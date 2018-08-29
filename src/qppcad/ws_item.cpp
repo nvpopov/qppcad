@@ -18,19 +18,18 @@ void ws_item::set_parent_workspace(workspace *_parent_ws){
 }
 
 void ws_item::render(){
-  app_state* astate = &(c_app::get_state());
-
-  if (astate->dp != nullptr){
+  app_state_c = &(c_app::get_state());
+  if (app_state_c->dp != nullptr){
       if (bSelected && support_selection() && !support_rendering_bounding_box()){
-          astate->dp->begin_render_aabb();
+          app_state_c->dp->begin_render_aabb();
           if (parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-            astate->dp->render_aabb(clr_fuchsia,
+            app_state_c->dp->render_aabb(clr_fuchsia,
                                     aabb.min ,
                                     aabb.max  );
-          else astate->dp->render_aabb_segmented(clr_olive,
+          else app_state_c->dp->render_aabb_segmented(clr_olive,
                                               aabb.min ,
                                               aabb.max  );
-          astate->dp->end_render_aabb();
+          app_state_c->dp->end_render_aabb();
         }
     }
 

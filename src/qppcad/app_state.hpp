@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include <imgui.h>
+#include <imgui_freetype.h>
 #include <mathf/math.hpp>
 #include <qppcad/draw_pipeline.hpp>
 #include <qppcad/workspace.hpp>

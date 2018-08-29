@@ -4,17 +4,20 @@
 #include <geom/lace3d.hpp>
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
+
 #include <vector>
 #include <iostream>
 
 
 namespace qpp{
   class workspace;
+  class app_state;
 
   class ws_item {
     protected:
       workspace* parent_ws;
     public:
+      app_state *app_state_c;
       std::string name;
       aabb_3d<float> aabb;
       vector3<float> vPosition;
@@ -36,6 +39,7 @@ namespace qpp{
       virtual bool support_content_editing() = 0;
       virtual bool support_selection() = 0;
       virtual bool support_rendering_bounding_box() = 0;
+      virtual std::string compose_item_name() = 0;
 
       virtual float get_bb_prescaller();
       virtual ~ws_item(){ }

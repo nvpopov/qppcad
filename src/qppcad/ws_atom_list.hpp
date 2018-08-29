@@ -35,6 +35,10 @@ namespace qpp{
                                  vector3<float> &vOutLookAt) override ;
       void update() override;
       void render() override;
+      void render_atom(const uint16_t atNum, const index &atIndex);
+      void render_bond(const uint16_t atNum1, const index &atIndex1,
+                       const uint16_t atNum2, const index &atIndex2);
+
       void render_ui() override;
       bool mouse_click(ray<float> *ray) override;
 
@@ -44,6 +48,7 @@ namespace qpp{
       bool support_content_editing() override;
       bool support_selection() override;
       bool support_rendering_bounding_box() override;
+      std::string compose_item_name() override;
 
       float get_bb_prescaller() override;
 

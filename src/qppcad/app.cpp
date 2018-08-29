@@ -42,7 +42,7 @@ void qpp::c_app::run(){
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_SAMPLES, 5);
+  glfwWindowHint(GLFW_SAMPLES, 8);
 
 
   qpp::c_app::curWindow = glfwCreateWindow(800,
@@ -68,10 +68,12 @@ void qpp::c_app::run(){
   ImFontConfig config;
   config.MergeMode = true;*/
 
-  io.Fonts->AddFontFromFileTTF("../data/fonts/Ubuntu/Ubuntu-Light.ttf",
+  io.Fonts->AddFontFromFileTTF("../data/fonts/Ubuntu/Ubuntu-Regular.ttf",
                                 14.0f);
+  unsigned int flags = ImGuiFreeType::ForceAutoHint;
+  ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
 
-  io.Fonts->Build();
+
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
   ImGui::StyleColorsDark();

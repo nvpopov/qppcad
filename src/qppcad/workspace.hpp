@@ -30,6 +30,7 @@ namespace qpp{
   /// workspace manager
   class workspace_manager {
   public:
+
     int iCurrentWorkSpace;
     std::vector<workspace*> ws;
     workspace_manager(){ iCurrentWorkSpace = -1;}
@@ -50,8 +51,7 @@ namespace qpp{
     camera* ws_cam;
     ray<float> debugRay;
     bool bFirstRender;
-
-
+    std::vector<std::string> vWSNames_c;
 
     workspace(std::string _ws_name = "default"){
       ws_name = _ws_name;
@@ -62,6 +62,11 @@ namespace qpp{
 
     }
 
+    int16_t get_selected_item();
+    void set_selected_item(const int16_t sel_idx);
+    void unselect_all();
+
+    void workspace_changed();
     void reset_camera();
     void set_best_view();
     void render();

@@ -8,12 +8,40 @@ using namespace qpp;
 
 
 
+int16_t workspace::get_selected_item(){
+  for (uint16_t i = 0; i < ws_items.size(); i++)
+    if (ws_items[i]->bSelected) return i;
+  return -1;
+}
+
+void workspace::set_selected_item(const int16_t sel_idx){
+  unselect_all();
+  if (sel_idx >= 0 && sel_idx < ws_items.size() && ws_items.size() > 0)
+      ws_items[sel_idx]->bSelected = true;
+}
+
+void workspace::unselect_all(){
+  for (uint16_t i = 0; i < ws_items.size(); i++) ws_items[i]->bSelected = false;
+}
+
+void workspace::workspace_changed(){
+  //rebuild ws items
+  vWSNames_c.clear();
+  for (ws_item* _ws_item : ws_items) vWSNames_c.push_back(_ws_item->name);
+}
+
 void workspace::reset_camera(){
   ws_cam->reset_camera();
   set_best_view();
 }
 
 void workspace::set_best_view(){
+
+  if (ws_items.size() == 0) {
+      ws_cam->reset_camera();
+      return;
+    }
+
   vector3<float> _vLookAt = vector3<float>(0.0, 0.0, 0.0);
   vector3<float> _vLookPos = vector3<float>(0.0, 0.0, 0.0);
 
@@ -136,6 +164,8 @@ void workspace::mouse_click(const double fMouseX, const double fMouseY){
 void workspace::add_item_to_workspace(ws_item *item_to_add){
   item_to_add->set_parent_workspace(this);
   ws_items.push_back(item_to_add);
+  workspace_changed();
+  c_app::log(fmt::format("New workspace {} size = {}", ws_name, ws_items.size()));
 }
 
 workspace *workspace_manager::get_current_workspace(){
@@ -146,40 +176,50 @@ workspace *workspace_manager::get_current_workspace(){
 
 void workspace_manager::init_default_workspace(){
 
-//  ws_atom_list* _wsl1 = new ws_atom_list();
-//  _wsl1->load_from_file(qc_file_format::format_standart_xyz, "../examples/io/ref_data/dna.xyz",
-//                        true);
+  //  ws_atom_list* _wsl1 = new ws_atom_list();
+  //  _wsl1->load_from_file(qc_file_format::format_standart_xyz, "../examples/io/ref_data/dna.xyz",
+  //                        true);
 
-//  ws_atom_list* _wsl2 = new ws_atom_list();
-//  _wsl2->load_from_file(qc_file_format::format_standart_xyz, "../examples/io/ref_data/ddt.xyz",
-//                        true);
+  //  ws_atom_list* _wsl2 = new ws_atom_list();
+  //  _wsl2->load_from_file(qc_file_format::format_standart_xyz, "../examples/io/ref_data/ddt.xyz",
+  //                        true);
 
-//  ws_atom_list* _wsl3 = new ws_atom_list();
-//  _wsl3->load_from_file(qc_file_format::format_standart_xyz, "../examples/io/ref_data/nanotube.xyz",          true);
+  //  ws_atom_list* _wsl3 = new ws_atom_list();
+  //  _wsl3->load_from_file(qc_file_format::format_standart_xyz, "../examples/io/ref_data/nanotube.xyz",          true);
   workspace* _ws2 = new workspace();
   _ws2->ws_name = "d2";
-  ws_atom_list* _wsl4 = new ws_atom_list(_ws2);
-  _wsl4->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/laf3_p6.vasp",
+  ws_atom_list* _wsl2 = new ws_atom_list(_ws2);
+  _wsl2->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                         false);
 
-//  _wsl1->shift(vector3<float>(15.0f, 15.0f, 15.0f));
+  workspace* _ws3 = new workspace();
+  _ws3->ws_name = "d1";
+  ws_atom_list* _wsl3 = new ws_atom_list(_ws3);
+  _wsl3->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
+                        false);
+  ws_atom_list* _wsl32 = new ws_atom_list(_ws3);
+  _wsl32->load_from_file(qc_file_format::format_standart_xyz, "../deps/qpp/examples/io/ref_data/nanotube.xyz",
+                         true);
+  _wsl3->name = "zeolite1";
+  _wsl32->name = "nanotube1";
+  _wsl32->shift(vector3<float>(0.0f, 0.0f, 15.0f));
 
-//  workspace* _ws1 = new workspace();
-//  _ws1->ws_name = "d1";
+  //  workspace* _ws1 = new workspace();
+  //  _ws1->ws_name = "d1";
 
 
 
-//  workspace* _ws3 = new workspace();
-//  _ws3->ws_name = "nanotube";
+  //  workspace* _ws3 = new workspace();
+  //  _ws3->ws_name = "nanotube";
 
-//  _ws1->add_item_to_workspace(_wsl1);
-//  _ws1->add_item_to_workspace(_wsl2);
-  _ws2->add_item_to_workspace(_wsl4);
- // _ws3->add_item_to_workspace(_wsl3);
-
+  //  _ws1->add_item_to_workspace(_wsl1);
+  //  _ws1->add_item_to_workspace(_wsl2);
+  _ws2->add_item_to_workspace(_wsl2);
+  _ws3->add_item_to_workspace(_wsl3);
+  _ws3->add_item_to_workspace(_wsl32);
   ws.push_back(_ws2);
- // ws.push_back(_ws3);
-//  ws.push_back(_ws1);
+  ws.push_back(_ws3);
+  //  ws.push_back(_ws1);
 
   iCurrentWorkSpace = ws.size() - 1;
 }

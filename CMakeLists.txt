@@ -10,17 +10,17 @@ macro(set_option option value)
   set(${option} ${value} CACHE INTERNAL "" FORCE)
 endmacro()
 
- 
-
 set_option(PYTHON_BINDINGS OFF)
 add_subdirectory(deps/qpp)
-
+add_subdirectory(deps/freetype)
 add_subdirectory(deps/glfw)
 include_directories(deps/glfw/include)
 include_directories(deps/glfw/deps)
 include_directories(src/)
 include_directories(deps/imgui)
+include_directories(deps/imgui/misc/freetype)
 include_directories(deps/imgui/examples)
+include_directories(deps/freetype/include)
 include_directories(deps/qpp/modules)
 include_directories(deps/qpp/deps/pybind11/include)
 include_directories(deps/qpp/deps/fmtlib)
@@ -49,9 +49,11 @@ add_executable(qppcad
     src/qppcad/action.cpp
     src/qppcad/gl_math.cpp
     src/qppcad/ui_manager.cpp
+    deps/imgui/misc/freetype/imgui_freetype.cpp
     deps/imgui/examples/imgui_impl_glfw.cpp
     deps/imgui/examples/imgui_impl_opengl3.cpp
     deps/glfw/deps/gl3w.c
     deps/imgui/imgui.cpp
-    deps/imgui/imgui_draw.cpp)
-target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY} glfw m)
+    deps/imgui/imgui_draw.cpp
+    )
+target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY} freetype glfw m)

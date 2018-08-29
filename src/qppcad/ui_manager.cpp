@@ -63,8 +63,10 @@ void ui_manager::render_main_menu(){
           if (c_app::get_state().wm->has_wss()){
               if(ImGui::BeginMenu("Camera")){
                   int _cp_t = c_app::get_state()._camera->cur_proj;
-                  ImGui::RadioButton("Ortho", &_cp_t, int(app_camera_proj_type::CAMERA_PROJ_ORTHO)); ImGui::SameLine();
-                  ImGui::RadioButton("Perspective", &_cp_t, int(app_camera_proj_type::CAMERA_PROJ_PERSP)); ImGui::SameLine();
+                  ImGui::RadioButton("Ortho", &_cp_t, int(app_camera_proj_type::CAMERA_PROJ_ORTHO));
+                  ImGui::SameLine();
+                  ImGui::RadioButton("Perspective", &_cp_t, int(app_camera_proj_type::CAMERA_PROJ_PERSP));
+                  ImGui::SameLine();
                   if(_cp_t != c_app::get_state()._camera->cur_proj){
                       c_app::get_state()._camera->set_projection(app_camera_proj_type(_cp_t));
                       c_app::get_state().wm->get_current_workspace()->set_best_view();
@@ -217,7 +219,7 @@ void ui_manager::render_work_panel(){
       int edit_mode = int(c_app::get_state().wm->
                           get_current_workspace()->cur_edit_type);
 
-      ImGui::BeginTabs("newtab", 2, edit_mode, 60 );
+      ImGui::BeginTabs("newtab", 2, edit_mode, 70 );
       if (ImGui::AddTab( "ITEM")) {
           c_app::get_state().wm->
               get_current_workspace()->cur_edit_type = ws_edit_type::EDIT_WS_ITEM;
@@ -308,11 +310,30 @@ void ui_manager::render_object_inspector(){
   ImGui::Separator();
   ImGui::Text("Workspace items:");
   auto iCurWs = astate->wm->iCurrentWorkSpace;
+
+  ImGui::PushItemWidth(284);
   workspace* cur_ws = astate->wm->ws[iCurWs];
   if (cur_ws != nullptr){
+      int ws_itm_cur = cur_ws->get_selected_item();
+      ImGui::PushID(1);
+      ImGui::ListBox_stl("", &ws_itm_cur, cur_ws->vWSNames_c, 8);
+      ImGui::PopID();
+      if (ws_itm_cur != cur_ws->get_selected_item()) cur_ws->set_selected_item(ws_itm_cur);
 
+      ImGui::PopItemWidth();
+
+      ImGui::Spacing();
+      ImGui::Separator();
+      if (cur_ws->get_selected_item() != -1){
+          ImGui::Text(fmt::format("Selected: {}",
+                                  cur_ws->ws_items[cur_ws->get_selected_item()]->
+                      compose_item_name()).c_str());
+        }
+      else {
+          ImGui::Text("Selected: None");
+        }
     }
-
+  ImGui::Separator();
 
   ImGui::End();
   ImGui::PopStyleVar();

@@ -71,47 +71,13 @@ void ws_atom_list::render(){
 
       // atom render start
       astate->dp->begin_atom_render();
-      std::cout << "atom count " << geom->nat() << std::endl;
-      for (int i = 0; i < geom->nat(); i++){
-          int ap_idx = ptable::number_by_symbol(geom->atom(i));
-          float fDrawRad = 0.4f;
-          vector3<float> color(0.0, 0.0, 1.0);
 
-          if(ap_idx != -1){
-              //TODO: radius scale factor
-              fDrawRad = ptable::get_inst()->arecs[ap_idx-1].aRadius *
-                         astate->fAtomRadiusScaleFactor;
-              color = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;
-            }
+      // draw {0,..} atoms
+      for (int i = 0; i < geom->nat(); i++) render_atom(i, index::D(geom->DIM).all(0));
 
-          if((parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) &&
-             (geom->xfield<bool>("sel", i)) && bSelected)
-            color = vector3<float>(0.43f, 0.55f, 0.12f);
-
-          astate->dp->render_atom(color, geom->pos(i), fDrawRad);
-        }
-
-      if (geom->DIM > 0){
-          for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++){
-              int ap_idx = ptable::number_by_symbol(geom->atom(tws_tr->imgAtoms[i]->atm));
-              float fDrawRad = 0.4f;
-              vector3<float> color(0.0, 0.0, 1.0);
-
-              if(ap_idx != -1){
-                  //TODO: radius scale factor
-                  fDrawRad = ptable::get_inst()->arecs[ap_idx-1].aRadius *
-                             astate->fAtomRadiusScaleFactor;
-                  color = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;
-                }
-
-              //              if((parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) &&
-              //                 (geom->xfield<bool>("sel", i)) && bSelected)
-              //                color = vector3<float>(0.43f, 0.55f, 0.12f);
-
-              astate->dp->render_atom(color, geom->pos(tws_tr->imgAtoms[i]->atm,
-                                                         tws_tr->imgAtoms[i]->idx), fDrawRad);
-            }
-        }
+      // draw imaginay atoms
+      if (geom->DIM > 0) for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
+            render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
 
       astate->dp->end_atom_render();
       // atom render end
@@ -123,50 +89,60 @@ void ws_atom_list::render(){
       for (uint16_t i = 0; i < geom->nat(); i++)
         for (uint16_t j = 0; j < tws_tr->n(i); j++){
 
-            int ap_idx = ptable::number_by_symbol(geom->atom(i));
-            vector3<float> bcolor(0.0, 0.0, 1.0);
-            if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
-
-            int id1 = i;
-            int id2 = tws_tr->table_atm(i,j);
+            uint16_t id1 = i;
+            uint16_t id2 = tws_tr->table_atm(i,j);
             index idx2 = tws_tr->table_idx(i,j);
 
-            astate->dp->render_bond(bcolor, geom->pos(id1), geom->pos(id2, idx2),
-                                    astate->fBondScaleFactor);
-            if( idx2 != index::D(geom->DIM).all(0)){
-                int ap_idx2 = ptable::number_by_symbol(geom->atom(i));
-                vector3<float> bcolor2(0.0, 0.0, 1.0);
-                if(ap_idx2 != -1){bcolor2 = ptable::get_inst()->arecs[ap_idx2-1].aColorJmol;}
+            render_bond(id1, index::D(geom->DIM).all(0), id2, idx2);
 
-                astate->dp->render_bond(bcolor2, geom->pos(id2, idx2), geom->pos(id1),
-                                        astate->fBondScaleFactor);
-              }
+            if(idx2 != index::D(geom->DIM).all(0))
+              render_bond(id2, idx2, id1, index::D(geom->DIM).all(0));
+
           }
 
       if (geom->DIM > 0)
-          for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
-            for (uint16_t j = 0; j < tws_tr->imgAtoms[i]->imBonds.size(); j++){
+        for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
+          for (uint16_t j = 0; j < tws_tr->imgAtoms[i]->imBonds.size(); j++){
 
-                int id1 = tws_tr->imgAtoms[i]->atm;
-                int id2 = tws_tr->imgAtoms[i]->imBonds[j]->atm;
+              uint16_t id1 = tws_tr->imgAtoms[i]->atm;
+              uint16_t id2 = tws_tr->imgAtoms[i]->imBonds[j]->atm;
 
-                int ap_idx = ptable::number_by_symbol(geom->atom(id1));
-                vector3<float> bcolor(0.0, 0.0, 1.0);
-                if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
+              index idx1 = tws_tr->imgAtoms[i]->idx;
+              index idx2 = tws_tr->imgAtoms[i]->imBonds[j]->idx;
 
-                index idx1 = tws_tr->imgAtoms[i]->idx;
-                index idx2 = tws_tr->imgAtoms[i]->imBonds[j]->idx;
-
-                astate->dp->render_bond(bcolor, geom->pos(id1, idx1 ), geom->pos(id2, idx2),
-                                        astate->fBondScaleFactor);
-
-
-              }
+              render_bond(id1, idx1, id2, idx2);
+            }
 
 
       astate->dp->end_render_bond();
 
     }
+}
+
+void ws_atom_list::render_atom(const uint16_t atNum, const index &atIndex){
+
+  int ap_idx = ptable::number_by_symbol(geom->atom(atNum));
+  float fDrawRad = 0.4f;
+  vector3<float> color(0.0, 0.0, 1.0);
+  if(ap_idx != -1){
+      fDrawRad = ptable::get_inst()->arecs[ap_idx-1].aRadius * app_state_c->fAtomRadiusScaleFactor;
+      color = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;
+    }
+
+  if((parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) &&
+     (geom->xfield<bool>("sel", atNum)) && bSelected)
+    color = vector3<float>(0.43f, 0.55f, 0.12f);
+
+  app_state_c->dp->render_atom(color, geom->pos(atNum, atIndex), fDrawRad);
+}
+
+void ws_atom_list::render_bond(const uint16_t atNum1, const index &atIndex1,
+                               const uint16_t atNum2, const index &atIndex2){
+  int ap_idx = ptable::number_by_symbol(geom->atom(atNum1));
+  vector3<float> bcolor(0.0, 0.0, 1.0);
+  if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
+  app_state_c->dp->render_bond(bcolor, geom->pos(atNum1, atIndex1), geom->pos(atNum2, atIndex2),
+                               app_state_c->fBondScaleFactor);
 }
 
 void ws_atom_list::render_ui(){
@@ -253,7 +229,11 @@ bool ws_atom_list::support_selection(){
 }
 
 bool ws_atom_list::support_rendering_bounding_box(){
-  return true;
+  return geom->DIM > 0;
+}
+
+std::string ws_atom_list::compose_item_name(){
+  return fmt::format("Type = [atom list], DIM = [{}d]", geom->DIM);
 }
 
 float ws_atom_list::get_bb_prescaller(){
@@ -297,17 +277,17 @@ void ws_atom_list::load_from_file(qc_file_format eFileFormat,
   tws_tr->clear_tree();
   ext_obs->bFirstData = true;
 
+  name = extract_base_name(sFileName);
 
   switch (eFileFormat) {
     case qc_file_format::format_standart_xyz:
-      name = extract_base_name(sFileName);
+      geom->DIM = 0;
       read_xyz(fQCData, *(geom));
       break;
 
     case qc_file_format::format_vasp_poscar:
       geom->DIM = 3;
       geom->cell.DIM = 3;
-      name = extract_base_name(sFileName);
       read_vasp_poscar(fQCData, *(geom));
       break;
 
