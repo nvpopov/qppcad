@@ -103,9 +103,11 @@ void draw_pipeline::render_molecule(){
 
 }
 
-void draw_pipeline::render_cell_3d(const vector3<float> &a,
+void draw_pipeline::render_cell_3d(const vector3<float> &color,
+                                   const vector3<float> &a,
                                    const vector3<float> &b,
-                                   const vector3<float> &c ){
+                                   const vector3<float> &c,
+                                   const float fLineWidth = 1.0f){
   static int disp[][6] = {
     {0, 0, 0, 0, 0, 1},
     {0, 0, 0, 0, 1, 0},
@@ -125,7 +127,7 @@ void draw_pipeline::render_cell_3d(const vector3<float> &a,
       vector3<float> vLStart = a*disp[i][0] + b*disp[i][1] + c*disp[i][2];
       vector3<float> vLEnd   = a*disp[i][3] + b*disp[i][4] + c*disp[i][5];
 
-      render_line(clr_black, vLStart, vLEnd );
+      render_line(color, vLStart, vLEnd, fLineWidth);
 
     }
 }
@@ -281,11 +283,12 @@ void draw_pipeline::render_line(const vector3<float> &color,
   astate->unit_line_shader->set_u(sp_u_name::mModelView,
                                   astate->_camera->mView.data());
   astate->unit_line->render();
-  glLineWidth(1.0f);
+
 
 }
 
 void draw_pipeline::end_render_line(){
+   glLineWidth(1.0f);
   app_state* astate = &(c_app::get_state());
   astate->unit_line_shader->end_shader_program();
 

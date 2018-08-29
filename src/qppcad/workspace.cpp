@@ -159,7 +159,7 @@ void workspace_manager::init_default_workspace(){
   workspace* _ws2 = new workspace();
   _ws2->ws_name = "d2";
   ws_atom_list* _wsl4 = new ws_atom_list(_ws2);
-  _wsl4->load_from_file(qc_file_format::format_vasp_poscar, "../deps/qpp/examples/io/ref_data/p2.vasp",
+  _wsl4->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/laf3_p6.vasp",
                         false);
 
 //  _wsl1->shift(vector3<float>(15.0f, 15.0f, 15.0f));

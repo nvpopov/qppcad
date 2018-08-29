@@ -63,13 +63,13 @@ void qpp::c_app::run(){
 
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;
-  io.Fonts->AddFontDefault();
+  //io.Fonts->AddFontDefault();
   /*ImWchar ranges[] = { 0xf000, 0xf3ff, 0 };
   ImFontConfig config;
   config.MergeMode = true;*/
 
-  //  io.Fonts->AddFontFromFileTTF("../tools/qppcad/assets/fa-regular-400.ttf",
-  //                               16.0f);
+  io.Fonts->AddFontFromFileTTF("../data/fonts/Ubuntu/Ubuntu-Light.ttf",
+                                14.0f);
 
   io.Fonts->Build();
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;

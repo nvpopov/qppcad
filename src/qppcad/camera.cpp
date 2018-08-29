@@ -4,7 +4,7 @@
 using namespace qpp;
 
 camera::camera(){
-  fFOV = 60.0;
+  fFOV = 50.0;
   fZNearPersp = 0.1;
   fZFarPersp  = 600;
   fZNearOrtho = -100;

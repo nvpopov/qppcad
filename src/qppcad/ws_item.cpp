@@ -21,7 +21,7 @@ void ws_item::render(){
   app_state* astate = &(c_app::get_state());
 
   if (astate->dp != nullptr){
-      if (bSelected && support_selection()){
+      if (bSelected && support_selection() && !support_rendering_bounding_box()){
           astate->dp->begin_render_aabb();
           if (parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
             astate->dp->render_aabb(clr_fuchsia,
