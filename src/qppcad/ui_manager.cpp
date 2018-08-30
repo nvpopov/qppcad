@@ -200,19 +200,22 @@ void ui_manager_t::render_work_panel(){
   ImGuiWindow* window = ImGui::GetCurrentWindow();
   window->DC.LayoutType = ImGuiLayoutType_Horizontal;
 
-
+  ImGui::Button("~" , ImVec2(20,20));
   ImGui::Separator();
-
+  ImGui::Text("View:");
   ImGui::Button("a" , ImVec2(20,20));
   ImGui::Button("b" , ImVec2(20,20));
   ImGui::Button("c" , ImVec2(20,20));
   ImGui::Separator();
+
 
   ImGui::Text("T:");
   ImGui::Button("X" , ImVec2(20,20));
   ImGui::Button("Y" , ImVec2(20,20));
   ImGui::Button("Z" , ImVec2(20,20));
   ImGui::Separator();
+
+
 
   if (c_app::get_state().workspace_manager->has_wss()){
       ImGui::Text("Edit:");
@@ -236,7 +239,12 @@ void ui_manager_t::render_work_panel(){
 
       ImGui::Spacing();
       ImGui::Separator();
+
+      ImGui::Button("Undo" , ImVec2(40,20));
+      ImGui::Button("Redo" , ImVec2(40,20));
+      ImGui::Separator();
     }
+
 
 
   ImGui::End();
@@ -316,7 +324,7 @@ void ui_manager_t::render_object_inspector(){
   if (cur_ws != nullptr){
       int ws_itm_cur = cur_ws->get_selected_item();
       ImGui::PushID(1);
-      ImGui::ListBox_stl("", &ws_itm_cur, cur_ws->vWSNames_c, 8);
+      ImGui::ListBox_stl("", &ws_itm_cur, cur_ws->ws_names_c, 8);
       ImGui::PopID();
       if (ws_itm_cur != cur_ws->get_selected_item()) cur_ws->set_selected_item(ws_itm_cur);
 
@@ -325,15 +333,17 @@ void ui_manager_t::render_object_inspector(){
       ImGui::Spacing();
       ImGui::Separator();
       if (cur_ws->get_selected_item() != -1){
-          ImGui::Text(fmt::format("Selected: {}",
-                                  cur_ws->ws_items[cur_ws->get_selected_item()]->
-                      compose_item_name()).c_str());
+          ImGui::Text(fmt::format("Selected: {}",cur_ws->get_selected()->compose_item_name()).c_str());
+          ImGui::Separator();
+          ImGui::Spacing();
+          cur_ws->get_selected()->render_ui();
         }
       else {
           ImGui::Text("Selected: None");
+          ImGui::Separator();
         }
     }
-  ImGui::Separator();
+
 
   ImGui::End();
   ImGui::PopStyleVar();

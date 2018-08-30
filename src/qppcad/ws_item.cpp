@@ -17,6 +17,24 @@ void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
   parent_ws = _parent_ws;
 }
 
+const std::string ws_item_t::get_name(){
+
+}
+
+void ws_item_t::set_name(const std::string _name){
+  if (name != _name){
+      name = _name;
+      parent_ws->workspace_changed();
+    }
+}
+
+void ws_item_t::set_name(const char *_name){
+  if (name != _name){
+      name = std::string(_name);
+      parent_ws->workspace_changed();
+    }
+}
+
 void ws_item_t::render(){
   app_state_c = &(c_app::get_state());
   if (app_state_c->dp != nullptr){
@@ -33,6 +51,14 @@ void ws_item_t::render(){
         }
     }
 
+}
+
+void ws_item_t::render_ui(){
+  char * s_item_name = new char[60];
+  strcpy(s_item_name, name.c_str());
+  ImGui::InputText("Item name", s_item_name, 60);
+  if (name != s_item_name) set_name(s_item_name);
+  delete[] s_item_name;
 }
 
 void ws_item_t::update(){

@@ -29,8 +29,11 @@ namespace qpp{
                                          vector3<float> &vOutLookAt) = 0;
       void set_parent_workspace(workspace_t* _parent_ws);
 
+      const std::string get_name();
+      void set_name(const std::string _name);
+      void set_name(const char * _name);
       virtual void render();
-      virtual void render_ui() = 0;
+      virtual void render_ui();
       virtual bool mouse_click(ray<float> *ray) = 0;
       virtual void update();
       virtual bool support_translation() = 0;

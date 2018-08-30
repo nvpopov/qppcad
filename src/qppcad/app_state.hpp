@@ -52,11 +52,11 @@ namespace qpp {
     //app_edit_type cur_edit_type;
 
     // sphere mesh with differnet resolutions
-    std::vector<mesh*> _sph_meshes;
-    mesh* cylinder_mesh;
-    mesh* unit_line;
-    mesh* trm;
-    mesh* gridXZ;
+    std::vector<mesh_t*> _sph_meshes;
+    mesh_t* cylinder_mesh;
+    mesh_t* unit_line;
+    mesh_t* trm;
+    mesh_t* gridXZ;
 
     int FPS;
 
@@ -125,10 +125,10 @@ namespace qpp {
       dp = new draw_pipeline_t();
 
       //default meshes
-      _sph_meshes.push_back(mesh::generate_sphere_mesh(15, 15));
-      cylinder_mesh = mesh::generate_cylinder_whole(12, 4);
-      unit_line = mesh::generate_unit_line();
-      gridXZ = mesh::generate_xz_plane(20, 0.5, 20, 0.5);
+      _sph_meshes.push_back(mesh_t::generate_sphere_mesh(15, 15));
+      cylinder_mesh = mesh_t::generate_cylinder_whole(12, 4);
+      unit_line = mesh_t::generate_unit_line();
+      gridXZ = mesh_t::generate_xz_plane(20, 0.5, 20, 0.5);
       def_shader = gen_default_program();
       unit_line_shader = gen_unit_line_program();
       bond_shader = gen_bond_draw_program();

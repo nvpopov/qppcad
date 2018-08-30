@@ -19,16 +19,16 @@ namespace qpp{
   };
 
   /// Mesh consist of vertexes, indices and normals
-  class mesh{
+  class mesh_t{
   public:
 
     /// Raw vertex data
-    std::vector<float> vertexData;
-    std::vector<int> indicesData;
-    std::vector<float> normalData;
+    std::vector<float> vertecies;
+    std::vector<int>   indices;
+    std::vector<float> normals;
 
-    unsigned int num_vertices;
-    unsigned int num_indices;
+    uint32_t num_vertices;
+    uint32_t num_indices;
 
     /// OpenGL buffer handles
     GLuint vio;
@@ -37,14 +37,12 @@ namespace qpp{
     GLuint nbo;
     GLenum mesh_rt;
 
-    mesh();
-    static mesh *generate_sphere_mesh(const int latBands, const int longBands);
-    static mesh *generate_cylinder_whole(const int numPhi, const int numZ);
-    static mesh *generate_unit_line();
-    static mesh *generate_xz_plane(const int iNumX,
-                                   const float fDeltaX,
-                                   const int iNumZ,
-                                   const float fDeltaZ);
+    mesh_t();
+    static mesh_t *generate_sphere_mesh(const int lat_bands, const int long_bands);
+    static mesh_t *generate_cylinder_whole(const int num_phi, const int num_z);
+    static mesh_t *generate_unit_line();
+    static mesh_t *generate_cone();
+    static mesh_t *generate_xz_plane(const int n_x,const float dx, const int n_z, const float dz);
     void render();
     void bind_data();
   };

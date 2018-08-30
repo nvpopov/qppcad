@@ -1,12 +1,14 @@
 #ifndef QPP_WORKSPACE_H
 #define QPP_WORKSPACE_H
 
+#include <vector>
+#include <iostream>
 #include <geom/lace3d.hpp>
 #include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
 #include <qppcad/camera.hpp>
-#include <vector>
-#include <iostream>
+#include <imgui.h>
+#include <imgui_internal.h>
 #include <qppcad/ws_item.hpp>
 #include <qppcad/ws_atom_list.hpp>
 
@@ -51,7 +53,7 @@ namespace qpp{
     camera_t* camera;
     ray<float> debugRay;
     bool bFirstRender;
-    std::vector<std::string> vWSNames_c;
+    std::vector<std::string> ws_names_c;
 
     workspace_t(std::string _ws_name = "default"){
       ws_name = _ws_name;
@@ -63,6 +65,7 @@ namespace qpp{
     }
 
     int16_t get_selected_item();
+    ws_item_t *get_selected();
     void set_selected_item(const int16_t sel_idx);
     void unselect_all();
 

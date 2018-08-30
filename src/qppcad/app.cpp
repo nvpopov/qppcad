@@ -27,6 +27,7 @@ void qpp::c_app::key_callback(GLFWwindow* window,
 
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
+  ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 }
 
 void qpp::c_app::run(){
@@ -109,7 +110,7 @@ void qpp::c_app::run(){
           glfwPollEvents();
           float currentTime = glfwGetTime();
           frameCount++;
-          if ( currentTime - previousTime >= 1.0 ){
+          if ( currentTime - previousTime >= 1.0f ){
               astate->FPS = frameCount;
               frameCount = 0;
               previousTime = currentTime;

@@ -46,6 +46,7 @@ void ws_atom_list_t::update(){
 
 void ws_atom_list_t::render(){
   ws_item_t::render();
+  //we need it for lambda fn
   app_state_t* astate = &(c_app::get_state());
 
   if (app_state_c->dp != nullptr){
@@ -62,10 +63,16 @@ void ws_atom_list_t::render(){
 
       if (geom->DIM == 3){
           astate->dp->begin_render_line();
-          if (bSelected) astate->dp->render_cell_3d(clr_red, geom->cell.v[0],
-              geom->cell.v[1], geom->cell.v[2], 2.0f);
-          else astate->dp->render_cell_3d(clr_black, geom->cell.v[0], geom->cell.v[1],
-              geom->cell.v[2], 1.1f);
+          vector3<float> cell_clr = clr_black;
+          if (bSelected){
+              if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
+                cell_clr = clr_red;
+              if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
+                cell_clr = clr_lime;
+            }
+
+            app_state_c->dp->render_cell_3d(
+                  cell_clr, geom->cell.v[0], geom->cell.v[1],geom->cell.v[2], 1.1f);
           astate->dp->end_render_line();
         }
 
@@ -75,7 +82,7 @@ void ws_atom_list_t::render(){
       // draw {0,..} atoms
       for (int i = 0; i < geom->nat(); i++) render_atom(i, index::D(geom->DIM).all(0));
 
-      // draw imaginay atoms
+      // draw imaginary atoms that appear due to periodic
       if (geom->DIM > 0) for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
             render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
 
@@ -146,48 +153,7 @@ void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
 }
 
 void ws_atom_list_t::render_ui(){
-  ImGui::Separator();
-  ImGui::Button("Rebond");
-  ImGui::SameLine();
-  ImGui::Button("Delete");
-  static bool bVisible;
-  ImGui::SameLine();
-  ImGui::Checkbox("Show" , &bVisible);
-  ImGui::Separator();
-  int _dim = iDim;
-  ImGui::Text("Geom. dim:"); ImGui::SameLine();
-  ImGui::SliderInt("", &_dim, 0, 3);
-  iDim = _dim;
-
-  if (ImGui::TreeNode("Atoms")){
-      for (int i = 0; i < geom->nat(); i++)
-        if (ImGui::TreeNode(fmt::format("{}:{}", geom->atom(i), i).c_str())){
-            //            ImGui::SameLine();
-            //            ImGui::Button("eeeee");
-            //  ImGui::Columns(2);
-            //            float _x = geom->pos(i)[0];
-            //            float _y = geom->pos(i)[1];
-            //            float _z = geom->pos(i)[2];
-
-            float vec3f[3] = { geom->pos(i)[0], geom->pos(i)[1], geom->pos(i)[2]};
-
-            //            ImGui::Text("X");
-            //            ImGui::Text("Y");
-            //            ImGui::Text("Z");
-            //ImGui::Se
-            ImGui::Text("Pos.:");
-            ImGui::SameLine();
-            ImGui::PushID("flt3");
-            ImGui::InputFloat3("", vec3f);
-            ImGui::PopID();
-
-
-            geom->coord(i) = vector3<float>(vec3f[0], vec3f[1], vec3f[2]);
-            //   ImGui::Columns(1);
-            ImGui::TreePop();
-          }
-      ImGui::TreePop();
-    }
+  ws_item_t::render_ui();
 }
 
 bool ws_atom_list_t::mouse_click(ray<float> *ray){

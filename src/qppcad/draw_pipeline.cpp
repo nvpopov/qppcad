@@ -31,18 +31,15 @@ void draw_pipeline_t::render_atom(const vector3<float> &color,
   app_state_t* astate = &(c_app::get_state());
   // std::cout<<"render_atom"<<std::endl;
 
-  astate->def_shader->set_u(sp_u_name::vTranslate, (GLfloat*)(pos.data()));
-  astate->def_shader->set_u(sp_u_name::fScale, (GLfloat*)(&radius));
-  astate->def_shader->set_u(sp_u_name::vColor, (GLfloat*)(color.data()));
+  astate->def_shader->set_u(sp_u_name::v_translate, (GLfloat*)(pos.data()));
+  astate->def_shader->set_u(sp_u_name::f_scale, (GLfloat*)(&radius));
+  astate->def_shader->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
 
-  matrix4<float> mModelViewInvTr =
-      (astate->camera->mView*matrix4<float>::Identity()).inverse().transpose();
+  matrix4<float> mModelViewInvTr = (astate->camera->mView*matrix4<float>::Identity()).inverse().transpose();
   // our Model matrix equals unity matrix, so just pass matrix from app state
-  astate->def_shader->set_u(sp_u_name::mModelViewProj,
-                            astate->camera->mViewProjection.data());
-  astate->def_shader->set_u(sp_u_name::mModelView, astate->camera->mView.data());
-  astate->def_shader->set_u(sp_u_name::mModelViewInvTr,
-                            mModelViewInvTr.data());
+  astate->def_shader->set_u(sp_u_name::m_model_view_proj, astate->camera->mViewProjection.data());
+  astate->def_shader->set_u(sp_u_name::m_model_view, astate->camera->mView.data());
+  astate->def_shader->set_u(sp_u_name::m_model_view_inv_tr, mModelViewInvTr.data());
 
   astate->_sph_meshes[0]->render();
   // astate->trm->render();
@@ -76,19 +73,15 @@ void draw_pipeline_t::render_bond(const vector3<float> &color,
   mModelTr.block<3,1>(0,1) = vAxisNorm.cross(mModelTr.block<3,1>(0,0));
   mModelTr.block<3,1>(0,3) = vBondStart;
 
-  matrix4<float> mModel = mModelTr  /** rotM * mModelSc */;
-  matrix4<float> mModelViewInvTr =
-      (astate->camera->mView * mModelTr).inverse().transpose(); /* * rotM*/;
+  matrix4<float> mModelViewInvTr = (astate->camera->mView * mModelTr).inverse().transpose();
 
-  matrix4<float> mModelView = astate->camera->mView * mModel;
-  matrix4<float> mModelViewProjection = astate->camera->mViewProjection * mModel;
+  matrix4<float> mModelView = astate->camera->mView * mModelTr;
+  matrix4<float> mModelViewProjection = astate->camera->mViewProjection * mModelTr;
 
-  astate->bond_shader->set_u(sp_u_name::mModelViewProj,
-                             mModelViewProjection.data());
-  astate->bond_shader->set_u(sp_u_name::mModelView, mModelView.data());
-  astate->bond_shader->set_u(sp_u_name::vColor, (GLfloat*)(color.data()));
-  astate->bond_shader->set_u(sp_u_name::mModelViewInvTr,
-                             mModelViewInvTr.data());
+  astate->bond_shader->set_u(sp_u_name::m_model_view_proj, mModelViewProjection.data());
+  astate->bond_shader->set_u(sp_u_name::m_model_view, mModelView.data());
+  astate->bond_shader->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
+  astate->bond_shader->set_u(sp_u_name::m_model_view_inv_tr, mModelViewInvTr.data());
 
   astate->cylinder_mesh->render();
 
@@ -170,7 +163,7 @@ void draw_pipeline_t::render_aabb(const vector3<float> &vColor,
     { 1, 1,-1, -1, 1,-1},
   };
 
-  for (unsigned int i = 0; i < 12; i++){
+  for (uint8_t i = 0; i < 12; i++){
       vector3<float>
           vLStart(
             vHalfBoxSize[0]*disp[i][0],
@@ -272,16 +265,11 @@ void draw_pipeline_t::render_line(const vector3<float> &color,
   app_state_t* astate = &(c_app::get_state());
 
   glLineWidth(fLineWidth);
-  astate->unit_line_shader->set_u(sp_u_name::vColor,
-                                  (GLfloat*)color.data());
-  astate->unit_line_shader->set_u(sp_u_name::vLineStart,
-                                  (GLfloat*)vStart.data());
-  astate->unit_line_shader->set_u(sp_u_name::vLineEnd,
-                                  (GLfloat*)vEnd.data());
-  astate->unit_line_shader->set_u(sp_u_name::mModelViewProj,
-                                  astate->camera->mViewProjection.data());
-  astate->unit_line_shader->set_u(sp_u_name::mModelView,
-                                  astate->camera->mView.data());
+  astate->unit_line_shader->set_u(sp_u_name::v_color, (GLfloat*)color.data());
+  astate->unit_line_shader->set_u(sp_u_name::v_line_start, (GLfloat*)vStart.data());
+  astate->unit_line_shader->set_u(sp_u_name::v_line_end, (GLfloat*)vEnd.data());
+  astate->unit_line_shader->set_u(sp_u_name::m_model_view_proj, astate->camera->mViewProjection.data());
+  astate->unit_line_shader->set_u(sp_u_name::m_model_view, astate->camera->mView.data());
   astate->unit_line->render();
 
 

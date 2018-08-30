@@ -6,12 +6,16 @@
 
 using namespace qpp;
 
-
-
 int16_t workspace_t::get_selected_item(){
   for (uint16_t i = 0; i < ws_items.size(); i++)
     if (ws_items[i]->bSelected) return i;
   return -1;
+}
+
+ws_item_t *workspace_t::get_selected(){
+  int16_t sel_idx = get_selected_item();
+  if (sel_idx != -1) return ws_items.at(sel_idx);
+  else return nullptr;
 }
 
 void workspace_t::set_selected_item(const int16_t sel_idx){
@@ -26,8 +30,10 @@ void workspace_t::unselect_all(){
 
 void workspace_t::workspace_changed(){
   //rebuild ws items
-  vWSNames_c.clear();
-  for (ws_item_t* _ws_item : ws_items) vWSNames_c.push_back(_ws_item->name);
+  ws_names_c.clear();
+  for(uint8_t i = 0; i < ws_items.size(); i++)
+    ws_names_c.push_back(fmt::format("[{}] {}", i, ws_items.at(i)->name));
+
 }
 
 void workspace_t::reset_camera(){
@@ -72,9 +78,7 @@ void workspace_t::render(){
 
   if (astate->bDebugDrawSelectionRay){
       astate->dp->begin_render_line();
-      astate->dp->
-          render_line(vector3<float>(1.0, 1.0, 0.0),
-                      debugRay.start,
+      astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0),debugRay.start,
                       debugRay.start+debugRay.dir*55.0);
       astate->dp->end_render_line();
     }
@@ -86,19 +90,15 @@ void workspace_t::render(){
       if (astate->bDrawGrid){
           astate->shaderLineMesh->begin_shader_program();
           vector3<float> color(0.75, 0.75, 0.75);
-          astate->shaderLineMesh->set_u(sp_u_name::mModelViewProj,
+          astate->shaderLineMesh->set_u(sp_u_name::m_model_view_proj,
                                         astate->camera->mViewProjection.data());
-          astate->shaderLineMesh->set_u(sp_u_name::mModelView,
-                                        astate->camera->mView.data());
-          astate->shaderLineMesh->set_u(sp_u_name::vColor,
-                                        (GLfloat*)color.data());
+          astate->shaderLineMesh->set_u(sp_u_name::m_model_view, astate->camera->mView.data());
+          astate->shaderLineMesh->set_u(sp_u_name::v_color, (GLfloat*)color.data());
 
           for (int dx = -4; dx <= 4; dx++)
             for (int dz = -4; dz <= 4; dz++){
-                vector3<float> vTr(dx * (20.0f * 0.5f),
-                                   dz * (20.0f * 0.5f), 0.0f );
-                astate->shaderLineMesh->set_u(sp_u_name::vTranslate,
-                                              (GLfloat*)vTr.data());
+                vector3<float> vTr(dx * (20.0f * 0.5f), dz * (20.0f * 0.5f), 0.0f );
+                astate->shaderLineMesh->set_u(sp_u_name::v_translate, (GLfloat*)vTr.data());
                 astate->gridXZ->render();
 
               }
