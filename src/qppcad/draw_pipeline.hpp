@@ -6,9 +6,9 @@
 
 namespace qpp {
 
-  class draw_pipeline{
+  class draw_pipeline_t{
   public:
-    draw_pipeline();
+    draw_pipeline_t();
     void load_pipeline();
     void unload_pipeline();
     void render();

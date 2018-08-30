@@ -12,8 +12,8 @@
 
 namespace qpp{
 
-  class workspace;
-  class ws_item;
+  class workspace_t;
+  class ws_item_t;
 
   enum ws_periodic {
     ws_periodic_a,
@@ -28,13 +28,13 @@ namespace qpp{
 
 
   /// workspace manager
-  class workspace_manager {
+  class workspace_manager_t {
   public:
 
     int iCurrentWorkSpace;
-    std::vector<workspace*> ws;
-    workspace_manager(){ iCurrentWorkSpace = -1;}
-    workspace* get_current_workspace();
+    std::vector<workspace_t*> ws;
+    workspace_manager_t(){ iCurrentWorkSpace = -1;}
+    workspace_t* get_current_workspace();
 
     bool has_wss(){return ws.size()>0;}
     void init_default_workspace();
@@ -43,21 +43,21 @@ namespace qpp{
   };
 
   /// workspace
-  class workspace {
+  class workspace_t {
   public:
     ws_edit_type cur_edit_type;
-    std::vector<ws_item*> ws_items;
+    std::vector<ws_item_t*> ws_items;
     std::string ws_name;
-    camera* ws_cam;
+    camera_t* camera;
     ray<float> debugRay;
     bool bFirstRender;
     std::vector<std::string> vWSNames_c;
 
-    workspace(std::string _ws_name = "default"){
+    workspace_t(std::string _ws_name = "default"){
       ws_name = _ws_name;
       bFirstRender = true;
-      ws_cam = new camera();
-      ws_cam->reset_camera();
+      camera = new camera_t();
+      camera->reset_camera();
       cur_edit_type = ws_edit_type::EDIT_WS_ITEM;
 
     }
@@ -71,7 +71,7 @@ namespace qpp{
     void set_best_view();
     void render();
     void mouse_click(const double fMouseX, const double fMouseY);
-    void add_item_to_workspace(ws_item *item_to_add);
+    void add_item_to_workspace(ws_item_t *item_to_add);
   };
 
 

@@ -5,7 +5,7 @@
 
 using namespace qpp;
 
-ws_item::ws_item(workspace* parent){
+ws_item_t::ws_item_t(workspace_t* parent){
   vPosition = vector3<float>(0.0f, 0.0f, 0.0f);
   vScale    = vector3<float>(1.0f, 1.0f, 1.0f);
   vRotation = vector3<float>(0.0f, 0.0f, 0.0f);
@@ -13,11 +13,11 @@ ws_item::ws_item(workspace* parent){
   parent_ws = parent;
 }
 
-void ws_item::set_parent_workspace(workspace *_parent_ws){
+void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
   parent_ws = _parent_ws;
 }
 
-void ws_item::render(){
+void ws_item_t::render(){
   app_state_c = &(c_app::get_state());
   if (app_state_c->dp != nullptr){
       if (bSelected && support_selection() && !support_rendering_bounding_box()){
@@ -35,10 +35,10 @@ void ws_item::render(){
 
 }
 
-void ws_item::update(){
+void ws_item_t::update(){
 
 }
 
-float ws_item::get_bb_prescaller(){
+float ws_item_t::get_bb_prescaller(){
   return 1.0f;
 }

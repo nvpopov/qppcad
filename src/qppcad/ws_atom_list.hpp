@@ -19,7 +19,7 @@
 
 namespace qpp{
 
-  class ws_atom_list : public ws_item {
+  class ws_atom_list_t : public ws_item_t {
     public:
       int iDim;
       bool bNeedToRebuildNBT;
@@ -29,7 +29,7 @@ namespace qpp{
       tws_tree<float, periodic_cell<float> > *tws_tr;
       extents_observer<float, periodic_cell<float> > *ext_obs;
 
-      ws_atom_list(workspace* parent);
+      ws_atom_list_t(workspace_t* parent);
 
       void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                  vector3<float> &vOutLookAt) override ;
@@ -65,7 +65,7 @@ namespace qpp{
 
       void rebuild_ngbt();
 
-      ~ws_atom_list() override {
+      ~ws_atom_list_t() override {
 
       }
 

@@ -82,13 +82,13 @@ namespace qpp {
 
   /// Shader program implements wrapper around OpenGL program, i.e contains
   /// vertex plus fragment shader and some kind of uniform variables management
-  class shader_program{
+  class shader_program_t{
   private:
     GLuint programID;
   public:
     std::vector<uniform_record> unfRec;
     std::string programName;
-    shader_program(const std::string _programName,
+    shader_program_t(const std::string _programName,
                    const std::string &_vs_text,
                    const std::string &_fs_text);
 
@@ -102,12 +102,12 @@ namespace qpp {
   };
 
   /// Default shader testing program - Gourand shading
-  shader_program* gen_default_program();
+  shader_program_t* gen_default_program();
 
-  shader_program* gen_unit_line_program();
-  shader_program* gen_bond_draw_program();
-  shader_program* gen_line_mesh_program();
-  shader_program *gen_screen_space_lighting_program();
+  shader_program_t* gen_unit_line_program();
+  shader_program_t* gen_bond_draw_program();
+  shader_program_t* gen_line_mesh_program();
+  shader_program_t *gen_screen_space_lighting_program();
 }
 #endif
 

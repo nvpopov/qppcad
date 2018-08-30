@@ -16,7 +16,7 @@ namespace qpp{
   class c_app{
 
   private:
-    static app_state* a_state;
+    static app_state_t* app_state;
     static GLFWwindow* curWindow;
 
     static void error_callback(int error, const char* description);
@@ -51,10 +51,10 @@ namespace qpp{
   public:
     static void log(const std::string logText);
     static void run();
-    static app_state & get_state(){
-      if (c_app::a_state == nullptr)
-        c_app::a_state = new qpp::app_state();
-      return *a_state;
+    static app_state_t & get_state(){
+      if (c_app::app_state == nullptr)
+        c_app::app_state = new qpp::app_state_t();
+      return *app_state;
     }
   };
 }

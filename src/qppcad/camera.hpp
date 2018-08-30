@@ -9,7 +9,7 @@ namespace qpp{
     CAMERA_PROJ_PERSP
   };
 
-  class camera{
+  class camera_t{
   public:
     static constexpr float fNormEps = 0.00001f;
     static constexpr float fNavTresh = 0.01f;
@@ -43,7 +43,7 @@ namespace qpp{
 
     app_camera_proj_type cur_proj;
 
-    camera();
+    camera_t();
     void orthogonalize_gs();
     void rotate_camera_around_origin(matrix3<float> mRot,
                                      vector3<float> vOrigin);

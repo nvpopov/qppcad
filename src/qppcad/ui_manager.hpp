@@ -12,12 +12,12 @@
 #include <cstdlib>
 
 namespace qpp{
-  class ui_manager{
+  class ui_manager_t{
   public:
     int iWorkPanelHeight;
     int iWorkPanelYOffset;
     int iObjInspWidth;
-    ui_manager();
+    ui_manager_t();
     void render_ui();
     void render_main_menu();
     void render_work_panel();

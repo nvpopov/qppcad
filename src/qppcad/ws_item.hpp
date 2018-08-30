@@ -10,24 +10,24 @@
 
 
 namespace qpp{
-  class workspace;
-  class app_state;
+  class workspace_t;
+  class app_state_t;
 
-  class ws_item {
+  class ws_item_t {
     protected:
-      workspace* parent_ws;
+      workspace_t* parent_ws;
     public:
-      app_state *app_state_c;
+      app_state_t *app_state_c;
       std::string name;
       aabb_3d<float> aabb;
       vector3<float> vPosition;
       vector3<float> vScale;
       vector3<float> vRotation;
       bool bSelected;
-      ws_item(workspace* parent);
+      ws_item_t(workspace_t* parent);
       virtual void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                          vector3<float> &vOutLookAt) = 0;
-      void set_parent_workspace(workspace* _parent_ws);
+      void set_parent_workspace(workspace_t* _parent_ws);
 
       virtual void render();
       virtual void render_ui() = 0;
@@ -42,7 +42,7 @@ namespace qpp{
       virtual std::string compose_item_name() = 0;
 
       virtual float get_bb_prescaller();
-      virtual ~ws_item(){ }
+      virtual ~ws_item_t(){ }
   };
 
 }

@@ -93,7 +93,7 @@ void qpp::c_app::run(){
                            qpp::c_app::mouse_callback);
 
   qpp::c_app::log("qpp::cad initialized succesfully!");
-  app_state* astate = &(c_app::get_state());
+  app_state_t* astate = &(c_app::get_state());
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
@@ -136,7 +136,7 @@ void qpp::c_app::begin_render(){
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-  qpp::c_app::get_state()._ui_manager->render_ui();
+  qpp::c_app::get_state().ui_manager->render_ui();
 
   float ratio;
   int width, height;
@@ -165,13 +165,13 @@ void qpp::c_app::end_render(){
 }
 
 void qpp::c_app::render(){
-  app_state* astate = &(c_app::get_state());
+  app_state_t* astate = &(c_app::get_state());
   glViewport(astate->vViewportXY(0),
              astate->vViewportXY(1),
              astate->vViewportWidthHeight(0),
              astate->vViewportWidthHeight(1));
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR)
-    astate->wm->render_current_workspace();
+    astate->workspace_manager->render_current_workspace();
   glViewport(0, 0, astate->wWidth, astate->wHeight);
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -179,25 +179,25 @@ void qpp::c_app::render(){
 
 void qpp::c_app::resize_window_callback(GLFWwindow *window,
                                         int _width, int _height){
-  app_state* astate = &(c_app::get_state());
+  app_state_t* astate = &(c_app::get_state());
   if (_width < 0)  _width = 10;
   if (_height < 0) _height = 10;
   astate->wWidth = _width;
   astate->wHeight = _height;
   astate->vViewportXY(0) = 0.0;
-  astate->vViewportXY(1) = astate->_ui_manager->iWorkPanelHeight +
-      astate->_ui_manager->iWorkPanelYOffset - 64;
-  astate->vViewportWidthHeight(0) = _width - astate->_ui_manager->iObjInspWidth;
+  astate->vViewportXY(1) = astate->ui_manager->iWorkPanelHeight +
+      astate->ui_manager->iWorkPanelYOffset - 64;
+  astate->vViewportWidthHeight(0) = _width - astate->ui_manager->iObjInspWidth;
   astate->vViewportWidthHeight(1) = _height -
-      (astate->_ui_manager->iWorkPanelHeight +
-       astate->_ui_manager->iWorkPanelYOffset) ;
+      (astate->ui_manager->iWorkPanelHeight +
+       astate->ui_manager->iWorkPanelYOffset) ;
 }
 
 void qpp::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset){
-  app_state* astate =  &(c_app::get_state());
+  app_state_t* astate =  &(c_app::get_state());
   if ((astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR)&&
-      (astate->_camera != nullptr))
-    astate->_camera->update_camera_zoom(-yoffset);
+      (astate->camera != nullptr))
+    astate->camera->update_camera_zoom(-yoffset);
 }
 
 void qpp::c_app::mouse_callback(GLFWwindow *window, double x, double y){
@@ -206,17 +206,17 @@ void qpp::c_app::mouse_callback(GLFWwindow *window, double x, double y){
 }
 
 void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
-  app_state* astate =  &(c_app::get_state());
+  app_state_t* astate =  &(c_app::get_state());
   if ((astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR) &&
-      (astate->_camera != nullptr)){
+      (astate->camera != nullptr)){
 
       if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-          astate->wm->mouse_click();
+          astate->workspace_manager->mouse_click();
 
-      astate->_camera->update_camera_rotation(
+      astate->camera->update_camera_rotation(
             button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS);
 
-      astate->_camera->update_camera_translation(
+      astate->camera->update_camera_translation(
             button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS);
     }
 }
@@ -231,4 +231,4 @@ void qpp::c_app::log(const std::string logText){
 }
 
 GLFWwindow* qpp::c_app::curWindow;
-qpp::app_state* qpp::c_app::a_state;
+qpp::app_state_t* qpp::c_app::app_state;

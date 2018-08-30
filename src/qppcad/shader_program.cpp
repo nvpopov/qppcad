@@ -1,9 +1,8 @@
 #include <qppcad/shader_program.hpp>
 #include <qppcad/app.hpp>
 
-qpp::shader_program::shader_program(const std::string _programName,
-                                    const std::string &_vs_text,
-                                    const std::string &_fs_text){
+qpp::shader_program_t::shader_program_t(const std::string _programName, const std::string &_vs_text,
+                                        const std::string &_fs_text){
 
   unfRec.resize(qpp::map_u2s.size());
   std::fill(unfRec.begin(), unfRec.end(), uniform_record({false, 0}));
@@ -58,15 +57,13 @@ qpp::shader_program::shader_program(const std::string _programName,
 
 }
 
-void qpp::shader_program::u_on(
-    qpp::sp_u_name _val){
+void qpp::shader_program_t::u_on(qpp::sp_u_name _val){
   //std::cout<<_val << " "<< unfRec.size() << std::endl;
   unfRec[_val].bEnabled = true;
-  unfRec[_val].iProgVar =
-      glGetUniformLocation(programID, map_u2s[_val].c_str());
+  unfRec[_val].iProgVar = glGetUniformLocation(programID, map_u2s[_val].c_str());
 }
 
-void qpp::shader_program::set_u(qpp::sp_u_name _ut,
+void qpp::shader_program_t::set_u(qpp::sp_u_name _ut,
                                 GLfloat *_val){
   if (unfRec[_ut].bEnabled){
       qpp::sp_u_type _utype = qpp::map_u2at[_ut];
@@ -93,13 +90,14 @@ void qpp::shader_program::set_u(qpp::sp_u_name _ut,
           break;
         }
     }
+
   else {
 
     }
 
 }
 
-void qpp::shader_program::begin_shader_program(){
+void qpp::shader_program_t::begin_shader_program(){
   glUseProgram(programID);
 
   /*
@@ -111,11 +109,11 @@ void qpp::shader_program::begin_shader_program(){
   //std::cout<<std::endl<<c_app::get_state().mView<<std::endl;
 }
 
-void qpp::shader_program::end_shader_program(){
+void qpp::shader_program_t::end_shader_program(){
   glUseProgram(0);
 }
 
-qpp::shader_program* qpp::gen_default_program(){
+qpp::shader_program_t* qpp::gen_default_program(){
   std::string vs =
       "#version 330\n"
       "uniform mat4 mMV;\n"
@@ -157,8 +155,7 @@ qpp::shader_program* qpp::gen_default_program(){
       "                  pow(linearColor.b, gamma.b), 1.0);\n"
       "}\n";
 
-  qpp::shader_program *sp =
-      new qpp::shader_program(std::string("default_program"), vs, fs);
+  qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("default_program"), vs, fs);
   sp->u_on(sp_u_name::mModelViewProj);
   sp->u_on(sp_u_name::mModelView);
   sp->u_on(sp_u_name::mModelViewInvTr);
@@ -169,7 +166,7 @@ qpp::shader_program* qpp::gen_default_program(){
   return sp;
 }
 
-qpp::shader_program *qpp::gen_unit_line_program(){
+qpp::shader_program_t *qpp::gen_unit_line_program(){
   std::string vs =
       "#version 330\n"
       "uniform mat4 mMV;\n"
@@ -195,8 +192,7 @@ qpp::shader_program *qpp::gen_unit_line_program(){
       "  Color = vec4(vColor, 1.0);\n"
       "}\n";
 
-  qpp::shader_program *sp =
-      new qpp::shader_program(std::string("unit_line_program"), vs, fs);
+  qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("unit_line_program"), vs, fs);
   sp->u_on(sp_u_name::mModelViewProj);
   sp->u_on(sp_u_name::mModelView);
 //  sp->u_on(sp_u_name::vLightPos);
@@ -209,7 +205,7 @@ qpp::shader_program *qpp::gen_unit_line_program(){
   return sp;
 }
 
-qpp::shader_program *qpp::gen_bond_draw_program(){
+qpp::shader_program_t *qpp::gen_bond_draw_program(){
   std::string vs =
       "#version 330\n"
       "uniform mat4 mMV;\n"
@@ -250,8 +246,7 @@ qpp::shader_program *qpp::gen_bond_draw_program(){
       "                  pow(linearColor.b, gamma.b), 1.0);\n"
       "}\n";
 
-  qpp::shader_program *sp =
-      new qpp::shader_program(std::string("bond_program"), vs, fs);
+  qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("bond_program"), vs, fs);
   sp->u_on(sp_u_name::mModelViewProj);
   sp->u_on(sp_u_name::mModelView);
   sp->u_on(sp_u_name::mModelViewInvTr);
@@ -261,7 +256,7 @@ qpp::shader_program *qpp::gen_bond_draw_program(){
   return sp;
 }
 
-qpp::shader_program *qpp::gen_line_mesh_program(){
+qpp::shader_program_t *qpp::gen_line_mesh_program(){
   std::string vs =
       "#version 330\n"
       "uniform mat4 mMV;\n"
@@ -289,8 +284,7 @@ qpp::shader_program *qpp::gen_line_mesh_program(){
       "  Color = mix(vec4(vColor, 1), bgColor, effectAlpha);\n"
       "}\n";
 
-  qpp::shader_program *sp =
-      new qpp::shader_program(std::string("grid_program"), vs, fs);
+  qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("grid_program"), vs, fs);
   sp->u_on(sp_u_name::mModelViewProj);
   sp->u_on(sp_u_name::mModelView);
 //  sp->u_on(sp_u_name::vLightPos);
@@ -301,7 +295,7 @@ qpp::shader_program *qpp::gen_line_mesh_program(){
   return sp;
 }
 
-qpp::shader_program *qpp::gen_screen_space_lighting_program(){
+qpp::shader_program_t *qpp::gen_screen_space_lighting_program(){
   std::string vs =
       "#version 330\n"
       "uniform mat4 mMV;\n"
@@ -342,8 +336,7 @@ qpp::shader_program *qpp::gen_screen_space_lighting_program(){
       "                  pow(linearColor.b, gamma.b), 1.0);\n"
       "}\n";
 
-  qpp::shader_program *sp =
-      new qpp::shader_program(std::string("default_program"), vs, fs);
+  qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("default_program"), vs, fs);
   sp->u_on(sp_u_name::mModelViewProj);
   sp->u_on(sp_u_name::mModelView);
   sp->u_on(sp_u_name::mModelViewInvTr);

@@ -5,7 +5,7 @@
 
 using namespace qpp;
 
-ws_atom_list::ws_atom_list(workspace* parent):ws_item(parent){
+ws_atom_list_t::ws_atom_list_t(workspace_t* parent):ws_item_t(parent){
 
   bNeedToRebuildNBT = true;
   iDim = 3;
@@ -26,7 +26,7 @@ ws_atom_list::ws_atom_list(workspace* parent):ws_item(parent){
 
 }
 
-void ws_atom_list::vote_for_view_vectors(vector3<float> &vOutLookPos,
+void ws_atom_list_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
                                          vector3<float> &vOutLookAt){
   if(geom->nat() > 2){
       vOutLookAt += (ext_obs->aabb.max + ext_obs->aabb.min) / 2.0;
@@ -40,15 +40,15 @@ void ws_atom_list::vote_for_view_vectors(vector3<float> &vOutLookPos,
 
 }
 
-void ws_atom_list::update(){
+void ws_atom_list_t::update(){
   aabb = ext_obs->aabb;
 }
 
-void ws_atom_list::render(){
-  ws_item::render();
-  app_state* astate = &(c_app::get_state());
+void ws_atom_list_t::render(){
+  ws_item_t::render();
+  app_state_t* astate = &(c_app::get_state());
 
-  if (astate->dp != nullptr){
+  if (app_state_c->dp != nullptr){
 
       if (astate->bDebugDrawRTree){
           astate->dp->begin_render_aabb();
@@ -119,7 +119,7 @@ void ws_atom_list::render(){
     }
 }
 
-void ws_atom_list::render_atom(const uint16_t atNum, const index &atIndex){
+void ws_atom_list_t::render_atom(const uint16_t atNum, const index &atIndex){
 
   int ap_idx = ptable::number_by_symbol(geom->atom(atNum));
   float fDrawRad = 0.4f;
@@ -136,7 +136,7 @@ void ws_atom_list::render_atom(const uint16_t atNum, const index &atIndex){
   app_state_c->dp->render_atom(color, geom->pos(atNum, atIndex), fDrawRad);
 }
 
-void ws_atom_list::render_bond(const uint16_t atNum1, const index &atIndex1,
+void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
                                const uint16_t atNum2, const index &atIndex2){
   int ap_idx = ptable::number_by_symbol(geom->atom(atNum1));
   vector3<float> bcolor(0.0, 0.0, 1.0);
@@ -145,7 +145,7 @@ void ws_atom_list::render_bond(const uint16_t atNum1, const index &atIndex1,
                                app_state_c->fBondScaleFactor);
 }
 
-void ws_atom_list::render_ui(){
+void ws_atom_list_t::render_ui(){
   ImGui::Separator();
   ImGui::Button("Rebond");
   ImGui::SameLine();
@@ -190,7 +190,7 @@ void ws_atom_list::render_ui(){
     }
 }
 
-bool ws_atom_list::mouse_click(ray<float> *ray){
+bool ws_atom_list_t::mouse_click(ray<float> *ray){
   if (ray){
       std::vector<tws_query_data<float>* > res;
       tws_tr->query_ray<query_ray_add_all<float> >(ray, &res);
@@ -208,40 +208,40 @@ bool ws_atom_list::mouse_click(ray<float> *ray){
   return false;
 }
 
-bool ws_atom_list::support_translation(){
+bool ws_atom_list_t::support_translation(){
   return true;
 }
 
-bool ws_atom_list::support_rotation(){
+bool ws_atom_list_t::support_rotation(){
   return false;
 }
 
-bool ws_atom_list::support_scaling(){
+bool ws_atom_list_t::support_scaling(){
   return  false;
 }
 
-bool ws_atom_list::support_content_editing(){
+bool ws_atom_list_t::support_content_editing(){
   return true;
 }
 
-bool ws_atom_list::support_selection(){
+bool ws_atom_list_t::support_selection(){
   return true;
 }
 
-bool ws_atom_list::support_rendering_bounding_box(){
+bool ws_atom_list_t::support_rendering_bounding_box(){
   return geom->DIM > 0;
 }
 
-std::string ws_atom_list::compose_item_name(){
+std::string ws_atom_list_t::compose_item_name(){
   return fmt::format("Type = [atom list], DIM = [{}d]", geom->DIM);
 }
 
-float ws_atom_list::get_bb_prescaller(){
+float ws_atom_list_t::get_bb_prescaller(){
   if (geom->DIM == 3) return 1.5f;
   return 1.1f;
 }
 
-void ws_atom_list::shift(const vector3<float> vShift){
+void ws_atom_list_t::shift(const vector3<float> vShift){
   tws_tr->bAutoBonding = false;
   tws_tr->bAutoBuild   = false;
 
@@ -257,7 +257,7 @@ void ws_atom_list::shift(const vector3<float> vShift){
   update();
 }
 
-void ws_atom_list::load_from_file(qc_file_format eFileFormat,
+void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
                                   std::string sFileName,
                                   bool bAutoCenter){
 
@@ -318,7 +318,7 @@ void ws_atom_list::load_from_file(qc_file_format eFileFormat,
 
 }
 
-void ws_atom_list::rebuild_ngbt(){
+void ws_atom_list_t::rebuild_ngbt(){
 
   bNeedToRebuildNBT = false;
 }

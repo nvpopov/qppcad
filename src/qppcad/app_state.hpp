@@ -32,16 +32,16 @@ namespace qpp {
   ///
   /// \brief The app_state class
   ///
-  class app_state {
+  class app_state_t {
   public:
-    draw_pipeline* dp;
-    shader_program* def_shader;
-    shader_program* unit_line_shader;
-    shader_program* bond_shader;
-    shader_program* shaderLineMesh;
-    workspace_manager* wm;
-    ui_manager* _ui_manager;
-    camera* _camera;
+    draw_pipeline_t* dp;
+    shader_program_t* def_shader;
+    shader_program_t* unit_line_shader;
+    shader_program_t* bond_shader;
+    shader_program_t* shaderLineMesh;
+    workspace_manager_t* workspace_manager;
+    ui_manager_t* ui_manager;
+    camera_t* camera;
 
     double MouseX;
     double MouseY;
@@ -73,6 +73,7 @@ namespace qpp {
     vector3<float> vLightColor;
     vector3<float> vLightPosTr;
 
+
     bool bDrawAxis;
     bool bDrawGrid;
     bool bDebugDrawRTree;
@@ -90,16 +91,16 @@ namespace qpp {
     /// \brief update
     ///
     void update(){
-      if (_camera != nullptr){
-          _camera->update_camera();
-          vLightPosTr = mat4_to_mat3<float>(_camera->mView) * vLigthPos;
+      if (camera != nullptr){
+          camera->update_camera();
+          vLightPosTr = mat4_to_mat3<float>(camera->mView) * vLigthPos;
         }
     }
 
     ///
     /// \brief app_state
     ///
-    app_state(){
+    app_state_t(){
 
       FPS = 60;
 
@@ -119,9 +120,9 @@ namespace qpp {
       fAtomRadiusScaleFactor = 0.3f;
       fBondScaleFactor = 0.09f;
 
-      _camera = nullptr;
+      camera = nullptr;
 
-      dp = new draw_pipeline();
+      dp = new draw_pipeline_t();
 
       //default meshes
       _sph_meshes.push_back(mesh::generate_sphere_mesh(15, 15));
@@ -133,9 +134,9 @@ namespace qpp {
       bond_shader = gen_bond_draw_program();
       shaderLineMesh = gen_line_mesh_program();
 
-      wm = new workspace_manager();
-      wm->init_default_workspace();
-      _ui_manager = new ui_manager();
+      workspace_manager = new workspace_manager_t();
+      workspace_manager->init_default_workspace();
+      ui_manager = new ui_manager_t();
     }
 
   };

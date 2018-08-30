@@ -3,32 +3,32 @@
 
 using namespace qpp;
 
-draw_pipeline::draw_pipeline(){
+draw_pipeline_t::draw_pipeline_t(){
 
 }
 
-void draw_pipeline::load_pipeline(){
+void draw_pipeline_t::load_pipeline(){
 
 }
 
-void draw_pipeline::unload_pipeline(){
+void draw_pipeline_t::unload_pipeline(){
 
 }
 
-void draw_pipeline::render(){
+void draw_pipeline_t::render(){
 
 }
 
-void draw_pipeline::begin_atom_render(){
-  app_state* astate = &(c_app::get_state());
+void draw_pipeline_t::begin_atom_render(){
+  app_state_t* astate = &(c_app::get_state());
   astate->def_shader->begin_shader_program();
 }
 
-void draw_pipeline::render_atom(const vector3<float> &color,
+void draw_pipeline_t::render_atom(const vector3<float> &color,
                                 const vector3<float> &pos,
                                 const float radius){
 
-  app_state* astate = &(c_app::get_state());
+  app_state_t* astate = &(c_app::get_state());
   // std::cout<<"render_atom"<<std::endl;
 
   astate->def_shader->set_u(sp_u_name::vTranslate, (GLfloat*)(pos.data()));
@@ -36,11 +36,11 @@ void draw_pipeline::render_atom(const vector3<float> &color,
   astate->def_shader->set_u(sp_u_name::vColor, (GLfloat*)(color.data()));
 
   matrix4<float> mModelViewInvTr =
-      (astate->_camera->mView*matrix4<float>::Identity()).inverse().transpose();
+      (astate->camera->mView*matrix4<float>::Identity()).inverse().transpose();
   // our Model matrix equals unity matrix, so just pass matrix from app state
   astate->def_shader->set_u(sp_u_name::mModelViewProj,
-                            astate->_camera->mViewProjection.data());
-  astate->def_shader->set_u(sp_u_name::mModelView, astate->_camera->mView.data());
+                            astate->camera->mViewProjection.data());
+  astate->def_shader->set_u(sp_u_name::mModelView, astate->camera->mView.data());
   astate->def_shader->set_u(sp_u_name::mModelViewInvTr,
                             mModelViewInvTr.data());
 
@@ -49,21 +49,21 @@ void draw_pipeline::render_atom(const vector3<float> &color,
 
 }
 
-void draw_pipeline::end_atom_render(){
-  app_state* astate = &(c_app::get_state());
+void draw_pipeline_t::end_atom_render(){
+  app_state_t* astate = &(c_app::get_state());
   astate->def_shader->end_shader_program();
 }
 
-void draw_pipeline::begin_render_bond(){
-  app_state* astate = &(c_app::get_state());
+void draw_pipeline_t::begin_render_bond(){
+  app_state_t* astate = &(c_app::get_state());
   astate->bond_shader->begin_shader_program();
 }
 
-void draw_pipeline::render_bond(const vector3<float> &color,
+void draw_pipeline_t::render_bond(const vector3<float> &color,
                                 const vector3<float> &vBondStart,
                                 const vector3<float> &vBondEnd,
                                 const float fBondRadius){
-  app_state* astate = &(c_app::get_state());
+  app_state_t* astate = &(c_app::get_state());
 
   vector3<float> vBondEndNew = (vBondEnd - vBondStart)*(-0.498f) + vBondEnd;
 
@@ -78,10 +78,10 @@ void draw_pipeline::render_bond(const vector3<float> &color,
 
   matrix4<float> mModel = mModelTr  /** rotM * mModelSc */;
   matrix4<float> mModelViewInvTr =
-      (astate->_camera->mView * mModelTr).inverse().transpose(); /* * rotM*/;
+      (astate->camera->mView * mModelTr).inverse().transpose(); /* * rotM*/;
 
-  matrix4<float> mModelView = astate->_camera->mView * mModel;
-  matrix4<float> mModelViewProjection = astate->_camera->mViewProjection * mModel;
+  matrix4<float> mModelView = astate->camera->mView * mModel;
+  matrix4<float> mModelViewProjection = astate->camera->mViewProjection * mModel;
 
   astate->bond_shader->set_u(sp_u_name::mModelViewProj,
                              mModelViewProjection.data());
@@ -94,16 +94,16 @@ void draw_pipeline::render_bond(const vector3<float> &color,
 
 }
 
-void draw_pipeline::end_render_bond(){
-  app_state* astate = &(c_app::get_state());
+void draw_pipeline_t::end_render_bond(){
+  app_state_t* astate = &(c_app::get_state());
   astate->bond_shader->end_shader_program();
 }
 
-void draw_pipeline::render_molecule(){
+void draw_pipeline_t::render_molecule(){
 
 }
 
-void draw_pipeline::render_cell_3d(const vector3<float> &color,
+void draw_pipeline_t::render_cell_3d(const vector3<float> &color,
                                    const vector3<float> &a,
                                    const vector3<float> &b,
                                    const vector3<float> &c,
@@ -132,19 +132,19 @@ void draw_pipeline::render_cell_3d(const vector3<float> &color,
     }
 }
 
-void draw_pipeline::render_vector(){
+void draw_pipeline_t::render_vector(){
 
 }
 
-void draw_pipeline::render_primitive(){
+void draw_pipeline_t::render_primitive(){
 
 }
 
-void draw_pipeline::begin_render_aabb(){
+void draw_pipeline_t::begin_render_aabb(){
   begin_render_line();
 }
 
-void draw_pipeline::render_aabb(const vector3<float> &vColor,
+void draw_pipeline_t::render_aabb(const vector3<float> &vColor,
                                 const vector3<float> &vBoxMin,
                                 const vector3<float> &vBoxMax){
 
@@ -189,7 +189,7 @@ void draw_pipeline::render_aabb(const vector3<float> &vColor,
 
 }
 
-void draw_pipeline::render_aabb_segmented(const vector3<float> &vColor,
+void draw_pipeline_t::render_aabb_segmented(const vector3<float> &vColor,
                                           const vector3<float> &vBoxMin,
                                           const vector3<float> &vBoxMax){
 
@@ -256,20 +256,20 @@ void draw_pipeline::render_aabb_segmented(const vector3<float> &vColor,
 
 }
 
-void draw_pipeline::end_render_aabb(){
+void draw_pipeline_t::end_render_aabb(){
   end_render_line();
 }
 
-void draw_pipeline::begin_render_line(){
-  app_state* astate = &(c_app::get_state());
+void draw_pipeline_t::begin_render_line(){
+  app_state_t* astate = &(c_app::get_state());
   astate->unit_line_shader->begin_shader_program();
 }
 
-void draw_pipeline::render_line(const vector3<float> &color,
+void draw_pipeline_t::render_line(const vector3<float> &color,
                                 const vector3<float> &vStart,
                                 const vector3<float> &vEnd,
                                 const float fLineWidth){
-  app_state* astate = &(c_app::get_state());
+  app_state_t* astate = &(c_app::get_state());
 
   glLineWidth(fLineWidth);
   astate->unit_line_shader->set_u(sp_u_name::vColor,
@@ -279,17 +279,17 @@ void draw_pipeline::render_line(const vector3<float> &color,
   astate->unit_line_shader->set_u(sp_u_name::vLineEnd,
                                   (GLfloat*)vEnd.data());
   astate->unit_line_shader->set_u(sp_u_name::mModelViewProj,
-                                  astate->_camera->mViewProjection.data());
+                                  astate->camera->mViewProjection.data());
   astate->unit_line_shader->set_u(sp_u_name::mModelView,
-                                  astate->_camera->mView.data());
+                                  astate->camera->mView.data());
   astate->unit_line->render();
 
 
 }
 
-void draw_pipeline::end_render_line(){
+void draw_pipeline_t::end_render_line(){
    glLineWidth(1.0f);
-  app_state* astate = &(c_app::get_state());
+  app_state_t* astate = &(c_app::get_state());
   astate->unit_line_shader->end_shader_program();
 
 }
