@@ -31,24 +31,30 @@ namespace qpp {
                         const vector3<float> &a,
                         const vector3<float> &b,
                         const vector3<float> &c,
-                        const float fLineWidth);
+                        const float line_width);
     void render_vector();
     void render_primitive();
 
+    void begin_render_cube();
+    void render_cube(const vector3<float> &cube_pos,
+                     const vector3<float> &cube_size,
+                     const vector3<float> &cube_color);
+    void end_render_cube();
+
     void begin_render_aabb();
-    void render_aabb(const vector3<float> &vColor,
-                     const vector3<float> &vBoxMin,
-                     const vector3<float> &vBoxMax);
-    void render_aabb_segmented(const vector3<float> &vColor,
-                               const vector3<float> &vBoxMin,
-                               const vector3<float> &vBoxMax);
+    void render_aabb(const vector3<float> &color,
+                     const vector3<float> &box_min,
+                     const vector3<float> &box_max);
+    void render_aabb_segmented(const vector3<float> &color,
+                               const vector3<float> &box_min,
+                               const vector3<float> &box_max);
     void end_render_aabb();
 
     void begin_render_line();
     void render_line(const vector3<float> &color,
-                     const vector3<float> &vStart,
-                     const vector3<float> &vEnd,
-                     const float fLineWidth = 1.0f);
+                     const vector3<float> &line_start,
+                     const vector3<float> &line_end,
+                     const float line_width = 1.0f);
     void end_render_line();
   };
 

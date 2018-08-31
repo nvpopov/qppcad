@@ -11,6 +11,9 @@ ws_item_t::ws_item_t(workspace_t* parent){
   vRotation = vector3<float>(0.0f, 0.0f, 0.0f);
   bSelected = false;
   parent_ws = parent;
+
+  b_show = true;
+  b_draw_cell = true;
 }
 
 void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
@@ -54,9 +57,12 @@ void ws_item_t::render(){
 }
 
 void ws_item_t::render_ui(){
+  ImGui::Text("General properties:");
+  ImGui::Spacing();
   char * s_item_name = new char[60];
   strcpy(s_item_name, name.c_str());
   ImGui::InputText("Item name", s_item_name, 60);
+  ImGui::Checkbox("Draw workspace item", &b_show);
   if (name != s_item_name) set_name(s_item_name);
   delete[] s_item_name;
 }

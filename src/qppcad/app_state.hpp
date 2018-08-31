@@ -15,6 +15,7 @@
 #include <qppcad/ui_manager.hpp>
 #include <qppcad/gl_math.hpp>
 #include <qppcad/camera.hpp>
+#include <qppcad/gizmo.hpp>
 #include <geom/lace3d.hpp>
 
 namespace qpp {
@@ -34,14 +35,14 @@ namespace qpp {
   ///
   class app_state_t {
   public:
-    draw_pipeline_t* dp;
-    shader_program_t* def_shader;
-    shader_program_t* unit_line_shader;
-    shader_program_t* bond_shader;
-    shader_program_t* shaderLineMesh;
+    draw_pipeline_t*     dp;
+    shader_program_t*    default_program;
+    shader_program_t*    unit_line_program;
+    shader_program_t*    line_mesh_program;
+    shader_program_t*    mvp_ssl_program;
     workspace_manager_t* workspace_manager;
-    ui_manager_t* ui_manager;
-    camera_t* camera;
+    ui_manager_t*        ui_manager;
+    camera_t*            camera;
 
     double MouseX;
     double MouseY;
@@ -57,6 +58,7 @@ namespace qpp {
     mesh_t* unit_line;
     mesh_t* trm;
     mesh_t* gridXZ;
+    mesh_t* unit_cube;
 
     int FPS;
 
@@ -127,12 +129,14 @@ namespace qpp {
       //default meshes
       _sph_meshes.push_back(mesh_t::generate_sphere_mesh(15, 15));
       cylinder_mesh = mesh_t::generate_cylinder_whole(12, 4);
-      unit_line = mesh_t::generate_unit_line();
-      gridXZ = mesh_t::generate_xz_plane(20, 0.5, 20, 0.5);
-      def_shader = gen_default_program();
-      unit_line_shader = gen_unit_line_program();
-      bond_shader = gen_bond_draw_program();
-      shaderLineMesh = gen_line_mesh_program();
+      unit_line     = mesh_t::generate_unit_line();
+      gridXZ        = mesh_t::generate_xz_plane(20, 0.5, 20, 0.5);
+      unit_cube     = mesh_t::generate_unit_cube();
+
+      default_program       = gen_default_program();
+      unit_line_program = gen_unit_line_program();
+      line_mesh_program   = gen_line_mesh_program();
+      mvp_ssl_program  = gen_mv_screen_space_lighting_program();
 
       workspace_manager = new workspace_manager_t();
       workspace_manager->init_default_workspace();

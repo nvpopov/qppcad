@@ -21,7 +21,7 @@ mesh_t::mesh_t(){
 
 void mesh_t::render(){
   glBindVertexArray(vao);
-  glDrawElements(mesh_rt, num_vertices, GL_UNSIGNED_INT, 0);
+  glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, 0);
 
   glBindVertexArray(0);
 }
@@ -50,8 +50,8 @@ void mesh_t::bind_data(){
   glBindVertexArray(0);
 
   std::cout << fmt::format("Binded data to mesh with vs={}, ns={}, is={}", vertecies.size(),
-                 normals.size(),
-                 indices.size()) << std::endl;
+                           normals.size(),
+                           indices.size()) << std::endl;
 }
 
 mesh_t* mesh_t::generate_sphere_mesh(const int lat_bands, const int long_bands){
@@ -103,7 +103,7 @@ mesh_t* mesh_t::generate_sphere_mesh(const int lat_bands, const int long_bands){
 
         }
     }
-  _mesh->num_vertices = _mesh->indices.size()*3;
+  _mesh->num_primitives = _mesh->indices.size()*3;
   _mesh->bind_data();
   return _mesh;
 }
@@ -114,7 +114,7 @@ mesh_t *mesh_t::generate_cylinder_whole(const int num_phi, const int num_z){
   float R = 1.0f;
 
   float dZ = 1.0f/(num_z - 1);
-  float dPhi = (2.0f*qpp::pi)/(num_phi - 1);
+  float dPhi = (2.0f * qpp::pi) / (num_phi - 1);
   size_t id = 0;
   int numIdx = 0;
 
@@ -134,10 +134,10 @@ mesh_t *mesh_t::generate_cylinder_whole(const int num_phi, const int num_z){
           vector3<float> n2(R*cos(phiN),R*sin(phiN), zC);
           vector3<float> n3(R*cos(phiN),R*sin(phiN), zN);
           vector3<float> n4(R*cos(phiC),R*sin(phiC), zN);
-//          std::cout << p1 << std::endl << std::endl
-//                    << p2 << std::endl << std::endl
-//                    << p3 << std::endl << std::endl
-//                    << p4 << std::endl << std::endl;
+          //          std::cout << p1 << std::endl << std::endl
+          //                    << p2 << std::endl << std::endl
+          //                    << p3 << std::endl << std::endl
+          //                    << p4 << std::endl << std::endl;
           dump_vector3_to_vector<float>(_mesh->vertecies, p1);
           dump_vector3_to_vector<float>(_mesh->vertecies, p2);
           dump_vector3_to_vector<float>(_mesh->vertecies, p3);
@@ -162,9 +162,7 @@ mesh_t *mesh_t::generate_cylinder_whole(const int num_phi, const int num_z){
         }
     }
 
-  _mesh->num_vertices = _mesh->indices.size()*3;
-    std::cout<<_mesh->num_vertices<<std::endl;
-  //  std::cout<<_mesh->vertexData[6]<<std::endl;
+  _mesh->num_primitives = _mesh->indices.size()*3;
   _mesh->bind_data();
   return _mesh;
 }
@@ -183,11 +181,110 @@ mesh_t *mesh_t::generate_unit_line(){
     }
 
   for(int i = 0; i < 2; i++) _mesh->indices.push_back(i);
-  _mesh->num_vertices = 2;
+  _mesh->num_primitives = 2;
   _mesh->bind_data();
   _mesh->mesh_rt = GL_LINES;
   return _mesh;
 
+}
+
+mesh_t *mesh_t::generate_unit_cube(){
+  mesh_t* _mesh = new mesh_t();
+  float cv[] = {
+    -1.0f,-1.0f,-1.0f,
+    -1.0f,-1.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f,
+    -1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f, 1.0f,
+    -1.0f,-1.0f,-1.0f,
+    1.0f,-1.0f,-1.0f,
+    1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f,
+    -1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f, 1.0f,
+    -1.0f,-1.0f, 1.0f,
+    -1.0f,-1.0f,-1.0f,
+    -1.0f, 1.0f, 1.0f,
+    -1.0f,-1.0f, 1.0f,
+    1.0f,-1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f,-1.0f,-1.0f,
+    1.0f, 1.0f,-1.0f,
+    1.0f,-1.0f,-1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f,-1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f,-1.0f,
+    -1.0f, 1.0f,-1.0f,
+    1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f,-1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f,
+    1.0f,-1.0f, 1.0f
+  };
+
+  //  for (uint8_t i = 0; i < 8; i++){
+  //     _mesh->vertecies.push_back(cube_vertices[i*3]);
+  //     _mesh->vertecies.push_back(cube_vertices[i*3 + 1]);
+  //     _mesh->vertecies.push_back(cube_vertices[i*3 + 2]);
+
+  //     vector3<float> _n = vector3<float>(cube_vertices[i*3], cube_vertices[i*3 + 1],
+  //         cube_vertices[i*3 + 2]).normalized();
+
+  //     _mesh->normals.push_back(_n[0]);
+  //     _mesh->normals.push_back(_n[1]);
+  //     _mesh->normals.push_back(_n[2]);
+  //    }
+
+  for (uint8_t i = 0 ; i < 12; i++){
+      _mesh->vertecies.push_back(cv[i*9]);
+      _mesh->vertecies.push_back(cv[i*9+1]);
+      _mesh->vertecies.push_back(cv[i*9+2]);
+
+      _mesh->vertecies.push_back(cv[(i*9)+3]);
+      _mesh->vertecies.push_back(cv[(i*9)+4]);
+      _mesh->vertecies.push_back(cv[(i*9)+5]);
+
+      _mesh->vertecies.push_back(cv[(i*9)+6]);
+      _mesh->vertecies.push_back(cv[(i*9)+7]);
+      _mesh->vertecies.push_back(cv[(i*9)+8]);
+
+
+      vector3<float> pos1(cv[i*9],     cv[i*9+1],     cv[i*9+2]);
+      vector3<float> pos2(cv[(i*9)+3], cv[(i*9)+4],   cv[(i*9)+5]);
+      vector3<float> pos3(cv[(i*9)+6], cv[(i*9)+7],   cv[(i*9)+8]);
+
+      vector3<float> surf_normal = ((pos2-pos1).cross(pos3-pos1)).normalized();
+
+      _mesh->normals.push_back(surf_normal[0]);
+      _mesh->normals.push_back(surf_normal[1]);
+      _mesh->normals.push_back(surf_normal[2]);
+
+      _mesh->normals.push_back(surf_normal[0]);
+      _mesh->normals.push_back(surf_normal[1]);
+      _mesh->normals.push_back(surf_normal[2]);
+
+      _mesh->normals.push_back(surf_normal[0]);
+      _mesh->normals.push_back(surf_normal[1]);
+      _mesh->normals.push_back(surf_normal[2]);
+
+      _mesh->indices.push_back(i*3);
+      _mesh->indices.push_back((i*3) + 1);
+      _mesh->indices.push_back((i*3) + 2);
+
+
+    }
+
+  _mesh->num_primitives = 36;
+  _mesh->bind_data();
+  _mesh->mesh_rt = GL_TRIANGLES;
+  return _mesh;
 }
 
 mesh_t *mesh_t::generate_xz_plane(const int n_x,const float dx, const int n_z, const float dz){
@@ -229,11 +326,11 @@ mesh_t *mesh_t::generate_xz_plane(const int n_x,const float dx, const int n_z, c
       _mesh->normals.push_back(0.0);
     }
 
-  _mesh->num_vertices = _mesh->vertecies.size() / 2;
+  _mesh->num_primitives = _mesh->vertecies.size() / 2;
 
-  for (int i = 0; i < _mesh->num_vertices; i++){
-     _mesh->indices.push_back(i * 2 );
-     _mesh->indices.push_back(i * 2 + 1);
+  for (int i = 0; i < _mesh->num_primitives; i++){
+      _mesh->indices.push_back(i * 2 );
+      _mesh->indices.push_back(i * 2 + 1);
     }
 
 

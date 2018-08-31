@@ -47,34 +47,33 @@ void ws_atom_list_t::update(){
 void ws_atom_list_t::render(){
   ws_item_t::render();
   //we need it for lambda fn
+
   app_state_t* astate = &(c_app::get_state());
 
   if (app_state_c->dp != nullptr){
 
       if (astate->bDebugDrawRTree){
           astate->dp->begin_render_aabb();
-          tws_tr->apply_visitor(
-                [astate](tws_node<float> *inNode, int deepLevel){
-            astate->dp->render_aabb(clr_maroon, inNode->bb.min, inNode->bb.max);
-          });
-
+          tws_tr->apply_visitor( [astate](tws_node<float> *inNode, int deepLevel){
+            astate->dp->render_aabb(clr_maroon, inNode->bb.min, inNode->bb.max);});
           astate->dp->end_render_aabb();
         }
 
-      if (geom->DIM == 3){
+      if (geom->DIM == 3 && b_show && b_draw_cell){
           astate->dp->begin_render_line();
           vector3<float> cell_clr = clr_black;
           if (bSelected){
-              if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-                cell_clr = clr_red;
-              if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
-                cell_clr = clr_lime;
+              if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)  cell_clr = clr_red;
+              if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) cell_clr =clr_lime;
             }
 
             app_state_c->dp->render_cell_3d(
                   cell_clr, geom->cell.v[0], geom->cell.v[1],geom->cell.v[2], 1.1f);
           astate->dp->end_render_line();
         }
+
+      if (!b_show) return;
+
 
       // atom render start
       astate->dp->begin_atom_render();
@@ -154,6 +153,7 @@ void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
 
 void ws_atom_list_t::render_ui(){
   ws_item_t::render_ui();
+  if (geom->DIM > 0) ImGui::Checkbox("Draw periodic cell", &b_draw_cell);
 }
 
 bool ws_atom_list_t::mouse_click(ray<float> *ray){

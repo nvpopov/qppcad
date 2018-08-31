@@ -69,17 +69,22 @@ void workspace_t::set_best_view(){
 
 void workspace_t::render(){
 
-  if (bFirstRender) {
+
+  if (first_render) {
       set_best_view();
-      bFirstRender = false;
+      first_render = false;
     }
 
   app_state_t* astate = &(c_app::get_state());
 
+  if (gizmo->is_active){
+      gizmo->render();
+    }
+
   if (astate->bDebugDrawSelectionRay){
       astate->dp->begin_render_line();
-      astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0),debugRay.start,
-                      debugRay.start+debugRay.dir*55.0);
+      astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), ray_debug.start,
+                      ray_debug.start+ray_debug.dir*55.0);
       astate->dp->end_render_line();
     }
 
@@ -88,21 +93,21 @@ void workspace_t::render(){
 
       ///// Draw grid /////
       if (astate->bDrawGrid){
-          astate->shaderLineMesh->begin_shader_program();
+          astate->line_mesh_program->begin_shader_program();
           vector3<float> color(0.75, 0.75, 0.75);
-          astate->shaderLineMesh->set_u(sp_u_name::m_model_view_proj,
+          astate->line_mesh_program->set_u(sp_u_name::m_model_view_proj,
                                         astate->camera->mViewProjection.data());
-          astate->shaderLineMesh->set_u(sp_u_name::m_model_view, astate->camera->mView.data());
-          astate->shaderLineMesh->set_u(sp_u_name::v_color, (GLfloat*)color.data());
+          astate->line_mesh_program->set_u(sp_u_name::m_model_view, astate->camera->mView.data());
+          astate->line_mesh_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
 
           for (int dx = -4; dx <= 4; dx++)
             for (int dz = -4; dz <= 4; dz++){
                 vector3<float> vTr(dx * (20.0f * 0.5f), dz * (20.0f * 0.5f), 0.0f );
-                astate->shaderLineMesh->set_u(sp_u_name::v_translate, (GLfloat*)vTr.data());
+                astate->line_mesh_program->set_u(sp_u_name::v_translate, (GLfloat*)vTr.data());
                 astate->gridXZ->render();
 
               }
-          astate->shaderLineMesh->end_shader_program();
+          astate->line_mesh_program->end_shader_program();
         }
       ///// Draw grid /////
 
@@ -140,8 +145,8 @@ void workspace_t::render(){
 }
 
 void workspace_t::mouse_click(const double fMouseX, const double fMouseY){
-  debugRay.dir = (camera->unproject(fMouseX, fMouseY) - camera->vViewPoint).normalized();
-  debugRay.start = camera->vViewPoint;
+  ray_debug.dir = (camera->unproject(fMouseX, fMouseY) - camera->vViewPoint).normalized();
+  ray_debug.start = camera->vViewPoint;
 
   bool bHitAny = false;
 
@@ -149,7 +154,7 @@ void workspace_t::mouse_click(const double fMouseX, const double fMouseY){
     for (ws_item_t* ws_it : ws_items) ws_it->bSelected = false;
 
   for (ws_item_t* ws_it : ws_items){
-      bool bWsHit = ws_it->mouse_click(&debugRay);
+      bool bWsHit = ws_it->mouse_click(&ray_debug);
       bHitAny = bHitAny || bWsHit;
       if ((bWsHit) && (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
           && ws_it->support_selection()) ws_it->bSelected = true;

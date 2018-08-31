@@ -105,9 +105,9 @@ namespace qpp {
   shader_program_t* gen_default_program();
 
   shader_program_t* gen_unit_line_program();
-  shader_program_t* gen_bond_draw_program();
   shader_program_t* gen_line_mesh_program();
   shader_program_t* gen_screen_space_lighting_program();
+  shader_program_t *gen_mv_screen_space_lighting_program();
 }
 #endif
 

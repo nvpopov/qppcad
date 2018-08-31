@@ -17,6 +17,7 @@ add_subdirectory(deps/glfw)
 include_directories(deps/glfw/include)
 include_directories(deps/glfw/deps)
 include_directories(src/)
+include_directories(data/)
 include_directories(deps/imgui)
 include_directories(deps/imgui/misc/freetype)
 include_directories(deps/imgui/examples)
@@ -49,6 +50,7 @@ add_executable(qppcad
     src/qppcad/action.cpp
     src/qppcad/gl_math.cpp
     src/qppcad/ui_manager.cpp
+    src/qppcad/gizmo.cpp
     deps/imgui/misc/freetype/imgui_freetype.cpp
     deps/imgui/examples/imgui_impl_glfw.cpp
     deps/imgui/examples/imgui_impl_opengl3.cpp

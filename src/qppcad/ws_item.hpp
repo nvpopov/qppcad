@@ -23,6 +23,8 @@ namespace qpp{
       vector3<float> vPosition;
       vector3<float> vScale;
       vector3<float> vRotation;
+      bool b_show;
+      bool b_draw_cell;
       bool bSelected;
       ws_item_t(workspace_t* parent);
       virtual void vote_for_view_vectors(vector3<float> &vOutLookPos,
