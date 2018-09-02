@@ -155,6 +155,54 @@ void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
 void ws_atom_list_t::render_ui(){
   ws_item_t::render_ui();
   if (geom->DIM > 0) ImGui::Checkbox("Draw periodic cell", &b_draw_cell);
+  ImGui::Spacing();
+  ImGui::Separator();
+  ImGui::Text("Summary:");
+  ImGui::Separator();
+  ImGui::Columns(2);
+  ImGui::Text("Total atoms:");
+  ImGui::Text("Atom types:");
+  ImGui::NextColumn();
+  ImGui::Text(fmt::format("{}", geom->nat()).c_str());
+  ImGui::Text(fmt::format("{}", geom->n_atom_types()).c_str());
+  ImGui::Columns(1);
+
+  ImGui::Spacing();
+  ImGui::Separator();
+  ImGui::Columns(3);
+  ImGui::Text("Atom type");
+  ImGui::NextColumn();
+  ImGui::Text("Count");
+  ImGui::NextColumn();
+  ImGui::Text("Color");
+  ImGui::NextColumn();
+  ImGui::Separator();
+  for (uint8_t i = 0; i < geom->n_types(); i++){
+      ImGui::Text(geom->atom_of_type(i).c_str());
+    }
+  ImGui::NextColumn();
+
+  for (uint8_t i = 0; i < geom->n_types(); i++){
+      ImGui::Text(fmt::format("{}",geom->get_atom_count_by_type(i)).c_str());
+    }
+  ImGui::NextColumn();
+
+  ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+  for (uint8_t i = 0; i < geom->n_types(); i++){
+      const ImVec2 p = ImGui::GetCursorScreenPos();
+      float p_x = p.x + 8 + 6;
+      float p_y = p.y + 8;
+      ImVec2 p_n(p_x, p_y);
+      int ap_idx = ptable::number_by_symbol(geom->atom_of_type(i));
+      vector3<float> bc(0.0, 0.0, 1.0);
+      if(ap_idx != -1) {bc = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
+      draw_list->AddCircleFilled(p_n, 8, ImColor(ImVec4(bc[0], bc[1], bc[2], 1.0f)));
+      ImGui::Dummy(ImVec2(16, 16));
+    }
+  ImGui::NextColumn();
+
+  ImGui::Columns(1);
 }
 
 bool ws_atom_list_t::mouse_click(ray<float> *click_ray){

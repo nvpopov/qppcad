@@ -11,8 +11,9 @@ ui_manager_t::ui_manager_t(){
 
 void ui_manager_t::setup_style(){
   ImGuiStyle * style = &ImGui::GetStyle();
-  style->FrameRounding = 4.0f;
-  style->ScrollbarRounding = 3.0f;
+  style->FrameRounding = 2.0f;
+  style->ScrollbarRounding = 2.0f;
+  style->FrameBorderSize = 1.0f;
   //style->Colors[ImGuiCol_Button] = ImVec4(0.40f, 0.39f, 0.12f, 1.00f);
 }
 
@@ -120,8 +121,11 @@ void ui_manager_t::render_main_menu(){
       ImGui::PopStyleVar();
 
       int e_task = c_app::get_state().cur_task;
+
       ImGui::Separator();
       ImGui::SameLine();
+      //ImGui::Set
+      ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5,15));
       ImGui::RadioButton("Workspace editor", &e_task,
                          int(app_task_type::TASK_WORKSPACE_EDITOR));
       ImGui::SameLine();
@@ -133,6 +137,7 @@ void ui_manager_t::render_main_menu(){
       c_app::get_state().cur_task = app_task_type(e_task);
       ImGui::Separator();
       ImGui::SameLine();
+      ImGui::PopStyleVar();
 
       //
       int iCurWS = astate->workspace_manager->iCurrentWorkSpace;

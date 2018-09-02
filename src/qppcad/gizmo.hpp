@@ -5,6 +5,7 @@
 #include <geom/ray.hpp>
 #include <geom/primitive_intersections.hpp>
 #include <qppcad/ws_item.hpp>
+#include <data/color.hpp>
 
 namespace qpp {
 
@@ -14,12 +15,20 @@ namespace qpp {
     vector3<float>(0, 0, 1)
   };
 
+  const vector3<float> gizmo_color[3] = {
+    clr_red,
+    clr_green,
+    clr_navy
+  };
+
   class gizmo_t {
     public:
       vector3<float> pos;
       float gizmo_box_size;
       float gizmo_shift_magnitude;
       bool is_active;
+      bool interact_at_the_moment;
+
       uint8_t touched_axis;
       std::array<aabb_3d<float>,3> bx;
       std::array<bool, 3> bx_touched;

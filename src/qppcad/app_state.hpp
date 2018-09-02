@@ -93,7 +93,7 @@ namespace qpp {
       mouse_y_old = mouse_y;
       mouse_x = _mcx;
       mouse_y = _mcy;
-      std::cout << fmt::format("msx xo {} yo {} x {} y {}\n", mouse_x_old, mouse_y_old, mouse_x, mouse_y);
+      //std::cout << fmt::format("msx xo {} yo {} x {} y {}\n", mouse_x_old, mouse_y_old, mouse_x, mouse_y);
     }
 
     ///
