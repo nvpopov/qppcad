@@ -6,9 +6,9 @@
 using namespace qpp;
 
 ws_item_t::ws_item_t(workspace_t* parent){
-  vPosition = vector3<float>(0.0f, 0.0f, 0.0f);
-  vScale    = vector3<float>(1.0f, 1.0f, 1.0f);
-  vRotation = vector3<float>(0.0f, 0.0f, 0.0f);
+  pos = vector3<float>(0.0f, 0.0f, 0.0f);
+  scale    = vector3<float>(1.0f, 1.0f, 1.0f);
+  rotation = vector3<float>(0.0f, 0.0f, 0.0f);
   bSelected = false;
   parent_ws = parent;
 
@@ -45,11 +45,11 @@ void ws_item_t::render(){
           app_state_c->dp->begin_render_aabb();
           if (parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
             app_state_c->dp->render_aabb(clr_fuchsia,
-                                    aabb.min ,
-                                    aabb.max  );
+                                    pos + aabb.min ,
+                                    pos + aabb.max  );
           else app_state_c->dp->render_aabb_segmented(clr_olive,
-                                              aabb.min ,
-                                              aabb.max  );
+                                              pos + aabb.min ,
+                                              pos + aabb.max  );
           app_state_c->dp->end_render_aabb();
         }
     }
@@ -67,7 +67,8 @@ void ws_item_t::render_ui(){
   delete[] s_item_name;
 }
 
-void ws_item_t::update(){
+
+void ws_item_t::update(float delta_time){
 
 }
 

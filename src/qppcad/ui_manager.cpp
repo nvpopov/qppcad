@@ -9,13 +9,20 @@ ui_manager_t::ui_manager_t(){
   iWorkPanelYOffset = 28;
 }
 
+void ui_manager_t::setup_style(){
+  ImGuiStyle * style = &ImGui::GetStyle();
+  style->FrameRounding = 4.0f;
+  style->ScrollbarRounding = 3.0f;
+  //style->Colors[ImGuiCol_Button] = ImVec4(0.40f, 0.39f, 0.12f, 1.00f);
+}
+
 void ui_manager_t::render_ui(){
   render_main_menu();
   render_task_panel();
   if(c_app::get_state().cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
       render_work_panel();
       render_ws_tabs();
-      render_object_inspector();
+      if (c_app::get_state().show_object_inspector) render_object_inspector();
     }
 
   if(c_app::get_state().cur_task == app_task_type::TASK_MENDELEY_TABLE){
@@ -243,6 +250,10 @@ void ui_manager_t::render_work_panel(){
       ImGui::Button("Undo" , ImVec2(40,20));
       ImGui::Button("Redo" , ImVec2(40,20));
       ImGui::Separator();
+
+      ImGui::Checkbox("Inspector", &(c_app::get_state().show_object_inspector));
+      ImGui::Separator();
+
     }
 
 

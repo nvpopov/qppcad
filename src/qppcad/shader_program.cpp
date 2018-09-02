@@ -105,7 +105,7 @@ void qpp::shader_program_t::begin_shader_program(){
   set_u(sp_u_name::mModelView, c_app::get_state().mView.data());
   set_u(sp_u_name::mViewInvTr, c_app::get_state().mViewInvTr.data());
   */
-   set_u(sp_u_name::v_light_pos, c_app::get_state().vLightPosTr.data());
+   set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
   //std::cout<<std::endl<<c_app::get_state().mView<<std::endl;
 }
 

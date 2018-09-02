@@ -33,14 +33,14 @@ namespace qpp{
 
       void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                  vector3<float> &vOutLookAt) override ;
-      void update() override;
+      void geometry_changed();
       void render() override;
       void render_atom(const uint16_t atNum, const index &atIndex);
       void render_bond(const uint16_t atNum1, const index &atIndex1,
                        const uint16_t atNum2, const index &atIndex2);
 
       void render_ui() override;
-      bool mouse_click(ray<float> *ray) override;
+      bool mouse_click(ray<float> *click_ray) override;
 
       bool support_translation() override;
       bool support_rotation() override;
@@ -49,7 +49,7 @@ namespace qpp{
       bool support_selection() override;
       bool support_rendering_bounding_box() override;
       std::string compose_item_name() override;
-
+      void update(float delta_time) override;
       float get_bb_prescaller() override;
 
       void shift(const vector3<float> vShift);

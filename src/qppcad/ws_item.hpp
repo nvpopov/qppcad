@@ -15,14 +15,14 @@ namespace qpp{
 
   class ws_item_t {
     protected:
-      workspace_t* parent_ws;
+      workspace_t *parent_ws;
     public:
       app_state_t *app_state_c;
       std::string name;
       aabb_3d<float> aabb;
-      vector3<float> vPosition;
-      vector3<float> vScale;
-      vector3<float> vRotation;
+      vector3<float> pos;
+      vector3<float> scale;
+      vector3<float> rotation;
       bool b_show;
       bool b_draw_cell;
       bool bSelected;
@@ -37,7 +37,6 @@ namespace qpp{
       virtual void render();
       virtual void render_ui();
       virtual bool mouse_click(ray<float> *ray) = 0;
-      virtual void update();
       virtual bool support_translation() = 0;
       virtual bool support_rotation() = 0;
       virtual bool support_scaling() = 0;
@@ -45,7 +44,7 @@ namespace qpp{
       virtual bool support_selection() = 0;
       virtual bool support_rendering_bounding_box() = 0;
       virtual std::string compose_item_name() = 0;
-
+      virtual void update(float delta_time);
       virtual float get_bb_prescaller();
       virtual ~ws_item_t(){ }
   };

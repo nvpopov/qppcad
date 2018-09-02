@@ -102,21 +102,27 @@ void qpp::c_app::run(){
   glCullFace(GL_BACK);
   /// main app cycle
 
-  float previousTime = glfwGetTime();
-  int frameCount = 0;
+  float previous_time = glfwGetTime();
+  int frame_count = 0;
+
+  double _mouse_x, _mouse_y;
 
   while (!glfwWindowShouldClose(qpp::c_app::curWindow)){
+
       if(!glfwGetWindowAttrib(qpp::c_app::curWindow, GLFW_ICONIFIED)){
           glfwPollEvents();
-          float currentTime = glfwGetTime();
-          frameCount++;
-          if ( currentTime - previousTime >= 1.0f ){
-              astate->FPS = frameCount;
-              frameCount = 0;
-              previousTime = currentTime;
+          float current_time = glfwGetTime();
+          float delta_time = current_time - previous_time;
+          frame_count++;
+          if ( delta_time >= 1.0f ){
+              astate->FPS = frame_count;
+              frame_count = 0;
+              previous_time = current_time;
             }
 
-          astate->update();
+          glfwGetCursorPos(c_app::curWindow, &_mouse_x, &_mouse_y);
+          astate->update_mouse_coord(_mouse_x, _mouse_y);
+          astate->update(delta_time);
 
           qpp::c_app::begin_render();
           qpp::c_app::render();
@@ -167,12 +173,16 @@ void qpp::c_app::end_render(){
 
 void qpp::c_app::render(){
   app_state_t* astate = &(c_app::get_state());
+  float _viewport_w = 0.0f;
+  if (!astate->show_object_inspector) _viewport_w = astate->ui_manager->iObjInspWidth;
+
   glViewport(astate->vViewportXY(0),
              astate->vViewportXY(1),
-             astate->vViewportWidthHeight(0),
+             astate->vViewportWidthHeight(0)+_viewport_w,
              astate->vViewportWidthHeight(1));
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR)
     astate->workspace_manager->render_current_workspace();
+
   glViewport(0, 0, astate->wWidth, astate->wHeight);
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -203,7 +213,7 @@ void qpp::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, doubl
 
 void qpp::c_app::mouse_callback(GLFWwindow *window, double x, double y){
   //std::cout<<x<<" "<<y<<std::endl;
-  qpp::c_app::get_state().update_mouse_coord(x, y);
+  //qpp::c_app::get_state().update_mouse_coord(x, y);
 }
 
 void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
@@ -211,8 +221,14 @@ void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int actio
   if ((astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR) &&
       (astate->camera != nullptr)){
 
-      if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+      if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+          astate->mouse_lb_pressed = true;
           astate->workspace_manager->mouse_click();
+        }
+
+      if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+          astate->mouse_lb_pressed = false;
+
 
       astate->camera->update_camera_rotation(
             button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS);

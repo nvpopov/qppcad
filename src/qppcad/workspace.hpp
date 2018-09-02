@@ -18,17 +18,10 @@ namespace qpp{
   class workspace_t;
   class ws_item_t;
 
-  enum ws_periodic {
-    ws_periodic_a,
-    ws_periodic_b,
-    ws_periodic_c
-  };
-
   enum ws_edit_type {
     EDIT_WS_ITEM = 0,
     EDIT_WS_ITEM_CONTENT = 1
   };
-
 
   /// workspace manager
   class workspace_manager_t {
@@ -77,6 +70,7 @@ namespace qpp{
     void render();
     void mouse_click(const double fMouseX, const double fMouseY);
     void add_item_to_workspace(ws_item_t *item_to_add);
+    void update(float delta_time);
   };
 
 

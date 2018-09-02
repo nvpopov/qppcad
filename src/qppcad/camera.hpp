@@ -58,7 +58,7 @@ namespace qpp{
 
     void reset_camera();
     void update_camera();
-    void update_camera_zoom(const double _dist);
+    void update_camera_zoom(const float _dist);
     void update_camera_translation(const bool _bMoveCamera);
     void update_camera_rotation(bool _bRotateCamera);
 

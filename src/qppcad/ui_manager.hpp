@@ -18,6 +18,7 @@ namespace qpp{
     int iWorkPanelYOffset;
     int iObjInspWidth;
     ui_manager_t();
+    void setup_style();
     void render_ui();
     void render_main_menu();
     void render_work_panel();

@@ -44,10 +44,10 @@ namespace qpp {
     ui_manager_t*        ui_manager;
     camera_t*            camera;
 
-    double MouseX;
-    double MouseY;
-    double MouseOldX;
-    double MouseOldY;
+    float mouse_x;
+    float mouse_y;
+    float mouse_x_old;
+    float mouse_y_old;
 
     app_task_type cur_task;
     //app_edit_type cur_edit_type;
@@ -71,32 +71,44 @@ namespace qpp {
     vector2<float> vViewportXY;
     vector2<float> vViewportWidthHeight;
 
-    vector3<float> vLigthPos;
-    vector3<float> vLightColor;
-    vector3<float> vLightPosTr;
+    vector3<float> light_pos;
+    vector3<float> light_color;
+    vector3<float> light_pos_tr;
 
+    bool mouse_lb_pressed;
 
     bool bDrawAxis;
     bool bDrawGrid;
     bool bDebugDrawRTree;
     bool bDebugDrawSelectionRay;
-
+    bool show_object_inspector;
     ///
     /// \brief update_mouse_coord
     /// \param _mcx
     /// \param _mcy
     ///
-    void update_mouse_coord(const double _mcx, const double _mcy){
-      MouseX = _mcx; MouseY = _mcy;}
+    void update_mouse_coord(const float _mcx, const float _mcy){
+
+      mouse_x_old = mouse_x;
+      mouse_y_old = mouse_y;
+      mouse_x = _mcx;
+      mouse_y = _mcy;
+      std::cout << fmt::format("msx xo {} yo {} x {} y {}\n", mouse_x_old, mouse_y_old, mouse_x, mouse_y);
+    }
 
     ///
     /// \brief update
     ///
-    void update(){
+    void update(float delta_time){
+
       if (camera != nullptr){
           camera->update_camera();
-          vLightPosTr = mat4_to_mat3<float>(camera->mView) * vLigthPos;
+          light_pos_tr = mat4_to_mat3<float>(camera->mView) * light_pos;
         }
+
+      workspace_t *cur_ws = workspace_manager->get_current_workspace();
+      if (cur_ws) cur_ws->update(delta_time);
+
     }
 
     ///
@@ -109,13 +121,15 @@ namespace qpp {
       cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
       //cur_edit_type = app_edit_type::EDIT_WS_ITEM_CONTENT;
 
-      bDrawAxis = true;
-      bDrawGrid = false;
-      bDebugDrawRTree = false;
+      bDrawAxis              = true;
+      bDrawGrid              = false;
+      bDebugDrawRTree        = false;
       bDebugDrawSelectionRay = false;
+      show_object_inspector  = true;
+      mouse_lb_pressed       = false;
 
-      vLigthPos = vector3<float>(0, 25.0, 25.0);
-      vLightPosTr = vector3<float>(0, 0, 0);
+      light_pos    = vector3<float>(0, 25.0, 25.0);
+      light_pos_tr = vector3<float>(0, 0, 0);
 
       wWidth  = 600;
       wHeight = 600;
@@ -141,6 +155,7 @@ namespace qpp {
       workspace_manager = new workspace_manager_t();
       workspace_manager->init_default_workspace();
       ui_manager = new ui_manager_t();
+      ui_manager->setup_style();
     }
 
   };

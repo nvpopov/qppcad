@@ -40,7 +40,7 @@ void ws_atom_list_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
 
 }
 
-void ws_atom_list_t::update(){
+void ws_atom_list_t::geometry_changed(){
   aabb = ext_obs->aabb;
 }
 
@@ -49,13 +49,13 @@ void ws_atom_list_t::render(){
   //we need it for lambda fn
 
   app_state_t* astate = &(c_app::get_state());
-
+  vector3<float> _pos = pos;
   if (app_state_c->dp != nullptr){
 
       if (astate->bDebugDrawRTree){
           astate->dp->begin_render_aabb();
-          tws_tr->apply_visitor( [astate](tws_node<float> *inNode, int deepLevel){
-            astate->dp->render_aabb(clr_maroon, inNode->bb.min, inNode->bb.max);});
+          tws_tr->apply_visitor( [astate, _pos](tws_node<float> *inNode, int deepLevel){
+            astate->dp->render_aabb(clr_maroon, inNode->bb.min+_pos, inNode->bb.max+_pos);});
           astate->dp->end_render_aabb();
         }
 
@@ -68,7 +68,7 @@ void ws_atom_list_t::render(){
             }
 
             app_state_c->dp->render_cell_3d(
-                  cell_clr, geom->cell.v[0], geom->cell.v[1],geom->cell.v[2], 1.1f);
+                  cell_clr, geom->cell.v[0], geom->cell.v[1],geom->cell.v[2], pos, 1.1f);
           astate->dp->end_render_line();
         }
 
@@ -139,7 +139,7 @@ void ws_atom_list_t::render_atom(const uint16_t atNum, const index &atIndex){
      (geom->xfield<bool>("sel", atNum)) && bSelected)
     color = vector3<float>(0.43f, 0.55f, 0.12f);
 
-  app_state_c->dp->render_atom(color, geom->pos(atNum, atIndex), fDrawRad);
+  app_state_c->dp->render_atom(color, geom->pos(atNum, atIndex) + pos, fDrawRad);
 }
 
 void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
@@ -147,7 +147,8 @@ void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
   int ap_idx = ptable::number_by_symbol(geom->atom(atNum1));
   vector3<float> bcolor(0.0, 0.0, 1.0);
   if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
-  app_state_c->dp->render_bond(bcolor, geom->pos(atNum1, atIndex1), geom->pos(atNum2, atIndex2),
+  app_state_c->dp->render_bond(bcolor, geom->pos(atNum1, atIndex1)+ pos,
+                               geom->pos(atNum2, atIndex2)+ pos,
                                app_state_c->fBondScaleFactor);
 }
 
@@ -156,10 +157,14 @@ void ws_atom_list_t::render_ui(){
   if (geom->DIM > 0) ImGui::Checkbox("Draw periodic cell", &b_draw_cell);
 }
 
-bool ws_atom_list_t::mouse_click(ray<float> *ray){
-  if (ray){
+bool ws_atom_list_t::mouse_click(ray<float> *click_ray){
+  if (click_ray){
       std::vector<tws_query_data<float>* > res;
-      tws_tr->query_ray<query_ray_add_all<float> >(ray, &res);
+      //we need to translate ray in world frame to local geometry frame
+      ray<float> local_geom_ray;
+      local_geom_ray.start = click_ray->start - pos;
+      local_geom_ray.dir = click_ray->dir;
+      tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, &res);
       //std::cout << "res_size = " << res.size() << std::endl;
       std::sort(res.begin(), res.end(), tws_query_data_sort_by_dist<float>);
 
@@ -174,32 +179,24 @@ bool ws_atom_list_t::mouse_click(ray<float> *ray){
   return false;
 }
 
-bool ws_atom_list_t::support_translation(){
-  return true;
-}
+bool ws_atom_list_t::support_translation(){return true;}
 
-bool ws_atom_list_t::support_rotation(){
-  return false;
-}
+bool ws_atom_list_t::support_rotation(){return false;}
 
-bool ws_atom_list_t::support_scaling(){
-  return  false;
-}
+bool ws_atom_list_t::support_scaling(){return  false;}
 
-bool ws_atom_list_t::support_content_editing(){
-  return true;
-}
+bool ws_atom_list_t::support_content_editing(){return true;}
 
-bool ws_atom_list_t::support_selection(){
-  return true;
-}
+bool ws_atom_list_t::support_selection(){return true;}
 
-bool ws_atom_list_t::support_rendering_bounding_box(){
-  return geom->DIM > 0;
-}
+bool ws_atom_list_t::support_rendering_bounding_box(){return geom->DIM > 0;}
 
 std::string ws_atom_list_t::compose_item_name(){
   return fmt::format("Type = [atom list], DIM = [{}d]", geom->DIM);
+}
+
+void ws_atom_list_t::update(float delta_time){
+  ws_item_t::update(delta_time);
 }
 
 float ws_atom_list_t::get_bb_prescaller(){
@@ -220,7 +217,7 @@ void ws_atom_list_t::shift(const vector3<float> vShift){
 
   tws_tr->bAutoBonding = true;
   tws_tr->bAutoBuild   = true;
-  update();
+  geometry_changed();
 }
 
 void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
@@ -280,7 +277,7 @@ void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
   tws_tr->bAutoBonding = true;
   tws_tr->bAutoBuild   = true;
 
-  update();
+  geometry_changed();
 
 }
 

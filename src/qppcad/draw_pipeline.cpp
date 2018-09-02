@@ -100,6 +100,7 @@ void draw_pipeline_t::render_cell_3d(const vector3<float> &color,
                                    const vector3<float> &a,
                                    const vector3<float> &b,
                                    const vector3<float> &c,
+                                   const vector3<float> &shift,
                                    const float line_width = 1.0f){
   static int disp[][6] = {
     {0, 0, 0, 0, 0, 1},
@@ -120,7 +121,7 @@ void draw_pipeline_t::render_cell_3d(const vector3<float> &color,
       vector3<float> vec_line_start = a*disp[i][0] + b*disp[i][1] + c*disp[i][2];
       vector3<float> vec_line_end   = a*disp[i][3] + b*disp[i][4] + c*disp[i][5];
 
-      render_line(color, vec_line_start, vec_line_end, line_width);
+      render_line(color, vec_line_start + shift, vec_line_end + shift, line_width);
 
     }
 }
@@ -146,9 +147,11 @@ void draw_pipeline_t::render_cube(const vector3<float> &cube_pos,
 
   Eigen::Transform<float, 3, Eigen::Affine>
       t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
-
+  t.prescale(cube_size);
   t.pretranslate(cube_pos);
-  t.prescale(0.5*cube_size); // cube has a = 2 (-1 .. 1), so scale it
+
+
+   // cube has a = 2 (-1 .. 1), so scale it
   matrix4<float> mat_model = t.matrix()*matrix4<float>::Identity();
 
   matrix4<float> mat_model_view      = astate->camera->mView * mat_model;

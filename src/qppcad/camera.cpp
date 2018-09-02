@@ -98,39 +98,33 @@ void camera_t::reset_camera(){
 void camera_t::update_camera(){
   app_state_t* astate = &(c_app::get_state());
 
-  float xDt = astate->MouseX - astate->MouseOldX;
-  float yDt = astate->MouseY - astate->MouseOldY;
+  float xDt = astate->mouse_x - astate->mouse_x_old;
+  float yDt = astate->mouse_y - astate->mouse_y_old;
 
-  astate->MouseOldX = astate->MouseX;
-  astate->MouseOldY = astate->MouseY;
 
   if (bMoveCamera){
       float fMoveRight = -xDt/camera_t::iNavDivStepTranslation;
       float fMoveUp = yDt/camera_t::iNavDivStepTranslation;
-
-      if (fabs(fMoveRight) > camera_t::fNavTresh)
-        translate_camera_right(fMoveRight);
-      if (fabs(fMoveUp) > camera_t::fNavTresh)
-        translate_camera_up(fMoveUp);
+      if (fabs(fMoveRight) > camera_t::fNavTresh) translate_camera_right(fMoveRight);
+      if (fabs(fMoveUp) > camera_t::fNavTresh) translate_camera_up(fMoveUp);
     }
 
   if (bRotateCamera){
       float fRotAngleX = yDt/camera_t::iNavDivStepRotation;
       float fRotAngleY = xDt/camera_t::iNavDivStepRotation;
-
-      if (fabs(fRotAngleY) > camera_t::fNavTresh)
-        rotate_camera_orbit_yaw(fRotAngleY);
-
-      if (fabs(fRotAngleX) > camera_t::fNavTresh)
-        rotate_camera_orbit_pitch(fRotAngleX);
+      if (fabs(fRotAngleY) > camera_t::fNavTresh) rotate_camera_orbit_yaw(fRotAngleY);
+      if (fabs(fRotAngleX) > camera_t::fNavTresh) rotate_camera_orbit_pitch(fRotAngleX);
     }
 
 
   mView = look_at<float>(vViewPoint, vLookAt, vLookUp);
 
+  float _viewport_w = 0.0f;
+  if (!astate->show_object_inspector) _viewport_w = astate->ui_manager->iObjInspWidth;
+
   if (cur_proj == app_camera_proj_type::CAMERA_PROJ_PERSP)
     mProjection = perspective<float>(fFOV,
-                                     astate->vViewportWidthHeight(0) /
+                                     (astate->vViewportWidthHeight(0) + _viewport_w)/
                                      astate->vViewportWidthHeight(1),
                                      fZNearPersp, fZFarPersp);
   else {
@@ -147,13 +141,13 @@ void camera_t::update_camera(){
   mViewInvTr = mat4_to_mat3<float>((mView.transpose()).inverse());
 }
 
-void camera_t::update_camera_zoom(const double _dist){
+void camera_t::update_camera_zoom(const float _dist){
   vector3<float> vViewDir_n = - vViewPoint + vLookAt;
   float fDist = vViewDir_n.norm();
   fStoredDist = fDist;
   vViewDir_n.normalize();
   float fDistDelta = _dist * fMouseWhellCameraStep;
-  bool bCanZoom = true;
+  //bool bCanZoom = true;
   if ((fDist + fDistDelta > fMouseZoomMinDistance) || (fDistDelta < 0.0))
     vViewPoint += vViewDir_n * fDistDelta;
 }
@@ -171,7 +165,6 @@ void camera_t::set_projection(app_camera_proj_type _proj_to_set){
       reset_camera();
       cur_proj = _proj_to_set;
     }
-
 }
 
 vector3<float> camera_t::unproject(const float _x, const float _y){

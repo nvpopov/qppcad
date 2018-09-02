@@ -31,6 +31,7 @@ namespace qpp {
                         const vector3<float> &a,
                         const vector3<float> &b,
                         const vector3<float> &c,
+                        const vector3<float> &shift,
                         const float line_width);
     void render_vector();
     void render_primitive();
