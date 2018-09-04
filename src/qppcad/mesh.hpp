@@ -64,12 +64,6 @@ namespace qpp{
     static mesh_t *generate_unit_line();
 
     ///
-    /// \brief generate_cone
-    /// \return
-    ///
-    static mesh_t *generate_cone();
-
-    ///
     /// \brief generate_unit_cube
     /// \return
     ///

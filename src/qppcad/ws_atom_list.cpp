@@ -29,7 +29,7 @@ ws_atom_list_t::ws_atom_list_t(workspace_t* parent):ws_item_t(parent){
 }
 
 void ws_atom_list_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                         vector3<float> &vOutLookAt){
+                                           vector3<float> &vOutLookAt){
   if(geom->nat() > 2){
       vOutLookAt += (ext_obs->aabb.max + ext_obs->aabb.min) / 2.0;
       vector3<float> vSize = ext_obs->aabb.max - ext_obs->aabb.min;
@@ -57,7 +57,7 @@ void ws_atom_list_t::render(){
       if (astate->bDebugDrawRTree){
           astate->dp->begin_render_aabb();
           tws_tr->apply_visitor( [astate, _pos](tws_node<float> *inNode, int deepLevel){
-            astate->dp->render_aabb(clr_maroon, inNode->bb.min+_pos, inNode->bb.max+_pos);});
+              astate->dp->render_aabb(clr_maroon, inNode->bb.min+_pos, inNode->bb.max+_pos);});
           astate->dp->end_render_aabb();
         }
 
@@ -69,8 +69,8 @@ void ws_atom_list_t::render(){
               if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) cell_clr =clr_lime;
             }
 
-            app_state_c->dp->render_cell_3d(
-                  cell_clr, geom->cell.v[0], geom->cell.v[1],geom->cell.v[2], pos, 1.1f);
+          app_state_c->dp->render_cell_3d(
+                cell_clr, geom->cell.v[0], geom->cell.v[1],geom->cell.v[2], pos, 1.1f);
           astate->dp->end_render_line();
         }
 
@@ -85,7 +85,7 @@ void ws_atom_list_t::render(){
 
       // draw imaginary atoms that appear due to periodic
       if (geom->DIM > 0) for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
-            render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
+        render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
 
       astate->dp->end_atom_render();
       // atom render end
@@ -145,7 +145,7 @@ void ws_atom_list_t::render_atom(const uint16_t atNum, const index &atIndex){
 }
 
 void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
-                               const uint16_t atNum2, const index &atIndex2){
+                                 const uint16_t atNum2, const index &atIndex2){
   int ap_idx = ptable::number_by_symbol(geom->atom(atNum1));
   vector3<float> bcolor(0.0, 0.0, 1.0);
   if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
@@ -157,55 +157,65 @@ void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
 void ws_atom_list_t::render_ui(){
   ws_item_t::render_ui();
   if (geom->DIM > 0) ImGui::Checkbox("Draw periodic cell", &b_draw_cell);
-  ImGui::Spacing();
-  ImGui::Separator();
-  ImGui::Text("Summary:");
-  ImGui::Separator();
-  ImGui::Columns(2);
-  ImGui::Text("Total atoms:");
-  ImGui::Text("Atom types:");
-  ImGui::NextColumn();
-  ImGui::Text(fmt::format("{}", geom->nat()).c_str());
-  ImGui::Text(fmt::format("{}", geom->n_atom_types()).c_str());
-  ImGui::Columns(1);
 
   ImGui::Spacing();
-  ImGui::Spacing();
-  ImGui::Separator();
-  ImGui::Columns(3);
-  ImGui::Text("Atom type");
-  ImGui::NextColumn();
-  ImGui::Text("Count");
-  ImGui::NextColumn();
-  ImGui::Text("Color");
-  ImGui::NextColumn();
-  ImGui::Separator();
-  for (uint8_t i = 0; i < geom->n_types(); i++){
-      ImGui::Text(geom->atom_of_type(i).c_str());
+  if (ImGui::CollapsingHeader("Summary")){
+      ImGui::Spacing();
+      ImGui::Columns(2);
+      ImGui::Text("Total atoms:");
+      ImGui::Text("Atom types:");
+      ImGui::NextColumn();
+      ImGui::Text(fmt::format("{}", geom->nat()).c_str());
+      ImGui::Text(fmt::format("{}", geom->n_atom_types()).c_str());
+      ImGui::Columns(1);
     }
-  ImGui::NextColumn();
 
-  for (uint8_t i = 0; i < geom->n_types(); i++){
-      ImGui::Text(fmt::format("{}",geom->get_atom_count_by_type(i)).c_str());
+
+  if (ImGui::CollapsingHeader("Atom types")){
+      ImGui::Spacing();
+      ImGui::Columns(3);
+      ImGui::Text("Atom type");
+      ImGui::NextColumn();
+      ImGui::Text("Count");
+      ImGui::NextColumn();
+      ImGui::Text("Color");
+      ImGui::NextColumn();
+      ImGui::Separator();
+      for (uint8_t i = 0; i < geom->n_types(); i++){
+          ImGui::Text(geom->atom_of_type(i).c_str());
+        }
+      ImGui::NextColumn();
+
+      for (uint8_t i = 0; i < geom->n_types(); i++){
+          ImGui::Text(fmt::format("{}",geom->get_atom_count_by_type(i)).c_str());
+        }
+      ImGui::NextColumn();
+
+      ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+      for (uint8_t i = 0; i < geom->n_types(); i++){
+          const ImVec2 p = ImGui::GetCursorScreenPos();
+          float p_x = p.x + 8 + 6;
+          float p_y = p.y + 8;
+          ImVec2 p_n(p_x, p_y);
+          int ap_idx = ptable::number_by_symbol(geom->atom_of_type(i));
+          vector3<float> bc(0.0, 0.0, 1.0);
+          if(ap_idx != -1) {bc = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
+          draw_list->AddCircleFilled(p_n, 8, ImColor(ImVec4(bc[0], bc[1], bc[2], 1.0f)));
+          ImGui::Dummy(ImVec2(16, 16));
+        }
+      ImGui::NextColumn();
+
+      ImGui::Columns(1);
     }
-  ImGui::NextColumn();
 
-  ImDrawList* draw_list = ImGui::GetWindowDrawList();
+  if (ImGui::CollapsingHeader("Display and styling")){
 
-  for (uint8_t i = 0; i < geom->n_types(); i++){
-      const ImVec2 p = ImGui::GetCursorScreenPos();
-      float p_x = p.x + 8 + 6;
-      float p_y = p.y + 8;
-      ImVec2 p_n(p_x, p_y);
-      int ap_idx = ptable::number_by_symbol(geom->atom_of_type(i));
-      vector3<float> bc(0.0, 0.0, 1.0);
-      if(ap_idx != -1) {bc = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
-      draw_list->AddCircleFilled(p_n, 8, ImColor(ImVec4(bc[0], bc[1], bc[2], 1.0f)));
-      ImGui::Dummy(ImVec2(16, 16));
     }
-  ImGui::NextColumn();
 
-  ImGui::Columns(1);
+  if (ImGui::CollapsingHeader("Modify")){
+
+    }
 }
 
 bool ws_atom_list_t::mouse_click(ray<float> *click_ray){
@@ -272,8 +282,8 @@ void ws_atom_list_t::shift(const vector3<float> vShift){
 }
 
 void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
-                                  std::string sFileName,
-                                  bool bAutoCenter){
+                                    std::string sFileName,
+                                    bool bAutoCenter){
 
   c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
                          sFileName, parent_ws->ws_name));

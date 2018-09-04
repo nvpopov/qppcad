@@ -96,10 +96,12 @@ void gizmo_t::clear_selected_axis(){
 void gizmo_t::update_gizmo(float delta_time){
 
   app_state_t *astate = &(c_app::get_state());
+  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->cur_edit_type;
 
   if (attached_item) pos = attached_item->aabb.min+attached_item->pos;
 
-  if (attached_item && astate->mouse_lb_pressed && touched_axis < 4){
+  if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
+      cur_edit_type== ws_edit_type::EDIT_WS_ITEM){
       interact_at_the_moment = true;
       transform_attached_object(delta_time);
     }

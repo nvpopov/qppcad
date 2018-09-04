@@ -189,9 +189,22 @@ void workspace_t::update(float delta_time){
 }
 
 workspace_t *workspace_manager_t::get_current_workspace(){
-  if ((iCurrentWorkSpace <= 0) && (iCurrentWorkSpace > ws.size()))
+  if (current_workspace_id >= ws.size())
     return nullptr;
-  return ws[iCurrentWorkSpace];
+  return ws[current_workspace_id];
+}
+
+uint8_t workspace_manager_t::get_current_workspace_id(){
+  return current_workspace_id;
+}
+
+bool workspace_manager_t::set_current_workspace(const uint8_t ws_index){
+  bool succes = false;
+  if (ws_index < ws.size()){
+      current_workspace_id = ws_index;
+      succes = true;
+    }
+  return succes;
 }
 
 void workspace_manager_t::init_default_workspace(){
@@ -225,15 +238,15 @@ void workspace_manager_t::init_default_workspace(){
   ws.push_back(_ws2);
   ws.push_back(_ws3);
 
-  iCurrentWorkSpace = ws.size() - 1;
+  current_workspace_id = ws.size() - 1;
 }
 
 void workspace_manager_t::render_current_workspace(){
 
   if (has_wss())
-    if ((iCurrentWorkSpace >= 0) && (iCurrentWorkSpace < ws.size())){
-        c_app::get_state().camera = ws[iCurrentWorkSpace]->camera;
-        ws[iCurrentWorkSpace]->render();
+    if (current_workspace_id < ws.size()){
+        c_app::get_state().camera = ws[current_workspace_id]->camera;
+        ws[current_workspace_id]->render();
       }
 }
 
@@ -271,6 +284,7 @@ void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file
       ws_atom_list_t* _wsl2 = new ws_atom_list_t(_ws2);
       _wsl2->load_from_file(qc_file_format::format_standart_xyz, file_name_fd, false);
       ws.push_back(_ws2);
+      set_current_workspace(ws.size()-1);
     }
 }
 

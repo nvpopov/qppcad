@@ -148,7 +148,7 @@ void ui_manager_t::render_main_menu(){
       ImGui::PopStyleVar();
 
       //
-      int iCurWS = astate->workspace_manager->iCurrentWorkSpace;
+      int ui_current_workspace = astate->workspace_manager->get_current_workspace_id();
 
       std::vector<std::string>  vStr;
       std::vector<char*>  vChar;
@@ -159,12 +159,13 @@ void ui_manager_t::render_main_menu(){
                      vec_str_to_char);
 
       ImGui::PushItemWidth(150);
-      ImGui::Combo("Workspace", &iCurWS, vChar.data(),
+      ImGui::Combo("Workspace", &ui_current_workspace, vChar.data(),
                    astate->workspace_manager->ws.size());
       ImGui::PopItemWidth();
 
       for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
-      astate->workspace_manager->iCurrentWorkSpace = iCurWS;
+      if (ui_current_workspace != astate->workspace_manager->get_current_workspace_id())
+        astate->workspace_manager->set_current_workspace(ui_current_workspace);
       //
 
       if (ImGui::Button("New")){
@@ -343,7 +344,7 @@ void ui_manager_t::render_object_inspector(){
 
   ImGui::Text("Workspace items:");
   ImGui::Spacing();
-  auto iCurWs = astate->workspace_manager->iCurrentWorkSpace;
+  auto iCurWs = astate->workspace_manager->get_current_workspace_id();
 
   ImGui::PushItemWidth(284);
   workspace_t* cur_ws = astate->workspace_manager->ws[iCurWs];

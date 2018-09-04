@@ -27,12 +27,18 @@ namespace qpp{
   /// \brief The workspace_manager_t class
   ///
   class workspace_manager_t {
+  private:
+     uint8_t current_workspace_id;
   public:
 
-    int iCurrentWorkSpace;
+
     std::vector<workspace_t*> ws;
-    workspace_manager_t(){ iCurrentWorkSpace = -1;}
+    workspace_manager_t(){ current_workspace_id = 0;}
+
     workspace_t* get_current_workspace();
+    uint8_t get_current_workspace_id();
+
+    bool set_current_workspace(const uint8_t ws_index);
 
     bool has_wss(){return ws.size()>0;}
     void init_default_workspace();
