@@ -1,31 +1,28 @@
 #include <qppcad/file_dialog.hpp>
 #include <qppcad/app.hpp>
+#include <nfd.h>
 
 using namespace qpp;
 
-void file_dialog_t::require_dialog(file_dialog_kind kind_of_dialog){
-  kind = kind_of_dialog;
-  activated = true;
-}
 
-void file_dialog_t::render(){
-  app_state_t *astate = &(c_app::get_state());
+std::string file_dialog_manager_t::request_open_file(std::string &filter, bool &succes){
+  nfdchar_t *out_path;
+  nfdchar_t *filter_ch = new char[filter.size()+1];
+  std::copy(filter.begin(), filter.end(), filter_ch);
+  filter_ch[filter.size()] = '\0';
+  nfdresult_t result = NFD_OpenDialog( filter_ch, NULL, &out_path );
+  if ( result == NFD_OKAY){
+      succes = true;
+      return std::string(out_path);
+    } else if (result == NFD_CANCEL) {
 
-  if (activated) {
-      ImGui::OpenPopup(file_dialog_headers[uint8_t(kind)].c_str());
-      astate->disable_mouse_camera_control = true;
     } else {
-      astate->disable_mouse_camera_control = false;
+      //error
     }
 
-  ImVec2 dialog_pos = ImVec2(astate->wWidth / 2 - 350, astate->wHeight / 2 - 250);
-  ImGui::SetNextWindowPos(dialog_pos);
-  ImGui::SetNextWindowSize(ImVec2(600,500));
-  if (ImGui::BeginPopupModal(file_dialog_headers[uint8_t(kind)].c_str(),
-                             &activated,
-                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoNav)){
+//  delete[] out_path;
+//  delete[] filter_ch;
 
-      ImGui::SetItemDefaultFocus();
-      ImGui::EndPopup();
-    }
+  succes = false;
+  return "";
 }

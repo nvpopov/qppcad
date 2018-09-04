@@ -38,7 +38,7 @@ namespace qpp{
     void init_default_workspace();
     void render_current_workspace();
     void mouse_click();
-    void import_file_as_new_workspace(const std::string file_name);
+    void query_import_file_as_new_workspace(qc_file_format file_format);
   };
 
   ///

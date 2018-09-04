@@ -7,14 +7,6 @@
 
 namespace qpp {
 
-  ///
-  /// \brief The file_dialog_kind enum
-  ///
-  enum file_dialog_kind {
-    save_file_dialog,
-    open_file_dialog,
-    select_dir_dialog
-  };
 
   const std::string file_dialog_headers[3]  = {
     "Save file",
@@ -25,24 +17,17 @@ namespace qpp {
   ///
   /// \brief The file_dialog_t class
   ///
-  class file_dialog_t {
+  class file_dialog_manager_t {
     public:
-
-      std::vector<std::string> dialog_file_ext;
-      std::vector<std::string> current_dir_ls;
-      std::string              current_dir;
-      file_dialog_kind kind;
-      bool activated;
-
       ///
       /// \brief file_dialog_t
       /// \param activate_when_created
       ///
-      file_dialog_t(bool activate_when_created = false){
-        activated = activate_when_created;
+      file_dialog_manager_t(){
+
       }
-      void require_dialog(file_dialog_kind kind_of_dialog);
-      void render();
+
+      std::string request_open_file(std::string &filter, bool &succes);
   };
 }
 

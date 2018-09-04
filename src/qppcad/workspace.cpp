@@ -258,7 +258,19 @@ void workspace_manager_t::mouse_click(){
     }
 }
 
-void workspace_manager_t::import_file_as_new_workspace(const std::string file_name){
-
-
+void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file_format){
+  app_state_t *astate = &(c_app::get_state());
+  bool succes = false;
+  std::string filter = "*";
+  std::string file_name_fd =
+      astate->file_dialog_manager->request_open_file(filter, succes);
+  if (succes){
+      workspace_t* _ws2 = new workspace_t();
+      std::string file_name_extr = qpp::extract_base_name(file_name_fd);
+      _ws2->ws_name = file_name_extr;
+      ws_atom_list_t* _wsl2 = new ws_atom_list_t(_ws2);
+      _wsl2->load_from_file(qc_file_format::format_standart_xyz, file_name_fd, false);
+      ws.push_back(_ws2);
+    }
 }
+

@@ -1,6 +1,5 @@
 #include <qppcad/ui_manager.hpp>
 #include <qppcad/app.hpp>
-#include <nfd.h>
 
 using namespace qpp;
 
@@ -51,23 +50,8 @@ void ui_manager_t::render_main_menu(){
           if (ImGui::BeginMenu("Import")){
 
               if (ImGui::MenuItem("Standart XYZ(0D)")){
-                  //astate->workspace_manager->import_file_as_new_workspace("gggg");
-                  //astate->file_dialog->require_dialog(file_dialog_kind::open_file_dialog);
-                  nfdchar_t *outPath = NULL;
-                  nfdchar_t *filter = " cpp";
-                      nfdresult_t result = NFD_OpenDialog( filter, NULL, &outPath );
-
-                      if ( result == NFD_OKAY ) {
-                          std::cout << "Success!" << std::endl;
-                          std::cout <<(outPath)<< std::endl;
-                          free(outPath);
-                      }
-                      else if ( result == NFD_CANCEL ) {
-                          std::cout <<"User pressed cancel."<< std::endl;
-                      }
-                      else {
-                         // std::cout <<"Error: %s\n", NFD_GetError() );
-                      }
+                  astate->workspace_manager->
+                      query_import_file_as_new_workspace(qc_file_format::format_standart_xyz);
                 }
 
               ImGui::MenuItem("VASP POSCAR/CONTCAR)");
