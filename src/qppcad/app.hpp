@@ -1,16 +1,12 @@
 #ifndef QPP_CAD_H
 #define QPP_CAD_H
 
+#include <qppcad/qppcad.hpp>
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
-#include <io/strfun.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/gl_math.hpp>
-#include <chrono>
-#include <ctime>
+
 
 namespace qpp{
   class c_app{

@@ -206,8 +206,9 @@ void qpp::c_app::resize_window_callback(GLFWwindow *window,
 
 void qpp::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset){
   app_state_t* astate =  &(c_app::get_state());
-  if ((astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR)&&
-      (astate->camera != nullptr))
+  if ( astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
+       astate->camera != nullptr &&
+       !astate->disable_mouse_camera_control)
     astate->camera->update_camera_zoom(-yoffset);
 }
 
@@ -218,8 +219,10 @@ void qpp::c_app::mouse_callback(GLFWwindow *window, double x, double y){
 
 void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
   app_state_t* astate =  &(c_app::get_state());
-  if ((astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR) &&
-      (astate->camera != nullptr)){
+
+  if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
+      astate->camera != nullptr &&
+      !astate->disable_mouse_camera_control){
 
       if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
           astate->mouse_lb_pressed = true;

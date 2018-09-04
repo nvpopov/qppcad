@@ -1,5 +1,6 @@
 #include <qppcad/ui_manager.hpp>
 #include <qppcad/app.hpp>
+#include <nfd.h>
 
 using namespace qpp;
 
@@ -7,6 +8,7 @@ ui_manager_t::ui_manager_t(){
   iObjInspWidth = 300;
   iWorkPanelHeight = 35;
   iWorkPanelYOffset = 28;
+
 }
 
 void ui_manager_t::setup_style(){
@@ -29,6 +31,8 @@ void ui_manager_t::render_ui(){
   if(c_app::get_state().cur_task == app_task_type::TASK_MENDELEY_TABLE){
       render_mtable_big();
     }
+
+
 }
 
 void ui_manager_t::render_main_menu(){
@@ -45,7 +49,27 @@ void ui_manager_t::render_main_menu(){
           ImGui::MenuItem("New");
           ImGui::MenuItem("Open");
           if (ImGui::BeginMenu("Import")){
-              ImGui::MenuItem("Standart XYZ(0D)");
+
+              if (ImGui::MenuItem("Standart XYZ(0D)")){
+                  //astate->workspace_manager->import_file_as_new_workspace("gggg");
+                  //astate->file_dialog->require_dialog(file_dialog_kind::open_file_dialog);
+                  nfdchar_t *outPath = NULL;
+                  nfdchar_t *filter = " cpp";
+                      nfdresult_t result = NFD_OpenDialog( filter, NULL, &outPath );
+
+                      if ( result == NFD_OKAY ) {
+                          std::cout << "Success!" << std::endl;
+                          std::cout <<(outPath)<< std::endl;
+                          free(outPath);
+                      }
+                      else if ( result == NFD_CANCEL ) {
+                          std::cout <<"User pressed cancel."<< std::endl;
+                      }
+                      else {
+                         // std::cout <<"Error: %s\n", NFD_GetError() );
+                      }
+                }
+
               ImGui::MenuItem("VASP POSCAR/CONTCAR)");
               ImGui::EndMenu();
             }
@@ -310,6 +334,7 @@ void ui_manager_t::render_object_inspector(){
 
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+
   ImGui::Begin("Object inspector", nullptr,
                ImGuiWindowFlags_NoMove |
                ImGuiWindowFlags_NoResize |
@@ -331,8 +356,9 @@ void ui_manager_t::render_object_inspector(){
 
       ImGui::EndMenuBar();
     }
-  ImGui::Separator();
+
   ImGui::Text("Workspace items:");
+  ImGui::Spacing();
   auto iCurWs = astate->workspace_manager->iCurrentWorkSpace;
 
   ImGui::PushItemWidth(284);
@@ -342,14 +368,16 @@ void ui_manager_t::render_object_inspector(){
       ImGui::PushID(1);
       ImGui::ListBox_stl("", &ws_itm_cur, cur_ws->ws_names_c, 8);
       ImGui::PopID();
-      if (ws_itm_cur != cur_ws->get_selected_item()) cur_ws->set_selected_item(ws_itm_cur);
+      if (ws_itm_cur != cur_ws->get_selected_item())
+        cur_ws->set_selected_item(ws_itm_cur);
 
       ImGui::PopItemWidth();
 
       ImGui::Spacing();
       ImGui::Separator();
       if (cur_ws->get_selected_item() != -1){
-          ImGui::Text(fmt::format("Selected: {}",cur_ws->get_selected()->compose_item_name()).c_str());
+          ImGui::Text(fmt::format("Selected: {}",
+                                  cur_ws->get_selected()->compose_item_name()).c_str());
           ImGui::Separator();
           ImGui::Spacing();
           cur_ws->get_selected()->render_ui();
@@ -362,7 +390,7 @@ void ui_manager_t::render_object_inspector(){
 
 
   ImGui::End();
-  ImGui::PopStyleVar();
+  ImGui::PopStyleVar(1);
 
 }
 

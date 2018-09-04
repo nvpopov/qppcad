@@ -1,16 +1,15 @@
 #ifndef QPP_SHADER_PROGRAM_H
 #define QPP_SHADER_PROGRAM_H
+
+#include <qppcad/qppcad.hpp>
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
-#include <io/strfun.hpp>
-#include <tuple>
 
 namespace qpp {
 
-  /// Uniform fixed name
+  ///
+  /// \brief Uniform fixed name
+  ///
   enum sp_u_name {
     m_model_view,
     m_model_view_no_scale,
@@ -28,7 +27,9 @@ namespace qpp {
     v_line_end
   };
 
-  /// Uniform OpenGL type wrapper
+  ///
+  /// \brief Uniform OpenGL type wrapper
+  ///
   enum sp_u_type {
     a_v3f,
     a_v4f,
@@ -80,33 +81,77 @@ namespace qpp {
     std::make_pair(sp_u_name::v_line_end,            sp_u_type::a_v3f)
   };
 
-  /// Shader program implements wrapper around OpenGL program, i.e contains
-  /// vertex plus fragment shader and some kind of uniform variables management
+  ///
+  /// \brief Shader program implements wrapper around OpenGL program, i.e contains
+  ///  vertex plus fragment shader and some kind of uniform variables management
+  ///
   class shader_program_t{
   private:
     GLuint program_id;
   public:
     std::vector<uniform_record> unf_rec;
     std::string program_name;
+
+    ///
+    /// \brief shader_program_t
+    /// \param _program_name
+    /// \param _vs_text
+    /// \param _fs_text
+    ///
     shader_program_t(const std::string _program_name,
                    const std::string &_vs_text,
                    const std::string &_fs_text);
 
-    /// Enable internal uniform
+    ///
+    /// \brief Enable internal uniform
+    /// \param _val
+    ///
     void u_on(sp_u_name _val);
 
-    /// Set internal uniform
+
+    ///
+    /// \brief Set internal uniform
+    /// \param _ut
+    /// \param _val
+    ///
     void set_u(sp_u_name _ut, GLfloat *_val);
+
+    ///
+    /// \brief begin_shader_program
+    ///
     void begin_shader_program();
+
+    ///
+    /// \brief end_shader_program
+    ///
     void end_shader_program();
   };
 
   /// Default shader testing program - Gourand shading
   shader_program_t* gen_default_program();
 
+  ///
+  /// \brief gen_unit_line_program
+  /// \return
+  ///
   shader_program_t* gen_unit_line_program();
+
+  ///
+  /// \brief gen_line_mesh_program
+  /// \return
+  ///
   shader_program_t* gen_line_mesh_program();
+
+  ///
+  /// \brief gen_screen_space_lighting_program
+  /// \return
+  ///
   shader_program_t* gen_screen_space_lighting_program();
+
+  ///
+  /// \brief gen_mv_screen_space_lighting_program
+  /// \return
+  ///
   shader_program_t *gen_mv_screen_space_lighting_program();
 }
 #endif

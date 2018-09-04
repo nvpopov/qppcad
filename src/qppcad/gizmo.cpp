@@ -83,8 +83,8 @@ void gizmo_t::transform_attached_object(float delta_time){
                           astate->mouse_y_old - astate->mouse_y;
 
 
-      if (fabs(mouse_delta) > 1.5f) attached_item->pos +=
-          gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis];
+      if (fabs(d_unproj[touched_axis]) > 0.01f) attached_item->pos +=
+          gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 0.5f;
     }
 }
 

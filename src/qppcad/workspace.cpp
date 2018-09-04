@@ -206,16 +206,22 @@ void workspace_manager_t::init_default_workspace(){
   ws_atom_list_t* _wsl3 = new ws_atom_list_t(_ws3);
   _wsl3->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
                         false);
+
   ws_atom_list_t* _wsl32 = new ws_atom_list_t(_ws3);
   _wsl32->load_from_file(qc_file_format::format_standart_xyz, "../deps/qpp/examples/io/ref_data/nanotube.xyz",
                          true);
+
+  ws_atom_list_t* _wsl33 = new ws_atom_list_t(_ws3);
+  _wsl33->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
+                         false);
+
   _wsl3->name = "zeolite1";
   _wsl32->name = "nanotube1";
   _wsl32->pos = vector3<float>(0.0f, 0.0f, 14.0f);
+  _wsl33->name = "ss1";
+  _wsl33->pos = vector3<float>(0.0f, 22.0f, 2.0f);
 
-  _ws2->add_item_to_workspace(_wsl2);
-  _ws3->add_item_to_workspace(_wsl3);
-  _ws3->add_item_to_workspace(_wsl32);
+
   ws.push_back(_ws2);
   ws.push_back(_ws3);
 
@@ -237,7 +243,7 @@ void workspace_manager_t::mouse_click(){
   //transform from window frame to viewport frame
   float newMouseX = astate->mouse_x;
   float newMouseY = astate->mouse_y - astate->ui_manager->iWorkPanelHeight
-                     - astate->ui_manager->iWorkPanelYOffset;
+                    - astate->ui_manager->iWorkPanelYOffset;
   c_app::log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
 
   if ((newMouseX > 0) && (newMouseX < astate->vViewportWidthHeight(0)) &&
@@ -250,4 +256,9 @@ void workspace_manager_t::mouse_click(){
 
       if(has_wss()) get_current_workspace()->mouse_click(newMouseX, newMouseY);
     }
+}
+
+void workspace_manager_t::import_file_as_new_workspace(const std::string file_name){
+
+
 }

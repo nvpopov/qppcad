@@ -1,6 +1,8 @@
 #ifndef QPP_UI_MANAGER_H
 #define QPP_UI_MANAGER_H
 #pragma GCC diagnostic ignored "-Wformat-security"
+
+#include <qppcad/qppcad.hpp>
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 #include <imgui.h>
@@ -8,8 +10,6 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <qppcad/imgui_addons.hpp>
-#include <io/strfun.hpp>
-#include <cstdlib>
 
 namespace qpp{
   class ui_manager_t{

@@ -1,9 +1,9 @@
 cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
-add_definitions(-O3 -std=c++11 -fPIC -DFMT_HEADER_ONLY)
+add_definitions(-O3 -std=c++14 -fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS "-O3 -funroll-loops -ftree-vectorize")
 #set(CMAKE_BUILD_TYPE "Debug")
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 macro(set_option option value)
@@ -14,6 +14,7 @@ set_option(PYTHON_BINDINGS OFF)
 add_subdirectory(deps/qpp)
 add_subdirectory(deps/freetype)
 add_subdirectory(deps/glfw)
+
 include_directories(deps/glfw/include)
 include_directories(deps/glfw/deps)
 include_directories(src/)
@@ -26,6 +27,15 @@ include_directories(deps/qpp/modules)
 include_directories(deps/qpp/deps/pybind11/include)
 include_directories(deps/qpp/deps/fmtlib)
 include_directories(deps/qpp/deps/eigen3)
+include_directories(deps/nativefiledialog/src/)
+include_directories(deps/nativefiledialog/src/include)
+
+if (UNIX)
+    find_package(PkgConfig REQUIRED)
+    PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
+    add_library(nfd deps/nativefiledialog/src/nfd_common.c deps/nativefiledialog/src/nfd_gtk.c)
+    include_directories(${GTK3_INCLUDE_DIRS})
+endif(UNIX)
 
 file(GLOB_RECURSE ide_cpp_qppcad "src/qppcad/*.cpp")
 file(GLOB_RECURSE ide_hpp_qppcad "src/qppcad/*.hpp")
@@ -51,11 +61,11 @@ add_executable(qppcad
     src/qppcad/gl_math.cpp
     src/qppcad/ui_manager.cpp
     src/qppcad/gizmo.cpp
+    src/qppcad/file_dialog.cpp
     deps/imgui/misc/freetype/imgui_freetype.cpp
     deps/imgui/examples/imgui_impl_glfw.cpp
     deps/imgui/examples/imgui_impl_opengl3.cpp
     deps/glfw/deps/gl3w.c
     deps/imgui/imgui.cpp
-    deps/imgui/imgui_draw.cpp
-    )
-target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY} freetype glfw m)
+    deps/imgui/imgui_draw.cpp)
+target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY} freetype glfw nfd ${GTK3_LIBRARIES} m)

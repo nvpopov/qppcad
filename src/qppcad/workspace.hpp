@@ -1,17 +1,17 @@
 #ifndef QPP_WORKSPACE_H
 #define QPP_WORKSPACE_H
 
-#include <vector>
-#include <iostream>
+#include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
 #include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
 #include <qppcad/camera.hpp>
-#include <imgui.h>
-#include <imgui_internal.h>
 #include <qppcad/ws_item.hpp>
 #include <qppcad/ws_atom_list.hpp>
 #include <qppcad/gizmo.hpp>
+#include <qppcad/delegates.hpp>
+#include <imgui.h>
+#include <imgui_internal.h>
 
 namespace qpp{
 
@@ -23,7 +23,9 @@ namespace qpp{
     EDIT_WS_ITEM_CONTENT = 1
   };
 
-  /// workspace manager
+  ///
+  /// \brief The workspace_manager_t class
+  ///
   class workspace_manager_t {
   public:
 
@@ -36,9 +38,12 @@ namespace qpp{
     void init_default_workspace();
     void render_current_workspace();
     void mouse_click();
+    void import_file_as_new_workspace(const std::string file_name);
   };
 
-  /// workspace
+  ///
+  /// \brief The workspace_t class
+  ///
   class workspace_t {
   public:
     ws_edit_type             cur_edit_type;
@@ -72,8 +77,6 @@ namespace qpp{
     void add_item_to_workspace(ws_item_t *item_to_add);
     void update(float delta_time);
   };
-
-
 
 
 }

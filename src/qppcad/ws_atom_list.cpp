@@ -24,6 +24,8 @@ ws_atom_list_t::ws_atom_list_t(workspace_t* parent):ws_item_t(parent){
   tws_tr = new tws_tree<float>(*geom);
   tws_tr->bAutoBonding = true;
 
+  parent->add_item_to_workspace(this);
+
 }
 
 void ws_atom_list_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
@@ -167,6 +169,7 @@ void ws_atom_list_t::render_ui(){
   ImGui::Text(fmt::format("{}", geom->n_atom_types()).c_str());
   ImGui::Columns(1);
 
+  ImGui::Spacing();
   ImGui::Spacing();
   ImGui::Separator();
   ImGui::Columns(3);
@@ -326,6 +329,8 @@ void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
   tws_tr->bAutoBuild   = true;
 
   geometry_changed();
+
+  if (parent_ws) parent_ws->workspace_changed();
 
 }
 

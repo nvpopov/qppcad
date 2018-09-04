@@ -102,14 +102,14 @@ void camera_t::update_camera(){
   float yDt = astate->mouse_y - astate->mouse_y_old;
 
 
-  if (bMoveCamera){
+  if (bMoveCamera && !astate->disable_mouse_camera_control){
       float fMoveRight = -xDt/camera_t::iNavDivStepTranslation;
       float fMoveUp = yDt/camera_t::iNavDivStepTranslation;
       if (fabs(fMoveRight) > camera_t::fNavTresh) translate_camera_right(fMoveRight);
       if (fabs(fMoveUp) > camera_t::fNavTresh) translate_camera_up(fMoveUp);
     }
 
-  if (bRotateCamera){
+  if (bRotateCamera && !astate->disable_mouse_camera_control){
       float fRotAngleX = yDt/camera_t::iNavDivStepRotation;
       float fRotAngleY = xDt/camera_t::iNavDivStepRotation;
       if (fabs(fRotAngleY) > camera_t::fNavTresh) rotate_camera_orbit_yaw(fRotAngleY);

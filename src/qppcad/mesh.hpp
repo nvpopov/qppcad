@@ -1,24 +1,26 @@
 #ifndef QPP_MESH_H
 #define QPP_MESH_H
+
+#include <qppcad/qppcad.hpp>
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
-#include <io/strfun.hpp>
 #include <geom/lace3d.hpp>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 namespace qpp{
 
-  /// mesh render type
+  ///
+  /// \brief The mesh_rt enum
+  ///
   enum mesh_rt {
     mesh_rt_triangles,
     mesh_rt_lines
   };
 
-  /// Mesh consist of vertexes, indices and normals
+  ///
+  /// \brief The mesh_t class
+  ///
   class mesh_t{
   public:
 
@@ -38,13 +40,59 @@ namespace qpp{
     GLenum mesh_rt;
 
     mesh_t();
+
+    ///
+    /// \brief generate_sphere_mesh
+    /// \param lat_bands
+    /// \param long_bands
+    /// \return
+    ///
     static mesh_t *generate_sphere_mesh(const int lat_bands, const int long_bands);
+
+    ///
+    /// \brief generate_cylinder_whole
+    /// \param num_phi
+    /// \param num_z
+    /// \return
+    ///
     static mesh_t *generate_cylinder_whole(const int num_phi, const int num_z);
+
+    ///
+    /// \brief generate_unit_line
+    /// \return
+    ///
     static mesh_t *generate_unit_line();
+
+    ///
+    /// \brief generate_cone
+    /// \return
+    ///
     static mesh_t *generate_cone();
+
+    ///
+    /// \brief generate_unit_cube
+    /// \return
+    ///
     static mesh_t *generate_unit_cube();
+
+    ///
+    /// \brief generate_xz_plane
+    /// \param n_x
+    /// \param dx
+    /// \param n_z
+    /// \param dz
+    /// \return
+    ///
     static mesh_t *generate_xz_plane(const int n_x,const float dx, const int n_z, const float dz);
+
+    ///
+    /// \brief render
+    ///
     void render();
+
+    ///
+    /// \brief bind_data
+    ///
     void bind_data();
   };
 

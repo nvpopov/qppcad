@@ -1,7 +1,7 @@
 #ifndef QPP_WS_ATOM_LIST_H
 #define QPP_WS_ATOM_LIST_H
 
-
+#include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
 #include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
@@ -12,13 +12,13 @@
 #include <qppcad/ws_item.hpp>
 #include <qppcad/camera.hpp>
 #include <qppcad/file_formats.hpp>
-#include <functional>
-#include <vector>
-#include <iostream>
-#include <algorithm>
+
 
 namespace qpp{
 
+  ///
+  /// \brief The ws_atom_list_t class
+  ///
   class ws_atom_list_t : public ws_item_t {
     public:
       int iDim;
@@ -52,6 +52,10 @@ namespace qpp{
       void update(float delta_time) override;
       float get_bb_prescaller() override;
 
+      ///
+      /// \brief shift
+      /// \param vShift
+      ///
       void shift(const vector3<float> vShift);
 
       ///

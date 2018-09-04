@@ -16,6 +16,7 @@
 #include <qppcad/gl_math.hpp>
 #include <qppcad/camera.hpp>
 #include <qppcad/gizmo.hpp>
+#include <qppcad/file_dialog.hpp>
 #include <geom/lace3d.hpp>
 
 namespace qpp {
@@ -35,14 +36,17 @@ namespace qpp {
   ///
   class app_state_t {
   public:
-    draw_pipeline_t*     dp;
-    shader_program_t*    default_program;
-    shader_program_t*    unit_line_program;
-    shader_program_t*    line_mesh_program;
-    shader_program_t*    mvp_ssl_program;
-    workspace_manager_t* workspace_manager;
-    ui_manager_t*        ui_manager;
-    camera_t*            camera;
+    draw_pipeline_t*               dp;
+
+    shader_program_t*              default_program;
+    shader_program_t*              unit_line_program;
+    shader_program_t*              line_mesh_program;
+    shader_program_t*              mvp_ssl_program;
+
+    std::shared_ptr<workspace_manager_t> workspace_manager;
+    std::shared_ptr<ui_manager_t>        ui_manager;
+
+    camera_t*  camera;
 
     float mouse_x;
     float mouse_y;
@@ -76,6 +80,7 @@ namespace qpp {
     vector3<float> light_pos_tr;
 
     bool mouse_lb_pressed;
+    bool disable_mouse_camera_control;
 
     bool bDrawAxis;
     bool bDrawGrid;
@@ -121,12 +126,13 @@ namespace qpp {
       cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
       //cur_edit_type = app_edit_type::EDIT_WS_ITEM_CONTENT;
 
-      bDrawAxis              = true;
-      bDrawGrid              = false;
-      bDebugDrawRTree        = false;
-      bDebugDrawSelectionRay = false;
-      show_object_inspector  = true;
-      mouse_lb_pressed       = false;
+      bDrawAxis                    = true;
+      bDrawGrid                    = false;
+      bDebugDrawRTree              = false;
+      bDebugDrawSelectionRay       = false;
+      show_object_inspector        = true;
+      mouse_lb_pressed             = false;
+      disable_mouse_camera_control = false;
 
       light_pos    = vector3<float>(0, 25.0, 25.0);
       light_pos_tr = vector3<float>(0, 0, 0);
@@ -152,9 +158,9 @@ namespace qpp {
       line_mesh_program   = gen_line_mesh_program();
       mvp_ssl_program  = gen_mv_screen_space_lighting_program();
 
-      workspace_manager = new workspace_manager_t();
+      workspace_manager = std::make_shared<workspace_manager_t>();
       workspace_manager->init_default_workspace();
-      ui_manager = new ui_manager_t();
+      ui_manager = std::make_shared<ui_manager_t>();
       ui_manager->setup_style();
     }
 
