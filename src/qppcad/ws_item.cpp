@@ -6,13 +6,12 @@
 using namespace qpp;
 
 ws_item_t::ws_item_t(workspace_t* parent){
-  pos = vector3<float>(0.0f, 0.0f, 0.0f);
-  scale    = vector3<float>(1.0f, 1.0f, 1.0f);
-  rotation = vector3<float>(0.0f, 0.0f, 0.0f);
-  bSelected = false;
-  parent_ws = parent;
-
-  b_show = true;
+  pos         = vector3<float>(0.0f, 0.0f, 0.0f);
+  scale       = vector3<float>(1.0f, 1.0f, 1.0f);
+  rotation    = vector3<float>(0.0f, 0.0f, 0.0f);
+  is_selected = false;
+  parent_ws   = parent;
+  b_show      = true;
   b_draw_cell = true;
 }
 
@@ -41,15 +40,15 @@ void ws_item_t::set_name(const char *_name){
 void ws_item_t::render(){
   app_state_c = &(c_app::get_state());
   if (app_state_c->dp != nullptr){
-      if (bSelected && support_selection() && !support_rendering_bounding_box()){
+      if (is_selected && support_selection() && !support_rendering_bounding_box()){
           app_state_c->dp->begin_render_aabb();
           if (parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
             app_state_c->dp->render_aabb(clr_fuchsia,
-                                    pos + aabb.min ,
-                                    pos + aabb.max  );
+                                         pos + aabb.min ,
+                                         pos + aabb.max  );
           else app_state_c->dp->render_aabb_segmented(clr_olive,
-                                              pos + aabb.min ,
-                                              pos + aabb.max  );
+                                                      pos + aabb.min ,
+                                                      pos + aabb.max  );
           app_state_c->dp->end_render_aabb();
         }
     }
@@ -57,14 +56,16 @@ void ws_item_t::render(){
 }
 
 void ws_item_t::render_ui(){
-  ImGui::Text("General properties:");
   ImGui::Spacing();
-  char * s_item_name = new char[60];
-  strcpy(s_item_name, name.c_str());
-  ImGui::InputText("Item name", s_item_name, 60);
-  ImGui::Checkbox("Draw workspace item", &b_show);
-  if (name != s_item_name) set_name(s_item_name);
-  delete[] s_item_name;
+  if (ImGui::CollapsingHeader("General properties", ImGuiTreeNodeFlags_DefaultOpen)){
+      char * s_item_name = new char[60];
+      strcpy(s_item_name, name.c_str());
+      ImGui::InputText("Item name", s_item_name, 60);
+      ImGui::Checkbox("Draw workspace item", &b_show);
+      ImGui::Spacing();
+      if (name != s_item_name) set_name(s_item_name);
+      delete[] s_item_name;
+    }
 }
 
 

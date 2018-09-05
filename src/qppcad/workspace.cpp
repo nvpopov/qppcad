@@ -8,7 +8,7 @@ using namespace qpp;
 
 int16_t workspace_t::get_selected_item(){
   for (uint16_t i = 0; i < ws_items.size(); i++)
-    if (ws_items[i]->bSelected) return i;
+    if (ws_items[i]->is_selected) return i;
   return -1;
 }
 
@@ -21,13 +21,13 @@ ws_item_t *workspace_t::get_selected(){
 void workspace_t::set_selected_item(const int16_t sel_idx){
   unselect_all();
   if (sel_idx >= 0 && sel_idx < ws_items.size() && ws_items.size() > 0){
-      ws_items[sel_idx]->bSelected = true;
+      ws_items[sel_idx]->is_selected = true;
       gizmo->attached_item = ws_items[sel_idx];
     }
 }
 
 void workspace_t::unselect_all(){
-  for (uint16_t i = 0; i < ws_items.size(); i++) ws_items[i]->bSelected = false;
+  for (uint16_t i = 0; i < ws_items.size(); i++) ws_items[i]->is_selected = false;
 }
 
 void workspace_t::workspace_changed(){
@@ -79,8 +79,7 @@ void workspace_t::render(){
 
   if (gizmo->is_active && gizmo->attached_item) gizmo->render();
 
-
-  if (astate->bDebugDrawSelectionRay){
+  if (astate->debug_show_selection_ray){
       astate->dp->begin_render_line();
       astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), ray_debug.start,
                               ray_debug.start+ray_debug.dir*55.0);
@@ -90,7 +89,7 @@ void workspace_t::render(){
   if (astate->dp != nullptr){
 
       ///// Draw grid /////
-      if (astate->bDrawGrid){
+      if (astate->show_grid){
           astate->line_mesh_program->begin_shader_program();
           vector3<float> color(0.75, 0.75, 0.75);
           astate->line_mesh_program->set_u(sp_u_name::m_model_view_proj,
@@ -110,7 +109,7 @@ void workspace_t::render(){
       ///// Draw grid /////
 
       ///// Draw axis /////
-      if (astate->bDrawAxis){
+      if (astate->show_axis){
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
           float fAxisLen = 0.07f *astate->camera->fStoredDist;
           if (astate->camera->cur_proj ==
@@ -154,7 +153,7 @@ void workspace_t::mouse_click(const double fMouseX, const double fMouseY){
   bool bHitAny = false;
 
   if (cur_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT){
-      for (ws_item_t* ws_it : ws_items) ws_it->bSelected = false;
+      for (ws_item_t* ws_it : ws_items) ws_it->is_selected = false;
       gizmo->attached_item = nullptr;
     }
 
@@ -164,13 +163,13 @@ void workspace_t::mouse_click(const double fMouseX, const double fMouseY){
       if ((bWsHit) && (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
           && ws_it->support_selection()){
           gizmo->attached_item = ws_it;
-          ws_it->bSelected = true;
+          ws_it->is_selected = true;
         }
     }
 
   if ((cur_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT) && (!bHitAny)){
       gizmo->attached_item = nullptr;
-      for (ws_item_t* ws_it : ws_items) ws_it->bSelected = false;
+      for (ws_item_t* ws_it : ws_items) ws_it->is_selected = false;
     }
 
 }

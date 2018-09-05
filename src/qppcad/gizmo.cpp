@@ -17,18 +17,18 @@ gizmo_t::gizmo_t(){
 
 void gizmo_t::render(){
   app_state_t* astate = &(c_app::get_state());
-  astate->dp->begin_render_cube();
+  astate->dp->begin_render_general_mesh();
 
   vector3<float> _v_scale = vector3<float>::Ones()*gizmo_box_size;
-
+  vector3<float> _v_one = vector3<float>::Ones();
   if (!interact_at_the_moment){
       astate->dp->render_cube(pos, _v_scale * 0.9f, clr_gray);
       astate->dp->render_cube(pos + gizmo_axis[0] * gizmo_shift_magnitude,
           _v_scale, gizmo_color[0]);
       astate->dp->render_cube(pos + gizmo_axis[1] * gizmo_shift_magnitude,
           _v_scale, gizmo_color[1]);
-      astate->dp->render_cube(pos + gizmo_axis[2] * gizmo_shift_magnitude,
-          _v_scale, gizmo_color[2]);
+      astate->dp->render_cone(pos + gizmo_axis[2] * gizmo_shift_magnitude,
+          _v_one, gizmo_color[2]);
 
       astate->dp->render_cube(pos + gizmo_axis[0] * (gizmo_shift_magnitude-gizmo_box_size)*0.5f,
           vector3<float>((gizmo_shift_magnitude/2-gizmo_box_size)+_v_scale[0],
@@ -48,7 +48,7 @@ void gizmo_t::render(){
           (gizmo_shift_magnitude/2-gizmo_box_size)+ _v_scale[2]),
           gizmo_color[2]);
 
-      astate->dp->end_render_cube();
+      astate->dp->end_render_general_mesh();
 
     }
 
@@ -98,7 +98,12 @@ void gizmo_t::update_gizmo(float delta_time){
   app_state_t *astate = &(c_app::get_state());
   ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->cur_edit_type;
 
-  if (attached_item) pos = attached_item->aabb.min+attached_item->pos;
+  if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM)
+    pos = attached_item->aabb.min+attached_item->pos;
+
+  if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM_CONTENT)
+    pos = attached_item->pos + attached_item->get_gizmo_content_barycenter();
+
 
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
       cur_edit_type== ws_edit_type::EDIT_WS_ITEM){

@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <functional>
 #include <tuple>
+#include <unordered_set>
 #include <io/strfun.hpp>
 #include <qppcad/file_formats.hpp>
 

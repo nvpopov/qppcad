@@ -21,13 +21,25 @@ namespace qpp{
   ///
   class ws_atom_list_t : public ws_item_t {
     public:
-      int iDim;
-      bool bNeedToRebuildNBT;
+
+      bool need_to_rebuild_nbt;
+
+      ///
+      /// \brief display_imaginary_atoms
+      ///
+      bool show_imaginary_atoms;
+      bool show_imaginary_bonds;
+      bool show_bonds;
+      bool show_atoms;
+
       xgeometry<float, periodic_cell<float> > *geom;
       bonding_table<float> *bt;
       neighbours_table<float> *nt;
       tws_tree<float, periodic_cell<float> > *tws_tr;
       extents_observer<float, periodic_cell<float> > *ext_obs;
+      std::unordered_set<uint16_t> atom_selection;
+
+      vector3<float> gizmo_barycenter;
 
       ws_atom_list_t(workspace_t* parent);
 
@@ -51,6 +63,9 @@ namespace qpp{
       std::string compose_item_name() override;
       void update(float delta_time) override;
       float get_bb_prescaller() override;
+
+      void recalc_gizmo_barycenter();
+      const vector3<float> get_gizmo_content_barycenter() override;
 
       ///
       /// \brief shift

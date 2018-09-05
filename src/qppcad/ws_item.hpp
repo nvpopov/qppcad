@@ -27,7 +27,7 @@ namespace qpp{
       vector3<float> rotation; ///
       bool b_show; ///
       bool b_draw_cell; ///
-      bool bSelected; ///
+      bool is_selected; ///
 
       ///
       /// \brief ws_item_t
@@ -137,6 +137,12 @@ namespace qpp{
       /// \return
       ///
       virtual float get_bb_prescaller();
+
+      ///
+      /// \brief get_gizmo_content_barycenter
+      /// \return
+      ///
+      virtual const vector3<float> get_gizmo_content_barycenter() = 0;
 
       ///
       /// \brief ~ws_item_t

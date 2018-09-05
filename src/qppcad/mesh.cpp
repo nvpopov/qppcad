@@ -188,6 +188,54 @@ mesh_t *mesh_t::generate_unit_line(){
 
 }
 
+mesh_t *mesh_t::generate_cone_mesh(const float radius,
+                                   const float height,
+                                   const uint8_t num_segment_height,
+                                   const uint8_t num_segment_base){
+  mesh_t* _mesh = new mesh_t();
+
+  float delta_angle  = (qpp::pi * 2) / num_segment_base;
+  float delta_height = height / static_cast<float>(num_segment_height);
+  _mesh->indices.resize(num_segment_height * num_segment_base*6 + 3 * num_segment_base);
+  vector3<float> normal = (vector3<float>(radius, height, 0.0f)).normalized();
+  uint32_t offset = 0;
+  for (uint8_t i = 0; i <= num_segment_height; i++){
+      float r_0 = radius * (1 - i / static_cast<float>(num_segment_height));
+      for (uint8_t j = 0; j <= num_segment_base; j++){
+          float x_0 = r_0 * cosf(j * delta_angle);
+          float z_0 = r_0 * sinf(j * delta_angle);
+
+          Eigen::Matrix3f rotm;
+          rotm = Eigen::AngleAxisf(-j * delta_angle, vector3<float>::UnitY());
+          vector3<float> normal_rotated = rotm * normal;
+          _mesh->vertecies.push_back(x_0);
+          _mesh->vertecies.push_back(i * delta_height);
+          _mesh->vertecies.push_back(z_0);
+
+          _mesh->normals.push_back(normal_rotated[0]);
+          _mesh->normals.push_back(normal_rotated[1]);
+          _mesh->normals.push_back(normal_rotated[2]);
+
+
+          if (i != num_segment_height && j != num_segment_base){
+            _mesh->indices[offset + num_segment_base + 2];
+            _mesh->indices[offset];
+            _mesh->indices[offset + num_segment_base + 1];
+            _mesh->indices[offset + num_segment_base + 2];
+            _mesh->indices[offset + 1];
+            _mesh->indices[offset];
+          }
+
+          offset ++;
+        }
+    }
+
+  _mesh->num_primitives = _mesh->indices.size();
+  _mesh->bind_data();
+  _mesh->mesh_rt = GL_TRIANGLES;
+  return _mesh;
+}
+
 mesh_t *mesh_t::generate_unit_cube(){
   mesh_t* _mesh = new mesh_t();
   float cv[] = {

@@ -7,9 +7,6 @@ using namespace qpp;
 
 ws_atom_list_t::ws_atom_list_t(workspace_t* parent):ws_item_t(parent){
 
-  bNeedToRebuildNBT = true;
-  iDim = 3;
-  //cell = new periodic_cell<float>({20.0, 0.0, 0.0}, {0.0, 20.0, 0.0}, {0.0, 0.0, 20.0});
 
   geom = new xgeometry<float, periodic_cell<float> >(3,"rg1");
   geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel"},
@@ -24,6 +21,10 @@ ws_atom_list_t::ws_atom_list_t(workspace_t* parent):ws_item_t(parent){
   tws_tr = new tws_tree<float>(*geom);
   tws_tr->bAutoBonding = true;
 
+  show_imaginary_atoms = true;
+  show_imaginary_bonds = true;
+  show_atoms = true;
+  show_bonds = true;
   parent->add_item_to_workspace(this);
 
 }
@@ -54,7 +55,7 @@ void ws_atom_list_t::render(){
   vector3<float> _pos = pos;
   if (app_state_c->dp != nullptr){
 
-      if (astate->bDebugDrawRTree){
+      if (astate->debug_show_tws_tree){
           astate->dp->begin_render_aabb();
           tws_tr->apply_visitor( [astate, _pos](tws_node<float> *inNode, int deepLevel){
               astate->dp->render_aabb(clr_maroon, inNode->bb.min+_pos, inNode->bb.max+_pos);});
@@ -64,7 +65,7 @@ void ws_atom_list_t::render(){
       if (geom->DIM == 3 && b_show && b_draw_cell){
           astate->dp->begin_render_line();
           vector3<float> cell_clr = clr_black;
-          if (bSelected){
+          if (is_selected){
               if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM)  cell_clr = clr_red;
               if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) cell_clr =clr_lime;
             }
@@ -81,10 +82,11 @@ void ws_atom_list_t::render(){
       astate->dp->begin_atom_render();
 
       // draw {0,..} atoms
-      for (int i = 0; i < geom->nat(); i++) render_atom(i, index::D(geom->DIM).all(0));
+      for (int i = 0; i < geom->nat(); i++)
+        if (show_atoms) render_atom(i, index::D(geom->DIM).all(0));
 
       // draw imaginary atoms that appear due to periodic
-      if (geom->DIM > 0) for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
+      if (geom->DIM > 0 && show_atoms && show_imaginary_atoms) for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
         render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
 
       astate->dp->end_atom_render();
@@ -94,21 +96,22 @@ void ws_atom_list_t::render(){
       astate->dp->begin_render_bond();
 
 
-      for (uint16_t i = 0; i < geom->nat(); i++)
-        for (uint16_t j = 0; j < tws_tr->n(i); j++){
+      if (show_bonds)
+        for (uint16_t i = 0; i < geom->nat(); i++)
+          for (uint16_t j = 0; j < tws_tr->n(i); j++){
 
-            uint16_t id1 = i;
-            uint16_t id2 = tws_tr->table_atm(i,j);
-            index idx2 = tws_tr->table_idx(i,j);
+              uint16_t id1 = i;
+              uint16_t id2 = tws_tr->table_atm(i,j);
+              index idx2 = tws_tr->table_idx(i,j);
 
-            render_bond(id1, index::D(geom->DIM).all(0), id2, idx2);
+              render_bond(id1, index::D(geom->DIM).all(0), id2, idx2);
 
-            if(idx2 != index::D(geom->DIM).all(0))
-              render_bond(id2, idx2, id1, index::D(geom->DIM).all(0));
+              if(idx2 != index::D(geom->DIM).all(0) && show_imaginary_bonds)
+                render_bond(id2, idx2, id1, index::D(geom->DIM).all(0));
 
-          }
+            }
 
-      if (geom->DIM > 0)
+      if (geom->DIM > 0 && show_imaginary_bonds)
         for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
           for (uint16_t j = 0; j < tws_tr->imgAtoms[i]->imBonds.size(); j++){
 
@@ -133,13 +136,13 @@ void ws_atom_list_t::render_atom(const uint16_t atNum, const index &atIndex){
   float fDrawRad = 0.4f;
   vector3<float> color(0.0, 0.0, 1.0);
   if(ap_idx != -1){
-      fDrawRad = ptable::get_inst()->arecs[ap_idx-1].aRadius * app_state_c->fAtomRadiusScaleFactor;
+      fDrawRad = ptable::get_inst()->arecs[ap_idx-1].aRadius * app_state_c->atom_radius_scale_factor;
       color = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;
     }
 
-  if((parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) &&
-     (geom->xfield<bool>("sel", atNum)) && bSelected)
-    color = vector3<float>(0.43f, 0.55f, 0.12f);
+  if(parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
+    if(atom_selection.find(atNum) != atom_selection.end() && is_selected)
+      color = vector3<float>(0.43f, 0.55f, 0.12f);
 
   app_state_c->dp->render_atom(color, geom->pos(atNum, atIndex) + pos, fDrawRad);
 }
@@ -151,14 +154,12 @@ void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
   if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
   app_state_c->dp->render_bond(bcolor, geom->pos(atNum1, atIndex1)+ pos,
                                geom->pos(atNum2, atIndex2)+ pos,
-                               app_state_c->fBondScaleFactor);
+                               app_state_c->bond_radius_scale_factor);
 }
 
 void ws_atom_list_t::render_ui(){
   ws_item_t::render_ui();
-  if (geom->DIM > 0) ImGui::Checkbox("Draw periodic cell", &b_draw_cell);
 
-  ImGui::Spacing();
   if (ImGui::CollapsingHeader("Summary")){
       ImGui::Spacing();
       ImGui::Columns(2);
@@ -168,6 +169,7 @@ void ws_atom_list_t::render_ui(){
       ImGui::Text(fmt::format("{}", geom->nat()).c_str());
       ImGui::Text(fmt::format("{}", geom->n_atom_types()).c_str());
       ImGui::Columns(1);
+      ImGui::Spacing();
     }
 
 
@@ -207,9 +209,17 @@ void ws_atom_list_t::render_ui(){
       ImGui::NextColumn();
 
       ImGui::Columns(1);
+      ImGui::Spacing();
     }
 
   if (ImGui::CollapsingHeader("Display and styling")){
+      ImGui::Checkbox("Show atoms", &show_atoms);
+      ImGui::Checkbox("Show bonds", &show_bonds);
+      if (geom->DIM > 0) {
+          ImGui::Checkbox("Draw periodic cell", &b_draw_cell);
+          ImGui::Checkbox("Show imaginary atoms", &show_imaginary_atoms);
+          ImGui::Checkbox("Show imaginary bonds", &show_imaginary_bonds);
+        }
 
     }
 
@@ -230,10 +240,14 @@ bool ws_atom_list_t::mouse_click(ray<float> *click_ray){
       std::sort(res.begin(), res.end(), tws_query_data_sort_by_dist<float>);
 
       if (res.size() > 0){
-          //std::cout << res[0]->atm << std::endl;
-          if ((parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) && bSelected &&
-              (res[0]->idx == index::D(geom->DIM).all(0)))
-            geom->xfield<bool>("sel", res[0]->atm ) = !(geom->xfield<bool>("sel", res[0]->atm ));
+          if (parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && is_selected ){
+              recalc_gizmo_barycenter();
+              auto atom_sel_it = atom_selection.find(res[0]->atm);
+              if (atom_sel_it == atom_selection.end())
+                atom_selection.insert(res[0]->atm);
+              else
+                atom_selection.erase(atom_sel_it);
+            };
           return true;
         }
     }
@@ -263,6 +277,24 @@ void ws_atom_list_t::update(float delta_time){
 float ws_atom_list_t::get_bb_prescaller(){
   if (geom->DIM == 3) return 1.5f;
   return 1.1f;
+}
+
+void ws_atom_list_t::recalc_gizmo_barycenter(){
+  //barycenter in local frame
+  gizmo_barycenter = vector3<float>::Zero();
+  if (geom->nat() == 0) return;
+
+  if (atom_selection.size() > 0){
+      for (const auto& atm_idx : atom_selection)
+        gizmo_barycenter += geom->pos(atm_idx);
+      gizmo_barycenter /= atom_selection.size();
+    } else {
+      gizmo_barycenter = (aabb.max + aabb.min) / 2;
+    }
+}
+
+const vector3<float> ws_atom_list_t::get_gizmo_content_barycenter(){
+  return gizmo_barycenter;
 }
 
 void ws_atom_list_t::shift(const vector3<float> vShift){
@@ -346,5 +378,5 @@ void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
 
 void ws_atom_list_t::rebuild_ngbt(){
 
-  bNeedToRebuildNBT = false;
+  need_to_rebuild_nbt = false;
 }

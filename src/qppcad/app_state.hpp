@@ -59,19 +59,20 @@ namespace qpp {
 
     // sphere mesh with differnet resolutions
     std::vector<mesh_t*> _sph_meshes;
-    mesh_t* cylinder_mesh;
-    mesh_t* unit_line;
-    mesh_t* trm;
-    mesh_t* gridXZ;
-    mesh_t* unit_cube;
+    mesh_t *cylinder_mesh;
+    mesh_t *unit_line;
+    mesh_t *trm;
+    mesh_t *gridXZ;
+    mesh_t *unit_cube;
+    mesh_t *unit_cone;
 
     int FPS;
 
     int wWidth;
     int wHeight;
 
-    float fAtomRadiusScaleFactor;
-    float fBondScaleFactor;
+    float atom_radius_scale_factor;
+    float bond_radius_scale_factor;
 
     vector2<float> vViewportXY;
     vector2<float> vViewportWidthHeight;
@@ -83,10 +84,10 @@ namespace qpp {
     bool mouse_lb_pressed;
     bool disable_mouse_camera_control;
 
-    bool bDrawAxis;
-    bool bDrawGrid;
-    bool bDebugDrawRTree;
-    bool bDebugDrawSelectionRay;
+    bool show_axis;
+    bool show_grid;
+    bool debug_show_tws_tree;
+    bool debug_show_selection_ray;
     bool show_object_inspector;
     ///
     /// \brief update_mouse_coord
@@ -127,10 +128,10 @@ namespace qpp {
       cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
       //cur_edit_type = app_edit_type::EDIT_WS_ITEM_CONTENT;
 
-      bDrawAxis                    = true;
-      bDrawGrid                    = false;
-      bDebugDrawRTree              = false;
-      bDebugDrawSelectionRay       = false;
+      show_axis                    = true;
+      show_grid                    = false;
+      debug_show_tws_tree          = false;
+      debug_show_selection_ray     = false;
       show_object_inspector        = true;
       mouse_lb_pressed             = false;
       disable_mouse_camera_control = false;
@@ -140,8 +141,8 @@ namespace qpp {
 
       wWidth  = 600;
       wHeight = 600;
-      fAtomRadiusScaleFactor = 0.3f;
-      fBondScaleFactor = 0.09f;
+      atom_radius_scale_factor = 0.3f;
+      bond_radius_scale_factor = 0.09f;
 
       camera = nullptr;
 
@@ -153,6 +154,7 @@ namespace qpp {
       unit_line     = mesh_t::generate_unit_line();
       gridXZ        = mesh_t::generate_xz_plane(20, 0.5, 20, 0.5);
       unit_cube     = mesh_t::generate_unit_cube();
+      unit_cone     = mesh_t::generate_cone_mesh(1.0f, 1.0f, 1, 10);
 
       default_program       = gen_default_program();
       unit_line_program = gen_unit_line_program();

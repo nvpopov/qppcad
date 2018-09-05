@@ -134,9 +134,15 @@ void draw_pipeline_t::render_primitive(){
 
 }
 
-void draw_pipeline_t::begin_render_cube(){
+void draw_pipeline_t::begin_render_general_mesh(){
   app_state_t* astate = &(c_app::get_state());
   astate->mvp_ssl_program->begin_shader_program();
+}
+
+void draw_pipeline_t::render_general_mesh(const vector3<float> &mesh_pos,
+                                          const vector3<float> &mesh_scale,
+                                          const vector3<float> &mesh_color){
+
 }
 
 void draw_pipeline_t::render_cube(const vector3<float> &cube_pos,
@@ -167,7 +173,32 @@ void draw_pipeline_t::render_cube(const vector3<float> &cube_pos,
   //glEnable(GL_CULL_FACE);
 }
 
-void draw_pipeline_t::end_render_cube(){
+void draw_pipeline_t::render_cone(const vector3<float> &cone_pos,
+                                  const vector3<float> &cone_size,
+                                  const vector3<float> &cone_color){
+  app_state_t* astate = &(c_app::get_state());
+
+
+  Eigen::Transform<float, 3, Eigen::Affine>
+      t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
+  t.prescale(cone_size);
+  t.pretranslate(cone_pos);
+  matrix4<float> mat_model = t.matrix()*matrix4<float>::Identity();
+
+  matrix4<float> mat_model_view      = astate->camera->mView * mat_model;
+  matrix4<float> mat_model_view_proj = astate->camera->mViewProjection * mat_model;
+  matrix4<float> mat_model_view_inv_tr = (mat_model_view).inverse().transpose();
+
+  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
+  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+  astate->mvp_ssl_program->set_u(sp_u_name::v_color, (GLfloat*)(cone_color.data()));
+  //glDisable(GL_CULL_FACE);
+  astate->unit_cone->render();
+  //glEnable(GL_CULL_FACE);
+}
+
+void draw_pipeline_t::end_render_general_mesh(){
   app_state_t* astate = &(c_app::get_state());
   astate->mvp_ssl_program->end_shader_program();
 }

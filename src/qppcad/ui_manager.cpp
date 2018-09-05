@@ -95,20 +95,20 @@ void ui_manager_t::render_main_menu(){
 
           if(ImGui::BeginMenu("Debug")){
               ImGui::Checkbox("Show tws-Tree",
-                              &(c_app::get_state().bDebugDrawRTree));
+                              &(c_app::get_state().debug_show_tws_tree));
               ImGui::Checkbox("Show debug selection ray",
-                              &(c_app::get_state().bDebugDrawSelectionRay));
+                              &(c_app::get_state().debug_show_selection_ray));
               ImGui::EndMenu();
             }
 
-          ImGui::Checkbox("Cartesian Axis" , &(c_app::get_state().bDrawAxis));
-          ImGui::Checkbox("Grid XY" , &(c_app::get_state().bDrawGrid));
+          ImGui::Checkbox("Cartesian Axis" , &(c_app::get_state().show_axis));
+          ImGui::Checkbox("Grid XY" , &(c_app::get_state().show_grid));
 
           ImGui::SliderFloat("Atom size scale",
-                             &(c_app::get_state().fAtomRadiusScaleFactor),
+                             &(c_app::get_state().atom_radius_scale_factor),
                              0.25f, 2.0f, "%.4f", 1);
           ImGui::SliderFloat("Bond size scale",
-                             &(c_app::get_state().fBondScaleFactor),
+                             &(c_app::get_state().bond_radius_scale_factor),
                              0.02f, 2.0f, "%.4f", 1);
 
           ImGui::EndMenu();

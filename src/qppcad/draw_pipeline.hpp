@@ -36,11 +36,17 @@ namespace qpp {
     void render_vector();
     void render_primitive();
 
-    void begin_render_cube();
+    void begin_render_general_mesh();
+    void render_general_mesh(const vector3<float> &mesh_pos,
+                             const vector3<float> &mesh_scale,
+                             const vector3<float> &mesh_color);
     void render_cube(const vector3<float> &cube_pos,
                      const vector3<float> &cube_size,
                      const vector3<float> &cube_color);
-    void end_render_cube();
+    void render_cone(const vector3<float> &cone_pos,
+                     const vector3<float> &cone_size,
+                     const vector3<float> &cone_color);
+    void end_render_general_mesh();
 
     void begin_render_aabb();
     void render_aabb(const vector3<float> &color,
