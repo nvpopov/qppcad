@@ -196,7 +196,7 @@ mesh_t *mesh_t::generate_cone_mesh(const float radius,
 
   float delta_angle  = (qpp::pi * 2) / num_segment_base;
   float delta_height = height / static_cast<float>(num_segment_height);
-  _mesh->indices.resize(num_segment_height * num_segment_base*6 + 3 * num_segment_base);
+  //_mesh->indices.resize(num_segment_height * num_segment_base*6 + 3 * num_segment_base);
   vector3<float> normal = (vector3<float>(radius, height, 0.0f)).normalized();
   uint32_t offset = 0;
   for (uint8_t i = 0; i <= num_segment_height; i++){
@@ -218,17 +218,50 @@ mesh_t *mesh_t::generate_cone_mesh(const float radius,
 
 
           if (i != num_segment_height && j != num_segment_base){
-            _mesh->indices[offset + num_segment_base + 2];
-            _mesh->indices[offset];
-            _mesh->indices[offset + num_segment_base + 1];
-            _mesh->indices[offset + num_segment_base + 2];
-            _mesh->indices[offset + 1];
-            _mesh->indices[offset];
+            _mesh->indices.push_back(offset + num_segment_base + 2);
+            _mesh->indices.push_back(offset);
+            _mesh->indices.push_back(offset + num_segment_base + 1);
+            _mesh->indices.push_back(offset + num_segment_base + 2);
+            _mesh->indices.push_back(offset + 1);
+            _mesh->indices.push_back(offset);
           }
 
           offset ++;
         }
     }
+
+  //lo cap
+
+  uint32_t center_idx = offset;
+  _mesh->vertecies.push_back(0.0f);
+  _mesh->vertecies.push_back(0.0f);
+  _mesh->vertecies.push_back(0.0f);
+
+  _mesh->normals.push_back(0.0f);
+  _mesh->normals.push_back(-1.0f);
+  _mesh->normals.push_back(1.0f);
+
+  offset++;
+  for (uint8_t j=0; j<= num_segment_base; j++){
+    float x_0 = radius * cosf(j * delta_angle);
+    float z_0 = radius * sinf(j * delta_angle);
+
+    _mesh->vertecies.push_back(x_0);
+    _mesh->vertecies.push_back(0.0f);
+    _mesh->vertecies.push_back(z_0);
+
+    _mesh->normals.push_back(0.0f);
+    _mesh->normals.push_back(-1.0f);
+    _mesh->normals.push_back(0.0f);
+
+
+    if (j != num_segment_base){
+      _mesh->indices.push_back(center_idx);
+      _mesh->indices.push_back(offset);
+      _mesh->indices.push_back(offset+1);
+    }
+    offset++;
+  }
 
   _mesh->num_primitives = _mesh->indices.size();
   _mesh->bind_data();
