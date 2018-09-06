@@ -1,4 +1,5 @@
 #include <qppcad/mesh.hpp>
+#include <qppcad/app.hpp>
 
 using namespace qpp;
 
@@ -22,7 +23,17 @@ mesh_t::mesh_t(){
 void mesh_t::render(){
   glBindVertexArray(vao);
   glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, 0);
+}
 
+void mesh_t::begin_render_batch(){
+  glBindVertexArray(vao);
+}
+
+void mesh_t::render_batch(){
+  glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, 0);
+}
+
+void mesh_t::end_render_batch(){
   glBindVertexArray(0);
 }
 
@@ -49,9 +60,10 @@ void mesh_t::bind_data(){
                &indices[0], GL_STATIC_DRAW);
   glBindVertexArray(0);
 
-  std::cout << fmt::format("Binded data to mesh with vs={}, ns={}, is={}", vertecies.size(),
-                           normals.size(),
-                           indices.size()) << std::endl;
+  c_app::log(fmt::format("Binded data to mesh with vs={}, ns={}, is={}",
+                         vertecies.size(),
+                         normals.size(),
+                         indices.size()));
 }
 
 mesh_t* mesh_t::generate_sphere_mesh(const int lat_bands, const int long_bands){
@@ -115,7 +127,7 @@ mesh_t *mesh_t::generate_cylinder_whole(const int num_phi, const int num_z){
 
   float dZ = 1.0f/(num_z - 1);
   float dPhi = (2.0f * qpp::pi) / (num_phi - 1);
-  size_t id = 0;
+
   int numIdx = 0;
 
   for (int i = 0; i < num_z-1; i++){
@@ -164,6 +176,112 @@ mesh_t *mesh_t::generate_cylinder_whole(const int num_phi, const int num_z){
 
   _mesh->num_primitives = _mesh->indices.size()*3;
   _mesh->bind_data();
+  return _mesh;
+}
+
+mesh_t *mesh_t::generate_cylinder_mk2(const int num_segment_height,
+                                      const int num_segment_base,
+                                      const float radius,
+                                      const float height){
+  mesh_t* _mesh = new mesh_t();
+
+  float delta_angle  = (qpp::pi * 2) / num_segment_base;
+  float delta_height = height / static_cast<float>(num_segment_height);
+  uint32_t offset = 0;
+
+  for (uint8_t i = 0; i <= num_segment_height; i++){
+      for (uint8_t j = 0; j <= num_segment_base; j++){
+
+          float x_0 = sinf(j * delta_angle);
+          float y_0 = cosf(j * delta_angle);
+
+          vector3<float> normal1 = vector3<float>(x_0, y_0, 0.0f);
+          normal1 = normal1.normalized();
+
+          _mesh->vertecies.push_back(x_0);
+          _mesh->vertecies.push_back(y_0);
+          _mesh->vertecies.push_back(i * delta_height);
+
+          _mesh->normals.push_back(normal1[0]);
+          _mesh->normals.push_back(normal1[1]);
+          _mesh->normals.push_back(normal1[2]);
+
+          if (i != num_segment_height) {
+              _mesh->indices.push_back(offset + num_segment_base + 1);
+              _mesh->indices.push_back(offset);
+              _mesh->indices.push_back(offset + num_segment_base);
+              _mesh->indices.push_back(offset + num_segment_base + 1);
+              _mesh->indices.push_back(offset + 1);
+              _mesh->indices.push_back(offset);
+            }
+          offset ++;
+        }
+    }
+
+  uint32_t center_index = offset;
+  _mesh->vertecies.push_back(0.0f);
+  _mesh->vertecies.push_back(0.0f);
+  _mesh->vertecies.push_back(0.0f);
+  _mesh->normals.push_back( 0.0f);
+  _mesh->normals.push_back( 0.0);
+  _mesh->normals.push_back(-1.0f);
+
+  offset++;
+
+  for (uint32_t j = 0; j <= num_segment_base; j++){
+      float x_0 = sinf(j * delta_angle);
+      float y_0 = cosf(j * delta_angle);
+
+      _mesh->vertecies.push_back(x_0);
+      _mesh->vertecies.push_back(y_0);
+      _mesh->vertecies.push_back(0.0f);
+
+      _mesh->normals.push_back( 0.0f);
+      _mesh->normals.push_back( 0.0f);
+      _mesh->normals.push_back( -1.0f);
+
+      if ( j!= num_segment_base){
+          _mesh->indices.push_back(center_index);
+          _mesh->indices.push_back(offset);
+          _mesh->indices.push_back(offset+1);
+        }
+      offset++;
+    }
+
+  center_index = offset;
+  _mesh->vertecies.push_back(0.0f);
+  _mesh->vertecies.push_back(0.0f);
+  _mesh->vertecies.push_back(height);
+  _mesh->normals.push_back(0.0f);
+  _mesh->normals.push_back(0.0f);
+  _mesh->normals.push_back(1.0f);
+
+  offset++;
+
+  for (uint32_t j = 0; j <= num_segment_base; j++){
+      float x_0 = sinf(j * delta_angle);
+      float y_0 = cosf(j * delta_angle);
+
+      _mesh->vertecies.push_back(x_0);
+      _mesh->vertecies.push_back(y_0);
+      _mesh->vertecies.push_back(height);
+
+      _mesh->normals.push_back( 0.0f);
+      _mesh->normals.push_back( 0.0f);
+      _mesh->normals.push_back( 1.0f);
+
+      if ( j!= num_segment_base){
+          _mesh->indices.push_back(center_index);
+          _mesh->indices.push_back(offset+1);
+          _mesh->indices.push_back(offset);
+        }
+      offset++;
+    }
+
+
+  _mesh->num_primitives = _mesh->indices.size();
+  _mesh->bind_data();
+  _mesh->mesh_rt = GL_TRIANGLES;
   return _mesh;
 }
 
@@ -218,13 +336,13 @@ mesh_t *mesh_t::generate_cone_mesh(const float radius,
 
 
           if (i != num_segment_height && j != num_segment_base){
-            _mesh->indices.push_back(offset + num_segment_base + 2);
-            _mesh->indices.push_back(offset);
-            _mesh->indices.push_back(offset + num_segment_base + 1);
-            _mesh->indices.push_back(offset + num_segment_base + 2);
-            _mesh->indices.push_back(offset + 1);
-            _mesh->indices.push_back(offset);
-          }
+              _mesh->indices.push_back(offset + num_segment_base + 2);
+              _mesh->indices.push_back(offset);
+              _mesh->indices.push_back(offset + num_segment_base + 1);
+              _mesh->indices.push_back(offset + num_segment_base + 2);
+              _mesh->indices.push_back(offset + 1);
+              _mesh->indices.push_back(offset);
+            }
 
           offset ++;
         }
@@ -243,25 +361,25 @@ mesh_t *mesh_t::generate_cone_mesh(const float radius,
 
   offset++;
   for (uint8_t j=0; j<= num_segment_base; j++){
-    float x_0 = radius * cosf(j * delta_angle);
-    float z_0 = radius * sinf(j * delta_angle);
+      float x_0 = radius * cosf(j * delta_angle);
+      float z_0 = radius * sinf(j * delta_angle);
 
-    _mesh->vertecies.push_back(x_0);
-    _mesh->vertecies.push_back(0.0f);
-    _mesh->vertecies.push_back(z_0);
+      _mesh->vertecies.push_back(x_0);
+      _mesh->vertecies.push_back(0.0f);
+      _mesh->vertecies.push_back(z_0);
 
-    _mesh->normals.push_back(0.0f);
-    _mesh->normals.push_back(-1.0f);
-    _mesh->normals.push_back(0.0f);
+      _mesh->normals.push_back(0.0f);
+      _mesh->normals.push_back(-1.0f);
+      _mesh->normals.push_back(0.0f);
 
 
-    if (j != num_segment_base){
-      _mesh->indices.push_back(center_idx);
-      _mesh->indices.push_back(offset);
-      _mesh->indices.push_back(offset+1);
+      if (j != num_segment_base){
+          _mesh->indices.push_back(center_idx);
+          _mesh->indices.push_back(offset);
+          _mesh->indices.push_back(offset+1);
+        }
+      offset++;
     }
-    offset++;
-  }
 
   _mesh->num_primitives = _mesh->indices.size();
   _mesh->bind_data();

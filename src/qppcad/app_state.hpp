@@ -150,11 +150,11 @@ namespace qpp {
 
       //default meshes
       _sph_meshes.push_back(mesh_t::generate_sphere_mesh(15, 15));
-      cylinder_mesh = mesh_t::generate_cylinder_whole(12, 4);
+      cylinder_mesh = mesh_t::generate_cylinder_mk2(2, 10, 1.0f, 1.0f);
       unit_line     = mesh_t::generate_unit_line();
       gridXZ        = mesh_t::generate_xz_plane(20, 0.5, 20, 0.5);
       unit_cube     = mesh_t::generate_unit_cube();
-      unit_cone     = mesh_t::generate_cone_mesh(1.0f, 1.0f, 1, 10);
+      unit_cone     = mesh_t::generate_cone_mesh(1.0f, 2.0f, 1, 16);
 
       default_program       = gen_default_program();
       unit_line_program = gen_unit_line_program();

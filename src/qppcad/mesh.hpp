@@ -57,6 +57,20 @@ namespace qpp{
       ///
       static mesh_t *generate_cylinder_whole(const int num_phi, const int num_z);
 
+
+      ///
+      /// \brief generate_cylinder_mk2
+      /// \param num_segment_height
+      /// \param num_segment_base
+      /// \param radius
+      /// \param height
+      /// \return
+      ///
+      static mesh_t *generate_cylinder_mk2(const int num_segment_height,
+                                           const int num_segment_base,
+                                           const float radius,
+                                           const float height);
+
       ///
       /// \brief generate_unit_line
       /// \return
@@ -87,6 +101,10 @@ namespace qpp{
       /// \brief render
       ///
       void render();
+
+      void begin_render_batch();
+      void render_batch();
+      void end_render_batch();
 
       ///
       /// \brief bind_data

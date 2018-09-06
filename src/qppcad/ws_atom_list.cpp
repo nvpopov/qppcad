@@ -86,8 +86,9 @@ void ws_atom_list_t::render(){
         if (show_atoms) render_atom(i, index::D(geom->DIM).all(0));
 
       // draw imaginary atoms that appear due to periodic
-      if (geom->DIM > 0 && show_atoms && show_imaginary_atoms) for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
-        render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
+      if (geom->DIM > 0 && show_atoms && show_imaginary_atoms)
+        for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
+          render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
 
       astate->dp->end_atom_render();
       // atom render end
@@ -238,16 +239,17 @@ bool ws_atom_list_t::mouse_click(ray<float> *click_ray){
       tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, &res);
       //std::cout << "res_size = " << res.size() << std::endl;
       std::sort(res.begin(), res.end(), tws_query_data_sort_by_dist<float>);
-
+      recalc_gizmo_barycenter();
       if (res.size() > 0){
           if (parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && is_selected ){
-              recalc_gizmo_barycenter();
+
               auto atom_sel_it = atom_selection.find(res[0]->atm);
               if (atom_sel_it == atom_selection.end())
                 atom_selection.insert(res[0]->atm);
               else
                 atom_selection.erase(atom_sel_it);
             };
+          recalc_gizmo_barycenter();
           return true;
         }
     }
