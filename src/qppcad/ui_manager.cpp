@@ -43,7 +43,7 @@ void ui_manager_t::render_main_menu(){
 
   if (ImGui::BeginMainMenuBar()){
 
-      ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4,4));
+      ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6,6));
       if (ImGui::BeginMenu("File")){
           ImGui::MenuItem("New");
           ImGui::MenuItem("Open");
@@ -92,7 +92,6 @@ void ui_manager_t::render_main_menu(){
             }
 
 
-
           if(ImGui::BeginMenu("Debug")){
               ImGui::Checkbox("Show tws-Tree",
                               &(c_app::get_state().debug_show_tws_tree));
@@ -101,8 +100,12 @@ void ui_manager_t::render_main_menu(){
               ImGui::EndMenu();
             }
 
+          ImGui::Separator();
+
           ImGui::Checkbox("Cartesian Axis" , &(c_app::get_state().show_axis));
           ImGui::Checkbox("Grid XY" , &(c_app::get_state().show_grid));
+
+          ImGui::Separator();
 
           ImGui::SliderFloat("Atom size scale",
                              &(c_app::get_state().atom_radius_scale_factor),
@@ -263,6 +266,9 @@ void ui_manager_t::render_work_panel(){
 
       ImGui::Button("Undo" , ImVec2(40,20));
       ImGui::Button("Redo" , ImVec2(40,20));
+      ImGui::Separator();
+
+      ImGui::Button("Tr. mode" , ImVec2(60,20));
       ImGui::Separator();
 
       ImGui::Checkbox("Inspector", &(c_app::get_state().show_object_inspector));
