@@ -24,6 +24,7 @@ namespace qpp {
   class gizmo_t {
     public:
       vector3<float> pos;
+      vector3<float> accum_translate;
       float gizmo_box_size;
       float gizmo_shift_magnitude;
       bool is_active;
@@ -53,7 +54,7 @@ namespace qpp {
         return _gizmo_touched;
       }
 
-      void transform_attached_object(float delta_time);
+      void translate_attached(float delta_time);
       void clear_selected_axis();
       void update_gizmo(float delta_time);
       void render();

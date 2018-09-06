@@ -55,7 +55,7 @@ add_executable(qppcad
     src/qppcad/draw_pipeline.cpp
     src/qppcad/workspace.cpp
     src/qppcad/ws_item.cpp
-    src/qppcad/ws_atom_list.cpp
+    src/qppcad/ws_atoms_list.cpp
     src/qppcad/camera.cpp
     src/qppcad/action.cpp
     src/qppcad/gl_math.cpp

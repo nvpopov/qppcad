@@ -76,3 +76,12 @@ void ws_item_t::update(float delta_time){
 float ws_item_t::get_bb_prescaller(){
   return 1.0f;
 }
+
+void ws_item_t::on_begin_node_gizmo_translate(){
+  pos_old = pos;
+  c_app::log(fmt::format("Start of translation of node [{}], pos = {}", name, pos.to_string_vec()));
+}
+
+void ws_item_t::on_end_node_gizmo_translate(){
+  c_app::log(fmt::format("End of translation of node [{}], pos = {}", name, pos.to_string_vec()));
+}

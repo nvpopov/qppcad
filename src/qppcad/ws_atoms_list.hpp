@@ -19,7 +19,7 @@ namespace qpp{
   ///
   /// \brief The ws_atom_list_t class
   ///
-  class ws_atom_list_t : public ws_item_t {
+  class ws_atoms_list_t : public ws_item_t {
     public:
 
       bool need_to_rebuild_nbt;
@@ -41,18 +41,36 @@ namespace qpp{
 
       vector3<float> gizmo_barycenter;
 
-      ws_atom_list_t(workspace_t* parent);
+      ws_atoms_list_t(workspace_t* parent);
 
       void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                  vector3<float> &vOutLookAt) override ;
+      ///
+      /// \brief geometry_changed
+      ///
       void geometry_changed();
       void render() override;
+
+      ///
+      /// \brief render_atom
+      /// \param atNum
+      /// \param atIndex
+      ///
       void render_atom(const uint16_t atNum, const index &atIndex);
+
+      ///
+      /// \brief render_bond
+      /// \param atNum1
+      /// \param atIndex1
+      /// \param atNum2
+      /// \param atIndex2
+      ///
       void render_bond(const uint16_t atNum1, const index &atIndex1,
                        const uint16_t atNum2, const index &atIndex2);
 
       void render_ui() override;
       bool mouse_click(ray<float> *click_ray) override;
+
 
       bool support_translation() override;
       bool support_rotation() override;
@@ -64,6 +82,10 @@ namespace qpp{
       void update(float delta_time) override;
       float get_bb_prescaller() override;
 
+      ///
+      void on_begin_content_gizmo_translate() override;
+      void apply_intermediate_translate_content(const vector3<float> &pos) override;
+      void on_end_content_gizmo_translate() override;
       void recalc_gizmo_barycenter();
       const vector3<float> get_gizmo_content_barycenter() override;
 
@@ -84,7 +106,7 @@ namespace qpp{
 
       void rebuild_ngbt();
 
-      ~ws_atom_list_t() override {
+      ~ws_atoms_list_t() override {
 
       }
 

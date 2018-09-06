@@ -7,7 +7,7 @@
 #include <geom/xgeom.hpp>
 #include <qppcad/camera.hpp>
 #include <qppcad/ws_item.hpp>
-#include <qppcad/ws_atom_list.hpp>
+#include <qppcad/ws_atoms_list.hpp>
 #include <qppcad/gizmo.hpp>
 #include <qppcad/delegates.hpp>
 #include <imgui.h>

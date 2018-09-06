@@ -209,21 +209,21 @@ bool workspace_manager_t::set_current_workspace(const uint8_t ws_index){
 void workspace_manager_t::init_default_workspace(){
   workspace_t* _ws2 = new workspace_t();
   _ws2->ws_name = "d2";
-  ws_atom_list_t* _wsl2 = new ws_atom_list_t(_ws2);
+  ws_atoms_list_t* _wsl2 = new ws_atoms_list_t(_ws2);
   _wsl2->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                         false);
 
   workspace_t* _ws3 = new workspace_t();
   _ws3->ws_name = "d1";
-  ws_atom_list_t* _wsl3 = new ws_atom_list_t(_ws3);
+  ws_atoms_list_t* _wsl3 = new ws_atoms_list_t(_ws3);
   _wsl3->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
                         false);
 
-  ws_atom_list_t* _wsl32 = new ws_atom_list_t(_ws3);
+  ws_atoms_list_t* _wsl32 = new ws_atoms_list_t(_ws3);
   _wsl32->load_from_file(qc_file_format::format_standart_xyz, "../deps/qpp/examples/io/ref_data/nanotube.xyz",
                          true);
 
-  ws_atom_list_t* _wsl33 = new ws_atom_list_t(_ws3);
+  ws_atoms_list_t* _wsl33 = new ws_atoms_list_t(_ws3);
   _wsl33->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                          false);
 
@@ -280,8 +280,8 @@ void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file
       workspace_t* _ws2 = new workspace_t();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
       _ws2->ws_name = file_name_extr;
-      ws_atom_list_t* _wsl2 = new ws_atom_list_t(_ws2);
-      _wsl2->load_from_file(qc_file_format::format_standart_xyz, file_name_fd, false);
+      ws_atoms_list_t* _wsl2 = new ws_atoms_list_t(_ws2);
+      _wsl2->load_from_file(file_format, file_name_fd, false);
       ws.push_back(_ws2);
       set_current_workspace(ws.size()-1);
     }

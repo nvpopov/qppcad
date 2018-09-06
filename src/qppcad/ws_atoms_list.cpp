@@ -1,11 +1,11 @@
-#include <qppcad/ws_atom_list.hpp>
+#include <qppcad/ws_atoms_list.hpp>
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
 
 using namespace qpp;
 
-ws_atom_list_t::ws_atom_list_t(workspace_t* parent):ws_item_t(parent){
+ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
 
 
   geom = new xgeometry<float, periodic_cell<float> >(3,"rg1");
@@ -29,8 +29,8 @@ ws_atom_list_t::ws_atom_list_t(workspace_t* parent):ws_item_t(parent){
 
 }
 
-void ws_atom_list_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                           vector3<float> &vOutLookAt){
+void ws_atoms_list_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
+                                            vector3<float> &vOutLookAt){
   if(geom->nat() > 2){
       vOutLookAt += (ext_obs->aabb.max + ext_obs->aabb.min) / 2.0;
       vector3<float> vSize = ext_obs->aabb.max - ext_obs->aabb.min;
@@ -43,11 +43,11 @@ void ws_atom_list_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
 
 }
 
-void ws_atom_list_t::geometry_changed(){
+void ws_atoms_list_t::geometry_changed(){
   aabb = ext_obs->aabb;
 }
 
-void ws_atom_list_t::render(){
+void ws_atoms_list_t::render(){
   ws_item_t::render();
   //we need it for lambda fn
 
@@ -131,7 +131,7 @@ void ws_atom_list_t::render(){
     }
 }
 
-void ws_atom_list_t::render_atom(const uint16_t atNum, const index &atIndex){
+void ws_atoms_list_t::render_atom(const uint16_t atNum, const index &atIndex){
 
   int ap_idx = ptable::number_by_symbol(geom->atom(atNum));
   float fDrawRad = 0.4f;
@@ -148,8 +148,8 @@ void ws_atom_list_t::render_atom(const uint16_t atNum, const index &atIndex){
   app_state_c->dp->render_atom(color, geom->pos(atNum, atIndex) + pos, fDrawRad);
 }
 
-void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
-                                 const uint16_t atNum2, const index &atIndex2){
+void ws_atoms_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
+                                  const uint16_t atNum2, const index &atIndex2){
   int ap_idx = ptable::number_by_symbol(geom->atom(atNum1));
   vector3<float> bcolor(0.0, 0.0, 1.0);
   if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
@@ -158,7 +158,7 @@ void ws_atom_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
                                app_state_c->bond_radius_scale_factor);
 }
 
-void ws_atom_list_t::render_ui(){
+void ws_atoms_list_t::render_ui(){
   ws_item_t::render_ui();
 
   if (ImGui::CollapsingHeader("Summary")){
@@ -229,7 +229,7 @@ void ws_atom_list_t::render_ui(){
     }
 }
 
-bool ws_atom_list_t::mouse_click(ray<float> *click_ray){
+bool ws_atoms_list_t::mouse_click(ray<float> *click_ray){
   if (click_ray){
       std::vector<tws_query_data<float>* > res;
       //we need to translate ray in world frame to local geometry frame
@@ -256,50 +256,70 @@ bool ws_atom_list_t::mouse_click(ray<float> *click_ray){
   return false;
 }
 
-bool ws_atom_list_t::support_translation(){return true;}
+bool ws_atoms_list_t::support_translation(){return true;}
 
-bool ws_atom_list_t::support_rotation(){return false;}
+bool ws_atoms_list_t::support_rotation(){return false;}
 
-bool ws_atom_list_t::support_scaling(){return  false;}
+bool ws_atoms_list_t::support_scaling(){return  false;}
 
-bool ws_atom_list_t::support_content_editing(){return true;}
+bool ws_atoms_list_t::support_content_editing(){return true;}
 
-bool ws_atom_list_t::support_selection(){return true;}
+bool ws_atoms_list_t::support_selection(){return true;}
 
-bool ws_atom_list_t::support_rendering_bounding_box(){return geom->DIM > 0;}
+bool ws_atoms_list_t::support_rendering_bounding_box(){return geom->DIM > 0;}
 
-std::string ws_atom_list_t::compose_item_name(){
+std::string ws_atoms_list_t::compose_item_name(){
   return fmt::format("Type = [atom list], DIM = [{}d]", geom->DIM);
 }
 
-void ws_atom_list_t::update(float delta_time){
+void ws_atoms_list_t::update(float delta_time){
   ws_item_t::update(delta_time);
 }
 
-float ws_atom_list_t::get_bb_prescaller(){
+float ws_atoms_list_t::get_bb_prescaller(){
   if (geom->DIM == 3) return 1.5f;
   return 1.1f;
 }
 
-void ws_atom_list_t::recalc_gizmo_barycenter(){
+void ws_atoms_list_t::on_begin_content_gizmo_translate(){
+  c_app::log(fmt::format("Start of translating node [{}] content", name));
+  tws_tr->bAutoBonding = false;
+  tws_tr->bAutoBuild   = false;
+}
+
+void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos){
+  bool someone_from_atoms_were_translated = false;
+  for (const uint16_t &at_idx : atom_selection){
+      geom->coord(at_idx)+=pos;
+      someone_from_atoms_were_translated = true;
+    }
+  if (someone_from_atoms_were_translated) recalc_gizmo_barycenter();
+}
+
+void ws_atoms_list_t::on_end_content_gizmo_translate(){
+  c_app::log(fmt::format("End of translating node [{}] content", name));
+  tws_tr->bAutoBonding = true;
+  tws_tr->bAutoBuild   = true;
+}
+
+void ws_atoms_list_t::recalc_gizmo_barycenter(){
   //barycenter in local frame
   gizmo_barycenter = vector3<float>::Zero();
-  if (geom->nat() == 0) return;
 
-  if (atom_selection.size() > 0){
+  if (atom_selection.size() > 0 || geom->nat() == 0){
       for (const auto& atm_idx : atom_selection)
         gizmo_barycenter += geom->pos(atm_idx);
       gizmo_barycenter /= atom_selection.size();
-    } else {
-      gizmo_barycenter = (aabb.max + aabb.min) / 2;
     }
+  else gizmo_barycenter = aabb.min;
+
 }
 
-const vector3<float> ws_atom_list_t::get_gizmo_content_barycenter(){
+const vector3<float> ws_atoms_list_t::get_gizmo_content_barycenter(){
   return gizmo_barycenter;
 }
 
-void ws_atom_list_t::shift(const vector3<float> vShift){
+void ws_atoms_list_t::shift(const vector3<float> vShift){
   tws_tr->bAutoBonding = false;
   tws_tr->bAutoBuild   = false;
 
@@ -315,9 +335,9 @@ void ws_atom_list_t::shift(const vector3<float> vShift){
   geometry_changed();
 }
 
-void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
-                                    std::string sFileName,
-                                    bool bAutoCenter){
+void ws_atoms_list_t::load_from_file(qc_file_format eFileFormat,
+                                     std::string sFileName,
+                                     bool bAutoCenter){
 
   c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
                          sFileName, parent_ws->ws_name));
@@ -378,7 +398,7 @@ void ws_atom_list_t::load_from_file(qc_file_format eFileFormat,
 
 }
 
-void ws_atom_list_t::rebuild_ngbt(){
+void ws_atoms_list_t::rebuild_ngbt(){
 
   need_to_rebuild_nbt = false;
 }

@@ -21,7 +21,7 @@ namespace qpp{
       app_state_t *app_state_c;
       std::string name;
       aabb_3d<float> aabb;
-
+      vector3<float> pos_old;
       vector3<float> pos; ///
       vector3<float> scale; ///
       vector3<float> rotation; ///
@@ -148,6 +148,12 @@ namespace qpp{
       /// \brief ~ws_item_t
       ///
       virtual ~ws_item_t(){ }
+
+      virtual void on_begin_node_gizmo_translate();
+      virtual void on_end_node_gizmo_translate();
+      virtual void on_begin_content_gizmo_translate() = 0;
+      virtual void apply_intermediate_translate_content(const vector3<float> &pos) = 0;
+      virtual void on_end_content_gizmo_translate() = 0;
   };
 
 }
