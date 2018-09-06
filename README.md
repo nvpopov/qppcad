@@ -1,4 +1,5 @@
 # qpp::cad
+### current status - under construction
  molecule and crystal editor written in c++
 ### How to build
   Init submodule "qpp" first.
