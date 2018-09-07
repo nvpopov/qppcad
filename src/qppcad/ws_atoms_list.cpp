@@ -8,7 +8,10 @@ using namespace qpp;
 ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
 
 
-  geom = new xgeometry<float, periodic_cell<float> >(3,"rg1");
+  geom = unique_ptr<xgeometry<float, periodic_cell<float> > >(
+        new xgeometry<float, periodic_cell<float> >(3,"rg1")
+        );
+
   geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel"},
 
   {type_string, type_int, type_real, type_real, type_real, type_real,
@@ -17,8 +20,8 @@ ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
   geom->DIM = 0;
   geom->cell.DIM = 0;
 
-  ext_obs = new extents_observer_t<float>(*geom);
-  tws_tr = new tws_tree_t<float>(*geom);
+  ext_obs = unique_ptr<extents_observer_t<float> >(new extents_observer_t<float>(*geom));
+  tws_tr  = unique_ptr<tws_tree_t<float> >(new tws_tree_t<float>(*geom));
   tws_tr->auto_bonding = true;
 
   show_imaginary_atoms = true;
@@ -87,7 +90,7 @@ void ws_atoms_list_t::render(){
       // draw imaginary atoms that appear due to periodic
       if (geom->DIM > 0 && show_atoms && show_imaginary_atoms)
         for (uint16_t i = 0; i < tws_tr->img_atoms.size(); i++)
-          render_atom(tws_tr->img_atoms[i]->atm, tws_tr->img_atoms[i]->idx);
+          render_atom(tws_tr->img_atoms[i].atm, tws_tr->img_atoms[i].idx);
 
       astate->dp->end_atom_render();
       // atom render end
@@ -111,13 +114,13 @@ void ws_atoms_list_t::render(){
 
       if (geom->DIM > 0 && show_imaginary_bonds)
         for (uint16_t i = 0; i < tws_tr->img_atoms.size(); i++)
-          for (uint16_t j = 0; j < tws_tr->img_atoms[i]->imBonds.size(); j++){
+          for (uint16_t j = 0; j < tws_tr->img_atoms[i].img_bonds.size(); j++){
 
-              uint16_t id1 = tws_tr->img_atoms[i]->atm;
-              uint16_t id2 = tws_tr->img_atoms[i]->imBonds[j]->atm;
+              uint16_t id1 = tws_tr->img_atoms[i].atm;
+              uint16_t id2 = tws_tr->img_atoms[i].img_bonds[j]->atm;
 
-              index idx1 = tws_tr->img_atoms[i]->idx;
-              index idx2 = tws_tr->img_atoms[i]->imBonds[j]->idx;
+              index idx1 = tws_tr->img_atoms[i].idx;
+              index idx2 = tws_tr->img_atoms[i].img_bonds[j]->idx;
 
               render_bond(id1, idx1, id2, idx2);
             }
@@ -228,12 +231,12 @@ void ws_atoms_list_t::render_ui(){
 
 bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
   if (click_ray){
-      std::vector<tws_query_data_t<float>* > res;
+      vector<unique_ptr<tws_query_data_t<float> > > res;
       //we need to translate ray in world frame to local geometry frame
       ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - pos;
       local_geom_ray.dir = click_ray->dir;
-      tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, &res);
+      tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, res);
       //std::cout << "res_size = " << res.size() << std::endl;
       std::sort(res.begin(), res.end(), tws_query_data_sort_by_dist<float>);
       recalc_gizmo_barycenter();
@@ -287,7 +290,8 @@ void ws_atoms_list_t::on_begin_content_gizmo_translate(){
 void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos){
   bool someone_from_atoms_were_translated = false;
   for (const uint16_t &at_idx : atom_selection){
-      geom->coord(at_idx)+=pos;
+      vector3<float> acc_pos = geom->coord(at_idx) + pos;
+      geom->change_pos(at_idx, acc_pos);
       someone_from_atoms_were_translated = true;
     }
   if (someone_from_atoms_were_translated) recalc_gizmo_barycenter();
@@ -339,8 +343,8 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format,
   c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
                          file_name, parent_ws->ws_name));
 
-  std::ifstream fQCData(file_name);
-  if (!(fQCData.good())) {
+  std::ifstream qc_data(file_name);
+  if (!(qc_data.good())) {
       c_app::log(fmt::format("Error in loading from file {}", file_name));
       return;
     }
@@ -357,20 +361,20 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format,
   switch (file_format) {
     case qc_file_format::format_standart_xyz:
       geom->DIM = 0;
-      read_xyz(fQCData, *(geom));
+      read_xyz(qc_data, *(geom));
       break;
 
     case qc_file_format::format_vasp_poscar:
       geom->DIM = 3;
       geom->cell.DIM = 3;
-      read_vasp_poscar(fQCData, *(geom));
+      read_vasp_poscar(qc_data, *(geom));
       break;
 
     default: c_app::log("File format not implemented");
 
     }
 
-  fQCData.close();
+  qc_data.close();
 
   if(auto_center){
       vector3<float> vCenter(0.0, 0.0, 0.0);

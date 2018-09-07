@@ -52,22 +52,22 @@ namespace qpp{
   ///
   class workspace_t {
   public:
-    ws_edit_type             cur_edit_type;
-    std::vector<ws_item_t*>  ws_items;
-    std::string              ws_name;
-    camera_t*                camera;
-    ray_t<float>               ray_debug;
-    bool                     first_render;
-    std::vector<std::string> ws_names_c;
-    gizmo_t*                 gizmo;
+    ws_edit_type                   cur_edit_type;
+    vector<unique_ptr<ws_item_t> > ws_items;
+    string                         ws_name;
+    unique_ptr<camera_t>           camera;
+    ray_t<float>                   ray_debug;
+    bool                           first_render;
+    vector<string>                 ws_names_c;
+    unique_ptr<gizmo_t>            gizmo;
 
-    workspace_t(std::string _ws_name = "default"){
+    workspace_t(string _ws_name = "default"){
       ws_name = _ws_name;
       first_render = true;
-      camera = new camera_t();
+      camera = unique_ptr<camera_t>(new camera_t());
       camera->reset_camera();
       cur_edit_type = ws_edit_type::EDIT_WS_ITEM;
-      gizmo = new gizmo_t();
+      gizmo = unique_ptr<gizmo_t>(new gizmo_t());
     }
 
     int16_t get_selected_item();

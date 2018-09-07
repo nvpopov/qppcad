@@ -14,6 +14,24 @@ namespace qpp{
   ///
   /// \brief The ws_item_t class
   ///
+//  struct behaviour_disable{
+//      static constexpr bool value  = false;
+//      static constexpr bool custom = false;
+//  };
+
+//  struct behaviour_enable{
+//      static constexpr bool value  = true;
+//      static constexpr bool custom = false;
+//  };
+
+//  struct behaviour_custom{
+//      static constexpr bool value  = true;
+//      static constexpr bool custom = true;
+//  };
+
+//  template<typename support_translation_behaviour = behaviour_enable,
+//           typename support_rotation_behaviour    = behaviour_disable,
+//           typename support_scale_behaviour       = behaviour_disable>
   class ws_item_t {
     protected:
       workspace_t *parent_ws;
@@ -152,7 +170,7 @@ namespace qpp{
       virtual void on_begin_node_gizmo_translate();
       virtual void on_end_node_gizmo_translate();
       virtual void on_begin_content_gizmo_translate() = 0;
-      virtual void apply_intermediate_translate_content(const vector3<float> &pos) = 0;
+      virtual void apply_intermediate_translate_content(const vector3<float> &new_pos) = 0;
       virtual void on_end_content_gizmo_translate() = 0;
   };
 

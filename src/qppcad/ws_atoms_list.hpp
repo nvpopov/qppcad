@@ -32,12 +32,12 @@ namespace qpp{
       bool show_bonds;
       bool show_atoms;
 
-      xgeometry<float, periodic_cell<float> >          *geom;
-      bonding_table<float>                             *bt;
-      neighbours_table<float>                          *nt;
-      tws_tree_t<float, periodic_cell<float> >         *tws_tr;
-      extents_observer_t<float, periodic_cell<float> > *ext_obs;
-      std::unordered_set<uint16_t>                     atom_selection;
+      unique_ptr<xgeometry<float, periodic_cell<float> > >          geom;
+      unique_ptr<bonding_table<float> >                             bt;
+      unique_ptr<neighbours_table<float> >                          nt;
+      unique_ptr<tws_tree_t<float, periodic_cell<float> > >         tws_tr;
+      unique_ptr<extents_observer_t<float, periodic_cell<float> > > ext_obs;
+      unordered_set<uint16_t>                     atom_selection;
 
       vector3<float> gizmo_barycenter;
 
@@ -84,7 +84,7 @@ namespace qpp{
 
       ///
       void on_begin_content_gizmo_translate() override;
-      void apply_intermediate_translate_content(const vector3<float> &pos) override;
+      void apply_intermediate_translate_content(const vector3<float> &new_pos) override;
       void on_end_content_gizmo_translate() override;
       void recalc_gizmo_barycenter();
       const vector3<float> get_gizmo_content_barycenter() override;

@@ -15,6 +15,7 @@
 #include <io/strfun.hpp>
 #include <qppcad/file_formats.hpp>
 
+using namespace std;
 
 namespace qpp {
     typedef std::uint8_t  uint8_t;

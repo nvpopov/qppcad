@@ -14,7 +14,7 @@ int16_t workspace_t::get_selected_item(){
 
 ws_item_t *workspace_t::get_selected(){
   int16_t sel_idx = get_selected_item();
-  if (sel_idx != -1) return ws_items.at(sel_idx);
+  if (sel_idx != -1) return ws_items.at(sel_idx).get();
   else return nullptr;
 }
 
@@ -22,7 +22,7 @@ void workspace_t::set_selected_item(const int16_t sel_idx){
   unselect_all();
   if (sel_idx >= 0 && sel_idx < ws_items.size() && ws_items.size() > 0){
       ws_items[sel_idx]->is_selected = true;
-      gizmo->attached_item = ws_items[sel_idx];
+      gizmo->attached_item = ws_items[sel_idx].get();;
     }
 }
 
@@ -52,7 +52,7 @@ void workspace_t::set_best_view(){
   vector3<float> _vLookAt = vector3<float>(0.0, 0.0, 0.0);
   vector3<float> _vLookPos = vector3<float>(0.0, 0.0, 0.0);
 
-  for (ws_item_t* _ws_item : ws_items)
+  for (unique_ptr<ws_item_t> &_ws_item : ws_items)
     _ws_item->vote_for_view_vectors(_vLookPos, _vLookAt);
 
   _vLookAt  /= ws_items.size();
@@ -137,7 +137,7 @@ void workspace_t::render(){
       ///// Draw axis end /////
     }
 
-  for (ws_item_t* _ws_item : ws_items) _ws_item->render();
+  for (unique_ptr<ws_item_t> &_ws_item : ws_items) _ws_item->render();
 
 }
 
@@ -153,37 +153,36 @@ void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
   bool bHitAny = false;
 
   if (cur_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT){
-      for (ws_item_t* ws_it : ws_items) ws_it->is_selected = false;
+      for (unique_ptr<ws_item_t> &_ws_item : ws_items) _ws_item->is_selected = false;
       gizmo->attached_item = nullptr;
     }
 
-  for (ws_item_t* ws_it : ws_items){
-      bool bWsHit = ws_it->mouse_click(&ray_debug);
+  for (unique_ptr<ws_item_t> &_ws_item : ws_items){
+      bool bWsHit = _ws_item->mouse_click(&ray_debug);
       bHitAny = bHitAny || bWsHit;
-      if ((bWsHit) && (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-          && ws_it->support_selection()){
-          gizmo->attached_item = ws_it;
-          ws_it->is_selected = true;
+      if (bWsHit && cur_edit_type == ws_edit_type::EDIT_WS_ITEM && _ws_item->support_selection()){
+          gizmo->attached_item = _ws_item.get();
+          _ws_item->is_selected = true;
         }
     }
 
   if ((cur_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT) && (!bHitAny)){
       gizmo->attached_item = nullptr;
-      for (ws_item_t* ws_it : ws_items) ws_it->is_selected = false;
+      for (unique_ptr<ws_item_t> &_ws_item : ws_items) _ws_item->is_selected = false;
     }
 
 }
 
 void workspace_t::add_item_to_workspace(ws_item_t *item_to_add){
   item_to_add->set_parent_workspace(this);
-  ws_items.push_back(item_to_add);
+  ws_items.push_back(unique_ptr<ws_item_t>(item_to_add));
   workspace_changed();
   c_app::log(fmt::format("New workspace {} size = {}", ws_name, ws_items.size()));
 }
 
 void workspace_t::update(float delta_time){
   gizmo->update_gizmo(delta_time);
-  for (ws_item_t *ws_item : ws_items)
+  for (unique_ptr<ws_item_t> &ws_item : ws_items)
     ws_item->update(delta_time);
 }
 
@@ -244,7 +243,7 @@ void workspace_manager_t::render_current_workspace(){
 
   if (has_wss())
     if (current_workspace_id < ws.size()){
-        c_app::get_state().camera = ws[current_workspace_id]->camera;
+        c_app::get_state().camera = ws[current_workspace_id]->camera.get();
         ws[current_workspace_id]->render();
       }
 }
@@ -253,20 +252,20 @@ void workspace_manager_t::mouse_click(){
   app_state_t* astate =  &(c_app::get_state());
 
   //transform from window frame to viewport frame
-  float newMouseX = astate->mouse_x;
-  float newMouseY = astate->mouse_y - astate->ui_manager->iWorkPanelHeight
+  float new_mouse_x = astate->mouse_x;
+  float new_mouse_y = astate->mouse_y - astate->ui_manager->iWorkPanelHeight
                     - astate->ui_manager->iWorkPanelYOffset;
   c_app::log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
 
-  if ((newMouseX > 0) && (newMouseX < astate->vViewportWidthHeight(0)) &&
-      (newMouseY > 0) && (newMouseY < astate->vViewportWidthHeight(1))){
+  if (new_mouse_x > 0 && new_mouse_x < astate->vViewportWidthHeight(0) &&
+      new_mouse_y > 0 && new_mouse_y < astate->vViewportWidthHeight(1)){
 
-      newMouseX = (newMouseX/astate->vViewportWidthHeight(0)-0.5)*2.0;
-      newMouseY = (newMouseY/astate->vViewportWidthHeight(1)-0.5)*-2.0;
+      new_mouse_x = (new_mouse_x/astate->vViewportWidthHeight(0)-0.5)*2.0;
+      new_mouse_y = (new_mouse_y/astate->vViewportWidthHeight(1)-0.5)*-2.0;
 
-      c_app::log(fmt::format("Mouse click in ws {} {}", newMouseX, newMouseY));
+      c_app::log(fmt::format("Mouse click in ws {} {}", new_mouse_x, new_mouse_y));
 
-      if(has_wss()) get_current_workspace()->mouse_click(newMouseX, newMouseY);
+      if(has_wss()) get_current_workspace()->mouse_click(new_mouse_x, new_mouse_y);
     }
 }
 
