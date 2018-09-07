@@ -20,11 +20,17 @@ gizmo_t::gizmo_t(){
 
 void gizmo_t::render(){
   app_state_t* astate = &(c_app::get_state());
+  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->cur_edit_type;
   astate->dp->begin_render_general_mesh();
 
   vector3<float> _v_scale = vector3<float>::Ones()*gizmo_box_size*0.25;
   vector3<float> _v_one = vector3<float>::Ones();
-  if (!interact_at_the_moment){
+
+  if ( !interact_at_the_moment &&
+       (cur_edit_type == ws_edit_type::EDIT_WS_ITEM ||
+       (cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT &&
+        attached_item->get_amount_of_selected_content() > 0)) ){
+
       astate->dp->render_cube(pos, _v_scale * 1.2f, clr_gray);
 
       astate->dp->render_general_mesh(
@@ -90,6 +96,7 @@ void gizmo_t::render(){
 
 void gizmo_t::translate_attached(float delta_time){
   app_state_t *astate = &(c_app::get_state());
+
   if (attached_item){
       ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->cur_edit_type;
 

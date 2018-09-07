@@ -281,6 +281,10 @@ float ws_atoms_list_t::get_bb_prescaller(){
   return 1.1f;
 }
 
+uint32_t ws_atoms_list_t::get_amount_of_selected_content(){
+  return this->atom_selection.size();
+}
+
 void ws_atoms_list_t::on_begin_content_gizmo_translate(){
   c_app::log(fmt::format("Start of translating node [{}] content", name));
   tws_tr->auto_bonding = false;

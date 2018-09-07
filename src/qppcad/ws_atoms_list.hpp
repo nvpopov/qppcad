@@ -82,6 +82,8 @@ namespace qpp{
       void update(float delta_time) override;
       float get_bb_prescaller() override;
 
+      uint32_t get_amount_of_selected_content() override;
+
       ///
       void on_begin_content_gizmo_translate() override;
       void apply_intermediate_translate_content(const vector3<float> &new_pos) override;

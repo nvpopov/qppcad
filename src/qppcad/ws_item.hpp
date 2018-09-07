@@ -139,6 +139,12 @@ namespace qpp{
       virtual bool support_rendering_bounding_box() = 0;
 
       ///
+      /// \brief get_amount_of_selected_content
+      /// \return
+      ///
+      virtual uint32_t get_amount_of_selected_content() = 0;
+
+      ///
       /// \brief compose_item_name
       /// \return
       ///
