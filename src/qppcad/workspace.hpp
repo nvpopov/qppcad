@@ -56,7 +56,7 @@ namespace qpp{
     std::vector<ws_item_t*>  ws_items;
     std::string              ws_name;
     camera_t*                camera;
-    ray<float>               ray_debug;
+    ray_t<float>               ray_debug;
     bool                     first_render;
     std::vector<std::string> ws_names_c;
     gizmo_t*                 gizmo;
@@ -79,7 +79,7 @@ namespace qpp{
     void reset_camera();
     void set_best_view();
     void render();
-    void mouse_click(const double fMouseX, const double fMouseY);
+    void mouse_click(const double mouse_x, const double mouse_y);
     void add_item_to_workspace(ws_item_t *item_to_add);
     void update(float delta_time);
   };

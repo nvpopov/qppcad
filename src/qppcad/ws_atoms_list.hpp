@@ -32,12 +32,12 @@ namespace qpp{
       bool show_bonds;
       bool show_atoms;
 
-      xgeometry<float, periodic_cell<float> > *geom;
-      bonding_table<float> *bt;
-      neighbours_table<float> *nt;
-      tws_tree<float, periodic_cell<float> > *tws_tr;
-      extents_observer<float, periodic_cell<float> > *ext_obs;
-      std::unordered_set<uint16_t> atom_selection;
+      xgeometry<float, periodic_cell<float> >          *geom;
+      bonding_table<float>                             *bt;
+      neighbours_table<float>                          *nt;
+      tws_tree_t<float, periodic_cell<float> >         *tws_tr;
+      extents_observer_t<float, periodic_cell<float> > *ext_obs;
+      std::unordered_set<uint16_t>                     atom_selection;
 
       vector3<float> gizmo_barycenter;
 
@@ -69,7 +69,7 @@ namespace qpp{
                        const uint16_t atNum2, const index &atIndex2);
 
       void render_ui() override;
-      bool mouse_click(ray<float> *click_ray) override;
+      bool mouse_click(ray_t<float> *click_ray) override;
 
 
       bool support_translation() override;

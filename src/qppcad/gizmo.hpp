@@ -31,17 +31,17 @@ namespace qpp {
       bool interact_at_the_moment;
 
       uint8_t touched_axis;
-      std::array<aabb_3d<float>,3> bx;
+      std::array<aabb_3d_t<float>,3> bx;
       std::array<bool, 3> bx_touched;
       ws_item_t *attached_item;
 
       template<typename REAL>
-      bool process_ray(ray<REAL> *ray){
+      bool process_ray(ray_t<REAL> *ray){
         bool _gizmo_touched = false;
         if (ray) {
             touched_axis = 4;
             for(uint8_t i = 0; i < 3; i++){
-                aabb_3d<float> aabb_in_world_frame = bx[i].shifted(pos);
+                aabb_3d_t<float> aabb_in_world_frame = bx[i].shifted(pos);
                 if (ray_aabb_test(ray, &aabb_in_world_frame)){
                     touched_axis = i;
                     bx_touched[i] = true;

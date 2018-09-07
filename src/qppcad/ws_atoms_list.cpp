@@ -17,9 +17,9 @@ ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
   geom->DIM = 0;
   geom->cell.DIM = 0;
 
-  ext_obs = new extents_observer<float>(*geom);
-  tws_tr = new tws_tree<float>(*geom);
-  tws_tr->bAutoBonding = true;
+  ext_obs = new extents_observer_t<float>(*geom);
+  tws_tr = new tws_tree_t<float>(*geom);
+  tws_tr->auto_bonding = true;
 
   show_imaginary_atoms = true;
   show_imaginary_bonds = true;
@@ -57,8 +57,8 @@ void ws_atoms_list_t::render(){
 
       if (astate->debug_show_tws_tree){
           astate->dp->begin_render_aabb();
-          tws_tr->apply_visitor( [astate, _pos](tws_node<float> *inNode, int deepLevel){
-              astate->dp->render_aabb(clr_maroon, inNode->bb.min+_pos, inNode->bb.max+_pos);});
+          tws_tr->apply_visitor( [astate, _pos](tws_node_t<float> *in_node, int deep_level){
+              astate->dp->render_aabb(clr_maroon, in_node->bb.min+_pos, in_node->bb.max+_pos);});
           astate->dp->end_render_aabb();
         }
 
@@ -77,7 +77,6 @@ void ws_atoms_list_t::render(){
 
       if (!b_show) return;
 
-
       // atom render start
       astate->dp->begin_atom_render();
 
@@ -87,15 +86,14 @@ void ws_atoms_list_t::render(){
 
       // draw imaginary atoms that appear due to periodic
       if (geom->DIM > 0 && show_atoms && show_imaginary_atoms)
-        for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
-          render_atom(tws_tr->imgAtoms[i]->atm, tws_tr->imgAtoms[i]->idx);
+        for (uint16_t i = 0; i < tws_tr->img_atoms.size(); i++)
+          render_atom(tws_tr->img_atoms[i]->atm, tws_tr->img_atoms[i]->idx);
 
       astate->dp->end_atom_render();
       // atom render end
 
       // bond render
       astate->dp->begin_render_bond();
-
 
       if (show_bonds)
         for (uint16_t i = 0; i < geom->nat(); i++)
@@ -109,18 +107,17 @@ void ws_atoms_list_t::render(){
 
               if(idx2 != index::D(geom->DIM).all(0) && show_imaginary_bonds)
                 render_bond(id2, idx2, id1, index::D(geom->DIM).all(0));
-
             }
 
       if (geom->DIM > 0 && show_imaginary_bonds)
-        for (uint16_t i = 0; i < tws_tr->imgAtoms.size(); i++)
-          for (uint16_t j = 0; j < tws_tr->imgAtoms[i]->imBonds.size(); j++){
+        for (uint16_t i = 0; i < tws_tr->img_atoms.size(); i++)
+          for (uint16_t j = 0; j < tws_tr->img_atoms[i]->imBonds.size(); j++){
 
-              uint16_t id1 = tws_tr->imgAtoms[i]->atm;
-              uint16_t id2 = tws_tr->imgAtoms[i]->imBonds[j]->atm;
+              uint16_t id1 = tws_tr->img_atoms[i]->atm;
+              uint16_t id2 = tws_tr->img_atoms[i]->imBonds[j]->atm;
 
-              index idx1 = tws_tr->imgAtoms[i]->idx;
-              index idx2 = tws_tr->imgAtoms[i]->imBonds[j]->idx;
+              index idx1 = tws_tr->img_atoms[i]->idx;
+              index idx2 = tws_tr->img_atoms[i]->imBonds[j]->idx;
 
               render_bond(id1, idx1, id2, idx2);
             }
@@ -229,11 +226,11 @@ void ws_atoms_list_t::render_ui(){
     }
 }
 
-bool ws_atoms_list_t::mouse_click(ray<float> *click_ray){
+bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
   if (click_ray){
-      std::vector<tws_query_data<float>* > res;
+      std::vector<tws_query_data_t<float>* > res;
       //we need to translate ray in world frame to local geometry frame
-      ray<float> local_geom_ray;
+      ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - pos;
       local_geom_ray.dir = click_ray->dir;
       tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, &res);
@@ -283,8 +280,8 @@ float ws_atoms_list_t::get_bb_prescaller(){
 
 void ws_atoms_list_t::on_begin_content_gizmo_translate(){
   c_app::log(fmt::format("Start of translating node [{}] content", name));
-  tws_tr->bAutoBonding = false;
-  tws_tr->bAutoBuild   = false;
+  tws_tr->auto_bonding = false;
+  tws_tr->auto_build   = false;
 }
 
 void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos){
@@ -298,8 +295,8 @@ void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> 
 
 void ws_atoms_list_t::on_end_content_gizmo_translate(){
   c_app::log(fmt::format("End of translating node [{}] content", name));
-  tws_tr->bAutoBonding = true;
-  tws_tr->bAutoBuild   = true;
+  tws_tr->auto_bonding = true;
+  tws_tr->auto_build   = true;
 }
 
 void ws_atoms_list_t::recalc_gizmo_barycenter(){
@@ -320,8 +317,8 @@ const vector3<float> ws_atoms_list_t::get_gizmo_content_barycenter(){
 }
 
 void ws_atoms_list_t::shift(const vector3<float> vShift){
-  tws_tr->bAutoBonding = false;
-  tws_tr->bAutoBuild   = false;
+  tws_tr->auto_bonding = false;
+  tws_tr->auto_build   = false;
 
   for (int i = 0; i < geom->nat(); i++)
     geom->coord(i) = vShift + geom->pos(i) ;
@@ -330,34 +327,34 @@ void ws_atoms_list_t::shift(const vector3<float> vShift){
   ext_obs->aabb.max = vShift + ext_obs->aabb.max;
   tws_tr->apply_shift(vShift);
 
-  tws_tr->bAutoBonding = true;
-  tws_tr->bAutoBuild   = true;
+  tws_tr->auto_bonding = true;
+  tws_tr->auto_build   = true;
   geometry_changed();
 }
 
-void ws_atoms_list_t::load_from_file(qc_file_format eFileFormat,
-                                     std::string sFileName,
-                                     bool bAutoCenter){
+void ws_atoms_list_t::load_from_file(qc_file_format file_format,
+                                     std::string file_name,
+                                     bool auto_center){
 
   c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
-                         sFileName, parent_ws->ws_name));
+                         file_name, parent_ws->ws_name));
 
-  std::ifstream fQCData(sFileName);
+  std::ifstream fQCData(file_name);
   if (!(fQCData.good())) {
-      c_app::log(fmt::format("Error in loading from file {}", sFileName));
+      c_app::log(fmt::format("Error in loading from file {}", file_name));
       return;
     }
 
   //clean geom and tws-tree
-  tws_tr->bAutoBonding = false;
-  tws_tr->bAutoBuild   = false;
+  tws_tr->auto_bonding = false;
+  tws_tr->auto_build   = false;
   tws_tr->clear_ntable();
   tws_tr->clear_tree();
-  ext_obs->bFirstData = true;
+  ext_obs->first_data = true;
 
-  name = extract_base_name(sFileName);
+  name = extract_base_name(file_name);
 
-  switch (eFileFormat) {
+  switch (file_format) {
     case qc_file_format::format_standart_xyz:
       geom->DIM = 0;
       read_xyz(fQCData, *(geom));
@@ -375,7 +372,7 @@ void ws_atoms_list_t::load_from_file(qc_file_format eFileFormat,
 
   fQCData.close();
 
-  if(bAutoCenter){
+  if(auto_center){
       vector3<float> vCenter(0.0, 0.0, 0.0);
       for (int i = 0; i < geom->nat(); i++)
         vCenter += geom->pos(i);
@@ -389,8 +386,8 @@ void ws_atoms_list_t::load_from_file(qc_file_format eFileFormat,
 
   tws_tr->manual_build();
   tws_tr->find_all_neighbours();
-  tws_tr->bAutoBonding = true;
-  tws_tr->bAutoBuild   = true;
+  tws_tr->auto_bonding = true;
+  tws_tr->auto_build   = true;
 
   geometry_changed();
 

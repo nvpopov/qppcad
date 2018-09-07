@@ -20,7 +20,7 @@ namespace qpp{
     public:
       app_state_t *app_state_c;
       std::string name;
-      aabb_3d<float> aabb;
+      aabb_3d_t<float> aabb;
       vector3<float> pos_old;
       vector3<float> pos; ///
       vector3<float> scale; ///
@@ -82,7 +82,7 @@ namespace qpp{
       /// \param ray
       /// \return
       ///
-      virtual bool mouse_click(ray<float> *ray) = 0;
+      virtual bool mouse_click(ray_t<float> *ray) = 0;
 
       ///
       /// \brief support_translation

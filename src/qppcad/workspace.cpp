@@ -141,8 +141,8 @@ void workspace_t::render(){
 
 }
 
-void workspace_t::mouse_click(const double fMouseX, const double fMouseY){
-  ray_debug.dir = (camera->unproject(fMouseX, fMouseY) - camera->vViewPoint).normalized();
+void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
+  ray_debug.dir = (camera->unproject(mouse_x, mouse_y) - camera->vViewPoint).normalized();
   ray_debug.start = camera->vViewPoint;
 
   if (gizmo->process_ray(&ray_debug)){
