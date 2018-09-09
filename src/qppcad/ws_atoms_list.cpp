@@ -117,10 +117,10 @@ void ws_atoms_list_t::render(){
           for (uint16_t j = 0; j < tws_tr->img_atoms[i].img_bonds.size(); j++){
 
               uint16_t id1 = tws_tr->img_atoms[i].atm;
-              uint16_t id2 = tws_tr->img_atoms[i].img_bonds[j]->atm;
+              uint16_t id2 = tws_tr->img_atoms[i].img_bonds[j].atm;
 
               index idx1 = tws_tr->img_atoms[i].idx;
-              index idx2 = tws_tr->img_atoms[i].img_bonds[j]->idx;
+              index idx2 = tws_tr->img_atoms[i].img_bonds[j].idx;
 
               render_bond(id1, idx1, id2, idx2);
             }
@@ -231,7 +231,7 @@ void ws_atoms_list_t::render_ui(){
 
 bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
   if (click_ray){
-      vector<unique_ptr<tws_query_data_t<float> > > res;
+      vector<tws_query_data_t<float> > res;
       //we need to translate ray in world frame to local geometry frame
       ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - pos;
@@ -243,9 +243,9 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
       if (res.size() > 0){
           if (parent_ws->cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && is_selected ){
 
-              auto atom_sel_it = atom_selection.find(res[0]->atm);
+              auto atom_sel_it = atom_selection.find(res[0].atm);
               if (atom_sel_it == atom_selection.end())
-                atom_selection.insert(res[0]->atm);
+                atom_selection.insert(res[0].atm);
               else
                 atom_selection.erase(atom_sel_it);
             };
