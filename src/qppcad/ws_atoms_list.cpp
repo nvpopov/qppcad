@@ -251,7 +251,7 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
             };
           recalc_gizmo_barycenter();
           return true;
-        }
+        } else atom_selection.clear();
     }
   return false;
 }
@@ -286,7 +286,7 @@ uint32_t ws_atoms_list_t::get_amount_of_selected_content(){
 }
 
 void ws_atoms_list_t::on_begin_content_gizmo_translate(){
-  c_app::log(fmt::format("Start of translating node [{}] content", name));
+  //c_app::log(fmt::format("Start of translating node [{}] content", name));
   tws_tr->auto_bonding = false;
   tws_tr->auto_build   = false;
 }
@@ -356,8 +356,8 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format,
   //clean geom and tws-tree
   tws_tr->auto_bonding = false;
   tws_tr->auto_build   = false;
-  tws_tr->clear_ntable();
-  tws_tr->clear_tree();
+  tws_tr->clr_ntable();
+  tws_tr->clr_tree();
   ext_obs->first_data = true;
 
   name = extract_base_name(file_name);
