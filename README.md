@@ -11,12 +11,6 @@
 4. freetype
 5. nativfiledialog
 
-### Current features
+### Current implemented features
+  [Go to implemented features gallery](docs/features-milestone.md)
 
-1. Manipulate the atoms list(molecules or periodic crystals)
-
-![alttext](docs/images/translate_node1.gif)
-
-2. 3k atoms realtime 60fps on nvidia 960
-
-![alttext](docs/images/3katoms.gif)
