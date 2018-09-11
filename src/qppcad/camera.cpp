@@ -127,7 +127,7 @@ void camera_t::update_camera(){
       float a = astate->vViewportWidthHeight(0) + _viewport_w;
       a /= astate->vViewportWidthHeight(1);
       float r = (m_view_point-m_look_at).norm();
-      if (a > 1.0f)
+      if (a < 1.0f)
         m_mat_proj = ortho<float>(-r*a, r*a, -r, r, m_znear_ortho, m_zfar_ortho);
       else
         m_mat_proj = ortho<float>(-r, r, -r/a, r/a, m_znear_ortho, m_zfar_ortho);

@@ -11,10 +11,11 @@ ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
   m_geom = unique_ptr<xgeometry<float, periodic_cell<float> > >(
         new xgeometry<float, periodic_cell<float> >(3,"rg1"));
 
-  m_geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel"},
+  m_geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel",
+                      "cc", "ccr", "ccg", "ccb"},
 
   {type_string, type_int, type_real, type_real, type_real, type_real,
-   type_bool, type_bool});
+   type_bool, type_bool, type_bool, type_real, type_real, type_real});
 
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;
@@ -27,6 +28,8 @@ ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
   m_show_imaginary_bonds = true;
   m_show_atoms = true;
   m_show_bonds = true;
+  m_draw_line_in_dist_measurement = false;
+
   parent->add_item_to_workspace(this);
 
 }
@@ -111,7 +114,7 @@ void ws_atoms_list_t::render(){
                 render_bond(id2, idx2, id1, index::D(m_geom->DIM).all(0));
             }
 
-      if (m_geom->DIM > 0 && m_show_imaginary_bonds)
+      if (m_geom->DIM > 0 && m_show_imaginary_bonds && m_show_bonds)
         for (uint16_t i = 0; i < m_tws_tr->img_atoms.size(); i++)
           for (uint16_t j = 0; j < m_tws_tr->img_atoms[i].img_bonds.size(); j++){
 
@@ -126,6 +129,16 @@ void ws_atoms_list_t::render(){
 
       astate->dp->end_render_bond();
 
+    }
+
+  //render measurement
+  if (m_selected && m_draw_line_in_dist_measurement && m_atom_idx_selection.size() == 2){
+      auto fa = m_atom_idx_selection.cbegin();
+      auto la  = ++(m_atom_idx_selection.cbegin());
+      astate->dp->begin_render_line();
+      astate->dp->render_line(clr_white, m_geom->pos(fa->m_atm, fa->m_idx),
+                              m_geom->pos(la->m_atm, la->m_idx), 6.0f);
+      astate->dp->end_render_line();
     }
 }
 
@@ -238,7 +251,7 @@ void ws_atoms_list_t::render_ui(){
           auto first = m_atom_idx_selection.cbegin();
           auto last  = ++(m_atom_idx_selection.cbegin());
           float dist = (m_geom->pos(first->m_atm, first->m_idx) -
-                       m_geom->pos(last->m_atm, last->m_idx)).norm();
+                        m_geom->pos(last->m_atm, last->m_idx)).norm();
           ImGui::Columns(2);
           ImGui::Separator();
           ImGui::Text("First atom");
@@ -254,6 +267,8 @@ void ws_atoms_list_t::render_ui(){
           ImGui::Text(fmt::format("{} Angs.", dist).c_str());
           ImGui::Columns(1);
           ImGui::Separator();
+          ImGui::Checkbox("Draw a line between the measured atoms", &m_draw_line_in_dist_measurement);
+
 
         }
 

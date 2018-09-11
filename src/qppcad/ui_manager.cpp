@@ -54,7 +54,10 @@ void ui_manager_t::render_main_menu(){
                       query_import_file_as_new_workspace(qc_file_format::format_standart_xyz);
                 }
 
-              ImGui::MenuItem("VASP POSCAR/CONTCAR)");
+              if (ImGui::MenuItem("VASP POSCAR(CONTCAR)")){
+                  astate->workspace_manager->
+                      query_import_file_as_new_workspace(qc_file_format::format_vasp_poscar);
+                }
               ImGui::EndMenu();
             }
           ImGui::MenuItem("Save");

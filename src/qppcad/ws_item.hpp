@@ -46,7 +46,7 @@ namespace qpp{
       bool             m_is_visible; ///
       bool             m_draw_cell; ///
       bool             m_selected; ///
-
+      bool             m_hide_gizmo_trigger;
       ///
       /// \brief ws_item_t
       /// \param parent

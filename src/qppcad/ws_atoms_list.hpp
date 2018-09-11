@@ -32,6 +32,7 @@ namespace qpp{
       bool m_show_imaginary_bonds;
       bool m_show_bonds;
       bool m_show_atoms;
+      bool m_draw_line_in_dist_measurement;
 
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
       unique_ptr<bonding_table<float> >                             m_bt;
