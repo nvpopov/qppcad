@@ -37,15 +37,15 @@ namespace qpp{
       workspace_t *parent_ws;
     public:
       app_state_t *app_state_c;
-      std::string name;
-      aabb_3d_t<float> aabb;
-      vector3<float> pos_old;
-      vector3<float> pos; ///
-      vector3<float> scale; ///
-      vector3<float> rotation; ///
-      bool b_show; ///
-      bool b_draw_cell; ///
-      bool is_selected; ///
+      std::string      m_name;
+      aabb_3d_t<float> m_aabb;
+      vector3<float>   m_pos_old;
+      vector3<float>   m_pos; ///
+      vector3<float>   m_scale; ///
+      vector3<float>   m_rotation; ///
+      bool             m_is_visible; ///
+      bool             m_draw_cell; ///
+      bool             m_selected; ///
 
       ///
       /// \brief ws_item_t

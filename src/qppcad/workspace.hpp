@@ -28,19 +28,19 @@ namespace qpp{
   ///
   class workspace_manager_t {
   private:
-     uint8_t current_workspace_id;
+     uint8_t m_current_workspace_id;
   public:
 
 
-    std::vector<workspace_t*> ws;
-    workspace_manager_t(){ current_workspace_id = 0;}
+    std::vector<workspace_t*> m_ws;
+    workspace_manager_t(){ m_current_workspace_id = 0;}
 
     workspace_t* get_current_workspace();
     uint8_t get_current_workspace_id();
 
     bool set_current_workspace(const uint8_t ws_index);
 
-    bool has_wss(){return ws.size()>0;}
+    bool has_wss(){return m_ws.size()>0;}
     void init_default_workspace();
     void render_current_workspace();
     void mouse_click();
@@ -52,22 +52,22 @@ namespace qpp{
   ///
   class workspace_t {
   public:
-    ws_edit_type                   cur_edit_type;
-    vector<unique_ptr<ws_item_t> > ws_items;
-    string                         ws_name;
-    unique_ptr<camera_t>           camera;
-    ray_t<float>                   ray_debug;
-    bool                           first_render;
-    vector<string>                 ws_names_c;
-    unique_ptr<gizmo_t>            gizmo;
+    ws_edit_type                   m_edit_type;
+    vector<unique_ptr<ws_item_t> > m_ws_items;
+    string                         m_ws_name;
+    unique_ptr<camera_t>           m_camera;
+    ray_t<float>                   m_ray_debug;
+    bool                           m_first_render;
+    vector<string>                 m_ws_names_c;
+    unique_ptr<gizmo_t>            m_gizmo;
 
     workspace_t(string _ws_name = "default"){
-      ws_name = _ws_name;
-      first_render = true;
-      camera = unique_ptr<camera_t>(new camera_t());
-      camera->reset_camera();
-      cur_edit_type = ws_edit_type::EDIT_WS_ITEM;
-      gizmo = unique_ptr<gizmo_t>(new gizmo_t());
+      m_ws_name = _ws_name;
+      m_first_render = true;
+      m_camera = unique_ptr<camera_t>(new camera_t());
+      m_camera->reset_camera();
+      m_edit_type = ws_edit_type::EDIT_WS_ITEM;
+      m_gizmo = unique_ptr<gizmo_t>(new gizmo_t());
     }
 
     int16_t get_selected_item();

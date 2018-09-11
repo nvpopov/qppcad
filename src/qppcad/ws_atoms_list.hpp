@@ -9,6 +9,7 @@
 #include <geom/extents_observer.hpp>
 #include <geom/tws_tree.hpp>
 #include <data/color.hpp>
+#include <symm/index_set.hpp>
 #include <qppcad/ws_item.hpp>
 #include <qppcad/camera.hpp>
 #include <qppcad/file_formats.hpp>
@@ -27,19 +28,20 @@ namespace qpp{
       ///
       /// \brief display_imaginary_atoms
       ///
-      bool show_imaginary_atoms;
-      bool show_imaginary_bonds;
-      bool show_bonds;
-      bool show_atoms;
+      bool m_show_imaginary_atoms;
+      bool m_show_imaginary_bonds;
+      bool m_show_bonds;
+      bool m_show_atoms;
 
-      unique_ptr<xgeometry<float, periodic_cell<float> > >          geom;
-      unique_ptr<bonding_table<float> >                             bt;
-      unique_ptr<neighbours_table<float> >                          nt;
-      unique_ptr<tws_tree_t<float, periodic_cell<float> > >         tws_tr;
-      unique_ptr<extents_observer_t<float, periodic_cell<float> > > ext_obs;
-      unordered_set<uint16_t>                     atom_selection;
+      unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
+      unique_ptr<bonding_table<float> >                             m_bt;
+      unique_ptr<neighbours_table<float> >                          m_nt;
+      unique_ptr<tws_tree_t<float, periodic_cell<float> > >         m_tws_tr;
+      unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs;
+      unordered_set<uint16_t>                                       m_atom_selection;
+      unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_selection;
 
-      vector3<float> gizmo_barycenter;
+      vector3<float> m_gizmo_barycenter;
 
       ws_atoms_list_t(workspace_t* parent);
 
@@ -56,7 +58,7 @@ namespace qpp{
       /// \param atNum
       /// \param atIndex
       ///
-      void render_atom(const uint16_t atNum, const index &atIndex);
+      void render_atom(const uint16_t at_num, const index &at_index);
 
       ///
       /// \brief render_bond
@@ -65,8 +67,8 @@ namespace qpp{
       /// \param atNum2
       /// \param atIndex2
       ///
-      void render_bond(const uint16_t atNum1, const index &atIndex1,
-                       const uint16_t atNum2, const index &atIndex2);
+      void render_bond(const uint16_t at_num1, const index &at_index1,
+                       const uint16_t at_num2, const index &at_index2);
 
       void render_ui() override;
       bool mouse_click(ray_t<float> *click_ray) override;
@@ -95,7 +97,7 @@ namespace qpp{
       /// \brief shift
       /// \param vShift
       ///
-      void shift(const vector3<float> vShift);
+      void shift(const vector3<float> shift);
 
       ///
       /// \brief load_from_file
@@ -103,8 +105,8 @@ namespace qpp{
       /// \param sFileName
       /// \param bAutoCenter
       ///
-      void load_from_file(qc_file_format eFileFormat, std::string sFileName,
-                          bool bAutoCenter = false);
+      void load_from_file(qc_file_format file_format, std::string file_name,
+                          bool auto_center = false);
 
       void rebuild_ngbt();
 

@@ -155,15 +155,15 @@ void ui_manager_t::render_main_menu(){
 
       std::vector<std::string>  vStr;
       std::vector<char*>  vChar;
-      for (int i = 0; i < astate->workspace_manager->ws.size(); i++)
-        vStr.push_back(astate->workspace_manager->ws[i]->ws_name);
+      for (int i = 0; i < astate->workspace_manager->m_ws.size(); i++)
+        vStr.push_back(astate->workspace_manager->m_ws[i]->m_ws_name);
       std::transform(vStr.begin(), vStr.end(),
                      std::back_inserter(vChar),
                      vec_str_to_char);
 
       ImGui::PushItemWidth(150);
       ImGui::Combo("Workspace", &ui_current_workspace, vChar.data(),
-                   astate->workspace_manager->ws.size());
+                   astate->workspace_manager->m_ws.size());
       ImGui::PopItemWidth();
 
       for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
@@ -244,22 +244,22 @@ void ui_manager_t::render_work_panel(){
   if (c_app::get_state().workspace_manager->has_wss()){
       ImGui::Text("Edit:");
       int edit_mode = int(c_app::get_state().workspace_manager->
-                          get_current_workspace()->cur_edit_type);
+                          get_current_workspace()->m_edit_type);
 
       ImGui::BeginTabs("newtab", 2, edit_mode, 70 );
       if (ImGui::AddTab( "ITEM")) {
           c_app::get_state().workspace_manager->
-              get_current_workspace()->cur_edit_type = ws_edit_type::EDIT_WS_ITEM;
+              get_current_workspace()->m_edit_type = ws_edit_type::EDIT_WS_ITEM;
         }
 
       if (ImGui::AddTab( "CONTENT")) {
           c_app::get_state().workspace_manager->
-              get_current_workspace()->cur_edit_type =
-              ws_edit_type::EDIT_WS_ITEM_CONTENT;
+              get_current_workspace()->m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
         }
+
       ImGui::EndTabs();
       c_app::get_state().workspace_manager->get_current_workspace()->
-          cur_edit_type = ws_edit_type(edit_mode);
+          m_edit_type = ws_edit_type(edit_mode);
 
       ImGui::Spacing();
       ImGui::Separator();
@@ -353,11 +353,11 @@ void ui_manager_t::render_object_inspector(){
   auto iCurWs = astate->workspace_manager->get_current_workspace_id();
 
   ImGui::PushItemWidth(284);
-  workspace_t* cur_ws = astate->workspace_manager->ws[iCurWs];
+  workspace_t* cur_ws = astate->workspace_manager->m_ws[iCurWs];
   if (cur_ws != nullptr){
       int ws_itm_cur = cur_ws->get_selected_item();
       ImGui::PushID(1);
-      ImGui::ListBox_stl("", &ws_itm_cur, cur_ws->ws_names_c, 8);
+      ImGui::ListBox_stl("", &ws_itm_cur, cur_ws->m_ws_names_c, 8);
       ImGui::PopID();
       if (ws_itm_cur != cur_ws->get_selected_item())
         cur_ws->set_selected_item(ws_itm_cur);

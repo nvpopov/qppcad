@@ -20,7 +20,7 @@ gizmo_t::gizmo_t(){
 
 void gizmo_t::render(){
   app_state_t* astate = &(c_app::get_state());
-  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->cur_edit_type;
+  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->m_edit_type;
   astate->dp->begin_render_general_mesh();
 
   vector3<float> _v_scale = vector3<float>::Ones()*gizmo_box_size*0.25;
@@ -98,7 +98,7 @@ void gizmo_t::translate_attached(float delta_time){
   app_state_t *astate = &(c_app::get_state());
 
   if (attached_item){
-      ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->cur_edit_type;
+      ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->m_edit_type;
 
       vector3<float> unproj_mouse_hit_old =
           astate->camera->unproject(astate->mouse_x_old, astate->mouse_y_old);
@@ -117,7 +117,7 @@ void gizmo_t::translate_attached(float delta_time){
               gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 0.5f;
           accum_translate += new_transform;
           if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-            attached_item->pos += new_transform;
+            attached_item->m_pos += new_transform;
           else attached_item->apply_intermediate_translate_content(new_transform);
         }
     }
@@ -131,16 +131,16 @@ void gizmo_t::clear_selected_axis(){
 void gizmo_t::update_gizmo(float delta_time){
 
   app_state_t *astate = &(c_app::get_state());
-  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->cur_edit_type;
+  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->m_edit_type;
 
   //update gizmo position according to current workspace edit type value
   //if we are in node edit mode - snap to aabb min
   if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM)
-    pos = attached_item->aabb.min+attached_item->pos;
+    pos = attached_item->m_aabb.min+attached_item->m_pos;
 
   //if we are in the content edit mode - snap to calculated barycenter, provided by node
   if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM_CONTENT)
-    pos = attached_item->pos + attached_item->get_gizmo_content_barycenter();
+    pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
 
   //Transform in node mode
   //start interacting - run event
@@ -182,8 +182,8 @@ void gizmo_t::update_gizmo(float delta_time){
     }
 
   //we we release left mouse button - fire event(on_end_content_translate)
-  if (attached_item && !astate->mouse_lb_pressed && cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT &&
-      interact_at_the_moment){
+  if (attached_item && !astate->mouse_lb_pressed &&
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && interact_at_the_moment){
         interact_at_the_moment = false;
         attached_item->on_end_content_gizmo_translate();
         clear_selected_axis();
