@@ -9,8 +9,7 @@ ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
 
 
   m_geom = unique_ptr<xgeometry<float, periodic_cell<float> > >(
-        new xgeometry<float, periodic_cell<float> >(3,"rg1")
-        );
+        new xgeometry<float, periodic_cell<float> >(3,"rg1"));
 
   m_geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel"},
 
@@ -229,6 +228,36 @@ void ws_atoms_list_t::render_ui(){
   if (ImGui::CollapsingHeader("Modify")){
 
     }
+
+  if (ImGui::CollapsingHeader("Measurements")){
+      ImGui::Spacing();
+      if (m_atom_idx_selection.size() != 2) {
+          ImGui::BulletText("Select 2 atoms to measure distance");
+          ImGui::BulletText("Select 3 atoms to measure angle");
+        } else if (m_atom_idx_selection.size() == 2) {
+          auto first = m_atom_idx_selection.cbegin();
+          auto last  = ++(m_atom_idx_selection.cbegin());
+          float dist = (m_geom->pos(first->m_atm, first->m_idx) -
+                       m_geom->pos(last->m_atm, last->m_idx)).norm();
+          ImGui::Columns(2);
+          ImGui::Separator();
+          ImGui::Text("First atom");
+          ImGui::Text("Second atom");
+          ImGui::Text("Distance");
+          ImGui::NextColumn();
+          ImGui::Text(fmt::format("{}, Index = {}",
+                                  m_geom->atom_of_type(m_geom->type_table(first->m_atm)),
+                                  first->m_idx).c_str());
+          ImGui::Text(fmt::format("{}, Index = {}",
+                                  m_geom->atom_of_type(m_geom->type_table(last->m_atm)),
+                                  last->m_idx).c_str());
+          ImGui::Text(fmt::format("{} Angs.", dist).c_str());
+          ImGui::Columns(1);
+          ImGui::Separator();
+
+        }
+
+    }
 }
 
 bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
@@ -325,10 +354,10 @@ void ws_atoms_list_t::recalc_gizmo_barycenter(){
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
 
-  if (m_atom_selection.size() > 0 || m_geom->nat() == 0){
-      for (const auto& atm_idx : m_atom_selection)
-        m_gizmo_barycenter += m_geom->pos(atm_idx);
-      m_gizmo_barycenter /= m_atom_selection.size();
+  if (m_atom_idx_selection.size() > 0 || m_geom->nat() == 0){
+      for (const auto& atm_idx : m_atom_idx_selection)
+        m_gizmo_barycenter += m_geom->pos(atm_idx.m_atm, atm_idx.m_idx);
+      m_gizmo_barycenter /= m_atom_idx_selection.size();
     }
   else m_gizmo_barycenter = m_aabb.min;
 

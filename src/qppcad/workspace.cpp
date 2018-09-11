@@ -58,13 +58,13 @@ void workspace_t::set_best_view(){
   vec_look_at  /= m_ws_items.size();
   vec_look_pos /= m_ws_items.size();
 
-  m_camera->vLookAt = vec_look_at;
-  m_camera->vViewPoint = vec_look_pos;
+  m_camera->m_look_at = vec_look_at;
+  m_camera->m_view_point = vec_look_pos;
 
   //  std::cout << "set bv " << _vLookAt << std::endl << _vLookPos << std::endl
   //            << "end bv " << std::endl;
 
-  if ((m_camera->vLookAt-m_camera->vViewPoint).norm() < 0.4f)
+  if ((m_camera->m_look_at-m_camera->m_view_point).norm() < 0.4f)
     m_camera->reset_camera();
 }
 
@@ -93,8 +93,8 @@ void workspace_t::render(){
           astate->line_mesh_program->begin_shader_program();
           vector3<float> color(0.75, 0.75, 0.75);
           astate->line_mesh_program->set_u(sp_u_name::m_model_view_proj,
-                                           astate->camera->mViewProjection.data());
-          astate->line_mesh_program->set_u(sp_u_name::m_model_view, astate->camera->mView.data());
+                                           astate->camera->m_view_proj.data());
+          astate->line_mesh_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
           astate->line_mesh_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
 
           for (int dx = -4; dx <= 4; dx++)
@@ -111,7 +111,7 @@ void workspace_t::render(){
       ///// Draw axis /////
       if (astate->show_axis){
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
-          float fAxisLen = 0.07f *astate->camera->fStoredDist;
+          float fAxisLen = 0.07f *astate->camera->m_stored_dist;
           if (astate->camera->cur_proj ==
               app_camera_proj_type::CAMERA_PROJ_PERSP)
             fAxisLen = 0.015f;
@@ -142,8 +142,8 @@ void workspace_t::render(){
 }
 
 void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
-  m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->vViewPoint).normalized();
-  m_ray_debug.start = m_camera->vViewPoint;
+  m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
+  m_ray_debug.start = m_camera->m_view_point;
 
   if (m_gizmo->process_ray(&m_ray_debug)){
       c_app::log("gizmo clicked");

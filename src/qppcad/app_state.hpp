@@ -110,7 +110,7 @@ namespace qpp {
 
       if (camera != nullptr){
           camera->update_camera();
-          light_pos_tr = mat4_to_mat3<float>(camera->mView) * light_pos;
+          light_pos_tr = mat4_to_mat3<float>(camera->m_mat_view) * light_pos;
         }
 
       workspace_t *cur_ws = workspace_manager->get_current_workspace();
