@@ -186,6 +186,7 @@ qpp::shader_program_t *qpp::gen_mv_screen_space_lighting_program(){
   qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("mv_ssl"), vs, fs);
   sp->u_on(sp_u_name::m_model_view_proj);
   sp->u_on(sp_u_name::m_model_view);
+  sp->u_on(sp_u_name::m_view_proj);
   sp->u_on(sp_u_name::m_model_view_inv_tr);
   sp->u_on(sp_u_name::v_light_pos);
   sp->u_on(sp_u_name::v_color);

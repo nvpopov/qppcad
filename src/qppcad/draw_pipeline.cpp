@@ -23,6 +23,7 @@ void draw_pipeline_t::begin_atom_render(){
   app_state_t* astate = &(c_app::get_state());
   astate->default_program->begin_shader_program();
   astate->_sph_meshes[0]->begin_render_batch();
+
 }
 
 void draw_pipeline_t::render_atom(const vector3<float> &color,
@@ -83,6 +84,7 @@ void draw_pipeline_t::render_bond(const vector3<float> &color,
 
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  astate->mvp_ssl_program->set_u(sp_u_name::m_view_proj, astate->camera->m_view_proj.data());
   astate->mvp_ssl_program->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
 

@@ -139,7 +139,7 @@ namespace qpp {
       disable_mouse_camera_control = false;
       show_console                 = false;
 
-      light_pos    = vector3<float>(0, 25.0, 25.0);
+      light_pos    = vector3<float>(0, 1.0f, 1.0f);
       light_pos_tr = vector3<float>(0, 0, 0);
 
       wWidth  = 600;

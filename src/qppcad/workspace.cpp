@@ -144,7 +144,10 @@ void workspace_t::render(){
 
 void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
   m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
+
+
   m_ray_debug.start = m_camera->m_view_point;
+//  if (m_camera->cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO) m_ray_debug.start *= m_camera->m_ortho_scale;
 
   if (m_gizmo->process_ray(&m_ray_debug)){
       c_app::log("gizmo clicked");
@@ -192,8 +195,6 @@ void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
       add_item_to_workspace(wsl);
       wsl->m_name = "test1";
       wsl->load_from_file(file_format, file_name_fd, false);
-      //add_item_to_workspace(wsl);
-      //this->workspace_changed();
     }
 
 }

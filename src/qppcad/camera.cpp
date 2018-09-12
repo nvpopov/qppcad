@@ -14,6 +14,7 @@ camera_t::camera_t(){
   m_mouse_zoom_min_distance = 4.0f;
   m_rotate_camera           = false;
   m_move_camera             = false;
+  m_ortho_scale = 10.0f;
 
   reset_camera();
 }
@@ -121,16 +122,30 @@ void camera_t::update_camera(){
   if (cur_proj == app_camera_proj_type::CAMERA_PROJ_PERSP)
     m_mat_proj = perspective<float>(m_fov,
                                     (astate->vViewportWidthHeight(0) + _viewport_w)/
-                                     astate->vViewportWidthHeight(1),
-                                     m_znear_persp, m_zfar_persp);
+                                    astate->vViewportWidthHeight(1),
+                                    m_znear_persp, m_zfar_persp);
   else {
-      float a = astate->vViewportWidthHeight(0) + _viewport_w;
-      a /= astate->vViewportWidthHeight(1);
-      float r = (m_view_point-m_look_at).norm();
-      if (a < 1.0f)
-        m_mat_proj = ortho<float>(-r*a, r*a, -r, r, m_znear_ortho, m_zfar_ortho);
-      else
-        m_mat_proj = ortho<float>(-r, r, -r/a, r/a, m_znear_ortho, m_zfar_ortho);
+      float width = astate->vViewportWidthHeight(0) + _viewport_w;
+      float height = astate->vViewportWidthHeight(1);
+      float x_scale = 1.0f;
+      float y_scale = 1.0f;
+
+      if (width > height) {
+          x_scale = width / (height * 2);
+          y_scale = 0.5;
+        }
+
+      else {
+          x_scale = 0.5;
+          y_scale = height / (width * 2);
+        }
+
+      float left   = -2 * x_scale * (m_ortho_scale);
+      float right  =  2 * x_scale * (m_ortho_scale);
+      float bottom = -2 * y_scale * (m_ortho_scale);
+      float top   =   2 * y_scale * (m_ortho_scale);
+      //std::cout<<"ortho_scale"<<m_ortho_scale<<std::endl;
+      m_mat_proj = ortho<float>(left, right, bottom, top , -10, 100);
     }
 
   m_view_proj = m_mat_proj *  m_mat_view ;
@@ -138,14 +153,19 @@ void camera_t::update_camera(){
 }
 
 void camera_t::update_camera_zoom(const float dist){
-  vector3<float> m_view_dir_n = - m_view_point + m_look_at;
-  float f_dist = m_view_dir_n.norm();
-  m_stored_dist = f_dist;
-  m_view_dir_n.normalize();
-  float f_dist_delta = dist * m_mouse_whell_camera_step;
-  //bool bCanZoom = true;
-  if (f_dist + f_dist_delta > m_mouse_zoom_min_distance || f_dist_delta < 0.0f)
-    m_view_point += m_view_dir_n * f_dist_delta;
+  if (cur_proj == app_camera_proj_type::CAMERA_PROJ_PERSP){
+      vector3<float> m_view_dir_n = - m_view_point + m_look_at;
+      float f_dist = m_view_dir_n.norm();
+      m_stored_dist = f_dist;
+      m_view_dir_n.normalize();
+      float f_dist_delta = dist * m_mouse_whell_camera_step;
+      //bool bCanZoom = true;
+      if (f_dist + f_dist_delta > m_mouse_zoom_min_distance || f_dist_delta < 0.0f)
+        m_view_point += m_view_dir_n * f_dist_delta;
+    } else {
+      m_ortho_scale += dist;
+      m_ortho_scale = clamp(m_ortho_scale, 1.0f, 30.0f);
+    }
 }
 
 void camera_t::update_camera_translation(const bool move_camera){
@@ -163,11 +183,15 @@ void camera_t::set_projection(app_camera_proj_type _proj_to_set){
     }
 }
 
+float camera_t::distance(const vector3<float> &point){
+  return (m_mat_view * vector4<float>(point(0), point(1), point(2), 1.0f)).norm();
+}
+
 vector3<float> camera_t::unproject(const float _x, const float _y){
-  app_state_t* astate = &(c_app::get_state());
-  matrix4<float> mMVP_Inv = (m_mat_proj * m_mat_view).inverse();
-  vector4<float> invec4(_x, _y, 0.5, 1.0);
-  vector4<float> rvec4 = mMVP_Inv * invec4;
+  //app_state_t* astate = &(c_app::get_state());
+  matrix4<float> mat_mvp_inv = (m_mat_proj * m_mat_view).inverse();
+  vector4<float> invec4(_x, _y, 0.5f, 1.0f);
+  vector4<float> rvec4 = mat_mvp_inv * invec4;
   rvec4(3) = 1.0f / rvec4(3);
   rvec4(0) = rvec4(0) * rvec4(3);
   rvec4(1) = rvec4(1) * rvec4(3);

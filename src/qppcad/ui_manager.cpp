@@ -405,7 +405,7 @@ void ui_manager_t::render_object_inspector(){
   auto iCurWs = astate->workspace_manager->get_current_workspace_id();
 
   ImGui::PushItemWidth(284);
-  auto cur_ws = astate->workspace_manager->m_ws[iCurWs];
+  auto cur_ws = astate->workspace_manager->get_current_workspace();
   if (cur_ws != nullptr){
       int ws_itm_cur = cur_ws->get_selected_item();
       ImGui::PushID(1);

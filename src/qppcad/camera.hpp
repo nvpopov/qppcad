@@ -34,6 +34,7 @@ namespace qpp{
     float m_mouse_whell_camera_step;
     float m_mouse_zoom_min_distance;
 
+    float m_ortho_scale;
     float m_fov;
     float m_znear_persp;
     float m_zfar_persp;
@@ -61,6 +62,7 @@ namespace qpp{
     void update_camera_rotation(const bool rotate_camera);
 
     void set_projection(app_camera_proj_type _proj_to_set);
+    float distance(const vector3<float> &point);
     vector3<float> unproject(const float x, const float y);
   };
 }
