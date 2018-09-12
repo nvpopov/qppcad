@@ -5,7 +5,7 @@
 
 using namespace qpp;
 
-ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
+ws_atoms_list_t::ws_atoms_list_t():ws_item_t(){
 
 
   m_geom = unique_ptr<xgeometry<float, periodic_cell<float> > >(
@@ -30,7 +30,7 @@ ws_atoms_list_t::ws_atoms_list_t(workspace_t* parent):ws_item_t(parent){
   m_show_bonds = true;
   m_draw_line_in_dist_measurement = false;
 
-  parent->add_item_to_workspace(this);
+  //parent->add_item_to_workspace(this->shared_from_this());
 
 }
 
@@ -307,8 +307,11 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
           recalc_gizmo_barycenter();
           return true;
         } else {
-          m_atom_selection.clear();
-          m_atom_idx_selection.clear();
+          //TODO: need refractoring
+          if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
+              m_atom_selection.clear();
+              m_atom_idx_selection.clear();
+            }
         }
     }
   return false;

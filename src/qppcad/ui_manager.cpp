@@ -36,6 +36,7 @@ void ui_manager_t::render_ui(){
 
 void ui_manager_t::render_main_menu(){
   bool bShowExitDialog = false;
+  bool show_rename_workspace_dialog = false;
   app_state_t* astate = &(c_app::get_state());
   //
   //ImGui::PushStyleVar(, ImVec2(0.85, 2.85));
@@ -183,7 +184,7 @@ void ui_manager_t::render_main_menu(){
         }
 
       if (ImGui::Button("Ren")){
-
+          show_rename_workspace_dialog = true;
         }
 
       ImGui::Separator();
@@ -210,10 +211,49 @@ void ui_manager_t::render_main_menu(){
       ImGui::SetItemDefaultFocus();
       ImGui::EndPopup();
     }
+
+  if (show_rename_workspace_dialog && astate->workspace_manager->has_wss()){
+      ImGui::OpenPopup("Renaming workspace");
+      ImGui::SetNextWindowSize(ImVec2(300, 110));
+      ImGui::SetNextWindowPos(ImVec2(100, 20));
+      strcpy(s_rename_workspace_name, astate->workspace_manager->get_current_workspace()->m_ws_name.c_str());
+    }
+
+  if (ImGui::BeginPopupModal("Renaming workspace", NULL, ImGuiWindowFlags_NoResize)){
+      ImGui::Columns(2);
+      ImGui::Text("Current name");
+      ImGui::Text("New name");
+      ImGui::NextColumn();
+      ImGui::Text(astate->workspace_manager->get_current_workspace()->m_ws_name.c_str());
+
+
+      ImGui::PushID("input1");
+      ImGui::InputText("", s_rename_workspace_name, 60);
+      ImGui::PopID();
+      ImGui::Columns(1);
+
+      ImGui::Spacing();
+      ImGui::Spacing();
+      ImGui::Dummy(ImVec2(76, 0)); ImGui::SameLine();
+      if (ImGui::Button("Rename")){
+          astate->workspace_manager->get_current_workspace()->m_ws_name =
+              std::string(s_rename_workspace_name);
+          ImGui::CloseCurrentPopup();
+        }
+      ImGui::SameLine();
+      if (ImGui::Button("Close")){
+          ImGui::CloseCurrentPopup();
+        }
+      ImGui::EndPopup();
+
+    }
   //
 }
 
 void ui_manager_t::render_work_panel(){
+
+  app_state_t* astate = &(c_app::get_state());
+
   ImGui::SetNextWindowSize(ImVec2( c_app::get_state().wWidth, iWorkPanelHeight));
   ImGui::SetNextWindowPos(ImVec2(0, iWorkPanelYOffset));
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
@@ -227,7 +267,7 @@ void ui_manager_t::render_work_panel(){
   ImGuiWindow* window = ImGui::GetCurrentWindow();
   window->DC.LayoutType = ImGuiLayoutType_Horizontal;
 
-  ImGui::Button("~" , ImVec2(20,20));
+  ImGui::ToggleButton("~" , &astate->show_console);
   ImGui::Separator();
   ImGui::Text("View:");
   ImGui::Button("a" , ImVec2(20,20));
@@ -249,13 +289,13 @@ void ui_manager_t::render_work_panel(){
       int edit_mode = int(c_app::get_state().workspace_manager->
                           get_current_workspace()->m_edit_type);
 
-      ImGui::BeginTabs("newtab", 2, edit_mode, 70 );
-      if (ImGui::AddTab( "ITEM")) {
+      ImGui::BeginTabs("newtab", 2, edit_mode, 35 );
+      if (ImGui::AddTab( "ITM")) {
           c_app::get_state().workspace_manager->
               get_current_workspace()->m_edit_type = ws_edit_type::EDIT_WS_ITEM;
         }
 
-      if (ImGui::AddTab( "CONTENT")) {
+      if (ImGui::AddTab( "CNT")) {
           c_app::get_state().workspace_manager->
               get_current_workspace()->m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
         }
@@ -274,7 +314,7 @@ void ui_manager_t::render_work_panel(){
       ImGui::Button("Tr. mode" , ImVec2(60,20));
       ImGui::Separator();
 
-      ImGui::Checkbox("Inspector", &(c_app::get_state().show_object_inspector));
+      ImGui::ToggleButton("INSP", &(c_app::get_state().show_object_inspector));
       ImGui::Separator();
 
     }
@@ -343,8 +383,17 @@ void ui_manager_t::render_object_inspector(){
         }
 
       if(ImGui::BeginMenu("Import")){
-          ImGui::MenuItem("XYZ");
-          ImGui::MenuItem("VASP");
+          if (ImGui::MenuItem("XYZ")) {
+              if (astate->workspace_manager->has_wss())
+                astate->workspace_manager->get_current_workspace()->
+                    dialog_add_geom_from_file(qc_file_format::format_standart_xyz);
+            }
+          if (ImGui::MenuItem("VASP")){
+              if (astate->workspace_manager->has_wss())
+                astate->workspace_manager->get_current_workspace()->
+                    dialog_add_geom_from_file(qc_file_format::format_vasp_poscar);
+            }
+
           ImGui::EndMenu();
         }
 
@@ -356,7 +405,7 @@ void ui_manager_t::render_object_inspector(){
   auto iCurWs = astate->workspace_manager->get_current_workspace_id();
 
   ImGui::PushItemWidth(284);
-  workspace_t* cur_ws = astate->workspace_manager->m_ws[iCurWs];
+  auto cur_ws = astate->workspace_manager->m_ws[iCurWs];
   if (cur_ws != nullptr){
       int ws_itm_cur = cur_ws->get_selected_item();
       ImGui::PushID(1);
@@ -381,7 +430,6 @@ void ui_manager_t::render_object_inspector(){
           ImGui::Separator();
         }
     }
-
 
   ImGui::End();
   ImGui::PopStyleVar(1);

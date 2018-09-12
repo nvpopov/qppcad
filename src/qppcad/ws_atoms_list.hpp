@@ -44,7 +44,7 @@ namespace qpp{
 
       vector3<float> m_gizmo_barycenter;
 
-      ws_atoms_list_t(workspace_t* parent);
+      ws_atoms_list_t();
 
       void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                  vector3<float> &vOutLookAt) override ;

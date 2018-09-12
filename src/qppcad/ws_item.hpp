@@ -32,9 +32,9 @@ namespace qpp{
 //  template<typename support_translation_behaviour = behaviour_enable,
 //           typename support_rotation_behaviour    = behaviour_disable,
 //           typename support_scale_behaviour       = behaviour_disable>
-  class ws_item_t {
+  class ws_item_t  {
     protected:
-      workspace_t *parent_ws;
+      shared_ptr<workspace_t> parent_ws{};
     public:
       app_state_t *app_state_c;
       std::string      m_name;
@@ -51,7 +51,7 @@ namespace qpp{
       /// \brief ws_item_t
       /// \param parent
       ///
-      ws_item_t(workspace_t* parent);
+      ws_item_t();
 
       ///
       /// \brief vote_for_view_vectors
@@ -65,7 +65,7 @@ namespace qpp{
       /// \brief set_parent_workspace
       /// \param _parent_ws
       ///
-      void set_parent_workspace(workspace_t* _parent_ws);
+      void set_parent_workspace(const shared_ptr<workspace_t> _parent_ws);
 
       ///
       /// \brief get_name

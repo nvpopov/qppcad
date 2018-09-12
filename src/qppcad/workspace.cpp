@@ -63,6 +63,7 @@ void workspace_t::set_best_view(){
 
   //  std::cout << "set bv " << _vLookAt << std::endl << _vLookPos << std::endl
   //            << "end bv " << std::endl;
+  m_camera->orthogonalize_gs();
 
   if ((m_camera->m_look_at-m_camera->m_view_point).norm() < 0.4f)
     m_camera->reset_camera();
@@ -173,11 +174,28 @@ void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
 
 }
 
-void workspace_t::add_item_to_workspace(ws_item_t *item_to_add){
-  item_to_add->set_parent_workspace(this);
-  m_ws_items.push_back(unique_ptr<ws_item_t>(item_to_add));
+void workspace_t::add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add){
+  item_to_add->set_parent_workspace(shared_from_this());
+  m_ws_items.push_back(item_to_add);
   workspace_changed();
   c_app::log(fmt::format("New workspace {} size = {}", m_ws_name, m_ws_items.size()));
+}
+
+void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
+  app_state_t *astate = &(c_app::get_state());
+
+  bool succes = false;
+  string filter = "*";
+  string file_name_fd = astate->file_dialog_manager->request_open_file(filter, succes);
+  if (succes){
+      auto wsl = make_shared<ws_atoms_list_t>();
+      add_item_to_workspace(wsl);
+      wsl->m_name = "test1";
+      wsl->load_from_file(file_format, file_name_fd, false);
+      //add_item_to_workspace(wsl);
+      //this->workspace_changed();
+    }
+
 }
 
 void workspace_t::update(float delta_time){
@@ -185,7 +203,7 @@ void workspace_t::update(float delta_time){
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
 }
 
-workspace_t *workspace_manager_t::get_current_workspace(){
+shared_ptr<workspace_t> workspace_manager_t::get_current_workspace(){
   if (m_current_workspace_id >= m_ws.size())
     return nullptr;
   return m_ws[m_current_workspace_id];
@@ -205,24 +223,31 @@ bool workspace_manager_t::set_current_workspace(const uint8_t ws_index){
 }
 
 void workspace_manager_t::init_default_workspace(){
-  workspace_t* _ws2 = new workspace_t();
+
+  auto _ws2 = make_shared<workspace_t>();
   _ws2->m_ws_name = "d2";
-  ws_atoms_list_t* _wsl2 = new ws_atoms_list_t(_ws2);
+
+  auto _ws3 = make_shared<workspace_t>();
+  _ws3->m_ws_name = "d1";
+
+  auto _wsl2 = make_shared<ws_atoms_list_t>();
+  _ws3->add_item_to_workspace(_wsl2);
   _wsl2->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                         false);
 
-  workspace_t* _ws3 = new workspace_t();
-  _ws3->m_ws_name = "d1";
-  ws_atoms_list_t* _wsl3 = new ws_atoms_list_t(_ws3);
+  auto _wsl3 = make_shared<ws_atoms_list_t>();
+  _ws2->add_item_to_workspace(_wsl3);
   _wsl3->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
                         false);
 
-  ws_atoms_list_t* _wsl32 = new ws_atoms_list_t(_ws3);
+  auto _wsl32 = make_shared<ws_atoms_list_t>();
+  _ws2->add_item_to_workspace(_wsl32);
   _wsl32->load_from_file(qc_file_format::format_standart_xyz,
                          "../deps/qpp/examples/io/ref_data/nanotube.xyz",
                          true);
 
-  ws_atoms_list_t* _wsl33 = new ws_atoms_list_t(_ws3);
+  auto _wsl33 = make_shared<ws_atoms_list_t>();
+  _ws2->add_item_to_workspace(_wsl33);
   _wsl33->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                          false);
 
@@ -233,8 +258,8 @@ void workspace_manager_t::init_default_workspace(){
   _wsl33->m_pos = vector3<float>(0.0f, 22.0f, 2.0f);
 
 
-  m_ws.push_back(_ws2);
-  m_ws.push_back(_ws3);
+  add_workspace(_ws3);
+  add_workspace(_ws2);
 
   m_current_workspace_id = m_ws.size() - 1;
 }
@@ -269,6 +294,10 @@ void workspace_manager_t::mouse_click(){
     }
 }
 
+void workspace_manager_t::add_workspace(const shared_ptr<workspace_t> &ws_to_add){
+  m_ws.push_back(ws_to_add);
+}
+
 void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file_format){
   app_state_t *astate = &(c_app::get_state());
   bool succes = false;
@@ -276,12 +305,13 @@ void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file
   std::string file_name_fd =
       astate->file_dialog_manager->request_open_file(filter, succes);
   if (succes){
-      workspace_t* _ws2 = new workspace_t();
+      auto _ws2 = make_shared<workspace_t>();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
       _ws2->m_ws_name = file_name_extr;
-      ws_atoms_list_t* _wsl2 = new ws_atoms_list_t(_ws2);
+      auto _wsl2 = make_shared<ws_atoms_list_t>();
+      _ws2->add_item_to_workspace(_wsl2);
       _wsl2->load_from_file(file_format, file_name_fd, false);
-      m_ws.push_back(_ws2);
+      add_workspace(_ws2);
       set_current_workspace(m_ws.size()-1);
     }
 }

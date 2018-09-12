@@ -89,6 +89,8 @@ namespace qpp {
     bool debug_show_tws_tree;
     bool debug_show_selection_ray;
     bool show_object_inspector;
+    bool show_console;
+
     ///
     /// \brief update_mouse_coord
     /// \param _mcx
@@ -113,7 +115,7 @@ namespace qpp {
           light_pos_tr = mat4_to_mat3<float>(camera->m_mat_view) * light_pos;
         }
 
-      workspace_t *cur_ws = workspace_manager->get_current_workspace();
+      auto cur_ws = workspace_manager->get_current_workspace();
       if (cur_ws) cur_ws->update(delta_time);
 
     }
@@ -135,6 +137,7 @@ namespace qpp {
       show_object_inspector        = true;
       mouse_lb_pressed             = false;
       disable_mouse_camera_control = false;
+      show_console                 = false;
 
       light_pos    = vector3<float>(0, 25.0, 25.0);
       light_pos_tr = vector3<float>(0, 0, 0);

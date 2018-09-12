@@ -31,11 +31,10 @@ namespace qpp{
      uint8_t m_current_workspace_id;
   public:
 
-
-    std::vector<workspace_t*> m_ws;
+    vector<shared_ptr<workspace_t> > m_ws;
     workspace_manager_t(){ m_current_workspace_id = 0;}
 
-    workspace_t* get_current_workspace();
+    shared_ptr<workspace_t> get_current_workspace();
     uint8_t get_current_workspace_id();
 
     bool set_current_workspace(const uint8_t ws_index);
@@ -44,16 +43,17 @@ namespace qpp{
     void init_default_workspace();
     void render_current_workspace();
     void mouse_click();
+    void add_workspace(const shared_ptr<workspace_t> &ws_to_add);
     void query_import_file_as_new_workspace(qc_file_format file_format);
   };
 
   ///
   /// \brief The workspace_t class
   ///
-  class workspace_t {
+  class workspace_t : public std::enable_shared_from_this<workspace_t> {
   public:
     ws_edit_type                   m_edit_type;
-    vector<unique_ptr<ws_item_t> > m_ws_items;
+    vector<shared_ptr<ws_item_t> > m_ws_items;
     string                         m_ws_name;
     unique_ptr<camera_t>           m_camera;
     ray_t<float>                   m_ray_debug;
@@ -80,7 +80,8 @@ namespace qpp{
     void set_best_view();
     void render();
     void mouse_click(const double mouse_x, const double mouse_y);
-    void add_item_to_workspace(ws_item_t *item_to_add);
+    void add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add);
+    void dialog_add_geom_from_file(qc_file_format file_format);
     void update(float delta_time);
   };
 

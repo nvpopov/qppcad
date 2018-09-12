@@ -14,6 +14,7 @@
 namespace qpp{
   class ui_manager_t{
   public:
+    char s_rename_workspace_name[60];
     int iWorkPanelHeight;
     int iWorkPanelYOffset;
     int iObjInspWidth;
@@ -28,4 +29,5 @@ namespace qpp{
     void render_mtable_big();
   };
 }
+
 #endif

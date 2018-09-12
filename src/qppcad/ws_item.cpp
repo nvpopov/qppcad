@@ -5,18 +5,17 @@
 
 using namespace qpp;
 
-ws_item_t::ws_item_t(workspace_t* parent){
+ws_item_t::ws_item_t(){
   m_pos                = vector3<float>(0.0f, 0.0f, 0.0f);
   m_scale              = vector3<float>(1.0f, 1.0f, 1.0f);
   m_rotation           = vector3<float>(0.0f, 0.0f, 0.0f);
   m_selected           = false;
-  parent_ws            = parent;
   m_is_visible         = true;
   m_draw_cell          = true;
   m_hide_gizmo_trigger = false;
 }
 
-void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
+void ws_item_t::set_parent_workspace(const shared_ptr<workspace_t> _parent_ws){
   parent_ws = _parent_ws;
 }
 

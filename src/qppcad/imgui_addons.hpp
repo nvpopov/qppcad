@@ -125,4 +125,8 @@ namespace ImGui {
   }
 }
 
+namespace ImGui{
+bool ToggleButton(const char* label, bool* v, const ImVec2& size = ImVec2(0, 0));
+}
+
 #endif

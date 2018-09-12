@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
 add_definitions(-O3 -std=c++17 -fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS "-O3 -funroll-loops -ftree-vectorize")
-set(CMAKE_BUILD_TYPE "Debug")
+#set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
@@ -62,6 +62,7 @@ add_executable(qppcad
     src/qppcad/ui_manager.cpp
     src/qppcad/gizmo.cpp
     src/qppcad/file_dialog.cpp
+    src/qppcad/imgui_addons.cpp
     deps/imgui/misc/freetype/imgui_freetype.cpp
     deps/imgui/examples/imgui_impl_glfw.cpp
     deps/imgui/examples/imgui_impl_opengl3.cpp
