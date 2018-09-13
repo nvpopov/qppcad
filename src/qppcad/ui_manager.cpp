@@ -267,19 +267,19 @@ void ui_manager_t::render_work_panel(){
   ImGuiWindow* window = ImGui::GetCurrentWindow();
   window->DC.LayoutType = ImGuiLayoutType_Horizontal;
 
-  ImGui::ToggleButton("~" , &astate->show_console);
+  ImGui::ToggleButton("~" , &astate->show_console, ImVec2(20,24));
   ImGui::Separator();
   ImGui::Text("View:");
-  ImGui::Button("a" , ImVec2(20,20));
-  ImGui::Button("b" , ImVec2(20,20));
-  ImGui::Button("c" , ImVec2(20,20));
+  ImGui::Button("a" , ImVec2(20,24));
+  ImGui::Button("b" , ImVec2(20,24));
+  ImGui::Button("c" , ImVec2(20,24));
   ImGui::Separator();
 
 
   ImGui::Text("T:");
-  ImGui::Button("X" , ImVec2(20,20));
-  ImGui::Button("Y" , ImVec2(20,20));
-  ImGui::Button("Z" , ImVec2(20,20));
+  ImGui::Button("X" , ImVec2(20,24));
+  ImGui::Button("Y" , ImVec2(20,24));
+  ImGui::Button("Z" , ImVec2(20,24));
   ImGui::Separator();
 
 
@@ -307,14 +307,14 @@ void ui_manager_t::render_work_panel(){
       ImGui::Spacing();
       ImGui::Separator();
 
-      ImGui::Button("Undo" , ImVec2(40,20));
-      ImGui::Button("Redo" , ImVec2(40,20));
+      ImGui::Button("Undo" , ImVec2(50,24));
+      ImGui::Button("Redo" , ImVec2(50,24));
       ImGui::Separator();
 
-      ImGui::Button("Tr. mode" , ImVec2(60,20));
+      ImGui::Button("Tr. mode" , ImVec2(65,24));
       ImGui::Separator();
 
-      ImGui::ToggleButton("INSP", &(c_app::get_state().show_object_inspector));
+      ImGui::ToggleButton("INSP", &(c_app::get_state().show_object_inspector), ImVec2(50,24));
       ImGui::Separator();
 
     }

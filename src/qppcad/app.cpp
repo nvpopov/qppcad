@@ -70,7 +70,7 @@ void qpp::c_app::run(){
   config.MergeMode = true;*/
 
   io.Fonts->AddFontFromFileTTF("../data/fonts/Ubuntu/Ubuntu-Regular.ttf",
-                                14.0f);
+                                16.0f);
   unsigned int flags = ImGuiFreeType::ForceAutoHint;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
 

@@ -104,7 +104,7 @@ namespace ImGui {
       }
 
     // Draw the button
-    if (ImGui::Button(label, ImVec2(tbs->lableWidth, 0))) {
+    if (ImGui::Button(label, ImVec2(tbs->lableWidth, 24))) {
         *(CurTabs->selectedIdx) = tbs->currentidx;
       }
 
