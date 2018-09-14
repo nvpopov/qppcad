@@ -8,12 +8,15 @@
 #include <fmt/ostream.h>
 #include <chrono>
 #include <ctime>
+#include <set>
 #include <algorithm>
 #include <functional>
 #include <tuple>
 #include <unordered_set>
+#include <optional>
 #include <io/strfun.hpp>
 #include <qppcad/file_formats.hpp>
+
 
 using namespace std;
 

@@ -37,25 +37,25 @@ namespace qpp{
 
     matrix4<REAL> res;
 
-    res(0,0) = ((REAL)2) / (right-left);
+    res(0,0) = REAL(2) / (right-left);
     res(0,1) = 0;
     res(0,2) = 0;
     res(0,3) = -(right+left) / (right-left);
 
     res(1,0) = 0;
-    res(1,1) = ((REAL)2) / (top-bottom);
+    res(1,1) = REAL(2) / (top-bottom);
     res(1,2) = 0;
     res(1,3) = -(top+bottom) / (top-bottom);
 
     res(2,0) = 0;
     res(2,1) = 0;
-    res(2,2) = -((REAL)2) / (zFar-zNear);
+    res(2,2) = -REAL(2) / (zFar-zNear);
     res(2,3) = -(zFar+zNear) / (zFar-zNear);
 
     res(3,0) = 0;
     res(3,1) = 0;
     res(3,2) = 0;
-    res(3,3) = ((REAL)1);
+    res(3,3) = REAL(1);
 
     return res;
   }

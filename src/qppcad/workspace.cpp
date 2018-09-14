@@ -83,7 +83,7 @@ void workspace_t::render(){
   if (astate->debug_show_selection_ray){
       astate->dp->begin_render_line();
       astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), m_ray_debug.start,
-                              m_ray_debug.start + m_ray_debug.dir * 55.0);
+                              m_ray_debug.start + m_ray_debug.dir * 155.0);
       astate->dp->end_render_line();
     }
 
@@ -210,8 +210,9 @@ shared_ptr<workspace_t> workspace_manager_t::get_current_workspace(){
   return m_ws[m_current_workspace_id];
 }
 
-uint8_t workspace_manager_t::get_current_workspace_id(){
-  return m_current_workspace_id;
+optional<uint8_t> workspace_manager_t::get_current_workspace_id(){
+  if (m_ws.size() != 0) return optional<uint8_t>(m_current_workspace_id);
+  return nullopt;
 }
 
 bool workspace_manager_t::set_current_workspace(const uint8_t ws_index){
@@ -233,7 +234,7 @@ void workspace_manager_t::init_default_workspace(){
 
   auto _wsl2 = make_shared<ws_atoms_list_t>();
   _ws3->add_item_to_workspace(_wsl2);
-  _wsl2->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
+  _wsl2->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/laf3_p3.vasp",
                         false);
 
   auto _wsl3 = make_shared<ws_atoms_list_t>();
@@ -262,7 +263,7 @@ void workspace_manager_t::init_default_workspace(){
   add_workspace(_ws3);
   add_workspace(_ws2);
 
-  m_current_workspace_id = m_ws.size() - 1;
+  m_current_workspace_id = 1;
 }
 
 void workspace_manager_t::render_current_workspace(){

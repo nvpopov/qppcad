@@ -23,11 +23,21 @@ void qpp::c_app::error_callback(int error, const char* description){
 
 void qpp::c_app::key_callback(GLFWwindow* window,
                               int key, int scancode, int action, int mods){
-  qpp::c_app::log(fmt::format("Key pressed  {}, scancode = {}", key, scancode));
+
+  app_state_t* astate = &(c_app::get_state());
+
+  qpp::c_app::log(fmt::format("Key pressed  {}, sc = {}, act = {}", key, scancode, action));
+
+  if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS){
+      astate->ui_manager->console_widget->m_active = !(astate->ui_manager->console_widget->m_active);
+      qpp::c_app::log("wft?");
+    }
 
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
   ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+
+
 }
 
 void qpp::c_app::run(){
@@ -153,7 +163,7 @@ void qpp::c_app::begin_render(){
   glViewport(0, 0, width, height);
 
   if (c_app::get_state().cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
-      glClearColor(0.75f, 0.75f, 0.75f, 1);
+      glClearColor(0.8f, 0.8f, 0.8f, 1);
     }
 
   if (c_app::get_state().cur_task == app_task_type::TASK_NODE_EDITOR){
@@ -208,7 +218,8 @@ void qpp::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, doubl
   app_state_t* astate =  &(c_app::get_state());
   if ( astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
        astate->camera != nullptr &&
-       !astate->disable_mouse_camera_control)
+       !astate->disable_mouse_camera_control &&
+       !astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE))
     astate->camera->update_camera_zoom(-yoffset);
 }
 
@@ -219,6 +230,9 @@ void qpp::c_app::mouse_callback(GLFWwindow *window, double x, double y){
 
 void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
   app_state_t* astate =  &(c_app::get_state());
+
+  if (astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE))
+    return;
 
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
       astate->camera != nullptr &&

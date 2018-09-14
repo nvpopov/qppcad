@@ -10,6 +10,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <qppcad/imgui_addons.hpp>
+#include <qppcad/console.hpp>
 
 namespace qpp{
   class ui_manager_t{
@@ -18,6 +19,7 @@ namespace qpp{
     int iWorkPanelHeight;
     int iWorkPanelYOffset;
     int iObjInspWidth;
+    unique_ptr<console_widget_t> console_widget;
     ui_manager_t();
     void setup_style();
     void render_ui();

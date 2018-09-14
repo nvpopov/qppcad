@@ -4,18 +4,57 @@
 using namespace qpp;
 
 ui_manager_t::ui_manager_t(){
+  console_widget = make_unique<console_widget_t>();
   iObjInspWidth = 300;
-  iWorkPanelHeight = 35;
+  iWorkPanelHeight = 38;
   iWorkPanelYOffset = 28;
-
+  setup_style();
 }
 
 void ui_manager_t::setup_style(){
   ImGuiStyle * style = &ImGui::GetStyle();
-  style->FrameRounding = 2.0f;
+  style->FrameRounding = 3.0f;
   style->ScrollbarRounding = 2.0f;
-  style->FrameBorderSize = 1.0f;
-  //style->Colors[ImGuiCol_Button] = ImVec4(0.40f, 0.39f, 0.12f, 1.00f);
+  style->FrameBorderSize = 2.0f;
+  style->Colors[ImGuiCol_Text]                  = {0.99333335f, 0.99333335f, 0.99333335f, 1.00f};
+  style->Colors[ImGuiCol_TextDisabled]          = {0.34509805f, 0.34509805f, 0.34509805f, 1.00f};
+  style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
+  style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.48f};
+  style->Colors[ImGuiCol_PopupBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
+  style->Colors[ImGuiCol_Border]                = {0.33333334f, 0.33333334f, 0.33333334f, 0.90f};
+  style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.00f};
+  style->Colors[ImGuiCol_FrameBg]               = {0.16862746f, 0.16862746f, 0.16862746f, 0.98f};
+  style->Colors[ImGuiCol_FrameBgHovered]        = {0.453125f, 0.67578125f, 0.99609375f, 0.97f};
+  style->Colors[ImGuiCol_FrameBgActive]         = {0.47058827f, 0.47058827f, 0.47058827f, 0.97f};
+  style->Colors[ImGuiCol_TitleBg]               = {0.04f, 0.04f, 0.04f, 1.00f};
+  style->Colors[ImGuiCol_TitleBgCollapsed]      = {0.16f, 0.29f, 0.48f, 1.00f};
+  style->Colors[ImGuiCol_TitleBgActive]         = {0.00f, 0.00f, 0.00f, 0.96f};
+  style->Colors[ImGuiCol_MenuBarBg]             = {0.21058825f, 0.21627452f, 0.2101961f, 0.80f};
+  style->Colors[ImGuiCol_ScrollbarBg]           = {0.27058825f, 0.28627452f, 0.2901961f, 0.60f};
+  style->Colors[ImGuiCol_ScrollbarGrab]         = {0.21960786f, 0.30980393f, 0.41960788f, 0.51f};
+  style->Colors[ImGuiCol_ScrollbarGrabHovered]  = {0.21960786f, 0.30980393f, 0.41960788f, 1.00f};
+  style->Colors[ImGuiCol_ScrollbarGrabActive]   = {0.13725491f, 0.19215688f, 0.2627451f, 0.91f};
+  // style->Colors[ImGuiCol_ComboBg]               = {0.1f, 0.1f, 0.1f, 0.99f};
+  style->Colors[ImGuiCol_CheckMark]             = {0.90f, 0.90f, 0.90f, 0.83f};
+  style->Colors[ImGuiCol_SliderGrab]            = {0.70f, 0.70f, 0.70f, 0.62f};
+  style->Colors[ImGuiCol_SliderGrabActive]      = {0.30f, 0.30f, 0.30f, 0.84f};
+  style->Colors[ImGuiCol_Button]                 = ImVec4(0.44f, 0.44f, 0.44f, 0.40f);
+  style->Colors[ImGuiCol_ButtonHovered]          = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
+  style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
+  style->Colors[ImGuiCol_Header]                = ImVec4(0.44f, 0.44f, 0.44f, 0.40f);
+  style->Colors[ImGuiCol_HeaderHovered]         = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
+  style->Colors[ImGuiCol_HeaderActive]          = {0.47058827f, 0.47058827f, 0.47058827f, 0.67f};
+  style->Colors[ImGuiCol_Separator]             = {0.31640625f, 0.31640625f, 0.31640625f, 1.00f};
+  style->Colors[ImGuiCol_SeparatorHovered]      = {0.31640625f, 0.31640625f, 0.31640625f, 1.00f};
+  style->Colors[ImGuiCol_SeparatorActive]       = {0.31640625f, 0.31640625f, 0.31640625f, 1.00f};
+  style->Colors[ImGuiCol_ResizeGrip]            = {1.00f, 1.00f, 1.00f, 0.85f};
+  style->Colors[ImGuiCol_ResizeGripHovered]     = {1.00f, 1.00f, 1.00f, 0.60f};
+  style->Colors[ImGuiCol_ResizeGripActive]      = {1.00f, 1.00f, 1.00f, 0.90f};
+  style->Colors[ImGuiCol_PlotLines]             = {0.61f, 0.61f, 0.61f, 1.00f};
+  style->Colors[ImGuiCol_PlotLinesHovered]      = {1.00f, 0.43f, 0.35f, 1.00f};
+  style->Colors[ImGuiCol_PlotHistogram]         = {0.90f, 0.70f, 0.00f, 1.00f};
+  style->Colors[ImGuiCol_PlotHistogramHovered]  = {1.00f, 0.60f, 0.00f, 1.00f};
+  style->Colors[ImGuiCol_TextSelectedBg]        = {0.18431373f, 0.39607847f, 0.79215693f, 0.90f};
 }
 
 void ui_manager_t::render_ui(){
@@ -30,6 +69,8 @@ void ui_manager_t::render_ui(){
   if(c_app::get_state().cur_task == app_task_type::TASK_MENDELEY_TABLE){
       render_mtable_big();
     }
+
+  console_widget->render();
 
 
 }
@@ -155,7 +196,9 @@ void ui_manager_t::render_main_menu(){
       ImGui::PopStyleVar();
 
       //
-      int ui_current_workspace = astate->workspace_manager->get_current_workspace_id();
+      optional<uint8_t> ui_cur_ws = astate->workspace_manager->get_current_workspace_id();
+      int ui_cur_ws_exact = -1;
+      if (ui_cur_ws) ui_cur_ws_exact = *ui_cur_ws;
 
       std::vector<std::string>  vStr;
       std::vector<char*>  vChar;
@@ -166,13 +209,12 @@ void ui_manager_t::render_main_menu(){
                      vec_str_to_char);
 
       ImGui::PushItemWidth(150);
-      ImGui::Combo("Workspace", &ui_current_workspace, vChar.data(),
-                   astate->workspace_manager->m_ws.size());
+      ImGui::Combo("Workspace", &ui_cur_ws_exact, vChar.data(), astate->workspace_manager->m_ws.size());
       ImGui::PopItemWidth();
 
       for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
-      if (ui_current_workspace != astate->workspace_manager->get_current_workspace_id())
-        astate->workspace_manager->set_current_workspace(ui_current_workspace);
+      if (ui_cur_ws_exact != *astate->workspace_manager->get_current_workspace_id())
+        astate->workspace_manager->set_current_workspace(ui_cur_ws_exact);
       //
 
       if (ImGui::Button("New")){
@@ -289,7 +331,7 @@ void ui_manager_t::render_work_panel(){
       int edit_mode = int(c_app::get_state().workspace_manager->
                           get_current_workspace()->m_edit_type);
 
-      ImGui::BeginTabs("newtab", 2, edit_mode, 35 );
+      ImGui::BeginTabs("newtab", 2, edit_mode, 40 );
       if (ImGui::AddTab( "ITM")) {
           c_app::get_state().workspace_manager->
               get_current_workspace()->m_edit_type = ws_edit_type::EDIT_WS_ITEM;
@@ -402,7 +444,7 @@ void ui_manager_t::render_object_inspector(){
 
   ImGui::Text("Workspace items:");
   ImGui::Spacing();
-  auto iCurWs = astate->workspace_manager->get_current_workspace_id();
+
 
   ImGui::PushItemWidth(284);
   auto cur_ws = astate->workspace_manager->get_current_workspace();

@@ -6,7 +6,7 @@ using namespace qpp;
 camera_t::camera_t(){
   m_fov = 50.0;
   m_znear_persp = 0.1f;
-  m_zfar_persp  = 600;
+  m_zfar_persp  = 800;
   m_znear_ortho = -100;
   m_zfar_ortho  = 100;
 
@@ -131,21 +131,21 @@ void camera_t::update_camera(){
       float y_scale = 1.0f;
 
       if (width > height) {
-          x_scale = width / (height * 2);
-          y_scale = 0.5;
+          x_scale = width / (height );
+          y_scale = 1;
         }
 
       else {
-          x_scale = 0.5;
-          y_scale = height / (width * 2);
+          x_scale = 1;
+          y_scale = height / (width );
         }
 
-      float left   = -2 * x_scale * (m_ortho_scale);
-      float right  =  2 * x_scale * (m_ortho_scale);
-      float bottom = -2 * y_scale * (m_ortho_scale);
-      float top   =   2 * y_scale * (m_ortho_scale);
+      float left   = - x_scale * (m_ortho_scale);
+      float right  =   x_scale * (m_ortho_scale);
+      float bottom = -  (m_ortho_scale);
+      float top    =   (m_ortho_scale);
       //std::cout<<"ortho_scale"<<m_ortho_scale<<std::endl;
-      m_mat_proj = ortho<float>(left, right, bottom, top , -10, 100);
+      m_mat_proj = ortho<float>(left, right, bottom, top , m_znear_ortho, m_zfar_ortho);
     }
 
   m_view_proj = m_mat_proj *  m_mat_view ;
@@ -191,7 +191,14 @@ vector3<float> camera_t::unproject(const float _x, const float _y){
   //app_state_t* astate = &(c_app::get_state());
   matrix4<float> mat_mvp_inv = (m_mat_proj * m_mat_view).inverse();
   vector4<float> invec4(_x, _y, 0.5f, 1.0f);
-  vector4<float> rvec4 = mat_mvp_inv * invec4;
+  vector4<float> rvec4 = vector4<float>::Zero();
+
+  if (cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO){
+      vector4<float> v_near_up = mat_mvp_inv * vector4<float>(_x, _y, m_znear_ortho, 1.0f);
+      vector4<float> v_far_up = mat_mvp_inv * vector4<float>(_x, _y, m_zfar_ortho, 1.0f);
+      rvec4 =   v_near_up;
+    } else rvec4 = mat_mvp_inv * invec4;
+
   rvec4(3) = 1.0f / rvec4(3);
   rvec4(0) = rvec4(0) * rvec4(3);
   rvec4(1) = rvec4(1) * rvec4(3);

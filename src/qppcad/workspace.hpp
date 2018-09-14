@@ -35,7 +35,7 @@ namespace qpp{
     workspace_manager_t(){ m_current_workspace_id = 0;}
 
     shared_ptr<workspace_t> get_current_workspace();
-    uint8_t get_current_workspace_id();
+    optional<uint8_t> get_current_workspace_id();
 
     bool set_current_workspace(const uint8_t ws_index);
 

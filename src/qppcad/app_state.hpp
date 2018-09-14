@@ -18,6 +18,7 @@
 #include <qppcad/gizmo.hpp>
 #include <qppcad/file_dialog.hpp>
 #include <geom/lace3d.hpp>
+#include <qppcad/vote_pool.hpp>
 
 namespace qpp {
 
@@ -30,6 +31,8 @@ namespace qpp {
     TASK_MENDELEY_TABLE = 2
   };
 
+  // vote candidats
+  const int DISABLE_MOUSE_CONTROL_IN_WORKSPACE = 0;
 
   ///
   /// \brief The app_state class
@@ -83,6 +86,8 @@ namespace qpp {
 
     bool mouse_lb_pressed;
     bool disable_mouse_camera_control;
+
+    vote_pool_t<uint32_t> config_vote_pool;
 
     bool show_axis;
     bool show_grid;
