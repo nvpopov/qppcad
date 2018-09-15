@@ -16,7 +16,8 @@ namespace qpp {
   class console_widget_t {
     public:
       vector<notebook_record_t> nb_recs;
-      bool m_active;
+      uint32_t m_id;
+      bool     m_active;
       console_widget_t();
       void render();
   };

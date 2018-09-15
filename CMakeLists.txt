@@ -3,6 +3,7 @@ project(qppcad CXX C)
 add_definitions(-O3 -std=c++17 -fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS "-O3 -funroll-loops -ftree-vectorize")
 #set(CMAKE_BUILD_TYPE "Debug")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
@@ -21,6 +22,7 @@ include_directories(src/)
 include_directories(data/)
 include_directories(deps/imgui)
 include_directories(deps/imgui/misc/freetype)
+include_directories(deps/imgui/misc/stl)
 include_directories(deps/imgui/examples)
 include_directories(deps/freetype/include)
 include_directories(deps/qpp/modules)
@@ -65,10 +67,13 @@ add_executable(qppcad
     src/qppcad/imgui_addons.cpp
     src/qppcad/console.cpp
     src/qppcad/keyboard_event.cpp
+    src/qppcad/uniq_id.cpp
     deps/imgui/misc/freetype/imgui_freetype.cpp
+    deps/imgui/misc/stl/imgui_stl.cpp
     deps/imgui/examples/imgui_impl_glfw.cpp
     deps/imgui/examples/imgui_impl_opengl3.cpp
     deps/glfw/deps/gl3w.c
     deps/imgui/imgui.cpp
+    deps/imgui/imgui_widgets.cpp
     deps/imgui/imgui_draw.cpp)
 target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY} freetype glfw nfd ${GTK3_LIBRARIES} m)

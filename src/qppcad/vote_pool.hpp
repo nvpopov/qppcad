@@ -20,6 +20,11 @@ namespace qpp {
         if (it != m_vote_data[for_what].end()) m_vote_data[for_what].erase(it);
       }
 
+      void vote_state(const INT_TYPE for_what, const INT_TYPE who, const bool what_to_do){
+        if (what_to_do) vote_for(for_what, who);
+        else unvote_for(for_what, who);
+      }
+
       void clear_voting(const INT_TYPE for_what){
         m_vote_data[for_what].clear();
       }

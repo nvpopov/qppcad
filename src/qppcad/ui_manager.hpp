@@ -15,7 +15,9 @@
 namespace qpp{
   class ui_manager_t{
   public:
+    uint32_t m_rename_ws_id;
     char s_rename_workspace_name[60];
+    bool show_rename_workspace_dialog;
     int iWorkPanelHeight;
     int iWorkPanelYOffset;
     int iObjInspWidth;

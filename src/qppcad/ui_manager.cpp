@@ -1,10 +1,15 @@
 #include <qppcad/ui_manager.hpp>
 #include <qppcad/app.hpp>
+#include <qppcad/uniq_id.hpp>
 
 using namespace qpp;
 
 ui_manager_t::ui_manager_t(){
   console_widget = make_unique<console_widget_t>();
+  m_rename_ws_id = get_uniq_id();
+
+  show_rename_workspace_dialog = false;
+
   iObjInspWidth = 300;
   iWorkPanelHeight = 38;
   iWorkPanelYOffset = 28;
@@ -13,9 +18,9 @@ ui_manager_t::ui_manager_t(){
 
 void ui_manager_t::setup_style(){
   ImGuiStyle * style = &ImGui::GetStyle();
-  style->FrameRounding = 3.0f;
+  style->FrameRounding = 2.0f;
   style->ScrollbarRounding = 2.0f;
-  style->FrameBorderSize = 2.0f;
+  style->FrameBorderSize = 1.0f;
   style->Colors[ImGuiCol_Text]                  = {0.99333335f, 0.99333335f, 0.99333335f, 1.00f};
   style->Colors[ImGuiCol_TextDisabled]          = {0.34509805f, 0.34509805f, 0.34509805f, 1.00f};
   style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
@@ -77,7 +82,7 @@ void ui_manager_t::render_ui(){
 
 void ui_manager_t::render_main_menu(){
   bool bShowExitDialog = false;
-  bool show_rename_workspace_dialog = false;
+
   app_state_t* astate = &(c_app::get_state());
   //
   //ImGui::PushStyleVar(, ImVec2(0.85, 2.85));
@@ -254,14 +259,22 @@ void ui_manager_t::render_main_menu(){
       ImGui::EndPopup();
     }
 
+
+  astate->config_vote_pool.vote_state(DISABLE_MOUSE_CONTROL_IN_WORKSPACE,
+                                      m_rename_ws_id,
+                                      show_rename_workspace_dialog);
+
+
   if (show_rename_workspace_dialog && astate->workspace_manager->has_wss()){
       ImGui::OpenPopup("Renaming workspace");
-      ImGui::SetNextWindowSize(ImVec2(300, 110));
-      ImGui::SetNextWindowPos(ImVec2(100, 20));
-      strcpy(s_rename_workspace_name, astate->workspace_manager->get_current_workspace()->m_ws_name.c_str());
+      ImGui::SetNextWindowSize(ImVec2(300, 115));
+      ImGui::SetNextWindowPos(ImVec2(650, 20));
+      strcpy(s_rename_workspace_name,
+             astate->workspace_manager->get_current_workspace()->m_ws_name.c_str());
     }
 
-  if (ImGui::BeginPopupModal("Renaming workspace", NULL, ImGuiWindowFlags_NoResize)){
+  if (ImGui::BeginPopupModal("Renaming workspace", &show_rename_workspace_dialog,
+                             ImGuiWindowFlags_NoResize)){
       ImGui::Columns(2);
       ImGui::Text("Current name");
       ImGui::Text("New name");
@@ -280,10 +293,14 @@ void ui_manager_t::render_main_menu(){
       if (ImGui::Button("Rename")){
           astate->workspace_manager->get_current_workspace()->m_ws_name =
               std::string(s_rename_workspace_name);
+          std::cout << s_rename_workspace_name << std::endl;
           ImGui::CloseCurrentPopup();
+          show_rename_workspace_dialog = false;
         }
+
       ImGui::SameLine();
       if (ImGui::Button("Close")){
+          show_rename_workspace_dialog = false;
           ImGui::CloseCurrentPopup();
         }
       ImGui::EndPopup();

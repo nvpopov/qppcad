@@ -79,8 +79,8 @@ void qpp::c_app::run(){
   ImFontConfig config;
   config.MergeMode = true;*/
 
-  io.Fonts->AddFontFromFileTTF("../data/fonts/Ubuntu/Ubuntu-Regular.ttf",
-                                16.0f);
+  io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",
+                                17.0f);
   unsigned int flags = ImGuiFreeType::ForceAutoHint;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
 
