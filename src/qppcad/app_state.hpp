@@ -46,9 +46,9 @@ namespace qpp {
     shader_program_t*              line_mesh_program;
     shader_program_t*              mvp_ssl_program;
 
-    std::shared_ptr<workspace_manager_t>   workspace_manager;
+    std::shared_ptr<workspace_manager_t>   ws_manager;
     std::shared_ptr<ui_manager_t>          ui_manager;
-    std::shared_ptr<file_dialog_manager_t> file_dialog_manager;
+    std::shared_ptr<file_dialog_manager_t> fd_manager;
 
     camera_t*  camera;
 
@@ -120,7 +120,7 @@ namespace qpp {
           light_pos_tr = mat4_to_mat3<float>(camera->m_mat_view) * light_pos;
         }
 
-      auto cur_ws = workspace_manager->get_current_workspace();
+      auto cur_ws = ws_manager->get_current();
       if (cur_ws) cur_ws->update(delta_time);
 
     }
@@ -169,12 +169,12 @@ namespace qpp {
       line_mesh_program   = gen_line_mesh_program();
       mvp_ssl_program  = gen_mv_screen_space_lighting_program();
 
-      workspace_manager = std::make_shared<workspace_manager_t>();
-      workspace_manager->init_default_workspace();
+      ws_manager = std::make_shared<workspace_manager_t>();
+      ws_manager->init_default();
       ui_manager = std::make_shared<ui_manager_t>();
       ui_manager->setup_style();
 
-      file_dialog_manager = std::make_shared<file_dialog_manager_t>();
+      fd_manager = std::make_shared<file_dialog_manager_t>();
     }
 
   };

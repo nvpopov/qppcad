@@ -34,13 +34,13 @@ namespace qpp{
     vector<shared_ptr<workspace_t> > m_ws;
     workspace_manager_t(){ m_current_workspace_id = 0;}
 
-    shared_ptr<workspace_t> get_current_workspace();
-    optional<uint8_t> get_current_workspace_id();
+    shared_ptr<workspace_t> get_current();
+    optional<uint8_t> get_current_id();
 
-    bool set_current_workspace(const uint8_t ws_index);
+    bool set_current(const uint8_t ws_index);
 
     bool has_wss(){return m_ws.size()>0;}
-    void init_default_workspace();
+    void init_default();
     void render_current_workspace();
     void mouse_click();
     void add_workspace(const shared_ptr<workspace_t> &ws_to_add);

@@ -178,18 +178,22 @@ void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
 }
 
 void workspace_t::add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add){
+
   item_to_add->set_parent_workspace(shared_from_this());
   m_ws_items.push_back(item_to_add);
   workspace_changed();
   c_app::log(fmt::format("New workspace {} size = {}", m_ws_name, m_ws_items.size()));
+
 }
 
 void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
+
   app_state_t *astate = &(c_app::get_state());
 
   bool succes = false;
   string filter = "*";
-  string file_name_fd = astate->file_dialog_manager->request_open_file(filter, succes);
+  string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
+
   if (succes){
       auto wsl = make_shared<ws_atoms_list_t>();
       add_item_to_workspace(wsl);
@@ -200,31 +204,39 @@ void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
 }
 
 void workspace_t::update(float delta_time){
+
   m_gizmo->update_gizmo(delta_time);
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
+
 }
 
-shared_ptr<workspace_t> workspace_manager_t::get_current_workspace(){
+shared_ptr<workspace_t> workspace_manager_t::get_current(){
+
   if (m_current_workspace_id >= m_ws.size())
     return nullptr;
   return m_ws[m_current_workspace_id];
+
 }
 
-optional<uint8_t> workspace_manager_t::get_current_workspace_id(){
+optional<uint8_t> workspace_manager_t::get_current_id(){
+
   if (m_ws.size() != 0) return optional<uint8_t>(m_current_workspace_id);
   return nullopt;
+
 }
 
-bool workspace_manager_t::set_current_workspace(const uint8_t ws_index){
+bool workspace_manager_t::set_current(const uint8_t ws_index){
+
   bool succes = false;
   if (ws_index < m_ws.size()){
       m_current_workspace_id = ws_index;
       succes = true;
     }
   return succes;
+
 }
 
-void workspace_manager_t::init_default_workspace(){
+void workspace_manager_t::init_default(){
 
   auto _ws2 = make_shared<workspace_t>();
   _ws2->m_ws_name = "d2";
@@ -276,6 +288,7 @@ void workspace_manager_t::render_current_workspace(){
 }
 
 void workspace_manager_t::mouse_click(){
+
   app_state_t* astate =  &(c_app::get_state());
 
   //transform from window frame to viewport frame
@@ -292,7 +305,7 @@ void workspace_manager_t::mouse_click(){
 
       c_app::log(fmt::format("Mouse click in ws {} {}", new_mouse_x, new_mouse_y));
 
-      if(has_wss()) get_current_workspace()->mouse_click(new_mouse_x, new_mouse_y);
+      if(has_wss()) get_current()->mouse_click(new_mouse_x, new_mouse_y);
     }
 }
 
@@ -305,7 +318,7 @@ void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file
   bool succes = false;
   std::string filter = "*";
   std::string file_name_fd =
-      astate->file_dialog_manager->request_open_file(filter, succes);
+      astate->fd_manager->request_open_file(filter, succes);
   if (succes){
       auto _ws2 = make_shared<workspace_t>();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
@@ -314,7 +327,7 @@ void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file
       _ws2->add_item_to_workspace(_wsl2);
       _wsl2->load_from_file(file_format, file_name_fd, false);
       add_workspace(_ws2);
-      set_current_workspace(m_ws.size()-1);
+      set_current(m_ws.size()-1);
     }
 }
 

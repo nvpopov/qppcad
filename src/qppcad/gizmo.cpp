@@ -20,7 +20,7 @@ gizmo_t::gizmo_t(){
 
 void gizmo_t::render(){
   app_state_t* astate = &(c_app::get_state());
-  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->m_edit_type;
+  ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
   astate->dp->begin_render_general_mesh();
 
   vector3<float> _v_scale = vector3<float>::Ones()*gizmo_box_size*0.25;
@@ -98,7 +98,7 @@ void gizmo_t::translate_attached(float delta_time){
   app_state_t *astate = &(c_app::get_state());
 
   if (attached_item){
-      ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->m_edit_type;
+      ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
       vector3<float> unproj_mouse_hit_old =
           astate->camera->unproject(astate->mouse_x_old, astate->mouse_y_old);
@@ -108,9 +108,8 @@ void gizmo_t::translate_attached(float delta_time){
 
       vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
 
-      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
-                          astate->mouse_y_old - astate->mouse_y;
-
+//      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
+//                          astate->mouse_y_old - astate->mouse_y;
 
       if (fabs(d_unproj[touched_axis]) > 0.01f) {
           vector3<float> new_transform =
@@ -120,6 +119,7 @@ void gizmo_t::translate_attached(float delta_time){
             attached_item->m_pos += new_transform;
           else attached_item->apply_intermediate_translate_content(new_transform);
         }
+
     }
 }
 
@@ -131,7 +131,7 @@ void gizmo_t::clear_selected_axis(){
 void gizmo_t::update_gizmo(float delta_time){
 
   app_state_t *astate = &(c_app::get_state());
-  ws_edit_type cur_edit_type = astate->workspace_manager->get_current_workspace()->m_edit_type;
+  ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
   //update gizmo position according to current workspace edit type value
   //if we are in node edit mode - snap to aabb min

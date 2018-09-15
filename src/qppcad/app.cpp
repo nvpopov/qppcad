@@ -186,20 +186,18 @@ void qpp::c_app::render(){
   float _viewport_w = 0.0f;
   if (!astate->show_object_inspector) _viewport_w = astate->ui_manager->iObjInspWidth;
 
-  glViewport(astate->vViewportXY(0),
-             astate->vViewportXY(1),
-             astate->vViewportWidthHeight(0)+_viewport_w,
-             astate->vViewportWidthHeight(1));
+  glViewport(astate->vViewportXY(0), astate->vViewportXY(1),
+             astate->vViewportWidthHeight(0)+_viewport_w, astate->vViewportWidthHeight(1));
+
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR)
-    astate->workspace_manager->render_current_workspace();
+    astate->ws_manager->render_current_workspace();
 
   glViewport(0, 0, astate->wWidth, astate->wHeight);
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void qpp::c_app::resize_window_callback(GLFWwindow *window,
-                                        int _width, int _height){
+void qpp::c_app::resize_window_callback(GLFWwindow *window, int _width, int _height){
   app_state_t* astate = &(c_app::get_state());
   if (_width < 0)  _width = 10;
   if (_height < 0) _height = 10;
@@ -240,7 +238,7 @@ void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int actio
 
       if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
           astate->mouse_lb_pressed = true;
-          astate->workspace_manager->mouse_click();
+          astate->ws_manager->mouse_click();
         }
 
       if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
