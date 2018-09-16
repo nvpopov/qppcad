@@ -15,6 +15,7 @@ gizmo_t::gizmo_t(){
 
   for (uint8_t i = 0; i < 3; i++)
     bx[i].fill_guess_with_shift(gizmo_box_size, gizmo_axis[i] * gizmo_shift_magnitude);
+  clear_selected_axis();
   //update_gizmo();
 }
 

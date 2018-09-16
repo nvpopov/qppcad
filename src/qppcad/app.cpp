@@ -245,6 +245,7 @@ void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int actio
       if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
           astate->mouse_lb_pressed = false;
 
+      if (!astate->mouse_in_3d_area) astate->mouse_lb_pressed = false;
 
       astate->camera->update_camera_rotation(
             button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS);
