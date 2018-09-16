@@ -217,7 +217,8 @@ void qpp::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, doubl
   if ( astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
        astate->camera != nullptr &&
        !astate->disable_mouse_camera_control &&
-       !astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE))
+       !astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE) &&
+       astate->mouse_in_3d_area)
     astate->camera->update_camera_zoom(-yoffset);
 }
 

@@ -144,12 +144,13 @@ void ws_atoms_list_t::render(){
 
 void ws_atoms_list_t::render_atom(const uint16_t at_num, const index &at_index){
 
-  int ap_idx = ptable::number_by_symbol(m_geom->atom(at_num));
-  float fDrawRad = 0.4f;
+  auto ap_idx = ptable::number_by_symbol(m_geom->atom(at_num));
+  float dr_rad = 0.4f;
   vector3<float> color(0.0, 0.0, 1.0);
-  if(ap_idx != -1){
-      fDrawRad = ptable::get_inst()->arecs[ap_idx-1].aRadius * app_state_c->atom_radius_scale_factor;
-      color = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;
+
+  if(ap_idx){
+      dr_rad = ptable::get_inst()->arecs[*ap_idx-1].aRadius * app_state_c->atom_radius_scale_factor;
+      color = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;
     }
 
   if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT){
@@ -159,14 +160,14 @@ void ws_atoms_list_t::render_atom(const uint16_t at_num, const index &at_index){
         color = vector3<float>(0.43f, 0.55f, 0.12f);
     }
 
-  app_state_c->dp->render_atom(color, m_geom->pos(at_num, at_index) + m_pos, fDrawRad);
+  app_state_c->dp->render_atom(color, m_geom->pos(at_num, at_index) + m_pos, dr_rad);
 }
 
 void ws_atoms_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
                                   const uint16_t atNum2, const index &atIndex2){
-  int ap_idx = ptable::number_by_symbol(m_geom->atom(atNum1));
+  auto ap_idx = ptable::number_by_symbol(m_geom->atom(atNum1));
   vector3<float> bcolor(0.0, 0.0, 1.0);
-  if(ap_idx != -1){bcolor = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
+  if(ap_idx){bcolor = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
   app_state_c->dp->render_bond(bcolor, m_geom->pos(atNum1, atIndex1) + m_pos,
                                m_geom->pos(atNum2, atIndex2) + m_pos,
                                app_state_c->bond_radius_scale_factor);
@@ -215,9 +216,9 @@ void ws_atoms_list_t::render_ui(){
           float p_x = p.x + 8 + 6;
           float p_y = p.y + 8;
           ImVec2 p_n(p_x, p_y);
-          int ap_idx = ptable::number_by_symbol(m_geom->atom_of_type(i));
+          auto ap_idx = ptable::number_by_symbol(m_geom->atom_of_type(i));
           vector3<float> bc(0.0, 0.0, 1.0);
-          if(ap_idx != -1) {bc = ptable::get_inst()->arecs[ap_idx-1].aColorJmol;}
+          if(ap_idx) {bc = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
           draw_list->AddCircleFilled(p_n, 8, ImColor(ImVec4(bc[0], bc[1], bc[2], 1.0f)));
           ImGui::Dummy(ImVec2(16, 16));
         }
@@ -240,36 +241,27 @@ void ws_atoms_list_t::render_ui(){
 
   if (ImGui::CollapsingHeader("Bonding table")){
       ImGui::Spacing();
+      bool rebuild_ngb{false};
+      for (auto &elem : m_tws_tr->m_bonding_table.m_dist){
+          if (ImGui::TreeNode(fmt::format("[{}] - [{}]",
+                                          m_geom->atom_of_type(elem.first.m_a),
+                                          m_geom->atom_of_type(elem.first.m_b)).c_str())){
+              ImGui::PushItemWidth(60);
+              if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled))) rebuild_ngb = true;
+              if (elem.second.m_enabled){
+                  ImGui::PushItemWidth(160);
+                  if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 30.0f))
+                    m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a, elem.first.m_b);
+                    rebuild_ngb = true;
+                }
+              ImGui::TreePop();
+            }
 
-      ImGui::Columns(4);
-      ImGui::SetColumnWidth(0, 57);
-      ImGui::SetColumnWidth(1, 67);
-      ImGui::SetColumnWidth(2, 83);
+          ImGui::Separator();
+          ImGui::Spacing();
 
-      ImGui::Text("First");
-      for (const auto &elem : m_tws_tr->m_dist_map){
-          ImGui::Text((m_geom->atom_of_type(elem.first.m_a)).c_str());
         }
-      ImGui::NextColumn();
-      ImGui::Text("Second");
-      for (const auto &elem : m_tws_tr->m_dist_map){
-          ImGui::Text((m_geom->atom_of_type(elem.first.m_b)).c_str());
-        }
-
-      ImGui::NextColumn();
-      ImGui::Text("Distance");
-      for (auto &elem : m_tws_tr->m_dist_map){
-          ImGui::PushID(elem.first.m_a + elem.first.m_b * 100);
-
-          ImGui::InputFloat("", &(elem.second.m_bonding_dist));
-          ImGui::PopID();
-        }
-
-      ImGui::NextColumn();
-      ImGui::Text("Options");
-
-      ImGui::Columns(1);
-
+      if (rebuild_ngb) m_tws_tr->clr_ngb_and_rebuild();
     }
 
   if (ImGui::CollapsingHeader("Modify")){

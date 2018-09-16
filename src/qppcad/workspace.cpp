@@ -147,7 +147,7 @@ void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
 
 
   m_ray_debug.start = m_camera->m_view_point;
-//  if (m_camera->cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO) m_ray_debug.start *= m_camera->m_ortho_scale;
+  //  if (m_camera->cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO) m_ray_debug.start *= m_camera->m_ortho_scale;
 
   if (m_gizmo->process_ray(&m_ray_debug)){
       c_app::log("gizmo clicked");
@@ -288,24 +288,14 @@ void workspace_manager_t::render_current_workspace(){
 }
 
 void workspace_manager_t::mouse_click(){
-
   app_state_t* astate =  &(c_app::get_state());
-
-  //transform from window frame to viewport frame
-  float new_mouse_x = astate->mouse_x;
-  float new_mouse_y = astate->mouse_y - astate->ui_manager->iWorkPanelHeight
-                    - astate->ui_manager->iWorkPanelYOffset;
   c_app::log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
-
-  if (new_mouse_x > 0 && new_mouse_x < astate->vViewportWidthHeight(0) &&
-      new_mouse_y > 0 && new_mouse_y < astate->vViewportWidthHeight(1)){
-
-      new_mouse_x = (new_mouse_x/astate->vViewportWidthHeight(0)-0.5)*2.0;
-      new_mouse_y = (new_mouse_y/astate->vViewportWidthHeight(1)-0.5)*-2.0;
-
-      c_app::log(fmt::format("Mouse click in ws {} {}", new_mouse_x, new_mouse_y));
-
-      if(has_wss()) get_current()->mouse_click(new_mouse_x, new_mouse_y);
+  if (astate->mouse_in_3d_area){
+      c_app::log(fmt::format("Mouse click in ws {} {}",
+                             astate->mouse_x_ws_frame,
+                             astate->mouse_y_ws_frame));
+      if(has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame,
+                                               astate->mouse_y_ws_frame);
     }
 }
 

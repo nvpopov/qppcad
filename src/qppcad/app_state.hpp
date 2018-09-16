@@ -56,6 +56,8 @@ namespace qpp {
     float mouse_y;
     float mouse_x_old;
     float mouse_y_old;
+    float mouse_x_ws_frame;
+    float mouse_y_ws_frame;
 
     app_task_type cur_task;
     //app_edit_type cur_edit_type;
@@ -89,12 +91,13 @@ namespace qpp {
 
     vote_pool_t<uint32_t> config_vote_pool;
 
-    bool show_axis;
-    bool show_grid;
-    bool debug_show_tws_tree;
-    bool debug_show_selection_ray;
-    bool show_object_inspector;
-    bool show_console;
+    bool show_axis{true};
+    bool show_grid{false};
+    bool debug_show_tws_tree{false};
+    bool debug_show_selection_ray{false};
+    bool show_object_inspector{true};
+    bool show_console{false};
+    bool mouse_in_3d_area{false};
 
     ///
     /// \brief update_mouse_coord
@@ -102,6 +105,21 @@ namespace qpp {
     /// \param _mcy
     ///
     void update_mouse_coord(const float _mcx, const float _mcy){
+      //3d area frame
+      mouse_x_ws_frame = mouse_x;
+      mouse_y_ws_frame = mouse_y - ui_manager->iWorkPanelHeight
+                        - ui_manager->iWorkPanelYOffset;
+
+      float vw_delta = 0.0f;
+      if (!show_object_inspector) vw_delta = ui_manager->iObjInspWidth;
+
+      mouse_in_3d_area = mouse_x_ws_frame > 0 &&
+                         mouse_x_ws_frame < (vViewportWidthHeight(0) + vw_delta) &&
+                         mouse_y_ws_frame > 0 &&
+                         mouse_y_ws_frame < vViewportWidthHeight(1);
+
+      mouse_x_ws_frame = (mouse_x_ws_frame / vViewportWidthHeight(0)-0.5)*2.0;
+      mouse_y_ws_frame = (mouse_y_ws_frame / vViewportWidthHeight(1)-0.5)*-2.0;
 
       mouse_x_old = mouse_x;
       mouse_y_old = mouse_y;
@@ -135,14 +153,14 @@ namespace qpp {
       cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
       //cur_edit_type = app_edit_type::EDIT_WS_ITEM_CONTENT;
 
-      show_axis                    = true;
-      show_grid                    = false;
-      debug_show_tws_tree          = false;
-      debug_show_selection_ray     = false;
-      show_object_inspector        = true;
-      mouse_lb_pressed             = false;
-      disable_mouse_camera_control = false;
-      show_console                 = false;
+//      show_axis                    = true;
+//      show_grid                    = false;
+//      debug_show_tws_tree          = false;
+//      debug_show_selection_ray     = false;
+//      show_object_inspector        = true;
+//      mouse_lb_pressed             = false;
+//      disable_mouse_camera_control = false;
+//      show_console                 = false;
 
       light_pos    = vector3<float>(0, 1.0f, 1.0f);
       light_pos_tr = vector3<float>(0, 0, 0);
