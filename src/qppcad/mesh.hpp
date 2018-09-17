@@ -6,8 +6,6 @@
 #include <GLFW/glfw3.h>
 #include <geom/lace3d.hpp>
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
 namespace qpp{
 
   ///
@@ -40,62 +38,6 @@ namespace qpp{
       GLenum mesh_rt;
 
       mesh_t();
-
-      ///
-      /// \brief generate_sphere_mesh
-      /// \param lat_bands
-      /// \param long_bands
-      /// \return
-      ///
-      static mesh_t *generate_sphere_mesh(const int lat_bands, const int long_bands);
-
-      ///
-      /// \brief generate_cylinder_whole
-      /// \param num_phi
-      /// \param num_z
-      /// \return
-      ///
-      static mesh_t *generate_cylinder_whole(const int num_phi, const int num_z);
-
-
-      ///
-      /// \brief generate_cylinder_mk2
-      /// \param num_segment_height
-      /// \param num_segment_base
-      /// \param radius
-      /// \param height
-      /// \return
-      ///
-      static mesh_t *generate_cylinder_mk2(const int num_segment_height,
-                                           const int num_segment_base,
-                                           const float radius,
-                                           const float height);
-
-      ///
-      /// \brief generate_unit_line
-      /// \return
-      ///
-      static mesh_t *generate_unit_line();
-
-      static mesh_t *generate_cone_mesh(const float radius = 1.0f,
-                                        const float height = 1.0f,
-                                        const uint8_t num_segment_height = 1,
-                                        const uint8_t num_segment_base   = 10);
-      ///
-      /// \brief generate_unit_cube
-      /// \return
-      ///
-      static mesh_t *generate_unit_cube();
-
-      ///
-      /// \brief generate_xz_plane
-      /// \param n_x
-      /// \param dx
-      /// \param n_z
-      /// \param dz
-      /// \return
-      ///
-      static mesh_t *generate_xz_plane(const int n_x,const float dx, const int n_z, const float dz);
 
       ///
       /// \brief render

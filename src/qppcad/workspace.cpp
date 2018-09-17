@@ -204,36 +204,28 @@ void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
 }
 
 void workspace_t::update(float delta_time){
-
   m_gizmo->update_gizmo(delta_time);
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
-
 }
 
 shared_ptr<workspace_t> workspace_manager_t::get_current(){
-
   if (m_current_workspace_id >= m_ws.size())
     return nullptr;
   return m_ws[m_current_workspace_id];
-
 }
 
 optional<uint8_t> workspace_manager_t::get_current_id(){
-
   if (m_ws.size() != 0) return optional<uint8_t>(m_current_workspace_id);
   return nullopt;
-
 }
 
 bool workspace_manager_t::set_current(const uint8_t ws_index){
-
   bool succes = false;
   if (ws_index < m_ws.size()){
       m_current_workspace_id = ws_index;
       succes = true;
     }
   return succes;
-
 }
 
 void workspace_manager_t::init_default(){
@@ -279,7 +271,6 @@ void workspace_manager_t::init_default(){
 }
 
 void workspace_manager_t::render_current_workspace(){
-
   if (has_wss())
     if (m_current_workspace_id < m_ws.size()){
         c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
@@ -294,7 +285,7 @@ void workspace_manager_t::mouse_click(){
       c_app::log(fmt::format("Mouse click in ws {} {}",
                              astate->mouse_x_ws_frame,
                              astate->mouse_y_ws_frame));
-      if(has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame,
+      if (has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame,
                                                astate->mouse_y_ws_frame);
     }
 }

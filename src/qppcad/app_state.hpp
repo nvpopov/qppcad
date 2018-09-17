@@ -5,8 +5,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <algorithm>
+
 #include <imgui.h>
 #include <imgui_freetype.h>
+
 #include <mathf/math.hpp>
 #include <qppcad/draw_pipeline.hpp>
 #include <qppcad/workspace.hpp>
@@ -17,8 +19,9 @@
 #include <qppcad/camera.hpp>
 #include <qppcad/gizmo.hpp>
 #include <qppcad/file_dialog.hpp>
-#include <geom/lace3d.hpp>
 #include <qppcad/vote_pool.hpp>
+#include <qppcad/frame_buffer.hpp>
+#include <qppcad/mesh_generators.hpp>
 
 namespace qpp {
 
@@ -45,11 +48,12 @@ namespace qpp {
     shader_program_t*              unit_line_program;
     shader_program_t*              line_mesh_program;
     shader_program_t*              mvp_ssl_program;
+    shader_program_t*              fbo_quad_program;
 
-    std::shared_ptr<workspace_manager_t>   ws_manager;
-    std::shared_ptr<ui_manager_t>          ui_manager;
-    std::shared_ptr<file_dialog_manager_t> fd_manager;
-
+    std::shared_ptr<workspace_manager_t>                           ws_manager;
+    std::shared_ptr<ui_manager_t>                                  ui_manager;
+    std::shared_ptr<file_dialog_manager_t>                         fd_manager;
+    std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
     camera_t*  camera;
 
     float mouse_x;
@@ -70,17 +74,17 @@ namespace qpp {
     mesh_t *gridXZ;
     mesh_t *unit_cube;
     mesh_t *unit_cone;
+    mesh_t *fbo_quad;
 
     int FPS;
-
-    int wWidth;
-    int wHeight;
 
     float atom_radius_scale_factor;
     float bond_radius_scale_factor;
 
-    vector2<float> vViewportXY;
-    vector2<float> vViewportWidthHeight;
+    vector2<float> viewport_xy;
+    vector2<float> viewport_size;
+    vector2<float> viewport_xy_c;
+    vector2<float> viewport_size_c;
 
     vector3<float> light_pos;
     vector3<float> light_color;
@@ -99,6 +103,20 @@ namespace qpp {
     bool show_console{false};
     bool mouse_in_3d_area{false};
 
+    void update_viewport_cache(){
+//      std::cout << fmt::format("s {} {} | xy {} {}\n",
+//                               viewport_size_c[0],
+//          viewport_size_c[1],
+//          viewport_xy_c[0],
+//          viewport_xy_c[1]);
+      viewport_xy_c = viewport_xy;
+      viewport_xy_c(1) = ui_manager->iWorkPanelHeight + ui_manager->iWorkPanelYOffset - 64;
+      viewport_size_c = viewport_size;
+      viewport_size_c(1) = viewport_size(1) -
+                           (ui_manager->iWorkPanelHeight + ui_manager->iWorkPanelYOffset);
+      if (show_object_inspector) viewport_size_c[0] -= ui_manager->iObjInspWidth;
+    }
+
     ///
     /// \brief update_mouse_coord
     /// \param _mcx
@@ -106,20 +124,19 @@ namespace qpp {
     ///
     void update_mouse_coord(const float _mcx, const float _mcy){
       //3d area frame
+      //std::cout<< fmt::format("b{}\n", mouse_in_3d_area);
       mouse_x_ws_frame = mouse_x;
       mouse_y_ws_frame = mouse_y - ui_manager->iWorkPanelHeight
                         - ui_manager->iWorkPanelYOffset;
 
-      float vw_delta = 0.0f;
-      if (!show_object_inspector) vw_delta = ui_manager->iObjInspWidth;
 
       mouse_in_3d_area = mouse_x_ws_frame > 0 &&
-                         mouse_x_ws_frame < (vViewportWidthHeight(0) + vw_delta) &&
+                         mouse_x_ws_frame < viewport_size_c(0)&&
                          mouse_y_ws_frame > 0 &&
-                         mouse_y_ws_frame < vViewportWidthHeight(1);
+                         mouse_y_ws_frame < viewport_size_c(1);
 
-      mouse_x_ws_frame = (mouse_x_ws_frame / vViewportWidthHeight(0)-0.5)*2.0;
-      mouse_y_ws_frame = (mouse_y_ws_frame / vViewportWidthHeight(1)-0.5)*-2.0;
+      mouse_x_ws_frame = (mouse_x_ws_frame / viewport_size_c(0)-0.5)*2.0;
+      mouse_y_ws_frame = (mouse_y_ws_frame / viewport_size_c(1)-0.5)*-2.0;
 
       mouse_x_old = mouse_x;
       mouse_y_old = mouse_y;
@@ -132,6 +149,7 @@ namespace qpp {
     /// \brief update
     ///
     void update(float delta_time){
+      update_viewport_cache();
 
       if (camera != nullptr){
           camera->update_camera();
@@ -165,8 +183,7 @@ namespace qpp {
       light_pos    = vector3<float>(0, 1.0f, 1.0f);
       light_pos_tr = vector3<float>(0, 0, 0);
 
-      wWidth  = 600;
-      wHeight = 600;
+
       atom_radius_scale_factor = 0.3f;
       bond_radius_scale_factor = 0.09f;
 
@@ -175,24 +192,29 @@ namespace qpp {
       dp = new draw_pipeline_t();
 
       //default meshes
-      _sph_meshes.push_back(mesh_t::generate_sphere_mesh(15, 15));
-      cylinder_mesh = mesh_t::generate_cylinder_mk2(2, 10, 1.0f, 1.0f);
-      unit_line     = mesh_t::generate_unit_line();
-      gridXZ        = mesh_t::generate_xz_plane(20, 0.5, 20, 0.5);
-      unit_cube     = mesh_t::generate_unit_cube();
-      unit_cone     = mesh_t::generate_cone_mesh(1.0f, 2.0f, 1, 16);
+      _sph_meshes.push_back(mesh_generators::sphere(15, 15));
+      cylinder_mesh = mesh_generators::cylinder_mk2(2, 10, 1.0f, 1.0f);
+      unit_line     = mesh_generators::unit_line();
+      gridXZ        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
+      unit_cube     = mesh_generators::unit_cube();
+      unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
+      fbo_quad      = mesh_generators::quad();
 
       default_program       = gen_default_program();
       unit_line_program = gen_unit_line_program();
       line_mesh_program   = gen_line_mesh_program();
       mvp_ssl_program  = gen_mv_screen_space_lighting_program();
+      fbo_quad_program = gen_fbo_quad_program();
 
+      frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
       ws_manager = std::make_shared<workspace_manager_t>();
       ws_manager->init_default();
       ui_manager = std::make_shared<ui_manager_t>();
       ui_manager->setup_style();
 
       fd_manager = std::make_shared<file_dialog_manager_t>();
+
+      update_viewport_cache();
     }
 
   };

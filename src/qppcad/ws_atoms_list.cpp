@@ -250,9 +250,11 @@ void ws_atoms_list_t::render_ui(){
               if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled))) rebuild_ngb = true;
               if (elem.second.m_enabled){
                   ImGui::PushItemWidth(160);
-                  if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f))
-                    m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a, elem.first.m_b);
-                    rebuild_ngb = true;
+                  if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
+                      m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
+                                                                     elem.first.m_b);
+                      rebuild_ngb = true;
+                    }
                 }
               ImGui::TreePop();
             }
@@ -262,6 +264,7 @@ void ws_atoms_list_t::render_ui(){
 
         }
       if (rebuild_ngb) m_tws_tr->clr_ngb_and_rebuild();
+
     }
 
   if (ImGui::CollapsingHeader("Modify")){

@@ -59,15 +59,15 @@ qpp::shader_program_t::shader_program_t(const std::string _program_name, const s
 
 void qpp::shader_program_t::u_on(qpp::sp_u_name _val){
   //std::cout<<_val << " "<< unfRec.size() << std::endl;
-  unf_rec[_val].bEnabled = true;
-  unf_rec[_val].iProgVar = glGetUniformLocation(program_id, map_u2s[_val].c_str());
+  unf_rec[_val].enabled = true;
+  unf_rec[_val].h_prog = glGetUniformLocation(program_id, map_u2s[_val].c_str());
 }
 
 void qpp::shader_program_t::set_u(qpp::sp_u_name _ut,
-                                GLfloat *_val){
-  if (unf_rec[_ut].bEnabled){
+                                  GLfloat *_val){
+  if (unf_rec[_ut].enabled){
       qpp::sp_u_type _utype = qpp::map_u2at[_ut];
-      GLint uloc = unf_rec[_ut].iProgVar;
+      GLint uloc = unf_rec[_ut].h_prog;
       switch(_utype){
 
         case qpp::sp_u_type::a_v3f :
@@ -86,7 +86,7 @@ void qpp::shader_program_t::set_u(qpp::sp_u_name _ut,
           glUniform1fv(uloc, 1, _val);
           break;
 
-         default:
+        default:
           break;
         }
     }
@@ -97,6 +97,7 @@ void qpp::shader_program_t::set_u(qpp::sp_u_name _ut,
 
 }
 
+
 void qpp::shader_program_t::begin_shader_program(){
   glUseProgram(program_id);
 
@@ -105,8 +106,9 @@ void qpp::shader_program_t::begin_shader_program(){
   set_u(sp_u_name::mModelView, c_app::get_state().mView.data());
   set_u(sp_u_name::mViewInvTr, c_app::get_state().mViewInvTr.data());
   */
-   set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
+  set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
   //std::cout<<std::endl<<c_app::get_state().mView<<std::endl;
+  if (unf_rec[sp_u_name::texture_0].enabled) glUniform1i(unf_rec[sp_u_name::texture_0].h_prog, 0);
 }
 
 void qpp::shader_program_t::end_shader_program(){
@@ -116,11 +118,11 @@ void qpp::shader_program_t::end_shader_program(){
 qpp::shader_program_t* qpp::gen_default_program(){
   std::string vs =
     #include "shaders/screen_space_lighting.vs"
- ;
+      ;
 
   std::string fs =
     #include "shaders/screen_space_lighting.fs"
-     ;
+      ;
 
   qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("default_program"), vs, fs);
   sp->u_on(sp_u_name::m_model_view_proj);
@@ -135,7 +137,7 @@ qpp::shader_program_t* qpp::gen_default_program(){
 
 qpp::shader_program_t *qpp::gen_unit_line_program(){
   std::string vs =
-          #include "shaders/unit_line.vs"
+    #include "shaders/unit_line.vs"
       ;
 
   std::string fs =
@@ -155,19 +157,19 @@ qpp::shader_program_t *qpp::gen_unit_line_program(){
 qpp::shader_program_t *qpp::gen_line_mesh_program(){
   std::string vs =
     #include "shaders/line_mesh.vs"
-  ;
+      ;
 
   std::string fs =
-   #include "shaders/line_mesh.fs"
-  ;
+    #include "shaders/line_mesh.fs"
+      ;
 
   qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("grid_program"), vs, fs);
   sp->u_on(sp_u_name::m_model_view_proj);
   sp->u_on(sp_u_name::m_model_view);
-//  sp->u_on(sp_u_name::vLightPos);
+  //  sp->u_on(sp_u_name::vLightPos);
   sp->u_on(sp_u_name::m_view_inv_tr);
   sp->u_on(sp_u_name::v_translate);
-//  sp->u_on(sp_u_name::fScale);
+  //  sp->u_on(sp_u_name::fScale);
   sp->u_on(sp_u_name::v_color);
   return sp;
 }
@@ -177,11 +179,11 @@ qpp::shader_program_t *qpp::gen_line_mesh_program(){
 qpp::shader_program_t *qpp::gen_mv_screen_space_lighting_program(){
   std::string vs =
     #include "shaders/mv_screen_space_lighting.vs"
- ;
+      ;
 
   std::string fs =
     #include "shaders/mv_screen_space_lighting.fs"
-     ;
+      ;
 
   qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("mv_ssl"), vs, fs);
   sp->u_on(sp_u_name::m_model_view_proj);
@@ -190,5 +192,18 @@ qpp::shader_program_t *qpp::gen_mv_screen_space_lighting_program(){
   sp->u_on(sp_u_name::m_model_view_inv_tr);
   sp->u_on(sp_u_name::v_light_pos);
   sp->u_on(sp_u_name::v_color);
+  return sp;
+}
+
+qpp::shader_program_t *qpp::gen_fbo_quad_program(){
+  std::string vs =
+    #include "shaders/fb_quad.vs"
+      ;
+
+  std::string fs =
+    #include "shaders/fb_quad.fs"
+      ;
+  qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("fbo_quad"), vs, fs);
+  sp->u_on(sp_u_name::texture_0);
   return sp;
 }

@@ -24,7 +24,11 @@ namespace qpp {
     v_translate,
     f_scale,
     v_line_start,
-    v_line_end
+    v_line_end,
+    texture_0,
+    texture_1,
+    texture_2,
+    texture_3
   };
 
   ///
@@ -35,14 +39,15 @@ namespace qpp {
     a_v4f,
     a_m3f,
     a_m4f,
-    a_sf
+    a_sf,
+    a_texture
   };
 
   /// This structure hold information about internal uniform - is it enabled
   /// and it shader uniform variable id
   struct uniform_record {
-    bool bEnabled;
-    GLint iProgVar;
+      bool enabled{false};
+      GLint h_prog;
   };
 
   /// Map uniform internal name to string
@@ -60,7 +65,11 @@ namespace qpp {
     std::make_pair(sp_u_name::v_translate,           "v_translate"),
     std::make_pair(sp_u_name::f_scale,               "f_scale"),
     std::make_pair(sp_u_name::v_line_start,          "v_line_start"),
-    std::make_pair(sp_u_name::v_line_end,            "v_line_end")
+    std::make_pair(sp_u_name::v_line_end,            "v_line_end"),
+    std::make_pair(sp_u_name::texture_0,             "texture_0"),
+    std::make_pair(sp_u_name::texture_1,             "texture_1"),
+    std::make_pair(sp_u_name::texture_2,             "texture_2"),
+    std::make_pair(sp_u_name::texture_3,             "texture_3"),
   };
 
   /// Map uniform internal name to OpenGL uniform type
@@ -78,7 +87,11 @@ namespace qpp {
     std::make_pair(sp_u_name::v_translate,           sp_u_type::a_v3f),
     std::make_pair(sp_u_name::f_scale,               sp_u_type::a_sf),
     std::make_pair(sp_u_name::v_line_start,          sp_u_type::a_v3f),
-    std::make_pair(sp_u_name::v_line_end,            sp_u_type::a_v3f)
+    std::make_pair(sp_u_name::v_line_end,            sp_u_type::a_v3f),
+    std::make_pair(sp_u_name::texture_0,             sp_u_type::a_texture),
+    std::make_pair(sp_u_name::texture_1,             sp_u_type::a_texture),
+    std::make_pair(sp_u_name::texture_2,             sp_u_type::a_texture),
+    std::make_pair(sp_u_name::texture_3,             sp_u_type::a_texture)
   };
 
   ///
@@ -86,45 +99,45 @@ namespace qpp {
   ///  vertex plus fragment shader and some kind of uniform variables management
   ///
   class shader_program_t{
-  private:
-    GLuint program_id;
-  public:
-    std::vector<uniform_record> unf_rec;
-    std::string program_name;
+    private:
+      GLuint program_id;
+    public:
+      std::vector<uniform_record> unf_rec;
+      std::string program_name;
 
-    ///
-    /// \brief shader_program_t
-    /// \param _program_name
-    /// \param _vs_text
-    /// \param _fs_text
-    ///
-    shader_program_t(const std::string _program_name,
-                   const std::string &_vs_text,
-                   const std::string &_fs_text);
+      ///
+      /// \brief shader_program_t
+      /// \param _program_name
+      /// \param _vs_text
+      /// \param _fs_text
+      ///
+      shader_program_t(const std::string _program_name,
+                       const std::string &_vs_text,
+                       const std::string &_fs_text);
 
-    ///
-    /// \brief Enable internal uniform
-    /// \param _val
-    ///
-    void u_on(sp_u_name _val);
+      ///
+      /// \brief Enable internal uniform
+      /// \param _val
+      ///
+      void u_on(sp_u_name _val);
 
 
-    ///
-    /// \brief Set internal uniform
-    /// \param _ut
-    /// \param _val
-    ///
-    void set_u(sp_u_name _ut, GLfloat *_val);
+      ///
+      /// \brief Set internal uniform
+      /// \param _ut
+      /// \param _val
+      ///
+      void set_u(sp_u_name _ut, GLfloat *_val);
 
-    ///
-    /// \brief begin_shader_program
-    ///
-    void begin_shader_program();
+      ///
+      /// \brief begin_shader_program
+      ///
+      void begin_shader_program();
 
-    ///
-    /// \brief end_shader_program
-    ///
-    void end_shader_program();
+      ///
+      /// \brief end_shader_program
+      ///
+      void end_shader_program();
   };
 
   /// Default shader testing program - Gourand shading
@@ -153,6 +166,8 @@ namespace qpp {
   /// \return
   ///
   shader_program_t *gen_mv_screen_space_lighting_program();
+
+  shader_program_t *gen_fbo_quad_program();
 }
 #endif
 

@@ -311,7 +311,7 @@ void ui_manager_t::render_work_panel(){
 
   app_state_t* astate = &(c_app::get_state());
 
-  ImGui::SetNextWindowSize(ImVec2( c_app::get_state().wWidth, iWorkPanelHeight));
+  ImGui::SetNextWindowSize(ImVec2( c_app::get_state().viewport_size(0), iWorkPanelHeight));
   ImGui::SetNextWindowPos(ImVec2(0, iWorkPanelYOffset));
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
   //ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.1f);
@@ -414,10 +414,10 @@ void ui_manager_t::render_object_inspector(){
   app_state_t* astate = &(c_app::get_state());
 
   ImGui::SetNextWindowSize(ImVec2(iObjInspWidth ,
-                                  astate->wHeight-(iWorkPanelYOffset +
+                                  astate->viewport_size(1)-(iWorkPanelYOffset +
                                                    iWorkPanelHeight)
                                   ));
-  ImGui::SetNextWindowPos(ImVec2(astate->wWidth - iObjInspWidth,
+  ImGui::SetNextWindowPos(ImVec2(astate->viewport_size(0) - iObjInspWidth,
                                  iWorkPanelYOffset + iWorkPanelHeight));
 
 
@@ -472,8 +472,7 @@ void ui_manager_t::render_object_inspector(){
       ImGui::Spacing();
       ImGui::Separator();
       if (cur_ws->get_selected_item() != -1){
-          ImGui::Text(fmt::format("Selected: {}",
-                                  cur_ws->get_selected()->compose_item_name()).c_str());
+          ImGui::Text(cur_ws->get_selected()->compose_item_name().c_str());
           ImGui::Separator();
           ImGui::Spacing();
           cur_ws->get_selected()->render_ui();
@@ -491,10 +490,12 @@ void ui_manager_t::render_object_inspector(){
 
 void ui_manager_t::render_mtable_big(){
   float mendFrm = 0.85f;
-  ImGui::SetNextWindowSize(ImVec2(c_app::get_state().wWidth*mendFrm ,
-                                  c_app::get_state().wHeight*mendFrm));
-  ImGui::SetNextWindowPos(ImVec2(c_app::get_state().wWidth*(1-mendFrm)*0.5f,
-                                 c_app::get_state().wHeight*(1-mendFrm)*0.5f));
+
+  ImGui::SetNextWindowSize(ImVec2(c_app::get_state().viewport_size(0) * mendFrm ,
+                                  c_app::get_state().viewport_size(1) * mendFrm));
+
+  ImGui::SetNextWindowPos(ImVec2(c_app::get_state().viewport_size(0) * (1-mendFrm) * 0.5f,
+                                 c_app::get_state().viewport_size(1) * (1-mendFrm) * 0.5f));
 
   ImGui::Begin("Mendeley table", nullptr,
                ImGuiWindowFlags_NoMove |

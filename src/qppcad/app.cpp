@@ -29,8 +29,9 @@ void qpp::c_app::key_callback(GLFWwindow* window,
   qpp::c_app::log(fmt::format("Key pressed  {}, sc = {}, act = {}", key, scancode, action));
 
   if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS){
-      astate->ui_manager->console_widget->m_active = !(astate->ui_manager->console_widget->m_active);
-      qpp::c_app::log("wft?");
+      astate->ui_manager->console_widget->m_active =
+          !(astate->ui_manager->console_widget->m_active);
+      //qpp::c_app::log("wft?");
     }
 
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -80,7 +81,7 @@ void qpp::c_app::run(){
   config.MergeMode = true;*/
 
   io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",
-                                17.0f);
+                               17.0f);
   unsigned int flags = ImGuiFreeType::ForceAutoHint;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
 
@@ -111,6 +112,10 @@ void qpp::c_app::run(){
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   /// main app cycle
+  ///
+  int width, height;
+  glfwGetFramebufferSize(qpp::c_app::curWindow, &width, &height);
+  //astate->frame_buffer->resize(width, height);
 
   float previous_time = glfwGetTime();
   int frame_count = 0;
@@ -183,16 +188,14 @@ void qpp::c_app::end_render(){
 
 void qpp::c_app::render(){
   app_state_t* astate = &(c_app::get_state());
-  float _viewport_w = 0.0f;
-  if (!astate->show_object_inspector) _viewport_w = astate->ui_manager->iObjInspWidth;
 
-  glViewport(astate->vViewportXY(0), astate->vViewportXY(1),
-             astate->vViewportWidthHeight(0)+_viewport_w, astate->vViewportWidthHeight(1));
+  glViewport(astate->viewport_xy_c(0), astate->viewport_xy_c(1),
+             astate->viewport_size_c(0), astate->viewport_size_c(1));
 
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR)
     astate->ws_manager->render_current_workspace();
 
-  glViewport(0, 0, astate->wWidth, astate->wHeight);
+  glViewport(0, 0, astate->viewport_size(0), astate->viewport_size(1));
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -201,22 +204,18 @@ void qpp::c_app::resize_window_callback(GLFWwindow *window, int _width, int _hei
   app_state_t* astate = &(c_app::get_state());
   if (_width < 0)  _width = 10;
   if (_height < 0) _height = 10;
-  astate->wWidth = _width;
-  astate->wHeight = _height;
-  astate->vViewportXY(0) = 0.0;
-  astate->vViewportXY(1) = astate->ui_manager->iWorkPanelHeight +
-      astate->ui_manager->iWorkPanelYOffset - 64;
-  astate->vViewportWidthHeight(0) = _width - astate->ui_manager->iObjInspWidth;
-  astate->vViewportWidthHeight(1) = _height -
-      (astate->ui_manager->iWorkPanelHeight +
-       astate->ui_manager->iWorkPanelYOffset) ;
+
+  astate->viewport_xy(0) = 0.0;
+  astate->viewport_xy(1) = 0.0;
+  astate->viewport_size(0) = _width;
+  astate->viewport_size(1) = _height;
+  astate->update_viewport_cache();
 }
 
 void qpp::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset){
   app_state_t* astate =  &(c_app::get_state());
   if ( astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
        astate->camera != nullptr &&
-       !astate->disable_mouse_camera_control &&
        !astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE) &&
        astate->mouse_in_3d_area)
     astate->camera->update_camera_zoom(-yoffset);
@@ -230,12 +229,15 @@ void qpp::c_app::mouse_callback(GLFWwindow *window, double x, double y){
 void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
   app_state_t* astate =  &(c_app::get_state());
 
-  if (astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE))
-    return;
+  if (astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE)){
+      std::cout<<"VOTING POINT\n";
+      astate->mouse_in_3d_area = false;
+      astate->mouse_lb_pressed = false;
+      return;
+    }
 
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
-      astate->camera != nullptr &&
-      !astate->disable_mouse_camera_control){
+      astate->camera != nullptr ){
 
       if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
           astate->mouse_lb_pressed = true;
@@ -243,7 +245,7 @@ void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int actio
         }
 
       if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
-          astate->mouse_lb_pressed = false;
+        astate->mouse_lb_pressed = false;
 
       if (!astate->mouse_in_3d_area) astate->mouse_lb_pressed = false;
 
@@ -258,7 +260,7 @@ void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int actio
 void qpp::c_app::log(const std::string logText){
 
   std::time_t t = std::chrono::system_clock::to_time_t(
-        std::chrono::system_clock::now());
+                    std::chrono::system_clock::now());
   std::string ts( ctime( &t) );
   std::cout << fmt::format("[{}] {}",
                            ts.substr( 0, ts.length() -1  ), logText) << std::endl;

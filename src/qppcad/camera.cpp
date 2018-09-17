@@ -99,14 +99,14 @@ void camera_t::update_camera(){
   float y_dt = astate->mouse_y - astate->mouse_y_old;
 
 
-  if (m_move_camera && !astate->disable_mouse_camera_control){
+  if (m_move_camera){
       float move_right = -x_dt / camera_t::nav_div_step_translation;
       float move_up = y_dt / camera_t::nav_div_step_translation;
       if (fabs(move_right) > camera_t::nav_thresh) translate_camera_right(move_right);
       if (fabs(move_up) > camera_t::nav_thresh) translate_camera_up(move_up);
     }
 
-  if (m_rotate_camera && !astate->disable_mouse_camera_control){
+  if (m_rotate_camera){
       float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
       float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
       if (fabs(rot_angle_y) > camera_t::nav_thresh) rotate_camera_orbit_yaw(rot_angle_y);
@@ -120,13 +120,11 @@ void camera_t::update_camera(){
   if (!astate->show_object_inspector) _viewport_w = astate->ui_manager->iObjInspWidth;
 
   if (cur_proj == app_camera_proj_type::CAMERA_PROJ_PERSP)
-    m_mat_proj = perspective<float>(m_fov,
-                                    (astate->vViewportWidthHeight(0) + _viewport_w)/
-                                    astate->vViewportWidthHeight(1),
+    m_mat_proj = perspective<float>(m_fov, astate->viewport_size_c(0)/ astate->viewport_size_c(1),
                                     m_znear_persp, m_zfar_persp);
   else {
-      float width = astate->vViewportWidthHeight(0) + _viewport_w;
-      float height = astate->vViewportWidthHeight(1);
+      float width   = astate->viewport_size_c(0);
+      float height  = astate->viewport_size_c(1);
       float x_scale = 1.0f;
       float y_scale = 1.0f;
 
