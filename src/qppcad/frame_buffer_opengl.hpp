@@ -4,70 +4,104 @@
 #include <GLFW/glfw3.h>
 #include <qppcad/qppcad.hpp>
 
+
 namespace qpp {
-    struct frame_buffer_opengl_provider{
-        typedef GLuint tex_handle;
-        tex_handle m_fbo;
-        tex_handle m_tex_color;
-        tex_handle m_tex_depth;
-        uint16_t m_width;
-        uint16_t m_height;
-        vector<GLenum> draw_buffer;
+  struct frame_buffer_opengl_provider{
+      typedef GLuint handle_t;
 
-        void gen_textures(uint16_t width, uint16_t height){
-          glGenTextures(1, &m_tex_color);
-          glBindTexture(GL_TEXTURE_2D, m_tex_color);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-          glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+      handle_t m_fbo_first;
+      handle_t m_fbo_first_color_buffer;
+      handle_t m_fbo_first_depth_buffer;
 
-          glGenTextures(1, &m_tex_depth);
-          glBindTexture(GL_TEXTURE_2D, m_tex_depth);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-          glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0,
-                       GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-        }
+      handle_t m_fbo_second;
+      handle_t m_fbo_second_color_buffer;
+      handle_t m_fbo_second_tex;
 
-        void gen_fbo(uint16_t width, uint16_t height){
-          glGenFramebuffers(1, &m_fbo);
-          glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-          gen_textures(width, height);
-          uint attachment_index_color_texture = 0;
-          glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 +
-                               attachment_index_color_texture, m_tex_color, 0);
-          glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_tex_depth, 0);//optional
-          draw_buffer.push_back(GL_COLOR_ATTACHMENT0 + attachment_index_color_texture);
-          glDrawBuffers(draw_buffer.size(), &draw_buffer[0]);
-          glBindFramebuffer(GL_FRAMEBUFFER, 0);
-          m_width = width;
-          m_height = height;
-        }
+      uint16_t m_width;
+      uint16_t m_height;
 
-        void resize_fbo(uint16_t new_width, uint16_t new_height){
-          destroy_fbo();
-          gen_fbo(new_width, new_height);
-        }
 
-        void bind_fbo(){
-          glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-        }
+      void gen_fbo(uint16_t width, uint16_t height, uint8_t num_samples = 6){
+        m_width = width;
+        m_height = height;
+        std::cout << fmt::format(" gen fbo {} {}\n", width, height);
+        //generate output texture
+        glGenTextures(1, &m_fbo_second_tex);
+        glBindTexture(GL_TEXTURE_2D, m_fbo_second_tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
-        void unbind_fbo(){
-          glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        }
+        glGenFramebuffers(1, &m_fbo_first);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_first);
 
-        void destroy_fbo(){
-          glDeleteFramebuffers(1, &m_fbo);
-          glDeleteTextures(1, &m_tex_color);
-          glDeleteTextures(1, &m_tex_depth);
-        }
+        glGenRenderbuffers(1, &m_fbo_first_color_buffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_fbo_first_color_buffer);
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 6, GL_RGB8, width, height);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-    };
+        glGenRenderbuffers(1, &m_fbo_first_depth_buffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_fbo_first_depth_buffer);
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 6, GL_DEPTH_COMPONENT,
+                                         width, height);
+
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  m_fbo_first_color_buffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                  m_fbo_first_depth_buffer);
+
+        glGenFramebuffers(1, &m_fbo_second);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_second);
+
+        glGenRenderbuffers(1, &m_fbo_second_color_buffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_fbo_second_color_buffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               m_fbo_second_tex, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                  m_fbo_second_color_buffer);
+
+      }
+
+      void resize_fbo(uint16_t new_width, uint16_t new_height){
+        destroy_fbo();
+        //std::cout<<"???????????????????????????????????\n"<<std::flush;
+        gen_fbo(new_width, new_height);
+      }
+
+      void bind_fbo(){
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo_first);
+      }
+
+      void unbind_fbo(){
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo_first);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo_second);
+        glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width, m_height,
+                          GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      }
+
+      void destroy_fbo(){
+        glDeleteFramebuffers(1, &m_fbo_first);
+        glDeleteFramebuffers(1, &m_fbo_second);
+        glDeleteRenderbuffers(1, &m_fbo_first_color_buffer);
+        glDeleteRenderbuffers(1, &m_fbo_first_depth_buffer);
+        glDeleteRenderbuffers(1, &m_fbo_second_color_buffer);
+        glDeleteTextures(1, &m_fbo_second_tex);
+      }
+
+  };
 }
 
 #endif

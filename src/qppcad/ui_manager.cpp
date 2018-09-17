@@ -368,7 +368,9 @@ void ui_manager_t::render_work_panel(){
       ImGui::Button("RULER" , ImVec2(64,24));
       ImGui::Separator();
 
-      ImGui::ToggleButton("INSP", &(c_app::get_state().show_object_inspector), ImVec2(50,24));
+      if(ImGui::ToggleButton("INSP", &(c_app::get_state().show_object_inspector), ImVec2(50,24))){
+          c_app::get_state().mark_viewport_change();
+        }
       ImGui::Separator();
 
     }

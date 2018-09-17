@@ -28,7 +28,9 @@ namespace qpp {
     texture_0,
     texture_1,
     texture_2,
-    texture_3
+    texture_3,
+    screen_width,
+    screen_height
   };
 
   ///
@@ -40,6 +42,7 @@ namespace qpp {
     a_m3f,
     a_m4f,
     a_sf,
+    a_i,
     a_texture
   };
 
@@ -70,6 +73,8 @@ namespace qpp {
     std::make_pair(sp_u_name::texture_1,             "texture_1"),
     std::make_pair(sp_u_name::texture_2,             "texture_2"),
     std::make_pair(sp_u_name::texture_3,             "texture_3"),
+    std::make_pair(sp_u_name::screen_width,          "screen_width"),
+    std::make_pair(sp_u_name::screen_height,         "screen_height")
   };
 
   /// Map uniform internal name to OpenGL uniform type
@@ -91,7 +96,9 @@ namespace qpp {
     std::make_pair(sp_u_name::texture_0,             sp_u_type::a_texture),
     std::make_pair(sp_u_name::texture_1,             sp_u_type::a_texture),
     std::make_pair(sp_u_name::texture_2,             sp_u_type::a_texture),
-    std::make_pair(sp_u_name::texture_3,             sp_u_type::a_texture)
+    std::make_pair(sp_u_name::texture_3,             sp_u_type::a_texture),
+    std::make_pair(sp_u_name::screen_width,          sp_u_type::a_i),
+    std::make_pair(sp_u_name::screen_height,          sp_u_type::a_i),
   };
 
   ///

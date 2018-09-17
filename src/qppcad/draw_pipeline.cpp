@@ -391,3 +391,16 @@ void draw_pipeline_t::end_render_line(){
   astate->unit_line_program->end_shader_program();
 
 }
+
+void draw_pipeline_t::render_screen_quad(){
+  app_state_t* astate = &(c_app::get_state());
+  astate->fbo_quad_program->begin_shader_program();
+  glDisable(GL_DEPTH_TEST);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, astate->frame_buffer->get_color_texture());
+
+  astate->fbo_quad->render();
+  glEnable(GL_DEPTH_TEST);
+  astate->fbo_quad_program->end_shader_program();
+}

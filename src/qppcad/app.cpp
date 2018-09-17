@@ -53,13 +53,12 @@ void qpp::c_app::run(){
   glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_SAMPLES, 8);
 
 
-  qpp::c_app::curWindow = glfwCreateWindow(800,
-                                           600,
-                                           "qpp::cad", nullptr, nullptr);
+  qpp::c_app::curWindow = glfwCreateWindow(800, 600, "qpp::cad", nullptr, nullptr);
 
   if (!qpp::c_app::curWindow){
       glfwTerminate();
@@ -115,12 +114,18 @@ void qpp::c_app::run(){
   ///
   int width, height;
   glfwGetFramebufferSize(qpp::c_app::curWindow, &width, &height);
-  //astate->frame_buffer->resize(width, height);
 
   float previous_time = glfwGetTime();
   int frame_count = 0;
-
   double _mouse_x, _mouse_y;
+
+  astate->viewport_xy(0) = 0.0;
+  astate->viewport_xy(1) = 0.0;
+  astate->viewport_size(0) = width;
+  astate->viewport_size(1) = height;
+  astate->update_viewport_cache();
+
+  astate->frame_buffer->resize(astate->viewport_size_c(0), astate->viewport_size_c(1));
 
   while (!glfwWindowShouldClose(qpp::c_app::curWindow)){
 
@@ -164,6 +169,7 @@ void qpp::c_app::begin_render(){
   int width, height;
   glfwGetFramebufferSize(qpp::c_app::curWindow, &width, &height);
 
+
   ratio = width / static_cast<float>(height);
   glViewport(0, 0, width, height);
 
@@ -188,12 +194,23 @@ void qpp::c_app::end_render(){
 
 void qpp::c_app::render(){
   app_state_t* astate = &(c_app::get_state());
+  if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
+      astate->frame_buffer->bind();
+      glClearColor(0.8f, 0.8f, 0.8f, 1);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glViewport(0, 0,
+                 astate->viewport_size_c(0)-astate->viewport_xy_c(0),
+                 astate->viewport_size_c(1)-astate->viewport_xy_c(1));
 
-  glViewport(astate->viewport_xy_c(0), astate->viewport_xy_c(1),
-             astate->viewport_size_c(0), astate->viewport_size_c(1));
+      astate->ws_manager->render_current_workspace();
+      astate->frame_buffer->unbind();
 
-  if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR)
-    astate->ws_manager->render_current_workspace();
+      glViewport(astate->viewport_xy_c(0),
+                 astate->viewport_xy_c(1),
+                 astate->viewport_size_c(0),
+                 astate->viewport_size_c(1));
+      astate->dp->render_screen_quad();
+    }
 
   glViewport(0, 0, astate->viewport_size(0), astate->viewport_size(1));
   ImGui::Render();
@@ -210,6 +227,8 @@ void qpp::c_app::resize_window_callback(GLFWwindow *window, int _width, int _hei
   astate->viewport_size(0) = _width;
   astate->viewport_size(1) = _height;
   astate->update_viewport_cache();
+  astate->frame_buffer->resize(astate->viewport_size_c(0)-astate->viewport_xy_c(0),
+                               astate->viewport_size_c(1)-astate->viewport_xy_c(1));
 }
 
 void qpp::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset){

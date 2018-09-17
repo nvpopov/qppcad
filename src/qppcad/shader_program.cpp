@@ -109,6 +109,14 @@ void qpp::shader_program_t::begin_shader_program(){
   set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
   //std::cout<<std::endl<<c_app::get_state().mView<<std::endl;
   if (unf_rec[sp_u_name::texture_0].enabled) glUniform1i(unf_rec[sp_u_name::texture_0].h_prog, 0);
+
+  if (unf_rec[sp_u_name::screen_width].enabled)
+    glUniform1i(unf_rec[sp_u_name::screen_width].h_prog,
+        int(c_app::get_state().viewport_size_c(0)));
+
+  if (unf_rec[sp_u_name::screen_height].enabled)
+    glUniform1i(unf_rec[sp_u_name::screen_height].h_prog,
+        int(c_app::get_state().viewport_size_c(1)));
 }
 
 void qpp::shader_program_t::end_shader_program(){

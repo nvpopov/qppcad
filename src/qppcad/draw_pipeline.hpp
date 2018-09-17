@@ -206,6 +206,8 @@ namespace qpp {
     /// \brief end_render_line
     ///
     void end_render_line();
+
+    void render_screen_quad();
   };
 
 }

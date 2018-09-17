@@ -10,16 +10,24 @@ namespace qpp {
     public:
 
       static constexpr uint16_t default_width{800};
-      static constexpr uint16_t default_height{800};
+      static constexpr uint16_t default_height{600};
 
       PROVIDER m_provider;
+
+      uint16_t get_width(){
+        return m_provider.m_width;
+      }
+
+      uint16_t get_height(){
+        return m_provider.m_height;
+      }
 
       void bind(){
         m_provider.bind_fbo();
       }
 
       void unbind(){
-        m_provider.unbid_fbo();
+        m_provider.unbind_fbo();
       }
 
       void resize(const uint16_t new_width, const uint16_t new_height){
@@ -34,12 +42,12 @@ namespace qpp {
         m_provider.gen_fbo(width, height);
       }
 
-      typename PROVIDER::tex_handle get_color_texture(){
-        return  m_provider.m_tex_color;
+      typename PROVIDER::handle_t get_color_texture(){
+        return  m_provider.m_fbo_second_tex;
       }
 
-      typename PROVIDER::tex_handle get_depth_texture(){
-        return m_provider.m_tex_deptj;
+      typename PROVIDER::handle_t get_depth_texture(){
+        return m_provider.m_fbo_second_tex;
       }
 
       ~frame_buffer_t(){
