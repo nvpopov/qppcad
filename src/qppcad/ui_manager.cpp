@@ -68,6 +68,7 @@ void ui_manager_t::render_ui(){
   if(c_app::get_state().cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
       render_work_panel();
       render_ws_tabs();
+      render_3d_viewport_context_menu();
       if (c_app::get_state().show_object_inspector) render_object_inspector();
     }
 
@@ -232,7 +233,7 @@ void ui_manager_t::render_main_menu(){
       if (ImGui::Button("R")){
           show_rename_workspace_dialog = true;
           if (astate->ws_manager->has_wss())
-              strcpy(s_rename_workspace_name, astate->ws_manager->get_current()->m_ws_name.c_str());
+            strcpy(s_rename_workspace_name, astate->ws_manager->get_current()->m_ws_name.c_str());
         }
 
       ImGui::Separator();
@@ -417,7 +418,7 @@ void ui_manager_t::render_object_inspector(){
 
   ImGui::SetNextWindowSize(ImVec2(iObjInspWidth ,
                                   astate->viewport_size(1)-(iWorkPanelYOffset +
-                                                   iWorkPanelHeight)
+                                                            iWorkPanelHeight)
                                   ));
   ImGui::SetNextWindowPos(ImVec2(astate->viewport_size(0) - iObjInspWidth,
                                  iWorkPanelYOffset + iWorkPanelHeight));
@@ -488,6 +489,39 @@ void ui_manager_t::render_object_inspector(){
   ImGui::End();
   ImGui::PopStyleVar(1);
 
+}
+
+void ui_manager_t::render_3d_viewport_context_menu(){
+  app_state_t* astate = &(c_app::get_state());
+  ImGui::SetNextWindowSize(ImVec2(c_app::get_state().viewport_size_c(0),
+                                  c_app::get_state().viewport_size_c(1)));
+
+  ImGui::SetNextWindowPos(ImVec2(c_app::get_state().viewport_xy(0),
+                                 c_app::get_state().viewport_xy(1)
+                                 + iWorkPanelHeight + iWorkPanelYOffset));
+
+  ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.16f, 0.16f, 0.16f, 0.00f));
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+  if (ImGui::Begin("Fake3dAreaWindow", nullptr,
+                   ImGuiWindowFlags_NoMove |
+                   ImGuiWindowFlags_NoResize |
+                   ImGuiWindowFlags_NoCollapse |
+                   ImGuiWindowFlags_NoNav |
+                   ImGuiWindowFlags_NoTitleBar)){
+      ImGui::PushItemWidth(200);
+
+            if (ImGui::BeginPopupContextWindow("3dAreaContext")){
+                ImGui::MenuItem("Test1");
+                ImGui::MenuItem("Test2");
+                ImGui::MenuItem("Test3");
+                ImGui::EndPopup();
+              }
+
+
+      ImGui::End();
+    }
+  ImGui::PopStyleColor();
+  ImGui::PopStyleVar();
 }
 
 void ui_manager_t::render_mtable_big(){

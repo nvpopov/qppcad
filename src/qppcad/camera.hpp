@@ -30,6 +30,7 @@ namespace qpp{
     bool m_rotate_camera;
     bool m_move_camera;
 
+
     /// how much to move forward on mouse wheel
     float m_mouse_whell_camera_step;
     float m_mouse_zoom_min_distance;

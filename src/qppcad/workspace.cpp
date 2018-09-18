@@ -167,6 +167,7 @@ void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
       if (is_hit && m_edit_type == ws_edit_type::EDIT_WS_ITEM && ws_item->support_selection()){
           m_gizmo->attached_item = ws_item.get();
           ws_item->m_selected = true;
+          break;
         }
     }
 

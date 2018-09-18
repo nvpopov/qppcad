@@ -21,18 +21,15 @@ namespace qpp {
       uint16_t m_height;
 
 
-      void gen_fbo(uint16_t width, uint16_t height, uint8_t num_samples = 6){
+      void gen_fbo(uint16_t width, uint16_t height, uint8_t num_samples = 8){
         m_width = width;
         m_height = height;
-        std::cout << fmt::format(" gen fbo {} {}\n", width, height);
-        //generate output texture
+
         glGenTextures(1, &m_fbo_second_tex);
         glBindTexture(GL_TEXTURE_2D, m_fbo_second_tex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -43,12 +40,12 @@ namespace qpp {
 
         glGenRenderbuffers(1, &m_fbo_first_color_buffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_fbo_first_color_buffer);
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 6, GL_RGB8, width, height);
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, num_samples, GL_RGB8, width, height);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
         glGenRenderbuffers(1, &m_fbo_first_depth_buffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_fbo_first_depth_buffer);
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 6, GL_DEPTH_COMPONENT,
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, num_samples, GL_DEPTH_COMPONENT,
                                          width, height);
 
         glBindRenderbuffer(GL_RENDERBUFFER, 0);

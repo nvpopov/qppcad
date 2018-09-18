@@ -107,10 +107,13 @@ void camera_t::update_camera(){
     }
 
   if (m_rotate_camera){
+      //std::cout << "m_rotate_camera enter \n";
       float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
       float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
+
       if (fabs(rot_angle_y) > camera_t::nav_thresh) rotate_camera_orbit_yaw(rot_angle_y);
       if (fabs(rot_angle_x) > camera_t::nav_thresh) rotate_camera_orbit_pitch(rot_angle_x);
+
     }
 
 

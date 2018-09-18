@@ -103,6 +103,12 @@ namespace qpp {
       bool show_console{false};
       bool mouse_in_3d_area{false};
       bool viewport_changed{false};
+      bool m_realtime{false};
+      bool m_viewport_dirty{true};
+
+      void make_viewport_dirty(){
+        m_viewport_dirty = true;
+      }
 
       void update_viewport_cache(){
         //      std::cout << fmt::format("s {} {} | xy {} {}\n",
@@ -158,8 +164,8 @@ namespace qpp {
         update_viewport_cache();
 
         if (viewport_changed){
-            frame_buffer->resize(viewport_size_c(0) - viewport_xy_c(0),
-                                 viewport_size_c(1) - viewport_xy_c(1));
+            frame_buffer->resize(viewport_size_c(0),
+                                 viewport_size_c(1));
             viewport_changed = false;
           }
 

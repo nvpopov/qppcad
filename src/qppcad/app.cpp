@@ -55,7 +55,7 @@ void qpp::c_app::run(){
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_SAMPLES, 8);
+  glfwWindowHint(GLFW_SAMPLES, 4);
 
 
   qpp::c_app::curWindow = glfwCreateWindow(800, 600, "qpp::cad", nullptr, nullptr);
@@ -109,6 +109,7 @@ void qpp::c_app::run(){
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
   glEnable(GL_CULL_FACE);
+  glEnable(GL_MULTISAMPLE);
   glCullFace(GL_BACK);
   /// main app cycle
   ///
