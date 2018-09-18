@@ -1,6 +1,8 @@
 #ifndef QPP_WORKSPACE_H
 #define QPP_WORKSPACE_H
 
+
+
 #include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
 #include <geom/geom.hpp>
@@ -17,6 +19,7 @@ namespace qpp{
 
   class workspace_t;
   class ws_item_t;
+  class app_state_t;
 
   enum ws_edit_type {
     EDIT_WS_ITEM = 0,
@@ -32,12 +35,16 @@ namespace qpp{
   public:
 
     vector<shared_ptr<workspace_t> > m_ws;
-    workspace_manager_t(){ m_current_workspace_id = 0;}
+
+    workspace_manager_t(app_state_t *_astate);
 
     shared_ptr<workspace_t> get_current();
     optional<uint8_t> get_current_id();
 
     bool set_current(const uint8_t ws_index);
+
+    template<int I>
+    void force_set_current(){set_current(I);}
 
     bool has_wss(){return m_ws.size()>0;}
     void init_default();
@@ -74,7 +81,7 @@ namespace qpp{
     ws_item_t *get_selected();
     void set_selected_item(const int16_t sel_idx);
     void unselect_all();
-
+    void toggle_edit_mode();
     void workspace_changed();
     void reset_camera();
     void set_best_view();

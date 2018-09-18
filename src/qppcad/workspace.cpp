@@ -30,6 +30,11 @@ void workspace_t::unselect_all(){
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
 }
 
+void workspace_t::toggle_edit_mode(){
+  if (m_edit_type == ws_edit_type::EDIT_WS_ITEM) m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
+  else m_edit_type = ws_edit_type::EDIT_WS_ITEM;
+}
+
 void workspace_t::workspace_changed(){
   //rebuild ws items
   m_ws_names_c.clear();
@@ -207,6 +212,19 @@ void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
 void workspace_t::update(float delta_time){
   m_gizmo->update_gizmo(delta_time);
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
+}
+
+workspace_manager_t::workspace_manager_t(app_state_t *_astate){
+  m_current_workspace_id = 0;
+  _astate->kb_manager->connect("switch_to_ws_0", this, &workspace_manager_t::force_set_current<0>);
+  _astate->kb_manager->connect("switch_to_ws_1", this, &workspace_manager_t::force_set_current<1>);
+  _astate->kb_manager->connect("switch_to_ws_2", this, &workspace_manager_t::force_set_current<2>);
+  _astate->kb_manager->connect("switch_to_ws_3", this, &workspace_manager_t::force_set_current<3>);
+  _astate->kb_manager->connect("switch_to_ws_4", this, &workspace_manager_t::force_set_current<4>);
+  _astate->kb_manager->connect("switch_to_ws_5", this, &workspace_manager_t::force_set_current<5>);
+  _astate->kb_manager->connect("switch_to_ws_6", this, &workspace_manager_t::force_set_current<6>);
+  _astate->kb_manager->connect("switch_to_ws_7", this, &workspace_manager_t::force_set_current<7>);
+  _astate->kb_manager->connect("switch_to_ws_8", this, &workspace_manager_t::force_set_current<8>);
 }
 
 shared_ptr<workspace_t> workspace_manager_t::get_current(){

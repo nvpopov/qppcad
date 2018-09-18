@@ -22,6 +22,8 @@
 #include <qppcad/vote_pool.hpp>
 #include <qppcad/frame_buffer.hpp>
 #include <qppcad/mesh_generators.hpp>
+#include <qppcad/shader_generators.hpp>
+#include <qppcad/keyboard_event.hpp>
 
 namespace qpp {
 
@@ -34,7 +36,7 @@ namespace qpp {
     TASK_MENDELEY_TABLE = 2
   };
 
-  // vote candidats
+  // vote candidates
   const int DISABLE_MOUSE_CONTROL_IN_WORKSPACE = 0;
 
   ///
@@ -50,10 +52,11 @@ namespace qpp {
       shader_program_t*              mvp_ssl_program;
       shader_program_t*              fbo_quad_program;
 
-      std::shared_ptr<workspace_manager_t>                           ws_manager;
-      std::shared_ptr<ui_manager_t>                                  ui_manager;
-      std::shared_ptr<file_dialog_manager_t>                         fd_manager;
-      std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
+      shared_ptr<workspace_manager_t>                           ws_manager;
+      shared_ptr<ui_manager_t>                                  ui_manager;
+      shared_ptr<file_dialog_manager_t>                         fd_manager;
+      unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
+      unique_ptr<keyboard_manager_t>                            kb_manager;
       camera_t*  camera;
 
       float mouse_x;
@@ -105,6 +108,7 @@ namespace qpp {
       bool viewport_changed{false};
       bool m_realtime{false};
       bool m_viewport_dirty{true};
+
 
       void make_viewport_dirty(){
         m_viewport_dirty = true;
@@ -218,19 +222,18 @@ namespace qpp {
         unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
         fbo_quad      = mesh_generators::quad();
 
-        default_program       = gen_default_program();
-        unit_line_program = gen_unit_line_program();
-        line_mesh_program   = gen_line_mesh_program();
-        mvp_ssl_program  = gen_mv_screen_space_lighting_program();
-        fbo_quad_program = gen_fbo_quad_program();
+        default_program    = shader_generators::gen_default_program();
+        unit_line_program  = shader_generators::gen_unit_line_program();
+        line_mesh_program  = shader_generators::gen_line_mesh_program();
+        mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
+        fbo_quad_program   = shader_generators::gen_fbo_quad_program();
 
-        frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
-        ws_manager = std::make_shared<workspace_manager_t>();
+        kb_manager = make_unique<keyboard_manager_t>();
+        frame_buffer = make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
+        ws_manager = make_shared<workspace_manager_t>(this);
         ws_manager->init_default();
-        ui_manager = std::make_shared<ui_manager_t>();
-        ui_manager->setup_style();
-
-        fd_manager = std::make_shared<file_dialog_manager_t>();
+        ui_manager = make_shared<ui_manager_t>(this);
+        fd_manager = make_shared<file_dialog_manager_t>();
 
         update_viewport_cache();
       }

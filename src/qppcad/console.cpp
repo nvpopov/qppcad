@@ -4,9 +4,15 @@
 
 using namespace qpp;
 
-console_widget_t::console_widget_t(){
+console_widget_t::console_widget_t(app_state_t *init_app_state){
   m_active = false;
   m_id = get_uniq_id();
+  init_app_state->kb_manager->connect("python_console_toggle", this,
+                                      &console_widget_t::toggle_visible);
+}
+
+void console_widget_t::toggle_visible(){
+  m_active = !m_active;
 }
 
 void console_widget_t::render(){
@@ -15,7 +21,7 @@ void console_widget_t::render(){
 
   if (m_active){
       astate->config_vote_pool.vote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
-      if (ImGui::Begin("Interactive console", &m_active, ImGuiWindowFlags_None)){
+      if (ImGui::Begin("Interactive console", &m_active, ImGuiWindowFlags_Modal)){
           ImGui::BeginChild("commands",
                             ImVec2(ImGui::GetWindowWidth()-20, ImGui::GetWindowHeight()-90),
                             true);

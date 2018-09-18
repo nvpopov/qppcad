@@ -13,6 +13,8 @@
 #include <qppcad/console.hpp>
 
 namespace qpp{
+  class app_state_t;
+
   class ui_manager_t{
   public:
     uint32_t m_rename_ws_id;
@@ -22,7 +24,8 @@ namespace qpp{
     int iWorkPanelYOffset;
     int iObjInspWidth;
     unique_ptr<console_widget_t> console_widget;
-    ui_manager_t();
+    ui_manager_t(app_state_t *init_app_state);
+    void toggle_edit_mode();
     void setup_style();
     void render_ui();
     void render_main_menu();

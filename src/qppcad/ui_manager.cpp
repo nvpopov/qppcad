@@ -4,8 +4,9 @@
 
 using namespace qpp;
 
-ui_manager_t::ui_manager_t(){
-  console_widget = make_unique<console_widget_t>();
+ui_manager_t::ui_manager_t(app_state_t *init_app_state){
+ // app_state_t *astate = &(c_app::get_state());
+  console_widget = make_unique<console_widget_t>(init_app_state);
   m_rename_ws_id = get_uniq_id();
 
   show_rename_workspace_dialog = false;
@@ -14,6 +15,14 @@ ui_manager_t::ui_manager_t(){
   iWorkPanelHeight = 38;
   iWorkPanelYOffset = 28;
   setup_style();
+
+  init_app_state->kb_manager->connect("edit_mode_toggle", this, &ui_manager_t::toggle_edit_mode);
+
+}
+
+void ui_manager_t::toggle_edit_mode(){
+  app_state_t* astate = &(c_app::get_state());
+  if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->toggle_edit_mode();
 }
 
 void ui_manager_t::setup_style(){
@@ -325,7 +334,7 @@ void ui_manager_t::render_work_panel(){
   ImGuiWindow* window = ImGui::GetCurrentWindow();
   window->DC.LayoutType = ImGuiLayoutType_Horizontal;
 
-  ImGui::ToggleButton("~" , &astate->show_console, ImVec2(20,24));
+  ImGui::ToggleButton("~" , &console_widget->m_active, ImVec2(20,24));
   ImGui::Separator();
   ImGui::Text("View:");
   ImGui::Button("a" , ImVec2(20,24));
@@ -444,9 +453,18 @@ void ui_manager_t::render_object_inspector(){
               if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->
                   dialog_add_geom_from_file(qc_file_format::format_standart_xyz);
             }
-          if (ImGui::MenuItem("VASP")){
-              if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->
-                  dialog_add_geom_from_file(qc_file_format::format_vasp_poscar);
+
+          if (ImGui::BeginMenu("VASP")){
+              if (ImGui::MenuItem("POSCAR/CONTCAR")){
+                  if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->
+                      dialog_add_geom_from_file(qc_file_format::format_vasp_poscar);
+                }
+
+              if (ImGui::MenuItem("OUTCAR")){
+
+                }
+
+              ImGui::EndMenu();
             }
 
           ImGui::EndMenu();

@@ -271,37 +271,37 @@ void ws_atoms_list_t::render_ui(){
 
     }
 
-  if (ImGui::CollapsingHeader("Measurements")){
-      ImGui::Spacing();
-      if (m_atom_idx_selection.size() != 2) {
-          ImGui::BulletText("Select 2 atoms to measure distance");
-          ImGui::BulletText("Select 3 atoms to measure angle");
-        } else if (m_atom_idx_selection.size() == 2) {
-          auto first = m_atom_idx_selection.cbegin();
-          auto last  = ++(m_atom_idx_selection.cbegin());
-          float dist = (m_geom->pos(first->m_atm, first->m_idx) -
-                        m_geom->pos(last->m_atm, last->m_idx)).norm();
-          ImGui::Columns(2);
-          ImGui::Separator();
-          ImGui::Text("First atom");
-          ImGui::Text("Second atom");
-          ImGui::Text("Distance");
-          ImGui::NextColumn();
-          ImGui::Text(fmt::format("{}, Index = {}",
-                                  m_geom->atom_of_type(m_geom->type_table(first->m_atm)),
-                                  first->m_idx).c_str());
-          ImGui::Text(fmt::format("{}, Index = {}",
-                                  m_geom->atom_of_type(m_geom->type_table(last->m_atm)),
-                                  last->m_idx).c_str());
-          ImGui::Text(fmt::format("{} Angs.", dist).c_str());
-          ImGui::Columns(1);
-          ImGui::Separator();
-          ImGui::Checkbox("Draw a line between the measured atoms", &m_draw_line_in_dist_measurement);
+//  if (ImGui::CollapsingHeader("Measurements")){
+//      ImGui::Spacing();
+//      if (m_atom_idx_selection.size() != 2) {
+//          ImGui::BulletText("Select 2 atoms to measure distance");
+//          ImGui::BulletText("Select 3 atoms to measure angle");
+//        } else if (m_atom_idx_selection.size() == 2) {
+//          auto first = m_atom_idx_selection.cbegin();
+//          auto last  = ++(m_atom_idx_selection.cbegin());
+//          float dist = (m_geom->pos(first->m_atm, first->m_idx) -
+//                        m_geom->pos(last->m_atm, last->m_idx)).norm();
+//          ImGui::Columns(2);
+//          ImGui::Separator();
+//          ImGui::Text("First atom");
+//          ImGui::Text("Second atom");
+//          ImGui::Text("Distance");
+//          ImGui::NextColumn();
+//          ImGui::Text(fmt::format("{}, Index = {}",
+//                                  m_geom->atom_of_type(m_geom->type_table(first->m_atm)),
+//                                  first->m_idx).c_str());
+//          ImGui::Text(fmt::format("{}, Index = {}",
+//                                  m_geom->atom_of_type(m_geom->type_table(last->m_atm)),
+//                                  last->m_idx).c_str());
+//          ImGui::Text(fmt::format("{} Angs.", dist).c_str());
+//          ImGui::Columns(1);
+//          ImGui::Separator();
+//          ImGui::Checkbox("Draw a line between the measured atoms", &m_draw_line_in_dist_measurement);
 
 
-        }
+//        }
 
-    }
+//    }
 }
 
 bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){

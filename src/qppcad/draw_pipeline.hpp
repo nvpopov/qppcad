@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_DRAW_PIPELINE_
-#define QPP_CAD_DRAW_PIPELINE_
+#ifndef QPP_CAD_DRAW_PIPELINE
+#define QPP_CAD_DRAW_PIPELINE
 #include <qppcad/qppcad.hpp>
 #include <qppcad/mesh.hpp>
 #include <string>

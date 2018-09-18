@@ -6,7 +6,7 @@
 #include <imgui_internal.h>
 
 namespace qpp {
-
+  class app_state_t;
   struct notebook_record_t {
       string m_rec;
       string m_answer;
@@ -18,7 +18,8 @@ namespace qpp {
       vector<notebook_record_t> nb_recs;
       uint32_t m_id;
       bool     m_active;
-      console_widget_t();
+      console_widget_t(app_state_t *init_app_state);
+      void toggle_visible();
       void render();
   };
 

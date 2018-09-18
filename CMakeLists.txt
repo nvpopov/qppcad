@@ -66,7 +66,7 @@ add_executable(qppcad
     src/qppcad/file_dialog.cpp
     src/qppcad/imgui_addons.cpp
     src/qppcad/console.cpp
-    src/qppcad/keyboard_event.cpp
+
     src/qppcad/uniq_id.cpp
     deps/imgui/misc/freetype/imgui_freetype.cpp
     deps/imgui/misc/stl/imgui_stl.cpp

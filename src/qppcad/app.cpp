@@ -28,14 +28,9 @@ void qpp::c_app::key_callback(GLFWwindow* window,
 
   qpp::c_app::log(fmt::format("Key pressed  {}, sc = {}, act = {}", key, scancode, action));
 
-  if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS){
-      astate->ui_manager->console_widget->m_active =
-          !(astate->ui_manager->console_widget->m_active);
-      //qpp::c_app::log("wft?");
-    }
-
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
+
   ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 
 
@@ -131,7 +126,11 @@ void qpp::c_app::run(){
   while (!glfwWindowShouldClose(qpp::c_app::curWindow)){
 
       if(!glfwGetWindowAttrib(qpp::c_app::curWindow, GLFW_ICONIFIED)){
+
           glfwPollEvents();
+
+          astate->kb_manager->update(qpp::c_app::curWindow);
+
           float current_time = glfwGetTime();
           float delta_time = current_time - previous_time;
           frame_count++;
@@ -149,7 +148,9 @@ void qpp::c_app::run(){
           qpp::c_app::render();
           qpp::c_app::end_render();
         }
+
       else glfwWaitEvents();
+
     }
 
   glfwDestroyWindow(qpp::c_app::curWindow);

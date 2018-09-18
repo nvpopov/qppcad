@@ -147,34 +147,7 @@ namespace qpp {
       void end_shader_program();
   };
 
-  /// Default shader testing program - Gourand shading
-  shader_program_t* gen_default_program();
 
-  ///
-  /// \brief gen_unit_line_program
-  /// \return
-  ///
-  shader_program_t* gen_unit_line_program();
-
-  ///
-  /// \brief gen_line_mesh_program
-  /// \return
-  ///
-  shader_program_t* gen_line_mesh_program();
-
-  ///
-  /// \brief gen_screen_space_lighting_program
-  /// \return
-  ///
-  shader_program_t* gen_screen_space_lighting_program();
-
-  ///
-  /// \brief gen_mv_screen_space_lighting_program
-  /// \return
-  ///
-  shader_program_t *gen_mv_screen_space_lighting_program();
-
-  shader_program_t *gen_fbo_quad_program();
 }
 #endif
 
