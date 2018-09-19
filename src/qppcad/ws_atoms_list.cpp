@@ -415,7 +415,7 @@ void ws_atoms_list_t::invert_selected_atoms(){
       auto it = m_atom_selection.find(i);
 
       if (it != m_atom_selection.end()){
-          m_atom_selection.clear();
+          m_atom_selection.erase(it);
           for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
                !idx.end(); idx++ ) {
               auto i2 = m_atom_idx_selection.find(atom_index_set_key(i, idx));
