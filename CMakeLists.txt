@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
 add_definitions(-O3 -std=c++17 -fPIC -DFMT_HEADER_ONLY)
-set(CMAKE_CXX_FLAGS "-O3 -funroll-loops -ftree-vectorize")
+set(CMAKE_CXX_FLAGS "-O3 -funroll-loops -ftree-vectorize -fvisibility=hidden")
 #set(CMAKE_BUILD_TYPE "Debug")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -31,7 +31,7 @@ include_directories(deps/qpp/deps/fmtlib)
 include_directories(deps/qpp/deps/eigen3)
 include_directories(deps/nativefiledialog/src/)
 include_directories(deps/nativefiledialog/src/include)
-
+include_directories(${PYTHON_INCLUDE_DIRS})
 if (UNIX)
     find_package(PkgConfig REQUIRED)
     PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
@@ -76,4 +76,11 @@ add_executable(qppcad
     deps/imgui/imgui.cpp
     deps/imgui/imgui_widgets.cpp
     deps/imgui/imgui_draw.cpp)
-target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY} freetype glfw nfd ${GTK3_LIBRARIES} m)
+if(PYTHON_BINDINGS)
+add_definitions(-DPYTHON_CONSOLE)
+target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY}
+    freetype glfw nfd ${GTK3_LIBRARIES} pybind11::embed m )
+else()
+    target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY}
+    freetype glfw nfd ${GTK3_LIBRARIES} m )
+endif(PYTHON_BINDINGS)

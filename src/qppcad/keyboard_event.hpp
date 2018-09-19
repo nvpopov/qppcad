@@ -90,6 +90,8 @@ namespace qpp {
         commands.emplace("switch_to_ws_6", keyboard_command_t({GLFW_KEY_7, GLFW_KEY_LEFT_CONTROL}));
         commands.emplace("switch_to_ws_7", keyboard_command_t({GLFW_KEY_8, GLFW_KEY_LEFT_CONTROL}));
         commands.emplace("switch_to_ws_8", keyboard_command_t({GLFW_KEY_9, GLFW_KEY_LEFT_CONTROL}));
+//        commands.emplace("console_nl", keyboard_command_t({GLFW_KEY_ENTER, GLFW_KEY_RIGHT_SHIFT}));
+//        commands.emplace("console_apply", keyboard_command_t({GLFW_KEY_ENTER}));
 
       }
   };

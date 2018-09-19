@@ -251,7 +251,7 @@ void qpp::c_app::mouse_button_callback(GLFWwindow *window, int button, int actio
   app_state_t* astate =  &(c_app::get_state());
 
   if (astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE)){
-      std::cout<<"VOTING POINT\n";
+      //std::cout<<"VOTING POINT\n";
       astate->mouse_in_3d_area = false;
       astate->mouse_lb_pressed = false;
       return;
