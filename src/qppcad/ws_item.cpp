@@ -65,6 +65,29 @@ void ws_item_t::render_ui(){
     }
 }
 
+void ws_item_t::td_context_menu_edit_item(){
+  if (support_translation())
+    if (ImGui::BeginMenu("Translate Node")){
+
+        ImGui::SliderFloat("X", &(explicit_translation[0]), -10.0, 10.0);
+        ImGui::SameLine();
+        ImGui::Button("Apply X");
+
+        ImGui::SliderFloat("Y", &(explicit_translation[1]), -10.0, 10.0);
+        ImGui::SameLine();
+        ImGui::Button("Apply Y");
+
+        ImGui::SliderFloat("Z", &(explicit_translation[2]), -10.0, 10.0);
+        ImGui::SameLine();
+        ImGui::Button("Apply Z");
+        ImGui::EndMenu();
+      }
+}
+
+void ws_item_t::td_context_menu_edit_content(){
+
+}
+
 
 void ws_item_t::update(float delta_time){
 

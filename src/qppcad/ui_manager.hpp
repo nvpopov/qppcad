@@ -23,6 +23,9 @@ namespace qpp{
     int iWorkPanelHeight;
     int iWorkPanelYOffset;
     int iObjInspWidth;
+
+    vector3<float> explicit_translation;
+
     unique_ptr<console_widget_t> console_widget;
     ui_manager_t(app_state_t *init_app_state);
     void toggle_edit_mode();

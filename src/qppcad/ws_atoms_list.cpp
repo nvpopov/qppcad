@@ -87,12 +87,16 @@ void ws_atoms_list_t::render(){
 
       // draw {0,..} atoms
       for (int i = 0; i < m_geom->nat(); i++)
-        if (m_show_atoms) render_atom(i, index::D(m_geom->DIM).all(0));
+        if (m_show_atoms &&
+            m_atom_type_to_hide.find(m_geom->type_table(i)) == m_atom_type_to_hide.end())
+          render_atom(i, index::D(m_geom->DIM).all(0));
 
       // draw imaginary atoms that appear due to periodic
       if (m_geom->DIM > 0 && m_show_atoms && m_show_imaginary_atoms)
         for (uint16_t i = 0; i < m_tws_tr->m_img_atoms.size(); i++)
-          render_atom(m_tws_tr->m_img_atoms[i].m_atm, m_tws_tr->m_img_atoms[i].m_idx);
+          if (m_atom_type_to_hide.find(m_geom->type_table(m_tws_tr->m_img_atoms[i].m_atm)) ==
+              m_atom_type_to_hide.end())
+            render_atom(m_tws_tr->m_img_atoms[i].m_atm, m_tws_tr->m_img_atoms[i].m_idx);
 
       astate->dp->end_atom_render();
       // atom render end
@@ -191,12 +195,18 @@ void ws_atoms_list_t::render_ui(){
 
   if (ImGui::CollapsingHeader("Atom types")){
       ImGui::Spacing();
-      ImGui::Columns(3);
-      ImGui::Text("Atom type");
+      ImGui::Columns(4);
+      ImGui::SetColumnWidth(0, 60);
+      ImGui::SetColumnWidth(1, 70);
+      ImGui::SetColumnWidth(2, 70);
+      ImGui::SetColumnWidth(3, 70);
+      ImGui::Text("Type");
       ImGui::NextColumn();
       ImGui::Text("Count");
       ImGui::NextColumn();
       ImGui::Text("Color");
+      ImGui::NextColumn();
+      ImGui::Text("Hide");
       ImGui::NextColumn();
       ImGui::Separator();
       for (uint8_t i = 0; i < m_geom->n_types(); i++){
@@ -214,7 +224,7 @@ void ws_atoms_list_t::render_ui(){
       for (uint8_t i = 0; i < m_geom->n_types(); i++){
           const ImVec2 p = ImGui::GetCursorScreenPos();
           float p_x = p.x + 8 + 6;
-          float p_y = p.y + 8;
+          float p_y = p.y + 10;
           ImVec2 p_n(p_x, p_y);
           auto ap_idx = ptable::number_by_symbol(m_geom->atom_of_type(i));
           vector3<float> bc(0.0, 0.0, 1.0);
@@ -222,8 +232,26 @@ void ws_atoms_list_t::render_ui(){
           draw_list->AddCircleFilled(p_n, 8, ImColor(ImVec4(bc[0], bc[1], bc[2], 1.0f)));
           ImGui::Dummy(ImVec2(16, 16));
         }
-      ImGui::NextColumn();
 
+      ImGui::NextColumn();
+      for (uint8_t i = 0; i < m_geom->n_types(); i++){
+          bool _l_type_to_hide = false;
+          auto it = m_atom_type_to_hide.find(i);
+          if (it != m_atom_type_to_hide.end()) _l_type_to_hide = true;
+
+          ImGui::PushID(i);
+          ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.8f, 0.8f));
+          ImGui::Checkbox("", &_l_type_to_hide);
+          ImGui::PopStyleVar(1);
+          ImGui::PopID();
+
+          if (_l_type_to_hide) {
+              m_atom_type_to_hide.insert(i);
+            } else {
+              auto it2 = m_atom_type_to_hide.find(i);
+              if (it2 != m_atom_type_to_hide.end()) m_atom_type_to_hide.erase(it2);
+            }
+        }
       ImGui::Columns(1);
       ImGui::Spacing();
     }
@@ -271,37 +299,56 @@ void ws_atoms_list_t::render_ui(){
 
     }
 
-//  if (ImGui::CollapsingHeader("Measurements")){
-//      ImGui::Spacing();
-//      if (m_atom_idx_selection.size() != 2) {
-//          ImGui::BulletText("Select 2 atoms to measure distance");
-//          ImGui::BulletText("Select 3 atoms to measure angle");
-//        } else if (m_atom_idx_selection.size() == 2) {
-//          auto first = m_atom_idx_selection.cbegin();
-//          auto last  = ++(m_atom_idx_selection.cbegin());
-//          float dist = (m_geom->pos(first->m_atm, first->m_idx) -
-//                        m_geom->pos(last->m_atm, last->m_idx)).norm();
-//          ImGui::Columns(2);
-//          ImGui::Separator();
-//          ImGui::Text("First atom");
-//          ImGui::Text("Second atom");
-//          ImGui::Text("Distance");
-//          ImGui::NextColumn();
-//          ImGui::Text(fmt::format("{}, Index = {}",
-//                                  m_geom->atom_of_type(m_geom->type_table(first->m_atm)),
-//                                  first->m_idx).c_str());
-//          ImGui::Text(fmt::format("{}, Index = {}",
-//                                  m_geom->atom_of_type(m_geom->type_table(last->m_atm)),
-//                                  last->m_idx).c_str());
-//          ImGui::Text(fmt::format("{} Angs.", dist).c_str());
-//          ImGui::Columns(1);
-//          ImGui::Separator();
-//          ImGui::Checkbox("Draw a line between the measured atoms", &m_draw_line_in_dist_measurement);
+  //  if (ImGui::CollapsingHeader("Measurements")){
+  //      ImGui::Spacing();
+  //      if (m_atom_idx_selection.size() != 2) {
+  //          ImGui::BulletText("Select 2 atoms to measure distance");
+  //          ImGui::BulletText("Select 3 atoms to measure angle");
+  //        } else if (m_atom_idx_selection.size() == 2) {
+  //          auto first = m_atom_idx_selection.cbegin();
+  //          auto last  = ++(m_atom_idx_selection.cbegin());
+  //          float dist = (m_geom->pos(first->m_atm, first->m_idx) -
+  //                        m_geom->pos(last->m_atm, last->m_idx)).norm();
+  //          ImGui::Columns(2);
+  //          ImGui::Separator();
+  //          ImGui::Text("First atom");
+  //          ImGui::Text("Second atom");
+  //          ImGui::Text("Distance");
+  //          ImGui::NextColumn();
+  //          ImGui::Text(fmt::format("{}, Index = {}",
+  //                                  m_geom->atom_of_type(m_geom->type_table(first->m_atm)),
+  //                                  first->m_idx).c_str());
+  //          ImGui::Text(fmt::format("{}, Index = {}",
+  //                                  m_geom->atom_of_type(m_geom->type_table(last->m_atm)),
+  //                                  last->m_idx).c_str());
+  //          ImGui::Text(fmt::format("{} Angs.", dist).c_str());
+  //          ImGui::Columns(1);
+  //          ImGui::Separator();
+  //          ImGui::Checkbox("Draw a line between the measured atoms", &m_draw_line_in_dist_measurement);
 
 
-//        }
+  //        }
 
-//    }
+  //    }
+}
+
+void ws_atoms_list_t::td_context_menu_edit_item(){
+  ws_item_t::td_context_menu_edit_item();
+}
+
+void ws_atoms_list_t::td_context_menu_edit_content(){
+  ws_item_t::td_context_menu_edit_content();
+  if (support_content_editing()) {
+
+      if (ImGui::BeginMenu("Selection")) {
+          if (ImGui::MenuItem("Select all")) select_atoms(true);
+          if (ImGui::MenuItem("Unselect all")) select_atoms(false);
+          if (ImGui::MenuItem("Invert selection")) invert_selected_atoms();
+          ImGui::EndMenu();
+        }
+
+      ImGui::Separator();
+    }
 }
 
 bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
@@ -344,6 +391,44 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
         }
     }
   return false;
+}
+
+void ws_atoms_list_t::select_atoms(bool all){
+  if (all) {
+      m_atom_selection.clear();
+      m_atom_idx_selection.clear();
+      for (auto i = 0; i < m_geom->nat(); i++){
+          m_atom_selection.insert(i);
+          for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
+               !idx.end(); idx++ ) m_atom_idx_selection.insert(atom_index_set_key(i, idx));
+        }
+
+    } else {
+      m_atom_selection.clear();
+      m_atom_idx_selection.clear();
+    }
+}
+
+void ws_atoms_list_t::invert_selected_atoms(){
+  m_atom_idx_selection.clear();
+  for (auto i = 0; i < m_geom->nat(); i++){
+      auto it = m_atom_selection.find(i);
+
+      if (it != m_atom_selection.end()){
+          m_atom_selection.clear();
+          for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
+               !idx.end(); idx++ ) {
+              auto i2 = m_atom_idx_selection.find(atom_index_set_key(i, idx));
+              if (i2 != m_atom_idx_selection.end()) m_atom_idx_selection.erase(i2);
+            }
+        } else {
+          m_atom_selection.insert(i);
+          for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
+               !idx.end(); idx++ ) {
+               m_atom_idx_selection.insert(atom_index_set_key(i, idx));
+            }
+        }
+    }
 }
 
 bool ws_atoms_list_t::support_translation(){return true;}

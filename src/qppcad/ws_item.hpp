@@ -43,6 +43,7 @@ namespace qpp{
       vector3<float>   m_pos; ///
       vector3<float>   m_scale; ///
       vector3<float>   m_rotation; ///
+      vector3<float>   explicit_translation;
       bool             m_is_visible; ///
       bool             m_draw_cell; ///
       bool             m_selected; ///
@@ -94,7 +95,8 @@ namespace qpp{
       /// \brief render_ui
       ///
       virtual void render_ui();
-
+      virtual void td_context_menu_edit_item();
+      virtual void td_context_menu_edit_content();
       ///
       /// \brief mouse_click
       /// \param ray

@@ -5,7 +5,7 @@
 using namespace qpp;
 
 ui_manager_t::ui_manager_t(app_state_t *init_app_state){
- // app_state_t *astate = &(c_app::get_state());
+  // app_state_t *astate = &(c_app::get_state());
   console_widget = make_unique<console_widget_t>(init_app_state);
   m_rename_ws_id = get_uniq_id();
 
@@ -478,21 +478,28 @@ void ui_manager_t::render_object_inspector(){
 
 
   ImGui::PushItemWidth(284);
-  auto cur_ws = astate->ws_manager->get_current();
 
-  if (cur_ws != nullptr){
-      int ws_itm_cur = cur_ws->get_selected_item();
+  auto cur_ws = astate->ws_manager->get_current();
+  if (cur_ws){
+
+      optional<uint16_t> ws_itm_cur = cur_ws->get_selected_item();
+
+      int ws_itm_cur_val = -1;
+      if (ws_itm_cur) ws_itm_cur_val = *ws_itm_cur;
+      int ws_itm_cur_val_stored = ws_itm_cur_val;
+
       ImGui::PushID(1);
-      ImGui::ListBox_stl("", &ws_itm_cur, cur_ws->m_ws_names_c, 8);
+      ImGui::ListBox_stl("", &ws_itm_cur_val, cur_ws->m_ws_names_c, 8);
       ImGui::PopID();
-      if (ws_itm_cur != cur_ws->get_selected_item())
-        cur_ws->set_selected_item(ws_itm_cur);
+
+      if (ws_itm_cur_val != ws_itm_cur_val_stored && ws_itm_cur_val != -1)
+        cur_ws->set_selected_item(ws_itm_cur_val);
 
       ImGui::PopItemWidth();
-
       ImGui::Spacing();
       ImGui::Separator();
-      if (cur_ws->get_selected_item() != -1){
+
+      if (ws_itm_cur_val != -1){
           ImGui::Text(cur_ws->get_selected()->compose_item_name().c_str());
           ImGui::Separator();
           ImGui::Spacing();
@@ -511,35 +518,27 @@ void ui_manager_t::render_object_inspector(){
 
 void ui_manager_t::render_3d_viewport_context_menu(){
   app_state_t* astate = &(c_app::get_state());
-  ImGui::SetNextWindowSize(ImVec2(c_app::get_state().viewport_size_c(0),
-                                  c_app::get_state().viewport_size_c(1)));
 
-  ImGui::SetNextWindowPos(ImVec2(c_app::get_state().viewport_xy(0),
-                                 c_app::get_state().viewport_xy(1)
-                                 + iWorkPanelHeight + iWorkPanelYOffset));
+  if (ImGui::BeginPopupContextVoid("3dAreaContext")){
+      ImGui::BulletText("Context menu");
+      ImGui::Separator();
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws){
+          auto cur_it = cur_ws->get_selected();
 
-  ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.16f, 0.16f, 0.16f, 0.00f));
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-  if (ImGui::Begin("Fake3dAreaWindow", nullptr,
-                   ImGuiWindowFlags_NoMove |
-                   ImGuiWindowFlags_NoResize |
-                   ImGuiWindowFlags_NoCollapse |
-                   ImGuiWindowFlags_NoNav |
-                   ImGuiWindowFlags_NoTitleBar)){
-      ImGui::PushItemWidth(200);
+          if (cur_it){
+              //if we in edit-item-mode show node related menu
+              if (cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+                  cur_it->td_context_menu_edit_item();
+              else cur_it->td_context_menu_edit_content();
 
-            if (ImGui::BeginPopupContextWindow("3dAreaContext")){
-                ImGui::MenuItem("Test1");
-                ImGui::MenuItem("Test2");
-                ImGui::MenuItem("Test3");
-                ImGui::EndPopup();
-              }
-
-
-      ImGui::End();
+            } else {
+              ImGui::BulletText("Nothing selected");
+            }
+        }
+      ImGui::EndPopup();
     }
-  ImGui::PopStyleColor();
-  ImGui::PopStyleVar();
+
 }
 
 void ui_manager_t::render_mtable_big(){

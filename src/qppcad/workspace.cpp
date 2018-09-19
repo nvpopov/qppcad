@@ -6,15 +6,15 @@
 
 using namespace qpp;
 
-int16_t workspace_t::get_selected_item(){
+optional<int16_t> workspace_t::get_selected_item(){
   for (uint16_t i = 0; i < m_ws_items.size(); i++)
-    if (m_ws_items[i]->m_selected) return i;
-  return -1;
+    if (m_ws_items[i]->m_selected) return optional<int16_t>(i);
+  return nullopt;
 }
 
 ws_item_t *workspace_t::get_selected(){
-  int16_t sel_idx = get_selected_item();
-  if (sel_idx != -1) return m_ws_items[sel_idx].get();
+  optional<int16_t> sel_idx = get_selected_item();
+  if (sel_idx) return m_ws_items[*sel_idx].get();
   else return nullptr;
 }
 
@@ -148,6 +148,9 @@ void workspace_t::render(){
 }
 
 void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
+
+  if (ImGui::GetIO().WantCaptureMouse) return;
+
   m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
 
 
@@ -228,7 +231,7 @@ workspace_manager_t::workspace_manager_t(app_state_t *_astate){
 }
 
 shared_ptr<workspace_t> workspace_manager_t::get_current(){
-  if (m_current_workspace_id >= m_ws.size())
+  if (m_current_workspace_id > m_ws.size())
     return nullptr;
   return m_ws[m_current_workspace_id];
 }

@@ -41,7 +41,7 @@ namespace qpp{
       unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs;
       unordered_set<uint16_t>                                       m_atom_selection;
       unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_selection;
-
+      set<uint16_t>  m_atom_type_to_hide;
       vector3<float> m_gizmo_barycenter;
 
       ws_atoms_list_t();
@@ -72,8 +72,13 @@ namespace qpp{
                        const uint16_t at_num2, const index &at_index2);
 
       void render_ui() override;
+      void td_context_menu_edit_item() override;
+      void td_context_menu_edit_content() override;
+
       bool mouse_click(ray_t<float> *click_ray) override;
 
+      void select_atoms(bool all);
+      void invert_selected_atoms();
 
       bool support_translation() override;
       bool support_rotation() override;

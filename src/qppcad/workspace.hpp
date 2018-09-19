@@ -77,8 +77,10 @@ namespace qpp{
       m_gizmo = unique_ptr<gizmo_t>(new gizmo_t());
     }
 
-    int16_t get_selected_item();
+    optional<int16_t>  get_selected_item();
     ws_item_t *get_selected();
+
+
     void set_selected_item(const int16_t sel_idx);
     void unselect_all();
     void toggle_edit_mode();
