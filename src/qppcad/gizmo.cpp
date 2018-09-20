@@ -22,6 +22,12 @@ gizmo_t::gizmo_t(){
 void gizmo_t::render(){
   app_state_t* astate = &(c_app::get_state());
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
+
+  //prevent showing gizmo when no content selected
+  if (attached_item)
+      if (attached_item->get_amount_of_selected_content() == 0 &&
+          cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) return;
+
   astate->dp->begin_render_general_mesh();
 
   vector3<float> _v_scale = vector3<float>::Ones()*gizmo_box_size*0.25;
@@ -133,7 +139,9 @@ void gizmo_t::update_gizmo(float delta_time){
 
   app_state_t *astate = &(c_app::get_state());
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
-
+//  if (attached_item) {
+//      if (attached_item->get_amount_of_selected_content() == 0) return;
+//    }
   //update gizmo position according to current workspace edit type value
   //if we are in node edit mode - snap to aabb min
   if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM)

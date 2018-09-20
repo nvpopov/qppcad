@@ -33,7 +33,7 @@ namespace qpp{
       bool m_show_bonds;
       bool m_show_atoms;
       bool m_draw_line_in_dist_measurement;
-
+      bool m_bonding_table_show_disabled_record{true};
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
       unique_ptr<bonding_table<float> >                             m_bt;
       unique_ptr<neighbours_table<float> >                          m_nt;
@@ -43,7 +43,7 @@ namespace qpp{
       unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_selection;
       set<uint16_t>  m_atom_type_to_hide;
       vector3<float> m_gizmo_barycenter;
-
+      vector3<float> m_new_atom_pos;
       ws_atoms_list_t();
 
       void vote_for_view_vectors(vector3<float> &vOutLookPos,
@@ -79,6 +79,9 @@ namespace qpp{
 
       void select_atoms(bool all);
       void invert_selected_atoms();
+      void insert_atom(const int atom_type, const vector3<float> &pos);
+      void insert_atom(const string atom_name, const vector3<float> &pos);
+      void delete_selected_atoms();
 
       bool support_translation() override;
       bool support_rotation() override;

@@ -72,11 +72,11 @@ void ws_atoms_list_t::render(){
           vector3<float> cell_clr = clr_black;
           if (m_selected){
               if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)  cell_clr = clr_red;
-              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) cell_clr =clr_lime;
+              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) cell_clr = clr_maroon;
             }
 
           app_state_c->dp->render_cell_3d(
-                cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos, 1.1f);
+                cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos, 2.1f);
           astate->dp->end_render_line();
         }
 
@@ -270,33 +270,51 @@ void ws_atoms_list_t::render_ui(){
   if (ImGui::CollapsingHeader("Bonding table")){
       ImGui::Spacing();
       bool rebuild_ngb{false};
-      for (auto &elem : m_tws_tr->m_bonding_table.m_dist){
-          if (ImGui::TreeNode(fmt::format("[{}] - [{}]",
-                                          m_geom->atom_of_type(elem.first.m_a),
-                                          m_geom->atom_of_type(elem.first.m_b)).c_str())){
-              ImGui::PushItemWidth(60);
-              if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled))) rebuild_ngb = true;
-              if (elem.second.m_enabled){
-                  ImGui::PushItemWidth(160);
-                  if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
-                      m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
-                                                                     elem.first.m_b);
-                      rebuild_ngb = true;
-                    }
-                }
-              ImGui::TreePop();
-            }
-
-          ImGui::Separator();
-          ImGui::Spacing();
-
+      ImGui::Separator();
+      ImGui::Spacing();
+      ImGui::Checkbox("Show disabled", &m_bonding_table_show_disabled_record);
+      ImGui::SameLine();
+      if (ImGui::Button("Rebond new")){
+          m_tws_tr->m_bonding_table.init_default(m_geom.get());
+          rebuild_ngb = true;
         }
+      ImGui::Spacing();
+      ImGui::Separator();
+      for (auto &elem : m_tws_tr->m_bonding_table.m_dist)
+        if (m_bonding_table_show_disabled_record || elem.second.m_enabled){
+            if (ImGui::TreeNode(fmt::format("[{}] - [{}]",
+                                            m_geom->atom_of_type(elem.first.m_a),
+                                            m_geom->atom_of_type(elem.first.m_b)).c_str())){
+                ImGui::PushItemWidth(60);
+                if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled))) rebuild_ngb = true;
+                if (elem.second.m_enabled){
+                    ImGui::PushItemWidth(160);
+                    if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
+                        m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
+                                                                       elem.first.m_b);
+                        rebuild_ngb = true;
+                      }
+                  }
+                ImGui::TreePop();
+              }
+            ImGui::Spacing();
+          }
       if (rebuild_ngb) m_tws_tr->clr_ngb_and_rebuild();
-
     }
 
   if (ImGui::CollapsingHeader("Modify")){
 
+    }
+
+  if (ImGui::CollapsingHeader("Export")){
+      if (ImGui::Button("VASP POSCAR")){
+
+        }
+
+      ImGui::SameLine();
+      if (ImGui::Button("XYZ")){
+
+        }
     }
 
   //  if (ImGui::CollapsingHeader("Measurements")){
@@ -347,7 +365,63 @@ void ws_atoms_list_t::td_context_menu_edit_content(){
           ImGui::EndMenu();
         }
 
+      if (m_atom_idx_selection.size() == 2){
+          if (ImGui::BeginMenu("Append new atom between")){
+
+              auto it1 = m_atom_idx_selection.begin();
+              auto it2 = it1++;
+              vector3<float> r_btw{0.0, 0.0, 0.0};
+
+              if (it1 != m_atom_idx_selection.end() && it2 != m_atom_idx_selection.end())
+                r_btw = (m_geom->pos(it1->m_atm, it1->m_idx) +
+                         m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
+
+              for (auto at_type = 0; at_type < m_geom->n_types(); at_type++)
+                if (ImGui::MenuItem(m_geom->atom_of_type(at_type).c_str())) {
+                    insert_atom(at_type, r_btw);
+                  }
+
+              static string custom_atom_name;
+              ImGui::PushItemWidth(100);
+              ImGui::PushID(1);
+              ImGui::InputText("", &custom_atom_name);
+              ImGui::PopID();
+              ImGui::SameLine();
+              if (ImGui::Button("Add custom")){
+                  m_geom->add(custom_atom_name, r_btw);
+                }
+              ImGui::EndMenu();
+            }
+
+          if (m_atom_selection.size() > 0)
+            if (ImGui::MenuItem(fmt::format("Delete selected atoms({})",
+                                            m_atom_selection.size()).c_str())){
+                delete_selected_atoms();
+              }
+
+          if (ImGui::BeginMenu("Two atoms manipulation")){
+              if (ImGui::MenuItem("Bond Lerp Both")){
+
+                }
+              ImGui::End();
+            }
+        }
+
       ImGui::Separator();
+
+      if (m_atom_idx_selection.size() == 0){
+          if (ImGui::BeginMenu("Add new atom")){
+              static string custom_atom_name;
+              ImGui::BulletText("Add new atom in local atom list frame");
+              ImGui::Separator();
+              ImGui::InputFloat3("Position", m_new_atom_pos.data());
+              ImGui::InputText("New atom name", &custom_atom_name);
+              ImGui::SameLine();
+              if (ImGui::Button("Add"))
+                if (custom_atom_name != "") insert_atom(custom_atom_name, m_new_atom_pos);
+              ImGui::EndMenu();
+            }
+        }
     }
 }
 
@@ -399,8 +473,7 @@ void ws_atoms_list_t::select_atoms(bool all){
       m_atom_idx_selection.clear();
       for (auto i = 0; i < m_geom->nat(); i++){
           m_atom_selection.insert(i);
-          for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
-               !idx.end(); idx++ ) m_atom_idx_selection.insert(atom_index_set_key(i, idx));
+          m_atom_idx_selection.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
         }
 
     } else {
@@ -423,11 +496,38 @@ void ws_atoms_list_t::invert_selected_atoms(){
             }
         } else {
           m_atom_selection.insert(i);
-          for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
-               !idx.end(); idx++ ) {
-               m_atom_idx_selection.insert(atom_index_set_key(i, idx));
-            }
+          m_atom_idx_selection.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
         }
+    }
+}
+
+void ws_atoms_list_t::insert_atom(const int atom_type, const vector3<float> &pos){
+  m_geom->add(m_geom->atom_of_type(atom_type), pos);
+}
+
+void ws_atoms_list_t::insert_atom(const string atom_name, const vector3<float> &pos){
+  m_geom->add(atom_name, pos);
+}
+
+void ws_atoms_list_t::delete_selected_atoms(){
+  vector<int> all_atom_num;
+  all_atom_num.reserve(m_atom_idx_selection.size());
+
+  //get unique selected atoms
+  for(auto &elem : m_atom_idx_selection) all_atom_num.push_back(elem.m_atm);
+  auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
+  all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
+
+  //sort by ancending order
+  std::sort(all_atom_num.begin(), all_atom_num.end());
+
+  m_atom_idx_selection.clear();
+  m_atom_selection.clear();
+
+  for (uint16_t delta = 0; delta < all_atom_num.size(); delta++) {
+      if (delta == 0 && all_atom_num.size() > 1) m_tws_tr->freeze();
+      if ((delta == all_atom_num.size() - 1) && all_atom_num.size() > 1) m_tws_tr->unfreeze();
+      m_geom->erase(all_atom_num[delta] - delta);
     }
 }
 

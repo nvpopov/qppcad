@@ -5,6 +5,9 @@
 #include <geom/lace3d.hpp>
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <imgui_stl.h>
 
 namespace qpp{
 
