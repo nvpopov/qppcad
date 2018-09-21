@@ -3,6 +3,7 @@
 #include <qppcad/uniq_id.hpp>
 
 using namespace qpp;
+using namespace qpp::cad;
 
 console_widget_t::console_widget_t(app_state_t *astate){
   m_active = false;

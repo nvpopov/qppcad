@@ -6,7 +6,7 @@
 #include <Eigen/Eigen>
 #include <geom/lace3d.hpp>
 
-namespace qpp {
+namespace qpp::cad {
 
   class draw_pipeline_t{
   public:

@@ -3,7 +3,7 @@
 #include <geom/lace3d.hpp>
 #include <qppcad/gl_math.hpp>
 
-namespace qpp{
+namespace qpp::cad{
   enum app_camera_proj_type {
     CAMERA_PROJ_ORTHO,
     CAMERA_PROJ_PERSP

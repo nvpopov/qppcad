@@ -8,7 +8,7 @@
 #include <qppcad/gl_math.hpp>
 
 
-namespace qpp{
+namespace qpp::cad{
   class c_app{
 
   private:
@@ -49,7 +49,7 @@ namespace qpp{
     static void run();
     static app_state_t & get_state(){
       if (c_app::app_state == nullptr)
-        c_app::app_state = new qpp::app_state_t();
+        c_app::app_state = new qpp::cad::app_state_t();
       return *app_state;
     }
   };

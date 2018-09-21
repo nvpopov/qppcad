@@ -25,7 +25,7 @@
 #include <qppcad/shader_generators.hpp>
 #include <qppcad/keyboard_event.hpp>
 
-namespace qpp {
+namespace qpp::cad {
 
   ///
   /// \brief The app_task_type enum

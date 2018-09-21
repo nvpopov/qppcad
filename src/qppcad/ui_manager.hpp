@@ -12,7 +12,7 @@
 #include <qppcad/imgui_addons.hpp>
 #include <qppcad/console.hpp>
 
-namespace qpp{
+namespace qpp::cad{
   class app_state_t;
 
   class ui_manager_t{

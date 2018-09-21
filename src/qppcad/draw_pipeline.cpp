@@ -2,6 +2,7 @@
 #include <qppcad/app.hpp>
 
 using namespace qpp;
+using namespace qpp::cad;
 
 draw_pipeline_t::draw_pipeline_t(){
 

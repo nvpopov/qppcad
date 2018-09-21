@@ -9,7 +9,7 @@
 #include <imgui_internal.h>
 #include <imgui_stl.h>
 
-namespace qpp{
+namespace qpp::cad{
 
   class workspace_t;
   class app_state_t;

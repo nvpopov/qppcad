@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <geom/lace3d.hpp>
 
-namespace qpp{
+namespace qpp::cad{
 
   ///
   /// \brief The mesh_rt enum

@@ -7,7 +7,7 @@
 #include <qppcad/ws_item.hpp>
 #include <data/color.hpp>
 
-namespace qpp {
+namespace qpp::cad {
 
   const vector3<float> gizmo_axis[3] = {
     vector3<float>(1, 0, 0),

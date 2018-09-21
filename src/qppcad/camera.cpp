@@ -2,6 +2,7 @@
 #include <qppcad/app.hpp>
 
 using namespace qpp;
+using namespace qpp::cad;
 
 camera_t::camera_t(){
   m_fov = 50.0;

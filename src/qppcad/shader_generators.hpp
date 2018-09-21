@@ -4,7 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/shader_program.hpp>
 
-namespace qpp {
+namespace qpp::cad {
   class shader_generators {
     public:
       /// Default shader testing program - Gourand shading
@@ -17,7 +17,8 @@ namespace qpp {
     #include "shaders/screen_space_lighting.fs"
             ;
 
-        qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("default_program"), vs, fs);
+        qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
+                                           std::string("default_program"), vs, fs);
         sp->u_on(sp_u_name::m_model_view_proj);
         sp->u_on(sp_u_name::m_model_view);
         sp->u_on(sp_u_name::m_model_view_inv_tr);
@@ -41,7 +42,8 @@ namespace qpp {
     #include "shaders/unit_line.fs"
             ;
 
-        qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("unit_line_program"), vs, fs);
+        qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
+                                           std::string("unit_line_program"), vs, fs);
         sp->u_on(sp_u_name::m_model_view_proj);
         sp->u_on(sp_u_name::m_view);
         sp->u_on(sp_u_name::m_view_inv_tr);
@@ -64,7 +66,8 @@ namespace qpp {
     #include "shaders/line_mesh.fs"
             ;
 
-        qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("grid_program"), vs, fs);
+        qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
+                                           std::string("grid_program"), vs, fs);
         sp->u_on(sp_u_name::m_model_view_proj);
         sp->u_on(sp_u_name::m_model_view);
         //  sp->u_on(sp_u_name::vLightPos);
@@ -88,7 +91,8 @@ namespace qpp {
     #include "shaders/mv_screen_space_lighting.fs"
             ;
 
-        qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("mv_ssl"), vs, fs);
+        qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
+                                           std::string("mv_ssl"), vs, fs);
         sp->u_on(sp_u_name::m_model_view_proj);
         sp->u_on(sp_u_name::m_model_view);
         sp->u_on(sp_u_name::m_view_proj);
@@ -106,7 +110,8 @@ namespace qpp {
         std::string fs =
     #include "shaders/fb_quad.fs"
             ;
-        qpp::shader_program_t *sp = new qpp::shader_program_t(std::string("fbo_quad"), vs, fs);
+        qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
+                                           std::string("fbo_quad"), vs, fs);
         sp->u_on(sp_u_name::texture_0);
         return sp;
       }

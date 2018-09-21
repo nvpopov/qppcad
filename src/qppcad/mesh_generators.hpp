@@ -8,7 +8,7 @@
 #include <qppcad/mesh.hpp>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
-namespace qpp {
+namespace qpp::cad {
   struct mesh_generators{
       static mesh_t *quad(){
         mesh_t* _mesh = new mesh_t();

@@ -1,7 +1,7 @@
 #include <qppcad/uniq_id.hpp>
 #include <qppcad/app.hpp>
 
-namespace qpp{
+namespace qpp::cad{
 
   static uint32_t uniq_id_storage = 0;
 

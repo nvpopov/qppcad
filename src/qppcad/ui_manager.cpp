@@ -3,6 +3,7 @@
 #include <qppcad/uniq_id.hpp>
 
 using namespace qpp;
+using namespace qpp::cad;
 
 ui_manager_t::ui_manager_t(app_state_t *init_app_state){
   // app_state_t *astate = &(c_app::get_state());
@@ -121,7 +122,7 @@ void ui_manager_t::render_main_menu(){
           ImGui::MenuItem("Save as");
 
           if (ImGui::MenuItem("Exit")){
-              qpp::c_app::log("Menu -> File -> Exit clicked");
+              qpp::cad::c_app::log("Menu -> File -> Exit clicked");
               bShowExitDialog = true;
             }
 

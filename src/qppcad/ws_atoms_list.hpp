@@ -15,7 +15,7 @@
 #include <qppcad/file_formats.hpp>
 
 
-namespace qpp{
+namespace qpp::cad {
 
   ///
   /// \brief The ws_atom_list_t class
@@ -41,7 +41,7 @@ namespace qpp{
       unique_ptr<neighbours_table<float> >                          m_nt;
       unique_ptr<tws_tree_t<float, periodic_cell<float> > >         m_tws_tr;
       unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs;
-      set<uint16_t>                                       m_atom_selection;
+      set<uint16_t>                                                 m_atom_selection;
       unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_selection;
       vector<vector<vector3<float> > > m_frames;
       set<uint16_t>  m_atom_type_to_hide;

@@ -16,7 +16,7 @@
 #include <imgui_internal.h>
 #include <imgui_stl.h>
 
-namespace qpp{
+namespace qpp::cad{
 
   class workspace_t;
   class ws_item_t;

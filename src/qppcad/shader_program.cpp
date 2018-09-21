@@ -1,11 +1,11 @@
 #include <qppcad/shader_program.hpp>
 #include <qppcad/app.hpp>
 
-qpp::shader_program_t::shader_program_t(const std::string _program_name,
+qpp::cad::shader_program_t::shader_program_t(const std::string _program_name,
                                         const std::string &_vs_text,
                                         const std::string &_fs_text){
 
-  unf_rec.resize(qpp::map_u2s.size());
+  unf_rec.resize(qpp::cad::map_u2s.size());
   std::fill(unf_rec.begin(), unf_rec.end(), uniform_record({false, 0}));
 
   program_name = _program_name;
@@ -30,7 +30,7 @@ qpp::shader_program_t::shader_program_t(const std::string _program_name,
   glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &vs_proc_res);
   glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &fs_proc_res);
 
-  c_app::log(fmt::format("Program[{}] vs_sh_stat = {}, fs_sh_stat = {}",
+  qpp::cad::c_app::log(fmt::format("Program[{}] vs_sh_stat = {}, fs_sh_stat = {}",
                          program_name, vs_proc_res, fs_proc_res));
   glAttachShader(program_id, vertexShaderID);
   glAttachShader(program_id, fragmentShaderID);
@@ -42,7 +42,7 @@ qpp::shader_program_t::shader_program_t(const std::string _program_name,
   glGetProgramiv(program_id, GL_LINK_STATUS, &proc_res);
   glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-  c_app::log("Shader program["+program_name+"] compilation status:" +
+  qpp::cad::c_app::log("Shader program["+program_name+"] compilation status:" +
              std::to_string(proc_res));
 
   if (infoLogLength > 0){
@@ -58,31 +58,31 @@ qpp::shader_program_t::shader_program_t(const std::string _program_name,
 
 }
 
-void qpp::shader_program_t::u_on(qpp::sp_u_name _val){
+void qpp::cad::shader_program_t::u_on(qpp::cad::sp_u_name _val){
   //std::cout<<_val << " "<< unfRec.size() << std::endl;
   unf_rec[_val].enabled = true;
   unf_rec[_val].h_prog = glGetUniformLocation(program_id, map_u2s[_val].c_str());
 }
 
-void qpp::shader_program_t::set_u(qpp::sp_u_name _ut, GLfloat *_val){
+void qpp::cad::shader_program_t::set_u(qpp::cad::sp_u_name _ut, GLfloat *_val){
   if (unf_rec[_ut].enabled){
-      qpp::sp_u_type _utype = qpp::map_u2at[_ut];
+      qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[_ut];
       GLint uloc = unf_rec[_ut].h_prog;
       switch(_utype){
 
-        case qpp::sp_u_type::a_v3f :
+        case qpp::cad::sp_u_type::a_v3f :
           glUniform3fv(uloc, 1, _val);
           break;
 
-        case qpp::sp_u_type::a_m4f :
+        case qpp::cad::sp_u_type::a_m4f :
           glUniformMatrix4fv(uloc, 1, GL_FALSE, _val);
           break;
 
-        case qpp::sp_u_type::a_m3f :
+        case qpp::cad::sp_u_type::a_m3f :
           glUniformMatrix3fv(uloc, 1, GL_FALSE, _val);
           break;
 
-        case qpp::sp_u_type::a_sf :
+        case qpp::cad::sp_u_type::a_sf :
           glUniform1fv(uloc, 1, _val);
           break;
 
@@ -96,7 +96,7 @@ void qpp::shader_program_t::set_u(qpp::sp_u_name _ut, GLfloat *_val){
     }
 }
 
-void qpp::shader_program_t::begin_shader_program(){
+void qpp::cad::shader_program_t::begin_shader_program(){
 
   glUseProgram(program_id);
   set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
@@ -112,7 +112,7 @@ void qpp::shader_program_t::begin_shader_program(){
         int(c_app::get_state().viewport_size_c(1)));
 }
 
-void qpp::shader_program_t::end_shader_program(){
+void qpp::cad::shader_program_t::end_shader_program(){
   glUseProgram(0);
 }
 

@@ -1,8 +1,8 @@
 #include <qppcad/mesh.hpp>
 #include <qppcad/app.hpp>
 
-
 using namespace qpp;
+using namespace qpp::cad;
 
 mesh_t::mesh_t(){
   mesh_rt = GL_TRIANGLES;

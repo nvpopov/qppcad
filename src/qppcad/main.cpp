@@ -2,5 +2,5 @@
 #include <qppcad/app.hpp>
 
 int main(){
-  qpp::c_app::run();
+  qpp::cad::c_app::run();
 }

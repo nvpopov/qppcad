@@ -5,6 +5,7 @@
 #include <mathf/math.hpp>
 
 using namespace qpp;
+using namespace qpp::cad;
 
 optional<int16_t> workspace_t::get_selected_item(){
   for (uint16_t i = 0; i < m_ws_items.size(); i++)

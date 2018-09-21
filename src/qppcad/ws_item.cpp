@@ -4,6 +4,7 @@
 #include <qppcad/workspace.hpp>
 
 using namespace qpp;
+using namespace qpp::cad;
 
 ws_item_t::ws_item_t(){
   m_pos                = vector3<float>(0.0f, 0.0f, 0.0f);

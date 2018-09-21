@@ -2,6 +2,7 @@
 #include <qppcad/app.hpp>
 
 using namespace qpp;
+using namespace qpp::cad;
 
 gizmo_t::gizmo_t(){
 
