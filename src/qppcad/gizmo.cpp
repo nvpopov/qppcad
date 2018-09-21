@@ -30,7 +30,7 @@ void gizmo_t::render(){
 
   astate->dp->begin_render_general_mesh();
 
-  vector3<float> _v_scale = vector3<float>::Ones()*gizmo_box_size*0.25;
+  vector3<float> _v_scale = vector3<float>::Ones()*gizmo_box_size*0.15;
   vector3<float> _v_one = vector3<float>::Ones();
 
   if ( !interact_at_the_moment &&
@@ -42,21 +42,21 @@ void gizmo_t::render(){
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[0] * gizmo_shift_magnitude,
-          _v_one * 0.5f,
+          _v_one * 0.35f,
           vector3<float>( -pi / 2, 0.0f, 0.0f ),
           gizmo_color[0],
           astate->unit_cone);
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[1] * gizmo_shift_magnitude,
-          _v_one * 0.5f,
+          _v_one * 0.35f,
           vector3<float>( 0.0f, 0.0f, 0.0f ),
           gizmo_color[1],
           astate->unit_cone);
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[2] * gizmo_shift_magnitude,
-          _v_one * 0.5f,
+          _v_one * 0.35f,
           vector3<float>( 0.0f, 0.0f,  pi / 2),
           gizmo_color[2],
           astate->unit_cone);

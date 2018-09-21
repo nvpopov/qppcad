@@ -34,6 +34,8 @@ namespace qpp{
       bool m_show_atoms;
       bool m_draw_line_in_dist_measurement;
       bool m_bonding_table_show_disabled_record{true};
+      bool m_has_animations;
+
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
       unique_ptr<bonding_table<float> >                             m_bt;
       unique_ptr<neighbours_table<float> >                          m_nt;
@@ -41,6 +43,7 @@ namespace qpp{
       unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs;
       set<uint16_t>                                       m_atom_selection;
       unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_selection;
+      vector<vector<vector3<float> > > m_frames;
       set<uint16_t>  m_atom_type_to_hide;
       vector3<float> m_gizmo_barycenter;
       vector3<float> m_new_atom_pos;

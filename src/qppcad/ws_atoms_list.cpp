@@ -393,19 +393,32 @@ void ws_atoms_list_t::td_context_menu_edit_content(){
               ImGui::EndMenu();
             }
 
-          if (m_atom_selection.size() > 0)
-            if (ImGui::MenuItem(fmt::format("Delete selected atoms({})",
-                                            m_atom_selection.size()).c_str())){
-                delete_selected_atoms();
-              }
-
           if (ImGui::BeginMenu("Two atoms manipulation")){
-              if (ImGui::MenuItem("Bond Lerp Both")){
+              auto it1 = m_atom_idx_selection.begin();
+              auto it2 = it1++;
+              float dist_btw = (m_geom->pos(it1->m_atm, it1->m_idx) -
+                                m_geom->pos(it2->m_atm, it2->m_idx)).norm();
 
+
+              if (ImGui::SliderFloat("Distance between two atoms", &dist_btw, 0.1f, 5.0f)){
+
+                  vector3<float> r_btw = (m_geom->pos(it1->m_atm, it1->m_idx) +
+                           m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
+                  vector3<float> dir_f = (m_geom->pos(it1->m_atm, it1->m_idx) - r_btw).normalized();
+                  vector3<float> dir_s = (m_geom->pos(it2->m_atm, it2->m_idx) - r_btw).normalized();
+                  m_geom->change_pos(it1->m_atm, r_btw + dir_f * dist_btw * 0.5f);
+                  m_geom->change_pos(it2->m_atm, r_btw + dir_s * dist_btw * 0.5f);
                 }
-              ImGui::End();
+
+              ImGui::EndMenu();
             }
         }
+
+      if (m_atom_selection.size() > 0)
+        if (ImGui::MenuItem(fmt::format("Delete selected atoms({})",
+                                        m_atom_selection.size()).c_str())){
+            delete_selected_atoms();
+          }
 
       ImGui::Separator();
 
