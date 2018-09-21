@@ -156,7 +156,7 @@ void ws_atoms_list_t::render_atom(const uint16_t at_num, const index &at_index){
   vector3<float> color(0.0, 0.0, 1.0);
 
   if(ap_idx){
-      dr_rad = ptable::get_inst()->arecs[*ap_idx-1].aRadius * app_state_c->atom_radius_scale_factor;
+      dr_rad = ptable::get_inst()->arecs[*ap_idx-1].aRadius * m_atom_scale_factor;
       color = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;
     }
 
@@ -177,7 +177,7 @@ void ws_atoms_list_t::render_bond(const uint16_t atNum1, const index &atIndex1,
   if(ap_idx){bcolor = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
   app_state_c->dp->render_bond(bcolor, m_geom->pos(atNum1, atIndex1) + m_pos,
                                m_geom->pos(atNum2, atIndex2) + m_pos,
-                               app_state_c->bond_radius_scale_factor);
+                               m_bond_scale_factor);
 }
 
 void ws_atoms_list_t::render_ui(){
@@ -203,7 +203,7 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
       ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - m_pos;
       local_geom_ray.dir = click_ray->dir;
-      m_tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, res);
+      m_tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, res, m_atom_scale_factor);
       //std::cout << "res_size = " << res.size() << std::endl;
       std::sort(res.begin(), res.end(), tws_query_data_sort_by_dist<float>);
       recalc_gizmo_barycenter();
@@ -276,6 +276,14 @@ void ws_atoms_list_t::insert_atom(const int atom_type, const vector3<float> &pos
 
 void ws_atoms_list_t::insert_atom(const string atom_name, const vector3<float> &pos){
   m_geom->add(atom_name, pos);
+}
+
+void ws_atoms_list_t::update_atom(const int at_id, const vector3<float> &pos){
+  m_geom->change_pos(at_id, pos);
+}
+
+void ws_atoms_list_t::update_atom(const int at_id, const string &at_name){
+  m_geom->change(at_id, at_name, m_geom->pos(at_id));
 }
 
 void ws_atoms_list_t::delete_selected_atoms(){

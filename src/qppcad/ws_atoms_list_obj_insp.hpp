@@ -71,7 +71,7 @@ namespace qpp::cad {
                 ImGui::PopID();
 
                 if (_l_type_to_hide) al->m_atom_type_to_hide.insert(i);
-                  else {
+                else {
                     auto it2 = al->m_atom_type_to_hide.find(i);
                     if (it2 != al->m_atom_type_to_hide.end()) al->m_atom_type_to_hide.erase(it2);
                   }
@@ -81,8 +81,13 @@ namespace qpp::cad {
           }
 
         if (ImGui::CollapsingHeader("Display and styling")){
+
+            ImGui::SliderFloat("Atom size scale", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1);
+            ImGui::SliderFloat("Bond size scale", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1);
+
             ImGui::Checkbox("Show atoms", &al->m_show_atoms);
             ImGui::Checkbox("Show bonds", &al->m_show_bonds);
+
             if (al->m_geom->DIM > 0) {
                 ImGui::Checkbox("Draw periodic cell", &al->m_draw_cell);
                 ImGui::Checkbox("Show imaginary atoms", &al->m_show_imaginary_atoms);
@@ -115,7 +120,7 @@ namespace qpp::cad {
                           ImGui::PushItemWidth(160);
                           if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
                               al->m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
-                                                                             elem.first.m_b);
+                                                                                 elem.first.m_b);
                               rebuild_ngb = true;
                             }
                         }
@@ -127,7 +132,35 @@ namespace qpp::cad {
           }
 
         if (ImGui::CollapsingHeader("Modify")){
+            if (al->m_atom_idx_selection.size()!=1){
+                ImGui::BulletText("Select one atom to edit it");
+              } else {
+                static string custom_atom_name =
+                    al->m_geom->atom(al->m_atom_idx_selection.begin()->m_atm);
+                ImGui::Separator();
+                vector3<float> pos = al->m_geom->pos(al->m_atom_idx_selection.begin()->m_atm);
+                if (ImGui::InputFloat3("Position", pos.data())){
+                    al->update_atom(al->m_atom_idx_selection.begin()->m_atm, pos);
+                  }
+                ImGui::PushItemWidth(70);
+                ImGui::InputText("Atom name", &custom_atom_name);
+                ImGui::SameLine();
+                if (ImGui::Button("Edit", ImVec2(100, 0)))
+                  if (custom_atom_name != "") al->update_atom(
+                        al->m_atom_idx_selection.begin()->m_atm, custom_atom_name);
+              }
+          }
 
+        if (ImGui::CollapsingHeader("Add atoms")){
+            static string custom_atom_name;
+            ImGui::Separator();
+            ImGui::InputFloat3("Position", al->m_new_atom_pos.data());
+            ImGui::PushItemWidth(70);
+            ImGui::InputText("Atom name", &custom_atom_name);
+            ImGui::SameLine();
+            if (ImGui::Button("Add", ImVec2(100, 0)))
+              if (custom_atom_name != "") al->insert_atom(custom_atom_name,
+                                                          al->m_new_atom_pos);
           }
 
         if (ImGui::CollapsingHeader("Export")){

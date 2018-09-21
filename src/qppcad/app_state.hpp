@@ -81,9 +81,6 @@ namespace qpp::cad {
 
       int FPS;
 
-      float atom_radius_scale_factor;
-      float bond_radius_scale_factor;
-
       vector2<float> viewport_xy;
       vector2<float> viewport_size;
       vector2<float> viewport_xy_c;
@@ -204,10 +201,6 @@ namespace qpp::cad {
 
         light_pos    = vector3<float>(0, 1.0f, 1.0f);
         light_pos_tr = vector3<float>(0, 0, 0);
-
-
-        atom_radius_scale_factor = 0.3f;
-        bond_radius_scale_factor = 0.09f;
 
         camera = nullptr;
 

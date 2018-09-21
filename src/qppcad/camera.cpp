@@ -8,8 +8,8 @@ camera_t::camera_t(){
   m_fov = 50.0;
   m_znear_persp = 0.1f;
   m_zfar_persp  = 800;
-  m_znear_ortho = -100;
-  m_zfar_ortho  = 100;
+  m_znear_ortho = -1000;
+  m_zfar_ortho  = 1000;
 
   m_mouse_whell_camera_step = 2.0f;
   m_mouse_zoom_min_distance = 4.0f;

@@ -103,9 +103,9 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6,6));
       if (ImGui::BeginMenu("File")){
-          ImGui::MenuItem("New");
-          ImGui::MenuItem("Open");
-          if (ImGui::BeginMenu("Import")){
+          ImGui::MenuItem("New workspace");
+          ImGui::MenuItem("Open workspace");
+          if (ImGui::BeginMenu("Import as new workspace")){
 
               if (ImGui::MenuItem("Standart XYZ(0D)")){
                   astate->ws_manager->
@@ -118,8 +118,8 @@ void ui_manager_t::render_main_menu(){
                 }
               ImGui::EndMenu();
             }
-          ImGui::MenuItem("Save");
-          ImGui::MenuItem("Save as");
+          ImGui::MenuItem("Save workspace");
+          ImGui::MenuItem("Save workspace as");
 
           if (ImGui::MenuItem("Exit")){
               qpp::cad::c_app::log("Menu -> File -> Exit clicked");
@@ -168,12 +168,12 @@ void ui_manager_t::render_main_menu(){
 
           ImGui::Separator();
 
-          ImGui::SliderFloat("Atom size scale",
-                             &(c_app::get_state().atom_radius_scale_factor),
-                             0.25f, 2.0f, "%.4f", 1);
-          ImGui::SliderFloat("Bond size scale",
-                             &(c_app::get_state().bond_radius_scale_factor),
-                             0.02f, 2.0f, "%.4f", 1);
+//          ImGui::SliderFloat("Atom size scale",
+//                             &(c_app::get_state().atom_radius_scale_factor),
+//                             0.25f, 2.0f, "%.4f", 1);
+//          ImGui::SliderFloat("Bond size scale",
+//                             &(c_app::get_state().bond_radius_scale_factor),
+//                             0.02f, 2.0f, "%.4f", 1);
 
           ImGui::EndMenu();
         }

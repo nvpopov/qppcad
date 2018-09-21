@@ -36,6 +36,9 @@ namespace qpp::cad {
       bool m_bonding_table_show_disabled_record{true};
       bool m_has_animations;
 
+      float m_atom_scale_factor{0.3f};
+      float m_bond_scale_factor{0.09f};
+
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
       unique_ptr<bonding_table<float> >                             m_bt;
       unique_ptr<neighbours_table<float> >                          m_nt;
@@ -51,26 +54,22 @@ namespace qpp::cad {
 
       void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                  vector3<float> &vOutLookAt) override ;
-      ///
+
       /// \brief geometry_changed
-      ///
       void geometry_changed();
       void render() override;
 
-      ///
+
       /// \brief render_atom
       /// \param atNum
       /// \param atIndex
-      ///
       void render_atom(const uint16_t at_num, const index &at_index);
 
-      ///
       /// \brief render_bond
       /// \param atNum1
       /// \param atIndex1
       /// \param atNum2
       /// \param atIndex2
-      ///
       void render_bond(const uint16_t at_num1, const index &at_index1,
                        const uint16_t at_num2, const index &at_index2);
 
@@ -84,6 +83,8 @@ namespace qpp::cad {
       void invert_selected_atoms();
       void insert_atom(const int atom_type, const vector3<float> &pos);
       void insert_atom(const string atom_name, const vector3<float> &pos);
+      void update_atom(const int at_id, const vector3<float> &pos);
+      void update_atom(const int at_id, const string &at_name);
       void delete_selected_atoms();
 
       bool support_translation() override;
@@ -92,31 +93,28 @@ namespace qpp::cad {
       bool support_content_editing() override;
       bool support_selection() override;
       bool support_rendering_bounding_box() override;
+
       std::string compose_item_name() override;
       void update(float delta_time) override;
       float get_bb_prescaller() override;
 
       uint32_t get_amount_of_selected_content() override;
 
-      ///
+
       void on_begin_content_gizmo_translate() override;
       void apply_intermediate_translate_content(const vector3<float> &new_pos) override;
       void on_end_content_gizmo_translate() override;
       void recalc_gizmo_barycenter();
       const vector3<float> get_gizmo_content_barycenter() override;
 
-      ///
       /// \brief shift
       /// \param vShift
-      ///
       void shift(const vector3<float> shift);
 
-      ///
       /// \brief load_from_file
       /// \param eFileFormat
       /// \param sFileName
       /// \param bAutoCenter
-      ///
       void load_from_file(qc_file_format file_format, std::string file_name,
                           bool auto_center = false);
 
