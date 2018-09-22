@@ -21,7 +21,7 @@ ws_item_t *workspace_t::get_selected(){
 
 void workspace_t::set_selected_item(const int16_t sel_idx){
   unselect_all();
-  if (sel_idx >= 0 && sel_idx < m_ws_items.size() && m_ws_items.size() > 0){
+  if (sel_idx >= 0 && sel_idx < m_ws_items.size() && !m_ws_items.empty()){
       m_ws_items[sel_idx]->m_selected = true;
       m_gizmo->attached_item = m_ws_items[sel_idx].get();;
     }
@@ -238,7 +238,7 @@ shared_ptr<workspace_t> workspace_manager_t::get_current(){
 }
 
 optional<uint8_t> workspace_manager_t::get_current_id(){
-  if (m_ws.size() != 0) return optional<uint8_t>(m_current_workspace_id);
+  if (!m_ws.empty()) return optional<uint8_t>(m_current_workspace_id);
   return nullopt;
 }
 

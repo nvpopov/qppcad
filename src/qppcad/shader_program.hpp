@@ -118,7 +118,7 @@ namespace qpp::cad {
       /// \param _vs_text
       /// \param _fs_text
       ///
-      shader_program_t(const std::string _program_name,
+      shader_program_t(const std::string &_program_name,
                        const std::string &_vs_text,
                        const std::string &_fs_text);
 

@@ -47,14 +47,14 @@ namespace qpp::cad{
 
     camera_t();
     void orthogonalize_gs();
-    void rotate_camera_around_origin(matrix3<float> mat_rot, vector3<float> origin);
+    void rotate_camera_around_origin(const matrix3<float> &mat_rot,const vector3<float> origin);
     void rotate_camera_around_axis(const float angle, const vector3<float> axis);
     void rotate_camera_orbit_yaw(const float yaw);
     void rotate_camera_orbit_pitch(const float pitch);
     void translate_camera_forward(const float amount);
     void translate_camera_right(const float amount);
     void translate_camera_up(const float amount);
-    void translate_camera(vector3<float> shift);
+    void translate_camera(const vector3<float> shift);
 
     void reset_camera();
     void update_camera();

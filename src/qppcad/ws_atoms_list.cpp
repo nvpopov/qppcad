@@ -11,8 +11,7 @@ using namespace qpp::cad;
 ws_atoms_list_t::ws_atoms_list_t():ws_item_t(){
 
 
-  m_geom = unique_ptr<xgeometry<float, periodic_cell<float> > >(
-        new xgeometry<float, periodic_cell<float> >(3,"rg1"));
+  m_geom = make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
   m_geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel",
                       "cc", "ccr", "ccg", "ccb"},
@@ -23,8 +22,8 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t(){
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;
 
-  m_ext_obs = unique_ptr<extents_observer_t<float> >(new extents_observer_t<float>(*m_geom));
-  m_tws_tr  = unique_ptr<tws_tree_t<float> >(new tws_tree_t<float>(*m_geom));
+  m_ext_obs = make_unique<extents_observer_t<float> >(*m_geom);
+  m_tws_tr  = make_unique<tws_tree_t<float> >(*m_geom);
   m_tws_tr->m_auto_bonding = true;
 
   m_show_imaginary_atoms = true;
@@ -89,17 +88,17 @@ void ws_atoms_list_t::render(){
       astate->dp->begin_atom_render();
 
       // draw {0,..} atoms
-      for (int i = 0; i < m_geom->nat(); i++)
+      for (uint32_t i = 0; i < m_geom->nat(); i++)
         if (m_show_atoms &&
             m_atom_type_to_hide.find(m_geom->type_table(i)) == m_atom_type_to_hide.end())
           render_atom(i, index::D(m_geom->DIM).all(0));
 
       // draw imaginary atoms that appear due to periodic
       if (m_geom->DIM > 0 && m_show_atoms && m_show_imaginary_atoms)
-        for (uint16_t i = 0; i < m_tws_tr->m_img_atoms.size(); i++)
-          if (m_atom_type_to_hide.find(m_geom->type_table(m_tws_tr->m_img_atoms[i].m_atm)) ==
+        for (const auto &at_img : m_tws_tr->m_img_atoms)
+          if (m_atom_type_to_hide.find(m_geom->type_table(at_img.m_atm)) ==
               m_atom_type_to_hide.end())
-            render_atom(m_tws_tr->m_img_atoms[i].m_atm, m_tws_tr->m_img_atoms[i].m_idx);
+            render_atom(at_img.m_atm, at_img.m_idx);
 
       astate->dp->end_atom_render();
       // atom render end
@@ -122,14 +121,14 @@ void ws_atoms_list_t::render(){
             }
 
       if (m_geom->DIM > 0 && m_show_imaginary_bonds && m_show_bonds)
-        for (uint16_t i = 0; i < m_tws_tr->m_img_atoms.size(); i++)
-          for (uint16_t j = 0; j < m_tws_tr->m_img_atoms[i].m_img_bonds.size(); j++){
+        for (const auto &img_atom : m_tws_tr->m_img_atoms)
+          for (const auto &img_bond : img_atom.m_img_bonds){
 
-              uint16_t id1 = m_tws_tr->m_img_atoms[i].m_atm;
-              uint16_t id2 = m_tws_tr->m_img_atoms[i].m_img_bonds[j].m_atm;
+              uint16_t id1 = img_atom.m_atm;
+              uint16_t id2 = img_bond.m_atm;
 
-              index idx1 = m_tws_tr->m_img_atoms[i].m_idx;
-              index idx2 = m_tws_tr->m_img_atoms[i].m_img_bonds[j].m_idx;
+              index idx1 = img_atom.m_idx;
+              index idx2 = img_bond.m_idx;
 
               render_bond(id1, idx1, id2, idx2);
             }
@@ -208,7 +207,7 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
       std::sort(res.begin(), res.end(), tws_query_data_sort_by_dist<float>);
       recalc_gizmo_barycenter();
 
-      if (res.size() > 0){
+      if (!res.empty()){
           if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ){
               atom_index_set_key iskey(res[0].m_atm, res[0].m_idx);
               auto atom_sel_it = m_atom_idx_selection.find(iskey);
@@ -274,7 +273,7 @@ void ws_atoms_list_t::insert_atom(const int atom_type, const vector3<float> &pos
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
 }
 
-void ws_atoms_list_t::insert_atom(const string atom_name, const vector3<float> &pos){
+void ws_atoms_list_t::insert_atom(const string &atom_name, const vector3<float> &pos){
   m_geom->add(atom_name, pos);
 }
 
@@ -363,7 +362,7 @@ void ws_atoms_list_t::recalc_gizmo_barycenter(){
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
 
-  if (m_atom_idx_selection.size() > 0 || m_geom->nat() == 0){
+  if (!m_atom_idx_selection.empty() || m_geom->nat() == 0){
       for (const auto& atm_idx : m_atom_idx_selection)
         m_gizmo_barycenter += m_geom->pos(atm_idx.m_atm, atm_idx.m_idx);
       m_gizmo_barycenter /= m_atom_idx_selection.size();
@@ -400,7 +399,7 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format,
                          file_name, parent_ws->m_ws_name));
 
   std::ifstream qc_data(file_name);
-  if (!(qc_data.good())) {
+  if (!qc_data) {
       c_app::log(fmt::format("Error in loading from file {}", file_name));
       return;
     }

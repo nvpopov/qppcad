@@ -21,10 +21,10 @@ void ws_item_t::set_parent_workspace(const shared_ptr<workspace_t> _parent_ws){
 }
 
 const std::string ws_item_t::get_name(){
-
+  return m_name;
 }
 
-void ws_item_t::set_name(const std::string _name){
+void ws_item_t::set_name(const std::string &_name){
   if (m_name != _name){
       m_name = _name;
       parent_ws->workspace_changed();

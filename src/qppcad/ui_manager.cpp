@@ -216,6 +216,7 @@ void ui_manager_t::render_main_menu(){
 
       //TODO We need to reinvent the wheel vec<string> - > vec<char*>
       std::vector<std::string>  vStr;
+      vStr.reserve(20);
       std::vector<char*>  vChar;
       for (int i = 0; i < astate->ws_manager->m_ws.size(); i++)
         vStr.push_back(astate->ws_manager->m_ws[i]->m_ws_name);

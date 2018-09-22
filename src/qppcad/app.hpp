@@ -45,7 +45,7 @@ namespace qpp::cad{
 
 
   public:
-    static void log(const std::string logText);
+    static void log(const std::string &logText);
     static void run();
     static app_state_t & get_state(){
       if (c_app::app_state == nullptr)

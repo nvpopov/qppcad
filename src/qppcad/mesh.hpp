@@ -27,8 +27,8 @@ namespace qpp::cad{
       std::vector<int>   indices;
       std::vector<float> normals;
 
-      uint32_t num_primitives;
-      uint32_t num_indices;
+      uint32_t num_primitives{0};
+      uint32_t num_indices{0};
 
       /// OpenGL buffer handles, todo: move it to template driven abonimation
       GLuint vio;

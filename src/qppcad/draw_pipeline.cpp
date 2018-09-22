@@ -343,16 +343,16 @@ void draw_pipeline_t::render_aabb_segmented(const vector3<float> &color,
     {   1.0f,   1.0f,   1.0f,   1.0f,   1.0f,   0.6f},
   };
 
-  for (unsigned int i = 0; i < 24; i++){
+  for (const auto &v : disp2){
       vector3<float> line_start(
-            half_box_size[0] * disp2[i][0],
-          half_box_size[1] * disp2[i][1],
-          half_box_size[2] * disp2[i][2]);
+            half_box_size[0] * v[0],
+          half_box_size[1] * v[1],
+          half_box_size[2] * v[2]);
 
       vector3<float> line_end(
-            half_box_size[0] * disp2[i][3],
-          half_box_size[1] * disp2[i][4],
-          half_box_size[2] * disp2[i][5]);
+            half_box_size[0] * v[3],
+          half_box_size[1] * v[4],
+          half_box_size[2] * v[5]);
 
       render_line(color, box_center + line_start, box_center + line_end, 4.0f);
 

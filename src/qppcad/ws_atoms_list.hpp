@@ -82,7 +82,7 @@ namespace qpp::cad {
       void select_atoms(bool all);
       void invert_selected_atoms();
       void insert_atom(const int atom_type, const vector3<float> &pos);
-      void insert_atom(const string atom_name, const vector3<float> &pos);
+      void insert_atom(const string &atom_name, const vector3<float> &pos);
       void update_atom(const int at_id, const vector3<float> &pos);
       void update_atom(const int at_id, const string &at_name);
       void delete_selected_atoms();

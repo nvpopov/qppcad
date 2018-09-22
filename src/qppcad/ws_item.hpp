@@ -81,7 +81,7 @@ namespace qpp::cad{
       /// \brief set_name
       /// \param _name
       ///
-      void set_name(const std::string _name);
+      void set_name(const std::string &_name);
 
       ///
       /// \brief set_name

@@ -1,7 +1,7 @@
 #include <qppcad/shader_program.hpp>
 #include <qppcad/app.hpp>
 
-qpp::cad::shader_program_t::shader_program_t(const std::string _program_name,
+qpp::cad::shader_program_t::shader_program_t(const std::string &_program_name,
                                         const std::string &_vs_text,
                                         const std::string &_fs_text){
 

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <fstream>
 #include <iostream>
 #include <fmt/format.h>
 #include <fmt/ostream.h>

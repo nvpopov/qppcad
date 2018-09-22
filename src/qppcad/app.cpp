@@ -275,7 +275,7 @@ void qpp::cad::c_app::mouse_button_callback(GLFWwindow *window, int button, int 
     }
 }
 
-void qpp::cad::c_app::log(const std::string logText){
+void qpp::cad::c_app::log(const std::string &logText){
 
   std::time_t t = std::chrono::system_clock::to_time_t(
                     std::chrono::system_clock::now());

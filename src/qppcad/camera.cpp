@@ -32,11 +32,12 @@ void camera_t::orthogonalize_gs(){
     }
 
   m_right = -1.0*(m_look_up.cross(m_view_dir));
-  if (m_right.isMuchSmallerThan(camera_t::norm_eps)) m_right = vector3<float>(-1.0, 0.0, 0.0);
+  if (m_right.isMuchSmallerThan(camera_t::norm_eps)) m_right = vector3<float>(1.0, 0.0, 0.0);
   else m_right.normalize();
 }
 
-void camera_t::rotate_camera_around_origin(matrix3<float> mat_rot, vector3<float> origin){
+void camera_t::rotate_camera_around_origin(const matrix3<float> &mat_rot,
+                                           const vector3<float> origin){
   translate_camera(-origin);
   m_view_point = mat_rot * m_view_point;
   m_look_at    = mat_rot * m_look_at;
@@ -77,10 +78,9 @@ void camera_t::translate_camera_up(const float amount){
   m_look_at += _tmp_tr;
 }
 
-void camera_t::translate_camera(vector3<float> shift){
+void camera_t::translate_camera(const vector3<float> shift){
   m_view_point += shift;
   m_look_at    += shift;
-  orthogonalize_gs();
 }
 
 void camera_t::reset_camera(){

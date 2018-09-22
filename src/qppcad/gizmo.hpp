@@ -27,10 +27,10 @@ namespace qpp::cad {
       vector3<float> accum_translate;
       float gizmo_box_size;
       float gizmo_shift_magnitude;
-      bool is_active;
+      bool is_active{false};
       bool interact_at_the_moment;
 
-      uint8_t touched_axis;
+      uint8_t touched_axis{0};
       std::array<aabb_3d_t<float>,3> bx;
       std::array<bool, 3> bx_touched;
       ws_item_t *attached_item;

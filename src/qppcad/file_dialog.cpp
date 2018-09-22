@@ -10,7 +10,7 @@ std::string file_dialog_manager_t::request_open_file(std::string &filter, bool &
   nfdchar_t *filter_ch = new char[filter.size()+1];
   std::copy(filter.begin(), filter.end(), filter_ch);
   filter_ch[filter.size()] = '\0';
-  nfdresult_t result = NFD_OpenDialog( filter_ch, NULL, &out_path );
+  nfdresult_t result = NFD_OpenDialog( filter_ch, nullptr, &out_path );
   if ( result == NFD_OKAY){
       succes = true;
       return std::string(out_path);
