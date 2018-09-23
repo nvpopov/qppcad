@@ -106,3 +106,15 @@ void ws_item_t::on_begin_node_gizmo_translate(){
 void ws_item_t::on_end_node_gizmo_translate(){
   c_app::log(fmt::format("End of translation of node [{}], pos = {}", m_name, m_pos.to_string_vec()));
 }
+
+void ws_item_t::write_to_json(json &json_object){
+  json_object["name"] = m_name;
+  json_object["type"] = get_ws_item_class_name();
+  json_object["is_visible"] = m_is_visible;
+  json coord = json::array({m_pos[0], m_pos[1], m_pos[2]});
+  json_object["pos"] = coord;
+}
+
+void ws_item_t::read_from_json(json &json_object){
+
+}

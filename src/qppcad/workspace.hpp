@@ -1,8 +1,6 @@
 #ifndef QPP_WORKSPACE_H
 #define QPP_WORKSPACE_H
 
-
-
 #include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
 #include <geom/geom.hpp>
@@ -68,6 +66,7 @@ namespace qpp::cad{
     bool                           m_first_render;
     vector<string>                 m_ws_names_c;
     unique_ptr<gizmo_t>            m_gizmo;
+    vector3<float>                 m_background_color{0.85f, 0.85f, 0.85f};
 
     workspace_t(string _ws_name = "default"){
       m_ws_name = _ws_name;
@@ -92,6 +91,10 @@ namespace qpp::cad{
     void mouse_click(const double mouse_x, const double mouse_y);
     void add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add);
     void dialog_add_geom_from_file(qc_file_format file_format);
+
+
+    void save_workspace_to_file(const string filename);
+    void load_workspace_from_file(const string filename);
     void update(float delta_time);
   };
 

@@ -71,7 +71,7 @@ void ws_atoms_list_t::render(){
 
       if (m_geom->DIM == 3 && m_is_visible && m_draw_cell){
           astate->dp->begin_render_line();
-          vector3<float> cell_clr = clr_black;
+          vector3<float> cell_clr = m_cell_color;
           if (m_selected){
               if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)  cell_clr = clr_red;
               if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) cell_clr = clr_maroon;
@@ -138,9 +138,9 @@ void ws_atoms_list_t::render(){
     }
 
   //render measurement
-  if (m_selected && m_draw_line_in_dist_measurement && m_atom_idx_selection.size() == 2){
-      auto fa = m_atom_idx_selection.cbegin();
-      auto la  = ++(m_atom_idx_selection.cbegin());
+  if (m_selected && m_draw_line_in_dist_measurement && m_atom_idx_sel.size() == 2){
+      auto fa = m_atom_idx_sel.cbegin();
+      auto la  = ++(m_atom_idx_sel.cbegin());
       astate->dp->begin_render_line();
       astate->dp->render_line(clr_white, m_geom->pos(fa->m_atm, fa->m_idx),
                               m_geom->pos(la->m_atm, la->m_idx), 6.0f);
@@ -160,8 +160,7 @@ void ws_atoms_list_t::render_atom(const uint16_t at_num, const index &at_index){
     }
 
   if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT){
-      if(m_atom_idx_selection.find(atom_index_set_key(at_num, at_index)) !=
-         m_atom_idx_selection.end()
+      if(m_atom_idx_sel.find(atom_index_set_key(at_num, at_index)) != m_atom_idx_sel.end()
          && m_selected)
         color = vector3<float>(0.43f, 0.55f, 0.12f);
     }
@@ -210,15 +209,14 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
       if (!res.empty()){
           if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ){
               atom_index_set_key iskey(res[0].m_atm, res[0].m_idx);
-              auto atom_sel_it = m_atom_idx_selection.find(iskey);
-              if (atom_sel_it == m_atom_idx_selection.end()){
-                  m_atom_idx_selection.insert(iskey);
-                  m_atom_selection.insert(res[0].m_atm);
+              auto atom_sel_it = m_atom_idx_sel.find(iskey);
+              if (atom_sel_it == m_atom_idx_sel.end()){
+                  m_atom_idx_sel.insert(iskey);
+                  m_atom_sel.insert(res[0].m_atm);
                 } else {
-                  m_atom_idx_selection.erase(atom_sel_it);
-                  auto it = m_atom_selection.find(res[0].m_atm);
-                  if (it != m_atom_selection.end())
-                    m_atom_selection.erase(m_atom_selection.find(res[0].m_atm));
+                  m_atom_idx_sel.erase(atom_sel_it);
+                  auto it = m_atom_sel.find(res[0].m_atm);
+                  if (it != m_atom_sel.end()) m_atom_sel.erase(m_atom_sel.find(res[0].m_atm));
                 }
             };
 
@@ -227,8 +225,8 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
         } else {
           //TODO: need refractoring
           if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
-              m_atom_selection.clear();
-              m_atom_idx_selection.clear();
+              m_atom_sel.clear();
+              m_atom_idx_sel.clear();
             }
         }
     }
@@ -237,34 +235,34 @@ bool ws_atoms_list_t::mouse_click(ray_t<float> *click_ray){
 
 void ws_atoms_list_t::select_atoms(bool all){
   if (all) {
-      m_atom_selection.clear();
-      m_atom_idx_selection.clear();
+      m_atom_sel.clear();
+      m_atom_idx_sel.clear();
       for (auto i = 0; i < m_geom->nat(); i++){
-          m_atom_selection.insert(i);
-          m_atom_idx_selection.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
+          m_atom_sel.insert(i);
+          m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
         }
 
     } else {
-      m_atom_selection.clear();
-      m_atom_idx_selection.clear();
+      m_atom_sel.clear();
+      m_atom_idx_sel.clear();
     }
 }
 
 void ws_atoms_list_t::invert_selected_atoms(){
-  m_atom_idx_selection.clear();
+  m_atom_idx_sel.clear();
   for (auto i = 0; i < m_geom->nat(); i++){
-      auto it = m_atom_selection.find(i);
+      auto it = m_atom_sel.find(i);
 
-      if (it != m_atom_selection.end()){
-          m_atom_selection.erase(it);
+      if (it != m_atom_sel.end()){
+          m_atom_sel.erase(it);
           for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
                !idx.end(); idx++ ) {
-              auto i2 = m_atom_idx_selection.find(atom_index_set_key(i, idx));
-              if (i2 != m_atom_idx_selection.end()) m_atom_idx_selection.erase(i2);
+              auto i2 = m_atom_idx_sel.find(atom_index_set_key(i, idx));
+              if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
             }
         } else {
-          m_atom_selection.insert(i);
-          m_atom_idx_selection.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
+          m_atom_sel.insert(i);
+          m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
         }
     }
 }
@@ -287,18 +285,18 @@ void ws_atoms_list_t::update_atom(const int at_id, const string &at_name){
 
 void ws_atoms_list_t::delete_selected_atoms(){
   vector<int> all_atom_num;
-  all_atom_num.reserve(m_atom_idx_selection.size());
+  all_atom_num.reserve(m_atom_idx_sel.size());
 
   //get unique selected atoms
-  for(auto &elem : m_atom_idx_selection) all_atom_num.push_back(elem.m_atm);
+  for(auto &elem : m_atom_idx_sel) all_atom_num.push_back(elem.m_atm);
   auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
   all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
 
   //sort by ancending order
   std::sort(all_atom_num.begin(), all_atom_num.end());
 
-  m_atom_idx_selection.clear();
-  m_atom_selection.clear();
+  m_atom_idx_sel.clear();
+  m_atom_sel.clear();
 
   for (uint16_t delta = 0; delta < all_atom_num.size(); delta++) {
       if (delta == 0 && all_atom_num.size() > 1) m_tws_tr->freeze();
@@ -333,7 +331,7 @@ float ws_atoms_list_t::get_bb_prescaller(){
 }
 
 uint32_t ws_atoms_list_t::get_amount_of_selected_content(){
-  return this->m_atom_selection.size();
+  return this->m_atom_sel.size();
 }
 
 void ws_atoms_list_t::on_begin_content_gizmo_translate(){
@@ -344,7 +342,7 @@ void ws_atoms_list_t::on_begin_content_gizmo_translate(){
 
 void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos){
   bool someone_from_atoms_were_translated = false;
-  for (const uint16_t &at_idx : m_atom_selection){
+  for (const uint16_t &at_idx : m_atom_sel){
       vector3<float> acc_pos = m_geom->coord(at_idx) + pos;
       m_geom->change_pos(at_idx, acc_pos);
       someone_from_atoms_were_translated = true;
@@ -362,10 +360,10 @@ void ws_atoms_list_t::recalc_gizmo_barycenter(){
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
 
-  if (!m_atom_idx_selection.empty() || m_geom->nat() == 0){
-      for (const auto& atm_idx : m_atom_idx_selection)
+  if (!m_atom_idx_sel.empty() || m_geom->nat() == 0){
+      for (const auto& atm_idx : m_atom_idx_sel)
         m_gizmo_barycenter += m_geom->pos(atm_idx.m_atm, atm_idx.m_idx);
-      m_gizmo_barycenter /= m_atom_idx_selection.size();
+      m_gizmo_barycenter /= m_atom_idx_sel.size();
     }
   else m_gizmo_barycenter = m_aabb.min;
 
@@ -453,7 +451,51 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format,
 
 }
 
-void ws_atoms_list_t::rebuild_ngbt(){
-
-  need_to_rebuild_nbt = false;
+string ws_atoms_list_t::get_ws_item_class_name(){
+  return "ws_atoms_list";
 }
+
+void ws_atoms_list_t::write_to_json(json &json_object){
+  ws_item_t::write_to_json(json_object);
+  json_object["dim"] = m_geom->DIM;
+  json_object["show_img_atoms"] = m_show_imaginary_atoms;
+  json_object["show_img_bonds"] = m_show_imaginary_bonds;
+  json_object["show_bonds"] = m_show_bonds;
+  json_object["show_atoms"] = m_show_atoms;
+  json_object["bt_show_disabled_records"] = m_bonding_table_show_disabled_record;
+  json_object["atom_scale"] = m_atom_scale_factor;
+  json_object["bond_scale"] = m_bond_scale_factor;
+  json_object["bonding_table"] = json::array({});
+
+  for (auto &elem : m_tws_tr->m_bonding_table.m_dist){
+      json bt_rec = json::array({});
+      bt_rec.push_back(m_geom->atom_of_type(elem.first.m_a));
+      bt_rec.push_back(m_geom->atom_of_type(elem.first.m_b));
+      bt_rec.push_back(elem.second.m_bonding_dist);
+      bt_rec.push_back(elem.second.m_enabled);
+      json_object["bonding_table"].push_back(bt_rec);
+    }
+
+  json_object["bonding_table_max_dist"] = json::array({});
+  for (auto &elem : m_tws_tr->m_bonding_table.m_max_dist){
+      json bt_md_rec = json::array({});
+      bt_md_rec.push_back(elem.first);
+      bt_md_rec.push_back(elem.second);
+      json_object["bonding_table_max_dist"].push_back(bt_md_rec);
+    }
+
+  json_object["atoms"] = json::array({});
+  for (auto i = 0; i < m_geom->nat(); i++){
+      json atom = json::array({});
+      atom.push_back(m_geom->atom(i));
+      atom.push_back(m_geom->pos(i)[0]);
+      atom.push_back(m_geom->pos(i)[1]);
+      atom.push_back(m_geom->pos(i)[2]);
+      json_object["atoms"].push_back(atom);
+    }
+}
+
+void ws_atoms_list_t::read_from_json(json &json_object){
+  ws_item_t::read_from_json(json_object);
+}
+

@@ -213,6 +213,35 @@ void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
 
 }
 
+void workspace_t::save_workspace_to_file(const string filename){
+  //using json = nlohmann::json;
+  ofstream out_file(filename);
+  json jsonfile;
+  //
+  jsonfile["qppcad_file_version"] = "1.0-aa";
+
+  json j_workspace_background = json::array({m_background_color[0],
+                                           m_background_color[1],
+                                           m_background_color[2], });
+  jsonfile["background_color"] = j_workspace_background;
+
+  json ws_objects = json::array({});
+  for (const auto &ws_item : m_ws_items){
+      json ws_object;
+      ws_item->write_to_json(ws_object);
+      ws_objects.push_back(ws_object);
+    }
+
+  jsonfile["objects"] = ws_objects;
+
+  out_file << jsonfile.dump(2);
+
+}
+
+void workspace_t::load_workspace_from_file(const string filename){
+
+}
+
 void workspace_t::update(float delta_time){
   m_gizmo->update_gizmo(delta_time);
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
@@ -290,14 +319,25 @@ void workspace_manager_t::init_default(){
   add_workspace(_ws3);
   add_workspace(_ws2);
 
+  _ws2->save_workspace_to_file("test.json");
   m_current_workspace_id = 1;
 }
 
 void workspace_manager_t::render_current_workspace(){
+
   if (has_wss())
     if (m_current_workspace_id < m_ws.size()){
+
+        glClearColor(m_ws[m_current_workspace_id]->m_background_color[0],
+            m_ws[m_current_workspace_id]->m_background_color[1],
+            m_ws[m_current_workspace_id]->m_background_color[2], 1);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
         m_ws[m_current_workspace_id]->render();
+      } else {
+        glClearColor(0.8f, 0.8f, 0.8f, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       }
 }
 
@@ -309,7 +349,7 @@ void workspace_manager_t::mouse_click(){
                              astate->mouse_x_ws_frame,
                              astate->mouse_y_ws_frame));
       if (has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame,
-                                               astate->mouse_y_ws_frame);
+                                                astate->mouse_y_ws_frame);
     }
 }
 

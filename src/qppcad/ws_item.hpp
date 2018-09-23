@@ -8,6 +8,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_stl.h>
+#include <qppcad/json_adapter.hpp>
 
 namespace qpp::cad{
 
@@ -94,6 +95,7 @@ namespace qpp::cad{
       ///
       virtual void render();
 
+      virtual string get_ws_item_class_name() { return "ws_abstract_item";}
       ///
       /// \brief render_ui
       ///
@@ -183,6 +185,9 @@ namespace qpp::cad{
       virtual void on_begin_content_gizmo_translate() = 0;
       virtual void apply_intermediate_translate_content(const vector3<float> &new_pos) = 0;
       virtual void on_end_content_gizmo_translate() = 0;
+
+      virtual void write_to_json(json &json_object);
+      virtual void read_from_json(json &json_object);
   };
 
 }

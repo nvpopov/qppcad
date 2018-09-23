@@ -12,7 +12,7 @@ ui_manager_t::ui_manager_t(app_state_t *init_app_state){
 
   show_rename_workspace_dialog = false;
 
-  iObjInspWidth = 300;
+  iObjInspWidth = 350;
   iWorkPanelHeight = 38;
   iWorkPanelYOffset = 28;
   setup_style();
@@ -479,7 +479,7 @@ void ui_manager_t::render_object_inspector(){
   ImGui::Spacing();
 
 
-  ImGui::PushItemWidth(284);
+  ImGui::PushItemWidth(iObjInspWidth-10);
 
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws){
@@ -508,8 +508,10 @@ void ui_manager_t::render_object_inspector(){
           cur_ws->get_selected()->render_ui();
         }
       else {
-          ImGui::Text("Selected: None");
-          ImGui::Separator();
+          if (ImGui::CollapsingHeader("Workspace settings")){
+              ImGui::ColorEdit3("Background", cur_ws->m_background_color.data());
+            }
+          //ImGui::Separator();
         }
     }
 

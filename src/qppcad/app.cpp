@@ -195,8 +195,7 @@ void qpp::cad::c_app::render(){
   app_state_t* astate = &(c_app::get_state());
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
       astate->frame_buffer->bind();
-      glClearColor(0.8f, 0.8f, 0.8f, 1);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
       glViewport(0, 0,
                  astate->viewport_size_c(0)-astate->viewport_xy_c(0),
                  astate->viewport_size_c(1)-astate->viewport_xy_c(1));

@@ -195,11 +195,11 @@ vector3<float> camera_t::unproject(const float _x, const float _y){
   vector4<float> invec4(_x, _y, 0.5f, 1.0f);
   vector4<float> rvec4 = vector4<float>::Zero();
 
-  if (cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO){
+  /*if (cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO){
       vector4<float> v_near_up = mat_mvp_inv * vector4<float>(_x, _y, m_znear_ortho, 1.0f);
       vector4<float> v_far_up = mat_mvp_inv * vector4<float>(_x, _y, m_zfar_ortho, 1.0f);
       rvec4 =   v_near_up;
-    } else rvec4 = mat_mvp_inv * invec4;
+    } else*/ rvec4 = mat_mvp_inv * invec4;
 
   rvec4(3) = 1.0f / rvec4(3);
   rvec4(0) = rvec4(0) * rvec4(3);

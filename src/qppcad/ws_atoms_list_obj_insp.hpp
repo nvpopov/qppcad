@@ -82,8 +82,8 @@ namespace qpp::cad {
 
         if (ImGui::CollapsingHeader("Display and styling")){
 
-            ImGui::SliderFloat("Atom size scale", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1);
-            ImGui::SliderFloat("Bond size scale", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1);
+            ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1);
+            ImGui::SliderFloat("Bond size", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1);
 
             ImGui::Checkbox("Show atoms", &al->m_show_atoms);
             ImGui::Checkbox("Show bonds", &al->m_show_bonds);
@@ -93,6 +93,8 @@ namespace qpp::cad {
                 ImGui::Checkbox("Show imaginary atoms", &al->m_show_imaginary_atoms);
                 ImGui::Checkbox("Show imaginary bonds", &al->m_show_imaginary_bonds);
               }
+
+            ImGui::ColorEdit3("Cell ", al->m_cell_color.data());
 
           }
 
@@ -115,9 +117,12 @@ namespace qpp::cad {
                                                   al->m_geom->atom_of_type(elem.first.m_a),
                                                   al->m_geom->atom_of_type(elem.first.m_b)).c_str())){
                       ImGui::PushItemWidth(60);
+
                       if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled))) rebuild_ngb = true;
+
                       if (elem.second.m_enabled){
-                          ImGui::PushItemWidth(160);
+                           ImGui::SameLine();
+                          ImGui::PushItemWidth(140);
                           if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
                               al->m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
                                                                                  elem.first.m_b);
@@ -131,25 +136,58 @@ namespace qpp::cad {
             if (rebuild_ngb) al->m_tws_tr->clr_ngb_and_rebuild();
           }
 
+        //begin modify section
         if (ImGui::CollapsingHeader("Modify")){
-            if (al->m_atom_idx_selection.size()!=1){
+            //check that we select 1 or 2 atoms
+            if (al->m_atom_idx_sel.size()!=1 && al->m_atom_idx_sel.size()!=2){
+                ImGui::Spacing();
                 ImGui::BulletText("Select one atom to edit it");
-              } else {
+                ImGui::BulletText("Select two atoms to specify \ndistance between them");
+
+
+              }
+            // if we selected one atom - show single modify widget
+            else if (al->m_atom_idx_sel.size()==1) {
+                ImGui::BulletText("Modify single atom:");
                 static string custom_atom_name =
-                    al->m_geom->atom(al->m_atom_idx_selection.begin()->m_atm);
-                ImGui::Separator();
-                vector3<float> pos = al->m_geom->pos(al->m_atom_idx_selection.begin()->m_atm);
+                    al->m_geom->atom(al->m_atom_idx_sel.begin()->m_atm);
+                //ImGui::Separator();
+                vector3<float> pos = al->m_geom->pos(al->m_atom_idx_sel.begin()->m_atm);
                 if (ImGui::InputFloat3("Position", pos.data())){
-                    al->update_atom(al->m_atom_idx_selection.begin()->m_atm, pos);
+                    al->update_atom(al->m_atom_idx_sel.begin()->m_atm, pos);
                   }
                 ImGui::PushItemWidth(70);
                 ImGui::InputText("Atom name", &custom_atom_name);
                 ImGui::SameLine();
                 if (ImGui::Button("Edit", ImVec2(100, 0)))
                   if (custom_atom_name != "") al->update_atom(
-                        al->m_atom_idx_selection.begin()->m_atm, custom_atom_name);
-              }
-          }
+                        al->m_atom_idx_sel.begin()->m_atm, custom_atom_name);
+              } // end one atom selection
+
+            // if we selected two atoms - show distance modify widget
+            else if (al->m_atom_idx_sel.size() == 2){
+                ImGui::BulletText("Modify distance between real atoms");
+                auto it1 = al->m_atom_idx_sel.begin();
+                auto it2 = it1++;
+                if (it1->m_idx != index::D(al->m_geom->DIM).all(0) ||
+                    it2->m_idx != index::D(al->m_geom->DIM).all(0) ){
+                    ImGui::BulletText("One of selected atom are imaginary");
+                  } else {
+                    float dist_btw = (al->m_geom->pos(it1->m_atm, it1->m_idx) -
+                                      al->m_geom->pos(it2->m_atm, it2->m_idx)).norm();
+
+                    if (ImGui::SliderFloat("Distance", &dist_btw, 0.1f, 15.0f)){
+                        vector3<float> r_btw = (al->m_geom->pos(it1->m_atm, it1->m_idx) +
+                                                al->m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
+                        vector3<float> dir_f = (al->m_geom->pos(it1->m_atm, it1->m_idx) - r_btw).normalized();
+                        vector3<float> dir_s = (al->m_geom->pos(it2->m_atm, it2->m_idx) - r_btw).normalized();
+                        al->m_geom->change_pos(it1->m_atm, r_btw + dir_f * dist_btw * 0.5f);
+                        al->m_geom->change_pos(it2->m_atm, r_btw + dir_s * dist_btw * 0.5f);
+                      }
+                  }
+              } //end two atom selection
+
+          }//end modify section
 
         if (ImGui::CollapsingHeader("Add atoms")){
             static string custom_atom_name;

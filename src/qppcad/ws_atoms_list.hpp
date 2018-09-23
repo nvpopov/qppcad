@@ -38,14 +38,15 @@ namespace qpp::cad {
 
       float m_atom_scale_factor{0.3f};
       float m_bond_scale_factor{0.09f};
+      vector3<float> m_cell_color{0.1f, 0.1f, 0.1f};
 
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
       unique_ptr<bonding_table<float> >                             m_bt;
       unique_ptr<neighbours_table<float> >                          m_nt;
       unique_ptr<tws_tree_t<float, periodic_cell<float> > >         m_tws_tr;
       unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs;
-      set<uint16_t>                                                 m_atom_selection;
-      unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_selection;
+      set<uint16_t>                                                 m_atom_sel;
+      unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_sel;
       vector<vector<vector3<float> > > m_frames;
       set<uint16_t>  m_atom_type_to_hide;
       vector3<float> m_gizmo_barycenter;
@@ -118,7 +119,9 @@ namespace qpp::cad {
       void load_from_file(qc_file_format file_format, std::string file_name,
                           bool auto_center = false);
 
-      void rebuild_ngbt();
+      string get_ws_item_class_name() override ;
+      void write_to_json(json &json_object) override;
+      void read_from_json(json &json_object) override;
 
       ~ws_atoms_list_t() override {
 

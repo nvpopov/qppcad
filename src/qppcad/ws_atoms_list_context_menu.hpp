@@ -18,14 +18,14 @@ namespace qpp::cad {
                 ImGui::EndMenu();
               }
 
-            if (al->m_atom_idx_selection.size() == 2){
+            if (al->m_atom_idx_sel.size() == 2){
                 if (ImGui::BeginMenu("Append new atom between")){
 
-                    auto it1 = al->m_atom_idx_selection.begin();
+                    auto it1 = al->m_atom_idx_sel.begin();
                     auto it2 = it1++;
                     vector3<float> r_btw{0.0, 0.0, 0.0};
 
-                    if (it1 != al->m_atom_idx_selection.end() && it2 != al->m_atom_idx_selection.end())
+                    if (it1 != al->m_atom_idx_sel.end() && it2 != al->m_atom_idx_sel.end())
                       r_btw = (al->m_geom->pos(it1->m_atm, it1->m_idx) +
                                al->m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
 
@@ -47,7 +47,7 @@ namespace qpp::cad {
                   }
 
                 if (ImGui::BeginMenu("Two atoms manipulation")){
-                    auto it1 = al->m_atom_idx_selection.begin();
+                    auto it1 = al->m_atom_idx_sel.begin();
                     auto it2 = it1++;
                     float dist_btw = (al->m_geom->pos(it1->m_atm, it1->m_idx) -
                                       al->m_geom->pos(it2->m_atm, it2->m_idx)).norm();
@@ -66,15 +66,15 @@ namespace qpp::cad {
                   }
               }
 
-            if (al->m_atom_selection.size() > 0)
+            if (al->m_atom_sel.size() > 0)
               if (ImGui::MenuItem(fmt::format("Delete selected atoms({})",
-                                              al->m_atom_selection.size()).c_str())){
+                                              al->m_atom_sel.size()).c_str())){
                   al->delete_selected_atoms();
                 }
 
             ImGui::Separator();
 
-            if (al->m_atom_idx_selection.size() == 0){
+            if (al->m_atom_idx_sel.size() == 0){
                 if (ImGui::BeginMenu("Add new atom")){
                     static string custom_atom_name;
                     ImGui::BulletText("Add new atom in local atom list frame");
