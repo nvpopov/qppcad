@@ -67,22 +67,22 @@ void ws_item_t::render_ui(){
 }
 
 void ws_item_t::td_context_menu_edit_item(){
-//  if (support_translation())
-//    if (ImGui::BeginMenu("Translate Node")){
+  //  if (support_translation())
+  //    if (ImGui::BeginMenu("Translate Node")){
 
-//        ImGui::SliderFloat("X", &(explicit_translation[0]), -10.0, 10.0);
-//        ImGui::SameLine();
-//        ImGui::Button("Apply X");
+  //        ImGui::SliderFloat("X", &(explicit_translation[0]), -10.0, 10.0);
+  //        ImGui::SameLine();
+  //        ImGui::Button("Apply X");
 
-//        ImGui::SliderFloat("Y", &(explicit_translation[1]), -10.0, 10.0);
-//        ImGui::SameLine();
-//        ImGui::Button("Apply Y");
+  //        ImGui::SliderFloat("Y", &(explicit_translation[1]), -10.0, 10.0);
+  //        ImGui::SameLine();
+  //        ImGui::Button("Apply Y");
 
-//        ImGui::SliderFloat("Z", &(explicit_translation[2]), -10.0, 10.0);
-//        ImGui::SameLine();
-//        ImGui::Button("Apply Z");
-//        ImGui::EndMenu();
-//      }
+  //        ImGui::SliderFloat("Z", &(explicit_translation[2]), -10.0, 10.0);
+  //        ImGui::SameLine();
+  //        ImGui::Button("Apply Z");
+  //        ImGui::EndMenu();
+  //      }
 }
 
 void ws_item_t::td_context_menu_edit_content(){
@@ -100,21 +100,35 @@ float ws_item_t::get_bb_prescaller(){
 
 void ws_item_t::on_begin_node_gizmo_translate(){
   m_pos_old = m_pos;
-  c_app::log(fmt::format("Start of translation of node [{}], pos = {}", m_name, m_pos.to_string_vec()));
+  c_app::log(fmt::format("Start of translation of node [{}], pos = {}",
+                         m_name, m_pos.to_string_vec()));
 }
 
 void ws_item_t::on_end_node_gizmo_translate(){
-  c_app::log(fmt::format("End of translation of node [{}], pos = {}", m_name, m_pos.to_string_vec()));
+  c_app::log(fmt::format("End of translation of node [{}], pos = {}",
+                         m_name, m_pos.to_string_vec()));
 }
 
-void ws_item_t::write_to_json(json &json_object){
-  json_object["name"] = m_name;
-  json_object["type"] = get_ws_item_class_name();
-  json_object["is_visible"] = m_is_visible;
+void ws_item_t::write_to_json(json &data){
+  data["name"] = m_name;
+  data["type"] = get_ws_item_class_name();
+  data["is_visible"] = m_is_visible;
   json coord = json::array({m_pos[0], m_pos[1], m_pos[2]});
-  json_object["pos"] = coord;
+  data["pos"] = coord;
 }
 
-void ws_item_t::read_from_json(json &json_object){
+void ws_item_t::read_from_json(json &data){
+  //read m_name & is_visible & pos
+  if (data.find("name") != data.end()) m_name = data["name"];
+  if (data.find("is_visible") != data.end()) m_is_visible = data["is_visible"];
+
+  if (support_translation())
+    if (data.find("pos") != data.end()) {
+        vector3<float> pos_rd = vector3<float>::Zero();
+        for(uint8_t i = 0; i < 3; i++)
+          pos_rd[i] = data["pos"][i].get<float>();
+        m_pos = pos_rd;
+      }
+
 
 }

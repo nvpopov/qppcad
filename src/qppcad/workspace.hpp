@@ -93,12 +93,17 @@ namespace qpp::cad{
     void dialog_add_geom_from_file(qc_file_format file_format);
 
 
-    void save_workspace_to_file(const string filename);
-    void load_workspace_from_file(const string filename);
+    void save_workspace_to_json(const string filename);
+    void load_workspace_from_json(const string filename);
     void update(float delta_time);
   };
 
 
+  struct ws_item_factory {
+      static shared_ptr<ws_item_t> create_object(const string &obj_type){
+        if (obj_type == "ws_atoms_list") return make_shared<ws_atoms_list_t>();
+      }
+  };
 }
 
 #endif

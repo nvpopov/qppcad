@@ -7,19 +7,19 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-optional<int16_t> workspace_t::get_selected_item(){
+optional<int16_t> workspace_t::get_selected_item () {
   for (uint16_t i = 0; i < m_ws_items.size(); i++)
     if (m_ws_items[i]->m_selected) return optional<int16_t>(i);
   return nullopt;
 }
 
-ws_item_t *workspace_t::get_selected(){
+ws_item_t *workspace_t::get_selected () {
   optional<int16_t> sel_idx = get_selected_item();
   if (sel_idx) return m_ws_items[*sel_idx].get();
   else return nullptr;
 }
 
-void workspace_t::set_selected_item(const int16_t sel_idx){
+void workspace_t::set_selected_item (const int16_t sel_idx) {
   unselect_all();
   if (sel_idx >= 0 && sel_idx < m_ws_items.size() && !m_ws_items.empty()){
       m_ws_items[sel_idx]->m_selected = true;
@@ -27,28 +27,28 @@ void workspace_t::set_selected_item(const int16_t sel_idx){
     }
 }
 
-void workspace_t::unselect_all(){
+void workspace_t::unselect_all () {
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
 }
 
-void workspace_t::toggle_edit_mode(){
+void workspace_t::toggle_edit_mode () {
   if (m_edit_type == ws_edit_type::EDIT_WS_ITEM) m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
   else m_edit_type = ws_edit_type::EDIT_WS_ITEM;
 }
 
-void workspace_t::workspace_changed(){
+void workspace_t::workspace_changed () {
   //rebuild ws items
   m_ws_names_c.clear();
-  for(uint8_t i = 0; i < m_ws_items.size(); i++)
+  for (uint8_t i = 0; i < m_ws_items.size(); i++)
     m_ws_names_c.push_back(fmt::format("[{}] {}", i, m_ws_items[i]->m_name));
 }
 
-void workspace_t::reset_camera(){
+void workspace_t::reset_camera () {
   m_camera->reset_camera();
   set_best_view();
 }
 
-void workspace_t::set_best_view(){
+void workspace_t::set_best_view () {
 
   if (m_ws_items.size() == 0) {
       m_camera->reset_camera();
@@ -75,7 +75,7 @@ void workspace_t::set_best_view(){
     m_camera->reset_camera();
 }
 
-void workspace_t::render(){
+void workspace_t::render() {
 
   if (m_first_render) {
       set_best_view();
@@ -93,7 +93,7 @@ void workspace_t::render(){
       astate->dp->end_render_line();
     }
 
-  if (astate->dp != nullptr){
+  if (astate->dp != nullptr) {
 
       ///// Draw grid /////
       if (astate->show_grid){
@@ -116,7 +116,7 @@ void workspace_t::render(){
       ///// Draw grid /////
 
       ///// Draw axis /////
-      if (astate->show_axis){
+      if (astate->show_axis) {
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
           float fAxisLen = 0.07f *astate->camera->m_stored_dist;
           if (astate->camera->cur_proj ==
@@ -148,7 +148,7 @@ void workspace_t::render(){
 
 }
 
-void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
+void workspace_t::mouse_click (const double mouse_x, const double mouse_y) {
 
   if (ImGui::GetIO().WantCaptureMouse) return;
 
@@ -165,15 +165,15 @@ void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
 
   bool hit_any = false;
 
-  if (m_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT){
+  if (m_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT) {
       for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
       m_gizmo->attached_item = nullptr;
     }
 
-  for (auto &ws_item : m_ws_items){
+  for (auto &ws_item : m_ws_items) {
       bool is_hit = ws_item->mouse_click(&m_ray_debug);
       hit_any = hit_any || is_hit;
-      if (is_hit && m_edit_type == ws_edit_type::EDIT_WS_ITEM && ws_item->support_selection()){
+      if (is_hit && m_edit_type == ws_edit_type::EDIT_WS_ITEM && ws_item->support_selection()) {
           m_gizmo->attached_item = ws_item.get();
           ws_item->m_selected = true;
           break;
@@ -187,7 +187,7 @@ void workspace_t::mouse_click(const double mouse_x, const double mouse_y){
 
 }
 
-void workspace_t::add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add){
+void workspace_t::add_item_to_workspace (const shared_ptr<ws_item_t> &item_to_add) {
 
   item_to_add->set_parent_workspace(shared_from_this());
   m_ws_items.push_back(item_to_add);
@@ -196,7 +196,7 @@ void workspace_t::add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add
 
 }
 
-void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
+void workspace_t::dialog_add_geom_from_file (qc_file_format file_format) {
 
   app_state_t *astate = &(c_app::get_state());
 
@@ -204,7 +204,7 @@ void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
   string filter = "*";
   string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
-  if (succes){
+  if (succes) {
       auto wsl = make_shared<ws_atoms_list_t>();
       add_item_to_workspace(wsl);
       wsl->m_name = "test1";
@@ -213,17 +213,18 @@ void workspace_t::dialog_add_geom_from_file(qc_file_format file_format){
 
 }
 
-void workspace_t::save_workspace_to_file(const string filename){
+void workspace_t::save_workspace_to_json (const string filename) {
   //using json = nlohmann::json;
   ofstream out_file(filename);
-  json jsonfile;
+  json data;
   //
-  jsonfile["qppcad_file_version"] = "1.0-aa";
 
+  data["qppcad_file_version"] = "1.0-aa";
+  data["ws_name"] = m_ws_name;
   json j_workspace_background = json::array({m_background_color[0],
-                                           m_background_color[1],
-                                           m_background_color[2], });
-  jsonfile["background_color"] = j_workspace_background;
+                                             m_background_color[1],
+                                             m_background_color[2], });
+  data["bg_clr"] = j_workspace_background;
 
   json ws_objects = json::array({});
   for (const auto &ws_item : m_ws_items){
@@ -232,22 +233,45 @@ void workspace_t::save_workspace_to_file(const string filename){
       ws_objects.push_back(ws_object);
     }
 
-  jsonfile["objects"] = ws_objects;
+  data["objects"] = ws_objects;
 
-  out_file << jsonfile.dump(2);
-
-}
-
-void workspace_t::load_workspace_from_file(const string filename){
+  out_file << data.dump(2);
 
 }
 
-void workspace_t::update(float delta_time){
+void workspace_t::load_workspace_from_json (const string filename) {
+  fstream ifile(filename);
+  json data;
+
+  try {
+    data = json::parse(ifile);
+
+    if (data.find("ws_name") != data.end()) m_ws_name = data["ws_name"];
+    if (data.find("bg_clr") != data.end())
+      for (uint8_t i = 0; i < 3; i++) m_background_color[i] = data["bg_clr"][i];
+
+    if (data.find("objects") != data.end()){
+        json objects = data["objects"];
+        for (auto &object : objects){
+            string obj_type = object["type"];
+            shared_ptr<ws_item_t> obj = ws_item_factory::create_object(obj_type);
+            obj->read_from_json(object);
+            add_item_to_workspace(obj);
+          }
+      }
+
+  } catch (json::parse_error &e) {
+    std::cerr << e.what() << " " << std::endl;
+  }
+
+}
+
+void workspace_t::update (float delta_time) {
   m_gizmo->update_gizmo(delta_time);
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
 }
 
-workspace_manager_t::workspace_manager_t(app_state_t *_astate){
+workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
   m_current_workspace_id = 0;
   _astate->kb_manager->connect("switch_to_ws_0", this, &workspace_manager_t::force_set_current<0>);
   _astate->kb_manager->connect("switch_to_ws_1", this, &workspace_manager_t::force_set_current<1>);
@@ -260,18 +284,18 @@ workspace_manager_t::workspace_manager_t(app_state_t *_astate){
   _astate->kb_manager->connect("switch_to_ws_8", this, &workspace_manager_t::force_set_current<8>);
 }
 
-shared_ptr<workspace_t> workspace_manager_t::get_current(){
+shared_ptr<workspace_t> workspace_manager_t::get_current () {
   if (m_current_workspace_id > m_ws.size())
     return nullptr;
   return m_ws[m_current_workspace_id];
 }
 
-optional<uint8_t> workspace_manager_t::get_current_id(){
+optional<uint8_t> workspace_manager_t::get_current_id () {
   if (!m_ws.empty()) return optional<uint8_t>(m_current_workspace_id);
   return nullopt;
 }
 
-bool workspace_manager_t::set_current(const uint8_t ws_index){
+bool workspace_manager_t::set_current (const uint8_t ws_index) {
   bool succes = false;
   if (ws_index < m_ws.size()){
       m_current_workspace_id = ws_index;
@@ -280,7 +304,7 @@ bool workspace_manager_t::set_current(const uint8_t ws_index){
   return succes;
 }
 
-void workspace_manager_t::init_default(){
+void workspace_manager_t::init_default () {
 
   auto _ws2 = make_shared<workspace_t>();
   _ws2->m_ws_name = "d2";
@@ -319,7 +343,13 @@ void workspace_manager_t::init_default(){
   add_workspace(_ws3);
   add_workspace(_ws2);
 
-  _ws2->save_workspace_to_file("test.json");
+  _ws2->save_workspace_to_json("test.json");
+
+//  auto _ws4 = make_shared<workspace_t>();
+//  _ws4->m_ws_name = "d4";
+//  _ws4->load_workspace_from_file("test2.json");
+//  add_workspace(_ws4);
+
   m_current_workspace_id = 1;
 }
 
@@ -355,6 +385,7 @@ void workspace_manager_t::mouse_click(){
 
 void workspace_manager_t::add_workspace(const shared_ptr<workspace_t> &ws_to_add){
   m_ws.push_back(ws_to_add);
+  ws_to_add->workspace_changed();
 }
 
 void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file_format){

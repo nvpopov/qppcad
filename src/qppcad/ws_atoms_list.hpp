@@ -120,8 +120,8 @@ namespace qpp::cad {
                           bool auto_center = false);
 
       string get_ws_item_class_name() override ;
-      void write_to_json(json &json_object) override;
-      void read_from_json(json &json_object) override;
+      void write_to_json(json &data) override;
+      void read_from_json(json &data) override;
 
       ~ws_atoms_list_t() override {
 

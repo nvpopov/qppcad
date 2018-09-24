@@ -103,9 +103,10 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6,6));
       if (ImGui::BeginMenu("File")){
-          ImGui::MenuItem("New workspace");
-          ImGui::MenuItem("Open workspace");
-          if (ImGui::BeginMenu("Import as new workspace")){
+          ImGui::MenuItem("New", "Ctrl + N");
+          ImGui::MenuItem("Open", "Ctrl + O");
+          ImGui::Separator();
+          if (ImGui::BeginMenu("Import", "Ctrl + I")){
 
               if (ImGui::MenuItem("Standart XYZ(0D)")){
                   astate->ws_manager->
@@ -118,9 +119,10 @@ void ui_manager_t::render_main_menu(){
                 }
               ImGui::EndMenu();
             }
-          ImGui::MenuItem("Save workspace");
-          ImGui::MenuItem("Save workspace as");
-
+          ImGui::Separator();
+          ImGui::MenuItem("Save", "Ctrl + S");
+          ImGui::MenuItem("Save as", "Alt + S");
+          ImGui::Separator();
           if (ImGui::MenuItem("Exit")){
               qpp::cad::c_app::log("Menu -> File -> Exit clicked");
               bShowExitDialog = true;

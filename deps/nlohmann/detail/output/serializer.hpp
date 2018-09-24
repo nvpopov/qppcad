@@ -187,9 +187,15 @@ class serializer
                     //o->write_characters(indent_string.c_str(), new_indent);
                     dump(val.m_value.array->back(), true, ensure_ascii, indent_step, new_indent);
 
-                    //o->write_character('\n');
+                    //
                     //o->write_characters(indent_string.c_str(), current_indent);
+                    if (val.m_value.array->back().m_type == value_t::array){
+                         o->write_character('\n');
+                         o->write_characters(indent_string.c_str(), new_indent);
+                      }
                     o->write_character(']');
+
+
                 }
                 else
                 {
