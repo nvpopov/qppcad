@@ -219,12 +219,12 @@ void workspace_t::save_workspace_to_json (const string filename) {
   json data;
   //
 
-  data["qppcad_file_version"] = "1.0-aa";
-  data["ws_name"] = m_ws_name;
+  data[JSON_QPPCAD_VERSION] = "1.0-aa";
+  data[JSON_WS_NAME] = m_ws_name;
   json j_workspace_background = json::array({m_background_color[0],
                                              m_background_color[1],
                                              m_background_color[2], });
-  data["bg_clr"] = j_workspace_background;
+  data[JSON_BG_CLR] = j_workspace_background;
 
   json ws_objects = json::array({});
   for (const auto &ws_item : m_ws_items){
@@ -233,7 +233,7 @@ void workspace_t::save_workspace_to_json (const string filename) {
       ws_objects.push_back(ws_object);
     }
 
-  data["objects"] = ws_objects;
+  data[JSON_OBJECTS] = ws_objects;
 
   out_file << data.dump(2);
 
@@ -246,18 +246,22 @@ void workspace_t::load_workspace_from_json (const string filename) {
   try {
     data = json::parse(ifile);
 
-    if (data.find("ws_name") != data.end()) m_ws_name = data["ws_name"];
-    if (data.find("bg_clr") != data.end())
-      for (uint8_t i = 0; i < 3; i++) m_background_color[i] = data["bg_clr"][i];
+    if (data.find(JSON_WS_NAME) != data.end()) m_ws_name = data[JSON_WS_NAME];
+    if (data.find(JSON_BG_CLR) != data.end())
+      for (uint8_t i = 0; i < 3; i++) m_background_color[i] = data[JSON_BG_CLR][i];
 
-    if (data.find("objects") != data.end()){
-        json objects = data["objects"];
-        for (auto &object : objects){
-            string obj_type = object["type"];
-            shared_ptr<ws_item_t> obj = ws_item_factory::create_object(obj_type);
-            obj->read_from_json(object);
-            add_item_to_workspace(obj);
-          }
+    if (data.find(JSON_OBJECTS) != data.end()){
+        json objects = data[JSON_OBJECTS];
+        for (auto &object : objects)
+          if (object.find(JSON_WS_ITEM_TYPE) != object.end()){
+              string obj_type = object[JSON_WS_ITEM_TYPE];
+              shared_ptr<ws_item_t> obj = ws_item_factory::create_object(obj_type);
+              obj->read_from_json(object);
+              add_item_to_workspace(obj);
+            } else {
+              c_app::log(fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
+                                     object[JSON_WS_ITEM_NAME], filename));
+            }
       }
 
   } catch (json::parse_error &e) {
@@ -345,10 +349,10 @@ void workspace_manager_t::init_default () {
 
   _ws2->save_workspace_to_json("test.json");
 
-//  auto _ws4 = make_shared<workspace_t>();
-//  _ws4->m_ws_name = "d4";
-//  _ws4->load_workspace_from_file("test2.json");
-//  add_workspace(_ws4);
+  auto _ws4 = make_shared<workspace_t>();
+  _ws4->m_ws_name = "d4";
+  _ws4->load_workspace_from_json("test2.json");
+  add_workspace(_ws4);
 
   m_current_workspace_id = 1;
 }

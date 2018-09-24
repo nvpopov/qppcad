@@ -110,23 +110,23 @@ void ws_item_t::on_end_node_gizmo_translate(){
 }
 
 void ws_item_t::write_to_json(json &data){
-  data["name"] = m_name;
-  data["type"] = get_ws_item_class_name();
-  data["is_visible"] = m_is_visible;
+  data[JSON_WS_ITEM_NAME] = m_name;
+  data[JSON_WS_ITEM_TYPE] = get_ws_item_class_name();
+  data[JSON_IS_VISIBLE] = m_is_visible;
   json coord = json::array({m_pos[0], m_pos[1], m_pos[2]});
-  data["pos"] = coord;
+  data[JSON_POS] = coord;
 }
 
 void ws_item_t::read_from_json(json &data){
   //read m_name & is_visible & pos
-  if (data.find("name") != data.end()) m_name = data["name"];
-  if (data.find("is_visible") != data.end()) m_is_visible = data["is_visible"];
+  if (data.find(JSON_WS_ITEM_NAME) != data.end()) m_name = data[JSON_WS_ITEM_NAME];
+  if (data.find(JSON_IS_VISIBLE) != data.end()) m_is_visible = data[JSON_IS_VISIBLE];
 
   if (support_translation())
-    if (data.find("pos") != data.end()) {
+    if (data.find(JSON_POS) != data.end()) {
         vector3<float> pos_rd = vector3<float>::Zero();
         for(uint8_t i = 0; i < 3; i++)
-          pos_rd[i] = data["pos"][i].get<float>();
+          pos_rd[i] = data[JSON_POS][i].get<float>();
         m_pos = pos_rd;
       }
 

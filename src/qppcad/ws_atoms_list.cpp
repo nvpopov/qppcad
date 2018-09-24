@@ -451,32 +451,24 @@ string ws_atoms_list_t::get_ws_item_class_name() {
 void ws_atoms_list_t::write_to_json(json &data) {
   ws_item_t::write_to_json(data);
 
-  data["dim"] = m_geom->DIM;
-  data["show_img_atoms"] = m_show_imaginary_atoms;
-  data["show_img_bonds"] = m_show_imaginary_bonds;
-  data["show_bonds"] = m_show_bonds;
-  data["show_atoms"] = m_show_atoms;
-  data["bt_show_disabled_records"] = m_bonding_table_show_disabled_record;
-  data["atom_scale"] = m_atom_scale_factor;
-  data["bond_scale"] = m_bond_scale_factor;
-  data["cell_color"] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
-  data["bonding_table"] = json::array({});
+  data[JSON_DIM] = m_geom->DIM;
+  data[JSON_SHOW_IMG_ATOMS] = m_show_imaginary_atoms;
+  data[JSON_SHOW_IMG_BONDS] = m_show_imaginary_bonds;
+  data[JSON_SHOW_BONDS] = m_show_bonds;
+  data[JSON_SHOW_ATOMS] = m_show_atoms;
+  data[JSON_BT_SHOW_DSBL] = m_bonding_table_show_disabled_record;
+  data[JSON_ATOM_SCALE] = m_atom_scale_factor;
+  data[JSON_BOND_SCALE] = m_bond_scale_factor;
+  data[JSON_CELL_COLOR] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
+  data[JSON_BONDING_TABLE] = json::array({});
 
-  for (const auto &elem : m_tws_tr->m_bonding_table.m_dist) {
+  for (auto&& [key, value] : m_tws_tr->m_bonding_table.m_dist) {
       json bt_rec = json::array({});
-      bt_rec.push_back(m_geom->atom_of_type(elem.first.m_a));
-      bt_rec.push_back(m_geom->atom_of_type(elem.first.m_b));
-      bt_rec.push_back(elem.second.m_bonding_dist);
-      bt_rec.push_back(elem.second.m_enabled);
-      data["bonding_table"].push_back(bt_rec);
-    }
-
-  data["bonding_table_max_dist"] = json::array({});
-  for (const auto &elem : m_tws_tr->m_bonding_table.m_max_dist) {
-      json bt_md_rec = json::array({});
-      bt_md_rec.push_back(elem.first);
-      bt_md_rec.push_back(elem.second);
-      data["bonding_table_max_dist"].push_back(bt_md_rec);
+      bt_rec.push_back(m_geom->atom_of_type(key.m_a));
+      bt_rec.push_back(m_geom->atom_of_type(key.m_b));
+      bt_rec.push_back(value.m_bonding_dist);
+      bt_rec.push_back(value.m_enabled);
+      data[JSON_BONDING_TABLE].push_back(bt_rec);
     }
 
   if (m_geom->DIM > 0) {
@@ -486,58 +478,60 @@ void ws_atoms_list_t::write_to_json(json &data) {
           for (uint8_t q = 0; q < 3; q++) cell_data.push_back(m_geom->cell.v[i][q]);
           cell.push_back(cell_data);
         }
-      data["cell"] = cell;
+      data[JSON_CELL] = cell;
     }
 
-  data["atoms"] = json::array({});
+  data[JSON_ATOMS] = json::array({});
   for (auto i = 0; i < m_geom->nat(); i++){
       json atom = json::array({});
       atom.push_back(m_geom->atom(i));
       atom.push_back(m_geom->pos(i)[0]);
       atom.push_back(m_geom->pos(i)[1]);
       atom.push_back(m_geom->pos(i)[2]);
-      data["atoms"].push_back(atom);
+      data[JSON_ATOMS].push_back(atom);
     }
 }
 
 void ws_atoms_list_t::read_from_json(json &data) {
   ws_item_t::read_from_json(data);
 
-  if (data.find("dim") != data.end()) {
-      m_geom->DIM = data["dim"];
+  if (data.find(JSON_DIM) != data.end()) {
+      m_geom->DIM = data[JSON_DIM];
       m_geom->cell.DIM = m_geom->DIM;
     }
 
-  if (data.find("atom_scale") != data.end())
-    m_atom_scale_factor = data["atom_scale"].get<float>();
+  if (data.find(JSON_ATOM_SCALE) != data.end())
+    m_atom_scale_factor = data[JSON_ATOM_SCALE].get<float>();
 
-  if (data.find("bond_scale") != data.end())
-    m_bond_scale_factor = data["bond_scale"].get<float>();
+  if (data.find(JSON_BOND_SCALE) != data.end())
+    m_bond_scale_factor = data[JSON_BOND_SCALE].get<float>();
 
-  if (data.find("show_img_atoms") != data.end()) m_show_imaginary_atoms = data["show_img_atoms"];
-  if (data.find("show_img_bonds") != data.end()) m_show_imaginary_bonds = data["show_img_bonds"];
-  if (data.find("show_bonds") != data.end()) m_show_atoms = data["show_bonds"];
-  if (data.find("show_atoms") != data.end()) m_show_bonds = data["show_atoms"];
-  if (data.find("bt_show_disabled_records") != data.end())
-    m_bonding_table_show_disabled_record = data["bt_show_disabled_records"];
+  if (data.find(JSON_SHOW_IMG_ATOMS) != data.end())
+    m_show_imaginary_atoms = data[JSON_SHOW_IMG_ATOMS];
+
+  if (data.find(JSON_SHOW_IMG_BONDS) != data.end())
+    m_show_imaginary_bonds = data[JSON_SHOW_IMG_BONDS];
+
+  if (data.find(JSON_SHOW_BONDS) != data.end())
+    m_show_atoms = data[JSON_SHOW_BONDS];
+
+  if (data.find(JSON_SHOW_ATOMS) != data.end())
+    m_show_bonds = data[JSON_SHOW_ATOMS];
+
+  if (data.find(JSON_BT_SHOW_DSBL) != data.end())
+    m_bonding_table_show_disabled_record = data[JSON_BT_SHOW_DSBL];
 
   m_tws_tr->freeze();
   m_tws_tr->clr_ntable();
   m_tws_tr->clr_tree();
   m_ext_obs->first_data = true;
 
-  if (data.find("bonding_table_max_dist") != data.end()) {
-      for (auto &elem : data["bonding_table_max_dist"]){
-          m_tws_tr->m_bonding_table.m_max_dist[elem[0].get<int>()] = elem[1].get<float>();
-        }
-    }
-
   if (m_geom->DIM>0) {
-      if (data.find("cell") != data.end()){
+      if (data.find(JSON_CELL) != data.end()){
           for (uint8_t i = 0; i < m_geom->DIM; i++){
-              vector3<float> cellv(data["cell"][i][0].get<float>(),
-                  data["cell"][i][1].get<float>(),
-                  data["cell"][i][2].get<float>());
+              vector3<float> cellv(data[JSON_CELL][i][0].get<float>(),
+                  data[JSON_CELL][i][1].get<float>(),
+                  data[JSON_CELL][i][2].get<float>());
               m_geom->cell.v[i] = cellv;
             }
         } else {
@@ -546,23 +540,23 @@ void ws_atoms_list_t::read_from_json(json &data) {
         }
     }
 
-  if (data.find("atoms") != data.end())
-    for (const auto &atom : data["atoms"]){
+  if (data.find(JSON_ATOMS) != data.end())
+    for (const auto &atom : data[JSON_ATOMS]){
         m_geom->add(atom[0].get<string>(),
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
       }
 
-
-  if (data.find("bonding_table") != data.end())
-    for (auto &elem : data["bonding_table"]){
-        int type1 = m_geom->type_of_atom(elem[0].get<string>());
-        int type2 = m_geom->type_of_atom(elem[1].get<string>());
-        float dist = elem[2].get<float>();
-        bool br_enabled = elem[3].get<bool>();
-        m_tws_tr->m_bonding_table.m_dist[sym_key<uint32_t>(type1, type2)].m_bonding_dist = dist;
-        m_tws_tr->m_bonding_table.m_dist[sym_key<uint32_t>(type1, type2)].m_enabled = br_enabled;
-      }
-
+  if (data.find(JSON_BONDING_TABLE) != data.end()){
+      for (auto &elem : data[JSON_BONDING_TABLE]){
+          int type1 = m_geom->type_of_atom(elem[0].get<string>());
+          int type2 = m_geom->type_of_atom(elem[1].get<string>());
+          float dist = elem[2].get<float>();
+          bool br_enabled = elem[3].get<bool>();
+          m_tws_tr->m_bonding_table.m_dist[sym_key<uint32_t>(type1, type2)].m_bonding_dist = dist;
+          m_tws_tr->m_bonding_table.m_dist[sym_key<uint32_t>(type1, type2)].m_enabled = br_enabled;
+        }
+      m_tws_tr->m_bonding_table.update_pair_max_dist_all();
+    }
 
   geometry_changed();
   m_tws_tr->manual_build();
