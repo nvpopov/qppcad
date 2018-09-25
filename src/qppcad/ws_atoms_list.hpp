@@ -3,8 +3,8 @@
 
 #include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
-#include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
+#include <geom/geom_anim.hpp>
 #include <geom/ngbr.hpp>
 #include <geom/extents_observer.hpp>
 #include <geom/tws_tree.hpp>
@@ -40,6 +40,12 @@ namespace qpp::cad {
       float m_bond_scale_factor{0.09f};
       vector3<float> m_cell_color{0.1f, 0.1f, 0.1f};
 
+      vector<geom_anim_record_t<float> >                            m_anim;
+      float m_cur_anim_time{0.0f};
+      float m_anim_frame_time{1.0f};
+      int m_cur_anim{0};
+      bool m_play_anim{false};
+
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
       unique_ptr<bonding_table<float> >                             m_bt;
       unique_ptr<neighbours_table<float> >                          m_nt;
@@ -64,15 +70,15 @@ namespace qpp::cad {
       /// \brief render_atom
       /// \param atNum
       /// \param atIndex
-      void render_atom(const uint16_t at_num, const index &at_index);
+      void render_atom(const uint32_t at_num, const index &at_index);
 
       /// \brief render_bond
       /// \param atNum1
       /// \param atIndex1
       /// \param atNum2
       /// \param atIndex2
-      void render_bond(const uint16_t at_num1, const index &at_index1,
-                       const uint16_t at_num2, const index &at_index2);
+      void render_bond(const uint32_t at_num1, const index &at_index1,
+                       const uint32_t at_num2, const index &at_index2);
 
       void render_ui() override;
       void td_context_menu_edit_item() override;
@@ -87,6 +93,9 @@ namespace qpp::cad {
       void update_atom(const int at_id, const vector3<float> &pos);
       void update_atom(const int at_id, const string &at_name);
       void delete_selected_atoms();
+
+      bool animable();
+      void update_geom_to_anim(const int anim_id, const float current_frame);
 
       bool support_translation() override;
       bool support_rotation() override;

@@ -112,10 +112,19 @@ void ui_manager_t::render_main_menu(){
           ImGui::Separator();
           if (ImGui::BeginMenu("Import")){
 
-              if (ImGui::MenuItem("Standart XYZ(0D)")){
-                  astate->ws_manager->
-                      query_import_file_as_new_workspace(qc_file_format::format_standart_xyz);
+              if (ImGui::BeginMenu("XYZ")){
+                  if (ImGui::MenuItem("Standart XYZ(0D)")){
+                      astate->ws_manager->
+                          query_import_file_as_new_workspace(qc_file_format::format_standart_xyz);
+                    }
+                  if (ImGui::MenuItem("Multiframe XYZ")){
+                      astate->ws_manager->
+                          query_import_file_as_new_workspace(qc_file_format::format_multi_frame_xyz);
+                    }
+                  ImGui::EndMenu();
                 }
+
+
 
               if (ImGui::MenuItem("VASP POSCAR(CONTCAR)")){
                   astate->ws_manager->

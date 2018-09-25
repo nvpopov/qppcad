@@ -4,6 +4,7 @@
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
+#include <io/xyz_multiframe.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -147,7 +148,7 @@ void ws_atoms_list_t::render () {
     }
 }
 
-void ws_atoms_list_t::render_atom (const uint16_t at_num, const index &at_index) {
+void ws_atoms_list_t::render_atom (const uint32_t at_num, const index &at_index) {
 
   auto ap_idx = ptable::number_by_symbol(m_geom->atom(at_num));
   float dr_rad = 0.4f;
@@ -167,8 +168,8 @@ void ws_atoms_list_t::render_atom (const uint16_t at_num, const index &at_index)
   app_state_c->dp->render_atom(color, m_geom->pos(at_num, at_index) + m_pos, dr_rad);
 }
 
-void ws_atoms_list_t::render_bond (const uint16_t atNum1, const index &atIndex1,
-                                   const uint16_t atNum2, const index &atIndex2) {
+void ws_atoms_list_t::render_bond (const uint32_t atNum1, const index &atIndex1,
+                                   const uint32_t atNum2, const index &atIndex2) {
   auto ap_idx = ptable::number_by_symbol(m_geom->atom(atNum1));
   vector3<float> bcolor(0.0, 0.0, 1.0);
   if(ap_idx){bcolor = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
@@ -303,6 +304,29 @@ void ws_atoms_list_t::delete_selected_atoms () {
     }
 }
 
+bool ws_atoms_list_t::animable(){
+  if (m_anim.empty()) return false;
+  for (auto &anim : m_anim)
+    if (anim.frame_data.empty()) return false;
+  return true;
+}
+
+void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
+                                          const float current_frame){
+  float start_frame = std::floor(current_frame);
+  float end_frame   = std::ceil(current_frame);
+  float frame_delta = end_frame - current_frame;
+  int start_frame_n = int(start_frame);
+  int end_frame_n   = int(end_frame);
+
+  if (anim_id > m_anim.size()) return;
+  for (auto i = 0; i < m_geom->nat(); i++){
+      vector3<float> new_pos = m_anim[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
+                               m_anim[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
+      m_geom->change_pos(i, new_pos);
+    }
+}
+
 bool ws_atoms_list_t::support_translation () { return true; }
 
 bool ws_atoms_list_t::support_rotation () { return false; }
@@ -334,8 +358,7 @@ uint32_t ws_atoms_list_t::get_amount_of_selected_content() {
 
 void ws_atoms_list_t::on_begin_content_gizmo_translate(){
   //c_app::log(fmt::format("Start of translating node [{}] content", name));
-  m_tws_tr->m_auto_bonding = false;
-  m_tws_tr->m_auto_build   = false;
+  m_tws_tr->freeze();
 }
 
 void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos) {
@@ -350,8 +373,7 @@ void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> 
 
 void ws_atoms_list_t::on_end_content_gizmo_translate() {
   c_app::log(fmt::format("End of translating node [{}] content", m_name));
-  m_tws_tr->m_auto_bonding = true;
-  m_tws_tr->m_auto_build   = true;
+  m_tws_tr->unfreeze();
 }
 
 void ws_atoms_list_t::recalc_gizmo_barycenter() {
@@ -409,6 +431,12 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
     case qc_file_format::format_standart_xyz:
       m_geom->DIM = 0;
       read_xyz(qc_data, *(m_geom));
+      break;
+
+    case qc_file_format::format_multi_frame_xyz:
+      m_geom->DIM = 0;
+      m_anim.clear();
+      read_xyz_multiframe(qc_data, *(m_geom), m_anim);
       break;
 
     case qc_file_format::format_vasp_poscar:

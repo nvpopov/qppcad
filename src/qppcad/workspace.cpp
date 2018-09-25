@@ -337,6 +337,14 @@ void workspace_manager_t::init_default () {
   _wsl33->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                          false);
 
+
+  auto _ws4 = make_shared<workspace_t>();
+  _ws4->m_ws_name = "animtest1";
+  auto _ws4_al = make_shared<ws_atoms_list_t>();
+  _ws4->add_item_to_workspace(_ws4_al);
+  _ws4_al->load_from_file(qc_file_format::format_multi_frame_xyz, "../data/refs/chxinv.xyz",
+                         false);
+
   _wsl3->m_name = "zeolite1";
   _wsl32->m_name = "nanotube1";
   _wsl32->m_pos = vector3<float>(0.0f, 0.0f, 14.0f);
@@ -346,26 +354,26 @@ void workspace_manager_t::init_default () {
 
   add_workspace(_ws3);
   add_workspace(_ws2);
+  add_workspace(_ws4);
 
   _ws2->save_workspace_to_json("test.json");
+  _ws4->save_workspace_to_json("test_with_anim.json");
 
   //  auto _ws4 = make_shared<workspace_t>();
   //  _ws4->m_ws_name = "d4";
   //  _ws4->load_workspace_from_json("test2.json");
   //  add_workspace(_ws4);
 
-  set_current(1);
+  set_current(2);
 }
 
 void workspace_manager_t::render_current_workspace () {
 
   if (has_wss()){
       if (m_current_workspace_id < m_ws.size()){
-
           glClearColor(m_ws[m_current_workspace_id]->m_background_color[0],
               m_ws[m_current_workspace_id]->m_background_color[1],
               m_ws[m_current_workspace_id]->m_background_color[2], 1);
-
           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
           c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
           m_ws[m_current_workspace_id]->render();
@@ -396,15 +404,15 @@ void workspace_manager_t::add_workspace (const shared_ptr<workspace_t> &ws_to_ad
 void workspace_manager_t::query_import_file_as_new_workspace (qc_file_format file_format) {
   app_state_t *astate = &(c_app::get_state());
   bool succes{false};
-  std::string filter{"*.*"};
+  std::string filter{"*"};
   std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
   if (succes){
       auto new_ws = make_shared<workspace_t>();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
       new_ws->m_ws_name = file_name_extr;
-      auto _wsl2 = make_shared<ws_atoms_list_t>();
-      new_ws->add_item_to_workspace(_wsl2);
-      _wsl2->load_from_file(file_format, file_name_fd, false);
+      auto new_atoms_list = make_shared<ws_atoms_list_t>();
+      new_ws->add_item_to_workspace(new_atoms_list);
+      new_atoms_list->load_from_file(file_format, file_name_fd, false);
       add_workspace(new_ws);
       set_current(m_ws.size()-1);
     }

@@ -2,6 +2,9 @@
 #define QPPCAD_WS_ATOMS_LIST_OBJ_INSP
 #include <qppcad/ws_atoms_list.hpp>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+
 namespace qpp::cad {
   struct ws_atoms_list_obj_insp_helper {
       static void render_ui(ws_atoms_list_t *al){
@@ -121,7 +124,7 @@ namespace qpp::cad {
                       if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled))) rebuild_ngb = true;
 
                       if (elem.second.m_enabled){
-                           ImGui::SameLine();
+                          ImGui::SameLine();
                           ImGui::PushItemWidth(140);
                           if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
                               al->m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
@@ -201,6 +204,33 @@ namespace qpp::cad {
                                                           al->m_new_atom_pos);
           }
 
+        if (al->animable()){
+            if (ImGui::CollapsingHeader("Animations")){
+                ImGui::Spacing();
+                ImGui::BulletText(fmt::format("Total animations : {}", al->m_anim.size()).c_str());
+                ImGui::PushItemWidth(140);
+                ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.1f, 5.0f);
+                ImGui::Separator();
+
+                std::vector<std::string>  vStr;
+                vStr.reserve(10);
+                std::vector<char*>  vChar;
+                for (size_t i = 0; i < al->m_anim.size(); i++)
+                  vStr.push_back(al->m_anim[i].anim_name);
+                std::transform(vStr.begin(), vStr.end(), std::back_inserter(vChar),vec_str_to_char);
+
+                ImGui::PushItemWidth(150);
+                ImGui::Combo("Current animation", &al->m_cur_anim, vChar.data(), al->m_anim.size());
+                ImGui::Text(fmt::format("Frames count: {}",
+                                        al->m_anim[al->m_cur_anim].frame_data.size()).c_str());
+                ImGui::Separator();
+                ImGui::PushItemWidth(240);
+                if (ImGui::SliderFloat("Timeline", &al->m_cur_anim_time,
+                                       0.0f, (al->m_anim[al->m_cur_anim].frame_data.size() - 1))){
+                    al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                  }
+              }
+          }
         if (ImGui::CollapsingHeader("Export")){
             if (ImGui::Button("VASP POSCAR")){
 
@@ -246,5 +276,5 @@ namespace qpp::cad {
       }
   };
 }
-
+#pragma clang diagnostic pop
 #endif
