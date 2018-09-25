@@ -7,21 +7,21 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-optional<int16_t> workspace_t::get_selected_item () {
-  for (uint16_t i = 0; i < m_ws_items.size(); i++)
-    if (m_ws_items[i]->m_selected) return optional<int16_t>(i);
+optional<size_t> workspace_t::get_selected_item () {
+  for (size_t i = 0; i < m_ws_items.size(); i++)
+    if (m_ws_items[i]->m_selected) return optional<size_t>(i);
   return nullopt;
 }
 
 ws_item_t *workspace_t::get_selected () {
-  optional<int16_t> sel_idx = get_selected_item();
+  optional<size_t> sel_idx = get_selected_item();
   if (sel_idx) return m_ws_items[*sel_idx].get();
   else return nullptr;
 }
 
-void workspace_t::set_selected_item (const int16_t sel_idx) {
+void workspace_t::set_selected_item (const size_t sel_idx) {
   unselect_all();
-  if (sel_idx >= 0 && sel_idx < m_ws_items.size() && !m_ws_items.empty()){
+  if (sel_idx < m_ws_items.size() && !m_ws_items.empty()) {
       m_ws_items[sel_idx]->m_selected = true;
       m_gizmo->attached_item = m_ws_items[sel_idx].get();;
     }
@@ -148,15 +148,12 @@ void workspace_t::render() {
 
 }
 
-void workspace_t::mouse_click (const double mouse_x, const double mouse_y) {
+void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
   if (ImGui::GetIO().WantCaptureMouse) return;
 
   m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
-
-
   m_ray_debug.start = m_camera->m_view_point;
-  //  if (m_camera->cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO) m_ray_debug.start *= m_camera->m_ortho_scale;
 
   if (m_gizmo->process_ray(&m_ray_debug)){
       c_app::log("gizmo clicked");
@@ -200,8 +197,9 @@ void workspace_t::dialog_add_geom_from_file (qc_file_format file_format) {
 
   app_state_t *astate = &(c_app::get_state());
 
-  bool succes = false;
-  string filter = "*";
+  bool succes{false};
+  string filter{"*"};
+
   string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
   if (succes) {
@@ -260,9 +258,11 @@ void workspace_t::load_workspace_from_json (const string filename) {
               add_item_to_workspace(obj);
             } else {
               c_app::log(fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
-                                     object[JSON_WS_ITEM_NAME], filename));
+                                     object[JSON_WS_ITEM_NAME].get<string>(), filename));
             }
       }
+
+    m_fs_path = filename;
 
   } catch (json::parse_error &e) {
     std::cerr << e.what() << " " << std::endl;
@@ -294,18 +294,18 @@ shared_ptr<workspace_t> workspace_manager_t::get_current () {
   return m_ws[m_current_workspace_id];
 }
 
-optional<uint8_t> workspace_manager_t::get_current_id () {
-  if (!m_ws.empty()) return optional<uint8_t>(m_current_workspace_id);
+optional<size_t> workspace_manager_t::get_current_id () {
+  if (!m_ws.empty()) return optional<size_t>(m_current_workspace_id);
   return nullopt;
 }
 
-bool workspace_manager_t::set_current (const uint8_t ws_index) {
-  bool succes = false;
+bool workspace_manager_t::set_current (const size_t ws_index) {
   if (ws_index < m_ws.size()){
       m_current_workspace_id = ws_index;
-      succes = true;
+      update_window_title();
+      return true;
     }
-  return succes;
+  return false;
 }
 
 void workspace_manager_t::init_default () {
@@ -349,33 +349,34 @@ void workspace_manager_t::init_default () {
 
   _ws2->save_workspace_to_json("test.json");
 
-  auto _ws4 = make_shared<workspace_t>();
-  _ws4->m_ws_name = "d4";
-  _ws4->load_workspace_from_json("test2.json");
-  add_workspace(_ws4);
+  //  auto _ws4 = make_shared<workspace_t>();
+  //  _ws4->m_ws_name = "d4";
+  //  _ws4->load_workspace_from_json("test2.json");
+  //  add_workspace(_ws4);
 
-  m_current_workspace_id = 1;
+  set_current(1);
 }
 
-void workspace_manager_t::render_current_workspace(){
+void workspace_manager_t::render_current_workspace () {
 
-  if (has_wss())
-    if (m_current_workspace_id < m_ws.size()){
+  if (has_wss()){
+      if (m_current_workspace_id < m_ws.size()){
 
-        glClearColor(m_ws[m_current_workspace_id]->m_background_color[0],
-            m_ws[m_current_workspace_id]->m_background_color[1],
-            m_ws[m_current_workspace_id]->m_background_color[2], 1);
+          glClearColor(m_ws[m_current_workspace_id]->m_background_color[0],
+              m_ws[m_current_workspace_id]->m_background_color[1],
+              m_ws[m_current_workspace_id]->m_background_color[2], 1);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
-        m_ws[m_current_workspace_id]->render();
-      } else {
-        glClearColor(0.8f, 0.8f, 0.8f, 1);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      }
+          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+          c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
+          m_ws[m_current_workspace_id]->render();
+        } else {
+          glClearColor(0.8f, 0.8f, 0.8f, 1);
+          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        }
+    }
 }
 
-void workspace_manager_t::mouse_click(){
+void workspace_manager_t::mouse_click () {
   app_state_t* astate =  &(c_app::get_state());
   c_app::log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
   if (astate->mouse_in_3d_area){
@@ -387,26 +388,72 @@ void workspace_manager_t::mouse_click(){
     }
 }
 
-void workspace_manager_t::add_workspace(const shared_ptr<workspace_t> &ws_to_add){
+void workspace_manager_t::add_workspace (const shared_ptr<workspace_t> &ws_to_add) {
   m_ws.push_back(ws_to_add);
   ws_to_add->workspace_changed();
 }
 
-void workspace_manager_t::query_import_file_as_new_workspace(qc_file_format file_format){
+void workspace_manager_t::query_import_file_as_new_workspace (qc_file_format file_format) {
   app_state_t *astate = &(c_app::get_state());
-  bool succes = false;
-  std::string filter = "*";
-  std::string file_name_fd =
-      astate->fd_manager->request_open_file(filter, succes);
+  bool succes{false};
+  std::string filter{"*.*"};
+  std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
   if (succes){
-      auto _ws2 = make_shared<workspace_t>();
+      auto new_ws = make_shared<workspace_t>();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
-      _ws2->m_ws_name = file_name_extr;
+      new_ws->m_ws_name = file_name_extr;
       auto _wsl2 = make_shared<ws_atoms_list_t>();
-      _ws2->add_item_to_workspace(_wsl2);
+      new_ws->add_item_to_workspace(_wsl2);
       _wsl2->load_from_file(file_format, file_name_fd, false);
-      add_workspace(_ws2);
+      add_workspace(new_ws);
       set_current(m_ws.size()-1);
     }
+}
+
+
+void workspace_manager_t::dialog_load_workspace () {
+
+  app_state_t *astate = &(c_app::get_state());
+
+  string filter{"json"};
+  bool succes{false};
+
+  string file_name = astate->fd_manager->request_open_file(filter, succes);
+  if (succes) {
+      auto new_ws = make_shared<workspace_t>();
+      //new_ws->m_ws_name = "d4";
+      new_ws->load_workspace_from_json(file_name);
+      add_workspace(new_ws);
+      set_current(m_ws.size()-1);
+    }
+}
+
+void workspace_manager_t::dialog_save_workspace (const size_t ws_idx, const bool force_save_as) {
+
+  app_state_t *astate = &(c_app::get_state());
+
+  string filter{"json"};
+  bool succes{false};
+  if (ws_idx > m_ws.size()) return;
+  auto ws_to_save = m_ws[ws_idx];
+  if (ws_to_save->m_fs_path == "" || force_save_as){
+      string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
+      if (!succes) return;
+      if (_tmp_fs_path.substr(_tmp_fs_path.find_last_of(".")+1) != "json") _tmp_fs_path += ".json";
+      ws_to_save->m_fs_path = _tmp_fs_path;
+    }
+  ws_to_save->save_workspace_to_json(ws_to_save->m_fs_path);
+}
+
+void workspace_manager_t::dialog_save_current_workspace(const bool force_save_as){
+  dialog_save_workspace(m_current_workspace_id, force_save_as);
+  update_window_title();
+}
+
+void workspace_manager_t::update_window_title(){
+  if (m_current_workspace_id >= m_ws.size()) return;
+  c_app::update_window_title(fmt::format(" - {} - [{}]",
+                                         string(m_ws[m_current_workspace_id]->m_ws_name),
+                                         string(m_ws[m_current_workspace_id]->m_fs_path)));
 }
 

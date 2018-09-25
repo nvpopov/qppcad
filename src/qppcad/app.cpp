@@ -274,13 +274,17 @@ void qpp::cad::c_app::mouse_button_callback(GLFWwindow *window, int button, int 
     }
 }
 
+void qpp::cad::c_app::update_window_title(const string &new_title){
+  string tmp_title = "qpp::cad " + new_title;
+  glfwSetWindowTitle(qpp::cad::c_app::curWindow, tmp_title.c_str());
+}
+
 void qpp::cad::c_app::log(const std::string &logText){
 
   std::time_t t = std::chrono::system_clock::to_time_t(
                     std::chrono::system_clock::now());
   std::string ts( ctime( &t) );
-  std::cout << fmt::format("[{}] {}",
-                           ts.substr( 0, ts.length() -1  ), logText) << std::endl;
+  std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), logText);
 }
 
 GLFWwindow* qpp::cad::c_app::curWindow;

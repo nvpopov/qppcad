@@ -11,8 +11,8 @@ namespace qpp::cad {
             ImGui::Text("Total atoms:");
             ImGui::Text("Atom types:");
             ImGui::NextColumn();
-            ImGui::Text(fmt::format("{}", al->m_geom->nat()).c_str());
-            ImGui::Text(fmt::format("{}", al->m_geom->n_atom_types()).c_str());
+            ImGui::Text(fmt::format(" {} ", al->m_geom->nat()).c_str());
+            ImGui::Text(fmt::format(" {} ", al->m_geom->n_atom_types()).c_str());
             ImGui::Columns(1);
             ImGui::Spacing();
           }

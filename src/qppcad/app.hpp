@@ -39,12 +39,14 @@ namespace qpp::cad{
                                      int button,
                                      int action,
                                      int mods );
+
     static void begin_render();
     static void render();
     static void end_render();
 
-
   public:
+
+    static void update_window_title(const string &new_title);
     static void log(const std::string &logText);
     static void run();
     static app_state_t & get_state(){

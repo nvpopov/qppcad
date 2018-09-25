@@ -14,20 +14,17 @@ namespace qpp {
     "Select directory"
   };
 
-  ///
   /// \brief The file_dialog_t class
-  ///
   class file_dialog_manager_t {
     public:
-      ///
+
       /// \brief file_dialog_t
       /// \param activate_when_created
-      ///
       file_dialog_manager_t(){
-
       }
 
       std::string request_open_file(std::string &filter, bool &succes);
+      std::string request_save_file(std::string &filter, bool &succes);
   };
 }
 

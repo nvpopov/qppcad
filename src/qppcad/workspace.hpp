@@ -30,7 +30,7 @@ namespace qpp::cad{
   ///
   class workspace_manager_t {
   private:
-     uint8_t m_current_workspace_id;
+     size_t m_current_workspace_id;
   public:
 
     vector<shared_ptr<workspace_t> > m_ws;
@@ -38,9 +38,9 @@ namespace qpp::cad{
     workspace_manager_t(app_state_t *_astate);
 
     shared_ptr<workspace_t> get_current();
-    optional<uint8_t> get_current_id();
+    optional<size_t> get_current_id();
 
-    bool set_current(const uint8_t ws_index);
+    bool set_current(const size_t ws_index);
 
     template<int I>
     void force_set_current(){set_current(I);}
@@ -51,6 +51,11 @@ namespace qpp::cad{
     void mouse_click();
     void add_workspace(const shared_ptr<workspace_t> &ws_to_add);
     void query_import_file_as_new_workspace(qc_file_format file_format);
+    void dialog_load_workspace();
+    void dialog_save_workspace(const size_t ws_idx, const bool force_save_as);
+    void dialog_save_current_workspace(const bool force_save_as);
+    void update_window_title();
+
   };
 
   ///
@@ -58,6 +63,7 @@ namespace qpp::cad{
   ///
   class workspace_t : public std::enable_shared_from_this<workspace_t> {
   public:
+    string                         m_fs_path{""};
     ws_edit_type                   m_edit_type;
     vector<shared_ptr<ws_item_t> > m_ws_items;
     string                         m_ws_name;
@@ -77,21 +83,19 @@ namespace qpp::cad{
       m_gizmo = unique_ptr<gizmo_t>(new gizmo_t());
     }
 
-    optional<int16_t>  get_selected_item();
+    optional<size_t>  get_selected_item();
     ws_item_t *get_selected();
 
-
-    void set_selected_item(const int16_t sel_idx);
+    void set_selected_item(const size_t sel_idx);
     void unselect_all();
     void toggle_edit_mode();
     void workspace_changed();
     void reset_camera();
     void set_best_view();
     void render();
-    void mouse_click(const double mouse_x, const double mouse_y);
+    void mouse_click(const float mouse_x, const float mouse_y);
     void add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add);
     void dialog_add_geom_from_file(qc_file_format file_format);
-
 
     void save_workspace_to_json(const string filename);
     void load_workspace_from_json(const string filename);

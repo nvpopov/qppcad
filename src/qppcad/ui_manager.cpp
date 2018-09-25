@@ -34,19 +34,19 @@ void ui_manager_t::setup_style(){
   style->Colors[ImGuiCol_Text]                  = {0.99333335f, 0.99333335f, 0.99333335f, 1.00f};
   style->Colors[ImGuiCol_TextDisabled]          = {0.34509805f, 0.34509805f, 0.34509805f, 1.00f};
   style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
-  style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.48f};
+  style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.9f};
   style->Colors[ImGuiCol_PopupBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
   style->Colors[ImGuiCol_Border]                = {0.33333334f, 0.33333334f, 0.33333334f, 0.90f};
-  style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.00f};
+  style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.01f};
   style->Colors[ImGuiCol_FrameBg]               = {0.16862746f, 0.16862746f, 0.16862746f, 0.98f};
   style->Colors[ImGuiCol_FrameBgHovered]        = {0.453125f, 0.67578125f, 0.99609375f, 0.97f};
   style->Colors[ImGuiCol_FrameBgActive]         = {0.47058827f, 0.47058827f, 0.47058827f, 0.97f};
   style->Colors[ImGuiCol_TitleBg]               = {0.04f, 0.04f, 0.04f, 1.00f};
   style->Colors[ImGuiCol_TitleBgCollapsed]      = {0.16f, 0.29f, 0.48f, 1.00f};
   style->Colors[ImGuiCol_TitleBgActive]         = {0.00f, 0.00f, 0.00f, 0.96f};
-  style->Colors[ImGuiCol_MenuBarBg]             = {0.21058825f, 0.21627452f, 0.2101961f, 0.80f};
-  style->Colors[ImGuiCol_ScrollbarBg]           = {0.27058825f, 0.28627452f, 0.2901961f, 0.60f};
-  style->Colors[ImGuiCol_ScrollbarGrab]         = {0.21960786f, 0.30980393f, 0.41960788f, 0.51f};
+  style->Colors[ImGuiCol_MenuBarBg]             = {0.21058825f, 0.21627452f, 0.2101961f, 0.990f};
+  style->Colors[ImGuiCol_ScrollbarBg]           = {0.27058825f, 0.28627452f, 0.2901961f, 0.90f};
+  style->Colors[ImGuiCol_ScrollbarGrab]         = {0.21960786f, 0.30980393f, 0.41960788f, 0.91f};
   style->Colors[ImGuiCol_ScrollbarGrabHovered]  = {0.21960786f, 0.30980393f, 0.41960788f, 1.00f};
   style->Colors[ImGuiCol_ScrollbarGrabActive]   = {0.13725491f, 0.19215688f, 0.2627451f, 0.91f};
   // style->Colors[ImGuiCol_ComboBg]               = {0.1f, 0.1f, 0.1f, 0.99f};
@@ -56,7 +56,7 @@ void ui_manager_t::setup_style(){
   style->Colors[ImGuiCol_Button]                 = ImVec4(0.44f, 0.44f, 0.44f, 0.40f);
   style->Colors[ImGuiCol_ButtonHovered]          = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
   style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
-  style->Colors[ImGuiCol_Header]                = ImVec4(0.44f, 0.44f, 0.44f, 0.40f);
+  style->Colors[ImGuiCol_Header]                = ImVec4(0.44f, 0.44f, 0.44f, 0.90f);
   style->Colors[ImGuiCol_HeaderHovered]         = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
   style->Colors[ImGuiCol_HeaderActive]          = {0.47058827f, 0.47058827f, 0.47058827f, 0.67f};
   style->Colors[ImGuiCol_Separator]             = {0.31640625f, 0.31640625f, 0.31640625f, 1.00f};
@@ -104,9 +104,13 @@ void ui_manager_t::render_main_menu(){
       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6,6));
       if (ImGui::BeginMenu("File")){
           ImGui::MenuItem("New", "Ctrl + N");
-          ImGui::MenuItem("Open", "Ctrl + O");
+
+          if (ImGui::MenuItem("Open", "Ctrl + O")){
+              astate->ws_manager->dialog_load_workspace();
+            }
+
           ImGui::Separator();
-          if (ImGui::BeginMenu("Import", "Ctrl + I")){
+          if (ImGui::BeginMenu("Import")){
 
               if (ImGui::MenuItem("Standart XYZ(0D)")){
                   astate->ws_manager->
@@ -119,9 +123,17 @@ void ui_manager_t::render_main_menu(){
                 }
               ImGui::EndMenu();
             }
+
           ImGui::Separator();
-          ImGui::MenuItem("Save", "Ctrl + S");
-          ImGui::MenuItem("Save as", "Alt + S");
+
+          if (ImGui::MenuItem("Save", "Ctrl + S")){
+              astate->ws_manager->dialog_save_current_workspace(false);
+            }
+
+          if (ImGui::MenuItem("Save as", "Alt + S")){
+              astate->ws_manager->dialog_save_current_workspace(true);
+            }
+
           ImGui::Separator();
           if (ImGui::MenuItem("Exit")){
               qpp::cad::c_app::log("Menu -> File -> Exit clicked");
@@ -212,7 +224,7 @@ void ui_manager_t::render_main_menu(){
       ImGui::PopStyleVar();
 
       //
-      optional<uint8_t> ui_cur_ws = astate->ws_manager->get_current_id();
+      optional<size_t> ui_cur_ws = astate->ws_manager->get_current_id();
       int ui_cur_ws_exact = -1;
       if (ui_cur_ws) ui_cur_ws_exact = *ui_cur_ws;
 
@@ -220,7 +232,7 @@ void ui_manager_t::render_main_menu(){
       std::vector<std::string>  vStr;
       vStr.reserve(20);
       std::vector<char*>  vChar;
-      for (int i = 0; i < astate->ws_manager->m_ws.size(); i++)
+      for (size_t i = 0; i < astate->ws_manager->m_ws.size(); i++)
         vStr.push_back(astate->ws_manager->m_ws[i]->m_ws_name);
       std::transform(vStr.begin(), vStr.end(),
                      std::back_inserter(vChar),
@@ -260,7 +272,7 @@ void ui_manager_t::render_main_menu(){
   ImGui::PopStyleVar();
 
   if (bShowExitDialog) ImGui::OpenPopup("Quit?");
-  if (ImGui::BeginPopupModal("Quit?")){
+  if (ImGui::BeginPopupModal("Quit?", nullptr, ImGuiWindowFlags_NoResize)){
       ImGui::Text("Do you want to quit?");
       if (ImGui::Button("Yes", ImVec2(120, 40))){
           //ImGui::CloseCurrentPopup();
