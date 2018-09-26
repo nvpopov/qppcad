@@ -320,7 +320,7 @@ void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
   int end_frame_n   = int(end_frame);
 
   if (anim_id > m_anim.size()) return;
-  for (auto i = 0; i < m_geom->nat(); i++){
+  for (auto i = 0; i < m_anim[anim_id].frame_data[start_frame_n].size(); i++){
       vector3<float> new_pos = m_anim[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
                                m_anim[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
       m_geom->change_pos(i, new_pos);
@@ -346,6 +346,8 @@ std::string ws_atoms_list_t::compose_item_name () {
 void ws_atoms_list_t::update (float delta_time) {
   ws_item_t::update(delta_time);
 
+  if (m_cur_anim >= m_anim.size()) return; // wrong animation index
+
   if (m_play_anim && animable()) {
       m_cur_anim_time += 1 / (m_anim_frame_time*60);
       if (m_cur_anim_time > m_anim[m_cur_anim].frame_data.size() - 1) {
@@ -356,6 +358,13 @@ void ws_atoms_list_t::update (float delta_time) {
             }
         } else {
           update_geom_to_anim(m_cur_anim, m_cur_anim_time);
+        }
+
+      //if current anim type equals static -> update to static and switch m_cur_anim_time = 0
+      if (m_anim[m_cur_anim].m_anim_type == geom_anim_type::anim_static){
+          m_cur_anim_time = 0.0f;
+          m_play_anim = false;
+          m_play_cyclic = false;
         }
     }
 }

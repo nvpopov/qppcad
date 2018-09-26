@@ -367,15 +367,6 @@ void ui_manager_t::render_work_panel(){
   ImGui::Button("c" , ImVec2(20,24));
   ImGui::Separator();
 
-
-  ImGui::Text("T:");
-  ImGui::Button("X" , ImVec2(20,24));
-  ImGui::Button("Y" , ImVec2(20,24));
-  ImGui::Button("Z" , ImVec2(20,24));
-  ImGui::Separator();
-
-
-
   if (c_app::get_state().ws_manager->has_wss()){
       ImGui::Text("Edit:");
       int edit_mode = int(c_app::get_state().ws_manager->get_current()->m_edit_type);

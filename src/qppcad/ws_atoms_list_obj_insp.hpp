@@ -4,7 +4,7 @@
 #include <qppcad/imgui_addons.hpp>
 
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#pragma clang diagnostic ignored "-Wformat-secutity"
 
 namespace qpp::cad {
   struct ws_atoms_list_obj_insp_helper {
@@ -15,8 +15,8 @@ namespace qpp::cad {
             ImGui::Text("Total atoms:");
             ImGui::Text("Atom types:");
             ImGui::NextColumn();
-            ImGui::Text(fmt::format(" {} ", al->m_geom->nat()).c_str());
-            ImGui::Text(fmt::format(" {} ", al->m_geom->n_atom_types()).c_str());
+            ImGui::TextUnformatted(fmt::format(" {0}", al->m_geom->nat()).c_str(), nullptr);
+            ImGui::TextUnformatted(fmt::format(" {}", al->m_geom->n_atom_types()).c_str(), nullptr);
             ImGui::Columns(1);
             ImGui::Spacing();
           }
@@ -39,12 +39,13 @@ namespace qpp::cad {
             ImGui::NextColumn();
             ImGui::Separator();
             for (uint8_t i = 0; i < al->m_geom->n_types(); i++){
-                ImGui::Text(al->m_geom->atom_of_type(i).c_str());
+                ImGui::TextUnformatted(al->m_geom->atom_of_type(i).c_str(), nullptr);
               }
             ImGui::NextColumn();
 
             for (uint8_t i = 0; i < al->m_geom->n_types(); i++){
-                ImGui::Text(fmt::format("{}", al->m_geom->get_atom_count_by_type(i)).c_str());
+                ImGui::TextUnformatted(
+                      fmt::format("{}", al->m_geom->get_atom_count_by_type(i)).c_str(), nullptr);
               }
             ImGui::NextColumn();
 
@@ -208,7 +209,8 @@ namespace qpp::cad {
         if (al->animable()){
             if (ImGui::CollapsingHeader("Animations")){
                 ImGui::Spacing();
-                ImGui::BulletText(fmt::format("Total animations : {}", al->m_anim.size()).c_str());
+                ImGui::TextUnformatted(
+                      fmt::format("Total animations : {}", al->m_anim.size()).c_str(), nullptr);
                 ImGui::PushItemWidth(140);
 
                 ImGui::Separator();
@@ -217,15 +219,23 @@ namespace qpp::cad {
                 vStr.reserve(10);
                 std::vector<char*>  vChar;
                 for (size_t i = 0; i < al->m_anim.size(); i++)
-                  vStr.push_back(al->m_anim[i].anim_name);
+                  vStr.push_back(al->m_anim[i].m_anim_name);
                 std::transform(vStr.begin(), vStr.end(), std::back_inserter(vChar),vec_str_to_char);
 
                 ImGui::PushItemWidth(150);
-                ImGui::Combo("Current animation", &al->m_cur_anim, vChar.data(), al->m_anim.size());
+                if (ImGui::Combo("Current animation",
+                                 &al->m_cur_anim, vChar.data(), al->m_anim.size())){
+                    al->m_cur_anim_time = 0.0f;
+                  }
+
                 ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.1f, 5.0f);
                 ImGui::Checkbox("Play in cycle", &al->m_play_cyclic);
-                ImGui::Text(fmt::format("Frames count: {}",
-                                        al->m_anim[al->m_cur_anim].frame_data.size()).c_str());
+
+                ImGui::TextUnformatted(
+                      fmt::format("Frames count: {}",
+                                  al->m_anim[al->m_cur_anim].frame_data.size()).c_str(),
+                                  nullptr);
+
                 ImGui::Separator();
                 ImGui::PushItemWidth(240);
                 if (ImGui::SliderFloat("Timeline", &al->m_cur_anim_time,
