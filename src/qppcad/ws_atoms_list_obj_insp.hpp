@@ -1,6 +1,7 @@
 #ifndef QPPCAD_WS_ATOMS_LIST_OBJ_INSP
 #define QPPCAD_WS_ATOMS_LIST_OBJ_INSP
 #include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/imgui_addons.hpp>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
@@ -209,7 +210,7 @@ namespace qpp::cad {
                 ImGui::Spacing();
                 ImGui::BulletText(fmt::format("Total animations : {}", al->m_anim.size()).c_str());
                 ImGui::PushItemWidth(140);
-                ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.1f, 5.0f);
+
                 ImGui::Separator();
 
                 std::vector<std::string>  vStr;
@@ -221,14 +222,18 @@ namespace qpp::cad {
 
                 ImGui::PushItemWidth(150);
                 ImGui::Combo("Current animation", &al->m_cur_anim, vChar.data(), al->m_anim.size());
+                ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.1f, 5.0f);
+                ImGui::Checkbox("Play in cycle", &al->m_play_cyclic);
                 ImGui::Text(fmt::format("Frames count: {}",
                                         al->m_anim[al->m_cur_anim].frame_data.size()).c_str());
                 ImGui::Separator();
                 ImGui::PushItemWidth(240);
                 if (ImGui::SliderFloat("Timeline", &al->m_cur_anim_time,
                                        0.0f, (al->m_anim[al->m_cur_anim].frame_data.size() - 1))){
-                    al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                    if (!al->m_play_anim) al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
                   }
+
+                ImGui::ToggleButton("Play", &al->m_play_anim);
               }
           }
         if (ImGui::CollapsingHeader("Export")){

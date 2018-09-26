@@ -345,6 +345,19 @@ std::string ws_atoms_list_t::compose_item_name () {
 
 void ws_atoms_list_t::update (float delta_time) {
   ws_item_t::update(delta_time);
+
+  if (m_play_anim && animable()) {
+      m_cur_anim_time += 1 / (m_anim_frame_time*60);
+      if (m_cur_anim_time > m_anim[m_cur_anim].frame_data.size() - 1) {
+          if (m_play_cyclic) m_cur_anim_time = 0.0f;
+          else {
+              m_play_anim = false;
+              m_cur_anim_time = m_anim[m_cur_anim].frame_data.size() - 1;
+            }
+        } else {
+          update_geom_to_anim(m_cur_anim, m_cur_anim_time);
+        }
+    }
 }
 
 float ws_atoms_list_t::get_bb_prescaller () {

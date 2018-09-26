@@ -44,6 +44,7 @@ namespace qpp::cad {
       float m_cur_anim_time{0.0f};
       float m_anim_frame_time{1.0f};
       int m_cur_anim{0};
+      bool m_play_cyclic{false};
       bool m_play_anim{false};
 
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
