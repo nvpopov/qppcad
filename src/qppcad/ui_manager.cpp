@@ -28,7 +28,8 @@ void ui_manager_t::toggle_edit_mode(){
 
 void ui_manager_t::setup_style(){
   ImGuiStyle * style = &ImGui::GetStyle();
-  style->FrameRounding = 2.0f;
+  style->FrameRounding = 3.0f;
+  //style->
   style->ScrollbarRounding = 2.0f;
   style->FrameBorderSize = 1.0f;
   style->Colors[ImGuiCol_Text]                  = {0.99333335f, 0.99333335f, 0.99333335f, 1.00f};
@@ -37,7 +38,7 @@ void ui_manager_t::setup_style(){
   style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.9f};
   style->Colors[ImGuiCol_PopupBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
   style->Colors[ImGuiCol_Border]                = {0.33333334f, 0.33333334f, 0.33333334f, 0.90f};
-  style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.01f};
+  style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.00f};
   style->Colors[ImGuiCol_FrameBg]               = {0.16862746f, 0.16862746f, 0.16862746f, 0.98f};
   style->Colors[ImGuiCol_FrameBgHovered]        = {0.453125f, 0.67578125f, 0.99609375f, 0.97f};
   style->Colors[ImGuiCol_FrameBgActive]         = {0.47058827f, 0.47058827f, 0.47058827f, 0.97f};
@@ -55,7 +56,7 @@ void ui_manager_t::setup_style(){
   style->Colors[ImGuiCol_SliderGrabActive]      = {0.30f, 0.30f, 0.30f, 0.84f};
   style->Colors[ImGuiCol_Button]                 = ImVec4(0.44f, 0.44f, 0.44f, 0.40f);
   style->Colors[ImGuiCol_ButtonHovered]          = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
-  style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.568f, 0.849f, 0.620f, 1.000f);
+  style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.334f, 0.681f, 0.044f, 1.000f);
   style->Colors[ImGuiCol_Header]                = ImVec4(0.44f, 0.44f, 0.44f, 0.90f);
   style->Colors[ImGuiCol_HeaderHovered]         = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
   style->Colors[ImGuiCol_HeaderActive]          = {0.47058827f, 0.47058827f, 0.47058827f, 0.67f};
@@ -127,13 +128,20 @@ void ui_manager_t::render_main_menu(){
                 }
 
 
-
-              if (ImGui::MenuItem("VASP POSCAR(CONTCAR)")){
-                  astate->ws_manager->
-                      query_import_file_as_new_workspace(qc_file_format::format_vasp_poscar);
+              if (ImGui::BeginMenu("VASP")){
+                  if (ImGui::MenuItem("VASP POSCAR(CONTCAR)")){
+                      astate->ws_manager->
+                          query_import_file_as_new_workspace(qc_file_format::format_vasp_poscar);
+                    }
+                  if (ImGui::MenuItem("VASP OUTCAR MD")){
+                      astate->ws_manager->
+                          query_import_file_as_new_workspace(qc_file_format::format_vasp_outcar_md);
+                    }
+                  ImGui::EndMenu();
                 }
               ImGui::EndMenu();
             }
+
 
           ImGui::Separator();
 
@@ -193,12 +201,12 @@ void ui_manager_t::render_main_menu(){
 
           ImGui::Separator();
 
-//          ImGui::SliderFloat("Atom size scale",
-//                             &(c_app::get_state().atom_radius_scale_factor),
-//                             0.25f, 2.0f, "%.4f", 1);
-//          ImGui::SliderFloat("Bond size scale",
-//                             &(c_app::get_state().bond_radius_scale_factor),
-//                             0.02f, 2.0f, "%.4f", 1);
+          //          ImGui::SliderFloat("Atom size scale",
+          //                             &(c_app::get_state().atom_radius_scale_factor),
+          //                             0.25f, 2.0f, "%.4f", 1);
+          //          ImGui::SliderFloat("Bond size scale",
+          //                             &(c_app::get_state().bond_radius_scale_factor),
+          //                             0.02f, 2.0f, "%.4f", 1);
 
           ImGui::EndMenu();
         }
@@ -367,11 +375,11 @@ void ui_manager_t::render_work_panel(){
 
   ImGui::ToggleButton("~" , &console_widget->m_active, ImVec2(20,24));
   ImGui::Separator();
-  ImGui::Text("View:");
-  ImGui::Button("a" , ImVec2(20,24));
-  ImGui::Button("b" , ImVec2(20,24));
-  ImGui::Button("c" , ImVec2(20,24));
-  ImGui::Separator();
+  //  ImGui::Text("View:");
+  //  ImGui::Button("a" , ImVec2(20,24));
+  //  ImGui::Button("b" , ImVec2(20,24));
+  //  ImGui::Button("c" , ImVec2(20,24));
+  //  ImGui::Separator();
 
   if (c_app::get_state().ws_manager->has_wss()){
       ImGui::Text("Edit:");
@@ -553,7 +561,7 @@ void ui_manager_t::render_3d_viewport_context_menu(){
           if (cur_it){
               //if we in edit-item-mode show node related menu
               if (cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
-                  cur_it->td_context_menu_edit_item();
+                cur_it->td_context_menu_edit_item();
               else cur_it->td_context_menu_edit_content();
 
             } else {

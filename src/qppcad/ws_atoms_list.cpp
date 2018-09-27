@@ -323,14 +323,15 @@ bool ws_atoms_list_t::animable(){
 
 void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
                                           const float current_frame){
-  float start_frame = std::floor(current_frame);
+  float start_frame = int(current_frame);
   float end_frame   = std::ceil(current_frame);
   float frame_delta = end_frame - current_frame;
   int start_frame_n = int(start_frame);
   int end_frame_n   = int(end_frame);
 
   if (anim_id > m_anim.size()) return;
-  for (auto i = 0; i < m_anim[anim_id].frame_data[start_frame_n].size(); i++){
+  //std::cout <<  m_anim[anim_id].frame_data[start_frame_n].size() << std::endl;
+  for (auto i = 0; i < m_geom->nat(); i++){
 
       if (m_anim[anim_id].frame_data[start_frame_n].size() != m_geom->nat()){
           m_force_non_animable = true;
@@ -480,6 +481,12 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
       m_geom->DIM = 3;
       m_geom->cell.DIM = 3;
       read_vasp_poscar(qc_data, *(m_geom));
+      break;
+
+    case qc_file_format::format_vasp_outcar_md:
+      m_geom->DIM = 3;
+      m_geom->cell.DIM = 3;
+      read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim);
       break;
 
     default: c_app::log("File format not implemented");

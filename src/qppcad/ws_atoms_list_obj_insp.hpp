@@ -228,22 +228,34 @@ namespace qpp::cad {
                     al->m_cur_anim_time = 0.0f;
                   }
 
-                ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.1f, 5.0f);
-                ImGui::Checkbox("Play in cycle", &al->m_play_cyclic);
+                if (al->m_anim[al->m_cur_anim].m_anim_type != geom_anim_type::anim_static){
+                    ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.01f, 3.0f);
+                    ImGui::Checkbox("Play in cycle", &al->m_play_cyclic);
 
-                ImGui::TextUnformatted(
-                      fmt::format("Frames count: {}",
-                                  al->m_anim[al->m_cur_anim].frame_data.size()).c_str(),
-                                  nullptr);
+                    ImGui::TextUnformatted(
+                          fmt::format("Frames count: {}",
+                                      al->m_anim[al->m_cur_anim].frame_data.size()).c_str(),
+                        nullptr);
 
-                ImGui::Separator();
-                ImGui::PushItemWidth(240);
-                if (ImGui::SliderFloat("Timeline", &al->m_cur_anim_time,
-                                       0.0f, (al->m_anim[al->m_cur_anim].frame_data.size() - 1))){
-                    if (!al->m_play_anim) al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                    ImGui::Separator();
+                    ImGui::PushItemWidth(240);
+                    if (ImGui::SliderFloat("Timeline", &al->m_cur_anim_time,
+                                           0.0f, (al->m_anim[al->m_cur_anim].frame_data.size() - 1))){
+                        if (!al->m_play_anim) al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                      }
+
+                    ImGui::ToggleButton("Play", &al->m_play_anim);
+                    ImGui::SameLine();
+                    if (ImGui::Button("Begin")) {
+                        al->m_cur_anim_time = 0.0f;
+                        al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                      }
+                    ImGui::SameLine();
+                    if (ImGui::Button("End")) {
+                        al->m_cur_anim_time = al->m_anim[al->m_cur_anim].frame_data.size() - 1;
+                        al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                      }
                   }
-
-                ImGui::ToggleButton("Play", &al->m_play_anim);
               }
           }
         if (ImGui::CollapsingHeader("Export")){
