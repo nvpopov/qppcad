@@ -7,7 +7,6 @@
 #include <geom/xgeom.hpp>
 #include <qppcad/camera.hpp>
 #include <qppcad/ws_item.hpp>
-#include <qppcad/ws_atoms_list.hpp>
 #include <qppcad/gizmo.hpp>
 #include <qppcad/delegates.hpp>
 #include <imgui.h>
@@ -18,6 +17,7 @@ namespace qpp::cad{
 
   class workspace_t;
   class ws_item_t;
+
   class app_state_t;
 
   enum ws_edit_type {
@@ -51,6 +51,7 @@ namespace qpp::cad{
     void mouse_click();
     void add_workspace(const shared_ptr<workspace_t> &ws_to_add);
     void query_import_file_as_new_workspace(qc_file_format file_format);
+    void query_create_new_workspace(const bool switch_to_new_workspace = true);
     void dialog_load_workspace();
     void dialog_save_workspace(const size_t ws_idx, const bool force_save_as);
     void dialog_save_current_workspace(const bool force_save_as);
@@ -104,9 +105,7 @@ namespace qpp::cad{
 
 
   struct ws_item_factory {
-      static shared_ptr<ws_item_t> create_object(const string &obj_type){
-        if (obj_type == "ws_atoms_list") return make_shared<ws_atoms_list_t>();
-      }
+      static shared_ptr<ws_item_t> create_object(const string &obj_type);
   };
 }
 

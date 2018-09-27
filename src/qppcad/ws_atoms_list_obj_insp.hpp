@@ -138,7 +138,7 @@ namespace qpp::cad {
                     }
                   ImGui::Spacing();
                 }
-            if (rebuild_ngb) al->m_tws_tr->clr_ngb_and_rebuild();
+            if (rebuild_ngb) al->m_tws_tr->do_action(act_rebuild_ntable);
           }
 
         //begin modify section

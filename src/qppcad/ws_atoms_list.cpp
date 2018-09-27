@@ -267,22 +267,29 @@ void ws_atoms_list_t::invert_selected_atoms () {
 }
 
 void ws_atoms_list_t::insert_atom(const int atom_type, const vector3<float> &pos){
+  m_force_non_animable = true;
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
 }
 
 void ws_atoms_list_t::insert_atom(const string &atom_name, const vector3<float> &pos){
+  m_force_non_animable = true;
   m_geom->add(atom_name, pos);
 }
 
 void ws_atoms_list_t::update_atom(const int at_id, const vector3<float> &pos){
+  m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
 }
 
 void ws_atoms_list_t::update_atom(const int at_id, const string &at_name){
+  m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
 }
 
 void ws_atoms_list_t::delete_selected_atoms () {
+
+  if (!m_atom_idx_sel.empty() || !m_atom_sel.empty()) m_force_non_animable = true;
+
   vector<int> all_atom_num;
   all_atom_num.reserve(m_atom_idx_sel.size());
 
@@ -298,13 +305,16 @@ void ws_atoms_list_t::delete_selected_atoms () {
   m_atom_sel.clear();
 
   for (uint16_t delta = 0; delta < all_atom_num.size(); delta++) {
-      if (delta == 0 && all_atom_num.size() > 1) m_tws_tr->freeze();
-      if ((delta == all_atom_num.size() - 1) && all_atom_num.size() > 1) m_tws_tr->unfreeze();
+      if (delta == 0 && all_atom_num.size() > 1)
+        m_tws_tr->do_action(act_lock);
+      if ((delta == all_atom_num.size() - 1) && all_atom_num.size() > 1)
+        m_tws_tr->do_action(act_unlock);
       m_geom->erase(all_atom_num[delta] - delta);
     }
 }
 
 bool ws_atoms_list_t::animable(){
+  if (m_force_non_animable) return false;
   if (m_anim.empty()) return false;
   for (auto &anim : m_anim)
     if (anim.frame_data.empty()) return false;
@@ -321,6 +331,12 @@ void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
 
   if (anim_id > m_anim.size()) return;
   for (auto i = 0; i < m_anim[anim_id].frame_data[start_frame_n].size(); i++){
+
+      if (m_anim[anim_id].frame_data[start_frame_n].size() != m_geom->nat()){
+          m_force_non_animable = true;
+          return;
+        }
+
       vector3<float> new_pos = m_anim[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
                                m_anim[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
       m_geom->change_pos(i, new_pos);
@@ -347,7 +363,8 @@ void ws_atoms_list_t::update (float delta_time) {
   ws_item_t::update(delta_time);
 
   if (m_cur_anim >= m_anim.size()) return; // wrong animation index
-
+  if (m_anim[m_cur_anim].frame_data.empty()) return;
+  //if (m_anim[m_cur_anim].frame_data[0].si)
   if (m_play_anim && animable()) {
       m_cur_anim_time += 1 / (m_anim_frame_time*60);
       if (m_cur_anim_time > m_anim[m_cur_anim].frame_data.size() - 1) {
@@ -380,7 +397,7 @@ uint32_t ws_atoms_list_t::get_amount_of_selected_content() {
 
 void ws_atoms_list_t::on_begin_content_gizmo_translate(){
   //c_app::log(fmt::format("Start of translating node [{}] content", name));
-  m_tws_tr->freeze();
+  m_tws_tr->do_action(act_lock);
 }
 
 void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos) {
@@ -395,7 +412,7 @@ void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> 
 
 void ws_atoms_list_t::on_end_content_gizmo_translate() {
   c_app::log(fmt::format("End of translating node [{}] content", m_name));
-  m_tws_tr->unfreeze();
+  m_tws_tr->do_action(act_unlock);
 }
 
 void ws_atoms_list_t::recalc_gizmo_barycenter() {
@@ -416,7 +433,7 @@ const vector3<float> ws_atoms_list_t::get_gizmo_content_barycenter() {
 }
 
 void ws_atoms_list_t::shift(const vector3<float> shift) {
-  m_tws_tr->freeze();
+  m_tws_tr->do_action(act_lock);
 
   for (int i = 0; i < m_geom->nat(); i++)
     m_geom->coord(i) = shift + m_geom->pos(i) ;
@@ -425,7 +442,7 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
   m_ext_obs->aabb.max = shift + m_ext_obs->aabb.max;
   m_tws_tr->apply_shift(shift);
 
-  m_tws_tr->unfreeze();
+  m_tws_tr->do_action(act_unlock);
   geometry_changed();
 }
 
@@ -442,9 +459,7 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
     }
 
   //clean geom and tws-tree
-  m_tws_tr->freeze();
-  m_tws_tr->clr_ntable();
-  m_tws_tr->clr_tree();
+  m_tws_tr->do_action(act_lock | act_clear_all);
   m_ext_obs->first_data = true;
 
   m_name = extract_base_name(file_name);
@@ -484,12 +499,8 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
       m_ext_obs->aabb.max = -center + m_ext_obs->aabb.max;
     }
 
-  m_tws_tr->manual_build();
-  m_tws_tr->find_all_neighbours();
-  m_tws_tr->unfreeze();
-
+  m_tws_tr->do_action(act_unlock | act_rebuild_all);
   geometry_changed();
-
   if (parent_ws) parent_ws->workspace_changed();
 
 }
@@ -571,9 +582,8 @@ void ws_atoms_list_t::read_from_json(json &data) {
   if (data.find(JSON_BT_SHOW_DSBL) != data.end())
     m_bonding_table_show_disabled_record = data[JSON_BT_SHOW_DSBL];
 
-  m_tws_tr->freeze();
-  m_tws_tr->clr_ntable();
-  m_tws_tr->clr_tree();
+  m_tws_tr->do_action(act_lock | act_clear_all);
+
   m_ext_obs->first_data = true;
 
   if (m_geom->DIM>0) {
@@ -609,10 +619,8 @@ void ws_atoms_list_t::read_from_json(json &data) {
     }
 
   geometry_changed();
-  m_tws_tr->manual_build();
-  m_tws_tr->find_all_neighbours();
+  m_tws_tr->do_action(act_unlock | act_build_all);
 
-  m_tws_tr->unfreeze();
 
 }
 

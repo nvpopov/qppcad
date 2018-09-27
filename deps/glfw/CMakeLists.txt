@@ -59,7 +59,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${GLFW_SOURCE_DIR}/CMake/modules")
 
-find_package(Threads REQUIRED)
+find_package(Threads)
 find_package(Vulkan)
 
 if (GLFW_BUILD_DOCS)

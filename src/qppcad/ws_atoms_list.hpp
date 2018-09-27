@@ -46,6 +46,7 @@ namespace qpp::cad {
       int m_cur_anim{0};
       bool m_play_cyclic{false};
       bool m_play_anim{false};
+      bool m_force_non_animable{false};
 
       unique_ptr<xgeometry<float, periodic_cell<float> > >          m_geom;
       unique_ptr<bonding_table<float> >                             m_bt;

@@ -1,4 +1,5 @@
 #include <qppcad/workspace.hpp>
+#include <qppcad/ws_atoms_list.hpp>
 #include <qppcad/app.hpp>
 #include <data/ptable.hpp>
 #include <io/geomio.hpp>
@@ -6,6 +7,10 @@
 
 using namespace qpp;
 using namespace qpp::cad;
+
+shared_ptr<ws_item_t> ws_item_factory::create_object(const string &obj_type){
+      if (obj_type == "ws_atoms_list") return make_shared<ws_atoms_list_t>();
+    }
 
 optional<size_t> workspace_t::get_selected_item () {
   for (size_t i = 0; i < m_ws_items.size(); i++)
@@ -104,6 +109,7 @@ void workspace_t::render() {
           astate->line_mesh_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
           astate->line_mesh_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
 
+          //TODO: reimplement grid via DrawInstanced
           for (int dx = -4; dx <= 4; dx++)
             for (int dz = -4; dz <= 4; dz++){
                 vector3<float> vTr(dx * (20.0f * 0.5f), dz * (20.0f * 0.5f), 0.0f );
@@ -418,6 +424,13 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_format fil
     }
 }
 
+void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_workspace){
+  auto new_ws = make_shared<workspace_t>();
+  new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
+  m_ws.push_back(new_ws);
+
+  if (switch_to_new_workspace) set_current(m_ws.size()-1);
+}
 
 void workspace_manager_t::dialog_load_workspace () {
 

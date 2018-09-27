@@ -55,7 +55,7 @@ void ui_manager_t::setup_style(){
   style->Colors[ImGuiCol_SliderGrabActive]      = {0.30f, 0.30f, 0.30f, 0.84f};
   style->Colors[ImGuiCol_Button]                 = ImVec4(0.44f, 0.44f, 0.44f, 0.40f);
   style->Colors[ImGuiCol_ButtonHovered]          = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
-  style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
+  style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.568f, 0.849f, 0.620f, 1.000f);
   style->Colors[ImGuiCol_Header]                = ImVec4(0.44f, 0.44f, 0.44f, 0.90f);
   style->Colors[ImGuiCol_HeaderHovered]         = ImVec4(0.46f, 0.47f, 0.48f, 1.00f);
   style->Colors[ImGuiCol_HeaderActive]          = {0.47058827f, 0.47058827f, 0.47058827f, 0.67f};
@@ -103,7 +103,9 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6,6));
       if (ImGui::BeginMenu("File")){
-          ImGui::MenuItem("New", "Ctrl + N");
+          if (ImGui::MenuItem("New", "Ctrl + N")){
+              astate->ws_manager->query_create_new_workspace();
+            }
 
           if (ImGui::MenuItem("Open", "Ctrl + O")){
               astate->ws_manager->dialog_load_workspace();
@@ -247,9 +249,11 @@ void ui_manager_t::render_main_menu(){
                      std::back_inserter(vChar),
                      vec_str_to_char);
 
-      ImGui::PushItemWidth(150);
-      ImGui::Combo("Workspace", &ui_cur_ws_exact, vChar.data(), astate->ws_manager->m_ws.size());
+      ImGui::PushItemWidth(170);
+      ImGui::PushID(1);
+      ImGui::Combo("", &ui_cur_ws_exact, vChar.data(), astate->ws_manager->m_ws.size());
       ImGui::PopItemWidth();
+      ImGui::PopID();
 
       for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
       if (ui_cur_ws_exact != *astate->ws_manager->get_current_id())
@@ -257,7 +261,7 @@ void ui_manager_t::render_main_menu(){
       //
 
       if (ImGui::Button("+")){
-
+          astate->ws_manager->query_create_new_workspace();
         }
 
       if (ImGui::Button("-")){
@@ -302,7 +306,7 @@ void ui_manager_t::render_main_menu(){
 
   if (show_rename_workspace_dialog && astate->ws_manager->has_wss()){
       ImGui::OpenPopup("Renaming workspace");
-      ImGui::SetNextWindowSize(ImVec2(300, 120));
+      ImGui::SetNextWindowSize(ImVec2(400, 120));
       ImGui::SetNextWindowPos(ImVec2(650, 20));
 
     }
@@ -317,13 +321,15 @@ void ui_manager_t::render_main_menu(){
 
 
       ImGui::PushID("input1");
-      ImGui::InputText("", s_rename_workspace_name, 60);
+      ImGui::PushItemWidth(180);
+      ImGui::InputText("", s_rename_workspace_name, 180);
+      ImGui::PushItemWidth(0);
       ImGui::PopID();
       ImGui::Columns(1);
 
       ImGui::Spacing();
       ImGui::Spacing();
-      ImGui::Dummy(ImVec2(76, 0)); ImGui::SameLine();
+      ImGui::Dummy(ImVec2(117, 0)); ImGui::SameLine();
       if (ImGui::Button("Rename")){
           astate->ws_manager->get_current()->m_ws_name = string(s_rename_workspace_name);
           ImGui::CloseCurrentPopup();
