@@ -1,4 +1,5 @@
 #include <qppcad/app.hpp>
+#include <clocale>
 
 void
 MessageCallback( GLenum source,
@@ -37,6 +38,8 @@ void qpp::cad::c_app::key_callback(GLFWwindow* window,
 }
 
 void qpp::cad::c_app::run(){
+
+  std::setlocale(LC_ALL, "C");
 
   glfwSetErrorCallback(qpp::cad::c_app::error_callback);
 

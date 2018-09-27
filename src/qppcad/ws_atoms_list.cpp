@@ -5,6 +5,7 @@
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
 #include <io/xyz_multiframe.hpp>
+#include <clocale>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -325,11 +326,13 @@ void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
                                           const float current_frame){
   float start_frame = int(current_frame);
   float end_frame   = std::ceil(current_frame);
-  float frame_delta = end_frame - current_frame;
+  float frame_delta = 1 - (current_frame - start_frame);
   int start_frame_n = int(start_frame);
   int end_frame_n   = int(end_frame);
 
   if (anim_id > m_anim.size()) return;
+//  std::cout << fmt::format("sf {} ef {} fd {} sfn {} efn {} \n", start_frame, end_frame,
+//                           frame_delta, start_frame_n, end_frame_n);
   //std::cout <<  m_anim[anim_id].frame_data[start_frame_n].size() << std::endl;
   for (auto i = 0; i < m_geom->nat(); i++){
 
@@ -337,7 +340,7 @@ void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
           m_force_non_animable = true;
           return;
         }
-
+      std::cout << m_anim[anim_id].frame_data[start_frame_n][i].to_string_vec() <<"\n" << std::endl ;
       vector3<float> new_pos = m_anim[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
                                m_anim[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
       m_geom->change_pos(i, new_pos);
@@ -449,6 +452,8 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
 
 void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string file_name,
                                      bool auto_center) {
+
+  std::setlocale(LC_ALL, "C");
 
   c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
                          file_name, parent_ws->m_ws_name));

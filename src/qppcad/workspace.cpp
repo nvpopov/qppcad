@@ -348,7 +348,7 @@ void workspace_manager_t::init_default () {
   _ws4->m_ws_name = "animtest1";
   auto _ws4_al = make_shared<ws_atoms_list_t>();
   _ws4->add_item_to_workspace(_ws4_al);
-  _ws4_al->load_from_file(qc_file_format::format_multi_frame_xyz, "../data/refs/chxinv.xyz",
+  _ws4_al->load_from_file(qc_file_format::format_multi_frame_xyz, "../data/refs/path.xyz",
                          false);
 
   _wsl3->m_name = "zeolite1";
