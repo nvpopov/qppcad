@@ -340,7 +340,7 @@ void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
           m_force_non_animable = true;
           return;
         }
-      std::cout << m_anim[anim_id].frame_data[start_frame_n][i].to_string_vec() <<"\n" << std::endl ;
+      //std::cout << m_anim[anim_id].frame_data[start_frame_n][i].to_string_vec() <<"\n" << std::endl ;
       vector3<float> new_pos = m_anim[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
                                m_anim[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
       m_geom->change_pos(i, new_pos);
