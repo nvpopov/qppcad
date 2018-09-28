@@ -86,13 +86,13 @@ namespace qpp::cad {
           }
 
         if (ImGui::CollapsingHeader("Display and styling")){
-
+            ImGui::Spacing();
             ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1);
             ImGui::SliderFloat("Bond size", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1);
 
             ImGui::Checkbox("Show atoms", &al->m_show_atoms);
             ImGui::Checkbox("Show bonds", &al->m_show_bonds);
-
+            //ImGui::Checkbox("Show bonds with imaginary atom", &al->m_show_bond_with_img);
             if (al->m_geom->DIM > 0) {
                 ImGui::Checkbox("Draw periodic cell", &al->m_draw_cell);
                 ImGui::Checkbox("Show imaginary atoms", &al->m_show_imaginary_atoms);
@@ -227,6 +227,7 @@ namespace qpp::cad {
                                  &al->m_cur_anim, vChar.data(), al->m_anim.size())){
                     al->m_cur_anim_time = 0.0f;
                   }
+                ImGui::Checkbox("Rebuild bonds", &al->m_rebuild_bonds_in_anim);
 
                 if (al->m_anim[al->m_cur_anim].m_anim_type != geom_anim_type::anim_static){
                     ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.01f, 3.0f);

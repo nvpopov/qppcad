@@ -23,27 +23,26 @@ namespace qpp::cad {
   class ws_atoms_list_t : public ws_item_t {
     public:
 
-      bool need_to_rebuild_nbt;
-
-      ///
-      /// \brief display_imaginary_atoms
-      ///
-      bool m_show_imaginary_atoms;
-      bool m_show_imaginary_bonds;
-      bool m_show_bonds;
-      bool m_show_atoms;
-      bool m_draw_line_in_dist_measurement;
+      bool m_show_imaginary_atoms{true};
+      bool m_show_imaginary_bonds{true};
+      bool m_show_bonds{true};
+      bool m_show_atoms{true};
+      bool m_draw_line_in_dist_measurement{false};
       bool m_bonding_table_show_disabled_record{true};
       bool m_has_animations;
 
       float m_atom_scale_factor{0.3f};
       float m_bond_scale_factor{0.09f};
       vector3<float> m_cell_color{0.1f, 0.1f, 0.1f};
+      vector3<float> m_gizmo_barycenter;
+      vector3<float> m_new_atom_pos;
 
+      //TODO: move to anim_subsys
       vector<geom_anim_record_t<float> >                            m_anim;
       float m_cur_anim_time{0.0f};
       float m_anim_frame_time{1.0f};
       int m_cur_anim{0};
+      bool m_rebuild_bonds_in_anim{true};
       bool m_play_cyclic{false};
       bool m_play_anim{false};
       bool m_force_non_animable{false};
@@ -57,8 +56,7 @@ namespace qpp::cad {
       unordered_set<atom_index_set_key, atom_index_set_key_hash>    m_atom_idx_sel;
       vector<vector<vector3<float> > > m_frames;
       set<uint16_t>  m_atom_type_to_hide;
-      vector3<float> m_gizmo_barycenter;
-      vector3<float> m_new_atom_pos;
+
       ws_atoms_list_t();
 
       void vote_for_view_vectors(vector3<float> &vOutLookPos,

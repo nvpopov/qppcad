@@ -25,13 +25,7 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
 
   m_ext_obs = make_unique<extents_observer_t<float> >(*m_geom);
   m_tws_tr  = make_unique<tws_tree_t<float> >(*m_geom);
-  m_tws_tr->m_auto_bonding = true;
-
-  m_show_imaginary_atoms = true;
-  m_show_imaginary_bonds = true;
-  m_show_atoms = true;
-  m_show_bonds = true;
-  m_draw_line_in_dist_measurement = false;
+  m_tws_tr->do_action(act_unlock);
 
   //parent->add_item_to_workspace(this->shared_from_this());
 
@@ -61,6 +55,7 @@ void ws_atoms_list_t::render () {
 
   app_state_t* astate = &(c_app::get_state());
   vector3<float> _pos = m_pos;
+  index all_null = index::D(m_geom->DIM).all(0);
   if (app_state_c->dp != nullptr){
 
       if (astate->debug_show_tws_tree) {
@@ -115,9 +110,10 @@ void ws_atoms_list_t::render () {
               uint16_t id2 = m_tws_tr->table_atm(i,j);
               index idx2 = m_tws_tr->table_idx(i,j);
 
-              render_bond(id1, index::D(m_geom->DIM).all(0), id2, idx2);
+              if (idx2 == all_null || m_show_imaginary_bonds)
+                render_bond(id1, all_null, id2, idx2);
 
-              if (idx2 != index::D(m_geom->DIM).all(0) && m_show_imaginary_bonds)
+              if (idx2 != all_null && m_show_imaginary_bonds)
                 render_bond(id2, idx2, id1, index::D(m_geom->DIM).all(0));
             }
 
@@ -330,10 +326,12 @@ void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
   int start_frame_n = int(start_frame);
   int end_frame_n   = int(end_frame);
 
+  //TODO: throw
   if (anim_id > m_anim.size()) return;
-//  std::cout << fmt::format("sf {} ef {} fd {} sfn {} efn {} \n", start_frame, end_frame,
-//                           frame_delta, start_frame_n, end_frame_n);
-  //std::cout <<  m_anim[anim_id].frame_data[start_frame_n].size() << std::endl;
+
+  if (!m_rebuild_bonds_in_anim) m_tws_tr->do_action(act_lock);
+  else if (m_geom->DIM > 0) m_tws_tr->do_action(act_lock_img);
+
   for (auto i = 0; i < m_geom->nat(); i++){
 
       if (m_anim[anim_id].frame_data[start_frame_n].size() != m_geom->nat()){
@@ -345,6 +343,9 @@ void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
                                m_anim[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
       m_geom->change_pos(i, new_pos);
     }
+
+  if (!m_rebuild_bonds_in_anim) m_tws_tr->do_action(act_unlock);
+  else if (m_geom->DIM > 0) m_tws_tr->do_action(act_unlock_img);
 }
 
 bool ws_atoms_list_t::support_translation () { return true; }
