@@ -21,6 +21,8 @@ gizmo_t::gizmo_t(){
 }
 
 void gizmo_t::render(){
+  if (!m_is_visible) return;
+
   app_state_t* astate = &(c_app::get_state());
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 

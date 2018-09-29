@@ -1,6 +1,7 @@
 #ifndef QPP_CAD_DELEGATES
 #define QPP_CAD_DELEGATES
 #include <qppcad/qppcad.hpp>
+#include <variant>
 
 namespace qpp {
 

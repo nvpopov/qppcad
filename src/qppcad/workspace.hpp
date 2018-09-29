@@ -65,22 +65,20 @@ namespace qpp::cad{
   class workspace_t : public std::enable_shared_from_this<workspace_t> {
   public:
     string                         m_fs_path{""};
-    ws_edit_type                   m_edit_type;
+    ws_edit_type                   m_edit_type{ws_edit_type::EDIT_WS_ITEM};
     vector<shared_ptr<ws_item_t> > m_ws_items;
     string                         m_ws_name;
     unique_ptr<camera_t>           m_camera;
     ray_t<float>                   m_ray_debug;
-    bool                           m_first_render;
+    bool                           m_first_render{true};
     vector<string>                 m_ws_names_c;
     unique_ptr<gizmo_t>            m_gizmo;
     vector3<float>                 m_background_color{0.85f, 0.85f, 0.85f};
 
     workspace_t(string _ws_name = "default"){
       m_ws_name = _ws_name;
-      m_first_render = true;
       m_camera = unique_ptr<camera_t>(new camera_t());
       m_camera->reset_camera();
-      m_edit_type = ws_edit_type::EDIT_WS_ITEM;
       m_gizmo = unique_ptr<gizmo_t>(new gizmo_t());
     }
 

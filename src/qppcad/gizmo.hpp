@@ -29,6 +29,7 @@ namespace qpp::cad {
       float gizmo_shift_magnitude;
       bool is_active{false};
       bool interact_at_the_moment;
+      bool m_is_visible{true};
 
       uint8_t touched_axis{0};
       std::array<aabb_3d_t<float>,3> bx;

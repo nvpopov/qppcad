@@ -26,6 +26,7 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
   m_ext_obs = make_unique<extents_observer_t<float> >(*m_geom);
   m_tws_tr  = make_unique<tws_tree_t<float> >(*m_geom);
   m_tws_tr->do_action(act_unlock);
+  m_anim = make_unique<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >(*this);
 
   //parent->add_item_to_workspace(this->shared_from_this());
 
@@ -264,28 +265,28 @@ void ws_atoms_list_t::invert_selected_atoms () {
 }
 
 void ws_atoms_list_t::insert_atom(const int atom_type, const vector3<float> &pos){
-  m_force_non_animable = true;
+  m_anim->m_force_non_animable = true;
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
 }
 
 void ws_atoms_list_t::insert_atom(const string &atom_name, const vector3<float> &pos){
-  m_force_non_animable = true;
+  m_anim->m_force_non_animable = true;
   m_geom->add(atom_name, pos);
 }
 
 void ws_atoms_list_t::update_atom(const int at_id, const vector3<float> &pos){
-  m_force_non_animable = true;
+  m_anim->m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
 }
 
 void ws_atoms_list_t::update_atom(const int at_id, const string &at_name){
-  m_force_non_animable = true;
+  m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
 }
 
 void ws_atoms_list_t::delete_selected_atoms () {
 
-  if (!m_atom_idx_sel.empty() || !m_atom_sel.empty()) m_force_non_animable = true;
+  if (!m_atom_idx_sel.empty() || !m_atom_sel.empty()) m_anim->m_force_non_animable = true;
 
   vector<int> all_atom_num;
   all_atom_num.reserve(m_atom_idx_sel.size());
@@ -310,44 +311,6 @@ void ws_atoms_list_t::delete_selected_atoms () {
     }
 }
 
-bool ws_atoms_list_t::animable(){
-  if (m_force_non_animable) return false;
-  if (m_anim.empty()) return false;
-  for (auto &anim : m_anim)
-    if (anim.frame_data.empty()) return false;
-  return true;
-}
-
-void ws_atoms_list_t::update_geom_to_anim(const int anim_id,
-                                          const float current_frame){
-  float start_frame = int(current_frame);
-  float end_frame   = std::ceil(current_frame);
-  float frame_delta = 1 - (current_frame - start_frame);
-  int start_frame_n = int(start_frame);
-  int end_frame_n   = int(end_frame);
-
-  //TODO: throw
-  if (anim_id > m_anim.size()) return;
-
-  if (!m_rebuild_bonds_in_anim) m_tws_tr->do_action(act_lock);
-  else if (m_geom->DIM > 0) m_tws_tr->do_action(act_lock_img);
-
-  for (auto i = 0; i < m_geom->nat(); i++){
-
-      if (m_anim[anim_id].frame_data[start_frame_n].size() != m_geom->nat()){
-          m_force_non_animable = true;
-          return;
-        }
-      //std::cout << m_anim[anim_id].frame_data[start_frame_n][i].to_string_vec() <<"\n" << std::endl ;
-      vector3<float> new_pos = m_anim[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
-                               m_anim[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
-      m_geom->change_pos(i, new_pos);
-    }
-
-  if (!m_rebuild_bonds_in_anim) m_tws_tr->do_action(act_unlock);
-  else if (m_geom->DIM > 0) m_tws_tr->do_action(act_unlock_img);
-}
-
 bool ws_atoms_list_t::support_translation () { return true; }
 
 bool ws_atoms_list_t::support_rotation () { return false; }
@@ -366,29 +329,7 @@ std::string ws_atoms_list_t::compose_item_name () {
 
 void ws_atoms_list_t::update (float delta_time) {
   ws_item_t::update(delta_time);
-
-  if (m_cur_anim >= m_anim.size()) return; // wrong animation index
-  if (m_anim[m_cur_anim].frame_data.empty()) return;
-  //if (m_anim[m_cur_anim].frame_data[0].si)
-  if (m_play_anim && animable()) {
-      m_cur_anim_time += 1 / (m_anim_frame_time*60);
-      if (m_cur_anim_time > m_anim[m_cur_anim].frame_data.size() - 1) {
-          if (m_play_cyclic) m_cur_anim_time = 0.0f;
-          else {
-              m_play_anim = false;
-              m_cur_anim_time = m_anim[m_cur_anim].frame_data.size() - 1;
-            }
-        } else {
-          update_geom_to_anim(m_cur_anim, m_cur_anim_time);
-        }
-
-      //if current anim type equals static -> update to static and switch m_cur_anim_time = 0
-      if (m_anim[m_cur_anim].m_anim_type == geom_anim_type::anim_static){
-          m_cur_anim_time = 0.0f;
-          m_play_anim = false;
-          m_play_cyclic = false;
-        }
-    }
+  m_anim->update(delta_time);
 }
 
 float ws_atoms_list_t::get_bb_prescaller () {
@@ -479,8 +420,8 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
 
     case qc_file_format::format_multi_frame_xyz:
       m_geom->DIM = 0;
-      m_anim.clear();
-      read_xyz_multiframe(qc_data, *(m_geom), m_anim);
+      //
+      read_xyz_multiframe(qc_data, *(m_geom), m_anim->m_anim_data);
       break;
 
     case qc_file_format::format_vasp_poscar:
@@ -492,7 +433,7 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
     case qc_file_format::format_vasp_outcar_md:
       m_geom->DIM = 3;
       m_geom->cell.DIM = 3;
-      read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim);
+      read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim->m_anim_data);
       break;
 
     default: c_app::log("File format not implemented");

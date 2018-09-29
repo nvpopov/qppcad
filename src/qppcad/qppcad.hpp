@@ -14,7 +14,7 @@
 #include <functional>
 #include <tuple>
 #include <unordered_set>
-#include <optional>
+#include <data/compiler_fallback.hpp>
 #include <io/strfun.hpp>
 #include <qppcad/file_formats.hpp>
 

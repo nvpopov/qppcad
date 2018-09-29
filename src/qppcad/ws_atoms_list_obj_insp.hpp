@@ -38,20 +38,20 @@ namespace qpp::cad {
             ImGui::Text("Hide");
             ImGui::NextColumn();
             ImGui::Separator();
+
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 0));
+            ImGui::BeginGroup();
+
             for (uint8_t i = 0; i < al->m_geom->n_types(); i++){
                 ImGui::TextUnformatted(al->m_geom->atom_of_type(i).c_str(), nullptr);
-              }
-            ImGui::NextColumn();
+                ImGui::NextColumn();
 
-            for (uint8_t i = 0; i < al->m_geom->n_types(); i++){
                 ImGui::TextUnformatted(
                       fmt::format("{}", al->m_geom->get_atom_count_by_type(i)).c_str(), nullptr);
-              }
-            ImGui::NextColumn();
+                ImGui::NextColumn();
 
-            ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
-            for (uint8_t i = 0; i < al->m_geom->n_types(); i++){
+                ImDrawList* draw_list = ImGui::GetWindowDrawList();
                 const ImVec2 p = ImGui::GetCursorScreenPos();
                 float p_x = p.x + 8 + 6;
                 float p_y = p.y + 10;
@@ -61,10 +61,8 @@ namespace qpp::cad {
                 if(ap_idx) {bc = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
                 draw_list->AddCircleFilled(p_n, 8, ImColor(ImVec4(bc[0], bc[1], bc[2], 1.0f)));
                 ImGui::Dummy(ImVec2(16, 16));
-              }
+                ImGui::NextColumn();
 
-            ImGui::NextColumn();
-            for (uint8_t i = 0; i < al->m_geom->n_types(); i++){
                 bool _l_type_to_hide = false;
                 auto it = al->m_atom_type_to_hide.find(i);
                 if (it != al->m_atom_type_to_hide.end()) _l_type_to_hide = true;
@@ -80,10 +78,16 @@ namespace qpp::cad {
                     auto it2 = al->m_atom_type_to_hide.find(i);
                     if (it2 != al->m_atom_type_to_hide.end()) al->m_atom_type_to_hide.erase(it2);
                   }
+                ImGui::NextColumn();
+                ImGui::Separator();
               }
             ImGui::Columns(1);
             ImGui::Spacing();
+
+            ImGui::EndGroup();
+            ImGui::PopStyleVar();
           }
+
 
         if (ImGui::CollapsingHeader("Display and styling")){
             ImGui::Spacing();
@@ -143,21 +147,28 @@ namespace qpp::cad {
 
         //begin modify section
         if (ImGui::CollapsingHeader("Modify")){
+
             //check that we select 1 or 2 atoms
             if (al->m_atom_idx_sel.size()!=1 && al->m_atom_idx_sel.size()!=2){
                 ImGui::Spacing();
                 ImGui::BulletText("Select one atom to edit it");
                 ImGui::BulletText("Select two atoms to specify \ndistance between them");
-
-
               }
+
             // if we selected one atom - show single modify widget
             else if (al->m_atom_idx_sel.size()==1) {
                 ImGui::BulletText("Modify single atom:");
-                static string custom_atom_name =
-                    al->m_geom->atom(al->m_atom_idx_sel.begin()->m_atm);
+                static string custom_atom_name = "";
+
+                static int last_selected = -1;
+                if (last_selected != al->m_atom_idx_sel.begin()->m_atm){
+                    custom_atom_name = al->m_geom->atom(al->m_atom_idx_sel.begin()->m_atm);
+                    last_selected = al->m_atom_idx_sel.begin()->m_atm;
+                  }
+
                 //ImGui::Separator();
                 vector3<float> pos = al->m_geom->pos(al->m_atom_idx_sel.begin()->m_atm);
+                ImGui::PushItemWidth(220);
                 if (ImGui::InputFloat3("Position", pos.data())){
                     al->update_atom(al->m_atom_idx_sel.begin()->m_atm, pos);
                   }
@@ -167,6 +178,7 @@ namespace qpp::cad {
                 if (ImGui::Button("Edit", ImVec2(100, 0)))
                   if (custom_atom_name != "") al->update_atom(
                         al->m_atom_idx_sel.begin()->m_atm, custom_atom_name);
+
               } // end one atom selection
 
             // if we selected two atoms - show distance modify widget
@@ -206,11 +218,12 @@ namespace qpp::cad {
                                                           al->m_new_atom_pos);
           }
 
-        if (al->animable()){
+        // start animation block
+        if (al->m_anim->animable()){
             if (ImGui::CollapsingHeader("Animations")){
                 ImGui::Spacing();
                 ImGui::TextUnformatted(
-                      fmt::format("Total animations : {}", al->m_anim.size()).c_str(), nullptr);
+                      fmt::format("Total anims : {}", al->m_anim->m_anim_data.size()).c_str(), nullptr);
                 ImGui::PushItemWidth(140);
 
                 ImGui::Separator();
@@ -218,47 +231,58 @@ namespace qpp::cad {
                 std::vector<std::string>  vStr;
                 vStr.reserve(10);
                 std::vector<char*>  vChar;
-                for (size_t i = 0; i < al->m_anim.size(); i++)
-                  vStr.push_back(al->m_anim[i].m_anim_name);
+                for (size_t i = 0; i < al->m_anim->get_total_anims(); i++)
+                  vStr.push_back(al->m_anim->m_anim_data[i].m_anim_name);
                 std::transform(vStr.begin(), vStr.end(), std::back_inserter(vChar),vec_str_to_char);
 
                 ImGui::PushItemWidth(150);
                 if (ImGui::Combo("Current animation",
-                                 &al->m_cur_anim, vChar.data(), al->m_anim.size())){
-                    al->m_cur_anim_time = 0.0f;
+                                 &al->m_anim->m_cur_anim, vChar.data(),
+                                 al->m_anim->get_total_anims())){
+                    al->m_anim->m_cur_anim_time = 0.0f;
                   }
-                ImGui::Checkbox("Rebuild bonds", &al->m_rebuild_bonds_in_anim);
+                ImGui::Checkbox("Rebuild bonds", &al->m_anim->m_rebuild_bonds_in_anim);
 
-                if (al->m_anim[al->m_cur_anim].m_anim_type != geom_anim_type::anim_static){
-                    ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim_frame_time, 0.01f, 3.0f);
-                    ImGui::Checkbox("Play in cycle", &al->m_play_cyclic);
+                if (al->m_anim->get_cur_anim_type() != geom_anim_type::anim_static){
+                    ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim->m_anim_frame_time, 0.01f, 3.0f);
+                    ImGui::Checkbox("Play in cycle", &al->m_anim->m_play_cyclic);
 
-                    ImGui::TextUnformatted(
-                          fmt::format("Frames count: {}",
-                                      al->m_anim[al->m_cur_anim].frame_data.size()).c_str(),
-                        nullptr);
+                    ImGui::TextUnformatted(fmt::format("Frames count: {}",
+                                                       al->m_anim->current_frame_count()).c_str(),nullptr);
 
                     ImGui::Separator();
                     ImGui::PushItemWidth(240);
-                    if (ImGui::SliderFloat("Timeline", &al->m_cur_anim_time,
-                                           0.0f, (al->m_anim[al->m_cur_anim].frame_data.size() - 1))){
-                        if (!al->m_play_anim) al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                    if (ImGui::SliderFloat("Timeline", &al->m_anim->m_cur_anim_time, 0.0f,
+                                           (al->m_anim->current_frame_count() - 1))){
+                        if (!al->m_anim->m_play_anim) al->m_anim->update_geom_to_anim();
                       }
 
-                    ImGui::ToggleButton("Play", &al->m_play_anim);
+                    ImGui::ToggleButton("Play", &al->m_anim->m_play_anim);
                     ImGui::SameLine();
                     if (ImGui::Button("Begin")) {
-                        al->m_cur_anim_time = 0.0f;
-                        al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                        al->m_anim->m_cur_anim_time = 0.0f;
+                        al->m_anim->update_geom_to_anim();
                       }
                     ImGui::SameLine();
                     if (ImGui::Button("End")) {
-                        al->m_cur_anim_time = al->m_anim[al->m_cur_anim].frame_data.size() - 1;
-                        al->update_geom_to_anim(al->m_cur_anim, al->m_cur_anim_time);
+                        al->m_anim->m_cur_anim_time = al->m_anim->current_frame_count() - 1;
+                        al->m_anim->update_geom_to_anim();
+                      }
+
+                    ImGui::SameLine();
+                    if (ImGui::Button("+Frame")) {
+
+                      }
+
+                    ImGui::SameLine();
+                    if (ImGui::Button("-Frame")) {
+
                       }
                   }
               }
           }
+        // end animation block
+
         if (ImGui::CollapsingHeader("Export")){
             if (ImGui::Button("VASP POSCAR")){
 

@@ -413,6 +413,10 @@ void ui_manager_t::render_work_panel(){
         }
       ImGui::Separator();
 
+      if (astate->ws_manager->has_wss())
+        ImGui::ToggleButton("GIZMO", &(astate->ws_manager->get_current()->m_gizmo->m_is_visible),
+                             ImVec2(60, 24));
+      ImGui::Separator();
     }
 
 
