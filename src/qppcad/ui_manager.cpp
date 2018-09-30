@@ -511,7 +511,7 @@ void ui_manager_t::render_object_inspector(){
   ImGui::Spacing();
 
 
-  ImGui::PushItemWidth(iObjInspWidth-10);
+  ImGui::PushItemWidth(iObjInspWidth-14);
 
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws){
@@ -532,7 +532,7 @@ void ui_manager_t::render_object_inspector(){
       ImGui::PopItemWidth();
       ImGui::Spacing();
 
-      ImGui::BeginChild("obj_insp_child", ImVec2(337, 0));
+      ImGui::BeginChild("obj_insp_child", ImVec2(339, 0));
       ImGui::Spacing();
       if (ws_itm_cur_val != -1){
           ImGui::Text(cur_ws->get_selected()->compose_item_name().c_str());

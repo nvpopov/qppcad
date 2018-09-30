@@ -276,8 +276,8 @@ uint32_t ws_atoms_list_t::get_amount_of_selected_content() {
 }
 
 void ws_atoms_list_t::on_begin_content_gizmo_translate(){
-  //c_app::log(fmt::format("Start of translating node [{}] content", name));
-  m_tws_tr->do_action(act_lock);
+  c_app::log(fmt::format("Start of translating node [{}] content", m_name));
+  //m_tws_tr->do_action(act_lock);
 }
 
 void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos) {
@@ -292,7 +292,7 @@ void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> 
 
 void ws_atoms_list_t::on_end_content_gizmo_translate() {
   c_app::log(fmt::format("End of translating node [{}] content", m_name));
-  m_tws_tr->do_action(act_unlock);
+  //m_tws_tr->do_action(act_unlock);
 }
 
 void ws_atoms_list_t::recalc_gizmo_barycenter() {
