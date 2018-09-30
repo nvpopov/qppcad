@@ -523,7 +523,7 @@ void ui_manager_t::render_object_inspector(){
       int ws_itm_cur_val_stored = ws_itm_cur_val;
 
       ImGui::PushID(1);
-      ImGui::ListBox_stl("", &ws_itm_cur_val, cur_ws->m_ws_names_c, 8);
+      ImGui::ListBox_stl("", &ws_itm_cur_val, cur_ws->m_ws_names_c, 5);
       ImGui::PopID();
 
       if (ws_itm_cur_val != ws_itm_cur_val_stored && ws_itm_cur_val != -1)
@@ -531,8 +531,9 @@ void ui_manager_t::render_object_inspector(){
 
       ImGui::PopItemWidth();
       ImGui::Spacing();
-      ImGui::Separator();
 
+      ImGui::BeginChild("obj_insp_child", ImVec2(337, 0));
+      ImGui::Spacing();
       if (ws_itm_cur_val != -1){
           ImGui::Text(cur_ws->get_selected()->compose_item_name().c_str());
           ImGui::Separator();
@@ -545,6 +546,7 @@ void ui_manager_t::render_object_inspector(){
             }
           //ImGui::Separator();
         }
+      ImGui::EndChild();
     }
 
   ImGui::End();

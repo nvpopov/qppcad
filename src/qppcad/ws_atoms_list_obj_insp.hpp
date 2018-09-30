@@ -131,7 +131,7 @@ namespace qpp::cad {
 
                       if (elem.second.m_enabled){
                           ImGui::SameLine();
-                          ImGui::PushItemWidth(140);
+                          ImGui::PushItemWidth(110);
                           if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
                               al->m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
                                                                                  elem.first.m_b);
@@ -168,12 +168,12 @@ namespace qpp::cad {
 
                 //ImGui::Separator();
                 vector3<float> pos = al->m_geom->pos(al->m_atom_idx_sel.begin()->m_atm);
-                ImGui::PushItemWidth(220);
-                if (ImGui::InputFloat3("Position", pos.data())){
+                ImGui::PushItemWidth(190);
+                if (ImGui::InputFloat3("Edit position", pos.data())){
                     al->update_atom(al->m_atom_idx_sel.begin()->m_atm, pos);
                   }
                 ImGui::PushItemWidth(70);
-                ImGui::InputText("Atom name", &custom_atom_name);
+                ImGui::InputText("Edit name", &custom_atom_name);
                 ImGui::SameLine();
                 if (ImGui::Button("Edit", ImVec2(100, 0)))
                   if (custom_atom_name != "") al->update_atom(
@@ -209,11 +209,11 @@ namespace qpp::cad {
         if (ImGui::CollapsingHeader("Add atoms")){
             static string custom_atom_name;
             ImGui::Separator();
-            ImGui::InputFloat3("Position", al->m_new_atom_pos.data());
-            ImGui::PushItemWidth(70);
-            ImGui::InputText("Atom name", &custom_atom_name);
+            ImGui::PushItemWidth(200);
+            ImGui::InputFloat3("New position", al->m_new_atom_pos.data());
+            ImGui::InputText("New name", &custom_atom_name);
             ImGui::SameLine();
-            if (ImGui::Button("Add", ImVec2(100, 0)))
+            if (ImGui::Button("Add", ImVec2(40, 0)))
               if (custom_atom_name != "") al->insert_atom(custom_atom_name,
                                                           al->m_new_atom_pos);
           }

@@ -17,9 +17,12 @@
 
 namespace qpp::cad {
 
-  ///
+  enum ws_atoms_list_render_type {
+    ball_and_stick,
+    lines
+  };
+
   /// \brief The ws_atom_list_t class
-  ///
   class ws_atoms_list_t : public ws_item_t {
     public:
 
@@ -31,6 +34,7 @@ namespace qpp::cad {
       bool m_bonding_table_show_disabled_record{true};
       bool m_has_animations;
 
+      ws_atoms_list_render_type m_cur_render_type{ws_atoms_list_render_type::ball_and_stick};
       float m_atom_scale_factor{0.3f};
       float m_bond_scale_factor{0.09f};
       vector3<float> m_cell_color{0.1f, 0.1f, 0.1f};
@@ -55,20 +59,6 @@ namespace qpp::cad {
       /// \brief geometry_changed
       void geometry_changed();
       void render() override;
-
-
-      /// \brief render_atom
-      /// \param atNum
-      /// \param atIndex
-      void render_atom(const uint32_t at_num, const index &at_index);
-
-      /// \brief render_bond
-      /// \param atNum1
-      /// \param atIndex1
-      /// \param atNum2
-      /// \param atIndex2
-      void render_bond(const uint32_t at_num1, const index &at_index1,
-                       const uint32_t at_num2, const index &at_index2);
 
       void render_ui() override;
       void td_context_menu_edit_item() override;

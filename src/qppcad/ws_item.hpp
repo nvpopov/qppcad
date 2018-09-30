@@ -37,9 +37,8 @@ namespace qpp::cad{
 //           typename support_rotation_behaviour    = behaviour_disable,
 //           typename support_scale_behaviour       = behaviour_disable>
   class ws_item_t  {
-    protected:
-      shared_ptr<workspace_t> parent_ws{};
     public:
+      shared_ptr<workspace_t> parent_ws{};
       app_state_t *app_state_c;
       std::string      m_name;
       aabb_3d_t<float> m_aabb;
