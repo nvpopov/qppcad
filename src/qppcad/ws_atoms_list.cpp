@@ -3,6 +3,7 @@
 #include <qppcad/ws_atoms_list_obj_insp.hpp>
 #include <qppcad/ws_atoms_list_render_bs.hpp>
 #include <qppcad/ws_atoms_list_render_dlines.hpp>
+#include <qppcad/ws_atoms_list_render_xlines.hpp>
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
@@ -85,14 +86,22 @@ void ws_atoms_list_t::render () {
       if (!m_is_visible) return;
 
       switch (m_cur_render_type) {
+
         case ws_atoms_list_render_type::ball_and_stick :
           ws_atoms_list_render_bs::render(*this);
           break;
+
         case ws_atoms_list_render_type::dynamic_lines:
           ws_atoms_list_render_dlines::render(*this);
           break;
+
+        case ws_atoms_list_render_type::xatom_lines:
+          ws_atoms_list_render_xlines::render(*this);
+          break;
+
         default:
           break;
+
         }
       // atom render start
 

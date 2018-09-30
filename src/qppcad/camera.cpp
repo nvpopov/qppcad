@@ -166,7 +166,7 @@ void camera_t::update_camera_zoom(const float dist){
         m_view_point += m_view_dir_n * f_dist_delta;
     } else {
       m_ortho_scale += dist;
-      m_ortho_scale = clamp(m_ortho_scale, 1.0f, 30.0f);
+      m_ortho_scale = clamp(m_ortho_scale, 1.0f, 150.0f);
     }
 }
 

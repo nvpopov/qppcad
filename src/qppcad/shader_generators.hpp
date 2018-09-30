@@ -69,11 +69,7 @@ namespace qpp::cad {
         qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
                                            std::string("grid_program"), vs, fs);
         sp->u_on(sp_u_name::m_model_view_proj);
-        sp->u_on(sp_u_name::m_model_view);
-        //  sp->u_on(sp_u_name::vLightPos);
-        sp->u_on(sp_u_name::m_view_inv_tr);
         sp->u_on(sp_u_name::v_translate);
-        //  sp->u_on(sp_u_name::fScale);
         sp->u_on(sp_u_name::v_color);
         return sp;
       }

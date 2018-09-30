@@ -78,6 +78,7 @@ namespace qpp::cad {
       mesh_t *unit_cube;
       mesh_t *unit_cone;
       mesh_t *fbo_quad;
+      mesh_t *xline_mesh;
 
       int FPS;
 
@@ -214,6 +215,7 @@ namespace qpp::cad {
         unit_cube     = mesh_generators::unit_cube();
         unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
         fbo_quad      = mesh_generators::quad();
+        xline_mesh    = mesh_generators::cross_line_atom();
 
         default_program    = shader_generators::gen_default_program();
         unit_line_program  = shader_generators::gen_unit_line_program();
@@ -221,12 +223,12 @@ namespace qpp::cad {
         mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
         fbo_quad_program   = shader_generators::gen_fbo_quad_program();
 
-        kb_manager = make_unique<keyboard_manager_t>();
+        kb_manager   = make_unique<keyboard_manager_t>();
         frame_buffer = make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
-        ws_manager = make_shared<workspace_manager_t>(this);
+        ws_manager   = make_shared<workspace_manager_t>(this);
         ws_manager->init_default();
-        ui_manager = make_shared<ui_manager_t>(this);
-        fd_manager = make_shared<file_dialog_manager_t>();
+        ui_manager   = make_shared<ui_manager_t>(this);
+        fd_manager   = make_shared<file_dialog_manager_t>();
 
         update_viewport_cache();
       }

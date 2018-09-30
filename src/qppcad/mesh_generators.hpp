@@ -8,16 +8,19 @@
 #include <qppcad/mesh.hpp>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
 namespace qpp::cad {
+
   struct mesh_generators{
+
       static mesh_t *quad(){
         mesh_t* _mesh = new mesh_t();
 
         float quad_vert[12] = {
-         -1, -1,  0,
+          -1, -1,  0,
           1, -1,  0,
           1,  1,  0,
-         -1,  1,  0
+          -1,  1,  0
         };
 
         float quad_texc[12] = {
@@ -56,7 +59,7 @@ namespace qpp::cad {
             float cos_theta = cos(theta);
 
             for (int long_num = 0; long_num <= long_bands; long_num++) {
-                float phi = long_num * 2 * qpp::pi / long_bands;
+                float phi = long_num * 2.0f * qpp::pi / long_bands;
                 float sin_phi = sin(phi);
                 float cos_phi = cos(phi);
 
@@ -110,9 +113,12 @@ namespace qpp::cad {
         int numIdx = 0;
 
         for (int i = 0; i < num_z-1; i++){
+
             float zC = dZ*float(i);
             float zN = dZ*float(i+1);
+
             for (int j = 0; j < num_phi-1; j++){
+
                 float phiC = dPhi*float(j);
                 float phiN = dPhi*float(j+1);
 
@@ -125,10 +131,7 @@ namespace qpp::cad {
                 vector3<float> n2(R*cos(phiN),R*sin(phiN), zC);
                 vector3<float> n3(R*cos(phiN),R*sin(phiN), zN);
                 vector3<float> n4(R*cos(phiC),R*sin(phiC), zN);
-                //          std::cout << p1 << std::endl << std::endl
-                //                    << p2 << std::endl << std::endl
-                //                    << p3 << std::endl << std::endl
-                //                    << p4 << std::endl << std::endl;
+
                 dump_vector3_to_vector<float>(_mesh->vertecies, p1);
                 dump_vector3_to_vector<float>(_mesh->vertecies, p2);
                 dump_vector3_to_vector<float>(_mesh->vertecies, p3);
@@ -147,9 +150,8 @@ namespace qpp::cad {
                 _mesh->indices.push_back(numIdx*4 + 2);
                 _mesh->indices.push_back(numIdx*4 + 3);
 
-                //tri = new Triangle(p1, p2, p3);
-                //tri = new Triangle(p1, p3, p4);
                 numIdx += 1;
+
               }
           }
 
@@ -501,6 +503,77 @@ namespace qpp::cad {
 
         _mesh->bind_data();
         _mesh->mesh_rt = GL_LINES;
+        return _mesh;
+      }
+
+      static mesh_t *cross_line_atom () {
+        mesh_t* _mesh = new mesh_t();
+
+        // 0 - 0
+        _mesh->vertecies.push_back(1.0);
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(0.0);
+
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+
+        // 0 - 1
+        _mesh->vertecies.push_back(-1.0);
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(0.0);
+
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+
+        // 1 - 0
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(1.0);
+        _mesh->vertecies.push_back(0.0);
+
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+
+        // 1 - 1
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(-1.0);
+        _mesh->vertecies.push_back(0.0);
+
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+
+        // 2 - 0
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(1.0);
+
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+
+        // 2 - 1
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(0.0);
+        _mesh->vertecies.push_back(-1.0);
+
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+        _mesh->normals.push_back(0.0);
+
+        _mesh->indices.push_back(0);
+        _mesh->indices.push_back(1);
+        _mesh->indices.push_back(2);
+        _mesh->indices.push_back(3);
+        _mesh->indices.push_back(4);
+        _mesh->indices.push_back(5);
+
+        _mesh->bind_data();
+        _mesh->num_primitives = 6;
+        _mesh->mesh_rt = GL_LINES;
+
         return _mesh;
       }
   };

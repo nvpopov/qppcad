@@ -101,24 +101,24 @@ void workspace_t::render() {
   if (astate->dp != nullptr) {
 
       ///// Draw grid /////
-      if (astate->show_grid){
-          astate->line_mesh_program->begin_shader_program();
-          vector3<float> color(0.75, 0.75, 0.75);
-          astate->line_mesh_program->set_u(sp_u_name::m_model_view_proj,
-                                           astate->camera->m_view_proj.data());
-          astate->line_mesh_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
-          astate->line_mesh_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
+//      if (astate->show_grid){
+//          astate->line_mesh_program->begin_shader_program();
+//          vector3<float> color(0.75, 0.75, 0.75);
+//          astate->line_mesh_program->set_u(sp_u_name::m_model_view_proj,
+//                                           astate->camera->m_view_proj.data());
+//          astate->line_mesh_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
+//          astate->line_mesh_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
 
-          //TODO: reimplement grid via DrawInstanced
-          for (int dx = -4; dx <= 4; dx++)
-            for (int dz = -4; dz <= 4; dz++){
-                vector3<float> vTr(dx * (20.0f * 0.5f), dz * (20.0f * 0.5f), 0.0f );
-                astate->line_mesh_program->set_u(sp_u_name::v_translate, (GLfloat*)vTr.data());
-                astate->gridXZ->render();
+//          //TODO: reimplement grid via DrawInstanced
+//          for (int dx = -4; dx <= 4; dx++)
+//            for (int dz = -4; dz <= 4; dz++){
+//                vector3<float> vTr(dx * (10.0f * 0.5f), dz * (10.0f * 0.5f), 0.0f );
+//                astate->line_mesh_program->set_u(sp_u_name::v_translate, (GLfloat*)vTr.data());
+//                astate->gridXZ->render();
 
-              }
-          astate->line_mesh_program->end_shader_program();
-        }
+//              }
+//          astate->line_mesh_program->end_shader_program();
+//        }
       ///// Draw grid /////
 
       ///// Draw axis /////

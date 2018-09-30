@@ -7,8 +7,11 @@
 #pragma clang diagnostic ignored "-Wformat-secutity"
 
 namespace qpp::cad {
+
   struct ws_atoms_list_obj_insp_helper {
-      static void render_ui(ws_atoms_list_t *al){
+
+      static void render_ui (ws_atoms_list_t *al) {
+
         if (ImGui::CollapsingHeader("Summary")){
             ImGui::Spacing();
             ImGui::Columns(2);
@@ -22,7 +25,7 @@ namespace qpp::cad {
           }
 
 
-        if (ImGui::CollapsingHeader("Atom types")){
+        if (ImGui::CollapsingHeader("Atom types")) {
             ImGui::Spacing();
             ImGui::Columns(4);
             ImGui::SetColumnWidth(0, 60);
@@ -42,7 +45,7 @@ namespace qpp::cad {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20, 0));
             ImGui::BeginGroup();
 
-            for (uint8_t i = 0; i < al->m_geom->n_types(); i++){
+            for (uint8_t i = 0; i < al->m_geom->n_types(); i++) {
                 ImGui::TextUnformatted(al->m_geom->atom_of_type(i).c_str(), nullptr);
                 ImGui::NextColumn();
 
@@ -58,7 +61,7 @@ namespace qpp::cad {
                 ImVec2 p_n(p_x, p_y);
                 auto ap_idx = ptable::number_by_symbol(al->m_geom->atom_of_type(i));
                 vector3<float> bc(0.0, 0.0, 1.0);
-                if(ap_idx) {bc = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
+                if (ap_idx) {bc = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
                 draw_list->AddCircleFilled(p_n, 8, ImColor(ImVec4(bc[0], bc[1], bc[2], 1.0f)));
                 ImGui::Dummy(ImVec2(16, 16));
                 ImGui::NextColumn();
@@ -81,6 +84,7 @@ namespace qpp::cad {
                 ImGui::NextColumn();
                 ImGui::Separator();
               }
+
             ImGui::Columns(1);
             ImGui::Spacing();
 
@@ -92,8 +96,8 @@ namespace qpp::cad {
         if (ImGui::CollapsingHeader("Display and styling")){
             ImGui::Spacing();
 
-            const char* items[] = { "Balls & sticks", "Dynamic lines"};
-            ImGui::Combo("Render style", reinterpret_cast<int*>(&al->m_cur_render_type), items, 2);
+            const char* items[] = { "Balls & sticks", "Dynamic lines", "X Atoms lines"};
+            ImGui::Combo("Render style", reinterpret_cast<int*>(&al->m_cur_render_type), items, 3);
             ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1);
             ImGui::SliderFloat("Bond size", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1);
 
@@ -210,7 +214,7 @@ namespace qpp::cad {
 
           }//end modify section
 
-        if (ImGui::CollapsingHeader("Add atoms")){
+        if (ImGui::CollapsingHeader("Add atoms")) {
             static string custom_atom_name;
             ImGui::Separator();
             ImGui::PushItemWidth(200);
@@ -223,8 +227,8 @@ namespace qpp::cad {
           }
 
         // start animation block
-        if (al->m_anim->animable()){
-            if (ImGui::CollapsingHeader("Animations")){
+        if (al->m_anim->animable()) {
+            if (ImGui::CollapsingHeader("Animations")) {
                 ImGui::Spacing();
                 ImGui::TextUnformatted(
                       fmt::format("Total anims : {}", al->m_anim->m_anim_data.size()).c_str(), nullptr);
@@ -247,12 +251,13 @@ namespace qpp::cad {
                   }
                 ImGui::Checkbox("Rebuild bonds", &al->m_anim->m_rebuild_bonds_in_anim);
 
-                if (al->m_anim->get_cur_anim_type() != geom_anim_type::anim_static){
+                if (al->m_anim->get_cur_anim_type() != geom_anim_type::anim_static) {
                     ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim->m_anim_frame_time, 0.01f, 3.0f);
                     ImGui::Checkbox("Play in cycle", &al->m_anim->m_play_cyclic);
 
                     ImGui::TextUnformatted(fmt::format("Frames count: {}",
-                                                       al->m_anim->current_frame_count()).c_str(),nullptr);
+                                                       al->m_anim->current_frame_count()).c_str(),
+                                           nullptr);
 
                     ImGui::Separator();
                     ImGui::PushItemWidth(240);
@@ -285,7 +290,7 @@ namespace qpp::cad {
                   }
               }
           }
-        // end animation block
+        // end animation bloc
 
         if (ImGui::CollapsingHeader("Export")){
             if (ImGui::Button("VASP POSCAR")){
@@ -331,6 +336,7 @@ namespace qpp::cad {
         //    }
       }
   };
+
 }
 #pragma clang diagnostic pop
 #endif

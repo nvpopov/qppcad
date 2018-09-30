@@ -99,7 +99,8 @@ void qpp::cad::shader_program_t::set_u(qpp::cad::sp_u_name _ut, GLfloat *_val){
 void qpp::cad::shader_program_t::begin_shader_program(){
 
   glUseProgram(program_id);
-  set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
+  if (unf_rec[sp_u_name::v_light_pos].enabled)
+      set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
 
   if (unf_rec[sp_u_name::texture_0].enabled) glUniform1i(unf_rec[sp_u_name::texture_0].h_prog, 0);
 

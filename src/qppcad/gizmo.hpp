@@ -9,6 +9,11 @@
 
 namespace qpp::cad {
 
+  enum gizmo_transform_type {
+    translation,
+    rotation
+  };
+
   const vector3<float> gizmo_axis[3] = {
     vector3<float>(1, 0, 0),
     vector3<float>(0, 1, 0),
@@ -30,6 +35,7 @@ namespace qpp::cad {
       bool is_active{false};
       bool interact_at_the_moment;
       bool m_is_visible{true};
+      gizmo_transform_type m_cur_ttype{gizmo_transform_type::translation};
 
       uint8_t touched_axis{0};
       std::array<aabb_3d_t<float>,3> bx;

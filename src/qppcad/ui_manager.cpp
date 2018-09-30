@@ -413,49 +413,32 @@ void ui_manager_t::render_work_panel(){
         }
       ImGui::Separator();
 
-      if (astate->ws_manager->has_wss())
-        ImGui::ToggleButton("GIZMO", &(astate->ws_manager->get_current()->m_gizmo->m_is_visible),
-                             ImVec2(60, 24));
+      if (astate->ws_manager->has_wss()){
+          auto &gizmo = astate->ws_manager->get_current()->m_gizmo;
+          ImGui::ToggleButton("GIZMO", &(gizmo->m_is_visible), ImVec2(60, 24));
+          if (astate->ws_manager->get_current()->m_gizmo->m_is_visible){
+              const char* items[] = { "Tr.", "Rot."};
+              ImGui::PushItemWidth(70);
+              ImGui::Combo("Type", reinterpret_cast<int*>(&gizmo->m_cur_ttype), items, 2);
+              ImGui::PushItemWidth(-1);
+            }
+        }
+
       ImGui::Separator();
     }
-
-
 
   ImGui::End();
   ImGui::PopStyleVar();
 }
 
-void ui_manager_t::render_task_panel(){
+void ui_manager_t::render_task_panel () {
 
 }
 
-void ui_manager_t::render_ws_tabs(){
-  //  ImGui::SetNextWindowSize(ImVec2(c_app::get_state().wWidth - iObjInspWidth ,
-  //                                  35
-  //                                  ));
-  //  ImGui::SetNextWindowPos(ImVec2(0,
-  //                                 iWorkPanelYOffset + iWorkPanelHeight));
-
-  // ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-  // ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.f);
-
-  //  if (ImGui::Begin("tanb", NULL,
-  //               ImGuiWindowFlags_NoMove |
-  //               ImGuiWindowFlags_NoResize |
-  //               ImGuiWindowFlags_NoCollapse |
-  //               ImGuiWindowFlags_NoNavFocus |
-  //               ImGuiWindowFlags_NoTitleBar)){
-  // // ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
-  //  ImGui::Button("workspace1");
-  //  //ImGui::PopStyleVar();
-  //    }
-  //  ImGui::End();
-
-  //  ImGui::PopStyleVar(2);
-
+void ui_manager_t::render_ws_tabs () {
 }
 
-void ui_manager_t::render_object_inspector(){
+void ui_manager_t::render_object_inspector () {
 
   app_state_t* astate = &(c_app::get_state());
 
@@ -475,14 +458,14 @@ void ui_manager_t::render_object_inspector(){
                ImGuiWindowFlags_NoCollapse |
                ImGuiWindowFlags_MenuBar);
 
-  if(ImGui::BeginMenuBar()){
+  if (ImGui::BeginMenuBar()){
       if(ImGui::BeginMenu("Add")){
           ImGui::MenuItem("Geometry");
           ImGui::MenuItem("Debug");
           ImGui::EndMenu();
         }
 
-      if(ImGui::BeginMenu("Import")){
+      if (ImGui::BeginMenu("Import")){
           if (ImGui::MenuItem("XYZ")) {
               if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->
                   dialog_add_geom_from_file(qc_file_format::format_standart_xyz);
@@ -532,15 +515,14 @@ void ui_manager_t::render_object_inspector(){
       ImGui::PopItemWidth();
       ImGui::Spacing();
 
-      ImGui::BeginChild("obj_insp_child", ImVec2(339, 0));
+      ImGui::BeginChild("obj_insp_child", ImVec2(335, 0));
       ImGui::Spacing();
-      if (ws_itm_cur_val != -1){
+      if (ws_itm_cur_val != -1) {
           ImGui::Text(cur_ws->get_selected()->compose_item_name().c_str());
           ImGui::Separator();
           ImGui::Spacing();
           cur_ws->get_selected()->render_ui();
-        }
-      else {
+        } else {
           if (ImGui::CollapsingHeader("Workspace settings")){
               ImGui::ColorEdit3("Background", cur_ws->m_background_color.data());
             }
@@ -554,7 +536,7 @@ void ui_manager_t::render_object_inspector(){
 
 }
 
-void ui_manager_t::render_3d_viewport_context_menu(){
+void ui_manager_t::render_3d_viewport_context_menu () {
   app_state_t* astate = &(c_app::get_state());
 
   if (ImGui::BeginPopupContextVoid("3dAreaContext")){
@@ -579,7 +561,7 @@ void ui_manager_t::render_3d_viewport_context_menu(){
 
 }
 
-void ui_manager_t::render_mtable_big(){
+void ui_manager_t::render_mtable_big () {
   float mendFrm = 0.85f;
 
   ImGui::SetNextWindowSize(ImVec2(c_app::get_state().viewport_size(0) * mendFrm ,
