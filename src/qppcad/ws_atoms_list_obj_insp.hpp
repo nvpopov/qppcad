@@ -91,6 +91,9 @@ namespace qpp::cad {
 
         if (ImGui::CollapsingHeader("Display and styling")){
             ImGui::Spacing();
+
+            const char* items[] = { "Balls & sticks", "Dynamic lines"};
+            ImGui::Combo("Render style", reinterpret_cast<int*>(&al->m_cur_render_type), items, 2);
             ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1);
             ImGui::SliderFloat("Bond size", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1);
 
@@ -132,7 +135,8 @@ namespace qpp::cad {
                       if (elem.second.m_enabled){
                           ImGui::SameLine();
                           ImGui::PushItemWidth(110);
-                          if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist), 0.01f, 10.0f)){
+                          if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist),
+                                                 0.01f, 10.0f)){
                               al->m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
                                                                                  elem.first.m_b);
                               rebuild_ngb = true;

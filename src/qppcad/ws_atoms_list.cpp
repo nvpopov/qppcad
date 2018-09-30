@@ -2,6 +2,7 @@
 #include <qppcad/ws_atoms_list_context_menu.hpp>
 #include <qppcad/ws_atoms_list_obj_insp.hpp>
 #include <qppcad/ws_atoms_list_render_bs.hpp>
+#include <qppcad/ws_atoms_list_render_dlines.hpp>
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
@@ -58,7 +59,7 @@ void ws_atoms_list_t::render () {
   app_state_t* astate = &(c_app::get_state());
   vector3<float> _pos = m_pos;
   index all_null = index::D(m_geom->DIM).all(0);
-  if (app_state_c->dp != nullptr){
+  if (app_state_c->dp){
 
       if (astate->debug_show_tws_tree) {
           astate->dp->begin_render_aabb();
@@ -86,6 +87,9 @@ void ws_atoms_list_t::render () {
       switch (m_cur_render_type) {
         case ws_atoms_list_render_type::ball_and_stick :
           ws_atoms_list_render_bs::render(*this);
+          break;
+        case ws_atoms_list_render_type::dynamic_lines:
+          ws_atoms_list_render_dlines::render(*this);
           break;
         default:
           break;

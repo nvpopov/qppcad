@@ -19,7 +19,8 @@ namespace qpp::cad {
 
   enum ws_atoms_list_render_type {
     ball_and_stick,
-    lines
+    dynamic_lines,
+    static_lines,
   };
 
   /// \brief The ws_atom_list_t class
