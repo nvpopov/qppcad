@@ -355,9 +355,7 @@ void draw_pipeline_t::render_aabb_segmented(const vector3<float> &color,
           half_box_size[2] * v[5]);
 
       render_line(color, box_center + line_start, box_center + line_end, 4.0f);
-
     }
-
 }
 
 void draw_pipeline_t::end_render_aabb(){
@@ -382,15 +380,12 @@ void draw_pipeline_t::render_line(const vector3<float> &color,
   astate->unit_line_program->set_u(sp_u_name::m_model_view_proj, astate->camera->m_view_proj.data());
   astate->unit_line_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
   astate->unit_line->render();
-
-
 }
 
 void draw_pipeline_t::end_render_line(){
   glLineWidth(1.0f);
   app_state_t* astate = &(c_app::get_state());
   astate->unit_line_program->end_shader_program();
-
 }
 
 void draw_pipeline_t::render_screen_quad(){

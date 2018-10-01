@@ -24,6 +24,7 @@ ui_manager_t::ui_manager_t(app_state_t *init_app_state){
 void ui_manager_t::toggle_edit_mode(){
   app_state_t* astate = &(c_app::get_state());
   if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->toggle_edit_mode();
+  astate->make_viewport_dirty();
 }
 
 void ui_manager_t::setup_style(){
@@ -75,10 +76,10 @@ void ui_manager_t::setup_style(){
 
 void ui_manager_t::render_ui(){
   render_main_menu();
-  render_task_panel();
+  //render_task_panel();
   if(c_app::get_state().cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
       render_work_panel();
-      render_ws_tabs();
+      // render_ws_tabs();
       render_3d_viewport_context_menu();
       if (c_app::get_state().show_object_inspector) render_object_inspector();
     }
@@ -173,12 +174,12 @@ void ui_manager_t::render_main_menu(){
           if (c_app::get_state().ws_manager->has_wss()){
               if(ImGui::BeginMenu("Camera")){
                   int _cp_t = c_app::get_state().camera->cur_proj;
-                  ImGui::RadioButton("Ortho", &_cp_t, int(app_camera_proj_type::CAMERA_PROJ_ORTHO));
+                  ImGui::RadioButton("Ortho", &_cp_t, int(cam_proj_type::CAMERA_PROJ_ORTHO));
                   ImGui::SameLine();
-                  ImGui::RadioButton("Perspective", &_cp_t, int(app_camera_proj_type::CAMERA_PROJ_PERSP));
+                  ImGui::RadioButton("Perspective", &_cp_t,int(cam_proj_type::CAMERA_PROJ_PERSP));
                   ImGui::SameLine();
                   if(_cp_t != c_app::get_state().camera->cur_proj){
-                      c_app::get_state().camera->set_projection(app_camera_proj_type(_cp_t));
+                      c_app::get_state().camera->set_projection(cam_proj_type(_cp_t));
                       c_app::get_state().ws_manager->get_current()->set_best_view();
                     }
                   ImGui::EndMenu();
@@ -196,6 +197,7 @@ void ui_manager_t::render_main_menu(){
 
           ImGui::Separator();
 
+          ImGui::Checkbox("Realtime", &(c_app::get_state().m_realtime));
           ImGui::Checkbox("Cartesian Axis" , &(c_app::get_state().show_axis));
           ImGui::Checkbox("Grid XY" , &(c_app::get_state().show_grid));
 
@@ -259,13 +261,17 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::PushItemWidth(170);
       ImGui::PushID(1);
-      ImGui::Combo("", &ui_cur_ws_exact, vChar.data(), astate->ws_manager->m_ws.size());
+      if (ImGui::Combo("", &ui_cur_ws_exact, vChar.data(), astate->ws_manager->m_ws.size())){
+          astate->make_viewport_dirty();
+        }
       ImGui::PopItemWidth();
       ImGui::PopID();
 
       for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
-      if (ui_cur_ws_exact != *astate->ws_manager->get_current_id())
-        astate->ws_manager->set_current(ui_cur_ws_exact);
+      if (ui_cur_ws_exact != *astate->ws_manager->get_current_id()){
+          astate->ws_manager->set_current(ui_cur_ws_exact);
+          astate->make_viewport_dirty();
+        }
       //
 
       if (ImGui::Button("+")){
@@ -284,7 +290,8 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::Separator();
       ImGui::SameLine();
-      ImGui::Text(fmt::format("| FPS : {} |", c_app::get_state().FPS).c_str());
+      if (astate->m_realtime)
+        ImGui::Text(fmt::format("| FPS : {} |", c_app::get_state().FPS).c_str());
 
       ImGui::EndMainMenuBar();
 
@@ -416,10 +423,12 @@ void ui_manager_t::render_work_panel(){
       if (astate->ws_manager->has_wss()){
           auto &gizmo = astate->ws_manager->get_current()->m_gizmo;
           ImGui::ToggleButton("GIZMO", &(gizmo->m_is_visible), ImVec2(60, 24));
+
           if (astate->ws_manager->get_current()->m_gizmo->m_is_visible){
               const char* items[] = { "Tr.", "Rot."};
               ImGui::PushItemWidth(70);
-              ImGui::Combo("Type", reinterpret_cast<int*>(&gizmo->m_cur_ttype), items, 2);
+              if (ImGui::Combo("Type", reinterpret_cast<int*>(&gizmo->m_cur_ttype), items, 2))
+                astate->make_viewport_dirty();
               ImGui::PushItemWidth(-1);
             }
         }
@@ -431,12 +440,6 @@ void ui_manager_t::render_work_panel(){
   ImGui::PopStyleVar();
 }
 
-void ui_manager_t::render_task_panel () {
-
-}
-
-void ui_manager_t::render_ws_tabs () {
-}
 
 void ui_manager_t::render_object_inspector () {
 

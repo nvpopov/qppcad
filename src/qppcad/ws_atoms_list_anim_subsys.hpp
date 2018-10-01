@@ -4,9 +4,10 @@
 #include <geom/geom.hpp>
 #include <geom/geom_anim.hpp>
 #include <geom/tws_tree.hpp>
+#include <qppcad/app.hpp>
 #include <vector>
 
-namespace qpp {
+namespace qpp::cad {
 
   template <typename REAL, typename DATA>
   class ws_atoms_list_anim_subsys_t {
@@ -60,7 +61,7 @@ namespace qpp {
       }
 
       void update (const REAL delta_time) {
-
+        app_state_t* astate = &(c_app::get_state());
         if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
         if (m_anim_data[m_cur_anim].frame_data.empty()) return;
         //if (m_anim[m_cur_anim].frame_data[0].si)
@@ -82,6 +83,7 @@ namespace qpp {
                 m_play_anim = false;
                 m_play_cyclic = false;
               }
+            astate->make_viewport_dirty();
           }
       }
 

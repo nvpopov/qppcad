@@ -23,9 +23,9 @@ void qpp::cad::c_app::error_callback(int error, const char* description){
 }
 
 void qpp::cad::c_app::key_callback(GLFWwindow* window,
-                              int key, int scancode, int action, int mods){
+                                   int key, int scancode, int action, int mods){
 
-  app_state_t* astate = &(c_app::get_state());
+  //app_state_t* astate = &(c_app::get_state());
 
   qpp::cad::c_app::log(fmt::format("Key pressed  {}, sc = {}, act = {}", key, scancode, action));
 
@@ -40,6 +40,7 @@ void qpp::cad::c_app::key_callback(GLFWwindow* window,
 void qpp::cad::c_app::run(){
 
   std::setlocale(LC_ALL, "C");
+  qpp::cad::c_app::m_is_state_initialized = false;
 
   glfwSetErrorCallback(qpp::cad::c_app::error_callback);
 
@@ -100,6 +101,7 @@ void qpp::cad::c_app::run(){
 
   qpp::cad::c_app::log("qpp::cad initialized succesfully!");
   app_state_t* astate = &(c_app::get_state());
+  qpp::cad::c_app::m_is_state_initialized = true;
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
@@ -122,6 +124,8 @@ void qpp::cad::c_app::run(){
   astate->update_viewport_cache();
 
   astate->frame_buffer->resize(astate->viewport_size_c(0), astate->viewport_size_c(1));
+  float current_time = glfwGetTime();
+  float delta_time = current_time - previous_time;
 
   while (!glfwWindowShouldClose(qpp::cad::c_app::curWindow)){
 
@@ -131,22 +135,25 @@ void qpp::cad::c_app::run(){
 
           astate->kb_manager->update(qpp::cad::c_app::curWindow);
 
-          float current_time = glfwGetTime();
-          float delta_time = current_time - previous_time;
+          current_time = glfwGetTime();
+          delta_time = current_time - previous_time;
           frame_count++;
+
+          glfwGetCursorPos(c_app::curWindow, &_mouse_x, &_mouse_y);
+          astate->update_mouse_coord(_mouse_x, _mouse_y);
+          astate->update(delta_time);
+
           if ( delta_time >= 1.0f ){
               astate->FPS = frame_count;
               frame_count = 0;
               previous_time = current_time;
             }
 
-          glfwGetCursorPos(c_app::curWindow, &_mouse_x, &_mouse_y);
-          astate->update_mouse_coord(_mouse_x, _mouse_y);
-          astate->update(delta_time);
-
           qpp::cad::c_app::begin_render();
           qpp::cad::c_app::render();
           qpp::cad::c_app::end_render();
+
+
         }
 
       else glfwWaitEvents();
@@ -195,16 +202,22 @@ void qpp::cad::c_app::end_render(){
 }
 
 void qpp::cad::c_app::render(){
+
   app_state_t* astate = &(c_app::get_state());
+
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
-      astate->frame_buffer->bind();
 
-      glViewport(0, 0,
-                 astate->viewport_size_c(0)-astate->viewport_xy_c(0),
-                 astate->viewport_size_c(1)-astate->viewport_xy_c(1));
+      if (astate->m_viewport_dirty || astate->m_realtime || astate->m_workspace_changed){
+          //c_app::log("new frame rendered");
+          astate->frame_buffer->bind();
 
-      astate->ws_manager->render_current_workspace();
-      astate->frame_buffer->unbind();
+          glViewport(0, 0,
+                     astate->viewport_size_c(0)-astate->viewport_xy_c(0),
+                     astate->viewport_size_c(1)-astate->viewport_xy_c(1));
+
+          astate->ws_manager->render_current_workspace();
+          astate->frame_buffer->unbind();
+        }
 
       glViewport(astate->viewport_xy_c(0),
                  astate->viewport_xy_c(1),
@@ -212,6 +225,9 @@ void qpp::cad::c_app::render(){
                  astate->viewport_size_c(1));
       astate->dp->render_screen_quad();
     }
+
+  if (!astate->m_viewport_dirty) astate->m_workspace_changed = false;
+  astate->m_viewport_dirty = false;
 
   glViewport(0, 0, astate->viewport_size(0), astate->viewport_size(1));
   ImGui::Render();
@@ -230,6 +246,7 @@ void qpp::cad::c_app::resize_window_callback(GLFWwindow *window, int _width, int
   astate->update_viewport_cache();
   astate->frame_buffer->resize(astate->viewport_size_c(0)-astate->viewport_xy_c(0),
                                astate->viewport_size_c(1)-astate->viewport_xy_c(1));
+  astate->make_viewport_dirty();
 }
 
 void qpp::cad::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset){
@@ -248,6 +265,7 @@ void qpp::cad::c_app::mouse_callback(GLFWwindow *window, double x, double y){
 
 void qpp::cad::c_app::mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
   app_state_t* astate =  &(c_app::get_state());
+  astate->make_viewport_dirty();
 
   if (astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE)){
       //std::cout<<"VOTING POINT\n";
@@ -292,3 +310,4 @@ void qpp::cad::c_app::log(const std::string &logText){
 
 GLFWwindow* qpp::cad::c_app::curWindow;
 qpp::cad::app_state_t* qpp::cad::c_app::app_state;
+bool qpp::cad::c_app::m_is_state_initialized;

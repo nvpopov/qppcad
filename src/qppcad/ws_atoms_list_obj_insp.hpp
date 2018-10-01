@@ -2,6 +2,7 @@
 #define QPPCAD_WS_ATOMS_LIST_OBJ_INSP
 #include <qppcad/ws_atoms_list.hpp>
 #include <qppcad/imgui_addons.hpp>
+#include <qppcad/app.hpp>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-secutity"
@@ -11,6 +12,8 @@ namespace qpp::cad {
   struct ws_atoms_list_obj_insp_helper {
 
       static void render_ui (ws_atoms_list_t *al) {
+
+        app_state_t* astate = &(c_app::get_state());
 
         if (ImGui::CollapsingHeader("Summary")){
             ImGui::Spacing();
@@ -72,7 +75,7 @@ namespace qpp::cad {
 
                 ImGui::PushID(i);
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.8f, 0.8f));
-                ImGui::Checkbox("", &_l_type_to_hide);
+                if (ImGui::Checkbox("", &_l_type_to_hide)) astate->make_viewport_dirty();
                 ImGui::PopStyleVar(1);
                 ImGui::PopID();
 
@@ -94,23 +97,36 @@ namespace qpp::cad {
 
 
         if (ImGui::CollapsingHeader("Display and styling")){
+
             ImGui::Spacing();
-
             const char* items[] = { "Balls & sticks", "Dynamic lines", "X Atoms lines"};
-            ImGui::Combo("Render style", reinterpret_cast<int*>(&al->m_cur_render_type), items, 3);
-            ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1);
-            ImGui::SliderFloat("Bond size", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1);
 
-            ImGui::Checkbox("Show atoms", &al->m_show_atoms);
-            ImGui::Checkbox("Show bonds", &al->m_show_bonds);
+            if (ImGui::Combo("Render style", reinterpret_cast<int*>(&al->m_cur_render_type),
+                             items, 3)) astate->make_viewport_dirty();
+
+            if (ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1))
+              astate->make_viewport_dirty();
+
+            if (ImGui::SliderFloat("Bond size", &al->m_bond_scale_factor, 0.02f, 2.0f, "%.4f", 1))
+              astate->make_viewport_dirty();
+
+            if (ImGui::Checkbox("Show atoms", &al->m_show_atoms)) astate->make_viewport_dirty();
+            if (ImGui::Checkbox("Show bonds", &al->m_show_bonds)) astate->make_viewport_dirty();
+
             //ImGui::Checkbox("Show bonds with imaginary atom", &al->m_show_bond_with_img);
             if (al->m_geom->DIM > 0) {
-                ImGui::Checkbox("Draw periodic cell", &al->m_draw_cell);
-                ImGui::Checkbox("Show imaginary atoms", &al->m_show_imaginary_atoms);
-                ImGui::Checkbox("Show imaginary bonds", &al->m_show_imaginary_bonds);
+
+                if (ImGui::Checkbox("Draw periodic cell", &al->m_draw_cell))
+                  astate->make_viewport_dirty();
+
+                if (ImGui::Checkbox("Show imaginary atoms", &al->m_show_imaginary_atoms))
+                  astate->make_viewport_dirty();
+
+                if (ImGui::Checkbox("Show imaginary bonds", &al->m_show_imaginary_bonds))
+                  astate->make_viewport_dirty();
               }
 
-            ImGui::ColorEdit3("Cell ", al->m_cell_color.data());
+            if (ImGui::ColorEdit3("Cell ", al->m_cell_color.data())) astate->make_viewport_dirty();
 
           }
 
@@ -150,7 +166,10 @@ namespace qpp::cad {
                     }
                   ImGui::Spacing();
                 }
-            if (rebuild_ngb) al->m_tws_tr->do_action(act_rebuild_ntable);
+            if (rebuild_ngb) {
+                al->m_tws_tr->do_action(act_rebuild_ntable);
+                astate->make_viewport_dirty();
+              }
           }
 
         //begin modify section
@@ -179,13 +198,17 @@ namespace qpp::cad {
                 ImGui::PushItemWidth(190);
                 if (ImGui::InputFloat3("Edit position", pos.data())){
                     al->update_atom(al->m_atom_idx_sel.begin()->m_atm, pos);
+                    astate->make_viewport_dirty();
                   }
+
                 ImGui::PushItemWidth(70);
                 ImGui::InputText("Edit name", &custom_atom_name);
                 ImGui::SameLine();
                 if (ImGui::Button("Edit", ImVec2(100, 0)))
-                  if (custom_atom_name != "") al->update_atom(
-                        al->m_atom_idx_sel.begin()->m_atm, custom_atom_name);
+                  if (custom_atom_name != "") {
+                      al->update_atom(al->m_atom_idx_sel.begin()->m_atm, custom_atom_name);
+                      astate->make_viewport_dirty();
+                    }
 
               } // end one atom selection
 
@@ -208,6 +231,7 @@ namespace qpp::cad {
                         vector3<float> dir_s = (al->m_geom->pos(it2->m_atm, it2->m_idx) - r_btw).normalized();
                         al->m_geom->change_pos(it1->m_atm, r_btw + dir_f * dist_btw * 0.5f);
                         al->m_geom->change_pos(it2->m_atm, r_btw + dir_s * dist_btw * 0.5f);
+                        astate->make_viewport_dirty();
                       }
                   }
               } //end two atom selection
@@ -221,9 +245,11 @@ namespace qpp::cad {
             ImGui::InputFloat3("New position", al->m_new_atom_pos.data());
             ImGui::InputText("New name", &custom_atom_name);
             ImGui::SameLine();
-            if (ImGui::Button("Add", ImVec2(40, 0)))
-              if (custom_atom_name != "") al->insert_atom(custom_atom_name,
-                                                          al->m_new_atom_pos);
+            if (ImGui::Button("Add", ImVec2(40, 0))){
+                if (custom_atom_name != "") al->insert_atom(custom_atom_name,al->m_new_atom_pos);
+                astate->make_viewport_dirty();
+              }
+
           }
 
         // start animation block
@@ -244,10 +270,10 @@ namespace qpp::cad {
                 std::transform(vStr.begin(), vStr.end(), std::back_inserter(vChar),vec_str_to_char);
 
                 ImGui::PushItemWidth(150);
-                if (ImGui::Combo("Current animation",
-                                 &al->m_anim->m_cur_anim, vChar.data(),
+                if (ImGui::Combo("Current animation", &al->m_anim->m_cur_anim, vChar.data(),
                                  al->m_anim->get_total_anims())){
                     al->m_anim->m_cur_anim_time = 0.0f;
+                    astate->make_viewport_dirty();
                   }
                 ImGui::Checkbox("Rebuild bonds", &al->m_anim->m_rebuild_bonds_in_anim);
 
@@ -271,21 +297,24 @@ namespace qpp::cad {
                     if (ImGui::Button("Begin")) {
                         al->m_anim->m_cur_anim_time = 0.0f;
                         al->m_anim->update_geom_to_anim();
+                        astate->make_viewport_dirty();
                       }
                     ImGui::SameLine();
                     if (ImGui::Button("End")) {
                         al->m_anim->m_cur_anim_time = al->m_anim->current_frame_count() - 1;
                         al->m_anim->update_geom_to_anim();
+                        astate->make_viewport_dirty();
                       }
 
                     ImGui::SameLine();
                     if (ImGui::Button("+Frame")) {
-
+                        //TODO: unimplemented
+                        astate->make_viewport_dirty();
                       }
 
                     ImGui::SameLine();
                     if (ImGui::Button("-Frame")) {
-
+                        astate->make_viewport_dirty();
                       }
                   }
               }
@@ -303,37 +332,6 @@ namespace qpp::cad {
               }
           }
 
-        //  if (ImGui::CollapsingHeader("Measurements")){
-        //      ImGui::Spacing();
-        //      if (m_atom_idx_selection.size() != 2) {
-        //          ImGui::BulletText("Select 2 atoms to measure distance");
-        //          ImGui::BulletText("Select 3 atoms to measure angle");
-        //        } else if (m_atom_idx_selection.size() == 2) {
-        //          auto first = m_atom_idx_selection.cbegin();
-        //          auto last  = ++(m_atom_idx_selection.cbegin());
-        //          float dist = (m_geom->pos(first->m_atm, first->m_idx) -
-        //                        m_geom->pos(last->m_atm, last->m_idx)).norm();
-        //          ImGui::Columns(2);
-        //          ImGui::Separator();
-        //          ImGui::Text("First atom");
-        //          ImGui::Text("Second atom");
-        //          ImGui::Text("Distance");
-        //          ImGui::NextColumn();
-        //          ImGui::Text(fmt::format("{}, Index = {}",
-        //                                  m_geom->atom_of_type(m_geom->type_table(first->m_atm)),
-        //                                  first->m_idx).c_str());
-        //          ImGui::Text(fmt::format("{}, Index = {}",
-        //                                  m_geom->atom_of_type(m_geom->type_table(last->m_atm)),
-        //                                  last->m_idx).c_str());
-        //          ImGui::Text(fmt::format("{} Angs.", dist).c_str());
-        //          ImGui::Columns(1);
-        //          ImGui::Separator();
-        //          ImGui::Checkbox("Draw a line between the measured atoms", &m_draw_line_in_dist_measurement);
-
-
-        //        }
-
-        //    }
       }
   };
 

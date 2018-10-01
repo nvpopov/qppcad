@@ -4,7 +4,7 @@
 #include <qppcad/gl_math.hpp>
 
 namespace qpp::cad{
-  enum app_camera_proj_type {
+  enum cam_proj_type {
     CAMERA_PROJ_ORTHO,
     CAMERA_PROJ_PERSP
   };
@@ -43,7 +43,7 @@ namespace qpp::cad{
     float m_zfar_ortho;
     float m_stored_dist;
 
-    app_camera_proj_type cur_proj;
+    cam_proj_type cur_proj;
 
     camera_t();
     void orthogonalize_gs();
@@ -62,7 +62,7 @@ namespace qpp::cad{
     void update_camera_translation(const bool move_camera);
     void update_camera_rotation(const bool rotate_camera);
 
-    void set_projection(app_camera_proj_type _proj_to_set);
+    void set_projection(cam_proj_type _proj_to_set);
     float distance(const vector3<float> &point);
     vector3<float> unproject(const float x, const float y);
   };

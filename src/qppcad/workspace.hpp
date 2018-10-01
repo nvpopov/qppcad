@@ -30,6 +30,7 @@ namespace qpp::cad{
   ///
   class workspace_manager_t {
   private:
+     app_state_t *cached_astate;
      size_t m_current_workspace_id;
   public:
 

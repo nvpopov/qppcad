@@ -38,6 +38,7 @@ namespace qpp::cad {
 
   // vote candidates
   const int DISABLE_MOUSE_CONTROL_IN_WORKSPACE = 0;
+  const int NEED_TO_REDRAW_WS_VIEWPORT         = 1;
 
   ///
   /// \brief The app_state class
@@ -58,18 +59,8 @@ namespace qpp::cad {
       unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
       unique_ptr<keyboard_manager_t>                            kb_manager;
       camera_t*  camera;
+      vote_pool_t<uint32_t> config_vote_pool;
 
-      float mouse_x;
-      float mouse_y;
-      float mouse_x_old;
-      float mouse_y_old;
-      float mouse_x_ws_frame;
-      float mouse_y_ws_frame;
-
-      app_task_type cur_task;
-      //app_edit_type cur_edit_type;
-
-      // sphere mesh with differnet resolutions
       std::vector<mesh_t*> _sph_meshes;
       mesh_t *cylinder_mesh;
       mesh_t *unit_line;
@@ -80,8 +71,6 @@ namespace qpp::cad {
       mesh_t *fbo_quad;
       mesh_t *xline_mesh;
 
-      int FPS;
-
       vector2<float> viewport_xy;
       vector2<float> viewport_size;
       vector2<float> viewport_xy_c;
@@ -91,10 +80,19 @@ namespace qpp::cad {
       vector3<float> light_color;
       vector3<float> light_pos_tr;
 
+      int FPS;
+
+      float mouse_x;
+      float mouse_y;
+      float mouse_x_old;
+      float mouse_y_old;
+      float mouse_x_ws_frame;
+      float mouse_y_ws_frame;
+
+      app_task_type cur_task;
+
       bool mouse_lb_pressed;
       bool disable_mouse_camera_control;
-
-      vote_pool_t<uint32_t> config_vote_pool;
 
       bool show_axis{true};
       bool show_grid{false};
@@ -104,36 +102,37 @@ namespace qpp::cad {
       bool show_console{false};
       bool mouse_in_3d_area{false};
       bool viewport_changed{false};
+
       bool m_realtime{false};
       bool m_viewport_dirty{true};
+      bool m_workspace_changed{true};
 
 
       void make_viewport_dirty(){
         m_viewport_dirty = true;
+        m_workspace_changed = true;
       }
 
       void update_viewport_cache(){
-        //      std::cout << fmt::format("s {} {} | xy {} {}\n",
-        //                               viewport_size_c[0],
-        //          viewport_size_c[1],
-        //          viewport_xy_c[0],
-        //          viewport_xy_c[1]);
+
         viewport_xy_c = viewport_xy;
         viewport_xy_c(1) = ui_manager->iWorkPanelHeight + ui_manager->iWorkPanelYOffset - 64;
         viewport_size_c = viewport_size;
         viewport_size_c(1) = viewport_size(1) -
                              (ui_manager->iWorkPanelHeight + ui_manager->iWorkPanelYOffset);
+
         if (show_object_inspector) viewport_size_c[0] -= ui_manager->iObjInspWidth;
+
+        //make_viewport_dirty();
+
       }
 
-      ///
       /// \brief update_mouse_coord
       /// \param _mcx
       /// \param _mcy
-      ///
       void update_mouse_coord(const float _mcx, const float _mcy){
+
         //3d area frame
-        //std::cout<< fmt::format("b{}\n", mouse_in_3d_area);
         mouse_x_ws_frame = mouse_x;
         mouse_y_ws_frame = mouse_y - ui_manager->iWorkPanelHeight
                            - ui_manager->iWorkPanelYOffset;
@@ -166,10 +165,12 @@ namespace qpp::cad {
         update_viewport_cache();
 
         if (viewport_changed){
-            frame_buffer->resize(viewport_size_c(0),
-                                 viewport_size_c(1));
+            frame_buffer->resize(viewport_size_c(0), viewport_size_c(1));
             viewport_changed = false;
+            make_viewport_dirty();
           }
+
+        if (mouse_lb_pressed) make_viewport_dirty();
 
         if (camera != nullptr){
             camera->update_camera();
@@ -189,16 +190,6 @@ namespace qpp::cad {
         FPS = 60;
 
         cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
-        //cur_edit_type = app_edit_type::EDIT_WS_ITEM_CONTENT;
-
-        //      show_axis                    = true;
-        //      show_grid                    = false;
-        //      debug_show_tws_tree          = false;
-        //      debug_show_selection_ray     = false;
-        //      show_object_inspector        = true;
-        //      mouse_lb_pressed             = false;
-        //      disable_mouse_camera_control = false;
-        //      show_console                 = false;
 
         light_pos    = vector3<float>(0, 1.0f, 1.0f);
         light_pos_tr = vector3<float>(0, 0, 0);
@@ -230,6 +221,7 @@ namespace qpp::cad {
         ui_manager   = make_shared<ui_manager_t>(this);
         fd_manager   = make_shared<file_dialog_manager_t>();
 
+        make_viewport_dirty();
         update_viewport_cache();
       }
 

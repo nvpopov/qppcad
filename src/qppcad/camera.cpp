@@ -90,30 +90,47 @@ void camera_t::reset_camera(){
   m_look_up    = vector3<float>(0.0, 0.0, 1.0);
   orthogonalize_gs();
 
-  cur_proj = app_camera_proj_type::CAMERA_PROJ_PERSP;
+  cur_proj = cam_proj_type::CAMERA_PROJ_PERSP;
 }
 
 void camera_t::update_camera(){
+
   app_state_t* astate = &(c_app::get_state());
 
   float x_dt = astate->mouse_x - astate->mouse_x_old;
   float y_dt = astate->mouse_y - astate->mouse_y_old;
 
-
   if (m_move_camera){
+
       float move_right = -x_dt / camera_t::nav_div_step_translation;
       float move_up = y_dt / camera_t::nav_div_step_translation;
-      if (fabs(move_right) > camera_t::nav_thresh) translate_camera_right(move_right);
-      if (fabs(move_up) > camera_t::nav_thresh) translate_camera_up(move_up);
+
+      if (fabs(move_right) > camera_t::nav_thresh) {
+          translate_camera_right(move_right);
+          astate->make_viewport_dirty();
+        }
+
+      if (fabs(move_up) > camera_t::nav_thresh) {
+          translate_camera_up(move_up);
+          astate->make_viewport_dirty();
+        }
+
     }
 
   if (m_rotate_camera){
-      //std::cout << "m_rotate_camera enter \n";
+
       float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
       float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
 
-      if (fabs(rot_angle_y) > camera_t::nav_thresh) rotate_camera_orbit_yaw(rot_angle_y);
-      if (fabs(rot_angle_x) > camera_t::nav_thresh) rotate_camera_orbit_pitch(rot_angle_x);
+      if (fabs(rot_angle_y) > camera_t::nav_thresh) {
+          rotate_camera_orbit_yaw(rot_angle_y);
+          astate->make_viewport_dirty();
+        }
+
+      if (fabs(rot_angle_x) > camera_t::nav_thresh) {
+          rotate_camera_orbit_pitch(rot_angle_x);
+          astate->make_viewport_dirty();
+        }
 
     }
 
@@ -123,7 +140,7 @@ void camera_t::update_camera(){
   float _viewport_w = 0.0f;
   if (!astate->show_object_inspector) _viewport_w = astate->ui_manager->iObjInspWidth;
 
-  if (cur_proj == app_camera_proj_type::CAMERA_PROJ_PERSP)
+  if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP)
     m_mat_proj = perspective<float>(m_fov, astate->viewport_size_c(0)/ astate->viewport_size_c(1),
                                     m_znear_persp, m_zfar_persp);
   else {
@@ -155,7 +172,11 @@ void camera_t::update_camera(){
 }
 
 void camera_t::update_camera_zoom(const float dist){
-  if (cur_proj == app_camera_proj_type::CAMERA_PROJ_PERSP){
+
+  app_state_t* astate = &(c_app::get_state());
+
+  if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP){
+
       vector3<float> m_view_dir_n = - m_view_point + m_look_at;
       float f_dist = m_view_dir_n.norm();
       m_stored_dist = f_dist;
@@ -164,10 +185,13 @@ void camera_t::update_camera_zoom(const float dist){
       //bool bCanZoom = true;
       if (f_dist + f_dist_delta > m_mouse_zoom_min_distance || f_dist_delta < 0.0f)
         m_view_point += m_view_dir_n * f_dist_delta;
+
     } else {
       m_ortho_scale += dist;
       m_ortho_scale = clamp(m_ortho_scale, 1.0f, 150.0f);
     }
+
+  astate->make_viewport_dirty();
 }
 
 void camera_t::update_camera_translation(const bool move_camera){
@@ -178,7 +202,7 @@ void camera_t::update_camera_rotation(bool rotate_camera){
   m_rotate_camera = rotate_camera;
 }
 
-void camera_t::set_projection(app_camera_proj_type _proj_to_set){
+void camera_t::set_projection(cam_proj_type _proj_to_set){
   if (cur_proj != _proj_to_set){
       reset_camera();
       cur_proj = _proj_to_set;

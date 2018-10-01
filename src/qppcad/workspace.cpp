@@ -42,7 +42,6 @@ void workspace_t::toggle_edit_mode () {
 }
 
 void workspace_t::workspace_changed () {
-  //rebuild ws items
   m_ws_names_c.clear();
   for (uint8_t i = 0; i < m_ws_items.size(); i++)
     m_ws_names_c.push_back(fmt::format("[{}] {}", i, m_ws_items[i]->m_name));
@@ -82,12 +81,12 @@ void workspace_t::set_best_view () {
 
 void workspace_t::render() {
 
+  app_state_t* astate = &(c_app::get_state());
+
   if (m_first_render) {
       set_best_view();
       m_first_render = false;
     }
-
-  app_state_t* astate = &(c_app::get_state());
 
   if (m_gizmo->is_active && m_gizmo->attached_item) m_gizmo->render();
 
@@ -98,7 +97,7 @@ void workspace_t::render() {
       astate->dp->end_render_line();
     }
 
-  if (astate->dp != nullptr) {
+  if (astate->dp) {
 
       ///// Draw grid /////
 //      if (astate->show_grid){
@@ -126,7 +125,7 @@ void workspace_t::render() {
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
           float fAxisLen = 0.07f *astate->camera->m_stored_dist;
           if (astate->camera->cur_proj ==
-              app_camera_proj_type::CAMERA_PROJ_PERSP)
+              cam_proj_type::CAMERA_PROJ_PERSP)
             fAxisLen = 0.015f;
 
           astate->dp->begin_render_line();
@@ -218,10 +217,9 @@ void workspace_t::dialog_add_geom_from_file (qc_file_format file_format) {
 }
 
 void workspace_t::save_workspace_to_json (const string filename) {
-  //using json = nlohmann::json;
+
   ofstream out_file(filename);
   json data;
-  //
 
   data[JSON_QPPCAD_VERSION] = "1.0-aa";
   data[JSON_WS_NAME] = m_ws_name;
@@ -244,6 +242,7 @@ void workspace_t::save_workspace_to_json (const string filename) {
 }
 
 void workspace_t::load_workspace_from_json (const string filename) {
+
   fstream ifile(filename);
   json data;
 
@@ -283,6 +282,7 @@ void workspace_t::update (float delta_time) {
 
 workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
   m_current_workspace_id = 0;
+  cached_astate = _astate;
   _astate->kb_manager->connect("switch_to_ws_0", this, &workspace_manager_t::force_set_current<0>);
   _astate->kb_manager->connect("switch_to_ws_1", this, &workspace_manager_t::force_set_current<1>);
   _astate->kb_manager->connect("switch_to_ws_2", this, &workspace_manager_t::force_set_current<2>);
@@ -306,11 +306,17 @@ optional<size_t> workspace_manager_t::get_current_id () {
 }
 
 bool workspace_manager_t::set_current (const size_t ws_index) {
+  c_app::log("set current called");
+
   if (ws_index < m_ws.size()){
       m_current_workspace_id = ws_index;
       update_window_title();
+      cached_astate->camera = m_ws[ws_index]->m_camera.get();
+      cached_astate->make_viewport_dirty();
       return true;
     }
+
+  cached_astate->make_viewport_dirty();
   return false;
 }
 
@@ -348,8 +354,7 @@ void workspace_manager_t::init_default () {
   _ws4->m_ws_name = "animtest1";
   auto _ws4_al = make_shared<ws_atoms_list_t>();
   _ws4->add_item_to_workspace(_ws4_al);
-  _ws4_al->load_from_file(qc_file_format::format_multi_frame_xyz, "../data/refs/path.xyz",
-                         false);
+  _ws4_al->load_from_file(qc_file_format::format_multi_frame_xyz, "../data/refs/path.xyz", false);
 
   _wsl3->m_name = "zeolite1";
   _wsl32->m_name = "nanotube1";
@@ -357,18 +362,12 @@ void workspace_manager_t::init_default () {
   _wsl33->m_name = "ss1";
   _wsl33->m_pos = vector3<float>(0.0f, 22.0f, 2.0f);
 
-
   add_workspace(_ws3);
   add_workspace(_ws2);
   add_workspace(_ws4);
 
   _ws2->save_workspace_to_json("test.json");
   _ws4->save_workspace_to_json("test_with_anim.json");
-
-  //  auto _ws4 = make_shared<workspace_t>();
-  //  _ws4->m_ws_name = "d4";
-  //  _ws4->load_workspace_from_json("test2.json");
-  //  add_workspace(_ws4);
 
   set_current(2);
 }
@@ -381,7 +380,7 @@ void workspace_manager_t::render_current_workspace () {
               m_ws[m_current_workspace_id]->m_background_color[1],
               m_ws[m_current_workspace_id]->m_background_color[2], 1);
           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-          c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
+//          c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
           m_ws[m_current_workspace_id]->render();
         } else {
           glClearColor(0.8f, 0.8f, 0.8f, 1);

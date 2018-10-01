@@ -33,8 +33,6 @@ namespace qpp::cad{
     void render_ui();
     void render_main_menu();
     void render_work_panel();
-    void render_task_panel();
-    void render_ws_tabs();
     void render_object_inspector();
     void render_3d_viewport_context_menu();
     void render_mtable_big();

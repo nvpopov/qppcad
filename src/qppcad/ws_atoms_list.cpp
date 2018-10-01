@@ -398,6 +398,7 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
 
   m_tws_tr->do_action(act_unlock | act_rebuild_all);
   geometry_changed();
+
   if (parent_ws) parent_ws->workspace_changed();
 
 }
