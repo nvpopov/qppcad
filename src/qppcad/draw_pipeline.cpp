@@ -20,17 +20,18 @@ void draw_pipeline_t::render(){
 
 }
 
-void draw_pipeline_t::begin_atom_render(float &specular_power){
+void draw_pipeline_t::begin_atom_render (float specular_power, float specular_alpha) {
+
   app_state_t* astate = &(c_app::get_state());
   astate->default_program->begin_shader_program();
   astate->default_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
+  astate->default_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
   astate->_sph_meshes[0]->begin_render_batch();
-
 }
 
-void draw_pipeline_t::render_atom(const vector3<float> &color,
-                                  const vector3<float> &pos,
-                                  const float radius){
+void draw_pipeline_t::render_atom (const vector3<float> &color,
+                                   const vector3<float> &pos,
+                                   const float radius) {
 
   app_state_t* astate = &(c_app::get_state());
   // std::cout<<"render_atom"<<std::endl;
@@ -51,21 +52,23 @@ void draw_pipeline_t::render_atom(const vector3<float> &color,
 
 }
 
-void draw_pipeline_t::end_atom_render(){
+void draw_pipeline_t::end_atom_render () {
   app_state_t* astate = &(c_app::get_state());
   astate->default_program->end_shader_program();
   astate->_sph_meshes[0]->end_render_batch();
 }
 
-void draw_pipeline_t::begin_render_bond(){
+void draw_pipeline_t::begin_render_bond (float specular_power, float specular_alpha) {
   app_state_t* astate = &(c_app::get_state());
   astate->mvp_ssl_program->begin_shader_program();
+  astate->mvp_ssl_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
+  astate->mvp_ssl_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
 }
 
-void draw_pipeline_t::render_bond(const vector3<float> &color,
-                                  const vector3<float> &bond_start,
-                                  const vector3<float> &bond_end,
-                                  const float bond_radius){
+void draw_pipeline_t::render_bond (const vector3<float> &color,
+                                   const vector3<float> &bond_start,
+                                   const vector3<float> &bond_end,
+                                   const float bond_radius) {
   app_state_t* astate = &(c_app::get_state());
 
   vector3<float> bond_end_new = (bond_end - bond_start)*(-0.498f) + bond_end;
@@ -94,21 +97,21 @@ void draw_pipeline_t::render_bond(const vector3<float> &color,
 
 }
 
-void draw_pipeline_t::end_render_bond(){
+void draw_pipeline_t::end_render_bond () {
   app_state_t* astate = &(c_app::get_state());
   astate->mvp_ssl_program->end_shader_program();
 }
 
-void draw_pipeline_t::render_molecule(){
+void draw_pipeline_t::render_molecule () {
 
 }
 
-void draw_pipeline_t::render_cell_3d(const vector3<float> &color,
-                                     const vector3<float> &a,
-                                     const vector3<float> &b,
-                                     const vector3<float> &c,
-                                     const vector3<float> &shift,
-                                     const float line_width = 1.0f){
+void draw_pipeline_t::render_cell_3d (const vector3<float> &color,
+                                      const vector3<float> &a,
+                                      const vector3<float> &b,
+                                      const vector3<float> &c,
+                                      const vector3<float> &shift,
+                                      const float line_width = 1.0f) {
   static int disp[][6] = {
     {0, 0, 0, 0, 0, 1},
     {0, 0, 0, 0, 1, 0},
@@ -133,24 +136,24 @@ void draw_pipeline_t::render_cell_3d(const vector3<float> &color,
     }
 }
 
-void draw_pipeline_t::render_vector(){
+void draw_pipeline_t::render_vector () {
 
 }
 
-void draw_pipeline_t::render_primitive(){
+void draw_pipeline_t::render_primitive () {
 
 }
 
-void draw_pipeline_t::begin_render_general_mesh(){
+void draw_pipeline_t::begin_render_general_mesh () {
   app_state_t* astate = &(c_app::get_state());
   astate->mvp_ssl_program->begin_shader_program();
 }
 
-void draw_pipeline_t::render_general_mesh(const vector3<float> &mesh_pos,
-                                          const vector3<float> &mesh_scale,
-                                          const vector3<float> &mesh_rotation,
-                                          const vector3<float> &mesh_color,
-                                          mesh_t *mesh){
+void draw_pipeline_t::render_general_mesh (const vector3<float> &mesh_pos,
+                                           const vector3<float> &mesh_scale,
+                                           const vector3<float> &mesh_rotation,
+                                           const vector3<float> &mesh_color,
+                                           mesh_t *mesh) {
 
   Eigen::Transform<float, 3, Eigen::Affine>
       t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
@@ -174,9 +177,9 @@ void draw_pipeline_t::render_general_mesh(const vector3<float> &mesh_pos,
 
 
 
-void draw_pipeline_t::render_general_mesh(const matrix4<float> &model_matrix,
-                                          const vector3<float> &mesh_color,
-                                          mesh_t *mesh){
+void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
+                                           const vector3<float> &mesh_color,
+                                           mesh_t *mesh) {
   app_state_t* astate = &(c_app::get_state());
 
   matrix4<float> mat_model_view      = astate->camera->m_mat_view * model_matrix;
@@ -191,9 +194,9 @@ void draw_pipeline_t::render_general_mesh(const matrix4<float> &model_matrix,
   mesh->render();
 }
 
-void draw_pipeline_t::render_cube(const vector3<float> &cube_pos,
-                                  const vector3<float> &cube_size,
-                                  const vector3<float> &cube_color){
+void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
+                                   const vector3<float> &cube_size,
+                                   const vector3<float> &cube_color) {
   app_state_t* astate = &(c_app::get_state());
 
 
@@ -219,9 +222,9 @@ void draw_pipeline_t::render_cube(const vector3<float> &cube_pos,
   //glEnable(GL_CULL_FACE);
 }
 
-void draw_pipeline_t::render_cone(const vector3<float> &cone_pos,
-                                  const vector3<float> &cone_size,
-                                  const vector3<float> &cone_color){
+void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
+                                   const vector3<float> &cone_size,
+                                   const vector3<float> &cone_color) {
   app_state_t* astate = &(c_app::get_state());
 
 
@@ -244,7 +247,7 @@ void draw_pipeline_t::render_cone(const vector3<float> &cone_pos,
   //glEnable(GL_CULL_FACE);
 }
 
-void draw_pipeline_t::end_render_general_mesh(){
+void draw_pipeline_t::end_render_general_mesh () {
   app_state_t* astate = &(c_app::get_state());
   astate->mvp_ssl_program->end_shader_program();
 }
@@ -253,9 +256,9 @@ void draw_pipeline_t::begin_render_aabb(){
   begin_render_line();
 }
 
-void draw_pipeline_t::render_aabb(const vector3<float> &color,
-                                  const vector3<float> &box_min,
-                                  const vector3<float> &box_max){
+void draw_pipeline_t::render_aabb (const vector3<float> &color,
+                                   const vector3<float> &box_min,
+                                   const vector3<float> &box_max) {
 
   vector3<float> half_box_size = (box_max - box_min) * 0.5f;
   vector3<float> box_center   = (box_min + box_max) * 0.5f;

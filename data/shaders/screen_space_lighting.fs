@@ -3,6 +3,7 @@ R"(
 uniform vec3 v_light_pos;
 uniform vec3 v_color;
 uniform float f_specular_intensity;
+uniform float f_specular_alpha;
 in vec3 fs_normal;
 in vec3 fs_position;
 out vec4 color;
@@ -14,7 +15,7 @@ void main(void){
 
   float diffuse = max(dot(fs_normal, light_vector), 0.05);
   float specular = max(dot(fs_normal, rvec), 0.01);
-  specular = pow(specular, f_specular_intensity);
+  specular = pow(specular, f_specular_intensity) * f_specular_alpha;
   vec4 ambient = vec4(0.01, 0.01, 0.01, 1.0);
   vec3 gamma = vec3(1.0/2.2, 1.0/2.2, 1.0/2.2);
   vec4 linear_color =  vec4(v_color, 1.0) * diffuse + vec4(1.0, 1.0, 1.0, 1.0) * specular;

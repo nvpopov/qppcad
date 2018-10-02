@@ -200,7 +200,7 @@ namespace qpp::cad {
 
         //default meshes
         _sph_meshes.push_back(mesh_generators::sphere(15, 15));
-        cylinder_mesh = mesh_generators::cylinder_mk2(2, 10, 1.0f, 1.0f);
+        cylinder_mesh = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
         unit_line     = mesh_generators::unit_line();
         gridXZ        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
         unit_cube     = mesh_generators::unit_cube();

@@ -9,7 +9,10 @@ namespace qpp::cad {
       static void render(ws_atoms_list_t &al) {
         app_state_t *astate = &(c_app::get_state());
         index all_null = index::D(al.m_geom->DIM).all(0);
-        astate->dp->begin_atom_render(al.m_shading_specular_power);
+
+        float spec = al.m_draw_specular ? 1.0f : 0.0f;
+
+        astate->dp->begin_atom_render(al.m_shading_specular_power, spec);
 
         // draw {0,..} atoms
         for (uint32_t i = 0; i < al.m_geom->nat(); i++)
@@ -28,7 +31,7 @@ namespace qpp::cad {
         // atom render end
 
         // bond render
-        astate->dp->begin_render_bond();
+        astate->dp->begin_render_bond(al.m_shading_specular_power, spec);
 
         if (al.m_show_bonds)
           for (uint16_t i = 0; i < al.m_geom->nat(); i++)

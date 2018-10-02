@@ -24,7 +24,7 @@ namespace qpp::cad {
     void render ();
 
     /// \brief begin_atom_render
-    void begin_atom_render (float &specular_power);
+    void begin_atom_render (float specular_power, float specular_alpha);
 
     /// \brief render_atom
     /// \param color
@@ -36,7 +36,7 @@ namespace qpp::cad {
     void end_atom_render();
 
     /// \brief begin_render_bond
-    void begin_render_bond();
+    void begin_render_bond(float specular_power, float specular_alpha);
 
     /// \brief render_bond
     /// \param color

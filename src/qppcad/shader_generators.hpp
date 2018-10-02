@@ -28,6 +28,7 @@ namespace qpp::cad {
         sp->u_on(sp_u_name::v_light_pos);
         //sp->u_on(sp_u_name::v_eye_pos);
         sp->u_on(sp_u_name::f_specular_intensity);
+        sp->u_on(sp_u_name::f_specular_alpha);
         sp->u_on(sp_u_name::v_translate);
         sp->u_on(sp_u_name::f_scale);
         sp->u_on(sp_u_name::v_color);
@@ -92,9 +93,12 @@ namespace qpp::cad {
         sp->u_on(sp_u_name::m_model_view_proj);
         sp->u_on(sp_u_name::m_model_view);
         sp->u_on(sp_u_name::m_view_proj);
+        sp->u_on(sp_u_name::f_specular_intensity);
+        sp->u_on(sp_u_name::f_specular_alpha);
         sp->u_on(sp_u_name::m_model_view_inv_tr);
         sp->u_on(sp_u_name::v_light_pos);
         sp->u_on(sp_u_name::v_color);
+
         return sp;
       }
 

@@ -50,6 +50,7 @@ namespace qpp::cad {
 
       bool m_show_imaginary_atoms{true};
       bool m_show_imaginary_bonds{true};
+      bool m_draw_specular{true};
       bool m_show_bonds{true};
       bool m_show_atoms{true};
       bool m_draw_line_in_dist_measurement{false};
