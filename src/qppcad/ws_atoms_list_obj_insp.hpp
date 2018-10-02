@@ -104,6 +104,10 @@ namespace qpp::cad {
             if (ImGui::Combo("Style", reinterpret_cast<int*>(&al->m_cur_render_type),
                              items, 3)) astate->make_viewport_dirty();
 
+            if (al->m_cur_render_type == ws_atoms_list_render_type::ball_and_stick)
+              if (ImGui::SliderFloat("Spec. power", &al->m_shading_specular_power,
+                                 0.5f, 15.0f, "%.4f", 1)) astate->make_viewport_dirty();
+
             if (ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1))
               astate->make_viewport_dirty();
 

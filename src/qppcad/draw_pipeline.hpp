@@ -9,20 +9,22 @@
 namespace qpp::cad {
 
   class draw_pipeline_t{
+
   public:
-    draw_pipeline_t();
+
+    draw_pipeline_t ();
 
     /// \brief load_pipeline
-    void load_pipeline();
+    void load_pipeline ();
 
     /// \brief unload_pipeline
-    void unload_pipeline();
+    void unload_pipeline ();
 
     /// \brief render
-    void render();
+    void render ();
 
     /// \brief begin_atom_render
-    void begin_atom_render();
+    void begin_atom_render (float &specular_power);
 
     /// \brief render_atom
     /// \param color

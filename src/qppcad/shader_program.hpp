@@ -19,6 +19,8 @@ namespace qpp::cad {
     m_view_proj,
     m_view,
     v_light_pos,
+    v_eye_pos,
+    f_specular_intensity,
     v_color,
     v_scale,
     v_translate,
@@ -63,6 +65,8 @@ namespace qpp::cad {
     std::make_pair(sp_u_name::m_view_proj,           "m_view_proj"),
     std::make_pair(sp_u_name::m_view,                "m_view"),
     std::make_pair(sp_u_name::v_light_pos,           "v_light_pos"),
+    std::make_pair(sp_u_name::v_eye_pos,             "v_eye_pos"),
+    std::make_pair(sp_u_name::f_specular_intensity,  "f_specular_intensity"),
     std::make_pair(sp_u_name::v_color,               "v_color"),
     std::make_pair(sp_u_name::v_scale,               "v_scale"),
     std::make_pair(sp_u_name::v_translate,           "v_translate"),
@@ -87,6 +91,8 @@ namespace qpp::cad {
     std::make_pair(sp_u_name::m_view_proj,           sp_u_type::a_m4f),
     std::make_pair(sp_u_name::m_view,                sp_u_type::a_m4f),
     std::make_pair(sp_u_name::v_light_pos,           sp_u_type::a_v3f),
+    std::make_pair(sp_u_name::v_eye_pos,             sp_u_type::a_v3f),
+    std::make_pair(sp_u_name::f_specular_intensity,  sp_u_type::a_sf),
     std::make_pair(sp_u_name::v_color,               sp_u_type::a_v3f),
     std::make_pair(sp_u_name::v_scale,               sp_u_type::a_v3f),
     std::make_pair(sp_u_name::v_translate,           sp_u_type::a_v3f),
@@ -98,7 +104,7 @@ namespace qpp::cad {
     std::make_pair(sp_u_name::texture_2,             sp_u_type::a_texture),
     std::make_pair(sp_u_name::texture_3,             sp_u_type::a_texture),
     std::make_pair(sp_u_name::screen_width,          sp_u_type::a_i),
-    std::make_pair(sp_u_name::screen_height,          sp_u_type::a_i),
+    std::make_pair(sp_u_name::screen_height,         sp_u_type::a_i),
   };
 
   ///
@@ -106,45 +112,39 @@ namespace qpp::cad {
   ///  vertex plus fragment shader and some kind of uniform variables management
   ///
   class shader_program_t{
+
     private:
+
       GLuint program_id;
+
     public:
+
       std::vector<uniform_record> unf_rec;
       std::string program_name;
 
-      ///
       /// \brief shader_program_t
       /// \param _program_name
       /// \param _vs_text
       /// \param _fs_text
-      ///
-      shader_program_t(const std::string &_program_name,
-                       const std::string &_vs_text,
-                       const std::string &_fs_text);
+      shader_program_t (const std::string &_program_name,
+                        const std::string &_vs_text,
+                        const std::string &_fs_text);
 
-      ///
       /// \brief Enable internal uniform
       /// \param _val
-      ///
-      void u_on(sp_u_name _val);
+      void u_on (sp_u_name _val);
 
 
-      ///
       /// \brief Set internal uniform
       /// \param _ut
       /// \param _val
-      ///
-      void set_u(sp_u_name _ut, GLfloat *_val);
+      void set_u (sp_u_name _ut, GLfloat *_val);
 
-      ///
       /// \brief begin_shader_program
-      ///
-      void begin_shader_program();
+      void begin_shader_program ();
 
-      ///
       /// \brief end_shader_program
-      ///
-      void end_shader_program();
+      void end_shader_program ();
   };
 
 

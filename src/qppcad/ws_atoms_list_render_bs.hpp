@@ -9,7 +9,7 @@ namespace qpp::cad {
       static void render(ws_atoms_list_t &al) {
         app_state_t *astate = &(c_app::get_state());
         index all_null = index::D(al.m_geom->DIM).all(0);
-        astate->dp->begin_atom_render();
+        astate->dp->begin_atom_render(al.m_shading_specular_power);
 
         // draw {0,..} atoms
         for (uint32_t i = 0; i < al.m_geom->nat(); i++)

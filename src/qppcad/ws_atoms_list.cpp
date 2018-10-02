@@ -54,12 +54,13 @@ void ws_atoms_list_t::geometry_changed () {
 }
 
 void ws_atoms_list_t::render () {
+
   ws_item_t::render();
-  //we need it for lambda fn
 
   app_state_t* astate = &(c_app::get_state());
   vector3<float> _pos = m_pos;
   index all_null = index::D(m_geom->DIM).all(0);
+
   if (app_state_c->dp){
 
       if (astate->debug_show_tws_tree) {
@@ -104,7 +105,6 @@ void ws_atoms_list_t::render () {
 
         }
       // atom render start
-
 
     }
 

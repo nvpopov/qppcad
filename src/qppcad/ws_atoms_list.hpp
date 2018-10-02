@@ -26,22 +26,8 @@ namespace qpp::cad {
 
   /// \brief The ws_atom_list_t class
   class ws_atoms_list_t : public ws_item_t {
+
     public:
-
-      bool m_show_imaginary_atoms{true};
-      bool m_show_imaginary_bonds{true};
-      bool m_show_bonds{true};
-      bool m_show_atoms{true};
-      bool m_draw_line_in_dist_measurement{false};
-      bool m_bonding_table_show_disabled_record{true};
-      bool m_has_animations;
-
-      ws_atoms_list_render_type m_cur_render_type{ws_atoms_list_render_type::ball_and_stick};
-      float m_atom_scale_factor{0.3f};
-      float m_bond_scale_factor{0.09f};
-      vector3<float> m_cell_color{0.1f, 0.1f, 0.1f};
-      vector3<float> m_gizmo_barycenter;
-      vector3<float> m_new_atom_pos;
 
       unique_ptr<xgeometry<float, periodic_cell<float> > >             m_geom;
       unique_ptr<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> > m_anim;
@@ -52,6 +38,24 @@ namespace qpp::cad {
       unordered_set<atom_index_set_key, atom_index_set_key_hash>       m_atom_idx_sel;
 
       set<uint16_t>  m_atom_type_to_hide;
+
+      float m_shading_specular_power{12.0f};
+      float m_atom_scale_factor{0.3f};
+      float m_bond_scale_factor{0.09f};
+      vector3<float> m_cell_color{0.1f, 0.1f, 0.1f};
+      vector3<float> m_gizmo_barycenter;
+      vector3<float> m_new_atom_pos;
+
+      ws_atoms_list_render_type m_cur_render_type{ws_atoms_list_render_type::ball_and_stick};
+
+      bool m_show_imaginary_atoms{true};
+      bool m_show_imaginary_bonds{true};
+      bool m_show_bonds{true};
+      bool m_show_atoms{true};
+      bool m_draw_line_in_dist_measurement{false};
+      bool m_bonding_table_show_disabled_record{true};
+      bool m_has_animations;
+
 
       ws_atoms_list_t();
 

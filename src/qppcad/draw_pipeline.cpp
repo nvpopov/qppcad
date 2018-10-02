@@ -20,9 +20,10 @@ void draw_pipeline_t::render(){
 
 }
 
-void draw_pipeline_t::begin_atom_render(){
+void draw_pipeline_t::begin_atom_render(float &specular_power){
   app_state_t* astate = &(c_app::get_state());
   astate->default_program->begin_shader_program();
+  astate->default_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
   astate->_sph_meshes[0]->begin_render_batch();
 
 }
