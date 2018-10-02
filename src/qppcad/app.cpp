@@ -213,7 +213,7 @@ void qpp::cad::c_app::render(){
 
           glViewport(0, 0,
                      astate->viewport_size_c(0)-astate->viewport_xy_c(0),
-                     astate->viewport_size_c(1)-astate->viewport_xy_c(1));
+                     astate->viewport_size_c(1)-astate->viewport_xy_c(1)+4);
 
           astate->ws_manager->render_current_workspace();
           astate->frame_buffer->unbind();

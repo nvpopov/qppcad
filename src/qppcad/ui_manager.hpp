@@ -13,20 +13,22 @@
 #include <qppcad/console.hpp>
 
 namespace qpp::cad{
+
   class app_state_t;
 
   class ui_manager_t{
+
   public:
-    uint32_t m_rename_ws_id;
-    char s_rename_workspace_name[60];
-    bool show_rename_workspace_dialog;
-    int iWorkPanelHeight;
-    int iWorkPanelYOffset;
-    int iObjInspWidth;
 
     vector3<float> explicit_translation;
-
     unique_ptr<console_widget_t> console_widget;
+    int work_panel_height{38};
+    int work_panel_yoffset{28};
+    int obj_insp_width{350};
+    uint32_t m_rename_ws_id;
+    char s_rename_workspace_name[60];
+    bool show_rename_workspace_dialog{false};
+
     ui_manager_t(app_state_t *init_app_state);
     void toggle_edit_mode();
     void setup_style();
@@ -36,7 +38,9 @@ namespace qpp::cad{
     void render_object_inspector();
     void render_3d_viewport_context_menu();
     void render_mtable_big();
+
   };
+
 }
 
 #endif

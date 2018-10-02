@@ -5,29 +5,25 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-ui_manager_t::ui_manager_t(app_state_t *init_app_state){
-  // app_state_t *astate = &(c_app::get_state());
+ui_manager_t::ui_manager_t (app_state_t *init_app_state) {
+
   console_widget = make_unique<console_widget_t>(init_app_state);
   m_rename_ws_id = get_uniq_id();
-
-  show_rename_workspace_dialog = false;
-
-  iObjInspWidth = 350;
-  iWorkPanelHeight = 38;
-  iWorkPanelYOffset = 28;
   setup_style();
-
   init_app_state->kb_manager->connect("edit_mode_toggle", this, &ui_manager_t::toggle_edit_mode);
 
 }
 
-void ui_manager_t::toggle_edit_mode(){
+void ui_manager_t::toggle_edit_mode () {
+
   app_state_t* astate = &(c_app::get_state());
   if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->toggle_edit_mode();
   astate->make_viewport_dirty();
+
 }
 
-void ui_manager_t::setup_style(){
+void ui_manager_t::setup_style () {
+
   ImGuiStyle * style = &ImGui::GetStyle();
   style->FrameRounding = 3.0f;
   //style->
@@ -367,8 +363,8 @@ void ui_manager_t::render_work_panel(){
 
   app_state_t* astate = &(c_app::get_state());
 
-  ImGui::SetNextWindowSize(ImVec2( c_app::get_state().viewport_size(0), iWorkPanelHeight));
-  ImGui::SetNextWindowPos(ImVec2(0, iWorkPanelYOffset));
+  ImGui::SetNextWindowSize(ImVec2( c_app::get_state().viewport_size(0), work_panel_height));
+  ImGui::SetNextWindowPos(ImVec2(0, work_panel_yoffset));
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
   //ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.1f);
   ImGui::Begin("task_panel", nullptr,
@@ -445,12 +441,12 @@ void ui_manager_t::render_object_inspector () {
 
   app_state_t* astate = &(c_app::get_state());
 
-  ImGui::SetNextWindowSize(ImVec2(iObjInspWidth ,
-                                  astate->viewport_size(1)-(iWorkPanelYOffset +
-                                                            iWorkPanelHeight)
-                                  ));
-  ImGui::SetNextWindowPos(ImVec2(astate->viewport_size(0) - iObjInspWidth,
-                                 iWorkPanelYOffset + iWorkPanelHeight));
+  ImGui::SetNextWindowSize(ImVec2(obj_insp_width,
+                                  astate->viewport_size(1)-(work_panel_yoffset +work_panel_height))
+                           );
+
+  ImGui::SetNextWindowPos(ImVec2(astate->viewport_size(0) - obj_insp_width,
+                                 work_panel_yoffset + work_panel_height));
 
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
@@ -497,7 +493,7 @@ void ui_manager_t::render_object_inspector () {
   ImGui::Spacing();
 
 
-  ImGui::PushItemWidth(iObjInspWidth-14);
+  ImGui::PushItemWidth(obj_insp_width-14);
 
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws){
@@ -527,7 +523,9 @@ void ui_manager_t::render_object_inspector () {
           cur_ws->get_selected()->render_ui();
         } else {
           if (ImGui::CollapsingHeader("Workspace settings")){
-              ImGui::ColorEdit3("Background", cur_ws->m_background_color.data());
+              if (ImGui::ColorEdit3("Background", cur_ws->m_background_color.data())){
+                  astate->make_viewport_dirty();
+                }
             }
           //ImGui::Separator();
         }

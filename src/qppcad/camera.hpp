@@ -10,7 +10,9 @@ namespace qpp::cad{
   };
 
   class camera_t{
+
   public:
+
     static constexpr float norm_eps = 0.00001f;
     static constexpr float nav_thresh = 0.01f;
     static constexpr int   nav_div_step_translation = 100;
@@ -27,23 +29,21 @@ namespace qpp::cad{
     matrix4<float> m_view_proj;
     matrix3<float> m_view_inv_tr;
 
-    bool m_rotate_camera;
-    bool m_move_camera;
+    bool m_rotate_camera{false};
+    bool m_move_camera{false};
 
+    float m_mouse_whell_camera_step{2.0f};
+    float m_mouse_zoom_min_distance{4.0f};
 
-    /// how much to move forward on mouse wheel
-    float m_mouse_whell_camera_step;
-    float m_mouse_zoom_min_distance;
-
-    float m_ortho_scale;
-    float m_fov;
-    float m_znear_persp;
-    float m_zfar_persp;
-    float m_znear_ortho;
-    float m_zfar_ortho;
+    float m_ortho_scale{10.0f};
+    float m_fov{50.0};
+    float m_znear_persp{0.1f};
+    float m_zfar_persp{800};
+    float m_znear_ortho{-1000};
+    float m_zfar_ortho{1000};
     float m_stored_dist;
 
-    cam_proj_type cur_proj;
+    cam_proj_type cur_proj{cam_proj_type::CAMERA_PROJ_PERSP};
 
     camera_t();
     void orthogonalize_gs();
@@ -66,6 +66,7 @@ namespace qpp::cad{
     float distance(const vector3<float> &point);
     vector3<float> unproject(const float x, const float y);
   };
+
 }
 
 #endif

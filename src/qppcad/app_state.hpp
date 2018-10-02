@@ -116,12 +116,12 @@ namespace qpp::cad {
       void update_viewport_cache(){
 
         viewport_xy_c = viewport_xy;
-        viewport_xy_c(1) = ui_manager->iWorkPanelHeight + ui_manager->iWorkPanelYOffset - 64;
+        viewport_xy_c(1) = ui_manager->work_panel_height + ui_manager->work_panel_yoffset - 64;
         viewport_size_c = viewport_size;
         viewport_size_c(1) = viewport_size(1) -
-                             (ui_manager->iWorkPanelHeight + ui_manager->iWorkPanelYOffset);
+                             (ui_manager->work_panel_height + ui_manager->work_panel_yoffset);
 
-        if (show_object_inspector) viewport_size_c[0] -= ui_manager->iObjInspWidth;
+        if (show_object_inspector) viewport_size_c[0] -= ui_manager->obj_insp_width;
 
         //make_viewport_dirty();
 
@@ -134,8 +134,8 @@ namespace qpp::cad {
 
         //3d area frame
         mouse_x_ws_frame = mouse_x;
-        mouse_y_ws_frame = mouse_y - ui_manager->iWorkPanelHeight
-                           - ui_manager->iWorkPanelYOffset;
+        mouse_y_ws_frame = mouse_y - ui_manager->work_panel_height
+                           - ui_manager->work_panel_yoffset;
 
 
         mouse_in_3d_area = mouse_x_ws_frame > 0 &&

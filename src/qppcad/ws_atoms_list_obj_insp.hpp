@@ -101,7 +101,7 @@ namespace qpp::cad {
             ImGui::Spacing();
             const char* items[] = { "Balls & sticks", "Dynamic lines", "X Atoms lines"};
 
-            if (ImGui::Combo("Render style", reinterpret_cast<int*>(&al->m_cur_render_type),
+            if (ImGui::Combo("Style", reinterpret_cast<int*>(&al->m_cur_render_type),
                              items, 3)) astate->make_viewport_dirty();
 
             if (ImGui::SliderFloat("Atom size", &al->m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1))
@@ -278,7 +278,7 @@ namespace qpp::cad {
                 ImGui::Checkbox("Rebuild bonds", &al->m_anim->m_rebuild_bonds_in_anim);
 
                 if (al->m_anim->get_cur_anim_type() != geom_anim_type::anim_static) {
-                    ImGui::SliderFloat("Time per frame(sec.)", &al->m_anim->m_anim_frame_time, 0.01f, 3.0f);
+                    ImGui::SliderFloat("Frame time(sec.)", &al->m_anim->m_anim_frame_time, 0.01f, 3.0f);
                     ImGui::Checkbox("Play in cycle", &al->m_anim->m_play_cyclic);
 
                     ImGui::TextUnformatted(fmt::format("Frames count: {}",
@@ -299,6 +299,7 @@ namespace qpp::cad {
                         al->m_anim->update_geom_to_anim();
                         astate->make_viewport_dirty();
                       }
+
                     ImGui::SameLine();
                     if (ImGui::Button("End")) {
                         al->m_anim->m_cur_anim_time = al->m_anim->current_frame_count() - 1;
@@ -309,11 +310,13 @@ namespace qpp::cad {
                     ImGui::SameLine();
                     if (ImGui::Button("+Frame")) {
                         //TODO: unimplemented
+                        al->m_anim->manual_frame_manipulate(+1.0f);
                         astate->make_viewport_dirty();
                       }
 
                     ImGui::SameLine();
                     if (ImGui::Button("-Frame")) {
+                        al->m_anim->manual_frame_manipulate(-1.0f);
                         astate->make_viewport_dirty();
                       }
                   }

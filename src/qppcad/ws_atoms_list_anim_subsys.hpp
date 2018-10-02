@@ -6,6 +6,7 @@
 #include <geom/tws_tree.hpp>
 #include <qppcad/app.hpp>
 #include <vector>
+#include <algorithm>
 
 namespace qpp::cad {
 
@@ -93,6 +94,15 @@ namespace qpp::cad {
         for (auto &anim : m_anim_data)
           if (anim.frame_data.empty()) return false;
         return true;
+      }
+
+      void manual_frame_manipulate(const int frame_mod){
+        if (!animable()) return;
+        if (m_cur_anim >= m_anim_data.size()) return;
+        m_cur_anim_time += frame_mod;
+        m_cur_anim_time = std::clamp(m_cur_anim_time,
+                                     0.0f, float(m_anim_data[m_cur_anim].frame_data.size()- 1) );
+        update_geom_to_anim();
       }
 
       geom_anim_type get_cur_anim_type () const {
