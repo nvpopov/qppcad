@@ -42,6 +42,7 @@ void qpp::cad::c_app::key_callback(GLFWwindow* window,
 void qpp::cad::c_app::run(){
 
   std::setlocale(LC_ALL, "C");
+
   qpp::cad::c_app::m_is_state_initialized = false;
 
   glfwSetErrorCallback(qpp::cad::c_app::error_callback);
@@ -138,7 +139,8 @@ void qpp::cad::c_app::run(){
           frame_count++;
           auto now = std::chrono::steady_clock::now();
           auto diff = now - start;
-          auto end = now + std::chrono::milliseconds(static_cast<int>((1.0f / astate->max_fps)*1000.0f));
+          auto end = now + std::chrono::milliseconds(static_cast<int>(
+                                                       (1.0f / astate->max_fps)*1000.0f));
 
           if(diff >= std::chrono::seconds(1)){
               start = now;
@@ -307,7 +309,7 @@ void qpp::cad::c_app::update_window_title(const string &new_title){
 }
 
 void qpp::cad::c_app::log(const std::string &logText){
-
+  std::setlocale(LC_ALL, "C");
   std::time_t t = std::chrono::system_clock::to_time_t(
                     std::chrono::system_clock::now());
   std::string ts( ctime( &t) );

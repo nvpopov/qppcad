@@ -223,6 +223,7 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::PopStyleVar();
       ImGui::Spacing();
+      ImGui::Separator();
       int e_task = c_app::get_state().cur_task;
 
       //      ImGui::Separator();
@@ -293,6 +294,7 @@ void ui_manager_t::render_main_menu(){
         } else {
           ImGui::TextUnformatted("Realtime : OFF");
         }
+      ImGui::Separator();
       ImGui::EndMainMenuBar();
 
     }
