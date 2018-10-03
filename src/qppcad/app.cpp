@@ -1,5 +1,6 @@
 #include <qppcad/app.hpp>
 #include <clocale>
+#include <thread>
 
 void
 MessageCallback( GLenum source,
@@ -124,8 +125,8 @@ void qpp::cad::c_app::run(){
   astate->update_viewport_cache();
 
   astate->frame_buffer->resize(astate->viewport_size_c(0), astate->viewport_size_c(1));
-  float current_time = glfwGetTime();
-  float delta_time = current_time - previous_time;
+
+  auto start = std::chrono::steady_clock::now();
 
   while (!glfwWindowShouldClose(qpp::cad::c_app::curWindow)){
 
@@ -133,26 +134,30 @@ void qpp::cad::c_app::run(){
 
           glfwPollEvents();
 
-          astate->kb_manager->update(qpp::cad::c_app::curWindow);
-
-          current_time = glfwGetTime();
-          delta_time = current_time - previous_time;
           frame_count++;
+          auto now = std::chrono::steady_clock::now();
+          auto diff = now - start;
+          auto end = now + std::chrono::milliseconds(16);
+
+          if(diff >= std::chrono::seconds(1)){
+              start = now;
+              astate->FPS = frame_count;
+              frame_count = 0;
+            }
+
+          astate->kb_manager->update(qpp::cad::c_app::curWindow);
 
           glfwGetCursorPos(c_app::curWindow, &_mouse_x, &_mouse_y);
           astate->update_mouse_coord(_mouse_x, _mouse_y);
-          astate->update(delta_time);
 
-          if ( delta_time >= 1.0f ){
-              astate->FPS = frame_count;
-              frame_count = 0;
-              previous_time = current_time;
-            }
+          auto secs = std::chrono::duration_cast<std::chrono::duration<float>>(diff);
+          astate->update(secs.count());
 
           qpp::cad::c_app::begin_render();
           qpp::cad::c_app::render();
           qpp::cad::c_app::end_render();
 
+          std::this_thread::sleep_until(end);
 
         }
 
