@@ -7,66 +7,69 @@
 #include <qppcad/ws_item.hpp>
 #include <data/color.hpp>
 
-namespace qpp::cad {
+namespace qpp {
 
-  enum gizmo_transform_type {
-    translation,
-    rotation
-  };
+  namespace cad {
 
-  const vector3<float> gizmo_axis[3] = {
-    vector3<float>(1, 0, 0),
-    vector3<float>(0, 1, 0),
-    vector3<float>(0, 0, 1)
-  };
+    enum gizmo_transform_type {
+      translation,
+      rotation
+    };
 
-  const vector3<float> gizmo_color[3] = {
-    clr_red,
-    clr_green,
-    clr_navy
-  };
+    const vector3<float> gizmo_axis[3] = {
+      vector3<float>(1, 0, 0),
+      vector3<float>(0, 1, 0),
+      vector3<float>(0, 0, 1)
+    };
 
-  class gizmo_t {
-    public:
-      vector3<float> pos;
-      vector3<float> accum_translate;
-      float gizmo_box_size;
-      float gizmo_shift_magnitude;
-      bool is_active{false};
-      bool interact_at_the_moment;
-      bool m_is_visible{true};
-      gizmo_transform_type m_cur_ttype{gizmo_transform_type::translation};
+    const vector3<float> gizmo_color[3] = {
+      clr_red,
+      clr_green,
+      clr_navy
+    };
 
-      uint8_t touched_axis{0};
-      std::array<aabb_3d_t<float>,3> bx;
-      std::array<bool, 3> bx_touched;
-      ws_item_t *attached_item;
+    class gizmo_t {
+      public:
+        vector3<float> pos;
+        vector3<float> accum_translate;
+        float gizmo_box_size;
+        float gizmo_shift_magnitude;
+        bool is_active{false};
+        bool interact_at_the_moment;
+        bool m_is_visible{true};
+        gizmo_transform_type m_cur_ttype{gizmo_transform_type::translation};
 
-      template<typename REAL>
-      bool process_ray(ray_t<REAL> *ray){
-        bool _gizmo_touched = false;
-        if (ray) {
-            touched_axis = 4;
-            for(uint8_t i = 0; i < 3; i++){
-                aabb_3d_t<float> aabb_in_world_frame = bx[i].shifted(pos);
-                if (ray_aabb_test(ray, &aabb_in_world_frame)){
-                    touched_axis = i;
-                    bx_touched[i] = true;
-                    _gizmo_touched = true;
-                  }
-                else
-                  bx_touched[i] = false;
-              }
-          }
-        return _gizmo_touched;
-      }
+        uint8_t touched_axis{0};
+        std::array<aabb_3d_t<float>,3> bx;
+        std::array<bool, 3> bx_touched;
+        ws_item_t *attached_item;
 
-      void translate_attached(float delta_time);
-      void clear_selected_axis();
-      void update_gizmo(float delta_time);
-      void render();
+        template<typename REAL>
+        bool process_ray(ray_t<REAL> *ray){
+          bool _gizmo_touched = false;
+          if (ray) {
+              touched_axis = 4;
+              for(uint8_t i = 0; i < 3; i++){
+                  aabb_3d_t<float> aabb_in_world_frame = bx[i].shifted(pos);
+                  if (ray_aabb_test(ray, &aabb_in_world_frame)){
+                      touched_axis = i;
+                      bx_touched[i] = true;
+                      _gizmo_touched = true;
+                    }
+                  else
+                    bx_touched[i] = false;
+                }
+            }
+          return _gizmo_touched;
+        }
 
-      gizmo_t();
-  };
+        void translate_attached(float delta_time);
+        void clear_selected_axis();
+        void update_gizmo(float delta_time);
+        void render();
+
+        gizmo_t();
+    };
+  }
 }
 #endif

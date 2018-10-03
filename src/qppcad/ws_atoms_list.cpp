@@ -421,12 +421,12 @@ void ws_atoms_list_t::write_to_json(json &data) {
   data[JSON_CELL_COLOR] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
   data[JSON_BONDING_TABLE] = json::array({});
 
-  for (auto&& [key, value] : m_tws_tr->m_bonding_table.m_dist) {
+  for (auto &record: m_tws_tr->m_bonding_table.m_dist) {
       json bt_rec = json::array({});
-      bt_rec.push_back(m_geom->atom_of_type(key.m_a));
-      bt_rec.push_back(m_geom->atom_of_type(key.m_b));
-      bt_rec.push_back(value.m_bonding_dist);
-      bt_rec.push_back(value.m_enabled);
+      bt_rec.push_back(m_geom->atom_of_type(record.first.m_a));
+      bt_rec.push_back(m_geom->atom_of_type(record.first.m_b));
+      bt_rec.push_back(record.second.m_bonding_dist);
+      bt_rec.push_back(record.second.m_enabled);
       data[JSON_BONDING_TABLE].push_back(bt_rec);
     }
 

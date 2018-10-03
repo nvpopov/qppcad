@@ -6,58 +6,54 @@
 #include <GLFW/glfw3.h>
 #include <geom/lace3d.hpp>
 
-namespace qpp::cad{
+namespace qpp {
 
-  ///
-  /// \brief The mesh_rt enum
-  ///
-  enum mesh_rt {
-    mesh_rt_triangles,
-    mesh_rt_lines
-  };
+  namespace cad {
 
-  ///
-  /// \brief The mesh_t class
-  ///
-  class mesh_t{
-    public:
+    /// \brief The mesh_rt enum
+    enum mesh_rt {
+      mesh_rt_triangles,
+      mesh_rt_lines
+    };
 
-      /// Raw vertex data
-      std::vector<float> vertecies;
-      std::vector<int>   indices;
-      std::vector<float> normals;
+    /// \brief The mesh_t class
+    class mesh_t{
+      public:
 
-      uint32_t num_primitives{0};
-      uint32_t num_indices{0};
+        /// Raw vertex data
+        std::vector<float> vertecies;
+        std::vector<int>   indices;
+        std::vector<float> normals;
 
-      /// OpenGL buffer handles, todo: move it to template driven abonimation
-      GLuint vio;
-      GLuint vbo;
-      GLuint vao;
-      GLuint nbo;
-      GLenum mesh_rt;
+        uint32_t num_primitives{0};
+        uint32_t num_indices{0};
 
-      mesh_t();
+        /// OpenGL buffer handles, todo: move it to template driven abonimation
+        GLuint vio;
+        GLuint vbo;
+        GLuint vao;
+        GLuint nbo;
+        GLenum mesh_rt;
 
-      ///
-      /// \brief render
-      ///
-      void render();
+        mesh_t();
 
-      void begin_render_batch();
-      void render_batch();
-      void end_render_batch();
+        /// \brief render
+        void render();
 
-      ///
-      /// \brief bind_data
-      ///
-      void bind_data();
-  };
+        void begin_render_batch();
+        void render_batch();
+        void end_render_batch();
 
-  template<typename REAL = float>
-  void dump_vector3_to_vector(std::vector<REAL> &invec,
-                              const vector3<REAL> _v){
-    for (uint8_t i = 0; i < 3; i++) invec.push_back(_v(i));
+        /// \brief bind_data
+        void bind_data();
+    };
+
+    template<typename REAL = float>
+    void dump_vector3_to_vector(std::vector<REAL> &invec,
+                                const vector3<REAL> _v){
+      for (uint8_t i = 0; i < 3; i++) invec.push_back(_v(i));
+    }
+
   }
 
 }

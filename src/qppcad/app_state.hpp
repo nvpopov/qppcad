@@ -25,207 +25,209 @@
 #include <qppcad/shader_generators.hpp>
 #include <qppcad/keyboard_event.hpp>
 
-namespace qpp::cad {
+namespace qpp {
+  namespace cad {
 
-  ///
-  /// \brief The app_task_type enum
-  ///
-  enum app_task_type {
-    TASK_WORKSPACE_EDITOR = 0,
-    TASK_NODE_EDITOR = 1,
-    TASK_MENDELEY_TABLE = 2
-  };
+    ///
+    /// \brief The app_task_type enum
+    ///
+    enum app_task_type {
+      TASK_WORKSPACE_EDITOR = 0,
+      TASK_NODE_EDITOR = 1,
+      TASK_MENDELEY_TABLE = 2
+    };
 
-  // vote candidates
-  const int DISABLE_MOUSE_CONTROL_IN_WORKSPACE = 0;
-  const int NEED_TO_REDRAW_WS_VIEWPORT         = 1;
+    // vote candidates
+    const int DISABLE_MOUSE_CONTROL_IN_WORKSPACE = 0;
+    const int NEED_TO_REDRAW_WS_VIEWPORT         = 1;
 
-  ///
-  /// \brief The app_state class
-  ///
-  class app_state_t {
-    public:
-      draw_pipeline_t*               dp;
+    ///
+    /// \brief The app_state class
+    ///
+    class app_state_t {
+      public:
+        draw_pipeline_t*               dp;
 
-      shader_program_t*              default_program;
-      shader_program_t*              unit_line_program;
-      shader_program_t*              line_mesh_program;
-      shader_program_t*              mvp_ssl_program;
-      shader_program_t*              fbo_quad_program;
+        shader_program_t*              default_program;
+        shader_program_t*              unit_line_program;
+        shader_program_t*              line_mesh_program;
+        shader_program_t*              mvp_ssl_program;
+        shader_program_t*              fbo_quad_program;
 
-      shared_ptr<workspace_manager_t>                           ws_manager;
-      shared_ptr<ui_manager_t>                                  ui_manager;
-      shared_ptr<file_dialog_manager_t>                         fd_manager;
-      unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
-      unique_ptr<keyboard_manager_t>                            kb_manager;
-      camera_t*  camera;
-      vote_pool_t<uint32_t> config_vote_pool;
+        shared_ptr<workspace_manager_t>                           ws_manager;
+        shared_ptr<ui_manager_t>                                  ui_manager;
+        shared_ptr<file_dialog_manager_t>                         fd_manager;
+        unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
+        unique_ptr<keyboard_manager_t>                            kb_manager;
+        camera_t*  camera;
+        vote_pool_t<uint32_t> config_vote_pool;
 
-      std::vector<mesh_t*> _sph_meshes;
-      mesh_t *cylinder_mesh;
-      mesh_t *unit_line;
-      mesh_t *trm;
-      mesh_t *gridXZ;
-      mesh_t *unit_cube;
-      mesh_t *unit_cone;
-      mesh_t *fbo_quad;
-      mesh_t *xline_mesh;
+        std::vector<mesh_t*> _sph_meshes;
+        mesh_t *cylinder_mesh;
+        mesh_t *unit_line;
+        mesh_t *trm;
+        mesh_t *gridXZ;
+        mesh_t *unit_cube;
+        mesh_t *unit_cone;
+        mesh_t *fbo_quad;
+        mesh_t *xline_mesh;
 
-      vector2<float> viewport_xy;
-      vector2<float> viewport_size;
-      vector2<float> viewport_xy_c;
-      vector2<float> viewport_size_c;
+        vector2<float> viewport_xy;
+        vector2<float> viewport_size;
+        vector2<float> viewport_xy_c;
+        vector2<float> viewport_size_c;
 
-      vector3<float> light_pos;
-      vector3<float> light_color;
-      vector3<float> light_pos_tr;
+        vector3<float> light_pos;
+        vector3<float> light_color;
+        vector3<float> light_pos_tr;
 
-      int FPS;
+        int FPS;
 
-      float mouse_x;
-      float mouse_y;
-      float mouse_x_old;
-      float mouse_y_old;
-      float mouse_x_ws_frame;
-      float mouse_y_ws_frame;
+        float mouse_x;
+        float mouse_y;
+        float mouse_x_old;
+        float mouse_y_old;
+        float mouse_x_ws_frame;
+        float mouse_y_ws_frame;
 
-      app_task_type cur_task;
+        app_task_type cur_task;
 
-      bool mouse_lb_pressed;
-      bool disable_mouse_camera_control;
+        bool mouse_lb_pressed;
+        bool disable_mouse_camera_control;
 
-      bool show_axis{true};
-      bool show_grid{false};
-      bool debug_show_tws_tree{false};
-      bool debug_show_selection_ray{false};
-      bool show_object_inspector{true};
-      bool show_console{false};
-      bool mouse_in_3d_area{false};
-      bool viewport_changed{false};
+        bool show_axis{true};
+        bool show_grid{false};
+        bool debug_show_tws_tree{false};
+        bool debug_show_selection_ray{false};
+        bool show_object_inspector{true};
+        bool show_console{false};
+        bool mouse_in_3d_area{false};
+        bool viewport_changed{false};
 
-      bool m_realtime{false};
-      bool m_viewport_dirty{true};
-      bool m_workspace_changed{true};
-
-
-      void make_viewport_dirty(){
-        m_viewport_dirty = true;
-        m_workspace_changed = true;
-      }
-
-      void update_viewport_cache(){
-
-        viewport_xy_c = viewport_xy;
-        viewport_xy_c(1) = ui_manager->work_panel_height + ui_manager->work_panel_yoffset - 64;
-        viewport_size_c = viewport_size;
-        viewport_size_c(1) = viewport_size(1) -
-                             (ui_manager->work_panel_height + ui_manager->work_panel_yoffset);
-
-        if (show_object_inspector) viewport_size_c[0] -= ui_manager->obj_insp_width;
-
-        //make_viewport_dirty();
-
-      }
-
-      /// \brief update_mouse_coord
-      /// \param _mcx
-      /// \param _mcy
-      void update_mouse_coord(const float _mcx, const float _mcy){
-
-        //3d area frame
-        mouse_x_ws_frame = mouse_x;
-        mouse_y_ws_frame = mouse_y - ui_manager->work_panel_height
-                           - ui_manager->work_panel_yoffset;
+        bool m_realtime{false};
+        bool m_viewport_dirty{true};
+        bool m_workspace_changed{true};
 
 
-        mouse_in_3d_area = mouse_x_ws_frame > 0 &&
-                           mouse_x_ws_frame < viewport_size_c(0)&&
-                           mouse_y_ws_frame > 0 &&
-                           mouse_y_ws_frame < viewport_size_c(1);
+        void make_viewport_dirty(){
+          m_viewport_dirty = true;
+          m_workspace_changed = true;
+        }
 
-        mouse_x_ws_frame = (mouse_x_ws_frame / viewport_size_c(0)-0.5)*2.0;
-        mouse_y_ws_frame = (mouse_y_ws_frame / viewport_size_c(1)-0.5)*-2.0;
+        void update_viewport_cache(){
 
-        mouse_x_old = mouse_x;
-        mouse_y_old = mouse_y;
-        mouse_x = _mcx;
-        mouse_y = _mcy;
+          viewport_xy_c = viewport_xy;
+          viewport_xy_c(1) = ui_manager->work_panel_height + ui_manager->work_panel_yoffset - 64;
+          viewport_size_c = viewport_size;
+          viewport_size_c(1) = viewport_size(1) -
+                               (ui_manager->work_panel_height + ui_manager->work_panel_yoffset);
 
-      }
+          if (show_object_inspector) viewport_size_c[0] -= ui_manager->obj_insp_width;
 
-      //TODO: implement via vote pool
-      void mark_viewport_change(){
-        viewport_changed = true;
-      }
+          //make_viewport_dirty();
 
-      ///
-      /// \brief update
-      ///
-      void update(float delta_time){
-        update_viewport_cache();
+        }
 
-        if (viewport_changed){
-            frame_buffer->resize(viewport_size_c(0), viewport_size_c(1));
-            viewport_changed = false;
-            make_viewport_dirty();
-          }
+        /// \brief update_mouse_coord
+        /// \param _mcx
+        /// \param _mcy
+        void update_mouse_coord(const float _mcx, const float _mcy){
 
-        if (mouse_lb_pressed) make_viewport_dirty();
+          //3d area frame
+          mouse_x_ws_frame = mouse_x;
+          mouse_y_ws_frame = mouse_y - ui_manager->work_panel_height
+                             - ui_manager->work_panel_yoffset;
 
-        if (camera != nullptr){
-            camera->update_camera();
-            light_pos_tr = mat4_to_mat3<float>(camera->m_mat_view) * light_pos;
-          }
 
-        auto cur_ws = ws_manager->get_current();
-        if (cur_ws) cur_ws->update(delta_time);
+          mouse_in_3d_area = mouse_x_ws_frame > 0 &&
+                             mouse_x_ws_frame < viewport_size_c(0)&&
+                             mouse_y_ws_frame > 0 &&
+                             mouse_y_ws_frame < viewport_size_c(1);
 
-      }
+          mouse_x_ws_frame = (mouse_x_ws_frame / viewport_size_c(0)-0.5)*2.0;
+          mouse_y_ws_frame = (mouse_y_ws_frame / viewport_size_c(1)-0.5)*-2.0;
 
-      ///
-      /// \brief app_state
-      ///
-      app_state_t(){
+          mouse_x_old = mouse_x;
+          mouse_y_old = mouse_y;
+          mouse_x = _mcx;
+          mouse_y = _mcy;
 
-        FPS = 60;
+        }
 
-        cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
+        //TODO: implement via vote pool
+        void mark_viewport_change(){
+          viewport_changed = true;
+        }
 
-        light_pos    = vector3<float>(0, 1.0f, 1.0f);
-        light_pos_tr = vector3<float>(0, 0, 0);
+        ///
+        /// \brief update
+        ///
+        void update(float delta_time){
+          update_viewport_cache();
 
-        camera = nullptr;
+          if (viewport_changed){
+              frame_buffer->resize(viewport_size_c(0), viewport_size_c(1));
+              viewport_changed = false;
+              make_viewport_dirty();
+            }
 
-        dp = new draw_pipeline_t();
+          if (mouse_lb_pressed) make_viewport_dirty();
 
-        //default meshes
-        _sph_meshes.push_back(mesh_generators::sphere(15, 15));
-        cylinder_mesh = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
-        unit_line     = mesh_generators::unit_line();
-        gridXZ        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
-        unit_cube     = mesh_generators::unit_cube();
-        unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
-        fbo_quad      = mesh_generators::quad();
-        xline_mesh    = mesh_generators::cross_line_atom();
+          if (camera != nullptr){
+              camera->update_camera();
+              light_pos_tr = mat4_to_mat3<float>(camera->m_mat_view) * light_pos;
+            }
 
-        default_program    = shader_generators::gen_default_program();
-        unit_line_program  = shader_generators::gen_unit_line_program();
-        line_mesh_program  = shader_generators::gen_line_mesh_program();
-        mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
-        fbo_quad_program   = shader_generators::gen_fbo_quad_program();
+          auto cur_ws = ws_manager->get_current();
+          if (cur_ws) cur_ws->update(delta_time);
 
-        kb_manager   = make_unique<keyboard_manager_t>();
-        frame_buffer = make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
-        ws_manager   = make_shared<workspace_manager_t>(this);
-        ws_manager->init_default();
-        ui_manager   = make_shared<ui_manager_t>(this);
-        fd_manager   = make_shared<file_dialog_manager_t>();
+        }
 
-        make_viewport_dirty();
-        update_viewport_cache();
-      }
+        ///
+        /// \brief app_state
+        ///
+        app_state_t(){
 
-  };
+          FPS = 60;
+
+          cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
+
+          light_pos    = vector3<float>(0, 1.0f, 1.0f);
+          light_pos_tr = vector3<float>(0, 0, 0);
+
+          camera = nullptr;
+
+          dp = new draw_pipeline_t();
+
+          //default meshes
+          _sph_meshes.push_back(mesh_generators::sphere(15, 15));
+          cylinder_mesh = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
+          unit_line     = mesh_generators::unit_line();
+          gridXZ        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
+          unit_cube     = mesh_generators::unit_cube();
+          unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
+          fbo_quad      = mesh_generators::quad();
+          xline_mesh    = mesh_generators::cross_line_atom();
+
+          default_program    = shader_generators::gen_default_program();
+          unit_line_program  = shader_generators::gen_unit_line_program();
+          line_mesh_program  = shader_generators::gen_line_mesh_program();
+          mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
+          fbo_quad_program   = shader_generators::gen_fbo_quad_program();
+
+          kb_manager   = make_unique<keyboard_manager_t>();
+          frame_buffer = make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
+          ws_manager   = make_shared<workspace_manager_t>(this);
+          ws_manager->init_default();
+          ui_manager   = make_shared<ui_manager_t>(this);
+          fd_manager   = make_shared<file_dialog_manager_t>();
+
+          make_viewport_dirty();
+          update_viewport_cache();
+        }
+
+    };
+  }
 }
 
 #endif

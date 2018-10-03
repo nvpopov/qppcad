@@ -8,59 +8,63 @@
 #include <qppcad/gl_math.hpp>
 
 
-namespace qpp::cad{
-  class c_app{
+namespace qpp{
 
-    private:
+  namespace cad {
 
-      static app_state_t* app_state;
-      static GLFWwindow* curWindow;
+    class c_app{
 
-      static void error_callback(int error, const char* description);
+      private:
 
-      static void key_callback(GLFWwindow* window,
-                               int key,
-                               int scancode,
-                               int action,
-                               int mods);
+        static app_state_t* app_state;
+        static GLFWwindow* curWindow;
 
-      static void resize_window_callback(GLFWwindow* window,
-                                         int _width,
-                                         int _height);
+        static void error_callback(int error, const char* description);
 
-      static void mouse_callback( GLFWwindow *window,
-                                  double x,
-                                  double y );
+        static void key_callback(GLFWwindow* window,
+                                 int key,
+                                 int scancode,
+                                 int action,
+                                 int mods);
 
-      static void mouse_scroll_callback(GLFWwindow* window,
-                                        double xoffset,
-                                        double yoffset);
+        static void resize_window_callback(GLFWwindow* window,
+                                           int _width,
+                                           int _height);
 
-      static void mouse_button_callback( GLFWwindow * window,
-                                         int button,
-                                         int action,
-                                         int mods );
+        static void mouse_callback( GLFWwindow *window,
+                                    double x,
+                                    double y );
 
-      static void begin_render();
-      static void render();
-      static void end_render();
+        static void mouse_scroll_callback(GLFWwindow* window,
+                                          double xoffset,
+                                          double yoffset);
 
-    public:
+        static void mouse_button_callback( GLFWwindow * window,
+                                           int button,
+                                           int action,
+                                           int mods );
 
-      static bool m_is_state_initialized;
-      static void update_window_title(const string &new_title);
-      static void log(const std::string &logText);
-      static void run();
+        static void begin_render();
+        static void render();
+        static void end_render();
 
-      static app_state_t & get_state(){
+      public:
 
-        if (c_app::app_state == nullptr)
-          c_app::app_state = new qpp::cad::app_state_t();
+        static bool m_is_state_initialized;
+        static void update_window_title(const string &new_title);
+        static void log(const std::string &logText);
+        static void run();
 
-        return *app_state;
+        static app_state_t & get_state(){
 
-      }
+          if (c_app::app_state == nullptr)
+            c_app::app_state = new qpp::cad::app_state_t();
 
-  };
+          return *app_state;
+
+        }
+
+    };
+  }
 }
 #endif
