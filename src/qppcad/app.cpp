@@ -1,5 +1,6 @@
 #include <qppcad/app.hpp>
 #include <clocale>
+#include <algorithm>
 #include <thread>
 
 void
@@ -137,11 +138,11 @@ void qpp::cad::c_app::run(){
           frame_count++;
           auto now = std::chrono::steady_clock::now();
           auto diff = now - start;
-          auto end = now + std::chrono::milliseconds(16);
+          auto end = now + std::chrono::milliseconds(static_cast<int>((1.0f / astate->max_fps)*1000.0f));
 
           if(diff >= std::chrono::seconds(1)){
               start = now;
-              astate->FPS = frame_count;
+              astate->current_fps = std::clamp(frame_count, 0, astate->max_fps);
               frame_count = 0;
             }
 

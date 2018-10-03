@@ -222,23 +222,24 @@ void ui_manager_t::render_main_menu(){
         }
 
       ImGui::PopStyleVar();
-
+      ImGui::Spacing();
       int e_task = c_app::get_state().cur_task;
 
-      ImGui::Separator();
-      ImGui::SameLine();
-      //ImGui::Set
-      ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5,15));
-      ImGui::RadioButton("Workspace editor", &e_task,
-                         int(app_task_type::TASK_WORKSPACE_EDITOR));
-      ImGui::SameLine();
-      ImGui::RadioButton("Node editor", &e_task,
-                         int(app_task_type::TASK_NODE_EDITOR));
+      //      ImGui::Separator();
+      //      ImGui::SameLine();
+      //      //ImGui::Set
+      //      ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5,15));
+      //      ImGui::RadioButton("Workspace editor", &e_task,
+      //                         int(app_task_type::TASK_WORKSPACE_EDITOR));
+      //      ImGui::SameLine();
+      //      ImGui::RadioButton("Node editor", &e_task,
+      //                         int(app_task_type::TASK_NODE_EDITOR));
 
-      c_app::get_state().cur_task = app_task_type(e_task);
-      ImGui::Separator();
-      ImGui::SameLine();
-      ImGui::PopStyleVar();
+      //      c_app::get_state().cur_task = app_task_type(e_task);
+      //      ImGui::Separator();
+      //      ImGui::SameLine();
+
+      //      ImGui::PopStyleVar();
 
       //
       optional<size_t> ui_cur_ws = astate->ws_manager->get_current_id();
@@ -286,9 +287,12 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::Separator();
       ImGui::SameLine();
-      if (astate->m_realtime)
-        ImGui::Text(fmt::format("| FPS : {} |", c_app::get_state().FPS).c_str());
-
+      if (astate->m_realtime){
+          ImGui::TextUnformatted("Realtime : ON");
+          ImGui::Text(fmt::format("| FPS : {} |", c_app::get_state().current_fps).c_str());
+        } else {
+          ImGui::TextUnformatted("Realtime : OFF");
+        }
       ImGui::EndMainMenuBar();
 
     }

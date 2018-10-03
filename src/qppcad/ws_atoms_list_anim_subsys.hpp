@@ -65,12 +65,16 @@ namespace qpp {
         }
 
         void update (const REAL delta_time) {
+
           app_state_t* astate = &(c_app::get_state());
+
           if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
           if (m_anim_data[m_cur_anim].frame_data.empty()) return;
+
           //if (m_anim[m_cur_anim].frame_data[0].si)
           if (m_play_anim && animable()) {
-              m_cur_anim_time += 1 / (m_anim_frame_time*60);
+
+              m_cur_anim_time += 1 / (m_anim_frame_time * astate->current_fps);
               if (m_cur_anim_time > m_anim_data[m_cur_anim].frame_data.size() - 1) {
                   if (m_play_cyclic) m_cur_anim_time = 0.0f;
                   else {
@@ -89,23 +93,29 @@ namespace qpp {
                 }
               astate->make_viewport_dirty();
             }
+
         }
 
         bool animable () const {
+
           if (m_force_non_animable) return false;
           if (m_anim_data.empty()) return false;
           for (auto &anim : m_anim_data)
             if (anim.frame_data.empty()) return false;
           return true;
+
         }
 
         void manual_frame_manipulate(const int frame_mod){
+
           if (!animable()) return;
           if (m_cur_anim >= m_anim_data.size()) return;
+
           m_cur_anim_time += frame_mod;
           m_cur_anim_time = std::clamp(m_cur_anim_time,
                                        0.0f, float(m_anim_data[m_cur_anim].frame_data.size()- 1) );
           update_geom_to_anim();
+
         }
 
         geom_anim_type get_cur_anim_type () const {

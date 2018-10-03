@@ -77,11 +77,12 @@ namespace qpp {
         vector2<float> viewport_xy_c;
         vector2<float> viewport_size_c;
 
-        vector3<float> light_pos;
-        vector3<float> light_color;
-        vector3<float> light_pos_tr;
+        vector3<float> light_pos{0, 1.0f, 1.0f};
+        vector3<float> light_color; // @unused
+        vector3<float> light_pos_tr{0, 0, 0};
 
-        int FPS;
+        int current_fps{60};
+        int max_fps{60};
 
         float mouse_x;
         float mouse_y;
@@ -90,7 +91,7 @@ namespace qpp {
         float mouse_x_ws_frame;
         float mouse_y_ws_frame;
 
-        app_task_type cur_task;
+        app_task_type cur_task{app_task_type::TASK_WORKSPACE_EDITOR};
 
         bool mouse_lb_pressed;
         bool disable_mouse_camera_control;
@@ -187,13 +188,6 @@ namespace qpp {
         /// \brief app_state
         ///
         app_state_t(){
-
-          FPS = 60;
-
-          cur_task = app_task_type::TASK_WORKSPACE_EDITOR;
-
-          light_pos    = vector3<float>(0, 1.0f, 1.0f);
-          light_pos_tr = vector3<float>(0, 0, 0);
 
           camera = nullptr;
 
