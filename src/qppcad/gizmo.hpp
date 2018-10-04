@@ -51,7 +51,7 @@ namespace qpp {
               touched_axis = 4;
               for(uint8_t i = 0; i < 3; i++){
                   aabb_3d_t<float> aabb_in_world_frame = bx[i].shifted(pos);
-                  if (ray_aabb_test(ray, &aabb_in_world_frame)){
+                  if (ray_aabb_test(*ray, aabb_in_world_frame)){
                       touched_axis = i;
                       bx_touched[i] = true;
                       _gizmo_touched = true;

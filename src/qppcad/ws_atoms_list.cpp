@@ -137,17 +137,18 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
   if (click_ray){
 
-      vector<tws_query_data_t<float> > res;
+      vector<tws_query_data_t<float, uint32_t> > res;
       //we need to translate ray in world frame to local geometry frame
       ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - m_pos;
       local_geom_ray.dir = click_ray->dir;
-      m_tws_tr->query_ray<query_ray_add_all<float> >(&local_geom_ray, res, m_atom_scale_factor);
+      m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
 
       recalc_gizmo_barycenter();
 
       if (!res.empty()) {
-          std::sort(res.begin(), res.end(), tws_query_data_sort_by_dist<float>);
+          //std::cout << "TTTTT" << res.size() << std::endl;
+          std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
           if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
               atom_index_set_key iskey(res[0].m_atm, res[0].m_idx);
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
