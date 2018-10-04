@@ -8,7 +8,7 @@ using namespace qpp::cad;
 ui_manager_t::ui_manager_t (app_state_t *init_app_state) {
 
   console_widget = make_unique<console_widget_t>(init_app_state);
-  m_rename_ws_id = get_uniq_id();
+  m_rename_ws_id = uniq_id_provider::get_uniq_id();
   setup_style();
   init_app_state->kb_manager->connect("edit_mode_toggle", this, &ui_manager_t::toggle_edit_mode);
 
@@ -223,6 +223,8 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::PopStyleVar();
       ImGui::Spacing();
+
+
       ImGui::Separator();
       int e_task = c_app::get_state().cur_task;
 
@@ -257,7 +259,7 @@ void ui_manager_t::render_main_menu(){
                      std::back_inserter(vChar),
                      vec_str_to_char);
 
-      ImGui::PushItemWidth(170);
+      ImGui::PushItemWidth(200);
       ImGui::PushID(1);
       if (ImGui::Combo("", &ui_cur_ws_exact, vChar.data(), astate->ws_manager->m_ws.size())){
           astate->make_viewport_dirty();

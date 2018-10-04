@@ -13,7 +13,7 @@ void main(void){
   vec3 light_vector = normalize(sp_light_pos - fs_position);
   vec3 rvec = normalize(vec3(0, 1, 1) + sp_light_pos);
 
-  float diffuse = max(dot(fs_normal, light_vector), 0.05);
+  float diffuse = max(dot(fs_normal, light_vector), 0.01);
   float specular = max(dot(fs_normal, rvec), 0.01);
   specular = pow(specular, f_specular_intensity) * f_specular_alpha;
   vec4 ambient = vec4(0.01, 0.01, 0.01, 1.0);

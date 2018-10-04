@@ -7,7 +7,7 @@ using namespace qpp::cad;
 
 console_widget_t::console_widget_t(app_state_t *astate){
   m_active = false;
-  m_id = get_uniq_id();
+  m_id = uniq_id_provider::get_uniq_id();
   m_line_height = 28;
   m_total_com_lines = 1;
   astate->kb_manager->connect("python_console_toggle", this, &console_widget_t::toggle_visible);

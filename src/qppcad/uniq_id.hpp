@@ -6,9 +6,12 @@ namespace qpp {
 
   namespace cad {
 
-    uint32_t get_uniq_id();
+    struct uniq_id_provider {
+      static uint32_t get_uniq_id();
+    };
 
   }
+
 }
 
 #endif
