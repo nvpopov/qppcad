@@ -3,12 +3,12 @@
  molecule and crystal editor written in c++
 ### How to obtain the code
 
-## Variant №1
+#### Init submodules in one command
 ```bash
 git clone https://github.com/nvpopov/qppcad.git --recurse-submodules
 ```
 
-## Variant №2
+#### or in two!
 ```bash
 git clone https://github.com/nvpopov/qppcad.git
 git submodule update --init --recursive
