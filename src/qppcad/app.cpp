@@ -57,8 +57,7 @@ void qpp::cad::c_app::run(){
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_SAMPLES, 4);
-
+   //glfwWindowHint(GLFW_SAMPLES, 2);
 
   qpp::cad::c_app::curWindow = glfwCreateWindow(800, 600, "qpp::cad", nullptr, nullptr);
 
@@ -70,9 +69,20 @@ void qpp::cad::c_app::run(){
 
   glfwMakeContextCurrent(qpp::cad::c_app::curWindow);
   glfwSwapInterval(1);
+
   if (gl3wInit()) {
       qpp::cad::c_app::log("Failed  to initialize OpenGL");
     }
+
+  //log renderer stuff
+  const GLubyte* vendor = glGetString(GL_VENDOR);
+  const GLubyte* renderer = glGetString(GL_RENDERER);
+  const GLubyte* version = glGetString(GL_VERSION);
+  c_app::log(fmt::format("OpenGL summary: vendor={}, renderer={}, version={}",
+                         vendor,
+                         renderer,
+                         version));
+  //end log renderer stuff
 
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;

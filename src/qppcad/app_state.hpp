@@ -110,6 +110,14 @@ namespace qpp {
         bool m_workspace_changed{true};
 
 
+        void write_app_settings(){
+
+        }
+
+        void read_app_settings(){
+
+        }
+
         void make_viewport_dirty(){
           m_viewport_dirty = true;
           m_workspace_changed = true;
