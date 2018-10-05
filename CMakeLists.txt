@@ -14,6 +14,7 @@ macro(set_option option value)
 endmacro()
 
 set_option(PYTHON_BINDINGS OFF)
+set_option(WITH_HarfBuzz OFF)
 add_subdirectory(deps/qpp)
 add_subdirectory(deps/freetype)
 add_subdirectory(deps/glfw)

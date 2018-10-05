@@ -13,13 +13,19 @@ git clone https://github.com/nvpopov/qppcad.git --recurse-submodules
 git clone https://github.com/nvpopov/qppcad.git
 git submodule update --init --recursive
 ```
-
+### Debian - based distro dependencies :
+```bash
+apt install build-essential xorg-dev libgl1-mesa-dev libgtk-3-dev
+```
 ### Dependecies
 1. qpp::core
 2. glfw3
 3. imgui
 4. freetype
 5. nativefiledialog
+### CI Status
+1.[![Build Status](https://travis-ci.org/nvpopov/qppcad.svg?branch=master)](https://travis-ci.org/nvpopov/qppcad)
+
 
 ### Current implemented features
   [Go to implemented features gallery](docs/features-milestone.md)
