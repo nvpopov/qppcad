@@ -3,13 +3,26 @@
 
 namespace qpp{
 
-  enum qc_file_format{
-    format_standart_xyz,
-    format_advanced_xyz,
-    format_multi_frame_xyz,
-    format_vasp_poscar,
-    format_vasp_outcar_md
-  };
+  namespace cad {
+
+    enum qc_file_fmt{
+      standart_xyz,
+      advanced_xyz,
+      multi_frame_xyz,
+      vasp_poscar,
+      vasp_outcar_md
+    };
+
+    struct qc_file_fmt_helper {
+
+        static bool need_to_auto_center(qc_file_fmt file_format){
+          if (file_format == qc_file_fmt::multi_frame_xyz ||
+              file_format == qc_file_fmt::standart_xyz) return true;
+          return false;
+        }
+
+    };
+  }
 
 }
 

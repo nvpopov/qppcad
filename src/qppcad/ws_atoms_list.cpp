@@ -336,7 +336,7 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
   geometry_changed();
 }
 
-void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string file_name,
+void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_name,
                                      bool auto_center) {
 
   std::setlocale(LC_ALL, "C");
@@ -357,24 +357,24 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
   m_name = extract_base_name(file_name);
 
   switch (file_format) {
-    case qc_file_format::format_standart_xyz:
+    case qc_file_fmt::standart_xyz:
       m_geom->DIM = 0;
       read_xyz(qc_data, *(m_geom));
       break;
 
-    case qc_file_format::format_multi_frame_xyz:
+    case qc_file_fmt::multi_frame_xyz:
       m_geom->DIM = 0;
       //
       read_xyz_multiframe(qc_data, *(m_geom), m_anim->m_anim_data);
       break;
 
-    case qc_file_format::format_vasp_poscar:
+    case qc_file_fmt::vasp_poscar:
       m_geom->DIM = 3;
       m_geom->cell.DIM = 3;
       read_vasp_poscar(qc_data, *(m_geom));
       break;
 
-    case qc_file_format::format_vasp_outcar_md:
+    case qc_file_fmt::vasp_outcar_md:
       m_geom->DIM = 3;
       m_geom->cell.DIM = 3;
       read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim->m_anim_data);
@@ -395,6 +395,11 @@ void ws_atoms_list_t::load_from_file(qc_file_format file_format, std::string fil
 
       m_ext_obs->aabb.min = -center + m_ext_obs->aabb.min;
       m_ext_obs->aabb.max = -center + m_ext_obs->aabb.max;
+
+      for (auto &anim : m_anim->m_anim_data)
+        for (auto &anim_frame : anim.frame_data)
+          for (auto &anim_frame_rec : anim_frame)
+            anim_frame_rec -= center;
     }
 
   m_tws_tr->do_action(act_unlock | act_rebuild_all);

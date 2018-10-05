@@ -110,7 +110,8 @@ namespace qpp {
         /// \param eFileFormat
         /// \param sFileName
         /// \param bAutoCenter
-        void load_from_file(qc_file_format file_format, std::string file_name,
+        void load_from_file(qc_file_fmt file_format,
+                            std::string file_name,
                             bool auto_center = false);
 
         string get_ws_item_class_name() override ;

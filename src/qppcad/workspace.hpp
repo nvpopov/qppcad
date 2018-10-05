@@ -53,7 +53,7 @@ namespace qpp {
         void render_current_workspace();
         void mouse_click();
         void add_workspace(const shared_ptr<workspace_t> &ws_to_add);
-        void query_import_file_as_new_workspace(qc_file_format file_format);
+        void query_import_file_as_new_workspace(qc_file_fmt file_format);
         void query_create_new_workspace(const bool switch_to_new_workspace = true);
         void dialog_load_workspace();
         void dialog_save_workspace(const size_t ws_idx, const bool force_save_as);
@@ -97,7 +97,7 @@ namespace qpp {
         void render();
         void mouse_click(const float mouse_x, const float mouse_y);
         void add_item_to_workspace(const shared_ptr<ws_item_t> &item_to_add);
-        void dialog_add_geom_from_file(qc_file_format file_format);
+        void dialog_add_geom_from_file(qc_file_fmt file_format);
 
         void save_workspace_to_json(const string filename);
         void load_workspace_from_json(const string filename);

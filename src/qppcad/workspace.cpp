@@ -198,7 +198,7 @@ void workspace_t::add_item_to_workspace (const shared_ptr<ws_item_t> &item_to_ad
 
 }
 
-void workspace_t::dialog_add_geom_from_file (qc_file_format file_format) {
+void workspace_t::dialog_add_geom_from_file (qc_file_fmt file_format) {
 
   app_state_t *astate = &(c_app::get_state());
 
@@ -330,23 +330,23 @@ void workspace_manager_t::init_default () {
 
   auto _wsl2 = make_shared<ws_atoms_list_t>();
   _ws3->add_item_to_workspace(_wsl2);
-  _wsl2->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/laf3_p3.vasp",
+  _wsl2->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/laf3_p3.vasp",
                         false);
 
   auto _wsl3 = make_shared<ws_atoms_list_t>();
   _ws2->add_item_to_workspace(_wsl3);
-  _wsl3->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
+  _wsl3->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
                         false);
 
   auto _wsl32 = make_shared<ws_atoms_list_t>();
   _ws2->add_item_to_workspace(_wsl32);
-  _wsl32->load_from_file(qc_file_format::format_standart_xyz,
+  _wsl32->load_from_file(qc_file_fmt::standart_xyz,
                          "../deps/qpp/examples/io/ref_data/nanotube.xyz",
                          true);
 
   auto _wsl33 = make_shared<ws_atoms_list_t>();
   _ws2->add_item_to_workspace(_wsl33);
-  _wsl33->load_from_file(qc_file_format::format_vasp_poscar, "../data/refs/mp-971662_Si.vasp",
+  _wsl33->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                          false);
 
 
@@ -354,7 +354,9 @@ void workspace_manager_t::init_default () {
   _ws4->m_ws_name = "animtest1";
   auto _ws4_al = make_shared<ws_atoms_list_t>();
   _ws4->add_item_to_workspace(_ws4_al);
-  _ws4_al->load_from_file(qc_file_format::format_multi_frame_xyz, "../data/refs/path.xyz", false);
+  _ws4_al->load_from_file(qc_file_fmt::multi_frame_xyz,
+                          "../data/refs/path.xyz",
+                          qc_file_fmt_helper::need_to_auto_center(qc_file_fmt::multi_frame_xyz));
 
   _wsl3->m_name = "zeolite1";
   _wsl32->m_name = "nanotube1";
@@ -406,18 +408,24 @@ void workspace_manager_t::add_workspace (const shared_ptr<workspace_t> &ws_to_ad
   ws_to_add->workspace_changed();
 }
 
-void workspace_manager_t::query_import_file_as_new_workspace (qc_file_format file_format) {
+void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_format) {
+
   app_state_t *astate = &(c_app::get_state());
   bool succes{false};
   std::string filter{"*"};
   std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
+
   if (succes){
       auto new_ws = make_shared<workspace_t>();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
       new_ws->m_ws_name = file_name_extr;
       auto new_atoms_list = make_shared<ws_atoms_list_t>();
       new_ws->add_item_to_workspace(new_atoms_list);
-      new_atoms_list->load_from_file(file_format, file_name_fd, false);
+
+      new_atoms_list->load_from_file(file_format,
+                                     file_name_fd,
+                                     qc_file_fmt_helper::need_to_auto_center(file_format));
+
       add_workspace(new_ws);
       set_current(m_ws.size()-1);
     }

@@ -115,11 +115,11 @@ void ui_manager_t::render_main_menu(){
               if (ImGui::BeginMenu("XYZ")){
                   if (ImGui::MenuItem("Standart XYZ(0D)")){
                       astate->ws_manager->
-                          query_import_file_as_new_workspace(qc_file_format::format_standart_xyz);
+                          query_import_file_as_new_workspace(qc_file_fmt::standart_xyz);
                     }
                   if (ImGui::MenuItem("Multiframe XYZ")){
                       astate->ws_manager->
-                          query_import_file_as_new_workspace(qc_file_format::format_multi_frame_xyz);
+                          query_import_file_as_new_workspace(qc_file_fmt::multi_frame_xyz);
                     }
                   ImGui::EndMenu();
                 }
@@ -128,11 +128,11 @@ void ui_manager_t::render_main_menu(){
               if (ImGui::BeginMenu("VASP")){
                   if (ImGui::MenuItem("VASP POSCAR(CONTCAR)")){
                       astate->ws_manager->
-                          query_import_file_as_new_workspace(qc_file_format::format_vasp_poscar);
+                          query_import_file_as_new_workspace(qc_file_fmt::vasp_poscar);
                     }
                   if (ImGui::MenuItem("VASP OUTCAR MD")){
                       astate->ws_manager->
-                          query_import_file_as_new_workspace(qc_file_format::format_vasp_outcar_md);
+                          query_import_file_as_new_workspace(qc_file_fmt::vasp_outcar_md);
                     }
                   ImGui::EndMenu();
                 }
@@ -475,13 +475,13 @@ void ui_manager_t::render_object_inspector () {
       if (ImGui::BeginMenu("Import")){
           if (ImGui::MenuItem("XYZ")) {
               if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->
-                  dialog_add_geom_from_file(qc_file_format::format_standart_xyz);
+                  dialog_add_geom_from_file(qc_file_fmt::standart_xyz);
             }
 
           if (ImGui::BeginMenu("VASP")){
               if (ImGui::MenuItem("POSCAR/CONTCAR")){
                   if (astate->ws_manager->has_wss()) astate->ws_manager->get_current()->
-                      dialog_add_geom_from_file(qc_file_format::format_vasp_poscar);
+                      dialog_add_geom_from_file(qc_file_fmt::vasp_poscar);
                 }
 
               if (ImGui::MenuItem("OUTCAR")){

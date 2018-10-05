@@ -40,8 +40,9 @@ void console_widget_t::render(){
   app_state_t* astate =  &(c_app::get_state());
 
   if (m_active){
-      astate->config_vote_pool.vote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
-      if (ImGui::Begin("Interactive console", &m_active, ImGuiWindowFlags_Modal)){
+      //astate->config_vote_pool.vote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
+      if (ImGui::Begin("Interactive console", &m_active,
+                       ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoCollapse)){
           ImGui::BeginChild("console_output_region", ImVec2(0, ImGui::GetWindowHeight() - 62
                                                             - m_total_com_lines * m_line_height));
           ImGui::PushItemWidth(ImGui::GetWindowWidth());
@@ -79,7 +80,7 @@ void console_widget_t::render(){
           ImGui::End();
         }
     } else {
-      astate->config_vote_pool.unvote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
+      //astate->config_vote_pool.unvote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
     }
 }
 
