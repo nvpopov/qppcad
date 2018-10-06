@@ -7,6 +7,7 @@ namespace qpp {
 
   template<typename PROVIDER = frame_buffer_opengl_provider>
   class frame_buffer_t {
+
     public:
 
       static constexpr uint16_t default_width{800};
@@ -34,12 +35,11 @@ namespace qpp {
         m_provider.resize_fbo(new_width, new_height);
       }
 
-      frame_buffer_t(bool need_to_init = true){
-        m_provider.gen_fbo(default_width, default_height);
-      }
-
-      frame_buffer_t(const uint16_t width, const uint16_t height){
-        m_provider.gen_fbo(width, height);
+      frame_buffer_t(const uint16_t width,
+                     const uint16_t height,
+                     bool enable_multisampling,
+                     uint num_multisampling) {
+        m_provider.gen_fbo(width, height, enable_multisampling, num_multisampling);
       }
 
       typename PROVIDER::handle_t get_color_texture(){
@@ -53,6 +53,7 @@ namespace qpp {
       ~frame_buffer_t(){
         m_provider.destroy_fbo();
       }
+
   };
 
 }

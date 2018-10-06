@@ -5,13 +5,14 @@
 #include <args.hxx>
 
 void
-MessageCallback( GLenum source,
-                 GLenum type,
-                 GLuint id,
-                 GLenum severity,
-                 GLsizei length,
-                 const GLchar* message,
-                 const void* userParam ){
+MessageCallback ( GLenum source,
+                  GLenum type,
+                  GLuint id,
+                  GLenum severity,
+                  GLsizei length,
+                  const GLchar* message,
+                  const void* userParam ) {
+
   if (type == GL_DEBUG_TYPE_ERROR){
       fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
                ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
@@ -20,13 +21,15 @@ MessageCallback( GLenum source,
     }
 }
 
-void qpp::cad::c_app::error_callback(int error, const char* description){
+void qpp::cad::c_app::error_callback (int error, const char* description) {
+
   std::string s1(description);
   qpp::cad::c_app::log(s1);
+
 }
 
-void qpp::cad::c_app::key_callback(GLFWwindow* window,
-                                   int key, int scancode, int action, int mods){
+void qpp::cad::c_app::key_callback (GLFWwindow* window,
+                                    int key, int scancode, int action, int mods) {
 
   //app_state_t* astate = &(c_app::get_state());
 
@@ -36,7 +39,6 @@ void qpp::cad::c_app::key_callback(GLFWwindow* window,
     glfwSetWindowShouldClose(window, GL_TRUE);
 
   ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
-
 
 }
 
@@ -81,6 +83,9 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   else if (str_render_mode == "fb_legacy")
     render_mode_from_args = app_render_mode::buffered_legacy;
 
+  //on modern hardware force ms level if it didnt set in options
+  if (!glfw_samples && render_mode_from_args == app_render_mode::buffered_multi_sampling)
+    aa_level = 8;
   //std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@ " << render_mode_from_args << std::endl;
   //end process args
 
@@ -97,7 +102,9 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  if (aa_level > 0) glfwWindowHint(GLFW_SAMPLES, aa_level);
+  if (aa_level > 0 && render_mode_from_args == app_render_mode::direct) {
+      glfwWindowHint(GLFW_SAMPLES, aa_level);
+    }
 
   qpp::cad::c_app::curWindow = glfwCreateWindow(800, 600, "qpp::cad", nullptr, nullptr);
 
@@ -124,6 +131,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
                          version));
   //end log renderer stuff
 
+  // Start setup imgui
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;
   //io.Fonts->AddFontDefault();
@@ -143,6 +151,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
   ImGui_ImplGlfw_InitForOpenGL(qpp::cad::c_app::curWindow, true);
   ImGui_ImplOpenGL3_Init();
+  // End setup imgui
 
   glfwSetScrollCallback(qpp::cad::c_app::curWindow, qpp::cad::c_app::mouse_scroll_callback);
   glfwSetKeyCallback(qpp::cad::c_app::curWindow, qpp::cad::c_app::key_callback);
@@ -153,17 +162,22 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   glEnable              ( GL_DEBUG_OUTPUT );
   glDebugMessageCallback( MessageCallback, 0 );
 
-  qpp::cad::c_app::log("qpp::cad initialized succesfully!");
   app_state_t* astate = &(c_app::get_state());
-
-  astate->m_render_mode = render_mode_from_args;
+  qpp::cad::c_app::log("qpp::cad initialized succesfully!");
 
   qpp::cad::c_app::m_is_state_initialized = true;
+
+  if (aa_level > 0) {
+      glfwWindowHint(GLFW_SAMPLES, aa_level);
+      glEnable(GL_MULTISAMPLE);
+      astate->m_viewport_ms_level = aa_level;
+    }
+
+  astate->m_render_mode = render_mode_from_args;
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
   glEnable(GL_CULL_FACE);
-  glEnable(GL_MULTISAMPLE);
   glCullFace(GL_BACK);
   /// main app cycle
   ///
@@ -180,8 +194,14 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   astate->viewport_size(1) = height;
   astate->update_viewport_cache();
 
-  if (astate->m_render_mode != app_render_mode::direct)
-    astate->frame_buffer->resize(astate->viewport_size_c(0), astate->viewport_size_c(1));
+  if (astate->m_render_mode != app_render_mode::direct) {
+      astate->frame_buffer =
+          std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >(
+            astate->viewport_size_c(0),
+            astate->viewport_size_c(1),
+            astate->m_render_mode == app_render_mode::buffered_multi_sampling,
+            astate->m_viewport_ms_level);
+    }
 
   auto start = std::chrono::steady_clock::now();
 
@@ -226,9 +246,10 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   glfwDestroyWindow(qpp::cad::c_app::curWindow);
   glfwTerminate();
   //exit(EXIT_SUCCESS);
+
 }
 
-void qpp::cad::c_app::begin_render(){
+void qpp::cad::c_app::begin_render () {
 
   glfwMakeContextCurrent(qpp::cad::c_app::curWindow);
 
@@ -240,7 +261,6 @@ void qpp::cad::c_app::begin_render(){
   float ratio;
   int width, height;
   glfwGetFramebufferSize(qpp::cad::c_app::curWindow, &width, &height);
-
 
   ratio = width / static_cast<float>(height);
   glViewport(0, 0, width, height);
@@ -258,13 +278,14 @@ void qpp::cad::c_app::begin_render(){
     }
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }
 
 void qpp::cad::c_app::end_render(){
   glfwSwapBuffers(qpp::cad::c_app::curWindow);
 }
 
-void qpp::cad::c_app::render(){
+void qpp::cad::c_app::render () {
 
   app_state_t* astate = &(c_app::get_state());
 
@@ -273,16 +294,16 @@ void qpp::cad::c_app::render(){
         case app_render_mode::direct:
           qpp::cad::c_app::render_direct();
           break;
-        case app_render_mode::buffered_legacy:
-          break;
-        case app_render_mode::buffered_multi_sampling:
-          qpp::cad::c_app::render_fb_ms();
+        default:
+          qpp::cad::c_app::render_fb();
           break;
         }
     }
 
   // Restore viewport for gui drawing
-  glViewport(0, 0, astate->viewport_size(0), astate->viewport_size(1));
+  glViewport(0, 0,
+             static_cast<int>(astate->viewport_size(0)),
+             static_cast<int>(astate->viewport_size(1)));
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -291,32 +312,34 @@ void qpp::cad::c_app::render_direct () {
 
   app_state_t* astate = &(c_app::get_state());
 
-  glViewport(astate->viewport_xy_c(0), astate->viewport_xy_c(1),
-             astate->viewport_size_c(0), astate->viewport_size_c(1));
+  glViewport(static_cast<int>(astate->viewport_xy_c(0)),
+             static_cast<int>(astate->viewport_xy_c(1)),
+             static_cast<int>(astate->viewport_size_c(0)),
+             static_cast<int>(astate->viewport_size_c(1)));
 
   astate->ws_manager->render_current_workspace();
 
 }
 
-void qpp::cad::c_app::render_fb_legacy () {
-
-}
-
-void qpp::cad::c_app::render_fb_ms () {
+void qpp::cad::c_app::render_fb () {
 
   app_state_t* astate = &(c_app::get_state());
 
   if (astate->m_viewport_dirty || astate->m_realtime || astate->m_workspace_changed){
       //c_app::log("new frame rendered");
       astate->frame_buffer->bind();
-      glViewport(0, 0, astate->viewport_size_c(0) - astate->viewport_xy_c(0),
-                 astate->viewport_size_c(1) - astate->viewport_xy_c(1) + 4);
+      glViewport(0, 0,
+                 static_cast<int>(astate->viewport_size_c(0) - astate->viewport_xy_c(0)),
+                 static_cast<int>(astate->viewport_size_c(1) - astate->viewport_xy_c(1) + 4));
       astate->ws_manager->render_current_workspace();
       astate->frame_buffer->unbind();
     }
 
-  glViewport(astate->viewport_xy_c(0), astate->viewport_xy_c(1),
-             astate->viewport_size_c(0), astate->viewport_size_c(1));
+  glViewport(static_cast<int>(astate->viewport_xy_c(0)),
+             static_cast<int>(astate->viewport_xy_c(1)),
+             static_cast<int>(astate->viewport_size_c(0)),
+             static_cast<int>(astate->viewport_size_c(1)));
+
   astate->dp->render_screen_quad();
 
   if (!astate->m_viewport_dirty) astate->m_workspace_changed = false;
@@ -324,9 +347,11 @@ void qpp::cad::c_app::render_fb_ms () {
 
 }
 
-void qpp::cad::c_app::resize_window_callback(GLFWwindow *window, int _width, int _height){
+void qpp::cad::c_app::resize_window_callback (GLFWwindow *window, int _width, int _height) {
+
   app_state_t* astate = &(c_app::get_state());
 
+  // to prevent early initialization bug
   if (_width < 0)  _width = 10;
   if (_height < 0) _height = 10;
 
@@ -335,13 +360,17 @@ void qpp::cad::c_app::resize_window_callback(GLFWwindow *window, int _width, int
   astate->viewport_size(0) = _width;
   astate->viewport_size(1) = _height;
   astate->update_viewport_cache();
+
   if (astate->m_render_mode != app_render_mode::direct)
-    astate->frame_buffer->resize(astate->viewport_size_c(0)-astate->viewport_xy_c(0),
-                                 astate->viewport_size_c(1)-astate->viewport_xy_c(1));
+    astate->frame_buffer->resize(
+          static_cast<uint16_t>(astate->viewport_size_c(0)-astate->viewport_xy_c(0)),
+          static_cast<uint16_t>(astate->viewport_size_c(1)-astate->viewport_xy_c(1)));
+
   astate->make_viewport_dirty();
 }
 
-void qpp::cad::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset){
+void qpp::cad::c_app::mouse_scroll_callback (GLFWwindow *window, double xoffset, double yoffset) {
+
   app_state_t* astate =  &(c_app::get_state());
   if ( astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
        astate->camera != nullptr &&
@@ -349,14 +378,16 @@ void qpp::cad::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, 
        astate->mouse_in_3d_area)
     astate->camera->update_camera_zoom(-yoffset);
   ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+
 }
 
-void qpp::cad::c_app::mouse_callback(GLFWwindow *window, double x, double y){
+void qpp::cad::c_app::mouse_callback (GLFWwindow *window, double x, double y) {
   //std::cout<<x<<" "<<y<<std::endl;
   //qpp::c_app::get_state().update_mouse_coord(x, y);
 }
 
-void qpp::cad::c_app::mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
+void qpp::cad::c_app::mouse_button_callback (GLFWwindow *window, int button, int action, int mods){
+
   app_state_t* astate =  &(c_app::get_state());
   astate->make_viewport_dirty();
 
@@ -386,18 +417,23 @@ void qpp::cad::c_app::mouse_button_callback(GLFWwindow *window, int button, int 
       astate->camera->update_camera_translation(
             button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS);
     }
+
 }
 
-void qpp::cad::c_app::update_window_title(const std::string &new_title){
+void qpp::cad::c_app::update_window_title (const std::string &new_title) {
+
   std::string tmp_title = "qpp::cad " + new_title;
   glfwSetWindowTitle(qpp::cad::c_app::curWindow, tmp_title.c_str());
+
 }
 
-void qpp::cad::c_app::log(const std::string &logText){
+void qpp::cad::c_app::log (const std::string &logText) {
+
   std::setlocale(LC_ALL, "C");
   std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   std::string ts( ctime( &t) );
   std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), logText);
+
 }
 
 GLFWwindow* qpp::cad::c_app::curWindow;

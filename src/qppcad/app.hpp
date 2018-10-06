@@ -48,8 +48,7 @@ namespace qpp{
 
         static void render();
         static void render_direct();
-        static void render_fb_legacy();
-        static void render_fb_ms();
+        static void render_fb();
 
         static void end_render();
 

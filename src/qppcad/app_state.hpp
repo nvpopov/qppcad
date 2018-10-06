@@ -90,6 +90,7 @@ namespace qpp {
 
         int current_fps{60};
         int max_fps{60};
+        uint m_viewport_ms_level{0};
 
         float mouse_x;
         float mouse_y;
@@ -220,7 +221,7 @@ namespace qpp {
           fbo_quad_program   = shader_generators::gen_fbo_quad_program();
 
           kb_manager   = std::make_unique<keyboard_manager_t>();
-          frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
+          //frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >(false);
           ws_manager   = std::make_shared<workspace_manager_t>(this);
           ws_manager->init_default();
           ui_manager   = std::make_shared<ui_manager_t>(this);
