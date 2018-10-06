@@ -60,7 +60,7 @@ void workspace_t::set_best_view () {
     }
 
   vector3<float> vec_look_at  = vector3<float>(0.0, 0.0, 0.0);
-  vector3<float> vec_look_pos = vector3<float>(0.0, 0.0, 0.0);
+  vector3<float> vec_look_pos = vector3<float>(0.0, 0.0, -5.0);
 
   for (auto &ws_item : m_ws_items)
     ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);

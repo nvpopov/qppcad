@@ -32,11 +32,11 @@ void ui_manager_t::setup_style () {
   style->Colors[ImGuiCol_Text]                  = {0.99333335f, 0.99333335f, 0.99333335f, 1.00f};
   style->Colors[ImGuiCol_TextDisabled]          = {0.34509805f, 0.34509805f, 0.34509805f, 1.00f};
   style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
-  style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.9f};
+  style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
   style->Colors[ImGuiCol_PopupBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
   style->Colors[ImGuiCol_Border]                = {0.33333334f, 0.33333334f, 0.33333334f, 0.90f};
   style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.00f};
-  style->Colors[ImGuiCol_FrameBg]               = {0.16862746f, 0.16862746f, 0.16862746f, 0.98f};
+  style->Colors[ImGuiCol_FrameBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
   style->Colors[ImGuiCol_FrameBgHovered]        = {0.453125f, 0.67578125f, 0.99609375f, 0.97f};
   style->Colors[ImGuiCol_FrameBgActive]         = {0.47058827f, 0.47058827f, 0.47058827f, 0.97f};
   style->Colors[ImGuiCol_TitleBg]               = {0.04f, 0.04f, 0.04f, 1.00f};
@@ -290,13 +290,45 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::Separator();
       ImGui::SameLine();
-      if (astate->m_realtime){
-          ImGui::TextUnformatted("Realtime : ON");
-          ImGui::Text(fmt::format("| FPS : {} |", c_app::get_state().current_fps).c_str());
+
+
+      switch (astate->m_render_mode) {
+        case app_render_mode::direct:
+          ImGui::TextUnformatted("RENDER[D]");
+          break;
+
+        case app_render_mode::buffered_legacy:
+          ImGui::TextUnformatted("RENDER[B_L]");
+          break;
+
+        case app_render_mode::buffered_multi_sampling:
+          ImGui::TextUnformatted("RENDER[B_MS]");
+          break;
+        }
+
+      ImGui::Separator();
+
+      if (!astate->m_realtime && astate->m_render_mode != app_render_mode::direct) {
+          ImGui::TextUnformatted("RT[OFF]");
         } else {
-          ImGui::TextUnformatted("Realtime : OFF");
+          ImGui::TextUnformatted("RT[ON]");
+          ImGui::TextUnformatted(fmt::format("FPS[{}]", c_app::get_state().current_fps).c_str());
         }
       ImGui::Separator();
+
+      if (astate->ws_manager->has_wss()){
+          auto cur_ws = astate->ws_manager->get_current();
+          if (cur_ws){
+              ImGui::TextUnformatted(fmt::format("Objects[{}]", cur_ws->m_ws_items.size()).c_str());
+              size_t total_content = 0;
+              for (auto &ws_item : cur_ws->m_ws_items)
+                total_content += ws_item->get_content_count();
+              ImGui::Separator();
+              ImGui::TextUnformatted(fmt::format("Atoms[{}]", total_content).c_str());
+            }
+          ImGui::Separator();
+        }
+
       ImGui::EndMainMenuBar();
 
     }
@@ -305,7 +337,7 @@ void ui_manager_t::render_main_menu(){
 
   if (bShowExitDialog) ImGui::OpenPopup("Quit?");
   if (ImGui::BeginPopupModal("Quit?", nullptr, ImGuiWindowFlags_NoResize)){
-      ImGui::Text("Do you want to quit?");
+      ImGui::TextUnformatted("Do you want to quit?");
       if (ImGui::Button("Yes", ImVec2(120, 40))){
           //ImGui::CloseCurrentPopup();
           exit(0);
@@ -367,7 +399,7 @@ void ui_manager_t::render_main_menu(){
   //
 }
 
-void ui_manager_t::render_work_panel(){
+void ui_manager_t::render_work_panel () {
 
   app_state_t* astate = &(c_app::get_state());
 
@@ -450,12 +482,10 @@ void ui_manager_t::render_object_inspector () {
   app_state_t* astate = &(c_app::get_state());
 
   ImGui::SetNextWindowSize(ImVec2(obj_insp_width,
-                                  astate->viewport_size(1)-(work_panel_yoffset +work_panel_height))
-                           );
+                                  astate->viewport_size(1)-(work_panel_yoffset+work_panel_height)));
 
   ImGui::SetNextWindowPos(ImVec2(astate->viewport_size(0) - obj_insp_width,
                                  work_panel_yoffset + work_panel_height));
-
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 
@@ -463,6 +493,7 @@ void ui_manager_t::render_object_inspector () {
                ImGuiWindowFlags_NoMove |
                ImGuiWindowFlags_NoResize |
                ImGuiWindowFlags_NoCollapse |
+               ImGuiWindowFlags_NoTitleBar |
                ImGuiWindowFlags_MenuBar);
 
   if (ImGui::BeginMenuBar()){
@@ -499,7 +530,6 @@ void ui_manager_t::render_object_inspector () {
 
   ImGui::Text("Workspace items:");
   ImGui::Spacing();
-
 
   ImGui::PushItemWidth(obj_insp_width-14);
 
@@ -546,6 +576,7 @@ void ui_manager_t::render_object_inspector () {
 }
 
 void ui_manager_t::render_3d_viewport_context_menu () {
+
   app_state_t* astate = &(c_app::get_state());
 
   if (ImGui::BeginPopupContextVoid("3dAreaContext")){
@@ -571,6 +602,7 @@ void ui_manager_t::render_3d_viewport_context_menu () {
 }
 
 void ui_manager_t::render_mtable_big () {
+
   float mendFrm = 0.85f;
 
   ImGui::SetNextWindowSize(ImVec2(c_app::get_state().viewport_size(0) * mendFrm ,
@@ -585,5 +617,6 @@ void ui_manager_t::render_mtable_big () {
                ImGuiWindowFlags_NoCollapse);
 
   ImGui::End();
+
 }
 

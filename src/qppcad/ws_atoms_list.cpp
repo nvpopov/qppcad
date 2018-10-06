@@ -41,11 +41,9 @@ void ws_atoms_list_t::vote_for_view_vectors (vector3<float> &out_look_pos,
       out_look_at += (m_ext_obs->aabb.max + m_ext_obs->aabb.min) / 2.0;
       vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
       float size = bb_size.norm();
-
-      out_look_pos  +=
-          2.35f * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 100.0);
-    }
-  else out_look_pos += vector3<float>(0.0, 0.0, -5.0);
+      float g_sz_mod = 2.0f;
+      out_look_pos += g_sz_mod * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 60.0);
+    } else out_look_pos += vector3<float>(0.0, 0.0, -5.0);
 
 }
 
@@ -176,6 +174,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 }
 
 void ws_atoms_list_t::select_atoms (bool all) {
+
   if (all) {
       m_atom_sel.clear();
       m_atom_idx_sel.clear();
@@ -187,9 +186,11 @@ void ws_atoms_list_t::select_atoms (bool all) {
       m_atom_sel.clear();
       m_atom_idx_sel.clear();
     }
+
 }
 
 void ws_atoms_list_t::invert_selected_atoms () {
+
   m_atom_idx_sel.clear();
   for (auto i = 0; i < m_geom->nat(); i++){
       auto it = m_atom_sel.find(i);
@@ -206,6 +207,7 @@ void ws_atoms_list_t::invert_selected_atoms () {
           m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
         }
     }
+
 }
 
 void ws_atoms_list_t::insert_atom(const int atom_type, const vector3<float> &pos){
@@ -253,6 +255,7 @@ void ws_atoms_list_t::delete_selected_atoms () {
         m_tws_tr->do_action(act_unlock);
       m_geom->erase(all_atom_num[delta] - delta);
     }
+
 }
 
 bool ws_atoms_list_t::support_translation () { return true; }
@@ -281,16 +284,21 @@ float ws_atoms_list_t::get_bb_prescaller () {
   return 1.1f;
 }
 
-uint32_t ws_atoms_list_t::get_amount_of_selected_content() {
+uint32_t ws_atoms_list_t::get_amount_of_selected_content () {
   return this->m_atom_sel.size();
 }
 
-void ws_atoms_list_t::on_begin_content_gizmo_translate(){
+size_t ws_atoms_list_t::get_content_count () {
+  return (m_geom->nat());
+}
+
+void ws_atoms_list_t::on_begin_content_gizmo_translate () {
   c_app::log(fmt::format("Start of translating node [{}] content", m_name));
   //m_tws_tr->do_action(act_lock);
 }
 
-void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> &pos) {
+void ws_atoms_list_t::apply_intermediate_translate_content (const vector3<float> &pos) {
+
   bool someone_from_atoms_were_translated = false;
   for (const uint16_t &at_idx : m_atom_sel){
       vector3<float> acc_pos = m_geom->coord(at_idx) + pos;
@@ -298,14 +306,15 @@ void ws_atoms_list_t::apply_intermediate_translate_content(const vector3<float> 
       someone_from_atoms_were_translated = true;
     }
   if (someone_from_atoms_were_translated) recalc_gizmo_barycenter();
+
 }
 
-void ws_atoms_list_t::on_end_content_gizmo_translate() {
+void ws_atoms_list_t::on_end_content_gizmo_translate () {
   c_app::log(fmt::format("End of translating node [{}] content", m_name));
   //m_tws_tr->do_action(act_unlock);
 }
 
-void ws_atoms_list_t::recalc_gizmo_barycenter() {
+void ws_atoms_list_t::recalc_gizmo_barycenter () {
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
 

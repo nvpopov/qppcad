@@ -45,7 +45,12 @@ namespace qpp{
                                            int mods );
 
         static void begin_render();
+
         static void render();
+        static void render_direct();
+        static void render_fb_legacy();
+        static void render_fb_ms();
+
         static void end_render();
 
       public:
@@ -53,7 +58,7 @@ namespace qpp{
         static bool m_is_state_initialized;
         static void update_window_title(const string &new_title);
         static void log(const std::string &logText);
-        static void run();
+        static void run(int argc, char **argv);
 
         static app_state_t & get_state(){
 

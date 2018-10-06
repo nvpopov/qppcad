@@ -26,15 +26,20 @@
 #include <qppcad/keyboard_event.hpp>
 
 namespace qpp {
+
   namespace cad {
 
-    ///
     /// \brief The app_task_type enum
-    ///
     enum app_task_type {
       TASK_WORKSPACE_EDITOR = 0,
       TASK_NODE_EDITOR = 1,
       TASK_MENDELEY_TABLE = 2
+    };
+
+    enum app_render_mode {
+      direct,
+      buffered_legacy,
+      buffered_multi_sampling
     };
 
     // vote candidates
@@ -45,7 +50,9 @@ namespace qpp {
     /// \brief The app_state class
     ///
     class app_state_t {
+
       public:
+
         draw_pipeline_t*               dp;
 
         shader_program_t*              default_program;
@@ -92,6 +99,7 @@ namespace qpp {
         float mouse_y_ws_frame;
 
         app_task_type cur_task{app_task_type::TASK_WORKSPACE_EDITOR};
+        app_render_mode m_render_mode{app_render_mode::buffered_multi_sampling};
 
         bool mouse_lb_pressed;
         bool disable_mouse_camera_control;
@@ -109,21 +117,20 @@ namespace qpp {
         bool m_viewport_dirty{true};
         bool m_workspace_changed{true};
 
-
-        void write_app_settings(){
-
-        }
-
-        void read_app_settings(){
+        void write_app_settings () {
 
         }
 
-        void make_viewport_dirty(){
+        void read_app_settings () {
+
+        }
+
+        void make_viewport_dirty () {
           m_viewport_dirty = true;
           m_workspace_changed = true;
         }
 
-        void update_viewport_cache(){
+        void update_viewport_cache () {
 
           viewport_xy_c = viewport_xy;
           viewport_xy_c(1) = ui_manager->work_panel_height + ui_manager->work_panel_yoffset - 64;
@@ -133,14 +140,12 @@ namespace qpp {
 
           if (show_object_inspector) viewport_size_c[0] -= ui_manager->obj_insp_width;
 
-          //make_viewport_dirty();
-
         }
 
         /// \brief update_mouse_coord
         /// \param _mcx
         /// \param _mcy
-        void update_mouse_coord(const float _mcx, const float _mcy){
+        void update_mouse_coord (const float _mcx, const float _mcy) {
 
           //3d area frame
           mouse_x_ws_frame = mouse_x;
@@ -164,14 +169,13 @@ namespace qpp {
         }
 
         //TODO: implement via vote pool
-        void mark_viewport_change(){
+        void mark_viewport_change () {
           viewport_changed = true;
         }
 
-        ///
         /// \brief update
-        ///
-        void update(float delta_time){
+        void update (float delta_time) {
+
           update_viewport_cache();
 
           if (viewport_changed){
@@ -192,10 +196,8 @@ namespace qpp {
 
         }
 
-        ///
         /// \brief app_state
-        ///
-        app_state_t(){
+        app_state_t () {
 
           camera = nullptr;
 

@@ -2,6 +2,7 @@
 #include <clocale>
 #include <algorithm>
 #include <thread>
+#include <args.hxx>
 
 void
 MessageCallback( GLenum source,
@@ -39,11 +40,46 @@ void qpp::cad::c_app::key_callback(GLFWwindow* window,
 
 }
 
-void qpp::cad::c_app::run(){
+void qpp::cad::c_app::run(int argc, char **argv){
 
   std::setlocale(LC_ALL, "C");
-
   qpp::cad::c_app::m_is_state_initialized = false;
+
+  //process args
+  args::ArgumentParser parser("qpp::cad program for view and edit data for quantum chemistry calculations");
+  args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
+  args::ValueFlag<std::string> render_mode(parser, "direct, fb_legacy, fb_ms", "Selected render mode",
+  {'r', "render_mode"});
+
+  try {
+    parser.ParseCLI(argc, argv);
+  }
+
+  catch (const args::Completion& e) {
+    std::cout << e.what();
+    return;
+  }
+
+  catch (const args::Help&){
+    std::cout << parser;
+    return;
+  }
+
+  catch (const args::ParseError& e){
+    std::cerr << e.what() << std::endl;
+    std::cerr << parser;
+    return ;
+  }
+
+  app_render_mode render_mode_from_args = app_render_mode::buffered_multi_sampling;
+  std::string str_render_mode = args::get(render_mode);
+  if (str_render_mode == "direct")
+    render_mode_from_args = app_render_mode::direct;
+  else if (str_render_mode == "fb_legacy")
+    render_mode_from_args = app_render_mode::buffered_legacy;
+
+  //std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@ " << render_mode_from_args << std::endl;
+  //end process args
 
   glfwSetErrorCallback(qpp::cad::c_app::error_callback);
 
@@ -54,10 +90,10 @@ void qpp::cad::c_app::run(){
 
   glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-   //glfwWindowHint(GLFW_SAMPLES, 2);
+  //glfwWindowHint(GLFW_SAMPLES, 2);
 
   qpp::cad::c_app::curWindow = glfwCreateWindow(800, 600, "qpp::cad", nullptr, nullptr);
 
@@ -101,8 +137,6 @@ void qpp::cad::c_app::run(){
 
   ImGui::StyleColorsDark();
 
-  glEnable              ( GL_DEBUG_OUTPUT );
-  glDebugMessageCallback( MessageCallback, 0 );
   ImGui_ImplGlfw_InitForOpenGL(qpp::cad::c_app::curWindow, true);
   ImGui_ImplOpenGL3_Init();
 
@@ -112,8 +146,14 @@ void qpp::cad::c_app::run(){
   glfwSetMouseButtonCallback(qpp::cad::c_app::curWindow, qpp::cad::c_app::mouse_button_callback);
   glfwSetCursorPosCallback(qpp::cad::c_app::curWindow, qpp::cad::c_app::mouse_callback);
 
+  glEnable              ( GL_DEBUG_OUTPUT );
+  glDebugMessageCallback( MessageCallback, 0 );
+
   qpp::cad::c_app::log("qpp::cad initialized succesfully!");
   app_state_t* astate = &(c_app::get_state());
+
+  astate->m_render_mode = render_mode_from_args;
+
   qpp::cad::c_app::m_is_state_initialized = true;
 
   glEnable(GL_DEPTH_TEST);
@@ -140,9 +180,9 @@ void qpp::cad::c_app::run(){
 
   auto start = std::chrono::steady_clock::now();
 
-  while (!glfwWindowShouldClose(qpp::cad::c_app::curWindow)){
+  while (!glfwWindowShouldClose(qpp::cad::c_app::curWindow)) {
 
-      if(!glfwGetWindowAttrib(qpp::cad::c_app::curWindow, GLFW_ICONIFIED)){
+      if (!glfwGetWindowAttrib(qpp::cad::c_app::curWindow, GLFW_ICONIFIED)) {
 
           glfwPollEvents();
 
@@ -152,7 +192,7 @@ void qpp::cad::c_app::run(){
           auto end = now + std::chrono::milliseconds(static_cast<int>(
                                                        (1.0f / astate->max_fps)*1000.0f));
 
-          if(diff >= std::chrono::seconds(1)){
+          if (diff >= std::chrono::seconds(1)) {
               start = now;
               astate->current_fps = std::clamp(frame_count, 0, astate->max_fps);
               frame_count = 0;
@@ -224,32 +264,59 @@ void qpp::cad::c_app::render(){
   app_state_t* astate = &(c_app::get_state());
 
   if (astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
-
-      if (astate->m_viewport_dirty || astate->m_realtime || astate->m_workspace_changed){
-          //c_app::log("new frame rendered");
-          astate->frame_buffer->bind();
-
-          glViewport(0, 0,
-                     astate->viewport_size_c(0)-astate->viewport_xy_c(0),
-                     astate->viewport_size_c(1)-astate->viewport_xy_c(1)+4);
-
-          astate->ws_manager->render_current_workspace();
-          astate->frame_buffer->unbind();
+      switch (astate->m_render_mode) {
+        case app_render_mode::direct:
+          qpp::cad::c_app::render_direct();
+          break;
+        case app_render_mode::buffered_legacy:
+          break;
+        case app_render_mode::buffered_multi_sampling:
+          qpp::cad::c_app::render_fb_ms();
+          break;
         }
-
-      glViewport(astate->viewport_xy_c(0),
-                 astate->viewport_xy_c(1),
-                 astate->viewport_size_c(0),
-                 astate->viewport_size_c(1));
-      astate->dp->render_screen_quad();
     }
+
+  // Restore viewport for gui drawing
+  glViewport(0, 0, astate->viewport_size(0), astate->viewport_size(1));
+  ImGui::Render();
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void qpp::cad::c_app::render_direct () {
+
+  app_state_t* astate = &(c_app::get_state());
+
+  glViewport(astate->viewport_xy_c(0), astate->viewport_xy_c(1),
+             astate->viewport_size_c(0), astate->viewport_size_c(1));
+
+  if (astate->ws_manager->has_wss()) astate->ws_manager->render_current_workspace();
+
+}
+
+void qpp::cad::c_app::render_fb_legacy () {
+
+}
+
+void qpp::cad::c_app::render_fb_ms () {
+
+  app_state_t* astate = &(c_app::get_state());
+
+  if (astate->m_viewport_dirty || astate->m_realtime || astate->m_workspace_changed){
+      //c_app::log("new frame rendered");
+      astate->frame_buffer->bind();
+      glViewport(0, 0, astate->viewport_size_c(0) - astate->viewport_xy_c(0),
+                 astate->viewport_size_c(1) - astate->viewport_xy_c(1) + 4);
+      astate->ws_manager->render_current_workspace();
+      astate->frame_buffer->unbind();
+    }
+
+  glViewport(astate->viewport_xy_c(0), astate->viewport_xy_c(1),
+             astate->viewport_size_c(0), astate->viewport_size_c(1));
+  astate->dp->render_screen_quad();
 
   if (!astate->m_viewport_dirty) astate->m_workspace_changed = false;
   astate->m_viewport_dirty = false;
 
-  glViewport(0, 0, astate->viewport_size(0), astate->viewport_size(1));
-  ImGui::Render();
-  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void qpp::cad::c_app::resize_window_callback(GLFWwindow *window, int _width, int _height){
