@@ -48,8 +48,8 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   //process args
   args::ArgumentParser parser("qpp::cad program for view and edit data for quantum chemistry calculations");
   args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
-  args::ValueFlag<std::string> render_mode(parser, "direct, fb_legacy, fb_ms", "Selected render mode",
-  {'r', "render_mode"});
+  args::ValueFlag<std::string> render_mode(parser, "direct, fb_legacy, fb_ms",
+                                           "Selected render mode", {'r', "render_mode"});
   args::ValueFlag<uint> glfw_samples(parser, "0..12", "Selected glfw window samples amount",
   {'s', "n_samples"});
 
@@ -75,6 +75,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
   app_render_mode render_mode_from_args = app_render_mode::buffered_multi_sampling;
   std::string str_render_mode = args::get(render_mode);
+  int aa_level = args::get(glfw_samples);
   if (str_render_mode == "direct")
     render_mode_from_args = app_render_mode::direct;
   else if (str_render_mode == "fb_legacy")
@@ -95,7 +96,8 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  //glfwWindowHint(GLFW_SAMPLES, 2);
+
+  if (aa_level > 0) glfwWindowHint(GLFW_SAMPLES, aa_level);
 
   qpp::cad::c_app::curWindow = glfwCreateWindow(800, 600, "qpp::cad", nullptr, nullptr);
 
