@@ -29,11 +29,11 @@ namespace qpp {
         uint8_t m_line_height;
         uint8_t m_total_com_lines;
         bool     m_active;
-        string m_output;
-        string m_command;
+        std::string m_output;
+        std::string m_command;
         console_widget_t(app_state_t *init_app_state);
         void toggle_visible();
-        void process_command(string &command);
+        void process_command(std::string &command);
         void render();
         static int InputTextCallback(ImGuiInputTextCallbackData* data);
     };

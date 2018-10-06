@@ -4,7 +4,7 @@
 
 using namespace qpp;
 
-std::string file_dialog_manager_t::request_open_file(std::string &filter, bool &succes){
+std::string file_dialog_manager_t::request_open_file (std::string &filter, bool &succes) {
 
   nfdchar_t *out_path;
   nfdchar_t *filter_ch = new char[filter.size()+1];
@@ -25,9 +25,11 @@ std::string file_dialog_manager_t::request_open_file(std::string &filter, bool &
 
   succes = false;
   return "";
+
 }
 
-string file_dialog_manager_t::request_save_file(string &filter, bool &succes){
+std::string file_dialog_manager_t::request_save_file (std::string &filter, bool &succes) {
+
   nfdchar_t *out_path;
   nfdchar_t *filter_ch = new char[filter.size()+1];
   std::copy(filter.begin(), filter.end(), filter_ch);
@@ -47,4 +49,5 @@ string file_dialog_manager_t::request_save_file(string &filter, bool &succes){
 
   succes = false;
   return "";
+
 }

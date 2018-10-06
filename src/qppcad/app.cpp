@@ -40,7 +40,7 @@ void qpp::cad::c_app::key_callback(GLFWwindow* window,
 
 }
 
-void qpp::cad::c_app::run(int argc, char **argv){
+void qpp::cad::c_app::run (int argc, char **argv) {
 
   std::setlocale(LC_ALL, "C");
   qpp::cad::c_app::m_is_state_initialized = false;
@@ -51,7 +51,7 @@ void qpp::cad::c_app::run(int argc, char **argv){
   args::ValueFlag<std::string> render_mode(parser, "direct, fb_legacy, fb_ms", "Selected render mode",
   {'r', "render_mode"});
   args::ValueFlag<uint> glfw_samples(parser, "0..12", "Selected glfw window samples amount",
-  {'s', "glfw_samples"});
+  {'s', "n_samples"});
 
   try {
     parser.ParseCLI(argc, argv);
@@ -386,8 +386,8 @@ void qpp::cad::c_app::mouse_button_callback(GLFWwindow *window, int button, int 
     }
 }
 
-void qpp::cad::c_app::update_window_title(const string &new_title){
-  string tmp_title = "qpp::cad " + new_title;
+void qpp::cad::c_app::update_window_title(const std::string &new_title){
+  std::string tmp_title = "qpp::cad " + new_title;
   glfwSetWindowTitle(qpp::cad::c_app::curWindow, tmp_title.c_str());
 }
 

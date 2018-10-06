@@ -7,7 +7,7 @@ using namespace qpp::cad;
 
 ui_manager_t::ui_manager_t (app_state_t *init_app_state) {
 
-  console_widget = make_unique<console_widget_t>(init_app_state);
+  console_widget = std::make_unique<console_widget_t>(init_app_state);
   m_rename_ws_id = uniq_id_provider::get_uniq_id();
   setup_style();
   init_app_state->kb_manager->connect("edit_mode_toggle", this, &ui_manager_t::toggle_edit_mode);
@@ -245,7 +245,7 @@ void ui_manager_t::render_main_menu(){
       //      ImGui::PopStyleVar();
 
       //
-      optional<size_t> ui_cur_ws = astate->ws_manager->get_current_id();
+      std::optional<size_t> ui_cur_ws = astate->ws_manager->get_current_id();
       int ui_cur_ws_exact = -1;
       if (ui_cur_ws) ui_cur_ws_exact = *ui_cur_ws;
 
@@ -382,7 +382,7 @@ void ui_manager_t::render_main_menu(){
       ImGui::Spacing();
       ImGui::Dummy(ImVec2(117, 0)); ImGui::SameLine();
       if (ImGui::Button("Rename")){
-          astate->ws_manager->get_current()->m_ws_name = string(s_rename_workspace_name);
+          astate->ws_manager->get_current()->m_ws_name = std::string(s_rename_workspace_name);
           ImGui::CloseCurrentPopup();
           show_rename_workspace_dialog = false;
         }
@@ -536,7 +536,7 @@ void ui_manager_t::render_object_inspector () {
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws){
 
-      optional<uint16_t> ws_itm_cur = cur_ws->get_selected_item();
+      std::optional<uint16_t> ws_itm_cur = cur_ws->get_selected_item();
 
       int ws_itm_cur_val = -1;
       if (ws_itm_cur) ws_itm_cur_val = *ws_itm_cur;

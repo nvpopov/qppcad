@@ -5,7 +5,8 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-console_widget_t::console_widget_t(app_state_t *astate){
+console_widget_t::console_widget_t (app_state_t *astate) {
+
   m_active = false;
   m_id = uniq_id_provider::get_uniq_id();
   m_line_height = 28;
@@ -16,13 +17,15 @@ console_widget_t::console_widget_t(app_state_t *astate){
 #ifdef PYTHON_CONSOLE
   scope = py::module::import("__main__").attr("__dict__");
 #endif
+
 }
 
-void console_widget_t::toggle_visible(){
+void console_widget_t::toggle_visible () {
   m_active = !m_active;
 }
 
-void console_widget_t::process_command(string &command){
+void console_widget_t::process_command (std::string &command) {
+
   m_command = "";
 #ifdef PYTHON_CONSOLE
   try {
@@ -35,8 +38,8 @@ void console_widget_t::process_command(string &command){
 #endif
 }
 
-void console_widget_t::render(){
-  string test ="dsdsd";
+void console_widget_t::render () {
+  std::string test ="dsdsd";
   app_state_t* astate =  &(c_app::get_state());
 
   if (m_active){
@@ -84,7 +87,8 @@ void console_widget_t::render(){
     }
 }
 
-int console_widget_t::InputTextCallback(ImGuiInputTextCallbackData *data){
+int console_widget_t::InputTextCallback (ImGuiInputTextCallbackData *data) {
+
   ImGuiContext& g = *GImGui;
   const ImGuiIO& io = g.IO;
 //  if ((data->EventFlag & ImGuiInputTextFlags_CallBackUnfocus) !=0) {
@@ -92,7 +96,8 @@ int console_widget_t::InputTextCallback(ImGuiInputTextCallbackData *data){
 //    }
 
   if (data->EventKey == ImGuiKey_Enter){
-      string buf_cont(data->Buf);
+
+      std::string buf_cont(data->Buf);
       static_cast<console_widget_t*>(data->UserData)->process_command(buf_cont);
       data->DeleteChars(0, data->BufTextLen);
 

@@ -23,9 +23,9 @@ apt install build-essential xorg-dev libgl1-mesa-dev libgtk-3-dev
 3. imgui
 4. freetype
 5. nativefiledialog
-### CI Status
-1.[![Build Status](https://travis-ci.org/nvpopov/qppcad.svg?branch=master)](https://travis-ci.org/nvpopov/qppcad)
 
+### CI Status
+1. Travis CI [![Build Status](https://travis-ci.org/nvpopov/qppcad.svg?branch=master)](https://travis-ci.org/nvpopov/qppcad)
 
 ### Current implemented features
   [Go to implemented features gallery](docs/features-milestone.md)

@@ -56,7 +56,7 @@ namespace qpp{
       public:
 
         static bool m_is_state_initialized;
-        static void update_window_title(const string &new_title);
+        static void update_window_title(const std::string &new_title);
         static void log(const std::string &logText);
         static void run(int argc, char **argv);
 

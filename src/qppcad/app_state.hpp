@@ -61,11 +61,11 @@ namespace qpp {
         shader_program_t*              mvp_ssl_program;
         shader_program_t*              fbo_quad_program;
 
-        shared_ptr<workspace_manager_t>                           ws_manager;
-        shared_ptr<ui_manager_t>                                  ui_manager;
-        shared_ptr<file_dialog_manager_t>                         fd_manager;
-        unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
-        unique_ptr<keyboard_manager_t>                            kb_manager;
+        std::shared_ptr<workspace_manager_t>                           ws_manager;
+        std::shared_ptr<ui_manager_t>                                  ui_manager;
+        std::shared_ptr<file_dialog_manager_t>                         fd_manager;
+        std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
+        std::unique_ptr<keyboard_manager_t>                            kb_manager;
         camera_t*  camera;
         vote_pool_t<uint32_t> config_vote_pool;
 
@@ -219,12 +219,12 @@ namespace qpp {
           mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
           fbo_quad_program   = shader_generators::gen_fbo_quad_program();
 
-          kb_manager   = make_unique<keyboard_manager_t>();
-          frame_buffer = make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
-          ws_manager   = make_shared<workspace_manager_t>(this);
+          kb_manager   = std::make_unique<keyboard_manager_t>();
+          frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >();
+          ws_manager   = std::make_shared<workspace_manager_t>(this);
           ws_manager->init_default();
-          ui_manager   = make_shared<ui_manager_t>(this);
-          fd_manager   = make_shared<file_dialog_manager_t>();
+          ui_manager   = std::make_shared<ui_manager_t>(this);
+          fd_manager   = std::make_shared<file_dialog_manager_t>();
 
           make_viewport_dirty();
           update_viewport_cache();

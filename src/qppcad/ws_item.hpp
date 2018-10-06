@@ -19,7 +19,7 @@ namespace qpp {
 
     class ws_item_t  {
       public:
-        shared_ptr<workspace_t> parent_ws{};
+        std::shared_ptr<workspace_t> parent_ws{};
         app_state_t *app_state_c;
         std::string      m_name;
         aabb_3d_t<float> m_aabb;
@@ -45,7 +45,7 @@ namespace qpp {
 
         /// \brief set_parent_workspace
         /// \param _parent_ws
-        void set_parent_workspace(const shared_ptr<workspace_t> _parent_ws);
+        void set_parent_workspace(const std::shared_ptr<workspace_t> _parent_ws);
 
         /// \brief get_name
         /// \return
@@ -62,7 +62,7 @@ namespace qpp {
         /// \brief render
         virtual void render();
 
-        virtual string get_ws_item_class_name() { return "ws_abstract_item";}
+        virtual std::string get_ws_item_class_name() { return "ws_abstract_item";}
         virtual size_t get_content_count() = 0;
         /// \brief render_ui
         virtual void render_ui();

@@ -189,6 +189,16 @@ void ws_atoms_list_t::select_atoms (bool all) {
 
 }
 
+void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
+
+  for (auto i = 0; i < m_geom->nat(); i++)
+      if (m_geom->type_table(i) == item_type_to_select){
+           m_atom_sel.insert(i);
+           m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
+        }
+
+}
+
 void ws_atoms_list_t::invert_selected_atoms () {
 
   m_atom_idx_sel.clear();

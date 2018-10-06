@@ -18,8 +18,6 @@
 #include <io/strfun.hpp>
 #include <qppcad/file_formats.hpp>
 
-using namespace std;
-
 namespace qpp {
 
   namespace cad {

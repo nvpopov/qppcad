@@ -203,9 +203,9 @@ void workspace_t::dialog_add_geom_from_file (qc_file_fmt file_format) {
   app_state_t *astate = &(c_app::get_state());
 
   bool succes{false};
-  string filter{"*"};
+  std::string filter{"*"};
 
-  string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
+  std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
   if (succes) {
       auto wsl = make_shared<ws_atoms_list_t>();
@@ -216,7 +216,7 @@ void workspace_t::dialog_add_geom_from_file (qc_file_fmt file_format) {
 
 }
 
-void workspace_t::save_workspace_to_json (const string filename) {
+void workspace_t::save_workspace_to_json (const std::string filename) {
 
   ofstream out_file(filename);
   json data;

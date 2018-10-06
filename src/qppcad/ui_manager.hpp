@@ -23,7 +23,7 @@ namespace qpp {
       public:
 
         vector3<float> explicit_translation;
-        unique_ptr<console_widget_t> console_widget;
+        std::unique_ptr<console_widget_t> console_widget;
         int work_panel_height{38};
         int work_panel_yoffset{28};
         int obj_insp_width{350};

@@ -7,14 +7,22 @@ namespace qpp {
   namespace cad {
 
     struct ws_atoms_list_context_menu_helper {
-        static void render_item_edit_menu(ws_atoms_list_t *al){
+
+        static void render_item_edit_menu (ws_atoms_list_t *al) {
 
         }
 
-        static void render_content_edit_menu(ws_atoms_list_t *al){
+        static void render_content_edit_menu (ws_atoms_list_t *al) {
+
           if (al->support_content_editing()) {
 
               if (ImGui::BeginMenu("Selection")) {
+                  if (ImGui::BeginMenu("Select by type")){
+                      for (auto i = 0; i < al->m_geom->n_atom_types(); i++)
+                        if (ImGui::MenuItem(al->m_geom->atom_of_type(i).c_str()))
+                          al->select_by_type(i);
+                      ImGui::EndMenu();
+                    }
                   if (ImGui::MenuItem("Select all")) al->select_atoms(true);
                   if (ImGui::MenuItem("Unselect all")) al->select_atoms(false);
                   if (ImGui::MenuItem("Invert selection")) al->invert_selected_atoms();
@@ -95,7 +103,7 @@ namespace qpp {
                     }
                 }
             }
-        }
+        } // end render_content_edit_menu
     };
   }
 }

@@ -16,7 +16,7 @@ ws_item_t::ws_item_t(){
   m_hide_gizmo_trigger = false;
 }
 
-void ws_item_t::set_parent_workspace(const shared_ptr<workspace_t> _parent_ws){
+void ws_item_t::set_parent_workspace(const std::shared_ptr<workspace_t> _parent_ws){
   parent_ws = _parent_ws;
 }
 

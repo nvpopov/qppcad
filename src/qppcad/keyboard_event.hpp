@@ -9,9 +9,9 @@ namespace qpp {
 
   class keyboard_command_t {
     public:
-      vector<uint16_t> keys;
-      vector<uint16_t> key_state_current;
-      vector<uint16_t> key_state_last;
+      std::vector<uint16_t> keys;
+      std::vector<uint16_t> key_state_current;
+      std::vector<uint16_t> key_state_last;
       delegate<> kc_dgt;
 
       void update(GLFWwindow *window){
@@ -44,7 +44,7 @@ namespace qpp {
           }
       }
 
-      keyboard_command_t(initializer_list<uint16_t> keys_list){
+      keyboard_command_t(std::initializer_list<uint16_t> keys_list){
         for (auto &key : keys_list) keys.push_back(key);
         key_state_current.resize(keys.size());
         key_state_last.resize(keys.size());
@@ -55,7 +55,7 @@ namespace qpp {
   class keyboard_manager_t {
     public:
 
-      map<string, keyboard_command_t> commands;
+      std::map<std::string, keyboard_command_t> commands;
 
       void update(GLFWwindow *window){
         for (auto &command : commands)
@@ -63,7 +63,7 @@ namespace qpp {
       }
 
       template<typename T, typename M>
-      void connect(const string com_name, T *_obj_inst, M _obj_method){
+      void connect(const std::string com_name, T *_obj_inst, M _obj_method){
         auto it = commands.find(com_name);
         if (it != commands.end()){
             it->second.kc_dgt.connect(_obj_inst, _obj_method);
@@ -71,7 +71,7 @@ namespace qpp {
       }
 
       template<typename FUNC>
-      void connect(const string com_name, FUNC _func_inst){
+      void connect(const std::string com_name, FUNC _func_inst){
         auto it = commands.find(com_name);
         if (it != commands.end()){
             it->second.kc_dgt.connect(_func_inst);
