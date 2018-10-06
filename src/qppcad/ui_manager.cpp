@@ -36,7 +36,7 @@ void ui_manager_t::setup_style () {
   style->Colors[ImGuiCol_PopupBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
   style->Colors[ImGuiCol_Border]                = {0.33333334f, 0.33333334f, 0.33333334f, 0.90f};
   style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.00f};
-  style->Colors[ImGuiCol_FrameBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
+  style->Colors[ImGuiCol_FrameBg]               = {0.18529413f, 0.18705884f, 0.18490198f, 0.94f};
   style->Colors[ImGuiCol_FrameBgHovered]        = {0.453125f, 0.67578125f, 0.99609375f, 0.97f};
   style->Colors[ImGuiCol_FrameBgActive]         = {0.47058827f, 0.47058827f, 0.47058827f, 0.97f};
   style->Colors[ImGuiCol_TitleBg]               = {0.04f, 0.04f, 0.04f, 1.00f};

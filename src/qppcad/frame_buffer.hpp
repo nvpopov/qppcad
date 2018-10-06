@@ -34,7 +34,7 @@ namespace qpp {
         m_provider.resize_fbo(new_width, new_height);
       }
 
-      frame_buffer_t(){
+      frame_buffer_t(bool need_to_init = true){
         m_provider.gen_fbo(default_width, default_height);
       }
 

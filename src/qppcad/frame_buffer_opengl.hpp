@@ -99,6 +99,8 @@ namespace qpp {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
                                   m_fbo_second_color_buffer);
 
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
       }
       ///
       /// End gen fbo section

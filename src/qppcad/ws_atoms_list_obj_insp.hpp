@@ -109,7 +109,7 @@ namespace qpp {
               if (al->m_cur_render_type == ws_atoms_list_render_type::ball_and_stick){
                   ImGui::Checkbox("Draw specular", &al->m_draw_specular);
                   if (al->m_draw_specular)
-                    if (ImGui::SliderFloat("Spec. power", &al->m_shading_specular_power,
+                    if (ImGui::SliderFloat("Sp. power", &al->m_shading_specular_power,
                                            0.5f, 15.0f, "%.4f", 1)) astate->make_viewport_dirty();
                 }
 
@@ -253,8 +253,8 @@ namespace qpp {
               static string custom_atom_name;
               ImGui::Separator();
               ImGui::PushItemWidth(200);
-              ImGui::InputFloat3("New position", al->m_new_atom_pos.data());
-              ImGui::InputText("New name", &custom_atom_name);
+              ImGui::InputFloat3("Position", al->m_new_atom_pos.data());
+              ImGui::InputText("Name", &custom_atom_name);
               ImGui::SameLine();
               if (ImGui::Button("Add", ImVec2(40, 0))){
                   if (custom_atom_name != "") al->insert_atom(custom_atom_name,al->m_new_atom_pos);

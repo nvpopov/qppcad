@@ -50,6 +50,8 @@ void qpp::cad::c_app::run(int argc, char **argv){
   args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
   args::ValueFlag<std::string> render_mode(parser, "direct, fb_legacy, fb_ms", "Selected render mode",
   {'r', "render_mode"});
+  args::ValueFlag<uint> glfw_samples(parser, "0..12", "Selected glfw window samples amount",
+  {'s', "glfw_samples"});
 
   try {
     parser.ParseCLI(argc, argv);
@@ -176,7 +178,8 @@ void qpp::cad::c_app::run(int argc, char **argv){
   astate->viewport_size(1) = height;
   astate->update_viewport_cache();
 
-  astate->frame_buffer->resize(astate->viewport_size_c(0), astate->viewport_size_c(1));
+  if (astate->m_render_mode != app_render_mode::direct)
+    astate->frame_buffer->resize(astate->viewport_size_c(0), astate->viewport_size_c(1));
 
   auto start = std::chrono::steady_clock::now();
 
@@ -289,7 +292,7 @@ void qpp::cad::c_app::render_direct () {
   glViewport(astate->viewport_xy_c(0), astate->viewport_xy_c(1),
              astate->viewport_size_c(0), astate->viewport_size_c(1));
 
-  if (astate->ws_manager->has_wss()) astate->ws_manager->render_current_workspace();
+  astate->ws_manager->render_current_workspace();
 
 }
 
@@ -321,6 +324,7 @@ void qpp::cad::c_app::render_fb_ms () {
 
 void qpp::cad::c_app::resize_window_callback(GLFWwindow *window, int _width, int _height){
   app_state_t* astate = &(c_app::get_state());
+
   if (_width < 0)  _width = 10;
   if (_height < 0) _height = 10;
 
@@ -329,8 +333,9 @@ void qpp::cad::c_app::resize_window_callback(GLFWwindow *window, int _width, int
   astate->viewport_size(0) = _width;
   astate->viewport_size(1) = _height;
   astate->update_viewport_cache();
-  astate->frame_buffer->resize(astate->viewport_size_c(0)-astate->viewport_xy_c(0),
-                               astate->viewport_size_c(1)-astate->viewport_xy_c(1));
+  if (astate->m_render_mode != app_render_mode::direct)
+    astate->frame_buffer->resize(astate->viewport_size_c(0)-astate->viewport_xy_c(0),
+                                 astate->viewport_size_c(1)-astate->viewport_xy_c(1));
   astate->make_viewport_dirty();
 }
 
@@ -341,6 +346,7 @@ void qpp::cad::c_app::mouse_scroll_callback(GLFWwindow *window, double xoffset, 
        !astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE) &&
        astate->mouse_in_3d_area)
     astate->camera->update_camera_zoom(-yoffset);
+  ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
 }
 
 void qpp::cad::c_app::mouse_callback(GLFWwindow *window, double x, double y){
@@ -387,8 +393,7 @@ void qpp::cad::c_app::update_window_title(const string &new_title){
 
 void qpp::cad::c_app::log(const std::string &logText){
   std::setlocale(LC_ALL, "C");
-  std::time_t t = std::chrono::system_clock::to_time_t(
-                    std::chrono::system_clock::now());
+  std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   std::string ts( ctime( &t) );
   std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), logText);
 }
