@@ -65,7 +65,8 @@ void ws_atoms_list_t::render () {
           astate->dp->begin_render_aabb();
           m_tws_tr->apply_visitor( [astate, _pos](tws_node_t<float> *in_node,
                                    int deep_level){
-              astate->dp->render_aabb(clr_maroon, in_node->m_bb.min+_pos, in_node->m_bb.max+_pos);});
+              astate->dp->render_aabb(clr_maroon,
+                                      in_node->m_bb.min+_pos, in_node->m_bb.max+_pos);});
           astate->dp->end_render_aabb();
         }
 
@@ -73,8 +74,10 @@ void ws_atoms_list_t::render () {
           astate->dp->begin_render_line();
           vector3<float> cell_clr = m_cell_color;
           if (m_selected){
-              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)  cell_clr = clr_red;
-              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) cell_clr = clr_maroon;
+              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+                cell_clr = clr_red;
+              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
+                cell_clr = clr_maroon;
             }
 
           app_state_c->dp->render_cell_3d(
@@ -106,6 +109,14 @@ void ws_atoms_list_t::render () {
 
     }
 
+//  ImDrawList* imdrw = ImGui::GetOverlayDrawList();
+//  vector3<float> uproj = astate->camera->project(m_geom->pos(0)); // in NDC
+//  std::cout << uproj.to_string_vec() << std::endl;
+//  imdrw->AddText(ImVec2(((uproj[0]+ 1.0f) / 2.0f)*astate->viewport_size_c[0]+
+//      astate->viewport_xy_c[0],
+//      ((uproj[1] + 1.0f) / 2.0f)*astate->viewport_size_c[1]+
+//      astate->viewport_xy_c[1]), ImColor(1.0f, 1.0f, 1.0f, 1.0f), "Si");
+
   //render measurement
   if (m_selected && m_draw_line_in_dist_measurement && m_atom_idx_sel.size() == 2) {
       auto fa = m_atom_idx_sel.cbegin();
@@ -115,6 +126,7 @@ void ws_atoms_list_t::render () {
                               m_geom->pos(la->m_atm, la->m_idx), 6.0f);
       astate->dp->end_render_line();
     }
+
 }
 
 void ws_atoms_list_t::render_ui () {
@@ -162,15 +174,20 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
           recalc_gizmo_barycenter();
           return true;
+
         } else {
+
           //TODO: need refractoring
           if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
               m_atom_sel.clear();
               m_atom_idx_sel.clear();
             }
+
         }
     }
+
   return false;
+
 }
 
 void ws_atoms_list_t::select_atoms (bool all) {

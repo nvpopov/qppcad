@@ -27,8 +27,9 @@ namespace qpp {
 
         matrix4<float> m_mat_view;
         matrix4<float> m_mat_proj;
-        matrix4<float> m_view_proj;
+        matrix4<float> m_proj_view;
         matrix3<float> m_view_inv_tr;
+        matrix3<float> m3_proj_view;
 
         bool m_rotate_camera{false};
         bool m_move_camera{false};
@@ -48,7 +49,8 @@ namespace qpp {
 
         camera_t();
         void orthogonalize_gs();
-        void rotate_camera_around_origin(const matrix3<float> &mat_rot,const vector3<float> origin);
+        void rotate_camera_around_origin(const matrix3<float> &mat_rot,
+                                         const vector3<float> origin);
         void rotate_camera_around_axis(const float angle, const vector3<float> axis);
         void rotate_camera_orbit_yaw(const float yaw);
         void rotate_camera_orbit_pitch(const float pitch);
@@ -66,6 +68,7 @@ namespace qpp {
         void set_projection(cam_proj_type _proj_to_set);
         float distance(const vector3<float> &point);
         vector3<float> unproject(const float x, const float y);
+        vector3<float> project(const vector3<float> point);
     };
 
   }

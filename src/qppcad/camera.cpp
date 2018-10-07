@@ -89,7 +89,6 @@ void camera_t::update_camera () {
   float y_dt = astate->mouse_y - astate->mouse_y_old;
 
   if (m_move_camera){
-
       float move_right = -x_dt / camera_t::nav_div_step_translation;
       float move_up = y_dt / camera_t::nav_div_step_translation;
 
@@ -106,7 +105,6 @@ void camera_t::update_camera () {
     }
 
   if (m_rotate_camera){
-
       float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
       float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
 
@@ -125,7 +123,8 @@ void camera_t::update_camera () {
   m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
 
   if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP)
-    m_mat_proj = perspective<float>(m_fov, astate->viewport_size_c(0) / astate->viewport_size_c(1),
+    m_mat_proj = perspective<float>(m_fov,
+                                    astate->viewport_size_c(0) / astate->viewport_size_c(1),
                                     m_znear_persp, m_zfar_persp);
   else {
       float width   = astate->viewport_size_c(0);
@@ -151,12 +150,13 @@ void camera_t::update_camera () {
       m_mat_proj = ortho<float>(left, right, bottom, top , m_znear_ortho, m_zfar_ortho);
     }
 
-  m_view_proj = m_mat_proj *  m_mat_view ;
+  m_proj_view = m_mat_proj *  m_mat_view ;
   m_view_inv_tr = mat4_to_mat3<float>((m_mat_view.transpose()).inverse());
+  m3_proj_view = mat4_to_mat3<float>(m_proj_view);
 
 }
 
-void camera_t::update_camera_zoom(const float dist){
+void camera_t::update_camera_zoom (const float dist) {
 
   app_state_t* astate = &(c_app::get_state());
 
@@ -177,28 +177,31 @@ void camera_t::update_camera_zoom(const float dist){
     }
 
   astate->make_viewport_dirty();
+
 }
 
-void camera_t::update_camera_translation(const bool move_camera){
+void camera_t::update_camera_translation (const bool move_camera) {
   m_move_camera = move_camera;
 }
 
-void camera_t::update_camera_rotation(bool rotate_camera){
+void camera_t::update_camera_rotation (bool rotate_camera) {
   m_rotate_camera = rotate_camera;
 }
 
-void camera_t::set_projection(cam_proj_type _proj_to_set){
+void camera_t::set_projection (cam_proj_type _proj_to_set) {
+
   if (cur_proj != _proj_to_set){
       reset_camera();
       cur_proj = _proj_to_set;
     }
+
 }
 
-float camera_t::distance(const vector3<float> &point){
+float camera_t::distance(const vector3<float> &point) {
   return (m_mat_view * vector4<float>(point(0), point(1), point(2), 1.0f)).norm();
 }
 
-vector3<float> camera_t::unproject(const float _x, const float _y){
+vector3<float> camera_t::unproject (const float _x, const float _y) {
   //app_state_t* astate = &(c_app::get_state());
   matrix4<float> mat_mvp_inv = (m_mat_proj * m_mat_view).inverse();
   vector4<float> invec4(_x, _y, 0.5f, 1.0f);
@@ -215,4 +218,11 @@ vector3<float> camera_t::unproject(const float _x, const float _y){
   rvec4(1) = rvec4(1) * rvec4(3);
   rvec4(2) = rvec4(2) * rvec4(3);
   return vector3<float>(rvec4(0), rvec4(1), rvec4(2));
+
+}
+
+vector3<float> camera_t::project (const vector3<float> point) {
+  vector4<float> tmpv = m_proj_view * vector4<float>(point[0], point[1], point[2], 1.0f);
+  tmpv /= tmpv[3];
+  return vector3<float>(tmpv[0], tmpv[1], tmpv[2]);
 }

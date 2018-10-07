@@ -43,7 +43,7 @@ void draw_pipeline_t::render_atom (const vector3<float> &color,
   matrix4<float> mat_model_view_inv_tr =
       (astate->camera->m_mat_view*matrix4<float>::Identity()).inverse().transpose();
   // our Model matrix equals unity matrix, so just pass matrix from app state
-  astate->default_program->set_u(sp_u_name::m_model_view_proj, astate->camera->m_view_proj.data());
+  astate->default_program->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
   astate->default_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
   astate->default_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
 
@@ -85,11 +85,11 @@ void draw_pipeline_t::render_bond (const vector3<float> &color,
   matrix4<float> mat_model_view_inv_tr = (astate->camera->m_mat_view * mat_model).inverse().transpose();
 
   matrix4<float> mat_model_view = astate->camera->m_mat_view * mat_model;
-  matrix4<float> mat_model_view_proj = astate->camera->m_view_proj * mat_model;
+  matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * mat_model;
 
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_view_proj, astate->camera->m_view_proj.data());
+  astate->mvp_ssl_program->set_u(sp_u_name::m_view_proj, astate->camera->m_proj_view.data());
   astate->mvp_ssl_program->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
 
@@ -183,7 +183,7 @@ void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
   app_state_t* astate = &(c_app::get_state());
 
   matrix4<float> mat_model_view      = astate->camera->m_mat_view * model_matrix;
-  matrix4<float> mat_model_view_proj = astate->camera->m_view_proj * model_matrix;
+  matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * model_matrix;
   matrix4<float> mat_model_view_inv_tr = (mat_model_view).inverse().transpose();
 
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
@@ -210,7 +210,7 @@ void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
   matrix4<float> mat_model = t.matrix()*matrix4<float>::Identity();
 
   matrix4<float> mat_model_view      = astate->camera->m_mat_view * mat_model;
-  matrix4<float> mat_model_view_proj = astate->camera->m_view_proj * mat_model;
+  matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * mat_model;
   matrix4<float> mat_model_view_inv_tr = (mat_model_view).inverse().transpose();
 
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
@@ -235,7 +235,7 @@ void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
   matrix4<float> mat_model = t.matrix()*matrix4<float>::Identity();
 
   matrix4<float> mat_model_view      = astate->camera->m_mat_view * mat_model;
-  matrix4<float> mat_model_view_proj = astate->camera->m_view_proj * mat_model;
+  matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * mat_model;
   matrix4<float> mat_model_view_inv_tr = (mat_model_view).inverse().transpose();
 
   astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
@@ -252,7 +252,7 @@ void draw_pipeline_t::end_render_general_mesh () {
   astate->mvp_ssl_program->end_shader_program();
 }
 
-void draw_pipeline_t::begin_render_aabb(){
+void draw_pipeline_t::begin_render_aabb () {
   begin_render_line();
 }
 
@@ -299,9 +299,9 @@ void draw_pipeline_t::render_aabb (const vector3<float> &color,
 
 }
 
-void draw_pipeline_t::render_aabb_segmented(const vector3<float> &color,
-                                            const vector3<float> &box_min,
-                                            const vector3<float> &box_max){
+void draw_pipeline_t::render_aabb_segmented (const vector3<float> &color,
+                                             const vector3<float> &box_min,
+                                             const vector3<float> &box_max) {
 
   vector3<float> half_box_size = (box_max - box_min) * 0.5f;
   vector3<float> box_center    = (box_max + box_min) * 0.5f;
@@ -360,13 +360,15 @@ void draw_pipeline_t::render_aabb_segmented(const vector3<float> &color,
 
       render_line(color, box_center + line_start, box_center + line_end, 4.0f);
     }
+
 }
 
 void draw_pipeline_t::end_render_aabb(){
   end_render_line();
 }
 
-void draw_pipeline_t::begin_render_line(){
+void draw_pipeline_t::begin_render_line () {
+
   app_state_t* astate = &(c_app::get_state());
   astate->unit_line_program->begin_shader_program();
 }
@@ -381,18 +383,22 @@ void draw_pipeline_t::render_line(const vector3<float> &color,
   astate->unit_line_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
-  astate->unit_line_program->set_u(sp_u_name::m_model_view_proj, astate->camera->m_view_proj.data());
+  astate->unit_line_program->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
   astate->unit_line_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
   astate->unit_line->render();
+
 }
 
-void draw_pipeline_t::end_render_line(){
+void draw_pipeline_t::end_render_line () {
+
   glLineWidth(1.0f);
   app_state_t* astate = &(c_app::get_state());
   astate->unit_line_program->end_shader_program();
+
 }
 
-void draw_pipeline_t::render_screen_quad(){
+void draw_pipeline_t::render_screen_quad () {
+
   app_state_t* astate = &(c_app::get_state());
   astate->fbo_quad_program->begin_shader_program();
   glDisable(GL_DEPTH_TEST);
@@ -403,4 +409,5 @@ void draw_pipeline_t::render_screen_quad(){
   astate->fbo_quad->render();
   glEnable(GL_DEPTH_TEST);
   astate->fbo_quad_program->end_shader_program();
+
 }

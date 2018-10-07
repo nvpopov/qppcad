@@ -22,7 +22,7 @@ namespace qpp {
         sp->u_on(sp_u_name::v_color);
          */
           astate->line_mesh_program->set_u(sp_u_name::m_model_view_proj,
-                                           astate->camera->m_view_proj.data());
+                                           astate->camera->m_proj_view.data());
           glLineWidth(al.m_atom_scale_factor*3);
 
           for (uint32_t i = 0; i < al.m_geom->nat(); i++)
