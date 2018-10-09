@@ -203,7 +203,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
             astate->m_viewport_ms_level);
     }
 
-  auto start = std::chrono::steady_clock::now();
+  auto start = std::chrono::system_clock::now();
 
   while (!glfwWindowShouldClose(qpp::cad::c_app::curWindow)) {
 
@@ -212,8 +212,9 @@ void qpp::cad::c_app::run (int argc, char **argv) {
           glfwPollEvents();
 
           frame_count++;
-          auto now = std::chrono::steady_clock::now();
-          auto diff = now - start;
+          std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+          std::chrono::duration<float, std::milli>  diff = now - start;
+          //std::chrono::duration<long, std::ration<1, 1000000
           auto end = now + std::chrono::milliseconds(static_cast<int>(
                                                        (1.0f / astate->max_fps)*1000.0f));
 
@@ -228,7 +229,8 @@ void qpp::cad::c_app::run (int argc, char **argv) {
           glfwGetCursorPos(c_app::curWindow, &_mouse_x, &_mouse_y);
           astate->update_mouse_coord(_mouse_x, _mouse_y);
 
-          auto secs = std::chrono::duration_cast<std::chrono::duration<float>>(diff);
+          auto secs = std::chrono::duration_cast<std::chrono::duration<float> >(diff);
+
           astate->update(secs.count());
 
           qpp::cad::c_app::begin_render();

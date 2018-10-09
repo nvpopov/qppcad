@@ -131,7 +131,7 @@ void ws_atoms_list_t::render () {
 
 void ws_atoms_list_t::render_ui () {
   ws_item_t::render_ui();
-  ws_atoms_list_obj_insp_helper::render_ui(this);
+  ws_atoms_list_obj_insp_helper::render_ui(*this);
 }
 
 void ws_atoms_list_t::td_context_menu_edit_item () {
@@ -140,7 +140,7 @@ void ws_atoms_list_t::td_context_menu_edit_item () {
 
 void ws_atoms_list_t::td_context_menu_edit_content () {
   ws_item_t::td_context_menu_edit_content();
-  ws_atoms_list_context_menu_helper::render_content_edit_menu(this);
+  ws_atoms_list_context_menu_helper::render_content_edit_menu(*this);
 }
 
 bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
