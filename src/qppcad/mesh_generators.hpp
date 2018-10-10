@@ -57,13 +57,13 @@ namespace qpp {
 
           for (int lat_num = 0; lat_num <= lat_bands; lat_num++){
               float theta = lat_num * qpp::pi / lat_bands;
-              float sin_theta = sin(theta);
-              float cos_theta = cos(theta);
+              float sin_theta = std::sin(theta);
+              float cos_theta = std::cos(theta);
 
               for (int long_num = 0; long_num <= long_bands; long_num++) {
                   float phi = long_num * 2.0f * qpp::pi / long_bands;
-                  float sin_phi = sin(phi);
-                  float cos_phi = cos(phi);
+                  float sin_phi = std::sin(phi);
+                  float cos_phi = std::cos(phi);
 
                   float x = cos_phi * sin_theta;   // x
                   float y = sin_phi * sin_theta;            // y
@@ -124,15 +124,15 @@ namespace qpp {
                   float phiC = dPhi*float(j);
                   float phiN = dPhi*float(j+1);
 
-                  vector3<float> p1(R*cos(phiC), R*sin(phiC), zC);
-                  vector3<float> p2(R*cos(phiN), R*sin(phiN), zC);
-                  vector3<float> p3(R*cos(phiN), R*sin(phiN), zN);
-                  vector3<float> p4(R*cos(phiC), R*sin(phiC), zN);
+                  vector3<float> p1(R*std::cos(phiC), R*std::sin(phiC), zC);
+                  vector3<float> p2(R*std::cos(phiN), R*std::sin(phiN), zC);
+                  vector3<float> p3(R*std::cos(phiN), R*std::sin(phiN), zN);
+                  vector3<float> p4(R*std::cos(phiC), R*std::sin(phiC), zN);
 
-                  vector3<float> n1(R*cos(phiC),R*sin(phiC), zC);
-                  vector3<float> n2(R*cos(phiN),R*sin(phiN), zC);
-                  vector3<float> n3(R*cos(phiN),R*sin(phiN), zN);
-                  vector3<float> n4(R*cos(phiC),R*sin(phiC), zN);
+                  vector3<float> n1(R*std::cos(phiC),R*std::sin(phiC), zC);
+                  vector3<float> n2(R*std::cos(phiN),R*std::sin(phiN), zC);
+                  vector3<float> n3(R*std::cos(phiN),R*std::sin(phiN), zN);
+                  vector3<float> n4(R*std::cos(phiC),R*std::sin(phiC), zN);
 
                   dump_vector3_to_vector<float>(_mesh->vertecies, p1);
                   dump_vector3_to_vector<float>(_mesh->vertecies, p2);
@@ -160,23 +160,25 @@ namespace qpp {
           _mesh->num_primitives = _mesh->indices.size()*3;
           _mesh->bind_data();
           return _mesh;
+
         }
 
-        static mesh_t *cylinder_mk2(const int num_segment_height,
-                                    const int num_segment_base,
-                                    const float radius,
-                                    const float height){
+        static mesh_t *cylinder_mk2 (const int num_segment_height,
+                                     const int num_segment_base,
+                                     const float radius,
+                                     const float height) {
+
           mesh_t* _mesh = new mesh_t();
 
-          float delta_angle  = (qpp::pi * 2) / num_segment_base;
+          float delta_angle  = (static_cast<float>(qpp::pi) * 2.0f) / num_segment_base;
           float delta_height = height / static_cast<float>(num_segment_height);
           uint32_t offset = 0;
 
-          for (uint8_t i = 0; i <= num_segment_height; i++){
-              for (uint8_t j = 0; j <= num_segment_base; j++){
+          for (uint8_t i = 0; i <= num_segment_height; i++) {
+              for (uint8_t j = 0; j <= num_segment_base; j++) {
 
-                  float x_0 = sinf(j * delta_angle);
-                  float y_0 = cosf(j * delta_angle);
+                  float x_0 = std::sin(j * delta_angle);
+                  float y_0 = std::cos(j * delta_angle);
 
                   vector3<float> normal1 = vector3<float>(x_0, y_0, 0.0f);
                   normal1 = normal1.normalized();
@@ -211,7 +213,8 @@ namespace qpp {
 
           offset++;
 
-          for (uint32_t j = 0; j <= num_segment_base; j++){
+          for (uint32_t j = 0; j <= num_segment_base; j++) {
+
               float x_0 = sinf(j * delta_angle);
               float y_0 = cosf(j * delta_angle);
 
@@ -223,7 +226,7 @@ namespace qpp {
               _mesh->normals.push_back( 0.0f);
               _mesh->normals.push_back( -1.0f);
 
-              if ( j!= num_segment_base){
+              if (j!= num_segment_base) {
                   _mesh->indices.push_back(center_index);
                   _mesh->indices.push_back(offset);
                   _mesh->indices.push_back(offset+1);
@@ -242,8 +245,8 @@ namespace qpp {
           offset++;
 
           for (uint32_t j = 0; j <= num_segment_base; j++){
-              float x_0 = sinf(j * delta_angle);
-              float y_0 = cosf(j * delta_angle);
+              float x_0 = std::sin(j * delta_angle);
+              float y_0 = std::cos(j * delta_angle);
 
               _mesh->vertecies.push_back(x_0);
               _mesh->vertecies.push_back(y_0);
@@ -253,7 +256,7 @@ namespace qpp {
               _mesh->normals.push_back( 0.0f);
               _mesh->normals.push_back( 1.0f);
 
-              if ( j!= num_segment_base){
+              if (j != num_segment_base) {
                   _mesh->indices.push_back(center_index);
                   _mesh->indices.push_back(offset+1);
                   _mesh->indices.push_back(offset);
@@ -268,30 +271,32 @@ namespace qpp {
           return _mesh;
         }
 
-        static mesh_t *unit_line(){
+        static mesh_t *unit_line () {
+
           mesh_t* _mesh = new mesh_t();
 
-          for(int i = 0; i < 3; i++){
+          for (int i = 0; i < 3; i++) {
               _mesh->vertecies.push_back(0.0);
               _mesh->normals.push_back(0.0);
             }
 
-          for(int i = 0; i < 3; i++){
+          for (int i = 0; i < 3; i++) {
               _mesh->vertecies.push_back(1.0);
               _mesh->normals.push_back(1.0);
             }
 
-          for(int i = 0; i < 2; i++) _mesh->indices.push_back(i);
+          for (int i = 0; i < 2; i++) _mesh->indices.push_back(i);
           _mesh->num_primitives = 2;
           _mesh->bind_data();
           _mesh->mesh_rt = GL_LINES;
           return _mesh;
 
         }
-        static mesh_t *cone(const float radius = 1.0f,
+        static mesh_t *cone (const float radius = 1.0f,
                             const float height = 1.0f,
                             const uint8_t num_segment_height = 1,
-                            const uint8_t num_segment_base   = 10){
+                            const uint8_t num_segment_base   = 10) {
+
           mesh_t* _mesh = new mesh_t();
 
           float delta_angle  = (qpp::pi * 2) / num_segment_base;
@@ -299,8 +304,10 @@ namespace qpp {
           //_mesh->indices.resize(num_segment_height * num_segment_base*6 + 3 * num_segment_base);
           vector3<float> normal = (vector3<float>(radius, height, 0.0f)).normalized();
           uint32_t offset = 0;
-          for (uint8_t i = 0; i <= num_segment_height; i++){
+
+          for (uint8_t i = 0; i <= num_segment_height; i++) {
               float r_0 = radius * (1 - i / static_cast<float>(num_segment_height));
+
               for (uint8_t j = 0; j <= num_segment_base; j++){
                   float x_0 = r_0 * cosf(j * delta_angle);
                   float z_0 = r_0 * sinf(j * delta_angle);
@@ -315,7 +322,6 @@ namespace qpp {
                   _mesh->normals.push_back(normal_rotated[0]);
                   _mesh->normals.push_back(normal_rotated[1]);
                   _mesh->normals.push_back(normal_rotated[2]);
-
 
                   if (i != num_segment_height && j != num_segment_base){
                       _mesh->indices.push_back(offset + num_segment_base + 2);
@@ -342,7 +348,9 @@ namespace qpp {
           _mesh->normals.push_back(1.0f);
 
           offset++;
+
           for (uint8_t j=0; j<= num_segment_base; j++){
+
               float x_0 = radius * cosf(j * delta_angle);
               float z_0 = radius * sinf(j * delta_angle);
 
@@ -360,6 +368,7 @@ namespace qpp {
                   _mesh->indices.push_back(offset);
                   _mesh->indices.push_back(offset+1);
                 }
+
               offset++;
             }
 

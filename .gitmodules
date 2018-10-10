@@ -1,4 +1,4 @@
 [submodule "deps/qpp"]
 	path = deps/qpp
-	url = git@github.com:nvpopov/qpp.git
+	url = https://github.com/nvpopov/qpp.git 
 	branch = master
