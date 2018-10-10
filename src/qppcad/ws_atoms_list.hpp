@@ -2,10 +2,8 @@
 #define QPP_WS_ATOM_LIST_H
 
 #include <qppcad/qppcad.hpp>
-#include <geom/lace3d.hpp>
 #include <geom/xgeom.hpp>
 #include <geom/geom_anim.hpp>
-#include <geom/ngbr.hpp>
 #include <geom/extents_observer.hpp>
 #include <geom/tws_tree.hpp>
 #include <data/color.hpp>
@@ -14,8 +12,10 @@
 #include <qppcad/camera.hpp>
 #include <qppcad/file_formats.hpp>
 #include <qppcad/ws_atoms_list_anim_subsys.hpp>
+#include <qppcad/ws_atoms_list_measurement_subsys.hpp>
 
 namespace qpp {
+
   namespace cad {
 
     enum ws_atoms_list_render_type {
@@ -30,13 +30,14 @@ namespace qpp {
 
       public:
 
-        unique_ptr<xgeometry<float, periodic_cell<float> > >             m_geom;
-        unique_ptr<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> > m_anim;
-        unique_ptr<bonding_table<float> >                                m_bt;
-        unique_ptr<tws_tree_t<float, periodic_cell<float> > >            m_tws_tr;
-        unique_ptr<extents_observer_t<float, periodic_cell<float> > >    m_ext_obs;
-        set<uint16_t>                                                    m_atom_sel;
-        unordered_set<atom_index_set_key, atom_index_set_key_hash>       m_atom_idx_sel;
+        unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom;
+        unique_ptr<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >        m_anim;
+        unique_ptr<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> > m_measure;
+        unique_ptr<bonding_table<float> >                                       m_bt;
+        unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr;
+        unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs;
+        set<uint16_t>                                                           m_atom_sel;
+        unordered_set<atom_index_set_key, atom_index_set_key_hash>              m_atom_idx_sel;
 
         set<uint16_t>  m_atom_type_to_hide;
 

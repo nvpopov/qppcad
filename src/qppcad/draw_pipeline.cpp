@@ -383,7 +383,8 @@ void draw_pipeline_t::render_line(const vector3<float> &color,
   astate->unit_line_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
-  astate->unit_line_program->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
+  astate->unit_line_program->set_u(sp_u_name::m_model_view_proj,
+                                   astate->camera->m_proj_view.data());
   astate->unit_line_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
   astate->unit_line->render();
 

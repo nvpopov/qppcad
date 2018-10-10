@@ -98,10 +98,13 @@ namespace qpp {
                       ImGui::SameLine();
                       if (ImGui::Button("Add"))
                         if (custom_atom_name != "") al.insert_atom(custom_atom_name,
-                                                                    al.m_new_atom_pos);
+                                                                   al.m_new_atom_pos);
                       ImGui::EndMenu();
                     }
                 }
+
+              al.m_measure->render_ui_context();
+
             }
         } // end render_content_edit_menu
     };

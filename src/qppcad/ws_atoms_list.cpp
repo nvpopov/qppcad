@@ -30,7 +30,7 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
   m_tws_tr  = make_unique<tws_tree_t<float> >(*m_geom);
   m_tws_tr->do_action(act_unlock);
   m_anim = make_unique<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >(*this);
-
+  m_measure = make_unique<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> >(*this);
   //parent->add_item_to_workspace(this->shared_from_this());
 
 }
@@ -118,14 +118,7 @@ void ws_atoms_list_t::render () {
 //      astate->viewport_xy_c[1]), ImColor(1.0f, 1.0f, 1.0f, 1.0f), "Si");
 
   //render measurement
-  if (m_selected && m_draw_line_in_dist_measurement && m_atom_idx_sel.size() == 2) {
-      auto fa = m_atom_idx_sel.cbegin();
-      auto la  = ++(m_atom_idx_sel.cbegin());
-      astate->dp->begin_render_line();
-      astate->dp->render_line(clr_white, m_geom->pos(fa->m_atm, fa->m_idx),
-                              m_geom->pos(la->m_atm, la->m_idx), 6.0f);
-      astate->dp->end_render_line();
-    }
+  m_measure->render();
 
 }
 
