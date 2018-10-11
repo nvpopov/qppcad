@@ -39,7 +39,7 @@ namespace qpp {
 
         void add_bond_measurement (const AINT atm1, const AINT atm2,
                                    const index idx1, const index idx2) {
-          m_records.push_back(measurement_bond_record<AINT>(atm1, atm2, idx1, idx2));
+          m_records.emplace_back(atm1, atm2, idx1, idx2);
         }
 
         void remove_bond_measurement (const size_t measure_idx) {
@@ -47,16 +47,18 @@ namespace qpp {
             m_records.erase(m_records.begin() + measure_idx);
         }
 
-        std::optional<size_t> is_bond_measurement_exists (const AINT atm1,
+        std::optional<size_t> is_bond_measurement_exist (const AINT atm1,
                                                           const AINT atm2,
                                                           const index idx1,
                                                           const AINT idx2) const {
 
-          for (auto i = 0; i < m_records.size() ; i++)
-            if (m_records[i].at1 == atm1 && m_records[i].at2 == atm2 &&
-                m_records[i].idx1 == idx1 && m_records[i].idx2 == idx2) {
-                return std::optional<size_t>(i);
-              }
+          for (auto i = 0; i < m_records.size(); i++)
+            if ((m_records[i].at1 == atm1 && m_records[i].at2 == atm2 &&
+                m_records[i].idx1 == idx1 && m_records[i].idx2 == idx2) ||
+                (m_records[i].at1 == atm2 && m_records[i].at2 == atm1 &&
+                 m_records[i].idx1 == idx2 && m_records[i].idx2 == idx1))
+              return std::optional<size_t>(i);
+
           return std::nullopt;
 
         }
@@ -64,27 +66,28 @@ namespace qpp {
         void render () {
           //render bond measurements
           app_state_t* astate = &(c_app::get_state());
-          astate->dp->begin_render_line();
+          astate->dp->begin_render_line_styled();
 
           for (auto &record : m_records) {
-              astate->dp->render_line(clr_black, p_owner->m_geom->pos(record.at1, record.idx1),
-                                      p_owner->m_geom->pos(record.at2, record.idx2), 3.0f);
+              astate->dp->render_line_styled(clr_black, p_owner->m_geom->pos(record.at1, record.idx1),
+                                      p_owner->m_geom->pos(record.at2, record.idx2), 6.0f);
             }
 
-          astate->dp->end_render_line();
+          astate->dp->end_render_line_styled();
         }
 
         void render_ui_context () {
+
           if (p_owner->m_atom_idx_sel.size() == 2) {
               if (ImGui::BeginMenu("Measurements")) {
                   auto it1 = p_owner->m_atom_idx_sel.begin();
-                  auto it2 = it1++;
-                  std::optional<size_t> cur_sel = is_bond_measurement_exists(
-                                                    it1->m_atm, it2->m_atm,
-                                                    it1->m_idx, it2->m_idx);
+                  auto it2 = ++(p_owner->m_atom_idx_sel.begin());
+
+                  auto cur_sel = is_bond_measurement_exist(it1->m_atm, it2->m_atm,
+                                                            it1->m_idx, it2->m_idx);
                   if (cur_sel)
-                    if (ImGui::MenuItem("Remove measurements"))
-                        remove_bond_measurement(*cur_sel);
+                    if (ImGui::MenuItem("Remove distance measurements"))
+                      remove_bond_measurement(*cur_sel);
 
                   if (!cur_sel)
                     if (ImGui::MenuItem("Add distance measurement"))
@@ -93,7 +96,8 @@ namespace qpp {
                   ImGui::EndMenu();
                 }
             }
-        }
+
+        } // end render_ui_context
     };
 
   }

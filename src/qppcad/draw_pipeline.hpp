@@ -159,6 +159,13 @@ namespace qpp {
         /// \brief end_render_line
         void end_render_line();
 
+        void begin_render_line_styled ();
+        void render_line_styled (const vector3<float> &color,
+                                 const vector3<float> &line_start,
+                                 const vector3<float> &line_end,
+                                 const float line_width = 1.0f);
+        void end_render_line_styled();
+
 
 
         void render_screen_quad();

@@ -276,11 +276,14 @@ void workspace_t::load_workspace_from_json (const string filename) {
 }
 
 void workspace_t::update (float delta_time) {
+
   m_gizmo->update_gizmo(delta_time);
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
+
 }
 
 workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
+
   m_current_workspace_id = 0;
   cached_astate = _astate;
   _astate->kb_manager->connect("switch_to_ws_0", this, &workspace_manager_t::force_set_current<0>);
@@ -292,12 +295,14 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
   _astate->kb_manager->connect("switch_to_ws_6", this, &workspace_manager_t::force_set_current<6>);
   _astate->kb_manager->connect("switch_to_ws_7", this, &workspace_manager_t::force_set_current<7>);
   _astate->kb_manager->connect("switch_to_ws_8", this, &workspace_manager_t::force_set_current<8>);
+
 }
 
 shared_ptr<workspace_t> workspace_manager_t::get_current () {
-  if (m_current_workspace_id > m_ws.size())
-    return nullptr;
+
+  if (m_current_workspace_id > m_ws.size()) return nullptr;
   return m_ws[m_current_workspace_id];
+
 }
 
 optional<size_t> workspace_manager_t::get_current_id () {
@@ -306,6 +311,7 @@ optional<size_t> workspace_manager_t::get_current_id () {
 }
 
 bool workspace_manager_t::set_current (const size_t ws_index) {
+
   c_app::log("set current called");
 
   if (ws_index < m_ws.size()){
@@ -318,6 +324,7 @@ bool workspace_manager_t::set_current (const size_t ws_index) {
 
   cached_astate->make_viewport_dirty();
   return false;
+
 }
 
 void workspace_manager_t::init_default () {
@@ -372,6 +379,7 @@ void workspace_manager_t::init_default () {
   _ws4->save_workspace_to_json("test_with_anim.json");
 
   set_current(2);
+
 }
 
 void workspace_manager_t::render_current_workspace () {
@@ -382,7 +390,6 @@ void workspace_manager_t::render_current_workspace () {
               m_ws[m_current_workspace_id]->m_background_color[1],
               m_ws[m_current_workspace_id]->m_background_color[2], 1);
           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//          c_app::get_state().camera = m_ws[m_current_workspace_id]->m_camera.get();
           m_ws[m_current_workspace_id]->render();
         } else {
           glClearColor(0.8f, 0.8f, 0.8f, 1);
@@ -392,16 +399,16 @@ void workspace_manager_t::render_current_workspace () {
 }
 
 void workspace_manager_t::mouse_click () {
+
   app_state_t* astate =  &(c_app::get_state());
   c_app::log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
   if (astate->mouse_in_3d_area){
       c_app::log(fmt::format("Mouse click in ws {} {}",
-                             astate->mouse_x_ws_frame,
-                             astate->mouse_y_ws_frame));
-      if (has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame,
-                                                astate->mouse_y_ws_frame);
+                             astate->mouse_x_ws_frame, astate->mouse_y_ws_frame));
+      if (has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame, astate->mouse_y_ws_frame);
     }
 }
+
 
 void workspace_manager_t::add_workspace (const shared_ptr<workspace_t> &ws_to_add) {
   m_ws.push_back(ws_to_add);
@@ -412,7 +419,7 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_f
 
   app_state_t *astate = &(c_app::get_state());
   bool succes{false};
-  std::string filter{"*"};
+  std::string filter{""};
   std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
   if (succes){
@@ -421,14 +428,12 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_f
       new_ws->m_ws_name = file_name_extr;
       auto new_atoms_list = make_shared<ws_atoms_list_t>();
       new_ws->add_item_to_workspace(new_atoms_list);
-
-      new_atoms_list->load_from_file(file_format,
-                                     file_name_fd,
+      new_atoms_list->load_from_file(file_format, file_name_fd,
                                      qc_file_fmt_helper::need_to_auto_center(file_format));
-
       add_workspace(new_ws);
       set_current(m_ws.size()-1);
     }
+
 }
 
 void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_workspace){

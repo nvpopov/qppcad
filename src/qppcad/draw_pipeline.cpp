@@ -371,22 +371,25 @@ void draw_pipeline_t::begin_render_line () {
 
   app_state_t* astate = &(c_app::get_state());
   astate->unit_line_program->begin_shader_program();
+  astate->unit_line_program->set_u(sp_u_name::m_model_view_proj,
+                                   astate->camera->m_proj_view.data());
+  astate->unit_line_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
+  astate->unit_line->begin_render_batch();
 }
 
 void draw_pipeline_t::render_line(const vector3<float> &color,
                                   const vector3<float> &line_start,
                                   const vector3<float> &line_end,
                                   const float line_width){
+
   app_state_t* astate = &(c_app::get_state());
 
   glLineWidth(line_width);
   astate->unit_line_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
-  astate->unit_line_program->set_u(sp_u_name::m_model_view_proj,
-                                   astate->camera->m_proj_view.data());
-  astate->unit_line_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
-  astate->unit_line->render();
+
+  astate->unit_line->render_batch();
 
 }
 
@@ -395,6 +398,43 @@ void draw_pipeline_t::end_render_line () {
   glLineWidth(1.0f);
   app_state_t* astate = &(c_app::get_state());
   astate->unit_line_program->end_shader_program();
+  astate->unit_line->end_render_batch();
+
+}
+
+void draw_pipeline_t::begin_render_line_styled () {
+
+  app_state_t* astate = &(c_app::get_state());
+  astate->unit_line_styled_program->begin_shader_program();
+  astate->unit_line_styled_program->set_u(sp_u_name::m_model_view_proj,
+                                   astate->camera->m_proj_view.data());
+  astate->unit_line_styled_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
+  astate->unit_line->begin_render_batch();
+
+}
+
+void draw_pipeline_t::render_line_styled (const vector3<float> &color,
+                                          const vector3<float> &line_start,
+                                          const vector3<float> &line_end,
+                                          const float line_width) {
+
+  app_state_t* astate = &(c_app::get_state());
+
+  glLineWidth(line_width);
+  astate->unit_line_styled_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
+  astate->unit_line_styled_program->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
+  astate->unit_line_styled_program->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
+
+  astate->unit_line->render_batch();
+
+}
+
+void draw_pipeline_t::end_render_line_styled () {
+
+  glLineWidth(1.0f);
+  app_state_t* astate = &(c_app::get_state());
+  astate->unit_line_styled_program->end_shader_program();
+  astate->unit_line->end_render_batch();
 
 }
 

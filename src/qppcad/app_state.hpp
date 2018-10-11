@@ -57,6 +57,7 @@ namespace qpp {
 
         shader_program_t*              default_program;
         shader_program_t*              unit_line_program;
+        shader_program_t*              unit_line_styled_program;
         shader_program_t*              line_mesh_program;
         shader_program_t*              mvp_ssl_program;
         shader_program_t*              fbo_quad_program;
@@ -219,6 +220,7 @@ namespace qpp {
           line_mesh_program  = shader_generators::gen_line_mesh_program();
           mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
           fbo_quad_program   = shader_generators::gen_fbo_quad_program();
+          unit_line_styled_program = shader_generators::gen_unit_line_styled_program();
 
           kb_manager   = std::make_unique<keyboard_manager_t>();
           //frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >(false);

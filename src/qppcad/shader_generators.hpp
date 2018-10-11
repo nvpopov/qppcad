@@ -60,6 +60,26 @@ namespace qpp {
         }
 
 
+        static shader_program_t* gen_unit_line_styled_program(){
+          std::string vs =
+    #include "shaders/unit_line_styled.vs"
+              ;
+
+          std::string fs =
+    #include "shaders/unit_line_styled.fs"
+              ;
+
+          qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
+                                             std::string("unit_line_styled"), vs, fs);
+          sp->u_on(sp_u_name::m_model_view_proj);
+          sp->u_on(sp_u_name::m_view);
+          sp->u_on(sp_u_name::m_view_inv_tr);
+          sp->u_on(sp_u_name::v_color);
+          sp->u_on(sp_u_name::v_line_start);
+          sp->u_on(sp_u_name::v_line_end);
+          return sp;
+        }
+
         /// \brief gen_line_mesh_program
         /// \return
         static shader_program_t* gen_line_mesh_program(){
