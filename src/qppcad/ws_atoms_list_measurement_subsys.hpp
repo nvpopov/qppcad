@@ -70,7 +70,9 @@ namespace qpp {
 
           for (auto &record : m_records) {
               astate->dp->render_line_styled(clr_black, p_owner->m_geom->pos(record.at1, record.idx1),
-                                      p_owner->m_geom->pos(record.at2, record.idx2), 6.0f);
+                                      p_owner->m_geom->pos(record.at2, record.idx2), 7.0f);
+              astate->dp->render_line_styled(clr_white, p_owner->m_geom->pos(record.at1, record.idx1),
+                                      p_owner->m_geom->pos(record.at2, record.idx2), 4.0f);
             }
 
           astate->dp->end_render_line_styled();
