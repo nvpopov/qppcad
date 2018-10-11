@@ -105,6 +105,7 @@ void gizmo_t::render(){
 }
 
 void gizmo_t::translate_attached(float delta_time){
+
   app_state_t *astate = &(c_app::get_state());
 
   if (attached_item){
@@ -133,12 +134,12 @@ void gizmo_t::translate_attached(float delta_time){
     }
 }
 
-void gizmo_t::clear_selected_axis(){
+void gizmo_t::clear_selected_axis () {
   for (int i = 0; i < 3; i++) bx_touched[i] = false;
   interact_at_the_moment = false;
 }
 
-void gizmo_t::update_gizmo(float delta_time){
+void gizmo_t::update_gizmo (float delta_time) {
 
   app_state_t *astate = &(c_app::get_state());
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
@@ -148,7 +149,7 @@ void gizmo_t::update_gizmo(float delta_time){
   //update gizmo position according to current workspace edit type value
   //if we are in node edit mode - snap to aabb min
   if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM)
-    pos = attached_item->m_aabb.min+attached_item->m_pos;
+    pos = attached_item->m_pos;
 
   //if we are in the content edit mode - snap to calculated barycenter, provided by node
   if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM_CONTENT)
@@ -165,12 +166,13 @@ void gizmo_t::update_gizmo(float delta_time){
 
   //interacting - event already fired, start dragging object
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
-      cur_edit_type == ws_edit_type::EDIT_WS_ITEM && interact_at_the_moment){
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM && interact_at_the_moment) {
       translate_attached(delta_time);
     }
 
   //we we release left mouse button - fire event(on_end_content_translate)
-  if (attached_item && !astate->mouse_lb_pressed && cur_edit_type == ws_edit_type::EDIT_WS_ITEM &&
+  if (attached_item && !astate->mouse_lb_pressed &&
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM &&
       interact_at_the_moment){
         interact_at_the_moment = false;
         attached_item->on_end_node_gizmo_translate();
@@ -181,7 +183,7 @@ void gizmo_t::update_gizmo(float delta_time){
   //Transform in node mode
   //start interacting - run event
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
-      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && !interact_at_the_moment){
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && !interact_at_the_moment) {
         interact_at_the_moment = true;
         accum_translate = vector3<float>::Zero();
         attached_item->on_begin_content_gizmo_translate();
@@ -189,13 +191,13 @@ void gizmo_t::update_gizmo(float delta_time){
 
   //interacting - event already fired, start dragging object
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
-      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && interact_at_the_moment){
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && interact_at_the_moment) {
       translate_attached(delta_time);
     }
 
   //we we release left mouse button - fire event(on_end_content_translate)
   if (attached_item && !astate->mouse_lb_pressed &&
-      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && interact_at_the_moment){
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && interact_at_the_moment) {
         interact_at_the_moment = false;
         attached_item->on_end_content_gizmo_translate();
         clear_selected_axis();

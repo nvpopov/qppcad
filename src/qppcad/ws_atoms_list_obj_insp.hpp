@@ -23,8 +23,9 @@ namespace qpp {
               ImGui::Text("Total atoms:");
               ImGui::Text("Atom types:");
               ImGui::NextColumn();
-              ImGui::TextUnformatted(fmt::format(" {0}", al.m_geom->nat()).c_str(), nullptr);
-              ImGui::TextUnformatted(fmt::format(" {}", al.m_geom->n_atom_types()).c_str(), nullptr);
+              ImGui::TextUnformatted(fmt::format("{0}", al.m_geom->nat()).c_str(), nullptr);
+              ImGui::TextUnformatted(fmt::format("{}", al.m_geom->n_atom_types()).c_str(),
+                                     nullptr);
               ImGui::Columns(1);
               ImGui::Spacing();
             }
@@ -135,11 +136,13 @@ namespace qpp {
                     astate->make_viewport_dirty();
                 }
 
-              if (ImGui::ColorEdit3("Cell ", al.m_cell_color.data())) astate->make_viewport_dirty();
+              if (ImGui::ColorEdit3("Cell ", al.m_cell_color.data()))
+                astate->make_viewport_dirty();
 
             }
 
-          if (ImGui::CollapsingHeader("Bonding table")){
+          if (ImGui::CollapsingHeader("Bonding table")) {
+
               ImGui::Spacing();
               bool rebuild_ngb{false};
               ImGui::Separator();
@@ -152,22 +155,25 @@ namespace qpp {
                 }
               ImGui::Spacing();
               ImGui::Separator();
+
               for (auto &elem : al.m_tws_tr->m_bonding_table.m_dist)
-                if (al.m_bonding_table_show_disabled_record || elem.second.m_enabled){
-                    if (ImGui::TreeNode(fmt::format("[{}] - [{}]",
-                                                    al.m_geom->atom_of_type(elem.first.m_a),
-                                                    al.m_geom->atom_of_type(elem.first.m_b)).c_str())){
+                if (al.m_bonding_table_show_disabled_record || elem.second.m_enabled) {
+                    if (ImGui::TreeNode(
+                          fmt::format("[{}] - [{}]",
+                                      al.m_geom->atom_of_type(elem.first.m_a),
+                                      al.m_geom->atom_of_type(elem.first.m_b)).c_str())) {
                         ImGui::PushItemWidth(60);
 
-                        if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled))) rebuild_ngb = true;
+                        if (ImGui::Checkbox("Enabled", &(elem.second.m_enabled)))
+                          rebuild_ngb = true;
 
                         if (elem.second.m_enabled){
                             ImGui::SameLine();
                             ImGui::PushItemWidth(110);
                             if (ImGui::SliderFloat("Distance", &(elem.second.m_bonding_dist),
-                                                   0.01f, 10.0f)){
+                                                   0.01f, 10.0f)) {
                                 al.m_tws_tr->m_bonding_table.update_pair_max_dist(elem.first.m_a,
-                                                                                   elem.first.m_b);
+                                                                                  elem.first.m_b);
                                 rebuild_ngb = true;
                               }
                           }
@@ -175,10 +181,12 @@ namespace qpp {
                       }
                     ImGui::Spacing();
                   }
+
               if (rebuild_ngb) {
                   al.m_tws_tr->do_action(act_rebuild_ntable);
                   astate->make_viewport_dirty();
                 }
+
             }
 
           //begin modify section

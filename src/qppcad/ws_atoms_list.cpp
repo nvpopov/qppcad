@@ -125,6 +125,7 @@ void ws_atoms_list_t::render () {
 void ws_atoms_list_t::render_ui () {
   ws_item_t::render_ui();
   ws_atoms_list_obj_insp_helper::render_ui(*this);
+  m_measure->render_ui_obj_inst();
 }
 
 void ws_atoms_list_t::td_context_menu_edit_item () {
