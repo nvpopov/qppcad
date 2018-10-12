@@ -70,6 +70,7 @@ namespace qpp {
         void render() override;
 
         void render_ui() override;
+        void render_overlay() override;
         void td_context_menu_edit_item() override;
         void td_context_menu_edit_content() override;
 

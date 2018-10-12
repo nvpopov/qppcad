@@ -306,6 +306,8 @@ void qpp::cad::c_app::render () {
   glViewport(0, 0,
              static_cast<int>(astate->viewport_size(0)),
              static_cast<int>(astate->viewport_size(1)));
+
+  astate->ws_manager->render_current_workspace_overlay();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

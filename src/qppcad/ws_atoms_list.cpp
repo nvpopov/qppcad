@@ -128,6 +128,10 @@ void ws_atoms_list_t::render_ui () {
   m_measure->render_ui_obj_inst();
 }
 
+void ws_atoms_list_t::render_overlay () {
+
+}
+
 void ws_atoms_list_t::td_context_menu_edit_item () {
   ws_item_t::td_context_menu_edit_item();
 }

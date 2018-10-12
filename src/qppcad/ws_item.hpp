@@ -66,6 +66,7 @@ namespace qpp {
         virtual size_t get_content_count() = 0;
         /// \brief render_ui
         virtual void render_ui();
+        virtual void render_overlay() = 0;
         virtual void td_context_menu_edit_item();
         virtual void td_context_menu_edit_content();
 

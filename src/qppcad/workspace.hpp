@@ -51,6 +51,7 @@ namespace qpp {
         bool has_wss(){return m_ws.size()>0;}
         void init_default();
         void render_current_workspace();
+        void render_current_workspace_overlay();
         void mouse_click();
         void add_workspace(const std::shared_ptr<workspace_t> &ws_to_add);
         void query_import_file_as_new_workspace(qc_file_fmt file_format);
