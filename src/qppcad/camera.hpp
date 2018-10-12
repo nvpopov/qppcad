@@ -68,7 +68,7 @@ namespace qpp {
         void set_projection(cam_proj_type _proj_to_set);
         float distance(const vector3<float> &point);
         vector3<float> unproject(const float x, const float y);
-        vector3<float> project(const vector3<float> point);
+        std::optional<vector2<float> > project(const vector3<float> point);
     };
 
   }

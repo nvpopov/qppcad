@@ -81,6 +81,53 @@ namespace qpp {
 
         }
 
+        void render_overlay () {
+
+          app_state_t* astate = &(c_app::get_state());
+
+          ImDrawList* imdrw = ImGui::GetOverlayDrawList();
+          //imdrw->AddText(ImVec2(222,200),  ImColor(1.0f, 1.0f, 1.0f, 1.0f), "SiSSSSSS");
+
+          vector3<float> l_s, l_e;
+          imdrw->PushClipRect(ImVec2(astate->viewport_xy_c[0], astate->viewport_xy_c[1]),
+              ImVec2(astate->viewport_xy_c[0] + astate->viewport_size_c[0],
+              astate->viewport_xy_c[1] + astate->viewport_size_c[1]));
+
+          for (auto &record : m_records) {
+
+              l_s = p_owner->m_pos + p_owner->m_geom->pos(record.at1,record.idx1);
+              l_e = p_owner->m_pos + p_owner->m_geom->pos(record.at2,record.idx2);
+
+              auto uproj = astate->camera->project((l_s+l_e)*0.5f);
+              if (uproj) {
+//                  std::cout
+//                      << astate->viewport_xy_c[0] << " "
+//                      << astate->viewport_xy_c[1] << " "
+//                      << astate->viewport_size_c[0] << " "
+//                                                    << astate->viewport_size_c[1]
+//                                                    << " "
+//                                                    << (*uproj)[0] << " "
+//                                                    << (*uproj)[1] << std::endl;
+                  imdrw->AddRectFilled(
+                      ImVec2( (*uproj)[0]-12, (*uproj)[1]-6),
+                      ImVec2( (*uproj)[0]+82, (*uproj)[1]+20),
+                      ImColor(0.0f, 0.0f, 0.0f, 1.0f),
+                      4.0f);
+                  imdrw->AddRectFilled(
+                      ImVec2( (*uproj)[0]-10, (*uproj)[1]-4),
+                      ImVec2( (*uproj)[0]+80, (*uproj)[1]+18),
+                      ImColor(1.0f, 1.0f, 1.0f, 1.0f),
+                      4.0f);
+                  imdrw->AddText(ImVec2( (*uproj)[0]+4, (*uproj)[1]-2),
+                      ImColor(0.0f, 0.0f, 0.0f, 1.0f), fmt::format("{}", (l_s-l_e).norm()).c_str());
+                }
+
+            }
+
+          imdrw->PopClipRect();
+
+        }
+
         void render_ui_obj_inst () {
 
 

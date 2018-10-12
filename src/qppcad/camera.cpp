@@ -211,7 +211,8 @@ vector3<float> camera_t::unproject (const float _x, const float _y) {
       vector4<float> v_near_up = mat_mvp_inv * vector4<float>(_x, _y, m_znear_ortho, 1.0f);
       vector4<float> v_far_up = mat_mvp_inv * vector4<float>(_x, _y, m_zfar_ortho, 1.0f);
       rvec4 =   v_near_up;
-    } else*/ rvec4 = mat_mvp_inv * invec4;
+    } else*/
+  rvec4 = mat_mvp_inv * invec4;
 
   rvec4(3) = 1.0f / rvec4(3);
   rvec4(0) = rvec4(0) * rvec4(3);
@@ -221,8 +222,25 @@ vector3<float> camera_t::unproject (const float _x, const float _y) {
 
 }
 
-vector3<float> camera_t::project (const vector3<float> point) {
+std::optional<vector2<float> > camera_t::project (const vector3<float> point) {
+
+  app_state_t* astate = &(c_app::get_state());
+
   vector4<float> tmpv = m_proj_view * vector4<float>(point[0], point[1], point[2], 1.0f);
-  tmpv /= tmpv[3];
-  return vector3<float>(tmpv[0], tmpv[1], tmpv[2]);
+
+  if (std::fabs(tmpv[3]) < 0.00001f) return std::nullopt;
+
+  tmpv[0] /= tmpv[3];
+  tmpv[1] /= tmpv[3];
+  tmpv[2] /= tmpv[3];
+
+  tmpv[0] = (tmpv[0] + 1.0f) / 2.0f;
+  tmpv[1] = (-tmpv[1] + 1.0f) / 2.0f;
+  tmpv[2] = (tmpv[2] + 1.0f) / 2.0f;
+
+  tmpv[0] = tmpv[0] * astate->viewport_size_c[0];
+  tmpv[1] = (tmpv[1] * astate->viewport_size_c[1]) + astate->viewport_xy_c[1];
+
+  return std::optional<vector2<float> >(vector2<float>(tmpv[0], tmpv[1]));
+
 }

@@ -135,9 +135,9 @@ namespace qpp {
         void update_viewport_cache () {
 
           viewport_xy_c = viewport_xy;
-          viewport_xy_c(1) = ui_manager->work_panel_height + ui_manager->work_panel_yoffset - 64;
+          viewport_xy_c[1] = ui_manager->work_panel_height + ui_manager->work_panel_yoffset ;
           viewport_size_c = viewport_size;
-          viewport_size_c(1) = viewport_size(1) -
+          viewport_size_c[1] = viewport_size[1] -
                                (ui_manager->work_panel_height + ui_manager->work_panel_yoffset);
 
           if (show_object_inspector) viewport_size_c[0] -= ui_manager->obj_insp_width;
@@ -161,7 +161,7 @@ namespace qpp {
                              mouse_y_ws_frame < viewport_size_c(1);
 
           mouse_x_ws_frame = (mouse_x_ws_frame / viewport_size_c(0)-0.5)*2.0;
-          mouse_y_ws_frame = (mouse_y_ws_frame / viewport_size_c(1)-0.5)*-2.0;
+          mouse_y_ws_frame = (0.5 - mouse_y_ws_frame / viewport_size_c(1))*2.0;
 
           mouse_x_old = mouse_x;
           mouse_y_old = mouse_y;

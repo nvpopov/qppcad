@@ -129,7 +129,7 @@ void ws_atoms_list_t::render_ui () {
 }
 
 void ws_atoms_list_t::render_overlay () {
-
+  m_measure->render_overlay();
 }
 
 void ws_atoms_list_t::td_context_menu_edit_item () {

@@ -141,6 +141,8 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
   io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",
                                17.0f);
+  io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",
+                               26.0f);
   unsigned int flags = ImGuiFreeType::ForceAutoHint;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
 
@@ -253,11 +255,14 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
 void qpp::cad::c_app::begin_render () {
 
+  app_state_t* astate = &(c_app::get_state());
+
   glfwMakeContextCurrent(qpp::cad::c_app::curWindow);
 
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
+  astate->ws_manager->render_current_workspace_overlay();
   qpp::cad::c_app::get_state().ui_manager->render_ui();
 
   float ratio;
@@ -265,7 +270,9 @@ void qpp::cad::c_app::begin_render () {
   glfwGetFramebufferSize(qpp::cad::c_app::curWindow, &width, &height);
 
   ratio = width / static_cast<float>(height);
-  glViewport(0, 0, width, height);
+  glViewport(0, 0,
+             static_cast<int>(astate->viewport_size(0)),
+             static_cast<int>(astate->viewport_size(1)));
 
   if (qpp::cad::c_app::get_state().cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
       glClearColor(0.8f, 0.8f, 0.8f, 1);
@@ -307,7 +314,7 @@ void qpp::cad::c_app::render () {
              static_cast<int>(astate->viewport_size(0)),
              static_cast<int>(astate->viewport_size(1)));
 
-  astate->ws_manager->render_current_workspace_overlay();
+
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -317,7 +324,7 @@ void qpp::cad::c_app::render_direct () {
   app_state_t* astate = &(c_app::get_state());
 
   glViewport(static_cast<int>(astate->viewport_xy_c(0)),
-             static_cast<int>(astate->viewport_xy_c(1)),
+             static_cast<int>(0),
              static_cast<int>(astate->viewport_size_c(0)),
              static_cast<int>(astate->viewport_size_c(1)));
 
@@ -333,16 +340,16 @@ void qpp::cad::c_app::render_fb () {
       //c_app::log("new frame rendered");
       astate->frame_buffer->bind();
       glViewport(0, 0,
-                 static_cast<int>(astate->viewport_size_c(0) - astate->viewport_xy_c(0)),
-                 static_cast<int>(astate->viewport_size_c(1) - astate->viewport_xy_c(1) + 4));
+                 static_cast<int>(astate->viewport_size_c[0]),
+                 static_cast<int>(astate->viewport_size_c[1]));
       astate->ws_manager->render_current_workspace();
       astate->frame_buffer->unbind();
     }
 
-  glViewport(static_cast<int>(astate->viewport_xy_c(0)),
-             static_cast<int>(astate->viewport_xy_c(1)),
-             static_cast<int>(astate->viewport_size_c(0)),
-             static_cast<int>(astate->viewport_size_c(1)));
+  glViewport(static_cast<int>(astate->viewport_xy_c[0]),
+             0,
+             static_cast<int>(astate->viewport_size_c[0]),
+             static_cast<int>(astate->viewport_size_c[1]));
 
   astate->dp->render_screen_quad();
 
@@ -367,8 +374,8 @@ void qpp::cad::c_app::resize_window_callback (GLFWwindow *window, int _width, in
 
   if (astate->m_render_mode != app_render_mode::direct)
     astate->frame_buffer->resize(
-          static_cast<uint16_t>(astate->viewport_size_c(0)-astate->viewport_xy_c(0)),
-          static_cast<uint16_t>(astate->viewport_size_c(1)-astate->viewport_xy_c(1)));
+          static_cast<uint16_t>(astate->viewport_size_c[0]),
+          static_cast<uint16_t>(astate->viewport_size_c[1]));
 
   astate->make_viewport_dirty();
 }

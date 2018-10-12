@@ -12,7 +12,7 @@ out float ax;
 
 void main(void){
   vec3 tr_position = mix(v_line_start, v_line_end, vs_position.x);
-  ax = vs_position.x * length(tr_position);
+  ax = vs_position.x * length(v_line_start-v_line_end);
   gl_Position = m_model_view_proj * vec4(tr_position, 1.0);
 }
 )"
