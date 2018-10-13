@@ -130,7 +130,7 @@ void ui_manager_t::render_main_menu(){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::vasp_poscar);
                     }
-                  if (ImGui::MenuItem("VASP OUTCAR MD")){
+                  if (ImGui::MenuItem("VASP OUTCAR(MD/RELAX)")){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::vasp_outcar_md);
                     }
