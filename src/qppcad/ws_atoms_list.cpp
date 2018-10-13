@@ -109,13 +109,13 @@ void ws_atoms_list_t::render () {
 
     }
 
-//  ImDrawList* imdrw = ImGui::GetOverlayDrawList();
-//  vector3<float> uproj = astate->camera->project(m_geom->pos(0)); // in NDC
-//  std::cout << uproj.to_string_vec() << std::endl;
-//  imdrw->AddText(ImVec2(((uproj[0]+ 1.0f) / 2.0f)*astate->viewport_size_c[0]+
-//      astate->viewport_xy_c[0],
-//      ((uproj[1] + 1.0f) / 2.0f)*astate->viewport_size_c[1]+
-//      astate->viewport_xy_c[1]), ImColor(1.0f, 1.0f, 1.0f, 1.0f), "Si");
+  //  ImDrawList* imdrw = ImGui::GetOverlayDrawList();
+  //  vector3<float> uproj = astate->camera->project(m_geom->pos(0)); // in NDC
+  //  std::cout << uproj.to_string_vec() << std::endl;
+  //  imdrw->AddText(ImVec2(((uproj[0]+ 1.0f) / 2.0f)*astate->viewport_size_c[0]+
+  //      astate->viewport_xy_c[0],
+  //      ((uproj[1] + 1.0f) / 2.0f)*astate->viewport_size_c[1]+
+  //      astate->viewport_xy_c[1]), ImColor(1.0f, 1.0f, 1.0f, 1.0f), "Si");
 
   //render measurement
   m_measure->render();
@@ -207,10 +207,10 @@ void ws_atoms_list_t::select_atoms (bool all) {
 void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
 
   for (auto i = 0; i < m_geom->nat(); i++)
-      if (m_geom->type_table(i) == item_type_to_select){
-           m_atom_sel.insert(i);
-           m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
-        }
+    if (m_geom->type_table(i) == item_type_to_select){
+        m_atom_sel.insert(i);
+        m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
+      }
 
 }
 
@@ -443,11 +443,12 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
 }
 
-string ws_atoms_list_t::get_ws_item_class_name() {
+string ws_atoms_list_t::get_ws_item_class_name () {
   return "ws_atoms_list";
 }
 
-void ws_atoms_list_t::write_to_json(json &data) {
+void ws_atoms_list_t::write_to_json (json &data) {
+
   ws_item_t::write_to_json(data);
 
   data[JSON_DIM] = m_geom->DIM;
@@ -458,6 +459,9 @@ void ws_atoms_list_t::write_to_json(json &data) {
   data[JSON_BT_SHOW_DSBL] = m_bonding_table_show_disabled_record;
   data[JSON_ATOM_SCALE] = m_atom_scale_factor;
   data[JSON_BOND_SCALE] = m_bond_scale_factor;
+  data[JSON_ATOMS_LIST_RENDER_TYPE] = m_cur_render_type;
+  data[JSON_ATOMS_LIST_DRAW_SPECULAR] = m_draw_specular;
+  data[JSON_ATOMS_LIST_SPECULAR] = m_shading_specular_power;
   data[JSON_CELL_COLOR] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
   data[JSON_BONDING_TABLE] = json::array({});
 
@@ -489,9 +493,45 @@ void ws_atoms_list_t::write_to_json(json &data) {
       atom.push_back(m_geom->pos(i)[2]);
       data[JSON_ATOMS].push_back(atom);
     }
+
+  if (m_anim->animable()) {
+
+      json animations = json::array({});
+
+      for (auto &anim : m_anim->m_anim_data)
+        if (anim.m_anim_type != geom_anim_type::anim_static) {
+
+            json animation = json::object();
+            animation[JSON_ATOMS_LIST_ANIMATION_NAME] = anim.m_anim_name;
+            animation[JSON_ATOMS_LIST_ANIMATION_TYPE] = anim.m_anim_type;
+            json frames = json::array();
+
+            for (auto &frame : anim.frame_data) {
+
+                json frame_chunk = json::array({});
+                for (auto &frame_coord : frame) {
+                    json frame_chunk_coord = json::array({});
+                    frame_chunk_coord.push_back(frame_coord[0]);
+                    frame_chunk_coord.push_back(frame_coord[1]);
+                    frame_chunk_coord.push_back(frame_coord[2]);
+                    frame_chunk.push_back(frame_chunk_coord);
+                  }
+                frames.push_back(frame_chunk);
+              }
+
+            animation[JSON_ATOMS_LIST_ANIMATION_FRAMES] = frames;
+            animations.push_back(animation);
+          }
+
+      data[JSON_ATOMS_LIST_ANIMATIONS] = animations;
+    }
+
+
+
 }
 
-void ws_atoms_list_t::read_from_json(json &data) {
+void ws_atoms_list_t::read_from_json (json &data) {
+
   ws_item_t::read_from_json(data);
 
   if (data.find(JSON_DIM) != data.end()) {
@@ -507,6 +547,15 @@ void ws_atoms_list_t::read_from_json(json &data) {
 
   if (data.find(JSON_SHOW_IMG_ATOMS) != data.end())
     m_show_imaginary_atoms = data[JSON_SHOW_IMG_ATOMS];
+
+  if (data.find(JSON_ATOMS_LIST_RENDER_TYPE) != data.end())
+    m_cur_render_type = data[JSON_ATOMS_LIST_RENDER_TYPE];
+
+  if (data.find(JSON_ATOMS_LIST_DRAW_SPECULAR) != data.end())
+    m_draw_specular = data[JSON_ATOMS_LIST_DRAW_SPECULAR];
+
+  if (data.find(JSON_ATOMS_LIST_SPECULAR) != data.end())
+    m_shading_specular_power = data[JSON_ATOMS_LIST_SPECULAR].get<float>();
 
   if (data.find(JSON_SHOW_IMG_BONDS) != data.end())
     m_show_imaginary_bonds = data[JSON_SHOW_IMG_BONDS];
@@ -539,13 +588,13 @@ void ws_atoms_list_t::read_from_json(json &data) {
     }
 
   if (data.find(JSON_ATOMS) != data.end())
-    for (const auto &atom : data[JSON_ATOMS]){
+    for (const auto &atom : data[JSON_ATOMS]) {
         m_geom->add(atom[0].get<string>(),
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
       }
 
-  if (data.find(JSON_BONDING_TABLE) != data.end()){
-      for (auto &elem : data[JSON_BONDING_TABLE]){
+  if (data.find(JSON_BONDING_TABLE) != data.end()) {
+      for (auto &elem : data[JSON_BONDING_TABLE]) {
           int type1 = m_geom->type_of_atom(elem[0].get<string>());
           int type2 = m_geom->type_of_atom(elem[1].get<string>());
           float dist = elem[2].get<float>();
@@ -556,9 +605,58 @@ void ws_atoms_list_t::read_from_json(json &data) {
       m_tws_tr->m_bonding_table.update_pair_max_dist_all();
     }
 
+  if (data.find(JSON_ATOMS_LIST_ANIMATIONS) != data.end()) {
+      bool static_anim_found{false};
+      for (auto &anim : data[JSON_ATOMS_LIST_ANIMATIONS]) {
+
+          geom_anim_record_t<float> tmp_anim_rec;
+
+          if (anim.find(JSON_ATOMS_LIST_ANIMATION_NAME) != anim.end())
+            tmp_anim_rec.m_anim_name = anim[JSON_ATOMS_LIST_ANIMATION_NAME];
+          else tmp_anim_rec.m_anim_name = "generic1";
+
+          if (anim.find(JSON_ATOMS_LIST_ANIMATION_TYPE) != anim.end())
+            tmp_anim_rec.m_anim_type = anim[JSON_ATOMS_LIST_ANIMATION_TYPE];
+
+          if (anim.find(JSON_ATOMS_LIST_ANIMATION_FRAMES) != anim.end()) {
+            tmp_anim_rec.frame_data.reserve(anim[JSON_ATOMS_LIST_ANIMATION_FRAMES].size());
+
+            for (auto &frame : anim[JSON_ATOMS_LIST_ANIMATION_FRAMES]) {
+                tmp_anim_rec.frame_data.resize(tmp_anim_rec.frame_data.size() + 1);
+                size_t nf_id = tmp_anim_rec.frame_data.size() - 1;
+
+                tmp_anim_rec.frame_data[nf_id].reserve(frame.size());
+
+                for (auto &frame_data : frame) {
+                    vector3<float> frame_coord;
+                    frame_coord[0] = frame_data[0].get<float>();
+                    frame_coord[1] = frame_data[1].get<float>();
+                    frame_coord[2] = frame_data[2].get<float>();
+                    std::cout << frame_coord.to_string_vec() << std::endl;
+                    tmp_anim_rec.frame_data[nf_id].push_back(frame_coord);
+                  }
+              }
+            }
+          if (tmp_anim_rec.m_anim_type == geom_anim_type::anim_static) static_anim_found = true;
+          m_anim->m_anim_data.push_back(std::move(tmp_anim_rec));
+        }
+
+      if (!static_anim_found) {
+          geom_anim_record_t<float> tmp_anim_static;
+          tmp_anim_static.m_anim_name = "static";
+          tmp_anim_static.m_anim_type = geom_anim_type::anim_static;
+          tmp_anim_static.frame_data.resize(1);
+          for (auto i = 0; i < m_geom->nat(); i++)
+            tmp_anim_static.frame_data[0].push_back(m_geom->pos(i));
+          m_anim->m_anim_data.insert(m_anim->m_anim_data.begin(), std::move(tmp_anim_static));
+        }
+    }
+
+  //
+
+
   geometry_changed();
   m_tws_tr->do_action(act_unlock | act_build_all);
-
 
 }
 

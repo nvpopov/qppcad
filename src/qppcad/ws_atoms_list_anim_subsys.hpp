@@ -14,9 +14,13 @@ namespace qpp {
 
     template <typename REAL, typename DATA>
     class ws_atoms_list_anim_subsys_t {
+
       private:
+
         DATA* p_owner;
+
       public:
+
         std::vector<geom_anim_record_t<REAL> >  m_anim_data;
         REAL m_cur_anim_time{0.0f};
         REAL m_anim_frame_time{1.0f};
@@ -49,10 +53,11 @@ namespace qpp {
                   m_force_non_animable = true;
                   return;
                 }
-              //std::cout << m_anim[anim_id].frame_data[start_frame_n][i].to_string_vec() <<"\n" << std::endl ;
+
               vector3<float> new_pos =
                   m_anim_data[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
                   m_anim_data[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
+
               p_owner->m_geom->change_pos(i, new_pos);
             }
 

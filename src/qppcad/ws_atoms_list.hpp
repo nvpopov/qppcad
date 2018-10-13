@@ -59,7 +59,6 @@ namespace qpp {
         bool m_bonding_table_show_disabled_record{true};
         bool m_has_animations;
 
-
         ws_atoms_list_t();
 
         void vote_for_view_vectors(vector3<float> &vOutLookPos,
@@ -113,8 +112,7 @@ namespace qpp {
         /// \param eFileFormat
         /// \param sFileName
         /// \param bAutoCenter
-        void load_from_file(qc_file_fmt file_format,
-                            std::string file_name,
+        void load_from_file(qc_file_fmt file_format, std::string file_name,
                             bool auto_center = false);
 
         string get_ws_item_class_name() override ;

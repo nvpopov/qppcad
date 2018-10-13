@@ -20,6 +20,8 @@ namespace qpp {
     std::uint64_t,
     float>;
 
+    const auto QPP_CAD_JSON_VERSION = "0.2";
+    //qjson v0.1
     const auto JSON_QPPCAD_VERSION = "qppcad_file_version";
     const auto JSON_WS_NAME        = "ws_name";
     const auto JSON_BG_CLR         = "bg_clr";
@@ -40,6 +42,15 @@ namespace qpp {
     const auto JSON_BONDING_TABLE  = "bonding_table";
     const auto JSON_ATOMS          = "atoms";
     const auto JSON_CELL           = "cell";
+
+    //qjson v0.2
+    const auto JSON_ATOMS_LIST_RENDER_TYPE      = "render_type";
+    const auto JSON_ATOMS_LIST_DRAW_SPECULAR    = "draw_specular";
+    const auto JSON_ATOMS_LIST_SPECULAR         = "render_type_specular_power";
+    const auto JSON_ATOMS_LIST_ANIMATIONS       = "animations";
+    const auto JSON_ATOMS_LIST_ANIMATION_NAME   = "anim_name";
+    const auto JSON_ATOMS_LIST_ANIMATION_TYPE   = "anim_type";
+    const auto JSON_ATOMS_LIST_ANIMATION_FRAMES = "frames";
 
   }
 

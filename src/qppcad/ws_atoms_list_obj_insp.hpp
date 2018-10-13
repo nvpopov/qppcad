@@ -293,6 +293,7 @@ namespace qpp {
                   if (ImGui::Combo("Current animation", &al.m_anim->m_cur_anim, vChar.data(),
                                    al.m_anim->get_total_anims())){
                       al.m_anim->m_cur_anim_time = 0.0f;
+                      al.m_anim->update_geom_to_anim();
                       astate->make_viewport_dirty();
                     }
                   ImGui::Checkbox("Rebuild bonds", &al.m_anim->m_rebuild_bonds_in_anim);
