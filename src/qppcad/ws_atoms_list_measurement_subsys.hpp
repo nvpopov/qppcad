@@ -134,8 +134,13 @@ namespace qpp {
           if (ImGui::CollapsingHeader("Measurements")) {
               ImGui::Spacing();
               for (auto &rec : m_records){
-                  if (ImGui::TreeNode(fmt::format("Dist. {} {} {} {} ",
-                                                  rec.at1, rec.at2, rec.idx1, rec.idx2
+                  if (ImGui::TreeNode(fmt::format("Dist. {}{} {}{} {} {} ",
+                                                  p_owner->m_geom->atom_name(rec.at1),
+                                                  rec.at1,
+                                                  p_owner->m_geom->atom_name(rec.at2),
+                                                  rec.at2,
+                                                  rec.idx1,
+                                                  rec.idx2
                                                   ).c_str())){
                       ImGui::TreePop();
                     }

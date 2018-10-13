@@ -314,7 +314,6 @@ void qpp::cad::c_app::render () {
              static_cast<int>(astate->viewport_size(0)),
              static_cast<int>(astate->viewport_size(1)));
 
-
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
