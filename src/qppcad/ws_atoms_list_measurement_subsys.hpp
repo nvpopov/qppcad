@@ -12,10 +12,12 @@ namespace qpp {
 
     template<typename AINT = uint32_t>
     struct measurement_bond_record {
+
         AINT at1;
         AINT at2;
         index idx1;
         index idx2;
+        bool m_show{true};
 
         measurement_bond_record (const AINT _at1, const AINT _a2,
                                  const index _idx1, const index _idx2) :
@@ -35,6 +37,15 @@ namespace qpp {
 
         ws_atoms_list_measurement_subsys_t (DATA &_p_owner) {
           p_owner = &_p_owner;
+        }
+
+        REAL dist (const size_t idx) {
+          vector3<float> l_s, l_e;
+          l_s = p_owner->m_pos +
+                p_owner->m_geom->pos(m_records[idx].at1,m_records[idx].idx1);
+          l_e = p_owner->m_pos +
+                p_owner->m_geom->pos(m_records[idx].at2,m_records[idx].idx2);
+          return (l_e - l_s).norm();
         }
 
         void add_bond_measurement (const AINT atm1, const AINT atm2,
@@ -70,12 +81,13 @@ namespace qpp {
 
           vector3<float> l_s, l_e;
           glDisable(GL_DEPTH_TEST);
-          for (auto &record : m_records) {
-              l_s = p_owner->m_pos + p_owner->m_geom->pos(record.at1,record.idx1);
-              l_e = p_owner->m_pos + p_owner->m_geom->pos(record.at2,record.idx2);
-              astate->dp->render_line_styled(clr_black, l_s, l_e, 7.0f);
-              astate->dp->render_line_styled(clr_white, l_s, l_e, 4.0f);
-            }
+          for (auto &record : m_records)
+            if (record.m_show) {
+                l_s = p_owner->m_pos + p_owner->m_geom->pos(record.at1,record.idx1);
+                l_e = p_owner->m_pos + p_owner->m_geom->pos(record.at2,record.idx2);
+                astate->dp->render_line_styled(clr_black, l_s, l_e, 7.0f);
+                astate->dp->render_line_styled(clr_white, l_s, l_e, 4.0f);
+              }
           glEnable(GL_DEPTH_TEST);
           astate->dp->end_render_line_styled();
 
@@ -93,36 +105,38 @@ namespace qpp {
               ImVec2(astate->viewport_xy_c[0] + astate->viewport_size_c[0],
               astate->viewport_xy_c[1] + astate->viewport_size_c[1]));
 
-          for (auto &record : m_records) {
+          for (auto &record : m_records)
+            if (record.m_show) {
 
-              l_s = p_owner->m_pos + p_owner->m_geom->pos(record.at1,record.idx1);
-              l_e = p_owner->m_pos + p_owner->m_geom->pos(record.at2,record.idx2);
+                l_s = p_owner->m_pos + p_owner->m_geom->pos(record.at1,record.idx1);
+                l_e = p_owner->m_pos + p_owner->m_geom->pos(record.at2,record.idx2);
 
-              auto uproj = astate->camera->project((l_s+l_e)*0.5f);
-              if (uproj) {
-//                  std::cout
-//                      << astate->viewport_xy_c[0] << " "
-//                      << astate->viewport_xy_c[1] << " "
-//                      << astate->viewport_size_c[0] << " "
-//                                                    << astate->viewport_size_c[1]
-//                                                    << " "
-//                                                    << (*uproj)[0] << " "
-//                                                    << (*uproj)[1] << std::endl;
-                  imdrw->AddRectFilled(
-                      ImVec2( (*uproj)[0]-12, (*uproj)[1]-6),
-                      ImVec2( (*uproj)[0]+82, (*uproj)[1]+20),
-                      ImColor(0.0f, 0.0f, 0.0f, 1.0f),
-                      4.0f);
-                  imdrw->AddRectFilled(
-                      ImVec2( (*uproj)[0]-10, (*uproj)[1]-4),
-                      ImVec2( (*uproj)[0]+80, (*uproj)[1]+18),
-                      ImColor(1.0f, 1.0f, 1.0f, 1.0f),
-                      4.0f);
-                  imdrw->AddText(ImVec2( (*uproj)[0]+4, (*uproj)[1]-2),
-                      ImColor(0.0f, 0.0f, 0.0f, 1.0f), fmt::format("{}", (l_s-l_e).norm()).c_str());
-                }
+                auto uproj = astate->camera->project((l_s+l_e)*0.5f);
+                if (uproj) {
+                    //                  std::cout
+                    //                      << astate->viewport_xy_c[0] << " "
+                    //                      << astate->viewport_xy_c[1] << " "
+                    //                      << astate->viewport_size_c[0] << " "
+                    //                                                    << astate->viewport_size_c[1]
+                    //                                                    << " "
+                    //                                                    << (*uproj)[0] << " "
+                    //                                                    << (*uproj)[1] << std::endl;
+                    imdrw->AddRectFilled(
+                          ImVec2( (*uproj)[0]-12, (*uproj)[1]-6),
+                        ImVec2( (*uproj)[0]+82, (*uproj)[1]+20),
+                        ImColor(0.0f, 0.0f, 0.0f, 1.0f),
+                        4.0f);
+                    imdrw->AddRectFilled(
+                          ImVec2( (*uproj)[0]-10, (*uproj)[1]-4),
+                        ImVec2( (*uproj)[0]+80, (*uproj)[1]+18),
+                        ImColor(1.0f, 1.0f, 1.0f, 1.0f),
+                        4.0f);
+                    imdrw->AddText(ImVec2( (*uproj)[0]+4, (*uproj)[1]-2),
+                        ImColor(0.0f, 0.0f, 0.0f, 1.0f),
+                        fmt::format("{}", (l_s-l_e).norm()).c_str());
+                  }
 
-            }
+              }
 
           imdrw->PopClipRect();
 
@@ -130,20 +144,39 @@ namespace qpp {
 
         void render_ui_obj_inst () {
 
-
           if (ImGui::CollapsingHeader("Measurements")) {
               ImGui::Spacing();
-              for (auto &rec : m_records){
-                  if (ImGui::TreeNode(fmt::format("Dist. {}{} {}{} {} {} ",
-                                                  p_owner->m_geom->atom_name(rec.at1),
-                                                  rec.at1,
-                                                  p_owner->m_geom->atom_name(rec.at2),
-                                                  rec.at2,
-                                                  rec.idx1,
-                                                  rec.idx2
-                                                  ).c_str())){
-                      ImGui::TreePop();
+
+              if (ImGui::TreeNode("Interatomic distances")) {
+                  for (auto i = 0; i < m_records.size(); i++){
+                      float dist_c = dist(i);
+                      ImGui::Separator();
+                      if (ImGui::TreeNode(fmt::format("[{}] [{}{}:{}{}] i=[{}:{}]",
+                                                      i,
+                                                      p_owner->m_geom->atom_name(m_records[i].at1),
+                                                      m_records[i].at1,
+                                                      p_owner->m_geom->atom_name(m_records[i].at2),
+                                                      m_records[i].at2,
+                                                      m_records[i].idx1,
+                                                      m_records[i].idx2).c_str())){
+                          ImGui::Spacing();
+                          // ImGui::TextUnformatted("Type: interatomic distance");
+                          if (ImGui::Button("Delete")) remove_bond_measurement(i);
+                          ImGui::SameLine();
+
+                          if (ImGui::Button("Copy")) {
+                              c_app::copy_to_clipboard(fmt::format("{}",  dist_c).c_str());
+                            }
+
+                          ImGui::SameLine();
+                          ImGui::Checkbox("Show", &m_records[i].m_show);
+                          ImGui::TextUnformatted(fmt::format("Distance = {}", dist_c).c_str());
+                          ImGui::TreePop();
+                        }
+
+                      if (i == m_records.size()-1) ImGui::Separator();
                     }
+                  ImGui::TreePop();
                 }
             }
 

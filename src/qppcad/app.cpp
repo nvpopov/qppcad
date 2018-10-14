@@ -253,6 +253,10 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
 }
 
+void qpp::cad::c_app::copy_to_clipboard (const char * dat) {
+  glfwSetClipboardString(c_app::curWindow, dat);
+}
+
 void qpp::cad::c_app::begin_render () {
 
   app_state_t* astate = &(c_app::get_state());

@@ -58,7 +58,7 @@ namespace qpp{
         static void update_window_title(const std::string &new_title);
         static void log(const std::string &logText);
         static void run(int argc, char **argv);
-
+        static void copy_to_clipboard(const char * data);
         static app_state_t & get_state(){
 
           if (c_app::app_state == nullptr)

@@ -652,6 +652,8 @@ void ws_atoms_list_t::read_from_json (json &data) {
         }
     }
 
+  //reading measurement subsystem
+
   //
 
 

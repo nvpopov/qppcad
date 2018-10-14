@@ -52,6 +52,9 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_ANIMATION_TYPE   = "anim_type";
     const auto JSON_ATOMS_LIST_ANIMATION_FRAMES = "frames";
 
+    const auto JSON_ATOMS_LIST_MEASURE                   = "measurements";
+    const auto JSON_ATOMS_LIST_MEASURE_INTER_ATOMIC_DIST = "inter_atomic";
+
   }
 
 }
