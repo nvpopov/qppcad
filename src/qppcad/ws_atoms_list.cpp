@@ -15,7 +15,7 @@ using namespace qpp::cad;
 
 ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
 
-  m_geom = make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
+  m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
   m_geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel",
                       "cc", "ccr", "ccg", "ccb"},
@@ -26,11 +26,11 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;
 
-  m_ext_obs = make_unique<extents_observer_t<float> >(*m_geom);
-  m_tws_tr  = make_unique<tws_tree_t<float> >(*m_geom);
+  m_ext_obs = std::make_unique<extents_observer_t<float> >(*m_geom);
+  m_tws_tr  = std::make_unique<tws_tree_t<float> >(*m_geom);
   m_tws_tr->do_action(act_unlock);
-  m_anim = make_unique<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >(*this);
-  m_measure = make_unique<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> >(*this);
+  m_anim = std::make_unique<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >(*this);
+  m_measure = std::make_unique<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> >(*this);
   //parent->add_item_to_workspace(this->shared_from_this());
 
 }
@@ -145,7 +145,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
   if (click_ray){
 
-      vector<tws_query_data_t<float, uint32_t> > res;
+      std::vector<tws_query_data_t<float, uint32_t> > res;
       //we need to translate ray in world frame to local geometry frame
       ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - m_pos;
@@ -259,7 +259,7 @@ void ws_atoms_list_t::delete_selected_atoms () {
 
   if (!m_atom_idx_sel.empty() || !m_atom_sel.empty()) m_anim->m_force_non_animable = true;
 
-  vector<int> all_atom_num;
+  std::vector<int> all_atom_num;
   all_atom_num.reserve(m_atom_idx_sel.size());
 
   //get unique selected atoms

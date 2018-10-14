@@ -45,7 +45,7 @@ namespace qpp {
                             al.insert_atom(at_type, r_btw);
                           }
 
-                      static string custom_atom_name;
+                      static std::string custom_atom_name;
                       ImGui::PushItemWidth(100);
                       ImGui::PushID(1);
                       ImGui::InputText("", &custom_atom_name);
@@ -90,7 +90,7 @@ namespace qpp {
 
               if (al.m_atom_idx_sel.size() == 0){
                   if (ImGui::BeginMenu("Add new atom")){
-                      static string custom_atom_name;
+                      static std::string custom_atom_name;
                       ImGui::BulletText("Add new atom in local atom list frame");
                       ImGui::Separator();
                       ImGui::InputFloat3("Position", al.m_new_atom_pos.data());

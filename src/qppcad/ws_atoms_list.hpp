@@ -30,16 +30,16 @@ namespace qpp {
 
       public:
 
-        unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom;
-        unique_ptr<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >        m_anim;
-        unique_ptr<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> > m_measure;
-        unique_ptr<bonding_table<float> >                                       m_bt;
-        unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr;
-        unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs;
-        set<uint16_t>                                                           m_atom_sel;
-        unordered_set<atom_index_set_key, atom_index_set_key_hash>              m_atom_idx_sel;
+        std::unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom;
+        std::unique_ptr<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >        m_anim;
+        std::unique_ptr<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> > m_measure;
+        std::unique_ptr<bonding_table<float> >                                       m_bt;
+        std::unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr;
+        std::unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs;
+        std::set<uint16_t>                                                           m_atom_sel;
+        std::unordered_set<atom_index_set_key, atom_index_set_key_hash>              m_atom_idx_sel;
 
-        set<uint16_t>  m_atom_type_to_hide;
+        std::set<uint16_t>  m_atom_type_to_hide;
 
         float m_shading_specular_power{12.0f};
         float m_atom_scale_factor{0.3f};
@@ -79,9 +79,9 @@ namespace qpp {
         void select_by_type(const int item_type_to_select);
         void invert_selected_atoms();
         void insert_atom(const int atom_type, const vector3<float> &pos);
-        void insert_atom(const string &atom_name, const vector3<float> &pos);
+        void insert_atom(const std::string &atom_name, const vector3<float> &pos);
         void update_atom(const int at_id, const vector3<float> &pos);
-        void update_atom(const int at_id, const string &at_name);
+        void update_atom(const int at_id, const std::string &at_name);
         void delete_selected_atoms();
 
         bool support_translation() override;
@@ -115,7 +115,7 @@ namespace qpp {
         void load_from_file(qc_file_fmt file_format, std::string file_name,
                             bool auto_center = false);
 
-        string get_ws_item_class_name() override ;
+        std::string get_ws_item_class_name() override ;
         void write_to_json(json &data) override;
         void read_from_json(json &data) override;
 

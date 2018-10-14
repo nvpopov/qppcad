@@ -8,18 +8,18 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-shared_ptr<ws_item_t> ws_item_factory::create_object(const string &obj_type){
-  if (obj_type == "ws_atoms_list") return make_shared<ws_atoms_list_t>();
+std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj_type){
+  if (obj_type == "ws_atoms_list") return std::make_shared<ws_atoms_list_t>();
 }
 
-optional<size_t> workspace_t::get_selected_item () {
+std::optional<size_t> workspace_t::get_selected_item () {
   for (size_t i = 0; i < m_ws_items.size(); i++)
-    if (m_ws_items[i]->m_selected) return optional<size_t>(i);
-  return nullopt;
+    if (m_ws_items[i]->m_selected) return std::optional<size_t>(i);
+  return std::nullopt;
 }
 
 ws_item_t *workspace_t::get_selected () {
-  optional<size_t> sel_idx = get_selected_item();
+  std::optional<size_t> sel_idx = get_selected_item();
   if (sel_idx) return m_ws_items[*sel_idx].get();
   else return nullptr;
 }
@@ -189,7 +189,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
 }
 
-void workspace_t::add_item_to_workspace (const shared_ptr<ws_item_t> &item_to_add) {
+void workspace_t::add_item_to_workspace (const std::shared_ptr<ws_item_t> &item_to_add) {
 
   item_to_add->set_parent_workspace(shared_from_this());
   m_ws_items.push_back(item_to_add);
@@ -208,7 +208,7 @@ void workspace_t::dialog_add_geom_from_file (qc_file_fmt file_format) {
   std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
   if (succes) {
-      auto wsl = make_shared<ws_atoms_list_t>();
+      auto wsl = std::make_shared<ws_atoms_list_t>();
       add_item_to_workspace(wsl);
       wsl->m_name = "test1";
       wsl->load_from_file(file_format, file_name_fd, false);
@@ -218,7 +218,7 @@ void workspace_t::dialog_add_geom_from_file (qc_file_fmt file_format) {
 
 void workspace_t::save_workspace_to_json (const std::string filename) {
 
-  ofstream out_file(filename);
+  std::ofstream out_file(filename);
   json data;
 
   data[JSON_QPPCAD_VERSION] = "1.0-aa";
@@ -241,9 +241,9 @@ void workspace_t::save_workspace_to_json (const std::string filename) {
 
 }
 
-void workspace_t::load_workspace_from_json (const string filename) {
+void workspace_t::load_workspace_from_json (const std::string filename) {
 
-  fstream ifile(filename);
+  std::fstream ifile(filename);
   json data;
 
   try {
@@ -257,13 +257,13 @@ void workspace_t::load_workspace_from_json (const string filename) {
         json objects = data[JSON_OBJECTS];
         for (auto &object : objects)
           if (object.find(JSON_WS_ITEM_TYPE) != object.end()){
-              string obj_type = object[JSON_WS_ITEM_TYPE];
-              shared_ptr<ws_item_t> obj = ws_item_factory::create_object(obj_type);
+              std::string obj_type = object[JSON_WS_ITEM_TYPE];
+              std::shared_ptr<ws_item_t> obj = ws_item_factory::create_object(obj_type);
               obj->read_from_json(object);
               add_item_to_workspace(obj);
             } else {
               c_app::log(fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
-                                     object[JSON_WS_ITEM_NAME].get<string>(), filename));
+                                     object[JSON_WS_ITEM_NAME].get<std::string>(), filename));
             }
       }
 
@@ -298,16 +298,16 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 
 }
 
-shared_ptr<workspace_t> workspace_manager_t::get_current () {
+std::shared_ptr<workspace_t> workspace_manager_t::get_current () {
 
   if (m_current_workspace_id > m_ws.size()) return nullptr;
   return m_ws[m_current_workspace_id];
 
 }
 
-optional<size_t> workspace_manager_t::get_current_id () {
-  if (!m_ws.empty()) return optional<size_t>(m_current_workspace_id);
-  return nullopt;
+std::optional<size_t> workspace_manager_t::get_current_id () {
+  if (!m_ws.empty()) return std::optional<size_t>(m_current_workspace_id);
+  return std::nullopt;
 }
 
 bool workspace_manager_t::set_current (const size_t ws_index) {
@@ -329,37 +329,37 @@ bool workspace_manager_t::set_current (const size_t ws_index) {
 
 void workspace_manager_t::init_default () {
 
-  auto _ws2 = make_shared<workspace_t>();
+  auto _ws2 = std::make_shared<workspace_t>();
   _ws2->m_ws_name = "d2";
 
-  auto _ws3 = make_shared<workspace_t>();
+  auto _ws3 = std::make_shared<workspace_t>();
   _ws3->m_ws_name = "d1";
 
-  auto _wsl2 = make_shared<ws_atoms_list_t>();
+  auto _wsl2 = std::make_shared<ws_atoms_list_t>();
   _ws3->add_item_to_workspace(_wsl2);
   _wsl2->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/laf3_p3.vasp",
                         false);
 
-  auto _wsl3 = make_shared<ws_atoms_list_t>();
+  auto _wsl3 = std::make_shared<ws_atoms_list_t>();
   _ws2->add_item_to_workspace(_wsl3);
   _wsl3->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
                         false);
 
-  auto _wsl32 = make_shared<ws_atoms_list_t>();
+  auto _wsl32 = std::make_shared<ws_atoms_list_t>();
   _ws2->add_item_to_workspace(_wsl32);
   _wsl32->load_from_file(qc_file_fmt::standart_xyz,
                          "../deps/qpp/examples/io/ref_data/nanotube.xyz",
                          true);
 
-  auto _wsl33 = make_shared<ws_atoms_list_t>();
+  auto _wsl33 = std::make_shared<ws_atoms_list_t>();
   _ws2->add_item_to_workspace(_wsl33);
   _wsl33->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/mp-971662_Si.vasp",
                          false);
 
 
-  auto _ws4 = make_shared<workspace_t>();
+  auto _ws4 = std::make_shared<workspace_t>();
   _ws4->m_ws_name = "animtest1";
-  auto _ws4_al = make_shared<ws_atoms_list_t>();
+  auto _ws4_al = std::make_shared<ws_atoms_list_t>();
   _ws4->add_item_to_workspace(_ws4_al);
   _ws4_al->load_from_file(qc_file_fmt::multi_frame_xyz,
                           "../data/refs/path.xyz",
@@ -420,7 +420,7 @@ void workspace_manager_t::mouse_click () {
 }
 
 
-void workspace_manager_t::add_workspace (const shared_ptr<workspace_t> &ws_to_add) {
+void workspace_manager_t::add_workspace (const std::shared_ptr<workspace_t> &ws_to_add) {
   m_ws.push_back(ws_to_add);
   ws_to_add->workspace_changed();
 }
@@ -433,10 +433,10 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_f
   std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
   if (succes){
-      auto new_ws = make_shared<workspace_t>();
+      auto new_ws = std::make_shared<workspace_t>();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
       new_ws->m_ws_name = file_name_extr;
-      auto new_atoms_list = make_shared<ws_atoms_list_t>();
+      auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
       new_ws->add_item_to_workspace(new_atoms_list);
       new_atoms_list->load_from_file(file_format, file_name_fd,
                                      qc_file_fmt_helper::need_to_auto_center(file_format));
@@ -447,7 +447,7 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_f
 }
 
 void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_workspace){
-  auto new_ws = make_shared<workspace_t>();
+  auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
   m_ws.push_back(new_ws);
 
@@ -458,12 +458,12 @@ void workspace_manager_t::dialog_load_workspace () {
 
   app_state_t *astate = &(c_app::get_state());
 
-  string filter{"json"};
+  std::string filter{"json"};
   bool succes{false};
 
-  string file_name = astate->fd_manager->request_open_file(filter, succes);
+  std::string file_name = astate->fd_manager->request_open_file(filter, succes);
   if (succes) {
-      auto new_ws = make_shared<workspace_t>();
+      auto new_ws = std::make_shared<workspace_t>();
       //new_ws->m_ws_name = "d4";
       new_ws->load_workspace_from_json(file_name);
       add_workspace(new_ws);
@@ -475,12 +475,12 @@ void workspace_manager_t::dialog_save_workspace (const size_t ws_idx, const bool
 
   app_state_t *astate = &(c_app::get_state());
 
-  string filter{"json"};
+  std::string filter{"json"};
   bool succes{false};
   if (ws_idx > m_ws.size()) return;
   auto ws_to_save = m_ws[ws_idx];
   if (ws_to_save->m_fs_path == "" || force_save_as){
-      string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
+      std::string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
       if (!succes) return;
       if (_tmp_fs_path.substr(_tmp_fs_path.find_last_of(".")+1) != "json") _tmp_fs_path += ".json";
       ws_to_save->m_fs_path = _tmp_fs_path;
@@ -496,7 +496,7 @@ void workspace_manager_t::dialog_save_current_workspace(const bool force_save_as
 void workspace_manager_t::update_window_title(){
   if (m_current_workspace_id >= m_ws.size()) return;
   c_app::update_window_title(fmt::format(" - {} - [{}]",
-                                         string(m_ws[m_current_workspace_id]->m_ws_name),
-                                         string(m_ws[m_current_workspace_id]->m_fs_path)));
+                                         std::string(m_ws[m_current_workspace_id]->m_ws_name),
+                                         std::string(m_ws[m_current_workspace_id]->m_fs_path)));
 }
 

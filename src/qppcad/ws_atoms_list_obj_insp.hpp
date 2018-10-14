@@ -202,7 +202,7 @@ namespace qpp {
               // if we selected one atom - show single modify widget
               else if (al.m_atom_idx_sel.size()==1) {
                   ImGui::BulletText("Modify single atom:");
-                  static string custom_atom_name = "";
+                  static std::string custom_atom_name = "";
 
                   static int last_selected = -1;
                   if (last_selected != al.m_atom_idx_sel.begin()->m_atm){
@@ -258,7 +258,7 @@ namespace qpp {
             }//end modify section
 
           if (ImGui::CollapsingHeader("Add atoms")) {
-              static string custom_atom_name;
+              static std::string custom_atom_name;
               ImGui::Separator();
               ImGui::PushItemWidth(200);
               ImGui::InputFloat3("Position", al.m_new_atom_pos.data());
