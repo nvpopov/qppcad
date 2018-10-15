@@ -3,6 +3,7 @@ project(qppcad CXX C)
 add_definitions(-O3 -fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS "-O3 -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden")
 set(CMAKE_BUILD_TYPE "Release")
+
 #set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
 #set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
 
@@ -15,6 +16,7 @@ endmacro()
 
 set_option(PYTHON_BINDINGS OFF)
 set_option(WITH_HarfBuzz OFF)
+
 add_subdirectory(deps/qpp)
 add_subdirectory(deps/freetype)
 add_subdirectory(deps/glfw)

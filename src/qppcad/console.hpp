@@ -17,8 +17,8 @@ namespace qpp {
   namespace cad {
 
     enum console_type_t {
-      simple_query,
-      python
+      simple_query = 0,
+      python = 1
     };
 
     class app_state_t;
@@ -30,20 +30,23 @@ namespace qpp {
         py::object scope;
 #endif
       public:
-        uint32_t m_id;
-        uint8_t m_line_height;
-        int m_total_com_lines;
-        int m_total_output_lines{5};
-        std::vector<std::string> m_sq_history;
-        bool m_show_output{false};
-        int m_history_pos;
-        float m_console_alpha{0.95f};
-
-        console_type_t m_console_type{console_type_t::simple_query};
-
-        bool     m_active;
         std::vector<std::string> m_output;
         std::string m_command;
+        std::vector<std::string> m_sq_history;
+
+        float m_console_alpha{0.95f};
+
+        uint32_t m_id;
+        uint8_t m_line_height;
+
+        int m_total_com_lines;
+        int m_total_output_lines{5};
+        int m_history_pos{-1};
+
+        bool m_show_output{false};
+        bool     m_active;
+
+        console_type_t m_console_type{console_type_t::simple_query};
 
         console_widget_t(app_state_t *init_app_state);
         void toggle_visible();

@@ -10,6 +10,7 @@ using namespace qpp::cad;
 
 std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj_type){
   if (obj_type == "ws_atoms_list") return std::make_shared<ws_atoms_list_t>();
+  return nullptr;
 }
 
 std::optional<size_t> workspace_t::get_selected_item () {
