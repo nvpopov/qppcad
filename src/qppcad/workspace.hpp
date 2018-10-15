@@ -22,14 +22,8 @@ namespace qpp {
 
     class app_state_t;
 
-    enum ws_edit_type {
-      EDIT_WS_ITEM = 0,
-      EDIT_WS_ITEM_CONTENT = 1
-    };
-
-    ///
     /// \brief The workspace_manager_t class
-    ///
+
     class workspace_manager_t {
       private:
         app_state_t *cached_astate;
@@ -89,7 +83,7 @@ namespace qpp {
         std::optional<size_t>  get_selected_item();
         ws_item_t *get_selected();
 
-        void set_selected_item(const size_t sel_idx);
+        bool set_selected_item(const size_t sel_idx);
         void unselect_all();
         void toggle_edit_mode();
         void workspace_changed();
@@ -103,7 +97,7 @@ namespace qpp {
         void save_workspace_to_json(const std::string filename);
         void load_workspace_from_json(const std::string filename);
         void update(float delta_time);
-
+        void set_edit_type(const ws_edit_type new_edit_type);
     };
 
 

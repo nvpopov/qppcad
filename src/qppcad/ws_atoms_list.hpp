@@ -76,6 +76,7 @@ namespace qpp {
         bool mouse_click(ray_t<float> *click_ray) override;
 
         void select_atoms(bool all);
+        bool select_atom(int atom_id);
         void select_by_type(const int item_type_to_select);
         void invert_selected_atoms();
         void insert_atom(const int atom_type, const vector3<float> &pos);

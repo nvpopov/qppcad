@@ -59,13 +59,9 @@ namespace qpp{
         static void log(const std::string &logText);
         static void run(int argc, char **argv);
         static void copy_to_clipboard(const char * data);
+
         static app_state_t & get_state(){
-
-          if (c_app::app_state == nullptr)
-            c_app::app_state = new qpp::cad::app_state_t();
-
           return *app_state;
-
         }
 
     };

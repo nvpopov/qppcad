@@ -139,18 +139,12 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   ImFontConfig config;
   config.MergeMode = true;*/
 
-  io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",
-                               17.0f);
-  io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",
-                               26.0f);
+  io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",17.0f);
   unsigned int flags = ImGuiFreeType::ForceAutoHint;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
-
-
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
   ImGui::StyleColorsDark();
-
   ImGui_ImplGlfw_InitForOpenGL(qpp::cad::c_app::curWindow, true);
   ImGui_ImplOpenGL3_Init();
   // End setup imgui
@@ -164,6 +158,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   glEnable              ( GL_DEBUG_OUTPUT );
   glDebugMessageCallback( MessageCallback, 0 );
 
+  c_app::app_state = new qpp::cad::app_state_t();
   app_state_t* astate = &(c_app::get_state());
   qpp::cad::c_app::log("qpp::cad initialized succesfully!");
 

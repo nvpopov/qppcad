@@ -24,12 +24,21 @@ ws_item_t *workspace_t::get_selected () {
   else return nullptr;
 }
 
-void workspace_t::set_selected_item (const size_t sel_idx) {
+bool workspace_t::set_selected_item (const size_t sel_idx) {
+
+  app_state_t* astate = &(c_app::get_state());
+
   unselect_all();
+
   if (sel_idx < m_ws_items.size() && !m_ws_items.empty()) {
       m_ws_items[sel_idx]->m_selected = true;
-      m_gizmo->attached_item = m_ws_items[sel_idx].get();;
+      m_gizmo->attached_item = m_ws_items[sel_idx].get();
+      astate->make_viewport_dirty();
+      return true;
     }
+
+  astate->make_viewport_dirty();
+  return false;
 }
 
 void workspace_t::unselect_all () {
@@ -103,27 +112,6 @@ void workspace_t::render() {
     }
 
   if (astate->dp) {
-
-      ///// Draw grid /////
-      //      if (astate->show_grid){
-      //          astate->line_mesh_program->begin_shader_program();
-      //          vector3<float> color(0.75, 0.75, 0.75);
-      //          astate->line_mesh_program->set_u(sp_u_name::m_model_view_proj,
-      //                                           astate->camera->m_view_proj.data());
-      //          astate->line_mesh_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
-      //          astate->line_mesh_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
-
-      //          //TODO: reimplement grid via DrawInstanced
-      //          for (int dx = -4; dx <= 4; dx++)
-      //            for (int dz = -4; dz <= 4; dz++){
-      //                vector3<float> vTr(dx * (10.0f * 0.5f), dz * (10.0f * 0.5f), 0.0f );
-      //                astate->line_mesh_program->set_u(sp_u_name::v_translate, (GLfloat*)vTr.data());
-      //                astate->gridXZ->render();
-
-      //              }
-      //          astate->line_mesh_program->end_shader_program();
-      //        }
-      ///// Draw grid /////
 
       ///// Draw axis /////
       if (astate->show_axis) {
@@ -288,6 +276,14 @@ void workspace_t::update (float delta_time) {
 
 }
 
+void workspace_t::set_edit_type (const ws_edit_type new_edit_type) {
+
+  app_state_t *astate = &(c_app::get_state());
+  m_edit_type = new_edit_type;
+  astate->make_viewport_dirty();
+
+}
+
 workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 
   m_current_workspace_id = 0;
@@ -312,8 +308,10 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_current () {
 }
 
 std::optional<size_t> workspace_manager_t::get_current_id () {
+
   if (!m_ws.empty()) return std::optional<size_t>(m_current_workspace_id);
   return std::nullopt;
+
 }
 
 bool workspace_manager_t::set_current (const size_t ws_index) {

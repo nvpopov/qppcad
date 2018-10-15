@@ -98,9 +98,7 @@ void console_widget_t::render () {
                   astate->sq_manager->execute(m_command, c_output);
                   m_output[console_type_t::simple_query] += c_output;
                   m_command = "";
-                  ImGui::SetFocusID(ImGui::GetID("command_edit"), ImGui::GetCurrentWindow());
-                  ImGuiContext& g = *ImGui::GetCurrentContext();
-                  g.NavDisableHighlight = false;
+                  ImGui::SetItemDefaultFocus();
                 }
 
             } else {
