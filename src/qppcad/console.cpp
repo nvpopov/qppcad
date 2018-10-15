@@ -43,7 +43,7 @@ void console_widget_t::process_command (std::string &command) {
 
 void console_widget_t::render () {
 
-  ImVec4 bgc{1.0f, 1.0f, 1.0f, 1.0f};
+  ImVec4 bgc{1.0f, 1.0f, 1.0f, m_console_alpha};
   ImVec4 fc{0.0f, 0.0f, 0.0f, 1.0f};
 
   std::string test ="dsdsd";
@@ -51,7 +51,7 @@ void console_widget_t::render () {
 
   if (m_active){
       //astate->config_vote_pool.vote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
-      float console_height = 170;
+      float console_height = m_total_output_lines * m_line_height;
       float height = m_total_com_lines * m_line_height + console_height + 51;
 
       ImGui::SetNextWindowSize(ImVec2(astate->viewport_size_c[0], height));
@@ -70,19 +70,24 @@ void console_widget_t::render () {
                        ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar |
                        ImGuiWindowFlags_NoResize)) {
 
-          ImGui::Button("Clear output");
+          if (ImGui::Button("Clear output"))
+            m_output[m_console_type].clear();
 
           const char* items[] = {"Simple query", "Python"};
           ImGui::SameLine();
           ImGui::PushItemWidth(150);
           ImGui::Combo("Interpreter", reinterpret_cast<int*>(&m_console_type), items, 2);
+          ImGui::SameLine();
+          ImGui::SliderInt("Lines", &m_total_output_lines, 1, 30);
+          ImGui::SameLine();
+          ImGui::SliderFloat("Transparency", &m_console_alpha, 0.1f, 1.0f);
           ImGui::PushItemWidth(0);
 
           ImGui::BeginChild("console_output_region", ImVec2(0, console_height));
           ImGui::PushItemWidth(ImGui::GetWindowWidth());
           ImGui::PushID("command_output");
           ImGui::InputTextMultiline("", &m_output[m_console_type],
-                                    ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight()),
+                                    ImVec2(ImGui::GetWindowWidth(), console_height),
                                     ImGuiInputTextFlags_ReadOnly);
           ImGui::PopID();
           ImGui::EndChild();
@@ -92,14 +97,19 @@ void console_widget_t::render () {
 
               ImGui::PushItemWidth(ImGui::GetWindowWidth()-15);
               if (ImGui::InputText("", &m_command, ImGuiInputTextFlags_CallbackCompletion |
-                                   ImGuiInputTextFlags_EnterReturnsTrue,
-                  &console_widget_t::simple_query_input_callback, this)) {
+                                   ImGuiInputTextFlags_EnterReturnsTrue |
+                                   ImGuiInputTextFlags_CallbackHistory |
+                                   ImGuiInputTextFlags_CallbackAlways,
+                                   &console_widget_t::simple_query_input_callback, this)) {
                   std::string c_output;
                   astate->sq_manager->execute(m_command, c_output);
                   m_output[console_type_t::simple_query] += c_output;
+                  if (m_command != "" ) m_sq_history.push_back(m_command);
                   m_command = "";
-                  ImGui::SetItemDefaultFocus();
+                  ImGui::SetKeyboardFocusHere(-1);
                 }
+              ImGui::SetKeyboardFocusHere(-1);
+              ImGui::SetItemDefaultFocus();
 
             } else {
               if (ImGui::InputTextMultiline("", &m_command,
@@ -157,11 +167,42 @@ int console_widget_t::InputTextCallback (ImGuiInputTextCallbackData *data) {
       data->DeleteChars(0, data->BufTextLen);
 
     }
-
-
-
 }
 
 int console_widget_t::simple_query_input_callback(ImGuiInputTextCallbackData *data){
   //if (data->)
+  auto cw = static_cast<console_widget_t*>(data->UserData);
+
+  if (data->EventChar == '`') {
+      data->DeleteChars(data->BufTextLen-1, 1);
+      data->BufDirty = true;
+    }
+
+  switch (data->EventFlag) {
+
+    case ImGuiInputTextFlags_CallbackHistory: {
+
+        const int prev_history_pos = cw->m_history_pos;
+        if (data->EventKey == ImGuiKey_UpArrow){
+            if (cw->m_history_pos == -1)
+              cw->m_history_pos = cw->m_sq_history.size() - 1;
+            else if (cw->m_history_pos > 0)
+              cw->m_history_pos--;
+          }
+
+        else if (data->EventKey == ImGuiKey_DownArrow){
+            if (cw->m_history_pos != -1)
+              if (++(cw->m_history_pos) >= cw->m_sq_history.size())
+                cw->m_history_pos = -1;
+          }
+
+        if (prev_history_pos != cw->m_history_pos) {
+            const char* history_str =
+                (cw->m_history_pos >= 0) ? cw->m_sq_history[cw->m_history_pos].c_str() : "";
+            data->DeleteChars(0, data->BufTextLen);
+            data->InsertChars(0, history_str);
+          }
+      }
+
+    }
 }

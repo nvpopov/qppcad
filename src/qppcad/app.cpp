@@ -381,12 +381,14 @@ void qpp::cad::c_app::resize_window_callback (GLFWwindow *window, int _width, in
 void qpp::cad::c_app::mouse_scroll_callback (GLFWwindow *window, double xoffset, double yoffset) {
 
   app_state_t* astate =  &(c_app::get_state());
+
   if ( astate->cur_task == app_task_type::TASK_WORKSPACE_EDITOR &&
        astate->camera != nullptr &&
        !astate->config_vote_pool.is_voting_active(DISABLE_MOUSE_CONTROL_IN_WORKSPACE) &&
        astate->mouse_in_3d_area &&
        !ImGui::GetIO().WantCaptureMouse)
     astate->camera->update_camera_zoom(-yoffset);
+
   ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
 
 }

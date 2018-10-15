@@ -105,7 +105,7 @@ namespace qpp {
         app_task_type cur_task{app_task_type::TASK_WORKSPACE_EDITOR};
         app_render_mode m_render_mode{app_render_mode::buffered_multi_sampling};
 
-        bool mouse_lb_pressed;
+        bool mouse_lb_pressed{false};
         bool disable_mouse_camera_control;
 
         bool show_axis{true};

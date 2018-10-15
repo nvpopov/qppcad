@@ -56,7 +56,7 @@ bool sq_command_change_edit_type::execute (std::vector<std::string_view> &comman
   app_state_t *astate = &(c_app::get_state());
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws) cur_ws->set_edit_type(cur_edit_type);
-
+  output += "Current workspace edit mode was changed\n";
 }
 
 sq_command_change_edit_type::sq_command_change_edit_type (const ws_edit_type edit_type) {

@@ -62,6 +62,8 @@ namespace qpp {
 
         void execute (const std::string &command, std::string &output) {
 
+          if (command == "") return;
+
           std::vector<std::string_view> sv = split_sv(command, " ");
           auto it = m_commands.find(std::string(sv[0]));
 
@@ -76,8 +78,8 @@ namespace qpp {
         simple_query_manager_t () {
           add_command<sq_command_echo>("echo");
           add_command<sq_command_select_item>("seli");
-          add_command<sq_command_change_edit_type>("eitm", ws_edit_type::EDIT_WS_ITEM);
-          add_command<sq_command_change_edit_type>("ecnt", ws_edit_type::EDIT_WS_ITEM_CONTENT);
+          add_command<sq_command_change_edit_type>("itm", ws_edit_type::EDIT_WS_ITEM);
+          add_command<sq_command_change_edit_type>("cnt", ws_edit_type::EDIT_WS_ITEM_CONTENT);
           add_command<sq_command_select_content>("sel");
         }
 

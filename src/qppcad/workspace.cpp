@@ -97,11 +97,6 @@ void workspace_t::render() {
 
   app_state_t* astate = &(c_app::get_state());
 
-  if (m_first_render) {
-      set_best_view();
-      m_first_render = false;
-    }
-
   if (m_gizmo->is_active && m_gizmo->attached_item) m_gizmo->render();
 
   if (astate->debug_show_selection_ray){
@@ -270,6 +265,11 @@ void workspace_t::load_workspace_from_json (const std::string filename) {
 }
 
 void workspace_t::update (float delta_time) {
+
+  if (m_first_render) {
+      set_best_view();
+      m_first_render = false;
+    }
 
   m_gizmo->update_gizmo(delta_time);
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);

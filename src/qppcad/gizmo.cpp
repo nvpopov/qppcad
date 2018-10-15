@@ -28,8 +28,8 @@ void gizmo_t::render(){
 
   //prevent showing gizmo when no content selected
   if (attached_item)
-      if (attached_item->get_amount_of_selected_content() == 0 &&
-          cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) return;
+    if (attached_item->get_amount_of_selected_content() == 0 &&
+        cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) return;
 
   astate->dp->begin_render_general_mesh();
 
@@ -38,8 +38,8 @@ void gizmo_t::render(){
 
   if ( !interact_at_the_moment &&
        (cur_edit_type == ws_edit_type::EDIT_WS_ITEM ||
-       (cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT &&
-        attached_item->get_amount_of_selected_content() > 0)) ){
+        (cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT &&
+         attached_item->get_amount_of_selected_content() > 0)) ){
 
       astate->dp->render_cube(pos, _v_scale * 1.2f, clr_gray);
 
@@ -65,7 +65,7 @@ void gizmo_t::render(){
           astate->unit_cone);
 
       astate->dp->render_general_mesh(
-          pos + gizmo_axis[0] * (gizmo_shift_magnitude-gizmo_box_size-1.25f),
+            pos + gizmo_axis[0] * (gizmo_shift_magnitude-gizmo_box_size-1.25f),
           vector3<float>( _v_scale[0] , _v_scale[1] ,
           (gizmo_shift_magnitude/2-gizmo_box_size)+1.75f),
           vector3<float>( 0.0f, pi / 2.0,  0.0f),
@@ -73,7 +73,7 @@ void gizmo_t::render(){
           astate->cylinder_mesh);
 
       astate->dp->render_general_mesh(
-          pos + gizmo_axis[1] * (gizmo_shift_magnitude-gizmo_box_size+0.75),
+            pos + gizmo_axis[1] * (gizmo_shift_magnitude-gizmo_box_size+0.75),
           vector3<float>( _v_scale[0] , _v_scale[1] ,
           (gizmo_shift_magnitude/2-gizmo_box_size)+1.75f),
           vector3<float>( 0.0f, 0.0f,   pi / 2.0),
@@ -81,7 +81,7 @@ void gizmo_t::render(){
           astate->cylinder_mesh);
 
       astate->dp->render_general_mesh(
-          pos + gizmo_axis[2] * (gizmo_shift_magnitude-gizmo_box_size-1.25f),
+            pos + gizmo_axis[2] * (gizmo_shift_magnitude-gizmo_box_size-1.25f),
           vector3<float>( _v_scale[0] , _v_scale[1] ,
           (gizmo_shift_magnitude/2-gizmo_box_size)+1.75f),
           vector3<float>( 0.0f, 0.0f,  0.0f),
@@ -108,6 +108,12 @@ void gizmo_t::translate_attached(float delta_time){
 
   app_state_t *astate = &(c_app::get_state());
 
+  if (!astate->mouse_lb_pressed) {
+      interact_at_the_moment = false;
+      clear_selected_axis();
+      return;
+    }
+
   if (attached_item){
       ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
@@ -119,8 +125,8 @@ void gizmo_t::translate_attached(float delta_time){
 
       vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
 
-//      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
-//                          astate->mouse_y_old - astate->mouse_y;
+      //      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
+      //                          astate->mouse_y_old - astate->mouse_y;
 
       if (fabs(d_unproj[touched_axis]) > 0.01f) {
           vector3<float> new_transform =
@@ -143,25 +149,29 @@ void gizmo_t::update_gizmo (float delta_time) {
 
   app_state_t *astate = &(c_app::get_state());
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
-//  if (attached_item) {
-//      if (attached_item->get_amount_of_selected_content() == 0) return;
-//    }
+
   //update gizmo position according to current workspace edit type value
   //if we are in node edit mode - snap to aabb min
-  if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM)
+  if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
     pos = attached_item->m_pos;
 
   //if we are in the content edit mode - snap to calculated barycenter, provided by node
-  if (attached_item && cur_edit_type== ws_edit_type::EDIT_WS_ITEM_CONTENT)
+  if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
     pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
+
+  if (!astate->mouse_lb_pressed || ImGui::GetIO().WantCaptureMouse) {
+      interact_at_the_moment = false;
+      clear_selected_axis();
+      return;
+    }
 
   //Transform in node mode
   //start interacting - run event
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
       cur_edit_type == ws_edit_type::EDIT_WS_ITEM && !interact_at_the_moment){
-        interact_at_the_moment = true;
-        accum_translate = vector3<float>::Zero();
-        attached_item->on_begin_node_gizmo_translate();
+      interact_at_the_moment = true;
+      accum_translate = vector3<float>::Zero();
+      attached_item->on_begin_node_gizmo_translate();
     }
 
   //interacting - event already fired, start dragging object
@@ -174,9 +184,9 @@ void gizmo_t::update_gizmo (float delta_time) {
   if (attached_item && !astate->mouse_lb_pressed &&
       cur_edit_type == ws_edit_type::EDIT_WS_ITEM &&
       interact_at_the_moment){
-        interact_at_the_moment = false;
-        attached_item->on_end_node_gizmo_translate();
-        clear_selected_axis();
+      interact_at_the_moment = false;
+      attached_item->on_end_node_gizmo_translate();
+      clear_selected_axis();
     }
   //End transform in node edit mode
 
@@ -184,9 +194,9 @@ void gizmo_t::update_gizmo (float delta_time) {
   //start interacting - run event
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
       cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && !interact_at_the_moment) {
-        interact_at_the_moment = true;
-        accum_translate = vector3<float>::Zero();
-        attached_item->on_begin_content_gizmo_translate();
+      interact_at_the_moment = true;
+      accum_translate = vector3<float>::Zero();
+      attached_item->on_begin_content_gizmo_translate();
     }
 
   //interacting - event already fired, start dragging object
@@ -198,9 +208,9 @@ void gizmo_t::update_gizmo (float delta_time) {
   //we we release left mouse button - fire event(on_end_content_translate)
   if (attached_item && !astate->mouse_lb_pressed &&
       cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && interact_at_the_moment) {
-        interact_at_the_moment = false;
-        attached_item->on_end_content_gizmo_translate();
-        clear_selected_axis();
+      interact_at_the_moment = false;
+      attached_item->on_end_content_gizmo_translate();
+      clear_selected_axis();
     }
   //End transform in node edit mode
 

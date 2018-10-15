@@ -35,7 +35,7 @@ namespace qpp {
         float gizmo_box_size;
         float gizmo_shift_magnitude;
         bool is_active{false};
-        bool interact_at_the_moment;
+        bool interact_at_the_moment{false};
         bool m_is_visible{true};
         gizmo_transform_type m_cur_ttype{gizmo_transform_type::translation};
 
