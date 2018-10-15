@@ -39,6 +39,14 @@ namespace qpp {
          sq_command_change_edit_type(const ws_edit_type edit_type);
     };
 
+    class sq_command_translate_selected : public simple_query_command_t {
+      private:
+        vector3<float> p_axis;
+      public:
+        bool execute (std::vector<std::string_view> &commands_list, std::string &output) override ;
+        sq_command_translate_selected(const vector3<float> axis);
+    };
+
     class simple_query_manager_t {
 
       private:
@@ -81,6 +89,9 @@ namespace qpp {
           add_command<sq_command_change_edit_type>("itm", ws_edit_type::EDIT_WS_ITEM);
           add_command<sq_command_change_edit_type>("cnt", ws_edit_type::EDIT_WS_ITEM_CONTENT);
           add_command<sq_command_select_content>("sel");
+          add_command<sq_command_translate_selected>("tx", vector3<float>{1.0f, 0.0f, 0.0f});
+          add_command<sq_command_translate_selected>("ty", vector3<float>{0.0f, 1.0f, 0.0f});
+          add_command<sq_command_translate_selected>("tz", vector3<float>{0.0f, 0.0f, 1.0f});
         }
 
     };

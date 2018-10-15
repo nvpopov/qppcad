@@ -27,6 +27,9 @@ bool sq_command_select_item::execute(std::vector<std::string_view> &commands_lis
               output += fmt::format("Workspace item {} with index {} was selected\n",
                                     cur_ws->get_selected()->m_name, i);
             else output += fmt::format("Error : invalid item index {}\n", i);
+          } else {
+            output += "Error: nothing selected!\n";
+            return false;
           }
       }
       catch(std::exception const & e) {
@@ -90,4 +93,35 @@ bool sq_command_select_content::execute (std::vector<std::string_view> &commands
             }
         }
     }
+}
+
+bool sq_command_translate_selected::execute (std::vector<std::string_view> &commands_list,
+                                             std::string &output) {
+
+  app_state_t *astate = &(c_app::get_state());
+  auto cur_ws = astate->ws_manager->get_current();
+  if (cur_ws) {
+      auto sel_itm = cur_ws->get_selected();
+      if (sel_itm) {
+          auto sel_as_wsl = dynamic_cast<ws_atoms_list_t*>(sel_itm);
+          if (sel_as_wsl) {
+              try {
+                float amount = std::stof(commands_list[1].data());
+//                if (sel_as_wsl->select_atom(i))
+//                  output += fmt::format("Atom {} was selected\n", i);
+//                else output += fmt::format("Wrong index {}\n", i);
+                sel_as_wsl->translate_selected(p_axis * amount);
+              }
+              catch(std::exception const & e) {
+                output += "Error: wrong argument\n";
+                return false;
+              }
+            }
+        }
+    }
+
+}
+
+sq_command_translate_selected::sq_command_translate_selected (const vector3<float> axis) {
+  p_axis = axis;
 }

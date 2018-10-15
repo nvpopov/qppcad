@@ -51,8 +51,8 @@ void console_widget_t::render () {
 
   if (m_active){
       //astate->config_vote_pool.vote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
-      float console_height = m_total_output_lines * m_line_height;
-      float height = m_total_com_lines * m_line_height + console_height + 51;
+      float console_height = (m_total_output_lines * m_line_height) * m_show_output;
+      float height = m_total_com_lines * m_line_height + console_height + 42;
 
       ImGui::SetNextWindowSize(ImVec2(astate->viewport_size_c[0], height));
       ImGui::SetNextWindowPos(ImVec2(0, astate->viewport_size[1] - height));
@@ -77,24 +77,47 @@ void console_widget_t::render () {
           ImGui::SameLine();
           ImGui::PushItemWidth(150);
           ImGui::Combo("Interpreter", reinterpret_cast<int*>(&m_console_type), items, 2);
+
+          ImGui::SameLine();
+          ImGui::VerticalSeparator();
+
+          ImGui::SameLine();
+          ImGui::Checkbox("Show Output", &m_show_output);
+
+          ImGui::SameLine();
+          ImGui::VerticalSeparator();
+
           ImGui::SameLine();
           ImGui::SliderInt("Lines", &m_total_output_lines, 1, 30);
+
+          ImGui::SameLine();
+          ImGui::VerticalSeparator();
+
           ImGui::SameLine();
           ImGui::SliderFloat("Transparency", &m_console_alpha, 0.1f, 1.0f);
-          ImGui::PushItemWidth(0);
 
-          ImGui::BeginChild("console_output_region", ImVec2(0, console_height));
-          ImGui::PushItemWidth(ImGui::GetWindowWidth());
-          ImGui::PushID("command_output");
-          ImGui::InputTextMultiline("", &m_output[m_console_type],
-                                    ImVec2(ImGui::GetWindowWidth(), console_height),
-                                    ImGuiInputTextFlags_ReadOnly);
-          ImGui::PopID();
-          ImGui::EndChild();
-          ImGui::PushID("command_edit");
+          ImGui::SameLine();
+          ImGui::VerticalSeparator();
+
+          ImGui::PushItemWidth(0);
+          ImGui::SameLine();
+          if (ImGui::Button("Close")) m_active = false;
+
+          if (m_show_output) {
+              ImGui::BeginChild("console_output_region", ImVec2(0, console_height));
+              ImGui::PushItemWidth(ImGui::GetWindowWidth());
+              ImGui::PushID("command_output");
+              ImGui::InputTextMultiline("", &m_output[m_console_type],
+                                        ImVec2(ImGui::GetWindowWidth(), console_height),
+                                        ImGuiInputTextFlags_ReadOnly);
+              ImGui::PopID();
+              ImGui::EndChild();
+
+            }
           //ImGui::PushItemWidth(ImGui::GetWindowWidth());
           if (m_console_type == console_type_t::simple_query) {
 
+              ImGui::PushID("command_edit");
               ImGui::PushItemWidth(ImGui::GetWindowWidth()-15);
               if (ImGui::InputText("", &m_command, ImGuiInputTextFlags_CallbackCompletion |
                                    ImGuiInputTextFlags_EnterReturnsTrue |
@@ -108,8 +131,8 @@ void console_widget_t::render () {
                   m_command = "";
                   ImGui::SetKeyboardFocusHere(-1);
                 }
-              ImGui::SetKeyboardFocusHere(-1);
-              ImGui::SetItemDefaultFocus();
+              //              ImGui::SetKeyboardFocusHere(-1);
+              //              ImGui::SetItemDefaultFocus();
 
             } else {
               if (ImGui::InputTextMultiline("", &m_command,

@@ -212,9 +212,11 @@ bool ws_atoms_list_t::select_atom (int atom_id) {
       m_atom_sel.insert(atom_id);
       m_atom_idx_sel.insert(atom_index_set_key(atom_id, index::D(m_geom->DIM).all(0)));
       astate->make_viewport_dirty();
+      recalc_gizmo_barycenter();
       return true;
     }
 
+  recalc_gizmo_barycenter();
   return false;
 }
 
@@ -249,24 +251,37 @@ void ws_atoms_list_t::invert_selected_atoms () {
 
 }
 
-void ws_atoms_list_t::insert_atom(const int atom_type, const vector3<float> &pos){
+void ws_atoms_list_t::insert_atom (const int atom_type, const vector3<float> &pos) {
   m_anim->m_force_non_animable = true;
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
 }
 
-void ws_atoms_list_t::insert_atom(const string &atom_name, const vector3<float> &pos){
+void ws_atoms_list_t::insert_atom (const string &atom_name, const vector3<float> &pos) {
   m_anim->m_force_non_animable = true;
   m_geom->add(atom_name, pos);
 }
 
-void ws_atoms_list_t::update_atom(const int at_id, const vector3<float> &pos){
+void ws_atoms_list_t::update_atom (const int at_id, const vector3<float> &pos) {
+
   m_anim->m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
+  app_state_t* astate = &(c_app::get_state());
+  astate->make_viewport_dirty();
+
 }
 
-void ws_atoms_list_t::update_atom(const int at_id, const string &at_name){
+void ws_atoms_list_t::update_atom (const int at_id, const string &at_name) {
+
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
+  app_state_t* astate = &(c_app::get_state());
+  astate->make_viewport_dirty();
+
+}
+
+void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {
+  for (auto &elem : m_atom_sel)
+    update_atom(elem, m_geom->pos(elem) + t_vec);
 }
 
 void ws_atoms_list_t::delete_selected_atoms () {

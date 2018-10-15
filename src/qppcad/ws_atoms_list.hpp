@@ -83,6 +83,7 @@ namespace qpp {
         void insert_atom(const std::string &atom_name, const vector3<float> &pos);
         void update_atom(const int at_id, const vector3<float> &pos);
         void update_atom(const int at_id, const std::string &at_name);
+        void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
 
         bool support_translation() override;
