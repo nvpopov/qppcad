@@ -48,7 +48,8 @@ void ws_atoms_list_t::vote_for_view_vectors (vector3<float> &out_look_pos,
 }
 
 void ws_atoms_list_t::geometry_changed () {
-  m_aabb = m_ext_obs->aabb;
+  if (m_ext_obs)
+    m_aabb = m_ext_obs->aabb;
 }
 
 void ws_atoms_list_t::render () {
@@ -468,7 +469,10 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   m_tws_tr->do_action(act_unlock | act_rebuild_all);
   geometry_changed();
 
-  if (parent_ws) parent_ws->workspace_changed();
+  if (parent_ws) {
+      parent_ws->set_best_view();
+      parent_ws->workspace_changed();
+    }
 
 }
 
