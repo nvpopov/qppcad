@@ -16,6 +16,11 @@ namespace qpp {
 
   namespace cad {
 
+    enum console_type_t {
+      simple_query,
+      python
+    };
+
     class app_state_t;
 
     class console_widget_t {
@@ -28,14 +33,19 @@ namespace qpp {
         uint32_t m_id;
         uint8_t m_line_height;
         uint8_t m_total_com_lines;
+
+        console_type_t m_console_type{console_type_t::simple_query};
+
         bool     m_active;
-        std::string m_output;
+        std::vector<std::string> m_output;
         std::string m_command;
+
         console_widget_t(app_state_t *init_app_state);
         void toggle_visible();
         void process_command(std::string &command);
         void render();
         static int InputTextCallback(ImGuiInputTextCallbackData* data);
+        static int simple_query_input_callback(ImGuiInputTextCallbackData* data);
     };
 
   }

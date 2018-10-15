@@ -37,8 +37,13 @@ void workspace_t::unselect_all () {
 }
 
 void workspace_t::toggle_edit_mode () {
-  if (m_edit_type == ws_edit_type::EDIT_WS_ITEM) m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
-  else m_edit_type = ws_edit_type::EDIT_WS_ITEM;
+  app_state_t* astate = &(c_app::get_state());
+  if (!astate->ui_manager->console_widget->m_active) {
+      if (m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+        m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
+      else
+        m_edit_type = ws_edit_type::EDIT_WS_ITEM;
+    }
 }
 
 void workspace_t::workspace_changed () {
@@ -160,10 +165,11 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
   m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
   m_ray_debug.start = m_camera->m_view_point;
 
-  if (m_gizmo->process_ray(&m_ray_debug)){
-      c_app::log("gizmo clicked");
-      return;
-    }
+  if (m_gizmo->m_is_visible)
+    if (m_gizmo->process_ray(&m_ray_debug)){
+        c_app::log("gizmo clicked");
+        return;
+      }
 
   bool hit_any = false;
 

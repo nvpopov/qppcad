@@ -22,7 +22,7 @@ namespace qpp {
       ball_and_stick,
       dynamic_lines,
       xatom_lines,
-      static_lines
+      billboards
     };
 
     /// \brief The ws_atom_list_t class

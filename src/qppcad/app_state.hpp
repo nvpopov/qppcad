@@ -24,6 +24,7 @@
 #include <qppcad/mesh_generators.hpp>
 #include <qppcad/shader_generators.hpp>
 #include <qppcad/keyboard_event.hpp>
+#include <qppcad/simple_query.hpp>
 
 namespace qpp {
 
@@ -67,6 +68,7 @@ namespace qpp {
         std::shared_ptr<file_dialog_manager_t>                         fd_manager;
         std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
         std::unique_ptr<keyboard_manager_t>                            kb_manager;
+        std::unique_ptr<simple_query_manager_t>                        sq_manager;
         camera_t*  camera;
         vote_pool_t<uint32_t> config_vote_pool;
 
@@ -228,6 +230,7 @@ namespace qpp {
           ws_manager->init_default();
           ui_manager   = std::make_shared<ui_manager_t>(this);
           fd_manager   = std::make_shared<file_dialog_manager_t>();
+          sq_manager   = std::make_unique<simple_query_manager_t>();
 
           make_viewport_dirty();
           update_viewport_cache();
