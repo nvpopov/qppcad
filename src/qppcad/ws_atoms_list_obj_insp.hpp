@@ -114,6 +114,8 @@ namespace qpp {
                                            0.5f, 15.0f, "%.4f", 1)) astate->make_viewport_dirty();
                 }
 
+              al.m_labels->render_ui();
+
               if (ImGui::SliderFloat("Atom size", &al.m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1))
                 astate->make_viewport_dirty();
 

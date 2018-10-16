@@ -40,7 +40,7 @@ namespace qpp {
         }
 
         REAL dist (const size_t idx) {
-          vector3<float> l_s, l_e;
+          vector3<REAL> l_s, l_e;
           l_s = p_owner->m_pos +
                 p_owner->m_geom->pos(m_records[idx].at1,m_records[idx].idx1);
           l_e = p_owner->m_pos +
@@ -100,7 +100,7 @@ namespace qpp {
           ImDrawList* imdrw = ImGui::GetOverlayDrawList();
           //imdrw->AddText(ImVec2(222,200),  ImColor(1.0f, 1.0f, 1.0f, 1.0f), "SiSSSSSS");
 
-          vector3<float> l_s, l_e;
+          vector3<REAL> l_s, l_e;
           imdrw->PushClipRect(ImVec2(astate->viewport_xy_c[0], astate->viewport_xy_c[1]),
               ImVec2(astate->viewport_xy_c[0] + astate->viewport_size_c[0],
               astate->viewport_xy_c[1] + astate->viewport_size_c[1]));

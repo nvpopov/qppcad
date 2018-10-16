@@ -31,6 +31,7 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
   m_tws_tr->do_action(act_unlock);
   m_anim = std::make_unique<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >(*this);
   m_measure = std::make_unique<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> >(*this);
+  m_labels = std::make_unique<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >(*this);
   //parent->add_item_to_workspace(this->shared_from_this());
 
 }
@@ -131,6 +132,7 @@ void ws_atoms_list_t::render_ui () {
 
 void ws_atoms_list_t::render_overlay () {
   m_measure->render_overlay();
+  m_labels->render_overlay();
 }
 
 void ws_atoms_list_t::td_context_menu_edit_item () {
