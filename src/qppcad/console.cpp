@@ -7,19 +7,9 @@ using namespace qpp::cad;
 
 console_widget_t::console_widget_t (app_state_t *astate) {
 
-  m_active = false;
   m_id = uniq_id_provider::get_uniq_id();
-  m_line_height = 28;
-  m_total_com_lines = 1;
   m_output.resize(2);
-
   astate->kb_manager->connect("python_console_toggle", this, &console_widget_t::toggle_visible);
-
-  //  astate->kb_manager->connect("console_nl", this, &console_widget_t::newline_event);
-  //  astate->kb_manager->connect("console_apply", this, &console_widget_t::apply_event);
-#ifdef PYTHON_CONSOLE
-  scope = py::module::import("__main__").attr("__dict__");
-#endif
 
 }
 
@@ -30,15 +20,7 @@ void console_widget_t::toggle_visible () {
 void console_widget_t::process_command (std::string &command) {
 
   m_command = "";
-#ifdef PYTHON_CONSOLE
-  try {
-    py::exec(command, scope);
-    //m_output += py::cast<string>(s.str()) + "\n";
-  }
-  catch (const py::error_already_set&){
 
-  }
-#endif
 }
 
 void console_widget_t::render () {
@@ -119,10 +101,12 @@ void console_widget_t::render () {
 
               ImGui::PushID("command_edit_sq");
               ImGui::PushItemWidth(ImGui::GetWindowWidth()-15);
-              if (ImGui::InputText("", &m_command, ImGuiInputTextFlags_CallbackCompletion |
+              if (ImGui::InputText("", &m_command,
+                                   ImGuiInputTextFlags_CallbackCompletion |
                                    ImGuiInputTextFlags_EnterReturnsTrue |
                                    ImGuiInputTextFlags_CallbackHistory |
-                                   ImGuiInputTextFlags_CallbackAlways,
+                                   ImGuiInputTextFlags_CallbackAlways |
+                                   ImGuiInputTextFlags_CallbackCharFilter,
                                    &console_widget_t::simple_query_input_callback, this)) {
                   std::string c_output;
                   astate->sq_manager->execute(m_command, c_output);
@@ -131,6 +115,12 @@ void console_widget_t::render () {
                   m_command = "";
                   ImGui::SetKeyboardFocusHere(-1);
                 }
+
+              if (m_last_frame_inactive) {
+                  m_last_frame_inactive = false;
+                  ImGui::SetKeyboardFocusHere(-1);
+                }
+
               ImGui::PopID();
               //              ImGui::SetKeyboardFocusHere(-1);
               //              ImGui::SetItemDefaultFocus();
@@ -154,6 +144,7 @@ void console_widget_t::render () {
       ImGui::PopStyleVar();
 
     } else {
+      m_last_frame_inactive = true;
       //astate->config_vote_pool.unvote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
     }
 
@@ -161,34 +152,69 @@ void console_widget_t::render () {
 
 int console_widget_t::InputTextCallback (ImGuiInputTextCallbackData *data) {
 
-  ImGuiContext& g = *GImGui;
-  const ImGuiIO& io = g.IO;
-  //  if ((data->EventFlag & ImGuiInputTextFlags_CallBackUnfocus) !=0) {
-  //      std::cout<< "(data->EventFlag & ImGuiInputTextFlags_CallBackUnfocus)\n ";
-  //    }
+  //  ImGuiContext& g = *GImGui;
+  //  const ImGuiIO& io = g.IO;
+  //  //  if ((data->EventFlag & ImGuiInputTextFlags_CallBackUnfocus) !=0) {
+  //  //      std::cout<< "(data->EventFlag & ImGuiInputTextFlags_CallBackUnfocus)\n ";
+  //  //    }
 
-  if (data->EventKey == ImGuiKey_Enter){
-      std::string buf_cont(data->Buf);
-      static_cast<console_widget_t*>(data->UserData)->process_command(buf_cont);
-      data->DeleteChars(0, data->BufTextLen);
-    }
+  //  if (data->EventKey == ImGuiKey_Enter){
+  //      std::string buf_cont(data->Buf);
+  //      static_cast<console_widget_t*>(data->UserData)->process_command(buf_cont);
+  //      data->DeleteChars(0, data->BufTextLen);
+  //    }
 
   return -1;
 }
 
-int console_widget_t::simple_query_input_callback(ImGuiInputTextCallbackData *data){
-  //if (data->)
+int console_widget_t::simple_query_input_callback (ImGuiInputTextCallbackData *data) {
+
+  app_state_t* astate =  &(c_app::get_state());
+
   if (!data->UserData) return -1;
 
   auto cw = static_cast<console_widget_t*>(data->UserData);
 
   if (!cw) return -1;
-//  if (data->EventChar == '`') {
-//      data->DeleteChars(data->BufTextLen-1, 1);
-//      data->BufDirty = true;
-//    }
+
+  if (data->EventFlag == ImGuiInputTextFlags_CallbackCharFilter) {
+
+      if (data->EventChar == '`' || data->EventChar == '~') return 1;
+      else return 0;
+
+    }
 
   switch (data->EventFlag) {
+
+    case ImGuiInputTextFlags_CallbackCompletion: {
+
+        const char* word_end = data->Buf + data->CursorPos;
+        const char* word_start = word_end;
+
+        while (word_start > data->Buf) {
+            const char c = word_start[-1];
+            if (c == ' ' || c == '\t' || c == ',' || c == ';')
+              break;
+            word_start--;
+          }
+
+        char *newc = new char (int(word_end - word_start));
+
+        std::strcpy(newc, word_start);
+        auto &sq_m = astate->sq_manager;
+        std::optional<std::string> candidate = sq_m->auto_complete(newc);
+
+        if (candidate && cw->m_command.find(' ') == std::string::npos) {
+            data->DeleteChars((int)(word_start-data->Buf), (int)(word_end-word_start));
+            data->InsertChars(data->CursorPos, (*candidate).c_str());
+            data->InsertChars(data->CursorPos, " ");
+          }
+
+        delete newc;
+
+        break;
+
+      };
 
     case ImGuiInputTextFlags_CallbackHistory: {
 
@@ -208,12 +234,13 @@ int console_widget_t::simple_query_input_callback(ImGuiInputTextCallbackData *da
 
         if (prev_history_pos != cw->m_history_pos)
           if (!cw->m_sq_history.empty()){
-            const char* history_str =
-                (cw->m_history_pos >= 0) ? cw->m_sq_history[cw->m_history_pos].c_str() : "";
-            data->DeleteChars(0, data->BufTextLen);
-            data->InsertChars(0, history_str);
-          }
-      }
+              const char* history_str =
+                  (cw->m_history_pos >= 0) ? cw->m_sq_history[cw->m_history_pos].c_str() : "";
+              data->DeleteChars(0, data->BufTextLen);
+              data->InsertChars(0, history_str);
+            }
+        break;
+      };
 
     }
   return -1;

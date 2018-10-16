@@ -69,6 +69,7 @@ namespace qpp {
         std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
         std::unique_ptr<keyboard_manager_t>                            kb_manager;
         std::unique_ptr<simple_query_manager_t>                        sq_manager;
+
         camera_t*  camera;
         vote_pool_t<uint32_t> config_vote_pool;
 

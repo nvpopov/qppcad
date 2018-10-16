@@ -83,6 +83,26 @@ namespace qpp {
 
         }
 
+        std::optional<std::string> auto_complete(const char * data) {
+
+          size_t score = 99;
+          std::string candidate;
+
+          //if (std::string_view(data).find(" ") != std::string_view::npos) return std::nullopt;
+
+          for (auto &elem : m_commands) {
+              size_t new_score = elem.first.find(data);
+
+              if (score > new_score && new_score != std::string::npos) {
+                  score = new_score;
+                  candidate = elem.first;
+                }
+            }
+
+          if (score != 99) return std::optional<std::string>(candidate);
+          return std::nullopt;
+        }
+
         simple_query_manager_t () {
           add_command<sq_command_echo>("echo");
           add_command<sq_command_select_item>("seli");

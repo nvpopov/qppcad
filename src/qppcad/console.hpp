@@ -37,14 +37,15 @@ namespace qpp {
         float m_console_alpha{0.95f};
 
         uint32_t m_id;
-        uint8_t m_line_height;
+        uint8_t m_line_height{28};
 
-        int m_total_com_lines;
+        int m_total_com_lines{1};
         int m_total_output_lines{5};
         int m_history_pos{-1};
 
-        bool m_show_output{false};
-        bool     m_active;
+        bool m_last_frame_inactive{true};
+        bool m_show_output{true};
+        bool m_active{false};
 
         console_type_t m_console_type{console_type_t::simple_query};
 

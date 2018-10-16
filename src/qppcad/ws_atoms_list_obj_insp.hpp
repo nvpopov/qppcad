@@ -5,7 +5,7 @@
 #include <qppcad/app.hpp>
 
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-secutity"
+#pragma clang diagnostic ignored "-Wformat-security"
 
 namespace qpp {
 
