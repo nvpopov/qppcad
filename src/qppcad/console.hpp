@@ -35,7 +35,7 @@ namespace qpp {
         std::vector<std::string> m_sq_history;
 
         float m_console_alpha{0.95f};
-
+        float m_console_height{10.0f};
         uint32_t m_id;
         uint8_t m_line_height{28};
 

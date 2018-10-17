@@ -34,10 +34,10 @@ void console_widget_t::render () {
   if (m_active){
       //astate->config_vote_pool.vote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
       float console_height = (m_total_output_lines * m_line_height) * m_show_output;
-      float height = m_total_com_lines * m_line_height + console_height + 42;
+      m_console_height = m_total_com_lines * m_line_height + console_height + 42;
 
-      ImGui::SetNextWindowSize(ImVec2(astate->viewport_size_c[0], height));
-      ImGui::SetNextWindowPos(ImVec2(0, astate->viewport_size[1] - height));
+      ImGui::SetNextWindowSize(ImVec2(astate->viewport_size_c[0], m_console_height));
+      ImGui::SetNextWindowPos(ImVec2(0, astate->viewport_size[1] - m_console_height));
 
       ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
       ImGui::PushStyleColor(ImGuiCol_WindowBg, bgc);
@@ -72,11 +72,11 @@ void console_widget_t::render () {
           ImGui::SameLine();
           ImGui::SliderInt("Lines", &m_total_output_lines, 1, 30);
 
-          ImGui::SameLine();
-          ImGui::VerticalSeparator();
+//          ImGui::SameLine();
+//          ImGui::VerticalSeparator();
 
-          ImGui::SameLine();
-          ImGui::SliderFloat("Transparency", &m_console_alpha, 0.1f, 1.0f);
+//          ImGui::SameLine();
+//          ImGui::SliderFloat("Transparency", &m_console_alpha, 0.1f, 1.0f);
 
           ImGui::SameLine();
           ImGui::VerticalSeparator();

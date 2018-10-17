@@ -46,11 +46,12 @@ namespace qpp {
           ImDrawList* imdrw = ImGui::GetOverlayDrawList();
           imdrw->PushClipRect(ImVec2(astate->viewport_xy_c[0], astate->viewport_xy_c[1]),
               ImVec2(astate->viewport_xy_c[0] + astate->viewport_size_c[0],
-              astate->viewport_xy_c[1] + astate->viewport_size_c[1]));
+              astate->viewport_xy_c[1] + astate->viewport_size_c[1] -
+              astate->ui_manager->console_widget->m_console_height));
 
           std::optional<vector2<REAL> > proj_pos;
           for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
-              proj_pos = astate->camera->project (p_owner->m_geom->pos(i));
+              proj_pos = astate->camera->project(p_owner->m_pos + p_owner->m_geom->pos(i));
 
               std::string label;/* = fmt::format("{}", i);*/
 

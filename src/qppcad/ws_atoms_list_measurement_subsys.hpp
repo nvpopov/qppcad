@@ -103,7 +103,8 @@ namespace qpp {
           vector3<REAL> l_s, l_e;
           imdrw->PushClipRect(ImVec2(astate->viewport_xy_c[0], astate->viewport_xy_c[1]),
               ImVec2(astate->viewport_xy_c[0] + astate->viewport_size_c[0],
-              astate->viewport_xy_c[1] + astate->viewport_size_c[1]));
+              astate->viewport_xy_c[1] + astate->viewport_size_c[1]-
+              astate->ui_manager->console_widget->m_console_height));
 
           for (auto &record : m_records)
             if (record.m_show) {
