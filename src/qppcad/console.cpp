@@ -8,7 +8,6 @@ using namespace qpp::cad;
 console_widget_t::console_widget_t (app_state_t *astate) {
 
   m_id = uniq_id_provider::get_uniq_id();
-  m_output.resize(2);
   astate->kb_manager->connect("python_console_toggle", this, &console_widget_t::toggle_visible);
 
 }

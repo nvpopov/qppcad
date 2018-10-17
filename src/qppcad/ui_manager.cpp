@@ -5,12 +5,14 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-ui_manager_t::ui_manager_t (app_state_t *init_app_state) {
+ui_manager_t::ui_manager_t (app_state_t *astate) {
 
-  console_widget = std::make_unique<console_widget_t>(init_app_state);
+  console_widget = std::make_unique<console_widget_t>(astate);
+  sc_widget = std::make_unique<super_cell_widget_t>(astate);
+
   m_rename_ws_id = uniq_id_provider::get_uniq_id();
   setup_style();
-  init_app_state->kb_manager->connect("edit_mode_toggle", this, &ui_manager_t::toggle_edit_mode);
+  astate->kb_manager->connect("edit_mode_toggle", this, &ui_manager_t::toggle_edit_mode);
 
 }
 
@@ -25,18 +27,18 @@ void ui_manager_t::toggle_edit_mode () {
 void ui_manager_t::setup_style () {
 
   ImGuiStyle * style = &ImGui::GetStyle();
-  style->FrameRounding = 3.0f;
+  style->FrameRounding = 2.0f;
   //style->
-  style->ScrollbarRounding = 2.0f;
-  style->FrameBorderSize = 1.0f;
+  style->ScrollbarRounding = 1.0f;
+  style->FrameBorderSize = 0.2f;
   style->Colors[ImGuiCol_Text]                  = {0.99333335f, 0.99333335f, 0.99333335f, 1.00f};
   style->Colors[ImGuiCol_TextDisabled]          = {0.34509805f, 0.34509805f, 0.34509805f, 1.00f};
-  style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
-  style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
-  style->Colors[ImGuiCol_PopupBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 0.94f};
+  style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
+  style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
+  style->Colors[ImGuiCol_PopupBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
   style->Colors[ImGuiCol_Border]                = {0.33333334f, 0.33333334f, 0.33333334f, 0.90f};
   style->Colors[ImGuiCol_BorderShadow]          = {0.15686275f, 0.15686275f, 0.15686275f, 0.00f};
-  style->Colors[ImGuiCol_FrameBg]               = {0.18529413f, 0.18705884f, 0.18490198f, 0.94f};
+  style->Colors[ImGuiCol_FrameBg]               = {0.18529413f, 0.18705884f, 0.18490198f, 1.00f};
   style->Colors[ImGuiCol_FrameBgHovered]        = {0.453125f, 0.67578125f, 0.99609375f, 0.97f};
   style->Colors[ImGuiCol_FrameBgActive]         = {0.47058827f, 0.47058827f, 0.47058827f, 0.97f};
   style->Colors[ImGuiCol_TitleBg]               = {0.04f, 0.04f, 0.04f, 1.00f};
@@ -210,8 +212,7 @@ void ui_manager_t::render_main_menu(){
         }
 
       if (ImGui::BeginMenu("Tools")){
-          ImGui::MenuItem("Tool1");
-          ImGui::MenuItem("Tool2");
+          ImGui::MenuItem("Supercell generation");
           ImGui::EndMenu();
         }
 

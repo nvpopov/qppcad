@@ -107,9 +107,9 @@ bool sq_command_translate_selected::execute (std::vector<std::string_view> &comm
           if (sel_as_wsl) {
               try {
                 float amount = std::stof(commands_list[1].data());
-//                if (sel_as_wsl->select_atom(i))
-//                  output += fmt::format("Atom {} was selected\n", i);
-//                else output += fmt::format("Wrong index {}\n", i);
+                //                if (sel_as_wsl->select_atom(i))
+                //                  output += fmt::format("Atom {} was selected\n", i);
+                //                else output += fmt::format("Wrong index {}\n", i);
                 sel_as_wsl->translate_selected(p_axis * amount);
                 return true;
               }
@@ -125,4 +125,27 @@ bool sq_command_translate_selected::execute (std::vector<std::string_view> &comm
 
 sq_command_translate_selected::sq_command_translate_selected (const vector3<float> axis) {
   p_axis = axis;
+}
+
+bool sq_command_make_super_cell::execute (std::vector<std::string_view> &commands_list,
+                                          std::string &output) {
+  app_state_t *astate = &(c_app::get_state());
+  auto cur_ws = astate->ws_manager->get_current();
+
+  if (cur_ws) {
+      auto sel_itm = cur_ws->get_selected();
+      auto sel_as_wsl = dynamic_cast<ws_atoms_list_t*>(sel_itm);
+      if (sel_as_wsl) {
+          //std::cout << "COMMAND LIST SIZE " << commands_list.size() << std::endl;
+          int a = std::stoi(commands_list[1].data());
+          int b = std::stoi(commands_list[2].data());
+          int c = std::stoi(commands_list[3].data());
+          sel_as_wsl->make_super_cell(a,b,c);
+          astate->make_viewport_dirty();
+          return true;
+        }
+    }
+
+  return false;
+
 }

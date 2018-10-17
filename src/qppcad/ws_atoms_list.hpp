@@ -87,7 +87,7 @@ namespace qpp {
         void update_atom(const int at_id, const std::string &at_name);
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
-
+        void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);
         bool support_translation() override;
         bool support_rotation() override;
         bool support_scaling() override;

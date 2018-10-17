@@ -16,6 +16,11 @@ namespace qpp {
     };
 
 
+    class sq_command_make_super_cell : public simple_query_command_t {
+      public:
+        bool execute (std::vector<std::string_view> &commands_list, std::string &output) override ;
+    };
+
     class sq_command_select_item : public simple_query_command_t {
       public:
         bool execute (std::vector<std::string_view> &commands_list, std::string &output) override ;
@@ -112,6 +117,7 @@ namespace qpp {
           add_command<sq_command_translate_selected>("tx", vector3<float>{1.0f, 0.0f, 0.0f});
           add_command<sq_command_translate_selected>("ty", vector3<float>{0.0f, 1.0f, 0.0f});
           add_command<sq_command_translate_selected>("tz", vector3<float>{0.0f, 0.0f, 1.0f});
+          add_command<sq_command_make_super_cell>("sc");
         }
 
     };

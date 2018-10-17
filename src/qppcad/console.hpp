@@ -30,7 +30,7 @@ namespace qpp {
         py::object scope;
 #endif
       public:
-        std::vector<std::string> m_output;
+        std::array<std::string, 2> m_output;
         std::string m_command;
         std::vector<std::string> m_sq_history;
 
@@ -49,7 +49,7 @@ namespace qpp {
 
         console_type_t m_console_type{console_type_t::simple_query};
 
-        console_widget_t(app_state_t *init_app_state);
+        console_widget_t(app_state_t *astate);
         void toggle_visible();
         void process_command(std::string &command);
         void render();

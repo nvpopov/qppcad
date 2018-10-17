@@ -96,6 +96,7 @@ namespace qpp {
 
               ImGui::EndGroup();
               ImGui::PopStyleVar();
+              ImGui::Spacing();
             }
 
 
@@ -140,6 +141,7 @@ namespace qpp {
 
               if (ImGui::ColorEdit3("Cell ", al.m_cell_color.data()))
                 astate->make_viewport_dirty();
+              ImGui::Spacing();
 
             }
 
@@ -183,6 +185,8 @@ namespace qpp {
                       }
                     ImGui::Spacing();
                   }
+
+              ImGui::Spacing();
 
               if (rebuild_ngb) {
                   al.m_tws_tr->do_action(act_rebuild_ntable);

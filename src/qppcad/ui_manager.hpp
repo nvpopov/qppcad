@@ -11,6 +11,7 @@
 #include <imgui_impl_opengl3.h>
 #include <qppcad/imgui_addons.hpp>
 #include <qppcad/console.hpp>
+#include <qppcad/super_cell_widget.hpp>
 
 namespace qpp {
 
@@ -24,6 +25,7 @@ namespace qpp {
 
         vector3<float> explicit_translation;
         std::unique_ptr<console_widget_t> console_widget;
+        std::unique_ptr<super_cell_widget_t> sc_widget;
         int work_panel_height{38};
         int work_panel_yoffset{28};
         int obj_insp_width{350};
@@ -31,7 +33,8 @@ namespace qpp {
         char s_rename_workspace_name[60];
         bool show_rename_workspace_dialog{false};
 
-        ui_manager_t(app_state_t *init_app_state);
+        ui_manager_t(app_state_t *astate);
+
         void toggle_edit_mode();
         void setup_style();
         void render_ui();

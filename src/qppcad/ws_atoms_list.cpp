@@ -315,6 +315,44 @@ void ws_atoms_list_t::delete_selected_atoms () {
 
 }
 
+void ws_atoms_list_t::make_super_cell (const int a_steps,
+                                       const int b_steps,
+                                       const int c_steps) {
+  if (!parent_ws) return;
+  if (m_geom->DIM != 3) return;
+
+  std::shared_ptr<ws_atoms_list_t> sc_al = std::make_shared<ws_atoms_list_t>();
+  sc_al->m_geom->DIM = 3;
+  sc_al->m_geom->cell.DIM = 3;
+
+  //sc_al->set_parent_workspace(parent_ws);
+  sc_al->m_tws_tr->do_action(act_lock | act_clear_all);
+
+  sc_al->m_geom->cell.v[0] = m_geom->cell.v[0] * (a_steps + 1);
+  sc_al->m_geom->cell.v[1] = m_geom->cell.v[1] * (b_steps + 1);
+  sc_al->m_geom->cell.v[2] = m_geom->cell.v[2] * (c_steps + 1);
+
+  for (auto i = 0; i < m_geom->nat(); i++)
+    for (auto a = 0; a <= a_steps; a++)
+      for (auto b = 0; b <= b_steps; b++)
+        for (auto c = 0; c <= c_steps; c++) {
+            index new_atom_index{a,b,c};
+            vector3<float> new_atom_pos = m_geom->pos(i, new_atom_index);
+            sc_al->m_geom->add(m_geom->atom(i), new_atom_pos);
+          }
+
+  sc_al->m_pos = m_pos + m_geom->cell.v[0];
+
+  sc_al->m_name = m_name + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps);
+
+  parent_ws->add_item_to_workspace(sc_al);
+
+
+
+  sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  sc_al->geometry_changed();
+}
+
 bool ws_atoms_list_t::support_translation () { return true; }
 
 bool ws_atoms_list_t::support_rotation () { return false; }

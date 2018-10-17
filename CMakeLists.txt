@@ -74,6 +74,7 @@ add_executable(qppcad
     src/qppcad/file_dialog.cpp
     src/qppcad/imgui_addons.cpp
     src/qppcad/console.cpp
+    src/qppcad/super_cell_widget.cpp
     src/qppcad/simple_query.cpp
     src/qppcad/uniq_id.cpp
     deps/imgui/misc/freetype/imgui_freetype.cpp
