@@ -29,7 +29,9 @@ namespace qpp {
     };
 
     class gizmo_t {
+
       public:
+
         vector3<float> pos;
         vector3<float> accum_translate;
         float gizmo_box_size;
@@ -45,8 +47,10 @@ namespace qpp {
         ws_item_t *attached_item;
 
         template<typename REAL>
-        bool process_ray(ray_t<REAL> *ray){
+        bool process_ray (ray_t<REAL> *ray) {
+
           bool _gizmo_touched = false;
+
           if (ray) {
               touched_axis = 4;
               for(uint8_t i = 0; i < 3; i++){
@@ -60,16 +64,20 @@ namespace qpp {
                     bx_touched[i] = false;
                 }
             }
+
           return _gizmo_touched;
+
         }
 
-        void translate_attached(float delta_time);
-        void clear_selected_axis();
-        void update_gizmo(float delta_time);
-        void render();
+        void translate_attached (float delta_time);
+        void clear_selected_axis ();
+        void update_gizmo (float delta_time);
+        void render ();
 
-        gizmo_t();
+        gizmo_t ();
     };
+
   }
+
 }
 #endif

@@ -18,24 +18,23 @@ namespace qpp {
     class app_state_t;
 
     class ws_item_t  {
+
       public:
-        std::shared_ptr<workspace_t> parent_ws{};
+
+        workspace_t *parent_ws{};
         app_state_t *app_state_c;
         std::string      m_name;
         aabb_3d_t<float> m_aabb;
         vector3<float>   m_pos_old;
-        vector3<float>   m_pos; ///
-        vector3<float>   m_scale; ///
-        vector3<float>   m_rotation; ///
+        vector3<float>   m_pos{0.0f, 0.0f, 0.0f}; ///
+        vector3<float>   m_scale{1.0f, 1.0f, 1.0f}; ///
+        vector3<float>   m_rotation{1.0f, 1.0f, 1.0f}; ///
         vector3<float>   explicit_translation;
-        bool             m_is_visible; ///
-        bool             m_draw_cell; ///
-        bool             m_selected; ///
-        bool             m_hide_gizmo_trigger;
-
-        /// \brief ws_item_t
-        /// \param parent
-        ws_item_t();
+        bool             m_is_visible{true}; ///
+        bool             m_draw_cell{true}; ///
+        bool             m_selected{false}; ///
+        bool             m_hide_gizmo_trigger{false};
+        bool             m_marked_for_deletion{false};
 
         /// \brief vote_for_view_vectors
         /// \param vOutLookPos
@@ -45,7 +44,7 @@ namespace qpp {
 
         /// \brief set_parent_workspace
         /// \param _parent_ws
-        void set_parent_workspace(const std::shared_ptr<workspace_t> _parent_ws);
+        void set_parent_workspace(workspace_t *_parent_ws);
 
         /// \brief get_name
         /// \return
@@ -122,11 +121,6 @@ namespace qpp {
         /// \return
         ///
         virtual const vector3<float> get_gizmo_content_barycenter() = 0;
-
-        ///
-        /// \brief ~ws_item_t
-        ///
-        virtual ~ws_item_t(){ }
 
         virtual void on_begin_node_gizmo_translate();
         virtual void on_end_node_gizmo_translate();

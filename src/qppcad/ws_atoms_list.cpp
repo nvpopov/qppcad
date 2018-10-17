@@ -735,3 +735,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
 
 }
 
+//ws_atoms_list_t::~ws_atoms_list_t () {
+
+//}
+

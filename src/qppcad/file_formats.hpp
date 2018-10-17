@@ -10,7 +10,8 @@ namespace qpp{
       advanced_xyz,
       multi_frame_xyz,
       vasp_poscar,
-      vasp_outcar_md
+      vasp_outcar_md,
+      cp2k_coord_cell_section
     };
 
     struct qc_file_fmt_helper {

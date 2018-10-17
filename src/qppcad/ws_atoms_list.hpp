@@ -123,9 +123,6 @@ namespace qpp {
         void write_to_json(json &data) override;
         void read_from_json(json &data) override;
 
-        ~ws_atoms_list_t() override {
-
-        }
 
     };
 

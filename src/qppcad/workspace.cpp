@@ -181,7 +181,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
 void workspace_t::add_item_to_workspace (const std::shared_ptr<ws_item_t> &item_to_add) {
 
-  item_to_add->set_parent_workspace(shared_from_this());
+  item_to_add->set_parent_workspace(this);
   m_ws_items.push_back(item_to_add);
   workspace_changed();
   c_app::log(fmt::format("New workspace {} size = {}", m_ws_name, m_ws_items.size()));
@@ -273,6 +273,24 @@ void workspace_t::update (float delta_time) {
     }
 
   m_gizmo->update_gizmo(delta_time);
+
+  //handle deletion
+  for (auto it = m_ws_items.begin(); it != m_ws_items.end(); ) {
+      if ((*it)->m_marked_for_deletion) {
+          //(*it).reset();
+          if (it->get() == m_gizmo->attached_item)
+            m_gizmo->attached_item = nullptr;
+
+          it = m_ws_items.erase(it);
+          workspace_changed();
+
+        }
+      else {
+          ++it;
+        }
+    }
+
+  //update cycle
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
 
 }
@@ -451,12 +469,14 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_f
 
 }
 
-void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_workspace){
+void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_workspace) {
+
   auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
   m_ws.push_back(new_ws);
 
   if (switch_to_new_workspace) set_current(m_ws.size()-1);
+
 }
 
 void workspace_manager_t::dialog_load_workspace () {
