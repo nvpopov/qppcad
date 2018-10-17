@@ -7,6 +7,7 @@
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
+#include <io/cp2k.hpp>
 #include <io/xyz_multiframe.hpp>
 #include <clocale>
 
@@ -341,13 +342,11 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
             sc_al->m_geom->add(m_geom->atom(i), new_atom_pos);
           }
 
-  sc_al->m_pos = m_pos + m_geom->cell.v[0];
+  sc_al->m_pos = m_pos + m_geom->cell.v[0] * 1.4f;
 
   sc_al->m_name = m_name + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps);
 
   parent_ws->add_item_to_workspace(sc_al);
-
-
 
   sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
   sc_al->geometry_changed();
@@ -514,6 +513,40 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       parent_ws->workspace_changed();
     }
 
+}
+
+void ws_atoms_list_t::save_to_file (qc_file_fmt file_format, std::string file_name) {
+
+  std::setlocale(LC_ALL, "C");
+  c_app::log(fmt::format("Saving geometry[{}] to file {} from workspace {}",
+                         m_name, file_name, parent_ws->m_ws_name));
+
+  std::ofstream output(file_name);
+  if (output) {
+      switch (file_format) {
+
+        case qc_file_fmt::standart_xyz: {
+            write_xyz(output, *m_geom);
+            break;
+          };
+
+        case qc_file_fmt::vasp_poscar: {
+            write_vasp_poscar(output, *m_geom);
+            break;
+          };
+
+        case qc_file_fmt::cp2k_coord_cell_section : {
+            write_cp2k_coord_section(output, *m_geom);
+            break;
+          }
+
+        default : {
+            c_app::log(fmt::format("Saving geomtery -> file format[{}] not supported",file_format));
+            break;
+          }
+        }
+
+    }
 }
 
 string ws_atoms_list_t::get_ws_item_class_name () {
@@ -727,13 +760,24 @@ void ws_atoms_list_t::read_from_json (json &data) {
 
   //reading measurement subsystem
 
-  //
-
-
   geometry_changed();
   m_tws_tr->do_action(act_unlock | act_build_all);
 
 }
+
+void ws_atoms_list_t::dialog_save_to_file (qc_file_fmt file_format) {
+
+  app_state_t *astate = &(c_app::get_state());
+
+  std::string filter{""};
+  bool succes{false};
+
+  std::string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
+  if (!succes) return;
+  save_to_file(file_format, _tmp_fs_path);
+
+}
+
 
 //ws_atoms_list_t::~ws_atoms_list_t () {
 

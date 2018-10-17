@@ -135,7 +135,7 @@ bool sq_command_make_super_cell::execute (std::vector<std::string_view> &command
   if (cur_ws) {
       auto sel_itm = cur_ws->get_selected();
       auto sel_as_wsl = dynamic_cast<ws_atoms_list_t*>(sel_itm);
-      if (sel_as_wsl) {
+      if (sel_as_wsl && commands_list.size() >= 3) {
           //std::cout << "COMMAND LIST SIZE " << commands_list.size() << std::endl;
           int a = std::stoi(commands_list[1].data());
           int b = std::stoi(commands_list[2].data());

@@ -116,13 +116,15 @@ namespace qpp {
         /// \param eFileFormat
         /// \param sFileName
         /// \param bAutoCenter
-        void load_from_file(qc_file_fmt file_format, std::string file_name,
+        void load_from_file (qc_file_fmt file_format, std::string file_name,
                             bool auto_center = false);
+        void save_to_file (qc_file_fmt file_format, std::string file_name);
 
         std::string get_ws_item_class_name() override ;
         void write_to_json(json &data) override;
         void read_from_json(json &data) override;
 
+        void dialog_save_to_file(qc_file_fmt file_format);
 
     };
 

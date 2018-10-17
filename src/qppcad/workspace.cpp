@@ -206,6 +206,7 @@ void workspace_t::dialog_add_geom_from_file (qc_file_fmt file_format) {
 
 }
 
+
 void workspace_t::save_workspace_to_json (const std::string filename) {
 
   std::ofstream out_file(filename);

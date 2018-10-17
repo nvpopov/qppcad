@@ -352,15 +352,22 @@ namespace qpp {
             }
           // end animation bloc
 
-          if (ImGui::CollapsingHeader("Export")){
-              if (ImGui::Button("VASP POSCAR")){
-
+          if (ImGui::CollapsingHeader("Export")) {
+              ImGui::Spacing();
+              if (ImGui::Button("VASP POSCAR")) {
+                  al.dialog_save_to_file(qc_file_fmt::vasp_poscar);
                 }
 
               ImGui::SameLine();
-              if (ImGui::Button("XYZ")){
-
+              if (ImGui::Button("XYZ")) {
+                  al.dialog_save_to_file(qc_file_fmt::standart_xyz);
                 }
+
+              ImGui::SameLine();
+              if (ImGui::Button("CP2K coord.")) {
+                  al.dialog_save_to_file(qc_file_fmt::cp2k_coord_cell_section);
+                }
+              ImGui::Spacing();
             }
 
         }

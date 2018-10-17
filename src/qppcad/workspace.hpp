@@ -98,8 +98,8 @@ namespace qpp {
         void load_workspace_from_json(const std::string filename);
         void update(float delta_time);
         void set_edit_type(const ws_edit_type new_edit_type);
-    };
 
+    };
 
     struct ws_item_factory {
 
