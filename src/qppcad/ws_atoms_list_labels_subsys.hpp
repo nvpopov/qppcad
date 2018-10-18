@@ -34,8 +34,8 @@ namespace qpp {
         }
 
         void render_ui () {
-          const char* items[] = { "None", "Show ID", "Show Type", "Show ID and Type"};
-          ImGui::Combo("Labels style", reinterpret_cast<int*>(&m_style), items, 4);
+          const char* items[] = { "None", "ID", "Type", "ID and Type"};
+          ImGui::Combo("Labels", reinterpret_cast<int*>(&m_style), items, 4);
         }
 
         void render_overlay () {

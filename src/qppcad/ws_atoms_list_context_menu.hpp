@@ -88,7 +88,7 @@ namespace qpp {
 
                   if (ImGui::BeginMenu("Barycentric n-atom scale")) {
                       static float uniform_scale{0.9f};
-                      ImGui::SliderFloat("Uniform scale amount", &uniform_scale, 0.001f, 1.0f);
+                      ImGui::SliderFloat("Uniform scale amount", &uniform_scale, 0.001f, 2.0f);
 
                       if (ImGui::Button("Apply scaling")) {
                           vector3<float> center{0.0f, 0.0f, 0.0f};
