@@ -196,7 +196,13 @@ namespace qpp {
               light_pos_tr = mat4_to_mat3<float>(camera->m_mat_view) * light_pos;
             }
 
-          if (!ws_manager->has_wss()) show_object_inspector = false;
+          if (!ws_manager->has_wss()) {
+              if (show_object_inspector) {
+                  viewport_changed = true;
+                }
+              show_object_inspector = false;
+            }
+
           auto cur_ws = ws_manager->get_current();
           if (cur_ws) cur_ws->update(delta_time);
 

@@ -80,11 +80,33 @@ namespace qpp {
                     }
                 }
 
-              if (al.m_atom_sel.size() > 0)
-                if (ImGui::MenuItem(fmt::format("Delete selected atoms({})",
-                                                al.m_atom_sel.size()).c_str())){
-                    al.delete_selected_atoms();
-                  }
+              if (al.m_atom_sel.size() > 0) {
+                  if (ImGui::MenuItem(fmt::format("Delete selected atoms({})",
+                                                  al.m_atom_sel.size()).c_str())){
+                      al.delete_selected_atoms();
+                    }
+
+                  if (ImGui::BeginMenu("Barycentric n-atom scale")) {
+                      static float uniform_scale{0.9f};
+                      ImGui::SliderFloat("Uniform scale amount", &uniform_scale, 0.001f, 1.0f);
+
+                      if (ImGui::Button("Apply scaling")) {
+                          vector3<float> center{0.0f, 0.0f, 0.0f};
+                          for (auto &rec : al.m_atom_sel) center += al.m_geom->pos(rec);
+                          center /= al.m_atom_sel.size();
+
+                          for (auto &rec : al.m_atom_sel) {
+                              vector3<float> new_pos_dist = center - al.m_geom->pos(rec);
+                              vector3<float> new_pos = al.m_geom->pos(rec) +
+                                                       (1-uniform_scale) * new_pos_dist ;
+                              al.update_atom(rec, new_pos);
+                            }
+                        }
+
+                      ImGui::EndMenu();
+                    }
+
+                }
 
               ImGui::Separator();
 

@@ -269,7 +269,8 @@ void ui_manager_t::render_main_menu(){
       ImGui::PopID();
 
       for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
-      if (ui_cur_ws_exact != *astate->ws_manager->get_current_id()){
+      if (ui_cur_ws_exact != *astate->ws_manager->get_current_id()
+          && astate->ws_manager->has_wss()){
           astate->ws_manager->set_current(ui_cur_ws_exact);
           astate->make_viewport_dirty();
         }

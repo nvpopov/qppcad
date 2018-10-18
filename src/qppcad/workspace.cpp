@@ -354,8 +354,9 @@ bool workspace_manager_t::set_current (const size_t ws_index) {
 void workspace_manager_t::init_default () {
 
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
-  if (!test_in_dev_env.good()) return;
-
+  if (!test_in_dev_env.good()) {
+      return;
+    }
 
   auto _ws2 = std::make_shared<workspace_t>();
   _ws2->m_ws_name = "d2";
