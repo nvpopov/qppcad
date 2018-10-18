@@ -58,6 +58,7 @@ if(NOT OPENGL_FOUND)
     message("ERROR: OpenGL not found")
 endif(NOT OPENGL_FOUND)
 set(GL_LIBRARY GL  X11)
+
 add_executable(qppcad
     src/qppcad/main.cpp
     src/qppcad/mesh.cpp
@@ -86,6 +87,9 @@ add_executable(qppcad
     deps/imgui/imgui.cpp
     deps/imgui/imgui_widgets.cpp
     deps/imgui/imgui_draw.cpp)
+
+add_executable(bin2compc deps/imgui/misc/fonts/binary_to_compressed_c.cpp)
+
 if(PYTHON_BINDINGS)
 add_definitions(-DPYTHON_CONSOLE)
 target_link_libraries(qppcad qpp ${glfw_LIBRARIES} ${GL_LIBRARY}
