@@ -322,7 +322,7 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_current () {
 
-  if (m_current_workspace_id > m_ws.size()) return nullptr;
+  if (m_current_workspace_id >= m_ws.size()) return nullptr;
   return m_ws[m_current_workspace_id];
 
 }
@@ -352,6 +352,10 @@ bool workspace_manager_t::set_current (const size_t ws_index) {
 }
 
 void workspace_manager_t::init_default () {
+
+  std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
+  if (!test_in_dev_env.good()) return;
+
 
   auto _ws2 = std::make_shared<workspace_t>();
   _ws2->m_ws_name = "d2";

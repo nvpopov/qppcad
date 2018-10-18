@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <thread>
 #include <args.hxx>
+#include <qppcad/font.inc>
 
 void
 MessageCallback ( GLenum source,
@@ -141,7 +142,9 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   ImFontConfig config;
   config.MergeMode = true;*/
 
-  io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",17.0f);
+  //io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",17.0f);
+  io.Fonts->AddFontFromMemoryCompressedTTF((void*)fontmem_compressed_data, fontmem_compressed_size, 17.0f);
+
   unsigned int flags = ImGuiFreeType::ForceAutoHint;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
