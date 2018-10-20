@@ -43,6 +43,7 @@ namespace qpp {
         void render_object_inspector();
         void render_3d_viewport_context_menu();
         void render_mtable_big();
+        void render_start_page();
 
     };
 

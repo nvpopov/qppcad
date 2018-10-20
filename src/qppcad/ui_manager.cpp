@@ -72,17 +72,21 @@ void ui_manager_t::setup_style () {
   style->Colors[ImGuiCol_TextSelectedBg]        = {0.18431373f, 0.39607847f, 0.79215693f, 0.90f};
 }
 
-void ui_manager_t::render_ui(){
+void ui_manager_t::render_ui() {
+
+  app_state_t* astate = &(c_app::get_state());
+
   render_main_menu();
-  //render_task_panel();
-  if(c_app::get_state().cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
+
+  if (c_app::get_state().cur_task == app_task_type::TASK_WORKSPACE_EDITOR){
       render_work_panel();
       // render_ws_tabs();
       render_3d_viewport_context_menu();
       if (c_app::get_state().show_object_inspector) render_object_inspector();
+      if (!astate->ws_manager->has_wss()) render_start_page();
     }
 
-  if(c_app::get_state().cur_task == app_task_type::TASK_MENDELEY_TABLE){
+  if (c_app::get_state().cur_task == app_task_type::TASK_MENDELEY_TABLE){
       render_mtable_big();
     }
 
@@ -102,14 +106,10 @@ void ui_manager_t::render_main_menu(){
   if (ImGui::BeginMainMenuBar()){
 
       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6,6));
-      if (ImGui::BeginMenu("File")){
-          if (ImGui::MenuItem("New", "Ctrl + N")){
-              astate->ws_manager->query_create_new_workspace();
-            }
+      if (ImGui::BeginMenu("File")) {
 
-          if (ImGui::MenuItem("Open", "Ctrl + O")){
-              astate->ws_manager->dialog_load_workspace();
-            }
+          if (ImGui::MenuItem("New", "Ctrl + N")) astate->ws_manager->query_create_new_workspace();
+          if (ImGui::MenuItem("Open", "Ctrl + O")) astate->ws_manager->dialog_load_workspace();
 
           ImGui::Separator();
           if (ImGui::BeginMenu("Import")){
@@ -227,67 +227,60 @@ void ui_manager_t::render_main_menu(){
 
 
       ImGui::Separator();
+
       int e_task = c_app::get_state().cur_task;
 
-      //      ImGui::Separator();
-      //      ImGui::SameLine();
-      //      //ImGui::Set
-      //      ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5,15));
-      //      ImGui::RadioButton("Workspace editor", &e_task,
-      //                         int(app_task_type::TASK_WORKSPACE_EDITOR));
-      //      ImGui::SameLine();
-      //      ImGui::RadioButton("Node editor", &e_task,
-      //                         int(app_task_type::TASK_NODE_EDITOR));
+      bool has_ws = astate->ws_manager->has_wss();
 
-      //      c_app::get_state().cur_task = app_task_type(e_task);
-      //      ImGui::Separator();
-      //      ImGui::SameLine();
-
-      //      ImGui::PopStyleVar();
-
-      //
       std::optional<size_t> ui_cur_ws = astate->ws_manager->get_current_id();
       int ui_cur_ws_exact = -1;
       if (ui_cur_ws) ui_cur_ws_exact = *ui_cur_ws;
 
       //TODO We need to reinvent the wheel vec<string> - > vec<char*>
-      std::vector<std::string>  vStr;
-      vStr.reserve(20);
-      std::vector<char*>  vChar;
-      for (size_t i = 0; i < astate->ws_manager->m_ws.size(); i++)
-        vStr.push_back(astate->ws_manager->m_ws[i]->m_ws_name);
-      std::transform(vStr.begin(), vStr.end(),
-                     std::back_inserter(vChar),
-                     vec_str_to_char);
 
-      ImGui::PushItemWidth(200);
-      ImGui::PushID(1);
-      if (ImGui::Combo("", &ui_cur_ws_exact, vChar.data(), astate->ws_manager->m_ws.size())){
-          astate->make_viewport_dirty();
-        }
-      ImGui::PopItemWidth();
-      ImGui::PopID();
+      if (has_ws) {
+          std::vector<std::string>  vStr;
+          vStr.reserve(20);
+          std::vector<char*>  vChar;
+          for (size_t i = 0; i < astate->ws_manager->m_ws.size(); i++)
+            vStr.push_back(astate->ws_manager->m_ws[i]->m_ws_name);
+          std::transform(vStr.begin(), vStr.end(),
+                         std::back_inserter(vChar),
+                         vec_str_to_char);
 
-      for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
-      if (ui_cur_ws_exact != *astate->ws_manager->get_current_id()
-          && astate->ws_manager->has_wss()){
-          astate->ws_manager->set_current(ui_cur_ws_exact);
-          astate->make_viewport_dirty();
+          ImGui::PushItemWidth(200);
+          ImGui::PushID(1);
+
+          if (ImGui::Combo("", &ui_cur_ws_exact, vChar.data(), astate->ws_manager->m_ws.size())) {
+              astate->make_viewport_dirty();
+            }
+
+          ImGui::PopItemWidth();
+          ImGui::PopID();
+
+          for ( size_t i = 0 ; i < vChar.size() ; i++ ) delete [] vChar[i];
+          if (ui_cur_ws_exact != *astate->ws_manager->get_current_id()
+              && astate->ws_manager->has_wss()){
+              astate->ws_manager->set_current(ui_cur_ws_exact);
+              astate->make_viewport_dirty();
+            }
+          //
         }
-      //
 
       if (ImGui::Button("+")){
           astate->ws_manager->query_create_new_workspace();
         }
 
-      if (ImGui::Button("-")){
+      if (has_ws) {
+          if (ImGui::Button("-")){
 
-        }
+            }
 
-      if (ImGui::Button("R")){
-          show_rename_workspace_dialog = true;
-          if (astate->ws_manager->has_wss())
-            strcpy(s_rename_workspace_name, astate->ws_manager->get_current()->m_ws_name.c_str());
+          if (ImGui::Button("R")){
+              show_rename_workspace_dialog = true;
+              if (astate->ws_manager->has_wss())
+                strcpy(s_rename_workspace_name, astate->ws_manager->get_current()->m_ws_name.c_str());
+            }
         }
 
       ImGui::Separator();
@@ -617,6 +610,40 @@ void ui_manager_t::render_mtable_big () {
                ImGuiWindowFlags_NoMove |
                ImGuiWindowFlags_NoResize |
                ImGuiWindowFlags_NoCollapse);
+
+  ImGui::End();
+
+}
+
+void ui_manager_t::render_start_page () {
+
+  app_state_t* astate = &(c_app::get_state());
+
+  ImGui::SetNextWindowSize(ImVec2(300, 200));
+
+  ImGui::SetNextWindowPos(ImVec2(c_app::get_state().viewport_size(0) * (1-0.25f) * 0.5f,
+                                 c_app::get_state().viewport_size(1) * (1-0.25f) * 0.5f));
+
+
+  ImGui::Begin("Start screen", nullptr,
+               ImGuiWindowFlags_NoMove |
+               ImGuiWindowFlags_NoResize |
+               ImGuiWindowFlags_NoCollapse);
+
+  ImGui::BulletText("Welcome to qpp::cad");
+  ImGui::BulletText("Version : v0.1.a");
+
+  ImVec2 _button_size{284,30};
+
+  ImGui::Spacing();
+  ImGui::Spacing();
+
+  if (ImGui::Button("Create new workspace", _button_size))
+    astate->ws_manager->query_create_new_workspace();
+
+  if (ImGui::Button("Open workspace", _button_size)) astate->ws_manager->dialog_load_workspace();
+
+  ImGui::Button("Help", _button_size);
 
   ImGui::End();
 

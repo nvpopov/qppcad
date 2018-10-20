@@ -413,18 +413,19 @@ void workspace_manager_t::init_default () {
 
 void workspace_manager_t::render_current_workspace () {
 
-  if (has_wss()){
-      if (m_current_workspace_id < m_ws.size()){
+  if (has_wss()) {
+      if (m_current_workspace_id < m_ws.size()) {
           glClearColor(m_ws[m_current_workspace_id]->m_background_color[0],
               m_ws[m_current_workspace_id]->m_background_color[1],
               m_ws[m_current_workspace_id]->m_background_color[2], 1);
           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
           m_ws[m_current_workspace_id]->render();
-        } else {
-          glClearColor(0.8f, 0.8f, 0.8f, 1);
-          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+          return ;
         }
     }
+
+  glClearColor(0.8f, 0.8f, 0.8f, 1);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void workspace_manager_t::render_current_workspace_overlay () {
