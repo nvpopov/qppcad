@@ -4,7 +4,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-gizmo_t::gizmo_t(){
+gizmo_t::gizmo_t () {
 
   gizmo_box_size         = 0.65f;
   gizmo_shift_magnitude  = 2.0f;
@@ -20,7 +20,8 @@ gizmo_t::gizmo_t(){
   //update_gizmo();
 }
 
-void gizmo_t::render(){
+void gizmo_t::render () {
+
   if (!m_is_visible) return;
 
   app_state_t* astate = &(c_app::get_state());

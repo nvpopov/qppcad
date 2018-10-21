@@ -30,9 +30,19 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
   m_ext_obs = std::make_unique<extents_observer_t<float> >(*m_geom);
   m_tws_tr  = std::make_unique<tws_tree_t<float> >(*m_geom);
   m_tws_tr->do_action(act_unlock);
-  m_anim = std::make_unique<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >(*this);
-  m_measure = std::make_unique<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> >(*this);
-  m_labels = std::make_unique<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >(*this);
+
+  m_anim =
+      std::make_unique<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >(*this);
+
+  m_measure =
+      std::make_unique<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> >(*this);
+
+  m_labels =
+      std::make_unique<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >(*this);
+
+  m_lat_planes =
+      std::make_unique<ws_atoms_list_lat_planes_subsys_t<ws_atoms_list_t, float> >(*this);
+
   //parent->add_item_to_workspace(this->shared_from_this());
 
 }
@@ -123,12 +133,15 @@ void ws_atoms_list_t::render () {
   //render measurement
   m_measure->render();
 
+  m_lat_planes->render();
+
 }
 
 void ws_atoms_list_t::render_ui () {
   ws_item_t::render_ui();
   ws_atoms_list_obj_insp_helper::render_ui(*this);
   m_measure->render_ui_obj_inst();
+  m_lat_planes->render_ui_obj_insp();
 }
 
 void ws_atoms_list_t::render_overlay () {

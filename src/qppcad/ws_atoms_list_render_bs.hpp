@@ -8,7 +8,9 @@ namespace qpp {
   namespace cad {
 
     struct ws_atoms_list_render_bs {
+
         static void render(ws_atoms_list_t &al) {
+
           app_state_t *astate = &(c_app::get_state());
           index all_null = index::D(al.m_geom->DIM).all(0);
 
@@ -67,6 +69,7 @@ namespace qpp {
 
         static void render_atom(ws_atoms_list_t &al, const uint32_t at_num,
                                 const index &at_index) {
+
           auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num));
           float dr_rad = 0.4f;
           vector3<float> color(0.0, 0.0, 1.0);
@@ -91,6 +94,7 @@ namespace qpp {
         static void render_bond(ws_atoms_list_t &al, const uint32_t at_num1,
                                 const index &at_index1, const uint32_t at_num2,
                                 const index &at_index2) {
+
           auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num1));
           vector3<float> bcolor(0.0, 0.0, 1.0);
           if (ap_idx) {

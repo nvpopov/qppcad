@@ -14,6 +14,7 @@
 #include <qppcad/ws_atoms_list_anim_subsys.hpp>
 #include <qppcad/ws_atoms_list_measurement_subsys.hpp>
 #include <qppcad/ws_atoms_list_labels_subsys.hpp>
+#include <qppcad/ws_atoms_list_lattice_planes_subsys.hpp>
 
 namespace qpp {
 
@@ -35,6 +36,7 @@ namespace qpp {
         std::unique_ptr<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >        m_anim;
         std::unique_ptr<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> > m_measure;
         std::unique_ptr<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >      m_labels;
+        std::unique_ptr<ws_atoms_list_lat_planes_subsys_t<ws_atoms_list_t, float> >  m_lat_planes;
         std::unique_ptr<bonding_table<float> >                                       m_bt;
         std::unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr;
         std::unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs;

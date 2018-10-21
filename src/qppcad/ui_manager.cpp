@@ -27,7 +27,8 @@ void ui_manager_t::toggle_edit_mode () {
 void ui_manager_t::setup_style () {
 
   ImGuiStyle * style = &ImGui::GetStyle();
-  style->FrameRounding = 2.0f;
+  style->FrameRounding = 0.51f;
+  style->WindowRounding = 0.0f;
   //style->
   style->ScrollbarRounding = 1.0f;
   style->FrameBorderSize = 0.2f;

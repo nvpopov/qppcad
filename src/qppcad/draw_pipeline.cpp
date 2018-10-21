@@ -147,6 +147,10 @@ void draw_pipeline_t::render_primitive () {
 void draw_pipeline_t::begin_render_general_mesh () {
   app_state_t* astate = &(c_app::get_state());
   astate->mvp_ssl_program->begin_shader_program();
+  float specular_power = 12.0f;
+  float specular_alpha = 0.0f;
+//  astate->default_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
+//  astate->default_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
 }
 
 void draw_pipeline_t::render_general_mesh (const vector3<float> &mesh_pos,

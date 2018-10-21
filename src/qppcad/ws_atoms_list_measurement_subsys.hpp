@@ -150,9 +150,10 @@ namespace qpp {
               ImGui::Spacing();
 
               if (ImGui::TreeNode("Interatomic distances")) {
-                  for (auto i = 0; i < m_records.size(); i++){
+                  for (auto i = 0; i < m_records.size(); i++) {
                       float dist_c = dist(i);
                       ImGui::Separator();
+
                       if (ImGui::TreeNode(fmt::format("[{}] [{}{}:{}{}] i=[{}:{}]",
                                                       i,
                                                       p_owner->m_geom->atom_name(m_records[i].at1),
@@ -166,9 +167,8 @@ namespace qpp {
                           if (ImGui::Button("Delete")) remove_bond_measurement(i);
                           ImGui::SameLine();
 
-                          if (ImGui::Button("Copy")) {
+                          if (ImGui::Button("Copy"))
                               c_app::copy_to_clipboard(fmt::format("{}",  dist_c).c_str());
-                            }
 
                           ImGui::SameLine();
                           ImGui::Checkbox("Show", &m_records[i].m_show);
@@ -178,8 +178,10 @@ namespace qpp {
 
                       if (i == m_records.size()-1) ImGui::Separator();
                     }
+                  if (m_records.empty()) ImGui::BulletText("No measurements");
                   ImGui::TreePop();
                 }
+
             }
 
 

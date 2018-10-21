@@ -81,7 +81,9 @@ namespace qpp {
         mesh_t *unit_cube;
         mesh_t *unit_cone;
         mesh_t *fbo_quad;
+        mesh_t *zup_quad;
         mesh_t *xline_mesh;
+
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;
@@ -223,6 +225,7 @@ namespace qpp {
           unit_cube     = mesh_generators::unit_cube();
           unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
           fbo_quad      = mesh_generators::quad();
+          zup_quad      = mesh_generators::quad_zup();
           xline_mesh    = mesh_generators::cross_line_atom();
 
           default_program    = shader_generators::gen_default_program();

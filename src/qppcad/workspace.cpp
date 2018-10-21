@@ -500,6 +500,8 @@ void workspace_manager_t::dialog_load_workspace () {
       new_ws->load_workspace_from_json(file_name);
       add_workspace(new_ws);
       set_current(m_ws.size()-1);
+      new_ws->set_best_view();
+      astate->make_viewport_dirty();
     }
 }
 
