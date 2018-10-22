@@ -33,7 +33,7 @@ namespace qpp {
       public:
 
         std::unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom;
-        std::unique_ptr<ws_atoms_list_anim_subsys_t<float, ws_atoms_list_t> >        m_anim;
+        std::unique_ptr<ws_atoms_list_anim_subsys_t< ws_atoms_list_t,float> >        m_anim;
         std::unique_ptr<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> > m_measure;
         std::unique_ptr<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >      m_labels;
         std::unique_ptr<ws_atoms_list_lat_planes_subsys_t<ws_atoms_list_t, float> >  m_lat_planes;

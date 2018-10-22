@@ -63,6 +63,7 @@ add_executable(qppcad
     src/qppcad/main.cpp
     src/qppcad/mesh.cpp
     src/qppcad/app.cpp
+    src/qppcad/app_state.cpp
     src/qppcad/shader_program.cpp
     src/qppcad/draw_pipeline.cpp
     src/qppcad/workspace.cpp
@@ -70,6 +71,7 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list.cpp
     src/qppcad/ws_atoms_list_lattice_planes_subsys.cpp
     src/qppcad/ws_atoms_list_measurement_subsys.cpp
+    src/qppcad/ws_atoms_list_anim_subsys.cpp
     src/qppcad/camera.cpp
     src/qppcad/action.cpp
     src/qppcad/gl_math.cpp
