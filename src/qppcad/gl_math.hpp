@@ -5,7 +5,9 @@
 #include <mathf/math.hpp>
 
 namespace qpp {
+
   namespace cad {
+
     template<typename REAL>
     matrix4<REAL> perspective( REAL fovy,
                                REAL aspect,
@@ -81,7 +83,7 @@ namespace qpp {
     }
 
     template<typename REAL>
-    matrix3<REAL> align_vectors3(const vector3<REAL> v1, const vector3<REAL> v2){
+    matrix3<REAL> align_vectors3(const vector3<REAL> v1, const vector3<REAL> v2) {
       matrix3<REAL> m_out = matrix4<REAL>::Identity();
       vector3<REAL> v3 = (v1.cross(v2)).normalized();
       vector3<REAL> v4 = (v3.cross(v1)).normalized();
@@ -155,6 +157,7 @@ namespace qpp {
 
       return m1.inverse() * m2 * m1;
     }
+
   }
 
 }

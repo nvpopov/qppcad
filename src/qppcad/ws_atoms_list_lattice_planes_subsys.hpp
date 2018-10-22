@@ -15,17 +15,14 @@ namespace qpp {
 
         vector3<REAL> m_center{0.0f, 0.0f, 0.0f};
         vector3<REAL> m_normal{0.0f, 1.0f, 0.0f};
+        vector3<REAL> m_rotation{0.0f, 0.0f, 0.0f};
 
+        REAL d{0.0f};
         REAL m_size{10.0f};
 
         int m_h{0};
         int m_k{0};
         int m_l{0};
-
-        REAL a;
-        REAL b;
-        REAL c;
-        REAL d;
 
         void update(geometry<REAL, periodic_cell<REAL> > *geom, int _h, int _k, int _l);
 

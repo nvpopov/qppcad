@@ -69,9 +69,13 @@ add_executable(qppcad
     src/qppcad/workspace.cpp
     src/qppcad/ws_item.cpp
     src/qppcad/ws_atoms_list.cpp
+    src/qppcad/ws_atoms_list_render_bs.cpp
     src/qppcad/ws_atoms_list_lattice_planes_subsys.cpp
     src/qppcad/ws_atoms_list_measurement_subsys.cpp
     src/qppcad/ws_atoms_list_anim_subsys.cpp
+    src/qppcad/ws_atoms_list_obj_insp.cpp
+    src/qppcad/ws_atoms_list_render_xlines.cpp
+    src/qppcad/ws_atoms_list_render_dlines.cpp
     src/qppcad/camera.cpp
     src/qppcad/action.cpp
     src/qppcad/gl_math.cpp
