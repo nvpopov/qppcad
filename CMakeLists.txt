@@ -76,6 +76,7 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list_obj_insp.cpp
     src/qppcad/ws_atoms_list_render_xlines.cpp
     src/qppcad/ws_atoms_list_render_dlines.cpp
+    src/qppcad/ptable_widget.cpp
     src/qppcad/camera.cpp
     src/qppcad/action.cpp
     src/qppcad/gl_math.cpp

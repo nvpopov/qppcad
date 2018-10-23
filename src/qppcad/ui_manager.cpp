@@ -9,6 +9,7 @@ ui_manager_t::ui_manager_t (app_state_t *astate) {
 
   console_widget = std::make_unique<console_widget_t>(astate);
   sc_widget = std::make_unique<super_cell_widget_t>(astate);
+  ptable_widget = std::make_unique<ptable_widget_t>(astate);
 
   m_rename_ws_id = uniq_id_provider::get_uniq_id();
   setup_style();
@@ -91,6 +92,7 @@ void ui_manager_t::render_ui() {
       render_mtable_big();
     }
 
+  ptable_widget->render();
   console_widget->render();
 
 
@@ -466,6 +468,10 @@ void ui_manager_t::render_work_panel () {
         }
 
       ImGui::Separator();
+
+      ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(64,24));
+      ImGui::Separator();
+
     }
 
   ImGui::End();
