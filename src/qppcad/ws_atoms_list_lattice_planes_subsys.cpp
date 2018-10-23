@@ -27,7 +27,9 @@ void lattice_plane_record_t<REAL>::update(geometry<REAL, periodic_cell<REAL> > *
   m_normal = ((pp1 - pp2).cross(pp2 - pp3)).normalized();
   d = - (pp1.dot(m_normal));
 
-  m_rotation[0] = std::acos(m_normal.dot(vector3<float>::UnitZ()));
+  m_center = (pp1 + pp2 + pp3) / REAL(3);
+
+  m_rotation[0] = qpp::pi+std::acos(m_normal.dot(vector3<float>::UnitZ()));
   m_rotation[1] = std::acos(m_normal.dot(vector3<float>::UnitY()));
   m_rotation[2] = std::acos(m_normal.dot(vector3<float>::UnitX()));
 

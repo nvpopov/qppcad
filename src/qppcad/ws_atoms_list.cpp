@@ -4,6 +4,7 @@
 #include <qppcad/ws_atoms_list_render_bs.hpp>
 #include <qppcad/ws_atoms_list_render_dlines.hpp>
 #include <qppcad/ws_atoms_list_render_xlines.hpp>
+#include <qppcad/ws_atoms_list_cell_helper.hpp>
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
@@ -140,6 +141,7 @@ void ws_atoms_list_t::render () {
 void ws_atoms_list_t::render_ui () {
   ws_item_t::render_ui();
   ws_atoms_list_obj_insp_helper::render_ui(*this);
+  ws_atoms_list_cell_helper::render_ui_obj_insp(*this);
   m_measure->render_ui_obj_inst();
   m_lat_planes->render_ui_obj_insp();
 }
