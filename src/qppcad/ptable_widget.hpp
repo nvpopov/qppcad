@@ -16,7 +16,9 @@ namespace qpp {
 
       public:
         bool m_active{false};
-
+        bool m_filter_name{true};
+        bool m_filter_symbol{true};
+        std::string m_filter{""};
         ptable_widget_t(app_state_t *astate);
         void render();
 

@@ -216,6 +216,7 @@ void ui_manager_t::render_main_menu(){
 
       if (ImGui::BeginMenu("Tools")){
           ImGui::MenuItem("Supercell generation");
+          if (ImGui::MenuItem("Periodic table")) ptable_widget->m_active = true;
           ImGui::EndMenu();
         }
 
