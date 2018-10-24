@@ -29,8 +29,8 @@ void qpp::cad::c_app::error_callback (int error, const char* description) {
 
 }
 
-void qpp::cad::c_app::key_callback (GLFWwindow* window,
-                                    int key, int scancode, int action, int mods) {
+void qpp::cad::c_app::key_callback (GLFWwindow* window, int key, int scancode, int action,
+                                    int mods) {
 
   //app_state_t* astate = &(c_app::get_state());
 
@@ -135,7 +135,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   //end log renderer stuff
 
   // Start setup imgui
-  ImGui::CreateContext();
+  c_app::m_context_ui = ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io;
   //io.Fonts->AddFontDefault();
   /*ImWchar ranges[] = { 0xf000, 0xf3ff, 0 };
@@ -150,6 +150,10 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
   ImGui::StyleColorsDark();
+
+  c_app::m_context_overlay = ImGui::CreateContext(io.Fonts);
+  ImGui::SetCurrentContext(c_app::m_context_ui);
+
   ImGui_ImplGlfw_InitForOpenGL(qpp::cad::c_app::curWindow, true);
   ImGui_ImplOpenGL3_Init();
   // End setup imgui
@@ -263,10 +267,19 @@ void qpp::cad::c_app::begin_render () {
 
   glfwMakeContextCurrent(qpp::cad::c_app::curWindow);
 
+//  ImGui_ImplOpenGL3_NewFrame();
+//  ImGui_ImplGlfw_NewFrame();
+
+  ImGui::SetCurrentContext(c_app::m_context_overlay);
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
   astate->ws_manager->render_current_workspace_overlay();
+
+  ImGui::SetCurrentContext(c_app::m_context_ui);
+  ImGui_ImplOpenGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
+  ImGui::NewFrame();
   qpp::cad::c_app::get_state().ui_manager->render_ui();
 
   float ratio;
@@ -318,8 +331,14 @@ void qpp::cad::c_app::render () {
              static_cast<int>(astate->viewport_size(0)),
              static_cast<int>(astate->viewport_size(1)));
 
+  ImGui::SetCurrentContext(c_app::m_context_overlay);
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+  ImGui::SetCurrentContext(c_app::m_context_ui);
+  ImGui::Render();
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 }
 
 void qpp::cad::c_app::render_direct () {
@@ -454,5 +473,7 @@ void qpp::cad::c_app::log (const std::string &logText) {
 }
 
 GLFWwindow* qpp::cad::c_app::curWindow;
+ImGuiContext* qpp::cad::c_app::m_context_ui;
+ImGuiContext* qpp::cad::c_app::m_context_overlay;
 qpp::cad::app_state_t* qpp::cad::c_app::app_state;
 bool qpp::cad::c_app::m_is_state_initialized;

@@ -44,11 +44,6 @@ namespace qpp {
 
           app_state_t* astate = &(c_app::get_state());
           ImDrawList* imdrw = ImGui::GetOverlayDrawList();
-          imdrw->PushClipRect(ImVec2(astate->viewport_xy_c[0], astate->viewport_xy_c[1]),
-              ImVec2(astate->viewport_xy_c[0] + astate->viewport_size_c[0],
-              astate->viewport_xy_c[1] + astate->viewport_size_c[1] -
-              astate->ui_manager->console_widget->m_console_height
-              * astate->ui_manager->console_widget->m_active));
 
           std::optional<vector2<REAL> > proj_pos;
           for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
@@ -80,7 +75,7 @@ namespace qpp {
 
               //ImGui::SetWindowFontScale(2.0f);
               imdrw->AddText(
-                  ImVec2((*proj_pos)[0]-label.length()*5, (*proj_pos)[1]-label.length()*5),
+                    ImVec2((*proj_pos)[0]-label.length()*5, (*proj_pos)[1]-label.length()*5),
                   ImColor(0.0f, 0.0f, 0.0f, 1.0f),
                   label.c_str());
             }
@@ -88,6 +83,7 @@ namespace qpp {
 
 
     };
+
   }
 
 }
