@@ -10,6 +10,7 @@ ui_manager_t::ui_manager_t (app_state_t *astate) {
   console_widget = std::make_unique<console_widget_t>(astate);
   sc_widget = std::make_unique<super_cell_widget_t>(astate);
   ptable_widget = std::make_unique<ptable_widget_t>(astate);
+  ecg_widget = std::make_unique<embedded_cluster_generator_widget_t>(astate);
 
   m_rename_ws_id = uniq_id_provider::get_uniq_id();
   setup_style();
@@ -94,7 +95,7 @@ void ui_manager_t::render_ui() {
 
   ptable_widget->render();
   console_widget->render();
-
+  ecg_widget->render();
 
 }
 
@@ -214,9 +215,17 @@ void ui_manager_t::render_main_menu(){
           ImGui::EndMenu();
         }
 
-      if (ImGui::BeginMenu("Tools")){
-          ImGui::MenuItem("Supercell generation");
+      if (ImGui::BeginMenu("Tools")) {
+
+          if (ImGui::BeginMenu("Generators")) {
+              ImGui::MenuItem("Supercell generation");
+              if (ImGui::MenuItem("Embedded cluster generator")) ecg_widget->set_active(true);
+              ImGui::EndMenu();
+            }
+
+          ImGui::Separator();
           if (ImGui::MenuItem("Periodic table")) ptable_widget->m_active = true;
+
           ImGui::EndMenu();
         }
 

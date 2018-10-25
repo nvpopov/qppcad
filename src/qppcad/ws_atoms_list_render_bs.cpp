@@ -18,7 +18,7 @@ namespace qpp {
         if (al.m_show_atoms &&
             al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
             al.m_atom_type_to_hide.end())
-          render_atom(al, i, index::D(al.m_geom->DIM).all(0));
+          render_atom(al, i, all_null);
 
       // draw imaginary atoms that appear due to periodic
       if (al.m_geom->DIM > 0 && al.m_show_atoms && al.m_show_imaginary_atoms)

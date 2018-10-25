@@ -13,6 +13,7 @@
 #include <qppcad/console.hpp>
 #include <qppcad/ptable_widget.hpp>
 #include <qppcad/super_cell_widget.hpp>
+#include <qppcad/embedded_cluster_generator_widget.hpp>
 
 namespace qpp {
 
@@ -29,6 +30,7 @@ namespace qpp {
         std::unique_ptr<console_widget_t> console_widget;
         std::unique_ptr<super_cell_widget_t> sc_widget;
         std::unique_ptr<ptable_widget_t>  ptable_widget;
+        std::unique_ptr<embedded_cluster_generator_widget_t> ecg_widget;
 
         int work_panel_height{38};
         int work_panel_yoffset{28};

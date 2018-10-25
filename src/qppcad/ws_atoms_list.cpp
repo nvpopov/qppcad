@@ -4,6 +4,7 @@
 #include <qppcad/ws_atoms_list_render_bs.hpp>
 #include <qppcad/ws_atoms_list_render_dlines.hpp>
 #include <qppcad/ws_atoms_list_render_xlines.hpp>
+#include <qppcad/ws_atoms_list_render_billboards.hpp>
 #include <qppcad/ws_atoms_list_cell_helper.hpp>
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
