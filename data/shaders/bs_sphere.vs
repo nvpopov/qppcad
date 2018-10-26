@@ -1,18 +1,35 @@
-R"(  
+R"(
 #version 330
+
 uniform mat4 m_model_view;
-uniform mat4 m_model_view_proj;
-uniform mat4 m_model_view_inv_tr;
-uniform vec3 v_translate;
-uniform float f_scale;
-in vec3 vs_position;
-in vec3 vs_normal;
-out vec3 fs_normal;
-out vec3 fs_position;
+uniform mat4 m_proj;
+
+layout(location=0) in vec3 vs_position;
+layout(location=1) in vec3 vs_normal;
+
+smooth out vec2 fs_position;
+
 void main(void){
-  vec3 tr_position = (vs_position * f_scale + v_translate);
-  fs_normal = vec3(m_model_view_inv_tr * vec4(vs_normal,0.0));
-  fs_position = vec3(m_model_view * vec4(tr_position, 1.0));
-  gl_Position = m_model_view_proj * vec4(tr_position, 1.0);
+  mat4 modelView = m_model_view;
+  
+  // First colunm.
+  modelView[0][0] = 1.0; 
+  modelView[0][1] = 0.0; 
+  modelView[0][2] = 0.0; 
+
+
+  // Second colunm.
+  modelView[1][0] = 0.0; 
+  modelView[1][1] = 1.0; 
+  modelView[1][2] = 0.0; 
+
+  // Thrid colunm.
+  modelView[2][0] = 0.0; 
+  modelView[2][1] = 0.0; 
+  modelView[2][2] = 1.0; 
+  
+  vec4 P = modelView * vec4(vs_position, 1.0f);
+  fs_position = vec2(vs_position.x*2, vs_position.y*2);
+  gl_Position = m_proj * P;	
 }
 )"

@@ -110,6 +110,7 @@ namespace qpp {
       mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
       fbo_quad_program   = shader_generators::gen_fbo_quad_program();
       unit_line_styled_program = shader_generators::gen_unit_line_styled_program();
+      bs_sphere_program = shader_generators::gen_bs_sphere_program();
 
       kb_manager   = std::make_unique<keyboard_manager_t>();
       //frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >(false);

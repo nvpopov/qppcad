@@ -101,7 +101,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
   glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -143,7 +143,8 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   config.MergeMode = true;*/
 
   //io.Fonts->AddFontFromFileTTF("../data/fonts/Hack-Regular.ttf",17.0f);
-  io.Fonts->AddFontFromMemoryCompressedTTF((void*)fontmem_compressed_data, fontmem_compressed_size, 17.0f);
+  io.Fonts->AddFontFromMemoryCompressedTTF((void*)fontmem_compressed_data, fontmem_compressed_size,
+                                           17.0f);
 
   unsigned int flags = ImGuiFreeType::ForceAutoHint;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);

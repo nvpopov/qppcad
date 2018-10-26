@@ -94,10 +94,11 @@ namespace qpp {
       if (ImGui::CollapsingHeader("Display and styling")){
 
           ImGui::Spacing();
-          const char* items[] = { "Balls & sticks", "Dynamic lines", "X Atoms lines"};
+          const char* items[] = { "Balls & sticks", "Dynamic lines", "X Atoms lines",
+                                "Billboards"};
 
           if (ImGui::Combo("Style", reinterpret_cast<int*>(&al.m_cur_render_type),
-                           items, 3)) astate->make_viewport_dirty();
+                           items, 4)) astate->make_viewport_dirty();
 
           if (al.m_cur_render_type == ws_atoms_list_render_type::ball_and_stick){
               ImGui::Checkbox("Draw specular", &al.m_draw_specular);

@@ -116,8 +116,12 @@ void ws_atoms_list_t::render () {
           ws_atoms_list_render_xlines::render(*this);
           break;
 
-        default:
+        case ws_atoms_list_render_type::billboards:
+          ws_atoms_list_render_billboards::render(*this);
           break;
+
+//        default:
+//          break;
 
         }
       // atom render start

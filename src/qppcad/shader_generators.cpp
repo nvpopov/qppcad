@@ -18,7 +18,7 @@ shader_program_t *shader_generators::gen_default_program () {
   sp->u_on(sp_u_name::m_model_view_proj);
   sp->u_on(sp_u_name::m_model_view);
   sp->u_on(sp_u_name::m_model_view_inv_tr);
-  sp->u_on(sp_u_name::v_light_pos);
+  //sp->u_on(sp_u_name::v_light_pos);
   //sp->u_on(sp_u_name::v_eye_pos);
   sp->u_on(sp_u_name::f_specular_intensity);
   sp->u_on(sp_u_name::f_specular_alpha);
@@ -40,8 +40,8 @@ shader_program_t *shader_generators::gen_unit_line_program () {
   qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(std::string("unit_line_program"),
                                                                   vs, fs);
   sp->u_on(sp_u_name::m_model_view_proj);
-  sp->u_on(sp_u_name::m_view);
-  sp->u_on(sp_u_name::m_view_inv_tr);
+//  sp->u_on(sp_u_name::m_view);
+//  sp->u_on(sp_u_name::m_view_inv_tr);
   sp->u_on(sp_u_name::v_color);
   sp->u_on(sp_u_name::v_line_start);
   sp->u_on(sp_u_name::v_line_end);
@@ -60,8 +60,8 @@ shader_program_t *shader_generators::gen_unit_line_styled_program () {
   qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(std::string("unit_line_styled"),
                                                                   vs, fs);
   sp->u_on(sp_u_name::m_model_view_proj);
-  sp->u_on(sp_u_name::m_view);
-  sp->u_on(sp_u_name::m_view_inv_tr);
+  //sp->u_on(sp_u_name::m_view);
+  //sp->u_on(sp_u_name::m_view_inv_tr);
   sp->u_on(sp_u_name::v_color);
   sp->u_on(sp_u_name::v_line_start);
   sp->u_on(sp_u_name::v_line_end);
@@ -97,11 +97,11 @@ shader_program_t *shader_generators::gen_mv_screen_space_lighting_program () {
   qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(std::string("mv_ssl"), vs, fs);
   sp->u_on(sp_u_name::m_model_view_proj);
   sp->u_on(sp_u_name::m_model_view);
-  sp->u_on(sp_u_name::m_view_proj);
+  //sp->u_on(sp_u_name::m_view_proj);
   sp->u_on(sp_u_name::f_specular_intensity);
   sp->u_on(sp_u_name::f_specular_alpha);
   sp->u_on(sp_u_name::m_model_view_inv_tr);
-  sp->u_on(sp_u_name::v_light_pos);
+  //sp->u_on(sp_u_name::v_light_pos);
   sp->u_on(sp_u_name::v_color);
 
   return sp;
@@ -132,14 +132,14 @@ shader_program_t *shader_generators::gen_bs_sphere_program () {
 
   qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(
                                      std::string("bs_sphere"), vs, fs);
-  sp->u_on(sp_u_name::m_model_view_proj);
   sp->u_on(sp_u_name::m_model_view);
-  sp->u_on(sp_u_name::m_view_proj);
-  sp->u_on(sp_u_name::f_specular_intensity);
-  sp->u_on(sp_u_name::f_specular_alpha);
-  sp->u_on(sp_u_name::m_model_view_inv_tr);
-  sp->u_on(sp_u_name::v_light_pos);
+  sp->u_on(sp_u_name::m_proj);
   sp->u_on(sp_u_name::v_color);
+ // sp->u_on(sp_u_name::f_specular_intensity);
+ // sp->u_on(sp_u_name::f_specular_alpha);
+  //sp->u_on(sp_u_name::m_model_view_inv_tr);
+  //sp->u_on(sp_u_name::v_light_pos);
+  //sp->u_on(sp_u_name::v_color);
 
   return sp;
 }

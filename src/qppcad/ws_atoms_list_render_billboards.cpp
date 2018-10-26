@@ -6,6 +6,47 @@ namespace qpp {
 
     void ws_atoms_list_render_billboards::render(ws_atoms_list_t &al) {
 
+      // std::cout << "fhfg" << std::endl;
+      app_state_t *astate = &(c_app::get_state());
+
+      astate->zup_quad->begin_render_batch();
+      astate->bs_sphere_program->begin_shader_program();
+      astate->bs_sphere_program->set_u(sp_u_name::m_proj, astate->camera->m_mat_proj.data());
+
+      //(GL_CULL_FACE);
+      vector3<float> color(0.0, 0.0, 1.0);
+      float dr_rad = 0.4f;
+      auto cached_last_atom_type = -1;
+      Eigen::Transform<float, 3, Eigen::Affine> t;
+      matrix4<float> mat_model_view;
+
+      for (uint32_t i = 0; i < al.m_geom->nat(); i++) {
+
+          if (cached_last_atom_type != al.m_geom->type(i)) {
+              auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
+              if (ap_idx) {
+                  dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].aRadius *
+                           al.m_atom_scale_factor;
+                  color = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
+                }
+              astate->bs_sphere_program->set_u(sp_u_name::v_color, color.data());
+            }
+
+          t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
+          t.prerotate(matrix3<float>::Identity());
+          t.prescale(vector3<float>(dr_rad, dr_rad, dr_rad));
+          t.pretranslate(al.m_geom->pos(i));
+          mat_model_view = astate->camera->m_mat_view * t.matrix();
+
+          astate->bs_sphere_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
+          astate->zup_quad->render_batch();
+
+        }
+
+      astate->bs_sphere_program->end_shader_program();
+      astate->zup_quad->end_render_batch();
+      //glEnable(GL_CULL_FACE);
+
     }
 
     void ws_atoms_list_render_billboards::render_atom (ws_atoms_list_t &al, const uint32_t at_num,

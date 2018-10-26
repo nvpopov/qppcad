@@ -67,6 +67,7 @@ add_executable(qppcad
     src/qppcad/shader_program.cpp
     src/qppcad/draw_pipeline.cpp
     src/qppcad/shader_generators.cpp
+    src/qppcad/mesh_generators.cpp
     src/qppcad/workspace.cpp
     src/qppcad/ws_item.cpp
     src/qppcad/ws_atoms_list.cpp

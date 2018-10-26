@@ -63,6 +63,10 @@ void qpp::cad::shader_program_t::u_on (qpp::cad::sp_u_name _val) {
   unf_rec[_val].enabled = true;
   unf_rec[_val].h_prog = glGetUniformLocation(program_id, map_u2s[_val].c_str());
 
+  if (unf_rec[_val].h_prog == -1) {
+      c_app::log(fmt::format("WARNING: Uniform[{}] doesn`t exist in program {}",
+                             map_u2s[_val], program_name ));
+    }
 }
 
 void qpp::cad::shader_program_t::set_u (qpp::cad::sp_u_name _ut, GLfloat *_val) {
@@ -103,6 +107,7 @@ void qpp::cad::shader_program_t::begin_shader_program () {
   app_state_t* astate = &(c_app::get_state());
 
   glUseProgram(program_id);
+
   if (unf_rec[sp_u_name::v_light_pos].enabled)
     set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
 
