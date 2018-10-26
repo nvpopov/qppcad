@@ -26,16 +26,17 @@ namespace qpp {
               auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
               if (ap_idx) {
                   dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].aRadius *
-                           al.m_atom_scale_factor;
+                           al.m_atom_scale_factor * 2.0f;
                   color = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
                 }
               astate->bs_sphere_program->set_u(sp_u_name::v_color, color.data());
+              astate->bs_sphere_program->set_u(sp_u_name::f_scale, &dr_rad);
             }
 
           t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
-          t.prerotate(matrix3<float>::Identity());
-          t.prescale(vector3<float>(dr_rad, dr_rad, dr_rad));
-          t.pretranslate(al.m_geom->pos(i));
+//          t.prerotate(matrix3<float>::Identity());
+//          t.prescale(vector3<float>(dr_rad, dr_rad, dr_rad));
+          t.pretranslate(al.m_geom->pos(i)+al.m_pos);
           mat_model_view = astate->camera->m_mat_view * t.matrix();
 
           astate->bs_sphere_program->set_u(sp_u_name::m_model_view, mat_model_view.data());

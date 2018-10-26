@@ -1,8 +1,9 @@
 R"(
-#version 330
+#version 330 core
 
 uniform mat4 m_model_view;
 uniform mat4 m_proj;
+uniform float f_scale;
 
 layout(location=0) in vec3 vs_position;
 layout(location=1) in vec3 vs_normal;
@@ -28,7 +29,7 @@ void main(void){
   modelView[2][1] = 0.0; 
   modelView[2][2] = 1.0; 
   
-  vec4 P = modelView * vec4(vs_position, 1.0f);
+  vec4 P = modelView * vec4(f_scale*vs_position, 1.0f);
   fs_position = vec2(vs_position.x*2, vs_position.y*2);
   gl_Position = m_proj * P;	
 }

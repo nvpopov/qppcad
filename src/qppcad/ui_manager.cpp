@@ -504,8 +504,8 @@ void ui_manager_t::render_object_inspector () {
   //style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
  // style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
 
-  ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.32529413f, 0.32705884f, 0.32490198f, 1.00f));
-  ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.32529413f, 0.32705884f, 0.32490198f, 1.00f));
+  ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.29529413f, 0.29529413f, 0.29529413f, 1.00f));
+  ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.29529413f, 0.29529413f, 0.29529413f, 1.00f));
   ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.42529413f, 0.42705884f, 0.42490198f, 1.00f));
 
   ImGui::Begin("Object inspector", nullptr,
