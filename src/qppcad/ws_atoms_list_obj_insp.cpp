@@ -100,7 +100,8 @@ namespace qpp {
           if (ImGui::Combo("Style", reinterpret_cast<int*>(&al.m_cur_render_type),
                            items, 4)) astate->make_viewport_dirty();
 
-          if (al.m_cur_render_type == ws_atoms_list_render_type::ball_and_stick){
+          if (al.m_cur_render_type == ws_atoms_list_render_type::ball_and_stick ||
+              al.m_cur_render_type == ws_atoms_list_render_type::billboards) {
               ImGui::Checkbox("Draw specular", &al.m_draw_specular);
               if (al.m_draw_specular)
                 if (ImGui::SliderFloat("Sp. power", &al.m_shading_specular_power,

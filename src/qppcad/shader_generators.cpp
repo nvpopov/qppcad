@@ -136,6 +136,8 @@ shader_program_t *shader_generators::gen_bs_sphere_program () {
   sp->u_on(sp_u_name::m_proj);
   sp->u_on(sp_u_name::v_color);
   sp->u_on(sp_u_name::f_scale);
+  sp->u_on(sp_u_name::f_specular_intensity);
+  sp->u_on(sp_u_name::f_specular_alpha);
  // sp->u_on(sp_u_name::f_specular_intensity);
  // sp->u_on(sp_u_name::f_specular_alpha);
   //sp->u_on(sp_u_name::m_model_view_inv_tr);

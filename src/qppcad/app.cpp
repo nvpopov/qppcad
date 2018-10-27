@@ -88,7 +88,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
   //on modern hardware force ms level if it didnt set in options
   if (!glfw_samples && render_mode_from_args == app_render_mode::buffered_multi_sampling)
-    aa_level = 8;
+    aa_level = 12;
   //std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@ " << render_mode_from_args << std::endl;
   //end process args
 

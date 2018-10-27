@@ -20,6 +20,11 @@ namespace qpp {
       Eigen::Transform<float, 3, Eigen::Affine> t;
       matrix4<float> mat_model_view;
 
+      astate->default_program->set_u(sp_u_name::f_specular_intensity, &al.m_shading_specular_power);
+
+      float draw_specular = al.m_draw_specular;
+      astate->default_program->set_u(sp_u_name::f_specular_alpha, &draw_specular);
+
       for (uint32_t i = 0; i < al.m_geom->nat(); i++) {
 
           if (cached_last_atom_type != al.m_geom->type(i)) {
