@@ -91,6 +91,8 @@ namespace qpp {
 
       camera = nullptr;
 
+      glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &c_max_texture_buffer_size);
+
       dp = new draw_pipeline_t();
 
       //default meshes

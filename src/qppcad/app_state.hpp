@@ -95,6 +95,7 @@ namespace qpp {
         vector3<float> light_color; // @unused
         vector3<float> light_pos_tr{0, 0, 0};
 
+        int c_max_texture_buffer_size;
         int current_fps{60};
         int max_fps{60};
         uint m_viewport_ms_level{0};

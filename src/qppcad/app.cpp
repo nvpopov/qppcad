@@ -172,6 +172,9 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   app_state_t* astate = &(c_app::get_state());
   qpp::cad::c_app::log("qpp::cad initialized succesfully!");
 
+  qpp::cad::c_app::log(fmt::format("GL_MAX_TEXTURE_BUFFER_SIZE = {}",
+                                   astate->c_max_texture_buffer_size));
+
   qpp::cad::c_app::m_is_state_initialized = true;
 
   if (aa_level > 0) {

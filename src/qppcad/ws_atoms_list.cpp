@@ -523,7 +523,13 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
             anim_frame_rec -= center;
     }
 
-  m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  if (m_geom->nat() > 30000) {
+      m_cur_render_type = ws_atoms_list_render_type::billboards;
+      m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+    } else {
+      m_tws_tr->do_action(act_unlock | act_rebuild_all);
+    }
+
   geometry_changed();
 
   if (parent_ws) {

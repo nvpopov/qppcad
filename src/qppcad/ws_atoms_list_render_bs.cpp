@@ -34,10 +34,10 @@ namespace qpp {
       astate->dp->begin_render_bond(al.m_shading_specular_power, spec);
 
       if (al.m_show_bonds)
-        for (uint16_t i = 0; i < al.m_geom->nat(); i++)
-          for (uint16_t j = 0; j < al.m_tws_tr->n(i); j++) {
-              uint16_t id1 = i;
-              uint16_t id2 = al.m_tws_tr->table_atm(i, j);
+        for (uint32_t i = 0; i < al.m_geom->nat(); i++)
+          for (uint32_t j = 0; j < al.m_tws_tr->n(i); j++) {
+              uint32_t id1 = i;
+              uint32_t id2 = al.m_tws_tr->table_atm(i, j);
               index idx2 = al.m_tws_tr->table_idx(i, j);
 
               if (idx2 == all_null || al.m_show_imaginary_bonds)
@@ -50,8 +50,8 @@ namespace qpp {
       if (al.m_geom->DIM > 0 && al.m_show_imaginary_bonds && al.m_show_bonds)
         for (const auto &img_atom : al.m_tws_tr->m_img_atoms)
           for (const auto &img_bond : img_atom.m_img_bonds) {
-              uint16_t id1 = img_atom.m_atm;
-              uint16_t id2 = img_bond.m_atm;
+              uint32_t id1 = img_atom.m_atm;
+              uint32_t id2 = img_bond.m_atm;
 
               index idx1 = img_atom.m_idx;
               index idx2 = img_bond.m_idx;

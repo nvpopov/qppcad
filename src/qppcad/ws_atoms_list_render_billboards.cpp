@@ -36,6 +36,7 @@ namespace qpp {
                 }
               astate->bs_sphere_program->set_u(sp_u_name::v_color, color.data());
               astate->bs_sphere_program->set_u(sp_u_name::f_scale, &dr_rad);
+              cached_last_atom_type = al.m_geom->type(i);
             }
 
           t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
