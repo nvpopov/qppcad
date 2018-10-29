@@ -30,6 +30,7 @@ namespace qpp {
 
         static shader_program_t *gen_bs_sphere_program();
 
+        static shader_program_t *gen_buf_bs_sphere_program();
     };
 
   }

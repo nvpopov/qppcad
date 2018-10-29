@@ -63,6 +63,7 @@ namespace qpp {
         shader_program_t*              mvp_ssl_program;
         shader_program_t*              fbo_quad_program;
         shader_program_t*              bs_sphere_program;
+        shader_program_t*              buf_bs_program;
 
         std::shared_ptr<workspace_manager_t>                           ws_manager;
         std::shared_ptr<ui_manager_t>                                  ui_manager;

@@ -146,3 +146,30 @@ shader_program_t *shader_generators::gen_bs_sphere_program () {
 
   return sp;
 }
+
+shader_program_t *shader_generators::gen_buf_bs_sphere_program() {
+  std::string vs =
+    #include "shaders/bs_sphere_buffered.vs"
+      ;
+
+  std::string fs =
+    #include "shaders/bs_sphere_buffered.fs"
+      ;
+
+  shader_program_t *sp = new qpp::cad::shader_program_t(std::string("bs_sphere"), vs, fs);
+
+  sp->u_on(sp_u_name::m_view);
+  sp->u_on(sp_u_name::m_proj);
+  sp->u_on(sp_u_name::f_scale);
+  sp->u_on(sp_u_name::f_specular_intensity);
+  sp->u_on(sp_u_name::f_specular_alpha);
+  sp->u_on(sp_u_name::texture_0);
+  sp->u_on(sp_u_name::texture_1);
+ // sp->u_on(sp_u_name::f_specular_intensity);
+ // sp->u_on(sp_u_name::f_specular_alpha);
+  //sp->u_on(sp_u_name::m_model_view_inv_tr);
+  //sp->u_on(sp_u_name::v_light_pos);
+  //sp->u_on(sp_u_name::v_color);
+
+  return sp;
+}

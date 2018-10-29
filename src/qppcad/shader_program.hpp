@@ -147,6 +147,7 @@ namespace qpp {
         /// \param _ut
         /// \param _val
         void set_u (sp_u_name _ut, GLfloat *_val);
+        void set_u_sampler (sp_u_name _ut, GLint val);
 
         /// \brief begin_shader_program
         void begin_shader_program ();

@@ -1,9 +1,12 @@
 R"(
 #version 330 core
-uniform vec3 v_color; 
+
 uniform float f_specular_intensity;
 uniform float f_specular_alpha;
+
 smooth in vec3 fs_position;
+smooth in vec3 fs_color;
+
 out vec4 color;
 
 void main(void) {
@@ -24,7 +27,7 @@ void main(void) {
   specular = pow(specular, f_specular_intensity) * f_specular_alpha;
   vec4 ambient = vec4(0.11, 0.11, 0.11, 1.0);
 
-  color =  ambient + vec4(v_color, 1.0) * diffuse_term + vec4(1.0, 1.0, 1.0, 1.0) * specular;
+  color =  ambient + vec4(fs_color, 1.0) * diffuse_term + vec4(1.0, 1.0, 1.0, 1.0) * specular;
    
 }
 )"

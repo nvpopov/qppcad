@@ -102,6 +102,16 @@ void qpp::cad::shader_program_t::set_u (qpp::cad::sp_u_name _ut, GLfloat *_val) 
     }
 }
 
+void qpp::cad::shader_program_t::set_u_sampler(qpp::cad::sp_u_name _ut, GLint val) {
+
+  if (unf_rec[_ut].enabled) {
+      //qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[_ut];
+      GLint uloc = unf_rec[_ut].h_prog;
+      glUniform1i(uloc, val);
+    }
+
+}
+
 void qpp::cad::shader_program_t::begin_shader_program () {
 
   app_state_t* astate = &(c_app::get_state());
