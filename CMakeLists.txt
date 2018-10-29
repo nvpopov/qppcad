@@ -68,6 +68,7 @@ add_executable(qppcad
     src/qppcad/draw_pipeline.cpp
     src/qppcad/shader_generators.cpp
     src/qppcad/mesh_generators.cpp
+    src/qppcad/texture_buffer.cpp
     src/qppcad/workspace.cpp
     src/qppcad/ws_item.cpp
     src/qppcad/ws_atoms_list.cpp
@@ -79,6 +80,7 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list_render_xlines.cpp
     src/qppcad/ws_atoms_list_render_dlines.cpp
     src/qppcad/ws_atoms_list_render_billboards.cpp
+    src/qppcad/ws_atoms_list_render_billboards_buffered.cpp
     src/qppcad/ptable_widget.cpp
     src/qppcad/embedded_cluster_generator_widget.cpp
     src/qppcad/camera.cpp
