@@ -120,21 +120,26 @@ void ws_atoms_list_t::render () {
           ws_atoms_list_render_billboards::render(*this);
           break;
 
-//        default:
-//          break;
+        case ws_atoms_list_render_type::buffered_billboards: {
+            if (!m_bs) {
+                m_bs =
+                    std::make_unique<ws_atoms_list_render_buffered_billboards_t
+                    <ws_atoms_list_t, float, uint32_t> >(*this);
+                m_bs->init();
+              } else {
+                m_bs->render();
+              }
+            //ws_atoms_list_render_billboards::render(*this);
+            break;
+          }
+
+          //        default:
+          //          break;
 
         }
       // atom render start
 
     }
-
-  //  ImDrawList* imdrw = ImGui::GetOverlayDrawList();
-  //  vector3<float> uproj = astate->camera->project(m_geom->pos(0)); // in NDC
-  //  std::cout << uproj.to_string_vec() << std::endl;
-  //  imdrw->AddText(ImVec2(((uproj[0]+ 1.0f) / 2.0f)*astate->viewport_size_c[0]+
-  //      astate->viewport_xy_c[0],
-  //      ((uproj[1] + 1.0f) / 2.0f)*astate->viewport_size_c[1]+
-  //      astate->viewport_xy_c[1]), ImColor(1.0f, 1.0f, 1.0f, 1.0f), "Si");
 
   //render measurement
   m_measure->render();
@@ -460,6 +465,8 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
 void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_name,
                                      bool auto_center) {
 
+  using elapsed_duration = std::chrono::duration<float, std::ratio<1> >;
+
   std::setlocale(LC_ALL, "C");
 
   c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
@@ -476,6 +483,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   m_ext_obs->first_data = true;
 
   m_name = extract_base_name(file_name);
+
+  auto start_timer = std::chrono::steady_clock::now();
 
   switch (file_format) {
     case qc_file_fmt::standart_xyz:
@@ -506,6 +515,12 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
   qc_data.close();
 
+  auto end_timer = std::chrono::steady_clock::now();
+  auto diff_timer = end_timer - start_timer;
+
+  c_app::log(fmt::format("Reading file {} took {} sec.", file_name,
+                         elapsed_duration(diff_timer).count()) );
+
   if (auto_center) {
       vector3<float> center(0.0, 0.0, 0.0);
       for (int i = 0; i < m_geom->nat(); i++)
@@ -523,13 +538,25 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
             anim_frame_rec -= center;
     }
 
+  auto start_timer_build_tree = std::chrono::steady_clock::now();
+  m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+  auto end_timer_build_tree = std::chrono::steady_clock::now();
+  auto diff_timer_build_tree = end_timer_build_tree - start_timer_build_tree;
+  c_app::log(fmt::format("Building tws-tree for file {} took {} sec.", file_name,
+                         elapsed_duration(diff_timer_build_tree).count()));
+
   if (m_geom->nat() > 30000) {
       m_cur_render_type = ws_atoms_list_render_type::billboards;
-      m_tws_tr->do_action(act_unlock | act_rebuild_tree);
     } else {
-      m_tws_tr->do_action(act_unlock | act_rebuild_all);
+
     }
 
+  auto start_timer_build_ntable = std::chrono::steady_clock::now();
+  m_tws_tr->do_action(act_rebuild_ntable);
+  auto end_timer_build_ntable  = std::chrono::steady_clock::now();
+  auto diff_timer_build_ntable  = end_timer_build_ntable  - start_timer_build_ntable ;
+  c_app::log(fmt::format("Building ntable for file {} took {} sec.", file_name,
+                         elapsed_duration(diff_timer_build_ntable).count()));
   geometry_changed();
 
   if (parent_ws) {
@@ -801,7 +828,6 @@ void ws_atoms_list_t::dialog_save_to_file (qc_file_fmt file_format) {
   save_to_file(file_format, _tmp_fs_path);
 
 }
-
 
 //ws_atoms_list_t::~ws_atoms_list_t () {
 

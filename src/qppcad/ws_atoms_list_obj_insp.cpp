@@ -95,10 +95,10 @@ namespace qpp {
 
           ImGui::Spacing();
           const char* items[] = { "Balls & sticks", "Dynamic lines", "X Atoms lines",
-                                "Billboards"};
+                                "Billboards", "Buffered Billboards"};
 
           if (ImGui::Combo("Style", reinterpret_cast<int*>(&al.m_cur_render_type),
-                           items, 4)) astate->make_viewport_dirty();
+                           items, 5)) astate->make_viewport_dirty();
 
           if (al.m_cur_render_type == ws_atoms_list_render_type::ball_and_stick ||
               al.m_cur_render_type == ws_atoms_list_render_type::billboards) {

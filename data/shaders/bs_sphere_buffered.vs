@@ -18,7 +18,6 @@ void main(void){
   modelView[0][1] = 0.0; 
   modelView[0][2] = 0.0; 
 
-
   // Second colunm.
   modelView[1][0] = 0.0; 
   modelView[1][1] = 1.0; 
