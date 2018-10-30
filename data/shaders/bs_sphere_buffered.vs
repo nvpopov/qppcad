@@ -1,30 +1,29 @@
 R"(
 #version 330 core
-#extension GL_ARB_explicit_uniform_location : enable
 #extension GL_EXT_gpu_shader4 : enable
 
 uniform mat4 m_view;
 uniform mat4 m_proj;
 
-uniform samplerBuffer pos_buf;
-uniform samplerBuffer clr_s_buf;
+uniform samplerBuffer texture_0;
+uniform samplerBuffer texture_1;
 
 layout(location=0) in vec3 vs_position;
 layout(location=1) in vec3 vs_normal;
 
 smooth out vec3 fs_position;
-smooth out vec3 fs_color;
+out vec3 fs_color;
 
 void main(void) {
 
   mat4 m_model = mat4(1.0);
   
-  vec4 pos = texelFetchBuffer(pos_buf, gl_InstanceID);
-  m_model[3][0] = pos[0];	
-  m_model[3][1] = pos[1];
-  m_model[3][2] = pos[2];
+  vec4 pos = texelFetch(texture_0, gl_InstanceID);
+  m_model[3][0] = pos.x;	
+  m_model[3][1] = pos.y;
+  m_model[3][2] = pos.z;
 
-  vec4 clr_s = texelFetchBuffer(clr_s_buf, gl_InstanceID);
+  vec4 clr_s = texelFetch(texture_1, gl_InstanceID);
   fs_color = clr_s.xyz;
 
   mat4 m_model_view = m_view * m_model;
@@ -44,7 +43,7 @@ void main(void) {
   m_model_view[2][1] = 0.0; 
   m_model_view[2][2] = 1.0; 
   
-  vec4 P = m_model_view * vec4(clr_s[3]*vs_position, 1.0f);
+  vec4 P = m_model_view * vec4(clr_s.w*vs_position, 1.0f);
   fs_position = vec3(vs_position.x*2, vs_position.y*2, vs_position.z*2);
   gl_Position = m_proj * P;	
 }

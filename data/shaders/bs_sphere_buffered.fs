@@ -5,7 +5,7 @@ uniform float f_specular_intensity;
 uniform float f_specular_alpha;
 
 smooth in vec3 fs_position;
-smooth in vec3 fs_color;
+in vec3 fs_color;
 
 out vec4 color;
 

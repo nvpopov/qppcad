@@ -8,15 +8,14 @@ namespace qpp {
 
   namespace cad {
 
-    template<typename REAL, int COLS> // Eigen::MatrixX<type> (where type = Scalar)
-    using row_dynamic_matrix_t = Eigen::Matrix<REAL, Eigen::Dynamic, COLS, Eigen::RowMajor>;
+    template<typename REAL, int COLS>
+    using row_dynamic_matrix_t = Eigen::Matrix<REAL, Eigen::Dynamic, COLS, Eigen::ColMajor>;
 
-    template<typename REAL = float>
     class texture_buffer_t {
       public:
         GLenum m_tx_id;
         GLenum m_tx_buffer_id;
-        row_dynamic_matrix_t<REAL,4> m_data;
+        row_dynamic_matrix_t<float,4> m_data;
         void init();
         void bind(const int slot);
         void unbind(const int slot);

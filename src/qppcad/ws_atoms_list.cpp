@@ -122,9 +122,7 @@ void ws_atoms_list_t::render () {
 
         case ws_atoms_list_render_type::buffered_billboards: {
             if (!m_bs) {
-                m_bs =
-                    std::make_unique<ws_atoms_list_render_buffered_billboards_t
-                    <ws_atoms_list_t, float, uint32_t> >(*this);
+                m_bs = std::make_unique<ws_atoms_list_render_buffered_billboards_t>(*this);
                 m_bs->init();
               } else {
                 m_bs->render();

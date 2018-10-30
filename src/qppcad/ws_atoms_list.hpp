@@ -34,17 +34,17 @@ namespace qpp {
 
       public:
 
-        std::unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom;
-        std::unique_ptr<ws_atoms_list_anim_subsys_t<ws_atoms_list_t,float> >         m_anim;
-        std::unique_ptr<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> > m_measure;
-        std::unique_ptr<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >      m_labels;
-        std::unique_ptr<ws_atoms_list_lat_planes_subsys_t<ws_atoms_list_t, float> >  m_lat_planes;
-        std::unique_ptr<bonding_table<float> >                                       m_bt;
-        std::unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr;
-        std::unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs;
+        std::unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom{};
+        std::unique_ptr<ws_atoms_list_anim_subsys_t<ws_atoms_list_t,float> >         m_anim{};
+        std::unique_ptr<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> > m_measure{};
+        std::unique_ptr<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >      m_labels{};
+        std::unique_ptr<ws_atoms_list_lat_planes_subsys_t<ws_atoms_list_t, float> >  m_lat_planes{};
+        std::unique_ptr<bonding_table<float> >                                       m_bt{};
+        std::unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr{};
+        std::unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs{};
         std::set<uint16_t>                                                           m_atom_sel;
         std::unordered_set<atom_index_set_key, atom_index_set_key_hash>              m_atom_idx_sel;
-        std::unique_ptr<ws_atoms_list_render_buffered_billboards_t<ws_atoms_list_t,float> > m_bs;
+        std::unique_ptr<ws_atoms_list_render_buffered_billboards_t> m_bs{};
         std::set<uint16_t>  m_atom_type_to_hide;
 
         float m_shading_specular_power{12.0f};

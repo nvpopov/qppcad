@@ -7,22 +7,19 @@ namespace qpp {
 
   namespace cad {
 
-    template <typename DATA, typename REAL = float, typename AINT  = uint32_t>
+    class ws_atoms_list_t;
+
     class ws_atoms_list_render_buffered_billboards_t {
 
       private:
 
-        DATA* p_owner;
-        std::unique_ptr<texture_buffer_t<REAL> > m_tb_pos;
-        std::unique_ptr<texture_buffer_t<REAL> > m_tb_color_s;
+        ws_atoms_list_t* p_owner;
+        std::unique_ptr<texture_buffer_t> m_tb_pos{};
+        std::unique_ptr<texture_buffer_t> m_tb_color_s{};
 
       public:
 
-        ws_atoms_list_render_buffered_billboards_t (DATA &_p_owner) {
-          p_owner = &_p_owner;
-          init();
-        }
-
+        ws_atoms_list_render_buffered_billboards_t (ws_atoms_list_t &_p_owner);
         void init();
         void render();
     };
