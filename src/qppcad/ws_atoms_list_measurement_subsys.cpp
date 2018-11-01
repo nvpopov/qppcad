@@ -5,9 +5,8 @@ namespace qpp {
 
   namespace cad {
 
-    template<typename DATA, typename REAL, typename AINT>
-    REAL ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::dist (const size_t idx) {
-      vector3<REAL> l_s, l_e;
+    float ws_atoms_list_measurement_subsys_t::dist (const size_t idx) {
+      vector3<float> l_s, l_e;
       l_s = p_owner->m_pos +
             p_owner->m_geom->pos(m_records[idx].at1,m_records[idx].idx1);
       l_e = p_owner->m_pos +
@@ -15,26 +14,25 @@ namespace qpp {
       return (l_e - l_s).norm();
     }
 
-    template<typename DATA, typename REAL, typename AINT>
-    void ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::add_bond_measurement (
-        const AINT atm1,
-        const AINT atm2,
-        const index idx1,
-        const index idx2) {
+    void ws_atoms_list_measurement_subsys_t::add_bond_measurement (const uint32_t atm1,
+                                                                   const uint32_t atm2,
+                                                                   const index idx1,
+                                                                   const index idx2) {
       m_records.emplace_back(atm1, atm2, idx1, idx2);
     }
 
-    template<typename DATA, typename REAL, typename AINT>
-    void ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::remove_bond_measurement (
-        const size_t measure_idx) {
+    ws_atoms_list_measurement_subsys_t::ws_atoms_list_measurement_subsys_t(ws_atoms_list_t &_p_owner) {
+      p_owner = &_p_owner;
+    }
+
+    void ws_atoms_list_measurement_subsys_t::remove_bond_measurement (const size_t measure_idx) {
       if (measure_idx < m_records.size())
         m_records.erase(m_records.begin() + measure_idx);
     }
 
-    template<typename DATA, typename REAL, typename AINT>
-    std::optional<size_t>
-    ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::is_bond_measurement_exist (
-        const AINT atm1, const AINT atm2, const index idx1, const index idx2) {
+
+    std::optional<size_t> ws_atoms_list_measurement_subsys_t::is_bond_measurement_exist (
+        const uint32_t atm1, const uint32_t atm2, const index idx1, const index idx2) {
 
       for (auto i = 0; i < m_records.size(); i++)
         if ((m_records[i].at1 == atm1 && m_records[i].at2 == atm2 &&
@@ -47,8 +45,7 @@ namespace qpp {
 
     }
 
-    template<typename DATA, typename REAL, typename AINT>
-    void ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::render() {
+    void ws_atoms_list_measurement_subsys_t::render() {
       //render bond measurements
       app_state_t* astate = &(c_app::get_state());
       astate->dp->begin_render_line_styled();
@@ -67,15 +64,14 @@ namespace qpp {
 
     }
 
-    template<typename DATA, typename REAL, typename AINT>
-    void ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::render_overlay() {
+    void ws_atoms_list_measurement_subsys_t::render_overlay() {
 
       app_state_t* astate = &(c_app::get_state());
 
       ImDrawList* imdrw = ImGui::GetOverlayDrawList();
       //imdrw->AddText(ImVec2(222,200),  ImColor(1.0f, 1.0f, 1.0f, 1.0f), "SiSSSSSS");
 
-      vector3<REAL> l_s, l_e;
+      vector3<float> l_s, l_e;
 
       for (auto &record : m_records)
         if (record.m_show) {
@@ -112,8 +108,7 @@ namespace qpp {
 
     }
 
-    template<typename DATA, typename REAL, typename AINT>
-    void ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::render_ui_obj_inst() {
+    void ws_atoms_list_measurement_subsys_t::render_ui_obj_inst() {
 
       if (ImGui::CollapsingHeader("Measurements")) {
           ImGui::Spacing();
@@ -153,11 +148,9 @@ namespace qpp {
 
         }
 
-
     }
 
-    template<typename DATA, typename REAL, typename AINT>
-    void ws_atoms_list_measurement_subsys_t<DATA, REAL, AINT>::render_ui_context() {
+    void ws_atoms_list_measurement_subsys_t::render_ui_context() {
 
       if (p_owner->m_atom_idx_sel.size() == 2) {
           if (ImGui::BeginMenu("Measurements")) {
@@ -181,8 +174,6 @@ namespace qpp {
         }
 
     }
-
-    template class ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float>;
 
   }
 

@@ -12,31 +12,32 @@ namespace qpp {
 
   namespace cad {
 
-    template <typename DATA, typename REAL>
+    class ws_atoms_list_t;
+
     class ws_atoms_list_anim_subsys_t {
 
       private:
 
-        DATA* p_owner;
+        ws_atoms_list_t* p_owner;
 
       public:
 
-        std::vector<geom_anim_record_t<REAL> >  m_anim_data;
-        REAL m_cur_anim_time{0.0f};
-        REAL m_anim_frame_time{1.0f};
+        std::vector<geom_anim_record_t<float> >  m_anim_data;
+        float m_cur_anim_time{0.0f};
+        float m_anim_frame_time{1.0f};
         int m_cur_anim{0};
         bool m_rebuild_bonds_in_anim{true};
         bool m_play_cyclic{false};
         bool m_play_anim{false};
         bool m_force_non_animable{false};
 
-        ws_atoms_list_anim_subsys_t (DATA &_p_owner);
+        ws_atoms_list_anim_subsys_t (ws_atoms_list_t &_p_owner);
 
-        void update_geom_to_anim (const int anim_id, const REAL current_frame);
+        void update_geom_to_anim (const int anim_id, const float current_frame);
 
         void update_geom_to_anim ();
 
-        void update (const REAL delta_time);
+        void update (const float delta_time);
 
         bool animable () const;
 

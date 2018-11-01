@@ -5,14 +5,12 @@ namespace qpp {
 
   namespace cad {
 
-    template <typename DATA, typename REAL>
-    ws_atoms_list_anim_subsys_t<DATA, REAL>::ws_atoms_list_anim_subsys_t(DATA &_p_owner) {
+    ws_atoms_list_anim_subsys_t::ws_atoms_list_anim_subsys_t(ws_atoms_list_t &_p_owner) {
       p_owner = &_p_owner;
     }
 
-    template <typename DATA, typename REAL>
-    void ws_atoms_list_anim_subsys_t<DATA, REAL>::update_geom_to_anim(const int anim_id,
-                                                                      const REAL current_frame) {
+    void ws_atoms_list_anim_subsys_t::update_geom_to_anim(const int anim_id,
+                                                          const float current_frame) {
       float start_frame = int(current_frame);
       float end_frame   = std::ceil(current_frame);
       float frame_delta = 1 - (current_frame - start_frame);
@@ -43,13 +41,11 @@ namespace qpp {
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_unlock_img);
     }
 
-    template <typename DATA, typename REAL>
-    void ws_atoms_list_anim_subsys_t<DATA, REAL>::update_geom_to_anim() {
+    void ws_atoms_list_anim_subsys_t::update_geom_to_anim() {
       update_geom_to_anim(m_cur_anim, m_cur_anim_time);
     }
 
-    template <typename DATA, typename REAL>
-    void ws_atoms_list_anim_subsys_t<DATA, REAL>::update(const REAL delta_time) {
+    void ws_atoms_list_anim_subsys_t::update(const float delta_time) {
 
       app_state_t* astate = &(c_app::get_state());
 
@@ -81,8 +77,7 @@ namespace qpp {
 
     }
 
-    template <typename DATA, typename REAL>
-    bool ws_atoms_list_anim_subsys_t<DATA, REAL>::animable() const {
+    bool ws_atoms_list_anim_subsys_t::animable() const {
 
       if (m_force_non_animable) return false;
       if (m_anim_data.empty()) return false;
@@ -92,8 +87,7 @@ namespace qpp {
 
     }
 
-    template <typename DATA, typename REAL>
-    void ws_atoms_list_anim_subsys_t<DATA, REAL>::manual_frame_manipulate(const int frame_mod){
+    void ws_atoms_list_anim_subsys_t::manual_frame_manipulate(const int frame_mod){
 
       if (!animable()) return;
       if (m_cur_anim >= m_anim_data.size()) return;
@@ -105,28 +99,22 @@ namespace qpp {
 
     }
 
-    template <typename DATA, typename REAL>
-    geom_anim_type ws_atoms_list_anim_subsys_t<DATA, REAL>::get_cur_anim_type() const {
+    geom_anim_type ws_atoms_list_anim_subsys_t::get_cur_anim_type() const {
       return m_anim_data[m_cur_anim].m_anim_type;
     }
 
-    template <typename DATA, typename REAL>
-    size_t ws_atoms_list_anim_subsys_t<DATA, REAL>::get_total_anims() const {
+    size_t ws_atoms_list_anim_subsys_t::get_total_anims() const {
       return m_anim_data.size();
     }
 
-    template <typename DATA, typename REAL>
-    size_t ws_atoms_list_anim_subsys_t<DATA, REAL>::frame_count(const size_t anim_id) const {
+    size_t ws_atoms_list_anim_subsys_t::frame_count(const size_t anim_id) const {
       return m_anim_data[anim_id].frame_data.size();
     }
 
-    template <typename DATA, typename REAL>
-    size_t ws_atoms_list_anim_subsys_t<DATA, REAL>::current_frame_count() const {
+    size_t ws_atoms_list_anim_subsys_t::current_frame_count() const {
       return frame_count(m_cur_anim);
     }
 
-
-    template class ws_atoms_list_anim_subsys_t<ws_atoms_list_t, float>;
   }
 
 }

@@ -3,55 +3,17 @@
 
 using namespace qpp::cad;
 
-template<typename REAL>
-void lattice_plane_record_t<REAL>::update(geometry<REAL, periodic_cell<REAL> > *geom,
-                                          int _h, int _k, int _l) {
 
-  m_h = _h;
-  m_k = _k;
-  m_l = _l;
-
-  vector3<REAL> pp1 = geom->cell.v[0] / m_h;
-  vector3<REAL> pp2 = geom->cell.v[1] / m_k;
-  vector3<REAL> pp3 = geom->cell.v[2] / m_l;
-
-  m_size = std::max(geom->cell.v[0].norm(),
-      std::max(geom->cell.v[1].norm(), geom->cell.v[2].norm()));
-
-//  norm = cross(p1-p0,p2-p0);
-//    norm.normalize();
-//    d = -dot(norm,p0);
-
-  m_center = pp1;
-
-  m_normal = ((pp1 - pp2).cross(pp2 - pp3)).normalized();
-  d = - (pp1.dot(m_normal));
-
-  m_center = (pp1 + pp2 + pp3) / REAL(3);
-
-  m_rotation[0] = qpp::pi+std::acos(m_normal.dot(vector3<float>::UnitZ()));
-  m_rotation[1] = std::acos(m_normal.dot(vector3<float>::UnitY()));
-  m_rotation[2] = std::acos(m_normal.dot(vector3<float>::UnitX()));
-
+ws_atoms_list_lat_planes_subsys_t::ws_atoms_list_lat_planes_subsys_t(ws_atoms_list_t &_p_owner) {
+  p_owner = &_p_owner;
 }
 
-template<typename REAL>
-lattice_plane_record_t<REAL>::lattice_plane_record_t(
-    geometry<REAL, periodic_cell<REAL> > *geom,
-    int _h, int _k, int _l) {
-
-  update(geom, _h, _k, _l);
-
-}
-
-template<typename DATA, typename REAL, typename AINT>
-void ws_atoms_list_lat_planes_subsys_t<DATA, REAL, AINT>::add_plane(int _h, int _k, int _l) {
+void ws_atoms_list_lat_planes_subsys_t::add_plane(int _h, int _k, int _l) {
   if (_h == 0 || _k == 0 || _l == 0) return;
   m_planes.emplace_back(p_owner->m_geom.get(), _h, _k, _l);
 }
 
-template<typename DATA, typename REAL, typename AINT>
-void ws_atoms_list_lat_planes_subsys_t<DATA, REAL, AINT>::render() {
+void ws_atoms_list_lat_planes_subsys_t::render() {
   if (p_owner->m_geom->DIM == 0) return;
   app_state_t* astate = &(c_app::get_state());
 
@@ -72,8 +34,7 @@ void ws_atoms_list_lat_planes_subsys_t<DATA, REAL, AINT>::render() {
   glEnable(GL_CULL_FACE);
 }
 
-template<typename DATA, typename REAL, typename AINT>
-void ws_atoms_list_lat_planes_subsys_t<DATA, REAL, AINT>::render_ui_obj_insp() {
+void ws_atoms_list_lat_planes_subsys_t::render_ui_obj_insp() {
 
   app_state_t* astate = &(c_app::get_state());
 
@@ -101,5 +62,3 @@ void ws_atoms_list_lat_planes_subsys_t<DATA, REAL, AINT>::render_ui_obj_insp() {
       }
 }
 
-template class qpp::cad::ws_atoms_list_lat_planes_subsys_t<ws_atoms_list_t, float>;
-template struct qpp::cad::lattice_plane_record_t<float>;

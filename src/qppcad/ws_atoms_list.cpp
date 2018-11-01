@@ -33,17 +33,10 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
   m_tws_tr  = std::make_unique<tws_tree_t<float> >(*m_geom);
   m_tws_tr->do_action(act_unlock);
 
-  m_anim =
-      std::make_unique<ws_atoms_list_anim_subsys_t<ws_atoms_list_t, float > >(*this);
-
-  m_measure =
-      std::make_unique<ws_atoms_list_measurement_subsys_t<ws_atoms_list_t, float> >(*this);
-
-  m_labels =
-      std::make_unique<ws_atoms_list_labels_subsys_t<ws_atoms_list_t, float> >(*this);
-
-  m_lat_planes =
-      std::make_unique<ws_atoms_list_lat_planes_subsys_t<ws_atoms_list_t, float> >(*this);
+  m_anim = std::make_unique<ws_atoms_list_anim_subsys_t>(*this);
+  m_measure = std::make_unique<ws_atoms_list_measurement_subsys_t>(*this);
+  m_labels = std::make_unique<ws_atoms_list_labels_subsys_t>(*this);
+  m_lat_planes = std::make_unique<ws_atoms_list_lat_planes_subsys_t>(*this);
 
   //parent->add_item_to_workspace(this->shared_from_this());
 

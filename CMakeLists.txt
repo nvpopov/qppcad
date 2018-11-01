@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
-add_definitions(-O3 -fPIC -DFMT_HEADER_ONLY)
+add_definitions(-g3 -rdynamic -fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS "-O3 -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden")
 set(CMAKE_BUILD_TYPE "Debug")
 #set(CMAKE_BUILD_TYPE "Release")
@@ -75,6 +75,7 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list_render_bs.cpp
     src/qppcad/ws_atoms_list_lattice_planes_subsys.cpp
     src/qppcad/ws_atoms_list_measurement_subsys.cpp
+    src/qppcad/ws_atoms_list_labels_subsys.cpp
     src/qppcad/ws_atoms_list_anim_subsys.cpp
     src/qppcad/ws_atoms_list_obj_insp.cpp
     src/qppcad/ws_atoms_list_render_xlines.cpp

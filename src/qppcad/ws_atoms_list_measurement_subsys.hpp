@@ -10,6 +10,8 @@ namespace qpp {
 
   namespace cad {
 
+    class ws_atoms_list_t;
+
     template<typename AINT = uint32_t>
     struct measurement_bond_record {
 
@@ -25,28 +27,25 @@ namespace qpp {
 
     };
 
-    template <typename DATA, typename REAL = float, typename AINT  = uint32_t>
     class ws_atoms_list_measurement_subsys_t {
 
       private:
 
-        DATA* p_owner;
-        std::vector<measurement_bond_record<AINT> > m_records;
+        ws_atoms_list_t* p_owner;
+        std::vector<measurement_bond_record<uint32_t> > m_records;
 
       public:
 
-        ws_atoms_list_measurement_subsys_t (DATA &_p_owner) {
-          p_owner = &_p_owner;
-        }
+        ws_atoms_list_measurement_subsys_t (ws_atoms_list_t &_p_owner);
 
-        REAL dist (const size_t idx);
+        float dist (const size_t idx);
 
-        void add_bond_measurement (const AINT atm1, const AINT atm2,
+        void add_bond_measurement (const uint32_t atm1, const uint32_t atm2,
                                    const index idx1, const index idx2);
 
         void remove_bond_measurement (const size_t measure_idx);
 
-        std::optional<size_t> is_bond_measurement_exist (const AINT atm1, const AINT atm2,
+        std::optional<size_t> is_bond_measurement_exist (const uint32_t atm1, const uint32_t atm2,
                                                          const index idx1, const index idx2);
 
         void render ();
