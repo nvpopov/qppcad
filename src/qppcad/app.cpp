@@ -165,8 +165,8 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   glfwSetMouseButtonCallback(qpp::cad::c_app::curWindow, qpp::cad::c_app::mouse_button_callback);
   glfwSetCursorPosCallback(qpp::cad::c_app::curWindow, qpp::cad::c_app::mouse_callback);
 
-  glEnable              ( GL_DEBUG_OUTPUT );
-  glDebugMessageCallback( MessageCallback, 0 );
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(MessageCallback, 0);
 
   c_app::app_state = new qpp::cad::app_state_t();
   app_state_t* astate = &(c_app::get_state());
@@ -176,6 +176,7 @@ void qpp::cad::c_app::run (int argc, char **argv) {
                                    astate->c_max_texture_buffer_size));
 
   qpp::cad::c_app::m_is_state_initialized = true;
+  astate->ws_manager->init_default();
 
   if (aa_level > 0) {
       glfwWindowHint(GLFW_SAMPLES, aa_level);

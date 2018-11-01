@@ -76,6 +76,7 @@ namespace qpp {
 
         void render_ui() override;
         void render_overlay() override;
+        void render_work_panel_ui() override;
         void td_context_menu_edit_item() override;
         void td_context_menu_edit_content() override;
 

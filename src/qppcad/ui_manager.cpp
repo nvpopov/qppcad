@@ -119,6 +119,8 @@ void ui_manager_t::render_main_menu(){
           if (ImGui::BeginMenu("Import")){
 
               if (ImGui::BeginMenu("XYZ")){
+                  ImGui::Checkbox("Truncate PDB-like names", &astate->m_transform_pdb_atom_names);
+                  ImGui::Separator();
                   if (ImGui::MenuItem("Standart XYZ(0D)")){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::standart_xyz);
@@ -482,6 +484,18 @@ void ui_manager_t::render_work_panel () {
       ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(64,24));
       ImGui::Separator();
 
+      if (astate->ws_manager->has_wss()){
+          auto curws = astate->ws_manager->get_current();
+          if (curws) {
+              auto curi = curws->get_selected();
+              if (curi) {
+                  curi->render_work_panel_ui();
+                  ImGui::Separator();
+                }
+            }
+        }
+
+
     }
 
   ImGui::End();
@@ -502,7 +516,7 @@ void ui_manager_t::render_object_inspector () {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 
   //style->Colors[ImGuiCol_WindowBg]              = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
- // style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
+  // style->Colors[ImGuiCol_ChildBg]               = {0.23529413f, 0.24705884f, 0.25490198f, 1.00f};
 
   ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.29529413f, 0.29529413f, 0.29529413f, 1.00f));
   ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.29529413f, 0.29529413f, 0.29529413f, 1.00f));

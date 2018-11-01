@@ -27,7 +27,7 @@ namespace qpp {
         float m_anim_frame_time{1.0f};
         int m_cur_anim{0};
         bool m_rebuild_bonds_in_anim{true};
-        bool m_play_cyclic{false};
+        bool m_play_cyclic{true};
         bool m_play_anim{false};
         bool m_force_non_animable{false};
 

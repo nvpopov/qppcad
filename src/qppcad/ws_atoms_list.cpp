@@ -152,6 +152,78 @@ void ws_atoms_list_t::render_overlay () {
   m_labels->render_overlay();
 }
 
+void ws_atoms_list_t::render_work_panel_ui() {
+
+  app_state_t* astate = &(c_app::get_state());
+  vector3<float> look_from;
+  vector3<float> look_to;
+  vector3<float> look_up{0.0, 1.0, 0.0};
+
+  bool need_to_update_camera{false};
+
+  if (m_geom->DIM == 0) {
+
+      if (ImGui::Button("C:X", ImVec2(35, 24))) {
+          float axis_size = m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0];
+          look_from = m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+          look_to = m_pos;
+          look_up = {0.0 , 0.0 , 1.0};
+          need_to_update_camera = true;
+        }
+
+      if (ImGui::Button("C:Y", ImVec2(35, 24))) {
+          float axis_size = m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1];
+          look_from = m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
+          look_to = m_pos;
+          look_up = {0.0, 0.0, 1.0};
+          need_to_update_camera = true;
+        }
+
+      if (ImGui::Button("C:Z", ImVec2(35, 24))) {
+          float axis_size = m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2];
+          look_from = m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
+          look_to = m_pos;
+          look_up = {0.0, 1.0, 0.0};
+          need_to_update_camera = true;
+        }
+
+    }
+
+  if (m_geom->DIM == 3) {
+      if (ImGui::Button("C:a", ImVec2(35, 24))) {
+          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+          look_from = m_pos + center - 2.0f*m_geom->cell.v[0];
+          look_to = m_pos  + center;
+          look_up = {0.0 , 0.0 , 1.0};
+          need_to_update_camera = true;
+        }
+
+      if (ImGui::Button("C:b", ImVec2(35, 24))) {
+          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+          look_from = m_pos + center - 2.0f*m_geom->cell.v[1];
+          look_to = m_pos  + center;
+          look_up = {0.0, 0.0, 1.0};
+          need_to_update_camera = true;
+        }
+
+      if (ImGui::Button("C:c", ImVec2(35, 24))) {
+          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+          look_from = m_pos + center - 2.0f*m_geom->cell.v[2];
+          look_to = m_pos  + center;
+          look_up = {0.0, 1.0, 0.0};
+          need_to_update_camera = true;
+        }
+    }
+
+  if (need_to_update_camera) {
+      astate->camera->m_view_point = look_from;
+      astate->camera->m_look_at = look_to;
+      astate->camera->m_look_up = look_up;
+      astate->camera->orthogonalize_gs();
+    }
+
+}
+
 void ws_atoms_list_t::td_context_menu_edit_item () {
   ws_item_t::td_context_menu_edit_item();
 }
@@ -456,6 +528,8 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
 void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_name,
                                      bool auto_center) {
 
+  app_state_t* astate = &(c_app::get_state());
+
   using elapsed_duration = std::chrono::duration<float, std::ratio<1> >;
 
   std::setlocale(LC_ALL, "C");
@@ -486,7 +560,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
     case qc_file_fmt::multi_frame_xyz:
       m_geom->DIM = 0;
       //
-      read_xyz_multiframe(qc_data, *(m_geom), m_anim->m_anim_data);
+      read_xyz_multiframe(qc_data, *(m_geom), m_anim->m_anim_data,
+                          !astate->m_transform_pdb_atom_names);
       break;
 
     case qc_file_fmt::vasp_poscar:

@@ -118,7 +118,6 @@ namespace qpp {
       kb_manager   = std::make_unique<keyboard_manager_t>();
       //frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >(false);
       ws_manager   = std::make_shared<workspace_manager_t>(this);
-      ws_manager->init_default();
       ui_manager   = std::make_shared<ui_manager_t>(this);
       fd_manager   = std::make_shared<file_dialog_manager_t>();
       sq_manager   = std::make_unique<simple_query_manager_t>();

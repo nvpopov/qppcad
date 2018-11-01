@@ -122,6 +122,7 @@ namespace qpp {
         bool show_console{false};
         bool mouse_in_3d_area{false};
         bool viewport_changed{false};
+        bool m_transform_pdb_atom_names{true};
 
         bool m_realtime{false};
         bool m_viewport_dirty{true};

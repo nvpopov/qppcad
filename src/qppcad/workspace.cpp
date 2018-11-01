@@ -390,6 +390,7 @@ void workspace_manager_t::init_default () {
   _ws4->m_ws_name = "animtest1";
   auto _ws4_al = std::make_shared<ws_atoms_list_t>();
   _ws4->add_item_to_workspace(_ws4_al);
+
   _ws4_al->load_from_file(qc_file_fmt::multi_frame_xyz,
                           "../data/refs/path.xyz",
                           qc_file_fmt_helper::need_to_auto_center(qc_file_fmt::multi_frame_xyz));
