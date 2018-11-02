@@ -93,6 +93,7 @@ namespace qpp {
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
         void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);
+        void apply_axial_scale(const float scale_a, const float scale_b, const float scale_c);
         bool support_translation() override;
         bool support_rotation() override;
         bool support_scaling() override;

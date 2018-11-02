@@ -29,6 +29,19 @@ namespace qpp {
                   ImGui::EndMenu();
                 }
 
+              if (al.m_geom->DIM == 3) {
+                  if (ImGui::BeginMenu("Axial scale")) {
+                      static float axs_a{1.0f}, axs_b{1.0f}, axs_c{1.0f};
+                      ImGui::DragFloat("Scale a", &axs_a, 0.01f, 0.01f, 1.5f);
+                      ImGui::DragFloat("Scale b", &axs_b, 0.01f, 0.01f, 1.5f);
+                      ImGui::DragFloat("Scale c", &axs_c, 0.01f, 0.01f, 1.5f);
+                      if (ImGui::Button("Apply Scale")) {
+                          al.apply_axial_scale(axs_a, axs_b, axs_c);
+                        }
+                      ImGui::EndMenu();
+                    }
+                }
+
               if (al.m_atom_idx_sel.size() == 2){
                   if (ImGui::BeginMenu("Append new atom between")){
 
@@ -56,6 +69,8 @@ namespace qpp {
                         }
                       ImGui::EndMenu();
                     }
+
+
 
                   if (ImGui::BeginMenu("Two atoms manipulation")){
                       auto it1 = al.m_atom_idx_sel.begin();

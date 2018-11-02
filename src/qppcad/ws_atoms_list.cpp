@@ -438,6 +438,30 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
   sc_al->geometry_changed();
 }
 
+void ws_atoms_list_t::apply_axial_scale (const float scale_a,
+                                         const float scale_b,
+                                         const float scale_c) {
+  if (m_geom->DIM != 3) return;
+  m_tws_tr->do_action(act_lock | act_clear_all);
+
+  periodic_cell<float> new_cell(3);
+  new_cell.v[0] = m_geom->cell.v[0] * scale_a;
+  new_cell.v[1] = m_geom->cell.v[1] * scale_b;
+  new_cell.v[2] = m_geom->cell.v[2] * scale_c;
+
+  for (auto i = 0; i < m_geom->nat(); i++) {
+      vector3<float> frac_in_old_cell = m_geom->cell.cart2frac(m_geom->pos(i));
+      //std::cout << frac_in_old_cell << new_cell.frac2cart(frac_in_old_cell) << std::endl;
+      m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
+    }
+
+  m_geom->cell.v[0] = new_cell.v[0];
+  m_geom->cell.v[1] = new_cell.v[1];
+  m_geom->cell.v[2] = new_cell.v[2];
+
+  m_tws_tr->do_action(act_unlock | act_rebuild_all);
+}
+
 bool ws_atoms_list_t::support_translation () { return true; }
 
 bool ws_atoms_list_t::support_rotation () { return false; }
