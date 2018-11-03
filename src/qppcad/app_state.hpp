@@ -54,6 +54,9 @@ namespace qpp {
 
       public:
 
+        ImFont* fontn;
+        ImFont* fontb;
+
         draw_pipeline_t*               dp;
 
         shader_program_t*              default_program;

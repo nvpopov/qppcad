@@ -4,6 +4,7 @@
 #include <thread>
 #include <args.hxx>
 #include <qppcad/font.inc>
+#include <qppcad/fontb.inc>
 
 void
 MessageCallback ( GLenum source,
@@ -143,9 +144,12 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   config.MergeMode = true;*/
 
   //io.Fonts->AddFontFromFileTTF("../data/fonts/Open_Sans/OpenSans-Regular.ttf", 22.0f);
-  io.Fonts->AddFontFromMemoryCompressedTTF((void*)fontn_compressed_data, fontn_compressed_size,
-                                           21.0f);
-
+  ImFont* fontn = io.Fonts->AddFontFromMemoryCompressedTTF((void*)fontn_compressed_data,
+                                                           fontn_compressed_size,
+                                           20.0f);
+  ImFont* fontb = io.Fonts->AddFontFromMemoryCompressedTTF((void*)fontb_compressed_data,
+                                                           fontb_compressed_size,
+                                           20.0f);
   unsigned int flags = ImGuiFreeType::LightHinting;
   ImGuiFreeType::BuildFontAtlas(io.Fonts, flags);
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -170,6 +174,9 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
   c_app::app_state = new qpp::cad::app_state_t();
   app_state_t* astate = &(c_app::get_state());
+  astate->fontn = fontn;
+  astate->fontb = fontb;
+
   qpp::cad::c_app::log("qpp::cad initialized succesfully!");
 
   qpp::cad::c_app::log(fmt::format("GL_MAX_TEXTURE_BUFFER_SIZE = {}",
