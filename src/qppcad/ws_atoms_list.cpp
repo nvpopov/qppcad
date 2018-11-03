@@ -163,7 +163,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
 
   if (m_geom->DIM == 0) {
 
-      if (ImGui::Button("C:X", ImVec2(35, 24))) {
+      if (ImGui::Button("C:X", ImVec2(35, astate->ui_manager->wp_btn_height))) {
           float axis_size = m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0];
           look_from = m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
           look_to = m_pos;
@@ -171,7 +171,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
           need_to_update_camera = true;
         }
 
-      if (ImGui::Button("C:Y", ImVec2(35, 24))) {
+      if (ImGui::Button("C:Y", ImVec2(35, astate->ui_manager->wp_btn_height))) {
           float axis_size = m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1];
           look_from = m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
           look_to = m_pos;
@@ -179,7 +179,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
           need_to_update_camera = true;
         }
 
-      if (ImGui::Button("C:Z", ImVec2(35, 24))) {
+      if (ImGui::Button("C:Z", ImVec2(35, astate->ui_manager->wp_btn_height))) {
           float axis_size = m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2];
           look_from = m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
           look_to = m_pos;
@@ -190,7 +190,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
     }
 
   if (m_geom->DIM == 3) {
-      if (ImGui::Button("C:a", ImVec2(35, 24))) {
+      if (ImGui::Button("C:a", ImVec2(35, astate->ui_manager->wp_btn_height))) {
           vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
           look_from = m_pos + center - 2.0f*m_geom->cell.v[0];
           look_to = m_pos  + center;
@@ -198,7 +198,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
           need_to_update_camera = true;
         }
 
-      if (ImGui::Button("C:b", ImVec2(35, 24))) {
+      if (ImGui::Button("C:b", ImVec2(35, astate->ui_manager->wp_btn_height))) {
           vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
           look_from = m_pos + center - 2.0f*m_geom->cell.v[1];
           look_to = m_pos  + center;
@@ -206,7 +206,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
           need_to_update_camera = true;
         }
 
-      if (ImGui::Button("C:c", ImVec2(35, 24))) {
+      if (ImGui::Button("C:c", ImVec2(35, astate->ui_manager->wp_btn_height))) {
           vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
           look_from = m_pos + center - 2.0f*m_geom->cell.v[2];
           look_to = m_pos  + center;

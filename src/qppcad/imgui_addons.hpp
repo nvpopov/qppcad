@@ -79,7 +79,7 @@ namespace ImGui {
 
   }
 
-  inline bool AddTab(const char* label){
+  inline bool AddTab(const char* label, const float tab_height = 24){
     TabsDesc* tbs = CurTabs->tbd;
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec2 itemSpacing = style.ItemSpacing;
@@ -104,7 +104,7 @@ namespace ImGui {
       }
 
     // Draw the button
-    if (ImGui::Button(label, ImVec2(tbs->lableWidth, 24))) {
+    if (ImGui::Button(label, ImVec2(tbs->lableWidth, tab_height))) {
         *(CurTabs->selectedIdx) = tbs->currentidx;
       }
 

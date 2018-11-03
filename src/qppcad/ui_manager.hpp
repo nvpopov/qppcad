@@ -32,9 +32,12 @@ namespace qpp {
         std::unique_ptr<ptable_widget_t>  ptable_widget;
         std::unique_ptr<embedded_cluster_generator_widget_t> ecg_widget;
 
-        int work_panel_height{38};
+        int work_panel_height{48};
         int work_panel_yoffset{28};
+        int wp_btn_height{28};
+        int wp_wnd_padding{14};
         int obj_insp_width{350};
+
         uint32_t m_rename_ws_id;
         char s_rename_workspace_name[60];
         bool show_rename_workspace_dialog{false};

@@ -30,7 +30,8 @@ void ui_manager_t::setup_style () {
 
   ImGuiStyle * style = &ImGui::GetStyle();
   style->FrameRounding = 0.51f;
-  style->WindowRounding = 0.0f;
+  style->WindowRounding = 0.3f;
+  style->ChildRounding = 1.0f;
   //style->
   style->ScrollbarRounding = 1.0f;
   style->FrameBorderSize = 0.2f;
@@ -243,7 +244,7 @@ void ui_manager_t::render_main_menu(){
 
       ImGui::Separator();
 
-      int e_task = c_app::get_state().cur_task;
+      //int e_task = c_app::get_state().cur_task;
 
       bool has_ws = astate->ws_manager->has_wss();
 
@@ -416,17 +417,20 @@ void ui_manager_t::render_work_panel () {
   ImGui::SetNextWindowSize(ImVec2( c_app::get_state().viewport_size(0), work_panel_height));
   ImGui::SetNextWindowPos(ImVec2(0, work_panel_yoffset));
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.0f, wp_wnd_padding));
+
   //ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.1f);
   ImGui::Begin("task_panel", nullptr,
                ImGuiWindowFlags_NoTitleBar |
                ImGuiWindowFlags_NoMove |
                ImGuiWindowFlags_NoResize |
                ImGuiWindowFlags_NoScrollbar |
-               ImGuiWindowFlags_NoBringToFrontOnFocus);
+               ImGuiWindowFlags_NoBringToFrontOnFocus |
+               ImGuiWindowFlags_AlwaysUseWindowPadding);
   ImGuiWindow* window = ImGui::GetCurrentWindow();
   window->DC.LayoutType = ImGuiLayoutType_Horizontal;
 
-  ImGui::ToggleButton("~" , &console_widget->m_active, ImVec2(20,24));
+  ImGui::ToggleButton("~" , &console_widget->m_active, ImVec2(20, wp_btn_height));
   ImGui::Separator();
   //  ImGui::Text("View:");
   //  ImGui::Button("a" , ImVec2(20,24));
@@ -439,11 +443,11 @@ void ui_manager_t::render_work_panel () {
       int edit_mode = int(c_app::get_state().ws_manager->get_current()->m_edit_type);
 
       ImGui::BeginTabs("newtab", 2, edit_mode, 40 );
-      if (ImGui::AddTab( "ITM")) {
+      if (ImGui::AddTab("ITM", wp_btn_height)) {
           c_app::get_state().ws_manager->get_current()->m_edit_type = ws_edit_type::EDIT_WS_ITEM;
         }
 
-      if (ImGui::AddTab( "CNT")) {
+      if (ImGui::AddTab("CNT", wp_btn_height)) {
           c_app::get_state().ws_manager->get_current()->m_edit_type =
               ws_edit_type::EDIT_WS_ITEM_CONTENT;
         }
@@ -454,34 +458,36 @@ void ui_manager_t::render_work_panel () {
       ImGui::Spacing();
       ImGui::Separator();
 
-      ImGui::Button("Undo" , ImVec2(50,24));
-      ImGui::Button("Redo" , ImVec2(50,24));
+      ImGui::Button("Undo" , ImVec2(50,wp_btn_height));
+      ImGui::Button("Redo" , ImVec2(50,wp_btn_height));
       ImGui::Separator();
 
-      ImGui::Button("RULER" , ImVec2(64,24));
+      ImGui::Button("RULER" , ImVec2(64,wp_btn_height));
       ImGui::Separator();
 
-      if(ImGui::ToggleButton("INSP", &(c_app::get_state().show_object_inspector), ImVec2(50,24))){
+      if(ImGui::ToggleButton("INSP", &(c_app::get_state().show_object_inspector),
+                             ImVec2(50,wp_btn_height))) {
           c_app::get_state().mark_viewport_change();
         }
+
       ImGui::Separator();
 
-      if (astate->ws_manager->has_wss()){
+      if (astate->ws_manager->has_wss()) {
           auto &gizmo = astate->ws_manager->get_current()->m_gizmo;
-          ImGui::ToggleButton("GIZMO", &(gizmo->m_is_visible), ImVec2(60, 24));
+          ImGui::ToggleButton("GIZMO", &(gizmo->m_is_visible), ImVec2(60, wp_btn_height));
 
-          if (astate->ws_manager->get_current()->m_gizmo->m_is_visible){
-              const char* items[] = { "Tr.", "Rot."};
-              ImGui::PushItemWidth(70);
-              if (ImGui::Combo("Type", reinterpret_cast<int*>(&gizmo->m_cur_ttype), items, 2))
-                astate->make_viewport_dirty();
-              ImGui::PushItemWidth(-1);
-            }
+//          if (astate->ws_manager->get_current()->m_gizmo->m_is_visible) {
+//              const char* items[] = { "Tr.", "Rot."};
+//              ImGui::PushItemWidth(70);
+//              if (ImGui::Combo("Type", reinterpret_cast<int*>(&gizmo->m_cur_ttype), items, 2))
+//                astate->make_viewport_dirty();
+//              ImGui::PushItemWidth(-1);
+//            }
         }
 
       ImGui::Separator();
 
-      ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(64,24));
+      ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(64, wp_btn_height));
       ImGui::Separator();
 
       if (astate->ws_manager->has_wss()){
@@ -499,7 +505,7 @@ void ui_manager_t::render_work_panel () {
     }
 
   ImGui::End();
-  ImGui::PopStyleVar();
+  ImGui::PopStyleVar(2);
 }
 
 
@@ -569,7 +575,7 @@ void ui_manager_t::render_object_inspector () {
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws){
 
-      std::optional<uint16_t> ws_itm_cur = cur_ws->get_selected_item();
+      std::optional<size_t> ws_itm_cur = cur_ws->get_selected_item();
 
       int ws_itm_cur_val = -1;
       if (ws_itm_cur) ws_itm_cur_val = *ws_itm_cur;
@@ -584,6 +590,7 @@ void ui_manager_t::render_object_inspector () {
 
       ImGui::PopItemWidth();
       ImGui::Spacing();
+      ImGui::Separator();
 
       ImGui::BeginChild("obj_insp_child", ImVec2(335, 0));
       ImGui::Spacing();
