@@ -134,7 +134,7 @@ void ui_manager_t::render_main_menu(){
                 }
 
 
-              if (ImGui::BeginMenu("VASP")){
+              if (ImGui::BeginMenu("VASP")) {
                   if (ImGui::MenuItem("VASP POSCAR(CONTCAR)")){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::vasp_poscar);
@@ -142,6 +142,14 @@ void ui_manager_t::render_main_menu(){
                   if (ImGui::MenuItem("VASP OUTCAR(MD/RELAX)")){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::vasp_outcar_md);
+                    }
+                  ImGui::EndMenu();
+                }
+
+              if (ImGui::BeginMenu("PC Gamess Firefly")) {
+                  if (ImGui::MenuItem("OUTPUT")){
+                      astate->ws_manager->
+                          query_import_file_as_new_workspace(qc_file_fmt::firefly_output);
                     }
                   ImGui::EndMenu();
                 }
@@ -413,7 +421,7 @@ void ui_manager_t::render_main_menu(){
 void ui_manager_t::render_work_panel () {
 
   app_state_t* astate = &(c_app::get_state());
-
+  ImGui::PushFont(astate->fontb);
   ImGui::SetNextWindowSize(ImVec2( c_app::get_state().viewport_size(0), work_panel_height));
   ImGui::SetNextWindowPos(ImVec2(0, work_panel_yoffset));
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
@@ -476,18 +484,18 @@ void ui_manager_t::render_work_panel () {
           auto &gizmo = astate->ws_manager->get_current()->m_gizmo;
           ImGui::ToggleButton("GIZMO", &(gizmo->m_is_visible), ImVec2(60, wp_btn_height));
 
-//          if (astate->ws_manager->get_current()->m_gizmo->m_is_visible) {
-//              const char* items[] = { "Tr.", "Rot."};
-//              ImGui::PushItemWidth(70);
-//              if (ImGui::Combo("Type", reinterpret_cast<int*>(&gizmo->m_cur_ttype), items, 2))
-//                astate->make_viewport_dirty();
-//              ImGui::PushItemWidth(-1);
-//            }
+          //          if (astate->ws_manager->get_current()->m_gizmo->m_is_visible) {
+          //              const char* items[] = { "Tr.", "Rot."};
+          //              ImGui::PushItemWidth(70);
+          //              if (ImGui::Combo("Type", reinterpret_cast<int*>(&gizmo->m_cur_ttype), items, 2))
+          //                astate->make_viewport_dirty();
+          //              ImGui::PushItemWidth(-1);
+          //            }
         }
 
       ImGui::Separator();
 
-      ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(64, wp_btn_height));
+      ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(0, wp_btn_height));
       ImGui::Separator();
 
       if (astate->ws_manager->has_wss()){
@@ -505,6 +513,7 @@ void ui_manager_t::render_work_panel () {
     }
 
   ImGui::End();
+  ImGui::PopFont();
   ImGui::PopStyleVar(2);
 }
 
@@ -566,8 +575,9 @@ void ui_manager_t::render_object_inspector () {
 
       ImGui::EndMenuBar();
     }
-
+  ImGui::PushFont(astate->fontb);
   ImGui::Text("Workspace items:");
+  ImGui::PopFont();
   ImGui::Spacing();
 
   ImGui::PushItemWidth(obj_insp_width-14);

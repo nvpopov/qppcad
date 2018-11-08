@@ -574,6 +574,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   m_name = extract_base_name(file_name);
 
   auto start_timer = std::chrono::steady_clock::now();
+  bool need_to_compile_from_ccd = false;
+  comp_chem_program_data_t<float> cc_inst;
 
   switch (file_format) {
     case qc_file_fmt::standart_xyz:
@@ -600,10 +602,26 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim->m_anim_data);
       break;
 
+    case qc_file_fmt::firefly_output : {
+      m_geom->DIM = 0;
+      read_ccd_from_firefly_output(qc_data, cc_inst);
+      need_to_compile_from_ccd = true;
+      break;
+    }
+
     default: c_app::log("File format not implemented");
     }
 
   qc_data.close();
+
+  if (need_to_compile_from_ccd) {
+      bool succes_comp_geom = compile_geometry(cc_inst, *(m_geom.get()));
+      bool succes_comp_static_anim = compile_static_animation(cc_inst, m_anim->m_anim_data);
+      bool succes_anims = compile_animation(cc_inst, m_anim->m_anim_data);
+
+      c_app::log(fmt::format("Is geometry compilation succes? {}",
+                             succes_comp_geom && succes_comp_static_anim));
+    }
 
   auto end_timer = std::chrono::steady_clock::now();
   auto diff_timer = end_timer - start_timer;

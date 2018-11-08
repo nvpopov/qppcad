@@ -29,6 +29,7 @@ namespace qpp {
           ImGui::SetColumnWidth(1, 70);
           ImGui::SetColumnWidth(2, 70);
           ImGui::SetColumnWidth(3, 70);
+          ImGui::PushFont(astate->fontb);
           ImGui::Text("Type");
           ImGui::NextColumn();
           ImGui::Text("Count");
@@ -36,6 +37,7 @@ namespace qpp {
           ImGui::Text("Color");
           ImGui::NextColumn();
           ImGui::Text("Hide");
+          ImGui::PopFont();
           ImGui::NextColumn();
           ImGui::Separator();
 
@@ -295,11 +297,19 @@ namespace qpp {
                   al.m_anim->update_geom_to_anim();
                   astate->make_viewport_dirty();
                 }
+
+              if (al.m_anim->get_total_anims() > 1) {
+                  if (ImGui::Button("Next anim")) al.m_anim->next_anim();
+                  ImGui::SameLine();
+                  if (ImGui::Button("Prev anim")) al.m_anim->prev_anim();
+                }
+
               ImGui::Checkbox("Rebuild bonds", &al.m_anim->m_rebuild_bonds_in_anim);
 
               if (al.m_anim->get_cur_anim_type() != geom_anim_type::anim_static) {
                   ImGui::SliderFloat("Frame time(sec.)", &al.m_anim->m_anim_frame_time,
                                      0.01f, 3.0f);
+
                   ImGui::Checkbox("Play in cycle", &al.m_anim->m_play_cyclic);
 
                   ImGui::TextUnformatted(fmt::format("Frames count: {}",
@@ -340,6 +350,8 @@ namespace qpp {
                       al.m_anim->manual_frame_manipulate(-1.0f);
                       astate->make_viewport_dirty();
                     }
+
+                  ImGui::Spacing();
                 }
             }
         }

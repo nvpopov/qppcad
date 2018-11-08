@@ -11,6 +11,8 @@ namespace qpp{
       multi_frame_xyz,
       vasp_poscar,
       vasp_outcar_md,
+      firefly_output,
+      firefly_input,
       cp2k_coord_cell_section
     };
 

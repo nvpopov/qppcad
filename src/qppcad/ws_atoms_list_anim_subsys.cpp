@@ -81,9 +81,19 @@ namespace qpp {
 
       if (m_force_non_animable) return false;
       if (m_anim_data.empty()) return false;
+      if (m_anim_data.size() == 1)
+        if (m_anim_data[0].m_anim_type == geom_anim_type::anim_static) return false;
       for (auto &anim : m_anim_data)
         if (anim.frame_data.empty()) return false;
       return true;
+
+    }
+
+    void ws_atoms_list_anim_subsys_t::next_anim() {
+
+    }
+
+    void ws_atoms_list_anim_subsys_t::prev_anim() {
 
     }
 

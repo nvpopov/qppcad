@@ -41,6 +41,10 @@ namespace qpp {
 
         bool animable () const;
 
+        void next_anim();
+
+        void prev_anim();
+
         void manual_frame_manipulate(const int frame_mod);
 
         geom_anim_type get_cur_anim_type () const;
