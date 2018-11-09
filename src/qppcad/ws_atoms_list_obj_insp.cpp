@@ -190,14 +190,16 @@ namespace qpp {
 
         }
 
+      al.m_anim->render_ui();
+
       //begin modify section
-      if (ImGui::CollapsingHeader("Modify")){
+      if (ImGui::CollapsingHeader("Modify")) {
 
           //check that we select 1 or 2 atoms
-          if (al.m_atom_idx_sel.size()!=1 && al.m_atom_idx_sel.size()!=2){
+          if (al.m_atom_idx_sel.size()!=1 && al.m_atom_idx_sel.size()!=2) {
               ImGui::Spacing();
               ImGui::BulletText("Select one atom to edit it");
-              ImGui::BulletText("Select two atoms to specify \ndistance between them");
+              ImGui::BulletText("Select two atoms to modify \ndistance between them");
             }
 
           // if we selected one atom - show single modify widget
@@ -206,7 +208,7 @@ namespace qpp {
               static std::string custom_atom_name = "";
 
               static int last_selected = -1;
-              if (last_selected != al.m_atom_idx_sel.begin()->m_atm){
+              if (last_selected != al.m_atom_idx_sel.begin()->m_atm) {
                   custom_atom_name = al.m_geom->atom(al.m_atom_idx_sel.begin()->m_atm);
                   last_selected = al.m_atom_idx_sel.begin()->m_atm;
                 }
@@ -214,7 +216,7 @@ namespace qpp {
               //ImGui::Separator();
               vector3<float> pos = al.m_geom->pos(al.m_atom_idx_sel.begin()->m_atm);
               ImGui::PushItemWidth(190);
-              if (ImGui::InputFloat3("Edit position", pos.data())){
+              if (ImGui::InputFloat3("Edit position", pos.data())) {
                   al.update_atom(al.m_atom_idx_sel.begin()->m_atm, pos);
                   astate->make_viewport_dirty();
                 }
@@ -231,18 +233,18 @@ namespace qpp {
             } // end one atom selection
 
           // if we selected two atoms - show distance modify widget
-          else if (al.m_atom_idx_sel.size() == 2){
+          else if (al.m_atom_idx_sel.size() == 2) {
               ImGui::BulletText("Modify distance between real atoms");
               auto it1 = al.m_atom_idx_sel.begin();
               auto it2 = it1++;
               if (it1->m_idx != index::D(al.m_geom->DIM).all(0) ||
-                  it2->m_idx != index::D(al.m_geom->DIM).all(0) ){
+                  it2->m_idx != index::D(al.m_geom->DIM).all(0) ) {
                   ImGui::BulletText("One of selected atom are imaginary");
                 } else {
                   float dist_btw = (al.m_geom->pos(it1->m_atm, it1->m_idx) -
                                     al.m_geom->pos(it2->m_atm, it2->m_idx)).norm();
 
-                  if (ImGui::SliderFloat("Distance", &dist_btw, 0.1f, 15.0f)){
+                  if (ImGui::SliderFloat("Distance", &dist_btw, 0.1f, 15.0f)) {
                       vector3<float> r_btw = (al.m_geom->pos(it1->m_atm, it1->m_idx) +
                                               al.m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
                       vector3<float> dir_f =
@@ -271,91 +273,6 @@ namespace qpp {
             }
 
         }
-
-      // start animation block
-      if (al.m_anim->animable()) {
-          if (ImGui::CollapsingHeader("Animations")) {
-              ImGui::Spacing();
-              ImGui::TextUnformatted(
-                    fmt::format("Total anims : {}", al.m_anim->m_anim_data.size()).c_str(),
-                    nullptr);
-              ImGui::PushItemWidth(140);
-
-              ImGui::Separator();
-
-              std::vector<std::string>  vStr;
-              vStr.reserve(10);
-              std::vector<char*>  vChar;
-              for (size_t i = 0; i < al.m_anim->get_total_anims(); i++)
-                vStr.push_back(al.m_anim->m_anim_data[i].m_anim_name);
-              std::transform(vStr.begin(), vStr.end(), std::back_inserter(vChar),vec_str_to_char);
-
-              ImGui::PushItemWidth(150);
-              if (ImGui::Combo("Current animation", &al.m_anim->m_cur_anim, vChar.data(),
-                               al.m_anim->get_total_anims())){
-                  al.m_anim->m_cur_anim_time = 0.0f;
-                  al.m_anim->update_geom_to_anim();
-                  astate->make_viewport_dirty();
-                }
-
-              if (al.m_anim->get_total_anims() > 1) {
-                  if (ImGui::Button("Next anim")) al.m_anim->next_anim();
-                  ImGui::SameLine();
-                  if (ImGui::Button("Prev anim")) al.m_anim->prev_anim();
-                }
-
-              ImGui::Checkbox("Rebuild bonds", &al.m_anim->m_rebuild_bonds_in_anim);
-
-              if (al.m_anim->get_cur_anim_type() != geom_anim_type::anim_static) {
-                  ImGui::SliderFloat("Frame time(sec.)", &al.m_anim->m_anim_frame_time,
-                                     0.01f, 3.0f);
-
-                  ImGui::Checkbox("Play in cycle", &al.m_anim->m_play_cyclic);
-
-                  ImGui::TextUnformatted(fmt::format("Frames count: {}",
-                                                     al.m_anim->current_frame_count()).c_str(),
-                                         nullptr);
-
-                  ImGui::Separator();
-                  ImGui::PushItemWidth(240);
-                  if (ImGui::SliderFloat("Timeline", &al.m_anim->m_cur_anim_time, 0.0f,
-                                         (al.m_anim->current_frame_count() - 1))){
-                      if (!al.m_anim->m_play_anim) al.m_anim->update_geom_to_anim();
-                    }
-
-                  ImGui::ToggleButton("Play", &al.m_anim->m_play_anim);
-                  ImGui::SameLine();
-                  if (ImGui::Button("Begin")) {
-                      al.m_anim->m_cur_anim_time = 0.0f;
-                      al.m_anim->update_geom_to_anim();
-                      astate->make_viewport_dirty();
-                    }
-
-                  ImGui::SameLine();
-                  if (ImGui::Button("End")) {
-                      al.m_anim->m_cur_anim_time = al.m_anim->current_frame_count() - 1;
-                      al.m_anim->update_geom_to_anim();
-                      astate->make_viewport_dirty();
-                    }
-
-                  ImGui::SameLine();
-                  if (ImGui::Button("+Frame")) {
-                      //TODO: unimplemented
-                      al.m_anim->manual_frame_manipulate(+1.0f);
-                      astate->make_viewport_dirty();
-                    }
-
-                  ImGui::SameLine();
-                  if (ImGui::Button("-Frame")) {
-                      al.m_anim->manual_frame_manipulate(-1.0f);
-                      astate->make_viewport_dirty();
-                    }
-
-                  ImGui::Spacing();
-                }
-            }
-        }
-      // end animation bloc
 
       if (ImGui::CollapsingHeader("Export")) {
           ImGui::Spacing();

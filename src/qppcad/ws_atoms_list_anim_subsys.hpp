@@ -24,7 +24,7 @@ namespace qpp {
 
         std::vector<geom_anim_record_t<float> >  m_anim_data;
         float m_cur_anim_time{0.0f};
-        float m_anim_frame_time{1.0f};
+        float m_anim_frame_time{0.25f};
         int m_cur_anim{0};
         bool m_rebuild_bonds_in_anim{true};
         bool m_play_cyclic{true};
@@ -44,6 +44,10 @@ namespace qpp {
         void next_anim();
 
         void prev_anim();
+
+        void traverse_anim(int travel_dir);
+
+        void render_ui();
 
         void manual_frame_manipulate(const int frame_mod);
 
