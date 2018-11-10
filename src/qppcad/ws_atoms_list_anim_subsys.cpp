@@ -104,21 +104,24 @@ namespace qpp {
       bool need_to_update_anim = false;
 
       if (target_anim < 0 && m_anim_data.size() > 0) {
-          locked_target_anim = m_anim_data.size() - 1;
+          locked_target_anim = int(m_anim_data.size()) - 1;
           need_to_update_anim = true;
         }
 
-      if (target_anim >= m_anim_data.size() && m_anim_data.size() > 0) {
+      if (target_anim >= m_anim_data.size() && m_anim_data.size() > 0 && !need_to_update_anim) {
           locked_target_anim = 0;
           need_to_update_anim = true;
         }
 
-      if (target_anim >= 0 && target_anim < m_anim_data.size()) {
+      if (target_anim >= 0 && target_anim < m_anim_data.size() && !need_to_update_anim) {
           locked_target_anim = target_anim;
           need_to_update_anim = true;
         }
 
       if (need_to_update_anim) {
+          c_app::log(fmt::format("TRAVERSE ANIM ta={} lta={} asz={}",
+                                 target_anim, locked_target_anim, get_total_anims()));
+
           m_cur_anim = locked_target_anim;
           m_cur_anim_time = 0.0f;
           update_geom_to_anim();

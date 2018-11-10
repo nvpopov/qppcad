@@ -495,7 +495,7 @@ void ui_manager_t::render_work_panel () {
 
       ImGui::Separator();
 
-      ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(0, wp_btn_height));
+      ImGui::ToggleButton("PTABLE", &ptable_widget->m_active, ImVec2(65, wp_btn_height));
       ImGui::Separator();
 
       if (astate->ws_manager->has_wss()){

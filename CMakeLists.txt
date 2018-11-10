@@ -18,6 +18,7 @@ macro(set_option option value)
 endmacro()
 
 set_option(PYTHON_BINDINGS OFF)
+set_option(BUILD_TESTS ON)
 set_option(WITH_HarfBuzz OFF)
 
 add_subdirectory(deps/qpp)

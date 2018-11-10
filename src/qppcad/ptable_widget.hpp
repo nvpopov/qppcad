@@ -15,6 +15,7 @@ namespace qpp {
     class ptable_widget_t {
 
       public:
+
         bool m_active{false};
         bool m_filter_name{true};
         bool m_filter_symbol{true};
