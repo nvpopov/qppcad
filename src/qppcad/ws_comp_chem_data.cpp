@@ -4,12 +4,12 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_comp_chem_data_t::ws_comp_chem_data_t() {
-
+  set_default_flags(ws_item_flags_default);
 }
 
 void ws_comp_chem_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
                                                 vector3<float> &vOutLookAt) {
-
+  //do nothing
 }
 
 void ws_comp_chem_data_t::render() {
@@ -18,6 +18,11 @@ void ws_comp_chem_data_t::render() {
 
 void ws_comp_chem_data_t::render_overlay() {
 
+}
+
+void ws_comp_chem_data_t::render_ui() {
+  ws_item_t::render_ui();
+  ImGui::BulletText("I am a placeholder");
 }
 
 void ws_comp_chem_data_t::render_work_panel_ui() {
@@ -36,29 +41,6 @@ bool ws_comp_chem_data_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-bool ws_comp_chem_data_t::support_translation() {
-  return false;
-}
-
-bool ws_comp_chem_data_t::support_rotation() {
-  return false;
-}
-
-bool ws_comp_chem_data_t::support_scaling() {
-  return false;
-}
-
-bool ws_comp_chem_data_t::support_content_editing() {
-  return false;
-}
-
-bool ws_comp_chem_data_t::support_selection() {
-  return false;
-}
-
-bool ws_comp_chem_data_t::support_rendering_bounding_box() {
-  return false;
-}
 
 std::string ws_comp_chem_data_t::compose_item_name() {
   return "Type = [comp. chem. data]";

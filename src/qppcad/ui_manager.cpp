@@ -296,14 +296,15 @@ void ui_manager_t::render_main_menu(){
         }
 
       if (has_ws) {
-          if (ImGui::Button("-")){
+          if (ImGui::Button("-")) {
 
             }
 
-          if (ImGui::Button("R")){
+          if (ImGui::Button("R")) {
               show_rename_workspace_dialog = true;
               if (astate->ws_manager->has_wss())
-                strcpy(s_rename_workspace_name, astate->ws_manager->get_current()->m_ws_name.c_str());
+                strcpy(s_rename_workspace_name,
+                       astate->ws_manager->get_current()->m_ws_name.c_str());
             }
         }
 
@@ -502,7 +503,7 @@ void ui_manager_t::render_work_panel () {
           auto curws = astate->ws_manager->get_current();
           if (curws) {
               auto curi = curws->get_selected();
-              if (curi) {
+              if (curi && (curi->get_flags() & ws_item_flags_toolbar_extension) ) {
                   curi->render_work_panel_ui();
                   ImGui::Separator();
                 }

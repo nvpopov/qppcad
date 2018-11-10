@@ -1,5 +1,6 @@
 #include <qppcad/workspace.hpp>
 #include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_comp_chem_data.hpp>
 #include <qppcad/app.hpp>
 #include <data/ptable.hpp>
 #include <io/geomio.hpp>
@@ -10,6 +11,7 @@ using namespace qpp::cad;
 
 std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj_type){
   if (obj_type == "ws_atoms_list") return std::make_shared<ws_atoms_list_t>();
+  if (obj_type == "ws_comp_chem_data") return std::make_shared<ws_comp_chem_data_t>();
   return nullptr;
 }
 
@@ -33,7 +35,10 @@ bool workspace_t::set_selected_item (const size_t sel_idx) {
 
   if (sel_idx < m_ws_items.size() && !m_ws_items.empty()) {
       m_ws_items[sel_idx]->m_selected = true;
-      m_gizmo->attached_item = m_ws_items[sel_idx].get();
+      if (m_ws_items[sel_idx]->get_flags() & ws_item_flags_support_translation)
+        m_gizmo->attached_item = m_ws_items[sel_idx].get();
+      else
+        m_gizmo->attached_item = nullptr;
       astate->make_viewport_dirty();
       return true;
     }
@@ -165,7 +170,8 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
   for (auto &ws_item : m_ws_items) {
       bool is_hit = ws_item->mouse_click(&m_ray_debug);
       hit_any = hit_any || is_hit;
-      if (is_hit && m_edit_type == ws_edit_type::EDIT_WS_ITEM && ws_item->support_selection()) {
+      if (is_hit && m_edit_type == ws_edit_type::EDIT_WS_ITEM &&
+          (ws_item->get_flags() & ws_item_flags_support_selection)) {
           m_gizmo->attached_item = ws_item.get();
           ws_item->m_selected = true;
           break;
@@ -377,7 +383,7 @@ void workspace_manager_t::init_default () {
   auto _wsl32 = std::make_shared<ws_atoms_list_t>();
   _ws2->add_item_to_workspace(_wsl32);
   _wsl32->load_from_file(qc_file_fmt::standart_xyz,
-                         "../deps/qpp/examples/io/ref_data/nanotube.xyz",
+                         "../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz",
                          true);
 
   auto _wsl33 = std::make_shared<ws_atoms_list_t>();

@@ -19,16 +19,11 @@ namespace qpp {
                                    vector3<float> &vOutLookAt) override ;
         void render() override;
         void render_overlay() override;
+        void render_ui() override;
         void render_work_panel_ui() override;
         void td_context_menu_edit_item() override;
         void td_context_menu_edit_content() override;
         bool mouse_click(ray_t<float> *click_ray) override;
-        bool support_translation() override;
-        bool support_rotation() override;
-        bool support_scaling() override;
-        bool support_content_editing() override;
-        bool support_selection() override;
-        bool support_rendering_bounding_box() override;
 
         std::string compose_item_name() override;
         void update(float delta_time) override;

@@ -32,18 +32,17 @@ void ws_item_t::render () {
 
   app_state_c = &(c_app::get_state());
 
-  if (app_state_c->dp != nullptr){
-
-      if (m_selected && support_selection() && !support_rendering_bounding_box()) {
-          app_state_c->dp->begin_render_aabb();
-          if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
-            app_state_c->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min , m_pos + m_aabb.max  );
-          else
-            app_state_c->dp->render_aabb_segmented(clr_olive, m_pos + m_aabb.min , m_pos + m_aabb.max);
-          app_state_c->dp->end_render_aabb();
-        }
-
+  if (m_selected && (get_flags() & ws_item_flags_support_selection) &&
+      !(get_flags() & ws_item_flags_support_rendering_bb)) {
+      app_state_c->dp->begin_render_aabb();
+      if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+        app_state_c->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min , m_pos + m_aabb.max  );
+      else
+        app_state_c->dp->render_aabb_segmented(clr_olive, m_pos + m_aabb.min ,
+                                               m_pos + m_aabb.max);
+      app_state_c->dp->end_render_aabb();
     }
+
 
 }
 
@@ -95,6 +94,14 @@ void ws_item_t::td_context_menu_edit_content () {
 
 }
 
+void ws_item_t::set_default_flags(uint32_t flags){
+  p_flags = flags;
+}
+
+uint32_t ws_item_t::get_flags() const {
+  return p_flags;
+}
+
 
 void ws_item_t::update (float delta_time) {
 
@@ -102,6 +109,10 @@ void ws_item_t::update (float delta_time) {
 
 float ws_item_t::get_bb_prescaller(){
   return 1.0f;
+}
+
+const vector3<float> ws_item_t::get_gizmo_content_barycenter() {
+  return vector3<float>::Zero();
 }
 
 //ws_item_t::~ws_item_t(){
@@ -131,7 +142,7 @@ void ws_item_t::on_end_content_gizmo_translate() {
 
 }
 
-void ws_item_t::write_to_json(json &data){
+void ws_item_t::write_to_json(json &data) {
   data[JSON_WS_ITEM_NAME] = m_name;
   data[JSON_WS_ITEM_TYPE] = get_ws_item_class_name();
   data[JSON_IS_VISIBLE] = m_is_visible;
@@ -139,18 +150,16 @@ void ws_item_t::write_to_json(json &data){
   data[JSON_POS] = coord;
 }
 
-void ws_item_t::read_from_json(json &data){
+void ws_item_t::read_from_json(json &data) {
   //read m_name & is_visible & pos
   if (data.find(JSON_WS_ITEM_NAME) != data.end()) m_name = data[JSON_WS_ITEM_NAME];
   if (data.find(JSON_IS_VISIBLE) != data.end()) m_is_visible = data[JSON_IS_VISIBLE];
 
-  if (support_translation())
+  if (get_flags() | ws_item_flags_support_translation)
     if (data.find(JSON_POS) != data.end()) {
         vector3<float> pos_rd = vector3<float>::Zero();
         for(uint8_t i = 0; i < 3; i++)
           pos_rd[i] = data[JSON_POS][i].get<float>();
         m_pos = pos_rd;
       }
-
-
 }

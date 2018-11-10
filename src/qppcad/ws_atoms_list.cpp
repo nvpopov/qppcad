@@ -19,6 +19,10 @@ using namespace qpp::cad;
 
 ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
 
+  set_default_flags(ws_item_flags_default | ws_item_flags_support_translation |
+                    ws_item_flags_support_selection | ws_item_flags_support_content_editing |
+                    ws_item_flags_support_rendering_bb | ws_item_flags_toolbar_extension);
+
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
   m_geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel",
@@ -463,18 +467,6 @@ void ws_atoms_list_t::apply_axial_scale (const float scale_a,
   m_tws_tr->do_action(act_unlock | act_rebuild_all);
 }
 
-bool ws_atoms_list_t::support_translation () { return true; }
-
-bool ws_atoms_list_t::support_rotation () { return false; }
-
-bool ws_atoms_list_t::support_scaling () { return  false; }
-
-bool ws_atoms_list_t::support_content_editing () { return true; }
-
-bool ws_atoms_list_t::support_selection () { return true; }
-
-bool ws_atoms_list_t::support_rendering_bounding_box () { return m_geom->DIM > 0; }
-
 std::string ws_atoms_list_t::compose_item_name () {
   return fmt::format("Type = [atom list], DIM = [{}d]", m_geom->DIM);
 }
@@ -630,7 +622,9 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
     }
 
   if (need_to_extract_ccd) {
-
+      std::shared_ptr<ws_item_t> extracted_ccd = std::make_shared<ws_comp_chem_data_t>();
+      extracted_ccd->m_name = m_name+"_ccd";
+      parent_ws->add_item_to_workspace(extracted_ccd);
     }
 
   auto end_timer = std::chrono::steady_clock::now();
@@ -801,8 +795,6 @@ void ws_atoms_list_t::write_to_json (json &data) {
 
       data[JSON_ATOMS_LIST_ANIMATIONS] = animations;
     }
-
-
 
 }
 

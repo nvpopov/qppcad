@@ -17,7 +17,21 @@ namespace qpp {
     class workspace_t;
     class app_state_t;
 
+    // ws_item_t capabilities
+    const uint32_t ws_item_flags_default                 = 0;
+    const uint32_t ws_item_flags_support_translation     = 1 << 1;
+    const uint32_t ws_item_flags_support_scaling         = 1 << 2;
+    const uint32_t ws_item_flags_support_rotation        = 1 << 3;
+    const uint32_t ws_item_flags_support_content_editing = 1 << 4;
+    const uint32_t ws_item_flags_support_selection       = 1 << 5;
+    const uint32_t ws_item_flags_support_rendering_bb    = 1 << 6;
+    const uint32_t ws_item_flags_toolbar_extension       = 1 << 7;
+
     class ws_item_t  {
+
+      private:
+
+        uint32_t p_flags;
 
       public:
 
@@ -75,31 +89,33 @@ namespace qpp {
         /// \return
         virtual bool mouse_click(ray_t<float> *ray) = 0;
 
+        void set_default_flags(uint32_t);
 
-        /// \brief support_translation
-        /// \return
-        virtual bool support_translation() = 0;
+        uint32_t get_flags() const ;
+//        /// \brief support_translation
+//        /// \return
+//        virtual bool support_translation() = 0;
 
-        /// \brief support_rotation
-        /// \return
-        virtual bool support_rotation() = 0;
+//        /// \brief support_rotation
+//        /// \return
+//        virtual bool support_rotation() = 0;
 
-        /// \brief support_scaling
-        /// \return
-        virtual bool support_scaling() = 0;
+//        /// \brief support_scaling
+//        /// \return
+//        virtual bool support_scaling() = 0;
 
-        /// \brief support_content_editing
-        /// \return
-        virtual bool support_content_editing() = 0;
+//        /// \brief support_content_editing
+//        /// \return
+//        virtual bool support_content_editing() = 0;
 
-        /// \brief support_selection
-        /// \return
+//        /// \brief support_selection
+//        /// \return
 
-        virtual bool support_selection() = 0;
+//        virtual bool support_selection() = 0;
 
-        /// \brief support_rendering_bounding_box
-        /// \return
-        virtual bool support_rendering_bounding_box() = 0;
+//        /// \brief support_rendering_bounding_box
+//        /// \return
+//        virtual bool support_rendering_bounding_box() = 0;
 
         /// \brief get_amount_of_selected_content
         /// \return
@@ -117,11 +133,9 @@ namespace qpp {
         /// \return
         virtual float get_bb_prescaller();
 
-        ///
         /// \brief get_gizmo_content_barycenter
         /// \return
-        ///
-        virtual const vector3<float> get_gizmo_content_barycenter() = 0;
+        virtual const vector3<float> get_gizmo_content_barycenter();
 
         virtual void on_begin_node_gizmo_translate();
         virtual void on_end_node_gizmo_translate();
@@ -134,6 +148,7 @@ namespace qpp {
     };
 
   }
+
 }
 
 #endif

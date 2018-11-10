@@ -14,7 +14,7 @@ namespace qpp {
 
         static void render_content_edit_menu (ws_atoms_list_t &al) {
 
-          if (al.support_content_editing()) {
+          if (al.get_flags() & ws_item_flags_support_content_editing) {
 
               if (ImGui::BeginMenu("Selection")) {
                   if (ImGui::BeginMenu("Select by type")){
@@ -70,9 +70,7 @@ namespace qpp {
                       ImGui::EndMenu();
                     }
 
-
-
-                  if (ImGui::BeginMenu("Two atoms manipulation")){
+                  if (ImGui::BeginMenu("Two atoms manipulation")) {
                       auto it1 = al.m_atom_idx_sel.begin();
                       auto it2 = it1++;
                       float dist_btw = (al.m_geom->pos(it1->m_atm, it1->m_idx) -
@@ -97,7 +95,7 @@ namespace qpp {
 
               if (al.m_atom_sel.size() > 0) {
                   if (ImGui::MenuItem(fmt::format("Delete selected atoms({})",
-                                                  al.m_atom_sel.size()).c_str())){
+                                                  al.m_atom_sel.size()).c_str())) {
                       al.delete_selected_atoms();
                     }
 
@@ -145,7 +143,9 @@ namespace qpp {
             }
         } // end render_content_edit_menu
     };
+
   }
+
 }
 
 #endif
