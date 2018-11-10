@@ -119,6 +119,18 @@ void ws_item_t::on_end_node_gizmo_translate(){
                          m_name, m_pos.to_string_vec()));
 }
 
+void ws_item_t::on_begin_content_gizmo_translate() {
+
+}
+
+void ws_item_t::apply_intermediate_translate_content(const vector3<float> &new_pos){
+
+}
+
+void ws_item_t::on_end_content_gizmo_translate() {
+
+}
+
 void ws_item_t::write_to_json(json &data){
   data[JSON_WS_ITEM_NAME] = m_name;
   data[JSON_WS_ITEM_TYPE] = get_ws_item_class_name();

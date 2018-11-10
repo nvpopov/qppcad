@@ -74,6 +74,7 @@ add_executable(qppcad
     src/qppcad/texture_buffer.cpp
     src/qppcad/workspace.cpp
     src/qppcad/ws_item.cpp
+    src/qppcad/ws_comp_chem_data.cpp
     src/qppcad/ws_atoms_list.cpp
     src/qppcad/ws_atoms_list_render_bs.cpp
     src/qppcad/ws_atoms_list_lattice_planes_subsys.cpp

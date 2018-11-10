@@ -6,6 +6,7 @@
 #include <qppcad/ws_atoms_list_render_xlines.hpp>
 #include <qppcad/ws_atoms_list_render_billboards.hpp>
 #include <qppcad/ws_atoms_list_cell_helper.hpp>
+#include <qppcad/ws_comp_chem_data.hpp>
 #include <qppcad/app.hpp>
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
@@ -575,6 +576,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
   auto start_timer = std::chrono::steady_clock::now();
   bool need_to_compile_from_ccd = false;
+  bool need_to_extract_ccd = false;
   comp_chem_program_data_t<float> cc_inst;
 
   switch (file_format) {
@@ -599,11 +601,13 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
     case qc_file_fmt::vasp_outcar_md:
       m_geom->DIM = 3;
       m_geom->cell.DIM = 3;
+      need_to_extract_ccd = true;
       read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim->m_anim_data);
       break;
 
     case qc_file_fmt::firefly_output : {
       m_geom->DIM = 0;
+      need_to_extract_ccd = true;
       read_ccd_from_firefly_output(qc_data, cc_inst);
       need_to_compile_from_ccd = true;
       break;
@@ -621,6 +625,12 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
       c_app::log(fmt::format("Is geometry compilation succes? {}",
                              succes_comp_geom && succes_comp_static_anim));
+      if (m_anim->get_total_anims() > 1 && succes_anims)
+        c_app::log("Animations has been added to geom \n");
+    }
+
+  if (need_to_extract_ccd) {
+
     }
 
   auto end_timer = std::chrono::steady_clock::now();
@@ -629,6 +639,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   c_app::log(fmt::format("Reading file {} took {} sec.", file_name,
                          elapsed_duration(diff_timer).count()) );
 
+  //TODO: move autocentering to ccd compilation
   if (auto_center) {
       vector3<float> center(0.0, 0.0, 0.0);
       for (int i = 0; i < m_geom->nat(); i++)
