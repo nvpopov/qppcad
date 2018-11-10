@@ -33,17 +33,18 @@ void ws_item_t::render () {
   app_state_c = &(c_app::get_state());
 
   if (m_selected && (get_flags() & ws_item_flags_support_selection) &&
-      !(get_flags() & ws_item_flags_support_rendering_bb)) {
+      (get_flags() & ws_item_flags_support_rendering_bb) && is_bb_visible()) {
       app_state_c->dp->begin_render_aabb();
       if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
-        app_state_c->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min , m_pos + m_aabb.max  );
+        app_state_c->dp->render_aabb(clr_fuchsia,
+                                     m_pos + m_aabb.min,
+                                     m_pos + m_aabb.max  );
       else
-        app_state_c->dp->render_aabb_segmented(clr_olive, m_pos + m_aabb.min ,
+        app_state_c->dp->render_aabb_segmented(clr_olive,
+                                               m_pos + m_aabb.min,
                                                m_pos + m_aabb.max);
       app_state_c->dp->end_render_aabb();
     }
-
-
 }
 
 void ws_item_t::render_ui () {
@@ -54,18 +55,35 @@ void ws_item_t::render_ui () {
       char * s_item_name = new char[60];
       strcpy(s_item_name, m_name.c_str());
       ImGui::InputText("Item name", s_item_name, 60);
-      ImGui::Checkbox("Draw workspace item", &m_is_visible);
+
+      if (get_flags() & ws_item_flags_support_rendering)
+        ImGui::Checkbox("Draw workspace item", &m_is_visible);
+
       ImGui::Spacing();
+
       ImGui::Separator();
-      ImGui::Text("Actions:");
-      if (ImGui::Button("Delete")) m_marked_for_deletion = true;
-      ImGui::SameLine();
-      ImGui::Button("Clone");
-      ImGui::SameLine();
-      ImGui::Button("Move to");
-      ImGui::Spacing();
-      ImGui::Separator();
-      ImGui::Spacing();
+
+      if ( get_flags() & ws_item_flags_support_actions) {
+          ImGui::Text("Actions:");
+
+          if (get_flags() & ws_item_flags_support_delete) {
+              if (ImGui::Button("Delete")) m_marked_for_deletion = true;
+              ImGui::SameLine();
+            }
+
+          if (get_flags() & ws_item_flags_support_clone) {
+              ImGui::Button("Clone");
+              ImGui::SameLine();
+            }
+
+          if (get_flags() & ws_item_flags_support_moveto) {
+              ImGui::Button("Move to");
+            }
+          ImGui::Spacing();
+          ImGui::Separator();
+          ImGui::Spacing();
+        }
+
       if (m_name != s_item_name) set_name(s_item_name);
       delete[] s_item_name;
     }
@@ -109,6 +127,10 @@ void ws_item_t::update (float delta_time) {
 
 float ws_item_t::get_bb_prescaller(){
   return 1.0f;
+}
+
+bool ws_item_t::is_bb_visible() {
+  return true;
 }
 
 const vector3<float> ws_item_t::get_gizmo_content_barycenter() {

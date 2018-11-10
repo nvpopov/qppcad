@@ -12,7 +12,7 @@ namespace qpp {
     class ws_comp_chem_data_t : public ws_item_t {
 
       public:
-
+        std::unique_ptr<comp_chem_program_data_t<float> > m_ccd{nullptr};
         ws_comp_chem_data_t();
 
         void vote_for_view_vectors(vector3<float> &vOutLookPos,

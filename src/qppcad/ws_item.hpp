@@ -26,6 +26,11 @@ namespace qpp {
     const uint32_t ws_item_flags_support_selection       = 1 << 5;
     const uint32_t ws_item_flags_support_rendering_bb    = 1 << 6;
     const uint32_t ws_item_flags_toolbar_extension       = 1 << 7;
+    const uint32_t ws_item_flags_support_actions         = 1 << 8;
+    const uint32_t ws_item_flags_support_delete          = 1 << 9;
+    const uint32_t ws_item_flags_support_clone           = 1 << 10;
+    const uint32_t ws_item_flags_support_moveto          = 1 << 11;
+    const uint32_t ws_item_flags_support_rendering       = 1 << 12;
 
     class ws_item_t  {
 
@@ -47,7 +52,7 @@ namespace qpp {
         bool             m_is_visible{true}; ///
         bool             m_draw_cell{true}; ///
         bool             m_selected{false}; ///
-        bool             m_hide_gizmo_trigger{false};
+     //   bool             m_hide_gizmo_trigger{false};
         bool             m_marked_for_deletion{false};
 
         /// \brief vote_for_view_vectors
@@ -92,30 +97,6 @@ namespace qpp {
         void set_default_flags(uint32_t);
 
         uint32_t get_flags() const ;
-//        /// \brief support_translation
-//        /// \return
-//        virtual bool support_translation() = 0;
-
-//        /// \brief support_rotation
-//        /// \return
-//        virtual bool support_rotation() = 0;
-
-//        /// \brief support_scaling
-//        /// \return
-//        virtual bool support_scaling() = 0;
-
-//        /// \brief support_content_editing
-//        /// \return
-//        virtual bool support_content_editing() = 0;
-
-//        /// \brief support_selection
-//        /// \return
-
-//        virtual bool support_selection() = 0;
-
-//        /// \brief support_rendering_bounding_box
-//        /// \return
-//        virtual bool support_rendering_bounding_box() = 0;
 
         /// \brief get_amount_of_selected_content
         /// \return
@@ -132,7 +113,7 @@ namespace qpp {
         /// \brief get_bb_prescaller
         /// \return
         virtual float get_bb_prescaller();
-
+        virtual bool is_bb_visible();
         /// \brief get_gizmo_content_barycenter
         /// \return
         virtual const vector3<float> get_gizmo_content_barycenter();

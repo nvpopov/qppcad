@@ -22,7 +22,42 @@ void ws_comp_chem_data_t::render_overlay() {
 
 void ws_comp_chem_data_t::render_ui() {
   ws_item_t::render_ui();
-  ImGui::BulletText("I am a placeholder");
+
+  if (!m_ccd) {
+      ImGui::BulletText("No data loaded");
+      return;
+    }
+
+  if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen)) {
+      ImGui::Spacing();
+      ImGui::TextUnformatted("Summary:");
+      ImGui::Spacing();
+
+      ImGui::Columns(2);
+      ImGui::Separator();
+      ImGui::TextUnformatted("Calculation type");
+      ImGui::NextColumn();
+      ImGui::TextUnformatted(ccdrt2str[m_ccd->run_t].c_str());
+      ImGui::Separator();
+
+      ImGui::NextColumn();
+      ImGui::TextUnformatted("Calculated by");
+      ImGui::NextColumn();
+      ImGui::TextUnformatted(ccdprog2str[m_ccd->comp_chem_program].c_str());
+      ImGui::Columns(1);
+
+      ImGui::Separator();
+    }
+
+  if (m_ccd->run_t == comp_chem_program_run_t::rt_geo_opt)
+    if (ImGui::CollapsingHeader("Geometry optimization")) {
+
+      }
+
+  if (m_ccd->run_t == comp_chem_program_run_t::rt_vib)
+    if (ImGui::CollapsingHeader("Vibrational analysis")) {
+
+      }
 }
 
 void ws_comp_chem_data_t::render_work_panel_ui() {

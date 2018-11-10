@@ -97,10 +97,10 @@ namespace qpp {
         void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);
         void apply_axial_scale(const float scale_a, const float scale_b, const float scale_c);
 
-
         std::string compose_item_name() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
+        bool is_bb_visible() override;
 
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;

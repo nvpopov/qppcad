@@ -21,7 +21,10 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
 
   set_default_flags(ws_item_flags_default | ws_item_flags_support_translation |
                     ws_item_flags_support_selection | ws_item_flags_support_content_editing |
-                    ws_item_flags_support_rendering_bb | ws_item_flags_toolbar_extension);
+                    ws_item_flags_support_rendering_bb | ws_item_flags_toolbar_extension |
+                    ws_item_flags_support_actions | ws_item_flags_support_delete |
+                    ws_item_flags_support_clone | ws_item_flags_support_moveto |
+                    ws_item_flags_support_rendering);
 
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
@@ -481,6 +484,10 @@ float ws_atoms_list_t::get_bb_prescaller () {
   return 1.1f;
 }
 
+bool ws_atoms_list_t::is_bb_visible() {
+  return m_geom->DIM == 0;
+}
+
 uint32_t ws_atoms_list_t::get_amount_of_selected_content () {
   return this->m_atom_sel.size();
 }
@@ -622,8 +629,9 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
     }
 
   if (need_to_extract_ccd) {
-      std::shared_ptr<ws_item_t> extracted_ccd = std::make_shared<ws_comp_chem_data_t>();
+      std::shared_ptr<ws_comp_chem_data_t> extracted_ccd = std::make_shared<ws_comp_chem_data_t>();
       extracted_ccd->m_name = m_name+"_ccd";
+      extracted_ccd->m_ccd = std::make_unique<comp_chem_program_data_t<float> >(std::move(cc_inst));
       parent_ws->add_item_to_workspace(extracted_ccd);
     }
 
