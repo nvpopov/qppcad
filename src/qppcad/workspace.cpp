@@ -360,9 +360,7 @@ bool workspace_manager_t::set_current (const size_t ws_index) {
 void workspace_manager_t::init_default () {
 
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
-  if (!test_in_dev_env.good()) {
-      return;
-    }
+  if (!test_in_dev_env.good()) return;
 
   auto _ws2 = std::make_shared<workspace_t>();
   _ws2->m_ws_name = "d2";
@@ -372,7 +370,8 @@ void workspace_manager_t::init_default () {
 
   auto _wsl2 = std::make_shared<ws_atoms_list_t>();
   _ws3->add_item_to_workspace(_wsl2);
-  _wsl2->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/laf3_p3.vasp",
+  _wsl2->load_from_file(qc_file_fmt::firefly_output,
+                        "../deps/qpp/examples/io/ref_data/firefly/dvb_gopt_a.out",
                         false);
 
   auto _wsl3 = std::make_shared<ws_atoms_list_t>();
@@ -481,6 +480,19 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_f
       set_current(m_ws.size()-1);
     }
 
+}
+
+void workspace_manager_t::import_file_as_new_workspace(const std::string &fname,
+                                                       qc_file_fmt file_format){
+  auto new_ws = std::make_shared<workspace_t>();
+  std::string file_name_extr = qpp::extract_base_name(fname);
+  new_ws->m_ws_name = file_name_extr;
+  auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
+  new_ws->add_item_to_workspace(new_atoms_list);
+  new_atoms_list->load_from_file(file_format, fname,
+                                 qc_file_fmt_helper::need_to_auto_center(file_format));
+  add_workspace(new_ws);
+  set_current(m_ws.size()-1);
 }
 
 void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_workspace) {

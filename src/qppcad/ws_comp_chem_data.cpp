@@ -47,11 +47,13 @@ void ws_comp_chem_data_t::render_ui() {
       ImGui::Columns(1);
 
       ImGui::Separator();
+      ImGui::Spacing();
     }
 
   if (m_ccd->run_t == comp_chem_program_run_t::rt_geo_opt)
     if (ImGui::CollapsingHeader("Geometry optimization")) {
-
+        static float arr[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
+                   ImGui::PlotLines("Curve", arr, IM_ARRAYSIZE(arr));
       }
 
   if (m_ccd->run_t == comp_chem_program_run_t::rt_vib)

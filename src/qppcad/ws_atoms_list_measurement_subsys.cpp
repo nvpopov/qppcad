@@ -21,7 +21,8 @@ namespace qpp {
       m_records.emplace_back(atm1, atm2, idx1, idx2);
     }
 
-    ws_atoms_list_measurement_subsys_t::ws_atoms_list_measurement_subsys_t(ws_atoms_list_t &_p_owner) {
+    ws_atoms_list_measurement_subsys_t::ws_atoms_list_measurement_subsys_t(
+        ws_atoms_list_t &_p_owner) {
       p_owner = &_p_owner;
     }
 
@@ -81,25 +82,15 @@ namespace qpp {
 
             auto uproj = astate->camera->project((l_s+l_e)*0.5f);
             if (uproj) {
-                //                  std::cout
-                //                      << astate->viewport_xy_c[0] << " "
-                //                      << astate->viewport_xy_c[1] << " "
-                //                      << astate->viewport_size_c[0] << " "
-                //                                                    << astate->viewport_size_c[1]
-                //                                                    << " "
-                //                                                    << (*uproj)[0] << " "
-                //                                                    << (*uproj)[1] << std::endl;
-                imdrw->AddRectFilled(
-                      ImVec2( (*uproj)[0]-12, (*uproj)[1]-6),
-                    ImVec2( (*uproj)[0]+82, (*uproj)[1]+20),
+                imdrw->AddRectFilled(ImVec2( (*uproj)[0] - 12, (*uproj)[1] - 6),
+                    ImVec2( (*uproj)[0] + 82, (*uproj)[1] + 20),
                     ImColor(0.0f, 0.0f, 0.0f, 1.0f),
                     4.0f);
-                imdrw->AddRectFilled(
-                      ImVec2( (*uproj)[0]-10, (*uproj)[1]-4),
-                    ImVec2( (*uproj)[0]+80, (*uproj)[1]+18),
+                imdrw->AddRectFilled(ImVec2( (*uproj)[0] - 10, (*uproj)[1] - 4),
+                    ImVec2( (*uproj)[0] + 80, (*uproj)[1] + 18),
                     ImColor(1.0f, 1.0f, 1.0f, 1.0f),
                     4.0f);
-                imdrw->AddText(ImVec2( (*uproj)[0]+4, (*uproj)[1]-2),
+                imdrw->AddText(ImVec2( (*uproj)[0] + 8, (*uproj)[1] - 4),
                     ImColor(0.0f, 0.0f, 0.0f, 1.0f),
                     fmt::format("{}", (l_s-l_e).norm()).c_str());
               }

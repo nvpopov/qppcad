@@ -5,6 +5,7 @@
 #include <args.hxx>
 #include <qppcad/font.inc>
 #include <qppcad/fontb.inc>
+#include <qppcad/file_formats.hpp>
 
 void
 MessageCallback ( GLenum source,
@@ -50,9 +51,10 @@ void qpp::cad::c_app::run (int argc, char **argv) {
   qpp::cad::c_app::m_is_state_initialized = false;
 
   //process args
-  args::ArgumentParser parser("qpp::cad program for view and edit data for quantum chemistry"
-                              " calculations");
+  args::ArgumentParser parser("qpp::cad program helps you edit molecules and crystal structures");
+
   args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
+  args::Positional<std::string> filename(parser, "filename", "Filename to open");
   args::ValueFlag<std::string> render_mode(parser, "direct, fb_legacy, fb_ms",
                                            "Selected render mode", {'r', "render_mode"});
   args::ValueFlag<uint> glfw_samples(parser, "0..12", "Selected glfw window samples amount",
@@ -80,6 +82,8 @@ void qpp::cad::c_app::run (int argc, char **argv) {
 
   app_render_mode render_mode_from_args = app_render_mode::buffered_multi_sampling;
   std::string str_render_mode = args::get(render_mode);
+  std::string filename_to_open = args::get(filename);
+  //std::cout << filename_to_open << std::endl;
 
   int aa_level = args::get(glfw_samples);
   if (str_render_mode == "direct")
@@ -183,7 +187,16 @@ void qpp::cad::c_app::run (int argc, char **argv) {
                                    astate->c_max_texture_buffer_size));
 
   qpp::cad::c_app::m_is_state_initialized = true;
-  astate->ws_manager->init_default();
+  if (filename_to_open == "") {
+      astate->ws_manager->init_default();
+    }
+  else {
+      qc_file_fmt guess_ff =
+          qc_file_fmt_helper::file_name_to_file_format(filename_to_open);
+      std::cout << "FILEFORMAT " << guess_ff << std::endl;
+      if (guess_ff != qc_file_fmt::unknown_fileformat)
+        astate->ws_manager->import_file_as_new_workspace(filename_to_open, guess_ff);
+    }
 
   if (aa_level > 0) {
       glfwWindowHint(GLFW_SAMPLES, aa_level);

@@ -172,7 +172,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
   if (m_geom->DIM == 0) {
 
       if (ImGui::Button("C:X", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          float axis_size = m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0];
+          float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
           look_from = m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
           look_to = m_pos;
           look_up = {0.0 , 0.0 , 1.0};
@@ -180,7 +180,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
         }
 
       if (ImGui::Button("C:Y", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          float axis_size = m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1];
+          float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
           look_from = m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
           look_to = m_pos;
           look_up = {0.0, 0.0, 1.0};
@@ -188,7 +188,7 @@ void ws_atoms_list_t::render_work_panel_ui() {
         }
 
       if (ImGui::Button("C:Z", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          float axis_size = m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2];
+          float axis_size = std::max(2.0f,m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
           look_from = m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
           look_to = m_pos;
           look_up = {0.0, 1.0, 0.0};
