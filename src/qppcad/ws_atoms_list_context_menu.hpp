@@ -14,7 +14,28 @@ namespace qpp {
 
         static void render_content_edit_menu (ws_atoms_list_t &al) {
 
+          app_state_t *astate = &(c_app::get_state());
+
           if (al.get_flags() & ws_item_flags_support_content_editing) {
+
+              if (al.m_geom->DIM == 3) {
+                  if (ImGui::BeginMenu("Generate supercell")) {
+                      static int sc_a{1};
+                      static int sc_b{1};
+                      static int sc_c{1};
+                      ImGui::DragInt("Replicate in a", &sc_a, 1.0f, 1, 12);
+                      ImGui::DragInt("Replicate in b", &sc_b, 1.0f, 1, 12);
+                      ImGui::DragInt("Replicate in c", &sc_c, 1.0f, 1, 12);
+                      if (ImGui::Button("Replicate")) {
+                          if (sc_a != 1 || sc_b != 1 || sc_c != 1) {
+                              al.make_super_cell(sc_a, sc_b, sc_c);
+                              ImGui::CloseCurrentPopup();
+                              astate->make_viewport_dirty();
+                            }
+                        }
+                      ImGui::EndMenu();
+                    }
+                }
 
               if (ImGui::BeginMenu("Selection")) {
                   if (ImGui::BeginMenu("Select by type")){

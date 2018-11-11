@@ -425,12 +425,12 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
   //sc_al->set_parent_workspace(parent_ws);
   sc_al->m_tws_tr->do_action(act_lock | act_clear_all);
 
-  sc_al->m_geom->cell.v[0] = m_geom->cell.v[0] * (a_steps + 1);
-  sc_al->m_geom->cell.v[1] = m_geom->cell.v[1] * (b_steps + 1);
-  sc_al->m_geom->cell.v[2] = m_geom->cell.v[2] * (c_steps + 1);
+  sc_al->m_geom->cell.v[0] = m_geom->cell.v[0] * (a_steps);
+  sc_al->m_geom->cell.v[1] = m_geom->cell.v[1] * (b_steps);
+  sc_al->m_geom->cell.v[2] = m_geom->cell.v[2] * (c_steps);
 
   for (auto i = 0; i < m_geom->nat(); i++)
-    for (iterator idx_it(index::D(m_geom->DIM).all(0), index({a_steps, b_steps, c_steps}));
+    for (iterator idx_it(index::D(m_geom->DIM).all(0), index({a_steps-1, b_steps-1, c_steps-1}));
          !idx_it.end(); idx_it++ ) {
         vector3<float> new_atom_pos = m_geom->pos(i, idx_it);
         sc_al->m_geom->add(m_geom->atom(i), new_atom_pos);

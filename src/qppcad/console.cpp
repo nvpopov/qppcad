@@ -33,7 +33,7 @@ void console_widget_t::render () {
   if (m_active){
       //astate->config_vote_pool.vote_for(DISABLE_MOUSE_CONTROL_IN_WORKSPACE, m_id);
       float console_height = (m_total_output_lines * m_line_height) * m_show_output;
-      m_console_height = m_total_com_lines * m_line_height + console_height + 42;
+      m_console_height = m_total_com_lines * m_line_height + console_height + 52;
 
       ImGui::SetNextWindowSize(ImVec2(astate->viewport_size_c[0], m_console_height));
       ImGui::SetNextWindowPos(ImVec2(0, astate->viewport_size[1] - m_console_height));
