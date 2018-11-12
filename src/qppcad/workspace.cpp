@@ -154,7 +154,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
   m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
   m_ray_debug.start = m_camera->m_view_point;
 
-  if (m_gizmo->m_is_visible)
+  if (m_gizmo->m_is_visible && m_gizmo->attached_item)
     if (m_gizmo->process_ray(&m_ray_debug)){
         c_app::log("gizmo clicked");
         return;
@@ -178,7 +178,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
         }
     }
 
-  if (m_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT && !hit_any){
+  if (m_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT && !hit_any) {
       m_gizmo->attached_item = nullptr;
       for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
     }
@@ -396,9 +396,9 @@ void workspace_manager_t::init_default () {
   auto _ws4_al = std::make_shared<ws_atoms_list_t>();
   _ws4->add_item_to_workspace(_ws4_al);
 
-  _ws4_al->load_from_file(qc_file_fmt::multi_frame_xyz,
-                          "../data/refs/path.xyz",
-                          qc_file_fmt_helper::need_to_auto_center(qc_file_fmt::multi_frame_xyz));
+  _ws4_al->load_from_file(qc_file_fmt::standart_xyz,
+                          "../deps/qpp/examples/io/ref_data/xyz/2mult.xyz",
+                          qc_file_fmt_helper::need_to_auto_center(qc_file_fmt::standart_xyz));
 
   _wsl3->m_name = "zeolite1";
   _wsl32->m_name = "nanotube1";
@@ -451,7 +451,8 @@ void workspace_manager_t::mouse_click () {
   if (astate->mouse_in_3d_area){
       c_app::log(fmt::format("Mouse click in ws {} {}",
                              astate->mouse_x_ws_frame, astate->mouse_y_ws_frame));
-      if (has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame, astate->mouse_y_ws_frame);
+      if (has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame,
+                                                astate->mouse_y_ws_frame);
     }
 }
 

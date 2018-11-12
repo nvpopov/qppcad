@@ -9,7 +9,6 @@
 #include <data/color.hpp>
 #include <symm/index_set.hpp>
 #include <io/comp_chem_data.hpp>
-#include <io/ccd_firefly.hpp>
 #include <qppcad/ws_item.hpp>
 #include <qppcad/camera.hpp>
 #include <qppcad/file_formats.hpp>

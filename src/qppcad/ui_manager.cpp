@@ -108,13 +108,17 @@ void ui_manager_t::render_main_menu(){
   //ImGui::PushStyleVar(, ImVec2(0.85, 2.85));
   ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8,8));
 
-  if (ImGui::BeginMainMenuBar()){
+  if (ImGui::BeginMainMenuBar()) {
 
       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6,6));
+
       if (ImGui::BeginMenu("File")) {
 
-          if (ImGui::MenuItem("New", "Ctrl + N")) astate->ws_manager->query_create_new_workspace();
-          if (ImGui::MenuItem("Open", "Ctrl + O")) astate->ws_manager->dialog_load_workspace();
+          if (ImGui::MenuItem("New", "Ctrl + N"))
+            astate->ws_manager->query_create_new_workspace();
+
+          if (ImGui::MenuItem("Open", "Ctrl + O"))
+            astate->ws_manager->dialog_load_workspace();
 
           ImGui::Separator();
           if (ImGui::BeginMenu("Import")){
@@ -126,28 +130,29 @@ void ui_manager_t::render_main_menu(){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::standart_xyz);
                     }
-                  if (ImGui::MenuItem("Multiframe XYZ")){
-                      astate->ws_manager->
-                          query_import_file_as_new_workspace(qc_file_fmt::multi_frame_xyz);
-                    }
                   ImGui::EndMenu();
                 }
 
 
               if (ImGui::BeginMenu("VASP")) {
+
                   if (ImGui::MenuItem("VASP POSCAR(CONTCAR)")){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::vasp_poscar);
                     }
+
                   if (ImGui::MenuItem("VASP OUTCAR(MD/RELAX)")){
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::vasp_outcar_md);
                     }
+
                   ImGui::EndMenu();
+
                 }
 
               if (ImGui::BeginMenu("PC Gamess Firefly")) {
-                  if (ImGui::MenuItem("OUTPUT")){
+
+                  if (ImGui::MenuItem("OUTPUT")) {
                       astate->ws_manager->
                           query_import_file_as_new_workspace(qc_file_fmt::firefly_output);
                     }
@@ -177,7 +182,7 @@ void ui_manager_t::render_main_menu(){
         }
 
 
-      if (ImGui::BeginMenu("Edit")){
+      if (ImGui::BeginMenu("Edit")) {
           ImGui::MenuItem("Undo");
           ImGui::MenuItem("Redo");
           ImGui::EndMenu();

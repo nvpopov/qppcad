@@ -8,8 +8,6 @@ namespace qpp{
 
     enum qc_file_fmt{
       standart_xyz,
-      advanced_xyz,
-      multi_frame_xyz,
       vasp_poscar,
       vasp_outcar_md,
       firefly_output,
@@ -21,8 +19,7 @@ namespace qpp{
     struct qc_file_fmt_helper {
 
         static bool need_to_auto_center(qc_file_fmt file_format){
-          if (file_format == qc_file_fmt::multi_frame_xyz ||
-              file_format == qc_file_fmt::standart_xyz) return true;
+          if (file_format == qc_file_fmt::standart_xyz) return true;
           return false;
         }
 
@@ -30,7 +27,7 @@ namespace qpp{
 
           //XYZ
           if (fn.find(".XYZ") != std::string::npos || fn.find(".xyz") != std::string::npos) {
-              return qc_file_fmt::multi_frame_xyz;
+              return qc_file_fmt::standart_xyz;
             }
 
           //VASP POSCAR

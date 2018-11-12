@@ -8,10 +8,17 @@
 #include <qppcad/ws_atoms_list_cell_helper.hpp>
 #include <qppcad/ws_comp_chem_data.hpp>
 #include <qppcad/app.hpp>
+
+//new ccd io modules
+#include <io/ccd_firefly.hpp>
+#include <io/ccd_xyz.hpp>
+
+//deprecated direct io modules
 #include <io/geomio.hpp>
 #include <io/vasp_io.hpp>
 #include <io/cp2k.hpp>
 #include <io/xyz_multiframe.hpp>
+
 #include <clocale>
 
 using namespace qpp;
@@ -243,7 +250,7 @@ void ws_atoms_list_t::td_context_menu_edit_content () {
 
 bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
-  if (click_ray){
+  if (click_ray) {
 
       std::vector<tws_query_data_t<float, uint32_t> > res;
       //we need to translate ray in world frame to local geometry frame
@@ -579,16 +586,15 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   comp_chem_program_data_t<float> cc_inst;
 
   switch (file_format) {
+
     case qc_file_fmt::standart_xyz:
       m_geom->DIM = 0;
-      read_xyz(qc_data, *(m_geom));
-      break;
-
-    case qc_file_fmt::multi_frame_xyz:
-      m_geom->DIM = 0;
       //
-      read_xyz_multiframe(qc_data, *(m_geom), m_anim->m_anim_data,
-                          !astate->m_transform_pdb_atom_names);
+      //read_xyz_multiframe(qc_data, *(m_geom), m_anim->m_anim_data,
+      //                    !astate->m_transform_pdb_atom_names);
+      need_to_extract_ccd = false;
+      need_to_compile_from_ccd = true;
+      read_ccd_from_xyz_file(qc_data, cc_inst);
       break;
 
     case qc_file_fmt::vasp_poscar:
@@ -625,7 +631,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       c_app::log(fmt::format("Is geometry compilation succes? {}",
                              succes_comp_geom && succes_comp_static_anim));
       if (m_anim->get_total_anims() > 1 && succes_anims)
-        c_app::log("Animations has been added to geom \n");
+        c_app::log("Animations have been added to geom");
     }
 
   if (need_to_extract_ccd) {
