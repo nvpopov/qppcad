@@ -194,8 +194,10 @@ void qpp::cad::c_app::run (int argc, char **argv) {
       qc_file_fmt guess_ff =
           qc_file_fmt_helper::file_name_to_file_format(filename_to_open);
       std::cout << "FILEFORMAT " << guess_ff << std::endl;
-      if (guess_ff != qc_file_fmt::unknown_fileformat)
+      if (guess_ff != qc_file_fmt::unknown_fileformat && guess_ff != qc_file_fmt::qppcad_json)
         astate->ws_manager->import_file_as_new_workspace(filename_to_open, guess_ff);
+      if (guess_ff == qc_file_fmt::qppcad_json)
+        astate->ws_manager->load_workspace_from_file(filename_to_open);
     }
 
   if (aa_level > 0) {

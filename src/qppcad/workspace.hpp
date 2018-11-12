@@ -51,6 +51,7 @@ namespace qpp {
         void query_import_file_as_new_workspace(qc_file_fmt file_format);
         void import_file_as_new_workspace(const std::string &fname, qc_file_fmt file_format);
         void query_create_new_workspace(const bool switch_to_new_workspace = true);
+        void load_workspace_from_file(const std::string &filename);
         void dialog_load_workspace();
         void dialog_save_workspace(const size_t ws_idx, const bool force_save_as);
         void dialog_save_current_workspace(const bool force_save_as);

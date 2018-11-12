@@ -506,6 +506,20 @@ void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_wo
 
 }
 
+void workspace_manager_t::load_workspace_from_file(const std::string &filename) {
+
+  app_state_t *astate = &(c_app::get_state());
+
+  auto new_ws = std::make_shared<workspace_t>();
+  //new_ws->m_ws_name = "d4";
+  new_ws->load_workspace_from_json(filename);
+  add_workspace(new_ws);
+  set_current(m_ws.size()-1);
+  new_ws->set_best_view();
+  astate->make_viewport_dirty();
+
+}
+
 void workspace_manager_t::dialog_load_workspace () {
 
   app_state_t *astate = &(c_app::get_state());
@@ -514,15 +528,7 @@ void workspace_manager_t::dialog_load_workspace () {
   bool succes{false};
 
   std::string file_name = astate->fd_manager->request_open_file(filter, succes);
-  if (succes) {
-      auto new_ws = std::make_shared<workspace_t>();
-      //new_ws->m_ws_name = "d4";
-      new_ws->load_workspace_from_json(file_name);
-      add_workspace(new_ws);
-      set_current(m_ws.size()-1);
-      new_ws->set_best_view();
-      astate->make_viewport_dirty();
-    }
+  if (succes) load_workspace_from_file(file_name);
 }
 
 void workspace_manager_t::dialog_save_workspace (const size_t ws_idx, const bool force_save_as) {

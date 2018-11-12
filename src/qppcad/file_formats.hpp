@@ -13,6 +13,7 @@ namespace qpp{
       firefly_output,
       firefly_input,
       cp2k_coord_cell_section,
+      qppcad_json,
       unknown_fileformat
     };
 
@@ -24,6 +25,12 @@ namespace qpp{
         }
 
         static qc_file_fmt file_name_to_file_format(const std::string &fn) {
+
+          //qppcad json
+
+          if (fn.find("json") != std::string::npos) {
+              return qc_file_fmt::qppcad_json;
+            }
 
           //XYZ
           if (fn.find(".XYZ") != std::string::npos || fn.find(".xyz") != std::string::npos) {
