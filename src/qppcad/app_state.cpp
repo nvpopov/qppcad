@@ -52,6 +52,20 @@ namespace qpp {
       mouse_x = _mcx;
       mouse_y = _mcy;
 
+      double delta = std::sqrt(
+                      std::pow(mouse_x_old - mouse_x, 2) + std::pow(mouse_y_old - mouse_y, 2));
+
+      if (delta < 2.5 && mouse_in_3d_area)
+        m_trigger_3d_popup_counter += 1;
+      else {
+          m_trigger_3d_popup = 0;
+          m_trigger_3d_popup = false;
+        }
+
+      if (m_trigger_3d_popup_counter > m_trigger_3d_popup_counter_max) {
+          m_trigger_3d_popup = true;
+          m_trigger_3d_popup_counter = 0;
+        }
     }
 
     void app_state_t::mark_viewport_change() {

@@ -77,6 +77,8 @@ namespace qpp {
         /// \param _name
         void set_name(const char * _name);
 
+        bool is_selected();
+
         /// \brief render
         virtual void render();
 

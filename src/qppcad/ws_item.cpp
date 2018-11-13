@@ -28,6 +28,17 @@ void ws_item_t::set_name(const char *_name){
     }
 }
 
+bool ws_item_t::is_selected() {
+
+  if (parent_ws) {
+      return parent_ws->get_selected() == this;
+    }
+  else {
+      return false;
+    }
+
+}
+
 void ws_item_t::render () {
 
   app_state_c = &(c_app::get_state());

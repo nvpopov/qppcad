@@ -53,6 +53,7 @@ namespace qpp {
         void render_3d_viewport_context_menu();
         void render_mtable_big();
         void render_start_page();
+        void render_3d_atom_popup();
 
     };
 

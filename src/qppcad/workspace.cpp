@@ -9,7 +9,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj_type){
+std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj_type) {
   if (obj_type == "ws_atoms_list") return std::make_shared<ws_atoms_list_t>();
   if (obj_type == "ws_comp_chem_data") return std::make_shared<ws_comp_chem_data_t>();
   return nullptr;
@@ -456,7 +456,6 @@ void workspace_manager_t::mouse_click () {
     }
 }
 
-
 void workspace_manager_t::add_workspace (const std::shared_ptr<workspace_t> &ws_to_add) {
   m_ws.push_back(ws_to_add);
   ws_to_add->workspace_changed();
@@ -469,7 +468,7 @@ void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_f
   std::string filter{""};
   std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
-  if (succes){
+  if (succes) {
       auto new_ws = std::make_shared<workspace_t>();
       std::string file_name_extr = qpp::extract_base_name(file_name_fd);
       new_ws->m_ws_name = file_name_extr;

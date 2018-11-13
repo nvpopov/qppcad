@@ -98,6 +98,8 @@ void ui_manager_t::render_ui() {
   console_widget->render();
   ecg_widget->render();
 
+  render_3d_atom_popup();
+
 }
 
 void ui_manager_t::render_main_menu(){
@@ -636,7 +638,7 @@ void ui_manager_t::render_3d_viewport_context_menu () {
 
   app_state_t* astate = &(c_app::get_state());
 
-  if (ImGui::BeginPopupContextVoid("3dAreaContext")){
+  if (ImGui::BeginPopupContextVoid("3dAreaContext")) {
       ImGui::BulletText("Context menu");
       ImGui::Separator();
       auto cur_ws = astate->ws_manager->get_current();
@@ -708,6 +710,19 @@ void ui_manager_t::render_start_page () {
   ImGui::Button("Help", _button_size);
 
   ImGui::End();
+
+}
+
+void ui_manager_t::render_3d_atom_popup () {
+
+//  app_state_t* astate = &(c_app::get_state());
+
+//  if (astate->m_trigger_3d_popup) {
+//      ImGui::OpenPopup("3dAreaAtomPopup");
+//      if (ImGui::BeginPopupContextVoid("3dAreaAtomPopup")) {
+//          ImGui::EndPopup();
+//        }
+//    }
 
 }
 

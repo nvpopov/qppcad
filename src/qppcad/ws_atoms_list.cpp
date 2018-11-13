@@ -163,6 +163,37 @@ void ws_atoms_list_t::render_ui () {
 }
 
 void ws_atoms_list_t::render_overlay () {
+
+  app_state_t* astate = &(c_app::get_state());
+
+  if (astate->m_trigger_3d_popup && is_selected()) {
+
+      ImDrawList* imdrw = ImGui::GetOverlayDrawList();
+      ray_t<float> local_geom_ray;
+      std::vector<tws_query_data_t<float, uint32_t> > res;
+      local_geom_ray.start = astate->camera->m_view_point - m_pos;
+      local_geom_ray.dir = (astate->camera->unproject(astate->mouse_x_ws_frame,
+                                                      astate->mouse_y_ws_frame) -
+                            astate->camera->m_view_point).normalized();
+      m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
+      //fmt::print(std::cout, "!!!!!!!!! {}\n", res.size());
+      if (!res.empty()) {
+
+          imdrw->AddRectFilled(ImVec2(astate->mouse_x+20, astate->mouse_y),
+                               ImVec2(astate->mouse_x+350, astate->mouse_y+95),
+                               ImColor(0.0f, 0.0f, 0.0f, 1.0f),
+                               4.0f);
+          imdrw->AddText(ImVec2(astate->mouse_x+35, astate->mouse_y+5),
+                         ImColor(1.0f, 1.0f, 1.0f, 1.0f),
+                         fmt::format("Atom name : {} \nAtom pos.: {}\nAtom ID: {}\nAtom IDX: {}",
+                                     m_geom->atom_name(res[0].m_atm),
+                                     m_geom->pos(res[0].m_atm, res[0].m_idx),
+                                     res[0].m_atm,
+                                     res[0].m_idx).c_str(),
+                         nullptr);
+        }
+    }
+
   m_measure->render_overlay();
   m_labels->render_overlay();
 }
@@ -611,12 +642,12 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       break;
 
     case qc_file_fmt::firefly_output : {
-      m_geom->DIM = 0;
-      need_to_extract_ccd = true;
-      read_ccd_from_firefly_output(qc_data, cc_inst);
-      need_to_compile_from_ccd = true;
-      break;
-    }
+        m_geom->DIM = 0;
+        need_to_extract_ccd = true;
+        read_ccd_from_firefly_output(qc_data, cc_inst);
+        need_to_compile_from_ccd = true;
+        break;
+      }
 
     default: c_app::log("File format not implemented");
     }
