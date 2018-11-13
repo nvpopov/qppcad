@@ -23,9 +23,9 @@ namespace qpp {
                       static int sc_a{1};
                       static int sc_b{1};
                       static int sc_c{1};
-                      ImGui::DragInt("Replicate in a", &sc_a, 1.0f, 1, 12);
-                      ImGui::DragInt("Replicate in b", &sc_b, 1.0f, 1, 12);
-                      ImGui::DragInt("Replicate in c", &sc_c, 1.0f, 1, 12);
+                      ImGui::SliderInt("Replicate in a", &sc_a,  1, 8);
+                      ImGui::SliderInt("Replicate in b", &sc_b,  1, 8);
+                      ImGui::SliderInt("Replicate in c", &sc_c,  1, 8);
                       if (ImGui::Button("Replicate")) {
                           if (sc_a != 1 || sc_b != 1 || sc_c != 1) {
                               al.make_super_cell(sc_a, sc_b, sc_c);
