@@ -12,6 +12,7 @@ namespace qpp{
       vasp_outcar_md,
       firefly_output,
       firefly_input,
+      cp2k_output,
       cp2k_coord_cell_section,
       qppcad_json,
       unknown_fileformat

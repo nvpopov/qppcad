@@ -12,6 +12,7 @@
 //new ccd io modules
 #include <io/ccd_firefly.hpp>
 #include <io/ccd_xyz.hpp>
+#include <io/ccd_cp2k.hpp>
 
 //deprecated direct io modules
 #include <io/geomio.hpp>
@@ -614,6 +615,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   auto start_timer = std::chrono::steady_clock::now();
   bool need_to_compile_from_ccd = false;
   bool need_to_extract_ccd = false;
+  bool need_to_compile_ccd = false;
   comp_chem_program_data_t<float> cc_inst;
 
   switch (file_format) {
@@ -649,10 +651,26 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         break;
       }
 
+    case qc_file_fmt::cp2k_output : {
+        need_to_extract_ccd = true;
+        need_to_compile_from_ccd = true;
+        need_to_compile_ccd = true;
+        read_ccd_from_cp2k_output(qc_data, cc_inst);
+        m_geom->DIM = cc_inst.m_DIM;
+        m_geom->cell.DIM = m_geom->DIM;
+        break;
+      }
+
     default: c_app::log("File format not implemented");
     }
 
   qc_data.close();
+
+  if (need_to_compile_ccd) {
+      bool succes_comp_ccd = compile_ccd(cc_inst, ccd_cf_default_flags |
+                                         ccd_cf_remove_empty_geom_steps);
+      c_app::log(fmt::format("Is ccd compilation succes? {}", succes_comp_ccd));
+    }
 
   if (need_to_compile_from_ccd) {
       bool succes_comp_geom = compile_geometry(cc_inst, *(m_geom.get()));

@@ -160,6 +160,16 @@ void ui_manager_t::render_main_menu(){
                     }
                   ImGui::EndMenu();
                 }
+
+              if (ImGui::BeginMenu("CP2K")) {
+
+                  if (ImGui::MenuItem("OUTPUT")) {
+                      astate->ws_manager->
+                          query_import_file_as_new_workspace(qc_file_fmt::cp2k_output);
+                    }
+                  ImGui::EndMenu();
+                }
+
               ImGui::EndMenu();
             }
 
