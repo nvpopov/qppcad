@@ -13,13 +13,21 @@ namespace qpp {
 
       public:
         std::unique_ptr<comp_chem_program_data_t<float> > m_ccd{nullptr};
+        std::vector<std::shared_ptr<ws_item_t> > m_connected_items; // todo: need to change to weak
+        std::vector<size_t> m_connected_items_stride;
+
+        int m_cur_step{0};
+        int m_cur_vib{-1};
         ws_comp_chem_data_t();
+
+        void manual_step_update(const int dir);
 
         void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                    vector3<float> &vOutLookAt) override ;
         void render() override;
         void render_overlay() override;
         void render_ui() override;
+        void update_joined_atoms_list_animation(size_t step_idx);
         void render_work_panel_ui() override;
         void td_context_menu_edit_item() override;
         void td_context_menu_edit_content() override;

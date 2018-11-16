@@ -34,7 +34,7 @@ namespace qpp {
         ws_atoms_list_anim_subsys_t (ws_atoms_list_t &_p_owner);
 
         void update_geom_to_anim (const int anim_id, const float current_frame);
-
+        void update_and_set_anim (const int anim_id, const float current_frame);
         void update_geom_to_anim ();
 
         void update (const float delta_time);

@@ -396,9 +396,9 @@ void workspace_manager_t::init_default () {
   auto _ws4_al = std::make_shared<ws_atoms_list_t>();
   _ws4->add_item_to_workspace(_ws4_al);
 
-  _ws4_al->load_from_file(qc_file_fmt::standart_xyz,
-                          "../deps/qpp/examples/io/ref_data/xyz/2mult.xyz",
-                          qc_file_fmt_helper::need_to_auto_center(qc_file_fmt::standart_xyz));
+  _ws4_al->load_from_file(qc_file_fmt::firefly_output,
+                          "../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out",
+                          false);
 
   _wsl3->m_name = "zeolite1";
   _wsl32->m_name = "nanotube1";

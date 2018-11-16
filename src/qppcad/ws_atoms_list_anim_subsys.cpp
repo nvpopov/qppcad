@@ -41,6 +41,13 @@ namespace qpp {
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_unlock_img);
     }
 
+    void ws_atoms_list_anim_subsys_t::update_and_set_anim(const int anim_id,
+                                                          const float current_frame) {
+      m_cur_anim = anim_id;
+      m_cur_anim_time = current_frame;
+      update_geom_to_anim(anim_id, current_frame);
+    }
+
     void ws_atoms_list_anim_subsys_t::update_geom_to_anim() {
       update_geom_to_anim(m_cur_anim, m_cur_anim_time);
     }
