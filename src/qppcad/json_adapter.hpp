@@ -55,6 +55,9 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_MEASURE                   = "measurements";
     const auto JSON_ATOMS_LIST_MEASURE_INTER_ATOMIC_DIST = "inter_atomic";
 
+    const auto JSON_ATOMS_LIST_DRAW_SUBCELLS             = "draw_subcells";
+    const auto JSON_ATOMS_LIST_SUBCELLS_RANGE            = "subcells_range";
+
   }
 
 }

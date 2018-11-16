@@ -819,6 +819,12 @@ void ws_atoms_list_t::write_to_json (json &data) {
   data[JSON_CELL_COLOR] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
   data[JSON_BONDING_TABLE] = json::array({});
 
+  if (m_geom->DIM == 3) {
+      data[JSON_ATOMS_LIST_DRAW_SUBCELLS] = m_draw_subcells;
+      data[JSON_ATOMS_LIST_SUBCELLS_RANGE] =
+          json::array({m_subcells_range[0], m_subcells_range[1], m_subcells_range[2]});
+    }
+
   for (auto &record: m_tws_tr->m_bonding_table.m_dist) {
       json bt_rec = json::array({});
       bt_rec.push_back(m_geom->atom_of_type(record.first.m_a));
@@ -921,13 +927,23 @@ void ws_atoms_list_t::read_from_json (json &data) {
   if (data.find(JSON_BT_SHOW_DSBL) != data.end())
     m_bonding_table_show_disabled_record = data[JSON_BT_SHOW_DSBL];
 
+  if (data.find(JSON_ATOMS_LIST_DRAW_SUBCELLS) != data.end())
+    m_draw_subcells = data[JSON_ATOMS_LIST_DRAW_SUBCELLS];
+
+  if (data.find(JSON_ATOMS_LIST_SUBCELLS_RANGE) != data.end()) {
+      int sc_a = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][0].get<int>();
+      int sc_b = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][1].get<int>();
+      int sc_c = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][2].get<int>();
+      m_subcells_range = vector3<int>(sc_a, sc_b, sc_c);
+    }
+
   m_tws_tr->do_action(act_lock | act_clear_all);
 
   m_ext_obs->first_data = true;
 
   if (m_geom->DIM>0) {
-      if (data.find(JSON_CELL) != data.end()){
-          for (uint8_t i = 0; i < m_geom->DIM; i++){
+      if (data.find(JSON_CELL) != data.end()) {
+          for (uint8_t i = 0; i < m_geom->DIM; i++) {
               vector3<float> cellv(data[JSON_CELL][i][0].get<float>(),
                   data[JSON_CELL][i][1].get<float>(),
                   data[JSON_CELL][i][2].get<float>());
