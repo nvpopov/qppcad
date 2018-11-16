@@ -95,6 +95,7 @@ namespace qpp {
         void delete_selected_atoms();
         void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);
         void apply_axial_scale(const float scale_a, const float scale_b, const float scale_c);
+        void move_selected_atoms_to_home(bool ignore_selection = false);
 
         std::string compose_item_name() override;
         void update(float delta_time) override;

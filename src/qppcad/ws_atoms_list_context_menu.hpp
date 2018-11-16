@@ -35,6 +35,13 @@ namespace qpp {
                         }
                       ImGui::EndMenu();
                     }
+
+                  if (ImGui::BeginMenu("Return atoms to home")) {
+                      if (ImGui::MenuItem("Return selected")) al.move_selected_atoms_to_home();
+                      if (ImGui::MenuItem("Return all")) al.move_selected_atoms_to_home(true);
+                      ImGui::EndMenu();
+                    }
+
                 }
 
               if (ImGui::BeginMenu("Selection")) {

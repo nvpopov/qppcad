@@ -167,7 +167,7 @@ void ws_atoms_list_t::render_overlay () {
 
   app_state_t* astate = &(c_app::get_state());
 
-  if (astate->m_trigger_3d_popup && is_selected()) {
+  if (astate->m_trigger_3d_popup && is_selected() && !ImGui::GetIO().WantCaptureMouse) {
 
       ImDrawList* imdrw = ImGui::GetOverlayDrawList();
       ray_t<float> local_geom_ray;
@@ -509,6 +509,16 @@ void ws_atoms_list_t::apply_axial_scale (const float scale_a,
   m_tws_tr->do_action(act_unlock | act_rebuild_all);
 }
 
+void ws_atoms_list_t::move_selected_atoms_to_home (bool ignore_selection) {
+
+  for (int i = 0; i < m_geom->nat(); i++)
+    if (m_atom_sel.find(i) != m_atom_sel.end() || ignore_selection) {
+        vector3<float> pos = m_geom->pos(i);
+        m_geom->change_pos(i, m_geom->cell.reduce(pos));
+      }
+
+}
+
 std::string ws_atoms_list_t::compose_item_name () {
   return fmt::format("Type = [atom list], DIM = [{}d]", m_geom->DIM);
 }
@@ -768,7 +778,8 @@ void ws_atoms_list_t::save_to_file (qc_file_fmt file_format, std::string file_na
           }
 
         default : {
-            c_app::log(fmt::format("Saving geomtery -> file format[{}] not supported",file_format));
+            c_app::log(fmt::format("Saving geomtery -> file format[{}] not supported",
+                                   file_format));
             break;
           }
         }
