@@ -134,6 +134,15 @@ namespace qpp {
                 astate->make_viewport_dirty();
             }
 
+          if (al.m_geom->DIM == 3) {
+              if (al.m_draw_subcells) ImGui::Separator();
+              ImGui::Checkbox("Draw subcells", &al.m_draw_subcells);
+              if (al.m_draw_subcells) {
+                  ImGui::InputInt3("Range", al.m_subcells_range.data());
+                  ImGui::Separator();
+                }
+            }
+
           if (ImGui::ColorEdit3("Cell ", al.m_cell_color.data()))
             astate->make_viewport_dirty();
           ImGui::Spacing();

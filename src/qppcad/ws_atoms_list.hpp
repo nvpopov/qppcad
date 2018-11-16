@@ -56,6 +56,7 @@ namespace qpp {
         vector3<float> m_new_atom_pos;
 
         ws_atoms_list_render_type m_cur_render_type{ws_atoms_list_render_type::ball_and_stick};
+        vector3<int> m_subcells_range{1,1,1};
 
         bool m_show_imaginary_atoms{true};
         bool m_show_imaginary_bonds{true};
@@ -65,6 +66,7 @@ namespace qpp {
         bool m_draw_line_in_dist_measurement{false};
         bool m_bonding_table_show_disabled_record{true};
         bool m_has_animations;
+        bool m_draw_subcells{false};
 
         ws_atoms_list_t();
 

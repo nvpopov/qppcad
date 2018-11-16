@@ -106,8 +106,24 @@ void ws_atoms_list_t::render () {
 
           app_state_c->dp->render_cell_3d(
                 cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos, 2.1f);
+
+          if ( m_draw_subcells) {
+
+              vector3<float> sc_a = m_geom->cell.v[0] / m_subcells_range[0];
+              vector3<float> sc_b = m_geom->cell.v[1] / m_subcells_range[1];
+              vector3<float> sc_c = m_geom->cell.v[2] / m_subcells_range[2];
+              for (int i_a = 0; i_a < m_subcells_range[0]; i_a++)
+                for (int i_b = 0; i_b < m_subcells_range[1]; i_b++)
+                  for (int i_c = 0; i_c < m_subcells_range[2]; i_c++) {
+                      vector3<float> new_pos = m_pos + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
+                      app_state_c->dp->render_cell_3d(cell_clr, sc_a, sc_b, sc_c, new_pos, 2.1f);
+                    }
+            }
+
           astate->dp->end_render_line();
         }
+
+
 
       if (!m_is_visible) return;
 
@@ -188,10 +204,10 @@ void ws_atoms_list_t::render_overlay () {
                          ImColor(1.0f, 1.0f, 1.0f, 1.0f),
                          fmt::format("Atom name : {} \nAtom pos.: {}\nAtom ID: {}\nAtom IDX: {}",
                                      m_geom->atom_name(res[0].m_atm),
-                                     m_geom->pos(res[0].m_atm, res[0].m_idx),
-                                     res[0].m_atm,
-                                     res[0].m_idx).c_str(),
-                         nullptr);
+                         m_geom->pos(res[0].m_atm, res[0].m_idx),
+              res[0].m_atm,
+              res[0].m_idx).c_str(),
+              nullptr);
         }
     }
 
@@ -360,13 +376,11 @@ bool ws_atoms_list_t::select_atom (int atom_id) {
 }
 
 void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
-
   for (auto i = 0; i < m_geom->nat(); i++)
     if (m_geom->type_table(i) == item_type_to_select){
         m_atom_sel.insert(i);
         m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
       }
-
 }
 
 void ws_atoms_list_t::invert_selected_atoms () {
@@ -401,21 +415,17 @@ void ws_atoms_list_t::insert_atom (const string &atom_name, const vector3<float>
 }
 
 void ws_atoms_list_t::update_atom (const int at_id, const vector3<float> &pos) {
-
   m_anim->m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
   app_state_t* astate = &(c_app::get_state());
   astate->make_viewport_dirty();
-
 }
 
 void ws_atoms_list_t::update_atom (const int at_id, const string &at_name) {
-
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
   app_state_t* astate = &(c_app::get_state());
   astate->make_viewport_dirty();
-
 }
 
 void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {
