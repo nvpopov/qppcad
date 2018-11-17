@@ -30,6 +30,11 @@ namespace qpp {
       buffered_billboards
     };
 
+    enum ws_atoms_list_color_mode {
+      color_from_ptable,
+      color_from_xgeom
+    };
+
     /// \brief The ws_atom_list_t class
     class ws_atoms_list_t : public ws_item_t {
 
@@ -58,6 +63,7 @@ namespace qpp {
         ws_atoms_list_render_type m_cur_render_type{ws_atoms_list_render_type::ball_and_stick};
         vector3<int> m_subcells_range{1,1,1};
 
+        ws_atoms_list_color_mode m_color_mode{ws_atoms_list_color_mode::color_from_ptable};
         bool m_show_imaginary_atoms{true};
         bool m_show_imaginary_bonds{true};
         bool m_draw_specular{true};

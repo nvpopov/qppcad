@@ -110,6 +110,9 @@ namespace qpp {
                                        0.5f, 15.0f, "%.4f", 1)) astate->make_viewport_dirty();
             }
 
+          const char* items_color[] = {"Color from ptable", "Color from xgeometry"};
+          if (ImGui::Combo("Color mode", reinterpret_cast<int*>(&al.m_color_mode),
+                           items_color, 2)) astate->make_viewport_dirty();
           al.m_labels->render_ui();
 
           if (ImGui::SliderFloat("Atom size", &al.m_atom_scale_factor, 0.25f, 2.0f, "%.4f", 1))
@@ -132,6 +135,9 @@ namespace qpp {
 
               if (ImGui::Checkbox("Show imaginary bonds", &al.m_show_imaginary_bonds))
                 astate->make_viewport_dirty();
+
+              if (ImGui::ColorEdit3("Cell ", al.m_cell_color.data()))
+                astate->make_viewport_dirty();
             }
 
           if (al.m_geom->DIM == 3) {
@@ -143,8 +149,6 @@ namespace qpp {
                 }
             }
 
-          if (ImGui::ColorEdit3("Cell ", al.m_cell_color.data()))
-            astate->make_viewport_dirty();
           ImGui::Spacing();
 
         }

@@ -36,11 +36,44 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
 
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
-  m_geom->set_format({"atom", "number", "charge", "x", "y", "z", "show", "sel",
-                      "cc", "ccr", "ccg", "ccb"},
+  /* atom
+   * number
+   * charge
+   * X
+   * Y
+   * Z
+   * show
+   * sel
+   * ccr - red component of custom color
+   * ccg - green component of custom color
+   * ccb - blue component of custom color
+   */
 
-  {type_string, type_int, type_real, type_real, type_real, type_real,
-   type_bool, type_bool, type_bool, type_real, type_real, type_real});
+  m_geom->set_format(
+
+  {"atom",
+   "number",
+   "charge",
+   "x",
+   "y",
+   "z",
+   "show",
+   "sel",
+   "ccr",
+   "ccg",
+   "ccb"},
+
+  {type_string,
+   type_int,
+   type_real,
+   type_real,
+   type_real,
+   type_real,
+   type_bool,
+   type_bool,
+   type_bool,
+   type_real,
+   type_real});
 
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;
@@ -731,7 +764,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
       for (auto &anim : m_anim->m_anim_data)
         for (auto &anim_frame : anim.frame_data)
-          for (auto &anim_frame_rec : anim_frame)
+          for (auto &anim_frame_rec : anim_frame.atom_pos)
             anim_frame_rec -= center;
     }
 
@@ -870,7 +903,7 @@ void ws_atoms_list_t::write_to_json (json &data) {
             for (auto &frame : anim.frame_data) {
 
                 json frame_chunk = json::array({});
-                for (auto &frame_coord : frame) {
+                for (auto &frame_coord : frame.atom_pos) {
                     json frame_chunk_coord = json::array({});
                     frame_chunk_coord.push_back(frame_coord[0]);
                     frame_chunk_coord.push_back(frame_coord[1]);
@@ -994,7 +1027,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
                   tmp_anim_rec.frame_data.resize(tmp_anim_rec.frame_data.size() + 1);
                   size_t nf_id = tmp_anim_rec.frame_data.size() - 1;
 
-                  tmp_anim_rec.frame_data[nf_id].reserve(frame.size());
+                  tmp_anim_rec.frame_data[nf_id].atom_pos.reserve(frame.size());
 
                   for (auto &frame_data : frame) {
                       vector3<float> frame_coord;
@@ -1002,7 +1035,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
                       frame_coord[1] = frame_data[1].get<float>();
                       frame_coord[2] = frame_data[2].get<float>();
                       std::cout << frame_coord.to_string_vec() << std::endl;
-                      tmp_anim_rec.frame_data[nf_id].push_back(frame_coord);
+                      tmp_anim_rec.frame_data[nf_id].atom_pos.push_back(frame_coord);
                     }
                 }
             }
@@ -1016,7 +1049,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
           tmp_anim_static.m_anim_type = geom_anim_type::anim_static;
           tmp_anim_static.frame_data.resize(1);
           for (auto i = 0; i < m_geom->nat(); i++)
-            tmp_anim_static.frame_data[0].push_back(m_geom->pos(i));
+            tmp_anim_static.frame_data[0].atom_pos.push_back(m_geom->pos(i));
           m_anim->m_anim_data.insert(m_anim->m_anim_data.begin(), std::move(tmp_anim_static));
         }
     }

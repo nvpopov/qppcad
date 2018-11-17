@@ -99,6 +99,7 @@ add_executable(qppcad
     src/qppcad/super_cell_widget.cpp
     src/qppcad/simple_query.cpp
     src/qppcad/uniq_id.cpp
+    src/qppcad/color_map.cpp
     deps/imgui/misc/freetype/imgui_freetype.cpp
     deps/imgui/misc/stl/imgui_stl.cpp
     deps/imgui/examples/imgui_impl_glfw.cpp

@@ -25,6 +25,7 @@
 #include <qppcad/shader_generators.hpp>
 #include <qppcad/keyboard_event.hpp>
 #include <qppcad/simple_query.hpp>
+#include <qppcad/color_map.hpp>
 
 namespace qpp {
 
@@ -89,6 +90,7 @@ namespace qpp {
         mesh_t *zup_quad;
         mesh_t *xline_mesh;
 
+        std::map<std::string, color_map_t> m_color_maps;
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;

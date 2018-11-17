@@ -25,14 +25,15 @@ namespace qpp {
 
       for (auto i = 0; i < p_owner->m_geom->nat(); i++){
 
-          if (m_anim_data[anim_id].frame_data[start_frame_n].size() != p_owner->m_geom->nat()){
+          if (m_anim_data[anim_id].frame_data[start_frame_n].atom_pos.size() !=
+              p_owner->m_geom->nat()){
               m_force_non_animable = true;
               return;
             }
 
           vector3<float> new_pos =
-              m_anim_data[anim_id].frame_data[start_frame_n][i] * (frame_delta) +
-              m_anim_data[anim_id].frame_data[end_frame_n][i] * (1-frame_delta);
+              m_anim_data[anim_id].frame_data[start_frame_n].atom_pos[i] * (frame_delta) +
+              m_anim_data[anim_id].frame_data[end_frame_n].atom_pos[i] * (1-frame_delta);
 
           p_owner->m_geom->change_pos(i, new_pos);
         }

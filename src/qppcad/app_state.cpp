@@ -53,7 +53,7 @@ namespace qpp {
       mouse_y = _mcy;
 
       double delta = std::sqrt(
-                      std::pow(mouse_x_old - mouse_x, 2) + std::pow(mouse_y_old - mouse_y, 2));
+                       std::pow(mouse_x_old - mouse_x, 2) + std::pow(mouse_y_old - mouse_y, 2));
 
       if (delta < 2.5 && mouse_in_3d_area)
         m_trigger_3d_popup_counter += 1;
@@ -109,6 +109,9 @@ namespace qpp {
 
       dp = new draw_pipeline_t();
 
+      m_color_maps["black_and_white"] = {{0.0f, clr_black}, {1.0, clr_white}};
+      m_color_maps["semapwhore"] = {{0.0f, clr_green}, {5.0, clr_yellow}, {1.0, clr_red}};
+
       //default meshes
       _sph_meshes.push_back(mesh_generators::sphere(18, 18));
       cylinder_mesh = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
@@ -135,6 +138,7 @@ namespace qpp {
       ui_manager   = std::make_shared<ui_manager_t>(this);
       fd_manager   = std::make_shared<file_dialog_manager_t>();
       sq_manager   = std::make_unique<simple_query_manager_t>();
+
 
       make_viewport_dirty();
       update_viewport_cache();
