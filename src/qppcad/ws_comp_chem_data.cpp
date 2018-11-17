@@ -15,6 +15,20 @@ void ws_comp_chem_data_t::manual_step_update(const int dir) {
   if (old_step != m_cur_step) update_joined_atoms_list_animation(m_cur_step);
 }
 
+void ws_comp_chem_data_t::manual_update_vib() {
+  for (auto &items : m_connected_items) {
+      ws_atoms_list_t *al = dynamic_cast<ws_atoms_list_t*>(items.get());
+      if (al && al->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1)  {
+          //fmt::print(std::cout, "Hallelujiah\n");
+          al->m_anim->m_cur_anim = m_cur_vib + 1;
+          al->m_anim->m_cur_anim_time = 0.0f;
+          al->m_anim->m_play_anim = true;
+          al->m_anim->m_play_cyclic = true;
+          al->m_anim->m_anim_frame_time = 0.1f;
+        }
+    }
+}
+
 void ws_comp_chem_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
                                                 vector3<float> &vOutLookAt) {
   //do nothing
@@ -105,19 +119,19 @@ void ws_comp_chem_data_t::render_ui() {
 
         for (size_t i = 0; i < m_ccd->m_vibs.size(); i++) {
 
-            if (i == m_cur_vib) ImGui::TextUnformatted(fmt::format("{}*", i).c_str());
-            else ImGui::TextUnformatted(fmt::format("{}", i).c_str());
-            if (ImGui::IsItemClicked()) m_cur_vib = i;
+            if (ImGui::Selectable(fmt::format("{}", i).c_str(), m_cur_vib == i,
+                                  ImGuiSelectableFlags_SpanAllColumns)) {
+                        m_cur_vib = i;
+                        manual_update_vib();
+                    }
             ImGui::NextColumn();
-            ImGui::TextUnformatted(fmt::format("{} cm-1", m_ccd->m_vibs[i].m_frequency).c_str());
-            if (ImGui::IsItemClicked()) m_cur_vib = i;
-            ImGui::NextColumn();
-            ImGui::TextUnformatted(fmt::format("{}", m_ccd->m_vibs[i].m_intensity).c_str());
-            if (ImGui::IsItemClicked()) m_cur_vib = i;
-            ImGui::NextColumn();
-            if (ImGui::IsItemClicked()) m_cur_vib = i;
-            ImGui::Separator();
 
+            ImGui::TextUnformatted(fmt::format("{} cm-1", m_ccd->m_vibs[i].m_frequency).c_str());
+            ImGui::NextColumn();
+
+            ImGui::TextUnformatted(fmt::format("{}", m_ccd->m_vibs[i].m_intensity).c_str());
+            ImGui::Separator();
+            ImGui::NextColumn();
 
           }
         ImGui::Separator();

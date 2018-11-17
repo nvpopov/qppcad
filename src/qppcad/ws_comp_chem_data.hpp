@@ -21,6 +21,7 @@ namespace qpp {
         ws_comp_chem_data_t();
 
         void manual_step_update(const int dir);
+        void manual_update_vib();
 
         void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                    vector3<float> &vOutLookAt) override ;
