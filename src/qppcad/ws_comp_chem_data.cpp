@@ -91,6 +91,7 @@ void ws_comp_chem_data_t::render_ui() {
         ImGui::TextUnformatted("Step info:");
 
         ImGui::Columns(2);
+        ImGui::SetColumnWidth(0, 120);
         ImGui::Separator();
         ImGui::TextUnformatted("Final energy");
         ImGui::NextColumn();
@@ -102,6 +103,43 @@ void ws_comp_chem_data_t::render_ui() {
         ImGui::NextColumn();
         ImGui::TextUnformatted(fmt::format("{}",
                                            m_ccd->m_steps[m_cur_step].m_scf_steps.size()).c_str());
+        ImGui::NextColumn();
+        ImGui::Separator();
+        ImGui::TextUnformatted("Max grd.");
+        ImGui::NextColumn();
+        ImGui::TextUnformatted(fmt::format("{}",
+                                           m_ccd->m_steps[m_cur_step].m_gradient_max).c_str());
+        ImGui::NextColumn();
+        ImGui::Separator();
+        ImGui::TextUnformatted("Min grd.");
+        ImGui::NextColumn();
+        ImGui::TextUnformatted(fmt::format("{}",
+                                           m_ccd->m_steps[m_cur_step].m_gradient_min).c_str());
+        ImGui::NextColumn();
+        ImGui::Separator();
+        ImGui::TextUnformatted("Avg grd.");
+        ImGui::NextColumn();
+        ImGui::TextUnformatted(fmt::format("{}",
+                                           m_ccd->m_steps[m_cur_step].m_gradient_average).c_str());
+        ImGui::NextColumn();
+        ImGui::Separator();
+        ImGui::TextUnformatted("Nrm. grd. max");
+        ImGui::NextColumn();
+        ImGui::TextUnformatted(fmt::format("{}",
+                                           m_ccd->m_steps[m_cur_step].m_gradient_norm_max).c_str());
+        ImGui::NextColumn();
+        ImGui::Separator();
+        ImGui::TextUnformatted("Nrm. grd. min");
+        ImGui::NextColumn();
+        ImGui::TextUnformatted(fmt::format("{}",
+                                           m_ccd->m_steps[m_cur_step].m_gradient_norm_min).c_str());
+        ImGui::NextColumn();
+        ImGui::Separator();
+        ImGui::TextUnformatted("Nrm. grd. avg");
+        ImGui::NextColumn();
+        ImGui::TextUnformatted(
+              fmt::format("{}",m_ccd->m_steps[m_cur_step].m_gradient_norm_average).c_str());
+
         ImGui::Columns(1);
       }
 
@@ -130,11 +168,11 @@ void ws_comp_chem_data_t::render_ui() {
             ImGui::NextColumn();
 
             ImGui::TextUnformatted(fmt::format("{}", m_ccd->m_vibs[i].m_intensity).c_str());
-            ImGui::Separator();
+           // ImGui::Separator();
             ImGui::NextColumn();
 
           }
-        ImGui::Separator();
+        //ImGui::Separator();
         ImGui::Columns(1);
       }
 }

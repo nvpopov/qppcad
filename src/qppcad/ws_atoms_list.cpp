@@ -701,6 +701,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         need_to_extract_ccd = true;
         read_ccd_from_firefly_output(qc_data, cc_inst);
         need_to_compile_from_ccd = true;
+        need_to_compile_ccd = true;
         break;
       }
 
@@ -739,7 +740,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   if (need_to_extract_ccd) {
       std::shared_ptr<ws_comp_chem_data_t> extracted_ccd = std::make_shared<ws_comp_chem_data_t>();
       extracted_ccd->m_name = m_name+"_ccd";
-      extracted_ccd->m_ccd = std::make_unique<comp_chem_program_data_t<float> >(std::move(cc_inst));
+      extracted_ccd->m_ccd =
+          std::make_unique<comp_chem_program_data_t<float> >(std::move(cc_inst));
       extracted_ccd->m_connected_items.push_back(shared_from_this());
       parent_ws->add_item_to_workspace(extracted_ccd);
     }
