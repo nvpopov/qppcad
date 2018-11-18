@@ -23,10 +23,10 @@ namespace qpp {
       if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_lock);
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_lock_img);
 
+      size_t nat = p_owner->m_geom->nat();
       for (auto i = 0; i < p_owner->m_geom->nat(); i++){
 
-          if (m_anim_data[anim_id].frame_data[start_frame_n].atom_pos.size() !=
-              p_owner->m_geom->nat()){
+          if (m_anim_data[anim_id].frame_data[start_frame_n].atom_pos.size() != nat) {
               m_force_non_animable = true;
               return;
             }
@@ -36,6 +36,27 @@ namespace qpp {
               m_anim_data[anim_id].frame_data[end_frame_n].atom_pos[i] * (1-frame_delta);
 
           p_owner->m_geom->change_pos(i, new_pos);
+
+          if (p_owner->m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
+
+              // check the avaiability of colors in frame_data
+              if (m_anim_data[anim_id].frame_data[start_frame_n].atom_color.size() == nat &&
+                  m_anim_data[anim_id].frame_data[end_frame_n].atom_color.size() == nat) {
+                  vector3<float> new_color =
+                      m_anim_data[anim_id].frame_data[start_frame_n].atom_color[i] * (frame_delta) +
+                      m_anim_data[anim_id].frame_data[end_frame_n].atom_color[i] * (1-frame_delta);
+                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccr, i) = new_color[0];
+                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccg, i) = new_color[1];
+                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccb, i) = new_color[2];
+                }
+              // otherwise - load default colors
+              else {
+                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccr, i) = 0.0f;
+                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccg, i) = 0.0f;
+                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccb, i) = 0.0f;
+                }
+            }
+
         }
 
       if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_unlock);

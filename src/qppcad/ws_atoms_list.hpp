@@ -32,8 +32,12 @@ namespace qpp {
 
     enum ws_atoms_list_color_mode {
       color_from_ptable,
-      color_from_xgeom
+      color_from_anim
     };
+
+    const int ws_atoms_list_xgeom_ccr = 8;
+    const int ws_atoms_list_xgeom_ccg = 9;
+    const int ws_atoms_list_xgeom_ccb = 10;
 
     /// \brief The ws_atom_list_t class
     class ws_atoms_list_t : public ws_item_t {

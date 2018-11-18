@@ -21,7 +21,6 @@ namespace qpp {
           ImGui::Spacing();
         }
 
-
       if (ImGui::CollapsingHeader("Atom types")) {
           ImGui::Spacing();
           ImGui::Columns(4);
@@ -51,7 +50,6 @@ namespace qpp {
               ImGui::TextUnformatted(
                     fmt::format("{}", al.m_geom->get_atom_count_by_type(i)).c_str(), nullptr);
               ImGui::NextColumn();
-
 
               ImDrawList* draw_list = ImGui::GetWindowDrawList();
               const ImVec2 p = ImGui::GetCursorScreenPos();
@@ -92,7 +90,6 @@ namespace qpp {
           ImGui::Spacing();
         }
 
-
       if (ImGui::CollapsingHeader("Display and styling")){
 
           ImGui::Spacing();
@@ -110,7 +107,7 @@ namespace qpp {
                                        0.5f, 15.0f, "%.4f", 1)) astate->make_viewport_dirty();
             }
 
-          const char* items_color[] = {"Color from ptable", "Color from xgeometry"};
+          const char* items_color[] = {"Color from ptable", "Color from animation"};
           if (ImGui::Combo("Color mode", reinterpret_cast<int*>(&al.m_color_mode),
                            items_color, 2)) astate->make_viewport_dirty();
           al.m_labels->render_ui();

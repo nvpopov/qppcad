@@ -76,6 +76,12 @@ namespace qpp {
           color = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
         }
 
+      if (al.m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
+          color[0] = al.m_geom->xfield<float>(ws_atoms_list_xgeom_ccr, at_num);
+          color[1] = al.m_geom->xfield<float>(ws_atoms_list_xgeom_ccg, at_num);
+          color[2] = al.m_geom->xfield<float>(ws_atoms_list_xgeom_ccb, at_num);
+        }
+
       if (al.parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
           if (al.m_atom_idx_sel.find(atom_index_set_key(at_num, at_index)) !=
               al.m_atom_idx_sel.end() &&
@@ -102,8 +108,6 @@ namespace qpp {
             bcolor, al.m_geom->pos(at_num1, at_index1) + al.m_pos,
             al.m_geom->pos(at_num2, at_index2) + al.m_pos, al.m_bond_scale_factor);
     }
-
-
 
   }
 

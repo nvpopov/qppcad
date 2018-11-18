@@ -110,7 +110,7 @@ namespace qpp {
       dp = new draw_pipeline_t();
 
       m_color_maps["black_and_white"] = {{0.0f, clr_black}, {1.0, clr_white}};
-      m_color_maps["semapwhore"] = {{0.0f, clr_green}, {5.0, clr_yellow}, {1.0, clr_red}};
+      m_color_maps["semapwhore"] = {{0.0f, clr_green}, {0.5, clr_yellow}, {1.0, clr_red}};
 
       //default meshes
       _sph_meshes.push_back(mesh_generators::sphere(18, 18));

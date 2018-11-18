@@ -12,7 +12,7 @@ vector3<float> qpp::cad::color_map_t::get_color(float pos) {
 
   // in [0,n) :
   for (size_t i = 0; i < m_colors.size() - 1; i++)
-    if (m_colors[i].m_pos >= pos && m_colors[i].m_pos < pos) {
+    if (m_colors[i].m_pos >= pos-0.05f && m_colors[i].m_pos < pos) {
         idx_1 = i;
         idx_2 = i+1;
         break;

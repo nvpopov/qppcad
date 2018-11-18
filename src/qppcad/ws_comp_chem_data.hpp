@@ -22,6 +22,7 @@ namespace qpp {
 
         void manual_step_update(const int dir);
         void manual_update_vib();
+        void fill_custom_colors_of_geom_anim(const std::string color_map_name);
 
         void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                    vector3<float> &vOutLookAt) override ;

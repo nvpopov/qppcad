@@ -36,17 +36,17 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
 
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
-  /* atom
-   * number
-   * charge
-   * X
-   * Y
-   * Z
-   * show
-   * sel
-   * ccr - red component of custom color
-   * ccg - green component of custom color
-   * ccb - blue component of custom color
+  /* 0 atom
+   * 1 number
+   * 2 charge
+   * 3 X
+   * 4 Y
+   * 5 Z
+   * 6 show
+   * 7 sel
+   * 8 ccr - red component of custom color
+   * 9 ccg - green component of custom color
+   * 10 ccb - blue component of custom color
    */
 
   m_geom->set_format(
@@ -71,7 +71,7 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
    type_real,
    type_bool,
    type_bool,
-   type_bool,
+   type_real,
    type_real,
    type_real});
 
@@ -743,6 +743,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       extracted_ccd->m_ccd =
           std::make_unique<comp_chem_program_data_t<float> >(std::move(cc_inst));
       extracted_ccd->m_connected_items.push_back(shared_from_this());
+      extracted_ccd->m_connected_items_stride.push_back(0);
       parent_ws->add_item_to_workspace(extracted_ccd);
     }
 
