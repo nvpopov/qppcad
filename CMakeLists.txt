@@ -71,6 +71,7 @@ qt5_add_resources(QRCS data/resources.qrc)
 add_executable(qppcad
     src/qppcad/main.cpp
     src/qppcad/main_window.cpp
+    src/qppcad/ws_viewer_widget.cpp
     ${QRCS})
 qt5_use_modules(qppcad Core Gui Widgets)
 target_link_libraries(qppcad Qt5::Widgets)
