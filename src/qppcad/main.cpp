@@ -1,8 +1,15 @@
 #include <iostream>
-#include <qppcad/app.hpp>
+#include <QApplication>
+#include <qppcad/main_window.hpp>
+
+using namespace qpp;
+using namespace qpp::cad;
 
 int main (int argc, char **argv) {
 
-  qpp::cad::c_app::run(argc, argv);
+  QApplication app(argc, argv);
+  main_window w;
+  w.showMaximized();
+  return app.exec();
 
 }

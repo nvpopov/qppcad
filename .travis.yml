@@ -10,7 +10,8 @@ addons:
       - g++-7
       - xorg-dev
       - libgl1-mesa-dev
-      - libgtk-3-dev
+      - libqt5widgets5
+      - libqt5core5a
 git:
   submodules: false
 
