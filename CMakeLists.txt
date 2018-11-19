@@ -23,7 +23,7 @@ set_option(WITH_HarfBuzz OFF)
 
 add_subdirectory(deps/qpp)
 add_subdirectory(deps/freetype)
-add_subdirectory(deps/glfw)
+
 
 include_directories(deps/glfw/include)
 include_directories(deps/glfw/deps)
