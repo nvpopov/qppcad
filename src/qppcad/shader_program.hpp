@@ -2,8 +2,8 @@
 #define QPP_SHADER_PROGRAM_H
 
 #include <qppcad/qppcad.hpp>
-#include <GL/gl3w.h>
-#include <GLFW/glfw3.h>
+#include <QOpenGLContext>
+#include <QOpenGLFunctions>
 
 namespace qpp {
 
@@ -134,26 +134,27 @@ namespace qpp {
         /// \param _program_name
         /// \param _vs_text
         /// \param _fs_text
-        shader_program_t (const std::string &_program_name,
+        shader_program_t (QOpenGLContext *context,
+                          const std::string &_program_name,
                           const std::string &_vs_text,
                           const std::string &_fs_text);
 
         /// \brief Enable internal uniform
         /// \param _val
-        void u_on (sp_u_name _val);
+        void u_on (QOpenGLContext *context, sp_u_name _val);
 
 
         /// \brief Set internal uniform
         /// \param _ut
         /// \param _val
-        void set_u (sp_u_name _ut, GLfloat *_val);
-        void set_u_sampler (sp_u_name _ut, GLint val);
+        void set_u (QOpenGLContext *context, sp_u_name _ut, GLfloat *_val);
+        void set_u_sampler (QOpenGLContext *context, sp_u_name _ut, GLint val);
 
         /// \brief begin_shader_program
-        void begin_shader_program ();
+        void begin_shader_program (QOpenGLContext *context);
 
         /// \brief end_shader_program
-        void end_shader_program ();
+        void end_shader_program (QOpenGLContext *context);
     };
 
   }

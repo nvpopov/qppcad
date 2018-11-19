@@ -65,6 +65,8 @@ endif()
 
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
+find_package(Qt5OpenGL CONFIG REQUIRED)
+
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 qt5_add_resources(QRCS data/resources.qrc)
@@ -72,7 +74,10 @@ add_executable(qppcad
     src/qppcad/main.cpp
     src/qppcad/main_window.cpp
     src/qppcad/ws_viewer_widget.cpp
+    src/qppcad/app_state.cpp
+    src/qppcad/shader_program.cpp
+    src/qppcad/shader_generators.cpp
     ${QRCS})
-qt5_use_modules(qppcad Core Gui Widgets)
-target_link_libraries(qppcad Qt5::Widgets)
+qt5_use_modules(qppcad Core OpenGL Gui Widgets)
+target_link_libraries(qppcad Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES})
 
