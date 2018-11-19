@@ -4,7 +4,6 @@
 #include <geom/geom.hpp>
 #include <geom/geom_anim.hpp>
 #include <geom/tws_tree.hpp>
-#include <qppcad/app.hpp>
 #include <vector>
 #include <algorithm>
 
@@ -47,7 +46,7 @@ namespace qpp {
 
         void traverse_anim(int travel_dir);
 
-        void render_ui();
+        //void render_ui();
 
         void manual_frame_manipulate(const int frame_mod);
 

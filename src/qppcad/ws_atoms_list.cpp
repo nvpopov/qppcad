@@ -1,13 +1,12 @@
 #include <qppcad/ws_atoms_list.hpp>
-#include <qppcad/ws_atoms_list_context_menu.hpp>
-#include <qppcad/ws_atoms_list_obj_insp.hpp>
+//#include <qppcad/ws_atoms_list_context_menu.hpp>
 #include <qppcad/ws_atoms_list_render_bs.hpp>
 #include <qppcad/ws_atoms_list_render_dlines.hpp>
 #include <qppcad/ws_atoms_list_render_xlines.hpp>
 #include <qppcad/ws_atoms_list_render_billboards.hpp>
-#include <qppcad/ws_atoms_list_cell_helper.hpp>
+//#include <qppcad/ws_atoms_list_cell_helper.hpp>
 #include <qppcad/ws_comp_chem_data.hpp>
-#include <qppcad/app.hpp>
+#include <qppcad/app_state.hpp>
 
 //new ccd io modules
 #include <io/ccd_firefly.hpp>
@@ -25,7 +24,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
+ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
 
   set_default_flags(ws_item_flags_default | ws_item_flags_support_translation |
                     ws_item_flags_support_selection | ws_item_flags_support_content_editing |
@@ -84,7 +83,7 @@ ws_atoms_list_t::ws_atoms_list_t():ws_item_t () {
 
   m_anim = std::make_unique<ws_atoms_list_anim_subsys_t>(*this);
   m_measure = std::make_unique<ws_atoms_list_measurement_subsys_t>(*this);
-  m_labels = std::make_unique<ws_atoms_list_labels_subsys_t>(*this);
+  //m_labels = std::make_unique<ws_atoms_list_labels_subsys_t>(*this);
   m_lat_planes = std::make_unique<ws_atoms_list_lat_planes_subsys_t>(*this);
 
   //parent->add_item_to_workspace(this->shared_from_this());
@@ -112,11 +111,11 @@ void ws_atoms_list_t::render () {
 
   ws_item_t::render();
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   vector3<float> _pos = m_pos;
   index all_null = index::D(m_geom->DIM).all(0);
 
-  if (app_state_c->dp){
+  if (astate->dp){
 
       if (astate->debug_show_tws_tree) {
           astate->dp->begin_render_aabb();
@@ -204,130 +203,130 @@ void ws_atoms_list_t::render () {
 
 }
 
-void ws_atoms_list_t::render_ui () {
-  ws_item_t::render_ui();
-  ws_atoms_list_obj_insp_helper::render_ui(*this);
-  ws_atoms_list_cell_helper::render_ui_obj_insp(*this);
-  m_measure->render_ui_obj_inst();
-  m_lat_planes->render_ui_obj_insp();
-}
+//void ws_atoms_list_t::render_ui () {
+//  ws_item_t::render_ui();
+//  ws_atoms_list_obj_insp_helper::render_ui(*this);
+//  ws_atoms_list_cell_helper::render_ui_obj_insp(*this);
+//  m_measure->render_ui_obj_inst();
+//  m_lat_planes->render_ui_obj_insp();
+//}
 
-void ws_atoms_list_t::render_overlay () {
+//void ws_atoms_list_t::render_overlay () {
 
-  app_state_t* astate = &(c_app::get_state());
+//  app_state_t* astate = &(c_app::get_state());
 
-  if (astate->m_trigger_3d_popup && is_selected() && !ImGui::GetIO().WantCaptureMouse) {
+//  if (astate->m_trigger_3d_popup && is_selected() && !ImGui::GetIO().WantCaptureMouse) {
 
-      ImDrawList* imdrw = ImGui::GetOverlayDrawList();
-      ray_t<float> local_geom_ray;
-      std::vector<tws_query_data_t<float, uint32_t> > res;
-      local_geom_ray.start = astate->camera->m_view_point - m_pos;
-      local_geom_ray.dir = (astate->camera->unproject(astate->mouse_x_ws_frame,
-                                                      astate->mouse_y_ws_frame) -
-                            astate->camera->m_view_point).normalized();
-      m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
-      //fmt::print(std::cout, "!!!!!!!!! {}\n", res.size());
-      if (!res.empty()) {
+//      ImDrawList* imdrw = ImGui::GetOverlayDrawList();
+//      ray_t<float> local_geom_ray;
+//      std::vector<tws_query_data_t<float, uint32_t> > res;
+//      local_geom_ray.start = astate->camera->m_view_point - m_pos;
+//      local_geom_ray.dir = (astate->camera->unproject(astate->mouse_x_ws_frame,
+//                                                      astate->mouse_y_ws_frame) -
+//                            astate->camera->m_view_point).normalized();
+//      m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
+//      //fmt::print(std::cout, "!!!!!!!!! {}\n", res.size());
+//      if (!res.empty()) {
 
-          imdrw->AddRectFilled(ImVec2(astate->mouse_x+20, astate->mouse_y),
-                               ImVec2(astate->mouse_x+350, astate->mouse_y+95),
-                               ImColor(0.0f, 0.0f, 0.0f, 1.0f),
-                               4.0f);
-          imdrw->AddText(ImVec2(astate->mouse_x+35, astate->mouse_y+5),
-                         ImColor(1.0f, 1.0f, 1.0f, 1.0f),
-                         fmt::format("Atom name : {} \nAtom pos.: {}\nAtom ID: {}\nAtom IDX: {}",
-                                     m_geom->atom_name(res[0].m_atm),
-                         m_geom->pos(res[0].m_atm, res[0].m_idx),
-              res[0].m_atm,
-              res[0].m_idx).c_str(),
-              nullptr);
-        }
-    }
+//          imdrw->AddRectFilled(ImVec2(astate->mouse_x+20, astate->mouse_y),
+//                               ImVec2(astate->mouse_x+350, astate->mouse_y+95),
+//                               ImColor(0.0f, 0.0f, 0.0f, 1.0f),
+//                               4.0f);
+//          imdrw->AddText(ImVec2(astate->mouse_x+35, astate->mouse_y+5),
+//                         ImColor(1.0f, 1.0f, 1.0f, 1.0f),
+//                         fmt::format("Atom name : {} \nAtom pos.: {}\nAtom ID: {}\nAtom IDX: {}",
+//                                     m_geom->atom_name(res[0].m_atm),
+//                         m_geom->pos(res[0].m_atm, res[0].m_idx),
+//              res[0].m_atm,
+//              res[0].m_idx).c_str(),
+//              nullptr);
+//        }
+//    }
 
-  m_measure->render_overlay();
-  m_labels->render_overlay();
-}
+//  m_measure->render_overlay();
+//  m_labels->render_overlay();
+//}
 
-void ws_atoms_list_t::render_work_panel_ui() {
+//void ws_atoms_list_t::render_work_panel_ui() {
 
-  app_state_t* astate = &(c_app::get_state());
-  vector3<float> look_from;
-  vector3<float> look_to;
-  vector3<float> look_up{0.0, 1.0, 0.0};
+//  app_state_t* astate = &(c_app::get_state());
+//  vector3<float> look_from;
+//  vector3<float> look_to;
+//  vector3<float> look_up{0.0, 1.0, 0.0};
 
-  bool need_to_update_camera{false};
+//  bool need_to_update_camera{false};
 
-  if (m_geom->DIM == 0) {
+//  if (m_geom->DIM == 0) {
 
-      if (ImGui::Button("C:X", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-          look_from = m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
-          look_to = m_pos;
-          look_up = {0.0 , 0.0 , 1.0};
-          need_to_update_camera = true;
-        }
+//      if (ImGui::Button("C:X", ImVec2(35, astate->ui_manager->wp_btn_height))) {
+//          float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
+//          look_from = m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+//          look_to = m_pos;
+//          look_up = {0.0 , 0.0 , 1.0};
+//          need_to_update_camera = true;
+//        }
 
-      if (ImGui::Button("C:Y", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
-          look_from = m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
-          look_to = m_pos;
-          look_up = {0.0, 0.0, 1.0};
-          need_to_update_camera = true;
-        }
+//      if (ImGui::Button("C:Y", ImVec2(35, astate->ui_manager->wp_btn_height))) {
+//          float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
+//          look_from = m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
+//          look_to = m_pos;
+//          look_up = {0.0, 0.0, 1.0};
+//          need_to_update_camera = true;
+//        }
 
-      if (ImGui::Button("C:Z", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          float axis_size = std::max(2.0f,m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
-          look_from = m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
-          look_to = m_pos;
-          look_up = {0.0, 1.0, 0.0};
-          need_to_update_camera = true;
-        }
+//      if (ImGui::Button("C:Z", ImVec2(35, astate->ui_manager->wp_btn_height))) {
+//          float axis_size = std::max(2.0f,m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
+//          look_from = m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
+//          look_to = m_pos;
+//          look_up = {0.0, 1.0, 0.0};
+//          need_to_update_camera = true;
+//        }
 
-    }
+//    }
 
-  if (m_geom->DIM == 3) {
-      if (ImGui::Button("C:a", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-          look_from = m_pos + center - 2.0f*m_geom->cell.v[0];
-          look_to = m_pos  + center;
-          look_up = {0.0 , 0.0 , 1.0};
-          need_to_update_camera = true;
-        }
+//  if (m_geom->DIM == 3) {
+//      if (ImGui::Button("C:a", ImVec2(35, astate->ui_manager->wp_btn_height))) {
+//          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+//          look_from = m_pos + center - 2.0f*m_geom->cell.v[0];
+//          look_to = m_pos  + center;
+//          look_up = {0.0 , 0.0 , 1.0};
+//          need_to_update_camera = true;
+//        }
 
-      if (ImGui::Button("C:b", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-          look_from = m_pos + center - 2.0f*m_geom->cell.v[1];
-          look_to = m_pos  + center;
-          look_up = {0.0, 0.0, 1.0};
-          need_to_update_camera = true;
-        }
+//      if (ImGui::Button("C:b", ImVec2(35, astate->ui_manager->wp_btn_height))) {
+//          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+//          look_from = m_pos + center - 2.0f*m_geom->cell.v[1];
+//          look_to = m_pos  + center;
+//          look_up = {0.0, 0.0, 1.0};
+//          need_to_update_camera = true;
+//        }
 
-      if (ImGui::Button("C:c", ImVec2(35, astate->ui_manager->wp_btn_height))) {
-          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-          look_from = m_pos + center - 2.0f*m_geom->cell.v[2];
-          look_to = m_pos  + center;
-          look_up = {0.0, 1.0, 0.0};
-          need_to_update_camera = true;
-        }
-    }
+//      if (ImGui::Button("C:c", ImVec2(35, astate->ui_manager->wp_btn_height))) {
+//          vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+//          look_from = m_pos + center - 2.0f*m_geom->cell.v[2];
+//          look_to = m_pos  + center;
+//          look_up = {0.0, 1.0, 0.0};
+//          need_to_update_camera = true;
+//        }
+//    }
 
-  if (need_to_update_camera) {
-      astate->camera->m_view_point = look_from;
-      astate->camera->m_look_at = look_to;
-      astate->camera->m_look_up = look_up;
-      astate->camera->orthogonalize_gs();
-    }
+//  if (need_to_update_camera) {
+//      astate->camera->m_view_point = look_from;
+//      astate->camera->m_look_at = look_to;
+//      astate->camera->m_look_up = look_up;
+//      astate->camera->orthogonalize_gs();
+//    }
 
-}
+//}
 
-void ws_atoms_list_t::td_context_menu_edit_item () {
-  ws_item_t::td_context_menu_edit_item();
-}
+//void ws_atoms_list_t::td_context_menu_edit_item () {
+//  ws_item_t::td_context_menu_edit_item();
+//}
 
-void ws_atoms_list_t::td_context_menu_edit_content () {
-  ws_item_t::td_context_menu_edit_content();
-  ws_atoms_list_context_menu_helper::render_content_edit_menu(*this);
-}
+//void ws_atoms_list_t::td_context_menu_edit_content () {
+//  ws_item_t::td_context_menu_edit_content();
+//  ws_atoms_list_context_menu_helper::render_content_edit_menu(*this);
+//}
 
 bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
@@ -394,12 +393,12 @@ void ws_atoms_list_t::select_atoms (bool all) {
 
 bool ws_atoms_list_t::select_atom (int atom_id) {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
       m_atom_sel.insert(atom_id);
       m_atom_idx_sel.insert(atom_index_set_key(atom_id, index::D(m_geom->DIM).all(0)));
-      astate->make_viewport_dirty();
+      //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
       return true;
     }
@@ -450,15 +449,15 @@ void ws_atoms_list_t::insert_atom (const string &atom_name, const vector3<float>
 void ws_atoms_list_t::update_atom (const int at_id, const vector3<float> &pos) {
   m_anim->m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
-  app_state_t* astate = &(c_app::get_state());
-  astate->make_viewport_dirty();
+  app_state_t* astate = app_state_t::get_inst();
+  //astate->make_viewport_dirty();
 }
 
 void ws_atoms_list_t::update_atom (const int at_id, const string &at_name) {
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
-  app_state_t* astate = &(c_app::get_state());
-  astate->make_viewport_dirty();
+  app_state_t* astate = app_state_t::get_inst();
+  //astate->make_viewport_dirty();
 }
 
 void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {
@@ -589,7 +588,7 @@ size_t ws_atoms_list_t::get_content_count () {
 }
 
 void ws_atoms_list_t::on_begin_content_gizmo_translate () {
-  c_app::log(fmt::format("Start of translating node [{}] content", m_name));
+  //c_app::log(fmt::format("Start of translating node [{}] content", m_name));
   //m_tws_tr->do_action(act_lock);
 }
 
@@ -606,7 +605,7 @@ void ws_atoms_list_t::apply_intermediate_translate_content (const vector3<float>
 }
 
 void ws_atoms_list_t::on_end_content_gizmo_translate () {
-  c_app::log(fmt::format("End of translating node [{}] content", m_name));
+  //c_app::log(fmt::format("End of translating node [{}] content", m_name));
   //m_tws_tr->do_action(act_unlock);
 }
 
@@ -644,18 +643,18 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
 void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_name,
                                      bool auto_center) {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
   using elapsed_duration = std::chrono::duration<float, std::ratio<1> >;
 
   std::setlocale(LC_ALL, "C");
 
-  c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
-                         file_name, parent_ws->m_ws_name));
+//  c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
+//                         file_name, parent_ws->m_ws_name));
 
   std::ifstream qc_data(file_name);
   if (!qc_data) {
-      c_app::log(fmt::format("Error in loading from file {}", file_name));
+     // c_app::log(fmt::format("Error in loading from file {}", file_name));
       return;
     }
 
@@ -715,7 +714,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         break;
       }
 
-    default: c_app::log("File format not implemented");
+    default: {}
+      //c_app::log("File format not implemented");
     }
 
   qc_data.close();
@@ -723,7 +723,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   if (need_to_compile_ccd) {
       bool succes_comp_ccd = compile_ccd(cc_inst, ccd_cf_default_flags |
                                          ccd_cf_remove_empty_geom_steps);
-      c_app::log(fmt::format("Is ccd compilation succes? {}", succes_comp_ccd));
+     // c_app::log(fmt::format("Is ccd compilation succes? {}", succes_comp_ccd));
     }
 
   if (need_to_compile_from_ccd) {
@@ -731,10 +731,10 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       bool succes_comp_static_anim = compile_static_animation(cc_inst, m_anim->m_anim_data);
       bool succes_anims = compile_animation(cc_inst, m_anim->m_anim_data);
 
-      c_app::log(fmt::format("Is geometry compilation succes? {}",
-                             succes_comp_geom && succes_comp_static_anim));
-      if (m_anim->get_total_anims() > 1 && succes_anims)
-        c_app::log("Animations have been added to geom");
+//      c_app::log(fmt::format("Is geometry compilation succes? {}",
+//                             succes_comp_geom && succes_comp_static_anim));
+//      if (m_anim->get_total_anims() > 1 && succes_anims)
+//        c_app::log("Animations have been added to geom");
     }
 
   if (need_to_extract_ccd) {
@@ -750,8 +750,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   auto end_timer = std::chrono::steady_clock::now();
   auto diff_timer = end_timer - start_timer;
 
-  c_app::log(fmt::format("Reading file {} took {} sec.", file_name,
-                         elapsed_duration(diff_timer).count()) );
+//  c_app::log(fmt::format("Reading file {} took {} sec.", file_name,
+//                         elapsed_duration(diff_timer).count()) );
 
   //TODO: move autocentering to ccd compilation
   if (auto_center) {
@@ -775,8 +775,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   m_tws_tr->do_action(act_unlock | act_rebuild_tree);
   auto end_timer_build_tree = std::chrono::steady_clock::now();
   auto diff_timer_build_tree = end_timer_build_tree - start_timer_build_tree;
-  c_app::log(fmt::format("Building tws-tree for file {} took {} sec.", file_name,
-                         elapsed_duration(diff_timer_build_tree).count()));
+//  c_app::log(fmt::format("Building tws-tree for file {} took {} sec.", file_name,
+//                         elapsed_duration(diff_timer_build_tree).count()));
 
   if (m_geom->nat() > 30000) {
       m_cur_render_type = ws_atoms_list_render_type::billboards;
@@ -788,8 +788,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   m_tws_tr->do_action(act_rebuild_ntable);
   auto end_timer_build_ntable  = std::chrono::steady_clock::now();
   auto diff_timer_build_ntable  = end_timer_build_ntable  - start_timer_build_ntable ;
-  c_app::log(fmt::format("Building ntable for file {} took {} sec.", file_name,
-                         elapsed_duration(diff_timer_build_ntable).count()));
+//  c_app::log(fmt::format("Building ntable for file {} took {} sec.", file_name,
+//                         elapsed_duration(diff_timer_build_ntable).count()));
   geometry_changed();
 
   if (parent_ws) {
@@ -802,8 +802,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 void ws_atoms_list_t::save_to_file (qc_file_fmt file_format, std::string file_name) {
 
   std::setlocale(LC_ALL, "C");
-  c_app::log(fmt::format("Saving geometry[{}] to file {} from workspace {}",
-                         m_name, file_name, parent_ws->m_ws_name));
+//  c_app::log(fmt::format("Saving geometry[{}] to file {} from workspace {}",
+//                         m_name, file_name, parent_ws->m_ws_name));
 
   std::ofstream output(file_name);
   if (output) {
@@ -825,8 +825,8 @@ void ws_atoms_list_t::save_to_file (qc_file_fmt file_format, std::string file_na
           }
 
         default : {
-            c_app::log(fmt::format("Saving geomtery -> file format[{}] not supported",
-                                   file_format));
+//            c_app::log(fmt::format("Saving geomtery -> file format[{}] not supported",
+//                                   file_format));
             break;
           }
         }
@@ -988,7 +988,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
             }
         } else {
           m_geom->DIM = 0;
-          c_app::log("Cannot load cell data for geom with DIM>0");
+          //c_app::log("Cannot load cell data for geom with DIM>0");
         }
     }
 
@@ -1066,14 +1066,14 @@ void ws_atoms_list_t::read_from_json (json &data) {
 
 void ws_atoms_list_t::dialog_save_to_file (qc_file_fmt file_format) {
 
-  app_state_t *astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
-  std::string filter{""};
-  bool succes{false};
+//  std::string filter{""};
+//  bool succes{false};
 
-  std::string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
-  if (!succes) return;
-  save_to_file(file_format, _tmp_fs_path);
+//  std::string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
+//  if (!succes) return;
+//  save_to_file(file_format, _tmp_fs_path);
 
 }
 

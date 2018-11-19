@@ -1,12 +1,12 @@
 #include <qppcad/ws_atoms_list_render_dlines.hpp>
-
+#include <qppcad/app_state.hpp>
 namespace qpp {
 
   namespace cad {
 
     void ws_atoms_list_render_dlines::render (ws_atoms_list_t &al) {
 
-      app_state_t *astate = &(c_app::get_state());
+      app_state_t* astate = app_state_t::get_inst();
       index all_null = index::D(al.m_geom->DIM).all(0);
 
       astate->dp->begin_render_line();

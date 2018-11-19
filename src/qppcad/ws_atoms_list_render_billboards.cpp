@@ -1,4 +1,5 @@
 #include <qppcad/ws_atoms_list_render_billboards.hpp>
+#include <qppcad/app_state.hpp>
 
 namespace qpp {
 
@@ -7,7 +8,7 @@ namespace qpp {
     void ws_atoms_list_render_billboards::render(ws_atoms_list_t &al) {
 
       // std::cout << "fhfg" << std::endl;
-      app_state_t *astate = &(c_app::get_state());
+      app_state_t* astate = app_state_t::get_inst();
 
       astate->zup_quad->begin_render_batch();
       astate->bs_sphere_program->begin_shader_program();

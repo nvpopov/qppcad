@@ -5,7 +5,11 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <qppcad/shader_generators.hpp>
+#include <qppcad/mesh_generators.hpp>
 #include <qppcad/camera.hpp>
+#include <qppcad/glapi.hpp>
+#include <qppcad/draw_pipeline.hpp>
+#include <qppcad/workspace.hpp>
 
 namespace qpp {
 
@@ -14,22 +18,25 @@ namespace qpp {
     class app_state_t;
 
     class app_state_t {
+
       private:
         static app_state_t *g_inst;
 
       public:
-
         static void init_inst();
         static app_state_t* get_inst();
 
-        void init_shaders(QOpenGLContext *context);
-        void init_meshes(QOpenGLContext *context);
+        void init_glapi();
+        void init_shaders();
+        void init_meshes();
+        void init_managers();
 
+        glapi_t *glapi;
         camera_t *camera;
        // ImFont* fontn;
       //  ImFont* fontb;
 
-//        draw_pipeline_t*               dp;
+        draw_pipeline_t*               dp;
 
         shader_program_t*              default_program;
         shader_program_t*              unit_line_program;
@@ -40,7 +47,20 @@ namespace qpp {
         shader_program_t*              bs_sphere_program;
         shader_program_t*              buf_bs_program;
 
-//        std::shared_ptr<workspace_manager_t>                           ws_manager;
+        std::vector<mesh_t*> _sph_meshes;
+        mesh_t *cylinder_mesh;
+        mesh_t *unit_line;
+        mesh_t *trm;
+        mesh_t *gridXZ;
+        mesh_t *unit_cube;
+        mesh_t *unit_cone;
+        mesh_t *fbo_quad;
+        mesh_t *zup_quad;
+        mesh_t *xline_mesh;
+
+        std::shared_ptr<workspace_manager_t>                           ws_manager;
+
+//        ;
 //        std::shared_ptr<ui_manager_t>                                  ui_manager;
 //        std::shared_ptr<file_dialog_manager_t>                         fd_manager;
 //        std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
@@ -50,23 +70,14 @@ namespace qpp {
 //        camera_t*  camera;
 //      //  vote_pool_t<uint32_t> config_vote_pool;
 
-//        std::vector<mesh_t*> _sph_meshes;
-//        mesh_t *cylinder_mesh;
-//        mesh_t *unit_line;
-//        mesh_t *trm;
-//        mesh_t *gridXZ;
-//        mesh_t *unit_cube;
-//        mesh_t *unit_cone;
-//        mesh_t *fbo_quad;
-//        mesh_t *zup_quad;
-//        mesh_t *xline_mesh;
+
 
 // //       std::map<std::string, color_map_t> m_color_maps;
 
-//        vector2<float> viewport_xy;
-//        vector2<float> viewport_size;
-//        vector2<float> viewport_xy_c;
-//        vector2<float> viewport_size_c;
+        vector2<float> viewport_xy;
+        vector2<float> viewport_size;
+        vector2<float> viewport_xy_c;
+        vector2<float> viewport_size_c;
 
 //        vector3<float> light_pos{0, 1.0f, 1.0f};
 //        vector3<float> light_color; // @unused
@@ -87,18 +98,18 @@ namespace qpp {
 ////        app_task_type cur_task{app_task_type::TASK_WORKSPACE_EDITOR};
 ////        app_render_mode m_render_mode{app_render_mode::buffered_multi_sampling};
 
-//        bool mouse_lb_pressed{false};
-//        bool disable_mouse_camera_control;
+        bool mouse_lb_pressed{false};
+        bool disable_mouse_camera_control;
 
-//        bool show_axis{true};
-//        bool show_grid{false};
-//        bool debug_show_tws_tree{false};
-//        bool debug_show_selection_ray{false};
-//        bool show_object_inspector{true};
-//        bool show_console{false};
-//        bool mouse_in_3d_area{false};
-//        bool viewport_changed{false};
-//        bool m_transform_pdb_atom_names{true};
+        bool show_axis{true};
+        bool show_grid{false};
+        bool debug_show_tws_tree{false};
+        bool debug_show_selection_ray{false};
+        bool show_object_inspector{true};
+        bool show_console{false};
+        bool mouse_in_3d_area{false};
+        bool viewport_changed{false};
+        bool m_transform_pdb_atom_names{true};
 //        bool m_trigger_3d_popup{false};
 //        int  m_trigger_3d_popup_counter{0};
 //        int  m_trigger_3d_popup_counter_max{65};

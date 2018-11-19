@@ -1,6 +1,6 @@
 #ifndef QPPCAD_BUFFERED_BILLBOARDS
 #define QPPCAD_BUFFERED_BILLBOARDS
-#include <qppcad/app.hpp>
+//#include <qppcad/app.hpp>
 #include <qppcad/texture_buffer.hpp>
 
 namespace qpp {
@@ -14,8 +14,8 @@ namespace qpp {
       private:
 
         ws_atoms_list_t* p_owner;
-        std::unique_ptr<texture_buffer_t> m_tb_pos{};
-        std::unique_ptr<texture_buffer_t> m_tb_color_s{};
+//        std::unique_ptr<texture_buffer_t> m_tb_pos{};
+//        std::unique_ptr<texture_buffer_t> m_tb_color_s{};
 
       public:
 

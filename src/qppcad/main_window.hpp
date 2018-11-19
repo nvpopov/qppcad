@@ -6,6 +6,7 @@
 #include <QShortcut>
 #include <QApplication>
 #include <QMenuBar>
+#include <QAction>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QSplitter>
@@ -35,6 +36,11 @@ namespace qpp {
 
         //Menus
         QMenu *file_menu;
+        QAction *act_new_ws;
+        QAction *act_open_ws;
+        QAction *act_save_ws;
+        QAction *act_save_ws_as;
+        QAction *act_close_app;
         QMenu *edit_menu;
         QMenu *tools_menu;
         QMenu *help_menu;

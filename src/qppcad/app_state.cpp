@@ -12,19 +12,42 @@ namespace qpp {
       return g_inst;
     }
 
-    void app_state_t::init_shaders(QOpenGLContext *context) {
-      default_program    = shader_generators::gen_default_program(context);
-      unit_line_program  = shader_generators::gen_unit_line_program(context);
-      line_mesh_program  = shader_generators::gen_line_mesh_program(context);
-      mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program(context);
-      fbo_quad_program   = shader_generators::gen_fbo_quad_program(context);
-      unit_line_styled_program = shader_generators::gen_unit_line_styled_program(context);
-      bs_sphere_program = shader_generators::gen_bs_sphere_program(context);
-      buf_bs_program = shader_generators::gen_buf_bs_sphere_program(context);
+    void app_state_t::init_glapi(){
+      glapi = new glapi_t();
+      dp = new draw_pipeline_t();
     }
 
-    void app_state_t::init_meshes(QOpenGLContext *context) {
+    void app_state_t::init_shaders() {
 
+      default_program    = shader_generators::gen_default_program();
+      unit_line_program  = shader_generators::gen_unit_line_program();
+      line_mesh_program  = shader_generators::gen_line_mesh_program();
+      mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
+      fbo_quad_program   = shader_generators::gen_fbo_quad_program();
+      unit_line_styled_program = shader_generators::gen_unit_line_styled_program();
+      bs_sphere_program = shader_generators::gen_bs_sphere_program();
+      buf_bs_program = shader_generators::gen_buf_bs_sphere_program();
+
+
+    }
+
+    void app_state_t::init_meshes() {
+
+      _sph_meshes.push_back(mesh_generators::sphere(18, 18));
+      cylinder_mesh = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
+      unit_line     = mesh_generators::unit_line();
+      gridXZ        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
+      unit_cube     = mesh_generators::unit_cube();
+      unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
+      fbo_quad      = mesh_generators::quad();
+      zup_quad      = mesh_generators::quad_zup();
+      xline_mesh    = mesh_generators::cross_line_atom();
+
+    }
+
+    void app_state_t::init_managers() {
+      ws_manager   = std::make_shared<workspace_manager_t>(this);
+      ws_manager->init_default();
     }
 
     //    void app_state_t::write_app_settings() {
@@ -150,7 +173,7 @@ namespace qpp {
 
     //      kb_manager   = std::make_unique<keyboard_manager_t>();
     //      //frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >(false);
-    //      ws_manager   = std::make_shared<workspace_manager_t>(this);
+    //
     //      ui_manager   = std::make_shared<ui_manager_t>(this);
     //      fd_manager   = std::make_shared<file_dialog_manager_t>();
     //      sq_manager   = std::make_unique<simple_query_manager_t>();

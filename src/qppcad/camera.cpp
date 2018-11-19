@@ -1,5 +1,5 @@
 #include <qppcad/camera.hpp>
-#include <qppcad/app.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -83,42 +83,42 @@ void camera_t::reset_camera () {
 
 void camera_t::update_camera () {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
-  float x_dt = astate->mouse_x - astate->mouse_x_old;
-  float y_dt = astate->mouse_y - astate->mouse_y_old;
+//  float x_dt = astate->mouse_x - astate->mouse_x_old;
+//  float y_dt = astate->mouse_y - astate->mouse_y_old;
 
-  if (m_move_camera){
-      float move_right = -x_dt / camera_t::nav_div_step_translation;
-      float move_up = y_dt / camera_t::nav_div_step_translation;
+//  if (m_move_camera){
+//      float move_right = -x_dt / camera_t::nav_div_step_translation;
+//      float move_up = y_dt / camera_t::nav_div_step_translation;
 
-      if (fabs(move_right) > camera_t::nav_thresh) {
-          translate_camera_right(move_right);
-          astate->make_viewport_dirty();
-        }
+//      if (fabs(move_right) > camera_t::nav_thresh) {
+//          translate_camera_right(move_right);
+//          astate->make_viewport_dirty();
+//        }
 
-      if (fabs(move_up) > camera_t::nav_thresh) {
-          translate_camera_up(move_up);
-          astate->make_viewport_dirty();
-        }
+//      if (fabs(move_up) > camera_t::nav_thresh) {
+//          translate_camera_up(move_up);
+//          astate->make_viewport_dirty();
+//        }
 
-    }
+//    }
 
-  if (m_rotate_camera){
-      float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
-      float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
+//  if (m_rotate_camera){
+//      float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
+//      float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
 
-      if (fabs(rot_angle_y) > camera_t::nav_thresh) {
-          rotate_camera_orbit_yaw(rot_angle_y);
-          astate->make_viewport_dirty();
-        }
+//      if (fabs(rot_angle_y) > camera_t::nav_thresh) {
+//          rotate_camera_orbit_yaw(rot_angle_y);
+//          astate->make_viewport_dirty();
+//        }
 
-      if (fabs(rot_angle_x) > camera_t::nav_thresh) {
-          rotate_camera_orbit_pitch(rot_angle_x);
-          astate->make_viewport_dirty();
-        }
+//      if (fabs(rot_angle_x) > camera_t::nav_thresh) {
+//          rotate_camera_orbit_pitch(rot_angle_x);
+//          astate->make_viewport_dirty();
+//        }
 
-    }
+//    }
 
   m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
 
@@ -158,7 +158,7 @@ void camera_t::update_camera () {
 
 void camera_t::update_camera_zoom (const float dist) {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
   if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP){
 
@@ -176,7 +176,7 @@ void camera_t::update_camera_zoom (const float dist) {
       m_ortho_scale = clamp(m_ortho_scale, 1.0f, 150.0f);
     }
 
-  astate->make_viewport_dirty();
+  //astate->make_viewport_dirty();
 
 }
 
@@ -224,7 +224,7 @@ vector3<float> camera_t::unproject (const float _x, const float _y) {
 
 std::optional<vector2<float> > camera_t::project (const vector3<float> point) {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
   vector4<float> tmpv = m_proj_view * vector4<float>(point[0], point[1], point[2], 1.0f);
 

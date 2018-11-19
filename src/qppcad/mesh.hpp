@@ -2,8 +2,8 @@
 #define QPP_MESH_H
 
 #include <qppcad/qppcad.hpp>
-#include <GL/gl3w.h>
-#include <GLFW/glfw3.h>
+#include <QOpenGLContext>
+#include <QOpenGLFunctions_3_3_Core>
 #include <geom/lace3d.hpp>
 
 namespace qpp {
@@ -17,7 +17,7 @@ namespace qpp {
     };
 
     /// \brief The mesh_t class
-    class mesh_t{
+    class mesh_t {
       public:
 
         /// Raw vertex data
@@ -49,8 +49,7 @@ namespace qpp {
     };
 
     template<typename REAL = float>
-    void dump_vector3_to_vector(std::vector<REAL> &invec,
-                                const vector3<REAL> _v){
+    void dump_vector3_to_vector(std::vector<REAL> &invec, const vector3<REAL> _v){
       for (uint8_t i = 0; i < 3; i++) invec.push_back(_v(i));
     }
 

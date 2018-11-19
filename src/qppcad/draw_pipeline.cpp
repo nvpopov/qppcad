@@ -1,5 +1,5 @@
 #include <qppcad/draw_pipeline.hpp>
-#include <qppcad/app.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -22,7 +22,8 @@ void draw_pipeline_t::render(){
 
 void draw_pipeline_t::begin_atom_render (float specular_power, float specular_alpha) {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
+
   astate->default_program->begin_shader_program();
   astate->default_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
   astate->default_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
@@ -33,7 +34,8 @@ void draw_pipeline_t::render_atom (const vector3<float> &color,
                                    const vector3<float> &pos,
                                    const float radius) {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
+
   // std::cout<<"render_atom"<<std::endl;
 
   astate->default_program->set_u(sp_u_name::v_translate, (GLfloat*)(pos.data()));
@@ -53,13 +55,13 @@ void draw_pipeline_t::render_atom (const vector3<float> &color,
 }
 
 void draw_pipeline_t::end_atom_render () {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->default_program->end_shader_program();
   astate->_sph_meshes[0]->end_render_batch();
 }
 
 void draw_pipeline_t::begin_render_bond (float specular_power, float specular_alpha) {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->mvp_ssl_program->begin_shader_program();
   astate->mvp_ssl_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
   astate->mvp_ssl_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
@@ -69,7 +71,7 @@ void draw_pipeline_t::render_bond (const vector3<float> &color,
                                    const vector3<float> &bond_start,
                                    const vector3<float> &bond_end,
                                    const float bond_radius) {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
   vector3<float> bond_end_new = (bond_end - bond_start)*(-0.498f) + bond_end;
 
@@ -98,7 +100,7 @@ void draw_pipeline_t::render_bond (const vector3<float> &color,
 }
 
 void draw_pipeline_t::end_render_bond () {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->mvp_ssl_program->end_shader_program();
 }
 
@@ -145,7 +147,7 @@ void draw_pipeline_t::render_primitive () {
 }
 
 void draw_pipeline_t::begin_render_general_mesh () {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->mvp_ssl_program->begin_shader_program();
   float specular_power = 12.0f;
   float specular_alpha = 0.0f;
@@ -184,7 +186,8 @@ void draw_pipeline_t::render_general_mesh (const vector3<float> &mesh_pos,
 void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
                                            const vector3<float> &mesh_color,
                                            mesh_t *mesh) {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
+ // glapi_t* glapi = astate->glapi;
 
   matrix4<float> mat_model_view      = astate->camera->m_mat_view * model_matrix;
   matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * model_matrix;
@@ -201,7 +204,7 @@ void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
 void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
                                    const vector3<float> &cube_size,
                                    const vector3<float> &cube_color) {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
 
   Eigen::Transform<float, 3, Eigen::Affine>
@@ -229,7 +232,7 @@ void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
 void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
                                    const vector3<float> &cone_size,
                                    const vector3<float> &cone_color) {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
 
   Eigen::Transform<float, 3, Eigen::Affine>
@@ -252,7 +255,7 @@ void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
 }
 
 void draw_pipeline_t::end_render_general_mesh () {
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->mvp_ssl_program->end_shader_program();
 }
 
@@ -373,7 +376,7 @@ void draw_pipeline_t::end_render_aabb(){
 
 void draw_pipeline_t::begin_render_line () {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->unit_line_program->begin_shader_program();
   astate->unit_line_program->set_u(sp_u_name::m_model_view_proj,
                                    astate->camera->m_proj_view.data());
@@ -386,9 +389,9 @@ void draw_pipeline_t::render_line(const vector3<float> &color,
                                   const vector3<float> &line_end,
                                   const float line_width){
 
-  app_state_t* astate = &(c_app::get_state());
-
-  glLineWidth(line_width);
+  app_state_t* astate = app_state_t::get_inst();
+  glapi_t* glapi = astate->glapi;
+  glapi->glLineWidth(line_width);
   astate->unit_line_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
   astate->unit_line_program->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
@@ -399,8 +402,9 @@ void draw_pipeline_t::render_line(const vector3<float> &color,
 
 void draw_pipeline_t::end_render_line () {
 
-  glLineWidth(1.0f);
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
+  glapi_t* glapi = astate->glapi;
+  glapi->glLineWidth(1.0f);
   astate->unit_line_program->end_shader_program();
   astate->unit_line->end_render_batch();
 
@@ -408,11 +412,12 @@ void draw_pipeline_t::end_render_line () {
 
 void draw_pipeline_t::begin_render_line_styled () {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->unit_line_styled_program->begin_shader_program();
   astate->unit_line_styled_program->set_u(sp_u_name::m_model_view_proj,
                                    astate->camera->m_proj_view.data());
-  astate->unit_line_styled_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
+  astate->unit_line_styled_program->set_u(sp_u_name::m_model_view,
+                                          astate->camera->m_mat_view.data());
   astate->unit_line->begin_render_batch();
 
 }
@@ -422,7 +427,7 @@ void draw_pipeline_t::render_line_styled (const vector3<float> &color,
                                           const vector3<float> &line_end,
                                           const float line_width) {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
   glLineWidth(line_width);
   astate->unit_line_styled_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
@@ -436,7 +441,7 @@ void draw_pipeline_t::render_line_styled (const vector3<float> &color,
 void draw_pipeline_t::end_render_line_styled () {
 
   glLineWidth(1.0f);
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->unit_line_styled_program->end_shader_program();
   astate->unit_line->end_render_batch();
 
@@ -444,12 +449,12 @@ void draw_pipeline_t::end_render_line_styled () {
 
 void draw_pipeline_t::render_screen_quad () {
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   astate->fbo_quad_program->begin_shader_program();
   glDisable(GL_DEPTH_TEST);
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, astate->frame_buffer->get_color_texture());
+  //glBindTexture(GL_TEXTURE_2D, astate->frame_buffer->get_color_texture());
 
   astate->fbo_quad->render();
   glEnable(GL_DEPTH_TEST);

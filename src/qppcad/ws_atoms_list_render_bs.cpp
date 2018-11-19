@@ -1,4 +1,5 @@
 #include <qppcad/ws_atoms_list_render_bs.hpp>
+#include <qppcad/app_state.hpp>
 
 namespace qpp {
 
@@ -6,7 +7,7 @@ namespace qpp {
 
     void ws_atoms_list_render_bs::render (ws_atoms_list_t &al) {
 
-      app_state_t *astate = &(c_app::get_state());
+      app_state_t* astate = app_state_t::get_inst();
       index all_null = index::D(al.m_geom->DIM).all(0);
 
       float spec = al.m_draw_specular ? 1.0f : 0.0f;
@@ -65,7 +66,7 @@ namespace qpp {
     void ws_atoms_list_render_bs::render_atom (ws_atoms_list_t &al,
                                                const uint32_t at_num,
                                                const index &at_index) {
-
+      app_state_t* astate = app_state_t::get_inst();
       auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num));
       float dr_rad = 0.4f;
       vector3<float> color(0.0, 0.0, 1.0);
@@ -89,7 +90,7 @@ namespace qpp {
             color = vector3<float>(0.43f, 0.55f, 0.12f);
         }
 
-      al.app_state_c->dp->render_atom(
+      astate->dp->render_atom(
             color, al.m_geom->pos(at_num, at_index) + al.m_pos, dr_rad);
     }
 
@@ -98,13 +99,13 @@ namespace qpp {
                                                const index &at_index1,
                                                const uint32_t at_num2,
                                                const index &at_index2) {
-
+      app_state_t* astate = app_state_t::get_inst();
       auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num1));
       vector3<float> bcolor(0.0, 0.0, 1.0);
       if (ap_idx) {
           bcolor = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
         }
-      al.app_state_c->dp->render_bond(
+      astate->dp->render_bond(
             bcolor, al.m_geom->pos(at_num1, at_index1) + al.m_pos,
             al.m_geom->pos(at_num2, at_index2) + al.m_pos, al.m_bond_scale_factor);
     }

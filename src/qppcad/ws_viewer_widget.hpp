@@ -4,7 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <QOpenGLWidget>
 #include <QOpenGLContext>
-#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_3_Core>
 
 namespace qpp {
 

@@ -1,5 +1,5 @@
 #include <qppcad/gizmo.hpp>
-#include <qppcad/app.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -24,7 +24,7 @@ void gizmo_t::render () {
 
   if (!m_is_visible) return;
 
-  app_state_t* astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
   //prevent showing gizmo when no content selected
@@ -107,7 +107,7 @@ void gizmo_t::render () {
 
 void gizmo_t::translate_attached(float delta_time){
 
-  app_state_t *astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
 
   if (!astate->mouse_lb_pressed) {
       interact_at_the_moment = false;
@@ -115,30 +115,30 @@ void gizmo_t::translate_attached(float delta_time){
       return;
     }
 
-  if (attached_item){
-      ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
+//  if (attached_item){
+//      ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
-      vector3<float> unproj_mouse_hit_old =
-          astate->camera->unproject(astate->mouse_x_old, astate->mouse_y_old);
+//      vector3<float> unproj_mouse_hit_old =
+//          astate->camera->unproject(astate->mouse_x_old, astate->mouse_y_old);
 
-      vector3<float> unproj_mouse_hit     =
-          astate->camera->unproject(astate->mouse_x, astate->mouse_y);
+//      vector3<float> unproj_mouse_hit     =
+//          astate->camera->unproject(astate->mouse_x, astate->mouse_y);
 
-      vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
+//      vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
 
-      //      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
-      //                          astate->mouse_y_old - astate->mouse_y;
+//      //      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
+//      //                          astate->mouse_y_old - astate->mouse_y;
 
-      if (fabs(d_unproj[touched_axis]) > 0.01f) {
-          vector3<float> new_transform =
-              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 0.5f;
-          accum_translate += new_transform;
-          if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-            attached_item->m_pos += new_transform;
-          else attached_item->apply_intermediate_translate_content(new_transform);
-        }
+//      if (fabs(d_unproj[touched_axis]) > 0.01f) {
+//          vector3<float> new_transform =
+//              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 0.5f;
+//          accum_translate += new_transform;
+//          if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
+//            attached_item->m_pos += new_transform;
+//          else attached_item->apply_intermediate_translate_content(new_transform);
+//        }
 
-    }
+//    }
 }
 
 void gizmo_t::clear_selected_axis () {
@@ -148,7 +148,7 @@ void gizmo_t::clear_selected_axis () {
 
 void gizmo_t::update_gizmo (float delta_time) {
 
-  app_state_t *astate = &(c_app::get_state());
+  app_state_t* astate = app_state_t::get_inst();
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
   //update gizmo position according to current workspace edit type value
@@ -160,11 +160,11 @@ void gizmo_t::update_gizmo (float delta_time) {
   if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
     pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
 
-  if (!astate->mouse_lb_pressed || ImGui::GetIO().WantCaptureMouse) {
-      interact_at_the_moment = false;
-      clear_selected_axis();
-      return;
-    }
+//  if (!astate->mouse_lb_pressed || ImGui::GetIO().WantCaptureMouse) {
+//      interact_at_the_moment = false;
+//      clear_selected_axis();
+//      return;
+//    }
 
   //Transform in node mode
   //start interacting - run event

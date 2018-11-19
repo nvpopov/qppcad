@@ -1,6 +1,6 @@
 #ifndef QPP_CAD_RENDER_BILLBOARDS
 #define QPP_CAD_RENDER_BILLBOARDS
-#include <qppcad/app.hpp>
+
 #include <qppcad/ws_atoms_list.hpp>
 
 namespace qpp {

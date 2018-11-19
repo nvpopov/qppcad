@@ -2,7 +2,7 @@
 #define QPP_CAD_WS_ATOMS_LIST_MEASURE_S
 
 #include <geom/geom.hpp>
-#include <qppcad/app.hpp>
+//#include <qppcad/app.hpp>
 #include <vector>
 #include <algorithm>
 
@@ -50,11 +50,11 @@ namespace qpp {
 
         void render ();
 
-        void render_overlay ();
+//        void render_overlay ();
 
-        void render_ui_obj_inst ();
+//        void render_ui_obj_inst ();
 
-        void render_ui_context (); // end render_ui_context
+//        void render_ui_context (); // end render_ui_context
     };
 
   }

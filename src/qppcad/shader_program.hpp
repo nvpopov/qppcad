@@ -3,7 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <QOpenGLContext>
-#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_3_Core>
 
 namespace qpp {
 
@@ -119,7 +119,7 @@ namespace qpp {
     /// \brief Shader program implements wrapper around OpenGL program, i.e contains
     ///  vertex plus fragment shader and some kind of uniform variables management
     ///
-    class shader_program_t{
+    class shader_program_t {
 
       private:
 
@@ -134,27 +134,26 @@ namespace qpp {
         /// \param _program_name
         /// \param _vs_text
         /// \param _fs_text
-        shader_program_t (QOpenGLContext *context,
-                          const std::string &_program_name,
+        shader_program_t (const std::string &_program_name,
                           const std::string &_vs_text,
                           const std::string &_fs_text);
 
         /// \brief Enable internal uniform
         /// \param _val
-        void u_on (QOpenGLContext *context, sp_u_name _val);
+        void u_on (sp_u_name _val);
 
 
         /// \brief Set internal uniform
         /// \param _ut
         /// \param _val
-        void set_u (QOpenGLContext *context, sp_u_name _ut, GLfloat *_val);
-        void set_u_sampler (QOpenGLContext *context, sp_u_name _ut, GLint val);
+        void set_u (sp_u_name _ut, GLfloat *_val);
+        void set_u_sampler (sp_u_name _ut, GLint val);
 
         /// \brief begin_shader_program
-        void begin_shader_program (QOpenGLContext *context);
+        void begin_shader_program ();
 
         /// \brief end_shader_program
-        void end_shader_program (QOpenGLContext *context);
+        void end_shader_program ();
     };
 
   }

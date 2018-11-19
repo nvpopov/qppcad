@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
 add_definitions(-fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS " -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden")
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
 #set(CMAKE_BUILD_TYPE "Release")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -g3 -rdynamic")
@@ -77,7 +77,25 @@ add_executable(qppcad
     src/qppcad/app_state.cpp
     src/qppcad/shader_program.cpp
     src/qppcad/shader_generators.cpp
+    src/qppcad/mesh.cpp
+    src/qppcad/mesh_generators.cpp
+    src/qppcad/glapi.cpp
+    src/qppcad/draw_pipeline.cpp
+    src/qppcad/workspace.cpp
+    src/qppcad/ws_item.cpp
+    src/qppcad/camera.cpp
+    src/qppcad/gizmo.cpp
+    src/qppcad/ws_atoms_list.cpp
+    src/qppcad/ws_comp_chem_data.cpp
+    src/qppcad/ws_atoms_list_render_bs.cpp
+    src/qppcad/ws_atoms_list_render_billboards.cpp
+    src/qppcad/ws_atoms_list_render_buffered_billboards.cpp
+    src/qppcad/ws_atoms_list_render_dlines.cpp
+    src/qppcad/ws_atoms_list_render_xlines.cpp
+    src/qppcad/ws_atoms_list_anim_subsys.cpp
+    src/qppcad/ws_atoms_list_measurement_subsys.cpp
+    src/qppcad/ws_atoms_list_lattice_planes_subsys.cpp
     ${QRCS})
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
-target_link_libraries(qppcad Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES})
+target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES})
 

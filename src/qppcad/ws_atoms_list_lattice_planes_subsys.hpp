@@ -2,7 +2,7 @@
 #define QPP_CAD_WS_ATOMS_LIST_LATPL_S
 
 #include <geom/geom.hpp>
-#include <qppcad/app.hpp>
+//#include <qppcad/app.hpp>
 #include <vector>
 #include <algorithm>
 
@@ -72,7 +72,7 @@ namespace qpp {
         ws_atoms_list_lat_planes_subsys_t (ws_atoms_list_t &_p_owner);
         void add_plane (int _h = 1, int _k = -1, int _l = -1);
         void render ();
-        void render_ui_obj_insp ();
+        //void render_ui_obj_insp ();
     };
 
   }

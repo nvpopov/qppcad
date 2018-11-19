@@ -5,9 +5,6 @@
 #include <geom/lace3d.hpp>
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
-#include <imgui.h>
-#include <imgui_internal.h>
-#include <imgui_stl.h>
 #include <qppcad/json_adapter.hpp>
 
 namespace qpp {
@@ -85,11 +82,7 @@ namespace qpp {
         virtual std::string get_ws_item_class_name() { return "ws_abstract_item";}
         virtual size_t get_content_count() = 0;
         /// \brief render_ui
-        virtual void render_ui();
-        virtual void render_overlay() = 0;
-        virtual void render_work_panel_ui() = 0;
-        virtual void td_context_menu_edit_item();
-        virtual void td_context_menu_edit_content();
+
 
         /// \brief mouse_click
         /// \param ray

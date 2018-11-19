@@ -1,7 +1,7 @@
 #ifndef QPP_CAD_WS_ATOMS_RS_DL
 #define QPP_CAD_WS_ATOMS_RS_DL
-#include <qppcad/app.hpp>
 #include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/app_state.hpp>
 
 namespace qpp {
 
@@ -20,7 +20,7 @@ namespace qpp {
               bcolor = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
             }
 
-          app_state_t *astate = &(c_app::get_state());
+          app_state_t* astate = app_state_t::get_inst();
           astate->dp->render_line(bcolor,
                                   al.m_pos + al.m_geom->pos(at_num1, at_index1),
                                   al.m_pos + (al.m_geom->pos(at_num2, at_index2) +

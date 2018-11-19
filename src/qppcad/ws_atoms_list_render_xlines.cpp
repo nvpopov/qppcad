@@ -1,4 +1,5 @@
 #include <qppcad/ws_atoms_list_render_xlines.hpp>
+#include <qppcad/app_state.hpp>
 
 namespace qpp {
 
@@ -6,7 +7,7 @@ namespace qpp {
 
     void ws_atoms_list_render_xlines::render(ws_atoms_list_t &al) {
 
-      app_state_t* astate = &(c_app::get_state());
+      app_state_t* astate = app_state_t::get_inst();
       index all_null = index::D(al.m_geom->DIM).all(0);
       astate->line_mesh_program->begin_shader_program();
       astate->xline_mesh->begin_render_batch();

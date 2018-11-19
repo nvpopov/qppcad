@@ -1,6 +1,5 @@
 #ifndef QPP_CAD_RENDER_BS
 #define QPP_CAD_RENDER_BS
-#include <qppcad/app.hpp>
 #include <qppcad/ws_atoms_list.hpp>
 
 namespace qpp {

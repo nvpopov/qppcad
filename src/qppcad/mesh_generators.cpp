@@ -4,7 +4,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 
-mesh_t *mesh_generators::quad_zup() {
+mesh_t *mesh_generators::quad_zup( ) {
   mesh_t* _mesh = new mesh_t();
 
   float quad_vert[12] = {

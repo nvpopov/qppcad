@@ -2,8 +2,8 @@
 #define QPPCAD_MESH_GENERATORS
 
 #include <qppcad/qppcad.hpp>
-#include <GL/gl3w.h>
-#include <GLFW/glfw3.h>
+#include <QOpenGLContext>
+#include <QOpenGLFunctions>
 #include <geom/lace3d.hpp>
 #include <qppcad/mesh.hpp>
 
