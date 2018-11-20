@@ -8,8 +8,10 @@
 #include <QMenuBar>
 #include <QAction>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QGridLayout>
 #include <QSplitter>
+#include <QComboBox>
 #include <qppcad/ws_viewer_widget.hpp>
 
 namespace qpp {
@@ -29,6 +31,9 @@ namespace qpp {
         //Widgets
         QWidget *main_widget;
         QWidget *tool_panel_widget;
+        QHBoxLayout *tool_panel_layout;
+
+        QComboBox *tp_ws_selector;
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
         ws_viewer_widget_t *ws_viewer_widget;
@@ -41,9 +46,17 @@ namespace qpp {
         QAction *act_save_ws;
         QAction *act_save_ws_as;
         QAction *act_close_app;
+
         QMenu *edit_menu;
+        QAction *act_undo;
+        QAction *act_redo;
+        QAction *act_settings;
+
         QMenu *tools_menu;
+        QAction *act_sc_generator;
+
         QMenu *help_menu;
+        QAction *act_about;
         //end of menus
 
         //Layouts

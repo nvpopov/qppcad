@@ -85,40 +85,40 @@ void camera_t::update_camera () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-//  float x_dt = astate->mouse_x - astate->mouse_x_old;
-//  float y_dt = astate->mouse_y - astate->mouse_y_old;
+  float x_dt = std::clamp(astate->mouse_x - astate->mouse_x_old, -3.0f, 3.0f);
+  float y_dt = std::clamp(astate->mouse_y - astate->mouse_y_old, -3.0f, 3.0f);
 
-//  if (m_move_camera){
-//      float move_right = -x_dt / camera_t::nav_div_step_translation;
-//      float move_up = y_dt / camera_t::nav_div_step_translation;
+  if (m_move_camera) {
+      float move_right = -x_dt / camera_t::nav_div_step_translation;
+      float move_up = y_dt / camera_t::nav_div_step_translation;
 
-//      if (fabs(move_right) > camera_t::nav_thresh) {
-//          translate_camera_right(move_right);
-//          astate->make_viewport_dirty();
-//        }
+      if (fabs(move_right) > camera_t::nav_thresh) {
+          translate_camera_right(move_right);
+          astate->make_viewport_dirty();
+        }
 
-//      if (fabs(move_up) > camera_t::nav_thresh) {
-//          translate_camera_up(move_up);
-//          astate->make_viewport_dirty();
-//        }
+      if (fabs(move_up) > camera_t::nav_thresh) {
+          translate_camera_up(move_up);
+          astate->make_viewport_dirty();
+        }
 
-//    }
+    }
 
-//  if (m_rotate_camera){
-//      float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
-//      float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
+  if (m_rotate_camera) {
+      float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
+      float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
 
-//      if (fabs(rot_angle_y) > camera_t::nav_thresh) {
-//          rotate_camera_orbit_yaw(rot_angle_y);
-//          astate->make_viewport_dirty();
-//        }
+      if (fabs(rot_angle_y) > camera_t::nav_thresh) {
+          rotate_camera_orbit_yaw(rot_angle_y);
+          astate->make_viewport_dirty();
+        }
 
-//      if (fabs(rot_angle_x) > camera_t::nav_thresh) {
-//          rotate_camera_orbit_pitch(rot_angle_x);
-//          astate->make_viewport_dirty();
-//        }
+      if (fabs(rot_angle_x) > camera_t::nav_thresh) {
+          rotate_camera_orbit_pitch(rot_angle_x);
+          astate->make_viewport_dirty();
+        }
 
-//    }
+    }
 
   m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
 
@@ -160,7 +160,7 @@ void camera_t::update_camera_zoom (const float dist) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP){
+  if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP) {
 
       vector3<float> m_view_dir_n = - m_view_point + m_look_at;
       float f_dist = m_view_dir_n.norm();

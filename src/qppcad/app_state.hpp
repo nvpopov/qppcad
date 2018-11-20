@@ -30,11 +30,12 @@ namespace qpp {
         void init_shaders();
         void init_meshes();
         void init_managers();
+        void make_viewport_dirty();
 
         glapi_t *glapi;
         camera_t *camera;
-       // ImFont* fontn;
-      //  ImFont* fontb;
+        // ImFont* fontn;
+        //  ImFont* fontb;
 
         draw_pipeline_t*               dp;
 
@@ -60,45 +61,47 @@ namespace qpp {
 
         std::shared_ptr<workspace_manager_t>                           ws_manager;
 
-//        ;
-//        std::shared_ptr<ui_manager_t>                                  ui_manager;
-//        std::shared_ptr<file_dialog_manager_t>                         fd_manager;
-//        std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
-//        std::unique_ptr<keyboard_manager_t>                            kb_manager;
-//        std::unique_ptr<simple_query_manager_t>                        sq_manager;
+        //        ;
+        //        std::shared_ptr<ui_manager_t>                                  ui_manager;
+        //        std::shared_ptr<file_dialog_manager_t>                         fd_manager;
+        //        std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
+        //        std::unique_ptr<keyboard_manager_t>                            kb_manager;
+        //        std::unique_ptr<simple_query_manager_t>                        sq_manager;
 
-//        camera_t*  camera;
-//      //  vote_pool_t<uint32_t> config_vote_pool;
+        //        camera_t*  camera;
+        //      //  vote_pool_t<uint32_t> config_vote_pool;
 
 
 
-// //       std::map<std::string, color_map_t> m_color_maps;
+        // //       std::map<std::string, color_map_t> m_color_maps;
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;
         vector2<float> viewport_xy_c;
         vector2<float> viewport_size_c;
 
-//        vector3<float> light_pos{0, 1.0f, 1.0f};
-//        vector3<float> light_color; // @unused
-//        vector3<float> light_pos_tr{0, 0, 0};
+        //        vector3<float> light_pos{0, 1.0f, 1.0f};
+        //        vector3<float> light_color; // @unused
+        //        vector3<float> light_pos_tr{0, 0, 0};
 
-//        int c_max_texture_buffer_size;
-//        int current_fps{60};
-//        int max_fps{60};
-//        uint m_viewport_ms_level{0};
+        //        int c_max_texture_buffer_size;
+        //        int current_fps{60};
+        //        int max_fps{60};
+        //        uint m_viewport_ms_level{0};
 
-//        float mouse_x;
-//        float mouse_y;
-//        float mouse_x_old;
-//        float mouse_y_old;
-//        float mouse_x_ws_frame;
-//        float mouse_y_ws_frame;
-
-////        app_task_type cur_task{app_task_type::TASK_WORKSPACE_EDITOR};
-////        app_render_mode m_render_mode{app_render_mode::buffered_multi_sampling};
-
+        float mouse_x;
+        float mouse_y;
+        float mouse_x_old;
+        float mouse_y_old;
         bool mouse_lb_pressed{false};
+        bool mouse_rb_pressed{false};
+        bool is_mouse_moving{false};
+        //        float mouse_x_ws_frame;
+        //        float mouse_y_ws_frame;
+
+        ////        app_task_type cur_task{app_task_type::TASK_WORKSPACE_EDITOR};
+        ////        app_render_mode m_render_mode{app_render_mode::buffered_multi_sampling};
+
         bool disable_mouse_camera_control;
 
         bool show_axis{true};
@@ -110,35 +113,39 @@ namespace qpp {
         bool mouse_in_3d_area{false};
         bool viewport_changed{false};
         bool m_transform_pdb_atom_names{true};
-//        bool m_trigger_3d_popup{false};
-//        int  m_trigger_3d_popup_counter{0};
-//        int  m_trigger_3d_popup_counter_max{65};
 
-//        bool m_realtime{false};
-//        bool m_viewport_dirty{true};
-//        bool m_workspace_changed{true};
+        bool m_viewport_dirty{true};
+        //        bool m_trigger_3d_popup{false};
+        //        int  m_trigger_3d_popup_counter{0};
+        //        int  m_trigger_3d_popup_counter_max{65};
 
-//        void write_app_settings ();
+        //        bool m_realtime{false};
+        //
+        //        bool m_workspace_changed{true};
 
-//        void read_app_settings ();
+        //        void write_app_settings ();
 
-//        void make_viewport_dirty ();
+        //        void read_app_settings ();
 
-//        void update_viewport_cache ();
 
-//        /// \brief update_mouse_coord
-//        /// \param _mcx
-//        /// \param _mcy
-//        void update_mouse_coord (const float _mcx, const float _mcy);
 
-//        //TODO: implement via vote pool
-//        void mark_viewport_change ();
+        //        void update_viewport_cache ();
 
-//        /// \brief update
-//        void update (float delta_time);
+        //        /// \brief update_mouse_coord
+        //        /// \param _mcx
+        //        /// \param _mcy
+        //        void update_mouse_coord (const float _mcx, const float _mcy);
 
-//        /// \brief app_state
-//        app_state_t ();
+        //        //TODO: implement via vote pool
+        //        void mark_viewport_change ();
+
+        //        /// \brief update
+        //        void update (float delta_time);
+
+        //        /// \brief app_state
+        //        app_state_t ();
+
+
 
     };
 

@@ -5,6 +5,8 @@
 #include <QOpenGLWidget>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>
+#include <QTimer>
+#include <QMouseEvent>
 
 namespace qpp {
 
@@ -13,11 +15,19 @@ namespace qpp {
     class ws_viewer_widget_t : public QOpenGLWidget {
       public:
         ws_viewer_widget_t(QWidget *parent);
+        QTimer *m_update_timer;
+
+      public slots:
+        void update_cycle();
 
       protected:
         void initializeGL() override;
         void resizeGL(int w, int h) override;
         void paintGL() override;
+        void mousePressEvent(QMouseEvent * event) override;
+        void mouseReleaseEvent(QMouseEvent * event) override;
+        void mouseMoveEvent(QMouseEvent * event) override;
+        void wheelEvent(QWheelEvent *event) override;
     };
 
   }

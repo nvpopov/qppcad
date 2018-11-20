@@ -50,6 +50,10 @@ namespace qpp {
       ws_manager->init_default();
     }
 
+    void app_state_t::make_viewport_dirty() {
+      m_viewport_dirty = true;
+    }
+
     //    void app_state_t::write_app_settings() {
 
     //    }
