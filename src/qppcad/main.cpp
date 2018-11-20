@@ -21,15 +21,16 @@ int main (int argc, char **argv) {
   QSurfaceFormat::setDefaultFormat(format);
 
   QApplication app(argc, argv);
-  QApplication::setStyle(QStyleFactory::create("Fusion"));
+  app.setStyle(QStyleFactory::create("Fusion"));
   QPalette p;
 
-  p = qApp->palette();
+  p = app.palette();
   p.setColor(QPalette::Window, QColor(55,55,55));
   p.setColor(QPalette::Button, QColor(53,53,53));
   p.setColor(QPalette::Highlight, QColor(142,45,197));
   p.setColor(QPalette::ButtonText, QColor(255,255,255));
-  qApp->setPalette(p);
+  //p.setColor(QPalette::Text, QColor(200, 200, 200));
+  app.setPalette(p);
 
   main_window w;
   w.showMaximized();

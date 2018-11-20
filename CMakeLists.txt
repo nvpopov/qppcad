@@ -2,8 +2,8 @@ cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
 add_definitions(-fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS " -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden")
-#set(CMAKE_BUILD_TYPE "Debug")
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
+#set(CMAKE_BUILD_TYPE "Release")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -g3 -rdynamic")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
@@ -75,6 +75,7 @@ add_executable(qppcad
     src/qppcad/main_window.cpp
     src/qppcad/ws_viewer_widget.cpp
     src/qppcad/app_state.cpp
+    src/qppcad/app_state_event_disp.cpp
     src/qppcad/shader_program.cpp
     src/qppcad/shader_generators.cpp
     src/qppcad/mesh.cpp

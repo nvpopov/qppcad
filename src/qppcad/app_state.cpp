@@ -12,6 +12,10 @@ namespace qpp {
       return g_inst;
     }
 
+    app_state_t::app_state_t() {
+      astate_evd = new app_state_event_disp_t;
+    }
+
     void app_state_t::init_glapi(){
       glapi = new glapi_t();
       dp = new draw_pipeline_t();
@@ -52,6 +56,14 @@ namespace qpp {
 
     void app_state_t::make_viewport_dirty() {
       m_viewport_dirty = true;
+    }
+
+    void app_state_t::log(std::string logstr, bool flush) {
+      std::setlocale(LC_ALL, "C");
+      std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+      std::string ts( ctime( &t) );
+      std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), logstr);
+      if (flush) std::cout << std::flush;
     }
 
     //    void app_state_t::write_app_settings() {

@@ -450,12 +450,15 @@ void workspace_manager_t::mouse_click () {
 
   app_state_t* astate = app_state_t::get_inst();
   //c_app::log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
-//  if (astate->mouse_in_3d_area){
-//      c_app::log(fmt::format("Mouse click in ws {} {}",
-//                             astate->mouse_x_ws_frame, astate->mouse_y_ws_frame));
-//      if (has_wss()) get_current()->mouse_click(astate->mouse_x_ws_frame,
-//                                                astate->mouse_y_ws_frame);
-//    }
+
+  astate->log(fmt::format("Mouse click in ws {} {}",
+                          astate->mouse_x_dc, astate->mouse_y_dc));
+
+  if (has_wss()) {
+      get_current()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
+      astate->make_viewport_dirty();
+    }
+
 }
 
 void workspace_manager_t::add_workspace (const std::shared_ptr<workspace_t> &ws_to_add) {
@@ -466,21 +469,21 @@ void workspace_manager_t::add_workspace (const std::shared_ptr<workspace_t> &ws_
 void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_format) {
 
   app_state_t* astate = app_state_t::get_inst();
-//  bool succes{false};
-//  std::string filter{""};
-//  std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
+  //  bool succes{false};
+  //  std::string filter{""};
+  //  std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
-//  if (succes) {
-//      auto new_ws = std::make_shared<workspace_t>();
-//      std::string file_name_extr = qpp::extract_base_name(file_name_fd);
-//      new_ws->m_ws_name = file_name_extr;
-//      auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
-//      new_ws->add_item_to_workspace(new_atoms_list);
-//      new_atoms_list->load_from_file(file_format, file_name_fd,
-//                                     qc_file_fmt_helper::need_to_auto_center(file_format));
-//      add_workspace(new_ws);
-//      set_current(m_ws.size()-1);
-//    }
+  //  if (succes) {
+  //      auto new_ws = std::make_shared<workspace_t>();
+  //      std::string file_name_extr = qpp::extract_base_name(file_name_fd);
+  //      new_ws->m_ws_name = file_name_extr;
+  //      auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
+  //      new_ws->add_item_to_workspace(new_atoms_list);
+  //      new_atoms_list->load_from_file(file_format, file_name_fd,
+  //                                     qc_file_fmt_helper::need_to_auto_center(file_format));
+  //      add_workspace(new_ws);
+  //      set_current(m_ws.size()-1);
+  //    }
 
 }
 
@@ -528,25 +531,25 @@ void workspace_manager_t::dialog_load_workspace () {
   std::string filter{"json"};
   bool succes{false};
 
-//  std::string file_name = astate->fd_manager->request_open_file(filter, succes);
-//  if (succes) load_workspace_from_file(file_name);
+  //  std::string file_name = astate->fd_manager->request_open_file(filter, succes);
+  //  if (succes) load_workspace_from_file(file_name);
 }
 
 void workspace_manager_t::dialog_save_workspace (const size_t ws_idx, const bool force_save_as) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-//  std::string filter{"json"};
-//  bool succes{false};
-//  if (ws_idx > m_ws.size()) return;
-//  auto ws_to_save = m_ws[ws_idx];
-//  if (ws_to_save->m_fs_path == "" || force_save_as){
-//      std::string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
-//      if (!succes) return;
-//      if (_tmp_fs_path.substr(_tmp_fs_path.find_last_of(".")+1) != "json") _tmp_fs_path += ".json";
-//      ws_to_save->m_fs_path = _tmp_fs_path;
-//    }
-//  ws_to_save->save_workspace_to_json(ws_to_save->m_fs_path);
+  //  std::string filter{"json"};
+  //  bool succes{false};
+  //  if (ws_idx > m_ws.size()) return;
+  //  auto ws_to_save = m_ws[ws_idx];
+  //  if (ws_to_save->m_fs_path == "" || force_save_as){
+  //      std::string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
+  //      if (!succes) return;
+  //      if (_tmp_fs_path.substr(_tmp_fs_path.find_last_of(".")+1) != "json") _tmp_fs_path += ".json";
+  //      ws_to_save->m_fs_path = _tmp_fs_path;
+  //    }
+  //  ws_to_save->save_workspace_to_json(ws_to_save->m_fs_path);
 }
 
 void workspace_manager_t::dialog_save_current_workspace(const bool force_save_as){
@@ -556,8 +559,8 @@ void workspace_manager_t::dialog_save_current_workspace(const bool force_save_as
 
 void workspace_manager_t::update_window_title(){
   if (m_current_workspace_id >= m_ws.size()) return;
-//  c_app::update_window_title(fmt::format(" - {} - [{}]",
-//                                         std::string(m_ws[m_current_workspace_id]->m_ws_name),
-//                                         std::string(m_ws[m_current_workspace_id]->m_fs_path)));
+  //  c_app::update_window_title(fmt::format(" - {} - [{}]",
+  //                                         std::string(m_ws[m_current_workspace_id]->m_ws_name),
+  //                                         std::string(m_ws[m_current_workspace_id]->m_fs_path)));
 }
 

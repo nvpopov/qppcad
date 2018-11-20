@@ -12,6 +12,8 @@
 #include <QGridLayout>
 #include <QSplitter>
 #include <QComboBox>
+#include <QLabel>
+#include <QPushButton>
 #include <qppcad/ws_viewer_widget.hpp>
 
 namespace qpp {
@@ -32,8 +34,11 @@ namespace qpp {
         QWidget *main_widget;
         QWidget *tool_panel_widget;
         QHBoxLayout *tool_panel_layout;
-
+        QLabel *tp_ws_selector_label;
         QComboBox *tp_ws_selector;
+        QPushButton *tp_add_ws;
+        QPushButton *tp_rnm_ws;
+        QPushButton *tp_rm_ws;
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
         ws_viewer_widget_t *ws_viewer_widget;

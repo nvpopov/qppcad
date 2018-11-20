@@ -10,6 +10,7 @@
 #include <qppcad/glapi.hpp>
 #include <qppcad/draw_pipeline.hpp>
 #include <qppcad/workspace.hpp>
+#include <qppcad/app_state_event_disp.hpp>
 
 namespace qpp {
 
@@ -26,16 +27,18 @@ namespace qpp {
         static void init_inst();
         static app_state_t* get_inst();
 
+        app_state_t();
         void init_glapi();
         void init_shaders();
         void init_meshes();
         void init_managers();
         void make_viewport_dirty();
+        void log(std::string logstr, bool flush = true);
+
+        app_state_event_disp_t *astate_evd;
 
         glapi_t *glapi;
         camera_t *camera;
-        // ImFont* fontn;
-        //  ImFont* fontb;
 
         draw_pipeline_t*               dp;
 
@@ -61,18 +64,6 @@ namespace qpp {
 
         std::shared_ptr<workspace_manager_t>                           ws_manager;
 
-        //        ;
-        //        std::shared_ptr<ui_manager_t>                                  ui_manager;
-        //        std::shared_ptr<file_dialog_manager_t>                         fd_manager;
-        //        std::unique_ptr<frame_buffer_t<frame_buffer_opengl_provider> > frame_buffer;
-        //        std::unique_ptr<keyboard_manager_t>                            kb_manager;
-        //        std::unique_ptr<simple_query_manager_t>                        sq_manager;
-
-        //        camera_t*  camera;
-        //      //  vote_pool_t<uint32_t> config_vote_pool;
-
-
-
         // //       std::map<std::string, color_map_t> m_color_maps;
 
         vector2<float> viewport_xy;
@@ -89,6 +80,8 @@ namespace qpp {
         //        int max_fps{60};
         //        uint m_viewport_ms_level{0};
 
+        float mouse_x_dc;
+        float mouse_y_dc;
         float mouse_x;
         float mouse_y;
         float mouse_x_old;
@@ -144,9 +137,6 @@ namespace qpp {
 
         //        /// \brief app_state
         //        app_state_t ();
-
-
-
     };
 
   }

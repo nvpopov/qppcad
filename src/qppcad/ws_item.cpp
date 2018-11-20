@@ -45,16 +45,16 @@ void ws_item_t::render () {
 
   if (m_selected && (get_flags() & ws_item_flags_support_selection) &&
       (get_flags() & ws_item_flags_support_rendering_bb) && is_bb_visible()) {
-      app_state_c->dp->begin_render_aabb();
+      astate->dp->begin_render_aabb();
       if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
-        app_state_c->dp->render_aabb(clr_fuchsia,
+        astate->dp->render_aabb(clr_fuchsia,
                                      m_pos + m_aabb.min,
                                      m_pos + m_aabb.max  );
       else
-        app_state_c->dp->render_aabb_segmented(clr_olive,
+        astate->dp->render_aabb_segmented(clr_olive,
                                                m_pos + m_aabb.min,
                                                m_pos + m_aabb.max);
-      app_state_c->dp->end_render_aabb();
+      astate->dp->end_render_aabb();
     }
 }
 

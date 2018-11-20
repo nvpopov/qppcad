@@ -85,8 +85,8 @@ void camera_t::update_camera () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  float x_dt = std::clamp(astate->mouse_x - astate->mouse_x_old, -3.0f, 3.0f);
-  float y_dt = std::clamp(astate->mouse_y - astate->mouse_y_old, -3.0f, 3.0f);
+  float x_dt = std::clamp(astate->mouse_x - astate->mouse_x_old, -1.0f, 1.0f);
+  float y_dt = std::clamp(astate->mouse_y - astate->mouse_y_old, -1.0f, 1.0f);
 
   if (m_move_camera) {
       float move_right = -x_dt / camera_t::nav_div_step_translation;

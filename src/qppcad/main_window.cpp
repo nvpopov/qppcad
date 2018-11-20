@@ -88,15 +88,34 @@ void main_window::init_widgets() {
   tool_panel_widget = new QWidget;
   //tool_panel_widget->setStyleSheet("background-color:black;");
   tool_panel_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-  tool_panel_widget->setMinimumHeight(35);
+  tool_panel_widget->setMinimumHeight(5);
   //tool_panel_widget->setMaximumHeight(35);
   //tool_panel_widget->setStyleSheet("border-bottom: 1px solid gray;margin-bottom:0px;");
-  tool_panel_widget->setStyleSheet("margin-bottom:0px;");
+  tool_panel_widget->setStyleSheet("margin-bottom:0px; "
+                                   "QLabel {color:white;}");
 
   tp_ws_selector = new QComboBox;
   //tp_ws_selector->setParent(tool_panel_widget);
   //tp_ws_selector->setStyleSheet("margin:10px;");
-  tp_ws_selector->setMaximumWidth(100);
+  tp_ws_selector->setMinimumWidth(150);
+  tp_ws_selector->setMinimumHeight(30);
+//  tp_ws_selector_label = new QLabel;
+//  tp_ws_selector_label->setText(tr("Current workspace:"));
+
+  tp_add_ws = new QPushButton;
+  tp_add_ws->setMinimumWidth(30);
+  tp_add_ws->setMinimumHeight(30);
+  tp_add_ws->setText("+");
+
+  tp_rm_ws = new QPushButton;
+  tp_rm_ws->setText("-");
+  tp_rm_ws->setMinimumWidth(30);
+  tp_rm_ws->setMinimumHeight(30);
+
+  tp_rnm_ws = new QPushButton;
+  tp_rnm_ws->setText("RN");
+  tp_rnm_ws->setMinimumWidth(30);
+  tp_rnm_ws->setMinimumHeight(30);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
   ws_viewer_widget->setStyleSheet("margin-top:0px;");
@@ -123,16 +142,21 @@ void main_window::init_layouts() {
 
   tool_panel_layout = new QHBoxLayout;
   tool_panel_widget->setLayout(tool_panel_layout);
-  tool_panel_layout->addWidget(tp_ws_selector);
-//  layout_tools_main_window = new QGridLayout;
-//  layout_tools_main_window->setContentsMargins(0,0,0,0);
-//  main_widget->setLayout(layout_tools_main_window);
-//  layout_tools_main_window->addWidget(tool_panel_widget, 0, 0, 1, 2);
+  //tool_panel_layout->addWidget(tp_ws_selector_label, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_add_ws, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_rm_ws, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
+  tool_panel_layout->addStretch(1);
+  //  layout_tools_main_window = new QGridLayout;
+  //  layout_tools_main_window->setContentsMargins(0,0,0,0);
+  //  main_widget->setLayout(layout_tools_main_window);
+  //  layout_tools_main_window->addWidget(tool_panel_widget, 0, 0, 1, 2);
 
-//  layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
-//  layout_tools_main_window->addLayout()
-//  layout_tools_main_window->addWidget(ws_viewer_placeholder, 1, 0, 1, 1);
-//  layout_tools_main_window->addWidget(obj_inst_placeholder, 1, 1, 1, 1);
+  //  layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
+  //  layout_tools_main_window->addLayout()
+  //  layout_tools_main_window->addWidget(ws_viewer_placeholder, 1, 0, 1, 1);
+  //  layout_tools_main_window->addWidget(obj_inst_placeholder, 1, 1, 1, 1);
 }
 
 void main_window::slot_shortcut_terminate_app() {
