@@ -14,7 +14,8 @@ int main (int argc, char **argv) {
 
   QSurfaceFormat format;
   format.setDepthBufferSize(24);
-  format.setStencilBufferSize(8);
+
+  //format.setStencilBufferSize(8);
   format.setSamples(8);
   format.setVersion(3, 3);
   format.setProfile(QSurfaceFormat::CoreProfile);
@@ -25,10 +26,27 @@ int main (int argc, char **argv) {
   QPalette p;
 
   p = app.palette();
-  p.setColor(QPalette::Window, QColor(55,55,55));
-  p.setColor(QPalette::Button, QColor(53,53,53));
-  p.setColor(QPalette::Highlight, QColor(142,45,197));
-  p.setColor(QPalette::ButtonText, QColor(255,255,255));
+  p.setColor(QPalette::Window,QColor(53,53,53));
+  p.setColor(QPalette::WindowText,Qt::white);
+  p.setColor(QPalette::Disabled,QPalette::WindowText,QColor(127,127,127));
+  p.setColor(QPalette::Base,QColor(42,42,42));
+  p.setColor(QPalette::AlternateBase,QColor(66,66,66));
+  p.setColor(QPalette::ToolTipBase,Qt::white);
+  p.setColor(QPalette::ToolTipText,Qt::white);
+  p.setColor(QPalette::Text,Qt::white);
+  p.setColor(QPalette::Disabled,QPalette::Text,QColor(127,127,127));
+  p.setColor(QPalette::Dark,QColor(35,35,35));
+  p.setColor(QPalette::Shadow,QColor(20,20,20));
+  p.setColor(QPalette::Button,QColor(53,53,53));
+  p.setColor(QPalette::ButtonText,Qt::white);
+  p.setColor(QPalette::Disabled,QPalette::ButtonText,QColor(127,127,127));
+  p.setColor(QPalette::BrightText,Qt::red);
+  p.setColor(QPalette::Link,QColor(42,130,218));
+  p.setColor(QPalette::Highlight,QColor(42,130,218));
+  p.setColor(QPalette::Disabled,QPalette::Highlight,QColor(80,80,80));
+  p.setColor(QPalette::HighlightedText,Qt::white);
+  p.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
+
   //p.setColor(QPalette::Text, QColor(200, 200, 200));
   app.setPalette(p);
 

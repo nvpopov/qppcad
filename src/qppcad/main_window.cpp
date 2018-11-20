@@ -1,11 +1,12 @@
 #include <qppcad/main_window.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 main_window::main_window(QWidget *parent) {
   main_widget = new QWidget;
-
+  app_state_t* astate = app_state_t::get_inst();
   //tool_panel_widget->setSizePolicy(QSizePolicy::)
   setCentralWidget(main_widget);
   setMinimumHeight(300);
@@ -14,6 +15,11 @@ main_window::main_window(QWidget *parent) {
   init_menus();
   init_widgets();
   init_layouts();
+  bool connect_st = QObject::connect(astate->astate_evd,
+                                     SIGNAL(workspaces_changed_signal()),
+                                     this, SLOT(ws_selector_changed()));
+  ws_selector_changed();
+  //astate->log(fmt::format("Connection status: {}", connect_st));
 }
 
 main_window::~main_window() {
@@ -95,12 +101,16 @@ void main_window::init_widgets() {
                                    "QLabel {color:white;}");
 
   tp_ws_selector = new QComboBox;
+  QObject::connect(tp_ws_selector,
+                   SIGNAL(currentIndexChanged(int)),
+                   this,
+                   SLOT(ws_selector_selection_changed(int)));
   //tp_ws_selector->setParent(tool_panel_widget);
-  //tp_ws_selector->setStyleSheet("margin:10px;");
+  tp_ws_selector->setStyleSheet("padding:4px;");
   tp_ws_selector->setMinimumWidth(150);
   tp_ws_selector->setMinimumHeight(30);
-//  tp_ws_selector_label = new QLabel;
-//  tp_ws_selector_label->setText(tr("Current workspace:"));
+  //  tp_ws_selector_label = new QLabel;
+  //  tp_ws_selector_label->setText(tr("Current workspace:"));
 
   tp_add_ws = new QPushButton;
   tp_add_ws->setMinimumWidth(30);
@@ -157,6 +167,34 @@ void main_window::init_layouts() {
   //  layout_tools_main_window->addLayout()
   //  layout_tools_main_window->addWidget(ws_viewer_placeholder, 1, 0, 1, 1);
   //  layout_tools_main_window->addWidget(obj_inst_placeholder, 1, 1, 1, 1);
+}
+
+void main_window::ws_selector_changed() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  tp_ws_selector->clear();
+  for (auto &ws : astate->ws_manager->m_ws) {
+      QString dest = QString::fromStdString(ws->m_ws_name);
+      tp_ws_selector->addItem(dest);
+    }
+  if (astate->ws_manager->has_wss()) {
+      tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_current_id()));
+    }
+  //astate->log("main_window::ws_selector_changed()");
+
+}
+
+void main_window::ws_selector_selection_changed(int index) {
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto current = astate->ws_manager->get_current_id();
+      astate->log(fmt::format("swtiching ws: {}", index));
+      if (current && index != *current) {
+          astate->ws_manager->set_current(index);
+          astate->make_viewport_dirty();
+        }
+    }
 }
 
 void main_window::slot_shortcut_terminate_app() {

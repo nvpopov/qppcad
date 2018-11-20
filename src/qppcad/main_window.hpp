@@ -71,12 +71,14 @@ namespace qpp {
         //end of layouts
 
         //Shortcuts
-         QShortcut       *sc_terminate_app;
+        QShortcut       *sc_terminate_app;
 
         //End of shortcuts
 
       private slots:
         void slot_shortcut_terminate_app();
+        void ws_selector_changed();
+        void ws_selector_selection_changed(int index);
     };
   }
 

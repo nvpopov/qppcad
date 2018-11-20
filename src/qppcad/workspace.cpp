@@ -346,8 +346,10 @@ bool workspace_manager_t::set_current (const size_t ws_index) {
 
   if (ws_index < m_ws.size()){
       m_current_workspace_id = ws_index;
-      update_window_title();
+      //update_window_title();
       cached_astate->camera = m_ws[ws_index]->m_camera.get();
+      cached_astate->camera->update_camera();
+
       //cached_astate->make_viewport_dirty();
       return true;
     }
@@ -370,8 +372,8 @@ void workspace_manager_t::init_default () {
 
   auto _wsl2 = std::make_shared<ws_atoms_list_t>();
   _ws3->add_item_to_workspace(_wsl2);
-  _wsl2->load_from_file(qc_file_fmt::firefly_output,
-                        "../deps/qpp/examples/io/ref_data/firefly/dvb_gopt_a.out",
+  _wsl2->load_from_file(qc_file_fmt::standart_xyz,
+                        "../deps/qpp/examples/io/ref_data/xyz/slab.xyz",
                         false);
 
   auto _wsl3 = std::make_shared<ws_atoms_list_t>();
@@ -461,9 +463,16 @@ void workspace_manager_t::mouse_click () {
 
 }
 
+void workspace_manager_t::workspace_manager_changed() {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->log("Workspaces changed");
+  astate->astate_evd->workspaces_changed();
+}
+
 void workspace_manager_t::add_workspace (const std::shared_ptr<workspace_t> &ws_to_add) {
   m_ws.push_back(ws_to_add);
   ws_to_add->workspace_changed();
+  workspace_manager_changed();
 }
 
 void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_format) {

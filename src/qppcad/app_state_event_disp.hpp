@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <QObject>
+#include <QMetaObject>
 
 namespace qpp {
 
@@ -11,7 +12,10 @@ namespace qpp {
     class app_state_event_disp_t : public QObject {
         Q_OBJECT
       signals:
-          void workspaces_changed();
+        void workspaces_changed_signal();
+      public:
+        void workspaces_changed();
+        explicit app_state_event_disp_t(QObject *parent = 0);
     };
 
   }

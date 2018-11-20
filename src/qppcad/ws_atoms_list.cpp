@@ -136,7 +136,7 @@ void ws_atoms_list_t::render () {
                 cell_clr = clr_maroon;
             }
 
-          app_state_c->dp->render_cell_3d(
+          astate->dp->render_cell_3d(
                 cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos, 2.1f);
 
           if ( m_draw_subcells) {

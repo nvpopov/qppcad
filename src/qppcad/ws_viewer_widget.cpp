@@ -20,8 +20,7 @@ void ws_viewer_widget_t::update_cycle() {
   if (astate->m_viewport_dirty) {
       astate->m_viewport_dirty = false;
 
-      if (astate->camera &&
-          (astate->camera->m_rotate_camera || astate->camera->m_move_camera)) {
+      if (astate->camera && (astate->camera->m_rotate_camera || astate->camera->m_move_camera)) {
           astate->camera->update_camera();
           astate->camera->m_rotate_camera = false;
           astate->camera->m_move_camera = false;
@@ -71,7 +70,12 @@ void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (event) {
-      if (event->button() == Qt::LeftButton)  astate->mouse_lb_pressed = true;
+
+      if (event->button() == Qt::LeftButton)  {
+          astate->mouse_lb_pressed = true;
+          astate->mouse_distance_pp = 0.0f;
+        }
+
       if (event->button() == Qt::RightButton) astate->mouse_rb_pressed = true;
     }
   //fmt::print(std::cout, "mousePressEvent\n");
@@ -87,7 +91,8 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
 
       if (event->button() == Qt::LeftButton) {
           astate->mouse_lb_pressed = false;
-          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera)
+          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera
+              && astate->mouse_distance_pp < 10)
             astate->ws_manager->mouse_click();
           need_to_cancel_cam_transform = true;
         }
@@ -120,24 +125,33 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       astate->mouse_x_dc = (astate->mouse_x / float(this->width()) - 0.5f) * 2.0f;
       astate->mouse_y_dc = (0.5f - astate->mouse_y / float(this->height())) * 2.0f;
 
-      astate->is_mouse_moving = (abs(astate->mouse_x - astate->mouse_x_old) > 2.0f &&
-                                 abs(astate->mouse_y - astate->mouse_y_old) > 2.0f);
+      astate->is_mouse_moving = (abs(astate->mouse_x - astate->mouse_x_old) > 1.0f ||
+                                 abs(astate->mouse_y - astate->mouse_y_old) > 1.0f);
 
-//      std::cout << fmt::format("{} {} {} {} \n",
-//                               astate->mouse_x_old,
-//                               astate->mouse_y_old,
-//                               astate->mouse_x,
-//                               astate->mouse_y)<< std::endl;
+      astate->mouse_distance_pp += abs(astate->mouse_x - astate->mouse_x_old) +
+                                   abs(astate->mouse_y - astate->mouse_y_old);
+      //if (astate->mouse_lb_pressed)
+
+      //      std::cout << fmt::format("{} {} {} {} \n",
+      //                               astate->mouse_x_old,
+      //                               astate->mouse_y_old,
+      //                               astate->mouse_x,
+      //                               astate->mouse_y)<< std::endl;
 
       //float delta =
-      if (astate->mouse_lb_pressed && astate->camera) {
+      if (astate->mouse_lb_pressed && astate->camera && astate->is_mouse_moving) {
           astate->camera->m_rotate_camera = true;
           astate->make_viewport_dirty();
         }
 
-      if (astate->mouse_rb_pressed && astate->camera) {
+      if (astate->mouse_rb_pressed && astate->camera && astate->is_mouse_moving) {
           astate->camera->m_move_camera = true;
           astate->make_viewport_dirty();
+        }
+
+      if (!astate->is_mouse_moving) {
+          astate->camera->m_rotate_camera = false;
+          astate->camera->m_move_camera = false;
         }
     }
 
