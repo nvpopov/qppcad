@@ -122,9 +122,24 @@ void main_window::init_menus() {
   edit_menu->addAction(act_settings);
 
   tools_menu = menuBar()->addMenu(tr("&Tools"));
+  tools_menu_generators = tools_menu->addMenu(tr("Generators"));
+
   act_sc_generator = new QAction();
   act_sc_generator->setText(tr("Supercell generator"));
-  tools_menu->addAction(act_sc_generator);
+  tools_menu_generators->addAction(act_sc_generator);
+
+  tools_quick_geom_export = tools_menu->addMenu(tr("Export selected geometry"));
+  tools_quick_geom_export_xyz = new QAction;
+  tools_quick_geom_export_xyz->setText("XYZ");
+  tools_quick_geom_export->addAction(tools_quick_geom_export_xyz);
+
+  tools_quick_geom_export_cp2k_coord = new QAction;
+  tools_quick_geom_export_cp2k_coord->setText("CP2K coord section");
+  tools_quick_geom_export->addAction(tools_quick_geom_export_cp2k_coord);
+
+  tools_quick_geom_export_vasp_poscar = new QAction;
+  tools_quick_geom_export_vasp_poscar->setText("VASP POSCAR");
+  tools_quick_geom_export->addAction(tools_quick_geom_export_vasp_poscar);
 
   help_menu  = menuBar()->addMenu(tr("&Help"));
   act_about = new QAction();
@@ -183,6 +198,16 @@ void main_window::init_widgets() {
                                   "padding-right:5px; "
                                   "QCheckBox::indicator { width: 21px;height: 21px;}");
 
+  tp_show_gizmo = new QCheckBox;
+  tp_show_gizmo->setCheckState(Qt::Checked);
+  tp_show_gizmo->setText("Gizmo");
+  tp_show_gizmo->setMinimumHeight(30);
+  tp_show_gizmo->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
+                               "padding-right:5px; "
+                               "QCheckBox::indicator { width: 21px;height: 21px;}");
+  QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
+                   this, SLOT(tp_show_gizmo_state_changed(int)));
+
   ws_viewer_widget = new ws_viewer_widget_t(this);
   ws_viewer_widget->setStyleSheet("margin-top:-15px;");
 
@@ -215,6 +240,8 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_rm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
+
   tool_panel_layout->addStretch(1);
   //  layout_tools_main_window = new QGridLayout;
   //  layout_tools_main_window->setContentsMargins(0,0,0,0);
@@ -237,14 +264,18 @@ void main_window::workspaces_changed_slot() {
   if (astate->ws_manager->has_wss()) {
       tp_rm_ws->setEnabled(true);
       tp_rnm_ws->setEnabled(true);
+      tp_show_gizmo->setEnabled(true);
       for (auto &ws : astate->ws_manager->m_ws) {
           QString dest = QString::fromStdString(ws->m_ws_name);
           tp_ws_selector->addItem(dest);
         }
+
       tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_current_id()));
+
     } else {
       tp_rm_ws->setEnabled(false);
       tp_rnm_ws->setEnabled(false);
+      tp_show_gizmo->setEnabled(false);
     }
 
   tp_ws_selector->blockSignals(false);
@@ -276,6 +307,20 @@ void main_window::tp_show_obj_insp_state_changed(int state) {
   if (state == Qt::Unchecked) {
       obj_insp_widget->hide();
     }
+}
+
+void main_window::tp_show_gizmo_state_changed(int state) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          cur_ws->m_gizmo->m_is_visible = state == Qt::Checked;
+          astate->make_viewport_dirty();
+        }
+    }
+
 }
 
 void main_window::import_file(QString dialog_name,
@@ -390,6 +435,7 @@ void main_window::current_workspace_changed() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
+          tp_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
           std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
                                                cur_ws->m_ws_name, cur_ws->m_fs_path);
           this->setWindowTitle(QString::fromStdString(title_text));

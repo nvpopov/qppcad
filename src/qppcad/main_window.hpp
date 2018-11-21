@@ -46,6 +46,7 @@ namespace qpp {
         QPushButton *tp_rnm_ws;
         QPushButton *tp_rm_ws;
         QCheckBox *tp_show_obj_insp;
+        QCheckBox *tp_show_gizmo;
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
         ws_viewer_widget_t *ws_viewer_widget;
@@ -81,7 +82,12 @@ namespace qpp {
         QAction *act_settings;
 
         QMenu *tools_menu;
+        QMenu *tools_menu_generators;
         QAction *act_sc_generator;
+        QMenu *tools_quick_geom_export;
+        QAction *tools_quick_geom_export_xyz;
+        QAction *tools_quick_geom_export_vasp_poscar;
+        QAction *tools_quick_geom_export_cp2k_coord;
 
         QMenu *help_menu;
         QAction *act_about;
@@ -103,6 +109,7 @@ namespace qpp {
         void workspaces_changed_slot();
         void ws_selector_selection_changed(int index);
         void tp_show_obj_insp_state_changed(int state);
+        void tp_show_gizmo_state_changed(int state);
         void import_file(QString dialog_name, QString file_ext,  qc_file_fmt file_fmt);
         void create_new_workspace();
         void open_workspace();
