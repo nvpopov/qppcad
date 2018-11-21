@@ -17,8 +17,8 @@ main_window::main_window(QWidget *parent) {
   init_layouts();
   bool connect_st = QObject::connect(astate->astate_evd,
                                      SIGNAL(workspaces_changed_signal()),
-                                     this, SLOT(ws_selector_changed()));
-  ws_selector_changed();
+                                     this, SLOT(workspaces_changed_slot()));
+  workspaces_changed_slot();
   //astate->log(fmt::format("Connection status: {}", connect_st));
 }
 
@@ -40,11 +40,47 @@ void main_window::init_menus() {
   act_new_ws->setText(tr("New workspace"));
   act_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
   file_menu->addAction(act_new_ws);
+  connect(act_new_ws, &QAction::triggered, this, &main_window::create_new_workspace);
 
   act_open_ws = new QAction();
   act_open_ws->setText(tr("Open workspace"));
   act_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
   file_menu->addAction(act_open_ws);
+  connect(act_open_ws, &QAction::triggered, this, &main_window::open_workspace);
+
+  menu_import = file_menu->addMenu(tr("Import"));
+  menu_import_xyz = new QAction;
+  menu_import_xyz->setText("XYZ");
+  menu_import->addAction(menu_import_xyz);
+  connect(menu_import_xyz, &QAction::triggered, this,
+          [this](){this->import_file("Import XYZ file", "*", qc_file_fmt::standart_xyz);});
+
+  menu_import_cp2k = menu_import->addMenu("CP2K");
+  menu_import_cp2k_output = new QAction;
+  menu_import_cp2k_output->setText(tr("OUTPUT"));
+  menu_import_cp2k->addAction(menu_import_cp2k_output);
+  connect(menu_import_cp2k_output, &QAction::triggered, this,
+          [this](){this->import_file("Import CP2K output", "*", qc_file_fmt::cp2k_output);});
+
+  menu_import_firefly = menu_import->addMenu("Firefly");
+  menu_import_firefly_output = new QAction;
+  menu_import_firefly_output->setText(tr("OUTPUT"));
+  menu_import_firefly->addAction(menu_import_firefly_output);
+  connect(menu_import_firefly_output, &QAction::triggered, this,
+          [this](){this->import_file("Import Firefly output", "*", qc_file_fmt::firefly_output);});
+
+  menu_import_vasp = menu_import->addMenu("VASP");
+  menu_import_vasp_poscar = new QAction;
+  menu_import_vasp_poscar->setText(tr("POSCAR"));
+  connect(menu_import_vasp_poscar,&QAction::triggered, this,
+          [this](){this->import_file("Import VASP POSCAR", "*", qc_file_fmt::vasp_poscar);});
+
+  menu_import_vasp->addAction(menu_import_vasp_poscar);
+  menu_import_vasp_outcar = new QAction;
+  menu_import_vasp_outcar->setText(tr("OUTCAR"));
+  menu_import_vasp->addAction(menu_import_vasp_outcar);
+  connect(menu_import_vasp_outcar,&QAction::triggered, this,
+          [this](){this->import_file("Import VASP OUTCAR", "*", qc_file_fmt::vasp_outcar_md);});
 
   act_save_ws = new QAction();
   act_save_ws->setText(tr("Save workspace"));
@@ -97,7 +133,7 @@ void main_window::init_widgets() {
   tool_panel_widget->setMinimumHeight(5);
   //tool_panel_widget->setMaximumHeight(35);
   //tool_panel_widget->setStyleSheet("border-bottom: 1px solid gray;margin-bottom:0px;");
-  tool_panel_widget->setStyleSheet("margin-bottom:0px; "
+  tool_panel_widget->setStyleSheet("padding-bottom:-5px; padding-top:-5px;"
                                    "QLabel {color:white;}");
 
   tp_ws_selector = new QComboBox;
@@ -127,12 +163,22 @@ void main_window::init_widgets() {
   tp_rnm_ws->setMinimumWidth(30);
   tp_rnm_ws->setMinimumHeight(30);
 
-  ws_viewer_widget = new ws_viewer_widget_t(this);
-  ws_viewer_widget->setStyleSheet("margin-top:0px;");
+  tp_show_obj_insp = new QCheckBox;
+  tp_show_obj_insp->setCheckState(Qt::Checked);
+  tp_show_obj_insp->setText("Inspector");
+  tp_show_obj_insp->setMinimumHeight(30);
+  QObject::connect(tp_show_obj_insp, SIGNAL(stateChanged(int)),
+                   this, SLOT(tp_show_obj_insp_state_changed(int)));
+  tp_show_obj_insp->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
+                                  "padding-right:5px; "
+                                  "QCheckBox::indicator { width: 21px;height: 21px;}");
 
-  obj_inst_placeholder = new QWidget;
-  obj_inst_placeholder->setMaximumWidth(400);
-  obj_inst_placeholder->setStyleSheet("margin-top:0px;");
+  ws_viewer_widget = new ws_viewer_widget_t(this);
+  ws_viewer_widget->setStyleSheet("margin-top:-15px;");
+
+  obj_insp_widget = new object_inspector_widget_t();
+  obj_insp_widget->setMaximumWidth(400);
+  obj_insp_widget->setStyleSheet("margin-top:-15px;");
 }
 
 void main_window::init_layouts() {
@@ -141,12 +187,13 @@ void main_window::init_layouts() {
   main_widget->setLayout(main_layout);
   main_layout->addWidget(tool_panel_widget);
   main_layout->setContentsMargins(0,0,0,0);
+  main_layout->setSpacing(0);
 
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   layout_ws_viewer_obj_insp->addWidget(ws_viewer_widget);
-  layout_ws_viewer_obj_insp->addWidget(obj_inst_placeholder);
+  layout_ws_viewer_obj_insp->addWidget(obj_insp_widget);
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
-  layout_ws_viewer_obj_insp->setStyleSheet("margin-top:0px;");
+  //layout_ws_viewer_obj_insp->setStyleSheet("margin-top:0px;");
   layout_ws_viewer_obj_insp->setHandleWidth(15);
   main_layout->addWidget(layout_ws_viewer_obj_insp);
 
@@ -157,6 +204,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_add_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_rm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addStretch(1);
   //  layout_tools_main_window = new QGridLayout;
   //  layout_tools_main_window->setContentsMargins(0,0,0,0);
@@ -169,32 +217,96 @@ void main_window::init_layouts() {
   //  layout_tools_main_window->addWidget(obj_inst_placeholder, 1, 1, 1, 1);
 }
 
-void main_window::ws_selector_changed() {
+void main_window::workspaces_changed_slot() {
 
   app_state_t* astate = app_state_t::get_inst();
   tp_ws_selector->clear();
+
+  tp_ws_selector->blockSignals(true);
+
   for (auto &ws : astate->ws_manager->m_ws) {
       QString dest = QString::fromStdString(ws->m_ws_name);
       tp_ws_selector->addItem(dest);
     }
+
   if (astate->ws_manager->has_wss()) {
       tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_current_id()));
     }
-  //astate->log("main_window::ws_selector_changed()");
+
+  tp_ws_selector->blockSignals(false);
+  astate->log("main_window::workspaces_changed_slot()");
 
 }
 
 void main_window::ws_selector_selection_changed(int index) {
+
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
       auto current = astate->ws_manager->get_current_id();
-      astate->log(fmt::format("swtiching ws: {}", index));
-      if (current && index != *current) {
+      astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
+                              index, *current));
+      if (current) {
           astate->ws_manager->set_current(index);
           astate->make_viewport_dirty();
         }
     }
+}
+
+void main_window::tp_show_obj_insp_state_changed(int state) {
+
+  if (state == Qt::Checked) {
+      obj_insp_widget->show();
+    }
+
+  if (state == Qt::Unchecked) {
+      obj_insp_widget->hide();
+    }
+}
+
+void main_window::import_vasp_poscar() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open VASP POSCAR"), tr("Any (*)"));
+
+  if (fileName != "") astate->ws_manager->import_file_as_new_workspace(fileName.toStdString(),
+                                                                       qc_file_fmt::vasp_poscar);
+}
+
+void main_window::import_file(QString dialog_name,
+                              QString file_ext,
+                              qc_file_fmt file_fmt) {
+  app_state_t* astate = app_state_t::get_inst();
+  QString fileName = QFileDialog::getOpenFileName(this, dialog_name, file_ext);
+
+  if (fileName != "") {
+      astate->ws_manager->import_file_as_new_workspace(fileName.toStdString(), file_fmt);
+      workspaces_changed_slot();
+    }
+}
+
+void main_window::create_new_workspace() {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->ws_manager->query_create_new_workspace(true);
+  workspaces_changed_slot();
+  astate->make_viewport_dirty();
+}
+
+void main_window::open_workspace() {
+  app_state_t* astate = app_state_t::get_inst();
+  QString file_name = QFileDialog::getOpenFileName(this, "Open qpp::cad workspace", "*.json");
+  if (file_name != "") {
+      astate->ws_manager->load_workspace_from_file(file_name.toStdString());
+      workspaces_changed_slot();
+    }
+}
+
+void main_window::save_workspace() {
+
+}
+
+void main_window::save_workspace_as() {
+
 }
 
 void main_window::slot_shortcut_terminate_app() {

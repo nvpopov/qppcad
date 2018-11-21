@@ -89,6 +89,7 @@ namespace qpp {
         float mouse_distance_pp{0.0f};
         bool mouse_lb_pressed{false};
         bool mouse_rb_pressed{false};
+        bool mouse_md_pressed{false};
         bool is_mouse_moving{false};
         //        float mouse_x_ws_frame;
         //        float mouse_y_ws_frame;

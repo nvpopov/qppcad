@@ -92,7 +92,7 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
 
 void ws_atoms_list_t::vote_for_view_vectors (vector3<float> &out_look_pos,
                                              vector3<float> &out_look_at) {
-  if (m_geom->nat() > 2) {
+  if (m_geom->nat() > 1) {
       out_look_at += (m_ext_obs->aabb.max + m_ext_obs->aabb.min) / 2.0;
       vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
       float size = bb_size.norm();

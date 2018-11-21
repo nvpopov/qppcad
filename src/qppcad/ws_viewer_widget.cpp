@@ -77,6 +77,7 @@ void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
         }
 
       if (event->button() == Qt::RightButton) astate->mouse_rb_pressed = true;
+      if (event->button() == Qt::MiddleButton) astate->mouse_md_pressed = true;
     }
   //fmt::print(std::cout, "mousePressEvent\n");
 }
@@ -99,6 +100,11 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
 
       if (event->button() == Qt::RightButton) {
           astate->mouse_rb_pressed = false;
+          need_to_cancel_cam_transform = true;
+        }
+
+      if (event->button() == Qt::MiddleButton) {
+          astate->mouse_md_pressed = false;
           need_to_cancel_cam_transform = true;
         }
 

@@ -62,9 +62,7 @@ void workspace_t::toggle_edit_mode () {
 }
 
 void workspace_t::workspace_changed () {
-  m_ws_names_c.clear();
-  for (uint8_t i = 0; i < m_ws_items.size(); i++)
-    m_ws_names_c.push_back(fmt::format("[{}] {}", i, m_ws_items[i]->m_name));
+
 }
 
 void workspace_t::reset_camera () {
@@ -80,7 +78,7 @@ void workspace_t::set_best_view () {
     }
 
   vector3<float> vec_look_at  = vector3<float>(0.0, 0.0, 0.0);
-  vector3<float> vec_look_pos = vector3<float>(0.0, 0.0, -5.0);
+  vector3<float> vec_look_pos = vector3<float>(0.0, 0.0, -3.0);
 
   for (auto &ws_item : m_ws_items)
     ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
@@ -95,7 +93,7 @@ void workspace_t::set_best_view () {
   //            << "end bv " << std::endl;
   m_camera->orthogonalize_gs();
 
-  if ((m_camera->m_look_at-m_camera->m_view_point).norm() < 0.4f)
+  if ((m_camera->m_look_at-m_camera->m_view_point).norm() < 0.4f || vec_look_at == vec_look_pos)
     m_camera->reset_camera();
 }
 
@@ -465,7 +463,7 @@ void workspace_manager_t::mouse_click () {
 
 void workspace_manager_t::workspace_manager_changed() {
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("Workspaces changed");
+  astate->log("DEBUG: workspace_manager_t -> Workspaces changed");
   astate->astate_evd->workspaces_changed();
 }
 
@@ -475,26 +473,26 @@ void workspace_manager_t::add_workspace (const std::shared_ptr<workspace_t> &ws_
   workspace_manager_changed();
 }
 
-void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_format) {
+//void workspace_manager_t::query_import_file_as_new_workspace (qc_file_fmt file_format) {
 
-  app_state_t* astate = app_state_t::get_inst();
-  //  bool succes{false};
-  //  std::string filter{""};
-  //  std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
+//  app_state_t* astate = app_state_t::get_inst();
+//  //  bool succes{false};
+//  //  std::string filter{""};
+//  //  std::string file_name_fd = astate->fd_manager->request_open_file(filter, succes);
 
-  //  if (succes) {
-  //      auto new_ws = std::make_shared<workspace_t>();
-  //      std::string file_name_extr = qpp::extract_base_name(file_name_fd);
-  //      new_ws->m_ws_name = file_name_extr;
-  //      auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
-  //      new_ws->add_item_to_workspace(new_atoms_list);
-  //      new_atoms_list->load_from_file(file_format, file_name_fd,
-  //                                     qc_file_fmt_helper::need_to_auto_center(file_format));
-  //      add_workspace(new_ws);
-  //      set_current(m_ws.size()-1);
-  //    }
+//  //  if (succes) {
+//  //      auto new_ws = std::make_shared<workspace_t>();
+//  //      std::string file_name_extr = qpp::extract_base_name(file_name_fd);
+//  //      new_ws->m_ws_name = file_name_extr;
+//  //      auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
+//  //      new_ws->add_item_to_workspace(new_atoms_list);
+//  //      new_atoms_list->load_from_file(file_format, file_name_fd,
+//  //                                     qc_file_fmt_helper::need_to_auto_center(file_format));
+//  //      add_workspace(new_ws);
+//  //      set_current(m_ws.size()-1);
+//  //    }
 
-}
+//}
 
 void workspace_manager_t::import_file_as_new_workspace(const std::string &fname,
                                                        qc_file_fmt file_format){
@@ -509,13 +507,13 @@ void workspace_manager_t::import_file_as_new_workspace(const std::string &fname,
   set_current(m_ws.size()-1);
 }
 
-void workspace_manager_t::query_create_new_workspace(const bool switch_to_new_workspace) {
+void workspace_manager_t::query_create_new_workspace(bool switch_to_new_workspace) {
 
   auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
   m_ws.push_back(new_ws);
-
   if (switch_to_new_workspace) set_current(m_ws.size()-1);
+  workspace_manager_changed();
 
 }
 
@@ -530,7 +528,7 @@ void workspace_manager_t::load_workspace_from_file(const std::string &filename) 
   set_current(m_ws.size()-1);
   new_ws->set_best_view();
   //astate->make_viewport_dirty();
-
+  workspace_manager_changed();
 }
 
 void workspace_manager_t::dialog_load_workspace () {

@@ -14,7 +14,10 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QCheckBox>
+#include <QFileDialog>
 #include <qppcad/ws_viewer_widget.hpp>
+#include <qppcad/object_inspector_widget.hpp>
 
 namespace qpp {
 
@@ -39,15 +42,32 @@ namespace qpp {
         QPushButton *tp_add_ws;
         QPushButton *tp_rnm_ws;
         QPushButton *tp_rm_ws;
+        QCheckBox *tp_show_obj_insp;
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
         ws_viewer_widget_t *ws_viewer_widget;
+        object_inspector_widget_t *obj_insp_widget;
         //End of widgets
 
         //Menus
         QMenu *file_menu;
         QAction *act_new_ws;
         QAction *act_open_ws;
+
+        QMenu *menu_import;
+
+        QAction *menu_import_xyz;
+
+        QMenu *menu_import_cp2k;
+        QAction *menu_import_cp2k_output;
+
+        QMenu *menu_import_vasp;
+        QAction *menu_import_vasp_outcar;
+        QAction *menu_import_vasp_poscar;
+
+        QMenu *menu_import_firefly;
+        QAction *menu_import_firefly_output;
+
         QAction *act_save_ws;
         QAction *act_save_ws_as;
         QAction *act_close_app;
@@ -77,8 +97,15 @@ namespace qpp {
 
       private slots:
         void slot_shortcut_terminate_app();
-        void ws_selector_changed();
+        void workspaces_changed_slot();
         void ws_selector_selection_changed(int index);
+        void tp_show_obj_insp_state_changed(int state);
+        void import_vasp_poscar();
+        void import_file(QString dialog_name, QString file_ext,  qc_file_fmt file_fmt);
+        void create_new_workspace();
+        void open_workspace();
+        void save_workspace();
+        void save_workspace_as();
     };
   }
 

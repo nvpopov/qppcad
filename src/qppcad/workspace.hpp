@@ -45,9 +45,8 @@ namespace qpp {
         void mouse_click();
         void workspace_manager_changed();
         void add_workspace(const std::shared_ptr<workspace_t> &ws_to_add);
-        void query_import_file_as_new_workspace(qc_file_fmt file_format);
         void import_file_as_new_workspace(const std::string &fname, qc_file_fmt file_format);
-        void query_create_new_workspace(const bool switch_to_new_workspace = true);
+        void query_create_new_workspace(bool switch_to_new_workspace = true);
         void load_workspace_from_file(const std::string &filename);
         void dialog_load_workspace();
         void dialog_save_workspace(const size_t ws_idx, const bool force_save_as);
@@ -68,7 +67,6 @@ namespace qpp {
         std::unique_ptr<camera_t>                m_camera;
         ray_t<float>                             m_ray_debug;
         bool                                     m_first_render{true};
-        std::vector<std::string>                 m_ws_names_c;
         std::unique_ptr<gizmo_t>                 m_gizmo;
         vector3<float>                           m_background_color{0.85f, 0.85f, 0.85f};
 
