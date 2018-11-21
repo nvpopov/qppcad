@@ -15,10 +15,15 @@ main_window::main_window(QWidget *parent) {
   init_menus();
   init_widgets();
   init_layouts();
-  bool connect_st = QObject::connect(astate->astate_evd,
-                                     SIGNAL(workspaces_changed_signal()),
-                                     this, SLOT(workspaces_changed_slot()));
+  bool connect_st1 = QObject::connect(astate->astate_evd,
+                                      SIGNAL(workspaces_changed_signal()),
+                                      this, SLOT(workspaces_changed_slot()));
+
+  bool connect_st2 = QObject::connect(astate->astate_evd,
+                                      SIGNAL(current_workspace_changed_signal()),
+                                      this, SLOT(current_workspace_changed()));
   workspaces_changed_slot();
+  current_workspace_changed();
   //astate->log(fmt::format("Connection status: {}", connect_st));
 }
 
@@ -87,10 +92,12 @@ void main_window::init_menus() {
   act_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
   file_menu->addSeparator();
   file_menu->addAction(act_save_ws);
+  connect(act_save_ws, &QAction::triggered, this, &main_window::save_workspace);
 
   act_save_ws_as = new QAction();
   act_save_ws_as->setText(tr("Save workspace as"));
   file_menu->addAction(act_save_ws_as);
+  connect(act_save_ws_as, &QAction::triggered, this, &main_window::save_workspace_as);
 
   act_close_app = new QAction();
   act_close_app->setText(tr("Close"));
@@ -152,16 +159,19 @@ void main_window::init_widgets() {
   tp_add_ws->setMinimumWidth(30);
   tp_add_ws->setMinimumHeight(30);
   tp_add_ws->setText("+");
+  connect(tp_add_ws, &QPushButton::pressed, this, &main_window::create_new_workspace);
 
   tp_rm_ws = new QPushButton;
   tp_rm_ws->setText("-");
   tp_rm_ws->setMinimumWidth(30);
   tp_rm_ws->setMinimumHeight(30);
+  connect(tp_rm_ws, &QPushButton::pressed, this, &main_window::close_current_workspace);
 
   tp_rnm_ws = new QPushButton;
   tp_rnm_ws->setText("RN");
   tp_rnm_ws->setMinimumWidth(30);
   tp_rnm_ws->setMinimumHeight(30);
+  connect(tp_rnm_ws, &QPushButton::pressed, this, &main_window::rename_current_workspace);
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setCheckState(Qt::Checked);
@@ -224,13 +234,17 @@ void main_window::workspaces_changed_slot() {
 
   tp_ws_selector->blockSignals(true);
 
-  for (auto &ws : astate->ws_manager->m_ws) {
-      QString dest = QString::fromStdString(ws->m_ws_name);
-      tp_ws_selector->addItem(dest);
-    }
-
   if (astate->ws_manager->has_wss()) {
+      tp_rm_ws->setEnabled(true);
+      tp_rnm_ws->setEnabled(true);
+      for (auto &ws : astate->ws_manager->m_ws) {
+          QString dest = QString::fromStdString(ws->m_ws_name);
+          tp_ws_selector->addItem(dest);
+        }
       tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_current_id()));
+    } else {
+      tp_rm_ws->setEnabled(false);
+      tp_rnm_ws->setEnabled(false);
     }
 
   tp_ws_selector->blockSignals(false);
@@ -264,15 +278,6 @@ void main_window::tp_show_obj_insp_state_changed(int state) {
     }
 }
 
-void main_window::import_vasp_poscar() {
-
-  app_state_t* astate = app_state_t::get_inst();
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open VASP POSCAR"), tr("Any (*)"));
-
-  if (fileName != "") astate->ws_manager->import_file_as_new_workspace(fileName.toStdString(),
-                                                                       qc_file_fmt::vasp_poscar);
-}
-
 void main_window::import_file(QString dialog_name,
                               QString file_ext,
                               qc_file_fmt file_fmt) {
@@ -302,10 +307,97 @@ void main_window::open_workspace() {
 }
 
 void main_window::save_workspace() {
-
+  app_state_t* astate = app_state_t::get_inst();
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          QFileInfo check_file(QString::fromStdString(cur_ws->m_fs_path));
+          if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "") {
+              cur_ws->save_workspace_to_json(cur_ws->m_fs_path);
+            } else {
+              QString file_name = QFileDialog::getSaveFileName(this, "Save qpp::cad workspace",
+                                                               "*.json");
+              if (file_name != "") {
+                  cur_ws->save_workspace_to_json(file_name.toStdString());
+                  cur_ws->m_fs_path = file_name.toStdString();
+                }
+            }
+        }
+    }
+  current_workspace_changed();
 }
 
 void main_window::save_workspace_as() {
+  app_state_t* astate = app_state_t::get_inst();
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          QString file_name = QFileDialog::getSaveFileName(this, "Save qpp::cad workspace",
+                                                           "*.json");
+          if (file_name != "") {
+              cur_ws->save_workspace_to_json(file_name.toStdString());
+              cur_ws->m_fs_path = file_name.toStdString();
+            }
+        }
+    }
+  current_workspace_changed();
+}
+
+void main_window::close_current_workspace() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          QMessageBox::StandardButton reply;
+          reply = QMessageBox::question(this, tr("Workspace -> Close"),
+                                        tr("Do you really want to close the workspace?"),
+                                        QMessageBox::Yes | QMessageBox::No);
+          if (reply == QMessageBox::Yes) {
+
+            }
+          else if (reply == QMessageBox::No) {
+
+            }
+        }
+    }
+}
+
+void main_window::rename_current_workspace() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          bool ok;
+          QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
+                                               tr("User name:"), QLineEdit::Normal,
+                                               QString::fromStdString(cur_ws->m_ws_name), &ok);
+          if (ok && text != "") {
+              cur_ws->m_ws_name = text.toStdString();
+              workspaces_changed_slot();
+            }
+        }
+    }
+}
+
+void main_window::current_workspace_changed() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
+                                               cur_ws->m_ws_name, cur_ws->m_fs_path);
+          this->setWindowTitle(QString::fromStdString(title_text));
+        }
+      else {
+          this->setWindowTitle("qpp::cad");
+        }
+    }
 
 }
 

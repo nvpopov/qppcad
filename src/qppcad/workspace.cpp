@@ -30,6 +30,7 @@ ws_item_t *workspace_t::get_selected () {
 bool workspace_t::set_selected_item (const size_t sel_idx) {
 
   app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->current_workspace_selected_item_changed();
 
   unselect_all();
 
@@ -341,18 +342,19 @@ std::optional<size_t> workspace_manager_t::get_current_id () {
 bool workspace_manager_t::set_current (const size_t ws_index) {
 
   //c_app::log("set current called");
+  app_state_t* astate = app_state_t::get_inst();
 
-  if (ws_index < m_ws.size()){
+
+  if (ws_index < m_ws.size() && has_wss()) {
       m_current_workspace_id = ws_index;
       //update_window_title();
       cached_astate->camera = m_ws[ws_index]->m_camera.get();
       cached_astate->camera->update_camera();
-
-      //cached_astate->make_viewport_dirty();
+      astate->astate_evd->current_workspace_changed();
       return true;
     }
 
-  //cached_astate->make_viewport_dirty();
+  astate->astate_evd->current_workspace_changed();
   return false;
 
 }
@@ -362,11 +364,8 @@ void workspace_manager_t::init_default () {
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   if (!test_in_dev_env.good()) return;
 
-  auto _ws2 = std::make_shared<workspace_t>();
-  _ws2->m_ws_name = "d2";
-
-  auto _ws3 = std::make_shared<workspace_t>();
-  _ws3->m_ws_name = "d1";
+  auto _ws2 = std::make_shared<workspace_t>("d2");
+  auto _ws3 = std::make_shared<workspace_t>("d1");
 
   auto _wsl2 = std::make_shared<ws_atoms_list_t>();
   _ws3->add_item_to_workspace(_wsl2);
@@ -432,7 +431,7 @@ void workspace_manager_t::render_current_workspace () {
         }
     }
 
-  astate->glapi->glClearColor(0.8f, 0.8f, 0.8f, 1);
+  astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
   astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -463,11 +462,11 @@ void workspace_manager_t::mouse_click () {
 
 void workspace_manager_t::workspace_manager_changed() {
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("DEBUG: workspace_manager_t -> Workspaces changed");
   astate->astate_evd->workspaces_changed();
 }
 
 void workspace_manager_t::add_workspace (const std::shared_ptr<workspace_t> &ws_to_add) {
+  ws_to_add->m_owner = this;
   m_ws.push_back(ws_to_add);
   ws_to_add->workspace_changed();
   workspace_manager_changed();

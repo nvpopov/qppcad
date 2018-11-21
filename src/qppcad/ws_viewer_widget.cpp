@@ -108,7 +108,7 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
           need_to_cancel_cam_transform = true;
         }
 
-      if (need_to_cancel_cam_transform && astate->camera) {
+      if (astate->camera && need_to_cancel_cam_transform) {
           astate->camera->m_rotate_camera = false;
           astate->camera->m_move_camera = false;
         }
@@ -145,17 +145,17 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       //                               astate->mouse_y)<< std::endl;
 
       //float delta =
-      if (astate->mouse_lb_pressed && astate->camera && astate->is_mouse_moving) {
+      if (astate->camera && astate->mouse_lb_pressed && astate->is_mouse_moving) {
           astate->camera->m_rotate_camera = true;
           astate->make_viewport_dirty();
         }
 
-      if (astate->mouse_rb_pressed && astate->camera && astate->is_mouse_moving) {
+      if (astate->camera && astate->mouse_rb_pressed && astate->is_mouse_moving) {
           astate->camera->m_move_camera = true;
           astate->make_viewport_dirty();
         }
 
-      if (!astate->is_mouse_moving) {
+      if (astate->camera && !astate->is_mouse_moving) {
           astate->camera->m_rotate_camera = false;
           astate->camera->m_move_camera = false;
         }

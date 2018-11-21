@@ -20,7 +20,7 @@ namespace qpp {
 
     /// \brief The workspace_manager_t class
 
-    class workspace_manager_t {
+    class workspace_manager_t : public std::enable_shared_from_this<workspace_manager_t> {
       private:
         app_state_t *cached_astate;
         size_t m_current_workspace_id;
@@ -60,6 +60,7 @@ namespace qpp {
     ///
     class workspace_t : public std::enable_shared_from_this<workspace_t> {
       public:
+        workspace_manager_t                      *m_owner{nullptr};
         std::string                              m_fs_path{""};
         ws_edit_type                             m_edit_type{ws_edit_type::EDIT_WS_ITEM};
         std::vector<std::shared_ptr<ws_item_t> > m_ws_items;
@@ -70,7 +71,7 @@ namespace qpp {
         std::unique_ptr<gizmo_t>                 m_gizmo;
         vector3<float>                           m_background_color{0.85f, 0.85f, 0.85f};
 
-        workspace_t(std::string _ws_name = "default"){
+        workspace_t(std::string _ws_name = "default") {
           m_ws_name = _ws_name;
           m_camera = std::unique_ptr<camera_t>(new camera_t());
           m_camera->reset_camera();

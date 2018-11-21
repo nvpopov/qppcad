@@ -15,6 +15,9 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QCheckBox>
+#include <QMessageBox>
+#include <QInputDialog>
+#include <QLineEdit>
 #include <QFileDialog>
 #include <qppcad/ws_viewer_widget.hpp>
 #include <qppcad/object_inspector_widget.hpp>
@@ -100,12 +103,14 @@ namespace qpp {
         void workspaces_changed_slot();
         void ws_selector_selection_changed(int index);
         void tp_show_obj_insp_state_changed(int state);
-        void import_vasp_poscar();
         void import_file(QString dialog_name, QString file_ext,  qc_file_fmt file_fmt);
         void create_new_workspace();
         void open_workspace();
         void save_workspace();
         void save_workspace_as();
+        void close_current_workspace();
+        void rename_current_workspace();
+        void current_workspace_changed();
     };
   }
 
