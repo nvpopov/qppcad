@@ -42,21 +42,25 @@ object_inspector_widget_t::object_inspector_widget_t() {
   bool connect_st2 = QObject::connect(astate->astate_evd,
                                       SIGNAL(current_workspace_changed_signal()),
                                       this, SLOT(current_workspace_changed()));
+
   connect(ws_items_list, &QListWidget::itemSelectionChanged,
           this, &object_inspector_widget_t::ui_current_workspace_selected_item_changed);
 
   current_workspace_changed();
   ui_current_workspace_selected_item_changed();
+  ws_items_list->clearSelection();
 
 }
 
 void object_inspector_widget_t::current_workspace_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
+  astate->log("DEBUG: object_inspector_widget_t::current_workspace_changed");
+
+  ws_items_list->blockSignals(true);
 
   ws_items_list->clear();
   ws_items_list->clearSelection();
-  ws_items_list->blockSignals(true);
 
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
@@ -67,14 +71,14 @@ void object_inspector_widget_t::current_workspace_changed() {
         }
     }
 
-  ws_items_list->blockSignals(false);
   current_workspace_selected_item_changed();
+  ws_items_list->blockSignals(false);
 }
 
 void object_inspector_widget_t::current_workspace_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("DEBUG: current_workspace_selected_item_changed");
+  astate->log("DEBUG: object_inspector_widget_t::current_workspace_selected_item_changed");
   ws_items_list->blockSignals(true);
 
   if (astate->ws_manager->has_wss()) {
@@ -96,11 +100,18 @@ void object_inspector_widget_t::current_workspace_selected_item_changed() {
 void object_inspector_widget_t::ui_current_workspace_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("DEBUG: ui_current_workspace_selected_item_changed");
+  astate->log("DEBUG: object_inspector_widget_t::ui_current_workspace_selected_item_changed");
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
-          cur_ws->set_selected_item(ws_items_list->currentRow());
+          cur_ws->set_selected_item(ws_items_list->currentRow(), false);
+
+          if (ws_items_list->currentRow() != -1) {
+              ws_items_list->blockSignals(true);
+              ws_items_list->item(ws_items_list->currentRow())->setSelected(true);
+              ws_items_list->blockSignals(false);
+            }
+
           astate->make_viewport_dirty();
         }
 

@@ -76,8 +76,8 @@ namespace qpp {
         std::optional<size_t>  get_selected_item();
         ws_item_t *get_selected();
 
-        bool set_selected_item(const size_t sel_idx);
-        void unselect_all();
+        bool set_selected_item(const size_t sel_idx, bool emit_signal = true);
+        void unselect_all(bool emit_signal = true);
         void toggle_edit_mode();
         void workspace_changed();
         void reset_camera();

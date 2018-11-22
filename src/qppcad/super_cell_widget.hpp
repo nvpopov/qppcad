@@ -2,25 +2,21 @@
 #define QPP_CAD_SUPER_CELL_WIDGET
 
 #include <qppcad/qppcad.hpp>
-#include <imgui.h>
-#include <imgui_internal.h>
-#include <imgui_stl.h>
-
+#include <QWidget>
 
 namespace qpp {
 
   namespace cad {
 
-    class app_state_t;
+    class super_cell_widget_t : public QWidget {
 
-    class super_cell_widget_t {
+        Q_OBJECT
 
       private:
 
       public:
 
-        bool m_last_frame_inactive{true};
-        super_cell_widget_t(app_state_t *astate);
+        super_cell_widget_t();
     };
 
   }

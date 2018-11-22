@@ -92,9 +92,9 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
 
       if (event->button() == Qt::LeftButton) {
           astate->mouse_lb_pressed = false;
-          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera
-              && astate->mouse_distance_pp < 10)
-            astate->ws_manager->mouse_click();
+//          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera
+//              && astate->mouse_distance_pp < 10)
+          astate->ws_manager->mouse_click();
           need_to_cancel_cam_transform = true;
         }
 
@@ -131,8 +131,8 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       astate->mouse_x_dc = (astate->mouse_x / float(this->width()) - 0.5f) * 2.0f;
       astate->mouse_y_dc = (0.5f - astate->mouse_y / float(this->height())) * 2.0f;
 
-      astate->is_mouse_moving = (abs(astate->mouse_x - astate->mouse_x_old) > 1.0f ||
-                                 abs(astate->mouse_y - astate->mouse_y_old) > 1.0f);
+      astate->is_mouse_moving = (abs(astate->mouse_x - astate->mouse_x_old) > 0.0f ||
+                                 abs(astate->mouse_y - astate->mouse_y_old) > 0.0f);
 
       astate->mouse_distance_pp += abs(astate->mouse_x - astate->mouse_x_old) +
                                    abs(astate->mouse_y - astate->mouse_y_old);
@@ -145,12 +145,12 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       //                               astate->mouse_y)<< std::endl;
 
       //float delta =
-      if (astate->camera && astate->mouse_lb_pressed && astate->is_mouse_moving) {
+      if (astate->camera && astate->mouse_rb_pressed) {
           astate->camera->m_rotate_camera = true;
           astate->make_viewport_dirty();
         }
 
-      if (astate->camera && astate->mouse_rb_pressed && astate->is_mouse_moving) {
+      if (astate->camera && astate->mouse_md_pressed) {
           astate->camera->m_move_camera = true;
           astate->make_viewport_dirty();
         }

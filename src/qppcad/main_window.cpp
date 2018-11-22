@@ -26,6 +26,9 @@ main_window::main_window(QWidget *parent) {
   workspaces_changed_slot();
   current_workspace_changed();
   //astate->log(fmt::format("Connection status: {}", connect_st));
+
+  setStyleSheet("QPushButton:checked{"
+                "background-color: rgb(150, 150, 150);}");
 }
 
 main_window::~main_window() {
@@ -116,6 +119,16 @@ void main_window::init_menus() {
   act_redo->setText(tr("Redo"));
   act_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
   edit_menu->addAction(act_redo);
+
+  edit_menu->addSeparator();
+
+  switch_between_ws_edit_mode = new QAction;
+  switch_between_ws_edit_mode->setText(tr("Switch edit mode"));
+  switch_between_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
+  connect(switch_between_ws_edit_mode, SIGNAL(triggered()), this, SLOT(toggle_ws_edit_mode()));
+  edit_menu->addAction(switch_between_ws_edit_mode);
+
+  edit_menu->addSeparator();
 
   act_settings = new QAction();
   act_settings->setText(tr("Settings"));
@@ -209,11 +222,29 @@ void main_window::init_widgets() {
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
 
+  tp_edit_mode = new QButtonGroup;
+  tp_edit_mode->setExclusive(true);
+  QObject::connect(tp_edit_mode, SIGNAL(buttonClicked(int)),
+          this, SLOT(ws_edit_mode_selector_button_clicked(int)));
+  tp_edit_mode_item = new QPushButton;
+  tp_edit_mode_item->setText(tr("ITM"));
+  tp_edit_mode_item->setMinimumWidth(40);
+  tp_edit_mode_item->setMinimumHeight(30);
+  tp_edit_mode_item->setCheckable(true);
+  tp_edit_mode_content= new QPushButton;
+  tp_edit_mode_content->setText(tr("CNT"));
+  tp_edit_mode_content->setMinimumWidth(40);
+  tp_edit_mode_content->setMinimumHeight(30);
+  tp_edit_mode_content->setCheckable(true);
+  tp_edit_mode->addButton(tp_edit_mode_item, 0);
+  tp_edit_mode->addButton(tp_edit_mode_content, 1);
+
   ws_viewer_widget = new ws_viewer_widget_t(this);
   ws_viewer_widget->setStyleSheet("margin-top:-15px;");
 
   obj_insp_widget = new object_inspector_widget_t();
   obj_insp_widget->setMaximumWidth(400);
+  obj_insp_widget->setMinimumWidth(200);
   //obj_insp_widget->setStyleSheet("margin-top:-15px;");
 }
 
@@ -242,6 +273,8 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
   //  layout_tools_main_window = new QGridLayout;
@@ -447,7 +480,54 @@ void main_window::current_workspace_changed() {
           this->setWindowTitle("qpp::cad");
         }
     }
+  current_workspace_properties_changed();
 
+}
+
+void main_window::current_workspace_properties_changed() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          bool check_t = cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM;
+          tp_edit_mode_item->blockSignals(true);
+          tp_edit_mode_content->blockSignals(true);
+          tp_edit_mode_item->setChecked(check_t);
+          tp_edit_mode_content->setChecked(!check_t);
+          tp_edit_mode_item->blockSignals(false);
+          tp_edit_mode_content->blockSignals(false);
+        }
+    }
+
+  astate->make_viewport_dirty();
+}
+
+void main_window::ws_edit_mode_selector_button_clicked(int id) {
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          if (id == 0) cur_ws->m_edit_type = ws_edit_type::EDIT_WS_ITEM;
+          else cur_ws->m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
+        }
+    }
+
+  current_workspace_properties_changed();
+}
+
+void main_window::toggle_ws_edit_mode() {
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          cur_ws->toggle_edit_mode();
+          current_workspace_changed();
+        }
+    }
 }
 
 void main_window::slot_shortcut_terminate_app() {

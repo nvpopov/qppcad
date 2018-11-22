@@ -2,6 +2,6 @@
 
 using namespace qpp::cad;
 
-super_cell_widget_t::super_cell_widget_t (app_state_t *astate) {
+super_cell_widget_t::super_cell_widget_t () {
 
 }

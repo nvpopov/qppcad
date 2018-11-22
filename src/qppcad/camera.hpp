@@ -17,9 +17,9 @@ namespace qpp {
       public:
 
         static constexpr float norm_eps = 0.00001f;
-        static constexpr float nav_thresh = 0.01f;
-        static constexpr int   nav_div_step_translation = 12;
-        static constexpr int   nav_div_step_rotation = 28;
+        static constexpr float nav_thresh = 0.0001f;
+        static constexpr int   nav_div_step_translation = 13;
+        static constexpr int   nav_div_step_rotation = 12;
 
         vector3<float> m_view_point;
         vector3<float> m_view_dir;

@@ -14,6 +14,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QButtonGroup>
 #include <QCheckBox>
 #include <QMessageBox>
 #include <QInputDialog>
@@ -47,6 +48,9 @@ namespace qpp {
         QPushButton *tp_rm_ws;
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
+        QButtonGroup *tp_edit_mode;
+        QPushButton *tp_edit_mode_item;
+        QPushButton *tp_edit_mode_content;
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
         ws_viewer_widget_t *ws_viewer_widget;
@@ -79,6 +83,7 @@ namespace qpp {
         QMenu *edit_menu;
         QAction *act_undo;
         QAction *act_redo;
+        QAction *switch_between_ws_edit_mode;
         QAction *act_settings;
 
         QMenu *tools_menu;
@@ -118,6 +123,9 @@ namespace qpp {
         void close_current_workspace();
         void rename_current_workspace();
         void current_workspace_changed();
+        void current_workspace_properties_changed();
+        void ws_edit_mode_selector_button_clicked(int id);
+        void toggle_ws_edit_mode();
     };
   }
 

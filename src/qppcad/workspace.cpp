@@ -27,7 +27,7 @@ ws_item_t *workspace_t::get_selected () {
   else return nullptr;
 }
 
-bool workspace_t::set_selected_item (const size_t sel_idx) {
+bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -43,19 +43,19 @@ bool workspace_t::set_selected_item (const size_t sel_idx) {
           m_gizmo->attached_item = nullptr;
         }
       //astate->make_viewport_dirty();
-      astate->astate_evd->current_workspace_selected_item_changed();
+      if (emit_signal) astate->astate_evd->current_workspace_selected_item_changed();
       return true;
     }
 
   //astate->make_viewport_dirty();
-  astate->astate_evd->current_workspace_selected_item_changed();
+  if (emit_signal) astate->astate_evd->current_workspace_selected_item_changed();
   return false;
 }
 
-void workspace_t::unselect_all () {
+void workspace_t::unselect_all (bool emit_signal) {
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
   app_state_t* astate = app_state_t::get_inst();
-  astate->astate_evd->current_workspace_selected_item_changed();
+  if (emit_signal) astate->astate_evd->current_workspace_selected_item_changed();
 }
 
 void workspace_t::toggle_edit_mode () {
