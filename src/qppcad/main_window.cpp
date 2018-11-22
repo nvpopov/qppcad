@@ -5,6 +5,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 main_window::main_window(QWidget *parent) {
+
   main_widget = new QWidget;
   app_state_t* astate = app_state_t::get_inst();
   //tool_panel_widget->setSizePolicy(QSizePolicy::)
@@ -213,7 +214,7 @@ void main_window::init_widgets() {
 
   obj_insp_widget = new object_inspector_widget_t();
   obj_insp_widget->setMaximumWidth(400);
-  obj_insp_widget->setStyleSheet("margin-top:-15px;");
+  //obj_insp_widget->setStyleSheet("margin-top:-15px;");
 }
 
 void main_window::init_layouts() {
@@ -352,6 +353,7 @@ void main_window::open_workspace() {
 }
 
 void main_window::save_workspace() {
+
   app_state_t* astate = app_state_t::get_inst();
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
@@ -373,6 +375,7 @@ void main_window::save_workspace() {
 }
 
 void main_window::save_workspace_as() {
+
   app_state_t* astate = app_state_t::get_inst();
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
