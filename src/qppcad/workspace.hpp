@@ -73,7 +73,7 @@ namespace qpp {
           m_gizmo = std::unique_ptr<gizmo_t>(new gizmo_t());
         }
 
-        std::optional<size_t>  get_selected_item();
+        std::optional<size_t>  get_selected_idx();
         ws_item_t *get_selected();
 
         bool set_selected_item(const size_t sel_idx, bool emit_signal = true);

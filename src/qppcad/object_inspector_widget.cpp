@@ -1,5 +1,7 @@
 #include <qppcad/object_inspector_widget.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_comp_chem_data.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -29,9 +31,18 @@ object_inspector_widget_t::object_inspector_widget_t() {
   ws_items_list->setMaximumHeight(300);
   ws_items_list->setStyleSheet(" QListWidget::item { margin: 6px; }");
 
+//  property_label = new QLabel;
+//  property_label->setText(tr("Properties:"));
+
   obj_insp_layout->addWidget(ws_items_label, 0, Qt::AlignTop);
   obj_insp_layout->addWidget(ws_items_list, 0, Qt::AlignTop);
-  obj_insp_layout->addStretch(0);
+
+  obj_insp_layout_spacer = new QSpacerItem(0, 10,
+                                           QSizePolicy::Ignored, QSizePolicy::MinimumExpanding);
+
+  obj_insp_layout->addSpacerItem(obj_insp_layout_spacer);
+  //obj_insp_layout->addWidget(property_label, 0, Qt::AlignTop);
+
 
   obj_insp_layout->setContentsMargins(0,0,15,15);
 
@@ -46,10 +57,49 @@ object_inspector_widget_t::object_inspector_widget_t() {
   connect(ws_items_list, &QListWidget::itemSelectionChanged,
           this, &object_inspector_widget_t::ui_current_workspace_selected_item_changed);
 
+  //ws_item_view = new ws_item_obj_insp_widget_t;
+  ws_atoms_list_view = new ws_atoms_list_obj_insp_widget_t;
+  ws_comp_chem_data_view = new ws_comp_chem_data_obj_insp_widget_t;
+  ws_current_view = nullptr;
+
   current_workspace_changed();
   ui_current_workspace_selected_item_changed();
   ws_items_list->clearSelection();
 
+}
+
+void object_inspector_widget_t::update_ws_items_view_widget() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+
+          if (dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected())) {
+              if (ws_current_view)  obj_insp_layout->removeWidget(ws_current_view);
+              obj_insp_layout->addWidget(ws_atoms_list_view, 1, Qt::AlignTop);
+              ws_current_view = ws_atoms_list_view;
+              astate->log("DEBUG: ws_current_view = ws_atoms_list_view;");
+              return;
+            }
+
+          if (dynamic_cast<ws_comp_chem_data_t*>(cur_ws->get_selected())) {
+              if (ws_current_view)  obj_insp_layout->removeWidget(ws_current_view);
+              obj_insp_layout->addWidget(ws_comp_chem_data_view, 1, Qt::AlignTop);
+              ws_current_view = ws_comp_chem_data_view;
+              astate->log("DEBUG: ws_current_view = ws_comp_chem_data_view;");
+              return;
+            }
+        }
+    }
+
+  if (ws_current_view) {
+      //obj_insp_layout->removeItem(obj_insp_layout->i)
+      obj_insp_layout->removeWidget(ws_current_view);
+      ws_current_view->setParent(nullptr);
+      ws_current_view = nullptr;
+    }
 }
 
 void object_inspector_widget_t::current_workspace_changed() {
@@ -84,7 +134,7 @@ void object_inspector_widget_t::current_workspace_selected_item_changed() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
-          auto cur_id = cur_ws->get_selected_item();
+          auto cur_id = cur_ws->get_selected_idx();
           if (cur_id) {
               ws_items_list->item(*cur_id)->setSelected(true);
             }
@@ -93,7 +143,7 @@ void object_inspector_widget_t::current_workspace_selected_item_changed() {
             }
         }
     }
-
+  update_ws_items_view_widget();
   ws_items_list->blockSignals(false);
 }
 
@@ -116,5 +166,6 @@ void object_inspector_widget_t::ui_current_workspace_selected_item_changed() {
         }
 
     }
+  update_ws_items_view_widget();
 
 }

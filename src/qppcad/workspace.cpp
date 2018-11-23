@@ -15,14 +15,14 @@ std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj
   return nullptr;
 }
 
-std::optional<size_t> workspace_t::get_selected_item () {
+std::optional<size_t> workspace_t::get_selected_idx () {
   for (size_t i = 0; i < m_ws_items.size(); i++)
     if (m_ws_items[i]->m_selected) return std::optional<size_t>(i);
   return std::nullopt;
 }
 
 ws_item_t *workspace_t::get_selected () {
-  std::optional<size_t> sel_idx = get_selected_item();
+  std::optional<size_t> sel_idx = get_selected_idx();
   if (sel_idx) return m_ws_items[*sel_idx].get();
   else return nullptr;
 }

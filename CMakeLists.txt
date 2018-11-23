@@ -97,6 +97,9 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list_anim_subsys.cpp
     src/qppcad/ws_atoms_list_measurement_subsys.cpp
     src/qppcad/ws_atoms_list_lattice_planes_subsys.cpp
+    src/qppcad/ws_item_obj_insp_widget.cpp
+    src/qppcad/ws_atoms_list_obj_insp_widget.cpp
+    src/qppcad/ws_comp_chem_data_obj_insp_widget.cpp
     ${QRCS})
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES})
