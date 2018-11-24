@@ -28,10 +28,12 @@ namespace qpp {
         QListWidget *ws_items_list;
         QVBoxLayout *obj_insp_layout;
         QSpacerItem *obj_insp_layout_spacer;
+
         //QLabel *property_label;
 
         //property view by ws_item type
-        ws_item_obj_insp_widget_t           *ws_current_view;
+        QWidget *none_item_placeholder;
+        QWidget                             *ws_current_view;
         ws_atoms_list_obj_insp_widget_t     *ws_atoms_list_view;
         ws_comp_chem_data_obj_insp_widget_t *ws_comp_chem_data_view;
 
