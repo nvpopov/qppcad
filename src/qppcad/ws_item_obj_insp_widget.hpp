@@ -6,21 +6,27 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QScrollArea>
+#include <QFormLayout>
+#include <QPushButton>
 
 namespace qpp {
 
   namespace cad {
+
+    struct ws_item_tab_widget_t {
+        QScrollArea *tab_scroll;
+        QWidget *tab_inner_widget;
+        QVBoxLayout *tab_inner_widget_layout;
+    };
 
     class ws_item_obj_insp_widget_t : public QTabWidget {
 
         Q_OBJECT
 
       public:
-        QVBoxLayout *main_layout;
-        QWidget *tab_general;
-        QScrollArea *tab_general_scroll_area;
-        QVBoxLayout *tab_general_layout;
 
+        ws_item_tab_widget_t *tab_general;
+        ws_item_tab_widget_t* define_tab(QString tab_name);
         ws_item_obj_insp_widget_t();
 
     };

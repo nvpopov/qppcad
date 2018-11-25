@@ -5,20 +5,38 @@ using namespace qpp::cad;
 
 
 
+ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name) {
+
+  ws_item_tab_widget_t *tmp = new ws_item_tab_widget_t;
+  tmp->tab_scroll = new QScrollArea;
+  tmp->tab_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  tmp->tab_scroll->setWidgetResizable(true);
+
+  tmp->tab_inner_widget = new QWidget(tmp->tab_scroll);
+  tmp->tab_scroll->setWidget(tmp->tab_inner_widget);
+
+  tmp->tab_inner_widget_layout = new QVBoxLayout;
+  tmp->tab_inner_widget_layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  tmp->tab_inner_widget->setLayout(tmp->tab_inner_widget_layout);
+
+  addTab(tmp->tab_scroll, tab_name);
+
+  return tmp;
+}
+
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
-  main_layout = new QVBoxLayout;
-  //setMinimumHeight(500);
 
-  setLayout(main_layout);
-  tab_general = new QWidget;
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  addTab(tab_general, "General");
-  tab_general_layout = new QVBoxLayout;
-  tab_general_scroll_area = new QScrollArea;
-//  /
-  tab_general_layout->addWidget(tab_general_scroll_area);
-  tab_general->setLayout(tab_general_layout);
-  //setUsesScrollButtons(false);
-  //setElideMode(Qt::ElideLeft);
+  tab_general = define_tab(tr("General"));
+
+//  tab_general_child = new QWidget;
+
+//  tab_general_child->setLayout(new QVBoxLayout);
+//  tab_general_layout->addWidget(tab_general_child);
+
+//  for(int i = 0; i < 27; i++)
+//    tab_general_child->layout()->addWidget(new QPushButton("tre"));
+//  //setUsesScrollButtons(false);
+//  //setElideMode(Qt::ElideLeft);
 }

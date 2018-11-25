@@ -12,9 +12,9 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        QWidget *tab_display;
-        QWidget *tab_animation;
-        QWidget *tab_measurement;
+        ws_item_tab_widget_t *tab_display;
+        ws_item_tab_widget_t *tab_animation;
+        ws_item_tab_widget_t *tab_measurement;
         ws_atoms_list_obj_insp_widget_t();
     };
 

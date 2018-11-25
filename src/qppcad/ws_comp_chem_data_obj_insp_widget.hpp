@@ -12,6 +12,8 @@ namespace qpp {
         Q_OBJECT
 
       public:
+        ws_item_tab_widget_t *tab_geo_opt;
+        ws_item_tab_widget_t *tab_vibs;
         ws_comp_chem_data_obj_insp_widget_t();
     };
 
