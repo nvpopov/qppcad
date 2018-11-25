@@ -8,6 +8,7 @@
 #include <QScrollArea>
 #include <QFormLayout>
 #include <QPushButton>
+#include <qppcad/ws_item.hpp>
 
 namespace qpp {
 
@@ -24,9 +25,12 @@ namespace qpp {
         Q_OBJECT
 
       public:
+        ws_item_t *m_binded_item;
 
         ws_item_tab_widget_t *tab_general;
         ws_item_tab_widget_t* define_tab(QString tab_name);
+        virtual void bind_to_item(ws_item_t *_binding_item);
+        void unbind_item();
         ws_item_obj_insp_widget_t();
 
     };

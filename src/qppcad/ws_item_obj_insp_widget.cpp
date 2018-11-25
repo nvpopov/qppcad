@@ -24,6 +24,14 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name) {
   return tmp;
 }
 
+void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
+  m_binded_item = _binding_item;
+}
+
+void ws_item_obj_insp_widget_t::unbind_item() {
+  m_binded_item = nullptr;
+}
+
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
 
