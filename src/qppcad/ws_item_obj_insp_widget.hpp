@@ -8,7 +8,11 @@
 #include <QScrollArea>
 #include <QFormLayout>
 #include <QPushButton>
+#include <QLabel>
 #include <qppcad/ws_item.hpp>
+#include <QGroupBox>
+#include <QCheckBox>
+#include <qppcad/qbinded_inputs.hpp>
 
 namespace qpp {
 
@@ -28,9 +32,18 @@ namespace qpp {
         ws_item_t *m_binded_item;
 
         ws_item_tab_widget_t *tab_general;
+        QGroupBox *tg_info_widget;
+        QFormLayout *tg_form_layout;
+        QLabel *ws_item_name;
+        QLabel *ws_item_type;
+
+        QLabel *ws_item_is_visible_label;
+        qbinded_checkbox *ws_item_is_visible;
+
         ws_item_tab_widget_t* define_tab(QString tab_name);
         virtual void bind_to_item(ws_item_t *_binding_item);
         void unbind_item();
+        virtual void update_from_ws_item();
         ws_item_obj_insp_widget_t();
 
     };

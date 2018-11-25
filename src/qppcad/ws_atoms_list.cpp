@@ -562,7 +562,7 @@ void ws_atoms_list_t::move_selected_atoms_to_home (bool ignore_selection) {
 }
 
 std::string ws_atoms_list_t::compose_item_name () {
-  return fmt::format("Type = [atom list], DIM = [{}d]", m_geom->DIM);
+  return fmt::format("atom list, DIM = [{}d]", m_geom->DIM);
 }
 
 void ws_atoms_list_t::update (float delta_time) {

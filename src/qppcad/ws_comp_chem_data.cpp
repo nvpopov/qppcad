@@ -279,7 +279,7 @@ bool ws_comp_chem_data_t::mouse_click(ray_t<float> *click_ray) {
 
 
 std::string ws_comp_chem_data_t::compose_item_name() {
-  return "Type = [comp. chem. data]";
+  return "comp. chem. data";
 }
 
 void ws_comp_chem_data_t::update(float delta_time) {

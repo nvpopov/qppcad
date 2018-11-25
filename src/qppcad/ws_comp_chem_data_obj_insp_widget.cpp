@@ -9,4 +9,8 @@ ws_comp_chem_data_obj_insp_widget_t::ws_comp_chem_data_obj_insp_widget_t()
 
   tab_geo_opt = define_tab(tr("Geometry opt."));
   tab_vibs = define_tab(tr("Vibrational analysis"));
+
+  ws_item_is_visible->hide();
+  ws_item_is_visible_label->hide();
+  //tg_form_layout->
 }
