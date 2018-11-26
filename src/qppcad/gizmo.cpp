@@ -115,7 +115,7 @@ void gizmo_t::translate_attached(float delta_time){
       return;
     }
 
-  if (!astate->is_mouse_moving) {
+  if (!astate->is_mouse_moving || astate->mouse_distance_pp < 15) {
       accum_translate = vector3<float>::Zero();
       return;
     }
@@ -131,15 +131,19 @@ void gizmo_t::translate_attached(float delta_time){
           astate->camera->unproject(astate->mouse_x_dc, astate->mouse_y_dc);
 
       vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
-      //astate->log(fmt::format("{} {} {}", unproj_mouse_hit_old, unproj_mouse_hit, d_unproj));
+
       //      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
       //                          astate->mouse_y_old - astate->mouse_y;
 
-      if (fabs(d_unproj[touched_axis]) > 0.001f && astate->is_mouse_moving) {
+      if (fabs(d_unproj[touched_axis]) > 0.00025f && astate->is_mouse_moving &&
+          astate->mouse_distance_pp > 0.2) {
           vector3<float> new_transform =
-              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 1000.0f;
+              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 3500.0f;
           accum_translate += new_transform;
-          astate->log(fmt::format("{} {}", new_transform, accum_translate));
+//          astate->log(fmt::format("{} {} {} {}",
+//                                  astate->is_mouse_moving,
+//                                  astate->mouse_distance_pp,
+//                                  new_transform, accum_translate));
           if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
             attached_item->m_pos += new_transform;
           else attached_item->apply_intermediate_translate_content(new_transform);

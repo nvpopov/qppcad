@@ -36,11 +36,13 @@ namespace qpp {
         void init_menus();
         void init_widgets();
         void init_layouts();
+        void change_camera_buttons_visible(bool cart_c, bool cell_c);
 
         //Widgets
         QWidget *main_widget;
         QWidget *tool_panel_widget;
         QHBoxLayout *tool_panel_layout;
+
         QLabel *tp_ws_selector_label;
         QComboBox *tp_ws_selector;
         QPushButton *tp_add_ws;
@@ -48,9 +50,20 @@ namespace qpp {
         QPushButton *tp_rm_ws;
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
+
+        QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;
         QPushButton *tp_edit_mode_item;
         QPushButton *tp_edit_mode_content;
+        QFrame *tp_edit_mode_end;
+
+        QPushButton *tp_camera_x;
+        QPushButton *tp_camera_y;
+        QPushButton *tp_camera_z;
+        QPushButton *tp_camera_a;
+        QPushButton *tp_camera_b;
+        QPushButton *tp_camera_c;
+
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
         ws_viewer_widget_t *ws_viewer_widget;
@@ -123,9 +136,11 @@ namespace qpp {
         void close_current_workspace();
         void rename_current_workspace();
         void current_workspace_changed();
+        void current_workspace_selected_item_changed();
         void current_workspace_properties_changed();
         void ws_edit_mode_selector_button_clicked(int id);
         void toggle_ws_edit_mode();
+
     };
   }
 

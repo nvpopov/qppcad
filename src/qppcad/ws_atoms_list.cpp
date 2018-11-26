@@ -83,7 +83,7 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
 
   m_anim = std::make_unique<ws_atoms_list_anim_subsys_t>(*this);
   m_measure = std::make_unique<ws_atoms_list_measurement_subsys_t>(*this);
-  //m_labels = std::make_unique<ws_atoms_list_labels_subsys_t>(*this);
+  m_labels = std::make_unique<ws_atoms_list_labels_subsys_t>(*this);
   m_lat_planes = std::make_unique<ws_atoms_list_lat_planes_subsys_t>(*this);
 
   //parent->add_item_to_workspace(this->shared_from_this());
@@ -198,7 +198,7 @@ void ws_atoms_list_t::render () {
 
   //render measurement
   m_measure->render();
-
+  m_labels->render_overlay();
   m_lat_planes->render();
 
 }

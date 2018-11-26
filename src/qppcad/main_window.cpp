@@ -23,6 +23,11 @@ main_window::main_window(QWidget *parent) {
   bool connect_st2 = QObject::connect(astate->astate_evd,
                                       SIGNAL(current_workspace_changed_signal()),
                                       this, SLOT(current_workspace_changed()));
+
+  bool connect_st3 = QObject::connect(astate->astate_evd,
+                                      SIGNAL(current_workspace_selected_item_changed_signal()),
+                                      this, SLOT(current_workspace_selected_item_changed())
+                                      );
   workspaces_changed_slot();
   current_workspace_changed();
   //astate->log(fmt::format("Connection status: {}", connect_st));
@@ -165,9 +170,8 @@ void main_window::init_widgets() {
 
   tool_panel_widget = new QWidget;
   //tool_panel_widget->setStyleSheet("background-color:black;");
-  tool_panel_widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-  tool_panel_widget->setMinimumHeight(5);
-  //tool_panel_widget->setMaximumHeight(35);
+  tool_panel_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  tool_panel_widget->setMaximumHeight(45);
   //tool_panel_widget->setStyleSheet("border-bottom: 1px solid gray;margin-bottom:0px;");
   tool_panel_widget->setStyleSheet("padding-bottom:-5px; padding-top:-5px;"
                                    "QLabel {color:white;}");
@@ -226,18 +230,60 @@ void main_window::init_widgets() {
   tp_edit_mode->setExclusive(true);
   QObject::connect(tp_edit_mode, SIGNAL(buttonClicked(int)),
           this, SLOT(ws_edit_mode_selector_button_clicked(int)));
+
   tp_edit_mode_item = new QPushButton;
   tp_edit_mode_item->setText(tr("ITM"));
   tp_edit_mode_item->setMinimumWidth(40);
   tp_edit_mode_item->setMinimumHeight(30);
   tp_edit_mode_item->setCheckable(true);
+
   tp_edit_mode_content= new QPushButton;
   tp_edit_mode_content->setText(tr("CNT"));
   tp_edit_mode_content->setMinimumWidth(40);
   tp_edit_mode_content->setMinimumHeight(30);
   tp_edit_mode_content->setCheckable(true);
+
   tp_edit_mode->addButton(tp_edit_mode_item, 0);
   tp_edit_mode->addButton(tp_edit_mode_content, 1);
+
+  tp_edit_mode_start = new QFrame;
+  tp_edit_mode_start->setFrameShape(QFrame::VLine);
+  tp_edit_mode_start->setFrameShadow(QFrame::Sunken);
+  tp_edit_mode_start->setFixedWidth(2);
+  tp_edit_mode_start->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+
+  tp_edit_mode_end = new QFrame;
+  tp_edit_mode_end->setFrameShape(QFrame::VLine);
+  tp_edit_mode_end->setFrameShadow(QFrame::Sunken);
+  tp_edit_mode_end->setFixedWidth(2);
+  tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+
+
+  tp_camera_x = new QPushButton(tr("C:X"));
+  tp_camera_x->setMinimumWidth(34);
+  tp_camera_x->setMinimumHeight(28);
+
+  tp_camera_y = new QPushButton(tr("C:Y"));
+  tp_camera_y->setMinimumWidth(34);
+  tp_camera_y->setMinimumHeight(28);
+
+  tp_camera_z = new QPushButton(tr("C:Z"));
+  tp_camera_z->setMinimumWidth(34);
+  tp_camera_z->setMinimumHeight(28);
+
+  tp_camera_a = new QPushButton(tr("C:a"));
+  tp_camera_a->setMinimumWidth(34);
+  tp_camera_a->setMinimumHeight(28);
+
+  tp_camera_b = new QPushButton(tr("C:b"));
+  tp_camera_b->setMinimumWidth(34);
+  tp_camera_b->setMinimumHeight(28);
+
+  tp_camera_c = new QPushButton(tr("C:c"));
+  tp_camera_c->setMinimumWidth(34);
+  tp_camera_c->setMinimumHeight(28);
+
+  change_camera_buttons_visible(false, false);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
   ws_viewer_widget->setStyleSheet("margin-top:-15px;");
@@ -273,8 +319,18 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
+
+  tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
+
+  tool_panel_layout->addWidget(tp_camera_x, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_camera_y, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_camera_z, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_camera_a, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_camera_b, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_camera_c, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
   //  layout_tools_main_window = new QGridLayout;
@@ -286,6 +342,15 @@ void main_window::init_layouts() {
   //  layout_tools_main_window->addLayout()
   //  layout_tools_main_window->addWidget(ws_viewer_placeholder, 1, 0, 1, 1);
   //  layout_tools_main_window->addWidget(obj_inst_placeholder, 1, 1, 1, 1);
+}
+
+void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
+  tp_camera_x->setVisible(cart_c);
+  tp_camera_y->setVisible(cart_c);
+  tp_camera_z->setVisible(cart_c);
+  tp_camera_a->setVisible(cell_c);
+  tp_camera_b->setVisible(cell_c);
+  tp_camera_c->setVisible(cell_c);
 }
 
 void main_window::workspaces_changed_slot() {
@@ -468,6 +533,8 @@ void main_window::current_workspace_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  change_camera_buttons_visible(false, false);
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
@@ -482,6 +549,24 @@ void main_window::current_workspace_changed() {
     }
   current_workspace_properties_changed();
 
+}
+
+void main_window::current_workspace_selected_item_changed() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          if (cur_it_as_al) {
+              if (cur_it_as_al->m_geom->DIM == 3) change_camera_buttons_visible(true, true);
+              else change_camera_buttons_visible(true, false);
+            }
+          else change_camera_buttons_visible(false, false);
+        }
+    }
 }
 
 void main_window::current_workspace_properties_changed() {

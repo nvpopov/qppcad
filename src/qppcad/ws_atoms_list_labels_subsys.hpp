@@ -2,7 +2,6 @@
 #define QPP_CAD_WS_ATOMS_LIST_LABELS_S
 
 #include <geom/geom.hpp>
-#include <qppcad/app.hpp>
 #include <vector>
 #include <algorithm>
 
@@ -10,7 +9,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum ws_atoms_list_labels_style {
+    enum ws_atoms_list_labels_style : int {
       show_none,
       show_id,
       show_type,
@@ -31,7 +30,6 @@ namespace qpp {
 
         ws_atoms_list_labels_subsys_t (ws_atoms_list_t &_p_owner);
 
-        void render_ui ();
 
         void render_overlay ();
 

@@ -14,7 +14,7 @@
 #include <qppcad/file_formats.hpp>
 #include <qppcad/ws_atoms_list_anim_subsys.hpp>
 #include <qppcad/ws_atoms_list_measurement_subsys.hpp>
-//#include <qppcad/ws_atoms_list_labels_subsys.hpp>
+#include <qppcad/ws_atoms_list_labels_subsys.hpp>
 #include <qppcad/ws_atoms_list_lattice_planes_subsys.hpp>
 #include <qppcad/ws_atoms_list_render_buffered_billboards.hpp>
 
@@ -47,7 +47,7 @@ namespace qpp {
         std::unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom{};
         std::unique_ptr<ws_atoms_list_anim_subsys_t>                                 m_anim{};
         std::unique_ptr<ws_atoms_list_measurement_subsys_t>                          m_measure{};
-        //std::unique_ptr<ws_atoms_list_labels_subsys_t>                               m_labels{};
+        std::unique_ptr<ws_atoms_list_labels_subsys_t>                               m_labels{};
         std::unique_ptr<ws_atoms_list_lat_planes_subsys_t>                           m_lat_planes{};
         std::unique_ptr<bonding_table<float> >                                       m_bt{};
         std::unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr{};

@@ -3,6 +3,9 @@
 
 #include <qppcad/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_atoms_list.hpp>
+#include <QTableWidget>
+#include <QTableView>
+#include <QHeaderView>
 
 namespace qpp {
 
@@ -21,6 +24,10 @@ namespace qpp {
         QLabel *tg_geom_summary_total_atoms;
         QLabel *tg_geom_summary_total_types;
 
+        QGroupBox *tg_type_summary_widget;
+        QVBoxLayout *tg_type_summary_layout;
+        QTableWidget *tg_type_summary_table;
+
         ws_item_tab_widget_t *tab_display;
         QGroupBox *gb_display_settings;
         QFormLayout *gb_display_settings_layout;
@@ -31,6 +38,7 @@ namespace qpp {
         qbinded_float_spinbox *display_settings_atom_scale;
         qbinded_float_spinbox *display_settings_bond_scale;
         qbinded_combobox *display_settings_render_style;
+        qbinded_combobox *display_settings_labels_style;
 
         ws_item_tab_widget_t *tab_animation;
         ws_item_tab_widget_t *tab_measurement;
