@@ -139,6 +139,7 @@ namespace qpp {
         void current_workspace_selected_item_changed();
         void current_workspace_properties_changed();
         void ws_edit_mode_selector_button_clicked(int id);
+        void apply_camera_view_change(cam_target_view target_view);
         void toggle_ws_edit_mode();
 
     };

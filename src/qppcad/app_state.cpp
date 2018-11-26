@@ -58,6 +58,19 @@ namespace qpp {
       m_viewport_dirty = true;
     }
 
+
+    bool app_state_t::is_viewport_dirty() {
+      return m_viewport_dirty;
+    }
+
+    void app_state_t::cleanup_viewport() {
+
+      if (m_viewport_dirty) {
+          m_viewport_dirty = false;
+        }
+
+    }
+
     void app_state_t::log(std::string logstr, bool flush) {
       std::setlocale(LC_ALL, "C");
       std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

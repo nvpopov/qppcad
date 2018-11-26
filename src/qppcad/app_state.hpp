@@ -33,6 +33,9 @@ namespace qpp {
         void init_meshes();
         void init_managers();
         void make_viewport_dirty();
+        bool is_viewport_dirty();
+        void cleanup_viewport();
+
         void log(std::string logstr, bool flush = true);
 
         app_state_event_disp_t *astate_evd;

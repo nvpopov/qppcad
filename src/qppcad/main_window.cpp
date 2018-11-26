@@ -229,7 +229,7 @@ void main_window::init_widgets() {
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
   QObject::connect(tp_edit_mode, SIGNAL(buttonClicked(int)),
-          this, SLOT(ws_edit_mode_selector_button_clicked(int)));
+                   this, SLOT(ws_edit_mode_selector_button_clicked(int)));
 
   tp_edit_mode_item = new QPushButton;
   tp_edit_mode_item->setText(tr("ITM"));
@@ -262,26 +262,38 @@ void main_window::init_widgets() {
   tp_camera_x = new QPushButton(tr("C:X"));
   tp_camera_x->setMinimumWidth(34);
   tp_camera_x->setMinimumHeight(28);
+  connect(tp_camera_x, &QPushButton::pressed,
+          this, [this](){this->apply_camera_view_change(cam_target_view::tv_x_axis);});
 
   tp_camera_y = new QPushButton(tr("C:Y"));
   tp_camera_y->setMinimumWidth(34);
   tp_camera_y->setMinimumHeight(28);
+  connect(tp_camera_y, &QPushButton::pressed,
+          this, [this](){this->apply_camera_view_change(cam_target_view::tv_y_axis);});
 
   tp_camera_z = new QPushButton(tr("C:Z"));
   tp_camera_z->setMinimumWidth(34);
   tp_camera_z->setMinimumHeight(28);
+  connect(tp_camera_z, &QPushButton::pressed,
+          this, [this](){this->apply_camera_view_change(cam_target_view::tv_z_axis);});
 
   tp_camera_a = new QPushButton(tr("C:a"));
   tp_camera_a->setMinimumWidth(34);
   tp_camera_a->setMinimumHeight(28);
+  connect(tp_camera_a, &QPushButton::pressed,
+          this, [this](){this->apply_camera_view_change(cam_target_view::tv_a_axis);});
 
   tp_camera_b = new QPushButton(tr("C:b"));
   tp_camera_b->setMinimumWidth(34);
   tp_camera_b->setMinimumHeight(28);
+  connect(tp_camera_b, &QPushButton::pressed,
+          this, [this](){this->apply_camera_view_change(cam_target_view::tv_b_axis);});
 
   tp_camera_c = new QPushButton(tr("C:c"));
   tp_camera_c->setMinimumWidth(34);
   tp_camera_c->setMinimumHeight(28);
+  connect(tp_camera_c, &QPushButton::pressed,
+          this, [this](){this->apply_camera_view_change(cam_target_view::tv_c_axis);});
 
   change_camera_buttons_visible(false, false);
 
@@ -548,7 +560,7 @@ void main_window::current_workspace_changed() {
         }
     }
   current_workspace_properties_changed();
-
+  current_workspace_selected_item_changed();
 }
 
 void main_window::current_workspace_selected_item_changed() {
@@ -601,6 +613,103 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
     }
 
   current_workspace_properties_changed();
+}
+
+void main_window::apply_camera_view_change(cam_target_view target_view) {
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+
+          if (al) {
+
+              vector3<float> look_from;
+              vector3<float> look_to;
+              vector3<float> look_up{0.0, 1.0, 0.0};
+              bool need_to_update_camera{false};
+
+              switch (target_view) {
+
+                case cam_target_view::tv_x_axis : {
+                    float axis_size =
+                        std::max(2.0f, al->m_ext_obs->aabb.max[0] - al->m_ext_obs->aabb.min[0]);
+                    look_from = al->m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+                    look_to = al->m_pos;
+                    look_up = {0.0 , 0.0 , 1.0};
+                    need_to_update_camera = true;
+                    break;
+                  }
+
+                case cam_target_view::tv_y_axis : {
+                    float axis_size =
+                        std::max(2.0f, al->m_ext_obs->aabb.max[1] - al->m_ext_obs->aabb.min[1]);
+                    look_from = al->m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
+                    look_to = al->m_pos;
+                    look_up = {0.0, 0.0, 1.0};
+                    need_to_update_camera = true;
+                    break;
+                  }
+
+                case cam_target_view::tv_z_axis : {
+                    float axis_size =
+                        std::max(2.0f,al->m_ext_obs->aabb.max[2] - al->m_ext_obs->aabb.min[2]);
+                    look_from = al->m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
+                    look_to = al->m_pos;
+                    look_up = {0.0, 1.0, 0.0};
+                    need_to_update_camera = true;
+                    break;
+                  }
+
+                case cam_target_view::tv_a_axis : {
+                    vector3<float> center =
+                        0.5*(al->m_geom->cell.v[0] +al-> m_geom->cell.v[1] + al->m_geom->cell.v[2]);
+                    look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[0];
+                    look_to = al->m_pos  + center;
+                    look_up = {0.0 , 0.0 , 1.0};
+                    need_to_update_camera = true;
+                    break;
+                  }
+
+                case cam_target_view::tv_b_axis : {
+                    vector3<float> center =
+                        0.5*(al->m_geom->cell.v[0] + al->m_geom->cell.v[1] + al->m_geom->cell.v[2]);
+                    look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[1];
+                    look_to = al->m_pos  + center;
+                    look_up = {0.0, 0.0, 1.0};
+                    need_to_update_camera = true;
+                    break;
+                  }
+
+                case cam_target_view::tv_c_axis : {
+                    vector3<float> center =
+                        0.5*(al->m_geom->cell.v[0] + al->m_geom->cell.v[1] + al->m_geom->cell.v[2]);
+                    look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[2];
+                    look_to = al->m_pos  + center;
+                    look_up = {0.0, 1.0, 0.0};
+                    need_to_update_camera = true;
+                    break;
+                  }
+
+                }
+
+              if (need_to_update_camera) {
+                   astate->camera->m_view_point = look_from;
+                   astate->camera->m_look_at = look_to;
+                   astate->camera->m_look_up = look_up;
+                   astate->camera->orthogonalize_gs();
+                   astate->camera->update_camera();
+                   //astate->make_viewport_dirty();
+                 }
+
+            } // end of if (cur_it_as_al)
+
+        }
+    }
+
+  astate->make_viewport_dirty();
 }
 
 void main_window::toggle_ws_edit_mode() {

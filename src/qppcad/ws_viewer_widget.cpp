@@ -25,14 +25,16 @@ void ws_viewer_widget_t::update_cycle() {
       cur_ws->update(0.016);
     }
 
-  if (astate->m_viewport_dirty) {
-      astate->m_viewport_dirty = false;
+  if (astate->is_viewport_dirty()) {
+
+      astate->cleanup_viewport();
 
       if (astate->camera && (astate->camera->m_rotate_camera || astate->camera->m_move_camera)) {
           astate->camera->update_camera();
           astate->camera->m_rotate_camera = false;
           astate->camera->m_move_camera = false;
         }
+
       repaint();
       //if (astate->camera)
     }

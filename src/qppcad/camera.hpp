@@ -7,6 +7,15 @@ namespace qpp {
 
   namespace cad {
 
+    enum cam_target_view : int {
+      tv_x_axis,
+      tv_y_axis,
+      tv_z_axis,
+      tv_a_axis,
+      tv_b_axis,
+      tv_c_axis
+    };
+
     enum cam_proj_type {
       CAMERA_PROJ_ORTHO,
       CAMERA_PROJ_PERSP

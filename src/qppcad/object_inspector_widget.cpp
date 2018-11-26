@@ -170,7 +170,7 @@ void object_inspector_widget_t::ui_current_workspace_selected_item_changed() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
-          cur_ws->set_selected_item(ws_items_list->currentRow(), false);
+          cur_ws->set_selected_item(ws_items_list->currentRow(), true);
 
           if (ws_items_list->currentRow() != -1) {
               ws_items_list->blockSignals(true);
