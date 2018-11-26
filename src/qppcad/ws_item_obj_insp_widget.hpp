@@ -42,7 +42,7 @@ namespace qpp {
 
         ws_item_tab_widget_t* define_tab(QString tab_name);
         virtual void bind_to_item(ws_item_t *_binding_item);
-        void unbind_item();
+        virtual void unbind_item();
         virtual void update_from_ws_item();
         ws_item_obj_insp_widget_t();
 

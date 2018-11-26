@@ -17,6 +17,11 @@ void ws_viewer_widget_t::update_cycle() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      cur_ws->update(0.016);
+    }
+
   if (astate->m_viewport_dirty) {
       astate->m_viewport_dirty = false;
 
@@ -73,6 +78,7 @@ void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
 
       if (event->button() == Qt::LeftButton)  {
           astate->mouse_lb_pressed = true;
+          astate->ws_manager->mouse_click();
           astate->mouse_distance_pp = 0.0f;
         }
 
@@ -94,7 +100,7 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
           astate->mouse_lb_pressed = false;
 //          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera
 //              && astate->mouse_distance_pp < 10)
-          astate->ws_manager->mouse_click();
+
           need_to_cancel_cam_transform = true;
         }
 
@@ -130,6 +136,8 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       //      mouse_y_ws_frame = (0.5 - mouse_y_ws_frame / viewport_size_c(1))*2.0;
       astate->mouse_x_dc = (astate->mouse_x / float(this->width()) - 0.5f) * 2.0f;
       astate->mouse_y_dc = (0.5f - astate->mouse_y / float(this->height())) * 2.0f;
+      astate->mouse_x_dc_old = (astate->mouse_x_old / float(this->width()) - 0.5f) * 2.0f;
+      astate->mouse_y_dc_old = (0.5f - astate->mouse_y_old / float(this->height())) * 2.0f;
 
       astate->is_mouse_moving = (abs(astate->mouse_x - astate->mouse_x_old) > 0.0f ||
                                  abs(astate->mouse_y - astate->mouse_y_old) > 0.0f);

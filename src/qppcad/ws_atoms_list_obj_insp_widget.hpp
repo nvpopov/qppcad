@@ -28,13 +28,16 @@ namespace qpp {
         qbinded_checkbox *display_settings_draw_bonds;
         qbinded_checkbox *display_settings_draw_img_atoms;
         qbinded_checkbox *display_settings_draw_img_bonds;
+        qbinded_float_spinbox *display_settings_atom_scale;
+        qbinded_float_spinbox *display_settings_bond_scale;
+        qbinded_combobox *display_settings_render_style;
 
         ws_item_tab_widget_t *tab_animation;
         ws_item_tab_widget_t *tab_measurement;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
-
+        void unbind_item() override;
         ws_atoms_list_obj_insp_widget_t();
     };
 

@@ -115,30 +115,40 @@ void gizmo_t::translate_attached(float delta_time){
       return;
     }
 
-//  if (attached_item){
-//      ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
+  if (!astate->is_mouse_moving) {
+      accum_translate = vector3<float>::Zero();
+      return;
+    }
 
-//      vector3<float> unproj_mouse_hit_old =
-//          astate->camera->unproject(astate->mouse_x_old, astate->mouse_y_old);
+  if (attached_item){
 
-//      vector3<float> unproj_mouse_hit     =
-//          astate->camera->unproject(astate->mouse_x, astate->mouse_y);
+      ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
-//      vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
+      vector3<float> unproj_mouse_hit_old =
+          astate->camera->unproject(astate->mouse_x_dc_old, astate->mouse_y_dc_old);
 
-//      //      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
-//      //                          astate->mouse_y_old - astate->mouse_y;
+      vector3<float> unproj_mouse_hit     =
+          astate->camera->unproject(astate->mouse_x_dc, astate->mouse_y_dc);
 
-//      if (fabs(d_unproj[touched_axis]) > 0.01f) {
-//          vector3<float> new_transform =
-//              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 0.5f;
-//          accum_translate += new_transform;
-//          if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-//            attached_item->m_pos += new_transform;
-//          else attached_item->apply_intermediate_translate_content(new_transform);
-//        }
+      vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
+      //astate->log(fmt::format("{} {} {}", unproj_mouse_hit_old, unproj_mouse_hit, d_unproj));
+      //      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
+      //                          astate->mouse_y_old - astate->mouse_y;
 
-//    }
+      if (fabs(d_unproj[touched_axis]) > 0.001f && astate->is_mouse_moving) {
+          vector3<float> new_transform =
+              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 1000.0f;
+          accum_translate += new_transform;
+          astate->log(fmt::format("{} {}", new_transform, accum_translate));
+          if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
+            attached_item->m_pos += new_transform;
+          else attached_item->apply_intermediate_translate_content(new_transform);
+        }
+      else {
+          accum_translate = vector3<float>::Zero();
+        }
+
+    }
 }
 
 void gizmo_t::clear_selected_axis () {
@@ -153,18 +163,23 @@ void gizmo_t::update_gizmo (float delta_time) {
 
   //update gizmo position according to current workspace edit type value
   //if we are in node edit mode - snap to aabb min
-  if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-    pos = attached_item->m_pos;
+  if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM) {
+      pos = attached_item->m_pos;
+      astate->make_viewport_dirty();
+    }
 
   //if we are in the content edit mode - snap to calculated barycenter, provided by node
-  if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
-    pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
+  if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+      pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
+      astate->make_viewport_dirty();
+    }
 
-//  if (!astate->mouse_lb_pressed || ImGui::GetIO().WantCaptureMouse) {
-//      interact_at_the_moment = false;
-//      clear_selected_axis();
-//      return;
-//    }
+    if (!astate->mouse_lb_pressed) {
+        interact_at_the_moment = false;
+        accum_translate = vector3<float>::Zero();
+        clear_selected_axis();
+        return;
+      }
 
   //Transform in node mode
   //start interacting - run event
@@ -173,21 +188,23 @@ void gizmo_t::update_gizmo (float delta_time) {
       interact_at_the_moment = true;
       accum_translate = vector3<float>::Zero();
       attached_item->on_begin_node_gizmo_translate();
+      astate->make_viewport_dirty();
     }
 
   //interacting - event already fired, start dragging object
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
       cur_edit_type == ws_edit_type::EDIT_WS_ITEM && interact_at_the_moment) {
       translate_attached(delta_time);
+      astate->make_viewport_dirty();
     }
 
   //we we release left mouse button - fire event(on_end_content_translate)
   if (attached_item && !astate->mouse_lb_pressed &&
-      cur_edit_type == ws_edit_type::EDIT_WS_ITEM &&
-      interact_at_the_moment){
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM && interact_at_the_moment) {
       interact_at_the_moment = false;
       attached_item->on_end_node_gizmo_translate();
       clear_selected_axis();
+      astate->make_viewport_dirty();
     }
   //End transform in node edit mode
 
@@ -198,12 +215,14 @@ void gizmo_t::update_gizmo (float delta_time) {
       interact_at_the_moment = true;
       accum_translate = vector3<float>::Zero();
       attached_item->on_begin_content_gizmo_translate();
+      astate->make_viewport_dirty();
     }
 
   //interacting - event already fired, start dragging object
   if (attached_item && astate->mouse_lb_pressed && touched_axis < 4 &&
       cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && interact_at_the_moment) {
       translate_attached(delta_time);
+      astate->make_viewport_dirty();
     }
 
   //we we release left mouse button - fire event(on_end_content_translate)
@@ -212,6 +231,7 @@ void gizmo_t::update_gizmo (float delta_time) {
       interact_at_the_moment = false;
       attached_item->on_end_content_gizmo_translate();
       clear_selected_axis();
+      astate->make_viewport_dirty();
     }
   //End transform in node edit mode
 

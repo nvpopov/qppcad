@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/helloworld-transparent.png</file>
+        <file>fonts/Hack-Regular.ttf</file>
     </qresource>
 </RCC>

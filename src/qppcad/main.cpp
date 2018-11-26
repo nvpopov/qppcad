@@ -1,6 +1,7 @@
 #include <iostream>
 #include <QApplication>
 #include <QStyleFactory>
+#include <QFontDatabase>
 #include <qppcad/main_window.hpp>
 #include <qppcad/app_state.hpp>
 
@@ -22,7 +23,20 @@ int main (int argc, char **argv) {
   QSurfaceFormat::setDefaultFormat(format);
 
   QApplication app(argc, argv);
-  app.setStyle(QStyleFactory::create("Fusion"));
+  //app.setStyle(QStyleFactory::create("Fusion"));
+
+  QFontDatabase::addApplicationFont(":/fonts/Hack-Regular.ttf");
+  QFont font = QFont("Hack-Regular", 12, 4);
+  app.setFont(font);
+
+  app.setStyleSheet(R"(
+                    QCheckBox::indicator { width: 21px;height: 21px;}
+                    QGroupBox::title {
+                        subcontrol-origin: margin;
+                        subcontrol-position: top center;
+                    }
+                    )"
+                    );
   QPalette p;
 
   p = app.palette();

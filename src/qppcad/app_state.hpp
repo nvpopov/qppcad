@@ -82,6 +82,8 @@ namespace qpp {
 
         float mouse_x_dc;
         float mouse_y_dc;
+        float mouse_x_dc_old;
+        float mouse_y_dc_old;
         float mouse_x;
         float mouse_y;
         float mouse_x_old;

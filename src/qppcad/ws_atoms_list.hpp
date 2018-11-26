@@ -22,7 +22,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum ws_atoms_list_render_type {
+    enum ws_atoms_list_render_type : int {
       ball_and_stick,
       dynamic_lines,
       xatom_lines,
@@ -30,7 +30,7 @@ namespace qpp {
       buffered_billboards
     };
 
-    enum ws_atoms_list_color_mode {
+    enum ws_atoms_list_color_mode : int {
       color_from_ptable,
       color_from_anim
     };
