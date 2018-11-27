@@ -7,6 +7,8 @@
 #include <geom/ray.hpp>
 #include <qppcad/json_adapter.hpp>
 
+#include <QPainter>
+
 namespace qpp {
 
   namespace cad {
@@ -84,6 +86,7 @@ namespace qpp {
 
         /// \brief render
         virtual void render();
+        virtual void render_overlay(QPainter *painter);
 
         virtual std::string get_ws_item_class_name() { return "ws_abstract_item";}
         virtual size_t get_content_count() = 0;

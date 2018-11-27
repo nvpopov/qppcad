@@ -37,25 +37,20 @@ namespace qpp {
         void update_geom_to_anim ();
 
         void update (const float delta_time);
-
         bool animable () const;
-
         void next_anim();
-
         void prev_anim();
-
         void traverse_anim(int travel_dir);
 
         //void render_ui();
 
         void manual_frame_manipulate(const int frame_mod);
 
+        geom_anim_record_t<float>* get_current_anim();
         geom_anim_type get_cur_anim_type () const;
 
         size_t get_total_anims () const;
-
         size_t frame_count (const size_t anim_id) const;
-
         size_t current_frame_count () const;
     };
 

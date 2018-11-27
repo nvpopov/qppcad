@@ -46,9 +46,13 @@ void ws_viewer_widget_t::update_cycle() {
 void ws_viewer_widget_t::initializeGL() {
 
   app_state_t* astate = app_state_t::get_inst();
+
   astate->init_glapi();
   astate->init_shaders();
   astate->init_meshes();
+
+  glapi_t* glapi = astate->glapi;
+
 }
 
 void ws_viewer_widget_t::resizeGL(int w, int h) {
@@ -74,7 +78,23 @@ void ws_viewer_widget_t::paintGL() {
                     static_cast<int>(astate->viewport_size_c(0)),
                     static_cast<int>(astate->viewport_size_c(1)));
 
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::Antialiasing);
+
+  painter.beginNativePainting();
+
+  glapi->glEnable(GL_DEPTH_TEST);
+  glapi->glDepthFunc(GL_LEQUAL);
+  glapi->glEnable(GL_CULL_FACE);
+  glapi->glCullFace(GL_BACK);
   astate->ws_manager->render_current_workspace();
+
+  glapi->glDisable(GL_DEPTH_TEST);
+
+  painter.endNativePainting();
+
+  astate->ws_manager->render_current_workspace_overlay(&painter);
+  painter.end();
 
 }
 

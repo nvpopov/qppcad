@@ -27,6 +27,8 @@ int main (int argc, char **argv) {
 
   QFontDatabase::addApplicationFont(":/fonts/Hack-Regular.ttf");
   QFont font = QFont("Hack-Regular", 12, 4);
+  QIcon icon("://icons8-molecule-40.png");
+  app.setWindowIcon(icon);
   app.setFont(font);
 
   app.setStyleSheet(R"(

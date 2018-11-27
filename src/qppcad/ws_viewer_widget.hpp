@@ -6,6 +6,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QTimer>
+#include <QPainter>
 #include <QMouseEvent>
 
 namespace qpp {

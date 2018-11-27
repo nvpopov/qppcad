@@ -38,6 +38,7 @@ bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
       if (m_ws_items[sel_idx]->get_flags() & ws_item_flags_support_translation) {
           m_gizmo->attached_item = m_ws_items[sel_idx].get();
           m_gizmo->update_gizmo(0.1f);
+          astate->make_viewport_dirty();
         }
       else {
           m_gizmo->attached_item = nullptr;
@@ -152,6 +153,10 @@ void workspace_t::render() {
 
 }
 
+void workspace_t::render_overlay(QPainter *painter) {
+  for (auto &ws_item : m_ws_items) ws_item->render_overlay(painter);
+}
+
 void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
   //if (ImGui::GetIO().WantCaptureMouse) return;
@@ -203,7 +208,6 @@ void workspace_t::add_item_to_workspace (const std::shared_ptr<ws_item_t> &item_
   //c_app::log(fmt::format("New workspace {} size = {}", m_ws_name, m_ws_items.size()));
 
 }
-
 
 void workspace_t::save_workspace_to_json (const std::string filename) {
 
@@ -319,24 +323,19 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_current () {
-
   if (m_current_workspace_id >= m_ws.size()) return nullptr;
   return m_ws[m_current_workspace_id];
-
 }
 
 std::optional<size_t> workspace_manager_t::get_current_id () {
-
   if (!m_ws.empty()) return std::optional<size_t>(m_current_workspace_id);
   return std::nullopt;
-
 }
 
 bool workspace_manager_t::set_current (const size_t ws_index) {
 
   //c_app::log("set current called");
   app_state_t* astate = app_state_t::get_inst();
-
 
   if (ws_index < m_ws.size() && has_wss()) {
       m_current_workspace_id = ws_index;
@@ -426,6 +425,15 @@ void workspace_manager_t::render_current_workspace () {
 
   astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
   astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void workspace_manager_t::render_current_workspace_overlay(QPainter *painter) {
+
+  if (has_wss()) {
+      if (m_current_workspace_id < m_ws.size()) {
+          m_ws[m_current_workspace_id]->render_overlay(painter);
+        }
+    }
 }
 
 //void workspace_manager_t::render_current_workspace_overlay () {

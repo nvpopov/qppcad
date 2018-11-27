@@ -40,13 +40,33 @@ namespace qpp {
         qbinded_combobox *display_settings_render_style;
         qbinded_combobox *display_settings_labels_style;
 
+        QGroupBox *gb_display_shading;
+        QFormLayout *gb_display_shading_layout;
+        qbinded_checkbox *display_shading_spec;
+        qbinded_float_spinbox *display_shading_spec_value;
+
         ws_item_tab_widget_t *tab_animation;
+        QGroupBox *gb_anim_summary;
+        QLabel *gb_anim_total_anims;
+        qbinded_checkbox *gb_rebuild_bonds;
+        qbinded_checkbox *gb_play_cyclic;
+        QComboBox *gb_current_anim;
+        //QLabel *gb_current_anim_type;
+        QFormLayout *gb_anim_summary_layout;
+
+        QGroupBox *gb_anim_detail;
+        QVBoxLayout *gb_anim_detail_layout;
+
         ws_item_tab_widget_t *tab_measurement;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+        void update_anim_tab_gb();
         ws_atoms_list_obj_insp_widget_t();
+
+      public slots:
+        void current_anim_index_changed(int index);
     };
 
   }

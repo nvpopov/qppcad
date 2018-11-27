@@ -1,9 +1,8 @@
 #include <qppcad/ws_item_obj_insp_widget.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
-
-
 
 ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name) {
 
@@ -46,10 +45,26 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
   tab_general = define_tab(tr("General"));
+
   tg_info_widget = new QGroupBox;
   tg_info_widget->setTitle(tr("Item information"));
   tab_general->tab_inner_widget_layout->addWidget(tg_info_widget);
+
+  tg_actions = new QGroupBox(tr("Item actions"));
+  tg_actions_layout = new QHBoxLayout;
+  tg_actions->setLayout(tg_actions_layout);
+  tg_actions_delete = new QPushButton(tr("Delete"));
+  tg_actions_rename = new QPushButton(tr("Rename"));
+  connect(tg_actions_rename, SIGNAL(pressed()), this, SLOT(rename_current_item()));
+  tg_actions_clone = new QPushButton(tr("Clone"));
+  tg_actions_layout->addWidget(tg_actions_delete);
+  tg_actions_layout->addWidget(tg_actions_rename);
+  tg_actions_layout->addWidget(tg_actions_clone);
+
+  tab_general->tab_inner_widget_layout->addWidget(tg_actions);
+
   tg_form_layout = new QFormLayout;
   tg_info_widget->setLayout(tg_form_layout);
   ws_item_name = new QLabel;
@@ -62,6 +77,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   tg_form_layout->setLabelAlignment(Qt::AlignRight);
 
+
+
 //  tab_general_child = new QWidget;
 
 //  tab_general_child->setLayout(new QVBoxLayout);
@@ -70,5 +87,19 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 //  for(int i = 0; i < 27; i++)
 //    tab_general_child->layout()->addWidget(new QPushButton("tre"));
 //  //setUsesScrollButtons(false);
-//  //setElideMode(Qt::ElideLeft);
+  //  //setElideMode(Qt::ElideLeft);
+}
+
+void ws_item_obj_insp_widget_t::rename_current_item() {
+  if (m_binded_item) {
+      app_state_t* astate = app_state_t::get_inst();
+      bool ok;
+      QString text = QInputDialog::getText(this, tr("Workspace item-> Rename"),
+                                           tr("User name:"), QLineEdit::Normal,
+                                           QString::fromStdString(m_binded_item->m_name), &ok);
+      if (ok && text != "") {
+          m_binded_item->m_name = text.toStdString();
+          astate->astate_evd->current_workspace_selected_item_changed();
+        }
+    }
 }

@@ -2,17 +2,21 @@
 #define QPP_CAD_WS_ITEM_OBJ_INSP_H
 
 #include <qppcad/qppcad.hpp>
+#include <qppcad/ws_item.hpp>
+#include <qppcad/qbinded_inputs.hpp>
 #include <QWidget>
 #include <QTabWidget>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QScrollArea>
 #include <QFormLayout>
 #include <QPushButton>
 #include <QLabel>
-#include <qppcad/ws_item.hpp>
 #include <QGroupBox>
 #include <QCheckBox>
-#include <qppcad/qbinded_inputs.hpp>
+#include <QMessageBox>
+#include <QInputDialog>
+#include <QLineEdit>
 
 namespace qpp {
 
@@ -37,6 +41,12 @@ namespace qpp {
         QLabel *ws_item_name;
         QLabel *ws_item_type;
 
+        QGroupBox *tg_actions;
+        QHBoxLayout *tg_actions_layout;
+        QPushButton *tg_actions_delete;
+        QPushButton *tg_actions_rename;
+        QPushButton *tg_actions_clone;
+
         QLabel *ws_item_is_visible_label;
         qbinded_checkbox *ws_item_is_visible;
 
@@ -45,6 +55,10 @@ namespace qpp {
         virtual void unbind_item();
         virtual void update_from_ws_item();
         ws_item_obj_insp_widget_t();
+
+      public slots:
+
+        void rename_current_item();
 
     };
 

@@ -78,7 +78,9 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       obj_insp_layout->addWidget(none_item_placeholder);
       none_item_placeholder->show();
       ws_comp_chem_data_view->unbind_item();
+      ws_comp_chem_data_view->hide();
       ws_atoms_list_view->unbind_item();
+      ws_atoms_list_view->hide();
     }
 
   if (astate->ws_manager->has_wss()) {
@@ -93,8 +95,12 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
               none_item_placeholder->hide();
               obj_insp_layout->addWidget(ws_atoms_list_view);
               ws_current_view = ws_atoms_list_view;
+
               ws_atoms_list_view->bind_to_item(cur_ws->get_selected());
+              ws_atoms_list_view->show();
+
               ws_comp_chem_data_view->unbind_item();
+
               astate->log("DEBUG: ws_current_view = ws_atoms_list_view;");
               return;
             }
@@ -107,8 +113,12 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
               none_item_placeholder->hide();
               obj_insp_layout->addWidget(ws_comp_chem_data_view);
               ws_current_view = ws_comp_chem_data_view;
+
               ws_comp_chem_data_view->bind_to_item(cur_ws->get_selected());
+              ws_comp_chem_data_view->show();
+
               ws_atoms_list_view->unbind_item();
+
               astate->log("DEBUG: ws_current_view = ws_comp_chem_data_view;");
               return;
             }
@@ -159,6 +169,7 @@ void object_inspector_widget_t::current_workspace_selected_item_changed() {
             }
         }
     }
+
   update_ws_items_view_widget();
   ws_items_list->blockSignals(false);
 }

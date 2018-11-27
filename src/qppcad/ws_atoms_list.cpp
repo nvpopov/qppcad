@@ -197,10 +197,13 @@ void ws_atoms_list_t::render () {
     }
 
   //render measurement
-  m_measure->render();
-  m_labels->render_overlay();
-  m_lat_planes->render();
 
+  m_lat_planes->render();
+  m_measure->render();
+}
+
+void ws_atoms_list_t::render_overlay(QPainter *painter) {
+  m_labels->render_overlay(painter);
 }
 
 //void ws_atoms_list_t::render_ui () {
@@ -358,6 +361,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
             };
 
           recalc_gizmo_barycenter();
+          parent_ws->m_gizmo->update_gizmo(0.01);
           return true;
 
         } else {

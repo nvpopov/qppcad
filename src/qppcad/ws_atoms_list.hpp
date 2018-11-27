@@ -86,6 +86,7 @@ namespace qpp {
         /// \brief geometry_changed
         void geometry_changed();
         void render() override;
+        void render_overlay(QPainter *painter) override;
 
 //        void render_ui() override;
 //        void render_overlay() override;

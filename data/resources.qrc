@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>resources/helloworld-transparent.png</file>
         <file>fonts/Hack-Regular.ttf</file>
+        <file>icons8-molecule-40.png</file>
     </qresource>
 </RCC>
