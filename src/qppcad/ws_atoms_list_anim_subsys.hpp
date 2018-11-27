@@ -36,6 +36,10 @@ namespace qpp {
         void update_and_set_anim (const int anim_id, const float current_frame);
         void update_geom_to_anim ();
 
+        void update_current_frame_to(const int new_frame);
+        void update_current_frame_to_begin();
+        void update_current_frame_to_end();
+
         void update (const float delta_time);
         bool animable () const;
         void next_anim();

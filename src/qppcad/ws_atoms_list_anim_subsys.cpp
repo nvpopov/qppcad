@@ -39,8 +39,7 @@ namespace qpp {
           p_owner->m_geom->change_pos(i, new_pos);
 
           if (p_owner->m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
-
-              // check the avaiability of colors in frame_data
+              // check the colors in frame_data are avaiable
               if (m_anim_data[anim_id].frame_data[start_frame_n].atom_color.size() == nat &&
                   m_anim_data[anim_id].frame_data[end_frame_n].atom_color.size() == nat) {
                   vector3<float> new_color =
@@ -58,6 +57,11 @@ namespace qpp {
                 }
             }
 
+          app_state_t* astate = app_state_t::get_inst();
+          astate->make_viewport_dirty();
+
+          if (p_owner->is_selected())
+            astate->astate_evd->current_workspace_selected_item_frame_changed();
         }
 
       if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_unlock);
@@ -75,6 +79,22 @@ namespace qpp {
       update_geom_to_anim(m_cur_anim, m_cur_anim_time);
     }
 
+    void ws_atoms_list_anim_subsys_t::update_current_frame_to(const int new_frame) {
+      if (!animable()) return;
+      if (m_cur_anim >= m_anim_data.size()) return;
+
+      m_cur_anim_time = new_frame;
+      update_geom_to_anim();
+    }
+
+    void ws_atoms_list_anim_subsys_t::update_current_frame_to_begin() {
+      update_current_frame_to(0);
+    }
+
+    void ws_atoms_list_anim_subsys_t::update_current_frame_to_end() {
+      update_current_frame_to(m_anim_data[m_cur_anim].frame_data.size()-1);
+    }
+
     void ws_atoms_list_anim_subsys_t::update(const float delta_time) {
 
       app_state_t* astate = app_state_t::get_inst();
@@ -84,6 +104,7 @@ namespace qpp {
 
       //if (m_anim[m_cur_anim].frame_data[0].si)
       if (m_play_anim && animable()) {
+
 
           m_cur_anim_time += 1 / (m_anim_frame_time * 60);
           if (m_cur_anim_time > m_anim_data[m_cur_anim].frame_data.size() - 1) {
@@ -100,7 +121,7 @@ namespace qpp {
           if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_type::anim_static){
               m_cur_anim_time = 0.0f;
               m_play_anim = false;
-              m_play_cyclic = false;
+              //m_play_cyclic = false;
             }
           //astate->make_viewport_dirty();
         }
@@ -159,96 +180,8 @@ namespace qpp {
 
     }
 
-    //    void ws_atoms_list_anim_subsys_t::render_ui(){
 
-    //      app_state_t* astate = &(c_app::get_state());
-
-    //      // start animation block
-    //      if (animable()) {
-    //          if (ImGui::CollapsingHeader("Animations")) {
-    //              ImGui::Spacing();
-    //              ImGui::TextUnformatted(
-    //                    fmt::format("Total anims : {}", m_anim_data.size()).c_str(), nullptr);
-    //              ImGui::PushItemWidth(140);
-
-    //              ImGui::Separator();
-
-    //              std::vector<std::string>  vStr;
-    //              vStr.reserve(10);
-    //              std::vector<char*>  vChar;
-    //              for (size_t i = 0; i < get_total_anims(); i++)
-    //                vStr.push_back(m_anim_data[i].m_anim_name);
-    //              std::transform(vStr.begin(), vStr.end(), std::back_inserter(vChar),vec_str_to_char);
-
-    //              ImGui::PushItemWidth(150);
-    //              if (ImGui::Combo("Current animation", &m_cur_anim, vChar.data(), get_total_anims())) {
-    //                  m_cur_anim_time = 0.0f;
-    //                  update_geom_to_anim();
-    //                  astate->make_viewport_dirty();
-    //                }
-
-    //              if (get_total_anims() > 1) {
-    //                  if (ImGui::Button("Next animation")) next_anim();
-    //                  ImGui::SameLine();
-    //                  if (ImGui::Button("Previous animation")) prev_anim();
-    //                }
-
-    //              ImGui::Checkbox("Rebuild bonds", &m_rebuild_bonds_in_anim);
-
-    //              if (get_cur_anim_type() != geom_anim_type::anim_static) {
-    //                  ImGui::SliderFloat("Frame time(sec.)", &m_anim_frame_time,
-    //                                     0.01f, 3.0f);
-
-    //                  ImGui::Checkbox("Play in cycle", &m_play_cyclic);
-
-    //                  ImGui::TextUnformatted(fmt::format("Frames count: {}",
-    //                                                     current_frame_count()).c_str(),
-    //                                         nullptr);
-
-    //                  ImGui::Separator();
-    //                  ImGui::PushItemWidth(240);
-    //                  if (ImGui::SliderFloat("Timeline", &m_cur_anim_time, 0.0f,
-    //                                         (current_frame_count() - 1))){
-    //                      if (!m_play_anim) update_geom_to_anim();
-    //                    }
-
-    //                  ImGui::ToggleButton("Play", &m_play_anim);
-    //                  ImGui::SameLine();
-    //                  if (ImGui::Button("Begin")) {
-    //                      m_cur_anim_time = 0.0f;
-    //                      update_geom_to_anim();
-    //                      astate->make_viewport_dirty();
-    //                    }
-
-    //                  ImGui::SameLine();
-    //                  if (ImGui::Button("End")) {
-    //                      m_cur_anim_time = current_frame_count() - 1;
-    //                      update_geom_to_anim();
-    //                      astate->make_viewport_dirty();
-    //                    }
-
-    //                  ImGui::SameLine();
-    //                  if (ImGui::Button("+Frame")) {
-    //                      //TODO: unimplemented
-    //                      manual_frame_manipulate(+1.0f);
-    //                      astate->make_viewport_dirty();
-    //                    }
-
-    //                  ImGui::SameLine();
-    //                  if (ImGui::Button("-Frame")) {
-    //                      manual_frame_manipulate(-1.0f);
-    //                      astate->make_viewport_dirty();
-    //                    }
-
-    //                  ImGui::Spacing();
-    //                }
-    //            }
-    //        }
-    //      // end animation bloc
-
-    //    }
-
-    void ws_atoms_list_anim_subsys_t::manual_frame_manipulate(const int frame_mod){
+    void ws_atoms_list_anim_subsys_t::manual_frame_manipulate(const int frame_mod) {
 
       if (!animable()) return;
       if (m_cur_anim >= m_anim_data.size()) return;

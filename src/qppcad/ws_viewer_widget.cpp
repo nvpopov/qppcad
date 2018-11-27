@@ -96,6 +96,8 @@ void ws_viewer_widget_t::paintGL() {
   astate->ws_manager->render_current_workspace_overlay(&painter);
   painter.end();
 
+  //std::cout<<"REPAINT"<<std::endl;
+
 }
 
 void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {

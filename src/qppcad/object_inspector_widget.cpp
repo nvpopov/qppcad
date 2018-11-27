@@ -28,7 +28,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
   //  ws_items_gb->setFlat(false);
   //  ws_items_gb->setLayout(ws_items_gb_layout);
   ws_items_list = new QListWidget;
-  ws_items_list->setMaximumHeight(300);
+  ws_items_list->setMaximumHeight(250);
   ws_items_list->setStyleSheet(" QListWidget::item { margin: 6px; }");
 
   none_item_placeholder = new QWidget;

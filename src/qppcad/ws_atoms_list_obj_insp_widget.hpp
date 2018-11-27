@@ -6,6 +6,7 @@
 #include <QTableWidget>
 #include <QTableView>
 #include <QHeaderView>
+#include <QSlider>
 
 namespace qpp {
 
@@ -16,7 +17,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        ws_atoms_list_t *m_binded_atoms_list;
+        ws_atoms_list_t *b_al; // binded atoms list
 
         QGroupBox *tg_geom_summary_widget;
         QFormLayout *tg_geom_summary_layout;
@@ -50,12 +51,24 @@ namespace qpp {
         QLabel *gb_anim_total_anims;
         qbinded_checkbox *gb_rebuild_bonds;
         qbinded_checkbox *gb_play_cyclic;
+        qbinded_float_spinbox *gb_anim_speed;
         QComboBox *gb_current_anim;
         //QLabel *gb_current_anim_type;
         QFormLayout *gb_anim_summary_layout;
 
-        QGroupBox *gb_anim_detail;
-        QVBoxLayout *gb_anim_detail_layout;
+        QGroupBox *gb_anim_timeline;
+        QHBoxLayout *gb_anim_timeline_layout;
+        QLabel *gb_anim_total_frames_in_anim;
+        QLabel *gb_anim_cur_frame;
+        QSlider *gb_anim_timeline_slider;
+        QGroupBox *gb_anim_buttons;
+        QHBoxLayout *gb_anim_buttons_layout;
+
+        QPushButton *anim_play;
+        QPushButton *anim_to_start;
+        QPushButton *anim_to_end;
+        QPushButton *anim_frame_forward;
+        QPushButton *anim_frame_backward;
 
         ws_item_tab_widget_t *tab_measurement;
 
@@ -67,6 +80,14 @@ namespace qpp {
 
       public slots:
         void current_anim_index_changed(int index);
+        void play_anim_button_toggle(bool value);
+        void animation_updated_external();
+        void current_workspace_selected_item_frame_changed();
+        void anim_timeline_slider_value_changed(int value);
+        void anim_button_begin_clicked();
+        void anim_button_end_clicked();
+        void anim_button_frame_move_forward_clicked();
+        void anim_button_frame_move_backward_clicked();
     };
 
   }

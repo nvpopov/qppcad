@@ -62,7 +62,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_actions_layout->addWidget(tg_actions_delete);
   tg_actions_layout->addWidget(tg_actions_rename);
   tg_actions_layout->addWidget(tg_actions_clone);
-
+  tg_actions->setMaximumHeight(90);
   tab_general->tab_inner_widget_layout->addWidget(tg_actions);
 
   tg_form_layout = new QFormLayout;
