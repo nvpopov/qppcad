@@ -20,6 +20,7 @@ void ws_viewer_widget_t::update_cycle() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  if (astate->m_disable_app) return;
 
   //if (!astate->is_mouse_moving) astate->mouse_distance_pp = 0;
 
@@ -73,6 +74,8 @@ void ws_viewer_widget_t::paintGL() {
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
 
+  if (astate->m_disable_app) return;
+
   //  glapi->glClearColor(1.0, 1.0, 1.0, 1.0);
   //  glapi->glClear(GL_COLOR_BUFFER_BIT);
 
@@ -99,7 +102,7 @@ void ws_viewer_widget_t::paintGL() {
   astate->ws_manager->render_current_workspace_overlay(&painter);
   painter.end();
 
-  //std::cout<<"REPAINT"<<std::endl;
+  //astate->log("REPAINT");
 
 }
 

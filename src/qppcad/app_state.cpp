@@ -58,6 +58,14 @@ namespace qpp {
       m_viewport_dirty = true;
     }
 
+    void app_state_t::disable_app() {
+      m_disable_app = true;
+    }
+
+    void app_state_t::enable_app() {
+      m_disable_app = false;
+    }
+
 
     bool app_state_t::is_viewport_dirty() {
       return m_viewport_dirty;

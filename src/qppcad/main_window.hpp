@@ -29,6 +29,9 @@ namespace qpp {
     class main_window : public QMainWindow {
         Q_OBJECT
 
+      private:
+        int p_elapsed_time_in_event_loop{0};
+
       public:
         explicit main_window(QWidget *parent = 0);
         ~main_window();
@@ -142,6 +145,8 @@ namespace qpp {
         void ws_edit_mode_selector_button_clicked(int id);
         void apply_camera_view_change(cam_target_view target_view);
         void toggle_ws_edit_mode();
+        void start_update_cycle();
+        void stop_update_cycle();
 
     };
   }

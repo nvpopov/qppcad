@@ -159,14 +159,14 @@ void main_window::init_menus() {
   tools_quick_geom_export->addAction(tools_quick_geom_export_cp2k_coord);
   connect(tools_quick_geom_export_cp2k_coord, &QAction::triggered, this,
           [this]() { this->export_selected_geometry("Export[CP2K coord. section]",
-                               qc_file_fmt::cp2k_coord_cell_section);});
+                                                    qc_file_fmt::cp2k_coord_cell_section);});
 
   tools_quick_geom_export_vasp_poscar = new QAction;
   tools_quick_geom_export_vasp_poscar->setText("VASP POSCAR");
   tools_quick_geom_export->addAction(tools_quick_geom_export_vasp_poscar);
   connect(tools_quick_geom_export_vasp_poscar, &QAction::triggered, this,
           [this]() { this->export_selected_geometry("Export[VASP POSCAR]",
-                               qc_file_fmt::vasp_poscar);});
+                                                    qc_file_fmt::vasp_poscar);});
 
   help_menu  = menuBar()->addMenu(tr("&Help"));
   act_about = new QAction();
@@ -460,29 +460,22 @@ void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file
 
   app_state_t* astate = app_state_t::get_inst();
 
-  //
-  this->blockSignals(true);
-  this->obj_insp_widget->ws_items_list->blockSignals(true);
+  stop_update_cycle();
 
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws) {
       auto cur_idx = cur_ws->get_selected_idx();
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
 
-      cur_ws->unselect_all(true);
       if (cur_it) {
           QString file_name =
               QFileDialog::getSaveFileName(nullptr, dialog_name, "", "*.*", nullptr,
                                            QFileDialog::ReadOnly);
           if (file_name != QString::null) cur_it->save_to_file(file_fmt, file_name.toStdString());
         }
-      cur_ws->set_selected_item(*cur_idx, true);
     }
 
-  this->blockSignals(false);
-  this->obj_insp_widget->ws_items_list->blockSignals(false);
-  //this->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-
+  start_update_cycle();
 
 }
 
@@ -505,6 +498,9 @@ void main_window::open_workspace() {
 void main_window::save_workspace() {
 
   app_state_t* astate = app_state_t::get_inst();
+
+  stop_update_cycle();
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
@@ -521,12 +517,19 @@ void main_window::save_workspace() {
             }
         }
     }
+
+  start_update_cycle();
+
   current_workspace_changed();
 }
 
 void main_window::save_workspace_as() {
 
   app_state_t* astate = app_state_t::get_inst();
+
+  stop_update_cycle();
+
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
@@ -539,6 +542,9 @@ void main_window::save_workspace_as() {
         }
     }
   current_workspace_changed();
+
+  start_update_cycle();
+
 }
 
 void main_window::close_current_workspace() {
@@ -761,6 +767,23 @@ void main_window::toggle_ws_edit_mode() {
           cur_ws->toggle_edit_mode();
           current_workspace_changed();
         }
+    }
+}
+
+void main_window::start_update_cycle() {
+
+  if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
+     ws_viewer_widget->m_update_timer->start();
+    }
+
+}
+
+void main_window::stop_update_cycle() {
+
+  if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
+      p_elapsed_time_in_event_loop =  ws_viewer_widget->m_update_timer->remainingTime();
+      ws_viewer_widget->m_update_timer->stop();
+      ws_viewer_widget->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
     }
 }
 

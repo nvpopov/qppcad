@@ -33,6 +33,8 @@ namespace qpp {
         void init_meshes();
         void init_managers();
         void make_viewport_dirty();
+        void disable_app();
+        void enable_app();
         bool is_viewport_dirty();
         void cleanup_viewport();
 
@@ -114,6 +116,7 @@ namespace qpp {
         bool viewport_changed{false};
         bool m_transform_pdb_atom_names{true};
 
+        bool m_disable_app{false};
         bool m_viewport_dirty{true};
         //        bool m_trigger_3d_popup{false};
         //        int  m_trigger_3d_popup_counter{0};
