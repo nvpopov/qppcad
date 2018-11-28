@@ -11,6 +11,9 @@ ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent)
                           &ws_viewer_widget_t::update_cycle);
   m_update_timer->start(16);
   setMouseTracking(true);
+  setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+  connect(this, &ws_viewer_widget_t::customContextMenuRequested,
+          this, &ws_viewer_widget_t::show_context_menu);
 }
 
 void ws_viewer_widget_t::update_cycle() {
@@ -112,7 +115,11 @@ void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
           astate->mouse_distance_pp = 0.0f;
         }
 
-      if (event->button() == Qt::RightButton) astate->mouse_rb_pressed = true;
+      if (event->button() == Qt::RightButton) {
+          astate->mouse_rb_pressed = true;
+
+        }
+
       if (event->button() == Qt::MiddleButton) astate->mouse_md_pressed = true;
     }
   //fmt::print(std::cout, "mousePressEvent\n");
@@ -128,8 +135,8 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
 
       if (event->button() == Qt::LeftButton) {
           astate->mouse_lb_pressed = false;
-//          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera
-//              && astate->mouse_distance_pp < 10)
+          //          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera
+          //              && astate->mouse_distance_pp < 10)
 
           need_to_cancel_cam_transform = true;
         }
@@ -137,6 +144,7 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
       if (event->button() == Qt::RightButton) {
           astate->mouse_rb_pressed = false;
           need_to_cancel_cam_transform = true;
+          astate->mouse_distance_pp = 0.0f;
         }
 
       if (event->button() == Qt::MiddleButton) {
@@ -169,14 +177,14 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       astate->mouse_x_dc = (astate->mouse_x / float(this->width()) - 0.5f) * 2.0f;
       astate->mouse_y_dc = (0.5f - astate->mouse_y / float(this->height())) * 2.0f;
 
-//      astate->mouse_x_dc_old = (astate->mouse_x_old / float(this->width()) - 0.5f) * 2.0f;
-//      astate->mouse_y_dc_old = (0.5f - astate->mouse_y_old / float(this->height())) * 2.0f;
+      //      astate->mouse_x_dc_old = (astate->mouse_x_old / float(this->width()) - 0.5f) * 2.0f;
+      //      astate->mouse_y_dc_old = (0.5f - astate->mouse_y_old / float(this->height())) * 2.0f;
 
-//      astate->log(fmt::format("{} {} {} {} {} {} {}",  astate->is_mouse_moving,
-//                              astate->mouse_x_dc, astate->mouse_y_dc,
-//                              astate->mouse_x_dc_old, astate->mouse_y_dc_old,
-//                              fabs(astate->mouse_x_dc - astate->mouse_x_dc_old),
-//                              fabs(astate->mouse_y_dc - astate->mouse_y_dc_old) ));
+      //      astate->log(fmt::format("{} {} {} {} {} {} {}",  astate->is_mouse_moving,
+      //                              astate->mouse_x_dc, astate->mouse_y_dc,
+      //                              astate->mouse_x_dc_old, astate->mouse_y_dc_old,
+      //                              fabs(astate->mouse_x_dc - astate->mouse_x_dc_old),
+      //                              fabs(astate->mouse_y_dc - astate->mouse_y_dc_old) ));
 
       astate->is_mouse_moving = (abs(astate->mouse_x_dc - astate->mouse_x_dc_old) > 0.001f ||
                                  abs(astate->mouse_y_dc - astate->mouse_y_dc_old) > 0.001f);
@@ -225,4 +233,28 @@ void ws_viewer_widget_t::wheelEvent(QWheelEvent *event) {
       astate->make_viewport_dirty();
     }
 
+}
+
+void ws_viewer_widget_t::show_context_menu(const QPoint &pos) {
+
+//  app_state_t* astate = app_state_t::get_inst();
+
+//  astate->log(fmt::format("DEBUG MOUSE_DISTANCE_PP {}", astate->mouse_distance_pp));
+//  if (astate->mouse_distance_pp < 30.2f) {
+//      astate->mouse_lb_pressed = false;
+//      astate->mouse_rb_pressed = false;
+//      astate->mouse_md_pressed = false;
+//      astate->is_mouse_moving = false;
+//      astate->mouse_distance_pp = 0.0f;
+
+//      QPoint globalPos = mapToGlobal(pos);
+
+//      // Create menu and insert some actions
+//      QMenu myMenu;
+//      myMenu.addAction("Insert");
+//      myMenu.addAction("Erase");
+
+//      // Show context menu at handling position
+//      myMenu.exec(globalPos);
+//    }
 }

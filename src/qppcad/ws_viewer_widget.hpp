@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QMenu>
 
 namespace qpp {
 
@@ -20,6 +21,7 @@ namespace qpp {
 
       public slots:
         void update_cycle();
+        void show_context_menu(const QPoint &pos);
 
       protected:
         void initializeGL() override;
@@ -29,6 +31,7 @@ namespace qpp {
         void mouseReleaseEvent(QMouseEvent * event) override;
         void mouseMoveEvent(QMouseEvent * event) override;
         void wheelEvent(QWheelEvent *event) override;
+
     };
 
   }

@@ -17,16 +17,16 @@ int main (int argc, char **argv) {
   format.setDepthBufferSize(24);
 
   //format.setStencilBufferSize(8);
-  format.setSamples(8);
+  format.setSamples(6);
   format.setVersion(3, 3);
   format.setProfile(QSurfaceFormat::CoreProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
   QApplication app(argc, argv);
-  //app.setStyle(QStyleFactory::create("Fusion"));
+  app.setStyle(QStyleFactory::create("Fusion"));
 
   QFontDatabase::addApplicationFont(":/fonts/Hack-Regular.ttf");
-  QFont font = QFont("Hack-Regular", 12, 4);
+  QFont font = QFont("Hack-Regular", 11, 4);
   QIcon icon("://icons8-molecule-40.png");
   app.setWindowIcon(icon);
   app.setFont(font);

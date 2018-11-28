@@ -151,14 +151,22 @@ void main_window::init_menus() {
   tools_quick_geom_export_xyz = new QAction;
   tools_quick_geom_export_xyz->setText("XYZ");
   tools_quick_geom_export->addAction(tools_quick_geom_export_xyz);
+  connect(tools_quick_geom_export_xyz, &QAction::triggered, this,
+          [this](){this->export_selected_geometry("Export[xyz]", qc_file_fmt::standart_xyz);});
 
   tools_quick_geom_export_cp2k_coord = new QAction;
   tools_quick_geom_export_cp2k_coord->setText("CP2K coord section");
   tools_quick_geom_export->addAction(tools_quick_geom_export_cp2k_coord);
+  connect(tools_quick_geom_export_cp2k_coord, &QAction::triggered, this,
+          [this]() { this->export_selected_geometry("Export[CP2K coord. section]",
+                               qc_file_fmt::cp2k_coord_cell_section);});
 
   tools_quick_geom_export_vasp_poscar = new QAction;
   tools_quick_geom_export_vasp_poscar->setText("VASP POSCAR");
   tools_quick_geom_export->addAction(tools_quick_geom_export_vasp_poscar);
+  connect(tools_quick_geom_export_vasp_poscar, &QAction::triggered, this,
+          [this]() { this->export_selected_geometry("Export[VASP POSCAR]",
+                               qc_file_fmt::vasp_poscar);});
 
   help_menu  = menuBar()->addMenu(tr("&Help"));
   act_about = new QAction();
@@ -437,13 +445,42 @@ void main_window::tp_show_gizmo_state_changed(int state) {
 void main_window::import_file(QString dialog_name,
                               QString file_ext,
                               qc_file_fmt file_fmt) {
+
   app_state_t* astate = app_state_t::get_inst();
+
   QString fileName = QFileDialog::getOpenFileName(this, dialog_name, file_ext);
 
   if (fileName != "") {
       astate->ws_manager->import_file_as_new_workspace(fileName.toStdString(), file_fmt);
       workspaces_changed_slot();
     }
+}
+
+void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file_fmt) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  //
+  this->blockSignals(true);
+  this->obj_insp_widget->ws_items_list->blockSignals(true);
+
+  auto cur_ws = astate->ws_manager->get_current();
+  if (cur_ws) {
+      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+
+      if (cur_it) {
+          QString file_name =
+              QFileDialog::getSaveFileName(nullptr, dialog_name, "", "*.*", nullptr,
+                                           QFileDialog::DontResolveSymlinks);
+          if (file_name != QString::null) cur_it->save_to_file(file_fmt, file_name.toStdString());
+        }
+    }
+
+  this->blockSignals(false);
+  this->obj_insp_widget->ws_items_list->blockSignals(false);
+  //this->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+
+
 }
 
 void main_window::create_new_workspace() {
@@ -696,13 +733,13 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
                 }
 
               if (need_to_update_camera) {
-                   astate->camera->m_view_point = look_from;
-                   astate->camera->m_look_at = look_to;
-                   astate->camera->m_look_up = look_up;
-                   astate->camera->orthogonalize_gs();
-                   astate->camera->update_camera();
-                   //astate->make_viewport_dirty();
-                 }
+                  astate->camera->m_view_point = look_from;
+                  astate->camera->m_look_at = look_to;
+                  astate->camera->m_look_up = look_up;
+                  astate->camera->orthogonalize_gs();
+                  astate->camera->update_camera();
+                  //astate->make_viewport_dirty();
+                }
 
             } // end of if (cur_it_as_al)
 

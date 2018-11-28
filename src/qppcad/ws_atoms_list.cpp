@@ -805,37 +805,40 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
 void ws_atoms_list_t::save_to_file (qc_file_fmt file_format, std::string file_name) {
 
-  std::setlocale(LC_ALL, "C");
-//  c_app::log(fmt::format("Saving geometry[{}] to file {} from workspace {}",
-//                         m_name, file_name, parent_ws->m_ws_name));
+  //std::setlocale(LC_ALL, "C");
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->log(fmt::format("Saving geometry[{}] to file {} from workspace {}",
+                         m_name, file_name, parent_ws->m_ws_name));
 
   std::ofstream output(file_name);
+  bool wrong_dimension{false};
+
   if (output) {
       switch (file_format) {
-
         case qc_file_fmt::standart_xyz: {
-            write_xyz(output, *m_geom);
+            if (m_geom->DIM == 0) write_xyz(output, *m_geom);
+            else wrong_dimension = true;
             break;
           };
-
         case qc_file_fmt::vasp_poscar: {
-            write_vasp_poscar(output, *m_geom);
+            if (m_geom->DIM == 3) write_vasp_poscar(output, *m_geom);
+            else wrong_dimension = true;
             break;
           };
-
         case qc_file_fmt::cp2k_coord_cell_section : {
-            write_cp2k_coord_section(output, *m_geom);
+            if (m_geom->DIM == 3) write_cp2k_coord_section(output, *m_geom);
+            else wrong_dimension = true;
             break;
           }
-
         default : {
-//            c_app::log(fmt::format("Saving geomtery -> file format[{}] not supported",
-//                                   file_format));
+            astate->log(fmt::format("Saving geomtery -> format[{}] not supported", file_format));
             break;
           }
         }
-
     }
+
+  if (wrong_dimension) astate->log("Export selected geometry : wrong dimension!");
 }
 
 string ws_atoms_list_t::get_ws_item_class_name () {
