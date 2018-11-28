@@ -19,10 +19,7 @@ apt install build-essential xorg-dev libgl1-mesa-dev libgtk-3-dev
 ```
 ### Dependecies
 1. qpp::core
-2. glfw3
-3. imgui
-4. freetype
-5. nativefiledialog
+2. qt5
 
 ### CI Status
 1. Travis CI [![Build Status](https://travis-ci.org/nvpopov/qppcad.svg?branch=master)](https://travis-ci.org/nvpopov/qppcad)

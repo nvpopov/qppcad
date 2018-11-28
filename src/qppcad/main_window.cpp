@@ -466,14 +466,17 @@ void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file
 
   auto cur_ws = astate->ws_manager->get_current();
   if (cur_ws) {
+      auto cur_idx = cur_ws->get_selected_idx();
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
 
+      cur_ws->unselect_all(true);
       if (cur_it) {
           QString file_name =
               QFileDialog::getSaveFileName(nullptr, dialog_name, "", "*.*", nullptr,
-                                           QFileDialog::DontResolveSymlinks);
+                                           QFileDialog::ReadOnly);
           if (file_name != QString::null) cur_it->save_to_file(file_fmt, file_name.toStdString());
         }
+      cur_ws->set_selected_item(*cur_idx, true);
     }
 
   this->blockSignals(false);
