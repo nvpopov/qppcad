@@ -95,6 +95,8 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       anim_play->blockSignals(true);
       anim_play->setChecked(b_al->m_anim->m_play_anim);
       anim_play->blockSignals(false);
+
+      bt_model->bind(b_al);
     }
 }
 
@@ -114,6 +116,8 @@ void ws_atoms_list_obj_insp_widget_t::unbind_item() {
   gb_rebuild_bonds->unbind_value();
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
+
+  bt_model->unbind();
 
 }
 
@@ -176,7 +180,6 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t()
   tab_general->tab_inner_widget_layout->addWidget(tg_type_summary_widget);
 
   //display tab
-
   gb_display_settings = new QGroupBox(tr("Draw settings"));
   gb_display_settings_layout = new QFormLayout;
   gb_display_settings_layout->setLabelAlignment(Qt::AlignRight);
@@ -216,7 +219,6 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t()
   gb_display_settings_layout->addRow(tr("Labels style"), display_settings_labels_style);
 
   //display - shading tab initialization
-
   gb_display_shading = new QGroupBox(tr("Shading settings"));
   gb_display_shading_layout = new QFormLayout;
   gb_display_shading->setLayout(gb_display_shading_layout);
@@ -226,10 +228,22 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t()
   gb_display_shading_layout->addRow(tr("Enable specular"), display_shading_spec);
   gb_display_shading_layout->addRow(tr("Specular power"), display_shading_spec_value);
 
+  //display - bonding table
+  gb_display_bt = new QGroupBox(tr("Bonding table"));
+  display_bt_layout = new QVBoxLayout;
+  gb_display_bt->setLayout(display_bt_layout);
+  bt_model = new qbonding_table_model_t;
+  display_bt = new QTableView;
+  display_bt->verticalHeader()->hide();
+  display_bt->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+  display_bt->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  display_bt->setModel(bt_model);
+  display_bt_layout->addWidget(display_bt);
+
   tab_display->tab_inner_widget_layout->addWidget(gb_display_shading);
+  tab_display->tab_inner_widget_layout->addWidget(gb_display_bt);
 
   //Anim tab
-
   gb_anim_summary = new QGroupBox(tr("Summary"));
   gb_anim_summary_layout = new QFormLayout;
   gb_anim_summary->setLayout(gb_anim_summary_layout);

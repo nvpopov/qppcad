@@ -3,6 +3,7 @@
 
 #include <qppcad/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/qbonding_table_model.hpp>
 #include <QTableWidget>
 #include <QTableView>
 #include <QHeaderView>
@@ -45,6 +46,11 @@ namespace qpp {
         QFormLayout *gb_display_shading_layout;
         qbinded_checkbox *display_shading_spec;
         qbinded_float_spinbox *display_shading_spec_value;
+
+        QGroupBox *gb_display_bt;
+        QVBoxLayout *display_bt_layout;
+        QTableView *display_bt;
+        qbonding_table_model_t *bt_model;
 
         ws_item_tab_widget_t *tab_animation;
         QGroupBox *gb_anim_summary;
