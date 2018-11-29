@@ -662,6 +662,7 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
 }
 
 void main_window::apply_camera_view_change(cam_target_view target_view) {
+
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -759,6 +760,7 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
 }
 
 void main_window::toggle_ws_edit_mode() {
+
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -771,15 +773,12 @@ void main_window::toggle_ws_edit_mode() {
 }
 
 void main_window::start_update_cycle() {
-
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
      ws_viewer_widget->m_update_timer->start();
     }
-
 }
 
 void main_window::stop_update_cycle() {
-
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
       p_elapsed_time_in_event_loop =  ws_viewer_widget->m_update_timer->remainingTime();
       ws_viewer_widget->m_update_timer->stop();
