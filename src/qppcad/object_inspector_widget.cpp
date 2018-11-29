@@ -30,6 +30,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
   ws_items_list = new QListWidget;
   ws_items_list->setMaximumHeight(250);
   ws_items_list->setStyleSheet(" QListWidget::item { margin: 6px; }");
+  ws_items_list->setFocusPolicy(Qt::NoFocus);
 
   none_item_placeholder = new QWidget;
   none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

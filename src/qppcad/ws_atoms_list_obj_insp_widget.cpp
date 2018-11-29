@@ -236,6 +236,7 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t()
   display_bt = new QTableView;
   display_bt->verticalHeader()->hide();
   display_bt->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+  display_bt->setFocusPolicy(Qt::NoFocus);
   display_bt->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   display_bt->setModel(bt_model);
   display_bt_layout->addWidget(display_bt);

@@ -1,4 +1,5 @@
 #include <qppcad/qbonding_table_model.hpp>
+#include <qppcad/app_state.hpp>
 #include <iterator>
 
 using namespace qpp;
@@ -21,6 +22,8 @@ int qbonding_table_model_t::columnCount(const QModelIndex &parent) const {
 
 QVariant qbonding_table_model_t::data(const QModelIndex &index, int role) const {
 
+  if (!m_al) return QVariant();
+
   if (role == Qt::DisplayRole) {
 
       auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
@@ -38,12 +41,21 @@ QVariant qbonding_table_model_t::data(const QModelIndex &index, int role) const 
               return QVariant(brec->second.m_bonding_dist);
               break;
             case 3 :
-              return QVariant(brec->second.m_enabled);
-              break;
-            default:
+              return QVariant();
               break;
             }
         }
+    }
+
+  if(index.column() == 3 && role == Qt::CheckStateRole) {
+      auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
+      std::advance(brec, index.row());
+      if (brec->second.m_enabled) return Qt::Checked;
+      else return Qt::Unchecked;
+    }
+
+  if (role == Qt::TextAlignmentRole) {
+      if (index.column() >= 0 && index.column() <= 3) return Qt::AlignCenter;
     }
 
   return QVariant();
@@ -77,6 +89,42 @@ QVariant qbonding_table_model_t::headerData(int section,
 
   return QVariant();
 
+}
+
+Qt::ItemFlags qbonding_table_model_t::flags(const QModelIndex &index) const {
+
+  Qt::ItemFlags flags = Qt::ItemFlag::ItemIsEnabled;
+
+  if (index.column() == 0 || index.column() == 1) {
+      flags = flags | Qt::ItemFlag::ItemIsSelectable;
+    }
+
+  if (index.column() == 2) {
+      flags = flags | Qt::ItemFlag::ItemIsEditable;
+    }
+
+  if (index.column() == 3) {
+      flags = flags | Qt::ItemFlag::ItemIsUserCheckable ;
+    }
+
+  return flags;
+}
+
+bool qbonding_table_model_t::setData(const QModelIndex &index, const QVariant &value, int role) {
+
+  if (!m_al) return false;
+
+  if(index.column() == 3 && role == Qt::CheckStateRole) {
+      auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
+      std::advance(brec, index.row());
+      brec->second.m_enabled = value == Qt::Checked;
+      app_state_t* astate = app_state_t::get_inst();
+      m_al->m_tws_tr->do_action(act_rebuild_ntable);
+      astate->make_viewport_dirty();
+      return true;
+    }
+
+  return QAbstractTableModel::setData(index, value, role);
 }
 
 void qbonding_table_model_t::bind(ws_atoms_list_t *_al) {
