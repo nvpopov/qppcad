@@ -22,6 +22,7 @@
 #include <QFileDialog>
 #include <qppcad/ws_viewer_widget.hpp>
 #include <qppcad/object_inspector_widget.hpp>
+#include <qppcad/super_cell_widget.hpp>
 
 namespace qpp {
 
@@ -147,6 +148,7 @@ namespace qpp {
         void toggle_ws_edit_mode();
         void start_update_cycle();
         void stop_update_cycle();
+        void dialog_supercell_generation();
 
     };
   }

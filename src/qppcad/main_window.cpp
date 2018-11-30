@@ -41,9 +41,9 @@ main_window::~main_window() {
 }
 
 void main_window::init_base_shortcuts() {
-  sc_terminate_app = new QShortcut(this);
-  sc_terminate_app->setKey(Qt::Key_Escape);
-  connect(sc_terminate_app, SIGNAL(activated()), this, SLOT(slot_shortcut_terminate_app()));
+  //  sc_terminate_app = new QShortcut(this);
+  //  sc_terminate_app->setKey(Qt::Key_Escape);
+  //  connect(sc_terminate_app, SIGNAL(activated()), this, SLOT(slot_shortcut_terminate_app()));
 }
 
 void main_window::init_menus() {
@@ -113,6 +113,7 @@ void main_window::init_menus() {
   act_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
   file_menu->addSeparator();
   file_menu->addAction(act_close_app);
+  connect(act_close_app, &QAction::triggered, this, &main_window::slot_shortcut_terminate_app);
 
   edit_menu  = menuBar()->addMenu(tr("&Edit"));
   act_undo = new QAction();
@@ -146,6 +147,7 @@ void main_window::init_menus() {
   act_sc_generator = new QAction();
   act_sc_generator->setText(tr("Supercell generator"));
   tools_menu_generators->addAction(act_sc_generator);
+  connect(act_sc_generator, &QAction::triggered, this, &main_window::dialog_supercell_generation);
 
   tools_quick_geom_export = tools_menu->addMenu(tr("Export selected geometry"));
   tools_quick_geom_export_xyz = new QAction;
@@ -600,11 +602,15 @@ void main_window::current_workspace_changed() {
           std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
                                                cur_ws->m_ws_name, cur_ws->m_fs_path);
           this->setWindowTitle(QString::fromStdString(title_text));
-        }
-      else {
+          act_sc_generator->setEnabled(true);
+        } else {
           this->setWindowTitle("qpp::cad");
         }
+    } else {
+      act_sc_generator->setEnabled(false);
+      this->setWindowTitle("qpp::cad");
     }
+
   current_workspace_properties_changed();
   current_workspace_selected_item_changed();
 }
@@ -774,7 +780,7 @@ void main_window::toggle_ws_edit_mode() {
 
 void main_window::start_update_cycle() {
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
-     ws_viewer_widget->m_update_timer->start();
+      ws_viewer_widget->m_update_timer->start();
     }
 }
 
@@ -783,6 +789,40 @@ void main_window::stop_update_cycle() {
       p_elapsed_time_in_event_loop =  ws_viewer_widget->m_update_timer->remainingTime();
       ws_viewer_widget->m_update_timer->stop();
       ws_viewer_widget->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
+    }
+}
+
+void main_window::dialog_supercell_generation() {
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+
+          if (al) {
+              if (al->m_geom->DIM == 3) {
+                  super_cell_widget_t scw;
+                  if (scw.exec() == QDialog::Accepted) {
+                      int rep_a = scw.get_replication_coeff(0) + 1;
+                      int rep_b = scw.get_replication_coeff(1) + 1;
+                      int rep_c = scw.get_replication_coeff(2) + 1;
+                      al->make_super_cell(rep_a, rep_b, rep_c);
+                      astate->make_viewport_dirty();
+                    }
+                } else QMessageBox::warning(this, tr("Supercell generation warning"),
+                                        tr("m_geom.DIM !=3"));
+            }
+          else { // is not an atoms list
+              QMessageBox::warning(this, tr("Supercell generation warning"),
+                                   tr("ws_item.type != ws_atoms_list"));
+            }
+
+        } else {
+          QMessageBox::warning(this, tr("Supercell generation warning"),
+                               tr("Workspace not select"));
+        }
     }
 }
 

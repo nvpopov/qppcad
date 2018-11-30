@@ -96,7 +96,11 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       anim_play->setChecked(b_al->m_anim->m_play_anim);
       anim_play->blockSignals(false);
 
+      display_bt->setModel(nullptr);
       bt_model->bind(b_al);
+      display_bt->setModel(bt_model);
+      display_bt->update();
+
     }
 }
 

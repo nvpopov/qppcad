@@ -529,6 +529,10 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
 
   sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
   sc_al->geometry_changed();
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->current_workspace_changed();
+
 }
 
 void ws_atoms_list_t::apply_axial_scale (const float scale_a,

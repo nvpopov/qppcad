@@ -132,5 +132,5 @@ void qbonding_table_model_t::bind(ws_atoms_list_t *_al) {
 }
 
 void qbonding_table_model_t::unbind() {
-
+  //this->
 }
