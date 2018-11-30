@@ -4,6 +4,7 @@
 #include <qppcad/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_atoms_list.hpp>
 #include <qppcad/qbonding_table_model.hpp>
+#include <qppcad/qrealspinbox_delegate.hpp>
 #include <QTableWidget>
 #include <QTableView>
 #include <QHeaderView>
@@ -51,6 +52,7 @@ namespace qpp {
         QVBoxLayout *display_bt_layout;
         QTableView *display_bt;
         qbonding_table_model_t *bt_model;
+        qrealspinbox_delegate_t *bt_dist_delegate;
 
         ws_item_tab_widget_t *tab_animation;
         QGroupBox *gb_anim_summary;

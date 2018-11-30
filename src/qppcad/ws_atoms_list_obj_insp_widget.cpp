@@ -244,6 +244,10 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t()
   display_bt->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   display_bt->setModel(bt_model);
   display_bt_layout->addWidget(display_bt);
+  bt_dist_delegate = new qrealspinbox_delegate_t;
+  bt_dist_delegate->set_min_max_step(0.1, 5.0, 0.01);
+  display_bt->setItemDelegateForColumn(2, bt_dist_delegate);
+
 
   tab_display->tab_inner_widget_layout->addWidget(gb_display_shading);
   tab_display->tab_inner_widget_layout->addWidget(gb_display_bt);

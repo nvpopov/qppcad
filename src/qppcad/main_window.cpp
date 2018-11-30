@@ -625,7 +625,7 @@ void main_window::current_workspace_selected_item_changed() {
           auto cur_it = cur_ws->get_selected();
           auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
           if (cur_it_as_al) {
-              if (cur_it_as_al->m_geom->DIM == 3) change_camera_buttons_visible(true, true);
+              if (cur_it_as_al->m_geom->DIM == 3) change_camera_buttons_visible(false, true);
               else change_camera_buttons_visible(true, false);
             }
           else change_camera_buttons_visible(false, false);
@@ -793,6 +793,7 @@ void main_window::stop_update_cycle() {
 }
 
 void main_window::dialog_supercell_generation() {
+
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -804,26 +805,28 @@ void main_window::dialog_supercell_generation() {
           if (al) {
               if (al->m_geom->DIM == 3) {
                   super_cell_widget_t scw;
-                  if (scw.exec() == QDialog::Accepted) {
-                      int rep_a = scw.get_replication_coeff(0) + 1;
-                      int rep_b = scw.get_replication_coeff(1) + 1;
-                      int rep_c = scw.get_replication_coeff(2) + 1;
-                      al->make_super_cell(rep_a, rep_b, rep_c);
+                  int ret_code = scw.exec();
+                  int rep_a = scw.get_replication_coeff(0);
+                  int rep_b = scw.get_replication_coeff(1);
+                  int rep_c = scw.get_replication_coeff(2);
+
+                  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c >= 1)) {
+                      al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
                       astate->make_viewport_dirty();
                     }
-                } else QMessageBox::warning(this, tr("Supercell generation warning"),
-                                        tr("m_geom.DIM !=3"));
+                } else QMessageBox::warning(this, tr("Supercell generation"), tr("m_geom.DIM !=3"));
             }
           else { // is not an atoms list
-              QMessageBox::warning(this, tr("Supercell generation warning"),
+              QMessageBox::warning(this, tr("Supercell generation"),
                                    tr("ws_item.type != ws_atoms_list"));
             }
 
         } else {
-          QMessageBox::warning(this, tr("Supercell generation warning"),
+          QMessageBox::warning(this, tr("Supercell generation"),
                                tr("Workspace not select"));
         }
     }
+
 }
 
 void main_window::slot_shortcut_terminate_app() {

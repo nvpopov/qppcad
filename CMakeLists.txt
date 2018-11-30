@@ -102,6 +102,7 @@ add_executable(qppcad
     src/qppcad/ws_comp_chem_data_obj_insp_widget.cpp
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qbonding_table_model.cpp
+    src/qppcad/qrealspinbox_delegate.cpp
     ${QRCS})
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES})

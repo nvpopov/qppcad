@@ -108,9 +108,12 @@ Qt::ItemFlags qbonding_table_model_t::flags(const QModelIndex &index) const {
     }
 
   return flags;
+
 }
 
 bool qbonding_table_model_t::setData(const QModelIndex &index, const QVariant &value, int role) {
+
+  app_state_t* astate = app_state_t::get_inst();
 
   if (!m_al) return false;
 
@@ -118,13 +121,27 @@ bool qbonding_table_model_t::setData(const QModelIndex &index, const QVariant &v
       auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
       std::advance(brec, index.row());
       brec->second.m_enabled = value == Qt::Checked;
-      app_state_t* astate = app_state_t::get_inst();
+
       m_al->m_tws_tr->do_action(act_rebuild_ntable);
       astate->make_viewport_dirty();
       return true;
     }
 
+  if(index.column() == 2 && role == Qt::EditRole) {
+      auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
+      std::advance(brec, index.row());
+      if (value.type() == QVariant::Double) {
+          astate->log("ALOHA");
+          brec->second.m_bonding_dist = value.toDouble();
+          m_al->m_tws_tr->m_bonding_table.update_pair_max_dist(brec->first.m_a, brec->first.m_b);
+          m_al->m_tws_tr->do_action(act_rebuild_ntable);
+          astate->make_viewport_dirty();
+          return true;
+       }
+    }
+
   return QAbstractTableModel::setData(index, value, role);
+
 }
 
 void qbonding_table_model_t::bind(ws_atoms_list_t *_al) {
