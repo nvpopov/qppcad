@@ -104,6 +104,7 @@ namespace qpp {
         QAction *act_settings;
 
         QMenu *tools_menu;
+        QAction *act_axial_scale;
         QMenu *tools_menu_generators;
         QAction *act_sc_generator;
         QMenu *tools_quick_geom_export;

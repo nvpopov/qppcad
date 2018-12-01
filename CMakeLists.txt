@@ -73,6 +73,7 @@ add_executable(qppcad
     src/qppcad/main_window.cpp
     src/qppcad/ws_viewer_widget.cpp
     src/qppcad/super_cell_widget.cpp
+    src/qppcad/axial_scale_widget.cpp
     src/qppcad/object_inspector_widget.cpp
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp

@@ -50,65 +50,65 @@ void main_window::init_menus() {
 
   file_menu  = menuBar()->addMenu(tr("&File"));
 
-  act_new_ws = new QAction();
+  act_new_ws = new QAction(this);
   act_new_ws->setText(tr("New workspace"));
   act_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
   file_menu->addAction(act_new_ws);
   connect(act_new_ws, &QAction::triggered, this, &main_window::create_new_workspace);
 
-  act_open_ws = new QAction();
+  act_open_ws = new QAction(this);
   act_open_ws->setText(tr("Open workspace"));
   act_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
   file_menu->addAction(act_open_ws);
   connect(act_open_ws, &QAction::triggered, this, &main_window::open_workspace);
 
   menu_import = file_menu->addMenu(tr("Import"));
-  menu_import_xyz = new QAction;
+  menu_import_xyz = new QAction(this);
   menu_import_xyz->setText("XYZ");
   menu_import->addAction(menu_import_xyz);
   connect(menu_import_xyz, &QAction::triggered, this,
           [this](){this->import_file("Import XYZ file", "*", qc_file_fmt::standart_xyz);});
 
   menu_import_cp2k = menu_import->addMenu("CP2K");
-  menu_import_cp2k_output = new QAction;
+  menu_import_cp2k_output = new QAction(this);
   menu_import_cp2k_output->setText(tr("OUTPUT"));
   menu_import_cp2k->addAction(menu_import_cp2k_output);
   connect(menu_import_cp2k_output, &QAction::triggered, this,
           [this](){this->import_file("Import CP2K output", "*", qc_file_fmt::cp2k_output);});
 
   menu_import_firefly = menu_import->addMenu("Firefly");
-  menu_import_firefly_output = new QAction;
+  menu_import_firefly_output = new QAction(this);
   menu_import_firefly_output->setText(tr("OUTPUT"));
   menu_import_firefly->addAction(menu_import_firefly_output);
   connect(menu_import_firefly_output, &QAction::triggered, this,
           [this](){this->import_file("Import Firefly output", "*", qc_file_fmt::firefly_output);});
 
   menu_import_vasp = menu_import->addMenu("VASP");
-  menu_import_vasp_poscar = new QAction;
+  menu_import_vasp_poscar = new QAction(this);
   menu_import_vasp_poscar->setText(tr("POSCAR"));
   connect(menu_import_vasp_poscar,&QAction::triggered, this,
           [this](){this->import_file("Import VASP POSCAR", "*", qc_file_fmt::vasp_poscar);});
 
   menu_import_vasp->addAction(menu_import_vasp_poscar);
-  menu_import_vasp_outcar = new QAction;
+  menu_import_vasp_outcar = new QAction(this);
   menu_import_vasp_outcar->setText(tr("OUTCAR"));
   menu_import_vasp->addAction(menu_import_vasp_outcar);
   connect(menu_import_vasp_outcar,&QAction::triggered, this,
           [this](){this->import_file("Import VASP OUTCAR", "*", qc_file_fmt::vasp_outcar_md);});
 
-  act_save_ws = new QAction();
+  act_save_ws = new QAction(this);
   act_save_ws->setText(tr("Save workspace"));
   act_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
   file_menu->addSeparator();
   file_menu->addAction(act_save_ws);
   connect(act_save_ws, &QAction::triggered, this, &main_window::save_workspace);
 
-  act_save_ws_as = new QAction();
+  act_save_ws_as = new QAction(this);
   act_save_ws_as->setText(tr("Save workspace as"));
   file_menu->addAction(act_save_ws_as);
   connect(act_save_ws_as, &QAction::triggered, this, &main_window::save_workspace_as);
 
-  act_close_app = new QAction();
+  act_close_app = new QAction(this);
   act_close_app->setText(tr("Close"));
   act_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
   file_menu->addSeparator();
@@ -116,19 +116,19 @@ void main_window::init_menus() {
   connect(act_close_app, &QAction::triggered, this, &main_window::slot_shortcut_terminate_app);
 
   edit_menu  = menuBar()->addMenu(tr("&Edit"));
-  act_undo = new QAction();
+  act_undo = new QAction(this);
   act_undo->setText(tr("Undo"));
   act_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
   edit_menu->addAction(act_undo);
 
-  act_redo = new QAction();
+  act_redo = new QAction(this);
   act_redo->setText(tr("Redo"));
   act_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
   edit_menu->addAction(act_redo);
 
   edit_menu->addSeparator();
 
-  switch_between_ws_edit_mode = new QAction;
+  switch_between_ws_edit_mode = new QAction(this);
   switch_between_ws_edit_mode->setText(tr("Switch edit mode"));
   switch_between_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
   connect(switch_between_ws_edit_mode, SIGNAL(triggered()), this, SLOT(toggle_ws_edit_mode()));
@@ -136,7 +136,7 @@ void main_window::init_menus() {
 
   edit_menu->addSeparator();
 
-  act_settings = new QAction();
+  act_settings = new QAction(this);
   act_settings->setText(tr("Settings"));
   edit_menu->addSeparator();
   edit_menu->addAction(act_settings);
@@ -144,26 +144,30 @@ void main_window::init_menus() {
   tools_menu = menuBar()->addMenu(tr("&Tools"));
   tools_menu_generators = tools_menu->addMenu(tr("Generators"));
 
-  act_sc_generator = new QAction();
+  act_axial_scale = new QAction(this);
+  act_axial_scale->setText(tr("Axial scale"));
+  tools_menu->addAction(act_axial_scale);
+
+  act_sc_generator = new QAction(this);
   act_sc_generator->setText(tr("Supercell generator"));
   tools_menu_generators->addAction(act_sc_generator);
   connect(act_sc_generator, &QAction::triggered, this, &main_window::dialog_supercell_generation);
 
   tools_quick_geom_export = tools_menu->addMenu(tr("Export selected geometry"));
-  tools_quick_geom_export_xyz = new QAction;
+  tools_quick_geom_export_xyz = new QAction(this);
   tools_quick_geom_export_xyz->setText("XYZ");
   tools_quick_geom_export->addAction(tools_quick_geom_export_xyz);
   connect(tools_quick_geom_export_xyz, &QAction::triggered, this,
           [this](){this->export_selected_geometry("Export[xyz]", qc_file_fmt::standart_xyz);});
 
-  tools_quick_geom_export_cp2k_coord = new QAction;
+  tools_quick_geom_export_cp2k_coord = new QAction(this);
   tools_quick_geom_export_cp2k_coord->setText("CP2K coord section");
   tools_quick_geom_export->addAction(tools_quick_geom_export_cp2k_coord);
   connect(tools_quick_geom_export_cp2k_coord, &QAction::triggered, this,
           [this]() { this->export_selected_geometry("Export[CP2K coord. section]",
                                                     qc_file_fmt::cp2k_coord_cell_section);});
 
-  tools_quick_geom_export_vasp_poscar = new QAction;
+  tools_quick_geom_export_vasp_poscar = new QAction(this);
   tools_quick_geom_export_vasp_poscar->setText("VASP POSCAR");
   tools_quick_geom_export->addAction(tools_quick_geom_export_vasp_poscar);
   connect(tools_quick_geom_export_vasp_poscar, &QAction::triggered, this,
@@ -171,7 +175,7 @@ void main_window::init_menus() {
                                                     qc_file_fmt::vasp_poscar);});
 
   help_menu  = menuBar()->addMenu(tr("&Help"));
-  act_about = new QAction();
+  act_about = new QAction(this);
   act_about->setText(tr("About"));
   help_menu->addAction(act_about);
 }
