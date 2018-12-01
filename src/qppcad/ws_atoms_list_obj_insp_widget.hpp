@@ -80,6 +80,8 @@ namespace qpp {
 
         ws_item_tab_widget_t *tab_measurement;
 
+        ws_item_tab_widget_t *tab_modify;
+
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;

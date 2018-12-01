@@ -23,6 +23,7 @@
 #include <qppcad/ws_viewer_widget.hpp>
 #include <qppcad/object_inspector_widget.hpp>
 #include <qppcad/super_cell_widget.hpp>
+#include <qppcad/axial_scale_widget.hpp>
 
 namespace qpp {
 
@@ -61,12 +62,17 @@ namespace qpp {
         QPushButton *tp_edit_mode_content;
         QFrame *tp_edit_mode_end;
 
+        int tp_button_width{36};
+        int tp_button_height{30};
+
         QPushButton *tp_camera_x;
         QPushButton *tp_camera_y;
         QPushButton *tp_camera_z;
         QPushButton *tp_camera_a;
         QPushButton *tp_camera_b;
         QPushButton *tp_camera_c;
+
+        QPushButton *tp_measure_dist;
 
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
@@ -150,6 +156,7 @@ namespace qpp {
         void start_update_cycle();
         void stop_update_cycle();
         void dialog_supercell_generation();
+        void dialog_axial_scale();
 
     };
   }

@@ -147,6 +147,7 @@ void main_window::init_menus() {
   act_axial_scale = new QAction(this);
   act_axial_scale->setText(tr("Axial scale"));
   tools_menu->addAction(act_axial_scale);
+  connect(act_axial_scale, &QAction::triggered, this, &main_window::dialog_axial_scale);
 
   act_sc_generator = new QAction(this);
   act_sc_generator->setText(tr("Supercell generator"));
@@ -198,32 +199,32 @@ void main_window::init_widgets() {
   //tp_ws_selector->setParent(tool_panel_widget);
   tp_ws_selector->setStyleSheet("padding:4px;");
   tp_ws_selector->setMinimumWidth(150);
-  tp_ws_selector->setMinimumHeight(30);
+  tp_ws_selector->setMinimumHeight(tp_button_height);
   //  tp_ws_selector_label = new QLabel;
   //  tp_ws_selector_label->setText(tr("Current workspace:"));
 
   tp_add_ws = new QPushButton;
   tp_add_ws->setMinimumWidth(30);
-  tp_add_ws->setMinimumHeight(30);
+  tp_add_ws->setMinimumHeight(tp_button_height);
   tp_add_ws->setText("+");
   connect(tp_add_ws, &QPushButton::pressed, this, &main_window::create_new_workspace);
 
   tp_rm_ws = new QPushButton;
   tp_rm_ws->setText("-");
   tp_rm_ws->setMinimumWidth(30);
-  tp_rm_ws->setMinimumHeight(30);
+  tp_rm_ws->setMinimumHeight(tp_button_height);
   connect(tp_rm_ws, &QPushButton::pressed, this, &main_window::close_current_workspace);
 
   tp_rnm_ws = new QPushButton;
   tp_rnm_ws->setText("RN");
   tp_rnm_ws->setMinimumWidth(30);
-  tp_rnm_ws->setMinimumHeight(30);
+  tp_rnm_ws->setMinimumHeight(tp_button_height);
   connect(tp_rnm_ws, &QPushButton::pressed, this, &main_window::rename_current_workspace);
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setCheckState(Qt::Checked);
   tp_show_obj_insp->setText("Inspector");
-  tp_show_obj_insp->setMinimumHeight(30);
+  tp_show_obj_insp->setMinimumHeight(tp_button_height);
   QObject::connect(tp_show_obj_insp, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_obj_insp_state_changed(int)));
   tp_show_obj_insp->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
@@ -233,7 +234,7 @@ void main_window::init_widgets() {
   tp_show_gizmo = new QCheckBox;
   tp_show_gizmo->setCheckState(Qt::Checked);
   tp_show_gizmo->setText("Gizmo");
-  tp_show_gizmo->setMinimumHeight(30);
+  tp_show_gizmo->setMinimumHeight(tp_button_height);
   tp_show_gizmo->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
                                "padding-right:5px; "
                                "QCheckBox::indicator { width: 21px;height: 21px;}");
@@ -248,13 +249,13 @@ void main_window::init_widgets() {
   tp_edit_mode_item = new QPushButton;
   tp_edit_mode_item->setText(tr("ITM"));
   tp_edit_mode_item->setMinimumWidth(40);
-  tp_edit_mode_item->setMinimumHeight(30);
+  tp_edit_mode_item->setMinimumHeight(tp_button_height);
   tp_edit_mode_item->setCheckable(true);
 
   tp_edit_mode_content= new QPushButton;
   tp_edit_mode_content->setText(tr("CNT"));
   tp_edit_mode_content->setMinimumWidth(40);
-  tp_edit_mode_content->setMinimumHeight(30);
+  tp_edit_mode_content->setMinimumHeight(tp_button_height);
   tp_edit_mode_content->setCheckable(true);
 
   tp_edit_mode->addButton(tp_edit_mode_item, 0);
@@ -275,41 +276,45 @@ void main_window::init_widgets() {
 
   tp_camera_x = new QPushButton(tr("C:X"));
   tp_camera_x->setMinimumWidth(34);
-  tp_camera_x->setMinimumHeight(28);
+  tp_camera_x->setMinimumHeight(tp_button_height);
   connect(tp_camera_x, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view::tv_x_axis);});
 
   tp_camera_y = new QPushButton(tr("C:Y"));
   tp_camera_y->setMinimumWidth(34);
-  tp_camera_y->setMinimumHeight(28);
+  tp_camera_y->setMinimumHeight(tp_button_height);
   connect(tp_camera_y, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view::tv_y_axis);});
 
   tp_camera_z = new QPushButton(tr("C:Z"));
   tp_camera_z->setMinimumWidth(34);
-  tp_camera_z->setMinimumHeight(28);
+  tp_camera_z->setMinimumHeight(tp_button_height);
   connect(tp_camera_z, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view::tv_z_axis);});
 
   tp_camera_a = new QPushButton(tr("C:a"));
   tp_camera_a->setMinimumWidth(34);
-  tp_camera_a->setMinimumHeight(28);
+  tp_camera_a->setMinimumHeight(tp_button_height);
   connect(tp_camera_a, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view::tv_a_axis);});
 
   tp_camera_b = new QPushButton(tr("C:b"));
   tp_camera_b->setMinimumWidth(34);
-  tp_camera_b->setMinimumHeight(28);
+  tp_camera_b->setMinimumHeight(tp_button_height);
   connect(tp_camera_b, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view::tv_b_axis);});
 
   tp_camera_c = new QPushButton(tr("C:c"));
   tp_camera_c->setMinimumWidth(34);
-  tp_camera_c->setMinimumHeight(28);
+  tp_camera_c->setMinimumHeight(tp_button_height);
   connect(tp_camera_c, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view::tv_c_axis);});
 
   change_camera_buttons_visible(false, false);
+
+  tp_measure_dist = new QPushButton(tr("DIST"));
+  tp_measure_dist->setMinimumWidth(40);
+  tp_measure_dist->setMinimumHeight(tp_button_height);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
   ws_viewer_widget->setStyleSheet("margin-top:-15px;");
@@ -357,6 +362,8 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_camera_a, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_b, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_c, 0, Qt::AlignLeft);
+
+  tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
   //  layout_tools_main_window = new QGridLayout;
@@ -623,16 +630,21 @@ void main_window::current_workspace_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_current();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
           if (cur_it_as_al) {
+              tp_measure_dist->show();
               if (cur_it_as_al->m_geom->DIM == 3) change_camera_buttons_visible(false, true);
               else change_camera_buttons_visible(true, false);
             }
-          else change_camera_buttons_visible(false, false);
+          else {
+              change_camera_buttons_visible(false, false);
+              tp_measure_dist->hide();
+            }
         }
     }
 }
@@ -831,6 +843,42 @@ void main_window::dialog_supercell_generation() {
         }
     }
 
+}
+
+void main_window::dialog_axial_scale() {
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+
+          if (al) {
+              if (al->m_geom->DIM == 3) {
+                  axial_scale_widget_t asw;
+                  int ret_code = asw.exec();
+                  double sc_a = asw.get_scale_value(0);
+                  double sc_b = asw.get_scale_value(1);
+                  double sc_c = asw.get_scale_value(2);
+
+                  if (ret_code == QDialog::Accepted) {
+                    //  al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
+                      al->apply_axial_scale(sc_a, sc_b, sc_c);
+                      astate->make_viewport_dirty();
+                    }
+                } else QMessageBox::warning(this, tr("Axial scale"), tr("m_geom.DIM !=3"));
+            }
+          else { // is not an atoms list
+              QMessageBox::warning(this, tr("Axial scale"),
+                                   tr("ws_item.type != ws_atoms_list"));
+            }
+
+        } else {
+          QMessageBox::warning(this, tr("Axial scale"),
+                               tr("Workspace not select"));
+        }
+    }
 }
 
 void main_window::slot_shortcut_terminate_app() {

@@ -141,14 +141,14 @@ void ws_atoms_list_obj_insp_widget_t::update_anim_tab_gb() {
 
 }
 
-ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t()
-  : ws_item_obj_insp_widget_t() {
+ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
   //general tab
 
   tab_display = define_tab(tr("Display"));
   tab_animation = define_tab(tr("Animation"));
   tab_measurement = define_tab(tr("Measurement"));
+  tab_modify = define_tab(tr("Modify"));
 
   tg_geom_summary_widget = new QGroupBox;
   tg_geom_summary_layout = new QFormLayout;

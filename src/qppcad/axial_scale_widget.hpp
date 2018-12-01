@@ -4,7 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <QWidget>
 #include <QDialog>
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QFormLayout>
@@ -19,6 +19,14 @@ namespace qpp {
         Q_OBJECT
 
       public:
+        QDoubleSpinBox *sb_sc_a;
+        QDoubleSpinBox *sb_sc_b;
+        QDoubleSpinBox *sb_sc_c;
+        QGroupBox *gb_sc_par;
+        QFormLayout *gb_sc_par_layout;
+        QVBoxLayout *dialog_layout;
+        QDialogButtonBox *dialog_bb;
+        double get_scale_value(int dim_id);
         axial_scale_widget_t();
 
     };
