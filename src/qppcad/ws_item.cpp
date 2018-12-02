@@ -7,7 +7,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
-  parent_ws = _parent_ws;
+  m_parent_ws = _parent_ws;
 }
 
 const std::string ws_item_t::get_name(){
@@ -17,21 +17,21 @@ const std::string ws_item_t::get_name(){
 void ws_item_t::set_name(const std::string &_name){
   if (m_name != _name){
       m_name = _name;
-      parent_ws->workspace_changed();
+      m_parent_ws->ws_changed();
     }
 }
 
 void ws_item_t::set_name(const char *_name){
   if (m_name != _name){
       m_name = std::string(_name);
-      parent_ws->workspace_changed();
+      m_parent_ws->ws_changed();
     }
 }
 
 bool ws_item_t::is_selected() {
 
-  if (parent_ws) {
-      return parent_ws->get_selected() == this;
+  if (m_parent_ws) {
+      return m_parent_ws->get_selected() == this;
     }
   else {
       return false;
@@ -46,7 +46,7 @@ void ws_item_t::render () {
   if (m_selected && (get_flags() & ws_item_flags_support_selection) &&
       (get_flags() & ws_item_flags_support_rendering_bb) && is_bb_visible()) {
       astate->dp->begin_render_aabb();
-      if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+      if (m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
         astate->dp->render_aabb(clr_fuchsia,
                                      m_pos + m_aabb.min,
                                      m_pos + m_aabb.max  );

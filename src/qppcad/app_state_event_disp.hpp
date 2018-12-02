@@ -14,24 +14,25 @@ namespace qpp {
         Q_OBJECT
 
       signals:
-        void workspaces_changed_signal();
-        void current_workspace_changed_signal();
-        void current_workspace_selected_item_changed_signal();
-        void current_workspace_selected_item_content_changed_signal();
-        void current_workspace_selected_item_frame_changed_signal();
-        void current_workspace_selected_atoms_list_selection_changed_signal();
-        void current_workspace_selected_atoms_list_cell_changed_signal();
-         void current_workspace_selected_item_position_changed_signal();
+        void wss_changed_signal();
+        void cur_ws_changed_signal();
+
+        void cur_ws_selected_item_changed_signal();
+        void cur_ws_selected_item_content_changed_signal();
+        void cur_ws_selected_item_frame_changed_signal();
+        void cur_ws_selected_atoms_list_selection_changed_signal();
+        void cur_ws_selected_atoms_list_cell_changed_signal();
+        void cur_ws_selected_item_position_changed_signal();
 
       public:
-        void workspaces_changed();
-        void current_workspace_changed();
-        void current_workspace_selected_item_changed();
-        void current_workspace_selected_item_content_changed();
-        void current_workspace_selected_item_frame_changed();
-        void current_workspace_selected_atoms_list_selection_changed();
-        void current_workspace_selected_atoms_list_cell_changed();
-        void current_workspace_selected_item_position_changed();
+        void wss_changed();
+        void cur_ws_changed();
+        void cur_ws_selected_item_changed();
+        void cur_ws_selected_item_content_changed();
+        void cur_ws_selected_item_frame_changed();
+        void cur_ws_selected_atoms_list_selection_changed();
+        void cur_ws_selected_atoms_list_cell_changed();
+        void cur_ws_selected_item_position_changed();
         explicit app_state_event_disp_t(QObject *parent = 0);
     };
 

@@ -39,7 +39,7 @@ void ws_viewer_widget_t::update_cycle() {
     }
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       cur_ws->update(0.016);
     }
 
@@ -93,13 +93,13 @@ void ws_viewer_widget_t::paintGL() {
   glapi->glDepthFunc(GL_LEQUAL);
   glapi->glEnable(GL_CULL_FACE);
   glapi->glCullFace(GL_BACK);
-  astate->ws_manager->render_current_workspace();
+  astate->ws_manager->render_cur_ws();
 
   glapi->glDisable(GL_DEPTH_TEST);
 
   painter.endNativePainting();
 
-  astate->ws_manager->render_current_workspace_overlay(&painter);
+  astate->ws_manager->render_cur_ws_overlay(&painter);
   painter.end();
 
   //astate->log("REPAINT");

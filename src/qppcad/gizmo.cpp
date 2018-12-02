@@ -25,7 +25,7 @@ void gizmo_t::render () {
   if (!m_is_visible) return;
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
+  ws_edit_type cur_edit_type = astate->ws_manager->get_cur_ws()->m_edit_type;
 
   //prevent showing gizmo when no content selected
   if (attached_item && attached_item->get_amount_of_selected_content() == 0 &&
@@ -121,7 +121,7 @@ void gizmo_t::translate_attached(float delta_time){
 
   if (attached_item) {
 
-      ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
+      ws_edit_type cur_edit_type = astate->ws_manager->get_cur_ws()->m_edit_type;
 
       vector3<float> unproj_mouse_hit_old =
           astate->camera->unproject(astate->mouse_x_dc_old, astate->mouse_y_dc_old);
@@ -144,7 +144,7 @@ void gizmo_t::translate_attached(float delta_time){
           if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM) {
               attached_item->m_pos += new_transform;
               if (attached_item && attached_item->is_selected())
-                astate->astate_evd->current_workspace_selected_item_position_changed();
+                astate->astate_evd->cur_ws_selected_item_position_changed();
             }
           else attached_item->apply_intermediate_translate_content(new_transform);
         }
@@ -163,7 +163,7 @@ void gizmo_t::clear_selected_axis () {
 void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
+  ws_edit_type cur_edit_type = astate->ws_manager->get_cur_ws()->m_edit_type;
 
   //update gizmo position according to current workspace edit type value
   //if we are in node edit mode - snap to aabb min

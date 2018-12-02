@@ -88,8 +88,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
 
   connect(astate->astate_evd,
-          &app_state_event_disp_t::current_workspace_selected_item_position_changed_signal,
-          this, &ws_item_obj_insp_widget_t::current_workspace_selected_item_position_changed);
+          &app_state_event_disp_t::cur_ws_selected_item_position_changed_signal,
+          this, &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
 
   tab_general->tab_inner_widget_layout->addWidget(tg_actions);
 
@@ -121,7 +121,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   //  //setElideMode(Qt::ElideLeft);
 }
 
-void ws_item_obj_insp_widget_t::current_workspace_selected_item_position_changed() {
+void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
 
   if (m_binded_item) {
       if (m_binded_item->get_flags() & ws_item_flags_support_translation) {
@@ -141,7 +141,7 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
                                            QString::fromStdString(m_binded_item->m_name), &ok);
       if (ok && text != "") {
           m_binded_item->m_name = text.toStdString();
-          astate->astate_evd->current_workspace_selected_item_changed();
+          astate->astate_evd->cur_ws_selected_item_changed();
         }
     }
 }

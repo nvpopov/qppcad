@@ -61,7 +61,7 @@ namespace qpp {
           astate->make_viewport_dirty();
 
           if (p_owner->is_selected())
-            astate->astate_evd->current_workspace_selected_item_frame_changed();
+            astate->astate_evd->cur_ws_selected_item_frame_changed();
         }
 
       if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_unlock);
@@ -105,7 +105,7 @@ namespace qpp {
       //if (m_anim[m_cur_anim].frame_data[0].si)
       if (m_play_anim && animable()) {
 
-          astate->log("ANIM");
+          //astate->log("ANIM");
 
           m_cur_anim_time += 1 / (m_anim_frame_time * 60);
           if (m_cur_anim_time > m_anim_data[m_cur_anim].frame_data.size() - 1) {

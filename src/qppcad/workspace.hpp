@@ -23,31 +23,31 @@ namespace qpp {
     class workspace_manager_t : public std::enable_shared_from_this<workspace_manager_t> {
       private:
         app_state_t *cached_astate;
-        size_t m_current_workspace_id;
-      public:
+        size_t m_cur_ws_id;
 
+      public:
         std::vector<std::shared_ptr<workspace_t> > m_ws;
 
         workspace_manager_t(app_state_t *_astate);
 
-        std::shared_ptr<workspace_t> get_current();
-        std::optional<size_t> get_current_id();
+        std::shared_ptr<workspace_t> get_cur_ws();
+        std::optional<size_t> get_cur_id();
 
-        bool set_current(const size_t ws_index);
+        bool set_cur_id(const size_t ws_index);
 
         template<int I>
-        void force_set_current(){set_current(I);}
+        void force_set_cur_ws(){set_cur_id(I);}
 
         bool has_wss(){return m_ws.size()>0;}
         void init_default();
-        void render_current_workspace();
-        void render_current_workspace_overlay(QPainter *painter);
+        void render_cur_ws();
+        void render_cur_ws_overlay(QPainter *painter);
         void mouse_click();
-        void workspace_manager_changed();
-        void add_workspace(const std::shared_ptr<workspace_t> &ws_to_add);
-        void import_file_as_new_workspace(const std::string &fname, qc_file_fmt file_format);
-        void query_create_new_workspace(bool switch_to_new_workspace = true);
-        void load_workspace_from_file(const std::string &filename);
+        void ws_mgr_changed();
+        void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
+        void import_file_as_new_ws(const std::string &fname, qc_file_fmt file_format);
+        void query_create_new_ws(bool switch_to_new_workspace = true);
+        void load_ws_from_file(const std::string &filename);
     };
 
     ///
@@ -79,17 +79,17 @@ namespace qpp {
         bool set_selected_item(const size_t sel_idx, bool emit_signal = true);
         void unselect_all(bool emit_signal = true);
         void toggle_edit_mode();
-        void workspace_changed();
+        void ws_changed();
         void reset_camera();
         void set_best_view();
         void render();
         void render_overlay(QPainter *painter);
         void mouse_click(const float mouse_x, const float mouse_y);
-        void add_item_to_workspace(const std::shared_ptr<ws_item_t> &item_to_add);
+        void add_item_to_ws(const std::shared_ptr<ws_item_t> &item_to_add);
         //void dialog_add_geom_from_file(qc_file_fmt file_format);
 
-        void save_workspace_to_json(const std::string filename);
-        void load_workspace_from_json(const std::string filename);
+        void save_ws_to_json(const std::string filename);
+        void load_ws_from_json(const std::string filename);
         void update(float delta_time);
         void set_edit_type(const ws_edit_type new_edit_type);
 

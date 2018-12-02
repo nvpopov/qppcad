@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum cam_target_view : int {
+    enum cam_target_view_t : int {
       tv_x_axis,
       tv_y_axis,
       tv_z_axis,
@@ -16,9 +16,9 @@ namespace qpp {
       tv_c_axis
     };
 
-    enum cam_proj_type {
-      CAMERA_PROJ_ORTHO,
-      CAMERA_PROJ_PERSP
+    enum cam_proj_t {
+      proj_ortho,
+      proj_persp
     };
 
     class camera_t{
@@ -56,7 +56,7 @@ namespace qpp {
         float m_zfar_ortho{1000};
         float m_stored_dist;
 
-        cam_proj_type cur_proj{cam_proj_type::CAMERA_PROJ_PERSP};
+        cam_proj_t m_cur_proj{cam_proj_t::proj_persp};
 
         camera_t();
         void orthogonalize_gs();
@@ -76,7 +76,7 @@ namespace qpp {
         void update_camera_translation(const bool move_camera);
         void update_camera_rotation(const bool rotate_camera);
 
-        void set_projection(cam_proj_type _proj_to_set);
+        void set_projection(cam_proj_t _proj_to_set);
         float distance(const vector3<float> &point);
         vector3<float> unproject(const float x, const float y);
         std::optional<vector2<float> > project(const vector3<float> point);

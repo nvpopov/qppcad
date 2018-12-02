@@ -14,19 +14,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
   setLayout(obj_insp_layout);
   ws_items_label = new QLabel;
   ws_items_label->setText(tr("Workspace items:"));
-  //  ws_items_gb = new QGroupBox;
-  //  ws_items_gb->setTitle(tr("Workspace items:"));
-  //  //ws_items_gb->setMaximumHeight(340);
-  //  ws_items_gb_layout = new QHBoxLayout;
-  //  ws_items_gb->setStyleSheet("QGroupBox::title {"
-  //                             "subcontrol-origin: margin;"
-  //                             "subcontrol-position: top center;"
-  //                             "padding-left: 10px;"
-  //                             "padding-right: 10px;"
-  //                             "padding-top: 0px;"
-  //                             "margin-bottom:15px;}");
-  //  ws_items_gb->setFlat(false);
-  //  ws_items_gb->setLayout(ws_items_gb_layout);
+
   ws_items_list = new QListWidget;
   ws_items_list->setMaximumHeight(250);
   ws_items_list->setStyleSheet(" QListWidget::item { margin: 6px; }");
@@ -34,36 +22,30 @@ object_inspector_widget_t::object_inspector_widget_t() {
 
   none_item_placeholder = new QWidget;
   none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  //  property_label = new QLabel;
-  //  property_label->setText(tr("Properties:"));
 
   obj_insp_layout->addWidget(ws_items_label);
   obj_insp_layout->addWidget(ws_items_list);
   obj_insp_layout->addWidget(none_item_placeholder);
-
-  //obj_insp_layout->addWidget(property_label, 0, Qt::AlignTop);
-
-
   obj_insp_layout->setContentsMargins(0,0,15,15);
 
   connect(astate->astate_evd,
-          SIGNAL(current_workspace_selected_item_changed_signal()),
-          this, SLOT(current_workspace_selected_item_changed()));
+          SIGNAL(cur_ws_selected_item_changed_signal()),
+          this, SLOT(cur_ws_selected_item_changed()));
 
   connect(astate->astate_evd,
-          SIGNAL(current_workspace_changed_signal()),
-          this, SLOT(current_workspace_changed()));
+          SIGNAL(cur_ws_changed_signal()),
+          this, SLOT(cur_ws_changed()));
 
   connect(ws_items_list, &QListWidget::itemSelectionChanged,
-          this, &object_inspector_widget_t::ui_current_workspace_selected_item_changed);
+          this, &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
 
   //ws_item_view = new ws_item_obj_insp_widget_t;
   ws_atoms_list_view = new ws_atoms_list_obj_insp_widget_t;
   ws_comp_chem_data_view = new ws_comp_chem_data_obj_insp_widget_t;
   ws_current_view = none_item_placeholder;
 
-  current_workspace_changed();
-  ui_current_workspace_selected_item_changed();
+  cur_ws_changed();
+  ui_cur_ws_selected_item_changed();
   ws_items_list->clearSelection();
 
 }
@@ -85,7 +67,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
     }
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
 
           if (dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected())) {
@@ -126,13 +108,13 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
         }
     }
 
-
 }
 
-void object_inspector_widget_t::current_workspace_changed() {
+void object_inspector_widget_t::cur_ws_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("DEBUG: object_inspector_widget_t::current_workspace_changed");
+
+  astate->log("DEBUG: object_inspector_widget_t::cur_ws_changed");
 
   ws_items_list->blockSignals(true);
 
@@ -140,7 +122,7 @@ void object_inspector_widget_t::current_workspace_changed() {
   ws_items_list->clearSelection();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++) {
               ws_items_list->addItem(QString::fromStdString(cur_ws->m_ws_items[i]->m_name));
@@ -148,18 +130,21 @@ void object_inspector_widget_t::current_workspace_changed() {
         }
     }
 
-  current_workspace_selected_item_changed();
+  cur_ws_selected_item_changed();
   ws_items_list->blockSignals(false);
+
 }
 
-void object_inspector_widget_t::current_workspace_selected_item_changed() {
+void object_inspector_widget_t::cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("DEBUG: object_inspector_widget_t::current_workspace_selected_item_changed");
+
+  astate->log("DEBUG: object_inspector_widget_t::cur_ws_selected_item_changed");
+
   ws_items_list->blockSignals(true);
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_id = cur_ws->get_selected_idx();
           if (cur_id) {
@@ -173,14 +158,17 @@ void object_inspector_widget_t::current_workspace_selected_item_changed() {
 
   update_ws_items_view_widget();
   ws_items_list->blockSignals(false);
+
 }
 
-void object_inspector_widget_t::ui_current_workspace_selected_item_changed() {
+void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("DEBUG: object_inspector_widget_t::ui_current_workspace_selected_item_changed");
+
+  astate->log("DEBUG: object_inspector_widget_t::ui_cur_ws_selected_item_changed");
+
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           cur_ws->set_selected_item(ws_items_list->currentRow(), true);
 
@@ -194,6 +182,7 @@ void object_inspector_widget_t::ui_current_workspace_selected_item_changed() {
         }
 
     }
+
   update_ws_items_view_widget();
 
 }

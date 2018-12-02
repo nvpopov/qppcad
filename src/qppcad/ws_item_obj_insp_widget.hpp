@@ -60,7 +60,7 @@ namespace qpp {
 
       public slots:
 
-        void current_workspace_selected_item_position_changed();
+        void cur_ws_selected_item_position_changed();
         void rename_current_item();
 
     };

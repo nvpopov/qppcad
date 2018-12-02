@@ -22,7 +22,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum ws_atoms_list_render_type : int {
+    enum ws_atoms_list_render_t : int {
       ball_and_stick,
       dynamic_lines,
       xatom_lines,
@@ -64,24 +64,23 @@ namespace qpp {
         vector3<float> m_gizmo_barycenter;
         vector3<float> m_new_atom_pos;
 
-        ws_atoms_list_render_type m_cur_render_type{ws_atoms_list_render_type::ball_and_stick};
+        ws_atoms_list_render_t m_cur_render_type{ws_atoms_list_render_t::ball_and_stick};
         vector3<int> m_subcells_range{1,1,1};
 
         ws_atoms_list_color_mode m_color_mode{ws_atoms_list_color_mode::color_from_ptable};
-        bool m_show_imaginary_atoms{true};
-        bool m_show_imaginary_bonds{true};
+        bool m_draw_imaginary_atoms{true};
+        bool m_draw_imaginary_bonds{true};
         bool m_draw_specular{true};
-        bool m_show_bonds{true};
-        bool m_show_atoms{true};
+        bool m_draw_bonds{true};
+        bool m_draw_atoms{true};
         bool m_draw_line_in_dist_measurement{false};
         bool m_bonding_table_show_disabled_record{true};
-        bool m_has_animations;
         bool m_draw_subcells{false};
 
         ws_atoms_list_t();
 
-        void vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                   vector3<float> &vOutLookAt) override ;
+        void vote_for_view_vectors(vector3<float> &out_look_pos,
+                                   vector3<float> &out_look_at) override ;
 
         void geometry_changed();
         void render() override;

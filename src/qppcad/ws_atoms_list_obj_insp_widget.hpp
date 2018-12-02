@@ -107,7 +107,7 @@ namespace qpp {
         void current_anim_index_changed(int index);
         void play_anim_button_toggle(bool value);
         void animation_updated_external();
-        void current_workspace_selected_item_frame_changed();
+        void cur_ws_selected_item_frame_changed();
         void anim_timeline_slider_value_changed(int value);
         void anim_button_begin_clicked();
         void anim_button_end_clicked();
@@ -115,6 +115,7 @@ namespace qpp {
         void anim_button_frame_move_backward_clicked();
         void cell_changed();
         void draw_subcells_changed(int state);
+        void cur_ws_selected_atoms_list_selection_changed();
     };
 
   }

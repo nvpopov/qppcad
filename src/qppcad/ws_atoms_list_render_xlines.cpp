@@ -22,7 +22,7 @@ namespace qpp {
       glLineWidth(al.m_atom_scale_factor*3);
 
       for (uint32_t i = 0; i < al.m_geom->nat(); i++)
-        if (al.m_show_atoms &&
+        if (al.m_draw_atoms &&
             al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
             al.m_atom_type_to_hide.end()) {
             vector3<float> color(0.0, 0.0, 1.0);

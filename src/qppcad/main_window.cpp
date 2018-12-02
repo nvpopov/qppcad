@@ -17,19 +17,19 @@ main_window::main_window(QWidget *parent) {
   init_widgets();
   init_layouts();
   bool connect_st1 = QObject::connect(astate->astate_evd,
-                                      SIGNAL(workspaces_changed_signal()),
-                                      this, SLOT(workspaces_changed_slot()));
+                                      SIGNAL(wss_changed_signal()),
+                                      this, SLOT(wss_changed_slot()));
 
   bool connect_st2 = QObject::connect(astate->astate_evd,
-                                      SIGNAL(current_workspace_changed_signal()),
-                                      this, SLOT(current_workspace_changed()));
+                                      SIGNAL(cur_ws_changed_signal()),
+                                      this, SLOT(cur_ws_changed()));
 
   bool connect_st3 = QObject::connect(astate->astate_evd,
-                                      SIGNAL(current_workspace_selected_item_changed_signal()),
-                                      this, SLOT(current_workspace_selected_item_changed())
+                                      SIGNAL(cur_ws_selected_item_changed_signal()),
+                                      this, SLOT(cur_ws_selected_item_changed())
                                       );
-  workspaces_changed_slot();
-  current_workspace_changed();
+  wss_changed_slot();
+  cur_ws_changed();
   //astate->log(fmt::format("Connection status: {}", connect_st));
 
   setStyleSheet("QPushButton:checked{"
@@ -54,13 +54,13 @@ void main_window::init_menus() {
   act_new_ws->setText(tr("New workspace"));
   act_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
   file_menu->addAction(act_new_ws);
-  connect(act_new_ws, &QAction::triggered, this, &main_window::create_new_workspace);
+  connect(act_new_ws, &QAction::triggered, this, &main_window::create_new_ws);
 
   act_open_ws = new QAction(this);
   act_open_ws->setText(tr("Open workspace"));
   act_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
   file_menu->addAction(act_open_ws);
-  connect(act_open_ws, &QAction::triggered, this, &main_window::open_workspace);
+  connect(act_open_ws, &QAction::triggered, this, &main_window::open_ws);
 
   menu_import = file_menu->addMenu(tr("Import"));
   menu_import_xyz = new QAction(this);
@@ -101,12 +101,12 @@ void main_window::init_menus() {
   act_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
   file_menu->addSeparator();
   file_menu->addAction(act_save_ws);
-  connect(act_save_ws, &QAction::triggered, this, &main_window::save_workspace);
+  connect(act_save_ws, &QAction::triggered, this, &main_window::save_ws);
 
   act_save_ws_as = new QAction(this);
   act_save_ws_as->setText(tr("Save workspace as"));
   file_menu->addAction(act_save_ws_as);
-  connect(act_save_ws_as, &QAction::triggered, this, &main_window::save_workspace_as);
+  connect(act_save_ws_as, &QAction::triggered, this, &main_window::save_ws_as);
 
   act_close_app = new QAction(this);
   act_close_app->setText(tr("Close"));
@@ -231,19 +231,19 @@ void main_window::init_widgets() {
   tp_add_ws->setMinimumWidth(30);
   tp_add_ws->setMinimumHeight(tp_button_height);
   tp_add_ws->setText("+");
-  connect(tp_add_ws, &QPushButton::pressed, this, &main_window::create_new_workspace);
+  connect(tp_add_ws, &QPushButton::pressed, this, &main_window::create_new_ws);
 
   tp_rm_ws = new QPushButton;
   tp_rm_ws->setText("-");
   tp_rm_ws->setMinimumWidth(30);
   tp_rm_ws->setMinimumHeight(tp_button_height);
-  connect(tp_rm_ws, &QPushButton::pressed, this, &main_window::close_current_workspace);
+  connect(tp_rm_ws, &QPushButton::pressed, this, &main_window::close_cur_ws);
 
   tp_rnm_ws = new QPushButton;
   tp_rnm_ws->setText("RN");
   tp_rnm_ws->setMinimumWidth(30);
   tp_rnm_ws->setMinimumHeight(tp_button_height);
-  connect(tp_rnm_ws, &QPushButton::pressed, this, &main_window::rename_current_workspace);
+  connect(tp_rnm_ws, &QPushButton::pressed, this, &main_window::rename_cur_ws);
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setCheckState(Qt::Checked);
@@ -302,37 +302,37 @@ void main_window::init_widgets() {
   tp_camera_x->setMinimumWidth(34);
   tp_camera_x->setMinimumHeight(tp_button_height);
   connect(tp_camera_x, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view::tv_x_axis);});
+          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_x_axis);});
 
   tp_camera_y = new QPushButton(tr("C:Y"));
   tp_camera_y->setMinimumWidth(34);
   tp_camera_y->setMinimumHeight(tp_button_height);
   connect(tp_camera_y, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view::tv_y_axis);});
+          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_y_axis);});
 
   tp_camera_z = new QPushButton(tr("C:Z"));
   tp_camera_z->setMinimumWidth(34);
   tp_camera_z->setMinimumHeight(tp_button_height);
   connect(tp_camera_z, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view::tv_z_axis);});
+          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
 
   tp_camera_a = new QPushButton(tr("C:a"));
   tp_camera_a->setMinimumWidth(34);
   tp_camera_a->setMinimumHeight(tp_button_height);
   connect(tp_camera_a, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view::tv_a_axis);});
+          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_a_axis);});
 
   tp_camera_b = new QPushButton(tr("C:b"));
   tp_camera_b->setMinimumWidth(34);
   tp_camera_b->setMinimumHeight(tp_button_height);
   connect(tp_camera_b, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view::tv_b_axis);});
+          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_b_axis);});
 
   tp_camera_c = new QPushButton(tr("C:c"));
   tp_camera_c->setMinimumWidth(34);
   tp_camera_c->setMinimumHeight(tp_button_height);
   connect(tp_camera_c, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view::tv_c_axis);});
+          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
 
   change_camera_buttons_visible(false, false);
 
@@ -410,7 +410,7 @@ void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
   tp_camera_c->setVisible(cell_c);
 }
 
-void main_window::workspaces_changed_slot() {
+void main_window::wss_changed_slot() {
 
   app_state_t* astate = app_state_t::get_inst();
   tp_ws_selector->clear();
@@ -426,7 +426,7 @@ void main_window::workspaces_changed_slot() {
           tp_ws_selector->addItem(dest);
         }
 
-      tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_current_id()));
+      tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_cur_id()));
 
     } else {
       tp_rm_ws->setEnabled(false);
@@ -444,11 +444,11 @@ void main_window::ws_selector_selection_changed(int index) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto current = astate->ws_manager->get_current_id();
+      auto current = astate->ws_manager->get_cur_id();
       astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
                               index, *current));
       if (current) {
-          astate->ws_manager->set_current(index);
+          astate->ws_manager->set_cur_id(index);
           astate->make_viewport_dirty();
         }
     }
@@ -470,7 +470,7 @@ void main_window::tp_show_gizmo_state_changed(int state) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           cur_ws->m_gizmo->m_is_visible = state == Qt::Checked;
           astate->make_viewport_dirty();
@@ -488,8 +488,8 @@ void main_window::import_file(QString dialog_name,
   QString fileName = QFileDialog::getOpenFileName(this, dialog_name, file_ext);
 
   if (fileName != "") {
-      astate->ws_manager->import_file_as_new_workspace(fileName.toStdString(), file_fmt);
-      workspaces_changed_slot();
+      astate->ws_manager->import_file_as_new_ws(fileName.toStdString(), file_fmt);
+      wss_changed_slot();
     }
 }
 
@@ -499,7 +499,7 @@ void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file
 
   stop_update_cycle();
 
-  auto cur_ws = astate->ws_manager->get_current();
+  auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws) {
       auto cur_idx = cur_ws->get_selected_idx();
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
@@ -516,39 +516,39 @@ void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file
 
 }
 
-void main_window::create_new_workspace() {
+void main_window::create_new_ws() {
   app_state_t* astate = app_state_t::get_inst();
-  astate->ws_manager->query_create_new_workspace(true);
-  workspaces_changed_slot();
+  astate->ws_manager->query_create_new_ws(true);
+  wss_changed_slot();
   astate->make_viewport_dirty();
 }
 
-void main_window::open_workspace() {
+void main_window::open_ws() {
   app_state_t* astate = app_state_t::get_inst();
   QString file_name = QFileDialog::getOpenFileName(this, "Open qpp::cad workspace", "*.json");
   if (file_name != "") {
-      astate->ws_manager->load_workspace_from_file(file_name.toStdString());
-      workspaces_changed_slot();
+      astate->ws_manager->load_ws_from_file(file_name.toStdString());
+      wss_changed_slot();
     }
 }
 
-void main_window::save_workspace() {
+void main_window::save_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
   stop_update_cycle();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           QFileInfo check_file(QString::fromStdString(cur_ws->m_fs_path));
           if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "") {
-              cur_ws->save_workspace_to_json(cur_ws->m_fs_path);
+              cur_ws->save_ws_to_json(cur_ws->m_fs_path);
             } else {
               QString file_name = QFileDialog::getSaveFileName(this, "Save qpp::cad workspace",
                                                                "*.json");
               if (file_name != "") {
-                  cur_ws->save_workspace_to_json(file_name.toStdString());
+                  cur_ws->save_ws_to_json(file_name.toStdString());
                   cur_ws->m_fs_path = file_name.toStdString();
                 }
             }
@@ -557,10 +557,10 @@ void main_window::save_workspace() {
 
   start_update_cycle();
 
-  current_workspace_changed();
+  cur_ws_changed();
 }
 
-void main_window::save_workspace_as() {
+void main_window::save_ws_as() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -568,28 +568,28 @@ void main_window::save_workspace_as() {
 
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           QString file_name = QFileDialog::getSaveFileName(this, "Save qpp::cad workspace",
                                                            "*.json");
           if (file_name != "") {
-              cur_ws->save_workspace_to_json(file_name.toStdString());
+              cur_ws->save_ws_to_json(file_name.toStdString());
               cur_ws->m_fs_path = file_name.toStdString();
             }
         }
     }
-  current_workspace_changed();
+  cur_ws_changed();
 
   start_update_cycle();
 
 }
 
-void main_window::close_current_workspace() {
+void main_window::close_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           QMessageBox::StandardButton reply;
           reply = QMessageBox::question(this, tr("Workspace -> Close"),
@@ -605,12 +605,12 @@ void main_window::close_current_workspace() {
     }
 }
 
-void main_window::rename_current_workspace() {
+void main_window::rename_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           bool ok;
           QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
@@ -618,20 +618,20 @@ void main_window::rename_current_workspace() {
                                                QString::fromStdString(cur_ws->m_ws_name), &ok);
           if (ok && text != "") {
               cur_ws->m_ws_name = text.toStdString();
-              workspaces_changed_slot();
+              wss_changed_slot();
             }
         }
     }
 }
 
-void main_window::current_workspace_changed() {
+void main_window::cur_ws_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
   change_camera_buttons_visible(false, false);
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           tp_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
           std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
@@ -646,17 +646,17 @@ void main_window::current_workspace_changed() {
       this->setWindowTitle("qpp::cad");
     }
 
-  current_workspace_properties_changed();
-  current_workspace_selected_item_changed();
+  cur_ws_properties_changed();
+  cur_ws_selected_item_changed();
 }
 
-void main_window::current_workspace_selected_item_changed() {
+void main_window::cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
@@ -673,12 +673,12 @@ void main_window::current_workspace_selected_item_changed() {
     }
 }
 
-void main_window::current_workspace_properties_changed() {
+void main_window::cur_ws_properties_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           bool check_t = cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM;
           tp_edit_mode_item->blockSignals(true);
@@ -697,22 +697,22 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           if (id == 0) cur_ws->m_edit_type = ws_edit_type::EDIT_WS_ITEM;
           else cur_ws->m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
         }
     }
 
-  current_workspace_properties_changed();
+  cur_ws_properties_changed();
 }
 
-void main_window::apply_camera_view_change(cam_target_view target_view) {
+void main_window::apply_camera_view_change(cam_target_view_t target_view) {
 
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
@@ -726,7 +726,7 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
 
               switch (target_view) {
 
-                case cam_target_view::tv_x_axis : {
+                case cam_target_view_t::tv_x_axis : {
                     float axis_size =
                         std::max(2.0f, al->m_ext_obs->aabb.max[0] - al->m_ext_obs->aabb.min[0]);
                     look_from = al->m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
@@ -736,7 +736,7 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
                     break;
                   }
 
-                case cam_target_view::tv_y_axis : {
+                case cam_target_view_t::tv_y_axis : {
                     float axis_size =
                         std::max(2.0f, al->m_ext_obs->aabb.max[1] - al->m_ext_obs->aabb.min[1]);
                     look_from = al->m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
@@ -746,7 +746,7 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
                     break;
                   }
 
-                case cam_target_view::tv_z_axis : {
+                case cam_target_view_t::tv_z_axis : {
                     float axis_size =
                         std::max(2.0f,al->m_ext_obs->aabb.max[2] - al->m_ext_obs->aabb.min[2]);
                     look_from = al->m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
@@ -756,7 +756,7 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
                     break;
                   }
 
-                case cam_target_view::tv_a_axis : {
+                case cam_target_view_t::tv_a_axis : {
                     vector3<float> center =
                         0.5*(al->m_geom->cell.v[0] +al-> m_geom->cell.v[1] + al->m_geom->cell.v[2]);
                     look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[0];
@@ -766,7 +766,7 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
                     break;
                   }
 
-                case cam_target_view::tv_b_axis : {
+                case cam_target_view_t::tv_b_axis : {
                     vector3<float> center =
                         0.5*(al->m_geom->cell.v[0] + al->m_geom->cell.v[1] + al->m_geom->cell.v[2]);
                     look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[1];
@@ -776,7 +776,7 @@ void main_window::apply_camera_view_change(cam_target_view target_view) {
                     break;
                   }
 
-                case cam_target_view::tv_c_axis : {
+                case cam_target_view_t::tv_c_axis : {
                     vector3<float> center =
                         0.5*(al->m_geom->cell.v[0] + al->m_geom->cell.v[1] + al->m_geom->cell.v[2]);
                     look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[2];
@@ -810,10 +810,10 @@ void main_window::toggle_ws_edit_mode() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           cur_ws->toggle_edit_mode();
-          current_workspace_changed();
+          cur_ws_changed();
         }
     }
 }
@@ -837,7 +837,7 @@ void main_window::dialog_supercell_generation() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
@@ -873,7 +873,7 @@ void main_window::dialog_axial_scale() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
@@ -909,7 +909,7 @@ void main_window::action_select_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto cur_ws = astate->ws_manager->get_current();
+  auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
 
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
@@ -925,7 +925,7 @@ void main_window::action_unselect_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto cur_ws = astate->ws_manager->get_current();
+  auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
 
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
@@ -939,7 +939,7 @@ void main_window::action_unselect_all_content() {
 void main_window::action_invert_selected_content() {
   app_state_t* astate = app_state_t::get_inst();
 
-  auto cur_ws = astate->ws_manager->get_current();
+  auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
 
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());

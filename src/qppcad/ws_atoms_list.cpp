@@ -130,9 +130,9 @@ void ws_atoms_list_t::render () {
           astate->dp->begin_render_line();
           vector3<float> cell_clr = m_cell_color;
           if (m_selected){
-              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+              if(m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
                 cell_clr = clr_red;
-              if(parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
+              if(m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
                 cell_clr = clr_maroon;
             }
 
@@ -161,23 +161,23 @@ void ws_atoms_list_t::render () {
 
       switch (m_cur_render_type) {
 
-        case ws_atoms_list_render_type::ball_and_stick :
+        case ws_atoms_list_render_t::ball_and_stick :
           ws_atoms_list_render_bs::render(*this);
           break;
 
-        case ws_atoms_list_render_type::dynamic_lines:
+        case ws_atoms_list_render_t::dynamic_lines:
           ws_atoms_list_render_dlines::render(*this);
           break;
 
-        case ws_atoms_list_render_type::xatom_lines:
+        case ws_atoms_list_render_t::xatom_lines:
           ws_atoms_list_render_xlines::render(*this);
           break;
 
-        case ws_atoms_list_render_type::billboards:
+        case ws_atoms_list_render_t::billboards:
           ws_atoms_list_render_billboards::render(*this);
           break;
 
-        case ws_atoms_list_render_type::buffered_billboards: {
+        case ws_atoms_list_render_t::buffered_billboards: {
             if (!m_bs) {
                 m_bs = std::make_unique<ws_atoms_list_render_buffered_billboards_t>(*this);
                 m_bs->init();
@@ -222,7 +222,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
       if (!res.empty()) {
           //std::cout << "TTTTT" << res.size() << std::endl;
           std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
-          if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
+          if (m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
               atom_index_set_key iskey(res[0].m_atm, res[0].m_idx);
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
               if (atom_sel_it == m_atom_idx_sel.end()) {
@@ -236,13 +236,13 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
             };
 
           recalc_gizmo_barycenter();
-          parent_ws->m_gizmo->update_gizmo(0.01);
+          m_parent_ws->m_gizmo->update_gizmo(0.01);
           return true;
 
         } else {
 
           //TODO: need refractoring
-          if (parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
+          if (m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
               m_atom_sel.clear();
               m_atom_idx_sel.clear();
             }
@@ -271,8 +271,8 @@ void ws_atoms_list_t::select_atoms (bool all) {
     }
 
   recalc_gizmo_barycenter();
-  parent_ws->m_gizmo->update_gizmo(0.01);
-  astate->astate_evd->current_workspace_selected_atoms_list_selection_changed();
+  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   astate->make_viewport_dirty();
 
 }
@@ -281,19 +281,19 @@ bool ws_atoms_list_t::select_atom (int atom_id) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
-  astate->astate_evd->current_workspace_selected_atoms_list_selection_changed();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
       m_atom_sel.insert(atom_id);
       m_atom_idx_sel.insert(atom_index_set_key(atom_id, index::D(m_geom->DIM).all(0)));
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
-      parent_ws->m_gizmo->update_gizmo(0.01);
+      m_parent_ws->m_gizmo->update_gizmo(0.01);
       return true;
     }
 
   recalc_gizmo_barycenter();
-  parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01);
   return false;
 }
 
@@ -307,9 +307,9 @@ void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
         m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
       }
 
-  parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01);
   astate->make_viewport_dirty();
-  astate->astate_evd->current_workspace_selected_atoms_list_selection_changed();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
 }
 
@@ -336,9 +336,9 @@ void ws_atoms_list_t::invert_selected_atoms () {
     }
 
   recalc_gizmo_barycenter();
-  parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01);
   astate->make_viewport_dirty();
-  astate->astate_evd->current_workspace_selected_atoms_list_selection_changed();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
 }
 
@@ -402,7 +402,7 @@ void ws_atoms_list_t::delete_selected_atoms () {
 void ws_atoms_list_t::make_super_cell (const int a_steps,
                                        const int b_steps,
                                        const int c_steps) {
-  if (!parent_ws) return;
+  if (!m_parent_ws) return;
   if (m_geom->DIM != 3) return;
 
   std::shared_ptr<ws_atoms_list_t> sc_al = std::make_shared<ws_atoms_list_t>();
@@ -427,13 +427,13 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
 
   sc_al->m_name = m_name + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps);
 
-  parent_ws->add_item_to_workspace(sc_al);
+  m_parent_ws->add_item_to_ws(sc_al);
 
   sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
   sc_al->geometry_changed();
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->astate_evd->current_workspace_changed();
+  astate->astate_evd->cur_ws_changed();
 
 }
 
@@ -461,7 +461,7 @@ void ws_atoms_list_t::apply_axial_scale (const float scale_a,
   m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->astate_evd->current_workspace_selected_atoms_list_cell_changed();
+  astate->astate_evd->cur_ws_selected_atoms_list_cell_changed();
 
 }
 
@@ -658,7 +658,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
           std::make_unique<comp_chem_program_data_t<float> >(std::move(cc_inst));
       extracted_ccd->m_connected_items.push_back(shared_from_this());
       extracted_ccd->m_connected_items_stride.push_back(0);
-      parent_ws->add_item_to_workspace(extracted_ccd);
+      m_parent_ws->add_item_to_ws(extracted_ccd);
     }
 
   auto end_timer = std::chrono::steady_clock::now();
@@ -693,7 +693,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   //                         elapsed_duration(diff_timer_build_tree).count()));
 
   if (m_geom->nat() > 30000) {
-      m_cur_render_type = ws_atoms_list_render_type::billboards;
+      m_cur_render_type = ws_atoms_list_render_t::billboards;
     } else {
 
     }
@@ -706,9 +706,9 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   //                         elapsed_duration(diff_timer_build_ntable).count()));
   geometry_changed();
 
-  if (parent_ws) {
-      parent_ws->set_best_view();
-      parent_ws->workspace_changed();
+  if (m_parent_ws) {
+      m_parent_ws->set_best_view();
+      m_parent_ws->ws_changed();
     }
 
 }
@@ -719,7 +719,7 @@ void ws_atoms_list_t::save_to_file (qc_file_fmt file_format, std::string file_na
 
   app_state_t* astate = app_state_t::get_inst();
   astate->log(fmt::format("Saving geometry[{}] to file {} from workspace {}",
-                          m_name, file_name, parent_ws->m_ws_name));
+                          m_name, file_name, m_parent_ws->m_ws_name));
 
   std::ofstream output(file_name);
   bool wrong_dimension{false};
@@ -760,10 +760,10 @@ void ws_atoms_list_t::write_to_json (json &data) {
   ws_item_t::write_to_json(data);
 
   data[JSON_DIM] = m_geom->DIM;
-  data[JSON_SHOW_IMG_ATOMS] = m_show_imaginary_atoms;
-  data[JSON_SHOW_IMG_BONDS] = m_show_imaginary_bonds;
-  data[JSON_SHOW_BONDS] = m_show_bonds;
-  data[JSON_SHOW_ATOMS] = m_show_atoms;
+  data[JSON_SHOW_IMG_ATOMS] = m_draw_imaginary_atoms;
+  data[JSON_SHOW_IMG_BONDS] = m_draw_imaginary_bonds;
+  data[JSON_SHOW_BONDS] = m_draw_bonds;
+  data[JSON_SHOW_ATOMS] = m_draw_atoms;
   data[JSON_BT_SHOW_DSBL] = m_bonding_table_show_disabled_record;
   data[JSON_ATOM_SCALE] = m_atom_scale_factor;
   data[JSON_BOND_SCALE] = m_bond_scale_factor;
@@ -858,7 +858,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
     m_bond_scale_factor = data[JSON_BOND_SCALE].get<float>();
 
   if (data.find(JSON_SHOW_IMG_ATOMS) != data.end())
-    m_show_imaginary_atoms = data[JSON_SHOW_IMG_ATOMS];
+    m_draw_imaginary_atoms = data[JSON_SHOW_IMG_ATOMS];
 
   if (data.find(JSON_ATOMS_LIST_RENDER_TYPE) != data.end())
     m_cur_render_type = data[JSON_ATOMS_LIST_RENDER_TYPE];
@@ -870,13 +870,13 @@ void ws_atoms_list_t::read_from_json (json &data) {
     m_shading_specular_power = data[JSON_ATOMS_LIST_SPECULAR].get<float>();
 
   if (data.find(JSON_SHOW_IMG_BONDS) != data.end())
-    m_show_imaginary_bonds = data[JSON_SHOW_IMG_BONDS];
+    m_draw_imaginary_bonds = data[JSON_SHOW_IMG_BONDS];
 
   if (data.find(JSON_SHOW_BONDS) != data.end())
-    m_show_atoms = data[JSON_SHOW_BONDS];
+    m_draw_atoms = data[JSON_SHOW_BONDS];
 
   if (data.find(JSON_SHOW_ATOMS) != data.end())
-    m_show_bonds = data[JSON_SHOW_ATOMS];
+    m_draw_bonds = data[JSON_SHOW_ATOMS];
 
   if (data.find(JSON_BT_SHOW_DSBL) != data.end())
     m_bonding_table_show_disabled_record = data[JSON_BT_SHOW_DSBL];

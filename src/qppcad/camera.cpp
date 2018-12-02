@@ -78,7 +78,7 @@ void camera_t::reset_camera () {
   m_look_up    = vector3<float>(0.0, 0.0, 1.0);
   orthogonalize_gs();
 
-  cur_proj = cam_proj_type::CAMERA_PROJ_PERSP;
+  m_cur_proj = cam_proj_t::proj_persp;
 }
 
 void camera_t::update_camera () {
@@ -122,7 +122,7 @@ void camera_t::update_camera () {
 
   m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
 
-  if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP)
+  if (m_cur_proj == cam_proj_t::proj_persp)
     m_mat_proj = perspective<float>(m_fov,
                                     astate->viewport_size_c(0) / astate->viewport_size_c(1),
                                     m_znear_persp, m_zfar_persp);
@@ -160,7 +160,7 @@ void camera_t::update_camera_zoom (const float dist) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (cur_proj == cam_proj_type::CAMERA_PROJ_PERSP) {
+  if (m_cur_proj == cam_proj_t::proj_persp) {
 
       vector3<float> m_view_dir_n = - m_view_point + m_look_at;
       float f_dist = m_view_dir_n.norm();
@@ -188,11 +188,11 @@ void camera_t::update_camera_rotation (bool rotate_camera) {
   m_rotate_camera = rotate_camera;
 }
 
-void camera_t::set_projection (cam_proj_type _proj_to_set) {
+void camera_t::set_projection (cam_proj_t _proj_to_set) {
 
-  if (cur_proj != _proj_to_set){
+  if (m_cur_proj != _proj_to_set){
       reset_camera();
-      cur_proj = _proj_to_set;
+      m_cur_proj = _proj_to_set;
     }
 
 }

@@ -64,10 +64,10 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
 
       //display tab
 
-      disp_s_draw_atoms->bind_value(&b_al->m_show_atoms);
-      disp_s_draw_bonds->bind_value(&b_al->m_show_bonds);
-      disp_s_draw_img_atoms->bind_value(&b_al->m_show_imaginary_atoms);
-      disp_s_draw_img_bonds->bind_value(&b_al->m_show_imaginary_bonds);
+      disp_s_draw_atoms->bind_value(&b_al->m_draw_atoms);
+      disp_s_draw_bonds->bind_value(&b_al->m_draw_bonds);
+      disp_s_draw_img_atoms->bind_value(&b_al->m_draw_imaginary_atoms);
+      disp_s_draw_img_bonds->bind_value(&b_al->m_draw_imaginary_bonds);
       disp_s_atom_scale->bind_value(&b_al->m_atom_scale_factor);
       disp_s_bond_scale->bind_value(&b_al->m_bond_scale_factor);
       disp_s_render_style->bind_value(
@@ -376,15 +376,33 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj
   tab_general->tab_inner_widget_layout->addStretch(0);
   tab_animation->tab_inner_widget_layout->addStretch(0);
 
-  //connect astate dispatcher signals
-  //current_workspace_selected_item_frame_changed
+  //Begin tab modify
+
+  tm_gb_info = new QGroupBox(tr("Modify info"));
+  tm_gb_info_layout = new QVBoxLayout;
+  tm_gb_info->setLayout(tm_gb_info_layout);
+
+  tm_gb_single_atom = new QGroupBox(tr("Modify single atom"));
+  tm_gb_single_atom_layout = new QFormLayout;
+  tm_gb_single_atom->setLayout(tm_gb_single_atom_layout);
+
+  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_info);
+  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
+
+  //end tab modify
+
   app_state_t *astate = app_state_t::get_inst();
 
-  connect(astate->astate_evd, SIGNAL(current_workspace_selected_item_frame_changed_signal()),
-          this, SLOT(current_workspace_selected_item_frame_changed()));
+  connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_frame_changed_signal()),
+          this, SLOT(cur_ws_selected_item_frame_changed()));
 
-  connect(astate->astate_evd, SIGNAL(current_workspace_selected_atoms_list_cell_changed_signal()),
+  connect(astate->astate_evd, SIGNAL(cur_ws_selected_atoms_list_cell_changed_signal()),
           this, SLOT(cell_changed()));
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
+          this,
+          &ws_atoms_list_obj_insp_widget_t::cur_ws_selected_atoms_list_selection_changed);
 }
 
 void ws_atoms_list_obj_insp_widget_t::current_anim_index_changed(int index) {
@@ -425,6 +443,7 @@ void ws_atoms_list_obj_insp_widget_t::play_anim_button_toggle(bool value) {
 }
 
 void ws_atoms_list_obj_insp_widget_t::animation_updated_external() {
+
   if (b_al) {
       int current_frame_truncated = std::floor(b_al->m_anim->m_cur_anim_time);
 
@@ -434,9 +453,10 @@ void ws_atoms_list_obj_insp_widget_t::animation_updated_external() {
       gb_anim_timeline_slider->setValue(current_frame_truncated);
       gb_anim_timeline_slider->blockSignals(false);
     }
+
 }
 
-void ws_atoms_list_obj_insp_widget_t::current_workspace_selected_item_frame_changed() {
+void ws_atoms_list_obj_insp_widget_t::cur_ws_selected_item_frame_changed() {
   animation_updated_external();
 }
 
@@ -505,6 +525,14 @@ void ws_atoms_list_obj_insp_widget_t::draw_subcells_changed(int state) {
     } else {
       disp_s_subcells_idx_label->hide();
       disp_s_subcells_idx->hide();
+    }
+
+}
+
+void ws_atoms_list_obj_insp_widget_t::cur_ws_selected_atoms_list_selection_changed() {
+
+  if (b_al && b_al->is_selected()) {
+
     }
 
 }

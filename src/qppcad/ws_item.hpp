@@ -45,8 +45,8 @@ namespace qpp {
 
       public:
 
-        workspace_t *parent_ws{};
-        app_state_t *app_state_c;
+        workspace_t *m_parent_ws{};
+
         std::string      m_name;
         aabb_3d_t<float> m_aabb;
         vector3<float>   m_pos_old;
@@ -57,7 +57,6 @@ namespace qpp {
         bool             m_is_visible{true}; ///
         bool             m_draw_cell{true}; ///
         bool             m_selected{false}; ///
-     //   bool             m_hide_gizmo_trigger{false};
         bool             m_marked_for_deletion{false};
 
         /// \brief vote_for_view_vectors

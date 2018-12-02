@@ -38,9 +38,9 @@ namespace qpp {
         ws_comp_chem_data_obj_insp_widget_t *ws_comp_chem_data_view;
 
       private slots:
-        void current_workspace_changed();
-        void current_workspace_selected_item_changed();
-        void ui_current_workspace_selected_item_changed();
+        void cur_ws_changed();
+        void cur_ws_selected_item_changed();
+        void ui_cur_ws_selected_item_changed();
     };
 
   }

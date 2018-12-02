@@ -9,9 +9,9 @@ namespace qpp {
     float ws_atoms_list_measurement_subsys_t::dist (const size_t idx) {
       vector3<float> l_s, l_e;
       l_s = p_owner->m_pos +
-            p_owner->m_geom->pos(m_records[idx].at1,m_records[idx].idx1);
+            p_owner->m_geom->pos(m_records[idx].m_at1,m_records[idx].m_idx1);
       l_e = p_owner->m_pos +
-            p_owner->m_geom->pos(m_records[idx].at2,m_records[idx].idx2);
+            p_owner->m_geom->pos(m_records[idx].m_at2,m_records[idx].m_idx2);
       return (l_e - l_s).norm();
     }
 
@@ -37,10 +37,10 @@ namespace qpp {
         const uint32_t atm1, const uint32_t atm2, const index idx1, const index idx2) {
 
       for (auto i = 0; i < m_records.size(); i++)
-        if ((m_records[i].at1 == atm1 && m_records[i].at2 == atm2 &&
-             m_records[i].idx1 == idx1 && m_records[i].idx2 == idx2) ||
-            (m_records[i].at1 == atm2 && m_records[i].at2 == atm1 &&
-             m_records[i].idx1 == idx2 && m_records[i].idx2 == idx1))
+        if ((m_records[i].m_at1 == atm1 && m_records[i].m_at2 == atm2 &&
+             m_records[i].m_idx1 == idx1 && m_records[i].m_idx2 == idx2) ||
+            (m_records[i].m_at1 == atm2 && m_records[i].m_at2 == atm1 &&
+             m_records[i].m_idx1 == idx2 && m_records[i].m_idx2 == idx1))
           return std::optional<size_t>(i);
 
       return std::nullopt;
@@ -56,8 +56,8 @@ namespace qpp {
       astate->glapi->glDisable(GL_DEPTH_TEST);
       for (auto &record : m_records)
         if (record.m_show) {
-            l_s = p_owner->m_pos + p_owner->m_geom->pos(record.at1,record.idx1);
-            l_e = p_owner->m_pos + p_owner->m_geom->pos(record.at2,record.idx2);
+            l_s = p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1);
+            l_e = p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2);
             astate->dp->render_line_styled(clr_black, l_s, l_e, 7.0f);
             astate->dp->render_line_styled(clr_white, l_s, l_e, 4.0f);
           }
