@@ -17,12 +17,16 @@ namespace qpp {
         void current_workspace_selected_item_changed_signal();
         void current_workspace_selected_item_content_changed_signal();
         void current_workspace_selected_item_frame_changed_signal();
+        void current_workspace_selected_atoms_list_selection_changed_signal();
+        void current_workspace_selected_atoms_list_cell_changed_signal();
       public:
         void workspaces_changed();
         void current_workspace_changed();
         void current_workspace_selected_item_changed();
         void current_workspace_selected_item_content_changed();
         void current_workspace_selected_item_frame_changed();
+        void current_workspace_selected_atoms_list_selection_changed();
+        void current_workspace_selected_atoms_list_cell_changed();
         explicit app_state_event_disp_t(QObject *parent = 0);
     };
 

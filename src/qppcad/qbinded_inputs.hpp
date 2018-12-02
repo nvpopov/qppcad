@@ -7,6 +7,8 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QDoubleSpinBox>
+#include <QFormLayout>
+#include <QHBoxLayout>
 
 namespace qpp {
 
@@ -71,6 +73,37 @@ namespace qpp {
       public slots:
         void value_changed(int i);
     };
+
+    class qbinded_int3_input : public QWidget {
+
+         Q_OBJECT
+
+       public:
+
+        vector3<int> *m_binded_value{nullptr};
+
+        QHBoxLayout *widget_layout;
+        QSpinBox *sb_x;
+        QSpinBox *sb_y;
+        QSpinBox *sb_z;
+
+        bool m_ignore_state_change{false};
+
+        void bind_value(vector3<int> *_binded_value);
+        void load_value();
+        void unbind_value();
+        void set_min_max_step(int min, int max, int step);
+
+        qbinded_int3_input(QWidget *parent = nullptr);
+
+      private slots:
+        void spinbox_value_changed(int newval);
+
+    };
+
+
+
+
 
   }
 

@@ -31,17 +31,26 @@ namespace qpp {
         QVBoxLayout *tg_type_summary_layout;
         QTableWidget *tg_type_summary_table;
 
+        QGroupBox *tg_gb_cell;
+        QVBoxLayout *tg_gb_cell_layout;
+        QTableWidget *tg_gb_cell_table;
+
         ws_item_tab_widget_t *tab_display;
-        QGroupBox *gb_display_settings;
-        QFormLayout *gb_display_settings_layout;
-        qbinded_checkbox *display_settings_draw_atoms;
-        qbinded_checkbox *display_settings_draw_bonds;
-        qbinded_checkbox *display_settings_draw_img_atoms;
-        qbinded_checkbox *display_settings_draw_img_bonds;
-        qbinded_float_spinbox *display_settings_atom_scale;
-        qbinded_float_spinbox *display_settings_bond_scale;
-        qbinded_combobox *display_settings_render_style;
-        qbinded_combobox *display_settings_labels_style;
+        QGroupBox *gb_disp_s;
+        QFormLayout *gb_disp_s_layout;
+        qbinded_checkbox *disp_s_draw_atoms;
+        qbinded_checkbox *disp_s_draw_bonds;
+        qbinded_checkbox *disp_s_draw_img_atoms;
+        qbinded_checkbox *disp_s_draw_img_bonds;
+        qbinded_float_spinbox *disp_s_atom_scale;
+        qbinded_float_spinbox *disp_s_bond_scale;
+        qbinded_combobox *disp_s_render_style;
+        qbinded_combobox *disp_s_labels_style;
+
+        QLabel *disp_s_draw_subcells_label;
+        QLabel *disp_s_subcells_idx_label;
+        qbinded_checkbox *disp_s_draw_subcells;
+        qbinded_int3_input *disp_s_subcells_idx;
 
         QGroupBox *gb_display_shading;
         QFormLayout *gb_display_shading_layout;
@@ -81,6 +90,12 @@ namespace qpp {
         ws_item_tab_widget_t *tab_measurement;
 
         ws_item_tab_widget_t *tab_modify;
+        QGroupBox *tm_gb_info;
+        QVBoxLayout *tm_gb_info_layout;
+        QLabel *tm_gb_info_label;
+
+        QGroupBox *tm_gb_single_atom;
+        QFormLayout *tm_gb_single_atom_layout;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
@@ -98,6 +113,8 @@ namespace qpp {
         void anim_button_end_clicked();
         void anim_button_frame_move_forward_clicked();
         void anim_button_frame_move_backward_clicked();
+        void cell_changed();
+        void draw_subcells_changed(int state);
     };
 
   }

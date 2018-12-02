@@ -148,7 +148,7 @@ void ws_atoms_list_t::render () {
                 for (int i_b = 0; i_b < m_subcells_range[1]; i_b++)
                   for (int i_c = 0; i_c < m_subcells_range[2]; i_c++) {
                       vector3<float> new_pos = m_pos + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
-                      app_state_c->dp->render_cell_3d(cell_clr, sc_a, sc_b, sc_c, new_pos, 2.1f);
+                      astate->dp->render_cell_3d(cell_clr, sc_a, sc_b, sc_c, new_pos, 2.1f);
                     }
             }
 
@@ -557,6 +557,10 @@ void ws_atoms_list_t::apply_axial_scale (const float scale_a,
   m_geom->cell.v[2] = new_cell.v[2];
 
   m_tws_tr->do_action(act_unlock | act_rebuild_all);
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->current_workspace_selected_atoms_list_cell_changed();
+
 }
 
 void ws_atoms_list_t::move_selected_atoms_to_home (bool ignore_selection) {
