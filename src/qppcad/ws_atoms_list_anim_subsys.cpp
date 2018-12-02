@@ -105,6 +105,7 @@ namespace qpp {
       //if (m_anim[m_cur_anim].frame_data[0].si)
       if (m_play_anim && animable()) {
 
+          astate->log("ANIM");
 
           m_cur_anim_time += 1 / (m_anim_frame_time * 60);
           if (m_cur_anim_time > m_anim_data[m_cur_anim].frame_data.size() - 1) {

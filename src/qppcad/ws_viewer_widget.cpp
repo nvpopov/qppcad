@@ -20,14 +20,9 @@ void ws_viewer_widget_t::update_cycle() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->m_disable_app) return;
+  //if (astate->m_disable_app) return;
 
   //if (!astate->is_mouse_moving) astate->mouse_distance_pp = 0;
-
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_current();
-      cur_ws->update(0.016);
-    }
 
   if (astate->is_viewport_dirty()) {
 
@@ -41,6 +36,11 @@ void ws_viewer_widget_t::update_cycle() {
 
       repaint();
       //if (astate->camera)
+    }
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_current();
+      cur_ws->update(0.016);
     }
 
   astate->is_mouse_moving = false;
@@ -102,7 +102,7 @@ void ws_viewer_widget_t::paintGL() {
   astate->ws_manager->render_current_workspace_overlay(&painter);
   painter.end();
 
-  //astate->log("REPAINT");
+  astate->log("REPAINT");
 
 }
 
@@ -138,9 +138,6 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
 
       if (event->button() == Qt::LeftButton) {
           astate->mouse_lb_pressed = false;
-          //          if (astate->camera && !astate->camera->m_rotate_camera && !astate->camera->m_move_camera
-          //              && astate->mouse_distance_pp < 10)
-
           need_to_cancel_cam_transform = true;
         }
 

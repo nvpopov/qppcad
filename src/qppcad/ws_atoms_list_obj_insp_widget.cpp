@@ -74,10 +74,14 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
             reinterpret_cast<int*>(&b_al->m_labels->m_style));
       display_shading_spec->bind_value(&b_al->m_draw_specular);
       display_shading_spec_value->bind_value(&b_al->m_shading_specular_power);
+
       disp_s_draw_subcells->bind_value(&b_al->m_draw_subcells);
       disp_s_subcells_idx->bind_value(&b_al->m_subcells_range);
-
       draw_subcells_changed(0);
+      disp_s_draw_subcells->setVisible(b_al->m_geom->DIM == 3);
+      disp_s_draw_subcells_label->setVisible(b_al->m_geom->DIM == 3);
+      disp_s_subcells_idx->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
+      disp_s_subcells_idx_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
 
       //anim bindings
       tabBar()->setTabEnabled(2, b_al->m_anim->animable());
@@ -193,6 +197,7 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj
   tg_gb_cell_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
   tg_gb_cell_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   tg_gb_cell_table->setHorizontalHeaderLabels(table_hdr_cell);
+  tg_gb_cell_table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   tg_gb_cell_layout->addWidget(tg_gb_cell_table);
 
@@ -461,6 +466,7 @@ void ws_atoms_list_obj_insp_widget_t::anim_button_frame_move_backward_clicked() 
 }
 
 void ws_atoms_list_obj_insp_widget_t::cell_changed() {
+
   if (b_al) {
       if (b_al->m_geom->DIM > 0) {
 
@@ -477,11 +483,14 @@ void ws_atoms_list_obj_insp_widget_t::cell_changed() {
                 QTableWidgetItem *n_ax = new QTableWidgetItem(tr("%1").arg(cell_amp));
                 tg_gb_cell_table->setItem(c, i, n_ax);
               }
+
+          tg_gb_cell_table->resizeRowsToContents();
           tg_gb_cell->show();
         } else {
           tg_gb_cell->hide();
         }
     }
+
 }
 
 void ws_atoms_list_obj_insp_widget_t::draw_subcells_changed(int state) {

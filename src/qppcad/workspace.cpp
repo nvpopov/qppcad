@@ -33,15 +33,18 @@ bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
 
   unselect_all();
 
+  astate->log(fmt::format("workspace_t::set_selected_item ({} {})", sel_idx, emit_signal));
+
   if (sel_idx < m_ws_items.size() && !m_ws_items.empty()) {
       m_ws_items[sel_idx]->m_selected = true;
       if (m_ws_items[sel_idx]->get_flags() & ws_item_flags_support_translation) {
           m_gizmo->attached_item = m_ws_items[sel_idx].get();
-          m_gizmo->update_gizmo(0.1f);
+          m_gizmo->update_gizmo(0.1f, true);
           astate->make_viewport_dirty();
         }
       else {
           m_gizmo->attached_item = nullptr;
+          m_gizmo->update_gizmo(0.1f, true);
         }
       //astate->make_viewport_dirty();
       if (emit_signal) astate->astate_evd->current_workspace_selected_item_changed();

@@ -71,7 +71,7 @@ namespace qpp {
 
         void translate_attached (float delta_time);
         void clear_selected_axis ();
-        void update_gizmo (float delta_time);
+        void update_gizmo (float delta_time, bool force_repaint = false);
         void render ();
 
         gizmo_t ();

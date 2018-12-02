@@ -28,8 +28,7 @@ void gizmo_t::render () {
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
   //prevent showing gizmo when no content selected
-  if (attached_item)
-    if (attached_item->get_amount_of_selected_content() == 0 &&
+  if (attached_item && attached_item->get_amount_of_selected_content() == 0 &&
         cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) return;
 
   astate->dp->begin_render_general_mesh();
@@ -160,7 +159,7 @@ void gizmo_t::clear_selected_axis () {
   interact_at_the_moment = false;
 }
 
-void gizmo_t::update_gizmo (float delta_time) {
+void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
@@ -169,13 +168,17 @@ void gizmo_t::update_gizmo (float delta_time) {
   //if we are in node edit mode - snap to aabb min
   if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM) {
       pos = attached_item->m_pos;
-      astate->make_viewport_dirty();
+      m_is_visible = true;
+      is_active = true;
+      if (force_repaint) astate->make_viewport_dirty();
     }
 
   //if we are in the content edit mode - snap to calculated barycenter, provided by node
   if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
       pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
-      astate->make_viewport_dirty();
+      m_is_visible = true;
+       is_active = true;
+      if (force_repaint) astate->make_viewport_dirty();
     }
 
     if (!astate->mouse_lb_pressed) {

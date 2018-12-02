@@ -27,15 +27,10 @@ qbinded_checkbox::qbinded_checkbox(QWidget *parent) : QCheckBox (parent){
 }
 
 void qbinded_checkbox::check_state_changed(int state) {
-
-  app_state_t* astate = app_state_t::get_inst();
-  //astate->log("qbinded_checkbox::checkStateSet()");
-
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = state == Qt::Checked;
-      astate->make_viewport_dirty();
+      app_state_t::get_inst()->make_viewport_dirty();
     }
-
 }
 
 qbinded_spinbox::qbinded_spinbox(QWidget *parent) : QSpinBox (parent) {
@@ -61,7 +56,8 @@ void qbinded_float_spinbox::unbind_value() {
   m_binded_value = nullptr;
 }
 
-void qbinded_float_spinbox::set_min_max_step(double new_min, double new_max,
+void qbinded_float_spinbox::set_min_max_step(double new_min,
+                                             double new_max,
                                              double new_step) {
   setMinimum(new_min);
   setMaximum(new_max);
@@ -73,13 +69,9 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
 }
 
 void qbinded_float_spinbox::value_changed(double d) {
-
-  app_state_t* astate = app_state_t::get_inst();
-  //astate->log("qbinded_checkbox::checkStateSet()");
-
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = float(d);
-      astate->make_viewport_dirty();
+     app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
@@ -105,12 +97,9 @@ qbinded_combobox::qbinded_combobox(QWidget *parent) : QComboBox (parent) {
 }
 
 void qbinded_combobox::value_changed(int i) {
-  app_state_t* astate = app_state_t::get_inst();
-  //astate->log("qbinded_checkbox::checkStateSet()");
-
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = i;
-      astate->make_viewport_dirty();
+      app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
@@ -134,7 +123,6 @@ void qbinded_int3_input::unbind_value() {
 }
 
 void qbinded_int3_input::set_min_max_step(int min, int max, int step) {
-
   sb_x->setMinimum(min);
   sb_x->setMaximum(max);
   sb_x->setSingleStep(step);
@@ -149,6 +137,7 @@ void qbinded_int3_input::set_min_max_step(int min, int max, int step) {
 }
 
 qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
+
   widget_layout = new QHBoxLayout;
   setLayout(widget_layout);
   sb_x = new QSpinBox(this);
@@ -168,12 +157,11 @@ qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
 }
 
 void qbinded_int3_input::spinbox_value_changed(int newval) {
-
   //we ignore newval here and make batch update based on inputs
   if (m_binded_value && !m_ignore_state_change) {
       (*m_binded_value)[0] = sb_x->value();
       (*m_binded_value)[1] = sb_y->value();
       (*m_binded_value)[2] = sb_z->value();
+      app_state_t::get_inst()->make_viewport_dirty();
     }
-
 }
