@@ -6,7 +6,9 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_comp_chem_data_t::ws_comp_chem_data_t() {
+
   set_default_flags(ws_item_flags_default);
+
 }
 
 void ws_comp_chem_data_t::manual_step_update(const int dir) {
@@ -261,17 +263,6 @@ void ws_comp_chem_data_t::update_joined_atoms_list_animation(size_t step_idx) {
 
 }
 
-//void ws_comp_chem_data_t::render_work_panel_ui() {
-
-//}
-
-//void ws_comp_chem_data_t::td_context_menu_edit_item() {
-
-//}
-
-//void ws_comp_chem_data_t::td_context_menu_edit_content() {
-
-//}
 
 bool ws_comp_chem_data_t::mouse_click(ray_t<float> *click_ray) {
   return false;

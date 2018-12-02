@@ -71,7 +71,7 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
 void qbinded_float_spinbox::value_changed(double d) {
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = float(d);
-     app_state_t::get_inst()->make_viewport_dirty();
+      app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
@@ -158,6 +158,82 @@ qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
 
 void qbinded_int3_input::spinbox_value_changed(int newval) {
   //we ignore newval here and make batch update based on inputs
+  if (m_binded_value && !m_ignore_state_change) {
+      (*m_binded_value)[0] = sb_x->value();
+      (*m_binded_value)[1] = sb_y->value();
+      (*m_binded_value)[2] = sb_z->value();
+      app_state_t::get_inst()->make_viewport_dirty();
+    }
+}
+
+void qbinded_float3_input::bind_value(vector3<float> *_binded_value) {
+  m_binded_value = _binded_value;
+  m_ignore_state_change = true;
+  load_value();
+  m_ignore_state_change = false;
+}
+
+void qbinded_float3_input::load_value() {
+
+  if (m_binded_value) {
+      m_ignore_state_change = true;
+      sb_x->setValue((*m_binded_value)[0]);
+      sb_y->setValue((*m_binded_value)[1]);
+      sb_z->setValue((*m_binded_value)[2]);
+      m_ignore_state_change = false;
+    }
+
+}
+
+void qbinded_float3_input::unbind_value() {
+  m_binded_value = nullptr;
+}
+
+void qbinded_float3_input::set_min_max_step(double min, double max, double step) {
+  sb_x->setMinimum(min);
+  sb_x->setMaximum(max);
+  sb_x->setSingleStep(step);
+
+  sb_y->setMinimum(min);
+  sb_y->setMaximum(max);
+  sb_y->setSingleStep(step);
+
+  sb_z->setMinimum(min);
+  sb_z->setMaximum(max);
+  sb_z->setSingleStep(step);
+}
+
+qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
+
+  widget_layout = new QHBoxLayout;
+  setLayout(widget_layout);
+
+  setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
+
+  sb_x = new QDoubleSpinBox(this);
+  sb_x->setMinimumWidth(30);
+
+  sb_y = new QDoubleSpinBox(this);
+  sb_y->setMinimumWidth(30);
+
+  sb_z = new QDoubleSpinBox(this);
+  sb_z->setMinimumWidth(30);
+
+  widget_layout->addWidget(sb_x, 1);
+  widget_layout->addWidget(sb_y, 1);
+  widget_layout->addWidget(sb_z, 1);
+  //widget_layout->addStretch(1);
+
+  connect(sb_x, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          this, &qbinded_float3_input::spinbox_value_changed);
+  connect(sb_y, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          this, &qbinded_float3_input::spinbox_value_changed);
+  connect(sb_z, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          this, &qbinded_float3_input::spinbox_value_changed);
+
+}
+
+void qbinded_float3_input::spinbox_value_changed(double newval) {
   if (m_binded_value && !m_ignore_state_change) {
       (*m_binded_value)[0] = sb_x->value();
       (*m_binded_value)[1] = sb_y->value();

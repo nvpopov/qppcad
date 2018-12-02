@@ -40,6 +40,8 @@ namespace qpp {
         QFormLayout *tg_form_layout;
         QLabel *ws_item_name;
         QLabel *ws_item_type;
+        QLabel *ws_item_pos_label;
+        qbinded_float3_input *ws_item_pos;
 
         QGroupBox *tg_actions;
         QHBoxLayout *tg_actions_layout;
@@ -58,6 +60,7 @@ namespace qpp {
 
       public slots:
 
+        void current_workspace_selected_item_position_changed();
         void rename_current_item();
 
     };

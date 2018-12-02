@@ -56,6 +56,8 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
 
         }
 
+      tg_type_summary_table->resizeRowsToContents();
+
       //update cell
 
       cell_changed();
@@ -471,6 +473,7 @@ void ws_atoms_list_obj_insp_widget_t::cell_changed() {
       if (b_al->m_geom->DIM > 0) {
 
           tg_gb_cell_table->setRowCount(b_al->m_geom->DIM);
+          tg_gb_cell_table->setMinimumHeight(100);
           QStringList table_hdr_cell_v;
           table_hdr_cell_v.push_back("a");
           table_hdr_cell_v.push_back("b");

@@ -29,7 +29,7 @@ void gizmo_t::render () {
 
   //prevent showing gizmo when no content selected
   if (attached_item && attached_item->get_amount_of_selected_content() == 0 &&
-        cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) return;
+      cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) return;
 
   astate->dp->begin_render_general_mesh();
 
@@ -119,7 +119,7 @@ void gizmo_t::translate_attached(float delta_time){
       return;
     }
 
-  if (attached_item){
+  if (attached_item) {
 
       ws_edit_type cur_edit_type = astate->ws_manager->get_current()->m_edit_type;
 
@@ -131,20 +131,21 @@ void gizmo_t::translate_attached(float delta_time){
 
       vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
 
-      //      float mouse_delta = astate->mouse_x_old - astate->mouse_x+
-      //                          astate->mouse_y_old - astate->mouse_y;
 
-      if (fabs(d_unproj[touched_axis]) > 0.00025f && astate->is_mouse_moving &&
+      if (fabs(d_unproj[touched_axis]) > 0.00025f &&
+          astate->is_mouse_moving &&
           astate->mouse_distance_pp > 0.2) {
+
           vector3<float> new_transform =
               gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 3500.0f;
+
           accum_translate += new_transform;
-//          astate->log(fmt::format("{} {} {} {}",
-//                                  astate->is_mouse_moving,
-//                                  astate->mouse_distance_pp,
-//                                  new_transform, accum_translate));
-          if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM)
-            attached_item->m_pos += new_transform;
+
+          if (cur_edit_type == ws_edit_type::EDIT_WS_ITEM) {
+              attached_item->m_pos += new_transform;
+              if (attached_item && attached_item->is_selected())
+                astate->astate_evd->current_workspace_selected_item_position_changed();
+            }
           else attached_item->apply_intermediate_translate_content(new_transform);
         }
       else {
@@ -177,16 +178,16 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
   if (attached_item && cur_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
       pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
       m_is_visible = true;
-       is_active = true;
+      is_active = true;
       if (force_repaint) astate->make_viewport_dirty();
     }
 
-    if (!astate->mouse_lb_pressed) {
-        interact_at_the_moment = false;
-        accum_translate = vector3<float>::Zero();
-        clear_selected_axis();
-        return;
-      }
+  if (!astate->mouse_lb_pressed) {
+      interact_at_the_moment = false;
+      accum_translate = vector3<float>::Zero();
+      clear_selected_axis();
+      return;
+    }
 
   //Transform in node mode
   //start interacting - run event

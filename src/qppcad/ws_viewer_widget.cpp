@@ -102,7 +102,7 @@ void ws_viewer_widget_t::paintGL() {
   astate->ws_manager->render_current_workspace_overlay(&painter);
   painter.end();
 
-  astate->log("REPAINT");
+  //astate->log("REPAINT");
 
 }
 

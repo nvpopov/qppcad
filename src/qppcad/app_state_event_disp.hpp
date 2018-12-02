@@ -10,7 +10,9 @@ namespace qpp {
   namespace cad {
 
     class app_state_event_disp_t : public QObject {
+
         Q_OBJECT
+
       signals:
         void workspaces_changed_signal();
         void current_workspace_changed_signal();
@@ -19,6 +21,8 @@ namespace qpp {
         void current_workspace_selected_item_frame_changed_signal();
         void current_workspace_selected_atoms_list_selection_changed_signal();
         void current_workspace_selected_atoms_list_cell_changed_signal();
+         void current_workspace_selected_item_position_changed_signal();
+
       public:
         void workspaces_changed();
         void current_workspace_changed();
@@ -27,6 +31,7 @@ namespace qpp {
         void current_workspace_selected_item_frame_changed();
         void current_workspace_selected_atoms_list_selection_changed();
         void current_workspace_selected_atoms_list_cell_changed();
+        void current_workspace_selected_item_position_changed();
         explicit app_state_event_disp_t(QObject *parent = 0);
     };
 

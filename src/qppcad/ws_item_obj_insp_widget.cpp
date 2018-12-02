@@ -25,13 +25,29 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name) {
 }
 
 void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
+
   m_binded_item = _binding_item;
+
+  if (m_binded_item) {
+
+      if (m_binded_item->get_flags() & ws_item_flags_support_translation) {
+          ws_item_pos->bind_value(&m_binded_item->m_pos);
+          ws_item_pos->show();
+          ws_item_pos_label->show();
+        } else {
+          ws_item_pos->hide();
+          ws_item_pos_label->hide();
+        }
+
+    }
+
   update_from_ws_item();
 }
 
 void ws_item_obj_insp_widget_t::unbind_item() {
   m_binded_item = nullptr;
   ws_item_is_visible->unbind_value();
+  ws_item_pos->unbind_value();
 }
 
 void ws_item_obj_insp_widget_t::update_from_ws_item() {
@@ -43,6 +59,8 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
 }
 
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -58,11 +76,21 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_actions_delete = new QPushButton(tr("Delete"));
   tg_actions_rename = new QPushButton(tr("Rename"));
   connect(tg_actions_rename, SIGNAL(pressed()), this, SLOT(rename_current_item()));
+
   tg_actions_clone = new QPushButton(tr("Clone"));
   tg_actions_layout->addWidget(tg_actions_delete);
   tg_actions_layout->addWidget(tg_actions_rename);
   tg_actions_layout->addWidget(tg_actions_clone);
   tg_actions->setMaximumHeight(90);
+
+  ws_item_pos_label = new QLabel(tr("Position"));
+  ws_item_pos = new qbinded_float3_input;
+  ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::current_workspace_selected_item_position_changed_signal,
+          this, &ws_item_obj_insp_widget_t::current_workspace_selected_item_position_changed);
+
   tab_general->tab_inner_widget_layout->addWidget(tg_actions);
 
   tg_form_layout = new QFormLayout;
@@ -71,11 +99,14 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   ws_item_type = new QLabel;
   ws_item_is_visible_label = new QLabel(tr("Is visible:"));
   ws_item_is_visible = new qbinded_checkbox;
+
+  tg_form_layout->setLabelAlignment(Qt::AlignCenter);
   tg_form_layout->addRow(tr("Name:"), ws_item_name);
   tg_form_layout->addRow(tr("Type:"), ws_item_type);
   tg_form_layout->addRow(ws_item_is_visible_label, ws_item_is_visible);
+  tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 
-  tg_form_layout->setLabelAlignment(Qt::AlignRight);
+  //tg_form_layout->setLabelAlignment(Qt::AlignRight);
 
 
 
@@ -90,7 +121,18 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   //  //setElideMode(Qt::ElideLeft);
 }
 
+void ws_item_obj_insp_widget_t::current_workspace_selected_item_position_changed() {
+
+  if (m_binded_item) {
+      if (m_binded_item->get_flags() & ws_item_flags_support_translation) {
+          ws_item_pos->load_value();
+        }
+    }
+
+}
+
 void ws_item_obj_insp_widget_t::rename_current_item() {
+
   if (m_binded_item) {
       app_state_t* astate = app_state_t::get_inst();
       bool ok;

@@ -101,6 +101,33 @@ namespace qpp {
 
     };
 
+    class qbinded_float3_input : public QWidget {
+
+        Q_OBJECT
+
+      public:
+
+        vector3<float> *m_binded_value{nullptr};
+
+        QHBoxLayout *widget_layout;
+        QDoubleSpinBox *sb_x;
+        QDoubleSpinBox *sb_y;
+        QDoubleSpinBox *sb_z;
+
+        bool m_ignore_state_change{false};
+
+        void bind_value(vector3<float> *_binded_value);
+        void load_value();
+        void unbind_value();
+        void set_min_max_step(double min, double max, double step);
+
+        qbinded_float3_input(QWidget *parent = nullptr);
+
+      private slots:
+        void spinbox_value_changed(double newval);
+
+    };
+
 
 
 

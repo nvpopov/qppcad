@@ -43,6 +43,10 @@ void app_state_event_disp_t::current_workspace_selected_atoms_list_cell_changed(
   emit(current_workspace_selected_atoms_list_cell_changed_signal());
 }
 
+void app_state_event_disp_t::current_workspace_selected_item_position_changed(){
+  emit(current_workspace_selected_item_position_changed_signal());
+}
+
 app_state_event_disp_t::app_state_event_disp_t(QObject *parent) : QObject (parent) {
 
 }
