@@ -83,16 +83,9 @@ namespace qpp {
         void vote_for_view_vectors(vector3<float> &vOutLookPos,
                                    vector3<float> &vOutLookAt) override ;
 
-        /// \brief geometry_changed
         void geometry_changed();
         void render() override;
         void render_overlay(QPainter *painter) override;
-
-//        void render_ui() override;
-//        void render_overlay() override;
-//        void render_work_panel_ui() override;
-//        void td_context_menu_edit_item() override;
-//        void td_context_menu_edit_content() override;
 
         bool mouse_click(ray_t<float> *click_ray) override;
 

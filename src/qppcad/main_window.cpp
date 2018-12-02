@@ -128,6 +128,30 @@ void main_window::init_menus() {
 
   edit_menu->addSeparator();
 
+  //Selection menu
+  edit_selection_menu = edit_menu->addMenu(tr("Content selection"));
+  edit_selection_select_all = new QAction(this);
+  edit_selection_select_all->setText(tr("Select all"));
+  edit_selection_select_all->setShortcut(QKeySequence(tr("ctrl+a")));
+  edit_selection_menu->addAction(edit_selection_select_all);
+  connect(edit_selection_select_all, &QAction::triggered,
+          this, &main_window::action_select_all_content);
+
+  edit_selection_unselect_all = new QAction(this);
+  edit_selection_unselect_all->setText(tr("Unselect all"));
+  edit_selection_unselect_all->setShortcut(QKeySequence(tr("ctrl+u")));
+  edit_selection_menu->addAction(edit_selection_unselect_all);
+  connect(edit_selection_unselect_all, &QAction::triggered,
+          this, &main_window::action_unselect_all_content);
+
+  edit_selection_invert = new QAction(this);
+  edit_selection_invert->setText(tr("Invert selection"));
+  edit_selection_invert->setShortcut(QKeySequence(tr("ctrl+i")));
+  edit_selection_menu->addAction(edit_selection_invert);
+  connect(edit_selection_invert, &QAction::triggered,
+          this, &main_window::action_invert_selected_content);
+  //End of selection menu
+
   switch_between_ws_edit_mode = new QAction(this);
   switch_between_ws_edit_mode->setText(tr("Switch edit mode"));
   switch_between_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
@@ -877,6 +901,51 @@ void main_window::dialog_axial_scale() {
         } else {
           QMessageBox::warning(this, tr("Axial scale"),
                                tr("Workspace not select"));
+        }
+    }
+}
+
+void main_window::action_select_all_content() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  auto cur_ws = astate->ws_manager->get_current();
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+
+      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+
+      if (cur_it) {
+          cur_it->select_atoms(true);
+        }
+    }
+
+}
+
+void main_window::action_unselect_all_content() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  auto cur_ws = astate->ws_manager->get_current();
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+
+      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+
+      if (cur_it) {
+          cur_it->select_atoms(false);
+        }
+    }
+}
+
+void main_window::action_invert_selected_content() {
+  app_state_t* astate = app_state_t::get_inst();
+
+  auto cur_ws = astate->ws_manager->get_current();
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+
+      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+
+      if (cur_it) {
+          cur_it->invert_selected_atoms();
         }
     }
 }

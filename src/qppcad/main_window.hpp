@@ -109,6 +109,11 @@ namespace qpp {
         QAction *switch_between_ws_edit_mode;
         QAction *act_settings;
 
+        QMenu *edit_selection_menu;
+        QAction *edit_selection_select_all;
+        QAction *edit_selection_unselect_all;
+        QAction *edit_selection_invert;
+
         QMenu *tools_menu;
         QAction *act_axial_scale;
         QMenu *tools_menu_generators;
@@ -157,6 +162,10 @@ namespace qpp {
         void stop_update_cycle();
         void dialog_supercell_generation();
         void dialog_axial_scale();
+
+        void action_select_all_content();
+        void action_unselect_all_content();
+        void action_invert_selected_content();
 
     };
   }
