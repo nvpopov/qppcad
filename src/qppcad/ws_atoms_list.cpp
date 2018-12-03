@@ -208,6 +208,8 @@ void ws_atoms_list_t::render_overlay(QPainter *painter) {
 
 bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   if (click_ray) {
 
       std::vector<tws_query_data_t<float, uint32_t> > res;
@@ -218,6 +220,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
       m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
 
       recalc_gizmo_barycenter();
+
 
       if (!res.empty()) {
           //std::cout << "TTTTT" << res.size() << std::endl;
@@ -237,6 +240,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
           recalc_gizmo_barycenter();
           m_parent_ws->m_gizmo->update_gizmo(0.01);
+          astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
           return true;
 
         } else {
@@ -250,6 +254,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
         }
     }
 
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   return false;
 
 }

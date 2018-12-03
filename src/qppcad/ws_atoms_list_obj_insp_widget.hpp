@@ -94,9 +94,16 @@ namespace qpp {
         QFormLayout *tm_gb_add_atom_layout;
         QComboBox *tm_add_atom_combo;
         qbinded_float3_input *tm_add_atom_vec3;
+        QPushButton *tm_add_atom_button;
 
         QGroupBox *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_layout;
+
+        QGroupBox *tm_gb_pair_dist;
+        QFormLayout *tm_gb_pair_dist_layout;
+
+        QGroupBox *tm_gb_nu_scale;
+        QFormLayout *tm_gb_nu_scale_layout;
 
         void construct_general_tab();
         void construct_display_tab();
@@ -108,6 +115,7 @@ namespace qpp {
         void update_from_ws_item() override;
         void unbind_item() override;
         void update_anim_tab_gb();
+        void update_modify_tab();
         ws_atoms_list_obj_insp_widget_t();
 
       public slots:
@@ -123,6 +131,7 @@ namespace qpp {
         void cell_changed();
         void draw_subcells_changed(int state);
         void cur_ws_selected_atoms_list_selection_changed();
+        void modify_add_atom_button_clicked();
     };
 
   }
