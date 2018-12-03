@@ -139,7 +139,7 @@ void main_window::init_menus() {
 
   edit_selection_unselect_all = new QAction(this);
   edit_selection_unselect_all->setText(tr("Unselect all"));
-  edit_selection_unselect_all->setShortcut(QKeySequence(tr("ctrl+u")));
+  edit_selection_unselect_all->setShortcut(QKeySequence(tr("shift+a")));
   edit_selection_menu->addAction(edit_selection_unselect_all);
   connect(edit_selection_unselect_all, &QAction::triggered,
           this, &main_window::action_unselect_all_content);

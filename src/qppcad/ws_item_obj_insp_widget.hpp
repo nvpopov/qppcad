@@ -33,7 +33,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        ws_item_t *m_binded_item;
+        ws_item_t *m_binded_item{nullptr};
 
         ws_item_tab_widget_t *tab_general;
         QGroupBox *tg_info_widget;
@@ -62,6 +62,7 @@ namespace qpp {
 
         void cur_ws_selected_item_position_changed();
         void rename_current_item();
+        void cur_tab_changed(int index);
 
     };
 

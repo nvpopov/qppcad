@@ -30,6 +30,18 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   if (m_binded_item) {
 
+      int target_index = -1;
+      if (m_binded_item->m_last_tab >= 0) target_index = m_binded_item->m_last_tab;
+      else target_index = 0;
+
+      auto *widget_to_focus = widget(target_index);
+      if (widget_to_focus) {
+          widget_to_focus->setFocus();
+          setCurrentIndex(target_index);
+          //this->scroll(target_index * 10, 0);
+          //emit(tabBarClicked(target_index));
+        }
+
       if (m_binded_item->get_flags() & ws_item_flags_support_translation) {
           ws_item_pos->bind_value(&m_binded_item->m_pos);
           ws_item_pos->show();
@@ -45,6 +57,11 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 }
 
 void ws_item_obj_insp_widget_t::unbind_item() {
+
+  if (m_binded_item) {
+      m_binded_item->m_last_tab = currentIndex();
+    }
+
   m_binded_item = nullptr;
   ws_item_is_visible->unbind_value();
   ws_item_pos->unbind_value();
@@ -106,19 +123,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_form_layout->addRow(ws_item_is_visible_label, ws_item_is_visible);
   tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 
-  //tg_form_layout->setLabelAlignment(Qt::AlignRight);
-
-
-
-//  tab_general_child = new QWidget;
-
-//  tab_general_child->setLayout(new QVBoxLayout);
-//  tab_general_layout->addWidget(tab_general_child);
-
-//  for(int i = 0; i < 27; i++)
-//    tab_general_child->layout()->addWidget(new QPushButton("tre"));
-//  //setUsesScrollButtons(false);
-  //  //setElideMode(Qt::ElideLeft);
+  connect(this, &ws_item_obj_insp_widget_t::currentChanged,
+          this, &ws_item_obj_insp_widget_t::cur_tab_changed);
 }
 
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
@@ -143,5 +149,11 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
           m_binded_item->m_name = text.toStdString();
           astate->astate_evd->cur_ws_selected_item_changed();
         }
+    }
+}
+
+void ws_item_obj_insp_widget_t::cur_tab_changed(int index) {
+  if (m_binded_item) {
+      m_binded_item->m_last_tab = index;
     }
 }

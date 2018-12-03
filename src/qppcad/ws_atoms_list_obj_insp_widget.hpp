@@ -19,7 +19,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        ws_atoms_list_t *b_al; // binded atoms list
+        ws_atoms_list_t *b_al{nullptr}; // binded atoms list
 
         QGroupBox *tg_geom_summary_widget;
         QFormLayout *tg_geom_summary_layout;
@@ -90,12 +90,19 @@ namespace qpp {
         ws_item_tab_widget_t *tab_measurement;
 
         ws_item_tab_widget_t *tab_modify;
-        QGroupBox *tm_gb_info;
-        QVBoxLayout *tm_gb_info_layout;
-        QLabel *tm_gb_info_label;
+        QGroupBox *tm_gb_add_atom;
+        QFormLayout *tm_gb_add_atom_layout;
+        QComboBox *tm_add_atom_combo;
+        qbinded_float3_input *tm_add_atom_vec3;
 
         QGroupBox *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_layout;
+
+        void construct_general_tab();
+        void construct_display_tab();
+        void construct_anim_tab();
+        void construct_measure_tab();
+        void construct_modify_tab();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;

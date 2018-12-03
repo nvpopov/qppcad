@@ -68,6 +68,7 @@ namespace qpp {
         vector3<int> m_subcells_range{1,1,1};
 
         ws_atoms_list_color_mode m_color_mode{ws_atoms_list_color_mode::color_from_ptable};
+
         bool m_draw_imaginary_atoms{true};
         bool m_draw_imaginary_bonds{true};
         bool m_draw_specular{true};

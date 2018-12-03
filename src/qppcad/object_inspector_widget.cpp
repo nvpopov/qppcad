@@ -71,10 +71,12 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       if (cur_ws) {
 
           if (dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected())) {
+
               if (ws_current_view)  {
                   obj_insp_layout->removeWidget(ws_current_view);
                   ws_current_view->setParent(nullptr);
                 }
+
               none_item_placeholder->hide();
               obj_insp_layout->addWidget(ws_atoms_list_view);
               ws_current_view = ws_atoms_list_view;

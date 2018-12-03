@@ -54,6 +54,7 @@ namespace qpp {
         vector3<float>   m_scale{1.0f, 1.0f, 1.0f}; ///
         vector3<float>   m_rotation{1.0f, 1.0f, 1.0f}; ///
         vector3<float>   explicit_translation;
+        int m_last_tab{-1};
         bool             m_is_visible{true}; ///
         bool             m_draw_cell{true}; ///
         bool             m_selected{false}; ///
