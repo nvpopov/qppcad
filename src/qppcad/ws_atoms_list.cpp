@@ -86,8 +86,6 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
   m_labels = std::make_unique<ws_atoms_list_labels_subsys_t>(*this);
   m_lat_planes = std::make_unique<ws_atoms_list_lat_planes_subsys_t>(*this);
 
-  //parent->add_item_to_workspace(this->shared_from_this());
-
 }
 
 void ws_atoms_list_t::vote_for_view_vectors (vector3<float> &out_look_pos,
@@ -130,9 +128,9 @@ void ws_atoms_list_t::render () {
           astate->dp->begin_render_line();
           vector3<float> cell_clr = m_cell_color;
           if (m_selected){
-              if(m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+              if(m_parent_ws->m_edit_type == ws_edit_t::edit_item)
                 cell_clr = clr_red;
-              if(m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT)
+              if(m_parent_ws->m_edit_type == ws_edit_t::edit_content)
                 cell_clr = clr_maroon;
             }
 
@@ -225,7 +223,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
       if (!res.empty()) {
           //std::cout << "TTTTT" << res.size() << std::endl;
           std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
-          if (m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
+          if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
               atom_index_set_key iskey(res[0].m_atm, res[0].m_idx);
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
               if (atom_sel_it == m_atom_idx_sel.end()) {
@@ -246,7 +244,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
         } else {
 
           //TODO: need refractoring
-          if (m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT && m_selected ) {
+          if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
               m_atom_sel.clear();
               m_atom_idx_sel.clear();
             }
@@ -368,12 +366,22 @@ void ws_atoms_list_t::update_atom (const int at_id, const string &at_name) {
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
   app_state_t* astate = app_state_t::get_inst();
-  //astate->make_viewport_dirty();
+  astate->make_viewport_dirty();
+}
+
+void ws_atoms_list_t::update_atom(const int at_id, const std::string &at_name,
+                                  const vector3<float> &pos){
+  m_anim->m_force_non_animable = true;
+  m_geom->change(at_id, at_name, pos);
+  app_state_t* astate = app_state_t::get_inst();
+  astate->make_viewport_dirty();
 }
 
 void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {
   for (auto &elem : m_atom_sel)
     update_atom(elem, m_geom->pos(elem) + t_vec);
+  app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
 }
 
 void ws_atoms_list_t::delete_selected_atoms () {
@@ -513,13 +521,18 @@ void ws_atoms_list_t::on_begin_content_gizmo_translate () {
 
 void ws_atoms_list_t::apply_intermediate_translate_content (const vector3<float> &pos) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   bool someone_from_atoms_were_translated = false;
   for (const uint16_t &at_idx : m_atom_sel){
       vector3<float> acc_pos = m_geom->coord(at_idx) + pos;
       m_geom->change_pos(at_idx, acc_pos);
       someone_from_atoms_were_translated = true;
     }
-  if (someone_from_atoms_were_translated) recalc_gizmo_barycenter();
+  if (someone_from_atoms_were_translated) {
+      recalc_gizmo_barycenter();
+      astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
+    }
 
 }
 
@@ -568,12 +581,12 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
   std::setlocale(LC_ALL, "C");
 
-  //  c_app::log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
-  //                         file_name, parent_ws->m_ws_name));
+  astate->log(fmt::format("Loading geometry from file {} to ws_atom_list in workspace {}",
+                          file_name, m_parent_ws->m_ws_name));
 
   std::ifstream qc_data(file_name);
   if (!qc_data) {
-      // c_app::log(fmt::format("Error in loading from file {}", file_name));
+      astate->log(fmt::format("Error in loading from file {}", file_name));
       return;
     }
 
@@ -633,8 +646,9 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         break;
       }
 
-    default: {}
-      //c_app::log("File format not implemented");
+    default: {
+        astate->log("File format not implemented");
+      }
     }
 
   qc_data.close();
@@ -642,7 +656,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   if (need_to_compile_ccd) {
       bool succes_comp_ccd = compile_ccd(cc_inst, ccd_cf_default_flags |
                                          ccd_cf_remove_empty_geom_steps);
-      // c_app::log(fmt::format("Is ccd compilation succes? {}", succes_comp_ccd));
+      astate->log(fmt::format("Is ccd compilation succes? {}", succes_comp_ccd));
     }
 
   if (need_to_compile_from_ccd) {
@@ -650,10 +664,10 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       bool succes_comp_static_anim = compile_static_animation(cc_inst, m_anim->m_anim_data);
       bool succes_anims = compile_animation(cc_inst, m_anim->m_anim_data);
 
-      //      c_app::log(fmt::format("Is geometry compilation succes? {}",
-      //                             succes_comp_geom && succes_comp_static_anim));
-      //      if (m_anim->get_total_anims() > 1 && succes_anims)
-      //        c_app::log("Animations have been added to geom");
+      astate->log(fmt::format("Is geometry compilation succes? {}",
+                              succes_comp_geom && succes_comp_static_anim));
+      if (m_anim->get_total_anims() > 1 && succes_anims)
+        astate->log("Animations have been added to geom");
     }
 
   if (need_to_extract_ccd) {
@@ -669,8 +683,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   auto end_timer = std::chrono::steady_clock::now();
   auto diff_timer = end_timer - start_timer;
 
-  //  c_app::log(fmt::format("Reading file {} took {} sec.", file_name,
-  //                         elapsed_duration(diff_timer).count()) );
+  astate->log(fmt::format("Reading file {} took {} sec.", file_name,
+                          elapsed_duration(diff_timer).count()) );
 
   //TODO: move autocentering to ccd compilation
   if (auto_center) {
@@ -694,8 +708,9 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   m_tws_tr->do_action(act_unlock | act_rebuild_tree);
   auto end_timer_build_tree = std::chrono::steady_clock::now();
   auto diff_timer_build_tree = end_timer_build_tree - start_timer_build_tree;
-  //  c_app::log(fmt::format("Building tws-tree for file {} took {} sec.", file_name,
-  //                         elapsed_duration(diff_timer_build_tree).count()));
+
+  astate->log(fmt::format("Building tws-tree for file {} took {} sec.", file_name,
+                          elapsed_duration(diff_timer_build_tree).count()));
 
   if (m_geom->nat() > 30000) {
       m_cur_render_type = ws_atoms_list_render_t::billboards;
@@ -707,8 +722,8 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
   m_tws_tr->do_action(act_rebuild_ntable);
   auto end_timer_build_ntable  = std::chrono::steady_clock::now();
   auto diff_timer_build_ntable  = end_timer_build_ntable  - start_timer_build_ntable ;
-  //  c_app::log(fmt::format("Building ntable for file {} took {} sec.", file_name,
-  //                         elapsed_duration(diff_timer_build_ntable).count()));
+  astate->log(fmt::format("Building ntable for file {} took {} sec.", file_name,
+                          elapsed_duration(diff_timer_build_ntable).count()));
   geometry_changed();
 
   if (m_parent_ws) {

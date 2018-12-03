@@ -32,9 +32,9 @@ namespace qpp {
     typedef std::int32_t int32_t;
     typedef std::int64_t int64_t;
 
-    enum ws_edit_type {
-      EDIT_WS_ITEM = 0,
-      EDIT_WS_ITEM_CONTENT = 1
+    enum ws_edit_t {
+      edit_item = 0,
+      edit_content = 1
     };
 
   }

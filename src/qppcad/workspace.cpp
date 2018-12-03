@@ -63,12 +63,15 @@ void workspace_t::unselect_all (bool emit_signal) {
 }
 
 void workspace_t::toggle_edit_mode () {
+
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_edit_type == ws_edit_type::EDIT_WS_ITEM)
-    m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
+  if (m_edit_type == ws_edit_t::edit_item)
+    m_edit_type = ws_edit_t::edit_content;
   else
-    m_edit_type = ws_edit_type::EDIT_WS_ITEM;
+    m_edit_type = ws_edit_t::edit_item;
+
+  astate->astate_evd->cur_ws_edit_type_changed();
 
 }
 
@@ -176,7 +179,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
   bool hit_any = false;
 
-  if (m_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+  if (m_edit_type != ws_edit_t::edit_content) {
       for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
       m_gizmo->attached_item = nullptr;
     }
@@ -184,7 +187,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
   for (auto &ws_item : m_ws_items) {
       bool is_hit = ws_item->mouse_click(&m_ray_debug);
       hit_any = hit_any || is_hit;
-      if (is_hit && m_edit_type == ws_edit_type::EDIT_WS_ITEM &&
+      if (is_hit && m_edit_type == ws_edit_t::edit_item &&
           (ws_item->get_flags() & ws_item_flags_support_selection)) {
           m_gizmo->attached_item = ws_item.get();
           auto it = std::find(m_ws_items.begin(), m_ws_items.end(), ws_item);
@@ -196,7 +199,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
         }
     }
 
-  if (m_edit_type != ws_edit_type::EDIT_WS_ITEM_CONTENT && !hit_any) {
+  if (m_edit_type != ws_edit_t::edit_content && !hit_any) {
       m_gizmo->attached_item = nullptr;
       unselect_all();
     }
@@ -301,7 +304,7 @@ void workspace_t::update (float delta_time) {
 
 }
 
-void workspace_t::set_edit_type (const ws_edit_type new_edit_type) {
+void workspace_t::set_edit_type (const ws_edit_t new_edit_type) {
 
   app_state_t* astate = app_state_t::get_inst();
   m_edit_type = new_edit_type;

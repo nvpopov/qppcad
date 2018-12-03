@@ -680,7 +680,7 @@ void main_window::cur_ws_properties_changed() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          bool check_t = cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM;
+          bool check_t = cur_ws->m_edit_type == ws_edit_t::edit_item;
           tp_edit_mode_item->blockSignals(true);
           tp_edit_mode_content->blockSignals(true);
           tp_edit_mode_item->setChecked(check_t);
@@ -699,8 +699,8 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          if (id == 0) cur_ws->m_edit_type = ws_edit_type::EDIT_WS_ITEM;
-          else cur_ws->m_edit_type = ws_edit_type::EDIT_WS_ITEM_CONTENT;
+          if (id == 0) cur_ws->m_edit_type = ws_edit_t::edit_item;
+          else cur_ws->m_edit_type = ws_edit_t::edit_content;
         }
     }
 
@@ -910,7 +910,7 @@ void main_window::action_select_all_content() {
   app_state_t* astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
 
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
 
@@ -926,7 +926,7 @@ void main_window::action_unselect_all_content() {
   app_state_t* astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
 
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
 
@@ -940,7 +940,7 @@ void main_window::action_invert_selected_content() {
   app_state_t* astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws && cur_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
 
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
 

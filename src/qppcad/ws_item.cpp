@@ -46,7 +46,7 @@ void ws_item_t::render () {
   if (m_selected && (get_flags() & ws_item_flags_support_selection) &&
       (get_flags() & ws_item_flags_support_rendering_bb) && is_bb_visible()) {
       astate->dp->begin_render_aabb();
-      if (m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM)
+      if (m_parent_ws->m_edit_type == ws_edit_t::edit_item)
         astate->dp->render_aabb(clr_fuchsia,
                                      m_pos + m_aabb.min,
                                      m_pos + m_aabb.max  );

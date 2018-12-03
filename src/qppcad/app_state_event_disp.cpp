@@ -17,6 +17,10 @@ void app_state_event_disp_t::cur_ws_changed() {
   emit(cur_ws_changed_signal());
 }
 
+void app_state_event_disp_t::cur_ws_edit_type_changed(){
+   emit(cur_ws_edit_type_changed_signal());
+}
+
 void app_state_event_disp_t::cur_ws_selected_item_changed() {
   app_state_t* astate = app_state_t::get_inst();
   //astate->log("DEBUG: app_state_event_disp_t::current_workspace_selected_item_changed()");
@@ -45,6 +49,10 @@ void app_state_event_disp_t::cur_ws_selected_atoms_list_cell_changed() {
 
 void app_state_event_disp_t::cur_ws_selected_item_position_changed(){
   emit(cur_ws_selected_item_position_changed_signal());
+}
+
+void app_state_event_disp_t::cur_ws_selected_atoms_list_selected_content_changed() {
+  emit(cur_ws_selected_atoms_list_selected_content_changed_signal());
 }
 
 app_state_event_disp_t::app_state_event_disp_t(QObject *parent) : QObject (parent) {

@@ -57,7 +57,7 @@ namespace qpp {
       public:
         workspace_manager_t                      *m_owner{nullptr};
         std::string                              m_fs_path{""};
-        ws_edit_type                             m_edit_type{ws_edit_type::EDIT_WS_ITEM};
+        ws_edit_t                             m_edit_type{ws_edit_t::edit_item};
         std::vector<std::shared_ptr<ws_item_t> > m_ws_items;
         std::string                              m_ws_name;
         std::unique_ptr<camera_t>                m_camera;
@@ -91,7 +91,7 @@ namespace qpp {
         void save_ws_to_json(const std::string filename);
         void load_ws_from_json(const std::string filename);
         void update(float delta_time);
-        void set_edit_type(const ws_edit_type new_edit_type);
+        void set_edit_type(const ws_edit_t new_edit_type);
 
     };
 

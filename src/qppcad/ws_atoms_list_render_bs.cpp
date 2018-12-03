@@ -83,7 +83,7 @@ namespace qpp {
           color[2] = al.m_geom->xfield<float>(ws_atoms_list_xgeom_ccb, at_num);
         }
 
-      if (al.m_parent_ws->m_edit_type == ws_edit_type::EDIT_WS_ITEM_CONTENT) {
+      if (al.m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
           if (al.m_atom_idx_sel.find(atom_index_set_key(at_num, at_index)) !=
               al.m_atom_idx_sel.end() &&
               al.m_selected)

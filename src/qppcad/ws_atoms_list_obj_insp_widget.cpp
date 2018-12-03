@@ -158,7 +158,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   gb_current_anim = new QComboBox;
 
   connect(gb_current_anim, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(current_anim_index_changed(int)));
+          this, SLOT(cur_anim_index_changed(int)));
 
   gb_anim_summary_layout->addRow(tr("Number of animations"), gb_anim_total_anims);
   gb_anim_summary_layout->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
@@ -235,6 +235,17 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_single_atom = new QGroupBox(tr("Modify single atom"));
   tm_gb_single_atom_layout = new QFormLayout;
   tm_gb_single_atom->setLayout(tm_gb_single_atom_layout);
+  tm_single_atom_combo = new QComboBox;
+  tm_single_atom_combo->setEditable(true);
+  tm_single_atom_vec3 = new qbinded_float3_input;
+  tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
+  tm_single_atom_commit = new QPushButton(tr("Commit changes"));
+  tm_gb_single_atom_layout->addRow(tr("Atom name"), tm_single_atom_combo);
+  tm_gb_single_atom_layout->addRow(tr("Atom position"), tm_single_atom_vec3);
+  tm_gb_single_atom_layout->addRow("", tm_single_atom_commit);
+
+  connect(tm_single_atom_commit, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked);
 
   tm_add_atom_combo = new QComboBox;
   tm_add_atom_combo->setEditable(true);
@@ -263,6 +274,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_nu_scale);
 
   tab_modify->tab_inner_widget_layout->addStretch(0);
+
 }
 
 void ws_atoms_list_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
@@ -347,7 +359,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       disp_s_subcells_idx_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
 
       //anim bindings
-      tabBar()->setTabEnabled(2, b_al->m_anim->animable());
+      update_animate_section_status();
 
       gb_anim_total_anims->setText(tr("%1").arg(b_al->m_anim->get_total_anims()));
       gb_rebuild_bonds->bind_value(&b_al->m_anim->m_rebuild_bonds_in_anim);
@@ -424,38 +436,65 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
 
   if (b_al) {
 
-      if (b_al->m_atom_sel.empty()) {
+      if (b_al->m_parent_ws &&
+          b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+
+          if (b_al->m_atom_sel.empty()) {
+              tm_gb_single_atom->hide();
+              tm_gb_add_atom->show();
+              tm_gb_pair_dist->hide();
+              tm_gb_nu_scale->hide();
+
+              //update atom names combobox
+              tm_add_atom_combo->clear();
+              for (auto i = 0 ; i < b_al->m_geom->n_atom_types(); i++)
+                tm_add_atom_combo->addItem(QString::fromStdString(b_al->m_geom->atom_of_type(i)));
+            }
+
+          if (b_al->m_atom_sel.size() == 1) {
+              tm_gb_single_atom->show();
+              tm_gb_add_atom->hide();
+              tm_gb_pair_dist->hide();
+              tm_gb_nu_scale->hide();
+
+              tm_single_atom_combo->clear();
+              for (auto i = 0 ; i < b_al->m_geom->n_atom_types(); i++)
+                tm_single_atom_combo->addItem(
+                      QString::fromStdString(b_al->m_geom->atom_of_type(i)));
+
+              auto it = b_al->m_atom_sel.begin();
+              if (it != b_al->m_atom_sel.end()) {
+                  int itv = *it;
+                  tm_single_atom_combo->setCurrentText(
+                        QString::fromStdString(b_al->m_geom->atom_name(itv)));
+                  tm_single_atom_vec3->sb_x->setValue(b_al->m_geom->pos(itv)[0]);
+                  tm_single_atom_vec3->sb_y->setValue(b_al->m_geom->pos(itv)[1]);
+                  tm_single_atom_vec3->sb_z->setValue(b_al->m_geom->pos(itv)[2]);
+                }
+
+
+            }
+
+          if (b_al->m_atom_sel.size() == 2) {
+              tm_gb_add_atom->hide();
+              tm_gb_single_atom->hide();
+              tm_gb_pair_dist->show();
+              tm_gb_nu_scale->hide();
+            }
+
+          if (b_al->m_atom_sel.size() > 2) {
+              tm_gb_add_atom->hide();
+              tm_gb_single_atom->hide();
+              tm_gb_pair_dist->hide();
+              tm_gb_nu_scale->show();
+            }
+        } else {
+          tm_gb_add_atom->hide();
           tm_gb_single_atom->hide();
-          tm_gb_add_atom->show();
           tm_gb_pair_dist->hide();
           tm_gb_nu_scale->hide();
-
-          //update atom names combobox
-          tm_add_atom_combo->clear();
-          for (auto i = 0 ; i < b_al->m_geom->n_atom_types(); i++)
-            tm_add_atom_combo->addItem(QString::fromStdString(b_al->m_geom->atom_of_type(i)));
         }
 
-      if (b_al->m_atom_sel.size() == 1) {
-          tm_gb_single_atom->show();
-          tm_gb_add_atom->hide();
-          tm_gb_pair_dist->hide();
-          tm_gb_nu_scale->hide();
-        }
-
-      if (b_al->m_atom_sel.size() == 2) {
-          tm_gb_add_atom->hide();
-          tm_gb_single_atom->hide();
-          tm_gb_pair_dist->show();
-          tm_gb_nu_scale->hide();
-        }
-
-      if (b_al->m_atom_sel.size() > 2) {
-          tm_gb_add_atom->hide();
-          tm_gb_single_atom->hide();
-          tm_gb_pair_dist->hide();
-          tm_gb_nu_scale->show();
-        }
     }
 
 }
@@ -485,10 +524,21 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this,
-          &ws_atoms_list_obj_insp_widget_t::cur_ws_selected_atoms_list_selection_changed);
+          &ws_atoms_list_obj_insp_widget_t::cur_it_list_selection_changed);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_edit_type_changed_signal,
+          this,
+          &ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_atoms_list_selected_content_changed_signal,
+          this,
+          &ws_atoms_list_obj_insp_widget_t::cur_it_selected_content_changed);
+
 }
 
-void ws_atoms_list_obj_insp_widget_t::current_anim_index_changed(int index) {
+void ws_atoms_list_obj_insp_widget_t::cur_anim_index_changed(int index) {
 
   if (b_al) {
 
@@ -525,7 +575,7 @@ void ws_atoms_list_obj_insp_widget_t::play_anim_button_toggle(bool value) {
     }
 }
 
-void ws_atoms_list_obj_insp_widget_t::animation_updated_external() {
+void ws_atoms_list_obj_insp_widget_t::anim_updated_external() {
 
   if (b_al) {
       int current_frame_truncated = std::floor(b_al->m_anim->m_cur_anim_time);
@@ -540,7 +590,7 @@ void ws_atoms_list_obj_insp_widget_t::animation_updated_external() {
 }
 
 void ws_atoms_list_obj_insp_widget_t::cur_ws_selected_item_frame_changed() {
-  animation_updated_external();
+  anim_updated_external();
 }
 
 void ws_atoms_list_obj_insp_widget_t::anim_timeline_slider_value_changed(int value) {
@@ -615,8 +665,14 @@ void ws_atoms_list_obj_insp_widget_t::draw_subcells_changed(int state) {
 
 }
 
-void ws_atoms_list_obj_insp_widget_t::cur_ws_selected_atoms_list_selection_changed() {
+void ws_atoms_list_obj_insp_widget_t::update_animate_section_status() {
+  tabBar()->setTabEnabled(2, b_al->m_anim->animable());
+}
+
+void ws_atoms_list_obj_insp_widget_t::cur_it_list_selection_changed() {
+
   std::cout<<"SEL"<<std::endl;
+
   if (b_al && b_al->is_selected()) {
 
       update_modify_tab();
@@ -630,10 +686,34 @@ void ws_atoms_list_obj_insp_widget_t::modify_add_atom_button_clicked() {
 
   if (b_al) {
       vector3<float> new_atom_pos{tm_add_atom_vec3->sb_x->value(),
-                                 tm_add_atom_vec3->sb_y->value(),
-                                 tm_add_atom_vec3->sb_z->value()};
+            tm_add_atom_vec3->sb_y->value(),
+            tm_add_atom_vec3->sb_z->value()};
       std::string new_atom_name = tm_add_atom_combo->currentText().toStdString();
       b_al->insert_atom(new_atom_name, new_atom_pos);
+      update_animate_section_status();
       astate->make_viewport_dirty();
     }
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked() {
+
+  if (b_al && b_al->m_atom_sel.size() == 1) {
+      auto it = b_al->m_atom_sel.begin();
+      if (it != b_al->m_atom_sel.end()) {
+          int itv = *it;
+          b_al->update_atom(itv, tm_single_atom_combo->currentText().toStdString(),
+                            vector3<float>(tm_single_atom_vec3->sb_x->value(),
+                                           tm_single_atom_vec3->sb_y->value(),
+                                           tm_single_atom_vec3->sb_z->value()));
+          update_animate_section_status();
+        }
+    }
+}
+
+void ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed() {
+  update_modify_tab();
+}
+
+void ws_atoms_list_obj_insp_widget_t::cur_it_selected_content_changed() {
+  update_modify_tab();
 }

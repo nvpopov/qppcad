@@ -97,6 +97,7 @@ namespace qpp {
         void insert_atom(const std::string &atom_name, const vector3<float> &pos);
         void update_atom(const int at_id, const vector3<float> &pos);
         void update_atom(const int at_id, const std::string &at_name);
+        void update_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
         void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);

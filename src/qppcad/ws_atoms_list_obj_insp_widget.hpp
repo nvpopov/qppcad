@@ -98,6 +98,9 @@ namespace qpp {
 
         QGroupBox *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_layout;
+        QComboBox *tm_single_atom_combo;
+        qbinded_float3_input *tm_single_atom_vec3;
+        QPushButton *tm_single_atom_commit;
 
         QGroupBox *tm_gb_pair_dist;
         QFormLayout *tm_gb_pair_dist_layout;
@@ -119,9 +122,9 @@ namespace qpp {
         ws_atoms_list_obj_insp_widget_t();
 
       public slots:
-        void current_anim_index_changed(int index);
+        void cur_anim_index_changed(int index);
         void play_anim_button_toggle(bool value);
-        void animation_updated_external();
+        void anim_updated_external();
         void cur_ws_selected_item_frame_changed();
         void anim_timeline_slider_value_changed(int value);
         void anim_button_begin_clicked();
@@ -130,8 +133,12 @@ namespace qpp {
         void anim_button_frame_move_backward_clicked();
         void cell_changed();
         void draw_subcells_changed(int state);
-        void cur_ws_selected_atoms_list_selection_changed();
+        void update_animate_section_status();
+        void cur_it_list_selection_changed();
         void modify_add_atom_button_clicked();
+        void modify_single_atom_button_clicked();
+        void cur_ws_edit_mode_changed();
+        void cur_it_selected_content_changed();
     };
 
   }
