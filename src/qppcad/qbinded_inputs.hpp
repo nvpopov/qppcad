@@ -128,6 +128,19 @@ namespace qpp {
 
     };
 
+    class qbinded_color3_input : public QWidget {
+
+        Q_OBJECT
+
+      public:
+
+        vector3<float> *m_binded_value{nullptr};
+        QColor m_stored_value;
+
+        qbinded_color3_input(QWidget *parent = nullptr);
+
+    };
+
 
 
 

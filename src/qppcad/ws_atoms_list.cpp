@@ -386,6 +386,8 @@ void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {
 
 void ws_atoms_list_t::delete_selected_atoms () {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   if (!m_atom_idx_sel.empty() || !m_atom_sel.empty()) m_anim->m_force_non_animable = true;
 
   std::vector<int> all_atom_num;
@@ -409,6 +411,8 @@ void ws_atoms_list_t::delete_selected_atoms () {
         m_tws_tr->do_action(act_unlock);
       m_geom->erase(all_atom_num[delta] - delta);
     }
+
+   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
 
 }
 

@@ -243,6 +243,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
 
   tm_single_atom_commit = new QPushButton(tr("Commit changes"));
   tm_single_atom_delete = new QPushButton(tr("Delete atom"));
+  connect(tm_single_atom_delete, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_single_atom_delete_button_clicked);
 
   tm_gb_single_atom_layout->addRow(tr("Atom name"), tm_single_atom_combo);
   tm_gb_single_atom_layout->addRow(tr("Atom idx"), tm_single_atom_idx);
@@ -301,15 +303,56 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
           static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
           this, &ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed);
 
-  tm_gb_nu_scale = new QGroupBox(tr("Non-uniform scale"));
-  tm_gb_nu_scale_layout = new QFormLayout;
-  tm_gb_nu_scale->setLayout(tm_gb_nu_scale_layout);
+  tm_gb_u_scale = new QGroupBox(tr("Barycentric scaling"));
+  tm_gb_u_scale_layout = new QFormLayout;
+  tm_gb_u_scale->setLayout(tm_gb_u_scale_layout);
+
+  tm_u_scale_sb_x = new QDoubleSpinBox;
+  tm_u_scale_sb_x->setMinimum(0.01);
+  tm_u_scale_sb_x->setMaximum(2.0);
+  tm_u_scale_sb_x->setSingleStep(0.01);
+  tm_u_scale_sb_x->setValue(1.0);
+
+  tm_u_scale_sb_y = new QDoubleSpinBox;
+  tm_u_scale_sb_y->setMinimum(0.01);
+  tm_u_scale_sb_y->setMaximum(2.0);
+  tm_u_scale_sb_y->setSingleStep(0.01);
+  tm_u_scale_sb_y->setValue(1.0);
+
+  tm_u_scale_sb_z = new QDoubleSpinBox;
+  tm_u_scale_sb_z->setMinimum(0.01);
+  tm_u_scale_sb_z->setMaximum(2.0);
+  tm_u_scale_sb_z->setSingleStep(0.01);
+  tm_u_scale_sb_z->setValue(1.0);
+
+  tm_u_scale_x_enabled = new QCheckBox;
+  tm_u_scale_x_enabled->setChecked(true);
+
+  tm_u_scale_y_enabled = new QCheckBox;
+  tm_u_scale_y_enabled->setChecked(true);
+
+  tm_u_scale_z_enabled = new QCheckBox;
+  tm_u_scale_z_enabled->setChecked(true);
+
+  tm_u_apply_scale_button = new QPushButton(tr("Apply scale"));
+  connect(tm_u_apply_scale_button, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_barycentric_scale_button_clicked);
+
+  tm_gb_u_scale_layout->addRow("Scaling value for X-axis", tm_u_scale_sb_x);
+  tm_gb_u_scale_layout->addRow("Scaling value for Y-axis", tm_u_scale_sb_y);
+  tm_gb_u_scale_layout->addRow("Scaling value for Z-axis", tm_u_scale_sb_z);
+  tm_gb_u_scale_layout->addRow("Enable scaling for X-axis", tm_u_scale_x_enabled);
+  tm_gb_u_scale_layout->addRow("Enable scaling for Y-axis", tm_u_scale_y_enabled);
+  tm_gb_u_scale_layout->addRow("Enable scaling for Z-axis", tm_u_scale_z_enabled);
+
+  tm_gb_u_scale_layout->addRow("", tm_u_apply_scale_button);
+
 
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_dist);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_creation);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_nu_scale);
+  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_u_scale);
 
   tab_modify->tab_inner_widget_layout->addStretch(0);
 
@@ -477,11 +520,13 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
       if (b_al->m_parent_ws &&
           b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
 
+          tabBar()->setTabEnabled(3, true);
+
           if (b_al->m_atom_sel.empty()) {
               tm_gb_single_atom->hide();
               tm_gb_add_atom->show();
               tm_gb_pair_dist->hide();
-              tm_gb_nu_scale->hide();
+              tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
 
               //update atom names combobox
@@ -492,7 +537,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_single_atom->show();
               tm_gb_add_atom->hide();
               tm_gb_pair_dist->hide();
-              tm_gb_nu_scale->hide();
+              tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
 
               fill_combo_with_atom_types(tm_single_atom_combo, b_al);
@@ -519,7 +564,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_add_atom->hide();
               tm_gb_single_atom->hide();
               tm_gb_pair_dist->show();
-              tm_gb_nu_scale->hide();
+              tm_gb_u_scale->hide();
               tm_gb_pair_creation->show();
 
               auto it1 = b_al->m_atom_idx_sel.begin();
@@ -565,14 +610,16 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_single_atom->hide();
               tm_gb_pair_creation->hide();
               tm_gb_pair_dist->hide();
-              tm_gb_nu_scale->show();
+              tm_gb_u_scale->show();
             }
         } else {
+
+          tabBar()->setTabEnabled(3, false);
           tm_gb_add_atom->hide();
           tm_gb_pair_creation->hide();
           tm_gb_single_atom->hide();
           tm_gb_pair_dist->hide();
-          tm_gb_nu_scale->hide();
+          tm_gb_u_scale->hide();
         }
 
     }
@@ -798,6 +845,17 @@ void ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked() {
     }
 }
 
+void ws_atoms_list_obj_insp_widget_t::modify_single_atom_delete_button_clicked() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      b_al->delete_selected_atoms();
+      astate->make_viewport_dirty();
+      update_animate_section_status();
+    }
+}
+
 void ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double newval) {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -846,6 +904,41 @@ void ws_atoms_list_obj_insp_widget_t::modify_add_atom_between_pair() {
       astate->make_viewport_dirty();
     }
 
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_barycentric_scale_button_clicked() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+
+      vector3<float> center{0.0f, 0.0f, 0.0f};
+      for (auto &rec : b_al->m_atom_sel) center += b_al->m_geom->pos(rec);
+      center /= b_al->m_atom_sel.size();
+
+      for (auto &rec : b_al->m_atom_sel) {
+
+          float scale_mod_x = 0.0f;
+          float scale_mod_y = 0.0f;
+          float scale_mod_z = 0.0f;
+
+          if (tm_u_scale_x_enabled->checkState() == Qt::Checked) scale_mod_x = 1.0f;
+          if (tm_u_scale_y_enabled->checkState() == Qt::Checked) scale_mod_y = 1.0f;
+          if (tm_u_scale_z_enabled->checkState() == Qt::Checked) scale_mod_z = 1.0f;
+
+          vector3<float> new_pos_dist = center - b_al->m_geom->pos(rec);
+          vector3<float> new_pos = b_al->m_geom->pos(rec);
+
+          new_pos[0] +=  (1-float(tm_u_scale_sb_x->value())) * new_pos_dist[0] * scale_mod_x;
+          new_pos[1] +=  (1-float(tm_u_scale_sb_y->value())) * new_pos_dist[1] * scale_mod_y;
+          new_pos[2] +=  (1-float(tm_u_scale_sb_z->value())) * new_pos_dist[2] * scale_mod_z;
+
+          b_al->update_atom(rec, new_pos);
+        }
+
+      update_animate_section_status();
+      astate->make_viewport_dirty();
+    }
 }
 
 void ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed() {

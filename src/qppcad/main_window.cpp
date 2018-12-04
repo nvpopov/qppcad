@@ -162,8 +162,12 @@ void main_window::init_menus() {
 
   act_settings = new QAction(this);
   act_settings->setText(tr("Settings"));
+
+  act_workspace_settings = new QAction(this);
+  act_workspace_settings->setText(tr("Workspace settings"));
   edit_menu->addSeparator();
   edit_menu->addAction(act_settings);
+  edit_menu->addAction(act_workspace_settings);
 
   tools_menu = menuBar()->addMenu(tr("&Tools"));
   tools_menu_generators = tools_menu->addMenu(tr("Generators"));

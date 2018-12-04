@@ -241,3 +241,7 @@ void qbinded_float3_input::spinbox_value_changed(double newval) {
       app_state_t::get_inst()->make_viewport_dirty();
     }
 }
+
+qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QWidget (parent) {
+
+}

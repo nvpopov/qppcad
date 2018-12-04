@@ -108,6 +108,7 @@ namespace qpp {
         QAction *act_redo;
         QAction *switch_between_ws_edit_mode;
         QAction *act_settings;
+        QAction *act_workspace_settings;
 
         QMenu *edit_selection_menu;
         QAction *edit_selection_select_all;

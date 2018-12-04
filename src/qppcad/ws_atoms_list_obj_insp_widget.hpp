@@ -90,6 +90,7 @@ namespace qpp {
         ws_item_tab_widget_t *tab_measurement;
 
         ws_item_tab_widget_t *tab_modify;
+
         QGroupBox *tm_gb_add_atom;
         QFormLayout *tm_gb_add_atom_layout;
         QComboBox *tm_add_atom_combo;
@@ -118,8 +119,15 @@ namespace qpp {
         QComboBox *tm_pair_creation_combo;
         QPushButton *tm_pair_creation_button;
 
-        QGroupBox *tm_gb_nu_scale;
-        QFormLayout *tm_gb_nu_scale_layout;
+        QGroupBox *tm_gb_u_scale;
+        QFormLayout *tm_gb_u_scale_layout;
+        QDoubleSpinBox *tm_u_scale_sb_x;
+        QDoubleSpinBox *tm_u_scale_sb_y;
+        QDoubleSpinBox *tm_u_scale_sb_z;
+        QCheckBox *tm_u_scale_x_enabled;
+        QCheckBox *tm_u_scale_y_enabled;
+        QCheckBox *tm_u_scale_z_enabled;
+        QPushButton *tm_u_apply_scale_button;
 
         void construct_general_tab();
         void construct_display_tab();
@@ -151,8 +159,10 @@ namespace qpp {
         void cur_it_list_selection_changed();
         void modify_add_atom_button_clicked();
         void modify_single_atom_button_clicked();
+        void modify_single_atom_delete_button_clicked();
         void modify_pair_dist_spinbox_value_changed(double newval);
         void modify_add_atom_between_pair();
+        void modify_barycentric_scale_button_clicked();
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
     };
