@@ -353,8 +353,19 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_translate_vec3 = new qbinded_float3_input;
   tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
   tm_translate_apply_button = new QPushButton(tr("Apply translate"));
+  tm_translate_coord_type_label = new QLabel("Coord. type");
+  tm_translate_coord_type = new QComboBox;
+  tm_translate_coord_type->addItem("Cartesian");
+  tm_translate_coord_type->addItem("Fractional");
+
+  tm_gb_translate_layout->addRow(tm_translate_coord_type_label, tm_translate_coord_type);
   tm_gb_translate_layout->addRow(tr("Tr. vector"), tm_translate_vec3);
   tm_gb_translate_layout->addRow("", tm_translate_apply_button);
+
+  connect(tm_translate_coord_type,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this, &ws_atoms_list_obj_insp_widget_t::modify_translate_coord_type_changed);
+
   connect(tm_translate_apply_button, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked);
 
@@ -627,6 +638,18 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_translate->show();
 
             }
+
+          if (b_al->m_atom_sel.size() > 0) {
+              if (b_al->m_geom->DIM == 3) {
+                  tm_translate_coord_type_label->show();
+                  tm_translate_coord_type->show();
+                } else {
+                  tm_translate_coord_type->setCurrentIndex(0);
+                  tm_translate_coord_type->hide();
+                  tm_translate_coord_type_label->hide();
+                }
+            }
+
         } else {
 
           tabBar()->setTabEnabled(3, false);
@@ -968,13 +991,26 @@ void ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked() 
                             tm_translate_vec3->sb_y->value(),
                             tm_translate_vec3->sb_z->value());
 
+      if (tm_translate_coord_type->currentIndex() == 1 && b_al->m_geom->DIM == 3) {
+          vector3<float> tr_vec_c = tr_vec;
+          tr_vec = b_al->m_geom->cell.frac2cart(tr_vec_c);
+        }
+
       for (auto &rec : b_al->m_atom_sel) {
-           b_al->update_atom(rec, b_al->m_geom->pos(rec) + tr_vec);
+          b_al->update_atom(rec, b_al->m_geom->pos(rec) + tr_vec);
         }
 
     }
 
   astate->make_viewport_dirty();
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_translate_coord_type_changed(int coord_type) {
+  if (coord_type == 0) {
+      tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
+    } else {
+      tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
+    }
 }
 
 void ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed() {

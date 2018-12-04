@@ -132,6 +132,8 @@ namespace qpp {
         QGroupBox *tm_gb_translate;
         QFormLayout *tm_gb_translate_layout;
         qbinded_float3_input *tm_translate_vec3;
+        QLabel *tm_translate_coord_type_label;
+        QComboBox *tm_translate_coord_type;
         QPushButton *tm_translate_apply_button;
 
         void construct_general_tab();
@@ -169,6 +171,7 @@ namespace qpp {
         void modify_add_atom_between_pair();
         void modify_barycentric_scale_button_clicked();
         void modify_translate_selected_atoms_clicked();
+        void modify_translate_coord_type_changed(int coord_type);
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
 
