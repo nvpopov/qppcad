@@ -239,10 +239,16 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_single_atom_combo->setEditable(true);
   tm_single_atom_vec3 = new qbinded_float3_input;
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
+  tm_single_atom_idx = new QLabel;
+
   tm_single_atom_commit = new QPushButton(tr("Commit changes"));
+  tm_single_atom_delete = new QPushButton(tr("Delete atom"));
+
   tm_gb_single_atom_layout->addRow(tr("Atom name"), tm_single_atom_combo);
+  tm_gb_single_atom_layout->addRow(tr("Atom idx"), tm_single_atom_idx);
   tm_gb_single_atom_layout->addRow(tr("Atom position"), tm_single_atom_vec3);
   tm_gb_single_atom_layout->addRow("", tm_single_atom_commit);
+  tm_gb_single_atom_layout->addRow("", tm_single_atom_delete);
 
   connect(tm_single_atom_commit, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked);
@@ -279,6 +285,18 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist_layout->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
   tm_gb_pair_dist_layout->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
 
+  tm_gb_pair_creation = new QGroupBox(tr("Insert atom between"));
+  tm_gb_pair_creation_layout = new QFormLayout;
+  tm_gb_pair_creation->setLayout(tm_gb_pair_creation_layout);
+  tm_pair_creation_combo = new QComboBox;
+  tm_pair_creation_combo->setEditable(true);
+  tm_pair_creation_button = new QPushButton("Append");
+  tm_gb_pair_creation_layout->addRow(tr("New atom type"), tm_pair_creation_combo);
+  tm_gb_pair_creation_layout->addRow("", tm_pair_creation_button);
+
+  connect(tm_pair_creation_button, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_add_atom_between_pair);
+
   connect(tm_pair_dist_spinbox,
           static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
           this, &ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed);
@@ -290,6 +308,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_dist);
+  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_creation);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_nu_scale);
 
   tab_modify->tab_inner_widget_layout->addStretch(0);
@@ -463,41 +482,45 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_add_atom->show();
               tm_gb_pair_dist->hide();
               tm_gb_nu_scale->hide();
+              tm_gb_pair_creation->hide();
 
               //update atom names combobox
-              tm_add_atom_combo->clear();
-              for (auto i = 0 ; i < b_al->m_geom->n_atom_types(); i++)
-                tm_add_atom_combo->addItem(QString::fromStdString(b_al->m_geom->atom_of_type(i)));
+              fill_combo_with_atom_types(tm_add_atom_combo, b_al);
             }
 
-          if (b_al->m_atom_sel.size() == 1) {
+          if (b_al->m_atom_idx_sel.size() == 1) {
               tm_gb_single_atom->show();
               tm_gb_add_atom->hide();
               tm_gb_pair_dist->hide();
               tm_gb_nu_scale->hide();
+              tm_gb_pair_creation->hide();
 
-              tm_single_atom_combo->clear();
-              for (auto i = 0 ; i < b_al->m_geom->n_atom_types(); i++)
-                tm_single_atom_combo->addItem(
-                      QString::fromStdString(b_al->m_geom->atom_of_type(i)));
+              fill_combo_with_atom_types(tm_single_atom_combo, b_al);
 
-              auto it = b_al->m_atom_sel.begin();
-              if (it != b_al->m_atom_sel.end()) {
-                  int itv = *it;
+              auto it = b_al->m_atom_idx_sel.begin();
+              if (it != b_al->m_atom_idx_sel.end()) {
+
+                  tm_single_atom_idx->setText(
+                        QString::fromStdString(fmt::format("{}", it->m_idx)));
+
                   tm_single_atom_combo->setCurrentText(
-                        QString::fromStdString(b_al->m_geom->atom_name(itv)));
-                  tm_single_atom_vec3->sb_x->setValue(b_al->m_geom->pos(itv)[0]);
-                  tm_single_atom_vec3->sb_y->setValue(b_al->m_geom->pos(itv)[1]);
-                  tm_single_atom_vec3->sb_z->setValue(b_al->m_geom->pos(itv)[2]);
+                        QString::fromStdString(b_al->m_geom->atom_name(it->m_atm)));
+                  tm_single_atom_vec3->sb_x->setValue(b_al->m_geom->pos(it->m_atm)[0]);
+                  tm_single_atom_vec3->sb_y->setValue(b_al->m_geom->pos(it->m_atm)[1]);
+                  tm_single_atom_vec3->sb_z->setValue(b_al->m_geom->pos(it->m_atm)[2]);
+
+                } else {
+
                 }
 
             }
 
-          if (b_al->m_atom_sel.size() == 2) {
+          if (b_al->m_atom_idx_sel.size() == 2) {
               tm_gb_add_atom->hide();
               tm_gb_single_atom->hide();
               tm_gb_pair_dist->show();
               tm_gb_nu_scale->hide();
+              tm_gb_pair_creation->show();
 
               auto it1 = b_al->m_atom_idx_sel.begin();
               auto it2 = it1++;
@@ -531,17 +554,22 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
                       tm_pair_dist_note_label->hide();
                       tm_pair_dist_spinbox->hide();
                     }
+
+                  //atom between
+                  fill_combo_with_atom_types(tm_pair_creation_combo, b_al);
                 }
             }
 
           if (b_al->m_atom_sel.size() > 2) {
               tm_gb_add_atom->hide();
               tm_gb_single_atom->hide();
+              tm_gb_pair_creation->hide();
               tm_gb_pair_dist->hide();
               tm_gb_nu_scale->show();
             }
         } else {
           tm_gb_add_atom->hide();
+          tm_gb_pair_creation->hide();
           tm_gb_single_atom->hide();
           tm_gb_pair_dist->hide();
           tm_gb_nu_scale->hide();
@@ -551,13 +579,21 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
 
 }
 
-ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
+void ws_atoms_list_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
+                                                                 ws_atoms_list_t *_al) {
+  if (_al && combo) {
+      combo->clear();
+      for (auto i = 0 ; i < _al->m_geom->n_atom_types(); i++)
+        combo->addItem(QString::fromStdString(_al->m_geom->atom_of_type(i)));
+    }
+}
 
+ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
   tab_display = define_tab(tr("Display"));
   tab_animation = define_tab(tr("Animation"));
-  tab_measurement = define_tab(tr("Measurement"));
   tab_modify = define_tab(tr("Modify"));
+  tab_measurement = define_tab(tr("Measurement"));
 
   construct_general_tab();
   construct_display_tab();
@@ -788,6 +824,28 @@ void ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(dou
           astate->make_viewport_dirty();
         }
     }
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_add_atom_between_pair() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+
+      auto it1 = b_al->m_atom_idx_sel.begin();
+      auto it2 = it1++;
+      vector3<float> r_btw{0.0, 0.0, 0.0};
+
+      if (it1 != b_al->m_atom_idx_sel.end() && it2 != b_al->m_atom_idx_sel.end())
+        r_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) +
+                 b_al->m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
+
+      std::string new_atom_name = tm_pair_creation_combo->currentText().toStdString();
+      b_al->insert_atom(new_atom_name, r_btw);
+      update_animate_section_status();
+      astate->make_viewport_dirty();
+    }
+
 }
 
 void ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed() {

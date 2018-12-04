@@ -98,9 +98,11 @@ namespace qpp {
 
         QGroupBox *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_layout;
+        QLabel *tm_single_atom_idx;
         QComboBox *tm_single_atom_combo;
         qbinded_float3_input *tm_single_atom_vec3;
         QPushButton *tm_single_atom_commit;
+        QPushButton *tm_single_atom_delete;
 
         QGroupBox *tm_gb_pair_dist;
         QFormLayout *tm_gb_pair_dist_layout;
@@ -110,6 +112,11 @@ namespace qpp {
         QLabel *tm_pair_dist_atom2_idx;
         QDoubleSpinBox *tm_pair_dist_spinbox;
         QLabel *tm_pair_dist_note_label;
+
+        QGroupBox *tm_gb_pair_creation;
+        QFormLayout *tm_gb_pair_creation_layout;
+        QComboBox *tm_pair_creation_combo;
+        QPushButton *tm_pair_creation_button;
 
         QGroupBox *tm_gb_nu_scale;
         QFormLayout *tm_gb_nu_scale_layout;
@@ -125,6 +132,7 @@ namespace qpp {
         void unbind_item() override;
         void update_anim_tab_gb();
         void update_modify_tab();
+        void fill_combo_with_atom_types(QComboBox *combo, ws_atoms_list_t *_al);
         ws_atoms_list_obj_insp_widget_t();
 
       public slots:
@@ -144,6 +152,7 @@ namespace qpp {
         void modify_add_atom_button_clicked();
         void modify_single_atom_button_clicked();
         void modify_pair_dist_spinbox_value_changed(double newval);
+        void modify_add_atom_between_pair();
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
     };
