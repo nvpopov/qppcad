@@ -16,21 +16,27 @@ main_window::main_window(QWidget *parent) {
   init_menus();
   init_widgets();
   init_layouts();
-  bool connect_st1 = QObject::connect(astate->astate_evd,
-                                      SIGNAL(wss_changed_signal()),
-                                      this, SLOT(wss_changed_slot()));
 
-  bool connect_st2 = QObject::connect(astate->astate_evd,
-                                      SIGNAL(cur_ws_changed_signal()),
-                                      this, SLOT(cur_ws_changed()));
+  connect(astate->astate_evd, &app_state_event_disp_t::wss_changed_signal,
+          this, &main_window::wss_changed_slot);
 
-  bool connect_st3 = QObject::connect(astate->astate_evd,
-                                      SIGNAL(cur_ws_selected_item_changed_signal()),
-                                      this, SLOT(cur_ws_selected_item_changed())
-                                      );
+  connect(astate->astate_evd, &app_state_event_disp_t::cur_ws_changed_signal,
+          this, &main_window::cur_ws_changed);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
+          this, &main_window::cur_ws_selected_item_changed);
+
+  connect(astate->astate_evd, &app_state_event_disp_t::cur_ws_edit_type_changed_signal,
+          this, &main_window::cur_ws_edit_type_changed);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
+          this, &main_window::cur_ws_selected_atoms_list_selection_changed);
+
   wss_changed_slot();
   cur_ws_changed();
-  //astate->log(fmt::format("Connection status: {}", connect_st));
+  cur_ws_edit_type_changed();
 
   setStyleSheet("QPushButton:checked{"
                 "background-color: rgb(150, 150, 150);}");
@@ -343,6 +349,9 @@ void main_window::init_widgets() {
   tp_measure_dist = new QPushButton(tr("DIST"));
   tp_measure_dist->setMinimumWidth(40);
   tp_measure_dist->setMinimumHeight(tp_button_height);
+  tp_measure_dist->setCheckable(true);
+
+  connect(tp_measure_dist, &QPushButton::toggled, this, &main_window::tp_dist_button_clicked);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
   ws_viewer_widget->setStyleSheet("margin-top:-15px;");
@@ -350,7 +359,7 @@ void main_window::init_widgets() {
   obj_insp_widget = new object_inspector_widget_t();
   obj_insp_widget->setMaximumWidth(400);
   obj_insp_widget->setMinimumWidth(200);
-  //obj_insp_widget->setStyleSheet("margin-top:-15px;");
+
 }
 
 void main_window::init_layouts() {
@@ -365,13 +374,13 @@ void main_window::init_layouts() {
   layout_ws_viewer_obj_insp->addWidget(ws_viewer_widget);
   layout_ws_viewer_obj_insp->addWidget(obj_insp_widget);
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
-  //layout_ws_viewer_obj_insp->setStyleSheet("margin-top:0px;");
+
   layout_ws_viewer_obj_insp->setHandleWidth(15);
   main_layout->addWidget(layout_ws_viewer_obj_insp);
 
   tool_panel_layout = new QHBoxLayout;
   tool_panel_widget->setLayout(tool_panel_layout);
-  //tool_panel_layout->addWidget(tp_ws_selector_label, 0, Qt::AlignLeft);
+
   tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_add_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_rm_ws, 0, Qt::AlignLeft);
@@ -394,15 +403,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
-  //  layout_tools_main_window = new QGridLayout;
-  //  layout_tools_main_window->setContentsMargins(0,0,0,0);
-  //  main_widget->setLayout(layout_tools_main_window);
-  //  layout_tools_main_window->addWidget(tool_panel_widget, 0, 0, 1, 2);
 
-  //  layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
-  //  layout_tools_main_window->addLayout()
-  //  layout_tools_main_window->addWidget(ws_viewer_placeholder, 1, 0, 1, 1);
-  //  layout_tools_main_window->addWidget(obj_inst_placeholder, 1, 1, 1, 1);
 }
 
 void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
@@ -658,23 +659,24 @@ void main_window::cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
           if (cur_it_as_al) {
-              tp_measure_dist->show();
+              //tp_measure_dist->show();
               if (cur_it_as_al->m_geom->DIM == 3) change_camera_buttons_visible(false, true);
               else change_camera_buttons_visible(true, false);
             }
           else {
               change_camera_buttons_visible(false, false);
-              tp_measure_dist->hide();
+              //tp_measure_dist->hide();
             }
         }
     }
+
+  cur_ws_edit_type_changed();
 }
 
 void main_window::cur_ws_properties_changed() {
@@ -695,6 +697,88 @@ void main_window::cur_ws_properties_changed() {
     }
 
   astate->make_viewport_dirty();
+}
+
+void main_window::cur_ws_edit_type_changed() {
+  cur_ws_selected_atoms_list_selection_changed();
+}
+
+void main_window::cur_ws_selected_atoms_list_selection_changed() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  bool need_to_hide_al_cntls{true};
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it = cur_ws->get_selected();
+          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+
+          if (cur_it_as_al) {
+              if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
+                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  tp_measure_dist->show();
+                  need_to_hide_al_cntls = false;
+                  auto it1 = cur_it_as_al->m_atom_idx_sel.begin();
+                  auto it2 = ++(cur_it_as_al->m_atom_idx_sel.begin());
+
+                  auto cur_sel = cur_it_as_al->m_measure->is_bond_measurement_exist(
+                                   it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
+                  tp_measure_dist->blockSignals(true);
+                  tp_measure_dist->setChecked(cur_sel != std::nullopt);
+                  tp_measure_dist->blockSignals(false);
+                }
+            }
+
+        }
+    }
+
+  if (need_to_hide_al_cntls) {
+      tp_measure_dist->hide();
+    }
+
+}
+
+void main_window::tp_dist_button_clicked(bool checked) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it = cur_ws->get_selected();
+          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+
+          if (cur_it_as_al) {
+
+              if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
+                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  tp_measure_dist->show();
+
+                  auto it1 = cur_it_as_al->m_atom_idx_sel.begin();
+                  auto it2 = ++(cur_it_as_al->m_atom_idx_sel.begin());
+
+                  auto cur_sel = cur_it_as_al->m_measure->is_bond_measurement_exist(
+                                   it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
+
+                  if (checked) cur_it_as_al->m_measure->add_bond_measurement(
+                        it1->m_atm, it2->m_atm,it1->m_idx, it2->m_idx);
+                  else cur_it_as_al->m_measure->remove_bond_measurement(*cur_sel);
+                }
+            }
+
+        }
+    }
+
+  astate->make_viewport_dirty();
+
 }
 
 void main_window::ws_edit_mode_selector_button_clicked(int id) {
@@ -893,7 +977,7 @@ void main_window::dialog_axial_scale() {
                   double sc_c = asw.get_scale_value(2);
 
                   if (ret_code == QDialog::Accepted) {
-                    //  al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
+                      //  al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
                       al->apply_axial_scale(sc_a, sc_b, sc_c);
                       astate->make_viewport_dirty();
                     }

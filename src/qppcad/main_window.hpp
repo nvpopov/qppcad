@@ -141,23 +141,34 @@ namespace qpp {
 
       private slots:
         void slot_shortcut_terminate_app();
+
         void wss_changed_slot();
+
         void ws_selector_selection_changed(int index);
         void tp_show_obj_insp_state_changed(int state);
         void tp_show_gizmo_state_changed(int state);
+
         void import_file(QString dialog_name, QString file_ext,  qc_file_fmt file_fmt);
         void export_selected_geometry(QString dialog_name, qc_file_fmt file_fmt);
+
         void create_new_ws();
         void open_ws();
         void save_ws();
         void save_ws_as();
         void close_cur_ws();
         void rename_cur_ws();
+
         void cur_ws_changed();
         void cur_ws_selected_item_changed();
         void cur_ws_properties_changed();
+        void cur_ws_edit_type_changed();
+        void cur_ws_selected_atoms_list_selection_changed();
+
+        void tp_dist_button_clicked(bool checked);
         void ws_edit_mode_selector_button_clicked(int id);
+
         void apply_camera_view_change(cam_target_view_t target_view);
+
         void toggle_ws_edit_mode();
         void start_update_cycle();
         void stop_update_cycle();

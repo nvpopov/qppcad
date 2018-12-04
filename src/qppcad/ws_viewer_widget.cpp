@@ -94,7 +94,7 @@ void ws_viewer_widget_t::paintGL() {
   glapi->glEnable(GL_CULL_FACE);
   glapi->glCullFace(GL_BACK);
   astate->ws_manager->render_cur_ws();
-
+  glapi->glDisable(GL_CULL_FACE);
   glapi->glDisable(GL_DEPTH_TEST);
 
   painter.endNativePainting();

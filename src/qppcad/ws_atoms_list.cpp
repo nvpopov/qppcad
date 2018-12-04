@@ -197,10 +197,11 @@ void ws_atoms_list_t::render () {
   //render measurement
 
   m_lat_planes->render();
-  m_measure->render();
+
 }
 
 void ws_atoms_list_t::render_overlay(QPainter *painter) {
+  m_measure->render_overlay(painter);
   m_labels->render_overlay(painter);
 }
 
