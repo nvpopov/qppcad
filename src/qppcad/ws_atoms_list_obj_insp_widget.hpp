@@ -129,6 +129,11 @@ namespace qpp {
         QCheckBox *tm_u_scale_z_enabled;
         QPushButton *tm_u_apply_scale_button;
 
+        QGroupBox *tm_gb_translate;
+        QFormLayout *tm_gb_translate_layout;
+        qbinded_float3_input *tm_translate_vec3;
+        QPushButton *tm_translate_apply_button;
+
         void construct_general_tab();
         void construct_display_tab();
         void construct_anim_tab();
@@ -163,8 +168,10 @@ namespace qpp {
         void modify_pair_dist_spinbox_value_changed(double newval);
         void modify_add_atom_between_pair();
         void modify_barycentric_scale_button_clicked();
+        void modify_translate_selected_atoms_clicked();
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
+
     };
 
   }

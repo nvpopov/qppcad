@@ -347,12 +347,23 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
 
   tm_gb_u_scale_layout->addRow("", tm_u_apply_scale_button);
 
+  tm_gb_translate = new QGroupBox(tr("Translate selected atoms"));
+  tm_gb_translate_layout = new QFormLayout;
+  tm_gb_translate->setLayout(tm_gb_translate_layout);
+  tm_translate_vec3 = new qbinded_float3_input;
+  tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
+  tm_translate_apply_button = new QPushButton(tr("Apply translate"));
+  tm_gb_translate_layout->addRow(tr("Tr. vector"), tm_translate_vec3);
+  tm_gb_translate_layout->addRow("", tm_translate_apply_button);
+  connect(tm_translate_apply_button, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked);
 
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_dist);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_creation);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_u_scale);
+  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_translate);
 
   tab_modify->tab_inner_widget_layout->addStretch(0);
 
@@ -528,7 +539,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_pair_dist->hide();
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
-
+              tm_gb_translate->hide();
               //update atom names combobox
               fill_combo_with_atom_types(tm_add_atom_combo, b_al);
             }
@@ -539,6 +550,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_pair_dist->hide();
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
+              tm_gb_translate->show();
 
               fill_combo_with_atom_types(tm_single_atom_combo, b_al);
 
@@ -566,6 +578,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_pair_dist->show();
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->show();
+              tm_gb_translate->show();
 
               auto it1 = b_al->m_atom_idx_sel.begin();
               auto it2 = it1++;
@@ -611,6 +624,8 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_pair_creation->hide();
               tm_gb_pair_dist->hide();
               tm_gb_u_scale->show();
+              tm_gb_translate->show();
+
             }
         } else {
 
@@ -620,6 +635,8 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
           tm_gb_single_atom->hide();
           tm_gb_pair_dist->hide();
           tm_gb_u_scale->hide();
+          tm_gb_translate->hide();
+
         }
 
     }
@@ -939,6 +956,25 @@ void ws_atoms_list_obj_insp_widget_t::modify_barycentric_scale_button_clicked() 
       update_animate_section_status();
       astate->make_viewport_dirty();
     }
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+
+      vector3<float> tr_vec(tm_translate_vec3->sb_x->value(),
+                            tm_translate_vec3->sb_y->value(),
+                            tm_translate_vec3->sb_z->value());
+
+      for (auto &rec : b_al->m_atom_sel) {
+           b_al->update_atom(rec, b_al->m_geom->pos(rec) + tr_vec);
+        }
+
+    }
+
+  astate->make_viewport_dirty();
 }
 
 void ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed() {
