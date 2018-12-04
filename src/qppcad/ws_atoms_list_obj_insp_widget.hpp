@@ -104,6 +104,12 @@ namespace qpp {
 
         QGroupBox *tm_gb_pair_dist;
         QFormLayout *tm_gb_pair_dist_layout;
+        QLabel *tm_pair_dist_atom1;
+        QLabel *tm_pair_dist_atom2;
+        QLabel *tm_pair_dist_atom1_idx;
+        QLabel *tm_pair_dist_atom2_idx;
+        QDoubleSpinBox *tm_pair_dist_spinbox;
+        QLabel *tm_pair_dist_note_label;
 
         QGroupBox *tm_gb_nu_scale;
         QFormLayout *tm_gb_nu_scale_layout;
@@ -137,6 +143,7 @@ namespace qpp {
         void cur_it_list_selection_changed();
         void modify_add_atom_button_clicked();
         void modify_single_atom_button_clicked();
+        void modify_pair_dist_spinbox_value_changed(double newval);
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
     };

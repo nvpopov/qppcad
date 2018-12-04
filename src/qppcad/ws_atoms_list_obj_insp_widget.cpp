@@ -263,6 +263,25 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist = new QGroupBox(tr("Pair distance"));
   tm_gb_pair_dist_layout = new QFormLayout;
   tm_gb_pair_dist->setLayout(tm_gb_pair_dist_layout);
+  tm_pair_dist_atom1 = new QLabel;
+  tm_pair_dist_atom2 = new QLabel;
+  tm_pair_dist_atom1_idx = new QLabel;
+  tm_pair_dist_atom2_idx = new QLabel;
+  tm_pair_dist_spinbox = new QDoubleSpinBox;
+  tm_pair_dist_note_label = new QLabel;
+  tm_pair_dist_note_label->setText(tr("Distance between"));
+  tm_pair_dist_spinbox->setMinimum(0.0);
+  tm_pair_dist_spinbox->setMaximum(10);
+  tm_pair_dist_spinbox->setSingleStep(0.01);
+  tm_gb_pair_dist_layout->addRow(tr("Atom №1"), tm_pair_dist_atom1);
+  tm_gb_pair_dist_layout->addRow(tr("Atom №2"), tm_pair_dist_atom2);
+  tm_gb_pair_dist_layout->addRow(tr("Atom №1 idx"), tm_pair_dist_atom1_idx);
+  tm_gb_pair_dist_layout->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
+  tm_gb_pair_dist_layout->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
+
+  connect(tm_pair_dist_spinbox,
+          static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          this, &ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed);
 
   tm_gb_nu_scale = new QGroupBox(tr("Non-uniform scale"));
   tm_gb_nu_scale_layout = new QFormLayout;
@@ -472,7 +491,6 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
                   tm_single_atom_vec3->sb_z->setValue(b_al->m_geom->pos(itv)[2]);
                 }
 
-
             }
 
           if (b_al->m_atom_sel.size() == 2) {
@@ -480,6 +498,40 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_single_atom->hide();
               tm_gb_pair_dist->show();
               tm_gb_nu_scale->hide();
+
+              auto it1 = b_al->m_atom_idx_sel.begin();
+              auto it2 = it1++;
+              if (it2 != b_al->m_atom_idx_sel.end()) {
+
+                  tm_pair_dist_atom1->setText(
+                        QString::fromStdString(fmt::format("{}{}",
+                                                           b_al->m_geom->atom_name(it1->m_atm),
+                                                           it1->m_atm)));
+                  tm_pair_dist_atom2->setText(
+                        QString::fromStdString(fmt::format("{}{}",
+                                                           b_al->m_geom->atom_name(it2->m_atm),
+                                                           it2->m_atm)));
+                  tm_pair_dist_atom1_idx->setText(
+                        QString::fromStdString(fmt::format("{}", it1->m_idx)));
+                  tm_pair_dist_atom2_idx->setText(
+                        QString::fromStdString(fmt::format("{}", it2->m_idx)));
+
+                  if (it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
+                      it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
+                      tm_pair_dist_spinbox->show();
+                      float dist_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) -
+                                        b_al->m_geom->pos(it2->m_atm, it2->m_idx)).norm();
+
+                      tm_pair_dist_spinbox->blockSignals(true);
+                      tm_pair_dist_spinbox->setValue(dist_btw);
+                      tm_pair_dist_spinbox->blockSignals(false);
+                      tm_pair_dist_note_label->show();
+                      tm_pair_dist_spinbox->show();
+                    } else {
+                      tm_pair_dist_note_label->hide();
+                      tm_pair_dist_spinbox->hide();
+                    }
+                }
             }
 
           if (b_al->m_atom_sel.size() > 2) {
@@ -706,6 +758,34 @@ void ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked() {
                                            tm_single_atom_vec3->sb_y->value(),
                                            tm_single_atom_vec3->sb_z->value()));
           update_animate_section_status();
+        }
+    }
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double newval) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      auto it1 = b_al->m_atom_idx_sel.begin();
+      auto it2 = it1++;
+      if (it2 != b_al->m_atom_idx_sel.end() &&
+          it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
+          it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
+          float dist_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) -
+                            b_al->m_geom->pos(it2->m_atm, it2->m_idx)).norm();
+
+          vector3<float> r_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) +
+                                  b_al->m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
+          vector3<float> dir_f =
+              (b_al->m_geom->pos(it1->m_atm, it1->m_idx) - r_btw).normalized();
+          vector3<float> dir_s =
+              (b_al->m_geom->pos(it2->m_atm, it2->m_idx) - r_btw).normalized();
+
+          b_al->m_geom->change_pos(it1->m_atm, r_btw + dir_f * newval * 0.5f);
+          b_al->m_geom->change_pos(it2->m_atm, r_btw + dir_s * newval * 0.5f);
+
+          astate->make_viewport_dirty();
         }
     }
 }

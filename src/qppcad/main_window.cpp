@@ -694,6 +694,7 @@ void main_window::cur_ws_properties_changed() {
 }
 
 void main_window::ws_edit_mode_selector_button_clicked(int id) {
+
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -703,8 +704,9 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
           else cur_ws->m_edit_type = ws_edit_t::edit_content;
         }
     }
-
+  astate->astate_evd->cur_ws_edit_type_changed();
   cur_ws_properties_changed();
+
 }
 
 void main_window::apply_camera_view_change(cam_target_view_t target_view) {
