@@ -173,7 +173,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
   if (m_gizmo->m_is_visible && m_gizmo->attached_item)
     if (m_gizmo->process_ray(&m_ray_debug)){
-        //c_app::log("gizmo clicked");
+        astate->log("gizmo clicked");
         return;
       }
 
@@ -242,6 +242,8 @@ void workspace_t::save_ws_to_json (const std::string filename) {
 
 void workspace_t::load_ws_from_json (const std::string filename) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   std::fstream ifile(filename);
   json data;
 
@@ -261,8 +263,8 @@ void workspace_t::load_ws_from_json (const std::string filename) {
               obj->read_from_json(object);
               add_item_to_ws(obj);
             } else {
-              //              c_app::log(fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
-              //                                     object[JSON_WS_ITEM_NAME].get<std::string>(), filename));
+              astate->log(fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
+                                      object[JSON_WS_ITEM_NAME].get<std::string>(), filename));
             }
       }
 
@@ -442,20 +444,11 @@ void workspace_manager_t::render_cur_ws_overlay(QPainter *painter) {
     }
 }
 
-//void workspace_manager_t::render_current_workspace_overlay () {
-
-//  if (has_wss()){
-//      if (m_current_workspace_id < m_ws.size()) {
-//          for (auto &ws_item : m_ws[m_current_workspace_id]->m_ws_items)
-//            ws_item->render_overlay();
-//        }
-//    }
-//}
 
 void workspace_manager_t::mouse_click () {
 
   app_state_t* astate = app_state_t::get_inst();
-  //c_app::log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
+  astate->log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
 
   astate->log(fmt::format("Mouse click in ws {} {}",
                           astate->mouse_x_dc, astate->mouse_y_dc));
@@ -481,7 +474,7 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 
 
 void workspace_manager_t::import_file_as_new_ws(const std::string &fname,
-                                                       qc_file_fmt file_format){
+                                                qc_file_fmt file_format){
   auto new_ws = std::make_shared<workspace_t>();
   std::string file_name_extr = qpp::extract_base_name(fname);
   new_ws->m_ws_name = file_name_extr;

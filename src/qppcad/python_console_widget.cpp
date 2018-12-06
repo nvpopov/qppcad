@@ -1,4 +1,5 @@
 #include <qppcad/python_console_widget.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -23,11 +24,11 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
 
-  if(event->key() == Qt::Key_Up) {
+  if (event->key() == Qt::Key_Up) {
 
-      if(!m_commands.empty()) {
+      if (!m_commands.empty()) {
           m_cur_cmd--;
-          if(m_cur_cmd < 0) m_cur_cmd = m_commands.size();
+          if (m_cur_cmd < 0) m_cur_cmd = m_commands.size();
           last_command_reached();
         }
 
@@ -36,9 +37,9 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
     }
 
-  if(event->key() == Qt::Key_Down) {
+  if (event->key() == Qt::Key_Down) {
 
-      if(!m_commands.empty()) {
+      if (!m_commands.empty()) {
           m_cur_cmd++;
           if(m_cur_cmd > m_commands.size()) m_cur_cmd = 0;
           last_command_reached();
@@ -49,17 +50,16 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
     }
 
-  if(event->key() == Qt::Key_Return) {
+  if (event->key() == Qt::Key_Return) {
 
       QString text = toPlainText();
 
-      std::cout <<"TEST "<< m_curs_pos << std::endl;
       QString t = text.right(text.size() - m_curs_pos);
 
-      if(!t.isEmpty()) {
+      if (!t.isEmpty()) {
           m_commands.append(t);
 
-          if(m_commands.size() > 100) {
+          if (m_commands.size() > 100) {
               m_commands.removeFirst();
             }
         }
@@ -70,7 +70,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
       return;
     }
 
-  if(event->key() == Qt::Key_Backspace) {
+  if (event->key() == Qt::Key_Backspace) {
 
       QTextCursor cursor(textCursor());
       if (cursor.position() <= m_curs_pos) {
@@ -80,7 +80,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
     }
 
-  if(event->key() == Qt::Key_Home) {
+  if (event->key() == Qt::Key_Home) {
 
       QTextCursor cursor(textCursor());
       cursor.setPosition(m_curs_pos);
@@ -97,7 +97,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
 void python_text_editor_t::last_command_reached() {
 
-  if(m_cur_cmd == m_commands.size()) {
+  if (m_cur_cmd == m_commands.size()) {
       setText(toPlainText().left(m_curs_pos));
       QTextCursor cursor(textCursor());
       cursor.movePosition(QTextCursor::End);
@@ -114,7 +114,7 @@ void python_text_editor_t::last_command_reached() {
 }
 
 void python_text_editor_t::wheelEvent(QWheelEvent *event) {
-
+  event->accept();
 }
 
 
@@ -124,16 +124,14 @@ void python_text_editor_t::run_cmd() {
   QString text = toPlainText();
   text = text.right(text.size() - m_curs_pos);
 
-  QString indent_string;
+  QString indentString;
 
-  if(!text.trimmed().isEmpty()) {
-
+  if (!text.trimmed().isEmpty()) {
       QString line = text;
       while (line.startsWith(' ')) {
           line.remove(0, 1);
           indent++;
         }
-
       line += text.trimmed();
 
       if (line.endsWith(':')) {
@@ -145,25 +143,25 @@ void python_text_editor_t::run_cmd() {
               m_line_data.append(text + "\n");
               append(QLatin1String(""));
             } else {
-              QString result = "m_interpreter.exec(text)\n";
-              append(result);
+              app_state_t* astate = app_state_t::get_inst();
+              bool result = astate->py_manager->execute(text.toStdString());
+              append(QString::fromStdString(astate->py_manager->m_output_buffer));
             }
         }
 
-      for (int i = 0; i < indent; ++i) indent_string += QLatin1String(" ");
+      for (int i = 0; i < indent; ++i)
+        indentString += QLatin1String(" ");
 
     } else {
-      if (m_line_data.isEmpty()) {
-          append("");
-        } else {
-          QString result = "ss\n";
-          append(result);
-          m_line_data.clear();
-        }
+      app_state_t* astate = app_state_t::get_inst();
+      bool result = astate->py_manager->execute(m_line_data.toStdString());
+      append(QString::fromStdString(astate->py_manager->m_output_buffer));
+      m_line_data.clear();
     }
 
   m_indent = indent;
   print_promt();
+
 }
 
 void python_text_editor_t::print_promt() {

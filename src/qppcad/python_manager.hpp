@@ -18,9 +18,8 @@ namespace qpp {
     class python_manager_t {
       public:
         py::scoped_interpreter guard{};
-        py::module core;
-        py::module sys;
-        py::dict global;
+        bool execute(std::string command);
+        std::string m_output_buffer;
         python_manager_t();
     };
 

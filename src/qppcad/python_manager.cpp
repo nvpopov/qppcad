@@ -1,14 +1,26 @@
 #include <qppcad/python_manager.hpp>
-#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
+bool python_manager_t::execute(std::string command) {
+  m_output_buffer.clear();
+
+  bool ret_status{true};
+
+  try {
+    py::exec(command, py::globals());
+  } catch (py::error_already_set &err) {
+    m_output_buffer+= err.what();
+    m_output_buffer+= "\n";
+    ret_status = true;
+  }
+
+  return ret_status;
+}
+
 python_manager_t::python_manager_t() {
-  core = py::module::import("core");
-  sys = py::module::import("sys");
-  global = py::dict(py::module::import("__main__").attr("__dict__"));
   py::exec("import core, sys", py::globals());
   py::exec("sys.stdout = core.output_redirector()", py::globals());
-  py::print("@@32edqwef123r23");
+  //py::exec("print(2+2)");
 }

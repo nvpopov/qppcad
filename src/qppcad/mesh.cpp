@@ -57,28 +57,28 @@ void mesh_t::bind_data() {
 
   glapi->glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glapi->glBufferData(GL_ARRAY_BUFFER,
-               vertecies.size()*sizeof(float),
-               &vertecies[0],GL_STATIC_DRAW);
+                      vertecies.size()*sizeof(float),
+                      &vertecies[0],GL_STATIC_DRAW);
   glapi->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
   glapi->glEnableVertexAttribArray(0);
 
   glapi->glBindBuffer(GL_ARRAY_BUFFER, nbo);
   glapi->glBufferData(GL_ARRAY_BUFFER,
-               normals.size()*sizeof(float),
-               &normals[0], GL_STATIC_DRAW);
+                      normals.size()*sizeof(float),
+                      &normals[0], GL_STATIC_DRAW);
   glapi->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
   glapi->glEnableVertexAttribArray(1);
 
   glapi->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vio);
   glapi->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               indices.size()*sizeof(int),
-               &indices[0], GL_STATIC_DRAW);
+                      indices.size()*sizeof(int),
+                      &indices[0], GL_STATIC_DRAW);
   glapi->glBindVertexArray(0);
 
-//  c_app::log(fmt::format("Binded data to mesh with vs={}, ns={}, is={}",
-//                         vertecies.size(),
-//                         normals.size(),
-//                         indices.size()));
+  astate->log(fmt::format("Binded data to mesh with vs={}, ns={}, is={}",
+                          vertecies.size(),
+                          normals.size(),
+                          indices.size()));
 }
 
 
