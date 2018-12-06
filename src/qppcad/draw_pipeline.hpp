@@ -48,8 +48,8 @@ namespace qpp {
         /// \param vBondEnd
         /// \param fBondRadius
         void render_bond (const vector3<float> &color,
-                          const vector3<float> &vBondStart,
-                          const vector3<float> &vBondEnd,
+                          const vector3<float> &bond_start,
+                          const vector3<float> &bond_end,
                           const float fBondRadius);
 
         /// \brief end_render_bond

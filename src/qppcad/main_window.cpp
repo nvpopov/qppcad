@@ -360,6 +360,9 @@ void main_window::init_widgets() {
   obj_insp_widget->setMaximumWidth(400);
   obj_insp_widget->setMinimumWidth(200);
 
+  py_console_widget = new python_console_widget_t(this);
+  widget_ws_viewer_py_console = new QWidget();
+
 }
 
 void main_window::init_layouts() {
@@ -370,10 +373,17 @@ void main_window::init_layouts() {
   main_layout->setContentsMargins(0,0,0,0);
   main_layout->setSpacing(0);
 
+  splitter_ws_viewer_py_console = new QSplitter(Qt::Vertical);
+  splitter_ws_viewer_py_console->addWidget(ws_viewer_widget);
+  splitter_ws_viewer_py_console->addWidget(py_console_widget);
+  splitter_ws_viewer_py_console->setHandleWidth(15);
+  splitter_ws_viewer_py_console->setSizes(QList<int>({1, 0}));
+
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
-  layout_ws_viewer_obj_insp->addWidget(ws_viewer_widget);
+  layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console);
   layout_ws_viewer_obj_insp->addWidget(obj_insp_widget);
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
+  layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
   layout_ws_viewer_obj_insp->setHandleWidth(15);
   main_layout->addWidget(layout_ws_viewer_obj_insp);

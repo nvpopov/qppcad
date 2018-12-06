@@ -34,7 +34,7 @@ void ws_viewer_widget_t::update_cycle() {
           astate->camera->m_move_camera = false;
         }
 
-      repaint();
+      update();
       //if (astate->camera)
     }
 

@@ -57,7 +57,7 @@ namespace qpp {
       app_state_t* astate = app_state_t::get_inst();
 
       std::optional<vector2<float> > l_s, l_e;
-      QPen linepen(QPen(Qt::black, 12, Qt::DotLine, Qt::RoundCap));
+      QPen linepen(QPen(Qt::black, 6, Qt::DotLine, Qt::RoundCap));
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
       painter->setFont(QFont("Hack-Regular", 13));
 

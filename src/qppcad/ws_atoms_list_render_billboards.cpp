@@ -18,10 +18,12 @@ namespace qpp {
       vector3<float> color(0.0, 0.0, 1.0);
       float dr_rad = 0.4f;
       auto cached_last_atom_type = -1;
+      auto cached_last_atom_selected = false;
       Eigen::Transform<float, 3, Eigen::Affine> t;
       matrix4<float> mat_model_view;
 
       astate->default_program->set_u(sp_u_name::f_specular_intensity, &al.m_shading_specular_power);
+      index null_idx = index::D(al.m_geom->DIM).all(0);
 
       float draw_specular = al.m_draw_specular;
       astate->default_program->set_u(sp_u_name::f_specular_alpha, &draw_specular);
@@ -40,9 +42,18 @@ namespace qpp {
               cached_last_atom_type = al.m_geom->type(i);
             }
 
+          if (al.m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+              if (al.m_atom_idx_sel.find(atom_index_set_key(i, null_idx)) != al.m_atom_idx_sel.end()
+                  && al.m_selected) {
+                  color = vector3<float>(0.43f, 0.55f, 0.12f);
+                  astate->bs_sphere_program->set_u(sp_u_name::v_color, color.data());
+
+                }
+            }
+
           t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
-//          t.prerotate(matrix3<float>::Identity());
-//          t.prescale(vector3<float>(dr_rad, dr_rad, dr_rad));
+          //          t.prerotate(matrix3<float>::Identity());
+          //          t.prescale(vector3<float>(dr_rad, dr_rad, dr_rad));
           t.pretranslate(al.m_geom->pos(i)+al.m_pos);
           mat_model_view = astate->camera->m_mat_view * t.matrix();
 

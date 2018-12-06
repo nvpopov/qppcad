@@ -17,9 +17,9 @@ macro(set_option option value)
   set(${option} ${value} CACHE INTERNAL "" FORCE)
 endmacro()
 
+#to prevent building qpp python bindings
 set_option(PYTHON_BINDINGS OFF)
 set_option(BUILD_TESTS ON)
-set_option(WITH_HarfBuzz OFF)
 
 add_subdirectory(deps/qpp)
 
@@ -104,7 +104,11 @@ add_executable(qppcad
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qbonding_table_model.cpp
     src/qppcad/qrealspinbox_delegate.cpp
+    src/qppcad/python_console_output_redirectors.cpp
+    src/qppcad/python_console_widget.cpp
+    src/qppcad/python_manager.cpp
+    src/qppcad/python_embedded_core.cpp
     ${QRCS})
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
-target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES})
+target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES} pybind11::embed)
 

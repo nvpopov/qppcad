@@ -24,6 +24,7 @@
 #include <qppcad/object_inspector_widget.hpp>
 #include <qppcad/super_cell_widget.hpp>
 #include <qppcad/axial_scale_widget.hpp>
+#include <qppcad/python_console_widget.hpp>
 
 namespace qpp {
 
@@ -76,6 +77,8 @@ namespace qpp {
 
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
+
+        python_console_widget_t *py_console_widget;
         ws_viewer_widget_t *ws_viewer_widget;
         object_inspector_widget_t *obj_insp_widget;
         //End of widgets
@@ -132,6 +135,8 @@ namespace qpp {
         QGridLayout *layout_tools_main_window;
         QVBoxLayout *main_layout;
         QSplitter   *layout_ws_viewer_obj_insp;
+        QWidget *widget_ws_viewer_py_console;
+        QSplitter   *splitter_ws_viewer_py_console;
         //end of layouts
 
         //Shortcuts

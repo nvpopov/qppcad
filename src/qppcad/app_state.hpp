@@ -11,6 +11,7 @@
 #include <qppcad/draw_pipeline.hpp>
 #include <qppcad/workspace.hpp>
 #include <qppcad/app_state_event_disp.hpp>
+#include <qppcad/python_manager.hpp>
 
 namespace qpp {
 
@@ -68,7 +69,7 @@ namespace qpp {
         mesh_t *xline_mesh;
 
         std::shared_ptr<workspace_manager_t>                           ws_manager;
-
+        std::unique_ptr<python_manager_t> py_manager;
         // //       std::map<std::string, color_map_t> m_color_maps;
 
         vector2<float> viewport_xy;
