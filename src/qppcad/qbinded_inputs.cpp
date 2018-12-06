@@ -206,9 +206,11 @@ void qbinded_float3_input::set_min_max_step(double min, double max, double step)
 qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
 
   widget_layout = new QHBoxLayout;
+  widget_layout->setContentsMargins(2,2,2,2);
   setLayout(widget_layout);
 
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
+
 
   sb_x = new QDoubleSpinBox(this);
   sb_x->setMinimumWidth(40);
