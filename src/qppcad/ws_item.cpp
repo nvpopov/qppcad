@@ -62,70 +62,6 @@ void ws_item_t::render_overlay(QPainter *painter) {
 
 }
 
-//void ws_item_t::render_ui () {
-
-//  ImGui::Spacing();
-
-//  if (ImGui::CollapsingHeader("General properties", ImGuiTreeNodeFlags_DefaultOpen)){
-//      char * s_item_name = new char[60];
-//      strcpy(s_item_name, m_name.c_str());
-//      ImGui::InputText("Item name", s_item_name, 60);
-
-//      if (get_flags() & ws_item_flags_support_rendering)
-//        ImGui::Checkbox("Draw workspace item", &m_is_visible);
-
-//      ImGui::Spacing();
-
-//      ImGui::Separator();
-
-//      if ( get_flags() & ws_item_flags_support_actions) {
-//          ImGui::Text("Actions:");
-
-//          if (get_flags() & ws_item_flags_support_delete) {
-//              if (ImGui::Button("Delete")) m_marked_for_deletion = true;
-//              ImGui::SameLine();
-//            }
-
-//          if (get_flags() & ws_item_flags_support_clone) {
-//              ImGui::Button("Clone");
-//              ImGui::SameLine();
-//            }
-
-//          if (get_flags() & ws_item_flags_support_moveto) {
-//              ImGui::Button("Move to");
-//            }
-//          ImGui::Spacing();
-//          ImGui::Separator();
-//          ImGui::Spacing();
-//        }
-
-//      if (m_name != s_item_name) set_name(s_item_name);
-//      delete[] s_item_name;
-//    }
-//}
-
-//void ws_item_t::td_context_menu_edit_item () {
-//  //  if (support_translation())
-//  //    if (ImGui::BeginMenu("Translate Node")){
-
-//  //        ImGui::SliderFloat("X", &(explicit_translation[0]), -10.0, 10.0);
-//  //        ImGui::SameLine();
-//  //        ImGui::Button("Apply X");
-
-//  //        ImGui::SliderFloat("Y", &(explicit_translation[1]), -10.0, 10.0);
-//  //        ImGui::SameLine();
-//  //        ImGui::Button("Apply Y");
-
-//  //        ImGui::SliderFloat("Z", &(explicit_translation[2]), -10.0, 10.0);
-//  //        ImGui::SameLine();
-//  //        ImGui::Button("Apply Z");
-//  //        ImGui::EndMenu();
-//  //      }
-//}
-
-//void ws_item_t::td_context_menu_edit_content () {
-
-//}
 
 void ws_item_t::set_default_flags(uint32_t flags){
   p_flags = flags;
@@ -177,6 +113,12 @@ void ws_item_t::apply_intermediate_translate_content(const vector3<float> &new_p
 
 void ws_item_t::on_end_content_gizmo_translate() {
 
+}
+
+void ws_item_t::translate(vector3<float> tr_vec) {
+  app_state_t* astate = app_state_t::get_inst();
+  if (get_flags() & ws_item_flags_support_translation) m_pos += tr_vec;
+  astate->make_viewport_dirty();
 }
 
 void ws_item_t::write_to_json(json &data) {

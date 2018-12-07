@@ -127,7 +127,7 @@ namespace qpp {
         virtual void on_begin_content_gizmo_translate();
         virtual void apply_intermediate_translate_content(const vector3<float> &new_pos);
         virtual void on_end_content_gizmo_translate();
-
+        void translate(vector3<float> tr_vec);
         virtual void write_to_json(json &data);
         virtual void read_from_json(json &data);
     };

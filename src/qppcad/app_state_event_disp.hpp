@@ -26,6 +26,7 @@ namespace qpp {
         void cur_ws_selected_atoms_list_cell_changed_signal();
         void cur_ws_selected_item_position_changed_signal();
         void python_console_clear_requested_signal();
+        void python_console_focus_requested_signal();
 
       public:
         void wss_changed();
@@ -39,6 +40,7 @@ namespace qpp {
         void cur_ws_selected_item_position_changed();
         void cur_ws_selected_atoms_list_selected_content_changed();
         void python_console_clear_requested();
+        void python_console_focus_requested();
 
         explicit app_state_event_disp_t(QObject *parent = 0);
     };

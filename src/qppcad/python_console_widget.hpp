@@ -54,6 +54,7 @@ namespace qpp {
         void print_promt();
         void move_cursor_to_end();
         void clear_signal_received();
+        void focus_signal_received();
 
     };
 

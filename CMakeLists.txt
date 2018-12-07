@@ -108,6 +108,8 @@ add_executable(qppcad
     src/qppcad/python_console_widget.cpp
     src/qppcad/python_manager.cpp
     src/qppcad/python_embedded_core.cpp
+    src/qppcad/python_embedded_simple_query.cpp
+    src/qppcad/python_simple_query.cpp
     ${QRCS})
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES} pybind11::embed)

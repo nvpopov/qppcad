@@ -25,6 +25,11 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 
   connect(astate->astate_evd, &app_state_event_disp_t::python_console_clear_requested_signal,
           this, &python_text_editor_t::clear_signal_received);
+
+  connect(astate->astate_evd, &app_state_event_disp_t::python_console_focus_requested_signal,
+          this, &python_text_editor_t::focus_signal_received);
+
+
 }
 
 void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
@@ -227,6 +232,10 @@ void python_text_editor_t::move_cursor_to_end() {
 void python_text_editor_t::clear_signal_received() {
   clear();
   //print_promt();
+}
+
+void python_text_editor_t::focus_signal_received() {
+  setFocus();
 }
 
 python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter_t(

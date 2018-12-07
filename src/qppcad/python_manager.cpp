@@ -21,6 +21,7 @@ bool python_manager_t::execute(std::string command) {
 
 python_manager_t::python_manager_t() {
   py::exec("from core import *\n"
+           "from sq import *\n"
            "import sys\n", py::globals());
   py::exec("sys.stdout = output_redirector()", py::globals());
   //py::exec("print(2+2)");

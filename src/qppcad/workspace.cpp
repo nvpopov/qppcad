@@ -66,10 +66,8 @@ void workspace_t::toggle_edit_mode () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_edit_type == ws_edit_t::edit_item)
-    m_edit_type = ws_edit_t::edit_content;
-  else
-    m_edit_type = ws_edit_t::edit_item;
+  if (m_edit_type == ws_edit_t::edit_item) m_edit_type = ws_edit_t::edit_content;
+  else m_edit_type = ws_edit_t::edit_item;
 
   astate->astate_evd->cur_ws_edit_type_changed();
 
@@ -310,7 +308,7 @@ void workspace_t::set_edit_type (const ws_edit_t new_edit_type) {
 
   app_state_t* astate = app_state_t::get_inst();
   m_edit_type = new_edit_type;
-  //astate->make_viewport_dirty();
+  astate->astate_evd->cur_ws_edit_type_changed();
 
 }
 

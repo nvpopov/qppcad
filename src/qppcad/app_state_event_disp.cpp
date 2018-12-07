@@ -59,6 +59,10 @@ void app_state_event_disp_t::python_console_clear_requested() {
   emit(python_console_clear_requested_signal());
 }
 
+void app_state_event_disp_t::python_console_focus_requested() {
+  emit(python_console_focus_requested_signal());
+}
+
 app_state_event_disp_t::app_state_event_disp_t(QObject *parent) : QObject (parent) {
 
 }

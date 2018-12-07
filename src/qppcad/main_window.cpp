@@ -726,6 +726,7 @@ void main_window::cur_ws_properties_changed() {
 }
 
 void main_window::cur_ws_edit_type_changed() {
+  cur_ws_properties_changed();
   cur_ws_selected_atoms_list_selection_changed();
 }
 
@@ -1070,6 +1071,7 @@ void main_window::action_toggle_console() {
       py_console_widget->hide();
     } else {
       py_console_widget->show();
+      py_console_widget->py_tedit->setFocus();
     }
 }
 

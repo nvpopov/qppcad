@@ -91,7 +91,9 @@ namespace qpp {
 
         void select_atoms(bool all);
         bool select_atom(int atom_id);
+        bool unselect_atom(int atom_id);
         void select_by_type(const int item_type_to_select);
+        void unselect_by_type(const int item_type_to_unselect);
         void invert_selected_atoms();
         void insert_atom(const int atom_type, const vector3<float> &pos);
         void insert_atom(const std::string &atom_name, const vector3<float> &pos);

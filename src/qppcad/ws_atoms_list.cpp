@@ -301,6 +301,33 @@ bool ws_atoms_list_t::select_atom (int atom_id) {
   return false;
 }
 
+bool ws_atoms_list_t::unselect_atom(int atom_id) {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->make_viewport_dirty();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+
+  if (atom_id >= 0 && atom_id < m_geom->nat()) {
+
+      auto it = m_atom_sel.find(atom_id);
+      if (it != m_atom_sel.end()) m_atom_sel.erase(it);
+
+      for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
+           !idx.end(); idx++ ) {
+          auto i2 = m_atom_idx_sel.find(atom_index_set_key(atom_id, idx));
+          if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
+        }
+
+      //astate->make_viewport_dirty();
+      recalc_gizmo_barycenter();
+      m_parent_ws->m_gizmo->update_gizmo(0.01);
+      return true;
+    }
+
+  recalc_gizmo_barycenter();
+  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  return false;
+}
+
 void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -310,6 +337,31 @@ void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
         m_atom_sel.insert(i);
         m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
       }
+
+  recalc_gizmo_barycenter();
+
+  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  astate->make_viewport_dirty();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+
+}
+
+void ws_atoms_list_t::unselect_by_type(const int item_type_to_unselect) {
+  app_state_t* astate = app_state_t::get_inst();
+
+  for (auto i = 0; i < m_geom->nat(); i++)
+    if (m_geom->type_table(i) == item_type_to_unselect) {
+        auto it = m_atom_sel.find(i);
+        if (it != m_atom_sel.end()) m_atom_sel.erase(it);
+
+        for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
+             !idx.end(); idx++ ) {
+            auto i2 = m_atom_idx_sel.find(atom_index_set_key(i, idx));
+            if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
+          }
+      }
+
+  recalc_gizmo_barycenter();
 
   m_parent_ws->m_gizmo->update_gizmo(0.01);
   astate->make_viewport_dirty();
@@ -434,7 +486,7 @@ void ws_atoms_list_t::delete_selected_atoms () {
       m_geom->erase(all_atom_num[delta] - delta);
     }
 
-   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
+  astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
 
 }
 
