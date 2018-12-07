@@ -29,6 +29,20 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 
 void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
+  if (event->key() == Qt::Key_QuoteLeft || event->key() == Qt::Key_AsciiTilde) {
+      return;
+    }
+
+  if (event->key() == Qt::Key_Escape) {
+
+     parentWidget()->setFocus();
+     return;
+    }
+
+  if (event->key() == Qt::Key_Tab) {
+      return;
+    }
+
   if (event->key() == Qt::Key_Control) {
       event->accept();
       return;

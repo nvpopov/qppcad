@@ -14,6 +14,7 @@ ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent)
   setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
   connect(this, &ws_viewer_widget_t::customContextMenuRequested,
           this, &ws_viewer_widget_t::show_context_menu);
+  setMinimumHeight(300);
 }
 
 void ws_viewer_widget_t::update_cycle() {

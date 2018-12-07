@@ -378,6 +378,27 @@ void ws_atoms_list_t::update_atom(const int at_id, const std::string &at_name,
   astate->make_viewport_dirty();
 }
 
+void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
+                                               const int at1, const int at2,
+                                               const index id1, const index id2) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  vector3<float> r_btw = (m_geom->pos(at1, id1) + m_geom->pos(at2, id2))*0.5f;
+  vector3<float> dir_f = (m_geom->pos(at1, id1) - r_btw).normalized();
+  vector3<float> dir_s = (m_geom->pos(at2, id2) - r_btw).normalized();
+
+  m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
+  m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
+
+  astate->make_viewport_dirty();
+}
+
+void ws_atoms_list_t::update_inter_atomic_dist(float new_dist, const int at1, const int at2) {
+  update_inter_atomic_dist(new_dist, at1, at2,
+                           index::D(m_geom->DIM).all(0), index::D(m_geom->DIM).all(0));
+}
+
 void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {
   for (auto &elem : m_atom_sel)
     update_atom(elem, m_geom->pos(elem) + t_vec);

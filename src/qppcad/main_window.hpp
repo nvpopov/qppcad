@@ -85,50 +85,51 @@ namespace qpp {
 
         //Menus
         QMenu *file_menu;
-        QAction *act_new_ws;
-        QAction *act_open_ws;
+        QAction *file_menu_new_ws;
+        QAction *file_menu_open_ws;
 
-        QMenu *menu_import;
+        QMenu *file_menu_import;
 
-        QAction *menu_import_xyz;
+        QAction *file_menu_import_xyz;
 
-        QMenu *menu_import_cp2k;
-        QAction *menu_import_cp2k_output;
+        QMenu *file_menu_import_cp2k;
+        QAction *file_menu_import_cp2k_output;
 
-        QMenu *menu_import_vasp;
-        QAction *menu_import_vasp_outcar;
-        QAction *menu_import_vasp_poscar;
+        QMenu *file_menu_import_vasp;
+        QAction *file_menu_import_vasp_outcar;
+        QAction *file_menu_import_vasp_poscar;
 
-        QMenu *menu_import_firefly;
-        QAction *menu_import_firefly_output;
+        QMenu *file_menu_import_firefly;
+        QAction *file_menu_import_firefly_output;
 
-        QAction *act_save_ws;
-        QAction *act_save_ws_as;
-        QAction *act_close_app;
+        QAction *file_menu_save_ws;
+        QAction *file_menu_save_ws_as;
+        QAction *file_menu_close_app;
 
         QMenu *edit_menu;
-        QAction *act_undo;
-        QAction *act_redo;
-        QAction *switch_between_ws_edit_mode;
-        QAction *act_settings;
-        QAction *act_workspace_settings;
+        QAction *edit_menu_undo;
+        QAction *edit_menu_redo;
+        QAction *edit_menu_switch_ws_edit_mode;
+        QAction *edit_menu_console;
+        QAction *edit_menu_settings;
+        QAction *edit_menu_ws_settings;
 
-        QMenu *edit_selection_menu;
-        QAction *edit_selection_select_all;
-        QAction *edit_selection_unselect_all;
-        QAction *edit_selection_invert;
+        QMenu *edit_menu_selection;
+        QAction *edit_menu_selection_select_all;
+        QAction *edit_menu_selection_unselect_all;
+        QAction *edit_menu_selection_invert;
 
         QMenu *tools_menu;
-        QAction *act_axial_scale;
+        QAction *tools_menu_axial_scale;
         QMenu *tools_menu_generators;
-        QAction *act_sc_generator;
-        QMenu *tools_quick_geom_export;
-        QAction *tools_quick_geom_export_xyz;
-        QAction *tools_quick_geom_export_vasp_poscar;
-        QAction *tools_quick_geom_export_cp2k_coord;
+        QAction *tools_menu_sc_generator;
+        QMenu *tools_menu_quick_geom_export;
+        QAction *tools_menu_quick_geom_export_xyz;
+        QAction *tools_menu_quick_geom_export_vasp_poscar;
+        QAction *tools_menu_quick_geom_export_cp2k_coord;
 
         QMenu *help_menu;
-        QAction *act_about;
+        QAction *help_menu_about;
         //end of menus
 
         //Layouts
@@ -183,6 +184,7 @@ namespace qpp {
         void action_select_all_content();
         void action_unselect_all_content();
         void action_invert_selected_content();
+        void action_toggle_console();
 
     };
   }

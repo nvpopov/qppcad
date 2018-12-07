@@ -906,18 +906,8 @@ void ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(dou
       if (it2 != b_al->m_atom_idx_sel.end() &&
           it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
           it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
-          float dist_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) -
-                            b_al->m_geom->pos(it2->m_atm, it2->m_idx)).norm();
 
-          vector3<float> r_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) +
-                                  b_al->m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
-          vector3<float> dir_f =
-              (b_al->m_geom->pos(it1->m_atm, it1->m_idx) - r_btw).normalized();
-          vector3<float> dir_s =
-              (b_al->m_geom->pos(it2->m_atm, it2->m_idx) - r_btw).normalized();
-
-          b_al->m_geom->change_pos(it1->m_atm, r_btw + dir_f * newval * 0.5f);
-          b_al->m_geom->change_pos(it2->m_atm, r_btw + dir_s * newval * 0.5f);
+          b_al->update_inter_atomic_dist(newval, it1->m_atm, it2->m_atm);
 
           astate->make_viewport_dirty();
         }

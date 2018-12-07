@@ -56,163 +56,175 @@ void main_window::init_menus() {
 
   file_menu  = menuBar()->addMenu(tr("&File"));
 
-  act_new_ws = new QAction(this);
-  act_new_ws->setText(tr("New workspace"));
-  act_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
-  file_menu->addAction(act_new_ws);
-  connect(act_new_ws, &QAction::triggered, this, &main_window::create_new_ws);
+  file_menu_new_ws = new QAction(this);
+  file_menu_new_ws->setText(tr("New workspace"));
+  file_menu_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
+  file_menu->addAction(file_menu_new_ws);
+  connect(file_menu_new_ws, &QAction::triggered, this, &main_window::create_new_ws);
 
-  act_open_ws = new QAction(this);
-  act_open_ws->setText(tr("Open workspace"));
-  act_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
-  file_menu->addAction(act_open_ws);
-  connect(act_open_ws, &QAction::triggered, this, &main_window::open_ws);
+  file_menu_open_ws = new QAction(this);
+  file_menu_open_ws->setText(tr("Open workspace"));
+  file_menu_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
+  file_menu->addAction(file_menu_open_ws);
+  connect(file_menu_open_ws, &QAction::triggered, this, &main_window::open_ws);
 
-  menu_import = file_menu->addMenu(tr("Import"));
-  menu_import_xyz = new QAction(this);
-  menu_import_xyz->setText("XYZ");
-  menu_import->addAction(menu_import_xyz);
-  connect(menu_import_xyz, &QAction::triggered, this,
+  file_menu_import = file_menu->addMenu(tr("Import"));
+  file_menu_import_xyz = new QAction(this);
+  file_menu_import_xyz->setText("XYZ");
+  file_menu_import->addAction(file_menu_import_xyz);
+  connect(file_menu_import_xyz, &QAction::triggered, this,
           [this](){this->import_file("Import XYZ file", "*", qc_file_fmt::standart_xyz);});
 
-  menu_import_cp2k = menu_import->addMenu("CP2K");
-  menu_import_cp2k_output = new QAction(this);
-  menu_import_cp2k_output->setText(tr("OUTPUT"));
-  menu_import_cp2k->addAction(menu_import_cp2k_output);
-  connect(menu_import_cp2k_output, &QAction::triggered, this,
+  file_menu_import_cp2k = file_menu_import->addMenu("CP2K");
+  file_menu_import_cp2k_output = new QAction(this);
+  file_menu_import_cp2k_output->setText(tr("OUTPUT"));
+  file_menu_import_cp2k->addAction(file_menu_import_cp2k_output);
+  connect(file_menu_import_cp2k_output, &QAction::triggered, this,
           [this](){this->import_file("Import CP2K output", "*", qc_file_fmt::cp2k_output);});
 
-  menu_import_firefly = menu_import->addMenu("Firefly");
-  menu_import_firefly_output = new QAction(this);
-  menu_import_firefly_output->setText(tr("OUTPUT"));
-  menu_import_firefly->addAction(menu_import_firefly_output);
-  connect(menu_import_firefly_output, &QAction::triggered, this,
+  file_menu_import_firefly = file_menu_import->addMenu("Firefly");
+  file_menu_import_firefly_output = new QAction(this);
+  file_menu_import_firefly_output->setText(tr("OUTPUT"));
+  file_menu_import_firefly->addAction(file_menu_import_firefly_output);
+  connect(file_menu_import_firefly_output, &QAction::triggered, this,
           [this](){this->import_file("Import Firefly output", "*", qc_file_fmt::firefly_output);});
 
-  menu_import_vasp = menu_import->addMenu("VASP");
-  menu_import_vasp_poscar = new QAction(this);
-  menu_import_vasp_poscar->setText(tr("POSCAR"));
-  connect(menu_import_vasp_poscar,&QAction::triggered, this,
+  file_menu_import_vasp = file_menu_import->addMenu("VASP");
+  file_menu_import_vasp_poscar = new QAction(this);
+  file_menu_import_vasp_poscar->setText(tr("POSCAR"));
+  connect(file_menu_import_vasp_poscar,&QAction::triggered, this,
           [this](){this->import_file("Import VASP POSCAR", "*", qc_file_fmt::vasp_poscar);});
 
-  menu_import_vasp->addAction(menu_import_vasp_poscar);
-  menu_import_vasp_outcar = new QAction(this);
-  menu_import_vasp_outcar->setText(tr("OUTCAR"));
-  menu_import_vasp->addAction(menu_import_vasp_outcar);
-  connect(menu_import_vasp_outcar,&QAction::triggered, this,
+  file_menu_import_vasp->addAction(file_menu_import_vasp_poscar);
+  file_menu_import_vasp_outcar = new QAction(this);
+  file_menu_import_vasp_outcar->setText(tr("OUTCAR"));
+  file_menu_import_vasp->addAction(file_menu_import_vasp_outcar);
+  connect(file_menu_import_vasp_outcar,&QAction::triggered, this,
           [this](){this->import_file("Import VASP OUTCAR", "*", qc_file_fmt::vasp_outcar_md);});
 
-  act_save_ws = new QAction(this);
-  act_save_ws->setText(tr("Save workspace"));
-  act_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
+  file_menu_save_ws = new QAction(this);
+  file_menu_save_ws->setText(tr("Save workspace"));
+  file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
   file_menu->addSeparator();
-  file_menu->addAction(act_save_ws);
-  connect(act_save_ws, &QAction::triggered, this, &main_window::save_ws);
+  file_menu->addAction(file_menu_save_ws);
+  connect(file_menu_save_ws, &QAction::triggered, this, &main_window::save_ws);
 
-  act_save_ws_as = new QAction(this);
-  act_save_ws_as->setText(tr("Save workspace as"));
-  file_menu->addAction(act_save_ws_as);
-  connect(act_save_ws_as, &QAction::triggered, this, &main_window::save_ws_as);
+  file_menu_save_ws_as = new QAction(this);
+  file_menu_save_ws_as->setText(tr("Save workspace as"));
+  file_menu->addAction(file_menu_save_ws_as);
+  connect(file_menu_save_ws_as, &QAction::triggered, this, &main_window::save_ws_as);
 
-  act_close_app = new QAction(this);
-  act_close_app->setText(tr("Close"));
-  act_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
+  file_menu_close_app = new QAction(this);
+  file_menu_close_app->setText(tr("Close"));
+  file_menu_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
   file_menu->addSeparator();
-  file_menu->addAction(act_close_app);
-  connect(act_close_app, &QAction::triggered, this, &main_window::slot_shortcut_terminate_app);
+  file_menu->addAction(file_menu_close_app);
+  connect(file_menu_close_app, &QAction::triggered, this, &main_window::slot_shortcut_terminate_app);
 
   edit_menu  = menuBar()->addMenu(tr("&Edit"));
-  act_undo = new QAction(this);
-  act_undo->setText(tr("Undo"));
-  act_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
-  edit_menu->addAction(act_undo);
+  edit_menu_undo = new QAction(this);
+  edit_menu_undo->setText(tr("Undo"));
+  edit_menu_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
+  edit_menu->addAction(edit_menu_undo);
 
-  act_redo = new QAction(this);
-  act_redo->setText(tr("Redo"));
-  act_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
-  edit_menu->addAction(act_redo);
+  edit_menu_redo = new QAction(this);
+  edit_menu_redo->setText(tr("Redo"));
+  edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
+  edit_menu->addAction(edit_menu_redo);
 
   edit_menu->addSeparator();
 
   //Selection menu
-  edit_selection_menu = edit_menu->addMenu(tr("Content selection"));
-  edit_selection_select_all = new QAction(this);
-  edit_selection_select_all->setText(tr("Select all"));
-  edit_selection_select_all->setShortcut(QKeySequence(tr("ctrl+a")));
-  edit_selection_menu->addAction(edit_selection_select_all);
-  connect(edit_selection_select_all, &QAction::triggered,
+  edit_menu_selection = edit_menu->addMenu(tr("Content selection"));
+  edit_menu_selection_select_all = new QAction(this);
+  edit_menu_selection_select_all->setText(tr("Select all"));
+  edit_menu_selection_select_all->setShortcut(QKeySequence(tr("ctrl+a")));
+  edit_menu_selection->addAction(edit_menu_selection_select_all);
+  connect(edit_menu_selection_select_all, &QAction::triggered,
           this, &main_window::action_select_all_content);
 
-  edit_selection_unselect_all = new QAction(this);
-  edit_selection_unselect_all->setText(tr("Unselect all"));
-  edit_selection_unselect_all->setShortcut(QKeySequence(tr("shift+a")));
-  edit_selection_menu->addAction(edit_selection_unselect_all);
-  connect(edit_selection_unselect_all, &QAction::triggered,
+  edit_menu_selection_unselect_all = new QAction(this);
+  edit_menu_selection_unselect_all->setText(tr("Unselect all"));
+  edit_menu_selection_unselect_all->setShortcut(QKeySequence(tr("shift+a")));
+  edit_menu_selection->addAction(edit_menu_selection_unselect_all);
+  connect(edit_menu_selection_unselect_all, &QAction::triggered,
           this, &main_window::action_unselect_all_content);
 
-  edit_selection_invert = new QAction(this);
-  edit_selection_invert->setText(tr("Invert selection"));
-  edit_selection_invert->setShortcut(QKeySequence(tr("ctrl+i")));
-  edit_selection_menu->addAction(edit_selection_invert);
-  connect(edit_selection_invert, &QAction::triggered,
+  edit_menu_selection_invert = new QAction(this);
+  edit_menu_selection_invert->setText(tr("Invert selection"));
+  edit_menu_selection_invert->setShortcut(QKeySequence(tr("ctrl+i")));
+  edit_menu_selection->addAction(edit_menu_selection_invert);
+  connect(edit_menu_selection_invert, &QAction::triggered,
           this, &main_window::action_invert_selected_content);
   //End of selection menu
 
-  switch_between_ws_edit_mode = new QAction(this);
-  switch_between_ws_edit_mode->setText(tr("Switch edit mode"));
-  switch_between_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
-  connect(switch_between_ws_edit_mode, SIGNAL(triggered()), this, SLOT(toggle_ws_edit_mode()));
-  edit_menu->addAction(switch_between_ws_edit_mode);
+  edit_menu_switch_ws_edit_mode = new QAction(this);
+  edit_menu_switch_ws_edit_mode->setText(tr("Switch edit mode"));
+  edit_menu_switch_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
+  connect(edit_menu_switch_ws_edit_mode, SIGNAL(triggered()), this, SLOT(toggle_ws_edit_mode()));
+  edit_menu->addAction(edit_menu_switch_ws_edit_mode);
 
   edit_menu->addSeparator();
 
-  act_settings = new QAction(this);
-  act_settings->setText(tr("Settings"));
+  edit_menu_settings = new QAction(this);
+  edit_menu_settings->setText(tr("Settings"));
 
-  act_workspace_settings = new QAction(this);
-  act_workspace_settings->setText(tr("Workspace settings"));
+  edit_menu_ws_settings = new QAction(this);
+  edit_menu_ws_settings->setText(tr("Workspace settings"));
   edit_menu->addSeparator();
-  edit_menu->addAction(act_settings);
-  edit_menu->addAction(act_workspace_settings);
+  edit_menu->addAction(edit_menu_settings);
+  edit_menu->addAction(edit_menu_ws_settings);
+
+  edit_menu_console = new QAction(this);
+  edit_menu_console->setText(tr("Toggle Console"));
+  //edit_menu_console->setCheckable(true);
+  edit_menu_console->setShortcut(QKeySequence(tr("shift+c")));
+  edit_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
+
+  connect(edit_menu_console, &QAction::triggered,
+          this, &main_window::action_toggle_console);
+  edit_menu->addAction(edit_menu_console);
 
   tools_menu = menuBar()->addMenu(tr("&Tools"));
   tools_menu_generators = tools_menu->addMenu(tr("Generators"));
 
-  act_axial_scale = new QAction(this);
-  act_axial_scale->setText(tr("Axial scale"));
-  tools_menu->addAction(act_axial_scale);
-  connect(act_axial_scale, &QAction::triggered, this, &main_window::dialog_axial_scale);
+  tools_menu_axial_scale = new QAction(this);
+  tools_menu_axial_scale->setText(tr("Axial scale"));
+  tools_menu->addAction(tools_menu_axial_scale);
+  connect(tools_menu_axial_scale, &QAction::triggered, this, &main_window::dialog_axial_scale);
 
-  act_sc_generator = new QAction(this);
-  act_sc_generator->setText(tr("Supercell generator"));
-  tools_menu_generators->addAction(act_sc_generator);
-  connect(act_sc_generator, &QAction::triggered, this, &main_window::dialog_supercell_generation);
+  tools_menu_sc_generator = new QAction(this);
+  tools_menu_sc_generator->setText(tr("Supercell generator"));
+  tools_menu_generators->addAction(tools_menu_sc_generator);
+  connect(tools_menu_sc_generator, &QAction::triggered, this,
+          &main_window::dialog_supercell_generation);
 
-  tools_quick_geom_export = tools_menu->addMenu(tr("Export selected geometry"));
-  tools_quick_geom_export_xyz = new QAction(this);
-  tools_quick_geom_export_xyz->setText("XYZ");
-  tools_quick_geom_export->addAction(tools_quick_geom_export_xyz);
-  connect(tools_quick_geom_export_xyz, &QAction::triggered, this,
+  tools_menu_quick_geom_export = tools_menu->addMenu(tr("Export selected geometry"));
+  tools_menu_quick_geom_export_xyz = new QAction(this);
+  tools_menu_quick_geom_export_xyz->setText("XYZ");
+  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_xyz);
+  connect(tools_menu_quick_geom_export_xyz, &QAction::triggered, this,
           [this](){this->export_selected_geometry("Export[xyz]", qc_file_fmt::standart_xyz);});
 
-  tools_quick_geom_export_cp2k_coord = new QAction(this);
-  tools_quick_geom_export_cp2k_coord->setText("CP2K coord section");
-  tools_quick_geom_export->addAction(tools_quick_geom_export_cp2k_coord);
-  connect(tools_quick_geom_export_cp2k_coord, &QAction::triggered, this,
+  tools_menu_quick_geom_export_cp2k_coord = new QAction(this);
+  tools_menu_quick_geom_export_cp2k_coord->setText("CP2K coord section");
+  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_cp2k_coord);
+  connect(tools_menu_quick_geom_export_cp2k_coord, &QAction::triggered, this,
           [this]() { this->export_selected_geometry("Export[CP2K coord. section]",
                                                     qc_file_fmt::cp2k_coord_cell_section);});
 
-  tools_quick_geom_export_vasp_poscar = new QAction(this);
-  tools_quick_geom_export_vasp_poscar->setText("VASP POSCAR");
-  tools_quick_geom_export->addAction(tools_quick_geom_export_vasp_poscar);
-  connect(tools_quick_geom_export_vasp_poscar, &QAction::triggered, this,
+  tools_menu_quick_geom_export_vasp_poscar = new QAction(this);
+  tools_menu_quick_geom_export_vasp_poscar->setText("VASP POSCAR");
+  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_vasp_poscar);
+  connect(tools_menu_quick_geom_export_vasp_poscar, &QAction::triggered, this,
           [this]() { this->export_selected_geometry("Export[VASP POSCAR]",
                                                     qc_file_fmt::vasp_poscar);});
 
   help_menu  = menuBar()->addMenu(tr("&Help"));
-  act_about = new QAction(this);
-  act_about->setText(tr("About"));
-  help_menu->addAction(act_about);
+  help_menu_about = new QAction(this);
+  help_menu_about->setText(tr("About"));
+  help_menu->addAction(help_menu_about);
+
 }
 
 void main_window::init_widgets() {
@@ -377,7 +389,10 @@ void main_window::init_layouts() {
   splitter_ws_viewer_py_console->addWidget(ws_viewer_widget);
   splitter_ws_viewer_py_console->addWidget(py_console_widget);
   splitter_ws_viewer_py_console->setHandleWidth(15);
-  splitter_ws_viewer_py_console->setSizes(QList<int>({1, 0}));
+  splitter_ws_viewer_py_console->setSizes(QList<int>({3, 1}));
+  py_console_widget->hide();
+  splitter_ws_viewer_py_console->setCollapsible(1, false);
+  splitter_ws_viewer_py_console->setCollapsible(0, false);
 
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console);
@@ -489,6 +504,7 @@ void main_window::tp_show_gizmo_state_changed(int state) {
       if (cur_ws) {
           cur_ws->m_gizmo->m_is_visible = state == Qt::Checked;
           astate->make_viewport_dirty();
+          std::cout << "STATE DEBUG " << state << std::endl;
         }
     }
 
@@ -652,12 +668,12 @@ void main_window::cur_ws_changed() {
           std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
                                                cur_ws->m_ws_name, cur_ws->m_fs_path);
           this->setWindowTitle(QString::fromStdString(title_text));
-          act_sc_generator->setEnabled(true);
+          tools_menu_sc_generator->setEnabled(true);
         } else {
           this->setWindowTitle("qpp::cad");
         }
     } else {
-      act_sc_generator->setEnabled(false);
+      tools_menu_sc_generator->setEnabled(false);
       this->setWindowTitle("qpp::cad");
     }
 
@@ -937,7 +953,9 @@ void main_window::dialog_supercell_generation() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
+
       auto cur_ws = astate->ws_manager->get_cur_ws();
+
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
@@ -954,17 +972,14 @@ void main_window::dialog_supercell_generation() {
                       al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
                       astate->make_viewport_dirty();
                     }
-                } else QMessageBox::warning(this, tr("Supercell generation"), tr("m_geom.DIM !=3"));
-            }
-          else { // is not an atoms list
-              QMessageBox::warning(this, tr("Supercell generation"),
-                                   tr("ws_item.type != ws_atoms_list"));
-            }
 
-        } else {
-          QMessageBox::warning(this, tr("Supercell generation"),
-                               tr("Workspace not select"));
-        }
+                } else QMessageBox::warning(this, tr("Supercell generation"), tr("m_geom.DIM !=3"));
+
+            } else QMessageBox::warning(this, tr("Supercell generation"),
+                                        tr("ws_item.type != ws_atoms_list"));
+
+        } else QMessageBox::warning(this, tr("Supercell generation"), tr("Workspace not select"));
+
     }
 
 }
@@ -1047,6 +1062,14 @@ void main_window::action_invert_selected_content() {
       if (cur_it) {
           cur_it->invert_selected_atoms();
         }
+    }
+}
+
+void main_window::action_toggle_console() {
+  if (py_console_widget->isVisible()) {
+      py_console_widget->hide();
+    } else {
+      py_console_widget->show();
     }
 }
 
