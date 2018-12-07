@@ -9,6 +9,7 @@ ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent)
   //m_update_timer->setInterval(16);
   m_update_timer->connect(m_update_timer, &QTimer::timeout, this,
                           &ws_viewer_widget_t::update_cycle);
+  m_update_timer->setTimerType(Qt::PreciseTimer);
   m_update_timer->start(16);
   setMouseTracking(true);
   setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);

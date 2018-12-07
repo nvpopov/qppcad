@@ -109,8 +109,15 @@ add_executable(qppcad
     src/qppcad/python_manager.cpp
     src/qppcad/python_embedded_core.cpp
     src/qppcad/python_embedded_simple_query.cpp
+    src/qppcad/python_embedded_pyqpp.cpp
     src/qppcad/python_simple_query.cpp
+    deps/qpp/modules/pyqpp/pyqpp_linalg.cpp
+    deps/qpp/modules/pyqpp/pyqpp_geom.cpp
+    deps/qpp/modules/pyqpp/pyqpp_xgeom.cpp
+    deps/qpp/modules/pyqpp/pyqpp_cell.cpp
+    deps/qpp/modules/data/errors.cpp
     ${QRCS})
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES} pybind11::embed)
+target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 
