@@ -50,6 +50,11 @@ void main_window::init_base_shortcuts() {
   //  sc_terminate_app = new QShortcut(this);
   //  sc_terminate_app->setKey(Qt::Key_Escape);
   //  connect(sc_terminate_app, SIGNAL(activated()), this, SLOT(slot_shortcut_terminate_app()));
+
+  sc_toggle_console = new QShortcut(this);
+  sc_toggle_console->setKey(Qt::Key_QuoteLeft);
+  connect(sc_toggle_console, &QShortcut::activated, this, &main_window::action_toggle_console);
+
 }
 
 void main_window::init_menus() {
@@ -178,7 +183,7 @@ void main_window::init_menus() {
   edit_menu_console = new QAction(this);
   edit_menu_console->setText(tr("Toggle Console"));
   //edit_menu_console->setCheckable(true);
-  edit_menu_console->setShortcut(QKeySequence(tr("shift+c")));
+  edit_menu_console->setShortcut(QKeySequence(tr("~")));
   edit_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
 
   connect(edit_menu_console, &QAction::triggered,
@@ -974,7 +979,8 @@ void main_window::dialog_supercell_generation() {
                       astate->make_viewport_dirty();
                     }
 
-                } else QMessageBox::warning(this, tr("Supercell generation"), tr("m_geom.DIM !=3"));
+                } else QMessageBox::warning(this, tr("Supercell generation"),
+                                            tr("m_geom.DIM !=3"));
 
             } else QMessageBox::warning(this, tr("Supercell generation"),
                                         tr("ws_item.type != ws_atoms_list"));

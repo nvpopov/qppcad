@@ -142,6 +142,7 @@ namespace qpp {
 
         //Shortcuts
         QShortcut       *sc_terminate_app;
+        QShortcut       *sc_toggle_console;
 
         //End of shortcuts
 

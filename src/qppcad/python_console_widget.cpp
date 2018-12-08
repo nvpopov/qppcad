@@ -35,6 +35,8 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
   if (event->key() == Qt::Key_QuoteLeft || event->key() == Qt::Key_AsciiTilde) {
+      parentWidget()->setFocus();
+      parentWidget()->hide();
       return;
     }
 
@@ -243,7 +245,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
 
   python_highlighting_rule_t rule;
 
-  prompt_fmt.setForeground(Qt::red);
+  prompt_fmt.setForeground(Qt::green);
 //  prompt_fmt.setFontWeight(QFont::Bold);
   QStringList promptPatterns;
   promptPatterns << ">>>" << "\\.\\.\\.";
@@ -254,7 +256,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
       hl_rules.append(rule);
     }
 
-  keyword_fmt.setForeground(Qt::darkGreen);
+  keyword_fmt.setForeground(Qt::lightGray);
   //keyword_fmt.setFontWeight(QFont::Bold);
   QStringList keywordPatterns;
 
@@ -278,7 +280,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
     }
 
   class_fmt.setFontWeight(QFont::Bold);
-  class_fmt.setForeground(Qt::darkGreen);
+  class_fmt.setForeground(Qt::lightGray);
   rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
   rule.format = class_fmt;
   hl_rules.append(rule);
@@ -290,13 +292,13 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
 
   multi_line_c_fmt.setForeground(Qt::red);
 
-  quotation_fmt.setForeground(Qt::darkGreen);
+  quotation_fmt.setForeground(Qt::lightGray);
   rule.pattern = QRegExp("\".*\"");
   rule.format = quotation_fmt;
   hl_rules.append(rule);
 
   function_fmt.setFontWeight(QFont::Bold);
-  function_fmt.setForeground(Qt::darkGreen);
+  function_fmt.setForeground(Qt::lightGray);
   rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
   rule.format = function_fmt;
   hl_rules.append(rule);

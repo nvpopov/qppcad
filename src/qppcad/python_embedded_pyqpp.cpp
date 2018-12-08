@@ -38,5 +38,5 @@ PYBIND11_EMBEDDED_MODULE(pyqpp, m) {
   pyqpp_geom_export(m);
   pyqpp_xgeom_export(m);
 
-  m.def("claim_xgeom", &claim_xgeom);
+  m.def("claim_xgeom", &claim_xgeom, py::return_value_policy::reference);
 }
