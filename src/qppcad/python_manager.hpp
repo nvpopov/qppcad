@@ -17,6 +17,7 @@ namespace qpp {
 
     class python_manager_t {
       public:
+        py::object f_comp;
         py::scoped_interpreter guard{};
         bool execute(std::string command);
         std::string m_output_buffer;

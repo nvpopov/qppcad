@@ -124,7 +124,8 @@ void main_window::init_menus() {
   file_menu_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
   file_menu->addSeparator();
   file_menu->addAction(file_menu_close_app);
-  connect(file_menu_close_app, &QAction::triggered, this, &main_window::slot_shortcut_terminate_app);
+  connect(file_menu_close_app, &QAction::triggered, this,
+          &main_window::slot_shortcut_terminate_app);
 
   edit_menu  = menuBar()->addMenu(tr("&Edit"));
   edit_menu_undo = new QAction(this);
@@ -189,6 +190,17 @@ void main_window::init_menus() {
   connect(edit_menu_console, &QAction::triggered,
           this, &main_window::action_toggle_console);
   edit_menu->addAction(edit_menu_console);
+
+  edit_menu_toggle_debug_info = new QAction(this);
+  edit_menu_toggle_debug_info->setText(tr("Toggle debug info"));
+  edit_menu_toggle_debug_info->setCheckable(true);
+  edit_menu->addAction(edit_menu_toggle_debug_info);
+  connect(edit_menu_toggle_debug_info, &QAction::toggled,
+          [](bool checked){
+      app_state_t* astate = app_state_t::get_inst();
+      astate->m_show_debug_frame_stats = checked;
+      astate->make_viewport_dirty();
+    });
 
   tools_menu = menuBar()->addMenu(tr("&Tools"));
   tools_menu_generators = tools_menu->addMenu(tr("Generators"));
@@ -1010,7 +1022,7 @@ void main_window::dialog_axial_scale() {
 
                   if (ret_code == QDialog::Accepted) {
                       //  al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
-                      al->apply_axial_scale(sc_a, sc_b, sc_c);
+                      al->apply_axial_scale(float(sc_a), float(sc_b), float(sc_c));
                       astate->make_viewport_dirty();
                     }
                 } else QMessageBox::warning(this, tr("Axial scale"), tr("m_geom.DIM !=3"));

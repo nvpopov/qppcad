@@ -279,7 +279,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
       hl_rules.append(rule);
     }
 
-  class_fmt.setFontWeight(QFont::Bold);
+  //class_fmt.setFontWeight(QFont::Bold);
   class_fmt.setForeground(Qt::lightGray);
   rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
   rule.format = class_fmt;
@@ -297,7 +297,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
   rule.format = quotation_fmt;
   hl_rules.append(rule);
 
-  function_fmt.setFontWeight(QFont::Bold);
+  //function_fmt.setFontWeight(QFont::Bold);
   function_fmt.setForeground(Qt::lightGray);
   rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
   rule.format = function_fmt;

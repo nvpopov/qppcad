@@ -16,6 +16,10 @@ ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent)
   connect(this, &ws_viewer_widget_t::customContextMenuRequested,
           this, &ws_viewer_widget_t::show_context_menu);
   setMinimumHeight(300);
+
+  m_update_timer_cpu = new QElapsedTimer;
+  m_update_timer_gpu = new QElapsedTimer;
+
 }
 
 void ws_viewer_widget_t::update_cycle() {
@@ -37,12 +41,16 @@ void ws_viewer_widget_t::update_cycle() {
         }
 
       update();
+
+
       //if (astate->camera)
     }
 
   if (astate->ws_manager->has_wss()) {
+      m_update_timer_cpu->start();
       auto cur_ws = astate->ws_manager->get_cur_ws();
       cur_ws->update(0.016);
+      astate->m_last_frame_time_cpu = m_update_timer_cpu->nsecsElapsed();
     }
 
   astate->is_mouse_moving = false;
@@ -57,8 +65,6 @@ void ws_viewer_widget_t::initializeGL() {
   astate->init_shaders();
   astate->init_meshes();
 
-  glapi_t* glapi = astate->glapi;
-
 }
 
 void ws_viewer_widget_t::resizeGL(int w, int h) {
@@ -72,6 +78,7 @@ void ws_viewer_widget_t::resizeGL(int w, int h) {
 
 void ws_viewer_widget_t::paintGL() {
 
+  m_update_timer_gpu->start();
 
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
@@ -101,9 +108,30 @@ void ws_viewer_widget_t::paintGL() {
 
   painter.endNativePainting();
 
-  astate->ws_manager->render_cur_ws_overlay(&painter);
-  painter.end();
+  if (astate->m_show_debug_frame_stats) {
+      painter.setFont(QFont("Hack-Regular", 13));
+      painter.setPen(Qt::black);
+      painter.drawText(3, 3,
+                       250, 30,
+                       Qt::AlignLeft,
+                       QString::fromStdString(fmt::format("Frame time GPU: {:6.6f}",
+                                                          (astate->m_last_frame_time_gpu)/
+                                                          1000000.0))
+                       );
 
+      painter.drawText(3, 30,
+                       250, 30,
+                       Qt::AlignLeft,
+                       QString::fromStdString(fmt::format("Frame time CPU: {:6.6f}",
+                                                          (astate->m_last_frame_time_cpu)/
+                                                          1000000.0))
+                       );
+
+      astate->ws_manager->render_cur_ws_overlay(&painter);
+      painter.end();
+    }
+
+  astate->m_last_frame_time_gpu = m_update_timer_gpu->nsecsElapsed();
   //astate->log("REPAINT");
 
 }
@@ -188,8 +216,8 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       //                              fabs(astate->mouse_x_dc - astate->mouse_x_dc_old),
       //                              fabs(astate->mouse_y_dc - astate->mouse_y_dc_old) ));
 
-      astate->is_mouse_moving = (abs(astate->mouse_x_dc - astate->mouse_x_dc_old) > 0.001f ||
-                                 abs(astate->mouse_y_dc - astate->mouse_y_dc_old) > 0.001f);
+      astate->is_mouse_moving = (abs(astate->mouse_x_dc - astate->mouse_x_dc_old) > 0.0001f ||
+                                 abs(astate->mouse_y_dc - astate->mouse_y_dc_old) > 0.0001f);
 
       astate->mouse_distance_pp += abs(astate->mouse_x - astate->mouse_x_old) +
                                    abs(astate->mouse_y - astate->mouse_y_old);
@@ -239,24 +267,24 @@ void ws_viewer_widget_t::wheelEvent(QWheelEvent *event) {
 
 void ws_viewer_widget_t::show_context_menu(const QPoint &pos) {
 
-//  app_state_t* astate = app_state_t::get_inst();
+  //  app_state_t* astate = app_state_t::get_inst();
 
-//  astate->log(fmt::format("DEBUG MOUSE_DISTANCE_PP {}", astate->mouse_distance_pp));
-//  if (astate->mouse_distance_pp < 30.2f) {
-//      astate->mouse_lb_pressed = false;
-//      astate->mouse_rb_pressed = false;
-//      astate->mouse_md_pressed = false;
-//      astate->is_mouse_moving = false;
-//      astate->mouse_distance_pp = 0.0f;
+  //  astate->log(fmt::format("DEBUG MOUSE_DISTANCE_PP {}", astate->mouse_distance_pp));
+  //  if (astate->mouse_distance_pp < 30.2f) {
+  //      astate->mouse_lb_pressed = false;
+  //      astate->mouse_rb_pressed = false;
+  //      astate->mouse_md_pressed = false;
+  //      astate->is_mouse_moving = false;
+  //      astate->mouse_distance_pp = 0.0f;
 
-//      QPoint globalPos = mapToGlobal(pos);
+  //      QPoint globalPos = mapToGlobal(pos);
 
-//      // Create menu and insert some actions
-//      QMenu myMenu;
-//      myMenu.addAction("Insert");
-//      myMenu.addAction("Erase");
+  //      // Create menu and insert some actions
+  //      QMenu myMenu;
+  //      myMenu.addAction("Insert");
+  //      myMenu.addAction("Erase");
 
-//      // Show context menu at handling position
-//      myMenu.exec(globalPos);
-//    }
+  //      // Show context menu at handling position
+  //      myMenu.exec(globalPos);
+  //    }
 }

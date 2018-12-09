@@ -30,8 +30,15 @@ python_manager_t::python_manager_t() {
   py::exec("from core import *\n"
            "from sq import *\n"
            "import pyqpp \n"
+           "import rlcompleter \n"
            "import sys\n", py::globals());
+
   py::exec("sys.stdout = output_redirector()", py::globals());
+  //py::exec("completer = rlcompleter.Completer()", py::globals());
+
+  //f_comp = py::globals().attr("__main__").attr("completer").attr("complete");
+  //py::print(py::globals());
+  //py::print(rlcompl.attr("complete")("pyqpp.", 0));
   //py::exec("print(2+2)");
 
 }

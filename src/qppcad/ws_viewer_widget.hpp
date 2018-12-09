@@ -6,6 +6,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QTimer>
+#include <QElapsedTimer>
 #include <QPainter>
 #include <QMouseEvent>
 #include <QMenu>
@@ -18,6 +19,8 @@ namespace qpp {
       public:
         ws_viewer_widget_t(QWidget *parent);
         QTimer *m_update_timer;
+        QElapsedTimer *m_update_timer_gpu;
+        QElapsedTimer *m_update_timer_cpu;
 
       public slots:
         void update_cycle();

@@ -86,6 +86,9 @@ namespace qpp {
         //        int max_fps{60};
         //        uint m_viewport_ms_level{0};
 
+        int64_t m_last_frame_time_cpu{0};
+        int64_t m_last_frame_time_gpu{0};
+        bool m_show_debug_frame_stats{false};
         float mouse_x_dc;
         float mouse_y_dc;
         float mouse_x_dc_old;
