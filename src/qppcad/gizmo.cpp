@@ -48,21 +48,21 @@ void gizmo_t::render () {
           _v_one * 0.35f,
           vector3<float>( -pi / 2, 0.0f, 0.0f ),
           gizmo_color[0],
-          astate->unit_cone);
+          astate->mesh_unit_cone);
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[1] * gizmo_shift_magnitude,
           _v_one * 0.35f,
           vector3<float>( 0.0f, 0.0f, 0.0f ),
           gizmo_color[1],
-          astate->unit_cone);
+          astate->mesh_unit_cone);
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[2] * gizmo_shift_magnitude,
           _v_one * 0.35f,
           vector3<float>( 0.0f, 0.0f,  pi / 2),
           gizmo_color[2],
-          astate->unit_cone);
+          astate->mesh_unit_cone);
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[0] * (gizmo_shift_magnitude-gizmo_box_size-1.25f),
@@ -70,7 +70,7 @@ void gizmo_t::render () {
           (gizmo_shift_magnitude/2-gizmo_box_size)+1.75f),
           vector3<float>( 0.0f, pi / 2.0,  0.0f),
           gizmo_color[0],
-          astate->cylinder_mesh);
+          astate->mesh_cylinder);
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[1] * (gizmo_shift_magnitude-gizmo_box_size+0.75),
@@ -78,7 +78,7 @@ void gizmo_t::render () {
           (gizmo_shift_magnitude/2-gizmo_box_size)+1.75f),
           vector3<float>( 0.0f, 0.0f,   pi / 2.0),
           gizmo_color[1],
-          astate->cylinder_mesh);
+          astate->mesh_cylinder);
 
       astate->dp->render_general_mesh(
             pos + gizmo_axis[2] * (gizmo_shift_magnitude-gizmo_box_size-1.25f),
@@ -86,7 +86,7 @@ void gizmo_t::render () {
           (gizmo_shift_magnitude/2-gizmo_box_size)+1.75f),
           vector3<float>( 0.0f, 0.0f,  0.0f),
           gizmo_color[2],
-          astate->cylinder_mesh);
+          astate->mesh_cylinder);
 
       astate->dp->end_render_general_mesh();
 

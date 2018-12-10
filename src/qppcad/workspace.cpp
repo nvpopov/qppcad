@@ -115,7 +115,7 @@ void workspace_t::render() {
 
   if (m_gizmo->is_active && m_gizmo->attached_item) m_gizmo->render();
 
-  if (astate->debug_show_selection_ray){
+  if (astate->m_debug_show_selection_ray){
       astate->dp->begin_render_line();
       astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), m_ray_debug.start,
                               m_ray_debug.start + m_ray_debug.dir * 155.0);
@@ -125,7 +125,7 @@ void workspace_t::render() {
   if (astate->dp) {
 
       ///// Draw axis /////
-      if (astate->show_axis) {
+      if (astate->m_show_axis) {
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
           float fAxisLen = 0.07f *astate->camera->m_stored_dist;
           if (astate->camera->m_cur_proj ==

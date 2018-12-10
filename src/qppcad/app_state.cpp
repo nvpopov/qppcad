@@ -23,28 +23,29 @@ namespace qpp {
 
     void app_state_t::init_shaders() {
 
-      default_program    = shader_generators::gen_default_program();
-      unit_line_program  = shader_generators::gen_unit_line_program();
-      line_mesh_program  = shader_generators::gen_line_mesh_program();
-      mvp_ssl_program    = shader_generators::gen_mv_screen_space_lighting_program();
-      fbo_quad_program   = shader_generators::gen_fbo_quad_program();
-      unit_line_styled_program = shader_generators::gen_unit_line_styled_program();
-      bs_sphere_program = shader_generators::gen_bs_sphere_program();
-      buf_bs_program = shader_generators::gen_buf_bs_sphere_program();
+      sp_default    = shader_generators::gen_sp_default();
+      sp_unit_line  = shader_generators::gen_sp_unit_line();
+      sp_line_mesh  = shader_generators::gen_sp_line_mesh();
+      sp_mvp_ssl    = shader_generators::gen_sp_mv_screen_space_lighting();
+      sp_fbo_quad   = shader_generators::gen_sp_fbo_quad();
+      sp_unit_line_styled = shader_generators::gen_sp_unit_line_styled();
+      sp_bs_sphere = shader_generators::gen_sp_bs_sphere();
+      sp_buf_bs = shader_generators::gen_sp_buf_bs_sphere();
+      sp_2c_cylinder = shader_generators::gen_sp_2c_cylinder();
 
     }
 
     void app_state_t::init_meshes() {
 
-      _sph_meshes.push_back(mesh_generators::sphere(18, 18));
-      cylinder_mesh = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
-      unit_line     = mesh_generators::unit_line();
-      gridXZ        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
-      unit_cube     = mesh_generators::unit_cube();
-      unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
-      fbo_quad      = mesh_generators::quad();
-      zup_quad      = mesh_generators::quad_zup();
-      xline_mesh    = mesh_generators::cross_line_atom();
+      mesh_spheres.push_back(mesh_generators::sphere(18, 18));
+      mesh_cylinder = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
+      mesh_unit_line     = mesh_generators::unit_line();
+      mesh_grid_xz        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
+      mesh_unit_cube     = mesh_generators::unit_cube();
+      mesh_unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
+      mesh_fbo_quad      = mesh_generators::quad();
+      mesh_zup_quad      = mesh_generators::quad_zup();
+      mesh_xline_mesh    = mesh_generators::cross_line_atom();
 
     }
 

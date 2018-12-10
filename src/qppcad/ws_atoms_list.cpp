@@ -115,7 +115,7 @@ void ws_atoms_list_t::render () {
 
   if (astate->dp){
 
-      if (astate->debug_show_tws_tree) {
+      if (astate->m_debug_show_tws_tree) {
           astate->dp->begin_render_aabb();
           m_tws_tr->apply_visitor( [astate, _pos](tws_node_t<float> *in_node,
                                    int deep_level){

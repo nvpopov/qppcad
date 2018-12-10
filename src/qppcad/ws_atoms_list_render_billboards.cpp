@@ -10,9 +10,9 @@ namespace qpp {
       // std::cout << "fhfg" << std::endl;
       app_state_t* astate = app_state_t::get_inst();
 
-      astate->zup_quad->begin_render_batch();
-      astate->bs_sphere_program->begin_shader_program();
-      astate->bs_sphere_program->set_u(sp_u_name::m_proj, astate->camera->m_mat_proj.data());
+      astate->mesh_zup_quad->begin_render_batch();
+      astate->sp_bs_sphere->begin_shader_program();
+      astate->sp_bs_sphere->set_u(sp_u_name::m_proj, astate->camera->m_mat_proj.data());
 
       //(GL_CULL_FACE);
       vector3<float> color(0.0, 0.0, 1.0);
@@ -22,11 +22,11 @@ namespace qpp {
       Eigen::Transform<float, 3, Eigen::Affine> t;
       matrix4<float> mat_model_view;
 
-      astate->default_program->set_u(sp_u_name::f_specular_intensity, &al.m_shading_specular_power);
+      astate->sp_default->set_u(sp_u_name::f_specular_intensity, &al.m_shading_specular_power);
       index null_idx = index::D(al.m_geom->DIM).all(0);
 
       float draw_specular = al.m_draw_specular;
-      astate->default_program->set_u(sp_u_name::f_specular_alpha, &draw_specular);
+      astate->sp_default->set_u(sp_u_name::f_specular_alpha, &draw_specular);
 
       for (uint32_t i = 0; i < al.m_geom->nat(); i++) {
 
@@ -37,8 +37,8 @@ namespace qpp {
                            al.m_atom_scale_factor * 2.0f;
                   color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
                 }
-              astate->bs_sphere_program->set_u(sp_u_name::v_color, color.data());
-              astate->bs_sphere_program->set_u(sp_u_name::f_scale, &dr_rad);
+              astate->sp_bs_sphere->set_u(sp_u_name::v_color, color.data());
+              astate->sp_bs_sphere->set_u(sp_u_name::f_scale, &dr_rad);
               cached_last_atom_type = al.m_geom->type(i);
             }
 
@@ -46,7 +46,7 @@ namespace qpp {
               if (al.m_atom_idx_sel.find(atom_index_set_key(i, null_idx)) != al.m_atom_idx_sel.end()
                   && al.m_selected) {
                   color = vector3<float>(0.43f, 0.55f, 0.12f);
-                  astate->bs_sphere_program->set_u(sp_u_name::v_color, color.data());
+                  astate->sp_bs_sphere->set_u(sp_u_name::v_color, color.data());
 
                 }
             }
@@ -57,13 +57,13 @@ namespace qpp {
           t.pretranslate(al.m_geom->pos(i)+al.m_pos);
           mat_model_view = astate->camera->m_mat_view * t.matrix();
 
-          astate->bs_sphere_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
-          astate->zup_quad->render_batch();
+          astate->sp_bs_sphere->set_u(sp_u_name::m_model_view, mat_model_view.data());
+          astate->mesh_zup_quad->render_batch();
 
         }
 
-      astate->bs_sphere_program->end_shader_program();
-      astate->zup_quad->end_render_batch();
+      astate->sp_bs_sphere->end_shader_program();
+      astate->mesh_zup_quad->end_render_batch();
       //glEnable(GL_CULL_FACE);
 
     }

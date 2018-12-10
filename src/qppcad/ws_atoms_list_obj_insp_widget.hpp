@@ -88,6 +88,9 @@ namespace qpp {
         QPushButton *anim_frame_backward;
 
         ws_item_tab_widget_t *tab_measurement;
+        QGroupBox *tmeasure_pair_dist_gb;
+        QVBoxLayout *tmeasure_pair_dist_gb_layout;
+        QTableView *tmeasure_pair_dist_table;
 
         ws_item_tab_widget_t *tab_modify;
 

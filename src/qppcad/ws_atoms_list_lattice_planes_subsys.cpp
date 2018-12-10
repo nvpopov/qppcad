@@ -21,7 +21,7 @@ void ws_atoms_list_lat_planes_subsys_t::render() {
   astate->dp->begin_render_general_mesh();
   astate->glapi->glDisable(GL_CULL_FACE);
   float specular_alpha = 0.0f;
-  astate->mvp_ssl_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
+  astate->sp_mvp_ssl->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
 
   vector3<float> scale{1.0f, 1.0f, 1.0f};
 
@@ -29,7 +29,7 @@ void ws_atoms_list_lat_planes_subsys_t::render() {
       scale = vector3<float>(plane.m_size, plane.m_size, plane.m_size);
       astate->dp->render_general_mesh(p_owner->m_pos + plane.m_center,
                                       scale, plane.m_rotation,
-                                      clr_green, astate->zup_quad);
+                                      clr_green, astate->mesh_zup_quad);
     }
 
   astate->dp->end_render_general_mesh();

@@ -46,29 +46,29 @@ namespace qpp {
         glapi_t *glapi;
         camera_t *camera;
 
-        draw_pipeline_t*               dp;
+        draw_pipeline_t *dp;
 
-        shader_program_t*              default_program;
-        shader_program_t*              unit_line_program;
-        shader_program_t*              unit_line_styled_program;
-        shader_program_t*              line_mesh_program;
-        shader_program_t*              mvp_ssl_program;
-        shader_program_t*              fbo_quad_program;
-        shader_program_t*              bs_sphere_program;
-        shader_program_t*              buf_bs_program;
+        shader_program_t *sp_default;
+        shader_program_t *sp_unit_line;
+        shader_program_t *sp_unit_line_styled;
+        shader_program_t *sp_line_mesh;
+        shader_program_t *sp_mvp_ssl;
+        shader_program_t *sp_fbo_quad;
+        shader_program_t *sp_bs_sphere;
+        shader_program_t *sp_buf_bs;
+        shader_program_t *sp_2c_cylinder;
 
-        std::vector<mesh_t*> _sph_meshes;
-        mesh_t *cylinder_mesh;
-        mesh_t *unit_line;
-        mesh_t *trm;
-        mesh_t *gridXZ;
-        mesh_t *unit_cube;
-        mesh_t *unit_cone;
-        mesh_t *fbo_quad;
-        mesh_t *zup_quad;
-        mesh_t *xline_mesh;
+        std::vector<mesh_t*> mesh_spheres;
+        mesh_t *mesh_cylinder;
+        mesh_t *mesh_unit_line;
+        mesh_t *mesh_grid_xz;
+        mesh_t *mesh_unit_cube;
+        mesh_t *mesh_unit_cone;
+        mesh_t *mesh_fbo_quad;
+        mesh_t *mesh_zup_quad;
+        mesh_t *mesh_xline_mesh;
 
-        std::shared_ptr<workspace_manager_t>                           ws_manager;
+        std::shared_ptr<workspace_manager_t> ws_manager;
         std::unique_ptr<python_manager_t> py_manager;
         // //       std::map<std::string, color_map_t> m_color_maps;
 
@@ -76,15 +76,6 @@ namespace qpp {
         vector2<float> viewport_size;
         vector2<float> viewport_xy_c;
         vector2<float> viewport_size_c;
-
-        //        vector3<float> light_pos{0, 1.0f, 1.0f};
-        //        vector3<float> light_color; // @unused
-        //        vector3<float> light_pos_tr{0, 0, 0};
-
-        //        int c_max_texture_buffer_size;
-        //        int current_fps{60};
-        //        int max_fps{60};
-        //        uint m_viewport_ms_level{0};
 
         int64_t m_last_frame_time_cpu{0};
         int64_t m_last_frame_time_gpu{0};
@@ -102,55 +93,20 @@ namespace qpp {
         bool mouse_rb_pressed{false};
         bool mouse_md_pressed{false};
         bool is_mouse_moving{false};
-        //        float mouse_x_ws_frame;
-        //        float mouse_y_ws_frame;
 
-        ////        app_task_type cur_task{app_task_type::TASK_WORKSPACE_EDITOR};
-        ////        app_render_mode m_render_mode{app_render_mode::buffered_multi_sampling};
-
-        bool disable_mouse_camera_control;
-
-        bool show_axis{true};
-        bool show_grid{false};
-        bool debug_show_tws_tree{false};
-        bool debug_show_selection_ray{false};
-        bool show_object_inspector{true};
-        bool show_console{false};
-        bool mouse_in_3d_area{false};
-        bool viewport_changed{false};
+        bool m_show_axis{true};
+        bool m_show_grid{false};
+        bool m_debug_show_tws_tree{false};
+        bool m_debug_show_selection_ray{false};
+        bool m_show_object_inspector{true};
+        bool m_show_console{false};
+        bool m_mouse_in_3d_area{false};
+        bool m_viewport_changed{false};
         bool m_transform_pdb_atom_names{true};
 
         bool m_disable_app{false};
         bool m_viewport_dirty{true};
-        //        bool m_trigger_3d_popup{false};
-        //        int  m_trigger_3d_popup_counter{0};
-        //        int  m_trigger_3d_popup_counter_max{65};
 
-        //        bool m_realtime{false};
-        //
-        //        bool m_workspace_changed{true};
-
-        //        void write_app_settings ();
-
-        //        void read_app_settings ();
-
-
-
-        //        void update_viewport_cache ();
-
-        //        /// \brief update_mouse_coord
-        //        /// \param _mcx
-        //        /// \param _mcy
-        //        void update_mouse_coord (const float _mcx, const float _mcy);
-
-        //        //TODO: implement via vote pool
-        //        void mark_viewport_change ();
-
-        //        /// \brief update
-        //        void update (float delta_time);
-
-        //        /// \brief app_state
-        //        app_state_t ();
     };
 
   }

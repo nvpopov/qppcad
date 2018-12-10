@@ -4,7 +4,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 
-shader_program_t *shader_generators::gen_default_program () {
+shader_program_t *shader_generators::gen_sp_default () {
   std::string vs =
     #include "shaders/screen_space_lighting.vs"
       ;
@@ -28,7 +28,7 @@ shader_program_t *shader_generators::gen_default_program () {
   return sp;
 }
 
-shader_program_t *shader_generators::gen_unit_line_program () {
+shader_program_t *shader_generators::gen_sp_unit_line () {
   std::string vs =
     #include "shaders/unit_line.vs"
       ;
@@ -48,7 +48,7 @@ shader_program_t *shader_generators::gen_unit_line_program () {
   return sp;
 }
 
-shader_program_t *shader_generators::gen_unit_line_styled_program () {
+shader_program_t *shader_generators::gen_sp_unit_line_styled () {
   std::string vs =
     #include "shaders/unit_line_styled.vs"
       ;
@@ -68,7 +68,7 @@ shader_program_t *shader_generators::gen_unit_line_styled_program () {
   return sp;
 }
 
-shader_program_t *shader_generators::gen_line_mesh_program () {
+shader_program_t *shader_generators::gen_sp_line_mesh () {
   std::string vs =
     #include "shaders/line_mesh.vs"
       ;
@@ -85,7 +85,7 @@ shader_program_t *shader_generators::gen_line_mesh_program () {
   return sp;
 }
 
-shader_program_t *shader_generators::gen_mv_screen_space_lighting_program () {
+shader_program_t *shader_generators::gen_sp_mv_screen_space_lighting () {
   std::string vs =
     #include "shaders/mv_screen_space_lighting.vs"
       ;
@@ -107,7 +107,7 @@ shader_program_t *shader_generators::gen_mv_screen_space_lighting_program () {
   return sp;
 }
 
-shader_program_t *shader_generators::gen_fbo_quad_program () {
+shader_program_t *shader_generators::gen_sp_fbo_quad () {
   std::string vs =
     #include "shaders/fb_quad.vs"
       ;
@@ -121,7 +121,7 @@ shader_program_t *shader_generators::gen_fbo_quad_program () {
   return sp;
 }
 
-shader_program_t *shader_generators::gen_bs_sphere_program () {
+shader_program_t *shader_generators::gen_sp_bs_sphere () {
   std::string vs =
     #include "shaders/bs_sphere.vs"
       ;
@@ -147,7 +147,7 @@ shader_program_t *shader_generators::gen_bs_sphere_program () {
   return sp;
 }
 
-shader_program_t *shader_generators::gen_buf_bs_sphere_program() {
+shader_program_t *shader_generators::gen_sp_buf_bs_sphere() {
   std::string vs =
     #include "shaders/bs_sphere_buffered.vs"
       ;
@@ -170,6 +170,30 @@ shader_program_t *shader_generators::gen_buf_bs_sphere_program() {
   //sp->u_on(sp_u_name::m_model_view_inv_tr);
   //sp->u_on(sp_u_name::v_light_pos);
   //sp->u_on(sp_u_name::v_color);
+
+  return sp;
+}
+
+shader_program_t *shader_generators::gen_sp_2c_cylinder() {
+
+  std::string vs =
+    #include "shaders/2color_cylinder.vs"
+      ;
+
+  std::string fs =
+    #include "shaders/2color_cylinder.fs"
+      ;
+
+  qpp::cad::shader_program_t *sp =
+      new qpp::cad::shader_program_t(std::string("2c_cylinder"), vs, fs);
+  sp->u_on(sp_u_name::m_model_view_proj);
+  sp->u_on(sp_u_name::m_model_view);
+  //sp->u_on(sp_u_name::m_view_proj);
+  sp->u_on(sp_u_name::f_specular_intensity);
+  sp->u_on(sp_u_name::f_specular_alpha);
+  sp->u_on(sp_u_name::m_model_view_inv_tr);
+  //sp->u_on(sp_u_name::v_light_pos);
+  sp->u_on(sp_u_name::v_color);
 
   return sp;
 }

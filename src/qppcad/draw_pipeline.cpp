@@ -24,10 +24,10 @@ void draw_pipeline_t::begin_atom_render (float specular_power, float specular_al
 
   app_state_t* astate = app_state_t::get_inst();
 
-  astate->default_program->begin_shader_program();
-  astate->default_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
-  astate->default_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
-  astate->_sph_meshes[0]->begin_render_batch();
+  astate->sp_default->begin_shader_program();
+  astate->sp_default->set_u(sp_u_name::f_specular_intensity, &specular_power);
+  astate->sp_default->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
+  astate->mesh_spheres[0]->begin_render_batch();
 }
 
 void draw_pipeline_t::render_atom (const vector3<float> &color,
@@ -38,33 +38,33 @@ void draw_pipeline_t::render_atom (const vector3<float> &color,
 
   // std::cout<<"render_atom"<<std::endl;
 
-  astate->default_program->set_u(sp_u_name::v_translate, (GLfloat*)(pos.data()));
-  astate->default_program->set_u(sp_u_name::f_scale, (GLfloat*)(&radius));
-  astate->default_program->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
+  astate->sp_default->set_u(sp_u_name::v_translate, (GLfloat*)(pos.data()));
+  astate->sp_default->set_u(sp_u_name::f_scale, (GLfloat*)(&radius));
+  astate->sp_default->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
 
   matrix4<float> mat_model_view_inv_tr =
       (astate->camera->m_mat_view*matrix4<float>::Identity()).inverse().transpose();
   // our Model matrix equals unity matrix, so just pass matrix from app state
-  astate->default_program->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
-  astate->default_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
-  astate->default_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+  astate->sp_default->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
+  astate->sp_default->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
+  astate->sp_default->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
 
-  astate->_sph_meshes[0]->render_batch();
+  astate->mesh_spheres[0]->render_batch();
   // astate->trm->render();
 
 }
 
 void draw_pipeline_t::end_atom_render () {
   app_state_t* astate = app_state_t::get_inst();
-  astate->default_program->end_shader_program();
-  astate->_sph_meshes[0]->end_render_batch();
+  astate->sp_default->end_shader_program();
+  astate->mesh_spheres[0]->end_render_batch();
 }
 
 void draw_pipeline_t::begin_render_bond (float specular_power, float specular_alpha) {
   app_state_t* astate = app_state_t::get_inst();
-  astate->mvp_ssl_program->begin_shader_program();
-  astate->mvp_ssl_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
-  astate->mvp_ssl_program->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
+  astate->sp_mvp_ssl->begin_shader_program();
+  astate->sp_mvp_ssl->set_u(sp_u_name::f_specular_intensity, &specular_power);
+  astate->sp_mvp_ssl->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
 }
 
 void draw_pipeline_t::render_bond (const vector3<float> &color,
@@ -84,24 +84,25 @@ void draw_pipeline_t::render_bond (const vector3<float> &color,
   mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
   mat_model.block<3,1>(0,3) = bond_start;
 
-  matrix4<float> mat_model_view_inv_tr = (astate->camera->m_mat_view * mat_model).inverse().transpose();
+  matrix4<float> mat_model_view_inv_tr = (astate->camera->m_mat_view *
+                                          mat_model).inverse().transpose();
 
   matrix4<float> mat_model_view = astate->camera->m_mat_view * mat_model;
   matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * mat_model;
 
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_view_proj, astate->camera->m_proj_view.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_view_proj, astate->camera->m_proj_view.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
 
-  astate->cylinder_mesh->render();
+  astate->mesh_cylinder->render();
 
 }
 
 void draw_pipeline_t::end_render_bond () {
   app_state_t* astate = app_state_t::get_inst();
-  astate->mvp_ssl_program->end_shader_program();
+  astate->sp_mvp_ssl->end_shader_program();
 }
 
 void draw_pipeline_t::render_molecule () {
@@ -148,7 +149,7 @@ void draw_pipeline_t::render_primitive () {
 
 void draw_pipeline_t::begin_render_general_mesh () {
   app_state_t* astate = app_state_t::get_inst();
-  astate->mvp_ssl_program->begin_shader_program();
+  astate->sp_mvp_ssl->begin_shader_program();
   float specular_power = 12.0f;
   float specular_alpha = 0.0f;
 //  astate->default_program->set_u(sp_u_name::f_specular_intensity, &specular_power);
@@ -193,10 +194,10 @@ void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
   matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * model_matrix;
   matrix4<float> mat_model_view_inv_tr = (mat_model_view).inverse().transpose();
 
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::v_color, (GLfloat*)(mesh_color.data()));
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::v_color, (GLfloat*)(mesh_color.data()));
   //glDisable(GL_CULL_FACE);
   mesh->render();
 }
@@ -220,12 +221,12 @@ void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
   matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * mat_model;
   matrix4<float> mat_model_view_inv_tr = (mat_model_view).inverse().transpose();
 
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::v_color, (GLfloat*)(cube_color.data()));
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::v_color, (GLfloat*)(cube_color.data()));
   //glDisable(GL_CULL_FACE);
-  astate->unit_cube->render();
+  astate->mesh_unit_cube->render();
   //glEnable(GL_CULL_FACE);
 }
 
@@ -245,18 +246,18 @@ void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
   matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * mat_model;
   matrix4<float> mat_model_view_inv_tr = (mat_model_view).inverse().transpose();
 
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view, mat_model_view.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
-  astate->mvp_ssl_program->set_u(sp_u_name::v_color, (GLfloat*)(cone_color.data()));
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+  astate->sp_mvp_ssl->set_u(sp_u_name::v_color, (GLfloat*)(cone_color.data()));
   //glDisable(GL_CULL_FACE);
-  astate->unit_cone->render();
+  astate->mesh_unit_cone->render();
   //glEnable(GL_CULL_FACE);
 }
 
 void draw_pipeline_t::end_render_general_mesh () {
   app_state_t* astate = app_state_t::get_inst();
-  astate->mvp_ssl_program->end_shader_program();
+  astate->sp_mvp_ssl->end_shader_program();
 }
 
 void draw_pipeline_t::begin_render_aabb () {
@@ -377,11 +378,11 @@ void draw_pipeline_t::end_render_aabb(){
 void draw_pipeline_t::begin_render_line () {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->unit_line_program->begin_shader_program();
-  astate->unit_line_program->set_u(sp_u_name::m_model_view_proj,
+  astate->sp_unit_line->begin_shader_program();
+  astate->sp_unit_line->set_u(sp_u_name::m_model_view_proj,
                                    astate->camera->m_proj_view.data());
-  astate->unit_line_program->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
-  astate->unit_line->begin_render_batch();
+  astate->sp_unit_line->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
+  astate->mesh_unit_line->begin_render_batch();
 }
 
 void draw_pipeline_t::render_line(const vector3<float> &color,
@@ -392,11 +393,11 @@ void draw_pipeline_t::render_line(const vector3<float> &color,
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glLineWidth(line_width);
-  astate->unit_line_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
-  astate->unit_line_program->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
-  astate->unit_line_program->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
+  astate->sp_unit_line->set_u(sp_u_name::v_color, (GLfloat*)color.data());
+  astate->sp_unit_line->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
+  astate->sp_unit_line->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
 
-  astate->unit_line->render_batch();
+  astate->mesh_unit_line->render_batch();
 
 }
 
@@ -405,20 +406,20 @@ void draw_pipeline_t::end_render_line () {
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glLineWidth(1.0f);
-  astate->unit_line_program->end_shader_program();
-  astate->unit_line->end_render_batch();
+  astate->sp_unit_line->end_shader_program();
+  astate->mesh_unit_line->end_render_batch();
 
 }
 
 void draw_pipeline_t::begin_render_line_styled () {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->unit_line_styled_program->begin_shader_program();
-  astate->unit_line_styled_program->set_u(sp_u_name::m_model_view_proj,
+  astate->sp_unit_line_styled->begin_shader_program();
+  astate->sp_unit_line_styled->set_u(sp_u_name::m_model_view_proj,
                                    astate->camera->m_proj_view.data());
-  astate->unit_line_styled_program->set_u(sp_u_name::m_model_view,
+  astate->sp_unit_line_styled->set_u(sp_u_name::m_model_view,
                                           astate->camera->m_mat_view.data());
-  astate->unit_line->begin_render_batch();
+  astate->mesh_unit_line->begin_render_batch();
 
 }
 
@@ -430,11 +431,11 @@ void draw_pipeline_t::render_line_styled (const vector3<float> &color,
   app_state_t* astate = app_state_t::get_inst();
 
   glLineWidth(line_width);
-  astate->unit_line_styled_program->set_u(sp_u_name::v_color, (GLfloat*)color.data());
-  astate->unit_line_styled_program->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
-  astate->unit_line_styled_program->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
+  astate->sp_unit_line_styled->set_u(sp_u_name::v_color, (GLfloat*)color.data());
+  astate->sp_unit_line_styled->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
+  astate->sp_unit_line_styled->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
 
-  astate->unit_line->render_batch();
+  astate->mesh_unit_line->render_batch();
 
 }
 
@@ -442,22 +443,22 @@ void draw_pipeline_t::end_render_line_styled () {
 
   glLineWidth(1.0f);
   app_state_t* astate = app_state_t::get_inst();
-  astate->unit_line_styled_program->end_shader_program();
-  astate->unit_line->end_render_batch();
+  astate->sp_unit_line_styled->end_shader_program();
+  astate->mesh_unit_line->end_render_batch();
 
 }
 
 void draw_pipeline_t::render_screen_quad () {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->fbo_quad_program->begin_shader_program();
+  astate->sp_fbo_quad->begin_shader_program();
   glDisable(GL_DEPTH_TEST);
 
   glActiveTexture(GL_TEXTURE0);
   //glBindTexture(GL_TEXTURE_2D, astate->frame_buffer->get_color_texture());
 
-  astate->fbo_quad->render();
+  astate->mesh_fbo_quad->render();
   glEnable(GL_DEPTH_TEST);
-  astate->fbo_quad_program->end_shader_program();
+  astate->sp_fbo_quad->end_shader_program();
 
 }

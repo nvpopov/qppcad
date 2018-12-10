@@ -224,6 +224,13 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
 
 void ws_atoms_list_obj_insp_widget_t::construct_measure_tab() {
 
+  tmeasure_pair_dist_gb = new QGroupBox(tr("Interatomic distances"));
+  tmeasure_pair_dist_gb_layout = new QVBoxLayout;
+  tmeasure_pair_dist_gb->setLayout(tmeasure_pair_dist_gb_layout);
+  tmeasure_pair_dist_table = new QTableView;
+  tmeasure_pair_dist_gb_layout->addWidget(tmeasure_pair_dist_table);
+  tab_measurement->tab_inner_widget_layout->addWidget(tmeasure_pair_dist_gb);
+
 }
 
 void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {

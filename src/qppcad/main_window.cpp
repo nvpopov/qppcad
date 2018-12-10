@@ -208,7 +208,7 @@ void main_window::init_menus() {
   connect(edit_menu_toggle_debug_tws_tree, &QAction::toggled,
           [](bool checked){
       app_state_t* astate = app_state_t::get_inst();
-      astate->debug_show_tws_tree = checked;
+      astate->m_debug_show_tws_tree = checked;
       astate->make_viewport_dirty();
     });
 
@@ -513,12 +513,16 @@ void main_window::ws_selector_selection_changed(int index) {
 
 void main_window::tp_show_obj_insp_state_changed(int state) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   if (state == Qt::Checked) {
       obj_insp_widget->show();
+      astate->m_show_object_inspector = true;
     }
 
   if (state == Qt::Unchecked) {
       obj_insp_widget->hide();
+      astate->m_show_object_inspector = false;
     }
 }
 
@@ -559,7 +563,7 @@ void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws) {
-      auto cur_idx = cur_ws->get_selected_idx();
+      //auto cur_idx = cur_ws->get_selected_idx();
       auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
 
       if (cur_it) {
@@ -963,17 +967,21 @@ void main_window::toggle_ws_edit_mode() {
 }
 
 void main_window::start_update_cycle() {
+
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
       ws_viewer_widget->m_update_timer->start();
     }
+
 }
 
 void main_window::stop_update_cycle() {
+
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
       p_elapsed_time_in_event_loop =  ws_viewer_widget->m_update_timer->remainingTime();
       ws_viewer_widget->m_update_timer->stop();
       ws_viewer_widget->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
     }
+
 }
 
 void main_window::dialog_supercell_generation() {
@@ -1007,7 +1015,8 @@ void main_window::dialog_supercell_generation() {
             } else QMessageBox::warning(this, tr("Supercell generation"),
                                         tr("ws_item.type != ws_atoms_list"));
 
-        } else QMessageBox::warning(this, tr("Supercell generation"), tr("Workspace not select"));
+        } else QMessageBox::warning(this, tr("Supercell generation"),
+                                    tr("Workspace not select"));
 
     }
 
@@ -1081,6 +1090,7 @@ void main_window::action_unselect_all_content() {
 }
 
 void main_window::action_invert_selected_content() {
+
   app_state_t* astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
@@ -1095,11 +1105,16 @@ void main_window::action_invert_selected_content() {
 }
 
 void main_window::action_toggle_console() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
   if (py_console_widget->isVisible()) {
       py_console_widget->hide();
+      astate->m_show_console = true;
     } else {
       py_console_widget->show();
       py_console_widget->py_tedit->setFocus();
+      astate->m_show_console = false;
     }
 }
 

@@ -15,24 +15,26 @@ namespace qpp {
       public:
 
         /// Default shader testing program - Gourand shading
-        static shader_program_t* gen_default_program();
+        static shader_program_t* gen_sp_default();
 
         /// \brief gen_unit_line_program
-        static shader_program_t* gen_unit_line_program();
+        static shader_program_t* gen_sp_unit_line();
 
-        static shader_program_t* gen_unit_line_styled_program();
+        static shader_program_t* gen_sp_unit_line_styled();
 
         /// \brief gen_line_mesh_program
-        static shader_program_t* gen_line_mesh_program();
+        static shader_program_t* gen_sp_line_mesh();
 
         /// \brief gen_mv_screen_space_lighting_program
-        static shader_program_t *gen_mv_screen_space_lighting_program();
+        static shader_program_t *gen_sp_mv_screen_space_lighting();
 
-        static shader_program_t *gen_fbo_quad_program();
+        static shader_program_t *gen_sp_fbo_quad();
 
-        static shader_program_t *gen_bs_sphere_program();
+        static shader_program_t *gen_sp_bs_sphere();
 
-        static shader_program_t *gen_buf_bs_sphere_program();
+        static shader_program_t *gen_sp_buf_bs_sphere();
+
+        static shader_program_t *gen_sp_2c_cylinder();
     };
 
   }

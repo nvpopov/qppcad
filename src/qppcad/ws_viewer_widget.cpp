@@ -126,11 +126,10 @@ void ws_viewer_widget_t::paintGL() {
                                                           (astate->m_last_frame_time_cpu)/
                                                           1000000.0))
                        );
-
-      astate->ws_manager->render_cur_ws_overlay(&painter);
-      painter.end();
     }
 
+  astate->ws_manager->render_cur_ws_overlay(&painter);
+  painter.end();
   astate->m_last_frame_time_gpu = m_update_timer_gpu->nsecsElapsed();
   //astate->log("REPAINT");
 
