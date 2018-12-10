@@ -182,23 +182,33 @@ void main_window::init_menus() {
   edit_menu->addAction(edit_menu_ws_settings);
 
   edit_menu_console = new QAction(this);
-  edit_menu_console->setText(tr("Toggle Console"));
+  edit_menu_console->setText(tr("Console"));
   //edit_menu_console->setCheckable(true);
   edit_menu_console->setShortcut(QKeySequence(tr("~")));
   edit_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
-
   connect(edit_menu_console, &QAction::triggered,
           this, &main_window::action_toggle_console);
   edit_menu->addAction(edit_menu_console);
 
   edit_menu_toggle_debug_info = new QAction(this);
-  edit_menu_toggle_debug_info->setText(tr("Toggle debug info"));
+  edit_menu_toggle_debug_info->setText(tr("Debug info"));
   edit_menu_toggle_debug_info->setCheckable(true);
   edit_menu->addAction(edit_menu_toggle_debug_info);
   connect(edit_menu_toggle_debug_info, &QAction::toggled,
           [](bool checked){
       app_state_t* astate = app_state_t::get_inst();
       astate->m_show_debug_frame_stats = checked;
+      astate->make_viewport_dirty();
+    });
+
+  edit_menu_toggle_debug_tws_tree = new QAction(this);
+  edit_menu_toggle_debug_tws_tree->setText(tr("Debug tws-tree"));
+  edit_menu_toggle_debug_tws_tree->setCheckable(true);
+  edit_menu->addAction(edit_menu_toggle_debug_tws_tree);
+  connect(edit_menu_toggle_debug_tws_tree, &QAction::toggled,
+          [](bool checked){
+      app_state_t* astate = app_state_t::get_inst();
+      astate->debug_show_tws_tree = checked;
       astate->make_viewport_dirty();
     });
 

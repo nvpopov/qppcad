@@ -29,9 +29,9 @@ namespace qpp {
             auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
             float dr_rad = 0.4f;
             if (ap_idx) {
-                dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].aRadius *
+                dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius *
                          al.m_atom_scale_factor;
-                color = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
+                color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
               }
             astate->line_mesh_program->set_u(sp_u_name::v_translate,
                                              al.m_geom->pos(i).data());

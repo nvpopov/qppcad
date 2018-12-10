@@ -33,9 +33,9 @@ namespace qpp {
           if (cached_last_atom_type != al.m_geom->type(i)) {
               auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
               if (ap_idx) {
-                  dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].aRadius *
+                  dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius *
                            al.m_atom_scale_factor * 2.0f;
-                  color = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
+                  color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
                 }
               astate->bs_sphere_program->set_u(sp_u_name::v_color, color.data());
               astate->bs_sphere_program->set_u(sp_u_name::f_scale, &dr_rad);

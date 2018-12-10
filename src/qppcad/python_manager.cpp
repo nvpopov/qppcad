@@ -25,6 +25,17 @@ bool python_manager_t::execute(std::string command) {
   return ret_status;
 }
 
+void python_manager_t::get_completion_list(QString text, QStringList &sl) {
+  std::string command = fmt::format("complete_text(\"{}\")", text.toStdString());
+  py::list retlist = py::eval(command, py::globals());
+  sl.clear();
+  for (auto elem : retlist) {
+      if (py::isinstance<py::str>(elem))
+        sl.append(QString::fromStdString(elem.cast<std::string>()));
+    }
+}
+
+
 python_manager_t::python_manager_t() {
 
   py::exec("from core import *\n"
@@ -34,11 +45,19 @@ python_manager_t::python_manager_t() {
            "import sys\n", py::globals());
 
   py::exec("sys.stdout = output_redirector()", py::globals());
-  //py::exec("completer = rlcompleter.Completer()", py::globals());
+  py::exec(R"(
+           cm = rlcompleter.Completer()
 
-  //f_comp = py::globals().attr("__main__").attr("completer").attr("complete");
-  //py::print(py::globals());
-  //py::print(rlcompl.attr("complete")("pyqpp.", 0));
-  //py::exec("print(2+2)");
+           def complete_text(text):
+            ret_list = []
+            for i in range(0,40):
+              x = cm.complete(text, i)
+              if x is None:
+                break
+              else:
+                ret_list.append(x)
+            return ret_list
+
+           )", py::globals());
 
 }

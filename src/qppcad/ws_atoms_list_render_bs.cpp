@@ -72,9 +72,9 @@ namespace qpp {
       vector3<float> color(0.0, 0.0, 1.0);
 
       if (ap_idx) {
-          dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].aRadius *
+          dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius *
                    al.m_atom_scale_factor;
-          color = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
+          color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
         }
 
       if (al.m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
@@ -103,7 +103,7 @@ namespace qpp {
       auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num1));
       vector3<float> bcolor(0.0, 0.0, 1.0);
       if (ap_idx) {
-          bcolor = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
+          bcolor = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
         }
       astate->dp->render_bond(
             bcolor, al.m_geom->pos(at_num1, at_index1) + al.m_pos,

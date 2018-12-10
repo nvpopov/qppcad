@@ -49,7 +49,7 @@ void ws_viewer_widget_t::update_cycle() {
   if (astate->ws_manager->has_wss()) {
       m_update_timer_cpu->start();
       auto cur_ws = astate->ws_manager->get_cur_ws();
-      cur_ws->update(0.016);
+      cur_ws->update(0.016f);
       astate->m_last_frame_time_cpu = m_update_timer_cpu->nsecsElapsed();
     }
 
@@ -112,17 +112,17 @@ void ws_viewer_widget_t::paintGL() {
       painter.setFont(QFont("Hack-Regular", 13));
       painter.setPen(Qt::black);
       painter.drawText(3, 3,
-                       250, 30,
+                       280, 30,
                        Qt::AlignLeft,
-                       QString::fromStdString(fmt::format("Frame time GPU: {:6.6f}",
+                       QString::fromStdString(fmt::format("Frame time GPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_gpu)/
                                                           1000000.0))
                        );
 
       painter.drawText(3, 30,
-                       250, 30,
+                       280, 30,
                        Qt::AlignLeft,
-                       QString::fromStdString(fmt::format("Frame time CPU: {:6.6f}",
+                       QString::fromStdString(fmt::format("Frame time CPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_cpu)/
                                                           1000000.0))
                        );

@@ -424,7 +424,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
 
           auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(i));
           vector3<float> bc(0.0, 0.0, 1.0);
-          if (ap_idx) {bc = ptable::get_inst()->arecs[*ap_idx-1].aColorJmol;}
+          if (ap_idx) {bc = ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol;}
           QColor color_bck;
           color_bck.setRgbF(bc[0], bc[1], bc[2]);
           n_clr->setBackgroundColor(color_bck);

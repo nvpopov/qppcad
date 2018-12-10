@@ -114,6 +114,7 @@ namespace qpp {
         QAction *edit_menu_settings;
         QAction *edit_menu_ws_settings;
         QAction *edit_menu_toggle_debug_info;
+        QAction *edit_menu_toggle_debug_tws_tree;
 
         QMenu *edit_menu_selection;
         QAction *edit_menu_selection_select_all;

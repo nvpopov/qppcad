@@ -10,6 +10,13 @@
 #include <QKeyEvent>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
+#include <QCompleter>
+#include <QStringListModel>
+#include <QStringList>
+#include <QModelIndex>
+#include <QAbstractItemModel>
+#include <QAbstractItemView>
+#include <QScrollBar>
 
 /*
  * inspired(==copied) by avogadro (http://avogadro.cc/) pythonterminal extension
@@ -42,12 +49,15 @@ namespace qpp {
         QString m_line_data;
         QFont m_font;
         python_text_editor_syntax_highilighter_t *syntax_hl;
-
+        QCompleter *m_c;
+        QStringListModel *m_sl_model;
+        QStringList m_wl;
         int m_cur_cmd{0}, m_curs_pos{0}, m_indent{0};
 
         python_text_editor_t(QWidget *parent);
         void keyPressEvent(QKeyEvent *event);
         void last_command_reached();
+        QString text_under_cursor() const;
 
       private slots:
         void run_cmd();
@@ -55,6 +65,7 @@ namespace qpp {
         void move_cursor_to_end();
         void clear_signal_received();
         void focus_signal_received();
+        void insert_completion(const QString &completion);
 
     };
 

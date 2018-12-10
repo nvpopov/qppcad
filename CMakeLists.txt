@@ -67,7 +67,9 @@ find_package(Qt5OpenGL CONFIG REQUIRED)
 
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
+
 qt5_add_resources(QRCS data/resources.qrc)
+
 add_executable(qppcad
     src/qppcad/main.cpp
     src/qppcad/main_window.cpp
@@ -103,6 +105,7 @@ add_executable(qppcad
     src/qppcad/ws_comp_chem_data_obj_insp_widget.cpp
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qbonding_table_model.cpp
+    src/qppcad/qmeasurements_table_model.cpp
     src/qppcad/qrealspinbox_delegate.cpp
     src/qppcad/python_console_output_redirectors.cpp
     src/qppcad/python_console_widget.cpp
@@ -117,7 +120,9 @@ add_executable(qppcad
     deps/qpp/modules/pyqpp/pyqpp_cell.cpp
     deps/qpp/modules/data/errors.cpp
     ${QRCS})
+
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
+
 target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES} pybind11::embed)
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 

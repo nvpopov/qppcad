@@ -9,6 +9,9 @@
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 
+#include <QStringList>
+#include <QString>
+
 namespace py = pybind11;
 
 namespace qpp {
@@ -21,6 +24,7 @@ namespace qpp {
         py::scoped_interpreter guard{};
         bool execute(std::string command);
         std::string m_output_buffer;
+        void get_completion_list(QString text, QStringList &sl);
         python_manager_t();
     };
 

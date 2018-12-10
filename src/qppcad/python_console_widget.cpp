@@ -29,10 +29,47 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
   connect(astate->astate_evd, &app_state_event_disp_t::python_console_focus_requested_signal,
           this, &python_text_editor_t::focus_signal_received);
 
+  m_c = new QCompleter(this);
+  m_c->popup()->setFont(m_font);
+  m_c->popup()->setMinimumHeight(30);
+  m_sl_model = new QStringListModel;
+  m_wl.append("sel_it");
+  m_wl.append("sel");
+  m_wl.append("sel_ws");
+  m_sl_model->setStringList(m_wl);
+
+  m_c->setModel(m_sl_model);
+  m_c->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+  m_c->setCaseSensitivity(Qt::CaseInsensitive);
+  m_c->setWrapAround(false);
+
+  m_c->setWidget(this);
+  m_c->setCompletionMode(QCompleter::PopupCompletion);
+  m_c->setCaseSensitivity(Qt::CaseInsensitive);
+  QObject::connect(m_c, SIGNAL(activated(QString)),
+                   this, SLOT(insert_completion(QString)));
+
 
 }
 
 void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
+
+  bool is_completer_shortcut = false;
+
+  if (m_c && m_c->popup()->isVisible()) {
+      // The following keys are forwarded by the completer to the widget
+      switch (event->key()) {
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+        case Qt::Key_Escape:
+        case Qt::Key_Tab:
+        case Qt::Key_Backtab:
+          event->ignore();
+          return; // let the completer do default behavior
+        default:
+          break;
+        }
+    }
 
   if (event->key() == Qt::Key_QuoteLeft || event->key() == Qt::Key_AsciiTilde) {
       parentWidget()->setFocus();
@@ -42,11 +79,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
   if (event->key() == Qt::Key_Escape) {
 
-     parentWidget()->setFocus();
-     return;
-    }
-
-  if (event->key() == Qt::Key_Tab) {
+      parentWidget()->setFocus();
       return;
     }
 
@@ -87,19 +120,14 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
     }
 
   if (event->key() == Qt::Key_Return) {
-
       QString text = toPlainText();
-
       QString t = text.right(text.size() - m_curs_pos);
-
       if (!t.isEmpty()) {
           m_commands.append(t);
-
           if (m_commands.size() > 100) {
               m_commands.removeFirst();
             }
         }
-
       m_cur_cmd = m_commands.size();
       run_cmd();
       event->accept();
@@ -107,28 +135,61 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
     }
 
   if (event->key() == Qt::Key_Backspace) {
-
       QTextCursor cursor(textCursor());
       if (cursor.position() <= m_curs_pos) {
           event->accept();
           return;
         }
-
     }
 
   if (event->key() == Qt::Key_Home) {
-
       QTextCursor cursor(textCursor());
       cursor.setPosition(m_curs_pos);
       setTextCursor(cursor);
       event->accept();
       return;
-
     }
 
-  move_cursor_to_end();
+  if (event->key() == Qt::Key_Tab) {
+      is_completer_shortcut = true;
+    }
 
-  QTextEdit::keyPressEvent(event);
+  if (!is_completer_shortcut) {
+      move_cursor_to_end();
+      QTextEdit::keyPressEvent(event);
+    }
+
+  if (m_c && m_c->popup()->isVisible()) {
+
+      QString completion_prefix = text_under_cursor();
+      if (completion_prefix != m_c->completionPrefix()) {
+          app_state_t* astate = app_state_t::get_inst();
+          astate->py_manager->get_completion_list(completion_prefix, m_wl);
+          m_sl_model->setStringList(m_wl);
+          m_c->setCompletionPrefix(completion_prefix);
+        }
+
+      if (m_wl.size() == 0)
+        m_c->popup()->hide();
+    }
+
+  if (is_completer_shortcut) {
+      QString completion_prefix = text_under_cursor();
+      app_state_t* astate = app_state_t::get_inst();
+      astate->py_manager->get_completion_list(completion_prefix, m_wl);
+      m_sl_model->setStringList(m_wl);
+
+      if (completion_prefix != m_c->completionPrefix()) {
+          m_c->setCompletionPrefix(completion_prefix);
+          m_c->popup()->setCurrentIndex(m_c->completionModel()->index(0, 0));
+        }
+
+      QRect cr = cursorRect();
+      cr.setWidth(m_c->popup()->sizeHintForColumn(0)
+                  + m_c->popup()->verticalScrollBar()->sizeHint().width());
+      m_c->complete(cr);
+    }
+
 }
 
 void python_text_editor_t::last_command_reached() {
@@ -148,6 +209,27 @@ void python_text_editor_t::last_command_reached() {
     }
 
 }
+
+QString python_text_editor_t::text_under_cursor() const {
+
+  QString text = toPlainText();
+  text = text.right(text.size() - m_curs_pos);
+
+  int last = text.lastIndexOf(QChar::Space);
+  std::cout <<"LAST " << last << " TEXT " << text.toStdString() << std::endl;
+  int last_bracket = text.lastIndexOf("(");
+
+  if (last == -1 && last_bracket != -1) last = last_bracket + 1;
+
+  if (last == -1) {
+      return text;
+    } else {
+      std::cout <<"LAST TEXT " << text.right(text.size()-last).toStdString() << std::endl;
+      return text.right(text.size()-last).trimmed();
+    }
+
+}
+
 
 //void python_text_editor_t::wheelEvent(QWheelEvent *event) {
 //  event->accept();
@@ -240,13 +322,24 @@ void python_text_editor_t::focus_signal_received() {
   setFocus();
 }
 
+void python_text_editor_t::insert_completion(const QString &completion) {
+  if (m_c->widget() != this)
+    return;
+  QTextCursor tc = textCursor();
+  int extra = completion.length() - m_c->completionPrefix().length();
+  tc.movePosition(QTextCursor::Left);
+  tc.movePosition(QTextCursor::EndOfWord);
+  tc.insertText(completion.right(extra));
+  setTextCursor(tc);
+}
+
 python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter_t(
     QTextDocument *parent) : QSyntaxHighlighter (parent) {
 
   python_highlighting_rule_t rule;
 
   prompt_fmt.setForeground(Qt::green);
-//  prompt_fmt.setFontWeight(QFont::Bold);
+  //  prompt_fmt.setFontWeight(QFont::Bold);
   QStringList promptPatterns;
   promptPatterns << ">>>" << "\\.\\.\\.";
 

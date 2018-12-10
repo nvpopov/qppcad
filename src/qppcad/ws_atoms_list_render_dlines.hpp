@@ -17,7 +17,7 @@ namespace qpp {
           auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num1));
           vector3<float> bcolor(0.0, 0.0, 1.0);
           if (ap_idx) {
-              bcolor = ptable::get_inst()->arecs[*ap_idx - 1].aColorJmol;
+              bcolor = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
             }
 
           app_state_t* astate = app_state_t::get_inst();
