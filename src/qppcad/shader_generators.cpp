@@ -193,7 +193,8 @@ shader_program_t *shader_generators::gen_sp_2c_cylinder() {
   sp->u_on(sp_u_name::f_specular_alpha);
   sp->u_on(sp_u_name::m_model_view_inv_tr);
   //sp->u_on(sp_u_name::v_light_pos);
-  sp->u_on(sp_u_name::v_color);
+  sp->u_on(sp_u_name::v_color1);
+  sp->u_on(sp_u_name::v_color2);
 
   return sp;
 }

@@ -1,13 +1,15 @@
-R"(  
+R"(
 #version 330
 
 uniform vec3 v_light_pos;
-uniform vec3 v_color;
+uniform vec3 v_color1;
+uniform vec3 v_color2;
 uniform mat4 m_view_proj;
 uniform float f_specular_intensity;
 uniform float f_specular_alpha;
 in vec3 fs_normal;
 in vec3 fs_position;
+in float cylinder_primordial_z;
 out vec4 color;
 
 void main(void){
@@ -22,7 +24,9 @@ void main(void){
 
   vec4 ambient = vec4(0.01, 0.01, 0.01, 1.0);
   vec3 gamma = vec3(1.0/2.2, 1.0/2.2, 1.0/2.2);
-  vec4 linear_color =  vec4(v_color, 1.0) * diffuse + vec4(1.0, 1.0, 1.0, 1.0) * specular;
+  float fs_color_mix = round(cylinder_primordial_z);	
+  vec3 tmp_color = v_color2*fs_color_mix + v_color1*(1-fs_color_mix);
+  vec4 linear_color =  vec4(tmp_color, 1.0) * diffuse + vec4(1.0, 1.0, 1.0, 1.0) * specular;
   color = vec4(pow(linear_color.r, gamma.r),
                pow(linear_color.g, gamma.g),
                pow(linear_color.b, gamma.b), 1.0);

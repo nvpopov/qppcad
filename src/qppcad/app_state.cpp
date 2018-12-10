@@ -38,7 +38,7 @@ namespace qpp {
     void app_state_t::init_meshes() {
 
       mesh_spheres.push_back(mesh_generators::sphere(18, 18));
-      mesh_cylinder = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
+      mesh_cylinder = mesh_generators::cylinder_mk2(3, 14, 1.0f, 1.0f);
       mesh_unit_line     = mesh_generators::unit_line();
       mesh_grid_xz        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
       mesh_unit_cube     = mesh_generators::unit_cube();

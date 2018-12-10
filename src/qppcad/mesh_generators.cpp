@@ -187,7 +187,8 @@ mesh_t *mesh_generators::cylinder_whole (const int num_phi, const int num_z) {
 
 }
 
-mesh_t *mesh_generators::cylinder_mk2 (const int num_segment_height, const int num_segment_base,
+mesh_t *mesh_generators::cylinder_mk2 (const int num_segment_height,
+                                       const int num_segment_base,
                                        const float radius, const float height) {
 
   mesh_t* _mesh = new mesh_t();
@@ -315,11 +316,12 @@ mesh_t *mesh_generators::unit_line() {
 
 }
 
-mesh_t *mesh_generators::cone(const float radius, const float height, const uint8_t num_segment_height, const uint8_t num_segment_base) {
+mesh_t *mesh_generators::cone(const float radius, const float height,
+                              const uint8_t num_segment_height, const uint8_t num_segment_base) {
 
   mesh_t* _mesh = new mesh_t();
 
-  float delta_angle  = (qpp::pi * 2) / num_segment_base;
+  float delta_angle  = float(qpp::pi * 2) / num_segment_base;
   float delta_height = height / static_cast<float>(num_segment_height);
   //_mesh->indices.resize(num_segment_height * num_segment_base*6 + 3 * num_segment_base);
   vector3<float> normal = (vector3<float>(radius, height, 0.0f)).normalized();

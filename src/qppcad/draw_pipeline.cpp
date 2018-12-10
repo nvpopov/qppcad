@@ -105,6 +105,55 @@ void draw_pipeline_t::end_render_bond () {
   astate->sp_mvp_ssl->end_shader_program();
 }
 
+void draw_pipeline_t::begin_render_2c_bond(float specular_power, float specular_alpha) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->sp_2c_cylinder->begin_shader_program();
+  astate->sp_2c_cylinder->set_u(sp_u_name::f_specular_intensity, &specular_power);
+  astate->sp_2c_cylinder->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
+
+}
+
+void draw_pipeline_t::render_2c_bond(const vector3<float> &color1,
+                                     const vector3<float> &color2,
+                                     const vector3<float> &bond_start,
+                                     const vector3<float> &bond_end,
+                                     const float bond_radius) {
+  app_state_t* astate = app_state_t::get_inst();
+
+  vector3<float> bond_end_new =  bond_end;
+
+  matrix4<float> mat_model = matrix4<float>::Identity();
+  mat_model.block<3,1>(0,3) = bond_start;
+  mat_model.block<3,1>(0,2) = bond_end_new - bond_start;
+
+  vector3<float> vec_axis_norm = mat_model.block<3,1>(0,2).normalized();
+  mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * bond_radius;
+  mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
+  mat_model.block<3,1>(0,3) = bond_start;
+
+  matrix4<float> mat_model_view_inv_tr = (astate->camera->m_mat_view *
+                                          mat_model).inverse().transpose();
+
+  matrix4<float> mat_model_view = astate->camera->m_mat_view * mat_model;
+  matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * mat_model;
+
+  astate->sp_2c_cylinder->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
+  astate->sp_2c_cylinder->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  astate->sp_2c_cylinder->set_u(sp_u_name::m_view_proj, astate->camera->m_proj_view.data());
+  astate->sp_2c_cylinder->set_u(sp_u_name::v_color1, (GLfloat*)(color1.data()));
+  astate->sp_2c_cylinder->set_u(sp_u_name::v_color2, (GLfloat*)(color2.data()));
+  astate->sp_2c_cylinder->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+
+  astate->mesh_cylinder->render();
+
+}
+
+void draw_pipeline_t::end_render_2c_bond() {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->sp_2c_cylinder->end_shader_program();
+}
+
 void draw_pipeline_t::render_molecule () {
 
 }
