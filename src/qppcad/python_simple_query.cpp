@@ -147,6 +147,7 @@ void simple_query::unsel_cnt_list(pybind11::list sel_list) {
 }
 
 void simple_query::unsel_cnt_type(pybind11::str sel_type) {
+
   app_state_t *astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -167,6 +168,45 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
 
       astate->make_viewport_dirty();
 
+    }
+}
+
+pybind11::list simple_query::get_sel() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  py::list res;
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              for (auto &elem : cur_it_al->m_atom_sel) res.append(elem);
+            }
+        }
+    }
+
+  return res;
+}
+
+void simple_query::rebond() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              cur_it_al->m_tws_tr->m_bonding_table.init_default(cur_it_al->m_geom.get());
+              cur_it_al->m_tws_tr->do_action(act_rebuild_ntable);
+              astate->astate_evd->cur_ws_selected_item_changed();
+            }
+        }
     }
 }
 
@@ -242,4 +282,43 @@ float simple_query::ptable_get_radius_by_name(std::string name) {
   auto ap_idx = ptable::number_by_symbol(name);
   if (ap_idx) return ptable_get_radius_by_number(*ap_idx);
   else return 0.0f;
+}
+
+void simple_query::camera_move(vector3<float> axis, float magnitude) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->camera) {
+      astate->camera->translate_camera(axis * magnitude);
+      astate->camera->update_camera();
+    }
+}
+
+void simple_query::camera_rotate_yaw(float magnitude) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->camera) {
+      astate->camera->rotate_camera_orbit_yaw(magnitude);
+      astate->camera->update_camera();
+    }
+
+}
+
+void simple_query::camera_rotate_pitch(float magnitude) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->camera) {
+      astate->camera->rotate_camera_orbit_pitch(magnitude);
+      astate->camera->update_camera();
+    }
+
+}
+
+void simple_query::camera_zoom(float magnitude) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->camera) {
+      astate->camera->update_camera_zoom(magnitude);
+      astate->camera->update_camera();
+    }
+
 }

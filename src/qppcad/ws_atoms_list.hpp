@@ -77,6 +77,7 @@ namespace qpp {
         bool m_draw_line_in_dist_measurement{false};
         bool m_bonding_table_show_disabled_record{true};
         bool m_draw_subcells{false};
+        bool m_selective_visibility{false};
 
         ws_atoms_list_t();
 

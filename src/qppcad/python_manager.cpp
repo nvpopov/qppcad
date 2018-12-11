@@ -48,8 +48,16 @@ bool python_manager_t::execute(std::string command) {
 }
 
 void python_manager_t::get_completion_list(QString text, QStringList &sl) {
+
   std::string command = fmt::format("complete_text(\"{}\")", text.toStdString());
-  py::list retlist = py::eval(command, py::globals());
+  py::list retlist;
+
+  try {
+    retlist = py::eval(command, py::globals());
+  } catch (py::error_already_set &err) {
+
+  }
+
   sl.clear();
   for (auto elem : retlist) {
       if (py::isinstance<py::str>(elem))

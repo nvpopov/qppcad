@@ -19,7 +19,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("unsel", &simple_query::unsel_cnt);
   m.def("unsel", &simple_query::unsel_cnt_list);
   m.def("unsel", &simple_query::unsel_cnt_type);
+  m.def("get_sel", &simple_query::get_sel);
   m.def("mode", &simple_query::edit_mode);
+  m.def("rebond", &simple_query::rebond);
   m.def("t", &simple_query::translate_selected);
   m.def("pt_color", &simple_query::ptable_set_color_by_number);
   m.def("pt_color", &simple_query::ptable_set_color_by_name);
@@ -29,4 +31,12 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("get_pt_color", &simple_query::ptable_get_color_by_name);
   m.def("get_pt_r", &simple_query::ptable_get_radius_by_name);
   m.def("get_pt_r", &simple_query::ptable_get_radius_by_number);
+
+  py::module cam = m.def_submodule("cam");
+  cam.def("t", &simple_query::camera_move);
+  cam.def("ry", &simple_query::camera_rotate_yaw);
+  cam.def("rp", &simple_query::camera_rotate_pitch);
+  cam.def("zoom", &simple_query::camera_zoom);
+
+  //cam.def("tu", )
 }

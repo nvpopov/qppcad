@@ -42,7 +42,7 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
    * 4 Y
    * 5 Z
    * 6 show
-   * 7 sel
+   * 7 hide
    * 8 ccr - red component of custom color
    * 9 ccg - green component of custom color
    * 10 ccb - blue component of custom color
@@ -56,7 +56,7 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
    "x",
    "y",
    "z",
-   "show",
+   "hide",
    "sel",
    "ccr",
    "ccg",

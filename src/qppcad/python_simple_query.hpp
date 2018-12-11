@@ -28,6 +28,8 @@ namespace qpp {
         static void unsel_cnt(int cnt_idx);
         static void unsel_cnt_list(py::list sel_list);
         static void unsel_cnt_type(py::str sel_type);
+        static py::list get_sel();
+        static void rebond();
         static void translate_selected(float tx, float ty, float tz);
 
         static void ptable_set_color_by_number(int num, float r, float g, float b);
@@ -39,6 +41,12 @@ namespace qpp {
         static vector3<float> ptable_get_color_by_name(std::string name);
         static float ptable_get_radius_by_number(int num);
         static float ptable_get_radius_by_name(std::string name);
+
+        static void camera_move(vector3<float> axis, float magnitude);
+        static void camera_rotate_yaw(float magnitude);
+        static void camera_rotate_pitch(float magnitude);
+        static void camera_zoom(float magnitude);
+
     };
 
   }
