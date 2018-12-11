@@ -11,13 +11,13 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QWidget (par
   console_layout = new QVBoxLayout;
   setLayout(console_layout);
   console_layout->addWidget(py_tedit);
-
+  setMinimumHeight(200);
 }
 
 python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent) {
   //m_commands.append("");
   syntax_hl = new python_text_editor_syntax_highilighter_t(document());
-  m_font.setPointSize(14);
+  m_font.setPointSize(15);
   setFont(m_font);
   print_promt();
 
@@ -31,7 +31,7 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 
   m_c = new QCompleter(this);
   m_c->popup()->setFont(m_font);
-  m_c->popup()->setMinimumHeight(30);
+  m_c->popup()->setMinimumHeight(40);
   m_sl_model = new QStringListModel;
   m_wl.append("sel_it");
   m_wl.append("sel");

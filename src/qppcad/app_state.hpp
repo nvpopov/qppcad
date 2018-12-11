@@ -39,6 +39,9 @@ namespace qpp {
         bool is_viewport_dirty();
         void cleanup_viewport();
 
+        void load_settings();
+        void save_settings();
+
         void log(std::string logstr, bool flush = true);
 
         app_state_event_disp_t *astate_evd;

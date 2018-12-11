@@ -1,6 +1,7 @@
 #include <qppcad/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_atoms_list.hpp>
+#include <data/ptable.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -79,8 +80,8 @@ void simple_query::sel_cnt_type(pybind11::str sel_type) {
               std::string type_name = py::cast<std::string>(sel_type);
               int type_id = cur_it_al->m_geom->type_of_atom(type_name);
               if (type_id != -1) cur_it_al->select_by_type(type_id);
-//              for (auto itm : sel_list)
-//                if (py::isinstance<py::int_>(itm)) cur_it_al->select_atom(py::cast<int>(itm));
+              //              for (auto itm : sel_list)
+              //                if (py::isinstance<py::int_>(itm)) cur_it_al->select_atom(py::cast<int>(itm));
             }
         }
 
@@ -159,8 +160,8 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
               std::string type_name = py::cast<std::string>(sel_type);
               int type_id = cur_it_al->m_geom->type_of_atom(type_name);
               if (type_id != -1) cur_it_al->unselect_by_type(type_id);
-//              for (auto itm : sel_list)
-//                if (py::isinstance<py::int_>(itm)) cur_it_al->select_atom(py::cast<int>(itm));
+              //              for (auto itm : sel_list)
+              //                if (py::isinstance<py::int_>(itm)) cur_it_al->select_atom(py::cast<int>(itm));
             }
         }
 
@@ -193,4 +194,52 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
       astate->make_viewport_dirty();
 
     }
+}
+
+void simple_query::ptable_set_color_by_number(int num, float r, float g, float b) {
+  if (num > 0 && num <100) {
+      ptable_atom_record &rec = ptable::get_inst()->arecs[num-1];
+      rec.m_color_jmol = vector3<float>(r, g, b);
+      rec.m_redefined = true;
+    }
+}
+
+void simple_query::ptable_set_color_by_name(std::string name, float r, float g, float b) {
+  auto ap_idx = ptable::number_by_symbol(name);
+  if (ap_idx) ptable_set_color_by_number(*ap_idx, r, g, b);
+}
+
+void simple_query::ptable_set_radius_by_number(int num, float r) {
+  if (num > 0 && num <100) {
+      ptable_atom_record &rec = ptable::get_inst()->arecs[num-1];
+      rec.m_radius = r;
+      rec.m_redefined = true;
+    }
+}
+
+void simple_query::ptable_set_radius_by_name(std::string name, float r) {
+  auto ap_idx = ptable::number_by_symbol(name);
+  if (ap_idx) ptable_set_radius_by_number(*ap_idx, r);
+}
+
+vector3<float> simple_query::ptable_get_color_by_number(int num) {
+  if (num > 0 && num <100) return ptable::get_inst()->arecs[num-1].m_color_jmol;
+  else return vector3<float>::Zero();
+}
+
+vector3<float> simple_query::ptable_get_color_by_name(std::string name) {
+  auto ap_idx = ptable::number_by_symbol(name);
+  if (ap_idx) return ptable_get_color_by_number(*ap_idx);
+  else return vector3<float>::Zero();
+}
+
+float simple_query::ptable_get_radius_by_number(int num) {
+  if (num > 0 && num <100) return ptable::get_inst()->arecs[num-1].m_radius;
+  else return 0.0f;
+}
+
+float simple_query::ptable_get_radius_by_name(std::string name) {
+  auto ap_idx = ptable::number_by_symbol(name);
+  if (ap_idx) return ptable_get_radius_by_number(*ap_idx);
+  else return 0.0f;
 }

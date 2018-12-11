@@ -11,8 +11,13 @@ using namespace qpp::cad;
 
 int main (int argc, char **argv) {
 
+  QCoreApplication::setOrganizationName("igc");
+  QCoreApplication::setOrganizationDomain("igc.irk.ru");
+  QCoreApplication::setApplicationName("qppcad");
+
   app_state_t::init_inst();
   app_state_t::get_inst()->init_managers();
+  app_state_t::get_inst()->load_settings();
 
   QSurfaceFormat format;
   format.setDepthBufferSize(24);
@@ -59,45 +64,12 @@ int main (int argc, char **argv) {
   app.setWindowIcon(icon);
   app.setFont(font);
 
-
-
-//  app.setStyleSheet(R"(
-//                    QCheckBox::indicator { width: 21px;height: 21px;}
-//                    QGroupBox::title {
-//                        subcontrol-origin: margin;
-//                        subcontrol-position: top center;
-//                    }
-//                    )"
-//                    );
-//  QPalette p;
-
-//  p = app.palette();
-//  p.setColor(QPalette::Window,QColor(53,53,53));
-//  p.setColor(QPalette::WindowText,Qt::white);
-//  p.setColor(QPalette::Disabled,QPalette::WindowText,QColor(127,127,127));
-//  p.setColor(QPalette::Base,QColor(42,42,42));
-//  p.setColor(QPalette::AlternateBase,QColor(66,66,66));
-//  p.setColor(QPalette::ToolTipBase,Qt::white);
-//  p.setColor(QPalette::ToolTipText,Qt::white);
-//  p.setColor(QPalette::Text,Qt::white);
-//  p.setColor(QPalette::Disabled,QPalette::Text,QColor(127,127,127));
-//  p.setColor(QPalette::Dark,QColor(35,35,35));
-//  p.setColor(QPalette::Shadow,QColor(20,20,20));
-//  p.setColor(QPalette::Button,QColor(53,53,53));
-//  p.setColor(QPalette::ButtonText,Qt::white);
-//  p.setColor(QPalette::Disabled,QPalette::ButtonText,QColor(127,127,127));
-//  p.setColor(QPalette::BrightText,Qt::red);
-//  p.setColor(QPalette::Link,QColor(42,130,218));
-//  p.setColor(QPalette::Highlight,QColor(42,130,218));
-//  p.setColor(QPalette::Disabled,QPalette::Highlight,QColor(80,80,80));
-//  p.setColor(QPalette::HighlightedText,Qt::white);
-//  p.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
-
-//  //p.setColor(QPalette::Text, QColor(200, 200, 200));
-//  app.setPalette(p);
-
   main_window w;
   w.showMaximized();
-  return app.exec();
+  int ret_code = app.exec();
+
+  app_state_t::get_inst()->save_settings();
+
+  return ret_code;
 
 }

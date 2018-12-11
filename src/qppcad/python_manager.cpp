@@ -13,7 +13,29 @@ bool python_manager_t::execute(std::string command) {
   bool ret_status{true};
 
   try {
-    py::exec(command, py::globals());
+
+    bool comm_has_equality = command.find("=") != std::string::npos;
+    bool comm_is_multiline = std::count(command.begin(), command.end(), '\n') > 0;
+    //    bool comm_has_double_equality = command.find("==") != std::string::npos;
+    bool comm_has_statement =
+        command.find("for") != std::string::npos || command.find("import") != std::string::npos;
+    bool comm_is_empty = !(command.length() > 0);
+
+    if(!comm_is_empty) {
+        if (!comm_has_equality && !comm_is_multiline && !comm_has_statement) {
+            py::object res = py::eval(command, py::globals());
+
+            if (py::isinstance<py::int_>(res) || py::isinstance<py::float_>(res) ||
+                py::isinstance<py::str>(res) || py::isinstance<py::list>(res) ||
+                py::isinstance<py::dict>(res) || py::isinstance<py::bool_>(res) ||
+                py::isinstance<vector3<float> >(res) || py::isinstance<matrix3<float> >(res)) {
+                py::print(res);
+              }
+          } else {
+            py::eval<py::eval_statements>(command, py::globals());
+          }
+      }
+
   } catch (py::error_already_set &err) {
     m_output_buffer+= err.what();
     m_output_buffer+= "\n";

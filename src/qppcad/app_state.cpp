@@ -1,4 +1,6 @@
 #include <qppcad/app_state.hpp>
+#include <QSettings>
+#include <data/ptable.hpp>
 
 namespace qpp {
 
@@ -83,6 +85,57 @@ namespace qpp {
 
     }
 
+    void app_state_t::load_settings() {
+
+      QSettings settings;
+
+      settings.beginGroup("periodic_table");
+      int ovr_size = settings.beginReadArray("mod");
+      ptable *table = ptable::get_inst();
+
+      for(int i=0; i < ovr_size; i++) {
+         settings.setArrayIndex(i);
+          int number = settings.value("number").toInt();
+          float c_r = settings.value("c_r").toFloat();
+          float c_g = settings.value("c_g").toFloat();
+          float c_b = settings.value("c_b").toFloat();
+          float rad = settings.value("r").toFloat();
+          if (number > 0 && number < 100) {
+              table->arecs[number-1].m_color_jmol[0] = c_r;
+              table->arecs[number-1].m_color_jmol[1] = c_g;
+              table->arecs[number-1].m_color_jmol[2] = c_b;
+              table->arecs[number-1].m_radius = rad;
+              table->arecs[number-1].m_redefined = true;
+            }
+        }
+
+      settings.endArray();
+      settings.endGroup();
+
+    }
+
+    void app_state_t::save_settings() {
+      QSettings settings;
+      settings.setValue("test", 68);
+
+      settings.beginGroup("periodic_table");
+      ptable *table = ptable::get_inst();
+      settings.beginWriteArray("mod");
+      int i = 0;
+      for (auto &rec : table->arecs)
+        if (rec.m_redefined) {
+            settings.setArrayIndex(i);
+            settings.setValue("number", rec.m_number);
+            settings.setValue("c_r", double(rec.m_color_jmol[0]));
+            settings.setValue("c_g", double(rec.m_color_jmol[1]));
+            settings.setValue("c_b", double(rec.m_color_jmol[2]));
+            settings.setValue("r", double(rec.m_radius));
+            i+=1;
+          }
+      settings.endArray();
+      settings.endGroup();
+    }
+
     void app_state_t::log(std::string logstr, bool flush) {
       std::setlocale(LC_ALL, "C");
       std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -90,139 +143,6 @@ namespace qpp {
       std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), logstr);
       if (flush) std::cout << std::flush;
     }
-
-    //    void app_state_t::write_app_settings() {
-
-    //    }
-
-    //    void app_state_t::read_app_settings() {
-
-    //    }
-
-    //    void app_state_t::make_viewport_dirty() {
-    //      m_viewport_dirty = true;
-    //      m_workspace_changed = true;
-    //    }
-
-    //    void app_state_t::update_viewport_cache() {
-
-    //      viewport_xy_c = viewport_xy;
-    //      viewport_xy_c[1] = ui_manager->work_panel_height + ui_manager->work_panel_yoffset ;
-    //      viewport_size_c = viewport_size;
-    //      viewport_size_c[1] = viewport_size[1] -
-    //                           (ui_manager->work_panel_height + ui_manager->work_panel_yoffset);
-
-    //      if (show_object_inspector) viewport_size_c[0] -= ui_manager->obj_insp_width;
-
-    //    }
-
-
-
-    //    void app_state_t::update_mouse_coord(const float _mcx, const float _mcy) {
-
-    //      //3d area frame
-    //      mouse_x_ws_frame = mouse_x;
-    //      mouse_y_ws_frame = mouse_y - ui_manager->work_panel_height
-    //                         - ui_manager->work_panel_yoffset;
-
-
-    //      mouse_in_3d_area = mouse_x_ws_frame > 0 &&
-    //                         mouse_x_ws_frame < viewport_size_c(0)&&
-    //                         mouse_y_ws_frame > 0 &&
-    //                         mouse_y_ws_frame < viewport_size_c(1);
-
-    //      mouse_x_ws_frame = (mouse_x_ws_frame / viewport_size_c(0)-0.5)*2.0;
-    //      mouse_y_ws_frame = (0.5 - mouse_y_ws_frame / viewport_size_c(1))*2.0;
-
-    //      mouse_x_old = mouse_x;
-    //      mouse_y_old = mouse_y;
-    //      mouse_x = _mcx;
-    //      mouse_y = _mcy;
-
-    //      double delta = std::sqrt(
-    //                       std::pow(mouse_x_old - mouse_x, 2) + std::pow(mouse_y_old - mouse_y, 2));
-
-    //      if (delta < 2.5 && mouse_in_3d_area)
-    //        m_trigger_3d_popup_counter += 1;
-    //      else {
-    //          m_trigger_3d_popup = 0;
-    //          m_trigger_3d_popup = false;
-    //        }
-
-    //      if (m_trigger_3d_popup_counter > m_trigger_3d_popup_counter_max) {
-    //          m_trigger_3d_popup = true;
-    //          m_trigger_3d_popup_counter = 0;
-    //        }
-    //    }
-
-    //    void app_state_t::mark_viewport_change() {
-    //      viewport_changed = true;
-    //    }
-
-    //    void app_state_t::update(float delta_time) {
-
-    //      update_viewport_cache();
-
-    //      if (viewport_changed){
-    //          frame_buffer->resize(viewport_size_c(0), viewport_size_c(1));
-    //          viewport_changed = false;
-    //          make_viewport_dirty();
-    //        }
-
-    //      if (mouse_lb_pressed) make_viewport_dirty();
-
-    //      if (camera != nullptr){
-    //          camera->update_camera();
-    //          light_pos_tr = mat4_to_mat3<float>(camera->m_mat_view) * light_pos;
-    //        }
-
-    //      if (!ws_manager->has_wss()) {
-    //          if (show_object_inspector) {
-    //              viewport_changed = true;
-    //            }
-    //          show_object_inspector = false;
-    //        }
-
-    //      auto cur_ws = ws_manager->get_current();
-    //      if (cur_ws) cur_ws->update(delta_time);
-
-    //    }
-
-    //    app_state_t::app_state_t() {
-
-    //      camera = nullptr;
-
-    //      glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &c_max_texture_buffer_size);
-
-    //      dp = new draw_pipeline_t();
-
-    //      m_color_maps["black_and_white"] = {{0.0f, clr_black}, {1.0, clr_white}};
-    //      m_color_maps["semapwhore"] = {{0.0f, clr_green}, {0.5, clr_yellow}, {1.0, clr_red}};
-
-    //      //default meshes
-    //      _sph_meshes.push_back(mesh_generators::sphere(18, 18));
-    //      cylinder_mesh = mesh_generators::cylinder_mk2(2, 14, 1.0f, 1.0f);
-    //      unit_line     = mesh_generators::unit_line();
-    //      gridXZ        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
-    //      unit_cube     = mesh_generators::unit_cube();
-    //      unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
-    //      fbo_quad      = mesh_generators::quad();
-    //      zup_quad      = mesh_generators::quad_zup();
-    //      xline_mesh    = mesh_generators::cross_line_atom();
-
-
-
-    //      kb_manager   = std::make_unique<keyboard_manager_t>();
-    //      //frame_buffer = std::make_unique<frame_buffer_t<frame_buffer_opengl_provider> >(false);
-    //
-    //      ui_manager   = std::make_shared<ui_manager_t>(this);
-    //      fd_manager   = std::make_shared<file_dialog_manager_t>();
-    //      sq_manager   = std::make_unique<simple_query_manager_t>();
-
-
-    //      make_viewport_dirty();
-    //      update_viewport_cache();
-    //    }
 
     app_state_t* app_state_t::g_inst = nullptr;
 
