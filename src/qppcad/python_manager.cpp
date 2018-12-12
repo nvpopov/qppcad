@@ -68,26 +68,9 @@ void python_manager_t::get_completion_list(QString text, QStringList &sl) {
 
 python_manager_t::python_manager_t() {
 
-  py::exec("from core import *\n"
-           "from sq import *\n"
-           "import pyqpp \n"
-           "import rlcompleter \n"
-           "import sys\n", py::globals());
-
-  py::exec("sys.stdout = output_redirector()", py::globals());
-  py::exec(R"(
-           cm = rlcompleter.Completer()
-
-           def complete_text(text):
-            ret_list = []
-            for i in range(0,40):
-              x = cm.complete(text, i)
-              if x is None:
-                break
-              else:
-                ret_list.append(x)
-            return ret_list
-
-           )", py::globals());
+  std::string bootstrap =
+    #include <python_files/bootstrap.py>
+      ;
+  py::exec(bootstrap, py::globals());
 
 }
