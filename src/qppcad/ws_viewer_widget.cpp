@@ -94,9 +94,9 @@ void ws_viewer_widget_t::paintGL() {
                     static_cast<int>(astate->viewport_size_c(1)));
 
   QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
+  painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-  painter.beginNativePainting();
+  //painter.beginNativePainting();
 
   glapi->glEnable(GL_DEPTH_TEST);
   glapi->glDepthFunc(GL_LEQUAL);
@@ -106,7 +106,7 @@ void ws_viewer_widget_t::paintGL() {
   glapi->glDisable(GL_CULL_FACE);
   glapi->glDisable(GL_DEPTH_TEST);
 
-  painter.endNativePainting();
+  //painter.endNativePainting();
 
   if (astate->m_show_debug_frame_stats) {
       painter.setFont(QFont("Hack-Regular", 13));
@@ -128,7 +128,7 @@ void ws_viewer_widget_t::paintGL() {
                        );
     }
 
-  astate->ws_manager->render_cur_ws_overlay(&painter);
+  astate->ws_manager->render_cur_ws_overlay(painter);
   painter.end();
   astate->m_last_frame_time_gpu = m_update_timer_gpu->nsecsElapsed();
   //astate->log("REPAINT");

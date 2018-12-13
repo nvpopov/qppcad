@@ -58,7 +58,7 @@ void ws_item_t::render () {
     }
 }
 
-void ws_item_t::render_overlay(QPainter *painter) {
+void ws_item_t::render_overlay(QPainter &painter) {
 
 }
 

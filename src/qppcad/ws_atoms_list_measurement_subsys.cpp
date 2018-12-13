@@ -52,14 +52,14 @@ namespace qpp {
       //deprecated
     }
 
-    void ws_atoms_list_measurement_subsys_t::render_overlay(QPainter *painter) {
+    void ws_atoms_list_measurement_subsys_t::render_overlay(QPainter &painter) {
 
       app_state_t* astate = app_state_t::get_inst();
 
       std::optional<vector2<float> > l_s, l_e;
       QPen linepen(QPen(Qt::black, 6, Qt::DotLine, Qt::RoundCap));
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
-      painter->setFont(QFont("Hack-Regular", 13));
+      painter.setFont(QFont("Hack-Regular", 13));
 
       for (auto &record : m_records)
         if (record.m_show) {
@@ -77,8 +77,8 @@ namespace qpp {
 
             QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
                 round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);
-            painter->setPen(linepen);
-            painter->drawLine(linef);
+            painter.setPen(linepen);
+            painter.drawLine(linef);
 
             double angle = 180 * std::atan2(linef.y2()-linef.y1(), linef.x2()-linef.x1()) / qpp::pi;
 
@@ -86,18 +86,18 @@ namespace qpp {
             //std::cout << angle << std::endl;
             if (angle > 90 && angle < 270) angle = angle+180;
 
-            painter->translate(mid[0], mid[1]);
-            painter->rotate(angle);
+            painter.translate(mid[0], mid[1]);
+            painter.rotate(angle);
             QPainterPath path;
             path.addRoundedRect(QRectF(-rect_size*0.5f, 35*0.5f + 10, 100, 35),
                                 10, 10);
-            painter->fillPath(path, Qt::white);
-            painter->setPen(rectpen);
-            painter->drawPath(path);
-            painter->drawText(-rect_size*0.5f, -rect_size*0.15f + 10,
+            painter.fillPath(path, Qt::white);
+            painter.setPen(rectpen);
+            painter.drawPath(path);
+            painter.drawText(-rect_size*0.5f, -rect_size*0.15f + 10,
                               rect_size, rect_size,
                               Qt::AlignCenter, QString::fromStdString(fmt::format("{}", dist)) );
-            painter->resetTransform();
+            painter.resetTransform();
           }
       //      painter->restore();
     }

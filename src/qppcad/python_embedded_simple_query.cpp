@@ -23,6 +23,10 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("mode", &simple_query::edit_mode);
   m.def("rebond", &simple_query::rebond);
   m.def("t", &simple_query::translate_selected);
+  m.def("bg", &simple_query::set_ws_bg);
+  m.def("bg", [](float r, float g, float b)
+  {simple_query::set_ws_bg(vector3<float>(r,g,b));});
+
   m.def("pt_color", &simple_query::ptable_set_color_by_number);
   m.def("pt_color", &simple_query::ptable_set_color_by_name);
   m.def("pt_r", &simple_query::ptable_set_radius_by_name);

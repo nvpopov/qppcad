@@ -157,7 +157,7 @@ void workspace_t::render() {
 
 }
 
-void workspace_t::render_overlay(QPainter *painter) {
+void workspace_t::render_overlay(QPainter &painter) {
   for (auto &ws_item : m_ws_items) ws_item->render_overlay(painter);
 }
 
@@ -433,7 +433,7 @@ void workspace_manager_t::render_cur_ws () {
   astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void workspace_manager_t::render_cur_ws_overlay(QPainter *painter) {
+void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
   if (has_wss()) {
       if (m_cur_ws_id < m_ws.size()) {

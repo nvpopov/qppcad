@@ -86,7 +86,7 @@ namespace qpp {
 
         void geometry_changed();
         void render() override;
-        void render_overlay(QPainter *painter) override;
+        void render_overlay(QPainter &painter) override;
 
         bool mouse_click(ray_t<float> *click_ray) override;
 

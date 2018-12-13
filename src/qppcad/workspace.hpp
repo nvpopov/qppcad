@@ -41,7 +41,7 @@ namespace qpp {
         bool has_wss(){return m_ws.size()>0;}
         void init_default();
         void render_cur_ws();
-        void render_cur_ws_overlay(QPainter *painter);
+        void render_cur_ws_overlay(QPainter &painter);
         void mouse_click();
         void ws_mgr_changed();
         void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
@@ -83,7 +83,7 @@ namespace qpp {
         void reset_camera();
         void set_best_view();
         void render();
-        void render_overlay(QPainter *painter);
+        void render_overlay(QPainter &painter);
         void mouse_click(const float mouse_x, const float mouse_y);
         void add_item_to_ws(const std::shared_ptr<ws_item_t> &item_to_add);
         //void dialog_add_geom_from_file(qc_file_fmt file_format);

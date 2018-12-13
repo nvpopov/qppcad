@@ -45,7 +45,7 @@ namespace qpp {
         std::optional<size_t> is_bond_measurement_exist (const uint32_t atm1, const uint32_t atm2,
                                                          const index idx1, const index idx2);
         void render ();
-        void render_overlay(QPainter *painter);
+        void render_overlay(QPainter &painter);
 
     };
 

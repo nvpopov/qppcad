@@ -236,6 +236,20 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
     }
 }
 
+void simple_query::set_ws_bg(vector3<float> bg) {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          cur_ws->m_background_color = bg;
+        }
+
+    }
+}
+
 void simple_query::ptable_set_color_by_number(int num, float r, float g, float b) {
   if (num > 0 && num <100) {
       ptable_atom_record &rec = ptable::get_inst()->arecs[num-1];

@@ -31,6 +31,7 @@ namespace qpp {
         static py::list get_sel();
         static void rebond();
         static void translate_selected(float tx, float ty, float tz);
+        static void set_ws_bg(vector3<float> bg);
 
         static void ptable_set_color_by_number(int num, float r, float g, float b);
         static void ptable_set_color_by_name(std::string name, float r, float g, float b);
