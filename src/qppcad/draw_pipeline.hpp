@@ -87,8 +87,7 @@ namespace qpp {
                              const vector3<float> &a,
                              const vector3<float> &b,
                              const vector3<float> &c,
-                             const vector3<float> &shift,
-                             const float line_width);
+                             const vector3<float> &shift);
 
         /// \brief render_vector
         void render_vector ();
@@ -171,8 +170,7 @@ namespace qpp {
         /// \param line_width
         void render_line (const vector3<float> &color,
                           const vector3<float> &line_start,
-                          const vector3<float> &line_end,
-                          const float line_width = 1.0f);
+                          const vector3<float> &line_end);
 
         /// \brief end_render_line
         void end_render_line();
@@ -180,8 +178,7 @@ namespace qpp {
         void begin_render_line_styled ();
         void render_line_styled (const vector3<float> &color,
                                  const vector3<float> &line_start,
-                                 const vector3<float> &line_end,
-                                 const float line_width = 1.0f);
+                                 const vector3<float> &line_end);
         void end_render_line_styled();
 
 

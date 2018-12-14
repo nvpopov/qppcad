@@ -17,10 +17,10 @@ namespace qpp {
               uint16_t id2 = al.m_tws_tr->table_atm(i, j);
               index idx2 = al.m_tws_tr->table_idx(i, j);
 
-              if (idx2 == all_null || al.m_draw_imaginary_bonds)
+              if (idx2 == all_null || al.m_draw_img_bonds)
                 render_bond(al, id1, all_null, id2, idx2);
 
-              if (idx2 != all_null && al.m_draw_imaginary_bonds)
+              if (idx2 != all_null && al.m_draw_img_bonds)
                 render_bond(al, id2, idx2, id1, all_null);
             }
       astate->dp->end_render_line();

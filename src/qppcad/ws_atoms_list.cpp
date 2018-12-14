@@ -135,10 +135,9 @@ void ws_atoms_list_t::render () {
             }
 
           astate->dp->render_cell_3d(
-                cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos, 2.1f);
+                cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos);
 
           if ( m_draw_subcells) {
-
               vector3<float> sc_a = m_geom->cell.v[0] / m_subcells_range[0];
               vector3<float> sc_b = m_geom->cell.v[1] / m_subcells_range[1];
               vector3<float> sc_c = m_geom->cell.v[2] / m_subcells_range[2];
@@ -146,7 +145,7 @@ void ws_atoms_list_t::render () {
                 for (int i_b = 0; i_b < m_subcells_range[1]; i_b++)
                   for (int i_c = 0; i_c < m_subcells_range[2]; i_c++) {
                       vector3<float> new_pos = m_pos + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
-                      astate->dp->render_cell_3d(cell_clr, sc_a, sc_b, sc_c, new_pos, 2.1f);
+                      astate->dp->render_cell_3d(cell_clr, sc_a, sc_b, sc_c, new_pos);
                     }
             }
 
@@ -212,33 +211,39 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
   if (click_ray) {
 
       std::vector<tws_query_data_t<float, uint32_t> > res;
-      //we need to translate ray in world frame to local geometry frame
+
       ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - m_pos;
       local_geom_ray.dir = click_ray->dir;
-      m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
 
+      if (m_draw_img_atoms)
+        m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
+      else
+        m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray, res, m_atom_scale_factor);
       recalc_gizmo_barycenter();
 
-
       if (!res.empty()) {
-          //std::cout << "TTTTT" << res.size() << std::endl;
+
           std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
+
           if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
-              atom_index_set_key iskey(res[0].m_atm, res[0].m_idx);
+              atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
+
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
+
               if (atom_sel_it == m_atom_idx_sel.end()) {
                   m_atom_idx_sel.insert(iskey);
                   m_atom_sel.insert(res[0].m_atm);
+
                 } else {
                   m_atom_idx_sel.erase(atom_sel_it);
                   auto it = m_atom_sel.find(res[0].m_atm);
                   if (it != m_atom_sel.end()) m_atom_sel.erase(m_atom_sel.find(res[0].m_atm));
                 }
-            };
+            }
 
           recalc_gizmo_barycenter();
-          m_parent_ws->m_gizmo->update_gizmo(0.01);
+          m_parent_ws->m_gizmo->update_gizmo(0.01f);
           astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
           return true;
 
@@ -275,7 +280,7 @@ void ws_atoms_list_t::select_atoms (bool all) {
     }
 
   recalc_gizmo_barycenter();
-  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   astate->make_viewport_dirty();
 
@@ -292,12 +297,12 @@ bool ws_atoms_list_t::select_atom (int atom_id) {
       m_atom_idx_sel.insert(atom_index_set_key(atom_id, index::D(m_geom->DIM).all(0)));
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
-      m_parent_ws->m_gizmo->update_gizmo(0.01);
+      m_parent_ws->m_gizmo->update_gizmo(0.01f);
       return true;
     }
 
   recalc_gizmo_barycenter();
-  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01f);
   return false;
 }
 
@@ -319,12 +324,12 @@ bool ws_atoms_list_t::unselect_atom(int atom_id) {
 
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
-      m_parent_ws->m_gizmo->update_gizmo(0.01);
+      m_parent_ws->m_gizmo->update_gizmo(0.01f);
       return true;
     }
 
   recalc_gizmo_barycenter();
-  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01f);
   return false;
 }
 
@@ -340,7 +345,7 @@ void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
 
   recalc_gizmo_barycenter();
 
-  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
@@ -363,7 +368,7 @@ void ws_atoms_list_t::unselect_by_type(const int item_type_to_unselect) {
 
   recalc_gizmo_barycenter();
 
-  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
@@ -392,7 +397,7 @@ void ws_atoms_list_t::invert_selected_atoms () {
     }
 
   recalc_gizmo_barycenter();
-  m_parent_ws->m_gizmo->update_gizmo(0.01);
+  m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
@@ -858,11 +863,11 @@ void ws_atoms_list_t::write_to_json (json &data) {
   ws_item_t::write_to_json(data);
 
   data[JSON_DIM] = m_geom->DIM;
-  data[JSON_SHOW_IMG_ATOMS] = m_draw_imaginary_atoms;
-  data[JSON_SHOW_IMG_BONDS] = m_draw_imaginary_bonds;
+  data[JSON_SHOW_IMG_ATOMS] = m_draw_img_atoms;
+  data[JSON_SHOW_IMG_BONDS] = m_draw_img_bonds;
   data[JSON_SHOW_BONDS] = m_draw_bonds;
   data[JSON_SHOW_ATOMS] = m_draw_atoms;
-  data[JSON_BT_SHOW_DSBL] = m_bonding_table_show_disabled_record;
+  data[JSON_BT_SHOW_DSBL] = m_bt_show_disabled_record;
   data[JSON_ATOM_SCALE] = m_atom_scale_factor;
   data[JSON_BOND_SCALE] = m_bond_scale_factor;
   data[JSON_ATOMS_LIST_RENDER_TYPE] = m_cur_render_type;
@@ -956,7 +961,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
     m_bond_scale_factor = data[JSON_BOND_SCALE].get<float>();
 
   if (data.find(JSON_SHOW_IMG_ATOMS) != data.end())
-    m_draw_imaginary_atoms = data[JSON_SHOW_IMG_ATOMS];
+    m_draw_img_atoms = data[JSON_SHOW_IMG_ATOMS];
 
   if (data.find(JSON_ATOMS_LIST_RENDER_TYPE) != data.end())
     m_cur_render_type = data[JSON_ATOMS_LIST_RENDER_TYPE];
@@ -968,7 +973,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
     m_shading_specular_power = data[JSON_ATOMS_LIST_SPECULAR].get<float>();
 
   if (data.find(JSON_SHOW_IMG_BONDS) != data.end())
-    m_draw_imaginary_bonds = data[JSON_SHOW_IMG_BONDS];
+    m_draw_img_bonds = data[JSON_SHOW_IMG_BONDS];
 
   if (data.find(JSON_SHOW_BONDS) != data.end())
     m_draw_atoms = data[JSON_SHOW_BONDS];
@@ -977,7 +982,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
     m_draw_bonds = data[JSON_SHOW_ATOMS];
 
   if (data.find(JSON_BT_SHOW_DSBL) != data.end())
-    m_bonding_table_show_disabled_record = data[JSON_BT_SHOW_DSBL];
+    m_bt_show_disabled_record = data[JSON_BT_SHOW_DSBL];
 
   if (data.find(JSON_ATOMS_LIST_DRAW_SUBCELLS) != data.end())
     m_draw_subcells = data[JSON_ATOMS_LIST_DRAW_SUBCELLS];

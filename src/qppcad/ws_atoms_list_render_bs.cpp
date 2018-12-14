@@ -22,7 +22,7 @@ namespace qpp {
           render_atom(al, i, all_null);
 
       // draw imaginary atoms that appear due to periodic
-      if (al.m_geom->DIM > 0 && al.m_draw_atoms && al.m_draw_imaginary_atoms)
+      if (al.m_geom->DIM > 0 && al.m_draw_atoms && al.m_draw_img_atoms)
         for (const auto &at_img : al.m_tws_tr->m_img_atoms)
           if (al.m_atom_type_to_hide.find(al.m_geom->type_table(at_img.m_atm)) ==
               al.m_atom_type_to_hide.end())
@@ -46,12 +46,12 @@ namespace qpp {
                 render_bond(al, id1, all_null, id2, idx2);
 
               //bond is mixed
-              if (idx2 != all_null && al.m_draw_imaginary_bonds)
+              if (idx2 != all_null && al.m_draw_img_bonds)
                 render_bond(al, id2, idx2, id1, all_null);
             }
 
       //pure imaginary bond
-      if (al.m_geom->DIM > 0 && al.m_draw_imaginary_bonds && al.m_draw_bonds)
+      if (al.m_geom->DIM > 0 && al.m_draw_img_bonds && al.m_draw_bonds)
         for (const auto &img_atom : al.m_tws_tr->m_img_atoms)
           for (const auto &img_bond : img_atom.m_img_bonds) {
               uint32_t id1 = img_atom.m_atm;

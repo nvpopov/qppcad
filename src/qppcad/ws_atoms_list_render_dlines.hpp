@@ -24,8 +24,7 @@ namespace qpp {
           astate->dp->render_line(bcolor,
                                   al.m_pos + al.m_geom->pos(at_num1, at_index1),
                                   al.m_pos + (al.m_geom->pos(at_num2, at_index2) +
-                                              al.m_geom->pos(at_num1, at_index1)) * 0.5f,
-                                  al.m_bond_scale_factor * 3.0f);
+                                              al.m_geom->pos(at_num1, at_index1)) * 0.5f);
         }
     };
 

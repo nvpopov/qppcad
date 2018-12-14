@@ -69,13 +69,13 @@ namespace qpp {
 
         ws_atoms_list_color_mode m_color_mode{ws_atoms_list_color_mode::color_from_ptable};
 
-        bool m_draw_imaginary_atoms{true};
-        bool m_draw_imaginary_bonds{true};
+        bool m_draw_img_atoms{true};
+        bool m_draw_img_bonds{true};
         bool m_draw_specular{true};
         bool m_draw_bonds{true};
         bool m_draw_atoms{true};
         bool m_draw_line_in_dist_measurement{false};
-        bool m_bonding_table_show_disabled_record{true};
+        bool m_bt_show_disabled_record{true};
         bool m_draw_subcells{false};
         bool m_selective_visibility{false};
 

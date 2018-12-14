@@ -162,8 +162,7 @@ void draw_pipeline_t::render_cell_3d (const vector3<float> &color,
                                       const vector3<float> &a,
                                       const vector3<float> &b,
                                       const vector3<float> &c,
-                                      const vector3<float> &shift,
-                                      const float line_width = 1.0f) {
+                                      const vector3<float> &shift) {
   static int disp[][6] = {
     {0, 0, 0, 0, 0, 1},
     {0, 0, 0, 0, 1, 0},
@@ -183,7 +182,7 @@ void draw_pipeline_t::render_cell_3d (const vector3<float> &color,
       vector3<float> vec_line_start = a*disp[i][0] + b*disp[i][1] + c*disp[i][2];
       vector3<float> vec_line_end   = a*disp[i][3] + b*disp[i][4] + c*disp[i][5];
 
-      render_line(color, vec_line_start + shift, vec_line_end + shift, line_width);
+      render_line(color, vec_line_start + shift, vec_line_end + shift);
 
     }
 }
@@ -415,7 +414,7 @@ void draw_pipeline_t::render_aabb_segmented (const vector3<float> &color,
           half_box_size[1] * v[4],
           half_box_size[2] * v[5]);
 
-      render_line(color, box_center + line_start, box_center + line_end, 4.0f);
+      render_line(color, box_center + line_start, box_center + line_end);
     }
 
 }
@@ -436,12 +435,11 @@ void draw_pipeline_t::begin_render_line () {
 
 void draw_pipeline_t::render_line(const vector3<float> &color,
                                   const vector3<float> &line_start,
-                                  const vector3<float> &line_end,
-                                  const float line_width){
+                                  const vector3<float> &line_end){
 
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
-  glapi->glLineWidth(line_width);
+  //glapi->glLineWidth(line_width);
   astate->sp_unit_line->set_u(sp_u_name::v_color, (GLfloat*)color.data());
   astate->sp_unit_line->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
   astate->sp_unit_line->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
@@ -454,7 +452,7 @@ void draw_pipeline_t::end_render_line () {
 
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
-  glapi->glLineWidth(1.0f);
+ // glapi->glLineWidth(1.0f);
   astate->sp_unit_line->end_shader_program();
   astate->mesh_unit_line->end_render_batch();
 
@@ -474,12 +472,11 @@ void draw_pipeline_t::begin_render_line_styled () {
 
 void draw_pipeline_t::render_line_styled (const vector3<float> &color,
                                           const vector3<float> &line_start,
-                                          const vector3<float> &line_end,
-                                          const float line_width) {
+                                          const vector3<float> &line_end) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  glLineWidth(line_width);
+  //glLineWidth(line_width);
   astate->sp_unit_line_styled->set_u(sp_u_name::v_color, (GLfloat*)color.data());
   astate->sp_unit_line_styled->set_u(sp_u_name::v_line_start, (GLfloat*)line_start.data());
   astate->sp_unit_line_styled->set_u(sp_u_name::v_line_end, (GLfloat*)line_end.data());
@@ -490,7 +487,7 @@ void draw_pipeline_t::render_line_styled (const vector3<float> &color,
 
 void draw_pipeline_t::end_render_line_styled () {
 
-  glLineWidth(1.0f);
+  //glLineWidth(1.0f);
   app_state_t* astate = app_state_t::get_inst();
   astate->sp_unit_line_styled->end_shader_program();
   astate->mesh_unit_line->end_render_batch();

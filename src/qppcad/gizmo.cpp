@@ -97,8 +97,7 @@ void gizmo_t::render () {
             astate->dp->begin_render_line();
             astate->dp->render_line(gizmo_color[i],
                                     pos - gizmo_axis[i] * 120 + vec_small_aliasing,
-                                    pos + gizmo_axis[i] * 120 + vec_small_aliasing,
-                                    4.0f);
+                                    pos + gizmo_axis[i] * 120 + vec_small_aliasing);
             astate->dp->end_render_line();
           }
     }

@@ -452,8 +452,8 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
 
       disp_s_draw_atoms->bind_value(&b_al->m_draw_atoms);
       disp_s_draw_bonds->bind_value(&b_al->m_draw_bonds);
-      disp_s_draw_img_atoms->bind_value(&b_al->m_draw_imaginary_atoms);
-      disp_s_draw_img_bonds->bind_value(&b_al->m_draw_imaginary_bonds);
+      disp_s_draw_img_atoms->bind_value(&b_al->m_draw_img_atoms);
+      disp_s_draw_img_bonds->bind_value(&b_al->m_draw_img_bonds);
       disp_s_atom_scale->bind_value(&b_al->m_atom_scale_factor);
       disp_s_bond_scale->bind_value(&b_al->m_bond_scale_factor);
       disp_s_render_style->bind_value(

@@ -19,7 +19,7 @@ namespace qpp {
          */
       astate->sp_line_mesh->set_u(sp_u_name::m_model_view_proj,
                                        astate->camera->m_proj_view.data());
-      glLineWidth(al.m_atom_scale_factor*3);
+      //glLineWidth(al.m_atom_scale_factor*3);
 
       for (uint32_t i = 0; i < al.m_geom->nat(); i++)
         if (al.m_draw_atoms &&
@@ -33,8 +33,8 @@ namespace qpp {
                          al.m_atom_scale_factor;
                 color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
               }
-            astate->sp_line_mesh->set_u(sp_u_name::v_translate,
-                                             al.m_geom->pos(i).data());
+            vector3<float> xpos = al.m_geom->pos(i) + al.m_pos;
+            astate->sp_line_mesh->set_u(sp_u_name::v_translate, xpos.data());
             astate->sp_line_mesh->set_u(sp_u_name::v_color, color.data());
             astate->mesh_xline_mesh->render_batch();
           }
