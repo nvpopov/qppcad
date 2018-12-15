@@ -336,3 +336,65 @@ void simple_query::camera_zoom(float magnitude) {
     }
 
 }
+
+pybind11::list simple_query::sv_get() {
+  py::list ret;
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (_al) {
+              for (int i = 0; i < _al->m_geom->nat(); i++)
+                ret.append(_al->m_geom->xfield<bool>(xgeom_sel_vis, i));
+            }
+        }
+      astate->make_viewport_dirty();
+    }
+  return ret;
+}
+
+void simple_query::sv_edit(int at, bool status) {
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (_al) {
+              _al->m_geom->xfield<bool>(xgeom_sel_vis, at) = status;
+            }
+        }
+      astate->make_viewport_dirty();
+    }
+}
+
+void simple_query::sv_edit_list(pybind11::list at_list, bool status) {
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (_al) {
+              for (auto elem : at_list)
+                if (py::isinstance<py::int_>(elem))
+                  _al->m_geom->xfield<bool>(xgeom_sel_vis, elem.cast<py::int_>()) =
+                      status;
+            }
+        }
+      astate->make_viewport_dirty();
+    }
+}
+
+void simple_query::sv_edit_all(bool status) {
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (_al)
+            for (int i = 0; i < _al->m_geom->nat(); i++)
+              _al->m_geom->xfield<bool>(xgeom_sel_vis,i) = status;
+        }
+      astate->make_viewport_dirty();
+    }
+}

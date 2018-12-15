@@ -100,7 +100,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   connect(disp_s_draw_subcells, &qbinded_checkbox::stateChanged,
           this, &ws_atoms_list_obj_insp_widget_t::draw_subcells_changed);
 
-  disp_s_selective_vis = new qbinded_checkbox;
+  disp_s_sel_vis = new qbinded_checkbox;
+  disp_s_sel_vis_affect_bonds = new qbinded_checkbox;
 
   gb_disp_s_layout->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_layout->addRow(tr("Draw atoms"), disp_s_draw_atoms);
@@ -110,7 +111,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_layout->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_layout->addRow(tr("Bond scale"), disp_s_bond_scale);
   gb_disp_s_layout->addRow(tr("Labels style"), disp_s_labels_style);
-  gb_disp_s_layout->addRow(tr("Selective visibility"), disp_s_selective_vis);
+  gb_disp_s_layout->addRow(tr("Selective visibility"), disp_s_sel_vis);
+  gb_disp_s_layout->addRow(tr("Sel. visb. affect bonds"), disp_s_sel_vis_affect_bonds);
   gb_disp_s_layout->addRow(disp_s_draw_subcells_label, disp_s_draw_subcells);
   gb_disp_s_layout->addRow(disp_s_subcells_idx_label, disp_s_subcells_idx);
 
@@ -463,7 +465,8 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       display_shading_spec->bind_value(&b_al->m_draw_specular);
       display_shading_spec_value->bind_value(&b_al->m_shading_specular_power);
 
-      disp_s_selective_vis->bind_value(&b_al->m_selective_visibility);
+      disp_s_sel_vis->bind_value(&b_al->m_sel_vis);
+      disp_s_sel_vis_affect_bonds->bind_value(&b_al->m_sel_vis_affect_bonds);
 
       disp_s_draw_subcells->bind_value(&b_al->m_draw_subcells);
       disp_s_subcells_idx->bind_value(&b_al->m_subcells_range);
@@ -520,7 +523,8 @@ void ws_atoms_list_obj_insp_widget_t::unbind_item() {
   disp_s_labels_style->unbind_value();
   display_shading_spec->unbind_value();
   display_shading_spec_value->unbind_value();
-  disp_s_selective_vis->unbind_value();
+  disp_s_sel_vis->unbind_value();
+  disp_s_sel_vis_affect_bonds->unbind_value();
 
   disp_s_draw_subcells->unbind_value();
   disp_s_subcells_idx->unbind_value();

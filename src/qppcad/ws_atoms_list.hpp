@@ -35,9 +35,10 @@ namespace qpp {
       color_from_anim
     };
 
-    const int ws_atoms_list_xgeom_ccr = 8;
-    const int ws_atoms_list_xgeom_ccg = 9;
-    const int ws_atoms_list_xgeom_ccb = 10;
+    const int xgeom_sel_vis = 7;
+    const int xgeom_ccr     = 8;
+    const int xgeom_ccg     = 9;
+    const int xgeom_ccb     = 10;
 
     /// \brief The ws_atom_list_t class
     class ws_atoms_list_t : public ws_item_t {
@@ -77,7 +78,9 @@ namespace qpp {
         bool m_draw_line_in_dist_measurement{false};
         bool m_bt_show_disabled_record{true};
         bool m_draw_subcells{false};
-        bool m_selective_visibility{false};
+        bool m_sel_vis{false};
+        bool m_sel_vis_affect_bonds{false};
+
 
         ws_atoms_list_t();
 
@@ -140,6 +143,8 @@ namespace qpp {
         std::string get_ws_item_class_name() override ;
         void write_to_json(json &data) override;
         void read_from_json(json &data) override;
+
+        //void post_load();
 
         void dialog_save_to_file(qc_file_fmt file_format);
 

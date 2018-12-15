@@ -36,11 +36,16 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("get_pt_r", &simple_query::ptable_get_radius_by_name);
   m.def("get_pt_r", &simple_query::ptable_get_radius_by_number);
 
-  py::module cam = m.def_submodule("cam");
+  py::module cam = m.def_submodule("cam", "Camera manipulation");
   cam.def("t", &simple_query::camera_move);
   cam.def("ry", &simple_query::camera_rotate_yaw);
   cam.def("rp", &simple_query::camera_rotate_pitch);
   cam.def("zoom", &simple_query::camera_zoom);
 
+  py::module sv = m.def_submodule("sv", "Selective visibility manipulation");
+  sv.def("hidden", &simple_query::sv_get);
+  sv.def("set", &simple_query::sv_edit);
+  sv.def("set", &simple_query::sv_edit_list);
+  sv.def("set", &simple_query::sv_edit_all);
   //cam.def("tu", )
 }

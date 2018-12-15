@@ -46,7 +46,8 @@ namespace qpp {
         qbinded_float_spinbox *disp_s_bond_scale;
         qbinded_combobox *disp_s_render_style;
         qbinded_combobox *disp_s_labels_style;
-        qbinded_checkbox *disp_s_selective_vis;
+        qbinded_checkbox *disp_s_sel_vis;
+        qbinded_checkbox *disp_s_sel_vis_affect_bonds;
 
         QLabel *disp_s_draw_subcells_label;
         QLabel *disp_s_subcells_idx_label;

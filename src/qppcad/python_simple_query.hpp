@@ -48,6 +48,11 @@ namespace qpp {
         static void camera_rotate_pitch(float magnitude);
         static void camera_zoom(float magnitude);
 
+        static py::list sv_get();
+        static void sv_edit(int at, bool status);
+        static void sv_edit_list(py::list at_list, bool status);
+        static void sv_edit_all(bool status);
+
     };
 
   }

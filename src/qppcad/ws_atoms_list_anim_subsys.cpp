@@ -45,15 +45,15 @@ namespace qpp {
                   vector3<float> new_color =
                       m_anim_data[anim_id].frame_data[start_frame_n].atom_color[i] * (frame_delta) +
                       m_anim_data[anim_id].frame_data[end_frame_n].atom_color[i] * (1-frame_delta);
-                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccr, i) = new_color[0];
-                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccg, i) = new_color[1];
-                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccb, i) = new_color[2];
+                  p_owner->m_geom->xfield<float>(xgeom_ccr, i) = new_color[0];
+                  p_owner->m_geom->xfield<float>(xgeom_ccg, i) = new_color[1];
+                  p_owner->m_geom->xfield<float>(xgeom_ccb, i) = new_color[2];
                 }
               // otherwise - load default colors
               else {
-                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccr, i) = 0.0f;
-                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccg, i) = 0.0f;
-                  p_owner->m_geom->xfield<float>(ws_atoms_list_xgeom_ccb, i) = 0.0f;
+                  p_owner->m_geom->xfield<float>(xgeom_ccr, i) = 0.0f;
+                  p_owner->m_geom->xfield<float>(xgeom_ccg, i) = 0.0f;
+                  p_owner->m_geom->xfield<float>(xgeom_ccb, i) = 0.0f;
                 }
             }
 

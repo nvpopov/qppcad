@@ -71,6 +71,10 @@ namespace qpp {
     void ws_atoms_list_render_bs::render_atom (ws_atoms_list_t &al,
                                                const uint32_t at_num,
                                                const index &at_index) {
+
+      if (al.m_sel_vis &&
+          al.m_geom->xfield<bool>(xgeom_sel_vis, at_num)) return;
+
       app_state_t* astate = app_state_t::get_inst();
       auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num));
       float dr_rad = 0.4f;
@@ -83,9 +87,9 @@ namespace qpp {
         }
 
       if (al.m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
-          color[0] = al.m_geom->xfield<float>(ws_atoms_list_xgeom_ccr, at_num);
-          color[1] = al.m_geom->xfield<float>(ws_atoms_list_xgeom_ccg, at_num);
-          color[2] = al.m_geom->xfield<float>(ws_atoms_list_xgeom_ccb, at_num);
+          color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
+          color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
+          color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
         }
 
       if (al.m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
@@ -105,6 +109,10 @@ namespace qpp {
                                                const uint32_t at_num2,
                                                const index &at_index2) {
       app_state_t* astate = app_state_t::get_inst();
+
+      if (al.m_sel_vis && al.m_sel_vis_affect_bonds &&
+          (al.m_geom->xfield<bool>(xgeom_sel_vis, at_num1) ||
+           al.m_geom->xfield<bool>(xgeom_sel_vis, at_num2) )) return;
 
       auto ap_idx1 = ptable::number_by_symbol(al.m_geom->atom(at_num1));
       vector3<float> bcolor1(0.0, 0.0, 1.0);
