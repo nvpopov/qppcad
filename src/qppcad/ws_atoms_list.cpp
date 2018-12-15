@@ -876,6 +876,9 @@ void ws_atoms_list_t::write_to_json (json &data) {
   data[JSON_CELL_COLOR] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
   data[JSON_BONDING_TABLE] = json::array({});
 
+  data[JSON_ATOMS_LIST_SEL_VIS] = m_sel_vis;
+  data[JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds;
+
   if (m_geom->DIM == 3) {
       data[JSON_ATOMS_LIST_DRAW_SUBCELLS] = m_draw_subcells;
       data[JSON_ATOMS_LIST_SUBCELLS_RANGE] =
@@ -908,6 +911,7 @@ void ws_atoms_list_t::write_to_json (json &data) {
       atom.push_back(m_geom->pos(i)[0]);
       atom.push_back(m_geom->pos(i)[1]);
       atom.push_back(m_geom->pos(i)[2]);
+      atom.push_back(m_geom->xfield<bool>(xgeom_sel_vis, i));
       data[JSON_ATOMS].push_back(atom);
     }
 
@@ -987,6 +991,12 @@ void ws_atoms_list_t::read_from_json (json &data) {
   if (data.find(JSON_ATOMS_LIST_DRAW_SUBCELLS) != data.end())
     m_draw_subcells = data[JSON_ATOMS_LIST_DRAW_SUBCELLS];
 
+  if (data.find(JSON_ATOMS_LIST_SEL_VIS) != data.end())
+    m_sel_vis = data[JSON_ATOMS_LIST_SEL_VIS];
+
+  if (data.find(JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS) != data.end())
+    m_sel_vis_affect_bonds = data[JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS];
+
   if (data.find(JSON_ATOMS_LIST_SUBCELLS_RANGE) != data.end()) {
       int sc_a = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][0].get<int>();
       int sc_b = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][1].get<int>();
@@ -1008,7 +1018,7 @@ void ws_atoms_list_t::read_from_json (json &data) {
             }
         } else {
           m_geom->DIM = 0;
-          //c_app::log("Cannot load cell data for geom with DIM>0");
+          //("Cannot load cell data for geom with DIM>0");
         }
     }
 
@@ -1016,6 +1026,10 @@ void ws_atoms_list_t::read_from_json (json &data) {
     for (const auto &atom : data[JSON_ATOMS]) {
         m_geom->add(atom[0].get<string>(),
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
+
+        if (atom.size() > 4) {
+             m_geom->xfield<bool>(xgeom_sel_vis, m_geom->nat()-1) = atom[4].get<bool>();
+          }
       }
 
   if (data.find(JSON_BONDING_TABLE) != data.end()) {
@@ -1082,6 +1096,10 @@ void ws_atoms_list_t::read_from_json (json &data) {
   geometry_changed();
   m_tws_tr->do_action(act_unlock | act_build_all);
 
+}
+
+bool ws_atoms_list_t::can_be_written_to_json() {
+  return true;
 }
 
 void ws_atoms_list_t::dialog_save_to_file (qc_file_fmt file_format) {

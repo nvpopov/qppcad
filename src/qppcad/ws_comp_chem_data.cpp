@@ -294,9 +294,9 @@ std::string ws_comp_chem_data_t::get_ws_item_class_name() {
 }
 
 void ws_comp_chem_data_t::write_to_json(json &data) {
-
+  ws_item_t::write_to_json(data);
 }
 
 void ws_comp_chem_data_t::read_from_json(json &data) {
-
+  ws_item_t::read_from_json(data);
 }

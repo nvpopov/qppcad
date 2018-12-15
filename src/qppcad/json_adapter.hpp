@@ -57,6 +57,9 @@ namespace qpp {
 
     const auto JSON_ATOMS_LIST_DRAW_SUBCELLS             = "draw_subcells";
     const auto JSON_ATOMS_LIST_SUBCELLS_RANGE            = "subcells_range";
+    const auto JSON_ATOMS_LIST_SEL_VIS                   = "sel_vis";
+    const auto JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS      = "sel_vis_affect_bondskd";
+
 
   }
 

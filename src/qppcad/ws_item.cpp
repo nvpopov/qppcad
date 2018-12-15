@@ -142,3 +142,7 @@ void ws_item_t::read_from_json(json &data) {
         m_pos = pos_rd;
       }
 }
+
+bool ws_item_t::can_be_written_to_json() {
+  return false;
+}

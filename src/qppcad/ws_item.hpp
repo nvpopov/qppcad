@@ -130,6 +130,7 @@ namespace qpp {
         void translate(vector3<float> tr_vec);
         virtual void write_to_json(json &data);
         virtual void read_from_json(json &data);
+        virtual bool can_be_written_to_json();
     };
 
   }

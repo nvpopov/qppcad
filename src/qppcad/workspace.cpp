@@ -86,6 +86,7 @@ void workspace_t::set_best_view () {
 
   if (m_ws_items.size() == 0) {
       m_camera->reset_camera();
+      m_camera->update_camera();
       return;
     }
 
@@ -104,6 +105,7 @@ void workspace_t::set_best_view () {
   //  std::cout << "set bv " << _vLookAt << std::endl << _vLookPos << std::endl
   //            << "end bv " << std::endl;
   m_camera->orthogonalize_gs();
+  m_camera->update_camera();
 
   if ((m_camera->m_look_at-m_camera->m_view_point).norm() < 0.4f || vec_look_at == vec_look_pos)
     m_camera->reset_camera();
@@ -226,11 +228,12 @@ void workspace_t::save_ws_to_json (const std::string filename) {
   data[JSON_BG_CLR] = j_workspace_background;
 
   json ws_objects = json::array({});
-  for (const auto &ws_item : m_ws_items){
-      json ws_object;
-      ws_item->write_to_json(ws_object);
-      ws_objects.push_back(ws_object);
-    }
+  for (const auto &ws_item : m_ws_items)
+    if (ws_item->can_be_written_to_json()) {
+        json ws_object;
+        ws_item->write_to_json(ws_object);
+        ws_objects.push_back(ws_object);
+      }
 
   data[JSON_OBJECTS] = ws_objects;
 
@@ -506,6 +509,7 @@ void workspace_manager_t::load_ws_from_file(const std::string &filename) {
   new_ws->set_best_view();
   //astate->make_viewport_dirty();
   ws_mgr_changed();
+  astate->make_viewport_dirty();
 }
 
 
