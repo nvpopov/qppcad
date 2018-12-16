@@ -506,7 +506,7 @@ void workspace_manager_t::load_ws_from_file(const std::string &filename) {
   new_ws->load_ws_from_json(filename);
   add_ws(new_ws);
   set_cur_id(m_ws.size()-1);
-  new_ws->set_best_view();
+  //new_ws->set_best_view();
   //astate->make_viewport_dirty();
   ws_mgr_changed();
   astate->make_viewport_dirty();

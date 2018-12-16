@@ -28,6 +28,8 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
 
       std::string label;/* = fmt::format("{}", i);*/
 
+      bool render_label{true};
+
       switch (m_style) {
 
         case ws_atoms_list_labels_style::show_type : {
@@ -45,17 +47,27 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
             break;
           }
 
+        case ws_atoms_list_labels_style::show_custom : {
+            if (p_owner->m_geom->xfield<bool>(xgeom_label_state, i)) {
+                label = p_owner->m_geom->xfield<std::string>(xgeom_label_text, i);
+              } else {
+                render_label = false;
+              }
+          }
+
         default:
           break;
 
         }
 
-      const int rect_size = 60;
-      painter.drawText(
-            int((*proj_pos)[0]-rect_size*0.5f),
-          int((*proj_pos)[1]-rect_size*0.5f),
-          rect_size, rect_size,
-          Qt::AlignCenter, QString::fromStdString(label));
+      if (render_label) {
+          const int rect_size = 60;
+          painter.drawText(
+                int((*proj_pos)[0]-rect_size*0.5f),
+              int((*proj_pos)[1]-rect_size*0.5f),
+              rect_size, rect_size,
+              Qt::AlignCenter, QString::fromStdString(label));
+        }
 
       //ImGui::SetWindowFontScale(2.0f);
 

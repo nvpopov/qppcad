@@ -43,9 +43,14 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   cam.def("zoom", &simple_query::camera_zoom);
 
   py::module sv = m.def_submodule("sv", "Selective visibility manipulation");
-  sv.def("hidden", &simple_query::sv_get);
+  sv.def("state", &simple_query::sv_get);
   sv.def("set", &simple_query::sv_edit);
   sv.def("set", &simple_query::sv_edit_list);
   sv.def("set", &simple_query::sv_edit_all);
+
+  py::module cl = m.def_submodule("cl", "Custom labels");
+  cl.def("state", &simple_query::cl_get);
+  cl.def("set_st", &simple_query::set_cl_state);
+  cl.def("set_t", &simple_query::set_cl_text);
   //cam.def("tu", )
 }

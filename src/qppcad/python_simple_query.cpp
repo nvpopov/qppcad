@@ -398,3 +398,56 @@ void simple_query::sv_edit_all(bool status) {
       astate->make_viewport_dirty();
     }
 }
+
+pybind11::list simple_query::cl_get() {
+
+  py::list ret;
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (_al) {
+              for (int i = 0; i < _al->m_geom->nat(); i++)
+                ret.append(_al->m_geom->xfield<bool>(xgeom_label_state, i));
+            }
+        }
+      astate->make_viewport_dirty();
+    }
+  return ret;
+
+}
+
+void simple_query::set_cl_state(int at, bool status) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (_al) {
+              _al->m_geom->xfield<bool>(xgeom_label_state, at) = status;
+            }
+        }
+      astate->make_viewport_dirty();
+    }
+}
+
+void simple_query::set_cl_text(int at, std::string text) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (_al) {
+              _al->m_geom->xfield<std::string>(xgeom_label_text, at) = text;
+            }
+        }
+      astate->make_viewport_dirty();
+    }
+}

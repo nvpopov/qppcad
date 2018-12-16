@@ -35,10 +35,12 @@ namespace qpp {
       color_from_anim
     };
 
-    const int xgeom_sel_vis = 7;
-    const int xgeom_ccr     = 8;
-    const int xgeom_ccg     = 9;
-    const int xgeom_ccb     = 10;
+    const int xgeom_sel_vis     = 6;
+    const int xgeom_label_state = 7;
+    const int xgeom_ccr         = 8;
+    const int xgeom_ccg         = 9;
+    const int xgeom_ccb         = 10;
+    const int xgeom_label_text  = 11;
 
     /// \brief The ws_atom_list_t class
     class ws_atoms_list_t : public ws_item_t {

@@ -53,6 +53,10 @@ namespace qpp {
         static void sv_edit_list(py::list at_list, bool status);
         static void sv_edit_all(bool status);
 
+        static py::list cl_get();
+        static void set_cl_state(int at, bool status);
+        static void set_cl_text(int at, std::string text);
+
     };
 
   }

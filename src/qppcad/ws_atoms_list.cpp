@@ -50,29 +50,33 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
 
   m_geom->set_format(
 
-  {"atom",
-   "number",
-   "charge",
-   "x",
-   "y",
-   "z",
-   "hide",
-   "sel",
-   "ccr",
-   "ccg",
-   "ccb"},
+  {"atom", //0
+   "number", //1
+   "charge",//2
+   "x",//3
+   "y",//4
+   "z",//5
+   "hide",//6
+   "lshow",//7
+   "ccr",//8
+   "ccg",//9
+   "ccb",//10
+   "ltext"//11
+        },
 
-  {type_string,
-   type_int,
-   type_real,
-   type_real,
-   type_real,
-   type_real,
-   type_bool,
-   type_bool,
-   type_real,
-   type_real,
-   type_real});
+  {type_string, //0
+   type_int, //1
+   type_real, //2
+   type_real, //3
+   type_real, //4
+   type_real, //5
+   type_bool, //6
+   type_bool, //7
+   type_real, //8
+   type_real, //9
+   type_real, //10
+   type_string //11
+        });
 
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;

@@ -14,7 +14,8 @@ namespace qpp {
       show_none,
       show_id,
       show_type,
-      show_id_type
+      show_id_type,
+      show_custom
     };
 
     class ws_atoms_list_t;
