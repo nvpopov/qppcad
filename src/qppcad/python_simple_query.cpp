@@ -11,6 +11,7 @@ void simple_query::select_ws(int ws_idx) {
   app_state_t *astate = app_state_t::get_inst();
   if (astate->ws_manager->has_wss()) {
       astate->ws_manager->set_cur_id(ws_idx);
+      astate->astate_evd->cur_ws_changed();
       astate->make_viewport_dirty();
     }
 
@@ -80,8 +81,7 @@ void simple_query::sel_cnt_type(pybind11::str sel_type) {
               std::string type_name = py::cast<std::string>(sel_type);
               int type_id = cur_it_al->m_geom->type_of_atom(type_name);
               if (type_id != -1) cur_it_al->select_by_type(type_id);
-              //              for (auto itm : sel_list)
-              //                if (py::isinstance<py::int_>(itm)) cur_it_al->select_atom(py::cast<int>(itm));
+
             }
         }
 
@@ -120,6 +120,7 @@ void simple_query::unsel_cnt(int cnt_idx) {
               cur_it_al->unselect_atom(cnt_idx);
             }
         }
+
       astate->make_viewport_dirty();
 
     }
@@ -155,14 +156,11 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
 
       if (cur_ws) {
-
           auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
           if (cur_it_al) {
               std::string type_name = py::cast<std::string>(sel_type);
               int type_id = cur_it_al->m_geom->type_of_atom(type_name);
               if (type_id != -1) cur_it_al->unselect_by_type(type_id);
-              //              for (auto itm : sel_list)
-              //                if (py::isinstance<py::int_>(itm)) cur_it_al->select_atom(py::cast<int>(itm));
             }
         }
 

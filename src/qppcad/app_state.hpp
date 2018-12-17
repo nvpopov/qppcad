@@ -4,6 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
+#include <QString>
 #include <qppcad/shader_generators.hpp>
 #include <qppcad/mesh_generators.hpp>
 #include <qppcad/camera.hpp>
