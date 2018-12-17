@@ -113,7 +113,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_layout->addRow(tr("Bond scale"), disp_s_bond_scale);
   gb_disp_s_layout->addRow(tr("Labels style"), disp_s_labels_style);
   gb_disp_s_layout->addRow(tr("Selective visibility"), disp_s_sel_vis);
-  gb_disp_s_layout->addRow(tr("Sel. visb. affect bonds"), disp_s_sel_vis_affect_bonds);
+  gb_disp_s_layout->addRow(tr("S.v. affect bonds"), disp_s_sel_vis_affect_bonds);
   gb_disp_s_layout->addRow(disp_s_draw_subcells_label, disp_s_draw_subcells);
   gb_disp_s_layout->addRow(disp_s_subcells_idx_label, disp_s_subcells_idx);
 
@@ -129,10 +129,12 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
 
   //display - bonding table
   gb_display_bt = new QGroupBox(tr("Bonding table"));
+  gb_display_bt->setContentsMargins(0,0,0,0);
   display_bt_layout = new QVBoxLayout;
   gb_display_bt->setLayout(display_bt_layout);
   bt_model = new qbonding_table_model_t;
   display_bt = new QTableView;
+  display_bt->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   display_bt->verticalHeader()->hide();
   display_bt->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   display_bt->setFocusPolicy(Qt::NoFocus);
@@ -290,6 +292,11 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_pair_dist_atom2_idx = new QLabel;
   tm_pair_dist_spinbox = new QDoubleSpinBox;
   tm_pair_dist_note_label = new QLabel;
+  tm_pair_dist_t_mode = new QComboBox;
+  tm_pair_dist_t_mode->addItem("Transform both");
+  tm_pair_dist_t_mode->addItem("Fix first");
+  tm_pair_dist_t_mode->addItem("Fix second");
+
   tm_pair_dist_note_label->setText(tr("Distance between"));
   tm_pair_dist_spinbox->setMinimum(0.0);
   tm_pair_dist_spinbox->setMaximum(10);
@@ -298,6 +305,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist_layout->addRow(tr("Atom №2"), tm_pair_dist_atom2);
   tm_gb_pair_dist_layout->addRow(tr("Atom №1 idx"), tm_pair_dist_atom1_idx);
   tm_gb_pair_dist_layout->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
+  tm_gb_pair_dist_layout->addRow(tr("Transform mode"), tm_pair_dist_t_mode);
   tm_gb_pair_dist_layout->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
 
   tm_gb_pair_creation = new QGroupBox(tr("Insert atom between"));
@@ -419,6 +427,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       //update type table
       tg_type_summary_table->clearContents();
       tg_type_summary_table->setRowCount(b_al->m_geom->n_atom_types());
+
       for (int i = 0; i < b_al->m_geom->n_atom_types(); i++) {
 
           QString n_name_str = QString::fromStdString(b_al->m_geom->atom_of_type(i));
@@ -445,6 +454,8 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
 
         }
 
+      //resize type table view
+      tg_type_summary_table->setMinimumHeight(36 * b_al->m_geom->n_atom_types());
       tg_type_summary_table->resizeRowsToContents();
 
       //update cell
@@ -506,6 +517,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       bt_model->bind(b_al);
       display_bt->setModel(bt_model);
       display_bt->update();
+      display_bt->setMinimumHeight(40 * b_al->m_tws_tr->m_bonding_table.m_dist.size());
 
       update_modify_tab();
     }

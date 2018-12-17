@@ -116,6 +116,7 @@ namespace qpp {
         QLabel *tm_pair_dist_atom2;
         QLabel *tm_pair_dist_atom1_idx;
         QLabel *tm_pair_dist_atom2_idx;
+        QComboBox *tm_pair_dist_t_mode;
         QDoubleSpinBox *tm_pair_dist_spinbox;
         QLabel *tm_pair_dist_note_label;
 
