@@ -938,7 +938,9 @@ void ws_atoms_list_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(dou
           it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
           it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
 
-          b_al->update_inter_atomic_dist(newval, it1->m_atm, it2->m_atm);
+          pair_dist_mode mode;
+          mode = static_cast<pair_dist_mode>(tm_pair_dist_t_mode->currentIndex());
+          b_al->update_inter_atomic_dist(float(newval), it1->m_atm, it2->m_atm, mode);
 
           astate->make_viewport_dirty();
         }

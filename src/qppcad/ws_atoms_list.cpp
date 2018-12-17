@@ -441,7 +441,8 @@ void ws_atoms_list_t::update_atom(const int at_id, const std::string &at_name,
 
 void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
                                                const int at1, const int at2,
-                                               const index id1, const index id2) {
+                                               const index id1, const index id2,
+                                               pair_dist_mode mode) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -449,15 +450,36 @@ void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
   vector3<float> dir_f = (m_geom->pos(at1, id1) - r_btw).normalized();
   vector3<float> dir_s = (m_geom->pos(at2, id2) - r_btw).normalized();
 
-  m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
-  m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
+  switch (mode) {
+
+    case pair_dist_mode::transform_both : {
+        m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
+        m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
+        break;
+      }
+
+    case pair_dist_mode::fix_first : {
+        m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f );
+        break;
+      }
+
+    case pair_dist_mode::fix_second : {
+        m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
+        break;
+      }
+
+    }
+
 
   astate->make_viewport_dirty();
 }
 
-void ws_atoms_list_t::update_inter_atomic_dist(float new_dist, const int at1, const int at2) {
+void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
+                                               const int at1,
+                                               const int at2,
+                                               pair_dist_mode mode) {
   update_inter_atomic_dist(new_dist, at1, at2,
-                           index::D(m_geom->DIM).all(0), index::D(m_geom->DIM).all(0));
+                           index::D(m_geom->DIM).all(0), index::D(m_geom->DIM).all(0), mode);
 }
 
 void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {

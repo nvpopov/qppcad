@@ -35,6 +35,12 @@ namespace qpp {
       color_from_anim
     };
 
+    enum pair_dist_mode : int {
+      transform_both,
+      fix_first,
+      fix_second
+    };
+
     const int xgeom_sel_vis     = 6;
     const int xgeom_label_state = 7;
     const int xgeom_ccr         = 8;
@@ -108,8 +114,12 @@ namespace qpp {
         void update_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
         void update_inter_atomic_dist(float new_dist,
                                       const int at1, const int at2,
-                                      const index id1, const index id2);
-        void update_inter_atomic_dist(float new_dist, const int at1, const int at2);
+                                      const index id1, const index id2,
+                                      pair_dist_mode mode);
+        void update_inter_atomic_dist(float new_dist,
+                                      const int at1,
+                                      const int at2,
+                                      pair_dist_mode mode);
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
         void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);
