@@ -1,5 +1,6 @@
 #include <qppcad/main_window.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/app_settings_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -176,6 +177,11 @@ void main_window::init_menus() {
 
   edit_menu_settings = new QAction(this);
   edit_menu_settings->setText(tr("Settings"));
+  connect(edit_menu_settings, &QAction::triggered,
+          [](){
+      app_settings_widget_t aset;
+      aset.exec();
+    });
 
   edit_menu_ws_settings = new QAction(this);
   edit_menu_ws_settings->setText(tr("Workspace settings"));

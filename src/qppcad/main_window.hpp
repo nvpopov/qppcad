@@ -44,6 +44,7 @@ namespace qpp {
         void init_layouts();
         void change_camera_buttons_visible(bool cart_c, bool cell_c);
 
+
         //Widgets
         QWidget *main_widget;
         QWidget *tool_panel_widget;
