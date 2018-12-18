@@ -899,6 +899,9 @@ void ws_atoms_list_t::write_to_json (json &data) {
   data[JSON_ATOMS_LIST_RENDER_TYPE] = m_cur_render_type;
   data[JSON_ATOMS_LIST_DRAW_SPECULAR] = m_draw_specular;
   data[JSON_ATOMS_LIST_SPECULAR] = m_shading_specular_power;
+
+  data[JSON_ATOMS_LIST_LABELS_TYPE] = m_labels->m_style;
+
   data[JSON_CELL_COLOR] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
   data[JSON_BONDING_TABLE] = json::array({});
 
@@ -938,6 +941,8 @@ void ws_atoms_list_t::write_to_json (json &data) {
       atom.push_back(m_geom->pos(i)[1]);
       atom.push_back(m_geom->pos(i)[2]);
       atom.push_back(m_geom->xfield<bool>(xgeom_sel_vis, i));
+      atom.push_back(m_geom->xfield<bool>(xgeom_label_state, i));
+      atom.push_back(m_geom->xfield<std::string>(xgeom_label_text, i));
       data[JSON_ATOMS].push_back(atom);
     }
 
@@ -1002,6 +1007,9 @@ void ws_atoms_list_t::read_from_json (json &data) {
   if (data.find(JSON_ATOMS_LIST_SPECULAR) != data.end())
     m_shading_specular_power = data[JSON_ATOMS_LIST_SPECULAR].get<float>();
 
+  if (data.find(JSON_ATOMS_LIST_LABELS_TYPE) != data.end())
+    m_labels->m_style = data[JSON_ATOMS_LIST_LABELS_TYPE];
+
   if (data.find(JSON_SHOW_IMG_BONDS) != data.end())
     m_draw_img_bonds = data[JSON_SHOW_IMG_BONDS];
 
@@ -1055,6 +1063,11 @@ void ws_atoms_list_t::read_from_json (json &data) {
 
         if (atom.size() > 4) {
              m_geom->xfield<bool>(xgeom_sel_vis, m_geom->nat()-1) = atom[4].get<bool>();
+             if (atom.size() > 6) {
+                 m_geom->xfield<bool>(xgeom_label_state, m_geom->nat()-1) = atom[5].get<bool>();
+                 m_geom->xfield<std::string>(xgeom_label_text, m_geom->nat()-1) =
+                     atom[6].get<std::string>();
+               }
           }
       }
 

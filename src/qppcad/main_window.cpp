@@ -9,6 +9,7 @@ main_window::main_window(QWidget *parent) {
   main_widget = new QWidget;
   app_state_t* astate = app_state_t::get_inst();
   //tool_panel_widget->setSizePolicy(QSizePolicy::)
+
   setCentralWidget(main_widget);
   setMinimumHeight(300);
   setMinimumWidth(600);
@@ -40,6 +41,7 @@ main_window::main_window(QWidget *parent) {
 
   setStyleSheet("QPushButton:checked{"
                 "background-color: rgb(150, 150, 150);}");
+
 }
 
 main_window::~main_window() {
