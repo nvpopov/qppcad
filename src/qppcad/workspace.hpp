@@ -64,7 +64,7 @@ namespace qpp {
         ray_t<float>                             m_ray_debug;
         bool                                     m_first_render{true};
         std::unique_ptr<gizmo_t>                 m_gizmo;
-        vector3<float>                           m_background_color{0.85f, 0.85f, 0.85f};
+        vector3<float>                           m_background_color{1, 1, 1};
 
         workspace_t(std::string _ws_name = "default") {
           m_ws_name = _ws_name;

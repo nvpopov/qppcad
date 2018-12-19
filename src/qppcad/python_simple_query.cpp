@@ -48,6 +48,24 @@ void simple_query::sel_cnt(int cnt_idx) {
     }
 }
 
+void simple_query::sel_invert() {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              cur_it_al->invert_selected_atoms();
+            }
+        }
+
+      astate->make_viewport_dirty();
+
+    }
+}
+
 void simple_query::sel_cnt_list(pybind11::list sel_list) {
 
   app_state_t *astate = app_state_t::get_inst();

@@ -221,9 +221,17 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
       local_geom_ray.dir = click_ray->dir;
 
       if (m_draw_img_atoms)
-        m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray, res, m_atom_scale_factor);
+        m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray,
+                                                       res,
+                                                       m_atom_scale_factor,
+                                                       m_sel_vis,
+                                                       xgeom_sel_vis);
       else
-        m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray, res, m_atom_scale_factor);
+        m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray,
+                                                              res,
+                                                              m_atom_scale_factor,
+                                                              m_sel_vis,
+                                                              xgeom_sel_vis);
       recalc_gizmo_barycenter();
 
       if (!res.empty()) {
@@ -1062,12 +1070,12 @@ void ws_atoms_list_t::read_from_json (json &data) {
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
 
         if (atom.size() > 4) {
-             m_geom->xfield<bool>(xgeom_sel_vis, m_geom->nat()-1) = atom[4].get<bool>();
-             if (atom.size() > 6) {
-                 m_geom->xfield<bool>(xgeom_label_state, m_geom->nat()-1) = atom[5].get<bool>();
-                 m_geom->xfield<std::string>(xgeom_label_text, m_geom->nat()-1) =
-                     atom[6].get<std::string>();
-               }
+            m_geom->xfield<bool>(xgeom_sel_vis, m_geom->nat()-1) = atom[4].get<bool>();
+            if (atom.size() > 6) {
+                m_geom->xfield<bool>(xgeom_label_state, m_geom->nat()-1) = atom[5].get<bool>();
+                m_geom->xfield<std::string>(xgeom_label_text, m_geom->nat()-1) =
+                    atom[6].get<std::string>();
+              }
           }
       }
 
@@ -1143,18 +1151,6 @@ bool ws_atoms_list_t::can_be_written_to_json() {
 
 void ws_atoms_list_t::dialog_save_to_file (qc_file_fmt file_format) {
 
-  app_state_t* astate = app_state_t::get_inst();
-
-  //  std::string filter{""};
-  //  bool succes{false};
-
-  //  std::string _tmp_fs_path = astate->fd_manager->request_save_file(filter, succes);
-  //  if (!succes) return;
-  //  save_to_file(file_format, _tmp_fs_path);
-
 }
 
-//ws_atoms_list_t::~ws_atoms_list_t () {
-
-//}
 

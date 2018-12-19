@@ -22,6 +22,7 @@ namespace qpp {
         static void select_ws(int ws_idx);
         static void select_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);
+        static void sel_invert();
         static void sel_cnt_list(py::list sel_list);
         static void sel_cnt_type(py::str sel_type);
         static void edit_mode(int mode);

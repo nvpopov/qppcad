@@ -22,6 +22,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   sel.def("uc", &simple_query::unsel_cnt_list);
   sel.def("uc", &simple_query::unsel_cnt_type);
   sel.def("c", &simple_query::get_sel);
+  sel.def("inv", &simple_query::sel_invert);
 
   m.def("mode", &simple_query::edit_mode);
   m.def("rebond", &simple_query::rebond);

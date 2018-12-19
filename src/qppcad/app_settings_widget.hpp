@@ -6,8 +6,10 @@
 #include <QDialog>
 #include <QComboBox>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QListWidget>
 #include <QStackedWidget>
+#include <QPushButton>
 
 namespace qpp {
 
@@ -19,13 +21,17 @@ namespace qpp {
         explicit app_settings_widget_t(QWidget *parent = 0);
         QVBoxLayout *settings_layout;
         QListWidget *settings_entries;
-        QSplitter *settings_splitter;
+        QHBoxLayout *settings_splitter_layout;
+
+        QHBoxLayout *settings_button_layout;
+        QPushButton *settings_close;
+        QPushButton *settings_save;
 
         QStackedWidget *settings_stacked_pages;
         QWidget *settings_page_general;
         QWidget *settings_page_appearance;
         QWidget *settings_page_console;
-
+        QWidget *settings_page_ptable;
     };
 
   }
