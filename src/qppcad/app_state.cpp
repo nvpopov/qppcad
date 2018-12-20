@@ -39,8 +39,8 @@ namespace qpp {
 
     void app_state_t::init_meshes() {
 
-      mesh_spheres.push_back(mesh_generators::sphere(18, 18));
-      mesh_cylinder = mesh_generators::cylinder_mk2(3, 14, 1.0f, 1.0f);
+      mesh_spheres.push_back(mesh_generators::sphere(m_sphere_quality, m_sphere_quality));
+      mesh_cylinder = mesh_generators::cylinder_mk2(2, m_cylinder_quality, 1.0f, 1.0f);
       mesh_unit_line     = mesh_generators::unit_line();
       mesh_grid_xz        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
       mesh_unit_cube     = mesh_generators::unit_cube();
@@ -112,6 +112,11 @@ namespace qpp {
       settings.endArray();
       settings.endGroup();
 
+      settings.beginGroup("mesh_generators");
+      m_sphere_quality = settings.value("sphere_res", 18).toInt();
+      m_cylinder_quality = settings.value("cylinder_res", 16).toInt();
+      settings.endGroup();
+
     }
 
     void app_state_t::save_settings() {
@@ -133,6 +138,11 @@ namespace qpp {
             i+=1;
           }
       settings.endArray();
+      settings.endGroup();
+
+      settings.beginGroup("mesh_generators");
+      settings.setValue("sphere_res", m_sphere_quality);
+      settings.setValue("cylinder_res", m_cylinder_quality);
       settings.endGroup();
     }
 

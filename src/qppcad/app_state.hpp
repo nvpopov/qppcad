@@ -62,6 +62,7 @@ namespace qpp {
         shader_program_t *sp_buf_bs;
         shader_program_t *sp_2c_cylinder;
 
+
         std::vector<mesh_t*> mesh_spheres;
         mesh_t *mesh_cylinder;
         mesh_t *mesh_unit_line;
@@ -83,7 +84,10 @@ namespace qpp {
 
         int64_t m_last_frame_time_cpu{0};
         int64_t m_last_frame_time_gpu{0};
+
         bool m_show_debug_frame_stats{false};
+        int m_sphere_quality{18};
+        int m_cylinder_quality{16};
         float mouse_x_dc;
         float mouse_y_dc;
         float mouse_x_dc_old;

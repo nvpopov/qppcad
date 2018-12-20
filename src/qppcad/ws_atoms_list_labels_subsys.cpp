@@ -73,12 +73,5 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
               Qt::AlignCenter, QString::fromStdString(label));
         }
 
-      //ImGui::SetWindowFontScale(2.0f);
-
-      //      imdrw->AddText(
-      //            ImVec2((*proj_pos)[0]-label.length()*5, (*proj_pos)[1]-label.length()*5),
-      //          ImColor(0.0f, 0.0f, 0.0f, 1.0f),
-      //          label.c_str());
-      //      ImGui::PopFont();
     }
 }
