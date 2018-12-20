@@ -253,6 +253,7 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
 }
 
 void simple_query::set_ws_bg(vector3<float> bg) {
+
   app_state_t *astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -267,10 +268,15 @@ void simple_query::set_ws_bg(vector3<float> bg) {
 }
 
 void simple_query::ptable_set_color_by_number(int num, float r, float g, float b) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
   if (num > 0 && num <100) {
       ptable_atom_record &rec = ptable::get_inst()->arecs[num-1];
       rec.m_color_jmol = vector3<float>(r, g, b);
       rec.m_redefined = true;
+      astate->astate_evd->cur_ws_selected_item_changed();
+      astate->astate_evd->python_console_focus_requested();
     }
 }
 

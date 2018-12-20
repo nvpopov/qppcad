@@ -24,6 +24,10 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
 
   std::optional<vector2<float> > proj_pos;
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
+
+      if (p_owner->m_sel_vis &&
+          p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
+
       proj_pos = astate->camera->project(p_owner->m_pos + p_owner->m_geom->pos(i));
 
       std::string label;/* = fmt::format("{}", i);*/

@@ -217,9 +217,12 @@ QString python_text_editor_t::text_under_cursor() const {
 
   int last = text.lastIndexOf(QChar::Space);
   std::cout <<"LAST " << last << " TEXT " << text.toStdString() << std::endl;
+
   int last_bracket = text.lastIndexOf("(");
+  int last_eq_sign = text.lastIndexOf("=");
 
   if (last == -1 && last_bracket != -1) last = last_bracket + 1;
+  if (last_eq_sign != -1 && last_eq_sign > last) last = last_eq_sign + 1;
 
   if (last == -1) {
       return text;
