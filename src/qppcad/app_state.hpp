@@ -88,6 +88,8 @@ namespace qpp {
         bool m_show_debug_frame_stats{false};
         int m_sphere_quality{18};
         int m_cylinder_quality{16};
+
+        float m_middle_mb_translate_mode{1.25f};
         float mouse_x_dc;
         float mouse_y_dc;
         float mouse_x_dc_old;
