@@ -86,8 +86,12 @@ namespace qpp {
         int64_t m_last_frame_time_gpu{0};
 
         bool m_show_debug_frame_stats{false};
+
+        //Settings begin
         int m_sphere_quality{18};
         int m_cylinder_quality{16};
+        cam_proj_t m_default_cam_proj{cam_proj_t::proj_ortho};
+        //Settings end
 
         float m_middle_mb_translate_mode{1.25f};
         float mouse_x_dc;

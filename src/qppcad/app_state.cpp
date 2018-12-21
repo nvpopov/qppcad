@@ -115,6 +115,9 @@ namespace qpp {
       settings.beginGroup("mesh_generators");
       m_sphere_quality = settings.value("sphere_res", 18).toInt();
       m_cylinder_quality = settings.value("cylinder_res", 16).toInt();
+      int m_loaded_default_cam_proj = settings.value("default_camera_projection", 0).toInt();
+      m_default_cam_proj = static_cast<cam_proj_t>(m_loaded_default_cam_proj);
+
       settings.endGroup();
 
     }
@@ -143,6 +146,7 @@ namespace qpp {
       settings.beginGroup("mesh_generators");
       settings.setValue("sphere_res", m_sphere_quality);
       settings.setValue("cylinder_res", m_cylinder_quality);
+      settings.setValue("default_camera_projection", static_cast<int>(m_default_cam_proj));
       settings.endGroup();
     }
 

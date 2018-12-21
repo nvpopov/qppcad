@@ -9,7 +9,7 @@ out vec4 color;
 
 void main(void){
   vec3 sp_light_pos = normalize(vec3(0, 0, 1));
-  vec3 light_vector = normalize(sp_light_pos - fs_position);
+  vec3 light_vector = normalize(sp_light_pos);
   vec3 rvec = normalize(vec3(0, 1, 1) + sp_light_pos);
 
   float diffuse = max(dot(fs_normal, light_vector), 0.01);

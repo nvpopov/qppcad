@@ -5,6 +5,8 @@ using namespace qpp;
 using namespace qpp::cad;
 
 camera_t::camera_t () {
+  app_state_t* astate = app_state_t::get_inst();
+  m_cur_proj = astate->m_default_cam_proj;
   reset_camera();
 }
 
@@ -78,7 +80,7 @@ void camera_t::reset_camera () {
   m_look_up    = vector3<float>(0.0, 0.0, 1.0);
   orthogonalize_gs();
 
-  m_cur_proj = cam_proj_t::proj_persp;
+  //m_cur_proj = cam_proj_t::proj_persp;
 }
 
 void camera_t::update_camera () {
@@ -169,7 +171,7 @@ void camera_t::update_camera_zoom (const float dist) {
         m_view_point += m_view_dir_n * f_dist_delta;
 
     } else {
-      m_ortho_scale += dist;
+      m_ortho_scale -= dist;
       m_ortho_scale = clamp(m_ortho_scale, 1.0f, 150.0f);
     }
 

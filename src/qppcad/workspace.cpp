@@ -129,26 +129,25 @@ void workspace_t::render() {
       ///// Draw axis /////
       if (astate->m_show_axis) {
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
-          float fAxisLen = 0.07f *astate->camera->m_stored_dist;
-          if (astate->camera->m_cur_proj ==
-              cam_proj_t::proj_persp)
-            fAxisLen = 0.015f;
+          float axis_magn = 0.07f *astate->camera->m_stored_dist;
+          if (astate->camera->m_cur_proj == cam_proj_t::proj_persp) axis_magn = 0.015f;
+          else axis_magn = m_camera->m_ortho_scale * 0.1f;
 
           astate->dp->begin_render_line();
           astate->dp->
               render_line(vector3<float>(1.0, 0.0, 0.0),
                           vector3<float>(0.0, 0.0, 0.0) + vScrTW,
-                          vector3<float>(fAxisLen, 0.0, 0.0) + vScrTW);
+                          vector3<float>(axis_magn, 0.0, 0.0) + vScrTW);
 
           astate->dp->
               render_line(vector3<float>(0.0, 1.0, 0.0),
                           vector3<float>(0.0, 0.0, 0.0) + vScrTW,
-                          vector3<float>(0.0, fAxisLen, 0.0) + vScrTW);
+                          vector3<float>(0.0, axis_magn, 0.0) + vScrTW);
 
           astate->dp->
               render_line(vector3<float>(0.0, 0.0, 1.0),
                           vector3<float>(0.0, 0.0, 0.0) + vScrTW,
-                          vector3<float>(0.0, 0.0, fAxisLen) + vScrTW);
+                          vector3<float>(0.0, 0.0, axis_magn) + vScrTW);
           astate->dp->end_render_line();
 
         }
@@ -328,15 +327,6 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 
   m_cur_ws_id = 0;
   cached_astate = _astate;
-  //  _astate->kb_manager->connect("switch_to_ws_0", this, &workspace_manager_t::force_set_current<0>);
-  //  _astate->kb_manager->connect("switch_to_ws_1", this, &workspace_manager_t::force_set_current<1>);
-  //  _astate->kb_manager->connect("switch_to_ws_2", this, &workspace_manager_t::force_set_current<2>);
-  //  _astate->kb_manager->connect("switch_to_ws_3", this, &workspace_manager_t::force_set_current<3>);
-  //  _astate->kb_manager->connect("switch_to_ws_4", this, &workspace_manager_t::force_set_current<4>);
-  //  _astate->kb_manager->connect("switch_to_ws_5", this, &workspace_manager_t::force_set_current<5>);
-  //  _astate->kb_manager->connect("switch_to_ws_6", this, &workspace_manager_t::force_set_current<6>);
-  //  _astate->kb_manager->connect("switch_to_ws_7", this, &workspace_manager_t::force_set_current<7>);
-  //  _astate->kb_manager->connect("switch_to_ws_8", this, &workspace_manager_t::force_set_current<8>);
 
 }
 

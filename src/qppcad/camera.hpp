@@ -56,7 +56,7 @@ namespace qpp {
         float m_zfar_ortho{1000};
         float m_stored_dist;
 
-        cam_proj_t m_cur_proj{cam_proj_t::proj_persp};
+        cam_proj_t m_cur_proj{cam_proj_t::proj_ortho};
 
         camera_t();
         void orthogonalize_gs();
