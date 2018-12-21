@@ -130,13 +130,16 @@ void gizmo_t::translate_attached(float delta_time){
 
       vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
 
+      //TODO: Magic numbers
+      if (fabs(d_unproj[touched_axis]) > 0.00025f && astate->is_mouse_moving &&
+          astate->mouse_distance_pp > 0.2f) {
 
-      if (fabs(d_unproj[touched_axis]) > 0.00025f &&
-          astate->is_mouse_moving &&
-          astate->mouse_distance_pp > 0.2) {
+          float proj_dependent_mod = 3500.0f;
+
+          if (astate->camera->m_cur_proj == cam_proj_t::proj_ortho) proj_dependent_mod = 350.0f;
 
           vector3<float> new_transform =
-              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * 3500.0f;
+              gizmo_axis[touched_axis] * delta_time * d_unproj[touched_axis] * proj_dependent_mod;
 
           accum_translate += new_transform;
 

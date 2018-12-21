@@ -158,10 +158,7 @@ void camera_t::update_camera () {
 
 void camera_t::update_camera_zoom (const float dist) {
 
-  app_state_t* astate = app_state_t::get_inst();
-
   if (m_cur_proj == cam_proj_t::proj_persp) {
-
       vector3<float> m_view_dir_n = - m_view_point + m_look_at;
       float f_dist = m_view_dir_n.norm();
       m_stored_dist = f_dist;
@@ -175,8 +172,6 @@ void camera_t::update_camera_zoom (const float dist) {
       m_ortho_scale += dist;
       m_ortho_scale = clamp(m_ortho_scale, 1.0f, 150.0f);
     }
-
-  //astate->make_viewport_dirty();
 
 }
 
@@ -201,17 +196,12 @@ float camera_t::distance(const vector3<float> &point) {
   return (m_mat_view * vector4<float>(point(0), point(1), point(2), 1.0f)).norm();
 }
 
-vector3<float> camera_t::unproject (const float _x, const float _y) {
+vector3<float> camera_t::unproject (const float _x, const float _y, const float _z) {
   //app_state_t* astate = &(c_app::get_state());
   matrix4<float> mat_mvp_inv = (m_mat_proj * m_mat_view).inverse();
-  vector4<float> invec4(_x, _y, 0.5f, 1.0f);
+  vector4<float> invec4(_x, _y, _z, 1.0f);
   vector4<float> rvec4 = vector4<float>::Zero();
 
-  /*if (cur_proj == app_camera_proj_type::CAMERA_PROJ_ORTHO){
-      vector4<float> v_near_up = mat_mvp_inv * vector4<float>(_x, _y, m_znear_ortho, 1.0f);
-      vector4<float> v_far_up = mat_mvp_inv * vector4<float>(_x, _y, m_zfar_ortho, 1.0f);
-      rvec4 =   v_near_up;
-    } else*/
   rvec4 = mat_mvp_inv * invec4;
 
   rvec4(3) = 1.0f / rvec4(3);

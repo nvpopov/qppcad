@@ -119,8 +119,8 @@ void workspace_t::render() {
 
   if (astate->m_debug_show_selection_ray){
       astate->dp->begin_render_line();
-      astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), m_ray_debug.start,
-                              m_ray_debug.start + m_ray_debug.dir * 155.0);
+      astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), m_ray.start,
+                              m_ray.start + m_ray.dir * 155.0);
       astate->dp->end_render_line();
     }
 
@@ -168,11 +168,20 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
   //if (ImGui::GetIO().WantCaptureMouse) return;
   app_state_t* astate = app_state_t::get_inst();
 
-  m_ray_debug.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
-  m_ray_debug.start = m_camera->m_view_point;
+  if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
+      m_ray.start = m_camera->m_view_point;
+      m_ray.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
+    } else {
+      float z_p =  (m_camera->m_znear_ortho + m_camera->m_zfar_ortho) /
+                   (m_camera->m_znear_ortho - m_camera->m_zfar_ortho);
+
+      m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
+      m_ray.dir = (m_camera->m_look_at - m_camera->m_view_point).normalized();
+
+    }
 
   if (m_gizmo->m_is_visible && m_gizmo->attached_item)
-    if (m_gizmo->process_ray(&m_ray_debug)){
+    if (m_gizmo->process_ray(&m_ray)){
         astate->log("gizmo clicked");
         return;
       }
@@ -185,7 +194,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
     }
 
   for (auto &ws_item : m_ws_items) {
-      bool is_hit = ws_item->mouse_click(&m_ray_debug);
+      bool is_hit = ws_item->mouse_click(&m_ray);
       hit_any = hit_any || is_hit;
       if (is_hit && m_edit_type == ws_edit_t::edit_item &&
           (ws_item->get_flags() & ws_item_flags_support_selection)) {

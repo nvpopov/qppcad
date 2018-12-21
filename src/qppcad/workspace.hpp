@@ -61,7 +61,7 @@ namespace qpp {
         std::vector<std::shared_ptr<ws_item_t> > m_ws_items;
         std::string                              m_ws_name;
         std::unique_ptr<camera_t>                m_camera;
-        ray_t<float>                             m_ray_debug;
+        ray_t<float>                             m_ray;
         bool                                     m_first_render{true};
         std::unique_ptr<gizmo_t>                 m_gizmo;
         vector3<float>                           m_background_color{1, 1, 1};

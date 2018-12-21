@@ -360,8 +360,20 @@ void simple_query::camera_zoom(float magnitude) {
 
 }
 
+void simple_query::camera_mode(int mode) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->camera) {
+      if (mode == 0) astate->camera->set_projection(cam_proj_t::proj_persp);
+      else astate->camera->set_projection(cam_proj_t::proj_ortho);
+      astate->camera->update_camera();
+    }
+}
+
 pybind11::list simple_query::sv_get() {
+
   py::list ret;
+
   app_state_t *astate = app_state_t::get_inst();
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
@@ -378,7 +390,9 @@ pybind11::list simple_query::sv_get() {
 }
 
 void simple_query::sv_edit(int at, bool status) {
+
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
@@ -392,7 +406,9 @@ void simple_query::sv_edit(int at, bool status) {
 }
 
 void simple_query::sv_edit_list(pybind11::list at_list, bool status) {
+
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
@@ -409,7 +425,9 @@ void simple_query::sv_edit_list(pybind11::list at_list, bool status) {
 }
 
 void simple_query::sv_edit_all(bool status) {
+
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
