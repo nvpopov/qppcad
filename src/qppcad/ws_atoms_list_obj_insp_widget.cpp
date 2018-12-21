@@ -575,7 +575,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
 
           tabBar()->setTabEnabled(3, true);
 
-          if (b_al->m_atom_sel.empty()) {
+          if (b_al->m_atom_idx_sel.empty()) {
               tm_gb_single_atom->hide();
               tm_gb_add_atom->show();
               tm_gb_pair_dist->hide();
@@ -660,7 +660,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
                 }
             }
 
-          if (b_al->m_atom_sel.size() > 2) {
+          if (b_al->m_atom_idx_sel.size() > 2) {
               tm_gb_add_atom->hide();
               tm_gb_single_atom->hide();
               tm_gb_pair_creation->hide();
@@ -670,7 +670,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
 
             }
 
-          if (b_al->m_atom_sel.size() > 0) {
+          if (b_al->m_atom_idx_sel.size() > 0) {
               if (b_al->m_geom->DIM == 3) {
                   tm_translate_coord_type_label->show();
                   tm_translate_coord_type->show();
@@ -903,11 +903,11 @@ void ws_atoms_list_obj_insp_widget_t::modify_add_atom_button_clicked() {
 
 void ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked() {
 
-  if (b_al && b_al->m_atom_sel.size() == 1) {
-      auto it = b_al->m_atom_sel.begin();
-      if (it != b_al->m_atom_sel.end()) {
-          int itv = *it;
-          b_al->update_atom(itv, tm_single_atom_combo->currentText().toStdString(),
+  if (b_al && b_al->m_atom_idx_sel.size() == 1) {
+      auto it = b_al->m_atom_idx_sel.begin();
+      if (it != b_al->m_atom_idx_sel.end()) {
+          auto itv = *it;
+          b_al->update_atom(itv.m_atm, tm_single_atom_combo->currentText().toStdString(),
                             vector3<float>(tm_single_atom_vec3->sb_x->value(),
                                            tm_single_atom_vec3->sb_y->value(),
                                            tm_single_atom_vec3->sb_z->value()));
@@ -976,10 +976,10 @@ void ws_atoms_list_obj_insp_widget_t::modify_barycentric_scale_button_clicked() 
   if (b_al) {
 
       vector3<float> center{0.0f, 0.0f, 0.0f};
-      for (auto &rec : b_al->m_atom_sel) center += b_al->m_geom->pos(rec);
-      center /= b_al->m_atom_sel.size();
+      for (auto &rec : b_al->m_atom_idx_sel) center += b_al->m_geom->pos(rec.m_atm);
+      center /= b_al->m_atom_idx_sel.size();
 
-      for (auto &rec : b_al->m_atom_sel) {
+      for (auto &rec : b_al->m_atom_idx_sel) {
 
           float scale_mod_x = 0.0f;
           float scale_mod_y = 0.0f;
@@ -989,14 +989,14 @@ void ws_atoms_list_obj_insp_widget_t::modify_barycentric_scale_button_clicked() 
           if (tm_u_scale_y_enabled->checkState() == Qt::Checked) scale_mod_y = 1.0f;
           if (tm_u_scale_z_enabled->checkState() == Qt::Checked) scale_mod_z = 1.0f;
 
-          vector3<float> new_pos_dist = center - b_al->m_geom->pos(rec);
-          vector3<float> new_pos = b_al->m_geom->pos(rec);
+          vector3<float> new_pos_dist = center - b_al->m_geom->pos(rec.m_atm);
+          vector3<float> new_pos = b_al->m_geom->pos(rec.m_atm);
 
           new_pos[0] +=  (1-float(tm_u_scale_sb_x->value())) * new_pos_dist[0] * scale_mod_x;
           new_pos[1] +=  (1-float(tm_u_scale_sb_y->value())) * new_pos_dist[1] * scale_mod_y;
           new_pos[2] +=  (1-float(tm_u_scale_sb_z->value())) * new_pos_dist[2] * scale_mod_z;
 
-          b_al->update_atom(rec, new_pos);
+          b_al->update_atom(rec.m_atm, new_pos);
         }
 
       update_animate_section_status();
@@ -1019,8 +1019,8 @@ void ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked() 
           tr_vec = b_al->m_geom->cell.frac2cart(tr_vec_c);
         }
 
-      for (auto &rec : b_al->m_atom_sel) {
-          b_al->update_atom(rec, b_al->m_geom->pos(rec) + tr_vec);
+      for (auto &rec : b_al->m_atom_idx_sel) {
+          b_al->update_atom(rec.m_atm, b_al->m_geom->pos(rec.m_atm) + tr_vec);
         }
 
     }

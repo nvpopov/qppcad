@@ -243,15 +243,9 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
 
-              if (atom_sel_it == m_atom_idx_sel.end()) {
-                  m_atom_idx_sel.insert(iskey);
-                  m_atom_sel.insert(res[0].m_atm);
+              if (atom_sel_it == m_atom_idx_sel.end()) m_atom_idx_sel.insert(iskey);
+              else m_atom_idx_sel.erase(atom_sel_it);
 
-                } else {
-                  m_atom_idx_sel.erase(atom_sel_it);
-                  auto it = m_atom_sel.find(res[0].m_atm);
-                  if (it != m_atom_sel.end()) m_atom_sel.erase(m_atom_sel.find(res[0].m_atm));
-                }
             }
 
           recalc_gizmo_barycenter();
@@ -263,7 +257,6 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
           //TODO: need refractoring
           if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
-              m_atom_sel.clear();
               m_atom_idx_sel.clear();
             }
 
@@ -280,14 +273,11 @@ void ws_atoms_list_t::select_atoms (bool all) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (all) {
-      m_atom_sel.clear();
       m_atom_idx_sel.clear();
       for (auto i = 0; i < m_geom->nat(); i++) {
-          m_atom_sel.insert(i);
           m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
         }
     } else {
-      m_atom_sel.clear();
       m_atom_idx_sel.clear();
     }
 
@@ -305,7 +295,6 @@ bool ws_atoms_list_t::select_atom (int atom_id) {
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
-      m_atom_sel.insert(atom_id);
       m_atom_idx_sel.insert(atom_index_set_key(atom_id, index::D(m_geom->DIM).all(0)));
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
@@ -324,9 +313,6 @@ bool ws_atoms_list_t::unselect_atom(int atom_id) {
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
-
-      auto it = m_atom_sel.find(atom_id);
-      if (it != m_atom_sel.end()) m_atom_sel.erase(it);
 
       for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
            !idx.end(); idx++ ) {
@@ -351,7 +337,6 @@ void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
 
   for (auto i = 0; i < m_geom->nat(); i++)
     if (m_geom->type_table(i) == item_type_to_select){
-        m_atom_sel.insert(i);
         m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
       }
 
@@ -367,9 +352,9 @@ void ws_atoms_list_t::unselect_by_type(const int item_type_to_unselect) {
   app_state_t* astate = app_state_t::get_inst();
 
   for (auto i = 0; i < m_geom->nat(); i++)
+
     if (m_geom->type_table(i) == item_type_to_unselect) {
-        auto it = m_atom_sel.find(i);
-        if (it != m_atom_sel.end()) m_atom_sel.erase(it);
+
 
         for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
              !idx.end(); idx++ ) {
@@ -390,23 +375,17 @@ void ws_atoms_list_t::invert_selected_atoms () {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  std::set<int> sel_atm;
+  index zero = index::D(m_geom->DIM).all(0);
+
+  for (auto &rec : m_atom_idx_sel)
+    if (rec.m_idx == zero) sel_atm.insert(rec.m_atm);
+
   m_atom_idx_sel.clear();
 
-  for (auto i = 0; i < m_geom->nat(); i++) {
-      auto it = m_atom_sel.find(i);
-
-      if (it != m_atom_sel.end()) {
-          m_atom_sel.erase(it);
-          for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
-               !idx.end(); idx++ ) {
-              auto i2 = m_atom_idx_sel.find(atom_index_set_key(i, idx));
-              if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
-            }
-        } else {
-          m_atom_sel.insert(i);
-          m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
-        }
-    }
+  for (int i = 0 ; i < m_geom->nat(); i++)
+     if (sel_atm.find(i) == sel_atm.end())
+       m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -491,8 +470,9 @@ void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
 }
 
 void ws_atoms_list_t::translate_selected (const vector3<float> &t_vec) {
-  for (auto &elem : m_atom_sel)
-    update_atom(elem, m_geom->pos(elem) + t_vec);
+  for (auto &elem : m_atom_idx_sel)
+    if (elem.m_idx == index::D(m_geom->DIM).all(0))
+      update_atom(elem.m_atm, m_geom->pos(elem.m_atm) + t_vec);
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
 }
@@ -501,7 +481,7 @@ void ws_atoms_list_t::delete_selected_atoms () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!m_atom_idx_sel.empty() || !m_atom_sel.empty()) m_anim->m_force_non_animable = true;
+  if (!m_atom_idx_sel.empty()) m_anim->m_force_non_animable = true;
 
   std::vector<int> all_atom_num;
   all_atom_num.reserve(m_atom_idx_sel.size());
@@ -515,7 +495,6 @@ void ws_atoms_list_t::delete_selected_atoms () {
   std::sort(all_atom_num.begin(), all_atom_num.end());
 
   m_atom_idx_sel.clear();
-  m_atom_sel.clear();
 
   for (uint16_t delta = 0; delta < all_atom_num.size(); delta++) {
       if (delta == 0 && all_atom_num.size() > 1)
@@ -580,7 +559,6 @@ void ws_atoms_list_t::apply_axial_scale (const float scale_a,
 
   for (auto i = 0; i < m_geom->nat(); i++) {
       vector3<float> frac_in_old_cell = m_geom->cell.cart2frac(m_geom->pos(i));
-      //std::cout << frac_in_old_cell << new_cell.frac2cart(frac_in_old_cell) << std::endl;
       m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
     }
 
@@ -598,7 +576,8 @@ void ws_atoms_list_t::apply_axial_scale (const float scale_a,
 void ws_atoms_list_t::move_selected_atoms_to_home (bool ignore_selection) {
 
   for (int i = 0; i < m_geom->nat(); i++)
-    if (m_atom_sel.find(i) != m_atom_sel.end() || ignore_selection) {
+    if (m_atom_idx_sel.find(atom_index_set_key(i, index::D(m_geom->DIM).all(0))) !=
+        m_atom_idx_sel.end() || ignore_selection) {
         vector3<float> pos = m_geom->pos(i);
         m_geom->change_pos(i, m_geom->cell.reduce(pos));
       }
@@ -624,7 +603,7 @@ bool ws_atoms_list_t::is_bb_visible() {
 }
 
 uint32_t ws_atoms_list_t::get_amount_of_selected_content () {
-  return this->m_atom_sel.size();
+  return this->m_atom_idx_sel.size();
 }
 
 size_t ws_atoms_list_t::get_content_count () {
@@ -641,9 +620,9 @@ void ws_atoms_list_t::apply_intermediate_translate_content (const vector3<float>
   app_state_t* astate = app_state_t::get_inst();
 
   bool someone_from_atoms_were_translated = false;
-  for (const uint16_t &at_idx : m_atom_sel){
-      vector3<float> acc_pos = m_geom->coord(at_idx) + pos;
-      m_geom->change_pos(at_idx, acc_pos);
+  for (auto &it : m_atom_idx_sel) {
+      vector3<float> acc_pos = m_geom->coord(it.m_atm) + pos;
+      m_geom->change_pos(it.m_atm, acc_pos);
       someone_from_atoms_were_translated = true;
     }
   if (someone_from_atoms_were_translated) {
@@ -662,7 +641,7 @@ void ws_atoms_list_t::recalc_gizmo_barycenter () {
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
 
-  if (!m_atom_idx_sel.empty() || m_geom->nat() == 0){
+  if (!m_atom_idx_sel.empty() || m_geom->nat() == 0) {
       for (const auto& atm_idx : m_atom_idx_sel)
         m_gizmo_barycenter += m_geom->pos(atm_idx.m_atm, atm_idx.m_idx);
       m_gizmo_barycenter /= m_atom_idx_sel.size();

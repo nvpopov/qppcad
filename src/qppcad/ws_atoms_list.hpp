@@ -61,7 +61,7 @@ namespace qpp {
         std::unique_ptr<bonding_table<float> >                                       m_bt{};
         std::unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr{};
         std::unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs{};
-        std::set<uint16_t>                                                           m_atom_sel;
+        //std::set<uint16_t>                                                           m_atom_sel;
         std::unordered_set<atom_index_set_key, atom_index_set_key_hash>              m_atom_idx_sel;
         std::unique_ptr<ws_atoms_list_render_buffered_billboards_t> m_bs{};
         std::set<uint16_t>  m_atom_type_to_hide;
@@ -89,7 +89,6 @@ namespace qpp {
         bool m_sel_vis{false};
         bool m_sel_vis_affect_bonds{false};
 
-
         ws_atoms_list_t();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -107,11 +106,14 @@ namespace qpp {
         void select_by_type(const int item_type_to_select);
         void unselect_by_type(const int item_type_to_unselect);
         void invert_selected_atoms();
+
         void insert_atom(const int atom_type, const vector3<float> &pos);
         void insert_atom(const std::string &atom_name, const vector3<float> &pos);
+
         void update_atom(const int at_id, const vector3<float> &pos);
         void update_atom(const int at_id, const std::string &at_name);
         void update_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
+
         void update_inter_atomic_dist(float new_dist,
                                       const int at1, const int at2,
                                       const index id1, const index id2,
@@ -120,6 +122,7 @@ namespace qpp {
                                       const int at1,
                                       const int at2,
                                       pair_dist_mode mode);
+
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
         void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);

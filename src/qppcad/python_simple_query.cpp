@@ -199,7 +199,8 @@ pybind11::list simple_query::get_sel() {
       if (cur_ws) {
           auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
           if (cur_it_al) {
-              for (auto &elem : cur_it_al->m_atom_sel) res.append(elem);
+              for (auto &elem : cur_it_al->m_atom_idx_sel)
+                if (elem.m_idx == index::D(cur_it_al->m_geom->DIM).all(0)) res.append(elem.m_atm);
             }
         }
     }
