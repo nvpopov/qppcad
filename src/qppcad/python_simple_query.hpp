@@ -23,13 +23,17 @@ namespace qpp {
         static void select_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);
         static void sel_invert();
+        static void sel_cnt_all();
         static void sel_cnt_list(py::list sel_list);
         static void sel_cnt_type(py::str sel_type);
-        static void edit_mode(int mode);
+        static void sel_cnt_sphere(vector3<float> sph_center, float sph_rad);
+        static void unsel_cnt_all();
         static void unsel_cnt(int cnt_idx);
         static void unsel_cnt_list(py::list sel_list);
         static void unsel_cnt_type(py::str sel_type);
         static py::list get_sel();
+
+        static void edit_mode(int mode);
         static void rebond();
         static void translate_selected(float tx, float ty, float tz);
         static void set_ws_bg(vector3<float> bg);
