@@ -23,7 +23,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   sel.def("uc", &simple_query::unsel_cnt);
   sel.def("uc", &simple_query::unsel_cnt_list);
   sel.def("uc", &simple_query::unsel_cnt_type);
-  sel.def("c", &simple_query::get_sel);
+  sel.def("get", &simple_query::get_sel);
   sel.def("sph", &simple_query::sel_cnt_sphere);
   sel.def("inv", &simple_query::sel_invert);
 
