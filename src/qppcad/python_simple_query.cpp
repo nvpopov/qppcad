@@ -271,6 +271,25 @@ pybind11::list simple_query::get_sel() {
   return res;
 }
 
+vector3<float> simple_query::gizmo_pos() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              return cur_it_al->get_gizmo_content_barycenter();
+            }
+        }
+    }
+
+  return vector3<float>::Zero();
+}
+
 void simple_query::rebond() {
 
   app_state_t *astate = app_state_t::get_inst();

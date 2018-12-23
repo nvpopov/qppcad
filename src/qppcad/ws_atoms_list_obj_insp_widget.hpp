@@ -105,6 +105,7 @@ namespace qpp {
         QGroupBox *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_layout;
         QLabel *tm_single_atom_idx;
+        QLabel *tm_single_atom_num;
         QComboBox *tm_single_atom_combo;
         qbinded_float3_input *tm_single_atom_vec3;
         QPushButton *tm_single_atom_commit;
@@ -142,6 +143,12 @@ namespace qpp {
         QComboBox *tm_translate_coord_type;
         QPushButton *tm_translate_apply_button;
 
+        QGroupBox *tm_gb_group_op;
+        QGridLayout *tm_group_op_layout;
+        QPushButton *tm_group_op_sv_show;
+        QPushButton *tm_group_op_sv_hide;
+        QPushButton *tm_group_op_sv_show_all;
+
         void construct_general_tab();
         void construct_display_tab();
         void construct_anim_tab();
@@ -161,15 +168,18 @@ namespace qpp {
         void play_anim_button_toggle(bool value);
         void anim_updated_external();
         void cur_ws_selected_item_frame_changed();
+
         void anim_timeline_slider_value_changed(int value);
         void anim_button_begin_clicked();
         void anim_button_end_clicked();
         void anim_button_frame_move_forward_clicked();
         void anim_button_frame_move_backward_clicked();
+
         void cell_changed();
         void draw_subcells_changed(int state);
         void update_animate_section_status();
         void cur_it_list_selection_changed();
+
         void modify_add_atom_button_clicked();
         void modify_single_atom_button_clicked();
         void modify_single_atom_delete_button_clicked();
@@ -178,8 +188,15 @@ namespace qpp {
         void modify_barycentric_scale_button_clicked();
         void modify_translate_selected_atoms_clicked();
         void modify_translate_coord_type_changed(int coord_type);
+
+        void modify_group_op_sv_show();
+        void modify_group_op_sv_hide();
+        void modify_group_op_sv_show_all();
+
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
+
+
 
     };
 

@@ -32,18 +32,18 @@ namespace qpp {
 
       public:
 
-        vector3<float> pos;
-        vector3<float> accum_translate;
-        float gizmo_box_size;
-        float gizmo_shift_magnitude;
-        bool is_active{false};
-        bool interact_at_the_moment{false};
+        vector3<float> m_pos; // gizmo pos in world coordinates
+        vector3<float> m_acc_tr;
+        float m_box_size;
+        float m_shift_magn;
+        bool m_is_active{false};
+        bool m_is_interacting{false};
         bool m_is_visible{true};
         gizmo_transform_type m_cur_ttype{gizmo_transform_type::translation};
 
-        uint8_t touched_axis{0};
-        std::array<aabb_3d_t<float>,3> bx;
-        std::array<bool, 3> bx_touched;
+        uint8_t m_touched_axis{0};
+        std::array<aabb_3d_t<float>,3> m_bx;
+        std::array<bool, 3> m_bx_touched;
         ws_item_t *attached_item;
 
         template<typename REAL>
@@ -52,16 +52,16 @@ namespace qpp {
           bool _gizmo_touched = false;
 
           if (ray) {
-              touched_axis = 4;
+              m_touched_axis = 4;
               for(uint8_t i = 0; i < 3; i++){
-                  aabb_3d_t<float> aabb_in_world_frame = bx[i].shifted(pos);
+                  aabb_3d_t<float> aabb_in_world_frame = m_bx[i].shifted(m_pos);
                   if (ray_aabb_test(*ray, aabb_in_world_frame)){
-                      touched_axis = i;
-                      bx_touched[i] = true;
+                      m_touched_axis = i;
+                      m_bx_touched[i] = true;
                       _gizmo_touched = true;
                     }
                   else
-                    bx_touched[i] = false;
+                    m_bx_touched[i] = false;
                 }
             }
 

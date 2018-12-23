@@ -115,7 +115,7 @@ void workspace_t::render() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_gizmo->is_active && m_gizmo->attached_item) m_gizmo->render();
+  if (m_gizmo->m_is_active && m_gizmo->attached_item) m_gizmo->render();
 
   if (astate->m_debug_show_selection_ray){
       astate->dp->begin_render_line();

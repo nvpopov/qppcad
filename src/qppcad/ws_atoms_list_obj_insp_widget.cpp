@@ -255,6 +255,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_single_atom_vec3 = new qbinded_float3_input;
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
   tm_single_atom_idx = new QLabel;
+  tm_single_atom_num = new QLabel;
 
   tm_single_atom_commit = new QPushButton(tr("Commit changes"));
   tm_single_atom_delete = new QPushButton(tr("Delete atom"));
@@ -263,6 +264,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
 
   tm_gb_single_atom_layout->addRow(tr("Atom name"), tm_single_atom_combo);
   tm_gb_single_atom_layout->addRow(tr("Atom idx"), tm_single_atom_idx);
+  tm_gb_single_atom_layout->addRow(tr("Atom num"), tm_single_atom_num);
   tm_gb_single_atom_layout->addRow(tr("Atom position"), tm_single_atom_vec3);
   tm_gb_single_atom_layout->addRow("", tm_single_atom_commit);
   tm_gb_single_atom_layout->addRow("", tm_single_atom_delete);
@@ -390,12 +392,31 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   connect(tm_translate_apply_button, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked);
 
+  tm_gb_group_op = new QGroupBox(tr("Group operations"));
+  tm_group_op_layout = new QGridLayout;
+  tm_gb_group_op->setLayout(tm_group_op_layout);
+  tm_group_op_sv_show = new QPushButton(tr("SV:Show"));
+  tm_group_op_sv_hide = new QPushButton(tr("SV:Hide"));
+  tm_group_op_sv_show_all = new QPushButton(tr("SV:Show all"));
+
+  connect(tm_group_op_sv_show, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show);
+  connect(tm_group_op_sv_hide, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_hide);
+  connect(tm_group_op_sv_show_all, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show_all);
+
+  tm_group_op_layout->addWidget(tm_group_op_sv_show,     0, 0, 1, 1);
+  tm_group_op_layout->addWidget(tm_group_op_sv_hide,     0, 1, 1, 1);
+  tm_group_op_layout->addWidget(tm_group_op_sv_show_all, 0, 2, 1, 1);
+
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_dist);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_creation);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_u_scale);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_translate);
+  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_group_op);
 
   tab_modify->tab_inner_widget_layout->addStretch(0);
 
@@ -582,6 +603,8 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
               tm_gb_translate->hide();
+              tm_gb_group_op->hide();
+
               //update atom names combobox
               fill_combo_with_atom_types(tm_add_atom_combo, b_al);
             }
@@ -593,6 +616,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
               tm_gb_translate->show();
+              tm_gb_group_op->show();
 
               fill_combo_with_atom_types(tm_single_atom_combo, b_al);
 
@@ -600,10 +624,16 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               if (it != b_al->m_atom_idx_sel.end()) {
 
                   tm_single_atom_idx->setText(
-                        QString::fromStdString(fmt::format("{}", it->m_idx)));
+                        QString::fromStdString(fmt::format("{}", it->m_idx))
+                        );
+
+                  tm_single_atom_num->setText(
+                        QString::fromStdString(fmt::format("{}", it->m_atm))
+                        );
 
                   tm_single_atom_combo->setCurrentText(
                         QString::fromStdString(b_al->m_geom->atom_name(it->m_atm)));
+
                   tm_single_atom_vec3->sb_x->setValue(b_al->m_geom->pos(it->m_atm)[0]);
                   tm_single_atom_vec3->sb_y->setValue(b_al->m_geom->pos(it->m_atm)[1]);
                   tm_single_atom_vec3->sb_z->setValue(b_al->m_geom->pos(it->m_atm)[2]);
@@ -621,6 +651,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->show();
               tm_gb_translate->show();
+              tm_gb_group_op->show();
 
               auto it1 = b_al->m_atom_idx_sel.begin();
               auto it2 = it1++;
@@ -667,6 +698,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_pair_dist->hide();
               tm_gb_u_scale->show();
               tm_gb_translate->show();
+              tm_gb_group_op->show();
 
             }
 
@@ -690,6 +722,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
           tm_gb_pair_dist->hide();
           tm_gb_u_scale->hide();
           tm_gb_translate->hide();
+          tm_gb_group_op->hide();
 
         }
 
@@ -1034,6 +1067,44 @@ void ws_atoms_list_obj_insp_widget_t::modify_translate_coord_type_changed(int co
     } else {
       tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
     }
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      for (auto &rec : b_al->m_atom_idx_sel)
+        if (rec.m_idx == index::D(b_al->m_geom->DIM).all(0))
+          b_al->m_geom->xfield<bool>(xgeom_sel_vis, rec.m_atm) = false;
+    }
+
+  astate->make_viewport_dirty();
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_hide() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      for (auto &rec : b_al->m_atom_idx_sel)
+        if (rec.m_idx == index::D(b_al->m_geom->DIM).all(0))
+          b_al->m_geom->xfield<bool>(xgeom_sel_vis, rec.m_atm) = true;
+    }
+
+  astate->make_viewport_dirty();
+
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show_all() {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      for (int i = 0; i < b_al->m_geom->nat(); i++)
+          b_al->m_geom->xfield<bool>(xgeom_sel_vis, i) = false;
+    }
+
+  astate->make_viewport_dirty();
 }
 
 void ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed() {

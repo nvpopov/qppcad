@@ -33,6 +33,8 @@ namespace qpp {
         static void unsel_cnt_type(py::str sel_type);
         static py::list get_sel();
 
+        static vector3<float> gizmo_pos();
+
         static void edit_mode(int mode);
         static void rebond();
         static void translate_selected(float tx, float ty, float tz);
