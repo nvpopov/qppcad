@@ -51,6 +51,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   cam.def("rp", &simple_query::camera_rotate_pitch);
   cam.def("zoom", &simple_query::camera_zoom);
   cam.def("proj", &simple_query::camera_mode);
+  cam.def("copy", &simple_query::copy_camera_from_ws);
 
   py::module sv = m.def_submodule("sv", "Selective visibility manipulation");
   sv.def("state", &simple_query::sv_get);

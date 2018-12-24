@@ -73,6 +73,33 @@ void camera_t::translate_camera (const vector3<float> shift) {
   m_look_at    += shift;
 }
 
+void camera_t::copy_from_camera(const camera_t &another) {
+
+  m_view_point = another.m_view_point;
+  m_view_dir = another.m_view_dir;
+  m_look_at = another.m_look_at;
+  m_look_up = another.m_look_up;
+  m_right = another.m_right;
+
+  m_mat_view = another.m_mat_view;
+  m_mat_proj = another.m_mat_proj;
+  m_proj_view = another.m_proj_view;
+  m_view_inv_tr = another.m_view_inv_tr;
+  m3_proj_view = another.m3_proj_view;
+
+  m_ortho_scale = another.m_ortho_scale;
+  m_fov = another.m_fov;
+  m_znear_persp = another.m_znear_persp;
+  m_zfar_persp = another.m_zfar_persp;
+  m_znear_ortho = another.m_znear_ortho;
+  m_zfar_ortho = another.m_zfar_ortho;
+  m_stored_dist = another.m_stored_dist;
+
+  m_cur_proj = another.m_cur_proj;
+  update_camera();
+
+}
+
 void camera_t::reset_camera () {
   //
   m_view_point = vector3<float>(0.0, 9.0, 0.0);

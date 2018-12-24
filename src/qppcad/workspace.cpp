@@ -361,6 +361,11 @@ bool workspace_manager_t::set_cur_id (const size_t ws_index) {
 
 }
 
+std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
+  if (!m_ws.empty() && id >= 0 && id < m_ws.size()) return m_ws[id];
+  else return nullptr;
+}
+
 void workspace_manager_t::init_default () {
 
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");

@@ -70,6 +70,8 @@ namespace qpp {
         void translate_camera_up(const float amount);
         void translate_camera(const vector3<float> shift);
 
+        void copy_from_camera(const camera_t &another);
+
         void reset_camera();
         void update_camera();
         void update_camera_zoom(const float dist);

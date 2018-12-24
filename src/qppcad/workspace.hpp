@@ -38,6 +38,7 @@ namespace qpp {
         template<int I>
         void force_set_cur_ws(){set_cur_id(I);}
 
+        std::shared_ptr<workspace_t> get_ws(int id);
         bool has_wss(){return m_ws.size()>0;}
         void init_default();
         void render_cur_ws();

@@ -452,6 +452,16 @@ void simple_query::camera_mode(int mode) {
     }
 }
 
+void simple_query::copy_camera_from_ws(int ws_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->camera) {
+      auto ws_ref = astate->ws_manager->get_ws(ws_id);
+      if (ws_ref) astate->camera->copy_from_camera(*(ws_ref->m_camera));
+    }
+}
+
 pybind11::list simple_query::sv_get() {
 
   py::list ret;
