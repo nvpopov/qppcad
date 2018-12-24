@@ -102,6 +102,7 @@ namespace qpp {
 
         QMenu *file_menu_import_firefly;
         QAction *file_menu_import_firefly_output;
+        QAction *file_menu_import_cube;
 
         QAction *file_menu_save_ws;
         QAction *file_menu_save_ws_as;

@@ -34,7 +34,8 @@ namespace qpp {
     enum ws_item_tag {
       tag_abstract_item,
       tag_atoms_list,
-      tag_comp_chem_data
+      tag_comp_chem_data,
+      tag_volume_data
     };
 
     class ws_item_t : public std::enable_shared_from_this<ws_item_t> {

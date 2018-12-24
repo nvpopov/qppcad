@@ -110,6 +110,10 @@ void main_window::init_menus() {
   connect(file_menu_import_vasp_outcar,&QAction::triggered, this,
           [this](){this->import_file("Import VASP OUTCAR", "*", qc_file_fmt::vasp_outcar_md);});
 
+  file_menu_import_cube = new QAction(this);
+  file_menu_import_cube->setText(tr("CUBE"));
+  file_menu_import->addAction(file_menu_import_cube);
+
   file_menu_save_ws = new QAction(this);
   file_menu_save_ws->setText(tr("Save workspace"));
   file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));

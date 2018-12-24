@@ -5,6 +5,7 @@
 #include <mathf/math.hpp>
 #include <qppcad/ws_atoms_list.hpp>
 #include <qppcad/ws_comp_chem_data.hpp>
+#include <qppcad/ws_volume_data.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -12,6 +13,7 @@ using namespace qpp::cad;
 std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj_type) {
   if (obj_type == "ws_atoms_list") return std::make_shared<ws_atoms_list_t>();
   if (obj_type == "ws_comp_chem_data") return std::make_shared<ws_comp_chem_data_t>();
+  if (obj_type == "ws_volume_data") return std::make_shared<ws_volume_data_t>();
   return nullptr;
 }
 

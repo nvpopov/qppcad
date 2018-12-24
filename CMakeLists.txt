@@ -92,6 +92,7 @@ add_executable(qppcad
     src/qppcad/gizmo.cpp
     src/qppcad/ws_atoms_list.cpp
     src/qppcad/ws_comp_chem_data.cpp
+    src/qppcad/ws_volume_data.cpp
     src/qppcad/ws_atoms_list_render_bs.cpp
     src/qppcad/ws_atoms_list_render_billboards.cpp
     src/qppcad/ws_atoms_list_render_buffered_billboards.cpp
