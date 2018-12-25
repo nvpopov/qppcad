@@ -378,6 +378,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_translate_apply_button = new QPushButton(tr("Apply translate"));
   tm_translate_coord_type_label = new QLabel("Coord. type");
   tm_translate_coord_type = new QComboBox;
+
   tm_translate_coord_type->addItem("Cartesian");
   tm_translate_coord_type->addItem("Fractional");
 
@@ -391,6 +392,40 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
 
   connect(tm_translate_apply_button, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked);
+
+  tm_gb_bc_rot = new QGroupBox(tr("Rotate selected atoms"));
+  tm_gb_bc_rot_layout = new QFormLayout;
+  tm_gb_bc_rot->setLayout(tm_gb_bc_rot_layout);
+  tm_bc_rot_axis = new QComboBox;
+  tm_bc_rot_axis->addItem("X");
+  tm_bc_rot_axis->addItem("Y");
+  tm_bc_rot_axis->addItem("Z");
+
+  tm_bc_rot_axis->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
+  tm_bc_rot_axis->setItemData(1, QBrush(Qt::green), Qt::TextColorRole);
+  tm_bc_rot_axis->setItemData(2, QBrush(Qt::blue), Qt::TextColorRole);
+
+  tm_bc_rot_angle = new QDoubleSpinBox;
+  tm_bc_rot_angle->setMinimum(-1000);
+  tm_bc_rot_angle->setMaximum(1000);
+
+  tm_bc_rot_angle_type = new QComboBox;
+
+  connect(tm_bc_rot_angle_type,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this, &ws_atoms_list_obj_insp_widget_t::modify_bc_rot_angle_type_change);
+
+  tm_bc_rot_angle_type->addItem("Degrees");
+  tm_bc_rot_angle_type->addItem("Radians");
+  tm_bc_rot_apply = new QPushButton(tr("Apply rotation"));
+
+  connect(tm_bc_rot_apply, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_bc_rot_apply);
+
+  tm_gb_bc_rot_layout->addRow(tr("Rotation axis"), tm_bc_rot_axis);
+  tm_gb_bc_rot_layout->addRow(tr("Angle type"), tm_bc_rot_angle_type);
+  tm_gb_bc_rot_layout->addRow(tr("Angle"), tm_bc_rot_angle);
+  tm_gb_bc_rot_layout->addRow("", tm_bc_rot_apply);
 
   tm_gb_group_op = new QGroupBox(tr("Group operations"));
   tm_group_op_layout = new QGridLayout;
@@ -416,6 +451,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_creation);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_u_scale);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_translate);
+  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_bc_rot);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_group_op);
 
   tab_modify->tab_inner_widget_layout->addStretch(0);
@@ -603,6 +639,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
               tm_gb_translate->hide();
+              tm_gb_bc_rot->hide();
               tm_gb_group_op->hide();
 
               //update atom names combobox
@@ -616,6 +653,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->hide();
               tm_gb_translate->show();
+              tm_gb_bc_rot->hide();
               tm_gb_group_op->show();
 
               fill_combo_with_atom_types(tm_single_atom_combo, b_al);
@@ -651,6 +689,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_u_scale->hide();
               tm_gb_pair_creation->show();
               tm_gb_translate->show();
+              tm_gb_bc_rot->show();
               tm_gb_group_op->show();
 
               auto it1 = b_al->m_atom_idx_sel.begin();
@@ -698,6 +737,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
               tm_gb_pair_dist->hide();
               tm_gb_u_scale->show();
               tm_gb_translate->show();
+              tm_gb_bc_rot->show();
               tm_gb_group_op->show();
 
             }
@@ -722,6 +762,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
           tm_gb_pair_dist->hide();
           tm_gb_u_scale->hide();
           tm_gb_translate->hide();
+          tm_gb_bc_rot->hide();
           tm_gb_group_op->hide();
 
         }
@@ -924,9 +965,11 @@ void ws_atoms_list_obj_insp_widget_t::modify_add_atom_button_clicked() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (b_al) {
-      vector3<float> new_atom_pos{tm_add_atom_vec3->sb_x->value(),
-            tm_add_atom_vec3->sb_y->value(),
-            tm_add_atom_vec3->sb_z->value()};
+      vector3<float> new_atom_pos{
+            float(tm_add_atom_vec3->sb_x->value()),
+            float(tm_add_atom_vec3->sb_y->value()),
+            float(tm_add_atom_vec3->sb_z->value())
+                                 };
       std::string new_atom_name = tm_add_atom_combo->currentText().toStdString();
       b_al->insert_atom(new_atom_name, new_atom_pos);
       update_animate_section_status();
@@ -1066,6 +1109,54 @@ void ws_atoms_list_obj_insp_widget_t::modify_translate_coord_type_changed(int co
       tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
     } else {
       tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
+    }
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_bc_rot_angle_type_change(int new_angle_type) {
+  if (new_angle_type == 0) tm_bc_rot_angle->setSingleStep(0.5);
+  else tm_bc_rot_angle->setSingleStep(0.01);
+  tm_bc_rot_angle->setValue(0.0);
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_bc_rot_apply() {
+
+  if (b_al && b_al->m_parent_ws && b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+
+      float angle;
+
+      if (tm_bc_rot_angle_type->currentIndex() == 0)
+        angle = float(tm_bc_rot_angle->value() * qpp::pi) / 180.0f;
+      else //bypass input value
+        angle = float(tm_bc_rot_angle->value());
+      vector3<float> rot_center = b_al->get_gizmo_content_barycenter();
+
+      vector3<float> rot_axis{vector3<float>::Zero()};
+
+      switch (tm_bc_rot_axis->currentIndex()) {
+        case 0: {
+            rot_axis = {1, 0, 0};
+            break;
+          }
+        case 1: {
+            rot_axis = {0, 1, 0};
+            break;
+          }
+        default: {
+            rot_axis = {0, 0, 1};
+            break;
+          }
+        }
+
+      Eigen::Translation<float,3> tr_b(rot_center);
+      Eigen::Translation<float,3> tr_a(-rot_center);
+      matrix3<float> rm = RotMtrx(rot_axis, angle);
+      Eigen::Transform<float, 3, Eigen::Affine> combo = tr_b * rm * tr_a;
+
+      matrix3<float> tm = combo.linear();
+
+      b_al->transform_selected(tm);
+      app_state_t *astate = app_state_t::get_inst();
+      astate->make_viewport_dirty();
     }
 }
 

@@ -114,6 +114,9 @@ namespace qpp {
         void update_atom(const int at_id, const std::string &at_name);
         void update_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
 
+        void transform_atom(const int at_id, const matrix3<float> &tm);
+        void transform_selected(const matrix3<float> &tm);
+
         void update_inter_atomic_dist(float new_dist,
                                       const int at1, const int at2,
                                       const index id1, const index id2,

@@ -143,6 +143,13 @@ namespace qpp {
         QComboBox *tm_translate_coord_type;
         QPushButton *tm_translate_apply_button;
 
+        QGroupBox *tm_gb_bc_rot;
+        QFormLayout *tm_gb_bc_rot_layout;
+        QComboBox *tm_bc_rot_axis;
+        QComboBox *tm_bc_rot_angle_type;
+        QDoubleSpinBox *tm_bc_rot_angle;
+        QPushButton *tm_bc_rot_apply;
+
         QGroupBox *tm_gb_group_op;
         QGridLayout *tm_group_op_layout;
         QPushButton *tm_group_op_sv_show;
@@ -188,6 +195,8 @@ namespace qpp {
         void modify_barycentric_scale_button_clicked();
         void modify_translate_selected_atoms_clicked();
         void modify_translate_coord_type_changed(int coord_type);
+        void modify_bc_rot_angle_type_change(int new_angle_type);
+        void modify_bc_rot_apply();
 
         void modify_group_op_sv_show();
         void modify_group_op_sv_hide();
@@ -195,8 +204,6 @@ namespace qpp {
 
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
-
-
 
     };
 

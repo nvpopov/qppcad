@@ -426,6 +426,18 @@ void ws_atoms_list_t::update_atom(const int at_id, const std::string &at_name,
   astate->make_viewport_dirty();
 }
 
+void ws_atoms_list_t::transform_selected(const matrix3<float> &tm) {
+  for (auto &elem : m_atom_idx_sel)
+    if (elem.m_idx == index::D(m_geom->DIM).all(0))
+      transform_atom(elem.m_atm, tm);
+}
+
+void ws_atoms_list_t::transform_atom(const int at_id, const matrix3<float> &tm) {
+  vector3<float> pos = m_geom->coord(at_id);
+  vector3<float> new_pos = tm * pos;
+  m_geom->coord(at_id) = new_pos;
+}
+
 void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
                                                const int at1, const int at2,
                                                const index id1, const index id2,
