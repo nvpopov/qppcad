@@ -384,8 +384,8 @@ void ws_atoms_list_t::invert_selected_atoms () {
   m_atom_idx_sel.clear();
 
   for (int i = 0 ; i < m_geom->nat(); i++)
-     if (sel_atm.find(i) == sel_atm.end())
-       m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
+    if (sel_atm.find(i) == sel_atm.end())
+      m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -408,7 +408,7 @@ void ws_atoms_list_t::update_atom (const int at_id, const vector3<float> &pos) {
   m_anim->m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
   app_state_t* astate = app_state_t::get_inst();
-  //astate->make_viewport_dirty();
+  astate->make_viewport_dirty();
 }
 
 void ws_atoms_list_t::update_atom (const int at_id, const string &at_name) {
@@ -426,16 +426,25 @@ void ws_atoms_list_t::update_atom(const int at_id, const std::string &at_name,
   astate->make_viewport_dirty();
 }
 
-void ws_atoms_list_t::transform_selected(const matrix3<float> &tm) {
-  for (auto &elem : m_atom_idx_sel)
-    if (elem.m_idx == index::D(m_geom->DIM).all(0))
-      transform_atom(elem.m_atm, tm);
-}
-
 void ws_atoms_list_t::transform_atom(const int at_id, const matrix3<float> &tm) {
   vector3<float> pos = m_geom->coord(at_id);
   vector3<float> new_pos = tm * pos;
   m_geom->coord(at_id) = new_pos;
+}
+
+void ws_atoms_list_t::transform_atom(const int at_id, const matrix4<float> &tm) {
+
+  vector4<float> p_aff(
+      m_geom->coord(at_id)[0],
+      m_geom->coord(at_id)[1],
+      m_geom->coord(at_id)[2],
+      1.0f);
+
+  vector4<float> new_p = tm * p_aff;
+  vector3<float> new_pos3(new_p[0], new_p[1], new_p[2]);
+
+  m_geom->change_pos(at_id, new_pos3);
+
 }
 
 void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,

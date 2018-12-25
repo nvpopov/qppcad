@@ -1128,6 +1128,7 @@ void ws_atoms_list_obj_insp_widget_t::modify_bc_rot_apply() {
         angle = float(tm_bc_rot_angle->value() * qpp::pi) / 180.0f;
       else //bypass input value
         angle = float(tm_bc_rot_angle->value());
+
       vector3<float> rot_center = b_al->get_gizmo_content_barycenter();
 
       vector3<float> rot_axis{vector3<float>::Zero()};
@@ -1147,12 +1148,13 @@ void ws_atoms_list_obj_insp_widget_t::modify_bc_rot_apply() {
           }
         }
 
-      Eigen::Translation<float,3> tr_b(rot_center);
-      Eigen::Translation<float,3> tr_a(-rot_center);
-      matrix3<float> rm = RotMtrx(rot_axis, angle);
-      Eigen::Transform<float, 3, Eigen::Affine> combo = tr_b * rm * tr_a;
+      Eigen::Affine3f t;
+      Eigen::AngleAxisf rot(angle, rot_axis);
+      Eigen::Translation<float,3> tb(-rot_center);
+      Eigen::Translation<float,3> ta(rot_center);
+      t = ta * rot * tb;
 
-      matrix3<float> tm = combo.linear();
+      matrix4<float> tm = t.matrix();
 
       b_al->transform_selected(tm);
       app_state_t *astate = app_state_t::get_inst();

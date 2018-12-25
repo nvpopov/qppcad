@@ -115,7 +115,14 @@ namespace qpp {
         void update_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
 
         void transform_atom(const int at_id, const matrix3<float> &tm);
-        void transform_selected(const matrix3<float> &tm);
+        void transform_atom(const int at_id, const matrix4<float> &tm);
+
+        template <typename TRANSFORM_CLASS>
+        void transform_selected(const TRANSFORM_CLASS &tm) {
+          for (auto &elem : m_atom_idx_sel)
+            if (elem.m_idx == index::D(m_geom->DIM).all(0)) transform_atom(elem.m_atm, tm);
+          recalc_gizmo_barycenter();
+        }
 
         void update_inter_atomic_dist(float new_dist,
                                       const int at1, const int at2,
