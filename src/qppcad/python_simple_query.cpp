@@ -151,6 +151,29 @@ void simple_query::sel_cnt_sphere(vector3<float> sph_center, float sph_rad) {
     }
 }
 
+void simple_query::sel_hemisphere(int coord_idx, bool positive) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (coord_idx < 0 || coord_idx > 2) return;
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              for (int i = 0; i < cur_it_al->m_geom->nat(); i++)
+                if (positive == cur_it_al->m_geom->pos(i)[coord_idx] > -0.01)
+                  cur_it_al->select_atom(i);
+            }
+        }
+
+      astate->make_viewport_dirty();
+
+    }
+}
+
 void simple_query::edit_mode(int mode) {
 
   app_state_t *astate = app_state_t::get_inst();

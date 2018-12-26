@@ -36,11 +36,11 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
   /* 0 atom
-   * 1 number
-   * 2 charge
-   * 3 X
-   * 4 Y
-   * 5 Z
+   * 1 X
+   * 2 Y
+   * 3 Z
+   * 4 charge
+   * 5 number
    * 6 hide
    * 7 sel
    * 8 ccr - red component of custom color
@@ -51,11 +51,11 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
   m_geom->set_format(
 
   {"atom", //0
-   "number", //1
-   "charge",//2
-   "x",//3
-   "y",//4
-   "z",//5
+   "x",//1
+   "y",//2
+   "z",//3
+   "charge",//4
+   "number", //5
    "hide",//6
    "lshow",//7
    "ccr",//8
@@ -65,11 +65,11 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
         },
 
   {type_string, //0
-   type_int, //1
+   type_real, //1
    type_real, //2
    type_real, //3
    type_real, //4
-   type_real, //5
+   type_int, //5
    type_bool, //6
    type_bool, //7
    type_real, //8

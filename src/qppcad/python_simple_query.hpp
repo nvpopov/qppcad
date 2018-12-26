@@ -27,6 +27,7 @@ namespace qpp {
         static void sel_cnt_list(py::list sel_list);
         static void sel_cnt_type(py::str sel_type);
         static void sel_cnt_sphere(vector3<float> sph_center, float sph_rad);
+        static void sel_hemisphere(int coord_idx, bool positive);
         static void unsel_cnt_all();
         static void unsel_cnt(int cnt_idx);
         static void unsel_cnt_list(py::list sel_list);

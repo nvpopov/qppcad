@@ -26,13 +26,13 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   sel.def("get", &simple_query::get_sel);
   sel.def("sph", &simple_query::sel_cnt_sphere);
   sel.def("inv", &simple_query::sel_invert);
+  sel.def("hemisph", &simple_query::sel_hemisphere);
 
   m.def("mode", &simple_query::edit_mode);
   m.def("rebond", &simple_query::rebond);
   m.def("t", &simple_query::translate_selected);
   m.def("bg", &simple_query::set_ws_bg);
-  m.def("bg", [](float r, float g, float b)
-  {simple_query::set_ws_bg(vector3<float>(r,g,b));});
+  m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));} );
   m.def("gpos", &simple_query::gizmo_pos);
 
   py::module pt = m.def_submodule("pt", "Periodic table manipulations");
