@@ -15,6 +15,7 @@ namespace qpp{
       cp2k_output,
       cp2k_coord_cell_section,
       qppcad_json,
+      qpp_uc,
       unknown_fileformat
     };
 
@@ -23,6 +24,37 @@ namespace qpp{
         static bool need_to_auto_center(qc_file_fmt file_format){
           if (file_format == qc_file_fmt::standart_xyz) return true;
           return false;
+        }
+
+        static qc_file_fmt file_format_from_string(const std::string &fn) {
+          //qppcad json
+
+          if (fn.find("json") != std::string::npos) {
+              return qc_file_fmt::qppcad_json;
+            }
+
+          //XYZ
+          if (fn.find("xyz") != std::string::npos) {
+              return qc_file_fmt::standart_xyz;
+            }
+
+          //VASP POSCAR
+          if (fn.find("poscar") != std::string::npos || fn.find("vasp") != std::string::npos) {
+              return qc_file_fmt::vasp_poscar;
+            }
+
+          //VASP OUTCAR
+          if (fn.find("outcar") != std::string::npos) {
+              return qc_file_fmt::vasp_outcar_md;
+            }
+
+          if (fn.find("cp2k") != std::string::npos) {
+              return qc_file_fmt::cp2k_output;
+            }
+
+
+          return qc_file_fmt::unknown_fileformat;
+
         }
 
         static qc_file_fmt file_name_to_file_format(const std::string &fn) {

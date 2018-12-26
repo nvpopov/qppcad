@@ -18,7 +18,7 @@ void ws_volume_data_t::render() {
 }
 
 bool ws_volume_data_t::mouse_click(ray_t<float> *click_ray) {
-
+  return false;
 }
 
 std::string ws_volume_data_t::compose_item_name() {
@@ -30,15 +30,15 @@ void ws_volume_data_t::update(float delta_time) {
 }
 
 float ws_volume_data_t::get_bb_prescaller() {
-
+  return 1.0f;
 }
 
 uint32_t ws_volume_data_t::get_amount_of_selected_content() {
-
+  return 0;
 }
 
 size_t ws_volume_data_t::get_content_count() {
-
+  return 0;
 }
 
 std::string ws_volume_data_t::get_ws_item_class_name() {

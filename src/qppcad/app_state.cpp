@@ -53,7 +53,7 @@ namespace qpp {
 
     void app_state_t::init_managers() {
       ws_manager   = std::make_shared<workspace_manager_t>(this);
-      ws_manager->init_default();
+      //ws_manager->init_default();
 
       py_manager = std::make_unique<python_manager_t>();
 //      auto result = py_manager->sys.attr("copyright").cast<std::string>();

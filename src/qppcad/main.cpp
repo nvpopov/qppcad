@@ -5,6 +5,7 @@
 #include <qppcad/main_window.hpp>
 #include <qppcad/app_state.hpp>
 #include <QTextStream>
+#include <QCommandLineParser>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -14,10 +15,47 @@ int main (int argc, char **argv) {
   QCoreApplication::setOrganizationName("igc");
   QCoreApplication::setOrganizationDomain("igc.irk.ru");
   QCoreApplication::setApplicationName("qppcad");
+  QApplication app(argc, argv);
+
+  QCommandLineParser parser;
+  parser.setApplicationDescription("qpp::cad");
+  parser.addHelpOption();
+  parser.addVersionOption();
+  parser.addPositionalArgument("file", "The file to open.");
+
+  QCommandLineOption target_fmt_option(QStringList() << "f" << "format",
+                                       QCoreApplication::translate("main", "Force file format"),
+                                       QCoreApplication::translate("main", "file_format"));
+  parser.addOption(target_fmt_option);
+
+  parser.process(QCoreApplication::arguments());
+  const QStringList args = parser.positionalArguments();
+
 
   app_state_t::init_inst();
-  app_state_t::get_inst()->init_managers();
-  app_state_t::get_inst()->load_settings();
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->init_managers();
+  astate->ws_manager->init_default();
+  astate->load_settings();
+
+  if (!args.empty()) {
+
+      std::string filename_to_open = args[0].toStdString();
+      qc_file_fmt guess_ff;
+
+      if (parser.isSet(target_fmt_option)) {
+           QString target_format = parser.value(target_fmt_option);
+           guess_ff = qc_file_fmt_helper::file_format_from_string(target_format.toStdString());
+        } else {
+          guess_ff = qc_file_fmt_helper::file_name_to_file_format(filename_to_open);
+        }
+
+      if (guess_ff != qc_file_fmt::unknown_fileformat && guess_ff != qc_file_fmt::qppcad_json)
+        astate->ws_manager->import_file_as_new_ws(filename_to_open, guess_ff);
+      if (guess_ff == qc_file_fmt::qppcad_json)
+        astate->ws_manager->load_ws_from_file(filename_to_open);
+    }
 
   QSurfaceFormat format;
   format.setDepthBufferSize(24);
@@ -28,13 +66,12 @@ int main (int argc, char **argv) {
   format.setProfile(QSurfaceFormat::CoreProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-  QApplication app(argc, argv);
   qApp->setStyle(QStyleFactory::create("Fusion"));
-  // increase font size for better reading
+
   QFont defaultFont = QApplication::font();
   defaultFont.setPointSize(defaultFont.pointSize()+1);
   qApp->setFont(defaultFont);
-  // modify palette to dark
+
   QPalette darkPalette;
   darkPalette.setColor(QPalette::Window,QColor(53,53,53));
   darkPalette.setColor(QPalette::WindowText,Qt::white);
