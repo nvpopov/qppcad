@@ -124,6 +124,9 @@ namespace qpp {
           recalc_gizmo_barycenter();
         }
 
+        void select_atom_ngbs(const int at_id);
+        void select_selected_atoms_ngbs();
+
         void update_inter_atomic_dist(float new_dist,
                                       const int at1, const int at2,
                                       const index id1, const index id2,

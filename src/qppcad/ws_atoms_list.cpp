@@ -447,6 +447,20 @@ void ws_atoms_list_t::transform_atom(const int at_id, const matrix4<float> &tm) 
 
 }
 
+void ws_atoms_list_t::select_atom_ngbs(const int at_id) {
+  for (int i = 0; i < m_tws_tr->n(at_id); i++)
+    if (m_tws_tr->table_idx(at_id, i) == index::D(m_geom->DIM).all(0))
+      select_atom(m_tws_tr->table_atm(at_id, i));
+}
+
+void ws_atoms_list_t::select_selected_atoms_ngbs() {
+  std::set<int> stored_sel;
+  for (auto &rec : m_atom_idx_sel)
+    if (rec.m_idx == index::D(m_geom->DIM).all(0)) stored_sel.insert(rec.m_atm);
+
+  for (auto &rec : stored_sel) select_atom_ngbs(rec);
+}
+
 void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
                                                const int at1, const int at2,
                                                const index id1, const index id2,

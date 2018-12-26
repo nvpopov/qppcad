@@ -430,9 +430,9 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_group_op = new QGroupBox(tr("Group operations"));
   tm_group_op_layout = new QGridLayout;
   tm_gb_group_op->setLayout(tm_group_op_layout);
-  tm_group_op_sv_show = new QPushButton(tr("SV:Show"));
-  tm_group_op_sv_hide = new QPushButton(tr("SV:Hide"));
-  tm_group_op_sv_show_all = new QPushButton(tr("SV:Show all"));
+  tm_group_op_sv_show = new QPushButton(tr("SV:SHOW"));
+  tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
+  tm_group_op_sv_show_all = new QPushButton(tr("SV:SHOW ALL"));
 
   connect(tm_group_op_sv_show, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show);
@@ -441,9 +441,14 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   connect(tm_group_op_sv_show_all, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show_all);
 
+  tm_group_op_sel_ngbs = new QPushButton(tr("SEL:NGB"));
+  connect(tm_group_op_sel_ngbs, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sel_ngbs);
+
   tm_group_op_layout->addWidget(tm_group_op_sv_show,     0, 0, 1, 1);
   tm_group_op_layout->addWidget(tm_group_op_sv_hide,     0, 1, 1, 1);
   tm_group_op_layout->addWidget(tm_group_op_sv_show_all, 0, 2, 1, 1);
+  tm_group_op_layout->addWidget(tm_group_op_sel_ngbs,    1, 0, 1, 1);
 
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
@@ -951,10 +956,7 @@ void ws_atoms_list_obj_insp_widget_t::update_animate_section_status() {
 
 void ws_atoms_list_obj_insp_widget_t::cur_it_list_selection_changed() {
 
-  std::cout<<"SEL"<<std::endl;
-
   if (b_al && b_al->is_selected()) {
-
       update_modify_tab();
     }
 
@@ -1197,6 +1199,12 @@ void ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show_all() {
           b_al->m_geom->xfield<bool>(xgeom_sel_vis, i) = false;
     }
 
+  astate->make_viewport_dirty();
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_group_op_sel_ngbs() {
+  app_state_t *astate = app_state_t::get_inst();
+  if (b_al) b_al->select_selected_atoms_ngbs();
   astate->make_viewport_dirty();
 }
 
