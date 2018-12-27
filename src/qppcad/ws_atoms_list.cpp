@@ -100,7 +100,8 @@ void ws_atoms_list_t::vote_for_view_vectors (vector3<float> &out_look_pos,
       vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
       float size = bb_size.norm();
       float g_sz_mod = 2.0f;
-      out_look_pos += g_sz_mod * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 60.0);
+      out_look_pos +=
+          g_sz_mod * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 60.0);
     } else out_look_pos += vector3<float>(0.0, 0.0, -5.0);
 
 }
@@ -448,6 +449,13 @@ void ws_atoms_list_t::transform_atom(const int at_id, const matrix4<float> &tm) 
 
 }
 
+void ws_atoms_list_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
+  for (int i = 0; i < xgeom_inst.nat(); i++) {
+      m_geom->add(xgeom_inst.atom(i), xgeom_inst.pos(i));
+      m_geom->xfield<float>(xgeom_charge, i) = xgeom_inst.xfield<float>(xgeom_charge, i);
+    }
+}
+
 void ws_atoms_list_t::select_atom_ngbs(const int at_id) {
   for (int i = 0; i < m_tws_tr->n(at_id); i++)
     if (m_tws_tr->table_idx(at_id, i) == index::D(m_geom->DIM).all(0))
@@ -750,6 +758,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         read_xyzq(qc_data, *m_geom, true);
         m_draw_img_atoms = false;
         m_draw_img_bonds = false;
+        m_role = ws_atoms_list_role_t::role_uc;
         astate->log(fmt::format("qpp_uc after m_geom.nat() {}", m_geom->nat()));
         break;
       }

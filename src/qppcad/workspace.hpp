@@ -89,6 +89,7 @@ namespace qpp {
         void add_item_to_ws(const std::shared_ptr<ws_item_t> &item_to_add);
         //void dialog_add_geom_from_file(qc_file_fmt file_format);
 
+        void clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete);
         void save_ws_to_json(const std::string filename);
         void load_ws_from_json(const std::string filename);
         void update(float delta_time);

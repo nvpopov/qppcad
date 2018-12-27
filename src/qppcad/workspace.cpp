@@ -225,6 +225,16 @@ void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> &item_to_add)
 
 }
 
+void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete) {
+  for (auto elem : m_ws_items) {
+      auto it = std::find(elem->m_connected_items.begin(),
+                          elem->m_connected_items.end(),
+                          item_to_delete);
+      if (it != elem->m_connected_items.end())
+        elem->m_connected_items.erase(it);
+    }
+}
+
 void workspace_t::save_ws_to_json (const std::string filename) {
 
   std::ofstream out_file(filename);
@@ -303,6 +313,7 @@ void workspace_t::update (float delta_time) {
           if (it->get() == m_gizmo->attached_item)
             m_gizmo->attached_item = nullptr;
 
+          clear_connected_items(*it);
           it = m_ws_items.erase(it);
           ws_changed();
 

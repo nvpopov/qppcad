@@ -12,8 +12,7 @@ using namespace qpp::cad;
 
 PYBIND11_EMBEDDED_MODULE(embc, m) {
 
-  py::module embq = m.def_submodule("embc", "Embedded cluster tools");
-  embq.def("gen_sph", &embedded_cluster_tools::gen_spherical_cluster);
+  m.def("gen_sph", &embedded_cluster_tools::gen_spherical_cluster_cur);
     //embq.def("ws",  &simple_query::select_ws);
 
 }

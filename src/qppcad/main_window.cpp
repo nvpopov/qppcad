@@ -725,6 +725,7 @@ void main_window::cur_ws_changed() {
       tools_menu_sc_generator->setEnabled(false);
       this->setWindowTitle("qpp::cad");
     }
+
   wss_changed_slot();
   cur_ws_properties_changed();
   cur_ws_selected_item_changed();

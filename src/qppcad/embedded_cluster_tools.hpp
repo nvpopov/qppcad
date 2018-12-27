@@ -16,6 +16,10 @@ namespace qpp {
                                           float cluster_r = 30,
                                           float cls_r = 12);
 
+        static void gen_spherical_cluster_cur(vector3<float> displ,
+                                          float cluster_r = 30,
+                                          float cls_r = 12);
+
     };
 
   }
