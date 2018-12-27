@@ -91,6 +91,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_actions_layout = new QHBoxLayout;
   tg_actions->setLayout(tg_actions_layout);
   tg_actions_delete = new QPushButton(tr("Delete"));
+  connect(tg_actions_delete, SIGNAL(pressed()), this, SLOT(delete_current_item()));
+
   tg_actions_rename = new QPushButton(tr("Rename"));
   connect(tg_actions_rename, SIGNAL(pressed()), this, SLOT(rename_current_item()));
 
@@ -149,6 +151,18 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
           m_binded_item->m_name = text.toStdString();
           astate->astate_evd->cur_ws_selected_item_changed();
         }
+    }
+}
+
+void ws_item_obj_insp_widget_t::delete_current_item() {
+
+  if (m_binded_item) {
+      app_state_t* astate = app_state_t::get_inst();
+      m_binded_item->m_marked_for_deletion = true;
+      unbind_item();
+      astate->ws_manager->get_cur_ws()->unselect_all();
+      astate->astate_evd->cur_ws_changed();
+      astate->astate_evd->wss_changed();
     }
 }
 

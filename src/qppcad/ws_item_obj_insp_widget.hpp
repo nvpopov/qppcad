@@ -62,6 +62,7 @@ namespace qpp {
 
         void cur_ws_selected_item_position_changed();
         void rename_current_item();
+        void delete_current_item();
         void cur_tab_changed(int index);
 
     };

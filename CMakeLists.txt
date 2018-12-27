@@ -90,6 +90,7 @@ add_executable(qppcad
     src/qppcad/ws_item.cpp
     src/qppcad/camera.cpp
     src/qppcad/gizmo.cpp
+    src/qppcad/embedded_cluster_tools.cpp
     src/qppcad/ws_atoms_list.cpp
     src/qppcad/ws_comp_chem_data.cpp
     src/qppcad/ws_volume_data.cpp
@@ -115,6 +116,7 @@ add_executable(qppcad
     src/qppcad/python_embedded_core.cpp
     src/qppcad/python_embedded_simple_query.cpp
     src/qppcad/python_embedded_pyqpp.cpp
+    src/qppcad/python_embedded_embc.cpp
     src/qppcad/python_simple_query.cpp
     deps/qpp/modules/pyqpp/pyqpp_linalg.cpp
     deps/qpp/modules/pyqpp/pyqpp_geom.cpp

@@ -306,6 +306,8 @@ void workspace_t::update (float delta_time) {
           it = m_ws_items.erase(it);
           ws_changed();
 
+          app_state_t* astate = app_state_t::get_inst();
+          astate->astate_evd->cur_ws_changed();
         }
       else {
           ++it;

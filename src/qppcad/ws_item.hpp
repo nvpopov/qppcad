@@ -47,6 +47,7 @@ namespace qpp {
       public:
 
         workspace_t *m_parent_ws{};
+        std::vector<std::shared_ptr<ws_item_t> > m_connected_items;
 
         std::string      m_name;
         aabb_3d_t<float> m_aabb;
@@ -82,6 +83,11 @@ namespace qpp {
         /// \brief set_name
         /// \param _name
         void set_name(const char * _name);
+
+        void add_connected_item(std::shared_ptr<ws_item_t> new_item);
+        void remove_connected_item(std::shared_ptr<ws_item_t> item_to_remove);
+        std::optional<size_t> get_connected(std::shared_ptr<ws_item_t> item_to_find);
+        bool is_connected_to(std::shared_ptr<ws_item_t> item_to_find);
 
         bool is_selected();
 

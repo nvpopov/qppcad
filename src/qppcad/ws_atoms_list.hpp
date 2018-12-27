@@ -30,6 +30,14 @@ namespace qpp {
       buffered_billboards
     };
 
+    enum ws_atoms_list_role_t : int {
+      role_generic,
+      role_uc,
+      role_embc_qm,
+      role_embc_cls,
+      role_embc_chg
+    };
+
     enum ws_atoms_list_color_mode : int {
       color_from_ptable,
       color_from_anim
@@ -78,6 +86,7 @@ namespace qpp {
         vector3<int> m_subcells_range{1,1,1};
 
         ws_atoms_list_color_mode m_color_mode{ws_atoms_list_color_mode::color_from_ptable};
+        ws_atoms_list_role_t m_role{ws_atoms_list_role_t::role_generic};
 
         bool m_draw_img_atoms{true};
         bool m_draw_img_bonds{true};

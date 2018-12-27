@@ -28,6 +28,25 @@ void ws_item_t::set_name(const char *_name){
     }
 }
 
+void ws_item_t::add_connected_item(std::shared_ptr<ws_item_t> new_item) {
+  if (!is_connected_to(new_item)) m_connected_items.push_back(new_item);
+}
+
+void ws_item_t::remove_connected_item(std::shared_ptr<ws_item_t> item_to_remove) {
+  std::optional<size_t> idx = get_connected(item_to_remove);
+  if (idx) m_connected_items.erase(m_connected_items.begin() + *idx);
+}
+
+std::optional<size_t> ws_item_t::get_connected(std::shared_ptr<ws_item_t> item_to_find) {
+  for (size_t i = 0; i < m_connected_items.size(); i++)
+    if (m_connected_items[i].get() == item_to_find.get()) return std::optional<size_t>(i);
+  return std::nullopt;
+}
+
+bool ws_item_t::is_connected_to(std::shared_ptr<ws_item_t> item_to_find) {
+  return (get_connected(item_to_find) != std::nullopt);
+}
+
 bool ws_item_t::is_selected() {
 
   if (m_parent_ws) {
