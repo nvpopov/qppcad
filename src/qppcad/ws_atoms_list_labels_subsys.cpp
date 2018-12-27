@@ -51,6 +51,11 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
             break;
           }
 
+        case ws_atoms_list_labels_style::show_charge : {
+            label = fmt::format("{:2.2f}", p_owner->m_geom->xfield<float>(xgeom_charge, i));
+            break;
+          }
+
         case ws_atoms_list_labels_style::show_custom : {
             if (p_owner->m_geom->xfield<bool>(xgeom_label_state, i)) {
                 label = p_owner->m_geom->xfield<std::string>(xgeom_label_text, i);

@@ -90,6 +90,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_s_labels_style->addItem("Id");
   disp_s_labels_style->addItem("Type");
   disp_s_labels_style->addItem("Type and Id");
+  disp_s_labels_style->addItem("Charge");
   disp_s_labels_style->addItem("Custom");
 
   disp_s_draw_subcells = new qbinded_checkbox;

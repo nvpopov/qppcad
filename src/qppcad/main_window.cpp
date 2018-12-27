@@ -114,6 +114,12 @@ void main_window::init_menus() {
   file_menu_import_cube->setText(tr("CUBE"));
   file_menu_import->addAction(file_menu_import_cube);
 
+  file_menu_import_uc = new QAction(this);
+  file_menu_import_uc->setText(tr("UC"));
+  file_menu_import->addAction(file_menu_import_uc);
+  connect(file_menu_import_uc,&QAction::triggered, this,
+          [this](){this->import_file("Import qpp UC file", "*", qc_file_fmt::qpp_uc);});
+
   file_menu_save_ws = new QAction(this);
   file_menu_save_ws->setText(tr("Save workspace"));
   file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));

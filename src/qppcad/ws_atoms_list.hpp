@@ -41,6 +41,7 @@ namespace qpp {
       fix_second
     };
 
+    const int xgeom_charge      = 4;
     const int xgeom_sel_vis     = 6;
     const int xgeom_label_state = 7;
     const int xgeom_ccr         = 8;

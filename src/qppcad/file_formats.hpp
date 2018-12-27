@@ -52,6 +52,10 @@ namespace qpp{
               return qc_file_fmt::cp2k_output;
             }
 
+          if (fn.find("uc") != std::string::npos) {
+              return qc_file_fmt::qpp_uc;
+            }
+
 
           return qc_file_fmt::unknown_fileformat;
 
@@ -79,6 +83,10 @@ namespace qpp{
           //VASP OUTCAR
           if (fn.find("OUTCAR") != std::string::npos) {
               return qc_file_fmt::vasp_outcar_md;
+            }
+
+          if (fn.find(".uc") != std::string::npos) {
+              return qc_file_fmt::qpp_uc;
             }
 
           return qc_file_fmt::unknown_fileformat;

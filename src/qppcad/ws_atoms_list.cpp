@@ -80,6 +80,7 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
 
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;
+  m_geom->auto_update_types = true;
 
   m_ext_obs = std::make_unique<extents_observer_t<float> >(*m_geom);
   m_tws_tr  = std::make_unique<tws_tree_t<float> >(*m_geom);
@@ -435,7 +436,7 @@ void ws_atoms_list_t::transform_atom(const int at_id, const matrix3<float> &tm) 
 void ws_atoms_list_t::transform_atom(const int at_id, const matrix4<float> &tm) {
 
   vector4<float> p_aff(
-      m_geom->coord(at_id)[0],
+        m_geom->coord(at_id)[0],
       m_geom->coord(at_id)[1],
       m_geom->coord(at_id)[2],
       1.0f);
@@ -735,28 +736,38 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
   switch (file_format) {
 
-    case qc_file_fmt::standart_xyz:
-      m_geom->DIM = 0;
-      //
-      //read_xyz_multiframe(qc_data, *(m_geom), m_anim->m_anim_data,
-      //                    !astate->m_transform_pdb_atom_names);
-      need_to_extract_ccd = false;
-      need_to_compile_from_ccd = true;
-      read_ccd_from_xyz_file(qc_data, cc_inst);
-      break;
+    case qc_file_fmt::standart_xyz : {
+        m_geom->DIM = 0;
+        need_to_compile_from_ccd = true;
+        read_ccd_from_xyz_file(qc_data, cc_inst);
+        break;
+      }
 
-    case qc_file_fmt::vasp_poscar:
-      m_geom->DIM = 3;
-      m_geom->cell.DIM = 3;
-      read_vasp_poscar(qc_data, *(m_geom));
-      break;
+    case qc_file_fmt::qpp_uc : {
+        astate->log(fmt::format("qpp_uc before m_geom.nat() {}", m_geom->nat()));
+        m_geom->DIM = 3;
+        m_geom->cell.DIM = 3;
+        read_xyzq(qc_data, *m_geom, true);
+        m_draw_img_atoms = false;
+        m_draw_img_bonds = false;
+        astate->log(fmt::format("qpp_uc after m_geom.nat() {}", m_geom->nat()));
+        break;
+      }
 
-    case qc_file_fmt::vasp_outcar_md:
-      m_geom->DIM = 3;
-      m_geom->cell.DIM = 3;
-      need_to_extract_ccd = true;
-      read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim->m_anim_data);
-      break;
+    case qc_file_fmt::vasp_poscar : {
+        m_geom->DIM = 3;
+        m_geom->cell.DIM = 3;
+        read_vasp_poscar(qc_data, *(m_geom));
+        break;
+      }
+
+    case qc_file_fmt::vasp_outcar_md : {
+        m_geom->DIM = 3;
+        m_geom->cell.DIM = 3;
+        need_to_extract_ccd = true;
+        read_vasp_outcar_md_with_frames(qc_data, *(m_geom), m_anim->m_anim_data);
+        break;
+      }
 
     case qc_file_fmt::firefly_output : {
         m_geom->DIM = 0;
