@@ -49,7 +49,7 @@ void ws_viewer_widget_t::update_cycle() {
   if (astate->ws_manager->has_wss()) {
       m_update_timer_cpu->start();
       auto cur_ws = astate->ws_manager->get_cur_ws();
-      cur_ws->update(0.016f);
+      if (cur_ws) cur_ws->update(0.016f);
       astate->m_last_frame_time_cpu = m_update_timer_cpu->nsecsElapsed();
     }
 

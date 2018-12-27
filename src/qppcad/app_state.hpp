@@ -48,7 +48,7 @@ namespace qpp {
         app_state_event_disp_t *astate_evd;
 
         glapi_t *glapi;
-        camera_t *camera;
+        camera_t *camera{nullptr};
 
         draw_pipeline_t *dp;
 
