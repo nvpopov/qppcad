@@ -488,16 +488,18 @@ void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
 void main_window::wss_changed_slot() {
 
   app_state_t* astate = app_state_t::get_inst();
-  tp_ws_selector->clear();
 
   tp_ws_selector->blockSignals(true);
+
+  tp_ws_selector->clear();
 
   if (astate->ws_manager->has_wss()) {
       tp_rm_ws->setEnabled(true);
       tp_rnm_ws->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
-      for (auto &ws : astate->ws_manager->m_ws) {
+      for (auto ws : astate->ws_manager->m_ws) {
           QString dest = QString::fromStdString(ws->m_ws_name);
+          //astate->log(fmt::format("DEBUG COMBOBOX: add new item {}", dest.toStdString()));
           tp_ws_selector->addItem(dest);
         }
 
@@ -510,7 +512,8 @@ void main_window::wss_changed_slot() {
     }
 
   tp_ws_selector->blockSignals(false);
-  astate->log("main_window::workspaces_changed_slot()");
+  astate->log(fmt::format("main_window::workspaces_changed_slot(), total ws = {}",
+                          astate->ws_manager->m_ws.size()));
 
 }
 
