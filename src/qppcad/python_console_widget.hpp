@@ -45,7 +45,6 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        QList<QString> m_commands;
         QString m_line_data;
         QFont m_font;
         python_text_editor_syntax_highilighter_t *syntax_hl;

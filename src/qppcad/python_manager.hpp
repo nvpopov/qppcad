@@ -11,6 +11,7 @@
 
 #include <QStringList>
 #include <QString>
+#include <QList>
 
 namespace py = pybind11;
 
@@ -20,6 +21,7 @@ namespace qpp {
 
     class python_manager_t {
       public:
+        QList<QString> m_commands;
         py::object f_comp;
         py::scoped_interpreter guard{};
         bool execute(std::string command);

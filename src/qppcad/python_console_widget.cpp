@@ -54,6 +54,8 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 
 void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   bool is_completer_shortcut = false;
 
   if (m_c && m_c->popup()->isVisible()) {
@@ -95,9 +97,9 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
   if (event->key() == Qt::Key_Up) {
 
-      if (!m_commands.empty()) {
+      if (!astate->py_manager->m_commands.empty()) {
           m_cur_cmd--;
-          if (m_cur_cmd < 0) m_cur_cmd = m_commands.size();
+          if (m_cur_cmd < 0) m_cur_cmd = astate->py_manager->m_commands.size();
           last_command_reached();
         }
 
@@ -108,9 +110,9 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
   if (event->key() == Qt::Key_Down) {
 
-      if (!m_commands.empty()) {
+      if (!astate->py_manager->m_commands.empty()) {
           m_cur_cmd++;
-          if(m_cur_cmd > m_commands.size()) m_cur_cmd = 0;
+          if(m_cur_cmd > astate->py_manager->m_commands.size()) m_cur_cmd = 0;
           last_command_reached();
         }
 
@@ -123,12 +125,12 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
       QString text = toPlainText();
       QString t = text.right(text.size() - m_curs_pos);
       if (!t.isEmpty()) {
-          m_commands.append(t);
-          if (m_commands.size() > 100) {
-              m_commands.removeFirst();
+          astate->py_manager->m_commands.append(t);
+          if (astate->py_manager->m_commands.size() > 100) {
+              astate->py_manager->m_commands.removeFirst();
             }
         }
-      m_cur_cmd = m_commands.size();
+      m_cur_cmd = astate->py_manager->m_commands.size();
       run_cmd();
       event->accept();
       return;
@@ -194,7 +196,9 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
 void python_text_editor_t::last_command_reached() {
 
-  if (m_cur_cmd == m_commands.size()) {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (m_cur_cmd == astate->py_manager->m_commands.size()) {
       setText(toPlainText().left(m_curs_pos));
       QTextCursor cursor(textCursor());
       cursor.movePosition(QTextCursor::End);
@@ -203,7 +207,7 @@ void python_text_editor_t::last_command_reached() {
       setText(toPlainText().left(m_curs_pos));
       QTextCursor cursor(textCursor());
       cursor.movePosition(QTextCursor::End);
-      cursor.insertText(m_commands.at(m_cur_cmd));
+      cursor.insertText(astate->py_manager->m_commands.at(m_cur_cmd));
       cursor.movePosition(QTextCursor::End);
       setTextCursor(cursor);
     }

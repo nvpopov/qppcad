@@ -56,8 +56,8 @@ namespace qpp {
       //ws_manager->init_default();
 
       py_manager = std::make_unique<python_manager_t>();
-//      auto result = py_manager->sys.attr("copyright").cast<std::string>();
-//      std::cout<< "IM HERE " << result << std::endl;
+      //      auto result = py_manager->sys.attr("copyright").cast<std::string>();
+      //      std::cout<< "IM HERE " << result << std::endl;
     }
 
     void app_state_t::make_viewport_dirty() {
@@ -94,7 +94,7 @@ namespace qpp {
       ptable *table = ptable::get_inst();
 
       for(int i=0; i < ovr_size; i++) {
-         settings.setArrayIndex(i);
+          settings.setArrayIndex(i);
           int number = settings.value("number").toInt();
           float c_r = settings.value("c_r").toFloat();
           float c_g = settings.value("c_g").toFloat();
@@ -119,6 +119,14 @@ namespace qpp {
       m_default_cam_proj = static_cast<cam_proj_t>(m_loaded_default_cam_proj);
 
       settings.endGroup();
+
+      int cmd_size = settings.beginReadArray("pyconsole_history");
+      for(int i = 0; i < cmd_size; i++) {
+          settings.setArrayIndex(i);
+          QString cmd = settings.value("cmd").toString();
+          if (!cmd.trimmed().isEmpty()) py_manager->m_commands.push_back(cmd);
+        }
+      settings.endArray();
 
     }
 
@@ -148,6 +156,14 @@ namespace qpp {
       settings.setValue("cylinder_res", m_cylinder_quality);
       settings.setValue("default_camera_projection", static_cast<int>(m_default_cam_proj));
       settings.endGroup();
+
+      settings.beginWriteArray("pyconsole_history");
+      for (int i = 0; i < py_manager->m_commands.size(); i++) {
+          settings.setArrayIndex(i);
+          settings.setValue("cmd", py_manager->m_commands[i]);
+        }
+
+      settings.endArray();
     }
 
     void app_state_t::log(std::string logstr, bool flush) {
