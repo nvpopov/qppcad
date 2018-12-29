@@ -13,6 +13,7 @@ using namespace qpp::cad;
 PYBIND11_EMBEDDED_MODULE(embc, m) {
 
   m.def("gen_sph", &embedded_cluster_tools::gen_spherical_cluster_cur);
+  m.def("gen_sph_qm", &embedded_cluster_tools::gen_spherical_cluster_cur_qm);
     //embq.def("ws",  &simple_query::select_ws);
 
 }

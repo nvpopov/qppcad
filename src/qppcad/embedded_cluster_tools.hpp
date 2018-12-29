@@ -14,11 +14,18 @@ namespace qpp {
         static void gen_spherical_cluster(ws_atoms_list_t *uc,
                                           vector3<float> displ,
                                           float cluster_r = 30,
-                                          float cls_r = 12);
+                                          float cls_r = 12,
+                                          bool generate_qm = false,
+                                          float qm_r = 5);
 
         static void gen_spherical_cluster_cur(vector3<float> displ,
                                           float cluster_r = 30,
                                           float cls_r = 12);
+
+        static void gen_spherical_cluster_cur_qm(vector3<float> displ,
+                                          float cluster_r = 30,
+                                          float cls_r = 12,
+                                          float qm_r = 2);
 
     };
 
