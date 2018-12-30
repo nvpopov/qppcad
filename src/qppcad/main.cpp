@@ -41,20 +41,14 @@ int main (int argc, char **argv) {
 
   if (!args.empty()) {
 
-      std::string filename_to_open = args[0].toStdString();
-      qc_file_fmt guess_ff;
+      std::string file_name = args[0].toStdString();
+      std::string file_format = "";
 
-      if (parser.isSet(target_fmt_option)) {
-           QString target_format = parser.value(target_fmt_option);
-           guess_ff = qc_file_fmt_helper::file_format_from_string(target_format.toStdString());
-        } else {
-          guess_ff = qc_file_fmt_helper::file_name_to_file_format(filename_to_open);
-        }
+      if (parser.isSet(target_fmt_option))
+        file_format = parser.value(target_fmt_option).toStdString();
 
-      if (guess_ff != qc_file_fmt::unknown_fileformat && guess_ff != qc_file_fmt::qppcad_json)
-        astate->ws_manager->import_file_as_new_ws(filename_to_open, guess_ff);
-      if (guess_ff == qc_file_fmt::qppcad_json)
-        astate->ws_manager->load_ws_from_file(filename_to_open);
+      astate->ws_manager->import_file_autodeduce(file_name, file_format);
+
     }
 
   QSurfaceFormat format;

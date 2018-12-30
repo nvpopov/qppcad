@@ -19,6 +19,9 @@ namespace qpp {
     class simple_query {
 
       public:
+
+        static void open_file(std::string file_name);
+        static void open_file_query(std::string file_name, qc_file_fmt file_format);
         static void select_ws(int ws_idx);
         static void select_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);

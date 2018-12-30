@@ -506,6 +506,25 @@ void workspace_manager_t::import_file_as_new_ws(const std::string &fname,
   set_cur_id(m_ws.size()-1);
 }
 
+void workspace_manager_t::import_file_autodeduce(const std::string file_name,
+                                                 const std::string file_format) {
+  qc_file_fmt guess_ff;
+  if (file_format.empty())
+    guess_ff = qc_file_fmt_helper::file_name_to_file_format(file_name);
+  else
+     guess_ff = qc_file_fmt_helper::file_format_from_string(file_format);
+  import_file_generic(file_name, guess_ff);
+
+}
+
+void workspace_manager_t::import_file_generic(const std::string file_name,
+                                              const qc_file_fmt file_format) {
+  if (file_format != qc_file_fmt::unknown_fileformat && file_format != qc_file_fmt::qppcad_json)
+    import_file_as_new_ws(file_name, file_format);
+  if (file_format == qc_file_fmt::qppcad_json)
+    load_ws_from_json(file_name);
+}
+
 void workspace_manager_t::query_create_new_ws(bool switch_to_new_workspace) {
 
   auto new_ws = std::make_shared<workspace_t>();
@@ -516,7 +535,7 @@ void workspace_manager_t::query_create_new_ws(bool switch_to_new_workspace) {
 
 }
 
-void workspace_manager_t::load_ws_from_file(const std::string &filename) {
+void workspace_manager_t::load_ws_from_json(const std::string &filename) {
 
   app_state_t* astate = app_state_t::get_inst();
 

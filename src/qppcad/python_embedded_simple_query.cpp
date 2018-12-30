@@ -11,6 +11,29 @@ using namespace qpp::cad;
 
 PYBIND11_EMBEDDED_MODULE(sq, m) {
 
+  py::enum_<qc_file_fmt>(m, "ffmt", py::arithmetic(), "qc file format")
+      .value("std_xyz", qc_file_fmt::standart_xyz)
+      .value("vasp_poscar", qc_file_fmt::vasp_poscar)
+      .value("vasp_outcar_md", qc_file_fmt::vasp_outcar_md)
+      .value("ff_out", qc_file_fmt::firefly_output)
+      .value("ff_inp", qc_file_fmt::firefly_input)
+      .value("cp2k_out", qc_file_fmt::cp2k_output)
+      .value("cp2k_coord", qc_file_fmt::cp2k_coord_cell_section)
+      .value("json", qc_file_fmt::standart_xyz)
+      .value("uc", qc_file_fmt::qpp_uc)
+      .value("unk", qc_file_fmt::unknown_fileformat)
+      .export_values();
+
+  m.def("qopen", &simple_query::open_file);
+  m.def("qopen", &simple_query::open_file_query);
+
+  m.def("mode", &simple_query::edit_mode);
+  m.def("rebond", &simple_query::rebond);
+  m.def("t", &simple_query::translate_selected);
+  m.def("bg", &simple_query::set_ws_bg);
+  m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));} );
+  m.def("gpos", &simple_query::gizmo_pos);
+
   py::module sel = m.def_submodule("sel", "Selection routines");
 
   sel.def("ws",  &simple_query::select_ws);
@@ -27,13 +50,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   sel.def("sph", &simple_query::sel_cnt_sphere);
   sel.def("inv", &simple_query::sel_invert);
   sel.def("hemisph", &simple_query::sel_hemisphere);
-
-  m.def("mode", &simple_query::edit_mode);
-  m.def("rebond", &simple_query::rebond);
-  m.def("t", &simple_query::translate_selected);
-  m.def("bg", &simple_query::set_ws_bg);
-  m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));} );
-  m.def("gpos", &simple_query::gizmo_pos);
 
   py::module pt = m.def_submodule("pt", "Periodic table manipulations");
   pt.def("c", &simple_query::ptable_set_color_by_number);

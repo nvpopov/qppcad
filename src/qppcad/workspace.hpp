@@ -47,8 +47,11 @@ namespace qpp {
         void ws_mgr_changed();
         void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
         void import_file_as_new_ws(const std::string &fname, qc_file_fmt file_format);
+        void import_file_autodeduce(const std::string file_name,
+                                    const std::string file_format = "");
+        void import_file_generic(const std::string file_name, const qc_file_fmt file_format);
         void query_create_new_ws(bool switch_to_new_workspace = true);
-        void load_ws_from_file(const std::string &filename);
+        void load_ws_from_json(const std::string &filename);
     };
 
     ///
