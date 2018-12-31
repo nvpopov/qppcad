@@ -10,7 +10,7 @@ main_window::main_window(QWidget *parent) {
   main_widget = new QWidget;
   app_state_t* astate = app_state_t::get_inst();
   //tool_panel_widget->setSizePolicy(QSizePolicy::)
-
+  setAcceptDrops(true);
   setCentralWidget(main_widget);
   setMinimumHeight(300);
   setMinimumWidth(600);
@@ -483,6 +483,33 @@ void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
   tp_camera_a->setVisible(cell_c);
   tp_camera_b->setVisible(cell_c);
   tp_camera_c->setVisible(cell_c);
+}
+
+void main_window::dragEnterEvent(QDragEnterEvent *event) {
+  event->acceptProposedAction();
+}
+
+void main_window::dragMoveEvent(QDragMoveEvent *event) {
+  event->acceptProposedAction();
+}
+
+void main_window::dragLeaveEvent(QDragLeaveEvent *event) {
+  event->accept();
+}
+
+void main_window::dropEvent(QDropEvent *event) {
+
+  const QMimeData *mimeData = event->mimeData();
+  if (mimeData && mimeData->hasUrls()) {
+      app_state_t* astate = app_state_t::get_inst();
+      QList<QUrl> urlList = mimeData->urls();
+      for (int i = 0; i < urlList.size(); i++) {
+          QString native_path = urlList.at(i).toLocalFile();
+          std::string native_path_str = native_path.toStdString();
+          astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
+          astate->ws_manager->import_file_autodeduce(native_path_str);
+        }
+    }
 }
 
 void main_window::wss_changed_slot() {

@@ -19,6 +19,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QLineEdit>
+#include <QMimeData>
 #include <QFileDialog>
 #include <qppcad/ws_viewer_widget.hpp>
 #include <qppcad/object_inspector_widget.hpp>
@@ -151,6 +152,12 @@ namespace qpp {
         QShortcut       *sc_toggle_console;
 
         //End of shortcuts
+      protected:
+
+        void dragEnterEvent(QDragEnterEvent *event) override;
+        void dragMoveEvent(QDragMoveEvent *event) override;
+        void dragLeaveEvent(QDragLeaveEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
 
       private slots:
         void slot_shortcut_terminate_app();

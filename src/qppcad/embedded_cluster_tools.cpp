@@ -66,15 +66,24 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   xgeometry<float, periodic_cell<float> > gd_chg(0);
   xgeometry<float, periodic_cell<float> > gd_qm(0);
 
+  gd_cls.set_format({"charge"},{type_real});
+  gd_cls.additive(4) = true;
+
+  gd_chg.set_format({"charge"},{type_real});
+  gd_chg.additive(4) = true;
+
+  gd_qm.set_format({"charge"},{type_real});
+  gd_qm.additive(4) = true;
+
   if (generate_qm) {
-      qpp::fill(gd_cls, *uc->m_geom, sh_cls_w_qm, crowd_merge);
-      qpp::fill(gd_qm, *uc->m_geom, sp_qm, crowd_merge);
+      qpp::fill(gd_cls, *uc->m_geom, sh_cls_w_qm, crowd_merge | fill_cells);
+      qpp::fill(gd_qm, *uc->m_geom, sp_qm, crowd_merge | fill_cells);
     }
   else {
-      qpp::fill(gd_cls, *uc->m_geom, sp_cls, crowd_merge);
+      qpp::fill(gd_cls, *uc->m_geom, sp_cls, crowd_merge | fill_cells);
     }
 
-  qpp::fill(gd_chg, *uc->m_geom, sh_chg, crowd_merge);
+  qpp::fill(gd_chg, *uc->m_geom, sh_chg, crowd_merge | fill_cells);
 
   //std::cout << "DEBUG UC " << std::endl;
 
