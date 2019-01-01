@@ -42,6 +42,7 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   chg->m_tws_tr->do_action(act_lock);
   chg->m_role = ws_atoms_list_role_t::role_embc_chg;
   chg->m_name = fmt::format("{}_chg", uc->m_name);
+  chg->m_draw_bonds = false;
   uc->m_parent_ws->add_item_to_ws(ws_chg);
 
   cls = ws_cls.get();
@@ -62,9 +63,25 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   shape<float> & sh_chg = sp - sp_cls;
   shape<float> & sh_cls_w_qm = sp_cls - sp_qm;
 
+  xgeometry<float, periodic_cell<float> > gd_uc(3);
+  gd_uc.set_format({"charge"},{type_real});
+  gd_uc.DIM = 3;
+  gd_uc.cell.DIM = 3;
+  gd_uc.cell.v[0] = uc->m_geom->cell.v[0];
+  gd_uc.cell.v[1] = uc->m_geom->cell.v[1];
+  gd_uc.cell.v[2] = uc->m_geom->cell.v[2];
+
+  for (int i = 0 ; i < uc->m_geom->nat(); i++) {
+      gd_uc.add(uc->m_geom->atom(i), uc->m_geom->pos(i) + displ);
+      gd_uc.xfield<float>(4, i) = uc->m_geom->xfield<float>(4, i);
+    }
+
   xgeometry<float, periodic_cell<float> > gd_cls(0);
   xgeometry<float, periodic_cell<float> > gd_chg(0);
   xgeometry<float, periodic_cell<float> > gd_qm(0);
+
+  xgeometry<float, periodic_cell<float> > g_all_m(0);
+  xgeometry<float, periodic_cell<float> > g_all_e(0);
 
   gd_cls.set_format({"charge"},{type_real});
   gd_cls.additive(4) = true;
@@ -75,32 +92,52 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   gd_qm.set_format({"charge"},{type_real});
   gd_qm.additive(4) = true;
 
-  if (generate_qm) {
-      qpp::fill(gd_cls, *uc->m_geom, sh_cls_w_qm, crowd_merge | fill_cells);
-      qpp::fill(gd_qm, *uc->m_geom, sp_qm, crowd_merge | fill_cells);
-    }
-  else {
-      qpp::fill(gd_cls, *uc->m_geom, sp_cls, crowd_merge | fill_cells);
+
+  qpp::fill(g_all_m, gd_uc, sp, crowd_merge | fill_cells);
+  qpp::fill(g_all_e, gd_uc, sp, crowd_exclude | fill_cells);
+
+  //translate intermediates to zero
+//  for (int i = 0 ; i < g_all_m.nat(); i++) g_all_m.coord(i) -= displ;
+//  for (int i = 0 ; i < g_all_e.nat(); i++) g_all_e.coord(i) -= displ;
+
+  //performing charge addition
+  tws_tree_t<float, periodic_cell<float> > sum_tree(g_all_m);
+  sum_tree.do_action(act_unlock | act_rebuild_tree);
+  const float equality_dist = 0.01f;
+
+  for (int i = 0; i < g_all_e.nat(); i++) {
+      std::vector<tws_node_content_t<float> > res;
+      sum_tree.query_sphere(equality_dist, g_all_e.pos(i), res);
+      float accum_chg = 0;
+      for (auto &elem : res) accum_chg += g_all_m.xfield<float>(4, elem.m_atm);
+      gd_chg.add(g_all_e.atom(i), g_all_e.pos(i));
+      gd_chg.xfield<float>(4, i) = accum_chg ;
     }
 
-  qpp::fill(gd_chg, *uc->m_geom, sh_chg, crowd_merge | fill_cells);
+  if (generate_qm) {
+    //  qpp::fill(gd_cls, *uc->m_geom, sh_cls_w_qm, crowd_merge | fill_atoms);
+    //  qpp::fill(gd_qm, *uc->m_geom, sp_qm, crowd_merge | fill_cells);
+    }
+  else {
+    //  qpp::fill(gd_cls, *uc->m_geom, sp_cls, crowd_merge | fill_cells);
+    }
 
   //std::cout << "DEBUG UC " << std::endl;
 
   chg->copy_from_xgeometry(gd_chg);
-  cls->copy_from_xgeometry(gd_cls);
+  //cls->copy_from_xgeometry(gd_cls);
 
   if (generate_qm) {
       qm->copy_from_xgeometry(gd_qm);
       if (qm->m_geom->nat() > 0) qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
     }
 
-  chg->m_tws_tr->do_action(act_unlock | act_rebuild_all);
-  cls->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  if (chg->m_geom->nat() > 0) chg->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  if (cls->m_geom->nat() > 0) cls->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   //if (generate_qm && )
 
-  if (chg->m_geom->nat() > 1000) chg->m_cur_render_type = ws_atoms_list_render_t::xatom_lines;
+  if (chg->m_geom->nat() > 1800) chg->m_cur_render_type = ws_atoms_list_render_t::xatom_lines;
   //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   //add connection info
@@ -147,4 +184,28 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
           if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r, true, qm_r);
         }
     }
+}
+
+vector3<float> embedded_cluster_tools::calc_dipole_moment() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  vector3<float> accum_dm{0,0,0};
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              for (int i = 0; i < cur_it_al->m_geom->nat(); i++)
+                accum_dm += cur_it_al->m_geom->pos(i) *
+                            cur_it_al->m_geom->xfield<float>(4, i);
+            }
+        }
+    }
+
+  return accum_dm;
+
 }

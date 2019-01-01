@@ -27,6 +27,8 @@ namespace qpp {
                                           float cls_r = 12,
                                           float qm_r = 2);
 
+        static vector3<float> calc_dipole_moment();
+
     };
 
   }
