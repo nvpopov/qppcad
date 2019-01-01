@@ -24,6 +24,21 @@ void simple_query::open_file_query(std::string file_name, qc_file_fmt file_forma
 
 }
 
+void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_c) {
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              cur_it_al->make_super_cell(sc_a+1, sc_b+1, sc_c+1);
+            }
+        }
+      astate->make_viewport_dirty();
+
+    }
+}
+
 void simple_query::select_ws(int ws_idx) {
 
   app_state_t *astate = app_state_t::get_inst();

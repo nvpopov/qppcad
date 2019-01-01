@@ -22,6 +22,7 @@ namespace qpp {
 
         static void open_file(std::string file_name);
         static void open_file_query(std::string file_name, qc_file_fmt file_format);
+        static void make_super_cell(const int sc_a, const int sc_b, const int sc_c);
         static void select_ws(int ws_idx);
         static void select_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);

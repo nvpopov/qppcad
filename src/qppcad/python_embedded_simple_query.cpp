@@ -33,6 +33,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("bg", &simple_query::set_ws_bg);
   m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));} );
   m.def("gpos", &simple_query::gizmo_pos);
+  m.def("sc", &simple_query::make_super_cell);
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 
