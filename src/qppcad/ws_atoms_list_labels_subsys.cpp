@@ -11,7 +11,7 @@ ws_atoms_list_labels_subsys_t::ws_atoms_list_labels_subsys_t(ws_atoms_list_t &_p
 
 void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
 
-  if (m_style == show_none) return;
+  if (m_style == ws_atoms_list_labels_style::show_none) return;
 
   app_state_t* astate = app_state_t::get_inst();
 

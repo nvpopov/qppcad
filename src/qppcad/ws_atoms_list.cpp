@@ -574,6 +574,9 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
          !idx_it.end(); idx_it++ ) {
         vector3<float> new_atom_pos = m_geom->pos(i, idx_it);
         sc_al->m_geom->add(m_geom->atom(i), new_atom_pos);
+        if (m_role == ws_atoms_list_role_t::role_uc)
+          sc_al->m_geom->xfield<float>(xgeom_charge, sc_al->m_geom->nat()-1) =
+              m_geom->xfield<float>(xgeom_charge, i);
       }
 
   sc_al->m_pos = m_pos + m_geom->cell.v[0] * 1.4f;
@@ -584,6 +587,44 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
 
   sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
   sc_al->geometry_changed();
+
+  //perform purification
+  if (m_role == ws_atoms_list_role_t::role_uc) {
+
+      sc_al->m_tws_tr->do_action(act_lock);
+      //intermediage xgeom
+      xgeometry<float, periodic_cell<float> > g(3);
+      g.set_format({"charge"},{type_real});
+      g.DIM = 3;
+      g.cell.DIM = 3;
+      g.cell.v[0] = sc_al->m_geom->cell.v[0];
+      g.cell.v[1] = sc_al->m_geom->cell.v[1];
+      g.cell.v[2] = sc_al->m_geom->cell.v[2];
+      // tws_tree_t<float, periodic_cell<float> > sum_tree(g);
+      const float equality_dist = 0.01f;
+      for (int i = 0; i < sc_al->m_geom->nat(); i++) {
+          std::vector<tws_node_content_t<float> > res;
+          sc_al->m_tws_tr->query_sphere(equality_dist, sc_al->m_geom->pos(i), res);
+          float accum_chg = 0;
+
+          bool need_to_add{true};
+          for (auto &elem : res)
+            if (elem.m_idx == index::D(sc_al->m_geom->DIM).all(0)) {
+                accum_chg +=  sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
+                if (i > elem.m_atm) need_to_add = false;
+              }
+
+          if (need_to_add) {
+              g.add(sc_al->m_geom->atom(i), sc_al->m_geom->pos(i));
+              g.xfield<float>(xgeom_charge, g.nat()-1) = accum_chg;
+            }
+        }
+
+      sc_al->m_geom->clear();
+      sc_al->copy_from_xgeometry(g);
+      sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+
+    }
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_changed();
