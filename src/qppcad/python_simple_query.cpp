@@ -9,6 +9,7 @@ using namespace qpp::cad;
 void simple_query::open_file(std::string file_name) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   astate->ws_manager->import_file_autodeduce(file_name);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
@@ -18,6 +19,7 @@ void simple_query::open_file(std::string file_name) {
 void simple_query::open_file_query(std::string file_name, qc_file_fmt file_format) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   astate->ws_manager->import_file_generic(file_name, file_format);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
@@ -25,7 +27,9 @@ void simple_query::open_file_query(std::string file_name, qc_file_fmt file_forma
 }
 
 void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_c) {
+
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
@@ -33,6 +37,8 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
           if (cur_it_al) {
               cur_it_al->make_super_cell(sc_a+1, sc_b+1, sc_c+1);
             }
+          cur_ws->set_selected_item(cur_ws->m_ws_items.size()-1);
+          astate->astate_evd->python_console_focus_requested();
         }
       astate->make_viewport_dirty();
 
@@ -42,6 +48,7 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
 void simple_query::select_ws(int ws_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->ws_manager->has_wss()) {
       astate->ws_manager->set_cur_id(ws_idx);
       astate->astate_evd->cur_ws_changed();
@@ -53,6 +60,7 @@ void simple_query::select_ws(int ws_idx) {
 void simple_query::select_itm(int itm_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
@@ -68,6 +76,7 @@ void simple_query::select_itm(int itm_idx) {
 void simple_query::sel_cnt(int cnt_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
@@ -82,6 +91,7 @@ void simple_query::sel_cnt(int cnt_idx) {
 }
 
 void simple_query::sel_invert() {
+
   app_state_t *astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {

@@ -134,6 +134,7 @@ namespace qpp {
         QAction *tools_menu_quick_geom_export_xyz;
         QAction *tools_menu_quick_geom_export_vasp_poscar;
         QAction *tools_menu_quick_geom_export_cp2k_coord;
+        QAction *tools_menu_quick_geom_export_qpp_uc;
 
         QMenu *help_menu;
         QAction *help_menu_about;

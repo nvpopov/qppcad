@@ -265,6 +265,13 @@ void main_window::init_menus() {
           [this]() { this->export_selected_geometry("Export[VASP POSCAR]",
                                                     qc_file_fmt::vasp_poscar);});
 
+  tools_menu_quick_geom_export_qpp_uc = new QAction(this);
+  tools_menu_quick_geom_export_qpp_uc->setText(tr("qpp UC"));
+  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_qpp_uc);
+  connect(tools_menu_quick_geom_export_qpp_uc, &QAction::triggered, this,
+          [this]() { this->export_selected_geometry("Export[qpp UC]",
+                                                    qc_file_fmt::qpp_uc);});
+
   help_menu  = menuBar()->addMenu(tr("&Help"));
   help_menu_about = new QAction(this);
   help_menu_about->setText(tr("About"));
@@ -921,69 +928,7 @@ void main_window::apply_camera_view_change(cam_target_view_t target_view) {
               vector3<float> look_up{0.0, 1.0, 0.0};
               bool need_to_update_camera{false};
 
-              switch (target_view) {
-
-                case cam_target_view_t::tv_x_axis : {
-                    float axis_size =
-                        std::max(2.0f, al->m_ext_obs->aabb.max[0] - al->m_ext_obs->aabb.min[0]);
-                    look_from = al->m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
-                    look_to = al->m_pos;
-                    look_up = {0.0 , 0.0 , 1.0};
-                    need_to_update_camera = true;
-                    break;
-                  }
-
-                case cam_target_view_t::tv_y_axis : {
-                    float axis_size =
-                        std::max(2.0f, al->m_ext_obs->aabb.max[1] - al->m_ext_obs->aabb.min[1]);
-                    look_from = al->m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
-                    look_to = al->m_pos;
-                    look_up = {0.0, 0.0, 1.0};
-                    need_to_update_camera = true;
-                    break;
-                  }
-
-                case cam_target_view_t::tv_z_axis : {
-                    float axis_size =
-                        std::max(2.0f,al->m_ext_obs->aabb.max[2] - al->m_ext_obs->aabb.min[2]);
-                    look_from = al->m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
-                    look_to = al->m_pos;
-                    look_up = {0.0, 1.0, 0.0};
-                    need_to_update_camera = true;
-                    break;
-                  }
-
-                case cam_target_view_t::tv_a_axis : {
-                    vector3<float> center =
-                        0.5*(al->m_geom->cell.v[0] +al-> m_geom->cell.v[1] + al->m_geom->cell.v[2]);
-                    look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[0];
-                    look_to = al->m_pos  + center;
-                    look_up = {0.0 , 0.0 , 1.0};
-                    need_to_update_camera = true;
-                    break;
-                  }
-
-                case cam_target_view_t::tv_b_axis : {
-                    vector3<float> center =
-                        0.5*(al->m_geom->cell.v[0] + al->m_geom->cell.v[1] + al->m_geom->cell.v[2]);
-                    look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[1];
-                    look_to = al->m_pos  + center;
-                    look_up = {0.0, 0.0, 1.0};
-                    need_to_update_camera = true;
-                    break;
-                  }
-
-                case cam_target_view_t::tv_c_axis : {
-                    vector3<float> center =
-                        0.5*(al->m_geom->cell.v[0] + al->m_geom->cell.v[1] + al->m_geom->cell.v[2]);
-                    look_from = al->m_pos + center - 2.0f*al->m_geom->cell.v[2];
-                    look_to = al->m_pos  + center;
-                    look_up = {0.0, 1.0, 0.0};
-                    need_to_update_camera = true;
-                    break;
-                  }
-
-                }
+              al->target_view(target_view, look_from, look_to, look_up, need_to_update_camera);
 
               if (need_to_update_camera) {
                   astate->camera->m_view_point = look_from;

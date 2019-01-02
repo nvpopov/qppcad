@@ -13,7 +13,10 @@ namespace qpp {
       tv_z_axis,
       tv_a_axis,
       tv_b_axis,
-      tv_c_axis
+      tv_c_axis,
+      tv_a_star_axis,
+      tv_b_star_axis,
+      tv_c_star_axis
     };
 
     enum cam_proj_t {

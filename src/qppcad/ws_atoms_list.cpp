@@ -106,6 +106,70 @@ void ws_atoms_list_t::vote_for_view_vectors (vector3<float> &out_look_pos,
 
 }
 
+void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
+                                  vector3<float> &look_from,
+                                  vector3<float> &look_to,
+                                  vector3<float> &look_up,
+                                  bool &need_to_update_camera) {
+  switch (_target_view) {
+
+    case cam_target_view_t::tv_x_axis : {
+        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
+        look_from = m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+        look_to = m_pos;
+        look_up = {0.0 , 0.0 , 1.0};
+        need_to_update_camera = true;
+        break;
+      }
+
+    case cam_target_view_t::tv_y_axis : {
+        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
+        look_from = m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
+        look_to = m_pos;
+        look_up = {0.0, 0.0, 1.0};
+        need_to_update_camera = true;
+        break;
+      }
+
+    case cam_target_view_t::tv_z_axis : {
+        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
+        look_from = m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
+        look_to = m_pos;
+        look_up = {0.0, 1.0, 0.0};
+        need_to_update_camera = true;
+        break;
+      }
+
+    case cam_target_view_t::tv_a_axis : {
+        vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+        look_from = m_pos + center - 2.0f * m_geom->cell.v[0];
+        look_to = m_pos  + center;
+        look_up = {0.0 , 0.0 , 1.0};
+        need_to_update_camera = true;
+        break;
+      }
+
+    case cam_target_view_t::tv_b_axis : {
+        vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+        look_from = m_pos + center - 2.0f * m_geom->cell.v[1];
+        look_to = m_pos  + center;
+        look_up = {0.0, 0.0, 1.0};
+        need_to_update_camera = true;
+        break;
+      }
+
+    case cam_target_view_t::tv_c_axis : {
+        vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+        look_from = m_pos + center - 2.0f * m_geom->cell.v[2];
+        look_to = m_pos  + center;
+        look_up = {0.0, 1.0, 0.0};
+        need_to_update_camera = true;
+        break;
+      }
+
+    }
+}
+
 void ws_atoms_list_t::geometry_changed () {
   if (m_ext_obs)
     m_aabb = m_ext_obs->aabb;
@@ -569,6 +633,11 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
   sc_al->m_geom->cell.v[1] = m_geom->cell.v[1] * (b_steps);
   sc_al->m_geom->cell.v[2] = m_geom->cell.v[2] * (c_steps);
 
+  if (m_role == ws_atoms_list_role_t::role_uc) {
+      sc_al->m_draw_img_atoms = false;
+      sc_al->m_draw_img_bonds = false;
+    }
+
   for (auto i = 0; i < m_geom->nat(); i++)
     for (iterator idx_it(index::D(m_geom->DIM).all(0), index({a_steps-1, b_steps-1, c_steps-1}));
          !idx_it.end(); idx_it++ ) {
@@ -950,6 +1019,11 @@ void ws_atoms_list_t::save_to_file (qc_file_fmt file_format, std::string file_na
           };
         case qc_file_fmt::cp2k_coord_cell_section : {
             if (m_geom->DIM == 3) write_cp2k_coord_section(output, *m_geom);
+            else wrong_dimension = true;
+            break;
+          }
+        case qc_file_fmt::qpp_uc : {
+            if (m_geom->DIM == 3) write_xyzq(output, *m_geom);
             else wrong_dimension = true;
             break;
           }
