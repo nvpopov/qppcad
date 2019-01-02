@@ -435,6 +435,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
   tm_group_op_sv_show_all = new QPushButton(tr("SV:SHOW ALL"));
 
+
   connect(tm_group_op_sv_show, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show);
   connect(tm_group_op_sv_hide, &QPushButton::pressed,
@@ -446,10 +447,15 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   connect(tm_group_op_sel_ngbs, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sel_ngbs);
 
+  tm_group_op_del_sel = new QPushButton(tr("SEL:DEL"));
+  connect(tm_group_op_del_sel, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_del_sel);
+
   tm_group_op_layout->addWidget(tm_group_op_sv_show,     0, 0, 1, 1);
   tm_group_op_layout->addWidget(tm_group_op_sv_hide,     0, 1, 1, 1);
   tm_group_op_layout->addWidget(tm_group_op_sv_show_all, 0, 2, 1, 1);
   tm_group_op_layout->addWidget(tm_group_op_sel_ngbs,    1, 0, 1, 1);
+  tm_group_op_layout->addWidget(tm_group_op_del_sel,    1, 1, 1, 1);
 
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
@@ -1206,6 +1212,12 @@ void ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show_all() {
 void ws_atoms_list_obj_insp_widget_t::modify_group_op_sel_ngbs() {
   app_state_t *astate = app_state_t::get_inst();
   if (b_al) b_al->select_selected_atoms_ngbs();
+  astate->make_viewport_dirty();
+}
+
+void ws_atoms_list_obj_insp_widget_t::modify_group_op_del_sel() {
+  app_state_t *astate = app_state_t::get_inst();
+  if (b_al) b_al->delete_selected_atoms();
   astate->make_viewport_dirty();
 }
 

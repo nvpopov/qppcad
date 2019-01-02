@@ -156,6 +156,7 @@ namespace qpp {
         QPushButton *tm_group_op_sv_hide;
         QPushButton *tm_group_op_sv_show_all;
         QPushButton *tm_group_op_sel_ngbs;
+        QPushButton *tm_group_op_del_sel;
 
         void construct_general_tab();
         void construct_display_tab();
@@ -203,6 +204,7 @@ namespace qpp {
         void modify_group_op_sv_hide();
         void modify_group_op_sv_show_all();
         void modify_group_op_sel_ngbs();
+        void modify_group_op_del_sel();
 
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
