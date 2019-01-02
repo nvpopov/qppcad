@@ -13,8 +13,17 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
                                                    bool generate_qm ,
                                                    float qm_r) {
 
-  if (!uc || uc->m_role != ws_atoms_list_role_t::role_uc) return;
-  if (cls_r > cluster_r) return;
+  if (!uc || uc->m_role != ws_atoms_list_role_t::role_uc) {
+      //throw py::error_already_set();
+      throw std::runtime_error("uc || uc->m_role != ws_atoms_list_role_t::role_uc");
+      return;
+    }
+
+  if (cls_r > cluster_r) {
+      //throw py::error_already_set();
+      throw std::runtime_error("cls_r > cluster_r");
+      return;
+    }
 
   //try to find charges, classic and quantum ws_atoms_list`s
   ws_atoms_list_t *chg{nullptr};
@@ -30,7 +39,11 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
         }
     }
 
-  if (chg || cls || qm) return;
+  if (chg || cls || qm) {
+      //throw py::error_already_set();
+      throw std::runtime_error("chg || cls || qm");
+      return;
+    }
 
   uc->m_is_visible = false;
 
@@ -58,11 +71,8 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   uc->m_parent_ws->add_item_to_ws(ws_qm);
 
   shape_sphere<float> sp(cluster_r, displ);
-  shape_sphere<float> sp_cls(cls_r, displ);
-  shape_sphere<float> sp_qm(qm_r, displ);
-  shape<float> & sh_chg = sp - sp_cls;
-  shape<float> & sh_cls_w_qm = sp_cls - sp_qm;
 
+  //copy uc to intermediate
   xgeometry<float, periodic_cell<float> > gd_uc(3);
   gd_uc.set_format({"charge"},{type_real});
   gd_uc.DIM = 3;
@@ -72,33 +82,26 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   gd_uc.cell.v[2] = uc->m_geom->cell.v[2];
 
   for (int i = 0 ; i < uc->m_geom->nat(); i++) {
-      gd_uc.add(uc->m_geom->atom(i), uc->m_geom->pos(i) + displ);
+      gd_uc.add(uc->m_geom->atom(i), uc->m_geom->pos(i));
       gd_uc.xfield<float>(4, i) = uc->m_geom->xfield<float>(4, i);
     }
 
-  xgeometry<float, periodic_cell<float> > gd_cls(0);
+  //initialize result xgeometries
   xgeometry<float, periodic_cell<float> > gd_chg(0);
-  xgeometry<float, periodic_cell<float> > gd_qm(0);
 
+  //initialize intermidiates for charge counting
   xgeometry<float, periodic_cell<float> > g_all_m(0);
   xgeometry<float, periodic_cell<float> > g_all_e(0);
-
-  gd_cls.set_format({"charge"},{type_real});
-  gd_cls.additive(4) = true;
 
   gd_chg.set_format({"charge"},{type_real});
   gd_chg.additive(4) = true;
 
-  gd_qm.set_format({"charge"},{type_real});
-  gd_qm.additive(4) = true;
-
-
-  qpp::fill(g_all_m, gd_uc, sp, crowd_merge | fill_cells);
-  qpp::fill(g_all_e, gd_uc, sp, crowd_exclude | fill_cells);
+  qpp::fill(g_all_m, gd_uc, sp, crowd_merge | fill_atoms);
+  qpp::fill(g_all_e, gd_uc, sp, crowd_exclude | fill_atoms);
 
   //translate intermediates to zero
-//  for (int i = 0 ; i < g_all_m.nat(); i++) g_all_m.coord(i) -= displ;
-//  for (int i = 0 ; i < g_all_e.nat(); i++) g_all_e.coord(i) -= displ;
+  for (int i = 0 ; i < g_all_m.nat(); i++) g_all_m.coord(i) -= displ;
+  for (int i = 0 ; i < g_all_e.nat(); i++) g_all_e.coord(i) -= displ;
 
   //performing charge addition
   tws_tree_t<float, periodic_cell<float> > sum_tree(g_all_m);
@@ -114,23 +117,29 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
       gd_chg.xfield<float>(4, i) = accum_chg ;
     }
 
-  if (generate_qm) {
-    //  qpp::fill(gd_cls, *uc->m_geom, sh_cls_w_qm, crowd_merge | fill_atoms);
-    //  qpp::fill(gd_qm, *uc->m_geom, sp_qm, crowd_merge | fill_cells);
-    }
-  else {
-    //  qpp::fill(gd_cls, *uc->m_geom, sp_cls, crowd_merge | fill_cells);
+  //time to assign atoms to clusters
+  auto add_atom_to_xgeom = [](xgeometry<float, periodic_cell<float> > &g1,
+      xgeometry<float, periodic_cell<float> > &g2, int atom_id ) {
+    g2.add(g1.atom(atom_id), g1.pos(atom_id));
+    g2.xfield<float>(xgeom_charge, g2.nat()-1) = g1.xfield<float>(xgeom_charge, atom_id);
+  };
+
+  for (int i = 0; i < gd_chg.nat(); i++) {
+
+      float r = gd_chg.pos(i).norm();
+
+      if (r >= cls_r) add_atom_to_xgeom(gd_chg, *chg->m_geom, i);
+
+      if (generate_qm) {
+          if (r > -0.01f && r < qm_r) add_atom_to_xgeom(gd_chg, *qm->m_geom, i);
+          if (r > qm_r + 0.01f && r < cls_r) add_atom_to_xgeom(gd_chg, *cls->m_geom, i);
+        } else {
+          if (r > -0.01f && r < cls_r) add_atom_to_xgeom(gd_chg, *cls->m_geom, i);
+        }
     }
 
-  //std::cout << "DEBUG UC " << std::endl;
 
-  chg->copy_from_xgeometry(gd_chg);
-  //cls->copy_from_xgeometry(gd_cls);
-
-  if (generate_qm) {
-      qm->copy_from_xgeometry(gd_qm);
-      if (qm->m_geom->nat() > 0) qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
-    }
+  if (generate_qm) if (qm->m_geom->nat() > 0) qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   if (chg->m_geom->nat() > 0) chg->m_tws_tr->do_action(act_unlock | act_rebuild_all);
   if (cls->m_geom->nat() > 0) cls->m_tws_tr->do_action(act_unlock | act_rebuild_all);
@@ -150,6 +159,7 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
 
   app_state_t *astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_changed();
+
 }
 
 //embc.gen_sph(pq.vector3f(0,0,0), 16, 9)
@@ -182,6 +192,10 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
       if (cur_ws) {
           auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
           if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r, true, qm_r);
+          else {
+              throw std::runtime_error("cur_it_al == null");
+              return;
+            }
         }
     }
 }

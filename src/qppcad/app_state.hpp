@@ -44,6 +44,7 @@ namespace qpp {
         void save_settings();
 
         void log(std::string logstr, bool flush = true);
+        void pylog(std::string logstr);
 
         app_state_event_disp_t *astate_evd;
 

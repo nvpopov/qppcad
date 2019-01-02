@@ -174,6 +174,11 @@ namespace qpp {
       if (flush) std::cout << std::flush;
     }
 
+    void app_state_t::pylog(std::string logstr) {
+      if (py_manager)
+        py_manager->m_output_buffer += "\n" + logstr;
+    }
+
     app_state_t* app_state_t::g_inst = nullptr;
 
   }

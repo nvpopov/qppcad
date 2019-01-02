@@ -401,6 +401,31 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
     }
 }
 
+void simple_query::set_charge(float charge) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+
+          if (cur_it_al && cur_ws->m_edit_type == ws_edit_t::edit_content) {
+              index zero = index::D(cur_it_al->m_geom->DIM).all(0);
+              for (auto &elem : cur_it_al->m_atom_idx_sel)
+                if (elem.m_idx == zero)
+                  cur_it_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm) = charge;
+            }
+        }
+
+      astate->make_viewport_dirty();
+
+    }
+}
+
 void simple_query::set_ws_bg(vector3<float> bg) {
 
   app_state_t *astate = app_state_t::get_inst();

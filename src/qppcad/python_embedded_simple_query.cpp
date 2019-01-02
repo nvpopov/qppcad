@@ -28,12 +28,16 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("qopen", &simple_query::open_file_query);
 
   m.def("mode", &simple_query::edit_mode);
-  m.def("rebond", &simple_query::rebond);
-  m.def("t", &simple_query::translate_selected);
+
   m.def("bg", &simple_query::set_ws_bg);
   m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));} );
   m.def("gpos", &simple_query::gizmo_pos);
-  m.def("sc", &simple_query::make_super_cell);
+
+  py::module tools = m.def_submodule("tools", "Generic tools");
+  tools.def("rebond", &simple_query::rebond);
+  tools.def("t", &simple_query::translate_selected);
+  tools.def("sc", &simple_query::make_super_cell);
+  tools.def("set_chg", &simple_query::set_charge);
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 
