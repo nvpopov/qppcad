@@ -11,7 +11,8 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
                                                    float cluster_r,
                                                    float cls_r,
                                                    bool generate_qm ,
-                                                   float qm_r) {
+                                                   float qm_r,
+                                                   bool do_legacy) {
 
   if (!uc || uc->m_role != ws_atoms_list_role_t::role_uc) {
       //throw py::error_already_set();
@@ -103,30 +104,50 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
 
   //initialize intermidiates for charge counting
   xgeometry<float, periodic_cell<float> > g_all_m(0);
-  xgeometry<float, periodic_cell<float> > g_all_e(0);
+
+  g_all_m.set_format({"charge"},{type_real});
+  g_all_m.additive(4) = true;
+  g_all_m.tol_geom = 0.01f;
 
   gd_chg.set_format({"charge"},{type_real});
   gd_chg.additive(4) = true;
+  gd_chg.tol_geom = 0.01f;
 
-  qpp::fill(g_all_m, gd_uc, sp, crowd_merge | fill_atoms);
-  qpp::fill(g_all_e, gd_uc, sp, crowd_exclude | fill_atoms);
+  int mode_m = crowd_ignore | fill_cells;
+
+  if (do_legacy) {
+      mode_m = mode_m | legacy_fill;
+    }
+
+  qpp::fill(g_all_m, gd_uc, sp, mode_m);
 
   //translate intermediates to zero
   for (int i = 0 ; i < g_all_m.nat(); i++) g_all_m.coord(i) -= displ;
-  for (int i = 0 ; i < g_all_e.nat(); i++) g_all_e.coord(i) -= displ;
 
   //performing charge addition
   tws_tree_t<float, periodic_cell<float> > sum_tree(g_all_m);
   sum_tree.do_action(act_unlock | act_rebuild_tree);
+
   const float equality_dist = 0.01f;
 
-  for (int i = 0; i < g_all_e.nat(); i++) {
+  for (int i = 0; i < g_all_m.nat(); i++) {
+
       std::vector<tws_node_content_t<float> > res;
-      sum_tree.query_sphere(equality_dist, g_all_e.pos(i), res);
+      sum_tree.query_sphere(equality_dist, g_all_m.pos(i), res);
       float accum_chg = 0;
-      for (auto &elem : res) accum_chg += g_all_m.xfield<float>(4, elem.m_atm);
-      gd_chg.add(g_all_e.atom(i), g_all_e.pos(i));
-      gd_chg.xfield<float>(4, i) = accum_chg ;
+
+      std::set<int> num_occur;
+
+      for (auto &elem : res) {
+          accum_chg += g_all_m.xfield<float>(4, elem.m_atm);
+          num_occur.insert(elem.m_atm);
+        }
+
+      if (!num_occur.empty() && i == *num_occur.begin()) {
+          gd_chg.add(g_all_m.atom(i), g_all_m.pos(i));
+          gd_chg.xfield<float>(4, gd_chg.nat()-1) = accum_chg;
+        }
+
     }
 
   //time to assign atoms to clusters
@@ -182,7 +203,8 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
 //embc.gen_sph(pq.vector3f(0,0,0), 16, 9)
 void embedded_cluster_tools::gen_spherical_cluster_cur(vector3<float> displ,
                                                        float cluster_r,
-                                                       float cls_r) {
+                                                       float cls_r,
+                                                       bool do_legacy) {
   app_state_t *astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -191,7 +213,7 @@ void embedded_cluster_tools::gen_spherical_cluster_cur(vector3<float> displ,
 
       if (cur_ws) {
           auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
-          if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r);
+          if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r, do_legacy);
         }
     }
 }
@@ -199,7 +221,8 @@ void embedded_cluster_tools::gen_spherical_cluster_cur(vector3<float> displ,
 void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
                                                           float cluster_r,
                                                           float cls_r,
-                                                          float qm_r) {
+                                                          float qm_r,
+                                                          bool do_legacy) {
   app_state_t *astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -208,7 +231,8 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
 
       if (cur_ws) {
           auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
-          if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r, true, qm_r);
+          if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r,
+                                               true, qm_r, do_legacy);
           else {
               throw std::runtime_error("cur_it_al == null");
               return;
