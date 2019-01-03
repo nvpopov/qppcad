@@ -6,7 +6,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
+void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list_t> uc,
                                                    vector3<float> displ,
                                                    float cluster_r,
                                                    float cls_r,
@@ -186,10 +186,15 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   //add connection info
   ws_chg->add_connected_item(ws_cls);
   ws_chg->add_connected_item(ws_qm);
+  ws_chg->add_connected_item(uc);
+
   ws_cls->add_connected_item(ws_chg);
   ws_cls->add_connected_item(ws_qm);
+  ws_cls->add_connected_item(uc);
+
   ws_qm->add_connected_item(ws_chg);
   ws_qm->add_connected_item(ws_cls);
+  ws_qm->add_connected_item(uc);
 
   uc->add_connected_item(ws_cls);
   uc->add_connected_item(ws_qm);
@@ -212,8 +217,11 @@ void embedded_cluster_tools::gen_spherical_cluster_cur(vector3<float> displ,
       auto cur_ws = astate->ws_manager->get_cur_ws();
 
       if (cur_ws) {
-          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
-          if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r, do_legacy);
+          //
+          std::shared_ptr<ws_atoms_list_t> as_al =
+              std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+
+          if (as_al) gen_spherical_cluster(as_al, displ, cluster_r, cls_r, do_legacy);
         }
     }
 }
@@ -229,15 +237,42 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
 
       auto cur_ws = astate->ws_manager->get_cur_ws();
 
+      bool succes{false};
+
       if (cur_ws) {
-          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
-          if (cur_it_al) gen_spherical_cluster(cur_it_al, displ, cluster_r, cls_r,
-                                               true, qm_r, do_legacy);
-          else {
-              throw std::runtime_error("cur_it_al == null");
+
+          std::shared_ptr<ws_atoms_list_t> as_al =
+              std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+
+          if (as_al && as_al->m_role == ws_atoms_list_role_t::role_uc) {
+              succes = true;
+              gen_spherical_cluster(as_al, displ, cluster_r, cls_r, true, qm_r, do_legacy);
               return;
             }
+
+          //try to deduce uc from connected items
+          if (as_al && (as_al->m_role == ws_atoms_list_role_t::role_embc_qm ||
+                            as_al->m_role == ws_atoms_list_role_t::role_embc_chg ||
+                            as_al->m_role == ws_atoms_list_role_t::role_embc_cls ))
+
+            for (auto elem : as_al->m_connected_items) {
+                std::shared_ptr<ws_atoms_list_t> con_al =
+                    std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
+                if (con_al && con_al->m_role == ws_atoms_list_role_t::role_uc) {
+                    succes = true;
+                    gen_spherical_cluster(con_al, displ, cluster_r, cls_r,
+                                          true, qm_r, do_legacy);
+                    return;
+                  }
+              }
+
         }
+
+      if (!succes) {
+          throw std::runtime_error("Cannot deduce context for embedded cluster generation");
+          return;
+        }
+
     }
 }
 

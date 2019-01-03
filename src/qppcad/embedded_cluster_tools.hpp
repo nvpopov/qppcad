@@ -11,7 +11,7 @@ namespace qpp {
     class embedded_cluster_tools {
 
       public:
-        static void gen_spherical_cluster(ws_atoms_list_t *uc,
+        static void gen_spherical_cluster(std::shared_ptr<ws_atoms_list_t> uc,
                                           vector3<float> displ,
                                           float cluster_r = 30,
                                           float cls_r = 12,

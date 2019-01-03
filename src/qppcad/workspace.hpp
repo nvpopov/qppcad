@@ -79,6 +79,7 @@ namespace qpp {
 
         std::optional<size_t>  get_selected_idx();
         ws_item_t *get_selected();
+        std::shared_ptr<ws_item_t> get_selected_sp();
 
         bool set_selected_item(const size_t sel_idx, bool emit_signal = true);
         void unselect_all(bool emit_signal = true);

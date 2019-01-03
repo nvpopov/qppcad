@@ -29,6 +29,12 @@ ws_item_t *workspace_t::get_selected () {
   else return nullptr;
 }
 
+std::shared_ptr<ws_item_t> workspace_t::get_selected_sp(){
+  std::optional<size_t> sel_idx = get_selected_idx();
+  if (sel_idx) return m_ws_items[*sel_idx];
+  else return nullptr;
+}
+
 bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -512,7 +518,7 @@ void workspace_manager_t::import_file_autodeduce(const std::string file_name,
   if (file_format.empty())
     guess_ff = qc_file_fmt_helper::file_name_to_file_format(file_name);
   else
-     guess_ff = qc_file_fmt_helper::file_format_from_string(file_format);
+    guess_ff = qc_file_fmt_helper::file_format_from_string(file_format);
   import_file_generic(file_name, guess_ff);
 
 }
