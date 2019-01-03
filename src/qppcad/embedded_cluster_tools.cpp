@@ -26,49 +26,61 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
     }
 
   //try to find charges, classic and quantum ws_atoms_list`s
-  ws_atoms_list_t *chg{nullptr};
-  ws_atoms_list_t *cls{nullptr};
-  ws_atoms_list_t *qm{nullptr};
+
+  std::shared_ptr<ws_atoms_list_t> ws_chg{nullptr};
+  std::shared_ptr<ws_atoms_list_t> ws_cls{nullptr};
+  std::shared_ptr<ws_atoms_list_t> ws_qm{nullptr};
 
   for (auto elem : uc->m_connected_items) {
-      auto as_al = dynamic_cast<ws_atoms_list_t*>(elem.get());
+      std::shared_ptr<ws_atoms_list_t> as_al = std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
       if (as_al) {
-          if (as_al->m_role == ws_atoms_list_role_t::role_embc_chg) chg = as_al;
-          if (as_al->m_role == ws_atoms_list_role_t::role_embc_cls) cls = as_al;
-          if (as_al->m_role == ws_atoms_list_role_t::role_embc_qm)  qm  = as_al;
+          if (as_al->m_role == ws_atoms_list_role_t::role_embc_chg) ws_chg = as_al;
+          if (as_al->m_role == ws_atoms_list_role_t::role_embc_cls) ws_cls = as_al;
+          if (as_al->m_role == ws_atoms_list_role_t::role_embc_qm)  ws_qm  = as_al;
         }
-    }
-
-  if (chg || cls || qm) {
-      //throw py::error_already_set();
-      throw std::runtime_error("chg || cls || qm");
-      return;
     }
 
   uc->m_is_visible = false;
 
-  auto ws_chg = std::make_shared<ws_atoms_list_t>();
-  auto ws_cls = std::make_shared<ws_atoms_list_t>();
-  auto ws_qm = std::make_shared<ws_atoms_list_t>();
+  if (ws_chg == nullptr) {
+      ws_chg = std::make_shared<ws_atoms_list_t>();
+      uc->m_parent_ws->add_item_to_ws(ws_chg);
+    } else {
+      ws_chg->m_tws_tr->do_action(act_lock);
+      ws_chg->m_tws_tr->do_action(act_clear_all);
+      ws_chg->m_geom->clear();
+    }
 
-  chg = ws_chg.get();
-  chg->m_tws_tr->do_action(act_lock);
-  chg->m_role = ws_atoms_list_role_t::role_embc_chg;
-  chg->m_name = fmt::format("{}_chg", uc->m_name);
-  chg->m_draw_bonds = false;
-  uc->m_parent_ws->add_item_to_ws(ws_chg);
+  ws_chg->m_tws_tr->do_action(act_lock);
+  ws_chg->m_role = ws_atoms_list_role_t::role_embc_chg;
+  ws_chg->m_name = fmt::format("{}_chg", uc->m_name);
+  ws_chg->m_draw_bonds = false;
 
-  cls = ws_cls.get();
-  cls->m_tws_tr->do_action(act_lock);
-  cls->m_role = ws_atoms_list_role_t::role_embc_cls;
-  cls->m_name = fmt::format("{}_cls", uc->m_name);
-  uc->m_parent_ws->add_item_to_ws(ws_cls);
+  if (ws_cls == nullptr) {
+      ws_cls = std::make_shared<ws_atoms_list_t>();
+      uc->m_parent_ws->add_item_to_ws(ws_cls);
+    } else {
+      ws_cls->m_tws_tr->do_action(act_lock);
+      ws_cls->m_tws_tr->do_action(act_clear_all);
+      ws_cls->m_geom->clear();
+    }
 
-  qm = ws_qm.get();
-  qm->m_tws_tr->do_action(act_lock);
-  qm->m_name = fmt::format("{}_qm", uc->m_name);
-  qm->m_role = ws_atoms_list_role_t::role_embc_qm;
-  uc->m_parent_ws->add_item_to_ws(ws_qm);
+  ws_cls->m_tws_tr->do_action(act_lock);
+  ws_cls->m_role = ws_atoms_list_role_t::role_embc_cls;
+  ws_cls->m_name = fmt::format("{}_cls", uc->m_name);
+
+  if (ws_qm == nullptr) {
+      ws_qm = std::make_shared<ws_atoms_list_t>();
+      uc->m_parent_ws->add_item_to_ws(ws_qm);
+    } else {
+      ws_qm->m_tws_tr->do_action(act_lock);
+      ws_qm->m_tws_tr->do_action(act_clear_all);
+      ws_qm->m_geom->clear();
+    }
+
+  ws_qm->m_tws_tr->do_action(act_lock);
+  ws_qm->m_name = fmt::format("{}_qm", uc->m_name);
+  ws_qm->m_role = ws_atoms_list_role_t::role_embc_qm;
 
   shape_sphere<float> sp(cluster_r, displ);
 
@@ -128,25 +140,26 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
 
       float r = gd_chg.pos(i).norm();
 
-      if (r >= cls_r) add_atom_to_xgeom(gd_chg, *chg->m_geom, i);
+      if (r >= cls_r) add_atom_to_xgeom(gd_chg, *ws_chg->m_geom, i);
 
       if (generate_qm) {
-          if (r > -0.01f && r < qm_r) add_atom_to_xgeom(gd_chg, *qm->m_geom, i);
-          if (r > qm_r + 0.01f && r < cls_r) add_atom_to_xgeom(gd_chg, *cls->m_geom, i);
+          if (r > -0.01f && r < qm_r) add_atom_to_xgeom(gd_chg, *ws_qm->m_geom, i);
+          if (r > qm_r + 0.01f && r < cls_r) add_atom_to_xgeom(gd_chg, *ws_cls->m_geom, i);
         } else {
-          if (r > -0.01f && r < cls_r) add_atom_to_xgeom(gd_chg, *cls->m_geom, i);
+          if (r > -0.01f && r < cls_r) add_atom_to_xgeom(gd_chg, *ws_cls->m_geom, i);
         }
     }
 
 
-  if (generate_qm) if (qm->m_geom->nat() > 0) qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  if (generate_qm) if (ws_qm->m_geom->nat() > 0)
+    ws_qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
-  if (chg->m_geom->nat() > 0) chg->m_tws_tr->do_action(act_unlock | act_rebuild_all);
-  if (cls->m_geom->nat() > 0) cls->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  if (ws_chg->m_geom->nat() > 0) ws_chg->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  if (ws_cls->m_geom->nat() > 0) ws_cls->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   //if (generate_qm && )
 
-  if (chg->m_geom->nat() > 1800) chg->m_cur_render_type = ws_atoms_list_render_t::xatom_lines;
+  if (ws_chg->m_geom->nat() > 1800) ws_chg->m_cur_render_type = ws_atoms_list_render_t::xatom_lines;
   //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   //add connection info
@@ -156,6 +169,10 @@ void embedded_cluster_tools::gen_spherical_cluster(ws_atoms_list_t *uc,
   ws_cls->add_connected_item(ws_qm);
   ws_qm->add_connected_item(ws_chg);
   ws_qm->add_connected_item(ws_cls);
+
+  uc->add_connected_item(ws_cls);
+  uc->add_connected_item(ws_qm);
+  uc->add_connected_item(ws_chg);
 
   app_state_t *astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_changed();
