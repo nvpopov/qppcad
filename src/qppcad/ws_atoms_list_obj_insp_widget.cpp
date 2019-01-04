@@ -628,7 +628,7 @@ void ws_atoms_list_obj_insp_widget_t::update_anim_tab_gb() {
 
   if (b_al) {
       auto cur_anim = b_al->m_anim->get_current_anim();
-      if (cur_anim && cur_anim->m_anim_type == geom_anim_type::anim_static) {
+      if (cur_anim && cur_anim->m_anim_type == geom_anim_t::anim_static) {
           gb_anim_buttons->hide();
           gb_anim_timeline->hide();
         }
@@ -847,7 +847,7 @@ void ws_atoms_list_obj_insp_widget_t::cur_anim_index_changed(int index) {
           b_al->m_anim->update_geom_to_anim();
 
           auto cur_anim = b_al->m_anim->get_current_anim();
-          if (cur_anim && cur_anim->m_anim_type != geom_anim_type::anim_static) {
+          if (cur_anim && cur_anim->m_anim_type != geom_anim_t::anim_static) {
               anim_play->blockSignals(true);
               anim_play->setChecked(b_al->m_anim->m_play_anim);
               anim_play->blockSignals(false);
@@ -858,9 +858,9 @@ void ws_atoms_list_obj_insp_widget_t::cur_anim_index_changed(int index) {
             }
 
           update_anim_tab_gb();
-          gb_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frame_data.size()));
+          gb_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frames.size()));
           gb_anim_timeline_slider->setMinimum(0);
-          gb_anim_timeline_slider->setMaximum(cur_anim->frame_data.size()-1);
+          gb_anim_timeline_slider->setMaximum(cur_anim->frames.size()-1);
         }
 
     }
@@ -894,7 +894,7 @@ void ws_atoms_list_obj_insp_widget_t::anim_timeline_slider_value_changed(int val
 
   if (b_al) {
       auto cur_anim = b_al->m_anim->get_current_anim();
-      if (cur_anim && value < cur_anim->frame_data.size()) {
+      if (cur_anim && value < cur_anim->frames.size()) {
           // gb_anim_timeline_slider->setValue(value);
           b_al->m_anim->update_and_set_anim(b_al->m_anim->m_cur_anim, value);
           //animation_updated_external();

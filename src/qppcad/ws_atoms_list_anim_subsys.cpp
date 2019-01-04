@@ -27,24 +27,24 @@ namespace qpp {
       size_t nat = p_owner->m_geom->nat();
       for (auto i = 0; i < p_owner->m_geom->nat(); i++){
 
-          if (m_anim_data[anim_id].frame_data[start_frame_n].atom_pos.size() != nat) {
+          if (m_anim_data[anim_id].frames[start_frame_n].atom_pos.size() != nat) {
               m_force_non_animable = true;
               return;
             }
 
           vector3<float> new_pos =
-              m_anim_data[anim_id].frame_data[start_frame_n].atom_pos[i] * (frame_delta) +
-              m_anim_data[anim_id].frame_data[end_frame_n].atom_pos[i] * (1-frame_delta);
+              m_anim_data[anim_id].frames[start_frame_n].atom_pos[i] * (frame_delta) +
+              m_anim_data[anim_id].frames[end_frame_n].atom_pos[i] * (1-frame_delta);
 
           p_owner->m_geom->change_pos(i, new_pos);
 
           if (p_owner->m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
               // check the colors in frame_data are avaiable
-              if (m_anim_data[anim_id].frame_data[start_frame_n].atom_color.size() == nat &&
-                  m_anim_data[anim_id].frame_data[end_frame_n].atom_color.size() == nat) {
+              if (m_anim_data[anim_id].frames[start_frame_n].atom_color.size() == nat &&
+                  m_anim_data[anim_id].frames[end_frame_n].atom_color.size() == nat) {
                   vector3<float> new_color =
-                      m_anim_data[anim_id].frame_data[start_frame_n].atom_color[i] * (frame_delta) +
-                      m_anim_data[anim_id].frame_data[end_frame_n].atom_color[i] * (1-frame_delta);
+                      m_anim_data[anim_id].frames[start_frame_n].atom_color[i] * (frame_delta) +
+                      m_anim_data[anim_id].frames[end_frame_n].atom_color[i] * (1-frame_delta);
                   p_owner->m_geom->xfield<float>(xgeom_ccr, i) = new_color[0];
                   p_owner->m_geom->xfield<float>(xgeom_ccg, i) = new_color[1];
                   p_owner->m_geom->xfield<float>(xgeom_ccb, i) = new_color[2];
@@ -92,7 +92,7 @@ namespace qpp {
     }
 
     void ws_atoms_list_anim_subsys_t::update_current_frame_to_end() {
-      update_current_frame_to(m_anim_data[m_cur_anim].frame_data.size()-1);
+      update_current_frame_to(m_anim_data[m_cur_anim].frames.size()-1);
     }
 
     void ws_atoms_list_anim_subsys_t::update(const float delta_time) {
@@ -100,7 +100,7 @@ namespace qpp {
       app_state_t* astate = app_state_t::get_inst();
 
       if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
-      if (m_anim_data[m_cur_anim].frame_data.empty()) return;
+      if (m_anim_data[m_cur_anim].frames.empty()) return;
 
       //if (m_anim[m_cur_anim].frame_data[0].si)
       if (m_play_anim && animable()) {
@@ -108,18 +108,18 @@ namespace qpp {
           //astate->log("ANIM");
 
           m_cur_anim_time += 1 / (m_anim_frame_time * 60);
-          if (m_cur_anim_time > m_anim_data[m_cur_anim].frame_data.size() - 1) {
+          if (m_cur_anim_time > m_anim_data[m_cur_anim].frames.size() - 1) {
               if (m_play_cyclic) m_cur_anim_time = 0.0f;
               else {
                   m_play_anim = false;
-                  m_cur_anim_time = m_anim_data[m_cur_anim].frame_data.size() - 1;
+                  m_cur_anim_time = m_anim_data[m_cur_anim].frames.size() - 1;
                 }
             } else {
               update_geom_to_anim(m_cur_anim, m_cur_anim_time);
             }
 
           //if current anim type equals static -> update to static and switch m_cur_anim_time = 0
-          if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_type::anim_static){
+          if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_t::anim_static){
               m_cur_anim_time = 0.0f;
               m_play_anim = false;
               //m_play_cyclic = false;
@@ -134,9 +134,9 @@ namespace qpp {
       if (m_force_non_animable) return false;
       if (m_anim_data.empty()) return false;
       if (m_anim_data.size() == 1)
-        if (m_anim_data[0].m_anim_type == geom_anim_type::anim_static) return false;
+        if (m_anim_data[0].m_anim_type == geom_anim_t::anim_static) return false;
       for (auto &anim : m_anim_data)
-        if (anim.frame_data.empty()) return false;
+        if (anim.frames.empty()) return false;
       return true;
 
     }
@@ -189,7 +189,7 @@ namespace qpp {
 
       m_cur_anim_time += frame_mod;
       m_cur_anim_time = std::clamp(m_cur_anim_time,
-                                   0.0f, float(m_anim_data[m_cur_anim].frame_data.size()- 1) );
+                                   0.0f, float(m_anim_data[m_cur_anim].frames.size()- 1) );
       update_geom_to_anim();
 
     }
@@ -199,7 +199,7 @@ namespace qpp {
       else return nullptr;
     }
 
-    geom_anim_type ws_atoms_list_anim_subsys_t::get_cur_anim_type() const {
+    geom_anim_t ws_atoms_list_anim_subsys_t::get_cur_anim_type() const {
       return m_anim_data[m_cur_anim].m_anim_type;
     }
 
@@ -208,7 +208,7 @@ namespace qpp {
     }
 
     size_t ws_atoms_list_anim_subsys_t::frame_count(const size_t anim_id) const {
-      return m_anim_data[anim_id].frame_data.size();
+      return m_anim_data[anim_id].frames.size();
     }
 
     size_t ws_atoms_list_anim_subsys_t::current_frame_count() const {

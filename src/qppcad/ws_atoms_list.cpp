@@ -538,16 +538,16 @@ void ws_atoms_list_t::load_color_from_static_anim() {
   if (m_anim->m_anim_data.size()>0) {
       int static_anim = -1;
       for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
-        if (m_anim->m_anim_data[i].m_anim_type == geom_anim_type::anim_static) static_anim = i;
-      if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frame_data.size() > 0 &&
-          m_anim->m_anim_data[static_anim].frame_data[0].atom_color.size() == m_geom->nat()) {
+        if (m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_static) static_anim = i;
+      if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
+          m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
           for (int i = 0; i < m_geom->nat(); i++) {
               m_geom->xfield<float>(xgeom_ccr, i) =
-                  m_anim->m_anim_data[static_anim].frame_data[0].atom_color[i][0];
+                  m_anim->m_anim_data[static_anim].frames[0].atom_color[i][0];
               m_geom->xfield<float>(xgeom_ccg, i) =
-                  m_anim->m_anim_data[static_anim].frame_data[0].atom_color[i][1];
+                  m_anim->m_anim_data[static_anim].frames[0].atom_color[i][1];
               m_geom->xfield<float>(xgeom_ccb, i) =
-                  m_anim->m_anim_data[static_anim].frame_data[0].atom_color[i][2];
+                  m_anim->m_anim_data[static_anim].frames[0].atom_color[i][2];
             }
         }
     }
@@ -994,7 +994,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
       m_ext_obs->aabb.max = -center + m_ext_obs->aabb.max;
 
       for (auto &anim : m_anim->m_anim_data)
-        for (auto &anim_frame : anim.frame_data)
+        for (auto &anim_frame : anim.frames)
           for (auto &anim_frame_rec : anim_frame.atom_pos)
             anim_frame_rec -= center;
     }
@@ -1142,14 +1142,14 @@ void ws_atoms_list_t::write_to_json (json &data) {
       json animations = json::array({});
 
       for (auto &anim : m_anim->m_anim_data)
-        if (anim.m_anim_type != geom_anim_type::anim_static) {
+        if (anim.m_anim_type != geom_anim_t::anim_static) {
 
             json animation = json::object();
             animation[JSON_ATOMS_LIST_ANIMATION_NAME] = anim.m_anim_name;
             animation[JSON_ATOMS_LIST_ANIMATION_TYPE] = anim.m_anim_type;
             json frames = json::array();
 
-            for (auto &frame : anim.frame_data) {
+            for (auto &frame : anim.frames) {
 
                 json frame_chunk = json::array({});
                 for (auto &frame_coord : frame.atom_pos) {
@@ -1288,13 +1288,13 @@ void ws_atoms_list_t::read_from_json (json &data) {
             tmp_anim_rec.m_anim_type = anim[JSON_ATOMS_LIST_ANIMATION_TYPE];
 
           if (anim.find(JSON_ATOMS_LIST_ANIMATION_FRAMES) != anim.end()) {
-              tmp_anim_rec.frame_data.reserve(anim[JSON_ATOMS_LIST_ANIMATION_FRAMES].size());
+              tmp_anim_rec.frames.reserve(anim[JSON_ATOMS_LIST_ANIMATION_FRAMES].size());
 
               for (auto &frame : anim[JSON_ATOMS_LIST_ANIMATION_FRAMES]) {
-                  tmp_anim_rec.frame_data.resize(tmp_anim_rec.frame_data.size() + 1);
-                  size_t nf_id = tmp_anim_rec.frame_data.size() - 1;
+                  tmp_anim_rec.frames.resize(tmp_anim_rec.frames.size() + 1);
+                  size_t nf_id = tmp_anim_rec.frames.size() - 1;
 
-                  tmp_anim_rec.frame_data[nf_id].atom_pos.reserve(frame.size());
+                  tmp_anim_rec.frames[nf_id].atom_pos.reserve(frame.size());
 
                   for (auto &frame_data : frame) {
                       vector3<float> frame_coord;
@@ -1302,21 +1302,21 @@ void ws_atoms_list_t::read_from_json (json &data) {
                       frame_coord[1] = frame_data[1].get<float>();
                       frame_coord[2] = frame_data[2].get<float>();
                       std::cout << frame_coord.to_string_vec() << std::endl;
-                      tmp_anim_rec.frame_data[nf_id].atom_pos.push_back(frame_coord);
+                      tmp_anim_rec.frames[nf_id].atom_pos.push_back(frame_coord);
                     }
                 }
             }
-          if (tmp_anim_rec.m_anim_type == geom_anim_type::anim_static) static_anim_found = true;
+          if (tmp_anim_rec.m_anim_type == geom_anim_t::anim_static) static_anim_found = true;
           m_anim->m_anim_data.push_back(std::move(tmp_anim_rec));
         }
 
       if (!static_anim_found) {
           geom_anim_record_t<float> tmp_anim_static;
           tmp_anim_static.m_anim_name = "static";
-          tmp_anim_static.m_anim_type = geom_anim_type::anim_static;
-          tmp_anim_static.frame_data.resize(1);
+          tmp_anim_static.m_anim_type = geom_anim_t::anim_static;
+          tmp_anim_static.frames.resize(1);
           for (auto i = 0; i < m_geom->nat(); i++)
-            tmp_anim_static.frame_data[0].atom_pos.push_back(m_geom->pos(i));
+            tmp_anim_static.frames[0].atom_pos.push_back(m_geom->pos(i));
           m_anim->m_anim_data.insert(m_anim->m_anim_data.begin(), std::move(tmp_anim_static));
         }
     }

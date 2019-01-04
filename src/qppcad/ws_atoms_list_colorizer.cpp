@@ -38,20 +38,20 @@ void ws_atoms_list_colorizer_helper::colorize_by_distance(ws_atoms_list_t *al,
       //iterate over all animations
       for (size_t a_id = 0; a_id < al->m_anim->get_total_anims(); a_id++)
         //iterate over all frames
-        for (size_t f_id = 0; f_id < al->m_anim->m_anim_data[a_id].frame_data.size(); f_id++) {
+        for (size_t f_id = 0; f_id < al->m_anim->m_anim_data[a_id].frames.size(); f_id++) {
             //std::cout << "PROCCESING FRAME " << f_id << " FOR ANIM " << a_id << std::endl;
             //copy anim to temp geometry
             for (int i = 0; i < al->m_geom->nat(); i++)
-              g.coord(i) = al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_pos[i];
+              g.coord(i) = al->m_anim->m_anim_data[a_id].frames[f_id].atom_pos[i];
 
             g_t.do_action(act_unlock | act_unlock_img);
             g_t.do_action(act_clear_all);
             g_t.do_action(act_build_tree);
             g_t.do_action(act_lock | act_lock_img);
 
-            if (al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_color.size() !=
+            if (al->m_anim->m_anim_data[a_id].frames[f_id].atom_color.size() !=
                 al->m_geom->nat())
-              al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_color.resize(al->m_geom->nat());
+              al->m_anim->m_anim_data[a_id].frames[f_id].atom_color.resize(al->m_geom->nat());
 
             for (int i = 0; i < g.nat(); i++) {
 
@@ -90,7 +90,7 @@ void ws_atoms_list_colorizer_helper::colorize_by_distance(ws_atoms_list_t *al,
                       final_color = min_dist_color;
                   }
 
-                al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_color[i] = final_color;
+                al->m_anim->m_anim_data[a_id].frames[f_id].atom_color[i] = final_color;
 
               }
 

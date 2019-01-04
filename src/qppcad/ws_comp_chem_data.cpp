@@ -255,7 +255,7 @@ void ws_comp_chem_data_t::update_joined_atoms_list_animation(size_t step_idx) {
   for (auto &items : m_connected_items) {
       ws_atoms_list_t *al = dynamic_cast<ws_atoms_list_t*>(items.get());
       if (al && al->m_anim->get_total_anims() > 1
-          && al->m_anim->m_anim_data[1].frame_data.size() == m_ccd->m_steps.size())  {
+          && al->m_anim->m_anim_data[1].frames.size() == m_ccd->m_steps.size())  {
           //fmt::print(std::cout, "Hallelujiah\n");
           al->m_anim->update_and_set_anim(1, step_idx);
         }
