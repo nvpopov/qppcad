@@ -5,6 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/python_simple_query.hpp>
+#include <qppcad/ws_atoms_list_colorizer.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -38,6 +39,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("t", &simple_query::translate_selected);
   tools.def("sc", &simple_query::make_super_cell);
   tools.def("set_chg", &simple_query::set_charge);
+  tools.def("colorize_by_dist", &ws_atoms_list_colorizer_helper::py_colorize_by_distance);
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 

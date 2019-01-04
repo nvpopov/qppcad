@@ -520,6 +520,19 @@ void ws_atoms_list_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> 
     }
 }
 
+void ws_atoms_list_t::copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
+
+  xgeom_inst.clear();
+  xgeom_inst.DIM = m_geom->DIM;
+  xgeom_inst.cell.DIM = m_geom->cell.DIM;
+
+  for (int i = 0; i < 3; i++)
+    if (m_geom->DIM > i) xgeom_inst.cell.v[i] = m_geom->cell.v[i];
+
+  for (int i = 0; i < m_geom->nat(); i++)
+    xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
+}
+
 void ws_atoms_list_t::select_atom_ngbs(const int at_id) {
   for (int i = 0; i < m_tws_tr->n(at_id); i++)
     if (m_tws_tr->table_idx(at_id, i) == index::D(m_geom->DIM).all(0))

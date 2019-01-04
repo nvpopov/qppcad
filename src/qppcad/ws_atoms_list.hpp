@@ -140,6 +140,7 @@ namespace qpp {
         }
 
         void copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
+        void copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
 
         void select_atom_ngbs(const int at_id);
         void select_selected_atoms_ngbs();
