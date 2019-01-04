@@ -7,7 +7,10 @@ using namespace qpp::cad;
 void ws_atoms_list_colorizer_helper::colorize_by_distance(ws_atoms_list_t *al,
                                                           float min_dist,
                                                           vector3<float> min_dist_color,
-                                                          vector3<float> over_dist_color) {
+                                                          vector3<float> over_dist_color,
+                                                          bool affect_pairs,
+                                                          std::string atom_type1,
+                                                          std::string atom_type2) {
 
   if (!al) {
       throw std::runtime_error("colorize_by_distance -> !al");
@@ -24,6 +27,8 @@ void ws_atoms_list_colorizer_helper::colorize_by_distance(ws_atoms_list_t *al,
   tws_tree_t<float, periodic_cell<float> > g_t(g);
   g_t.do_action(act_lock | act_lock_img);
 
+  index zero = index::D(al->m_geom->DIM).all(0);
+
   if (al->m_anim->animable()) {
 
       //copy initial geometry
@@ -33,7 +38,7 @@ void ws_atoms_list_colorizer_helper::colorize_by_distance(ws_atoms_list_t *al,
       for (size_t a_id = 0; a_id < al->m_anim->get_total_anims(); a_id++)
         //iterate over all frames
         for (size_t f_id = 0; f_id < al->m_anim->m_anim_data[a_id].frame_data.size(); f_id++) {
-            std::cout << "PROCCESING FRAME " << f_id << " FOR ANIM " << a_id << std::endl;
+            //std::cout << "PROCCESING FRAME " << f_id << " FOR ANIM " << a_id << std::endl;
             //copy anim to temp geometry
             for (int i = 0; i < al->m_geom->nat(); i++)
               g.coord(i) = al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_pos[i];
@@ -50,10 +55,30 @@ void ws_atoms_list_colorizer_helper::colorize_by_distance(ws_atoms_list_t *al,
             for (int i = 0; i < g.nat(); i++) {
                 std::vector<tws_node_content_t<float> > res;
                 g_t.query_sphere(min_dist, g.pos(i), res);
-                if (res.size() > 1)
-                  al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_color[i] = min_dist_color;
-                else
-                  al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_color[i] = over_dist_color;
+
+                vector3<float> final_color = over_dist_color;
+
+                int zero_cnt = 0;
+
+                zero_cnt = std::count_if(res.begin(), res.end(),
+                           [&zero](tws_node_content_t<float> &elem){
+                           return elem.m_idx == zero;});
+
+                if (res.size() > 1 ) {
+
+                    bool pair1_d = al->m_geom->atom(i) == atom_type1;
+                    bool pair2_d = al->m_geom->atom(res[1].m_atm) == atom_type2;
+                    bool pair1_i = al->m_geom->atom(res[1].m_atm) == atom_type1;
+                    bool pair2_i = al->m_geom->atom(i) == atom_type2;
+                    bool p1 = pair1_d && pair2_d;
+                    bool p2 = pair1_i && pair2_i;
+
+                    if ((!affect_pairs || (affect_pairs && (p1 || p2))) && zero_cnt > 1)
+                      final_color = min_dist_color;
+                  }
+
+                al->m_anim->m_anim_data[a_id].frame_data[f_id].atom_color[i] = final_color;
+
               }
 
           }
@@ -78,7 +103,33 @@ void ws_atoms_list_colorizer_helper::py_colorize_by_distance(float min_dist,
               std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
 
           if (as_al) ws_atoms_list_colorizer_helper::colorize_by_distance(
-                as_al.get(), min_dist, min_dist_color, over_dist_color);
+                as_al.get(), min_dist, min_dist_color, over_dist_color, false, "", "");
         }
     }
+}
+
+void ws_atoms_list_colorizer_helper::py_colorize_by_distance_with_pairs(
+    float min_dist,
+    vector3<float> min_dist_color,
+    vector3<float> over_dist_color,
+    std::string atom_type1,
+    std::string atom_type2) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          //
+          std::shared_ptr<ws_atoms_list_t> as_al =
+              std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+
+          if (as_al) ws_atoms_list_colorizer_helper::colorize_by_distance(
+                as_al.get(), min_dist, min_dist_color, over_dist_color,
+                true, atom_type1, atom_type2);
+        }
+    }
+
 }
