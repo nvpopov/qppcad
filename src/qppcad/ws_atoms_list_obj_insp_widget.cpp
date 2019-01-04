@@ -85,6 +85,10 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_s_render_style->addItem("Billboards");
   disp_s_render_style->addItem("Buffered billboards");
 
+  disp_s_color_mode = new qbinded_combobox;
+  disp_s_color_mode->addItem(tr("Color from ptable"));
+  disp_s_color_mode->addItem(tr("Color from xgeom"));
+
   disp_s_labels_style = new qbinded_combobox;
   disp_s_labels_style->addItem("None");
   disp_s_labels_style->addItem("Id");
@@ -106,6 +110,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox;
 
   gb_disp_s_layout->addRow(tr("Draw style"), disp_s_render_style);
+  gb_disp_s_layout->addRow(tr("Color style"), disp_s_color_mode);
   gb_disp_s_layout->addRow(tr("Draw atoms"), disp_s_draw_atoms);
   gb_disp_s_layout->addRow(tr("Draw bonds"), disp_s_draw_bonds);
   gb_disp_s_layout->addRow(tr("Draw img. atoms"), disp_s_draw_img_atoms);
@@ -539,10 +544,9 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       disp_s_draw_img_bonds->bind_value(&b_al->m_draw_img_bonds);
       disp_s_atom_scale->bind_value(&b_al->m_atom_scale_factor);
       disp_s_bond_scale->bind_value(&b_al->m_bond_scale_factor);
-      disp_s_render_style->bind_value(
-            reinterpret_cast<int*>(&b_al->m_cur_render_type));
-      disp_s_labels_style->bind_value(
-            reinterpret_cast<int*>(&b_al->m_labels->m_style));
+      disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_cur_render_type));
+      disp_s_color_mode->bind_value(reinterpret_cast<int*>(&b_al->m_color_mode));
+      disp_s_labels_style->bind_value(reinterpret_cast<int*>(&b_al->m_labels->m_style));
       display_shading_spec->bind_value(&b_al->m_draw_specular);
       display_shading_spec_value->bind_value(&b_al->m_shading_specular_power);
 
@@ -602,6 +606,7 @@ void ws_atoms_list_obj_insp_widget_t::unbind_item() {
   disp_s_atom_scale->unbind_value();
   disp_s_bond_scale->unbind_value();
   disp_s_render_style->unbind_value();
+  disp_s_color_mode->unbind_value();
   disp_s_labels_style->unbind_value();
   display_shading_spec->unbind_value();
   display_shading_spec_value->unbind_value();
