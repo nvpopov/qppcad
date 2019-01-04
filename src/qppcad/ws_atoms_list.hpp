@@ -141,6 +141,7 @@ namespace qpp {
 
         void copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
         void copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
+        void load_color_from_static_anim();
 
         void select_atom_ngbs(const int at_id);
         void select_selected_atoms_ngbs();
@@ -191,8 +192,6 @@ namespace qpp {
         void read_from_json(json &data) override;
         bool can_be_written_to_json() override;
         //void post_load();
-
-        void dialog_save_to_file(qc_file_fmt file_format);
 
     };
 

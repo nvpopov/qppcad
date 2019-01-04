@@ -533,6 +533,27 @@ void ws_atoms_list_t::copy_to_xgeometry(xgeometry<float, periodic_cell<float> > 
     xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
 }
 
+void ws_atoms_list_t::load_color_from_static_anim() {
+
+  if (m_anim->m_anim_data.size()>0) {
+      int static_anim = -1;
+      for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
+        if (m_anim->m_anim_data[i].m_anim_type == geom_anim_type::anim_static) static_anim = i;
+      if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frame_data.size() > 0 &&
+          m_anim->m_anim_data[static_anim].frame_data[0].atom_color.size() == m_geom->nat()) {
+          for (int i = 0; i < m_geom->nat(); i++) {
+              m_geom->xfield<float>(xgeom_ccr, i) =
+                  m_anim->m_anim_data[static_anim].frame_data[0].atom_color[i][0];
+              m_geom->xfield<float>(xgeom_ccg, i) =
+                  m_anim->m_anim_data[static_anim].frame_data[0].atom_color[i][1];
+              m_geom->xfield<float>(xgeom_ccb, i) =
+                  m_anim->m_anim_data[static_anim].frame_data[0].atom_color[i][2];
+            }
+        }
+    }
+
+}
+
 void ws_atoms_list_t::select_atom_ngbs(const int at_id) {
   for (int i = 0; i < m_tws_tr->n(at_id); i++)
     if (m_tws_tr->table_idx(at_id, i) == index::D(m_geom->DIM).all(0))
@@ -1311,8 +1332,5 @@ bool ws_atoms_list_t::can_be_written_to_json() {
   return true;
 }
 
-void ws_atoms_list_t::dialog_save_to_file (qc_file_fmt file_format) {
-
-}
 
 

@@ -14,6 +14,7 @@ namespace qpp {
         static void colorize_by_distance(ws_atoms_list_t* al, float min_dist,
                                          vector3<float> min_dist_color,
                                          vector3<float> over_dist_color,
+                                         bool fill_def_color_on_miss,
                                          bool affect_pairs,
                                          std::string atom_type1,
                                          std::string atom_type2);
