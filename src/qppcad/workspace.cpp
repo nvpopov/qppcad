@@ -167,7 +167,8 @@ void workspace_t::render() {
 }
 
 void workspace_t::render_overlay(QPainter &painter) {
-  for (auto &ws_item : m_ws_items) ws_item->render_overlay(painter);
+  for (auto &ws_item : m_ws_items)
+    if (ws_item->m_is_visible) ws_item->render_overlay(painter);
 }
 
 void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {

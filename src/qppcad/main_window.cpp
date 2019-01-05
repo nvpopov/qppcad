@@ -208,10 +208,12 @@ void main_window::init_menus() {
           this, &main_window::action_toggle_console);
   edit_menu->addAction(edit_menu_console);
 
+  edit_menu_debug = edit_menu->addMenu(tr("Debug"));
+
   edit_menu_toggle_debug_info = new QAction(this);
-  edit_menu_toggle_debug_info->setText(tr("Debug info"));
+  edit_menu_toggle_debug_info->setText(tr("Show frame info"));
   edit_menu_toggle_debug_info->setCheckable(true);
-  edit_menu->addAction(edit_menu_toggle_debug_info);
+  edit_menu_debug->addAction(edit_menu_toggle_debug_info);
   connect(edit_menu_toggle_debug_info, &QAction::toggled,
           [](bool checked){
       app_state_t* astate = app_state_t::get_inst();
@@ -220,13 +222,24 @@ void main_window::init_menus() {
     });
 
   edit_menu_toggle_debug_tws_tree = new QAction(this);
-  edit_menu_toggle_debug_tws_tree->setText(tr("Debug tws-tree"));
+  edit_menu_toggle_debug_tws_tree->setText(tr("Render tws-tree"));
   edit_menu_toggle_debug_tws_tree->setCheckable(true);
-  edit_menu->addAction(edit_menu_toggle_debug_tws_tree);
+  edit_menu_debug->addAction(edit_menu_toggle_debug_tws_tree);
   connect(edit_menu_toggle_debug_tws_tree, &QAction::toggled,
           [](bool checked){
       app_state_t* astate = app_state_t::get_inst();
       astate->m_debug_show_tws_tree = checked;
+      astate->make_viewport_dirty();
+    });
+
+  edit_menu_toggle_sel_deque = new QAction(this);
+  edit_menu_toggle_sel_deque->setText(tr("Show selection deque"));
+  edit_menu_toggle_sel_deque->setCheckable(true);
+  edit_menu_debug->addAction(edit_menu_toggle_sel_deque);
+  connect(edit_menu_toggle_debug_tws_tree, &QAction::toggled,
+          [](bool checked){
+      app_state_t* astate = app_state_t::get_inst();
+      astate->m_debug_show_sel_deque = checked;
       astate->make_viewport_dirty();
     });
 
@@ -339,6 +352,14 @@ void main_window::init_widgets() {
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
 
+  tp_show_node_editor = new QCheckBox;
+  tp_show_node_editor->setCheckState(Qt::Unchecked);
+  tp_show_node_editor->setText("NODES");
+  tp_show_node_editor->setMinimumHeight(tp_button_height);
+  tp_show_node_editor->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px;"
+                               "padding-right:5px; "
+                               "QCheckBox::indicator { width: 21px;height: 21px;}");
+
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
   QObject::connect(tp_edit_mode, SIGNAL(buttonClicked(int)),
@@ -415,6 +436,11 @@ void main_window::init_widgets() {
   tp_measure_dist->setMinimumHeight(tp_button_height);
   tp_measure_dist->setCheckable(true);
 
+  tp_measure_angle = new QPushButton(tr("ANGLE"));
+  tp_measure_angle->setMinimumWidth(60);
+  tp_measure_angle->setMinimumHeight(tp_button_height);
+  tp_measure_angle->setCheckable(true);
+
   connect(tp_measure_dist, &QPushButton::toggled, this, &main_window::tp_dist_button_clicked);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
@@ -464,6 +490,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_show_node_editor, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
@@ -478,6 +505,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_camera_c, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
 
@@ -835,6 +863,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
           if (cur_it_as_al) {
               if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
                   cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  tp_measure_angle->hide();
                   tp_measure_dist->show();
                   need_to_hide_al_cntls = false;
                   auto it1 = cur_it_as_al->m_atom_idx_sel.begin();
@@ -846,6 +875,14 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                   tp_measure_dist->setChecked(cur_sel != std::nullopt);
                   tp_measure_dist->blockSignals(false);
                 }
+
+              if (cur_it_as_al->m_atom_idx_sel.size() == 3 &&
+                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  need_to_hide_al_cntls = false;
+                  tp_measure_dist->hide();
+                  tp_measure_angle->show();
+                }
+
             }
 
         }
@@ -853,6 +890,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
 
   if (need_to_hide_al_cntls) {
       tp_measure_dist->hide();
+      tp_measure_angle->hide();
     }
 
 }

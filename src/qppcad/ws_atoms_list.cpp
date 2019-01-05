@@ -167,6 +167,10 @@ void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
         break;
       }
 
+    default : {
+        break;
+      }
+
     }
 }
 
@@ -306,9 +310,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
           if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
               atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
-
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
-
               if (atom_sel_it == m_atom_idx_sel.end()) m_atom_idx_sel.insert(iskey);
               else m_atom_idx_sel.erase(atom_sel_it);
 
@@ -340,9 +342,7 @@ void ws_atoms_list_t::select_atoms (bool all) {
 
   if (all) {
       m_atom_idx_sel.clear();
-      for (auto i = 0; i < m_geom->nat(); i++) {
-          m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
-        }
+      for (auto i = 0; i < m_geom->nat(); i++) select_atom(i);
     } else {
       m_atom_idx_sel.clear();
     }
@@ -354,26 +354,32 @@ void ws_atoms_list_t::select_atoms (bool all) {
 
 }
 
-bool ws_atoms_list_t::select_atom (int atom_id) {
+void ws_atoms_list_t::select_atom (int atom_id) {
+  select_atom(atom_id, index::D(m_geom->DIM).all(0));
+}
+
+void ws_atoms_list_t::select_atom(int atom_id, index atom_idx) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
-      m_atom_idx_sel.insert(atom_index_set_key(atom_id, index::D(m_geom->DIM).all(0)));
+      m_atom_idx_sel.insert(atom_index_set_key(atom_id, atom_idx));
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
-      return true;
+      return;
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
-  return false;
+  return;
+
 }
 
-bool ws_atoms_list_t::unselect_atom(int atom_id) {
+void ws_atoms_list_t::unselect_atom(int atom_id) {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
@@ -389,12 +395,35 @@ bool ws_atoms_list_t::unselect_atom(int atom_id) {
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
-      return true;
+      return;
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
-  return false;
+  return;
+}
+
+void ws_atoms_list_t::unselect_atom(int atom_id, index atom_idx) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->make_viewport_dirty();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+
+  if (atom_id >= 0 && atom_id < m_geom->nat()) {
+
+      auto i2 = m_atom_idx_sel.find(atom_index_set_key(atom_id, atom_idx));
+      if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
+
+      //astate->make_viewport_dirty();
+      recalc_gizmo_barycenter();
+      m_parent_ws->m_gizmo->update_gizmo(0.01f);
+      return;
+    }
+
+  recalc_gizmo_barycenter();
+  m_parent_ws->m_gizmo->update_gizmo(0.01f);
+  return;
+
 }
 
 void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
@@ -402,11 +431,9 @@ void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
   app_state_t* astate = app_state_t::get_inst();
 
   for (auto i = 0; i < m_geom->nat(); i++)
-    if (m_geom->type_table(i) == item_type_to_select){
-        m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
-      }
+    if (m_geom->type_table(i) == item_type_to_select) select_atom(i);
 
-  recalc_gizmo_barycenter();
+  //recalc_gizmo_barycenter();
 
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
@@ -415,19 +442,12 @@ void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
 }
 
 void ws_atoms_list_t::unselect_by_type(const int item_type_to_unselect) {
+
   app_state_t* astate = app_state_t::get_inst();
 
   for (auto i = 0; i < m_geom->nat(); i++)
 
-    if (m_geom->type_table(i) == item_type_to_unselect) {
-
-
-        for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
-             !idx.end(); idx++ ) {
-            auto i2 = m_atom_idx_sel.find(atom_index_set_key(i, idx));
-            if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
-          }
-      }
+    if (m_geom->type_table(i) == item_type_to_unselect) unselect_atom(i);
 
   recalc_gizmo_barycenter();
 
@@ -450,8 +470,7 @@ void ws_atoms_list_t::invert_selected_atoms () {
   m_atom_idx_sel.clear();
 
   for (int i = 0 ; i < m_geom->nat(); i++)
-    if (sel_atm.find(i) == sel_atm.end())
-      m_atom_idx_sel.insert(atom_index_set_key(i, index::D(m_geom->DIM).all(0)));
+    if (sel_atm.find(i) == sel_atm.end()) select_atom(i);
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -484,7 +503,8 @@ void ws_atoms_list_t::update_atom (const int at_id, const string &at_name) {
   astate->make_viewport_dirty();
 }
 
-void ws_atoms_list_t::update_atom(const int at_id, const std::string &at_name,
+void ws_atoms_list_t::update_atom(const int at_id,
+                                  const std::string &at_name,
                                   const vector3<float> &pos){
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, pos);
@@ -492,13 +512,15 @@ void ws_atoms_list_t::update_atom(const int at_id, const std::string &at_name,
   astate->make_viewport_dirty();
 }
 
-void ws_atoms_list_t::transform_atom(const int at_id, const matrix3<float> &tm) {
+void ws_atoms_list_t::transform_atom(const int at_id,
+                                     const matrix3<float> &tm) {
   vector3<float> pos = m_geom->coord(at_id);
   vector3<float> new_pos = tm * pos;
   m_geom->coord(at_id) = new_pos;
 }
 
-void ws_atoms_list_t::transform_atom(const int at_id, const matrix4<float> &tm) {
+void ws_atoms_list_t::transform_atom(const int at_id,
+                                     const matrix4<float> &tm) {
 
   vector4<float> p_aff(
         m_geom->coord(at_id)[0],
@@ -569,8 +591,10 @@ void ws_atoms_list_t::select_selected_atoms_ngbs() {
 }
 
 void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
-                                               const int at1, const int at2,
-                                               const index id1, const index id2,
+                                               const int at1,
+                                               const int at2,
+                                               const index id1,
+                                               const index id2,
                                                pair_dist_mode mode) {
 
   app_state_t* astate = app_state_t::get_inst();

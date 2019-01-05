@@ -112,6 +112,7 @@ namespace qpp {
         bool m_show_axis{true};
         bool m_show_grid{false};
         bool m_debug_show_tws_tree{false};
+        bool m_debug_show_sel_deque{false};
         bool m_debug_show_selection_ray{false};
         bool m_show_object_inspector{true};
         bool m_show_console{false};

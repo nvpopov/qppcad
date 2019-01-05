@@ -59,6 +59,7 @@ namespace qpp {
         QPushButton *tp_rm_ws;
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
+        QCheckBox *tp_show_node_editor;
 
         QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;
@@ -77,6 +78,7 @@ namespace qpp {
         QPushButton *tp_camera_c;
 
         QPushButton *tp_measure_dist;
+        QPushButton *tp_measure_angle;
 
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
@@ -118,8 +120,11 @@ namespace qpp {
         QAction *edit_menu_console;
         QAction *edit_menu_settings;
         QAction *edit_menu_ws_settings;
+
+        QMenu *edit_menu_debug;
         QAction *edit_menu_toggle_debug_info;
         QAction *edit_menu_toggle_debug_tws_tree;
+        QAction *edit_menu_toggle_sel_deque;
 
         QMenu *edit_menu_selection;
         QAction *edit_menu_selection_select_all;

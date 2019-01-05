@@ -17,6 +17,7 @@
 #include <qppcad/ws_atoms_list_labels_subsys.hpp>
 #include <qppcad/ws_atoms_list_lattice_planes_subsys.hpp>
 #include <qppcad/ws_atoms_list_render_buffered_billboards.hpp>
+#include <deque>
 
 namespace qpp {
 
@@ -72,6 +73,7 @@ namespace qpp {
         std::unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs{};
         //std::set<uint16_t>                                                           m_atom_sel;
         std::unordered_set<atom_index_set_key, atom_index_set_key_hash>              m_atom_idx_sel;
+        std::deque<atom_index_set_key>                                               m_atom_ord_sel;
         std::unique_ptr<ws_atoms_list_render_buffered_billboards_t> m_bs{};
         std::set<uint16_t>  m_atom_type_to_hide;
 
@@ -116,8 +118,12 @@ namespace qpp {
         bool mouse_click(ray_t<float> *click_ray) override;
 
         void select_atoms(bool all);
-        bool select_atom(int atom_id);
-        bool unselect_atom(int atom_id);
+        void select_atom(int atom_id);
+        void select_atom(int atom_id, index atom_idx);
+
+        void unselect_atom(int atom_id);
+        void unselect_atom(int atom_id, index atom_idx);
+
         void select_by_type(const int item_type_to_select);
         void unselect_by_type(const int item_type_to_unselect);
         void invert_selected_atoms();
