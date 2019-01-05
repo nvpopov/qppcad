@@ -357,8 +357,8 @@ void main_window::init_widgets() {
   tp_show_node_editor->setText("NODES");
   tp_show_node_editor->setMinimumHeight(tp_button_height);
   tp_show_node_editor->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px;"
-                               "padding-right:5px; "
-                               "QCheckBox::indicator { width: 21px;height: 21px;}");
+                                     "padding-right:5px; "
+                                     "QCheckBox::indicator { width: 21px;height: 21px;}");
 
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
@@ -435,13 +435,13 @@ void main_window::init_widgets() {
   tp_measure_dist->setMinimumWidth(40);
   tp_measure_dist->setMinimumHeight(tp_button_height);
   tp_measure_dist->setCheckable(true);
+  connect(tp_measure_dist, &QPushButton::toggled, this, &main_window::tp_dist_button_clicked);
 
   tp_measure_angle = new QPushButton(tr("ANGLE"));
   tp_measure_angle->setMinimumWidth(60);
   tp_measure_angle->setMinimumHeight(tp_button_height);
   tp_measure_angle->setCheckable(true);
-
-  connect(tp_measure_dist, &QPushButton::toggled, this, &main_window::tp_dist_button_clicked);
+  connect(tp_measure_angle, &QPushButton::toggled, this, &main_window::tp_angle_button_clicked);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
   ws_viewer_widget->setStyleSheet("margin-top:-15px;");
@@ -877,10 +877,23 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                 }
 
               if (cur_it_as_al->m_atom_idx_sel.size() == 3 &&
-                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  cur_ws->m_edit_type == ws_edit_t::edit_content &&
+                  cur_it_as_al->m_atom_ord_sel.size() == 3) {
                   need_to_hide_al_cntls = false;
+
+                  auto cur_sel = cur_it_as_al->m_measure->is_angle_measurement_exist(
+                        cur_it_as_al->m_atom_ord_sel[0].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[2].m_idx);
+
                   tp_measure_dist->hide();
                   tp_measure_angle->show();
+                  tp_measure_angle->blockSignals(true);
+                  tp_measure_angle->setChecked(cur_sel != std::nullopt);
+                  tp_measure_angle->blockSignals(false);
                 }
 
             }
@@ -931,6 +944,50 @@ void main_window::tp_dist_button_clicked(bool checked) {
 
   astate->make_viewport_dirty();
 
+}
+
+void main_window::tp_angle_button_clicked(bool checked) {
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it = cur_ws->get_selected();
+          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+
+          if (cur_it_as_al) {
+
+              if (cur_it_as_al->m_atom_idx_sel.size() == 3 &&
+                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  tp_measure_angle->show();
+
+                  auto cur_sel = cur_it_as_al->m_measure->is_angle_measurement_exist(
+                        cur_it_as_al->m_atom_ord_sel[0].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[2].m_idx);
+
+                  if (checked) cur_it_as_al->m_measure->add_angle_measurement(
+                        cur_it_as_al->m_atom_ord_sel[0].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[2].m_idx);
+
+                  else cur_it_as_al->m_measure->remove_angle_measurement(*cur_sel);
+                }
+            }
+
+        }
+    }
+
+  astate->make_viewport_dirty();
 }
 
 void main_window::ws_edit_mode_selector_button_clicked(int id) {

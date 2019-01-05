@@ -311,8 +311,8 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
           if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
               atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
-              if (atom_sel_it == m_atom_idx_sel.end()) m_atom_idx_sel.insert(iskey);
-              else m_atom_idx_sel.erase(atom_sel_it);
+              if (atom_sel_it == m_atom_idx_sel.end()) select_atom(res[0].m_atm, res[0].m_idx);
+              else unselect_atom(res[0].m_atm, res[0].m_idx);
 
             }
 
@@ -325,7 +325,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
           //TODO: need refractoring
           if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
-              m_atom_idx_sel.clear();
+              select_atoms(false);
             }
 
         }
@@ -345,12 +345,14 @@ void ws_atoms_list_t::select_atoms (bool all) {
       for (auto i = 0; i < m_geom->nat(); i++) select_atom(i);
     } else {
       m_atom_idx_sel.clear();
+      m_atom_ord_sel.clear();
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   astate->make_viewport_dirty();
+
 
 }
 
@@ -366,14 +368,27 @@ void ws_atoms_list_t::select_atom(int atom_id, index atom_idx) {
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
       m_atom_idx_sel.insert(atom_index_set_key(atom_id, atom_idx));
+      if (m_atom_ord_sel.size() >= max_sel_in_deque) {
+          m_atom_ord_sel.resize(max_sel_in_deque);
+          m_atom_ord_sel.pop_front();
+        }
+      m_atom_ord_sel.push_back(atom_index_set_key(atom_id, atom_idx));
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+      for (int i = 0; i < m_atom_ord_sel.size(); i++)
+        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+
       return;
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+  for (int i = 0; i < m_atom_ord_sel.size(); i++)
+    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+
   return;
 
 }
@@ -388,18 +403,31 @@ void ws_atoms_list_t::unselect_atom(int atom_id) {
 
       for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
            !idx.end(); idx++ ) {
-          auto i2 = m_atom_idx_sel.find(atom_index_set_key(atom_id, idx));
+          auto key = atom_index_set_key(atom_id, idx);
+
+          auto i2 = std::find(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), key);
           if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
+
+          auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
+          if (it_ordered != m_atom_ord_sel.end()) m_atom_ord_sel.erase(it_ordered);
         }
 
       //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+      for (int i = 0; i < m_atom_ord_sel.size(); i++)
+        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+
       return;
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+  for (int i = 0; i < m_atom_ord_sel.size(); i++)
+    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+
   return;
 }
 
@@ -410,18 +438,28 @@ void ws_atoms_list_t::unselect_atom(int atom_id, index atom_idx) {
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
-
-      auto i2 = m_atom_idx_sel.find(atom_index_set_key(atom_id, atom_idx));
+      auto key = atom_index_set_key(atom_id, atom_idx);
+      auto i2 = std::find(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), key);
       if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
 
-      //astate->make_viewport_dirty();
+      auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
+      if (it_ordered != m_atom_ord_sel.end()) m_atom_ord_sel.erase(it_ordered);
+
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+      for (int i = 0; i < m_atom_ord_sel.size(); i++)
+        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+
       return;
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+  for (int i = 0; i < m_atom_ord_sel.size(); i++)
+    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+
   return;
 
 }

@@ -58,6 +58,8 @@ namespace qpp {
     const int xgeom_ccb         = 10;
     const int xgeom_label_text  = 11;
 
+    const int max_sel_in_deque = 4;
+
     /// \brief The ws_atom_list_t class
     class ws_atoms_list_t : public ws_item_t {
 

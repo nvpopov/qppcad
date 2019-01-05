@@ -19,7 +19,8 @@ namespace qpp {
                                                                    const uint32_t atm2,
                                                                    const index idx1,
                                                                    const index idx2) {
-      m_dist_recs.emplace_back(atm1, atm2, idx1, idx2);
+      if (!is_bond_measurement_exist(atm1, atm2, idx1, idx2))
+        m_dist_recs.emplace_back(atm1, atm2, idx1, idx2);
     }
 
     void ws_atoms_list_measurement_subsys_t::add_angle_measurement(

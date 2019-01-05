@@ -46,7 +46,6 @@ namespace qpp {
         void init_layouts();
         void change_camera_buttons_visible(bool cart_c, bool cell_c);
 
-
         //Widgets
         QWidget *main_widget;
         QWidget *tool_panel_widget;
@@ -191,6 +190,7 @@ namespace qpp {
         void cur_ws_selected_atoms_list_selection_changed();
 
         void tp_dist_button_clicked(bool checked);
+        void tp_angle_button_clicked(bool checked);
         void ws_edit_mode_selector_button_clicked(int id);
 
         void apply_camera_view_change(cam_target_view_t target_view);
