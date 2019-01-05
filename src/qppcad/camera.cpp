@@ -156,6 +156,7 @@ void camera_t::update_camera () {
                                     astate->viewport_size_c(0) / astate->viewport_size_c(1),
                                     m_znear_persp, m_zfar_persp);
   else {
+
       float width   = astate->viewport_size_c(0);
       float height  = astate->viewport_size_c(1);
       float x_scale = 1.0f;
@@ -173,8 +174,8 @@ void camera_t::update_camera () {
 
       float left   = - x_scale * (m_ortho_scale);
       float right  =   x_scale * (m_ortho_scale);
-      float bottom = -  (m_ortho_scale);
-      float top    =   (m_ortho_scale);
+      float bottom = - y_scale * (m_ortho_scale);
+      float top    =   y_scale * (m_ortho_scale);
       //std::cout<<"ortho_scale"<<m_ortho_scale<<std::endl;
       m_mat_proj = ortho<float>(left, right, bottom, top , m_znear_ortho, m_zfar_ortho);
     }

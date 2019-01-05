@@ -321,7 +321,7 @@ void main_window::init_widgets() {
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setCheckState(Qt::Checked);
-  tp_show_obj_insp->setText("Inspector");
+  tp_show_obj_insp->setText("INS");
   tp_show_obj_insp->setMinimumHeight(tp_button_height);
   QObject::connect(tp_show_obj_insp, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_obj_insp_state_changed(int)));
@@ -331,7 +331,7 @@ void main_window::init_widgets() {
 
   tp_show_gizmo = new QCheckBox;
   tp_show_gizmo->setCheckState(Qt::Checked);
-  tp_show_gizmo->setText("Gizmo");
+  tp_show_gizmo->setText("GZM");
   tp_show_gizmo->setMinimumHeight(tp_button_height);
   tp_show_gizmo->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
                                "padding-right:5px; "
