@@ -90,6 +90,40 @@ void simple_query::sel_cnt(int cnt_idx) {
     }
 }
 
+void simple_query::sel_cnt_parity() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          if (cur_it_al) {
+              index zero = index::D(cur_it_al->m_geom->DIM).all(0);
+              for (auto &elem : cur_it_al->m_atom_idx_sel)
+                if (elem.m_idx == zero) {
+                    std::array<int, 2> parity_d{-1,1};
+                    for (auto &p_x : parity_d)
+                      for (auto &p_y : parity_d)
+                        for (auto &p_z : parity_d) {
+                            vector3<float> new_pos{0};
+                            new_pos[0] = cur_it_al->m_geom->coord(elem.m_atm)[0] * p_x;
+                            new_pos[1] = cur_it_al->m_geom->coord(elem.m_atm)[1] * p_y;
+                            new_pos[2] = cur_it_al->m_geom->coord(elem.m_atm)[2] * p_z;
+                            std::vector<tws_node_content_t<float> > res;
+                            const float eps_dist = 0.01;
+                            cur_it_al->m_tws_tr->query_sphere(eps_dist, new_pos, res);
+                            for (auto &res_elem : res)
+                              if (res_elem.m_idx == zero) cur_it_al->select_atom(res_elem.m_atm);
+                        }
+                  }
+            }
+        }
+      astate->make_viewport_dirty();
+
+    }
+}
+
 void simple_query::sel_invert() {
 
   app_state_t *astate = app_state_t::get_inst();

@@ -51,6 +51,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   sel.def("c", &simple_query::sel_cnt_list);
   sel.def("c", &simple_query::sel_cnt_type);
   sel.def("c", &simple_query::sel_cnt_all);
+  sel.def("c_p", &simple_query::sel_cnt_parity);
   sel.def("uc", &simple_query::unsel_cnt_all);
   sel.def("uc", &simple_query::unsel_cnt);
   sel.def("uc", &simple_query::unsel_cnt_list);
