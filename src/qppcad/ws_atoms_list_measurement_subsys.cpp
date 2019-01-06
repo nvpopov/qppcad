@@ -104,6 +104,10 @@ namespace qpp {
 
       for (auto &record : m_dist_recs)
         if (record.m_show) {
+
+            if (record.m_at1 >= p_owner->m_geom->nat() || record.m_at2 >= p_owner->m_geom->nat())
+              continue;
+
             l_s = astate->camera->project(
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
 
@@ -140,7 +144,34 @@ namespace qpp {
                              Qt::AlignCenter, QString::fromStdString(fmt::format("{}", dist)) );
             painter.resetTransform();
           }
-      //      painter->restore();
+      painter.resetTransform();
+
+      for (auto &record : m_angle_recs)
+        if (record.m_show) {
+            if (record.m_at1 >= p_owner->m_geom->nat() ||
+                record.m_at2 >= p_owner->m_geom->nat() ||
+                record.m_at3 >= p_owner->m_geom->nat())
+              continue;
+          }
+
+    }
+
+    void ws_atoms_list_measurement_subsys_t::notify_atom_has_been_deleted(const uint32_t atm) {
+
+      for (auto it = m_dist_recs.begin(); it != m_dist_recs.end(); ) {
+          if ((*it).m_at1 == atm || (*it).m_at2 == atm)
+            m_dist_recs.erase(it);
+          else
+            ++it;
+        }
+
+      for (auto it = m_angle_recs.begin(); it != m_angle_recs.end(); ) {
+          if ((*it).m_at1 == atm || (*it).m_at2 == atm || (*it).m_at3 == atm)
+            m_angle_recs.erase(it);
+          else
+            ++it;
+        }
+
     }
 
 

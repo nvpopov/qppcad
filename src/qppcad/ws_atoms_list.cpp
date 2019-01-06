@@ -691,7 +691,11 @@ void ws_atoms_list_t::delete_selected_atoms () {
   all_atom_num.reserve(m_atom_idx_sel.size());
 
   //get unique selected atoms
-  for(auto &elem : m_atom_idx_sel) all_atom_num.push_back(elem.m_atm);
+  for(auto &elem : m_atom_idx_sel) {
+      all_atom_num.push_back(elem.m_atm);
+      m_measure->notify_atom_has_been_deleted(elem.m_atm);
+    }
+
   auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
   all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
 

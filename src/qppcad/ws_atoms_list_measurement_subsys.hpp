@@ -39,7 +39,7 @@ namespace qpp {
         index m_idx3;
         bool m_show{true};
         measurement_angle_record (const AINT _at1, const AINT _a2, const AINT _a3,
-                                 const index _idx1, const index _idx2, const index _idx3) :
+                                  const index _idx1, const index _idx2, const index _idx3) :
           m_at1(_at1), m_at2(_a2), m_at3(_a3), m_idx1(_idx1), m_idx2(_idx2), m_idx3(_idx3) {}
     };
 
@@ -85,6 +85,7 @@ namespace qpp {
                                                          const index idx3);
         void render ();
         void render_overlay(QPainter &painter);
+        void notify_atom_has_been_deleted(const uint32_t atm);
 
     };
 
