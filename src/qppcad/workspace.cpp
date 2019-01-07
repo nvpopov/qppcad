@@ -204,7 +204,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
   for (auto &ws_item : m_ws_items) {
       bool is_hit = ws_item->mouse_click(&m_ray);
       hit_any = hit_any || is_hit;
-      if (is_hit && m_edit_type == ws_edit_t::edit_item &&
+      if (is_hit && m_edit_type == ws_edit_t::edit_item && ws_item->m_is_visible &&
           (ws_item->get_flags() & ws_item_flags_support_selection)) {
           m_gizmo->attached_item = ws_item.get();
           auto it = std::find(m_ws_items.begin(), m_ws_items.end(), ws_item);
