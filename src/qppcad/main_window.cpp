@@ -547,6 +547,25 @@ void main_window::dropEvent(QDropEvent *event) {
     }
 }
 
+void main_window::resizeEvent(QResizeEvent *event) {
+
+  if (event->size().width() < 800) {
+      tp_add_ws->hide();
+      tp_rnm_ws->hide();
+      tp_rm_ws->hide();
+      tp_show_gizmo->hide();
+      tp_show_node_editor->hide();
+    } else {
+      tp_add_ws->show();
+      tp_rnm_ws->show();
+      tp_rm_ws->show();
+      tp_show_gizmo->show();
+      tp_show_node_editor->show();
+    }
+
+  QMainWindow::resizeEvent(event);
+}
+
 void main_window::wss_changed_slot() {
 
   app_state_t* astate = app_state_t::get_inst();

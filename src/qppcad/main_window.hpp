@@ -163,6 +163,7 @@ namespace qpp {
         void dragMoveEvent(QDragMoveEvent *event) override;
         void dragLeaveEvent(QDragLeaveEvent *event) override;
         void dropEvent(QDropEvent *event) override;
+        void resizeEvent(QResizeEvent *event) override;
 
       private slots:
         void slot_shortcut_terminate_app();
