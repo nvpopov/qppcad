@@ -320,6 +320,46 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<ws_atoms_list_t> q
 
 }
 
+void embedded_cluster_tools::move_sel_from_qm_to_cls(std::shared_ptr<ws_atoms_list_t> qm,
+                                                     std::shared_ptr<ws_atoms_list_t> cls) {
+  if ( !cls || !qm) {
+      throw std::runtime_error("!chg || !cls || !qm");
+      return;
+    } else {
+      for (auto &elem : qm->m_atom_idx_sel)
+        cls->insert_atom(qm->m_geom->atom(elem.m_atm), qm->m_geom->pos(elem.m_atm));
+      qm->delete_selected_atoms();
+    }
+}
+
+void embedded_cluster_tools::move_sel_from_qm_to_cls_cur() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it_al = std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+
+          std::shared_ptr<ws_atoms_list_t> uc{nullptr};
+          std::shared_ptr<ws_atoms_list_t> chg{nullptr};
+          std::shared_ptr<ws_atoms_list_t> cls{nullptr};
+          std::shared_ptr<ws_atoms_list_t> qm{nullptr};
+
+          deduce_embedding_context(uc, chg, cls, qm);
+
+          if (!chg || !cls || !qm) {
+              throw std::runtime_error("!chg || !cls || !qm");
+              return;
+            } else {
+              move_sel_from_qm_to_cls(qm, cls);
+            }
+        }
+    }
+}
+
 void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
 
   app_state_t *astate = app_state_t::get_inst();

@@ -32,6 +32,11 @@ namespace qpp {
                                      std::shared_ptr<ws_atoms_list_t> cls,
                                      float new_r);
 
+        static void move_sel_from_qm_to_cls(std::shared_ptr<ws_atoms_list_t> qm,
+                                            std::shared_ptr<ws_atoms_list_t> cls);
+
+        static void move_sel_from_qm_to_cls_cur();
+
         static void set_qm_cluster_r_cur(float new_r);
 
         static void deduce_embedding_context(std::shared_ptr<ws_atoms_list_t> &uc,
