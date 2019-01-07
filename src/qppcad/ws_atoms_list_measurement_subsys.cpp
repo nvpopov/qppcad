@@ -98,8 +98,8 @@ namespace qpp {
       app_state_t* astate = app_state_t::get_inst();
 
       std::optional<vector2<float> > l_s, l_e;
-      QPen linepen(QPen(Qt::black, 6, Qt::DotLine, Qt::RoundCap));
-      QPen linepen_2(QPen(Qt::black, 6, Qt::SolidLine, Qt::RoundCap));
+      QPen linepen(QPen(Qt::black, 4, Qt::DotLine, Qt::RoundCap));
+      QPen linepen_2(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
 
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
       painter.setFont(QFont("Hack-Regular", 13));
@@ -166,21 +166,34 @@ namespace qpp {
             l_t = astate->camera->project(
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx2));
 
+
             if (l_f && l_s && l_t) {
+
+                vector3<float> dir_f_s =
+                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
+                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2);
+
+                vector3<float> dir_t_s =
+                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx3) -
+                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2);
+
+                float real_angle = 180 -
+                    std::acos(dir_f_s.dot(dir_t_s) / (dir_f_s.norm() * dir_t_s.norm())) *
+                                   180 / M_PI;
 
                 QLineF line_f_s(
                       0, 0,
                       round((*l_f)[0]-(*l_s)[0]),
-                      round((*l_f)[1]-(*l_s)[1])
-                      );
+                    round((*l_f)[1]-(*l_s)[1])
+                    );
 
                 QLineF line_t_s(
                       0, 0,
                       round((*l_t)[0]-(*l_s)[0]),
-                      round((*l_t)[1]-(*l_s)[1])
+                    round((*l_t)[1]-(*l_s)[1])
                     );
 
-                float line_len = std::min(line_f_s.length(), line_t_s.length()) * 0.5f;
+                float line_len = std::min(line_f_s.length(), line_t_s.length()) * 0.2f;
                 int angle1 =
                     (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0]) * 180 / M_PI) ;
                 int angle2 =
@@ -196,9 +209,9 @@ namespace qpp {
                 float fangle2 = std::max(angle1, angle2);
 
                 float fangle_delta{fangle2 - fangle1};
-
-//                if (fangle_delta > 180)
-//                    fangle_delta = -(fangle_delta-120);
+                float inv_angle_delta = (360-fangle2)+fangle1;
+                if (fangle_delta > inv_angle_delta )
+                  fangle_delta = -inv_angle_delta;
 
                 painter.setPen(linepen_2);
 
@@ -207,14 +220,28 @@ namespace qpp {
                 painter.drawLine(line_f_s);
                 painter.drawLine(line_t_s);
 
+                for (int i = 1; i <= record.m_order; i++) {
+                    float new_r = line_len + line_len * i / 3.0;
+                    painter.drawArc(-new_r, -new_r, 2*new_r, 2*new_r,
+                                    (fangle1) * 16, fangle_delta * 16);
+                  }
 
+                float text_r = line_len + line_len * (record.m_order + 2) / 3.0;
 
-                painter.drawArc(-line_len, -line_len, 2*line_len, 2*line_len,
-                                (fangle1) * 16, fangle_delta * 16);
+                vector2<float> nd = (((*l_f) + (*l_t) - 2*(*l_s))).normalized();
+                nd *= text_r;
 
-                std::cout<< fangle1 << " " <<
-                            fangle2 << " " <<
-                            fangle_delta << std::endl;
+                const float text_rect_size = 70;
+
+                const QChar degreeChar(0260);
+
+                painter.drawText(nd[0] - text_rect_size * 0.5f,
+                    nd[1] - text_rect_size * 0.5f,
+                    text_rect_size,
+                    text_rect_size,
+                    Qt::AlignCenter,
+                    QString("%1%2").arg(QString::number(real_angle, 'f', 2)).arg(degreeChar));
+
                 painter.resetTransform();
               }
 

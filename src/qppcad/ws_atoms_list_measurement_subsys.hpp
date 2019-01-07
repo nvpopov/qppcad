@@ -37,6 +37,9 @@ namespace qpp {
         index m_idx1;
         index m_idx2;
         index m_idx3;
+
+        int m_order{1};
+
         bool m_show{true};
         measurement_angle_record (const AINT _at1, const AINT _a2, const AINT _a3,
                                   const index _idx1, const index _idx2, const index _idx3) :
