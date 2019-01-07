@@ -35,6 +35,8 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("gpos", &simple_query::gizmo_pos);
 
   py::module tools = m.def_submodule("tools", "Generic tools");
+  tools.def("add_al_0d", &simple_query::add_atoms_list_0d);
+  tools.def("add_al_3d", &simple_query::add_atoms_list_3d);
   tools.def("rebond", &simple_query::rebond);
   tools.def("t", &simple_query::translate_selected);
   tools.def("sc", &simple_query::make_super_cell);

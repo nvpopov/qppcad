@@ -475,6 +475,45 @@ void simple_query::set_ws_bg(vector3<float> bg) {
     }
 }
 
+void simple_query::add_atoms_list_0d(std::string name) {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto new_al = std::make_shared<ws_atoms_list_t>();
+          new_al->m_name = name;
+          cur_ws->add_item_to_ws(new_al);
+        }
+
+    }
+}
+
+void simple_query::add_atoms_list_3d(std::string name, vector3<float> a,
+                                     vector3<float> b,
+                                     vector3<float> c) {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto new_al = std::make_shared<ws_atoms_list_t>();
+          new_al->m_name = name;
+          new_al->m_geom->DIM = 3;
+          new_al->m_geom->cell.DIM = 3;
+          new_al->m_geom->cell.v[0] = a;
+          new_al->m_geom->cell.v[1] = b;
+          new_al->m_geom->cell.v[2] = c;
+          cur_ws->add_item_to_ws(new_al);
+        }
+
+    }
+}
+
 void simple_query::ptable_set_color_by_number(int num, float r, float g, float b) {
 
   app_state_t *astate = app_state_t::get_inst();

@@ -99,6 +99,8 @@ namespace qpp {
 
       std::optional<vector2<float> > l_s, l_e;
       QPen linepen(QPen(Qt::black, 6, Qt::DotLine, Qt::RoundCap));
+      QPen linepen_2(QPen(Qt::black, 6, Qt::SolidLine, Qt::RoundCap));
+
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
       painter.setFont(QFont("Hack-Regular", 13));
 
@@ -152,6 +154,70 @@ namespace qpp {
                 record.m_at2 >= p_owner->m_geom->nat() ||
                 record.m_at3 >= p_owner->m_geom->nat())
               continue;
+
+            std::optional<vector2<float> > l_f, l_s, l_t;
+
+            l_f = astate->camera->project(
+                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
+
+            l_s = astate->camera->project(
+                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2));
+
+            l_t = astate->camera->project(
+                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx2));
+
+            if (l_f && l_s && l_t) {
+
+                QLineF line_f_s(
+                      0, 0,
+                      round((*l_f)[0]-(*l_s)[0]),
+                      round((*l_f)[1]-(*l_s)[1])
+                      );
+
+                QLineF line_t_s(
+                      0, 0,
+                      round((*l_t)[0]-(*l_s)[0]),
+                      round((*l_t)[1]-(*l_s)[1])
+                    );
+
+                float line_len = std::min(line_f_s.length(), line_t_s.length()) * 0.5f;
+                int angle1 =
+                    (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0]) * 180 / M_PI) ;
+                int angle2 =
+                    (std::atan2((*l_t)[1]- (*l_s)[1], (*l_t)[0] - (*l_s)[0]) * 180 / M_PI) ;
+
+                angle1 -= 360. * std::floor((angle1) * (1. / 360.));
+                angle2 -= 360. * std::floor((angle2) * (1. / 360.));
+
+                angle1 = 360 - angle1;
+                angle2 = 360 - angle2;
+
+                float fangle1 = std::min(angle1, angle2);
+                float fangle2 = std::max(angle1, angle2);
+
+                float fangle_delta{fangle2 - fangle1};
+
+//                if (fangle_delta > 180)
+//                    fangle_delta = -(fangle_delta-120);
+
+                painter.setPen(linepen_2);
+
+                painter.translate((*l_s)[0], (*l_s)[1]);
+
+                painter.drawLine(line_f_s);
+                painter.drawLine(line_t_s);
+
+
+
+                painter.drawArc(-line_len, -line_len, 2*line_len, 2*line_len,
+                                (fangle1) * 16, fangle_delta * 16);
+
+                std::cout<< fangle1 << " " <<
+                            fangle2 << " " <<
+                            fangle_delta << std::endl;
+                painter.resetTransform();
+              }
+
           }
 
     }

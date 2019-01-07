@@ -227,7 +227,7 @@ void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> &item_to_add)
 
   item_to_add->set_parent_workspace(this);
   m_ws_items.push_back(item_to_add);
-  ws_changed();
+  app_state_t::get_inst()->astate_evd->cur_ws_changed();
   //c_app::log(fmt::format("New workspace {} size = {}", m_ws_name, m_ws_items.size()));
 
 }

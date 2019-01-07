@@ -46,6 +46,9 @@ namespace qpp {
         static void translate_selected(float tx, float ty, float tz);
         static void set_charge(float charge);
         static void set_ws_bg(vector3<float> bg);
+        static void add_atoms_list_0d(std::string name);
+        static void add_atoms_list_3d(std::string name, vector3<float> a, vector3<float> b,
+                                      vector3<float> c);
 
         static void ptable_set_color_by_number(int num, float r, float g, float b);
         static void ptable_set_color_by_name(std::string name, float r, float g, float b);
