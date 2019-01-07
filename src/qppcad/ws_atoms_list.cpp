@@ -716,6 +716,41 @@ void ws_atoms_list_t::delete_selected_atoms () {
 
 }
 
+void ws_atoms_list_t::delete_atoms(std::set<int> &to_delete) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (!to_delete.empty()) m_anim->m_force_non_animable = true;
+
+  std::vector<int> all_atom_num;
+  all_atom_num.reserve(to_delete.size());
+
+  //get unique selected atoms
+  for(auto &elem : to_delete) {
+      all_atom_num.push_back(elem);
+      m_measure->notify_atom_has_been_deleted(elem);
+    }
+
+  auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
+  all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
+
+  //sort by ancending order
+  std::sort(all_atom_num.begin(), all_atom_num.end());
+
+  m_atom_idx_sel.clear();
+
+  for (uint16_t delta = 0; delta < all_atom_num.size(); delta++) {
+      if (delta == 0 && all_atom_num.size() > 1)
+        m_tws_tr->do_action(act_lock);
+      if ((delta == all_atom_num.size() - 1) && all_atom_num.size() > 1)
+        m_tws_tr->do_action(act_unlock);
+      m_geom->erase(all_atom_num[delta] - delta);
+    }
+
+  astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
+
+}
+
 void ws_atoms_list_t::make_super_cell (const int a_steps,
                                        const int b_steps,
                                        const int c_steps) {
@@ -733,7 +768,7 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
   sc_al->m_geom->cell.v[1] = m_geom->cell.v[1] * (b_steps);
   sc_al->m_geom->cell.v[2] = m_geom->cell.v[2] * (c_steps);
 
-  if (m_role == ws_atoms_list_role_t::role_uc) {
+  if (m_role == ws_atoms_list_role_t::r_uc) {
       sc_al->m_draw_img_atoms = false;
       sc_al->m_draw_img_bonds = false;
     }
@@ -743,7 +778,7 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
          !idx_it.end(); idx_it++ ) {
         vector3<float> new_atom_pos = m_geom->pos(i, idx_it);
         sc_al->m_geom->add(m_geom->atom(i), new_atom_pos);
-        if (m_role == ws_atoms_list_role_t::role_uc)
+        if (m_role == ws_atoms_list_role_t::r_uc)
           sc_al->m_geom->xfield<float>(xgeom_charge, sc_al->m_geom->nat()-1) =
               m_geom->xfield<float>(xgeom_charge, i);
       }
@@ -758,7 +793,7 @@ void ws_atoms_list_t::make_super_cell (const int a_steps,
   sc_al->geometry_changed();
 
   //perform purification
-  if (m_role == ws_atoms_list_role_t::role_uc) {
+  if (m_role == ws_atoms_list_role_t::r_uc) {
 
       sc_al->m_tws_tr->do_action(act_lock);
       //intermediage xgeom
@@ -968,7 +1003,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         read_xyzq(qc_data, *m_geom, true);
         m_draw_img_atoms = false;
         m_draw_img_bonds = false;
-        m_role = ws_atoms_list_role_t::role_uc;
+        m_role = ws_atoms_list_role_t::r_uc;
         astate->log(fmt::format("qpp_uc after m_geom.nat() {}", m_geom->nat()));
         break;
       }

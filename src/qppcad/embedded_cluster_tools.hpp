@@ -28,6 +28,17 @@ namespace qpp {
                                           float cls_r = 12,
                                           float qm_r = 2, bool do_legacy = true);
 
+        static void set_qm_cluster_r(std::shared_ptr<ws_atoms_list_t> qm,
+                                     std::shared_ptr<ws_atoms_list_t> cls,
+                                     float new_r);
+
+        static void set_qm_cluster_r_cur(float new_r);
+
+        static void deduce_embedding_context(std::shared_ptr<ws_atoms_list_t> &uc,
+                                             std::shared_ptr<ws_atoms_list_t> &chg,
+                                             std::shared_ptr<ws_atoms_list_t> &cls,
+                                             std::shared_ptr<ws_atoms_list_t> &qm);
+
         static vector3<float> calc_dipole_moment();
 
     };

@@ -177,8 +177,8 @@ namespace qpp {
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx3) -
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2);
 
-                float real_angle = 180 -
-                    std::acos(dir_f_s.dot(dir_t_s) / (dir_f_s.norm() * dir_t_s.norm())) *
+                float real_angle = 180 - std::acos(dir_f_s.dot(dir_t_s) / (dir_f_s.norm() *
+                                                                     dir_t_s.norm())) *
                                    180 / M_PI;
 
                 QLineF line_f_s(
@@ -210,8 +210,9 @@ namespace qpp {
 
                 float fangle_delta{fangle2 - fangle1};
                 float inv_angle_delta = (360-fangle2)+fangle1;
-                if (fangle_delta > inv_angle_delta )
-                  fangle_delta = -inv_angle_delta;
+                if (fangle_delta > inv_angle_delta) {
+                    fangle_delta = -inv_angle_delta;
+                  }
 
                 painter.setPen(linepen_2);
 

@@ -32,11 +32,11 @@ namespace qpp {
     };
 
     enum ws_atoms_list_role_t : int {
-      role_generic,
-      role_uc,
-      role_embc_qm,
-      role_embc_cls,
-      role_embc_chg
+      r_generic,
+      r_uc,
+      r_embc_qm,
+      r_embc_cls,
+      r_embc_chg
     };
 
     enum ws_atoms_list_color_mode : int {
@@ -90,7 +90,7 @@ namespace qpp {
         vector3<int> m_subcells_range{1,1,1};
 
         ws_atoms_list_color_mode m_color_mode{ws_atoms_list_color_mode::color_from_ptable};
-        ws_atoms_list_role_t m_role{ws_atoms_list_role_t::role_generic};
+        ws_atoms_list_role_t m_role{ws_atoms_list_role_t::r_generic};
 
         bool m_draw_img_atoms{true};
         bool m_draw_img_bonds{true};
@@ -165,6 +165,7 @@ namespace qpp {
 
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
+        void delete_atoms(std::set<int> &to_delete);
         void make_super_cell(const int a_steps = 1, const int b_steps = 1, const int c_steps = 1);
         void apply_axial_scale(const float scale_a, const float scale_b, const float scale_c);
         void move_selected_atoms_to_home(bool ignore_selection = false);

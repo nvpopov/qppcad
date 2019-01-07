@@ -14,7 +14,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
                                                    float qm_r,
                                                    bool do_legacy) {
 
-  if (!uc || uc->m_role != ws_atoms_list_role_t::role_uc) {
+  if (!uc || uc->m_role != ws_atoms_list_role_t::r_uc) {
       //throw py::error_already_set();
       throw std::runtime_error("uc || uc->m_role != ws_atoms_list_role_t::role_uc");
       return;
@@ -35,9 +35,9 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
   for (auto elem : uc->m_connected_items) {
       std::shared_ptr<ws_atoms_list_t> as_al = std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
       if (as_al) {
-          if (as_al->m_role == ws_atoms_list_role_t::role_embc_chg) ws_chg = as_al;
-          if (as_al->m_role == ws_atoms_list_role_t::role_embc_cls) ws_cls = as_al;
-          if (as_al->m_role == ws_atoms_list_role_t::role_embc_qm)  ws_qm  = as_al;
+          if (as_al->m_role == ws_atoms_list_role_t::r_embc_chg) ws_chg = as_al;
+          if (as_al->m_role == ws_atoms_list_role_t::r_embc_cls) ws_cls = as_al;
+          if (as_al->m_role == ws_atoms_list_role_t::r_embc_qm)  ws_qm  = as_al;
         }
     }
 
@@ -53,7 +53,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
     }
 
   ws_chg->m_tws_tr->do_action(act_lock);
-  ws_chg->m_role = ws_atoms_list_role_t::role_embc_chg;
+  ws_chg->m_role = ws_atoms_list_role_t::r_embc_chg;
   ws_chg->m_name = fmt::format("{}_chg", uc->m_name);
   ws_chg->m_draw_bonds = false;
 
@@ -67,7 +67,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
     }
 
   ws_cls->m_tws_tr->do_action(act_lock);
-  ws_cls->m_role = ws_atoms_list_role_t::role_embc_cls;
+  ws_cls->m_role = ws_atoms_list_role_t::r_embc_cls;
   ws_cls->m_name = fmt::format("{}_cls", uc->m_name);
 
   if (ws_qm == nullptr) {
@@ -81,7 +81,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
 
   ws_qm->m_tws_tr->do_action(act_lock);
   ws_qm->m_name = fmt::format("{}_qm", uc->m_name);
-  ws_qm->m_role = ws_atoms_list_role_t::role_embc_qm;
+  ws_qm->m_role = ws_atoms_list_role_t::r_embc_qm;
 
   shape_sphere<float> sp(cluster_r, displ);
 
@@ -244,21 +244,21 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
           std::shared_ptr<ws_atoms_list_t> as_al =
               std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
 
-          if (as_al && as_al->m_role == ws_atoms_list_role_t::role_uc) {
+          if (as_al && as_al->m_role == ws_atoms_list_role_t::r_uc) {
               succes = true;
               gen_spherical_cluster(as_al, displ, cluster_r, cls_r, true, qm_r, do_legacy);
               return;
             }
 
           //try to deduce uc from connected items
-          if (as_al && (as_al->m_role == ws_atoms_list_role_t::role_embc_qm ||
-                            as_al->m_role == ws_atoms_list_role_t::role_embc_chg ||
-                            as_al->m_role == ws_atoms_list_role_t::role_embc_cls ))
+          if (as_al && (as_al->m_role == ws_atoms_list_role_t::r_embc_qm ||
+                        as_al->m_role == ws_atoms_list_role_t::r_embc_chg ||
+                        as_al->m_role == ws_atoms_list_role_t::r_embc_cls ))
 
             for (auto elem : as_al->m_connected_items) {
                 std::shared_ptr<ws_atoms_list_t> con_al =
                     std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
-                if (con_al && con_al->m_role == ws_atoms_list_role_t::role_uc) {
+                if (con_al && con_al->m_role == ws_atoms_list_role_t::r_uc) {
                     succes = true;
                     gen_spherical_cluster(con_al, displ, cluster_r, cls_r,
                                           true, qm_r, do_legacy);
@@ -274,6 +274,116 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
         }
 
     }
+}
+
+void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<ws_atoms_list_t> qm,
+                                              std::shared_ptr<ws_atoms_list_t> cls,
+                                              float new_r) {
+
+  if (!qm || !cls) {
+      throw std::runtime_error("!qm || !cls");
+      return;
+    }
+
+  //phase 1 : move atoms from cls to qm
+
+   std::vector<tws_node_content_t<float> > redu_cls;
+
+   cls->m_tws_tr->query_sphere(new_r, vector3<float>(0), redu_cls);
+   std::set<int> redu_cls_set; //set for fast search
+
+   for (auto &elem : redu_cls) redu_cls_set.insert(elem.m_atm);
+
+   for (int i = 0; i < cls->m_geom->nat(); i++)
+     if (redu_cls_set.find(i) != redu_cls_set.end())
+       qm->insert_atom(cls->m_geom->atom(i), cls->m_geom->pos(i));
+
+   //delete atoms from cls
+   cls->delete_atoms(redu_cls_set);
+
+   //phase 2 : move atoms from qm to cls
+   std::vector<tws_node_content_t<float> > redu_qm;
+   std::set<int> redu_qm_inside, redu_qm_outside;
+
+   //construct direct set - atoms inside sphere with r = new_r
+   qm->m_tws_tr->query_sphere(new_r, vector3<float>(0), redu_qm);
+   for (auto &elem : redu_qm) redu_qm_inside.insert(elem.m_atm);
+
+   // redu_qm_outside = set(ALL) - set(INSIDE)
+   for (int i = 0; i < qm->m_geom->nat(); i++)
+     if (redu_qm_inside.find(i) == redu_qm_inside.end()) {
+         cls->insert_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
+         redu_qm_outside.insert(i);
+       }
+
+   qm->delete_atoms(redu_qm_outside);
+
+}
+
+void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it_al = std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+
+          std::shared_ptr<ws_atoms_list_t> uc{nullptr};
+          std::shared_ptr<ws_atoms_list_t> chg{nullptr};
+          std::shared_ptr<ws_atoms_list_t> cls{nullptr};
+          std::shared_ptr<ws_atoms_list_t> qm{nullptr};
+
+          deduce_embedding_context(uc, chg, cls, qm);
+
+          if (!chg || !cls || !qm) {
+              throw std::runtime_error("!chg || !cls || !qm");
+              return;
+            } else {
+              set_qm_cluster_r(qm, cls, new_r);
+            }
+        }
+    }
+
+}
+
+void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<ws_atoms_list_t> &uc,
+                                                      std::shared_ptr<ws_atoms_list_t> &chg,
+                                                      std::shared_ptr<ws_atoms_list_t> &cls,
+                                                      std::shared_ptr<ws_atoms_list_t> &qm) {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it_al = std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+
+          if (cur_it_al) {
+
+              if (cur_it_al->m_role == ws_atoms_list_role_t::r_embc_qm) qm = cur_it_al;
+              if (cur_it_al->m_role == ws_atoms_list_role_t::r_embc_chg) chg = cur_it_al;
+              if (cur_it_al->m_role == ws_atoms_list_role_t::r_embc_cls) cls = cur_it_al;
+              if (cur_it_al->m_role == ws_atoms_list_role_t::r_uc) uc = cur_it_al;
+
+              for (auto elem : cur_it_al->m_connected_items) {
+                  auto elem_al = std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
+                  if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_qm) qm = elem_al;
+                  if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_chg) chg = elem_al;
+                  if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_cls) cls = elem_al;
+                  if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_uc) uc = elem_al;
+                }
+
+            }
+
+        }
+
+    }
+
 }
 
 vector3<float> embedded_cluster_tools::calc_dipole_moment() {

@@ -15,6 +15,7 @@ PYBIND11_EMBEDDED_MODULE(embc, m) {
   m.def("gen_sph", &embedded_cluster_tools::gen_spherical_cluster_cur);
   m.def("gen_sph_qm", &embedded_cluster_tools::gen_spherical_cluster_cur_qm);
   m.def("dipole_moment", &embedded_cluster_tools::calc_dipole_moment);
+  m.def("set_qm_r", &embedded_cluster_tools::set_qm_cluster_r_cur);
     //embq.def("ws",  &simple_query::select_ws);
 
 }
