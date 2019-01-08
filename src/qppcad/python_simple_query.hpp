@@ -50,6 +50,9 @@ namespace qpp {
         static void add_atoms_list_3d(std::string name, vector3<float> a, vector3<float> b,
                                       vector3<float> c);
 
+        static void set_sel_color_vec(vector3<float> color);
+        static void set_sel_color(float r, float g, float b);
+
         static void ptable_set_color_by_number(int num, float r, float g, float b);
         static void ptable_set_color_by_name(std::string name, float r, float g, float b);
         static void ptable_set_radius_by_number(int num, float r);

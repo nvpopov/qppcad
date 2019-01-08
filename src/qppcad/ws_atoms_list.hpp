@@ -41,7 +41,7 @@ namespace qpp {
 
     enum ws_atoms_list_color_mode : int {
       color_from_ptable,
-      color_from_anim
+      color_from_xgeom
     };
 
     enum pair_dist_mode : int {

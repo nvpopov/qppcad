@@ -115,7 +115,7 @@ void simple_query::sel_cnt_parity() {
                             cur_it_al->m_tws_tr->query_sphere(eps_dist, new_pos, res);
                             for (auto &res_elem : res)
                               if (res_elem.m_idx == zero) cur_it_al->select_atom(res_elem.m_atm);
-                        }
+                          }
                   }
             }
         }
@@ -510,6 +510,45 @@ void simple_query::add_atoms_list_3d(std::string name, vector3<float> a,
           new_al->m_geom->cell.v[2] = c;
           cur_ws->add_item_to_ws(new_al);
         }
+
+    }
+}
+
+void simple_query::set_sel_color_vec(vector3<float> color) {
+  set_sel_color(color[0], color[1], color[2]);
+}
+
+void simple_query::set_sel_color(float r, float g, float b) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+
+          if (cur_it_al)
+            for (auto &elem : cur_it_al->m_atom_idx_sel) {
+                cur_it_al->m_geom->xfield<float>(xgeom_ccr, elem.m_atm) = r;
+                cur_it_al->m_geom->xfield<float>(xgeom_ccg, elem.m_atm) = g;
+                cur_it_al->m_geom->xfield<float>(xgeom_ccb, elem.m_atm) = b;
+
+                if (cur_it_al->m_anim->get_total_anims() > 0 &&
+                    !cur_it_al->m_anim->m_anim_data[0].frames.empty() &&
+                    cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color.size() ==
+                    cur_it_al->m_geom->nat()) {
+                    cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][0] = r;
+                    cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][1] = g;
+                    cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][2] = b;
+                  }
+
+              }
+        }
+
+      astate->make_viewport_dirty();
 
     }
 }

@@ -41,6 +41,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("t", &simple_query::translate_selected);
   tools.def("sc", &simple_query::make_super_cell);
   tools.def("set_chg", &simple_query::set_charge);
+  tools.def("set_sel_color", &simple_query::set_sel_color);
+  tools.def("set_sel_color", &simple_query::set_sel_color_vec);
+
   tools.def("color_by_dist", &ws_atoms_list_colorizer_helper::py_colorize_by_distance);
   tools.def("color_by_dist_pairs",
             &ws_atoms_list_colorizer_helper::py_colorize_by_distance_with_pairs);

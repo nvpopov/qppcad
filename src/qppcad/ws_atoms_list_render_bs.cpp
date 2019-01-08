@@ -86,7 +86,7 @@ namespace qpp {
           color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
         }
 
-      if (al.m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
+      if (al.m_color_mode == ws_atoms_list_color_mode::color_from_xgeom) {
           color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
           color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
           color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
@@ -124,7 +124,7 @@ namespace qpp {
           bcolor2 = ptable::get_inst()->arecs[*ap_idx2 - 1].m_color_jmol;
         }
 
-      if (al.m_color_mode == ws_atoms_list_color_mode::color_from_anim) {
+      if (al.m_color_mode == ws_atoms_list_color_mode::color_from_xgeom) {
           bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
           bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
           bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
