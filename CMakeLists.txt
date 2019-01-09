@@ -108,6 +108,7 @@ add_executable(qppcad
     src/qppcad/ws_item_obj_insp_widget.cpp
     src/qppcad/ws_atoms_list_obj_insp_widget.cpp
     src/qppcad/ws_comp_chem_data_obj_insp_widget.cpp
+    src/qppcad/ws_volume_data_obj_insp_widget.cpp
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qbonding_table_model.cpp
     src/qppcad/qmeasurements_table_model.cpp

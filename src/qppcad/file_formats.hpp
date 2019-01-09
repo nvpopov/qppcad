@@ -16,6 +16,7 @@ namespace qpp{
       cp2k_coord_cell_section,
       qppcad_json,
       qpp_uc,
+      cube,
       unknown_fileformat
     };
 
@@ -56,6 +57,10 @@ namespace qpp{
               return qc_file_fmt::qpp_uc;
             }
 
+          if (fn.find(".cube") != std::string::npos) {
+              return qc_file_fmt::cube;
+            }
+
 
           return qc_file_fmt::unknown_fileformat;
 
@@ -87,6 +92,10 @@ namespace qpp{
 
           if (fn.find(".uc") != std::string::npos) {
               return qc_file_fmt::qpp_uc;
+            }
+
+          if (fn.find(".cube") != std::string::npos) {
+              return qc_file_fmt::cube;
             }
 
           return qc_file_fmt::unknown_fileformat;

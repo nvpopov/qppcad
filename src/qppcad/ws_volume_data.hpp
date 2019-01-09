@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item.hpp>
+#include <io/cube.hpp>
 
 namespace qpp {
 
@@ -11,6 +12,9 @@ namespace qpp {
     class ws_volume_data_t : public ws_item_t {
 
       public:
+
+        cube_header_t<float> m_ch;
+        std::vector<float> m_field;
 
         ws_volume_data_t();
 

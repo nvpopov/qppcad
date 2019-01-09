@@ -11,6 +11,7 @@
 #include <qppcad/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_atoms_list_obj_insp_widget.hpp>
 #include <qppcad/ws_comp_chem_data_obj_insp_widget.hpp>
+#include <qppcad/ws_volume_data_obj_insp_widget.hpp>
 
 namespace qpp {
 
@@ -36,6 +37,7 @@ namespace qpp {
         QWidget                             *ws_current_view;
         ws_atoms_list_obj_insp_widget_t     *ws_atoms_list_view;
         ws_comp_chem_data_obj_insp_widget_t *ws_comp_chem_data_view;
+        ws_volume_data_obj_insp_widget_t    *ws_volume_data_view;
 
       private slots:
         void cur_ws_changed();

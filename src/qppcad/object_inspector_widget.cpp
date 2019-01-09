@@ -42,6 +42,8 @@ object_inspector_widget_t::object_inspector_widget_t() {
   //ws_item_view = new ws_item_obj_insp_widget_t;
   ws_atoms_list_view = new ws_atoms_list_obj_insp_widget_t;
   ws_comp_chem_data_view = new ws_comp_chem_data_obj_insp_widget_t;
+  ws_volume_data_view = new ws_volume_data_obj_insp_widget_t;
+
   ws_current_view = none_item_placeholder;
 
   cur_ws_changed();
@@ -64,6 +66,8 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       ws_comp_chem_data_view->hide();
       ws_atoms_list_view->unbind_item();
       ws_atoms_list_view->hide();
+      ws_volume_data_view->unbind_item();
+      ws_volume_data_view->hide();
     }
 
   if (astate->ws_manager->has_wss()) {
@@ -85,16 +89,19 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
               ws_atoms_list_view->show();
 
               ws_comp_chem_data_view->unbind_item();
+              ws_volume_data_view->unbind_item();
 
               astate->log("DEBUG: ws_current_view = ws_atoms_list_view;");
               return;
             }
 
           if (dynamic_cast<ws_comp_chem_data_t*>(cur_ws->get_selected())) {
+
               if (ws_current_view)  {
                   obj_insp_layout->removeWidget(ws_current_view);
                   ws_current_view->setParent(nullptr);
                 }
+
               none_item_placeholder->hide();
               obj_insp_layout->addWidget(ws_comp_chem_data_view);
               ws_current_view = ws_comp_chem_data_view;
@@ -103,6 +110,28 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
               ws_comp_chem_data_view->show();
 
               ws_atoms_list_view->unbind_item();
+              ws_volume_data_view->unbind_item();
+
+              astate->log("DEBUG: ws_current_view = ws_comp_chem_data_view;");
+              return;
+            }
+
+          if (dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected())) {
+
+              if (ws_current_view)  {
+                  obj_insp_layout->removeWidget(ws_current_view);
+                  ws_current_view->setParent(nullptr);
+                }
+
+              none_item_placeholder->hide();
+              obj_insp_layout->addWidget(ws_volume_data_view);
+              ws_current_view = ws_volume_data_view;
+
+              ws_volume_data_view->bind_to_item(cur_ws->get_selected());
+              ws_volume_data_view->show();
+
+              ws_atoms_list_view->unbind_item();
+              ws_comp_chem_data_view->unbind_item();
 
               astate->log("DEBUG: ws_current_view = ws_comp_chem_data_view;");
               return;

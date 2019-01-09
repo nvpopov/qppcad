@@ -18,6 +18,8 @@
 #include <io/vasp_io.hpp>
 #include <io/cp2k.hpp>
 #include <io/xyz_multiframe.hpp>
+#include <io/cube.hpp>
+#include <qppcad/ws_volume_data.hpp>
 
 #include <clocale>
 
@@ -1039,6 +1041,16 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         read_ccd_from_cp2k_output(qc_data, cc_inst);
         m_geom->DIM = cc_inst.m_DIM;
         m_geom->cell.DIM = m_geom->DIM;
+        break;
+      }
+
+    case qc_file_fmt::cube : {
+        std::shared_ptr<ws_volume_data_t> vold = std::make_shared<ws_volume_data_t>();
+        m_geom->DIM = 0;
+        m_geom->cell.DIM = 0;
+        read_cube(qc_data, *(m_geom), vold->m_ch, vold->m_field);
+        vold->m_name = fmt::format("volume_{}", m_name);
+        m_parent_ws->add_item_to_ws(vold);
         break;
       }
 
