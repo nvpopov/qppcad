@@ -9,6 +9,7 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
                                                  std::vector<float> &field,
                                                  float isolevel) {
 
+  int num_idx = 0;
   //iterate over all sub-cubes
   for (int ix = 0; ix < ch.steps[0] - 1; ix++)
     for (int iy = 0; iy < ch.steps[1] - 1; iy++)
@@ -16,7 +17,7 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
 
           //restore cube coords 0,0 - top
           //for ref http://paulbourke.net/geometry/polygonise/polygonise1.gif
-          vector3<float> gp0(ix * ch.axis[0][0], iy * ch.axis[1][1], ix * ch.axis[0][0]); //0 0 0
+          vector3<float> gp0(ix * ch.axis[0][0], iy * ch.axis[1][1], iz * ch.axis[2][2]); //0 0 0
           vector3<float> gp1 = gp0 + ch.axis[0]; // +1  0 0
           vector3<float> gp2 = gp1 + ch.axis[1]; // +1 +1 0
           vector3<float> gp3 = gp0 + ch.axis[1]; //  0 +1 0
@@ -96,9 +97,49 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
               vector3<float> p1 = vertlist[mc_tri_table[cubeindex][i+1]];
               vector3<float> p2 = vertlist[mc_tri_table[cubeindex][i+2]];
               ntriang++;
+
+              //emit vertecies
+              mesh.vertecies.push_back(p0[0]);
+              mesh.vertecies.push_back(p0[1]);
+              mesh.vertecies.push_back(p0[2]);
+
+              mesh.vertecies.push_back(p1[0]);
+              mesh.vertecies.push_back(p1[1]);
+              mesh.vertecies.push_back(p1[2]);
+
+              mesh.vertecies.push_back(p2[0]);
+              mesh.vertecies.push_back(p2[1]);
+              mesh.vertecies.push_back(p2[2]);
+              //emit normals
+
+              vector3<float> n0 = p0.normalized();
+              vector3<float> n1 = p1.normalized();
+              vector3<float> n2 = p2.normalized();
+
+              mesh.normals.push_back(n0[0]);
+              mesh.normals.push_back(n0[1]);
+              mesh.normals.push_back(n0[2]);
+
+              mesh.normals.push_back(n1[0]);
+              mesh.normals.push_back(n1[1]);
+              mesh.normals.push_back(n1[2]);
+
+              mesh.normals.push_back(n2[0]);
+              mesh.normals.push_back(n2[1]);
+              mesh.normals.push_back(n2[2]);
+
+              //emit indices
+              mesh.indices.push_back(num_idx);
+              mesh.indices.push_back(num_idx + 1);
+              mesh.indices.push_back(num_idx + 2);
+
+              num_idx += 3;
             }
 
         }
+  mesh.num_primitives = mesh.indices.size()*3;
+  mesh.bind_data();
+
 }
 
 vector3<float> marching_cubes_helper::vertex_interp(float isolevel,

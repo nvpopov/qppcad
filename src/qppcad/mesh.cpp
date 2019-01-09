@@ -5,7 +5,10 @@ using namespace qpp;
 using namespace qpp::cad;
 
 mesh_t::mesh_t() {
+  construct_explicit();
+}
 
+void mesh_t::construct_explicit() {
   mesh_rt = GL_TRIANGLES;
 
   app_state_t* astate = app_state_t::get_inst();
@@ -53,6 +56,11 @@ void mesh_t::end_render_batch() {
 void mesh_t::bind_data() {
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
+  glapi->glBindVertexArray(0);
+
+  astate->log(
+        fmt::format("Pre bind data to mesh[vao={}, vbo={}, nbo={}, vio={}]",
+                          vao, vbo, nbo, vio));
   glapi->glBindVertexArray(vao);
 
   glapi->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -75,7 +83,9 @@ void mesh_t::bind_data() {
                       &indices[0], GL_STATIC_DRAW);
   glapi->glBindVertexArray(0);
 
-  astate->log(fmt::format("Binded data to mesh with vs={}, ns={}, is={}",
+  astate->log(
+        fmt::format("Binded data to mesh[vao={}, vbo={}, nbo={}, vio={}] with vs={}, ns={}, is={}",
+                          vao, vbo, nbo, vio,
                           vertecies.size(),
                           normals.size(),
                           indices.size()));

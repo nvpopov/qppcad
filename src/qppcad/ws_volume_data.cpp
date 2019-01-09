@@ -1,11 +1,22 @@
 #include <qppcad/ws_volume_data.hpp>
+#include <qppcad/marching_cubes.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 
-ws_volume_data_t::ws_volume_data_t() {
+void ws_volume_data_t::gen_repr() {
+
+}
+
+void ws_volume_data_t::mc_polygonise(float _isolevel) {
+  marching_cubes_helper::polygonise_volume_mc(*(m_mesh), m_ch, m_field, _isolevel);
+}
+
+ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
   set_default_flags(ws_item_flags_default);
+
 }
 
 void ws_volume_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
@@ -14,7 +25,25 @@ void ws_volume_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
 }
 
 void ws_volume_data_t::render() {
+  app_state_t* astate = app_state_t::get_inst();
 
+  if (m_ready_to_render) {
+
+      astate->dp->begin_render_general_mesh();
+      vector3<float> scale{1,1,1};
+      vector3<float> rot{0};
+      vector3<float> color{0.5f};
+      astate->dp->render_general_mesh(m_pos, scale, rot, color, m_mesh);
+      astate->dp->end_render_general_mesh();
+    }
+
+  if (m_need_to_regenerate) {
+      if (!m_mesh) m_mesh = new mesh_t();
+      mc_polygonise(qpp::def_isovalue_dens);
+      m_ready_to_render = true;
+      m_need_to_regenerate = false;
+      astate->make_viewport_dirty();
+    }
 }
 
 bool ws_volume_data_t::mouse_click(ray_t<float> *click_ray) {

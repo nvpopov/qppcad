@@ -4,6 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item.hpp>
 #include <io/cube.hpp>
+#include <qppcad/mesh.hpp>
 
 namespace qpp {
 
@@ -15,6 +16,13 @@ namespace qpp {
 
         cube_header_t<float> m_ch;
         std::vector<float> m_field;
+        mesh_t *m_mesh{nullptr};
+        bool m_ready_to_render{false};
+        bool m_need_to_regenerate{false};
+        float m_isolevel{qpp::def_isovalue_dens};
+
+        void gen_repr();
+        void mc_polygonise(float _isolevel);
 
         ws_volume_data_t();
 

@@ -1049,7 +1049,9 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         m_geom->DIM = 0;
         m_geom->cell.DIM = 0;
         read_cube(qc_data, *(m_geom), vold->m_ch, vold->m_field);
-        vold->m_name = fmt::format("volume_{}", m_name);
+        //vold->mc_polygonise(qpp::def_isovalue_dens);
+        vold->m_need_to_regenerate = true;
+        vold->m_name = fmt::format("v_{}", m_name);
         m_parent_ws->add_item_to_ws(vold);
         break;
       }

@@ -305,7 +305,7 @@ namespace qpp {
     };
 
     class marching_cubes_helper {
-
+      public:
         //based on http://paulbourke.net/geometry/polygonise/
         static void polygonise_volume_mc(mesh_t &mesh,
                                          cube_header_t<float> &ch,

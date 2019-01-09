@@ -37,6 +37,7 @@ namespace qpp {
 
         mesh_t();
 
+        void construct_explicit();
         /// \brief render
         void render();
 
