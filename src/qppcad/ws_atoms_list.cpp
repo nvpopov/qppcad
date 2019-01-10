@@ -169,6 +169,15 @@ void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
         break;
       }
 
+    case cam_target_view_t::tv_cart_center : {
+        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
+        look_from = m_pos + 3.0f*vector3<float>(axis_size, 0.0, 0.0);
+        look_to = m_pos + vector3<float>(1)*axis_size * 0.5f;
+        look_up = {0.0 , 0.0 , 1.0};
+        need_to_update_camera = true;
+        break;
+      }
+
     default : {
         break;
       }

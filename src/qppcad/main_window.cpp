@@ -413,6 +413,12 @@ void main_window::init_widgets() {
   connect(tp_camera_z, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
 
+  tp_camera_cart_c = new QPushButton(tr("C:C"));
+  tp_camera_cart_c->setMinimumWidth(34);
+  tp_camera_cart_c->setMinimumHeight(tp_button_height);
+  connect(tp_camera_cart_c, &QPushButton::pressed,
+          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_cart_center);});
+
   tp_camera_a = new QPushButton(tr("C:a"));
   tp_camera_a->setMinimumWidth(34);
   tp_camera_a->setMinimumHeight(tp_button_height);
@@ -502,6 +508,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_camera_x, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_y, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_z, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_camera_cart_c, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_a, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_b, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_c, 0, Qt::AlignLeft);
@@ -517,6 +524,7 @@ void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
   tp_camera_x->setVisible(cart_c);
   tp_camera_y->setVisible(cart_c);
   tp_camera_z->setVisible(cart_c);
+  tp_camera_cart_c->setVisible(cart_c);
   tp_camera_a->setVisible(cell_c);
   tp_camera_b->setVisible(cell_c);
   tp_camera_c->setVisible(cell_c);

@@ -17,7 +17,7 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
 
           //restore cube coords 0,0 - top
           //for ref http://paulbourke.net/geometry/polygonise/polygonise1.gif
-          vector3<float> gp0(ix * ch.axis[0][0], iy * ch.axis[1][1], iz * ch.axis[2][2]); //0 0 0
+          vector3<float> gp0 = ix * ch.axis[0] + iy * ch.axis[1] + iz * ch.axis[2]; //0 0 0
           vector3<float> gp1 = gp0 + ch.axis[0]; // +1  0 0
           vector3<float> gp2 = gp1 + ch.axis[1]; // +1 +1 0
           vector3<float> gp3 = gp0 + ch.axis[1]; //  0 +1 0

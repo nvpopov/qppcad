@@ -72,6 +72,7 @@ namespace qpp {
         QPushButton *tp_camera_x;
         QPushButton *tp_camera_y;
         QPushButton *tp_camera_z;
+        QPushButton *tp_camera_cart_c;
         QPushButton *tp_camera_a;
         QPushButton *tp_camera_b;
         QPushButton *tp_camera_c;
