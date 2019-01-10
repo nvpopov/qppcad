@@ -128,6 +128,15 @@ namespace qpp {
         }
       settings.endArray();
 
+      int recent_file_size = settings.beginReadArray("recent_files");
+      for (int i = 0; i < recent_file_size; i++) {
+          settings.setArrayIndex(i);
+          QString rc_filename = settings.value("filename").toString();
+          int m_loaded_qcfmt = settings.value("qcfmt",0).toInt();
+          add_recent_file(rc_filename.toStdString(), static_cast<qc_file_fmt>(m_loaded_qcfmt));
+        }
+      settings.endArray();
+
     }
 
     void app_state_t::save_settings() {
@@ -164,6 +173,15 @@ namespace qpp {
         }
 
       settings.endArray();
+
+      settings.beginWriteArray("recent_files");
+      for (int i = 0; i < m_recent_files.size(); i++) {
+          settings.setArrayIndex(i);
+          settings.setValue("filename", QString::fromStdString(m_recent_files[i].m_file_name));
+          settings.setValue("qcfmt", static_cast<int>(m_recent_files[i].m_file_format));
+        }
+
+      settings.endArray();
     }
 
     void app_state_t::log(std::string logstr, bool flush) {
@@ -181,17 +199,18 @@ namespace qpp {
 
     void app_state_t::add_recent_file(const std::string file_name, const qc_file_fmt qcfmt) {
 
+      if (m_recent_files.size() > max_recent_files)
+        m_recent_files.erase(m_recent_files.begin() ,
+                             m_recent_files.begin() + (m_recent_files.size() - max_recent_files));
+
       for (auto it = m_recent_files.begin(); it != m_recent_files.end(); ++it) {
           if ((*it).m_file_name.find(file_name) != std::string::npos) {
-              auto x = std::move(*it); // or std::move(*it)
+              auto x = std::move(*it);
               m_recent_files.erase(it);
               m_recent_files.insert(m_recent_files.end(), std::move(x));
-              break;
+              return;
             }
         }
-
-      if (m_recent_files.size() > max_recent_files)
-        m_recent_files.erase(m_recent_files.begin() + (m_recent_files.size() - max_recent_files));
 
       m_recent_files.emplace_back(file_name, qcfmt);
     }

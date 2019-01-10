@@ -211,6 +211,7 @@ namespace qpp {
         void action_toggle_console();
 
         void rebuild_recent_files_menu();
+        void recent_files_clicked();
 
     };
   }

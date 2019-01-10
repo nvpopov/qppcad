@@ -24,6 +24,7 @@ namespace qpp {
       public:
         std::string m_file_name;
         qc_file_fmt m_file_format{qc_file_fmt::unknown_fileformat};
+        recent_file_record_t(){}
         recent_file_record_t(const std::string _file_name , const qc_file_fmt _file_format) :
           m_file_name(_file_name), m_file_format(_file_format){}
     };

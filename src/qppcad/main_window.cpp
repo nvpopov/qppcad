@@ -139,10 +139,13 @@ void main_window::init_menus() {
   connect(file_menu_save_ws_as, &QAction::triggered, this, &main_window::save_ws_as);
 
   file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
+
   for (int i = 0; i < qpp::cad::max_recent_files; i++) {
       QAction *recent_action = new QAction(this);
       file_menu_recent_entries[i] = recent_action;
       file_menu_recent_files->addAction(recent_action);
+      connect(recent_action, &QAction::triggered, this,
+              &main_window::recent_files_clicked);
     }
 
   file_menu_close_app = new QAction(this);
@@ -727,13 +730,16 @@ void main_window::save_ws() {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           QFileInfo check_file(QString::fromStdString(cur_ws->m_fs_path));
-          if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "") {
+          if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "" &&
+              !cur_ws->m_is_ws_imported) {
+              cur_ws->m_is_ws_imported = false;
               cur_ws->save_ws_to_json(cur_ws->m_fs_path);
             } else {
               QString file_name = QFileDialog::getSaveFileName(this, "Save qpp::cad workspace",
                                                                "*.json");
               if (file_name != "") {
                   cur_ws->save_ws_to_json(file_name.toStdString());
+                  cur_ws->m_is_ws_imported = false;
                   cur_ws->m_fs_path = file_name.toStdString();
                 }
             }
@@ -759,6 +765,7 @@ void main_window::save_ws_as() {
                                                            "*.json");
           if (file_name != "") {
               cur_ws->save_ws_to_json(file_name.toStdString());
+              cur_ws->m_is_ws_imported = false;
               cur_ws->m_fs_path = file_name.toStdString();
             }
         }
@@ -922,12 +929,12 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                   need_to_hide_al_cntls = false;
 
                   auto cur_sel = cur_it_as_al->m_measure->is_angle_measurement_exist(
-                        cur_it_as_al->m_atom_ord_sel[0].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[1].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[2].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[0].m_idx,
-                        cur_it_as_al->m_atom_ord_sel[1].m_idx,
-                        cur_it_as_al->m_atom_ord_sel[2].m_idx);
+                                   cur_it_as_al->m_atom_ord_sel[0].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                      cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                      cur_it_as_al->m_atom_ord_sel[2].m_idx);
 
                   tp_measure_dist->hide();
                   tp_measure_angle->show();
@@ -1005,20 +1012,20 @@ void main_window::tp_angle_button_clicked(bool checked) {
                   tp_measure_angle->show();
 
                   auto cur_sel = cur_it_as_al->m_measure->is_angle_measurement_exist(
-                        cur_it_as_al->m_atom_ord_sel[0].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[1].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[2].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[0].m_idx,
-                        cur_it_as_al->m_atom_ord_sel[1].m_idx,
-                        cur_it_as_al->m_atom_ord_sel[2].m_idx);
+                                   cur_it_as_al->m_atom_ord_sel[0].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                      cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                      cur_it_as_al->m_atom_ord_sel[2].m_idx);
 
                   if (checked) cur_it_as_al->m_measure->add_angle_measurement(
                         cur_it_as_al->m_atom_ord_sel[0].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[1].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[2].m_atm,
-                        cur_it_as_al->m_atom_ord_sel[0].m_idx,
-                        cur_it_as_al->m_atom_ord_sel[1].m_idx,
-                        cur_it_as_al->m_atom_ord_sel[2].m_idx);
+                      cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                      cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                      cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                      cur_it_as_al->m_atom_ord_sel[2].m_idx);
 
                   else cur_it_as_al->m_measure->remove_angle_measurement(*cur_sel);
                 }
@@ -1261,6 +1268,22 @@ void main_window::rebuild_recent_files_menu() {
             QString::fromStdString(astate->m_recent_files[i].m_file_name));
     }
 
+}
+
+void main_window::recent_files_clicked() {
+  int idx = -1;
+  QObject* obj = sender();
+  for (int i = 0 ; i < file_menu_recent_entries.size(); i++)
+    if (file_menu_recent_entries[i]->isVisible() && file_menu_recent_entries[i] == obj) {
+        idx = i;
+      }
+
+  if (idx != -1) {
+      app_state_t* astate = app_state_t::get_inst();
+      astate->ws_manager->import_file_as_new_ws(astate->m_recent_files[idx].m_file_name,
+                                                astate->m_recent_files[idx].m_file_format,
+                                                false);
+    }
 }
 
 void main_window::slot_shortcut_terminate_app() {

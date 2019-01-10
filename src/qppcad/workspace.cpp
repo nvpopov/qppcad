@@ -244,6 +244,8 @@ void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delet
 
 void workspace_t::save_ws_to_json (const std::string filename) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   std::ofstream out_file(filename);
   json data;
 
@@ -265,6 +267,8 @@ void workspace_t::save_ws_to_json (const std::string filename) {
   data[JSON_OBJECTS] = ws_objects;
 
   out_file << data.dump(2);
+
+  astate->astate_evd->new_file_loaded(filename, qc_file_fmt::qppcad_json);
 
 }
 
@@ -516,12 +520,26 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 
 
 void workspace_manager_t::import_file_as_new_ws(const std::string &fname,
-                                                qc_file_fmt file_format) {
+                                                qc_file_fmt file_format,
+                                                bool override) {
+
   app_state_t* astate = app_state_t::get_inst();
+
+  if (!override)
+      for (int i = 0; i < m_ws.size(); i++)
+        if (m_ws[i]->m_fs_path.find(fname) != std::string::npos) {
+            set_cur_id(i);
+            return;
+          }
 
   auto new_ws = std::make_shared<workspace_t>();
   std::string file_name_extr = qpp::extract_base_name(fname);
   new_ws->m_ws_name = file_name_extr;
+  new_ws->m_fs_path = fname;
+
+  if (file_format != qc_file_fmt::qppcad_json)
+    new_ws->m_is_ws_imported = true;
+
   auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
   new_ws->add_item_to_ws(new_atoms_list);
   new_atoms_list->load_from_file(file_format, fname,
@@ -529,7 +547,8 @@ void workspace_manager_t::import_file_as_new_ws(const std::string &fname,
   add_ws(new_ws);
   set_cur_id(m_ws.size()-1);
 
-  astate->astate_evd->new_file_loaded(fname, qc_file_fmt::qppcad_json);
+  astate->astate_evd->new_file_loaded(fname, file_format);
+
 }
 
 void workspace_manager_t::import_file_autodeduce(const std::string file_name,
@@ -561,12 +580,19 @@ void workspace_manager_t::query_create_new_ws(bool switch_to_new_workspace) {
 
 }
 
-void workspace_manager_t::load_ws_from_json(const std::string &filename) {
+void workspace_manager_t::load_ws_from_json(const std::string &filename, bool override) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto new_ws = std::make_shared<workspace_t>();
+  if (!override)
+      for (int i = 0; i < m_ws.size(); i++)
+        if (m_ws[i]->m_fs_path.find(filename) != std::string::npos) {
+            set_cur_id(i);
+            return;
+          }
 
+  auto new_ws = std::make_shared<workspace_t>();
+  new_ws->m_fs_path = filename;
   new_ws->load_ws_from_json(filename);
   add_ws(new_ws);
   set_cur_id(m_ws.size()-1);

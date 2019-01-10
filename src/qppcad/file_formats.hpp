@@ -6,7 +6,7 @@ namespace qpp{
 
   namespace cad {
 
-    enum qc_file_fmt{
+    enum qc_file_fmt : int {
       standart_xyz,
       vasp_poscar,
       vasp_outcar_md,
