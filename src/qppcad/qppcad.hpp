@@ -37,6 +37,7 @@ namespace qpp {
       edit_content = 1
     };
 
+    const int max_recent_files = 10;
   }
 
 }

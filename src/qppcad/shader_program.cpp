@@ -138,8 +138,11 @@ void qpp::cad::shader_program_t::begin_shader_program () {
 //  if (unf_rec[sp_u_name::screen_height].enabled)
 //    glUniform1i(unf_rec[sp_u_name::screen_height].h_prog,
 //        int(astate->viewport_size_c(1)));
+//  if (unf_rec[sp_u_name::m_model_view_inv_tr].enabled && astate->camera) {
+//      set_u(sp_u_name::m_model_view_inv_tr, astate->camera->m);
+//    }
 
-  if (unf_rec[sp_u_name::v_eye_pos].enabled && astate->camera){
+  if (unf_rec[sp_u_name::v_eye_pos].enabled && astate->camera) {
       set_u(sp_u_name::v_eye_pos, astate->camera->m_view_point.data());
     }
 }

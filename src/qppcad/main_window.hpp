@@ -111,6 +111,8 @@ namespace qpp {
 
         QAction *file_menu_save_ws;
         QAction *file_menu_save_ws_as;
+        QMenu *file_menu_recent_files;
+        std::array<QAction*, max_recent_files> file_menu_recent_entries;
         QAction *file_menu_close_app;
 
         QMenu *edit_menu;
@@ -166,7 +168,7 @@ namespace qpp {
         void dropEvent(QDropEvent *event) override;
         void resizeEvent(QResizeEvent *event) override;
 
-      private slots:
+      public slots:
         void slot_shortcut_terminate_app();
 
         void wss_changed_slot();
@@ -207,6 +209,8 @@ namespace qpp {
         void action_unselect_all_content();
         void action_invert_selected_content();
         void action_toggle_console();
+
+        void rebuild_recent_files_menu();
 
     };
   }

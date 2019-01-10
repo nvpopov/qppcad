@@ -391,55 +391,70 @@ void workspace_manager_t::init_default () {
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   if (!test_in_dev_env.good()) return;
 
-  auto _ws2 = std::make_shared<workspace_t>("d2");
-  auto _ws3 = std::make_shared<workspace_t>("d1");
+  import_file_as_new_ws("../deps/qpp/examples/io/ref_data/xyz/slab.xyz",
+                        qc_file_fmt::standart_xyz);
 
-  auto _wsl2 = std::make_shared<ws_atoms_list_t>();
-  _ws3->add_item_to_ws(_wsl2);
-  _wsl2->load_from_file(qc_file_fmt::standart_xyz,
-                        "../deps/qpp/examples/io/ref_data/xyz/slab.xyz",
-                        false);
+  import_file_as_new_ws("../data/refs/POSCAR.mp-558947_SiO2",
+                        qc_file_fmt::vasp_poscar);
 
-  auto _wsl3 = std::make_shared<ws_atoms_list_t>();
-  _ws2->add_item_to_ws(_wsl3);
-  _wsl3->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
-                        false);
+  import_file_as_new_ws("../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz",
+                        qc_file_fmt::standart_xyz);
 
-  auto _wsl32 = std::make_shared<ws_atoms_list_t>();
-  _ws2->add_item_to_ws(_wsl32);
-  _wsl32->load_from_file(qc_file_fmt::standart_xyz,
-                         "../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz",
-                         true);
+  import_file_as_new_ws("../data/refs/mp-971662_Si.vasp",
+                        qc_file_fmt::vasp_poscar);
 
-  auto _wsl33 = std::make_shared<ws_atoms_list_t>();
-  _ws2->add_item_to_ws(_wsl33);
-  _wsl33->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/mp-971662_Si.vasp",
-                         false);
+  import_file_as_new_ws("../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out",
+                        qc_file_fmt::firefly_output);
+
+//  auto _ws2 = std::make_shared<workspace_t>("d2");
+//  auto _ws3 = std::make_shared<workspace_t>("d1");
+
+//  auto _wsl2 = std::make_shared<ws_atoms_list_t>();
+//  _ws3->add_item_to_ws(_wsl2);
+//  _wsl2->load_from_file(qc_file_fmt::standart_xyz,
+//                        "../deps/qpp/examples/io/ref_data/xyz/slab.xyz",
+//                        false);
+
+//  auto _wsl3 = std::make_shared<ws_atoms_list_t>();
+//  _ws2->add_item_to_ws(_wsl3);
+//  _wsl3->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
+//                        false);
+
+//  auto _wsl32 = std::make_shared<ws_atoms_list_t>();
+//  _ws2->add_item_to_ws(_wsl32);
+//  _wsl32->load_from_file(qc_file_fmt::standart_xyz,
+//                         "../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz",
+//                         true);
+
+//  auto _wsl33 = std::make_shared<ws_atoms_list_t>();
+//  _ws2->add_item_to_ws(_wsl33);
+//  _wsl33->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/mp-971662_Si.vasp",
+//                         false);
 
 
-  auto _ws4 = std::make_shared<workspace_t>();
-  _ws4->m_ws_name = "animtest1";
-  auto _ws4_al = std::make_shared<ws_atoms_list_t>();
-  _ws4->add_item_to_ws(_ws4_al);
+//  auto _ws4 = std::make_shared<workspace_t>();
+//  _ws4->m_ws_name = "animtest1";
+//  auto _ws4_al = std::make_shared<ws_atoms_list_t>();
+//  _ws4->add_item_to_ws(_ws4_al);
 
-  _ws4_al->load_from_file(qc_file_fmt::firefly_output,
-                          "../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out",
-                          false);
+//  _ws4_al->load_from_file(qc_file_fmt::firefly_output,
+//                          "../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out",
+//                          false);
 
-  _wsl3->m_name = "zeolite1";
-  _wsl32->m_name = "nanotube1";
-  _wsl32->m_pos = vector3<float>(0.0f, 0.0f, 14.0f);
-  _wsl33->m_name = "ss1";
-  _wsl33->m_pos = vector3<float>(0.0f, 22.0f, 2.0f);
+//  _wsl3->m_name = "zeolite1";
+//  _wsl32->m_name = "nanotube1";
+//  _wsl32->m_pos = vector3<float>(0.0f, 0.0f, 14.0f);
+//  _wsl33->m_name = "ss1";
+//  _wsl33->m_pos = vector3<float>(0.0f, 22.0f, 2.0f);
 
-  add_ws(_ws3);
-  add_ws(_ws2);
-  add_ws(_ws4);
+//  add_ws(_ws3);
+//  add_ws(_ws2);
+//  add_ws(_ws4);
 
-  //  _ws2->save_workspace_to_json("test.json");
-  //  _ws4->save_workspace_to_json("test_with_anim.json");
+//  //  _ws2->save_workspace_to_json("test.json");
+//  //  _ws4->save_workspace_to_json("test_with_anim.json");
 
-  set_cur_id(2);
+//  set_cur_id(2);
 
 }
 
@@ -501,7 +516,9 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 
 
 void workspace_manager_t::import_file_as_new_ws(const std::string &fname,
-                                                qc_file_fmt file_format){
+                                                qc_file_fmt file_format) {
+  app_state_t* astate = app_state_t::get_inst();
+
   auto new_ws = std::make_shared<workspace_t>();
   std::string file_name_extr = qpp::extract_base_name(fname);
   new_ws->m_ws_name = file_name_extr;
@@ -511,6 +528,8 @@ void workspace_manager_t::import_file_as_new_ws(const std::string &fname,
                                  qc_file_fmt_helper::need_to_auto_center(file_format));
   add_ws(new_ws);
   set_cur_id(m_ws.size()-1);
+
+  astate->astate_evd->new_file_loaded(fname, qc_file_fmt::qppcad_json);
 }
 
 void workspace_manager_t::import_file_autodeduce(const std::string file_name,
@@ -547,14 +566,15 @@ void workspace_manager_t::load_ws_from_json(const std::string &filename) {
   app_state_t* astate = app_state_t::get_inst();
 
   auto new_ws = std::make_shared<workspace_t>();
-  //new_ws->m_ws_name = "d4";
+
   new_ws->load_ws_from_json(filename);
   add_ws(new_ws);
   set_cur_id(m_ws.size()-1);
-  //new_ws->set_best_view();
-  //astate->make_viewport_dirty();
+
   ws_mgr_changed();
   astate->make_viewport_dirty();
+
+  astate->astate_evd->new_file_loaded(filename, qc_file_fmt::qppcad_json);
 }
 
 

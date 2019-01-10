@@ -36,6 +36,10 @@ main_window::main_window(QWidget *parent) {
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this, &main_window::cur_ws_selected_atoms_list_selection_changed);
 
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::new_file_loaded_signal,
+          this, &main_window::rebuild_recent_files_menu);
+
   wss_changed_slot();
   cur_ws_changed();
   cur_ws_edit_type_changed();
@@ -133,6 +137,13 @@ void main_window::init_menus() {
   file_menu_save_ws_as->setText(tr("Save workspace as"));
   file_menu->addAction(file_menu_save_ws_as);
   connect(file_menu_save_ws_as, &QAction::triggered, this, &main_window::save_ws_as);
+
+  file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
+  for (int i = 0; i < qpp::cad::max_recent_files; i++) {
+      QAction *recent_action = new QAction(this);
+      file_menu_recent_entries[i] = recent_action;
+      file_menu_recent_files->addAction(recent_action);
+    }
 
   file_menu_close_app = new QAction(this);
   file_menu_close_app->setText(tr("Close"));
@@ -1234,6 +1245,22 @@ void main_window::action_toggle_console() {
       py_console_widget->py_tedit->setFocus();
       astate->m_show_console = false;
     }
+}
+
+void main_window::rebuild_recent_files_menu() {
+
+  if (!file_menu_recent_files) return;
+
+  for (auto &elem : file_menu_recent_entries)
+    elem->setVisible(false);
+
+  app_state_t* astate = app_state_t::get_inst();
+  for (int i = 0; i < astate->m_recent_files.size(); i++) {
+      file_menu_recent_entries[i]->setVisible(true);
+      file_menu_recent_entries[i]->setText(
+            QString::fromStdString(astate->m_recent_files[i].m_file_name));
+    }
+
 }
 
 void main_window::slot_shortcut_terminate_app() {

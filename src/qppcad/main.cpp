@@ -96,6 +96,7 @@ int main (int argc, char **argv) {
   app.setFont(font);
 
   main_window w;
+  w.rebuild_recent_files_menu();
   w.showMaximized();
   int ret_code = app.exec();
 

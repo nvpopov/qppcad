@@ -20,6 +20,14 @@ namespace qpp {
 
     class app_state_t;
 
+    class recent_file_record_t {
+      public:
+        std::string m_file_name;
+        qc_file_fmt m_file_format{qc_file_fmt::unknown_fileformat};
+        recent_file_record_t(const std::string _file_name , const qc_file_fmt _file_format) :
+          m_file_name(_file_name), m_file_format(_file_format){}
+    };
+
     class app_state_t {
 
       private:
@@ -45,6 +53,7 @@ namespace qpp {
 
         void log(std::string logstr, bool flush = true);
         void pylog(std::string logstr);
+        void add_recent_file(const std::string file_name, const qc_file_fmt qcfmt);
 
         app_state_event_disp_t *astate_evd;
 
@@ -63,7 +72,6 @@ namespace qpp {
         shader_program_t *sp_buf_bs;
         shader_program_t *sp_2c_cylinder;
 
-
         std::vector<mesh_t*> mesh_spheres;
         mesh_t *mesh_cylinder;
         mesh_t *mesh_unit_line;
@@ -76,6 +84,8 @@ namespace qpp {
 
         std::shared_ptr<workspace_manager_t> ws_manager;
         std::unique_ptr<python_manager_t> py_manager;
+
+        std::vector<recent_file_record_t> m_recent_files;
         // //       std::map<std::string, color_map_t> m_color_maps;
 
         vector2<float> viewport_xy;

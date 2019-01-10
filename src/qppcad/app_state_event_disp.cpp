@@ -45,6 +45,12 @@ void app_state_event_disp_t::cur_ws_selected_atoms_list_selected_content_changed
   emit(cur_ws_selected_atoms_list_selected_content_changed_signal());
 }
 
+void app_state_event_disp_t::new_file_loaded(const std::string file_name,
+                                             const qc_file_fmt qcfmt) {
+  app_state_t::get_inst()->add_recent_file(file_name, qcfmt);
+  emit(new_file_loaded_signal());
+}
+
 void app_state_event_disp_t::python_console_clear_requested() {
   emit(python_console_clear_requested_signal());
 }

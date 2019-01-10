@@ -13,7 +13,7 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
   //iterate over all sub-cubes
   for (int ix = 0; ix < ch.steps[0] - 1; ix++)
     for (int iy = 0; iy < ch.steps[1] - 1; iy++)
-      for (int iz = 0; iz < ch.steps[2] - 2; iz++) {
+      for (int iz = 0; iz < ch.steps[2] - 1; iz++) {
 
           //restore cube coords 0,0 - top
           //for ref http://paulbourke.net/geometry/polygonise/polygonise1.gif
@@ -112,21 +112,22 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
               mesh.vertecies.push_back(p2[2]);
               //emit normals
 
+              vector3<float> n_ot = -(p2-p1).cross(p2-p0).normalized();
               vector3<float> n0 = p0.normalized();
               vector3<float> n1 = p1.normalized();
               vector3<float> n2 = p2.normalized();
 
-              mesh.normals.push_back(n0[0]);
-              mesh.normals.push_back(n0[1]);
-              mesh.normals.push_back(n0[2]);
+              mesh.normals.push_back(n_ot[0]);
+              mesh.normals.push_back(n_ot[1]);
+              mesh.normals.push_back(n_ot[2]);
 
-              mesh.normals.push_back(n1[0]);
-              mesh.normals.push_back(n1[1]);
-              mesh.normals.push_back(n1[2]);
+              mesh.normals.push_back(n_ot[0]);
+              mesh.normals.push_back(n_ot[1]);
+              mesh.normals.push_back(n_ot[2]);
 
-              mesh.normals.push_back(n2[0]);
-              mesh.normals.push_back(n2[1]);
-              mesh.normals.push_back(n2[2]);
+              mesh.normals.push_back(n_ot[0]);
+              mesh.normals.push_back(n_ot[1]);
+              mesh.normals.push_back(n_ot[2]);
 
               //emit indices
               mesh.indices.push_back(num_idx);

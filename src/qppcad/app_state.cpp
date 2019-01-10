@@ -179,6 +179,23 @@ namespace qpp {
         py_manager->m_output_buffer += "\n" + logstr;
     }
 
+    void app_state_t::add_recent_file(const std::string file_name, const qc_file_fmt qcfmt) {
+
+      for (auto it = m_recent_files.begin(); it != m_recent_files.end(); ++it) {
+          if ((*it).m_file_name.find(file_name) != std::string::npos) {
+              auto x = std::move(*it); // or std::move(*it)
+              m_recent_files.erase(it);
+              m_recent_files.insert(m_recent_files.end(), std::move(x));
+              break;
+            }
+        }
+
+      if (m_recent_files.size() > max_recent_files)
+        m_recent_files.erase(m_recent_files.begin() + (m_recent_files.size() - max_recent_files));
+
+      m_recent_files.emplace_back(file_name, qcfmt);
+    }
+
     app_state_t* app_state_t::g_inst = nullptr;
 
   }
