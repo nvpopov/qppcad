@@ -199,9 +199,10 @@ namespace qpp {
 
     void app_state_t::add_recent_file(const std::string file_name, const qc_file_fmt qcfmt) {
 
-      if (m_recent_files.size() > max_recent_files)
+      if (m_recent_files.size() >= max_recent_files)
         m_recent_files.erase(m_recent_files.begin() ,
-                             m_recent_files.begin() + (m_recent_files.size() - max_recent_files));
+                             m_recent_files.begin() +
+                             (1 + m_recent_files.size() - max_recent_files));
 
       for (auto it = m_recent_files.begin(); it != m_recent_files.end(); ++it) {
           if ((*it).m_file_name.find(file_name) != std::string::npos) {

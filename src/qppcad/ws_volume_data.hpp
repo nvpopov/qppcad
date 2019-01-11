@@ -15,7 +15,7 @@ namespace qpp {
       public:
 
         cube_header_t<float> m_ch;
-        std::vector<float> m_field;
+        std::vector<float> m_cube_field;
         mesh_t *m_mesh{nullptr};
         bool m_ready_to_render{false};
         bool m_need_to_regenerate{false};

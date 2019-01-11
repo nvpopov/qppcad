@@ -141,10 +141,10 @@ void main_window::init_menus() {
   file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
 
   for (int i = 0; i < qpp::cad::max_recent_files; i++) {
-      QAction *recent_action = new QAction(this);
-      file_menu_recent_entries[i] = recent_action;
-      file_menu_recent_files->addAction(recent_action);
-      connect(recent_action, &QAction::triggered, this,
+      QAction *recent_act = new QAction(file_menu_recent_files);
+      file_menu_recent_entries[i] = recent_act;
+      file_menu_recent_files->addAction(recent_act);
+      connect(recent_act, &QAction::triggered, this,
               &main_window::recent_files_clicked);
     }
 

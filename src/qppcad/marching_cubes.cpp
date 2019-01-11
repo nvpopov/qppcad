@@ -1,45 +1,63 @@
 #include <qppcad/marching_cubes.hpp>
 
+
 using namespace qpp;
 using namespace qpp::cad;
 
 
 void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
                                                  cube_header_t<float> &ch,
-                                                 std::vector<float> &field,
-                                                 float isolevel) {
+                                                 std::vector<float> &cube_field,
+                                                 float isolevel,
+                                                 int steps) {
+
+  //construct cell from cube file
+  periodic_cell<float> cube_cell(3);
+  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = ch.axis[i] * ch.steps[i];
+
+  //construct bounding cube for cube file cell
+  vector3<float> bc_start{0};
+  float bc_a{0};
+
+  marching_cubes_helper::comp_bounding_cube(cube_cell.v[0], cube_cell.v[1], cube_cell.v[2],
+      bc_start, bc_a);
+
+  std::cout << "BC " << bc_start << " " << bc_a << std::endl;
+
+  float bc_step_size = bc_a / steps;
 
   int num_idx = 0;
+
   //iterate over all sub-cubes
-  for (int ix = 0; ix < ch.steps[0] - 1; ix++)
-    for (int iy = 0; iy < ch.steps[1] - 1; iy++)
-      for (int iz = 0; iz < ch.steps[2] - 1; iz++) {
+  for (int ix = 0; ix < steps - 1; ix++)
+    for (int iy = 0; iy < steps - 1; iy++)
+      for (int iz = 0; iz < steps - 1; iz++) {
 
           //restore cube coords 0,0 - top
           //for ref http://paulbourke.net/geometry/polygonise/polygonise1.gif
-          vector3<float> gp0 = ix * ch.axis[0] + iy * ch.axis[1] + iz * ch.axis[2]; //0 0 0
-          vector3<float> gp1 = gp0 + ch.axis[0]; // +1  0 0
-          vector3<float> gp2 = gp1 + ch.axis[1]; // +1 +1 0
-          vector3<float> gp3 = gp0 + ch.axis[1]; //  0 +1 0
+          vector3<float> gp0 = bc_start + vector3<float>{ix, iy, iz} * bc_step_size; //0 0 0
+          vector3<float> gp1 = gp0 + vector3<float>{ 1,  0,  0} * bc_step_size;; // +1  0 0
+          vector3<float> gp2 = gp0 + vector3<float>{ 1,  1,  0} * bc_step_size;; // +1 +1 0
+          vector3<float> gp3 = gp0 + vector3<float>{ 0,  1,  0} * bc_step_size;; //  0 +1 0
 
-          vector3<float> gp4 = gp0 + ch.axis[2]; //  0  0 +1
-          vector3<float> gp5 = gp4 + ch.axis[0]; // +1  0 +1
-          vector3<float> gp6 = gp5 + ch.axis[1]; // +1 +1 +1
-          vector3<float> gp7 = gp4 + ch.axis[1]; //  0 +1 +1
+          vector3<float> gp4 = gp0 + vector3<float>{ 0,  0,  1} * bc_step_size;; //  0  0 +1
+          vector3<float> gp5 = gp0 + vector3<float>{ 1,  0,  1} * bc_step_size;; // +1  0 +1
+          vector3<float> gp6 = gp0 + vector3<float>{ 1,  1,  1} * bc_step_size;; // +1 +1 +1
+          vector3<float> gp7 = gp0 + vector3<float>{ 0,  1,  1} * bc_step_size;; //  0 +1 +1
 
           //          int i,ntriang;
           //          int cubeindex;
           //          XYZ vertlist[12];
 
           std::array<float, 8> gv;
-          gv[0] = get_field_value_at(ix,     iy,     iz, ch.steps[0], ch.steps[1], field);
-          gv[1] = get_field_value_at(ix + 1, iy,     iz, ch.steps[0], ch.steps[1], field);
-          gv[2] = get_field_value_at(ix + 1, iy + 1, iz, ch.steps[0], ch.steps[1], field);
-          gv[3] = get_field_value_at(ix,     iy + 1, iz, ch.steps[0], ch.steps[1], field);
-          gv[4] = get_field_value_at(ix,     iy,     iz + 1, ch.steps[0], ch.steps[1], field);
-          gv[5] = get_field_value_at(ix + 1, iy,     iz + 1, ch.steps[0], ch.steps[1], field);
-          gv[6] = get_field_value_at(ix + 1, iy + 1, iz + 1, ch.steps[0], ch.steps[1], field);
-          gv[7] = get_field_value_at(ix,     iy + 1, iz + 1, ch.steps[0], ch.steps[1], field);
+          gv[0] = get_value_from_cube_interpolated(gp0, ch, cube_field);
+          gv[1] = get_value_from_cube_interpolated(gp1, ch, cube_field);
+          gv[2] = get_value_from_cube_interpolated(gp2, ch, cube_field);
+          gv[3] = get_value_from_cube_interpolated(gp3, ch, cube_field);
+          gv[4] = get_value_from_cube_interpolated(gp4, ch, cube_field);
+          gv[5] = get_value_from_cube_interpolated(gp5, ch, cube_field);
+          gv[6] = get_value_from_cube_interpolated(gp6, ch, cube_field);
+          gv[7] = get_value_from_cube_interpolated(gp7, ch, cube_field);
 
           int cubeindex = 0;
           if (gv[0] < isolevel) cubeindex |= 1;
@@ -113,9 +131,9 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
               //emit normals
 
               vector3<float> n_ot = -(p2-p1).cross(p2-p0).normalized();
-              vector3<float> n0 = p0.normalized();
-              vector3<float> n1 = p1.normalized();
-              vector3<float> n2 = p2.normalized();
+              //              vector3<float> n0 = p0.normalized();
+              //              vector3<float> n1 = p1.normalized();
+              //              vector3<float> n2 = p2.normalized();
 
               mesh.normals.push_back(n_ot[0]);
               mesh.normals.push_back(n_ot[1]);
@@ -141,6 +159,86 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
   mesh.num_primitives = mesh.indices.size()*3;
   mesh.bind_data();
 
+}
+
+void marching_cubes_helper::comp_bounding_cube(vector3<float> &va,
+                                               vector3<float> &vc,
+                                               vector3<float> &vb,
+                                               vector3<float> &start,
+                                               float &cube_a) {
+  std::array<int,2 > rng = {0,1};
+
+  vector3<float> tmpv{0};
+
+  vector3<float> cell_in_min{0};
+  vector3<float> cell_in_max{0};
+
+  //compute cell bounding box
+  for (int ia : rng)
+    for (int ib : rng)
+      for (int ic : rng) {
+          tmpv = va * ia + vb * ib + vc * ic;
+          for (int i = 0 ; i < 3; i++) {
+              if (tmpv[i] < cell_in_min[i]) cell_in_min = tmpv[i];
+              if (tmpv[i] > cell_in_max[i]) cell_in_max = tmpv[i];
+            }
+        }
+
+  vector3<float> cube_size = cell_in_max - cell_in_min;
+  //float cube_size_min = std::min(cube_size[0], std::min(cube_size[1], cube_size[2]));
+  float cube_size_max = std::max(cube_size[0], std::max(cube_size[1], cube_size[2]));
+
+  vector3<float> fc_c = (va + vc + vb) * 0.5;
+  start = fc_c - vector3<float>(0.5) * cube_size_max;
+  cube_a = cube_size_max;
+}
+
+float marching_cubes_helper::get_value_from_cube(vector3<float> &pos,
+                                                 cube_header_t<float> &ch,
+                                                 std::vector<float> &cube_field) {
+  periodic_cell<float> cube_cell(3);
+  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = ch.axis[i] * ch.steps[i];
+
+  vector3<float> pos_f = cube_cell.cart2frac(pos);
+
+  if (cube_cell.within_already_frac(pos_f)) {
+      int cube_a = std::trunc(pos_f[0] * ch.steps[0]);
+      int cube_b = std::trunc(pos_f[1] * ch.steps[1]);
+      int cube_c = std::trunc(pos_f[2] * ch.steps[2]);
+      return get_field_value_at(cube_a, cube_b, cube_c, ch, cube_field);
+    } else {
+      return 0.0f;
+    }
+}
+
+float marching_cubes_helper::get_value_from_cube_interpolated(vector3<float> &pos,
+                                                              cube_header_t<float> &ch,
+                                                              std::vector<float> &cube_field) {
+  periodic_cell<float> cube_cell(3);
+  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = ch.axis[i] * ch.steps[i];
+
+  vector3<float> pos_f = cube_cell.cart2frac(pos);
+
+  if (cube_cell.within_already_frac(pos_f)) {
+      int cube_a = std::trunc(pos_f[0] * ch.steps[0]);
+      int cube_b = std::trunc(pos_f[1] * ch.steps[1]);
+      int cube_c = std::trunc(pos_f[2] * ch.steps[2]);
+
+      float acc{0};
+      for (int i = -1; i < 2; i++)
+        for (int j = -1; j < 2; j++)
+          for (int k = -1; k < 2; k++) {
+              int _i = std::clamp<int>(cube_a + i, 0, ch.steps[0]);
+              int _j = std::clamp<int>(cube_b + j, 0, ch.steps[1]);
+              int _k = std::clamp<int>(cube_c + k, 0, ch.steps[2]);
+              acc += get_field_value_at(_i, _j, _k,
+                                        ch, cube_field);
+            }
+      return acc / 27.0f;
+
+    } else {
+      return 0.0f;
+    }
 }
 
 vector3<float> marching_cubes_helper::vertex_interp(float isolevel,
