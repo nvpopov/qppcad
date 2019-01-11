@@ -983,6 +983,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
                           file_name, m_parent_ws->m_ws_name));
 
   std::ifstream qc_data(file_name);
+
   if (!qc_data) {
       astate->log(fmt::format("Error in loading from file {}", file_name));
       return;

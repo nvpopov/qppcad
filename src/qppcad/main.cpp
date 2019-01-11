@@ -11,6 +11,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 int main (int argc, char **argv) {
+  std::ios_base::sync_with_stdio(false);
 
   QCoreApplication::setOrganizationName("igc");
   QCoreApplication::setOrganizationDomain("igc.irk.ru");
@@ -47,7 +48,7 @@ int main (int argc, char **argv) {
       if (parser.isSet(target_fmt_option))
         file_format = parser.value(target_fmt_option).toStdString();
 
-      astate->ws_manager->import_file_autodeduce(file_name, file_format);
+      astate->ws_manager->load_from_file_autodeduce(file_name, file_format);
 
     }
 

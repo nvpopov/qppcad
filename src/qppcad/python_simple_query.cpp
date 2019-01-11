@@ -10,7 +10,7 @@ void simple_query::open_file(std::string file_name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->ws_manager->import_file_autodeduce(file_name);
+  astate->ws_manager->load_from_file_autodeduce(file_name);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 
@@ -20,7 +20,7 @@ void simple_query::open_file_query(std::string file_name, qc_file_fmt file_forma
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->ws_manager->import_file_generic(file_name, file_format);
+  astate->ws_manager->load_from_file(file_name, file_format);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 

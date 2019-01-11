@@ -7,16 +7,16 @@ namespace qpp{
   namespace cad {
 
     enum qc_file_fmt : int {
-      standart_xyz,
-      vasp_poscar,
-      vasp_outcar_md,
-      firefly_output,
-      firefly_input,
-      cp2k_output,
-      cp2k_coord_cell_section,
-      qppcad_json,
-      qpp_uc,
-      cube,
+      standart_xyz, //0
+      vasp_poscar,  //1
+      vasp_outcar_md, //2
+      firefly_output, //3
+      firefly_input, //4
+      cp2k_output, //5
+      cp2k_coord_cell_section, //6
+      qppcad_json, //7
+      qpp_uc, //8
+      cube, //9
       unknown_fileformat
     };
 

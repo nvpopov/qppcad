@@ -566,7 +566,7 @@ void main_window::dropEvent(QDropEvent *event) {
           QString native_path = urlList.at(i).toLocalFile();
           std::string native_path_str = native_path.toStdString();
           astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
-          astate->ws_manager->import_file_autodeduce(native_path_str);
+          astate->ws_manager->load_from_file_autodeduce(native_path_str);
         }
     }
 }
@@ -676,7 +676,7 @@ void main_window::import_file(QString dialog_name,
   QString fileName = QFileDialog::getOpenFileName(this, dialog_name, file_ext);
 
   if (fileName != "") {
-      astate->ws_manager->import_file_as_new_ws(fileName.toStdString(), file_fmt);
+      astate->ws_manager->load_from_file(fileName.toStdString(), file_fmt);
       wss_changed_slot();
     }
 }
@@ -706,7 +706,7 @@ void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file
 
 void main_window::create_new_ws() {
   app_state_t* astate = app_state_t::get_inst();
-  astate->ws_manager->query_create_new_ws(true);
+  astate->ws_manager->create_new_ws(true);
   wss_changed_slot();
   astate->make_viewport_dirty();
 }
@@ -715,7 +715,7 @@ void main_window::open_ws() {
   app_state_t* astate = app_state_t::get_inst();
   QString file_name = QFileDialog::getOpenFileName(this, "Open qpp::cad workspace", "*.json");
   if (file_name != "") {
-      astate->ws_manager->load_ws_from_json(file_name.toStdString());
+      astate->ws_manager->load_from_file(file_name.toStdString(), qc_file_fmt::qppcad_json);
       wss_changed_slot();
     }
 }
@@ -1280,9 +1280,8 @@ void main_window::recent_files_clicked() {
 
   if (idx != -1) {
       app_state_t* astate = app_state_t::get_inst();
-      astate->ws_manager->import_file_as_new_ws(astate->m_recent_files[idx].m_file_name,
-                                                astate->m_recent_files[idx].m_file_format,
-                                                false);
+      astate->ws_manager->load_from_file(astate->m_recent_files[idx].m_file_name,
+                                              astate->m_recent_files[idx].m_file_format);
     }
 }
 
