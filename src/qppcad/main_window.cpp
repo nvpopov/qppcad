@@ -1265,7 +1265,12 @@ void main_window::rebuild_recent_files_menu() {
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
       file_menu_recent_entries[i]->setVisible(true);
       file_menu_recent_entries[i]->setText(
-            QString::fromStdString(astate->m_recent_files[i].m_file_name));
+            QString::fromStdString(fmt::format("{}) {} ({})",
+                                               i,
+                                               astate->m_recent_files[i].m_file_name,
+                                               qc_file_fmt_helper::get_file_format_hint(
+                                                 astate->m_recent_files[i].m_file_format)))
+            );
     }
 
 }
@@ -1281,7 +1286,7 @@ void main_window::recent_files_clicked() {
   if (idx != -1) {
       app_state_t* astate = app_state_t::get_inst();
       astate->ws_manager->load_from_file(astate->m_recent_files[idx].m_file_name,
-                                              astate->m_recent_files[idx].m_file_format);
+                                         astate->m_recent_files[idx].m_file_format);
     }
 }
 

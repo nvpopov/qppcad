@@ -101,6 +101,45 @@ namespace qpp{
           return qc_file_fmt::unknown_fileformat;
         }
 
+        static std::string get_file_format_hint(qc_file_fmt ffmt) {
+
+          switch(ffmt) {
+            case qc_file_fmt::standart_xyz :
+              return "xyz";
+
+            case qc_file_fmt::vasp_poscar :
+              return "VASP POSCAR";
+
+            case qc_file_fmt::vasp_outcar_md :
+              return "VASP OUTCAR";
+
+            case qc_file_fmt::firefly_output :
+              return "Firefly OUTPUT";
+
+            case qc_file_fmt::firefly_input :
+              return "Firefly INPUT";
+
+            case qc_file_fmt::cp2k_output :
+              return "CP2K OUTPUT";
+
+//            case qc_file_fmt::cp2k_coord_cell_section :
+//              return "cp2k output";
+
+            case qc_file_fmt::qppcad_json :
+              return "qpp::cad json";
+
+            case qc_file_fmt::qpp_uc :
+              return "qpp::cad uc";
+
+            case qc_file_fmt::cube :
+              return "CUBE volume";
+
+            default:
+              return "unknown";
+
+            }
+        }
+
     };
   }
 
