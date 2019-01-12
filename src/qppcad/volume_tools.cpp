@@ -6,14 +6,13 @@ using namespace qpp::cad;
 
 
 void volume_helper::polygonise_volume_mc(mesh_t &mesh,
-                                                 cube_header_t<float> &ch,
-                                                 std::vector<float> &cube_field,
-                                                 float isolevel,
-                                                 int steps) {
+                                         scalar_volume_t<float> &volume,
+                                         float isolevel,
+                                         int steps) {
 
   //construct cell from cube file
   periodic_cell<float> cube_cell(3);
-  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = ch.axis[i] * ch.steps[i];
+  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = volume.m_axis[i] * volume.m_steps[i];
 
   //construct bounding cube for cube file cell
   vector3<float> bc_start{0};
@@ -50,14 +49,14 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
           //          XYZ vertlist[12];
 
           std::array<float, 8> gv;
-          gv[0] = get_value_from_cube_interpolated(gp0, ch, cube_field);
-          gv[1] = get_value_from_cube_interpolated(gp1, ch, cube_field);
-          gv[2] = get_value_from_cube_interpolated(gp2, ch, cube_field);
-          gv[3] = get_value_from_cube_interpolated(gp3, ch, cube_field);
-          gv[4] = get_value_from_cube_interpolated(gp4, ch, cube_field);
-          gv[5] = get_value_from_cube_interpolated(gp5, ch, cube_field);
-          gv[6] = get_value_from_cube_interpolated(gp6, ch, cube_field);
-          gv[7] = get_value_from_cube_interpolated(gp7, ch, cube_field);
+          gv[0] = get_value_from_cube_interpolated(gp0, volume);
+          gv[1] = get_value_from_cube_interpolated(gp1, volume);
+          gv[2] = get_value_from_cube_interpolated(gp2, volume);
+          gv[3] = get_value_from_cube_interpolated(gp3, volume);
+          gv[4] = get_value_from_cube_interpolated(gp4, volume);
+          gv[5] = get_value_from_cube_interpolated(gp5, volume);
+          gv[6] = get_value_from_cube_interpolated(gp6, volume);
+          gv[7] = get_value_from_cube_interpolated(gp7, volume);
 
           int cubeindex = 0;
           if (gv[0] < isolevel) cubeindex |= 1;
@@ -162,10 +161,10 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
 }
 
 void volume_helper::comp_bounding_cube(vector3<float> &va,
-                                               vector3<float> &vc,
-                                               vector3<float> &vb,
-                                               vector3<float> &start,
-                                               float &cube_a) {
+                                       vector3<float> &vc,
+                                       vector3<float> &vb,
+                                       vector3<float> &start,
+                                       float &cube_a) {
   std::array<int,2 > rng = {0,1};
 
   vector3<float> tmpv{0};
@@ -194,45 +193,42 @@ void volume_helper::comp_bounding_cube(vector3<float> &va,
 }
 
 float volume_helper::get_value_from_cube(vector3<float> &pos,
-                                                 cube_header_t<float> &ch,
-                                                 std::vector<float> &cube_field) {
+                                         scalar_volume_t<float> &volume) {
   periodic_cell<float> cube_cell(3);
-  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = ch.axis[i] * ch.steps[i];
+  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = volume.m_axis[i] * volume.m_steps[i];
 
   vector3<float> pos_f = cube_cell.cart2frac(pos);
 
   if (cube_cell.within_already_frac(pos_f)) {
-      int cube_a = std::trunc(pos_f[0] * ch.steps[0]);
-      int cube_b = std::trunc(pos_f[1] * ch.steps[1]);
-      int cube_c = std::trunc(pos_f[2] * ch.steps[2]);
-      return get_field_value_at(cube_a, cube_b, cube_c, ch, cube_field);
+      int cube_a = std::trunc(pos_f[0] * volume.m_steps[0]);
+      int cube_b = std::trunc(pos_f[1] * volume.m_steps[1]);
+      int cube_c = std::trunc(pos_f[2] * volume.m_steps[2]);
+      return get_field_value_at(cube_a, cube_b, cube_c, volume);
     } else {
       return 0.0f;
     }
 }
 
 float volume_helper::get_value_from_cube_interpolated(vector3<float> &pos,
-                                                              cube_header_t<float> &ch,
-                                                              std::vector<float> &cube_field) {
+                                                      scalar_volume_t<float> &volume) {
   periodic_cell<float> cube_cell(3);
-  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = ch.axis[i] * ch.steps[i];
+  for (int i = 0 ; i < 3; i++) cube_cell.v[i] = volume.m_axis[i] * volume.m_steps[i];
 
   vector3<float> pos_f = cube_cell.cart2frac(pos);
 
   if (cube_cell.within_already_frac(pos_f)) {
-      int cube_a = std::trunc(pos_f[0] * ch.steps[0]);
-      int cube_b = std::trunc(pos_f[1] * ch.steps[1]);
-      int cube_c = std::trunc(pos_f[2] * ch.steps[2]);
+      int cube_a = std::trunc(pos_f[0] * volume.m_steps[0]);
+      int cube_b = std::trunc(pos_f[1] * volume.m_steps[1]);
+      int cube_c = std::trunc(pos_f[2] * volume.m_steps[2]);
 
       float acc{0};
       for (int i = -1; i < 2; i++)
         for (int j = -1; j < 2; j++)
           for (int k = -1; k < 2; k++) {
-              int _i = std::clamp<int>(cube_a + i, 0, ch.steps[0]);
-              int _j = std::clamp<int>(cube_b + j, 0, ch.steps[1]);
-              int _k = std::clamp<int>(cube_c + k, 0, ch.steps[2]);
-              acc += get_field_value_at(_i, _j, _k,
-                                        ch, cube_field);
+              int _i = std::clamp<int>(cube_a + i, 0, volume.m_steps[0]);
+              int _j = std::clamp<int>(cube_b + j, 0, volume.m_steps[1]);
+              int _k = std::clamp<int>(cube_c + k, 0, volume.m_steps[2]);
+              acc += get_field_value_at(_i, _j, _k, volume);
             }
       return acc / 27.0f;
 
@@ -242,8 +238,8 @@ float volume_helper::get_value_from_cube_interpolated(vector3<float> &pos,
 }
 
 vector3<float> volume_helper::vertex_interp(float isolevel,
-                                                    vector3<float> &p1, vector3<float> &p2,
-                                                    float val_p1, float val_p2) {
+                                            vector3<float> &p1, vector3<float> &p2,
+                                            float val_p1, float val_p2) {
   //  double mu;
   //  XYZ p;
 

@@ -1060,7 +1060,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         std::shared_ptr<ws_volume_data_t> vold = std::make_shared<ws_volume_data_t>();
         m_geom->DIM = 0;
         m_geom->cell.DIM = 0;
-        read_cube(qc_data, *(m_geom), vold->m_ch, vold->m_cube_field);
+        read_cube(qc_data, *(m_geom), vold->m_volume);
         //vold->mc_polygonise(qpp::def_isovalue_dens);
         vold->m_need_to_regenerate = true;
         vold->m_name = fmt::format("v_{}", m_name);

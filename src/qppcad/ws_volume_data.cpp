@@ -11,7 +11,7 @@ void ws_volume_data_t::gen_repr() {
 }
 
 void ws_volume_data_t::mc_polygonise(float _isolevel) {
-  volume_helper::polygonise_volume_mc(*(m_mesh), m_ch, m_cube_field, _isolevel, 100);
+  volume_helper::polygonise_volume_mc(*(m_mesh), m_volume, _isolevel, 100);
 }
 
 ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
