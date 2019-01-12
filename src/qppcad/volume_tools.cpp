@@ -1,11 +1,11 @@
-#include <qppcad/marching_cubes.hpp>
-
+#include <qppcad/volume_tools.hpp>
+#include <qppcad/marching_cubes_tables.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 
-void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
+void volume_helper::polygonise_volume_mc(mesh_t &mesh,
                                                  cube_header_t<float> &ch,
                                                  std::vector<float> &cube_field,
                                                  float isolevel,
@@ -19,7 +19,7 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
   vector3<float> bc_start{0};
   float bc_a{0};
 
-  marching_cubes_helper::comp_bounding_cube(cube_cell.v[0], cube_cell.v[1], cube_cell.v[2],
+  volume_helper::comp_bounding_cube(cube_cell.v[0], cube_cell.v[1], cube_cell.v[2],
       bc_start, bc_a);
 
   std::cout << "BC " << bc_start << " " << bc_a << std::endl;
@@ -130,7 +130,7 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
               mesh.vertecies.push_back(p2[2]);
               //emit normals
 
-              vector3<float> n_ot = -(p2-p1).cross(p2-p0).normalized();
+              vector3<float> n_ot = (p1-p0).cross(p2-p0).normalized();
               //              vector3<float> n0 = p0.normalized();
               //              vector3<float> n1 = p1.normalized();
               //              vector3<float> n2 = p2.normalized();
@@ -161,7 +161,7 @@ void marching_cubes_helper::polygonise_volume_mc(mesh_t &mesh,
 
 }
 
-void marching_cubes_helper::comp_bounding_cube(vector3<float> &va,
+void volume_helper::comp_bounding_cube(vector3<float> &va,
                                                vector3<float> &vc,
                                                vector3<float> &vb,
                                                vector3<float> &start,
@@ -193,7 +193,7 @@ void marching_cubes_helper::comp_bounding_cube(vector3<float> &va,
   cube_a = cube_size_max;
 }
 
-float marching_cubes_helper::get_value_from_cube(vector3<float> &pos,
+float volume_helper::get_value_from_cube(vector3<float> &pos,
                                                  cube_header_t<float> &ch,
                                                  std::vector<float> &cube_field) {
   periodic_cell<float> cube_cell(3);
@@ -211,7 +211,7 @@ float marching_cubes_helper::get_value_from_cube(vector3<float> &pos,
     }
 }
 
-float marching_cubes_helper::get_value_from_cube_interpolated(vector3<float> &pos,
+float volume_helper::get_value_from_cube_interpolated(vector3<float> &pos,
                                                               cube_header_t<float> &ch,
                                                               std::vector<float> &cube_field) {
   periodic_cell<float> cube_cell(3);
@@ -241,7 +241,7 @@ float marching_cubes_helper::get_value_from_cube_interpolated(vector3<float> &po
     }
 }
 
-vector3<float> marching_cubes_helper::vertex_interp(float isolevel,
+vector3<float> volume_helper::vertex_interp(float isolevel,
                                                     vector3<float> &p1, vector3<float> &p2,
                                                     float val_p1, float val_p2) {
   //  double mu;

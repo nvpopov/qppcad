@@ -1,5 +1,5 @@
 #include <qppcad/ws_volume_data.hpp>
-#include <qppcad/marching_cubes.hpp>
+#include <qppcad/volume_tools.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -11,7 +11,7 @@ void ws_volume_data_t::gen_repr() {
 }
 
 void ws_volume_data_t::mc_polygonise(float _isolevel) {
-  marching_cubes_helper::polygonise_volume_mc(*(m_mesh), m_ch, m_cube_field, _isolevel, 100);
+  volume_helper::polygonise_volume_mc(*(m_mesh), m_ch, m_cube_field, _isolevel, 100);
 }
 
 ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
