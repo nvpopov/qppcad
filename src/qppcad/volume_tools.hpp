@@ -32,6 +32,11 @@ namespace qpp {
         static float get_value_from_cube(vector3<float> &pos,
                                          scalar_volume_t<float> &volume);
 
+        static vector3<float> get_vertex_normal_from_cube(const int ix,
+                                                          const int iy,
+                                                          const int iz,
+                                                          scalar_volume_t<float> &volume);
+
         static float get_value_from_cube_interpolated(vector3<float> &pos,
                                                       scalar_volume_t<float> &volume);
 

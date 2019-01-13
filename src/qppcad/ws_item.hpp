@@ -30,6 +30,7 @@ namespace qpp {
     const uint32_t ws_item_flags_support_clone           = 1 << 10;
     const uint32_t ws_item_flags_support_moveto          = 1 << 11;
     const uint32_t ws_item_flags_support_rendering       = 1 << 12;
+    const uint32_t ws_item_flags_support_extended_editor = 1 << 13;
 
     enum ws_item_tag {
       tag_abstract_item,
