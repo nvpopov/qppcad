@@ -117,7 +117,7 @@ void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
 
     case cam_target_view_t::tv_x_axis : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos + 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+        look_from = m_pos - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
         look_to = m_pos;
         look_up = {0.0 , 0.0 , 1.0};
         need_to_update_camera = true;
@@ -126,7 +126,7 @@ void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
 
     case cam_target_view_t::tv_y_axis : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
-        look_from = m_pos + 2.0f*vector3<float>(0.0, axis_size, 0.0);
+        look_from = m_pos - 2.0f*vector3<float>(0.0, axis_size, 0.0);
         look_to = m_pos;
         look_up = {0.0, 0.0, 1.0};
         need_to_update_camera = true;
@@ -135,7 +135,7 @@ void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
 
     case cam_target_view_t::tv_z_axis : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
-        look_from = m_pos + 2.0f*vector3<float>(0.0, 0.0, axis_size);
+        look_from = m_pos - 2.0f*vector3<float>(0.0, 0.0, axis_size);
         look_to = m_pos;
         look_up = {0.0, 1.0, 0.0};
         need_to_update_camera = true;

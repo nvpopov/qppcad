@@ -27,6 +27,10 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
 
   int num_idx = 0;
 
+  vector3<float> p0;
+  vector3<float> p1;
+  vector3<float> p2;
+
   //iterate over all sub-cubes
   for (int ix = 0; ix < steps - 1; ix++)
     for (int iy = 0; iy < steps - 1; iy++)
@@ -110,8 +114,8 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
 
           int ntriang = 0;
           for (int i = 0; mc_tri_table[cubeindex][i] != -1;i += 3) {
-              vector3<float> p0 = vertlist[mc_tri_table[cubeindex][i  ]];
-              vector3<float> p1 = vertlist[mc_tri_table[cubeindex][i+1]];
+              p0 = vertlist[mc_tri_table[cubeindex][i  ]];
+              p1 = vertlist[mc_tri_table[cubeindex][i+1]];
               vector3<float> p2 = vertlist[mc_tri_table[cubeindex][i+2]];
               ntriang++;
 
@@ -155,6 +159,150 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
             }
 
         }
+  mesh.num_primitives = mesh.indices.size()*3;
+  mesh.bind_data();
+
+}
+
+void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh, scalar_volume_t<float> &volume,
+                                               float isolevel,
+                                               int steps) {
+  int num_idx = 0;
+  //iterate over all sub-cubes
+  std::array<float, 8> gv;
+  std::array<vector3<float>, 8> gp;
+  std::array<vector3<float>, 12> vertlist;
+  vector3<float> p0;
+  vector3<float> p1;
+  vector3<float> p2;
+  vector3<float> n_ot;
+
+  int ntriang = 0;
+  int cubeindex = 0;
+
+  for (int ix = -1; ix < volume.m_steps[0]; ix++)
+    for (int iy = -1; iy < volume.m_steps[1]; iy++)
+      for (int iz = 0-1; iz < volume.m_steps[2]; iz++) {
+
+          //restore cube coords 0,0 - top
+          //for ref http://paulbourke.net/geometry/polygonise/polygonise1.gif
+
+          gp[0] = ix * volume.m_axis[0] + iy * volume.m_axis[1] + iz * volume.m_axis[2];  //0 0 0
+
+          gp[1] = gp[0] + volume.m_axis[0]; // +1  0 0
+          gp[2] = gp[1] + volume.m_axis[1]; // +1 +1 0
+          gp[3] = gp[0] + volume.m_axis[1]; //  0 +1 0
+          gp[4] = gp[0] + volume.m_axis[2]; //  0  0 +1
+          gp[5] = gp[4] + volume.m_axis[0]; // +1  0 +1
+          gp[6] = gp[5] + volume.m_axis[1]; // +1 +1 +1
+          gp[7] = gp[4] + volume.m_axis[1]; //  0 +1 +1
+
+          //          int i,ntriang;
+          //          int cubeindex;
+          //          XYZ vertlist[12];
+
+          gv[0] = get_field_value_at(ix,     iy,     iz,     volume);
+          gv[1] = get_field_value_at(ix + 1, iy,     iz,     volume);
+          gv[2] = get_field_value_at(ix + 1, iy + 1, iz,     volume);
+          gv[3] = get_field_value_at(ix,     iy + 1, iz,     volume);
+          gv[4] = get_field_value_at(ix,     iy,     iz + 1, volume);
+          gv[5] = get_field_value_at(ix + 1, iy,     iz + 1, volume);
+          gv[6] = get_field_value_at(ix + 1, iy + 1, iz + 1, volume);
+          gv[7] = get_field_value_at(ix,     iy + 1, iz + 1, volume);
+
+          cubeindex = 0;
+
+          if (gv[0] < isolevel) cubeindex |= 1;
+          if (gv[1] < isolevel) cubeindex |= 2;
+          if (gv[2] < isolevel) cubeindex |= 4;
+          if (gv[3] < isolevel) cubeindex |= 8;
+          if (gv[4] < isolevel) cubeindex |= 16;
+          if (gv[5] < isolevel) cubeindex |= 32;
+          if (gv[6] < isolevel) cubeindex |= 64;
+          if (gv[7] < isolevel) cubeindex |= 128;
+
+
+          if (mc_edge_table[cubeindex] == 0) continue;
+          if (mc_edge_table[cubeindex] & 1)
+            vertlist[0] = vertex_interp(isolevel, gp[0], gp[1], gv[0], gv[1]);
+          if (mc_edge_table[cubeindex] & 2)
+            vertlist[1] = vertex_interp(isolevel, gp[1], gp[2], gv[1], gv[2]);
+          if (mc_edge_table[cubeindex] & 4)
+            vertlist[2] = vertex_interp(isolevel, gp[2], gp[3], gv[2], gv[3]);
+          if (mc_edge_table[cubeindex] & 8)
+            vertlist[3] = vertex_interp(isolevel, gp[3], gp[0], gv[3], gv[0]);
+          if (mc_edge_table[cubeindex] & 16)
+            vertlist[4] = vertex_interp(isolevel, gp[4], gp[5], gv[4], gv[5]);
+          if (mc_edge_table[cubeindex] & 32)
+            vertlist[5] = vertex_interp(isolevel, gp[5], gp[6], gv[5], gv[6]);
+          if (mc_edge_table[cubeindex] & 64)
+            vertlist[6] = vertex_interp(isolevel, gp[6], gp[7], gv[6], gv[7]);
+          if (mc_edge_table[cubeindex] & 128)
+            vertlist[7] = vertex_interp(isolevel, gp[7], gp[4], gv[7], gv[4]);
+          if (mc_edge_table[cubeindex] & 256)
+            vertlist[8] = vertex_interp(isolevel, gp[0], gp[4], gv[0], gv[4]);
+          if (mc_edge_table[cubeindex] & 512)
+            vertlist[9] = vertex_interp(isolevel, gp[1], gp[5], gv[1], gv[5]);
+          if (mc_edge_table[cubeindex] & 1024)
+            vertlist[10] = vertex_interp(isolevel, gp[2], gp[6], gv[2], gv[6]);
+          if (mc_edge_table[cubeindex] & 2048)
+            vertlist[11] = vertex_interp(isolevel, gp[3], gp[7], gv[3], gv[7]);
+
+          ntriang = 0;
+
+          for (int i = 0; mc_tri_table[cubeindex][i] != -1;i += 3) {
+              if (isolevel > 0) {
+                  p0 = vertlist[mc_tri_table[cubeindex][i  ]];
+                  p1 = vertlist[mc_tri_table[cubeindex][i+1]];
+                  p2 = vertlist[mc_tri_table[cubeindex][i+2]];
+                } else {
+                  p2 = vertlist[mc_tri_table[cubeindex][i  ]];
+                  p1 = vertlist[mc_tri_table[cubeindex][i+1]];
+                  p0 = vertlist[mc_tri_table[cubeindex][i+2]];
+                }
+              ntriang++;
+
+              //emit vertecies
+              mesh.vertecies.push_back(p0[0]);
+              mesh.vertecies.push_back(p0[1]);
+              mesh.vertecies.push_back(p0[2]);
+
+              mesh.vertecies.push_back(p1[0]);
+              mesh.vertecies.push_back(p1[1]);
+              mesh.vertecies.push_back(p1[2]);
+
+              mesh.vertecies.push_back(p2[0]);
+              mesh.vertecies.push_back(p2[1]);
+              mesh.vertecies.push_back(p2[2]);
+              //emit normals
+
+              n_ot = (p1-p0).cross(p2-p0).normalized();
+              //              vector3<float> n0 = p0.normalized();
+              //              vector3<float> n1 = p1.normalized();
+              //              vector3<float> n2 = p2.normalized();
+
+              mesh.normals.push_back(n_ot[0]);
+              mesh.normals.push_back(n_ot[1]);
+              mesh.normals.push_back(n_ot[2]);
+
+              mesh.normals.push_back(n_ot[0]);
+              mesh.normals.push_back(n_ot[1]);
+              mesh.normals.push_back(n_ot[2]);
+
+              mesh.normals.push_back(n_ot[0]);
+              mesh.normals.push_back(n_ot[1]);
+              mesh.normals.push_back(n_ot[2]);
+
+              //emit indices
+              mesh.indices.push_back(num_idx);
+              mesh.indices.push_back(num_idx + 1);
+              mesh.indices.push_back(num_idx + 2);
+
+              num_idx += 3;
+            }
+
+        }
+
   mesh.num_primitives = mesh.indices.size()*3;
   mesh.bind_data();
 
@@ -255,9 +403,9 @@ vector3<float> volume_helper::vertex_interp(float isolevel,
   //  p.z = p1.z + mu * (p2.z - p1.z);
 
   //  return(p);
-  if (std::abs(isolevel - val_p1) < 0.0001f) return p1;
-  if (std::abs(isolevel - val_p2) < 0.0001f) return p2;
-  if (std::abs(val_p1 - val_p2) < 0.0001f) return p1;
+  if (std::abs(isolevel - val_p1) < 0.00005f) return p1;
+  if (std::abs(isolevel - val_p2) < 0.00005f) return p2;
+  if (std::abs(val_p1 - val_p2) < 0.00005f) return p1;
 
   float mu = (isolevel - val_p1) / (val_p2 - val_p1);
 

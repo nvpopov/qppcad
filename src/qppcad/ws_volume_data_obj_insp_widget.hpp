@@ -15,7 +15,13 @@ namespace qpp {
       public:
 //        ws_item_tab_widget_t *tab_geo_opt;
 //        ws_item_tab_widget_t *tab_vibs;
+        ws_volume_data_t *b_vol{nullptr};
+        QLabel *general_volume_type;
         ws_volume_data_obj_insp_widget_t();
+
+        void bind_to_item(ws_item_t *_binding_item) override;
+        void update_from_ws_item() override;
+        void unbind_item() override;
     };
 
   }

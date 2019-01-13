@@ -15,7 +15,9 @@ namespace qpp {
       public:
 
         scalar_volume_t<float> m_volume;
-        mesh_t *m_mesh{nullptr};
+        mesh_t *m_first_mesh{nullptr};
+        mesh_t *m_second_mesh{nullptr};
+
         bool m_ready_to_render{false};
         bool m_need_to_regenerate{false};
         float m_isolevel{qpp::def_isovalue_dens};
