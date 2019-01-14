@@ -197,8 +197,8 @@ namespace qpp {
         void save_to_file (qc_file_fmt file_format, std::string file_name);
 
         std::string get_ws_item_class_name() override ;
-        void write_to_json(json &data) override;
-        void read_from_json(json &data) override;
+        void save_to_json(json &data) override;
+        void load_from_json(json &data) override;
         bool can_be_written_to_json() override;
         //void post_load();
 

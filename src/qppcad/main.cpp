@@ -64,7 +64,7 @@ int main (int argc, char **argv) {
   qApp->setStyle(QStyleFactory::create("Fusion"));
 
   QFont defaultFont = QApplication::font();
-  defaultFont.setPointSize(defaultFont.pointSize()+1);
+  defaultFont.setPointSize(defaultFont.pointSize());
   qApp->setFont(defaultFont);
 
   QPalette darkPalette;
@@ -91,7 +91,7 @@ int main (int argc, char **argv) {
 
   qApp->setPalette(darkPalette);
   QFontDatabase::addApplicationFont(":/fonts/Hack-Regular.ttf");
-  QFont font = QFont("Hack-Regular", 11, 4);
+  QFont font = QFont("Hack-Regular", 11, 5);
   QIcon icon("://icons8-molecule-40.png");
   app.setWindowIcon(icon);
   app.setFont(font);

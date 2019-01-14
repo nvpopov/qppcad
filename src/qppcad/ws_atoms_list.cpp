@@ -171,7 +171,7 @@ void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
 
     case cam_target_view_t::tv_cart_center : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos +
+        look_from = m_pos -
                     (m_ext_obs->aabb.max - m_ext_obs->aabb.min) *
                     3.0f*axis_size;
         look_to = m_pos + (m_ext_obs->aabb.max - m_ext_obs->aabb.min)*0.5;
@@ -1060,10 +1060,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         std::shared_ptr<ws_volume_data_t> vold = std::make_shared<ws_volume_data_t>();
         m_geom->DIM = 0;
         m_geom->cell.DIM = 0;
-        read_cube(qc_data, *(m_geom), vold->m_volume);
-        //vold->mc_polygonise(qpp::def_isovalue_dens);
-        vold->m_need_to_regenerate = true;
-        vold->m_name = fmt::format("v_{}", m_name);
+        vold->load_from_stream(qc_data, *(m_geom));
         m_parent_ws->add_item_to_ws(vold);
         break;
       }
@@ -1202,9 +1199,9 @@ string ws_atoms_list_t::get_ws_item_class_name () {
   return "ws_atoms_list";
 }
 
-void ws_atoms_list_t::write_to_json (json &data) {
+void ws_atoms_list_t::save_to_json (json &data) {
 
-  ws_item_t::write_to_json(data);
+  ws_item_t::save_to_json(data);
 
   data[JSON_DIM] = m_geom->DIM;
   data[JSON_SHOW_IMG_ATOMS] = m_draw_img_atoms;
@@ -1298,9 +1295,9 @@ void ws_atoms_list_t::write_to_json (json &data) {
 
 }
 
-void ws_atoms_list_t::read_from_json (json &data) {
+void ws_atoms_list_t::load_from_json (json &data) {
 
-  ws_item_t::read_from_json(data);
+  ws_item_t::load_from_json(data);
 
   if (data.find(JSON_DIM) != data.end()) {
       m_geom->DIM = data[JSON_DIM];

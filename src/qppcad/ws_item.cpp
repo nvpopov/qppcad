@@ -140,7 +140,7 @@ void ws_item_t::translate(vector3<float> tr_vec) {
   astate->make_viewport_dirty();
 }
 
-void ws_item_t::write_to_json(json &data) {
+void ws_item_t::save_to_json(json &data) {
   data[JSON_WS_ITEM_NAME] = m_name;
   data[JSON_WS_ITEM_TYPE] = get_ws_item_class_name();
   data[JSON_IS_VISIBLE] = m_is_visible;
@@ -148,7 +148,7 @@ void ws_item_t::write_to_json(json &data) {
   data[JSON_POS] = coord;
 }
 
-void ws_item_t::read_from_json(json &data) {
+void ws_item_t::load_from_json(json &data) {
   //read m_name & is_visible & pos
   if (data.find(JSON_WS_ITEM_NAME) != data.end()) m_name = data[JSON_WS_ITEM_NAME];
   if (data.find(JSON_IS_VISIBLE) != data.end()) m_is_visible = data[JSON_IS_VISIBLE];

@@ -38,8 +38,8 @@ namespace qpp {
         size_t get_content_count() override;
 
         std::string get_ws_item_class_name() override ;
-        void write_to_json(json &data) override;
-        void read_from_json(json &data) override;
+        void save_to_json(json &data) override;
+        void load_from_json(json &data) override;
 
     };
 

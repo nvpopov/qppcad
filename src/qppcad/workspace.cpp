@@ -260,7 +260,7 @@ void workspace_t::save_ws_to_json (const std::string filename) {
   for (const auto &ws_item : m_ws_items)
     if (ws_item->can_be_written_to_json()) {
         json ws_object;
-        ws_item->write_to_json(ws_object);
+        ws_item->save_to_json(ws_object);
         ws_objects.push_back(ws_object);
       }
 
@@ -292,7 +292,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
           if (object.find(JSON_WS_ITEM_TYPE) != object.end()){
               std::string obj_type = object[JSON_WS_ITEM_TYPE];
               std::shared_ptr<ws_item_t> obj = ws_item_factory::create_object(obj_type);
-              obj->read_from_json(object);
+              obj->load_from_json(object);
               add_item_to_ws(obj);
             } else {
               astate->log(fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
