@@ -103,11 +103,24 @@ void ws_volume_data_t::load_from_json(json &data) {
 
 }
 
+void ws_volume_data_t::update_isolevel(float new_isolevel) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  m_isolevel = new_isolevel;
+  m_ready_to_render = false;
+  m_need_to_regenerate = true;
+
+  astate->make_viewport_dirty();
+
+}
+
 void ws_volume_data_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
-                                        geometry<float, periodic_cell<float> > &geom) {
+                                        geometry<float, periodic_cell<float> > &geom,
+                                        std::string &fname) {
   read_cube(inp, geom, m_volume);
   m_need_to_regenerate = true;
-  m_name = fmt::format("v_{}", m_name);
+  m_name = fmt::format("v_{}", fname);
 
   if (m_volume.m_has_negative_values) {
       m_volume_type = ws_volume_t::volume_mo;

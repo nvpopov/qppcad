@@ -1060,7 +1060,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
         std::shared_ptr<ws_volume_data_t> vold = std::make_shared<ws_volume_data_t>();
         m_geom->DIM = 0;
         m_geom->cell.DIM = 0;
-        vold->load_from_stream(qc_data, *(m_geom));
+        vold->load_from_stream(qc_data, *(m_geom), m_name);
         m_parent_ws->add_item_to_ws(vold);
         break;
       }

@@ -1,6 +1,7 @@
 #include <qppcad/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_volume_data.hpp>
 #include <data/ptable.hpp>
 
 using namespace qpp;
@@ -510,6 +511,52 @@ void simple_query::add_atoms_list_3d(std::string name, vector3<float> a,
           new_al->m_geom->cell.v[2] = c;
           cur_ws->add_item_to_ws(new_al);
         }
+
+    }
+}
+
+float simple_query::get_isolevel() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
+
+          if (cur_it_vol) {
+              return cur_it_vol->m_isolevel;
+            }
+        }
+
+      astate->make_viewport_dirty();
+
+    }
+
+  return 0.0f;
+}
+
+void simple_query::set_isolevel(float new_isolevel) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
+
+          if (cur_it_vol) {
+              cur_it_vol->update_isolevel(new_isolevel);
+            }
+        }
+
+      astate->make_viewport_dirty();
 
     }
 }

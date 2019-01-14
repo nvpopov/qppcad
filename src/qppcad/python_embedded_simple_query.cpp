@@ -25,6 +25,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
       .value("unk", qc_file_fmt::unknown_fileformat)
       .export_values();
 
+  m.attr("def_isovalue_dens") = py::float_(qpp::def_isovalue_dens);
+  m.attr("def_isovalue_mo") = py::float_(qpp::def_isovalue_mo);
+
   m.def("qopen", &simple_query::open_file);
   m.def("qopen", &simple_query::open_file_query);
 
@@ -35,6 +38,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("gpos", &simple_query::gizmo_pos);
 
   py::module tools = m.def_submodule("tools", "Generic tools");
+  tools.def("get_isolevel", &simple_query::get_isolevel);
+  tools.def("set_isolevel", &simple_query::set_isolevel);
+
   tools.def("add_al_0d", &simple_query::add_atoms_list_0d);
   tools.def("add_al_3d", &simple_query::add_atoms_list_3d);
   tools.def("rebond", &simple_query::rebond);

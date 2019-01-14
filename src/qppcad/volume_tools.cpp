@@ -170,6 +170,11 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
 void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh, scalar_volume_t<float> &volume,
                                                float isolevel,
                                                int steps) {
+
+  mesh.vertecies.clear();
+  mesh.normals.clear();
+  mesh.indices.clear();
+
   int num_idx = 0;
   //iterate over all sub-cubes
   std::array<float, 8> gv;
