@@ -39,6 +39,11 @@ namespace qpp {
         static void unsel_cnt_type(py::str sel_type);
         static py::list get_sel();
 
+        static py::str get_type_name();
+        static py::int_ get_type_hash();
+        static py::bool_ is_instance_of_by_hash(size_t _type_hash);
+        static py::bool_ is_instance_of_by_type_name(std::string _type_name);
+
         static vector3<float> gizmo_pos();
 
         static void edit_mode(int mode);

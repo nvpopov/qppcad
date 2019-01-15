@@ -11,6 +11,8 @@ namespace qpp {
 
     class ws_comp_chem_data_t : public ws_item_t {
 
+      QPP_OBJECT(ws_comp_chem_data_t, ws_item_t)
+
       public:
         std::unique_ptr<comp_chem_program_data_t<float> > m_ccd{nullptr};
         std::vector<std::shared_ptr<ws_item_t> > m_connected_items; // todo: need to change to weak

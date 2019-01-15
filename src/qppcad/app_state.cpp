@@ -52,12 +52,9 @@ namespace qpp {
     }
 
     void app_state_t::init_managers() {
+      hash_reg = std::make_unique<string_hash_register_t>();
       ws_manager   = std::make_shared<workspace_manager_t>(this);
-      //ws_manager->init_default();
-
       py_manager = std::make_unique<python_manager_t>();
-      //      auto result = py_manager->sys.attr("copyright").cast<std::string>();
-      //      std::cout<< "IM HERE " << result << std::endl;
     }
 
     void app_state_t::make_viewport_dirty() {

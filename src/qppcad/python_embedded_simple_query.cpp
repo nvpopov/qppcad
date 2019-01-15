@@ -53,6 +53,10 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("color_by_dist", &ws_atoms_list_colorizer_helper::py_colorize_by_distance);
   tools.def("color_by_dist_pairs",
             &ws_atoms_list_colorizer_helper::py_colorize_by_distance_with_pairs);
+  tools.def("get_type_name", &simple_query::get_type_name);
+  tools.def("get_type_hash", &simple_query::get_type_hash);
+  tools.def("is_instance_of", &simple_query::is_instance_of_by_hash);
+  tools.def("is_instance_of", &simple_query::is_instance_of_by_type_name);
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 

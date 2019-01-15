@@ -16,6 +16,8 @@ namespace qpp {
 
     class ws_volume_data_t : public ws_item_t {
 
+        QPP_OBJECT(ws_volume_data_t, ws_item_t)
+
       public:
 
         scalar_volume_t<float> m_volume;

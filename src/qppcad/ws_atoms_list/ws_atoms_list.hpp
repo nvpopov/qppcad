@@ -63,6 +63,8 @@ namespace qpp {
     /// \brief The ws_atom_list_t class
     class ws_atoms_list_t : public ws_item_t {
 
+        QPP_OBJECT(ws_atoms_list_t, ws_item_t)
+
       public:
 
         std::unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom{};

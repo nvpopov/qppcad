@@ -13,6 +13,7 @@
 #include <qppcad/workspace.hpp>
 #include <qppcad/app_state_event_disp.hpp>
 #include <qppcad/python_manager.hpp>
+#include <qppcad/string_hash_register.hpp>
 
 namespace qpp {
 
@@ -85,6 +86,7 @@ namespace qpp {
 
         std::shared_ptr<workspace_manager_t> ws_manager;
         std::unique_ptr<python_manager_t> py_manager;
+        std::unique_ptr<string_hash_register_t> hash_reg;
 
         std::vector<recent_file_record_t> m_recent_files;
         // //       std::map<std::string, color_map_t> m_color_maps;

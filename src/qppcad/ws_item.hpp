@@ -6,6 +6,7 @@
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
 #include <qppcad/json_adapter.hpp>
+#include <qppcad/qpp_object.hpp>
 
 #include <QPainter>
 
@@ -39,7 +40,10 @@ namespace qpp {
       tag_ws_volume_data
     };
 
-    class ws_item_t : public std::enable_shared_from_this<ws_item_t> {
+    class ws_item_t : public std::enable_shared_from_this<ws_item_t>,
+        public qpp_object_t {
+
+        QPP_OBJECT(ws_item_t, qpp_object_t)
 
       private:
 

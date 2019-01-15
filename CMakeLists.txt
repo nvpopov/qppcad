@@ -71,22 +71,31 @@ include_directories(${Qt5Widgets_INCLUDE_DIRS})
 qt5_add_resources(QRCS data/resources.qrc)
 
 add_executable(qppcad
+
     src/qppcad/main.cpp
     src/qppcad/main_window.cpp
+
     src/qppcad/ws_viewer_widget.cpp
     src/qppcad/super_cell_widget.cpp
     src/qppcad/axial_scale_widget.cpp
     src/qppcad/object_inspector_widget.cpp
     src/qppcad/app_settings_widget.cpp
+
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp
+
     src/qppcad/shader_program.cpp
     src/qppcad/shader_generators.cpp
     src/qppcad/mesh.cpp
     src/qppcad/mesh_generators.cpp
     src/qppcad/glapi.cpp
     src/qppcad/draw_pipeline.cpp
+
     src/qppcad/workspace.cpp
+    src/qppcad/string_hash_register.cpp
+    src/qppcad/type_info.cpp
+    src/qppcad/qpp_object.cpp
+
     src/qppcad/ws_item.cpp
     src/qppcad/ws_item_obj_insp_widget.cpp
     src/qppcad/ws_item_behaviour_manager.cpp

@@ -7,6 +7,8 @@
 using namespace qpp;
 using namespace qpp::cad;
 
+namespace py = pybind11;
+
 void simple_query::open_file(std::string file_name) {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -370,6 +372,84 @@ pybind11::list simple_query::get_sel() {
     }
 
   return res;
+}
+
+py::str simple_query::get_type_name() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          if (cur_it) {
+              return cur_it->get_type_name();
+            }
+        }
+    }
+
+  return "unknown";
+
+}
+
+py::int_ simple_query::get_type_hash() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          if (cur_it) {
+              return cur_it->get_type();
+            }
+        }
+    }
+
+  return 32000;
+
+}
+
+pybind11::bool_ simple_query::is_instance_of_by_hash(size_t _type_hash) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+    if (astate->ws_manager->has_wss()) {
+
+        auto cur_ws = astate->ws_manager->get_cur_ws();
+
+        if (cur_ws) {
+            auto cur_it = cur_ws->get_selected();
+            if (cur_it) {
+                return cur_it->is_instance_of(_type_hash);
+              }
+          }
+      }
+
+    return false;
+}
+
+pybind11::bool_ simple_query::is_instance_of_by_type_name(std::string _type_name) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+    if (astate->ws_manager->has_wss()) {
+
+        auto cur_ws = astate->ws_manager->get_cur_ws();
+
+        if (cur_ws) {
+            auto cur_it = cur_ws->get_selected();
+            if (cur_it) {
+                return cur_it->get_type_name() == _type_name;
+              }
+          }
+      }
+
+    return false;
 }
 
 vector3<float> simple_query::gizmo_pos() {
