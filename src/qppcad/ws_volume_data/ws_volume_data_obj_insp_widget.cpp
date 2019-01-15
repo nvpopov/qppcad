@@ -1,4 +1,4 @@
-#include <qppcad/ws_volume_data_obj_insp_widget.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

@@ -1,5 +1,5 @@
-#include <qppcad/ws_atoms_list_labels_subsys.hpp>
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_labels_subsys.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;

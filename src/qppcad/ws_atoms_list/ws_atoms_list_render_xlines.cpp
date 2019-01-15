@@ -1,4 +1,4 @@
-#include <qppcad/ws_atoms_list_render_xlines.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_render_xlines.hpp>
 #include <qppcad/app_state.hpp>
 
 namespace qpp {

@@ -2,7 +2,7 @@
 #define QPP_CAD_WS_VOLUME_DATA_OBJ_INSP_H
 
 #include <qppcad/ws_item_obj_insp_widget.hpp>
-#include <qppcad/ws_volume_data.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data.hpp>
 
 namespace qpp {
 

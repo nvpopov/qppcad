@@ -1,4 +1,4 @@
-#include <qppcad/ws_atoms_list_obj_insp_widget.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -590,7 +590,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       bt_model->bind(b_al);
       display_bt->setModel(bt_model);
       display_bt->update();
-      display_bt->setMinimumHeight(40 * b_al->m_tws_tr->m_bonding_table.m_dist.size());
+      display_bt->setMinimumHeight(50 * b_al->m_tws_tr->m_bonding_table.m_dist.size());
 
       update_modify_tab();
     }

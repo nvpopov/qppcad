@@ -2,7 +2,7 @@
 #define QPP_CAD_WS_ATOMS_LIST_OBJ_INSP_H
 
 #include <qppcad/ws_item_obj_insp_widget.hpp>
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/qbonding_table_model.hpp>
 #include <qppcad/qrealspinbox_delegate.hpp>
 #include <QTableWidget>

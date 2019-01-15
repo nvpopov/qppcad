@@ -8,6 +8,7 @@
 #include <qppcad/camera.hpp>
 #include <qppcad/ws_item.hpp>
 #include <qppcad/gizmo.hpp>
+#include <qppcad/ws_item_behaviour_manager.hpp>
 
 namespace qpp {
 
@@ -27,7 +28,7 @@ namespace qpp {
 
       public:
         std::vector<std::shared_ptr<workspace_t> > m_ws;
-
+        std::unique_ptr<ws_item_behaviour_manager_t> m_bhv_mgr;
         workspace_manager_t(app_state_t *_astate);
 
         std::shared_ptr<workspace_t> get_cur_ws();

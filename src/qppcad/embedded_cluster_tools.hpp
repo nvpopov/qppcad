@@ -2,7 +2,7 @@
 #define QPP_CAD_EMBEDDED_CLUSTER_TOOLS
 
 #include <qppcad/qppcad.hpp>
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 
 namespace qpp {
 

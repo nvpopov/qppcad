@@ -2,7 +2,7 @@
 #define QPP_CAD_WS_ATOMS_LIST_COLORIZER
 
 #include <qppcad/qppcad.hpp>
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 
 namespace qpp {
 

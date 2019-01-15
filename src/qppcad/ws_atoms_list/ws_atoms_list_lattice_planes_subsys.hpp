@@ -2,7 +2,6 @@
 #define QPP_CAD_WS_ATOMS_LIST_LATPL_S
 
 #include <geom/geom.hpp>
-//#include <qppcad/app.hpp>
 #include <vector>
 #include <algorithm>
 

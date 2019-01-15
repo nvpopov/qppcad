@@ -1,4 +1,4 @@
-#include <qppcad/ws_comp_chem_data_obj_insp_widget.hpp>
+#include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

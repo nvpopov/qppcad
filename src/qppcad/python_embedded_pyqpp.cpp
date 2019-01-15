@@ -5,7 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/app_state.hpp>
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

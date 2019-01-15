@@ -12,11 +12,11 @@
 #include <qppcad/ws_item.hpp>
 #include <qppcad/camera.hpp>
 #include <qppcad/file_formats.hpp>
-#include <qppcad/ws_atoms_list_anim_subsys.hpp>
-#include <qppcad/ws_atoms_list_measurement_subsys.hpp>
-#include <qppcad/ws_atoms_list_labels_subsys.hpp>
-#include <qppcad/ws_atoms_list_lattice_planes_subsys.hpp>
-#include <qppcad/ws_atoms_list_render_buffered_billboards.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_anim_subsys.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_measurement_subsys.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_labels_subsys.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_lattice_planes_subsys.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_render_buffered_billboards.hpp>
 #include <deque>
 
 namespace qpp {

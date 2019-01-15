@@ -1,5 +1,5 @@
-#include <qppcad/ws_comp_chem_data.hpp>
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -8,7 +8,7 @@ using namespace qpp::cad;
 ws_comp_chem_data_t::ws_comp_chem_data_t() {
 
   set_default_flags(ws_item_flags_default);
-
+   m_tag = ws_item_tag::tag_ws_comp_chem_data;
 }
 
 void ws_comp_chem_data_t::manual_step_update(const int dir) {
@@ -22,7 +22,6 @@ void ws_comp_chem_data_t::manual_update_vib() {
   for (auto &items : m_connected_items) {
       ws_atoms_list_t *al = dynamic_cast<ws_atoms_list_t*>(items.get());
       if (al && al->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1)  {
-          //fmt::print(std::cout, "Hallelujiah\n");
           al->m_anim->m_cur_anim = m_cur_vib + 1;
           al->m_anim->m_cur_anim_time = 0.0f;
           al->m_anim->m_play_anim = true;

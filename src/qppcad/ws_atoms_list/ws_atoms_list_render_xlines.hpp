@@ -1,7 +1,7 @@
 #ifndef QPP_CAD_WS_ATOMS_RS_XL
 #define QPP_CAD_WS_ATOMS_RS_XL
 
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 
 namespace qpp {
 

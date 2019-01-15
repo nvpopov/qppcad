@@ -1,6 +1,6 @@
 #ifndef QPP_CAD_WS_ATOMS_RS_DL
 #define QPP_CAD_WS_ATOMS_RS_DL
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/app_state.hpp>
 
 namespace qpp {

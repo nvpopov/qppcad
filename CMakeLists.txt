@@ -88,27 +88,32 @@ add_executable(qppcad
     src/qppcad/draw_pipeline.cpp
     src/qppcad/workspace.cpp
     src/qppcad/ws_item.cpp
+    src/qppcad/ws_item_obj_insp_widget.cpp
+    src/qppcad/ws_item_behaviour_manager.cpp
     src/qppcad/camera.cpp
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
-    src/qppcad/ws_atoms_list.cpp
-    src/qppcad/ws_comp_chem_data.cpp
-    src/qppcad/ws_volume_data.cpp
+
+    src/qppcad/ws_comp_chem_data/ws_comp_chem_data.cpp
+    src/qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.cpp
+
+    src/qppcad/ws_volume_data/ws_volume_data.cpp
+    src/qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.cpp
     src/qppcad/volume_tools.cpp
-    src/qppcad/ws_atoms_list_render_bs.cpp
-    src/qppcad/ws_atoms_list_render_billboards.cpp
-    src/qppcad/ws_atoms_list_render_buffered_billboards.cpp
-    src/qppcad/ws_atoms_list_render_dlines.cpp
-    src/qppcad/ws_atoms_list_render_xlines.cpp
-    src/qppcad/ws_atoms_list_anim_subsys.cpp
-    src/qppcad/ws_atoms_list_measurement_subsys.cpp
-    src/qppcad/ws_atoms_list_lattice_planes_subsys.cpp
-    src/qppcad/ws_atoms_list_labels_subsys.cpp
-    src/qppcad/ws_atoms_list_colorizer.cpp
-    src/qppcad/ws_item_obj_insp_widget.cpp
-    src/qppcad/ws_atoms_list_obj_insp_widget.cpp
-    src/qppcad/ws_comp_chem_data_obj_insp_widget.cpp
-    src/qppcad/ws_volume_data_obj_insp_widget.cpp
+
+    src/qppcad/ws_atoms_list/ws_atoms_list.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_render_bs.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_render_billboards.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_render_buffered_billboards.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_render_dlines.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_render_xlines.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_anim_subsys.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_measurement_subsys.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_lattice_planes_subsys.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_labels_subsys.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_colorizer.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.cpp
+
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qbonding_table_model.cpp
     src/qppcad/qmeasurements_table_model.cpp

@@ -5,7 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/python_simple_query.hpp>
-#include <qppcad/ws_atoms_list_colorizer.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_colorizer.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

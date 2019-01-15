@@ -2,7 +2,7 @@
 #define QPP_CAD_QBONDING_TABLE_MODEL
 
 #include <qppcad/qppcad.hpp>
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <QAbstractTableModel>
 
 namespace qpp {

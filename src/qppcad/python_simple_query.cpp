@@ -1,7 +1,7 @@
 #include <qppcad/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/ws_atoms_list.hpp>
-#include <qppcad/ws_volume_data.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <data/ptable.hpp>
 
 using namespace qpp;

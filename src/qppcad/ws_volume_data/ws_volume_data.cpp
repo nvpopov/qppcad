@@ -1,4 +1,4 @@
-#include <qppcad/ws_volume_data.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <qppcad/volume_tools.hpp>
 #include <qppcad/app_state.hpp>
 
@@ -16,7 +16,7 @@ void ws_volume_data_t::mc_polygonise(float _isolevel) {
 
 ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
   set_default_flags(ws_item_flags_default);
-
+  m_tag = ws_item_tag::tag_ws_volume_data;
 }
 
 void ws_volume_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,

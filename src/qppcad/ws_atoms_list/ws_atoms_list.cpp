@@ -1,11 +1,11 @@
-#include <qppcad/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 //#include <qppcad/ws_atoms_list_context_menu.hpp>
-#include <qppcad/ws_atoms_list_render_bs.hpp>
-#include <qppcad/ws_atoms_list_render_dlines.hpp>
-#include <qppcad/ws_atoms_list_render_xlines.hpp>
-#include <qppcad/ws_atoms_list_render_billboards.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_render_bs.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_render_dlines.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_render_xlines.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_render_billboards.hpp>
 //#include <qppcad/ws_atoms_list_cell_helper.hpp>
-#include <qppcad/ws_comp_chem_data.hpp>
+#include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/app_state.hpp>
 
 //new ccd io modules
@@ -19,7 +19,7 @@
 #include <io/cp2k.hpp>
 #include <io/xyz_multiframe.hpp>
 #include <io/cube.hpp>
-#include <qppcad/ws_volume_data.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data.hpp>
 
 #include <clocale>
 
@@ -34,6 +34,8 @@ ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
                     ws_item_flags_support_actions | ws_item_flags_support_delete |
                     ws_item_flags_support_clone | ws_item_flags_support_moveto |
                     ws_item_flags_support_rendering);
+
+  m_tag = ws_item_tag::tag_ws_atoms_list;
 
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 

@@ -34,9 +34,9 @@ namespace qpp {
 
     enum ws_item_tag {
       tag_abstract_item,
-      tag_atoms_list,
-      tag_comp_chem_data,
-      tag_volume_data
+      tag_ws_atoms_list,
+      tag_ws_comp_chem_data,
+      tag_ws_volume_data
     };
 
     class ws_item_t : public std::enable_shared_from_this<ws_item_t> {
@@ -47,6 +47,7 @@ namespace qpp {
 
       public:
 
+        ws_item_tag m_tag{ws_item_tag::tag_abstract_item};
         workspace_t *m_parent_ws{};
         std::vector<std::shared_ptr<ws_item_t> > m_connected_items;
 
