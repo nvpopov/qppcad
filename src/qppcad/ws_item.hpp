@@ -143,6 +143,10 @@ namespace qpp {
         void translate(vector3<float> tr_vec);
         virtual void save_to_json(json &data);
         virtual void load_from_json(json &data);
+        void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream);
+        void save_to_stream(std::basic_istream<CHAR,TRAITS> &stream);
+        void load_from_file(std::string &file_name);
+        void save_from_file(std::string &file_name);
         virtual bool can_be_written_to_json();
     };
 

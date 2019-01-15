@@ -122,6 +122,7 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list/ws_atoms_list_labels_subsys.cpp
     src/qppcad/ws_atoms_list/ws_atoms_list_colorizer.cpp
     src/qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.cpp
+    src/qppcad/ws_atoms_list/ws_atoms_list_io_xyz.cpp
 
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qbonding_table_model.cpp

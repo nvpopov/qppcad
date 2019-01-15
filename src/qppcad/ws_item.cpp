@@ -162,6 +162,22 @@ void ws_item_t::load_from_json(json &data) {
       }
 }
 
+void ws_item_t::load_from_stream(std::basic_istream<char, TRAITS> &stream) {
+
+}
+
+void ws_item_t::save_to_stream(std::basic_istream<char, TRAITS> &stream) {
+
+}
+
+void ws_item_t::load_from_file(std::string &file_name) {
+
+}
+
+void ws_item_t::save_from_file(std::string &file_name) {
+
+}
+
 bool ws_item_t::can_be_written_to_json() {
   return false;
 }

@@ -47,6 +47,7 @@ namespace qpp {
         void mouse_click();
         void ws_mgr_changed();
         void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
+        void init_ws_item_bhv_mgr();
 
         void load_from_file_autodeduce(const std::string file_name,
                                        const std::string file_format = "");

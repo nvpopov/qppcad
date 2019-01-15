@@ -20,6 +20,7 @@ namespace qpp {
 
         bool register_string(const std::string &_str, const size_t _hash);
         bool register_string(const std::string &_str);
+        std::string get_pretty_string(const size_t _hash);
         std::optional<std::string> get_string(const size_t _hash);
         std::optional<size_t> get_hash(const std::string &_str);
         size_t get_or_create_hash(const std::string &_str);

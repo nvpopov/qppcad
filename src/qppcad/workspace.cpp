@@ -4,6 +4,7 @@
 #include <io/geomio.hpp>
 #include <mathf/math.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_io_xyz.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 
@@ -516,6 +517,16 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
   m_ws.push_back(ws_to_add);
   ws_to_add->ws_changed();
   ws_mgr_changed();
+}
+
+void workspace_manager_t::init_ws_item_bhv_mgr() {
+  m_bhv_mgr = std::make_unique<ws_item_behaviour_manager_t>();
+  size_t xyz_ff_hash = m_bhv_mgr->register_file_format("XYZ", "xyz");
+  size_t poscar_ff_hash = m_bhv_mgr->register_file_format("VASP POSCAR", "poscar");
+  size_t outcar_ff_hash = m_bhv_mgr->register_file_format("VASP OUTCAR", "outcar");
+
+  auto xyz_ff_mgr = std::make_shared<ws_atoms_list_io_xyz_t>();
+  m_bhv_mgr->register_io_behaviour(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
 }
 
 

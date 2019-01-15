@@ -26,6 +26,12 @@ bool string_hash_register_t::register_string(const std::string &_str) {
   return register_string(_str, _hash);
 }
 
+std::string string_hash_register_t::get_pretty_string(const size_t _hash) {
+  auto it = p_data.find(_hash);
+  if (it != p_data.end()) return it->second;
+  else return "ERROR";
+}
+
 std::optional<std::string> string_hash_register_t::get_string(const size_t _hash) {
   auto it = p_data.find(_hash);
   if (it != p_data.end()) return std::optional<std::string>(it->second);

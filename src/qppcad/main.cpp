@@ -37,6 +37,7 @@ int main (int argc, char **argv) {
 
   app_state_t *astate = app_state_t::get_inst();
   astate->init_managers();
+  astate->ws_manager->init_ws_item_bhv_mgr();
   astate->ws_manager->init_default();
   astate->load_settings();
 
