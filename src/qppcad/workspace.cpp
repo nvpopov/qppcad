@@ -224,7 +224,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
 }
 
-void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> &item_to_add) {
+void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> item_to_add) {
 
   item_to_add->set_parent_workspace(this);
   m_ws_items.push_back(item_to_add);
@@ -411,56 +411,6 @@ void workspace_manager_t::init_default () {
   load_from_file("../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out",
                  qc_file_fmt::firefly_output);
 
-  //  auto _ws2 = std::make_shared<workspace_t>("d2");
-  //  auto _ws3 = std::make_shared<workspace_t>("d1");
-
-  //  auto _wsl2 = std::make_shared<ws_atoms_list_t>();
-  //  _ws3->add_item_to_ws(_wsl2);
-  //  _wsl2->load_from_file(qc_file_fmt::standart_xyz,
-  //                        "../deps/qpp/examples/io/ref_data/xyz/slab.xyz",
-  //                        false);
-
-  //  auto _wsl3 = std::make_shared<ws_atoms_list_t>();
-  //  _ws2->add_item_to_ws(_wsl3);
-  //  _wsl3->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/POSCAR.mp-558947_SiO2",
-  //                        false);
-
-  //  auto _wsl32 = std::make_shared<ws_atoms_list_t>();
-  //  _ws2->add_item_to_ws(_wsl32);
-  //  _wsl32->load_from_file(qc_file_fmt::standart_xyz,
-  //                         "../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz",
-  //                         true);
-
-  //  auto _wsl33 = std::make_shared<ws_atoms_list_t>();
-  //  _ws2->add_item_to_ws(_wsl33);
-  //  _wsl33->load_from_file(qc_file_fmt::vasp_poscar, "../data/refs/mp-971662_Si.vasp",
-  //                         false);
-
-
-  //  auto _ws4 = std::make_shared<workspace_t>();
-  //  _ws4->m_ws_name = "animtest1";
-  //  auto _ws4_al = std::make_shared<ws_atoms_list_t>();
-  //  _ws4->add_item_to_ws(_ws4_al);
-
-  //  _ws4_al->load_from_file(qc_file_fmt::firefly_output,
-  //                          "../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out",
-  //                          false);
-
-  //  _wsl3->m_name = "zeolite1";
-  //  _wsl32->m_name = "nanotube1";
-  //  _wsl32->m_pos = vector3<float>(0.0f, 0.0f, 14.0f);
-  //  _wsl33->m_name = "ss1";
-  //  _wsl33->m_pos = vector3<float>(0.0f, 22.0f, 2.0f);
-
-  //  add_ws(_ws3);
-  //  add_ws(_ws2);
-  //  add_ws(_ws4);
-
-  //  //  _ws2->save_workspace_to_json("test.json");
-  //  //  _ws4->save_workspace_to_json("test_with_anim.json");
-
-  //  set_cur_id(2);
-
 }
 
 void workspace_manager_t::render_cur_ws () {
@@ -521,12 +471,22 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 
 void workspace_manager_t::init_ws_item_bhv_mgr() {
   m_bhv_mgr = std::make_unique<ws_item_behaviour_manager_t>();
-  size_t xyz_ff_hash = m_bhv_mgr->register_file_format("XYZ", "xyz");
-  size_t poscar_ff_hash = m_bhv_mgr->register_file_format("VASP POSCAR", "poscar");
-  size_t outcar_ff_hash = m_bhv_mgr->register_file_format("VASP OUTCAR", "outcar");
 
-  auto xyz_ff_mgr = std::make_shared<ws_atoms_list_io_xyz_t>();
+  size_t xyz_ff_hash =
+      m_bhv_mgr->register_file_format("XYZ", "xyz", {".xyz"});
+
+  size_t poscar_ff_hash =
+      m_bhv_mgr->register_file_format("VASP POSCAR", "poscar", {"POSCAR", ".vasp", ".VASP"} );
+
+  size_t outcar_ff_hash =
+      m_bhv_mgr->register_file_format("VASP OUTCAR", "outcar", {"OUTCAR"} );
+
+  auto xyz_ff_mgr =
+      std::make_shared<
+      ws_atoms_list_io_ccd_wrappered_t<read_ccd_from_xyz_file<float>, true, false, true, true> >();
+
   m_bhv_mgr->register_io_behaviour(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
+
 }
 
 
@@ -572,23 +532,18 @@ void workspace_manager_t::load_from_file(const std::string &fname,
 void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
                                                     const std::string file_format) {
   qc_file_fmt guess_ff;
-  if (file_format.empty())
-    guess_ff = qc_file_fmt_helper::file_name_to_file_format(file_name);
-  else
-    guess_ff = qc_file_fmt_helper::file_format_from_string(file_format);
+  if (file_format.empty()) guess_ff = qc_file_fmt_helper::file_name_to_file_format(file_name);
+  else guess_ff = qc_file_fmt_helper::file_format_from_string(file_format);
   load_from_file(file_name, guess_ff);
-
 }
 
 
 void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
-
   auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
   m_ws.push_back(new_ws);
   if (switch_to_new_workspace) set_cur_id(m_ws.size()-1);
   ws_mgr_changed();
-
 }
 
 

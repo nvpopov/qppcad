@@ -98,7 +98,7 @@ namespace qpp {
         void render();
         void render_overlay(QPainter &painter);
         void mouse_click(const float mouse_x, const float mouse_y);
-        void add_item_to_ws(const std::shared_ptr<ws_item_t> &item_to_add);
+        void add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add);
         //void dialog_add_geom_from_file(qc_file_fmt file_format);
 
         void clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete);

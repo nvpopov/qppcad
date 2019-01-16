@@ -3,6 +3,7 @@
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <QFileInfo>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -13,48 +14,52 @@ ws_item_behaviour_manager_t::ws_item_behaviour_manager_t() {
 
 
 
-void ws_item_behaviour_manager_t::load_ws_item_from_file(std::string &file_name,
-                                                         ws_item_t *ws_item,
-                                                         size_t file_format,
-                                                         bool trust) {
-
-  if (!ws_item) return;
+std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
+    std::string &file_name,
+    size_t io_bhv_idx) {
 
   app_state_t* astate = app_state_t::get_inst();
 
   std::setlocale(LC_ALL, "C");
 
-  astate->log(fmt::format("Loading ws_item from file {} to  workspace {}",
-                          file_name, ws_item->m_parent_ws->m_ws_name));
+  astate->log(fmt::format("Loading ws_item from file {}", file_name));
 
-  std::ifstream input(file_name);
-  //m_ws_item_io[file_format].
-  //load_ws_item_from_stream(input, ws_item, file_format);
+  auto new_ws_item = fabric_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
+
+  if (new_ws_item) {
+      std::ifstream input(file_name);
+      new_ws_item->m_name = extract_base_name(file_name);
+      m_ws_item_io[io_bhv_idx]->load_from_stream(input, new_ws_item.get());
+      return new_ws_item;
+    } else {
+      return nullptr;
+    }
+
+  return nullptr;
+
 }
 
-void ws_item_behaviour_manager_t::load_ws_item_from_file(std::string &file_name,
-                                                         ws_item_t *ws_item) {
-  //if (!ws_item) return;
-  for (size_t i = 0; i < m_ws_item_io.size(); i++) {
+std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
+    std::string &file_name) {
 
-      if (!ws_item) {
+  app_state_t* astate = app_state_t::get_inst();
 
-          //create new ws_item
-          if (m_ws_item_io[i]->can_load() && m_ws_item_io[i]->deduce_from_file_name(file_name)) {
-              std::shared_ptr<ws_item_t> new_item{nullptr};
-              new_item = fabric_by_type(m_ws_item_io[i]->m_accepted_type);
-              ws_item = new_item.get();
-              if (new_item) {
-                  load_ws_item_from_file(file_name, new_item.get(), i, true);
-                  return;
-                }
+  QFileInfo check_file(QString::fromStdString(file_name));
 
-            }
+  if (!check_file.exists() || !check_file.isFile()) return nullptr;
 
-        } else {
-          load_ws_item_from_file(file_name, ws_item, i, true);
+  auto file_format = get_file_format(file_name);
+
+  if (file_format) {
+      std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
+
+      if (io_bhv_id) {
+          auto ret_sp = load_ws_item_from_file(file_name, *io_bhv_id);
+          return ret_sp;
         }
     }
+
+  return nullptr;
 
 }
 
@@ -75,10 +80,10 @@ void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name,
 void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name, ws_item_t *ws_item) {
 
   if (!ws_item) return;
-  for (size_t i = 0; i < m_ws_item_io.size(); i++)
-    if (m_ws_item_io[i]->is_type_accepted(ws_item->get_type()) && m_ws_item_io[i]->can_save()) {
-        save_ws_item_to_file(file_name, ws_item, i, true);
-      }
+  //  for (size_t i = 0; i < m_ws_item_io.size(); i++)
+  //    if (m_ws_item_io[i]->is_type_accepted(ws_item->get_type()) && m_ws_item_io[i]->can_save()) {
+  //        save_ws_item_to_file(file_name, ws_item, i, true);
+  //      }
 }
 
 std::string ws_item_behaviour_manager_t::get_file_format_full_name(size_t _file_format_hash) {
@@ -88,7 +93,8 @@ std::string ws_item_behaviour_manager_t::get_file_format_full_name(size_t _file_
 }
 
 size_t ws_item_behaviour_manager_t::register_file_format(std::string _full_name,
-                                                         std::string _short_name) {
+                                                         std::string _short_name,
+                                                         std::vector<std::string> _finger_prints) {
   app_state_t *astate = app_state_t::get_inst();
 
   size_t _file_format_hash = astate->hash_reg->calc_hash(_full_name);
@@ -98,6 +104,7 @@ size_t ws_item_behaviour_manager_t::register_file_format(std::string _full_name,
       ws_item_io_file_format_t new_file_format;
       new_file_format.m_full_name = _full_name;
       new_file_format.m_shortname = _short_name;
+      new_file_format.m_finger_prints = _finger_prints;
       m_file_formats.insert(
             std::pair<size_t, ws_item_io_file_format_t>(_file_format_hash,
                                                         std::move(new_file_format)));
@@ -107,6 +114,48 @@ size_t ws_item_behaviour_manager_t::register_file_format(std::string _full_name,
                           _full_name, _short_name, _file_format_hash));
 
   return _file_format_hash;
+}
+
+std::optional<size_t> ws_item_behaviour_manager_t::get_file_format(std::string &file_name) {
+
+  for (auto &elem : m_file_formats)
+    for (auto &ffp : elem.second.m_finger_prints)
+      if (file_name.find(ffp) != std::string::npos) {
+          app_state_t *astate = app_state_t::get_inst();
+          astate->log(fmt::format("Compare ff {} {} - fname {}",
+                                  elem.first, elem.second.m_full_name, file_name));
+
+          return std::optional<size_t>(elem.first);
+        }
+
+  return std::nullopt;
+
+}
+
+std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format(size_t file_format) {
+
+  for (size_t i = 0; i < m_ws_item_io.size(); i++)
+    if (m_ws_item_io[i]->m_accepted_file_format == file_format) {
+        app_state_t *astate = app_state_t::get_inst();
+        astate->log(fmt::format("Compare ff {} - io_bhv {}",
+                               file_format, i));
+
+        return std::optional<size_t>(i);
+      }
+
+  return std::nullopt;
+
+}
+
+std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format_ex(size_t file_format,
+                                                                                size_t type_hash) {
+  for (size_t i = 0; i < m_ws_item_io.size(); i++)
+    if (m_ws_item_io[i]->m_accepted_file_format == file_format &&
+        m_ws_item_io[i]->m_accepted_type == type_hash)
+      return std::optional<size_t>(i);
+
+  return std::nullopt;
+
 }
 
 void ws_item_behaviour_manager_t::register_io_behaviour(
@@ -119,11 +168,12 @@ void ws_item_behaviour_manager_t::register_io_behaviour(
   io_bhv_inst->m_accepted_type = accepted_type;
   io_bhv_inst->m_accepted_file_format = accepted_file_format;
 
-  astate->log(fmt::format("Registering io behaviour for type {}, ff {}, save[{}], load[{}]",
-                          accepted_type,
-                          get_file_format_full_name(accepted_file_format),
-                          io_bhv_inst->can_save(),
-                          io_bhv_inst->can_load()));
+  astate->log(
+        fmt::format("Registering io behaviour for type {}, file format[{}], save[{}], load[{}]",
+                    accepted_type,
+                    get_file_format_full_name(accepted_file_format),
+                    io_bhv_inst->can_save(),
+                    io_bhv_inst->can_load()));
 
   m_ws_item_io.push_back(io_bhv_inst);
 }
@@ -134,6 +184,10 @@ void ws_item_behaviour_manager_t::unregister_file_format(size_t _file_format_has
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t type_id) {
 
+  app_state_t *astate = app_state_t::get_inst();
+
+  astate->log(fmt::format("Fabric new ws_item with type_id = {}", type_id));
+
   if (type_id == ws_atoms_list_t::get_type_static())
     return std::make_shared<ws_atoms_list_t>();
 
@@ -143,12 +197,31 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t ty
   if (type_id == ws_volume_data_t::get_type_static())
     return std::make_shared<ws_volume_data_t>();
 
+  astate->log(fmt::format("Cannot fabric new ws_item with type_id = {}!", type_id));
   return nullptr;
+
 }
 
-bool ws_item_io_behaviour_t::deduce_from_file_name(std::string &file_name) {
-  return false;
+ws_item_t *ws_item_behaviour_manager_t::fabric_by_type_p(size_t type_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  astate->log(fmt::format("Fabric new ws_item with type_id = {}", type_id));
+
+  if (type_id == ws_atoms_list_t::get_type_static())
+    return new ws_atoms_list_t();
+
+  if (type_id == ws_comp_chem_data_t::get_type_static())
+    return new ws_comp_chem_data_t();
+
+  if (type_id == ws_volume_data_t::get_type_static())
+    return new ws_volume_data_t();
+
+  astate->log(fmt::format("Cannot fabric new ws_item with type_id = {}!", type_id));
+  return nullptr;
+
 }
+
 
 bool ws_item_io_behaviour_t::is_type_accepted(size_t _type) {
   return m_accepted_type == _type;

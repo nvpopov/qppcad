@@ -57,6 +57,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("get_type_hash", &simple_query::get_type_hash);
   tools.def("is_instance_of", &simple_query::is_instance_of_by_hash);
   tools.def("is_instance_of", &simple_query::is_instance_of_by_type_name);
+  tools.def("bopen", &simple_query::bopen);
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 

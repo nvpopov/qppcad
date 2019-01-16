@@ -1149,7 +1149,7 @@ void ws_atoms_list_t::load_from_file(qc_file_fmt file_format, std::string file_n
 
   if (m_parent_ws) {
       m_parent_ws->set_best_view();
-      m_parent_ws->ws_changed();
+      //m_parent_ws->ws_changed();
     }
 
 }

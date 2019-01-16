@@ -8,10 +8,22 @@ namespace qpp {
 
   namespace cad {
 
+    enum ws_item_io_status {
+      io_status_succes,
+      io_status_file_doesnt_exists,
+      io_status_invalid_file_format,
+      io_status_file_format_not_supported,
+      io_status_file_format_not_supports_saving,
+      io_status_file_format_not_supports_loading,
+      io_status_invalid_type,
+      io_status_parsing_error
+    };
+
     class ws_item_io_file_format_t {
       public:
         std::string m_full_name;
         std::string m_shortname;
+        std::vector<std::string> m_finger_prints;
     };
 
     class ws_item_io_behaviour_t {
@@ -24,7 +36,6 @@ namespace qpp {
                                       ws_item_t *_item) = 0;
         virtual void save_to_stream(std::basic_ostream<CHAR,TRAITS> &stream,
                                     ws_item_t *_item) = 0;
-        virtual bool deduce_from_file_name(std::string &file_name);
         bool is_type_accepted(size_t _type);
     };
 
@@ -49,7 +60,7 @@ namespace qpp {
             }
         }
         virtual void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
-                                         T *_item) = 0;
+                                       T *_item) = 0;
 
     };
 
@@ -62,21 +73,23 @@ namespace qpp {
         std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
 
 
-        void load_ws_item_from_file(std::string &file_name, ws_item_t *ws_item,
-                                    size_t file_format, bool trust = false);
-
-        //auto deduce
-        void load_ws_item_from_file(std::string &file_name, ws_item_t *ws_item);
+        std::shared_ptr<ws_item_t> load_ws_item_from_file(std::string &file_name,
+                                                          size_t io_bhv_idx);
+        std::shared_ptr<ws_item_t> load_ws_item_from_file(std::string &file_name);
 
         void save_ws_item_to_file(std::string &file_name, ws_item_t *ws_item,
                                   size_t file_format, bool trust = false);
-
-        //auto deduce
         void save_ws_item_to_file(std::string &file_name, ws_item_t *ws_item);
+
         std::string get_file_format_full_name(size_t _file_format_hash);
 
         size_t register_file_format(std::string _full_name,
-                                    std::string _short_name);
+                                    std::string _short_name,
+                                    std::vector<std::string> _finger_prints);
+
+        std::optional<size_t> get_file_format(std::string &file_name);
+        std::optional<size_t> get_io_bhv_by_file_format(size_t file_format);
+        std::optional<size_t> get_io_bhv_by_file_format_ex(size_t file_format, size_t type_hash);
 
         void register_io_behaviour(std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
                                    size_t accepted_file_format,
@@ -85,6 +98,7 @@ namespace qpp {
         void unregister_file_format(size_t _file_format_hash);
 
         std::shared_ptr<ws_item_t> fabric_by_type(size_t type_id);
+        ws_item_t* fabric_by_type_p(size_t type_id);
     };
 
   }
