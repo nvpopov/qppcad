@@ -1,5 +1,8 @@
 #include <qppcad/ws_item_behaviour_manager.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -31,11 +34,28 @@ void ws_item_behaviour_manager_t::load_ws_item_from_file(std::string &file_name,
 
 void ws_item_behaviour_manager_t::load_ws_item_from_file(std::string &file_name,
                                                          ws_item_t *ws_item) {
-  if (!ws_item) return;
-  for (size_t i = 0; i < m_ws_item_io.size(); i++)
-    if (m_ws_item_io[i]->is_type_accepted(ws_item->get_type()) && m_ws_item_io[i]->can_load()) {
-        load_ws_item_from_file(file_name, ws_item, i, true);
-      }
+  //if (!ws_item) return;
+  for (size_t i = 0; i < m_ws_item_io.size(); i++) {
+
+      if (!ws_item) {
+
+          //create new ws_item
+          if (m_ws_item_io[i]->can_load() && m_ws_item_io[i]->deduce_from_file_name(file_name)) {
+              std::shared_ptr<ws_item_t> new_item{nullptr};
+              new_item = fabric_by_type(m_ws_item_io[i]->m_accepted_type);
+              ws_item = new_item.get();
+              if (new_item) {
+                  load_ws_item_from_file(file_name, new_item.get(), i, true);
+                  return;
+                }
+
+            }
+
+        } else {
+          load_ws_item_from_file(file_name, ws_item, i, true);
+        }
+    }
+
 }
 
 void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name,
@@ -110,6 +130,20 @@ void ws_item_behaviour_manager_t::register_io_behaviour(
 
 void ws_item_behaviour_manager_t::unregister_file_format(size_t _file_format_hash) {
 
+}
+
+std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t type_id) {
+
+  if (type_id == ws_atoms_list_t::get_type_static())
+    return std::make_shared<ws_atoms_list_t>();
+
+  if (type_id == ws_comp_chem_data_t::get_type_static())
+    return std::make_shared<ws_comp_chem_data_t>();
+
+  if (type_id == ws_volume_data_t::get_type_static())
+    return std::make_shared<ws_volume_data_t>();
+
+  return nullptr;
 }
 
 bool ws_item_io_behaviour_t::deduce_from_file_name(std::string &file_name) {

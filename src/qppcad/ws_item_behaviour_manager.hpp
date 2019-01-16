@@ -20,12 +20,37 @@ namespace qpp {
         size_t m_accepted_file_format;
         virtual bool can_save() = 0;
         virtual bool can_load() = 0;
-        virtual void load_from_stream(std::basic_ostream<CHAR,TRAITS> &stream,
+        virtual void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream,
                                       ws_item_t *_item) = 0;
-        virtual void save_to_stream(std::basic_istream<CHAR,TRAITS> &stream,
+        virtual void save_to_stream(std::basic_ostream<CHAR,TRAITS> &stream,
                                     ws_item_t *_item) = 0;
         virtual bool deduce_from_file_name(std::string &file_name);
         bool is_type_accepted(size_t _type);
+    };
+
+    template <typename T>
+    class ws_item_io_inherited_bhv_t : public ws_item_io_behaviour_t {
+
+      public:
+
+        void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream, ws_item_t *_item) override {
+          if (_item && _item->get_type() == T::get_type_static()) {
+              T* casted_item = _item->cast_as<T>();
+              if (casted_item) load_from_stream_ex(stream, casted_item);
+            }
+        }
+        virtual void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+                                         T *_item) = 0;
+
+        void save_to_stream(std::basic_ostream<CHAR,TRAITS> &stream, ws_item_t *_item) override {
+          if (_item && _item->get_type() == T::get_type_static()) {
+              T* casted_item = _item->cast_as<T>();
+              if (casted_item) save_to_stream_ex(stream, casted_item);
+            }
+        }
+        virtual void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+                                         T *_item) = 0;
+
     };
 
     class ws_item_behaviour_manager_t {
@@ -58,6 +83,8 @@ namespace qpp {
                                    size_t accepted_type);
 
         void unregister_file_format(size_t _file_format_hash);
+
+        std::shared_ptr<ws_item_t> fabric_by_type(size_t type_id);
     };
 
   }

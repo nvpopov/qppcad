@@ -4,7 +4,7 @@
 #include <io/geomio.hpp>
 #include <mathf/math.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list_io_xyz.hpp>
+#include <qppcad/ws_atoms_list/ws_atoms_list_io.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 
