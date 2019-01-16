@@ -29,6 +29,7 @@ namespace qpp {
       sp_unit_line  = shader_generators::gen_sp_unit_line();
       sp_line_mesh  = shader_generators::gen_sp_line_mesh();
       sp_mvp_ssl    = shader_generators::gen_sp_mv_screen_space_lighting();
+      sp_mvap_ssl   = shader_generators::gen_sp_mva_screen_space_lighting();
       sp_fbo_quad   = shader_generators::gen_sp_fbo_quad();
       sp_unit_line_styled = shader_generators::gen_sp_unit_line_styled();
       sp_bs_sphere = shader_generators::gen_sp_bs_sphere();

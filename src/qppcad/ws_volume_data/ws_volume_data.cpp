@@ -29,21 +29,24 @@ void ws_volume_data_t::render() {
 
   if (m_ready_to_render) {
 
-      astate->dp->begin_render_general_mesh();
+      astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
       vector3<float> scale{1,1,1};
       vector3<float> rot{0};
       vector3<float> color{0.5f};
 
       if (m_volume_type == ws_volume_t::volume_mo) {
-          astate->dp->render_general_mesh(m_pos, scale, rot, clr_red, m_first_mesh);
-          astate->dp->render_general_mesh(m_pos, scale, rot, clr_navy, m_second_mesh);
+          astate->dp->render_general_mesh(m_pos, scale, rot, clr_red,
+                                          m_first_mesh, m_alpha, astate->sp_mvap_ssl);
+          astate->dp->render_general_mesh(m_pos, scale, rot, clr_navy, m_second_mesh,
+                                          m_alpha, astate->sp_mvap_ssl);
         }
 
       if (m_volume_type == ws_volume_t::volume_density) {
-          astate->dp->render_general_mesh(m_pos, scale, rot, clr_yellow, m_first_mesh);
+          astate->dp->render_general_mesh(m_pos, scale, rot, clr_yellow, m_first_mesh,
+                                          m_alpha, astate->sp_mvap_ssl);
         }
 
-      astate->dp->end_render_general_mesh();
+      astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
     }
 
   if (m_need_to_regenerate) {

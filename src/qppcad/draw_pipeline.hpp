@@ -2,6 +2,7 @@
 #define QPP_CAD_DRAW_PIPELINE
 #include <qppcad/qppcad.hpp>
 #include <qppcad/mesh.hpp>
+#include <qppcad/shader_program.hpp>
 #include <string>
 #include <Eigen/Eigen>
 #include <geom/lace3d.hpp>
@@ -96,7 +97,7 @@ namespace qpp {
         void render_primitive ();
 
         /// \brief begin_render_general_mesh
-        void begin_render_general_mesh ();
+        void begin_render_general_mesh (shader_program_t *custom_sp = nullptr);
 
         /// \brief render_general_mesh
         /// \param mesh_pos
@@ -108,7 +109,9 @@ namespace qpp {
                                   const vector3<float> &mesh_scale,
                                   const vector3<float> &mesh_rotation,
                                   const vector3<float> &mesh_color,
-                                  mesh_t *mesh);
+                                  mesh_t *mesh,
+                                  float alpha = 1.0f,
+                                  shader_program_t *custom_sp = nullptr);
 
         /// \brief render_general_mesh
         /// \param model_matrix
@@ -116,7 +119,9 @@ namespace qpp {
         /// \param mesh
         void render_general_mesh (const matrix4<float> &model_matrix,
                                   const vector3<float> &mesh_color,
-                                  mesh_t *mesh);
+                                  mesh_t *mesh,
+                                  float alpha = 1.0f,
+                                  shader_program_t *custom_sp = nullptr);
 
         /// \brief render_cube
         /// \param cube_pos
@@ -135,7 +140,7 @@ namespace qpp {
                           const vector3<float> &cone_color);
 
         /// \brief end_render_general_mesh
-        void end_render_general_mesh ();
+        void end_render_general_mesh (shader_program_t *custom_sp = nullptr);
 
 
         /// \brief begin_render_aabb

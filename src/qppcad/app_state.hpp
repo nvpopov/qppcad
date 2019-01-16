@@ -69,6 +69,7 @@ namespace qpp {
         shader_program_t *sp_unit_line_styled;
         shader_program_t *sp_line_mesh;
         shader_program_t *sp_mvp_ssl;
+        shader_program_t *sp_mvap_ssl;
         shader_program_t *sp_fbo_quad;
         shader_program_t *sp_bs_sphere;
         shader_program_t *sp_buf_bs;

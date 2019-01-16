@@ -107,19 +107,6 @@ namespace qpp {
 
     };
 
-    class ws_atoms_list_io_xyz_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
-      public:
-        bool can_save() override;
-        bool can_load() override;
-
-        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
-                                 ws_atoms_list_t *_item) override;
-
-        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
-                               ws_atoms_list_t *_item) override;
-
-    };
-
   }
 
 }

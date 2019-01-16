@@ -28,6 +28,8 @@ namespace qpp {
         /// \brief gen_mv_screen_space_lighting_program
         static shader_program_t *gen_sp_mv_screen_space_lighting();
 
+        static shader_program_t *gen_sp_mva_screen_space_lighting();
+
         static shader_program_t *gen_sp_fbo_quad();
 
         static shader_program_t *gen_sp_bs_sphere();

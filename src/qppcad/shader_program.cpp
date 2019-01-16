@@ -62,6 +62,7 @@ qpp::cad::shader_program_t::shader_program_t (const std::string &_program_name,
 }
 
 void qpp::cad::shader_program_t::u_on (qpp::cad::sp_u_name _val) {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   unf_rec[_val].enabled = true;
@@ -74,9 +75,11 @@ void qpp::cad::shader_program_t::u_on (qpp::cad::sp_u_name _val) {
 }
 
 void qpp::cad::shader_program_t::set_u (qpp::cad::sp_u_name _ut, GLfloat *_val) {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
-  if (unf_rec[_ut].enabled){
+
+  if (unf_rec[_ut].enabled) {
       qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[_ut];
       GLint uloc = unf_rec[_ut].h_prog;
       switch(_utype){
@@ -108,8 +111,10 @@ void qpp::cad::shader_program_t::set_u (qpp::cad::sp_u_name _ut, GLfloat *_val) 
 }
 
 void qpp::cad::shader_program_t::set_u_sampler(qpp::cad::sp_u_name _ut, GLint val) {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
+
   if (unf_rec[_ut].enabled) {
       //qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[_ut];
       GLint uloc = unf_rec[_ut].h_prog;

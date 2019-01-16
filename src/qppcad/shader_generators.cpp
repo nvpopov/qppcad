@@ -107,6 +107,29 @@ shader_program_t *shader_generators::gen_sp_mv_screen_space_lighting () {
   return sp;
 }
 
+shader_program_t *shader_generators::gen_sp_mva_screen_space_lighting() {
+  std::string vs =
+    #include "shaders/mva_screen_space_lighting.vs"
+      ;
+
+  std::string fs =
+    #include "shaders/mva_screen_space_lighting.fs"
+      ;
+
+  qpp::cad::shader_program_t *sp = new qpp::cad::shader_program_t(std::string("mva_ssl"), vs, fs);
+  sp->u_on(sp_u_name::m_model_view_proj);
+  sp->u_on(sp_u_name::m_model_view);
+  //sp->u_on(sp_u_name::m_view_proj);
+  sp->u_on(sp_u_name::f_specular_intensity);
+  sp->u_on(sp_u_name::f_specular_alpha);
+  sp->u_on(sp_u_name::m_model_view_inv_tr);
+  //sp->u_on(sp_u_name::v_light_pos);
+  sp->u_on(sp_u_name::v_color);
+  sp->u_on(sp_u_name::f_color_alpha);
+
+  return sp;
+}
+
 shader_program_t *shader_generators::gen_sp_fbo_quad () {
   std::string vs =
     #include "shaders/fb_quad.vs"
