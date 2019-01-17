@@ -25,9 +25,10 @@ void ws_volume_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
 }
 
 void ws_volume_data_t::render() {
+
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_ready_to_render) {
+  if (m_ready_to_render && m_is_visible) {
 
       astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
       vector3<float> scale{1,1,1};
@@ -48,6 +49,7 @@ void ws_volume_data_t::render() {
 
       astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
     }
+
 
   if (m_need_to_regenerate) {
 

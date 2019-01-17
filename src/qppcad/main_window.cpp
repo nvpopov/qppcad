@@ -80,28 +80,44 @@ void main_window::init_menus() {
   file_menu->addAction(file_menu_open_ws);
   connect(file_menu_open_ws, &QAction::triggered, this, &main_window::open_ws);
 
-  file_menu_import = file_menu->addMenu(tr("Import as new workspace"));
+  file_menu_save_ws = new QAction(this);
+  file_menu_save_ws->setText(tr("Save workspace"));
+  file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
+  file_menu->addSeparator();
+  file_menu->addAction(file_menu_save_ws);
+  connect(file_menu_save_ws, &QAction::triggered, this, &main_window::save_ws);
+
+  file_menu_save_ws_as = new QAction(this);
+  file_menu_save_ws_as->setText(tr("Save workspace as"));
+  file_menu->addAction(file_menu_save_ws_as);
+  connect(file_menu_save_ws_as, &QAction::triggered, this, &main_window::save_ws_as);
+
+  file_menu->addSeparator();
+  file_menu_import_as_new_ws = file_menu->addMenu(tr("Import as new workspace"));
+  file_menu_import_to_cur_ws = file_menu->addMenu(tr("Import to current workspace"));
+  file_menu_export_sel_as = file_menu->addMenu(tr("Export selected item"));
+
   file_menu_import_xyz = new QAction(this);
   file_menu_import_xyz->setText("XYZ");
-  file_menu_import->addAction(file_menu_import_xyz);
+  file_menu_import_as_new_ws->addAction(file_menu_import_xyz);
   connect(file_menu_import_xyz, &QAction::triggered, this,
           [this](){this->import_file("Import XYZ file", "*", qc_file_fmt::standart_xyz);});
 
-  file_menu_import_cp2k = file_menu_import->addMenu("CP2K");
+  file_menu_import_cp2k = file_menu_import_as_new_ws->addMenu("CP2K");
   file_menu_import_cp2k_output = new QAction(this);
   file_menu_import_cp2k_output->setText(tr("OUTPUT"));
   file_menu_import_cp2k->addAction(file_menu_import_cp2k_output);
   connect(file_menu_import_cp2k_output, &QAction::triggered, this,
           [this](){this->import_file("Import CP2K output", "*", qc_file_fmt::cp2k_output);});
 
-  file_menu_import_firefly = file_menu_import->addMenu("Firefly");
+  file_menu_import_firefly = file_menu_import_as_new_ws->addMenu("Firefly");
   file_menu_import_firefly_output = new QAction(this);
   file_menu_import_firefly_output->setText(tr("OUTPUT"));
   file_menu_import_firefly->addAction(file_menu_import_firefly_output);
   connect(file_menu_import_firefly_output, &QAction::triggered, this,
           [this](){this->import_file("Import Firefly output", "*", qc_file_fmt::firefly_output);});
 
-  file_menu_import_vasp = file_menu_import->addMenu("VASP");
+  file_menu_import_vasp = file_menu_import_as_new_ws->addMenu("VASP");
   file_menu_import_vasp_poscar = new QAction(this);
   file_menu_import_vasp_poscar->setText(tr("POSCAR"));
   connect(file_menu_import_vasp_poscar, &QAction::triggered, this,
@@ -116,27 +132,16 @@ void main_window::init_menus() {
 
   file_menu_import_cube = new QAction(this);
   file_menu_import_cube->setText(tr("CUBE"));
-  file_menu_import->addAction(file_menu_import_cube);
+  file_menu_import_as_new_ws->addAction(file_menu_import_cube);
   connect(file_menu_import_cube, &QAction::triggered, this,
           [this](){this->import_file("Import cube", "*", qc_file_fmt::cube);});
 
   file_menu_import_uc = new QAction(this);
   file_menu_import_uc->setText(tr("UC"));
-  file_menu_import->addAction(file_menu_import_uc);
+  file_menu_import_as_new_ws->addAction(file_menu_import_uc);
   connect(file_menu_import_uc, &QAction::triggered, this,
           [this](){this->import_file("Import qpp UC file", "*", qc_file_fmt::qpp_uc);});
 
-  file_menu_save_ws = new QAction(this);
-  file_menu_save_ws->setText(tr("Save workspace"));
-  file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
-  file_menu->addSeparator();
-  file_menu->addAction(file_menu_save_ws);
-  connect(file_menu_save_ws, &QAction::triggered, this, &main_window::save_ws);
-
-  file_menu_save_ws_as = new QAction(this);
-  file_menu_save_ws_as->setText(tr("Save workspace as"));
-  file_menu->addAction(file_menu_save_ws_as);
-  connect(file_menu_save_ws_as, &QAction::triggered, this, &main_window::save_ws_as);
 
   file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
 

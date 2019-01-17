@@ -470,22 +470,63 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 }
 
 void workspace_manager_t::init_ws_item_bhv_mgr() {
+
   m_bhv_mgr = std::make_unique<ws_item_behaviour_manager_t>();
 
+  size_t xyz_ff_g_hash = m_bhv_mgr->reg_ffg("XYZ", "xyz");
+  size_t vasp_ff_g_hash = m_bhv_mgr->reg_ffg("VASP", "vasp");
+  size_t firefly_ff_g_hash = m_bhv_mgr->reg_ffg("Firefly", "ff");
+  size_t cp2k_ff_g_hash = m_bhv_mgr->reg_ffg("CP2K", "cp2k");
+
   size_t xyz_ff_hash =
-      m_bhv_mgr->register_file_format("XYZ", "xyz", {".xyz"});
+      m_bhv_mgr->reg_ff("XYZ", "xyz", xyz_ff_g_hash, {".xyz"});
 
   size_t poscar_ff_hash =
-      m_bhv_mgr->register_file_format("VASP POSCAR", "poscar", {"POSCAR", ".vasp", ".VASP"} );
+      m_bhv_mgr->reg_ff("VASP POSCAR", "POSCAR", vasp_ff_g_hash, {"POSCAR", ".vasp", ".VASP"} );
 
   size_t outcar_ff_hash =
-      m_bhv_mgr->register_file_format("VASP OUTCAR", "outcar", {"OUTCAR"} );
+      m_bhv_mgr->reg_ff("VASP OUTCAR", "OUTCAR", vasp_ff_g_hash, {"OUTCAR"} );
+
+  size_t firefly_out_ff_hash =
+      m_bhv_mgr->reg_ff("FF OUTPUT", "OUTPUT", firefly_ff_g_hash, {".out", ".ff"} );
+
+  size_t cp2k_out_ff_hash =
+      m_bhv_mgr->reg_ff("CP2K OUTPUT", "OUTPUT", cp2k_ff_g_hash, {"cp2k", ".out"} );
 
   auto xyz_ff_mgr =
       std::make_shared<
-      ws_atoms_list_io_ccd_wrappered_t<read_ccd_from_xyz_file<float>, true, false, true, true> >();
+      ws_atoms_list_io_ccd_t<
+      read_ccd_from_xyz_file<float>, true, false, true, true, false >
+      >();
 
-  m_bhv_mgr->register_io_behaviour(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
+  auto ff_output_mgf =
+      std::make_shared<
+      ws_atoms_list_io_ccd_t<
+      read_ccd_from_firefly_output<float>, true, true, true, true, false, 0 >
+      >();
+
+  auto cp2k_output_mgf =
+      std::make_shared<
+      ws_atoms_list_io_ccd_t<
+      read_ccd_from_cp2k_output<float>, true, true, true, true, true >
+      >();
+
+  auto vasp_poscar_mgf =
+      std::make_shared<
+      ws_atoms_list_io_loader_t<
+      read_vasp_poscar<float, periodic_cell<float> >, 3 >
+      >();
+
+  auto vasp_outcar_mgf =
+      std::make_shared<
+      ws_atoms_list_io_anim_loader_t<
+      read_vasp_outcar_md_with_frames<float, periodic_cell<float> > > >();
+
+  m_bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
+  m_bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash, ws_atoms_list_t::get_type_static());
+  m_bhv_mgr->reg_io_bhv(cp2k_output_mgf, cp2k_out_ff_hash, ws_atoms_list_t::get_type_static());
+  m_bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash, ws_atoms_list_t::get_type_static());
+  m_bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash, ws_atoms_list_t::get_type_static());
 
 }
 

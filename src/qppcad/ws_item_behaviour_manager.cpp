@@ -92,28 +92,53 @@ std::string ws_item_behaviour_manager_t::get_file_format_full_name(size_t _file_
   else return "NOT_FOUND";
 }
 
-size_t ws_item_behaviour_manager_t::register_file_format(std::string _full_name,
+size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
                                                          std::string _short_name,
+                                                         size_t _file_format_group_hash,
                                                          std::vector<std::string> _finger_prints) {
   app_state_t *astate = app_state_t::get_inst();
 
-  size_t _file_format_hash = astate->hash_reg->calc_hash(_full_name);
-  auto it = m_file_formats.find(_file_format_hash);
+  size_t _ff_hash = astate->hash_reg->calc_hash(_full_name);
+
+  auto it = m_file_formats.find(_ff_hash);
 
   if (it == m_file_formats.end()) {
       ws_item_io_file_format_t new_file_format;
       new_file_format.m_full_name = _full_name;
       new_file_format.m_shortname = _short_name;
       new_file_format.m_finger_prints = _finger_prints;
+      new_file_format.m_group_hash = _file_format_group_hash;
       m_file_formats.insert(
-            std::pair<size_t, ws_item_io_file_format_t>(_file_format_hash,
-                                                        std::move(new_file_format)));
+            std::pair<size_t, ws_item_io_file_format_t>(_ff_hash, std::move(new_file_format)));
     }
 
-  astate->log(fmt::format("Registering file format {}[{}] - hash {}",
-                          _full_name, _short_name, _file_format_hash));
+  astate->log(fmt::format("Registering file format {}[{}] - hash {}, ghash {}",
+                          _full_name, _short_name, _ff_hash, _file_format_group_hash));
 
-  return _file_format_hash;
+  return _ff_hash;
+}
+
+size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
+                                                               std::string _short_name) {
+  app_state_t *astate = app_state_t::get_inst();
+
+  size_t _file_format_group_hash = astate->hash_reg->calc_hash(_full_name);
+
+  auto it = m_file_format_groups.find(_file_format_group_hash);
+
+  if (it == m_file_format_groups.end()) {
+      ws_item_io_file_format_group_t new_file_format_group;
+      new_file_format_group.m_full_name = _full_name;
+      new_file_format_group.m_short_name = _short_name;
+      m_file_format_groups.insert(
+            std::pair<size_t, ws_item_io_file_format_group_t>(_file_format_group_hash,
+                                                              std::move(new_file_format_group)));
+    }
+
+  astate->log(fmt::format("Registering file format group {}[{}] - hash {}",
+                          _full_name, _short_name, _file_format_group_hash));
+
+  return _file_format_group_hash;
 }
 
 std::optional<size_t> ws_item_behaviour_manager_t::get_file_format(std::string &file_name) {
@@ -138,7 +163,7 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format(siz
     if (m_ws_item_io[i]->m_accepted_file_format == file_format) {
         app_state_t *astate = app_state_t::get_inst();
         astate->log(fmt::format("Compare ff {} - io_bhv {}",
-                               file_format, i));
+                                file_format, i));
 
         return std::optional<size_t>(i);
       }
@@ -158,7 +183,7 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format_ex(
 
 }
 
-void ws_item_behaviour_manager_t::register_io_behaviour(
+void ws_item_behaviour_manager_t::reg_io_bhv(
     std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
     size_t accepted_file_format,
     size_t accepted_type) {

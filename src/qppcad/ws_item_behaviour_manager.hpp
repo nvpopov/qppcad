@@ -19,11 +19,19 @@ namespace qpp {
       io_status_parsing_error
     };
 
+
+    class ws_item_io_file_format_group_t {
+      public:
+        std::string m_full_name;
+        std::string m_short_name;
+    };
+
     class ws_item_io_file_format_t {
       public:
         std::string m_full_name;
         std::string m_shortname;
         std::vector<std::string> m_finger_prints;
+        std::optional<size_t> m_group_hash;
     };
 
     class ws_item_io_behaviour_t {
@@ -70,8 +78,8 @@ namespace qpp {
       public:
         ws_item_behaviour_manager_t();
         std::map<size_t, ws_item_io_file_format_t> m_file_formats;
+        std::map<size_t, ws_item_io_file_format_group_t> m_file_format_groups;
         std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
-
 
         std::shared_ptr<ws_item_t> load_ws_item_from_file(std::string &file_name,
                                                           size_t io_bhv_idx);
@@ -83,15 +91,19 @@ namespace qpp {
 
         std::string get_file_format_full_name(size_t _file_format_hash);
 
-        size_t register_file_format(std::string _full_name,
+        size_t reg_ff(std::string _full_name,
                                     std::string _short_name,
+                                    size_t _file_format_group_hash,
                                     std::vector<std::string> _finger_prints);
+
+        size_t reg_ffg(std::string _full_name,
+                                          std::string _short_name);
 
         std::optional<size_t> get_file_format(std::string &file_name);
         std::optional<size_t> get_io_bhv_by_file_format(size_t file_format);
         std::optional<size_t> get_io_bhv_by_file_format_ex(size_t file_format, size_t type_hash);
 
-        void register_io_behaviour(std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
+        void reg_io_bhv(std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
                                    size_t accepted_file_format,
                                    size_t accepted_type);
 

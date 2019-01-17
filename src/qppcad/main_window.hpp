@@ -92,7 +92,9 @@ namespace qpp {
         QAction *file_menu_new_ws;
         QAction *file_menu_open_ws;
 
-        QMenu *file_menu_import;
+        QMenu *file_menu_import_as_new_ws;
+        QMenu *file_menu_import_to_cur_ws;
+        QMenu *file_menu_export_sel_as;
 
         QAction *file_menu_import_xyz;
 
