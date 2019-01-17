@@ -80,7 +80,7 @@ void main_window::init_menus() {
   file_menu->addAction(file_menu_open_ws);
   connect(file_menu_open_ws, &QAction::triggered, this, &main_window::open_ws);
 
-  file_menu_import = file_menu->addMenu(tr("Import"));
+  file_menu_import = file_menu->addMenu(tr("Import as new workspace"));
   file_menu_import_xyz = new QAction(this);
   file_menu_import_xyz->setText("XYZ");
   file_menu_import->addAction(file_menu_import_xyz);
@@ -368,13 +368,13 @@ void main_window::init_widgets() {
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
 
-  tp_show_node_editor = new QCheckBox;
-  tp_show_node_editor->setCheckState(Qt::Unchecked);
-  tp_show_node_editor->setText("NODES");
-  tp_show_node_editor->setMinimumHeight(tp_button_height);
-  tp_show_node_editor->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px;"
-                                     "padding-right:5px; "
-                                     "QCheckBox::indicator { width: 21px;height: 21px;}");
+//  tp_show_node_editor = new QCheckBox;
+//  tp_show_node_editor->setCheckState(Qt::Unchecked);
+//  tp_show_node_editor->setText("NODES");
+//  tp_show_node_editor->setMinimumHeight(tp_button_height);
+//  tp_show_node_editor->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px;"
+//                                     "padding-right:5px; "
+//                                     "QCheckBox::indicator { width: 21px;height: 21px;}");
 
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
@@ -512,7 +512,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_show_node_editor, 0, Qt::AlignLeft);
+//  tool_panel_layout->addWidget(tp_show_node_editor, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
@@ -578,13 +578,13 @@ void main_window::resizeEvent(QResizeEvent *event) {
       tp_rnm_ws->hide();
       tp_rm_ws->hide();
       tp_show_gizmo->hide();
-      tp_show_node_editor->hide();
+     // tp_show_node_editor->hide();
     } else {
       tp_add_ws->show();
       tp_rnm_ws->show();
       tp_rm_ws->show();
       tp_show_gizmo->show();
-      tp_show_node_editor->show();
+     // tp_show_node_editor->show();
     }
 
   QMainWindow::resizeEvent(event);
