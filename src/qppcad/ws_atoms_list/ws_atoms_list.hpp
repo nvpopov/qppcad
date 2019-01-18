@@ -190,14 +190,6 @@ namespace qpp {
         /// \param vShift
         void shift(const vector3<float> shift);
 
-        /// \brief load_from_file
-        /// \param eFileFormat
-        /// \param sFileName
-        /// \param bAutoCenter
-        void load_from_file (qc_file_fmt file_format, std::string file_name,
-                            bool auto_center = false);
-        void save_to_file (qc_file_fmt file_format, std::string file_name);
-
         std::string get_ws_item_class_name() override ;
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;

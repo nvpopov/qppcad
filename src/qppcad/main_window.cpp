@@ -600,43 +600,6 @@ void main_window::tp_show_gizmo_state_changed(int state) {
 
 }
 
-void main_window::import_file(QString dialog_name,
-                              QString file_ext,
-                              qc_file_fmt file_fmt) {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  QString fileName = QFileDialog::getOpenFileName(this, dialog_name, file_ext);
-
-  if (fileName != "") {
-      astate->ws_manager->load_from_file(fileName.toStdString(), file_fmt);
-      wss_changed_slot();
-    }
-}
-
-void main_window::export_selected_geometry(QString dialog_name, qc_file_fmt file_fmt) {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  stop_update_cycle();
-
-  auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws) {
-      //auto cur_idx = cur_ws->get_selected_idx();
-      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
-
-      if (cur_it) {
-          QString file_name =
-              QFileDialog::getSaveFileName(nullptr, dialog_name, "", "*.*", nullptr,
-                                           QFileDialog::ReadOnly);
-          if (file_name != QString::null) cur_it->save_to_file(file_fmt, file_name.toStdString());
-        }
-    }
-
-  start_update_cycle();
-
-}
-
 void main_window::create_new_ws() {
   app_state_t* astate = app_state_t::get_inst();
   astate->ws_manager->create_new_ws(true);

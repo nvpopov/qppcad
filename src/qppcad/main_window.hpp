@@ -168,9 +168,6 @@ namespace qpp {
         void tp_show_obj_insp_state_changed(int state);
         void tp_show_gizmo_state_changed(int state);
 
-        void import_file(QString dialog_name, QString file_ext,  qc_file_fmt file_fmt);
-        void export_selected_geometry(QString dialog_name, qc_file_fmt file_fmt);
-
         void create_new_ws();
         void open_ws();
         void save_ws();
