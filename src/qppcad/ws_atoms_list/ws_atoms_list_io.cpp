@@ -6,7 +6,7 @@ using namespace qpp::cad;
 
 void ws_atoms_list_io_cube_t::load_from_stream_ex(std::basic_istream<char, TRAITS> &stream,
                                                   ws_atoms_list_t *_item,
-                                                  workspace_t *ws){
+                                                  workspace_t *ws) {
   _item->m_tws_tr->do_action(act_lock | act_clear_all);
   _item->m_ext_obs->first_data = true;
 

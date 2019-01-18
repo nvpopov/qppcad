@@ -484,6 +484,9 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   size_t xyz_ff_hash =
       m_bhv_mgr->reg_ff("Standart XYZ", "std::xyz", xyz_ff_g_hash, {".xyz"});
 
+  size_t xyzq_ff_hash =
+      m_bhv_mgr->reg_ff("UC(XYZQ)", "uc(xyzq)", xyz_ff_g_hash, {".uc"});
+
   size_t poscar_ff_hash =
       m_bhv_mgr->reg_ff("VASP POSCAR", "POSCAR", vasp_ff_g_hash, {"POSCAR", ".vasp", ".VASP"} );
 
@@ -494,7 +497,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
       m_bhv_mgr->reg_ff("FF OUTPUT", "OUTPUT", firefly_ff_g_hash, {".out", ".ff"} );
 
   size_t cp2k_out_ff_hash =
-      m_bhv_mgr->reg_ff("CP2K OUTPUT", "OUTPUT", cp2k_ff_g_hash, {"cp2k", ".out"} );
+      m_bhv_mgr->reg_ff("CP2K OUTPUT", "OUTPUT", cp2k_ff_g_hash, {"cp2k", ".cout"} );
 
   size_t generic_cube_ff_hash =
       m_bhv_mgr->reg_ff("CUBE file", "CUBE", generic_ff_g_hash, {".cube", ".CUBE"} );
@@ -503,6 +506,12 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
       std::make_shared<
       ws_atoms_list_io_ccd_t<
       read_ccd_from_xyz_file<float>, true, false, true, true, false >
+      >();
+
+  auto xyzq_mgf =
+      std::make_shared<
+      ws_atoms_list_io_loader_t<
+      read_xyzq_wrp_def<float, periodic_cell<float> >, ws_atoms_list_role_t::r_uc, 3 >
       >();
 
   auto ff_output_mgf =
@@ -520,7 +529,14 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   auto vasp_poscar_mgf =
       std::make_shared<
       ws_atoms_list_io_loader_t<
-      read_vasp_poscar<float, periodic_cell<float> >, 3 >
+      read_vasp_poscar<float, periodic_cell<float> >, ws_atoms_list_role_t::r_generic, 3 >
+      >();
+
+  auto vasp_poscar_s_mgf =
+      std::make_shared<
+      ws_atoms_list_io_saver_t<
+      write_vasp_poscar<
+      float, periodic_cell<float> >, true, 3 >
       >();
 
   auto vasp_outcar_mgf =
@@ -533,7 +549,12 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
       std::make_shared<ws_atoms_list_io_cube_t
       >();
 
+
+
   m_bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(xyzq_mgf, xyzq_ff_hash,
                         ws_atoms_list_t::get_type_static());
 
   m_bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash,
@@ -543,6 +564,9 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
                         ws_atoms_list_t::get_type_static());
 
   m_bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(vasp_poscar_s_mgf, poscar_ff_hash,
                         ws_atoms_list_t::get_type_static());
 
   m_bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash,

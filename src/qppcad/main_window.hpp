@@ -102,6 +102,8 @@ namespace qpp {
         std::vector<qextended_action*> file_menu_import_to_cur_ws_acts;
 
         QMenu *file_menu_export_sel_as;
+        std::map<size_t, QMenu*> file_menu_export_sel_as_menus;
+        std::vector<qextended_action*> file_menu_export_sel_as_acts;
 
         QAction *file_menu_import_xyz;
 
@@ -224,6 +226,7 @@ namespace qpp {
         void build_bhv_menus_and_actions();
         void action_bhv_import_to_cur_workspace();
         void action_bhv_import_as_new_workspace();
+        void control_bhv_menus_activity();
 
     };
   }

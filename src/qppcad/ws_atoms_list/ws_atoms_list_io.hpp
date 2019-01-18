@@ -20,7 +20,36 @@ namespace qpp {
 
   namespace cad {
 
+
     template<auto GENERIC_FUNC_GEOM,
+           //  ws_atoms_list_role_t AL_ROLE = ws_atoms_list_role_t::r_generic,
+             bool CHECK_DIM = false,
+             int REQUIRED_DIM = -1>
+    class ws_atoms_list_io_saver_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
+
+      public:
+
+        bool can_save() override { return true; }
+        bool can_load() override { return false; }
+
+        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+                                 ws_atoms_list_t *_item,
+                                 workspace_t *ws) override {
+        }
+
+        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+                               ws_atoms_list_t *_item) {
+          if (!CHECK_DIM ||
+              (CHECK_DIM && (_item->m_geom->DIM == REQUIRED_DIM))) {
+              GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
+            //  _item->m_role = AL_ROLE;
+            }
+        }
+
+    };
+
+    template<auto GENERIC_FUNC_GEOM,
+             ws_atoms_list_role_t ROLE = ws_atoms_list_role_t::r_generic,
              int FORCED_DIM = -1>
     class ws_atoms_list_io_loader_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
 
@@ -43,7 +72,6 @@ namespace qpp {
 
           GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
 
-
           if (_item->m_geom->nat() > 20000) {
               _item->m_cur_render_type = ws_atoms_list_render_t::billboards;
             }
@@ -56,6 +84,8 @@ namespace qpp {
 
           _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
           _item->m_tws_tr->do_action(act_rebuild_ntable);
+
+          _item->m_role = ROLE;
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,

@@ -18,6 +18,7 @@ main_window::main_window(QWidget *parent) {
   init_base_shortcuts();
   init_menus();
   build_bhv_menus_and_actions();
+  control_bhv_menus_activity();
   init_widgets();
   init_layouts();
 
@@ -329,13 +330,13 @@ void main_window::init_widgets() {
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
 
-//  tp_show_node_editor = new QCheckBox;
-//  tp_show_node_editor->setCheckState(Qt::Unchecked);
-//  tp_show_node_editor->setText("NODES");
-//  tp_show_node_editor->setMinimumHeight(tp_button_height);
-//  tp_show_node_editor->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px;"
-//                                     "padding-right:5px; "
-//                                     "QCheckBox::indicator { width: 21px;height: 21px;}");
+  //  tp_show_node_editor = new QCheckBox;
+  //  tp_show_node_editor->setCheckState(Qt::Unchecked);
+  //  tp_show_node_editor->setText("NODES");
+  //  tp_show_node_editor->setMinimumHeight(tp_button_height);
+  //  tp_show_node_editor->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px;"
+  //                                     "padding-right:5px; "
+  //                                     "QCheckBox::indicator { width: 21px;height: 21px;}");
 
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
@@ -473,7 +474,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
-//  tool_panel_layout->addWidget(tp_show_node_editor, 0, Qt::AlignLeft);
+  //  tool_panel_layout->addWidget(tp_show_node_editor, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
@@ -539,13 +540,13 @@ void main_window::resizeEvent(QResizeEvent *event) {
       tp_rnm_ws->hide();
       tp_rm_ws->hide();
       tp_show_gizmo->hide();
-     // tp_show_node_editor->hide();
+      // tp_show_node_editor->hide();
     } else {
       tp_add_ws->show();
       tp_rnm_ws->show();
       tp_rm_ws->show();
       tp_show_gizmo->show();
-     // tp_show_node_editor->show();
+      // tp_show_node_editor->show();
     }
 
   QMainWindow::resizeEvent(event);
@@ -554,6 +555,8 @@ void main_window::resizeEvent(QResizeEvent *event) {
 void main_window::wss_changed_slot() {
 
   app_state_t* astate = app_state_t::get_inst();
+
+  control_bhv_menus_activity();
 
   tp_ws_selector->blockSignals(true);
 
@@ -1263,56 +1266,69 @@ void main_window::build_bhv_menus_and_actions() {
 
   //init groups for IMPORTED TO WS
   for (auto &ff_grp : bhv_mgr->m_file_format_groups) {
-      //import to current workspace
-      QMenu *new_menu =
-          file_menu_import_to_cur_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
-      file_menu_import_to_cur_ws_menus.emplace(ff_grp.first, new_menu);
-
-      //iterate over file formats from group
-      for (auto &ff : ff_grp.second.m_ffs_lookup) {
-          //bool at_least_one_bhv_founded = false;
-          for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++)
-            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
-                bhv_mgr->m_ws_item_io[i]->can_load() &&
-                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
-                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
-                qextended_action *new_act = new qextended_action(this);
-                new_act->m_joined_data[0] = i;
-                connect(new_act, &QAction::triggered,
-                        this, &main_window::action_bhv_import_to_cur_workspace);
-                new_act->setText(QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                new_menu->addAction(new_act);
-                //at_least_one_bhv_founded = true;
-              }
-        }
-      //TODO: make lookup for bhv
-    }
-
-  //init groups for IMPORTED AS NEW WS
-  for (auto &ff_grp : bhv_mgr->m_file_format_groups) {
-      //import to current workspace
-      QMenu *new_menu =
+      //spawn top-level menus
+      QMenu *new_menu_as_new_ws =
           file_menu_import_as_new_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
-      file_menu_import_as_new_ws_menus.emplace(ff_grp.first, new_menu);
+      QMenu *new_menu_to_cur_ws =
+          file_menu_import_to_cur_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+
+      QMenu *new_menu_export_selected =
+          file_menu_export_sel_as->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+
+      file_menu_import_as_new_ws_menus.emplace(ff_grp.first, new_menu_as_new_ws);
+      file_menu_import_to_cur_ws_menus.emplace(ff_grp.first, new_menu_to_cur_ws);
+      file_menu_export_sel_as_menus.emplace(ff_grp.first, new_menu_export_selected);
 
       //iterate over file formats from group
       for (auto &ff : ff_grp.second.m_ffs_lookup) {
           //bool at_least_one_bhv_founded = false;
-          for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++)
-            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
-                bhv_mgr->m_ws_item_io[i]->can_load() &&
-                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
-                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
-                qextended_action *new_act = new qextended_action(this);
-                new_act->m_joined_data[0] = i;
-                connect(new_act, &QAction::triggered,
-                        this, &main_window::action_bhv_import_as_new_workspace);
-                new_act->setText(QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                new_menu->addAction(new_act);
-                //at_least_one_bhv_founded = true;
-              }
+          for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++) {
+
+              //deduce import to current ws
+              if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+                  bhv_mgr->m_ws_item_io[i]->can_load() &&
+                  bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+                  bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
+                  qextended_action *new_act = new qextended_action(this);
+                  new_act->m_joined_data[0] = i;
+                  connect(new_act, &QAction::triggered,
+                          this, &main_window::action_bhv_import_to_cur_workspace);
+                  new_act->setText(
+                        QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                  new_menu_to_cur_ws->addAction(new_act);
+                  //at_least_one_bhv_founded = true;
+                }
+
+              //deduce import as new ws
+              if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+                  bhv_mgr->m_ws_item_io[i]->can_load() &&
+                  bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+                  bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
+                  qextended_action *new_act = new qextended_action(this);
+                  new_act->m_joined_data[0] = i;
+                  connect(new_act, &QAction::triggered,
+                          this, &main_window::action_bhv_import_as_new_workspace);
+                  new_act->setText(
+                        QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                  new_menu_as_new_ws->addAction(new_act);
+                  //at_least_one_bhv_founded = true;
+                }
+
+              //deduce save selected item
+              if (bhv_mgr->m_ws_item_io[i]->can_save() &&
+                  bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
+                  qextended_action *new_act = new qextended_action(this);
+                  new_act->m_joined_data[0] = i;
+//                  connect(new_act, &QAction::triggered,
+//                          this, &main_window::action_bhv_import_as_new_workspace);
+                  new_act->setText(
+                        QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                  new_menu_export_selected->addAction(new_act);
+                  //at_least_one_bhv_founded = true;
+                }
+            }
         }
       //TODO: make lookup for bhv
     }
@@ -1333,10 +1349,10 @@ void main_window::action_bhv_import_to_cur_workspace() {
   if (b_id < bhv_mgr->m_ws_item_io.size() &&
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
-       // astate->log(fmt::format("{}", b_id));
+      // astate->log(fmt::format("{}", b_id));
       std::string file_name = QFileDialog::getOpenFileName(this,
-                                                      "dialog_name",
-                                                      "*.*").toStdString();
+                                                           "dialog_name",
+                                                           "*.*").toStdString();
       if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id, false);
     }
 
@@ -1356,11 +1372,43 @@ void main_window::action_bhv_import_as_new_workspace() {
   if (b_id < bhv_mgr->m_ws_item_io.size() &&
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_as_new_ws) {
-       // astate->log(fmt::format("{}", b_id));
+      // astate->log(fmt::format("{}", b_id));
       std::string file_name = QFileDialog::getOpenFileName(this,
-                                                      "dialog_name",
-                                                      "*.*").toStdString();
+                                                           "dialog_name",
+                                                           "*.*").toStdString();
       if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id);
+    }
+
+}
+
+void main_window::control_bhv_menus_activity() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  if (!astate->ws_manager) return;
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
+  if (!astate->ws_manager->has_wss()) {
+
+      file_menu_import_to_cur_ws->setEnabled(false);
+      file_menu_export_sel_as->setEnabled(false);
+
+    } else {
+
+      file_menu_import_to_cur_ws->setEnabled(true);
+      bool need_to_enable_export_menu{false};
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected_sp();
+          if (cur_it)
+            for (auto &exp_act : file_menu_export_sel_as_acts) {
+                size_t bhv_id = exp_act->m_joined_data[0];
+                if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
+                    bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
+                    need_to_enable_export_menu = true;
+                    //save item dialog
+                  }
+              }
+        }
     }
 
 }
