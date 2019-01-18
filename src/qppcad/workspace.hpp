@@ -53,10 +53,9 @@ namespace qpp {
                                        const std::string file_format = "");
 
         void load_from_file(const std::string &fname,
-                            qc_file_fmt file_format,
                             bool override = true);
 
-        void import_from_file(std::string &fname,
+        void import_from_file(const std::string &fname,
                               size_t bhv_id,
                               bool need_to_create_new_ws = true);
 

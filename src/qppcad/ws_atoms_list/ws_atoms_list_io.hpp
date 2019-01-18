@@ -22,7 +22,6 @@ namespace qpp {
 
 
     template<auto GENERIC_FUNC_GEOM,
-           //  ws_atoms_list_role_t AL_ROLE = ws_atoms_list_role_t::r_generic,
              bool CHECK_DIM = false,
              int REQUIRED_DIM = -1>
     class ws_atoms_list_io_saver_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
@@ -38,7 +37,7 @@ namespace qpp {
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
-                               ws_atoms_list_t *_item) {
+                               ws_atoms_list_t *_item) override {
           if (!CHECK_DIM ||
               (CHECK_DIM && (_item->m_geom->DIM == REQUIRED_DIM))) {
               GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));

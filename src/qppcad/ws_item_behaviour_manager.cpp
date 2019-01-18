@@ -12,10 +12,8 @@ ws_item_behaviour_manager_t::ws_item_behaviour_manager_t() {
 
 }
 
-
-
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
-    std::string &file_name,
+    const std::string &file_name,
     size_t io_bhv_idx,
     workspace_t *ws) {
 
@@ -42,7 +40,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
 }
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
-    std::string &file_name,
+    const std::string &file_name,
     workspace_t *ws) {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -51,7 +49,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
 
   if (!check_file.exists() || !check_file.isFile()) return nullptr;
 
-  auto file_format = get_file_format(file_name);
+  auto file_format = get_file_fmt_by_finger_print(file_name);
 
   if (file_format) {
       std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
@@ -113,7 +111,8 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
         m_file_format_groups[_file_format_group_hash].m_ffs_lookup.insert(_ff_hash);
 
       m_file_formats.insert(
-            std::pair<size_t, ws_item_io_file_format_t>(_ff_hash, std::move(new_file_format)));
+            std::pair<size_t, ws_item_io_file_format_t>(_ff_hash, std::move(new_file_format))
+            );
     }
 
   astate->log(fmt::format("Registering file format {}[{}] - hash {}, ghash {}",
@@ -145,7 +144,8 @@ size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
   return _file_format_group_hash;
 }
 
-std::optional<size_t> ws_item_behaviour_manager_t::get_file_format(std::string &file_name) {
+std::optional<size_t> ws_item_behaviour_manager_t::get_file_fmt_by_finger_print(
+    const std::string &file_name) {
 
   for (auto &elem : m_file_formats)
     for (auto &ffp : elem.second.m_finger_prints)
@@ -153,7 +153,6 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_file_format(std::string &
           app_state_t *astate = app_state_t::get_inst();
           astate->log(fmt::format("Compare ff {} {} - fname {}",
                                   elem.first, elem.second.m_full_name, file_name));
-
           return std::optional<size_t>(elem.first);
         }
 
@@ -161,14 +160,19 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_file_format(std::string &
 
 }
 
+std::optional<size_t> ws_item_behaviour_manager_t::get_file_fmt_by_short_name(
+    const std::string &ffmt_short_name) {
+  for (auto &elem : m_file_formats)
+    if (elem.second.m_shortname == ffmt_short_name) return std::optional<size_t>(elem.first);
+  return std::nullopt;
+}
+
 std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format(size_t file_format) {
 
   for (size_t i = 0; i < m_ws_item_io.size(); i++)
     if (m_ws_item_io[i]->m_accepted_file_format == file_format) {
         app_state_t *astate = app_state_t::get_inst();
-        astate->log(fmt::format("Compare ff {} - io_bhv {}",
-                                file_format, i));
-
+        astate->log(fmt::format("Compare ff {} - io_bhv {}",file_format, i));
         return std::optional<size_t>(i);
       }
 

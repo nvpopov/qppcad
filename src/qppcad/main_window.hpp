@@ -105,20 +105,6 @@ namespace qpp {
         std::map<size_t, QMenu*> file_menu_export_sel_as_menus;
         std::vector<qextended_action*> file_menu_export_sel_as_acts;
 
-        QAction *file_menu_import_xyz;
-
-        QMenu *file_menu_import_cp2k;
-        QAction *file_menu_import_cp2k_output;
-
-        QMenu *file_menu_import_vasp;
-        QAction *file_menu_import_vasp_outcar;
-        QAction *file_menu_import_vasp_poscar;
-
-        QMenu *file_menu_import_firefly;
-        QAction *file_menu_import_firefly_output;
-        QAction *file_menu_import_cube;
-        QAction *file_menu_import_uc;
-
         QAction *file_menu_save_ws;
         QAction *file_menu_save_ws_as;
         QMenu *file_menu_recent_files;
@@ -147,11 +133,6 @@ namespace qpp {
         QAction *tools_menu_axial_scale;
         QMenu *tools_menu_generators;
         QAction *tools_menu_sc_generator;
-        QMenu *tools_menu_quick_geom_export;
-        QAction *tools_menu_quick_geom_export_xyz;
-        QAction *tools_menu_quick_geom_export_vasp_poscar;
-        QAction *tools_menu_quick_geom_export_cp2k_coord;
-        QAction *tools_menu_quick_geom_export_qpp_uc;
 
         QMenu *help_menu;
         QAction *help_menu_about;

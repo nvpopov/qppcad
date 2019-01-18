@@ -165,11 +165,7 @@ void main_window::init_menus() {
 
   edit_menu_settings = new QAction(this);
   edit_menu_settings->setText(tr("Settings"));
-  connect(edit_menu_settings, &QAction::triggered,
-          [](){
-      app_settings_widget_t aset;
-      aset.exec();
-    });
+  connect(edit_menu_settings, &QAction::triggered,[](){app_settings_widget_t aset;aset.exec();} );
 
   edit_menu_ws_settings = new QAction(this);
   edit_menu_ws_settings->setText(tr("Workspace settings"));
@@ -235,34 +231,6 @@ void main_window::init_menus() {
   connect(tools_menu_sc_generator, &QAction::triggered, this,
           &main_window::dialog_supercell_generation);
 
-  tools_menu_quick_geom_export = tools_menu->addMenu(tr("Export selected geometry"));
-  tools_menu_quick_geom_export_xyz = new QAction(this);
-  tools_menu_quick_geom_export_xyz->setText("XYZ");
-  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_xyz);
-  connect(tools_menu_quick_geom_export_xyz, &QAction::triggered, this,
-          [this](){this->export_selected_geometry("Export[xyz]", qc_file_fmt::standart_xyz);});
-
-  tools_menu_quick_geom_export_cp2k_coord = new QAction(this);
-  tools_menu_quick_geom_export_cp2k_coord->setText("CP2K coord section");
-  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_cp2k_coord);
-  connect(tools_menu_quick_geom_export_cp2k_coord, &QAction::triggered, this,
-          [this]() { this->export_selected_geometry("Export[CP2K coord. section]",
-                                                    qc_file_fmt::cp2k_coord_cell_section);});
-
-  tools_menu_quick_geom_export_vasp_poscar = new QAction(this);
-  tools_menu_quick_geom_export_vasp_poscar->setText("VASP POSCAR");
-  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_vasp_poscar);
-  connect(tools_menu_quick_geom_export_vasp_poscar, &QAction::triggered, this,
-          [this]() { this->export_selected_geometry("Export[VASP POSCAR]",
-                                                    qc_file_fmt::vasp_poscar);});
-
-  tools_menu_quick_geom_export_qpp_uc = new QAction(this);
-  tools_menu_quick_geom_export_qpp_uc->setText(tr("qpp UC"));
-  tools_menu_quick_geom_export->addAction(tools_menu_quick_geom_export_qpp_uc);
-  connect(tools_menu_quick_geom_export_qpp_uc, &QAction::triggered, this,
-          [this]() { this->export_selected_geometry("Export[qpp UC]",
-                                                    qc_file_fmt::qpp_uc);});
-
   help_menu  = menuBar()->addMenu(tr("&Help"));
   help_menu_about = new QAction(this);
   help_menu_about->setText(tr("About"));
@@ -285,12 +253,10 @@ void main_window::init_widgets() {
                    SIGNAL(currentIndexChanged(int)),
                    this,
                    SLOT(ws_selector_selection_changed(int)));
-  //tp_ws_selector->setParent(tool_panel_widget);
+
   tp_ws_selector->setStyleSheet("padding:4px;");
   tp_ws_selector->setMinimumWidth(150);
   tp_ws_selector->setMinimumHeight(tp_button_height);
-  //  tp_ws_selector_label = new QLabel;
-  //  tp_ws_selector_label->setText(tr("Current workspace:"));
 
   tp_add_ws = new QPushButton;
   tp_add_ws->setMinimumWidth(30);
@@ -314,8 +280,11 @@ void main_window::init_widgets() {
   tp_show_obj_insp->setCheckState(Qt::Checked);
   tp_show_obj_insp->setText("INS");
   tp_show_obj_insp->setMinimumHeight(tp_button_height);
-  QObject::connect(tp_show_obj_insp, SIGNAL(stateChanged(int)),
-                   this, SLOT(tp_show_obj_insp_state_changed(int)));
+  QObject::connect(tp_show_obj_insp,
+                   SIGNAL(stateChanged(int)),
+                   this,
+                   SLOT(tp_show_obj_insp_state_changed(int)));
+
   tp_show_obj_insp->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
                                   "padding-right:5px; "
                                   "QCheckBox::indicator { width: 21px;height: 21px;}");
@@ -1282,56 +1251,60 @@ void main_window::build_bhv_menus_and_actions() {
       file_menu_export_sel_as_menus.emplace(ff_grp.first, new_menu_export_selected);
 
       //iterate over file formats from group
-      for (auto &ff : ff_grp.second.m_ffs_lookup) {
-          //bool at_least_one_bhv_founded = false;
-          for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++) {
+      for (auto &ff : ff_grp.second.m_ffs_lookup)
 
-              //deduce import to current ws
-              if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
-                  bhv_mgr->m_ws_item_io[i]->can_load() &&
-                  bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
-                  bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
-                  qextended_action *new_act = new qextended_action(this);
-                  new_act->m_joined_data[0] = i;
-                  connect(new_act, &QAction::triggered,
-                          this, &main_window::action_bhv_import_to_cur_workspace);
-                  new_act->setText(
-                        QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                  new_menu_to_cur_ws->addAction(new_act);
-                  //at_least_one_bhv_founded = true;
-                }
+        for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++) {
 
-              //deduce import as new ws
-              if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
-                  bhv_mgr->m_ws_item_io[i]->can_load() &&
-                  bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
-                  bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
-                  qextended_action *new_act = new qextended_action(this);
-                  new_act->m_joined_data[0] = i;
-                  connect(new_act, &QAction::triggered,
-                          this, &main_window::action_bhv_import_as_new_workspace);
-                  new_act->setText(
-                        QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                  new_menu_as_new_ws->addAction(new_act);
-                  //at_least_one_bhv_founded = true;
-                }
+            //deduce import to current ws
+            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+                bhv_mgr->m_ws_item_io[i]->can_load() &&
+                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
+                qextended_action *new_act = new qextended_action(this);
+                new_act->m_joined_data[0] = i;
+                connect(new_act, &QAction::triggered,
+                        this, &main_window::action_bhv_import_to_cur_workspace);
+                new_act->setText(
+                      QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                new_menu_to_cur_ws->addAction(new_act);
+              }
 
-              //deduce save selected item
-              if (bhv_mgr->m_ws_item_io[i]->can_save() &&
-                  bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
-                  qextended_action *new_act = new qextended_action(this);
-                  new_act->m_joined_data[0] = i;
-//                  connect(new_act, &QAction::triggered,
-//                          this, &main_window::action_bhv_import_as_new_workspace);
-                  new_act->setText(
-                        QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                  new_menu_export_selected->addAction(new_act);
-                  //at_least_one_bhv_founded = true;
-                }
-            }
-        }
-      //TODO: make lookup for bhv
+            //deduce import as new ws
+            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+                bhv_mgr->m_ws_item_io[i]->can_load() &&
+                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
+                qextended_action *new_act = new qextended_action(this);
+                new_act->m_joined_data[0] = i;
+                connect(new_act, &QAction::triggered,
+                        this, &main_window::action_bhv_import_as_new_workspace);
+                new_act->setText(
+                      QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                new_menu_as_new_ws->addAction(new_act);
+              }
+
+            //deduce save selected item
+            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+                bhv_mgr->m_ws_item_io[i]->can_save() &&
+                bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
+                std::cout <<
+                             fmt::format("i={} can_save={}\n",
+                                         i,
+                                         bhv_mgr->m_ws_item_io[i]->can_save())
+                          << std::endl;
+                qextended_action *new_act = new qextended_action(this);
+                new_act->m_joined_data[0] = i;
+                //                  connect(new_act, &QAction::triggered,
+                //                          this, &main_window::action_bhv_import_as_new_workspace);
+                new_act->setText(
+                      QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                new_menu_export_selected->addAction(new_act);
+                //at_least_one_bhv_founded = true;
+              }
+          }
     }
+  //TODO: make lookup for bhv
+
 
 }
 

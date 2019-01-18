@@ -398,20 +398,11 @@ void workspace_manager_t::init_default () {
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   if (!test_in_dev_env.good()) return;
 
-  load_from_file("../deps/qpp/examples/io/ref_data/xyz/slab.xyz",
-                 qc_file_fmt::standart_xyz);
-
-  load_from_file("../data/refs/POSCAR.mp-558947_SiO2",
-                 qc_file_fmt::vasp_poscar);
-
-  load_from_file("../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz",
-                 qc_file_fmt::standart_xyz);
-
-  load_from_file("../data/refs/mp-971662_Si.vasp",
-                 qc_file_fmt::vasp_poscar);
-
-  load_from_file("../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out",
-                 qc_file_fmt::firefly_output);
+  load_from_file_autodeduce("../deps/qpp/examples/io/ref_data/xyz/slab.xyz");
+  load_from_file_autodeduce("../data/refs/POSCAR.mp-558947_SiO2");
+  load_from_file_autodeduce("../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz");
+  load_from_file_autodeduce("../data/refs/mp-971662_Si.vasp");
+  //load_from_file("../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out");
 
 }
 
@@ -482,25 +473,28 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   size_t generic_ff_g_hash = m_bhv_mgr->reg_ffg("Generic formats", "generic");
 
   size_t xyz_ff_hash =
-      m_bhv_mgr->reg_ff("Standart XYZ", "std::xyz", xyz_ff_g_hash, {".xyz"});
+      m_bhv_mgr->reg_ff("Standart XYZ", "xyz", xyz_ff_g_hash, {".xyz"});
 
   size_t xyzq_ff_hash =
-      m_bhv_mgr->reg_ff("UC(XYZQ)", "uc(xyzq)", xyz_ff_g_hash, {".uc"});
+      m_bhv_mgr->reg_ff("UC(XYZQ)", "uc", xyz_ff_g_hash, {".uc"});
 
   size_t poscar_ff_hash =
-      m_bhv_mgr->reg_ff("VASP POSCAR", "POSCAR", vasp_ff_g_hash, {"POSCAR", ".vasp", ".VASP"} );
+      m_bhv_mgr->reg_ff("VASP POSCAR", "poscar", vasp_ff_g_hash, {"POSCAR", ".vasp", ".VASP"} );
 
   size_t outcar_ff_hash =
-      m_bhv_mgr->reg_ff("VASP OUTCAR", "OUTCAR", vasp_ff_g_hash, {"OUTCAR"} );
+      m_bhv_mgr->reg_ff("VASP OUTCAR", "outcar", vasp_ff_g_hash, {"OUTCAR"} );
 
   size_t firefly_out_ff_hash =
-      m_bhv_mgr->reg_ff("FF OUTPUT", "OUTPUT", firefly_ff_g_hash, {".out", ".ff"} );
+      m_bhv_mgr->reg_ff("FF OUTPUT", "ffout", firefly_ff_g_hash, {".out", ".ff"} );
 
   size_t cp2k_out_ff_hash =
-      m_bhv_mgr->reg_ff("CP2K OUTPUT", "OUTPUT", cp2k_ff_g_hash, {"cp2k", ".cout"} );
+      m_bhv_mgr->reg_ff("CP2K OUTPUT", "cp2k", cp2k_ff_g_hash, {"cp2k", ".cout"} );
+
+  size_t cp2k_cs_ff_hash =
+      m_bhv_mgr->reg_ff("CP2K Coord.", "cp2kcs", cp2k_ff_g_hash, {".coord", ".cp2k_crd"} );
 
   size_t generic_cube_ff_hash =
-      m_bhv_mgr->reg_ff("CUBE file", "CUBE", generic_ff_g_hash, {".cube", ".CUBE"} );
+      m_bhv_mgr->reg_ff("CUBE file", "cube", generic_ff_g_hash, {".cube", ".CUBE"} );
 
   auto xyz_ff_mgr =
       std::make_shared<
@@ -508,10 +502,22 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
       read_ccd_from_xyz_file<float>, true, false, true, true, false >
       >();
 
+  auto xyz_s_ff_mgr =
+      std::make_shared<
+      ws_atoms_list_io_saver_t<
+      write_xyz<float, periodic_cell<float> > >
+      >();
+
   auto xyzq_mgf =
       std::make_shared<
       ws_atoms_list_io_loader_t<
       read_xyzq_wrp_def<float, periodic_cell<float> >, ws_atoms_list_role_t::r_uc, 3 >
+      >();
+
+  auto xyzq_s_mgf =
+      std::make_shared<
+      ws_atoms_list_io_saver_t<
+      write_xyzq<float, periodic_cell<float> >, true, 3 >
       >();
 
   auto ff_output_mgf =
@@ -524,6 +530,12 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
       std::make_shared<
       ws_atoms_list_io_ccd_t<
       read_ccd_from_cp2k_output<float>, true, true, true, false, true >
+      >();
+
+  auto cp2k_cs_mgf =
+      std::make_shared<
+      ws_atoms_list_io_saver_t<
+      write_cp2k_coord_section<float, periodic_cell<float> >, true, 3 >
       >();
 
   auto vasp_poscar_mgf =
@@ -550,17 +562,25 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
       >();
 
 
-
   m_bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash,
                         ws_atoms_list_t::get_type_static());
 
+  m_bhv_mgr->reg_io_bhv(xyz_s_ff_mgr, xyz_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
   m_bhv_mgr->reg_io_bhv(xyzq_mgf, xyzq_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(xyzq_s_mgf, xyzq_ff_hash,
                         ws_atoms_list_t::get_type_static());
 
   m_bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash,
                         ws_atoms_list_t::get_type_static());
 
   m_bhv_mgr->reg_io_bhv(cp2k_output_mgf, cp2k_out_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(cp2k_cs_mgf, cp2k_cs_ff_hash,
                         ws_atoms_list_t::get_type_static());
 
   m_bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash,
@@ -579,7 +599,6 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
 
 
 void workspace_manager_t::load_from_file(const std::string &fname,
-                                         qc_file_fmt file_format,
                                          bool override) {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -596,28 +615,16 @@ void workspace_manager_t::load_from_file(const std::string &fname,
   std::string file_name_extr = qpp::extract_base_name(fname);
   new_ws->m_ws_name = file_name_extr;
   new_ws->m_fs_path = fname;
-
-  if (file_format != qc_file_fmt::qppcad_json) {
-
-      new_ws->m_is_ws_imported = true;
-
-      auto new_atoms_list = std::make_shared<ws_atoms_list_t>();
-      new_ws->add_item_to_ws(new_atoms_list);
-      new_atoms_list->load_from_file(file_format, fname,
-                                     qc_file_fmt_helper::need_to_auto_center(file_format));
-
-    } else {
-      new_ws->load_ws_from_json(fname);
-    }
+  new_ws->load_ws_from_json(fname);
 
   add_ws(new_ws);
   set_cur_id(m_ws.size()-1);
 
-  astate->astate_evd->new_file_loaded(fname, file_format);
+  //astate->astate_evd->new_file_loaded(fname, file_format);
 
 }
 
-void workspace_manager_t::import_from_file(std::string &fname,
+void workspace_manager_t::import_from_file(const std::string &fname,
                                            size_t bhv_id,
                                            bool need_to_create_new_ws) {
 
@@ -637,16 +644,34 @@ void workspace_manager_t::import_from_file(std::string &fname,
   if (exec_ws) {
       auto p_new_item = m_bhv_mgr->load_ws_item_from_file(fname, bhv_id, exec_ws.get());
       astate->astate_evd->cur_ws_changed();
+      if (need_to_create_new_ws && p_new_item) exec_ws->m_ws_name = p_new_item->m_name;
     }
 
 }
 
 void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
                                                     const std::string file_format) {
-  qc_file_fmt guess_ff;
-  if (file_format.empty()) guess_ff = qc_file_fmt_helper::file_name_to_file_format(file_name);
-  else guess_ff = qc_file_fmt_helper::file_format_from_string(file_format);
-  load_from_file(file_name, guess_ff);
+
+  if (file_name.find("json") != std::string::npos ||
+      file_format.find("json") != std::string::npos) {
+       load_from_file(file_name, false);
+    } else {
+      //do autodeduce magic
+      if (!file_format.empty()) {
+          auto ff = m_bhv_mgr->get_file_fmt_by_short_name(file_format);
+          if (ff) {
+              auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
+              if (bhv_id) import_from_file(file_name, *bhv_id, true);
+            }
+        } else {
+          auto ff = m_bhv_mgr->get_file_fmt_by_finger_print(file_name);
+          if (ff) {
+              auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
+              if (bhv_id) import_from_file(file_name, *bhv_id, true);
+            }
+        }
+    }
+
 }
 
 
