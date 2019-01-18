@@ -456,13 +456,13 @@ void simple_query::bopen(std::string _file_name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto p_new_item = astate->ws_manager->m_bhv_mgr->load_ws_item_from_file(_file_name);
+//  auto p_new_item = astate->ws_manager->m_bhv_mgr->load_ws_item_from_file(_file_name);
 
-  if (p_new_item) {
-      astate->ws_manager->create_new_ws(true);
-      auto last_ws = astate->ws_manager->m_ws[astate->ws_manager->m_ws.size()-1];
-      last_ws->add_item_to_ws(p_new_item);
-    }
+//  if (p_new_item) {
+//      astate->ws_manager->create_new_ws(true);
+//      auto last_ws = astate->ws_manager->m_ws[astate->ws_manager->m_ws.size()-1];
+//      last_ws->add_item_to_ws(p_new_item);
+//    }
 
 }
 

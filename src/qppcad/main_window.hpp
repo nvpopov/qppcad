@@ -26,6 +26,7 @@
 #include <qppcad/super_cell_widget.hpp>
 #include <qppcad/axial_scale_widget.hpp>
 #include <qppcad/python_console_widget.hpp>
+#include <qppcad/qextended_action.hpp>
 
 namespace qpp {
 
@@ -93,7 +94,13 @@ namespace qpp {
         QAction *file_menu_open_ws;
 
         QMenu *file_menu_import_as_new_ws;
+        std::map<size_t, QMenu*> file_menu_import_as_new_ws_menus;
+        std::vector<qextended_action*> file_menu_import_as_new_ws_acts;
+
         QMenu *file_menu_import_to_cur_ws;
+        std::map<size_t, QMenu*> file_menu_import_to_cur_ws_menus;
+        std::vector<qextended_action*> file_menu_import_to_cur_ws_acts;
+
         QMenu *file_menu_export_sel_as;
 
         QAction *file_menu_import_xyz;
@@ -213,6 +220,10 @@ namespace qpp {
 
         void rebuild_recent_files_menu();
         void recent_files_clicked();
+
+        void build_bhv_menus_and_actions();
+        void action_bhv_import_to_cur_workspace();
+        void action_bhv_import_as_new_workspace();
 
     };
   }

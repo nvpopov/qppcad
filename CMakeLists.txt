@@ -80,6 +80,7 @@ add_executable(qppcad
     src/qppcad/axial_scale_widget.cpp
     src/qppcad/object_inspector_widget.cpp
     src/qppcad/app_settings_widget.cpp
+    src/qppcad/qextended_action.cpp
 
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp

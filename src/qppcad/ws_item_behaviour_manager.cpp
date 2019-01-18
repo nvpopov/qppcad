@@ -16,7 +16,8 @@ ws_item_behaviour_manager_t::ws_item_behaviour_manager_t() {
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
     std::string &file_name,
-    size_t io_bhv_idx) {
+    size_t io_bhv_idx,
+    workspace_t *ws) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -25,11 +26,12 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
   astate->log(fmt::format("Loading ws_item from file {}", file_name));
 
   auto new_ws_item = fabric_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
+  ws->add_item_to_ws(new_ws_item);
 
   if (new_ws_item) {
       std::ifstream input(file_name);
       new_ws_item->m_name = extract_base_name(file_name);
-      m_ws_item_io[io_bhv_idx]->load_from_stream(input, new_ws_item.get());
+      m_ws_item_io[io_bhv_idx]->load_from_stream(input, new_ws_item.get(), ws);
       return new_ws_item;
     } else {
       return nullptr;
@@ -40,7 +42,8 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
 }
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
-    std::string &file_name) {
+    std::string &file_name,
+    workspace_t *ws) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -54,7 +57,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
       std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
 
       if (io_bhv_id) {
-          auto ret_sp = load_ws_item_from_file(file_name, *io_bhv_id);
+          auto ret_sp = load_ws_item_from_file(file_name, *io_bhv_id, ws);
           return ret_sp;
         }
     }
@@ -77,13 +80,9 @@ void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name,
 
 }
 
-void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name, ws_item_t *ws_item) {
+void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name, ws_item_t *ws_item){
 
   if (!ws_item) return;
-  //  for (size_t i = 0; i < m_ws_item_io.size(); i++)
-  //    if (m_ws_item_io[i]->is_type_accepted(ws_item->get_type()) && m_ws_item_io[i]->can_save()) {
-  //        save_ws_item_to_file(file_name, ws_item, i, true);
-  //      }
 }
 
 std::string ws_item_behaviour_manager_t::get_file_format_full_name(size_t _file_format_hash) {
@@ -93,9 +92,9 @@ std::string ws_item_behaviour_manager_t::get_file_format_full_name(size_t _file_
 }
 
 size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
-                                                         std::string _short_name,
-                                                         size_t _file_format_group_hash,
-                                                         std::vector<std::string> _finger_prints) {
+                                           std::string _short_name,
+                                           size_t _file_format_group_hash,
+                                           std::vector<std::string> _finger_prints) {
   app_state_t *astate = app_state_t::get_inst();
 
   size_t _ff_hash = astate->hash_reg->calc_hash(_full_name);
@@ -108,6 +107,11 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
       new_file_format.m_shortname = _short_name;
       new_file_format.m_finger_prints = _finger_prints;
       new_file_format.m_group_hash = _file_format_group_hash;
+
+      auto it_ffg = m_file_format_groups.find(_file_format_group_hash);
+      if (it_ffg != m_file_format_groups.end())
+        m_file_format_groups[_file_format_group_hash].m_ffs_lookup.insert(_ff_hash);
+
       m_file_formats.insert(
             std::pair<size_t, ws_item_io_file_format_t>(_ff_hash, std::move(new_file_format)));
     }
@@ -119,7 +123,7 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
 }
 
 size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
-                                                               std::string _short_name) {
+                                            std::string _short_name) {
   app_state_t *astate = app_state_t::get_inst();
 
   size_t _file_format_group_hash = astate->hash_reg->calc_hash(_full_name);

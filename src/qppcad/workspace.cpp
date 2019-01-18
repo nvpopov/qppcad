@@ -296,8 +296,10 @@ void workspace_t::load_ws_from_json (const std::string filename) {
               obj->load_from_json(object);
               add_item_to_ws(obj);
             } else {
-              astate->log(fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
-                                      object[JSON_WS_ITEM_NAME].get<std::string>(), filename));
+              astate->log(
+                    fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
+                                      object[JSON_WS_ITEM_NAME].get<std::string>(), filename)
+                    );
             }
       }
 
@@ -479,7 +481,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   size_t cp2k_ff_g_hash = m_bhv_mgr->reg_ffg("CP2K", "cp2k");
 
   size_t xyz_ff_hash =
-      m_bhv_mgr->reg_ff("XYZ", "xyz", xyz_ff_g_hash, {".xyz"});
+      m_bhv_mgr->reg_ff("Standart XYZ", "std::xyz", xyz_ff_g_hash, {".xyz"});
 
   size_t poscar_ff_hash =
       m_bhv_mgr->reg_ff("VASP POSCAR", "POSCAR", vasp_ff_g_hash, {"POSCAR", ".vasp", ".VASP"} );
@@ -508,7 +510,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   auto cp2k_output_mgf =
       std::make_shared<
       ws_atoms_list_io_ccd_t<
-      read_ccd_from_cp2k_output<float>, true, true, true, true, true >
+      read_ccd_from_cp2k_output<float>, true, true, true, false, true >
       >();
 
   auto vasp_poscar_mgf =
@@ -520,7 +522,8 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   auto vasp_outcar_mgf =
       std::make_shared<
       ws_atoms_list_io_anim_loader_t<
-      read_vasp_outcar_md_with_frames<float, periodic_cell<float> > > >();
+      read_vasp_outcar_md_with_frames<float, periodic_cell<float> >, 3 >
+      >();
 
   m_bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
   m_bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash, ws_atoms_list_t::get_type_static());
@@ -567,6 +570,30 @@ void workspace_manager_t::load_from_file(const std::string &fname,
   set_cur_id(m_ws.size()-1);
 
   astate->astate_evd->new_file_loaded(fname, file_format);
+
+}
+
+void workspace_manager_t::import_from_file(std::string &fname,
+                                           size_t bhv_id,
+                                           bool need_to_create_new_ws) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (!need_to_create_new_ws && !has_wss()) return;
+
+  std::shared_ptr<workspace_t> exec_ws{nullptr};
+
+  if (need_to_create_new_ws) {
+      create_new_ws(true);
+      exec_ws = m_ws[m_ws.size()-1];
+    } else {
+      exec_ws = get_cur_ws();
+    }
+
+  if (exec_ws) {
+      auto p_new_item = m_bhv_mgr->load_ws_item_from_file(fname, bhv_id, exec_ws.get());
+      astate->astate_evd->cur_ws_changed();
+    }
 
 }
 

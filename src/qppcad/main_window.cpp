@@ -1,6 +1,7 @@
 #include <qppcad/main_window.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/app_settings_widget.hpp>
+#include <qppcad/ws_item_behaviour_manager.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -16,6 +17,7 @@ main_window::main_window(QWidget *parent) {
   setMinimumWidth(600);
   init_base_shortcuts();
   init_menus();
+  build_bhv_menus_and_actions();
   init_widgets();
   init_layouts();
 
@@ -96,52 +98,6 @@ void main_window::init_menus() {
   file_menu_import_as_new_ws = file_menu->addMenu(tr("Import as new workspace"));
   file_menu_import_to_cur_ws = file_menu->addMenu(tr("Import to current workspace"));
   file_menu_export_sel_as = file_menu->addMenu(tr("Export selected item"));
-
-  file_menu_import_xyz = new QAction(this);
-  file_menu_import_xyz->setText("XYZ");
-  file_menu_import_as_new_ws->addAction(file_menu_import_xyz);
-  connect(file_menu_import_xyz, &QAction::triggered, this,
-          [this](){this->import_file("Import XYZ file", "*", qc_file_fmt::standart_xyz);});
-
-  file_menu_import_cp2k = file_menu_import_as_new_ws->addMenu("CP2K");
-  file_menu_import_cp2k_output = new QAction(this);
-  file_menu_import_cp2k_output->setText(tr("OUTPUT"));
-  file_menu_import_cp2k->addAction(file_menu_import_cp2k_output);
-  connect(file_menu_import_cp2k_output, &QAction::triggered, this,
-          [this](){this->import_file("Import CP2K output", "*", qc_file_fmt::cp2k_output);});
-
-  file_menu_import_firefly = file_menu_import_as_new_ws->addMenu("Firefly");
-  file_menu_import_firefly_output = new QAction(this);
-  file_menu_import_firefly_output->setText(tr("OUTPUT"));
-  file_menu_import_firefly->addAction(file_menu_import_firefly_output);
-  connect(file_menu_import_firefly_output, &QAction::triggered, this,
-          [this](){this->import_file("Import Firefly output", "*", qc_file_fmt::firefly_output);});
-
-  file_menu_import_vasp = file_menu_import_as_new_ws->addMenu("VASP");
-  file_menu_import_vasp_poscar = new QAction(this);
-  file_menu_import_vasp_poscar->setText(tr("POSCAR"));
-  connect(file_menu_import_vasp_poscar, &QAction::triggered, this,
-          [this](){this->import_file("Import VASP POSCAR", "*", qc_file_fmt::vasp_poscar);});
-
-  file_menu_import_vasp->addAction(file_menu_import_vasp_poscar);
-  file_menu_import_vasp_outcar = new QAction(this);
-  file_menu_import_vasp_outcar->setText(tr("OUTCAR"));
-  file_menu_import_vasp->addAction(file_menu_import_vasp_outcar);
-  connect(file_menu_import_vasp_outcar, &QAction::triggered, this,
-          [this](){this->import_file("Import VASP OUTCAR", "*", qc_file_fmt::vasp_outcar_md);});
-
-  file_menu_import_cube = new QAction(this);
-  file_menu_import_cube->setText(tr("CUBE"));
-  file_menu_import_as_new_ws->addAction(file_menu_import_cube);
-  connect(file_menu_import_cube, &QAction::triggered, this,
-          [this](){this->import_file("Import cube", "*", qc_file_fmt::cube);});
-
-  file_menu_import_uc = new QAction(this);
-  file_menu_import_uc->setText(tr("UC"));
-  file_menu_import_as_new_ws->addAction(file_menu_import_uc);
-  connect(file_menu_import_uc, &QAction::triggered, this,
-          [this](){this->import_file("Import qpp UC file", "*", qc_file_fmt::qpp_uc);});
-
 
   file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
 
@@ -1281,7 +1237,9 @@ void main_window::rebuild_recent_files_menu() {
 }
 
 void main_window::recent_files_clicked() {
+
   int idx = -1;
+
   QObject* obj = sender();
   for (int i = 0 ; i < file_menu_recent_entries.size(); i++)
     if (file_menu_recent_entries[i]->isVisible() && file_menu_recent_entries[i] == obj) {
@@ -1293,6 +1251,118 @@ void main_window::recent_files_clicked() {
       astate->ws_manager->load_from_file(astate->m_recent_files[idx].m_file_name,
                                          astate->m_recent_files[idx].m_file_format);
     }
+
+}
+
+void main_window::build_bhv_menus_and_actions() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
+  if (!bhv_mgr) return;
+
+  //init groups for IMPORTED TO WS
+  for (auto &ff_grp : bhv_mgr->m_file_format_groups) {
+      //import to current workspace
+      QMenu *new_menu =
+          file_menu_import_to_cur_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+
+      file_menu_import_to_cur_ws_menus.emplace(ff_grp.first, new_menu);
+
+      //iterate over file formats from group
+      for (auto &ff : ff_grp.second.m_ffs_lookup) {
+          //bool at_least_one_bhv_founded = false;
+          for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++)
+            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+                bhv_mgr->m_ws_item_io[i]->can_load() &&
+                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
+                qextended_action *new_act = new qextended_action(this);
+                new_act->m_joined_data[0] = i;
+                connect(new_act, &QAction::triggered,
+                        this, &main_window::action_bhv_import_to_cur_workspace);
+                new_act->setText(QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                new_menu->addAction(new_act);
+                //at_least_one_bhv_founded = true;
+              }
+        }
+      //TODO: make lookup for bhv
+    }
+
+  //init groups for IMPORTED AS NEW WS
+  for (auto &ff_grp : bhv_mgr->m_file_format_groups) {
+      //import to current workspace
+      QMenu *new_menu =
+          file_menu_import_as_new_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+
+      file_menu_import_as_new_ws_menus.emplace(ff_grp.first, new_menu);
+
+      //iterate over file formats from group
+      for (auto &ff : ff_grp.second.m_ffs_lookup) {
+          //bool at_least_one_bhv_founded = false;
+          for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++)
+            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+                bhv_mgr->m_ws_item_io[i]->can_load() &&
+                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
+                qextended_action *new_act = new qextended_action(this);
+                new_act->m_joined_data[0] = i;
+                connect(new_act, &QAction::triggered,
+                        this, &main_window::action_bhv_import_as_new_workspace);
+                new_act->setText(QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+                new_menu->addAction(new_act);
+                //at_least_one_bhv_founded = true;
+              }
+        }
+      //TODO: make lookup for bhv
+    }
+
+}
+
+void main_window::action_bhv_import_to_cur_workspace() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
+  qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
+  if (!ext_act) return;
+
+  size_t b_id = ext_act->m_joined_data[0];
+
+  //check that bhv is valid
+  if (b_id < bhv_mgr->m_ws_item_io.size() &&
+      bhv_mgr->m_ws_item_io[b_id]->can_load() &&
+      bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
+       // astate->log(fmt::format("{}", b_id));
+      std::string file_name = QFileDialog::getOpenFileName(this,
+                                                      "dialog_name",
+                                                      "*.*").toStdString();
+      if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id, false);
+    }
+
+}
+
+void main_window::action_bhv_import_as_new_workspace() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
+  qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
+  if (!ext_act) return;
+
+  size_t b_id = ext_act->m_joined_data[0];
+
+  //check that bhv is valid
+  if (b_id < bhv_mgr->m_ws_item_io.size() &&
+      bhv_mgr->m_ws_item_io[b_id]->can_load() &&
+      bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_as_new_ws) {
+       // astate->log(fmt::format("{}", b_id));
+      std::string file_name = QFileDialog::getOpenFileName(this,
+                                                      "dialog_name",
+                                                      "*.*").toStdString();
+      if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id);
+    }
+
 }
 
 void main_window::slot_shortcut_terminate_app() {

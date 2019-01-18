@@ -56,6 +56,9 @@ namespace qpp {
                             qc_file_fmt file_format,
                             bool override = true);
 
+        void import_from_file(std::string &fname,
+                              size_t bhv_id,
+                              bool need_to_create_new_ws = true);
 
         void create_new_ws(bool switch_to_new_workspace = true);
 

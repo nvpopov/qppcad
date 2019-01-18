@@ -29,7 +29,8 @@ namespace qpp {
         bool can_load() override { return true; }
 
         void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
-                                 ws_atoms_list_t *_item) override {
+                                 ws_atoms_list_t *_item,
+                                 workspace_t *ws) override {
 
           if (FORCED_DIM != -1) {
               _item->m_geom->DIM = FORCED_DIM;
@@ -74,7 +75,8 @@ namespace qpp {
         bool can_load() override { return true; }
 
         void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
-                                 ws_atoms_list_t *_item) override {
+                                 ws_atoms_list_t *_item,
+                                 workspace_t *ws) override {
 
           _item->m_tws_tr->do_action(act_lock | act_clear_all);
           _item->m_ext_obs->first_data = true;
@@ -94,10 +96,10 @@ namespace qpp {
               _item->m_draw_img_bonds = false;
             }
 
-          _item->geometry_changed();
-
           _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
           _item->m_tws_tr->do_action(act_rebuild_ntable);
+
+          _item->geometry_changed();
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
@@ -122,7 +124,8 @@ namespace qpp {
         bool can_load() override { return true; }
 
         void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
-                                 ws_atoms_list_t *_item) override {
+                                 ws_atoms_list_t *_item,
+                                 workspace_t *ws) override {
 
           app_state_t* astate = app_state_t::get_inst();
 
@@ -196,10 +199,10 @@ namespace qpp {
               _item->m_draw_img_bonds = false;
             }
 
-          _item->geometry_changed();
-
           _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
           _item->m_tws_tr->do_action(act_rebuild_ntable);
+
+          _item->geometry_changed();
 
         }
 
