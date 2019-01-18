@@ -4,6 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <qppcad/ws_item_behaviour_manager.hpp>
 #include <qppcad/app_state.hpp>
 #include <io/ccd_firefly.hpp>
@@ -205,6 +206,25 @@ namespace qpp {
           _item->geometry_changed();
 
         }
+
+        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+                               ws_atoms_list_t *_item) {
+          //do nothing
+        }
+
+    };
+
+
+    class ws_atoms_list_io_cube_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
+
+      public:
+
+        bool can_save() override { return false; }
+        bool can_load() override { return true; }
+
+        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+                                 ws_atoms_list_t *_item,
+                                 workspace_t *ws) override ;
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
                                ws_atoms_list_t *_item) {

@@ -479,6 +479,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   size_t vasp_ff_g_hash = m_bhv_mgr->reg_ffg("VASP", "vasp");
   size_t firefly_ff_g_hash = m_bhv_mgr->reg_ffg("Firefly", "ff");
   size_t cp2k_ff_g_hash = m_bhv_mgr->reg_ffg("CP2K", "cp2k");
+  size_t generic_ff_g_hash = m_bhv_mgr->reg_ffg("Generic formats", "generic");
 
   size_t xyz_ff_hash =
       m_bhv_mgr->reg_ff("Standart XYZ", "std::xyz", xyz_ff_g_hash, {".xyz"});
@@ -494,6 +495,9 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
 
   size_t cp2k_out_ff_hash =
       m_bhv_mgr->reg_ff("CP2K OUTPUT", "OUTPUT", cp2k_ff_g_hash, {"cp2k", ".out"} );
+
+  size_t generic_cube_ff_hash =
+      m_bhv_mgr->reg_ff("CUBE file", "CUBE", generic_ff_g_hash, {".cube", ".CUBE"} );
 
   auto xyz_ff_mgr =
       std::make_shared<
@@ -525,11 +529,27 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
       read_vasp_outcar_md_with_frames<float, periodic_cell<float> >, 3 >
       >();
 
-  m_bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
-  m_bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash, ws_atoms_list_t::get_type_static());
-  m_bhv_mgr->reg_io_bhv(cp2k_output_mgf, cp2k_out_ff_hash, ws_atoms_list_t::get_type_static());
-  m_bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash, ws_atoms_list_t::get_type_static());
-  m_bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash, ws_atoms_list_t::get_type_static());
+  auto generic_cube_mgf =
+      std::make_shared<ws_atoms_list_io_cube_t
+      >();
+
+  m_bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(cp2k_output_mgf, cp2k_out_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash,
+                        ws_atoms_list_t::get_type_static());
+
+  m_bhv_mgr->reg_io_bhv(generic_cube_mgf, generic_cube_ff_hash,
+                        ws_atoms_list_t::get_type_static());
 
 }
 
