@@ -109,14 +109,10 @@ namespace qpp {
                                                           workspace_t *ws);
 
         void save_ws_item_to_file(std::string &file_name,
-                                  ws_item_t *ws_item,
-                                  size_t file_format,
-                                  bool trust = false);
+                                  std::shared_ptr<ws_item_t> ws_item,
+                                  size_t bhv_id);
 
-        void save_ws_item_to_file(std::string &file_name,
-                                  ws_item_t *ws_item);
-
-        std::string get_file_format_full_name(size_t _file_format_hash);
+        std::string get_ff_full_name(size_t _file_format_hash);
 
         size_t reg_ff(std::string _full_name,
                       std::string _short_name,
@@ -137,7 +133,7 @@ namespace qpp {
                         size_t accepted_file_format,
                         size_t accepted_type);
 
-        void unregister_file_format(size_t _file_format_hash);
+        void unreg_ff(size_t _file_format_hash);
 
         std::shared_ptr<ws_item_t> fabric_by_type(size_t type_id);
         ws_item_t* fabric_by_type_p(size_t type_id);

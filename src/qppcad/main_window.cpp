@@ -761,6 +761,7 @@ void main_window::cur_ws_selected_item_changed() {
     }
 
   cur_ws_edit_type_changed();
+  control_bhv_menus_activity();
 }
 
 void main_window::cur_ws_properties_changed() {
@@ -1257,12 +1258,12 @@ void main_window::build_bhv_menus_and_actions() {
                           << std::endl;
                 qextended_action *new_act = new qextended_action(this);
                 new_act->m_joined_data[0] = i;
-                //                  connect(new_act, &QAction::triggered,
-                //                          this, &main_window::action_bhv_import_as_new_workspace);
+                connect(new_act, &QAction::triggered,
+                        this, &main_window::action_bhv_export_selected);
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_export_selected->addAction(new_act);
-                //at_least_one_bhv_founded = true;
+                file_menu_export_sel_as_acts.push_back(new_act);
               }
           }
     }
@@ -1317,33 +1318,68 @@ void main_window::action_bhv_import_as_new_workspace() {
 
 }
 
+void main_window::action_bhv_export_selected() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
+  qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
+  if (!ext_act) return;
+
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  auto cur_it = cur_ws->get_selected_sp();
+  if (!cur_it) return;
+
+  size_t b_id = ext_act->m_joined_data[0];
+
+  //check that bhv is valid
+  if (b_id < bhv_mgr->m_ws_item_io.size() &&
+      bhv_mgr->m_ws_item_io[b_id]->can_save() &&
+      bhv_mgr->m_ws_item_io[b_id]->m_accepted_type == cur_it->get_type()) {
+      // astate->log(fmt::format("{}", b_id));
+      std::string file_name = QFileDialog::getSaveFileName(this,
+                                                           "dialog_name",
+                                                           "*.*").toStdString();
+      if (!file_name.empty())
+        astate->ws_manager->m_bhv_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
+    }
+
+}
+
 void main_window::control_bhv_menus_activity() {
 
   app_state_t* astate = app_state_t::get_inst();
+
   if (!astate->ws_manager) return;
+
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
 
   if (!astate->ws_manager->has_wss()) {
-
       file_menu_import_to_cur_ws->setEnabled(false);
       file_menu_export_sel_as->setEnabled(false);
-
     } else {
-
       file_menu_import_to_cur_ws->setEnabled(true);
       bool need_to_enable_export_menu{false};
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected_sp();
-          if (cur_it)
-            for (auto &exp_act : file_menu_export_sel_as_acts) {
-                size_t bhv_id = exp_act->m_joined_data[0];
-                if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
-                    bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
-                    need_to_enable_export_menu = true;
-                    //save item dialog
-                  }
-              }
+          if (cur_it) {
+              for (auto &exp_act : file_menu_export_sel_as_acts) {
+                  size_t bhv_id = exp_act->m_joined_data[0];
+                  if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
+                      bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
+                      need_to_enable_export_menu = true;
+                      exp_act->setEnabled(true);
+                      //save item dialog
+                    } else {
+                      exp_act->setEnabled(false);
+                    }
+                }
+            } else {
+              for (auto &exp_act : file_menu_export_sel_as_acts) exp_act->setEnabled(false);
+            }
         }
     }
 

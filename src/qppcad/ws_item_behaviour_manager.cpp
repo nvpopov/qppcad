@@ -65,25 +65,24 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
 }
 
 void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name,
-                                                       ws_item_t *ws_item,
-                                                       size_t file_format,
-                                                       bool trust) {
+                                                       std::shared_ptr<ws_item_t> ws_item,
+                                                       size_t bhv_id) {
+
   app_state_t* astate = app_state_t::get_inst();
 
-  astate->log(fmt::format("Saving ws_item[{}] to file {} from workspace {}",
-                          ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name));
-
-  std::ofstream output(file_name);
-  //save_ws_item_to_stream(output, ws_item, file_format);
-
-}
-
-void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name, ws_item_t *ws_item){
-
   if (!ws_item) return;
+  if (bhv_id < m_ws_item_io.size() && m_ws_item_io[bhv_id]->can_save() &&
+      m_ws_item_io[bhv_id]->m_accepted_type == ws_item->get_type()) {
+      astate->log(fmt::format("Saving ws_item[{}] to file {} from workspace {}",
+                              ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name));
+
+      std::ofstream output(file_name);
+      m_ws_item_io[bhv_id]->save_to_stream(output, ws_item.get());
+    }
+
 }
 
-std::string ws_item_behaviour_manager_t::get_file_format_full_name(size_t _file_format_hash) {
+std::string ws_item_behaviour_manager_t::get_ff_full_name(size_t _file_format_hash) {
   auto it = m_file_formats.find(_file_format_hash);
   if (it != m_file_formats.end()) return it->second.m_full_name;
   else return "NOT_FOUND";
@@ -204,14 +203,14 @@ void ws_item_behaviour_manager_t::reg_io_bhv(
   astate->log(
         fmt::format("Registering io behaviour for type {}, file format[{}], save[{}], load[{}]",
                     accepted_type,
-                    get_file_format_full_name(accepted_file_format),
+                    get_ff_full_name(accepted_file_format),
                     io_bhv_inst->can_save(),
                     io_bhv_inst->can_load()));
 
   m_ws_item_io.push_back(io_bhv_inst);
 }
 
-void ws_item_behaviour_manager_t::unregister_file_format(size_t _file_format_hash) {
+void ws_item_behaviour_manager_t::unreg_ff(size_t _file_format_hash) {
 
 }
 
