@@ -24,10 +24,11 @@ namespace qpp {
     class recent_file_record_t {
       public:
         std::string m_file_name;
-        qc_file_fmt m_file_format{qc_file_fmt::unknown_fileformat};
+        size_t m_ff;
+        bool m_native;
         recent_file_record_t(){}
-        recent_file_record_t(const std::string _file_name , const qc_file_fmt _file_format) :
-          m_file_name(_file_name), m_file_format(_file_format){}
+        recent_file_record_t(const std::string _file_name , const size_t _ff, const bool _native) :
+          m_file_name(_file_name), m_ff(_ff), m_native(_native){}
     };
 
     class app_state_t {
@@ -55,7 +56,9 @@ namespace qpp {
 
         void log(std::string logstr, bool flush = true);
         void pylog(std::string logstr);
-        void add_recent_file(const std::string file_name, const qc_file_fmt qcfmt);
+        void add_recent_file(const std::string file_name,
+                             const bool is_native,
+                             const size_t bhv_id);
 
         app_state_event_disp_t *astate_evd;
 

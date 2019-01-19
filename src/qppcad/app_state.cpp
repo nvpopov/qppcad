@@ -130,8 +130,9 @@ namespace qpp {
       for (int i = 0; i < recent_file_size; i++) {
           settings.setArrayIndex(i);
           QString rc_filename = settings.value("filename").toString();
-          int m_loaded_qcfmt = settings.value("qcfmt",0).toInt();
-          add_recent_file(rc_filename.toStdString(), static_cast<qc_file_fmt>(m_loaded_qcfmt));
+          size_t _loaded_fft = settings.value("ff",0).toUInt();
+          bool _loaded_is_native = settings.value("isnat", false).toBool();
+          add_recent_file(rc_filename.toStdString(), _loaded_fft, _loaded_is_native);
         }
       settings.endArray();
 
@@ -176,7 +177,8 @@ namespace qpp {
       for (int i = 0; i < m_recent_files.size(); i++) {
           settings.setArrayIndex(i);
           settings.setValue("filename", QString::fromStdString(m_recent_files[i].m_file_name));
-          settings.setValue("qcfmt", static_cast<int>(m_recent_files[i].m_file_format));
+          settings.setValue("ff", static_cast<int>(m_recent_files[i].m_ff));
+          settings.setValue("isnat", m_recent_files[i].m_native);
         }
 
       settings.endArray();
@@ -195,7 +197,9 @@ namespace qpp {
         py_manager->m_output_buffer += "\n" + logstr;
     }
 
-    void app_state_t::add_recent_file(const std::string file_name, const qc_file_fmt qcfmt) {
+    void app_state_t::add_recent_file(const std::string file_name,
+                                      const bool is_native,
+                                      const size_t bhv_id) {
 
       if (m_recent_files.size() >= max_recent_files)
         m_recent_files.erase(m_recent_files.begin() ,
@@ -211,7 +215,7 @@ namespace qpp {
             }
         }
 
-      m_recent_files.emplace_back(file_name, qcfmt);
+      m_recent_files.emplace_back(file_name, bhv_id, is_native);
     }
 
     app_state_t* app_state_t::g_inst = nullptr;

@@ -40,7 +40,9 @@ namespace qpp {
         void cur_ws_selected_atoms_list_cell_changed();
         void cur_ws_selected_item_position_changed();
         void cur_ws_selected_atoms_list_selected_content_changed();
-        void new_file_loaded(const std::string file_name, const qc_file_fmt qcfmt);
+        void new_file_loaded(const std::string &file_name,
+                             const size_t ff,
+                             const bool is_native);
         void python_console_clear_requested();
         void python_console_focus_requested();
 

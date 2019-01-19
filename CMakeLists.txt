@@ -96,6 +96,7 @@ add_executable(qppcad
     src/qppcad/string_hash_register.cpp
     src/qppcad/type_info.cpp
     src/qppcad/qpp_object.cpp
+    src/qppcad/register_all_things.cpp
 
     src/qppcad/ws_item.cpp
     src/qppcad/ws_item_obj_insp_widget.cpp

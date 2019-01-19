@@ -269,7 +269,7 @@ void workspace_t::save_ws_to_json (const std::string filename) {
 
   out_file << data.dump(2);
 
-  astate->astate_evd->new_file_loaded(filename, qc_file_fmt::qppcad_json);
+  astate->astate_evd->new_file_loaded(filename, 0, true);
 
 }
 
@@ -620,7 +620,7 @@ void workspace_manager_t::load_from_file(const std::string &fname,
   add_ws(new_ws);
   set_cur_id(m_ws.size()-1);
 
-  //astate->astate_evd->new_file_loaded(fname, file_format);
+  astate->astate_evd->new_file_loaded(fname, 0, true);
 
 }
 
@@ -645,6 +645,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
       auto p_new_item = m_bhv_mgr->load_ws_item_from_file(fname, bhv_id, exec_ws.get());
       astate->astate_evd->cur_ws_changed();
       if (need_to_create_new_ws && p_new_item) exec_ws->m_ws_name = p_new_item->m_name;
+      astate->astate_evd->new_file_loaded(fname, bhv_id, false);
     }
 
 }

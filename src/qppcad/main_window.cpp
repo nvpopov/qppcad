@@ -1161,13 +1161,11 @@ void main_window::rebuild_recent_files_menu() {
   app_state_t* astate = app_state_t::get_inst();
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
       file_menu_recent_entries[i]->setVisible(true);
-      file_menu_recent_entries[i]->setText(
-            QString::fromStdString(fmt::format("{}) {} ({})",
+      std::string rec_menu_entry = fmt::format("{}) {} ({})",
                                                i,
                                                astate->m_recent_files[i].m_file_name,
-                                               qc_file_fmt_helper::get_file_format_hint(
-                                                 astate->m_recent_files[i].m_file_format)))
-            );
+                                               astate->m_recent_files[i].m_ff);
+      file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
     }
 
 }
@@ -1175,6 +1173,7 @@ void main_window::rebuild_recent_files_menu() {
 void main_window::recent_files_clicked() {
 
   int idx = -1;
+  app_state_t* astate = app_state_t::get_inst();
 
   QObject* obj = sender();
   for (int i = 0 ; i < file_menu_recent_entries.size(); i++)
@@ -1182,10 +1181,10 @@ void main_window::recent_files_clicked() {
         idx = i;
       }
 
-  if (idx != -1) {
-      app_state_t* astate = app_state_t::get_inst();
-      astate->ws_manager->load_from_file(astate->m_recent_files[idx].m_file_name,
-                                         astate->m_recent_files[idx].m_file_format);
+  if (idx != -1 && idx < astate->m_recent_files.size()) {
+      auto &rec_idx = astate->m_recent_files[idx];
+      if (rec_idx.m_native) astate->ws_manager->load_from_file(rec_idx.m_file_name, false);
+      else astate->ws_manager->load_from_file_autodeduce(rec_idx.m_file_name);
     }
 
 }
@@ -1361,16 +1360,17 @@ void main_window::control_bhv_menus_activity() {
       file_menu_export_sel_as->setEnabled(false);
     } else {
       file_menu_import_to_cur_ws->setEnabled(true);
-      bool need_to_enable_export_menu{false};
+      //bool need_to_enable_export_menu{false};
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected_sp();
           if (cur_it) {
+              file_menu_export_sel_as->setEnabled(true);
               for (auto &exp_act : file_menu_export_sel_as_acts) {
                   size_t bhv_id = exp_act->m_joined_data[0];
                   if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
                       bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
-                      need_to_enable_export_menu = true;
+                      //need_to_enable_export_menu = true;
                       exp_act->setEnabled(true);
                       //save item dialog
                     } else {
@@ -1378,7 +1378,7 @@ void main_window::control_bhv_menus_activity() {
                     }
                 }
             } else {
-              for (auto &exp_act : file_menu_export_sel_as_acts) exp_act->setEnabled(false);
+              file_menu_export_sel_as->setEnabled(false);
             }
         }
     }
