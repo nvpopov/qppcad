@@ -157,6 +157,7 @@ namespace qpp {
                                   size_t bhv_id);
 
         std::string get_ff_full_name(size_t _file_format_hash);
+        std::string get_ff_short_name(size_t _file_format_hash);
 
         size_t reg_ff(std::string _full_name,
                       std::string _short_name,

@@ -48,7 +48,7 @@ void app_state_event_disp_t::cur_ws_selected_atoms_list_selected_content_changed
 void app_state_event_disp_t::new_file_loaded(const std::string &file_name,
                                              const size_t ff,
                                              const bool is_native) {
-  app_state_t::get_inst()->add_recent_file(file_name, ff, is_native);
+  app_state_t::get_inst()->add_recent_file(file_name, is_native, ff);
   emit(new_file_loaded_signal());
 }
 

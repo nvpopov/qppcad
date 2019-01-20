@@ -1161,10 +1161,13 @@ void main_window::rebuild_recent_files_menu() {
   app_state_t* astate = app_state_t::get_inst();
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
       file_menu_recent_entries[i]->setVisible(true);
+      std::string ff_name = astate->ws_manager->m_bhv_mgr->get_ff_full_name(
+                              astate->m_recent_files[i].m_ff);
+
       std::string rec_menu_entry = fmt::format("{}) {} ({})",
                                                i,
                                                astate->m_recent_files[i].m_file_name,
-                                               astate->m_recent_files[i].m_ff);
+                                               ff_name);
       file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
     }
 

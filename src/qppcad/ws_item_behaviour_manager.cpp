@@ -84,6 +84,12 @@ void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name,
 
 std::string ws_item_behaviour_manager_t::get_ff_full_name(size_t _file_format_hash) {
   auto it = m_file_formats.find(_file_format_hash);
+  if (it != m_file_formats.end()) return it->second.m_shortname;
+  else return "NOT_FOUND";
+}
+
+std::string ws_item_behaviour_manager_t::get_ff_short_name(size_t _file_format_hash) {
+  auto it = m_file_formats.find(_file_format_hash);
   if (it != m_file_formats.end()) return it->second.m_full_name;
   else return "NOT_FOUND";
 }

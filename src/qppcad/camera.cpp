@@ -150,7 +150,7 @@ void camera_t::update_camera () {
     }
 
   if (m_cur_proj == cam_proj_t::proj_persp)
-    m_look_at = m_look_at.normalized();
+    m_look_at = (m_view_point - m_look_at).normalized();
   m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
 
   if (m_cur_proj == cam_proj_t::proj_persp)

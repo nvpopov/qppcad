@@ -124,28 +124,38 @@ namespace qpp {
           QString cmd = settings.value("cmd").toString();
           if (!cmd.trimmed().isEmpty()) py_manager->m_commands.push_back(cmd);
         }
+
       settings.endArray();
 
       int recent_file_size = settings.beginReadArray("recent_files");
       for (int i = 0; i < recent_file_size; i++) {
           settings.setArrayIndex(i);
           QString rc_filename = settings.value("filename").toString();
-          size_t _loaded_fft = settings.value("ff",0).toUInt();
+          //size_t _loaded_fft = settings.value("ff",0).toUInt();
+          std::string ff_name = settings.value("ff").toString().toStdString();
+          auto ff_hsh = ws_manager->m_bhv_mgr->get_file_fmt_by_short_name(ff_name);
           bool _loaded_is_native = settings.value("isnat", false).toBool();
-          add_recent_file(rc_filename.toStdString(), _loaded_fft, _loaded_is_native);
+          if (ff_hsh && !_loaded_is_native)
+            add_recent_file(rc_filename.toStdString(), *ff_hsh, _loaded_is_native);
+          if (_loaded_is_native)
+            add_recent_file(rc_filename.toStdString(), 0, _loaded_is_native);
         }
+
       settings.endArray();
 
     }
 
     void app_state_t::save_settings() {
+
       QSettings settings;
       settings.setValue("test", 68);
 
       settings.beginGroup("periodic_table");
       ptable *table = ptable::get_inst();
+
       settings.beginWriteArray("mod");
       int i = 0;
+
       for (auto &rec : table->arecs)
         if (rec.m_redefined) {
             settings.setArrayIndex(i);
@@ -156,6 +166,7 @@ namespace qpp {
             settings.setValue("r", double(rec.m_radius));
             i+=1;
           }
+
       settings.endArray();
       settings.endGroup();
 
@@ -177,7 +188,8 @@ namespace qpp {
       for (int i = 0; i < m_recent_files.size(); i++) {
           settings.setArrayIndex(i);
           settings.setValue("filename", QString::fromStdString(m_recent_files[i].m_file_name));
-          settings.setValue("ff", static_cast<int>(m_recent_files[i].m_ff));
+          std::string ff_name = ws_manager->m_bhv_mgr->get_ff_full_name(m_recent_files[i].m_ff);
+          settings.setValue("ff", QString::fromStdString(ff_name));
           settings.setValue("isnat", m_recent_files[i].m_native);
         }
 
@@ -215,6 +227,7 @@ namespace qpp {
             }
         }
 
+      log(fmt::format("RECENT FILES ADD: {} {} {}", file_name, bhv_id, is_native));
       m_recent_files.emplace_back(file_name, bhv_id, is_native);
     }
 
