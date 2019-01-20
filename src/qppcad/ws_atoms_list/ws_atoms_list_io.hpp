@@ -20,6 +20,36 @@ namespace qpp {
 
   namespace cad {
 
+    class ws_item_io_bt_bhv_t : public ws_item_io_inherited_bhv_hooked_t<ws_atoms_list_t> {
+
+      public:
+
+        bool can_save() override { return true; }
+        bool can_load() override { return false; }
+
+         void pre_load_hook(ws_atoms_list_t *_item, workspace_t *ws) override {
+          _item->m_tws_tr->do_action(act_lock | act_clear_all);
+          _item->m_ext_obs->first_data = true;
+        }
+
+         void post_load_hook(ws_atoms_list_t *_item, workspace_t *ws) override {
+          if (_item->m_geom->nat() > 20000) {
+              _item->m_cur_render_type = ws_atoms_list_render_t::billboards;
+            }
+          else if (_item->m_geom->nat() > 7000) {
+              _item->m_draw_bonds = false;
+              _item->m_draw_img_bonds = false;
+            }
+
+          _item->geometry_changed();
+
+          _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+          _item->m_tws_tr->do_action(act_rebuild_ntable);
+        }
+
+        void pre_save_hook(ws_atoms_list_t *_item) override {}
+        void post_save_hook(ws_atoms_list_t *_item) override {}
+    };
 
     template<auto GENERIC_FUNC_GEOM,
              bool CHECK_DIM = false,
@@ -41,7 +71,7 @@ namespace qpp {
           if (!CHECK_DIM ||
               (CHECK_DIM && (_item->m_geom->DIM == REQUIRED_DIM))) {
               GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
-            //  _item->m_role = AL_ROLE;
+              //  _item->m_role = AL_ROLE;
             }
         }
 
@@ -50,7 +80,7 @@ namespace qpp {
     template<auto GENERIC_FUNC_GEOM,
              ws_atoms_list_role_t ROLE = ws_atoms_list_role_t::r_generic,
              int FORCED_DIM = -1>
-    class ws_atoms_list_io_loader_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
+    class ws_atoms_list_io_loader_t : public ws_item_io_bt_bhv_t {
 
       public:
 
@@ -66,23 +96,7 @@ namespace qpp {
               _item->m_geom->cell.DIM = FORCED_DIM;
             }
 
-          _item->m_tws_tr->do_action(act_lock | act_clear_all);
-          _item->m_ext_obs->first_data = true;
-
           GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
-
-          if (_item->m_geom->nat() > 20000) {
-              _item->m_cur_render_type = ws_atoms_list_render_t::billboards;
-            }
-          else if (_item->m_geom->nat() > 7000) {
-              _item->m_draw_bonds = false;
-              _item->m_draw_img_bonds = false;
-            }
-
-          _item->geometry_changed();
-
-          _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
-          _item->m_tws_tr->do_action(act_rebuild_ntable);
 
           _item->m_role = ROLE;
         }
@@ -96,8 +110,7 @@ namespace qpp {
 
     template<auto GENERIC_FUNC_GEOM_ANIM,
              int FORCED_DIM = -1>
-    class ws_atoms_list_io_anim_loader_t :
-        public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
+    class ws_atoms_list_io_anim_loader_t : public ws_item_io_bt_bhv_t {
 
       public:
 
@@ -108,9 +121,6 @@ namespace qpp {
                                  ws_atoms_list_t *_item,
                                  workspace_t *ws) override {
 
-          _item->m_tws_tr->do_action(act_lock | act_clear_all);
-          _item->m_ext_obs->first_data = true;
-
           if (FORCED_DIM != -1) {
               _item->m_geom->DIM = FORCED_DIM;
               _item->m_geom->cell.DIM = FORCED_DIM;
@@ -118,18 +128,6 @@ namespace qpp {
 
           GENERIC_FUNC_GEOM_ANIM(stream, *(_item->m_geom.get()), _item->m_anim->m_anim_data);
 
-          if (_item->m_geom->nat() > 20000) {
-              _item->m_cur_render_type = ws_atoms_list_render_t::billboards;
-            }
-          else if (_item->m_geom->nat() > 7000) {
-              _item->m_draw_bonds = false;
-              _item->m_draw_img_bonds = false;
-            }
-
-          _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
-          _item->m_tws_tr->do_action(act_rebuild_ntable);
-
-          _item->geometry_changed();
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
@@ -146,7 +144,7 @@ namespace qpp {
              bool AUTO_CENTER = false,
              bool COPY_DIM_FROM_CCD = false,
              int FORCED_DIM = -1>
-    class ws_atoms_list_io_ccd_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
+    class ws_atoms_list_io_ccd_t : public ws_item_io_bt_bhv_t {
 
       public:
 
@@ -158,9 +156,6 @@ namespace qpp {
                                  workspace_t *ws) override {
 
           app_state_t* astate = app_state_t::get_inst();
-
-          _item->m_tws_tr->do_action(act_lock | act_clear_all);
-          _item->m_ext_obs->first_data = true;
 
           comp_chem_program_data_t<float> cc_inst;
           CCD_FUNC(stream, cc_inst);
@@ -221,19 +216,6 @@ namespace qpp {
                     anim_frame_rec -= center;
             }
 
-          if (_item->m_geom->nat() > 20000) {
-              _item->m_cur_render_type = ws_atoms_list_render_t::billboards;
-            }
-          else if (_item->m_geom->nat() > 7000) {
-              _item->m_draw_bonds = false;
-              _item->m_draw_img_bonds = false;
-            }
-
-          _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
-          _item->m_tws_tr->do_action(act_rebuild_ntable);
-
-          _item->geometry_changed();
-
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
@@ -244,7 +226,7 @@ namespace qpp {
     };
 
 
-    class ws_atoms_list_io_cube_t : public ws_item_io_inherited_bhv_t<ws_atoms_list_t> {
+    class ws_atoms_list_io_cube_t : public ws_item_io_bt_bhv_t {
 
       public:
 
@@ -256,7 +238,7 @@ namespace qpp {
                                  workspace_t *ws) override ;
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
-                               ws_atoms_list_t *_item) {
+                               ws_atoms_list_t *_item) override {
           //do nothing
         }
 
