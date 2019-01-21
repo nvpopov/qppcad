@@ -8,17 +8,6 @@
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/app_state.hpp>
 
-//new ccd io modules
-#include <io/ccd_firefly.hpp>
-#include <io/ccd_xyz.hpp>
-#include <io/ccd_cp2k.hpp>
-
-//deprecated direct io modules
-#include <io/geomio.hpp>
-#include <io/vasp_io.hpp>
-#include <io/cp2k.hpp>
-#include <io/xyz_multiframe.hpp>
-#include <io/cube.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 
 #include <clocale>
@@ -537,7 +526,7 @@ void ws_atoms_list_t::insert_atom (const int atom_type, const vector3<float> &po
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
 }
 
-void ws_atoms_list_t::insert_atom (const string &atom_name, const vector3<float> &pos) {
+void ws_atoms_list_t::insert_atom (const std::string &atom_name, const vector3<float> &pos) {
   m_anim->m_force_non_animable = true;
   m_geom->add(atom_name, pos);
 }
@@ -549,7 +538,7 @@ void ws_atoms_list_t::update_atom (const int at_id, const vector3<float> &pos) {
   astate->make_viewport_dirty();
 }
 
-void ws_atoms_list_t::update_atom (const int at_id, const string &at_name) {
+void ws_atoms_list_t::update_atom (const int at_id, const std::string &at_name) {
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
   app_state_t* astate = app_state_t::get_inst();
@@ -972,7 +961,7 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
   geometry_changed();
 }
 
-string ws_atoms_list_t::get_ws_item_class_name () {
+std::string ws_atoms_list_t::get_ws_item_class_name () {
   return "ws_atoms_list";
 }
 
@@ -1150,7 +1139,7 @@ void ws_atoms_list_t::load_from_json (json &data) {
 
   if (data.find(JSON_ATOMS) != data.end())
     for (const auto &atom : data[JSON_ATOMS]) {
-        m_geom->add(atom[0].get<string>(),
+        m_geom->add(atom[0].get<std::string>(),
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
 
         if (atom.size() > 4) {
@@ -1165,8 +1154,8 @@ void ws_atoms_list_t::load_from_json (json &data) {
 
   if (data.find(JSON_BONDING_TABLE) != data.end()) {
       for (auto &elem : data[JSON_BONDING_TABLE]) {
-          int type1 = m_geom->type_of_atom(elem[0].get<string>());
-          int type2 = m_geom->type_of_atom(elem[1].get<string>());
+          int type1 = m_geom->type_of_atom(elem[0].get<std::string>());
+          int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
           float dist = elem[2].get<float>();
           bool br_enabled = elem[3].get<bool>();
           m_tws_tr->m_bonding_table.m_dist[sym_key<uint32_t>(type1, type2)].m_bonding_dist = dist;

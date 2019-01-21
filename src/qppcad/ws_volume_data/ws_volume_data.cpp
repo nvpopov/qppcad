@@ -26,7 +26,7 @@ void ws_volume_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
 }
 
 void ws_volume_data_t::render() {
-
+  ws_item_t::render();
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_ready_to_render && m_is_visible) {
@@ -36,6 +36,7 @@ void ws_volume_data_t::render() {
       vector3<float> rot{0};
       vector3<float> color{0.5f};
 
+      astate->glapi->glDisable(GL_CULL_FACE);
       if (m_volume_type == ws_volume_t::volume_mo) {
           astate->dp->render_general_mesh(m_pos, scale, rot, clr_red,
                                           m_first_mesh, m_alpha, astate->sp_mvap_ssl);
@@ -47,7 +48,7 @@ void ws_volume_data_t::render() {
           astate->dp->render_general_mesh(m_pos, scale, rot, clr_yellow, m_first_mesh,
                                           m_alpha, astate->sp_mvap_ssl);
         }
-
+      astate->glapi->glEnable(GL_CULL_FACE);
       astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
     }
 
