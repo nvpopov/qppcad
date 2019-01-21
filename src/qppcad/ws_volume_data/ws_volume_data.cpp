@@ -15,7 +15,8 @@ void ws_volume_data_t::mc_polygonise(float _isolevel) {
 }
 
 ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
-  set_default_flags(ws_item_flags_default);
+  set_default_flags(ws_item_flags_default | ws_item_flags_support_translation |
+                    ws_item_flags_support_moveto | ws_item_flags_support_rendering );
   m_tag = ws_item_tag::tag_ws_volume_data;
 }
 

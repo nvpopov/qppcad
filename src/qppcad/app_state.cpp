@@ -136,9 +136,9 @@ namespace qpp {
           auto ff_hsh = ws_manager->m_bhv_mgr->get_file_fmt_by_short_name(ff_name);
           bool _loaded_is_native = settings.value("isnat", false).toBool();
           if (ff_hsh && !_loaded_is_native)
-            add_recent_file(rc_filename.toStdString(), *ff_hsh, _loaded_is_native);
+            add_recent_file(rc_filename.toStdString(), _loaded_is_native, *ff_hsh);
           if (_loaded_is_native)
-            add_recent_file(rc_filename.toStdString(), 0, _loaded_is_native);
+            add_recent_file(rc_filename.toStdString(), _loaded_is_native, 0);
         }
 
       settings.endArray();
@@ -188,7 +188,7 @@ namespace qpp {
       for (int i = 0; i < m_recent_files.size(); i++) {
           settings.setArrayIndex(i);
           settings.setValue("filename", QString::fromStdString(m_recent_files[i].m_file_name));
-          std::string ff_name = ws_manager->m_bhv_mgr->get_ff_full_name(m_recent_files[i].m_ff);
+          std::string ff_name = ws_manager->m_bhv_mgr->get_ff_short_name(m_recent_files[i].m_ff);
           settings.setValue("ff", QString::fromStdString(ff_name));
           settings.setValue("isnat", m_recent_files[i].m_native);
         }
@@ -216,7 +216,7 @@ namespace qpp {
       if (m_recent_files.size() >= max_recent_files)
         m_recent_files.erase(m_recent_files.begin() ,
                              m_recent_files.begin() +
-                             (1 + m_recent_files.size() - max_recent_files));
+                             (m_recent_files.size() - max_recent_files));
 
       for (auto it = m_recent_files.begin(); it != m_recent_files.end(); ++it) {
           if ((*it).m_file_name.find(file_name) != std::string::npos) {

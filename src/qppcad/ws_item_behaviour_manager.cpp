@@ -90,7 +90,7 @@ std::string ws_item_behaviour_manager_t::get_ff_full_name(size_t _file_format_ha
 
 std::string ws_item_behaviour_manager_t::get_ff_short_name(size_t _file_format_hash) {
   auto it = m_file_formats.find(_file_format_hash);
-  if (it != m_file_formats.end()) return it->second.m_full_name;
+  if (it != m_file_formats.end()) return it->second.m_shortname;
   else return "NOT_FOUND";
 }
 

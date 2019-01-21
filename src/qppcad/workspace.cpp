@@ -517,6 +517,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
       astate->astate_evd->new_file_loaded(fname,
                                           m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
                                           false);
+      astate->astate_evd->wss_changed();
     }
 
 }
@@ -545,7 +546,6 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
     }
 
 }
-
 
 void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
   auto new_ws = std::make_shared<workspace_t>();
