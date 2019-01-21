@@ -21,7 +21,7 @@ namespace qpp {
       public:
 
         static void open_file(std::string file_name);
-        static void open_file_query(std::string file_name, qc_file_fmt file_format);
+        static void open_file_query(std::string file_name, std::string file_format);
         static void make_super_cell(const int sc_a, const int sc_b, const int sc_c);
         static void select_ws(int ws_idx);
         static void select_itm(int itm_idx);
@@ -43,7 +43,7 @@ namespace qpp {
         static py::int_ get_type_hash();
         static py::bool_ is_instance_of_by_hash(size_t _type_hash);
         static py::bool_ is_instance_of_by_type_name(std::string _type_name);
-        static void bopen(std::string _file_name);
+        //static void bopen(std::string _file_name);
         static vector3<float> gizmo_pos();
 
         static void edit_mode(int mode);

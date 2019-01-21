@@ -20,9 +20,10 @@ bool python_manager_t::execute(std::string command) {
     bool comm_has_statement =
         command.find("for") != std::string::npos || command.find("import") != std::string::npos;
     bool comm_is_empty = !(command.length() > 0);
+    bool comm_is_multi = command.find(";") != std::string::npos;
 
     if(!comm_is_empty) {
-        if (!comm_has_equality && !comm_is_multiline && !comm_has_statement) {
+        if (!comm_has_equality && !comm_is_multiline && !comm_has_statement && !comm_is_multi) {
             py::object res = py::eval(command, py::globals());
 
             if (py::isinstance<py::int_>(res) || py::isinstance<py::float_>(res) ||

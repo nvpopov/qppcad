@@ -46,6 +46,8 @@ namespace qpp {
 
         static vector3<float> calc_dipole_moment();
 
+        static void generate_molcas_embc_sp_input(std::string outdir);
+
     };
 
   }

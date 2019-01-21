@@ -19,11 +19,11 @@ void simple_query::open_file(std::string file_name) {
 
 }
 
-void simple_query::open_file_query(std::string file_name, qc_file_fmt file_format) {
+void simple_query::open_file_query(std::string file_name, std::string file_format) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->ws_manager->load_from_file(file_name, file_format);
+  astate->ws_manager->load_from_file_autodeduce(file_name, file_format);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 
@@ -452,19 +452,6 @@ pybind11::bool_ simple_query::is_instance_of_by_type_name(std::string _type_name
     return false;
 }
 
-void simple_query::bopen(std::string _file_name) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-//  auto p_new_item = astate->ws_manager->m_bhv_mgr->load_ws_item_from_file(_file_name);
-
-//  if (p_new_item) {
-//      astate->ws_manager->create_new_ws(true);
-//      auto last_ws = astate->ws_manager->m_ws[astate->ws_manager->m_ws.size()-1];
-//      last_ws->add_item_to_ws(p_new_item);
-//    }
-
-}
 
 vector3<float> simple_query::gizmo_pos() {
 

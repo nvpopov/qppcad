@@ -287,36 +287,36 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<ws_atoms_list_t> q
 
   //phase 1 : move atoms from cls to qm
 
-   std::vector<tws_node_content_t<float> > redu_cls;
+  std::vector<tws_node_content_t<float> > redu_cls;
 
-   cls->m_tws_tr->query_sphere(new_r, vector3<float>(0), redu_cls);
-   std::set<int> redu_cls_set; //set for fast search
+  cls->m_tws_tr->query_sphere(new_r, vector3<float>(0), redu_cls);
+  std::set<int> redu_cls_set; //set for fast search
 
-   for (auto &elem : redu_cls) redu_cls_set.insert(elem.m_atm);
+  for (auto &elem : redu_cls) redu_cls_set.insert(elem.m_atm);
 
-   for (int i = 0; i < cls->m_geom->nat(); i++)
-     if (redu_cls_set.find(i) != redu_cls_set.end())
-       qm->insert_atom(cls->m_geom->atom(i), cls->m_geom->pos(i));
+  for (int i = 0; i < cls->m_geom->nat(); i++)
+    if (redu_cls_set.find(i) != redu_cls_set.end())
+      qm->insert_atom(cls->m_geom->atom(i), cls->m_geom->pos(i));
 
-   //delete atoms from cls
-   cls->delete_atoms(redu_cls_set);
+  //delete atoms from cls
+  cls->delete_atoms(redu_cls_set);
 
-   //phase 2 : move atoms from qm to cls
-   std::vector<tws_node_content_t<float> > redu_qm;
-   std::set<int> redu_qm_inside, redu_qm_outside;
+  //phase 2 : move atoms from qm to cls
+  std::vector<tws_node_content_t<float> > redu_qm;
+  std::set<int> redu_qm_inside, redu_qm_outside;
 
-   //construct direct set - atoms inside sphere with r = new_r
-   qm->m_tws_tr->query_sphere(new_r, vector3<float>(0), redu_qm);
-   for (auto &elem : redu_qm) redu_qm_inside.insert(elem.m_atm);
+  //construct direct set - atoms inside sphere with r = new_r
+  qm->m_tws_tr->query_sphere(new_r, vector3<float>(0), redu_qm);
+  for (auto &elem : redu_qm) redu_qm_inside.insert(elem.m_atm);
 
-   // redu_qm_outside = set(ALL) - set(INSIDE)
-   for (int i = 0; i < qm->m_geom->nat(); i++)
-     if (redu_qm_inside.find(i) == redu_qm_inside.end()) {
-         cls->insert_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
-         redu_qm_outside.insert(i);
-       }
+  // redu_qm_outside = set(ALL) - set(INSIDE)
+  for (int i = 0; i < qm->m_geom->nat(); i++)
+    if (redu_qm_inside.find(i) == redu_qm_inside.end()) {
+        cls->insert_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
+        redu_qm_outside.insert(i);
+      }
 
-   qm->delete_atoms(redu_qm_outside);
+  qm->delete_atoms(redu_qm_outside);
 
 }
 
@@ -447,5 +447,93 @@ vector3<float> embedded_cluster_tools::calc_dipole_moment() {
     }
 
   return accum_dm;
+
+}
+
+void embedded_cluster_tools::generate_molcas_embc_sp_input(std::string outdir) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (!astate->ws_manager->has_wss()) return;
+
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  std::shared_ptr<ws_atoms_list_t> uc{nullptr};
+  std::shared_ptr<ws_atoms_list_t> chg{nullptr};
+  std::shared_ptr<ws_atoms_list_t> cls{nullptr};
+  std::shared_ptr<ws_atoms_list_t> qm{nullptr};
+
+  deduce_embedding_context(uc, chg, cls, qm);
+
+  if (!chg || !cls || !qm) return;
+
+  std::ofstream embc_inp(fmt::format("{}/inp", outdir));
+  std::ofstream embc_chg(fmt::format("{}/embc_chg", outdir));
+
+  //generate main input file
+  fmt::print(embc_inp, "&GATEWAY\n");
+
+  //printing qm atoms
+  for (int i = 0; i < qm->m_geom->n_types(); i++) {
+      fmt::print(embc_inp, "Basis set\n");
+      fmt::print(embc_inp, "{}.ANO-RCC-VDZP.\n", qm->m_geom->atom_of_type(i));
+      int local_type_c = 0;
+      for (int q = 0; q < qm->m_geom->nat(); q++)
+        if (qm->m_geom->type_table(q) == i) {
+            local_type_c +=1 ;
+            fmt::print(
+                  embc_inp, "{}{} {} {} {}\n",
+                  qm->m_geom->atom_of_type(i),
+                  local_type_c,
+                  qm->m_geom->pos(q)[0],
+                  qm->m_geom->pos(q)[1],
+                  qm->m_geom->pos(q)[2]
+                );
+          }
+      fmt::print(embc_inp, "End Of Basis\n");
+    }
+
+  //printing mm atoms
+  std::array<std::string, 7> map_type_to_sn = {"X", "Y", "L", "J", "M", "T", "E"};
+
+  for (int i = 0; i < cls->m_geom->n_types(); i++) {
+      fmt::print(embc_inp, "Basis set\n");
+      fmt::print(embc_inp, "{}.ECP.Pascual.0s.0s.0e-AIMP-CaF2.\n", cls->m_geom->atom_of_type(i));
+      int local_type_c = 0;
+      for (int q = 0; q < cls->m_geom->nat(); q++)
+        if (cls->m_geom->type_table(q) == i) {
+            local_type_c +=1 ;
+            fmt::print(
+                  embc_inp, "{}{} {} {} {}\n",
+                  map_type_to_sn[i],
+                  local_type_c,
+                  cls->m_geom->pos(q)[0],
+                  cls->m_geom->pos(q)[1],
+                  cls->m_geom->pos(q)[2]
+                );
+          }
+      fmt::print(embc_inp, "End Of Basis\n");
+    }
+
+  //printing charges
+  //x y z  c  0. 0. 0.
+  for (int i = 0; i < chg->m_geom->nat(); i++)
+    fmt::print(
+          embc_chg, "{} {} {} {} 0. 0. 0.\n",
+          chg->m_geom->pos(i)[0],
+          chg->m_geom->pos(i)[1],
+          chg->m_geom->pos(i)[2],
+          chg->m_geom->xfield<float>(xgeom_charge, i)
+        );
+
+  fmt::print(embc_inp, "XField\n");
+  fmt::print(embc_inp, "{}\n", chg->m_geom->nat());
+  fmt::print(embc_inp, ">>INCLUDE embc_chg\n");
+  fmt::print(embc_inp, "&SEWARD\n");
+  fmt::print(embc_inp, "EXPERT\n");
+  fmt::print(embc_inp, "AMFI\n");
+  fmt::print(embc_inp, "&SCF\n");
+  fmt::print(embc_inp, "CHARGE=1\n");
 
 }
