@@ -8,6 +8,12 @@ using namespace qpp;
 using namespace qpp::cad;
 
 
+void registration_helper_t::register_ws_item_fabric(ws_item_behaviour_manager_t *bhv_mgr) {
+  register_ws_item_fabric_t<ws_atoms_list_t>(bhv_mgr);
+  register_ws_item_fabric_t<ws_comp_chem_data_t>(bhv_mgr);
+  register_ws_item_fabric_t<ws_volume_data_t>(bhv_mgr);
+}
+
 void registration_helper_t::register_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
 
   size_t xyz_ff_g_hash = bhv_mgr->reg_ffg("XYZ", "xyz");

@@ -10,13 +10,6 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-std::shared_ptr<ws_item_t> ws_item_factory::create_object(const std::string &obj_type) {
-  if (obj_type == "ws_atoms_list") return std::make_shared<ws_atoms_list_t>();
-  if (obj_type == "ws_comp_chem_data") return std::make_shared<ws_comp_chem_data_t>();
-  if (obj_type == "ws_volume_data") return std::make_shared<ws_volume_data_t>();
-  return nullptr;
-}
-
 std::optional<size_t> workspace_t::get_selected_idx () {
   for (size_t i = 0; i < m_ws_items.size(); i++)
     if (m_ws_items[i]->m_selected) return std::optional<size_t>(i);
@@ -289,15 +282,19 @@ void workspace_t::load_ws_from_json (const std::string filename) {
     if (data.find(JSON_OBJECTS) != data.end()){
         json objects = data[JSON_OBJECTS];
         for (auto &object : objects)
-          if (object.find(JSON_WS_ITEM_TYPE) != object.end()){
+          if (object.find(JSON_WS_ITEM_TYPE) != object.end()) {
               std::string obj_type = object[JSON_WS_ITEM_TYPE];
-              std::shared_ptr<ws_item_t> obj = ws_item_factory::create_object(obj_type);
-              obj->load_from_json(object);
-              add_item_to_ws(obj);
+              size_t obj_hash = astate->hash_reg->calc_hash(obj_type);
+              std::shared_ptr<ws_item_t> obj =
+                  astate->ws_manager->m_bhv_mgr->fabric_by_type(obj_hash);
+              if (obj) {
+                  obj->load_from_json(object);
+                  add_item_to_ws(obj);
+                }
             } else {
               astate->log(
                     fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
-                                      object[JSON_WS_ITEM_NAME].get<std::string>(), filename)
+                                object[JSON_WS_ITEM_NAME].get<std::string>(), filename)
                     );
             }
       }
@@ -463,6 +460,7 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 
 void workspace_manager_t::init_ws_item_bhv_mgr() {
   m_bhv_mgr = std::make_unique<ws_item_behaviour_manager_t>();
+  registration_helper_t::register_ws_item_fabric(m_bhv_mgr.get());
   registration_helper_t::register_ws_item_io_bhv(m_bhv_mgr.get());
 }
 
@@ -511,7 +509,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
     }
 
   if (exec_ws) {
-      auto p_new_item = m_bhv_mgr->load_ws_item_from_file(fname, bhv_id, exec_ws.get());
+      auto p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
       astate->astate_evd->cur_ws_changed();
       if (need_to_create_new_ws && p_new_item) exec_ws->m_ws_name = p_new_item->m_name;
       astate->astate_evd->new_file_loaded(fname,
@@ -527,7 +525,7 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
 
   if (file_name.find("json") != std::string::npos ||
       file_format.find("json") != std::string::npos) {
-       load_from_file(file_name, false);
+      load_from_file(file_name, false);
     } else {
       //do autodeduce magic
       if (!file_format.empty()) {

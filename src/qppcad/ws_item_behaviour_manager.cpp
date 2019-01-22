@@ -12,7 +12,7 @@ ws_item_behaviour_manager_t::ws_item_behaviour_manager_t() {
 
 }
 
-std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
+std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     const std::string &file_name,
     size_t io_bhv_idx,
     workspace_t *ws) {
@@ -39,7 +39,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
 
 }
 
-std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
+std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     const std::string &file_name,
     workspace_t *ws) {
 
@@ -55,7 +55,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
       std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
 
       if (io_bhv_id) {
-          auto ret_sp = load_ws_item_from_file(file_name, *io_bhv_id, ws);
+          auto ret_sp = load_ws_itm_from_file(file_name, *io_bhv_id, ws);
           return ret_sp;
         }
     }
@@ -64,7 +64,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_item_from_file(
 
 }
 
-void ws_item_behaviour_manager_t::save_ws_item_to_file(std::string &file_name,
+void ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
                                                        std::shared_ptr<ws_item_t> ws_item,
                                                        size_t bhv_id) {
 
@@ -220,20 +220,19 @@ void ws_item_behaviour_manager_t::unreg_ff(size_t _file_format_hash) {
 
 }
 
+void ws_item_behaviour_manager_t::reg_item_fbr(size_t hash,
+                                               std::function<std::shared_ptr<ws_item_t>()> func) {
+  m_fabric_ws_item[hash] = func;
+}
+
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t type_id) {
 
   app_state_t *astate = app_state_t::get_inst();
 
   astate->log(fmt::format("Fabric new ws_item with type_id = {}", type_id));
 
-  if (type_id == ws_atoms_list_t::get_type_static())
-    return std::make_shared<ws_atoms_list_t>();
-
-  if (type_id == ws_comp_chem_data_t::get_type_static())
-    return std::make_shared<ws_comp_chem_data_t>();
-
-  if (type_id == ws_volume_data_t::get_type_static())
-    return std::make_shared<ws_volume_data_t>();
+  auto it = m_fabric_ws_item.find(type_id);
+  if (it != m_fabric_ws_item.end()) return it->second();
 
   astate->log(fmt::format("Cannot fabric new ws_item with type_id = {}!", type_id));
   return nullptr;

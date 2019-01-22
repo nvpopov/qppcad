@@ -36,7 +36,7 @@ void ws_volume_data_t::render() {
       vector3<float> rot{0};
       vector3<float> color{0.5f};
 
-      astate->glapi->glDisable(GL_CULL_FACE);
+      //astate->glapi->glDisable(GL_CULL_FACE);
       if (m_volume_type == ws_volume_t::volume_mo) {
           astate->dp->render_general_mesh(m_pos, scale, rot, clr_red,
                                           m_first_mesh, m_alpha, astate->sp_mvap_ssl);
@@ -48,7 +48,7 @@ void ws_volume_data_t::render() {
           astate->dp->render_general_mesh(m_pos, scale, rot, clr_yellow, m_first_mesh,
                                           m_alpha, astate->sp_mvap_ssl);
         }
-      astate->glapi->glEnable(GL_CULL_FACE);
+      //astate->glapi->glEnable(GL_CULL_FACE);
       astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
     }
 
@@ -99,7 +99,7 @@ size_t ws_volume_data_t::get_content_count() {
 }
 
 std::string ws_volume_data_t::get_ws_item_class_name() {
-  return "ws_volume_data";
+  return "ws_volume_data_t";
 }
 
 void ws_volume_data_t::save_to_json(json &data) {

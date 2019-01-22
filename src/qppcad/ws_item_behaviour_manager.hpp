@@ -143,16 +143,18 @@ namespace qpp {
 
         std::map<size_t, ws_item_io_file_format_t> m_file_formats;
         std::map<size_t, ws_item_io_file_format_group_t> m_file_format_groups;
+        std::map<size_t, std::function<std::shared_ptr<ws_item_t>() > > m_fabric_ws_item;
+
         std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
 
-        std::shared_ptr<ws_item_t> load_ws_item_from_file(const std::string &file_name,
+        std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                           size_t io_bhv_idx,
                                                           workspace_t *ws);
 
-        std::shared_ptr<ws_item_t> load_ws_item_from_file(const std::string &file_name,
+        std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                           workspace_t *ws);
 
-        void save_ws_item_to_file(std::string &file_name,
+        void save_ws_itm_to_file(std::string &file_name,
                                   std::shared_ptr<ws_item_t> ws_item,
                                   size_t bhv_id);
 
@@ -179,6 +181,9 @@ namespace qpp {
                         size_t accepted_type);
 
         void unreg_ff(size_t _file_format_hash);
+
+        //fabric related stuff
+        void reg_item_fbr(size_t hash, std::function<std::shared_ptr<ws_item_t>()> func);
 
         std::shared_ptr<ws_item_t> fabric_by_type(size_t type_id);
         ws_item_t* fabric_by_type_p(size_t type_id);

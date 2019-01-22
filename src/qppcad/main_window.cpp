@@ -1352,7 +1352,7 @@ void main_window::action_bhv_export_selected() {
                                                            "dialog_name",
                                                            "*.*").toStdString();
       if (!file_name.empty())
-        astate->ws_manager->m_bhv_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
+        astate->ws_manager->m_bhv_mgr->save_ws_itm_to_file(file_name, cur_it, b_id);
     }
 
 }

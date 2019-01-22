@@ -162,10 +162,8 @@ void ws_atoms_list_t::target_view(const cam_target_view_t _target_view,
 
     case cam_target_view_t::tv_cart_center : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos -
-                    (m_ext_obs->aabb.max - m_ext_obs->aabb.min) *
-                    3.0f*axis_size;
-        look_to = m_pos + (m_ext_obs->aabb.max - m_ext_obs->aabb.min)*0.5;
+        look_from = m_pos - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+        look_to = m_pos + (m_ext_obs->aabb.max - m_ext_obs->aabb.min) * 0.5;
         look_up = {0.0 , 0.0 , 1.0};
         need_to_update_camera = true;
         break;
@@ -416,7 +414,6 @@ void ws_atoms_list_t::unselect_atom(int atom_id) {
           if (it_ordered != m_atom_ord_sel.end()) m_atom_ord_sel.erase(it_ordered);
         }
 
-      //astate->make_viewport_dirty();
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
@@ -474,8 +471,6 @@ void ws_atoms_list_t::select_by_type (const int item_type_to_select) {
 
   for (auto i = 0; i < m_geom->nat(); i++)
     if (m_geom->type_table(i) == item_type_to_select) select_atom(i);
-
-  //recalc_gizmo_barycenter();
 
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
@@ -563,18 +558,10 @@ void ws_atoms_list_t::transform_atom(const int at_id,
 
 void ws_atoms_list_t::transform_atom(const int at_id,
                                      const matrix4<float> &tm) {
-
-  vector4<float> p_aff(
-        m_geom->coord(at_id)[0],
-      m_geom->coord(at_id)[1],
-      m_geom->coord(at_id)[2],
-      1.0f);
-
+  vector4<float> p_aff(m_geom->pos(at_id)[0], m_geom->pos(at_id)[1], m_geom->pos(at_id)[2], 1.0f);
   vector4<float> new_p = tm * p_aff;
   vector3<float> new_pos3(new_p[0], new_p[1], new_p[2]);
-
   m_geom->change_pos(at_id, new_pos3);
-
 }
 
 void ws_atoms_list_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
@@ -646,25 +633,20 @@ void ws_atoms_list_t::update_inter_atomic_dist(float new_dist,
   vector3<float> dir_s = (m_geom->pos(at2, id2) - r_btw).normalized();
 
   switch (mode) {
-
     case pair_dist_mode::transform_both : {
         m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
         m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
         break;
       }
-
     case pair_dist_mode::fix_first : {
         m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f );
         break;
       }
-
     case pair_dist_mode::fix_second : {
         m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
         break;
       }
-
     }
-
 
   astate->make_viewport_dirty();
 }
@@ -962,7 +944,7 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
 }
 
 std::string ws_atoms_list_t::get_ws_item_class_name () {
-  return "ws_atoms_list";
+  return "ws_atoms_list_t";
 }
 
 void ws_atoms_list_t::save_to_json (json &data) {

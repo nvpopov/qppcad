@@ -110,10 +110,6 @@ namespace qpp {
 
     };
 
-    struct ws_item_factory {
-        static std::shared_ptr<ws_item_t> create_object(const std::string &obj_type);
-    };
-
   }
 
 }
