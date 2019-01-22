@@ -98,10 +98,6 @@ size_t ws_volume_data_t::get_content_count() {
   return 0;
 }
 
-std::string ws_volume_data_t::get_ws_item_class_name() {
-  return "ws_volume_data_t";
-}
-
 void ws_volume_data_t::save_to_json(json &data) {
 
 }

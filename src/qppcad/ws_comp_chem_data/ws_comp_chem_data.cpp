@@ -288,10 +288,6 @@ size_t ws_comp_chem_data_t::get_content_count() {
   return 0;
 }
 
-std::string ws_comp_chem_data_t::get_ws_item_class_name() {
-  return "ws_comp_chem_data_t";
-}
-
 void ws_comp_chem_data_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 }

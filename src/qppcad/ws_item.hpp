@@ -101,7 +101,6 @@ namespace qpp {
         virtual void render();
         virtual void render_overlay(QPainter &painter);
 
-        virtual std::string get_ws_item_class_name() { return "ws_abstract_item";}
         virtual size_t get_content_count() = 0;
         /// \brief render_ui
 

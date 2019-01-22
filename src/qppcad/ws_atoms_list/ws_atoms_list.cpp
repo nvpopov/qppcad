@@ -943,10 +943,6 @@ void ws_atoms_list_t::shift(const vector3<float> shift) {
   geometry_changed();
 }
 
-std::string ws_atoms_list_t::get_ws_item_class_name () {
-  return "ws_atoms_list_t";
-}
-
 void ws_atoms_list_t::save_to_json (json &data) {
 
   ws_item_t::save_to_json(data);

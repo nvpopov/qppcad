@@ -190,7 +190,6 @@ namespace qpp {
         /// \param vShift
         void shift(const vector3<float> shift);
 
-        std::string get_ws_item_class_name() override ;
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
         bool can_be_written_to_json() override;

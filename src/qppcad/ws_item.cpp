@@ -142,7 +142,7 @@ void ws_item_t::translate(vector3<float> tr_vec) {
 
 void ws_item_t::save_to_json(json &data) {
   data[JSON_WS_ITEM_NAME] = m_name;
-  data[JSON_WS_ITEM_TYPE] = get_ws_item_class_name();
+  data[JSON_WS_ITEM_TYPE] = get_type_name();
   data[JSON_IS_VISIBLE] = m_is_visible;
   json coord = json::array({m_pos[0], m_pos[1], m_pos[2]});
   data[JSON_POS] = coord;

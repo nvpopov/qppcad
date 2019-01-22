@@ -11,11 +11,10 @@ namespace qpp {
 
     class ws_comp_chem_data_t : public ws_item_t {
 
-      QPP_OBJECT(ws_comp_chem_data_t, ws_item_t)
+       QPP_OBJECT(ws_comp_chem_data_t, ws_item_t)
 
       public:
         std::unique_ptr<comp_chem_program_data_t<float> > m_ccd{nullptr};
-        std::vector<std::shared_ptr<ws_item_t> > m_connected_items; // todo: need to change to weak
         std::vector<size_t> m_connected_items_stride;
 
         int m_cur_step{0};
@@ -26,8 +25,8 @@ namespace qpp {
         void manual_update_vib();
         void fill_custom_colors_of_geom_anim(const std::string color_map_name);
 
-        void vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                   vector3<float> &vOutLookAt) override ;
+        void vote_for_view_vectors(vector3<float> &out_look_pos,
+                                   vector3<float> &out_look_at) override ;
         void render() override;
         void update_joined_atoms_list_animation(size_t step_idx);
         bool mouse_click(ray_t<float> *click_ray) override;
@@ -39,7 +38,6 @@ namespace qpp {
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;
 
-        std::string get_ws_item_class_name() override ;
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
 

@@ -47,7 +47,6 @@ namespace qpp {
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;
 
-        std::string get_ws_item_class_name() override ;
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
 
