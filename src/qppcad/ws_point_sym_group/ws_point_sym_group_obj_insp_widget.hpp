@@ -12,7 +12,8 @@ namespace qpp {
         Q_OBJECT
 
       public:
-      
+        ws_point_sym_group_t *b_pg;
+
         ws_point_sym_group_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;

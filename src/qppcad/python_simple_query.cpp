@@ -2,6 +2,7 @@
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
 #include <data/ptable.hpp>
 
 #include <symm/point_groups.hpp>
@@ -493,6 +494,36 @@ std::string simple_query::get_point_sym_group(float tolerance) {
         }
     }
 
+}
+
+void simple_query::make_ws_point_sym_group(float tolerance) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          if (!cur_it) return;
+          auto al = cur_it->cast_as<ws_atoms_list_t>();
+          if (al && al->m_geom->DIM == 0) {
+              auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
+                             ws_point_sym_group_t::get_type_static());
+              auto ws_pg_c = ws_pg->cast_as<ws_point_sym_group_t>();
+
+              if (ws_pg_c) {
+                  ws_pg_c->gen_from_geom(*al->m_geom, tolerance);
+                  cur_ws->add_item_to_ws(ws_pg);
+                  ws_pg_c->m_name = fmt::format("point_sym_grp{}", cur_ws->m_ws_items.size());
+                }
+
+            }
+        }
+    }
+
+  astate->astate_evd->cur_ws_changed();
 }
 
 void simple_query::rebond() {

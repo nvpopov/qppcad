@@ -18,6 +18,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr_t<ws_atoms_list_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_comp_chem_data_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_volume_data_t>(bhv_mgr);
+  reg_ws_item_fbr_t<ws_point_sym_group_t>(bhv_mgr);
 }
 
 void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr) {

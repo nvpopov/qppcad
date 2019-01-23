@@ -8,6 +8,16 @@ ws_point_sym_group_t::ws_point_sym_group_t() {
   set_default_flags(ws_item_flags_default);
 }
 
+void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
+                                         float tolerance) {
+  //m_ag.group.clear();
+  find_point_symm(m_ag, geom, tolerance);
+  for (auto &t_elem : m_ag.group) {
+      transform_record_t new_tr;
+      analyze_transform(new_tr.m_axis, new_tr.m_phi, new_tr.m_inversion, t_elem);
+    }
+}
+
 void ws_point_sym_group_t::vote_for_view_vectors(vector3<float> &out_look_pos,
                                                  vector3<float> &out_look_at) {
   //do nothing

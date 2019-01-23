@@ -2,18 +2,31 @@
 #define QPP_CAD_WS_POINT_SYM_GROUP
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <geom/xgeom.hpp>
+#include <symm/point_groups.hpp>
 
 namespace qpp {
 
   namespace cad {
 
+    class transform_record_t {
+      public:
+        vector3<float> m_axis;
+        float m_phi;
+        bool m_inversion;
+    };
+
     class ws_point_sym_group_t : public ws_item_t {
 
         QPP_OBJECT(ws_point_sym_group_t, ws_item_t)
 
-        public:
-          ws_point_sym_group_t();
+      public:
+        array_group<matrix3<float> > m_ag;
+        std::vector<transform_record_t> m_atf;
+
+        ws_point_sym_group_t();
+        void gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
+                           float tolerance);
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
                                    vector3<float> &out_look_at) override ;
