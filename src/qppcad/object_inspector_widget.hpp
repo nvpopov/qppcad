@@ -23,6 +23,7 @@ namespace qpp {
 
       public:
         object_inspector_widget_t();
+        ~object_inspector_widget_t();
         void update_ws_items_view_widget();
 
         QLabel *ws_items_label;
@@ -34,10 +35,8 @@ namespace qpp {
 
         //property view by ws_item type
         QWidget *none_item_placeholder;
-        QWidget                             *ws_current_view;
-        ws_atoms_list_obj_insp_widget_t     *ws_atoms_list_view;
-        ws_comp_chem_data_obj_insp_widget_t *ws_comp_chem_data_view;
-        ws_volume_data_obj_insp_widget_t    *ws_volume_data_view;
+        //QWidget *ws_current_view{nullptr};
+        std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
 
       private slots:
         void cur_ws_changed();

@@ -65,8 +65,8 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 }
 
 void ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
-                                                       std::shared_ptr<ws_item_t> ws_item,
-                                                       size_t bhv_id) {
+                                                      std::shared_ptr<ws_item_t> ws_item,
+                                                      size_t bhv_id) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -225,6 +225,50 @@ void ws_item_behaviour_manager_t::reg_item_fbr(size_t hash,
   m_fabric_ws_item[hash] = func;
 }
 
+void ws_item_behaviour_manager_t::reg_obj_insp_fbr(
+    size_t hash,
+    std::function<std::shared_ptr<ws_item_obj_insp_widget_t> ()> func) {
+  m_obj_insp_fabric[hash] = func;
+}
+
+bool ws_item_behaviour_manager_t::is_obj_insp_fbr_exists(size_t hash) {
+  auto it = m_obj_insp_fabric.find(hash);
+  return it != m_obj_insp_fabric.end();
+}
+
+bool ws_item_behaviour_manager_t::is_obj_insp_exists(size_t hash) {
+  auto it = m_obj_insp_widgets.find(hash);
+  return it != m_obj_insp_widgets.end();
+}
+
+std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_insp_widget_sp(
+    size_t hash) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, query?", hash));
+
+  auto it = m_obj_insp_widgets.find(hash);
+  if (it != m_obj_insp_widgets.end() && it->second != nullptr) {
+      astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, exists", hash));
+      return it->second;
+    }
+
+  if (it == m_obj_insp_widgets.end()) {
+      auto it_f = m_obj_insp_fabric.find(hash);
+      if (it_f != m_obj_insp_fabric.end()) {
+          astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, constructing", hash));
+          auto cnstr = it_f->second();
+          m_obj_insp_widgets.emplace(hash, cnstr);
+          return it_f->second();
+        }
+      else return nullptr;
+    }
+
+  astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, not found", hash));
+  return nullptr;
+}
+
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t type_id) {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -239,7 +283,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t ty
 
 }
 
-ws_item_t *ws_item_behaviour_manager_t::fabric_by_type_p(size_t type_id) {
+ws_item_t *ws_item_behaviour_manager_t::ws_item_fbr_by_type_p(size_t type_id) {
 
   app_state_t *astate = app_state_t::get_inst();
 

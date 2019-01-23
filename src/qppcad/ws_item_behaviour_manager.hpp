@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item.hpp>
+#include <qppcad/ws_item_obj_insp_widget.hpp>
 
 namespace qpp {
 
@@ -145,6 +146,10 @@ namespace qpp {
         std::map<size_t, ws_item_io_file_format_group_t> m_file_format_groups;
         std::map<size_t, std::function<std::shared_ptr<ws_item_t>() > > m_fabric_ws_item;
 
+        std::map<size_t, std::shared_ptr<ws_item_obj_insp_widget_t> > m_obj_insp_widgets;
+        std::map<size_t,
+        std::function<std::shared_ptr<ws_item_obj_insp_widget_t>() > > m_obj_insp_fabric;
+
         std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
 
         std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
@@ -185,8 +190,15 @@ namespace qpp {
         //fabric related stuff
         void reg_item_fbr(size_t hash, std::function<std::shared_ptr<ws_item_t>()> func);
 
+        //obj insp related
+        void reg_obj_insp_fbr(size_t hash,
+                              std::function<std::shared_ptr<ws_item_obj_insp_widget_t>()> func);
+        bool is_obj_insp_fbr_exists(size_t hash);
+        bool is_obj_insp_exists(size_t hash);
+        std::shared_ptr<ws_item_obj_insp_widget_t> get_obj_insp_widget_sp(size_t hash);
+
         std::shared_ptr<ws_item_t> fabric_by_type(size_t type_id);
-        ws_item_t* fabric_by_type_p(size_t type_id);
+        ws_item_t* ws_item_fbr_by_type_p(size_t type_id);
     };
 
   }

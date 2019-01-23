@@ -3,18 +3,31 @@
 #include <qppcad/ws_atoms_list/ws_atoms_list_io.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
+
+#include <qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.hpp>
+#include <qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.hpp>
+#include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
+#include <qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 
-void registration_helper_t::register_ws_item_fabric(ws_item_behaviour_manager_t *bhv_mgr) {
-  register_ws_item_fabric_t<ws_atoms_list_t>(bhv_mgr);
-  register_ws_item_fabric_t<ws_comp_chem_data_t>(bhv_mgr);
-  register_ws_item_fabric_t<ws_volume_data_t>(bhv_mgr);
+void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr) {
+  reg_ws_item_fbr_t<ws_atoms_list_t>(bhv_mgr);
+  reg_ws_item_fbr_t<ws_comp_chem_data_t>(bhv_mgr);
+  reg_ws_item_fbr_t<ws_volume_data_t>(bhv_mgr);
 }
 
-void registration_helper_t::register_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
+void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr) {
+  reg_ws_item_obj_insp_t<ws_atoms_list_t, ws_atoms_list_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<ws_volume_data_t, ws_volume_data_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<ws_comp_chem_data_t, ws_comp_chem_data_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<ws_point_sym_group_t, ws_point_sym_group_obj_insp_widget_t>(bhv_mgr);
+}
+
+void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
 
   size_t xyz_ff_g_hash = bhv_mgr->reg_ffg("XYZ", "xyz");
   size_t vasp_ff_g_hash = bhv_mgr->reg_ffg("VASP", "vasp");

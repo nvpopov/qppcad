@@ -40,11 +40,11 @@ object_inspector_widget_t::object_inspector_widget_t() {
           this, &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
 
   //ws_item_view = new ws_item_obj_insp_widget_t;
-  ws_atoms_list_view = new ws_atoms_list_obj_insp_widget_t;
-  ws_comp_chem_data_view = new ws_comp_chem_data_obj_insp_widget_t;
-  ws_volume_data_view = new ws_volume_data_obj_insp_widget_t;
+  //  ws_atoms_list_view = new ws_atoms_list_obj_insp_widget_t;
+  //  ws_comp_chem_data_view = new ws_comp_chem_data_obj_insp_widget_t;
+  //  ws_volume_data_view = new ws_volume_data_obj_insp_widget_t;
 
-  ws_current_view = none_item_placeholder;
+  //ws_current_view = none_item_placeholder;
 
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();
@@ -52,93 +52,81 @@ object_inspector_widget_t::object_inspector_widget_t() {
 
 }
 
+object_inspector_widget_t::~object_inspector_widget_t() {
+
+  if (m_cur_obj_insp_widget) {
+      m_cur_obj_insp_widget->unbind_item();
+      obj_insp_layout->removeWidget(m_cur_obj_insp_widget.get());
+      m_cur_obj_insp_widget->setParent(nullptr);
+      m_cur_obj_insp_widget = nullptr;
+    }
+
+}
+
 void object_inspector_widget_t::update_ws_items_view_widget() {
 
   app_state_t* astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  if (!bhv_mgr) return;
 
-  if (ws_current_view) {
-      obj_insp_layout->removeWidget(ws_current_view);
-      ws_current_view->setParent(nullptr);
-      ws_current_view = none_item_placeholder;
-      obj_insp_layout->addWidget(none_item_placeholder);
+  //  if (ws_current_view) {
+  //      obj_insp_layout->removeWidget(ws_current_view);
+  //      ws_current_view->setParent(nullptr);
+  //      ws_current_view = none_item_placeholder;
+  //      obj_insp_layout->addWidget(none_item_placeholder);
+  //      none_item_placeholder->show();
+  //      ws_comp_chem_data_view->unbind_item();
+  //      ws_comp_chem_data_view->hide();
+  //      ws_atoms_list_view->unbind_item();
+  //      ws_atoms_list_view->hide();
+  //      ws_volume_data_view->unbind_item();
+  //      ws_volume_data_view->hide();
+  //    }
+
+  //  if (ws_current_view) {
+  //      obj_insp_layout->removeWidget(ws_current_view);
+  //      ws_current_view->setParent(nullptr);
+  //      ws_current_view = none_item_placeholder;
+  //      obj_insp_layout->addWidget(none_item_placeholder);
+  //      none_item_placeholder->show();
+  //    }
+
+  //unbind if binded
+  //  if (ws_current_view && ws_current_view != none_item_placeholder) {
+  //      //ws_current_view->setParent(nullptr);
+  //      obj_insp_layout->removeWidget(ws_current_view);
+  //    }
+
+  if (m_cur_obj_insp_widget) {
+      m_cur_obj_insp_widget->unbind_item();
+      obj_insp_layout->removeWidget(m_cur_obj_insp_widget.get());
+      m_cur_obj_insp_widget->setParent(nullptr);
+      m_cur_obj_insp_widget = nullptr;
       none_item_placeholder->show();
-      ws_comp_chem_data_view->unbind_item();
-      ws_comp_chem_data_view->hide();
-      ws_atoms_list_view->unbind_item();
-      ws_atoms_list_view->hide();
-      ws_volume_data_view->unbind_item();
-      ws_volume_data_view->hide();
     }
 
   if (astate->ws_manager->has_wss()) {
+
       auto cur_ws = astate->ws_manager->get_cur_ws();
+
       if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          if (cur_it) {
+              size_t thash = cur_it->get_type();
+              auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
+              if (obj_insp_w) {
 
-          if (dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected())) {
+                  none_item_placeholder->hide();
+                  obj_insp_layout->addWidget(obj_insp_w.get());
 
-              if (ws_current_view)  {
-                  obj_insp_layout->removeWidget(ws_current_view);
-                  ws_current_view->setParent(nullptr);
+                  m_cur_obj_insp_widget = obj_insp_w;
+                  obj_insp_w->bind_to_item(cur_it);
+                  obj_insp_w->show();
                 }
-
-              none_item_placeholder->hide();
-              obj_insp_layout->addWidget(ws_atoms_list_view);
-              ws_current_view = ws_atoms_list_view;
-
-              ws_atoms_list_view->bind_to_item(cur_ws->get_selected());
-              ws_atoms_list_view->show();
-
-              ws_comp_chem_data_view->unbind_item();
-              ws_volume_data_view->unbind_item();
-
-              astate->log("DEBUG: ws_current_view = ws_atoms_list_view;");
-              return;
-            }
-
-          if (dynamic_cast<ws_comp_chem_data_t*>(cur_ws->get_selected())) {
-
-              if (ws_current_view)  {
-                  obj_insp_layout->removeWidget(ws_current_view);
-                  ws_current_view->setParent(nullptr);
-                }
-
-              none_item_placeholder->hide();
-              obj_insp_layout->addWidget(ws_comp_chem_data_view);
-              ws_current_view = ws_comp_chem_data_view;
-
-              ws_comp_chem_data_view->bind_to_item(cur_ws->get_selected());
-              ws_comp_chem_data_view->show();
-
-              ws_atoms_list_view->unbind_item();
-              ws_volume_data_view->unbind_item();
-
-              astate->log("DEBUG: ws_current_view = ws_comp_chem_data_view;");
-              return;
-            }
-
-          if (dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected())) {
-
-              if (ws_current_view)  {
-                  obj_insp_layout->removeWidget(ws_current_view);
-                  ws_current_view->setParent(nullptr);
-                }
-
-              none_item_placeholder->hide();
-              obj_insp_layout->addWidget(ws_volume_data_view);
-              ws_current_view = ws_volume_data_view;
-
-              ws_volume_data_view->bind_to_item(cur_ws->get_selected());
-              ws_volume_data_view->show();
-
-              ws_atoms_list_view->unbind_item();
-              ws_comp_chem_data_view->unbind_item();
-
-              astate->log("DEBUG: ws_current_view = ws_comp_chem_data_view;");
-              return;
             }
         }
-    }
 
+    }
 }
 
 void object_inspector_widget_t::cur_ws_changed() {
