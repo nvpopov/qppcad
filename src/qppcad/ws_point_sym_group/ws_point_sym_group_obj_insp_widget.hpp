@@ -12,9 +12,14 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        ws_point_sym_group_t *b_pg;
+        ws_point_sym_group_t *b_pg{nullptr};
 
         ws_point_sym_group_obj_insp_widget_t();
+
+        QGroupBox *tg_info_summary_widget;
+        QFormLayout *tg_info_summary_layout;
+        QLabel *tg_info_sym_gr;
+        QLabel *tg_info_total_sym_op;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;

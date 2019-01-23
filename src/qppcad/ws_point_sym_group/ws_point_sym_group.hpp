@@ -14,6 +14,7 @@ namespace qpp {
         vector3<float> m_axis;
         float m_phi;
         bool m_inversion;
+        bool m_is_plane;
     };
 
     class ws_point_sym_group_t : public ws_item_t {

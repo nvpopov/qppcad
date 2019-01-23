@@ -10,11 +10,17 @@ ws_point_sym_group_t::ws_point_sym_group_t() {
 
 void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
                                          float tolerance) {
-  //m_ag.group.clear();
+
+  app_state_t* astate = app_state_t::get_inst();
+
   find_point_symm(m_ag, geom, tolerance);
   for (auto &t_elem : m_ag.group) {
       transform_record_t new_tr;
       analyze_transform(new_tr.m_axis, new_tr.m_phi, new_tr.m_inversion, t_elem);
+      new_tr.m_is_plane = new_tr.m_phi > 3.1400f && new_tr.m_phi < 3.14169f && new_tr.m_inversion;
+      astate->log(fmt::format("AT {} {} {} {}",
+                              new_tr.m_axis, new_tr.m_phi, new_tr.m_inversion, new_tr.m_is_plane));
+      m_atf.push_back(std::move(new_tr));
     }
 }
 
