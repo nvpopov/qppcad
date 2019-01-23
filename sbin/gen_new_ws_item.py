@@ -2,9 +2,10 @@
 import sys
 import os
 
-hpp_tmp = """
-namespace qpp {
-
+hpp_tmp = """#include <qppcad/qppcad.hpp>
+#include <qppcad/ws_item.hpp>
+  namespace qpp {
+  
   namespace cad {
 
     class #CLASS_NAME_t : public ws_item_t {
@@ -36,8 +37,7 @@ namespace qpp {
 }
 """
 
-cpp_tmp = """
-#include <qppcad/#CLASS_NAME/#CLASS_NAME.hpp>
+cpp_tmp = """#include <qppcad/#CLASS_NAME/#CLASS_NAME.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -90,6 +90,57 @@ void #CLASS_NAME_t::load_from_json(json &data) {
 
 """
 
+hpp_oi_tmp = """#include <qppcad/ws_item_obj_insp_widget.hpp>
+#include <qppcad/#CLASS_NAME/#CLASS_NAME.hpp>
+
+namespace qpp {
+
+  namespace cad {
+
+    class #CLASS_NAME_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+
+        Q_OBJECT
+
+      public:
+      
+        #CLASS_NAME_obj_insp_widget_t();
+
+        void bind_to_item(ws_item_t *_binding_item) override;
+        void update_from_ws_item() override;
+        void unbind_item() override;
+    };
+
+  }
+
+}
+"""
+
+cpp_oi_tmp = """#include <qppcad/#CLASS_NAME/#CLASS_NAME_obj_insp_widget.hpp>
+
+using namespace qpp;
+using namespace qpp::cad;
+
+#CLASS_NAME_obj_insp_widget_t::#CLASS_NAME_obj_insp_widget_t() {
+
+}
+
+void #CLASS_NAME_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
+
+  ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
+  
+}
+
+void #CLASS_NAME_obj_insp_widget_t::update_from_ws_item() {
+
+  ws_item_obj_insp_widget_t::update_from_ws_item();
+
+}
+
+void #CLASS_NAME_obj_insp_widget_t::unbind_item() {
+
+}
+"""
+
 argc = len(sys.argv)
 
 if (argc == 1):
@@ -103,7 +154,10 @@ if (argc == 2):
 
     file_hpp = open("{}/{}.hpp".format(new_path, class_name), "w")
     file_cpp = open("{}/{}.cpp".format(new_path, class_name), "w")
+    file_oi_hpp = open("{}/{}_obj_insp_widget.hpp".format(new_path, class_name), "w")
+    file_oi_cpp = open("{}/{}_obj_insp_widget.cpp".format(new_path, class_name), "w")
 
+    #write main
     hpp_guard = ("QPP_CAD_{}".format(class_name)).upper()
     file_hpp.write("#ifndef {}\n".format(hpp_guard))
     file_hpp.write("#define {}\n".format(hpp_guard))
@@ -115,3 +169,16 @@ if (argc == 2):
     file_cpp.write(cpp_emp)
 
     file_hpp.write("#endif")
+
+    #write oi
+    hpp_guard_oi = ("QPP_CAD_{}_OBJECT_INSP".format(class_name)).upper()
+    file_oi_hpp.write("#ifndef {}\n".format(hpp_guard_oi))
+    file_oi_hpp.write("#define {}\n".format(hpp_guard_oi))
+
+    hpp_oi_emp = hpp_oi_tmp.replace("#CLASS_NAME", class_name)
+    cpp_oi_emp = cpp_oi_tmp.replace("#CLASS_NAME", class_name)
+
+    file_oi_hpp.write(hpp_oi_emp)
+    file_oi_cpp.write(cpp_oi_emp)
+
+    file_oi_hpp.write("#endif")

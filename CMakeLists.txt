@@ -2,10 +2,10 @@ cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
 add_definitions(-fPIC -DFMT_HEADER_ONLY)
 set(CMAKE_CXX_FLAGS " -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden")
-#set(CMAKE_BUILD_TYPE "Debug")
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
+#set(CMAKE_BUILD_TYPE "Release")
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -g3 -rdynamic")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Og -fno-omit-frame-pointer -g3 -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 --fast-math")
 
 #set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS} -fno-omit-frame-pointer -fsanitize=address")
@@ -125,6 +125,9 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list/ws_atoms_list_colorizer.cpp
     src/qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.cpp
     src/qppcad/ws_atoms_list/ws_atoms_list_io.cpp
+
+    src/qppcad/ws_point_sym_group/ws_point_sym_group.cpp
+    src/qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.cpp
 
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qbonding_table_model.cpp
