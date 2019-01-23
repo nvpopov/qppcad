@@ -9,12 +9,12 @@ ws_point_sym_group_t::ws_point_sym_group_t() {
 }
 
 void ws_point_sym_group_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                          vector3<float> &out_look_at) {
+                                                 vector3<float> &out_look_at) {
   //do nothing
 }
 
 void ws_point_sym_group_t::render() {
- //do nothing
+  //do nothing
 }
 
 bool ws_point_sym_group_t::mouse_click(ray_t<float> *click_ray) {

@@ -39,13 +39,6 @@ object_inspector_widget_t::object_inspector_widget_t() {
   connect(ws_items_list, &QListWidget::itemSelectionChanged,
           this, &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
 
-  //ws_item_view = new ws_item_obj_insp_widget_t;
-  //  ws_atoms_list_view = new ws_atoms_list_obj_insp_widget_t;
-  //  ws_comp_chem_data_view = new ws_comp_chem_data_obj_insp_widget_t;
-  //  ws_volume_data_view = new ws_volume_data_obj_insp_widget_t;
-
-  //ws_current_view = none_item_placeholder;
-
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();
   ws_items_list->clearSelection();
@@ -68,34 +61,6 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
   if (!bhv_mgr) return;
-
-  //  if (ws_current_view) {
-  //      obj_insp_layout->removeWidget(ws_current_view);
-  //      ws_current_view->setParent(nullptr);
-  //      ws_current_view = none_item_placeholder;
-  //      obj_insp_layout->addWidget(none_item_placeholder);
-  //      none_item_placeholder->show();
-  //      ws_comp_chem_data_view->unbind_item();
-  //      ws_comp_chem_data_view->hide();
-  //      ws_atoms_list_view->unbind_item();
-  //      ws_atoms_list_view->hide();
-  //      ws_volume_data_view->unbind_item();
-  //      ws_volume_data_view->hide();
-  //    }
-
-  //  if (ws_current_view) {
-  //      obj_insp_layout->removeWidget(ws_current_view);
-  //      ws_current_view->setParent(nullptr);
-  //      ws_current_view = none_item_placeholder;
-  //      obj_insp_layout->addWidget(none_item_placeholder);
-  //      none_item_placeholder->show();
-  //    }
-
-  //unbind if binded
-  //  if (ws_current_view && ws_current_view != none_item_placeholder) {
-  //      //ws_current_view->setParent(nullptr);
-  //      obj_insp_layout->removeWidget(ws_current_view);
-  //    }
 
   if (m_cur_obj_insp_widget) {
       m_cur_obj_insp_widget->unbind_item();

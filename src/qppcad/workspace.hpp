@@ -91,6 +91,12 @@ namespace qpp {
         ws_item_t *get_selected();
         std::shared_ptr<ws_item_t> get_selected_sp();
 
+        template<typename T>
+        T* get_selected_as() {
+          auto cur_it = get_selected();
+          return  cur_it->cast_as<T>();
+        }
+
         bool set_selected_item(const size_t sel_idx, bool emit_signal = true);
         void unselect_all(bool emit_signal = true);
         void toggle_edit_mode();

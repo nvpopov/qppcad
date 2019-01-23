@@ -12,19 +12,6 @@ using namespace qpp::cad;
 
 PYBIND11_EMBEDDED_MODULE(sq, m) {
 
-  py::enum_<qc_file_fmt>(m, "ffmt", py::arithmetic(), "qc file format")
-      .value("std_xyz", qc_file_fmt::standart_xyz)
-      .value("vasp_poscar", qc_file_fmt::vasp_poscar)
-      .value("vasp_outcar_md", qc_file_fmt::vasp_outcar_md)
-      .value("ff_out", qc_file_fmt::firefly_output)
-      .value("ff_inp", qc_file_fmt::firefly_input)
-      .value("cp2k_out", qc_file_fmt::cp2k_output)
-      .value("cp2k_coord", qc_file_fmt::cp2k_coord_cell_section)
-      .value("json", qc_file_fmt::standart_xyz)
-      .value("uc", qc_file_fmt::qpp_uc)
-      .value("unk", qc_file_fmt::unknown_fileformat)
-      .export_values();
-
   m.attr("def_isovalue_dens") = py::float_(qpp::def_isovalue_dens);
   m.attr("def_isovalue_mo") = py::float_(qpp::def_isovalue_mo);
 
@@ -57,6 +44,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("get_type_hash", &simple_query::get_type_hash);
   tools.def("is_instance_of", &simple_query::is_instance_of_by_hash);
   tools.def("is_instance_of", &simple_query::is_instance_of_by_type_name);
+  tools.def("get_point_sym_g", &simple_query::get_point_sym_group, py::arg("tolerance") = 0.1f);
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 

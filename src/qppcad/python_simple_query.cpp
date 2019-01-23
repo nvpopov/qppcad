@@ -4,6 +4,8 @@
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <data/ptable.hpp>
 
+#include <symm/point_groups.hpp>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -470,6 +472,27 @@ vector3<float> simple_query::gizmo_pos() {
     }
 
   return vector3<float>::Zero();
+}
+
+std::string simple_query::get_point_sym_group(float tolerance) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          auto al = cur_it->cast_as<ws_atoms_list_t>();
+          if (al && al->m_geom->DIM == 0) {
+              array_group<matrix3<float> > G;
+              find_point_symm(G, *(al->m_geom), tolerance);
+              return G.name;
+            }
+        }
+    }
+
 }
 
 void simple_query::rebond() {

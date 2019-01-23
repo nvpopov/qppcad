@@ -45,6 +45,7 @@ namespace qpp {
         static py::bool_ is_instance_of_by_type_name(std::string _type_name);
         //static void bopen(std::string _file_name);
         static vector3<float> gizmo_pos();
+        static std::string get_point_sym_group(float tolerance);
 
         static void edit_mode(int mode);
         static void rebond();
