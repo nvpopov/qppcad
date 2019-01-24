@@ -22,6 +22,57 @@ void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> >
                               new_tr.m_axis, new_tr.m_phi, new_tr.m_inversion, new_tr.m_is_plane));
       m_atf.push_back(std::move(new_tr));
     }
+
+  recalc_render_data();
+
+}
+
+void ws_point_sym_group_t::recalc_render_data() {
+
+  for (auto &elem : m_atf) {
+
+      vector3<float> aliasing{(static_cast <float> (rand()) /
+            static_cast <float> (RAND_MAX))*0.05f};
+
+      vector3<float> start = elem.m_axis * 5 ;
+      vector3<float> end = elem.m_axis * -5;
+      float scale_val{0.055f};
+
+      if (elem.m_is_plane) {
+          start += aliasing;
+          //            end *= 6;
+          end = elem.m_axis * -8;
+          scale_val = (start-end).norm();
+        }
+
+      matrix4<float> mat_model = matrix4<float>::Identity();
+      mat_model.block<3,1>(0,3) = start;
+      mat_model.block<3,1>(0,2) = end - start;
+
+      vector3<float> vec_axis_norm = mat_model.block<3,1>(0,2).normalized();
+
+      mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * scale_val;
+      mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
+      mat_model.block<3,1>(0,3) = start;
+
+      elem.m_render_mat = mat_model;
+
+      //aux
+
+      vector3<float> start_aux = elem.m_axis * 5;
+      vector3<float> end_aux = elem.m_axis * 5.25;
+
+      matrix4<float> mat_model_aux = matrix4<float>::Identity();
+      mat_model_aux.block<3,1>(0,3) = start_aux;
+      mat_model_aux.block<3,1>(0,2) = end_aux - start_aux;
+
+      vector3<float> vec_axis_norm_aux = mat_model_aux.block<3,1>(0,2).normalized();
+      mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * 0.1f;
+      mat_model_aux.block<3,1>(0,1) = vec_axis_norm_aux.cross(mat_model_aux.block<3,1>(0,0));
+      mat_model_aux.block<3,1>(0,3) = start_aux;
+
+      elem.m_render_mat_aux = mat_model_aux;
+    }
 }
 
 void ws_point_sym_group_t::vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -30,7 +81,41 @@ void ws_point_sym_group_t::vote_for_view_vectors(vector3<float> &out_look_pos,
 }
 
 void ws_point_sym_group_t::render() {
-  //do nothing
+
+  if (!m_is_visible) return;
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  //draw axes
+  astate->dp->begin_render_general_mesh();
+
+  for (auto &elem : m_atf)
+    if (!elem.m_is_plane) {
+        if (elem.m_axis.isApprox(vector3<float>(0,0,1)) && !elem.m_inversion) {
+            astate->dp->render_general_mesh(elem.m_render_mat, clr_olive,
+                                            astate->mesh_cylinder);
+            astate->dp->render_general_mesh(elem.m_render_mat_aux, clr_olive,
+                                            astate->mesh_unit_cone);
+          } else {
+            astate->dp->render_general_mesh(elem.m_render_mat, clr_red,
+                                            astate->mesh_cylinder);
+            astate->dp->render_general_mesh(elem.m_render_mat_aux, clr_red,
+                                            astate->mesh_unit_cone);
+          }
+      }
+
+  astate->dp->end_render_general_mesh();
+
+  astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
+  astate->dp->begin_no_cull();
+  for (auto &elem : m_atf)
+    if (elem.m_is_plane) {
+        astate->dp->render_general_mesh(elem.m_render_mat, clr_green, astate->mesh_zl_plane,
+                                        m_plane_alpha, astate->sp_mvap_ssl);
+      }
+  astate->dp->end_no_cull();
+  astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
+
 }
 
 bool ws_point_sym_group_t::mouse_click(ray_t<float> *click_ray) {

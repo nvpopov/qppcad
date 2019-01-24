@@ -506,7 +506,11 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
 
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
-          if (!cur_it) return;
+
+          if (!cur_it) {
+              return;
+            }
+
           auto al = cur_it->cast_as<ws_atoms_list_t>();
           if (al && al->m_geom->DIM == 0) {
               auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
@@ -517,6 +521,7 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
                   ws_pg_c->gen_from_geom(*al->m_geom, tolerance);
                   cur_ws->add_item_to_ws(ws_pg);
                   ws_pg_c->m_name = fmt::format("point_sym_grp{}", cur_ws->m_ws_items.size());
+                  ws_pg_c->m_connected_items.push_back(cur_ws->get_selected_sp());
                 }
 
             }

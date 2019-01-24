@@ -42,13 +42,14 @@ namespace qpp {
 
       mesh_spheres.push_back(mesh_generators::sphere(m_sphere_quality, m_sphere_quality));
       mesh_cylinder = mesh_generators::cylinder_mk2(2, m_cylinder_quality, 1.0f, 1.0f);
-      mesh_unit_line     = mesh_generators::unit_line();
-      mesh_grid_xz        = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
-      mesh_unit_cube     = mesh_generators::unit_cube();
-      mesh_unit_cone     = mesh_generators::cone(1.0f, 2.0f, 1, 16);
-      mesh_fbo_quad      = mesh_generators::quad();
-      mesh_zup_quad      = mesh_generators::quad_zup();
-      mesh_xline_mesh    = mesh_generators::cross_line_atom();
+      mesh_unit_line = mesh_generators::unit_line();
+      mesh_grid_xz = mesh_generators::xz_plane(20, 0.5, 20, 0.5);
+      mesh_unit_cube = mesh_generators::unit_cube();
+      mesh_unit_cone = mesh_generators::cone(1.0f, 2.0f, 1, 16);
+      mesh_fbo_quad = mesh_generators::quad();
+      mesh_zup_quad = mesh_generators::quad_zup();
+      mesh_xline_mesh = mesh_generators::cross_line_atom();
+      mesh_zl_plane = mesh_generators::plane_zl();
 
     }
 

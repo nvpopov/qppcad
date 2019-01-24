@@ -15,6 +15,8 @@ namespace qpp {
         float m_phi;
         bool m_inversion;
         bool m_is_plane;
+        matrix4<float> m_render_mat;
+        matrix4<float> m_render_mat_aux;
     };
 
     class ws_point_sym_group_t : public ws_item_t {
@@ -24,10 +26,12 @@ namespace qpp {
       public:
         array_group<matrix3<float> > m_ag;
         std::vector<transform_record_t> m_atf;
+        float m_plane_alpha{0.8f};
 
         ws_point_sym_group_t();
         void gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
                            float tolerance);
+        void recalc_render_data();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
                                    vector3<float> &out_look_at) override ;

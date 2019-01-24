@@ -26,6 +26,9 @@ namespace qpp {
         /// \brief render
         void render ();
 
+        void begin_no_cull();
+        void end_no_cull();
+
         /// \brief begin_atom_render
         void begin_atom_render (float specular_power, float specular_alpha);
 

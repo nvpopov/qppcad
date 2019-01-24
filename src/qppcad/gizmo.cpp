@@ -6,12 +6,12 @@ using namespace qpp::cad;
 
 gizmo_t::gizmo_t () {
 
-  m_box_size         = 0.65f;
-  m_shift_magn  = 2.0f;
-  m_is_active              = true;
-  m_pos                    = vector3<float>::Zero();
-  m_acc_tr        = vector3<float>::Zero();
-  attached_item          = nullptr;
+  m_box_size = 0.65f;
+  m_shift_magn = 2.0f;
+  m_is_active = true;
+  m_pos = vector3<float>::Zero();
+  m_acc_tr = vector3<float>::Zero();
+  attached_item = nullptr;
   m_is_interacting = false;
 
   for (uint8_t i = 0; i < 3; i++)
@@ -46,28 +46,28 @@ void gizmo_t::render () {
       astate->dp->render_general_mesh(
             m_pos + gizmo_axis[0] * m_shift_magn,
           _v_one * 0.35f,
-          vector3<float>( -pi / 2, 0.0f, 0.0f ),
+          vector3<float>( 0.0f, pi / 2, 0.0f ),
           gizmo_color[0],
           astate->mesh_unit_cone);
 
       astate->dp->render_general_mesh(
             m_pos + gizmo_axis[1] * m_shift_magn,
           _v_one * 0.35f,
-          vector3<float>( 0.0f, 0.0f, 0.0f ),
+          vector3<float>( 0.0f, 0.0f, -pi / 2 ),
           gizmo_color[1],
           astate->mesh_unit_cone);
 
       astate->dp->render_general_mesh(
             m_pos + gizmo_axis[2] * m_shift_magn,
           _v_one * 0.35f,
-          vector3<float>( 0.0f, 0.0f,  pi / 2),
+          vector3<float>( 0.0f, 0.0f, 0.0f),
           gizmo_color[2],
           astate->mesh_unit_cone);
 
       astate->dp->render_general_mesh(
             m_pos + gizmo_axis[0] * (m_shift_magn-m_box_size-1.25f),
           vector3<float>( _v_scale[0] , _v_scale[1] ,
-          (m_shift_magn/2-m_box_size)+1.75f),
+          (m_shift_magn/2-m_box_size) + 1.75f),
           vector3<float>( 0.0f, pi / 2.0,  0.0f),
           gizmo_color[0],
           astate->mesh_cylinder);
@@ -75,15 +75,15 @@ void gizmo_t::render () {
       astate->dp->render_general_mesh(
             m_pos + gizmo_axis[1] * (m_shift_magn-m_box_size+0.75),
           vector3<float>( _v_scale[0] , _v_scale[1] ,
-          (m_shift_magn/2-m_box_size)+1.75f),
-          vector3<float>( 0.0f, 0.0f,   pi / 2.0),
+          (m_shift_magn/2-m_box_size) + 1.75f),
+          vector3<float>( 0.0f, 0.0f,  pi / 2.0),
           gizmo_color[1],
           astate->mesh_cylinder);
 
       astate->dp->render_general_mesh(
             m_pos + gizmo_axis[2] * (m_shift_magn-m_box_size-1.25f),
           vector3<float>( _v_scale[0] , _v_scale[1] ,
-          (m_shift_magn/2-m_box_size)+1.75f),
+          (m_shift_magn/2-m_box_size) + 1.75f),
           vector3<float>( 0.0f, 0.0f,  0.0f),
           gizmo_color[2],
           astate->mesh_cylinder);
@@ -134,12 +134,12 @@ void gizmo_t::translate_attached(float delta_time){
       if (fabs(d_unproj[m_touched_axis]) > 0.00025f && astate->is_mouse_moving &&
           astate->mouse_distance_pp > 0.2f) {
 
-          float proj_dependent_mod = 3500.0f;
+          float proj_dep_mod = 3500.0f;
 
-          if (astate->camera->m_cur_proj == cam_proj_t::proj_ortho) proj_dependent_mod = 350.0f;
+          if (astate->camera->m_cur_proj == cam_proj_t::proj_ortho) proj_dep_mod = 350.0f;
 
           vector3<float> new_transform =
-              gizmo_axis[m_touched_axis] * delta_time * d_unproj[m_touched_axis] * proj_dependent_mod;
+              gizmo_axis[m_touched_axis] * delta_time * d_unproj[m_touched_axis] * proj_dep_mod;
 
           m_acc_tr += new_transform;
 

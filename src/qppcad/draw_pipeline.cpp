@@ -20,6 +20,16 @@ void draw_pipeline_t::render(){
 
 }
 
+void draw_pipeline_t::begin_no_cull() {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->glapi->glDisable(GL_CULL_FACE);
+}
+
+void draw_pipeline_t::end_no_cull() {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->glapi->glEnable(GL_CULL_FACE);
+}
+
 void draw_pipeline_t::begin_atom_render (float specular_power, float specular_alpha) {
 
   app_state_t* astate = app_state_t::get_inst();

@@ -86,6 +86,7 @@ namespace qpp {
         mesh_t *mesh_unit_cone;
         mesh_t *mesh_fbo_quad;
         mesh_t *mesh_zup_quad;
+        mesh_t *mesh_zl_plane;
         mesh_t *mesh_xline_mesh;
 
         std::shared_ptr<workspace_manager_t> ws_manager;

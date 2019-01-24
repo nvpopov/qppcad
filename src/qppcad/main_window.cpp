@@ -1260,11 +1260,6 @@ void main_window::build_bhv_menus_and_actions() {
             if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
                 bhv_mgr->m_ws_item_io[i]->can_save() &&
                 bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
-                std::cout <<
-                             fmt::format("i={} can_save={}\n",
-                                         i,
-                                         bhv_mgr->m_ws_item_io[i]->can_save())
-                          << std::endl;
                 qextended_action *new_act = new qextended_action(this);
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
@@ -1295,10 +1290,8 @@ void main_window::action_bhv_import_to_cur_workspace() {
   if (b_id < bhv_mgr->m_ws_item_io.size() &&
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
-      // astate->log(fmt::format("{}", b_id));
-      std::string file_name = QFileDialog::getOpenFileName(this,
-                                                           "dialog_name",
-                                                           "*.*").toStdString();
+      std::string file_name =
+          QFileDialog::getOpenFileName(this, "dialog_name", "*.*").toStdString();
       if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id, false);
     }
 

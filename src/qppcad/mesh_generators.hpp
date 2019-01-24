@@ -15,7 +15,10 @@ namespace qpp {
 
     struct mesh_generators{
 
+        static mesh_t *plane_zl ();
+
         static mesh_t *quad_zup ();
+
         static mesh_t *quad ();
         static mesh_t *sphere(const int lat_bands, const int long_bands);
         static mesh_t *cylinder_whole(const int num_phi, const int num_z);
