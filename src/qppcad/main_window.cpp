@@ -115,11 +115,13 @@ void main_window::init_menus() {
   edit_menu  = menuBar()->addMenu(tr("&Edit"));
   edit_menu_undo = new QAction(this);
   edit_menu_undo->setText(tr("Undo"));
+  edit_menu_undo->setEnabled(false);
   edit_menu_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
   edit_menu->addAction(edit_menu_undo);
 
   edit_menu_redo = new QAction(this);
   edit_menu_redo->setText(tr("Redo"));
+  edit_menu_redo->setEnabled(false);
   edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
   edit_menu->addAction(edit_menu_redo);
 

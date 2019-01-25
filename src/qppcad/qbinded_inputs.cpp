@@ -65,7 +65,9 @@ void qbinded_float_spinbox::set_min_max_step(double new_min,
 }
 
 qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (parent) {
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   connect(this, SIGNAL(valueChanged(double)), this, SLOT(value_changed(double)));
+  setMaximumWidth(180);
 }
 
 void qbinded_float_spinbox::value_changed(double d) {
@@ -94,6 +96,8 @@ void qbinded_combobox::unbind_value() {
 
 qbinded_combobox::qbinded_combobox(QWidget *parent) : QComboBox (parent) {
   connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(value_changed(int)));
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+  setMaximumWidth(180);
 }
 
 void qbinded_combobox::value_changed(int i) {

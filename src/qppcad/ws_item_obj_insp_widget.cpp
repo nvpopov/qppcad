@@ -12,6 +12,7 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name) {
   tmp->tab_scroll->setWidgetResizable(true);
 
   tmp->tab_inner_widget = new QWidget(tmp->tab_scroll);
+  tmp->tab_inner_widget->setProperty("s_class", "tab_inner_widget");
   tmp->tab_scroll->setWidget(tmp->tab_inner_widget);
 
   tmp->tab_inner_widget_layout = new QVBoxLayout;

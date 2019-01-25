@@ -27,7 +27,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
   obj_insp_layout->addWidget(ws_items_label);
   obj_insp_layout->addWidget(ws_items_list);
   obj_insp_layout->addWidget(none_item_placeholder);
-  obj_insp_layout->setContentsMargins(0,0,15,15);
+  obj_insp_layout->setContentsMargins(0,0,0,0);
 
   connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_changed_signal()),
           this, SLOT(cur_ws_selected_item_changed()));
@@ -108,7 +108,10 @@ void object_inspector_widget_t::cur_ws_changed() {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++) {
-              ws_items_list->addItem(QString::fromStdString(cur_ws->m_ws_items[i]->m_name));
+              ws_items_list->addItem(
+                    QString::fromStdString(fmt::format("[{}] {} ",
+                                                       i, cur_ws->m_ws_items[i]->m_name))
+                    );
             }
         }
     }

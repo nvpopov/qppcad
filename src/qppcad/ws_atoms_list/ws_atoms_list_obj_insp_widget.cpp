@@ -121,7 +121,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
   gb_disp_s_lt->addRow(tr("Labels style"), disp_s_labels_style);
-  gb_disp_s_lt->addRow(tr("Selective visibility"), disp_s_sel_vis);
+  gb_disp_s_lt->addRow(tr("Sel. visibility"), disp_s_sel_vis);
   gb_disp_s_lt->addRow(tr("S.v. affect bonds"), disp_s_sel_vis_affect_bonds);
   gb_disp_s_lt->addRow(disp_s_draw_subcells_label, disp_s_draw_subcells);
   gb_disp_s_lt->addRow(disp_s_subcells_idx_label, disp_s_subcells_idx);
@@ -137,11 +137,17 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_shading_lt->addRow(tr("Specular power"), disp_shading_spec_value);
 
   //display - type specific rendering
-  gb_disp_type_spec_rend = new QGroupBox(tr("Type specific renderig"));
+  gb_disp_type_spec_rend = new QGroupBox(tr("Type specific rendering"));
   gb_disp_type_spec_rend_lt = new QFormLayout;
   disp_type_spec_tv = new QTableView;
   gb_disp_type_spec_rend->setLayout(gb_disp_type_spec_rend_lt);
   gb_disp_type_spec_rend_lt->addWidget(disp_type_spec_tv);
+  disp_type_spec_tv->setMaximumWidth(350);
+  disp_type_spec_tv->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  disp_type_spec_tv->verticalHeader()->hide();
+  disp_type_spec_tv->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+  disp_type_spec_tv->setFocusPolicy(Qt::NoFocus);
+  disp_type_spec_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   //display - bonding table
   gb_disp_bt = new QGroupBox(tr("Bonding table"));
@@ -150,6 +156,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_bt->setLayout(disp_bt_lt);
   bt_model = new qbonding_table_model_t;
   disp_bt = new QTableView;
+  disp_bt->setMaximumWidth(350);
   disp_bt->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   disp_bt->verticalHeader()->hide();
   disp_bt->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
@@ -161,10 +168,11 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   bt_dist_delegate->set_min_max_step(0.1, 5.0, 0.01);
   disp_bt->setItemDelegateForColumn(2, bt_dist_delegate);
 
-
   tab_disp->tab_inner_widget_layout->addWidget(gb_disp_shading);
   tab_disp->tab_inner_widget_layout->addWidget(gb_disp_type_spec_rend);
   tab_disp->tab_inner_widget_layout->addWidget(gb_disp_bt);
+
+  tab_disp->tab_inner_widget_layout->addStretch(0);
 
 }
 

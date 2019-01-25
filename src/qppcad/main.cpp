@@ -65,16 +65,16 @@ int main (int argc, char **argv) {
   qApp->setStyle(QStyleFactory::create("Fusion"));
 
   QPalette darkPalette;
-  darkPalette.setColor(QPalette::Window,QColor(53,53,53));
+  darkPalette.setColor(QPalette::Window,QColor(63,63,63));
   darkPalette.setColor(QPalette::WindowText,Qt::white);
   darkPalette.setColor(QPalette::Disabled,QPalette::WindowText,QColor(127,127,127));
-  darkPalette.setColor(QPalette::Base,QColor(42,42,42));
+  darkPalette.setColor(QPalette::Base,QColor(52,52,52));
   darkPalette.setColor(QPalette::AlternateBase,QColor(66,66,66));
   darkPalette.setColor(QPalette::ToolTipBase,Qt::white);
   darkPalette.setColor(QPalette::ToolTipText,Qt::white);
   darkPalette.setColor(QPalette::Text,Qt::white);
   darkPalette.setColor(QPalette::Disabled,QPalette::Text,QColor(127,127,127));
-  darkPalette.setColor(QPalette::Dark,QColor(35,35,35));
+  darkPalette.setColor(QPalette::Dark,QColor(45,45,45));
   darkPalette.setColor(QPalette::Shadow,QColor(20,20,20));
   darkPalette.setColor(QPalette::Button,QColor(53,53,53));
   darkPalette.setColor(QPalette::ButtonText,Qt::white);
@@ -87,10 +87,11 @@ int main (int argc, char **argv) {
   darkPalette.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
 
   qApp->setPalette(darkPalette);
-  QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Regular.ttf");
-  astate->m_font_name = "OpenSans";
+  QFontDatabase::addApplicationFont("://fonts/Hack-Regular.ttf");
+  QFontDatabase::addApplicationFont("://fonts/Hack-Bold.ttf");
+  astate->m_font_name = "Hack";
 
-  QFont font = QFont(astate->m_font_name, 12, 5);
+  QFont font = QFont(astate->m_font_name, 11, 1);
   QIcon icon("://icons8-molecule-40.png");
   //QFont defaultFont = QApplication::font();
   font.setPointSize(font.pointSize());
