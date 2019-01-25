@@ -611,7 +611,7 @@ void main_window::open_ws() {
   app_state_t* astate = app_state_t::get_inst();
   QString file_name = QFileDialog::getOpenFileName(this, "Open qpp::cad workspace", "*.json");
   if (file_name != "") {
-      astate->ws_manager->load_from_file(file_name.toStdString(), qc_file_fmt::qppcad_json);
+      astate->ws_manager->load_from_file(file_name.toStdString(), true);
       wss_changed_slot();
     }
 }

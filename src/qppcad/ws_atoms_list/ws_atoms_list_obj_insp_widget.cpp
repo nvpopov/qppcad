@@ -904,9 +904,7 @@ void ws_atoms_list_obj_insp_widget_t::anim_timeline_slider_value_changed(int val
   if (b_al) {
       auto cur_anim = b_al->m_anim->get_current_anim();
       if (cur_anim && value < cur_anim->frames.size()) {
-          // gb_anim_timeline_slider->setValue(value);
           b_al->m_anim->update_and_set_anim(b_al->m_anim->m_cur_anim, value);
-          //animation_updated_external();
         }
     }
 
@@ -945,7 +943,7 @@ void ws_atoms_list_obj_insp_widget_t::cell_changed() {
           for (int c = 0; c < b_al->m_geom->DIM; c++)
             for (int i = 0; i < 3; i++) {
                 float cell_amp = b_al->m_geom->cell.v[c][i];
-                QTableWidgetItem *n_ax = new QTableWidgetItem(tr("%1").arg(cell_amp));
+                QTableWidgetItem *n_ax = new QTableWidgetItem(tr("%1").arg(double(cell_amp)));
                 tg_gb_cell_table->setItem(c, i, n_ax);
               }
 
@@ -1007,9 +1005,9 @@ void ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked() {
       if (it != b_al->m_atom_idx_sel.end()) {
           auto itv = *it;
           b_al->update_atom(itv.m_atm, tm_single_atom_combo->currentText().toStdString(),
-                            vector3<float>(tm_single_atom_vec3->sb_x->value(),
-                                           tm_single_atom_vec3->sb_y->value(),
-                                           tm_single_atom_vec3->sb_z->value()));
+                            vector3<float>(float(tm_single_atom_vec3->sb_x->value()),
+                                           float(tm_single_atom_vec3->sb_y->value()),
+                                           float(tm_single_atom_vec3->sb_z->value())));
           update_animate_section_status();
         }
     }
@@ -1109,9 +1107,9 @@ void ws_atoms_list_obj_insp_widget_t::modify_translate_selected_atoms_clicked() 
 
   if (b_al) {
 
-      vector3<float> tr_vec(tm_translate_vec3->sb_x->value(),
-                            tm_translate_vec3->sb_y->value(),
-                            tm_translate_vec3->sb_z->value());
+      vector3<float> tr_vec(float(tm_translate_vec3->sb_x->value()),
+                            float(tm_translate_vec3->sb_y->value()),
+                            float(tm_translate_vec3->sb_z->value()));
 
       if (tm_translate_coord_type->currentIndex() == 1 && b_al->m_geom->DIM == 3) {
           vector3<float> tr_vec_c = tr_vec;
