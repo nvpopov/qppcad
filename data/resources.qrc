@@ -3,5 +3,8 @@
         <file>resources/helloworld-transparent.png</file>
         <file>fonts/Hack-Regular.ttf</file>
         <file>icons8-molecule-40.png</file>
+        <file>fonts/Ubuntu/Ubuntu-Bold.ttf</file>
+        <file>fonts/Ubuntu/Ubuntu-Italic.ttf</file>
+        <file>fonts/Ubuntu/Ubuntu-Medium.ttf</file>
     </qresource>
 </RCC>

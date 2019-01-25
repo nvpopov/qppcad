@@ -38,6 +38,16 @@ namespace qpp {
         std::optional<size_t> m_group_hash;
     };
 
+    class ws_item_tool_group_t {
+      public:
+        std::string m_full_name;
+    };
+
+    class ws_item_tool_t {
+      public:
+        size_t m_group_hash;
+    };
+
     class ws_item_io_behaviour_t {
       public:
         size_t m_accepted_type;

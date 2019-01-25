@@ -96,6 +96,8 @@ namespace qpp {
         std::vector<recent_file_record_t> m_recent_files;
         // //       std::map<std::string, color_map_t> m_color_maps;
 
+        QString m_font_name;
+
         vector2<float> viewport_xy;
         vector2<float> viewport_size;
         vector2<float> viewport_xy_c;

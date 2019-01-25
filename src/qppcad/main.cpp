@@ -64,10 +64,6 @@ int main (int argc, char **argv) {
 
   qApp->setStyle(QStyleFactory::create("Fusion"));
 
-  QFont defaultFont = QApplication::font();
-  defaultFont.setPointSize(defaultFont.pointSize());
-  qApp->setFont(defaultFont);
-
   QPalette darkPalette;
   darkPalette.setColor(QPalette::Window,QColor(53,53,53));
   darkPalette.setColor(QPalette::WindowText,Qt::white);
@@ -91,11 +87,18 @@ int main (int argc, char **argv) {
   darkPalette.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
 
   qApp->setPalette(darkPalette);
-  QFontDatabase::addApplicationFont(":/fonts/Hack-Regular.ttf");
-  QFont font = QFont("Hack-Regular", 11, 5);
+  QFontDatabase::addApplicationFont(":/fonts/Ubuntu/Ubuntu-Medium.ttf");
+  astate->m_font_name = "Ubuntu";
+
+  QFont font = QFont(astate->m_font_name, 12, 5);
   QIcon icon("://icons8-molecule-40.png");
+  //QFont defaultFont = QApplication::font();
+  font.setPointSize(font.pointSize());
+  //qApp->setFont(defaultFont);
   app.setWindowIcon(icon);
   app.setFont(font);
+  app.setStyleSheet("QGroupBox { font-weight: bold;  margin-top:17px; border: none; "
+                    "}");
 
   main_window w;
   w.rebuild_recent_files_menu();

@@ -16,7 +16,7 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
   app_state_t* astate = app_state_t::get_inst();
 
   painter.setPen(Qt::black);
-  painter.setFont(QFont("Hack-Regular", 16));
+  painter.setFont(QFont(astate->m_font_name, 16));
 
 
   //  app_state_t* astate = &(c_app::get_state());

@@ -102,7 +102,7 @@ namespace qpp {
       QPen linepen_2(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
 
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
-      painter.setFont(QFont("Hack-Regular", 13));
+      painter.setFont(QFont(astate->m_font_name, 13));
 
       for (auto &record : m_dist_recs)
         if (record.m_show) {

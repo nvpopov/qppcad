@@ -109,19 +109,15 @@ void ws_viewer_widget_t::paintGL() {
   //painter.endNativePainting();
 
   if (astate->m_show_debug_frame_stats) {
-      painter.setFont(QFont("Hack-Regular", 13));
+      painter.setFont(QFont(astate->m_font_name, 13));
       painter.setPen(Qt::black);
-      painter.drawText(3, 3,
-                       280, 30,
-                       Qt::AlignLeft,
+      painter.drawText(3, 3, 280, 30, Qt::AlignLeft,
                        QString::fromStdString(fmt::format("Frame time GPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_gpu)/
                                                           1000000.0))
                        );
 
-      painter.drawText(3, 30,
-                       280, 30,
-                       Qt::AlignLeft,
+      painter.drawText(3, 30, 280, 30, Qt::AlignLeft,
                        QString::fromStdString(fmt::format("Frame time CPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_cpu)/
                                                           1000000.0))
