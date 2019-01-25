@@ -87,8 +87,8 @@ int main (int argc, char **argv) {
   darkPalette.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
 
   qApp->setPalette(darkPalette);
-  QFontDatabase::addApplicationFont(":/fonts/Ubuntu/Ubuntu-Medium.ttf");
-  astate->m_font_name = "Ubuntu";
+  QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Regular.ttf");
+  astate->m_font_name = "OpenSans";
 
   QFont font = QFont(astate->m_font_name, 12, 5);
   QIcon icon("://icons8-molecule-40.png");
@@ -97,8 +97,11 @@ int main (int argc, char **argv) {
   //qApp->setFont(defaultFont);
   app.setWindowIcon(icon);
   app.setFont(font);
-  app.setStyleSheet("QGroupBox { font-weight: bold;  margin-top:17px; border: none; "
-                    "}");
+
+  QFile file("://style.qss");
+  file.open(QFile::ReadOnly);
+  QString style_sheet = QLatin1String(file.readAll());
+  app.setStyleSheet(style_sheet);
 
   main_window w;
   w.rebuild_recent_files_menu();

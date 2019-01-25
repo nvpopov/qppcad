@@ -47,9 +47,6 @@ main_window::main_window(QWidget *parent) {
   cur_ws_changed();
   cur_ws_edit_type_changed();
 
-  setStyleSheet("QPushButton:checked{"
-                "background-color: rgb(150, 150, 150);}");
-
 }
 
 main_window::~main_window() {
@@ -57,9 +54,6 @@ main_window::~main_window() {
 }
 
 void main_window::init_base_shortcuts() {
-  //  sc_terminate_app = new QShortcut(this);
-  //  sc_terminate_app->setKey(Qt::Key_Escape);
-  //  connect(sc_terminate_app, SIGNAL(activated()), this, SLOT(slot_shortcut_terminate_app()));
 
   sc_toggle_console = new QShortcut(this);
   sc_toggle_console->setKey(Qt::Key_QuoteLeft);
@@ -158,14 +152,17 @@ void main_window::init_menus() {
   edit_menu_switch_ws_edit_mode = new QAction(this);
   edit_menu_switch_ws_edit_mode->setText(tr("Switch edit mode"));
   edit_menu_switch_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
-  connect(edit_menu_switch_ws_edit_mode, SIGNAL(triggered()), this, SLOT(toggle_ws_edit_mode()));
+  connect(edit_menu_switch_ws_edit_mode, SIGNAL(triggered()),
+          this, SLOT(toggle_ws_edit_mode()));
+
   edit_menu->addAction(edit_menu_switch_ws_edit_mode);
 
   edit_menu->addSeparator();
 
   edit_menu_settings = new QAction(this);
   edit_menu_settings->setText(tr("Settings"));
-  connect(edit_menu_settings, &QAction::triggered,[](){app_settings_widget_t aset;aset.exec();} );
+  connect(edit_menu_settings,
+          &QAction::triggered,[](){app_settings_widget_t aset;aset.exec();});
 
   edit_menu_ws_settings = new QAction(this);
   edit_menu_ws_settings->setText(tr("Workspace settings"));
@@ -223,13 +220,14 @@ void main_window::init_menus() {
   tools_menu_axial_scale = new QAction(this);
   tools_menu_axial_scale->setText(tr("Axial scale"));
   tools_menu->addAction(tools_menu_axial_scale);
-  connect(tools_menu_axial_scale, &QAction::triggered, this, &main_window::dialog_axial_scale);
+  connect(tools_menu_axial_scale, &QAction::triggered,
+          this, &main_window::dialog_axial_scale);
 
   tools_menu_sc_generator = new QAction(this);
   tools_menu_sc_generator->setText(tr("Supercell generator"));
   tools_menu_generators->addAction(tools_menu_sc_generator);
-  connect(tools_menu_sc_generator, &QAction::triggered, this,
-          &main_window::dialog_supercell_generation);
+  connect(tools_menu_sc_generator, &QAction::triggered,
+          this, &main_window::dialog_supercell_generation);
 
   help_menu  = menuBar()->addMenu(tr("&Help"));
   help_menu_about = new QAction(this);
@@ -241,71 +239,55 @@ void main_window::init_menus() {
 void main_window::init_widgets() {
 
   tool_panel_widget = new QWidget;
-  //tool_panel_widget->setStyleSheet("background-color:black;");
   tool_panel_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   tool_panel_widget->setMaximumHeight(45);
-  //tool_panel_widget->setStyleSheet("border-bottom: 1px solid gray;margin-bottom:0px;");
-  tool_panel_widget->setStyleSheet("padding-bottom:-5px; padding-top:-5px;"
-                                   "QLabel {color:white;}");
+  tool_panel_widget->setProperty("s_class", "tp_generic");
 
   tp_ws_selector = new QComboBox;
-  QObject::connect(tp_ws_selector,
-                   SIGNAL(currentIndexChanged(int)),
-                   this,
-                   SLOT(ws_selector_selection_changed(int)));
+  tp_ws_selector->setProperty("s_class", "tp_ws_selector");
 
-  tp_ws_selector->setStyleSheet("padding:4px;");
+  QObject::connect(tp_ws_selector, SIGNAL(currentIndexChanged(int)),
+                   this, SLOT(ws_selector_selection_changed(int)));
+
   tp_ws_selector->setMinimumWidth(150);
   tp_ws_selector->setMinimumHeight(tp_button_height);
 
   tp_add_ws = new QPushButton;
-  tp_add_ws->setMinimumWidth(30);
+  tp_add_ws->setMaximumWidth(30);
   tp_add_ws->setMinimumHeight(tp_button_height);
   tp_add_ws->setText("+");
-  connect(tp_add_ws, &QPushButton::pressed, this, &main_window::create_new_ws);
+  connect(tp_add_ws, &QPushButton::pressed,
+          this, &main_window::create_new_ws);
 
   tp_rm_ws = new QPushButton;
   tp_rm_ws->setText("-");
-  tp_rm_ws->setMinimumWidth(30);
+  tp_rm_ws->setMaximumWidth(30);
   tp_rm_ws->setMinimumHeight(tp_button_height);
-  connect(tp_rm_ws, &QPushButton::pressed, this, &main_window::close_cur_ws);
+  connect(tp_rm_ws, &QPushButton::pressed,
+          this, &main_window::close_cur_ws);
 
   tp_rnm_ws = new QPushButton;
   tp_rnm_ws->setText("RN");
-  tp_rnm_ws->setMinimumWidth(30);
+  tp_rnm_ws->setMaximumWidth(30);
   tp_rnm_ws->setMinimumHeight(tp_button_height);
-  connect(tp_rnm_ws, &QPushButton::pressed, this, &main_window::rename_cur_ws);
+  connect(tp_rnm_ws, &QPushButton::pressed,
+          this, &main_window::rename_cur_ws);
 
   tp_show_obj_insp = new QCheckBox;
+  tp_show_obj_insp->setProperty("s_class", "tp_cb");
   tp_show_obj_insp->setCheckState(Qt::Checked);
   tp_show_obj_insp->setText("INS");
   tp_show_obj_insp->setMinimumHeight(tp_button_height);
-  QObject::connect(tp_show_obj_insp,
-                   SIGNAL(stateChanged(int)),
-                   this,
-                   SLOT(tp_show_obj_insp_state_changed(int)));
-
-  tp_show_obj_insp->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
-                                  "padding-right:5px; "
-                                  "QCheckBox::indicator { width: 21px;height: 21px;}");
+  QObject::connect(tp_show_obj_insp, SIGNAL(stateChanged(int)),
+                   this, SLOT(tp_show_obj_insp_state_changed(int)));
 
   tp_show_gizmo = new QCheckBox;
+  tp_show_gizmo->setProperty("s_class", "tp_cb");
   tp_show_gizmo->setCheckState(Qt::Checked);
   tp_show_gizmo->setText("GZM");
   tp_show_gizmo->setMinimumHeight(tp_button_height);
-  tp_show_gizmo->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px; "
-                               "padding-right:5px; "
-                               "QCheckBox::indicator { width: 21px;height: 21px;}");
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
-
-  //  tp_show_node_editor = new QCheckBox;
-  //  tp_show_node_editor->setCheckState(Qt::Unchecked);
-  //  tp_show_node_editor->setText("NODES");
-  //  tp_show_node_editor->setMinimumHeight(tp_button_height);
-  //  tp_show_node_editor->setStyleSheet("border:1px solid gray; border-radius:2px; padding-left:5px;"
-  //                                     "padding-right:5px; "
-  //                                     "QCheckBox::indicator { width: 21px;height: 21px;}");
 
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
@@ -314,13 +296,13 @@ void main_window::init_widgets() {
 
   tp_edit_mode_item = new QPushButton;
   tp_edit_mode_item->setText(tr("ITM"));
-  tp_edit_mode_item->setMinimumWidth(40);
+  tp_edit_mode_item->setMaximumWidth(40);
   tp_edit_mode_item->setMinimumHeight(tp_button_height);
   tp_edit_mode_item->setCheckable(true);
 
   tp_edit_mode_content= new QPushButton;
   tp_edit_mode_content->setText(tr("CNT"));
-  tp_edit_mode_content->setMinimumWidth(40);
+  tp_edit_mode_content->setMaximumWidth(40);
   tp_edit_mode_content->setMinimumHeight(tp_button_height);
   tp_edit_mode_content->setCheckable(true);
 
@@ -339,45 +321,44 @@ void main_window::init_widgets() {
   tp_edit_mode_end->setFixedWidth(2);
   tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
-
   tp_camera_x = new QPushButton(tr("C:X"));
-  tp_camera_x->setMinimumWidth(34);
+  tp_camera_x->setMaximumWidth(34);
   tp_camera_x->setMinimumHeight(tp_button_height);
   connect(tp_camera_x, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_x_axis);});
 
   tp_camera_y = new QPushButton(tr("C:Y"));
-  tp_camera_y->setMinimumWidth(34);
+  tp_camera_y->setMaximumWidth(34);
   tp_camera_y->setMinimumHeight(tp_button_height);
   connect(tp_camera_y, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_y_axis);});
 
   tp_camera_z = new QPushButton(tr("C:Z"));
-  tp_camera_z->setMinimumWidth(34);
+  tp_camera_z->setMaximumWidth(34);
   tp_camera_z->setMinimumHeight(tp_button_height);
   connect(tp_camera_z, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
 
   tp_camera_cart_c = new QPushButton(tr("C:C"));
-  tp_camera_cart_c->setMinimumWidth(34);
+  tp_camera_cart_c->setMaximumWidth(34);
   tp_camera_cart_c->setMinimumHeight(tp_button_height);
   connect(tp_camera_cart_c, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_cart_center);});
 
   tp_camera_a = new QPushButton(tr("C:a"));
-  tp_camera_a->setMinimumWidth(34);
+  tp_camera_a->setMaximumWidth(34);
   tp_camera_a->setMinimumHeight(tp_button_height);
   connect(tp_camera_a, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_a_axis);});
 
   tp_camera_b = new QPushButton(tr("C:b"));
-  tp_camera_b->setMinimumWidth(34);
+  tp_camera_b->setMaximumWidth(34);
   tp_camera_b->setMinimumHeight(tp_button_height);
   connect(tp_camera_b, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_b_axis);});
 
   tp_camera_c = new QPushButton(tr("C:c"));
-  tp_camera_c->setMinimumWidth(34);
+  tp_camera_c->setMaximumWidth(34);
   tp_camera_c->setMinimumHeight(tp_button_height);
   connect(tp_camera_c, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
@@ -385,19 +366,18 @@ void main_window::init_widgets() {
   change_camera_buttons_visible(false, false);
 
   tp_measure_dist = new QPushButton(tr("DIST"));
-  tp_measure_dist->setMinimumWidth(40);
+  tp_measure_dist->setMaximumWidth(40);
   tp_measure_dist->setMinimumHeight(tp_button_height);
   tp_measure_dist->setCheckable(true);
   connect(tp_measure_dist, &QPushButton::toggled, this, &main_window::tp_dist_button_clicked);
 
   tp_measure_angle = new QPushButton(tr("ANGLE"));
-  tp_measure_angle->setMinimumWidth(60);
+  tp_measure_angle->setMaximumWidth(60);
   tp_measure_angle->setMinimumHeight(tp_button_height);
   tp_measure_angle->setCheckable(true);
   connect(tp_measure_angle, &QPushButton::toggled, this, &main_window::tp_angle_button_clicked);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
-  ws_viewer_widget->setStyleSheet("margin-top:-15px;");
 
   obj_insp_widget = new object_inspector_widget_t();
   obj_insp_widget->setMaximumWidth(400);

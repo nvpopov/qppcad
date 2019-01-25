@@ -16,8 +16,9 @@ object_inspector_widget_t::object_inspector_widget_t() {
   ws_items_label->setText(tr("Workspace items:"));
 
   ws_items_list = new QListWidget;
+
   ws_items_list->setMaximumHeight(250);
-  ws_items_list->setStyleSheet(" QListWidget::item { margin: 6px; }");
+  ws_items_list->setProperty("s_class", "ws_items_list");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
 
   none_item_placeholder = new QWidget;
@@ -28,12 +29,10 @@ object_inspector_widget_t::object_inspector_widget_t() {
   obj_insp_layout->addWidget(none_item_placeholder);
   obj_insp_layout->setContentsMargins(0,0,15,15);
 
-  connect(astate->astate_evd,
-          SIGNAL(cur_ws_selected_item_changed_signal()),
+  connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_changed_signal()),
           this, SLOT(cur_ws_selected_item_changed()));
 
-  connect(astate->astate_evd,
-          SIGNAL(cur_ws_changed_signal()),
+  connect(astate->astate_evd, SIGNAL(cur_ws_changed_signal()),
           this, SLOT(cur_ws_changed()));
 
   connect(ws_items_list, &QListWidget::itemSelectionChanged,

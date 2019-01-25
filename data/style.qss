@@ -1,0 +1,33 @@
+QGroupBox {
+  font-weight: bold;
+}
+
+QPushButton:checked {
+  background-color: rgb(150, 150, 150);
+}
+
+QWidget[s_class="tp_generic"] {
+ padding-bottom:-5px; padding-top:-5px;
+}
+
+QWidget[s_class="tp_generic"] QLabel {
+  color:white;
+}
+
+QComboBox[s_class="tp_ws_selector"] {
+  padding:4px;
+}
+
+QCheckBox[s_class="tp_cb"] {
+  border:1px solid gray; border-radius:2px; padding-left:5px;
+  padding-right:5px;
+  QCheckBox::indicator { width: 21px;height: 21px; }
+}
+
+ws_viewer_widget_t {
+ margin-top:-22px;
+}
+
+QListWidget[s_class="ws_items_list"] {
+   QListWidget::item { margin: 6px; }
+}

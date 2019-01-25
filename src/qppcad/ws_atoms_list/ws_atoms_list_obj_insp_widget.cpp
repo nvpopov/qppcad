@@ -39,8 +39,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
   tg_gb_cell_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
   tg_gb_cell_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   tg_gb_cell_table->setHorizontalHeaderLabels(table_hdr_cell);
-  tg_gb_cell_table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
+  tg_gb_cell_table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  tg_gb_cell_table->setMinimumHeight(450);
   tg_gb_cell_layout->addWidget(tg_gb_cell_table);
 
   QStringList table_hdr;
@@ -58,6 +58,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
   tab_general->tab_inner_widget_layout->addWidget(tg_geom_summary_widget);
   tab_general->tab_inner_widget_layout->addWidget(tg_type_summary_widget);
   tab_general->tab_inner_widget_layout->addWidget(tg_gb_cell);
+
+  //tab_general->tab_inner_widget_layout->addStretch(0);
 
 }
 
@@ -240,7 +242,6 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_timeline);
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_buttons);
 
-  tab_general->tab_inner_widget_layout->addStretch(0);
   tab_anim->tab_inner_widget_layout->addStretch(0);
 
 }
@@ -538,7 +539,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
         }
 
       //resize type table view
-      tg_type_summary_table->setMinimumHeight(36 * b_al->m_geom->n_atom_types());
+      tg_type_summary_table->setMinimumHeight(56 * b_al->m_geom->n_atom_types());
       tg_type_summary_table->resizeRowsToContents();
 
       //update cell
@@ -599,7 +600,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       bt_model->bind(b_al);
       disp_bt->setModel(bt_model);
       disp_bt->update();
-      disp_bt->setMinimumHeight(50 * b_al->m_tws_tr->m_bonding_table.m_dist.size());
+      disp_bt->setMinimumHeight(56 * b_al->m_tws_tr->m_bonding_table.m_dist.size());
 
       update_modify_tab();
     }
