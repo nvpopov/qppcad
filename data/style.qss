@@ -39,6 +39,12 @@ QListWidget[s_class="ws_items_list"] {
 
 }
 
-QWidget[s_class="tab_inner_widget"] QVBoxLayout QGroupBox::nth-of-type(odd) {
- background-color: yellow;
+QGroupBox {
+ background-color: rgb(70, 70, 70);
+ border: none;
+ padding-top: 20px;
+}
+
+QGroupBox::title {
+ padding-top: 4px;
 }
