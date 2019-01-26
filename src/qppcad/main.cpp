@@ -87,11 +87,15 @@ int main (int argc, char **argv) {
   darkPalette.setColor(QPalette::Disabled,QPalette::HighlightedText,QColor(127,127,127));
 
   qApp->setPalette(darkPalette);
-  QFontDatabase::addApplicationFont("://fonts/Hack-Regular.ttf");
-  QFontDatabase::addApplicationFont("://fonts/Hack-Bold.ttf");
-  astate->m_font_name = "Hack";
+//  QFontDatabase::addApplicationFont("://fonts/Hack-Regular.ttf");
+//  QFontDatabase::addApplicationFont("://fonts/Hack-Bold.ttf");
 
-  QFont font = QFont(astate->m_font_name, 11, 1);
+  QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Light.ttf");
+  QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Bold.ttf");
+
+  astate->m_font_name = "OpenSans";
+
+  QFont font = QFont(astate->m_font_name, 12, 1);
   QIcon icon("://icons8-molecule-40.png");
   //QFont defaultFont = QApplication::font();
   font.setPointSize(font.pointSize());

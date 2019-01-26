@@ -40,7 +40,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
   tg_gb_cell_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   tg_gb_cell_table->setHorizontalHeaderLabels(table_hdr_cell);
   tg_gb_cell_table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  tg_gb_cell_table->setMinimumHeight(450);
+  tg_gb_cell_table->setMinimumHeight(120);
   tg_gb_cell_layout->addWidget(tg_gb_cell_table);
 
   QStringList table_hdr;
@@ -942,7 +942,7 @@ void ws_atoms_list_obj_insp_widget_t::cell_changed() {
       if (b_al->m_geom->DIM > 0) {
 
           tg_gb_cell_table->setRowCount(b_al->m_geom->DIM);
-          tg_gb_cell_table->setMinimumHeight(100);
+          //tg_gb_cell_table->setMinimumHeight(100);
           QStringList table_hdr_cell_v;
           table_hdr_cell_v.push_back("a");
           table_hdr_cell_v.push_back("b");

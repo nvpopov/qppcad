@@ -1,10 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>fonts/Hack-Regular.ttf</file>
         <file>icons8-molecule-40.png</file>
         <file>style.qss</file>
-        <file>fonts/Hack-Bold.ttf</file>
-        <file>fonts/Hack-BoldItalic.ttf</file>
-        <file>fonts/Hack-Italic.ttf</file>
+        <file>fonts/Open_Sans/OpenSans-Bold.ttf</file>
+        <file>fonts/Open_Sans/OpenSans-Light.ttf</file>
+        <file>fonts/Open_Sans/OpenSans-Regular.ttf</file>
     </qresource>
 </RCC>
