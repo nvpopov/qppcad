@@ -112,6 +112,9 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_s_sel_vis = new qbinded_checkbox;
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox;
 
+  disp_s_cell_color = new qbinded_color3_input;
+  disp_s_cell_color_label = new QLabel(tr("Cell color"));
+
   gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
   gb_disp_s_lt->addRow(tr("Draw atoms"), disp_s_draw_atoms);
@@ -121,6 +124,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
   gb_disp_s_lt->addRow(tr("Labels style"), disp_s_labels_style);
+  gb_disp_s_lt->addRow(disp_s_cell_color_label, disp_s_cell_color);
   gb_disp_s_lt->addRow(tr("Sel. visibility"), disp_s_sel_vis);
   gb_disp_s_lt->addRow(tr("S.v. affect bonds"), disp_s_sel_vis_affect_bonds);
   gb_disp_s_lt->addRow(disp_s_draw_subcells_label, disp_s_draw_subcells);
@@ -573,12 +577,15 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
 
       disp_s_draw_subcells->bind_value(&b_al->m_draw_subcells);
       disp_s_subcells_idx->bind_value(&b_al->m_subcells_range);
+      disp_s_cell_color->bind_value(&b_al->m_cell_color);
       draw_subcells_changed(0);
       disp_s_draw_subcells->setVisible(b_al->m_geom->DIM == 3);
       disp_s_draw_subcells_label->setVisible(b_al->m_geom->DIM == 3);
       disp_s_subcells_idx->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
       disp_s_subcells_idx_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
 
+      disp_s_cell_color->setVisible(b_al->m_geom->DIM == 3);
+      disp_s_cell_color_label->setVisible(b_al->m_geom->DIM == 3);
       //anim bindings
       update_animate_section_status();
 
@@ -630,7 +637,7 @@ void ws_atoms_list_obj_insp_widget_t::unbind_item() {
   disp_shading_spec_value->unbind_value();
   disp_s_sel_vis->unbind_value();
   disp_s_sel_vis_affect_bonds->unbind_value();
-
+  disp_s_cell_color->unbind_value();
   disp_s_draw_subcells->unbind_value();
   disp_s_subcells_idx->unbind_value();
 

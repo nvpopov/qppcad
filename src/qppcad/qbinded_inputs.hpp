@@ -135,14 +135,21 @@ namespace qpp {
       public:
 
         vector3<float> *m_binded_value{nullptr};
-        QColor m_stored_value;
+        QColor m_stored_color;
+
+        bool m_ignore_state_change{false};
 
         qbinded_color3_input(QWidget *parent = nullptr);
 
+        void bind_value(vector3<float> *_binded_value);
+        void load_value();
+        void unbind_value();
+
+        void mousePressEvent(QMouseEvent *event) override;
+
+      private slots:
+
     };
-
-
-
 
 
   }

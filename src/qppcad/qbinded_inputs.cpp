@@ -1,5 +1,8 @@
 #include <qppcad/qbinded_inputs.hpp>
 #include <qppcad/app_state.hpp>
+#include <QMouseEvent>
+#include <QColorDialog>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -248,6 +251,37 @@ void qbinded_float3_input::spinbox_value_changed(double newval) {
     }
 }
 
-qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QWidget (parent) {
+void qbinded_color3_input::bind_value(vector3<float> *_binded_value) {
+  m_binded_value = _binded_value;
+  load_value();
+}
 
+void qbinded_color3_input::load_value() {
+  if (m_binded_value) {
+      m_stored_color.setRgbF((*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
+      QPalette pal = palette();
+      pal.setColor(QPalette::Background, m_stored_color);
+      setAutoFillBackground(true);
+      setPalette(pal);
+    }
+}
+
+void qbinded_color3_input::unbind_value() {
+  m_binded_value = nullptr;
+}
+
+void qbinded_color3_input::mousePressEvent(QMouseEvent *event) {
+  if (event->button() == Qt::LeftButton) {
+      const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
+      if (color.isValid() && m_binded_value) {
+          (*m_binded_value)[0] = color.redF();
+          (*m_binded_value)[1] = color.greenF();
+          (*m_binded_value)[2] = color.blueF();
+          load_value();
+        }
+    }
+}
+
+qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QWidget (parent) {
+  setMaximumWidth(22);
 }

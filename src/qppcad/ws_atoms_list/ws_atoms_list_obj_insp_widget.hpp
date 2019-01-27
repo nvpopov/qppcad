@@ -49,6 +49,8 @@ namespace qpp {
         qbinded_combobox *disp_s_render_style;
         qbinded_combobox *disp_s_color_mode;
         qbinded_combobox *disp_s_labels_style;
+        qbinded_color3_input *disp_s_cell_color;
+        QLabel *disp_s_cell_color_label;
         qbinded_checkbox *disp_s_sel_vis;
         qbinded_checkbox *disp_s_sel_vis_affect_bonds;
 
