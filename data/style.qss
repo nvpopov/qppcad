@@ -1,13 +1,9 @@
-QGroupBox {
-  font-weight: bold;
-}
-
 QPushButton:checked {
   background-color: rgb(150, 150, 150);
 }
 
 QWidget[s_class="tp_generic"] {
-  padding-bottom:-5px; padding-top:-5px;
+
 }
 
 QWidget[s_class="tp_generic"] QLabel {
@@ -23,12 +19,12 @@ QCheckBox[s_class="tp_cb"] {
   padding-right:5px;
 }
 
-QCheckBox[s_class="tp_cb"]::indicator {
+QCheckBox::indicator {
   width: 21px;height: 21px;
 }
 
 ws_viewer_widget_t {
- margin-top:-22px;
+ margin-top:-12px;
 }
 
 QListWidget[s_class="ws_items_list"]::item {
@@ -40,9 +36,8 @@ QListWidget[s_class="ws_items_list"] {
 }
 
 QGroupBox {
- background-color: rgb(70, 70, 70);
- border: none;
- padding-top: 20px;
+ border: 1px solid rgb(85, 85, 85);
+ padding-top: 25px;
 }
 
 QGroupBox::title {
@@ -50,5 +45,11 @@ QGroupBox::title {
  subcontrol-position: top center;
  padding-left: 2000px;
  padding-right: 2000px;
- background-color: rgb(95, 95, 95);
+ padding-bottom:2px;
+ background-color: rgb(85, 85, 85);
 }
+
+QComboBox, QSpinBox, QDoubleSpinBox, QPushButton {
+ background-color: rgb(70, 70, 70);
+}
+

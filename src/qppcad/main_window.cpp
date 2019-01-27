@@ -242,7 +242,7 @@ void main_window::init_widgets() {
 
   tool_panel_widget = new QWidget;
   tool_panel_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  tool_panel_widget->setMaximumHeight(45);
+  tool_panel_widget->setMaximumHeight(50);
   tool_panel_widget->setProperty("s_class", "tp_generic");
 
   tp_ws_selector = new QComboBox;
@@ -383,7 +383,9 @@ void main_window::init_widgets() {
 
   obj_insp_widget = new object_inspector_widget_t();
   obj_insp_widget->setMaximumWidth(400);
-  obj_insp_widget->setMinimumWidth(200);
+  obj_insp_widget->setMinimumWidth(400);
+  //obj_insp_widget->setProperty("s_class", "object_inspector_widget_t");
+  //obj_insp_widget->setStyleSheet("padding-left:10px");
 
   py_console_widget = new python_console_widget_t(this);
   widget_ws_viewer_py_console = new QWidget();
@@ -413,11 +415,12 @@ void main_window::init_layouts() {
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
   layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
-  layout_ws_viewer_obj_insp->setHandleWidth(15);
+  layout_ws_viewer_obj_insp->setHandleWidth(6);
   main_layout->addWidget(layout_ws_viewer_obj_insp);
 
   tool_panel_layout = new QHBoxLayout;
   tool_panel_widget->setLayout(tool_panel_layout);
+  tool_panel_widget->setContentsMargins(0,0,0,0);
 
   tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_add_ws, 0, Qt::AlignLeft);

@@ -24,6 +24,10 @@ namespace qpp {
       public:
         object_inspector_widget_t();
         ~object_inspector_widget_t();
+
+        Q_PROPERTY(QString class READ cssClass)
+        QString cssClass() { return QString("object_inspector_widget"); }
+
         void update_ws_items_view_widget();
 
         QLabel *ws_items_label;
