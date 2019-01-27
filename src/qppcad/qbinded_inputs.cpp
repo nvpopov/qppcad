@@ -283,5 +283,6 @@ void qbinded_color3_input::mousePressEvent(QMouseEvent *event) {
 }
 
 qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QWidget (parent) {
-  setMaximumWidth(22);
+  setMaximumWidth(21);
+  setMaximumHeight(21);
 }

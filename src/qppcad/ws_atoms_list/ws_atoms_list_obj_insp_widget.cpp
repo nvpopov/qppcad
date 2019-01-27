@@ -115,6 +115,9 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_s_cell_color = new qbinded_color3_input;
   disp_s_cell_color_label = new QLabel(tr("Cell color"));
 
+  disp_s_subcell_color = new qbinded_color3_input;
+  disp_s_subcell_color_label = new QLabel(tr("Sub cell color"));
+
   gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
   gb_disp_s_lt->addRow(tr("Draw atoms"), disp_s_draw_atoms);
@@ -129,6 +132,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("S.v. affect bonds"), disp_s_sel_vis_affect_bonds);
   gb_disp_s_lt->addRow(disp_s_draw_subcells_label, disp_s_draw_subcells);
   gb_disp_s_lt->addRow(disp_s_subcells_idx_label, disp_s_subcells_idx);
+  gb_disp_s_lt->addRow(disp_s_subcell_color_label, disp_s_subcell_color);
 
   //display - shading tab initialization
   gb_disp_shading = new QGroupBox(tr("Shading settings"));
@@ -578,12 +582,15 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       disp_s_draw_subcells->bind_value(&b_al->m_draw_subcells);
       disp_s_subcells_idx->bind_value(&b_al->m_subcells_range);
       disp_s_cell_color->bind_value(&b_al->m_cell_color);
+      disp_s_subcell_color->bind_value(&b_al->m_subcell_color);
+
       draw_subcells_changed(0);
       disp_s_draw_subcells->setVisible(b_al->m_geom->DIM == 3);
       disp_s_draw_subcells_label->setVisible(b_al->m_geom->DIM == 3);
       disp_s_subcells_idx->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
       disp_s_subcells_idx_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-
+      disp_s_subcell_color->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
+      disp_s_subcell_color_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
       disp_s_cell_color->setVisible(b_al->m_geom->DIM == 3);
       disp_s_cell_color_label->setVisible(b_al->m_geom->DIM == 3);
       //anim bindings
@@ -640,7 +647,7 @@ void ws_atoms_list_obj_insp_widget_t::unbind_item() {
   disp_s_cell_color->unbind_value();
   disp_s_draw_subcells->unbind_value();
   disp_s_subcells_idx->unbind_value();
-
+  disp_s_subcell_color->unbind_value();
   gb_rebuild_bonds->unbind_value();
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
@@ -977,10 +984,14 @@ void ws_atoms_list_obj_insp_widget_t::draw_subcells_changed(int state) {
   if (b_al && b_al->m_draw_subcells ) {
       disp_s_subcells_idx_label->show();
       disp_s_subcells_idx->show();
+      disp_s_subcell_color->show();
+      disp_s_subcell_color_label->show();
 
     } else {
       disp_s_subcells_idx_label->hide();
       disp_s_subcells_idx->hide();
+      disp_s_subcell_color->hide();
+      disp_s_subcell_color_label->hide();
     }
 
 }

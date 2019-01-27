@@ -189,7 +189,7 @@ void ws_atoms_list_t::render () {
   vector3<float> _pos = m_pos;
   index all_null = index::D(m_geom->DIM).all(0);
 
-  if (astate->dp){
+  if (astate->dp) {
 
       if (astate->m_debug_show_tws_tree) {
           astate->dp->begin_render_aabb();
@@ -202,18 +202,8 @@ void ws_atoms_list_t::render () {
 
       if (m_geom->DIM == 3 && m_is_visible && m_draw_cell) {
           astate->dp->begin_render_line();
-          vector3<float> cell_clr = m_cell_color;
-          if (m_selected){
-              if(m_parent_ws->m_edit_type == ws_edit_t::edit_item)
-                cell_clr = clr_red;
-              if(m_parent_ws->m_edit_type == ws_edit_t::edit_content)
-                cell_clr = clr_maroon;
-            }
 
-          astate->dp->render_cell_3d(
-                cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos);
-
-          if ( m_draw_subcells) {
+          if (m_draw_subcells) {
               vector3<float> sc_a = m_geom->cell.v[0] / m_subcells_range[0];
               vector3<float> sc_b = m_geom->cell.v[1] / m_subcells_range[1];
               vector3<float> sc_c = m_geom->cell.v[2] / m_subcells_range[2];
@@ -221,9 +211,18 @@ void ws_atoms_list_t::render () {
                 for (int i_b = 0; i_b < m_subcells_range[1]; i_b++)
                   for (int i_c = 0; i_c < m_subcells_range[2]; i_c++) {
                       vector3<float> new_pos = m_pos + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
-                      astate->dp->render_cell_3d(cell_clr, sc_a, sc_b, sc_c, new_pos);
+                      astate->dp->render_cell_3d(m_subcell_color, sc_a, sc_b, sc_c, new_pos);
                     }
             }
+
+          vector3<float> cell_clr = m_cell_color;
+          if (m_selected) {
+              if(m_parent_ws->m_edit_type == ws_edit_t::edit_item) cell_clr = clr_red;
+              if(m_parent_ws->m_edit_type == ws_edit_t::edit_content) cell_clr = clr_maroon;
+            }
+
+          astate->dp->render_cell_3d(
+                cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos);
 
           astate->dp->end_render_line();
         }

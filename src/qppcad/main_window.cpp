@@ -415,7 +415,7 @@ void main_window::init_layouts() {
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
   layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
-  layout_ws_viewer_obj_insp->setHandleWidth(6);
+  layout_ws_viewer_obj_insp->setHandleWidth(10);
   main_layout->addWidget(layout_ws_viewer_obj_insp);
 
   tool_panel_layout = new QHBoxLayout;
