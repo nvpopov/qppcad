@@ -117,7 +117,7 @@ bool qbonding_table_model_t::setData(const QModelIndex &index, const QVariant &v
 
   if (!m_al) return false;
 
-  if(index.column() == 3 && role == Qt::CheckStateRole) {
+  if (index.column() == 3 && role == Qt::CheckStateRole) {
       auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
       std::advance(brec, index.row());
       brec->second.m_enabled = value == Qt::Checked;
@@ -127,11 +127,10 @@ bool qbonding_table_model_t::setData(const QModelIndex &index, const QVariant &v
       return true;
     }
 
-  if(index.column() == 2 && role == Qt::EditRole) {
+  if (index.column() == 2 && role == Qt::EditRole) {
       auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
       std::advance(brec, index.row());
       if (value.type() == QVariant::Double) {
-          astate->log("ALOHA");
           brec->second.m_bonding_dist = float(value.toDouble());
           m_al->m_tws_tr->m_bonding_table.update_pair_max_dist(brec->first.m_a, brec->first.m_b);
           m_al->m_tws_tr->do_action(act_rebuild_ntable);

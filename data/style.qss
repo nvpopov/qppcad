@@ -23,6 +23,47 @@ QCheckBox::indicator {
   width: 21px;height: 21px;
 }
 
+QCheckBox::indicator:checked,QTreeView::indicator:checked,QTableView::indicator:checked,QGroupBox::indicator:checked{
+  image:url(:/images/icon_checkbox_checked.png);
+}
+
+QCheckBox::indicator:checked:pressed,QTreeView::indicator:checked:pressed,QTableView::indicator:checked:pressed,QGroupBox::indicator:checked:pressed{
+  image:url(:/images/icon_checkbox_checked_pressed.png);
+}
+
+QCheckBox::indicator:checked:disabled,QTreeView::indicator:checked:disabled,QTableView::indicator:checked:disabled,QGroupBox::indicator:checked:disabled{
+  image:url(:/images/icon_checkbox_checked_disabled.png);
+}
+
+QCheckBox::indicator:unchecked,QTreeView::indicator:unchecked,QTableView::indicator:unchecked,QGroupBox::indicator:unchecked{
+  image:url(:/images/icon_checkbox_unchecked.png);
+}
+
+QCheckBox::indicator:unchecked:pressed,QTreeView::indicator:unchecked:pressed,QTableView::indicator:unchecked:pressed,QGroupBox::indicator:unchecked:pressed{
+  image:url(:/images/icon_checkbox_unchecked_pressed.png);
+}
+
+QCheckBox::indicator:unchecked:disabled,QTreeView::indicator:unchecked:disabled,QTableView::indicator:unchecked:disabled,QGroupBox::indicator:unchecked:disabled{
+  image:url(:/images/icon_checkbox_unchecked_disabled.png);
+}
+
+QCheckBox::indicator:indeterminate,QTreeView::indicator:indeterminate,QTableView::indicator:indeterminate,QGroupBox::indicator:indeterminate{
+  image:url(:/images/icon_checkbox_indeterminate.png);
+}
+
+QCheckBox::indicator:indeterminate:pressed,QTreeView::indicator:indeterminate:pressed,QTableView::indicator:indeterminate:pressed,QGroupBox::indicator:indeterminate:pressed{
+  image:url(:/images/icon_checkbox_indeterminate_pressed.png);
+}
+
+QCheckBox::indicator:indeterminate:disabled,QTreeView::indicator:indeterminate:disabled,QTableView::indicator:indeterminate:disabled,QGroupBox::indicator:indeterminate:disabled{
+  image:url(:/images/icon_checkbox_indeterminate_disabled.png);
+}
+
+QTableView::indicator {
+  width: 21px;height: 21px;
+  margin-left:35%;
+}
+
 ws_viewer_widget_t {
  margin-top:-12px;
 }

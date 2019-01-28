@@ -1,4 +1,4 @@
-#include <qppcad/qmeasurements_table_model.hpp>
+#include <qppcad/ws_atoms_list/qmeasurements_table_model.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

@@ -129,13 +129,12 @@ add_executable(qppcad
     src/qppcad/ws_atoms_list/ws_atoms_list_io.cpp
     src/qppcad/ws_atoms_list/qtype_specific_rendering_model.cpp
     src/qppcad/ws_atoms_list/qbonding_table_model.cpp
+    src/qppcad/ws_atoms_list/qmeasurements_table_model.cpp
 
     src/qppcad/ws_point_sym_group/ws_point_sym_group.cpp
     src/qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.cpp
 
     src/qppcad/qbinded_inputs.cpp
-
-    src/qppcad/qmeasurements_table_model.cpp
     src/qppcad/qrealspinbox_delegate.cpp
     src/qppcad/python_console_output_redirectors.cpp
     src/qppcad/python_console_widget.cpp

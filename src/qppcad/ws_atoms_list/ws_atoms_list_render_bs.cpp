@@ -112,6 +112,11 @@ namespace qpp {
           (al.m_geom->xfield<bool>(xgeom_sel_vis, at_num1) ||
            al.m_geom->xfield<bool>(xgeom_sel_vis, at_num2) )) return;
 
+      if (al.m_atom_type_to_hide_bond.find(al.m_geom->type_table(at_num1)) !=
+          al.m_atom_type_to_hide_bond.end() ||
+          al.m_atom_type_to_hide_bond.find(al.m_geom->type_table(at_num2)) !=
+                    al.m_atom_type_to_hide_bond.end()) return;
+
       auto ap_idx1 = ptable::number_by_symbol(al.m_geom->atom(at_num1));
       vector3<float> bcolor1(0.0, 0.0, 1.0);
       if (ap_idx1) {

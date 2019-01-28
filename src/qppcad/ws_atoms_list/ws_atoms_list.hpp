@@ -80,6 +80,7 @@ namespace qpp {
         std::deque<atom_index_set_key>                                               m_atom_ord_sel;
         std::unique_ptr<ws_atoms_list_render_buffered_billboards_t> m_bs{};
         std::set<uint16_t>  m_atom_type_to_hide;
+        std::set<uint16_t>  m_atom_type_to_hide_bond;
 
         float m_shading_specular_power{12.0f};
         float m_atom_scale_factor{0.3f};
