@@ -1022,8 +1022,8 @@ void main_window::dialog_supercell_generation() {
                   int rep_b = scw.get_replication_coeff(1);
                   int rep_c = scw.get_replication_coeff(2);
 
-                  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c >= 1)) {
-                      al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
+                  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c > 3)) {
+                      al->make_super_cell(rep_a, rep_b, rep_c);
                       astate->make_viewport_dirty();
                     }
 

@@ -32,15 +32,15 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
   gb_rep_par->setLayout(gb_rep_par_layout);
 
   sp_rep_a = new QSpinBox;
-  sp_rep_a->setMinimum(0);
+  sp_rep_a->setMinimum(1);
   sp_rep_a->setMaximum(10);
 
   sp_rep_b = new QSpinBox;
-  sp_rep_b->setMinimum(0);
+  sp_rep_b->setMinimum(1);
   sp_rep_b->setMaximum(10);
 
   sp_rep_c = new QSpinBox;
-  sp_rep_c->setMinimum(0);
+  sp_rep_c->setMinimum(1);
   sp_rep_c->setMaximum(10);
 
   gb_rep_par_layout->addRow(tr("Replicate along a-axis"), sp_rep_a);
