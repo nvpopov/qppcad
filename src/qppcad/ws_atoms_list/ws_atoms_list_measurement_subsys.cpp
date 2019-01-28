@@ -19,8 +19,12 @@ namespace qpp {
                                                                    const uint32_t atm2,
                                                                    const index idx1,
                                                                    const index idx2) {
-      if (!is_bond_measurement_exist(atm1, atm2, idx1, idx2))
-        m_dist_recs.emplace_back(atm1, atm2, idx1, idx2);
+
+      if (!is_bond_measurement_exist(atm1, atm2, idx1, idx2)) {
+          m_dist_recs.emplace_back(atm1, atm2, idx1, idx2);
+          app_state_t* astate = app_state_t::get_inst();
+          astate->astate_evd->cur_ws_selected_item_measurements_changed();
+        }
     }
 
     void ws_atoms_list_measurement_subsys_t::add_angle_measurement(
@@ -30,8 +34,12 @@ namespace qpp {
         const index idx1,
         const index idx2,
         const index idx3) {
-      if (!is_angle_measurement_exist(atm1, atm2, atm3, idx1, idx2, idx3))
-        m_angle_recs.emplace_back(atm1, atm2, atm3, idx1, idx2, idx3);
+
+      if (!is_angle_measurement_exist(atm1, atm2, atm3, idx1, idx2, idx3)) {
+          m_angle_recs.emplace_back(atm1, atm2, atm3, idx1, idx2, idx3);
+          app_state_t* astate = app_state_t::get_inst();
+          astate->astate_evd->cur_ws_selected_item_measurements_changed();
+        }
     }
 
     ws_atoms_list_measurement_subsys_t::ws_atoms_list_measurement_subsys_t(
@@ -40,13 +48,23 @@ namespace qpp {
     }
 
     void ws_atoms_list_measurement_subsys_t::remove_bond_measurement (const size_t measure_idx) {
+
       if (measure_idx < m_dist_recs.size())
         m_dist_recs.erase(m_dist_recs.begin() + measure_idx);
+
+      app_state_t* astate = app_state_t::get_inst();
+      astate->astate_evd->cur_ws_selected_item_measurements_changed();
+
     }
 
     void ws_atoms_list_measurement_subsys_t::remove_angle_measurement(const size_t measure_idx) {
+
       if (measure_idx < m_angle_recs.size())
         m_angle_recs.erase(m_angle_recs.begin() + measure_idx);
+
+      app_state_t* astate = app_state_t::get_inst();
+      astate->astate_evd->cur_ws_selected_item_measurements_changed();
+
     }
 
 
@@ -150,6 +168,7 @@ namespace qpp {
 
       for (auto &record : m_angle_recs)
         if (record.m_show) {
+
             if (record.m_at1 >= p_owner->m_geom->nat() ||
                 record.m_at2 >= p_owner->m_geom->nat() ||
                 record.m_at3 >= p_owner->m_geom->nat())
@@ -178,7 +197,7 @@ namespace qpp {
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2);
 
                 float real_angle = 180 - std::acos(dir_f_s.dot(dir_t_s) / (dir_f_s.norm() *
-                                                                     dir_t_s.norm())) *
+                                                                           dir_t_s.norm())) *
                                    180 / M_PI;
 
                 QLineF line_f_s(

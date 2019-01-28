@@ -5,6 +5,7 @@
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/ws_atoms_list/qbonding_table_model.hpp>
 #include <qppcad/ws_atoms_list/qtype_specific_rendering_model.hpp>
+#include <qppcad/ws_atoms_list/qmeasurements_table_model.hpp>
 #include <qppcad/qrealspinbox_delegate.hpp>
 #include <QTableWidget>
 #include <QTableView>
@@ -69,7 +70,7 @@ namespace qpp {
 
         QGroupBox *gb_disp_type_spec_rend;
         QTableView *disp_type_spec_tv;
-        qtype_specific_rendering_model_t *disp_type_spec_model;
+        qtype_specific_rendering_model_t *disp_type_spec_mdl;
         QFormLayout *gb_disp_type_spec_rend_lt;
 
         QGroupBox *gb_disp_bt;
@@ -86,7 +87,6 @@ namespace qpp {
         qbinded_checkbox *gb_play_cyclic;
         qbinded_float_spinbox *gb_anim_speed;
         QComboBox *gb_current_anim;
-        //QLabel *gb_current_anim_type;
         QFormLayout *gb_anim_summary_lt;
 
         QGroupBox *gb_anim_timeline;
@@ -95,7 +95,7 @@ namespace qpp {
         QLabel *gb_anim_cur_frame;
         QSlider *gb_anim_timeline_slider;
         QGroupBox *gb_anim_buttons;
-        QHBoxLayout *gb_anim_buttons_layout;
+        QHBoxLayout *gb_anim_buttons_lt;
 
         QPushButton *anim_play;
         QPushButton *anim_to_start;
@@ -103,10 +103,13 @@ namespace qpp {
         QPushButton *anim_frame_forward;
         QPushButton *anim_frame_backward;
 
+        //START TAB MEASUREMENT
         ws_item_tab_widget_t *tab_measurement;
-        QGroupBox *tmeasure_pair_dist_gb;
-        QVBoxLayout *tmeasure_pair_dist_gb_lt;
-        QTableView *tmeasure_pair_dist_table;
+        QGroupBox *tms_pair_dist_gb;
+        QVBoxLayout *tms_pair_dist_gb_lt;
+        QTableView *tms_pair_dist_table;
+        qatomic_dist_table_model_t *tms_dist_mdl;
+        //END TAB MEASUREMENT
 
         ws_item_tab_widget_t *tab_modify;
 
@@ -183,6 +186,7 @@ namespace qpp {
         void unbind_item() override;
         void update_anim_tab_gb();
         void update_modify_tab();
+        void update_measurement_tab();
         void fill_combo_with_atom_types(QComboBox *combo, ws_atoms_list_t *_al);
         ws_atoms_list_obj_insp_widget_t();
 

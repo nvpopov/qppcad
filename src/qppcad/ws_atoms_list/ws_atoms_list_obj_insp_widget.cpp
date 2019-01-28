@@ -159,8 +159,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_type_spec_tv->setFocusPolicy(Qt::NoFocus);
   disp_type_spec_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-  disp_type_spec_model = new qtype_specific_rendering_model_t;
-  disp_type_spec_tv->setModel(disp_type_spec_model);
+  disp_type_spec_mdl = new qtype_specific_rendering_model_t;
+  disp_type_spec_tv->setModel(disp_type_spec_mdl);
 
   //display - bonding table
   gb_disp_bt = new QGroupBox(tr("Bonding table"));
@@ -229,8 +229,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_timeline_lt->addWidget(gb_anim_timeline_slider, 1);
 
   gb_anim_buttons = new QGroupBox(tr("Control"));
-  gb_anim_buttons_layout = new QHBoxLayout;
-  gb_anim_buttons->setLayout(gb_anim_buttons_layout);
+  gb_anim_buttons_lt = new QHBoxLayout;
+  gb_anim_buttons->setLayout(gb_anim_buttons_lt);
   gb_anim_buttons->setMaximumWidth(373);
   gb_anim_buttons->setMaximumHeight(90);
 
@@ -254,11 +254,11 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   connect(anim_frame_backward, SIGNAL(clicked()),
           this, SLOT(anim_button_frame_move_backward_clicked()));
 
-  gb_anim_buttons_layout->addWidget(anim_play, 1);
-  gb_anim_buttons_layout->addWidget(anim_to_start, 1);
-  gb_anim_buttons_layout->addWidget(anim_to_end, 1);
-  gb_anim_buttons_layout->addWidget(anim_frame_forward, 1);
-  gb_anim_buttons_layout->addWidget(anim_frame_backward, 1);
+  gb_anim_buttons_lt->addWidget(anim_play, 1);
+  gb_anim_buttons_lt->addWidget(anim_to_start, 1);
+  gb_anim_buttons_lt->addWidget(anim_to_end, 1);
+  gb_anim_buttons_lt->addWidget(anim_frame_forward, 1);
+  gb_anim_buttons_lt->addWidget(anim_frame_backward, 1);
 
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_summary);
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_timeline);
@@ -270,13 +270,21 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
 
 void ws_atoms_list_obj_insp_widget_t::construct_measure_tab() {
 
-  tmeasure_pair_dist_gb = new QGroupBox(tr("Interatomic distances"));
-  tmeasure_pair_dist_gb_lt = new QVBoxLayout;
-  tmeasure_pair_dist_gb->setLayout(tmeasure_pair_dist_gb_lt);
-  tmeasure_pair_dist_table = new QTableView;
-  tmeasure_pair_dist_gb_lt->addWidget(tmeasure_pair_dist_table);
-  tab_measurement->tab_inner_widget_layout->addWidget(tmeasure_pair_dist_gb);
+  tms_pair_dist_gb = new QGroupBox(tr("Interatomic distances"));
+  tms_pair_dist_gb_lt = new QVBoxLayout;
+  tms_pair_dist_gb->setLayout(tms_pair_dist_gb_lt);
+  tms_pair_dist_table = new QTableView;
+  tms_pair_dist_gb_lt->addWidget(tms_pair_dist_table);
+  tab_measurement->tab_inner_widget_layout->addWidget(tms_pair_dist_gb);
 
+  tms_pair_dist_table->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  tms_pair_dist_table->verticalHeader()->hide();
+  tms_pair_dist_table->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+  tms_pair_dist_table->setFocusPolicy(Qt::NoFocus);
+
+  tab_measurement->tab_inner_widget_layout->addSpacing(0);
+
+  tms_dist_mdl = new qatomic_dist_table_model_t;
 }
 
 void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
@@ -624,8 +632,8 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       anim_play->blockSignals(false);
 
       disp_type_spec_tv->setModel(nullptr);
-      disp_type_spec_model->bind(b_al);
-      disp_type_spec_tv->setModel(disp_type_spec_model);
+      disp_type_spec_mdl->bind(b_al);
+      disp_type_spec_tv->setModel(disp_type_spec_mdl);
       disp_type_spec_tv->update();
       qt_helpers::vrt_resize_tv_to_content(disp_type_spec_tv);
 
@@ -636,6 +644,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       qt_helpers::vrt_resize_tv_to_content(disp_bt);
 
       update_modify_tab();
+      update_measurement_tab();
     }
 }
 
@@ -831,6 +840,31 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
 
 }
 
+void ws_atoms_list_obj_insp_widget_t::update_measurement_tab() {
+  if (b_al) {
+      tms_pair_dist_table->setModel(nullptr);
+      tms_dist_mdl->bind(b_al);
+      tms_pair_dist_table->setModel(tms_dist_mdl);
+      tms_pair_dist_table->update();
+      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(0,
+                                                                    QHeaderView::ResizeToContents);
+      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(1,
+                                                                    QHeaderView::ResizeToContents);
+      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(2,
+                                                                    QHeaderView::ResizeToContents);
+      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(3,
+                                                                    QHeaderView::ResizeToContents);
+      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(4,
+                                                                    QHeaderView::ResizeToContents);
+      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(5,
+                                                                    QHeaderView::ResizeToContents);
+      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(6,
+                                                                    QHeaderView::Stretch);
+
+      qt_helpers::vrt_resize_tv_to_content(tms_pair_dist_table);
+    }
+}
+
 void ws_atoms_list_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
                                                                  ws_atoms_list_t *_al) {
   if (_al && combo) {
@@ -875,6 +909,11 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selected_content_changed_signal,
           this,
           &ws_atoms_list_obj_insp_widget_t::cur_it_selected_content_changed);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_item_measurements_changed_signal,
+          this,
+          &ws_atoms_list_obj_insp_widget_t::update_measurement_tab);
 
 }
 
@@ -1025,10 +1064,10 @@ void ws_atoms_list_obj_insp_widget_t::modify_add_atom_button_clicked() {
 
   if (b_al) {
       vector3<float> new_atom_pos{
-            float(tm_add_atom_vec3->sb_x->value()),
+        float(tm_add_atom_vec3->sb_x->value()),
             float(tm_add_atom_vec3->sb_y->value()),
             float(tm_add_atom_vec3->sb_z->value())
-                                 };
+      };
       std::string new_atom_name = tm_add_atom_combo->currentText().toStdString();
       b_al->insert_atom(new_atom_name, new_atom_pos);
       update_animate_section_status();
@@ -1253,7 +1292,7 @@ void ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show_all() {
 
   if (b_al) {
       for (int i = 0; i < b_al->m_geom->nat(); i++)
-          b_al->m_geom->xfield<bool>(xgeom_sel_vis, i) = false;
+        b_al->m_geom->xfield<bool>(xgeom_sel_vis, i) = false;
     }
 
   astate->make_viewport_dirty();
@@ -1273,8 +1312,10 @@ void ws_atoms_list_obj_insp_widget_t::modify_group_op_del_sel() {
 
 void ws_atoms_list_obj_insp_widget_t::cur_ws_edit_mode_changed() {
   update_modify_tab();
+  update_measurement_tab();
 }
 
 void ws_atoms_list_obj_insp_widget_t::cur_it_selected_content_changed() {
   update_modify_tab();
+  update_measurement_tab();
 }

@@ -52,10 +52,11 @@ namespace qpp {
       private:
 
         ws_atoms_list_t* p_owner;
+
+      public:
         std::vector<measurement_bond_record<uint32_t> > m_dist_recs;
         std::vector<measurement_angle_record<uint32_t> > m_angle_recs;
 
-      public:
         ws_atoms_list_measurement_subsys_t (ws_atoms_list_t &_p_owner);
 
         float dist (const size_t idx);
