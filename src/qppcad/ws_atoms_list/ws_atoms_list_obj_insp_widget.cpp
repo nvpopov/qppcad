@@ -561,8 +561,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
         }
 
       //resize type table view
-      tg_type_summary_table->setMinimumHeight(56 * b_al->m_geom->n_atom_types());
-      tg_type_summary_table->resizeRowsToContents();
+      qt_helpers::vrt_resize_tv_to_content(tg_type_summary_table);
 
       //update cell
 
