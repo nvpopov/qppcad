@@ -1,4 +1,4 @@
-#include <qppcad/qbonding_table_model.hpp>
+#include <qppcad/ws_atoms_list/qbonding_table_model.hpp>
 #include <qppcad/app_state.hpp>
 #include <iterator>
 
@@ -149,5 +149,5 @@ void qbonding_table_model_t::bind(ws_atoms_list_t *_al) {
 }
 
 void qbonding_table_model_t::unbind() {
-  //this->
+  //
 }

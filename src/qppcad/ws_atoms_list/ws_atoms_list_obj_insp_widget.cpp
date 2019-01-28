@@ -1,5 +1,6 @@
 #include <qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -34,6 +35,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
   tg_gb_cell_layout = new QVBoxLayout;
   tg_gb_cell->setLayout(tg_gb_cell_layout);
   tg_gb_cell_table = new QTableWidget;
+
   tg_gb_cell_table->setColumnCount(3);
   tg_gb_cell_table->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   tg_gb_cell_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -150,12 +152,15 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_type_spec_tv = new QTableView;
   gb_disp_type_spec_rend->setLayout(gb_disp_type_spec_rend_lt);
   gb_disp_type_spec_rend_lt->addWidget(disp_type_spec_tv);
-  disp_type_spec_tv->setMaximumWidth(350);
+
   disp_type_spec_tv->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   disp_type_spec_tv->verticalHeader()->hide();
   disp_type_spec_tv->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   disp_type_spec_tv->setFocusPolicy(Qt::NoFocus);
   disp_type_spec_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+  disp_type_spec_model = new qtype_specific_rendering_model_t;
+  disp_type_spec_tv->setModel(disp_type_spec_model);
 
   //display - bonding table
   gb_disp_bt = new QGroupBox(tr("Bonding table"));
@@ -164,12 +169,13 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_bt->setLayout(disp_bt_lt);
   bt_model = new qbonding_table_model_t;
   disp_bt = new QTableView;
-  disp_bt->setMaximumWidth(350);
+
   disp_bt->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   disp_bt->verticalHeader()->hide();
   disp_bt->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   disp_bt->setFocusPolicy(Qt::NoFocus);
   disp_bt->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
   disp_bt->setModel(bt_model);
   disp_bt_lt->addWidget(disp_bt);
   bt_dist_delegate = new qrealspinbox_delegate_t;
@@ -618,11 +624,17 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       anim_play->setChecked(b_al->m_anim->m_play_anim);
       anim_play->blockSignals(false);
 
+      disp_type_spec_tv->setModel(nullptr);
+      disp_type_spec_model->bind(b_al);
+      disp_type_spec_tv->setModel(disp_type_spec_model);
+      disp_type_spec_tv->update();
+      qt_helpers::vrt_resize_tv_to_content(disp_type_spec_tv);
+
       disp_bt->setModel(nullptr);
       bt_model->bind(b_al);
       disp_bt->setModel(bt_model);
       disp_bt->update();
-      disp_bt->setMinimumHeight(56 * b_al->m_tws_tr->m_bonding_table.m_dist.size());
+      qt_helpers::vrt_resize_tv_to_content(disp_bt);
 
       update_modify_tab();
     }

@@ -3,7 +3,8 @@
 
 #include <qppcad/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
-#include <qppcad/qbonding_table_model.hpp>
+#include <qppcad/ws_atoms_list/qbonding_table_model.hpp>
+#include <qppcad/ws_atoms_list/qtype_specific_rendering_model.hpp>
 #include <qppcad/qrealspinbox_delegate.hpp>
 #include <QTableWidget>
 #include <QTableView>
@@ -68,6 +69,7 @@ namespace qpp {
 
         QGroupBox *gb_disp_type_spec_rend;
         QTableView *disp_type_spec_tv;
+        qtype_specific_rendering_model_t *disp_type_spec_model;
         QFormLayout *gb_disp_type_spec_rend_lt;
 
         QGroupBox *gb_disp_bt;

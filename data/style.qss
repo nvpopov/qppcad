@@ -35,6 +35,14 @@ QListWidget[s_class="ws_items_list"] {
 
 }
 
+QTabWidget {
+ border:none;
+}
+
+QTabWidget::pane {
+ border:none;
+}
+
 QGroupBox {
  border: 1px solid rgb(85, 85, 85);
  padding-top: 25px;
