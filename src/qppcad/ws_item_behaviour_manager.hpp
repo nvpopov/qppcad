@@ -53,7 +53,7 @@ namespace qpp {
         std::string m_full_name;
         size_t m_group_hash;
         size_t m_accepted_type;
-        bool m_no_item_required{false};
+        bool m_item_required{true};
         std::function<std::shared_ptr<ws_item_tool_t>() > m_fabric;
     };
 
@@ -198,13 +198,6 @@ namespace qpp {
         size_t reg_ffg(std::string _full_name,
                        std::string _short_name);
 
-        size_t reg_tool_grp(std::string _full_name);
-        size_t reg_tool(std::string _full_name,
-                        size_t _g_hash,
-                        size_t _t_hash,
-                        bool _itm_req,
-                        std::function<std::shared_ptr<ws_item_tool_t>() > _fabric);
-
         std::optional<size_t> get_ff_by_finger_print(const std::string &file_name);
         std::optional<size_t> get_ff_by_short_name(const std::string &ffmt_short_name);
 
@@ -230,6 +223,14 @@ namespace qpp {
 
         std::shared_ptr<ws_item_t> fabric_by_type(size_t type_id);
         ws_item_t* ws_item_fbr_by_type_p(size_t type_id);
+
+        size_t reg_tool_grp(std::string _full_name);
+        size_t reg_tool(std::string _full_name,
+                        size_t _g_hash,
+                        size_t _t_hash,
+                        bool _itm_req,
+                        std::function<std::shared_ptr<ws_item_tool_t>() > _fabric);
+        void exec_tool(ws_item_t* item, size_t tool_hash);
     };
 
   }

@@ -168,13 +168,34 @@ size_t ws_item_behaviour_manager_t::reg_tool(
   tinfo.m_full_name = _full_name;
   tinfo.m_accepted_type = _t_hash;
   tinfo.m_group_hash = _g_hash;
-  tinfo.m_no_item_required = _itm_req;
+  tinfo.m_item_required = _itm_req;
   tinfo.m_fabric = _fabric;
 
   size_t tinfo_hash = astate->hash_reg->calc_hash(_full_name);
 
   m_tools_info.emplace(tinfo_hash, std::move(tinfo));
   return tinfo_hash;
+
+}
+
+void ws_item_behaviour_manager_t::exec_tool(ws_item_t *item, size_t tool_hash) {
+
+  auto tinfo = m_tools_info.find(tool_hash);
+
+  //is tool info exists?
+  if (tinfo == m_tools_info.end()) return;
+
+  //item must exsist if tool needs it
+  if (tinfo->second.m_item_required && !item) return;
+
+  //item type must be equal to accepted type
+  if (tinfo->second.m_item_required &&
+      item->get_type() != tinfo->second.m_accepted_type) return;
+
+  auto tool_inst = tinfo->second.m_fabric();
+
+  //bypass item
+  tool_inst->exec(item);
 
 }
 

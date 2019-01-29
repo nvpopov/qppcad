@@ -1264,6 +1264,8 @@ void main_window::build_bhv_tools_menus() {
       //construct tool's action
       qextended_action *new_act = new qextended_action(this);
       new_act->m_joined_data[0] = ff.first;
+      connect(new_act, &QAction::triggered,
+              this, &main_window::action_bhv_tools_menus_clicked);
       new_act->setText(QString::fromStdString(ff.second.m_full_name));
       //locate menu for group
       auto it_g = tools_menu_groups.find(ff.second.m_group_hash);
@@ -1272,6 +1274,26 @@ void main_window::build_bhv_tools_menus() {
 
       tools_menu_actions.push_back(new_act);
     }
+}
+
+void main_window::action_bhv_tools_menus_clicked() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
+  qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
+  if (!ext_act) return;
+
+  size_t t_hash = ext_act->m_joined_data[0];
+
+  auto it_t = bhv_mgr->m_tools_info.find(t_hash);
+
+  std::shared_ptr<workspace_t> cur_ws = astate->ws_manager->get_cur_ws();
+  std::shared_ptr<ws_item_t> cur_it{nullptr};
+  if (cur_ws) cur_it = cur_ws->get_selected_sp();
+
+  if (it_t != bhv_mgr->m_tools_info.end())
+    bhv_mgr->exec_tool(cur_it.get(), t_hash);
 }
 
 void main_window::action_bhv_import_to_cur_workspace() {
