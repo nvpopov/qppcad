@@ -18,6 +18,7 @@ main_window::main_window(QWidget *parent) : QMainWindow(parent) {
   init_base_shortcuts();
   init_menus();
   build_bhv_menus_and_actions();
+  build_bhv_tools_menus();
   control_bhv_menus_activity();
   init_widgets();
   init_layouts();
@@ -1246,6 +1247,16 @@ void main_window::build_bhv_menus_and_actions() {
   //TODO: make lookup for bhv
 
 
+}
+
+void main_window::build_bhv_tools_menus() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  for (auto &ffg : astate->ws_manager->m_bhv_mgr->m_tools_groups) {
+      QMenu *new_menu = tools_menu->addMenu(QString::fromStdString(ffg.second.m_full_name));
+      tools_menu_groups.emplace(ffg.first, new_menu);
+    }
 }
 
 void main_window::action_bhv_import_to_cur_workspace() {

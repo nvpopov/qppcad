@@ -463,6 +463,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   registration_helper_t::reg_ws_item_fbr(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_io_bhv(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
+  registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
 }
 
 

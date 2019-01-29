@@ -200,6 +200,7 @@ namespace qpp {
         void recent_files_clicked();
 
         void build_bhv_menus_and_actions();
+        void build_bhv_tools_menus();
         void action_bhv_import_to_cur_workspace();
         void action_bhv_import_as_new_workspace();
         void action_bhv_export_selected();

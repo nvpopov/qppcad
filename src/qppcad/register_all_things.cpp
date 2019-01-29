@@ -160,3 +160,9 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
                         ws_atoms_list_t::get_type_static());
 
 }
+
+void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr) {
+   size_t hash_t_generator = bhv_mgr->reg_tool_grp("Generators");
+   size_t hash_t_tr = bhv_mgr->reg_tool_grp("Modify geometry");
+   size_t hash_t_generic = bhv_mgr->reg_tool_grp("Generic tools");
+}
