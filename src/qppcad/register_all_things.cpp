@@ -11,6 +11,7 @@
 #include <qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.hpp>
 
 #include <qppcad/tools/supercell/supercell.hpp>
+#include <qppcad/tools/axial_scale/axial_scale.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -151,5 +152,8 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
    registration_helper_t::reg_ws_item_tool<supercell_tool_t, ws_atoms_list_t>("Supercell",
                                                                               hash_t_generator,
                                                                               bhv_mgr);
+   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, ws_atoms_list_t>("Axial scale",
+                                                                                hash_t_tr,
+                                                                                bhv_mgr);
 
 }

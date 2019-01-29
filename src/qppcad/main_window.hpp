@@ -23,8 +23,6 @@
 #include <QFileDialog>
 #include <qppcad/ws_viewer_widget.hpp>
 #include <qppcad/object_inspector_widget.hpp>
-#include <qppcad/super_cell_widget.hpp>
-#include <qppcad/axial_scale_widget.hpp>
 #include <qppcad/python_console_widget.hpp>
 #include <qppcad/qextended_action.hpp>
 
@@ -189,8 +187,6 @@ namespace qpp {
         void toggle_ws_edit_mode();
         void start_update_cycle();
         void stop_update_cycle();
-        void dialog_supercell_generation();
-        void dialog_axial_scale();
 
         void action_select_all_content();
         void action_unselect_all_content();
@@ -203,6 +199,7 @@ namespace qpp {
         void build_bhv_menus_and_actions();
         void build_bhv_tools_menus();
         void action_bhv_tools_menus_clicked();
+        void control_bhv_tools_menus_activity();
         void action_bhv_import_to_cur_workspace();
         void action_bhv_import_as_new_workspace();
         void action_bhv_export_selected();

@@ -76,8 +76,6 @@ add_executable(qppcad
     src/qppcad/main_window.cpp
 
     src/qppcad/ws_viewer_widget.cpp
-    src/qppcad/super_cell_widget.cpp
-    src/qppcad/axial_scale_widget.cpp
     src/qppcad/object_inspector_widget.cpp
     src/qppcad/app_settings_widget.cpp
     src/qppcad/qextended_action.cpp
@@ -135,6 +133,7 @@ add_executable(qppcad
     src/qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.cpp
 
     src/qppcad/tools/supercell/supercell.cpp
+    src/qppcad/tools/axial_scale/axial_scale.cpp
 
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qrealspinbox_delegate.cpp

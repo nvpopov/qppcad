@@ -20,6 +20,7 @@ main_window::main_window(QWidget *parent) : QMainWindow(parent) {
   build_bhv_menus_and_actions();
   build_bhv_tools_menus();
   control_bhv_menus_activity();
+  control_bhv_tools_menus_activity();
   init_widgets();
   init_layouts();
 
@@ -735,6 +736,7 @@ void main_window::cur_ws_selected_item_changed() {
 
   cur_ws_edit_type_changed();
   control_bhv_menus_activity();
+  control_bhv_tools_menus_activity();
 }
 
 void main_window::cur_ws_properties_changed() {
@@ -990,80 +992,6 @@ void main_window::stop_update_cycle() {
 
 }
 
-void main_window::dialog_supercell_generation() {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (astate->ws_manager->has_wss()) {
-
-      auto cur_ws = astate->ws_manager->get_cur_ws();
-
-      if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
-
-          if (al) {
-              if (al->m_geom->DIM == 3) {
-                  super_cell_widget_t scw;
-                  int ret_code = scw.exec();
-                  int rep_a = scw.get_replication_coeff(0);
-                  int rep_b = scw.get_replication_coeff(1);
-                  int rep_c = scw.get_replication_coeff(2);
-
-                  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c > 3)) {
-                      al->make_super_cell(rep_a, rep_b, rep_c);
-                      astate->make_viewport_dirty();
-                    }
-
-                } else QMessageBox::warning(this, tr("Supercell generation"),
-                                            tr("m_geom.DIM !=3"));
-
-            } else QMessageBox::warning(this, tr("Supercell generation"),
-                                        tr("ws_item.type != ws_atoms_list"));
-
-        } else QMessageBox::warning(this, tr("Supercell generation"),
-                                    tr("Workspace not select"));
-
-    }
-
-}
-
-void main_window::dialog_axial_scale() {
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
-      if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
-
-          if (al) {
-              if (al->m_geom->DIM == 3) {
-                  axial_scale_widget_t asw;
-                  int ret_code = asw.exec();
-                  double sc_a = asw.get_scale_value(0);
-                  double sc_b = asw.get_scale_value(1);
-                  double sc_c = asw.get_scale_value(2);
-
-                  if (ret_code == QDialog::Accepted) {
-                      //  al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
-                      al->apply_axial_scale(float(sc_a), float(sc_b), float(sc_c));
-                      astate->make_viewport_dirty();
-                    }
-                } else QMessageBox::warning(this, tr("Axial scale"), tr("m_geom.DIM !=3"));
-            }
-          else { // is not an atoms list
-              QMessageBox::warning(this, tr("Axial scale"),
-                                   tr("ws_item.type != ws_atoms_list"));
-            }
-
-        } else {
-          QMessageBox::warning(this, tr("Axial scale"),
-                               tr("Workspace not select"));
-        }
-    }
-}
-
 void main_window::action_select_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -1294,6 +1222,29 @@ void main_window::action_bhv_tools_menus_clicked() {
 
   if (it_t != bhv_mgr->m_tools_info.end())
     bhv_mgr->exec_tool(cur_it.get(), t_hash);
+}
+
+void main_window::control_bhv_tools_menus_activity() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
+  std::shared_ptr<workspace_t> cur_ws = astate->ws_manager->get_cur_ws();
+  std::shared_ptr<ws_item_t> cur_it{nullptr};
+  if (cur_ws) cur_it = cur_ws->get_selected_sp();
+
+  for (auto elem : tools_menu_actions) {
+      elem->setEnabled(false);
+      if (cur_ws) {
+          auto it_t = bhv_mgr->m_tools_info.find(elem->m_joined_data[0]);
+          if (it_t != bhv_mgr->m_tools_info.end()) {
+              if (!it_t->second.m_item_required) elem->setEnabled(true);
+              if (cur_it && it_t->second.m_item_required &&
+                  it_t->second.m_accepted_type == cur_it->get_type()) elem->setEnabled(true);
+            }
+        }
+    }
+
 }
 
 void main_window::action_bhv_import_to_cur_workspace() {
