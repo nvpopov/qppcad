@@ -38,14 +38,22 @@ namespace qpp {
         std::optional<size_t> m_group_hash;
     };
 
+    class ws_item_tool_t {
+      public:
+        virtual void exec(ws_item_t *item) = 0;
+    };
+
     class ws_item_tool_group_t {
       public:
         std::string m_full_name;
     };
 
-    class ws_item_tool_t {
+    class ws_item_tool_info_t {
       public:
         size_t m_group_hash;
+        size_t m_accepted_type;
+        bool m_no_item_required{false};
+        std::function<std::shared_ptr<ws_item_tool_t>() > m_fabric;
     };
 
     class ws_item_io_behaviour_t {
@@ -162,6 +170,11 @@ namespace qpp {
 
         std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
 
+        //tools start
+        std::map<size_t, ws_item_tool_group_t> m_tools_groups;
+        std::map<size_t, ws_item_tool_info_t> m_tools_info;
+        //tools end
+
         std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                           size_t io_bhv_idx,
                                                           workspace_t *ws);
@@ -184,8 +197,10 @@ namespace qpp {
         size_t reg_ffg(std::string _full_name,
                        std::string _short_name);
 
-        std::optional<size_t> get_file_fmt_by_finger_print(const std::string &file_name);
-        std::optional<size_t> get_file_fmt_by_short_name(const std::string &ffmt_short_name);
+        size_t reg_tool_grp(std::string _full_name);
+
+        std::optional<size_t> get_ff_by_finger_print(const std::string &file_name);
+        std::optional<size_t> get_ff_by_short_name(const std::string &ffmt_short_name);
 
         std::optional<size_t> get_io_bhv_by_file_format(size_t file_format);
         std::optional<size_t> get_io_bhv_by_file_format_ex(size_t file_format,

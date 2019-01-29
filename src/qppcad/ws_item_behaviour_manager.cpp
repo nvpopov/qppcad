@@ -43,13 +43,11 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     const std::string &file_name,
     workspace_t *ws) {
 
-  app_state_t* astate = app_state_t::get_inst();
-
   QFileInfo check_file(QString::fromStdString(file_name));
 
   if (!check_file.exists() || !check_file.isFile()) return nullptr;
 
-  auto file_format = get_file_fmt_by_finger_print(file_name);
+  auto file_format = get_ff_by_finger_print(file_name);
 
   if (file_format) {
       std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
@@ -115,9 +113,7 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
       if (it_ffg != m_file_format_groups.end())
         m_file_format_groups[_file_format_group_hash].m_ffs_lookup.insert(_ff_hash);
 
-      m_file_formats.insert(
-            std::pair<size_t, ws_item_io_file_format_t>(_ff_hash, std::move(new_file_format))
-            );
+      m_file_formats.emplace(_ff_hash, std::move(new_file_format));
     }
 
   astate->log(fmt::format("Registering file format {}[{}] - hash {}, ghash {}",
@@ -138,9 +134,7 @@ size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
       ws_item_io_file_format_group_t new_file_format_group;
       new_file_format_group.m_full_name = _full_name;
       new_file_format_group.m_short_name = _short_name;
-      m_file_format_groups.insert(
-            std::pair<size_t, ws_item_io_file_format_group_t>(_file_format_group_hash,
-                                                              std::move(new_file_format_group)));
+      m_file_format_groups.emplace(_file_format_group_hash, std::move(new_file_format_group));
     }
 
   astate->log(fmt::format("Registering file format group {}[{}] - hash {}",
@@ -149,7 +143,20 @@ size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
   return _file_format_group_hash;
 }
 
-std::optional<size_t> ws_item_behaviour_manager_t::get_file_fmt_by_finger_print(
+size_t ws_item_behaviour_manager_t::reg_tool_grp(std::string _full_name) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  ws_item_tool_group_t tool_grp;
+  tool_grp.m_full_name = _full_name;
+  size_t _g_hash = astate->hash_reg->calc_hash(_full_name);
+  m_tools_groups.emplace(_g_hash, std::move(tool_grp));
+
+  return _g_hash;
+
+}
+
+std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_finger_print(
     const std::string &file_name) {
 
   for (auto &elem : m_file_formats)
@@ -165,7 +172,7 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_file_fmt_by_finger_print(
 
 }
 
-std::optional<size_t> ws_item_behaviour_manager_t::get_file_fmt_by_short_name(
+std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_short_name(
     const std::string &ffmt_short_name) {
   for (auto &elem : m_file_formats)
     if (elem.second.m_shortname == ffmt_short_name) return std::optional<size_t>(elem.first);
@@ -217,7 +224,8 @@ void ws_item_behaviour_manager_t::reg_io_bhv(
 }
 
 void ws_item_behaviour_manager_t::unreg_ff(size_t _file_format_hash) {
-
+  auto it = m_file_formats.find(_file_format_hash);
+  if (it != m_file_formats.end()) m_file_formats.erase(it);
 }
 
 void ws_item_behaviour_manager_t::reg_item_fbr(size_t hash,

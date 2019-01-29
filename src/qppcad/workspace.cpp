@@ -530,13 +530,13 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
     } else {
       //do autodeduce magic
       if (!file_format.empty()) {
-          auto ff = m_bhv_mgr->get_file_fmt_by_short_name(file_format);
+          auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
               if (bhv_id) import_from_file(file_name, *bhv_id, true);
             }
         } else {
-          auto ff = m_bhv_mgr->get_file_fmt_by_finger_print(file_name);
+          auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
               if (bhv_id) import_from_file(file_name, *bhv_id, true);

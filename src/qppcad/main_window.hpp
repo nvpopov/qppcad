@@ -130,9 +130,7 @@ namespace qpp {
         QAction *edit_menu_selection_invert;
 
         QMenu *tools_menu;
-        QAction *tools_menu_axial_scale;
-        QMenu *tools_menu_generators;
-        QAction *tools_menu_sc_generator;
+        std::map<size_t, QMenu*> tools_menu_groups;
 
         QMenu *help_menu;
         QAction *help_menu_about;

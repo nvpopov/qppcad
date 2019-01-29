@@ -6,11 +6,11 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-main_window::main_window(QWidget *parent) {
+main_window::main_window(QWidget *parent) : QMainWindow(parent) {
 
   main_widget = new QWidget;
   app_state_t* astate = app_state_t::get_inst();
-  //tool_panel_widget->setSizePolicy(QSizePolicy::)
+
   setAcceptDrops(true);
   setCentralWidget(main_widget);
   setMinimumHeight(300);
@@ -217,19 +217,6 @@ void main_window::init_menus() {
     });
 
   tools_menu = menuBar()->addMenu(tr("&Tools"));
-  tools_menu_generators = tools_menu->addMenu(tr("Generators"));
-
-  tools_menu_axial_scale = new QAction(this);
-  tools_menu_axial_scale->setText(tr("Axial scale"));
-  tools_menu->addAction(tools_menu_axial_scale);
-  connect(tools_menu_axial_scale, &QAction::triggered,
-          this, &main_window::dialog_axial_scale);
-
-  tools_menu_sc_generator = new QAction(this);
-  tools_menu_sc_generator->setText(tr("Supercell generator"));
-  tools_menu_generators->addAction(tools_menu_sc_generator);
-  connect(tools_menu_sc_generator, &QAction::triggered,
-          this, &main_window::dialog_supercell_generation);
 
   help_menu  = menuBar()->addMenu(tr("&Help"));
   help_menu_about = new QAction(this);
@@ -710,12 +697,12 @@ void main_window::cur_ws_changed() {
           std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
                                                cur_ws->m_ws_name, cur_ws->m_fs_path);
           this->setWindowTitle(QString::fromStdString(title_text));
-          tools_menu_sc_generator->setEnabled(true);
+          //tools_menu_sc_generator->setEnabled(true);
         } else {
           this->setWindowTitle("qpp::cad");
         }
     } else {
-      tools_menu_sc_generator->setEnabled(false);
+      //tools_menu_sc_generator->setEnabled(false);
       this->setWindowTitle("qpp::cad");
     }
 

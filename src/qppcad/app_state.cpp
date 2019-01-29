@@ -134,7 +134,7 @@ namespace qpp {
           QString rc_filename = settings.value("filename").toString();
           //size_t _loaded_fft = settings.value("ff",0).toUInt();
           std::string ff_name = settings.value("ff").toString().toStdString();
-          auto ff_hsh = ws_manager->m_bhv_mgr->get_file_fmt_by_short_name(ff_name);
+          auto ff_hsh = ws_manager->m_bhv_mgr->get_ff_by_short_name(ff_name);
           bool _loaded_is_native = settings.value("isnat", false).toBool();
           if (ff_hsh && !_loaded_is_native)
             add_recent_file(rc_filename.toStdString(), _loaded_is_native, *ff_hsh);

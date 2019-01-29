@@ -17,7 +17,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
 
   ws_items_list = new QListWidget;
 
-  ws_items_list->setMaximumHeight(250);
+  ws_items_list->setMaximumHeight(170);
   ws_items_list->setProperty("s_class", "ws_items_list");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
 
@@ -156,7 +156,7 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          cur_ws->set_selected_item(ws_items_list->currentRow(), true);
+          cur_ws->set_selected_item(size_t(ws_items_list->currentRow()), true);
 
           if (ws_items_list->currentRow() != -1) {
               ws_items_list->blockSignals(true);
