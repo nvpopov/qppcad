@@ -156,6 +156,28 @@ size_t ws_item_behaviour_manager_t::reg_tool_grp(std::string _full_name) {
 
 }
 
+size_t ws_item_behaviour_manager_t::reg_tool(
+    std::string _full_name,
+    size_t _g_hash,
+    size_t _t_hash,
+    bool _itm_req, std::function<std::shared_ptr<ws_item_tool_t> ()> _fabric) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  ws_item_tool_info_t tinfo;
+  tinfo.m_full_name = _full_name;
+  tinfo.m_accepted_type = _t_hash;
+  tinfo.m_group_hash = _g_hash;
+  tinfo.m_no_item_required = _itm_req;
+  tinfo.m_fabric = _fabric;
+
+  size_t tinfo_hash = astate->hash_reg->calc_hash(_full_name);
+
+  m_tools_info.emplace(tinfo_hash, std::move(tinfo));
+  return tinfo_hash;
+
+}
+
 std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_finger_print(
     const std::string &file_name) {
 

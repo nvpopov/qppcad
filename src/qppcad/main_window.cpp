@@ -1244,8 +1244,8 @@ void main_window::build_bhv_menus_and_actions() {
               }
           }
     }
-  //TODO: make lookup for bhv
 
+  //TODO: make lookup for bhv
 
 }
 
@@ -1253,9 +1253,24 @@ void main_window::build_bhv_tools_menus() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  //construct tools groups
   for (auto &ffg : astate->ws_manager->m_bhv_mgr->m_tools_groups) {
       QMenu *new_menu = tools_menu->addMenu(QString::fromStdString(ffg.second.m_full_name));
       tools_menu_groups.emplace(ffg.first, new_menu);
+    }
+
+  //construct tools actions
+  for (auto &ff : astate->ws_manager->m_bhv_mgr->m_tools_info) {
+      //construct tool's action
+      qextended_action *new_act = new qextended_action(this);
+      new_act->m_joined_data[0] = ff.first;
+      new_act->setText(QString::fromStdString(ff.second.m_full_name));
+      //locate menu for group
+      auto it_g = tools_menu_groups.find(ff.second.m_group_hash);
+      if (it_g != tools_menu_groups.end()) it_g->second->addAction(new_act);
+      else tools_menu->addAction(new_act);
+
+      tools_menu_actions.push_back(new_act);
     }
 }
 

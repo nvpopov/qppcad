@@ -10,6 +10,8 @@
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
 #include <qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.hpp>
 
+#include <qppcad/tools/supercell/supercell.hpp>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -126,43 +128,28 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       >();
 
 
-  bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(xyz_s_ff_mgr, xyz_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(xyzq_mgf, xyzq_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(xyzq_s_mgf, xyzq_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(cp2k_output_mgf, cp2k_out_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(cp2k_cs_mgf, cp2k_cs_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(vasp_poscar_s_mgf, poscar_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash,
-                        ws_atoms_list_t::get_type_static());
-
-  bhv_mgr->reg_io_bhv(generic_cube_mgf, generic_cube_ff_hash,
-                        ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(xyz_s_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(xyzq_mgf, xyzq_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(xyzq_s_mgf, xyzq_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(cp2k_output_mgf, cp2k_out_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(cp2k_cs_mgf, cp2k_cs_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(vasp_poscar_s_mgf, poscar_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(generic_cube_mgf, generic_cube_ff_hash, ws_atoms_list_t::get_type_static());
 
 }
 
 void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr) {
+
    size_t hash_t_generator = bhv_mgr->reg_tool_grp("Generators");
    size_t hash_t_tr = bhv_mgr->reg_tool_grp("Modify geometry");
    size_t hash_t_generic = bhv_mgr->reg_tool_grp("Generic tools");
+
+   registration_helper_t::reg_ws_item_tool<supercell_tool_t, ws_atoms_list_t>("Supercell",
+                                                                              hash_t_generator,
+                                                                              bhv_mgr);
+
 }

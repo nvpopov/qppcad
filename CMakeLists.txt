@@ -134,6 +134,8 @@ add_executable(qppcad
     src/qppcad/ws_point_sym_group/ws_point_sym_group.cpp
     src/qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.cpp
 
+    src/qppcad/tools/supercell/supercell.cpp
+
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qrealspinbox_delegate.cpp
     src/qppcad/python_console_output_redirectors.cpp

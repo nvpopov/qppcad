@@ -131,6 +131,7 @@ namespace qpp {
 
         QMenu *tools_menu;
         std::map<size_t, QMenu*> tools_menu_groups;
+        std::vector<qextended_action*> tools_menu_actions;
 
         QMenu *help_menu;
         QAction *help_menu_about;

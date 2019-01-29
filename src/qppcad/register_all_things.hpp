@@ -17,15 +17,26 @@ namespace qpp {
                                 [](){return std::make_shared<T>();});
         }
 
-        template<typename TYPE_FOR, typename TYPE_OI>
+        template<typename T, typename U>
         static void reg_ws_item_obj_insp_t(ws_item_behaviour_manager_t *bhv_mgr){
-          bhv_mgr->reg_obj_insp_fbr(TYPE_FOR::get_type_static(),
-                                    [](){return std::make_shared<TYPE_OI>();});
+          bhv_mgr->reg_obj_insp_fbr(T::get_type_static(),
+                                    [](){return std::make_shared<U>();});
         }
 
         static void reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr);
         static void reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr);
         static void reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr);
+
+        template<typename T, typename U>
+        static void reg_ws_item_tool(std::string _full_name,
+                                     size_t _g_hash,
+                                     ws_item_behaviour_manager_t *bhv_mgr) {
+          bhv_mgr->reg_tool(_full_name,
+                            _g_hash,
+                            U::get_type_static(),
+                            true,
+                            [](){return std::make_shared<T>();});
+        }
 
         static void reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr);
     };
