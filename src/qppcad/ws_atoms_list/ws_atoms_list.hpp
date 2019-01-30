@@ -170,7 +170,6 @@ namespace qpp {
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
         void delete_atoms(std::set<int> &to_delete);
-        void move_selected_atoms_to_home(bool ignore_selection = false);
 
         std::string compose_item_name() override;
         void update(float delta_time) override;

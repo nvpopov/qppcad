@@ -134,6 +134,7 @@ add_executable(qppcad
 
     src/qppcad/tools/supercell/supercell.cpp
     src/qppcad/tools/axial_scale/axial_scale.cpp
+    src/qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.cpp
 
     src/qppcad/qbinded_inputs.cpp
     src/qppcad/qrealspinbox_delegate.cpp

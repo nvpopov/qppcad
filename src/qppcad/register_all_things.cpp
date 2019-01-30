@@ -12,6 +12,7 @@
 
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
+#include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -145,15 +146,20 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
 void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr) {
 
-   size_t hash_t_generator = bhv_mgr->reg_tool_grp("Generators");
-   size_t hash_t_tr = bhv_mgr->reg_tool_grp("Modify geometry");
-   size_t hash_t_generic = bhv_mgr->reg_tool_grp("Generic tools");
+  size_t hash_t_generator = bhv_mgr->reg_tool_grp("Generators");
+  size_t hash_t_tr = bhv_mgr->reg_tool_grp("Modify geometry");
+  size_t hash_t_generic = bhv_mgr->reg_tool_grp("Generic tools");
 
-   registration_helper_t::reg_ws_item_tool<supercell_tool_t, ws_atoms_list_t>("Supercell",
-                                                                              hash_t_generator,
-                                                                              bhv_mgr);
-   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, ws_atoms_list_t>("Axial scale",
-                                                                                hash_t_tr,
-                                                                                bhv_mgr);
-
+  registration_helper_t::reg_ws_item_tool<supercell_tool_t, ws_atoms_list_t>(
+        "Supercell",
+        hash_t_generator,
+        bhv_mgr);
+  registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, ws_atoms_list_t>(
+        "Axial scale",
+        hash_t_tr,
+        bhv_mgr);
+  registration_helper_t::reg_ws_item_tool<clamp_atoms_to_cell_tool_t, ws_atoms_list_t>(
+        "Clamp atoms to cell(3D)",
+        hash_t_tr,
+        bhv_mgr);
 }
