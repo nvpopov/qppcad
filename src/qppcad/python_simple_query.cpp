@@ -4,7 +4,7 @@
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
 #include <data/ptable.hpp>
-
+#include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>
 
 using namespace qpp;
@@ -41,7 +41,8 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
       if (cur_ws) {
           auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
           if (cur_it_al) {
-              cur_it_al->make_super_cell(sc_a+1, sc_b+1, sc_c+1);
+              supercell_tool_t sct;
+              sct.make_super_cell(cur_it_al, sc_a, sc_b, sc_c);
             }
           cur_ws->set_selected_item(cur_ws->m_ws_items.size()-1);
           astate->astate_evd->python_console_focus_requested();
@@ -493,6 +494,8 @@ std::string simple_query::get_point_sym_group(float tolerance) {
             }
         }
     }
+
+  return "C1";
 
 }
 
