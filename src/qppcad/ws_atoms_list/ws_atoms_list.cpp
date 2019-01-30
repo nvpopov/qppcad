@@ -736,33 +736,6 @@ void ws_atoms_list_t::delete_atoms(std::set<int> &to_delete) {
 
 }
 
-void ws_atoms_list_t::apply_axial_scale (const float scale_a,
-                                         const float scale_b,
-                                         const float scale_c) {
-  if (m_geom->DIM != 3) return;
-  m_tws_tr->do_action(act_lock | act_clear_all);
-
-  periodic_cell<float> new_cell(3);
-  new_cell.v[0] = m_geom->cell.v[0] * scale_a;
-  new_cell.v[1] = m_geom->cell.v[1] * scale_b;
-  new_cell.v[2] = m_geom->cell.v[2] * scale_c;
-
-  for (auto i = 0; i < m_geom->nat(); i++) {
-      vector3<float> frac_in_old_cell = m_geom->cell.cart2frac(m_geom->pos(i));
-      m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
-    }
-
-  m_geom->cell.v[0] = new_cell.v[0];
-  m_geom->cell.v[1] = new_cell.v[1];
-  m_geom->cell.v[2] = new_cell.v[2];
-
-  m_tws_tr->do_action(act_unlock | act_rebuild_all);
-
-  app_state_t* astate = app_state_t::get_inst();
-  astate->astate_evd->cur_ws_selected_atoms_list_cell_changed();
-
-}
-
 void ws_atoms_list_t::move_selected_atoms_to_home (bool ignore_selection) {
 
   for (int i = 0; i < m_geom->nat(); i++)

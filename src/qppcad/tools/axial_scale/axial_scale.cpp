@@ -1,5 +1,4 @@
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -24,7 +23,7 @@ void axial_scale_tool_t::exec(ws_item_t *item) {
 
                   if (ret_code == QDialog::Accepted) {
                       //  al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
-                      al->apply_axial_scale(float(sc_a), float(sc_b), float(sc_c));
+                      apply_axial_scale(al, float(sc_a), float(sc_b), float(sc_c));
                       astate->make_viewport_dirty();
                     }
                 } else QMessageBox::warning(nullptr,
@@ -43,6 +42,34 @@ void axial_scale_tool_t::exec(ws_item_t *item) {
                                QObject::tr("Workspace not select"));
         }
     }
+}
+
+void axial_scale_tool_t::apply_axial_scale(ws_atoms_list_t *al,
+                                           const float scale_a,
+                                           const float scale_b,
+                                           const float scale_c) {
+  if (al->m_geom->DIM != 3) return;
+  al->m_tws_tr->do_action(act_lock | act_clear_all);
+
+  periodic_cell<float> new_cell(3);
+  new_cell.v[0] = al->m_geom->cell.v[0] * scale_a;
+  new_cell.v[1] = al->m_geom->cell.v[1] * scale_b;
+  new_cell.v[2] = al->m_geom->cell.v[2] * scale_c;
+
+  for (auto i = 0; i < al->m_geom->nat(); i++) {
+      vector3<float> frac_in_old_cell = al->m_geom->cell.cart2frac(al->m_geom->pos(i));
+      al->m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
+    }
+
+  al->m_geom->cell.v[0] = new_cell.v[0];
+  al->m_geom->cell.v[1] = new_cell.v[1];
+  al->m_geom->cell.v[2] = new_cell.v[2];
+
+  al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->cur_ws_selected_atoms_list_cell_changed();
+
 }
 
 double axial_scale_widget_t::get_scale_value(int dim_id) {
