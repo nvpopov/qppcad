@@ -806,6 +806,10 @@ const vector3<float> ws_atoms_list_t::get_gizmo_content_barycenter() {
   return m_gizmo_barycenter;
 }
 
+void ws_atoms_list_t::updated_internally() {
+
+}
+
 void ws_atoms_list_t::shift(const vector3<float> shift) {
   m_tws_tr->do_action(act_lock);
 

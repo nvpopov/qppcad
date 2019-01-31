@@ -23,10 +23,10 @@ hpp_tmp = """#include <qppcad/qppcad.hpp>
         std::string compose_item_name() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
-
+	void updated_internally() override;	
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;
-
+			
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
 
@@ -86,6 +86,9 @@ void #CLASS_NAME_t::save_to_json(json &data) {
 
 void #CLASS_NAME_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
+}
+
+void #CLASS_NAME_t::updated_internally() {
 }
 
 """

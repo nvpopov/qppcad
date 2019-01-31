@@ -77,6 +77,10 @@ float ws_comp_chem_data_t::get_bb_prescaller() {
   return 1.0f;
 }
 
+void ws_comp_chem_data_t::updated_internally() {
+
+}
+
 uint32_t ws_comp_chem_data_t::get_amount_of_selected_content() {
   return 0;
 }

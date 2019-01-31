@@ -134,6 +134,8 @@ namespace qpp {
         /// \return
         virtual const vector3<float> get_gizmo_content_barycenter();
 
+        virtual void updated_internally() = 0;
+
         virtual void on_begin_node_gizmo_translate();
         virtual void on_end_node_gizmo_translate();
         virtual void on_begin_content_gizmo_translate();

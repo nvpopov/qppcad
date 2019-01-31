@@ -156,6 +156,10 @@ float ws_point_sym_group_t::get_bb_prescaller() {
   return 1.0f;
 }
 
+void ws_point_sym_group_t::updated_internally() {
+
+}
+
 uint32_t ws_point_sym_group_t::get_amount_of_selected_content() {
   return 0;
 }

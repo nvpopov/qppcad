@@ -34,7 +34,7 @@ namespace qpp {
         std::string compose_item_name() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
-
+        void updated_internally() override;
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;
 

@@ -98,6 +98,10 @@ size_t ws_volume_data_t::get_content_count() {
   return 0;
 }
 
+void ws_volume_data_t::updated_internally() {
+
+}
+
 void ws_volume_data_t::save_to_json(json &data) {
 
 }
