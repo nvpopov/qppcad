@@ -11,7 +11,7 @@ ws_point_sym_group_t::ws_point_sym_group_t() {
 void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
                                          float tolerance) {
 
-  app_state_t* astate = app_state_t::get_inst();
+  //app_state_t* astate = app_state_t::get_inst();
 
   find_point_symm(m_ag, geom, tolerance);
   m_pg_axes = point_group_axes<float>(m_ag);
@@ -21,6 +21,14 @@ void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> >
       new_tr.m_is_plane = false;
       new_tr.m_axis = m_pg_axes.axes[i];
       std::cout << "PGAXES " << m_pg_axes.orders[i] << " " << m_pg_axes.axes[i] << std::endl;
+      m_atf.push_back(std::move(new_tr));
+    }
+
+  for (int i = 0; i < m_pg_axes.planes.size(); i++) {
+      transform_record_t new_tr;
+      new_tr.m_is_plane = true;
+      new_tr.m_axis =  m_pg_axes.planes[i];
+      std::cout << "PGPLANES " << m_pg_axes.planes[i] << std::endl;
       m_atf.push_back(std::move(new_tr));
     }
 
@@ -40,40 +48,53 @@ void ws_point_sym_group_t::recalc_render_data() {
       float scale_val{0.055f};
 
       if (elem.m_is_plane) {
+
           start += aliasing;
-          //            end *= 6;
-          end = elem.m_axis * -8;
-          scale_val = (start-end).norm();
+          matrix4<float> mat_model = matrix4<float>::Identity();
+          vector3<float> plane_normal_ut = vector3<float>(1, 0, 0);
+          vector3<float> plane_rot_axis = plane_normal_ut.cross(elem.m_axis);
+          float len_mod = elem.m_axis.norm() * plane_normal_ut.norm();
+          float rot_angle = std::acos(plane_normal_ut.dot(elem.m_axis) / len_mod);
+          Eigen::Affine3f t;
+          t = Eigen::AngleAxisf(rot_angle, plane_rot_axis);
+          t.prescale(vector3<float>(m_plane_scale));
+         // t.translate(vector3<float>(0.5, 0.5, 0.5));
+          mat_model = t.matrix();
+          elem.m_render_mat = mat_model;
+
+        } else {
+
+          matrix4<float> mat_model = matrix4<float>::Identity();
+          mat_model.block<3,1>(0,3) = start;
+          mat_model.block<3,1>(0,2) = end - start;
+
+          vector3<float> vec_axis_norm = mat_model.block<3,1>(0,2).normalized();
+
+          mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * scale_val;
+          mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
+          mat_model.block<3,1>(0,3) = start ;
+
+          elem.m_render_mat = mat_model;
+
+          //aux
+
+          vector3<float> start_aux = elem.m_axis * 5;
+          vector3<float> end_aux = elem.m_axis * 5.25;
+
+          matrix4<float> mat_model_aux = matrix4<float>::Identity();
+          mat_model_aux.block<3,1>(0,3) = start_aux;
+          mat_model_aux.block<3,1>(0,2) = end_aux - start_aux;
+
+          vector3<float> vec_axis_norm_aux = mat_model_aux.block<3,1>(0,2).normalized();
+          mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * 0.1f;
+          mat_model_aux.block<3,1>(0,1) = vec_axis_norm_aux.cross(mat_model_aux.block<3,1>(0,0));
+          mat_model_aux.block<3,1>(0,3) = start_aux;
+
+          elem.m_render_mat_aux = mat_model_aux;
         }
 
-      matrix4<float> mat_model = matrix4<float>::Identity();
-      mat_model.block<3,1>(0,3) = start;
-      mat_model.block<3,1>(0,2) = end - start;
-
-      vector3<float> vec_axis_norm = mat_model.block<3,1>(0,2).normalized();
-
-      mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * scale_val;
-      mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
-      mat_model.block<3,1>(0,3) = start;
-
-      elem.m_render_mat = mat_model;
-
-      //aux
-
-      vector3<float> start_aux = elem.m_axis * 5;
-      vector3<float> end_aux = elem.m_axis * 5.25;
-
-      matrix4<float> mat_model_aux = matrix4<float>::Identity();
-      mat_model_aux.block<3,1>(0,3) = start_aux;
-      mat_model_aux.block<3,1>(0,2) = end_aux - start_aux;
-
-      vector3<float> vec_axis_norm_aux = mat_model_aux.block<3,1>(0,2).normalized();
-      mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * 0.1f;
-      mat_model_aux.block<3,1>(0,1) = vec_axis_norm_aux.cross(mat_model_aux.block<3,1>(0,0));
-      mat_model_aux.block<3,1>(0,3) = start_aux;
-
-      elem.m_render_mat_aux = mat_model_aux;
     }
+
 }
 
 void ws_point_sym_group_t::vote_for_view_vectors(vector3<float> &out_look_pos,

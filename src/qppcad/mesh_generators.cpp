@@ -9,10 +9,10 @@ mesh_t *mesh_generators::plane_zl() {
   mesh_t* _mesh = new mesh_t();
 
   float quad_vert[12] = {
-    0,  0, 0,
-    0,  1, 0,
-    0,  1, 1,
-    0,  0, 1
+    0,  -0.5, -0.5,
+    0,   0.5, -0.5,
+    0,   0.5,  0.5,
+    0,  -0.5,  0.5
   };
 
   float quad_n[12] = {

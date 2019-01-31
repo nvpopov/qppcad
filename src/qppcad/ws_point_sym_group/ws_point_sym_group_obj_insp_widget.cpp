@@ -6,15 +6,15 @@ using namespace qpp::cad;
 ws_point_sym_group_obj_insp_widget_t::ws_point_sym_group_obj_insp_widget_t() {
 
   tg_info_summary_widget = new QGroupBox;
-  tg_info_summary_layout = new QFormLayout;
-  tg_info_summary_layout->setLabelAlignment(Qt::AlignRight);
-  tg_info_summary_widget->setLayout(tg_info_summary_layout);
+  tg_info_summary_lt = new QFormLayout;
+  tg_info_summary_lt->setLabelAlignment(Qt::AlignRight);
+  tg_info_summary_widget->setLayout(tg_info_summary_lt);
   tg_info_summary_widget->setTitle("Symmetry group summary");
   tab_general->tab_inner_widget_layout->addWidget(tg_info_summary_widget);
   tg_info_sym_gr = new QLabel;
   tg_info_total_sym_op = new QLabel;
-  tg_info_summary_layout->addRow(tr("Sym. gr. name "), tg_info_sym_gr);
-  tg_info_summary_layout->addRow(tr("Total num. of op. "), tg_info_total_sym_op);
+  tg_info_summary_lt->addRow(tr("Sym. gr. name "), tg_info_sym_gr);
+  tg_info_summary_lt->addRow(tr("Total num. of op. "), tg_info_total_sym_op);
   tab_general->tab_inner_widget_layout->addStretch();
 }
 

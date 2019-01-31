@@ -29,6 +29,7 @@ namespace qpp {
         point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
         float m_plane_alpha{0.8f};
+        float m_plane_scale{5.0f};
 
         ws_point_sym_group_t();
         void gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
