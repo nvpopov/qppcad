@@ -25,6 +25,8 @@ namespace qpp {
 
       public:
         array_group<matrix3<float> > m_ag;
+        //genform_group<matrix3<float> > m_gf_grp;
+        point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
         float m_plane_alpha{0.8f};
 

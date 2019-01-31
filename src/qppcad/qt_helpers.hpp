@@ -5,11 +5,14 @@
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QScrollBar>
+#include <QFormLayout>
+
 namespace qpp {
 
   namespace cad {
 
     class qt_helpers {
+
       public:
 
         template<typename T>
@@ -21,7 +24,10 @@ namespace qpp {
               row_total_height += table_view->verticalHeader()->sectionSize(i);
             }
           table_view->setMinimumHeight(horizontal_header_height + row_total_height + 2);
+          table_view->setMaximumHeight(horizontal_header_height + row_total_height + 2);
         }
+
+        static void resize_form_lt_labels(QFormLayout *form_lt, int new_size);
 
     };
 

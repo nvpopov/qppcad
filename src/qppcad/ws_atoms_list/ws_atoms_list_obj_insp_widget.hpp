@@ -111,6 +111,7 @@ namespace qpp {
         qatomic_dist_table_model_t *tms_dist_mdl;
         //END TAB MEASUREMENT
 
+        //START TAB MODIFY
         ws_item_tab_widget_t *tab_modify;
 
         QGroupBox *tm_gb_add_atom;
@@ -174,6 +175,10 @@ namespace qpp {
         QPushButton *tm_group_op_sv_show_all;
         QPushButton *tm_group_op_sel_ngbs;
         QPushButton *tm_group_op_del_sel;
+
+        int tab_modify_op_button_width{180};
+        int tab_modify_label_width{120};
+        //END TAB MODIFY
 
         void construct_general_tab();
         void construct_display_tab();

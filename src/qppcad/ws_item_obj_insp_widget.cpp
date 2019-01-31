@@ -131,13 +131,11 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 }
 
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
-
   if (m_binded_item) {
       if (m_binded_item->get_flags() & ws_item_flags_support_translation) {
           ws_item_pos->load_value();
         }
     }
-
 }
 
 void ws_item_obj_insp_widget_t::rename_current_item() {

@@ -15,6 +15,7 @@ ws_point_sym_group_obj_insp_widget_t::ws_point_sym_group_obj_insp_widget_t() {
   tg_info_total_sym_op = new QLabel;
   tg_info_summary_layout->addRow(tr("Sym. gr. name "), tg_info_sym_gr);
   tg_info_summary_layout->addRow(tr("Total num. of op. "), tg_info_total_sym_op);
+  tab_general->tab_inner_widget_layout->addStretch();
 }
 
 void ws_point_sym_group_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {

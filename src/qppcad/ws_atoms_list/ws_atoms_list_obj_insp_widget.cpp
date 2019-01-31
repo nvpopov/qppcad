@@ -8,7 +8,6 @@ using namespace qpp::cad;
 void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
 
   tg_geom_summary_widget = new QGroupBox;
-  //tg_geom_summary_widget->setFlat(true);
   tg_geom_summary_lt = new QFormLayout;
   tg_geom_summary_lt->setLabelAlignment(Qt::AlignRight);
   tg_geom_summary_widget->setLayout(tg_geom_summary_lt);
@@ -42,7 +41,6 @@ void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
   tg_gb_cell_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   tg_gb_cell_table->setHorizontalHeaderLabels(table_hdr_cell);
   tg_gb_cell_table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  tg_gb_cell_table->setMinimumHeight(120);
   tg_gb_cell_layout->addWidget(tg_gb_cell_table);
 
   QStringList table_hdr;
@@ -55,13 +53,14 @@ void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
   tg_type_summary_table->verticalHeader()->setVisible(false);
   tg_type_summary_table->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   tg_type_summary_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  tg_type_summary_table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   tg_type_summary_lt->addWidget(tg_type_summary_table);
 
   tab_general->tab_inner_widget_layout->addWidget(tg_geom_summary_widget);
   tab_general->tab_inner_widget_layout->addWidget(tg_type_summary_widget);
   tab_general->tab_inner_widget_layout->addWidget(tg_gb_cell);
 
-  //tab_general->tab_inner_widget_layout->addStretch(0);
+  tab_general->tab_inner_widget_layout->addStretch();
 
 }
 
@@ -264,7 +263,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_timeline);
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_buttons);
 
-  tab_anim->tab_inner_widget_layout->addStretch(0);
+  tab_anim->tab_inner_widget_layout->addStretch();
 
 }
 
@@ -282,7 +281,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_table->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   tms_pair_dist_table->setFocusPolicy(Qt::NoFocus);
 
-  tab_measurement->tab_inner_widget_layout->addSpacing(0);
+  tab_measurement->tab_inner_widget_layout->addStretch();
 
   tms_dist_mdl = new qatomic_dist_table_model_t;
 }
@@ -295,6 +294,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
 
   tm_gb_single_atom = new QGroupBox(tr("Modify single atom"));
   tm_gb_single_atom_lt = new QFormLayout;
+  tm_gb_single_atom_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_single_atom->setLayout(tm_gb_single_atom_lt);
   tm_single_atom_combo = new QComboBox;
   tm_single_atom_combo->setEditable(true);
@@ -304,7 +304,12 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_single_atom_num = new QLabel;
 
   tm_single_atom_commit = new QPushButton(tr("Commit changes"));
+  tm_single_atom_commit->setMaximumWidth(tab_modify_op_button_width);
+  connect(tm_single_atom_commit, &QPushButton::pressed,
+          this, &ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked);
+
   tm_single_atom_delete = new QPushButton(tr("Delete atom"));
+  tm_single_atom_delete->setMaximumWidth(tab_modify_op_button_width);
   connect(tm_single_atom_delete, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_single_atom_delete_button_clicked);
 
@@ -314,25 +319,26 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_single_atom_lt->addRow(tr("Atom position"), tm_single_atom_vec3);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_commit);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_delete);
-
-  connect(tm_single_atom_commit, &QPushButton::pressed,
-          this, &ws_atoms_list_obj_insp_widget_t::modify_single_atom_button_clicked);
+  qt_helpers::resize_form_lt_labels(tm_gb_single_atom_lt, tab_modify_label_width);
 
   tm_add_atom_combo = new QComboBox;
   tm_add_atom_combo->setEditable(true);
   tm_add_atom_vec3 = new qbinded_float3_input;
   tm_add_atom_vec3->set_min_max_step(-1000, 1000, 0.01);
-  tm_add_atom_button = new QPushButton(tr("Add atom"));
 
+  tm_add_atom_button = new QPushButton(tr("Add atom"));
+  tm_add_atom_button->setMaximumWidth(tab_modify_op_button_width);
   connect(tm_add_atom_button, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_add_atom_button_clicked);
 
   tm_gb_add_atom_lt->addRow(tr("Atom name"), tm_add_atom_combo);
   tm_gb_add_atom_lt->addRow(tr("Atom posisition"), tm_add_atom_vec3);
   tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
+  qt_helpers::resize_form_lt_labels(tm_gb_add_atom_lt, tab_modify_label_width);
 
   tm_gb_pair_dist = new QGroupBox(tr("Pair distance"));
   tm_gb_pair_dist_lt = new QFormLayout;
+  tm_gb_pair_dist_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_pair_dist->setLayout(tm_gb_pair_dist_lt);
   tm_pair_dist_atom1 = new QLabel;
   tm_pair_dist_atom2 = new QLabel;
@@ -355,15 +361,20 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist_lt->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
   tm_gb_pair_dist_lt->addRow(tr("Transform mode"), tm_pair_dist_t_mode);
   tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
+  qt_helpers::resize_form_lt_labels(tm_gb_pair_dist_lt, tab_modify_label_width);
 
   tm_gb_pair_creation = new QGroupBox(tr("Insert atom between"));
   tm_gb_pair_creation_lt = new QFormLayout;
+  tm_gb_pair_creation_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_pair_creation->setLayout(tm_gb_pair_creation_lt);
   tm_pair_creation_combo = new QComboBox;
   tm_pair_creation_combo->setEditable(true);
+
   tm_pair_creation_button = new QPushButton("Append");
+  tm_pair_creation_button->setMaximumWidth(tab_modify_op_button_width);
   tm_gb_pair_creation_lt->addRow(tr("New atom type"), tm_pair_creation_combo);
   tm_gb_pair_creation_lt->addRow("", tm_pair_creation_button);
+  qt_helpers::resize_form_lt_labels(tm_gb_pair_creation_lt, tab_modify_label_width);
 
   connect(tm_pair_creation_button, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_add_atom_between_pair);
@@ -374,6 +385,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
 
   tm_gb_u_scale = new QGroupBox(tr("Barycentric scaling"));
   tm_gb_u_scale_lt = new QFormLayout;
+  tm_gb_u_scale_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_u_scale->setLayout(tm_gb_u_scale_lt);
 
   tm_u_scale_sb_x = new QDoubleSpinBox;
@@ -404,24 +416,29 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_u_scale_z_enabled->setChecked(true);
 
   tm_u_apply_scale_button = new QPushButton(tr("Apply scale"));
+  tm_u_apply_scale_button->setMaximumWidth(tab_modify_op_button_width);
   connect(tm_u_apply_scale_button, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_barycentric_scale_button_clicked);
 
-  tm_gb_u_scale_lt->addRow("Scaling value for X-axis", tm_u_scale_sb_x);
-  tm_gb_u_scale_lt->addRow("Scaling value for Y-axis", tm_u_scale_sb_y);
-  tm_gb_u_scale_lt->addRow("Scaling value for Z-axis", tm_u_scale_sb_z);
-  tm_gb_u_scale_lt->addRow("Enable scaling for X-axis", tm_u_scale_x_enabled);
-  tm_gb_u_scale_lt->addRow("Enable scaling for Y-axis", tm_u_scale_y_enabled);
-  tm_gb_u_scale_lt->addRow("Enable scaling for Z-axis", tm_u_scale_z_enabled);
-
+  tm_gb_u_scale_lt->addRow("Scale X", tm_u_scale_sb_x);
+  tm_gb_u_scale_lt->addRow("Scale Y", tm_u_scale_sb_y);
+  tm_gb_u_scale_lt->addRow("Scale Z", tm_u_scale_sb_z);
+  tm_gb_u_scale_lt->addRow("Enable sc. X-axis", tm_u_scale_x_enabled);
+  tm_gb_u_scale_lt->addRow("Enable sc. Y-axis", tm_u_scale_y_enabled);
+  tm_gb_u_scale_lt->addRow("Enable sc. Z-axis", tm_u_scale_z_enabled);
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
+  qt_helpers::resize_form_lt_labels(tm_gb_u_scale_lt, tab_modify_label_width);
 
   tm_gb_translate = new QGroupBox(tr("Translate selected atoms"));
   tm_gb_translate_lt = new QFormLayout;
+  tm_gb_translate_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_translate->setLayout(tm_gb_translate_lt);
   tm_translate_vec3 = new qbinded_float3_input;
   tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
+
   tm_translate_apply_button = new QPushButton(tr("Apply translate"));
+  tm_translate_apply_button->setMaximumWidth(tab_modify_op_button_width);
+
   tm_translate_coord_type_label = new QLabel("Coord. type");
   tm_translate_coord_type = new QComboBox;
 
@@ -431,6 +448,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_translate_lt->addRow(tm_translate_coord_type_label, tm_translate_coord_type);
   tm_gb_translate_lt->addRow(tr("Tr. vector"), tm_translate_vec3);
   tm_gb_translate_lt->addRow("", tm_translate_apply_button);
+  qt_helpers::resize_form_lt_labels(tm_gb_translate_lt, tab_modify_label_width);
 
   connect(tm_translate_coord_type,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -441,6 +459,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
 
   tm_gb_bc_rot = new QGroupBox(tr("Rotate selected atoms"));
   tm_gb_bc_rot_lt = new QFormLayout;
+  tm_gb_bc_rot_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_bc_rot->setLayout(tm_gb_bc_rot_lt);
   tm_bc_rot_axis = new QComboBox;
   tm_bc_rot_axis->addItem("X");
@@ -464,7 +483,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_bc_rot_angle_type->addItem("Degrees");
   tm_bc_rot_angle_type->addItem("Radians");
   tm_bc_rot_apply = new QPushButton(tr("Apply rotation"));
-
+  tm_bc_rot_apply->setMaximumWidth(tab_modify_op_button_width);
   connect(tm_bc_rot_apply, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_bc_rot_apply);
 
@@ -472,6 +491,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_bc_rot_lt->addRow(tr("Angle type"), tm_bc_rot_angle_type);
   tm_gb_bc_rot_lt->addRow(tr("Angle"), tm_bc_rot_angle);
   tm_gb_bc_rot_lt->addRow("", tm_bc_rot_apply);
+  qt_helpers::resize_form_lt_labels(tm_gb_bc_rot_lt, tab_modify_label_width);
 
   tm_gb_group_op = new QGroupBox(tr("Group operations"));
   tm_group_op_lt = new QGridLayout;
@@ -479,7 +499,6 @@ void ws_atoms_list_obj_insp_widget_t::construct_modify_tab() {
   tm_group_op_sv_show = new QPushButton(tr("SV:SHOW"));
   tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
   tm_group_op_sv_show_all = new QPushButton(tr("SV:SHOW ALL"));
-
 
   connect(tm_group_op_sv_show, &QPushButton::pressed,
           this, &ws_atoms_list_obj_insp_widget_t::modify_group_op_sv_show);
@@ -572,11 +591,10 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       qt_helpers::vrt_resize_tv_to_content(tg_type_summary_table);
 
       //update cell
-
       cell_changed();
+      qt_helpers::vrt_resize_tv_to_content(tg_gb_cell_table);
 
       //display tab
-
       disp_s_draw_atoms->bind_value(&b_al->m_draw_atoms);
       disp_s_draw_bonds->bind_value(&b_al->m_draw_bonds);
       disp_s_draw_img_atoms->bind_value(&b_al->m_draw_img_atoms);
@@ -1006,7 +1024,6 @@ void ws_atoms_list_obj_insp_widget_t::cell_changed() {
       if (b_al->m_geom->DIM > 0) {
 
           tg_gb_cell_table->setRowCount(b_al->m_geom->DIM);
-          //tg_gb_cell_table->setMinimumHeight(100);
           QStringList table_hdr_cell_v;
           table_hdr_cell_v.push_back("a");
           table_hdr_cell_v.push_back("b");
