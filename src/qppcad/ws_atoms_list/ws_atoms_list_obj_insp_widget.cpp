@@ -16,8 +16,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_general_tab() {
   tg_geom_summary_total_atoms = new QLabel;
   tg_geom_summary_total_types = new QLabel;
 
-  tg_geom_summary_lt->addRow(tr("Total atoms:"), tg_geom_summary_total_atoms);
-  tg_geom_summary_lt->addRow(tr("Total atom types:"), tg_geom_summary_total_types);
+  tg_geom_summary_lt->addRow(tr("Total atoms"), tg_geom_summary_total_atoms);
+  tg_geom_summary_lt->addRow(tr("Total atom types"), tg_geom_summary_total_types);
 
   tg_type_summary_widget = new QGroupBox(tr("Type Summary"));
   tg_type_summary_lt = new QVBoxLayout;

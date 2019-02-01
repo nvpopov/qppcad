@@ -26,6 +26,7 @@ namespace qpp {
 
         void bind_value(T *_binded_value, ws_item_t *item_to_bind = nullptr) {
           m_binded_value = _binded_value;
+          m_binded_ws_item = item_to_bind;
           m_ignore_state_change = true;
           load_value();
           m_ignore_state_change = false;
@@ -67,7 +68,10 @@ namespace qpp {
 
       public:
         void load_value_ex() override;
-        void set_min_max_step(double new_min, double new_max, double new_step);
+        void set_min_max_step(double new_min,
+                              double new_max,
+                              double new_step,
+                              int decimals = 2);
         qbinded_float_spinbox(QWidget *parent = nullptr);
 
       public slots:

@@ -117,12 +117,12 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_info_widget->setLayout(tg_form_layout);
   ws_item_name = new QLabel;
   ws_item_type = new QLabel;
-  ws_item_is_visible_label = new QLabel(tr("Is visible:"));
+  ws_item_is_visible_label = new QLabel(tr("Is visible"));
   ws_item_is_visible = new qbinded_checkbox;
 
   tg_form_layout->setLabelAlignment(Qt::AlignCenter);
-  tg_form_layout->addRow(tr("Name:"), ws_item_name);
-  tg_form_layout->addRow(tr("Type:"), ws_item_type);
+  tg_form_layout->addRow(tr("Name"), ws_item_name);
+  tg_form_layout->addRow(tr("Type"), ws_item_type);
   tg_form_layout->addRow(ws_item_is_visible_label, ws_item_is_visible);
   tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 

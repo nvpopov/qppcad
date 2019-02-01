@@ -5,10 +5,12 @@
 #include <qppcad/ws_item.hpp>
 #include <io/cube.hpp>
 #include <qppcad/mesh.hpp>
+#include <data/color.hpp>
 
 namespace qpp {
 
   namespace cad {
+
     enum ws_volume_t  : int {
       volume_mo,
       volume_density
@@ -28,6 +30,11 @@ namespace qpp {
         bool m_need_to_regenerate{false};
         float m_alpha{0.75f};
         float m_isolevel{qpp::def_isovalue_dens};
+
+        vector3<float> m_color_pos{clr_red};
+        vector3<float> m_color_neg{clr_navy};
+        vector3<float> m_color_vol{clr_yellow};
+
         ws_volume_t m_volume_type;
 
         void gen_repr();
@@ -35,8 +42,8 @@ namespace qpp {
 
         ws_volume_data_t();
 
-        void vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                   vector3<float> &vOutLookAt) override ;
+        void vote_for_view_vectors(vector3<float> &v_out_look_pos,
+                                   vector3<float> &v_out_look_at) override ;
         void render() override;
         bool mouse_click(ray_t<float> *click_ray) override;
 

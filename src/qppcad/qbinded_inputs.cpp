@@ -34,11 +34,11 @@ void qbinded_float_spinbox::load_value_ex() {
 
 void qbinded_float_spinbox::set_min_max_step(double new_min,
                                              double new_max,
-                                             double new_step) {
-  setMinimum(new_min);
-  setMaximum(new_max);
+                                             double new_step,
+                                             int decimals) {
+  setRange(new_min, new_max);
   setSingleStep(new_step);
-
+  setDecimals(decimals);
 }
 
 qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (parent) {

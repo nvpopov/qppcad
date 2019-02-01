@@ -20,8 +20,8 @@ ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
   m_tag = ws_item_tag::tag_ws_volume_data;
 }
 
-void ws_volume_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                             vector3<float> &vOutLookAt) {
+void ws_volume_data_t::vote_for_view_vectors(vector3<float> &v_out_look_pos,
+                                             vector3<float> &v_out_look_at) {
 
 }
 
@@ -38,14 +38,14 @@ void ws_volume_data_t::render() {
 
       //astate->glapi->glDisable(GL_CULL_FACE);
       if (m_volume_type == ws_volume_t::volume_mo) {
-          astate->dp->render_general_mesh(m_pos, scale, rot, clr_red,
+          astate->dp->render_general_mesh(m_pos, scale, rot, m_color_pos,
                                           m_first_mesh, m_alpha, astate->sp_mvap_ssl);
-          astate->dp->render_general_mesh(m_pos, scale, rot, clr_navy, m_second_mesh,
+          astate->dp->render_general_mesh(m_pos, scale, rot, m_color_neg, m_second_mesh,
                                           m_alpha, astate->sp_mvap_ssl);
         }
 
       if (m_volume_type == ws_volume_t::volume_density) {
-          astate->dp->render_general_mesh(m_pos, scale, rot, clr_yellow, m_first_mesh,
+          astate->dp->render_general_mesh(m_pos, scale, rot, m_color_vol, m_first_mesh,
                                           m_alpha, astate->sp_mvap_ssl);
         }
       //astate->glapi->glEnable(GL_CULL_FACE);
@@ -99,7 +99,8 @@ size_t ws_volume_data_t::get_content_count() {
 }
 
 void ws_volume_data_t::updated_internally() {
-
+  m_need_to_regenerate = true;
+  m_ready_to_render = false;
 }
 
 void ws_volume_data_t::save_to_json(json &data) {

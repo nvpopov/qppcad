@@ -111,6 +111,7 @@ namespace qpp {
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
                                    vector3<float> &out_look_at) override ;
+
         void target_view(const cam_target_view_t _target_view,
                          vector3<float> &look_from,
                          vector3<float> &look_to,

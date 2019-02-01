@@ -17,6 +17,12 @@ namespace qpp {
 //        ws_item_tab_widget_t *tab_vibs;
         ws_volume_data_t *b_vol{nullptr};
         QLabel *general_volume_type;
+        qbinded_float_spinbox *vol_isovalue;
+
+        qbinded_color3_input *vol_color_pos;
+        qbinded_color3_input *vol_color_neg;
+        qbinded_color3_input *vol_color_vol;
+
         ws_volume_data_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
