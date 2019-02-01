@@ -231,6 +231,7 @@ void main_window::init_widgets() {
 
   tool_panel_widget = new QWidget;
   tool_panel_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  tool_panel_widget->setMinimumHeight(50);
   tool_panel_widget->setMaximumHeight(50);
   tool_panel_widget->setProperty("s_class", "tp_generic");
 

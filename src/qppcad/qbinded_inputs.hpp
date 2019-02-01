@@ -20,7 +20,7 @@ namespace qpp {
 
       public:
         bool m_ignore_state_change{false};
-        bool m_updated_internally_event{true};
+        bool m_updated_internally_event{false};
         T *m_binded_value{nullptr};
         ws_item_t *m_binded_ws_item{nullptr};
 

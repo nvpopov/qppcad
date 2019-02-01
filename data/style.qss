@@ -73,11 +73,12 @@ QListWidget[s_class="ws_items_list"]::item {
 }
 
 QListWidget[s_class="ws_items_list"] {
-
+ margin-right:10px;
 }
 
 QTabWidget {
  border:none;
+ margin-bottom:15px;
 }
 
 QTabWidget::pane {
