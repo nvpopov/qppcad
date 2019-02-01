@@ -24,6 +24,7 @@ namespace qpp {
     class workspace_t; //fwd decl
 
     class ws_item_io_file_format_group_t {
+
       public:
         std::string m_full_name;
         std::string m_short_name;
@@ -31,6 +32,7 @@ namespace qpp {
     };
 
     class ws_item_io_file_format_t {
+
       public:
         std::string m_full_name;
         std::string m_shortname;
@@ -44,11 +46,13 @@ namespace qpp {
     };
 
     class ws_item_tool_group_t {
+
       public:
         std::string m_full_name;
     };
 
     class ws_item_tool_info_t {
+
       public:
         std::string m_full_name;
         size_t m_group_hash;
@@ -58,6 +62,7 @@ namespace qpp {
     };
 
     class ws_item_io_behaviour_t {
+
       public:
         size_t m_accepted_type;
         size_t m_accepted_file_format;
@@ -82,7 +87,6 @@ namespace qpp {
     class ws_item_io_inherited_bhv_t : public ws_item_io_behaviour_t {
 
       public:
-
         void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream,
                               ws_item_t *_item,
                               workspace_t *ws) override {
@@ -113,7 +117,6 @@ namespace qpp {
     class ws_item_io_inherited_bhv_hooked_t : public ws_item_io_behaviour_t {
 
       public:
-
         virtual void pre_load_hook(T *_item, workspace_t *ws)  = 0;
         virtual void post_load_hook(T *_item, workspace_t *ws)  = 0;
         virtual void pre_save_hook(T *_item)  = 0;
@@ -155,10 +158,7 @@ namespace qpp {
 
     class ws_item_behaviour_manager_t {
 
-      private:
-
       public:
-
         ws_item_behaviour_manager_t();
 
         std::map<size_t, ws_item_io_file_format_t> m_file_formats;

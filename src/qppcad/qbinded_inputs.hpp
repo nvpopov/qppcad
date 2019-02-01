@@ -15,43 +15,58 @@ namespace qpp {
 
   namespace cad {
 
-    class qbinded_checkbox : public QCheckBox {
+    template<typename T>
+    class generic_binded_input_t {
+
+      public:
+        bool m_ignore_state_change{false};
+        bool m_updated_internally_event{true};
+        T *m_binded_value{nullptr};
+        ws_item_t *m_binded_ws_item{nullptr};
+
+        void bind_value(T *_binded_value, ws_item_t *item_to_bind = nullptr) {
+          m_binded_value = _binded_value;
+          m_ignore_state_change = true;
+          load_value();
+          m_ignore_state_change = false;
+        }
+
+        //from model to ui
+        void load_value() {
+          if (m_binded_value) load_value_ex();
+        }
+
+        void unbind_value() {
+          m_binded_value = nullptr;
+          m_binded_ws_item = nullptr;
+        }
+
+        void on_value_changed() {
+          if (m_binded_ws_item && m_updated_internally_event)
+            m_binded_ws_item->updated_internally();
+        }
+
+        virtual void load_value_ex() = 0;
+    };
+
+    class qbinded_checkbox : public QCheckBox , public generic_binded_input_t<bool> {
 
         Q_OBJECT
 
       public:
-        bool m_ignore_state_change{false};
-        bool *m_binded_value{nullptr};
-        ws_item_t *m_binded_ws_item{nullptr};
-        void bind_value(bool *_binded_value, ws_item_t *item_to_bind = nullptr);
-        void load_value();
-        void unbind_value();
+        void load_value_ex() override;
         qbinded_checkbox(QWidget *parent = nullptr);
 
       public slots:
         void check_state_changed(int state);
     };
 
-    class qbinded_spinbox : public QSpinBox {
+    class qbinded_float_spinbox : public QDoubleSpinBox, public generic_binded_input_t<float> {
 
         Q_OBJECT
 
       public:
-        int *m_binded_value{nullptr};
-        qbinded_spinbox(QWidget *parent = nullptr);
-
-    };
-
-    class qbinded_float_spinbox : public QDoubleSpinBox {
-
-        Q_OBJECT
-
-      public:
-        float *m_binded_value{nullptr};
-        bool m_ignore_state_change{false};
-        void bind_value(float *_binded_value);
-        void load_value();
-        void unbind_value();
+        void load_value_ex() override;
         void set_min_max_step(double new_min, double new_max, double new_step);
         qbinded_float_spinbox(QWidget *parent = nullptr);
 
@@ -60,42 +75,29 @@ namespace qpp {
 
     };
 
-    class qbinded_combobox : public QComboBox {
+    class qbinded_combobox : public QComboBox, public generic_binded_input_t<int> {
 
         Q_OBJECT
 
       public:
-        int *m_binded_value{nullptr};
-        bool m_ignore_state_change{false};
-        void bind_value(int *_binded_value);
-        void load_value();
-        void unbind_value();
+        void load_value_ex() override;
         qbinded_combobox(QWidget *parent = nullptr);
 
       public slots:
         void value_changed(int i);
     };
 
-    class qbinded_int3_input : public QWidget {
+    class qbinded_int3_input : public QWidget, public generic_binded_input_t<vector3<int> > {
 
-         Q_OBJECT
+        Q_OBJECT
 
-       public:
-
-        vector3<int> *m_binded_value{nullptr};
-
+      public:
         QHBoxLayout *widget_layout;
         QSpinBox *sb_x;
         QSpinBox *sb_y;
         QSpinBox *sb_z;
-
-        bool m_ignore_state_change{false};
-
-        void bind_value(vector3<int> *_binded_value);
-        void load_value();
-        void unbind_value();
+        void load_value_ex() override;
         void set_min_max_step(int min, int max, int step);
-
         qbinded_int3_input(QWidget *parent = nullptr);
 
       private slots:
@@ -103,26 +105,17 @@ namespace qpp {
 
     };
 
-    class qbinded_float3_input : public QWidget {
+    class qbinded_float3_input : public QWidget, public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 
       public:
-
-        vector3<float> *m_binded_value{nullptr};
-
         QHBoxLayout *widget_layout;
         QDoubleSpinBox *sb_x;
         QDoubleSpinBox *sb_y;
         QDoubleSpinBox *sb_z;
-
-        bool m_ignore_state_change{false};
-
-        void bind_value(vector3<float> *_binded_value);
-        void load_value();
-        void unbind_value();
+        void load_value_ex() override;
         void set_min_max_step(double min, double max, double step);
-
         qbinded_float3_input(QWidget *parent = nullptr);
 
       private slots:
@@ -130,23 +123,14 @@ namespace qpp {
 
     };
 
-    class qbinded_color3_input : public QWidget {
+    class qbinded_color3_input : public QWidget, public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 
       public:
-
-        vector3<float> *m_binded_value{nullptr};
         QColor m_stored_color;
-
-        bool m_ignore_state_change{false};
-
         qbinded_color3_input(QWidget *parent = nullptr);
-
-        void bind_value(vector3<float> *_binded_value);
-        void load_value();
-        void unbind_value();
-
+        void load_value_ex() override;
         void mousePressEvent(QMouseEvent *event) override;
 
       private slots:

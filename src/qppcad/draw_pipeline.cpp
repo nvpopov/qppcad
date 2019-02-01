@@ -20,6 +20,48 @@ void draw_pipeline_t::render(){
 
 }
 
+void draw_pipeline_t::depth_func(draw_pipeline_depth_func _action) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  switch (_action) {
+    case draw_pipeline_depth_func::depth_always :
+      astate->glapi->glDepthFunc(GL_ALWAYS);
+      break;
+    case draw_pipeline_depth_func::depth_disabled :
+      astate->glapi->glDisable(GL_DEPTH);
+      break;
+    case draw_pipeline_depth_func::depth_enabled :
+      astate->glapi->glEnable(GL_DEPTH);
+      break;
+    case draw_pipeline_depth_func::depth_equal :
+      astate->glapi->glDepthFunc(GL_EQUAL);
+      break;
+    case draw_pipeline_depth_func::depth_lequal:
+      astate->glapi->glDepthFunc(GL_LEQUAL);
+      break;
+    case draw_pipeline_depth_func::depth_less :
+      astate->glapi->glDepthFunc(GL_LESS);
+      break;
+    }
+
+}
+
+void draw_pipeline_t::cull_func(draw_pipeline_cull_func _action) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  switch (_action) {
+    case draw_pipeline_cull_func::cull_front :
+      astate->glapi->glCullFace(GL_FRONT);
+      break;
+    case draw_pipeline_cull_func::cull_back :
+      astate->glapi->glCullFace(GL_BACK);
+      break;
+    }
+
+}
+
 void draw_pipeline_t::begin_no_cull() {
   app_state_t* astate = app_state_t::get_inst();
   astate->glapi->glDisable(GL_CULL_FACE);
@@ -343,7 +385,7 @@ void draw_pipeline_t::end_render_general_mesh (shader_program_t *custom_sp) {
 
   if (custom_sp->unf_rec[sp_u_name::f_color_alpha].h_prog != -1) {
       astate->glapi->glDisable(GL_BLEND);
-     // astate->glapi->glCullFace(GL_BACK);
+      // astate->glapi->glCullFace(GL_BACK);
       astate->glapi->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
   custom_sp->end_shader_program();

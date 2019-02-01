@@ -7,61 +7,29 @@ using namespace qpp;
 using namespace qpp::cad;
 
 
-void qbinded_checkbox::bind_value(bool *_binded_value, ws_item_t *item_to_bind) {
-  m_binded_value = _binded_value;
-  m_binded_ws_item = item_to_bind;
-  m_ignore_state_change = true;
-  load_value();
-  m_ignore_state_change = false;
-}
-
-void qbinded_checkbox::load_value() {
+void qbinded_checkbox::load_value_ex() {
   if (m_binded_value) {
       if (*m_binded_value) setCheckState(Qt::Checked);
       else setCheckState(Qt::Unchecked);
     }
 }
 
-void qbinded_checkbox::unbind_value() {
-  m_binded_value = nullptr;
-  m_binded_ws_item = nullptr;
-}
-
 qbinded_checkbox::qbinded_checkbox(QWidget *parent) : QCheckBox (parent){
   connect(this, SIGNAL(stateChanged(int)), this, SLOT(check_state_changed(int)));
-  if (m_binded_ws_item) {
-      m_binded_ws_item->updated_internally();
-    }
 }
 
 void qbinded_checkbox::check_state_changed(int state) {
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = state == Qt::Checked;
+      on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
-qbinded_spinbox::qbinded_spinbox(QWidget *parent) : QSpinBox (parent) {
-
-}
-
-//float spinbox
-
-void qbinded_float_spinbox::bind_value(float *_binded_value) {
-  m_binded_value = _binded_value;
-  m_ignore_state_change = true;
-  load_value();
-  m_ignore_state_change = false;
-}
-
-void qbinded_float_spinbox::load_value() {
+void qbinded_float_spinbox::load_value_ex() {
   if (m_binded_value) {
       setValue(*m_binded_value);
     }
-}
-
-void qbinded_float_spinbox::unbind_value() {
-  m_binded_value = nullptr;
 }
 
 void qbinded_float_spinbox::set_min_max_step(double new_min,
@@ -70,6 +38,7 @@ void qbinded_float_spinbox::set_min_max_step(double new_min,
   setMinimum(new_min);
   setMaximum(new_max);
   setSingleStep(new_step);
+
 }
 
 qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (parent) {
@@ -81,25 +50,15 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
 void qbinded_float_spinbox::value_changed(double d) {
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = float(d);
+      on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
-void qbinded_combobox::bind_value(int *_binded_value) {
-  m_binded_value = _binded_value;
-  m_ignore_state_change = true;
-  load_value();
-  m_ignore_state_change = false;
-}
-
-void qbinded_combobox::load_value() {
+void qbinded_combobox::load_value_ex() {
   if (m_binded_value) {
       setCurrentIndex(*m_binded_value);
     }
-}
-
-void qbinded_combobox::unbind_value() {
-  m_binded_value = nullptr;
 }
 
 qbinded_combobox::qbinded_combobox(QWidget *parent) : QComboBox (parent) {
@@ -111,27 +70,17 @@ qbinded_combobox::qbinded_combobox(QWidget *parent) : QComboBox (parent) {
 void qbinded_combobox::value_changed(int i) {
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = i;
+      on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
-void qbinded_int3_input::bind_value(vector3<int> *_binded_value) {
-  m_binded_value = _binded_value;
-  m_ignore_state_change = true;
-  load_value();
-  m_ignore_state_change = false;
-}
-
-void qbinded_int3_input::load_value() {
+void qbinded_int3_input::load_value_ex() {
   if (m_binded_value) {
       sb_x->setValue((*m_binded_value)[0]);
       sb_y->setValue((*m_binded_value)[1]);
       sb_z->setValue((*m_binded_value)[2]);
     }
-}
-
-void qbinded_int3_input::unbind_value() {
-  m_binded_value = nullptr;
 }
 
 void qbinded_int3_input::set_min_max_step(int min, int max, int step) {
@@ -174,18 +123,12 @@ void qbinded_int3_input::spinbox_value_changed(int newval) {
       (*m_binded_value)[0] = sb_x->value();
       (*m_binded_value)[1] = sb_y->value();
       (*m_binded_value)[2] = sb_z->value();
+      on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
-void qbinded_float3_input::bind_value(vector3<float> *_binded_value) {
-  m_binded_value = _binded_value;
-  m_ignore_state_change = true;
-  load_value();
-  m_ignore_state_change = false;
-}
-
-void qbinded_float3_input::load_value() {
+void qbinded_float3_input::load_value_ex() {
 
   if (m_binded_value) {
       m_ignore_state_change = true;
@@ -195,10 +138,6 @@ void qbinded_float3_input::load_value() {
       m_ignore_state_change = false;
     }
 
-}
-
-void qbinded_float3_input::unbind_value() {
-  m_binded_value = nullptr;
 }
 
 void qbinded_float3_input::set_min_max_step(double min, double max, double step) {
@@ -252,16 +191,12 @@ void qbinded_float3_input::spinbox_value_changed(double newval) {
       (*m_binded_value)[0] = sb_x->value();
       (*m_binded_value)[1] = sb_y->value();
       (*m_binded_value)[2] = sb_z->value();
+      on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
 }
 
-void qbinded_color3_input::bind_value(vector3<float> *_binded_value) {
-  m_binded_value = _binded_value;
-  load_value();
-}
-
-void qbinded_color3_input::load_value() {
+void qbinded_color3_input::load_value_ex() {
   if (m_binded_value) {
       m_stored_color.setRgbF((*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
       QPalette pal = palette();
@@ -269,10 +204,6 @@ void qbinded_color3_input::load_value() {
       setAutoFillBackground(true);
       setPalette(pal);
     }
-}
-
-void qbinded_color3_input::unbind_value() {
-  m_binded_value = nullptr;
 }
 
 void qbinded_color3_input::mousePressEvent(QMouseEvent *event) {
@@ -283,6 +214,8 @@ void qbinded_color3_input::mousePressEvent(QMouseEvent *event) {
           (*m_binded_value)[1] = color.greenF();
           (*m_binded_value)[2] = color.blueF();
           load_value();
+          on_value_changed();
+          app_state_t::get_inst()->make_viewport_dirty();
         }
     }
 }
