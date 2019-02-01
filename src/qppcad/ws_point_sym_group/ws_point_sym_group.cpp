@@ -51,14 +51,14 @@ void ws_point_sym_group_t::recalc_render_data() {
 
           start += aliasing;
           matrix4<float> mat_model = matrix4<float>::Identity();
-          vector3<float> plane_normal_ut = vector3<float>(1, 0, 0);
+          vector3<float> plane_normal_ut = vector3<float>(0, 0, 1);
           vector3<float> plane_rot_axis = plane_normal_ut.cross(elem.m_axis);
           float len_mod = elem.m_axis.norm() * plane_normal_ut.norm();
           float rot_angle = std::acos(plane_normal_ut.dot(elem.m_axis) / len_mod);
           Eigen::Affine3f t;
           t = Eigen::AngleAxisf(rot_angle, plane_rot_axis);
           t.prescale(vector3<float>(m_plane_scale));
-         // t.translate(vector3<float>(0.5, 0.5, 0.5));
+          // t.translate(vector3<float>(0.5, 0.5, 0.5));
           mat_model = t.matrix();
           elem.m_render_mat = mat_model;
 
@@ -128,15 +128,27 @@ void ws_point_sym_group_t::render() {
 
   astate->dp->end_render_general_mesh();
 
-  astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
-  astate->dp->begin_no_cull();
-  for (auto &elem : m_atf)
-    if (elem.m_is_plane) {
-        astate->dp->render_general_mesh(elem.m_render_mat, clr_green, astate->mesh_zl_plane,
-                                        m_plane_alpha, astate->sp_mvap_ssl);
-      }
-  astate->dp->end_no_cull();
-  astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
+  if (m_plane_alpha_enabled) {
+      astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
+      astate->dp->begin_no_cull();
+      for (auto &elem : m_atf)
+        if (elem.m_is_plane) {
+            astate->dp->render_general_mesh(elem.m_render_mat, clr_green, astate->mesh_zl_plane,
+                                            m_plane_alpha, astate->sp_mvap_ssl);
+          }
+      astate->dp->end_no_cull();
+      astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
+    } else {
+      astate->dp->begin_render_general_mesh();
+      astate->dp->begin_no_cull();
+      for (auto &elem : m_atf)
+        if (elem.m_is_plane) {
+            astate->dp->render_general_mesh(elem.m_render_mat, clr_green, astate->mesh_zl_plane);
+          }
+      astate->dp->end_no_cull();
+      astate->dp->end_render_general_mesh();
+    }
+
 
 }
 

@@ -7,8 +7,9 @@ using namespace qpp;
 using namespace qpp::cad;
 
 
-void qbinded_checkbox::bind_value(bool *_binded_value) {
+void qbinded_checkbox::bind_value(bool *_binded_value, ws_item_t *item_to_bind) {
   m_binded_value = _binded_value;
+  m_binded_ws_item = item_to_bind;
   m_ignore_state_change = true;
   load_value();
   m_ignore_state_change = false;
@@ -23,10 +24,14 @@ void qbinded_checkbox::load_value() {
 
 void qbinded_checkbox::unbind_value() {
   m_binded_value = nullptr;
+  m_binded_ws_item = nullptr;
 }
 
 qbinded_checkbox::qbinded_checkbox(QWidget *parent) : QCheckBox (parent){
   connect(this, SIGNAL(stateChanged(int)), this, SLOT(check_state_changed(int)));
+  if (m_binded_ws_item) {
+      m_binded_ws_item->updated_internally();
+    }
 }
 
 void qbinded_checkbox::check_state_changed(int state) {

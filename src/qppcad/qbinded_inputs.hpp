@@ -9,6 +9,7 @@
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QHBoxLayout>
+#include <qppcad/ws_item.hpp>
 
 namespace qpp {
 
@@ -21,7 +22,8 @@ namespace qpp {
       public:
         bool m_ignore_state_change{false};
         bool *m_binded_value{nullptr};
-        void bind_value(bool *_binded_value);
+        ws_item_t *m_binded_ws_item{nullptr};
+        void bind_value(bool *_binded_value, ws_item_t *item_to_bind = nullptr);
         void load_value();
         void unbind_value();
         qbinded_checkbox(QWidget *parent = nullptr);

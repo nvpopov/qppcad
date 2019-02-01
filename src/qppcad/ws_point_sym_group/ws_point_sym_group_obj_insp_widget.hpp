@@ -20,7 +20,7 @@ namespace qpp {
         QFormLayout *tg_info_summary_lt;
         QLabel *tg_info_sym_gr;
         QLabel *tg_info_total_sym_op;
-
+        qbinded_checkbox *tg_plane_alpha_enabled;
         QGroupBox *tg_general_appearance;
         QFormLayout *tg_general_appearance_lt;
 
