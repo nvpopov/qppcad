@@ -1,5 +1,6 @@
 #include <qppcad/ws_item_obj_insp_widget.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -76,6 +77,15 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
     }
 }
 
+void ws_item_obj_insp_widget_t::pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
+  gb_lt->setLabelAlignment(Qt::AlignRight);
+  gb->setLayout(gb_lt);
+}
+
+void ws_item_obj_insp_widget_t::post_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
+  qt_helpers::resize_form_lt_labels(gb_lt, def_label_width);
+}
+
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -84,10 +94,32 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   tab_general = define_tab(tr("General"));
 
-  tg_info_widget = new QGroupBox;
-  tg_info_widget->setTitle(tr("Item information"));
-  tab_general->tab_inner_widget_layout->addWidget(tg_info_widget);
+  //begin group box Item information
+  tg_info_widget = new QGroupBox(tr("Item information"));
+  tg_form_layout = new QFormLayout;
+  pre_init_group_box(tg_info_widget, tg_form_layout);
 
+  ws_item_name = new QLabel;
+  ws_item_type = new QLabel;
+  ws_item_is_visible_label = new QLabel(tr("Is visible :"));
+  ws_item_is_visible = new qbinded_checkbox;
+
+  ws_item_pos_label = new QLabel(tr("Position :"));
+  ws_item_pos = new qbinded_float3_input;
+  ws_item_pos->sb_x->setSuffix("Å");
+  ws_item_pos->sb_y->setSuffix("Å");
+  ws_item_pos->sb_z->setSuffix("Å");
+  ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
+
+  tg_form_layout->addRow(tr("Name :"), ws_item_name);
+  tg_form_layout->addRow(tr("Type :"), ws_item_type);
+  tg_form_layout->addRow(ws_item_is_visible_label, ws_item_is_visible);
+  tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
+
+  post_init_group_box(tg_info_widget, tg_form_layout);
+  //end group box Item information
+
+  //Begin group box Item actions
   tg_actions = new QGroupBox(tr("Item actions"));
   tg_actions_layout = new QHBoxLayout;
   tg_actions->setLayout(tg_actions_layout);
@@ -102,29 +134,14 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_actions_layout->addWidget(tg_actions_rename);
   tg_actions_layout->addWidget(tg_actions_clone);
   tg_actions->setMaximumHeight(90);
-
-  ws_item_pos_label = new QLabel(tr("Position"));
-  ws_item_pos = new qbinded_float3_input;
-  ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
+  //end group box Item actions
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_position_changed_signal,
           this, &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
 
+  tab_general->tab_inner_widget_layout->addWidget(tg_info_widget);
   tab_general->tab_inner_widget_layout->addWidget(tg_actions);
-
-  tg_form_layout = new QFormLayout;
-  tg_info_widget->setLayout(tg_form_layout);
-  ws_item_name = new QLabel;
-  ws_item_type = new QLabel;
-  ws_item_is_visible_label = new QLabel(tr("Is visible"));
-  ws_item_is_visible = new qbinded_checkbox;
-
-  tg_form_layout->setLabelAlignment(Qt::AlignCenter);
-  tg_form_layout->addRow(tr("Name"), ws_item_name);
-  tg_form_layout->addRow(tr("Type"), ws_item_type);
-  tg_form_layout->addRow(ws_item_is_visible_label, ws_item_is_visible);
-  tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 
   connect(this, &ws_item_obj_insp_widget_t::currentChanged,
           this, &ws_item_obj_insp_widget_t::cur_tab_changed);

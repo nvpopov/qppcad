@@ -34,6 +34,7 @@ namespace qpp {
 
       public:
         ws_item_t *m_binded_item{nullptr};
+        int def_label_width{120};
 
         ws_item_tab_widget_t *tab_general;
         QGroupBox *tg_info_widget;
@@ -56,6 +57,8 @@ namespace qpp {
         virtual void bind_to_item(ws_item_t *_binding_item);
         virtual void unbind_item();
         virtual void update_from_ws_item();
+        void pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
+        void post_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
         ws_item_obj_insp_widget_t();
 
       public slots:

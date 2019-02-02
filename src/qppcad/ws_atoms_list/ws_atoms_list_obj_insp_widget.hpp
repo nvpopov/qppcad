@@ -32,11 +32,11 @@ namespace qpp {
 
         QGroupBox *tg_type_summary_widget;
         QVBoxLayout *tg_type_summary_lt;
-        QTableWidget *tg_type_summary_table;
+        QTableWidget *tg_type_summary_tbl;
 
         QGroupBox *tg_gb_cell;
-        QVBoxLayout *tg_gb_cell_layout;
-        QTableWidget *tg_gb_cell_table;
+        QVBoxLayout *tg_gb_cell_lt;
+        QTableWidget *tg_gb_cell_tbl;
 
         //START: Display tab
         ws_item_tab_widget_t *tab_disp;
@@ -76,7 +76,7 @@ namespace qpp {
         QGroupBox *gb_disp_bt;
         QVBoxLayout *disp_bt_lt;
         QTableView *disp_bt;
-        qbonding_table_model_t *bt_model;
+        qbonding_table_model_t *bt_mdl;
         qrealspinbox_delegate_t *bt_dist_delegate;
         //END: Display tab
 

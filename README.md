@@ -15,7 +15,7 @@ git submodule update --init --recursive
 ```
 ### Debian - based distro dependencies :
 ```bash
-apt install build-essential xorg-dev libgl1-mesa-dev libgtk-3-dev
+apt install libqt5opengl5-dev
 ```
 ### Dependecies
 1. qpp::core
