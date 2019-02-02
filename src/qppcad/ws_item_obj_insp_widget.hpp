@@ -34,7 +34,6 @@ namespace qpp {
 
       public:
         ws_item_t *m_binded_item{nullptr};
-        int def_label_width{120};
 
         ws_item_tab_widget_t *tab_general;
         QGroupBox *tg_info_widget;
@@ -52,6 +51,8 @@ namespace qpp {
 
         QLabel *ws_item_is_visible_label;
         qbinded_checkbox *ws_item_is_visible;
+
+        int def_label_width{120};
 
         ws_item_tab_widget_t* define_tab(QString tab_name);
         virtual void bind_to_item(ws_item_t *_binding_item);

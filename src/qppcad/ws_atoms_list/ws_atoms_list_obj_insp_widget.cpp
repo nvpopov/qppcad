@@ -636,7 +636,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       gb_current_anim->blockSignals(true);
       gb_current_anim->clear();
 
-      for (int i = 0; i < b_al->m_anim->get_total_anims(); i++) {
+      for (size_t i = 0; i < b_al->m_anim->get_total_anims(); i++) {
           gb_current_anim->addItem(
                 QString::fromStdString(b_al->m_anim->m_anim_data[i].m_anim_name));
         }
@@ -803,7 +803,7 @@ void ws_atoms_list_obj_insp_widget_t::update_modify_tab() {
                                         b_al->m_geom->pos(it2->m_atm, it2->m_idx)).norm();
 
                       tm_pair_dist_spinbox->blockSignals(true);
-                      tm_pair_dist_spinbox->setValue(dist_btw);
+                      tm_pair_dist_spinbox->setValue(double(dist_btw));
                       tm_pair_dist_spinbox->blockSignals(false);
                       tm_pair_dist_note_label->show();
                       tm_pair_dist_spinbox->show();
@@ -938,8 +938,8 @@ ws_atoms_list_obj_insp_widget_t::ws_atoms_list_obj_insp_widget_t() : ws_item_obj
 void ws_atoms_list_obj_insp_widget_t::cur_anim_index_changed(int index) {
 
   if (b_al) {
-
-      if (index < b_al->m_anim->get_total_anims()) {
+      //size_t clamped_index = std::clamp<size_t>(index, 0, index);
+      if (index < int(b_al->m_anim->get_total_anims())) {
           //          fmt::print(std::cout, "DEBUG CHANGE CURRENT ANIM {} {}\n", index,
           //                     b_al->m_anim->m_cur_anim);
           b_al->m_anim->m_cur_anim = index;
