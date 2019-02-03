@@ -40,8 +40,7 @@ namespace qpp {
       tag_ws_volume_data
     };
 
-    class ws_item_t : public std::enable_shared_from_this<ws_item_t>,
-        public qpp_object_t {
+    class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
 
@@ -63,16 +62,13 @@ namespace qpp {
         vector3<float>   m_rotation{1.0f, 1.0f, 1.0f}; ///
         vector3<float>   explicit_translation;
         int m_last_tab{-1};
-        bool             m_is_visible{true}; ///
-        bool             m_draw_cell{true}; ///
-        bool             m_selected{false}; ///
-        bool             m_marked_for_deletion{false};
+        bool m_is_visible{true}; ///
+        bool m_selected{false}; ///
+        bool m_marked_for_deletion{false};
 
-        /// \brief vote_for_view_vectors
-        /// \param vOutLookPos
-        /// \param vOutLookAt
-        virtual void vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                           vector3<float> &vOutLookAt) = 0;
+
+        virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
+                                           vector3<float> &out_look_at) = 0;
 
         /// \brief set_parent_workspace
         /// \param _parent_ws

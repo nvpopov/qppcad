@@ -102,6 +102,7 @@ namespace qpp {
         bool m_draw_atoms{true};
         bool m_draw_line_in_dist_measurement{false};
         bool m_bt_show_disabled_record{true};
+        bool m_draw_cell{true}; ///
         bool m_draw_subcells{false};
         vector3<float> m_subcell_color{0.1f, 0.1f, 0.1f};
         bool m_sel_vis{false};

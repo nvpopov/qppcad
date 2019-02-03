@@ -98,23 +98,26 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_s_labels_style->addItem("Charge");
   disp_s_labels_style->addItem("Custom");
 
-  disp_s_draw_subcells = new qbinded_checkbox;
-  disp_s_draw_subcells_label = new QLabel(tr("Draw subcells :"));
-  disp_s_subcells_idx = new qbinded_int3_input;
-  disp_s_subcells_idx_label = new QLabel(tr("Subcells range :"));
+  disp_draw_subcells = new qbinded_checkbox;
+  disp_draw_subcells_label = new QLabel(tr("Draw subcells :"));
+  disp_subcells_idx = new qbinded_int3_input;
+  disp_subcells_idx_label = new QLabel(tr("Subcells range :"));
 
-  disp_s_subcells_idx->set_min_max_step(1, 10, 1);
-  connect(disp_s_draw_subcells, &qbinded_checkbox::stateChanged,
+  disp_subcells_idx->set_min_max_step(1, 10, 1);
+  connect(disp_draw_subcells, &qbinded_checkbox::stateChanged,
           this, &ws_atoms_list_obj_insp_widget_t::draw_subcells_changed);
 
   disp_s_sel_vis = new qbinded_checkbox;
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox;
 
-  disp_s_cell_color = new qbinded_color3_input;
-  disp_s_cell_color_label = new QLabel(tr("Cell color :"));
+  disp_draw_cell = new qbinded_checkbox;
+  disp_draw_cell_label = new QLabel(tr("Draw cell :"));
 
-  disp_s_subcell_color = new qbinded_color3_input;
-  disp_s_subcell_color_label = new QLabel(tr("Sub cell color :"));
+  disp_cell_color = new qbinded_color3_input;
+  disp_cell_color_label = new QLabel(tr("Cell color :"));
+
+  disp_subcell_color = new qbinded_color3_input;
+  disp_subcell_color_label = new QLabel(tr("Sub cell color :"));
 
   gb_disp_s_lt->addRow(tr("Draw style :"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style :"), disp_s_color_mode);
@@ -125,12 +128,13 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("Atom scale :"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale :"), disp_s_bond_scale);
   gb_disp_s_lt->addRow(tr("Labels style :"), disp_s_labels_style);
-  gb_disp_s_lt->addRow(disp_s_cell_color_label, disp_s_cell_color);
   gb_disp_s_lt->addRow(tr("Sel. vis. :"), disp_s_sel_vis);
   gb_disp_s_lt->addRow(tr("Sel. vis. bonds :"), disp_s_sel_vis_affect_bonds);
-  gb_disp_s_lt->addRow(disp_s_draw_subcells_label, disp_s_draw_subcells);
-  gb_disp_s_lt->addRow(disp_s_subcells_idx_label, disp_s_subcells_idx);
-  gb_disp_s_lt->addRow(disp_s_subcell_color_label, disp_s_subcell_color);
+  gb_disp_s_lt->addRow(disp_draw_cell_label, disp_draw_cell);
+  gb_disp_s_lt->addRow(disp_cell_color_label, disp_cell_color);
+  gb_disp_s_lt->addRow(disp_draw_subcells_label, disp_draw_subcells);
+  gb_disp_s_lt->addRow(disp_subcells_idx_label, disp_subcells_idx);
+  gb_disp_s_lt->addRow(disp_subcell_color_label, disp_subcell_color);
   post_init_group_box(gb_disp_s, gb_disp_s_lt);
 
   //display - shading tab initialization
@@ -610,20 +614,23 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       disp_s_sel_vis->bind_value(&b_al->m_sel_vis);
       disp_s_sel_vis_affect_bonds->bind_value(&b_al->m_sel_vis_affect_bonds);
 
-      disp_s_draw_subcells->bind_value(&b_al->m_draw_subcells);
-      disp_s_subcells_idx->bind_value(&b_al->m_subcells_range);
-      disp_s_cell_color->bind_value(&b_al->m_cell_color);
-      disp_s_subcell_color->bind_value(&b_al->m_subcell_color);
+      disp_draw_cell->bind_value(&b_al->m_draw_cell);
+      disp_draw_subcells->bind_value(&b_al->m_draw_subcells);
+      disp_subcells_idx->bind_value(&b_al->m_subcells_range);
+      disp_cell_color->bind_value(&b_al->m_cell_color);
+      disp_subcell_color->bind_value(&b_al->m_subcell_color);
 
       draw_subcells_changed(0);
-      disp_s_draw_subcells->setVisible(b_al->m_geom->DIM == 3);
-      disp_s_draw_subcells_label->setVisible(b_al->m_geom->DIM == 3);
-      disp_s_subcells_idx->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_s_subcells_idx_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_s_subcell_color->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_s_subcell_color_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_s_cell_color->setVisible(b_al->m_geom->DIM == 3);
-      disp_s_cell_color_label->setVisible(b_al->m_geom->DIM == 3);
+      disp_draw_cell->setVisible(b_al->m_geom->DIM == 3);
+      disp_draw_cell_label->setVisible(b_al->m_geom->DIM == 3);
+      disp_draw_subcells->setVisible(b_al->m_geom->DIM == 3);
+      disp_draw_subcells_label->setVisible(b_al->m_geom->DIM == 3);
+      disp_subcells_idx->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
+      disp_subcells_idx_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
+      disp_subcell_color->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
+      disp_subcell_color_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
+      disp_cell_color->setVisible(b_al->m_geom->DIM == 3);
+      disp_cell_color_label->setVisible(b_al->m_geom->DIM == 3);
       //anim bindings
       update_animate_section_status();
 
@@ -682,10 +689,11 @@ void ws_atoms_list_obj_insp_widget_t::unbind_item() {
   disp_shading_spec_value->unbind_value();
   disp_s_sel_vis->unbind_value();
   disp_s_sel_vis_affect_bonds->unbind_value();
-  disp_s_cell_color->unbind_value();
-  disp_s_draw_subcells->unbind_value();
-  disp_s_subcells_idx->unbind_value();
-  disp_s_subcell_color->unbind_value();
+  disp_draw_cell->unbind_value();
+  disp_cell_color->unbind_value();
+  disp_draw_subcells->unbind_value();
+  disp_subcells_idx->unbind_value();
+  disp_subcell_color->unbind_value();
   gb_rebuild_bonds->unbind_value();
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
@@ -1049,16 +1057,16 @@ void ws_atoms_list_obj_insp_widget_t::cell_changed() {
 void ws_atoms_list_obj_insp_widget_t::draw_subcells_changed(int state) {
 
   if (b_al && b_al->m_draw_subcells ) {
-      disp_s_subcells_idx_label->show();
-      disp_s_subcells_idx->show();
-      disp_s_subcell_color->show();
-      disp_s_subcell_color_label->show();
+      disp_subcells_idx_label->show();
+      disp_subcells_idx->show();
+      disp_subcell_color->show();
+      disp_subcell_color_label->show();
 
     } else {
-      disp_s_subcells_idx_label->hide();
-      disp_s_subcells_idx->hide();
-      disp_s_subcell_color->hide();
-      disp_s_subcell_color_label->hide();
+      disp_subcells_idx_label->hide();
+      disp_subcells_idx->hide();
+      disp_subcell_color->hide();
+      disp_subcell_color_label->hide();
     }
 
 }

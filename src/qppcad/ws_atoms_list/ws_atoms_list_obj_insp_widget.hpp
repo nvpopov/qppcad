@@ -51,17 +51,24 @@ namespace qpp {
         qbinded_combobox *disp_s_render_style;
         qbinded_combobox *disp_s_color_mode;
         qbinded_combobox *disp_s_labels_style;
-        qbinded_color3_input *disp_s_cell_color;
-        QLabel *disp_s_cell_color_label;
+
         qbinded_checkbox *disp_s_sel_vis;
         qbinded_checkbox *disp_s_sel_vis_affect_bonds;
 
-        QLabel *disp_s_draw_subcells_label;
-        QLabel *disp_s_subcells_idx_label;
-        qbinded_checkbox *disp_s_draw_subcells;
-        qbinded_int3_input *disp_s_subcells_idx;
-        QLabel *disp_s_subcell_color_label;
-        qbinded_color3_input *disp_s_subcell_color;
+        QLabel *disp_draw_cell_label;
+        qbinded_checkbox *disp_draw_cell;
+
+        QLabel *disp_cell_color_label;
+        qbinded_color3_input *disp_cell_color;
+
+        QLabel *disp_draw_subcells_label;
+        qbinded_checkbox *disp_draw_subcells;
+
+        QLabel *disp_subcells_idx_label;
+        qbinded_int3_input *disp_subcells_idx;
+
+        QLabel *disp_subcell_color_label;
+        qbinded_color3_input *disp_subcell_color;
 
         QGroupBox *gb_disp_shading;
         QFormLayout *gb_disp_shading_lt;
