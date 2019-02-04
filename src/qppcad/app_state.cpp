@@ -1,5 +1,6 @@
 #include <qppcad/app_state.hpp>
 #include <QSettings>
+#include <QFileInfo>
 #include <data/ptable.hpp>
 
 namespace qpp {
@@ -228,8 +229,10 @@ namespace qpp {
             }
         }
 
-      log(fmt::format("RECENT FILES ADD: {} {} {}", file_name, bhv_id, is_native));
-      m_recent_files.emplace_back(file_name, bhv_id, is_native);
+      //log(fmt::format("RECENT FILES ADD: {} {} {}", file_name, bhv_id, is_native));
+      if (QFileInfo::exists(QString::fromStdString(file_name)) &&
+          QFileInfo(QString::fromStdString(file_name)).isFile())
+          m_recent_files.emplace_back(file_name, bhv_id, is_native);
     }
 
     app_state_t* app_state_t::g_inst = nullptr;
