@@ -15,10 +15,10 @@ git:
   submodules: false
 
 before_install:
-  - sudo add-apt-repository ppa:beineri/opt-qt571-trusty -y
+  - sudo add-apt-repository ppa:beineri/opt-qt591-trusty -y
   - sudo apt-get update -qq
-  - sudo apt-get install -qq qt57base
-  - source /opt/qt57/bin/qt57-env.sh;
+  - sudo apt-get install -qq qt59base qt59charts-no-lgpl
+  - source /opt/qt59/bin/qt59-env.sh;
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
 
