@@ -64,9 +64,11 @@ endif()
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
 find_package(Qt5OpenGL CONFIG REQUIRED)
+find_package(Qt5Charts)
 
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Charts_INCLUDE_DIRS})
 
 qt5_add_resources(QRCS data/resources.qrc)
 
@@ -155,6 +157,12 @@ add_executable(qppcad
 
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 
-target_link_libraries(qppcad qpp Qt5::Widgets Qt5::OpenGL ${OPENGL_LIBRARIES} pybind11::embed)
+target_link_libraries(qppcad
+    qpp
+    Qt5::Widgets
+    Qt5::OpenGL
+    Qt5::Charts
+    ${OPENGL_LIBRARIES}
+    pybind11::embed)
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 
