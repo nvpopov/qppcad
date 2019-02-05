@@ -13,7 +13,7 @@ void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> >
 
   //app_state_t* astate = app_state_t::get_inst();
 
-  find_point_symm(m_ag, geom, tolerance);
+  find_point_symm(m_ag, geom, m_new_centre, tolerance);
   m_pg_axes = point_group_axes<float>(m_ag);
 
   for (int i = 0; i < m_pg_axes.axes.size(); i++) {

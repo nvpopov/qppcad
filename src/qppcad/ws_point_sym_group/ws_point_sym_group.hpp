@@ -24,10 +24,12 @@ namespace qpp {
         QPP_OBJECT(ws_point_sym_group_t, ws_item_t)
 
       public:
+        vector3<float> m_new_centre{0,0,0};
+
         array_group<matrix3<float> > m_ag;
-        //genform_group<matrix3<float> > m_gf_grp;
         point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
+
         float m_plane_alpha{0.94f};
         bool m_plane_alpha_enabled{true};
         float m_plane_scale{6.0f};

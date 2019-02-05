@@ -70,15 +70,37 @@ void ws_comp_chem_data_obj_insp_widget_t::unbind_item() {
 }
 
 void ws_comp_chem_data_obj_insp_widget_t::update_geo_opt() {
+
   gb_go_conv_series->clear();
 
+  if (b_ccd->m_ccd->m_steps.empty()) {
+      gb_go_conv_graph->setVisible(false);
+      return;
+    } else {
+      gb_go_conv_graph->setVisible(true);
+    }
+
+  float max_energy = b_ccd->m_ccd->m_steps[0].m_toten;
+  float min_energy = b_ccd->m_ccd->m_steps[0].m_toten;
+
   for (int i = 0 ; i < b_ccd->m_ccd->m_steps.size(); i++) {
+
+      if (max_energy < b_ccd->m_ccd->m_steps[i].m_toten)
+        max_energy = b_ccd->m_ccd->m_steps[i].m_toten;
+
+      if (min_energy > b_ccd->m_ccd->m_steps[i].m_toten)
+        min_energy = b_ccd->m_ccd->m_steps[i].m_toten;
+
       gb_go_conv_series->append(
             i, b_ccd->m_ccd->m_steps[i].m_toten);
     }
+
   gb_go_conv_chart->removeSeries(gb_go_conv_series);
   gb_go_conv_chart->addSeries(gb_go_conv_series);
-
+  gb_go_conv_chart->axisX()->setMin(0);
+  gb_go_conv_chart->axisX()->setMax(gb_go_conv_series->count());
+  gb_go_conv_chart->axisY()->setRange(min_energy, max_energy);
+  //gb_go_conv_chart->axisY()->labe
 }
 
 ws_comp_chem_data_obj_insp_widget_t::ws_comp_chem_data_obj_insp_widget_t()
@@ -110,15 +132,17 @@ ws_comp_chem_data_obj_insp_widget_t::ws_comp_chem_data_obj_insp_widget_t()
   gb_go_conv_series = new QLineSeries();
   gb_go_conv_chart = new QChart();
   gb_go_conv_chart_view = new QChartView(gb_go_conv_chart);
+  gb_go_conv_chart_view->setRenderHint(QPainter::Antialiasing);
+  gb_go_conv_chart->setMargins(QMargins(2,2,2,2));
   gb_go_conv_graph_lt->addWidget(gb_go_conv_chart_view);
   gb_go_conv_chart->legend()->hide();
   gb_go_conv_chart->addSeries(gb_go_conv_series);
-  //gb_go_conv_chart->createDefaultAxes();
+  gb_go_conv_chart->createDefaultAxes();
+  gb_go_conv_chart->axisX()->setTitleText(tr("Steps"));
+  gb_go_conv_chart->axisY()->setTitleText(tr("Energy, eV"));
+
   tab_geo_opt->tab_inner_widget_layout->addWidget(gb_go_conv_graph);
   tab_geo_opt->tab_inner_widget_layout->addStretch(0);
-
-
-
 
   //tg_form_layout->
 }
