@@ -570,17 +570,28 @@ void ws_atoms_list_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> 
     }
 }
 
-void ws_atoms_list_t::copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
+void ws_atoms_list_t::copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst,
+                                        bool copy_selected,
+                                        bool copy_cell) {
 
   xgeom_inst.clear();
-  xgeom_inst.DIM = m_geom->DIM;
-  xgeom_inst.cell.DIM = m_geom->cell.DIM;
 
-  for (int i = 0; i < 3; i++)
-    if (m_geom->DIM > i) xgeom_inst.cell.v[i] = m_geom->cell.v[i];
+  if (copy_cell) {
+      xgeom_inst.DIM = m_geom->DIM;
+      xgeom_inst.cell.DIM = m_geom->cell.DIM;
 
-  for (int i = 0; i < m_geom->nat(); i++)
-    xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
+      for (int i = 0; i < 3; i++)
+        if (m_geom->DIM > i) xgeom_inst.cell.v[i] = m_geom->cell.v[i];
+    }
+
+  if (copy_selected) {
+      for (auto &sel : m_atom_idx_sel)
+        xgeom_inst.add(m_geom->atom(sel.m_atm), m_geom->pos(sel.m_atm, sel.m_idx));
+    } else {
+      for (int i = 0; i < m_geom->nat(); i++)
+        xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
+    }
+
 }
 
 void ws_atoms_list_t::load_color_from_static_anim() {

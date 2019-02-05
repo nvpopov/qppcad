@@ -548,11 +548,25 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
 }
 
 void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
+
   auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
   m_ws.push_back(new_ws);
+
   if (switch_to_new_workspace) set_cur_id(m_ws.size()-1);
   ws_mgr_changed();
+
+}
+
+std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
+
+  auto cur_ws = get_cur_ws();
+  if (!cur_ws) return nullptr;
+
+  auto cur_it = cur_ws->get_selected_sp();
+  if (!cur_it) return nullptr;
+
+  return cur_it;
 }
 
 

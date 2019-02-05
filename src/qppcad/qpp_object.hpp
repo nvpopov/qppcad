@@ -46,15 +46,18 @@ namespace qpp {
         bool is_instance_of(size_t type) const;
         bool is_instance_of(const type_info* _type_info) const;
 
-        template<typename T> bool is_instance_of() const {
+        template<typename T>
+        bool is_instance_of() const {
           return is_instance_of(T::get_type_info_static());
         }
 
-        template<typename T> T* cast_as() {
+        template<typename T>
+        T* cast_as() {
           return is_instance_of<T>() ? static_cast<T*>(this) : nullptr;
         }
 
-        template<typename T> const T* cast_as() const {
+        template<typename T>
+        const T* cast_as() const {
           return is_instance_of<T>() ? static_cast<const T*>(this) : nullptr;
         }
 

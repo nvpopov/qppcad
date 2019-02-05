@@ -26,6 +26,7 @@ namespace qpp {
       public:
         vector3<float> m_new_centre{0,0,0};
 
+        bool m_nested{false};
         array_group<matrix3<float> > m_ag;
         point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
@@ -35,8 +36,11 @@ namespace qpp {
         float m_plane_scale{6.0f};
 
         ws_point_sym_group_t();
+
         void gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
-                           float tolerance);
+                           float tolerance,
+                           bool nested);
+
         void recalc_render_data();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,

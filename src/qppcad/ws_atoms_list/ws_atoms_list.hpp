@@ -154,7 +154,9 @@ namespace qpp {
         }
 
         void copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
-        void copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
+        void copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst,
+                               bool copy_selected = false,
+                               bool copy_cell = true);
         void load_color_from_static_anim();
 
         void select_atom_ngbs(const int at_id);

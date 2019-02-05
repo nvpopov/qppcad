@@ -9,7 +9,8 @@ ws_point_sym_group_t::ws_point_sym_group_t() {
 }
 
 void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
-                                         float tolerance) {
+                                         float tolerance,
+                                         bool nested) {
 
   //app_state_t* astate = app_state_t::get_inst();
 
@@ -43,8 +44,17 @@ void ws_point_sym_group_t::recalc_render_data() {
       vector3<float> aliasing{(static_cast <float> (rand()) /
             static_cast <float> (RAND_MAX))*0.05f};
 
-      vector3<float> start = elem.m_axis * 5 ;
-      vector3<float> end = elem.m_axis * -5;
+      vector3<float> start = (elem.m_axis * 5);
+      vector3<float> end = (elem.m_axis * -5);
+
+      vector3<float> tr = m_new_centre;
+
+      //threat first connected item as master
+      if (!m_connected_items.empty()) tr += m_connected_items.front()->m_pos;
+
+      start += tr;
+      end += tr;
+
       float scale_val{0.055f};
 
       if (elem.m_is_plane) {
@@ -58,7 +68,7 @@ void ws_point_sym_group_t::recalc_render_data() {
           Eigen::Affine3f t;
           t = Eigen::AngleAxisf(rot_angle, plane_rot_axis);
           t.prescale(vector3<float>(m_plane_scale));
-          // t.translate(vector3<float>(0.5, 0.5, 0.5));
+          t.pretranslate(tr);
           mat_model = t.matrix();
           elem.m_render_mat = mat_model;
 
@@ -78,8 +88,8 @@ void ws_point_sym_group_t::recalc_render_data() {
 
           //aux
 
-          vector3<float> start_aux = elem.m_axis * 5;
-          vector3<float> end_aux = elem.m_axis * 5.25;
+          vector3<float> start_aux = elem.m_axis * 5 + tr;
+          vector3<float> end_aux = elem.m_axis * 5.25 + tr;
 
           matrix4<float> mat_model_aux = matrix4<float>::Identity();
           mat_model_aux.block<3,1>(0,3) = start_aux;

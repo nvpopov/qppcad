@@ -15,53 +15,10 @@ namespace qpp {
   namespace cad {
 
     class workspace_t;
+    class workspace_manager_t;
     class ws_item_t;
 
     class app_state_t;
-
-    /// \brief The workspace_manager_t class
-
-    class workspace_manager_t : public std::enable_shared_from_this<workspace_manager_t> {
-      private:
-        app_state_t *cached_astate;
-        size_t m_cur_ws_id;
-
-      public:
-        std::vector<std::shared_ptr<workspace_t> > m_ws;
-        std::unique_ptr<ws_item_behaviour_manager_t> m_bhv_mgr;
-        workspace_manager_t(app_state_t *_astate);
-
-        std::shared_ptr<workspace_t> get_cur_ws();
-        std::optional<size_t> get_cur_id();
-
-        bool set_cur_id(const size_t ws_index);
-
-        template<int I>
-        void force_set_cur_ws(){set_cur_id(I);}
-
-        std::shared_ptr<workspace_t> get_ws(int id);
-        bool has_wss(){return m_ws.size()>0;}
-        void init_default();
-        void render_cur_ws();
-        void render_cur_ws_overlay(QPainter &painter);
-        void mouse_click();
-        void ws_mgr_changed();
-        void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
-        void init_ws_item_bhv_mgr();
-
-        void load_from_file_autodeduce(const std::string file_name,
-                                       const std::string file_format = "");
-
-        void load_from_file(const std::string &fname,
-                            bool override = true);
-
-        void import_from_file(const std::string &fname,
-                              size_t bhv_id,
-                              bool need_to_create_new_ws = true);
-
-        void create_new_ws(bool switch_to_new_workspace = true);
-
-    };
 
     ///
     /// \brief The workspace_t class
@@ -115,6 +72,60 @@ namespace qpp {
         void set_edit_type(const ws_edit_t new_edit_type);
 
     };
+
+    /// \brief The workspace_manager_t class
+    class workspace_manager_t : public std::enable_shared_from_this<workspace_manager_t> {
+      private:
+        app_state_t *cached_astate;
+        size_t m_cur_ws_id;
+
+      public:
+        std::vector<std::shared_ptr<workspace_t> > m_ws;
+        std::unique_ptr<ws_item_behaviour_manager_t> m_bhv_mgr;
+        workspace_manager_t(app_state_t *_astate);
+
+        std::shared_ptr<workspace_t> get_cur_ws();
+        std::optional<size_t> get_cur_id();
+
+        bool set_cur_id(const size_t ws_index);
+
+        template<int I>
+        void force_set_cur_ws(){set_cur_id(I);}
+
+        std::shared_ptr<workspace_t> get_ws(int id);
+        bool has_wss(){return m_ws.size()>0;}
+        void init_default();
+        void render_cur_ws();
+        void render_cur_ws_overlay(QPainter &painter);
+        void mouse_click();
+        void ws_mgr_changed();
+        void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
+        void init_ws_item_bhv_mgr();
+
+        void load_from_file_autodeduce(const std::string file_name,
+                                       const std::string file_format = "");
+
+        void load_from_file(const std::string &fname,
+                            bool override = true);
+
+        void import_from_file(const std::string &fname,
+                              size_t bhv_id,
+                              bool need_to_create_new_ws = true);
+
+        void create_new_ws(bool switch_to_new_workspace = true);
+
+        std::shared_ptr<ws_item_t> get_sel_itm_sp();
+
+        template<typename T>
+        std::shared_ptr<T> get_sel_itm_sp_as() {
+          auto sel_sp = get_sel_itm_sp();
+          if (!sel_sp) return nullptr;
+          return std::static_pointer_cast<T>(sel_sp);
+        };
+
+    };
+
+
 
   }
 

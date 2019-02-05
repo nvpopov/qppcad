@@ -422,38 +422,38 @@ pybind11::bool_ simple_query::is_instance_of_by_hash(size_t _type_hash) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_manager->has_wss()) {
+  if (astate->ws_manager->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
 
-        if (cur_ws) {
-            auto cur_it = cur_ws->get_selected();
-            if (cur_it) {
-                return cur_it->is_instance_of(_type_hash);
-              }
-          }
-      }
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          if (cur_it) {
+              return cur_it->is_instance_of(_type_hash);
+            }
+        }
+    }
 
-    return false;
+  return false;
 }
 
 pybind11::bool_ simple_query::is_instance_of_by_type_name(std::string _type_name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_manager->has_wss()) {
+  if (astate->ws_manager->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_manager->get_cur_ws();
 
-        if (cur_ws) {
-            auto cur_it = cur_ws->get_selected();
-            if (cur_it) {
-                return cur_it->get_type_name() == _type_name;
-              }
-          }
-      }
+      if (cur_ws) {
+          auto cur_it = cur_ws->get_selected();
+          if (cur_it) {
+              return cur_it->get_type_name() == _type_name;
+            }
+        }
+    }
 
-    return false;
+  return false;
 }
 
 
@@ -504,35 +504,54 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  //  if (astate->ws_manager->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  //      auto cur_ws = astate->ws_manager->get_cur_ws();
 
-      if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
+  //      if (cur_ws) {
+  //          auto cur_it = cur_ws->get_selected();
 
-          if (!cur_it) {
-              return;
+  //          if (!cur_it) {
+  //              return;
+  //            }
+
+  //          auto al = cur_it->cast_as<ws_atoms_list_t>();
+  //          if (al && al->m_geom->DIM == 0) {
+  //              auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
+  //                             ws_point_sym_group_t::get_type_static());
+  //              auto ws_pg_c = ws_pg->cast_as<ws_point_sym_group_t>();
+
+  //              if (ws_pg_c) {
+  //                  ws_pg_c->gen_from_geom(*al->m_geom, tolerance, true);
+  //                  cur_ws->add_item_to_ws(ws_pg);
+  //                  ws_pg_c->m_name = fmt::format("point_sym_grp{}", cur_ws->m_ws_items.size());
+  //                  ws_pg_c->m_connected_items.push_back(cur_ws->get_selected_sp());
+  //                }
+
+  //            }
+  //        }
+  //    }
+  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+
+  if (al && al->m_parent_ws) {
+
+      if (al && al->m_geom->DIM == 0) {
+          auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
+                         ws_point_sym_group_t::get_type_static());
+          auto ws_pg_c = ws_pg->cast_as<ws_point_sym_group_t>();
+
+          if (ws_pg_c) {
+              ws_pg_c->m_connected_items.push_back(al->m_parent_ws->get_selected_sp());
+              ws_pg_c->gen_from_geom(*al->m_geom, tolerance, true);
+              al->m_parent_ws->add_item_to_ws(ws_pg);
+              ws_pg_c->m_name = fmt::format("point_sym_grp{}", al->m_parent_ws->m_ws_items.size());
             }
 
-          auto al = cur_it->cast_as<ws_atoms_list_t>();
-          if (al && al->m_geom->DIM == 0) {
-              auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
-                             ws_point_sym_group_t::get_type_static());
-              auto ws_pg_c = ws_pg->cast_as<ws_point_sym_group_t>();
-
-              if (ws_pg_c) {
-                  ws_pg_c->gen_from_geom(*al->m_geom, tolerance);
-                  cur_ws->add_item_to_ws(ws_pg);
-                  ws_pg_c->m_name = fmt::format("point_sym_grp{}", cur_ws->m_ws_items.size());
-                  ws_pg_c->m_connected_items.push_back(cur_ws->get_selected_sp());
-                }
-
-            }
         }
     }
 
   astate->astate_evd->cur_ws_changed();
+
 }
 
 void simple_query::rebond() {
