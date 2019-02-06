@@ -22,7 +22,9 @@ namespace qpp {
 
     enum draw_pipeline_cull_func {
       cull_front,
-      cull_back
+      cull_back,
+      cull_enable,
+      cull_disable
     };
 
     class draw_pipeline_t{
@@ -42,8 +44,6 @@ namespace qpp {
 
         void depth_func(draw_pipeline_depth_func _action);
         void cull_func(draw_pipeline_cull_func _action);
-        void begin_no_cull();
-        void end_no_cull();
 
         /// \brief begin_atom_render
         void begin_atom_render (float specular_power, float specular_alpha);

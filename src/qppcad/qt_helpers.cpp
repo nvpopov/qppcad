@@ -12,7 +12,7 @@ void qt_helpers::resize_form_lt_labels(QFormLayout *form_lt, int new_size) {
           lt->widget()->setMaximumWidth(new_size);
           lt->widget()->setMinimumWidth(new_size);
           QLabel *as_label = qobject_cast<QLabel *>(lt->widget());
-          if (as_label) as_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+          if (as_label) as_label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         }
     }
 }

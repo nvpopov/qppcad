@@ -78,7 +78,7 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
 }
 
 void ws_item_obj_insp_widget_t::pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
-  gb_lt->setLabelAlignment(Qt::AlignRight);
+  gb_lt->setLabelAlignment(Qt::AlignLeft);
   gb->setLayout(gb_lt);
 }
 

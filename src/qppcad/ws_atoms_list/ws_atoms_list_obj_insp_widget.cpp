@@ -197,7 +197,8 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
 
   gb_anim_summary = new QGroupBox(tr("Summary"));
   gb_anim_summary_lt = new QFormLayout;
-  gb_anim_summary->setLayout(gb_anim_summary_lt);
+  pre_init_group_box(gb_anim_summary, gb_anim_summary_lt);
+  gb_anim_summary->setMaximumHeight(250);
   gb_anim_total_anims = new QLabel;
   gb_rebuild_bonds = new qbinded_checkbox;
   gb_play_cyclic = new qbinded_checkbox;
@@ -210,18 +211,18 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   connect(gb_current_anim, SIGNAL(currentIndexChanged(int)),
           this, SLOT(cur_anim_index_changed(int)));
 
-  gb_anim_summary_lt->addRow(tr("Number of animations"), gb_anim_total_anims);
-  gb_anim_summary_lt->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
-  gb_anim_summary_lt->addRow(tr("Play in cycle"), gb_play_cyclic);
-  gb_anim_summary_lt->addRow(tr("Current animation"), gb_current_anim);
-  gb_anim_summary_lt->addRow(tr("Frame time"), gb_anim_speed);
-  gb_anim_summary_lt->addRow(tr("Total frames in anim."), gb_anim_total_frames_in_anim);
+  gb_anim_summary_lt->addRow(tr("Number of anim. :"), gb_anim_total_anims);
+  gb_anim_summary_lt->addRow(tr("Rebuild bonds :"), gb_rebuild_bonds);
+  gb_anim_summary_lt->addRow(tr("Play in cycle :"), gb_play_cyclic);
+  gb_anim_summary_lt->addRow(tr("Current anim. :"), gb_current_anim);
+  gb_anim_summary_lt->addRow(tr("Frame time  :"), gb_anim_speed);
+  gb_anim_summary_lt->addRow(tr("Total frames in anim. :"), gb_anim_total_frames_in_anim);
   gb_anim_summary_lt->addRow(tr("Current frame:"), gb_anim_cur_frame);
+  post_init_group_box(gb_anim_summary, gb_anim_summary_lt);
 
   gb_anim_timeline = new QGroupBox(tr("Timeline"));
   gb_anim_timeline_lt = new QHBoxLayout;
   gb_anim_timeline->setLayout(gb_anim_timeline_lt);
-
 
   gb_anim_timeline_slider = new QSlider(Qt::Orientation::Horizontal);
   gb_anim_timeline_slider->setTickPosition(QSlider::TicksBothSides);
@@ -234,7 +235,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_buttons = new QGroupBox(tr("Control"));
   gb_anim_buttons_lt = new QHBoxLayout;
   gb_anim_buttons->setLayout(gb_anim_buttons_lt);
-  gb_anim_buttons->setMaximumWidth(373);
+  gb_anim_buttons->setMaximumWidth(390);
   gb_anim_buttons->setMaximumHeight(90);
 
   anim_play = new QPushButton(tr("PLAY"));
@@ -267,7 +268,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_anim_tab() {
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_timeline);
   tab_anim->tab_inner_widget_layout->addWidget(gb_anim_buttons);
 
-  tab_anim->tab_inner_widget_layout->addStretch();
+  tab_anim->tab_inner_widget_layout->addStretch(0);
 
 }
 

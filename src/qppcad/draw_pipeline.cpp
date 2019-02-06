@@ -29,10 +29,10 @@ void draw_pipeline_t::depth_func(draw_pipeline_depth_func _action) {
       astate->glapi->glDepthFunc(GL_ALWAYS);
       break;
     case draw_pipeline_depth_func::depth_disabled :
-      astate->glapi->glDisable(GL_DEPTH);
+      astate->glapi->glDisable(GL_DEPTH_TEST);
       break;
     case draw_pipeline_depth_func::depth_enabled :
-      astate->glapi->glEnable(GL_DEPTH);
+      astate->glapi->glEnable(GL_DEPTH_TEST);
       break;
     case draw_pipeline_depth_func::depth_equal :
       astate->glapi->glDepthFunc(GL_EQUAL);
@@ -58,18 +58,14 @@ void draw_pipeline_t::cull_func(draw_pipeline_cull_func _action) {
     case draw_pipeline_cull_func::cull_back :
       astate->glapi->glCullFace(GL_BACK);
       break;
+    case draw_pipeline_cull_func::cull_enable :
+      astate->glapi->glEnable(GL_CULL_FACE);
+      break;
+    case draw_pipeline_cull_func::cull_disable :
+      astate->glapi->glDisable(GL_CULL_FACE);
+      break;
     }
 
-}
-
-void draw_pipeline_t::begin_no_cull() {
-  app_state_t* astate = app_state_t::get_inst();
-  astate->glapi->glDisable(GL_CULL_FACE);
-}
-
-void draw_pipeline_t::end_no_cull() {
-  app_state_t* astate = app_state_t::get_inst();
-  astate->glapi->glEnable(GL_CULL_FACE);
 }
 
 void draw_pipeline_t::begin_atom_render (float specular_power, float specular_alpha) {
