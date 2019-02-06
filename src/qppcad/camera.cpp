@@ -251,18 +251,23 @@ std::optional<vector2<float> > camera_t::project (const vector3<float> point) {
   vector4<float> tmpv = m_proj_view * vector4<float>(point[0], point[1], point[2], 1.0f);
 
   if (std::fabs(tmpv[3]) < 0.00001f) return std::nullopt;
-
-  tmpv[0] /= tmpv[3];
-  tmpv[1] /= tmpv[3];
-  tmpv[2] /= tmpv[3];
+  if (tmpv[3] > 0.98f && tmpv[3] < 1.04f) {
+      tmpv[0] /= tmpv[3];
+      tmpv[1] /= tmpv[3];
+      tmpv[2] /= tmpv[3];
+    }
 
   tmpv[0] = (tmpv[0] + 1.0f) / 2.0f;
   tmpv[1] = (-tmpv[1] + 1.0f) / 2.0f;
   tmpv[2] = (tmpv[2] + 1.0f) / 2.0f;
 
   tmpv[0] = tmpv[0] * astate->viewport_size_c[0];
-  tmpv[1] = (tmpv[1] * astate->viewport_size_c[1]) + astate->viewport_xy_c[1];
+  tmpv[1] = (tmpv[1] * astate->viewport_size_c[1]) + 0.5f;
 
-  return std::optional<vector2<float> >(vector2<float>(tmpv[0], tmpv[1]));
+  vector2<float> ret_v2;
+  ret_v2[0] = tmpv[0];
+  ret_v2[1] = tmpv[1];
+
+  return std::optional(ret_v2);
 
 }

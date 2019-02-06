@@ -121,12 +121,16 @@ namespace qpp {
 
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
       painter.setFont(QFont(astate->m_font_name, 13));
+      painter.resetTransform();
 
       for (auto &record : m_dist_recs)
+
         if (record.m_show) {
 
-            if (record.m_at1 >= p_owner->m_geom->nat() || record.m_at2 >= p_owner->m_geom->nat())
-              continue;
+            if (record.m_at1 >= p_owner->m_geom->nat() || record.m_at2 >= p_owner->m_geom->nat()) {
+                continue;
+              }
+
 
             l_s = astate->camera->project(
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
@@ -134,8 +138,12 @@ namespace qpp {
             l_e = astate->camera->project(
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2));
 
+            if (!l_s || !l_e) continue;
+
             float dist = (p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
                           p_owner->m_geom->pos(record.m_at2,record.m_idx2)).norm();
+
+           // astate->log(fmt::format("{} {}", *l_s, *l_e));
 
             vector2<float> mid = (*l_s + *l_e) * 0.5f;
             const float rect_size = 100;
@@ -164,6 +172,7 @@ namespace qpp {
                              Qt::AlignCenter, QString::fromStdString(fmt::format("{}", dist)) );
             painter.resetTransform();
           }
+
       painter.resetTransform();
 
       for (auto &record : m_angle_recs)
@@ -266,6 +275,8 @@ namespace qpp {
               }
 
           }
+
+      painter.resetTransform();
 
     }
 

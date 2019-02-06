@@ -513,7 +513,10 @@ void workspace_manager_t::import_from_file(const std::string &fname,
   if (exec_ws) {
       auto p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
       astate->astate_evd->cur_ws_changed();
-      if (need_to_create_new_ws && p_new_item) exec_ws->m_ws_name = p_new_item->m_name;
+      if (need_to_create_new_ws && p_new_item) {
+          exec_ws->m_ws_name = p_new_item->m_name;
+          exec_ws->set_best_view();
+        }
       astate->astate_evd->new_file_loaded(fname,
                                           m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
                                           false);
