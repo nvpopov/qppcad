@@ -24,11 +24,11 @@ namespace qpp {
     class recent_file_record_t {
       public:
         std::string m_file_name;
-        size_t m_ff;
+        size_t m_ff_id;
         bool m_native;
         recent_file_record_t(){}
         recent_file_record_t(const std::string _file_name , const size_t _ff, const bool _native) :
-          m_file_name(_file_name), m_ff(_ff), m_native(_native){}
+          m_file_name(_file_name), m_ff_id(_ff), m_native(_native){}
     };
 
     class app_state_t {
@@ -95,7 +95,7 @@ namespace qpp {
 
         std::vector<recent_file_record_t> m_recent_files;
         // //       std::map<std::string, color_map_t> m_color_maps;
-
+        QString m_last_dir;
         QString m_font_name;
 
         vector2<float> viewport_xy;

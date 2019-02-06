@@ -1,6 +1,7 @@
 #include <qppcad/app_state.hpp>
 #include <QSettings>
 #include <QFileInfo>
+#include <QDir>
 #include <data/ptable.hpp>
 
 namespace qpp {
@@ -190,7 +191,8 @@ namespace qpp {
       for (int i = 0; i < m_recent_files.size(); i++) {
           settings.setArrayIndex(i);
           settings.setValue("filename", QString::fromStdString(m_recent_files[i].m_file_name));
-          std::string ff_name = ws_manager->m_bhv_mgr->get_ff_short_name(m_recent_files[i].m_ff);
+          std::string ff_name =
+              ws_manager->m_bhv_mgr->get_ff_short_name(m_recent_files[i].m_ff_id);
           settings.setValue("ff", QString::fromStdString(ff_name));
           settings.setValue("isnat", m_recent_files[i].m_native);
         }
@@ -213,7 +215,11 @@ namespace qpp {
 
     void app_state_t::add_recent_file(const std::string file_name,
                                       const bool is_native,
-                                      const size_t bhv_id) {
+                                      const size_t ff_id) {
+
+      QFileInfo file_info(QString::fromStdString(file_name));
+      m_last_dir =  file_info.absoluteDir().path();
+      log(fmt::format("M_LAST_DIR= {}", m_last_dir.toStdString()));
 
       if (m_recent_files.size() >= max_recent_files)
         m_recent_files.erase(m_recent_files.begin() ,
@@ -232,7 +238,7 @@ namespace qpp {
       //log(fmt::format("RECENT FILES ADD: {} {} {}", file_name, bhv_id, is_native));
       if (QFileInfo::exists(QString::fromStdString(file_name)) &&
           QFileInfo(QString::fromStdString(file_name)).isFile())
-          m_recent_files.emplace_back(file_name, bhv_id, is_native);
+          m_recent_files.emplace_back(file_name, ff_id, is_native);
     }
 
     app_state_t* app_state_t::g_inst = nullptr;

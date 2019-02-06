@@ -525,6 +525,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
                                                     const std::string file_format) {
 
+
   if (file_name.find("json") != std::string::npos ||
       file_format.find("json") != std::string::npos) {
       load_from_file(file_name, false);

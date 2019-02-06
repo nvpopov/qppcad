@@ -576,15 +576,20 @@ void main_window::tp_show_gizmo_state_changed(int state) {
 }
 
 void main_window::create_new_ws() {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->ws_manager->create_new_ws(true);
   wss_changed_slot();
   astate->make_viewport_dirty();
+
 }
 
 void main_window::open_ws() {
   app_state_t* astate = app_state_t::get_inst();
-  QString file_name = QFileDialog::getOpenFileName(this, "Open qpp::cad workspace", "*.json");
+  QString file_name = QFileDialog::getOpenFileName(this,
+                                                   "Open qpp::cad workspace",
+                                                   astate->m_last_dir,
+                                                   "*.json");
   if (file_name != "") {
       astate->ws_manager->load_from_file(file_name.toStdString(), true);
       wss_changed_slot();
@@ -606,7 +611,9 @@ void main_window::save_ws() {
               cur_ws->m_is_ws_imported = false;
               cur_ws->save_ws_to_json(cur_ws->m_fs_path);
             } else {
-              QString file_name = QFileDialog::getSaveFileName(this, "Save qpp::cad workspace",
+              QString file_name = QFileDialog::getSaveFileName(this,
+                                                               "Save qpp::cad workspace",
+                                                               astate->m_last_dir,
                                                                "*.json");
               if (file_name != "") {
                   cur_ws->save_ws_to_json(file_name.toStdString());
@@ -632,7 +639,9 @@ void main_window::save_ws_as() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          QString file_name = QFileDialog::getSaveFileName(this, "Save qpp::cad workspace",
+          QString file_name = QFileDialog::getSaveFileName(this,
+                                                           "Save qpp::cad workspace",
+                                                           astate->m_last_dir,
                                                            "*.json");
           if (file_name != "") {
               cur_ws->save_ws_to_json(file_name.toStdString());
@@ -1064,7 +1073,7 @@ void main_window::rebuild_recent_files_menu() {
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
       file_menu_recent_entries[i]->setVisible(true);
       std::string ff_name = astate->ws_manager->m_bhv_mgr->get_ff_full_name(
-                              astate->m_recent_files[i].m_ff);
+                              astate->m_recent_files[i].m_ff_id);
 
       std::string rec_menu_entry;
       if (!astate->m_recent_files[i].m_native)
@@ -1096,7 +1105,11 @@ void main_window::recent_files_clicked() {
   if (idx != -1 && idx < astate->m_recent_files.size()) {
       auto &rec_idx = astate->m_recent_files[idx];
       if (rec_idx.m_native) astate->ws_manager->load_from_file(rec_idx.m_file_name, false);
-      else astate->ws_manager->load_from_file_autodeduce(rec_idx.m_file_name);
+      else {
+          auto bhv_id = astate->ws_manager->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
+          if (bhv_id) astate->ws_manager->import_from_file(rec_idx.m_file_name, *bhv_id, true);
+          else astate->ws_manager->load_from_file_autodeduce(rec_idx.m_file_name);
+        }
     }
 
 }
@@ -1263,7 +1276,10 @@ void main_window::action_bhv_import_to_cur_workspace() {
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
       std::string file_name =
-          QFileDialog::getOpenFileName(this, "dialog_name", "*.*").toStdString();
+          QFileDialog::getOpenFileName(this,
+                                       "dialog_name",
+                                       astate->m_last_dir,
+                                       "*.*").toStdString();
       if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id, false);
     }
 
@@ -1286,6 +1302,7 @@ void main_window::action_bhv_import_as_new_workspace() {
       // astate->log(fmt::format("{}", b_id));
       std::string file_name = QFileDialog::getOpenFileName(this,
                                                            "dialog_name",
+                                                           astate->m_last_dir,
                                                            "*.*").toStdString();
       if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id);
     }
