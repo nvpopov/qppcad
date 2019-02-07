@@ -155,12 +155,12 @@ void camera_t::update_camera () {
 
   if (m_cur_proj == cam_proj_t::proj_persp)
     m_mat_proj = perspective<float>(m_fov,
-                                    astate->viewport_size_c(0) / astate->viewport_size_c(1),
+                                    astate->viewport_size(0) / astate->viewport_size(1),
                                     m_znear_persp, m_zfar_persp);
   else {
 
-      float width   = astate->viewport_size_c(0);
-      float height  = astate->viewport_size_c(1);
+      float width   = astate->viewport_size(0);
+      float height  = astate->viewport_size(1);
       float x_scale = 1.0f;
       float y_scale = 1.0f;
 
@@ -261,8 +261,8 @@ std::optional<vector2<float> > camera_t::project (const vector3<float> point) {
   tmpv[1] = (-tmpv[1] + 1.0f) / 2.0f;
   tmpv[2] = (tmpv[2] + 1.0f) / 2.0f;
 
-  tmpv[0] = tmpv[0] * astate->viewport_size_c[0];
-  tmpv[1] = (tmpv[1] * astate->viewport_size_c[1]) + 0.5f;
+  tmpv[0] = tmpv[0] * astate->viewport_size[0];
+  tmpv[1] = (tmpv[1] * astate->viewport_size[1]) + 0.5f;
 
   vector2<float> ret_v2;
   ret_v2[0] = tmpv[0];

@@ -100,8 +100,6 @@ namespace qpp {
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;
-        vector2<float> viewport_xy_c;
-        vector2<float> viewport_size_c;
 
         int64_t m_last_frame_time_cpu{0};
         int64_t m_last_frame_time_gpu{0};

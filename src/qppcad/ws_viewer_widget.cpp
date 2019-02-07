@@ -68,12 +68,12 @@ void ws_viewer_widget_t::initializeGL() {
 }
 
 void ws_viewer_widget_t::resizeGL(int w, int h) {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->viewport_size[0] = w;
   astate->viewport_size[1] = h;
-  astate->viewport_size_c[0] = w;
-  astate->viewport_size_c[1] = h;
   if (astate->camera) astate->camera->update_camera();
+
 }
 
 void ws_viewer_widget_t::paintGL() {
@@ -90,8 +90,8 @@ void ws_viewer_widget_t::paintGL() {
 
   glapi->glViewport(static_cast<int>(0),
                     static_cast<int>(0),
-                    static_cast<int>(astate->viewport_size_c(0)),
-                    static_cast<int>(astate->viewport_size_c(1)));
+                    static_cast<int>(astate->viewport_size(0)),
+                    static_cast<int>(astate->viewport_size(1)));
 
   QPainter painter(this);
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
