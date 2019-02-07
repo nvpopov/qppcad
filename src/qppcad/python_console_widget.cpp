@@ -1,6 +1,8 @@
 #include <qppcad/python_console_widget.hpp>
 #include <qppcad/app_state.hpp>
 
+#include <QAction>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -28,7 +30,10 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 
   connect(astate->astate_evd, &app_state_event_disp_t::python_console_focus_requested_signal,
           this, &python_text_editor_t::focus_signal_received);
-
+//  auto act = actions();
+//  for (auto &action : actions()) {
+//      std::cout << "PTEA " << action->text().toStdString() << std::endl;
+//    }
   m_c = new QCompleter(this);
   m_c->popup()->setFont(m_font);
   m_c->popup()->setMinimumHeight(40);
@@ -49,7 +54,6 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
   QObject::connect(m_c, SIGNAL(activated(QString)),
                    this, SLOT(insert_completion(QString)));
 
-
 }
 
 void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
@@ -59,7 +63,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
   bool is_completer_shortcut = false;
 
   if (m_c && m_c->popup()->isVisible()) {
-      // The following keys are forwarded by the completer to the widget
+
       switch (event->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -67,7 +71,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_Tab:
         case Qt::Key_Backtab:
           event->ignore();
-          return; // let the completer do default behavior
+          return;
         default:
           break;
         }
@@ -90,10 +94,10 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
       return;
     }
 
-  if (event->modifiers() == Qt::ControlModifier) {
-      event->accept();
-      return;
-    }
+//  if (event->modifiers() == Qt::ControlModifier) {
+//      event->accept();
+//      return;
+//    }
 
   if (event->key() == Qt::Key_Up) {
 
