@@ -21,6 +21,9 @@ namespace qpp {
         QLabel *tg_info_sym_gr;
         QLabel *tg_info_total_sym_op;
         qbinded_checkbox *tg_plane_alpha_enabled;
+        qbinded_float_spinbox *tg_plane_scale;
+        qbinded_float_spinbox *tg_axis_scale;
+        qbinded_float_spinbox *tg_axis_len_mod;
         QGroupBox *tg_general_appearance;
         QFormLayout *tg_general_appearance_lt;
 

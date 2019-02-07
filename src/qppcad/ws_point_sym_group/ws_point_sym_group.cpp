@@ -55,14 +55,14 @@ void ws_point_sym_group_t::recalc_render_data() {
       start += tr;
       end += tr;
 
-      float scale_val{0.055f};
+      float scale_val = m_axis_scale * 0.02f;
 
       if (elem.m_is_plane) {
 
           start += aliasing;
           matrix4<float> mat_model = matrix4<float>::Identity();
           vector3<float> plane_normal_ut = vector3<float>(0, 0, 1);
-          vector3<float> plane_rot_axis = plane_normal_ut.cross(elem.m_axis);
+          vector3<float> plane_rot_axis = plane_normal_ut.cross(elem.m_axis).normalized();
           float len_mod = elem.m_axis.norm() * plane_normal_ut.norm();
           float rot_angle = std::acos(plane_normal_ut.dot(elem.m_axis) / len_mod);
           Eigen::Affine3f t;
@@ -75,6 +75,9 @@ void ws_point_sym_group_t::recalc_render_data() {
         } else {
 
           matrix4<float> mat_model = matrix4<float>::Identity();
+          start *= m_axis_len_mod;
+          end *= m_axis_len_mod;
+
           mat_model.block<3,1>(0,3) = start;
           mat_model.block<3,1>(0,2) = end - start;
 
@@ -87,16 +90,18 @@ void ws_point_sym_group_t::recalc_render_data() {
           elem.m_render_mat = mat_model;
 
           //aux
-
           vector3<float> start_aux = elem.m_axis * 5 + tr;
           vector3<float> end_aux = elem.m_axis * 5.25 + tr;
+
+          start_aux *= m_axis_len_mod;
+          end_aux *= m_axis_len_mod;
 
           matrix4<float> mat_model_aux = matrix4<float>::Identity();
           mat_model_aux.block<3,1>(0,3) = start_aux;
           mat_model_aux.block<3,1>(0,2) = end_aux - start_aux;
 
           vector3<float> vec_axis_norm_aux = mat_model_aux.block<3,1>(0,2).normalized();
-          mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * 0.1f;
+          mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * scale_val * 1.4;
           mat_model_aux.block<3,1>(0,1) = vec_axis_norm_aux.cross(mat_model_aux.block<3,1>(0,0));
           mat_model_aux.block<3,1>(0,3) = start_aux;
 
@@ -242,7 +247,7 @@ float ws_point_sym_group_t::get_bb_prescaller() {
 }
 
 void ws_point_sym_group_t::updated_internally() {
-
+  recalc_render_data();
 }
 
 uint32_t ws_point_sym_group_t::get_amount_of_selected_content() {

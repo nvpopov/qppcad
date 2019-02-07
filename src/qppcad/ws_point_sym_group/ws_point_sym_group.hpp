@@ -32,8 +32,10 @@ namespace qpp {
         std::vector<transform_record_t> m_atf;
 
         float m_plane_alpha{0.64f};
-        bool m_plane_alpha_enabled{true};
+        bool m_plane_alpha_enabled{false};
         float m_plane_scale{6.0f};
+        float m_axis_scale{5.0f};
+        float m_axis_len_mod{1.0f};
 
         ws_point_sym_group_t();
 
