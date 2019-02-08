@@ -47,6 +47,8 @@ namespace qpp {
         static vector3<float> calc_dipole_moment();
 
         static void generate_molcas_embc_sp_input(std::string outdir);
+        static void generate_orca_embc_sp_input(std::string outdir,
+                                                bool merge_cls_and_chg = false);
 
     };
 
