@@ -1,4 +1,4 @@
-R"(  
+R"(
 #version 330
 uniform mat4 m_model_view;
 uniform mat4 m_model_view_proj;

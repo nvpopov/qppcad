@@ -17,6 +17,7 @@ namespace qpp {
         bool m_is_plane;
         matrix4<float> m_render_mat;
         matrix4<float> m_render_mat_aux;
+        float m_norm_mod{1};
     };
 
     class ws_point_sym_group_t : public ws_item_t {

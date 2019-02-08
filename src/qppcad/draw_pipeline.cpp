@@ -84,21 +84,18 @@ void draw_pipeline_t::render_atom (const vector3<float> &color,
 
   app_state_t* astate = app_state_t::get_inst();
 
-  // std::cout<<"render_atom"<<std::endl;
-
   astate->sp_default->set_u(sp_u_name::v_translate, (GLfloat*)(pos.data()));
   astate->sp_default->set_u(sp_u_name::f_scale, (GLfloat*)(&radius));
   astate->sp_default->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
 
   matrix4<float> mat_model_view_inv_tr =
       (astate->camera->m_mat_view*matrix4<float>::Identity()).inverse().transpose();
-  // our Model matrix equals unity matrix, so just pass matrix from app state
+
   astate->sp_default->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
   astate->sp_default->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
   astate->sp_default->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
 
   astate->mesh_spheres[0]->render_batch();
-  // astate->trm->render();
 
 }
 
@@ -267,7 +264,6 @@ void draw_pipeline_t::render_general_mesh (const vector3<float> &mesh_pos,
   Eigen::Transform<float, 3, Eigen::Affine>
       t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
 
-
   Eigen::AngleAxisf roll_angle (mesh_rotation[0], vector3<float>::UnitZ());
   Eigen::AngleAxisf yaw_angle  (mesh_rotation[1], vector3<float>::UnitY());
   Eigen::AngleAxisf pitch_angle(mesh_rotation[2], vector3<float>::UnitX());
@@ -293,7 +289,6 @@ void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
                                            shader_program_t *custom_sp) {
 
   app_state_t* astate = app_state_t::get_inst();
-  // glapi_t* glapi = astate->glapi;
 
   matrix4<float> mat_model_view      = astate->camera->m_mat_view * model_matrix;
   matrix4<float> mat_model_view_proj = astate->camera->m_proj_view * model_matrix;
@@ -311,7 +306,6 @@ void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
   if (custom_sp->unf_rec[sp_u_name::f_color_alpha].h_prog != -1) {
       custom_sp->set_u(sp_u_name::f_color_alpha, &alpha);
       astate->glapi->glEnable(GL_BLEND);
-      //astate->glapi->glCullFace(GL_FRONT_AND_BACK);
       astate->glapi->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
