@@ -134,6 +134,8 @@ add_executable(qppcad
     src/qppcad/ws_point_sym_group/ws_point_sym_group.cpp
     src/qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.cpp
 
+    src/qppcad/ws_traj_highlight/ws_traj_highlight.cpp
+
     src/qppcad/tools/supercell/supercell.cpp
     src/qppcad/tools/axial_scale/axial_scale.cpp
     src/qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.cpp

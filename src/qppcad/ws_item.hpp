@@ -53,6 +53,8 @@ namespace qpp {
         ws_item_tag m_tag{ws_item_tag::tag_abstract_item};
         workspace_t *m_parent_ws{};
         std::vector<std::shared_ptr<ws_item_t> > m_connected_items;
+        std::vector<std::shared_ptr<ws_item_t> > m_followers;
+        std::shared_ptr<ws_item_t> m_leader{nullptr};
 
         std::string      m_name;
         aabb_3d_t<float> m_aabb;
@@ -66,10 +68,8 @@ namespace qpp {
         bool m_selected{false}; ///
         bool m_marked_for_deletion{false};
 
-
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
                                            vector3<float> &out_look_at) = 0;
-
         /// \brief set_parent_workspace
         /// \param _parent_ws
         void set_parent_workspace(workspace_t *_parent_ws);
@@ -86,10 +86,17 @@ namespace qpp {
         /// \param _name
         void set_name(const char * _name);
 
+        //connected items means many-to-many
         void add_connected_item(std::shared_ptr<ws_item_t> new_item);
-        void remove_connected_item(std::shared_ptr<ws_item_t> item_to_remove);
-        std::optional<size_t> get_connected(std::shared_ptr<ws_item_t> item_to_find);
-        bool is_connected_to(std::shared_ptr<ws_item_t> item_to_find);
+        void rm_connected_item(std::shared_ptr<ws_item_t> item_to_remove);
+        std::optional<size_t> get_connected_idx(std::shared_ptr<ws_item_t> item_to_find);
+        bool is_connected(std::shared_ptr<ws_item_t> item_to_find);
+
+        //leader-followers means one-to-many
+        void add_follower(std::shared_ptr<ws_item_t> new_item);
+        std::optional<size_t> get_follower_idx(std::shared_ptr<ws_item_t> item_to_find);
+        bool is_follower(std::shared_ptr<ws_item_t> item_to_find);
+        void rm_follower(std::shared_ptr<ws_item_t> item_to_remove);
 
         bool is_selected();
 
@@ -117,6 +124,8 @@ namespace qpp {
         /// \brief compose_item_name
         /// \return
         virtual std::string compose_item_name() = 0;
+
+        virtual void on_leader_changed();
 
         /// \brief update
         /// \param delta_time

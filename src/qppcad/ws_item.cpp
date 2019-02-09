@@ -29,22 +29,47 @@ void ws_item_t::set_name(const char *_name){
 }
 
 void ws_item_t::add_connected_item(std::shared_ptr<ws_item_t> new_item) {
-  if (!is_connected_to(new_item)) m_connected_items.push_back(new_item);
+  if (!is_connected(new_item)) m_connected_items.push_back(new_item);
 }
 
-void ws_item_t::remove_connected_item(std::shared_ptr<ws_item_t> item_to_remove) {
-  std::optional<size_t> idx = get_connected(item_to_remove);
+void ws_item_t::rm_connected_item(std::shared_ptr<ws_item_t> item_to_remove) {
+  auto idx = get_connected_idx(item_to_remove);
   if (idx) m_connected_items.erase(m_connected_items.begin() + *idx);
 }
 
-std::optional<size_t> ws_item_t::get_connected(std::shared_ptr<ws_item_t> item_to_find) {
+std::optional<size_t> ws_item_t::get_connected_idx(std::shared_ptr<ws_item_t> item_to_find) {
   for (size_t i = 0; i < m_connected_items.size(); i++)
     if (m_connected_items[i].get() == item_to_find.get()) return std::optional<size_t>(i);
   return std::nullopt;
 }
 
-bool ws_item_t::is_connected_to(std::shared_ptr<ws_item_t> item_to_find) {
-  return (get_connected(item_to_find) != std::nullopt);
+bool ws_item_t::is_connected(std::shared_ptr<ws_item_t> item_to_find) {
+  return (get_connected_idx(item_to_find) != std::nullopt);
+}
+
+void ws_item_t::add_follower(std::shared_ptr<ws_item_t> new_item) {
+ if (!is_follower(new_item)) m_followers.push_back(new_item);
+ new_item->m_leader = shared_from_this();
+ new_item->on_leader_changed();
+}
+
+std::optional<size_t> ws_item_t::get_follower_idx(std::shared_ptr<ws_item_t> item_to_find) {
+  for (size_t i = 0; i < m_followers.size(); i++)
+    if (m_followers[i].get() == item_to_find.get()) return std::optional<size_t>(i);
+  return std::nullopt;
+}
+
+bool ws_item_t::is_follower(std::shared_ptr<ws_item_t> item_to_find) {
+  return (get_follower_idx(item_to_find) != std::nullopt);
+}
+
+void ws_item_t::rm_follower(std::shared_ptr<ws_item_t> item_to_remove) {
+  auto idx = get_follower_idx(item_to_remove);
+  if (idx) {
+      m_followers.erase(m_followers.begin() + *idx);
+      item_to_remove->m_leader = nullptr;
+      item_to_remove->on_leader_changed();
+    }
 }
 
 bool ws_item_t::is_selected() {
@@ -88,6 +113,10 @@ void ws_item_t::set_default_flags(uint32_t flags){
 
 uint32_t ws_item_t::get_flags() const {
   return p_flags;
+}
+
+void ws_item_t::on_leader_changed() {
+
 }
 
 
