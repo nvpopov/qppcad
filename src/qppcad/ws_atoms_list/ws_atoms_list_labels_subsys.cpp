@@ -11,6 +11,8 @@ ws_atoms_list_labels_subsys_t::ws_atoms_list_labels_subsys_t(ws_atoms_list_t &_p
 
 void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
 
+  if (m_render_inplace_hud && p_owner->m_selected) render_in_place_overlay(painter);
+
   if (m_style == ws_atoms_list_labels_style::show_none) return;
 
   app_state_t* astate = app_state_t::get_inst();
@@ -79,4 +81,47 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
         }
 
     }
+}
+
+void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  painter.resetTransform();
+
+  int w = painter.device()->width();
+  int h = painter.device()->height();
+
+  int sh = 50;
+  int max_types = 10;
+  int ntypes = std::min(p_owner->m_geom->n_atom_types(), max_types);
+  int w_h = 60;
+  int padding_h = 30;
+  int sph_padding = 5;
+  int w_w = sh * ntypes + sph_padding * (ntypes+1);
+
+  QRect lrect(w/2 - w_w/2, h - w_h - padding_h, w_w, w_h);
+  QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
+  QPainterPath path;
+  path.addRoundedRect(lrect,10, 10);
+  painter.fillPath(path, Qt::white);
+  painter.setPen(rectpen);
+  painter.drawPath(path);
+  painter.setFont(QFont(astate->m_font_name, 20));
+
+  for (int i = 0; i < ntypes; i++) {
+     QRect sph(w/2 - w_w/2 + sh*i + sph_padding*(i+1), h - w_h - padding_h + sph_padding, sh, sh);
+
+     auto ap_idx = ptable::number_by_symbol(p_owner->m_geom->atom_of_type(i));
+     QColor fill_color = QColor::fromRgbF(0, 0, 1);
+     if (ap_idx) {
+         vector3<float> color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
+         fill_color.setRgbF(color[0], color[1], color[2]);
+       }
+     painter.setBrush(fill_color);
+     painter.drawEllipse(sph);
+     painter.drawText(sph, Qt::AlignCenter,
+                      QString::fromStdString(p_owner->m_geom->atom_of_type(i)));
+    }
+
 }

@@ -30,11 +30,11 @@ namespace qpp {
       public:
 
         ws_atoms_list_labels_style m_style{ws_atoms_list_labels_style::show_none};
-
+        bool m_render_inplace_hud{true};
         ws_atoms_list_labels_subsys_t (ws_atoms_list_t &_p_owner);
 
-
         void render_overlay (QPainter &painter);
+        void render_in_place_overlay(QPainter &painter);
 
     };
 

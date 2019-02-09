@@ -131,7 +131,6 @@ namespace qpp {
                 continue;
               }
 
-
             l_s = astate->camera->project(
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
 
