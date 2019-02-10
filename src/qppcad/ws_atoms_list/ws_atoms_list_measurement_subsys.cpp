@@ -142,10 +142,9 @@ namespace qpp {
             float dist = (p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
                           p_owner->m_geom->pos(record.m_at2,record.m_idx2)).norm();
 
-           // astate->log(fmt::format("{} {}", *l_s, *l_e));
-
             vector2<float> mid = (*l_s + *l_e) * 0.5f;
-            const float rect_size = 100;
+            const float rect_w = 70;
+            const float rect_h = 30;
 
             QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
                 round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);
@@ -155,20 +154,19 @@ namespace qpp {
             double angle = 180 * std::atan2(linef.y2()-linef.y1(), linef.x2()-linef.x1()) / qpp::pi;
 
             angle = angle + std::ceil( -angle / 360 ) * 360;
-            //std::cout << angle << std::endl;
-            if (angle > 90 && angle < 270) angle = angle+180;
+            if (angle > 90 && angle < 270) angle = angle + 180;
 
             painter.translate(mid[0], mid[1]);
             painter.rotate(angle);
             QPainterPath path;
-            path.addRoundedRect(QRectF(-rect_size*0.5f, 35*0.5f + 10, 100, 35),
-                                10, 10);
+            QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+            path.addRoundedRect(text_rect, 10, 10);
             painter.fillPath(path, Qt::white);
             painter.setPen(rectpen);
             painter.drawPath(path);
-            painter.drawText(-rect_size*0.5f, -rect_size*0.15f + 10,
-                             rect_size, rect_size,
-                             Qt::AlignCenter, QString::fromStdString(fmt::format("{}", dist)) );
+            painter.drawText(text_rect,
+                             Qt::AlignCenter,
+                             QString("%1 Å").arg(QString::number(dist, 'f', 2)));
             painter.resetTransform();
           }
 
