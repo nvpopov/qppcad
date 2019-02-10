@@ -47,7 +47,7 @@ namespace qpp {
         static vector3<float> gizmo_pos();
         static std::tuple<std::string, vector3<float> > get_point_sym_group(float tolerance);
         static void make_ws_point_sym_group(float tolerance);
-        static void make_traj_highlight();
+        static void make_traj_highlight(size_t atom_id, size_t anim_id);
 
         static void edit_mode(int mode);
         static void rebond();

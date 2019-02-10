@@ -27,7 +27,7 @@ void ws_traj_highlight_t::render() {
   if (m_is_visible && !m_need_to_rebuild && m_leader) {
       astate->dp->begin_render_line_mesh();
       astate->sp_line_mesh->set_u(sp_u_name::v_translate, (GLfloat*)m_leader->m_pos.data());
-      astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)clr_red.data());
+      astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)m_traj_color.data());
       m_line_mesh->render();
       astate->dp->end_render_line_mesh();
     }
@@ -79,8 +79,12 @@ void ws_traj_highlight_t::rebuild_line_mesh() {
   if (!b_al) return;
   if (b_al->m_anim->get_total_anims() < 1) return;
 
-  int anm_idx = 1;
-  int atm_idx = 0;
+  int anm_idx = m_anim_id;
+  int atm_idx = m_atm_id;
+
+  m_line_mesh->vertecies.clear();
+  m_line_mesh->normals.clear();
+  m_line_mesh->indices.clear();
 
   for (int frame_id = 0; frame_id < b_al->m_anim->m_anim_data[anm_idx].frames.size(); frame_id++) {
       if (b_al->m_anim->m_anim_data[anm_idx].frames[frame_id].atom_pos.size() < atm_idx) return;

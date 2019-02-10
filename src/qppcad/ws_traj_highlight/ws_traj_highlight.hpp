@@ -19,6 +19,9 @@ namespace qpp {
         ws_atoms_list_t *b_al;
         std::unique_ptr<mesh_t> m_line_mesh;
         bool m_need_to_rebuild{true};
+        size_t m_anim_id{1};
+        size_t m_atm_id{0};
+        vector3<float> m_traj_color{1, 0, 0};
         ws_traj_highlight_t();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,

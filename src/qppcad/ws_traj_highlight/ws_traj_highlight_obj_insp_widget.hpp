@@ -12,7 +12,12 @@ namespace qpp {
         Q_OBJECT
 
       public:
-      
+        QGroupBox *gb_traj_settings;
+        QFormLayout *gb_traj_settings_lt;
+        ws_traj_highlight_t *b_th{nullptr};
+
+        qbinded_color3_input *disp_traj_color;
+
         ws_traj_highlight_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;

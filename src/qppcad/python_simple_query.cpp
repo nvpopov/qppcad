@@ -519,7 +519,7 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
 
 }
 
-void simple_query::make_traj_highlight() {
+void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -535,7 +535,14 @@ void simple_query::make_traj_highlight() {
       astate->ws_manager->m_bhv_mgr->fabric_by_type(ws_traj_highlight_t::get_type_static());
 
   if (!traj_hl) return;
+
   traj_hl->m_name = fmt::format("traj_highlighter_{}", cur_ws->m_ws_items.size());
+
+  auto traj_hl_casted = traj_hl->cast_as<ws_traj_highlight_t>();
+  if (!traj_hl_casted) return;
+
+  traj_hl_casted->m_anim_id = anim_id;
+  traj_hl_casted->m_atm_id = atom_id;
 
   al->add_follower(traj_hl);
   cur_ws->add_item_to_ws(traj_hl);
