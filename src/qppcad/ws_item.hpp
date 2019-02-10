@@ -125,7 +125,11 @@ namespace qpp {
         /// \return
         virtual std::string compose_item_name() = 0;
 
+        //when a leader changed
         virtual void on_leader_changed();
+        //when a leader telling about his updates
+        virtual void on_leader_call();
+        void call_followers();
 
         /// \brief update
         /// \param delta_time

@@ -568,6 +568,26 @@ void draw_pipeline_t::end_render_line_styled () {
 
 }
 
+void draw_pipeline_t::begin_render_line_mesh() {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->sp_line_mesh->begin_shader_program();
+  astate->sp_line_mesh->set_u(sp_u_name::m_model_view_proj,
+                                   astate->camera->m_proj_view.data());
+}
+
+void draw_pipeline_t::render_line_mesh(const vector3<float> &pos,
+                                       const vector3<float> &color) {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->sp_line_mesh->set_u(sp_u_name::v_translate, (GLfloat*)pos.data());
+  astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)color.data());
+  astate->mesh_xline_mesh->render_batch();
+}
+
+void draw_pipeline_t::end_render_line_mesh() {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->sp_line_mesh->end_shader_program();
+}
+
 void draw_pipeline_t::render_screen_quad () {
 
   app_state_t* astate = app_state_t::get_inst();

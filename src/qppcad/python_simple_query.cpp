@@ -3,6 +3,7 @@
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
+#include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
 #include <data/ptable.hpp>
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>
@@ -515,6 +516,31 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
     }
 
   astate->astate_evd->cur_ws_changed();
+
+}
+
+void simple_query::make_traj_highlight() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (!astate->ws_manager->has_wss()) return;
+
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  if (!al) return;
+
+  auto traj_hl =
+      astate->ws_manager->m_bhv_mgr->fabric_by_type(ws_traj_highlight_t::get_type_static());
+
+  if (!traj_hl) return;
+  traj_hl->m_name = fmt::format("traj_highlighter_{}", cur_ws->m_ws_items.size());
+
+  al->add_follower(traj_hl);
+  cur_ws->add_item_to_ws(traj_hl);
+
+  astate->make_viewport_dirty();
 
 }
 

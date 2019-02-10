@@ -25,7 +25,7 @@ namespace qpp {
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_lock_img);
 
       size_t nat = p_owner->m_geom->nat();
-      for (auto i = 0; i < p_owner->m_geom->nat(); i++){
+      for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
 
           if (m_anim_data[anim_id].frames[start_frame_n].atom_pos.size() != nat) {
               m_force_non_animable = true;
@@ -57,12 +57,14 @@ namespace qpp {
                 }
             }
 
-          app_state_t* astate = app_state_t::get_inst();
-          astate->make_viewport_dirty();
-
-          if (p_owner->is_selected())
-            astate->astate_evd->cur_ws_selected_item_frame_changed();
         }
+
+      app_state_t* astate = app_state_t::get_inst();
+      p_owner->call_followers();
+      astate->make_viewport_dirty();
+
+      if (p_owner->is_selected())
+        astate->astate_evd->cur_ws_selected_item_frame_changed();
 
       if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_unlock);
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_unlock_img);
@@ -102,31 +104,28 @@ namespace qpp {
       if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
       if (m_anim_data[m_cur_anim].frames.empty()) return;
 
-      //if (m_anim[m_cur_anim].frame_data[0].si)
-      if (m_play_anim && animable()) {
+      if (!(m_play_anim && animable())) return;
 
-          //astate->log("ANIM");
+      //astate->log("ANIM");
 
-          m_cur_anim_time += 1 / (m_anim_frame_time * 60);
-          if (m_cur_anim_time > m_anim_data[m_cur_anim].frames.size() - 1) {
-              if (m_play_cyclic) m_cur_anim_time = 0.0f;
-              else {
-                  m_play_anim = false;
-                  m_cur_anim_time = m_anim_data[m_cur_anim].frames.size() - 1;
-                }
-            } else {
-              update_geom_to_anim(m_cur_anim, m_cur_anim_time);
-            }
-
-          //if current anim type equals static -> update to static and switch m_cur_anim_time = 0
-          if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_t::anim_static){
-              m_cur_anim_time = 0.0f;
+      m_cur_anim_time += 1 / (m_anim_frame_time * 60);
+      if (m_cur_anim_time > m_anim_data[m_cur_anim].frames.size() - 1) {
+          if (m_play_cyclic) m_cur_anim_time = 0.0f;
+          else {
               m_play_anim = false;
-              //m_play_cyclic = false;
+              m_cur_anim_time = m_anim_data[m_cur_anim].frames.size() - 1;
             }
-          //astate->make_viewport_dirty();
+        } else {
+          update_geom_to_anim(m_cur_anim, m_cur_anim_time);
         }
 
+      //if current anim type equals static -> update to static and switch m_cur_anim_time = 0
+      if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_t::anim_static) {
+          m_cur_anim_time = 0.0f;
+          m_play_anim = false;
+          //m_play_cyclic = false;
+        }
+      //astate->make_viewport_dirty();
     }
 
     bool ws_atoms_list_anim_subsys_t::animable() const {

@@ -119,6 +119,14 @@ void ws_item_t::on_leader_changed() {
 
 }
 
+void ws_item_t::on_leader_call() {
+
+}
+
+void ws_item_t::call_followers() {
+  for (auto follower : m_followers) follower->on_leader_call();
+}
+
 
 void ws_item_t::update (float delta_time) {
 

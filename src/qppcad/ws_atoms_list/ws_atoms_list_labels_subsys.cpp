@@ -96,7 +96,7 @@ void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
   int max_types = 10;
   int ntypes = std::min(p_owner->m_geom->n_atom_types(), max_types);
   int w_h = 60;
-  int padding_h = 30;
+  int padding_h = 10;
   int sph_padding = 5;
   int w_w = sh * ntypes + sph_padding * (ntypes+1);
 

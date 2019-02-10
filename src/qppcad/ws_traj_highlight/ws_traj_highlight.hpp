@@ -3,16 +3,22 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item.hpp>
+#include <qppcad/mesh.hpp>
 
 namespace qpp {
 
   namespace cad {
+
+    class ws_atoms_list_t;
 
     class ws_traj_highlight_t : public ws_item_t {
 
         QPP_OBJECT(ws_traj_highlight_t, ws_item_t)
 
       public:
+        ws_atoms_list_t *b_al;
+        std::unique_ptr<mesh_t> m_line_mesh;
+        bool m_need_to_rebuild{true};
         ws_traj_highlight_t();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -26,6 +32,11 @@ namespace qpp {
         void updated_internally() override;
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;
+
+        void on_leader_changed() override;
+        void on_leader_call() override;
+
+        void rebuild_line_mesh();
 
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;

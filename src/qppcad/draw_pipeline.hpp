@@ -205,7 +205,10 @@ namespace qpp {
                                  const vector3<float> &line_end);
         void end_render_line_styled();
 
-
+        void begin_render_line_mesh ();
+        void render_line_mesh (const vector3<float> &pos,
+                               const vector3<float> &color);
+        void end_render_line_mesh();
 
         void render_screen_quad();
     };
