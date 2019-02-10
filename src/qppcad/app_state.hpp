@@ -97,6 +97,7 @@ namespace qpp {
         // //       std::map<std::string, color_map_t> m_color_maps;
         QString m_last_dir;
         QString m_font_name;
+        QString m_screen_shots_dir{"."};
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;

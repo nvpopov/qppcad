@@ -57,6 +57,7 @@ namespace qpp {
         QPushButton *tp_rm_ws;
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
+        QPushButton *tp_print_screen;
 
         QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;
@@ -206,6 +207,8 @@ namespace qpp {
         void action_bhv_import_as_new_workspace();
         void action_bhv_export_selected();
         void control_bhv_menus_activity();
+
+        void make_screenshot();
 
     };
   }

@@ -2,6 +2,7 @@
 #include <qppcad/app_state.hpp>
 #include <qppcad/app_settings_widget.hpp>
 #include <qppcad/ws_item_behaviour_manager.hpp>
+#include <QDateTime>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -281,6 +282,14 @@ void main_window::init_widgets() {
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
 
+  tp_print_screen = new QPushButton(tr("SCRN"));
+  tp_print_screen->setProperty("s_class", "tp_cb");
+  tp_print_screen->setMinimumHeight(tp_button_height);
+  tp_print_screen->setMaximumWidth(48);
+  connect(tp_print_screen, &QPushButton::pressed,
+          this, &main_window::make_screenshot);
+
+
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
   QObject::connect(tp_edit_mode, SIGNAL(buttonClicked(int)),
@@ -424,6 +433,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_print_screen, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_camera_x, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_camera_y, 0, Qt::AlignLeft);
@@ -1374,6 +1384,19 @@ void main_window::control_bhv_menus_activity() {
             }
         }
     }
+
+}
+
+void main_window::make_screenshot() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  if (!astate->ws_manager) return;
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  QDateTime date = QDateTime::currentDateTime();
+  QString date_s = date.toString("dd_MM_yyyy_hh_mm_ss");
+  ws_viewer_widget->grabFramebuffer().save(tr("%1_screenshot.png").arg(date_s));
 
 }
 
