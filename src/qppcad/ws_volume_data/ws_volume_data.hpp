@@ -28,6 +28,7 @@ namespace qpp {
 
         bool m_ready_to_render{false};
         bool m_need_to_regenerate{false};
+        bool m_transparent_volume{false};
         float m_alpha{0.75f};
         float m_isolevel{qpp::def_isovalue_dens};
 

@@ -30,8 +30,8 @@ void ws_volume_data_t::render() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_ready_to_render && m_is_visible) {
-
-      astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
+      shader_program_t *custom_sp = m_transparent_volume ? astate->sp_mvap_ssl : nullptr;
+      astate->dp->begin_render_general_mesh(custom_sp);
       vector3<float> scale{1,1,1};
       vector3<float> rot{0};
       vector3<float> color{0.5f};
@@ -39,17 +39,17 @@ void ws_volume_data_t::render() {
       //astate->glapi->glDisable(GL_CULL_FACE);
       if (m_volume_type == ws_volume_t::volume_mo) {
           astate->dp->render_general_mesh(m_pos, scale, rot, m_color_pos,
-                                          m_first_mesh, m_alpha, astate->sp_mvap_ssl);
-          astate->dp->render_general_mesh(m_pos, scale, rot, m_color_neg, m_second_mesh,
-                                          m_alpha, astate->sp_mvap_ssl);
+                                          m_first_mesh, m_alpha, custom_sp);
+          astate->dp->render_general_mesh(m_pos, scale, rot, m_color_neg,
+                                          m_second_mesh, m_alpha, custom_sp);
         }
 
       if (m_volume_type == ws_volume_t::volume_density) {
-          astate->dp->render_general_mesh(m_pos, scale, rot, m_color_vol, m_first_mesh,
-                                          m_alpha, astate->sp_mvap_ssl);
+          astate->dp->render_general_mesh(m_pos, scale, rot, m_color_vol,
+                                          m_first_mesh, m_alpha, custom_sp);
         }
       //astate->glapi->glEnable(GL_CULL_FACE);
-      astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
+      astate->dp->end_render_general_mesh(custom_sp);
     }
 
 

@@ -167,7 +167,8 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
 
 }
 
-void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh, scalar_volume_t<float> &volume,
+void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh,
+                                               scalar_volume_t<float> &volume,
                                                float isolevel,
                                                int steps) {
 
@@ -190,7 +191,6 @@ void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh, scalar_volume_t<flo
   vector3<float> n0;
   vector3<float> n1;
   vector3<float> n2;
-
 
   vector3<float> n_ot;
 
@@ -242,7 +242,6 @@ void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh, scalar_volume_t<flo
           if (gv[5] < isolevel) cubeindex |= 32;
           if (gv[6] < isolevel) cubeindex |= 64;
           if (gv[7] < isolevel) cubeindex |= 128;
-
 
           if (mc_edge_table[cubeindex] == 0) continue;
 
@@ -335,6 +334,10 @@ void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh, scalar_volume_t<flo
                 }
 
               ntriang++;
+
+              p0 += volume.m_offset;
+              p1 += volume.m_offset;
+              p2 += volume.m_offset;
 
               //emit vertecies
               mesh.vertecies.push_back(p0[0]);
