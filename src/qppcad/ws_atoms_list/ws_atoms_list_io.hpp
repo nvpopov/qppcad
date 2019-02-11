@@ -229,7 +229,7 @@ namespace qpp {
     class ws_atoms_list_io_cube_t : public ws_item_io_bt_bhv_t {
 
       public:
-
+        bool m_cell_emplace{false};
         bool can_save() override { return false; }
         bool can_load() override { return true; }
 

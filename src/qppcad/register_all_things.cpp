@@ -67,6 +67,9 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   size_t generic_cube_ff_hash =
       bhv_mgr->reg_ff("CUBE file", "cube", generic_ff_g_hash, {".cube", ".CUBE"} );
 
+  size_t generic_cube3d_ff_hash =
+      bhv_mgr->reg_ff("CUBE file(3d)", "cube3d", generic_ff_g_hash, {".cube", ".CUBE"} );
+
   auto xyz_ff_mgr =
       std::make_shared<
       ws_atoms_list_io_ccd_t<
@@ -132,6 +135,11 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       std::make_shared<ws_atoms_list_io_cube_t
       >();
 
+  auto generic_cube3d_mgf =
+      std::make_shared<ws_atoms_list_io_cube_t
+      >();
+
+  generic_cube3d_mgf->m_cell_emplace = true;
 
   bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
   bhv_mgr->reg_io_bhv(xyz_s_ff_mgr, xyz_ff_hash, ws_atoms_list_t::get_type_static());
@@ -144,6 +152,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   bhv_mgr->reg_io_bhv(vasp_poscar_s_mgf, poscar_ff_hash, ws_atoms_list_t::get_type_static());
   bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash, ws_atoms_list_t::get_type_static());
   bhv_mgr->reg_io_bhv(generic_cube_mgf, generic_cube_ff_hash, ws_atoms_list_t::get_type_static());
+  bhv_mgr->reg_io_bhv(generic_cube3d_mgf, generic_cube3d_ff_hash, ws_atoms_list_t::get_type_static());
 
 }
 
