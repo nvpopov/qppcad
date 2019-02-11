@@ -13,9 +13,14 @@ ws_volume_data_obj_insp_widget_t::ws_volume_data_obj_insp_widget_t() {
   vol_color_pos = new qbinded_color3_input;
   vol_color_neg = new qbinded_color3_input;
   vol_color_vol = new qbinded_color3_input;
+  vol_transparent = new qbinded_checkbox;
+  vol_alpha = new qbinded_float_spinbox;
+  vol_alpha->set_min_max_step(0.1, 1.0, 0.05, 2);
 
   tg_form_layout->addRow(tr("Type"), general_volume_type);
   tg_form_layout->addRow(tr("Isolevel"), vol_isovalue);
+  tg_form_layout->addRow(tr("Transparent"), vol_transparent);
+  tg_form_layout->addRow(tr("Alpha"), vol_alpha);
   tg_form_layout->addRow(tr("Color positive"), vol_color_pos);
   tg_form_layout->addRow(tr("Color negative"), vol_color_neg);
   tg_form_layout->addRow(tr("Color density"), vol_color_vol);
@@ -32,6 +37,8 @@ void ws_volume_data_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       vol_color_pos->bind_value(&b_vol->m_color_pos);
       vol_color_neg->bind_value(&b_vol->m_color_neg);
       vol_color_vol->bind_value(&b_vol->m_color_vol);
+      vol_alpha->bind_value(&b_vol->m_alpha);
+      vol_transparent->bind_value(&b_vol->m_transparent_volume);
     }
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
@@ -45,7 +52,6 @@ void ws_volume_data_obj_insp_widget_t::update_from_ws_item() {
   if (b_vol) {
       if (b_vol->m_volume.m_has_negative_values) general_volume_type->setText(tr("MO"));
       else general_volume_type->setText(tr("DENSITY"));
-
     }
 }
 
@@ -55,5 +61,6 @@ void ws_volume_data_obj_insp_widget_t::unbind_item() {
   vol_color_pos->unbind_value();
   vol_color_neg->unbind_value();
   vol_color_vol->unbind_value();
-
+  vol_alpha->unbind_value();
+  vol_transparent->unbind_value();
 }

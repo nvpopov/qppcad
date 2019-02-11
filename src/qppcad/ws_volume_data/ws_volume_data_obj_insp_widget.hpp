@@ -19,6 +19,9 @@ namespace qpp {
         QLabel *general_volume_type;
         qbinded_float_spinbox *vol_isovalue;
 
+        qbinded_checkbox *vol_transparent;
+        qbinded_float_spinbox *vol_alpha;
+
         qbinded_color3_input *vol_color_pos;
         qbinded_color3_input *vol_color_neg;
         qbinded_color3_input *vol_color_vol;
