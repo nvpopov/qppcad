@@ -48,9 +48,9 @@ bool ws_item_t::is_connected(std::shared_ptr<ws_item_t> item_to_find) {
 }
 
 void ws_item_t::add_follower(std::shared_ptr<ws_item_t> new_item) {
- if (!is_follower(new_item)) m_followers.push_back(new_item);
- new_item->m_leader = shared_from_this();
- new_item->on_leader_changed();
+  if (!is_follower(new_item)) m_followers.push_back(new_item);
+  new_item->m_leader = shared_from_this();
+  new_item->on_leader_changed();
 }
 
 std::optional<size_t> ws_item_t::get_follower_idx(std::shared_ptr<ws_item_t> item_to_find) {
@@ -88,16 +88,13 @@ void ws_item_t::render () {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_selected && (get_flags() & ws_item_flags_support_selection) &&
-      (get_flags() & ws_item_flags_support_rendering_bb) && is_bb_visible()) {
+      (get_flags() & ws_item_flags_support_rendering_bb) && is_bb_visible() && m_show_bb) {
       astate->dp->begin_render_aabb();
-      if (m_parent_ws->m_edit_type == ws_edit_t::edit_item)
-        astate->dp->render_aabb(clr_fuchsia,
-                                     m_pos + m_aabb.min,
-                                     m_pos + m_aabb.max  );
-      else
-        astate->dp->render_aabb_segmented(clr_olive,
-                                               m_pos + m_aabb.min,
-                                               m_pos + m_aabb.max);
+
+      (m_parent_ws->m_edit_type == ws_edit_t::edit_item) ?
+            astate->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min, m_pos + m_aabb.max  )
+          : astate->dp->render_aabb_segmented(clr_olive, m_pos + m_aabb.min, m_pos + m_aabb.max);
+
       astate->dp->end_render_aabb();
     }
 }
@@ -150,13 +147,13 @@ const vector3<float> ws_item_t::get_gizmo_content_barycenter() {
 
 void ws_item_t::on_begin_node_gizmo_translate(){
   m_pos_old = m_pos;
-//  c_app::log(fmt::format("Start of translation of node [{}], pos = {}",
-//                         m_name, m_pos.to_string_vec()));
+  //  c_app::log(fmt::format("Start of translation of node [{}], pos = {}",
+  //                         m_name, m_pos.to_string_vec()));
 }
 
 void ws_item_t::on_end_node_gizmo_translate(){
-//  c_app::log(fmt::format("End of translation of node [{}], pos = {}",
-//                         m_name, m_pos.to_string_vec()));
+  //  c_app::log(fmt::format("End of translation of node [{}], pos = {}",
+  //                         m_name, m_pos.to_string_vec()));
 }
 
 void ws_item_t::on_begin_content_gizmo_translate() {

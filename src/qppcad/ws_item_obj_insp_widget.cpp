@@ -53,6 +53,15 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
           ws_item_pos_label->hide();
         }
 
+      if (m_binded_item->get_flags() & ws_item_flags_support_rendering_bb) {
+          ws_item_bb_visible->bind_value(&m_binded_item->m_show_bb);
+          ws_item_bb_visible->show();
+          ws_item_bb_visible_label->show();
+        } else {
+          ws_item_bb_visible->hide();
+          ws_item_bb_visible_label->hide();
+        }
+
     }
 
   update_from_ws_item();
@@ -67,14 +76,18 @@ void ws_item_obj_insp_widget_t::unbind_item() {
   m_binded_item = nullptr;
   ws_item_is_visible->unbind_value();
   ws_item_pos->unbind_value();
+  ws_item_bb_visible->unbind_value();
+
 }
 
 void ws_item_obj_insp_widget_t::update_from_ws_item() {
+
   if (m_binded_item) {
       ws_item_name->setText(QString::fromStdString(m_binded_item->get_name()));
       ws_item_type->setText(QString::fromStdString(m_binded_item->compose_item_name()));
       ws_item_is_visible->bind_value(&m_binded_item->m_is_visible);
     }
+
 }
 
 void ws_item_obj_insp_widget_t::pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
@@ -104,6 +117,9 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   ws_item_is_visible_label = new QLabel(tr("Is visible :"));
   ws_item_is_visible = new qbinded_checkbox;
 
+  ws_item_bb_visible_label = new QLabel(tr("Show bbox :"));
+  ws_item_bb_visible = new qbinded_checkbox;
+
   ws_item_pos_label = new QLabel(tr("Position :"));
   ws_item_pos = new qbinded_float3_input;
   ws_item_pos->sb_x->setSuffix("Å");
@@ -114,6 +130,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_form_layout->addRow(tr("Name :"), ws_item_name);
   tg_form_layout->addRow(tr("Type :"), ws_item_type);
   tg_form_layout->addRow(ws_item_is_visible_label, ws_item_is_visible);
+  tg_form_layout->addRow(ws_item_bb_visible_label, ws_item_bb_visible);
   tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 
   post_init_group_box(tg_info_widget, tg_form_layout);
