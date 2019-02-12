@@ -55,6 +55,8 @@ void ws_point_sym_group_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item
       tg_plane_scale->bind_value(&b_pg->m_plane_scale, b_pg);
       tg_axis_scale->bind_value(&b_pg->m_axis_scale, b_pg);
       tg_axis_len_mod->bind_value(&b_pg->m_axis_len_mod, b_pg);
+    } else {
+      b_pg = nullptr;
     }
 }
 

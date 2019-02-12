@@ -677,7 +677,8 @@ void simple_query::make_cube_p(std::string name,
 
   auto new_cube = std::make_shared<ws_cube_primitive_t>();
   new_cube->m_name = name;
-
+  new_cube->m_pos = pos;
+  new_cube->m_scale = {size_a, size_b, size_c};
   cur_ws->add_item_to_ws(new_cube);
 
 }

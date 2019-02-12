@@ -5,16 +5,29 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_cube_primitive_t::ws_cube_primitive_t() {
-  set_default_flags(ws_item_flags_default);
+  set_default_flags(ws_item_flags_default | ws_item_flags_support_rendering |
+                    ws_item_flags_support_moveto | ws_item_flags_support_translation);
 }
 
 void ws_cube_primitive_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                          vector3<float> &out_look_at) {
+                                                vector3<float> &out_look_at) {
   //do nothing
 }
 
 void ws_cube_primitive_t::render() {
- //do nothing
+
+  if (!m_is_visible) return;
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (m_render_mode == ws_cube_rendering_mode::ws_cube_rendering_mode_solid) {
+      astate->dp->begin_render_general_mesh();
+      astate->dp->render_cube(m_pos, m_scale, m_color);
+      astate->dp->end_render_general_mesh();
+    } else {
+
+    }
+
 }
 
 bool ws_cube_primitive_t::mouse_click(ray_t<float> *click_ray) {
