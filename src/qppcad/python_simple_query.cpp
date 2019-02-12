@@ -4,6 +4,7 @@
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
 #include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
+#include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
 #include <data/ptable.hpp>
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>
@@ -639,7 +640,8 @@ void simple_query::add_atoms_list_0d(std::string name) {
 
 }
 
-void simple_query::add_atoms_list_3d(std::string name, vector3<float> a,
+void simple_query::add_atoms_list_3d(std::string name,
+                                     vector3<float> a,
                                      vector3<float> b,
                                      vector3<float> c) {
   app_state_t *astate = app_state_t::get_inst();
@@ -657,6 +659,26 @@ void simple_query::add_atoms_list_3d(std::string name, vector3<float> a,
   new_al->m_geom->cell.v[1] = b;
   new_al->m_geom->cell.v[2] = c;
   cur_ws->add_item_to_ws(new_al);
+
+}
+
+void simple_query::make_cube_p(std::string name,
+                              vector3<float> pos,
+                              float size_a,
+                              float size_b,
+                              float size_c) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (!astate->ws_manager->has_wss()) return;
+
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  auto new_cube = std::make_shared<ws_cube_primitive_t>();
+  new_cube->m_name = name;
+
+  cur_ws->add_item_to_ws(new_cube);
 
 }
 

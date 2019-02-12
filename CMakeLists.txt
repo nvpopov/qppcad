@@ -107,6 +107,10 @@ add_executable(qppcad
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
 
+    src/qppcad/ws_cube_primitive/ws_cube_primitive.cpp
+    src/qppcad/ws_cube_primitive/ws_cube_primitive_obj_insp_widget.cpp
+
+
     src/qppcad/ws_comp_chem_data/ws_comp_chem_data.cpp
     src/qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.cpp
 

@@ -69,6 +69,7 @@ namespace qpp {
         bool m_menu_occupier{true};
         bool m_can_be_imported_as_new_ws{true};
         bool m_can_be_imported_to_ws{true};
+        bool m_support_multi_files{false};
 
         virtual bool can_save() = 0;
         virtual bool can_load() = 0;
@@ -183,6 +184,7 @@ namespace qpp {
         std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                           workspace_t *ws);
 
+        //std::shared_ptr<ws_item_t> loadws_itm_from_files
         void save_ws_itm_to_file(std::string &file_name,
                                   std::shared_ptr<ws_item_t> ws_item,
                                   size_t bhv_id);

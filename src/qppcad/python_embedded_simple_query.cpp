@@ -49,6 +49,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
             py::arg("tolerance") = 0.1f);
   tools.def("make_traj_highlighter", &simple_query::make_traj_highlight,  py::arg("atom_id"),
             py::arg("anim_id") = 1);
+  tools.def("make_cube", &simple_query::make_cube_p);
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 
