@@ -13,9 +13,7 @@ ws_cube_primitive_obj_insp_widget_t::ws_cube_primitive_obj_insp_widget_t() {
   cube_param_color = new qbinded_color3_input;
   cube_param_scale = new qbinded_float3_input;
   cube_param_scale->set_min_max_step(0.05f, 20.0f, 0.05f);
-  cube_param_scale->sb_x->setSuffix("Å");
-  cube_param_scale->sb_y->setSuffix("Å");
-  cube_param_scale->sb_z->setSuffix("Å");
+  cube_param_scale->set_default_suffix();
   tg_cube_params_lt->addRow(tr("Color"), cube_param_color);
   tg_cube_params_lt->addRow(tr("Size"), cube_param_scale);
   post_init_group_box(tg_cube_params, tg_cube_params_lt);

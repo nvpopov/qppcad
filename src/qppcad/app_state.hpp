@@ -98,6 +98,7 @@ namespace qpp {
         QString m_last_dir;
         QString m_font_name;
         QString m_screen_shots_dir{"."};
+        QString m_spatial_suffix{"Å"};
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;

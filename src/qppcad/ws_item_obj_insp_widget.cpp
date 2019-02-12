@@ -122,9 +122,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   ws_item_pos_label = new QLabel(tr("Position :"));
   ws_item_pos = new qbinded_float3_input;
-  ws_item_pos->sb_x->setSuffix("Å");
-  ws_item_pos->sb_y->setSuffix("Å");
-  ws_item_pos->sb_z->setSuffix("Å");
+  ws_item_pos->set_default_suffix();
   ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
 
   tg_form_layout->addRow(tr("Name :"), ws_item_name);

@@ -73,7 +73,8 @@ namespace qpp {
                               double new_step,
                               int decimals = 2);
         qbinded_float_spinbox(QWidget *parent = nullptr);
-
+        void set_suffix(QString &new_suffix);
+        void set_default_suffix();
       public slots:
         void value_changed(double d);
 
@@ -120,6 +121,8 @@ namespace qpp {
         QDoubleSpinBox *sb_z;
         void load_value_ex() override;
         void set_min_max_step(double min, double max, double step);
+        void set_suffix(QString &new_suffix);
+        void set_default_suffix();
         qbinded_float3_input(QWidget *parent = nullptr);
 
       private slots:

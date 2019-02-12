@@ -47,6 +47,15 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
   setMaximumWidth(180);
 }
 
+void qbinded_float_spinbox::set_suffix(QString &new_suffix) {
+  setSuffix(new_suffix);
+}
+
+void qbinded_float_spinbox::set_default_suffix() {
+  app_state_t *astate = app_state_t::get_inst();
+  set_suffix(astate->m_spatial_suffix);
+}
+
 void qbinded_float_spinbox::value_changed(double d) {
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = float(d);
@@ -152,6 +161,17 @@ void qbinded_float3_input::set_min_max_step(double min, double max, double step)
   sb_z->setMinimum(min);
   sb_z->setMaximum(max);
   sb_z->setSingleStep(step);
+}
+
+void qbinded_float3_input::set_suffix(QString &new_suffix) {
+  sb_x->setSuffix(new_suffix);
+  sb_y->setSuffix(new_suffix);
+  sb_z->setSuffix(new_suffix);
+}
+
+void qbinded_float3_input::set_default_suffix() {
+  app_state_t *astate = app_state_t::get_inst();
+  set_suffix(astate->m_spatial_suffix);
 }
 
 qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
