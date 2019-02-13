@@ -64,6 +64,7 @@ namespace qpp {
                                 float size_a,
                                 float size_b,
                                 float size_c);
+        static void convert_selected_units(spatial_units new_unit);
 
         static float get_isolevel();
         static void set_isolevel(float new_isolevel);

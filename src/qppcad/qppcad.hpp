@@ -31,6 +31,11 @@ namespace qpp {
     typedef std::int32_t int32_t;
     typedef std::int64_t int64_t;
 
+    enum spatial_units : int {
+      spatial_units_ang,
+      spatial_units_bohr
+    };
+
     enum ws_edit_t {
       edit_item = 0,
       edit_content = 1

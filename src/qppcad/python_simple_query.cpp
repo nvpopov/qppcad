@@ -683,6 +683,31 @@ void simple_query::make_cube_p(std::string name,
 
 }
 
+void simple_query::convert_selected_units(spatial_units new_unit) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (!astate->ws_manager->has_wss()) return;
+
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  if (!al) return;
+
+  float mod = new_unit == spatial_units_ang ? qpp::bohr_to_angs : qpp::ang_to_bohr;
+
+  al->m_tws_tr->do_action(act_lock | act_clear_all);
+  al->m_ext_obs->first_data = true;
+  //transform cell
+  for (int i = 0; i < al->m_geom->DIM; i++) al->m_geom->cell.v[i] *= mod;
+  //transform content
+  for (int i = 0; i < al->m_geom->nat(); i++) al->m_geom->coord(i) *= mod;
+  al->geometry_changed();
+  al->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+  al->m_tws_tr->do_action(act_rebuild_ntable);
+}
+
 float simple_query::get_isolevel() {
 
   app_state_t *astate = app_state_t::get_inst();
