@@ -48,6 +48,7 @@ namespace qpp {
 
         static void generate_molcas_embc_sp_input(std::string outdir);
         static void generate_orca_embc_sp_input(std::string outdir,
+                                                std::vector<std::string> anion_list,
                                                 bool merge_cls_and_chg = false);
 
     };

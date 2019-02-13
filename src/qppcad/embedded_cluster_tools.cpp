@@ -539,6 +539,7 @@ void embedded_cluster_tools::generate_molcas_embc_sp_input(std::string outdir) {
 }
 
 void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
+                                                         std::vector<std::string> anion_list,
                                                          bool merge_cls_and_chg) {
 
     app_state_t *astate = app_state_t::get_inst();
@@ -573,22 +574,26 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
                     embc_inp, "{0} {1} {2} {3}\n",
                     qm->m_geom->atom_name(i),
                     qm->m_geom->pos(i)[0],
-                    qm->m_geom->pos(i)[1],
-                    qm->m_geom->pos(i)[2]
+                qm->m_geom->pos(i)[1],
+                qm->m_geom->pos(i)[2]
                 );
 
     //printing cls atoms N> q x y z
     if (merge_cls_and_chg) {
         //fmt::print(embc_inp, "{}\n", cls->m_geom->nat());
-        for (int i = 0; i < cls->m_geom->nat(); i++)
+        for (int i = 0; i < cls->m_geom->nat(); i++) {
+            bool add_ecp = cls->m_geom->atom_name(i).find("F") == std::string::npos;
             fmt::print(
-                        embc_inp, "{0}> {1} {2} {3} {4} NewECP \"{0}_emb\" end\n",
+                        embc_inp,
+                        add_ecp ? "{0}> {1} {2} {3} {4} NewECP \"{0}_emb\" end\n" :
+                                  "{0}> {1} {2} {3} {4} \n",
                         cls->m_geom->atom_name(i),
                         cls->m_geom->xfield<float>(xgeom_charge, i),
                         cls->m_geom->pos(i)[0],
                         cls->m_geom->pos(i)[1],
                         cls->m_geom->pos(i)[2]
                     );
+        }
 
         //printing charges
         //q x y z
@@ -598,8 +603,8 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
                         embc_pc, "{} {} {} {}\n",
                         chg->m_geom->xfield<float>(xgeom_charge, i),
                         chg->m_geom->pos(i)[0],
-                        chg->m_geom->pos(i)[1],
-                        chg->m_geom->pos(i)[2]
+                    chg->m_geom->pos(i)[1],
+                    chg->m_geom->pos(i)[2]
                     );
     } else {
         int total_charges = cls->m_geom->nat() + chg->m_geom->nat();
@@ -609,16 +614,16 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
                         embc_pc, "{} {} {} {}\n",
                         cls->m_geom->xfield<float>(xgeom_charge, i),
                         cls->m_geom->pos(i)[0],
-                        cls->m_geom->pos(i)[1],
-                        cls->m_geom->pos(i)[2]
+                    cls->m_geom->pos(i)[1],
+                    cls->m_geom->pos(i)[2]
                     );
         for (int i = 0; i < chg->m_geom->nat(); i++)
             fmt::print(
                         embc_pc, "{} {} {} {}\n",
                         chg->m_geom->xfield<float>(xgeom_charge, i),
                         chg->m_geom->pos(i)[0],
-                        chg->m_geom->pos(i)[1],
-                        chg->m_geom->pos(i)[2]
+                    chg->m_geom->pos(i)[1],
+                    chg->m_geom->pos(i)[2]
                     );
     }
 
