@@ -9,8 +9,8 @@ namespace qpp {
   namespace cad {
 
     enum ws_cube_rendering_mode : int {
-      ws_cube_rendering_mode_solid,
-      ws_cube_rendering_mode_lines
+      render_solid,
+      render_lines
     };
 
     class ws_cube_primitive_t : public ws_item_t {
@@ -19,7 +19,7 @@ namespace qpp {
 
       public:
 
-        ws_cube_rendering_mode m_render_mode{ws_cube_rendering_mode_solid};
+        ws_cube_rendering_mode m_render_mode{render_solid};
         vector3<float> m_scale{1, 1, 1};
         vector3<float> m_color{1, 0, 0};
 

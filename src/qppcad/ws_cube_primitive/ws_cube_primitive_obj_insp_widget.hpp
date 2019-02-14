@@ -19,6 +19,7 @@ namespace qpp {
         QFormLayout *tg_cube_params_lt;
         qbinded_float3_input *cube_param_scale;
         qbinded_color3_input *cube_param_color;
+        qbinded_combobox *cube_render_mode;
 
         ws_cube_primitive_obj_insp_widget_t();
 

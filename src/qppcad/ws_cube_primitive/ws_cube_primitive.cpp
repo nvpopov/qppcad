@@ -20,12 +20,18 @@ void ws_cube_primitive_t::render() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_render_mode == ws_cube_rendering_mode::ws_cube_rendering_mode_solid) {
+  if (m_render_mode == ws_cube_rendering_mode::render_solid) {
       astate->dp->begin_render_general_mesh();
       astate->dp->render_cube(m_pos, m_scale, m_color);
       astate->dp->end_render_general_mesh();
     } else {
-
+      astate->dp->begin_render_line();
+      vector3<float> sc_a {m_scale[0]*2, 0, 0};
+      vector3<float> sc_b {0, m_scale[1]*2, 0};
+      vector3<float> sc_c {0, 0, m_scale[2]*2};
+      vector3<float> pos = m_pos - m_scale;
+      astate->dp->render_cell_3d(m_color, sc_a, sc_b, sc_c, pos);
+      astate->dp->end_render_line();
     }
 
 }
