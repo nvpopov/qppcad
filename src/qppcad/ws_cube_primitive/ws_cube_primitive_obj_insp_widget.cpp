@@ -26,8 +26,10 @@ ws_cube_primitive_obj_insp_widget_t::ws_cube_primitive_obj_insp_widget_t() {
   tg_cube_params_lt->addRow(tr("Render style"), cube_render_mode);
 
   post_init_group_box(tg_cube_params, tg_cube_params_lt);
+
   tab_general->tab_inner_widget_layout->addWidget(tg_cube_params);
-  tab_general->tab_inner_widget_layout->addStretch();
+
+  tab_general->tab_inner_widget_layout->addStretch(1);
 }
 
 void ws_cube_primitive_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {

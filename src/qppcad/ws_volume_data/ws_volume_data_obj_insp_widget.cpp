@@ -25,6 +25,8 @@ ws_volume_data_obj_insp_widget_t::ws_volume_data_obj_insp_widget_t() {
   tg_form_layout->addRow(tr("Color negative"), vol_color_neg);
   tg_form_layout->addRow(tr("Color density"), vol_color_vol);
 
+  tab_general->tab_inner_widget_layout->addStretch();
+
 }
 
 void ws_volume_data_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
