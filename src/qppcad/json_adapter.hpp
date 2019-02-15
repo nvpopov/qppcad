@@ -62,6 +62,10 @@ namespace qpp {
 
     const auto JSON_ATOMS_LIST_LABELS_TYPE               = "labels";
 
+    const auto JSON_WS_CUBE_P_COLOR = "cube_color";
+    const auto JSON_WS_CUBE_P_STYLE = "cube_style";
+    const auto JSON_WS_CUBE_P_SCALE = "cube_scale";
+
   }
 
 }

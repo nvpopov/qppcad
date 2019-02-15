@@ -1,5 +1,6 @@
 #include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -66,12 +67,23 @@ size_t ws_cube_primitive_t::get_content_count() {
 }
 
 void ws_cube_primitive_t::save_to_json(json &data) {
+
   ws_item_t::save_to_json(data);
+
+  json_helper::save_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
+  json_helper::save_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
+  json_helper::save_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
 
 }
 
 void ws_cube_primitive_t::load_from_json(json &data) {
+
   ws_item_t::load_from_json(data);
+
+  json_helper::load_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
+  json_helper::load_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
+  json_helper::load_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
+
 }
 
 bool ws_cube_primitive_t::can_be_written_to_json() {
