@@ -33,7 +33,8 @@ namespace qpp {
         bool m_render_inplace_hud{true};
         ws_atoms_list_labels_subsys_t (ws_atoms_list_t &_p_owner);
 
-        void render_overlay (QPainter &painter);
+        void render_overlay(QPainter &painter);
+        void render_labels(QPainter &painter);
         void render_in_place_overlay(QPainter &painter);
 
     };

@@ -12,28 +12,35 @@ ws_atoms_list_labels_subsys_t::ws_atoms_list_labels_subsys_t(ws_atoms_list_t &_p
 
 void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
 
+  render_labels(painter);
   if (m_render_inplace_hud && p_owner->m_selected) render_in_place_overlay(painter);
+
+}
+
+void ws_atoms_list_labels_subsys_t::render_labels(QPainter &painter) {
 
   if (m_style == ws_atoms_list_labels_style::show_none) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
-  painter.setPen(Qt::black);
-  painter.setFont(QFont(astate->m_font_name, 16));
+  QPen rectpen(QPen(Qt::black, 1, Qt::SolidLine));
+  QColor text_fill_color = QColor::fromRgbF(1,1,1);
+  QFont text_font_lb(astate->m_font_name, 16, QFont::Weight::Bold);
 
-
-  //  app_state_t* astate = &(c_app::get_state());
-  //  ImDrawList* imdrw = ImGui::GetOverlayDrawList();
+  painter.setBrush(text_fill_color);
+  painter.setPen(rectpen);
+  painter.setFont(text_font_lb);
 
   std::optional<vector2<float> > proj_pos;
+  std::string label;
+  QString label_qs;
+
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
 
       if (p_owner->m_sel_vis &&
           p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
 
       proj_pos = astate->camera->project(p_owner->m_pos + p_owner->m_geom->pos(i));
-
-      std::string label;/* = fmt::format("{}", i);*/
 
       bool render_label{true};
 
@@ -73,15 +80,32 @@ void ws_atoms_list_labels_subsys_t::render_overlay(QPainter &painter) {
         }
 
       if (render_label) {
-          const int rect_size = 60;
-          painter.drawText(
-                int((*proj_pos)[0]-rect_size*0.5f),
-              int((*proj_pos)[1]-rect_size*0.5f),
-              rect_size, rect_size,
-              Qt::AlignCenter, QString::fromStdString(label));
+
+          label_qs = QString::fromStdString(label);
+//          old style
+//          const int rect_size = 60;
+//          painter.drawText(
+//                int((*proj_pos)[0]-rect_size*0.5f),
+//              int((*proj_pos)[1]-rect_size*0.5f),
+//              rect_size, rect_size,
+//              Qt::AlignCenter, QString::fromStdString(label));
+
+          //w outline
+          QPainterPath text_path;
+          QFontMetrics fmetric(text_font_lb);
+          QRect font_rec = fmetric.boundingRect(label_qs);
+
+          painter.setRenderHint(QPainter::Antialiasing);
+          text_path.addText((*proj_pos)[0] - fmetric.width(label_qs) / 2,
+                            (*proj_pos)[1] - font_rec.center().y(),
+                            text_font_lb,
+                            label_qs);
+          painter.drawPath(text_path);
+
         }
 
     }
+
 }
 
 void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
@@ -131,12 +155,6 @@ void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
      painter.drawEllipse(sph);
 
      text = QString::fromStdString(p_owner->m_geom->atom_of_type(i));
-//     painter.setFont(text_font);
-//     painter.drawText(sph, Qt::AlignCenter, text);
-
-//     painter.setPen(rectpen2);
-//     painter.setFont(text_font_small);
-//     painter.drawText(sph, Qt::AlignCenter, text);
 
      painter.setBrush(text_fill_color);
      painter.setPen(rectpen2);
