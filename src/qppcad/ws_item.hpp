@@ -19,12 +19,12 @@ namespace qpp {
 
     // ws_item_t capabilities
     const uint32_t ws_item_flags_default                 = 0;
-    const uint32_t ws_item_flags_support_translation     = 1 << 1;
-    const uint32_t ws_item_flags_support_scaling         = 1 << 2;
-    const uint32_t ws_item_flags_support_rotation        = 1 << 3;
-    const uint32_t ws_item_flags_support_content_editing = 1 << 4;
-    const uint32_t ws_item_flags_support_selection       = 1 << 5;
-    const uint32_t ws_item_flags_support_rendering_bb    = 1 << 6;
+    const uint32_t ws_item_flags_support_tr              = 1 << 1;
+    const uint32_t ws_item_flags_support_scl             = 1 << 2;
+    const uint32_t ws_item_flags_support_rot             = 1 << 3;
+    const uint32_t ws_item_flags_support_cnt_edit        = 1 << 4;
+    const uint32_t ws_item_flags_support_sel             = 1 << 5;
+    const uint32_t ws_item_flags_support_render_bb       = 1 << 6;
     const uint32_t ws_item_flags_toolbar_extension       = 1 << 7;
     const uint32_t ws_item_flags_support_actions         = 1 << 8;
     const uint32_t ws_item_flags_support_delete          = 1 << 9;

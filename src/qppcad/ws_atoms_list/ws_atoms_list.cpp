@@ -1,10 +1,8 @@
 #include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
-//#include <qppcad/ws_atoms_list_context_menu.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list_render_bs.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list_render_dlines.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list_render_xlines.hpp>
 #include <qppcad/ws_atoms_list/ws_atoms_list_render_billboards.hpp>
-//#include <qppcad/ws_atoms_list_cell_helper.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/app_state.hpp>
 
@@ -17,13 +15,19 @@ using namespace qpp::cad;
 
 ws_atoms_list_t::ws_atoms_list_t(): ws_item_t () {
 
-  set_default_flags(ws_item_flags_default | ws_item_flags_support_translation |
-                    ws_item_flags_support_selection | ws_item_flags_support_content_editing |
-                    ws_item_flags_support_rendering_bb | ws_item_flags_toolbar_extension |
-                    ws_item_flags_support_actions | ws_item_flags_support_delete |
-                    ws_item_flags_support_clone | ws_item_flags_support_moveto |
+  set_default_flags(ws_item_flags_default |
+                    ws_item_flags_support_tr |
+                    ws_item_flags_support_sel |
+                    ws_item_flags_support_cnt_edit |
+                    ws_item_flags_support_render_bb |
+                    ws_item_flags_toolbar_extension |
+                    ws_item_flags_support_actions |
+                    ws_item_flags_support_delete |
+                    ws_item_flags_support_clone |
+                    ws_item_flags_support_moveto |
                     ws_item_flags_support_rendering);
 
+  //TODO: ws_item_t tag deprecated
   m_tag = ws_item_tag::tag_ws_atoms_list;
 
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");

@@ -5,8 +5,12 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_cube_primitive_t::ws_cube_primitive_t() {
-  set_default_flags(ws_item_flags_default | ws_item_flags_support_rendering |
-                    ws_item_flags_support_moveto | ws_item_flags_support_translation);
+
+  set_default_flags(ws_item_flags_default |
+                    ws_item_flags_support_rendering |
+                    ws_item_flags_support_moveto |
+                    ws_item_flags_support_tr);
+
 }
 
 void ws_cube_primitive_t::vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -63,10 +67,15 @@ size_t ws_cube_primitive_t::get_content_count() {
 
 void ws_cube_primitive_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
+
 }
 
 void ws_cube_primitive_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
+}
+
+bool ws_cube_primitive_t::can_be_written_to_json() {
+  return true;
 }
 
 void ws_cube_primitive_t::updated_internally() {

@@ -40,6 +40,8 @@ namespace qpp {
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
 
+        bool can_be_written_to_json() override;
+
     };
 
   }

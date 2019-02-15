@@ -37,14 +37,13 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       else target_index = 0;
 
       auto *widget_to_focus = widget(target_index);
+
       if (widget_to_focus) {
           widget_to_focus->setFocus();
           setCurrentIndex(target_index);
-          //this->scroll(target_index * 10, 0);
-          //emit(tabBarClicked(target_index));
         }
 
-      if (m_binded_item->get_flags() & ws_item_flags_support_translation) {
+      if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
           ws_item_pos->bind_value(&m_binded_item->m_pos);
           ws_item_pos->show();
           ws_item_pos_label->show();
@@ -53,7 +52,7 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
           ws_item_pos_label->hide();
         }
 
-      if (m_binded_item->get_flags() & ws_item_flags_support_rendering_bb) {
+      if (m_binded_item->get_flags() & ws_item_flags_support_render_bb) {
           ws_item_bb_visible->bind_value(&m_binded_item->m_show_bb);
           ws_item_bb_visible->show();
           ws_item_bb_visible_label->show();
@@ -65,6 +64,7 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
     }
 
   update_from_ws_item();
+
 }
 
 void ws_item_obj_insp_widget_t::unbind_item() {
@@ -164,7 +164,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
   if (m_binded_item) {
-      if (m_binded_item->get_flags() & ws_item_flags_support_translation) {
+      if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
           ws_item_pos->load_value();
         }
     }

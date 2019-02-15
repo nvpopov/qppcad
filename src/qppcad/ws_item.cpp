@@ -2,6 +2,7 @@
 #include <qppcad/app_state.hpp>
 #include <data/color.hpp>
 #include <qppcad/workspace.hpp>
+#include <qppcad/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -87,8 +88,8 @@ void ws_item_t::render () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_selected && (get_flags() & ws_item_flags_support_selection) &&
-      (get_flags() & ws_item_flags_support_rendering_bb) && is_bb_visible() && m_show_bb) {
+  if (m_selected && (get_flags() & ws_item_flags_support_sel) &&
+      (get_flags() & ws_item_flags_support_render_bb) && is_bb_visible() && m_show_bb) {
       astate->dp->begin_render_aabb();
 
       (m_parent_ws->m_edit_type == ws_edit_t::edit_item) ?
@@ -169,31 +170,28 @@ void ws_item_t::on_end_content_gizmo_translate() {
 }
 
 void ws_item_t::translate(vector3<float> tr_vec) {
+
   app_state_t* astate = app_state_t::get_inst();
-  if (get_flags() & ws_item_flags_support_translation) m_pos += tr_vec;
+  if (get_flags() & ws_item_flags_support_tr) m_pos += tr_vec;
   astate->make_viewport_dirty();
+
 }
 
 void ws_item_t::save_to_json(json &data) {
-  data[JSON_WS_ITEM_NAME] = m_name;
-  data[JSON_WS_ITEM_TYPE] = get_type_name();
-  data[JSON_IS_VISIBLE] = m_is_visible;
-  json coord = json::array({m_pos[0], m_pos[1], m_pos[2]});
-  data[JSON_POS] = coord;
+
+  json_helper::save_var(JSON_WS_ITEM_NAME, m_name, data);
+  json_helper::save_var(JSON_WS_ITEM_TYPE, get_type_name(), data);
+  json_helper::save_var(JSON_IS_VISIBLE, m_is_visible, data);
+  json_helper::save_vec3(JSON_POS, m_pos, data);
+
 }
 
 void ws_item_t::load_from_json(json &data) {
-  //read m_name & is_visible & pos
-  if (data.find(JSON_WS_ITEM_NAME) != data.end()) m_name = data[JSON_WS_ITEM_NAME];
-  if (data.find(JSON_IS_VISIBLE) != data.end()) m_is_visible = data[JSON_IS_VISIBLE];
 
-  if (get_flags() | ws_item_flags_support_translation)
-    if (data.find(JSON_POS) != data.end()) {
-        vector3<float> pos_rd = vector3<float>::Zero();
-        for(uint8_t i = 0; i < 3; i++)
-          pos_rd[i] = data[JSON_POS][i].get<float>();
-        m_pos = pos_rd;
-      }
+  json_helper::load_var(JSON_WS_ITEM_NAME, m_name, data);
+  json_helper::load_var(JSON_IS_VISIBLE, m_is_visible, data);
+
+  if (get_flags() | ws_item_flags_support_tr) json_helper::load_vec3(JSON_POS, m_pos, data);
 }
 
 void ws_item_t::load_from_stream(std::basic_istream<char, TRAITS> &stream) {
