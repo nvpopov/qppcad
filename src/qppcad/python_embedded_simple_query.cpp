@@ -49,12 +49,17 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("get_type_hash", &simple_query::get_type_hash);
   tools.def("is_instance_of", &simple_query::is_instance_of_by_hash);
   tools.def("is_instance_of", &simple_query::is_instance_of_by_type_name);
+
   tools.def("get_point_sym_g", &simple_query::get_point_sym_group, py::arg("tolerance") = 0.1f);
   tools.def("make_point_sym_g", &simple_query::make_ws_point_sym_group,
             py::arg("tolerance") = 0.1f);
+
   tools.def("make_traj_highlighter", &simple_query::make_traj_highlight,  py::arg("atom_id"),
             py::arg("anim_id") = 1);
+
   tools.def("make_cube", &simple_query::make_cube_p);
+  tools.def("make_arrow", &simple_query::make_arrow_p);
+
   tools.def("convert_spatial", &simple_query::convert_selected_units);
 
   py::module sel = m.def_submodule("sel", "Selection routines");

@@ -5,6 +5,7 @@
 #include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
 #include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
 #include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
+#include <qppcad/ws_arrow_primitive/ws_arrow_primitive.hpp>
 #include <data/ptable.hpp>
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>
@@ -680,6 +681,25 @@ void simple_query::make_cube_p(std::string name,
   new_cube->m_pos = pos;
   new_cube->m_scale = {size_a, size_b, size_c};
   cur_ws->add_item_to_ws(new_cube);
+
+}
+
+void simple_query::make_arrow_p(std::string name,
+                                vector3<float> from,
+                                vector3<float> to) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (!astate->ws_manager->has_wss()) return;
+
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  auto new_arr = std::make_shared<ws_arrow_primitive_t>();
+  new_arr->m_name = name;
+  new_arr->m_pos = from;
+  new_arr->m_arrow_to = to;
+  cur_ws->add_item_to_ws(new_arr);
 
 }
 

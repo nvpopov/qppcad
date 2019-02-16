@@ -54,16 +54,23 @@ namespace qpp {
         static void translate_selected(float tx, float ty, float tz);
         static void set_charge(float charge);
         static void set_ws_bg(vector3<float> bg);
+
         static void add_atoms_list_0d(std::string name);
         static void add_atoms_list_3d(std::string name,
                                       vector3<float> a,
                                       vector3<float> b,
                                       vector3<float> c);
+
         static void make_cube_p(std::string name,
                                 vector3<float> pos,
                                 float size_a,
                                 float size_b,
                                 float size_c);
+
+        static void make_arrow_p(std::string name,
+                                 vector3<float> from,
+                                 vector3<float> to);
+
         static void convert_selected_units(spatial_units new_unit);
 
         static float get_isolevel();

@@ -19,6 +19,9 @@
 #include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
 #include <qppcad/ws_cube_primitive/ws_cube_primitive_obj_insp_widget.hpp>
 
+#include <qppcad/ws_arrow_primitive/ws_arrow_primitive.hpp>
+#include <qppcad/ws_arrow_primitive/ws_arrow_primitive_obj_insp_widget.hpp>
+
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
@@ -27,22 +30,28 @@ using namespace qpp;
 using namespace qpp::cad;
 
 void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr) {
+
   reg_ws_item_fbr_t<ws_atoms_list_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_comp_chem_data_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_volume_data_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_point_sym_group_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_traj_highlight_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_cube_primitive_t>(bhv_mgr);
+  reg_ws_item_fbr_t<ws_arrow_primitive_t>(bhv_mgr);
+
 
 }
 
 void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr) {
+
   reg_ws_item_obj_insp_t<ws_atoms_list_t, ws_atoms_list_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<ws_volume_data_t, ws_volume_data_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<ws_comp_chem_data_t, ws_comp_chem_data_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<ws_point_sym_group_t, ws_point_sym_group_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<ws_traj_highlight_t, ws_traj_highlight_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<ws_cube_primitive_t, ws_cube_primitive_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<ws_arrow_primitive_t, ws_arrow_primitive_obj_insp_widget_t>(bhv_mgr);
+
 }
 
 void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
