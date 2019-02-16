@@ -12,6 +12,9 @@ object_inspector_widget_t::object_inspector_widget_t() {
 
   obj_insp_layout = new QVBoxLayout;
   setLayout(obj_insp_layout);
+
+  setProperty("s_class", "obj_insp");
+
   ws_items_label = new QLabel;
   ws_items_label->setText(tr("Workspace items:"));
 

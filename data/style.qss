@@ -2,8 +2,13 @@ QPushButton:checked {
   background-color: rgb(150, 150, 150);
 }
 
-QWidget[s_class="tp_generic"] {
+QMainWindow {
+}
 
+QWidget[s_class="obj_insp"] {
+}
+
+QWidget[s_class="tp_generic"] {
 }
 
 QWidget[s_class="tp_generic"] QLabel {

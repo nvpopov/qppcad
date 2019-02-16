@@ -34,6 +34,7 @@ void ws_atoms_list_labels_subsys_t::render_labels(QPainter &painter) {
   std::optional<vector2<float> > proj_pos;
   std::string label;
   QString label_qs;
+  QString last_label;
 
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
 
@@ -95,7 +96,7 @@ void ws_atoms_list_labels_subsys_t::render_labels(QPainter &painter) {
           QFontMetrics fmetric(text_font_lb);
           QRect font_rec = fmetric.boundingRect(label_qs);
 
-          painter.setRenderHint(QPainter::Antialiasing);
+          //painter.setRenderHint(QPainter::Antialiasing);
           text_path.addText((*proj_pos)[0] - fmetric.width(label_qs) / 2,
                             (*proj_pos)[1] - font_rec.center().y(),
                             text_font_lb,

@@ -289,7 +289,7 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
 
   if (click_ray) {
 
-      std::vector<tws_query_data_t<float, uint32_t> > res;
+      std::vector<tws_query_data_t<float, size_t> > res;
 
       ray_t<float> local_geom_ray;
       local_geom_ray.start = click_ray->start - m_pos;
@@ -298,12 +298,14 @@ bool ws_atoms_list_t::mouse_click (ray_t<float> *click_ray) {
       if (m_draw_img_atoms)
         m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray,
                                                        res,
+                                                       m_atom_type_to_hide,
                                                        m_atom_scale_factor,
                                                        m_sel_vis,
                                                        xgeom_sel_vis);
       else
         m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray,
                                                               res,
+                                                              m_atom_type_to_hide,
                                                               m_atom_scale_factor,
                                                               m_sel_vis,
                                                               xgeom_sel_vis);
@@ -1032,8 +1034,8 @@ void ws_atoms_list_t::load_from_json (json &data) {
           int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
           float dist = elem[2].get<float>();
           bool br_enabled = elem[3].get<bool>();
-          m_tws_tr->m_bonding_table.m_dist[sym_key<uint32_t>(type1, type2)].m_bonding_dist = dist;
-          m_tws_tr->m_bonding_table.m_dist[sym_key<uint32_t>(type1, type2)].m_enabled = br_enabled;
+          m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_bonding_dist = dist;
+          m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_enabled = br_enabled;
         }
       m_tws_tr->m_bonding_table.update_pair_max_dist_all();
     }

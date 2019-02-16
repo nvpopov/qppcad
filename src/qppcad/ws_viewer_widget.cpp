@@ -96,7 +96,7 @@ void ws_viewer_widget_t::paintGL() {
   QPainter painter(this);
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-  painter.beginNativePainting();
+  //painter.beginNativePainting();
 
   glapi->glEnable(GL_DEPTH_TEST);
   glapi->glDepthFunc(GL_LEQUAL);
@@ -106,7 +106,7 @@ void ws_viewer_widget_t::paintGL() {
   glapi->glDisable(GL_CULL_FACE);
   glapi->glDisable(GL_DEPTH_TEST);
 
-  painter.endNativePainting();
+ // painter.endNativePainting();
 
   if (astate->m_show_debug_frame_stats) {
       painter.setFont(QFont(astate->m_font_name, 13));
