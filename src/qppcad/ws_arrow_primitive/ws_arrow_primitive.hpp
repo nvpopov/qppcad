@@ -14,8 +14,12 @@ namespace qpp {
 
       public:
 
+        matrix4<float> m_model_body;
+        matrix4<float> m_model_arrow;
         vector3<float> m_arrow_to{0};
         vector3<float> m_color{0};
+        float m_axis_scale{1.0f};
+        bool m_need_to_recalc_render_data{true};
 
         ws_arrow_primitive_t();
 
@@ -34,6 +38,8 @@ namespace qpp {
 
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
+
+        void recalc_render_data();
 
     };
 

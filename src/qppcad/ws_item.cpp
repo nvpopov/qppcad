@@ -173,6 +173,7 @@ void ws_item_t::translate(vector3<float> tr_vec) {
 
   app_state_t* astate = app_state_t::get_inst();
   if (get_flags() & ws_item_flags_support_tr) m_pos += tr_vec;
+  if (get_flags() & ws_item_flags_translate_emit_upd_event) updated_internally();
   astate->make_viewport_dirty();
 
 }

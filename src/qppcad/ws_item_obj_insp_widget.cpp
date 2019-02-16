@@ -44,7 +44,7 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
         }
 
       if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
-          ws_item_pos->bind_value(&m_binded_item->m_pos);
+          ws_item_pos->bind_value(&m_binded_item->m_pos, m_binded_item);
           ws_item_pos->show();
           ws_item_pos_label->show();
         } else {

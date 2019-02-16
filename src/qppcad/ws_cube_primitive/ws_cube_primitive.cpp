@@ -91,5 +91,6 @@ bool ws_cube_primitive_t::can_be_written_to_json() {
 }
 
 void ws_cube_primitive_t::updated_internally() {
+
 }
 

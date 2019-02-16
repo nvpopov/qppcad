@@ -180,7 +180,8 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
 
     //if (generate_qm && )
 
-    if (ws_chg->m_geom->nat() > 1800) ws_chg->m_cur_render_type = ws_atoms_list_render_t::xatom_lines;
+    if (ws_chg->m_geom->nat() > 1800) ws_chg->m_cur_render_type =
+        ws_atoms_list_render_t::xatom_lines;
     //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
     //add connection info
@@ -341,7 +342,7 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls_cur() {
         auto cur_ws = astate->ws_manager->get_cur_ws();
 
         if (cur_ws) {
-            auto cur_it_al = std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            auto cur_it_al = std::static_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
 
             std::shared_ptr<ws_atoms_list_t> uc{nullptr};
             std::shared_ptr<ws_atoms_list_t> chg{nullptr};
@@ -369,7 +370,7 @@ void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
         auto cur_ws = astate->ws_manager->get_cur_ws();
 
         if (cur_ws) {
-            auto cur_it_al = std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            auto cur_it_al = std::static_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
 
             std::shared_ptr<ws_atoms_list_t> uc{nullptr};
             std::shared_ptr<ws_atoms_list_t> chg{nullptr};
@@ -401,7 +402,7 @@ void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<ws_atoms_l
 
         if (cur_ws) {
 
-            auto cur_it_al = std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            auto cur_it_al = std::static_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
 
             if (cur_it_al) {
 
@@ -411,10 +412,13 @@ void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<ws_atoms_l
                 if (cur_it_al->m_role == ws_atoms_list_role_t::r_uc) uc = cur_it_al;
 
                 for (auto elem : cur_it_al->m_connected_items) {
-                    auto elem_al = std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
-                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_qm) qm = elem_al;
-                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_chg) chg = elem_al;
-                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_cls) cls = elem_al;
+                    auto elem_al = std::static_pointer_cast<ws_atoms_list_t>(elem);
+                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_qm)
+                      qm = elem_al;
+                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_chg)
+                      chg = elem_al;
+                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_cls)
+                      cls = elem_al;
                     if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_uc) uc = elem_al;
                 }
 
@@ -483,13 +487,13 @@ void embedded_cluster_tools::generate_molcas_embc_sp_input(std::string outdir) {
             if (qm->m_geom->type_table(q) == i) {
                 local_type_c +=1 ;
                 fmt::print(
-                            embc_inp, "{}{} {} {} {}\n",
-                            qm->m_geom->atom_of_type(i),
-                            local_type_c,
-                            qm->m_geom->pos(q)[0],
-                        qm->m_geom->pos(q)[1],
-                        qm->m_geom->pos(q)[2]
-                        );
+                           embc_inp, "{}{} {} {} {}\n",
+                           qm->m_geom->atom_of_type(i),
+                           local_type_c,
+                           qm->m_geom->pos(q)[0],
+                           qm->m_geom->pos(q)[1],
+                           qm->m_geom->pos(q)[2]
+                         );
             }
         fmt::print(embc_inp, "End Of Basis\n");
     }
@@ -571,12 +575,12 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
     //printing qm atoms N x y z
     for (int i = 0; i < qm->m_geom->nat(); i++)
         fmt::print(
-                    embc_inp, "{0} {1} {2} {3}\n",
-                    qm->m_geom->atom_name(i),
-                    qm->m_geom->pos(i)[0],
-                qm->m_geom->pos(i)[1],
-                qm->m_geom->pos(i)[2]
-                );
+                   embc_inp, "{0} {1} {2} {3}\n",
+                   qm->m_geom->atom_name(i),
+                   qm->m_geom->pos(i)[0],
+                   qm->m_geom->pos(i)[1],
+                   qm->m_geom->pos(i)[2]
+                 );
 
     //printing cls atoms N> q x y z
     if (merge_cls_and_chg) {
@@ -600,30 +604,30 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
         fmt::print(embc_pc, "{}\n", chg->m_geom->nat());
         for (int i = 0; i < chg->m_geom->nat(); i++)
             fmt::print(
-                        embc_pc, "{} {} {} {}\n",
-                        chg->m_geom->xfield<float>(xgeom_charge, i),
-                        chg->m_geom->pos(i)[0],
-                    chg->m_geom->pos(i)[1],
-                    chg->m_geom->pos(i)[2]
+                       embc_pc, "{} {} {} {}\n",
+                       chg->m_geom->xfield<float>(xgeom_charge, i),
+                       chg->m_geom->pos(i)[0],
+                       chg->m_geom->pos(i)[1],
+                       chg->m_geom->pos(i)[2]
                     );
     } else {
         int total_charges = cls->m_geom->nat() + chg->m_geom->nat();
         fmt::print(embc_pc, "{}\n", total_charges);
         for (int i = 0; i < cls->m_geom->nat(); i++)
             fmt::print(
-                        embc_pc, "{} {} {} {}\n",
-                        cls->m_geom->xfield<float>(xgeom_charge, i),
-                        cls->m_geom->pos(i)[0],
-                    cls->m_geom->pos(i)[1],
-                    cls->m_geom->pos(i)[2]
+                       embc_pc, "{} {} {} {}\n",
+                       cls->m_geom->xfield<float>(xgeom_charge, i),
+                       cls->m_geom->pos(i)[0],
+                       cls->m_geom->pos(i)[1],
+                       cls->m_geom->pos(i)[2]
                     );
         for (int i = 0; i < chg->m_geom->nat(); i++)
             fmt::print(
-                        embc_pc, "{} {} {} {}\n",
-                        chg->m_geom->xfield<float>(xgeom_charge, i),
-                        chg->m_geom->pos(i)[0],
-                    chg->m_geom->pos(i)[1],
-                    chg->m_geom->pos(i)[2]
+                       embc_pc, "{} {} {} {}\n",
+                       chg->m_geom->xfield<float>(xgeom_charge, i),
+                       chg->m_geom->pos(i)[0],
+                       chg->m_geom->pos(i)[1],
+                       chg->m_geom->pos(i)[2]
                     );
     }
 

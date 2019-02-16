@@ -18,20 +18,21 @@ namespace qpp {
     class app_state_t;
 
     // ws_item_t capabilities
-    const uint32_t ws_item_flags_default                 = 0;
-    const uint32_t ws_item_flags_support_tr              = 1 << 1;
-    const uint32_t ws_item_flags_support_scl             = 1 << 2;
-    const uint32_t ws_item_flags_support_rot             = 1 << 3;
-    const uint32_t ws_item_flags_support_cnt_edit        = 1 << 4;
-    const uint32_t ws_item_flags_support_sel             = 1 << 5;
-    const uint32_t ws_item_flags_support_render_bb       = 1 << 6;
-    const uint32_t ws_item_flags_toolbar_extension       = 1 << 7;
-    const uint32_t ws_item_flags_support_actions         = 1 << 8;
-    const uint32_t ws_item_flags_support_delete          = 1 << 9;
-    const uint32_t ws_item_flags_support_clone           = 1 << 10;
-    const uint32_t ws_item_flags_support_moveto          = 1 << 11;
-    const uint32_t ws_item_flags_support_rendering       = 1 << 12;
-    const uint32_t ws_item_flags_support_extended_editor = 1 << 13;
+    const uint32_t ws_item_flags_default                  = 0;
+    const uint32_t ws_item_flags_support_tr               = 1 << 1;
+    const uint32_t ws_item_flags_support_scl              = 1 << 2;
+    const uint32_t ws_item_flags_support_rot              = 1 << 3;
+    const uint32_t ws_item_flags_support_cnt_edit         = 1 << 4;
+    const uint32_t ws_item_flags_support_sel              = 1 << 5;
+    const uint32_t ws_item_flags_support_render_bb        = 1 << 6;
+    const uint32_t ws_item_flags_toolbar_extension        = 1 << 7;
+    const uint32_t ws_item_flags_support_actions          = 1 << 8;
+    const uint32_t ws_item_flags_support_delete           = 1 << 9;
+    const uint32_t ws_item_flags_support_clone            = 1 << 10;
+    const uint32_t ws_item_flags_support_moveto           = 1 << 11;
+    const uint32_t ws_item_flags_support_rendering        = 1 << 12;
+    const uint32_t ws_item_flags_support_extended_editor  = 1 << 13;
+    const uint32_t ws_item_flags_translate_emit_upd_event = 1 << 14;
 
     enum ws_item_tag {
       tag_abstract_item,
