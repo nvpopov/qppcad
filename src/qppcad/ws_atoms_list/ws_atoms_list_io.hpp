@@ -244,6 +244,25 @@ namespace qpp {
 
     };
 
+
+    class ws_atoms_list_molcas_grid_t : public ws_item_io_bt_bhv_t {
+
+      public:
+        bool m_cell_emplace{false};
+        bool can_save() override { return false; }
+        bool can_load() override { return true; }
+
+        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+                                 ws_atoms_list_t *_item,
+                                 workspace_t *ws) override ;
+
+        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+                               ws_atoms_list_t *_item) override {
+          //do nothing
+        }
+
+    };
+
   }
 
 }

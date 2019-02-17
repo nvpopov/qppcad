@@ -182,7 +182,6 @@ qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
 
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
 
-
   sb_x = new QDoubleSpinBox(this);
   sb_x->setMinimumWidth(40);
 

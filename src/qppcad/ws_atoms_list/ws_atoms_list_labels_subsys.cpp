@@ -135,7 +135,7 @@ void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
   painter.setPen(rectpen);
   painter.drawPath(path);
 
-  QFont text_font(astate->m_font_name, 31, QFont::Weight::ExtraBold);
+  QFont text_font(astate->m_font_name, 28, QFont::Weight::ExtraBold);
   QColor text_fill_color = QColor::fromRgbF(1,1,1);
   QString text;
 
@@ -163,7 +163,7 @@ void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
      QFontMetrics fmetric(text_font);
      painter.setRenderHint(QPainter::Antialiasing);
      text_path.addText((sph.left() + sph.right()) / 2 - fmetric.width(text) / 2,
-                       sph.bottom() - fmetric.height() / 2 + padding_h,
+                       sph.bottom() - fmetric.height() / 2 + 5,
                        text_font,
                        text);
      painter.drawPath(text_path);

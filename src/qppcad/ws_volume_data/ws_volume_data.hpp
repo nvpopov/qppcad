@@ -24,11 +24,12 @@ namespace qpp {
         mesh_t *m_first_mesh{nullptr};
         mesh_t *m_second_mesh{nullptr};
 
-        std::string m_volume_name;
+        //std::string m_volume_name; move to scalar_volume_t::m_volume name
 
         bool m_ready_to_render{false};
         bool m_need_to_regenerate{false};
         bool m_transparent_volume{false};
+        bool m_render_permanent{false};
         float m_alpha{0.75f};
         float m_isolevel{qpp::def_isovalue_dens};
 
@@ -47,7 +48,7 @@ namespace qpp {
       public:
 
         std::vector<ws_volume_record_t> m_volumes;
-        int m_ui_current{0};
+        int m_current_volume{0};
 
         void gen_repr();
         void mc_polygonise(float _isolevel);

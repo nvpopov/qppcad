@@ -36,60 +36,85 @@ void ws_volume_data_t::render() {
   ws_item_t::render();
   app_state_t* astate = app_state_t::get_inst();
 
-  for (auto &vol : m_volumes) {
+  for (size_t i = 0; i < m_volumes.size(); i++) {
 
-      if (vol.m_ready_to_render && m_is_visible) {
+      if (m_volumes[i].m_ready_to_render && m_is_visible &&
+          (i == m_current_volume || m_volumes[i].m_render_permanent)) {
 
-          shader_program_t *custom_sp = vol.m_transparent_volume ? astate->sp_mvap_ssl : nullptr;
+          shader_program_t *custom_sp =
+              m_volumes[i].m_transparent_volume ? astate->sp_mvap_ssl : nullptr;
           astate->dp->begin_render_general_mesh(custom_sp);
           vector3<float> scale{1,1,1};
           vector3<float> rot{0};
           vector3<float> color{0.5f};
 
           //astate->glapi->glDisable(GL_CULL_FACE);
-          if (vol.m_volume_type == ws_volume_t::volume_mo) {
-              astate->dp->render_general_mesh(m_pos, scale, rot, vol.m_color_pos,
-                                              vol.m_first_mesh, vol.m_alpha, custom_sp);
-              astate->dp->render_general_mesh(m_pos, scale, rot, vol.m_color_neg,
-                                              vol.m_second_mesh, vol.m_alpha, custom_sp);
+          if (m_volumes[i].m_volume_type == ws_volume_t::volume_mo) {
+              astate->dp->render_general_mesh(m_pos,
+                                              scale,
+                                              rot,
+                                              m_volumes[i].m_color_pos,
+                                              m_volumes[i].m_first_mesh,
+                                              m_volumes[i].m_alpha,
+                                              custom_sp);
+
+              astate->dp->render_general_mesh(m_pos,
+                                              scale,
+                                              rot,
+                                              m_volumes[i].m_color_neg,
+                                              m_volumes[i].m_second_mesh,
+                                              m_volumes[i].m_alpha,
+                                              custom_sp);
             }
 
-          if (vol.m_volume_type == ws_volume_t::volume_density) {
-              astate->dp->render_general_mesh(m_pos, scale, rot, vol.m_color_vol,
-                                              vol.m_first_mesh, vol.m_alpha, custom_sp);
+          if (m_volumes[i].m_volume_type == ws_volume_t::volume_density) {
+              astate->dp->render_general_mesh(m_pos,
+                                              scale,
+                                              rot,
+                                              m_volumes[i].m_color_vol,
+                                              m_volumes[i].m_first_mesh,
+                                              m_volumes[i].m_alpha,
+                                              custom_sp);
             }
           //astate->glapi->glEnable(GL_CULL_FACE);
           astate->dp->end_render_general_mesh(custom_sp);
 
         }
 
+      if (m_volumes[i].m_need_to_regenerate) {
 
-      if (vol.m_need_to_regenerate) {
+          if (!m_volumes[i].m_first_mesh) m_volumes[i].m_first_mesh = new mesh_t();
+          if (!m_volumes[i].m_second_mesh) m_volumes[i].m_second_mesh = new mesh_t();
 
-          if (!vol.m_first_mesh) vol.m_first_mesh = new mesh_t();
-          if (!vol.m_second_mesh) vol.m_second_mesh = new mesh_t();
-
-          if (vol.m_volume_type == ws_volume_t::volume_mo) {
-              volume_helper::polygonise_vol_mc(*(vol.m_first_mesh),
-                                               vol.m_volume,
-                                               vol.m_isolevel, 100);
-              volume_helper::polygonise_vol_mc(*(vol.m_second_mesh),
-                                               vol.m_volume,
-                                               -vol.m_isolevel, 100);
+          if (m_volumes[i].m_volume_type == ws_volume_t::volume_mo) {
+              volume_helper::polygonise_vol_mc(*(m_volumes[i].m_first_mesh),
+                                               m_volumes[i].m_volume,
+                                               m_volumes[i].m_isolevel,
+                                               100,
+                                               m_volumes[i].m_volume.m_addr_mode);
+              volume_helper::polygonise_vol_mc(*(m_volumes[i].m_second_mesh),
+                                               m_volumes[i].m_volume,
+                                               -m_volumes[i].m_isolevel,
+                                               100,
+                                               m_volumes[i].m_volume.m_addr_mode);
             }
 
-          if (vol.m_volume_type == ws_volume_t::volume_density) {
-              volume_helper::polygonise_vol_mc(*(vol.m_first_mesh),
-                                               vol.m_volume,
-                                               vol.m_isolevel, 100);
+          if (m_volumes[i].m_volume_type == ws_volume_t::volume_density) {
+              volume_helper::polygonise_vol_mc(*(m_volumes[i].m_first_mesh),
+                                               m_volumes[i].m_volume,
+                                               m_volumes[i].m_isolevel,
+                                               100,
+                                               m_volumes[i].m_volume.m_addr_mode);
             }
 
-          vol.m_ready_to_render = true;
-          vol.m_need_to_regenerate = false;
+          m_volumes[i].m_ready_to_render = true;
+          m_volumes[i].m_need_to_regenerate = false;
           astate->make_viewport_dirty();
+
         }
 
     }
+
 }
 
 bool ws_volume_data_t::mouse_click(ray_t<float> *click_ray) {
@@ -137,12 +162,6 @@ void ws_volume_data_t::load_from_json(json &data) {
 void ws_volume_data_t::update_isolevel(float new_isolevel) {
 
   app_state_t* astate = app_state_t::get_inst();
-//  for (auto &vol : m_volumes) {
-//    m_isolevel = new_isolevel;
-//    m_ready_to_render = false;
-//    m_need_to_regenerate = true;
-//    }
-
   astate->make_viewport_dirty();
 
 }
@@ -155,7 +174,6 @@ void ws_volume_data_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
 
   read_cube(inp, geom, new_vol_rec.m_volume);
   new_vol_rec.m_need_to_regenerate = true;
-  new_vol_rec.m_volume_name = fmt::format("CUBE {}", m_volumes.size());
 
   m_name = fmt::format("v_{}", fname);
 
@@ -167,6 +185,7 @@ void ws_volume_data_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
       new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
     }
 
+  new_vol_rec.m_volume.m_name = "From CUBE";
   m_volumes.emplace_back(std::move(new_vol_rec));
 
 }
