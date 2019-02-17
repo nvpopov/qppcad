@@ -732,22 +732,22 @@ float simple_query::get_isolevel() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+//  if (astate->ws_manager->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+//      auto cur_ws = astate->ws_manager->get_cur_ws();
 
-      if (cur_ws) {
+//      if (cur_ws) {
 
-          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
+//          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
 
-          if (cur_it_vol) {
-              return cur_it_vol->m_isolevel;
-            }
-        }
+//          if (cur_it_vol) {
+//              return cur_it_vol->m_isolevel;
+//            }
+//        }
 
-      astate->make_viewport_dirty();
+//      astate->make_viewport_dirty();
 
-    }
+//    }
 
   return 0.0f;
 }
@@ -756,22 +756,22 @@ void simple_query::set_isolevel(float new_isolevel) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+//  if (astate->ws_manager->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+//      auto cur_ws = astate->ws_manager->get_cur_ws();
 
-      if (cur_ws) {
+//      if (cur_ws) {
 
-          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
+//          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
 
-          if (cur_it_vol) {
-              cur_it_vol->update_isolevel(new_isolevel);
-            }
-        }
+//          if (cur_it_vol) {
+//              cur_it_vol->update_isolevel(new_isolevel);
+//            }
+//        }
 
-      astate->make_viewport_dirty();
+//      astate->make_viewport_dirty();
 
-    }
+//    }
 }
 
 void simple_query::set_sel_color_vec(vector3<float> color) {

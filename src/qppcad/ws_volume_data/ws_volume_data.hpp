@@ -16,15 +16,15 @@ namespace qpp {
       volume_density
     };
 
-    class ws_volume_data_t : public ws_item_t {
-
-        QPP_OBJECT(ws_volume_data_t, ws_item_t)
+    class ws_volume_record_t {
 
       public:
 
         scalar_volume_t<float> m_volume;
         mesh_t *m_first_mesh{nullptr};
         mesh_t *m_second_mesh{nullptr};
+
+        std::string m_volume_name;
 
         bool m_ready_to_render{false};
         bool m_need_to_regenerate{false};
@@ -37,6 +37,17 @@ namespace qpp {
         vector3<float> m_color_vol{clr_yellow};
 
         ws_volume_t m_volume_type;
+
+    };
+
+    class ws_volume_data_t : public ws_item_t {
+
+        QPP_OBJECT(ws_volume_data_t, ws_item_t)
+
+      public:
+
+        std::vector<ws_volume_record_t> m_volumes;
+        int m_ui_current{0};
 
         void gen_repr();
         void mc_polygonise(float _isolevel);

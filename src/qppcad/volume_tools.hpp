@@ -18,7 +18,7 @@ namespace qpp {
                                          float isolevel,
                                          int steps);
 
-        static void polygonise_volume_mc_naive(mesh_t &mesh,
+        static void polygonise_vol_mc(mesh_t &mesh,
                                                scalar_volume_t<float> &volume,
                                                float isolevel,
                                                int steps);

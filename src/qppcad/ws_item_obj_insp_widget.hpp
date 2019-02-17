@@ -55,6 +55,7 @@ namespace qpp {
         qbinded_checkbox *ws_item_bb_visible;
 
         int def_label_width{120};
+        int def_control_width{80};
 
         ws_item_tab_widget_t* define_tab(QString tab_name);
         virtual void bind_to_item(ws_item_t *_binding_item);

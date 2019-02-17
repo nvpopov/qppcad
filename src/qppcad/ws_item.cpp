@@ -169,11 +169,12 @@ void ws_item_t::on_end_content_gizmo_translate() {
 
 }
 
-void ws_item_t::translate(vector3<float> tr_vec) {
+void ws_item_t::translate(const vector3<float> &tr_vec) {
 
   app_state_t* astate = app_state_t::get_inst();
   if (get_flags() & ws_item_flags_support_tr) m_pos += tr_vec;
   if (get_flags() & ws_item_flags_translate_emit_upd_event) updated_internally();
+  if (is_selected()) astate->astate_evd->cur_ws_selected_item_position_changed();
   astate->make_viewport_dirty();
 
 }

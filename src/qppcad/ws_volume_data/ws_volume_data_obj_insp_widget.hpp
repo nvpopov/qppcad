@@ -26,6 +26,10 @@ namespace qpp {
         qbinded_color3_input *vol_color_neg;
         qbinded_color3_input *vol_color_vol;
 
+        QGroupBox *gb_volume_detail;
+        QFormLayout *gb_volume_detail_lt;
+        QComboBox *cb_current_volume;
+
         ws_volume_data_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;

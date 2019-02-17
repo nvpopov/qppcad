@@ -143,11 +143,7 @@ void gizmo_t::translate_attached(float delta_time){
 
           m_acc_tr += new_transform;
 
-          if (cur_edit_type == ws_edit_t::edit_item) {
-              attached_item->m_pos += new_transform;
-              if (attached_item && attached_item->is_selected())
-                astate->astate_evd->cur_ws_selected_item_position_changed();
-            }
+          if (cur_edit_type == ws_edit_t::edit_item) attached_item->translate(m_acc_tr);
           else attached_item->apply_intermediate_translate_content(new_transform);
         }
       else {

@@ -167,7 +167,7 @@ void volume_helper::polygonise_volume_mc(mesh_t &mesh,
 
 }
 
-void volume_helper::polygonise_volume_mc_naive(mesh_t &mesh,
+void volume_helper::polygonise_vol_mc(mesh_t &mesh,
                                                scalar_volume_t<float> &volume,
                                                float isolevel,
                                                int steps) {

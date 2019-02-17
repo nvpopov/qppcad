@@ -17,14 +17,27 @@ ws_volume_data_obj_insp_widget_t::ws_volume_data_obj_insp_widget_t() {
   vol_alpha = new qbinded_float_spinbox;
   vol_alpha->set_min_max_step(0.1, 1.0, 0.05, 2);
 
-  tg_form_layout->addRow(tr("Type"), general_volume_type);
-  tg_form_layout->addRow(tr("Isolevel"), vol_isovalue);
-  tg_form_layout->addRow(tr("Transparent"), vol_transparent);
-  tg_form_layout->addRow(tr("Alpha"), vol_alpha);
-  tg_form_layout->addRow(tr("Color positive"), vol_color_pos);
-  tg_form_layout->addRow(tr("Color negative"), vol_color_neg);
-  tg_form_layout->addRow(tr("Color density"), vol_color_vol);
+  gb_volume_detail = new QGroupBox(tr("Volume details"));
+  gb_volume_detail_lt = new QFormLayout;
 
+  cb_current_volume = new QComboBox;
+  cb_current_volume->setEditable(false);
+  cb_current_volume->setMaximumWidth(def_control_width);
+
+  pre_init_group_box(gb_volume_detail, gb_volume_detail_lt);
+  gb_volume_detail_lt->addRow(tr("Current volume :"), cb_current_volume);
+  post_init_group_box(gb_volume_detail, gb_volume_detail_lt);
+
+
+//  tg_form_layout->addRow(tr("Type"), general_volume_type);
+//  tg_form_layout->addRow(tr("Isolevel"), vol_isovalue);
+//  tg_form_layout->addRow(tr("Transparent"), vol_transparent);
+//  tg_form_layout->addRow(tr("Alpha"), vol_alpha);
+//  tg_form_layout->addRow(tr("Color positive"), vol_color_pos);
+//  tg_form_layout->addRow(tr("Color negative"), vol_color_neg);
+//  tg_form_layout->addRow(tr("Color density"), vol_color_vol);
+
+  tab_general->tab_inner_widget_layout->addWidget(gb_volume_detail);
   tab_general->tab_inner_widget_layout->addStretch();
 
 }
@@ -35,12 +48,12 @@ void ws_volume_data_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   if (_tmp) {
       b_vol = _tmp;
-      vol_isovalue->bind_value(&b_vol->m_isolevel, b_vol);
-      vol_color_pos->bind_value(&b_vol->m_color_pos);
-      vol_color_neg->bind_value(&b_vol->m_color_neg);
-      vol_color_vol->bind_value(&b_vol->m_color_vol);
-      vol_alpha->bind_value(&b_vol->m_alpha);
-      vol_transparent->bind_value(&b_vol->m_transparent_volume);
+//      vol_isovalue->bind_value(&b_vol->m_isolevel, b_vol);
+//      vol_color_pos->bind_value(&b_vol->m_color_pos);
+//      vol_color_neg->bind_value(&b_vol->m_color_neg);
+//      vol_color_vol->bind_value(&b_vol->m_color_vol);
+//      vol_alpha->bind_value(&b_vol->m_alpha);
+//      vol_transparent->bind_value(&b_vol->m_transparent_volume);
     }
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
@@ -52,8 +65,8 @@ void ws_volume_data_obj_insp_widget_t::update_from_ws_item() {
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
   if (b_vol) {
-      if (b_vol->m_volume.m_has_negative_values) general_volume_type->setText(tr("MO"));
-      else general_volume_type->setText(tr("DENSITY"));
+//      if (b_vol->m_volume.m_has_negative_values) general_volume_type->setText(tr("MO"));
+//      else general_volume_type->setText(tr("DENSITY"));
     }
 }
 
