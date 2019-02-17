@@ -19,6 +19,7 @@ namespace qpp {
         QLabel *general_volume_type;
         qbinded_float_spinbox *vol_isovalue;
 
+        qbinded_checkbox *vol_render_permanent;
         qbinded_checkbox *vol_transparent;
         qbinded_float_spinbox *vol_alpha;
 
@@ -35,6 +36,7 @@ namespace qpp {
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+        void update_binded_volume_controls();
 
       public slots:
         void cur_volume_index_changed(int index);
