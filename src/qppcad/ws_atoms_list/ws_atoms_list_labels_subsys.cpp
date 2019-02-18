@@ -41,6 +41,11 @@ void ws_atoms_list_labels_subsys_t::render_labels(QPainter &painter) {
       if (p_owner->m_sel_vis &&
           p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
 
+      if (!p_owner->m_atom_type_to_hide.empty()) {
+          auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));
+          if (it != p_owner->m_atom_type_to_hide.end()) return;
+        }
+
       proj_pos = astate->camera->project(p_owner->m_pos + p_owner->m_geom->pos(i));
 
       bool render_label{true};
@@ -83,13 +88,13 @@ void ws_atoms_list_labels_subsys_t::render_labels(QPainter &painter) {
       if (render_label) {
 
           label_qs = QString::fromStdString(label);
-//          old style
-//          const int rect_size = 60;
-//          painter.drawText(
-//                int((*proj_pos)[0]-rect_size*0.5f),
-//              int((*proj_pos)[1]-rect_size*0.5f),
-//              rect_size, rect_size,
-//              Qt::AlignCenter, QString::fromStdString(label));
+          //          old style
+          //          const int rect_size = 60;
+          //          painter.drawText(
+          //                int((*proj_pos)[0]-rect_size*0.5f),
+          //              int((*proj_pos)[1]-rect_size*0.5f),
+          //              rect_size, rect_size,
+          //              Qt::AlignCenter, QString::fromStdString(label));
 
           //w outline
           QPainterPath text_path;
@@ -98,9 +103,9 @@ void ws_atoms_list_labels_subsys_t::render_labels(QPainter &painter) {
 
           //painter.setRenderHint(QPainter::Antialiasing);
           text_path.addText((*proj_pos)[0] - fmetric.width(label_qs) / 2,
-                            (*proj_pos)[1] - font_rec.center().y(),
-                            text_font_lb,
-                            label_qs);
+              (*proj_pos)[1] - font_rec.center().y(),
+              text_font_lb,
+              label_qs);
           painter.drawPath(text_path);
 
         }
@@ -120,11 +125,13 @@ void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
 
   int sh = 70;
   int max_types = 10;
+  int hidden_type = p_owner->m_atom_type_to_hide.size();
   int ntypes = std::min(p_owner->m_geom->n_atom_types(), max_types);
+  int ntypes_wh = std::min(p_owner->m_geom->n_atom_types() - hidden_type, max_types);
   int w_h = 80;
   int padding_h = 10;
   int sph_padding = 5;
-  int w_w = sh * ntypes + sph_padding * (ntypes+1);
+  int w_w = sh * ntypes_wh + sph_padding * (ntypes_wh+1);
 
   QRect lrect(w/2 - w_w/2, h - w_h - padding_h, w_w, w_h);
   QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
@@ -141,32 +148,42 @@ void ws_atoms_list_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
 
   QColor fill_color = QColor::fromRgbF(0, 0, 1);
 
+  int r_i = 0;
   for (int i = 0; i < ntypes; i++) {
-     painter.setPen(rectpen);
-     QRect sph(w/2 - w_w/2 + sh*i + sph_padding*(i+1), h - w_h - padding_h + sph_padding, sh, sh);
 
-     auto ap_idx = ptable::number_by_symbol(p_owner->m_geom->atom_of_type(i));
+      auto it = p_owner->m_atom_type_to_hide.find(i);
+      if (it != p_owner->m_atom_type_to_hide.end()) continue;
 
-     if (ap_idx) {
-         vector3<float> color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
-         fill_color.setRgbF(color[0], color[1], color[2]);
-       } else fill_color = QColor::fromRgbF(0, 0, 1);
+      painter.setPen(rectpen);
+      QRect sph(w/2 - w_w/2 + sh * r_i + sph_padding * (r_i+1),
+                h - w_h - padding_h + sph_padding,
+                sh,
+                sh);
 
-     painter.setBrush(fill_color);
-     painter.drawEllipse(sph);
+      auto ap_idx = ptable::number_by_symbol(p_owner->m_geom->atom_of_type(i));
 
-     text = QString::fromStdString(p_owner->m_geom->atom_of_type(i));
+      if (ap_idx) {
+          vector3<float> color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
+          fill_color.setRgbF(color[0], color[1], color[2]);
+        } else fill_color = QColor::fromRgbF(0, 0, 1);
 
-     painter.setBrush(text_fill_color);
-     painter.setPen(rectpen2);
-     QPainterPath text_path;
-     QFontMetrics fmetric(text_font);
-     painter.setRenderHint(QPainter::Antialiasing);
-     text_path.addText((sph.left() + sph.right()) / 2 - fmetric.width(text) / 2,
-                       sph.bottom() - fmetric.height() / 2 + 5,
-                       text_font,
-                       text);
-     painter.drawPath(text_path);
+      painter.setBrush(fill_color);
+      painter.drawEllipse(sph);
+
+      text = QString::fromStdString(p_owner->m_geom->atom_of_type(i));
+
+      painter.setBrush(text_fill_color);
+      painter.setPen(rectpen2);
+      QPainterPath text_path;
+      QFontMetrics fmetric(text_font);
+      painter.setRenderHint(QPainter::Antialiasing);
+      text_path.addText((sph.left() + sph.right()) / 2 - fmetric.width(text) / 2,
+                        sph.bottom() - fmetric.height() / 2 + 5,
+                        text_font,
+                        text);
+      painter.drawPath(text_path);
+
+      r_i++;
 
     }
 
