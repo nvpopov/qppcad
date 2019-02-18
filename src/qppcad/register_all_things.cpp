@@ -106,7 +106,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   auto xyzq_mgf =
       std::make_shared<
       ws_atoms_list_io_loader_t<
-      read_xyzq_wrp_def<float, periodic_cell<float> >, ws_atoms_list_role_t::r_uc, 3 >
+      read_xyzq_wrp_def<float, periodic_cell<float> >, ws_atoms_list_role_t::r_uc >
       >();
 
   auto xyzq_s_mgf =

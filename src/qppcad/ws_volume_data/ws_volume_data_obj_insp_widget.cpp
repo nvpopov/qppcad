@@ -28,7 +28,7 @@ ws_volume_data_obj_insp_widget_t::ws_volume_data_obj_insp_widget_t() {
 
   pre_init_group_box(gb_volume_detail, gb_volume_detail_lt);
   gb_volume_detail_lt->addRow(tr("Current volume :"), cb_current_volume);
-  gb_volume_detail_lt->addRow(tr("Render permanent :"), vol_render_permanent);
+  gb_volume_detail_lt->addRow(tr("Permanent :"), vol_render_permanent);
   gb_volume_detail_lt->addRow(tr("Type"), general_volume_type);
   gb_volume_detail_lt->addRow(tr("Isolevel"), vol_isovalue);
   gb_volume_detail_lt->addRow(tr("Transparent"), vol_transparent);
@@ -37,8 +37,6 @@ ws_volume_data_obj_insp_widget_t::ws_volume_data_obj_insp_widget_t() {
   gb_volume_detail_lt->addRow(tr("Color negative"), vol_color_neg);
   gb_volume_detail_lt->addRow(tr("Color density"), vol_color_vol);
   post_init_group_box(gb_volume_detail, gb_volume_detail_lt);
-
-
 
   tab_general->tab_inner_widget_layout->addWidget(gb_volume_detail);
   tab_general->tab_inner_widget_layout->addStretch();

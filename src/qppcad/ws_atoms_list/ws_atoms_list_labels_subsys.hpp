@@ -29,8 +29,9 @@ namespace qpp {
 
       public:
 
+        int m_label_font_size{17};
         ws_atoms_list_labels_style m_style{ws_atoms_list_labels_style::show_none};
-        bool m_render_inplace_hud{true};
+        bool m_render_inplace_hud{false};
         ws_atoms_list_labels_subsys_t (ws_atoms_list_t &_p_owner);
 
         void render_overlay(QPainter &painter);

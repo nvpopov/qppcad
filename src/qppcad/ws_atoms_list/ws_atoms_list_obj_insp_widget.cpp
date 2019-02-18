@@ -98,6 +98,9 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   disp_s_labels_style->addItem("Charge");
   disp_s_labels_style->addItem("Custom");
 
+  disp_labels_size = new qbinded_int_spinbox;
+  disp_labels_size->set_min_max_step(5, 35, 1);
+
   disp_s_inplace_labels = new qbinded_checkbox;
 
   disp_draw_subcells = new qbinded_checkbox;
@@ -130,6 +133,7 @@ void ws_atoms_list_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("Atom scale :"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale :"), disp_s_bond_scale);
   gb_disp_s_lt->addRow(tr("Labels style :"), disp_s_labels_style);
+  gb_disp_s_lt->addRow(tr("Labels size"), disp_labels_size);
   gb_disp_s_lt->addRow(tr("Inplace labels :"), disp_s_inplace_labels);
   gb_disp_s_lt->addRow(tr("Sel. vis. :"), disp_s_sel_vis);
   gb_disp_s_lt->addRow(tr("Sel. vis. bonds :"), disp_s_sel_vis_affect_bonds);
@@ -615,6 +619,7 @@ void ws_atoms_list_obj_insp_widget_t::update_from_ws_item() {
       disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_cur_render_type));
       disp_s_color_mode->bind_value(reinterpret_cast<int*>(&b_al->m_color_mode));
       disp_s_labels_style->bind_value(reinterpret_cast<int*>(&b_al->m_labels->m_style));
+      disp_labels_size->bind_value(&b_al->m_labels->m_label_font_size);
       disp_s_inplace_labels->bind_value(&b_al->m_labels->m_render_inplace_hud);
       disp_shading_spec->bind_value(&b_al->m_draw_specular);
       disp_shading_spec_value->bind_value(&b_al->m_shading_specular_power);
@@ -693,6 +698,7 @@ void ws_atoms_list_obj_insp_widget_t::unbind_item() {
   disp_s_render_style->unbind_value();
   disp_s_color_mode->unbind_value();
   disp_s_labels_style->unbind_value();
+  disp_labels_size->unbind_value();
   disp_s_inplace_labels->unbind_value();
   disp_shading_spec->unbind_value();
   disp_shading_spec_value->unbind_value();

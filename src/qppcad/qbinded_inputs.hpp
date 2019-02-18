@@ -50,7 +50,8 @@ namespace qpp {
         virtual void load_value_ex() = 0;
     };
 
-    class qbinded_checkbox : public QCheckBox , public generic_binded_input_t<bool> {
+    class qbinded_checkbox : public QCheckBox ,
+            public generic_binded_input_t<bool> {
 
         Q_OBJECT
 
@@ -62,7 +63,8 @@ namespace qpp {
         void check_state_changed(int state);
     };
 
-    class qbinded_float_spinbox : public QDoubleSpinBox, public generic_binded_input_t<float> {
+    class qbinded_float_spinbox : public QDoubleSpinBox,
+            public generic_binded_input_t<float> {
 
         Q_OBJECT
 
@@ -80,7 +82,26 @@ namespace qpp {
 
     };
 
-    class qbinded_combobox : public QComboBox, public generic_binded_input_t<int> {
+    class qbinded_int_spinbox : public QSpinBox,
+            public generic_binded_input_t<int> {
+
+        Q_OBJECT
+
+      public:
+        void load_value_ex() override;
+        void set_min_max_step(int new_min,
+                              int new_max,
+                              int new_step);
+        qbinded_int_spinbox(QWidget *parent = nullptr);
+        void set_suffix(QString &new_suffix);
+        void set_default_suffix();
+      public slots:
+        void value_changed(int value);
+
+    };
+
+    class qbinded_combobox : public QComboBox,
+            public generic_binded_input_t<int> {
 
         Q_OBJECT
 
@@ -92,7 +113,8 @@ namespace qpp {
         void value_changed(int i);
     };
 
-    class qbinded_int3_input : public QWidget, public generic_binded_input_t<vector3<int> > {
+    class qbinded_int3_input : public QWidget,
+            public generic_binded_input_t<vector3<int> > {
 
         Q_OBJECT
 
@@ -110,7 +132,8 @@ namespace qpp {
 
     };
 
-    class qbinded_float3_input : public QWidget, public generic_binded_input_t<vector3<float> > {
+    class qbinded_float3_input : public QWidget,
+            public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 
@@ -130,7 +153,8 @@ namespace qpp {
 
     };
 
-    class qbinded_color3_input : public QWidget, public generic_binded_input_t<vector3<float> > {
+    class qbinded_color3_input : public QWidget,
+            public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 

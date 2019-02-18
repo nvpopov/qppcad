@@ -25,7 +25,7 @@ void ws_atoms_list_labels_subsys_t::render_labels(QPainter &painter) {
 
   QPen rectpen(QPen(Qt::black, 1, Qt::SolidLine));
   QColor text_fill_color = QColor::fromRgbF(1,1,1);
-  QFont text_font_lb(astate->m_font_name, 16, QFont::Weight::Bold);
+  QFont text_font_lb(astate->m_font_name, m_label_font_size, QFont::Weight::Bold);
 
   painter.setBrush(text_fill_color);
   painter.setPen(rectpen);

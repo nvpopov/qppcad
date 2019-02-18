@@ -71,6 +71,8 @@ namespace qpp {
         QLabel *disp_subcell_color_label;
         qbinded_color3_input *disp_subcell_color;
 
+        qbinded_int_spinbox *disp_labels_size;
+
         QGroupBox *gb_disp_shading;
         QFormLayout *gb_disp_shading_lt;
         qbinded_checkbox *disp_shading_spec;
