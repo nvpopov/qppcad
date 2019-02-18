@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
+#include <qppcad/workspace.hpp>
 
 #pragma push_macro("slots")
 #undef slots
@@ -20,6 +21,7 @@ namespace qpp {
 
       public:
 
+        static std::shared_ptr<workspace_manager_t> get_ws_mgr();
         static void open_file(std::string file_name,
                               bool to_current);
         static void open_file_query(std::string file_name,

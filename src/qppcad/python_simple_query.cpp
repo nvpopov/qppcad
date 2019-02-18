@@ -15,6 +15,13 @@ using namespace qpp::cad;
 
 namespace py = pybind11;
 
+ std::shared_ptr<workspace_manager_t> simple_query::get_ws_mgr() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  return astate->ws_manager;
+
+}
+
 void simple_query::open_file(std::string file_name,
                              bool to_current) {
 

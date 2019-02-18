@@ -5,6 +5,9 @@ import pyqpp as pq
 import rlcompleter
 import sys
 import embc
+import workspace_stuff
+
+wsm = get_wsm()
 
 sys.stdout = output_redirector()
 cm = rlcompleter.Completer()

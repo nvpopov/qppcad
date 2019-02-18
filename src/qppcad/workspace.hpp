@@ -85,6 +85,7 @@ namespace qpp {
         workspace_manager_t(app_state_t *_astate);
 
         std::shared_ptr<workspace_t> get_cur_ws();
+        std::shared_ptr<workspace_t> get_by_name(std::string target_name);
         std::optional<size_t> get_cur_id();
 
         bool set_cur_id(const size_t ws_index);

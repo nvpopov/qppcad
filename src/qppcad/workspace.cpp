@@ -360,6 +360,15 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
   return m_ws[m_cur_ws_id];
 }
 
+std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target_name) {
+
+  for (auto item : m_ws)
+    if (item->m_ws_name == target_name) return item;
+
+  return nullptr;
+
+}
+
 std::optional<size_t> workspace_manager_t::get_cur_id () {
   if (!m_ws.empty()) return std::optional<size_t>(m_cur_ws_id);
   return std::nullopt;

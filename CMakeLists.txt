@@ -157,6 +157,7 @@ add_executable(qppcad
     src/qppcad/python_embedded_pyqpp.cpp
     src/qppcad/python_embedded_embc.cpp
     src/qppcad/python_simple_query.cpp
+    src/qppcad/python_embedded_workspace.cpp
     deps/qpp/modules/pyqpp/pyqpp_linalg.cpp
     deps/qpp/modules/pyqpp/pyqpp_geom.cpp
     deps/qpp/modules/pyqpp/pyqpp_xgeom.cpp
