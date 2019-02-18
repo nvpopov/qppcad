@@ -103,7 +103,8 @@ namespace qpp {
         void init_ws_item_bhv_mgr();
 
         void load_from_file_autodeduce(const std::string file_name,
-                                       const std::string file_format = "");
+                                       const std::string file_format = "",
+                                       bool create_new_ws = true);
 
         void load_from_file(const std::string &fname,
                             bool override = true);

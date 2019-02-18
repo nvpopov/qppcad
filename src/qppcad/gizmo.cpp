@@ -134,7 +134,7 @@ void gizmo_t::translate_attached(float delta_time){
       if (fabs(d_unproj[m_touched_axis]) > 0.00025f && astate->is_mouse_moving &&
           astate->mouse_distance_pp > 0.2f) {
 
-          float proj_dep_mod = 3500.0f;
+          float proj_dep_mod = 1500.0f;
 
           if (astate->camera->m_cur_proj == cam_proj_t::proj_ortho) proj_dep_mod = 350.0f;
 
@@ -142,6 +142,13 @@ void gizmo_t::translate_attached(float delta_time){
               gizmo_axis[m_touched_axis] * delta_time * d_unproj[m_touched_axis] * proj_dep_mod;
 
           m_acc_tr += new_transform;
+
+          const float transform_amplitude = 0.5f;
+          m_acc_tr[0] = std::clamp(m_acc_tr[0], -transform_amplitude, transform_amplitude);
+          m_acc_tr[1] = std::clamp(m_acc_tr[1], -transform_amplitude, transform_amplitude);
+          m_acc_tr[2] = std::clamp(m_acc_tr[2], -transform_amplitude, transform_amplitude);
+
+          //std::cout << "M_ACC_TR" << m_acc_tr << std::endl;
 
           if (cur_edit_type == ws_edit_t::edit_item) attached_item->translate(m_acc_tr);
           else attached_item->apply_intermediate_translate_content(new_transform);

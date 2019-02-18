@@ -526,7 +526,8 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 }
 
 void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
-                                                    const std::string file_format) {
+                                                    const std::string file_format,
+                                                    bool create_new_ws) {
 
 
   if (file_name.find("json") != std::string::npos ||
@@ -538,13 +539,13 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
           auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-              if (bhv_id) import_from_file(file_name, *bhv_id, true);
+              if (bhv_id) import_from_file(file_name, *bhv_id, create_new_ws);
             }
         } else {
           auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-              if (bhv_id) import_from_file(file_name, *bhv_id, true);
+              if (bhv_id) import_from_file(file_name, *bhv_id, create_new_ws);
             }
         }
     }

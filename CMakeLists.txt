@@ -161,6 +161,8 @@ add_executable(qppcad
     deps/qpp/modules/pyqpp/pyqpp_geom.cpp
     deps/qpp/modules/pyqpp/pyqpp_xgeom.cpp
     deps/qpp/modules/pyqpp/pyqpp_cell.cpp
+    deps/qpp/modules/pyqpp/pyqpp_autosymm.cpp
+    deps/qpp/modules/pyqpp/pyqpp_builders.cpp
     deps/qpp/modules/data/errors.cpp
     ${QRCS})
 

@@ -15,21 +15,24 @@ using namespace qpp::cad;
 
 namespace py = pybind11;
 
-void simple_query::open_file(std::string file_name) {
+void simple_query::open_file(std::string file_name,
+                             bool to_current) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->ws_manager->load_from_file_autodeduce(file_name);
+  astate->ws_manager->load_from_file_autodeduce(file_name, "", !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 
 }
 
-void simple_query::open_file_query(std::string file_name, std::string file_format) {
+void simple_query::open_file_query(std::string file_name,
+                                   std::string file_format,
+                                   bool to_current) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->ws_manager->load_from_file_autodeduce(file_name, file_format);
+  astate->ws_manager->load_from_file_autodeduce(file_name, file_format, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 

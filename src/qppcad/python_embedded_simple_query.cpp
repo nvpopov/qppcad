@@ -20,8 +20,10 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.attr("def_isovalue_dens") = py::float_(qpp::def_isovalue_dens);
   m.attr("def_isovalue_mo") = py::float_(qpp::def_isovalue_mo);
 
-  m.def("qopen", &simple_query::open_file);
-  m.def("qopen", &simple_query::open_file_query);
+  m.def("qopen", &simple_query::open_file,
+        py::arg("file_name"), py::arg("to_current") = false);
+  m.def("qopen", &simple_query::open_file_query,
+        py::arg("file_name"), py::arg("file_format") = "", py::arg("to_current") = false);
 
   m.def("mode", &simple_query::edit_mode);
 
