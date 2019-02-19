@@ -11,10 +11,6 @@ using namespace qpp;
 using namespace qpp::cad;
 
 PYBIND11_EMBEDDED_MODULE(core, m) {
-  // `m` is a `py::module` which is used to bind functions and classes
-  m.def("add", [](int i, int j) {
-      return i + j;
-    });
 
   m.def("clear", []() {
       app_state_t::get_inst()->astate_evd->python_console_clear_requested();
@@ -23,4 +19,5 @@ PYBIND11_EMBEDDED_MODULE(core, m) {
   py::class_<python_std_output_redirector_t> py_redirector(m, "output_redirector");
   py_redirector.def(py::init<>());
   py_redirector.def("write", &python_std_output_redirector_t::write);
+
 }

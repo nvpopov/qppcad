@@ -29,7 +29,7 @@ bool python_manager_t::execute(std::string command) {
             if (py::isinstance<py::int_>(res) || py::isinstance<py::float_>(res) ||
                 py::isinstance<py::str>(res) || py::isinstance<py::list>(res) ||
                 py::isinstance<py::dict>(res) || py::isinstance<py::bool_>(res) ||
-                py::isinstance<vector3<float> >(res) || py::isinstance<matrix3<float> >(res)) {
+                py::isinstance<vector3<float>>(res) || py::isinstance<matrix3<float>>(res)) {
                 py::print(res);
               }
           } else {

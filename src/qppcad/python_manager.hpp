@@ -20,14 +20,19 @@ namespace qpp {
   namespace cad {
 
     class python_manager_t {
+
       public:
+
         QList<QString> m_commands;
         py::object f_comp;
         py::scoped_interpreter guard{};
-        bool execute(std::string command);
         std::string m_output_buffer;
-        void get_completion_list(QString text, QStringList &sl);
+
         python_manager_t();
+        bool execute(std::string command);
+        void get_completion_list(QString text, QStringList &sl);
+
+
     };
 
   }

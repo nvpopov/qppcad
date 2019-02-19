@@ -317,7 +317,9 @@ std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_
     }
 
   astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, not found", hash));
+
   return nullptr;
+
 }
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t type_id) {
@@ -353,7 +355,6 @@ ws_item_t *ws_item_behaviour_manager_t::ws_item_fbr_by_type_p(size_t type_id) {
   return nullptr;
 
 }
-
 
 bool ws_item_io_behaviour_t::is_type_accepted(size_t _type) {
   return m_accepted_type == _type;

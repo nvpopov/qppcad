@@ -266,3 +266,32 @@ void ws_point_sym_group_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }
 
+void ws_point_sym_group_t::py_update() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  m_pg_axes = point_group_axes<float>(m_ag);
+
+  for (int i = 0; i < m_pg_axes.axes.size(); i++) {
+      transform_record_t new_tr;
+      new_tr.m_is_plane = false;
+      new_tr.m_axis = m_pg_axes.axes[i];
+      std::cout << "PGAXES " << m_pg_axes.orders[i] << " " << m_pg_axes.axes[i] << std::endl;
+      m_atf.push_back(std::move(new_tr));
+    }
+
+  for (int i = 0; i < m_pg_axes.planes.size(); i++) {
+      transform_record_t new_tr;
+      new_tr.m_is_plane = true;
+      new_tr.m_axis =  m_pg_axes.planes[i];
+      std::cout << "PGPLANES " << m_pg_axes.planes[i] << std::endl;
+      m_atf.push_back(std::move(new_tr));
+    }
+
+  recalc_render_data();
+
+  astate->astate_evd->cur_ws_selected_item_changed();
+  astate->make_viewport_dirty();
+
+}
+

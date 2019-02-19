@@ -226,3 +226,7 @@ void ws_item_t::save_from_file(std::string &file_name) {
 bool ws_item_t::can_be_written_to_json() {
   return false;
 }
+
+std::string ws_item_t::py_get_repr() {
+  return fmt::format("[ws_item, type=\"{}\", name=\"{}\"]", get_type_name(), m_name);
+}

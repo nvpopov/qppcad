@@ -162,6 +162,9 @@ namespace qpp {
         void load_from_file(std::string &file_name);
         void save_from_file(std::string &file_name);
         virtual bool can_be_written_to_json();
+
+        std::string py_get_repr();
+
     };
 
   }

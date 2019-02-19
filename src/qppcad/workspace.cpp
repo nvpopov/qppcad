@@ -356,6 +356,39 @@ void workspace_t::set_edit_type (const ws_edit_t new_edit_type) {
 
 }
 
+std::string workspace_t::py_get_repr() {
+  return fmt::format("[workspace, name=\"{}\"]", m_ws_name);
+}
+
+std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name,
+                                                          std::string item_name) {
+  app_state_t* astate = app_state_t::get_inst();
+  if (!m_owner) {
+      astate->log("ERROR: workspace_t::py_construct_item -> no ws mgr");
+      return nullptr;
+    }
+
+  auto type_hash = astate->hash_reg->calc_hash(class_name);
+
+  if (!type_hash) {
+      astate->log("ERROR: workspace_t::py_construct_item -> invalid hash");
+      return nullptr;
+    }
+
+  auto new_item = m_owner->m_bhv_mgr->fabric_by_type(type_hash);
+
+  if (!new_item) {
+      astate->log("ERROR: workspace_t::py_construct_item -> fabric error");
+      return nullptr;
+    }
+
+  new_item->m_name = item_name;
+  add_item_to_ws(new_item);
+
+  return new_item;
+
+}
+
 workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 
   m_cur_ws_id = 0;
@@ -573,6 +606,7 @@ void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
 
   auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
+  new_ws->m_owner = this;
   m_ws.push_back(new_ws);
 
   if (switch_to_new_workspace) set_cur_id(m_ws.size()-1);

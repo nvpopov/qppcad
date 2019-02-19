@@ -72,6 +72,10 @@ namespace qpp {
         void update(float delta_time);
         void set_edit_type(const ws_edit_t new_edit_type);
 
+        std::string py_get_repr();
+        std::shared_ptr<ws_item_t> py_construct_item(std::string class_name,
+                                                     std::string item_name);
+
     };
 
     /// \brief The workspace_manager_t class
