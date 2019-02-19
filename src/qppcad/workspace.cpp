@@ -28,6 +28,12 @@ std::shared_ptr<ws_item_t> workspace_t::get_selected_sp(){
   else return nullptr;
 }
 
+std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
+  for (auto item : m_ws_items)
+    if (item->m_name == _name) return item;
+  return nullptr;
+}
+
 bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -325,6 +331,7 @@ void workspace_t::update (float delta_time) {
 
           clear_connected_items(*it);
           it = m_ws_items.erase(it);
+          //it->reset();
           ws_changed();
 
           app_state_t* astate = app_state_t::get_inst();

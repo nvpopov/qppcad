@@ -27,7 +27,7 @@ namespace qpp {
       public:
         workspace_manager_t                      *m_owner{nullptr};
         std::string                              m_fs_path{""};
-        ws_edit_t                             m_edit_type{ws_edit_t::edit_item};
+        ws_edit_t                                m_edit_type{ws_edit_t::edit_item};
         std::vector<std::shared_ptr<ws_item_t> > m_ws_items;
         std::string                              m_ws_name;
         std::unique_ptr<camera_t>                m_camera;
@@ -47,6 +47,7 @@ namespace qpp {
         std::optional<size_t>  get_selected_idx();
         ws_item_t *get_selected();
         std::shared_ptr<ws_item_t> get_selected_sp();
+        std::shared_ptr<ws_item_t> get_by_name(std::string _name);
 
         template<typename T>
         T* get_selected_as() {
