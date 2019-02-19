@@ -7,6 +7,17 @@
 using namespace qpp;
 using namespace qpp::cad;
 
+vector3<float> ws_item_t::get_pos() {
+  return m_pos;
+}
+
+void ws_item_t::set_pos(vector3<float> new_pos) {
+  app_state_t* astate = app_state_t::get_inst();
+  m_pos = new_pos;
+  call_followers();
+  astate->make_viewport_dirty();
+}
+
 void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
   m_parent_ws = _parent_ws;
 }

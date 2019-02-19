@@ -70,6 +70,8 @@ namespace qpp {
         bool m_selected{false}; ///
         bool m_marked_for_deletion{false};
 
+        vector3<float> get_pos();
+        void set_pos(vector3<float> new_pos);
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
                                            vector3<float> &out_look_at) = 0;
         /// \brief set_parent_workspace

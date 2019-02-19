@@ -330,6 +330,7 @@ void workspace_t::update (float delta_time) {
             m_gizmo->attached_item = nullptr;
 
           clear_connected_items(*it);
+          it->get()->m_parent_ws = nullptr;
           it = m_ws_items.erase(it);
           //it->reset();
           ws_changed();

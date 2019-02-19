@@ -7,7 +7,7 @@ import sys
 import embc
 import workspace_stuff
 
-wsm = get_wsm()
+ws = get_wsm()
 
 sys.stdout = output_redirector()
 cm = rlcompleter.Completer()
