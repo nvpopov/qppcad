@@ -107,14 +107,14 @@ add_executable(qppcad
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
 
-    src/qppcad/ws_cube_primitive/ws_cube_primitive.cpp
-    src/qppcad/ws_cube_primitive/ws_cube_primitive_obj_insp_widget.cpp
+    src/qppcad/cube_primitive/cube_primitive.cpp
+    src/qppcad/cube_primitive/cube_primitive_obj_insp_widget.cpp
 
-    src/qppcad/ws_arrow_primitive/ws_arrow_primitive.cpp
-    src/qppcad/ws_arrow_primitive/ws_arrow_primitive_obj_insp_widget.cpp
+    src/qppcad/arrow_primitive/arrow_primitive.cpp
+    src/qppcad/arrow_primitive/arrow_primitive_obj_insp_widget.cpp
 
-    src/qppcad/ws_comp_chem_data/ws_comp_chem_data.cpp
-    src/qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.cpp
+    src/qppcad/ccd_view/ccd_view.cpp
+    src/qppcad/ccd_view/ccd_view_obj_insp_widget.cpp
 
     src/qppcad/volume_view/volume_view.cpp
     src/qppcad/volume_view/volume_view_obj_insp_widget.cpp
@@ -140,8 +140,8 @@ add_executable(qppcad
     src/qppcad/psg_view/psg_view.cpp
     src/qppcad/psg_view/psg_view_obj_insp_widget.cpp
 
-    src/qppcad/ws_traj_highlight/ws_traj_highlight.cpp
-    src/qppcad/ws_traj_highlight/ws_traj_highlight_obj_insp_widget.cpp
+    src/qppcad/traj_hl/traj_hl.cpp
+    src/qppcad/traj_hl/traj_hl_obj_insp_widget.cpp
 
     src/qppcad/tools/supercell/supercell.cpp
     src/qppcad/tools/axial_scale/axial_scale.cpp

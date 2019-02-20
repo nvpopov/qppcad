@@ -1,16 +1,16 @@
-#include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
+#include <qppcad/ccd_view/ccd_view_obj_insp_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 
-void ws_comp_chem_data_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
+void ccd_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   if (_binding_item && _binding_item->get_type() ==
-      ws_comp_chem_data_t::get_type_static()) {
-      ws_comp_chem_data_t *dp = _binding_item->cast_as<ws_comp_chem_data_t>();
+      ccd_view_t::get_type_static()) {
+      ccd_view_t *dp = _binding_item->cast_as<ccd_view_t>();
       if (dp) {
-          // std::cout << "accepted ws_comp_chem_data_t in ::bind_to_item" << std::endl;
+          // std::cout << "accepted ccd_view_t in ::bind_to_item" << std::endl;
           b_ccd = dp;
         }
       else {
@@ -22,7 +22,7 @@ void ws_comp_chem_data_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item)
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
 }
 
-void ws_comp_chem_data_obj_insp_widget_t::update_from_ws_item() {
+void ccd_view_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
@@ -64,12 +64,12 @@ void ws_comp_chem_data_obj_insp_widget_t::update_from_ws_item() {
     }
 }
 
-void ws_comp_chem_data_obj_insp_widget_t::unbind_item() {
+void ccd_view_obj_insp_widget_t::unbind_item() {
   ws_item_obj_insp_widget_t::unbind_item();
   b_ccd = nullptr;
 }
 
-void ws_comp_chem_data_obj_insp_widget_t::update_geo_opt() {
+void ccd_view_obj_insp_widget_t::update_geo_opt() {
 
   gb_go_conv_series->clear();
 
@@ -103,7 +103,7 @@ void ws_comp_chem_data_obj_insp_widget_t::update_geo_opt() {
   //gb_go_conv_chart->axisY()->labe
 }
 
-ws_comp_chem_data_obj_insp_widget_t::ws_comp_chem_data_obj_insp_widget_t()
+ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   : ws_item_obj_insp_widget_t() {
 
   tab_geo_opt = define_tab(tr("Geometry opt."));

@@ -1,20 +1,20 @@
-#include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
+#include <qppcad/traj_hl/traj_hl.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_traj_highlight_t::ws_traj_highlight_t() {
+traj_hl_t::traj_hl_t() {
   set_default_flags(ws_item_flags_default);
 }
 
-void ws_traj_highlight_t::vote_for_view_vectors(vector3<float> &out_look_pos,
+void traj_hl_t::vote_for_view_vectors(vector3<float> &out_look_pos,
                                                 vector3<float> &out_look_at) {
   //do nothing
 }
 
-void ws_traj_highlight_t::render() {
+void traj_hl_t::render() {
   app_state_t* astate = app_state_t::get_inst();
   //do nothing
   if (!m_line_mesh) {
@@ -33,31 +33,31 @@ void ws_traj_highlight_t::render() {
     }
 }
 
-bool ws_traj_highlight_t::mouse_click(ray_t<float> *click_ray) {
+bool traj_hl_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string ws_traj_highlight_t::compose_item_name() {
-  return "ws_traj_highlight";
+std::string traj_hl_t::compose_item_name() {
+  return "traj_hl";
 }
 
-void ws_traj_highlight_t::update(float delta_time) {
+void traj_hl_t::update(float delta_time) {
   //do nothing
 }
 
-float ws_traj_highlight_t::get_bb_prescaller() {
+float traj_hl_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-uint32_t ws_traj_highlight_t::get_amount_of_selected_content() {
+uint32_t traj_hl_t::get_amount_of_selected_content() {
   return 0;
 }
 
-size_t ws_traj_highlight_t::get_content_count() {
+size_t traj_hl_t::get_content_count() {
   return 0;
 }
 
-void ws_traj_highlight_t::on_leader_changed() {
+void traj_hl_t::on_leader_changed() {
    app_state_t* astate = app_state_t::get_inst();
    astate->log(fmt::format("{} ::on_leader_changed()", m_name));
 
@@ -67,12 +67,12 @@ void ws_traj_highlight_t::on_leader_changed() {
      }
 }
 
-void ws_traj_highlight_t::on_leader_call() {
+void traj_hl_t::on_leader_call() {
 //  app_state_t* astate = app_state_t::get_inst();
 //  astate->log(fmt::format("{} ::on_leader_call()", m_name));
 }
 
-void ws_traj_highlight_t::rebuild_line_mesh() {
+void traj_hl_t::rebuild_line_mesh() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -99,20 +99,20 @@ void ws_traj_highlight_t::rebuild_line_mesh() {
       m_line_mesh->indices.push_back(frame_id);
     }
 
-  astate->log(fmt::format("ws_traj_highlighter_t total points : {}", m_line_mesh->indices.size()));
+  astate->log(fmt::format("traj_hler_t total points : {}", m_line_mesh->indices.size()));
   m_line_mesh->mesh_rt = GL_LINES;
   m_line_mesh->num_primitives = m_line_mesh->indices.size();
   m_line_mesh->bind_data();
 }
 
-void ws_traj_highlight_t::save_to_json(json &data) {
+void traj_hl_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 }
 
-void ws_traj_highlight_t::load_from_json(json &data) {
+void traj_hl_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }
 
-void ws_traj_highlight_t::updated_internally() {
+void traj_hl_t::updated_internally() {
 }
 

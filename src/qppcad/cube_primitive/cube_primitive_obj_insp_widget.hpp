@@ -7,21 +7,21 @@ namespace qpp {
 
   namespace cad {
 
-    class ws_cube_primitive_t;
+    class cube_primitive_t;
 
-    class ws_cube_primitive_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class cube_primitive_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 
       public:
-        ws_cube_primitive_t *b_cp{nullptr};
+        cube_primitive_t *b_cp{nullptr};
         QGroupBox *tg_cube_params;
         QFormLayout *tg_cube_params_lt;
         qbinded_float3_input *cube_param_scale;
         qbinded_color3_input *cube_param_color;
         qbinded_combobox *cube_render_mode;
 
-        ws_cube_primitive_obj_insp_widget_t();
+        cube_primitive_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;

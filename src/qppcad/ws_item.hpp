@@ -37,7 +37,7 @@ namespace qpp {
     enum ws_item_tag {
       tag_abstract_item,
       tag_geom_view,
-      tag_ws_comp_chem_data,
+      tag_ccd_view,
       tag_volume_view
     };
 

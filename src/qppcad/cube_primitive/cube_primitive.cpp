@@ -1,11 +1,11 @@
-#include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
+#include <qppcad/cube_primitive/cube_primitive.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_cube_primitive_t::ws_cube_primitive_t() {
+cube_primitive_t::cube_primitive_t() {
 
   set_default_flags(ws_item_flags_default |
                     ws_item_flags_support_rendering |
@@ -14,12 +14,12 @@ ws_cube_primitive_t::ws_cube_primitive_t() {
 
 }
 
-void ws_cube_primitive_t::vote_for_view_vectors(vector3<float> &out_look_pos,
+void cube_primitive_t::vote_for_view_vectors(vector3<float> &out_look_pos,
                                                 vector3<float> &out_look_at) {
   //do nothing
 }
 
-void ws_cube_primitive_t::render() {
+void cube_primitive_t::render() {
 
   if (!m_is_visible) return;
 
@@ -42,31 +42,31 @@ void ws_cube_primitive_t::render() {
 
 }
 
-bool ws_cube_primitive_t::mouse_click(ray_t<float> *click_ray) {
+bool cube_primitive_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string ws_cube_primitive_t::compose_item_name() {
-  return "ws_cube_primitive";
+std::string cube_primitive_t::compose_item_name() {
+  return "cube_primitive";
 }
 
-void ws_cube_primitive_t::update(float delta_time) {
+void cube_primitive_t::update(float delta_time) {
   //do nothing
 }
 
-float ws_cube_primitive_t::get_bb_prescaller() {
+float cube_primitive_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-uint32_t ws_cube_primitive_t::get_amount_of_selected_content() {
+uint32_t cube_primitive_t::get_amount_of_selected_content() {
   return 0;
 }
 
-size_t ws_cube_primitive_t::get_content_count() {
+size_t cube_primitive_t::get_content_count() {
   return 0;
 }
 
-void ws_cube_primitive_t::save_to_json(json &data) {
+void cube_primitive_t::save_to_json(json &data) {
 
   ws_item_t::save_to_json(data);
 
@@ -76,7 +76,7 @@ void ws_cube_primitive_t::save_to_json(json &data) {
 
 }
 
-void ws_cube_primitive_t::load_from_json(json &data) {
+void cube_primitive_t::load_from_json(json &data) {
 
   ws_item_t::load_from_json(data);
 
@@ -86,11 +86,11 @@ void ws_cube_primitive_t::load_from_json(json &data) {
 
 }
 
-bool ws_cube_primitive_t::can_be_written_to_json() {
+bool cube_primitive_t::can_be_written_to_json() {
   return true;
 }
 
-void ws_cube_primitive_t::updated_internally() {
+void cube_primitive_t::updated_internally() {
 
 }
 

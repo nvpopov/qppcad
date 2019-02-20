@@ -1,9 +1,9 @@
-#include <qppcad/ws_traj_highlight/ws_traj_highlight_obj_insp_widget.hpp>
+#include <qppcad/traj_hl/traj_hl_obj_insp_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_traj_highlight_obj_insp_widget_t::ws_traj_highlight_obj_insp_widget_t() {
+traj_hl_obj_insp_widget_t::traj_hl_obj_insp_widget_t() {
 
   gb_traj_settings = new QGroupBox(tr("Trajectory settings"));
   gb_traj_settings_lt = new QFormLayout;
@@ -18,22 +18,22 @@ ws_traj_highlight_obj_insp_widget_t::ws_traj_highlight_obj_insp_widget_t() {
 
 }
 
-void ws_traj_highlight_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
+void traj_hl_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
 
-  if (_binding_item && _binding_item->get_type() == ws_traj_highlight_t::get_type_static()) {
-      b_th = _binding_item->cast_as<ws_traj_highlight_t>();
+  if (_binding_item && _binding_item->get_type() == traj_hl_t::get_type_static()) {
+      b_th = _binding_item->cast_as<traj_hl_t>();
       disp_traj_color->bind_value(&b_th->m_traj_color, b_th);
     }
 }
 
-void ws_traj_highlight_obj_insp_widget_t::update_from_ws_item() {
+void traj_hl_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
 }
 
-void ws_traj_highlight_obj_insp_widget_t::unbind_item() {
+void traj_hl_obj_insp_widget_t::unbind_item() {
   disp_traj_color->unbind_value();
 }

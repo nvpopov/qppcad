@@ -3,9 +3,9 @@
 #include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/volume_view/volume_view.hpp>
 #include <qppcad/psg_view/psg_view.hpp>
-#include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
-#include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
-#include <qppcad/ws_arrow_primitive/ws_arrow_primitive.hpp>
+#include <qppcad/traj_hl/traj_hl.hpp>
+#include <qppcad/cube_primitive/cube_primitive.hpp>
+#include <qppcad/arrow_primitive/arrow_primitive.hpp>
 #include <data/ptable.hpp>
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>
@@ -544,13 +544,13 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   if (!al) return;
 
   auto traj_hl =
-      astate->ws_manager->m_bhv_mgr->fabric_by_type(ws_traj_highlight_t::get_type_static());
+      astate->ws_manager->m_bhv_mgr->fabric_by_type(traj_hl_t::get_type_static());
 
   if (!traj_hl) return;
 
   traj_hl->m_name = fmt::format("traj_highlighter_{}", cur_ws->m_ws_items.size());
 
-  auto traj_hl_casted = traj_hl->cast_as<ws_traj_highlight_t>();
+  auto traj_hl_casted = traj_hl->cast_as<traj_hl_t>();
   if (!traj_hl_casted) return;
 
   traj_hl_casted->m_anim_id = anim_id;
@@ -686,7 +686,7 @@ void simple_query::make_cube_p(std::string name,
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto new_cube = std::make_shared<ws_cube_primitive_t>();
+  auto new_cube = std::make_shared<cube_primitive_t>();
   new_cube->m_name = name;
   new_cube->m_pos = pos;
   new_cube->m_scale = {size_a, size_b, size_c};
@@ -705,7 +705,7 @@ void simple_query::make_arrow_p(std::string name,
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto new_arr = std::make_shared<ws_arrow_primitive_t>();
+  auto new_arr = std::make_shared<arrow_primitive_t>();
   new_arr->m_name = name;
   new_arr->m_pos = from;
   new_arr->m_arrow_to = to;

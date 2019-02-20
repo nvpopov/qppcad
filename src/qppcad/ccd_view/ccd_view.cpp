@@ -1,24 +1,24 @@
-#include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
+#include <qppcad/ccd_view/ccd_view.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_comp_chem_data_t::ws_comp_chem_data_t() {
+ccd_view_t::ccd_view_t() {
 
   set_default_flags(ws_item_flags_default);
-   m_tag = ws_item_tag::tag_ws_comp_chem_data;
+   m_tag = ws_item_tag::tag_ccd_view;
 }
 
-void ws_comp_chem_data_t::manual_step_update(const int dir) {
+void ccd_view_t::manual_step_update(const int dir) {
   auto old_step = m_cur_step;
   auto new_step = m_cur_step + dir;
   if (new_step >= 0 && new_step < m_ccd->m_steps.size()) m_cur_step = new_step;
   if (old_step != m_cur_step) update_joined_atoms_list_animation(m_cur_step);
 }
 
-void ws_comp_chem_data_t::manual_update_vib() {
+void ccd_view_t::manual_update_vib() {
   for (auto &items : m_connected_items) {
       geom_view_t *al = dynamic_cast<geom_view_t*>(items.get());
       if (al && al->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1)  {
@@ -31,22 +31,22 @@ void ws_comp_chem_data_t::manual_update_vib() {
     }
 }
 
-void ws_comp_chem_data_t::fill_custom_colors_of_geom_anim(const std::string color_map_name) {
+void ccd_view_t::fill_custom_colors_of_geom_anim(const std::string color_map_name) {
 
   app_state_t* astate = app_state_t::get_inst();
 
 }
 
-void ws_comp_chem_data_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
+void ccd_view_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
                                                 vector3<float> &vOutLookAt) {
   //do nothing
 }
 
-void ws_comp_chem_data_t::render() {
+void ccd_view_t::render() {
 
 }
 
-void ws_comp_chem_data_t::update_joined_atoms_list_animation(size_t step_idx) {
+void ccd_view_t::update_joined_atoms_list_animation(size_t step_idx) {
 
   for (auto &items : m_connected_items) {
       geom_view_t *al = dynamic_cast<geom_view_t*>(items.get());
@@ -60,39 +60,39 @@ void ws_comp_chem_data_t::update_joined_atoms_list_animation(size_t step_idx) {
 }
 
 
-bool ws_comp_chem_data_t::mouse_click(ray_t<float> *click_ray) {
+bool ccd_view_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
 
-std::string ws_comp_chem_data_t::compose_item_name() {
+std::string ccd_view_t::compose_item_name() {
   return "comp. chem. data";
 }
 
-void ws_comp_chem_data_t::update(float delta_time) {
+void ccd_view_t::update(float delta_time) {
 
 }
 
-float ws_comp_chem_data_t::get_bb_prescaller() {
+float ccd_view_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-void ws_comp_chem_data_t::updated_internally() {
+void ccd_view_t::updated_internally() {
 
 }
 
-uint32_t ws_comp_chem_data_t::get_amount_of_selected_content() {
+uint32_t ccd_view_t::get_amount_of_selected_content() {
   return 0;
 }
 
-size_t ws_comp_chem_data_t::get_content_count() {
+size_t ccd_view_t::get_content_count() {
   return 0;
 }
 
-void ws_comp_chem_data_t::save_to_json(json &data) {
+void ccd_view_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 }
 
-void ws_comp_chem_data_t::load_from_json(json &data) {
+void ccd_view_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }

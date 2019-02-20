@@ -1,7 +1,7 @@
 #include <qppcad/ws_item_behaviour_manager.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
+#include <qppcad/ccd_view/ccd_view.hpp>
 #include <qppcad/volume_view/volume_view.hpp>
 #include <QFileInfo>
 
@@ -345,8 +345,8 @@ ws_item_t *ws_item_behaviour_manager_t::ws_item_fbr_by_type_p(size_t type_id) {
   if (type_id == geom_view_t::get_type_static())
     return new geom_view_t();
 
-  if (type_id == ws_comp_chem_data_t::get_type_static())
-    return new ws_comp_chem_data_t();
+  if (type_id == ccd_view_t::get_type_static())
+    return new ccd_view_t();
 
   if (type_id == volume_view_t::get_type_static())
     return new volume_view_t();

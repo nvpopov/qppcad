@@ -3,7 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
+#include <qppcad/ccd_view/ccd_view.hpp>
 #include <qppcad/volume_view/volume_view.hpp>
 #include <qppcad/ws_item_behaviour_manager.hpp>
 #include <qppcad/app_state.hpp>
@@ -189,8 +189,8 @@ namespace qpp {
             }
 
           if (EXTRACT_CCD) {
-              std::shared_ptr<ws_comp_chem_data_t> extracted_ccd =
-                  std::make_shared<ws_comp_chem_data_t>();
+              std::shared_ptr<ccd_view_t> extracted_ccd =
+                  std::make_shared<ccd_view_t>();
               extracted_ccd->m_name = _item->m_name+"_ccd";
               extracted_ccd->m_ccd =
                   std::make_unique<comp_chem_program_data_t<float> >(std::move(cc_inst));

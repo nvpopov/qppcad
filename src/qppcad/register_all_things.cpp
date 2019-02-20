@@ -4,8 +4,8 @@
 #include <qppcad/geom_view/geom_view_obj_insp_widget.hpp>
 #include <qppcad/geom_view/geom_view_io.hpp>
 
-#include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
-#include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
+#include <qppcad/ccd_view/ccd_view.hpp>
+#include <qppcad/ccd_view/ccd_view_obj_insp_widget.hpp>
 
 #include <qppcad/volume_view/volume_view.hpp>
 #include <qppcad/volume_view/volume_view_obj_insp_widget.hpp>
@@ -13,14 +13,14 @@
 #include <qppcad/psg_view/psg_view.hpp>
 #include <qppcad/psg_view/psg_view_obj_insp_widget.hpp>
 
-#include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
-#include <qppcad/ws_traj_highlight/ws_traj_highlight_obj_insp_widget.hpp>
+#include <qppcad/traj_hl/traj_hl.hpp>
+#include <qppcad/traj_hl/traj_hl_obj_insp_widget.hpp>
 
-#include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
-#include <qppcad/ws_cube_primitive/ws_cube_primitive_obj_insp_widget.hpp>
+#include <qppcad/cube_primitive/cube_primitive.hpp>
+#include <qppcad/cube_primitive/cube_primitive_obj_insp_widget.hpp>
 
-#include <qppcad/ws_arrow_primitive/ws_arrow_primitive.hpp>
-#include <qppcad/ws_arrow_primitive/ws_arrow_primitive_obj_insp_widget.hpp>
+#include <qppcad/arrow_primitive/arrow_primitive.hpp>
+#include <qppcad/arrow_primitive/arrow_primitive_obj_insp_widget.hpp>
 
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
@@ -32,12 +32,12 @@ using namespace qpp::cad;
 void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr) {
 
   reg_ws_item_fbr_t<geom_view_t>(bhv_mgr);
-  reg_ws_item_fbr_t<ws_comp_chem_data_t>(bhv_mgr);
+  reg_ws_item_fbr_t<ccd_view_t>(bhv_mgr);
   reg_ws_item_fbr_t<volume_view_t>(bhv_mgr);
   reg_ws_item_fbr_t<psg_view_t>(bhv_mgr);
-  reg_ws_item_fbr_t<ws_traj_highlight_t>(bhv_mgr);
-  reg_ws_item_fbr_t<ws_cube_primitive_t>(bhv_mgr);
-  reg_ws_item_fbr_t<ws_arrow_primitive_t>(bhv_mgr);
+  reg_ws_item_fbr_t<traj_hl_t>(bhv_mgr);
+  reg_ws_item_fbr_t<cube_primitive_t>(bhv_mgr);
+  reg_ws_item_fbr_t<arrow_primitive_t>(bhv_mgr);
 
 }
 
@@ -45,11 +45,11 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
 
   reg_ws_item_obj_insp_t<geom_view_t, geom_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<volume_view_t, volume_view_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<ws_comp_chem_data_t, ws_comp_chem_data_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<ccd_view_t, ccd_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<psg_view_t, psg_view_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<ws_traj_highlight_t, ws_traj_highlight_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<ws_cube_primitive_t, ws_cube_primitive_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<ws_arrow_primitive_t, ws_arrow_primitive_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<traj_hl_t, traj_hl_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<cube_primitive_t, cube_primitive_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<arrow_primitive_t, arrow_primitive_obj_insp_widget_t>(bhv_mgr);
 
 }
 
