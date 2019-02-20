@@ -11,7 +11,7 @@
 #include <qppcad/ws_item_obj_insp_widget.hpp>
 #include <qppcad/geom_view/geom_view_obj_insp_widget.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
-#include <qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.hpp>
+#include <qppcad/volume_view/volume_view_obj_insp_widget.hpp>
 
 namespace qpp {
 

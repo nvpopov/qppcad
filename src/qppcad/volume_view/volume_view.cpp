@@ -1,4 +1,4 @@
-#include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <qppcad/volume_view/volume_view.hpp>
 #include <qppcad/volume_tools.hpp>
 #include <qppcad/app_state.hpp>
 
@@ -6,15 +6,15 @@ using namespace qpp;
 using namespace qpp::cad;
 
 
-void ws_volume_data_t::gen_repr() {
+void volume_view_t::gen_repr() {
 
 }
 
-void ws_volume_data_t::mc_polygonise(float _isolevel) {
+void volume_view_t::mc_polygonise(float _isolevel) {
   //volume_helper::polygonise_volume_mc_naive(*(m_first_mesh), m_volume, _isolevel, 100);
 }
 
-ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
+volume_view_t::volume_view_t() : ws_item_t () {
 
   set_default_flags(ws_item_flags_default |
                     ws_item_flags_support_tr |
@@ -22,16 +22,16 @@ ws_volume_data_t::ws_volume_data_t() : ws_item_t () {
                     ws_item_flags_support_rendering );
 
   //TODO: Tag deprecated
-  m_tag = ws_item_tag::tag_ws_volume_data;
+  m_tag = ws_item_tag::tag_volume_view;
 
 }
 
-void ws_volume_data_t::vote_for_view_vectors(vector3<float> &v_out_look_pos,
+void volume_view_t::vote_for_view_vectors(vector3<float> &v_out_look_pos,
                                              vector3<float> &v_out_look_at) {
 
 }
 
-void ws_volume_data_t::render() {
+void volume_view_t::render() {
 
   ws_item_t::render();
   app_state_t* astate = app_state_t::get_inst();
@@ -117,31 +117,31 @@ void ws_volume_data_t::render() {
 
 }
 
-bool ws_volume_data_t::mouse_click(ray_t<float> *click_ray) {
+bool volume_view_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string ws_volume_data_t::compose_item_name() {
+std::string volume_view_t::compose_item_name() {
   return "3d volume data";
 }
 
-void ws_volume_data_t::update(float delta_time) {
+void volume_view_t::update(float delta_time) {
 
 }
 
-float ws_volume_data_t::get_bb_prescaller() {
+float volume_view_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-uint32_t ws_volume_data_t::get_amount_of_selected_content() {
+uint32_t volume_view_t::get_amount_of_selected_content() {
   return 0;
 }
 
-size_t ws_volume_data_t::get_content_count() {
+size_t volume_view_t::get_content_count() {
   return 0;
 }
 
-void ws_volume_data_t::updated_internally() {
+void volume_view_t::updated_internally() {
 
   for (auto &vol : m_volumes) {
       vol.m_need_to_regenerate = true;
@@ -151,22 +151,22 @@ void ws_volume_data_t::updated_internally() {
 
 }
 
-void ws_volume_data_t::save_to_json(json &data) {
+void volume_view_t::save_to_json(json &data) {
 
 }
 
-void ws_volume_data_t::load_from_json(json &data) {
+void volume_view_t::load_from_json(json &data) {
 
 }
 
-void ws_volume_data_t::update_isolevel(float new_isolevel) {
+void volume_view_t::update_isolevel(float new_isolevel) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
 
 }
 
-void ws_volume_data_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
+void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
                                         geometry<float, periodic_cell<float> > &geom,
                                         std::string &fname) {
 

@@ -116,8 +116,8 @@ add_executable(qppcad
     src/qppcad/ws_comp_chem_data/ws_comp_chem_data.cpp
     src/qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.cpp
 
-    src/qppcad/ws_volume_data/ws_volume_data.cpp
-    src/qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.cpp
+    src/qppcad/volume_view/volume_view.cpp
+    src/qppcad/volume_view/volume_view_obj_insp_widget.cpp
     src/qppcad/volume_tools.cpp
 
     src/qppcad/geom_view/geom_view.cpp

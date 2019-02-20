@@ -1,7 +1,7 @@
 #include <qppcad/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <qppcad/volume_view/volume_view.hpp>
 #include <qppcad/psg_view/psg_view.hpp>
 #include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
 #include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
@@ -748,7 +748,7 @@ float simple_query::get_isolevel() {
 
 //      if (cur_ws) {
 
-//          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
+//          auto cur_it_vol = dynamic_cast<volume_view_t*>(cur_ws->get_selected());
 
 //          if (cur_it_vol) {
 //              return cur_it_vol->m_isolevel;
@@ -772,7 +772,7 @@ void simple_query::set_isolevel(float new_isolevel) {
 
 //      if (cur_ws) {
 
-//          auto cur_it_vol = dynamic_cast<ws_volume_data_t*>(cur_ws->get_selected());
+//          auto cur_it_vol = dynamic_cast<volume_view_t*>(cur_ws->get_selected());
 
 //          if (cur_it_vol) {
 //              cur_it_vol->update_isolevel(new_isolevel);

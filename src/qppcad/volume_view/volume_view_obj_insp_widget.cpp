@@ -1,10 +1,10 @@
-#include <qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.hpp>
+#include <qppcad/volume_view/volume_view_obj_insp_widget.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_volume_data_obj_insp_widget_t::ws_volume_data_obj_insp_widget_t() {
+volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
 
   general_volume_type = new QLabel(tr("Molecular orbitals"));
   vol_isovalue = new qbinded_float_spinbox;
@@ -46,9 +46,9 @@ ws_volume_data_obj_insp_widget_t::ws_volume_data_obj_insp_widget_t() {
 
 }
 
-void ws_volume_data_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
+void volume_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
-  auto _tmp = _binding_item->cast_as<ws_volume_data_t>();
+  auto _tmp = _binding_item->cast_as<volume_view_t>();
 
   if (_tmp) {
       b_vol = _tmp;
@@ -59,7 +59,7 @@ void ws_volume_data_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
 }
 
-void ws_volume_data_obj_insp_widget_t::update_from_ws_item() {
+void volume_view_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
@@ -77,7 +77,7 @@ void ws_volume_data_obj_insp_widget_t::update_from_ws_item() {
     }
 }
 
-void ws_volume_data_obj_insp_widget_t::unbind_item() {
+void volume_view_obj_insp_widget_t::unbind_item() {
 
   vol_isovalue->unbind_value();
   vol_color_pos->unbind_value();
@@ -88,7 +88,7 @@ void ws_volume_data_obj_insp_widget_t::unbind_item() {
   vol_render_permanent->unbind_value();
 }
 
-void ws_volume_data_obj_insp_widget_t::update_binded_volume_controls() {
+void volume_view_obj_insp_widget_t::update_binded_volume_controls() {
 
   if (b_vol && b_vol->m_current_volume < b_vol->m_volumes.size()) {
 
@@ -106,7 +106,7 @@ void ws_volume_data_obj_insp_widget_t::update_binded_volume_controls() {
     }
 }
 
-void ws_volume_data_obj_insp_widget_t::cur_volume_index_changed(int index) {
+void volume_view_obj_insp_widget_t::cur_volume_index_changed(int index) {
 
   app_state_t *astate = app_state_t::get_inst();
 

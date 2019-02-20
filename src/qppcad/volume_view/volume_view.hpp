@@ -41,9 +41,9 @@ namespace qpp {
 
     };
 
-    class ws_volume_data_t : public ws_item_t {
+    class volume_view_t : public ws_item_t {
 
-        QPP_OBJECT(ws_volume_data_t, ws_item_t)
+        QPP_OBJECT(volume_view_t, ws_item_t)
 
       public:
 
@@ -53,7 +53,7 @@ namespace qpp {
         void gen_repr();
         void mc_polygonise(float _isolevel);
 
-        ws_volume_data_t();
+        volume_view_t();
 
         void vote_for_view_vectors(vector3<float> &v_out_look_pos,
                                    vector3<float> &v_out_look_at) override ;

@@ -7,8 +7,8 @@
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
 
-#include <qppcad/ws_volume_data/ws_volume_data.hpp>
-#include <qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.hpp>
+#include <qppcad/volume_view/volume_view.hpp>
+#include <qppcad/volume_view/volume_view_obj_insp_widget.hpp>
 
 #include <qppcad/psg_view/psg_view.hpp>
 #include <qppcad/psg_view/psg_view_obj_insp_widget.hpp>
@@ -33,7 +33,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
 
   reg_ws_item_fbr_t<geom_view_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_comp_chem_data_t>(bhv_mgr);
-  reg_ws_item_fbr_t<ws_volume_data_t>(bhv_mgr);
+  reg_ws_item_fbr_t<volume_view_t>(bhv_mgr);
   reg_ws_item_fbr_t<psg_view_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_traj_highlight_t>(bhv_mgr);
   reg_ws_item_fbr_t<ws_cube_primitive_t>(bhv_mgr);
@@ -44,7 +44,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
 void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr) {
 
   reg_ws_item_obj_insp_t<geom_view_t, geom_view_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<ws_volume_data_t, ws_volume_data_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<volume_view_t, volume_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<ws_comp_chem_data_t, ws_comp_chem_data_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<psg_view_t, psg_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<ws_traj_highlight_t, ws_traj_highlight_obj_insp_widget_t>(bhv_mgr);

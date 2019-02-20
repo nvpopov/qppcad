@@ -4,7 +4,7 @@
 #include <mathf/math.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
-#include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <qppcad/volume_view/volume_view.hpp>
 #include <qppcad/register_all_things.hpp>
 
 using namespace qpp;

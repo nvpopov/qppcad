@@ -6,7 +6,7 @@
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 #include <qppcad/app_state.hpp>
 
-#include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <qppcad/volume_view/volume_view.hpp>
 
 #include <clocale>
 

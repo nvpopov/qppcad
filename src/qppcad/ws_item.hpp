@@ -38,7 +38,7 @@ namespace qpp {
       tag_abstract_item,
       tag_geom_view,
       tag_ws_comp_chem_data,
-      tag_ws_volume_data
+      tag_volume_view
     };
 
     class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {

@@ -10,7 +10,7 @@ void geom_view_io_cube_t::load_from_stream_ex(std::basic_istream<char, TRAITS> &
                                                   geom_view_t *_item,
                                                   workspace_t *ws) {
 
-  std::shared_ptr<ws_volume_data_t> vold = std::make_shared<ws_volume_data_t>();
+  std::shared_ptr<volume_view_t> vold = std::make_shared<volume_view_t>();
   _item->m_geom->DIM = 0;
   _item->m_geom->cell.DIM = 0;
   vold->load_from_stream(stream, *(_item->m_geom.get()), _item->m_name);
@@ -33,7 +33,7 @@ void geom_view_io_cube_t::load_from_stream_ex(std::basic_istream<char, TRAITS> &
 void geom_view_molcas_grid_t::load_from_stream_ex(std::basic_istream<char, TRAITS> &stream,
                                                       geom_view_t *_item,
                                                       workspace_t *ws) {
-  std::shared_ptr<ws_volume_data_t> vold = std::make_shared<ws_volume_data_t>();
+  std::shared_ptr<volume_view_t> vold = std::make_shared<volume_view_t>();
   _item->m_geom->DIM = 0;
   _item->m_geom->cell.DIM = 0;
 

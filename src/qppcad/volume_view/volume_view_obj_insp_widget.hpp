@@ -2,20 +2,20 @@
 #define QPP_CAD_WS_VOLUME_DATA_OBJ_INSP_H
 
 #include <qppcad/ws_item_obj_insp_widget.hpp>
-#include <qppcad/ws_volume_data/ws_volume_data.hpp>
+#include <qppcad/volume_view/volume_view.hpp>
 
 namespace qpp {
 
   namespace cad {
 
-    class ws_volume_data_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class volume_view_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 
       public:
 //        ws_item_tab_widget_t *tab_geo_opt;
 //        ws_item_tab_widget_t *tab_vibs;
-        ws_volume_data_t *b_vol{nullptr};
+        volume_view_t *b_vol{nullptr};
         QLabel *general_volume_type;
         qbinded_float_spinbox *vol_isovalue;
 
@@ -31,7 +31,7 @@ namespace qpp {
         QFormLayout *gb_volume_detail_lt;
         QComboBox *cb_current_volume;
 
-        ws_volume_data_obj_insp_widget_t();
+        volume_view_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
