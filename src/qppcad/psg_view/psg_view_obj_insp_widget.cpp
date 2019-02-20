@@ -1,9 +1,9 @@
-#include <qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.hpp>
+#include <qppcad/psg_view/psg_view_obj_insp_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_point_sym_group_obj_insp_widget_t::ws_point_sym_group_obj_insp_widget_t() {
+psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
 
   tg_info_summary_widget = new QGroupBox;
   tg_info_summary_lt = new QFormLayout;
@@ -44,11 +44,11 @@ ws_point_sym_group_obj_insp_widget_t::ws_point_sym_group_obj_insp_widget_t() {
 
 }
 
-void ws_point_sym_group_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
+void psg_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
-  if (_binding_item && _binding_item->get_type() == ws_point_sym_group_t::get_type_static()) {
-      b_pg = _binding_item->cast_as<ws_point_sym_group_t>();
+  if (_binding_item && _binding_item->get_type() == psg_view_t::get_type_static()) {
+      b_pg = _binding_item->cast_as<psg_view_t>();
       tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag.name));
       tg_info_total_sym_op->setText(tr("%1").arg(b_pg->m_ag.size()));
       tg_plane_alpha_enabled->bind_value(&b_pg->m_plane_alpha_enabled, b_pg);
@@ -60,13 +60,13 @@ void ws_point_sym_group_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item
     }
 }
 
-void ws_point_sym_group_obj_insp_widget_t::update_from_ws_item() {
+void psg_view_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
 }
 
-void ws_point_sym_group_obj_insp_widget_t::unbind_item() {
+void psg_view_obj_insp_widget_t::unbind_item() {
   tg_plane_alpha_enabled->unbind_value();
   tg_plane_scale->unbind_value();
   tg_axis_scale->unbind_value();

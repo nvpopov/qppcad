@@ -137,8 +137,8 @@ add_executable(qppcad
     src/qppcad/geom_view/qbonding_table_model.cpp
     src/qppcad/geom_view/qmeasurements_table_model.cpp
 
-    src/qppcad/ws_point_sym_group/ws_point_sym_group.cpp
-    src/qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.cpp
+    src/qppcad/psg_view/psg_view.cpp
+    src/qppcad/psg_view/psg_view_obj_insp_widget.cpp
 
     src/qppcad/ws_traj_highlight/ws_traj_highlight.cpp
     src/qppcad/ws_traj_highlight/ws_traj_highlight_obj_insp_widget.cpp

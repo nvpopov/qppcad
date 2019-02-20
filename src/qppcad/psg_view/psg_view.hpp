@@ -20,9 +20,9 @@ namespace qpp {
         float m_norm_mod{1};
     };
 
-    class ws_point_sym_group_t : public ws_item_t {
+    class psg_view_t : public ws_item_t {
 
-        QPP_OBJECT(ws_point_sym_group_t, ws_item_t)
+        QPP_OBJECT(psg_view_t, ws_item_t)
 
       public:
         vector3<float> m_new_centre{0,0,0};
@@ -38,7 +38,7 @@ namespace qpp {
         float m_axis_scale{5.0f};
         float m_axis_len_mod{1.0f};
 
-        ws_point_sym_group_t();
+        psg_view_t();
 
         void gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
                            float tolerance,

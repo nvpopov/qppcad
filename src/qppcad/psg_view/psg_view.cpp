@@ -1,14 +1,14 @@
-#include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
+#include <qppcad/psg_view/psg_view.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_point_sym_group_t::ws_point_sym_group_t() {
+psg_view_t::psg_view_t() {
   set_default_flags(ws_item_flags_default);
 }
 
-void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
+void psg_view_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
                                          float tolerance,
                                          bool nested) {
 
@@ -37,7 +37,7 @@ void ws_point_sym_group_t::gen_from_geom(xgeometry<float, periodic_cell<float> >
 
 }
 
-void ws_point_sym_group_t::recalc_render_data() {
+void psg_view_t::recalc_render_data() {
 
   for (auto &elem : m_atf) {
 
@@ -112,12 +112,12 @@ void ws_point_sym_group_t::recalc_render_data() {
 
 }
 
-void ws_point_sym_group_t::vote_for_view_vectors(vector3<float> &out_look_pos,
+void psg_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
                                                  vector3<float> &out_look_at) {
   //do nothing
 }
 
-void ws_point_sym_group_t::render() {
+void psg_view_t::render() {
 
   if (!m_is_visible) return;
 
@@ -230,43 +230,43 @@ void ws_point_sym_group_t::render() {
 
 }
 
-bool ws_point_sym_group_t::mouse_click(ray_t<float> *click_ray) {
+bool psg_view_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string ws_point_sym_group_t::compose_item_name() {
-  return "ws_point_sym_group";
+std::string psg_view_t::compose_item_name() {
+  return "point sym. group view";
 }
 
-void ws_point_sym_group_t::update(float delta_time) {
+void psg_view_t::update(float delta_time) {
   //do nothing
 }
 
-float ws_point_sym_group_t::get_bb_prescaller() {
+float psg_view_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-void ws_point_sym_group_t::updated_internally() {
+void psg_view_t::updated_internally() {
   recalc_render_data();
 }
 
-uint32_t ws_point_sym_group_t::get_amount_of_selected_content() {
+uint32_t psg_view_t::get_amount_of_selected_content() {
   return 0;
 }
 
-size_t ws_point_sym_group_t::get_content_count() {
+size_t psg_view_t::get_content_count() {
   return 0;
 }
 
-void ws_point_sym_group_t::save_to_json(json &data) {
+void psg_view_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 }
 
-void ws_point_sym_group_t::load_from_json(json &data) {
+void psg_view_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }
 
-void ws_point_sym_group_t::py_update() {
+void psg_view_t::py_update() {
 
   app_state_t* astate = app_state_t::get_inst();
 

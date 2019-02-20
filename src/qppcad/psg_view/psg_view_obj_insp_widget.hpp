@@ -1,20 +1,20 @@
 #ifndef QPP_CAD_WS_POINT_SYM_GROUP_OBJECT_INSP
 #define QPP_CAD_WS_POINT_SYM_GROUP_OBJECT_INSP
 #include <qppcad/ws_item_obj_insp_widget.hpp>
-#include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
+#include <qppcad/psg_view/psg_view.hpp>
 
 namespace qpp {
 
   namespace cad {
 
-    class ws_point_sym_group_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class psg_view_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 
       public:
-        ws_point_sym_group_t *b_pg{nullptr};
+        psg_view_t *b_pg{nullptr};
 
-        ws_point_sym_group_obj_insp_widget_t();
+        psg_view_obj_insp_widget_t();
 
         QGroupBox *tg_info_summary_widget;
         QFormLayout *tg_info_summary_lt;

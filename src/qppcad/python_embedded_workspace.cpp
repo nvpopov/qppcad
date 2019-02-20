@@ -7,7 +7,7 @@
 #include <qppcad/ws_item_trampoline.hpp>
 #include <qppcad/workspace.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
+#include <qppcad/psg_view/psg_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -61,11 +61,11 @@ PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
                                         [](geom_view_t &self) {return self.m_geom.get();},
                                         py::return_value_policy::reference);
 
-  py::class_<ws_point_sym_group_t, std::shared_ptr<ws_point_sym_group_t> >
-  py_point_sym_group_t(m, "ws_point_sym_group_t", py_ws_item_t);
-  py_point_sym_group_t.def_readwrite("ag", &ws_point_sym_group_t::m_ag);
-  py_point_sym_group_t.def_readwrite("pg_axes", &ws_point_sym_group_t::m_pg_axes);
-  py_point_sym_group_t.def("update_view", &ws_point_sym_group_t::py_update);
-  py_point_sym_group_t.def_readwrite("center", &ws_point_sym_group_t::m_new_centre);
+  py::class_<psg_view_t, std::shared_ptr<psg_view_t> >
+  py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);
+  py_point_sym_group_t.def_readwrite("ag", &psg_view_t::m_ag);
+  py_point_sym_group_t.def_readwrite("pg_axes", &psg_view_t::m_pg_axes);
+  py_point_sym_group_t.def("update_view", &psg_view_t::py_update);
+  py_point_sym_group_t.def_readwrite("center", &psg_view_t::m_new_centre);
 
 }

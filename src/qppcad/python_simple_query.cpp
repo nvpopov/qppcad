@@ -2,7 +2,7 @@
 #include <qppcad/app_state.hpp>
 #include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
-#include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
+#include <qppcad/psg_view/psg_view.hpp>
 #include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
 #include <qppcad/ws_cube_primitive/ws_cube_primitive.hpp>
 #include <qppcad/ws_arrow_primitive/ws_arrow_primitive.hpp>
@@ -487,7 +487,7 @@ std::tuple<std::string, vector3<float> >  simple_query::get_point_sym_group(floa
 
 }
 
-void simple_query::make_ws_point_sym_group(float tolerance) {
+void simple_query::make_psg_view(float tolerance) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -498,8 +498,8 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
 
       if (cur_ws->m_edit_type == ws_edit_t::edit_item && al->m_geom->DIM == 0) {
           auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
-                         ws_point_sym_group_t::get_type_static());
-          auto ws_pg_c = ws_pg->cast_as<ws_point_sym_group_t>();
+                         psg_view_t::get_type_static());
+          auto ws_pg_c = ws_pg->cast_as<psg_view_t>();
 
           if (ws_pg_c) {
               ws_pg_c->m_connected_items.push_back(al->m_parent_ws->get_selected_sp());
@@ -512,8 +512,8 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
         } else if (cur_ws->m_edit_type == ws_edit_t::edit_content &&
                    !al->m_atom_idx_sel.empty()) {
           auto ws_pg_partial = astate->ws_manager->m_bhv_mgr->fabric_by_type(
-                                 ws_point_sym_group_t::get_type_static());
-          auto ws_pg_partial_c = ws_pg_partial->cast_as<ws_point_sym_group_t>();
+                                 psg_view_t::get_type_static());
+          auto ws_pg_partial_c = ws_pg_partial->cast_as<psg_view_t>();
           if (ws_pg_partial_c) {
               xgeometry<float, periodic_cell<float> > buffer{0};
               al->copy_to_xgeometry(buffer, true, false);
