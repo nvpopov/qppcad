@@ -15,9 +15,11 @@ namespace qpp {
         float m_phi;
         bool m_inversion;
         bool m_is_plane;
+        bool m_is_visible{true};
         matrix4<float> m_render_mat;
         matrix4<float> m_render_mat_aux;
         float m_norm_mod{1};
+        vector3<float> m_color{1,1,1};
     };
 
     class psg_view_t : public ws_item_t {
