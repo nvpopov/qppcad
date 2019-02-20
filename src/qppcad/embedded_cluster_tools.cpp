@@ -6,7 +6,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list_t> uc,
+void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> uc,
                                                    vector3<float> displ,
                                                    float cluster_r,
                                                    float cls_r,
@@ -14,9 +14,9 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
                                                    float qm_r,
                                                    bool do_legacy) {
 
-    if (!uc || uc->m_role != ws_atoms_list_role_t::r_uc) {
+    if (!uc || uc->m_role != geom_view_role_t::r_uc) {
         //throw py::error_already_set();
-        throw std::runtime_error("uc || uc->m_role != ws_atoms_list_role_t::role_uc");
+        throw std::runtime_error("uc || uc->m_role != geom_view_role_t::role_uc");
         return;
     }
 
@@ -26,25 +26,25 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
         return;
     }
 
-    //try to find charges, classic and quantum ws_atoms_list`s
+    //try to find charges, classic and quantum geom_view`s
 
-    std::shared_ptr<ws_atoms_list_t> ws_chg{nullptr};
-    std::shared_ptr<ws_atoms_list_t> ws_cls{nullptr};
-    std::shared_ptr<ws_atoms_list_t> ws_qm{nullptr};
+    std::shared_ptr<geom_view_t> ws_chg{nullptr};
+    std::shared_ptr<geom_view_t> ws_cls{nullptr};
+    std::shared_ptr<geom_view_t> ws_qm{nullptr};
 
     for (auto elem : uc->m_connected_items) {
-        std::shared_ptr<ws_atoms_list_t> as_al = std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
+        std::shared_ptr<geom_view_t> as_al = std::dynamic_pointer_cast<geom_view_t>(elem);
         if (as_al) {
-            if (as_al->m_role == ws_atoms_list_role_t::r_embc_chg) ws_chg = as_al;
-            if (as_al->m_role == ws_atoms_list_role_t::r_embc_cls) ws_cls = as_al;
-            if (as_al->m_role == ws_atoms_list_role_t::r_embc_qm)  ws_qm  = as_al;
+            if (as_al->m_role == geom_view_role_t::r_embc_chg) ws_chg = as_al;
+            if (as_al->m_role == geom_view_role_t::r_embc_cls) ws_cls = as_al;
+            if (as_al->m_role == geom_view_role_t::r_embc_qm)  ws_qm  = as_al;
         }
     }
 
     uc->m_is_visible = false;
 
     if (ws_chg == nullptr) {
-        ws_chg = std::make_shared<ws_atoms_list_t>();
+        ws_chg = std::make_shared<geom_view_t>();
         uc->m_parent_ws->add_item_to_ws(ws_chg);
     } else {
         ws_chg->m_tws_tr->do_action(act_lock);
@@ -53,12 +53,12 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
     }
 
     ws_chg->m_tws_tr->do_action(act_lock);
-    ws_chg->m_role = ws_atoms_list_role_t::r_embc_chg;
+    ws_chg->m_role = geom_view_role_t::r_embc_chg;
     ws_chg->m_name = fmt::format("{}_chg", uc->m_name);
     ws_chg->m_draw_bonds = false;
 
     if (ws_cls == nullptr) {
-        ws_cls = std::make_shared<ws_atoms_list_t>();
+        ws_cls = std::make_shared<geom_view_t>();
         uc->m_parent_ws->add_item_to_ws(ws_cls);
     } else {
         ws_cls->m_tws_tr->do_action(act_lock);
@@ -67,11 +67,11 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
     }
 
     ws_cls->m_tws_tr->do_action(act_lock);
-    ws_cls->m_role = ws_atoms_list_role_t::r_embc_cls;
+    ws_cls->m_role = geom_view_role_t::r_embc_cls;
     ws_cls->m_name = fmt::format("{}_cls", uc->m_name);
 
     if (ws_qm == nullptr) {
-        ws_qm = std::make_shared<ws_atoms_list_t>();
+        ws_qm = std::make_shared<geom_view_t>();
         uc->m_parent_ws->add_item_to_ws(ws_qm);
     } else {
         ws_qm->m_tws_tr->do_action(act_lock);
@@ -81,7 +81,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
 
     ws_qm->m_tws_tr->do_action(act_lock);
     ws_qm->m_name = fmt::format("{}_qm", uc->m_name);
-    ws_qm->m_role = ws_atoms_list_role_t::r_embc_qm;
+    ws_qm->m_role = geom_view_role_t::r_embc_qm;
 
     shape_sphere<float> sp(cluster_r, displ);
 
@@ -181,7 +181,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<ws_atoms_list
     //if (generate_qm && )
 
     if (ws_chg->m_geom->nat() > 1800) ws_chg->m_cur_render_type =
-        ws_atoms_list_render_t::xatom_lines;
+        geom_view_render_t::xatom_lines;
     //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
     //add connection info
@@ -219,8 +219,8 @@ void embedded_cluster_tools::gen_spherical_cluster_cur(vector3<float> displ,
 
         if (cur_ws) {
             //
-            std::shared_ptr<ws_atoms_list_t> as_al =
-                    std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            std::shared_ptr<geom_view_t> as_al =
+                    std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
             if (as_al) gen_spherical_cluster(as_al, displ, cluster_r, cls_r, do_legacy);
         }
@@ -242,24 +242,24 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
 
         if (cur_ws) {
 
-            std::shared_ptr<ws_atoms_list_t> as_al =
-                    std::dynamic_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            std::shared_ptr<geom_view_t> as_al =
+                    std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
-            if (as_al && as_al->m_role == ws_atoms_list_role_t::r_uc) {
+            if (as_al && as_al->m_role == geom_view_role_t::r_uc) {
                 succes = true;
                 gen_spherical_cluster(as_al, displ, cluster_r, cls_r, true, qm_r, do_legacy);
                 return;
             }
 
             //try to deduce uc from connected items
-            if (as_al && (as_al->m_role == ws_atoms_list_role_t::r_embc_qm ||
-                          as_al->m_role == ws_atoms_list_role_t::r_embc_chg ||
-                          as_al->m_role == ws_atoms_list_role_t::r_embc_cls ))
+            if (as_al && (as_al->m_role == geom_view_role_t::r_embc_qm ||
+                          as_al->m_role == geom_view_role_t::r_embc_chg ||
+                          as_al->m_role == geom_view_role_t::r_embc_cls ))
 
                 for (auto elem : as_al->m_connected_items) {
-                    std::shared_ptr<ws_atoms_list_t> con_al =
-                            std::dynamic_pointer_cast<ws_atoms_list_t>(elem);
-                    if (con_al && con_al->m_role == ws_atoms_list_role_t::r_uc) {
+                    std::shared_ptr<geom_view_t> con_al =
+                            std::dynamic_pointer_cast<geom_view_t>(elem);
+                    if (con_al && con_al->m_role == geom_view_role_t::r_uc) {
                         succes = true;
                         gen_spherical_cluster(con_al, displ, cluster_r, cls_r,
                                               true, qm_r, do_legacy);
@@ -277,8 +277,8 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
     }
 }
 
-void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<ws_atoms_list_t> qm,
-                                              std::shared_ptr<ws_atoms_list_t> cls,
+void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
+                                              std::shared_ptr<geom_view_t> cls,
                                               float new_r) {
 
     if (!qm || !cls) {
@@ -321,8 +321,8 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<ws_atoms_list_t> q
 
 }
 
-void embedded_cluster_tools::move_sel_from_qm_to_cls(std::shared_ptr<ws_atoms_list_t> qm,
-                                                     std::shared_ptr<ws_atoms_list_t> cls) {
+void embedded_cluster_tools::move_sel_from_qm_to_cls(std::shared_ptr<geom_view_t> qm,
+                                                     std::shared_ptr<geom_view_t> cls) {
     if ( !cls || !qm) {
         throw std::runtime_error("!chg || !cls || !qm");
         return;
@@ -342,12 +342,12 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls_cur() {
         auto cur_ws = astate->ws_manager->get_cur_ws();
 
         if (cur_ws) {
-            auto cur_it_al = std::static_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
-            std::shared_ptr<ws_atoms_list_t> uc{nullptr};
-            std::shared_ptr<ws_atoms_list_t> chg{nullptr};
-            std::shared_ptr<ws_atoms_list_t> cls{nullptr};
-            std::shared_ptr<ws_atoms_list_t> qm{nullptr};
+            std::shared_ptr<geom_view_t> uc{nullptr};
+            std::shared_ptr<geom_view_t> chg{nullptr};
+            std::shared_ptr<geom_view_t> cls{nullptr};
+            std::shared_ptr<geom_view_t> qm{nullptr};
 
             deduce_embedding_context(uc, chg, cls, qm);
 
@@ -370,12 +370,12 @@ void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
         auto cur_ws = astate->ws_manager->get_cur_ws();
 
         if (cur_ws) {
-            auto cur_it_al = std::static_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
-            std::shared_ptr<ws_atoms_list_t> uc{nullptr};
-            std::shared_ptr<ws_atoms_list_t> chg{nullptr};
-            std::shared_ptr<ws_atoms_list_t> cls{nullptr};
-            std::shared_ptr<ws_atoms_list_t> qm{nullptr};
+            std::shared_ptr<geom_view_t> uc{nullptr};
+            std::shared_ptr<geom_view_t> chg{nullptr};
+            std::shared_ptr<geom_view_t> cls{nullptr};
+            std::shared_ptr<geom_view_t> qm{nullptr};
 
             deduce_embedding_context(uc, chg, cls, qm);
 
@@ -390,10 +390,10 @@ void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
 
 }
 
-void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<ws_atoms_list_t> &uc,
-                                                      std::shared_ptr<ws_atoms_list_t> &chg,
-                                                      std::shared_ptr<ws_atoms_list_t> &cls,
-                                                      std::shared_ptr<ws_atoms_list_t> &qm) {
+void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<geom_view_t> &uc,
+                                                      std::shared_ptr<geom_view_t> &chg,
+                                                      std::shared_ptr<geom_view_t> &cls,
+                                                      std::shared_ptr<geom_view_t> &qm) {
     app_state_t *astate = app_state_t::get_inst();
 
     if (astate->ws_manager->has_wss()) {
@@ -402,24 +402,24 @@ void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<ws_atoms_l
 
         if (cur_ws) {
 
-            auto cur_it_al = std::static_pointer_cast<ws_atoms_list_t>(cur_ws->get_selected_sp());
+            auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
             if (cur_it_al) {
 
-                if (cur_it_al->m_role == ws_atoms_list_role_t::r_embc_qm) qm = cur_it_al;
-                if (cur_it_al->m_role == ws_atoms_list_role_t::r_embc_chg) chg = cur_it_al;
-                if (cur_it_al->m_role == ws_atoms_list_role_t::r_embc_cls) cls = cur_it_al;
-                if (cur_it_al->m_role == ws_atoms_list_role_t::r_uc) uc = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_t::r_embc_qm) qm = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_t::r_embc_chg) chg = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_t::r_embc_cls) cls = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_t::r_uc) uc = cur_it_al;
 
                 for (auto elem : cur_it_al->m_connected_items) {
-                    auto elem_al = std::static_pointer_cast<ws_atoms_list_t>(elem);
-                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_qm)
+                    auto elem_al = std::static_pointer_cast<geom_view_t>(elem);
+                    if (elem_al && elem_al->m_role == geom_view_role_t::r_embc_qm)
                       qm = elem_al;
-                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_chg)
+                    if (elem_al && elem_al->m_role == geom_view_role_t::r_embc_chg)
                       chg = elem_al;
-                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_embc_cls)
+                    if (elem_al && elem_al->m_role == geom_view_role_t::r_embc_cls)
                       cls = elem_al;
-                    if (elem_al && elem_al->m_role == ws_atoms_list_role_t::r_uc) uc = elem_al;
+                    if (elem_al && elem_al->m_role == geom_view_role_t::r_uc) uc = elem_al;
                 }
 
             }
@@ -441,7 +441,7 @@ vector3<float> embedded_cluster_tools::calc_dipole_moment() {
         auto cur_ws = astate->ws_manager->get_cur_ws();
 
         if (cur_ws) {
-            auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+            auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
             if (cur_it_al) {
                 for (int i = 0; i < cur_it_al->m_geom->nat(); i++)
                     accum_dm += cur_it_al->m_geom->pos(i) *
@@ -463,10 +463,10 @@ void embedded_cluster_tools::generate_molcas_embc_sp_input(std::string outdir) {
     auto cur_ws = astate->ws_manager->get_cur_ws();
     if (!cur_ws) return;
 
-    std::shared_ptr<ws_atoms_list_t> uc{nullptr};
-    std::shared_ptr<ws_atoms_list_t> chg{nullptr};
-    std::shared_ptr<ws_atoms_list_t> cls{nullptr};
-    std::shared_ptr<ws_atoms_list_t> qm{nullptr};
+    std::shared_ptr<geom_view_t> uc{nullptr};
+    std::shared_ptr<geom_view_t> chg{nullptr};
+    std::shared_ptr<geom_view_t> cls{nullptr};
+    std::shared_ptr<geom_view_t> qm{nullptr};
 
     deduce_embedding_context(uc, chg, cls, qm);
 
@@ -553,10 +553,10 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
     auto cur_ws = astate->ws_manager->get_cur_ws();
     if (!cur_ws) return;
 
-    std::shared_ptr<ws_atoms_list_t> uc{nullptr};
-    std::shared_ptr<ws_atoms_list_t> chg{nullptr};
-    std::shared_ptr<ws_atoms_list_t> cls{nullptr};
-    std::shared_ptr<ws_atoms_list_t> qm{nullptr};
+    std::shared_ptr<geom_view_t> uc{nullptr};
+    std::shared_ptr<geom_view_t> chg{nullptr};
+    std::shared_ptr<geom_view_t> cls{nullptr};
+    std::shared_ptr<geom_view_t> qm{nullptr};
 
     deduce_embedding_context(uc, chg, cls, qm);
 

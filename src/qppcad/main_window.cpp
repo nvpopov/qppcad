@@ -741,7 +741,7 @@ void main_window::cur_ws_selected_item_changed() {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
-          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto cur_it_as_al = dynamic_cast<geom_view_t*>(cur_it);
           if (cur_it_as_al) {
               //tp_measure_dist->show();
               if (cur_it_as_al->m_geom->DIM == 3) change_camera_buttons_visible(false, true);
@@ -797,7 +797,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
       if (cur_ws) {
 
           auto cur_it = cur_ws->get_selected();
-          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto cur_it_as_al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (cur_it_as_al) {
               if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
@@ -858,7 +858,7 @@ void main_window::tp_dist_button_clicked(bool checked) {
       if (cur_ws) {
 
           auto cur_it = cur_ws->get_selected();
-          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto cur_it_as_al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (cur_it_as_al) {
 
@@ -895,7 +895,7 @@ void main_window::tp_angle_button_clicked(bool checked) {
       if (cur_ws) {
 
           auto cur_it = cur_ws->get_selected();
-          auto cur_it_as_al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto cur_it_as_al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (cur_it_as_al) {
 
@@ -953,7 +953,7 @@ void main_window::apply_camera_view_change(cam_target_view_t target_view) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (al) {
 
@@ -1019,7 +1019,7 @@ void main_window::action_select_all_content() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
 
-      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+      auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
 
       if (cur_it) {
           cur_it->select_atoms(true);
@@ -1035,7 +1035,7 @@ void main_window::action_unselect_all_content() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
 
-      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+      auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
 
       if (cur_it) {
           cur_it->select_atoms(false);
@@ -1050,7 +1050,7 @@ void main_window::action_invert_selected_content() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
 
-      auto cur_it = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+      auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
 
       if (cur_it) {
           cur_it->invert_selected_atoms();

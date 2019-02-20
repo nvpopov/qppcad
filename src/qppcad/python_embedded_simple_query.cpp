@@ -5,7 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/python_simple_query.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list_colorizer.hpp>
+#include <qppcad/geom_view/geom_view_colorizer.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -46,9 +46,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("set_sel_color", &simple_query::set_sel_color);
   tools.def("set_sel_color", &simple_query::set_sel_color_vec);
 
-  tools.def("color_by_dist", &ws_atoms_list_colorizer_helper::py_colorize_by_distance);
+  tools.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance);
   tools.def("color_by_dist_pairs",
-            &ws_atoms_list_colorizer_helper::py_colorize_by_distance_with_pairs);
+            &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs);
   tools.def("get_type_name", &simple_query::get_type_name);
   tools.def("get_type_hash", &simple_query::get_type_hash);
   tools.def("is_instance_of", &simple_query::is_instance_of_by_hash);

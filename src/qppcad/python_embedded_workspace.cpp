@@ -6,7 +6,7 @@
 
 #include <qppcad/ws_item_trampoline.hpp>
 #include <qppcad/workspace.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
 
 using namespace qpp;
@@ -55,10 +55,10 @@ PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
           .def("__repr__", &ws_item_t::py_get_repr)
           .def("__str__", &ws_item_t::py_get_repr);
 
-  py::class_<ws_atoms_list_t, std::shared_ptr<ws_atoms_list_t> >
-  py_atoms_list_t(m, "ws_atoms_list_t", py_ws_item_t);
+  py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
+  py_atoms_list_t(m, "geom_view_t", py_ws_item_t);
   py_atoms_list_t.def_property_readonly("geom",
-                                        [](ws_atoms_list_t &self) {return self.m_geom.get();},
+                                        [](geom_view_t &self) {return self.m_geom.get();},
                                         py::return_value_policy::reference);
 
   py::class_<ws_point_sym_group_t, std::shared_ptr<ws_point_sym_group_t> >

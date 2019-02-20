@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QDialogButtonBox>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 
 namespace qpp {
 
@@ -18,7 +18,7 @@ namespace qpp {
     class axial_scale_tool_t : public ws_item_tool_t {
       public:
         void exec(ws_item_t *item) override;
-        void apply_axial_scale (ws_atoms_list_t *al,
+        void apply_axial_scale (geom_view_t *al,
                                 const float scale_a,
                                 const float scale_b,
                                 const float scale_c);

@@ -9,7 +9,7 @@
 #include <QSpacerItem>
 #include <QLabel>
 #include <qppcad/ws_item_obj_insp_widget.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.hpp>
+#include <qppcad/geom_view/geom_view_obj_insp_widget.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data_obj_insp_widget.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.hpp>
 

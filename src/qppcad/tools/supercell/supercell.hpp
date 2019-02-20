@@ -2,7 +2,7 @@
 #define QPP_CAD_TOOL_SUPERCELL
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item_behaviour_manager.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 #include <QWidget>
 #include <QDialog>
 #include <QSpinBox>
@@ -41,7 +41,7 @@ namespace qpp {
     class supercell_tool_t : public ws_item_tool_t {
       public:
         void exec(ws_item_t *item) override;
-        void make_super_cell(ws_atoms_list_t *al,
+        void make_super_cell(geom_view_t *al,
                              const int a_steps,
                              const int b_steps,
                              const int c_steps);

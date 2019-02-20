@@ -1,6 +1,6 @@
 #include <qppcad/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/ws_volume_data/ws_volume_data.hpp>
 #include <qppcad/ws_point_sym_group/ws_point_sym_group.hpp>
 #include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
@@ -54,7 +54,7 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   supercell_tool_t sct;
@@ -102,7 +102,7 @@ void simple_query::sel_cnt(int cnt_idx) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   al->select_atom(cnt_idx);
@@ -120,7 +120,7 @@ void simple_query::sel_cnt_parity() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   index zero = index::D(al->m_geom->DIM).all(0);
@@ -155,7 +155,7 @@ void simple_query::sel_invert() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   al->invert_selected_atoms();
@@ -173,7 +173,7 @@ void simple_query::sel_cnt_all() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   al->select_atoms(true);
@@ -191,7 +191,7 @@ void simple_query::sel_cnt_list(pybind11::list sel_list) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   for (auto itm : sel_list)
@@ -210,7 +210,7 @@ void simple_query::sel_cnt_type(pybind11::str sel_type) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   std::string type_name = py::cast<std::string>(sel_type);
@@ -230,7 +230,7 @@ void simple_query::sel_cnt_sphere(vector3<float> sph_center, float sph_rad) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   std::vector<tws_node_content_t<float> > cnt;
@@ -255,7 +255,7 @@ void simple_query::sel_hemisphere(int coord_idx, bool positive) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   for (int i = 0; i < al->m_geom->nat(); i++)
@@ -291,7 +291,7 @@ void simple_query::unsel_cnt_all() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   al->select_atoms(true);
@@ -310,7 +310,7 @@ void simple_query::unsel_cnt(int cnt_idx) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   al->unselect_atom(cnt_idx);
@@ -328,7 +328,7 @@ void simple_query::unsel_cnt_list(pybind11::list sel_list) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   for (auto itm : sel_list)
@@ -347,7 +347,7 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   std::string type_name = py::cast<std::string>(sel_type);
@@ -368,7 +368,7 @@ pybind11::list simple_query::get_sel() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return py::none();
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return py::none();
 
   for (auto &elem : al->m_atom_idx_sel)
@@ -454,7 +454,7 @@ vector3<float> simple_query::gizmo_pos() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return vector3<float>::Zero();
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return vector3<float>::Zero();
 
   if (al) return al->get_gizmo_content_barycenter();
@@ -473,7 +473,7 @@ std::tuple<std::string, vector3<float> >  simple_query::get_point_sym_group(floa
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return ret_empty();
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return ret_empty();
 
   if (al && al->m_geom->DIM == 0) {
@@ -491,7 +491,7 @@ void simple_query::make_ws_point_sym_group(float tolerance) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   auto cur_ws = astate->ws_manager->get_cur_ws();
 
   if (al && al->m_parent_ws && cur_ws) {
@@ -540,7 +540,7 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   auto traj_hl =
@@ -572,7 +572,7 @@ void simple_query::rebond() {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   al->m_tws_tr->m_bonding_table.init_default(al->m_geom.get());
@@ -590,7 +590,7 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   if (cur_ws->m_edit_type == ws_edit_t::edit_item) al->translate(vector3<float>(tx, ty, tz));
@@ -609,7 +609,7 @@ void simple_query::set_charge(float charge) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   if (al && cur_ws->m_edit_type == ws_edit_t::edit_content) {
@@ -645,7 +645,7 @@ void simple_query::add_atoms_list_0d(std::string name) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto new_al = std::make_shared<ws_atoms_list_t>();
+  auto new_al = std::make_shared<geom_view_t>();
   new_al->m_name = name;
   cur_ws->add_item_to_ws(new_al);
 
@@ -662,7 +662,7 @@ void simple_query::add_atoms_list_3d(std::string name,
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto new_al = std::make_shared<ws_atoms_list_t>();
+  auto new_al = std::make_shared<geom_view_t>();
   new_al->m_name = name;
   new_al->m_geom->DIM = 3;
   new_al->m_geom->cell.DIM = 3;
@@ -722,7 +722,7 @@ void simple_query::convert_selected_units(spatial_units new_unit) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  auto al = astate->ws_manager->get_sel_itm_sp_as<ws_atoms_list_t>();
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
   float mod = new_unit == spatial_units_ang ? qpp::bohr_to_angs : qpp::ang_to_bohr;
@@ -798,7 +798,7 @@ void simple_query::set_sel_color(float r, float g, float b) {
 
       if (cur_ws) {
 
-          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
 
           if (cur_it_al)
             for (auto &elem : cur_it_al->m_atom_idx_sel) {
@@ -943,7 +943,7 @@ pybind11::list simple_query::sv_get() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
               for (int i = 0; i < _al->m_geom->nat(); i++)
                 ret.append(_al->m_geom->xfield<bool>(xgeom_sel_vis, i));
@@ -961,7 +961,7 @@ void simple_query::sv_edit(int at, bool status) {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
               _al->m_geom->xfield<bool>(xgeom_sel_vis, at) = status;
             }
@@ -977,7 +977,7 @@ void simple_query::sv_edit_list(pybind11::list at_list, bool status) {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
               for (auto elem : at_list)
                 if (py::isinstance<py::int_>(elem))
@@ -996,7 +996,7 @@ void simple_query::sv_edit_all(bool status) {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al)
             for (int i = 0; i < _al->m_geom->nat(); i++)
               _al->m_geom->xfield<bool>(xgeom_sel_vis,i) = status;
@@ -1014,7 +1014,7 @@ pybind11::list simple_query::cl_get() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
               for (int i = 0; i < _al->m_geom->nat(); i++)
                 ret.append(_al->m_geom->xfield<bool>(xgeom_label_state, i));
@@ -1033,7 +1033,7 @@ void simple_query::set_cl_state(int at, bool status) {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
               _al->m_geom->xfield<bool>(xgeom_label_state, at) = status;
             }
@@ -1049,7 +1049,7 @@ void simple_query::set_cl_text(int at, std::string text) {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto _al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
               _al->m_geom->xfield<std::string>(xgeom_label_text, at) = text;
             }

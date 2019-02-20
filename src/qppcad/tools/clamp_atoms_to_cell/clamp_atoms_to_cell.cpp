@@ -1,6 +1,6 @@
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -23,7 +23,7 @@ void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item) {
 
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (al) {
               if (al->m_geom->DIM == 3) {
@@ -40,7 +40,7 @@ void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item) {
                                             QObject::tr("m_geom.DIM !=3"));
 
             } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                                        QObject::tr("ws_item.type != ws_atoms_list"));
+                                        QObject::tr("ws_item.type != geom_view"));
 
         } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
                                     QObject::tr("Workspace not select"));

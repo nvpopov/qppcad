@@ -9,14 +9,14 @@ namespace qpp {
 
   namespace cad {
 
-    class ws_atoms_list_t;
+    class geom_view_t;
 
     class ws_traj_highlight_t : public ws_item_t {
 
         QPP_OBJECT(ws_traj_highlight_t, ws_item_t)
 
       public:
-        ws_atoms_list_t *b_al;
+        geom_view_t *b_al;
         std::unique_ptr<mesh_t> m_line_mesh;
         bool m_need_to_rebuild{true};
         size_t m_anim_id{1};

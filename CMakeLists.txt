@@ -120,22 +120,22 @@ add_executable(qppcad
     src/qppcad/ws_volume_data/ws_volume_data_obj_insp_widget.cpp
     src/qppcad/volume_tools.cpp
 
-    src/qppcad/ws_atoms_list/ws_atoms_list.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_render_bs.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_render_billboards.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_render_buffered_billboards.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_render_dlines.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_render_xlines.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_anim_subsys.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_measurement_subsys.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_lattice_planes_subsys.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_labels_subsys.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_colorizer.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_obj_insp_widget.cpp
-    src/qppcad/ws_atoms_list/ws_atoms_list_io.cpp
-    src/qppcad/ws_atoms_list/qtype_specific_rendering_model.cpp
-    src/qppcad/ws_atoms_list/qbonding_table_model.cpp
-    src/qppcad/ws_atoms_list/qmeasurements_table_model.cpp
+    src/qppcad/geom_view/geom_view.cpp
+    src/qppcad/geom_view/geom_view_render_bs.cpp
+    src/qppcad/geom_view/geom_view_render_billboards.cpp
+    src/qppcad/geom_view/geom_view_render_buffered_billboards.cpp
+    src/qppcad/geom_view/geom_view_render_dlines.cpp
+    src/qppcad/geom_view/geom_view_render_xlines.cpp
+    src/qppcad/geom_view/geom_view_anim_subsys.cpp
+    src/qppcad/geom_view/geom_view_measurement_subsys.cpp
+    src/qppcad/geom_view/geom_view_lattice_planes_subsys.cpp
+    src/qppcad/geom_view/geom_view_labels_subsys.cpp
+    src/qppcad/geom_view/geom_view_colorizer.cpp
+    src/qppcad/geom_view/geom_view_obj_insp_widget.cpp
+    src/qppcad/geom_view/geom_view_io.cpp
+    src/qppcad/geom_view/qtype_specific_rendering_model.cpp
+    src/qppcad/geom_view/qbonding_table_model.cpp
+    src/qppcad/geom_view/qmeasurements_table_model.cpp
 
     src/qppcad/ws_point_sym_group/ws_point_sym_group.cpp
     src/qppcad/ws_point_sym_group/ws_point_sym_group_obj_insp_widget.cpp

@@ -11,7 +11,7 @@ void axial_scale_tool_t::exec(ws_item_t *item) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (al) {
               if (al->m_geom->DIM == 3) {
@@ -33,7 +33,7 @@ void axial_scale_tool_t::exec(ws_item_t *item) {
           else { // is not an atoms list
               QMessageBox::warning(nullptr,
                                    QObject::tr("Axial scale"),
-                                   QObject::tr("ws_item.type != ws_atoms_list"));
+                                   QObject::tr("ws_item.type != geom_view"));
             }
 
         } else {
@@ -44,7 +44,7 @@ void axial_scale_tool_t::exec(ws_item_t *item) {
     }
 }
 
-void axial_scale_tool_t::apply_axial_scale(ws_atoms_list_t *al,
+void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,
                                            const float scale_a,
                                            const float scale_b,
                                            const float scale_c) {

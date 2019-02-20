@@ -5,7 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/app_state.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -23,7 +23,7 @@ qpp::xgeometry<float, qpp::periodic_cell<float>  >* claim_xgeom() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          auto cur_it_al = dynamic_cast<ws_atoms_list_t*>(cur_ws->get_selected());
+          auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (cur_it_al) {
               return cur_it_al->m_geom.get();
             }

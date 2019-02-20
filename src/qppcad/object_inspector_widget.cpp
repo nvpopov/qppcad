@@ -1,6 +1,6 @@
 #include <qppcad/object_inspector_widget.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/ws_comp_chem_data/ws_comp_chem_data.hpp>
 
 using namespace qpp;

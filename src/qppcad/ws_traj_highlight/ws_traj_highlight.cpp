@@ -1,5 +1,5 @@
 #include <qppcad/ws_traj_highlight/ws_traj_highlight.hpp>
-#include <qppcad/ws_atoms_list/ws_atoms_list.hpp>
+#include <qppcad/geom_view/geom_view.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -61,9 +61,9 @@ void ws_traj_highlight_t::on_leader_changed() {
    app_state_t* astate = app_state_t::get_inst();
    astate->log(fmt::format("{} ::on_leader_changed()", m_name));
 
-   if (m_leader->get_type() == ws_atoms_list_t::get_type_static()) {
+   if (m_leader->get_type() == geom_view_t::get_type_static()) {
          m_need_to_rebuild = true;
-         b_al = m_leader->cast_as<ws_atoms_list_t>();
+         b_al = m_leader->cast_as<geom_view_t>();
      }
 }
 

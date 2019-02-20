@@ -15,7 +15,7 @@ void supercell_tool_t::exec(ws_item_t *item) {
 
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<ws_atoms_list_t*>(cur_it);
+          auto al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (al) {
               if (al->m_geom->DIM == 3) {
@@ -34,7 +34,7 @@ void supercell_tool_t::exec(ws_item_t *item) {
                                             QObject::tr("m_geom.DIM !=3"));
 
             } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                                        QObject::tr("ws_item.type != ws_atoms_list"));
+                                        QObject::tr("ws_item.type != geom_view"));
 
         } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
                                     QObject::tr("Workspace not select"));
@@ -43,14 +43,14 @@ void supercell_tool_t::exec(ws_item_t *item) {
 
 }
 
-void supercell_tool_t::make_super_cell(ws_atoms_list_t *al,
+void supercell_tool_t::make_super_cell(geom_view_t *al,
                                        const int a_steps,
                                        const int b_steps,
                                        const int c_steps) {
   if (!al->m_parent_ws) return;
   if (al->m_geom->DIM != 3) return;
 
-  std::shared_ptr<ws_atoms_list_t> sc_al = std::make_shared<ws_atoms_list_t>();
+  std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
   sc_al->m_geom->DIM = 3;
   sc_al->m_geom->cell.DIM = 3;
 
@@ -61,7 +61,7 @@ void supercell_tool_t::make_super_cell(ws_atoms_list_t *al,
   sc_al->m_geom->cell.v[1] = al->m_geom->cell.v[1] * (b_steps);
   sc_al->m_geom->cell.v[2] = al->m_geom->cell.v[2] * (c_steps);
 
-  if (al->m_role == ws_atoms_list_role_t::r_uc) {
+  if (al->m_role == geom_view_role_t::r_uc) {
       sc_al->m_draw_img_atoms = false;
       sc_al->m_draw_img_bonds = false;
     }
@@ -72,7 +72,7 @@ void supercell_tool_t::make_super_cell(ws_atoms_list_t *al,
          !idx_it.end(); idx_it++ ) {
         vector3<float> new_atom_pos = al->m_geom->pos(i, idx_it);
         sc_al->m_geom->add(al->m_geom->atom(i), new_atom_pos);
-        if (al->m_role == ws_atoms_list_role_t::r_uc)
+        if (al->m_role == geom_view_role_t::r_uc)
           sc_al->m_geom->xfield<float>(xgeom_charge, sc_al->m_geom->nat()-1) =
               al->m_geom->xfield<float>(xgeom_charge, i);
       }
@@ -87,7 +87,7 @@ void supercell_tool_t::make_super_cell(ws_atoms_list_t *al,
   sc_al->geometry_changed();
 
   //perform purification
-  if (al->m_role == ws_atoms_list_role_t::r_uc) {
+  if (al->m_role == geom_view_role_t::r_uc) {
 
       sc_al->m_tws_tr->do_action(act_lock);
       //intermediage xgeom
