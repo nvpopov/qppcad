@@ -34,13 +34,6 @@ namespace qpp {
     const uint32_t ws_item_flags_support_extended_editor  = 1 << 13;
     const uint32_t ws_item_flags_translate_emit_upd_event = 1 << 14;
 
-    enum ws_item_tag {
-      tag_abstract_item,
-      tag_geom_view,
-      tag_ccd_view,
-      tag_volume_view
-    };
-
     class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
@@ -51,7 +44,6 @@ namespace qpp {
 
       public:
 
-        ws_item_tag m_tag{ws_item_tag::tag_abstract_item};
         workspace_t *m_parent_ws{};
         std::vector<std::shared_ptr<ws_item_t> > m_connected_items;
         std::vector<std::shared_ptr<ws_item_t> > m_followers;

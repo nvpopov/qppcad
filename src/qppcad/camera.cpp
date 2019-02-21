@@ -50,6 +50,10 @@ void camera_t::rotate_camera_orbit_pitch (const float pitch) {
   rotate_camera_around_axis(pitch, m_right);
 }
 
+void camera_t::rotate_camera_orbit_roll(const float roll) {
+  rotate_camera_around_axis(roll, vector3<float>(1.0, 0.0, 0.0));
+}
+
 void camera_t::translate_camera_forward (const float amount) {
   vector3<float> view_dir_new = m_view_dir.normalized();
   m_view_point += view_dir_new * amount;
@@ -118,6 +122,7 @@ void camera_t::update_camera () {
   float y_dt = std::clamp(astate->mouse_y - astate->mouse_y_old, -11.0f, 10.0f);
 
   if (m_move_camera) {
+
       float move_right = -x_dt / camera_t::nav_div_step_translation;
       float move_up = y_dt / camera_t::nav_div_step_translation;
 
@@ -134,23 +139,29 @@ void camera_t::update_camera () {
     }
 
   if (m_rotate_camera) {
+
       float rot_angle_x = y_dt / camera_t::nav_div_step_rotation;
       float rot_angle_y = x_dt / camera_t::nav_div_step_rotation;
 
-      if (fabs(rot_angle_y) > camera_t::nav_thresh) {
+      if (fabs(rot_angle_y) > camera_t::nav_thresh && !m_rotate_over) {
           rotate_camera_orbit_yaw(rot_angle_y);
           astate->make_viewport_dirty();
         }
 
-      if (fabs(rot_angle_x) > camera_t::nav_thresh) {
+      if (fabs(rot_angle_x) > camera_t::nav_thresh && !m_rotate_over) {
           rotate_camera_orbit_pitch(rot_angle_x);
+          astate->make_viewport_dirty();
+        }
+
+      float med_rot = (rot_angle_y + rot_angle_x) * 0.5f;
+      if (fabs(med_rot) > camera_t::nav_thresh && m_rotate_over) {
+          rotate_camera_orbit_roll(med_rot);
           astate->make_viewport_dirty();
         }
 
     }
 
-  if (m_cur_proj == cam_proj_t::proj_persp)
-    m_look_at = (m_view_point - m_look_at).normalized();
+  if (m_cur_proj == cam_proj_t::proj_persp) m_look_at = (m_view_point - m_look_at).normalized();
   m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
 
   if (m_cur_proj == cam_proj_t::proj_persp)
@@ -180,6 +191,7 @@ void camera_t::update_camera () {
       float top    =   y_scale * (m_ortho_scale);
       //std::cout<<"ortho_scale"<<m_ortho_scale<<std::endl;
       m_mat_proj = ortho<float>(left, right, bottom, top , m_znear_ortho, m_zfar_ortho);
+
     }
 
   m_proj_view = m_mat_proj *  m_mat_view ;

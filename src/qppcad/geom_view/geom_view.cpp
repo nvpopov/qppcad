@@ -27,9 +27,6 @@ geom_view_t::geom_view_t(): ws_item_t () {
                     ws_item_flags_support_moveto |
                     ws_item_flags_support_rendering);
 
-  //TODO: ws_item_t tag deprecated
-  m_tag = ws_item_tag::tag_geom_view;
-
   m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
   /* 0 atom

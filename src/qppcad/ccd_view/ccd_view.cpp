@@ -6,9 +6,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ccd_view_t::ccd_view_t() {
-
   set_default_flags(ws_item_flags_default);
-   m_tag = ws_item_tag::tag_ccd_view;
 }
 
 void ccd_view_t::manual_step_update(const int dir) {

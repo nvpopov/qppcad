@@ -48,6 +48,7 @@ namespace qpp {
 
         bool m_rotate_camera{false};
         bool m_move_camera{false};
+        bool m_rotate_over{false};
 
         float m_mouse_whell_camera_step{2.0f};
         float m_mouse_zoom_min_distance{4.0f};
@@ -69,6 +70,7 @@ namespace qpp {
         void rotate_camera_around_axis(const float angle, const vector3<float> axis);
         void rotate_camera_orbit_yaw(const float yaw);
         void rotate_camera_orbit_pitch(const float pitch);
+        void rotate_camera_orbit_roll(const float roll);
         void translate_camera_forward(const float amount);
         void translate_camera_right(const float amount);
         void translate_camera_up(const float amount);

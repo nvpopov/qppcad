@@ -21,9 +21,6 @@ volume_view_t::volume_view_t() : ws_item_t () {
                     ws_item_flags_support_moveto |
                     ws_item_flags_support_rendering );
 
-  //TODO: Tag deprecated
-  m_tag = ws_item_tag::tag_volume_view;
-
 }
 
 void volume_view_t::vote_for_view_vectors(vector3<float> &v_out_look_pos,

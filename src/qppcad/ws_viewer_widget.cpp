@@ -1,5 +1,6 @@
 #include <qppcad/ws_viewer_widget.hpp>
 #include <qppcad/app_state.hpp>
+#include <QApplication>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -242,10 +243,14 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       if (astate->camera && !astate->is_mouse_moving) {
           astate->camera->m_rotate_camera = false;
           astate->camera->m_move_camera = false;
+          astate->camera->m_rotate_over = false;
         }
+
+      Qt::KeyboardModifiers kb_mod = QApplication::keyboardModifiers();
+      astate->camera->m_rotate_over =
+          astate->camera->m_rotate_camera && (kb_mod & Qt::ControlModifier);
     }
 
-  //fmt::print(std::cout, "mouseMoveEvent\n");
 }
 
 void ws_viewer_widget_t::wheelEvent(QWheelEvent *event) {
