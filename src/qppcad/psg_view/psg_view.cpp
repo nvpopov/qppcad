@@ -14,8 +14,9 @@ void psg_view_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
 
   //app_state_t* astate = app_state_t::get_inst();
 
-  find_point_symm(m_ag, geom, m_new_centre, tolerance);
-  m_pg_axes = point_group_axes<float>(m_ag);
+  if (!m_ag) m_ag = std::make_shared<array_group<matrix3<float> > > ();
+  find_point_symm(*m_ag, geom, m_new_centre, tolerance);
+  m_pg_axes = point_group_axes<float>(*m_ag);
   m_atf.clear();
 
   for (int i = 0; i < m_pg_axes.axes.size(); i++) {
@@ -288,7 +289,7 @@ void psg_view_t::py_update() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  m_pg_axes = point_group_axes<float>(m_ag);
+  m_pg_axes = point_group_axes<float>(*m_ag);
   m_atf.clear();
 
   for (int i = 0; i < m_pg_axes.axes.size(); i++) {

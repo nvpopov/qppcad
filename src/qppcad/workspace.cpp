@@ -2,9 +2,6 @@
 #include <qppcad/app_state.hpp>
 #include <data/ptable.hpp>
 #include <mathf/math.hpp>
-#include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/ccd_view/ccd_view.hpp>
-#include <qppcad/volume_view/volume_view.hpp>
 #include <qppcad/register_all_things.hpp>
 
 using namespace qpp;

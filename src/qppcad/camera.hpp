@@ -39,6 +39,7 @@ namespace qpp {
         vector3<float> m_look_at;
         vector3<float> m_look_up;
         vector3<float> m_right;
+        vector3<float> m_forward;
 
         matrix4<float> m_mat_view;
         matrix4<float> m_mat_proj;

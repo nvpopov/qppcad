@@ -15,7 +15,41 @@ using namespace qpp::cad;
 namespace py = pybind11;
 
 std::shared_ptr<ws_item_t> construct_from_geom(
-    std::shared_ptr<xgeometry<float, periodic_cell<float>>> geom) {
+    workspace_t &ws,
+    std::shared_ptr<xgeometry<float, periodic_cell<float> > > geom,
+    std::string name) {
+
+    auto new_item = ws.m_owner->m_bhv_mgr->fabric_by_type(geom_view_t::get_type_static());
+    if (!new_item) return nullptr;
+
+    auto as_gv = new_item->cast_as<geom_view_t>();
+    if(!as_gv) return nullptr;
+
+    as_gv->m_geom = geom;
+    as_gv->m_name = name;
+    ws.add_item_to_ws(new_item);
+
+    return new_item;
+
+}
+
+std::shared_ptr<ws_item_t> construct_from_array_group(
+    workspace_t &ws,
+    std::shared_ptr<array_group<matrix3<float> > > ag,
+    std::string name) {
+
+    auto new_item = ws.m_owner->m_bhv_mgr->fabric_by_type(psg_view_t::get_type_static());
+    if (!new_item) return nullptr;
+
+    auto as_psg = new_item->cast_as<psg_view_t>();
+    if(!as_psg) return nullptr;
+
+    as_psg->m_ag = ag;
+    as_psg->m_name = name;
+    ws.add_item_to_ws(new_item);
+    as_psg->py_update();
+
+    return new_item;
 
 }
 
@@ -48,6 +82,8 @@ PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
         return retv;
        }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
       .def("construct_item", &workspace_t::py_construct_item)
+      .def("construct_item", &construct_from_geom)
+      .def("construct_item", &construct_from_array_group)
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr);
 
@@ -62,13 +98,11 @@ PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
 
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(m, "geom_view_t", py_ws_item_t);
-  py_atoms_list_t.def_property_readonly("geom",
-                                        [](geom_view_t &self) {return self.m_geom.get();},
-                                        py::return_value_policy::reference);
+  py_atoms_list_t.def_readwrite("geom", &geom_view_t::m_geom);
 
   py::class_<psg_view_t, std::shared_ptr<psg_view_t> >
   py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);
-  py_point_sym_group_t.def_readwrite("ag", &psg_view_t::m_ag);
+  py_point_sym_group_t.def_readwrite("ag", &psg_view_t::m_ag, py::return_value_policy::reference);
   py_point_sym_group_t.def_readwrite("pg_axes", &psg_view_t::m_pg_axes);
   py_point_sym_group_t.def("update_view", &psg_view_t::py_update);
   py_point_sym_group_t.def_readwrite("center", &psg_view_t::m_new_centre);

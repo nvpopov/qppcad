@@ -5,12 +5,15 @@ using namespace qpp;
 using namespace qpp::cad;
 
 camera_t::camera_t () {
+
   app_state_t* astate = app_state_t::get_inst();
   m_cur_proj = astate->m_default_cam_proj;
   reset_camera();
+
 }
 
 void camera_t::orthogonalize_gs () {
+
   m_view_dir = m_look_at - m_view_point;
   m_stored_dist = m_view_dir.norm();
   vector3<float> view_dir_new = m_view_dir.normalized();
@@ -24,6 +27,9 @@ void camera_t::orthogonalize_gs () {
   m_right = -1.0*(m_look_up.cross(m_view_dir));
   if (m_right.isMuchSmallerThan(camera_t::norm_eps)) m_right = vector3<float>(1.0, 0.0, 0.0);
   else m_right.normalize();
+
+  m_forward = m_look_up.cross(m_right);
+
 }
 
 void camera_t::rotate_camera_around_origin (const matrix3<float> &mat_rot,
@@ -51,7 +57,7 @@ void camera_t::rotate_camera_orbit_pitch (const float pitch) {
 }
 
 void camera_t::rotate_camera_orbit_roll(const float roll) {
-  rotate_camera_around_axis(roll, vector3<float>(1.0, 0.0, 0.0));
+  rotate_camera_around_axis(roll, m_forward);
 }
 
 void camera_t::translate_camera_forward (const float amount) {

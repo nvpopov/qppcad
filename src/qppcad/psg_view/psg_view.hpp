@@ -30,7 +30,7 @@ namespace qpp {
         vector3<float> m_new_centre{0,0,0};
 
         bool m_nested{false};
-        array_group<matrix3<float> > m_ag;
+        std::shared_ptr<array_group<matrix3<float> > > m_ag{nullptr};
         point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
 

@@ -49,8 +49,12 @@ void psg_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
   if (_binding_item && _binding_item->get_type() == psg_view_t::get_type_static()) {
       b_pg = _binding_item->cast_as<psg_view_t>();
-      tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag.name));
-      tg_info_total_sym_op->setText(tr("%1").arg(b_pg->m_ag.size()));
+
+      if (b_pg && b_pg->m_ag) {
+          tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag->name));
+          tg_info_total_sym_op->setText(tr("%1").arg(b_pg->m_ag->size()));
+        }
+
       tg_plane_alpha_enabled->bind_value(&b_pg->m_plane_alpha_enabled, b_pg);
       tg_plane_scale->bind_value(&b_pg->m_plane_scale, b_pg);
       tg_axis_scale->bind_value(&b_pg->m_axis_scale, b_pg);
