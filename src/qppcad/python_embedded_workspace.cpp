@@ -14,6 +14,11 @@ using namespace qpp::cad;
 
 namespace py = pybind11;
 
+std::shared_ptr<ws_item_t> construct_from_geom(
+    std::shared_ptr<xgeometry<float, periodic_cell<float>>> geom) {
+
+}
+
 PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
 
   py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >(m, "workspace_manager_t")

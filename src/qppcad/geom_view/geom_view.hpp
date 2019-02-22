@@ -67,17 +67,17 @@ namespace qpp {
 
       public:
 
-        std::unique_ptr<xgeometry<float, periodic_cell<float> > >                    m_geom{};
-        std::unique_ptr<geom_view_anim_subsys_t>                                 m_anim{};
-        std::unique_ptr<geom_view_measurement_subsys_t>                          m_measure{};
-        std::unique_ptr<geom_view_labels_subsys_t>                               m_labels{};
-        std::unique_ptr<geom_view_lat_planes_subsys_t>                           m_lat_planes{};
-        std::unique_ptr<bonding_table<float> >                                       m_bt{};
-        std::unique_ptr<tws_tree_t<float, periodic_cell<float> > >                   m_tws_tr{};
-        std::unique_ptr<extents_observer_t<float, periodic_cell<float> > >           m_ext_obs{};
+        std::shared_ptr<xgeometry<float, periodic_cell<float> > > m_geom{};
+        std::unique_ptr<geom_view_anim_subsys_t> m_anim{};
+        std::unique_ptr<geom_view_measurement_subsys_t> m_measure{};
+        std::unique_ptr<geom_view_labels_subsys_t> m_labels{};
+        std::unique_ptr<geom_view_lat_planes_subsys_t> m_lat_planes{};
+        std::unique_ptr<bonding_table<float> > m_bt{};
+        std::unique_ptr<tws_tree_t<float, periodic_cell<float> > > m_tws_tr{};
+        std::unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs{};
         //std::set<uint16_t>                                                           m_atom_sel;
-        std::unordered_set<atom_index_set_key, atom_index_set_key_hash>              m_atom_idx_sel;
-        std::deque<atom_index_set_key>                                               m_atom_ord_sel;
+        std::unordered_set<atom_index_set_key, atom_index_set_key_hash> m_atom_idx_sel;
+        std::deque<atom_index_set_key> m_atom_ord_sel;
         std::unique_ptr<geom_view_render_buffered_billboards_t> m_bs{};
         std::set<size_t>  m_atom_type_to_hide;
         std::set<size_t>  m_atom_type_to_hide_bond;

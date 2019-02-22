@@ -27,7 +27,7 @@ geom_view_t::geom_view_t(): ws_item_t () {
                     ws_item_flags_support_moveto |
                     ws_item_flags_support_rendering);
 
-  m_geom = std::make_unique<xgeometry<float, periodic_cell<float> > >(3,"rg1");
+  m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
   /* 0 atom
    * 1 X
@@ -88,7 +88,7 @@ geom_view_t::geom_view_t(): ws_item_t () {
 }
 
 void geom_view_t::vote_for_view_vectors (vector3<float> &out_look_pos,
-                                             vector3<float> &out_look_at) {
+                                         vector3<float> &out_look_at) {
   if (m_geom->nat() > 1) {
       out_look_at += (m_ext_obs->aabb.max + m_ext_obs->aabb.min) / 2.0;
       vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
@@ -101,10 +101,10 @@ void geom_view_t::vote_for_view_vectors (vector3<float> &out_look_pos,
 }
 
 void geom_view_t::target_view(const cam_target_view_t _target_view,
-                                  vector3<float> &look_from,
-                                  vector3<float> &look_to,
-                                  vector3<float> &look_up,
-                                  bool &need_to_update_camera) {
+                              vector3<float> &look_from,
+                              vector3<float> &look_to,
+                              vector3<float> &look_up,
+                              bool &need_to_update_camera) {
   switch (_target_view) {
 
     case cam_target_view_t::tv_x_axis : {
@@ -284,7 +284,7 @@ bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (click_ray) {
+  if (click_ray && m_geom && m_parent_ws) {
 
       std::vector<tws_query_data_t<float, size_t> > res;
 
@@ -344,6 +344,8 @@ void geom_view_t::select_atoms (bool all) {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  if (!m_geom) return;
+
   if (all) {
       m_atom_idx_sel.clear();
       for (auto i = 0; i < m_geom->nat(); i++) select_atom(i);
@@ -361,6 +363,7 @@ void geom_view_t::select_atoms (bool all) {
 }
 
 void geom_view_t::select_atom (int atom_id) {
+  if (!m_geom) return;
   select_atom(atom_id, index::D(m_geom->DIM).all(0));
 }
 
@@ -369,6 +372,7 @@ void geom_view_t::select_atom(int atom_id, index atom_idx) {
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+  if (!m_geom) return;
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
       m_atom_idx_sel.insert(atom_index_set_key(atom_id, atom_idx));
@@ -402,6 +406,7 @@ void geom_view_t::unselect_atom(int atom_id) {
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+  if (!m_geom) return;
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
 
@@ -439,6 +444,7 @@ void geom_view_t::unselect_atom(int atom_id, index atom_idx) {
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+  if (!m_geom) return;
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
       auto key = atom_index_set_key(atom_id, atom_idx);
@@ -470,6 +476,7 @@ void geom_view_t::unselect_atom(int atom_id, index atom_idx) {
 void geom_view_t::select_by_type (const int item_type_to_select) {
 
   app_state_t* astate = app_state_t::get_inst();
+  if (!m_geom) return;
 
   for (auto i = 0; i < m_geom->nat(); i++)
     if (m_geom->type_table(i) == item_type_to_select) select_atom(i);
@@ -483,6 +490,7 @@ void geom_view_t::select_by_type (const int item_type_to_select) {
 void geom_view_t::unselect_by_type(const int item_type_to_unselect) {
 
   app_state_t* astate = app_state_t::get_inst();
+  if (!m_geom) return;
 
   for (auto i = 0; i < m_geom->nat(); i++)
 
@@ -499,6 +507,7 @@ void geom_view_t::unselect_by_type(const int item_type_to_unselect) {
 void geom_view_t::invert_selected_atoms () {
 
   app_state_t* astate = app_state_t::get_inst();
+  if (!m_geom) return;
 
   std::set<int> sel_atm;
   index zero = index::D(m_geom->DIM).all(0);
@@ -519,63 +528,89 @@ void geom_view_t::invert_selected_atoms () {
 }
 
 void geom_view_t::insert_atom (const int atom_type, const vector3<float> &pos) {
+
+  if (!m_geom) return;
   m_anim->m_force_non_animable = true;
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
+
 }
 
 void geom_view_t::insert_atom (const std::string &atom_name, const vector3<float> &pos) {
+
+  if (!m_geom) return;
   m_anim->m_force_non_animable = true;
   m_geom->add(atom_name, pos);
+
 }
 
 void geom_view_t::update_atom (const int at_id, const vector3<float> &pos) {
+
+  if (!m_geom) return;
   m_anim->m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_t::update_atom (const int at_id, const std::string &at_name) {
+
+  if (!m_geom) return;
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
+  if (!m_geom) return;
+
 }
 
 void geom_view_t::update_atom(const int at_id,
-                                  const std::string &at_name,
-                                  const vector3<float> &pos){
+                              const std::string &at_name,
+                              const vector3<float> &pos) {
+
+  if (!m_geom) return;
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, pos);
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_t::transform_atom(const int at_id,
-                                     const matrix3<float> &tm) {
+                                 const matrix3<float> &tm) {
+
+  if (!m_geom) return;
   vector3<float> pos = m_geom->coord(at_id);
   vector3<float> new_pos = tm * pos;
   m_geom->coord(at_id) = new_pos;
+
 }
 
 void geom_view_t::transform_atom(const int at_id,
-                                     const matrix4<float> &tm) {
+                                 const matrix4<float> &tm) {
+
+  if (!m_geom) return;
   vector4<float> p_aff(m_geom->pos(at_id)[0], m_geom->pos(at_id)[1], m_geom->pos(at_id)[2], 1.0f);
   vector4<float> new_p = tm * p_aff;
   vector3<float> new_pos3(new_p[0], new_p[1], new_p[2]);
   m_geom->change_pos(at_id, new_pos3);
+
 }
 
 void geom_view_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
+
+  if (!m_geom) return;
   for (int i = 0; i < xgeom_inst.nat(); i++) {
       m_geom->add(xgeom_inst.atom(i), xgeom_inst.pos(i));
       m_geom->xfield<float>(xgeom_charge, i) = xgeom_inst.xfield<float>(xgeom_charge, i);
     }
+
 }
 
 void geom_view_t::copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst,
-                                        bool copy_selected,
-                                        bool copy_cell) {
+                                    bool copy_selected,
+                                    bool copy_cell) {
+  if (!m_geom) return;
 
   xgeom_inst.clear();
 
@@ -599,6 +634,8 @@ void geom_view_t::copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xge
 
 void geom_view_t::load_color_from_static_anim() {
 
+  if (!m_geom) return;
+
   if (m_anim->m_anim_data.size()>0) {
       int static_anim = -1;
       for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
@@ -619,12 +656,18 @@ void geom_view_t::load_color_from_static_anim() {
 }
 
 void geom_view_t::select_atom_ngbs(const int at_id) {
+
+  if (!m_geom) return;
+
   for (int i = 0; i < m_tws_tr->n(at_id); i++)
     if (m_tws_tr->table_idx(at_id, i) == index::D(m_geom->DIM).all(0))
       select_atom(m_tws_tr->table_atm(at_id, i));
 }
 
 void geom_view_t::select_selected_atoms_ngbs() {
+
+  if (!m_geom) return;
+
   std::set<int> stored_sel;
   for (auto &rec : m_atom_idx_sel)
     if (rec.m_idx == index::D(m_geom->DIM).all(0)) stored_sel.insert(rec.m_atm);
@@ -633,13 +676,15 @@ void geom_view_t::select_selected_atoms_ngbs() {
 }
 
 void geom_view_t::update_inter_atomic_dist(float new_dist,
-                                               const int at1,
-                                               const int at2,
-                                               const index id1,
-                                               const index id2,
-                                               pair_dist_mode mode) {
+                                           const int at1,
+                                           const int at2,
+                                           const index id1,
+                                           const index id2,
+                                           pair_dist_mode mode) {
 
   app_state_t* astate = app_state_t::get_inst();
+
+  if (!m_geom) return;
 
   vector3<float> r_btw = (m_geom->pos(at1, id1) + m_geom->pos(at2, id2))*0.5f;
   vector3<float> dir_f = (m_geom->pos(at1, id1) - r_btw).normalized();
@@ -665,24 +710,33 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 }
 
 void geom_view_t::update_inter_atomic_dist(float new_dist,
-                                               const int at1,
-                                               const int at2,
-                                               pair_dist_mode mode) {
+                                           const int at1,
+                                           const int at2,
+                                           pair_dist_mode mode) {
+
+  if (!m_geom) return;
+
   update_inter_atomic_dist(new_dist, at1, at2,
                            index::D(m_geom->DIM).all(0), index::D(m_geom->DIM).all(0), mode);
 }
 
 void geom_view_t::translate_selected (const vector3<float> &t_vec) {
+
+  if (!m_geom) return;
+
   for (auto &elem : m_atom_idx_sel)
     if (elem.m_idx == index::D(m_geom->DIM).all(0))
       update_atom(elem.m_atm, m_geom->pos(elem.m_atm) + t_vec);
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
+
 }
 
 void geom_view_t::delete_selected_atoms () {
 
   app_state_t* astate = app_state_t::get_inst();
+
+  if (!m_geom) return;
 
   if (!m_atom_idx_sel.empty()) m_anim->m_force_non_animable = true;
 
@@ -719,6 +773,8 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  if (!m_geom) return;
+
   if (!to_delete.empty()) m_anim->m_force_non_animable = true;
 
   std::vector<int> all_atom_num;
@@ -751,7 +807,7 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
 }
 
 std::string geom_view_t::compose_item_name () {
-  return fmt::format("geom. view, DIM = [{}d]", m_geom->DIM);
+  return m_geom ? fmt::format("geom. view, DIM = [{}d]", m_geom->DIM) : "geom. view(empty)";
 }
 
 void geom_view_t::update (float delta_time) {
@@ -760,12 +816,12 @@ void geom_view_t::update (float delta_time) {
 }
 
 float geom_view_t::get_bb_prescaller () {
-  if (m_geom->DIM == 3) return 1.5f;
+  if (m_geom && m_geom->DIM == 3) return 1.5f;
   return 1.1f;
 }
 
 bool geom_view_t::is_bb_visible() {
-  return m_geom->DIM == 0;
+  return m_geom && m_geom->DIM == 0;
 }
 
 uint32_t geom_view_t::get_amount_of_selected_content () {
@@ -773,7 +829,7 @@ uint32_t geom_view_t::get_amount_of_selected_content () {
 }
 
 size_t geom_view_t::get_content_count () {
-  return (m_geom->nat());
+  return m_geom ? m_geom->nat() : 0;
 }
 
 void geom_view_t::on_begin_content_gizmo_translate () {
@@ -784,6 +840,7 @@ void geom_view_t::on_begin_content_gizmo_translate () {
 void geom_view_t::apply_intermediate_translate_content (const vector3<float> &pos) {
 
   app_state_t* astate = app_state_t::get_inst();
+  if (!m_geom) return;
 
   bool someone_from_atoms_were_translated = false;
   for (auto &it : m_atom_idx_sel) {
@@ -825,6 +882,9 @@ void geom_view_t::updated_internally() {
 }
 
 void geom_view_t::shift(const vector3<float> shift) {
+
+  if (!m_geom) return;
+
   m_tws_tr->do_action(act_lock);
 
   for (int i = 0; i < m_geom->nat(); i++)
@@ -836,6 +896,7 @@ void geom_view_t::shift(const vector3<float> shift) {
 
   m_tws_tr->do_action(act_unlock);
   geometry_changed();
+
 }
 
 void geom_view_t::save_to_json (json &data) {
