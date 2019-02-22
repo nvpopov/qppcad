@@ -10,7 +10,7 @@
 #include <symm/index_set.hpp>
 #include <io/comp_chem_data.hpp>
 #include <qppcad/ws_item.hpp>
-#include <qppcad/camera.hpp>
+#include <qppcad/render/camera.hpp>
 
 #include <qppcad/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/geom_view/geom_view_measurement_subsys.hpp>

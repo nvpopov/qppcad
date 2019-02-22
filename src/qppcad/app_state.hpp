@@ -5,11 +5,11 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QString>
-#include <qppcad/shader_generators.hpp>
-#include <qppcad/mesh_generators.hpp>
-#include <qppcad/camera.hpp>
-#include <qppcad/glapi.hpp>
-#include <qppcad/draw_pipeline.hpp>
+#include <qppcad/render/shader_generators.hpp>
+#include <qppcad/render/mesh_generators.hpp>
+#include <qppcad/render/camera.hpp>
+#include <qppcad/render/glapi.hpp>
+#include <qppcad/render/draw_pipeline.hpp>
 #include <qppcad/workspace.hpp>
 #include <qppcad/app_state_event_disp.hpp>
 #include <qppcad/python_manager.hpp>

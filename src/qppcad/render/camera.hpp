@@ -1,7 +1,7 @@
 #ifndef QPP_CAMERA_H
 #define QPP_CAMERA_H
 #include <geom/lace3d.hpp>
-#include <qppcad/gl_math.hpp>
+#include <qppcad/render/gl_math.hpp>
 
 namespace qpp {
 

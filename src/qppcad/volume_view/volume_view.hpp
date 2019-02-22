@@ -4,7 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item.hpp>
 #include <io/cube.hpp>
-#include <qppcad/mesh.hpp>
+#include <qppcad/render/mesh.hpp>
 #include <data/color.hpp>
 
 namespace qpp {

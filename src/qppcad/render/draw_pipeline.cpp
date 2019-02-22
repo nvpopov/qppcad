@@ -1,22 +1,22 @@
-#include <qppcad/draw_pipeline.hpp>
+#include <qppcad/render/draw_pipeline.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-draw_pipeline_t::draw_pipeline_t(){
+draw_pipeline_t::draw_pipeline_t() {
 
 }
 
-void draw_pipeline_t::load_pipeline(){
+void draw_pipeline_t::load_pipeline() {
 
 }
 
-void draw_pipeline_t::unload_pipeline(){
+void draw_pipeline_t::unload_pipeline() {
 
 }
 
-void draw_pipeline_t::render(){
+void draw_pipeline_t::render() {
 
 }
 

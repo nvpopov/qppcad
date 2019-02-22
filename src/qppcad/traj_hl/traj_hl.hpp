@@ -3,7 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item.hpp>
-#include <qppcad/mesh.hpp>
+#include <qppcad/render/mesh.hpp>
 
 namespace qpp {
 

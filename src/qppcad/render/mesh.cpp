@@ -1,4 +1,4 @@
-#include <qppcad/mesh.hpp>
+#include <qppcad/render/mesh.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;

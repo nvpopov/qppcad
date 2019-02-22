@@ -1,5 +1,5 @@
 #include <qppcad/volume_view/volume_view.hpp>
-#include <qppcad/volume_tools.hpp>
+#include <qppcad/render/volume_tools.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -24,7 +24,7 @@ volume_view_t::volume_view_t() : ws_item_t () {
 }
 
 void volume_view_t::vote_for_view_vectors(vector3<float> &v_out_look_pos,
-                                             vector3<float> &v_out_look_at) {
+                                          vector3<float> &v_out_look_at) {
 
 }
 
@@ -164,8 +164,8 @@ void volume_view_t::update_isolevel(float new_isolevel) {
 }
 
 void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
-                                        geometry<float, periodic_cell<float> > &geom,
-                                        std::string &fname) {
+                                     geometry<float, periodic_cell<float> > &geom,
+                                     std::string &fname) {
 
   ws_volume_record_t new_vol_rec;
 

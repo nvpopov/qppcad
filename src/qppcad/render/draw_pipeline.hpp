@@ -1,8 +1,8 @@
 #ifndef QPP_CAD_DRAW_PIPELINE
 #define QPP_CAD_DRAW_PIPELINE
 #include <qppcad/qppcad.hpp>
-#include <qppcad/mesh.hpp>
-#include <qppcad/shader_program.hpp>
+#include <qppcad/render/mesh.hpp>
+#include <qppcad/render/shader_program.hpp>
 #include <string>
 #include <Eigen/Eigen>
 #include <geom/lace3d.hpp>

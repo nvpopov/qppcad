@@ -1,4 +1,4 @@
-#include <qppcad/mesh_generators.hpp>
+#include <qppcad/render/mesh_generators.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

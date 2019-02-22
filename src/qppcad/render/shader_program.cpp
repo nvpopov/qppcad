@@ -1,4 +1,4 @@
-#include <qppcad/shader_program.hpp>
+#include <qppcad/render/shader_program.hpp>
 #include <qppcad/app_state.hpp>
 //#include <qppcad/app.hpp>
 

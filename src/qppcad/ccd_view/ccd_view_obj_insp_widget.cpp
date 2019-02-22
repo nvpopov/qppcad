@@ -118,8 +118,8 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   gen_ccd_info_run_type = new QLabel;
 
   pre_init_group_box(gb_gen_ccd_info, gb_gen_ccd_info_lt);
-  gb_gen_ccd_info_lt->addRow(tr("Program :"), gen_ccd_info_prog_name);
-  gb_gen_ccd_info_lt->addRow(tr("Run type :"), gen_ccd_info_run_type);
+  gb_gen_ccd_info_lt->addRow(tr("Program"), gen_ccd_info_prog_name);
+  gb_gen_ccd_info_lt->addRow(tr("Run type"), gen_ccd_info_run_type);
   post_init_group_box(gb_gen_ccd_info, gb_gen_ccd_info_lt);
 
   tab_general->tab_inner_widget_layout->addWidget(gb_gen_ccd_info);

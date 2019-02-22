@@ -27,8 +27,8 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   //cb_current_volume->setMaximumWidth(def_control_width);
 
   pre_init_group_box(gb_volume_detail, gb_volume_detail_lt);
-  gb_volume_detail_lt->addRow(tr("Current volume :"), cb_current_volume);
-  gb_volume_detail_lt->addRow(tr("Permanent :"), vol_render_permanent);
+  gb_volume_detail_lt->addRow(tr("Current volume"), cb_current_volume);
+  gb_volume_detail_lt->addRow(tr("Permanent"), vol_render_permanent);
   gb_volume_detail_lt->addRow(tr("Type"), general_volume_type);
   gb_volume_detail_lt->addRow(tr("Isolevel"), vol_isovalue);
   gb_volume_detail_lt->addRow(tr("Transparent"), vol_transparent);

@@ -1,4 +1,4 @@
-#include <qppcad/camera.hpp>
+#include <qppcad/render/camera.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;

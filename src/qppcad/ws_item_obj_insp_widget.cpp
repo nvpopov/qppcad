@@ -91,7 +91,6 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
 }
 
 void ws_item_obj_insp_widget_t::pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
-  gb_lt->setLabelAlignment(Qt::AlignLeft);
   gb->setLayout(gb_lt);
 }
 
@@ -114,19 +113,19 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   ws_item_name = new QLabel;
   ws_item_type = new QLabel;
-  ws_item_is_visible_label = new QLabel(tr("Is visible :"));
+  ws_item_is_visible_label = new QLabel(tr("Is visible"));
   ws_item_is_visible = new qbinded_checkbox;
 
-  ws_item_bb_visible_label = new QLabel(tr("Show bbox :"));
+  ws_item_bb_visible_label = new QLabel(tr("Show bbox"));
   ws_item_bb_visible = new qbinded_checkbox;
 
-  ws_item_pos_label = new QLabel(tr("Position :"));
+  ws_item_pos_label = new QLabel(tr("Position"));
   ws_item_pos = new qbinded_float3_input;
   ws_item_pos->set_default_suffix();
   ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
 
-  tg_form_layout->addRow(tr("Name :"), ws_item_name);
-  tg_form_layout->addRow(tr("Type :"), ws_item_type);
+  tg_form_layout->addRow(tr("Name"), ws_item_name);
+  tg_form_layout->addRow(tr("Type"), ws_item_type);
   tg_form_layout->addRow(ws_item_is_visible_label, ws_item_is_visible);
   tg_form_layout->addRow(ws_item_bb_visible_label, ws_item_bb_visible);
   tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);

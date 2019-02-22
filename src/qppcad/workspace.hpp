@@ -5,7 +5,7 @@
 #include <geom/lace3d.hpp>
 #include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
-#include <qppcad/camera.hpp>
+#include <qppcad/render/camera.hpp>
 #include <qppcad/ws_item.hpp>
 #include <qppcad/gizmo.hpp>
 #include <qppcad/ws_item_behaviour_manager.hpp>

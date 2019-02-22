@@ -14,8 +14,8 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_geom_summary_total_atoms = new QLabel;
   tg_geom_summary_total_types = new QLabel;
 
-  tg_geom_summary_lt->addRow(tr("Total atoms :"), tg_geom_summary_total_atoms);
-  tg_geom_summary_lt->addRow(tr("Total types :"), tg_geom_summary_total_types);
+  tg_geom_summary_lt->addRow(tr("Total atoms"), tg_geom_summary_total_atoms);
+  tg_geom_summary_lt->addRow(tr("Total types"), tg_geom_summary_total_types);
   post_init_group_box(tg_geom_summary_widget, tg_geom_summary_lt);
 
   tg_type_summary_widget = new QGroupBox(tr("Type Summary"));
@@ -104,9 +104,9 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_inplace_labels = new qbinded_checkbox;
 
   disp_draw_subcells = new qbinded_checkbox;
-  disp_draw_subcells_label = new QLabel(tr("Draw subcells :"));
+  disp_draw_subcells_label = new QLabel(tr("Draw subcells"));
   disp_subcells_idx = new qbinded_int3_input;
-  disp_subcells_idx_label = new QLabel(tr("Subcells range :"));
+  disp_subcells_idx_label = new QLabel(tr("Subcells range"));
 
   disp_subcells_idx->set_min_max_step(1, 10, 1);
   connect(disp_draw_subcells, &qbinded_checkbox::stateChanged,
@@ -116,27 +116,27 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox;
 
   disp_draw_cell = new qbinded_checkbox;
-  disp_draw_cell_label = new QLabel(tr("Draw cell :"));
+  disp_draw_cell_label = new QLabel(tr("Draw cell"));
 
   disp_cell_color = new qbinded_color3_input;
-  disp_cell_color_label = new QLabel(tr("Cell color :"));
+  disp_cell_color_label = new QLabel(tr("Cell color"));
 
   disp_subcell_color = new qbinded_color3_input;
-  disp_subcell_color_label = new QLabel(tr("Sub cell color :"));
+  disp_subcell_color_label = new QLabel(tr("Sub cell color"));
 
-  gb_disp_s_lt->addRow(tr("Draw style :"), disp_s_render_style);
-  gb_disp_s_lt->addRow(tr("Color style :"), disp_s_color_mode);
-  gb_disp_s_lt->addRow(tr("Draw atoms :"), disp_s_draw_atoms);
-  gb_disp_s_lt->addRow(tr("Draw bonds :"), disp_s_draw_bonds);
-  gb_disp_s_lt->addRow(tr("Draw im. atoms :"), disp_s_draw_img_atoms);
-  gb_disp_s_lt->addRow(tr("Draw im. bonds :"), disp_s_draw_img_bonds);
-  gb_disp_s_lt->addRow(tr("Atom scale :"), disp_s_atom_scale);
-  gb_disp_s_lt->addRow(tr("Bond scale :"), disp_s_bond_scale);
-  gb_disp_s_lt->addRow(tr("Labels style :"), disp_s_labels_style);
+  gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
+  gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
+  gb_disp_s_lt->addRow(tr("Draw atoms"), disp_s_draw_atoms);
+  gb_disp_s_lt->addRow(tr("Draw bonds"), disp_s_draw_bonds);
+  gb_disp_s_lt->addRow(tr("Draw im. atoms"), disp_s_draw_img_atoms);
+  gb_disp_s_lt->addRow(tr("Draw im. bonds"), disp_s_draw_img_bonds);
+  gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
+  gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
+  gb_disp_s_lt->addRow(tr("Labels style"), disp_s_labels_style);
   gb_disp_s_lt->addRow(tr("Labels size"), disp_labels_size);
-  gb_disp_s_lt->addRow(tr("Inplace labels :"), disp_s_inplace_labels);
-  gb_disp_s_lt->addRow(tr("Sel. vis. :"), disp_s_sel_vis);
-  gb_disp_s_lt->addRow(tr("Sel. vis. bonds :"), disp_s_sel_vis_affect_bonds);
+  gb_disp_s_lt->addRow(tr("Inplace labels"), disp_s_inplace_labels);
+  gb_disp_s_lt->addRow(tr("Sel. vis."), disp_s_sel_vis);
+  gb_disp_s_lt->addRow(tr("Sel. vis. bonds"), disp_s_sel_vis_affect_bonds);
   gb_disp_s_lt->addRow(disp_draw_cell_label, disp_draw_cell);
   gb_disp_s_lt->addRow(disp_cell_color_label, disp_cell_color);
   gb_disp_s_lt->addRow(disp_draw_subcells_label, disp_draw_subcells);
@@ -151,8 +151,8 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_shading_spec = new qbinded_checkbox;
   disp_shading_spec_value = new qbinded_float_spinbox;
   disp_shading_spec_value->set_min_max_step(0.25, 50, 0.25);
-  gb_disp_shading_lt->addRow(tr("Enable specular :"), disp_shading_spec);
-  gb_disp_shading_lt->addRow(tr("Specular power :"), disp_shading_spec_value);
+  gb_disp_shading_lt->addRow(tr("Enable specular"), disp_shading_spec);
+  gb_disp_shading_lt->addRow(tr("Specular power"), disp_shading_spec_value);
   post_init_group_box(gb_disp_shading, gb_disp_shading_lt);
 
   //display - type specific rendering
@@ -218,12 +218,12 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   connect(gb_current_anim, SIGNAL(currentIndexChanged(int)),
           this, SLOT(cur_anim_index_changed(int)));
 
-  gb_anim_summary_lt->addRow(tr("Number of anim. :"), gb_anim_total_anims);
-  gb_anim_summary_lt->addRow(tr("Rebuild bonds :"), gb_rebuild_bonds);
-  gb_anim_summary_lt->addRow(tr("Play in cycle :"), gb_play_cyclic);
-  gb_anim_summary_lt->addRow(tr("Current anim. :"), gb_current_anim);
-  gb_anim_summary_lt->addRow(tr("Frame time  :"), gb_anim_speed);
-  gb_anim_summary_lt->addRow(tr("Total frames in anim. :"), gb_anim_total_frames_in_anim);
+  gb_anim_summary_lt->addRow(tr("Number of anim."), gb_anim_total_anims);
+  gb_anim_summary_lt->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
+  gb_anim_summary_lt->addRow(tr("Play in cycle"), gb_play_cyclic);
+  gb_anim_summary_lt->addRow(tr("Current anim."), gb_current_anim);
+  gb_anim_summary_lt->addRow(tr("Frame time "), gb_anim_speed);
+  gb_anim_summary_lt->addRow(tr("Total frames in anim."), gb_anim_total_frames_in_anim);
   gb_anim_summary_lt->addRow(tr("Current frame:"), gb_anim_cur_frame);
   post_init_group_box(gb_anim_summary, gb_anim_summary_lt);
 

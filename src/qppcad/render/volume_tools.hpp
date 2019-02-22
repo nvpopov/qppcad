@@ -2,7 +2,7 @@
 #define QPP_CAD_MARCHING_CUBES_H
 
 #include <qppcad/qppcad.hpp>
-#include <qppcad/mesh.hpp>
+#include <qppcad/render/mesh.hpp>
 #include <io/cube.hpp>
 #include <symm/cell.hpp>
 

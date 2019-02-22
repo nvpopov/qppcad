@@ -87,12 +87,14 @@ add_executable(qppcad
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp
 
-    src/qppcad/shader_program.cpp
-    src/qppcad/shader_generators.cpp
-    src/qppcad/mesh.cpp
-    src/qppcad/mesh_generators.cpp
-    src/qppcad/glapi.cpp
-    src/qppcad/draw_pipeline.cpp
+    src/qppcad/render/shader_program.cpp
+    src/qppcad/render/shader_generators.cpp
+    src/qppcad/render/mesh.cpp
+    src/qppcad/render/mesh_generators.cpp
+    src/qppcad/render/glapi.cpp
+    src/qppcad/render/draw_pipeline.cpp
+    src/qppcad/render/camera.cpp
+    src/qppcad/render/volume_tools.cpp
 
     src/qppcad/workspace.cpp
     src/qppcad/string_hash_register.cpp
@@ -103,7 +105,7 @@ add_executable(qppcad
     src/qppcad/ws_item.cpp
     src/qppcad/ws_item_obj_insp_widget.cpp
     src/qppcad/ws_item_behaviour_manager.cpp
-    src/qppcad/camera.cpp
+
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
 
@@ -118,7 +120,6 @@ add_executable(qppcad
 
     src/qppcad/volume_view/volume_view.cpp
     src/qppcad/volume_view/volume_view_obj_insp_widget.cpp
-    src/qppcad/volume_tools.cpp
 
     src/qppcad/geom_view/geom_view.cpp
     src/qppcad/geom_view/geom_view_render_bs.cpp

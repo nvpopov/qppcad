@@ -1,5 +1,5 @@
-#include <qppcad/volume_tools.hpp>
-#include <qppcad/marching_cubes_tables.hpp>
+#include <qppcad/render/volume_tools.hpp>
+#include <qppcad/render/marching_cubes_tables.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

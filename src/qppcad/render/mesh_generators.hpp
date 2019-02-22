@@ -5,7 +5,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <geom/lace3d.hpp>
-#include <qppcad/mesh.hpp>
+#include <qppcad/render/mesh.hpp>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 

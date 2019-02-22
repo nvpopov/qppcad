@@ -1,4 +1,4 @@
-#include <qppcad/shader_generators.hpp>
+#include <qppcad/render/shader_generators.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
