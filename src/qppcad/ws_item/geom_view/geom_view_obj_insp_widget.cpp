@@ -214,16 +214,17 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_total_frames_in_anim = new QLabel;
   gb_anim_cur_frame = new QLabel;
   gb_current_anim = new QComboBox;
+  gb_current_anim->setMaximumWidth(def_gen_control_width);
 
   connect(gb_current_anim, SIGNAL(currentIndexChanged(int)),
           this, SLOT(cur_anim_index_changed(int)));
 
-  gb_anim_summary_lt->addRow(tr("Number of anim."), gb_anim_total_anims);
+  gb_anim_summary_lt->addRow(tr("Num. of anim."), gb_anim_total_anims);
   gb_anim_summary_lt->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
   gb_anim_summary_lt->addRow(tr("Play in cycle"), gb_play_cyclic);
   gb_anim_summary_lt->addRow(tr("Current anim."), gb_current_anim);
   gb_anim_summary_lt->addRow(tr("Frame time "), gb_anim_speed);
-  gb_anim_summary_lt->addRow(tr("Total frames in anim."), gb_anim_total_frames_in_anim);
+  gb_anim_summary_lt->addRow(tr("Num frm."), gb_anim_total_frames_in_anim);
   gb_anim_summary_lt->addRow(tr("Current frame:"), gb_anim_cur_frame);
   post_init_group_box(gb_anim_summary, gb_anim_summary_lt);
 
@@ -309,6 +310,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_single_atom_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_single_atom->setLayout(tm_gb_single_atom_lt);
   tm_single_atom_combo = new QComboBox;
+  tm_single_atom_combo->setMaximumWidth(def_gen_control_width);
   tm_single_atom_combo->setEditable(true);
   tm_single_atom_vec3 = new qbinded_float3_input;
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
@@ -327,9 +329,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this, &geom_view_obj_insp_widget_t::modify_single_atom_delete_button_clicked);
 
   tm_gb_single_atom_lt->addRow(tr("Atom name"), tm_single_atom_combo);
-  tm_gb_single_atom_lt->addRow(tr("Atom idx"), tm_single_atom_idx);
-  tm_gb_single_atom_lt->addRow(tr("Atom num"), tm_single_atom_num);
-  tm_gb_single_atom_lt->addRow(tr("Atom position"), tm_single_atom_vec3);
+  tm_gb_single_atom_lt->addRow(tr("Atom idx."), tm_single_atom_idx);
+  tm_gb_single_atom_lt->addRow(tr("Atom num."), tm_single_atom_num);
+  tm_gb_single_atom_lt->addRow(tr("Atom pos."), tm_single_atom_vec3);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_commit);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_delete);
   qt_helpers::resize_form_lt_labels(tm_gb_single_atom_lt, tab_modify_label_width);
@@ -346,7 +348,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this, &geom_view_obj_insp_widget_t::modify_add_atom_button_clicked);
 
   tm_gb_add_atom_lt->addRow(tr("Atom name"), tm_add_atom_combo);
-  tm_gb_add_atom_lt->addRow(tr("Atom posisition"), tm_add_atom_vec3);
+  tm_gb_add_atom_lt->addRow(tr("Atom pos."), tm_add_atom_vec3);
   tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
   qt_helpers::resize_form_lt_labels(tm_gb_add_atom_lt, tab_modify_label_width);
 
@@ -364,16 +366,19 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_pair_dist_t_mode->addItem("Transform both");
   tm_pair_dist_t_mode->addItem("Fix first");
   tm_pair_dist_t_mode->addItem("Fix second");
+  tm_pair_dist_t_mode->setMaximumWidth(def_gen_control_width);
 
   tm_pair_dist_note_label->setText(tr("Distance"));
   tm_pair_dist_spinbox->setMinimum(0.0);
   tm_pair_dist_spinbox->setMaximum(10);
   tm_pair_dist_spinbox->setSingleStep(0.01);
+  tm_pair_dist_spinbox->setMaximumWidth(def_gen_control_width);
+
   tm_gb_pair_dist_lt->addRow(tr("Atom №1"), tm_pair_dist_atom1);
   tm_gb_pair_dist_lt->addRow(tr("Atom №2"), tm_pair_dist_atom2);
   tm_gb_pair_dist_lt->addRow(tr("Atom №1 idx"), tm_pair_dist_atom1_idx);
   tm_gb_pair_dist_lt->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
-  tm_gb_pair_dist_lt->addRow(tr("Transform mode"), tm_pair_dist_t_mode);
+  tm_gb_pair_dist_lt->addRow(tr("Trnsf. mode"), tm_pair_dist_t_mode);
   tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
   qt_helpers::resize_form_lt_labels(tm_gb_pair_dist_lt, tab_modify_label_width);
 
@@ -383,6 +388,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_creation->setLayout(tm_gb_pair_creation_lt);
   tm_pair_creation_combo = new QComboBox;
   tm_pair_creation_combo->setEditable(true);
+  tm_pair_creation_combo->setMaximumWidth(def_gen_control_width);
 
   tm_pair_creation_button = new QPushButton("Append");
   tm_pair_creation_button->setMaximumWidth(tab_modify_op_button_width);
@@ -437,9 +443,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_u_scale_lt->addRow("Scale X", tm_u_scale_sb_x);
   tm_gb_u_scale_lt->addRow("Scale Y", tm_u_scale_sb_y);
   tm_gb_u_scale_lt->addRow("Scale Z", tm_u_scale_sb_z);
-  tm_gb_u_scale_lt->addRow("Enable sc. X-axis", tm_u_scale_x_enabled);
-  tm_gb_u_scale_lt->addRow("Enable sc. Y-axis", tm_u_scale_y_enabled);
-  tm_gb_u_scale_lt->addRow("Enable sc. Z-axis", tm_u_scale_z_enabled);
+  tm_gb_u_scale_lt->addRow("Enable::X", tm_u_scale_x_enabled);
+  tm_gb_u_scale_lt->addRow("Enable::Y", tm_u_scale_y_enabled);
+  tm_gb_u_scale_lt->addRow("Enable::Z", tm_u_scale_z_enabled);
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
   qt_helpers::resize_form_lt_labels(tm_gb_u_scale_lt, tab_modify_label_width);
 
@@ -456,6 +462,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_translate_coord_type_label = new QLabel("Coord. type");
   tm_translate_coord_type = new QComboBox;
+  tm_translate_coord_type->setMaximumWidth(def_gen_control_width);
 
   tm_translate_coord_type->addItem("Cartesian");
   tm_translate_coord_type->addItem("Fractional");
@@ -476,20 +483,23 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_bc_rot_lt = new QFormLayout;
   tm_gb_bc_rot_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_bc_rot->setLayout(tm_gb_bc_rot_lt);
+
   tm_bc_rot_axis = new QComboBox;
+  tm_bc_rot_axis->setMaximumWidth(def_gen_control_width);
   tm_bc_rot_axis->addItem("X");
   tm_bc_rot_axis->addItem("Y");
   tm_bc_rot_axis->addItem("Z");
-
   tm_bc_rot_axis->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
   tm_bc_rot_axis->setItemData(1, QBrush(Qt::green), Qt::TextColorRole);
   tm_bc_rot_axis->setItemData(2, QBrush(Qt::blue), Qt::TextColorRole);
 
   tm_bc_rot_angle = new QDoubleSpinBox;
+  tm_bc_rot_angle->setMaximumWidth(def_gen_control_width);
   tm_bc_rot_angle->setMinimum(-1000);
   tm_bc_rot_angle->setMaximum(1000);
 
   tm_bc_rot_angle_type = new QComboBox;
+  tm_bc_rot_angle_type->setMaximumWidth(def_gen_control_width);
 
   connect(tm_bc_rot_angle_type,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
