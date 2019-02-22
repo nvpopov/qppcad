@@ -5,7 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/python_simple_query.hpp>
-#include <qppcad/geom_view/geom_view_colorizer.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_colorizer.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

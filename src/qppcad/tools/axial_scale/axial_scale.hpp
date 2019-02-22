@@ -1,7 +1,7 @@
 #ifndef QPP_CAD_TOOL_AXIAL_SCALE
 #define QPP_CAD_TOOL_AXIAL_SCALE
 #include <qppcad/qppcad.hpp>
-#include <qppcad/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <QWidget>
 #include <QDialog>
 #include <QDoubleSpinBox>
@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QDialogButtonBox>
-#include <qppcad/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 namespace qpp {
 

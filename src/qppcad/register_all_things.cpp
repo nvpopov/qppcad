@@ -1,26 +1,26 @@
 #include <qppcad/register_all_things.hpp>
 
-#include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/geom_view/geom_view_obj_insp_widget.hpp>
-#include <qppcad/geom_view/geom_view_io.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_io.hpp>
 
-#include <qppcad/ccd_view/ccd_view.hpp>
-#include <qppcad/ccd_view/ccd_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/ccd_view/ccd_view.hpp>
+#include <qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.hpp>
 
-#include <qppcad/volume_view/volume_view.hpp>
-#include <qppcad/volume_view/volume_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/volume_view/volume_view.hpp>
+#include <qppcad/ws_item/volume_view/volume_view_obj_insp_widget.hpp>
 
-#include <qppcad/psg_view/psg_view.hpp>
-#include <qppcad/psg_view/psg_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/psg_view/psg_view.hpp>
+#include <qppcad/ws_item/psg_view/psg_view_obj_insp_widget.hpp>
 
-#include <qppcad/traj_hl/traj_hl.hpp>
-#include <qppcad/traj_hl/traj_hl_obj_insp_widget.hpp>
+#include <qppcad/ws_item/traj_hl/traj_hl.hpp>
+#include <qppcad/ws_item/traj_hl/traj_hl_obj_insp_widget.hpp>
 
-#include <qppcad/cube_primitive/cube_primitive.hpp>
-#include <qppcad/cube_primitive/cube_primitive_obj_insp_widget.hpp>
+#include <qppcad/ws_item/cube_primitive/cube_primitive.hpp>
+#include <qppcad/ws_item/cube_primitive/cube_primitive_obj_insp_widget.hpp>
 
-#include <qppcad/arrow_primitive/arrow_primitive.hpp>
-#include <qppcad/arrow_primitive/arrow_primitive_obj_insp_widget.hpp>
+#include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
+#include <qppcad/ws_item/arrow_primitive/arrow_primitive_obj_insp_widget.hpp>
 
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>

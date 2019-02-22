@@ -4,10 +4,10 @@
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 
-#include <qppcad/ws_item_trampoline.hpp>
+#include <qppcad/ws_item/ws_item_trampoline.hpp>
 #include <qppcad/workspace.hpp>
-#include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/psg_view/psg_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/psg_view/psg_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

@@ -6,9 +6,9 @@
 #include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
 #include <qppcad/render/camera.hpp>
-#include <qppcad/ws_item.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/gizmo.hpp>
-#include <qppcad/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {
 

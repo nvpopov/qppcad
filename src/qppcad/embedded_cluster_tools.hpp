@@ -2,7 +2,7 @@
 #define QPP_CAD_EMBEDDED_CLUSTER_TOOLS
 
 #include <qppcad/qppcad.hpp>
-#include <qppcad/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 namespace qpp {
 

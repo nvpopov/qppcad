@@ -1,18 +1,18 @@
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item) {
 
-//  for (int i = 0; i < m_geom->nat(); i++)
-//    if (m_atom_idx_sel.find(atom_index_set_key(i, index::D(m_geom->DIM).all(0))) !=
-//        m_atom_idx_sel.end() || ignore_selection) {
-//        vector3<float> pos = m_geom->pos(i);
-//        m_geom->change_pos(i, m_geom->cell.reduce(pos));
-//      }
+  //  for (int i = 0; i < m_geom->nat(); i++)
+  //    if (m_atom_idx_sel.find(atom_index_set_key(i, index::D(m_geom->DIM).all(0))) !=
+  //        m_atom_idx_sel.end() || ignore_selection) {
+  //        vector3<float> pos = m_geom->pos(i);
+  //        m_geom->change_pos(i, m_geom->cell.reduce(pos));
+  //      }
 
   app_state_t *astate = app_state_t::get_inst();
   astate->log("clamp_atoms_to_cell_tool_t::exec()");
@@ -48,4 +48,5 @@ void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item) {
     }
 
   astate->make_viewport_dirty();
+
 }

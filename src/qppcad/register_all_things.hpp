@@ -2,7 +2,7 @@
 #define QPP_CAD_REGISTER_ALL_THINGS_THING
 
 #include <qppcad/qppcad.hpp>
-#include <qppcad/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {
 

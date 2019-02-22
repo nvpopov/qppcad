@@ -1,11 +1,11 @@
 #include <qppcad/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/geom_view/geom_view.hpp>
-#include <qppcad/volume_view/volume_view.hpp>
-#include <qppcad/psg_view/psg_view.hpp>
-#include <qppcad/traj_hl/traj_hl.hpp>
-#include <qppcad/cube_primitive/cube_primitive.hpp>
-#include <qppcad/arrow_primitive/arrow_primitive.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/volume_view/volume_view.hpp>
+#include <qppcad/ws_item/psg_view/psg_view.hpp>
+#include <qppcad/ws_item/traj_hl/traj_hl.hpp>
+#include <qppcad/ws_item/cube_primitive/cube_primitive.hpp>
+#include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <data/ptable.hpp>
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>

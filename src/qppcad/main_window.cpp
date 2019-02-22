@@ -1,7 +1,7 @@
 #include <qppcad/main_window.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/app_settings_widget.hpp>
-#include <qppcad/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <QDateTime>
 
 using namespace qpp;

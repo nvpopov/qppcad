@@ -9,7 +9,7 @@
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QHBoxLayout>
-#include <qppcad/ws_item.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
 
 namespace qpp {
 

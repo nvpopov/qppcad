@@ -8,10 +8,10 @@
 #include <QVBoxLayout>
 #include <QSpacerItem>
 #include <QLabel>
-#include <qppcad/ws_item_obj_insp_widget.hpp>
-#include <qppcad/geom_view/geom_view_obj_insp_widget.hpp>
-#include <qppcad/ccd_view/ccd_view_obj_insp_widget.hpp>
-#include <qppcad/volume_view/volume_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/volume_view/volume_view_obj_insp_widget.hpp>
 
 namespace qpp {
 

@@ -4,7 +4,7 @@
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
 #include <geom/primitive_intersections.hpp>
-#include <qppcad/ws_item.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
 #include <data/color.hpp>
 
 namespace qpp {

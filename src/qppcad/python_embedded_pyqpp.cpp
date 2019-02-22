@@ -5,7 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/app_state.hpp>
-#include <qppcad/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
