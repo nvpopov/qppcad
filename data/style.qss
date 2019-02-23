@@ -105,7 +105,7 @@ QGroupBox::title {
 }
 
 QComboBox, QSpinBox, QDoubleSpinBox, QPushButton {
- background-color: rgb(70, 70, 70);
+ background-color: rgb(80, 80, 80);
 }
 
 QToolTip {

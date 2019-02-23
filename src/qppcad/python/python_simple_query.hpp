@@ -58,6 +58,8 @@ namespace qpp {
         static void make_traj_highlight(size_t atom_id,
                                         size_t anim_id);
 
+        static std::vector<std::string> get_xgeom_dfn();
+        static std::vector<basic_types> get_xgeom_dft();
         static void edit_mode(int mode);
         static void rebond();
         static void translate_selected(float tx,

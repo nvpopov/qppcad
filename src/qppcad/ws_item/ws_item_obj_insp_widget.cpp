@@ -182,6 +182,7 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
       if (ok && text != "") {
           m_binded_item->m_name = text.toStdString();
           astate->astate_evd->cur_ws_selected_item_changed();
+          astate->astate_evd->cur_ws_changed();
         }
     }
 }

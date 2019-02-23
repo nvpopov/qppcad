@@ -25,7 +25,20 @@ std::shared_ptr<ws_item_t> construct_from_geom(
     auto as_gv = new_item->cast_as<geom_view_t>();
     if(!as_gv) return nullptr;
 
+    if (as_gv->m_geom) {
+        as_gv->m_geom->remove_observer(*as_gv->m_ext_obs);
+        as_gv->m_geom->remove_observer(*as_gv->m_tws_tr);
+      }
+
     as_gv->m_geom = geom;
+    as_gv->m_ext_obs->geom = as_gv->m_geom.get();
+    as_gv->m_tws_tr->geom = as_gv->m_geom.get();
+
+    as_gv->m_tws_tr->do_action(act_lock | act_clear_all);
+    as_gv->m_geom->add_observer(*as_gv->m_ext_obs);
+    as_gv->m_geom->add_observer(*as_gv->m_tws_tr);
+    as_gv->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+    as_gv->m_tws_tr->do_action(act_rebuild_ntable);
     as_gv->m_name = name;
     ws.add_item_to_ws(new_item);
 
@@ -81,9 +94,9 @@ PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
         if (!retv) throw py::key_error();
         return retv;
        }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
-      .def("construct_item", &workspace_t::py_construct_item)
-      .def("construct_item", &construct_from_geom)
-      .def("construct_item", &construct_from_array_group)
+      .def("construct", &workspace_t::py_construct_item)
+      .def("construct", &construct_from_geom)
+      .def("construct", &construct_from_array_group)
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr);
 

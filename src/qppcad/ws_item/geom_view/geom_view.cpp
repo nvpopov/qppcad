@@ -184,6 +184,8 @@ void geom_view_t::render () {
 
   ws_item_t::render();
 
+  if (!m_geom) return;
+
   app_state_t* astate = app_state_t::get_inst();
   vector3<float> _pos = m_pos;
   index all_null = index::D(m_geom->DIM).all(0);

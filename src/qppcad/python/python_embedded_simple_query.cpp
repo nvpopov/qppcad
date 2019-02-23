@@ -33,6 +33,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));} );
   m.def("gpos", &simple_query::gizmo_pos);
 
+  m.def("xgeom_dfn", &simple_query::get_xgeom_dfn);
+  m.def("xgeom_dft", &simple_query::get_xgeom_dft);
+
   py::module tools = m.def_submodule("tools", "Generic tools");
   tools.def("get_isolevel", &simple_query::get_isolevel);
   tools.def("set_isolevel", &simple_query::set_isolevel);

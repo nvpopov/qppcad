@@ -563,6 +563,42 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
 
 }
 
+std::vector<std::string> simple_query::get_xgeom_dfn() {
+
+  return {
+      "atom", //0
+      "x",//1
+      "y",//2
+      "z",//3
+      "charge",//4
+      "number", //5
+      "hide",//6
+      "lshow",//7
+      "ccr",//8
+      "ccg",//9
+      "ccb",//10
+      "ltext"//11
+    };
+
+}
+
+std::vector<basic_types> simple_query::get_xgeom_dft() {
+  return  {
+          type_string, //0
+          type_real, //1
+          type_real, //2
+          type_real, //3
+          type_real, //4
+          type_int, //5
+          type_bool, //6
+          type_bool, //7
+          type_real, //8
+          type_real, //9
+          type_real, //10
+          type_string //11
+    };
+}
+
 void simple_query::rebond() {
 
   app_state_t *astate = app_state_t::get_inst();
