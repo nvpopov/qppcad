@@ -1,4 +1,4 @@
-#include <qppcad/qbinded_inputs.hpp>
+#include <qppcad/ui/qbinded_inputs.hpp>
 #include <qppcad/app_state.hpp>
 #include <QMouseEvent>
 #include <QColorDialog>

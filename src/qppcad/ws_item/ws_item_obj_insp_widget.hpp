@@ -3,7 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
-#include <qppcad/qbinded_inputs.hpp>
+#include <qppcad/ui/qbinded_inputs.hpp>
 #include <QWidget>
 #include <QTabWidget>
 #include <QVBoxLayout>

@@ -14,5 +14,6 @@
         <file>images/icon_checkbox_unchecked.png</file>
         <file>images/icon_checkbox_unchecked_disabled.png</file>
         <file>images/icon_checkbox_unchecked_pressed.png</file>
+        <file>images/outline_camera_alt_white_18dp.png</file>
     </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-#include <qppcad/app_settings_widget.hpp>
+#include <qppcad/ui/app_settings_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

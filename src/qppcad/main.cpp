@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QStyleFactory>
 #include <QFontDatabase>
-#include <qppcad/main_window.hpp>
+#include <qppcad/ui/main_window.hpp>
 #include <qppcad/app_state.hpp>
 #include <QTextStream>
 #include <QCommandLineParser>

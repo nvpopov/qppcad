@@ -1,4 +1,4 @@
-#include <qppcad/qt_helpers.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 #include <QLabel>
 
 using namespace qpp;

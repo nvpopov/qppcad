@@ -6,12 +6,12 @@
 #include <qppcad/ws_item/geom_view/qbonding_table_model.hpp>
 #include <qppcad/ws_item/geom_view/qtype_specific_rendering_model.hpp>
 #include <qppcad/ws_item/geom_view/qmeasurements_table_model.hpp>
-#include <qppcad/qrealspinbox_delegate.hpp>
+#include <qppcad/ui/qrealspinbox_delegate.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
 #include <QTableWidget>
 #include <QTableView>
 #include <QHeaderView>
 #include <QSlider>
-#include <qppcad/qspoiler_widget.hpp>
 
 namespace qpp {
 

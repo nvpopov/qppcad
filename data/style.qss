@@ -108,3 +108,6 @@ QComboBox, QSpinBox, QDoubleSpinBox, QPushButton {
  background-color: rgb(70, 70, 70);
 }
 
+QToolTip {
+ color: black;
+}

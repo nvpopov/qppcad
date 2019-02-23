@@ -1,6 +1,6 @@
 #include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/qt_helpers.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -338,6 +338,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_add_atom_combo = new QComboBox;
   tm_add_atom_combo->setEditable(true);
+  tm_add_atom_combo->setMaximumWidth(tab_modify_op_button_width);
   tm_add_atom_vec3 = new qbinded_float3_input;
   tm_add_atom_vec3->set_min_max_step(-1000, 1000, 0.01);
   tm_add_atom_vec3->set_default_suffix();

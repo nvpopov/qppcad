@@ -1,6 +1,6 @@
-#include <qppcad/main_window.hpp>
+#include <qppcad/ui/main_window.hpp>
 #include <qppcad/app_state.hpp>
-#include <qppcad/app_settings_widget.hpp>
+#include <qppcad/ui/app_settings_widget.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <QDateTime>
 
@@ -282,10 +282,13 @@ void main_window::init_widgets() {
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
 
-  tp_print_screen = new QPushButton(tr("SCRN"));
+  tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");
   tp_print_screen->setMinimumHeight(tp_button_height);
   tp_print_screen->setMaximumWidth(48);
+  tp_print_screen->setIconSize(QSize(26, 26));
+  tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
+  tp_print_screen->setIcon(QIcon("://images/outline_camera_alt_white_18dp.png"));
   connect(tp_print_screen, &QPushButton::pressed,
           this, &main_window::make_screenshot);
 

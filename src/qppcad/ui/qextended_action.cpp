@@ -1,4 +1,4 @@
-#include <qppcad/qextended_action.hpp>
+#include <qppcad/ui/qextended_action.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

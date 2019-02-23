@@ -2,6 +2,10 @@
 #define QPP_CAD_MAIN_WINDOW_H
 
 #include <qppcad/qppcad.hpp>
+#include <qppcad/ui/ws_viewer_widget.hpp>
+#include <qppcad/ui/object_inspector_widget.hpp>
+#include <qppcad/python_console_widget.hpp>
+#include <qppcad/ui/qextended_action.hpp>
 #include <QMainWindow>
 #include <QShortcut>
 #include <QApplication>
@@ -21,10 +25,6 @@
 #include <QLineEdit>
 #include <QMimeData>
 #include <QFileDialog>
-#include <qppcad/ws_viewer_widget.hpp>
-#include <qppcad/object_inspector_widget.hpp>
-#include <qppcad/python_console_widget.hpp>
-#include <qppcad/qextended_action.hpp>
 
 namespace qpp {
 

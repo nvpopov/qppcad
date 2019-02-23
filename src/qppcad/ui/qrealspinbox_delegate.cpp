@@ -1,4 +1,4 @@
-#include <qppcad/qrealspinbox_delegate.hpp>
+#include <qppcad/ui/qrealspinbox_delegate.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

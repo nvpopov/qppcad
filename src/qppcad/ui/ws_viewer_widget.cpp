@@ -1,4 +1,4 @@
-#include <qppcad/ws_viewer_widget.hpp>
+#include <qppcad/ui/ws_viewer_widget.hpp>
 #include <qppcad/app_state.hpp>
 #include <QApplication>
 
@@ -6,6 +6,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent) {
+
   m_update_timer = new QTimer;
   //m_update_timer->setInterval(16);
   m_update_timer->connect(m_update_timer, &QTimer::timeout, this,
@@ -107,7 +108,7 @@ void ws_viewer_widget_t::paintGL() {
   glapi->glDisable(GL_CULL_FACE);
   glapi->glDisable(GL_DEPTH_TEST);
 
- // painter.endNativePainting();
+  // painter.endNativePainting();
 
   if (astate->m_show_debug_frame_stats) {
       painter.setFont(QFont(astate->m_font_name, 13));

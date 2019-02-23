@@ -75,14 +75,16 @@ qt5_add_resources(QRCS data/resources.qrc)
 add_executable(qppcad
 
     src/qppcad/main.cpp
-    src/qppcad/main_window.cpp
+    src/qppcad/ui/main_window.cpp
 
-    src/qppcad/ws_viewer_widget.cpp
-    src/qppcad/object_inspector_widget.cpp
-    src/qppcad/app_settings_widget.cpp
-    src/qppcad/qextended_action.cpp
-    src/qppcad/qspoiler_widget.cpp
-    src/qppcad/qt_helpers.cpp
+    src/qppcad/ui/ws_viewer_widget.cpp
+    src/qppcad/ui/object_inspector_widget.cpp
+    src/qppcad/ui/app_settings_widget.cpp
+    src/qppcad/ui/qextended_action.cpp
+    src/qppcad/ui/qspoiler_widget.cpp
+    src/qppcad/ui/qt_helpers.cpp
+    src/qppcad/ui/qbinded_inputs.cpp
+    src/qppcad/ui/qrealspinbox_delegate.cpp
 
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp
@@ -148,8 +150,6 @@ add_executable(qppcad
     src/qppcad/tools/axial_scale/axial_scale.cpp
     src/qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.cpp
 
-    src/qppcad/qbinded_inputs.cpp
-    src/qppcad/qrealspinbox_delegate.cpp
     src/qppcad/python_console_output_redirectors.cpp
     src/qppcad/python_console_widget.cpp
     src/qppcad/python_manager.cpp
@@ -177,5 +177,6 @@ target_link_libraries(qppcad
     Qt5::Charts
     ${OPENGL_LIBRARIES}
     pybind11::embed)
+
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 

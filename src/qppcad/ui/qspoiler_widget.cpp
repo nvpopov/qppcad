@@ -1,4 +1,4 @@
-#include <qppcad/qspoiler_widget.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
 #include <QPropertyAnimation>
 
 using namespace qpp;
