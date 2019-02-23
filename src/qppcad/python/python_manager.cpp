@@ -1,4 +1,4 @@
-#include <qppcad/python_manager.hpp>
+#include <qppcad/python/python_manager.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;

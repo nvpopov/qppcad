@@ -2,9 +2,6 @@
 #define QPP_APP_STATE_H
 
 #include <qppcad/qppcad.hpp>
-#include <QOpenGLContext>
-#include <QOpenGLFunctions>
-#include <QString>
 #include <qppcad/render/shader_generators.hpp>
 #include <qppcad/render/mesh_generators.hpp>
 #include <qppcad/render/camera.hpp>
@@ -12,8 +9,11 @@
 #include <qppcad/render/draw_pipeline.hpp>
 #include <qppcad/workspace.hpp>
 #include <qppcad/app_state_event_disp.hpp>
-#include <qppcad/python_manager.hpp>
+#include <qppcad/python/python_manager.hpp>
 #include <qppcad/string_hash_register.hpp>
+#include <QOpenGLContext>
+#include <QOpenGLFunctions>
+#include <QString>
 
 namespace qpp {
 
@@ -22,13 +22,18 @@ namespace qpp {
     class app_state_t;
 
     class recent_file_record_t {
+
       public:
+
         std::string m_file_name;
         size_t m_ff_id;
         bool m_native;
         recent_file_record_t(){}
-        recent_file_record_t(const std::string _file_name , const size_t _ff, const bool _native) :
+        recent_file_record_t(const std::string _file_name ,
+                             const size_t _ff,
+                             const bool _native) :
           m_file_name(_file_name), m_ff_id(_ff), m_native(_native){}
+
     };
 
     class app_state_t {

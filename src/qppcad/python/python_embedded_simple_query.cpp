@@ -4,7 +4,7 @@
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 
-#include <qppcad/python_simple_query.hpp>
+#include <qppcad/python/python_simple_query.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_colorizer.hpp>
 
 using namespace qpp;

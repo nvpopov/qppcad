@@ -4,7 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ui/ws_viewer_widget.hpp>
 #include <qppcad/ui/object_inspector_widget.hpp>
-#include <qppcad/python_console_widget.hpp>
+#include <qppcad/python/python_console_widget.hpp>
 #include <qppcad/ui/qextended_action.hpp>
 #include <QMainWindow>
 #include <QShortcut>

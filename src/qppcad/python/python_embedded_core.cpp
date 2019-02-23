@@ -4,7 +4,7 @@
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 
-#include <qppcad/python_console_output_redirectors.hpp>
+#include <qppcad/python/python_console_output_redirectors.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;

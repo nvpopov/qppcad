@@ -150,15 +150,16 @@ add_executable(qppcad
     src/qppcad/tools/axial_scale/axial_scale.cpp
     src/qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.cpp
 
-    src/qppcad/python_console_output_redirectors.cpp
-    src/qppcad/python_console_widget.cpp
-    src/qppcad/python_manager.cpp
-    src/qppcad/python_embedded_core.cpp
-    src/qppcad/python_embedded_simple_query.cpp
-    src/qppcad/python_embedded_pyqpp.cpp
-    src/qppcad/python_embedded_embc.cpp
-    src/qppcad/python_simple_query.cpp
-    src/qppcad/python_embedded_workspace.cpp
+    src/qppcad/python/python_console_output_redirectors.cpp
+    src/qppcad/python/python_console_widget.cpp
+    src/qppcad/python/python_manager.cpp
+    src/qppcad/python/python_embedded_core.cpp
+    src/qppcad/python/python_embedded_simple_query.cpp
+    src/qppcad/python/python_embedded_pyqpp.cpp
+    src/qppcad/python/python_embedded_embc.cpp
+    src/qppcad/python/python_simple_query.cpp
+    src/qppcad/python/python_embedded_workspace.cpp
+
     deps/qpp/modules/pyqpp/pyqpp_linalg.cpp
     deps/qpp/modules/pyqpp/pyqpp_geom.cpp
     deps/qpp/modules/pyqpp/pyqpp_xgeom.cpp

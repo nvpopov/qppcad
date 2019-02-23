@@ -1,4 +1,4 @@
-#include <qppcad/python_console_widget.hpp>
+#include <qppcad/python/python_console_widget.hpp>
 #include <qppcad/app_state.hpp>
 
 #include <QAction>

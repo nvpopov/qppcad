@@ -1,4 +1,4 @@
-#include <qppcad/python_simple_query.hpp>
+#include <qppcad/python/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
