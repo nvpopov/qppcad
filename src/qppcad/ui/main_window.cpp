@@ -282,6 +282,15 @@ void main_window::init_widgets() {
   QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
                    this, SLOT(tp_show_gizmo_state_changed(int)));
 
+
+  tp_add_ws_item = new QPushButton();
+  tp_add_ws_item->setProperty("s_class", "tp_cb");
+  tp_add_ws_item->setMinimumHeight(tp_button_height);
+  tp_add_ws_item->setMaximumWidth(48);
+  tp_add_ws_item->setIconSize(QSize(26, 26));
+  tp_add_ws_item->setToolTip(tr("Add new item to current workspace"));
+  tp_add_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
+
   tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");
   tp_print_screen->setMinimumHeight(tp_button_height);
@@ -447,6 +456,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_add_ws_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_print_screen, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_camera_x, 0, Qt::AlignLeft);
@@ -534,6 +544,7 @@ void main_window::wss_changed_slot() {
       tp_rm_ws->setEnabled(true);
       tp_rnm_ws->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
+      tp_add_ws_item->setEnabled(true);
       for (auto ws : astate->ws_manager->m_ws) {
           QString dest = QString::fromStdString(ws->m_ws_name);
           //astate->log(fmt::format("DEBUG COMBOBOX: add new item {}", dest.toStdString()));
@@ -543,6 +554,7 @@ void main_window::wss_changed_slot() {
       tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_cur_id()));
 
     } else {
+      tp_add_ws_item->setEnabled(false);
       tp_rm_ws->setEnabled(false);
       tp_rnm_ws->setEnabled(false);
       tp_show_gizmo->setEnabled(false);

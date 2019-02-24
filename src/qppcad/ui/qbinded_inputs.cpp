@@ -282,3 +282,23 @@ void qbinded_int_spinbox::value_changed(int value) {
 qbinded_ws_item_combobox::qbinded_ws_item_combobox(QWidget *parent) {
 
 }
+
+void qbinded_ws_item_combobox::bind_value(std::shared_ptr<ws_item_t> *_binded_value,
+                                          ws_item_t *item_to_bind) {
+  m_binded_ws_item_p = _binded_value;
+  m_binded_ws_item = item_to_bind;
+  m_binded_ws = item_to_bind->m_parent_ws;
+
+}
+
+void qbinded_ws_item_combobox::load_value() {
+
+}
+
+void qbinded_ws_item_combobox::unbind_value() {
+
+  m_binded_ws_item_p = nullptr;
+  m_binded_ws_item = nullptr;
+  m_binded_ws = nullptr;
+
+}

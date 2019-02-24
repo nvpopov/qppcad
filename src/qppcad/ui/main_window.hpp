@@ -57,6 +57,7 @@ namespace qpp {
         QPushButton *tp_rm_ws;
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
+        QPushButton *tp_add_ws_item;
         QPushButton *tp_print_screen;
 
         QFrame *tp_edit_mode_start;

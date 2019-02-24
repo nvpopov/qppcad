@@ -168,15 +168,23 @@ namespace qpp {
 
     };
 
+
     class qbinded_ws_item_combobox : public QComboBox {
 
         Q_OBJECT
 
       public:
 
-        workspace_t *b_ws{nullptr};
+        std::shared_ptr<ws_item_t> *m_binded_ws_item_p{nullptr};
+        ws_item_t *m_binded_ws_item{nullptr};
+        workspace_t *m_binded_ws{nullptr};
         size_t m_type_id{0};
         qbinded_ws_item_combobox(QWidget *parent = nullptr);
+
+        void bind_value(std::shared_ptr<ws_item_t> *_binded_value,
+                        ws_item_t *item_to_bind = nullptr);
+        void load_value();
+        void unbind_value();
 
     };
 

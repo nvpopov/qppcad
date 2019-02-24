@@ -12,7 +12,7 @@
    viewBox="0 0 24 24"
    version="1.1"
    id="svg6"
-   sodipodi:docname="outline-straighten-24px.svg"
+   sodipodi:docname="outline-add_to_photos-24px.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)">
   <metadata
      id="metadata12">
@@ -42,9 +42,9 @@
      id="namedview8"
      showgrid="false"
      inkscape:pagecheckerboard="true"
-     inkscape:zoom="27.812867"
-     inkscape:cx="3.0032983"
-     inkscape:cy="14.862828"
+     inkscape:zoom="3.4766083"
+     inkscape:cx="7.0469735"
+     inkscape:cy="6.5679215"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -54,9 +54,7 @@
      d="M0 0h24v24H0V0z"
      id="path2" />
   <path
-     d="M 21.647183,5.7842726 H 2.3528176 c -1.1791002,0 -2.14381837,0.2402334 -2.14381837,1.6764088 V 17.905593 c 0,1.436175 0.96471817,2.611228 2.14381837,2.611228 H 21.647183 c 1.1791,0 2.143818,-1.175053 2.143818,-2.611228 V 7.4606814 c 0,-1.4361754 -0.964718,-1.6764088 -2.143818,-1.6764088 z M 22.042683,18.58873 1.8134989,18.552775 1.9213626,7.496636 h 2.5752732 v 5.186501 H 6.6404542 V 7.4606814 H 8.7842726 V 12.683137 H 10.928091 V 7.4606814 h 2.143818 v 5.2224556 h 2.143818 V 7.4606814 h 2.143818 v 5.2224556 h 2.143819 V 7.4606814 l 2.575274,0.035955 z"
+     d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zm-7-1h2v-4h4V9h-4V5h-2v4H9v2h4z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="sssssssssccccccccccccccccccccc" />
+     style="fill:#ffffff;fill-opacity:1" />
 </svg>

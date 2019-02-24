@@ -248,8 +248,10 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
         }
 
       Qt::KeyboardModifiers kb_mod = QApplication::keyboardModifiers();
-      astate->camera->m_rotate_over =
-          astate->camera->m_rotate_camera && (kb_mod & Qt::ControlModifier);
+      if (astate->camera) {
+          astate->camera->m_rotate_over =
+              astate->camera->m_rotate_camera && (kb_mod & Qt::ControlModifier);
+        }
     }
 
 }
