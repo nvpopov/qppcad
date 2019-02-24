@@ -96,7 +96,7 @@ int main (int argc, char **argv) {
   astate->m_font_name = "OpenSans";
 
   QFont font = QFont(astate->m_font_name, 12, 1);
-  QIcon icon("://icons8-molecule-40.png");
+  QIcon icon("://images/icon.svg");
   //QFont defaultFont = QApplication::font();
   font.setPointSize(font.pointSize());
   //qApp->setFont(defaultFont);

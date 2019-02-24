@@ -26,6 +26,10 @@
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
 
+#include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
+#include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
+
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -38,6 +42,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr_t<traj_hl_t>(bhv_mgr);
   reg_ws_item_fbr_t<cube_primitive_t>(bhv_mgr);
   reg_ws_item_fbr_t<arrow_primitive_t>(bhv_mgr);
+  reg_ws_item_fbr_t<pgf_producer_t>(bhv_mgr);
 
 }
 
@@ -50,6 +55,7 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
   reg_ws_item_obj_insp_t<traj_hl_t, traj_hl_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<cube_primitive_t, cube_primitive_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_t<arrow_primitive_t, arrow_primitive_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_t<pgf_producer_t, pgf_producer_obj_insp_widget_t>(bhv_mgr);
 
 }
 

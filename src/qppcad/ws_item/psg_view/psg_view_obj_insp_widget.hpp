@@ -28,6 +28,10 @@ namespace qpp {
         QGroupBox *tg_general_appearance;
         QFormLayout *tg_general_appearance_lt;
 
+        QGroupBox *gb_grepr_details;
+        QFormLayout *gb_grepr_details_lt;
+        QComboBox *gb_cur_grepr;
+
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;

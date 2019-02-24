@@ -39,6 +39,7 @@ namespace qpp {
         float m_plane_scale{6.0f};
         float m_axis_scale{5.0f};
         float m_axis_len_mod{1.0f};
+        int m_current_repr;
 
         psg_view_t();
 

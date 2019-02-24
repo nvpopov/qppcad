@@ -3,7 +3,7 @@ import sys
 import os
 
 hpp_tmp = """#include <qppcad/qppcad.hpp>
-#include <qppcad/ws_item.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
   namespace qpp {
   
   namespace cad {
@@ -37,7 +37,7 @@ hpp_tmp = """#include <qppcad/qppcad.hpp>
 }
 """
 
-cpp_tmp = """#include <qppcad/#CLASS_NAME/#CLASS_NAME.hpp>
+cpp_tmp = """#include <qppcad/ws_item/#CLASS_NAME/#CLASS_NAME.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -93,8 +93,8 @@ void #CLASS_NAME_t::updated_internally() {
 
 """
 
-hpp_oi_tmp = """#include <qppcad/ws_item_obj_insp_widget.hpp>
-#include <qppcad/#CLASS_NAME/#CLASS_NAME.hpp>
+hpp_oi_tmp = """#include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
+#include <qppcad/ws_item/#CLASS_NAME/#CLASS_NAME.hpp>
 
 namespace qpp {
 
@@ -118,7 +118,7 @@ namespace qpp {
 }
 """
 
-cpp_oi_tmp = """#include <qppcad/#CLASS_NAME/#CLASS_NAME_obj_insp_widget.hpp>
+cpp_oi_tmp = """#include <qppcad/ws_item/#CLASS_NAME/#CLASS_NAME_obj_insp_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -152,7 +152,7 @@ if (argc == 1):
 
 if (argc == 2):
     class_name = sys.argv[1]
-    new_path = "../src/qppcad/{}".format(class_name)
+    new_path = "../src/qppcad/ws_item/{}".format(class_name)
     os.mkdir(new_path)
 
     file_hpp = open("{}/{}.hpp".format(new_path, class_name), "w")

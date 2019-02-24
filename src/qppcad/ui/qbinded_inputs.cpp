@@ -278,3 +278,7 @@ void qbinded_int_spinbox::value_changed(int value) {
         app_state_t::get_inst()->make_viewport_dirty();
     }
 }
+
+qbinded_ws_item_combobox::qbinded_ws_item_combobox(QWidget *parent) {
+
+}

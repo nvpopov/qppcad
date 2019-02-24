@@ -299,15 +299,20 @@ void main_window::init_widgets() {
                    this, SLOT(ws_edit_mode_selector_button_clicked(int)));
 
   tp_edit_mode_item = new QPushButton;
-  tp_edit_mode_item->setText(tr("ITM"));
+  //tp_edit_mode_item->setText(tr("ITM"));
   tp_edit_mode_item->setMaximumWidth(40);
   tp_edit_mode_item->setMinimumHeight(tp_button_height);
+  tp_edit_mode_item->setIconSize(QSize(26, 26));
+  tp_edit_mode_item->setToolTip(tr("Set current workspace's edit mode to <edit item>"));
+  tp_edit_mode_item->setIcon(QIcon("://images/edit0.svg"));
   tp_edit_mode_item->setCheckable(true);
 
   tp_edit_mode_content= new QPushButton;
-  tp_edit_mode_content->setText(tr("CNT"));
   tp_edit_mode_content->setMaximumWidth(40);
   tp_edit_mode_content->setMinimumHeight(tp_button_height);
+  tp_edit_mode_content->setIconSize(QSize(26, 26));
+  tp_edit_mode_content->setToolTip(tr("Set current workspace's edit mode to <edit content>"));
+  tp_edit_mode_content->setIcon(QIcon("://images/edit1.svg"));
   tp_edit_mode_content->setCheckable(true);
 
   tp_edit_mode->addButton(tp_edit_mode_item, 0);
@@ -326,59 +331,65 @@ void main_window::init_widgets() {
   tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
   tp_camera_x = new QPushButton(tr("C:X"));
-  tp_camera_x->setMaximumWidth(34);
+  tp_camera_x->setMaximumWidth(40);
   tp_camera_x->setMinimumHeight(tp_button_height);
   connect(tp_camera_x, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_x_axis);});
 
   tp_camera_y = new QPushButton(tr("C:Y"));
-  tp_camera_y->setMaximumWidth(34);
+  tp_camera_y->setMaximumWidth(40);
   tp_camera_y->setMinimumHeight(tp_button_height);
   connect(tp_camera_y, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_y_axis);});
 
   tp_camera_z = new QPushButton(tr("C:Z"));
-  tp_camera_z->setMaximumWidth(34);
+  tp_camera_z->setMaximumWidth(40);
   tp_camera_z->setMinimumHeight(tp_button_height);
   connect(tp_camera_z, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
 
   tp_camera_cart_c = new QPushButton(tr("C:C"));
-  tp_camera_cart_c->setMaximumWidth(34);
+  tp_camera_cart_c->setMaximumWidth(40);
   tp_camera_cart_c->setMinimumHeight(tp_button_height);
   connect(tp_camera_cart_c, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_cart_center);});
 
   tp_camera_a = new QPushButton(tr("C:a"));
-  tp_camera_a->setMaximumWidth(34);
+  tp_camera_a->setMaximumWidth(40);
   tp_camera_a->setMinimumHeight(tp_button_height);
   connect(tp_camera_a, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_a_axis);});
 
   tp_camera_b = new QPushButton(tr("C:b"));
-  tp_camera_b->setMaximumWidth(34);
+  tp_camera_b->setMaximumWidth(40);
   tp_camera_b->setMinimumHeight(tp_button_height);
   connect(tp_camera_b, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_b_axis);});
 
   tp_camera_c = new QPushButton(tr("C:c"));
-  tp_camera_c->setMaximumWidth(34);
+  tp_camera_c->setMaximumWidth(40);
   tp_camera_c->setMinimumHeight(tp_button_height);
   connect(tp_camera_c, &QPushButton::pressed,
           this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
 
   change_camera_buttons_visible(false, false);
 
-  tp_measure_dist = new QPushButton(tr("DIST"));
+  tp_measure_dist = new QPushButton();
   tp_measure_dist->setMaximumWidth(40);
   tp_measure_dist->setMinimumHeight(tp_button_height);
   tp_measure_dist->setCheckable(true);
+  tp_measure_dist->setIconSize(QSize(26, 26));
+  tp_measure_dist->setToolTip(tr("Measure distance between atoms pair"));
+  tp_measure_dist->setIcon(QIcon("://images/dist.svg"));
   connect(tp_measure_dist, &QPushButton::toggled, this, &main_window::tp_dist_button_clicked);
 
-  tp_measure_angle = new QPushButton(tr("ANGLE"));
+  tp_measure_angle = new QPushButton();
   tp_measure_angle->setMaximumWidth(60);
   tp_measure_angle->setMinimumHeight(tp_button_height);
   tp_measure_angle->setCheckable(true);
+  tp_measure_angle->setIconSize(QSize(26, 26));
+  tp_measure_angle->setToolTip(tr("Measure angle between atoms triple"));
+  tp_measure_angle->setIcon(QIcon("://images/angle.svg"));
   connect(tp_measure_angle, &QPushButton::toggled, this, &main_window::tp_angle_button_clicked);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);

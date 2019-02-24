@@ -15,7 +15,7 @@ git submodule update --init --recursive
 ```
 ### Debian - based distro dependencies :
 ```bash
-apt install libqt5opengl5-dev libqt5charts5-dev
+apt install libqt5opengl5-dev libqt5charts5-dev libqt5svg5-dev libqt5core5a libqt5widgets5 libqt5gui5
 ```
 ### Dependecies
 1. qpp::core

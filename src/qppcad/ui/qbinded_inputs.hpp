@@ -168,6 +168,18 @@ namespace qpp {
 
     };
 
+    class qbinded_ws_item_combobox : public QComboBox {
+
+        Q_OBJECT
+
+      public:
+
+        workspace_t *b_ws{nullptr};
+        size_t m_type_id{0};
+        qbinded_ws_item_combobox(QWidget *parent = nullptr);
+
+    };
+
 
   }
 

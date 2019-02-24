@@ -64,6 +64,7 @@ endif()
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
 find_package(Qt5OpenGL CONFIG REQUIRED)
+find_package(Qt5Svg)
 find_package(Qt5Charts)
 
 include_directories(${Qt5Core_INCLUDE_DIRS})
@@ -123,6 +124,9 @@ add_executable(qppcad
     src/qppcad/ws_item/volume_view/volume_view.cpp
     src/qppcad/ws_item/volume_view/volume_view_obj_insp_widget.cpp
 
+    src/qppcad/ws_item/pgf_producer/pgf_producer.cpp
+    src/qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.cpp
+
     src/qppcad/ws_item/geom_view/geom_view.cpp
     src/qppcad/ws_item/geom_view/geom_view_render_bs.cpp
     src/qppcad/ws_item/geom_view/geom_view_render_billboards.cpp
@@ -176,6 +180,7 @@ target_link_libraries(qppcad
     Qt5::Widgets
     Qt5::OpenGL
     Qt5::Charts
+    Qt5::Svg
     ${OPENGL_LIBRARIES}
     pybind11::embed)
 

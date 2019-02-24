@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons8-molecule-40.png</file>
         <file>style.qss</file>
         <file>fonts/Open_Sans/OpenSans-Bold.ttf</file>
         <file>fonts/Open_Sans/OpenSans-Light.ttf</file>
@@ -15,5 +14,10 @@
         <file>images/icon_checkbox_unchecked_disabled.png</file>
         <file>images/icon_checkbox_unchecked_pressed.png</file>
         <file>images/outline_camera_alt_white_18dp.png</file>
+        <file>images/edit0.svg</file>
+        <file>images/edit1.svg</file>
+        <file>images/dist.svg</file>
+        <file>images/angle.svg</file>
+        <file>images/icon.svg</file>
     </qresource>
 </RCC>
