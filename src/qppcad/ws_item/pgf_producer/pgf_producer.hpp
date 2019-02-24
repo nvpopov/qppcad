@@ -3,6 +3,8 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
+#include <geom/geom.hpp>
+#include <symm/gen_cell.hpp>
 
 namespace qpp {
 
@@ -17,9 +19,11 @@ namespace qpp {
 
       public:
 
-        std::shared_ptr<geom_view_t> m_src{nullptr};
-        std::shared_ptr<geom_view_t> m_dst{nullptr};
-        std::shared_ptr<psg_view_t> m_ag{nullptr};
+        std::shared_ptr<ws_item_t> m_src{nullptr};
+        std::shared_ptr<ws_item_t> m_dst{nullptr};
+        std::shared_ptr<ws_item_t> m_ag{nullptr};
+
+        geometry<float, qpp::gen_cell<float, qpp::matrix3<float>>> m_imd;
 
         pgf_producer_t();
 

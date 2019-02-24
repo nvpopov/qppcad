@@ -14,6 +14,7 @@ namespace qpp {
 
       public:
 
+        pgf_producer_t *b_pr;
         ws_item_tab_widget_t *tab_cell_range;
         QGroupBox *gb_pgf_data;
         QFormLayout *gb_pgf_data_lt;

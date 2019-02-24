@@ -185,7 +185,10 @@ namespace qpp {
                         ws_item_t *item_to_bind = nullptr);
         void load_value();
         void unbind_value();
+        void rebuild_variants();
 
+      public slots:
+        void value_changed(int i);
     };
 
 
