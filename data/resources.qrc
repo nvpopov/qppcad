@@ -19,5 +19,13 @@
         <file>images/dist.svg</file>
         <file>images/angle.svg</file>
         <file>images/icon.svg</file>
+        <file>images/settings.svg</file>
+        <file>images/monitor.svg</file>
+        <file>images/film.svg</file>
+        <file>images/outline-camera_enhance-24px.svg</file>
+        <file>images/outline-build-24px.svg</file>
+        <file>images/outline-straighten-24px.svg</file>
+        <file>images/film_d.svg</file>
+        <file>images/outline-build-24px_d.svg</file>
     </qresource>
 </RCC>

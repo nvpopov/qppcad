@@ -90,6 +90,11 @@ QTabWidget::pane {
  border:none;
 }
 
+QTabBar::tab {
+ width:55px;
+ height:44px;
+}
+
 QGroupBox {
  border: 1px solid rgb(85, 85, 85);
  padding-top: 25px;

@@ -105,8 +105,12 @@ void ccd_view_obj_insp_widget_t::update_geo_opt() {
 ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   : ws_item_obj_insp_widget_t() {
 
-  tab_geo_opt = define_tab(tr("Geometry opt."));
-  tab_vibs = define_tab(tr("Vibrational analysis"));
+  tab_geo_opt = define_tab(tr("Geometry opt."),
+                           "://images/settings.svg",
+                           "://images/settings.svg");
+  tab_vibs = define_tab(tr("Vibrational analysis"),
+                        "://images/settings.svg",
+                        "://images/settings.svg");
 
   ws_item_is_visible->hide();
   ws_item_is_visible_label->hide();

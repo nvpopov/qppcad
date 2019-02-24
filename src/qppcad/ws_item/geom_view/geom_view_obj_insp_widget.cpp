@@ -751,7 +751,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
       if (b_al->m_parent_ws &&
           b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
 
-          tabBar()->setTabEnabled(3, true);
+          set_tab_enabled(tab_modify, true);
 
           if (b_al->m_atom_idx_sel.empty()) {
               tm_gb_single_atom->hide();
@@ -876,7 +876,8 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
 
         } else {
 
-          tabBar()->setTabEnabled(3, false);
+          set_tab_enabled(tab_modify, false);
+
           tm_gb_add_atom->hide();
           tm_gb_pair_creation->hide();
           tm_gb_single_atom->hide();
@@ -893,7 +894,9 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
 }
 
 void geom_view_obj_insp_widget_t::update_measurement_tab() {
+
   if (b_al) {
+
       tms_pair_dist_table->setModel(nullptr);
       tms_dist_mdl->bind(b_al);
       tms_pair_dist_table->setModel(tms_dist_mdl);
@@ -914,7 +917,9 @@ void geom_view_obj_insp_widget_t::update_measurement_tab() {
                                                                     QHeaderView::Stretch);
 
       qt_helpers::vrt_resize_tv_to_content(tms_pair_dist_table);
+
     }
+
 }
 
 void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
@@ -928,10 +933,19 @@ void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
 
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
-  tab_disp = define_tab(tr("Display"));
-  tab_anim = define_tab(tr("Animation"));
-  tab_modify = define_tab(tr("Modify"));
-  tab_measurement = define_tab(tr("Measurement"));
+  tab_disp = define_tab(tr("Display settings"),
+                        "://images/monitor.svg");
+
+  tab_anim = define_tab(tr("Animation"),
+                        "://images/film.svg",
+                        "://images/film_d.svg");
+
+  tab_modify = define_tab(tr("Modify"),
+                          "://images/outline-build-24px.svg",
+                          "://images/outline-build-24px_d.svg");
+
+  tab_measurement = define_tab(tr("Measurement"),
+                               "://images/outline-straighten-24px.svg");
 
   construct_general_tab();
   construct_display_tab();
@@ -1098,7 +1112,7 @@ void geom_view_obj_insp_widget_t::draw_subcells_changed(int state) {
 }
 
 void geom_view_obj_insp_widget_t::update_animate_section_status() {
-  tabBar()->setTabEnabled(2, b_al->m_anim->animable());
+  set_tab_enabled(tab_anim, b_al->m_anim->animable());
 }
 
 void geom_view_obj_insp_widget_t::cur_it_list_selection_changed() {

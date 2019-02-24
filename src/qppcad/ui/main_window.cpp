@@ -288,7 +288,7 @@ void main_window::init_widgets() {
   tp_print_screen->setMaximumWidth(48);
   tp_print_screen->setIconSize(QSize(26, 26));
   tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
-  tp_print_screen->setIcon(QIcon("://images/outline_camera_alt_white_18dp.png"));
+  tp_print_screen->setIcon(QIcon("://images/outline-camera_enhance-24px.svg"));
   connect(tp_print_screen, &QPushButton::pressed,
           this, &main_window::make_screenshot);
 

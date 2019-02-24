@@ -26,6 +26,9 @@ namespace qpp {
         QScrollArea *tab_scroll;
         QWidget *tab_inner_widget;
         QVBoxLayout *tab_inner_widget_layout;
+        QIcon *icon_enabled;
+        QIcon *icon_disabled;
+        int tab_id;
     };
 
     class ws_item_obj_insp_widget_t : public QTabWidget {
@@ -58,10 +61,14 @@ namespace qpp {
         int def_control_width{80};
         int def_gen_control_width{180};
 
-        ws_item_tab_widget_t* define_tab(QString tab_name);
+        ws_item_tab_widget_t* define_tab(QString tab_name,
+                                         QString icon_name_enabled,
+                                         QString icon_name_disabled = "");
         virtual void bind_to_item(ws_item_t *_binding_item);
         virtual void unbind_item();
         virtual void update_from_ws_item();
+        void set_tab_enabled(ws_item_tab_widget_t *tab,
+                             bool v_enabled);
         void pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
         void post_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
         ws_item_obj_insp_widget_t();

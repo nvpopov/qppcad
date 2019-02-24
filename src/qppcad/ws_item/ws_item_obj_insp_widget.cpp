@@ -5,7 +5,9 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name) {
+ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name,
+                                                            QString icon_name_enabled,
+                                                            QString icon_name_disabled) {
 
   ws_item_tab_widget_t *tmp = new ws_item_tab_widget_t;
   tmp->tab_scroll = new QScrollArea;
@@ -21,7 +23,11 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name) {
   tmp->tab_inner_widget_layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
   tmp->tab_inner_widget->setLayout(tmp->tab_inner_widget_layout);
 
-  addTab(tmp->tab_scroll, tab_name);
+  tmp->tab_id = addTab(tmp->tab_scroll, "");
+  setTabToolTip(tmp->tab_id, tab_name);
+  tmp->icon_enabled = new QIcon(icon_name_enabled);
+  if (icon_name_disabled != "") tmp->icon_disabled = new QIcon(icon_name_disabled);
+  setTabIcon(tmp->tab_id, *tmp->icon_enabled);
 
   return tmp;
 }
@@ -90,6 +96,16 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
 
 }
 
+void ws_item_obj_insp_widget_t::set_tab_enabled(ws_item_tab_widget_t *tab,
+                                                bool v_enabled) {
+  if (!tab) return;
+  setTabEnabled(tab->tab_id, v_enabled);
+
+  if (!v_enabled && tab->icon_disabled) setTabIcon(tab->tab_id, *tab->icon_disabled);
+  else setTabIcon(tab->tab_id, *tab->icon_enabled);
+
+}
+
 void ws_item_obj_insp_widget_t::pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
   gb->setLayout(gb_lt);
 }
@@ -103,8 +119,9 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   app_state_t *astate = app_state_t::get_inst();
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-  tab_general = define_tab(tr("General"));
+  setIconSize(QSize(32,32));
+  tab_general = define_tab(tr("General settings of workspace item"),
+                           "://images/settings.svg");
 
   //begin group box Item information
   tg_info_widget = new QGroupBox(tr("Item information"));
@@ -204,3 +221,4 @@ void ws_item_obj_insp_widget_t::cur_tab_changed(int index) {
       m_binded_item->m_last_tab = index;
     }
 }
+
