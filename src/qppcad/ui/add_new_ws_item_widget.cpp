@@ -1,10 +1,18 @@
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
+#include <qppcad/app_state.hpp>
+
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/psg_view/psg_view.hpp>
+#include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
+#include <symm/shoenflis.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 
 add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   setWindowTitle(tr("Add new item to workspace"));
 
@@ -70,6 +78,11 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   type_param_name = new QLineEdit();
   gb_type_param_lt->addRow(tr("Name"), type_param_name);
 
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (cur_ws) {
+      type_param_name->setText(tr("new_item_%1").arg(cur_ws->m_ws_items.size()));
+    }
+
   main_lt->addLayout(data_lt);
   data_lt->addWidget(gb_ctor);
   data_lt->addWidget(gb_type_descr);
@@ -96,7 +109,64 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
                                      tr("Missing name!"),
                                      tr("Name is empty! Do something!"));
     } else {
+
       accept();
+
+      app_state_t *astate = app_state_t::get_inst();
+
+      //
+
+      if (gb_ctor_geom0d->isChecked()) {
+          auto cur_ws = astate->ws_manager->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(geom_view_t::get_type_static());
+          auto nt_gv = nt->cast_as<geom_view_t>();
+          if (!nt_gv) return;
+          nt_gv->m_name = type_param_name->text().toStdString();
+          cur_ws->add_item_to_ws(nt);
+        }
+
+      if (gb_ctor_geom3d->isChecked()) {
+          auto cur_ws = astate->ws_manager->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(geom_view_t::get_type_static());
+          auto nt_gv = nt->cast_as<geom_view_t>();
+          if (!nt_gv) return;
+          nt_gv->m_tws_tr->do_action(act_lock | act_clear_all);
+          nt_gv->m_geom->DIM = 3;
+          nt_gv->m_geom->cell.DIM = 3;
+          nt_gv->m_geom->cell.v[0] = vector3<float>(5, 0, 0);
+          nt_gv->m_geom->cell.v[1] = vector3<float>(0, 5, 0);
+          nt_gv->m_geom->cell.v[2] = vector3<float>(0, 0, 5);
+          nt_gv->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+          nt_gv->m_tws_tr->do_action(act_rebuild_ntable);
+          nt_gv->m_name = type_param_name->text().toStdString();
+          cur_ws->add_item_to_ws(nt);
+        }
+
+      if (gb_ctor_psg->isChecked()) {
+          auto cur_ws = astate->ws_manager->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(psg_view_t::get_type_static());
+          auto nt_psg = nt->cast_as<psg_view_t>();
+          if (!nt_psg) return;
+          nt_psg->m_ag =
+              std::make_shared<array_group<matrix3<float>>>(shnfl<float>::Cnh(2));
+          nt_psg->m_name = type_param_name->text().toStdString();
+          nt_psg->update_view();
+          cur_ws->add_item_to_ws(nt);
+        }
+
+      if (gb_ctor_pgf_prod->isChecked()) {
+          auto cur_ws = astate->ws_manager->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt =
+              astate->ws_manager->m_bhv_mgr->fabric_by_type(pgf_producer_t::get_type_static());
+          auto nt_pgfp = nt->cast_as<pgf_producer_t>();
+          if (!nt_pgfp) return;
+          nt_pgfp->m_name = type_param_name->text().toStdString();
+          cur_ws->add_item_to_ws(nt);
+        }
     }
 }
 

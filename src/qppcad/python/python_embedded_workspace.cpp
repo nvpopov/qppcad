@@ -60,7 +60,7 @@ std::shared_ptr<ws_item_t> construct_from_array_group(
     as_psg->m_ag = ag;
     as_psg->m_name = name;
     ws.add_item_to_ws(new_item);
-    as_psg->py_update();
+    as_psg->update_view();
 
     return new_item;
 
@@ -117,7 +117,7 @@ PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
   py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);
   py_point_sym_group_t.def_readwrite("ag", &psg_view_t::m_ag, py::return_value_policy::reference);
   py_point_sym_group_t.def_readwrite("pg_axes", &psg_view_t::m_pg_axes);
-  py_point_sym_group_t.def("update_view", &psg_view_t::py_update);
+  py_point_sym_group_t.def("update_view", &psg_view_t::update_view);
   py_point_sym_group_t.def_readwrite("center", &psg_view_t::m_new_centre);
 
 }

@@ -65,7 +65,7 @@ namespace qpp {
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
 
-        void py_update();
+        void update_view();
         //void py_set_new_center(vector3<float> new_center);
 
     };

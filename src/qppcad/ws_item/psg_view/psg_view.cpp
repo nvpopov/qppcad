@@ -285,7 +285,7 @@ void psg_view_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }
 
-void psg_view_t::py_update() {
+void psg_view_t::update_view() {
 
   app_state_t* astate = app_state_t::get_inst();
 
