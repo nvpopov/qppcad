@@ -1,6 +1,7 @@
 #include <qppcad/ui/main_window.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ui/app_settings_widget.hpp>
+#include <qppcad/ui/add_new_ws_item_widget.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <QDateTime>
 
@@ -290,6 +291,8 @@ void main_window::init_widgets() {
   tp_add_ws_item->setIconSize(QSize(26, 26));
   tp_add_ws_item->setToolTip(tr("Add new item to current workspace"));
   tp_add_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
+  connect(tp_add_ws_item, &QPushButton::pressed,
+          this, [](){ add_new_ws_item_widget_t add_dialog; add_dialog.exec();});
 
   tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");

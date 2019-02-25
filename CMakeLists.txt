@@ -86,6 +86,7 @@ add_executable(qppcad
     src/qppcad/ui/qt_helpers.cpp
     src/qppcad/ui/qbinded_inputs.cpp
     src/qppcad/ui/qrealspinbox_delegate.cpp
+    src/qppcad/ui/add_new_ws_item_widget.cpp
 
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp
