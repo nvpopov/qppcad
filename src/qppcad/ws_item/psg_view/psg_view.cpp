@@ -130,122 +130,50 @@ void psg_view_t::render() {
   //draw axes
   astate->dp->begin_render_general_mesh();
 
-  for (auto &elem : m_atf)
-    if (!elem.m_is_plane && elem.m_is_visible) {
-        astate->dp->render_general_mesh(elem.m_render_mat,
-                                        elem.m_color,
-                                        astate->mesh_cylinder);
-        astate->dp->render_general_mesh(elem.m_render_mat_aux,
-                                        elem.m_color,
-                                        astate->mesh_unit_cone);
-      }
+  if (m_show_axes)
+    for (auto &elem : m_atf)
+      if (!elem.m_is_plane && elem.m_is_visible) {
+          astate->dp->render_general_mesh(elem.m_render_mat,
+                                          elem.m_color,
+                                          astate->mesh_cylinder);
+          astate->dp->render_general_mesh(elem.m_render_mat_aux,
+                                          elem.m_color,
+                                          astate->mesh_unit_cone);
+        }
 
   astate->dp->end_render_general_mesh();
 
-  if (m_plane_alpha_enabled) {
+  if (m_show_planes) {
 
-      astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
-      astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
-      for (auto &elem : m_atf)
-        if (elem.m_is_plane && elem.m_is_visible) {
-            astate->dp->render_general_mesh(elem.m_render_mat,
-                                            elem.m_color,
-                                            astate->mesh_zl_plane,
-                                            m_plane_alpha,
-                                            astate->sp_mvap_ssl);
-          }
-      astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
-      astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
+      if (m_plane_alpha_enabled) {
 
-      //            vector3<float> plane_color = (plane_c % 2 == 0) ? clr_green : clr_blue;
-      //            astate->dp->render_general_mesh(elem.m_render_mat, plane_color, astate->mesh_zl_plane,
-      //                                            m_plane_alpha, astate->sp_mvap_ssl);
-      //          plane_c += 1;
-      //          }
-      //      astate->dp->end_no_cull();
-      //      astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
-      //      astate->dp->depth_func(draw_pipeline_depth_func::depth_enabled);
+          astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
+          astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
+          for (auto &elem : m_atf)
+            if (elem.m_is_plane && elem.m_is_visible) {
+                astate->dp->render_general_mesh(elem.m_render_mat,
+                                                elem.m_color,
+                                                astate->mesh_zl_plane,
+                                                m_plane_alpha,
+                                                astate->sp_mvap_ssl);
+              }
+          astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
+          astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
 
-      //1 pass depth buffer
-      //      astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
-      //      astate->dp->depth_func(draw_pipeline_depth_func::depth_less);
-      //      for (auto &elem : m_atf)
-      //        if (elem.m_is_plane && elem.m_is_visible) {
-      //            astate->dp->render_general_mesh(elem.m_render_mat,
-      //                                            elem.m_color,
-      //                                            astate->mesh_zl_plane,
-      //                                            0,
-      //                                            astate->sp_mvap_ssl);
-      //          }
+        } else {
+          astate->dp->begin_render_general_mesh();
+          astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
+          for (auto &elem : m_atf)
+            if (elem.m_is_plane && elem.m_is_visible) {
+                astate->dp->render_general_mesh(elem.m_render_mat,
+                                                elem.m_color,
+                                                astate->mesh_zl_plane);
+              }
+          astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
+          astate->dp->end_render_general_mesh();
+        }
 
-      //      //2 pass
-      //      astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
-      //      astate->dp->cull_func(draw_pipeline_cull_func::cull_front);
-      //      astate->dp->depth_func(draw_pipeline_depth_func::depth_always);
-      //      for (auto &elem : m_atf)
-      //        if (elem.m_is_plane && elem.m_is_visible) {
-      //            astate->dp->render_general_mesh(elem.m_render_mat,
-      //                                            elem.m_color,
-      //                                            astate->mesh_zl_plane,
-      //                                            m_plane_alpha,
-      //                                            astate->sp_mvap_ssl);
-      //          }
-
-      //      //3 pass
-      //      astate->dp->cull_func(draw_pipeline_cull_func::cull_front);
-      //      astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
-      //      for (auto &elem : m_atf)
-      //        if (elem.m_is_plane && elem.m_is_visible) {
-      //            astate->dp->render_general_mesh(elem.m_render_mat,
-      //                                            elem.m_color,
-      //                                            astate->mesh_zl_plane,
-      //                                            m_plane_alpha,
-      //                                            astate->sp_mvap_ssl);
-      //          }
-
-      //      //4 pass cull back depth always
-      //      astate->dp->cull_func(draw_pipeline_cull_func::cull_back);
-      //      astate->dp->depth_func(draw_pipeline_depth_func::depth_always);
-      //      for (auto &elem : m_atf)
-      //        if (elem.m_is_plane && elem.m_is_visible) {
-      //            astate->dp->render_general_mesh(elem.m_render_mat,
-      //                                            elem.m_color,
-      //                                            astate->mesh_zl_plane,
-      //                                            m_plane_alpha,
-      //                                            astate->sp_mvap_ssl);
-      //          }
-
-      //      //5 pass cull back depth always
-      //      astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
-      //      astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
-      //      for (auto &elem : m_atf)
-      //        if (elem.m_is_plane && elem.m_is_visible) {
-      //            astate->dp->render_general_mesh(elem.m_render_mat,
-      //                                            elem.m_color,
-      //                                            astate->mesh_zl_plane,
-      //                                            m_plane_alpha,
-      //                                            astate->sp_mvap_ssl);
-      //          }
-      //      //restore default culling
-
-      //      astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
-      //      astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
-
-      //      astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
-
-    } else {
-      astate->dp->begin_render_general_mesh();
-      astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
-      for (auto &elem : m_atf)
-        if (elem.m_is_plane && elem.m_is_visible) {
-            astate->dp->render_general_mesh(elem.m_render_mat,
-                                            elem.m_color,
-                                            astate->mesh_zl_plane);
-          }
-      astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
-      astate->dp->end_render_general_mesh();
     }
-
 
 }
 
