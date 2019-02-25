@@ -196,15 +196,16 @@ namespace qpp {
 
                 vector3<float> dir_f_s =
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2);
+                    p_owner->m_geom->pos(record.m_at2,record.m_idx2);
 
                 vector3<float> dir_t_s =
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx3) -
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2);
+                    p_owner->m_geom->pos(record.m_at2,record.m_idx2);
 
-                float l1 = dir_f_s.norm();
-                float l2 = dir_t_s.norm();
-                float real_angle = 180 - std::acos(dir_f_s.dot(dir_t_s) / (l1 * l2)) * 180 / M_PI;
+                auto l1 = dir_f_s.normalized();
+                auto l2 = dir_t_s.normalized();
+
+                float real_angle = std::acos(l1.dot(l2)) * 180 / M_PI;
 
                 QLineF line_f_s(0, 0, round((*l_f)[0]-(*l_s)[0]), round((*l_f)[1]-(*l_s)[1]));
                 QLineF line_t_s(0, 0, round((*l_t)[0]-(*l_s)[0]), round((*l_t)[1]-(*l_s)[1]));
