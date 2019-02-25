@@ -9,6 +9,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
+const int label_width = 100;
 
 add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
@@ -41,18 +42,32 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   gb_ctor->setLayout(gb_ctor_lt);
 
   gb_ctor_geom0d = new QRadioButton(tr("geom_view_t [DIM=0D]"));
-  gb_ctor_geom0d->setChecked(true);
+  connect(gb_ctor_geom0d, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_geom0d_checked);
 
   gb_ctor_geom1d = new QRadioButton(tr("geom_view_t [DIM=1D]"));
   gb_ctor_geom1d->setEnabled(false);
+  connect(gb_ctor_geom1d, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_geom1d_checked);
 
   gb_ctor_geom2d = new QRadioButton(tr("geom_view_t [DIM=2D]"));
   gb_ctor_geom2d->setEnabled(false);
+  connect(gb_ctor_geom2d, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_geom2d_checked);
 
   gb_ctor_geom3d = new QRadioButton(tr("geom_view_t [DIM=3D]"));
+  connect(gb_ctor_geom3d, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_geom3d_checked);
 
   gb_ctor_psg = new QRadioButton(tr("psg_view_t"));
+  connect(gb_ctor_psg, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_psg_checked);
+
   gb_ctor_pgf_prod = new QRadioButton(tr("pgf_producer_t"));
+  connect(gb_ctor_pgf_prod, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_pgf_prod_checked);
+
+  gb_ctor_geom0d->setChecked(true);
 
   gb_ctor_lt->addWidget(gb_ctor_geom0d);
   gb_ctor_lt->addWidget(gb_ctor_geom1d);
@@ -70,13 +85,30 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   type_descr_lbl->setWordWrap(true);
   gb_type_descr_lt->addWidget(type_descr_lbl);
 
+  type_param_ag_lbl = new QLabel(tr("Point group"));
+  type_param_ag_lbl->setMinimumWidth(label_width);
+  type_param_ag = new QComboBox;
+  type_param_ag_lbl->setVisible(false);
+  type_param_ag->setVisible(false);
+
+  //construct ag_labels
+  for (int n = 1; n < 11; n++) {
+      std::vector<std::string> nl = shnfl<float>::groups_by_order(n);
+      for (auto &elem : nl) type_param_ag->addItem(QString::fromStdString(elem));
+    }
+  //end of construct ag_labels
+
   gb_type_param = new QGroupBox(tr("Type parameters"));
-  gb_type_param->setMinimumWidth(240);
+  gb_type_param->setMinimumWidth(300);
   gb_type_param_lt = new QFormLayout;
   gb_type_param->setLayout(gb_type_param_lt);
 
   type_param_name = new QLineEdit();
-  gb_type_param_lt->addRow(tr("Name"), type_param_name);
+  type_param_name_lbl = new QLabel("Name");
+  type_param_name_lbl->setMinimumWidth(label_width);
+
+  gb_type_param_lt->addRow(type_param_name_lbl, type_param_name);
+  gb_type_param_lt->addRow(type_param_ag_lbl, type_param_ag);
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws) {
@@ -150,8 +182,9 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(psg_view_t::get_type_static());
           auto nt_psg = nt->cast_as<psg_view_t>();
           if (!nt_psg) return;
+          auto ag = shnfl<float>::group(type_param_ag->currentText().toStdString());
           nt_psg->m_ag =
-              std::make_shared<array_group<matrix3<float>>>(shnfl<float>::Cnh(2));
+              std::make_shared<array_group<matrix3<float>>>(ag);
           nt_psg->m_name = type_param_name->text().toStdString();
           nt_psg->update_view();
           cur_ws->add_item_to_ws(nt);
@@ -172,4 +205,36 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
 
 void add_new_ws_item_widget_t::cancel_button_clicked() {
   reject();
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_geom0d_checked(bool checked) {
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_geom1d_checked(bool checked) {
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_geom2d_checked(bool checked) {
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_geom3d_checked(bool checked) {
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_psg_checked(bool checked) {
+
+  type_param_ag_lbl->setVisible(checked);
+  type_param_ag->setVisible(checked);
+
+  if (checked) {
+
+    } else {
+
+    }
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_pgf_prod_checked(bool checked) {
+
 }

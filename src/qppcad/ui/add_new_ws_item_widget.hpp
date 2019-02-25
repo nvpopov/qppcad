@@ -21,46 +21,53 @@ namespace qpp {
 
   namespace cad {
 
-  class add_new_ws_item_widget_t : public QDialog {
+    class add_new_ws_item_widget_t : public QDialog {
 
-  public:
+      public:
 
-      QVBoxLayout *main_lt;
-      QHBoxLayout *data_lt;
-      QHBoxLayout *button_lt;
-      QPushButton *ok_button;
-      QPushButton *cancel_button;
+        QVBoxLayout *main_lt;
+        QHBoxLayout *data_lt;
+        QHBoxLayout *button_lt;
+        QPushButton *ok_button;
+        QPushButton *cancel_button;
 
-      QGroupBox *gb_ctor;
-      QVBoxLayout *gb_ctor_lt;
-      QRadioButton *gb_ctor_geom0d;
-      QRadioButton *gb_ctor_geom1d;
-      QRadioButton *gb_ctor_geom2d;
-      QRadioButton *gb_ctor_geom3d;
-      QRadioButton *gb_ctor_psg;
-      QRadioButton *gb_ctor_pgf_prod;
+        QGroupBox *gb_ctor;
+        QVBoxLayout *gb_ctor_lt;
+        QRadioButton *gb_ctor_geom0d;
+        QRadioButton *gb_ctor_geom1d;
+        QRadioButton *gb_ctor_geom2d;
+        QRadioButton *gb_ctor_geom3d;
+        QRadioButton *gb_ctor_psg;
+        QRadioButton *gb_ctor_pgf_prod;
 
-      QGroupBox *gb_type_descr;
-      QVBoxLayout *gb_type_descr_lt;
-      QLabel *type_descr_lbl;
+        QGroupBox *gb_type_descr;
+        QVBoxLayout *gb_type_descr_lt;
+        QLabel *type_descr_lbl;
 
-      QGroupBox *gb_type_param;
-      QFormLayout *gb_type_param_lt;
+        QGroupBox *gb_type_param;
+        QFormLayout *gb_type_param_lt;
 
-      QLineEdit *type_param_name;
-      QLabel *type_param_ag_lbl;
-      QComboBox *type_param_ag;
+        QLabel *type_param_name_lbl;
+        QLineEdit *type_param_name;
+        QLabel *type_param_ag_lbl;
+        QComboBox *type_param_ag;
 
-      QStringList descr_list;
+        QStringList descr_list;
 
-      add_new_ws_item_widget_t();
+        add_new_ws_item_widget_t();
 
-  public slots:
+      public slots:
 
-      void ok_button_clicked();
-      void cancel_button_clicked();
+        void ok_button_clicked();
+        void cancel_button_clicked();
+        void react_gb_ctor_geom0d_checked(bool checked);
+        void react_gb_ctor_geom1d_checked(bool checked);
+        void react_gb_ctor_geom2d_checked(bool checked);
+        void react_gb_ctor_geom3d_checked(bool checked);
+        void react_gb_ctor_psg_checked(bool checked);
+        void react_gb_ctor_pgf_prod_checked(bool checked);
 
-  };
+    };
 
   }
 
