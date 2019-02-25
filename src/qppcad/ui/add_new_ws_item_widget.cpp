@@ -4,6 +4,9 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
+#include <qppcad/ws_item/cube_primitive/cube_primitive.hpp>
+#include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
+
 #include <symm/shoenflis.hpp>
 
 using namespace qpp;
@@ -17,13 +20,15 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   setWindowTitle(tr("Add new item to workspace"));
 
-  descr_list.reserve(6);
+  descr_list.reserve(8);
   descr_list.push_back(tr("Description for geom_view_t [DIM=0D]"));
   descr_list.push_back(tr("Description for geom_view_t [DIM=1D]"));
   descr_list.push_back(tr("Description for geom_view_t [DIM=2D]"));
   descr_list.push_back(tr("Description for geom_view_t [DIM=3D]"));
   descr_list.push_back(tr("Description for psg_view_t"));
   descr_list.push_back(tr("Description for pgf_producer_t"));
+  descr_list.push_back(tr("Description for cube_primitive_t"));
+  descr_list.push_back(tr("Description for arrow_primitive_t"));
 
   main_lt = new QVBoxLayout;
   data_lt = new QHBoxLayout;
@@ -37,35 +42,53 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   button_lt->addWidget(cancel_button, 0, Qt::AlignCenter);
   button_lt->addStretch();
 
+  gb_type_descr = new QGroupBox(tr("Type description"));
+  gb_type_descr->setMinimumWidth(220);
+  gb_type_descr_lt = new QVBoxLayout;
+  gb_type_descr->setLayout(gb_type_descr_lt);
+
+  type_descr_lbl = new QLabel;
+  type_descr_lbl->setWordWrap(true);
+  gb_type_descr_lt->addWidget(type_descr_lbl);
+  gb_type_descr_lt->addStretch();
+
   gb_ctor = new QGroupBox(tr("Constructible types"));
   gb_ctor_lt = new QVBoxLayout;
   gb_ctor->setLayout(gb_ctor_lt);
 
-  gb_ctor_geom0d = new QRadioButton(tr("geom_view_t [DIM=0D]"));
+  gb_ctor_geom0d = new QRadioButton(tr("geometry [DIM=0D]"));
   connect(gb_ctor_geom0d, &QRadioButton::toggled,
           this, &add_new_ws_item_widget_t::react_gb_ctor_geom0d_checked);
 
-  gb_ctor_geom1d = new QRadioButton(tr("geom_view_t [DIM=1D]"));
+  gb_ctor_geom1d = new QRadioButton(tr("geometry [DIM=1D]"));
   gb_ctor_geom1d->setEnabled(false);
   connect(gb_ctor_geom1d, &QRadioButton::toggled,
           this, &add_new_ws_item_widget_t::react_gb_ctor_geom1d_checked);
 
-  gb_ctor_geom2d = new QRadioButton(tr("geom_view_t [DIM=2D]"));
+  gb_ctor_geom2d = new QRadioButton(tr("geometry [DIM=2D]"));
   gb_ctor_geom2d->setEnabled(false);
   connect(gb_ctor_geom2d, &QRadioButton::toggled,
           this, &add_new_ws_item_widget_t::react_gb_ctor_geom2d_checked);
 
-  gb_ctor_geom3d = new QRadioButton(tr("geom_view_t [DIM=3D]"));
+  gb_ctor_geom3d = new QRadioButton(tr("geometry [DIM=3D]"));
   connect(gb_ctor_geom3d, &QRadioButton::toggled,
           this, &add_new_ws_item_widget_t::react_gb_ctor_geom3d_checked);
 
-  gb_ctor_psg = new QRadioButton(tr("psg_view_t"));
+  gb_ctor_psg = new QRadioButton(tr("point symmetry group"));
   connect(gb_ctor_psg, &QRadioButton::toggled,
           this, &add_new_ws_item_widget_t::react_gb_ctor_psg_checked);
 
-  gb_ctor_pgf_prod = new QRadioButton(tr("pgf_producer_t"));
+  gb_ctor_pgf_prod = new QRadioButton(tr("pgf producer"));
   connect(gb_ctor_pgf_prod, &QRadioButton::toggled,
           this, &add_new_ws_item_widget_t::react_gb_ctor_pgf_prod_checked);
+
+  gb_ctor_cube = new QRadioButton(tr("cube(parallelepiped) primitive"));
+  connect(gb_ctor_cube, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_cube_checked);
+
+  gb_ctor_arrow = new QRadioButton(tr("arrow primitive"));
+  connect(gb_ctor_arrow, &QRadioButton::toggled,
+          this, &add_new_ws_item_widget_t::react_gb_ctor_arrow_checked);
 
   gb_ctor_geom0d->setChecked(true);
 
@@ -75,15 +98,8 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   gb_ctor_lt->addWidget(gb_ctor_geom3d);
   gb_ctor_lt->addWidget(gb_ctor_psg);
   gb_ctor_lt->addWidget(gb_ctor_pgf_prod);
-
-  gb_type_descr = new QGroupBox(tr("Type description"));
-  gb_type_descr->setMinimumWidth(190);
-  gb_type_descr_lt = new QVBoxLayout;
-  gb_type_descr->setLayout(gb_type_descr_lt);
-
-  type_descr_lbl = new QLabel;
-  type_descr_lbl->setWordWrap(true);
-  gb_type_descr_lt->addWidget(type_descr_lbl);
+  gb_ctor_lt->addWidget(gb_ctor_cube);
+  gb_ctor_lt->addWidget(gb_ctor_arrow);
 
   type_param_ag_lbl = new QLabel(tr("Point group"));
   type_param_ag_lbl->setMinimumWidth(label_width);
@@ -200,26 +216,68 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           nt_pgfp->m_name = type_param_name->text().toStdString();
           cur_ws->add_item_to_ws(nt);
         }
+
+      if (gb_ctor_cube->isChecked()) {
+          auto cur_ws = astate->ws_manager->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt =
+              astate->ws_manager->m_bhv_mgr->fabric_by_type(cube_primitive_t::get_type_static());
+          auto nt_cp = nt->cast_as<cube_primitive_t>();
+          if (!nt_cp) return;
+          nt_cp->m_name = type_param_name->text().toStdString();
+          cur_ws->add_item_to_ws(nt);
+        }
+
+      if (gb_ctor_arrow->isChecked()) {
+          auto cur_ws = astate->ws_manager->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt =
+              astate->ws_manager->m_bhv_mgr->fabric_by_type(arrow_primitive_t::get_type_static());
+          auto nt_ap = nt->cast_as<arrow_primitive_t>();
+          if (!nt_ap) return;
+          nt_ap->m_name = type_param_name->text().toStdString();
+          cur_ws->add_item_to_ws(nt);
+        }
+
+
     }
 }
 
 void add_new_ws_item_widget_t::cancel_button_clicked() {
+
   reject();
+
 }
 
 void add_new_ws_item_widget_t::react_gb_ctor_geom0d_checked(bool checked) {
+
+  if (checked) {
+      type_descr_lbl->setText(descr_list[0]);
+    }
 
 }
 
 void add_new_ws_item_widget_t::react_gb_ctor_geom1d_checked(bool checked) {
 
+  if (checked) {
+      type_descr_lbl->setText(descr_list[1]);
+    }
+
 }
 
 void add_new_ws_item_widget_t::react_gb_ctor_geom2d_checked(bool checked) {
 
+  if (checked) {
+      type_descr_lbl->setText(descr_list[2]);
+    }
+
 }
 
 void add_new_ws_item_widget_t::react_gb_ctor_geom3d_checked(bool checked) {
+
+  if (checked) {
+      type_descr_lbl->setText(descr_list[3]);
+    }
 
 }
 
@@ -229,12 +287,32 @@ void add_new_ws_item_widget_t::react_gb_ctor_psg_checked(bool checked) {
   type_param_ag->setVisible(checked);
 
   if (checked) {
-
+      type_descr_lbl->setText(descr_list[4]);
     } else {
 
     }
 }
 
 void add_new_ws_item_widget_t::react_gb_ctor_pgf_prod_checked(bool checked) {
+
+  if (checked) {
+      type_descr_lbl->setText(descr_list[5]);
+    }
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_cube_checked(bool checked) {
+
+  if (checked) {
+      type_descr_lbl->setText(descr_list[6]);
+    }
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_arrow_checked(bool checked) {
+
+  if (checked) {
+      type_descr_lbl->setText(descr_list[7]);
+    }
 
 }

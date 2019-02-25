@@ -39,6 +39,8 @@ namespace qpp {
         QRadioButton *gb_ctor_geom3d;
         QRadioButton *gb_ctor_psg;
         QRadioButton *gb_ctor_pgf_prod;
+        QRadioButton *gb_ctor_cube;
+        QRadioButton *gb_ctor_arrow;
 
         QGroupBox *gb_type_descr;
         QVBoxLayout *gb_type_descr_lt;
@@ -66,6 +68,9 @@ namespace qpp {
         void react_gb_ctor_geom3d_checked(bool checked);
         void react_gb_ctor_psg_checked(bool checked);
         void react_gb_ctor_pgf_prod_checked(bool checked);
+        void react_gb_ctor_cube_checked(bool checked);
+        void react_gb_ctor_arrow_checked(bool checked);
+
 
     };
 
