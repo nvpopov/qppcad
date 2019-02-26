@@ -90,6 +90,11 @@ namespace qpp {
 
       QSettings settings;
 
+      settings.beginGroup("render");
+      int load_num_samples = settings.value("num_samples", 6).toInt();
+      if (load_num_samples >= 0 && load_num_samples < 32) m_num_samples = load_num_samples;
+      settings.endGroup();
+
       settings.beginGroup("periodic_table");
       int ovr_size = settings.beginReadArray("mod");
       ptable *table = ptable::get_inst();
@@ -152,6 +157,10 @@ namespace qpp {
 
       QSettings settings;
       settings.setValue("test", 68);
+
+      settings.beginGroup("render");
+      settings.setValue("num_samples", m_num_samples);
+      settings.endGroup();
 
       settings.beginGroup("periodic_table");
       ptable *table = ptable::get_inst();

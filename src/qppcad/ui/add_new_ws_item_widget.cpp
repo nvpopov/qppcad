@@ -12,7 +12,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-const int label_width = 100;
+const int label_width = 80;
 
 add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
@@ -43,7 +43,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   button_lt->addStretch();
 
   gb_type_descr = new QGroupBox(tr("Type description"));
-  gb_type_descr->setMinimumWidth(260);
+  gb_type_descr->setMinimumWidth(240);
   gb_type_descr_lt = new QVBoxLayout;
   gb_type_descr->setLayout(gb_type_descr_lt);
 
@@ -53,7 +53,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   gb_type_descr_lt->addStretch();
 
   gb_ctor = new QGroupBox(tr("Constructible types"));
-  gb_ctor->setMaximumWidth(260);
+  gb_ctor->setMinimumWidth(240);
   gb_ctor_lt = new QVBoxLayout;
   gb_ctor->setLayout(gb_ctor_lt);
 
@@ -104,9 +104,97 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   type_param_ag_lbl = new QLabel(tr("Point group"));
   type_param_ag_lbl->setMinimumWidth(label_width);
+  type_param_ag_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_param_ag = new QComboBox;
   type_param_ag_lbl->setVisible(false);
   type_param_ag->setVisible(false);
+
+  type_cell_ctor_mode = new QComboBox();
+  type_cell_ctor_mode->addItem(tr("Cubic cell"));
+  type_cell_ctor_mode->addItem(tr("Ortho[3 len]"));
+  type_cell_ctor_mode->addItem(tr("3 angles & 3 len"));
+  type_cell_ctor_mode->addItem(tr("3 vecs"));
+  type_cell_ctor_mode_lbl = new QLabel(tr("Cell mode"));
+  type_cell_ctor_mode_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_mode_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_mode->setVisible(false);
+  type_cell_ctor_mode_lbl->setVisible(false);
+
+  type_cell_ctor_cubic_size = new QDoubleSpinBox();
+  type_cell_ctor_cubic_size->setRange(0.00001, 100);
+  type_cell_ctor_cubic_size->setValue(5);
+  type_cell_ctor_cubic_size->setSuffix(astate->m_spatial_suffix);
+  type_cell_ctor_cubic_size_lbl = new QLabel(tr("Cube size"));
+  type_cell_ctor_cubic_size_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_cubic_size_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_cubic_size->setVisible(false);
+  type_cell_ctor_cubic_size_lbl->setVisible(false);
+
+  type_cell_ctor_ortho = new qbinded_float3_input;
+  type_cell_ctor_ortho->set_min_max_step(0.000, 50.0, 0.01);
+  type_cell_ctor_ortho->set_default_suffix();
+  type_cell_ctor_ortho->bind_value(&m_ortho_g3d_cell);
+  type_cell_ctor_ortho_lbl = new QLabel(tr("Ortho vecs."));
+  type_cell_ctor_ortho_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_ortho_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_ortho->setVisible(false);
+  type_cell_ctor_ortho_lbl->setVisible(false);
+
+  type_cell_ctor_a3 = new qbinded_float3_input;
+  type_cell_ctor_a3->set_min_max_step(0.000, 180.0, 0.01);
+  type_cell_ctor_a3->set_suffix(astate->m_degree_suffix);
+  type_cell_ctor_a3->bind_value(&m_a3_g3d_cell);
+  type_cell_ctor_a3_lbl = new QLabel(tr("Angles"));
+  type_cell_ctor_a3_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_a3_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_a3->setVisible(false);
+  type_cell_ctor_a3_lbl->setVisible(false);
+
+  type_cell_ctor_l3 = new qbinded_float3_input;
+  type_cell_ctor_l3->set_min_max_step(0.000, 180.0, 0.01);
+  type_cell_ctor_l3->set_default_suffix();
+  type_cell_ctor_l3->bind_value(&m_l3_g3d_cell);
+  type_cell_ctor_l3_lbl = new QLabel(tr("Lengths"));
+  type_cell_ctor_l3_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_l3_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_l3->setVisible(false);
+  type_cell_ctor_l3_lbl->setVisible(false);
+
+  type_cell_ctor_a = new qbinded_float3_input;
+  type_cell_ctor_a->set_min_max_step(-50.00, 50.0, 0.01);
+  type_cell_ctor_a->set_default_suffix();
+  type_cell_ctor_a->bind_value(&m_a_g3d_cell);
+  type_cell_ctor_a_lbl = new QLabel(tr("a"));
+  type_cell_ctor_a_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_a_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_a->setVisible(false);
+  type_cell_ctor_a_lbl->setVisible(false);
+
+  type_cell_ctor_b = new qbinded_float3_input;
+  type_cell_ctor_b->set_min_max_step(-50.00, 50.0, 0.01);
+  type_cell_ctor_b->set_default_suffix();
+  type_cell_ctor_b->bind_value(&m_b_g3d_cell);
+  type_cell_ctor_b_lbl = new QLabel(tr("b"));
+  type_cell_ctor_b_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_b_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_b->setVisible(false);
+  type_cell_ctor_b_lbl->setVisible(false);
+
+  type_cell_ctor_c = new qbinded_float3_input;
+  type_cell_ctor_c->set_min_max_step(-50.00, 50.0, 0.01);
+  type_cell_ctor_c->set_default_suffix();
+  type_cell_ctor_c->bind_value(&m_c_g3d_cell);
+  type_cell_ctor_c_lbl = new QLabel(tr("c"));
+  type_cell_ctor_c_lbl->setMinimumWidth(label_width);
+  type_cell_ctor_c_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  type_cell_ctor_c->setVisible(false);
+  type_cell_ctor_c_lbl->setVisible(false);
+
+  connect(type_cell_ctor_mode,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this, &add_new_ws_item_widget_t::geom3d_ctor_changed);
+
+  type_cell_ctor_mode->setCurrentIndex(0);
 
   //construct ag_labels
   for (int n = 1; n < 11; n++) {
@@ -116,21 +204,29 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   //end of construct ag_labels
 
   gb_type_param = new QGroupBox(tr("Type parameters"));
-  gb_type_param->setMinimumWidth(260);
+  gb_type_param->setMinimumWidth(360);
   gb_type_param_lt = new QFormLayout;
+  gb_type_param_lt->setAlignment(Qt::AlignVCenter);
   gb_type_param->setLayout(gb_type_param_lt);
 
   type_param_name = new QLineEdit();
   type_param_name_lbl = new QLabel("Name");
   type_param_name_lbl->setMinimumWidth(label_width);
+  type_param_name_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
   gb_type_param_lt->addRow(type_param_name_lbl, type_param_name);
+  gb_type_param_lt->addRow(type_cell_ctor_mode_lbl, type_cell_ctor_mode);
+  gb_type_param_lt->addRow(type_cell_ctor_cubic_size_lbl, type_cell_ctor_cubic_size);
+  gb_type_param_lt->addRow(type_cell_ctor_ortho_lbl, type_cell_ctor_ortho);
+  gb_type_param_lt->addRow(type_cell_ctor_a3_lbl, type_cell_ctor_a3);
+  gb_type_param_lt->addRow(type_cell_ctor_l3_lbl, type_cell_ctor_l3);
+  gb_type_param_lt->addRow(type_cell_ctor_a_lbl, type_cell_ctor_a);
+  gb_type_param_lt->addRow(type_cell_ctor_b_lbl, type_cell_ctor_b);
+  gb_type_param_lt->addRow(type_cell_ctor_c_lbl, type_cell_ctor_c);
   gb_type_param_lt->addRow(type_param_ag_lbl, type_param_ag);
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws) {
-      type_param_name->setText(tr("new_item_%1").arg(cur_ws->m_ws_items.size()));
-    }
+  if (cur_ws) type_param_name->setText(tr("new_item_%1").arg(cur_ws->m_ws_items.size()));
 
   main_lt->addLayout(data_lt);
   data_lt->addWidget(gb_ctor);
@@ -151,6 +247,28 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
 }
 
+void add_new_ws_item_widget_t::set_cell_ctors_visibility(bool show) {
+
+  if (type_cell_ctor_cubic_size) type_cell_ctor_cubic_size->setVisible(show);
+  if (type_cell_ctor_cubic_size_lbl) type_cell_ctor_cubic_size_lbl->setVisible(show);
+
+  if (type_cell_ctor_ortho) type_cell_ctor_ortho->setVisible(show);
+  if (type_cell_ctor_ortho_lbl) type_cell_ctor_ortho_lbl->setVisible(show);
+
+  if (type_cell_ctor_l3) type_cell_ctor_l3->setVisible(show);
+  if (type_cell_ctor_l3_lbl) type_cell_ctor_l3_lbl->setVisible(show);
+  if (type_cell_ctor_a3) type_cell_ctor_a3->setVisible(show);
+  if (type_cell_ctor_a3_lbl) type_cell_ctor_a3_lbl->setVisible(show);
+
+  if (type_cell_ctor_a) type_cell_ctor_a->setVisible(show);
+  if (type_cell_ctor_a_lbl) type_cell_ctor_a_lbl->setVisible(show);
+  if (type_cell_ctor_b) type_cell_ctor_b->setVisible(show);
+  if (type_cell_ctor_b_lbl) type_cell_ctor_b_lbl->setVisible(show);
+  if (type_cell_ctor_c) type_cell_ctor_c->setVisible(show);
+  if (type_cell_ctor_c_lbl) type_cell_ctor_c_lbl->setVisible(show);
+
+}
+
 void add_new_ws_item_widget_t::ok_button_clicked() {
 
   if (type_param_name->text() == "") {
@@ -158,8 +276,6 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
                                      tr("Missing name!"),
                                      tr("Name is empty! Do something!"));
     } else {
-
-      accept();
 
       app_state_t *astate = app_state_t::get_inst();
 
@@ -176,6 +292,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
         }
 
       if (gb_ctor_geom3d->isChecked()) {
+
+          cell_construct_mode ccm =
+              static_cast<cell_construct_mode>(type_cell_ctor_mode->currentIndex());
+
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
           auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(geom_view_t::get_type_static());
@@ -184,9 +304,49 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           nt_gv->m_tws_tr->do_action(act_lock | act_clear_all);
           nt_gv->m_geom->DIM = 3;
           nt_gv->m_geom->cell.DIM = 3;
-          nt_gv->m_geom->cell.v[0] = vector3<float>(5, 0, 0);
-          nt_gv->m_geom->cell.v[1] = vector3<float>(0, 5, 0);
-          nt_gv->m_geom->cell.v[2] = vector3<float>(0, 0, 5);
+
+          switch (ccm) {
+
+            case cell_construct_mode::construct_cubic : {
+                vector3<float> cubic_a{type_cell_ctor_cubic_size->value(), 0, 0};
+                vector3<float> cubic_b{0, type_cell_ctor_cubic_size->value(), 0};
+                vector3<float> cubic_c{0, 0, type_cell_ctor_cubic_size->value()};
+                nt_gv->m_geom->cell = periodic_cell<float>(cubic_a,
+                                                           cubic_b,
+                                                           cubic_c);
+                break;
+              }
+
+            case cell_construct_mode::construct_ortho : {
+                vector3<float> ortho_a{m_ortho_g3d_cell[0], 0, 0};
+                vector3<float> ortho_b{0, m_ortho_g3d_cell[1], 0};
+                vector3<float> ortho_c{0, 0, m_ortho_g3d_cell[2]};
+
+                nt_gv->m_geom->cell = periodic_cell<float>(ortho_a,
+                                                           ortho_b,
+                                                           ortho_c);
+                break;
+              }
+
+            case cell_construct_mode::construct_3angles_3len : {
+                nt_gv->m_geom->cell = periodic_cell<float>(m_l3_g3d_cell[0],
+                                                           m_l3_g3d_cell[1],
+                                                           m_l3_g3d_cell[2],
+                                                           m_a3_g3d_cell[0],
+                                                           m_a3_g3d_cell[1],
+                                                           m_a3_g3d_cell[2]);
+                break;
+              }
+
+            case cell_construct_mode::construct_9el : {
+                nt_gv->m_geom->cell = periodic_cell<float>(m_a_g3d_cell,
+                                                           m_b_g3d_cell,
+                                                           m_c_g3d_cell);
+                break;
+              }
+
+            }
+
           nt_gv->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
           nt_gv->m_tws_tr->do_action(act_rebuild_ntable);
           nt_gv->m_name = type_param_name->text().toStdString();
@@ -240,7 +400,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           cur_ws->add_item_to_ws(nt);
         }
 
+      accept();
+
     }
+
 }
 
 void add_new_ws_item_widget_t::cancel_button_clicked() {
@@ -252,6 +415,7 @@ void add_new_ws_item_widget_t::cancel_button_clicked() {
 void add_new_ws_item_widget_t::react_gb_ctor_geom0d_checked(bool checked) {
 
   if (checked) {
+      set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[0]);
     }
 
@@ -260,6 +424,7 @@ void add_new_ws_item_widget_t::react_gb_ctor_geom0d_checked(bool checked) {
 void add_new_ws_item_widget_t::react_gb_ctor_geom1d_checked(bool checked) {
 
   if (checked) {
+      set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[1]);
     }
 
@@ -268,6 +433,7 @@ void add_new_ws_item_widget_t::react_gb_ctor_geom1d_checked(bool checked) {
 void add_new_ws_item_widget_t::react_gb_ctor_geom2d_checked(bool checked) {
 
   if (checked) {
+      set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[2]);
     }
 
@@ -275,7 +441,12 @@ void add_new_ws_item_widget_t::react_gb_ctor_geom2d_checked(bool checked) {
 
 void add_new_ws_item_widget_t::react_gb_ctor_geom3d_checked(bool checked) {
 
+  type_cell_ctor_mode_lbl->setVisible(checked);
+  type_cell_ctor_mode->setVisible(checked);
+
   if (checked) {
+      type_cell_ctor_mode->setCurrentIndex(0);
+      geom3d_ctor_changed(0);
       type_descr_lbl->setText(descr_list[3]);
     }
 
@@ -287,6 +458,7 @@ void add_new_ws_item_widget_t::react_gb_ctor_psg_checked(bool checked) {
   type_param_ag->setVisible(checked);
 
   if (checked) {
+      set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[4]);
     } else {
 
@@ -296,6 +468,7 @@ void add_new_ws_item_widget_t::react_gb_ctor_psg_checked(bool checked) {
 void add_new_ws_item_widget_t::react_gb_ctor_pgf_prod_checked(bool checked) {
 
   if (checked) {
+      set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[5]);
     }
 
@@ -304,6 +477,7 @@ void add_new_ws_item_widget_t::react_gb_ctor_pgf_prod_checked(bool checked) {
 void add_new_ws_item_widget_t::react_gb_ctor_cube_checked(bool checked) {
 
   if (checked) {
+      set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[6]);
     }
 
@@ -312,7 +486,32 @@ void add_new_ws_item_widget_t::react_gb_ctor_cube_checked(bool checked) {
 void add_new_ws_item_widget_t::react_gb_ctor_arrow_checked(bool checked) {
 
   if (checked) {
+      set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[7]);
     }
+
+}
+
+void add_new_ws_item_widget_t::geom3d_ctor_changed(int index) {
+
+  cell_construct_mode ccm = static_cast<cell_construct_mode>(index);
+
+  type_cell_ctor_cubic_size->setVisible(ccm == cell_construct_mode::construct_cubic);
+  type_cell_ctor_cubic_size_lbl->setVisible(ccm == cell_construct_mode::construct_cubic);
+
+  type_cell_ctor_ortho->setVisible(ccm == cell_construct_mode::construct_ortho);
+  type_cell_ctor_ortho_lbl->setVisible(ccm == cell_construct_mode::construct_ortho);
+
+  type_cell_ctor_a3->setVisible(ccm == cell_construct_mode::construct_3angles_3len);
+  type_cell_ctor_a3_lbl->setVisible(ccm == cell_construct_mode::construct_3angles_3len);
+  type_cell_ctor_l3->setVisible(ccm == cell_construct_mode::construct_3angles_3len);
+  type_cell_ctor_l3_lbl->setVisible(ccm == cell_construct_mode::construct_3angles_3len);
+
+  type_cell_ctor_a->setVisible(ccm == cell_construct_mode::construct_9el);
+  type_cell_ctor_a_lbl->setVisible(ccm == cell_construct_mode::construct_9el);
+  type_cell_ctor_b->setVisible(ccm == cell_construct_mode::construct_9el);
+  type_cell_ctor_b_lbl->setVisible(ccm == cell_construct_mode::construct_9el);
+  type_cell_ctor_c->setVisible(ccm == cell_construct_mode::construct_9el);
+  type_cell_ctor_c_lbl->setVisible(ccm == cell_construct_mode::construct_9el);
 
 }

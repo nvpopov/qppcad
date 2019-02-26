@@ -24,30 +24,38 @@ namespace qpp {
   namespace cad {
 
     enum geom_view_render_t : int {
+
       ball_and_stick,
       dynamic_lines,
       xatom_lines,
       billboards,
       buffered_billboards
+
     };
 
     enum geom_view_role_t : int {
+
       r_generic,
       r_uc,
       r_embc_qm,
       r_embc_cls,
       r_embc_chg
+
     };
 
     enum geom_view_color_mode : int {
+
       color_from_ptable,
       color_from_xgeom
+
     };
 
     enum pair_dist_mode : int {
+
       transform_both,
       fix_first,
       fix_second
+
     };
 
     const int xgeom_charge      = 4;

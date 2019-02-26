@@ -39,9 +39,11 @@ namespace qpp {
     class app_state_t {
 
       private:
+
         static app_state_t *g_inst;
 
       public:
+
         static void init_inst();
         static app_state_t* get_inst();
 
@@ -59,8 +61,11 @@ namespace qpp {
         void load_settings();
         void save_settings();
 
-        void log(std::string logstr, bool flush = true);
+        void log(std::string logstr,
+                 bool flush = true);
+
         void pylog(std::string logstr);
+
         void add_recent_file(const std::string file_name,
                              const bool is_native,
                              const size_t bhv_id);
@@ -104,12 +109,15 @@ namespace qpp {
         QString m_font_name;
         QString m_screen_shots_dir{"."};
         QString m_spatial_suffix{"Å"};
+        QString m_degree_suffix{"°"};
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;
 
         int64_t m_last_frame_time_cpu{0};
         int64_t m_last_frame_time_gpu{0};
+
+        int m_num_samples{6};
 
         bool m_show_debug_frame_stats{false};
 

@@ -213,6 +213,13 @@ void ws_item_obj_insp_widget_t::delete_current_item() {
 
   if (m_binded_item) {
 
+      int ret = QMessageBox::warning(this,
+                                     tr("Confirm the deletion"),
+                                     tr("Are you sure?"),
+                                     QMessageBox::Ok | QMessageBox::Cancel);
+
+      if (ret == QMessageBox::Cancel) return;
+
       ws_item_t *_binded_item = m_binded_item;
       unbind_item();
 

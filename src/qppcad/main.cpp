@@ -11,6 +11,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 int main (int argc, char **argv) {
+
   std::ios_base::sync_with_stdio(false);
 
   QCoreApplication::setOrganizationName("igc");
@@ -57,7 +58,7 @@ int main (int argc, char **argv) {
   format.setDepthBufferSize(24);
 
   //format.setStencilBufferSize(8);
-  format.setSamples(6);
+  format.setSamples(astate->m_num_samples);
   format.setVersion(3, 3);
   format.setProfile(QSurfaceFormat::CoreProfile);
   QSurfaceFormat::setDefaultFormat(format);

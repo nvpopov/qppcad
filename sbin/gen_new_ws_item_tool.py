@@ -6,7 +6,7 @@ hpp_tmp = """
 #ifndef QPP_CAD_TOOL_#UCLASS_NAME
 #define QPP_CAD_TOOL_#UCLASS_NAME
 #include <qppcad/qppcad.hpp>
-#include <qppcad/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {
 
