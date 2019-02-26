@@ -811,8 +811,16 @@ std::string geom_view_t::compose_item_name () {
 }
 
 void geom_view_t::update (float delta_time) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
   ws_item_t::update(delta_time);
   m_anim->update(delta_time);
+
+  if (m_tws_tr->m_tree_is_dirty) {
+      m_tws_tr->m_tree_is_dirty = false;
+      if (m_selected) astate->astate_evd->cur_ws_selected_item_changed();
+    }
 }
 
 float geom_view_t::get_bb_prescaller () {
