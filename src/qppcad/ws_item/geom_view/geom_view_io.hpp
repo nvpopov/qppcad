@@ -102,7 +102,7 @@ namespace qpp {
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
-                               geom_view_t *_item) {
+                               geom_view_t *_item) override {
           //do nothing
         }
 
@@ -131,7 +131,7 @@ namespace qpp {
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
-                               geom_view_t *_item) {
+                               geom_view_t *_item) override {
           //do nothing
         }
 
@@ -219,7 +219,7 @@ namespace qpp {
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
-                               geom_view_t *_item) {
+                               geom_view_t *_item) override {
           //do nothing
         }
 

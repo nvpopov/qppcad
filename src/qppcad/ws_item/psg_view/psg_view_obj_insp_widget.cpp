@@ -90,4 +90,6 @@ void psg_view_obj_insp_widget_t::unbind_item() {
   cb_show_axes->unbind_value();
   cb_show_planes->unbind_value();
 
+  b_pg = nullptr;
+
 }

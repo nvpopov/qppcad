@@ -62,11 +62,13 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+
   if (!bhv_mgr) return;
 
   if (m_cur_obj_insp_widget) {
       m_cur_obj_insp_widget->unbind_item();
-      obj_insp_layout->removeWidget(m_cur_obj_insp_widget.get());
+      auto coiw_ptr = m_cur_obj_insp_widget.get();
+      if (coiw_ptr) obj_insp_layout->removeWidget(coiw_ptr);
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
       none_item_placeholder->show();
@@ -78,19 +80,19 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
 
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
+
           if (cur_it) {
               size_t thash = cur_it->get_type();
               auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
               if (obj_insp_w) {
-
                   none_item_placeholder->hide();
                   obj_insp_layout->addWidget(obj_insp_w.get());
-
                   m_cur_obj_insp_widget = obj_insp_w;
                   obj_insp_w->bind_to_item(cur_it);
                   obj_insp_w->show();
                 }
             }
+
         }
 
     }
@@ -128,13 +130,18 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  astate->log("DEBUG: object_inspector_widget_t::cur_ws_selected_item_changed");
+  astate->log("DEBUG: obj_insp_widget_t::cur_ws_selected_item_changed");
 
   ws_items_list->blockSignals(true);
 
   if (astate->ws_manager->has_wss()) {
+
       auto cur_ws = astate->ws_manager->get_cur_ws();
+
       if (cur_ws) {
+
+          astate->log(fmt::format("DEBUG ::cur_ws_selected_item_changed(), "
+                                  "[num_wsi = {}]", cur_ws->m_ws_items.size()));
           auto cur_id = cur_ws->get_selected_idx();
           if (cur_id) {
               ws_items_list->item(*cur_id)->setSelected(true);
@@ -143,6 +150,7 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
               ws_items_list->clearSelection();
             }
         }
+
     }
 
   update_ws_items_view_widget();

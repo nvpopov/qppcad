@@ -320,18 +320,23 @@ void workspace_t::update (float delta_time) {
   m_gizmo->update_gizmo(delta_time);
 
   //handle deletion
+
+  bool need_to_emit_ws_changed{false};
+
   for (auto it = m_ws_items.begin(); it != m_ws_items.end(); ) {
       if ((*it)->m_marked_for_deletion) {
 
           if (it->get() == m_gizmo->attached_item)
             m_gizmo->attached_item = nullptr;
 
+          if (it->get()->m_selected) unselect_all(true);
+
           clear_connected_items(*it);
           it->get()->m_parent_ws = nullptr;
+          it->get()->m_connected_items.clear();
           it = m_ws_items.erase(it);
           //it->reset();
-          ws_changed();
-
+          need_to_emit_ws_changed = true;
           app_state_t* astate = app_state_t::get_inst();
           astate->astate_evd->cur_ws_changed();
         }
@@ -339,6 +344,8 @@ void workspace_t::update (float delta_time) {
           ++it;
         }
     }
+
+  ws_changed();
 
   //update cycle
   for (auto &ws_item : m_ws_items) ws_item->update(delta_time);

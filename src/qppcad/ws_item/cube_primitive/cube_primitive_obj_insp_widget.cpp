@@ -30,11 +30,13 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
   tab_general->tab_inner_widget_layout->addWidget(tg_cube_params);
 
   tab_general->tab_inner_widget_layout->addStretch(1);
+
 }
 
 void cube_primitive_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
+
   if (_binding_item && _binding_item->get_type() == cube_primitive_t::get_type_static()) {
       b_cp = _binding_item->cast_as<cube_primitive_t>();
       cube_param_scale->bind_value(&b_cp->m_scale);
@@ -43,6 +45,7 @@ void cube_primitive_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
     } else {
       b_cp = nullptr;
     }
+
 }
 
 void cube_primitive_obj_insp_widget_t::update_from_ws_item() {
@@ -52,6 +55,12 @@ void cube_primitive_obj_insp_widget_t::update_from_ws_item() {
 }
 
 void cube_primitive_obj_insp_widget_t::unbind_item() {
+
+  ws_item_obj_insp_widget_t::unbind_item();
+
   cube_param_scale->unbind_value();
   cube_param_color->unbind_value();
+
+  b_cp = nullptr;
+
 }

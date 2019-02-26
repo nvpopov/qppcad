@@ -18,6 +18,7 @@ namespace qpp {
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+
     };
 
   }

@@ -149,4 +149,5 @@ void qbonding_table_model_t::bind(geom_view_t *_al) {
 
 void qbonding_table_model_t::unbind() {
   //
+  m_al = nullptr;
 }

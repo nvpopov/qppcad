@@ -193,9 +193,12 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
   if (m_binded_item) {
       app_state_t* astate = app_state_t::get_inst();
       bool ok;
-      QString text = QInputDialog::getText(this, tr("Workspace item-> Rename"),
-                                           tr("User name:"), QLineEdit::Normal,
-                                           QString::fromStdString(m_binded_item->m_name), &ok);
+      QString text = QInputDialog::getText(this,
+                                           tr("Workspace item-> Rename"),
+                                           tr("User name:"),
+                                           QLineEdit::Normal,
+                                           QString::fromStdString(m_binded_item->m_name),
+                                           &ok);
       if (ok && text != "") {
           m_binded_item->m_name = text.toStdString();
           astate->astate_evd->cur_ws_selected_item_changed();
@@ -206,19 +209,34 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
 
 void ws_item_obj_insp_widget_t::delete_current_item() {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   if (m_binded_item) {
-      app_state_t* astate = app_state_t::get_inst();
-      m_binded_item->m_marked_for_deletion = true;
+
+      ws_item_t *_binded_item = m_binded_item;
       unbind_item();
+
+      astate->ws_manager->get_cur_ws()->unselect_all();
+      _binded_item->m_marked_for_deletion = true;
+
+      astate->astate_evd->cur_ws_changed();
+      astate->astate_evd->wss_changed();
+
+    } else {
+
       astate->ws_manager->get_cur_ws()->unselect_all();
       astate->astate_evd->cur_ws_changed();
       astate->astate_evd->wss_changed();
+
     }
+
 }
 
 void ws_item_obj_insp_widget_t::cur_tab_changed(int index) {
+
   if (m_binded_item) {
       m_binded_item->m_last_tab = index;
     }
+
 }
 

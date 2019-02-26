@@ -700,6 +700,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 void geom_view_obj_insp_widget_t::unbind_item() {
 
   ws_item_obj_insp_widget_t::unbind_item();
+
   disp_s_draw_atoms->unbind_value();
   disp_s_draw_bonds->unbind_value();
   disp_s_draw_img_atoms->unbind_value();
@@ -724,7 +725,11 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
 
+  disp_type_spec_mdl->unbind();
   bt_mdl->unbind();
+  tms_dist_mdl->unbind();
+
+  b_al = nullptr;
 
 }
 
@@ -1265,20 +1270,25 @@ void geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked() {
     }
 
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_obj_insp_widget_t::modify_translate_coord_type_changed(int coord_type) {
+
   if (coord_type == 0) {
       tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
     } else {
       tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
     }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_bc_rot_angle_type_change(int new_angle_type) {
+
   if (new_angle_type == 0) tm_bc_rot_angle->setSingleStep(0.5);
   else tm_bc_rot_angle->setSingleStep(0.01);
   tm_bc_rot_angle->setValue(0.0);
+
 }
 
 void geom_view_obj_insp_widget_t::modify_bc_rot_apply() {
@@ -1353,6 +1363,7 @@ void geom_view_obj_insp_widget_t::modify_group_op_sv_hide() {
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_sv_show_all() {
+
   app_state_t *astate = app_state_t::get_inst();
 
   if (b_al) {
@@ -1361,26 +1372,35 @@ void geom_view_obj_insp_widget_t::modify_group_op_sv_show_all() {
     }
 
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_sel_ngbs() {
+
   app_state_t *astate = app_state_t::get_inst();
   if (b_al) b_al->select_selected_atoms_ngbs();
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_del_sel() {
+
   app_state_t *astate = app_state_t::get_inst();
   if (b_al) b_al->delete_selected_atoms();
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_obj_insp_widget_t::cur_ws_edit_mode_changed() {
+
   update_modify_tab();
   update_measurement_tab();
+
 }
 
 void geom_view_obj_insp_widget_t::cur_it_selected_content_changed() {
+
   update_modify_tab();
   update_measurement_tab();
+
 }

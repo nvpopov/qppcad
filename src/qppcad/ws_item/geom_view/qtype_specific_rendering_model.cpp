@@ -122,9 +122,13 @@ bool qtype_specific_rendering_model_t::setData(const QModelIndex &index,
 }
 
 void qtype_specific_rendering_model_t::bind(geom_view_t *_al) {
+
   m_al = _al;
+
 }
 
 void qtype_specific_rendering_model_t::unbind() {
-  //
+
+  m_al = nullptr;
+
 }
