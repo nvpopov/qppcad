@@ -21,6 +21,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   setWindowTitle(tr("Add new item to workspace"));
 
   descr_list.reserve(8);
+
   descr_list.push_back(tr("Description for geom_view_t [DIM=0D]"));
   descr_list.push_back(tr("Description for geom_view_t [DIM=1D]"));
   descr_list.push_back(tr("Description for geom_view_t [DIM=2D]"));
@@ -102,97 +103,87 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   gb_ctor_lt->addWidget(gb_ctor_cube);
   gb_ctor_lt->addWidget(gb_ctor_arrow);
 
-  type_param_ag_lbl = new QLabel(tr("Point group"));
-  type_param_ag_lbl->setMinimumWidth(label_width);
-  type_param_ag_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  auto label_setup = [](QLabel *label) {
+    label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    label->setMinimumWidth(label_width);
+    label->setVisible(false);
+  };
+
   type_param_ag = new QComboBox;
-  type_param_ag_lbl->setVisible(false);
   type_param_ag->setVisible(false);
+  type_param_ag_lbl = new QLabel(tr("Point group"));
+  label_setup(type_param_ag_lbl);
 
   type_cell_ctor_mode = new QComboBox();
   type_cell_ctor_mode->addItem(tr("Cubic cell"));
   type_cell_ctor_mode->addItem(tr("Ortho[3 len]"));
   type_cell_ctor_mode->addItem(tr("3 angles & 3 len"));
   type_cell_ctor_mode->addItem(tr("3 vecs"));
-  type_cell_ctor_mode_lbl = new QLabel(tr("Cell mode"));
-  type_cell_ctor_mode_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_mode_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_mode->setVisible(false);
-  type_cell_ctor_mode_lbl->setVisible(false);
+  type_cell_ctor_mode_lbl = new QLabel(tr("Cell mode"));
+  label_setup(type_cell_ctor_mode_lbl);
 
   type_cell_ctor_cubic_size = new QDoubleSpinBox();
   type_cell_ctor_cubic_size->setRange(0.00001, 100);
   type_cell_ctor_cubic_size->setValue(5);
   type_cell_ctor_cubic_size->setSuffix(astate->m_spatial_suffix);
-  type_cell_ctor_cubic_size_lbl = new QLabel(tr("Cube size"));
-  type_cell_ctor_cubic_size_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_cubic_size_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_cubic_size->setVisible(false);
-  type_cell_ctor_cubic_size_lbl->setVisible(false);
+  type_cell_ctor_cubic_size_lbl = new QLabel(tr("Cube size"));
+  label_setup(type_cell_ctor_cubic_size_lbl);
 
   type_cell_ctor_ortho = new qbinded_float3_input;
   type_cell_ctor_ortho->set_min_max_step(0.000, 50.0, 0.01);
   type_cell_ctor_ortho->set_default_suffix();
   type_cell_ctor_ortho->bind_value(&m_ortho_g3d_cell);
-  type_cell_ctor_ortho_lbl = new QLabel(tr("Ortho vecs."));
-  type_cell_ctor_ortho_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_ortho_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_ortho->setVisible(false);
-  type_cell_ctor_ortho_lbl->setVisible(false);
+  type_cell_ctor_ortho_lbl = new QLabel(tr("Ortho vecs."));
+  label_setup(type_cell_ctor_ortho_lbl);
 
   type_cell_ctor_a3 = new qbinded_float3_input;
   type_cell_ctor_a3->set_min_max_step(0.000, 180.0, 0.01);
   type_cell_ctor_a3->set_suffix(astate->m_degree_suffix);
   type_cell_ctor_a3->bind_value(&m_a3_g3d_cell);
-  type_cell_ctor_a3_lbl = new QLabel(tr("Angles"));
-  type_cell_ctor_a3_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_a3_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_a3->setVisible(false);
-  type_cell_ctor_a3_lbl->setVisible(false);
+  type_cell_ctor_a3_lbl = new QLabel(tr("Angles"));
+  label_setup(type_cell_ctor_a3_lbl);
 
   type_cell_ctor_l3 = new qbinded_float3_input;
   type_cell_ctor_l3->set_min_max_step(0.000, 180.0, 0.01);
   type_cell_ctor_l3->set_default_suffix();
   type_cell_ctor_l3->bind_value(&m_l3_g3d_cell);
-  type_cell_ctor_l3_lbl = new QLabel(tr("Lengths"));
-  type_cell_ctor_l3_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_l3_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_l3->setVisible(false);
-  type_cell_ctor_l3_lbl->setVisible(false);
+
+  type_cell_ctor_l3_lbl = new QLabel(tr("Lengths"));
+  label_setup(type_cell_ctor_l3_lbl);
 
   type_cell_ctor_a = new qbinded_float3_input;
   type_cell_ctor_a->set_min_max_step(-50.00, 50.0, 0.01);
   type_cell_ctor_a->set_default_suffix();
   type_cell_ctor_a->bind_value(&m_a_g3d_cell);
-  type_cell_ctor_a_lbl = new QLabel(tr("a"));
-  type_cell_ctor_a_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_a_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_a->setVisible(false);
-  type_cell_ctor_a_lbl->setVisible(false);
+  type_cell_ctor_a_lbl = new QLabel(tr("a"));
+  label_setup(type_cell_ctor_a_lbl);
 
   type_cell_ctor_b = new qbinded_float3_input;
   type_cell_ctor_b->set_min_max_step(-50.00, 50.0, 0.01);
   type_cell_ctor_b->set_default_suffix();
   type_cell_ctor_b->bind_value(&m_b_g3d_cell);
-  type_cell_ctor_b_lbl = new QLabel(tr("b"));
-  type_cell_ctor_b_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_b_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_b->setVisible(false);
-  type_cell_ctor_b_lbl->setVisible(false);
+  type_cell_ctor_b_lbl = new QLabel(tr("b"));
+  label_setup(type_cell_ctor_b_lbl);
 
   type_cell_ctor_c = new qbinded_float3_input;
   type_cell_ctor_c->set_min_max_step(-50.00, 50.0, 0.01);
   type_cell_ctor_c->set_default_suffix();
   type_cell_ctor_c->bind_value(&m_c_g3d_cell);
-  type_cell_ctor_c_lbl = new QLabel(tr("c"));
-  type_cell_ctor_c_lbl->setMinimumWidth(label_width);
-  type_cell_ctor_c_lbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   type_cell_ctor_c->setVisible(false);
-  type_cell_ctor_c_lbl->setVisible(false);
+  type_cell_ctor_c_lbl = new QLabel(tr("c"));
+  label_setup(type_cell_ctor_c_lbl);
 
   connect(type_cell_ctor_mode,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this, &add_new_ws_item_widget_t::geom3d_ctor_changed);
+          this,
+          &add_new_ws_item_widget_t::geom3d_ctor_changed);
 
   type_cell_ctor_mode->setCurrentIndex(0);
 
@@ -351,6 +342,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           nt_gv->m_tws_tr->do_action(act_rebuild_ntable);
           nt_gv->m_name = type_param_name->text().toStdString();
           cur_ws->add_item_to_ws(nt);
+
         }
 
       if (gb_ctor_psg->isChecked()) {
@@ -460,9 +452,8 @@ void add_new_ws_item_widget_t::react_gb_ctor_psg_checked(bool checked) {
   if (checked) {
       set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[4]);
-    } else {
-
     }
+
 }
 
 void add_new_ws_item_widget_t::react_gb_ctor_pgf_prod_checked(bool checked) {
