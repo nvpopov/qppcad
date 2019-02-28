@@ -90,19 +90,6 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_color_mode->addItem(tr("Color from ptable"));
   disp_s_color_mode->addItem(tr("Color from xgeom"));
 
-  disp_s_labels_style = new qbinded_combobox;
-  disp_s_labels_style->addItem("None");
-  disp_s_labels_style->addItem("Id");
-  disp_s_labels_style->addItem("Type");
-  disp_s_labels_style->addItem("Type and Id");
-  disp_s_labels_style->addItem("Charge");
-  disp_s_labels_style->addItem("Custom");
-
-  disp_labels_size = new qbinded_int_spinbox;
-  disp_labels_size->set_min_max_step(5, 35, 1);
-
-  disp_s_inplace_labels = new qbinded_checkbox;
-
   disp_draw_subcells = new qbinded_checkbox;
   disp_draw_subcells_label = new QLabel(tr("Draw subcells"));
   disp_subcells_idx = new qbinded_int3_input;
@@ -132,9 +119,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("Draw im. bonds"), disp_s_draw_img_bonds);
   gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
-  gb_disp_s_lt->addRow(tr("Labels style"), disp_s_labels_style);
-  gb_disp_s_lt->addRow(tr("Labels size"), disp_labels_size);
-  gb_disp_s_lt->addRow(tr("Inplace labels"), disp_s_inplace_labels);
+
   gb_disp_s_lt->addRow(tr("Sel. vis."), disp_s_sel_vis);
   gb_disp_s_lt->addRow(tr("Sel. vis. bonds"), disp_s_sel_vis_affect_bonds);
   gb_disp_s_lt->addRow(disp_draw_cell_label, disp_draw_cell);
@@ -143,6 +128,24 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(disp_subcells_idx_label, disp_subcells_idx);
   gb_disp_s_lt->addRow(disp_subcell_color_label, disp_subcell_color);
   post_init_group_box(gb_disp_s, gb_disp_s_lt);
+
+  gb_disp_labels = new QGroupBox(tr("Labels"));
+  gb_disp_labels_lt = new QFormLayout;
+  pre_init_group_box(gb_disp_labels, gb_disp_labels_lt);
+  disp_s_labels_style = new qbinded_combobox;
+  disp_s_labels_style->addItem("None");
+  disp_s_labels_style->addItem("Id");
+  disp_s_labels_style->addItem("Type");
+  disp_s_labels_style->addItem("Type and Id");
+  disp_s_labels_style->addItem("Charge");
+  disp_s_labels_style->addItem("Custom");
+  disp_labels_size = new qbinded_int_spinbox;
+  disp_labels_size->set_min_max_step(5, 35, 1);
+  disp_s_inplace_labels = new qbinded_checkbox;
+  gb_disp_labels_lt->addRow(tr("Labels style"), disp_s_labels_style);
+  gb_disp_labels_lt->addRow(tr("Labels size"), disp_labels_size);
+  gb_disp_labels_lt->addRow(tr("Inplace labels"), disp_s_inplace_labels);
+  post_init_group_box(gb_disp_labels, gb_disp_labels_lt);
 
   //display - shading tab initialization
   gb_disp_shading = new QGroupBox(tr("Shading settings"));
@@ -193,6 +196,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
 
   tab_disp->tab_inner_widget_layout->addWidget(gb_disp_s);
   tab_disp->tab_inner_widget_layout->addWidget(gb_disp_shading);
+  tab_disp->tab_inner_widget_layout->addWidget(gb_disp_labels);
   tab_disp->tab_inner_widget_layout->addWidget(gb_disp_type_spec_rend);
   tab_disp->tab_inner_widget_layout->addWidget(gb_disp_bt);
 

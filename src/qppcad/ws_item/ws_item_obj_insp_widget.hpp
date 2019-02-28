@@ -23,12 +23,14 @@ namespace qpp {
   namespace cad {
 
     struct ws_item_tab_widget_t {
+
         QScrollArea *tab_scroll;
         QWidget *tab_inner_widget;
         QVBoxLayout *tab_inner_widget_layout;
         QIcon *icon_enabled;
         QIcon *icon_disabled;
         int tab_id;
+
     };
 
     class ws_item_obj_insp_widget_t : public QTabWidget {
@@ -57,7 +59,7 @@ namespace qpp {
         QLabel *ws_item_bb_visible_label;
         qbinded_checkbox *ws_item_bb_visible;
 
-        int def_label_width{140};
+        int def_label_width{126};
         int def_control_width{80};
         int def_gen_control_width{180};
 

@@ -50,8 +50,12 @@ namespace qpp {
         qbinded_float_spinbox *disp_s_bond_scale;
         qbinded_combobox *disp_s_render_style;
         qbinded_combobox *disp_s_color_mode;
+
+        QGroupBox *gb_disp_labels;
+        QFormLayout *gb_disp_labels_lt;
         qbinded_combobox *disp_s_labels_style;
         qbinded_checkbox *disp_s_inplace_labels;
+        qbinded_int_spinbox *disp_labels_size;
 
         qbinded_checkbox *disp_s_sel_vis;
         qbinded_checkbox *disp_s_sel_vis_affect_bonds;
@@ -70,8 +74,6 @@ namespace qpp {
 
         QLabel *disp_subcell_color_label;
         qbinded_color3_input *disp_subcell_color;
-
-        qbinded_int_spinbox *disp_labels_size;
 
         QGroupBox *gb_disp_shading;
         QFormLayout *gb_disp_shading_lt;
