@@ -46,6 +46,7 @@ namespace qpp {
         void cur_ws_changed();
         void cur_ws_selected_item_changed();
         void ui_cur_ws_selected_item_changed();
+        void need_to_update_obj_insp_received();
     };
 
   }

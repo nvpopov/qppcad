@@ -886,13 +886,13 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
               //process labels state
               bool all_sel_lbls_vis = true;
               for (auto &rec : cur_it_as_al->m_atom_idx_sel)
-                if (cur_it_as_al->m_geom->xfield<bool>(xgeom_label_hide, rec.m_atm)) {
+                if (!cur_it_as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm)) {
                     all_sel_lbls_vis = false;
                     break;
                   }
               tp_force_sel_lbl_vis->blockSignals(true);
-              tp_force_sel_lbl_vis->setChecked(all_sel_lbls_vis &&
-                                               !cur_it_as_al->m_atom_idx_sel.empty());
+              tp_force_sel_lbl_vis->setChecked(all_sel_lbls_vis ||
+                                               cur_it_as_al->m_atom_idx_sel.empty());
               tp_force_sel_lbl_vis->blockSignals(false);
 
             } else {
@@ -1028,8 +1028,15 @@ void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 
           if (cur_it_as_al && cur_ws->m_edit_type == ws_edit_t::edit_content)
             for (auto &rec : cur_it_as_al->m_atom_idx_sel)
-              cur_it_as_al->m_geom->xfield<bool>(xgeom_label_hide, rec.m_atm) = !checked;
+              cur_it_as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = checked;
 
+          // if selective labels rendering was unchecked - force it and select some random style
+          if (!cur_it_as_al->m_atom_idx_sel.empty() &&
+              !cur_it_as_al->m_labels->m_selective_label_render) {
+                cur_it_as_al->m_labels->m_selective_label_render = true;
+                cur_it_as_al->m_labels->m_style = geom_view_labels_style::show_id_type;
+                astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+            }
         }
     }
 

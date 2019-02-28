@@ -60,7 +60,7 @@ namespace qpp {
 
     const int xgeom_charge      = 4;
     const int xgeom_sel_vis     = 6;
-    const int xgeom_label_hide  = 7;
+    const int xgeom_label_show  = 7;
     const int xgeom_ccr         = 8;
     const int xgeom_ccg         = 9;
     const int xgeom_ccb         = 10;

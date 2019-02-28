@@ -41,6 +41,9 @@ object_inspector_widget_t::object_inspector_widget_t() {
   connect(ws_items_list, &QListWidget::itemSelectionChanged,
           this, &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
 
+  connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_need_to_update_obj_insp_signal()),
+          this, SLOT(need_to_update_obj_insp_received()));
+
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();
   ws_items_list->clearSelection();
@@ -181,5 +184,13 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
     }
 
   update_ws_items_view_widget();
+
+}
+
+void object_inspector_widget_t::need_to_update_obj_insp_received() {
+
+  if (m_cur_obj_insp_widget) {
+      m_cur_obj_insp_widget->update_from_ws_item();
+    }
 
 }

@@ -41,7 +41,8 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       if (p_owner->m_sel_vis &&
           p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
 
-      if (p_owner->m_geom->xfield<bool>(xgeom_label_hide, i)) continue;
+      if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) && m_selective_label_render)
+        continue;
 
       if (!p_owner->m_atom_type_to_hide.empty()) {
           auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));
@@ -75,7 +76,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
           }
 
         case geom_view_labels_style::show_custom : {
-            if (p_owner->m_geom->xfield<bool>(xgeom_label_hide, i)) {
+            if (p_owner->m_geom->xfield<bool>(xgeom_label_show, i)) {
                 label = p_owner->m_geom->xfield<std::string>(xgeom_label_text, i);
               } else {
                 render_label = false;

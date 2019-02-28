@@ -56,6 +56,7 @@ namespace qpp {
         qbinded_combobox *disp_s_labels_style;
         qbinded_checkbox *disp_s_inplace_labels;
         qbinded_int_spinbox *disp_labels_size;
+        qbinded_checkbox *disp_sl_labels;
 
         qbinded_checkbox *disp_s_sel_vis;
         qbinded_checkbox *disp_s_sel_vis_affect_bonds;
