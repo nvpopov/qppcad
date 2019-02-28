@@ -193,11 +193,16 @@ namespace qpp {
         int tab_modify_label_width{120};
         //END TAB MODIFY
 
+        //START TAB SELECTIONS
+        ws_item_tab_widget_t *tab_select;
+        //END TAB SELECTIONS
+
         void construct_general_tab();
         void construct_display_tab();
         void construct_anim_tab();
         void construct_measure_tab();
         void construct_modify_tab();
+        void construct_select_tab();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
@@ -205,6 +210,7 @@ namespace qpp {
         void update_anim_tab_gb();
         void update_modify_tab();
         void update_measurement_tab();
+        void update_select_tab();
         void fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al);
         geom_view_obj_insp_widget_t();
 

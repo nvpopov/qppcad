@@ -566,6 +566,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
 }
 
+void geom_view_obj_insp_widget_t::construct_select_tab() {
+
+}
+
 void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   auto _tmp = dynamic_cast<geom_view_t*>(_binding_item);
@@ -703,7 +707,10 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       update_modify_tab();
       update_measurement_tab();
+      update_select_tab();
+
     }
+
 }
 
 void geom_view_obj_insp_widget_t::unbind_item() {
@@ -937,6 +944,20 @@ void geom_view_obj_insp_widget_t::update_measurement_tab() {
 
 }
 
+void geom_view_obj_insp_widget_t::update_select_tab() {
+
+  if (b_al) {
+
+      if (b_al->m_parent_ws &&
+          b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+          set_tab_enabled(tab_select, true);
+        } else {
+          set_tab_enabled(tab_select, false);
+        }
+    }
+
+}
+
 void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
                                                                  geom_view_t *_al) {
   if (_al && combo) {
@@ -962,11 +983,16 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   tab_measurement = define_tab(tr("Measurement"),
                                "://images/outline-straighten-24px.svg");
 
+  tab_select = define_tab(tr("Atom selection groups"),
+                          "://images/outline-select_all-24px.svg",
+                          "://images/outline-select_all-24px_d.svg");
+
   construct_general_tab();
   construct_display_tab();
   construct_anim_tab();
   construct_measure_tab();
   construct_modify_tab();
+  construct_select_tab();
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -1127,7 +1153,9 @@ void geom_view_obj_insp_widget_t::draw_subcells_changed(int state) {
 }
 
 void geom_view_obj_insp_widget_t::update_animate_section_status() {
+
   set_tab_enabled(tab_anim, b_al->m_anim->animable());
+
 }
 
 void geom_view_obj_insp_widget_t::cur_it_list_selection_changed() {
@@ -1405,6 +1433,7 @@ void geom_view_obj_insp_widget_t::cur_ws_edit_mode_changed() {
 
   update_modify_tab();
   update_measurement_tab();
+  update_select_tab();
 
 }
 
@@ -1412,5 +1441,6 @@ void geom_view_obj_insp_widget_t::cur_it_selected_content_changed() {
 
   update_modify_tab();
   update_measurement_tab();
+  update_select_tab();
 
 }
