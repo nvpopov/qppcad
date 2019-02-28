@@ -1053,7 +1053,7 @@ pybind11::list simple_query::cl_get() {
           auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
               for (int i = 0; i < _al->m_geom->nat(); i++)
-                ret.append(_al->m_geom->xfield<bool>(xgeom_label_state, i));
+                ret.append(_al->m_geom->xfield<bool>(xgeom_label_hide, i));
             }
         }
       astate->make_viewport_dirty();
@@ -1071,7 +1071,7 @@ void simple_query::set_cl_state(int at, bool status) {
       if (cur_ws) {
           auto _al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (_al) {
-              _al->m_geom->xfield<bool>(xgeom_label_state, at) = status;
+              _al->m_geom->xfield<bool>(xgeom_label_hide, at) = status;
             }
         }
       astate->make_viewport_dirty();

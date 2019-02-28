@@ -393,7 +393,18 @@ void main_window::init_widgets() {
   tp_measure_dist->setIconSize(QSize(26, 26));
   tp_measure_dist->setToolTip(tr("Measure distance between atoms pair"));
   tp_measure_dist->setIcon(QIcon("://images/dist.svg"));
-  connect(tp_measure_dist, &QPushButton::toggled, this, &main_window::tp_dist_button_clicked);
+  connect(tp_measure_dist, &QPushButton::toggled,
+          this, &main_window::tp_dist_button_clicked);
+
+  tp_force_sel_lbl_vis = new QPushButton();
+  tp_force_sel_lbl_vis->setMaximumWidth(40);
+  tp_force_sel_lbl_vis->setMinimumHeight(tp_button_height);
+  tp_force_sel_lbl_vis->setCheckable(true);
+  tp_force_sel_lbl_vis->setIconSize(QSize(26, 26));
+  tp_force_sel_lbl_vis->setToolTip(tr("Force labels selective visibility"));
+  tp_force_sel_lbl_vis->setIcon(QIcon("://images/outline-font_download-24px.svg"));
+  connect(tp_force_sel_lbl_vis, &QPushButton::toggled,
+          this, &main_window::tp_force_sel_lbl_vis_button_clicked);
 
   tp_measure_angle = new QPushButton();
   tp_measure_angle->setMaximumWidth(60);
@@ -472,6 +483,7 @@ void main_window::init_layouts() {
 
   tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
 
@@ -818,6 +830,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
   app_state_t* astate = app_state_t::get_inst();
 
   bool need_to_hide_al_cntls{true};
+  bool need_to_hide_force_sel_lbl_vis{false};
 
   if (astate->ws_manager->has_wss()) {
 
@@ -829,6 +842,12 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
           auto cur_it_as_al = dynamic_cast<geom_view_t*>(cur_it);
 
           if (cur_it_as_al) {
+
+              need_to_hide_force_sel_lbl_vis =
+                  cur_ws->m_edit_type == ws_edit_t::edit_item ||
+                  cur_it_as_al->m_atom_idx_sel.empty();
+              tp_force_sel_lbl_vis->show();
+
               if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
                   cur_ws->m_edit_type == ws_edit_t::edit_content) {
                   tp_measure_angle->hide();
@@ -864,6 +883,20 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                   tp_measure_angle->blockSignals(false);
                 }
 
+              //process labels state
+              bool all_sel_lbls_vis = true;
+              for (auto &rec : cur_it_as_al->m_atom_idx_sel)
+                if (cur_it_as_al->m_geom->xfield<bool>(xgeom_label_hide, rec.m_atm)) {
+                    all_sel_lbls_vis = false;
+                    break;
+                  }
+              tp_force_sel_lbl_vis->blockSignals(true);
+              tp_force_sel_lbl_vis->setChecked(all_sel_lbls_vis &&
+                                               !cur_it_as_al->m_atom_idx_sel.empty());
+              tp_force_sel_lbl_vis->blockSignals(false);
+
+            } else {
+              need_to_hide_force_sel_lbl_vis = true;
             }
 
         }
@@ -872,6 +905,10 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
   if (need_to_hide_al_cntls) {
       tp_measure_dist->hide();
       tp_measure_angle->hide();
+    }
+
+  if (need_to_hide_force_sel_lbl_vis) {
+      tp_force_sel_lbl_vis->hide();
     }
 
 }
@@ -915,6 +952,7 @@ void main_window::tp_dist_button_clicked(bool checked) {
 }
 
 void main_window::tp_angle_button_clicked(bool checked) {
+
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
@@ -956,6 +994,7 @@ void main_window::tp_angle_button_clicked(bool checked) {
     }
 
   astate->make_viewport_dirty();
+
 }
 
 void main_window::ws_edit_mode_selector_button_clicked(int id) {
@@ -971,6 +1010,30 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
     }
   astate->astate_evd->cur_ws_edit_type_changed();
   cur_ws_properties_changed();
+
+}
+
+void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it = cur_ws->get_selected();
+          auto cur_it_as_al = cur_it->cast_as<geom_view_t>();
+
+          if (cur_it_as_al && cur_ws->m_edit_type == ws_edit_t::edit_content)
+            for (auto &rec : cur_it_as_al->m_atom_idx_sel)
+              cur_it_as_al->m_geom->xfield<bool>(xgeom_label_hide, rec.m_atm) = !checked;
+
+        }
+    }
+
+  astate->make_viewport_dirty();
 
 }
 

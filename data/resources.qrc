@@ -29,5 +29,6 @@
         <file>images/outline-build-24px_d.svg</file>
         <file>images/outline-tune-24px.svg</file>
         <file>images/outline-add_to_photos-24px.svg</file>
+        <file>images/outline-font_download-24px.svg</file>
     </qresource>
 </RCC>

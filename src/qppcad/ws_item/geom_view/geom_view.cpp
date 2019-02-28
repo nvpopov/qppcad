@@ -969,7 +969,7 @@ void geom_view_t::save_to_json (json &data) {
       atom.push_back(m_geom->pos(i)[1]);
       atom.push_back(m_geom->pos(i)[2]);
       atom.push_back(m_geom->xfield<bool>(xgeom_sel_vis, i));
-      atom.push_back(m_geom->xfield<bool>(xgeom_label_state, i));
+      atom.push_back(m_geom->xfield<bool>(xgeom_label_hide, i));
       atom.push_back(m_geom->xfield<std::string>(xgeom_label_text, i));
       data[JSON_ATOMS].push_back(atom);
     }
@@ -1092,7 +1092,7 @@ void geom_view_t::load_from_json (json &data) {
         if (atom.size() > 4) {
             m_geom->xfield<bool>(xgeom_sel_vis, m_geom->nat()-1) = atom[4].get<bool>();
             if (atom.size() > 6) {
-                m_geom->xfield<bool>(xgeom_label_state, m_geom->nat()-1) = atom[5].get<bool>();
+                m_geom->xfield<bool>(xgeom_label_hide, m_geom->nat()-1) = atom[5].get<bool>();
                 m_geom->xfield<std::string>(xgeom_label_text, m_geom->nat()-1) =
                     atom[6].get<std::string>();
               }

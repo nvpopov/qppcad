@@ -77,6 +77,7 @@ namespace qpp {
         QPushButton *tp_camera_b;
         QPushButton *tp_camera_c;
 
+        QPushButton *tp_force_sel_lbl_vis;
         QPushButton *tp_measure_dist;
         QPushButton *tp_measure_angle;
 
@@ -185,6 +186,7 @@ namespace qpp {
         void tp_dist_button_clicked(bool checked);
         void tp_angle_button_clicked(bool checked);
         void ws_edit_mode_selector_button_clicked(int id);
+        void tp_force_sel_lbl_vis_button_clicked(bool checked);
 
         void apply_camera_view_change(cam_target_view_t target_view);
 
