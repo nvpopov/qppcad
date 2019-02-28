@@ -23,7 +23,7 @@ bool pgf_producer_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string pgf_producer_t::compose_item_name() {
+std::string pgf_producer_t::compose_type_descr() {
   return "pgf_producer";
 }
 

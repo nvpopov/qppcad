@@ -183,7 +183,7 @@ namespace qpp {
         void delete_selected_atoms();
         void delete_atoms(std::set<int> &to_delete);
 
-        std::string compose_item_name() override;
+        std::string compose_type_descr() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
         bool is_bb_visible() override;

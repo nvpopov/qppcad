@@ -31,7 +31,7 @@ namespace qpp {
         void update_joined_atoms_list_animation(size_t step_idx);
         bool mouse_click(ray_t<float> *click_ray) override;
 
-        std::string compose_item_name() override;
+        std::string compose_type_descr() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
         void updated_internally() override;

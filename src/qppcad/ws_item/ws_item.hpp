@@ -119,7 +119,7 @@ namespace qpp {
 
         /// \brief compose_item_name
         /// \return
-        virtual std::string compose_item_name() = 0;
+        virtual std::string compose_type_descr() = 0;
 
         //when a leader changed
         virtual void on_leader_changed();

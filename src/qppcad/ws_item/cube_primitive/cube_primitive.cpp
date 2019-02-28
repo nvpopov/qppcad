@@ -46,7 +46,7 @@ bool cube_primitive_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string cube_primitive_t::compose_item_name() {
+std::string cube_primitive_t::compose_type_descr() {
   return "cube_primitive";
 }
 

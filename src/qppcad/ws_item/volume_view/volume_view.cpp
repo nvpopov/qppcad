@@ -118,7 +118,7 @@ bool volume_view_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string volume_view_t::compose_item_name() {
+std::string volume_view_t::compose_type_descr() {
   return "3d volume data";
 }
 

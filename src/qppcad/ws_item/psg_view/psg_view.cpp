@@ -181,7 +181,7 @@ bool psg_view_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string psg_view_t::compose_item_name() {
+std::string psg_view_t::compose_type_descr() {
   return "point sym. group view";
 }
 

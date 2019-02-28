@@ -806,7 +806,7 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
 
 }
 
-std::string geom_view_t::compose_item_name () {
+std::string geom_view_t::compose_type_descr () {
   return m_geom ? fmt::format("geom. view, DIM = [{}d]", m_geom->DIM) : "geom. view(empty)";
 }
 

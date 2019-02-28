@@ -22,6 +22,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
+
         object_inspector_widget_t();
         ~object_inspector_widget_t();
 
@@ -35,18 +36,18 @@ namespace qpp {
         QVBoxLayout *obj_insp_layout;
         QSpacerItem *obj_insp_layout_spacer;
 
-        //QLabel *property_label;
-
         //property view by ws_item type
         QWidget *none_item_placeholder;
         //QWidget *ws_current_view{nullptr};
         std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
 
       private slots:
+
         void cur_ws_changed();
         void cur_ws_selected_item_changed();
         void ui_cur_ws_selected_item_changed();
         void need_to_update_obj_insp_received();
+
     };
 
   }

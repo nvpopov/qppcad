@@ -37,7 +37,7 @@ bool traj_hl_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string traj_hl_t::compose_item_name() {
+std::string traj_hl_t::compose_type_descr() {
   return "traj_hl";
 }
 

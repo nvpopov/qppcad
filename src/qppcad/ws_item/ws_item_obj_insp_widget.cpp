@@ -88,10 +88,22 @@ void ws_item_obj_insp_widget_t::unbind_item() {
 
 void ws_item_obj_insp_widget_t::update_from_ws_item() {
 
+  const int trc = 22;
+
   if (m_binded_item) {
-      ws_item_name->setText(QString::fromStdString(m_binded_item->get_name()));
-      ws_item_type->setText(QString::fromStdString(m_binded_item->compose_item_name()));
+
+      std::string name_str = m_binded_item->get_name();
+      QString name_truncated = QString::fromStdString(name_str).left(trc);
+      if (name_str.length() > trc) name_truncated += "...";
+      ws_item_name->setText(name_truncated);
+
+      std::string type_str = m_binded_item->compose_type_descr();
+      QString type_truncated = QString::fromStdString(type_str).left(trc);
+      if (type_str.length() > trc) type_truncated += "...";
+      ws_item_type->setText(type_truncated);
+
       ws_item_is_visible->bind_value(&m_binded_item->m_is_visible);
+
     }
 
 }
