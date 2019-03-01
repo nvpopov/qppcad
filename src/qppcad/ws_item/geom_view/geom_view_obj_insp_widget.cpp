@@ -308,6 +308,19 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_at2_idx = new QLabel();
   tms_pair_dist = new QLabel();
 
+  tms_pair_dist_color = new qbinded_color3_input;
+  tms_pair_enabled = new qbinded_checkbox;
+
+  tms_pair_line_size = new qbinded_int_spinbox;
+  tms_pair_line_size->set_min_max_step(1, 20, 1);
+
+  tms_pair_line_style = new qbinded_combobox;
+  tms_pair_line_style->addItem("Solid");
+  tms_pair_line_style->addItem("Dotted");
+  tms_pair_line_style->addItem("Dashed");
+  tms_pair_line_style->addItem("Dash-Dot");
+  tms_pair_line_style->addItem("Dash-Dot-Dot");
+
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1 name"), tms_pair_at1_name);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1 id"), tms_pair_at1_id);
@@ -315,6 +328,10 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Atom №2 name"), tms_pair_at2_name);
   tms_pair_dist_gb_lt->addRow(tr("Atom №2 id"), tms_pair_at2_id);
   tms_pair_dist_gb_lt->addRow(tr("Atom №2 idx"), tms_pair_at2_idx);
+  tms_pair_dist_gb_lt->addRow(tr("Line style"), tms_pair_line_style);
+  tms_pair_dist_gb_lt->addRow(tr("Line size"), tms_pair_line_size);
+  tms_pair_dist_gb_lt->addRow(tr("Color"), tms_pair_dist_color);
+  tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
 
   post_init_group_box(tms_pair_dist_gb, tms_pair_dist_gb_lt);
 
@@ -604,7 +621,7 @@ void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
 void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
-   ws_item_obj_insp_widget_t::update_from_ws_item();
+  ws_item_obj_insp_widget_t::update_from_ws_item();
 
   if (b_al) {
 
@@ -770,7 +787,48 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_type_spec_mdl->unbind();
   bt_mdl->unbind();
 
+  unbind_measure_tab();
+
   b_al = nullptr;
+
+}
+
+void geom_view_obj_insp_widget_t::bind_measure_tab() {
+
+  if (b_al) {
+
+      int cur_msr = b_al->m_measure->m_cur_dist_rec_ui - 1;
+      if (cur_msr < b_al->m_measure->m_dist_recs.size() &&
+          !b_al->m_measure->m_dist_recs.empty()) {
+          auto &rec = b_al->m_measure->m_dist_recs[cur_msr];
+          tms_pair_dist_color->bind_value(&rec.m_bond_color);
+          tms_pair_enabled->bind_value(&rec.m_show);
+          tms_pair_line_size->bind_value(&rec.m_line_size);
+          tms_pair_line_style->bind_value(reinterpret_cast<int*>(&rec.m_line_render_style));
+          tms_pair_enabled->setEnabled(true);
+          tms_pair_dist_color->setEnabled(true);
+          tms_pair_line_style->setEnabled(true);
+          tms_pair_line_size->setEnabled(true);
+        } else {
+          unbind_measure_tab();
+        }
+
+    }
+
+}
+
+void geom_view_obj_insp_widget_t::unbind_measure_tab() {
+
+  tms_pair_dist_color->unbind_value();
+  tms_pair_enabled->unbind_value();
+  tms_pair_line_style->unbind_value();
+  tms_pair_line_size->unbind_value();
+
+  tms_pair_line_style->setEnabled(false);
+  tms_pair_dist_color->setEnabled(false);
+  tms_pair_line_size->setEnabled(false);
+  tms_pair_enabled->setEnabled(false);
+  tms_pair_enabled->setChecked(false);
 
 }
 
@@ -998,6 +1056,7 @@ void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
           tms_pair_at2_name->setText(empty_label);
           tms_pair_at2_id->setText(empty_label);
           tms_pair_at2_idx->setText(empty_label);
+          unbind_measure_tab();
 
         } else {
 
@@ -1010,6 +1069,7 @@ void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
           tms_pair_at2_name->setText(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at2)));
           tms_pair_at2_id->setText(QString("%1").arg(rec.m_at2));
           tms_pair_at2_idx->setText(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
+          bind_measure_tab();
 
         }
 

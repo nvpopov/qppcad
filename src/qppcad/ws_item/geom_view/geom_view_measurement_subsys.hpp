@@ -15,7 +15,10 @@ namespace qpp {
 
     enum msr_line_render_style : int {
       msr_line_solid,
+      msr_line_dotted,
       msr_line_dashed,
+      msr_line_ddashed,
+      msr_line_dddashed
     };
 
     template<typename AINT = uint32_t>
@@ -26,6 +29,8 @@ namespace qpp {
       index m_idx1;
       index m_idx2;
       bool m_show{true};
+      vector3<float> m_bond_color{0};
+      int m_line_size{2};
       msr_line_render_style m_line_render_style{msr_line_render_style::msr_line_dashed};
 
       msr_bond_rec_t (const AINT _atm1,

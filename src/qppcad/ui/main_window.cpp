@@ -418,10 +418,8 @@ void main_window::init_widgets() {
   ws_viewer_widget = new ws_viewer_widget_t(this);
 
   obj_insp_widget = new object_inspector_widget_t();
-  obj_insp_widget->setMaximumWidth(400);
-  obj_insp_widget->setMinimumWidth(400);
-  //obj_insp_widget->setProperty("s_class", "object_inspector_widget_t");
-  //obj_insp_widget->setStyleSheet("padding-left:10px");
+  obj_insp_widget->setMaximumWidth(430);
+  obj_insp_widget->setMinimumWidth(430);
 
   py_console_widget = new python_console_widget_t(this);
   widget_ws_viewer_py_console = new QWidget();

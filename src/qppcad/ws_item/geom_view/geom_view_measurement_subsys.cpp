@@ -52,7 +52,7 @@ namespace qpp {
       if (measure_idx < m_dist_recs.size()) {
           m_dist_recs.erase(m_dist_recs.begin() + measure_idx);
           int r_dist_idx = m_cur_dist_rec_ui - 1;
-          if (r_dist_idx > measure_idx) m_cur_dist_rec_ui--;
+          if (r_dist_idx >= measure_idx) m_cur_dist_rec_ui--;
           if (m_dist_recs.empty()) m_cur_dist_rec_ui = 0;
         }
 
@@ -134,15 +134,16 @@ namespace qpp {
 
           if (record.m_show) {
 
-              if (record.m_at1 >= p_owner->m_geom->nat() || record.m_at2 >= p_owner->m_geom->nat()) {
+              if (record.m_at1 >= p_owner->m_geom->nat() ||
+                  record.m_at2 >= p_owner->m_geom->nat()) {
                   continue;
                 }
 
               l_s = astate->camera->project(
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
+                      p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
 
               l_e = astate->camera->project(
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2));
+                      p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2));
 
               if (!l_s || !l_e) continue;
 
@@ -156,18 +157,45 @@ namespace qpp {
               QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
                   round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);
 
-              if (i + 1 == m_cur_dist_rec_ui) painter.setPen(linepen_sel);
-              else {
-                  if (record.m_line_render_style == msr_line_render_style::msr_line_dashed)
-                    painter.setPen(linepen_dot_line);
-                  if (record.m_line_render_style == msr_line_render_style::msr_line_solid)
-                    painter.setPen(linepen_solid_line);
+              //compose pen
+              Qt::PenStyle pen_style;
+
+              switch (record.m_line_render_style) {
+                case msr_line_render_style::msr_line_dashed : {
+                    pen_style = Qt::PenStyle::DashLine;
+                    break;
+                  }
+                case msr_line_render_style::msr_line_solid: {
+                    pen_style = Qt::PenStyle::SolidLine;
+                    break;
+                  }
+                case msr_line_render_style::msr_line_ddashed: {
+                    pen_style = Qt::PenStyle::DashDotLine;
+                    break;
+                  }
+                case msr_line_render_style::msr_line_dddashed: {
+                    pen_style = Qt::PenStyle::DashDotDotLine;
+                    break;
+                  }
+                case msr_line_render_style::msr_line_dotted: {
+                    pen_style = Qt::PenStyle::DotLine;
+                    break;
+                  }
                 }
+
+              QColor pen_color =
+                    ((i + 1 == m_cur_dist_rec_ui) && p_owner->m_selected) ?
+                    QColor::fromRgbF(1, 0, 0) : QColor::fromRgbF(record.m_bond_color[0],
+                                                                 record.m_bond_color[1],
+                                                                 record.m_bond_color[2]);
+              QPen linepen_inline(QPen(pen_color, record.m_line_size, pen_style, Qt::RoundCap));
+              painter.setPen(linepen_inline);
               painter.drawLine(linef);
 
-              double angle = 180 * std::atan2(linef.y2()-linef.y1(), linef.x2()-linef.x1()) / qpp::pi;
+              double angle =
+                  180 * std::atan2(linef.y2() - linef.y1(), linef.x2() - linef.x1()) / qpp::pi;
 
-              angle = angle + std::ceil( -angle / 360 ) * 360;
+              angle = angle + std::ceil(-angle / 360) * 360;
               if (angle > 90 && angle < 270) angle = angle + 180;
 
               painter.translate(mid[0], mid[1]);

@@ -128,6 +128,10 @@ namespace qpp {
         QLabel *tms_pair_at2_id;
         QLabel *tms_pair_at2_idx;
         QLabel *tms_pair_dist;
+        qbinded_color3_input *tms_pair_dist_color;
+        qbinded_checkbox *tms_pair_enabled;
+        qbinded_combobox *tms_pair_line_style;
+        qbinded_int_spinbox *tms_pair_line_size;
         //END TAB MEASUREMENT
 
         //START TAB MODIFY
@@ -212,7 +216,12 @@ namespace qpp {
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
+
         void unbind_item() override;
+
+        void bind_measure_tab();
+        void unbind_measure_tab();
+
         void update_anim_tab_gb();
         void update_modify_tab();
         void update_measurement_tab();
