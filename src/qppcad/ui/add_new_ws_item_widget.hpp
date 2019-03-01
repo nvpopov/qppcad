@@ -86,7 +86,7 @@ namespace qpp {
         QLabel *type_cell_ctor_c_lbl{nullptr};
 
         QGroupBox *gb_type_param{nullptr};
-        QGridLayout *gb_type_param_lt{nullptr};
+        QFormLayout *gb_type_param_lt{nullptr};
 
         QLabel *type_param_name_lbl{nullptr};
         QLineEdit *type_param_name{nullptr};

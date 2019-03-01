@@ -27,9 +27,9 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
 
   post_init_group_box(tg_cube_params, tg_cube_params_lt);
 
-  tab_general->tab_inner_widget_layout->addWidget(tg_cube_params);
+  tab_general->tab_inner_widget_lt->addWidget(tg_cube_params);
 
-  tab_general->tab_inner_widget_layout->addStretch(1);
+  tab_general->tab_inner_widget_lt->addStretch(1);
 
 }
 

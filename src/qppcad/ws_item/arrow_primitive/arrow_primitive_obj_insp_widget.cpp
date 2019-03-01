@@ -5,7 +5,7 @@ using namespace qpp::cad;
 
 arrow_primitive_obj_insp_widget_t::arrow_primitive_obj_insp_widget_t() {
 
-  tab_general->tab_inner_widget_layout->addStretch(1);
+  tab_general->tab_inner_widget_lt->addStretch(1);
   ws_item_pos->m_updated_internally_event = true;
 
 }

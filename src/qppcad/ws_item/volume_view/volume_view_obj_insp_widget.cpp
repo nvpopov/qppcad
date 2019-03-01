@@ -38,8 +38,8 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   gb_volume_detail_lt->addRow(tr("Color density"), vol_color_vol);
   post_init_group_box(gb_volume_detail, gb_volume_detail_lt);
 
-  tab_general->tab_inner_widget_layout->addWidget(gb_volume_detail);
-  tab_general->tab_inner_widget_layout->addStretch();
+  tab_general->tab_inner_widget_lt->addWidget(gb_volume_detail);
+  tab_general->tab_inner_widget_lt->addStretch();
 
   connect(cb_current_volume, SIGNAL(currentIndexChanged(int)),
           this, SLOT(cur_volume_index_changed(int)));

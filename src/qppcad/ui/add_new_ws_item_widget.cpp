@@ -197,7 +197,8 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   gb_type_param = new QGroupBox(tr("Type parameters"), this);
   gb_type_param->setMinimumWidth(360);
-  gb_type_param_lt = new QGridLayout(this);
+  gb_type_param_lt = new QFormLayout(this);
+  gb_type_param_lt->setVerticalSpacing(1); // ???
   gb_type_param->setLayout(gb_type_param_lt);
  // gb_type_param_lt->setContentsMargins(5, 10, 50, 5);
 
@@ -205,41 +206,21 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   type_param_name_lbl = new QLabel("Name", this);
   label_setup(type_param_name_lbl, true);
 
-  gb_type_param_lt->addWidget(type_param_name_lbl, 0, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_param_name, 0, 1, Qt::AlignTop);
+  gb_type_param_lt->addRow(type_param_name_lbl, type_param_name);
+  gb_type_param_lt->addRow(type_cell_ctor_mode_lbl, type_cell_ctor_mode);
+  gb_type_param_lt->addRow(type_cell_ctor_cubic_size_lbl, type_cell_ctor_cubic_size);
+  gb_type_param_lt->addRow(type_cell_ctor_ortho_lbl, type_cell_ctor_ortho);
+  gb_type_param_lt->addRow(type_cell_ctor_a3_lbl, type_cell_ctor_a3);
+  gb_type_param_lt->addRow(type_cell_ctor_l3_lbl, type_cell_ctor_l3);
+  gb_type_param_lt->addRow(type_cell_ctor_a_lbl, type_cell_ctor_a);
+  gb_type_param_lt->addRow(type_cell_ctor_b_lbl, type_cell_ctor_b);
+  gb_type_param_lt->addRow(type_cell_ctor_c_lbl, type_cell_ctor_c);
+  gb_type_param_lt->addRow(type_param_ag_lbl, type_param_ag);
 
-  gb_type_param_lt->addWidget(type_cell_ctor_mode_lbl, 1, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_mode, 1, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_cell_ctor_cubic_size_lbl, 2, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_cubic_size, 2, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_cell_ctor_ortho_lbl, 3, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_ortho, 3, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_cell_ctor_a3_lbl, 4, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_a3, 4, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_cell_ctor_l3_lbl, 5, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_l3, 5, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_cell_ctor_a_lbl, 6, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_a, 6, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_cell_ctor_b_lbl, 7, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_b, 7, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_cell_ctor_c_lbl, 8, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_cell_ctor_c, 8, 1, Qt::AlignTop);
-
-  gb_type_param_lt->addWidget(type_param_ag_lbl, 9, 0, Qt::AlignTop);
-  gb_type_param_lt->addWidget(type_param_ag, 9, 1, Qt::AlignTop);
-
-  for (auto i = 0; i <= 9; i++) {
-      gb_type_param_lt->setColumnMinimumWidth(i, 0);
-     // gb_type_param_lt->setRowStretch(i, 1);
-    }
-
+//  for (auto i = 0; i <= 9; i++) {
+//      gb_type_param_lt->setColumnMinimumWidth(i, 0);
+//     // gb_type_param_lt->setRowStretch(i, 1);
+//    }
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (cur_ws) type_param_name->setText(tr("new_item_%1").arg(cur_ws->m_ws_items.size()));

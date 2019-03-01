@@ -26,7 +26,7 @@ namespace qpp {
 
         QScrollArea *tab_scroll;
         QWidget *tab_inner_widget;
-        QVBoxLayout *tab_inner_widget_layout;
+        QVBoxLayout *tab_inner_widget_lt;
         QIcon *icon_enabled;
         QIcon *icon_disabled;
         int tab_id;

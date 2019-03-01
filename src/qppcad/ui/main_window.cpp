@@ -856,7 +856,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                   auto it1 = cur_it_as_al->m_atom_idx_sel.begin();
                   auto it2 = ++(cur_it_as_al->m_atom_idx_sel.begin());
 
-                  auto cur_sel = cur_it_as_al->m_measure->is_bond_measurement_exist(
+                  auto cur_sel = cur_it_as_al->m_measure->is_bond_msr_exists(
                                    it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
                   tp_measure_dist->blockSignals(true);
                   tp_measure_dist->setChecked(cur_sel != std::nullopt);
@@ -868,7 +868,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                   cur_it_as_al->m_atom_ord_sel.size() == 3) {
                   need_to_hide_al_cntls = false;
 
-                  auto cur_sel = cur_it_as_al->m_measure->is_angle_measurement_exist(
+                  auto cur_sel = cur_it_as_al->m_measure->is_angle_msr_exists(
                                    cur_it_as_al->m_atom_ord_sel[0].m_atm,
                       cur_it_as_al->m_atom_ord_sel[1].m_atm,
                       cur_it_as_al->m_atom_ord_sel[2].m_atm,
@@ -935,12 +935,12 @@ void main_window::tp_dist_button_clicked(bool checked) {
                   auto it1 = cur_it_as_al->m_atom_idx_sel.begin();
                   auto it2 = ++(cur_it_as_al->m_atom_idx_sel.begin());
 
-                  auto cur_sel = cur_it_as_al->m_measure->is_bond_measurement_exist(
+                  auto cur_sel = cur_it_as_al->m_measure->is_bond_msr_exists(
                                    it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
 
-                  if (checked) cur_it_as_al->m_measure->add_bond_measurement(
+                  if (checked) cur_it_as_al->m_measure->add_bond_msr(
                         it1->m_atm, it2->m_atm,it1->m_idx, it2->m_idx);
-                  else cur_it_as_al->m_measure->remove_bond_measurement(*cur_sel);
+                  else cur_it_as_al->m_measure->rm_bond_msr(*cur_sel);
                 }
             }
 
@@ -970,7 +970,7 @@ void main_window::tp_angle_button_clicked(bool checked) {
                   cur_ws->m_edit_type == ws_edit_t::edit_content) {
                   tp_measure_angle->show();
 
-                  auto cur_sel = cur_it_as_al->m_measure->is_angle_measurement_exist(
+                  auto cur_sel = cur_it_as_al->m_measure->is_angle_msr_exists(
                                    cur_it_as_al->m_atom_ord_sel[0].m_atm,
                       cur_it_as_al->m_atom_ord_sel[1].m_atm,
                       cur_it_as_al->m_atom_ord_sel[2].m_atm,
@@ -978,7 +978,7 @@ void main_window::tp_angle_button_clicked(bool checked) {
                       cur_it_as_al->m_atom_ord_sel[1].m_idx,
                       cur_it_as_al->m_atom_ord_sel[2].m_idx);
 
-                  if (checked) cur_it_as_al->m_measure->add_angle_measurement(
+                  if (checked) cur_it_as_al->m_measure->add_angle_msr(
                         cur_it_as_al->m_atom_ord_sel[0].m_atm,
                       cur_it_as_al->m_atom_ord_sel[1].m_atm,
                       cur_it_as_al->m_atom_ord_sel[2].m_atm,
@@ -986,7 +986,7 @@ void main_window::tp_angle_button_clicked(bool checked) {
                       cur_it_as_al->m_atom_ord_sel[1].m_idx,
                       cur_it_as_al->m_atom_ord_sel[2].m_idx);
 
-                  else cur_it_as_al->m_measure->remove_angle_measurement(*cur_sel);
+                  else cur_it_as_al->m_measure->rm_angle_msr(*cur_sel);
                 }
             }
 

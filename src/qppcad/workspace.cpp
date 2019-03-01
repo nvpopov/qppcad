@@ -448,7 +448,6 @@ void workspace_manager_t::init_default () {
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   if (!test_in_dev_env.good()) return;
 
-  load_from_file_autodeduce("../deps/qpp/examples/io/ref_data/xyz/slab.xyz");
   load_from_file_autodeduce("../data/refs/POSCAR.mp-558947_SiO2");
   load_from_file_autodeduce("../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz");
   load_from_file_autodeduce("../data/refs/mp-971662_Si.vasp");
@@ -461,14 +460,18 @@ void workspace_manager_t::render_cur_ws () {
   app_state_t* astate = app_state_t::get_inst();
 
   if (has_wss()) {
+
       if (m_cur_ws_id < m_ws.size()) {
+
           astate->glapi->glClearColor(m_ws[m_cur_ws_id]->m_background_color[0],
               m_ws[m_cur_ws_id]->m_background_color[1],
               m_ws[m_cur_ws_id]->m_background_color[2], 1);
           astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
           m_ws[m_cur_ws_id]->render();
           return ;
+
         }
+
     }
 
   astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
@@ -478,10 +481,13 @@ void workspace_manager_t::render_cur_ws () {
 void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
   if (has_wss()) {
+
       if (m_cur_ws_id < m_ws.size()) {
           m_ws[m_cur_ws_id]->render_overlay(painter);
         }
+
     }
+
 }
 
 
@@ -494,30 +500,38 @@ void workspace_manager_t::mouse_click () {
                           astate->mouse_x_dc, astate->mouse_y_dc));
 
   if (has_wss()) {
+
       get_cur_ws()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
       astate->make_viewport_dirty();
+
     }
 
 }
 
 void workspace_manager_t::ws_mgr_changed() {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->wss_changed();
+
 }
 
 void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add) {
+
   ws_to_add->m_owner = this;
   m_ws.push_back(ws_to_add);
   ws_to_add->ws_changed();
   ws_mgr_changed();
+
 }
 
 void workspace_manager_t::init_ws_item_bhv_mgr() {
+
   m_bhv_mgr = std::make_unique<ws_item_behaviour_manager_t>();
   registration_helper_t::reg_ws_item_fbr(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_io_bhv(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
+
 }
 
 

@@ -55,11 +55,11 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_type_summary_tbl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   tg_type_summary_lt->addWidget(tg_type_summary_tbl);
 
-  tab_general->tab_inner_widget_layout->addWidget(tg_geom_summary_widget);
-  tab_general->tab_inner_widget_layout->addWidget(tg_type_summary_widget);
-  tab_general->tab_inner_widget_layout->addWidget(tg_gb_cell);
+  tab_general->tab_inner_widget_lt->addWidget(tg_geom_summary_widget);
+  tab_general->tab_inner_widget_lt->addWidget(tg_type_summary_widget);
+  tab_general->tab_inner_widget_lt->addWidget(tg_gb_cell);
 
-  tab_general->tab_inner_widget_layout->addStretch();
+  tab_general->tab_inner_widget_lt->addStretch();
 
 }
 
@@ -196,13 +196,13 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   bt_dist_delegate->set_min_max_step(0.1, 5.0, 0.01);
   disp_bt->setItemDelegateForColumn(2, bt_dist_delegate);
 
-  tab_disp->tab_inner_widget_layout->addWidget(gb_disp_s);
-  tab_disp->tab_inner_widget_layout->addWidget(gb_disp_shading);
-  tab_disp->tab_inner_widget_layout->addWidget(gb_disp_labels);
-  tab_disp->tab_inner_widget_layout->addWidget(gb_disp_type_spec_rend);
-  tab_disp->tab_inner_widget_layout->addWidget(gb_disp_bt);
+  tab_disp->tab_inner_widget_lt->addWidget(gb_disp_s);
+  tab_disp->tab_inner_widget_lt->addWidget(gb_disp_shading);
+  tab_disp->tab_inner_widget_lt->addWidget(gb_disp_labels);
+  tab_disp->tab_inner_widget_lt->addWidget(gb_disp_type_spec_rend);
+  tab_disp->tab_inner_widget_lt->addWidget(gb_disp_bt);
 
-  tab_disp->tab_inner_widget_layout->addStretch(0);
+  tab_disp->tab_inner_widget_lt->addStretch(0);
 
 }
 
@@ -278,31 +278,49 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_buttons_lt->addWidget(anim_frame_forward, 1);
   gb_anim_buttons_lt->addWidget(anim_frame_backward, 1);
 
-  tab_anim->tab_inner_widget_layout->addWidget(gb_anim_summary);
-  tab_anim->tab_inner_widget_layout->addWidget(gb_anim_timeline);
-  tab_anim->tab_inner_widget_layout->addWidget(gb_anim_buttons);
+  tab_anim->tab_inner_widget_lt->addWidget(gb_anim_summary);
+  tab_anim->tab_inner_widget_lt->addWidget(gb_anim_timeline);
+  tab_anim->tab_inner_widget_lt->addWidget(gb_anim_buttons);
 
-  tab_anim->tab_inner_widget_layout->addStretch(0);
+  tab_anim->tab_inner_widget_lt->addStretch(0);
 
 }
 
 void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
   tms_pair_dist_gb = new QGroupBox(tr("Interatomic distances"));
-  tms_pair_dist_gb_lt = new QVBoxLayout;
-  tms_pair_dist_gb->setLayout(tms_pair_dist_gb_lt);
-  tms_pair_dist_table = new QTableView;
-  tms_pair_dist_gb_lt->addWidget(tms_pair_dist_table);
-  tab_measurement->tab_inner_widget_layout->addWidget(tms_pair_dist_gb);
+  tms_pair_dist_gb_lt = new QFormLayout;
 
-  tms_pair_dist_table->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-  tms_pair_dist_table->verticalHeader()->hide();
-  tms_pair_dist_table->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
-  tms_pair_dist_table->setFocusPolicy(Qt::NoFocus);
+  pre_init_group_box(tms_pair_dist_gb, tms_pair_dist_gb_lt);
 
-  tab_measurement->tab_inner_widget_layout->addStretch();
+  tms_pair_cur_msr = new QComboBox;
 
-  tms_dist_mdl = new qatomic_dist_table_model_t;
+  connect(tms_pair_cur_msr,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &geom_view_obj_insp_widget_t::measurement_current_index_changed);
+
+  tms_pair_at1_name = new QLabel();
+  tms_pair_at1_id = new QLabel();
+  tms_pair_at1_idx = new QLabel();
+  tms_pair_at2_name = new QLabel();
+  tms_pair_at2_id = new QLabel();
+  tms_pair_at2_idx = new QLabel();
+  tms_pair_dist = new QLabel();
+
+  tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №1 name"), tms_pair_at1_name);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №1 id"), tms_pair_at1_id);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №1 idx"), tms_pair_at1_idx);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №2 name"), tms_pair_at2_name);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №2 id"), tms_pair_at2_id);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №2 idx"), tms_pair_at2_idx);
+
+  post_init_group_box(tms_pair_dist_gb, tms_pair_dist_gb_lt);
+
+  tab_measurement->tab_inner_widget_lt->addWidget(tms_pair_dist_gb);
+  tab_measurement->tab_inner_widget_lt->addStretch(1);
+
 }
 
 void geom_view_obj_insp_widget_t::construct_modify_tab() {
@@ -471,8 +489,8 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_translate_coord_type = new QComboBox;
   tm_translate_coord_type->setMaximumWidth(def_gen_control_width);
 
-  tm_translate_coord_type->addItem("Cartesian");
-  tm_translate_coord_type->addItem("Fractional");
+  tm_translate_coord_type->addItem("Cart.");
+  tm_translate_coord_type->addItem("Frac.");
 
   tm_gb_translate_lt->addRow(tm_translate_coord_type_label, tm_translate_coord_type);
   tm_gb_translate_lt->addRow(tr("Tr. vector"), tm_translate_vec3);
@@ -553,16 +571,16 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_group_op_lt->addWidget(tm_group_op_sel_ngbs,    1, 0, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_del_sel,    1, 1, 1, 1);
 
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_add_atom);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_single_atom);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_dist);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_pair_creation);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_u_scale);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_translate);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_bc_rot);
-  tab_modify->tab_inner_widget_layout->addWidget(tm_gb_group_op);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_add_atom);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_single_atom);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_pair_dist);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_pair_creation);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_u_scale);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_translate);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_bc_rot);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_group_op);
 
-  tab_modify->tab_inner_widget_layout->addStretch(0);
+  tab_modify->tab_inner_widget_lt->addStretch(0);
 
 }
 
@@ -572,18 +590,21 @@ void geom_view_obj_insp_widget_t::construct_select_tab() {
 
 void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
-  auto _tmp = dynamic_cast<geom_view_t*>(_binding_item);
+  geom_view_t* _tmp = dynamic_cast<geom_view_t*>(_binding_item);
+
+  assert(_tmp != nullptr);
 
   if (_tmp) {
       b_al = _tmp;
     }
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
+
 }
 
 void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
-  ws_item_obj_insp_widget_t::update_from_ws_item();
+   ws_item_obj_insp_widget_t::update_from_ws_item();
 
   if (b_al) {
 
@@ -602,12 +623,12 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
           QString n_name_str = QString::fromStdString(b_al->m_geom->atom_of_type(i));
           QTableWidgetItem *n_name = new QTableWidgetItem(n_name_str);
           n_name->setTextAlignment(Qt::AlignCenter);
-          tg_type_summary_tbl->setItem(i,0, n_name);
+          tg_type_summary_tbl->setItem(i, 0, n_name);
 
           QString n_c_str = tr("%1").arg(b_al->m_geom->get_atom_count_by_type(i));
           QTableWidgetItem *n_c = new QTableWidgetItem(n_c_str);
           n_c->setTextAlignment(Qt::AlignCenter);
-          tg_type_summary_tbl->setItem(i,1, n_c);
+          tg_type_summary_tbl->setItem(i, 1, n_c);
 
           QString n_clr_str = "";
           QTableWidgetItem *n_clr = new QTableWidgetItem(n_clr_str);
@@ -619,7 +640,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
           QColor color_bck;
           color_bck.setRgbF(bc[0], bc[1], bc[2]);
           n_clr->setBackgroundColor(color_bck);
-          tg_type_summary_tbl->setItem(i,2, n_clr);
+          tg_type_summary_tbl->setItem(i, 2, n_clr);
 
         }
 
@@ -705,6 +726,10 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_bt->update();
       qt_helpers::vrt_resize_tv_to_content(disp_bt);
 
+      //bind tab modify
+
+      //end bind tab modify
+
       update_modify_tab();
       update_measurement_tab();
       update_select_tab();
@@ -744,7 +769,6 @@ void geom_view_obj_insp_widget_t::unbind_item() {
 
   disp_type_spec_mdl->unbind();
   bt_mdl->unbind();
-  tms_dist_mdl->unbind();
 
   b_al = nullptr;
 
@@ -919,26 +943,75 @@ void geom_view_obj_insp_widget_t::update_measurement_tab() {
 
   if (b_al) {
 
-      tms_pair_dist_table->setModel(nullptr);
-      tms_dist_mdl->bind(b_al);
-      tms_pair_dist_table->setModel(tms_dist_mdl);
-      tms_pair_dist_table->update();
-      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(0,
-                                                                    QHeaderView::ResizeToContents);
-      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(1,
-                                                                    QHeaderView::ResizeToContents);
-      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(2,
-                                                                    QHeaderView::ResizeToContents);
-      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(3,
-                                                                    QHeaderView::ResizeToContents);
-      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(4,
-                                                                    QHeaderView::ResizeToContents);
-      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(5,
-                                                                    QHeaderView::ResizeToContents);
-      tms_pair_dist_table->horizontalHeader()->setSectionResizeMode(6,
-                                                                    QHeaderView::Stretch);
+      tms_pair_cur_msr->blockSignals(true);
+      tms_pair_cur_msr->clear();
 
-      qt_helpers::vrt_resize_tv_to_content(tms_pair_dist_table);
+      // check msr pair idx boundary
+      //if (tms_pair_cur_msr->currentIndex() )
+
+      tms_pair_cur_msr->addItem(tr("None"));
+
+      index zero = index::D(b_al->m_geom->DIM).all(0);
+
+      for (size_t i = 0; i < b_al->m_measure->m_dist_recs.size(); i++) {
+
+          //compose dist msr name
+          int at1 = b_al->m_measure->m_dist_recs[i].m_at1;
+          int at2 = b_al->m_measure->m_dist_recs[i].m_at2;
+          bool at1_img = b_al->m_measure->m_dist_recs[i].m_idx1 != zero;
+          bool at2_img = b_al->m_measure->m_dist_recs[i].m_idx2 != zero;
+
+          std::string item_name = fmt::format("[{}] {}{}{} - {}{}{}",
+                                              i,
+                                              b_al->m_geom->atom_name(at1),
+                                              at1,
+                                              at1_img ? "*" : "",
+                                              b_al->m_geom->atom_name(at2),
+                                              at2,
+                                              at2_img ? "*" : "");
+
+          tms_pair_cur_msr->addItem(QString::fromStdString(item_name));
+
+        }
+
+      tms_pair_cur_msr->setCurrentIndex(b_al->m_measure->m_cur_dist_rec_ui);
+      update_measurement_tab_info();
+      tms_pair_cur_msr->blockSignals(false);
+
+    }
+
+}
+
+void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
+
+  if (b_al) {
+
+      //transform dist msr id
+      int cur_dist_msr = b_al->m_measure->m_cur_dist_rec_ui - 1;
+
+      if (cur_dist_msr < 0 || b_al->m_measure->m_dist_recs.empty()) {
+
+          const QString empty_label = "-";
+          tms_pair_at1_name->setText(empty_label);
+          tms_pair_at1_id->setText(empty_label);
+          tms_pair_at1_idx->setText(empty_label);
+          tms_pair_at2_name->setText(empty_label);
+          tms_pair_at2_id->setText(empty_label);
+          tms_pair_at2_idx->setText(empty_label);
+
+        } else {
+
+          auto &rec = b_al->m_measure->m_dist_recs[cur_dist_msr];
+
+          tms_pair_at1_name->setText(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at1)));
+          tms_pair_at1_id->setText(QString("%1").arg(rec.m_at1));
+          tms_pair_at1_idx->setText(QString::fromStdString(fmt::format("{}",rec.m_idx1)));
+
+          tms_pair_at2_name->setText(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at2)));
+          tms_pair_at2_id->setText(QString("%1").arg(rec.m_at2));
+          tms_pair_at2_idx->setText(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
+
+        }
 
     }
 
@@ -959,7 +1032,7 @@ void geom_view_obj_insp_widget_t::update_select_tab() {
 }
 
 void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
-                                                                 geom_view_t *_al) {
+                                                             geom_view_t *_al) {
   if (_al && combo) {
       combo->clear();
       for (auto i = 0 ; i < _al->m_geom->n_atom_types(); i++)
@@ -996,11 +1069,15 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
 
   app_state_t *astate = app_state_t::get_inst();
 
-  connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_frame_changed_signal()),
-          this, SLOT(cur_ws_selected_item_frame_changed()));
+  connect(astate->astate_evd,
+          SIGNAL(cur_ws_selected_item_frame_changed_signal()),
+          this,
+          SLOT(cur_ws_selected_item_frame_changed()));
 
-  connect(astate->astate_evd, SIGNAL(cur_ws_selected_atoms_list_cell_changed_signal()),
-          this, SLOT(cell_changed()));
+  connect(astate->astate_evd,
+          SIGNAL(cur_ws_selected_atoms_list_cell_changed_signal()),
+          this,
+          SLOT(cell_changed()));
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
@@ -1027,10 +1104,9 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
 void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
 
   if (b_al) {
-      //size_t clamped_index = std::clamp<size_t>(index, 0, index);
+
       if (index < int(b_al->m_anim->get_total_anims())) {
-          //          fmt::print(std::cout, "DEBUG CHANGE CURRENT ANIM {} {}\n", index,
-          //                     b_al->m_anim->m_cur_anim);
+
           b_al->m_anim->m_cur_anim = index;
           b_al->m_anim->m_cur_anim_time = 0.0f;
           b_al->m_anim->update_geom_to_anim();
@@ -1050,15 +1126,21 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
           gb_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frames.size()));
           gb_anim_timeline_slider->setMinimum(0);
           gb_anim_timeline_slider->setMaximum(cur_anim->frames.size()-1);
+
         }
 
     }
+
 }
 
 void geom_view_obj_insp_widget_t::play_anim_button_toggle(bool value) {
+
   if (b_al) {
+
       b_al->m_anim->m_play_anim = value;
+
     }
+
 }
 
 void geom_view_obj_insp_widget_t::anim_updated_external() {
@@ -1071,6 +1153,7 @@ void geom_view_obj_insp_widget_t::anim_updated_external() {
       gb_anim_timeline_slider->blockSignals(true);
       gb_anim_timeline_slider->setValue(current_frame_truncated);
       gb_anim_timeline_slider->blockSignals(false);
+
     }
 
 }
@@ -1425,6 +1508,19 @@ void geom_view_obj_insp_widget_t::modify_group_op_del_sel() {
 
   app_state_t *astate = app_state_t::get_inst();
   if (b_al) b_al->delete_selected_atoms();
+  astate->make_viewport_dirty();
+
+}
+
+void geom_view_obj_insp_widget_t::measurement_current_index_changed(int index) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      b_al->m_measure->m_cur_dist_rec_ui = index;
+      update_measurement_tab_info();
+    }
+
   astate->make_viewport_dirty();
 
 }

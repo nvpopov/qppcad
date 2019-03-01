@@ -119,9 +119,15 @@ namespace qpp {
         //START TAB MEASUREMENT
         ws_item_tab_widget_t *tab_measurement;
         QGroupBox *tms_pair_dist_gb;
-        QVBoxLayout *tms_pair_dist_gb_lt;
-        QTableView *tms_pair_dist_table;
-        qatomic_dist_table_model_t *tms_dist_mdl;
+        QFormLayout *tms_pair_dist_gb_lt;
+        QComboBox *tms_pair_cur_msr;
+        QLabel *tms_pair_at1_name;
+        QLabel *tms_pair_at1_id;
+        QLabel *tms_pair_at1_idx;
+        QLabel *tms_pair_at2_name;
+        QLabel *tms_pair_at2_id;
+        QLabel *tms_pair_at2_idx;
+        QLabel *tms_pair_dist;
         //END TAB MEASUREMENT
 
         //START TAB MODIFY
@@ -210,6 +216,7 @@ namespace qpp {
         void update_anim_tab_gb();
         void update_modify_tab();
         void update_measurement_tab();
+        void update_measurement_tab_info();
         void update_select_tab();
         void fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al);
         geom_view_obj_insp_widget_t();
@@ -247,6 +254,8 @@ namespace qpp {
         void modify_group_op_sv_show_all();
         void modify_group_op_sel_ngbs();
         void modify_group_op_del_sel();
+
+        void measurement_current_index_changed(int index);
 
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();

@@ -6,7 +6,7 @@ namespace qpp {
 
   namespace cad {
 
-    float geom_view_measurement_subsys_t::dist (const size_t idx) {
+    float geom_view_msr_subsys_t::dist (const size_t idx) {
       vector3<float> l_s, l_e;
       l_s = p_owner->m_pos +
             p_owner->m_geom->pos(m_dist_recs[idx].m_at1,m_dist_recs[idx].m_idx1);
@@ -15,19 +15,19 @@ namespace qpp {
       return (l_e - l_s).norm();
     }
 
-    void geom_view_measurement_subsys_t::add_bond_measurement (const uint32_t atm1,
-                                                               const uint32_t atm2,
-                                                               const index idx1,
-                                                               const index idx2) {
+    void geom_view_msr_subsys_t::add_bond_msr (const uint32_t atm1,
+                                               const uint32_t atm2,
+                                               const index idx1,
+                                               const index idx2) {
 
-      if (!is_bond_measurement_exist(atm1, atm2, idx1, idx2)) {
+      if (!is_bond_msr_exists(atm1, atm2, idx1, idx2)) {
           m_dist_recs.emplace_back(atm1, atm2, idx1, idx2);
           app_state_t* astate = app_state_t::get_inst();
           astate->astate_evd->cur_ws_selected_item_measurements_changed();
         }
     }
 
-    void geom_view_measurement_subsys_t::add_angle_measurement(
+    void geom_view_msr_subsys_t::add_angle_msr(
         const uint32_t atm1,
         const uint32_t atm2,
         const uint32_t atm3,
@@ -35,29 +35,33 @@ namespace qpp {
         const index idx2,
         const index idx3) {
 
-      if (!is_angle_measurement_exist(atm1, atm2, atm3, idx1, idx2, idx3)) {
+      if (!is_angle_msr_exists(atm1, atm2, atm3, idx1, idx2, idx3)) {
           m_angle_recs.emplace_back(atm1, atm2, atm3, idx1, idx2, idx3);
           app_state_t* astate = app_state_t::get_inst();
           astate->astate_evd->cur_ws_selected_item_measurements_changed();
         }
     }
 
-    geom_view_measurement_subsys_t::geom_view_measurement_subsys_t(
+    geom_view_msr_subsys_t::geom_view_msr_subsys_t(
         geom_view_t &_p_owner) {
       p_owner = &_p_owner;
     }
 
-    void geom_view_measurement_subsys_t::remove_bond_measurement (const size_t measure_idx) {
+    void geom_view_msr_subsys_t::rm_bond_msr (const size_t measure_idx) {
 
-      if (measure_idx < m_dist_recs.size())
-        m_dist_recs.erase(m_dist_recs.begin() + measure_idx);
+      if (measure_idx < m_dist_recs.size()) {
+          m_dist_recs.erase(m_dist_recs.begin() + measure_idx);
+          int r_dist_idx = m_cur_dist_rec_ui - 1;
+          if (r_dist_idx > measure_idx) m_cur_dist_rec_ui--;
+          if (m_dist_recs.empty()) m_cur_dist_rec_ui = 0;
+        }
 
       app_state_t* astate = app_state_t::get_inst();
       astate->astate_evd->cur_ws_selected_item_measurements_changed();
 
     }
 
-    void geom_view_measurement_subsys_t::remove_angle_measurement(const size_t measure_idx) {
+    void geom_view_msr_subsys_t::rm_angle_msr(const size_t measure_idx) {
 
       if (measure_idx < m_angle_recs.size())
         m_angle_recs.erase(m_angle_recs.begin() + measure_idx);
@@ -68,7 +72,7 @@ namespace qpp {
     }
 
 
-    std::optional<size_t> geom_view_measurement_subsys_t::is_bond_measurement_exist (
+    std::optional<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (
         const uint32_t atm1,
         const uint32_t atm2,
         const index idx1,
@@ -85,7 +89,7 @@ namespace qpp {
 
     }
 
-    std::optional<size_t> geom_view_measurement_subsys_t::is_angle_measurement_exist(
+    std::optional<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(
         const uint32_t atm1,
         const uint32_t atm2,
         const uint32_t atm3,
@@ -106,69 +110,83 @@ namespace qpp {
 
     }
 
-    void geom_view_measurement_subsys_t::render() {
+    void geom_view_msr_subsys_t::render() {
       //render bond measurements
       //deprecated
     }
 
-    void geom_view_measurement_subsys_t::render_overlay(QPainter &painter) {
+    void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
 
       app_state_t* astate = app_state_t::get_inst();
 
       std::optional<vector2<float> > l_s, l_e;
-      QPen linepen(QPen(Qt::black, 4, Qt::DotLine, Qt::RoundCap));
-      QPen linepen_2(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
+      QPen linepen_dot_line(QPen(Qt::black, 4, Qt::DotLine, Qt::RoundCap));
+      QPen linepen_solid_line(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
+      QPen linepen_sel(QPen(Qt::red, 4, Qt::DotLine, Qt::RoundCap));
 
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
       painter.setFont(QFont(astate->m_font_name, 13));
       painter.resetTransform();
 
-      for (auto &record : m_dist_recs)
+      for (size_t i = 0; i < m_dist_recs.size(); i++) {
 
-        if (record.m_show) {
+          auto &record = m_dist_recs[i];
 
-            if (record.m_at1 >= p_owner->m_geom->nat() || record.m_at2 >= p_owner->m_geom->nat()) {
-                continue;
-              }
+          if (record.m_show) {
 
-            l_s = astate->camera->project(
+              if (record.m_at1 >= p_owner->m_geom->nat() || record.m_at2 >= p_owner->m_geom->nat()) {
+                  continue;
+                }
+
+              l_s = astate->camera->project(
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
 
-            l_e = astate->camera->project(
+              l_e = astate->camera->project(
                     p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2));
 
-            if (!l_s || !l_e) continue;
+              if (!l_s || !l_e) continue;
 
-            float dist = (p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
-                          p_owner->m_geom->pos(record.m_at2,record.m_idx2)).norm();
+              float dist = (p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
+                            p_owner->m_geom->pos(record.m_at2,record.m_idx2)).norm();
 
-            vector2<float> mid = (*l_s + *l_e) * 0.5f;
-            const float rect_w = 70;
-            const float rect_h = 30;
+              vector2<float> mid = (*l_s + *l_e) * 0.5f;
+              const float rect_w = 70;
+              const float rect_h = 30;
 
-            QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
-                round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);
-            painter.setPen(linepen);
-            painter.drawLine(linef);
+              QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
+                  round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);
 
-            double angle = 180 * std::atan2(linef.y2()-linef.y1(), linef.x2()-linef.x1()) / qpp::pi;
+              if (i + 1 == m_cur_dist_rec_ui) painter.setPen(linepen_sel);
+              else {
+                  if (record.m_line_render_style == msr_line_render_style::msr_line_dashed)
+                    painter.setPen(linepen_dot_line);
+                  if (record.m_line_render_style == msr_line_render_style::msr_line_solid)
+                    painter.setPen(linepen_solid_line);
+                }
+              painter.drawLine(linef);
 
-            angle = angle + std::ceil( -angle / 360 ) * 360;
-            if (angle > 90 && angle < 270) angle = angle + 180;
+              double angle = 180 * std::atan2(linef.y2()-linef.y1(), linef.x2()-linef.x1()) / qpp::pi;
 
-            painter.translate(mid[0], mid[1]);
-            painter.rotate(angle);
-            QPainterPath path;
-            QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
-            path.addRoundedRect(text_rect, 10, 10);
-            painter.fillPath(path, Qt::white);
-            painter.setPen(rectpen);
-            painter.drawPath(path);
-            painter.drawText(text_rect,
-                             Qt::AlignCenter,
-                             QString("%1 Å").arg(QString::number(dist, 'f', 2)));
-            painter.resetTransform();
-          }
+              angle = angle + std::ceil( -angle / 360 ) * 360;
+              if (angle > 90 && angle < 270) angle = angle + 180;
+
+              painter.translate(mid[0], mid[1]);
+              painter.rotate(angle);
+              QPainterPath path;
+              QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+              path.addRoundedRect(text_rect, 10, 10);
+              painter.fillPath(path, Qt::white);
+              painter.setPen(rectpen);
+              painter.drawPath(path);
+              painter.drawText(text_rect,
+                               Qt::AlignCenter,
+                               QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+              painter.resetTransform();
+
+            }
+
+        }
+
 
       painter.resetTransform();
 
@@ -231,7 +249,7 @@ namespace qpp {
                     fangle_delta = -inv_angle_delta;
                   }
 
-                painter.setPen(linepen_2);
+                painter.setPen(linepen_solid_line);
 
                 painter.translate((*l_s)[0], (*l_s)[1]);
 
@@ -269,7 +287,7 @@ namespace qpp {
 
     }
 
-    void geom_view_measurement_subsys_t::notify_atom_has_been_deleted(const uint32_t atm) {
+    void geom_view_msr_subsys_t::notify_atom_has_been_deleted(const uint32_t atm) {
 
       for (auto it = m_dist_recs.begin(); it != m_dist_recs.end(); ) {
           if ((*it).m_at1 == atm || (*it).m_at2 == atm)
@@ -286,7 +304,6 @@ namespace qpp {
         }
 
     }
-
 
   }
 

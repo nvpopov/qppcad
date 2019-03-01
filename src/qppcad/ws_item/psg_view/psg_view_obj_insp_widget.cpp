@@ -14,7 +14,7 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   tg_info_summary_widget->setLayout(tg_info_summary_lt);
 
   tg_info_summary_widget->setTitle("Symmetry group summary");
-  tab_general->tab_inner_widget_layout->addWidget(tg_info_summary_widget);
+  tab_general->tab_inner_widget_lt->addWidget(tg_info_summary_widget);
   tg_info_sym_gr = new QLabel;
   tg_info_total_sym_op = new QLabel;
   tg_plane_alpha_enabled = new qbinded_checkbox;
@@ -44,7 +44,7 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
 
   post_init_group_box(tg_info_summary_widget, tg_info_summary_lt);
 
-  tab_general->tab_inner_widget_layout->addStretch();
+  tab_general->tab_inner_widget_lt->addStretch();
 
 }
 

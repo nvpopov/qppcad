@@ -13,8 +13,8 @@ traj_hl_obj_insp_widget_t::traj_hl_obj_insp_widget_t() {
   gb_traj_settings_lt->addRow(tr("Trajectory color"), disp_traj_color);
   post_init_group_box(gb_traj_settings, gb_traj_settings_lt);
 
-  tab_general->tab_inner_widget_layout->addWidget(gb_traj_settings);
-  tab_general->tab_inner_widget_layout->addStretch();
+  tab_general->tab_inner_widget_lt->addWidget(gb_traj_settings);
+  tab_general->tab_inner_widget_lt->addStretch();
 
 }
 

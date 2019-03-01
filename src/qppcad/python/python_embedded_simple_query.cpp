@@ -1,9 +1,3 @@
-#pragma push_macro("slots")
-#undef slots
-#include <pybind11/pybind11.h>
-#include <pybind11/embed.h>
-#pragma pop_macro("slots")
-
 #include <qppcad/python/python_simple_query.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_colorizer.hpp>
 
@@ -63,6 +57,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   tools.def("make_traj_highlighter", &simple_query::make_traj_highlight,  py::arg("atom_id"),
             py::arg("anim_id") = 1);
+
+//  tools.def("test_diag",
+//            [](const Eigen::MatrixXf &xs) -> Eigen::MatrixXf{ return xs.inverse();});
 
   tools.def("make_cube", &simple_query::make_cube_p);
   tools.def("make_arrow", &simple_query::make_arrow_p);

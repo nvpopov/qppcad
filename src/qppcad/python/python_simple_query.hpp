@@ -9,6 +9,7 @@
 #undef slots
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
+//#include <pybind11/eigen.h>
 #pragma pop_macro("slots")
 
 namespace py = pybind11;

@@ -125,8 +125,8 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   gb_gen_ccd_info_lt->addRow(tr("Run type"), gen_ccd_info_run_type);
   post_init_group_box(gb_gen_ccd_info, gb_gen_ccd_info_lt);
 
-  tab_general->tab_inner_widget_layout->addWidget(gb_gen_ccd_info);
-  tab_general->tab_inner_widget_layout->addStretch(0);
+  tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);
+  tab_general->tab_inner_widget_lt->addStretch(0);
 
   gb_go_conv_graph = new QGroupBox(tr("Energy convergence"));
   gb_go_conv_graph_lt = new QHBoxLayout;
@@ -144,8 +144,8 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   gb_go_conv_chart->axisX()->setTitleText(tr("Steps"));
   gb_go_conv_chart->axisY()->setTitleText(tr("Energy, eV"));
 
-  tab_geo_opt->tab_inner_widget_layout->addWidget(gb_go_conv_graph);
-  tab_geo_opt->tab_inner_widget_layout->addStretch(0);
+  tab_geo_opt->tab_inner_widget_lt->addWidget(gb_go_conv_graph);
+  tab_geo_opt->tab_inner_widget_lt->addStretch(0);
 
   //tg_form_layout->
 }

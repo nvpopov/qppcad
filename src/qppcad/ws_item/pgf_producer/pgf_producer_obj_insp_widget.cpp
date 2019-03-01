@@ -31,10 +31,10 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   gb_pgf_data_lt->addRow(tr("Array group"), pgf_data_ag);
 
   post_init_group_box(gb_pgf_data, gb_pgf_data_lt);
-  tab_general->tab_inner_widget_layout->addWidget(gb_pgf_data);
+  tab_general->tab_inner_widget_lt->addWidget(gb_pgf_data);
 
-  tab_general->tab_inner_widget_layout->addStretch();
-  tab_cell_range->tab_inner_widget_layout->addStretch();
+  tab_general->tab_inner_widget_lt->addStretch();
+  tab_cell_range->tab_inner_widget_lt->addStretch();
 
 }
 

@@ -18,10 +18,10 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name,
   tmp->tab_inner_widget->setProperty("s_class", "tab_inner_widget");
   tmp->tab_scroll->setWidget(tmp->tab_inner_widget);
 
-  tmp->tab_inner_widget_layout = new QVBoxLayout;
-  tmp->tab_inner_widget_layout->setContentsMargins(3,3,3,3);
-  tmp->tab_inner_widget_layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-  tmp->tab_inner_widget->setLayout(tmp->tab_inner_widget_layout);
+  tmp->tab_inner_widget_lt = new QVBoxLayout;
+  tmp->tab_inner_widget_lt->setContentsMargins(3,3,3,3);
+  tmp->tab_inner_widget_lt->setSizeConstraint(QLayout::SetMinAndMaxSize);
+  tmp->tab_inner_widget->setLayout(tmp->tab_inner_widget_lt);
 
   tmp->tab_id = addTab(tmp->tab_scroll, "");
   setTabToolTip(tmp->tab_id, tab_name);
@@ -183,8 +183,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
           &app_state_event_disp_t::cur_ws_selected_item_position_changed_signal,
           this, &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
 
-  tab_general->tab_inner_widget_layout->addWidget(tg_info_widget);
-  tab_general->tab_inner_widget_layout->addWidget(tg_actions);
+  tab_general->tab_inner_widget_lt->addWidget(tg_info_widget);
+  tab_general->tab_inner_widget_lt->addWidget(tg_actions);
 
   connect(this, &ws_item_obj_insp_widget_t::currentChanged,
           this, &ws_item_obj_insp_widget_t::cur_tab_changed);
