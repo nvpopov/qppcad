@@ -3,6 +3,7 @@
 #include <data/ptable.hpp>
 #include <mathf/math.hpp>
 #include <qppcad/register_all_things.hpp>
+#include <io/parsing_exceptions.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -571,6 +572,8 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
   std::shared_ptr<workspace_t> exec_ws{nullptr};
 
+  bool need_to_dispose_ws{false};
+
   if (need_to_create_new_ws) {
       create_new_ws(true);
       exec_ws = m_ws[m_ws.size()-1];
@@ -579,7 +582,33 @@ void workspace_manager_t::import_from_file(const std::string &fname,
     }
 
   if (exec_ws) {
-      auto p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
+
+      std::shared_ptr<ws_item_t> p_new_item{nullptr};
+
+      try {
+        p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
+      } catch (const qpp::generic_parsing_error_t &exc) {
+        need_to_dispose_ws = true;
+        QString error_message =
+            QObject::tr("An error has occured while parsing the file\n"
+                        "\n"
+                        "File name : \n"
+                        "\"%1\"\n"
+                        "\n"
+                        "Line number : \n"
+                        "%2\n"
+                        "\n"
+                        "Line : \"%3\"\n"
+                        "\n"
+                        "Message : \n"
+                        "\"%4\"")
+                        .arg(QString::fromStdString(fname))
+                        .arg(exc.m_line_num)
+                        .arg(QString::fromStdString(exc.m_exception_src))
+                        .arg(QString::fromStdString(exc.m_exception_msg));
+        QMessageBox::critical(nullptr, "Error", error_message);
+      }
+
       astate->astate_evd->cur_ws_changed();
       if (need_to_create_new_ws && p_new_item) {
           exec_ws->m_ws_name = p_new_item->m_name;
