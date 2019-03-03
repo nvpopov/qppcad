@@ -571,7 +571,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
   std::shared_ptr<workspace_t> exec_ws{nullptr};
 
-  bool need_to_dispose_ws{false};
+  bool loading_is_succesfull{true};
 
   if (need_to_create_new_ws) {
       create_new_ws(true);
@@ -587,7 +587,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
       try {
         p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
       } catch (const qpp::parsing_error_t &exc) {
-        need_to_dispose_ws = true;
+        loading_is_succesfull = false;
         QString error_message =
             QObject::tr("An error has occured while parsing the file\n"
                         "\n"
@@ -601,21 +601,38 @@ void workspace_manager_t::import_from_file(const std::string &fname,
                         "\n"
                         "Message : \n"
                         "\"%4\"")
-                        .arg(QString::fromStdString(fname))
-                        .arg(exc.m_line_num)
-                        .arg(QString::fromStdString(exc.m_exception_src))
-                        .arg(QString::fromStdString(exc.m_exception_msg));
+            .arg(QString::fromStdString(fname))
+            .arg(exc.m_line_num)
+            .arg(QString::fromStdString(exc.m_exception_src))
+            .arg(QString::fromStdString(exc.m_exception_msg));
+        QMessageBox::critical(nullptr, "Error", error_message);
+      }
+      catch (...) {
+        loading_is_succesfull = false;
+        QString error_message =
+            QObject::tr("An error has occured while parsing the file\n");
         QMessageBox::critical(nullptr, "Error", error_message);
       }
 
       astate->astate_evd->cur_ws_changed();
-      if (need_to_create_new_ws && p_new_item) {
-          exec_ws->m_ws_name = p_new_item->m_name;
-          exec_ws->set_best_view();
+
+      if (loading_is_succesfull) {
+
+          if (need_to_create_new_ws && p_new_item) {
+              exec_ws->m_ws_name = p_new_item->m_name;
+              exec_ws->set_best_view();
+            }
+
+          astate->astate_evd->new_file_loaded(
+                fname,
+                m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
+                false);
+        } else {
+
+          if (need_to_create_new_ws && exec_ws) exec_ws->m_marked_for_deletion = true;
+
         }
-      astate->astate_evd->new_file_loaded(fname,
-                                          m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
-                                          false);
+
       astate->astate_evd->wss_changed();
     }
 
