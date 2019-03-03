@@ -4,6 +4,7 @@
 #include <mathf/math.hpp>
 #include <qppcad/register_all_things.hpp>
 #include <io/parsing_exceptions.hpp>
+#include <qppcad/ui/qrich_error_message_box.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -588,10 +589,13 @@ void workspace_manager_t::import_from_file(const std::string &fname,
         p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
       } catch (const qpp::parsing_error_t &exc) {
         loading_is_succesfull = false;
-        QString error_message =
-            QObject::tr("An error has occured while parsing the file\n"
-                        "\n"
-                        "File name : \n"
+
+        //compose error message
+        QString msg_box_title = "Error";
+        QString error_message = QObject::tr("An error has occured while parsing the file:\n"
+                                "%1").arg(QString::fromStdString(fname));
+        QString error_detail =
+            QObject::tr("File name : \n"
                         "\"%1\"\n"
                         "\n"
                         "Line number : \n"
@@ -605,7 +609,12 @@ void workspace_manager_t::import_from_file(const std::string &fname,
             .arg(exc.m_line_num)
             .arg(QString::fromStdString(exc.m_exception_src))
             .arg(QString::fromStdString(exc.m_exception_msg));
-        QMessageBox::critical(nullptr, "Error", error_message);
+
+        qrich_error_message_box_t err_msg(msg_box_title,
+                                          error_message,
+                                          error_detail);
+        err_msg.exec();
+
       }
       catch (...) {
         loading_is_succesfull = false;
@@ -696,8 +705,10 @@ void workspace_manager_t::utility_event_loop() {
       if ((*it)->m_marked_for_deletion) {
           auto cur_ws_idx = get_cur_id();
           if (cur_ws_idx) {
-              if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = std::nullopt;
-              else m_cur_ws_id = opt<size_t>(*cur_ws_idx - 1);
+              //last?
+              if (m_ws.size() == 1) m_cur_ws_id = std::nullopt;
+              else if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = opt<size_t>(0);
+              else m_cur_ws_id = opt<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
             }
           set_cur_id(m_cur_ws_id);
           it = m_ws.erase(it);

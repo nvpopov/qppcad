@@ -1386,7 +1386,7 @@ void main_window::action_bhv_import_to_cur_workspace() {
           QFileDialog::getOpenFileName(this,
                                        "dialog_name",
                                        astate->m_last_dir,
-                                       "*.*").toStdString();
+                                       "*").toStdString();
       if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id, false);
     }
 
@@ -1410,7 +1410,7 @@ void main_window::action_bhv_import_as_new_workspace() {
       std::string file_name = QFileDialog::getOpenFileName(this,
                                                            "dialog_name",
                                                            astate->m_last_dir,
-                                                           "*.*").toStdString();
+                                                           "*").toStdString();
       if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id);
     }
 
@@ -1439,7 +1439,7 @@ void main_window::action_bhv_export_selected() {
       // astate->log(fmt::format("{}", b_id));
       std::string file_name = QFileDialog::getSaveFileName(this,
                                                            "dialog_name",
-                                                           "*.*").toStdString();
+                                                           "*").toStdString();
       if (!file_name.empty())
         astate->ws_manager->m_bhv_mgr->save_ws_itm_to_file(file_name, cur_it, b_id);
     }
