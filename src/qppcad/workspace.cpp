@@ -710,8 +710,8 @@ void workspace_manager_t::utility_event_loop() {
               else if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = opt<size_t>(0);
               else m_cur_ws_id = opt<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
             }
-          set_cur_id(m_cur_ws_id);
           it = m_ws.erase(it);
+          set_cur_id(m_cur_ws_id);
           astate->astate_evd->cur_ws_changed();
         }
       else {
