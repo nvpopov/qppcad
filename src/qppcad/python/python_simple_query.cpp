@@ -71,7 +71,7 @@ void simple_query::select_ws(int ws_idx) {
 
   if (!astate->ws_manager->has_wss()) return;
 
-  astate->ws_manager->set_cur_id(ws_idx);
+  astate->ws_manager->set_cur_id(opt<size_t>(ws_idx));
   astate->astate_evd->cur_ws_changed();
   astate->make_viewport_dirty();
 

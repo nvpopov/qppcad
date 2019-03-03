@@ -42,6 +42,10 @@ namespace qpp {
     };
 
     const size_t max_recent_files = 10;
+
+    template<typename T>
+    using opt = std::optional<T>;
+
   }
 
 }

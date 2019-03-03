@@ -28,10 +28,6 @@ void ws_viewer_widget_t::update_cycle() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  //if (astate->m_disable_app) return;
-
-  //if (!astate->is_mouse_moving) astate->mouse_distance_pp = 0;
-
   if (astate->is_viewport_dirty()) {
 
       astate->cleanup_viewport();
@@ -44,8 +40,6 @@ void ws_viewer_widget_t::update_cycle() {
 
       update();
 
-
-      //if (astate->camera)
     }
 
   if (astate->ws_manager->has_wss()) {
@@ -56,6 +50,8 @@ void ws_viewer_widget_t::update_cycle() {
     }
 
   astate->is_mouse_moving = false;
+
+  astate->ws_manager->utility_event_loop();
 
 }
 

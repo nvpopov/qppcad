@@ -588,7 +588,7 @@ void main_window::ws_selector_selection_changed(int index) {
       astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
                               index, *current));
       if (current) {
-          astate->ws_manager->set_cur_id(index);
+          astate->ws_manager->set_cur_id(opt<size_t>(index));
           astate->make_viewport_dirty();
         }
     }
@@ -684,7 +684,6 @@ void main_window::save_ws_as() {
 
   stop_update_cycle();
 
-
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
@@ -699,6 +698,7 @@ void main_window::save_ws_as() {
             }
         }
     }
+
   cur_ws_changed();
 
   start_update_cycle();
@@ -717,7 +717,7 @@ void main_window::close_cur_ws() {
                                         tr("Do you really want to close the workspace?"),
                                         QMessageBox::Yes | QMessageBox::No);
           if (reply == QMessageBox::Yes) {
-
+              cur_ws->m_marked_for_deletion = true;
             }
           else if (reply == QMessageBox::No) {
 

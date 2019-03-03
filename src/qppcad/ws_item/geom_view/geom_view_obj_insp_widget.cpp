@@ -249,7 +249,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_buttons = new QGroupBox(tr("Control"));
   gb_anim_buttons_lt = new QHBoxLayout;
   gb_anim_buttons->setLayout(gb_anim_buttons_lt);
-  gb_anim_buttons->setMaximumWidth(390);
+  gb_anim_buttons->setMaximumWidth(420);
   gb_anim_buttons->setMaximumHeight(90);
 
   anim_play = new QPushButton(tr("PLAY"));

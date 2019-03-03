@@ -402,8 +402,9 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
-  if (m_cur_ws_id >= m_ws.size()) return nullptr;
-  return m_ws[m_cur_ws_id];
+  if (!m_cur_ws_id) return nullptr;
+  if (*m_cur_ws_id >= m_ws.size()) return nullptr;
+  return m_ws[*m_cur_ws_id];
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target_name) {
@@ -415,25 +416,26 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target
 
 }
 
-std::optional<size_t> workspace_manager_t::get_cur_id () {
-  if (!m_ws.empty()) return std::optional<size_t>(m_cur_ws_id);
+opt<size_t> workspace_manager_t::get_cur_id () {
+  if (!m_ws.empty()) return m_cur_ws_id;
   return std::nullopt;
 }
 
-bool workspace_manager_t::set_cur_id (const size_t ws_index) {
+bool workspace_manager_t::set_cur_id (const opt<size_t> ws_index) {
 
   //c_app::log("set current called");
   app_state_t* astate = app_state_t::get_inst();
 
-  if (ws_index < m_ws.size() && has_wss()) {
-      m_cur_ws_id = ws_index;
+  if (ws_index && *ws_index < m_ws.size() && has_wss()) {
+      m_cur_ws_id = opt<size_t>(ws_index);
       //update_window_title();
-      cached_astate->camera = m_ws[ws_index]->m_camera.get();
-      cached_astate->camera->update_camera();
+      astate->camera = m_ws[*ws_index]->m_camera.get();
+      astate->camera->update_camera();
       astate->astate_evd->cur_ws_changed();
       return true;
     }
 
+  astate->camera = nullptr;
   astate->astate_evd->cur_ws_changed();
   return false;
 
@@ -462,13 +464,13 @@ void workspace_manager_t::render_cur_ws () {
 
   if (has_wss()) {
 
-      if (m_cur_ws_id < m_ws.size()) {
+      if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
 
-          astate->glapi->glClearColor(m_ws[m_cur_ws_id]->m_background_color[0],
-              m_ws[m_cur_ws_id]->m_background_color[1],
-              m_ws[m_cur_ws_id]->m_background_color[2], 1);
+          astate->glapi->glClearColor(m_ws[*m_cur_ws_id]->m_background_color[0],
+              m_ws[*m_cur_ws_id]->m_background_color[1],
+              m_ws[*m_cur_ws_id]->m_background_color[2], 1);
           astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-          m_ws[m_cur_ws_id]->render();
+          m_ws[*m_cur_ws_id]->render();
           return ;
 
         }
@@ -483,8 +485,8 @@ void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
   if (has_wss()) {
 
-      if (m_cur_ws_id < m_ws.size()) {
-          m_ws[m_cur_ws_id]->render_overlay(painter);
+      if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
+          m_ws[*m_cur_ws_id]->render_overlay(painter);
         }
 
     }
@@ -495,16 +497,13 @@ void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 void workspace_manager_t::mouse_click () {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
 
-  astate->log(fmt::format("Mouse click in ws {} {}",
-                          astate->mouse_x_dc, astate->mouse_y_dc));
+  astate->log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
+  astate->log(fmt::format("Mouse click in ws {} {}", astate->mouse_x_dc, astate->mouse_y_dc));
 
   if (has_wss()) {
-
       get_cur_ws()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
       astate->make_viewport_dirty();
-
     }
 
 }
@@ -587,7 +586,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
       try {
         p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
-      } catch (const qpp::generic_parsing_error_t &exc) {
+      } catch (const qpp::parsing_error_t &exc) {
         need_to_dispose_ws = true;
         QString error_message =
             QObject::tr("An error has occured while parsing the file\n"
@@ -670,6 +669,28 @@ std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
   if (!cur_it) return nullptr;
 
   return cur_it;
+}
+
+void workspace_manager_t::utility_event_loop() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  for (auto it = m_ws.begin(); it != m_ws.end(); ) {
+      if ((*it)->m_marked_for_deletion) {
+          auto cur_ws_idx = get_cur_id();
+          if (cur_ws_idx) {
+              if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = std::nullopt;
+              else m_cur_ws_id = opt<size_t>(*cur_ws_idx - 1);
+            }
+          set_cur_id(m_cur_ws_id);
+          it = m_ws.erase(it);
+          astate->astate_evd->cur_ws_changed();
+        }
+      else {
+          ++it;
+        }
+    }
+
 }
 
 
