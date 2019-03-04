@@ -41,10 +41,10 @@ namespace qpp {
         bool m_is_visible{true};
         gizmo_transform_type m_cur_ttype{gizmo_transform_type::translation};
 
-        uint8_t m_touched_axis{0};
+        int8_t m_touched_axis{-1};
         std::array<aabb_3d_t<float>,3> m_bx;
-        std::array<bool, 3> m_bx_touched;
-        ws_item_t *attached_item;
+        std::array<bool, 3> m_bx_touched{false, false, false};
+        ws_item_t *attached_item{nullptr};
 
         template<typename REAL>
         bool process_ray (ray_t<REAL> *ray) {

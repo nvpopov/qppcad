@@ -130,33 +130,37 @@ void gizmo_t::translate_attached(float delta_time){
 
       vector3<float> d_unproj = unproj_mouse_hit - unproj_mouse_hit_old;
 
-      //TODO: Magic numbers
-      if (fabs(d_unproj[m_touched_axis]) > 0.00025f && astate->is_mouse_moving &&
-          astate->mouse_distance_pp > 0.2f) {
+      if (m_touched_axis >= 0 && m_touched_axis < 4) {
+          //TODO: Magic numbers
+          if (fabs(d_unproj[m_touched_axis]) > 0.00025f && astate->is_mouse_moving &&
+              astate->mouse_distance_pp > 0.2f) {
 
-          float proj_dep_mod = 1500.0f;
+              float proj_dep_mod = 1500.0f;
 
-          if (astate->camera->m_cur_proj == cam_proj_t::proj_ortho) proj_dep_mod = 350.0f;
+              if (astate->camera->m_cur_proj == cam_proj_t::proj_ortho) proj_dep_mod = 350.0f;
 
-          vector3<float> new_transform =
-              gizmo_axis[m_touched_axis] * delta_time * d_unproj[m_touched_axis] * proj_dep_mod;
 
-          m_acc_tr += new_transform;
+              vector3<float> new_transform =
+                  gizmo_axis[m_touched_axis] * delta_time * d_unproj[m_touched_axis] * proj_dep_mod;
 
-          const float transform_amplitude = 0.5f;
-          m_acc_tr[0] = std::clamp(m_acc_tr[0], -transform_amplitude, transform_amplitude);
-          m_acc_tr[1] = std::clamp(m_acc_tr[1], -transform_amplitude, transform_amplitude);
-          m_acc_tr[2] = std::clamp(m_acc_tr[2], -transform_amplitude, transform_amplitude);
+              m_acc_tr += new_transform;
 
-          //std::cout << "M_ACC_TR" << m_acc_tr << std::endl;
+              const float transform_amplitude = 0.5f;
+              m_acc_tr[0] = std::clamp(m_acc_tr[0], -transform_amplitude, transform_amplitude);
+              m_acc_tr[1] = std::clamp(m_acc_tr[1], -transform_amplitude, transform_amplitude);
+              m_acc_tr[2] = std::clamp(m_acc_tr[2], -transform_amplitude, transform_amplitude);
 
-          if (cur_edit_type == ws_edit_t::edit_item) attached_item->translate(m_acc_tr);
-          else attached_item->apply_intermediate_translate_content(new_transform);
+              //std::cout << "M_ACC_TR" << m_acc_tr << std::endl;
+
+              if (cur_edit_type == ws_edit_t::edit_item) attached_item->translate(m_acc_tr);
+              else attached_item->apply_intermediate_translate_content(new_transform);
+
+            }
+          else {
+              m_acc_tr = vector3<float>::Zero();
+            }
+
         }
-      else {
-          m_acc_tr = vector3<float>::Zero();
-        }
-
     }
 }
 
@@ -196,7 +200,7 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
 
   //Transform in node mode
   //start interacting - run event
-  if (attached_item && astate->mouse_lb_pressed && m_touched_axis < 4 &&
+  if (attached_item && astate->mouse_lb_pressed && m_touched_axis >= 0 && m_touched_axis < 4 &&
       cur_edit_type == ws_edit_t::edit_item && !m_is_interacting){
       m_is_interacting = true;
       m_acc_tr = vector3<float>::Zero();
@@ -205,7 +209,7 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
     }
 
   //interacting - event already fired, start dragging object
-  if (attached_item && astate->mouse_lb_pressed && m_touched_axis < 4 &&
+  if (attached_item && astate->mouse_lb_pressed && m_touched_axis >= 0 && m_touched_axis < 4 &&
       cur_edit_type == ws_edit_t::edit_item && m_is_interacting) {
       translate_attached(delta_time);
       astate->make_viewport_dirty();
@@ -223,7 +227,7 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
 
   //Transform in node mode
   //start interacting - run event
-  if (attached_item && astate->mouse_lb_pressed && m_touched_axis < 4 &&
+  if (attached_item && astate->mouse_lb_pressed &&  m_touched_axis >= 0 && m_touched_axis < 4 &&
       cur_edit_type == ws_edit_t::edit_content && !m_is_interacting) {
       m_is_interacting = true;
       m_acc_tr = vector3<float>::Zero();
@@ -232,7 +236,7 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
     }
 
   //interacting - event already fired, start dragging object
-  if (attached_item && astate->mouse_lb_pressed && m_touched_axis < 4 &&
+  if (attached_item && astate->mouse_lb_pressed &&  m_touched_axis >= 0 && m_touched_axis < 4 &&
       cur_edit_type == ws_edit_t::edit_content && m_is_interacting) {
       translate_attached(delta_time);
       astate->make_viewport_dirty();
