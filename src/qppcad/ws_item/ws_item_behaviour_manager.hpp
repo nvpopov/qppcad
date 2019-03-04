@@ -26,6 +26,7 @@ namespace qpp {
     class ws_item_io_file_format_group_t {
 
       public:
+
         std::string m_full_name;
         std::string m_short_name;
         std::set<size_t> m_ffs_lookup;
@@ -34,6 +35,7 @@ namespace qpp {
     class ws_item_io_file_format_t {
 
       public:
+
         std::string m_full_name;
         std::string m_shortname;
         std::vector<std::string> m_finger_prints;
@@ -41,19 +43,23 @@ namespace qpp {
     };
 
     class ws_item_tool_t {
+
       public:
+
         virtual void exec(ws_item_t *item) = 0;
     };
 
     class ws_item_tool_group_t {
 
       public:
+
         std::string m_full_name;
     };
 
     class ws_item_tool_info_t {
 
       public:
+
         std::string m_full_name;
         size_t m_group_hash;
         size_t m_accepted_type;
@@ -64,6 +70,7 @@ namespace qpp {
     class ws_item_io_behaviour_t {
 
       public:
+
         size_t m_accepted_type;
         size_t m_accepted_file_format;
         bool m_menu_occupier{true};
@@ -74,6 +81,10 @@ namespace qpp {
         virtual bool can_save() = 0;
         virtual bool can_load() = 0;
 
+        virtual bool check_before_save(ws_item_t *item, std::string &message) {
+          return true;
+        }
+
         virtual void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream,
                                       ws_item_t *_item,
                                       workspace_t *ws) = 0;
@@ -82,12 +93,26 @@ namespace qpp {
                                     ws_item_t *_item) = 0;
 
         bool is_type_accepted(size_t _type);
+
     };
 
     template <typename T>
     class ws_item_io_inherited_bhv_t : public ws_item_io_behaviour_t {
 
       public:
+
+        bool check_before_save(ws_item_t *_item, std::string &message) override {
+          if (_item && _item->get_type() == T::get_type_static()) {
+              T* casted_item = _item->cast_as<T>();
+              return check_before_save_ex(casted_item, message);
+            }
+          return true;
+        }
+
+        virtual bool check_before_save_ex(T *_item, std::string &message) {
+          return true;
+        }
+
         void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream,
                               ws_item_t *_item,
                               workspace_t *ws) override {
@@ -118,6 +143,19 @@ namespace qpp {
     class ws_item_io_inherited_bhv_hooked_t : public ws_item_io_behaviour_t {
 
       public:
+
+        bool check_before_save(ws_item_t *_item, std::string &message) override {
+          if (_item && _item->get_type() == T::get_type_static()) {
+              T* casted_item = _item->cast_as<T>();
+              return check_before_save_ex(casted_item, message);
+            }
+          return true;
+        }
+
+        virtual bool check_before_save_ex(T *_item, std::string &message) {
+          return true;
+        }
+
         virtual void pre_load_hook(T *_item, workspace_t *ws)  = 0;
         virtual void post_load_hook(T *_item, workspace_t *ws)  = 0;
         virtual void pre_save_hook(T *_item)  = 0;
@@ -160,16 +198,15 @@ namespace qpp {
     class ws_item_behaviour_manager_t {
 
       public:
+
         ws_item_behaviour_manager_t();
 
         std::map<size_t, ws_item_io_file_format_t> m_file_formats;
         std::map<size_t, ws_item_io_file_format_group_t> m_file_format_groups;
         std::map<size_t, std::function<std::shared_ptr<ws_item_t>() > > m_fabric_ws_item;
-
         std::map<size_t, std::shared_ptr<ws_item_obj_insp_widget_t> > m_obj_insp_widgets;
         std::map<size_t,
         std::function<std::shared_ptr<ws_item_obj_insp_widget_t>() > > m_obj_insp_fabric;
-
         std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
 
         //tools start
@@ -185,9 +222,10 @@ namespace qpp {
                                                           workspace_t *ws);
 
         //std::shared_ptr<ws_item_t> loadws_itm_from_files
-        void save_ws_itm_to_file(std::string &file_name,
-                                  std::shared_ptr<ws_item_t> ws_item,
-                                  size_t bhv_id);
+        bool save_ws_itm_to_file(std::string &file_name,
+                                 std::shared_ptr<ws_item_t> ws_item,
+                                 size_t bhv_id,
+                                 std::string &message);
 
         std::string get_ff_full_name(size_t _file_format_hash);
         std::string get_ff_short_name(size_t _file_format_hash);

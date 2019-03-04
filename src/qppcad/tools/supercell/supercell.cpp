@@ -31,13 +31,13 @@ void supercell_tool_t::exec(ws_item_t *item) {
                     }
 
                 } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                                            QObject::tr("m_geom.DIM !=3"));
+                                            QObject::tr("Invalid periodicity of input"));
 
             } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
                                         QObject::tr("ws_item.type != geom_view"));
 
         } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                                    QObject::tr("Workspace not select"));
+                                    QObject::tr("Workspace not selectected"));
 
     }
 

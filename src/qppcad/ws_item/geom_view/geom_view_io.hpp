@@ -61,6 +61,20 @@ namespace qpp {
         bool can_save() override { return true; }
         bool can_load() override { return false; }
 
+        bool check_before_save_ex(geom_view_t *_item, std::string &message) {
+
+          if (CHECK_DIM) {
+              bool check = _item->m_geom->DIM == REQUIRED_DIM;
+              if (!check)
+                message = fmt::format("Invalid dimension -> REQUIRED = {}, FOUND = {}",
+                                      REQUIRED_DIM, _item->m_geom->DIM);
+              return check;
+            } else {
+              return true;
+            }
+
+        }
+
         void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
                                  geom_view_t *_item,
                                  workspace_t *ws) override {
@@ -68,11 +82,7 @@ namespace qpp {
 
         void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
                                geom_view_t *_item) override {
-          if (!CHECK_DIM ||
-              (CHECK_DIM && (_item->m_geom->DIM == REQUIRED_DIM))) {
-              GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
-              //  _item->m_role = AL_ROLE;
-            }
+          GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
         }
 
     };

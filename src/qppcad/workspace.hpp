@@ -123,6 +123,10 @@ namespace qpp {
                               size_t bhv_id,
                               bool need_to_create_new_ws = true);
 
+        void save_ws_item_to_file(std::string &file_name,
+                                  std::shared_ptr<ws_item_t> ws_item,
+                                  size_t bhv_id); //dispatch to bhv_mgr
+
         void create_new_ws(bool switch_to_new_workspace = true);
 
         std::shared_ptr<ws_item_t> get_sel_itm_sp();

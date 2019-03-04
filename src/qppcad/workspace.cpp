@@ -647,10 +647,22 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
 }
 
+void workspace_manager_t::save_ws_item_to_file(std::string &file_name,
+                                               std::shared_ptr<ws_item_t> ws_item,
+                                               size_t bhv_id) {
+
+  std::string message;
+  bool save_res = m_bhv_mgr->save_ws_itm_to_file(file_name, ws_item, bhv_id, message);
+
+  if (!save_res) {
+      QMessageBox::critical(nullptr, "Error", QString::fromStdString(message));
+    }
+
+}
+
 void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
                                                     const std::string file_format,
                                                     bool create_new_ws) {
-
 
   if (file_name.find("json") != std::string::npos ||
       file_format.find("json") != std::string::npos) {

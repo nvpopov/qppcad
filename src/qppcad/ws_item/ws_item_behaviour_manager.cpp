@@ -62,34 +62,48 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 
 }
 
-void ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
+bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
                                                       std::shared_ptr<ws_item_t> ws_item,
-                                                      size_t bhv_id) {
+                                                      size_t bhv_id,
+                                                      std::string &message) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!ws_item) return;
+  if (!ws_item) return false;
   if (bhv_id < m_ws_item_io.size() && m_ws_item_io[bhv_id]->can_save() &&
       m_ws_item_io[bhv_id]->m_accepted_type == ws_item->get_type()) {
       astate->log(fmt::format("Saving ws_item[{}] to file {} from workspace {}",
                               ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name));
 
-      std::ofstream output(file_name);
-      m_ws_item_io[bhv_id]->save_to_stream(output, ws_item.get());
+      bool check = m_ws_item_io[bhv_id]->check_before_save(ws_item.get(), message);
+      if (check) {
+          std::ofstream output(file_name);
+          m_ws_item_io[bhv_id]->save_to_stream(output, ws_item.get());
+          return true;
+        } else {
+          astate->log(fmt::format("Checking failed for ws_item={}, file={}, workspace={}",
+                                  ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name));
+          return false;
+        }
+
     }
 
 }
 
 std::string ws_item_behaviour_manager_t::get_ff_full_name(size_t _file_format_hash) {
+
   auto it = m_file_formats.find(_file_format_hash);
   if (it != m_file_formats.end()) return it->second.m_shortname;
   else return "NOT_FOUND";
+
 }
 
 std::string ws_item_behaviour_manager_t::get_ff_short_name(size_t _file_format_hash) {
+
   auto it = m_file_formats.find(_file_format_hash);
   if (it != m_file_formats.end()) return it->second.m_shortname;
   else return "NOT_FOUND";
+
 }
 
 size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
