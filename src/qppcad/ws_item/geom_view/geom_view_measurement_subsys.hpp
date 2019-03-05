@@ -31,6 +31,7 @@ namespace qpp {
       bool m_show{true};
       vector3<float> m_bond_color{0};
       int m_line_size{2};
+      int m_font_size{13};
       msr_line_render_style m_line_render_style{msr_line_render_style::msr_line_dashed};
 
       msr_bond_rec_t (const AINT _atm1,

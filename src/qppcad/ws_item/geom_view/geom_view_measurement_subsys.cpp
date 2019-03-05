@@ -151,8 +151,13 @@ namespace qpp {
                             p_owner->m_geom->pos(record.m_at2,record.m_idx2)).norm();
 
               vector2<float> mid = (*l_s + *l_e) * 0.5f;
-              const float rect_w = 70;
-              const float rect_h = 30;
+
+              painter.setFont(QFont(astate->m_font_name, record.m_font_size));
+
+              //13 = 70
+              //26 = 140 ?
+              const float rect_w = (record.m_font_size / 13.0f) * 70.0f;
+              const float rect_h = record.m_font_size * 2.2;
 
               QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
                   round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);

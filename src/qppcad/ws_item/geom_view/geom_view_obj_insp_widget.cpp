@@ -314,6 +314,9 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_line_size = new qbinded_int_spinbox;
   tms_pair_line_size->set_min_max_step(1, 20, 1);
 
+  tms_font_screen_size = new qbinded_int_spinbox;
+  tms_font_screen_size->set_min_max_step(5, 40, 1);
+
   tms_pair_line_style = new qbinded_combobox;
   tms_pair_line_style->addItem("Solid");
   tms_pair_line_style->addItem("Dotted");
@@ -332,6 +335,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Line size"), tms_pair_line_size);
   tms_pair_dist_gb_lt->addRow(tr("Color"), tms_pair_dist_color);
   tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
+  tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
 
   post_init_group_box(tms_pair_dist_gb, tms_pair_dist_gb_lt);
 
@@ -804,11 +808,13 @@ void geom_view_obj_insp_widget_t::bind_measure_tab() {
           tms_pair_dist_color->bind_value(&rec.m_bond_color);
           tms_pair_enabled->bind_value(&rec.m_show);
           tms_pair_line_size->bind_value(&rec.m_line_size);
+          tms_font_screen_size->bind_value(&rec.m_font_size);
           tms_pair_line_style->bind_value(reinterpret_cast<int*>(&rec.m_line_render_style));
           tms_pair_enabled->setEnabled(true);
           tms_pair_dist_color->setEnabled(true);
           tms_pair_line_style->setEnabled(true);
           tms_pair_line_size->setEnabled(true);
+          tms_font_screen_size->setEnabled(true);
         } else {
           unbind_measure_tab();
         }
@@ -823,12 +829,14 @@ void geom_view_obj_insp_widget_t::unbind_measure_tab() {
   tms_pair_enabled->unbind_value();
   tms_pair_line_style->unbind_value();
   tms_pair_line_size->unbind_value();
+  tms_font_screen_size->unbind_value();
 
   tms_pair_line_style->setEnabled(false);
   tms_pair_dist_color->setEnabled(false);
   tms_pair_line_size->setEnabled(false);
   tms_pair_enabled->setEnabled(false);
   tms_pair_enabled->setChecked(false);
+  tms_font_screen_size->setEnabled(false);
 
 }
 

@@ -132,6 +132,7 @@ namespace qpp {
         qbinded_checkbox *tms_pair_enabled;
         qbinded_combobox *tms_pair_line_style;
         qbinded_int_spinbox *tms_pair_line_size;
+        qbinded_int_spinbox *tms_font_screen_size;
         //END TAB MEASUREMENT
 
         //START TAB MODIFY

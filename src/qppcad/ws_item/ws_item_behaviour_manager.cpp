@@ -70,6 +70,7 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
   app_state_t* astate = app_state_t::get_inst();
 
   if (!ws_item) return false;
+
   if (bhv_id < m_ws_item_io.size() && m_ws_item_io[bhv_id]->can_save() &&
       m_ws_item_io[bhv_id]->m_accepted_type == ws_item->get_type()) {
       astate->log(fmt::format("Saving ws_item[{}] to file {} from workspace {}",
@@ -87,6 +88,8 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
         }
 
     }
+
+  return false;
 
 }
 
