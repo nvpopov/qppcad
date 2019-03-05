@@ -122,18 +122,15 @@ namespace qpp {
         qspoiler_widget_t *tms_pair_dist_gb;
         QFormLayout *tms_pair_dist_gb_lt;
         QComboBox *tms_pair_cur_msr;
-        QLabel *tms_pair_at1_name;
-        QLabel *tms_pair_at1_id;
-        QLabel *tms_pair_at1_idx;
-        QLabel *tms_pair_at2_name;
-        QLabel *tms_pair_at2_id;
-        QLabel *tms_pair_at2_idx;
+        QLabel *tms_pair_at1_info;
+        QLabel *tms_pair_at2_info;
         QLabel *tms_pair_dist;
         qbinded_color3_input *tms_pair_dist_color;
         qbinded_checkbox *tms_pair_enabled;
         qbinded_combobox *tms_pair_line_style;
         qbinded_int_spinbox *tms_pair_line_size;
         qbinded_int_spinbox *tms_font_screen_size;
+        qbinded_combobox *tms_pair_label_style;
         //END TAB MEASUREMENT
 
         //START TAB MODIFY

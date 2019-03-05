@@ -64,10 +64,10 @@ void qspoiler_widget_t::process_state() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (m_state) {
-      widget_list->setVisible(true);
+      widget_list->show();
       action_btn->setIcon(*astate->icons.icon_arrow_up);
     } else {
-      widget_list->setVisible(false);
+      widget_list->hide();
       action_btn->setIcon(*astate->icons.icon_arrow_down);
     }
 
@@ -77,9 +77,5 @@ void qspoiler_widget_t::collapse_button_pressed() {
 
   m_state = !m_state;
   process_state();
-
-  if (m_state) {
-      widget_list->adjustSize();
-    }
 
 }

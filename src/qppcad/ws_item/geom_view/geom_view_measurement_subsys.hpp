@@ -21,6 +21,12 @@ namespace qpp {
       msr_line_dddashed
     };
 
+    enum msr_label_style : int {
+      msr_label_std,
+      msr_label_outline,
+      msr_label_border
+    };
+
     template<typename AINT = uint32_t>
     struct msr_bond_rec_t {
 
@@ -33,6 +39,7 @@ namespace qpp {
       int m_line_size{2};
       int m_font_size{13};
       msr_line_render_style m_line_render_style{msr_line_render_style::msr_line_dashed};
+      msr_label_style m_label_render_style{msr_label_style::msr_label_border};
 
       msr_bond_rec_t (const AINT _atm1,
                       const AINT _atm2,

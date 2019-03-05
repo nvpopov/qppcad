@@ -228,8 +228,10 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_current_anim = new QComboBox;
   gb_current_anim->setMaximumWidth(def_gen_control_width);
 
-  connect(gb_current_anim, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(cur_anim_index_changed(int)));
+  connect(gb_current_anim,
+          SIGNAL(currentIndexChanged(int)),
+          this,
+          SLOT(cur_anim_index_changed(int)));
 
   gb_anim_summary_lt->addRow(tr("Num. of anim."), gb_anim_total_anims);
   gb_anim_summary_lt->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
@@ -248,8 +250,11 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_timeline_slider = new QSlider(Qt::Orientation::Horizontal);
   gb_anim_timeline_slider->setTickPosition(QSlider::TicksBothSides);
   gb_anim_timeline_slider->setTickInterval(10);
-  connect(gb_anim_timeline_slider, SIGNAL(valueChanged(int)),
-          this, SLOT(anim_timeline_slider_value_changed(int)));
+  connect(gb_anim_timeline_slider,
+          SIGNAL(valueChanged(int)),
+          this,
+          SLOT(anim_timeline_slider_value_changed(int)));
+
   //gb_anim_timeline_layout->addWidget(gb_anim_timeline_cur_frame, 1);
   gb_anim_timeline_lt->addWidget(gb_anim_timeline_slider, 1);
 
@@ -261,23 +266,34 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
 
   anim_play = new QPushButton(tr("PLAY"));
   anim_play->setCheckable(true);
-  connect(anim_play, SIGNAL(toggled(bool)), this, SLOT(play_anim_button_toggle(bool)));
+  connect(anim_play,
+          SIGNAL(toggled(bool)),
+          this,
+          SLOT(play_anim_button_toggle(bool)));
 
   anim_to_start = new QPushButton(tr("<<"));
-  connect(anim_to_start, SIGNAL(clicked()),
-          this, SLOT(anim_button_begin_clicked()));
+  connect(anim_to_start,
+          SIGNAL(clicked()),
+          this,
+          SLOT(anim_button_begin_clicked()));
 
   anim_to_end = new QPushButton(tr(">>"));
-  connect(anim_to_end, SIGNAL(clicked()),
-          this, SLOT(anim_button_end_clicked()));
+  connect(anim_to_end,
+          SIGNAL(clicked()),
+          this,
+          SLOT(anim_button_end_clicked()));
 
   anim_frame_forward = new QPushButton(tr("+F"));
-  connect(anim_frame_forward, SIGNAL(clicked()),
-          this, SLOT(anim_button_frame_move_forward_clicked()));
+  connect(anim_frame_forward,
+          SIGNAL(clicked()),
+          this,
+          SLOT(anim_button_frame_move_forward_clicked()));
 
   anim_frame_backward = new QPushButton(tr("-F"));
-  connect(anim_frame_backward, SIGNAL(clicked()),
-          this, SLOT(anim_button_frame_move_backward_clicked()));
+  connect(anim_frame_backward,
+          SIGNAL(clicked()),
+          this,
+          SLOT(anim_button_frame_move_backward_clicked()));
 
   gb_anim_buttons_lt->addWidget(anim_play, 1);
   gb_anim_buttons_lt->addWidget(anim_to_start, 1);
@@ -306,12 +322,8 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
           this,
           &geom_view_obj_insp_widget_t::measurement_current_index_changed);
 
-  tms_pair_at1_name = new QLabel();
-  tms_pair_at1_id = new QLabel();
-  tms_pair_at1_idx = new QLabel();
-  tms_pair_at2_name = new QLabel();
-  tms_pair_at2_id = new QLabel();
-  tms_pair_at2_idx = new QLabel();
+  tms_pair_at1_info = new QLabel();
+  tms_pair_at2_info = new QLabel();
   tms_pair_dist = new QLabel();
 
   tms_pair_dist_color = new qbinded_color3_input;
@@ -330,17 +342,19 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_line_style->addItem("Dash-Dot");
   tms_pair_line_style->addItem("Dash-Dot-Dot");
 
+  tms_pair_label_style = new qbinded_combobox;
+  tms_pair_label_style->addItem("Standart");
+  tms_pair_label_style->addItem("Outline");
+  tms_pair_label_style->addItem("Border");
+
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
-  tms_pair_dist_gb_lt->addRow(tr("Atom №1 name"), tms_pair_at1_name);
-  tms_pair_dist_gb_lt->addRow(tr("Atom №1 id"), tms_pair_at1_id);
-  tms_pair_dist_gb_lt->addRow(tr("Atom №1 idx"), tms_pair_at1_idx);
-  tms_pair_dist_gb_lt->addRow(tr("Atom №2 name"), tms_pair_at2_name);
-  tms_pair_dist_gb_lt->addRow(tr("Atom №2 id"), tms_pair_at2_id);
-  tms_pair_dist_gb_lt->addRow(tr("Atom №2 idx"), tms_pair_at2_idx);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №1"), tms_pair_at1_info);
+  tms_pair_dist_gb_lt->addRow(tr("Atom №2"), tms_pair_at2_info);
   tms_pair_dist_gb_lt->addRow(tr("Line style"), tms_pair_line_style);
   tms_pair_dist_gb_lt->addRow(tr("Line size"), tms_pair_line_size);
   tms_pair_dist_gb_lt->addRow(tr("Color"), tms_pair_dist_color);
   tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
+  tms_pair_dist_gb_lt->addRow(tr("Label style"), tms_pair_label_style);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
 
   init_form_layout(tms_pair_dist_gb_lt);
@@ -448,12 +462,15 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_creation_lt->addRow("", tm_pair_creation_button);
   qt_helpers::resize_form_lt_labels(tm_gb_pair_creation_lt, tab_modify_label_width);
 
-  connect(tm_pair_creation_button, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_add_atom_between_pair);
+  connect(tm_pair_creation_button,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_add_atom_between_pair);
 
   connect(tm_pair_dist_spinbox,
           static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-          this, &geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed);
+          this,
+          &geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed);
 
   tm_gb_u_scale = new qspoiler_widget_t(tr("Barycentric scaling"));
   tm_gb_u_scale_lt = new QFormLayout;
@@ -489,8 +506,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_u_apply_scale_button = new QPushButton(tr("Apply scale"));
   tm_u_apply_scale_button->setMaximumWidth(tab_modify_op_button_width);
-  connect(tm_u_apply_scale_button, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_barycentric_scale_button_clicked);
+  connect(tm_u_apply_scale_button,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_barycentric_scale_button_clicked);
 
   tm_gb_u_scale_lt->addRow("Scale X", tm_u_scale_sb_x);
   tm_gb_u_scale_lt->addRow("Scale Y", tm_u_scale_sb_y);
@@ -526,10 +545,13 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   connect(tm_translate_coord_type,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this, &geom_view_obj_insp_widget_t::modify_translate_coord_type_changed);
+          this,
+          &geom_view_obj_insp_widget_t::modify_translate_coord_type_changed);
 
-  connect(tm_translate_apply_button, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked);
+  connect(tm_translate_apply_button,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked);
 
   tm_gb_bc_rot = new qspoiler_widget_t(tr("Rotate selected atoms"));
   tm_gb_bc_rot_lt = new QFormLayout;
@@ -555,14 +577,17 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   connect(tm_bc_rot_angle_type,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this, &geom_view_obj_insp_widget_t::modify_bc_rot_angle_type_change);
+          this,
+          &geom_view_obj_insp_widget_t::modify_bc_rot_angle_type_change);
 
   tm_bc_rot_angle_type->addItem("Degrees");
   tm_bc_rot_angle_type->addItem("Radians");
   tm_bc_rot_apply = new QPushButton(tr("Apply rotation"));
   tm_bc_rot_apply->setMaximumWidth(tab_modify_op_button_width);
-  connect(tm_bc_rot_apply, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_bc_rot_apply);
+  connect(tm_bc_rot_apply,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_bc_rot_apply);
 
   tm_gb_bc_rot_lt->addRow(tr("Rotation axis"), tm_bc_rot_axis);
   tm_gb_bc_rot_lt->addRow(tr("Angle type"), tm_bc_rot_angle_type);
@@ -816,11 +841,13 @@ void geom_view_obj_insp_widget_t::bind_measure_tab() {
           tms_pair_line_size->bind_value(&rec.m_line_size);
           tms_font_screen_size->bind_value(&rec.m_font_size);
           tms_pair_line_style->bind_value(reinterpret_cast<int*>(&rec.m_line_render_style));
+          tms_pair_label_style->bind_value(reinterpret_cast<int*>(&rec.m_label_render_style));
           tms_pair_enabled->setEnabled(true);
           tms_pair_dist_color->setEnabled(true);
           tms_pair_line_style->setEnabled(true);
           tms_pair_line_size->setEnabled(true);
           tms_font_screen_size->setEnabled(true);
+          tms_pair_label_style->setEnabled(true);
         } else {
           unbind_measure_tab();
         }
@@ -836,6 +863,7 @@ void geom_view_obj_insp_widget_t::unbind_measure_tab() {
   tms_pair_line_style->unbind_value();
   tms_pair_line_size->unbind_value();
   tms_font_screen_size->unbind_value();
+  tms_pair_label_style->unbind_value();
 
   tms_pair_line_style->setEnabled(false);
   tms_pair_dist_color->setEnabled(false);
@@ -843,6 +871,7 @@ void geom_view_obj_insp_widget_t::unbind_measure_tab() {
   tms_pair_enabled->setEnabled(false);
   tms_pair_enabled->setChecked(false);
   tms_font_screen_size->setEnabled(false);
+  tms_pair_label_style->setEnabled(false);
 
 }
 
@@ -1064,25 +1093,26 @@ void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
       if (cur_dist_msr < 0 || b_al->m_measure->m_dist_recs.empty()) {
 
           const QString empty_label = "-";
-          tms_pair_at1_name->setText(empty_label);
-          tms_pair_at1_id->setText(empty_label);
-          tms_pair_at1_idx->setText(empty_label);
-          tms_pair_at2_name->setText(empty_label);
-          tms_pair_at2_id->setText(empty_label);
-          tms_pair_at2_idx->setText(empty_label);
+          tms_pair_at1_info->setText(empty_label);
+          tms_pair_at2_info->setText(empty_label);
           unbind_measure_tab();
 
         } else {
 
           auto &rec = b_al->m_measure->m_dist_recs[cur_dist_msr];
 
-          tms_pair_at1_name->setText(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at1)));
-          tms_pair_at1_id->setText(QString("%1").arg(rec.m_at1));
-          tms_pair_at1_idx->setText(QString::fromStdString(fmt::format("{}",rec.m_idx1)));
+          QString atom1_info = tr("%1 [%2] %3")
+                              .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at1)))
+                              .arg(rec.m_at1)
+                              .arg(QString::fromStdString(fmt::format("{}",rec.m_idx1)));
+          tms_pair_at1_info->setText(atom1_info);
 
-          tms_pair_at2_name->setText(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at2)));
-          tms_pair_at2_id->setText(QString("%1").arg(rec.m_at2));
-          tms_pair_at2_idx->setText(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
+          QString atom2_info = tr("%1 [%2] %3")
+                              .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at2)))
+                              .arg(rec.m_at2)
+                              .arg(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
+          tms_pair_at2_info->setText(atom2_info);
+
           bind_measure_tab();
 
         }

@@ -125,6 +125,10 @@ namespace qpp {
       QPen linepen_sel(QPen(Qt::red, 4, Qt::DotLine, Qt::RoundCap));
 
       QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
+      QPen rectpen2(QPen(Qt::black, 1, Qt::SolidLine));
+
+      QColor text_fill_color = QColor::fromRgbF(1,1,1);
+
       painter.setFont(QFont(astate->m_font_name, 13));
       painter.resetTransform();
 
@@ -152,7 +156,8 @@ namespace qpp {
 
               vector2<float> mid = (*l_s + *l_e) * 0.5f;
 
-              painter.setFont(QFont(astate->m_font_name, record.m_font_size));
+              QFont font(astate->m_font_name, record.m_font_size);
+              painter.setFont(font);
 
               //13 = 70
               //26 = 140 ?
@@ -205,15 +210,47 @@ namespace qpp {
 
               painter.translate(mid[0], mid[1]);
               painter.rotate(angle);
-              QPainterPath path;
-              QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
-              path.addRoundedRect(text_rect, 10, 10);
-              painter.fillPath(path, Qt::white);
-              painter.setPen(rectpen);
-              painter.drawPath(path);
-              painter.drawText(text_rect,
-                               Qt::AlignCenter,
-                               QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+
+              switch (record.m_label_render_style) {
+
+                case msr_label_style::msr_label_std : {
+                    QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+                    painter.setPen(rectpen);
+                    painter.drawText(text_rect,
+                                     Qt::AlignCenter,
+                                     QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                    break;
+                  }
+
+                case msr_label_style::msr_label_border : {
+                    QPainterPath path;
+                    QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+                    path.addRoundedRect(text_rect, 10, 10);
+                    painter.fillPath(path, Qt::white);
+                    painter.setPen(rectpen);
+                    painter.drawPath(path);
+                    painter.drawText(text_rect,
+                                     Qt::AlignCenter,
+                                     QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                    break;
+                  }
+
+                case msr_label_style::msr_label_outline : {
+                    QPainterPath text_path;
+                    QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+                    painter.setPen(rectpen2);
+                    painter.setBrush(text_fill_color);
+                    text_path.addText(text_rect.left(),
+                                      text_rect.bottom(),
+                                      font,
+                                      QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                    painter.drawPath(text_path);
+                    break;
+                  }
+
+                }
+
+
               painter.resetTransform();
 
             }
