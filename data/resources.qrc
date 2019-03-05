@@ -32,5 +32,7 @@
         <file>images/outline-font_download-24px.svg</file>
         <file>images/outline-select_all-24px_d.svg</file>
         <file>images/outline-select_all-24px.svg</file>
+        <file>images/outline-arrow_upward-24px.svg</file>
+        <file>images/outline-arrow_downward-24px.svg</file>
     </qresource>
 </RCC>

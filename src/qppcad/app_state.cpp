@@ -61,6 +61,40 @@ namespace qpp {
       py_manager = std::make_unique<python_manager_t>();
     }
 
+    void app_state_t::init_styles() {
+
+      icons.icon_arrow_up = new QIcon("://images/outline-arrow_upward-24px.svg");
+      icons.icon_arrow_down = new QIcon("://images/outline-arrow_downward-24px.svg");
+
+      m_app_palette.setColor(QPalette::Window, QColor(68,68,68));
+      m_app_palette.setColor(QPalette::WindowText, Qt::white);
+      m_app_palette.setColor(QPalette::Disabled, QPalette::WindowText,QColor(87,87,87));
+      m_app_palette.setColor(QPalette::Base, QColor(52,52,52));
+      m_app_palette.setColor(QPalette::AlternateBase, QColor(66,66,66));
+      m_app_palette.setColor(QPalette::ToolTipBase, Qt::white);
+      m_app_palette.setColor(QPalette::ToolTipText, Qt::white);
+      m_app_palette.setColor(QPalette::Text, Qt::white);
+      m_app_palette.setColor(QPalette::Disabled, QPalette::Text,QColor(97,97,97));
+      m_app_palette.setColor(QPalette::Dark, QColor(45,45,45));
+      m_app_palette.setColor(QPalette::Shadow, QColor(20,20,20));
+      m_app_palette.setColor(QPalette::Button, QColor(53,53,53));
+      m_app_palette.setColor(QPalette::ButtonText, Qt::white);
+      m_app_palette.setColor(QPalette::Disabled, QPalette::ButtonText,QColor(127,127,127));
+      m_app_palette.setColor(QPalette::BrightText, Qt::red);
+      m_app_palette.setColor(QPalette::Link, QColor(42,130,218));
+      m_app_palette.setColor(QPalette::Highlight, QColor(42,130,218));
+      m_app_palette.setColor(QPalette::Disabled, QPalette::Highlight,QColor(50,50,50));
+      m_app_palette.setColor(QPalette::HighlightedText, Qt::white);
+      m_app_palette.setColor(QPalette::Disabled, QPalette::HighlightedText,
+                                     QColor(127,127,127));
+
+      m_bgfg_light_pal.setColor(QPalette::Foreground, QColor(127,127,127));
+      m_bgfg_light_pal.setColor(QPalette::Background, QColor(127,127,127));
+
+      m_bg_light_pal.setColor(QPalette::Background, QColor(127,127,127));
+
+    }
+
     void app_state_t::make_viewport_dirty() {
       m_viewport_dirty = true;
     }

@@ -2,10 +2,10 @@
 #define QPP_CAD_QSPOILER_WIDGET
 
 #include <QFrame>
-#include <QGridLayout>
-#include <QParallelAnimationGroup>
-#include <QScrollArea>
-#include <QToolButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
 #include <QWidget>
 #include <qppcad/qppcad.hpp>
 
@@ -13,21 +13,33 @@ namespace qpp {
 
   namespace cad {
 
-    //stackoverflow.com/questions/32476006/how-to-make-an-expandable-collapsable-section-widget-in-qt
-    class qspoiler_widget_t : public QWidget {
+
+    class qspoiler_widget_t : public QFrame {
+
         Q_OBJECT
-      private:
-        QGridLayout mainLayout;
-        QToolButton toggleButton;
-        QFrame headerLine;
-        QParallelAnimationGroup toggleAnimation;
-        QScrollArea contentArea;
-        int animationDuration{300};
+
       public:
+
+        QVBoxLayout *vbox_general_lt;
+        QFrame *top_frm;
+        QHBoxLayout *hbox_frm;
+        QLabel *lbl_frm;
+        QPushButton *action_btn;
+        QWidget *widget_list;
+        QVBoxLayout *widget_list_lt;
+
+        bool m_state{true};
+
         explicit qspoiler_widget_t(const QString & title = "",
-                                   const int animationDuration = 300,
                                    QWidget *parent = 0);
-        void setContentLayout(QLayout & contentLayout);
+
+        void add_content_layout(QLayout *new_lt);
+        void process_state();
+
+      public slots:
+
+        void collapse_button_pressed();
+
     };
 
   }

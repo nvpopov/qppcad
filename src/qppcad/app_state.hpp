@@ -14,6 +14,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QString>
+#include <QPalette>
 
 namespace qpp {
 
@@ -36,6 +37,12 @@ namespace qpp {
 
     };
 
+    class icon_repository_t {
+      public:
+        QIcon *icon_arrow_down;
+        QIcon *icon_arrow_up;
+    };
+
     class app_state_t {
 
       private:
@@ -52,6 +59,7 @@ namespace qpp {
         void init_shaders();
         void init_meshes();
         void init_managers();
+        void init_styles();
         void make_viewport_dirty();
         void disable_app();
         void enable_app();
@@ -110,6 +118,11 @@ namespace qpp {
         QString m_screen_shots_dir{"."};
         QString m_spatial_suffix{"Å"};
         QString m_degree_suffix{"°"};
+        QPalette m_app_palette;
+        QPalette m_bgfg_light_pal;
+        QPalette m_bg_light_pal;
+
+        icon_repository_t icons;
 
         vector2<float> viewport_xy;
         vector2<float> viewport_size;

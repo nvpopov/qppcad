@@ -1,68 +1,81 @@
 #include <qppcad/ui/qspoiler_widget.hpp>
-#include <QPropertyAnimation>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-qspoiler_widget_t::qspoiler_widget_t(
-    const QString & title, const int animationDuration,
-    QWidget *parent) : QWidget(parent), animationDuration(animationDuration) {
-  toggleButton.setStyleSheet("QToolButton { border: none; }");
-  toggleButton.setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-  toggleButton.setArrowType(Qt::ArrowType::RightArrow);
-  toggleButton.setText(title);
-  toggleButton.setCheckable(true);
-  toggleButton.setChecked(false);
+qspoiler_widget_t::qspoiler_widget_t(const QString & title,
+                                     QWidget *parent) : QFrame(parent) {
 
-  headerLine.setFrameShape(QFrame::HLine);
-  headerLine.setFrameShadow(QFrame::Sunken);
-  headerLine.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+  app_state_t *astate = app_state_t::get_inst();
 
-  contentArea.setStyleSheet("QScrollArea { border: none; }");
-  contentArea.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  // start out collapsed
-  contentArea.setMaximumHeight(0);
-  contentArea.setMinimumHeight(0);
-  // let the entire widget grow and shrink with its content
-  toggleAnimation.addAnimation(new QPropertyAnimation(this, "minimumHeight"));
-  toggleAnimation.addAnimation(new QPropertyAnimation(this, "maximumHeight"));
-  toggleAnimation.addAnimation(new QPropertyAnimation(&contentArea, "maximumHeight"));
-  // don't waste space
-  mainLayout.setVerticalSpacing(0);
-  mainLayout.setContentsMargins(0, 0, 0, 0);
-  int row = 0;
-  mainLayout.addWidget(&toggleButton, row, 0, 1, 1, Qt::AlignLeft);
-  mainLayout.addWidget(&headerLine, row++, 2, 1, 1);
-  mainLayout.addWidget(&contentArea, row, 0, 1, 3);
-  setLayout(&mainLayout);
-  QObject::connect(&toggleButton, &QToolButton::clicked, [this](const bool checked) {
-      toggleButton.setArrowType(
-            checked ? Qt::ArrowType::DownArrow : Qt::ArrowType::RightArrow);
-      toggleAnimation.setDirection(
-            checked ? QAbstractAnimation::Forward : QAbstractAnimation::Backward);
-      toggleAnimation.start();
-    });
+  vbox_general_lt = new QVBoxLayout;
+  vbox_general_lt->setContentsMargins(0, 0, 0, 0);
+  setLayout(vbox_general_lt);
+  setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
+ // setPalette(astate->m_app_palette);
+
+  setPalette(astate->m_bg_light_pal);
+
+  top_frm = new QFrame;
+  top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  top_frm->setPalette(astate->m_bgfg_light_pal);
+  top_frm->setFrameStyle(QFrame::Panel);
+  top_frm->setAutoFillBackground(true);
+
+  hbox_frm = new QHBoxLayout;
+  hbox_frm->setContentsMargins(4, 4, 4, 4);
+
+  top_frm->setLayout(hbox_frm);
+
+  lbl_frm = new QLabel(title);
+  lbl_frm->setAlignment(Qt::AlignCenter);
+  action_btn = new QPushButton;
+  action_btn->setMaximumWidth(24);
+
+  widget_list = new QWidget;
+
+  widget_list_lt = new QVBoxLayout;
+  widget_list_lt->setContentsMargins(10, 0, 10, 5);
+  widget_list->setLayout(widget_list_lt);
+
+  hbox_frm->addWidget(action_btn);
+  hbox_frm->addWidget(lbl_frm);
+  hbox_frm->addSpacing(24);
+
+  vbox_general_lt->addWidget(top_frm);
+  vbox_general_lt->addWidget(widget_list);
+
+  connect(action_btn, &QPushButton::clicked,
+          this, &qspoiler_widget_t::collapse_button_pressed);
+
+  process_state();
+
 }
 
-void qspoiler_widget_t::setContentLayout(QLayout & contentLayout) {
+void qspoiler_widget_t::add_content_layout(QLayout *new_lt) {
 
-  delete contentArea.layout();
-  contentArea.setLayout(&contentLayout);
-  const auto collapsedHeight = sizeHint().height() - contentArea.maximumHeight();
-  auto contentHeight = contentLayout.sizeHint().height();
+  widget_list_lt->addLayout(new_lt);
 
-  for (int i = 0; i < toggleAnimation.animationCount() - 1; ++i) {
-      QPropertyAnimation * spoilerAnimation =
-          static_cast<QPropertyAnimation *>(toggleAnimation.animationAt(i));
-      spoilerAnimation->setDuration(animationDuration);
-      spoilerAnimation->setStartValue(collapsedHeight);
-      spoilerAnimation->setEndValue(collapsedHeight + contentHeight);
+}
+
+void qspoiler_widget_t::process_state() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (m_state) {
+      widget_list->setVisible(true);
+      action_btn->setIcon(*astate->icons.icon_arrow_up);
+    } else {
+      widget_list->setVisible(false);
+      action_btn->setIcon(*astate->icons.icon_arrow_down);
     }
 
-  QPropertyAnimation * contentAnimation =
-      static_cast<QPropertyAnimation *>(
-        toggleAnimation.animationAt(toggleAnimation.animationCount() - 1));
-  contentAnimation->setDuration(animationDuration);
-  contentAnimation->setStartValue(0);
-  contentAnimation->setEndValue(contentHeight);
+}
+
+void qspoiler_widget_t::collapse_button_pressed() {
+
+  m_state = !m_state;
+  process_state();
+
 }

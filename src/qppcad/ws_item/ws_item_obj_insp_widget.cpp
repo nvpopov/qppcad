@@ -11,7 +11,7 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name,
 
   ws_item_tab_widget_t *tmp = new ws_item_tab_widget_t;
   tmp->tab_scroll = new QScrollArea;
-  tmp->tab_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  tmp->tab_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   tmp->tab_scroll->setWidgetResizable(true);
 
   tmp->tab_inner_widget = new QWidget(tmp->tab_scroll);
@@ -30,6 +30,7 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name,
   setTabIcon(tmp->tab_id, *tmp->icon_enabled);
 
   return tmp;
+
 }
 
 void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
@@ -126,6 +127,10 @@ void ws_item_obj_insp_widget_t::post_init_group_box(QGroupBox *gb, QFormLayout *
   qt_helpers::resize_form_lt_labels(gb_lt, def_label_width);
 }
 
+void ws_item_obj_insp_widget_t::init_form_layout(QFormLayout *frm_lt) {
+   qt_helpers::resize_form_lt_labels(frm_lt, def_label_width);
+}
+
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -137,8 +142,12 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   //begin group box Item information
   tg_info_widget = new QGroupBox(tr("Item information"));
+
+  sp_info_widget = new qspoiler_widget_t(tr("Item information"));
   tg_form_layout = new QFormLayout;
-  pre_init_group_box(tg_info_widget, tg_form_layout);
+
+  //pre_init_group_box(tg_info_widget, tg_form_layout);
+  sp_info_widget->add_content_layout(tg_form_layout);
 
   ws_item_name = new QLabel;
   ws_item_type = new QLabel;
@@ -159,7 +168,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_form_layout->addRow(ws_item_bb_visible_label, ws_item_bb_visible);
   tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 
-  post_init_group_box(tg_info_widget, tg_form_layout);
+  //post_init_group_box(tg_info_widget, tg_form_layout);
   //end group box Item information
 
   //Begin group box Item actions
@@ -183,7 +192,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
           &app_state_event_disp_t::cur_ws_selected_item_position_changed_signal,
           this, &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
 
-  tab_general->tab_inner_widget_lt->addWidget(tg_info_widget);
+  tab_general->tab_inner_widget_lt->addWidget(sp_info_widget);
   tab_general->tab_inner_widget_lt->addWidget(tg_actions);
 
   connect(this, &ws_item_obj_insp_widget_t::currentChanged,

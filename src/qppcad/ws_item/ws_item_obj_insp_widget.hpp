@@ -4,6 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/ui/qbinded_inputs.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
 #include <QWidget>
 #include <QTabWidget>
 #include <QVBoxLayout>
@@ -41,6 +42,7 @@ namespace qpp {
         ws_item_t *m_binded_item{nullptr};
 
         ws_item_tab_widget_t *tab_general;
+        qspoiler_widget_t *sp_info_widget;
         QGroupBox *tg_info_widget;
         QFormLayout *tg_form_layout;
         QLabel *ws_item_name;
@@ -73,6 +75,8 @@ namespace qpp {
                              bool v_enabled);
         void pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
         void post_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
+        void init_form_layout(QFormLayout *frm_lt);
+
         ws_item_obj_insp_widget_t();
 
       public slots:
