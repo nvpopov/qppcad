@@ -141,7 +141,6 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
                            "://images/settings.svg");
 
   //begin group box Item information
-  tg_info_widget = new QGroupBox(tr("Item information"));
 
   sp_info_widget = new qspoiler_widget_t(tr("Item information"));
   tg_form_layout = new QFormLayout;
@@ -168,13 +167,17 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_form_layout->addRow(ws_item_bb_visible_label, ws_item_bb_visible);
   tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 
+  init_form_layout(tg_form_layout);
+
   //post_init_group_box(tg_info_widget, tg_form_layout);
   //end group box Item information
 
   //Begin group box Item actions
-  tg_actions = new QGroupBox(tr("Item actions"));
+  tg_actions = new qspoiler_widget_t(tr("Item actions"));
+
   tg_actions_layout = new QHBoxLayout;
-  tg_actions->setLayout(tg_actions_layout);
+  tg_actions->add_content_layout(tg_actions_layout);
+
   tg_actions_delete = new QPushButton(tr("Delete"));
   connect(tg_actions_delete, SIGNAL(pressed()), this, SLOT(delete_current_item()));
 

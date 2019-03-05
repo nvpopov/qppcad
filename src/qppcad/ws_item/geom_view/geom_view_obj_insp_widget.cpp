@@ -7,20 +7,20 @@ using namespace qpp::cad;
 
 void geom_view_obj_insp_widget_t::construct_general_tab() {
 
-  tg_geom_summary_widget = new QGroupBox(tr("Geometry summary"));
+  tg_geom_summary_widget = new qspoiler_widget_t(tr("Geometry summary"));
   tg_geom_summary_lt = new QFormLayout;
-  pre_init_group_box(tg_geom_summary_widget, tg_geom_summary_lt);
+  tg_geom_summary_widget->add_content_layout(tg_geom_summary_lt);
 
   tg_geom_summary_total_atoms = new QLabel;
   tg_geom_summary_total_types = new QLabel;
 
   tg_geom_summary_lt->addRow(tr("Total atoms"), tg_geom_summary_total_atoms);
   tg_geom_summary_lt->addRow(tr("Total types"), tg_geom_summary_total_types);
-  post_init_group_box(tg_geom_summary_widget, tg_geom_summary_lt);
+  init_form_layout(tg_geom_summary_lt);
 
-  tg_type_summary_widget = new QGroupBox(tr("Type Summary"));
+  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"));
   tg_type_summary_lt = new QVBoxLayout;
-  tg_type_summary_widget->setLayout(tg_type_summary_lt);
+  tg_type_summary_widget->add_content_layout(tg_type_summary_lt);
   tg_type_summary_tbl = new QTableWidget;
   tg_type_summary_tbl->setColumnCount(3);
 
@@ -29,9 +29,9 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   table_hdr_cell.push_back("Y");
   table_hdr_cell.push_back("Z");
 
-  tg_gb_cell = new QGroupBox(tr("Lattice parameters"));
+  tg_gb_cell = new qspoiler_widget_t(tr("Lattice parameters"));
   tg_gb_cell_lt = new QVBoxLayout;
-  tg_gb_cell->setLayout(tg_gb_cell_lt);
+  tg_gb_cell->add_content_layout(tg_gb_cell_lt);
   tg_gb_cell_tbl = new QTableWidget;
 
   tg_gb_cell_tbl->setColumnCount(3);
@@ -65,9 +65,9 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
 
 void geom_view_obj_insp_widget_t::construct_display_tab() {
 
-  gb_disp_s = new QGroupBox(tr("Draw settings"));
+  gb_disp_s = new qspoiler_widget_t(tr("Draw settings"));
   gb_disp_s_lt = new QFormLayout;
-  pre_init_group_box(gb_disp_s, gb_disp_s_lt);
+  gb_disp_s->add_content_layout(gb_disp_s_lt);
 
   disp_s_draw_atoms = new qbinded_checkbox;
   disp_s_draw_bonds = new qbinded_checkbox;
@@ -127,11 +127,13 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(disp_draw_subcells_label, disp_draw_subcells);
   gb_disp_s_lt->addRow(disp_subcells_idx_label, disp_subcells_idx);
   gb_disp_s_lt->addRow(disp_subcell_color_label, disp_subcell_color);
-  post_init_group_box(gb_disp_s, gb_disp_s_lt);
 
-  gb_disp_labels = new QGroupBox(tr("Labels"));
+  init_form_layout(gb_disp_s_lt);
+
+  gb_disp_labels = new qspoiler_widget_t(tr("Labels"));
   gb_disp_labels_lt = new QFormLayout;
-  pre_init_group_box(gb_disp_labels, gb_disp_labels_lt);
+  gb_disp_labels->add_content_layout(gb_disp_labels_lt);
+
   disp_s_labels_style = new qbinded_combobox;
   disp_s_labels_style->addItem("None");
   disp_s_labels_style->addItem("Id");
@@ -147,22 +149,25 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_labels_lt->addRow(tr("Labels size"), disp_labels_size);
   gb_disp_labels_lt->addRow(tr("Inplace labels"), disp_s_inplace_labels);
   gb_disp_labels_lt->addRow(tr("Selective vis."), disp_sl_labels);
-  post_init_group_box(gb_disp_labels, gb_disp_labels_lt);
+  init_form_layout(gb_disp_labels_lt);
 
   //display - shading tab initialization
-  gb_disp_shading = new QGroupBox(tr("Shading settings"));
+  gb_disp_shading = new qspoiler_widget_t(tr("Shading settings"));
   gb_disp_shading_lt = new QFormLayout;
-  pre_init_group_box(gb_disp_shading, gb_disp_shading_lt);
+  gb_disp_shading->add_content_layout(gb_disp_shading_lt);
+
   disp_shading_spec = new qbinded_checkbox;
   disp_shading_spec_value = new qbinded_float_spinbox;
   disp_shading_spec_value->set_min_max_step(0.25, 50, 0.25);
   gb_disp_shading_lt->addRow(tr("Enable specular"), disp_shading_spec);
   gb_disp_shading_lt->addRow(tr("Specular power"), disp_shading_spec_value);
-  post_init_group_box(gb_disp_shading, gb_disp_shading_lt);
+  init_form_layout(gb_disp_shading_lt);
 
   //display - type specific rendering
-  gb_disp_type_spec_rend = new QGroupBox(tr("Type specific rendering"));
+  gb_disp_type_spec_rend = new qspoiler_widget_t(tr("Type specific rendering"));
   gb_disp_type_spec_rend_lt = new QFormLayout;
+  gb_disp_type_spec_rend->add_content_layout(gb_disp_type_spec_rend_lt);
+
   disp_type_spec_tv = new QTableView;
   gb_disp_type_spec_rend->setLayout(gb_disp_type_spec_rend_lt);
   gb_disp_type_spec_rend_lt->addWidget(disp_type_spec_tv);
@@ -177,10 +182,10 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_type_spec_tv->setModel(disp_type_spec_mdl);
 
   //display - bonding table
-  gb_disp_bt = new QGroupBox(tr("Bonding table"));
+  gb_disp_bt = new qspoiler_widget_t(tr("Bonding table"));
   gb_disp_bt->setContentsMargins(0,0,0,0);
   disp_bt_lt = new QVBoxLayout;
-  gb_disp_bt->setLayout(disp_bt_lt);
+  gb_disp_bt->add_content_layout(disp_bt_lt);
   bt_mdl = new qbonding_table_model_t;
   disp_bt = new QTableView;
 
@@ -202,15 +207,16 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_type_spec_rend);
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_bt);
 
-  tab_disp->tab_inner_widget_lt->addStretch(0);
+  tab_disp->tab_inner_widget_lt->addStretch(1);
 
 }
 
 void geom_view_obj_insp_widget_t::construct_anim_tab() {
 
-  gb_anim_summary = new QGroupBox(tr("Summary"));
+  gb_anim_summary = new qspoiler_widget_t(tr("Summary"));
   gb_anim_summary_lt = new QFormLayout;
-  pre_init_group_box(gb_anim_summary, gb_anim_summary_lt);
+  gb_anim_summary->add_content_layout(gb_anim_summary_lt);
+
   gb_anim_summary->setMaximumHeight(250);
   gb_anim_total_anims = new QLabel;
   gb_rebuild_bonds = new qbinded_checkbox;
@@ -232,11 +238,12 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_summary_lt->addRow(tr("Frame time "), gb_anim_speed);
   gb_anim_summary_lt->addRow(tr("Num frm."), gb_anim_total_frames_in_anim);
   gb_anim_summary_lt->addRow(tr("Current frame:"), gb_anim_cur_frame);
-  post_init_group_box(gb_anim_summary, gb_anim_summary_lt);
+  init_form_layout(gb_anim_summary_lt);
 
-  gb_anim_timeline = new QGroupBox(tr("Timeline"));
+  gb_anim_timeline = new qspoiler_widget_t(tr("Timeline"));
+  gb_anim_timeline->setMaximumWidth(400);
   gb_anim_timeline_lt = new QHBoxLayout;
-  gb_anim_timeline->setLayout(gb_anim_timeline_lt);
+  gb_anim_timeline->add_content_layout(gb_anim_timeline_lt);
 
   gb_anim_timeline_slider = new QSlider(Qt::Orientation::Horizontal);
   gb_anim_timeline_slider->setTickPosition(QSlider::TicksBothSides);
@@ -246,10 +253,10 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   //gb_anim_timeline_layout->addWidget(gb_anim_timeline_cur_frame, 1);
   gb_anim_timeline_lt->addWidget(gb_anim_timeline_slider, 1);
 
-  gb_anim_buttons = new QGroupBox(tr("Control"));
+  gb_anim_buttons = new qspoiler_widget_t(tr("Control"));
   gb_anim_buttons_lt = new QHBoxLayout;
-  gb_anim_buttons->setLayout(gb_anim_buttons_lt);
-  gb_anim_buttons->setMaximumWidth(420);
+  gb_anim_buttons->add_content_layout(gb_anim_buttons_lt);
+  gb_anim_buttons->setMaximumWidth(400);
   gb_anim_buttons->setMaximumHeight(90);
 
   anim_play = new QPushButton(tr("PLAY"));
@@ -282,16 +289,15 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   tab_anim->tab_inner_widget_lt->addWidget(gb_anim_timeline);
   tab_anim->tab_inner_widget_lt->addWidget(gb_anim_buttons);
 
-  tab_anim->tab_inner_widget_lt->addStretch(0);
+  tab_anim->tab_inner_widget_lt->addStretch(1);
 
 }
 
 void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
-  tms_pair_dist_gb = new QGroupBox(tr("Interatomic distances"));
+  tms_pair_dist_gb = new qspoiler_widget_t(tr("Interatomic distances"));
   tms_pair_dist_gb_lt = new QFormLayout;
-
-  pre_init_group_box(tms_pair_dist_gb, tms_pair_dist_gb_lt);
+  tms_pair_dist_gb->add_content_layout(tms_pair_dist_gb_lt);
 
   tms_pair_cur_msr = new QComboBox;
 
@@ -337,7 +343,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
 
-  post_init_group_box(tms_pair_dist_gb, tms_pair_dist_gb_lt);
+  init_form_layout(tms_pair_dist_gb_lt);
 
   tab_measurement->tab_inner_widget_lt->addWidget(tms_pair_dist_gb);
   tab_measurement->tab_inner_widget_lt->addStretch(1);
@@ -346,14 +352,14 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
 void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
-  tm_gb_add_atom = new QGroupBox(tr("Add atom"));
+  tm_gb_add_atom = new qspoiler_widget_t(tr("Add atom"));
   tm_gb_add_atom_lt = new QFormLayout;
-  tm_gb_add_atom->setLayout(tm_gb_add_atom_lt);
+  tm_gb_add_atom->add_content_layout(tm_gb_add_atom_lt);
 
-  tm_gb_single_atom = new QGroupBox(tr("Modify single atom"));
+  tm_gb_single_atom = new qspoiler_widget_t(tr("Modify single atom"));
   tm_gb_single_atom_lt = new QFormLayout;
   tm_gb_single_atom_lt->setLabelAlignment(Qt::AlignRight);
-  tm_gb_single_atom->setLayout(tm_gb_single_atom_lt);
+  tm_gb_single_atom->add_content_layout(tm_gb_single_atom_lt);
   tm_single_atom_combo = new QComboBox;
   tm_single_atom_combo->setMaximumWidth(def_gen_control_width);
   tm_single_atom_combo->setEditable(true);
@@ -398,10 +404,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
   qt_helpers::resize_form_lt_labels(tm_gb_add_atom_lt, tab_modify_label_width);
 
-  tm_gb_pair_dist = new QGroupBox(tr("Pair distance"));
+  tm_gb_pair_dist = new qspoiler_widget_t(tr("Pair distance"));
   tm_gb_pair_dist_lt = new QFormLayout;
   tm_gb_pair_dist_lt->setLabelAlignment(Qt::AlignRight);
-  tm_gb_pair_dist->setLayout(tm_gb_pair_dist_lt);
+  tm_gb_pair_dist->add_content_layout(tm_gb_pair_dist_lt);
   tm_pair_dist_atom1 = new QLabel;
   tm_pair_dist_atom2 = new QLabel;
   tm_pair_dist_atom1_idx = new QLabel;
@@ -428,10 +434,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
   qt_helpers::resize_form_lt_labels(tm_gb_pair_dist_lt, tab_modify_label_width);
 
-  tm_gb_pair_creation = new QGroupBox(tr("Insert atom between"));
+  tm_gb_pair_creation = new qspoiler_widget_t(tr("Insert atom between"));
   tm_gb_pair_creation_lt = new QFormLayout;
   tm_gb_pair_creation_lt->setLabelAlignment(Qt::AlignRight);
-  tm_gb_pair_creation->setLayout(tm_gb_pair_creation_lt);
+  tm_gb_pair_creation->add_content_layout(tm_gb_pair_creation_lt);
   tm_pair_creation_combo = new QComboBox;
   tm_pair_creation_combo->setEditable(true);
   tm_pair_creation_combo->setMaximumWidth(def_gen_control_width);
@@ -449,10 +455,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
           this, &geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed);
 
-  tm_gb_u_scale = new QGroupBox(tr("Barycentric scaling"));
+  tm_gb_u_scale = new qspoiler_widget_t(tr("Barycentric scaling"));
   tm_gb_u_scale_lt = new QFormLayout;
   tm_gb_u_scale_lt->setLabelAlignment(Qt::AlignRight);
-  tm_gb_u_scale->setLayout(tm_gb_u_scale_lt);
+  tm_gb_u_scale->add_content_layout(tm_gb_u_scale_lt);
 
   tm_u_scale_sb_x = new QDoubleSpinBox;
   tm_u_scale_sb_x->setMinimum(0.01);
@@ -495,10 +501,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
   qt_helpers::resize_form_lt_labels(tm_gb_u_scale_lt, tab_modify_label_width);
 
-  tm_gb_translate = new QGroupBox(tr("Translate selected atoms"));
+  tm_gb_translate = new qspoiler_widget_t(tr("Translate selected atoms"));
   tm_gb_translate_lt = new QFormLayout;
   tm_gb_translate_lt->setLabelAlignment(Qt::AlignRight);
-  tm_gb_translate->setLayout(tm_gb_translate_lt);
+  tm_gb_translate->add_content_layout(tm_gb_translate_lt);
   tm_translate_vec3 = new qbinded_float3_input;
   tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
   tm_translate_vec3->set_default_suffix();
@@ -525,10 +531,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   connect(tm_translate_apply_button, &QPushButton::pressed,
           this, &geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked);
 
-  tm_gb_bc_rot = new QGroupBox(tr("Rotate selected atoms"));
+  tm_gb_bc_rot = new qspoiler_widget_t(tr("Rotate selected atoms"));
   tm_gb_bc_rot_lt = new QFormLayout;
   tm_gb_bc_rot_lt->setLabelAlignment(Qt::AlignRight);
-  tm_gb_bc_rot->setLayout(tm_gb_bc_rot_lt);
+  tm_gb_bc_rot->add_content_layout(tm_gb_bc_rot_lt);
 
   tm_bc_rot_axis = new QComboBox;
   tm_bc_rot_axis->setMaximumWidth(def_gen_control_width);
@@ -564,9 +570,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_bc_rot_lt->addRow("", tm_bc_rot_apply);
   qt_helpers::resize_form_lt_labels(tm_gb_bc_rot_lt, tab_modify_label_width);
 
-  tm_gb_group_op = new QGroupBox(tr("Group operations"));
+  tm_gb_group_op = new qspoiler_widget_t(tr("Group operations"));
   tm_group_op_lt = new QGridLayout;
-  tm_gb_group_op->setLayout(tm_group_op_lt);
+  tm_gb_group_op->add_content_layout(tm_group_op_lt);
   tm_group_op_sv_show = new QPushButton(tr("SV:SHOW"));
   tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
   tm_group_op_sv_show_all = new QPushButton(tr("SV:SHOW ALL"));
@@ -601,7 +607,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_bc_rot);
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_group_op);
 
-  tab_modify->tab_inner_widget_lt->addStretch(0);
+  tab_modify->tab_inner_widget_lt->addStretch(1);
 
 }
 

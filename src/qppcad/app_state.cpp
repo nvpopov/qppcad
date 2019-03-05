@@ -88,10 +88,10 @@ namespace qpp {
       m_app_palette.setColor(QPalette::Disabled, QPalette::HighlightedText,
                                      QColor(127,127,127));
 
-      m_bgfg_light_pal.setColor(QPalette::Foreground, QColor(127,127,127));
-      m_bgfg_light_pal.setColor(QPalette::Background, QColor(127,127,127));
+      m_bgfg_light_pal.setColor(QPalette::Foreground, QColor(100,100,100));
+      m_bgfg_light_pal.setColor(QPalette::Background, QColor(100,100,100));
 
-      m_bg_light_pal.setColor(QPalette::Background, QColor(127,127,127));
+      m_bg_light_pal.setColor(QPalette::Background, QColor(100,100,100));
 
     }
 

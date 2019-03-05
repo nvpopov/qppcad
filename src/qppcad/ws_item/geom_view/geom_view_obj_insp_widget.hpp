@@ -8,6 +8,7 @@
 #include <qppcad/ws_item/geom_view/qmeasurements_table_model.hpp>
 #include <qppcad/ui/qrealspinbox_delegate.hpp>
 #include <qppcad/ui/qspoiler_widget.hpp>
+
 #include <QTableWidget>
 #include <QTableView>
 #include <QHeaderView>
@@ -24,23 +25,23 @@ namespace qpp {
       public:
         geom_view_t *b_al{nullptr}; // binded atoms list
 
-        QGroupBox *tg_geom_summary_widget;
+        qspoiler_widget_t *tg_geom_summary_widget;
         QFormLayout *tg_geom_summary_lt;
 
         QLabel *tg_geom_summary_total_atoms;
         QLabel *tg_geom_summary_total_types;
 
-        QGroupBox *tg_type_summary_widget;
+        qspoiler_widget_t *tg_type_summary_widget;
         QVBoxLayout *tg_type_summary_lt;
         QTableWidget *tg_type_summary_tbl;
 
-        QGroupBox *tg_gb_cell;
+        qspoiler_widget_t *tg_gb_cell;
         QVBoxLayout *tg_gb_cell_lt;
         QTableWidget *tg_gb_cell_tbl;
 
         //START: Display tab
         ws_item_tab_widget_t *tab_disp;
-        QGroupBox *gb_disp_s;
+        qspoiler_widget_t *gb_disp_s;
         QFormLayout *gb_disp_s_lt;
         qbinded_checkbox *disp_s_draw_atoms;
         qbinded_checkbox *disp_s_draw_bonds;
@@ -51,7 +52,7 @@ namespace qpp {
         qbinded_combobox *disp_s_render_style;
         qbinded_combobox *disp_s_color_mode;
 
-        QGroupBox *gb_disp_labels;
+        qspoiler_widget_t *gb_disp_labels;
         QFormLayout *gb_disp_labels_lt;
         qbinded_combobox *disp_s_labels_style;
         qbinded_checkbox *disp_s_inplace_labels;
@@ -76,17 +77,17 @@ namespace qpp {
         QLabel *disp_subcell_color_label;
         qbinded_color3_input *disp_subcell_color;
 
-        QGroupBox *gb_disp_shading;
+        qspoiler_widget_t *gb_disp_shading;
         QFormLayout *gb_disp_shading_lt;
         qbinded_checkbox *disp_shading_spec;
         qbinded_float_spinbox *disp_shading_spec_value;
 
-        QGroupBox *gb_disp_type_spec_rend;
+        qspoiler_widget_t *gb_disp_type_spec_rend;
         QTableView *disp_type_spec_tv;
         qtype_specific_rendering_model_t *disp_type_spec_mdl;
         QFormLayout *gb_disp_type_spec_rend_lt;
 
-        QGroupBox *gb_disp_bt;
+        qspoiler_widget_t *gb_disp_bt;
         QVBoxLayout *disp_bt_lt;
         QTableView *disp_bt;
         qbonding_table_model_t *bt_mdl;
@@ -94,7 +95,7 @@ namespace qpp {
         //END: Display tab
 
         ws_item_tab_widget_t *tab_anim;
-        QGroupBox *gb_anim_summary;
+        qspoiler_widget_t *gb_anim_summary;
         QLabel *gb_anim_total_anims;
         qbinded_checkbox *gb_rebuild_bonds;
         qbinded_checkbox *gb_play_cyclic;
@@ -102,12 +103,12 @@ namespace qpp {
         QComboBox *gb_current_anim;
         QFormLayout *gb_anim_summary_lt;
 
-        QGroupBox *gb_anim_timeline;
+        qspoiler_widget_t *gb_anim_timeline;
         QHBoxLayout *gb_anim_timeline_lt;
         QLabel *gb_anim_total_frames_in_anim;
         QLabel *gb_anim_cur_frame;
         QSlider *gb_anim_timeline_slider;
-        QGroupBox *gb_anim_buttons;
+        qspoiler_widget_t *gb_anim_buttons;
         QHBoxLayout *gb_anim_buttons_lt;
 
         QPushButton *anim_play;
@@ -118,7 +119,7 @@ namespace qpp {
 
         //START TAB MEASUREMENT
         ws_item_tab_widget_t *tab_measurement;
-        QGroupBox *tms_pair_dist_gb;
+        qspoiler_widget_t *tms_pair_dist_gb;
         QFormLayout *tms_pair_dist_gb_lt;
         QComboBox *tms_pair_cur_msr;
         QLabel *tms_pair_at1_name;
@@ -138,13 +139,13 @@ namespace qpp {
         //START TAB MODIFY
         ws_item_tab_widget_t *tab_modify;
 
-        QGroupBox *tm_gb_add_atom;
+        qspoiler_widget_t *tm_gb_add_atom;
         QFormLayout *tm_gb_add_atom_lt;
         QComboBox *tm_add_atom_combo;
         qbinded_float3_input *tm_add_atom_vec3;
         QPushButton *tm_add_atom_button;
 
-        QGroupBox *tm_gb_single_atom;
+        qspoiler_widget_t *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_lt;
         QLabel *tm_single_atom_idx;
         QLabel *tm_single_atom_num;
@@ -153,7 +154,7 @@ namespace qpp {
         QPushButton *tm_single_atom_commit;
         QPushButton *tm_single_atom_delete;
 
-        QGroupBox *tm_gb_pair_dist;
+        qspoiler_widget_t *tm_gb_pair_dist;
         QFormLayout *tm_gb_pair_dist_lt;
         QLabel *tm_pair_dist_atom1;
         QLabel *tm_pair_dist_atom2;
@@ -163,12 +164,12 @@ namespace qpp {
         QDoubleSpinBox *tm_pair_dist_spinbox;
         QLabel *tm_pair_dist_note_label;
 
-        QGroupBox *tm_gb_pair_creation;
+        qspoiler_widget_t *tm_gb_pair_creation;
         QFormLayout *tm_gb_pair_creation_lt;
         QComboBox *tm_pair_creation_combo;
         QPushButton *tm_pair_creation_button;
 
-        QGroupBox *tm_gb_u_scale;
+        qspoiler_widget_t *tm_gb_u_scale;
         QFormLayout *tm_gb_u_scale_lt;
         QDoubleSpinBox *tm_u_scale_sb_x;
         QDoubleSpinBox *tm_u_scale_sb_y;
@@ -178,21 +179,21 @@ namespace qpp {
         QCheckBox *tm_u_scale_z_enabled;
         QPushButton *tm_u_apply_scale_button;
 
-        QGroupBox *tm_gb_translate;
+        qspoiler_widget_t *tm_gb_translate;
         QFormLayout *tm_gb_translate_lt;
         qbinded_float3_input *tm_translate_vec3;
         QLabel *tm_translate_coord_type_label;
         QComboBox *tm_translate_coord_type;
         QPushButton *tm_translate_apply_button;
 
-        QGroupBox *tm_gb_bc_rot;
+        qspoiler_widget_t *tm_gb_bc_rot;
         QFormLayout *tm_gb_bc_rot_lt;
         QComboBox *tm_bc_rot_axis;
         QComboBox *tm_bc_rot_angle_type;
         QDoubleSpinBox *tm_bc_rot_angle;
         QPushButton *tm_bc_rot_apply;
 
-        QGroupBox *tm_gb_group_op;
+        qspoiler_widget_t *tm_gb_group_op;
         QGridLayout *tm_group_op_lt;
         QPushButton *tm_group_op_sv_show;
         QPushButton *tm_group_op_sv_hide;

@@ -24,7 +24,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   top_frm->setAutoFillBackground(true);
 
   hbox_frm = new QHBoxLayout;
-  hbox_frm->setContentsMargins(4, 4, 4, 4);
+  hbox_frm->setContentsMargins(4, 2, 4, 2);
 
   top_frm->setLayout(hbox_frm);
 
@@ -77,5 +77,9 @@ void qspoiler_widget_t::collapse_button_pressed() {
 
   m_state = !m_state;
   process_state();
+
+  if (m_state) {
+      widget_list->adjustSize();
+    }
 
 }

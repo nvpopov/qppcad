@@ -43,14 +43,14 @@ namespace qpp {
 
         ws_item_tab_widget_t *tab_general;
         qspoiler_widget_t *sp_info_widget;
-        QGroupBox *tg_info_widget;
+
         QFormLayout *tg_form_layout;
         QLabel *ws_item_name;
         QLabel *ws_item_type;
         QLabel *ws_item_pos_label;
         qbinded_float3_input *ws_item_pos;
 
-        QGroupBox *tg_actions;
+        qspoiler_widget_t *tg_actions;
         QHBoxLayout *tg_actions_layout;
         QPushButton *tg_actions_delete;
         QPushButton *tg_actions_rename;
