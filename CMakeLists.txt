@@ -21,6 +21,8 @@ endmacro()
 set_option(PYTHON_BINDINGS OFF)
 set_option(BUILD_TESTS ON)
 
+find_package(Doxygen)
+
 add_subdirectory(deps/qpp)
 
 include_directories(deps/glfw/include)
@@ -188,3 +190,11 @@ target_link_libraries(qppcad
 
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_SOURCE_DIR}/docs/doxygen.conf"
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src
+        COMMENT "Building user's documentation into doxyDoc build dir..."
+    )
+endif()
