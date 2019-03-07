@@ -5,7 +5,7 @@ import pyqpp as pq
 import rlcompleter
 import sys
 import embc
-import workspace_stuff
+import wss
 
 ws = get_wsm()
 

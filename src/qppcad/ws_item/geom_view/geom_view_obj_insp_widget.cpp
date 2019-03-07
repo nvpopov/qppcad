@@ -710,7 +710,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_s_draw_img_bonds->bind_value(&b_al->m_draw_img_bonds);
       disp_s_atom_scale->bind_value(&b_al->m_atom_scale_factor);
       disp_s_bond_scale->bind_value(&b_al->m_bond_scale_factor);
-      disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_cur_render_type));
+      disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_render_style));
       disp_s_color_mode->bind_value(reinterpret_cast<int*>(&b_al->m_color_mode));
 
       disp_s_labels_style->bind_value(reinterpret_cast<int*>(&b_al->m_labels->m_style));

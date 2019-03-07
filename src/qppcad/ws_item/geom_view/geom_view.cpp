@@ -232,25 +232,25 @@ void geom_view_t::render () {
 
       if (!m_is_visible) return;
 
-      switch (m_cur_render_type) {
+      switch (m_render_style) {
 
-        case geom_view_render_t::ball_and_stick :
+        case geom_view_render_style_t::ball_and_stick :
           geom_view_render_bs::render(*this);
           break;
 
-        case geom_view_render_t::dynamic_lines:
+        case geom_view_render_style_t::dynamic_lines:
           geom_view_render_dlines::render(*this);
           break;
 
-        case geom_view_render_t::xatom_lines:
+        case geom_view_render_style_t::xatom_lines:
           geom_view_render_xlines::render(*this);
           break;
 
-        case geom_view_render_t::billboards:
+        case geom_view_render_style_t::billboards:
           geom_view_render_billboards::render(*this);
           break;
 
-        case geom_view_render_t::buffered_billboards: {
+        case geom_view_render_style_t::buffered_billboards: {
             if (!m_bs) {
                 m_bs = std::make_unique<geom_view_render_buffered_billboards_t>(*this);
                 m_bs->init();
@@ -278,6 +278,17 @@ void geom_view_t::render () {
 void geom_view_t::render_overlay(QPainter &painter) {
   m_measure->render_overlay(painter);
   m_labels->render_overlay(painter);
+}
+
+void geom_view_t::rebond() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  m_tws_tr->m_bonding_table.init_default(m_geom.get());
+  m_tws_tr->do_action(act_rebuild_ntable);
+
+  astate->astate_evd->cur_ws_selected_item_changed();
+
 }
 
 bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
@@ -924,7 +935,7 @@ void geom_view_t::save_to_json (json &data) {
   data[JSON_BT_SHOW_DSBL] = m_bt_show_disabled_record;
   data[JSON_ATOM_SCALE] = m_atom_scale_factor;
   data[JSON_BOND_SCALE] = m_bond_scale_factor;
-  data[JSON_ATOMS_LIST_RENDER_TYPE] = m_cur_render_type;
+  data[JSON_ATOMS_LIST_RENDER_TYPE] = m_render_style;
   data[JSON_ATOMS_LIST_DRAW_SPECULAR] = m_draw_specular;
   data[JSON_ATOMS_LIST_SPECULAR] = m_shading_specular_power;
 
@@ -1027,7 +1038,7 @@ void geom_view_t::load_from_json (json &data) {
     m_draw_img_atoms = data[JSON_SHOW_IMG_ATOMS];
 
   if (data.find(JSON_ATOMS_LIST_RENDER_TYPE) != data.end())
-    m_cur_render_type = data[JSON_ATOMS_LIST_RENDER_TYPE];
+    m_render_style = data[JSON_ATOMS_LIST_RENDER_TYPE];
 
   if (data.find(JSON_ATOMS_LIST_DRAW_SPECULAR) != data.end())
     m_draw_specular = data[JSON_ATOMS_LIST_DRAW_SPECULAR];

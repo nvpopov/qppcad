@@ -34,7 +34,7 @@ namespace qpp {
 
          void post_load_hook(geom_view_t *_item, workspace_t *ws) override {
           if (_item->m_geom->nat() > 20000) {
-              _item->m_cur_render_type = geom_view_render_t::billboards;
+              _item->m_render_style = geom_view_render_style_t::billboards;
             }
           else if (_item->m_geom->nat() > 7000) {
               _item->m_draw_bonds = false;

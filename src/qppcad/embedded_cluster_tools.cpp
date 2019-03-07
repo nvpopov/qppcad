@@ -180,8 +180,8 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
 
     //if (generate_qm && )
 
-    if (ws_chg->m_geom->nat() > 1800) ws_chg->m_cur_render_type =
-        geom_view_render_t::xatom_lines;
+    if (ws_chg->m_geom->nat() > 1800) ws_chg->m_render_style =
+        geom_view_render_style_t::xatom_lines;
     //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
     //add connection info

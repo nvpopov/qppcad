@@ -19,7 +19,7 @@ void geom_view_labels_subsys_t::render_overlay(QPainter &painter) {
 
 void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
-  if (m_style == geom_view_labels_style::show_none) return;
+  if (m_style == geom_view_labels_style_t::show_none) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -55,27 +55,27 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
       switch (m_style) {
 
-        case geom_view_labels_style::show_type : {
+        case geom_view_labels_style_t::show_type : {
             label = p_owner->m_geom->atom(i);
             break;
           }
 
-        case geom_view_labels_style::show_id : {
+        case geom_view_labels_style_t::show_id : {
             label = fmt::format("{}", i);
             break;
           }
 
-        case geom_view_labels_style::show_id_type : {
+        case geom_view_labels_style_t::show_id_type : {
             label = fmt::format("{}{}", p_owner->m_geom->atom(i), i);
             break;
           }
 
-        case geom_view_labels_style::show_charge : {
+        case geom_view_labels_style_t::show_charge : {
             label = fmt::format("{:2.2f}", p_owner->m_geom->xfield<float>(xgeom_charge, i));
             break;
           }
 
-        case geom_view_labels_style::show_custom : {
+        case geom_view_labels_style_t::show_custom : {
             if (p_owner->m_geom->xfield<bool>(xgeom_label_show, i)) {
                 label = p_owner->m_geom->xfield<std::string>(xgeom_label_text, i);
               } else {

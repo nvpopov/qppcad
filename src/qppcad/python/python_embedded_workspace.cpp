@@ -8,6 +8,7 @@
 #include <qppcad/workspace.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -66,7 +67,14 @@ std::shared_ptr<ws_item_t> construct_from_array_group(
 
 }
 
-PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
+void upd_oi(ws_item_t *_item) {
+
+  if (_item && _item->m_selected)
+    app_state_t::get_inst()->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+}
+
+PYBIND11_EMBEDDED_MODULE(wss, m) {
 
   py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >(m, "workspace_manager_t")
       .def("__len__", [](const workspace_manager_t &wsm){ return wsm.m_ws.size();})
@@ -106,12 +114,75 @@ PYBIND11_EMBEDDED_MODULE(workspace_stuff, m) {
           .def("get_cnt_count", &ws_item_t::get_content_count)
           .def("get_parent_ws", [](ws_item_t &wsi){return wsi.m_parent_ws;})
          // .def_readwrite("m_pos", &ws_item_t::get_pos, &ws_item_t::set_pos)
+          .def_property("is_visible",
+                        [](ws_item_t &src)
+                        {return src.m_is_visible;},
+                        [](ws_item_t &src, const bool value)
+                        {src.m_is_visible = value; upd_oi(&src);})
+          .def_property("show_bb",
+                        [](ws_item_t &src)
+                        {return src.m_show_bb;},
+                        [](ws_item_t &src, const bool value)
+                        {src.m_show_bb = value; upd_oi(&src);})
+          .def_property("pos",
+                        [](ws_item_t &src)
+                        {return src.m_pos;},
+                        [](ws_item_t &src, const vector3<float> value)
+                        {src.m_pos = value; upd_oi(&src);})
           .def("__repr__", &ws_item_t::py_get_repr)
           .def("__str__", &ws_item_t::py_get_repr);
 
+  py::enum_<geom_view_render_style_t>(m, "geom_view_render_style_t", py::arithmetic(), "")
+          .value("ball_and_stick", ball_and_stick, "ball_and_stick")
+          .value("dynamic_lines", dynamic_lines, "dynamic_lines")
+          .value("xatom_lines", xatom_lines, "xatom_lines")
+          .value("billboards", billboards, "billboards")
+          .value("buffered_billboards", buffered_billboards, "buffered_billboards")
+          .export_values();
+
+  py::enum_<geom_view_labels_style_t>(m, "geom_view_labels_style_t", py::arithmetic(), "")
+          .value("show_none", show_none, "show_none")
+          .value("show_id", show_id, "show_id")
+          .value("show_type", show_type, "show_type")
+          .value("show_id_type", show_id_type, "show_id_type")
+          .value("show_charge", show_charge, "show_charge")
+          .value("show_custom", show_custom, "show_custom")
+          .export_values();
+
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(m, "geom_view_t", py_ws_item_t);
-  py_atoms_list_t.def_readwrite("geom", &geom_view_t::m_geom);
+  py_atoms_list_t.def_readwrite("geom", &geom_view_t::m_geom)
+                 .def_property("atom_scale",
+                               [](geom_view_t &src)
+                               {return src.m_atom_scale_factor;},
+                               [](geom_view_t &src, const float value)
+                               {src.m_atom_scale_factor = value; upd_oi(&src);})
+                 .def_property("bond_scale",
+                               [](geom_view_t &src)
+                               {return src.m_bond_scale_factor;},
+                               [](geom_view_t &src, const float value)
+                               {src.m_bond_scale_factor = value; upd_oi(&src);})
+                 .def_property("draw_atoms",
+                               [](geom_view_t &src)
+                               {return src.m_draw_atoms;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_draw_atoms = value; upd_oi(&src);})
+                 .def_property("draw_bonds",
+                               [](geom_view_t &src)
+                               {return src.m_draw_bonds;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_draw_bonds = value; upd_oi(&src);})
+                .def_property("render_style",
+                               [](geom_view_t &src)
+                               {return src.m_render_style;},
+                               [](geom_view_t &src, const geom_view_render_style_t value)
+                               {src.m_render_style = value; upd_oi(&src);})
+                .def_property("labels_style",
+                               [](geom_view_t &src)
+                               {return src.m_labels->m_style;},
+                               [](geom_view_t &src, const geom_view_labels_style_t value)
+                               {src.m_labels->m_style = value; upd_oi(&src);})
+                 .def("rebond", &geom_view_t::rebond);
 
   py::class_<psg_view_t, std::shared_ptr<psg_view_t> >
   py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);

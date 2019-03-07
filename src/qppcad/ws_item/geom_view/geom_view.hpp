@@ -23,7 +23,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum geom_view_render_t : int {
+    enum geom_view_render_style_t : int {
 
       ball_and_stick,
       dynamic_lines,
@@ -97,7 +97,7 @@ namespace qpp {
         vector3<float> m_gizmo_barycenter;
         vector3<float> m_new_atom_pos;
 
-        geom_view_render_t m_cur_render_type{geom_view_render_t::ball_and_stick};
+        geom_view_render_style_t m_render_style{geom_view_render_style_t::ball_and_stick};
         vector3<int> m_subcells_range{1,1,1};
 
         geom_view_color_mode m_color_mode{geom_view_color_mode::color_from_ptable};
@@ -130,6 +130,8 @@ namespace qpp {
         void geometry_changed();
         void render() override;
         void render_overlay(QPainter &painter) override;
+
+        void rebond();
 
         bool mouse_click(ray_t<float> *click_ray) override;
 
