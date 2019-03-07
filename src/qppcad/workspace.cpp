@@ -6,6 +6,8 @@
 #include <io/parsing_exceptions.hpp>
 #include <qppcad/ui/qrich_error_message_box.hpp>
 
+#include <QDir>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -452,10 +454,14 @@ void workspace_manager_t::init_default () {
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   if (!test_in_dev_env.good()) return;
 
-  load_from_file_autodeduce("../data/refs/POSCAR.mp-558947_SiO2");
-  load_from_file_autodeduce("../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz");
-  load_from_file_autodeduce("../data/refs/mp-971662_Si.vasp");
-  //load_from_file("../deps/qpp/examples/io/ref_data/firefly/dvb_ir.out");
+  QStringList files = {
+    "../data/refs/POSCAR.mp-558947_SiO2",
+    "../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz",
+    "../data/refs/mp-971662_Si.vasp"
+  };
+
+  for (auto &file : files)
+    load_from_file_autodeduce(QDir::toNativeSeparators(file).toStdString());
 
 }
 
