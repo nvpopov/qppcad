@@ -82,11 +82,14 @@ namespace qpp {
     }
 
     void geom_view_anim_subsys_t::update_current_frame_to(const int new_frame) {
+
       if (!animable()) return;
       if (m_cur_anim >= m_anim_data.size()) return;
+      if (get_current_anim()->m_anim_type == geom_anim_t::anim_static) return;
 
       m_cur_anim_time = new_frame;
       update_geom_to_anim();
+
     }
 
     void geom_view_anim_subsys_t::update_current_frame_to_begin() {
@@ -150,6 +153,8 @@ namespace qpp {
 
     void geom_view_anim_subsys_t::traverse_anim(int travel_dir) {
 
+      app_state_t* astate = app_state_t::get_inst();
+
       int target_anim = m_cur_anim + travel_dir;
       int locked_target_anim = target_anim;
       bool need_to_update_anim = false;
@@ -177,6 +182,9 @@ namespace qpp {
           m_cur_anim_time = 0.0f;
           update_geom_to_anim();
         }
+
+      if (p_owner->m_selected)
+        astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
 
     }
 

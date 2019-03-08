@@ -78,10 +78,10 @@ geom_view_t::geom_view_t(): ws_item_t () {
   m_tws_tr  = std::make_unique<tws_tree_t<float> >(*m_geom);
   m_tws_tr->do_action(act_unlock);
 
-  m_anim = std::make_unique<geom_view_anim_subsys_t>(*this);
-  m_measure = std::make_unique<geom_view_msr_subsys_t>(*this);
-  m_labels = std::make_unique<geom_view_labels_subsys_t>(*this);
-  m_lat_planes = std::make_unique<geom_view_lat_planes_subsys_t>(*this);
+  m_anim = std::make_shared<geom_view_anim_subsys_t>(*this);
+  m_measure = std::make_shared<geom_view_msr_subsys_t>(*this);
+  m_labels = std::make_shared<geom_view_labels_subsys_t>(*this);
+  m_lat_planes = std::make_shared<geom_view_lat_planes_subsys_t>(*this);
 
 }
 

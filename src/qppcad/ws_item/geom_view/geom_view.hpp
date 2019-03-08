@@ -76,10 +76,10 @@ namespace qpp {
       public:
 
         std::shared_ptr<xgeometry<float, periodic_cell<float> > > m_geom{};
-        std::unique_ptr<geom_view_anim_subsys_t> m_anim{};
-        std::unique_ptr<geom_view_msr_subsys_t> m_measure{};
-        std::unique_ptr<geom_view_labels_subsys_t> m_labels{};
-        std::unique_ptr<geom_view_lat_planes_subsys_t> m_lat_planes{};
+        std::shared_ptr<geom_view_anim_subsys_t> m_anim{};
+        std::shared_ptr<geom_view_msr_subsys_t> m_measure{};
+        std::shared_ptr<geom_view_labels_subsys_t> m_labels{};
+        std::shared_ptr<geom_view_lat_planes_subsys_t> m_lat_planes{};
         std::unique_ptr<bonding_table<float> > m_bt{};
         std::unique_ptr<tws_tree_t<float, periodic_cell<float> > > m_tws_tr{};
         std::unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs{};

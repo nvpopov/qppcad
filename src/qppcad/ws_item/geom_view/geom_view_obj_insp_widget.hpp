@@ -221,7 +221,9 @@ namespace qpp {
         void bind_measure_tab();
         void unbind_measure_tab();
 
-        void update_anim_tab_gb();
+        void update_anim_tab();
+        void update_anim_tab_visibility();
+       //
         void update_modify_tab();
         void update_measurement_tab();
         void update_measurement_tab_info();

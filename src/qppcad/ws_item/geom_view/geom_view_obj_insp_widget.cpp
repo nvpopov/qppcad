@@ -760,7 +760,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       gb_current_anim->setCurrentIndex(b_al->m_anim->m_cur_anim);
       gb_current_anim->blockSignals(false);
-      update_anim_tab_gb();
+      update_anim_tab();
 
       anim_play->blockSignals(true);
       anim_play->setChecked(b_al->m_anim->m_play_anim);
@@ -875,9 +875,21 @@ void geom_view_obj_insp_widget_t::unbind_measure_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::update_anim_tab_gb() {
+void geom_view_obj_insp_widget_t::update_anim_tab() {
 
   if (b_al) {
+
+      update_anim_tab_visibility();
+      cur_anim_index_changed(b_al->m_anim->m_cur_anim);
+
+    }
+
+}
+
+void geom_view_obj_insp_widget_t::update_anim_tab_visibility() {
+
+  if (b_al) {
+
       auto cur_anim = b_al->m_anim->get_current_anim();
       if (cur_anim && cur_anim->m_anim_type == geom_anim_t::anim_static) {
           gb_anim_buttons->hide();
@@ -1102,15 +1114,15 @@ void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
           auto &rec = b_al->m_measure->m_dist_recs[cur_dist_msr];
 
           QString atom1_info = tr("%1 [%2] %3")
-                              .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at1)))
-                              .arg(rec.m_at1)
-                              .arg(QString::fromStdString(fmt::format("{}",rec.m_idx1)));
+                               .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at1)))
+                               .arg(rec.m_at1)
+                               .arg(QString::fromStdString(fmt::format("{}",rec.m_idx1)));
           tms_pair_at1_info->setText(atom1_info);
 
           QString atom2_info = tr("%1 [%2] %3")
-                              .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at2)))
-                              .arg(rec.m_at2)
-                              .arg(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
+                               .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at2)))
+                               .arg(rec.m_at2)
+                               .arg(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
           tms_pair_at2_info->setText(atom2_info);
 
           bind_measure_tab();
@@ -1216,6 +1228,7 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
           b_al->m_anim->update_geom_to_anim();
 
           auto cur_anim = b_al->m_anim->get_current_anim();
+
           if (cur_anim && cur_anim->m_anim_type != geom_anim_t::anim_static) {
               anim_play->blockSignals(true);
               anim_play->setChecked(b_al->m_anim->m_play_anim);
@@ -1226,12 +1239,13 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
               anim_play->blockSignals(false);
             }
 
-          update_anim_tab_gb();
           gb_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frames.size()));
           gb_anim_timeline_slider->setMinimum(0);
           gb_anim_timeline_slider->setMaximum(cur_anim->frames.size()-1);
 
         }
+
+      update_anim_tab_visibility();
 
     }
 
@@ -1557,7 +1571,9 @@ void geom_view_obj_insp_widget_t::modify_bc_rot_apply() {
       b_al->transform_selected(tm);
       app_state_t *astate = app_state_t::get_inst();
       astate->make_viewport_dirty();
+
     }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_sv_show() {

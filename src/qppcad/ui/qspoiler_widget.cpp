@@ -24,13 +24,14 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   top_frm->setAutoFillBackground(true);
 
   hbox_frm = new QHBoxLayout;
-  hbox_frm->setContentsMargins(4, 2, 4, 2);
+  hbox_frm->setContentsMargins(2, 1, 2, 1);
 
   top_frm->setLayout(hbox_frm);
 
   lbl_frm = new QLabel(title);
   lbl_frm->setAlignment(Qt::AlignCenter);
   action_btn = new QPushButton;
+  action_btn->setFlat(true);
   action_btn->setMaximumWidth(24);
 
   widget_list = new QWidget;

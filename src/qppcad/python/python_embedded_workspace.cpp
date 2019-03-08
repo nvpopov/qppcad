@@ -149,40 +149,91 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
           .value("show_custom", show_custom, "show_custom")
           .export_values();
 
+  py::class_<geom_view_anim_subsys_t, std::shared_ptr<geom_view_anim_subsys_t> >
+  py_geom_view_anim(m, "geom_view_anim_subsys_t");
+  py_geom_view_anim.def("animable", &geom_view_anim_subsys_t::animable);
+  py_geom_view_anim.def("next_anim", &geom_view_anim_subsys_t::next_anim);
+  py_geom_view_anim.def("prev_anim", &geom_view_anim_subsys_t::prev_anim);
+  py_geom_view_anim.def("to_begin", &geom_view_anim_subsys_t::update_current_frame_to_begin);
+  py_geom_view_anim.def("to_end", &geom_view_anim_subsys_t::update_current_frame_to_end);
+  py_geom_view_anim.def("to_frame", &geom_view_anim_subsys_t::update_current_frame_to);
+
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(m, "geom_view_t", py_ws_item_t);
-  py_atoms_list_t.def_readwrite("geom", &geom_view_t::m_geom)
-                 .def_property("atom_scale",
+  py_atoms_list_t.def_readwrite("geom", &geom_view_t::m_geom);
+  py_atoms_list_t.def_property("atom_scale",
                                [](geom_view_t &src)
                                {return src.m_atom_scale_factor;},
                                [](geom_view_t &src, const float value)
-                               {src.m_atom_scale_factor = value; upd_oi(&src);})
-                 .def_property("bond_scale",
+                               {src.m_atom_scale_factor = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("bond_scale",
                                [](geom_view_t &src)
                                {return src.m_bond_scale_factor;},
                                [](geom_view_t &src, const float value)
-                               {src.m_bond_scale_factor = value; upd_oi(&src);})
-                 .def_property("draw_atoms",
+                               {src.m_bond_scale_factor = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("draw_atoms",
                                [](geom_view_t &src)
                                {return src.m_draw_atoms;},
                                [](geom_view_t &src, const bool value)
-                               {src.m_draw_atoms = value; upd_oi(&src);})
-                 .def_property("draw_bonds",
+                               {src.m_draw_atoms = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("draw_img_atoms",
+                               [](geom_view_t &src)
+                               {return src.m_draw_img_atoms;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_draw_img_atoms = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("draw_bonds",
                                [](geom_view_t &src)
                                {return src.m_draw_bonds;},
                                [](geom_view_t &src, const bool value)
-                               {src.m_draw_bonds = value; upd_oi(&src);})
-                .def_property("render_style",
+                               {src.m_draw_bonds = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("draw_img_bonds",
+                               [](geom_view_t &src)
+                               {return src.m_draw_img_bonds;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_draw_img_bonds = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("render_style",
                                [](geom_view_t &src)
                                {return src.m_render_style;},
                                [](geom_view_t &src, const geom_view_render_style_t value)
-                               {src.m_render_style = value; upd_oi(&src);})
-                .def_property("labels_style",
+                               {src.m_render_style = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("labels_style",
                                [](geom_view_t &src)
                                {return src.m_labels->m_style;},
                                [](geom_view_t &src, const geom_view_labels_style_t value)
-                               {src.m_labels->m_style = value; upd_oi(&src);})
-                 .def("rebond", &geom_view_t::rebond);
+                               {src.m_labels->m_style = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("sel_vis",
+                               [](geom_view_t &src)
+                               {return src.m_sel_vis;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_sel_vis = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("sel_vis_affect_bonds",
+                               [](geom_view_t &src)
+                               {return src.m_sel_vis_affect_bonds;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_sel_vis_affect_bonds = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("draw_cell",
+                               [](geom_view_t &src)
+                               {return src.m_draw_cell;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_draw_cell = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("cell_color",
+                               [](geom_view_t &src)
+                               {return src.m_cell_color;},
+                               [](geom_view_t &src, const vector3<float> value)
+                               {src.m_cell_color = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("draw_subcells",
+                               [](geom_view_t &src)
+                               {return src.m_draw_subcells;},
+                               [](geom_view_t &src, const bool value)
+                               {src.m_draw_subcells = value; upd_oi(&src);});
+  py_atoms_list_t.def_property("subcells_range",
+                               [](geom_view_t &src)
+                               {return src.m_subcells_range;},
+                               [](geom_view_t &src, const vector3<int> value)
+                               {src.m_subcells_range = value; upd_oi(&src);});
+
+  py_atoms_list_t.def("rebond", &geom_view_t::rebond);
+  py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);
 
   py::class_<psg_view_t, std::shared_ptr<psg_view_t> >
   py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);
