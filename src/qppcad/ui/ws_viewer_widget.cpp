@@ -195,22 +195,20 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       astate->mouse_y_dc_old = astate->mouse_y_dc;
       astate->mouse_x = event->x();
       astate->mouse_y = event->y();
-      //      mouse_x_ws_frame = (mouse_x_ws_frame / viewport_size_c(0)-0.5)*2.0;
-      //      mouse_y_ws_frame = (0.5 - mouse_y_ws_frame / viewport_size_c(1))*2.0;
+
       astate->mouse_x_dc = (astate->mouse_x / float(this->width()) - 0.5f) * 2.0f;
       astate->mouse_y_dc = (0.5f - astate->mouse_y / float(this->height())) * 2.0f;
 
-      //      astate->mouse_x_dc_old = (astate->mouse_x_old / float(this->width()) - 0.5f) * 2.0f;
-      //      astate->mouse_y_dc_old = (0.5f - astate->mouse_y_old / float(this->height())) * 2.0f;
 
-      //      astate->log(fmt::format("{} {} {} {} {} {} {}",  astate->is_mouse_moving,
-      //                              astate->mouse_x_dc, astate->mouse_y_dc,
-      //                              astate->mouse_x_dc_old, astate->mouse_y_dc_old,
-      //                              fabs(astate->mouse_x_dc - astate->mouse_x_dc_old),
-      //                              fabs(astate->mouse_y_dc - astate->mouse_y_dc_old) ));
+      astate->is_mouse_moving = (abs(astate->mouse_x_dc - astate->mouse_x_dc_old) > 0.00001f ||
+                                 abs(astate->mouse_y_dc - astate->mouse_y_dc_old) > 0.00001f);
 
-      astate->is_mouse_moving = (abs(astate->mouse_x_dc - astate->mouse_x_dc_old) > 0.0001f ||
-                                 abs(astate->mouse_y_dc - astate->mouse_y_dc_old) > 0.0001f);
+//      std::cout << fmt::format("MOUSE DEBUG MM={}, XDC={}, YDC={}, XDCO={}, YDCO={}",
+//                               astate->is_mouse_moving,
+//                               astate->mouse_x_dc,
+//                               astate->mouse_y_dc,
+//                               astate->mouse_x_dc_old,
+//                               astate->mouse_y_dc_old) << std::endl;
 
       astate->mouse_distance_pp += abs(astate->mouse_x - astate->mouse_x_old) +
                                    abs(astate->mouse_y - astate->mouse_y_old);
@@ -218,15 +216,7 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       if (!astate->is_mouse_moving) {
           astate->mouse_distance_pp = 0;
         }
-      //if (astate->mouse_lb_pressed)
 
-      //      std::cout << fmt::format("{} {} {} {} \n",
-      //                               astate->mouse_x_old,
-      //                               astate->mouse_y_old,
-      //                               astate->mouse_x,
-      //                               astate->mouse_y)<< std::endl;
-
-      //float delta =
       if (astate->camera && astate->mouse_rb_pressed) {
           astate->camera->m_rotate_camera = true;
           astate->make_viewport_dirty();
@@ -267,24 +257,4 @@ void ws_viewer_widget_t::wheelEvent(QWheelEvent *event) {
 
 void ws_viewer_widget_t::show_context_menu(const QPoint &pos) {
 
-  //  app_state_t* astate = app_state_t::get_inst();
-
-  //  astate->log(fmt::format("DEBUG MOUSE_DISTANCE_PP {}", astate->mouse_distance_pp));
-  //  if (astate->mouse_distance_pp < 30.2f) {
-  //      astate->mouse_lb_pressed = false;
-  //      astate->mouse_rb_pressed = false;
-  //      astate->mouse_md_pressed = false;
-  //      astate->is_mouse_moving = false;
-  //      astate->mouse_distance_pp = 0.0f;
-
-  //      QPoint globalPos = mapToGlobal(pos);
-
-  //      // Create menu and insert some actions
-  //      QMenu myMenu;
-  //      myMenu.addAction("Insert");
-  //      myMenu.addAction("Erase");
-
-  //      // Show context menu at handling position
-  //      myMenu.exec(globalPos);
-  //    }
 }
