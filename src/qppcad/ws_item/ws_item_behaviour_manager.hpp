@@ -85,11 +85,11 @@ namespace qpp {
           return true;
         }
 
-        virtual void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream,
+        virtual void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                       ws_item_t *_item,
                                       workspace_t *ws) = 0;
 
-        virtual void save_to_stream(std::basic_ostream<CHAR,TRAITS> &stream,
+        virtual void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                     ws_item_t *_item) = 0;
 
         bool is_type_accepted(size_t _type);
@@ -113,7 +113,7 @@ namespace qpp {
           return true;
         }
 
-        void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
                               ws_item_t *_item,
                               workspace_t *ws) override {
           if (_item && _item->get_type() == T::get_type_static()) {
@@ -122,11 +122,11 @@ namespace qpp {
             }
         }
 
-        virtual void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        virtual void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                          T *_item,
                                          workspace_t *ws) = 0;
 
-        void save_to_stream(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                             ws_item_t *_item) override {
           if (_item && _item->get_type() == T::get_type_static()) {
               T* casted_item = _item->cast_as<T>();
@@ -134,7 +134,7 @@ namespace qpp {
             }
         }
 
-        virtual void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                        T *_item) = 0;
 
     };
@@ -161,7 +161,7 @@ namespace qpp {
         virtual void pre_save_hook(T *_item)  = 0;
         virtual void post_save_hook(T *_item)  = 0;
 
-        void load_from_stream(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
                               ws_item_t *_item,
                               workspace_t *ws) override {
           if (_item && _item->get_type() == T::get_type_static()) {
@@ -174,11 +174,11 @@ namespace qpp {
             }
         }
 
-        virtual void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        virtual void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                          T *_item,
                                          workspace_t *ws) = 0;
 
-        void save_to_stream(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                             ws_item_t *_item) override {
           if (_item && _item->get_type() == T::get_type_static()) {
               T* casted_item = _item->cast_as<T>();
@@ -190,7 +190,7 @@ namespace qpp {
             }
         }
 
-        virtual void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                        T *_item) = 0;
 
     };

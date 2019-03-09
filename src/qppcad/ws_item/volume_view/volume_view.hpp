@@ -73,7 +73,7 @@ namespace qpp {
 
         void update_isolevel(float new_isolevel);
 
-        void load_from_stream(std::basic_istream<CHAR,TRAITS> & inp,
+        void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> & inp,
                               geometry<float, periodic_cell<float> > &geom,
                               std::string &fname);
 

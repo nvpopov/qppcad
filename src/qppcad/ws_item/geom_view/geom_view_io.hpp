@@ -75,12 +75,12 @@ namespace qpp {
 
         }
 
-        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                  geom_view_t *_item,
                                  workspace_t *ws) override {
         }
 
-        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                geom_view_t *_item) override {
           GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
         }
@@ -97,7 +97,7 @@ namespace qpp {
         bool can_save() override { return false; }
         bool can_load() override { return true; }
 
-        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                  geom_view_t *_item,
                                  workspace_t *ws) override {
 
@@ -111,7 +111,7 @@ namespace qpp {
           _item->m_role = ROLE;
         }
 
-        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                geom_view_t *_item) override {
           //do nothing
         }
@@ -127,7 +127,7 @@ namespace qpp {
         bool can_save() override { return false; }
         bool can_load() override { return true; }
 
-        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                  geom_view_t *_item,
                                  workspace_t *ws) override {
 
@@ -140,7 +140,7 @@ namespace qpp {
 
         }
 
-        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                geom_view_t *_item) override {
           //do nothing
         }
@@ -161,7 +161,7 @@ namespace qpp {
         bool can_save() override { return false; }
         bool can_load() override { return true; }
 
-        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                  geom_view_t *_item,
                                  workspace_t *ws) override {
 
@@ -228,7 +228,7 @@ namespace qpp {
 
         }
 
-        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                geom_view_t *_item) override {
           //do nothing
         }
@@ -243,11 +243,11 @@ namespace qpp {
         bool can_save() override { return false; }
         bool can_load() override { return true; }
 
-        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                  geom_view_t *_item,
                                  workspace_t *ws) override ;
 
-        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                geom_view_t *_item) override {
           //do nothing
         }
@@ -262,11 +262,11 @@ namespace qpp {
         bool can_save() override { return false; }
         bool can_load() override { return true; }
 
-        void load_from_stream_ex(std::basic_istream<CHAR,TRAITS> &stream,
+        void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                  geom_view_t *_item,
                                  workspace_t *ws) override ;
 
-        void save_to_stream_ex(std::basic_ostream<CHAR,TRAITS> &stream,
+        void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                geom_view_t *_item) override {
           //do nothing
         }
