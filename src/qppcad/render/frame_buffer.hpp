@@ -38,7 +38,7 @@ namespace qpp {
       frame_buffer_t(const uint16_t width,
                      const uint16_t height,
                      bool enable_multisampling,
-                     uint num_multisampling) {
+                     uint8_t num_multisampling) {
         m_provider.gen_fbo(width, height, enable_multisampling, num_multisampling);
       }
 

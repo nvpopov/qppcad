@@ -45,7 +45,7 @@ namespace qpp {
           m_gizmo = std::unique_ptr<gizmo_t>(new gizmo_t());
         }
 
-        std::optional<size_t>  get_selected_idx();
+        opt<size_t>  get_selected_idx();
         ws_item_t *get_selected();
         std::shared_ptr<ws_item_t> get_selected_sp();
         std::shared_ptr<ws_item_t> get_by_name(std::string _name);

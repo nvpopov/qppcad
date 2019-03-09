@@ -72,30 +72,28 @@ namespace qpp {
     }
 
 
-    std::optional<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (
-        const uint32_t atm1,
-        const uint32_t atm2,
-        const index idx1,
-        const index idx2) {
+    opt<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (const uint32_t atm1,
+                                                            const uint32_t atm2,
+                                                            const index idx1,
+                                                            const index idx2) {
 
       for (auto i = 0; i < m_dist_recs.size(); i++)
         if ((m_dist_recs[i].m_at1 == atm1 && m_dist_recs[i].m_at2 == atm2 &&
              m_dist_recs[i].m_idx1 == idx1 && m_dist_recs[i].m_idx2 == idx2) ||
             (m_dist_recs[i].m_at1 == atm2 && m_dist_recs[i].m_at2 == atm1 &&
              m_dist_recs[i].m_idx1 == idx2 && m_dist_recs[i].m_idx2 == idx1))
-          return std::optional<size_t>(i);
+          return opt<size_t>(i);
 
       return std::nullopt;
 
     }
 
-    std::optional<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(
-        const uint32_t atm1,
-        const uint32_t atm2,
-        const uint32_t atm3,
-        const index idx1,
-        const index idx2,
-        const index idx3) {
+    opt<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(const uint32_t atm1,
+                                                            const uint32_t atm2,
+                                                            const uint32_t atm3,
+                                                            const index idx1,
+                                                            const index idx2,
+                                                            const index idx3) {
 
       for (auto i = 0; i < m_angle_recs.size(); i++)
         if (m_angle_recs[i].m_at1 == atm1 &&
@@ -104,7 +102,7 @@ namespace qpp {
             m_angle_recs[i].m_idx1 == idx1 &&
             m_angle_recs[i].m_idx2 == idx2 &&
             m_angle_recs[i].m_idx3 == idx3)
-          return std::optional<size_t>(i);
+          return opt<size_t>(i);
 
       return std::nullopt;
 
@@ -194,10 +192,10 @@ namespace qpp {
                 }
 
               QColor pen_color =
-                    ((i + 1 == m_cur_dist_rec_ui) && p_owner->m_selected) ?
+                  ((i + 1 == m_cur_dist_rec_ui) && p_owner->m_selected) ?
                     QColor::fromRgbF(1, 0, 0) : QColor::fromRgbF(record.m_bond_color[0],
-                                                                 record.m_bond_color[1],
-                                                                 record.m_bond_color[2]);
+                  record.m_bond_color[1],
+                  record.m_bond_color[2]);
               QPen linepen_inline(QPen(pen_color, record.m_line_size, pen_style, Qt::RoundCap));
               painter.setPen(linepen_inline);
               painter.drawLine(linef);

@@ -13,8 +13,8 @@
 #include <algorithm>
 #include <functional>
 #include <tuple>
+#include <array>
 #include <unordered_set>
-#include <data/compiler_fallback.hpp>
 #include <io/strfun.hpp>
 
 namespace qpp {

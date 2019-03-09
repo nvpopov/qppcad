@@ -11,9 +11,9 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-std::optional<size_t> workspace_t::get_selected_idx () {
+opt<size_t> workspace_t::get_selected_idx () {
   for (size_t i = 0; i < m_ws_items.size(); i++)
-    if (m_ws_items[i]->m_selected) return std::optional<size_t>(i);
+    if (m_ws_items[i]->m_selected) return opt<size_t>(i);
   return std::nullopt;
 }
 

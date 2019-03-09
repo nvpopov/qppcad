@@ -205,7 +205,7 @@ namespace qpp {
       for (auto &rec : table->arecs)
         if (rec.m_redefined) {
             settings.setArrayIndex(i);
-            settings.setValue("number", rec.m_number);
+            settings.setValue("number", int(rec.m_number));
             settings.setValue("c_r", double(rec.m_color_jmol[0]));
             settings.setValue("c_g", double(rec.m_color_jmol[1]));
             settings.setValue("c_b", double(rec.m_color_jmol[2]));

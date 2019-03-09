@@ -2,11 +2,11 @@
 #define QPP_CAD_EXTENDED_QACTION
 
 #include <QAction>
+#include <array>
 
 namespace qpp {
 
   namespace cad {
-
 
     class qextended_action : public QAction {
         Q_OBJECT
