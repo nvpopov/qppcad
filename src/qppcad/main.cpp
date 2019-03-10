@@ -68,6 +68,8 @@ int main (int argc, char **argv) {
   qApp->setPalette(astate->m_app_palette);
 
   QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Light.ttf");
+  QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf");
+  QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf");
 
   astate->m_font_name = "RobotoCondensed";
 

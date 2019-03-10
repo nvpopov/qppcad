@@ -19,7 +19,7 @@ namespace qpp {
       virtual const std::string& get_type_name() const override {  \
         return get_type_info_static()->get_type_name(); \
       } \
-      virtual const type_info* get_type_info() const override { \
+      virtual const qtype_info* get_type_info() const override { \
         return get_type_info_static(); \
       } \
       static size_t get_type_static() { \
@@ -28,23 +28,24 @@ namespace qpp {
       static const std::string& get_type_name_static() { \
         return get_type_info_static()->get_type_name(); \
       } \
-      static const type_info* get_type_info_static() { \
-      static const type_info type_info_static(#type_name, base_cls_name::get_type_info_static()); \
+      static const qtype_info* get_type_info_static() { \
+      static const qtype_info type_info_static(#type_name, base_cls_name::get_type_info_static()); \
         return &type_info_static; \
       } \
 //END QPP_OBJECT_MACRO
 
     //inspired by Urho3d https://github.com/urho3d
     class qpp_object_t {
+
       public:
 
         virtual size_t get_type() const = 0;
         virtual const std::string& get_type_name() const = 0;
-        virtual const type_info* get_type_info() const = 0;
-        static const type_info* get_type_info_static() { return nullptr; }
+        virtual const qtype_info* get_type_info() const = 0;
+        static const qtype_info* get_type_info_static() { return nullptr; }
 
         bool is_instance_of(size_t type) const;
-        bool is_instance_of(const type_info* _type_info) const;
+        bool is_instance_of(const qtype_info* _type_info) const;
 
         template<typename T>
         bool is_instance_of() const {
@@ -60,7 +61,6 @@ namespace qpp {
         const T* cast_as() const {
           return is_instance_of<T>() ? static_cast<const T*>(this) : nullptr;
         }
-
 
     };
 

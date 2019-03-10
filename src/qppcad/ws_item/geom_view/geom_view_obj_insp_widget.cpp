@@ -1373,7 +1373,7 @@ void geom_view_obj_insp_widget_t::modify_add_atom_button_clicked() {
 
   if (b_al) {
       vector3<float> new_atom_pos{
-        float(tm_add_atom_vec3->sb_x->value()),
+            float(tm_add_atom_vec3->sb_x->value()),
             float(tm_add_atom_vec3->sb_y->value()),
             float(tm_add_atom_vec3->sb_z->value())
       };

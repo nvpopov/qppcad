@@ -4,8 +4,8 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-type_info::type_info(std::string type_name,
-                     const type_info *base_type_info) {
+qtype_info::qtype_info(std::string type_name,
+                       const qtype_info *base_type_info) {
 
   p_type_name = type_name;
   p_type_hash = app_state_t::get_inst()->hash_reg->calc_hash(type_name);
@@ -13,11 +13,11 @@ type_info::type_info(std::string type_name,
 
 }
 
-type_info::~type_info() = default;
+qtype_info::~qtype_info() = default;
 
-bool type_info::is_type_of(size_t type) const {
+bool qtype_info::is_type_of(size_t type) const {
 
-  const type_info* current = this;
+  const qtype_info* current = this;
 
   while (current) {
       if (current->get_type() == type)
@@ -28,9 +28,9 @@ bool type_info::is_type_of(size_t type) const {
   return false;
 }
 
-bool type_info::is_type_of(const type_info *_typeInfo) const {
+bool qtype_info::is_type_of(const qtype_info *_typeInfo) const {
 
-  const type_info* current = this;
+  const qtype_info* current = this;
 
   while (current) {
       if (current == _typeInfo)

@@ -305,9 +305,9 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           switch (ccm) {
 
             case cell_construct_mode::construct_cubic : {
-                vector3<float> cubic_a{type_cell_ctor_cubic_size->value(), 0, 0};
-                vector3<float> cubic_b{0, type_cell_ctor_cubic_size->value(), 0};
-                vector3<float> cubic_c{0, 0, type_cell_ctor_cubic_size->value()};
+                vector3<float> cubic_a{float(type_cell_ctor_cubic_size->value()), 0, 0};
+                vector3<float> cubic_b{0, float(type_cell_ctor_cubic_size->value()), 0};
+                vector3<float> cubic_c{0, 0, float(type_cell_ctor_cubic_size->value())};
                 nt_gv->m_geom->cell = periodic_cell<float>(cubic_a,
                                                            cubic_b,
                                                            cubic_c);
