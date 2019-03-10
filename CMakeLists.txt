@@ -11,6 +11,7 @@ if(NOT MSVC)
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Og -fno-omit-frame-pointer -g3 -ggdb")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
 elseif(MSVC)
+   add_definitions(-D_ENABLE_EXTENDED_ALIGNED_STORAGE)
    add_compile_options("/std:c++latest")
 endif()
 

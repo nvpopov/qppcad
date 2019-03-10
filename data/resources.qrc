@@ -1,9 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>style.qss</file>
-        <file>fonts/Open_Sans/OpenSans-Bold.ttf</file>
-        <file>fonts/Open_Sans/OpenSans-Light.ttf</file>
-        <file>fonts/Open_Sans/OpenSans-Regular.ttf</file>
         <file>images/icon_checkbox_checked.png</file>
         <file>images/icon_checkbox_checked_disabled.png</file>
         <file>images/icon_checkbox_checked_pressed.png</file>
@@ -34,5 +31,8 @@
         <file>images/outline-select_all-24px.svg</file>
         <file>images/outline-arrow_upward-24px.svg</file>
         <file>images/outline-arrow_downward-24px.svg</file>
+        <file>fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf</file>
+        <file>fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf</file>
+        <file>fonts/Roboto_Condensed/RobotoCondensed-Light.ttf</file>
     </qresource>
 </RCC>

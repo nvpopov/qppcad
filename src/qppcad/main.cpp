@@ -67,12 +67,11 @@ int main (int argc, char **argv) {
   astate->init_styles();
   qApp->setPalette(astate->m_app_palette);
 
-  QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Light.ttf");
-  QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Bold.ttf");
+  QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Light.ttf");
 
-  astate->m_font_name = "OpenSans";
+  astate->m_font_name = "RobotoCondensed";
 
-  QFont font = QFont(astate->m_font_name, 12, 1);
+  QFont font = QFont(astate->m_font_name, 14, 1);
   QIcon icon("://images/icon.svg");
   //QFont defaultFont = QApplication::font();
   font.setPointSize(font.pointSize());

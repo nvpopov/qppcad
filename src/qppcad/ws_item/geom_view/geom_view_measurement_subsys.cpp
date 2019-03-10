@@ -291,16 +291,16 @@ namespace qpp {
                 auto l1 = dir_f_s.normalized();
                 auto l2 = dir_t_s.normalized();
 
-                float real_angle = std::acos(l1.dot(l2)) * 180 / M_PI;
+                float real_angle = std::acos(l1.dot(l2)) * 180 / float(pi);
 
                 QLineF line_f_s(0, 0, round((*l_f)[0]-(*l_s)[0]), round((*l_f)[1]-(*l_s)[1]));
                 QLineF line_t_s(0, 0, round((*l_t)[0]-(*l_s)[0]), round((*l_t)[1]-(*l_s)[1]));
 
                 float line_len = std::min(line_f_s.length(), line_t_s.length()) * 0.2f;
                 int angle1 =
-                    (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0]) * 180 / M_PI) ;
+                    (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0]) * 180 / float(pi)) ;
                 int angle2 =
-                    (std::atan2((*l_t)[1]- (*l_s)[1], (*l_t)[0] - (*l_s)[0]) * 180 / M_PI) ;
+                    (std::atan2((*l_t)[1]- (*l_s)[1], (*l_t)[0] - (*l_s)[0]) * 180 / float(pi)) ;
 
                 angle1 -= 360. * std::floor((angle1) * (1. / 360.));
                 angle2 -= 360. * std::floor((angle2) * (1. / 360.));

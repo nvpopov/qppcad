@@ -399,7 +399,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_single_atom_lt->addRow(tr("Atom pos."), tm_single_atom_vec3);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_commit);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_delete);
-  qt_helpers::resize_form_lt_labels(tm_gb_single_atom_lt, tab_modify_label_width);
+  init_form_layout(tm_gb_single_atom_lt);
 
   tm_add_atom_combo = new QComboBox;
   tm_add_atom_combo->setEditable(true);
@@ -416,7 +416,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_add_atom_lt->addRow(tr("Atom name"), tm_add_atom_combo);
   tm_gb_add_atom_lt->addRow(tr("Atom pos."), tm_add_atom_vec3);
   tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
-  qt_helpers::resize_form_lt_labels(tm_gb_add_atom_lt, tab_modify_label_width);
+  init_form_layout(tm_gb_add_atom_lt);
 
   tm_gb_pair_dist = new qspoiler_widget_t(tr("Pair distance"));
   tm_gb_pair_dist_lt = new QFormLayout;
@@ -446,7 +446,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist_lt->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
   tm_gb_pair_dist_lt->addRow(tr("Trnsf. mode"), tm_pair_dist_t_mode);
   tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
-  qt_helpers::resize_form_lt_labels(tm_gb_pair_dist_lt, tab_modify_label_width);
+  init_form_layout(tm_gb_pair_dist_lt);
 
   tm_gb_pair_creation = new qspoiler_widget_t(tr("Insert atom between"));
   tm_gb_pair_creation_lt = new QFormLayout;
@@ -458,9 +458,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_pair_creation_button = new QPushButton("Append");
   tm_pair_creation_button->setMaximumWidth(tab_modify_op_button_width);
-  tm_gb_pair_creation_lt->addRow(tr("New atom type"), tm_pair_creation_combo);
+  tm_gb_pair_creation_lt->addRow(tr("New atom"), tm_pair_creation_combo);
   tm_gb_pair_creation_lt->addRow("", tm_pair_creation_button);
-  qt_helpers::resize_form_lt_labels(tm_gb_pair_creation_lt, tab_modify_label_width);
+  init_form_layout(tm_gb_pair_creation_lt);
 
   connect(tm_pair_creation_button,
           &QPushButton::pressed,
@@ -518,7 +518,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_u_scale_lt->addRow("Enable::Y", tm_u_scale_y_enabled);
   tm_gb_u_scale_lt->addRow("Enable::Z", tm_u_scale_z_enabled);
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
-  qt_helpers::resize_form_lt_labels(tm_gb_u_scale_lt, tab_modify_label_width);
+  init_form_layout(tm_gb_u_scale_lt);
 
   tm_gb_translate = new qspoiler_widget_t(tr("Translate selected atoms"));
   tm_gb_translate_lt = new QFormLayout;
@@ -541,7 +541,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_translate_lt->addRow(tm_translate_coord_type_label, tm_translate_coord_type);
   tm_gb_translate_lt->addRow(tr("Tr. vector"), tm_translate_vec3);
   tm_gb_translate_lt->addRow("", tm_translate_apply_button);
-  qt_helpers::resize_form_lt_labels(tm_gb_translate_lt, tab_modify_label_width);
+  init_form_layout(tm_gb_translate_lt);
 
   connect(tm_translate_coord_type,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -593,7 +593,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_bc_rot_lt->addRow(tr("Angle type"), tm_bc_rot_angle_type);
   tm_gb_bc_rot_lt->addRow(tr("Angle"), tm_bc_rot_angle);
   tm_gb_bc_rot_lt->addRow("", tm_bc_rot_apply);
-  qt_helpers::resize_form_lt_labels(tm_gb_bc_rot_lt, tab_modify_label_width);
+  init_form_layout(tm_gb_bc_rot_lt);
 
   tm_gb_group_op = new qspoiler_widget_t(tr("Group operations"));
   tm_group_op_lt = new QGridLayout;
@@ -1515,8 +1515,12 @@ void geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked() {
 void geom_view_obj_insp_widget_t::modify_translate_coord_type_changed(int coord_type) {
 
   if (coord_type == 0) {
-      tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
+      tm_translate_vec3->set_default_suffix();
+      tm_translate_vec3->set_sb_lbls_def();
+      tm_translate_vec3->set_min_max_step(-100, 100, 0.01);
     } else {
+      tm_translate_vec3->set_sb_lbls("a", "b", "c");
+      tm_translate_vec3->set_empty_suffix();
       tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
     }
 
@@ -1526,6 +1530,7 @@ void geom_view_obj_insp_widget_t::modify_bc_rot_angle_type_change(int new_angle_
 
   if (new_angle_type == 0) tm_bc_rot_angle->setSingleStep(0.5);
   else tm_bc_rot_angle->setSingleStep(0.01);
+
   tm_bc_rot_angle->setValue(0.0);
 
 }

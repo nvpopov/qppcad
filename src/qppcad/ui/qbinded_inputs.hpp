@@ -9,6 +9,8 @@
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
 #include <qppcad/ws_item/ws_item.hpp>
 
 namespace qpp {
@@ -138,14 +140,29 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        QHBoxLayout *widget_layout;
+        QVBoxLayout *widget_layout;
+
+        QHBoxLayout *sb_x_lt;
+        QHBoxLayout *sb_y_lt;
+        QHBoxLayout *sb_z_lt;
+
+        QLabel *sb_x_lbl;
+        QLabel *sb_y_lbl;
+        QLabel *sb_z_lbl;
+
         QDoubleSpinBox *sb_x;
         QDoubleSpinBox *sb_y;
         QDoubleSpinBox *sb_z;
+
         void load_value_ex() override;
         void set_min_max_step(double min, double max, double step);
         void set_suffix(QString &new_suffix);
+        void set_empty_suffix();
         void set_default_suffix();
+        void set_sb_lbls(const QString _lb_x,
+                         const QString _lb_y,
+                         const QString _lb_z);
+        void set_sb_lbls_def();
         qbinded_float3_input(QWidget *parent = nullptr);
 
       private slots:
