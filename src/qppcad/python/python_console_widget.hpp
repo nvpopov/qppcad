@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <QWidget>
+#include <QFrame>
 #include <QTextEdit>
 #include <QList>
 #include <QDir>
@@ -29,7 +30,7 @@ namespace qpp {
     class python_text_editor_syntax_highilighter_t;
     class python_text_editor_t;
 
-    class python_console_widget_t : public QWidget {
+    class python_console_widget_t : public QFrame {
 
         Q_OBJECT
 

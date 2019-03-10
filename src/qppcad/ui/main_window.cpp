@@ -272,17 +272,20 @@ void main_window::init_widgets() {
   tp_show_obj_insp->setCheckState(Qt::Checked);
   tp_show_obj_insp->setText("INS");
   tp_show_obj_insp->setMinimumHeight(tp_button_height);
-  QObject::connect(tp_show_obj_insp, SIGNAL(stateChanged(int)),
-                   this, SLOT(tp_show_obj_insp_state_changed(int)));
+  QObject::connect(tp_show_obj_insp,
+                   SIGNAL(stateChanged(int)),
+                   this,
+                   SLOT(tp_show_obj_insp_state_changed(int)));
 
   tp_show_gizmo = new QCheckBox;
   tp_show_gizmo->setProperty("s_class", "tp_cb");
   tp_show_gizmo->setCheckState(Qt::Checked);
   tp_show_gizmo->setText("GZM");
   tp_show_gizmo->setMinimumHeight(tp_button_height);
-  QObject::connect(tp_show_gizmo, SIGNAL(stateChanged(int)),
-                   this, SLOT(tp_show_gizmo_state_changed(int)));
-
+  QObject::connect(tp_show_gizmo,
+                   SIGNAL(stateChanged(int)),
+                   this,
+                   SLOT(tp_show_gizmo_state_changed(int)));
 
   tp_add_ws_item = new QPushButton();
   tp_add_ws_item->setProperty("s_class", "tp_cb");
@@ -291,8 +294,10 @@ void main_window::init_widgets() {
   tp_add_ws_item->setIconSize(QSize(26, 26));
   tp_add_ws_item->setToolTip(tr("Add new item to current workspace"));
   tp_add_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
-  connect(tp_add_ws_item, &QPushButton::pressed,
-          this, [](){ add_new_ws_item_widget_t add_dialog; add_dialog.exec();});
+  connect(tp_add_ws_item,
+          &QPushButton::pressed,
+          this,
+          [](){ add_new_ws_item_widget_t add_dialog; add_dialog.exec();});
 
   tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");
@@ -301,14 +306,17 @@ void main_window::init_widgets() {
   tp_print_screen->setIconSize(QSize(26, 26));
   tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
   tp_print_screen->setIcon(QIcon("://images/outline-camera_enhance-24px.svg"));
-  connect(tp_print_screen, &QPushButton::pressed,
-          this, &main_window::make_screenshot);
-
+  connect(tp_print_screen,
+          &QPushButton::pressed,
+          this,
+          &main_window::make_screenshot);
 
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
-  QObject::connect(tp_edit_mode, SIGNAL(buttonClicked(int)),
-                   this, SLOT(ws_edit_mode_selector_button_clicked(int)));
+  QObject::connect(tp_edit_mode,
+                   SIGNAL(buttonClicked(int)),
+                   this,
+                   SLOT(ws_edit_mode_selector_button_clicked(int)));
 
   tp_edit_mode_item = new QPushButton;
   //tp_edit_mode_item->setText(tr("ITM"));
@@ -345,44 +353,58 @@ void main_window::init_widgets() {
   tp_camera_x = new QPushButton(tr("C:X"));
   tp_camera_x->setMaximumWidth(40);
   tp_camera_x->setMinimumHeight(tp_button_height);
-  connect(tp_camera_x, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_x_axis);});
+  connect(tp_camera_x,
+          &QPushButton::pressed,
+          this,
+          [this](){this->apply_camera_view_change(cam_target_view_t::tv_x_axis);});
 
   tp_camera_y = new QPushButton(tr("C:Y"));
   tp_camera_y->setMaximumWidth(40);
   tp_camera_y->setMinimumHeight(tp_button_height);
-  connect(tp_camera_y, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_y_axis);});
+  connect(tp_camera_y,
+          &QPushButton::pressed,
+          this,
+          [this](){this->apply_camera_view_change(cam_target_view_t::tv_y_axis);});
 
   tp_camera_z = new QPushButton(tr("C:Z"));
   tp_camera_z->setMaximumWidth(40);
   tp_camera_z->setMinimumHeight(tp_button_height);
-  connect(tp_camera_z, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
+  connect(tp_camera_z,
+          &QPushButton::pressed,
+          this,
+          [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
 
   tp_camera_cart_c = new QPushButton(tr("C:C"));
   tp_camera_cart_c->setMaximumWidth(40);
   tp_camera_cart_c->setMinimumHeight(tp_button_height);
-  connect(tp_camera_cart_c, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_cart_center);});
+  connect(tp_camera_cart_c,
+          &QPushButton::pressed,
+          this,
+          [this](){this->apply_camera_view_change(cam_target_view_t::tv_cart_center);});
 
   tp_camera_a = new QPushButton(tr("C:a"));
   tp_camera_a->setMaximumWidth(40);
   tp_camera_a->setMinimumHeight(tp_button_height);
-  connect(tp_camera_a, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_a_axis);});
+  connect(tp_camera_a,
+          &QPushButton::pressed,
+          this,
+          [this](){this->apply_camera_view_change(cam_target_view_t::tv_a_axis);});
 
   tp_camera_b = new QPushButton(tr("C:b"));
   tp_camera_b->setMaximumWidth(40);
   tp_camera_b->setMinimumHeight(tp_button_height);
-  connect(tp_camera_b, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_b_axis);});
+  connect(tp_camera_b,
+          &QPushButton::pressed,
+          this,
+          [this](){this->apply_camera_view_change(cam_target_view_t::tv_b_axis);});
 
   tp_camera_c = new QPushButton(tr("C:c"));
   tp_camera_c->setMaximumWidth(40);
   tp_camera_c->setMinimumHeight(tp_button_height);
-  connect(tp_camera_c, &QPushButton::pressed,
-          this, [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
+  connect(tp_camera_c,
+          &QPushButton::pressed,
+          this,
+          [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
 
   change_camera_buttons_visible(false, false);
 
@@ -393,8 +415,10 @@ void main_window::init_widgets() {
   tp_measure_dist->setIconSize(QSize(26, 26));
   tp_measure_dist->setToolTip(tr("Measure distance between atoms pair"));
   tp_measure_dist->setIcon(QIcon("://images/dist.svg"));
-  connect(tp_measure_dist, &QPushButton::toggled,
-          this, &main_window::tp_dist_button_clicked);
+  connect(tp_measure_dist,
+          &QPushButton::toggled,
+          this,
+          &main_window::tp_dist_button_clicked);
 
   tp_force_sel_lbl_vis = new QPushButton();
   tp_force_sel_lbl_vis->setMaximumWidth(40);
@@ -403,8 +427,10 @@ void main_window::init_widgets() {
   tp_force_sel_lbl_vis->setIconSize(QSize(26, 26));
   tp_force_sel_lbl_vis->setToolTip(tr("Force labels selective visibility"));
   tp_force_sel_lbl_vis->setIcon(QIcon("://images/outline-font_download-24px.svg"));
-  connect(tp_force_sel_lbl_vis, &QPushButton::toggled,
-          this, &main_window::tp_force_sel_lbl_vis_button_clicked);
+  connect(tp_force_sel_lbl_vis,
+          &QPushButton::toggled,
+          this,
+          &main_window::tp_force_sel_lbl_vis_button_clicked);
 
   tp_measure_angle = new QPushButton();
   tp_measure_angle->setMaximumWidth(60);
@@ -413,7 +439,10 @@ void main_window::init_widgets() {
   tp_measure_angle->setIconSize(QSize(26, 26));
   tp_measure_angle->setToolTip(tr("Measure angle between atoms triple"));
   tp_measure_angle->setIcon(QIcon("://images/angle.svg"));
-  connect(tp_measure_angle, &QPushButton::toggled, this, &main_window::tp_angle_button_clicked);
+  connect(tp_measure_angle,
+          &QPushButton::toggled,
+          this,
+          &main_window::tp_angle_button_clicked);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
 
@@ -437,7 +466,7 @@ void main_window::init_layouts() {
   splitter_ws_viewer_py_console = new QSplitter(Qt::Vertical);
   splitter_ws_viewer_py_console->addWidget(ws_viewer_widget);
   splitter_ws_viewer_py_console->addWidget(py_console_widget);
-  splitter_ws_viewer_py_console->setHandleWidth(15);
+  splitter_ws_viewer_py_console->setHandleWidth(9);
   splitter_ws_viewer_py_console->setSizes(QList<int>({3, 1}));
   py_console_widget->hide();
   splitter_ws_viewer_py_console->setCollapsible(1, false);
@@ -449,7 +478,7 @@ void main_window::init_layouts() {
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
   layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
-  layout_ws_viewer_obj_insp->setHandleWidth(10);
+  layout_ws_viewer_obj_insp->setHandleWidth(0);
   main_layout->addWidget(layout_ws_viewer_obj_insp);
 
   tool_panel_layout = new QHBoxLayout;

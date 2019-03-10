@@ -30,7 +30,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
   obj_insp_layout->addWidget(ws_items_label);
   obj_insp_layout->addWidget(ws_items_list);
   obj_insp_layout->addWidget(none_item_placeholder);
-  obj_insp_layout->setContentsMargins(0,0,0,0);
+  obj_insp_layout->setContentsMargins(10, 0, 5, 0);
 
   connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_changed_signal()),
           this, SLOT(cur_ws_selected_item_changed()));

@@ -7,13 +7,15 @@ using namespace qpp;
 using namespace qpp::cad;
 
 
-python_console_widget_t::python_console_widget_t(QWidget *parent) : QWidget (parent) {
+python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (parent) {
 
   py_tedit = new python_text_editor_t(nullptr);
   console_layout = new QVBoxLayout;
   setLayout(console_layout);
   console_layout->addWidget(py_tedit);
   setMinimumHeight(200);
+  setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
+
 }
 
 python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent) {
