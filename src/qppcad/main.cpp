@@ -67,19 +67,22 @@ int main (int argc, char **argv) {
   astate->init_styles();
   qApp->setPalette(astate->m_app_palette);
 
-  QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Light.ttf");
-  QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf");
-  QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf");
+  std::vector<int> fnt_id = {
+    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Light.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf"),
+  };
 
-  astate->m_font_name = "RobotoCondensed";
+  QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
+  astate->m_font_name = family;
+  astate->log(fmt::format("Font used : {}", astate->m_font_name.toStdString()));
+  //QFont font = QFont(astate->m_font_name, 14, 1);
 
-  QFont font = QFont(astate->m_font_name, 14, 1);
   QIcon icon("://images/icon.svg");
-  //QFont defaultFont = QApplication::font();
-  font.setPointSize(font.pointSize());
-  //qApp->setFont(defaultFont);
+
+  // font.setPointSize(font.pointSize());
   app.setWindowIcon(icon);
-  app.setFont(font);
+ // app.setFont(font);
 
   QFile file("://style.qss");
   file.open(QFile::ReadOnly);

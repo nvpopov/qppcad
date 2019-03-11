@@ -592,13 +592,13 @@ void draw_pipeline_t::render_screen_quad () {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->sp_fbo_quad->begin_shader_program();
-  glDisable(GL_DEPTH_TEST);
+ //glDisable(GL_DEPTH_TEST);
 
-  glActiveTexture(GL_TEXTURE0);
+  //glActiveTexture(GL_TEXTURE0);
   //glBindTexture(GL_TEXTURE_2D, astate->frame_buffer->get_color_texture());
 
   astate->mesh_fbo_quad->render();
-  glEnable(GL_DEPTH_TEST);
+ // glEnable(GL_DEPTH_TEST);
   astate->sp_fbo_quad->end_shader_program();
 
 }

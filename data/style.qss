@@ -1,3 +1,9 @@
+* {
+ font-family : "Roboto Condensed";
+ font-size: 14pt;
+ font-weight: 1;
+}
+
 QPushButton:checked {
   background-color: rgb(150, 150, 150);
 }
