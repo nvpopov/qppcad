@@ -58,6 +58,7 @@ namespace qpp {
         void keyPressEvent(QKeyEvent *event);
         void last_command_reached();
         QString text_under_cursor() const;
+        void set_font_point_size(qreal new_size);
 
       private slots:
         void run_cmd();
@@ -81,13 +82,12 @@ namespace qpp {
 
       public:
         python_text_editor_syntax_highilighter_t(QTextDocument *parent = 0);
+        QVector<python_highlighting_rule_t> hl_rules;
 
       protected:
         void highlightBlock(const QString &text);
 
       private:
-
-        QVector<python_highlighting_rule_t> hl_rules;
 
         QRegExp comment_start_expression;
         QRegExp comment_end_expression;

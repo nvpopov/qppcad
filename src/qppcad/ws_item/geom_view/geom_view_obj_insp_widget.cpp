@@ -243,7 +243,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   init_form_layout(gb_anim_summary_lt);
 
   gb_anim_timeline = new qspoiler_widget_t(tr("Timeline"));
-  gb_anim_timeline->setMaximumWidth(400);
+  gb_anim_timeline->setMaximumWidth(390);
   gb_anim_timeline_lt = new QHBoxLayout;
   gb_anim_timeline->add_content_layout(gb_anim_timeline_lt);
 
@@ -261,7 +261,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_buttons = new qspoiler_widget_t(tr("Control"));
   gb_anim_buttons_lt = new QHBoxLayout;
   gb_anim_buttons->add_content_layout(gb_anim_buttons_lt);
-  gb_anim_buttons->setMaximumWidth(400);
+  gb_anim_buttons->setMaximumWidth(390);
   gb_anim_buttons->setMaximumHeight(90);
 
   anim_play = new QPushButton(tr("PLAY"));
@@ -1264,8 +1264,7 @@ void geom_view_obj_insp_widget_t::play_anim_button_toggle(bool value) {
 void geom_view_obj_insp_widget_t::anim_updated_external() {
 
   if (b_al) {
-      int current_frame_truncated = std::floor(b_al->m_anim->m_cur_anim_time);
-
+      int current_frame_truncated = b_al->m_anim->current_frame_truncated();
       // remap frame id from 0..size-1 1..size
       gb_anim_cur_frame->setText(tr("%1").arg(current_frame_truncated+1));
       gb_anim_timeline_slider->blockSignals(true);
@@ -1485,6 +1484,7 @@ void geom_view_obj_insp_widget_t::modify_barycentric_scale_button_clicked() {
       update_animate_section_status();
       astate->make_viewport_dirty();
     }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked() {
@@ -1592,6 +1592,7 @@ void geom_view_obj_insp_widget_t::modify_group_op_sv_show() {
     }
 
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_sv_hide() {

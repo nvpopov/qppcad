@@ -19,19 +19,24 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 }
 
 python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent) {
-  //m_commands.append("");
+
   syntax_hl = new python_text_editor_syntax_highilighter_t(document());
-  m_font.setPointSize(15);
-  setFont(m_font);
+
+  setStyleSheet("font-size:18pt;");
+
   print_promt();
 
   app_state_t* astate = app_state_t::get_inst();
 
-  connect(astate->astate_evd, &app_state_event_disp_t::python_console_clear_requested_signal,
-          this, &python_text_editor_t::clear_signal_received);
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::python_console_clear_requested_signal,
+          this,
+          &python_text_editor_t::clear_signal_received);
 
-  connect(astate->astate_evd, &app_state_event_disp_t::python_console_focus_requested_signal,
-          this, &python_text_editor_t::focus_signal_received);
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::python_console_focus_requested_signal,
+          this,
+          &python_text_editor_t::focus_signal_received);
 //  auto act = actions();
 //  for (auto &action : actions()) {
 //      std::cout << "PTEA " << action->text().toStdString() << std::endl;
@@ -53,8 +58,10 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
   m_c->setWidget(this);
   m_c->setCompletionMode(QCompleter::PopupCompletion);
   m_c->setCaseSensitivity(Qt::CaseInsensitive);
-  QObject::connect(m_c, SIGNAL(activated(QString)),
-                   this, SLOT(insert_completion(QString)));
+  QObject::connect(m_c,
+                   SIGNAL(activated(QString)),
+                   this,
+                   SLOT(insert_completion(QString)));
 
 }
 
@@ -243,11 +250,15 @@ QString python_text_editor_t::text_under_cursor() const {
 
 }
 
+void python_text_editor_t::set_font_point_size(qreal new_size) {
 
-//void python_text_editor_t::wheelEvent(QWheelEvent *event) {
-//  event->accept();
-//}
+  if (!syntax_hl) return;
 
+  for (auto &hl_rule : syntax_hl->hl_rules) {
+      hl_rule.format.setFontPointSize(new_size);
+    }
+
+}
 
 void python_text_editor_t::run_cmd() {
 
@@ -336,14 +347,15 @@ void python_text_editor_t::focus_signal_received() {
 }
 
 void python_text_editor_t::insert_completion(const QString &completion) {
-  if (m_c->widget() != this)
-    return;
+
+  if (m_c->widget() != this) return;
   QTextCursor tc = textCursor();
   int extra = completion.length() - m_c->completionPrefix().length();
   tc.movePosition(QTextCursor::Left);
   tc.movePosition(QTextCursor::EndOfWord);
   tc.insertText(completion.right(extra));
   setTextCursor(tc);
+
 }
 
 python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter_t(
@@ -352,6 +364,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
   python_highlighting_rule_t rule;
 
   prompt_fmt.setForeground(Qt::green);
+
   //  prompt_fmt.setFontWeight(QFont::Bold);
   QStringList promptPatterns;
   promptPatterns << ">>>" << "\\.\\.\\.";
@@ -411,6 +424,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
 
   comment_start_expression = QRegExp("/\\*");
   comment_end_expression = QRegExp("\\*/");
+
 }
 
 void python_text_editor_syntax_highilighter_t::highlightBlock(const QString &text) {
@@ -443,4 +457,5 @@ void python_text_editor_syntax_highilighter_t::highlightBlock(const QString &tex
       setFormat(startIndex, commentLength, multi_line_c_fmt);
       startIndex = text.indexOf(comment_start_expression, startIndex + commentLength);
     }
+
 }

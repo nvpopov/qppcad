@@ -237,25 +237,73 @@ namespace qpp {
 
     }
 
-    void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id) {
+    int geom_view_anim_subsys_t::current_frame_truncated() {
 
-      if (!animable()) return;
-      if (m_cur_anim >= m_anim_data.size()) return;
-
-      auto cur_anim = get_current_anim();
-      cur_anim->frames[]
+      return std::floor(p_owner->m_anim->m_cur_anim_time);
 
     }
 
+    void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id,
+                                                  bool propagate_to_the_end) {
+
+      if (!animable()) {
+          throw std::runtime_error("Object is not animable!");
+          return;
+        }
+
+      if (m_cur_anim >= m_anim_data.size()) {
+          throw std::out_of_range(fmt::format("Invalid anim m_cur_anim={}, m_anim_data.size={}",
+                                              m_cur_anim,
+                                              m_anim_data.size()));
+          return;
+        }
+
+      auto cur_anim = get_current_anim();
+
+      if (!cur_anim) {
+          throw std::runtime_error("cur_anim is not valid!");
+          return;
+        }
+
+      int current_frame = current_frame_truncated();
+
+      if (current_frame >= cur_anim->frames.size()) {
+          throw std::out_of_range(fmt::format("Invalid anim current_frame={}, "
+                                              "cur_anim->frames.size={}",
+                                              m_cur_anim,
+                                              m_anim_data.size()));
+          return;
+        }
+
+      int c_start_frame = current_frame;
+      int c_end_frame = propagate_to_the_end ? cur_anim->frames.size() : current_frame + 1;
+
+      for (int i = c_start_frame; i < c_end_frame; i++) {
+
+          if (cur_anim->frames[i].atom_pos.size() <= atom_id) {
+              throw std::out_of_range(fmt::format(
+                                        "cur_anim->frames[{}].atom_pos not populated!", i));
+              return;
+            }
+
+          cur_anim->frames[i].atom_pos[atom_id] = p_owner->m_geom->coord(atom_id);
+        }
+
+    }
 
     void geom_view_anim_subsys_t::manual_frame_manipulate(const int frame_mod) {
 
-      if (!animable()) return;
+      if (!animable()) {
+          throw std::runtime_error("Object is not animable!");
+          return;
+        }
+
       if (m_cur_anim >= m_anim_data.size()) return;
 
       m_cur_anim_time += frame_mod;
       m_cur_anim_time = std::clamp(m_cur_anim_time,
-                                   0.0f, float(m_anim_data[m_cur_anim].frames.size()- 1) );
+                                   0.0f,
+                                   float(m_anim_data[m_cur_anim].frames.size()- 1));
       update_geom_to_anim();
 
     }

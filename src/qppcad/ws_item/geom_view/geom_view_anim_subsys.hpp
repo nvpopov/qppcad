@@ -51,7 +51,16 @@ namespace qpp {
                        const geom_anim_t _anim_type,
                        const size_t _num_frames);
 
-        void commit_atom_pos(size_t atom_id);
+        int current_frame_truncated();
+
+        /**
+         * @brief commit_atom_pos
+         * @param atom_id
+         * @param propagate_to_the_end
+         */
+        void commit_atom_pos(size_t atom_id,
+                             bool propagate_to_the_end = false);
+
 
         //void render_ui();
 

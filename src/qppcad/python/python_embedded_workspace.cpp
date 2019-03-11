@@ -167,6 +167,9 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_geom_view_anim.def("to_frame", &geom_view_anim_subsys_t::update_current_frame_to);
   py_geom_view_anim.def("make_animable", &geom_view_anim_subsys_t::make_animable);
   py_geom_view_anim.def("make_anim", &geom_view_anim_subsys_t::make_anim);
+  py_geom_view_anim.def("commit_apos", &geom_view_anim_subsys_t::commit_atom_pos,
+                        py::arg("atom_id"),
+                        py::arg("propagate_to_the_end") = false);
 
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(m, "geom_view_t", py_ws_item_t);

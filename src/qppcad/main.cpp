@@ -68,9 +68,9 @@ int main (int argc, char **argv) {
   qApp->setPalette(astate->m_app_palette);
 
   std::vector<int> fnt_id = {
-    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Light.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Roboto/Roboto-Light.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Roboto/Roboto-Regular.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Roboto/Roboto-Bold.ttf"),
   };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
