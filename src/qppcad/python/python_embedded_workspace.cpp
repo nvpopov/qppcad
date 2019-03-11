@@ -149,6 +149,14 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
           .value("show_custom", show_custom, "show_custom")
           .export_values();
 
+  py::enum_<geom_anim_t>(m, "geom_anim_t", py::arithmetic(), "")
+          .value("anim_static", anim_static, "anim_static")
+          .value("anim_generic", anim_generic, "anim_generic")
+          .value("anim_geo_opt", anim_geo_opt, "anim_geo_opt")
+          .value("anim_md", anim_md, "anim_md")
+          .value("anim_vib", anim_vib, "anim_vib")
+          .export_values();
+
   py::class_<geom_view_anim_subsys_t, std::shared_ptr<geom_view_anim_subsys_t> >
   py_geom_view_anim(m, "geom_view_anim_subsys_t");
   py_geom_view_anim.def("animable", &geom_view_anim_subsys_t::animable);
@@ -157,6 +165,8 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_geom_view_anim.def("to_begin", &geom_view_anim_subsys_t::update_current_frame_to_begin);
   py_geom_view_anim.def("to_end", &geom_view_anim_subsys_t::update_current_frame_to_end);
   py_geom_view_anim.def("to_frame", &geom_view_anim_subsys_t::update_current_frame_to);
+  py_geom_view_anim.def("make_animable", &geom_view_anim_subsys_t::make_animable);
+  py_geom_view_anim.def("make_anim", &geom_view_anim_subsys_t::make_anim);
 
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(m, "geom_view_t", py_ws_item_t);

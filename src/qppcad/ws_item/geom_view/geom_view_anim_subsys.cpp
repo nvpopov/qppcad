@@ -11,7 +11,7 @@ namespace qpp {
     }
 
     void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
-                                                          const float current_frame) {
+                                                      const float current_frame) {
       float start_frame = int(current_frame);
       float end_frame   = std::ceil(current_frame);
       float frame_delta = 1 - (current_frame - start_frame);
@@ -71,7 +71,7 @@ namespace qpp {
     }
 
     void geom_view_anim_subsys_t::update_and_set_anim(const int anim_id,
-                                                          const float current_frame) {
+                                                      const float current_frame) {
       m_cur_anim = anim_id;
       m_cur_anim_time = current_frame;
       update_geom_to_anim(anim_id, current_frame);
@@ -185,6 +185,65 @@ namespace qpp {
 
       if (p_owner->m_selected)
         astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+    }
+
+    void geom_view_anim_subsys_t::make_animable() {
+
+      app_state_t* astate = app_state_t::get_inst();
+
+      if (m_anim_data.empty()) {
+          geom_anim_record_t<float> new_static_rec;
+          new_static_rec.m_anim_type = geom_anim_t::anim_generic;
+          new_static_rec.m_anim_name = "static";
+          m_anim_data.emplace_back(std::move(new_static_rec));
+        }
+
+      //iterate over all anims and delete wrong anims
+      for (auto &anim : m_anim_data) {
+
+          if (anim.frames.empty()) anim.frames.resize(1);
+
+          for (auto &frame : anim.frames) {
+              if (frame.atom_pos.size() != p_owner->m_geom->nat()) {
+                  frame.atom_pos.resize(p_owner->m_geom->nat());
+                  for (size_t i = 0; i < p_owner->m_geom->nat(); i++)
+                    frame.atom_pos[i] = p_owner->m_geom->coord(i);
+                }
+            }
+        }
+
+      m_force_non_animable = false;
+
+      astate->make_viewport_dirty();
+      astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+    }
+
+    void geom_view_anim_subsys_t::make_anim(const std::string _anim_name,
+                                            const geom_anim_t _anim_type,
+                                            const size_t _num_frames) {
+
+      app_state_t* astate = app_state_t::get_inst();
+
+      geom_anim_record_t<float> new_anim_rec;
+      new_anim_rec.m_anim_name = _anim_name;
+      new_anim_rec.m_anim_type = _anim_type;
+
+      new_anim_rec.frames.resize(_num_frames);
+      m_anim_data.emplace_back(std::move(new_anim_rec));
+
+      make_animable();
+
+    }
+
+    void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id) {
+
+      if (!animable()) return;
+      if (m_cur_anim >= m_anim_data.size()) return;
+
+      auto cur_anim = get_current_anim();
+      cur_anim->frames[]
 
     }
 

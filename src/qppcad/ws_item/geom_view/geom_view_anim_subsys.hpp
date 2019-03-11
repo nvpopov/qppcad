@@ -46,6 +46,13 @@ namespace qpp {
         void prev_anim();
         void traverse_anim(int travel_dir);
 
+        void make_animable();
+        void make_anim(const std::string _anim_name,
+                       const geom_anim_t _anim_type,
+                       const size_t _num_frames);
+
+        void commit_atom_pos(size_t atom_id);
+
         //void render_ui();
 
         void manual_frame_manipulate(const int frame_mod);
