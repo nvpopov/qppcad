@@ -1,6 +1,5 @@
 language: cpp
 dist: trusty
-python: '3.6'
 sudo: required
 addons:
   apt:
@@ -16,6 +15,7 @@ git:
   submodules: false
 
 before_install:
+  - pyenv global system 3.6
   - sudo add-apt-repository ppa:beineri/opt-qt591-trusty -y
   - sudo apt-get update -qq
   - sudo apt-get install -qq qt59base qt59charts-no-lgpl qt59svg
