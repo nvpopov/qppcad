@@ -146,8 +146,11 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_inplace_labels = new qbinded_checkbox;
   disp_sl_labels = new qbinded_checkbox;
   disp_labels_screen_scale = new qbinded_checkbox;
+  disp_labels_draw_outline = new qbinded_checkbox;
+
   gb_disp_labels_lt->addRow(tr("Labels style"), disp_labels_style);
   gb_disp_labels_lt->addRow(tr("Labels size"), disp_labels_size);
+  gb_disp_labels_lt->addRow(tr("Draw outline"), disp_labels_draw_outline);
   gb_disp_labels_lt->addRow(tr("Inplace labels"), disp_inplace_labels);
   gb_disp_labels_lt->addRow(tr("Selective vis."), disp_sl_labels);
   gb_disp_labels_lt->addRow(tr("Scr. spc. scale"), disp_labels_screen_scale);
@@ -720,6 +723,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_inplace_labels->bind_value(&b_al->m_labels->m_render_inplace_hud);
       disp_sl_labels->bind_value(&b_al->m_labels->m_selective_label_render);
       disp_labels_screen_scale->bind_value(&b_al->m_labels->m_screen_scale);
+      disp_labels_draw_outline->bind_value(&b_al->m_labels->m_render_outlines);
 
       disp_shading_spec->bind_value(&b_al->m_draw_specular);
       disp_shading_spec_value->bind_value(&b_al->m_shading_specular_power);
@@ -811,6 +815,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_inplace_labels->unbind_value();
   disp_sl_labels->unbind_value();
   disp_labels_screen_scale->unbind_value();
+  disp_labels_draw_outline->unbind_value();
 
   disp_shading_spec->unbind_value();
   disp_shading_spec_value->unbind_value();

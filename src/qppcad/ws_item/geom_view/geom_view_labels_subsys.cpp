@@ -25,11 +25,14 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
   QPen rectpen(QPen(Qt::black, 1, Qt::SolidLine));
   QColor text_fill_color = QColor::fromRgbF(1,1,1);
-  QFont text_font_lb(astate->m_font_name,
-                     m_screen_scale ?
-                       m_label_font_size / (0.5f + (astate->camera->m_ortho_scale - 0.5f) * 0.01f) :
-                       m_label_font_size,
-                     QFont::Weight::Bold);
+
+  float _font_size = m_label_font_size;
+  if (m_screen_scale) {
+      float clmp_os = std::clamp(astate->camera->m_ortho_scale, 1.0f, 20.0f);
+      _font_size = m_label_font_size * 10 / clmp_os;
+    }
+
+  QFont text_font_lb(astate->m_font_name, int(_font_size), QFont::Weight::Bold);
 
   painter.setBrush(text_fill_color);
   painter.setPen(rectpen);
@@ -95,25 +98,28 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       if (render_label) {
 
           label_qs = QString::fromStdString(label);
-          //          old style
-          //          const int rect_size = 60;
-          //          painter.drawText(
-          //                int((*proj_pos)[0]-rect_size*0.5f),
-          //              int((*proj_pos)[1]-rect_size*0.5f),
-          //              rect_size, rect_size,
-          //              Qt::AlignCenter, QString::fromStdString(label));
 
-          //w outline
-          QPainterPath text_path;
-          QFontMetrics fmetric(text_font_lb);
-          QRect font_rec = fmetric.boundingRect(label_qs);
+          if (m_render_outlines) {
+              QPainterPath text_path;
+              QFontMetrics fmetric(text_font_lb);
+              QRect font_rec = fmetric.boundingRect(label_qs);
 
-          //painter.setRenderHint(QPainter::Antialiasing);
-          text_path.addText((*proj_pos)[0] - fmetric.width(label_qs) / 2,
-              (*proj_pos)[1] - font_rec.center().y(),
-              text_font_lb,
-              label_qs);
-          painter.drawPath(text_path);
+              //painter.setRenderHint(QPainter::Antialiasing);
+              text_path.addText((*proj_pos)[0] - fmetric.width(label_qs) / 2,
+                  (*proj_pos)[1] - font_rec.center().y(),
+                  text_font_lb,
+                  label_qs);
+              painter.drawPath(text_path);
+            } else {
+              QFontMetrics fmetric(text_font_lb);
+              QRect font_rec = fmetric.boundingRect(label_qs);
+              painter.drawText(
+                    int((*proj_pos)[0]-font_rec.width()*0.5f),
+                    int((*proj_pos)[1]-font_rec.height()*0.5f),
+                    font_rec.width(), font_rec.height(),
+                    Qt::AlignCenter, QString::fromStdString(label));
+
+            }
 
         }
 
