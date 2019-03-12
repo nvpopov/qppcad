@@ -2,6 +2,9 @@
 
 #download appimage tools
 
+wget -c https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/master/linuxdeploy-plugin-conda.sh
+chmod +x ./linuxdeploy-plugin-conda.sh
+
 wget -c https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x ./appimagetool-x86_64.AppImage
 
@@ -19,11 +22,15 @@ mkdir qppcad
 mkdir qppcad/usr
 mkdir qppcad/usr/bin
 cp ../../bin/qppcad qppcad/usr/bin/
+chmod +x qppcad/usr/bin/qppcad
+
 cp ../../data/images/icon.svg qppcad/icon.svg
 cp ./qppcad.desktop qppcad/qppcad.desktop
 cp ./AppRun.in qppcad/AppRun
 
+export CONDA_PYTHON_VERSION=3.6
 ./linuxdeploy-x86_64.AppImage --appdir qppcad --plugin qt
+./linuxdeploy-x86_64.AppImage --appdir qppcad --plugin conda
 ./appimagetool-x86_64.AppImage qppcad
 
 

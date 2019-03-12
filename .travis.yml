@@ -1,6 +1,6 @@
 language: cpp
 dist: trusty
-python: '3.5'
+python: '3.6'
 sudo: required
 addons:
   apt:
@@ -26,7 +26,7 @@ before_install:
 script:
  - export CC=gcc-7 ;
  - export CXX=g++-7 ;
- - mkdir build && cd build && cmake .. -DPYBIND11_PYTHON_VERSION=3 -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
+ - mkdir build && cd build && cmake .. -DPYBIND11_PYTHON_VERSION=3.6 -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
  - cd ../packaging/appimage
  - ./make_appimage.sh
  - ./upload.sh ./qppcad-x86_64.AppImage
