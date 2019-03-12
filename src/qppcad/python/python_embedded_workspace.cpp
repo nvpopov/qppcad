@@ -244,6 +244,9 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
                                {return src.m_subcells_range;},
                                [](geom_view_t &src, const vector3<int> value)
                                {src.m_subcells_range = value; upd_oi(&src);});
+  py_atoms_list_t.def("get_xcolor", &geom_view_t::get_xcolor);
+  py_atoms_list_t.def("set_xcolor", &geom_view_t::set_xcolorv);
+  py_atoms_list_t.def("set_xcolor", &geom_view_t::set_xcolorf);
 
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
   py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);

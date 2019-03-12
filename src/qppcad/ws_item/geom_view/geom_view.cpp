@@ -666,6 +666,43 @@ void geom_view_t::load_color_from_static_anim() {
 
 }
 
+vector3<float> geom_view_t::get_xcolor(const size_t atm) {
+
+  if (atm >= m_geom->nat()) {
+      throw std::out_of_range("invalid atom id");
+      return vector3<float>(0);
+    }
+
+  return vector3<float>{
+                        m_geom->xfield<float>(xgeom_ccr, atm),
+                        m_geom->xfield<float>(xgeom_ccg, atm),
+                        m_geom->xfield<float>(xgeom_ccb, atm)
+    };
+}
+
+void geom_view_t::set_xcolorv(const size_t atm, const vector3<float> color) {
+
+  if (atm >= m_geom->nat()) {
+      throw std::out_of_range("invalid atom id");
+      return;
+    }
+
+  m_geom->xfield<float>(xgeom_ccr, atm) = color[0];
+  m_geom->xfield<float>(xgeom_ccg, atm) = color[1];
+  m_geom->xfield<float>(xgeom_ccb, atm) = color[2];
+
+}
+
+void geom_view_t::set_xcolorf(const size_t atm,
+                              const float _r,
+                              const float _g,
+                              const float _b) {
+
+  vector3<float> packed_color{_r, _g, _b};
+  set_xcolorv(atm, packed_color);
+
+}
+
 void geom_view_t::select_atom_ngbs(const int at_id) {
 
   if (!m_geom) return;
