@@ -53,7 +53,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
    "ccr",//8
    "ccg",//9
    "ccb",//10
-   "ltext"//11
+   "ltext",//11
+   "override"//12
         },
 
   {type_string, //0
@@ -67,7 +68,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
    type_real, //8
    type_real, //9
    type_real, //10
-   type_string //11
+   type_string, //11
+   type_bool // 12
         });
 
   m_geom->DIM = 0;

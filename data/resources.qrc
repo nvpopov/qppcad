@@ -34,5 +34,6 @@
         <file>fonts/Roboto/Roboto-Bold.ttf</file>
         <file>fonts/Roboto/Roboto-Regular.ttf</file>
         <file>fonts/Roboto/Roboto-Light.ttf</file>
+        <file>images/outline-my_location-24px.svg</file>
     </qresource>
 </RCC>

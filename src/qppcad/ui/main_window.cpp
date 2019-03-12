@@ -445,12 +445,24 @@ void main_window::init_widgets() {
   tp_measure_dist->setMinimumHeight(tp_button_height);
   tp_measure_dist->setCheckable(true);
   tp_measure_dist->setIconSize(QSize(26, 26));
-  tp_measure_dist->setToolTip(tr("Measure distance between atoms pair"));
+  tp_measure_dist->setToolTip(tr("Measure distance between pair of atoms"));
   tp_measure_dist->setIcon(QIcon("://images/dist.svg"));
   connect(tp_measure_dist,
           &QPushButton::toggled,
           this,
           &main_window::tp_dist_button_clicked);
+
+  tp_toggle_atom_override = new QPushButton();
+  tp_toggle_atom_override->setMaximumWidth(40);
+  tp_toggle_atom_override->setMinimumHeight(tp_button_height);
+  tp_toggle_atom_override->setCheckable(true);
+  tp_toggle_atom_override->setIconSize(QSize(26, 26));
+  tp_toggle_atom_override->setToolTip(tr("Toggle atom override"));
+  tp_toggle_atom_override->setIcon(QIcon("://images/outline-my_location-24px.svg"));
+  connect(tp_toggle_atom_override,
+          &QPushButton::toggled,
+          this,
+          &main_window::tp_toggle_atom_override_button_clicked);
 
   tp_force_sel_lbl_vis = new QPushButton();
   tp_force_sel_lbl_vis->setMaximumWidth(40);
@@ -543,6 +555,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
 
@@ -890,6 +903,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
 
   bool need_to_hide_al_cntls{true};
   bool need_to_hide_force_sel_lbl_vis{false};
+  bool need_to_hide_atom_override{false};
 
   if (astate->ws_manager->has_wss()) {
 
@@ -906,6 +920,22 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                   cur_ws->m_edit_type == ws_edit_e::edit_item ||
                   cur_it_as_al->m_atom_idx_sel.empty();
               tp_force_sel_lbl_vis->show();
+
+              if (cur_it_as_al->m_atom_idx_sel.size() != 1 ||
+                  cur_ws->m_edit_type == ws_edit_e::edit_item) need_to_hide_atom_override = true;
+
+              if (cur_it_as_al->m_atom_idx_sel.size() == 1 &&
+                  cur_ws->m_edit_type == ws_edit_e::edit_content) {
+                  tp_toggle_atom_override->show();
+                  size_t atom_idx = cur_it_as_al->m_atom_idx_sel.begin()->m_atm;
+
+                  tp_toggle_atom_override->blockSignals(true);
+
+                  tp_toggle_atom_override->setChecked(
+                        cur_it_as_al->m_geom->xfield<bool>(xgeom_override,atom_idx));
+
+                  tp_toggle_atom_override->blockSignals(false);
+                }
 
               if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
                   cur_ws->m_edit_type == ws_edit_e::edit_content) {
@@ -956,9 +986,11 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
 
             } else {
               need_to_hide_force_sel_lbl_vis = true;
+              need_to_hide_atom_override = true;
             }
 
         }
+
     }
 
   if (need_to_hide_al_cntls) {
@@ -968,6 +1000,10 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
 
   if (need_to_hide_force_sel_lbl_vis) {
       tp_force_sel_lbl_vis->hide();
+    }
+
+  if (need_to_hide_atom_override) {
+      tp_toggle_atom_override->hide();
     }
 
 }
@@ -1031,19 +1067,19 @@ void main_window::tp_angle_button_clicked(bool checked) {
 
                   auto cur_sel = cur_it_as_al->m_measure->is_angle_msr_exists(
                                    cur_it_as_al->m_atom_ord_sel[0].m_atm,
-                      cur_it_as_al->m_atom_ord_sel[1].m_atm,
-                      cur_it_as_al->m_atom_ord_sel[2].m_atm,
-                      cur_it_as_al->m_atom_ord_sel[0].m_idx,
-                      cur_it_as_al->m_atom_ord_sel[1].m_idx,
-                      cur_it_as_al->m_atom_ord_sel[2].m_idx);
+                                   cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                                   cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                                   cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                                   cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                                   cur_it_as_al->m_atom_ord_sel[2].m_idx);
 
                   if (checked) cur_it_as_al->m_measure->add_angle_msr(
                         cur_it_as_al->m_atom_ord_sel[0].m_atm,
-                      cur_it_as_al->m_atom_ord_sel[1].m_atm,
-                      cur_it_as_al->m_atom_ord_sel[2].m_atm,
-                      cur_it_as_al->m_atom_ord_sel[0].m_idx,
-                      cur_it_as_al->m_atom_ord_sel[1].m_idx,
-                      cur_it_as_al->m_atom_ord_sel[2].m_idx);
+                        cur_it_as_al->m_atom_ord_sel[1].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[2].m_atm,
+                        cur_it_as_al->m_atom_ord_sel[0].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[1].m_idx,
+                        cur_it_as_al->m_atom_ord_sel[2].m_idx);
 
                   else cur_it_as_al->m_measure->rm_angle_msr(*cur_sel);
                 }
@@ -1096,6 +1132,40 @@ void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
                 cur_it_as_al->m_labels->m_style = geom_labels_style_e::show_id_type;
                 astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
             }
+        }
+    }
+
+  astate->make_viewport_dirty();
+
+}
+
+void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_manager->has_wss()) {
+
+      auto cur_ws = astate->ws_manager->get_cur_ws();
+
+      if (cur_ws) {
+
+          auto cur_it = cur_ws->get_selected();
+          auto cur_it_as_al = cur_it->cast_as<geom_view_t>();
+
+          if (cur_it_as_al &&
+              cur_ws->m_edit_type == ws_edit_e::edit_content &&
+              cur_it_as_al->m_atom_idx_sel.size() == 1) {
+              size_t atom_idx = cur_it_as_al->m_atom_idx_sel.begin()->m_atm;
+              cur_it_as_al->m_geom->xfield<bool>(xgeom_override,atom_idx) = checked;
+            }
+
+//          // if selective labels rendering was unchecked - force it and select some random style
+//          if (!cur_it_as_al->m_atom_idx_sel.empty() &&
+//              !cur_it_as_al->m_labels->m_selective_label_render) {
+//                cur_it_as_al->m_labels->m_selective_label_render = true;
+//                cur_it_as_al->m_labels->m_style = geom_labels_style_e::show_id_type;
+//                astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+//            }
         }
     }
 

@@ -200,6 +200,9 @@ namespace qpp {
         QPushButton *tm_group_op_sel_ngbs;
         QPushButton *tm_group_op_del_sel;
 
+        qspoiler_widget_t *tm_gb_override_atom;
+        QLabel *tg_override_atom_info;
+
         int tab_modify_op_button_width{180};
         int tab_modify_label_width{120};
         //END TAB MODIFY

@@ -86,7 +86,8 @@ namespace qpp {
           color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
         }
 
-      if (al.m_color_mode == geom_view_color_e::color_from_xgeom) {
+      if (al.m_color_mode == geom_view_color_e::color_from_xgeom ||
+          al.m_geom->xfield<bool>(xgeom_override, at_num)) {
           color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
           color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
           color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
@@ -139,6 +140,17 @@ namespace qpp {
           bcolor2[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num2);
         }
 
+      if (al.m_geom->xfield<bool>(xgeom_override, at_num1)) {
+          bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
+          bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
+          bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
+        }
+
+      if (al.m_geom->xfield<bool>(xgeom_override, at_num2)) {
+          bcolor2[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num2);
+          bcolor2[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num2);
+          bcolor2[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num2);
+        }
 
       astate->dp->render_2c_bond(bcolor1, bcolor2,
                                  al.m_geom->pos(at_num1, at_index1) + al.m_pos,

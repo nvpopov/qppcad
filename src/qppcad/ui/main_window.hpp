@@ -31,12 +31,15 @@ namespace qpp {
   namespace cad {
 
     class main_window : public QMainWindow {
+
         Q_OBJECT
 
       private:
+
         int p_elapsed_time_in_event_loop{0};
 
       public:
+
         explicit main_window(QWidget *parent = 0);
         ~main_window();
         void init_base_shortcuts();
@@ -66,6 +69,7 @@ namespace qpp {
         QPushButton *tp_edit_mode_content;
         QFrame *tp_edit_mode_end;
 
+        //TODO: implement sizes guide
         int tp_button_width{36};
         int tp_button_height{30};
 
@@ -78,6 +82,7 @@ namespace qpp {
         QPushButton *tp_camera_c;
 
         QPushButton *tp_force_sel_lbl_vis;
+        QPushButton *tp_toggle_atom_override;
         QPushButton *tp_measure_dist;
         QPushButton *tp_measure_angle;
 
@@ -162,6 +167,7 @@ namespace qpp {
         void resizeEvent(QResizeEvent *event) override;
 
       public slots:
+
         void slot_shortcut_terminate_app();
 
         void wss_changed_slot();
@@ -187,6 +193,7 @@ namespace qpp {
         void tp_angle_button_clicked(bool checked);
         void ws_edit_mode_selector_button_clicked(int id);
         void tp_force_sel_lbl_vis_button_clicked(bool checked);
+        void tp_toggle_atom_override_button_clicked(bool checked);
 
         void apply_camera_view_change(cam_target_view_t target_view);
 
@@ -202,6 +209,9 @@ namespace qpp {
         void rebuild_recent_files_menu();
         void recent_files_clicked();
 
+        /**
+         * ws_item_t io behaviour related stuff
+         */
         void build_bhv_menus_and_actions();
         void build_bhv_tools_menus();
         void action_bhv_tools_menus_clicked();

@@ -65,6 +65,7 @@ namespace qpp {
     const int xgeom_ccg         = 9;
     const int xgeom_ccb         = 10;
     const int xgeom_label_text  = 11;
+    const int xgeom_override    = 12;
 
     const int max_sel_in_deque = 4;
 
