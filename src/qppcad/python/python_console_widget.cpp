@@ -196,6 +196,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
       if (completion_prefix != m_c->completionPrefix()) {
           m_c->setCompletionPrefix(completion_prefix);
+          m_c->popup()->setStyleSheet("font-size:16pt;");
           m_c->popup()->setCurrentIndex(m_c->completionModel()->index(0, 0));
         }
 

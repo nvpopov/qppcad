@@ -34,7 +34,7 @@ namespace qpp {
         bool m_render_inplace_hud{false};
         bool m_selective_label_render{false};
         bool m_screen_scale{false};
-        bool m_render_outlines{false};
+        bool m_render_outlines{true};
         geom_view_labels_subsys_t (geom_view_t &_p_owner);
 
         void render_overlay(QPainter &painter);

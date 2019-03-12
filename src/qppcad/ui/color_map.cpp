@@ -1,4 +1,4 @@
-#include <qppcad/color_map.hpp>
+#include <qppcad/ui/color_map.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -12,14 +12,18 @@ vector3<float> qpp::cad::color_map_t::get_color(float pos) {
 
   // in [0,n) :
   for (size_t i = 0; i < m_colors.size() - 1; i++)
-    if (m_colors[i].m_pos >= pos-0.05f && m_colors[i].m_pos < pos+0.05f) {
+    if (m_colors[i].m_pos >= _pos-0.05f && m_colors[i].m_pos < _pos+0.05f) {
         idx_1 = i;
         idx_2 = i+1;
         break;
       }
 
-  return m_colors[idx_1].m_color * pos + m_colors[idx_2].m_color * (1 - pos);
+  return m_colors[idx_2].m_color * _pos + m_colors[idx_1].m_color * (1 - _pos);
 
+}
+
+void color_map_t::push_color(float _pos, vector3<float> _color) {
+  m_colors.emplace_back(color_map_record_t{_pos, _color});
 }
 
 color_map_t::color_map_t(std::initializer_list<color_map_record_t> color_list) {

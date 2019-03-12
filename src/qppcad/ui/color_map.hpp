@@ -9,8 +9,11 @@
 namespace qpp {
 
   namespace cad {
+
     class color_map_record_t {
+
       public:
+
         float m_pos;
         vector3<float> m_color;
         color_map_record_t(const float _m_pos, const vector3<float> &_m_color)
@@ -18,10 +21,13 @@ namespace qpp {
     };
 
     class color_map_t {
+
       public:
+
         std::vector<color_map_record_t> m_colors;
 
         vector3<float> get_color(float pos);
+        void push_color(float _pos, vector3<float> _color);
 
         color_map_t(std::initializer_list<color_map_record_t> color_list);
         color_map_t() = default;

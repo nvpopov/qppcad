@@ -244,6 +244,7 @@ namespace qpp {
     }
 
     void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id,
+                                                  bool lerp_from_start,
                                                   bool propagate_to_the_end) {
 
       if (!animable()) {
@@ -279,6 +280,15 @@ namespace qpp {
       int c_end_frame = propagate_to_the_end ? cur_anim->frames.size() : current_frame + 1;
 
       for (int i = c_start_frame; i < c_end_frame; i++) {
+          if (cur_anim->frames[i].atom_pos.size() <= atom_id) {
+              throw std::out_of_range(fmt::format(
+                                        "cur_anim->frames[{}].atom_pos not populated!", i));
+              return;
+            }
+          cur_anim->frames[i].atom_pos[atom_id] = p_owner->m_geom->coord(atom_id);
+        }
+
+      for (int i = 0; i < c_start_frame; i++) {
 
           if (cur_anim->frames[i].atom_pos.size() <= atom_id) {
               throw std::out_of_range(fmt::format(
@@ -286,7 +296,18 @@ namespace qpp {
               return;
             }
 
-          cur_anim->frames[i].atom_pos[atom_id] = p_owner->m_geom->coord(atom_id);
+          if (cur_anim->frames[c_start_frame].atom_pos.size() <= atom_id) {
+              throw std::out_of_range(fmt::format(
+                                        "cur_anim->frames[{}].atom_pos not populated!",
+                                        c_start_frame));
+              return;
+            }
+
+          float i_c = i / (c_start_frame - i);
+          cur_anim->frames[i].atom_pos[atom_id] =
+             cur_anim->frames[i].atom_pos[atom_id] +
+             (cur_anim->frames[i].atom_pos[atom_id] - cur_anim->frames[i].atom_pos[atom_id])*i_c;
+
         }
 
     }

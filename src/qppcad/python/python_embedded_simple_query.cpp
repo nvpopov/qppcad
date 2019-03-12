@@ -1,5 +1,6 @@
 #include <qppcad/python/python_simple_query.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_colorizer.hpp>
+#include <qppcad/ui/color_map.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -30,7 +31,15 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("xgeom_dfn", &simple_query::get_xgeom_dfn);
   m.def("xgeom_dft", &simple_query::get_xgeom_dft);
 
+  //tools module begin
   py::module tools = m.def_submodule("tools", "Generic tools");
+
+  py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools,
+                                                                       "color_map_t");
+  py_color_map_t.def(py::init<>());
+  py_color_map_t.def("get_color", &color_map_t::get_color);
+  py_color_map_t.def("push_color", &color_map_t::push_color);
+
   tools.def("get_isolevel", &simple_query::get_isolevel);
   tools.def("set_isolevel", &simple_query::set_isolevel);
 
@@ -58,13 +67,12 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("make_traj_highlighter", &simple_query::make_traj_highlight,  py::arg("atom_id"),
             py::arg("anim_id") = 1);
 
-//  tools.def("test_diag",
-//            [](const Eigen::MatrixXf &xs) -> Eigen::MatrixXf{ return xs.inverse();});
-
   tools.def("make_cube", &simple_query::make_cube_p);
   tools.def("make_arrow", &simple_query::make_arrow_p);
 
   tools.def("convert_spatial", &simple_query::convert_selected_units);
+
+  //tools module end
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 

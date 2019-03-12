@@ -90,6 +90,7 @@ add_executable(qppcad
     src/qppcad/ui/qrealspinbox_delegate.cpp
     src/qppcad/ui/add_new_ws_item_widget.cpp
     src/qppcad/ui/qrich_error_message_box.cpp
+    src/qppcad/ui/color_map.cpp
 
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp

@@ -56,13 +56,12 @@ namespace qpp {
         /**
          * @brief commit_atom_pos
          * @param atom_id
+         * @param lerp_from_start
          * @param propagate_to_the_end
          */
         void commit_atom_pos(size_t atom_id,
+                             bool lerp_from_start = false,
                              bool propagate_to_the_end = false);
-
-
-        //void render_ui();
 
         void manual_frame_manipulate(const int frame_mod);
 
