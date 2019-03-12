@@ -6,7 +6,7 @@ using namespace qpp::cad;
 
 PYBIND11_EMBEDDED_MODULE(sq, m) {
 
-  py::enum_<spatial_units>(m, "spatial_units", py::arithmetic(), "Spatial(Ang or Bohr)")
+  py::enum_<spatial_units_e>(m, "spatial_units", py::arithmetic(), "Spatial(Ang or Bohr)")
           .value("ang", spatial_units_ang, "Docstring for spatial_units_ang")
           .value("bohr", spatial_units_bohr, "Docstring for spatial_units_bohr")
           .export_values();
@@ -99,6 +99,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   cam.def("ry", &simple_query::camera_rotate_yaw);
   cam.def("rp", &simple_query::camera_rotate_pitch);
   cam.def("zoom", &simple_query::camera_zoom);
+  cam.def("zoom", &simple_query::camera_get_zoom);
   cam.def("proj", &simple_query::camera_mode);
   cam.def("copy", &simple_query::copy_camera_from_ws);
 

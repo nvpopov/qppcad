@@ -866,7 +866,7 @@ void main_window::cur_ws_properties_changed() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          bool check_t = cur_ws->m_edit_type == ws_edit_t::edit_item;
+          bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
           tp_edit_mode_item->blockSignals(true);
           tp_edit_mode_content->blockSignals(true);
           tp_edit_mode_item->setChecked(check_t);
@@ -903,12 +903,12 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
           if (cur_it_as_al) {
 
               need_to_hide_force_sel_lbl_vis =
-                  cur_ws->m_edit_type == ws_edit_t::edit_item ||
+                  cur_ws->m_edit_type == ws_edit_e::edit_item ||
                   cur_it_as_al->m_atom_idx_sel.empty();
               tp_force_sel_lbl_vis->show();
 
               if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
-                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  cur_ws->m_edit_type == ws_edit_e::edit_content) {
                   tp_measure_angle->hide();
                   tp_measure_dist->show();
                   need_to_hide_al_cntls = false;
@@ -923,7 +923,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                 }
 
               if (cur_it_as_al->m_atom_idx_sel.size() == 3 &&
-                  cur_ws->m_edit_type == ws_edit_t::edit_content &&
+                  cur_ws->m_edit_type == ws_edit_e::edit_content &&
                   cur_it_as_al->m_atom_ord_sel.size() == 3) {
                   need_to_hide_al_cntls = false;
 
@@ -988,7 +988,7 @@ void main_window::tp_dist_button_clicked(bool checked) {
           if (cur_it_as_al) {
 
               if (cur_it_as_al->m_atom_idx_sel.size() == 2 &&
-                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  cur_ws->m_edit_type == ws_edit_e::edit_content) {
                   tp_measure_dist->show();
 
                   auto it1 = cur_it_as_al->m_atom_idx_sel.begin();
@@ -1026,7 +1026,7 @@ void main_window::tp_angle_button_clicked(bool checked) {
           if (cur_it_as_al) {
 
               if (cur_it_as_al->m_atom_idx_sel.size() == 3 &&
-                  cur_ws->m_edit_type == ws_edit_t::edit_content) {
+                  cur_ws->m_edit_type == ws_edit_e::edit_content) {
                   tp_measure_angle->show();
 
                   auto cur_sel = cur_it_as_al->m_measure->is_angle_msr_exists(
@@ -1063,8 +1063,8 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
-          if (id == 0) cur_ws->m_edit_type = ws_edit_t::edit_item;
-          else cur_ws->m_edit_type = ws_edit_t::edit_content;
+          if (id == 0) cur_ws->m_edit_type = ws_edit_e::edit_item;
+          else cur_ws->m_edit_type = ws_edit_e::edit_content;
         }
     }
   astate->astate_evd->cur_ws_edit_type_changed();
@@ -1085,7 +1085,7 @@ void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
           auto cur_it = cur_ws->get_selected();
           auto cur_it_as_al = cur_it->cast_as<geom_view_t>();
 
-          if (cur_it_as_al && cur_ws->m_edit_type == ws_edit_t::edit_content)
+          if (cur_it_as_al && cur_ws->m_edit_type == ws_edit_e::edit_content)
             for (auto &rec : cur_it_as_al->m_atom_idx_sel)
               cur_it_as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = checked;
 
@@ -1093,7 +1093,7 @@ void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
           if (!cur_it_as_al->m_atom_idx_sel.empty() &&
               !cur_it_as_al->m_labels->m_selective_label_render) {
                 cur_it_as_al->m_labels->m_selective_label_render = true;
-                cur_it_as_al->m_labels->m_style = geom_view_labels_style_t::show_id_type;
+                cur_it_as_al->m_labels->m_style = geom_labels_style_e::show_id_type;
                 astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
             }
         }
@@ -1175,7 +1175,7 @@ void main_window::action_select_all_content() {
   app_state_t* astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
       auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
 
@@ -1191,7 +1191,7 @@ void main_window::action_unselect_all_content() {
   app_state_t* astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
       auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
 
@@ -1206,7 +1206,7 @@ void main_window::action_invert_selected_content() {
   app_state_t* astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_manager->get_cur_ws();
-  if (cur_ws && cur_ws->m_edit_type == ws_edit_t::edit_content) {
+  if (cur_ws && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
       auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
 

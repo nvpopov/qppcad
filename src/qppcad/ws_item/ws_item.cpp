@@ -103,7 +103,7 @@ void ws_item_t::render () {
       (get_flags() & ws_item_flags_support_render_bb) && is_bb_visible() && m_show_bb) {
       astate->dp->begin_render_aabb();
 
-      (m_parent_ws->m_edit_type == ws_edit_t::edit_item) ?
+      (m_parent_ws->m_edit_type == ws_edit_e::edit_item) ?
             astate->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min, m_pos + m_aabb.max  )
           : astate->dp->render_aabb_segmented(clr_olive, m_pos + m_aabb.min, m_pos + m_aabb.max);
 

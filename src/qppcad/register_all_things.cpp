@@ -112,7 +112,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   auto xyzq_mgf =
       std::make_shared<
       geom_view_io_loader_t<
-      read_xyzq_wrp_def<float, periodic_cell<float> >, geom_view_role_t::r_uc >
+      read_xyzq_wrp_def<float, periodic_cell<float> >, geom_view_role_e::r_uc >
       >();
 
   auto xyzq_s_mgf =
@@ -142,7 +142,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   auto vasp_poscar_mgf =
       std::make_shared<
       geom_view_io_loader_t<
-      read_vasp_poscar<float, periodic_cell<float> >, geom_view_role_t::r_generic, 3 >
+      read_vasp_poscar<float, periodic_cell<float> >, geom_view_role_e::r_generic, 3 >
       >();
 
   auto vasp_poscar_s_mgf =

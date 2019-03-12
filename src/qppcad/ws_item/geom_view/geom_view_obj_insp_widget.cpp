@@ -134,21 +134,23 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_labels_lt = new QFormLayout;
   gb_disp_labels->add_content_layout(gb_disp_labels_lt);
 
-  disp_s_labels_style = new qbinded_combobox;
-  disp_s_labels_style->addItem("None");
-  disp_s_labels_style->addItem("Id");
-  disp_s_labels_style->addItem("Type");
-  disp_s_labels_style->addItem("Type and Id");
-  disp_s_labels_style->addItem("Charge");
-  disp_s_labels_style->addItem("Custom");
+  disp_labels_style = new qbinded_combobox;
+  disp_labels_style->addItem("None");
+  disp_labels_style->addItem("Id");
+  disp_labels_style->addItem("Type");
+  disp_labels_style->addItem("Type and Id");
+  disp_labels_style->addItem("Charge");
+  disp_labels_style->addItem("Custom");
   disp_labels_size = new qbinded_int_spinbox;
   disp_labels_size->set_min_max_step(5, 35, 1);
-  disp_s_inplace_labels = new qbinded_checkbox;
+  disp_inplace_labels = new qbinded_checkbox;
   disp_sl_labels = new qbinded_checkbox;
-  gb_disp_labels_lt->addRow(tr("Labels style"), disp_s_labels_style);
+  disp_labels_screen_scale = new qbinded_checkbox;
+  gb_disp_labels_lt->addRow(tr("Labels style"), disp_labels_style);
   gb_disp_labels_lt->addRow(tr("Labels size"), disp_labels_size);
-  gb_disp_labels_lt->addRow(tr("Inplace labels"), disp_s_inplace_labels);
+  gb_disp_labels_lt->addRow(tr("Inplace labels"), disp_inplace_labels);
   gb_disp_labels_lt->addRow(tr("Selective vis."), disp_sl_labels);
+  gb_disp_labels_lt->addRow(tr("Scr. spc. scale"), disp_labels_screen_scale);
   init_form_layout(gb_disp_labels_lt);
 
   //display - shading tab initialization
@@ -713,10 +715,11 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_render_style));
       disp_s_color_mode->bind_value(reinterpret_cast<int*>(&b_al->m_color_mode));
 
-      disp_s_labels_style->bind_value(reinterpret_cast<int*>(&b_al->m_labels->m_style));
+      disp_labels_style->bind_value(reinterpret_cast<int*>(&b_al->m_labels->m_style));
       disp_labels_size->bind_value(&b_al->m_labels->m_label_font_size);
-      disp_s_inplace_labels->bind_value(&b_al->m_labels->m_render_inplace_hud);
+      disp_inplace_labels->bind_value(&b_al->m_labels->m_render_inplace_hud);
       disp_sl_labels->bind_value(&b_al->m_labels->m_selective_label_render);
+      disp_labels_screen_scale->bind_value(&b_al->m_labels->m_screen_scale);
 
       disp_shading_spec->bind_value(&b_al->m_draw_specular);
       disp_shading_spec_value->bind_value(&b_al->m_shading_specular_power);
@@ -802,10 +805,13 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_s_bond_scale->unbind_value();
   disp_s_render_style->unbind_value();
   disp_s_color_mode->unbind_value();
-  disp_s_labels_style->unbind_value();
+
+  disp_labels_style->unbind_value();
   disp_labels_size->unbind_value();
-  disp_s_inplace_labels->unbind_value();
+  disp_inplace_labels->unbind_value();
   disp_sl_labels->unbind_value();
+  disp_labels_screen_scale->unbind_value();
+
   disp_shading_spec->unbind_value();
   disp_shading_spec_value->unbind_value();
   disp_s_sel_vis->unbind_value();
@@ -908,7 +914,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
   if (b_al) {
 
       if (b_al->m_parent_ws &&
-          b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+          b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
 
           set_tab_enabled(tab_modify, true);
 
@@ -1138,7 +1144,7 @@ void geom_view_obj_insp_widget_t::update_select_tab() {
   if (b_al) {
 
       if (b_al->m_parent_ws &&
-          b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+          b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
           set_tab_enabled(tab_select, true);
         } else {
           set_tab_enabled(tab_select, false);
@@ -1420,8 +1426,8 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
           it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
           it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
 
-          pair_dist_mode mode;
-          mode = static_cast<pair_dist_mode>(tm_pair_dist_t_mode->currentIndex());
+          pair_dist_mode_e mode;
+          mode = static_cast<pair_dist_mode_e>(tm_pair_dist_t_mode->currentIndex());
           b_al->update_inter_atomic_dist(float(newval), it1->m_atm, it2->m_atm, mode);
 
           astate->make_viewport_dirty();
@@ -1537,7 +1543,7 @@ void geom_view_obj_insp_widget_t::modify_bc_rot_angle_type_change(int new_angle_
 
 void geom_view_obj_insp_widget_t::modify_bc_rot_apply() {
 
-  if (b_al && b_al->m_parent_ws && b_al->m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+  if (b_al && b_al->m_parent_ws && b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
 
       float angle;
 

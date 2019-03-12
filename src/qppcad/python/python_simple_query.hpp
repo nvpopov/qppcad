@@ -85,7 +85,7 @@ namespace qpp {
                                  vector3<float> from,
                                  vector3<float> to);
 
-        static void convert_selected_units(spatial_units new_unit);
+        static void convert_selected_units(spatial_units_e new_unit);
 
         static float get_isolevel();
         static void set_isolevel(float new_isolevel);
@@ -115,6 +115,7 @@ namespace qpp {
         static void camera_rotate_yaw(float magnitude);
         static void camera_rotate_pitch(float magnitude);
         static void camera_zoom(float magnitude);
+        static float camera_get_zoom();
         static void camera_mode(int mode);
         static void copy_camera_from_ws(int ws_id);
 

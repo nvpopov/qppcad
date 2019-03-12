@@ -10,7 +10,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum geom_view_labels_style_t : int {
+    enum geom_labels_style_e : int {
       show_none,
       show_id,
       show_type,
@@ -30,9 +30,10 @@ namespace qpp {
       public:
 
         int m_label_font_size{17};
-        geom_view_labels_style_t m_style{geom_view_labels_style_t::show_none};
+        geom_labels_style_e m_style{geom_labels_style_e::show_none};
         bool m_render_inplace_hud{false};
         bool m_selective_label_render{false};
+        bool m_screen_scale{false};
         geom_view_labels_subsys_t (geom_view_t &_p_owner);
 
         void render_overlay(QPainter &painter);

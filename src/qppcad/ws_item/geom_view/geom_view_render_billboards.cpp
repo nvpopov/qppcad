@@ -42,7 +42,7 @@ namespace qpp {
               cached_last_atom_type = al.m_geom->type(i);
             }
 
-          if (al.m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+          if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
               if (al.m_atom_idx_sel.find(atom_index_set_key(i, null_idx)) != al.m_atom_idx_sel.end()
                   && al.m_selected) {
                   color = vector3<float>(0.43f, 0.55f, 0.12f);

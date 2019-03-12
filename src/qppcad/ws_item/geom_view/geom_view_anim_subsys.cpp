@@ -38,7 +38,7 @@ namespace qpp {
 
           p_owner->m_geom->change_pos(i, new_pos);
 
-          if (p_owner->m_color_mode == geom_view_color_mode::color_from_xgeom) {
+          if (p_owner->m_color_mode == geom_view_color_e::color_from_xgeom) {
               // check the colors in frame_data are avaiable
               if (m_anim_data[anim_id].frames[start_frame_n].atom_color.size() == nat &&
                   m_anim_data[anim_id].frames[end_frame_n].atom_color.size() == nat) {

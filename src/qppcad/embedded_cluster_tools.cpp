@@ -14,7 +14,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
                                                    float qm_r,
                                                    bool do_legacy) {
 
-    if (!uc || uc->m_role != geom_view_role_t::r_uc) {
+    if (!uc || uc->m_role != geom_view_role_e::r_uc) {
         //throw py::error_already_set();
         throw std::runtime_error("uc || uc->m_role != geom_view_role_t::role_uc");
         return;
@@ -35,9 +35,9 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
     for (auto elem : uc->m_connected_items) {
         std::shared_ptr<geom_view_t> as_al = std::dynamic_pointer_cast<geom_view_t>(elem);
         if (as_al) {
-            if (as_al->m_role == geom_view_role_t::r_embc_chg) ws_chg = as_al;
-            if (as_al->m_role == geom_view_role_t::r_embc_cls) ws_cls = as_al;
-            if (as_al->m_role == geom_view_role_t::r_embc_qm)  ws_qm  = as_al;
+            if (as_al->m_role == geom_view_role_e::r_embc_chg) ws_chg = as_al;
+            if (as_al->m_role == geom_view_role_e::r_embc_cls) ws_cls = as_al;
+            if (as_al->m_role == geom_view_role_e::r_embc_qm)  ws_qm  = as_al;
         }
     }
 
@@ -53,7 +53,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
     }
 
     ws_chg->m_tws_tr->do_action(act_lock);
-    ws_chg->m_role = geom_view_role_t::r_embc_chg;
+    ws_chg->m_role = geom_view_role_e::r_embc_chg;
     ws_chg->m_name = fmt::format("{}_chg", uc->m_name);
     ws_chg->m_draw_bonds = false;
 
@@ -67,7 +67,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
     }
 
     ws_cls->m_tws_tr->do_action(act_lock);
-    ws_cls->m_role = geom_view_role_t::r_embc_cls;
+    ws_cls->m_role = geom_view_role_e::r_embc_cls;
     ws_cls->m_name = fmt::format("{}_cls", uc->m_name);
 
     if (ws_qm == nullptr) {
@@ -81,7 +81,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
 
     ws_qm->m_tws_tr->do_action(act_lock);
     ws_qm->m_name = fmt::format("{}_qm", uc->m_name);
-    ws_qm->m_role = geom_view_role_t::r_embc_qm;
+    ws_qm->m_role = geom_view_role_e::r_embc_qm;
 
     shape_sphere<float> sp(cluster_r, displ);
 
@@ -181,7 +181,7 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
     //if (generate_qm && )
 
     if (ws_chg->m_geom->nat() > 1800) ws_chg->m_render_style =
-        geom_view_render_style_t::xatom_lines;
+        geom_view_render_style_e::xatom_lines;
     //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
     //add connection info
@@ -245,21 +245,21 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
             std::shared_ptr<geom_view_t> as_al =
                     std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
-            if (as_al && as_al->m_role == geom_view_role_t::r_uc) {
+            if (as_al && as_al->m_role == geom_view_role_e::r_uc) {
                 succes = true;
                 gen_spherical_cluster(as_al, displ, cluster_r, cls_r, true, qm_r, do_legacy);
                 return;
             }
 
             //try to deduce uc from connected items
-            if (as_al && (as_al->m_role == geom_view_role_t::r_embc_qm ||
-                          as_al->m_role == geom_view_role_t::r_embc_chg ||
-                          as_al->m_role == geom_view_role_t::r_embc_cls ))
+            if (as_al && (as_al->m_role == geom_view_role_e::r_embc_qm ||
+                          as_al->m_role == geom_view_role_e::r_embc_chg ||
+                          as_al->m_role == geom_view_role_e::r_embc_cls ))
 
                 for (auto elem : as_al->m_connected_items) {
                     std::shared_ptr<geom_view_t> con_al =
                             std::dynamic_pointer_cast<geom_view_t>(elem);
-                    if (con_al && con_al->m_role == geom_view_role_t::r_uc) {
+                    if (con_al && con_al->m_role == geom_view_role_e::r_uc) {
                         succes = true;
                         gen_spherical_cluster(con_al, displ, cluster_r, cls_r,
                                               true, qm_r, do_legacy);
@@ -406,20 +406,20 @@ void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<geom_view_
 
             if (cur_it_al) {
 
-                if (cur_it_al->m_role == geom_view_role_t::r_embc_qm) qm = cur_it_al;
-                if (cur_it_al->m_role == geom_view_role_t::r_embc_chg) chg = cur_it_al;
-                if (cur_it_al->m_role == geom_view_role_t::r_embc_cls) cls = cur_it_al;
-                if (cur_it_al->m_role == geom_view_role_t::r_uc) uc = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_e::r_embc_qm) qm = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_e::r_embc_chg) chg = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_e::r_embc_cls) cls = cur_it_al;
+                if (cur_it_al->m_role == geom_view_role_e::r_uc) uc = cur_it_al;
 
                 for (auto elem : cur_it_al->m_connected_items) {
                     auto elem_al = std::static_pointer_cast<geom_view_t>(elem);
-                    if (elem_al && elem_al->m_role == geom_view_role_t::r_embc_qm)
+                    if (elem_al && elem_al->m_role == geom_view_role_e::r_embc_qm)
                       qm = elem_al;
-                    if (elem_al && elem_al->m_role == geom_view_role_t::r_embc_chg)
+                    if (elem_al && elem_al->m_role == geom_view_role_e::r_embc_chg)
                       chg = elem_al;
-                    if (elem_al && elem_al->m_role == geom_view_role_t::r_embc_cls)
+                    if (elem_al && elem_al->m_role == geom_view_role_e::r_embc_cls)
                       cls = elem_al;
-                    if (elem_al && elem_al->m_role == geom_view_role_t::r_uc) uc = elem_al;
+                    if (elem_al && elem_al->m_role == geom_view_role_e::r_uc) uc = elem_al;
                 }
 
             }

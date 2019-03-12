@@ -23,7 +23,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum geom_view_render_style_t : int {
+    enum geom_view_render_style_e : int {
 
       ball_and_stick,
       dynamic_lines,
@@ -33,7 +33,7 @@ namespace qpp {
 
     };
 
-    enum geom_view_role_t : int {
+    enum geom_view_role_e : int {
 
       r_generic,
       r_uc,
@@ -43,14 +43,14 @@ namespace qpp {
 
     };
 
-    enum geom_view_color_mode : int {
+    enum geom_view_color_e : int {
 
       color_from_ptable,
       color_from_xgeom
 
     };
 
-    enum pair_dist_mode : int {
+    enum pair_dist_mode_e : int {
 
       transform_both,
       fix_first,
@@ -97,11 +97,11 @@ namespace qpp {
         vector3<float> m_gizmo_barycenter;
         vector3<float> m_new_atom_pos;
 
-        geom_view_render_style_t m_render_style{geom_view_render_style_t::ball_and_stick};
+        geom_view_render_style_e m_render_style{geom_view_render_style_e::ball_and_stick};
         vector3<int> m_subcells_range{1,1,1};
 
-        geom_view_color_mode m_color_mode{geom_view_color_mode::color_from_ptable};
-        geom_view_role_t m_role{geom_view_role_t::r_generic};
+        geom_view_color_e m_color_mode{geom_view_color_e::color_from_ptable};
+        geom_view_role_e m_role{geom_view_role_e::r_generic};
 
         bool m_draw_img_atoms{true};
         bool m_draw_img_bonds{true};
@@ -175,11 +175,11 @@ namespace qpp {
         void update_inter_atomic_dist(float new_dist,
                                       const int at1, const int at2,
                                       const index id1, const index id2,
-                                      pair_dist_mode mode);
+                                      pair_dist_mode_e mode);
         void update_inter_atomic_dist(float new_dist,
                                       const int at1,
                                       const int at2,
-                                      pair_dist_mode mode);
+                                      pair_dist_mode_e mode);
 
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();

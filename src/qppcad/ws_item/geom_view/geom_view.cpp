@@ -218,8 +218,8 @@ void geom_view_t::render () {
 
           vector3<float> cell_clr = m_cell_color;
           if (m_selected) {
-              if(m_parent_ws->m_edit_type == ws_edit_t::edit_item) cell_clr = clr_red;
-              if(m_parent_ws->m_edit_type == ws_edit_t::edit_content) cell_clr = clr_maroon;
+              if(m_parent_ws->m_edit_type == ws_edit_e::edit_item) cell_clr = clr_red;
+              if(m_parent_ws->m_edit_type == ws_edit_e::edit_content) cell_clr = clr_maroon;
             }
 
           astate->dp->render_cell_3d(
@@ -234,23 +234,23 @@ void geom_view_t::render () {
 
       switch (m_render_style) {
 
-        case geom_view_render_style_t::ball_and_stick :
+        case geom_view_render_style_e::ball_and_stick :
           geom_view_render_bs::render(*this);
           break;
 
-        case geom_view_render_style_t::dynamic_lines:
+        case geom_view_render_style_e::dynamic_lines:
           geom_view_render_dlines::render(*this);
           break;
 
-        case geom_view_render_style_t::xatom_lines:
+        case geom_view_render_style_e::xatom_lines:
           geom_view_render_xlines::render(*this);
           break;
 
-        case geom_view_render_style_t::billboards:
+        case geom_view_render_style_e::billboards:
           geom_view_render_billboards::render(*this);
           break;
 
-        case geom_view_render_style_t::buffered_billboards: {
+        case geom_view_render_style_e::buffered_billboards: {
             if (!m_bs) {
                 m_bs = std::make_unique<geom_view_render_buffered_billboards_t>(*this);
                 m_bs->init();
@@ -323,7 +323,7 @@ bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
 
           std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
 
-          if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
+          if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
               atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
               if (atom_sel_it == m_atom_idx_sel.end()) select_atom(res[0].m_atm, res[0].m_idx);
@@ -339,7 +339,7 @@ bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
         } else {
 
           //TODO: need refractoring
-          if (m_parent_ws->m_edit_type == ws_edit_t::edit_content && m_selected ) {
+          if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
               select_atoms(false);
             }
 
@@ -691,7 +691,7 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
                                            const int at2,
                                            const index id1,
                                            const index id2,
-                                           pair_dist_mode mode) {
+                                           pair_dist_mode_e mode) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -702,16 +702,16 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
   vector3<float> dir_s = (m_geom->pos(at2, id2) - r_btw).normalized();
 
   switch (mode) {
-    case pair_dist_mode::transform_both : {
+    case pair_dist_mode_e::transform_both : {
         m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
         m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
         break;
       }
-    case pair_dist_mode::fix_first : {
+    case pair_dist_mode_e::fix_first : {
         m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f );
         break;
       }
-    case pair_dist_mode::fix_second : {
+    case pair_dist_mode_e::fix_second : {
         m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
         break;
       }
@@ -723,7 +723,7 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 void geom_view_t::update_inter_atomic_dist(float new_dist,
                                            const int at1,
                                            const int at2,
-                                           pair_dist_mode mode) {
+                                           pair_dist_mode_e mode) {
 
   if (!m_geom) return;
 

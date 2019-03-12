@@ -19,13 +19,17 @@ void geom_view_labels_subsys_t::render_overlay(QPainter &painter) {
 
 void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
-  if (m_style == geom_view_labels_style_t::show_none) return;
+  if (m_style == geom_labels_style_e::show_none) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
   QPen rectpen(QPen(Qt::black, 1, Qt::SolidLine));
   QColor text_fill_color = QColor::fromRgbF(1,1,1);
-  QFont text_font_lb(astate->m_font_name, m_label_font_size, QFont::Weight::Bold);
+  QFont text_font_lb(astate->m_font_name,
+                     m_screen_scale ?
+                       m_label_font_size / (0.5f + (astate->camera->m_ortho_scale - 0.5f) * 0.01f) :
+                       m_label_font_size,
+                     QFont::Weight::Bold);
 
   painter.setBrush(text_fill_color);
   painter.setPen(rectpen);
@@ -41,8 +45,8 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       if (p_owner->m_sel_vis &&
           p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
 
-      if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) && m_selective_label_render)
-        continue;
+      if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) &&
+          m_selective_label_render) continue;
 
       if (!p_owner->m_atom_type_to_hide.empty()) {
           auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));
@@ -55,27 +59,27 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
       switch (m_style) {
 
-        case geom_view_labels_style_t::show_type : {
+        case geom_labels_style_e::show_type : {
             label = p_owner->m_geom->atom(i);
             break;
           }
 
-        case geom_view_labels_style_t::show_id : {
+        case geom_labels_style_e::show_id : {
             label = fmt::format("{}", i);
             break;
           }
 
-        case geom_view_labels_style_t::show_id_type : {
+        case geom_labels_style_e::show_id_type : {
             label = fmt::format("{}{}", p_owner->m_geom->atom(i), i);
             break;
           }
 
-        case geom_view_labels_style_t::show_charge : {
+        case geom_labels_style_e::show_charge : {
             label = fmt::format("{:2.2f}", p_owner->m_geom->xfield<float>(xgeom_charge, i));
             break;
           }
 
-        case geom_view_labels_style_t::show_custom : {
+        case geom_labels_style_e::show_custom : {
             if (p_owner->m_geom->xfield<bool>(xgeom_label_show, i)) {
                 label = p_owner->m_geom->xfield<std::string>(xgeom_label_text, i);
               } else {
@@ -132,7 +136,7 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
   int ntypes = std::min(p_owner->m_geom->n_atom_types(), max_types);
   int ntypes_wh = std::min(p_owner->m_geom->n_atom_types() - hidden_type, max_types);
   int w_h = 80;
-  int padding_h = 10;
+  int padding_h = 16;
   int sph_padding = 5;
   int w_w = sh * ntypes_wh + sph_padding * (ntypes_wh+1);
 
@@ -181,7 +185,7 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
       QFontMetrics fmetric(text_font);
       painter.setRenderHint(QPainter::Antialiasing);
       text_path.addText((sph.left() + sph.right()) / 2 - fmetric.width(text) / 2,
-                        sph.bottom() - fmetric.height() / 2 + 5,
+                        sph.bottom() - fmetric.height() / 2 + 2,
                         text_font,
                         text);
       painter.drawPath(text_path);

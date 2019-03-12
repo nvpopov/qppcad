@@ -86,13 +86,13 @@ namespace qpp {
           color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
         }
 
-      if (al.m_color_mode == geom_view_color_mode::color_from_xgeom) {
+      if (al.m_color_mode == geom_view_color_e::color_from_xgeom) {
           color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
           color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
           color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
         }
 
-      if (al.m_parent_ws->m_edit_type == ws_edit_t::edit_content) {
+      if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
           if (al.m_atom_idx_sel.find(atom_index_set_key(at_num, at_index)) !=
               al.m_atom_idx_sel.end() && al.m_selected)
             color = vector3<float>(0.43f, 0.55f, 0.12f);
@@ -129,7 +129,7 @@ namespace qpp {
           bcolor2 = ptable::get_inst()->arecs[*ap_idx2 - 1].m_color_jmol;
         }
 
-      if (al.m_color_mode == geom_view_color_mode::color_from_xgeom) {
+      if (al.m_color_mode == geom_view_color_e::color_from_xgeom) {
           bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
           bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
           bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);

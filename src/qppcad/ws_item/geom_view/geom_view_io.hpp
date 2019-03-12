@@ -34,7 +34,7 @@ namespace qpp {
 
          void post_load_hook(geom_view_t *_item, workspace_t *ws) override {
           if (_item->m_geom->nat() > 20000) {
-              _item->m_render_style = geom_view_render_style_t::billboards;
+              _item->m_render_style = geom_view_render_style_e::billboards;
             }
           else if (_item->m_geom->nat() > 7000) {
               _item->m_draw_bonds = false;
@@ -88,7 +88,7 @@ namespace qpp {
     };
 
     template<auto GENERIC_FUNC_GEOM,
-             geom_view_role_t ROLE = geom_view_role_t::r_generic,
+             geom_view_role_e ROLE = geom_view_role_e::r_generic,
              int FORCED_DIM = -1>
     class geom_view_io_loader_t : public ws_item_io_bt_bhv_t {
 

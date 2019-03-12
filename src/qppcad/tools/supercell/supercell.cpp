@@ -61,7 +61,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   sc_al->m_geom->cell.v[1] = al->m_geom->cell.v[1] * (b_steps);
   sc_al->m_geom->cell.v[2] = al->m_geom->cell.v[2] * (c_steps);
 
-  if (al->m_role == geom_view_role_t::r_uc) {
+  if (al->m_role == geom_view_role_e::r_uc) {
       sc_al->m_draw_img_atoms = false;
       sc_al->m_draw_img_bonds = false;
     }
@@ -72,7 +72,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
          !idx_it.end(); idx_it++ ) {
         vector3<float> new_atom_pos = al->m_geom->pos(i, idx_it);
         sc_al->m_geom->add(al->m_geom->atom(i), new_atom_pos);
-        if (al->m_role == geom_view_role_t::r_uc)
+        if (al->m_role == geom_view_role_e::r_uc)
           sc_al->m_geom->xfield<float>(xgeom_charge, sc_al->m_geom->nat()-1) =
               al->m_geom->xfield<float>(xgeom_charge, i);
       }
@@ -87,7 +87,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   sc_al->geometry_changed();
 
   //perform purification
-  if (al->m_role == geom_view_role_t::r_uc) {
+  if (al->m_role == geom_view_role_e::r_uc) {
 
       sc_al->m_tws_tr->do_action(act_lock);
       //intermediage xgeom

@@ -132,7 +132,7 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
           .def("__repr__", &ws_item_t::py_get_repr)
           .def("__str__", &ws_item_t::py_get_repr);
 
-  py::enum_<geom_view_render_style_t>(m, "geom_view_render_style_t", py::arithmetic(), "")
+  py::enum_<geom_view_render_style_e>(m, "geom_view_render_style_t", py::arithmetic(), "")
           .value("ball_and_stick", ball_and_stick, "ball_and_stick")
           .value("dynamic_lines", dynamic_lines, "dynamic_lines")
           .value("xatom_lines", xatom_lines, "xatom_lines")
@@ -140,7 +140,7 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
           .value("buffered_billboards", buffered_billboards, "buffered_billboards")
           .export_values();
 
-  py::enum_<geom_view_labels_style_t>(m, "geom_view_labels_style_t", py::arithmetic(), "")
+  py::enum_<geom_labels_style_e>(m, "geom_view_labels_style_t", py::arithmetic(), "")
           .value("show_none", show_none, "show_none")
           .value("show_id", show_id, "show_id")
           .value("show_type", show_type, "show_type")
@@ -207,12 +207,12 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_atoms_list_t.def_property("render_style",
                                [](geom_view_t &src)
                                {return src.m_render_style;},
-                               [](geom_view_t &src, const geom_view_render_style_t value)
+                               [](geom_view_t &src, const geom_view_render_style_e value)
                                {src.m_render_style = value; upd_oi(&src);});
   py_atoms_list_t.def_property("labels_style",
                                [](geom_view_t &src)
                                {return src.m_labels->m_style;},
-                               [](geom_view_t &src, const geom_view_labels_style_t value)
+                               [](geom_view_t &src, const geom_labels_style_e value)
                                {src.m_labels->m_style = value; upd_oi(&src);});
   py_atoms_list_t.def_property("sel_vis",
                                [](geom_view_t &src)

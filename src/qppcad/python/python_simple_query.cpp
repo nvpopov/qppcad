@@ -275,8 +275,8 @@ void simple_query::edit_mode(int mode) {
   auto cur_ws = astate->ws_manager->get_cur_ws();
   if (!cur_ws) return;
 
-  if (mode == 0) cur_ws->set_edit_type(ws_edit_t::edit_item);
-  else cur_ws->set_edit_type(ws_edit_t::edit_content);
+  if (mode == 0) cur_ws->set_edit_type(ws_edit_e::edit_item);
+  else cur_ws->set_edit_type(ws_edit_e::edit_content);
 
   astate->make_viewport_dirty();
 
@@ -496,7 +496,7 @@ void simple_query::make_psg_view(float tolerance) {
 
   if (al && al->m_parent_ws && cur_ws) {
 
-      if (cur_ws->m_edit_type == ws_edit_t::edit_item && al->m_geom->DIM == 0) {
+      if (cur_ws->m_edit_type == ws_edit_e::edit_item && al->m_geom->DIM == 0) {
           auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
                          psg_view_t::get_type_static());
           auto ws_pg_c = ws_pg->cast_as<psg_view_t>();
@@ -509,7 +509,7 @@ void simple_query::make_psg_view(float tolerance) {
                   fmt::format("point_sym_grp{}", al->m_parent_ws->m_ws_items.size());
             }
 
-        } else if (cur_ws->m_edit_type == ws_edit_t::edit_content &&
+        } else if (cur_ws->m_edit_type == ws_edit_e::edit_content &&
                    !al->m_atom_idx_sel.empty()) {
           auto ws_pg_partial = astate->ws_manager->m_bhv_mgr->fabric_by_type(
                                  psg_view_t::get_type_static());
@@ -629,7 +629,7 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
   auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
-  if (cur_ws->m_edit_type == ws_edit_t::edit_item) al->translate(vector3<float>(tx, ty, tz));
+  if (cur_ws->m_edit_type == ws_edit_e::edit_item) al->translate(vector3<float>(tx, ty, tz));
   else al->translate_selected(vector3<float>(tx, ty, tz));
 
   astate->make_viewport_dirty();
@@ -648,7 +648,7 @@ void simple_query::set_charge(float charge) {
   auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
   if (!al) return;
 
-  if (al && cur_ws->m_edit_type == ws_edit_t::edit_content) {
+  if (al && cur_ws->m_edit_type == ws_edit_e::edit_content) {
       index zero = index::D(al->m_geom->DIM).all(0);
       for (auto &elem : al->m_atom_idx_sel)
         if (elem.m_idx == zero)
@@ -749,7 +749,7 @@ void simple_query::make_arrow_p(std::string name,
 
 }
 
-void simple_query::convert_selected_units(spatial_units new_unit) {
+void simple_query::convert_selected_units(spatial_units_e new_unit) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -949,6 +949,13 @@ void simple_query::camera_zoom(float magnitude) {
       astate->camera->update_camera();
     }
 
+}
+
+float simple_query::camera_get_zoom() {
+  app_state_t *astate = app_state_t::get_inst();
+  if (astate->camera && astate->camera->m_cur_proj == cam_proj_t::proj_ortho)
+    return astate->camera->m_ortho_scale;
+  return 0.0f;
 }
 
 void simple_query::camera_mode(int mode) {

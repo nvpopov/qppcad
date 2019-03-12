@@ -169,23 +169,23 @@ namespace qpp {
               Qt::PenStyle pen_style;
 
               switch (record.m_line_render_style) {
-                case msr_line_render_style::msr_line_dashed : {
+                case msr_line_style_e::msr_line_dashed : {
                     pen_style = Qt::PenStyle::DashLine;
                     break;
                   }
-                case msr_line_render_style::msr_line_solid: {
+                case msr_line_style_e::msr_line_solid: {
                     pen_style = Qt::PenStyle::SolidLine;
                     break;
                   }
-                case msr_line_render_style::msr_line_ddashed: {
+                case msr_line_style_e::msr_line_ddashed: {
                     pen_style = Qt::PenStyle::DashDotLine;
                     break;
                   }
-                case msr_line_render_style::msr_line_dddashed: {
+                case msr_line_style_e::msr_line_dddashed: {
                     pen_style = Qt::PenStyle::DashDotDotLine;
                     break;
                   }
-                case msr_line_render_style::msr_line_dotted: {
+                case msr_line_style_e::msr_line_dotted: {
                     pen_style = Qt::PenStyle::DotLine;
                     break;
                   }
@@ -211,7 +211,7 @@ namespace qpp {
 
               switch (record.m_label_render_style) {
 
-                case msr_label_style::msr_label_std : {
+                case msr_label_style_e::msr_label_std : {
                     QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
                     painter.setPen(rectpen);
                     painter.drawText(text_rect,
@@ -220,7 +220,7 @@ namespace qpp {
                     break;
                   }
 
-                case msr_label_style::msr_label_border : {
+                case msr_label_style_e::msr_label_border : {
                     QPainterPath path;
                     QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
                     path.addRoundedRect(text_rect, 10, 10);
@@ -233,7 +233,7 @@ namespace qpp {
                     break;
                   }
 
-                case msr_label_style::msr_label_outline : {
+                case msr_label_style_e::msr_label_outline : {
                     QPainterPath text_path;
                     QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
                     painter.setPen(rectpen2);
