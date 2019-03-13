@@ -69,22 +69,28 @@ namespace qpp {
     }
 
     void geom_view_render_bs::render_atom (geom_view_t &al,
-                                               const uint32_t at_num,
-                                               const index &at_index) {
+                                           const uint32_t at_num,
+                                           const index &at_index) {
 
-      if (al.m_sel_vis &&
-          al.m_geom->xfield<bool>(xgeom_sel_vis, at_num)) return;
+      if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis, at_num)) return;
 
       app_state_t* astate = app_state_t::get_inst();
+
       auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(at_num));
       float dr_rad = 0.4f;
+      float pre_rad = 0.4f;
       vector3<float> color(0.0, 0.0, 1.0);
 
       if (ap_idx) {
-          dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius *
-                   al.m_atom_scale_factor;
+          pre_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
           color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
         }
+
+      if (al.m_geom->xfield<bool>(xgeom_override, at_num)) {
+          pre_rad = al.m_geom->xfield<float>(xgeom_atom_r, at_num);
+        }
+
+      dr_rad = pre_rad * al.m_atom_scale_factor;
 
       if (al.m_color_mode == geom_view_color_e::color_from_xgeom ||
           al.m_geom->xfield<bool>(xgeom_override, at_num)) {
@@ -100,13 +106,15 @@ namespace qpp {
         }
 
       astate->dp->render_atom(color, al.m_geom->pos(at_num, at_index) + al.m_pos, dr_rad);
+
     }
 
     void geom_view_render_bs::render_bond (geom_view_t &al,
-                                               const uint32_t at_num1,
-                                               const index &at_index1,
-                                               const uint32_t at_num2,
-                                               const index &at_index2) {
+                                           const uint32_t at_num1,
+                                           const index &at_index1,
+                                           const uint32_t at_num2,
+                                           const index &at_index2) {
+
       app_state_t* astate = app_state_t::get_inst();
 
       if (al.m_sel_vis && al.m_sel_vis_affect_bonds &&

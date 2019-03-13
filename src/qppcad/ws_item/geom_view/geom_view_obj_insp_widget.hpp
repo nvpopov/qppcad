@@ -204,7 +204,7 @@ namespace qpp {
         QFormLayout *tm_gb_override_atom_lt;
         QLabel *tm_override_atom_info;
         qbinded_xgeom_color3_input *tm_override_atom_color;
-        vector3<float> tm_override_color_val;
+        qbinded_xgeom_float_spinbox *tm_override_atom_radii;
 
         int tab_modify_op_button_width{180};
         int tab_modify_label_width{120};

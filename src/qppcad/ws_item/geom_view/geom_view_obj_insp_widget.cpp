@@ -411,8 +411,11 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_override_atom->add_content_layout(tm_gb_override_atom_lt);
   tm_override_atom_info = new QLabel;
   tm_override_atom_color = new qbinded_xgeom_color3_input;
+  tm_override_atom_radii = new qbinded_xgeom_float_spinbox;
+  tm_override_atom_radii->set_min_max_step(0.01, 5, 0.1);
   tm_gb_override_atom_lt->addRow(tr("Atom info"), tm_override_atom_info);
   tm_gb_override_atom_lt->addRow(tr("Atom color"), tm_override_atom_color);
+  tm_gb_override_atom_lt->addRow(tr("Atom radius"), tm_override_atom_radii);
   init_form_layout(tm_gb_override_atom_lt);
 
   tm_add_atom_combo = new QComboBox;
@@ -842,6 +845,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
 
   //tab modify spec
   tm_override_atom_color->unbind_value();
+  tm_override_atom_radii->unbind_value();
   //end tab modify spec
 
   disp_type_spec_mdl->unbind();
@@ -938,6 +942,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
           set_tab_enabled(tab_modify, true);
 
           tm_override_atom_color->unbind_value();
+          tm_override_atom_radii->unbind_value();
 
           if (b_al->m_atom_idx_sel.empty()) {
               tm_gb_single_atom->hide();
@@ -984,6 +989,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
                   tm_single_atom_vec3->sb_z->setValue(double(b_al->m_geom->pos(it->m_atm)[2]));
 
                   if (b_al->m_geom->xfield<bool>(xgeom_override, it->m_atm)) {
+
                       tm_override_atom_info->setText(
                             QString::fromStdString(fmt::format("{}{}",
                                                                b_al->m_geom->atom_name(it->m_atm),
@@ -993,6 +999,10 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
                       tm_override_atom_color->bind_value(b_al->m_geom.get(),
                                                          {xgeom_ccr, xgeom_ccg, xgeom_ccb},
                                                          it->m_atm);
+                      tm_override_atom_radii->bind_value(b_al->m_geom.get(),
+                                                         xgeom_atom_r,
+                                                         it->m_atm);
+
                     }
 
                 } else {

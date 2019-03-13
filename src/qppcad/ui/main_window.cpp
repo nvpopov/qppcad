@@ -1152,11 +1152,16 @@ void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
           auto cur_it = cur_ws->get_selected();
           auto cur_it_as_al = cur_it->cast_as<geom_view_t>();
 
+          //TODO: add boundary check
           if (cur_it_as_al &&
               cur_ws->m_edit_type == ws_edit_e::edit_content &&
               cur_it_as_al->m_atom_idx_sel.size() == 1) {
+
               size_t atom_idx = cur_it_as_al->m_atom_idx_sel.begin()->m_atm;
-              cur_it_as_al->m_geom->xfield<bool>(xgeom_override,atom_idx) = checked;
+              cur_it_as_al->m_geom->xfield<bool>(xgeom_override, atom_idx) = checked;
+              if (cur_it_as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) < 0.01f)
+                cur_it_as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) = 1.0f;
+
             }
 
           astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();

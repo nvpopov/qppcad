@@ -505,3 +505,72 @@ void qbinded_xgeom_color3_input::mousePressEvent(QMouseEvent *event) {
     }
 
 }
+
+void qbinded_xgeom_float_spinbox::bind_value(
+    xgeometry<float, periodic_cell<float> > *_binded_xgeom,
+    int _binding_index,
+    size_t _binded_atom_id) {
+
+  m_binded_xgeom = _binded_xgeom;
+  m_binding_index = _binding_index;
+  m_binded_atom_id = _binded_atom_id;
+
+  load_value();
+
+}
+
+void qbinded_xgeom_float_spinbox::load_value() {
+
+  if (m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+      blockSignals(true);
+      setValue(m_binded_xgeom->xfield<float>(m_binding_index, m_binded_atom_id));
+      blockSignals(false);
+    }
+
+}
+
+void qbinded_xgeom_float_spinbox::unbind_value() {
+  m_binded_xgeom = nullptr;
+}
+
+void qbinded_xgeom_float_spinbox::set_min_max_step(double new_min,
+                                                   double new_max,
+                                                   double new_step,
+                                                   int decimals) {
+
+  setRange(new_min, new_max);
+  setSingleStep(new_step);
+  setDecimals(decimals);
+
+}
+
+qbinded_xgeom_float_spinbox::qbinded_xgeom_float_spinbox(QWidget *parent) {
+
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+  connect(this, SIGNAL(valueChanged(double)),
+          this, SLOT(value_changed(double)));
+  setMaximumWidth(180);
+
+}
+
+void qbinded_xgeom_float_spinbox::set_suffix(QString &new_suffix) {
+
+  setSuffix(new_suffix);
+
+}
+
+void qbinded_xgeom_float_spinbox::set_default_suffix() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  set_suffix(astate->m_spatial_suffix);
+
+}
+
+void qbinded_xgeom_float_spinbox::value_changed(double d) {
+
+  if (m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+      m_binded_xgeom->xfield<float>(m_binding_index, m_binded_atom_id) = float(d);
+      app_state_t::get_inst()->make_viewport_dirty();
+    }
+
+}

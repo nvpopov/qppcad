@@ -192,7 +192,8 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        xgeometry<float, periodic_cell<float>> *m_binded_xgeom;
+
+        xgeometry<float, periodic_cell<float>> *m_binded_xgeom{nullptr};
         std::array<int, 3> m_binding_indicies;
         size_t m_binded_atom_id;
         QColor m_stored_color;
@@ -204,7 +205,33 @@ namespace qpp {
         void unbind_value();
         void mousePressEvent(QMouseEvent *event) override;
 
-      private slots:
+    };
+
+    class qbinded_xgeom_float_spinbox : public QDoubleSpinBox {
+
+        Q_OBJECT
+
+      public:
+
+        xgeometry<float, periodic_cell<float>> *m_binded_xgeom{nullptr};
+        int m_binding_index;
+        size_t m_binded_atom_id;
+        void bind_value(xgeometry<float, periodic_cell<float>> *_binded_xgeom,
+                        int _binding_index,
+                        size_t _binded_atom_id);
+        void load_value();
+        void unbind_value();
+        void set_min_max_step(double new_min,
+                              double new_max,
+                              double new_step,
+                              int decimals = 2);
+        qbinded_xgeom_float_spinbox(QWidget *parent = nullptr);
+        void set_suffix(QString &new_suffix);
+        void set_default_suffix();
+
+      public slots:
+
+        void value_changed(double d);
 
     };
 
@@ -229,7 +256,6 @@ namespace qpp {
       public slots:
         void value_changed(int i);
     };
-
 
   }
 
