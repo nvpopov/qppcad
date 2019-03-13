@@ -2,6 +2,8 @@
 #include <qppcad/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
+#include <QColorDialog>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -54,6 +56,11 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_type_summary_tbl->setEditTriggers(QAbstractItemView::NoEditTriggers);
   tg_type_summary_tbl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   tg_type_summary_lt->addWidget(tg_type_summary_tbl);
+
+  connect(tg_type_summary_tbl,
+          SIGNAL(clicked(const QModelIndex &)),
+          this,
+          SLOT(type_summary_clicked(const QModelIndex &)));
 
   tab_general->tab_inner_widget_lt->addWidget(tg_geom_summary_widget);
   tab_general->tab_inner_widget_lt->addWidget(tg_type_summary_widget);
@@ -1718,5 +1725,30 @@ void geom_view_obj_insp_widget_t::cur_it_selected_content_changed() {
   update_modify_tab();
   update_measurement_tab();
   update_select_tab();
+
+}
+
+void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      astate->log(fmt::format("DEBUG: Type summary clicked: {} {}", index.row(), index.column()));
+      int atom_type_idx = index.row();
+      if (atom_type_idx < b_al->m_geom->n_types()) {
+          auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(atom_type_idx));
+          if (ap_idx && *ap_idx > 0 && *ap_idx <100) {
+              ptable_atom_record &rec = ptable::get_inst()->arecs[*ap_idx-1];
+              QColor _stored_color = QColor::fromRgbF(rec.m_color_jmol[0],
+                                                      rec.m_color_jmol[1],
+                                                      rec.m_color_jmol[2]);
+              const QColor color = QColorDialog::getColor(_stored_color, this, "Select Color");
+              rec.m_color_jmol = vector3<float>(color.redF(), color.greenF(), color.blueF());
+              rec.m_redefined = true;
+              update_from_ws_item();
+              astate->make_viewport_dirty();
+            }
+        }
+    }
 
 }

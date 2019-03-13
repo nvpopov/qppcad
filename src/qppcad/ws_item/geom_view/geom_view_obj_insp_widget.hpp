@@ -240,6 +240,7 @@ namespace qpp {
         geom_view_obj_insp_widget_t();
 
       public slots:
+
         void cur_anim_index_changed(int index);
         void play_anim_button_toggle(bool value);
         void anim_updated_external();
@@ -277,6 +278,8 @@ namespace qpp {
 
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
+
+        void type_summary_clicked(const QModelIndex &index);
 
     };
 
