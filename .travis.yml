@@ -15,21 +15,28 @@ git:
   submodules: false
 
 before_install:
-  - pyenv global system 3.6
   - sudo add-apt-repository ppa:beineri/opt-qt591-trusty -y
   - sudo apt-get update -qq
   - sudo apt-get install -qq qt59base qt59charts-no-lgpl qt59svg
   - source /opt/qt59/bin/qt59-env.sh;
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
+  - cd packaging/appimage
+  - wget -c https://www.python.org/ftp/python/3.6.8/Python-3.6.8rc1.tgz
+  - tar -xvzf ./Python-3.6.8rc1.tgz
+  - cd Python-3.6.8rc1
+  - mkdir -p $TRAVIS_BUILD_DIR/packaging/appimage/qppcad
+  - configure --prefix=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad
+  - make
+  - make install
 
 script:
  - export CC=gcc-7 ;
  - export CXX=g++-7 ;
- - mkdir build && cd build && cmake .. -DPYTHON_EXECUTABLE=/opt/pyenv/shims/python3.6 -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
- - cd ../packaging/appimage
- - ./make_appimage.sh
- - ./upload.sh ./qppcad-x86_64.AppImage
+ - mkdir build && cd build && cmake .. -DPYTHON_EXECUTABLE=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad/bin/python3 -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
+# - cd ../packaging/appimage
+# - ./make_appimage.sh
+# - ./upload.sh ./qppcad-x86_64.AppImage
 
 branches:
   except:
