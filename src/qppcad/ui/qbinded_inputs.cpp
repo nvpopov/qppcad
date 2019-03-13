@@ -442,3 +442,66 @@ void qbinded_ws_item_combobox::value_changed(int i) {
     }
 
 }
+
+
+qbinded_xgeom_color3_input::qbinded_xgeom_color3_input(QWidget *parent) {
+
+  setMaximumWidth(21);
+  setMaximumHeight(21);
+
+}
+
+void qbinded_xgeom_color3_input::bind_value(xgeometry<float, periodic_cell<float>> *_binded_xgeom,
+                                            std::array<int, 3> _binding_indicies,
+                                            size_t _binded_atom_id) {
+  m_binded_xgeom = _binded_xgeom;
+  m_binding_indicies = _binding_indicies;
+  m_binded_atom_id = _binded_atom_id;
+
+  load_value();
+
+}
+
+void qbinded_xgeom_color3_input::load_value() {
+
+  if (m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+
+      float _r = m_binded_xgeom->xfield<float>(m_binding_indicies[0], m_binded_atom_id);
+      float _g = m_binded_xgeom->xfield<float>(m_binding_indicies[1], m_binded_atom_id);
+      float _b = m_binded_xgeom->xfield<float>(m_binding_indicies[2], m_binded_atom_id);
+
+      m_stored_color.setRgbF(_r, _g, _b);
+      QPalette pal = palette();
+      pal.setColor(QPalette::Background, m_stored_color);
+      setAutoFillBackground(true);
+      setPalette(pal);
+    }
+
+}
+
+void qbinded_xgeom_color3_input::unbind_value() {
+
+  m_binded_xgeom = nullptr;
+
+}
+
+void qbinded_xgeom_color3_input::mousePressEvent(QMouseEvent *event) {
+
+  if (event->button() == Qt::LeftButton) {
+      const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
+      if (color.isValid() && m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+
+          float _r = color.redF();
+          float _g = color.greenF();
+          float _b = color.blueF();
+
+          m_binded_xgeom->xfield<float>(m_binding_indicies[0], m_binded_atom_id) = _r;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[1], m_binded_atom_id) = _g;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[2], m_binded_atom_id) = _b;
+
+          load_value();
+          app_state_t::get_inst()->make_viewport_dirty();
+        }
+    }
+
+}

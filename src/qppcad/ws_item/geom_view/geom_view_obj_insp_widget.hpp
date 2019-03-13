@@ -201,7 +201,10 @@ namespace qpp {
         QPushButton *tm_group_op_del_sel;
 
         qspoiler_widget_t *tm_gb_override_atom;
-        QLabel *tg_override_atom_info;
+        QFormLayout *tm_gb_override_atom_lt;
+        QLabel *tm_override_atom_info;
+        qbinded_xgeom_color3_input *tm_override_atom_color;
+        vector3<float> tm_override_color_val;
 
         int tab_modify_op_button_width{180};
         int tab_modify_label_width{120};

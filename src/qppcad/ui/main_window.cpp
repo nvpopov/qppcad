@@ -1125,7 +1125,7 @@ void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
             for (auto &rec : cur_it_as_al->m_atom_idx_sel)
               cur_it_as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = checked;
 
-          // if selective labels rendering was unchecked - force it and select some random style
+          // if selective labels rendering unchecked - force it and select some random style
           if (!cur_it_as_al->m_atom_idx_sel.empty() &&
               !cur_it_as_al->m_labels->m_selective_label_render) {
                 cur_it_as_al->m_labels->m_selective_label_render = true;
@@ -1159,13 +1159,8 @@ void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
               cur_it_as_al->m_geom->xfield<bool>(xgeom_override,atom_idx) = checked;
             }
 
-//          // if selective labels rendering was unchecked - force it and select some random style
-//          if (!cur_it_as_al->m_atom_idx_sel.empty() &&
-//              !cur_it_as_al->m_labels->m_selective_label_render) {
-//                cur_it_as_al->m_labels->m_selective_label_render = true;
-//                cur_it_as_al->m_labels->m_style = geom_labels_style_e::show_id_type;
-//                astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-//            }
+          astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
         }
     }
 

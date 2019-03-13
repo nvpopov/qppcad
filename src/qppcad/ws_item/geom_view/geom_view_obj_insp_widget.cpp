@@ -406,6 +406,15 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_single_atom_lt->addRow("", tm_single_atom_delete);
   init_form_layout(tm_gb_single_atom_lt);
 
+  tm_gb_override_atom = new qspoiler_widget_t(tr("Override atom"));
+  tm_gb_override_atom_lt = new QFormLayout;
+  tm_gb_override_atom->add_content_layout(tm_gb_override_atom_lt);
+  tm_override_atom_info = new QLabel;
+  tm_override_atom_color = new qbinded_xgeom_color3_input;
+  tm_gb_override_atom_lt->addRow(tr("Atom info"), tm_override_atom_info);
+  tm_gb_override_atom_lt->addRow(tr("Atom color"), tm_override_atom_color);
+  init_form_layout(tm_gb_override_atom_lt);
+
   tm_add_atom_combo = new QComboBox;
   tm_add_atom_combo->setEditable(true);
   tm_add_atom_combo->setMaximumWidth(tab_modify_op_button_width);
@@ -629,6 +638,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_group_op_lt->addWidget(tm_group_op_del_sel,    1, 1, 1, 1);
 
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_add_atom);
+  tab_modify->tab_inner_widget_lt->addWidget(tm_gb_override_atom);
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_single_atom);
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_pair_dist);
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_pair_creation);
@@ -830,6 +840,10 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
 
+  //tab modify spec
+  tm_override_atom_color->unbind_value();
+  //end tab modify spec
+
   disp_type_spec_mdl->unbind();
   bt_mdl->unbind();
 
@@ -923,6 +937,8 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
 
           set_tab_enabled(tab_modify, true);
 
+          tm_override_atom_color->unbind_value();
+
           if (b_al->m_atom_idx_sel.empty()) {
               tm_gb_single_atom->hide();
               tm_gb_add_atom->show();
@@ -932,6 +948,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               tm_gb_translate->hide();
               tm_gb_bc_rot->hide();
               tm_gb_group_op->hide();
+              tm_gb_override_atom->hide();
 
               //update atom names combobox
               fill_combo_with_atom_types(tm_add_atom_combo, b_al);
@@ -946,6 +963,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               tm_gb_translate->show();
               tm_gb_bc_rot->hide();
               tm_gb_group_op->show();
+              tm_gb_override_atom->hide();
 
               fill_combo_with_atom_types(tm_single_atom_combo, b_al);
 
@@ -953,12 +971,10 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               if (it != b_al->m_atom_idx_sel.end()) {
 
                   tm_single_atom_idx->setText(
-                        QString::fromStdString(fmt::format("{}", it->m_idx))
-                        );
+                        QString::fromStdString(fmt::format("{}", it->m_idx)));
 
                   tm_single_atom_num->setText(
-                        QString::fromStdString(fmt::format("{}", it->m_atm))
-                        );
+                        QString::fromStdString(fmt::format("{}", it->m_atm)));
 
                   tm_single_atom_combo->setCurrentText(
                         QString::fromStdString(b_al->m_geom->atom_name(it->m_atm)));
@@ -967,6 +983,18 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
                   tm_single_atom_vec3->sb_y->setValue(double(b_al->m_geom->pos(it->m_atm)[1]));
                   tm_single_atom_vec3->sb_z->setValue(double(b_al->m_geom->pos(it->m_atm)[2]));
 
+                  if (b_al->m_geom->xfield<bool>(xgeom_override, it->m_atm)) {
+                      tm_override_atom_info->setText(
+                            QString::fromStdString(fmt::format("{}{}",
+                                                               b_al->m_geom->atom_name(it->m_atm),
+                                                               it->m_atm)));
+
+                      tm_gb_override_atom->show();
+                      tm_override_atom_color->bind_value(b_al->m_geom.get(),
+                                                         {xgeom_ccr, xgeom_ccg, xgeom_ccb},
+                                                         it->m_atm);
+                    }
+
                 } else {
 
                 }
@@ -974,6 +1002,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
             }
 
           if (b_al->m_atom_idx_sel.size() == 2) {
+
               tm_gb_add_atom->hide();
               tm_gb_single_atom->hide();
               tm_gb_pair_dist->show();
@@ -982,6 +1011,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               tm_gb_translate->show();
               tm_gb_bc_rot->show();
               tm_gb_group_op->show();
+              tm_gb_override_atom->hide();
 
               auto it1 = b_al->m_atom_idx_sel.begin();
               auto it2 = it1++;
@@ -1022,6 +1052,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
             }
 
           if (b_al->m_atom_idx_sel.size() > 2) {
+
               tm_gb_add_atom->hide();
               tm_gb_single_atom->hide();
               tm_gb_pair_creation->hide();
@@ -1030,6 +1061,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               tm_gb_translate->show();
               tm_gb_bc_rot->show();
               tm_gb_group_op->show();
+              tm_gb_override_atom->hide();
 
             }
 
@@ -1056,6 +1088,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
           tm_gb_translate->hide();
           tm_gb_bc_rot->hide();
           tm_gb_group_op->hide();
+          tm_gb_override_atom->hide();
 
         }
 

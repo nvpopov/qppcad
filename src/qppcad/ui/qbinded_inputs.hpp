@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <geom/xgeom.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 
 namespace qpp {
@@ -185,6 +186,27 @@ namespace qpp {
 
     };
 
+
+    class qbinded_xgeom_color3_input : public QWidget {
+
+        Q_OBJECT
+
+      public:
+        xgeometry<float, periodic_cell<float>> *m_binded_xgeom;
+        std::array<int, 3> m_binding_indicies;
+        size_t m_binded_atom_id;
+        QColor m_stored_color;
+        qbinded_xgeom_color3_input(QWidget *parent = nullptr);
+        void bind_value(xgeometry<float, periodic_cell<float>> *_binded_xgeom,
+                        std::array<int, 3> _binding_indicies,
+                        size_t _binded_atom_id);
+        void load_value();
+        void unbind_value();
+        void mousePressEvent(QMouseEvent *event) override;
+
+      private slots:
+
+    };
 
     class qbinded_ws_item_combobox : public QComboBox {
 
