@@ -1743,10 +1743,12 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
                                                       rec.m_color_jmol[1],
                                                       rec.m_color_jmol[2]);
               const QColor color = QColorDialog::getColor(_stored_color, this, "Select Color");
-              rec.m_color_jmol = vector3<float>(color.redF(), color.greenF(), color.blueF());
-              rec.m_redefined = true;
-              update_from_ws_item();
-              astate->make_viewport_dirty();
+              if (color.isValid()) {
+                  rec.m_color_jmol = vector3<float>(color.redF(), color.greenF(), color.blueF());
+                  rec.m_redefined = true;
+                  update_from_ws_item();
+                  astate->make_viewport_dirty();
+                }
             }
         }
     }

@@ -50,6 +50,7 @@ main_window::main_window(QWidget *parent) : QMainWindow(parent) {
   wss_changed_slot();
   cur_ws_changed();
   cur_ws_edit_type_changed();
+  cur_ws_selected_atoms_list_selection_changed();
 
 }
 
@@ -902,8 +903,8 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
   app_state_t* astate = app_state_t::get_inst();
 
   bool need_to_hide_al_cntls{true};
-  bool need_to_hide_force_sel_lbl_vis{false};
-  bool need_to_hide_atom_override{false};
+  bool need_to_hide_force_sel_lbl_vis{true};
+  bool need_to_hide_atom_override{true};
 
   if (astate->ws_manager->has_wss()) {
 
@@ -926,6 +927,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
 
               if (cur_it_as_al->m_atom_idx_sel.size() == 1 &&
                   cur_ws->m_edit_type == ws_edit_e::edit_content) {
+                  need_to_hide_atom_override = false;
                   tp_toggle_atom_override->show();
                   size_t atom_idx = cur_it_as_al->m_atom_idx_sel.begin()->m_atm;
 
@@ -984,9 +986,6 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
                                                cur_it_as_al->m_atom_idx_sel.empty());
               tp_force_sel_lbl_vis->blockSignals(false);
 
-            } else {
-              need_to_hide_force_sel_lbl_vis = true;
-              need_to_hide_atom_override = true;
             }
 
         }
