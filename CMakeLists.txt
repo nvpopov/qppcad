@@ -10,7 +10,6 @@ if(NOT MSVC)
   set(CMAKE_CXX_FLAGS " -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Og -fno-omit-frame-pointer -g3 -ggdb")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
-  add_compile_options(-pthread)
 elseif(MSVC)
    add_definitions(-D_ENABLE_EXTENDED_ALIGNED_STORAGE -DHAVE_SNPRINTF)
    add_compile_options("/std:c++latest")
@@ -188,7 +187,8 @@ target_link_libraries(qppcad
     Qt5::Charts
     Qt5::Svg
     ${OPENGL_LIBRARIES}
-    pybind11::embed)
+    pybind11::embed
+    pthread)
 
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 

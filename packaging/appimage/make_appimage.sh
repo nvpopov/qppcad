@@ -27,6 +27,15 @@ rm qppcad/AppRun
 cp AppRun.in qppcad/AppRun
 chmod +x qppcad/AppRun
 rm -rf qppcad/include
-rm -rf qppcad/lib/python3.5/test
+rm -rf qppcad/lib/python*/test
+rm -rf qppcad/bin/idle*
 
 ./appimagetool-x86_64.AppImage qppcad
+
+
+
+
+
+
+
+
