@@ -29,14 +29,14 @@ script:
  - export CC=gcc-7 ;
  - export CXX=g++-7 ;
  - cd $TRAVIS_BUILD_DIR/packaging/appimage/Python-3.6.8rc1
- - ./configure --prefix=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad
- - make
- - make install
+ - ./configure --prefix=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad > myconfigure.log 2>&1
+ - make > mymake.log 2>&1
+ - make install > mymakeinstall.log 2>&1
  - cd $TRAVIS_BUILD_DIR
  - mkdir build && cd build && cmake .. -DPYTHON_EXECUTABLE=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad/bin/python3 -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
-# - cd ../packaging/appimage
-# - ./make_appimage.sh
-# - ./upload.sh ./qppcad-x86_64.AppImage
+ #- cd $TRAVIS_BUILD_DIR/packaging/appimage
+ #- ./make_appimage.sh
+ #- ./upload.sh ./qppcad-x86_64.AppImage
 
 branches:
   except:
