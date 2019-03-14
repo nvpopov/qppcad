@@ -188,7 +188,8 @@ target_link_libraries(qppcad
     Qt5::Svg
     ${OPENGL_LIBRARIES}
     pybind11::embed
-    pthread)
+    pthread
+    dl)
 
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 
