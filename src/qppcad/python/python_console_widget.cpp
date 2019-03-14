@@ -21,12 +21,10 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent) {
 
   syntax_hl = new python_text_editor_syntax_highilighter_t(document());
-
-  set_font_point_size(16);
-
   print_promt();
 
   app_state_t* astate = app_state_t::get_inst();
+  set_font_point_size(astate->m_console_font_size);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::python_console_clear_requested_signal,
