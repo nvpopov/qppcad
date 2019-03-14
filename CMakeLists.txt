@@ -7,7 +7,7 @@ set(CMAKE_BUILD_TYPE "Release")
 add_definitions(-DFMT_HEADER_ONLY)
 if(NOT MSVC)
   add_definitions(-fPIC)
-  set(CMAKE_CXX_FLAGS " -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden")
+  set(CMAKE_CXX_FLAGS " -std=c++17 -fno-omit-frame-pointer -fvisibility=hidden -pthread")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Og -fno-omit-frame-pointer -g3 -ggdb")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
 elseif(MSVC)
@@ -188,7 +188,11 @@ target_link_libraries(qppcad
     Qt5::Svg
     ${OPENGL_LIBRARIES}
     pybind11::embed
-    ${PYTHON_LIBRARIES})
+    ${PYTHON_LIBRARIES}
+    pthread
+    dl
+    util
+    m)
 
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 
