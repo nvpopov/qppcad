@@ -15,18 +15,22 @@ using namespace qpp::cad;
 
 namespace py = pybind11;
 
- std::shared_ptr<workspace_manager_t> simple_query::get_ws_mgr() {
+std::shared_ptr<workspace_manager_t> simple_query::get_ws_mgr() {
 
   app_state_t *astate = app_state_t::get_inst();
   return astate->ws_manager;
 
- }
+}
 
- void simple_query::set_font_size(int new_font_size) {
-   app_state_t *astate = app_state_t::get_inst();
-   astate->m_console_font_size = new_font_size;
-   astate->astate_evd->python_console_font_size_updated();
- }
+void simple_query::set_font_size(int new_font_size) {
+  app_state_t *astate = app_state_t::get_inst();
+  astate->m_console_font_size = new_font_size;
+  astate->astate_evd->python_console_font_size_updated();
+}
+
+std::tuple<std::string, std::string> simple_query::get_build_info() {
+  return {GIT_REVISION, BUILD_TIMESTAMP};
+}
 
 void simple_query::open_file(std::string file_name,
                              bool to_current) {
@@ -590,7 +594,7 @@ std::vector<std::string> simple_query::get_xgeom_dfn() {
 
 std::vector<basic_types> simple_query::get_xgeom_dft() {
   return  {
-          type_string, //0
+      type_string, //0
           type_real, //1
           type_real, //2
           type_real, //3
@@ -716,10 +720,10 @@ void simple_query::add_atoms_list_3d(std::string name,
 }
 
 void simple_query::make_cube_p(std::string name,
-                              vector3<float> pos,
-                              float size_a,
-                              float size_b,
-                              float size_c) {
+                               vector3<float> pos,
+                               float size_a,
+                               float size_b,
+                               float size_c) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -784,22 +788,22 @@ float simple_query::get_isolevel() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-//  if (astate->ws_manager->has_wss()) {
+  //  if (astate->ws_manager->has_wss()) {
 
-//      auto cur_ws = astate->ws_manager->get_cur_ws();
+  //      auto cur_ws = astate->ws_manager->get_cur_ws();
 
-//      if (cur_ws) {
+  //      if (cur_ws) {
 
-//          auto cur_it_vol = dynamic_cast<volume_view_t*>(cur_ws->get_selected());
+  //          auto cur_it_vol = dynamic_cast<volume_view_t*>(cur_ws->get_selected());
 
-//          if (cur_it_vol) {
-//              return cur_it_vol->m_isolevel;
-//            }
-//        }
+  //          if (cur_it_vol) {
+  //              return cur_it_vol->m_isolevel;
+  //            }
+  //        }
 
-//      astate->make_viewport_dirty();
+  //      astate->make_viewport_dirty();
 
-//    }
+  //    }
 
   return 0.0f;
 }
@@ -808,22 +812,22 @@ void simple_query::set_isolevel(float new_isolevel) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-//  if (astate->ws_manager->has_wss()) {
+  //  if (astate->ws_manager->has_wss()) {
 
-//      auto cur_ws = astate->ws_manager->get_cur_ws();
+  //      auto cur_ws = astate->ws_manager->get_cur_ws();
 
-//      if (cur_ws) {
+  //      if (cur_ws) {
 
-//          auto cur_it_vol = dynamic_cast<volume_view_t*>(cur_ws->get_selected());
+  //          auto cur_it_vol = dynamic_cast<volume_view_t*>(cur_ws->get_selected());
 
-//          if (cur_it_vol) {
-//              cur_it_vol->update_isolevel(new_isolevel);
-//            }
-//        }
+  //          if (cur_it_vol) {
+  //              cur_it_vol->update_isolevel(new_isolevel);
+  //            }
+  //        }
 
-//      astate->make_viewport_dirty();
+  //      astate->make_viewport_dirty();
 
-//    }
+  //    }
 }
 
 void simple_query::set_sel_color_vec(vector3<float> color) {

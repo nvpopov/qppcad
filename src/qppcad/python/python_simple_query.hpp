@@ -24,6 +24,7 @@ namespace qpp {
 
         static std::shared_ptr<workspace_manager_t> get_ws_mgr();
         static void set_font_size(int new_font_size);
+        static std::tuple<std::string, std::string> get_build_info();
         static void open_file(std::string file_name,
                               bool to_current);
         static void open_file_query(std::string file_name,

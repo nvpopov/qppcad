@@ -63,6 +63,25 @@ if(WIN32)
   set(CMAKE_WIN32_EXECUTABLE ON)
 endif()
 
+find_package(Git)
+if(GIT_FOUND)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/src/qppcad/"
+    OUTPUT_VARIABLE _build_version
+    ERROR_QUIET
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  message( STATUS "GIT hash: ${_build_version}")
+else()
+  message(STATUS "GIT not found")
+endif()
+
+string(TIMESTAMP _time_stamp)
+
+configure_file(${CMAKE_SOURCE_DIR}/src/qppcad/gitversion.h.in
+               ${CMAKE_SOURCE_DIR}/src/qppcad/gitversion.h @ONLY)
+
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
 find_package(Qt5OpenGL CONFIG REQUIRED)

@@ -1,0 +1,7 @@
+#ifndef QPPCAD_GITVERSION
+#define QPPCAD_GITVERSION
+
+#define GIT_REVISION "@_build_version@"
+#define BUILD_TIMESTAMP "@_time_stamp@"
+
+#endif

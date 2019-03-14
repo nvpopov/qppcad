@@ -257,6 +257,17 @@ void main_window::init_menus() {
   help_menu_about = new QAction(this);
   help_menu_about->setText(tr("About"));
   help_menu->addAction(help_menu_about);
+  connect(help_menu_about,
+          &QAction::triggered,
+          [](){
+            QMessageBox::about(0, "qpp::cad",
+                               QObject::tr(
+                                 "Site : <a href='https://github.com/nvpopov/qppcad'>"
+                                 "https://github.com/nvpopov/qppcad"
+                                 "</a><br>"
+                                 "Git rev : %1<br>"
+                                 "Build time : %2").arg(GIT_REVISION).arg(BUILD_TIMESTAMP));
+          });
 
 }
 
@@ -601,7 +612,10 @@ void main_window::dropEvent(QDropEvent *event) {
 
 void main_window::resizeEvent(QResizeEvent *event) {
 
-  if (event->size().width() < 800) {
+  app_state_t::get_inst()->log(fmt::format("main_window::resizeEvent(width={}, height={})",
+                                           event->size().width(),
+                                           event->size().height()));
+  if (event->size().width() < 700) {
       tp_add_ws->hide();
       tp_rnm_ws->hide();
       tp_rm_ws->hide();
