@@ -172,10 +172,16 @@ namespace qpp {
         void load_color_from_static_anim();
 
         vector3<float> get_xcolor(const size_t atm);
-
-        void set_xcolorv(const size_t atm, const vector3<float> color);
-
-        void set_xcolorf(const size_t atm, const float _r, const float _g, const float _b);
+        void set_xcolorv(const size_t atm,
+                         const vector3<float> color);
+        void set_xcolorf(const size_t atm,
+                         const float _r,
+                         const float _g,
+                         const float _b);
+        void colorize_by_xfield(const vector3<float> color_low,
+                                const vector3<float> color_high,
+                                const size_t xfield_id);
+        std::tuple<float, float> get_min_max_xfield(const size_t xfield_id);
 
         void select_atom_ngbs(const int at_id);
         void select_selected_atoms_ngbs();

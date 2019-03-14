@@ -23,6 +23,7 @@ namespace qpp {
       public:
 
         static std::shared_ptr<workspace_manager_t> get_ws_mgr();
+        static void set_font_size(int new_font_size);
         static void open_file(std::string file_name,
                               bool to_current);
         static void open_file_query(std::string file_name,

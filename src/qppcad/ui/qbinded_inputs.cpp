@@ -188,23 +188,9 @@ void qbinded_float3_input::set_default_suffix() {
   set_suffix(astate->m_spatial_suffix);
 }
 
-void qbinded_float3_input::set_sb_lbls(const QString _lb_x,
-                                       const QString _lb_y,
-                                       const QString _lb_z) {
-
-  sb_x_lbl->setText(_lb_x);
-  sb_y_lbl->setText(_lb_y);
-  sb_z_lbl->setText(_lb_z);
-
-}
-
-void qbinded_float3_input::set_sb_lbls_def() {
-  set_sb_lbls("X", "Y", "Z");
-}
-
 qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
 
-  widget_layout = new QVBoxLayout;
+  widget_layout = new QHBoxLayout;
   widget_layout->setContentsMargins(2,2,2,2);
   setLayout(widget_layout);
 
@@ -219,40 +205,12 @@ qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
   sb_z = new QDoubleSpinBox(this);
   sb_z->setMaximumWidth(100);
 
-  sb_x_lt = new QHBoxLayout;
-  sb_y_lt = new QHBoxLayout;
-  sb_z_lt = new QHBoxLayout;
 
-  sb_x_lbl = new QLabel;
-  sb_x_lbl->setMinimumWidth(20);
-  sb_x_lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  widget_layout->addWidget(sb_x);
+  widget_layout->addWidget(sb_y);
+  widget_layout->addWidget(sb_z);
 
-  sb_y_lbl = new QLabel;
-  sb_y_lbl->setMinimumWidth(20);
-  sb_y_lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-  sb_z_lbl = new QLabel;
-  sb_z_lbl->setMinimumWidth(20);
-  sb_z_lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-  sb_x_lt->addWidget(sb_x_lbl);
-  sb_x_lt->addWidget(sb_x);
-  sb_x_lt->addStretch(1);
-
-  sb_y_lt->addWidget(sb_y_lbl);
-  sb_y_lt->addWidget(sb_y);
-  sb_y_lt->addStretch(1);
-
-  sb_z_lt->addWidget(sb_z_lbl);
-  sb_z_lt->addWidget(sb_z);
-  sb_z_lt->addStretch(1);
-
-  widget_layout->addLayout(sb_x_lt);
-  widget_layout->addLayout(sb_y_lt);
-  widget_layout->addLayout(sb_z_lt);
-
-  set_sb_lbls_def();
-  //widget_layout->addStretch(1);
+  widget_layout->addStretch(1);
 
   connect(sb_x,
           static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),

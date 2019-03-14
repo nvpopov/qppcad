@@ -22,7 +22,7 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
 
   syntax_hl = new python_text_editor_syntax_highilighter_t(document());
 
-  setStyleSheet("font-size:18pt;");
+  set_font_point_size(16);
 
   print_promt();
 
@@ -37,10 +37,12 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
           &app_state_event_disp_t::python_console_focus_requested_signal,
           this,
           &python_text_editor_t::focus_signal_received);
-//  auto act = actions();
-//  for (auto &action : actions()) {
-//      std::cout << "PTEA " << action->text().toStdString() << std::endl;
-//    }
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::python_console_font_size_updated_signal,
+          this,
+          &python_text_editor_t::font_size_updated_signal_received);
+
   m_c = new QCompleter(this);
   m_c->popup()->setFont(m_font);
   m_c->popup()->setMinimumHeight(40);
@@ -251,13 +253,9 @@ QString python_text_editor_t::text_under_cursor() const {
 
 }
 
-void python_text_editor_t::set_font_point_size(qreal new_size) {
+void python_text_editor_t::set_font_point_size(int new_size) {
 
-  if (!syntax_hl) return;
-
-  for (auto &hl_rule : syntax_hl->hl_rules) {
-      hl_rule.format.setFontPointSize(new_size);
-    }
+  setStyleSheet(tr("font-size:%1pt;").arg(new_size));
 
 }
 
@@ -345,6 +343,13 @@ void python_text_editor_t::clear_signal_received() {
 
 void python_text_editor_t::focus_signal_received() {
   setFocus();
+}
+
+void python_text_editor_t::font_size_updated_signal_received() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  set_font_point_size(astate->m_console_font_size);
+
 }
 
 void python_text_editor_t::insert_completion(const QString &completion) {

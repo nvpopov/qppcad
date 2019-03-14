@@ -20,7 +20,13 @@ namespace py = pybind11;
   app_state_t *astate = app_state_t::get_inst();
   return astate->ws_manager;
 
-}
+ }
+
+ void simple_query::set_font_size(int new_font_size) {
+   app_state_t *astate = app_state_t::get_inst();
+   astate->m_console_font_size = new_font_size;
+   astate->astate_evd->python_console_font_size_updated();
+ }
 
 void simple_query::open_file(std::string file_name,
                              bool to_current) {

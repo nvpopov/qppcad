@@ -46,6 +46,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
+
         QString m_line_data;
         QFont m_font;
         python_text_editor_syntax_highilighter_t *syntax_hl;
@@ -58,14 +59,16 @@ namespace qpp {
         void keyPressEvent(QKeyEvent *event);
         void last_command_reached();
         QString text_under_cursor() const;
-        void set_font_point_size(qreal new_size);
+        void set_font_point_size(int new_size);
 
       private slots:
+
         void run_cmd();
         void print_promt();
         void move_cursor_to_end();
         void clear_signal_received();
         void focus_signal_received();
+        void font_size_updated_signal_received();
         void insert_completion(const QString &completion);
 
     };

@@ -30,6 +30,7 @@ namespace qpp {
         void new_file_loaded_signal();
         void python_console_clear_requested_signal();
         void python_console_focus_requested_signal();
+        void python_console_font_size_updated_signal();
 
       public:
         void wss_changed();
@@ -49,6 +50,7 @@ namespace qpp {
                              const bool is_native);
         void python_console_clear_requested();
         void python_console_focus_requested();
+        void python_console_font_size_updated();
 
         explicit app_state_event_disp_t(QObject *parent = 0);
     };

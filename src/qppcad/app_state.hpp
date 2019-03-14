@@ -131,6 +131,7 @@ namespace qpp {
         int64_t m_last_frame_time_gpu{0};
 
         int m_num_samples{6};
+        int m_console_font_size{16};
 
         bool m_show_debug_frame_stats{false};
 

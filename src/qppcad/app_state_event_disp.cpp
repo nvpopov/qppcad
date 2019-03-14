@@ -68,6 +68,10 @@ void app_state_event_disp_t::python_console_focus_requested() {
   emit(python_console_focus_requested_signal());
 }
 
+void app_state_event_disp_t::python_console_font_size_updated(){
+  emit(python_console_font_size_updated_signal());
+}
+
 app_state_event_disp_t::app_state_event_disp_t(QObject *parent) : QObject (parent) {
 
 }

@@ -1577,10 +1577,8 @@ void geom_view_obj_insp_widget_t::modify_translate_coord_type_changed(int coord_
 
   if (coord_type == 0) {
       tm_translate_vec3->set_default_suffix();
-      tm_translate_vec3->set_sb_lbls_def();
       tm_translate_vec3->set_min_max_step(-100, 100, 0.01);
     } else {
-      tm_translate_vec3->set_sb_lbls("a", "b", "c");
       tm_translate_vec3->set_empty_suffix();
       tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
     }

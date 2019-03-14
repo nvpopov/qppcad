@@ -17,6 +17,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   m.def("get_wsm", &simple_query::get_ws_mgr, py::return_value_policy::reference);
 
+  m.def("set_font_size", &simple_query::set_font_size);
   m.def("qopen", &simple_query::open_file,
         py::arg("file_name"), py::arg("to_current") = false);
   m.def("qopen", &simple_query::open_file_query,

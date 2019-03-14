@@ -707,6 +707,49 @@ void geom_view_t::set_xcolorf(const size_t atm,
 
 }
 
+void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
+                                     const vector3<float> color_high,
+                                     const size_t xfield_id) {
+
+  auto field_min_max = get_min_max_xfield(xfield_id);
+
+  for (size_t i = 0; i < m_geom->nat(); i++) {
+      float el_val = m_geom->xfield<float>(xfield_id, i) - std::get<0>(field_min_max);
+      float len = std::get<1>(field_min_max) - std::get<0>(field_min_max);
+      vector3<float> color_interp = color_low + (color_high - color_low) * (el_val / len);
+      m_geom->xfield<float>(xgeom_ccr, i) = color_interp[0];
+      m_geom->xfield<float>(xgeom_ccg, i) = color_interp[1];
+      m_geom->xfield<float>(xgeom_ccb, i) = color_interp[2];
+    }
+
+}
+
+std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id) {
+
+  if (m_geom->field_type(xfield_id) != type_real) {
+      throw std::invalid_argument(fmt::format("wrong xfield type with id {} ", xfield_id));
+      return {0,0};
+    }
+
+  if (m_geom->nat() == 0) {
+      throw std::invalid_argument("m_geom->nat() == 0");
+      return {0,0};
+    }
+
+  float min_v = m_geom->xfield<float>(xfield_id, 0);
+  float max_v = m_geom->xfield<float>(xfield_id, 0);
+
+  for (size_t i = 0; i < m_geom->nat(); i++) {
+      if (min_v < m_geom->xfield<float>(xfield_id, i))
+        min_v = m_geom->xfield<float>(xfield_id, i);
+      if (max_v > m_geom->xfield<float>(xfield_id, i))
+        max_v = m_geom->xfield<float>(xfield_id, i);
+    }
+
+  return {min_v, max_v};
+
+}
+
 void geom_view_t::select_atom_ngbs(const int at_id) {
 
   if (!m_geom) return;
