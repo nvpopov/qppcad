@@ -34,9 +34,9 @@ script:
  - make install > mymakeinstall.log 2>&1
  - cd $TRAVIS_BUILD_DIR
  - mkdir build && cd build && cmake .. -DPYTHON_EXECUTABLE=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad/bin/python3 -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
- #- cd $TRAVIS_BUILD_DIR/packaging/appimage
- #- ./make_appimage.sh
- #- ./upload.sh ./qppcad-x86_64.AppImage
+ - cd $TRAVIS_BUILD_DIR/packaging/appimage
+ - ./make_appimage.sh
+ - ./upload.sh ./qppcad-x86_64.AppImage
 
 branches:
   except:
