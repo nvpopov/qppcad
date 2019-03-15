@@ -15,23 +15,29 @@ void qbinded_checkbox::load_value_ex() {
 
 }
 
-qbinded_checkbox::qbinded_checkbox(QWidget *parent) : QCheckBox (parent){
+qbinded_checkbox::qbinded_checkbox(QWidget *parent) : QCheckBox (parent) {
+
   connect(this, SIGNAL(stateChanged(int)),
           this, SLOT(check_state_changed(int)));
+
 }
 
 void qbinded_checkbox::check_state_changed(int state) {
+
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = state == Qt::Checked;
       on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
+
 }
 
 void qbinded_float_spinbox::load_value_ex() {
+
   if (m_binded_value) {
       setValue(*m_binded_value);
     }
+
 }
 
 void qbinded_float_spinbox::set_min_max_step(double new_min,
@@ -41,66 +47,84 @@ void qbinded_float_spinbox::set_min_max_step(double new_min,
   setRange(new_min, new_max);
   setSingleStep(new_step);
   setDecimals(decimals);
+
 }
 
 qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (parent) {
 
+  app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   connect(this, SIGNAL(valueChanged(double)),
           this, SLOT(value_changed(double)));
-  setMaximumWidth(180);
+  setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
 }
 
 void qbinded_float_spinbox::set_suffix(QString &new_suffix) {
+
   setSuffix(new_suffix);
+
 }
 
 void qbinded_float_spinbox::set_default_suffix() {
+
   app_state_t *astate = app_state_t::get_inst();
   set_suffix(astate->m_spatial_suffix);
+
 }
 
 void qbinded_float_spinbox::value_changed(double d) {
+
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = float(d);
       on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
+
 }
 
 void qbinded_combobox::load_value_ex() {
+
   if (m_binded_value) {
       setCurrentIndex(*m_binded_value);
     }
+
 }
 
 qbinded_combobox::qbinded_combobox(QWidget *parent) : QComboBox (parent) {
 
-  connect(this, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(value_changed(int)));
+  app_state_t *astate = app_state_t::get_inst();
+  connect(this,
+          SIGNAL(currentIndexChanged(int)),
+          this,
+          SLOT(value_changed(int)));
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
-  setMaximumWidth(180);
+  setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
 
 }
 
 void qbinded_combobox::value_changed(int i) {
+
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = i;
       on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
+
 }
 
 void qbinded_int3_input::load_value_ex() {
+
   if (m_binded_value) {
       sb_x->setValue((*m_binded_value)[0]);
       sb_y->setValue((*m_binded_value)[1]);
       sb_z->setValue((*m_binded_value)[2]);
     }
+
 }
 
 void qbinded_int3_input::set_min_max_step(int min, int max, int step) {
+
   sb_x->setMinimum(min);
   sb_x->setMaximum(max);
   sb_x->setSingleStep(step);
@@ -112,6 +136,7 @@ void qbinded_int3_input::set_min_max_step(int min, int max, int step) {
   sb_z->setMinimum(min);
   sb_z->setMaximum(max);
   sb_z->setSingleStep(step);
+
 }
 
 qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
@@ -136,6 +161,7 @@ qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
 }
 
 void qbinded_int3_input::spinbox_value_changed(int newval) {
+
   //we ignore newval here and make batch update based on inputs
   if (m_binded_value && !m_ignore_state_change) {
       (*m_binded_value)[0] = sb_x->value();
@@ -144,6 +170,7 @@ void qbinded_int3_input::spinbox_value_changed(int newval) {
       on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
+
 }
 
 void qbinded_float3_input::load_value_ex() {
@@ -159,6 +186,7 @@ void qbinded_float3_input::load_value_ex() {
 }
 
 void qbinded_float3_input::set_min_max_step(double min, double max, double step) {
+
   sb_x->setMinimum(min);
   sb_x->setMaximum(max);
   sb_x->setSingleStep(step);
@@ -170,23 +198,30 @@ void qbinded_float3_input::set_min_max_step(double min, double max, double step)
   sb_z->setMinimum(min);
   sb_z->setMaximum(max);
   sb_z->setSingleStep(step);
+
 }
 
 void qbinded_float3_input::set_suffix(QString &new_suffix) {
+
   sb_x->setSuffix(new_suffix);
   sb_y->setSuffix(new_suffix);
   sb_z->setSuffix(new_suffix);
+
 }
 
 void qbinded_float3_input::set_empty_suffix() {
+
   sb_x->setSuffix("");
   sb_y->setSuffix("");
   sb_z->setSuffix("");
+
 }
 
 void qbinded_float3_input::set_default_suffix() {
+
   app_state_t *astate = app_state_t::get_inst();
   set_suffix(astate->m_spatial_suffix);
+
 }
 
 qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
@@ -272,15 +307,18 @@ void qbinded_color3_input::mousePressEvent(QMouseEvent *event) {
 
 qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QWidget (parent) {
 
-  setMaximumWidth(21);
-  setMaximumHeight(21);
+  app_state_t *astate = app_state_t::get_inst();
+  setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+  setMaximumHeight(astate->size_guide.obj_insp_ctrl_t2_h());
 
 }
 
 void qbinded_int_spinbox::load_value_ex() {
+
   if (m_binded_value) {
       setValue(*m_binded_value);
     }
+
 }
 
 void qbinded_int_spinbox::set_min_max_step(int new_min,
@@ -291,34 +329,43 @@ void qbinded_int_spinbox::set_min_max_step(int new_min,
 
 qbinded_int_spinbox::qbinded_int_spinbox(QWidget *parent) : QSpinBox(parent) {
 
+  app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   connect(this, SIGNAL(valueChanged(int)),
           this, SLOT(value_changed(int)));
-  setMaximumWidth(180);
+  setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
 }
 
 void qbinded_int_spinbox::set_suffix(QString &new_suffix) {
+
   setSuffix(new_suffix);
+
 }
 
 void qbinded_int_spinbox::set_default_suffix() {
+
   app_state_t *astate = app_state_t::get_inst();
   set_suffix(astate->m_spatial_suffix);
+
 }
 
 void qbinded_int_spinbox::value_changed(int value) {
+
   if (m_binded_value && !m_ignore_state_change) {
       *m_binded_value = value;
       on_value_changed();
       app_state_t::get_inst()->make_viewport_dirty();
     }
+
 }
 
 qbinded_ws_item_combobox::qbinded_ws_item_combobox(QWidget *parent) {
 
-  connect(this, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(value_changed(int)));
+  connect(this,
+          SIGNAL(currentIndexChanged(int)),
+          this,
+          SLOT(value_changed(int)));
 
 }
 

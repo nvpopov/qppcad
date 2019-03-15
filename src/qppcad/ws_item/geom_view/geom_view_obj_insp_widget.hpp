@@ -84,7 +84,7 @@ namespace qpp {
         qspoiler_widget_t *gb_disp_type_spec_rend;
         QTableView *disp_type_spec_tv;
         qtype_specific_rendering_model_t *disp_type_spec_mdl;
-        QFormLayout *gb_disp_type_spec_rend_lt;
+        QVBoxLayout *gb_disp_type_spec_rend_lt;
 
         qspoiler_widget_t *gb_disp_bt;
         QVBoxLayout *disp_bt_lt;

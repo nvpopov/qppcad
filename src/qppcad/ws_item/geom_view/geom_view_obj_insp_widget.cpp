@@ -9,6 +9,8 @@ using namespace qpp::cad;
 
 void geom_view_obj_insp_widget_t::construct_general_tab() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   tg_geom_summary_widget = new qspoiler_widget_t(tr("Geometry summary"));
   tg_geom_summary_lt = new QFormLayout;
   tg_geom_summary_widget->add_content_layout(tg_geom_summary_lt);
@@ -24,6 +26,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_type_summary_lt = new QVBoxLayout;
   tg_type_summary_widget->add_content_layout(tg_type_summary_lt);
   tg_type_summary_tbl = new QTableWidget;
+  tg_type_summary_tbl->setFixedWidth(astate->size_guide.obj_insp_table_w());
   tg_type_summary_tbl->setColumnCount(3);
 
   QStringList table_hdr_cell;
@@ -42,6 +45,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_gb_cell_tbl->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   tg_gb_cell_tbl->setHorizontalHeaderLabels(table_hdr_cell);
   tg_gb_cell_tbl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  tg_gb_cell_tbl->setFixedWidth(astate->size_guide.obj_insp_table_w());
   tg_gb_cell_lt->addWidget(tg_gb_cell_tbl);
 
   QStringList table_hdr;
@@ -71,6 +75,8 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
 }
 
 void geom_view_obj_insp_widget_t::construct_display_tab() {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   gb_disp_s = new qspoiler_widget_t(tr("Draw settings"));
   gb_disp_s_lt = new QFormLayout;
@@ -173,18 +179,18 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
 
   //display - type specific rendering
   gb_disp_type_spec_rend = new qspoiler_widget_t(tr("Type specific rendering"));
-  gb_disp_type_spec_rend_lt = new QFormLayout;
+  gb_disp_type_spec_rend_lt = new QVBoxLayout;
   gb_disp_type_spec_rend->add_content_layout(gb_disp_type_spec_rend_lt);
 
   disp_type_spec_tv = new QTableView;
-  gb_disp_type_spec_rend->setLayout(gb_disp_type_spec_rend_lt);
   gb_disp_type_spec_rend_lt->addWidget(disp_type_spec_tv);
 
-  disp_type_spec_tv->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  disp_type_spec_tv->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
   disp_type_spec_tv->verticalHeader()->hide();
   disp_type_spec_tv->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   disp_type_spec_tv->setFocusPolicy(Qt::NoFocus);
   disp_type_spec_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  disp_type_spec_tv->setFixedWidth(astate->size_guide.obj_insp_table_w());
 
   disp_type_spec_mdl = new qtype_specific_rendering_model_t;
   disp_type_spec_tv->setModel(disp_type_spec_mdl);
@@ -197,11 +203,12 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   bt_mdl = new qbonding_table_model_t;
   disp_bt = new QTableView;
 
-  disp_bt->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  disp_bt->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
   disp_bt->verticalHeader()->hide();
   disp_bt->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   disp_bt->setFocusPolicy(Qt::NoFocus);
   disp_bt->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  disp_bt->setFixedWidth(astate->size_guide.obj_insp_table_w());
 
   disp_bt->setModel(bt_mdl);
   disp_bt_lt->addWidget(disp_bt);

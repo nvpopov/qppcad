@@ -20,7 +20,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
 
   ws_items_list = new QListWidget;
 
-  ws_items_list->setMaximumHeight(170);
+  ws_items_list->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
   ws_items_list->setProperty("s_class", "ws_items_list");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
 

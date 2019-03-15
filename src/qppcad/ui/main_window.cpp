@@ -15,8 +15,8 @@ main_window::main_window(QWidget *parent) : QMainWindow(parent) {
 
   setAcceptDrops(true);
   setCentralWidget(main_widget);
-  setMinimumHeight(300);
-  setMinimumWidth(600);
+  setMinimumHeight(astate->size_guide.main_window_h());
+  setMinimumWidth(astate->size_guide.main_window_w());
   init_base_shortcuts();
   init_menus();
   build_bhv_menus_and_actions();
@@ -273,49 +273,55 @@ void main_window::init_menus() {
 
 void main_window::init_widgets() {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   tool_panel_widget = new QWidget;
   tool_panel_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  tool_panel_widget->setMinimumHeight(50);
-  tool_panel_widget->setMaximumHeight(50);
+  tool_panel_widget->setFixedHeight(astate->size_guide.tool_panel_h());
   tool_panel_widget->setProperty("s_class", "tp_generic");
 
   tp_ws_selector = new QComboBox;
-  tp_ws_selector->setProperty("s_class", "tp_ws_selector");
-
   QObject::connect(tp_ws_selector,
                    SIGNAL(currentIndexChanged(int)),
                    this,
                    SLOT(ws_selector_selection_changed(int)));
-
-  tp_ws_selector->setMinimumWidth(150);
-  tp_ws_selector->setMinimumHeight(tp_button_height);
+  tp_ws_selector->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
+  tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
 
   tp_add_ws = new QPushButton;
-  tp_add_ws->setMaximumWidth(30);
-  tp_add_ws->setMinimumHeight(tp_button_height);
+  tp_add_ws->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_add_ws->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_add_ws->setText("+");
-  connect(tp_add_ws, &QPushButton::pressed,
-          this, &main_window::create_new_ws);
+  connect(tp_add_ws,
+          &QPushButton::pressed,
+          this,
+          &main_window::create_new_ws);
 
   tp_rm_ws = new QPushButton;
   tp_rm_ws->setText("-");
-  tp_rm_ws->setMaximumWidth(30);
-  tp_rm_ws->setMinimumHeight(tp_button_height);
-  connect(tp_rm_ws, &QPushButton::pressed,
-          this, &main_window::close_cur_ws);
+  tp_rm_ws->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_rm_ws->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  connect(tp_rm_ws,
+          &QPushButton::pressed,
+          this,
+          &main_window::close_cur_ws);
 
   tp_rnm_ws = new QPushButton;
   tp_rnm_ws->setText("RN");
-  tp_rnm_ws->setMaximumWidth(30);
-  tp_rnm_ws->setMinimumHeight(tp_button_height);
-  connect(tp_rnm_ws, &QPushButton::pressed,
-          this, &main_window::rename_cur_ws);
+  tp_rnm_ws->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_rnm_ws->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  connect(tp_rnm_ws,
+          &QPushButton::pressed,
+          this,
+          &main_window::rename_cur_ws);
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setProperty("s_class", "tp_cb");
   tp_show_obj_insp->setCheckState(Qt::Checked);
   tp_show_obj_insp->setText("INS");
-  tp_show_obj_insp->setMinimumHeight(tp_button_height);
+  tp_show_obj_insp->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
+  tp_show_obj_insp->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
   QObject::connect(tp_show_obj_insp,
                    SIGNAL(stateChanged(int)),
                    this,
@@ -325,7 +331,8 @@ void main_window::init_widgets() {
   tp_show_gizmo->setProperty("s_class", "tp_cb");
   tp_show_gizmo->setCheckState(Qt::Checked);
   tp_show_gizmo->setText("GZM");
-  tp_show_gizmo->setMinimumHeight(tp_button_height);
+  tp_show_gizmo->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
+  tp_show_gizmo->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
   QObject::connect(tp_show_gizmo,
                    SIGNAL(stateChanged(int)),
                    this,
@@ -333,9 +340,10 @@ void main_window::init_widgets() {
 
   tp_add_ws_item = new QPushButton();
   tp_add_ws_item->setProperty("s_class", "tp_cb");
-  tp_add_ws_item->setMinimumHeight(tp_button_height);
-  tp_add_ws_item->setMaximumWidth(48);
-  tp_add_ws_item->setIconSize(QSize(26, 26));
+  tp_add_ws_item->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_add_ws_item->setMaximumWidth(astate->size_guide.tool_panel_ctrl_sys_w());
+  tp_add_ws_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                    astate->size_guide.tool_panel_icon_size()));
   tp_add_ws_item->setToolTip(tr("Add new item to current workspace"));
   tp_add_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
   connect(tp_add_ws_item,
@@ -345,9 +353,10 @@ void main_window::init_widgets() {
 
   tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");
-  tp_print_screen->setMinimumHeight(tp_button_height);
-  tp_print_screen->setMaximumWidth(48);
-  tp_print_screen->setIconSize(QSize(26, 26));
+  tp_print_screen->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_print_screen->setMaximumWidth(astate->size_guide.tool_panel_ctrl_sys_w());
+  tp_print_screen->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                     astate->size_guide.tool_panel_icon_size()));
   tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
   tp_print_screen->setIcon(QIcon("://images/outline-camera_enhance-24px.svg"));
   connect(tp_print_screen,
@@ -357,24 +366,25 @@ void main_window::init_widgets() {
 
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
-  QObject::connect(tp_edit_mode,
-                   SIGNAL(buttonClicked(int)),
-                   this,
-                   SLOT(ws_edit_mode_selector_button_clicked(int)));
+  connect(tp_edit_mode,
+          SIGNAL(buttonClicked(int)),
+          this,
+          SLOT(ws_edit_mode_selector_button_clicked(int)));
 
   tp_edit_mode_item = new QPushButton;
-  //tp_edit_mode_item->setText(tr("ITM"));
-  tp_edit_mode_item->setMaximumWidth(40);
-  tp_edit_mode_item->setMinimumHeight(tp_button_height);
-  tp_edit_mode_item->setIconSize(QSize(26, 26));
+  tp_edit_mode_item->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
+  tp_edit_mode_item->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_edit_mode_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                       astate->size_guide.tool_panel_icon_size()));
   tp_edit_mode_item->setToolTip(tr("Set current workspace's edit mode to <edit item>"));
   tp_edit_mode_item->setIcon(QIcon("://images/edit0.svg"));
   tp_edit_mode_item->setCheckable(true);
 
   tp_edit_mode_content= new QPushButton;
-  tp_edit_mode_content->setMaximumWidth(40);
-  tp_edit_mode_content->setMinimumHeight(tp_button_height);
-  tp_edit_mode_content->setIconSize(QSize(26, 26));
+  tp_edit_mode_content->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
+  tp_edit_mode_content->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_edit_mode_content->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                          astate->size_guide.tool_panel_icon_size()));
   tp_edit_mode_content->setToolTip(tr("Set current workspace's edit mode to <edit content>"));
   tp_edit_mode_content->setIcon(QIcon("://images/edit1.svg"));
   tp_edit_mode_content->setCheckable(true);
@@ -395,68 +405,73 @@ void main_window::init_widgets() {
   tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
   tp_camera_x = new QPushButton(tr("C:X"));
-  tp_camera_x->setMaximumWidth(40);
-  tp_camera_x->setMinimumHeight(tp_button_height);
+  tp_camera_x->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_x->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_camera_x,
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_x_axis);});
 
   tp_camera_y = new QPushButton(tr("C:Y"));
-  tp_camera_y->setMaximumWidth(40);
-  tp_camera_y->setMinimumHeight(tp_button_height);
+  tp_camera_y->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_y->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_camera_y,
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_y_axis);});
 
   tp_camera_z = new QPushButton(tr("C:Z"));
-  tp_camera_z->setMaximumWidth(40);
-  tp_camera_z->setMinimumHeight(tp_button_height);
+  tp_camera_z->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_z->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_camera_z,
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
 
   tp_camera_cart_c = new QPushButton(tr("C:C"));
-  tp_camera_cart_c->setMaximumWidth(40);
-  tp_camera_cart_c->setMinimumHeight(tp_button_height);
+  tp_camera_cart_c->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_cart_c->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_camera_cart_c,
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_cart_center);});
 
   tp_camera_a = new QPushButton(tr("C:a"));
-  tp_camera_a->setMaximumWidth(40);
-  tp_camera_a->setMinimumHeight(tp_button_height);
+  tp_camera_a->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_a->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_camera_a,
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_a_axis);});
 
   tp_camera_b = new QPushButton(tr("C:b"));
-  tp_camera_b->setMaximumWidth(40);
-  tp_camera_b->setMinimumHeight(tp_button_height);
+  tp_camera_b->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_b->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_camera_b,
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_b_axis);});
 
   tp_camera_c = new QPushButton(tr("C:c"));
-  tp_camera_c->setMaximumWidth(40);
-  tp_camera_c->setMinimumHeight(tp_button_height);
+  tp_camera_c->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_c->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_camera_c,
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
+  connect(tp_edit_mode,
+                   SIGNAL(buttonClicked(int)),
+                   this,
+                   SLOT(ws_edit_mode_selector_button_clicked(int)));
 
   change_camera_buttons_visible(false, false);
 
   tp_measure_dist = new QPushButton();
-  tp_measure_dist->setMaximumWidth(40);
-  tp_measure_dist->setMinimumHeight(tp_button_height);
+  tp_measure_dist->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_measure_dist->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_measure_dist->setCheckable(true);
-  tp_measure_dist->setIconSize(QSize(26, 26));
+  tp_measure_dist->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                     astate->size_guide.tool_panel_icon_size()));
   tp_measure_dist->setToolTip(tr("Measure distance between pair of atoms"));
   tp_measure_dist->setIcon(QIcon("://images/dist.svg"));
   connect(tp_measure_dist,
@@ -465,10 +480,11 @@ void main_window::init_widgets() {
           &main_window::tp_dist_button_clicked);
 
   tp_toggle_atom_override = new QPushButton();
-  tp_toggle_atom_override->setMaximumWidth(40);
-  tp_toggle_atom_override->setMinimumHeight(tp_button_height);
+  tp_toggle_atom_override->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_toggle_atom_override->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_toggle_atom_override->setCheckable(true);
-  tp_toggle_atom_override->setIconSize(QSize(26, 26));
+  tp_toggle_atom_override->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                             astate->size_guide.tool_panel_icon_size()));
   tp_toggle_atom_override->setToolTip(tr("Toggle atom override"));
   tp_toggle_atom_override->setIcon(QIcon("://images/outline-my_location-24px.svg"));
   connect(tp_toggle_atom_override,
@@ -477,10 +493,11 @@ void main_window::init_widgets() {
           &main_window::tp_toggle_atom_override_button_clicked);
 
   tp_force_sel_lbl_vis = new QPushButton();
-  tp_force_sel_lbl_vis->setMaximumWidth(40);
-  tp_force_sel_lbl_vis->setMinimumHeight(tp_button_height);
+  tp_force_sel_lbl_vis->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_force_sel_lbl_vis->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_force_sel_lbl_vis->setCheckable(true);
-  tp_force_sel_lbl_vis->setIconSize(QSize(26, 26));
+  tp_force_sel_lbl_vis->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                          astate->size_guide.tool_panel_icon_size()));
   tp_force_sel_lbl_vis->setToolTip(tr("Force labels selective visibility"));
   tp_force_sel_lbl_vis->setIcon(QIcon("://images/outline-font_download-24px.svg"));
   connect(tp_force_sel_lbl_vis,
@@ -489,10 +506,11 @@ void main_window::init_widgets() {
           &main_window::tp_force_sel_lbl_vis_button_clicked);
 
   tp_measure_angle = new QPushButton();
-  tp_measure_angle->setMaximumWidth(60);
-  tp_measure_angle->setMinimumHeight(tp_button_height);
+  tp_measure_angle->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_measure_angle->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_measure_angle->setCheckable(true);
-  tp_measure_angle->setIconSize(QSize(26, 26));
+  tp_measure_angle->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                      astate->size_guide.tool_panel_icon_size()));
   tp_measure_angle->setToolTip(tr("Measure angle between atoms triple"));
   tp_measure_angle->setIcon(QIcon("://images/angle.svg"));
   connect(tp_measure_angle,
@@ -503,8 +521,7 @@ void main_window::init_widgets() {
   ws_viewer_widget = new ws_viewer_widget_t(this);
 
   obj_insp_widget = new object_inspector_widget_t();
-  obj_insp_widget->setMaximumWidth(430);
-  obj_insp_widget->setMinimumWidth(430);
+  obj_insp_widget->setFixedWidth(astate->size_guide.obj_insp_w());
 
   py_console_widget = new python_console_widget_t(this);
   widget_ws_viewer_py_console = new QWidget();
@@ -531,7 +548,7 @@ void main_window::init_layouts() {
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console);
   layout_ws_viewer_obj_insp->addWidget(obj_insp_widget);
-  layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
+  //layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
   layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
   layout_ws_viewer_obj_insp->setHandleWidth(0);
@@ -539,7 +556,7 @@ void main_window::init_layouts() {
 
   tool_panel_layout = new QHBoxLayout;
   tool_panel_widget->setLayout(tool_panel_layout);
-  tool_panel_widget->setContentsMargins(0,0,0,0);
+  tool_panel_layout->setContentsMargins(5,0,0,0);
 
   tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_add_ws, 0, Qt::AlignLeft);
@@ -723,6 +740,7 @@ void main_window::create_new_ws() {
 }
 
 void main_window::open_ws() {
+
   app_state_t* astate = app_state_t::get_inst();
   QString file_name = QFileDialog::getOpenFileName(this,
                                                    "Open qpp::cad workspace",
@@ -765,6 +783,7 @@ void main_window::save_ws() {
   start_update_cycle();
 
   cur_ws_changed();
+
 }
 
 void main_window::save_ws_as() {
@@ -813,6 +832,7 @@ void main_window::close_cur_ws() {
             }
         }
     }
+
 }
 
 void main_window::rename_cur_ws() {
@@ -832,6 +852,7 @@ void main_window::rename_cur_ws() {
             }
         }
     }
+
 }
 
 void main_window::cur_ws_changed() {
@@ -859,6 +880,7 @@ void main_window::cur_ws_changed() {
   wss_changed_slot();
   cur_ws_properties_changed();
   cur_ws_selected_item_changed();
+
 }
 
 void main_window::cur_ws_selected_item_changed() {
@@ -885,6 +907,7 @@ void main_window::cur_ws_selected_item_changed() {
   cur_ws_edit_type_changed();
   control_bhv_menus_activity();
   control_bhv_tools_menus_activity();
+
 }
 
 void main_window::cur_ws_properties_changed() {
@@ -905,11 +928,14 @@ void main_window::cur_ws_properties_changed() {
     }
 
   astate->make_viewport_dirty();
+
 }
 
 void main_window::cur_ws_edit_type_changed() {
+
   cur_ws_properties_changed();
   cur_ws_selected_atoms_list_selection_changed();
+
 }
 
 void main_window::cur_ws_selected_atoms_list_selection_changed() {
@@ -1642,5 +1668,7 @@ void main_window::make_screenshot() {
 }
 
 void main_window::slot_shortcut_terminate_app() {
+
   QApplication::quit();
+
 }

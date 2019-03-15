@@ -69,10 +69,6 @@ namespace qpp {
         QPushButton *tp_edit_mode_content;
         QFrame *tp_edit_mode_end;
 
-        //TODO: implement sizes guide
-        int tp_button_width{36};
-        int tp_button_height{30};
-
         QPushButton *tp_camera_x;
         QPushButton *tp_camera_y;
         QPushButton *tp_camera_z;

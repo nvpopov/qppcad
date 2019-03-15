@@ -17,6 +17,8 @@ int main (int argc, char **argv) {
   QCoreApplication::setOrganizationName("igc");
   QCoreApplication::setOrganizationDomain("igc.irk.ru");
   QCoreApplication::setApplicationName("qppcad");
+  QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
   QApplication app(argc, argv);
 
   QCommandLineParser parser;
@@ -32,7 +34,6 @@ int main (int argc, char **argv) {
 
   parser.process(QCoreApplication::arguments());
   const QStringList args = parser.positionalArguments();
-
 
   app_state_t::init_inst();
 
@@ -76,13 +77,9 @@ int main (int argc, char **argv) {
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
   astate->m_font_name = family;
   astate->log(fmt::format("Font used : {}", astate->m_font_name.toStdString()));
-  //QFont font = QFont(astate->m_font_name, 14, 1);
 
   QIcon icon("://images/icon.svg");
-
-  // font.setPointSize(font.pointSize());
   app.setWindowIcon(icon);
- // app.setFont(font);
 
   QFile file("://style.qss");
   file.open(QFile::ReadOnly);

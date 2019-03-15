@@ -21,10 +21,6 @@ QWidget[s_class="tp_generic"] QLabel {
   color:white;
 }
 
-QComboBox[s_class="tp_ws_selector"] {
-  padding:4px;
-}
-
 QCheckBox[s_class="tp_cb"] {
   border:1px solid gray; border-radius:2px; padding-left:5px;
   padding-right:5px;
