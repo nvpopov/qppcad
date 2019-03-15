@@ -374,6 +374,8 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
 void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   tm_gb_add_atom = new qspoiler_widget_t(tr("Add atom"));
   tm_gb_add_atom_lt = new QFormLayout;
   tm_gb_add_atom->add_content_layout(tm_gb_add_atom_lt);
@@ -387,7 +389,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_single_atom_combo->setEditable(true);
   tm_single_atom_vec3 = new qbinded_float3_input;
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
-  tm_single_atom_vec3->set_default_suffix();
+  //tm_single_atom_vec3->set_default_suffix();
   tm_single_atom_idx = new QLabel;
   tm_single_atom_num = new QLabel;
 
@@ -404,7 +406,8 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_single_atom_lt->addRow(tr("Atom name"), tm_single_atom_combo);
   tm_gb_single_atom_lt->addRow(tr("Atom idx."), tm_single_atom_idx);
   tm_gb_single_atom_lt->addRow(tr("Atom num."), tm_single_atom_num);
-  tm_gb_single_atom_lt->addRow(tr("Atom pos."), tm_single_atom_vec3);
+  tm_gb_single_atom_lt->addRow(tr("Atom pos.[%1]").arg(astate->m_spatial_suffix),
+                               tm_single_atom_vec3);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_commit);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_delete);
   init_form_lt(tm_gb_single_atom_lt);
@@ -426,7 +429,6 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_add_atom_combo->setMaximumWidth(tab_modify_op_button_width);
   tm_add_atom_vec3 = new qbinded_float3_input;
   tm_add_atom_vec3->set_min_max_step(-1000, 1000, 0.01);
-  tm_add_atom_vec3->set_default_suffix();
 
   tm_add_atom_button = new QPushButton(tr("Add atom"));
   tm_add_atom_button->setMaximumWidth(tab_modify_op_button_width);
@@ -434,7 +436,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this, &geom_view_obj_insp_widget_t::modify_add_atom_button_clicked);
 
   tm_gb_add_atom_lt->addRow(tr("Atom name"), tm_add_atom_combo);
-  tm_gb_add_atom_lt->addRow(tr("Atom pos."), tm_add_atom_vec3);
+  tm_gb_add_atom_lt->addRow(tr("Atom pos.[%1]").arg(astate->m_spatial_suffix), tm_add_atom_vec3);
   tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
   init_form_lt(tm_gb_add_atom_lt);
 
@@ -534,9 +536,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_u_scale_lt->addRow("Scale X", tm_u_scale_sb_x);
   tm_gb_u_scale_lt->addRow("Scale Y", tm_u_scale_sb_y);
   tm_gb_u_scale_lt->addRow("Scale Z", tm_u_scale_sb_z);
-  tm_gb_u_scale_lt->addRow("Enable::X", tm_u_scale_x_enabled);
-  tm_gb_u_scale_lt->addRow("Enable::Y", tm_u_scale_y_enabled);
-  tm_gb_u_scale_lt->addRow("Enable::Z", tm_u_scale_z_enabled);
+  tm_gb_u_scale_lt->addRow("Enable X", tm_u_scale_x_enabled);
+  tm_gb_u_scale_lt->addRow("Enable Y", tm_u_scale_y_enabled);
+  tm_gb_u_scale_lt->addRow("Enable Z", tm_u_scale_z_enabled);
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
   init_form_lt(tm_gb_u_scale_lt);
 
@@ -546,7 +548,6 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_translate->add_content_layout(tm_gb_translate_lt);
   tm_translate_vec3 = new qbinded_float3_input;
   tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
-  tm_translate_vec3->set_default_suffix();
 
   tm_translate_apply_button = new QPushButton(tr("Apply translate"));
   tm_translate_apply_button->setMaximumWidth(tab_modify_op_button_width);
@@ -1595,10 +1596,10 @@ void geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked() {
 void geom_view_obj_insp_widget_t::modify_translate_coord_type_changed(int coord_type) {
 
   if (coord_type == 0) {
-      tm_translate_vec3->set_default_suffix();
+      //tm_translate_vec3->set_default_suffix();
       tm_translate_vec3->set_min_max_step(-100, 100, 0.01);
     } else {
-      tm_translate_vec3->set_empty_suffix();
+     // tm_translate_vec3->set_empty_suffix();
       tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
     }
 

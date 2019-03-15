@@ -61,7 +61,7 @@ namespace qpp {
         QLabel *ws_item_bb_visible_label;
         qbinded_checkbox *ws_item_bb_visible;
 
-        int def_label_width{135};
+        int def_label_width{145};
         int def_control_width{80};
         int def_gen_control_width{180};
 

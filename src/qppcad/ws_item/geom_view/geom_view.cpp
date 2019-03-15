@@ -716,7 +716,7 @@ void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
   for (size_t i = 0; i < m_geom->nat(); i++) {
       float el_val = m_geom->xfield<float>(xfield_id, i) - std::get<0>(field_min_max);
       float len = std::get<1>(field_min_max) - std::get<0>(field_min_max);
-      vector3<float> color_interp = color_low + (color_high - color_low) * (el_val / len);
+      vector3<float> color_interp = color_low + (color_high - color_low) * (1 - el_val / len);
       m_geom->xfield<float>(xgeom_ccr, i) = color_interp[0];
       m_geom->xfield<float>(xgeom_ccg, i) = color_interp[1];
       m_geom->xfield<float>(xgeom_ccb, i) = color_interp[2];

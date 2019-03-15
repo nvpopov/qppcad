@@ -15,6 +15,7 @@
 #include <QOpenGLFunctions>
 #include <QString>
 #include <QPalette>
+#include <qppcad/ui/size_guide.hpp>
 
 namespace qpp {
 
@@ -79,11 +80,10 @@ namespace qpp {
                              const size_t bhv_id);
 
         app_state_event_disp_t *astate_evd;
-
         glapi_t *glapi;
         camera_t *camera{nullptr};
-
         draw_pipeline_t *dp;
+        size_guide_t size_guide;
 
         shader_program_t *sp_default;
         shader_program_t *sp_unit_line;
