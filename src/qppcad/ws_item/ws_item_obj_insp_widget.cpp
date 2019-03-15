@@ -130,16 +130,20 @@ void ws_item_obj_insp_widget_t::set_tab_enabled(ws_item_tab_widget_t *tab,
 
 }
 
-void ws_item_obj_insp_widget_t::pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
+void ws_item_obj_insp_widget_t::pre_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
   gb->setLayout(gb_lt);
 }
 
-void ws_item_obj_insp_widget_t::post_init_group_box(QGroupBox *gb, QFormLayout *gb_lt) {
-  qt_helpers::resize_form_lt_labels(gb_lt, def_label_width);
+void ws_item_obj_insp_widget_t::post_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
+  qt_helpers::resize_form_lt_lbls(gb_lt, def_label_width);
 }
 
-void ws_item_obj_insp_widget_t::init_form_layout(QFormLayout *frm_lt) {
-   qt_helpers::resize_form_lt_labels(frm_lt, def_label_width);
+void ws_item_obj_insp_widget_t::init_form_lt(QFormLayout *frm_lt) {
+  qt_helpers::resize_form_lt_lbls(frm_lt, def_label_width);
+}
+
+void ws_item_obj_insp_widget_t::init_form_lt_lbl(QLabel *_label) {
+  qt_helpers::resize_form_lt_lbl(_label, def_label_width);
 }
 
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
@@ -178,7 +182,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_form_layout->addRow(ws_item_bb_visible_label, ws_item_bb_visible);
   tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
 
-  init_form_layout(tg_form_layout);
+  init_form_lt(tg_form_layout);
 
   //post_init_group_box(tg_info_widget, tg_form_layout);
   //end group box Item information

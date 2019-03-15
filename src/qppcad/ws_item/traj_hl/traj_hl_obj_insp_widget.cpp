@@ -8,10 +8,10 @@ traj_hl_obj_insp_widget_t::traj_hl_obj_insp_widget_t() {
   gb_traj_settings = new QGroupBox(tr("Trajectory settings"));
   gb_traj_settings_lt = new QFormLayout;
 
-  pre_init_group_box(gb_traj_settings, gb_traj_settings_lt);
+  pre_init_gb(gb_traj_settings, gb_traj_settings_lt);
   disp_traj_color = new qbinded_color3_input;
   gb_traj_settings_lt->addRow(tr("Trajectory color"), disp_traj_color);
-  post_init_group_box(gb_traj_settings, gb_traj_settings_lt);
+  post_init_gb(gb_traj_settings, gb_traj_settings_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(gb_traj_settings);
   tab_general->tab_inner_widget_lt->addStretch();

@@ -51,14 +51,14 @@ namespace qpp {
 
         QGroupBox *gb_ctor{nullptr};
         QVBoxLayout *gb_ctor_lt{nullptr};
-        QRadioButton *gb_ctor_geom0d{nullptr};
-        QRadioButton *gb_ctor_geom1d{nullptr};
-        QRadioButton *gb_ctor_geom2d{nullptr};
-        QRadioButton *gb_ctor_geom3d{nullptr};
-        QRadioButton *gb_ctor_psg{nullptr};
-        QRadioButton *gb_ctor_pgf_prod{nullptr};
-        QRadioButton *gb_ctor_cube{nullptr};
-        QRadioButton *gb_ctor_arrow{nullptr};
+        QRadioButton *rb_ctor_geom0d{nullptr};
+        QRadioButton *rb_ctor_geom1d{nullptr};
+        QRadioButton *rb_ctor_geom2d{nullptr};
+        QRadioButton *rb_ctor_geom3d{nullptr};
+        QRadioButton *rb_ctor_psg{nullptr};
+        QRadioButton *rb_ctor_pgf_prod{nullptr};
+        QRadioButton *rb_ctor_cube{nullptr};
+        QRadioButton *rb_ctor_arrow{nullptr};
 
         QGroupBox *gb_type_descr{nullptr};
         QVBoxLayout *gb_type_descr_lt{nullptr};
@@ -98,6 +98,7 @@ namespace qpp {
         add_new_ws_item_widget_t();
 
         void set_cell_ctors_visibility(bool show);
+        void control_top_type_parameters_visibility();
 
       public slots:
 

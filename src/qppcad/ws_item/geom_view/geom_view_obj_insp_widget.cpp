@@ -18,7 +18,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
 
   tg_geom_summary_lt->addRow(tr("Total atoms"), tg_geom_summary_total_atoms);
   tg_geom_summary_lt->addRow(tr("Total types"), tg_geom_summary_total_types);
-  init_form_layout(tg_geom_summary_lt);
+  init_form_lt(tg_geom_summary_lt);
 
   tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"));
   tg_type_summary_lt = new QVBoxLayout;
@@ -98,11 +98,16 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_color_mode->addItem(tr("Color from xgeom"));
 
   disp_draw_subcells = new qbinded_checkbox;
-  disp_draw_subcells_label = new QLabel(tr("Draw subcells"));
+  disp_draw_subcells_lbl = new QLabel(tr("Draw subcells"));
   disp_subcells_idx = new qbinded_int3_input;
-  disp_subcells_idx_label = new QLabel(tr("Subcells range"));
-
+  disp_subcells_idx_lbl = new QLabel(tr("Subcells range"));
   disp_subcells_idx->set_min_max_step(1, 10, 1);
+  disp_subcells_clr = new qbinded_color3_input;
+  disp_subcells_color_lbl = new QLabel(tr("Subcell color"));
+  init_form_lt_lbl(disp_draw_subcells_lbl);
+  init_form_lt_lbl(disp_subcells_idx_lbl);
+  init_form_lt_lbl(disp_subcells_color_lbl);
+
   connect(disp_draw_subcells, &qbinded_checkbox::stateChanged,
           this, &geom_view_obj_insp_widget_t::draw_subcells_changed);
 
@@ -111,12 +116,10 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
 
   disp_draw_cell = new qbinded_checkbox;
   disp_draw_cell_label = new QLabel(tr("Draw cell"));
-
+  init_form_lt_lbl(disp_draw_cell_label);
   disp_cell_color = new qbinded_color3_input;
   disp_cell_color_label = new QLabel(tr("Cell color"));
-
-  disp_subcell_color = new qbinded_color3_input;
-  disp_subcell_color_label = new QLabel(tr("Sub cell color"));
+  init_form_lt_lbl(disp_cell_color_label);
 
   gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
@@ -126,16 +129,9 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("Draw im. bonds"), disp_s_draw_img_bonds);
   gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
-
   gb_disp_s_lt->addRow(tr("Sel. vis."), disp_s_sel_vis);
   gb_disp_s_lt->addRow(tr("Sel. vis. bonds"), disp_s_sel_vis_affect_bonds);
-  gb_disp_s_lt->addRow(disp_draw_cell_label, disp_draw_cell);
-  gb_disp_s_lt->addRow(disp_cell_color_label, disp_cell_color);
-  gb_disp_s_lt->addRow(disp_draw_subcells_label, disp_draw_subcells);
-  gb_disp_s_lt->addRow(disp_subcells_idx_label, disp_subcells_idx);
-  gb_disp_s_lt->addRow(disp_subcell_color_label, disp_subcell_color);
-
-  init_form_layout(gb_disp_s_lt);
+  init_form_lt(gb_disp_s_lt);
 
   gb_disp_labels = new qspoiler_widget_t(tr("Labels"));
   gb_disp_labels_lt = new QFormLayout;
@@ -161,7 +157,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_labels_lt->addRow(tr("Inplace labels"), disp_inplace_labels);
   gb_disp_labels_lt->addRow(tr("Selective vis."), disp_sl_labels);
   gb_disp_labels_lt->addRow(tr("Scr. spc. scale"), disp_labels_screen_scale);
-  init_form_layout(gb_disp_labels_lt);
+  init_form_lt(gb_disp_labels_lt);
 
   //display - shading tab initialization
   gb_disp_shading = new qspoiler_widget_t(tr("Shading settings"));
@@ -173,7 +169,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_shading_spec_value->set_min_max_step(0.25, 50, 0.25);
   gb_disp_shading_lt->addRow(tr("Enable specular"), disp_shading_spec);
   gb_disp_shading_lt->addRow(tr("Specular power"), disp_shading_spec_value);
-  init_form_layout(gb_disp_shading_lt);
+  init_form_lt(gb_disp_shading_lt);
 
   //display - type specific rendering
   gb_disp_type_spec_rend = new qspoiler_widget_t(tr("Type specific rendering"));
@@ -252,7 +248,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_summary_lt->addRow(tr("Frame time "), gb_anim_speed);
   gb_anim_summary_lt->addRow(tr("Num frm."), gb_anim_total_frames_in_anim);
   gb_anim_summary_lt->addRow(tr("Current frame:"), gb_anim_cur_frame);
-  init_form_layout(gb_anim_summary_lt);
+  init_form_lt(gb_anim_summary_lt);
 
   gb_anim_timeline = new qspoiler_widget_t(tr("Timeline"));
   gb_anim_timeline->setMaximumWidth(390);
@@ -369,7 +365,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Label style"), tms_pair_label_style);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
 
-  init_form_layout(tms_pair_dist_gb_lt);
+  init_form_lt(tms_pair_dist_gb_lt);
 
   tab_measurement->tab_inner_widget_lt->addWidget(tms_pair_dist_gb);
   tab_measurement->tab_inner_widget_lt->addStretch(1);
@@ -411,7 +407,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_single_atom_lt->addRow(tr("Atom pos."), tm_single_atom_vec3);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_commit);
   tm_gb_single_atom_lt->addRow("", tm_single_atom_delete);
-  init_form_layout(tm_gb_single_atom_lt);
+  init_form_lt(tm_gb_single_atom_lt);
 
   tm_gb_override_atom = new qspoiler_widget_t(tr("Override atom"));
   tm_gb_override_atom_lt = new QFormLayout;
@@ -423,7 +419,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_override_atom_lt->addRow(tr("Atom info"), tm_override_atom_info);
   tm_gb_override_atom_lt->addRow(tr("Atom color"), tm_override_atom_color);
   tm_gb_override_atom_lt->addRow(tr("Atom radius"), tm_override_atom_radii);
-  init_form_layout(tm_gb_override_atom_lt);
+  init_form_lt(tm_gb_override_atom_lt);
 
   tm_add_atom_combo = new QComboBox;
   tm_add_atom_combo->setEditable(true);
@@ -440,7 +436,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_add_atom_lt->addRow(tr("Atom name"), tm_add_atom_combo);
   tm_gb_add_atom_lt->addRow(tr("Atom pos."), tm_add_atom_vec3);
   tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
-  init_form_layout(tm_gb_add_atom_lt);
+  init_form_lt(tm_gb_add_atom_lt);
 
   tm_gb_pair_dist = new qspoiler_widget_t(tr("Pair distance"));
   tm_gb_pair_dist_lt = new QFormLayout;
@@ -470,7 +466,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist_lt->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
   tm_gb_pair_dist_lt->addRow(tr("Trnsf. mode"), tm_pair_dist_t_mode);
   tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
-  init_form_layout(tm_gb_pair_dist_lt);
+  init_form_lt(tm_gb_pair_dist_lt);
 
   tm_gb_pair_creation = new qspoiler_widget_t(tr("Insert atom between"));
   tm_gb_pair_creation_lt = new QFormLayout;
@@ -484,7 +480,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_pair_creation_button->setMaximumWidth(tab_modify_op_button_width);
   tm_gb_pair_creation_lt->addRow(tr("New atom"), tm_pair_creation_combo);
   tm_gb_pair_creation_lt->addRow("", tm_pair_creation_button);
-  init_form_layout(tm_gb_pair_creation_lt);
+  init_form_lt(tm_gb_pair_creation_lt);
 
   connect(tm_pair_creation_button,
           &QPushButton::pressed,
@@ -542,7 +538,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_u_scale_lt->addRow("Enable::Y", tm_u_scale_y_enabled);
   tm_gb_u_scale_lt->addRow("Enable::Z", tm_u_scale_z_enabled);
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
-  init_form_layout(tm_gb_u_scale_lt);
+  init_form_lt(tm_gb_u_scale_lt);
 
   tm_gb_translate = new qspoiler_widget_t(tr("Translate selected atoms"));
   tm_gb_translate_lt = new QFormLayout;
@@ -565,7 +561,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_translate_lt->addRow(tm_translate_coord_type_label, tm_translate_coord_type);
   tm_gb_translate_lt->addRow(tr("Tr. vector"), tm_translate_vec3);
   tm_gb_translate_lt->addRow("", tm_translate_apply_button);
-  init_form_layout(tm_gb_translate_lt);
+  init_form_lt(tm_gb_translate_lt);
 
   connect(tm_translate_coord_type,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -617,7 +613,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_bc_rot_lt->addRow(tr("Angle type"), tm_bc_rot_angle_type);
   tm_gb_bc_rot_lt->addRow(tr("Angle"), tm_bc_rot_angle);
   tm_gb_bc_rot_lt->addRow("", tm_bc_rot_apply);
-  init_form_layout(tm_gb_bc_rot_lt);
+  init_form_lt(tm_gb_bc_rot_lt);
 
   tm_gb_group_op = new qspoiler_widget_t(tr("Group operations"));
   tm_group_op_lt = new QGridLayout;
@@ -722,11 +718,11 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
         }
 
       //resize type table view
-      qt_helpers::vrt_resize_tv_to_content(tg_type_summary_tbl);
+      qt_helpers::vrt_resize_tv_to_cnt(tg_type_summary_tbl);
 
       //update cell
       cell_changed();
-      qt_helpers::vrt_resize_tv_to_content(tg_gb_cell_tbl);
+      qt_helpers::vrt_resize_tv_to_cnt(tg_gb_cell_tbl);
 
       //display tab
       disp_s_draw_atoms->bind_value(&b_al->m_draw_atoms);
@@ -755,19 +751,44 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_draw_subcells->bind_value(&b_al->m_draw_subcells);
       disp_subcells_idx->bind_value(&b_al->m_subcells_range);
       disp_cell_color->bind_value(&b_al->m_cell_color);
-      disp_subcell_color->bind_value(&b_al->m_subcell_color);
+      disp_subcells_clr->bind_value(&b_al->m_subcell_color);
 
-      draw_subcells_changed(0);
-      disp_draw_cell->setVisible(b_al->m_geom->DIM == 3);
-      disp_draw_cell_label->setVisible(b_al->m_geom->DIM == 3);
-      disp_draw_subcells->setVisible(b_al->m_geom->DIM == 3);
-      disp_draw_subcells_label->setVisible(b_al->m_geom->DIM == 3);
-      disp_subcells_idx->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_subcells_idx_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_subcell_color->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_subcell_color_label->setVisible(b_al->m_geom->DIM == 3 && b_al->m_draw_subcells);
-      disp_cell_color->setVisible(b_al->m_geom->DIM == 3);
-      disp_cell_color_label->setVisible(b_al->m_geom->DIM == 3);
+      // 3d geom section
+      bool _al3d = b_al->m_geom->DIM == 3;
+
+      qt_helpers::form_lt_ctrl_visibility(_al3d,
+                                          gb_disp_s_lt,
+                                          disp_s_sel_vis_affect_bonds,
+                                          disp_draw_cell_label,
+                                          disp_draw_cell);
+
+      qt_helpers::form_lt_ctrl_visibility(_al3d,
+                                          gb_disp_s_lt,
+                                          disp_draw_cell,
+                                          disp_cell_color_label,
+                                          disp_cell_color);
+
+      qt_helpers::form_lt_ctrl_visibility(_al3d,
+                                          gb_disp_s_lt,
+                                          disp_cell_color,
+                                          disp_draw_subcells_lbl,
+                                          disp_draw_subcells);
+
+      qt_helpers::form_lt_ctrl_visibility(_al3d && b_al->m_draw_subcells,
+                                          gb_disp_s_lt,
+                                          disp_draw_subcells,
+                                          disp_subcells_idx_lbl,
+                                          disp_subcells_idx);
+
+      qt_helpers::form_lt_ctrl_visibility(_al3d && b_al->m_draw_subcells,
+                                          gb_disp_s_lt,
+                                          disp_subcells_idx,
+                                          disp_subcells_color_lbl,
+                                          disp_subcells_clr);
+
+      // end 3d geom section
+      //gb_disp_s_lt->invalidate();
+
       //anim bindings
       update_animate_section_status();
 
@@ -797,13 +818,13 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_type_spec_mdl->bind(b_al);
       disp_type_spec_tv->setModel(disp_type_spec_mdl);
       disp_type_spec_tv->update();
-      qt_helpers::vrt_resize_tv_to_content(disp_type_spec_tv);
+      qt_helpers::vrt_resize_tv_to_cnt(disp_type_spec_tv);
 
       disp_bt->setModel(nullptr);
       bt_mdl->bind(b_al);
       disp_bt->setModel(bt_mdl);
       disp_bt->update();
-      qt_helpers::vrt_resize_tv_to_content(disp_bt);
+      qt_helpers::vrt_resize_tv_to_cnt(disp_bt);
 
       //bind tab modify
 
@@ -845,7 +866,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_cell_color->unbind_value();
   disp_draw_subcells->unbind_value();
   disp_subcells_idx->unbind_value();
-  disp_subcell_color->unbind_value();
+  disp_subcells_clr->unbind_value();
   gb_rebuild_bonds->unbind_value();
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
@@ -914,10 +935,8 @@ void geom_view_obj_insp_widget_t::unbind_measure_tab() {
 void geom_view_obj_insp_widget_t::update_anim_tab() {
 
   if (b_al) {
-
       update_anim_tab_visibility();
       cur_anim_index_changed(b_al->m_anim->m_cur_anim);
-
     }
 
 }
@@ -1215,6 +1234,7 @@ void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
       for (auto i = 0 ; i < _al->m_geom->n_atom_types(); i++)
         combo->addItem(QString::fromStdString(_al->m_geom->atom_of_type(i)));
     }
+
 }
 
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
@@ -1398,18 +1418,17 @@ void geom_view_obj_insp_widget_t::cell_changed() {
 
 void geom_view_obj_insp_widget_t::draw_subcells_changed(int state) {
 
-  if (b_al && b_al->m_draw_subcells ) {
-      disp_subcells_idx_label->show();
-      disp_subcells_idx->show();
-      disp_subcell_color->show();
-      disp_subcell_color_label->show();
+  qt_helpers::form_lt_ctrl_visibility(state == Qt::Checked,
+                                      gb_disp_s_lt,
+                                      disp_draw_subcells,
+                                      disp_subcells_idx_lbl,
+                                      disp_subcells_idx);
 
-    } else {
-      disp_subcells_idx_label->hide();
-      disp_subcells_idx->hide();
-      disp_subcell_color->hide();
-      disp_subcell_color_label->hide();
-    }
+  qt_helpers::form_lt_ctrl_visibility(state == Qt::Checked,
+                                      gb_disp_s_lt,
+                                      disp_subcells_idx,
+                                      disp_subcells_color_lbl,
+                                      disp_subcells_clr);
 
 }
 

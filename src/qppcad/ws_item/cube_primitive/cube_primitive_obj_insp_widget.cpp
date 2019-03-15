@@ -9,7 +9,7 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
   tg_cube_params = new QGroupBox(tr("Cube parameters"));
   tg_cube_params_lt = new QFormLayout;
 
-  pre_init_group_box(tg_cube_params, tg_cube_params_lt);
+  pre_init_gb(tg_cube_params, tg_cube_params_lt);
 
   cube_param_color = new qbinded_color3_input;
 
@@ -25,7 +25,7 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
   tg_cube_params_lt->addRow(tr("Size"), cube_param_scale);
   tg_cube_params_lt->addRow(tr("Render style"), cube_render_mode);
 
-  post_init_group_box(tg_cube_params, tg_cube_params_lt);
+  post_init_gb(tg_cube_params, tg_cube_params_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(tg_cube_params);
 

@@ -73,9 +73,10 @@ namespace qpp {
         virtual void update_from_ws_item();
         void set_tab_enabled(ws_item_tab_widget_t *tab,
                              bool v_enabled);
-        void pre_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
-        void post_init_group_box(QGroupBox *gb, QFormLayout *gb_lt);
-        void init_form_layout(QFormLayout *frm_lt);
+        void pre_init_gb(QGroupBox *gb, QFormLayout *gb_lt);
+        void post_init_gb(QGroupBox *gb, QFormLayout *gb_lt);
+        void init_form_lt(QFormLayout *frm_lt);
+        void init_form_lt_lbl(QLabel *_label);
 
         ws_item_obj_insp_widget_t();
 

@@ -118,6 +118,7 @@ qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
 
   widget_layout = new QHBoxLayout;
   setLayout(widget_layout);
+  widget_layout->setContentsMargins(0,0,0,0);
   sb_x = new QSpinBox(this);
   sb_y = new QSpinBox(this);
   sb_z = new QSpinBox(this);

@@ -8,7 +8,7 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   tg_info_summary_widget = new QGroupBox;
   tg_info_summary_lt = new QFormLayout;
 
-  pre_init_group_box(tg_info_summary_widget, tg_info_summary_lt);
+  pre_init_gb(tg_info_summary_widget, tg_info_summary_lt);
 
   tg_info_summary_lt->setLabelAlignment(Qt::AlignRight);
   tg_info_summary_widget->setLayout(tg_info_summary_lt);
@@ -33,16 +33,16 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   tg_axis_len_mod->set_min_max_step(0.5, 10, 0.1, 2);
   tg_axis_len_mod->m_updated_internally_event = true;
 
-  tg_info_summary_lt->addRow(tr("Sym. gr. name "), tg_info_sym_gr);
-  tg_info_summary_lt->addRow(tr("Num. of op. "), tg_info_total_sym_op);
+  tg_info_summary_lt->addRow(tr("Sym. gr. name"), tg_info_sym_gr);
+  tg_info_summary_lt->addRow(tr("Num. of op."), tg_info_total_sym_op);
   tg_info_summary_lt->addRow(tr("Show axes"), cb_show_axes);
   tg_info_summary_lt->addRow(tr("Show planes"), cb_show_planes);
-  tg_info_summary_lt->addRow(tr("Plane transp. "), tg_plane_alpha_enabled);
-  tg_info_summary_lt->addRow(tr("Plane scale "), tg_plane_scale);
-  tg_info_summary_lt->addRow(tr("Axis scale "), tg_axis_scale);
-  tg_info_summary_lt->addRow(tr("Axis length mod "), tg_axis_len_mod);
+  tg_info_summary_lt->addRow(tr("Plane transp."), tg_plane_alpha_enabled);
+  tg_info_summary_lt->addRow(tr("Plane scale"), tg_plane_scale);
+  tg_info_summary_lt->addRow(tr("Axis scale"), tg_axis_scale);
+  tg_info_summary_lt->addRow(tr("Axis length"), tg_axis_len_mod);
 
-  post_init_group_box(tg_info_summary_widget, tg_info_summary_lt);
+  post_init_gb(tg_info_summary_widget, tg_info_summary_lt);
 
   tab_general->tab_inner_widget_lt->addStretch();
 
