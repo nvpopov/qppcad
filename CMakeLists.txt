@@ -31,6 +31,10 @@ set_option(BUILD_TESTS ON)
 find_package(Doxygen)
 
 add_subdirectory(deps/qpp)
+if(APPIMAGE_UPDATE)
+  add_subdirectory(deps/AppImageUpdate)
+  message("add_subdirectory(AppImageUpdate)")
+endif(APPIMAGE_UPDATE)
 
 include_directories(src/)
 include_directories(data/)
@@ -79,8 +83,8 @@ endif()
 
 string(TIMESTAMP _time_stamp)
 
-configure_file(${CMAKE_SOURCE_DIR}/src/qppcad/gitversion.h.in
-               ${CMAKE_SOURCE_DIR}/src/qppcad/gitversion.h @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/src/qppcad/gitversion_ex.h.in
+               ${CMAKE_SOURCE_DIR}/src/qppcad/gitversion_ex.h @ONLY)
 
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
@@ -97,6 +101,7 @@ qt5_add_resources(QRCS data/resources.qrc)
 add_executable(qppcad
 
     src/qppcad/main.cpp
+    src/qppcad/gitversion.cpp
     src/qppcad/ui/main_window.cpp
 
     src/qppcad/ui/ws_viewer_widget.cpp
@@ -178,6 +183,7 @@ add_executable(qppcad
     src/qppcad/tools/supercell/supercell.cpp
     src/qppcad/tools/axial_scale/axial_scale.cpp
     src/qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.cpp
+    src/qppcad/tools/colorize_by_xfield/colorize_by_xfield.cpp
 
     src/qppcad/python/python_console_output_redirectors.cpp
     src/qppcad/python/python_console_widget.cpp

@@ -25,6 +25,7 @@
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
+#include <qppcad/tools/colorize_by_xfield/colorize_by_xfield.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -187,6 +188,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
                       geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(generic_molcas_grid_mgf, generic_molcas_grid_ff_hash,
                       geom_view_t::get_type_static());
+
 }
 
 void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr) {
@@ -199,12 +201,20 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         "Supercell",
         hash_t_generator,
         bhv_mgr);
+
   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, geom_view_t>(
         "Axial scale",
         hash_t_tr,
         bhv_mgr);
+
   registration_helper_t::reg_ws_item_tool<clamp_atoms_to_cell_tool_t, geom_view_t>(
         "Clamp atoms to cell(3D)",
         hash_t_tr,
         bhv_mgr);
+
+  registration_helper_t::reg_ws_item_tool<colorize_by_xfield_tool_t, geom_view_t>(
+        "Colorize by xfield",
+        hash_t_generic,
+        bhv_mgr);
+
 }

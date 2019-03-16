@@ -2,3 +2,6 @@
 	path = deps/qpp
 	url = https://github.com/nvpopov/qpp.git 
 	branch = master
+[submodule "deps/AppImageUpdate"]
+	path = deps/AppImageUpdate
+	url = git@github.com:AppImage/AppImageUpdate.git

@@ -29,7 +29,8 @@ void simple_query::set_font_size(int new_font_size) {
 }
 
 std::tuple<std::string, std::string> simple_query::get_build_info() {
-  return {GIT_REVISION, BUILD_TIMESTAMP};
+  return {build_info_helper::get_git_version(),
+          build_info_helper::get_build_date()};
 }
 
 void simple_query::open_file(std::string file_name,

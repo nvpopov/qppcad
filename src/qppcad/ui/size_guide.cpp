@@ -20,7 +20,7 @@ int size_guide_t::tool_panel_h() {
 }
 
 int size_guide_t::tool_panel_ws_selector_w() {
-  return 170;
+  return 180;
 }
 
 int size_guide_t::tool_panel_ws_selector_h() {

@@ -266,7 +266,9 @@ void main_window::init_menus() {
                                  "https://github.com/nvpopov/qppcad"
                                  "</a><br>"
                                  "Git rev : %1<br>"
-                                 "Build time : %2").arg(GIT_REVISION).arg(BUILD_TIMESTAMP));
+                                 "Build time : %2")
+                               .arg(QString::fromStdString(build_info_helper::get_git_version()))
+                               .arg(QString::fromStdString(build_info_helper::get_build_date())));
           });
 
 }
