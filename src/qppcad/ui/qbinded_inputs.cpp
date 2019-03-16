@@ -17,8 +17,10 @@ void qbinded_checkbox::load_value_ex() {
 
 qbinded_checkbox::qbinded_checkbox(QWidget *parent) : QCheckBox (parent) {
 
-  connect(this, SIGNAL(stateChanged(int)),
-          this, SLOT(check_state_changed(int)));
+  connect(this,
+          SIGNAL(stateChanged(int)),
+          this,
+          SLOT(check_state_changed(int)));
 
 }
 
@@ -54,8 +56,10 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
 
   app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
-  connect(this, SIGNAL(valueChanged(double)),
-          this, SLOT(value_changed(double)));
+  connect(this,
+          SIGNAL(valueChanged(double)),
+          this,
+          SLOT(value_changed(double)));
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
 }
@@ -151,12 +155,20 @@ qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
   widget_layout->addWidget(sb_y);
   widget_layout->addWidget(sb_z);
 
-  connect(sb_x, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-          this, &qbinded_int3_input::spinbox_value_changed);
-  connect(sb_y, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-          this, &qbinded_int3_input::spinbox_value_changed);
-  connect(sb_z, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-          this, &qbinded_int3_input::spinbox_value_changed);
+  connect(sb_x,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this,
+          &qbinded_int3_input::spinbox_value_changed);
+
+  connect(sb_y,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this,
+          &qbinded_int3_input::spinbox_value_changed);
+
+  connect(sb_z,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this,
+          &qbinded_int3_input::spinbox_value_changed);
 
 }
 
@@ -283,6 +295,7 @@ void qbinded_color3_input::load_value_ex() {
       m_stored_color.setRgbF((*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
       QPalette pal = palette();
       pal.setColor(QPalette::Background, m_stored_color);
+      pal.setColor(QPalette::Foreground, Qt::white);
       setAutoFillBackground(true);
       setPalette(pal);
     }
@@ -305,11 +318,12 @@ void qbinded_color3_input::mousePressEvent(QMouseEvent *event) {
 
 }
 
-qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QWidget (parent) {
+qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QFrame (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setMaximumHeight(astate->size_guide.obj_insp_ctrl_t2_h());
+  setFrameStyle(QFrame::Panel);
 
 }
 
@@ -324,16 +338,21 @@ void qbinded_int_spinbox::load_value_ex() {
 void qbinded_int_spinbox::set_min_max_step(int new_min,
                                            int new_max,
                                            int new_step) {
+
   setRange(new_min, new_max);
+
 }
 
 qbinded_int_spinbox::qbinded_int_spinbox(QWidget *parent) : QSpinBox(parent) {
 
   app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
-  connect(this, SIGNAL(valueChanged(int)),
-          this, SLOT(value_changed(int)));
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+
+  connect(this,
+          SIGNAL(valueChanged(int)),
+          this,
+          SLOT(value_changed(int)));
 
 }
 
@@ -450,10 +469,12 @@ void qbinded_ws_item_combobox::value_changed(int i) {
 }
 
 
-qbinded_xgeom_color3_input::qbinded_xgeom_color3_input(QWidget *parent) {
+qbinded_xgeom_color3_input::qbinded_xgeom_color3_input(QWidget *parent) : QFrame(parent) {
 
-  setMaximumWidth(21);
-  setMaximumHeight(21);
+  app_state_t *astate = app_state_t::get_inst();
+  setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+  setMaximumHeight(astate->size_guide.obj_insp_ctrl_t2_h());
+  setFrameStyle(QFrame::Panel);
 
 }
 
@@ -479,6 +500,7 @@ void qbinded_xgeom_color3_input::load_value() {
       m_stored_color.setRgbF(_r, _g, _b);
       QPalette pal = palette();
       pal.setColor(QPalette::Background, m_stored_color);
+      pal.setColor(QPalette::Foreground, Qt::white);
       setAutoFillBackground(true);
       setPalette(pal);
     }
@@ -512,10 +534,9 @@ void qbinded_xgeom_color3_input::mousePressEvent(QMouseEvent *event) {
 
 }
 
-void qbinded_xgeom_float_spinbox::bind_value(
-    xgeometry<float, periodic_cell<float> > *_binded_xgeom,
-    int _binding_index,
-    size_t _binded_atom_id) {
+void qbinded_xgeom_float_spinbox::bind_value(xgeometry<float, periodic_cell<float> > *_binded_xgeom,
+                                             int _binding_index,
+                                             size_t _binded_atom_id) {
 
   m_binded_xgeom = _binded_xgeom;
   m_binding_index = _binding_index;
@@ -552,10 +573,14 @@ void qbinded_xgeom_float_spinbox::set_min_max_step(double new_min,
 
 qbinded_xgeom_float_spinbox::qbinded_xgeom_float_spinbox(QWidget *parent) {
 
+  app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
-  connect(this, SIGNAL(valueChanged(double)),
-          this, SLOT(value_changed(double)));
-  setMaximumWidth(180);
+  setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+
+  connect(this,
+          SIGNAL(valueChanged(double)),
+          this,
+          SLOT(value_changed(double)));
 
 }
 

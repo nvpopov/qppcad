@@ -228,6 +228,8 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
 
 void geom_view_obj_insp_widget_t::construct_anim_tab() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   gb_anim_summary = new qspoiler_widget_t(tr("Summary"));
   gb_anim_summary_lt = new QFormLayout;
   gb_anim_summary->add_content_layout(gb_anim_summary_lt);
@@ -241,7 +243,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_total_frames_in_anim = new QLabel;
   gb_anim_cur_frame = new QLabel;
   gb_current_anim = new QComboBox;
-  gb_current_anim->setMaximumWidth(def_gen_control_width);
+  gb_current_anim->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
 
   connect(gb_current_anim,
           SIGNAL(currentIndexChanged(int)),
@@ -326,11 +328,14 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
 
 void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   tms_pair_dist_gb = new qspoiler_widget_t(tr("Interatomic distances"));
   tms_pair_dist_gb_lt = new QFormLayout;
   tms_pair_dist_gb->add_content_layout(tms_pair_dist_gb_lt);
 
   tms_pair_cur_msr = new QComboBox;
+  tms_pair_cur_msr->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
 
   connect(tms_pair_cur_msr,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -387,28 +392,49 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_add_atom_lt = new QFormLayout;
   tm_gb_add_atom->add_content_layout(tm_gb_add_atom_lt);
 
+  tm_add_atom_combo = new QComboBox;
+  tm_add_atom_combo->setEditable(true);
+  tm_add_atom_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+  tm_add_atom_vec3 = new qbinded_float3_input;
+  tm_add_atom_vec3->set_min_max_step(-1000, 1000, 0.01);
+
+  tm_add_atom_button = new QPushButton(tr("Add"));
+  tm_add_atom_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
+  connect(tm_add_atom_button,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_add_atom_button_clicked);
+
+  tm_gb_add_atom_lt->addRow(tr("Atom name"), tm_add_atom_combo);
+  tm_gb_add_atom_lt->addRow(tr("Atom pos.[%1]").arg(astate->m_spatial_suffix), tm_add_atom_vec3);
+  tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
+  init_form_lt(tm_gb_add_atom_lt);
+
   tm_gb_single_atom = new qspoiler_widget_t(tr("Modify single atom"));
   tm_gb_single_atom_lt = new QFormLayout;
   tm_gb_single_atom_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_single_atom->add_content_layout(tm_gb_single_atom_lt);
   tm_single_atom_combo = new QComboBox;
-  tm_single_atom_combo->setMaximumWidth(def_gen_control_width);
+  tm_single_atom_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_single_atom_combo->setEditable(true);
   tm_single_atom_vec3 = new qbinded_float3_input;
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
-  //tm_single_atom_vec3->set_default_suffix();
   tm_single_atom_idx = new QLabel;
   tm_single_atom_num = new QLabel;
 
-  tm_single_atom_commit = new QPushButton(tr("Commit changes"));
-  tm_single_atom_commit->setMaximumWidth(tab_modify_op_button_width);
-  connect(tm_single_atom_commit, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_single_atom_button_clicked);
+  tm_single_atom_commit = new QPushButton(tr("Commit"));
+  tm_single_atom_commit->setMaximumWidth(astate->size_guide.obj_insp_button_w());
+  connect(tm_single_atom_commit,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_single_atom_button_clicked);
 
-  tm_single_atom_delete = new QPushButton(tr("Delete atom"));
-  tm_single_atom_delete->setMaximumWidth(tab_modify_op_button_width);
-  connect(tm_single_atom_delete, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_single_atom_delete_button_clicked);
+  tm_single_atom_delete = new QPushButton(tr("Delete"));
+  tm_single_atom_delete->setMaximumWidth(astate->size_guide.obj_insp_button_w());
+  connect(tm_single_atom_delete,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_single_atom_delete_button_clicked);
 
   tm_gb_single_atom_lt->addRow(tr("Atom name"), tm_single_atom_combo);
   tm_gb_single_atom_lt->addRow(tr("Atom idx."), tm_single_atom_idx);
@@ -431,22 +457,6 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_override_atom_lt->addRow(tr("Atom radius"), tm_override_atom_radii);
   init_form_lt(tm_gb_override_atom_lt);
 
-  tm_add_atom_combo = new QComboBox;
-  tm_add_atom_combo->setEditable(true);
-  tm_add_atom_combo->setMaximumWidth(tab_modify_op_button_width);
-  tm_add_atom_vec3 = new qbinded_float3_input;
-  tm_add_atom_vec3->set_min_max_step(-1000, 1000, 0.01);
-
-  tm_add_atom_button = new QPushButton(tr("Add atom"));
-  tm_add_atom_button->setMaximumWidth(tab_modify_op_button_width);
-  connect(tm_add_atom_button, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_add_atom_button_clicked);
-
-  tm_gb_add_atom_lt->addRow(tr("Atom name"), tm_add_atom_combo);
-  tm_gb_add_atom_lt->addRow(tr("Atom pos.[%1]").arg(astate->m_spatial_suffix), tm_add_atom_vec3);
-  tm_gb_add_atom_lt->addRow("", tm_add_atom_button);
-  init_form_lt(tm_gb_add_atom_lt);
-
   tm_gb_pair_dist = new qspoiler_widget_t(tr("Pair distance"));
   tm_gb_pair_dist_lt = new QFormLayout;
   tm_gb_pair_dist_lt->setLabelAlignment(Qt::AlignRight);
@@ -461,13 +471,13 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_pair_dist_t_mode->addItem("Transform both");
   tm_pair_dist_t_mode->addItem("Fix first");
   tm_pair_dist_t_mode->addItem("Fix second");
-  tm_pair_dist_t_mode->setMaximumWidth(def_gen_control_width);
+  tm_pair_dist_t_mode->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
 
   tm_pair_dist_note_label->setText(tr("Distance"));
   tm_pair_dist_spinbox->setMinimum(0.0);
   tm_pair_dist_spinbox->setMaximum(10);
   tm_pair_dist_spinbox->setSingleStep(0.01);
-  tm_pair_dist_spinbox->setMaximumWidth(def_gen_control_width);
+  tm_pair_dist_spinbox->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   tm_gb_pair_dist_lt->addRow(tr("Atom №1"), tm_pair_dist_atom1);
   tm_gb_pair_dist_lt->addRow(tr("Atom №2"), tm_pair_dist_atom2);
@@ -483,10 +493,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_creation->add_content_layout(tm_gb_pair_creation_lt);
   tm_pair_creation_combo = new QComboBox;
   tm_pair_creation_combo->setEditable(true);
-  tm_pair_creation_combo->setMaximumWidth(def_gen_control_width);
+  tm_pair_creation_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   tm_pair_creation_button = new QPushButton("Append");
-  tm_pair_creation_button->setMaximumWidth(tab_modify_op_button_width);
+  tm_pair_creation_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
   tm_gb_pair_creation_lt->addRow(tr("New atom"), tm_pair_creation_combo);
   tm_gb_pair_creation_lt->addRow("", tm_pair_creation_button);
   init_form_lt(tm_gb_pair_creation_lt);
@@ -507,18 +517,21 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_u_scale->add_content_layout(tm_gb_u_scale_lt);
 
   tm_u_scale_sb_x = new QDoubleSpinBox;
+  tm_u_scale_sb_x->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_u_scale_sb_x->setMinimum(0.01);
   tm_u_scale_sb_x->setMaximum(2.0);
   tm_u_scale_sb_x->setSingleStep(0.01);
   tm_u_scale_sb_x->setValue(1.0);
 
   tm_u_scale_sb_y = new QDoubleSpinBox;
+  tm_u_scale_sb_y->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_u_scale_sb_y->setMinimum(0.01);
   tm_u_scale_sb_y->setMaximum(2.0);
   tm_u_scale_sb_y->setSingleStep(0.01);
   tm_u_scale_sb_y->setValue(1.0);
 
   tm_u_scale_sb_z = new QDoubleSpinBox;
+  tm_u_scale_sb_z->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_u_scale_sb_z->setMinimum(0.01);
   tm_u_scale_sb_z->setMaximum(2.0);
   tm_u_scale_sb_z->setSingleStep(0.01);
@@ -533,8 +546,8 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_u_scale_z_enabled = new QCheckBox;
   tm_u_scale_z_enabled->setChecked(true);
 
-  tm_u_apply_scale_button = new QPushButton(tr("Apply scale"));
-  tm_u_apply_scale_button->setMaximumWidth(tab_modify_op_button_width);
+  tm_u_apply_scale_button = new QPushButton(tr("Apply"));
+  tm_u_apply_scale_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
   connect(tm_u_apply_scale_button,
           &QPushButton::pressed,
           this,
@@ -556,12 +569,12 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_translate_vec3 = new qbinded_float3_input;
   tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
 
-  tm_translate_apply_button = new QPushButton(tr("Apply translate"));
-  tm_translate_apply_button->setMaximumWidth(tab_modify_op_button_width);
+  tm_translate_apply_button = new QPushButton(tr("Apply"));
+  tm_translate_apply_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
 
   tm_translate_coord_type_label = new QLabel("Coord. type");
   tm_translate_coord_type = new QComboBox;
-  tm_translate_coord_type->setMaximumWidth(def_gen_control_width);
+  tm_translate_coord_type->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   tm_translate_coord_type->addItem("Cart.");
   tm_translate_coord_type->addItem("Frac.");
@@ -587,7 +600,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_bc_rot->add_content_layout(tm_gb_bc_rot_lt);
 
   tm_bc_rot_axis = new QComboBox;
-  tm_bc_rot_axis->setMaximumWidth(def_gen_control_width);
+  tm_bc_rot_axis->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_bc_rot_axis->addItem("X");
   tm_bc_rot_axis->addItem("Y");
   tm_bc_rot_axis->addItem("Z");
@@ -596,12 +609,12 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_bc_rot_axis->setItemData(2, QBrush(Qt::blue), Qt::TextColorRole);
 
   tm_bc_rot_angle = new QDoubleSpinBox;
-  tm_bc_rot_angle->setMaximumWidth(def_gen_control_width);
+  tm_bc_rot_angle->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_bc_rot_angle->setMinimum(-1000);
   tm_bc_rot_angle->setMaximum(1000);
 
   tm_bc_rot_angle_type = new QComboBox;
-  tm_bc_rot_angle_type->setMaximumWidth(def_gen_control_width);
+  tm_bc_rot_angle_type->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   connect(tm_bc_rot_angle_type,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -610,8 +623,8 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_bc_rot_angle_type->addItem("Degrees");
   tm_bc_rot_angle_type->addItem("Radians");
-  tm_bc_rot_apply = new QPushButton(tr("Apply rotation"));
-  tm_bc_rot_apply->setMaximumWidth(tab_modify_op_button_width);
+  tm_bc_rot_apply = new QPushButton(tr("Apply"));
+  tm_bc_rot_apply->setMaximumWidth(astate->size_guide.obj_insp_button_w());
   connect(tm_bc_rot_apply,
           &QPushButton::pressed,
           this,
@@ -630,20 +643,32 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
   tm_group_op_sv_show_all = new QPushButton(tr("SV:SHOW ALL"));
 
-  connect(tm_group_op_sv_show, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_group_op_sv_show);
-  connect(tm_group_op_sv_hide, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_group_op_sv_hide);
-  connect(tm_group_op_sv_show_all, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_group_op_sv_show_all);
+  connect(tm_group_op_sv_show,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_group_op_sv_show);
+
+  connect(tm_group_op_sv_hide,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_group_op_sv_hide);
+
+  connect(tm_group_op_sv_show_all,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_group_op_sv_show_all);
 
   tm_group_op_sel_ngbs = new QPushButton(tr("SEL:NGB"));
-  connect(tm_group_op_sel_ngbs, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_group_op_sel_ngbs);
+  connect(tm_group_op_sel_ngbs,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_group_op_sel_ngbs);
 
   tm_group_op_del_sel = new QPushButton(tr("SEL:DEL"));
-  connect(tm_group_op_del_sel, &QPushButton::pressed,
-          this, &geom_view_obj_insp_widget_t::modify_group_op_del_sel);
+  connect(tm_group_op_del_sel,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_group_op_del_sel);
 
   tm_group_op_lt->addWidget(tm_group_op_sv_show,     0, 0, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_sv_hide,     0, 1, 1, 1);

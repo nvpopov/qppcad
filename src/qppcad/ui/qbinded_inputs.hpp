@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QFrame>
 #include <geom/xgeom.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 
@@ -159,8 +160,7 @@ namespace qpp {
 
     };
 
-    class qbinded_color3_input : public QWidget,
-            public generic_binded_input_t<vector3<float> > {
+    class qbinded_color3_input : public QFrame, public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 
@@ -175,7 +175,7 @@ namespace qpp {
     };
 
 
-    class qbinded_xgeom_color3_input : public QWidget {
+    class qbinded_xgeom_color3_input : public QFrame {
 
         Q_OBJECT
 

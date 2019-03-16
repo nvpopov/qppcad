@@ -107,8 +107,19 @@ void ws_viewer_widget_t::paintGL() {
   // painter.endNativePainting();
 
   if (astate->m_show_debug_frame_stats) {
+
       painter.setFont(QFont(astate->m_font_name, 13));
-      painter.setPen(Qt::black);
+
+      //build contrast color for font
+      QColor debug_hud_color = Qt::black;
+      if (astate->ws_manager->has_wss()) {
+          auto cur_ws = astate->ws_manager->get_cur_ws();
+          debug_hud_color.setRedF(1 - cur_ws->m_background_color[0]);
+          debug_hud_color.setGreenF(1 - cur_ws->m_background_color[1]);
+          debug_hud_color.setBlueF(1 - cur_ws->m_background_color[2]);
+        }
+
+      painter.setPen(debug_hud_color);
       painter.drawText(3, 3, 280, 30, Qt::AlignLeft,
                        QString::fromStdString(fmt::format("Frame time GPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_gpu)/

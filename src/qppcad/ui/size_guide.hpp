@@ -8,18 +8,46 @@ namespace qpp {
 
   namespace cad {
 
+    /**
+     * @brief The size_guide_t class implements single end point for controlling sizes of ui
+     * elements and fonts
+     */
     class size_guide_t {
 
       public:
 
         size_guide_t();
 
+        /**
+         * @brief main_window_h
+         * @return minimum height of app`s main window
+         */
         int main_window_h();
+
+        /**
+         * @brief main_window_w
+         * @return minimum width of app`s main window
+         */
         int main_window_w();
 
+        /**
+         * @brief tool_panel_h
+         * @return fixed height of app`s tool panel
+         */
         int tool_panel_h();
+
+        /**
+         * @brief tool_panel_ws_selector_w
+         * @return fixed width of workspace selector tool
+         */
         int tool_panel_ws_selector_w();
+
+        /**
+         * @brief tool_panel_ws_selector_h
+         * @return fixed height of workspace selector tool
+         */
         int tool_panel_ws_selector_h();
+
         int tool_panel_ctrl_h();
         int tool_panel_ctrl_w();
         int tool_panel_edit_sel_w();
@@ -34,6 +62,8 @@ namespace qpp {
         int obj_insp_combo_max_w();
         int obj_insp_ctrl_t2_w();
         int obj_insp_ctrl_t2_h();
+        int obj_insp_button_w();
+        int obj_insp_lbl_w();
 
     };
 

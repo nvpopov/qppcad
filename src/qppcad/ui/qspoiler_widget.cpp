@@ -47,8 +47,10 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   vbox_general_lt->addWidget(top_frm);
   vbox_general_lt->addWidget(widget_list);
 
-  connect(action_btn, &QPushButton::clicked,
-          this, &qspoiler_widget_t::collapse_button_pressed);
+  connect(action_btn,
+          &QPushButton::clicked,
+          this,
+          &qspoiler_widget_t::collapse_button_pressed);
 
   process_state();
 

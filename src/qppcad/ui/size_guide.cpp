@@ -24,15 +24,15 @@ int size_guide_t::tool_panel_ws_selector_w() {
 }
 
 int size_guide_t::tool_panel_ws_selector_h() {
-  return 36;
+  return 30;
 }
 
 int size_guide_t::tool_panel_ctrl_h() {
-  return 34;
+  return 30;
 }
 
 int size_guide_t::tool_panel_ctrl_w() {
-  return 34;
+  return 30;
 }
 
 int size_guide_t::tool_panel_edit_sel_w() {
@@ -64,11 +64,11 @@ int size_guide_t::obj_insp_item_list_max_h() {
 }
 
 int size_guide_t::obj_insp_ctrl_max_w() {
-  return 70;
+  return 80;
 }
 
 int size_guide_t::obj_insp_combo_max_w() {
-  return 170;
+  return 160;
 }
 
 int size_guide_t::obj_insp_ctrl_t2_w() {
@@ -77,4 +77,12 @@ int size_guide_t::obj_insp_ctrl_t2_w() {
 
 int size_guide_t::obj_insp_ctrl_t2_h() {
   return 21;
+}
+
+int size_guide_t::obj_insp_button_w() {
+  return 80;
+}
+
+int size_guide_t::obj_insp_lbl_w() {
+  return 140;
 }

@@ -1,11 +1,14 @@
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   tab_cell_range = define_tab(tr("Define geometry_pg{f,d} cell"),
                         "://images/outline-tune-24px.svg");
@@ -15,15 +18,15 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   pre_init_gb(gb_pgf_data, gb_pgf_data_lt);
 
   pgf_data_src = new qbinded_ws_item_combobox;
-  pgf_data_src->setMaximumWidth(def_gen_control_width);
+  pgf_data_src->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_src->m_type_id = geom_view_t::get_type_static();
 
   pgf_data_dst = new qbinded_ws_item_combobox;
-  pgf_data_dst->setMaximumWidth(def_gen_control_width);
+  pgf_data_dst->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_dst->m_type_id = geom_view_t::get_type_static();
 
   pgf_data_ag = new qbinded_ws_item_combobox;
-  pgf_data_ag->setMaximumWidth(def_gen_control_width);
+  pgf_data_ag->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_ag->m_type_id = psg_view_t::get_type_static();
 
   gb_pgf_data_lt->addRow(tr("Source"), pgf_data_src);

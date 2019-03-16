@@ -202,9 +202,6 @@ namespace qpp {
         QLabel *tm_override_atom_info;
         qbinded_xgeom_color3_input *tm_override_atom_color;
         qbinded_xgeom_float_spinbox *tm_override_atom_radii;
-
-        int tab_modify_op_button_width{180};
-        int tab_modify_label_width{120};
         //END TAB MODIFY
 
         //START TAB SELECTIONS

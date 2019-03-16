@@ -130,15 +130,24 @@ void ws_item_obj_insp_widget_t::pre_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
 }
 
 void ws_item_obj_insp_widget_t::post_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
-  qt_helpers::resize_form_lt_lbls(gb_lt, def_label_width);
+
+  app_state_t *astate = app_state_t::get_inst();
+  qt_helpers::resize_form_lt_lbls(gb_lt, astate->size_guide.obj_insp_lbl_w());
+
 }
 
 void ws_item_obj_insp_widget_t::init_form_lt(QFormLayout *frm_lt) {
-  qt_helpers::resize_form_lt_lbls(frm_lt, def_label_width);
+
+  app_state_t *astate = app_state_t::get_inst();
+  qt_helpers::resize_form_lt_lbls(frm_lt, astate->size_guide.obj_insp_lbl_w());
+
 }
 
 void ws_item_obj_insp_widget_t::init_form_lt_lbl(QLabel *_label) {
-  qt_helpers::resize_form_lt_lbl(_label, def_label_width);
+
+  app_state_t *astate = app_state_t::get_inst();
+  qt_helpers::resize_form_lt_lbl(_label, astate->size_guide.obj_insp_lbl_w());
+
 }
 
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
@@ -151,7 +160,6 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
                            "://images/settings.svg");
 
   //begin group box Item information
-
   sp_info_widget = new qspoiler_widget_t(tr("Item information"));
   tg_form_layout = new QFormLayout;
 
@@ -188,10 +196,16 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_actions->add_content_layout(tg_actions_layout);
 
   tg_actions_delete = new QPushButton(tr("Delete"));
-  connect(tg_actions_delete, SIGNAL(pressed()), this, SLOT(delete_current_item()));
+  connect(tg_actions_delete,
+          SIGNAL(pressed()),
+          this,
+          SLOT(delete_current_item()));
 
   tg_actions_rename = new QPushButton(tr("Rename"));
-  connect(tg_actions_rename, SIGNAL(pressed()), this, SLOT(rename_current_item()));
+  connect(tg_actions_rename,
+          SIGNAL(pressed()),
+          this,
+          SLOT(rename_current_item()));
 
   tg_actions_clone = new QPushButton(tr("Clone"));
   tg_actions_layout->addWidget(tg_actions_delete);
@@ -202,13 +216,16 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_position_changed_signal,
-          this, &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
+          this,
+          &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
 
   tab_general->tab_inner_widget_lt->addWidget(sp_info_widget);
   tab_general->tab_inner_widget_lt->addWidget(tg_actions);
 
-  connect(this, &ws_item_obj_insp_widget_t::currentChanged,
-          this, &ws_item_obj_insp_widget_t::cur_tab_changed);
+  connect(this,
+          &ws_item_obj_insp_widget_t::currentChanged,
+          this,
+          &ws_item_obj_insp_widget_t::cur_tab_changed);
 }
 
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
