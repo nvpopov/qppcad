@@ -24,6 +24,26 @@ ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent)
 
 }
 
+void ws_viewer_widget_t::draw_text_logo(QPainter &painter) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  QFont font(QFont(astate->m_font_name, 42, QFont::Medium));
+  painter.setFont(font);
+  QFontMetrics fm(font);
+  QColor logo_color = Qt::black;
+
+  QString logo_string = tr("qpp::cad, git rev.:%1")
+                        .arg(QString::fromStdString(build_info_helper::get_git_version()));
+
+  int c_x = painter.window().width() - fm.width(logo_string) - 10;
+  int c_y = painter.window().height() - fm.ascent() + 20;
+
+  painter.setPen(logo_color);
+  painter.drawText(c_x, c_y, logo_string);
+
+}
+
 void ws_viewer_widget_t::update_cycle() {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -134,9 +154,11 @@ void ws_viewer_widget_t::paintGL() {
     }
 
   astate->ws_manager->render_cur_ws_overlay(painter);
+
+  if (!astate->ws_manager->has_wss()) draw_text_logo(painter);
+
   painter.end();
   astate->m_last_frame_time_gpu = m_update_timer_gpu->nsecsElapsed();
-  //astate->log("REPAINT");
 
 }
 

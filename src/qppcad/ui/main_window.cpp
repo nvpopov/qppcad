@@ -717,15 +717,23 @@ void main_window::tp_show_obj_insp_state_changed(int state) {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+
+  if (!cur_ws) {
+      obj_insp_widget->hide();
+      return;
+    }
+
   if (state == Qt::Checked) {
       obj_insp_widget->show();
-      astate->m_show_object_inspector = true;
+      cur_ws->m_show_obj_insp = true;
     }
 
   if (state == Qt::Unchecked) {
       obj_insp_widget->hide();
-      astate->m_show_object_inspector = false;
+      cur_ws->m_show_obj_insp = false;
     }
+
 }
 
 void main_window::tp_show_gizmo_state_changed(int state) {
@@ -877,6 +885,8 @@ void main_window::cur_ws_changed() {
   if (astate->ws_manager->has_wss()) {
       auto cur_ws = astate->ws_manager->get_cur_ws();
       if (cur_ws) {
+          tp_show_obj_insp->setChecked(cur_ws->m_show_obj_insp);
+          tp_show_obj_insp->setVisible(true);
           tp_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
           std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
                                                cur_ws->m_ws_name, cur_ws->m_fs_path);
@@ -887,6 +897,8 @@ void main_window::cur_ws_changed() {
         }
     } else {
       //tools_menu_sc_generator->setEnabled(false);
+      tp_show_obj_insp->setChecked(false);
+      tp_show_obj_insp->setVisible(false);
       this->setWindowTitle("qpp::cad");
     }
 

@@ -24,7 +24,9 @@ namespace qpp {
     /// \brief The workspace_t class
     ///
     class workspace_t : public std::enable_shared_from_this<workspace_t> {
+
       public:
+
         workspace_manager_t                      *m_owner{nullptr};
         std::string                              m_fs_path{""};
         ws_edit_e                                m_edit_type{ws_edit_e::edit_item};
@@ -34,6 +36,7 @@ namespace qpp {
         ray_t<float>                             m_ray;
         std::unique_ptr<gizmo_t>                 m_gizmo;
         vector3<float>                           m_background_color{1, 1, 1};
+        bool m_show_obj_insp{true};
         bool m_is_ws_imported{false};
         bool m_marked_for_deletion{false};
         bool m_first_render{true};
@@ -141,7 +144,6 @@ namespace qpp {
         };
 
     };
-
 
 
   }

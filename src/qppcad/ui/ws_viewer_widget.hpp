@@ -22,6 +22,8 @@ namespace qpp {
         QElapsedTimer *m_update_timer_gpu;
         QElapsedTimer *m_update_timer_cpu;
 
+        void draw_text_logo(QPainter &painter);
+
       public slots:
         void update_cycle();
         void show_context_menu(const QPoint &pos);
