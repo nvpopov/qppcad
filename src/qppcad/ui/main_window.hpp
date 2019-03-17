@@ -117,6 +117,7 @@ namespace qpp {
         QAction *edit_menu_undo;
         QAction *edit_menu_redo;
         QAction *edit_menu_switch_ws_edit_mode;
+        QAction *edit_menu_toggle_fullscreen;
         QAction *edit_menu_console;
         QAction *edit_menu_settings;
         QAction *edit_menu_ws_settings;
@@ -194,6 +195,7 @@ namespace qpp {
         void apply_camera_view_change(cam_target_view_t target_view);
 
         void toggle_ws_edit_mode();
+        void toggle_fullscreen(bool checked);
         void start_update_cycle();
         void stop_update_cycle();
 

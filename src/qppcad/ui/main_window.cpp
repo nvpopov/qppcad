@@ -189,6 +189,17 @@ void main_window::init_menus() {
 
   edit_menu->addAction(edit_menu_switch_ws_edit_mode);
 
+  edit_menu_toggle_fullscreen = new QAction(this);
+  edit_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
+  edit_menu_toggle_fullscreen->setCheckable(true);
+  edit_menu_toggle_fullscreen->setShortcut(Qt::Key::Key_F11);
+  connect(edit_menu_toggle_fullscreen,
+          &QAction::toggled,
+          this,
+          &main_window::toggle_fullscreen);
+
+  edit_menu->addAction(edit_menu_toggle_fullscreen);
+
   edit_menu->addSeparator();
 
   edit_menu_settings = new QAction(this);
@@ -1261,6 +1272,24 @@ void main_window::toggle_ws_edit_mode() {
           cur_ws_changed();
         }
     }
+}
+
+void main_window::toggle_fullscreen(bool checked) {
+
+  if (checked) {
+
+      setWindowState(windowState() | Qt::WindowFullScreen);
+
+    } else {
+
+      setWindowFlags(Qt::CustomizeWindowHint |
+                     Qt::WindowStaysOnTopHint |
+                     Qt::WindowMaximizeButtonHint |
+                     Qt::WindowCloseButtonHint);
+      show();
+
+    }
+
 }
 
 void main_window::start_update_cycle() {

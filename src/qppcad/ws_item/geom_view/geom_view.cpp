@@ -721,18 +721,17 @@ void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
   opt<size_t> static_anim_id;
 
   for (size_t i = 0; i < m_geom->nat(); i++) {
+
       float el_val = std::get<1>(field_min_max) - m_geom->xfield<float>(xfield_id, i);
       float len = std::get<1>(field_min_max) - std::get<0>(field_min_max);
       vector3<float> color_interp = color_low + (color_high - color_low) * (1 - el_val / len);
 
-//      std::cout << fmt::format("i = {}, el_val = {}, len = {}, cx = {}, cy = {}, cz = {}",
-//                               i, el_val, len, color_interp[0], color_interp[1], color_interp[2])
-//          << std::endl;
       m_geom->xfield<float>(xgeom_ccr, i) = color_interp[0];
       m_geom->xfield<float>(xgeom_ccg, i) = color_interp[1];
       m_geom->xfield<float>(xgeom_ccb, i) = color_interp[2];
 
-      //propagate colors to first static anim
+      //TODO: propagate colors to first static anim
+
     }
 
 }
