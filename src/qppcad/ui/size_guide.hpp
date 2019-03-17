@@ -60,6 +60,7 @@ namespace qpp {
         int obj_insp_item_list_max_h();
         int obj_insp_ctrl_max_w();
         int obj_insp_combo_max_w();
+        int obj_insp_combo_max_w_v2();
         int obj_insp_ctrl_t2_w();
         int obj_insp_ctrl_t2_h();
         int obj_insp_button_w();

@@ -330,7 +330,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  tms_pair_dist_gb = new qspoiler_widget_t(tr("Interatomic distances"));
+  tms_pair_dist_gb = new qspoiler_widget_t(tr("Interatomic distance"));
   tms_pair_dist_gb_lt = new QFormLayout;
   tms_pair_dist_gb->add_content_layout(tms_pair_dist_gb_lt);
 
@@ -340,7 +340,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   connect(tms_pair_cur_msr,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
           this,
-          &geom_view_obj_insp_widget_t::measurement_current_index_changed);
+          &geom_view_obj_insp_widget_t::msr_pair_cur_idx_changed);
 
   tms_pair_at1_info = new QLabel();
   tms_pair_at2_info = new QLabel();
@@ -348,6 +348,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
   tms_pair_dist_color = new qbinded_color3_input;
   tms_pair_enabled = new qbinded_checkbox;
+  tms_pair_label_enabled = new qbinded_checkbox;
 
   tms_pair_line_size = new qbinded_int_spinbox;
   tms_pair_line_size->set_min_max_step(1, 20, 1);
@@ -374,12 +375,39 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Line size"), tms_pair_line_size);
   tms_pair_dist_gb_lt->addRow(tr("Color"), tms_pair_dist_color);
   tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
+  tms_pair_dist_gb_lt->addRow(tr("Label enabled"), tms_pair_label_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label style"), tms_pair_label_style);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
-
   init_form_lt(tms_pair_dist_gb_lt);
 
+  tms_angle_gb = new qspoiler_widget_t(tr("Interatomic angle"));
+  tms_angle_gb_lt = new QFormLayout;
+  tms_angle_gb->add_content_layout(tms_angle_gb_lt);
+  tms_angle_cur_msr = new QComboBox;
+  tms_angle_cur_msr->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w_v2());
+
+  connect(tms_angle_cur_msr,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &geom_view_obj_insp_widget_t::msr_angle_cur_idx_changed);
+
+  tms_angle_enabled = new qbinded_checkbox;
+  tms_angle_order = new qbinded_int_spinbox;
+  tms_angle_order->set_min_max_step(0, 10, 1);
+
+  tms_angle_at1_info = new QLabel;
+  tms_angle_at2_info = new QLabel;
+  tms_angle_at3_info = new QLabel;
+  tms_angle_gb_lt->addRow(tr("Current"), tms_angle_cur_msr);
+  tms_angle_gb_lt->addRow(tr("Atom №1"), tms_angle_at1_info);
+  tms_angle_gb_lt->addRow(tr("Atom №2"), tms_angle_at2_info);
+  tms_angle_gb_lt->addRow(tr("Atom №3"), tms_angle_at3_info);
+  tms_angle_gb_lt->addRow(tr("Enabled"), tms_angle_enabled);
+  tms_angle_gb_lt->addRow(tr("Order"), tms_angle_order);
+  init_form_lt(tms_angle_gb_lt);
+
   tab_measurement->tab_inner_widget_lt->addWidget(tms_pair_dist_gb);
+  tab_measurement->tab_inner_widget_lt->addWidget(tms_angle_gb);
   tab_measurement->tab_inner_widget_lt->addStretch(1);
 
 }
@@ -912,13 +940,13 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_type_spec_mdl->unbind();
   bt_mdl->unbind();
 
-  unbind_measure_tab();
+  unbind_dist_measure_tab();
 
   b_al = nullptr;
 
 }
 
-void geom_view_obj_insp_widget_t::bind_measure_tab() {
+void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
 
   if (b_al) {
 
@@ -928,6 +956,7 @@ void geom_view_obj_insp_widget_t::bind_measure_tab() {
           auto &rec = b_al->m_measure->m_dist_recs[cur_msr];
           tms_pair_dist_color->bind_value(&rec.m_bond_color);
           tms_pair_enabled->bind_value(&rec.m_show);
+          tms_pair_label_enabled->bind_value(&rec.m_show_label);
           tms_pair_line_size->bind_value(&rec.m_line_size);
           tms_font_screen_size->bind_value(&rec.m_font_size);
           tms_pair_line_style->bind_value(reinterpret_cast<int*>(&rec.m_line_render_style));
@@ -938,15 +967,16 @@ void geom_view_obj_insp_widget_t::bind_measure_tab() {
           tms_pair_line_size->setEnabled(true);
           tms_font_screen_size->setEnabled(true);
           tms_pair_label_style->setEnabled(true);
+          tms_pair_label_enabled->setEnabled(true);
         } else {
-          unbind_measure_tab();
+          unbind_dist_measure_tab();
         }
 
     }
 
 }
 
-void geom_view_obj_insp_widget_t::unbind_measure_tab() {
+void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
 
   tms_pair_dist_color->unbind_value();
   tms_pair_enabled->unbind_value();
@@ -954,6 +984,7 @@ void geom_view_obj_insp_widget_t::unbind_measure_tab() {
   tms_pair_line_size->unbind_value();
   tms_font_screen_size->unbind_value();
   tms_pair_label_style->unbind_value();
+  tms_pair_label_enabled->unbind_value();
 
   tms_pair_line_style->setEnabled(false);
   tms_pair_dist_color->setEnabled(false);
@@ -962,6 +993,40 @@ void geom_view_obj_insp_widget_t::unbind_measure_tab() {
   tms_pair_enabled->setChecked(false);
   tms_font_screen_size->setEnabled(false);
   tms_pair_label_style->setEnabled(false);
+  tms_pair_label_enabled->setEnabled(false);
+
+}
+
+void geom_view_obj_insp_widget_t::bind_angle_measure_tab() {
+
+  if (b_al) {
+
+      int cur_msr = b_al->m_measure->m_cur_angle_rec_ui - 1;
+      if (cur_msr < b_al->m_measure->m_angle_recs.size() &&
+          !b_al->m_measure->m_angle_recs.empty()) {
+          auto &rec = b_al->m_measure->m_angle_recs[cur_msr];
+
+          tms_angle_enabled->bind_value(&rec.m_show);
+          tms_angle_enabled->setEnabled(true);
+
+          tms_angle_order->bind_value(&rec.m_order);
+          tms_angle_order->setEnabled(true);
+
+        } else {
+          unbind_angle_measure_tab();
+        }
+
+    }
+
+}
+
+void geom_view_obj_insp_widget_t::unbind_angle_measure_tab() {
+
+  tms_angle_enabled->unbind_value();
+  tms_angle_enabled->setEnabled(false);
+
+  tms_angle_order->unbind_value();
+  tms_angle_order->setEnabled(false);
 
 }
 
@@ -1171,22 +1236,14 @@ void geom_view_obj_insp_widget_t::update_measurement_tab() {
 
       tms_pair_cur_msr->blockSignals(true);
       tms_pair_cur_msr->clear();
-
-      // check msr pair idx boundary
-      //if (tms_pair_cur_msr->currentIndex() )
-
       tms_pair_cur_msr->addItem(tr("None"));
-
       index zero = index::D(b_al->m_geom->DIM).all(0);
-
       for (size_t i = 0; i < b_al->m_measure->m_dist_recs.size(); i++) {
-
           //compose dist msr name
           int at1 = b_al->m_measure->m_dist_recs[i].m_at1;
           int at2 = b_al->m_measure->m_dist_recs[i].m_at2;
           bool at1_img = b_al->m_measure->m_dist_recs[i].m_idx1 != zero;
           bool at2_img = b_al->m_measure->m_dist_recs[i].m_idx2 != zero;
-
           std::string item_name = fmt::format("[{}] {}{}{} - {}{}{}",
                                               i,
                                               b_al->m_geom->atom_name(at1),
@@ -1195,20 +1252,53 @@ void geom_view_obj_insp_widget_t::update_measurement_tab() {
                                               b_al->m_geom->atom_name(at2),
                                               at2,
                                               at2_img ? "*" : "");
-
           tms_pair_cur_msr->addItem(QString::fromStdString(item_name));
-
         }
 
       tms_pair_cur_msr->setCurrentIndex(b_al->m_measure->m_cur_dist_rec_ui);
-      update_measurement_tab_info();
+      update_dist_measurement_tab_info();
       tms_pair_cur_msr->blockSignals(false);
+
+      //angle recs
+      tms_angle_cur_msr->blockSignals(true);
+      tms_angle_cur_msr->clear();
+      tms_angle_cur_msr->addItem(tr("None"));
+      for (size_t i = 0; i < b_al->m_measure->m_angle_recs.size(); i++) {
+
+          int at1 = b_al->m_measure->m_angle_recs[i].m_at1;
+          int at2 = b_al->m_measure->m_angle_recs[i].m_at2;
+          int at3 = b_al->m_measure->m_angle_recs[i].m_at3;
+
+          bool at1_img = b_al->m_measure->m_angle_recs[i].m_idx1 != zero;
+          bool at2_img = b_al->m_measure->m_angle_recs[i].m_idx2 != zero;
+          bool at3_img = b_al->m_measure->m_angle_recs[i].m_idx2 != zero;
+
+          std::string item_name = fmt::format("[{}] {}{}{} - {}{}{} - {}{}{}",
+                                              i,
+                                              b_al->m_geom->atom_name(at1),
+                                              at1,
+                                              at1_img ? "*" : "",
+                                              b_al->m_geom->atom_name(at2),
+                                              at2,
+                                              at2_img ? "*" : "",
+                                              b_al->m_geom->atom_name(at3),
+                                              at3,
+                                              at3_img ? "*" : "");
+
+          tms_angle_cur_msr->addItem(QString::fromStdString(item_name));
+
+        }
+
+
+      tms_angle_cur_msr->setCurrentIndex(b_al->m_measure->m_cur_angle_rec_ui);
+      update_angle_measurement_tab_info();
+      tms_angle_cur_msr->blockSignals(false);
 
     }
 
 }
 
-void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
+void geom_view_obj_insp_widget_t::update_dist_measurement_tab_info() {
 
   if (b_al) {
 
@@ -1220,7 +1310,7 @@ void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
           const QString empty_label = "-";
           tms_pair_at1_info->setText(empty_label);
           tms_pair_at2_info->setText(empty_label);
-          unbind_measure_tab();
+          unbind_dist_measure_tab();
 
         } else {
 
@@ -1238,7 +1328,51 @@ void geom_view_obj_insp_widget_t::update_measurement_tab_info() {
                                .arg(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
           tms_pair_at2_info->setText(atom2_info);
 
-          bind_measure_tab();
+          bind_dist_measure_tab();
+
+        }
+
+    }
+
+}
+
+void geom_view_obj_insp_widget_t::update_angle_measurement_tab_info()  {
+
+  if (b_al) {
+      //transform dist msr id
+      int cur_angle_msr = b_al->m_measure->m_cur_angle_rec_ui - 1;
+
+      if (cur_angle_msr < 0 || b_al->m_measure->m_angle_recs.empty()) {
+
+          const QString empty_label = "-";
+          tms_angle_at1_info->setText(empty_label);
+          tms_angle_at2_info->setText(empty_label);
+          tms_angle_at3_info->setText(empty_label);
+          unbind_angle_measure_tab();
+
+        } else {
+
+          auto &rec = b_al->m_measure->m_angle_recs[cur_angle_msr];
+
+          QString atom1_info = tr("%1 [%2] %3")
+                               .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at1)))
+                               .arg(rec.m_at1)
+                               .arg(QString::fromStdString(fmt::format("{}",rec.m_idx1)));
+          tms_angle_at1_info->setText(atom1_info);
+
+          QString atom2_info = tr("%1 [%2] %3")
+                               .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at2)))
+                               .arg(rec.m_at2)
+                               .arg(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
+          tms_angle_at2_info->setText(atom2_info);
+
+          QString atom3_info = tr("%1 [%2] %3")
+                               .arg(QString::fromStdString(b_al->m_geom->atom_name(rec.m_at3)))
+                               .arg(rec.m_at3)
+                               .arg(QString::fromStdString(fmt::format("{}",rec.m_idx3)));
+          tms_angle_at3_info->setText(atom3_info);
+
+          bind_angle_measure_tab();
 
         }
 
@@ -1302,7 +1436,7 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   connect(astate->astate_evd,
           SIGNAL(cur_ws_selected_item_frame_changed_signal()),
           this,
-          SLOT(cur_ws_selected_item_frame_changed()));
+          SLOT(cur_ws_sel_item_frame_changed()));
 
   connect(astate->astate_evd,
           SIGNAL(cur_ws_selected_atoms_list_cell_changed_signal()),
@@ -1400,7 +1534,7 @@ void geom_view_obj_insp_widget_t::anim_updated_external() {
 
 }
 
-void geom_view_obj_insp_widget_t::cur_ws_selected_item_frame_changed() {
+void geom_view_obj_insp_widget_t::cur_ws_sel_item_frame_changed() {
   anim_updated_external();
 }
 
@@ -1760,13 +1894,26 @@ void geom_view_obj_insp_widget_t::modify_group_op_del_sel() {
 
 }
 
-void geom_view_obj_insp_widget_t::measurement_current_index_changed(int index) {
+void geom_view_obj_insp_widget_t::msr_pair_cur_idx_changed(int index) {
 
   app_state_t *astate = app_state_t::get_inst();
 
   if (b_al) {
       b_al->m_measure->m_cur_dist_rec_ui = index;
-      update_measurement_tab_info();
+      update_dist_measurement_tab_info();
+    }
+
+  astate->make_viewport_dirty();
+
+}
+
+void geom_view_obj_insp_widget_t::msr_angle_cur_idx_changed(int index) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al) {
+      b_al->m_measure->m_cur_angle_rec_ui = index;
+      update_angle_measurement_tab_info();
     }
 
   astate->make_viewport_dirty();

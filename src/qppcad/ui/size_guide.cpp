@@ -28,11 +28,11 @@ int size_guide_t::tool_panel_ws_selector_h() {
 }
 
 int size_guide_t::tool_panel_ctrl_h() {
-  return 30;
+  return 32;
 }
 
 int size_guide_t::tool_panel_ctrl_w() {
-  return 30;
+  return 32;
 }
 
 int size_guide_t::tool_panel_edit_sel_w() {
@@ -69,6 +69,10 @@ int size_guide_t::obj_insp_ctrl_max_w() {
 
 int size_guide_t::obj_insp_combo_max_w() {
   return 160;
+}
+
+int size_guide_t::obj_insp_combo_max_w_v2() {
+  return 190;
 }
 
 int size_guide_t::obj_insp_ctrl_t2_w() {

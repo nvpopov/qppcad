@@ -209,44 +209,45 @@ namespace qpp {
               painter.translate(mid[0], mid[1]);
               painter.rotate(angle);
 
-              switch (record.m_label_render_style) {
+              if (record.m_show_label)
+                switch (record.m_label_render_style) {
 
-                case msr_label_style_e::msr_label_std : {
-                    QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
-                    painter.setPen(rectpen);
-                    painter.drawText(text_rect,
-                                     Qt::AlignCenter,
-                                     QString("%1 Å").arg(QString::number(dist, 'f', 2)));
-                    break;
+                  case msr_label_style_e::msr_label_std : {
+                      QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+                      painter.setPen(rectpen);
+                      painter.drawText(text_rect,
+                                       Qt::AlignCenter,
+                                       QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                      break;
+                    }
+
+                  case msr_label_style_e::msr_label_border : {
+                      QPainterPath path;
+                      QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+                      path.addRoundedRect(text_rect, 10, 10);
+                      painter.fillPath(path, Qt::white);
+                      painter.setPen(rectpen);
+                      painter.drawPath(path);
+                      painter.drawText(text_rect,
+                                       Qt::AlignCenter,
+                                       QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                      break;
+                    }
+
+                  case msr_label_style_e::msr_label_outline : {
+                      QPainterPath text_path;
+                      QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
+                      painter.setPen(rectpen2);
+                      painter.setBrush(text_fill_color);
+                      text_path.addText(text_rect.left(),
+                                        text_rect.bottom(),
+                                        font,
+                                        QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                      painter.drawPath(text_path);
+                      break;
+                    }
+
                   }
-
-                case msr_label_style_e::msr_label_border : {
-                    QPainterPath path;
-                    QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
-                    path.addRoundedRect(text_rect, 10, 10);
-                    painter.fillPath(path, Qt::white);
-                    painter.setPen(rectpen);
-                    painter.drawPath(path);
-                    painter.drawText(text_rect,
-                                     Qt::AlignCenter,
-                                     QString("%1 Å").arg(QString::number(dist, 'f', 2)));
-                    break;
-                  }
-
-                case msr_label_style_e::msr_label_outline : {
-                    QPainterPath text_path;
-                    QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
-                    painter.setPen(rectpen2);
-                    painter.setBrush(text_fill_color);
-                    text_path.addText(text_rect.left(),
-                                      text_rect.bottom(),
-                                      font,
-                                      QString("%1 Å").arg(QString::number(dist, 'f', 2)));
-                    painter.drawPath(text_path);
-                    break;
-                  }
-
-                }
 
 
               painter.resetTransform();
@@ -258,98 +259,110 @@ namespace qpp {
 
       painter.resetTransform();
 
-      for (auto &record : m_angle_recs)
-        if (record.m_show) {
+      for (size_t i = 0; i < m_angle_recs.size(); i++) {
 
-            if (record.m_at1 >= p_owner->m_geom->nat() ||
-                record.m_at2 >= p_owner->m_geom->nat() ||
-                record.m_at3 >= p_owner->m_geom->nat())
-              continue;
+          auto &record = m_angle_recs[i];
 
-            std::optional<vector2<float> > l_f, l_s, l_t;
+          if (record.m_show) {
 
-            l_f = astate->camera->project(
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
+              if (record.m_at1 >= p_owner->m_geom->nat() ||
+                  record.m_at2 >= p_owner->m_geom->nat() ||
+                  record.m_at3 >= p_owner->m_geom->nat())
+                continue;
 
-            l_s = astate->camera->project(
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2));
+              std::optional<vector2<float> > l_f, l_s, l_t;
 
-            l_t = astate->camera->project(
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx3));
+              l_f = astate->camera->project(
+                      p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1));
+
+              l_s = astate->camera->project(
+                      p_owner->m_pos + p_owner->m_geom->pos(record.m_at2,record.m_idx2));
+
+              l_t = astate->camera->project(
+                      p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx3));
 
 
-            if (l_f && l_s && l_t) {
+              if (l_f && l_s && l_t) {
 
-                vector3<float> dir_f_s =
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
-                    p_owner->m_geom->pos(record.m_at2,record.m_idx2);
+                  vector3<float> dir_f_s =
+                      p_owner->m_pos + p_owner->m_geom->pos(record.m_at1,record.m_idx1) -
+                      p_owner->m_geom->pos(record.m_at2,record.m_idx2);
 
-                vector3<float> dir_t_s =
-                    p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx3) -
-                    p_owner->m_geom->pos(record.m_at2,record.m_idx2);
+                  vector3<float> dir_t_s =
+                      p_owner->m_pos + p_owner->m_geom->pos(record.m_at3,record.m_idx3) -
+                      p_owner->m_geom->pos(record.m_at2,record.m_idx2);
 
-                auto l1 = dir_f_s.normalized();
-                auto l2 = dir_t_s.normalized();
+                  auto l1 = dir_f_s.normalized();
+                  auto l2 = dir_t_s.normalized();
 
-                float real_angle = std::acos(l1.dot(l2)) * 180 / float(pi);
+                  float real_angle = std::acos(l1.dot(l2)) * 180 / float(pi);
 
-                QLineF line_f_s(0, 0, round((*l_f)[0]-(*l_s)[0]), round((*l_f)[1]-(*l_s)[1]));
-                QLineF line_t_s(0, 0, round((*l_t)[0]-(*l_s)[0]), round((*l_t)[1]-(*l_s)[1]));
+                  QLineF line_f_s(0, 0, round((*l_f)[0]-(*l_s)[0]), round((*l_f)[1]-(*l_s)[1]));
+                  QLineF line_t_s(0, 0, round((*l_t)[0]-(*l_s)[0]), round((*l_t)[1]-(*l_s)[1]));
 
-                float line_len = std::min(line_f_s.length(), line_t_s.length()) * 0.2f;
-                int angle1 =
-                    (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0]) * 180 / float(pi)) ;
-                int angle2 =
-                    (std::atan2((*l_t)[1]- (*l_s)[1], (*l_t)[0] - (*l_s)[0]) * 180 / float(pi)) ;
+                  float line_len = std::min(line_f_s.length(), line_t_s.length()) * 0.2f;
+                  int angle1 =
+                      (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0]) * 180 / float(pi)) ;
+                  int angle2 =
+                      (std::atan2((*l_t)[1]- (*l_s)[1], (*l_t)[0] - (*l_s)[0]) * 180 / float(pi)) ;
 
-                angle1 -= 360. * std::floor((angle1) * (1. / 360.));
-                angle2 -= 360. * std::floor((angle2) * (1. / 360.));
+                  angle1 -= 360. * std::floor((angle1) * (1. / 360.));
+                  angle2 -= 360. * std::floor((angle2) * (1. / 360.));
 
-                angle1 = 360 - angle1;
-                angle2 = 360 - angle2;
+                  angle1 = 360 - angle1;
+                  angle2 = 360 - angle2;
 
-                float fangle1 = std::min(angle1, angle2);
-                float fangle2 = std::max(angle1, angle2);
+                  float fangle1 = std::min(angle1, angle2);
+                  float fangle2 = std::max(angle1, angle2);
 
-                float fangle_delta{fangle2 - fangle1};
-                float inv_angle_delta = (360-fangle2)+fangle1;
-                if (fangle_delta > inv_angle_delta) {
-                    fangle_delta = -inv_angle_delta;
-                  }
+                  float fangle_delta{fangle2 - fangle1};
+                  float inv_angle_delta = (360-fangle2)+fangle1;
+                  if (fangle_delta > inv_angle_delta) {
+                      fangle_delta = -inv_angle_delta;
+                    }
 
-                painter.setPen(linepen_solid_line);
+                  QColor pen_color =
+                      ((i + 1 == m_cur_angle_rec_ui) && p_owner->m_selected) ?
+                        QColor::fromRgbF(1, 0, 0) : QColor::fromRgbF(record.m_angle_color[0],
+                      record.m_angle_color[1],
+                      record.m_angle_color[2]);
+                  QPen linepen_inline(QPen(pen_color, 2, Qt::PenStyle::SolidLine, Qt::RoundCap));
 
-                painter.translate((*l_s)[0], (*l_s)[1]);
+                  painter.setPen(linepen_inline);
 
-                painter.drawLine(line_f_s);
-                painter.drawLine(line_t_s);
+                  painter.translate((*l_s)[0], (*l_s)[1]);
 
-                for (int i = 1; i <= record.m_order; i++) {
-                    float new_r = line_len + line_len * i / 3.0;
-                    painter.drawArc(-new_r, -new_r, 2*new_r, 2*new_r,
-                                    (fangle1) * 16, fangle_delta * 16);
-                  }
+                  painter.drawLine(line_f_s);
+                  painter.drawLine(line_t_s);
 
-                float text_r = line_len + line_len * (record.m_order + 2) / 3.0;
+                  for (int i = 1; i <= record.m_order; i++) {
+                      float new_r = line_len + line_len * i / 3.0;
+                      painter.drawArc(-new_r, -new_r, 2*new_r, 2*new_r,
+                                      (fangle1) * 16, fangle_delta * 16);
+                    }
 
-                vector2<float> nd = (((*l_f) + (*l_t) - 2*(*l_s))).normalized();
-                nd *= text_r;
+                  float text_r = line_len + line_len * (record.m_order + 2) / 3.0;
 
-                const float text_rect_size = 70;
+                  vector2<float> nd = (((*l_f) + (*l_t) - 2*(*l_s))).normalized();
+                  nd *= text_r;
 
-                const QChar degreeChar(0260);
+                  const float text_rect_size = 70;
 
-                painter.drawText(nd[0] - text_rect_size * 0.5f,
-                    nd[1] - text_rect_size * 0.5f,
-                    text_rect_size,
-                    text_rect_size,
-                    Qt::AlignCenter,
-                    QString("%1%2").arg(QString::number(real_angle, 'f', 2)).arg(degreeChar));
+                  const QChar degreeChar(0260);
 
-                painter.resetTransform();
-              }
+                  painter.drawText(nd[0] - text_rect_size * 0.5f,
+                      nd[1] - text_rect_size * 0.5f,
+                      text_rect_size,
+                      text_rect_size,
+                      Qt::AlignCenter,
+                      QString("%1%2").arg(QString::number(real_angle, 'f', 2)).arg(degreeChar));
 
-          }
+                  painter.resetTransform();
+                }
+
+            }
+
+        }
 
       painter.resetTransform();
 

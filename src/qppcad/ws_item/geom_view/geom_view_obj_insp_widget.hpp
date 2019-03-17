@@ -118,6 +118,9 @@ namespace qpp {
 
         //START TAB MEASUREMENT
         ws_item_tab_widget_t *tab_measurement;
+
+        //common measurements settings
+        //pair dist
         qspoiler_widget_t *tms_pair_dist_gb;
         QFormLayout *tms_pair_dist_gb_lt;
         QComboBox *tms_pair_cur_msr;
@@ -126,10 +129,21 @@ namespace qpp {
         QLabel *tms_pair_dist;
         qbinded_color3_input *tms_pair_dist_color;
         qbinded_checkbox *tms_pair_enabled;
+        qbinded_checkbox *tms_pair_label_enabled;
         qbinded_combobox *tms_pair_line_style;
         qbinded_int_spinbox *tms_pair_line_size;
         qbinded_int_spinbox *tms_font_screen_size;
         qbinded_combobox *tms_pair_label_style;
+
+        //interatomic angle
+        qspoiler_widget_t *tms_angle_gb;
+        QFormLayout *tms_angle_gb_lt;
+        QComboBox *tms_angle_cur_msr;
+        QLabel *tms_angle_at1_info;
+        QLabel *tms_angle_at2_info;
+        QLabel *tms_angle_at3_info;
+        qbinded_checkbox *tms_angle_enabled;
+        qbinded_int_spinbox *tms_angle_order;
         //END TAB MEASUREMENT
 
         //START TAB MODIFY
@@ -220,15 +234,18 @@ namespace qpp {
 
         void unbind_item() override;
 
-        void bind_measure_tab();
-        void unbind_measure_tab();
+        void bind_dist_measure_tab();
+        void unbind_dist_measure_tab();
+        void bind_angle_measure_tab();
+        void unbind_angle_measure_tab();
 
         void update_anim_tab();
         void update_anim_tab_visibility();
        //
         void update_modify_tab();
         void update_measurement_tab();
-        void update_measurement_tab_info();
+        void update_dist_measurement_tab_info();
+        void update_angle_measurement_tab_info();
         void update_select_tab();
         void fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al);
         geom_view_obj_insp_widget_t();
@@ -238,7 +255,7 @@ namespace qpp {
         void cur_anim_index_changed(int index);
         void play_anim_button_toggle(bool value);
         void anim_updated_external();
-        void cur_ws_selected_item_frame_changed();
+        void cur_ws_sel_item_frame_changed();
 
         void anim_timeline_slider_value_changed(int value);
         void anim_button_begin_clicked();
@@ -268,7 +285,8 @@ namespace qpp {
         void modify_group_op_sel_ngbs();
         void modify_group_op_del_sel();
 
-        void measurement_current_index_changed(int index);
+        void msr_pair_cur_idx_changed(int index);
+        void msr_angle_cur_idx_changed(int index);
 
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();

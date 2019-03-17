@@ -35,6 +35,7 @@ namespace qpp {
       index m_idx1;
       index m_idx2;
       bool m_show{true};
+      bool m_show_label{true};
       vector3<float> m_bond_color{0};
       int m_line_size{2};
       int m_font_size{13};
@@ -62,6 +63,8 @@ namespace qpp {
       int m_order{1};
 
       bool m_show{true};
+      bool m_show_label{true};
+      vector3<float> m_angle_color{0};
 
       msr_angle_rec_t (const AINT _at1,
                        const AINT _at2,
