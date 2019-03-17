@@ -1337,9 +1337,20 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
 
       if (index < int(b_al->m_anim->get_total_anims())) {
 
-          b_al->m_anim->m_cur_anim = index;
-          b_al->m_anim->m_cur_anim_time = 0.0f;
-          b_al->m_anim->update_geom_to_anim();
+          app_state_t* astate = app_state_t::get_inst();
+
+//          astate->log(fmt::format("BEFORE CHG ANIM {} {}",
+//                                  b_al->m_anim->m_cur_anim,
+//                                  b_al->m_anim->m_cur_anim_time));
+
+          if (b_al->m_anim->m_cur_anim != index) {
+              b_al->m_anim->m_cur_anim = index;
+              b_al->m_anim->m_cur_anim_time = 0.0f;
+              b_al->m_anim->update_geom_to_anim();
+//              astate->log(fmt::format("AFTER CHG ANIM {} {}",
+//                                      b_al->m_anim->m_cur_anim,
+//                                      b_al->m_anim->m_cur_anim_time));
+            }
 
           auto cur_anim = b_al->m_anim->get_current_anim();
 

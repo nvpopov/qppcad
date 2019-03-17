@@ -159,6 +159,7 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
 
   py::class_<geom_view_anim_subsys_t, std::shared_ptr<geom_view_anim_subsys_t> >
   py_geom_view_anim(m, "geom_view_anim_subsys_t");
+  py_geom_view_anim.def("nanim", &geom_view_anim_subsys_t::get_total_anims);
   py_geom_view_anim.def("animable", &geom_view_anim_subsys_t::animable);
   py_geom_view_anim.def("next_anim", &geom_view_anim_subsys_t::next_anim);
   py_geom_view_anim.def("prev_anim", &geom_view_anim_subsys_t::prev_anim);

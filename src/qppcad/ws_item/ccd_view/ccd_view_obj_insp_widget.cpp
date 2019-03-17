@@ -39,17 +39,17 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
           );
       switch (b_ccd->m_ccd->m_run_t) {
 
-        case comp_chem_program_run_t::rt_unknown :
+        case comp_chem_program_run_e::rt_unknown :
           tabBar()->setTabEnabled(1, false);
           tabBar()->setTabEnabled(2, false);
           break;
 
-        case comp_chem_program_run_t::rt_energy :
+        case comp_chem_program_run_e::rt_energy :
           tabBar()->setTabEnabled(1, false);
           tabBar()->setTabEnabled(2, false);
           break;
 
-        case comp_chem_program_run_t::rt_geo_opt :
+        case comp_chem_program_run_e::rt_geo_opt :
           tabBar()->setTabEnabled(1, true);
           tabBar()->setTabEnabled(2, false);
           update_geo_opt();

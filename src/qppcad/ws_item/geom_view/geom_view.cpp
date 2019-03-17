@@ -55,7 +55,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
    "ccb",//10
    "ltext",//11
    "override",//12
-   "atom_r" // 13
+   "atom_r", // 13
+   "external" //14
         },
 
   {type_string, //0
@@ -71,7 +72,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
    type_real, //10
    type_string, //11
    type_bool, // 12
-   type_real //13
+   type_real, // 13
+   type_real //14
         });
 
   m_geom->DIM = 0;
@@ -711,15 +713,26 @@ void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
                                      const vector3<float> color_high,
                                      const size_t xfield_id) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   auto field_min_max = get_min_max_xfield(xfield_id);
 
+  bool has_static_anim{false};
+  opt<size_t> static_anim_id;
+
   for (size_t i = 0; i < m_geom->nat(); i++) {
-      float el_val = m_geom->xfield<float>(xfield_id, i) - std::get<0>(field_min_max);
+      float el_val = std::get<1>(field_min_max) - m_geom->xfield<float>(xfield_id, i);
       float len = std::get<1>(field_min_max) - std::get<0>(field_min_max);
       vector3<float> color_interp = color_low + (color_high - color_low) * (1 - el_val / len);
+
+//      std::cout << fmt::format("i = {}, el_val = {}, len = {}, cx = {}, cy = {}, cz = {}",
+//                               i, el_val, len, color_interp[0], color_interp[1], color_interp[2])
+//          << std::endl;
       m_geom->xfield<float>(xgeom_ccr, i) = color_interp[0];
       m_geom->xfield<float>(xgeom_ccg, i) = color_interp[1];
       m_geom->xfield<float>(xgeom_ccb, i) = color_interp[2];
+
+      //propagate colors to first static anim
     }
 
 }
@@ -740,10 +753,9 @@ std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id)
   float max_v = m_geom->xfield<float>(xfield_id, 0);
 
   for (size_t i = 0; i < m_geom->nat(); i++) {
-      if (min_v < m_geom->xfield<float>(xfield_id, i))
-        min_v = m_geom->xfield<float>(xfield_id, i);
-      if (max_v > m_geom->xfield<float>(xfield_id, i))
-        max_v = m_geom->xfield<float>(xfield_id, i);
+      float val = m_geom->xfield<float>(xfield_id, i);
+      if (min_v > val) min_v = val;
+      if (max_v < val) max_v = val;
     }
 
   return {min_v, max_v};
