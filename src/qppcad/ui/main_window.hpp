@@ -222,6 +222,7 @@ namespace qpp {
         void make_screenshot();
 
     };
+
   }
 
 }

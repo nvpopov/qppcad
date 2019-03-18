@@ -23,8 +23,19 @@ namespace qpp {
       public:
 
         static std::shared_ptr<workspace_manager_t> get_ws_mgr();
+
+        /**
+         * @brief set_font_size set python console font size
+         * @param new_font_size in pt.
+         */
         static void set_font_size(int new_font_size);
+
+        /**
+         * @brief get_build_info
+         * @return git revision && build date
+         */
         static std::tuple<std::string, std::string> get_build_info();
+
         static void open_file(std::string file_name,
                               bool to_current);
         static void open_file_query(std::string file_name,
@@ -33,6 +44,7 @@ namespace qpp {
         static void make_super_cell(const int sc_a,
                                     const int sc_b,
                                     const int sc_c);
+
         static void select_ws(int ws_idx);
         static void select_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);
@@ -57,6 +69,12 @@ namespace qpp {
         //static void bopen(std::string _file_name);
         static vector3<float> gizmo_pos();
         static std::tuple<std::string, vector3<float> > get_point_sym_group(float tolerance);
+
+        /**
+         * @brief embed_cube create cube_primitive_t based on selected atoms from geom_view_ts
+         */
+        static void embed_cube();
+
         static void make_psg_view(float tolerance);
         static void make_traj_highlight(size_t atom_id,
                                         size_t anim_id);

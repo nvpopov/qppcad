@@ -70,6 +70,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
             py::arg("anim_id") = 1);
 
   tools.def("make_cube", &simple_query::make_cube_p);
+  tools.def("embed_cube", &simple_query::embed_cube);
   tools.def("make_arrow", &simple_query::make_arrow_p);
 
   tools.def("convert_spatial", &simple_query::convert_selected_units);

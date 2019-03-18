@@ -551,6 +551,7 @@ void workspace_manager_t::load_from_file(const std::string &fname,
     for (int i = 0; i < m_ws.size(); i++)
       if (m_ws[i]->m_fs_path.find(fname) != std::string::npos) {
           set_cur_id(i);
+          astate->astate_evd->cur_ws_changed();
           return;
         }
 
@@ -642,10 +643,9 @@ void workspace_manager_t::import_from_file(const std::string &fname,
                 fname,
                 m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
                 false);
+
         } else {
-
           if (need_to_create_new_ws && exec_ws) exec_ws->m_marked_for_deletion = true;
-
         }
 
       astate->astate_evd->wss_changed();

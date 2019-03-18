@@ -498,6 +498,51 @@ std::tuple<std::string, vector3<float> >  simple_query::get_point_sym_group(floa
 
 }
 
+void simple_query::embed_cube() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+
+  if (!al) {
+      throw std::invalid_argument("embed_cube : select geom_view_t");
+      return;
+    }
+
+  if (!al->m_parent_ws || !cur_ws) {
+      throw std::invalid_argument("embed_cube : invalid context");
+      return;
+    }
+
+  if (cur_ws->m_edit_type != ws_edit_e::edit_content) {
+      throw std::invalid_argument("embed_cube : edit_type != edit_content");
+      return;
+    }
+
+  if (al->m_atom_idx_sel.size() != 2) {
+      throw std::invalid_argument("embed_cube : sel.size() != 2 ");
+      return;
+    }
+
+  auto it1 = al->m_atom_idx_sel.begin();
+  auto it2 = ++(al->m_atom_idx_sel.begin());
+
+  vector3<float> p1 = al->m_geom->pos(it1->m_atm, it1->m_idx) + al->m_pos;
+  vector3<float> p2 = al->m_geom->pos(it2->m_atm, it2->m_idx) + al->m_pos;
+
+  vector3<float> center = (p1 + p2) * 0.5f;
+  vector3<float> len{0};
+  for (size_t i = 0; i < 3; i++) len[i] = std::max(p1[i], p2[i]) - std::min(p1[i], p2[i]);
+
+  auto new_cube = std::make_shared<cube_primitive_t>();
+  new_cube->m_name = fmt::format("cube{}", cur_ws->m_ws_items.size());
+  new_cube->m_pos = center;
+  new_cube->m_scale = len;
+  cur_ws->add_item_to_ws(new_cube);
+
+}
+
 void simple_query::make_psg_view(float tolerance) {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -574,6 +619,7 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
 
 }
 
+//TODO: need to update
 std::vector<std::string> simple_query::get_xgeom_dfn() {
 
   return {
