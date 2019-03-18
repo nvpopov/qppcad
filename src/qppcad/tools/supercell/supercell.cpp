@@ -177,14 +177,14 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
   dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
   connect(dialog_bb,
-          SIGNAL(accepted()),
+          &QDialogButtonBox::accepted,
           this,
-          SLOT(accept()));
+          &super_cell_widget_t::accept);
 
   connect(dialog_bb,
-          SIGNAL(rejected()),
+          &QDialogButtonBox::rejected,
           this,
-          SLOT(reject()));
+          &super_cell_widget_t::reject);
 
   dialog_layout->addWidget(gb_rep_par);
   dialog_layout->addWidget(dialog_bb);

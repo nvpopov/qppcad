@@ -62,9 +62,9 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_type_summary_lt->addWidget(tg_type_summary_tbl);
 
   connect(tg_type_summary_tbl,
-          SIGNAL(clicked(const QModelIndex &)),
+          &QTableView::clicked,
           this,
-          SLOT(type_summary_clicked(const QModelIndex &)));
+          &geom_view_obj_insp_widget_t::type_summary_clicked);
 
   tab_general->tab_inner_widget_lt->addWidget(tg_geom_summary_widget);
   tab_general->tab_inner_widget_lt->addWidget(tg_type_summary_widget);
@@ -114,8 +114,10 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   init_form_lt_lbl(disp_subcells_idx_lbl);
   init_form_lt_lbl(disp_subcells_color_lbl);
 
-  connect(disp_draw_subcells, &qbinded_checkbox::stateChanged,
-          this, &geom_view_obj_insp_widget_t::draw_subcells_changed);
+  connect(disp_draw_subcells,
+          &qbinded_checkbox::stateChanged,
+          this,
+          &geom_view_obj_insp_widget_t::draw_subcells_changed);
 
   disp_s_sel_vis = new qbinded_checkbox;
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox;
@@ -246,9 +248,9 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_current_anim->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
 
   connect(gb_current_anim,
-          SIGNAL(currentIndexChanged(int)),
+          static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
           this,
-          SLOT(cur_anim_index_changed(int)));
+          &geom_view_obj_insp_widget_t::cur_anim_index_changed);
 
   gb_anim_summary_lt->addRow(tr("Num. of anim."), gb_anim_total_anims);
   gb_anim_summary_lt->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
@@ -268,9 +270,9 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_timeline_slider->setTickPosition(QSlider::TicksBothSides);
   gb_anim_timeline_slider->setTickInterval(10);
   connect(gb_anim_timeline_slider,
-          SIGNAL(valueChanged(int)),
+          &QSlider::valueChanged,
           this,
-          SLOT(anim_timeline_slider_value_changed(int)));
+          &geom_view_obj_insp_widget_t::anim_timeline_slider_value_changed);
 
   //gb_anim_timeline_layout->addWidget(gb_anim_timeline_cur_frame, 1);
   gb_anim_timeline_lt->addWidget(gb_anim_timeline_slider, 1);
@@ -284,33 +286,33 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   anim_play = new QPushButton(tr("PLAY"));
   anim_play->setCheckable(true);
   connect(anim_play,
-          SIGNAL(toggled(bool)),
+          &QPushButton::toggled,
           this,
-          SLOT(play_anim_button_toggle(bool)));
+          &geom_view_obj_insp_widget_t::play_anim_button_toggle);
 
   anim_to_start = new QPushButton(tr("<<"));
   connect(anim_to_start,
-          SIGNAL(clicked()),
+          &QPushButton::clicked,
           this,
-          SLOT(anim_button_begin_clicked()));
+          &geom_view_obj_insp_widget_t::anim_button_begin_clicked);
 
   anim_to_end = new QPushButton(tr(">>"));
   connect(anim_to_end,
-          SIGNAL(clicked()),
+          &QPushButton::clicked,
           this,
-          SLOT(anim_button_end_clicked()));
+          &geom_view_obj_insp_widget_t::anim_button_end_clicked);
 
   anim_frame_forward = new QPushButton(tr("+F"));
   connect(anim_frame_forward,
-          SIGNAL(clicked()),
+          &QPushButton::clicked,
           this,
-          SLOT(anim_button_frame_move_forward_clicked()));
+          &geom_view_obj_insp_widget_t::anim_button_frame_move_forward_clicked);
 
   anim_frame_backward = new QPushButton(tr("-F"));
   connect(anim_frame_backward,
-          SIGNAL(clicked()),
+          &QPushButton::clicked,
           this,
-          SLOT(anim_button_frame_move_backward_clicked()));
+          &geom_view_obj_insp_widget_t::anim_button_frame_move_backward_clicked);
 
   gb_anim_buttons_lt->addWidget(anim_play, 1);
   gb_anim_buttons_lt->addWidget(anim_to_start, 1);
@@ -1434,14 +1436,14 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   app_state_t *astate = app_state_t::get_inst();
 
   connect(astate->astate_evd,
-          SIGNAL(cur_ws_selected_item_frame_changed_signal()),
+          &app_state_event_disp_t::cur_ws_selected_item_frame_changed_signal,
           this,
-          SLOT(cur_ws_sel_item_frame_changed()));
+          &geom_view_obj_insp_widget_t::cur_ws_sel_item_frame_changed);
 
   connect(astate->astate_evd,
-          SIGNAL(cur_ws_selected_atoms_list_cell_changed_signal()),
+          &app_state_event_disp_t::cur_ws_selected_atoms_list_cell_changed_signal,
           this,
-          SLOT(cell_changed()));
+          &geom_view_obj_insp_widget_t::cell_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,

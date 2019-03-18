@@ -32,17 +32,25 @@ object_inspector_widget_t::object_inspector_widget_t() {
   obj_insp_layout->addWidget(none_item_placeholder);
   obj_insp_layout->setContentsMargins(10, 0, 5, 0);
 
-  connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_changed_signal()),
-          this, SLOT(cur_ws_selected_item_changed()));
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
+          this,
+          &object_inspector_widget_t::cur_ws_selected_item_changed);
 
-  connect(astate->astate_evd, SIGNAL(cur_ws_changed_signal()),
-          this, SLOT(cur_ws_changed()));
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_changed_signal,
+          this,
+          &object_inspector_widget_t::cur_ws_changed);
 
-  connect(ws_items_list, &QListWidget::itemSelectionChanged,
-          this, &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
+  connect(ws_items_list,
+          &QListWidget::itemSelectionChanged,
+          this,
+          &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
 
-  connect(astate->astate_evd, SIGNAL(cur_ws_selected_item_need_to_update_obj_insp_signal()),
-          this, SLOT(need_to_update_obj_insp_received()));
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_item_need_to_update_obj_insp_signal,
+          this,
+          &object_inspector_widget_t::need_to_update_obj_insp_received);
 
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();

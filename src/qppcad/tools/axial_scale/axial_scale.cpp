@@ -124,8 +124,17 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
   gb_sc_par_layout->addRow(tr("Scale c-axis"), sb_sc_c);
 
   dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  connect(dialog_bb, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(dialog_bb, SIGNAL(rejected()), this, SLOT(reject()));
+
+  connect(dialog_bb,
+          &QDialogButtonBox::accepted,
+          this,
+          &axial_scale_widget_t::accept);
+
+  connect(dialog_bb,
+          &QDialogButtonBox::rejected,
+          this,
+          &axial_scale_widget_t::reject);
+
   dialog_layout->addWidget(gb_sc_par);
   dialog_layout->addWidget(dialog_bb);
 }

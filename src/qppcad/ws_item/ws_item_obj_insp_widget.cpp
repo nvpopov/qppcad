@@ -197,15 +197,15 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   tg_actions_delete = new QPushButton(tr("Delete"));
   connect(tg_actions_delete,
-          SIGNAL(pressed()),
+          &QPushButton::pressed,
           this,
-          SLOT(delete_current_item()));
+          &ws_item_obj_insp_widget_t::delete_current_item);
 
   tg_actions_rename = new QPushButton(tr("Rename"));
   connect(tg_actions_rename,
-          SIGNAL(pressed()),
+          &QPushButton::pressed,
           this,
-          SLOT(rename_current_item()));
+          &ws_item_obj_insp_widget_t::rename_current_item);
 
   tg_actions_clone = new QPushButton(tr("Clone"));
   tg_actions_layout->addWidget(tg_actions_delete);
@@ -226,6 +226,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
           &ws_item_obj_insp_widget_t::currentChanged,
           this,
           &ws_item_obj_insp_widget_t::cur_tab_changed);
+
 }
 
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
@@ -255,6 +256,7 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
           astate->astate_evd->cur_ws_changed();
         }
     }
+
 }
 
 void ws_item_obj_insp_widget_t::delete_current_item() {

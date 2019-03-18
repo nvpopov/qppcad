@@ -58,10 +58,11 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
   m_c->setWidget(this);
   m_c->setCompletionMode(QCompleter::PopupCompletion);
   m_c->setCaseSensitivity(Qt::CaseInsensitive);
-  QObject::connect(m_c,
-                   SIGNAL(activated(QString)),
-                   this,
-                   SLOT(insert_completion(QString)));
+
+  connect(m_c,
+          static_cast<void(QCompleter::*)(const QString &)>(&QCompleter::activated),
+          this,
+          &python_text_editor_t::insert_completion);
 
 }
 

@@ -183,9 +183,9 @@ void main_window::init_menus() {
   edit_menu_switch_ws_edit_mode->setText(tr("Switch edit mode"));
   edit_menu_switch_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
   connect(edit_menu_switch_ws_edit_mode,
-          SIGNAL(triggered()),
+          &QAction::triggered,
           this,
-          SLOT(toggle_ws_edit_mode()));
+          &main_window::toggle_ws_edit_mode);
 
   edit_menu->addAction(edit_menu_switch_ws_edit_mode);
 
@@ -294,10 +294,11 @@ void main_window::init_widgets() {
   tool_panel_widget->setProperty("s_class", "tp_generic");
 
   tp_ws_selector = new QComboBox;
-  QObject::connect(tp_ws_selector,
-                   SIGNAL(currentIndexChanged(int)),
-                   this,
-                   SLOT(ws_selector_selection_changed(int)));
+  connect(tp_ws_selector,
+          static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &main_window::ws_selector_selection_changed);
+
   tp_ws_selector->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
   tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
@@ -336,9 +337,9 @@ void main_window::init_widgets() {
   tp_show_obj_insp->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
   tp_show_obj_insp->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
   QObject::connect(tp_show_obj_insp,
-                   SIGNAL(stateChanged(int)),
+                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
                    this,
-                   SLOT(tp_show_obj_insp_state_changed(int)));
+                   &main_window::tp_show_obj_insp_state_changed);
 
   tp_show_gizmo = new QCheckBox;
   tp_show_gizmo->setProperty("s_class", "tp_cb");
@@ -347,9 +348,9 @@ void main_window::init_widgets() {
   tp_show_gizmo->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
   tp_show_gizmo->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
   QObject::connect(tp_show_gizmo,
-                   SIGNAL(stateChanged(int)),
+                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
                    this,
-                   SLOT(tp_show_gizmo_state_changed(int)));
+                   &main_window::tp_show_gizmo_state_changed);
 
   tp_add_ws_item = new QPushButton();
   tp_add_ws_item->setProperty("s_class", "tp_cb");
@@ -380,9 +381,9 @@ void main_window::init_widgets() {
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
   connect(tp_edit_mode,
-          SIGNAL(buttonClicked(int)),
+          static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this,
-          SLOT(ws_edit_mode_selector_button_clicked(int)));
+          &main_window::ws_edit_mode_selector_button_clicked);
 
   tp_edit_mode_item = new QPushButton;
   tp_edit_mode_item->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
@@ -416,6 +417,10 @@ void main_window::init_widgets() {
   tp_edit_mode_end->setFrameShadow(QFrame::Sunken);
   tp_edit_mode_end->setFixedWidth(2);
   tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+  connect(tp_edit_mode,
+          static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
+          this,
+          &main_window::ws_edit_mode_selector_button_clicked);
 
   tp_camera_x = new QPushButton(tr("C:X"));
   tp_camera_x->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -472,10 +477,6 @@ void main_window::init_widgets() {
           &QPushButton::pressed,
           this,
           [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
-  connect(tp_edit_mode,
-                   SIGNAL(buttonClicked(int)),
-                   this,
-                   SLOT(ws_edit_mode_selector_button_clicked(int)));
 
   change_camera_buttons_visible(false, false);
 

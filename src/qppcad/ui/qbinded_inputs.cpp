@@ -18,9 +18,9 @@ void qbinded_checkbox::load_value_ex() {
 qbinded_checkbox::qbinded_checkbox(QWidget *parent) : QCheckBox (parent) {
 
   connect(this,
-          SIGNAL(stateChanged(int)),
+          static_cast<void(qbinded_checkbox::*)(int)>(&qbinded_checkbox::stateChanged),
           this,
-          SLOT(check_state_changed(int)));
+          &qbinded_checkbox::check_state_changed);
 
 }
 
@@ -56,11 +56,12 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
 
   app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
-  connect(this,
-          SIGNAL(valueChanged(double)),
-          this,
-          SLOT(value_changed(double)));
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+
+  connect(this,
+          static_cast<void(qbinded_float_spinbox::*)(double)>(&qbinded_float_spinbox::valueChanged),
+          this,
+          &qbinded_float_spinbox::value_changed);
 
 }
 
@@ -98,12 +99,14 @@ void qbinded_combobox::load_value_ex() {
 qbinded_combobox::qbinded_combobox(QWidget *parent) : QComboBox (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
-  connect(this,
-          SIGNAL(currentIndexChanged(int)),
-          this,
-          SLOT(value_changed(int)));
+
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
+
+  connect(this,
+          static_cast<void(qbinded_combobox::*)(int)>(&qbinded_combobox::currentIndexChanged),
+          this,
+          &qbinded_combobox::value_changed);
 
 }
 
@@ -350,9 +353,9 @@ qbinded_int_spinbox::qbinded_int_spinbox(QWidget *parent) : QSpinBox(parent) {
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   connect(this,
-          SIGNAL(valueChanged(int)),
+          static_cast<void (qbinded_int_spinbox::*)(int)>(&qbinded_int_spinbox::valueChanged),
           this,
-          SLOT(value_changed(int)));
+          &qbinded_int_spinbox::value_changed);
 
 }
 
@@ -382,9 +385,10 @@ void qbinded_int_spinbox::value_changed(int value) {
 qbinded_ws_item_combobox::qbinded_ws_item_combobox(QWidget *parent) {
 
   connect(this,
-          SIGNAL(currentIndexChanged(int)),
+          static_cast<void (qbinded_ws_item_combobox::*)(int)>
+          (&qbinded_ws_item_combobox::currentIndexChanged),
           this,
-          SLOT(value_changed(int)));
+          &qbinded_ws_item_combobox::value_changed);
 
 }
 
@@ -578,9 +582,10 @@ qbinded_xgeom_float_spinbox::qbinded_xgeom_float_spinbox(QWidget *parent) {
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   connect(this,
-          SIGNAL(valueChanged(double)),
+          static_cast<void (qbinded_xgeom_float_spinbox::*)(double)>
+          (&qbinded_xgeom_float_spinbox::valueChanged),
           this,
-          SLOT(value_changed(double)));
+          &qbinded_xgeom_float_spinbox::value_changed);
 
 }
 

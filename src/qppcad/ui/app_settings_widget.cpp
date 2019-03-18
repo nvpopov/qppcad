@@ -43,12 +43,10 @@ app_settings_widget_t::app_settings_widget_t(QWidget *parent) : QDialog (parent)
   settings_splitter_layout->addWidget(settings_entries);
   settings_splitter_layout->addWidget(settings_stacked_pages);
 
-//  settings_splitter->addWidget(settings_entries);
-//  settings_splitter->addWidget(settings_stacked_pages);
-
-
-  connect(settings_entries, SIGNAL(activated(int)),
-             settings_stacked_pages, SLOT(setCurrentIndex(int)));
+  connect(settings_entries,
+          &QListWidget::currentRowChanged,
+          settings_stacked_pages,
+          &QStackedWidget::setCurrentIndex);
 
   settings_entries->setCurrentRow(0);
 
@@ -60,11 +58,18 @@ app_settings_widget_t::app_settings_widget_t(QWidget *parent) : QDialog (parent)
 
   settings_button_layout = new QHBoxLayout;
   settings_button_layout->setAlignment(Qt::AlignRight);
-  //settings_button_layout->addStretch(0);
   settings_button_layout->addWidget(settings_close, 0, Qt::AlignRight);
   settings_button_layout->addWidget(settings_save, 0, Qt::AlignRight);
   settings_layout->addLayout(settings_button_layout);
 
-  connect(settings_close, SIGNAL(clicked()), this, SLOT(accept()));
-  connect(settings_save, SIGNAL(clicked()), this, SLOT(accept()));
+  connect(settings_close,
+          &QPushButton::clicked,
+          this,
+          &app_settings_widget_t::accept);
+
+  connect(settings_save,
+          &QPushButton::clicked,
+          this,
+          &app_settings_widget_t::accept);
+
 }

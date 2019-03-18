@@ -85,13 +85,13 @@ colorize_by_xfield_widget_t::colorize_by_xfield_widget_t() {
   main_lt->addLayout(buttons_lt);
 
   connect(button_apply,
-          SIGNAL(clicked()),
+          &QPushButton::clicked,
           this,
-          SLOT(accept()));
+          &colorize_by_xfield_widget_t::accept);
 
   connect(button_cancel,
-          SIGNAL(clicked()),
+          &QPushButton::clicked,
           this,
-          SLOT(reject()));
+          &colorize_by_xfield_widget_t::reject);
 
 }

@@ -41,8 +41,10 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   tab_general->tab_inner_widget_lt->addWidget(gb_volume_detail);
   tab_general->tab_inner_widget_lt->addStretch();
 
-  connect(cb_current_volume, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(cur_volume_index_changed(int)));
+  connect(cb_current_volume,
+          static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &volume_view_obj_insp_widget_t::cur_volume_index_changed);
 
 }
 
