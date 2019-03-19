@@ -90,8 +90,9 @@ namespace qpp {
         std::unordered_set<atom_index_set_key, atom_index_set_key_hash> m_atom_idx_sel;
         std::deque<atom_index_set_key> m_atom_ord_sel;
         std::unique_ptr<geom_view_render_buffered_billboards_t> m_bs{};
-        std::set<size_t>  m_atom_type_to_hide;
-        std::set<size_t>  m_atom_type_to_hide_bond;
+        std::unordered_set<size_t> m_atom_type_to_hide;
+        std::unordered_set<size_t> m_atom_type_to_hide_bond;
+        std::unordered_map<size_t, vector3<float> > m_type_color_override;
 
         float m_shading_specular_power{12.0f};
         float m_atom_scale_factor{0.3f};

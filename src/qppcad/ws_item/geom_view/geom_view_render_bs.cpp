@@ -90,6 +90,12 @@ namespace qpp {
           pre_rad = al.m_geom->xfield<float>(xgeom_atom_r, at_num);
         }
 
+      if (!al.m_type_color_override.empty()) {
+          auto it = al.m_type_color_override.find(al.m_geom->type_table(at_num));
+          if (it != al.m_type_color_override.end())
+            color = it->second;
+        }
+
       dr_rad = pre_rad * al.m_atom_scale_factor;
 
       if (al.m_color_mode == geom_view_color_e::color_from_xgeom ||
@@ -136,6 +142,15 @@ namespace qpp {
       vector3<float> bcolor2(0.0, 0.0, 1.0);
       if (ap_idx1) {
           bcolor2 = ptable::get_inst()->arecs[*ap_idx2 - 1].m_color_jmol;
+        }
+
+      if (!al.m_type_color_override.empty()) {
+          auto it1 = al.m_type_color_override.find(al.m_geom->type_table(at_num1));
+          if (it1 != al.m_type_color_override.end())
+            bcolor1 = it1->second;
+          auto it2 = al.m_type_color_override.find(al.m_geom->type_table(at_num2));
+          if (it2 != al.m_type_color_override.end())
+            bcolor2 = it2->second;
         }
 
       if (al.m_color_mode == geom_view_color_e::color_from_xgeom) {

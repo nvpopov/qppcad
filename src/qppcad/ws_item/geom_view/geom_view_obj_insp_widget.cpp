@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
@@ -773,8 +774,14 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
           auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(i));
           vector3<float> bc(0.0, 0.0, 1.0);
           if (ap_idx) {bc = ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol;}
+
           QColor color_bck;
-          color_bck.setRgbF(bc[0], bc[1], bc[2]);
+
+          auto it = b_al->m_type_color_override.find(i);
+          if (it != b_al->m_type_color_override.end())
+              color_bck.setRgbF(it->second[0], it->second[1], it->second[2]);
+          else color_bck.setRgbF(bc[0], bc[1], bc[2]);
+
           n_clr->setBackgroundColor(color_bck);
           tg_type_summary_tbl->setItem(i, 2, n_clr);
 
@@ -1945,22 +1952,38 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
   if (b_al) {
       astate->log(fmt::format("DEBUG: Type summary clicked: {} {}", index.row(), index.column()));
       int atom_type_idx = index.row();
+
+      //type is valid
       if (atom_type_idx < b_al->m_geom->n_types()) {
+
+          auto it = b_al->m_type_color_override.find(atom_type_idx);
           auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(atom_type_idx));
+
+          QColor _stored_color = Qt::black;
+
+          //first load a color from ptable
           if (ap_idx && *ap_idx > 0 && *ap_idx <100) {
-              ptable_atom_record &rec = ptable::get_inst()->arecs[*ap_idx-1];
-              QColor _stored_color = QColor::fromRgbF(rec.m_color_jmol[0],
-                                                      rec.m_color_jmol[1],
-                                                      rec.m_color_jmol[2]);
-              const QColor color = QColorDialog::getColor(_stored_color, this, "Select Color");
-              if (color.isValid()) {
-                  rec.m_color_jmol = vector3<float>(color.redF(), color.greenF(), color.blueF());
-                  rec.m_redefined = true;
-                  update_from_ws_item();
-                  astate->make_viewport_dirty();
-                }
+              _stored_color = QColor::fromRgbF(
+                                ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[0],
+                                ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[1],
+                                ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[2]);
             }
+
+          if (it != b_al->m_type_color_override.end())
+            _stored_color = QColor::fromRgbF(it->second[0], it->second[1], it->second[2]);
+
+          const QColor clr = QColorDialog::getColor(_stored_color, this, "Select Color");
+          if (clr.isValid()) {
+              if (it != b_al->m_type_color_override.end()) b_al->m_type_color_override.erase(it);
+              auto new_c = std::make_pair(size_t(atom_type_idx),
+                                          vector3<float>(clr.redF(), clr.greenF(), clr.blueF()));
+              b_al->m_type_color_override.insert(new_c);
+              update_from_ws_item();
+              astate->make_viewport_dirty();
+            }
+
         }
+
     }
 
 }
