@@ -327,6 +327,11 @@ qbinded_color3_input::qbinded_color3_input(QWidget *parent) : QFrame (parent) {
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setMaximumHeight(astate->size_guide.obj_insp_ctrl_t2_h());
   setFrameStyle(QFrame::Panel);
+  QPalette pal = palette();
+  pal.setColor(QPalette::Background, Qt::black);
+  pal.setColor(QPalette::Foreground, Qt::white);
+  setAutoFillBackground(true);
+  setPalette(pal);
 
 }
 

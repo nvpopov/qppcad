@@ -96,6 +96,10 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
               size_t thash = cur_it->get_type();
               auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
               if (obj_insp_w) {
+
+                  // a dirty hack for preventing object inspectors widgets to be unbounded
+                  for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
+
                   none_item_placeholder->hide();
                   obj_insp_layout->addWidget(obj_insp_w.get());
                   m_cur_obj_insp_widget = obj_insp_w;
