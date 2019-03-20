@@ -120,6 +120,11 @@ namespace qpp {
         ws_item_tab_widget_t *tab_measurement;
 
         //common measurements settings
+        qspoiler_widget_t *tms_common_settings_gb;
+        QFormLayout *tms_common_settings_gb_lt;
+        qbinded_checkbox *tms_render_dist;
+        qbinded_checkbox *tms_render_angle;
+
         //pair dist
         qspoiler_widget_t *tms_pair_dist_gb;
         QFormLayout *tms_pair_dist_gb_lt;

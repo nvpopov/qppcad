@@ -61,6 +61,7 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS      = "sel_vis_affect_bonds";
 
     const auto JSON_ATOMS_LIST_LABELS_TYPE               = "labels";
+    const auto JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE       = "type_color_override";
 
     const auto JSON_WS_CUBE_P_COLOR = "cube_color";
     const auto JSON_WS_CUBE_P_STYLE = "cube_style";

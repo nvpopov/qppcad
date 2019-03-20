@@ -333,6 +333,16 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
   app_state_t *astate = app_state_t::get_inst();
 
+  tms_common_settings_gb = new qspoiler_widget_t(tr("Common settings"));
+  tms_common_settings_gb_lt = new QFormLayout;
+  tms_common_settings_gb->add_content_layout(tms_common_settings_gb_lt);
+
+  tms_render_dist = new qbinded_checkbox;
+  tms_render_angle = new qbinded_checkbox;
+  tms_common_settings_gb_lt->addRow(tr("Draw dists"), tms_render_dist);
+  tms_common_settings_gb_lt->addRow(tr("Draw angles"), tms_render_angle);
+  init_form_lt(tms_common_settings_gb_lt);
+
   tms_pair_dist_gb = new qspoiler_widget_t(tr("Interatomic distance"));
   tms_pair_dist_gb_lt = new QFormLayout;
   tms_pair_dist_gb->add_content_layout(tms_pair_dist_gb_lt);
@@ -409,6 +419,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_angle_gb_lt->addRow(tr("Order"), tms_angle_order);
   init_form_lt(tms_angle_gb_lt);
 
+  tab_measurement->tab_inner_widget_lt->addWidget(tms_common_settings_gb);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_pair_dist_gb);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_angle_gb);
   tab_measurement->tab_inner_widget_lt->addStretch(1);
@@ -900,6 +911,11 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       //end bind tab modify
 
+      //bind tab measurement common settings
+      tms_render_dist->bind_value(&b_al->m_measure->m_render_dist);
+      tms_render_angle->bind_value(&b_al->m_measure->m_render_angle);
+      //end of bind tab measurement common settings
+
       update_modify_tab();
       update_measurement_tab();
       update_select_tab();
@@ -945,6 +961,9 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   tm_override_atom_color->unbind_value();
   tm_override_atom_radii->unbind_value();
   //end tab modify spec
+
+  tms_render_dist->unbind_value();
+  tms_render_angle->unbind_value();
 
   disp_type_spec_mdl->unbind();
   bt_mdl->unbind();

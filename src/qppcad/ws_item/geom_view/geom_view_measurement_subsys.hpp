@@ -87,6 +87,9 @@ namespace qpp {
       std::vector<msr_bond_rec_t<uint32_t> > m_dist_recs;
       std::vector<msr_angle_rec_t<uint32_t> > m_angle_recs;
 
+      bool m_render_dist{true};
+      bool m_render_angle{true};
+
       int m_cur_dist_rec_ui{0}; // 0 - none, real = +1
       int m_cur_angle_rec_ui{0}; // 0 - none, real = +1
 
