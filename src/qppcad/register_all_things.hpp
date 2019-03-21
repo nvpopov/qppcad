@@ -9,6 +9,7 @@ namespace qpp {
   namespace cad {
 
     class registration_helper_t {
+
       public:
 
         template<typename T>
@@ -30,15 +31,17 @@ namespace qpp {
         template<typename T, typename U>
         static void reg_ws_item_tool(std::string _full_name,
                                      size_t _g_hash,
-                                     ws_item_behaviour_manager_t *bhv_mgr) {
+                                     ws_item_behaviour_manager_t *bhv_mgr,
+                                     bool _item_required = true) {
           bhv_mgr->reg_tool(_full_name,
                             _g_hash,
                             U::get_type_static(),
-                            true,
+                            _item_required,
                             [](){return std::make_shared<T>();});
         }
 
         static void reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr);
+
     };
 
   }

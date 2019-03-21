@@ -26,6 +26,7 @@
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
 #include <qppcad/tools/colorize_by_xfield/colorize_by_xfield.hpp>
+#include <qppcad/tools/structure_similarity/structure_similarity.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -216,5 +217,11 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         "Colorize by xfield",
         hash_t_generic,
         bhv_mgr);
+
+  registration_helper_t::reg_ws_item_tool<structure_similarity_tool_t, geom_view_t>(
+        "Structure similarity",
+        hash_t_generic,
+        bhv_mgr,
+        false);
 
 }

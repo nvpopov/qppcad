@@ -181,6 +181,7 @@ add_executable(qppcad
     src/qppcad/tools/axial_scale/axial_scale.cpp
     src/qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.cpp
     src/qppcad/tools/colorize_by_xfield/colorize_by_xfield.cpp
+    src/qppcad/tools/structure_similarity/structure_similarity.cpp
 
     src/qppcad/python/python_console_output_redirectors.cpp
     src/qppcad/python/python_console_widget.cpp
