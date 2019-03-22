@@ -28,6 +28,7 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
 
   gb_select_actors = new QGroupBox(tr("Actors"));
   gb_select_actors_lt = new QFormLayout;
+  gb_select_actors->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
   cmb_it1 = new QComboBox;
   cmb_ws1 = new QComboBox;
@@ -35,8 +36,8 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   cmb_ws2 = new QComboBox;
 
   cmb_method = new QComboBox;
-  cmb_method->addItem(tr("Compare-naive"));
-  cmb_method->addItem(tr("Compare-tws_tree"));
+  cmb_method->addItem(tr("compare-naive"));
+  cmb_method->addItem(tr("compare-tws_tree"));
 
   btn_compute = new QPushButton(tr("Compute"));
   connect(btn_compute,
@@ -52,9 +53,10 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   gb_select_actors_lt->addRow(tr(""), btn_compute);
 
   gb_select_actors->setLayout(gb_select_actors_lt);
-
   widget_lt->addWidget(gb_select_actors);
-  //widget_lt->addSpacing(1);
+
+  m_anim_info[0] = new structure_similarity_anim_info_t(widget_lt, "Actor №1 anim");
+  m_anim_info[1] = new structure_similarity_anim_info_t(widget_lt, "Actor №2 anim");
 
   connect(cmb_ws1,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -65,6 +67,16 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
           this,
           &structure_similarity_widget_t::cmb_ws2_changed);
+
+  connect(cmb_it1,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &structure_similarity_widget_t::cmb_it1_changed);
+
+  connect(cmb_it2,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &structure_similarity_widget_t::cmb_it2_changed);
 
   cmb_ws(cmb_ws1);
   cmb_ws(cmb_ws2);
@@ -95,12 +107,15 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   str_sim_table->setMinimumHeight(350);
 
   str_sim_output = new QTextEdit;
+  str_sim_output->setReadOnly(true);
   str_sim_output->setMaximumHeight(110);
 
   gb_str_sim_output_lt->addWidget(str_sim_table);
   gb_str_sim_output_lt->addWidget(str_sim_output);
 
   widget_top_lt->addWidget(gb_str_sim_output);
+
+  widget_lt->addStretch(1);
 
 }
 
@@ -124,7 +139,9 @@ void structure_similarity_widget_t::cmb_ws(QComboBox *_cmb) {
 
 }
 
-void structure_similarity_widget_t::cmb_it(QComboBox *_cmb, std::shared_ptr<workspace_t> _ws) {
+void structure_similarity_widget_t::cmb_it(QComboBox *_cmb,
+                                           std::shared_ptr<workspace_t> _ws,
+                                           size_t itm_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -132,10 +149,11 @@ void structure_similarity_widget_t::cmb_it(QComboBox *_cmb, std::shared_ptr<work
 
       _cmb->clear();
       _cmb->setEnabled(true);
-      for (size_t i = 0; i < _ws->m_ws_items.size(); i++)
-        _cmb->addItem(tr("[%1]%2")
-                      .arg(i)
-                      .arg(QString::fromStdString(_ws->m_ws_items[i]->m_name)));
+      for (size_t i = 0; i < _ws->m_ws_items.size(); i++) {
+          _cmb->addItem(tr("[%1]%2")
+                        .arg(i)
+                        .arg(QString::fromStdString(_ws->m_ws_items[i]->m_name)));
+        }
 
     } else {
 
@@ -265,6 +283,41 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
 
 }
 
+void structure_similarity_widget_t::cmb_it_changed_marshall(int index, size_t actor_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  m_anim_info[actor_id]->set_visible(false);
+
+  size_t ws_id = actor_id == 0 ? cmb_ws1->currentIndex() : cmb_ws2->currentIndex();
+
+  if (ws_id >= astate->ws_manager->m_ws.size()) return;
+  if (index >= astate->ws_manager->m_ws[ws_id]->m_ws_items.size()) return;
+
+  auto ws_itm = astate->ws_manager->m_ws[ws_id]->m_ws_items[index];
+
+  if (!ws_itm) return;
+
+  auto as_al = ws_itm->cast_as<geom_view_t>();
+
+  if (!as_al) {
+      return;
+    }
+
+  if (!as_al->m_anim->animable()) return;
+
+  m_anim_info[actor_id]->cmb_anim_name->clear();
+  m_anim_info[actor_id]->cmb_anim_frame->clear();
+
+  for (size_t i = 0 ; i < as_al->m_anim->m_anim_data.size(); i++)
+    m_anim_info[actor_id]->cmb_anim_name->addItem(QString::fromStdString(
+                                                    as_al->m_anim->m_anim_data[i].m_anim_name));
+
+  m_anim_info[actor_id]->set_visible(true);
+
+
+}
+
 void structure_similarity_widget_t::compute_button_clicked() {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -296,13 +349,47 @@ void structure_similarity_widget_t::compute_button_clicked() {
 void structure_similarity_widget_t::cmb_ws1_changed(int index) {
 
   app_state_t *astate = app_state_t::get_inst();
-  cmb_it(cmb_it1, astate->ws_manager->m_ws[cmb_ws1->currentIndex()]);
+  cmb_it(cmb_it1, astate->ws_manager->m_ws[cmb_ws1->currentIndex()], 0);
 
 }
 
 void structure_similarity_widget_t::cmb_ws2_changed(int index) {
 
   app_state_t *astate = app_state_t::get_inst();
-  cmb_it(cmb_it2, astate->ws_manager->m_ws[cmb_ws2->currentIndex()]);
+  cmb_it(cmb_it2, astate->ws_manager->m_ws[cmb_ws2->currentIndex()], 1);
+
+}
+
+void structure_similarity_widget_t::cmb_it1_changed(int index) {
+
+  cmb_it_changed_marshall(index, 0);
+
+}
+
+void structure_similarity_widget_t::cmb_it2_changed(int index) {
+
+  cmb_it_changed_marshall(index, 1);
+
+}
+
+void structure_similarity_anim_info_t::set_visible(bool visible) {
+
+  gb_itm_anim->setVisible(visible);
+
+}
+
+structure_similarity_anim_info_t::structure_similarity_anim_info_t(QLayout *lt, QString gb_title) {
+
+  gb_itm_anim = new QGroupBox(gb_title);
+  gb_itm_anim_lt = new QFormLayout;
+  gb_itm_anim->setLayout(gb_itm_anim_lt);
+
+  cmb_anim_name = new QComboBox;
+  cmb_anim_frame = new QComboBox;
+
+  gb_itm_anim_lt->addRow(QObject::tr("Anim name"), cmb_anim_name);
+  gb_itm_anim_lt->addRow(QObject::tr("Anim frame"), cmb_anim_frame);
+
+  lt->addWidget(gb_itm_anim);
 
 }

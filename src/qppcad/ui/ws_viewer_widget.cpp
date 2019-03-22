@@ -31,7 +31,7 @@ void ws_viewer_widget_t::draw_text_logo(QPainter &painter) {
   QFont font(QFont(astate->m_font_name, 42, QFont::Medium));
   painter.setFont(font);
   QFontMetrics fm(font);
-  QColor logo_color = Qt::black;
+  QColor logo_color = QColor::fromRgb(75, 75, 75);
 
   QString logo_string = tr("qpp::cad, git rev.:%1")
                         .arg(QString::fromStdString(build_info_helper::get_git_version()));
