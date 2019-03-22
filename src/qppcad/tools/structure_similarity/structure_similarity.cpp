@@ -1,5 +1,6 @@
 #include <qppcad/tools/structure_similarity/structure_similarity.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -19,6 +20,13 @@ void structure_similarity_tool_t::exec(ws_item_t *item) {
 }
 
 structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  Qt::WindowFlags flags = 0;
+  flags |= Qt::WindowMaximizeButtonHint;
+  flags |= Qt::WindowCloseButtonHint;
+  setWindowFlags(flags);
 
   setWindowTitle(tr("Structure similarity"));
   widget_lt = new QVBoxLayout;
@@ -78,6 +86,16 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
           this,
           &structure_similarity_widget_t::cmb_it2_changed);
 
+  connect(m_anim_info[0]->cmb_anim_name,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &structure_similarity_widget_t::cmb_anim1_changed);
+
+  connect(m_anim_info[1]->cmb_anim_name,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &structure_similarity_widget_t::cmb_anim2_changed);
+
   cmb_ws(cmb_ws1);
   cmb_ws(cmb_ws2);
 
@@ -115,6 +133,12 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
 
   widget_top_lt->addWidget(gb_str_sim_output);
 
+  qt_helpers::resize_form_lt_lbls(gb_select_actors_lt,
+                                  astate->size_guide.obj_insp_lbl_w());
+  qt_helpers::resize_form_lt_lbls(m_anim_info[0]->gb_itm_anim_lt,
+                                  astate->size_guide.obj_insp_lbl_w());
+  qt_helpers::resize_form_lt_lbls(m_anim_info[1]->gb_itm_anim_lt,
+                                  astate->size_guide.obj_insp_lbl_w());
   widget_lt->addStretch(1);
 
 }
@@ -239,47 +263,74 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
 
       vector3<float> p1 = g1->m_geom->pos(i);
       vector3<float> p2 = g2->m_geom->pos(i);
+
+      if (m_anim_info[0]->cmb_anim_name->isVisible()) {
+          size_t anim_id = m_anim_info[0]->cmb_anim_name->currentIndex();
+          size_t frame_id = m_anim_info[0]->cmb_anim_frame->currentIndex();
+          p1 = g1->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+        }
+
+      if (m_anim_info[1]->cmb_anim_name->isVisible()) {
+          size_t anim_id = m_anim_info[1]->cmb_anim_name->currentIndex();
+          size_t frame_id = m_anim_info[1]->cmb_anim_frame->currentIndex();
+          p2 = g2->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+        }
+
       vector3<float> dp = p2 - p1;
-      float dp_l = dp.norm();
-
-      QTableWidgetItem *atom_id = new QTableWidgetItem(QString("%1").arg(i));
-      atom_id->setTextAlignment(Qt::AlignCenter);
-      str_sim_table->setItem(i, 0, atom_id);
-
-      bool types_are_different = g1->m_geom->type_table(i) != g2->m_geom->type_table(i);
-      QTableWidgetItem *atype_g1 =
-          new QTableWidgetItem(QString::fromStdString(g1->m_geom->atom_name(i)));
-      atype_g1->setTextAlignment(Qt::AlignCenter);
-      if (types_are_different) atype_g1->setBackground(Qt::red);
-      str_sim_table->setItem(i, 1, atype_g1);
-
-      QTableWidgetItem *atype_g2 =
-          new QTableWidgetItem(QString::fromStdString(g2->m_geom->atom_name(i)));
-      atype_g2->setTextAlignment(Qt::AlignCenter);
-      if (types_are_different) atype_g2->setBackground(Qt::red);
-      str_sim_table->setItem(i, 2, atype_g2);
-
-      QTableWidgetItem *dp_lr = new QTableWidgetItem(QString("%1").arg(dp_l));
-      dp_lr->setTextAlignment(Qt::AlignCenter);
-      if (dp_l > 0.001f) dp_lr->setBackgroundColor(Qt::red);
-      str_sim_table->setItem(i, 3, dp_lr);
-
-      QTableWidgetItem *dp_x = new QTableWidgetItem(QString("%1").arg(dp[0]));
-      dp_x->setTextAlignment(Qt::AlignCenter);
-      if (abs(dp[0]) > 0.001f) dp_x->setBackgroundColor(Qt::red);
-      str_sim_table->setItem(i, 4, dp_x);
-
-      QTableWidgetItem *dp_y = new QTableWidgetItem(QString("%1").arg(dp[1]));
-      dp_y->setTextAlignment(Qt::AlignCenter);
-      if (abs(dp[1]) > 0.001f) dp_y->setBackgroundColor(Qt::red);
-      str_sim_table->setItem(i, 5, dp_y);
-
-      QTableWidgetItem *dp_z = new QTableWidgetItem(QString("%1").arg(dp[2]));
-      dp_z->setTextAlignment(Qt::AlignCenter);
-      if (abs(dp[2]) > 0.001f) dp_z->setBackgroundColor(Qt::red);
-      str_sim_table->setItem(i, 6, dp_z);
+      set_out_table_data(g1, g2, i, dp);
 
     }
+
+}
+
+void structure_similarity_widget_t::compute_structure_similarity_tws_tree(geom_view_t *g1,
+                                                                          geom_view_t *g2) {
+
+}
+
+void structure_similarity_widget_t::set_out_table_data(geom_view_t *g1,
+                                                       geom_view_t *g2,
+                                                       size_t atom_idx,
+                                                       vector3<float> _dp) {
+
+  float _dp_l = _dp.norm();
+
+  QTableWidgetItem *atom_id = new QTableWidgetItem(QString("%1").arg(atom_idx));
+  atom_id->setTextAlignment(Qt::AlignCenter);
+  str_sim_table->setItem(atom_idx, 0, atom_id);
+
+  bool types_are_different = g1->m_geom->type_table(atom_idx) != g2->m_geom->type_table(atom_idx);
+  QTableWidgetItem *atype_g1 =
+      new QTableWidgetItem(QString::fromStdString(g1->m_geom->atom_name(atom_idx)));
+  atype_g1->setTextAlignment(Qt::AlignCenter);
+  if (types_are_different) atype_g1->setBackground(Qt::red);
+  str_sim_table->setItem(atom_idx, 1, atype_g1);
+
+  QTableWidgetItem *atype_g2 =
+      new QTableWidgetItem(QString::fromStdString(g2->m_geom->atom_name(atom_idx)));
+  atype_g2->setTextAlignment(Qt::AlignCenter);
+  if (types_are_different) atype_g2->setBackground(Qt::red);
+  str_sim_table->setItem(atom_idx, 2, atype_g2);
+
+  QTableWidgetItem *dp_lr = new QTableWidgetItem(QString("%1").arg(_dp_l));
+  dp_lr->setTextAlignment(Qt::AlignCenter);
+  if (_dp_l > 0.001f) dp_lr->setBackgroundColor(Qt::red);
+  str_sim_table->setItem(atom_idx, 3, dp_lr);
+
+  QTableWidgetItem *dp_x = new QTableWidgetItem(QString("%1").arg(_dp[0]));
+  dp_x->setTextAlignment(Qt::AlignCenter);
+  if (abs(_dp[0]) > 0.001f) dp_x->setBackgroundColor(Qt::red);
+  str_sim_table->setItem(atom_idx, 4, dp_x);
+
+  QTableWidgetItem *dp_y = new QTableWidgetItem(QString("%1").arg(_dp[1]));
+  dp_y->setTextAlignment(Qt::AlignCenter);
+  if (abs(_dp[1]) > 0.001f) dp_y->setBackgroundColor(Qt::red);
+  str_sim_table->setItem(atom_idx, 5, dp_y);
+
+  QTableWidgetItem *dp_z = new QTableWidgetItem(QString("%1").arg(_dp[2]));
+  dp_z->setTextAlignment(Qt::AlignCenter);
+  if (abs(_dp[2]) > 0.001f) dp_z->setBackgroundColor(Qt::red);
+  str_sim_table->setItem(atom_idx, 6, dp_z);
 
 }
 
@@ -299,15 +350,10 @@ void structure_similarity_widget_t::cmb_it_changed_marshall(int index, size_t ac
   if (!ws_itm) return;
 
   auto as_al = ws_itm->cast_as<geom_view_t>();
-
-  if (!as_al) {
-      return;
-    }
-
+  if (!as_al) return;
   if (!as_al->m_anim->animable()) return;
 
   m_anim_info[actor_id]->cmb_anim_name->clear();
-  m_anim_info[actor_id]->cmb_anim_frame->clear();
 
   for (size_t i = 0 ; i < as_al->m_anim->m_anim_data.size(); i++)
     m_anim_info[actor_id]->cmb_anim_name->addItem(QString::fromStdString(
@@ -315,6 +361,35 @@ void structure_similarity_widget_t::cmb_it_changed_marshall(int index, size_t ac
 
   m_anim_info[actor_id]->set_visible(true);
 
+  //std::cout << "cmb_it_changed_marshall " << std::endl;
+
+}
+
+void structure_similarity_widget_t::cmb_anim_changed_marshall(int index, size_t actor_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  size_t ws_id = actor_id == 0 ? cmb_ws1->currentIndex() : cmb_ws2->currentIndex();
+  size_t anim_id =  m_anim_info[actor_id]->cmb_anim_name->currentIndex();
+  size_t itm_id = 0 ? cmb_it1->currentIndex() : cmb_it2->currentIndex();
+
+  if (ws_id >= astate->ws_manager->m_ws.size()) return;
+  if (index >= astate->ws_manager->m_ws[ws_id]->m_ws_items.size()) return;
+
+  auto ws_itm = astate->ws_manager->m_ws[ws_id]->m_ws_items[itm_id];
+
+  if (!ws_itm) return;
+
+  auto as_al = ws_itm->cast_as<geom_view_t>();
+  if (!as_al) return;
+  if (!as_al->m_anim->animable()) return;
+
+  m_anim_info[actor_id]->cmb_anim_frame->clear();
+
+  for (size_t i = 0 ; i < as_al->m_anim->m_anim_data[anim_id].frames.size(); i++)
+    m_anim_info[actor_id]->cmb_anim_frame->addItem(QString("%1").arg(i));
+
+  //std::cout << "cmb_anim_changed_marshall " << std::endl;
 
 }
 
@@ -369,6 +444,18 @@ void structure_similarity_widget_t::cmb_it1_changed(int index) {
 void structure_similarity_widget_t::cmb_it2_changed(int index) {
 
   cmb_it_changed_marshall(index, 1);
+
+}
+
+void structure_similarity_widget_t::cmb_anim1_changed(int index) {
+
+  cmb_anim_changed_marshall(index, 0);
+
+}
+
+void structure_similarity_widget_t::cmb_anim2_changed(int index) {
+
+  cmb_anim_changed_marshall(index, 1);
 
 }
 

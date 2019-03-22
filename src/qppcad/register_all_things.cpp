@@ -31,6 +31,7 @@
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
 
+#include <io/write_coord.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -99,6 +100,9 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   size_t generic_molcas_grid_ff_hash =
       bhv_mgr->reg_ff("Molcas ASCII Grid", "gv", generic_ff_g_hash, {".grid", ".GRID"} );
 
+  size_t generic_raw_coord_ff_hash =
+      bhv_mgr->reg_ff("Simple coord.", "coord", generic_ff_g_hash, {"coord", "coord"} );
+
   auto xyz_ff_mgr =
       std::make_shared<
       geom_view_io_ccd_t<
@@ -154,6 +158,13 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       float, periodic_cell<float> >, true, 3 >
       >();
 
+  auto write_raw_coord_mgf =
+      std::make_shared<
+      geom_view_io_saver_t<
+      write_raw_coord<
+      float, periodic_cell<float> >, false, 0 >
+      >();
+
   auto vasp_outcar_mgf =
       std::make_shared<
       geom_view_io_anim_loader_t<
@@ -188,6 +199,8 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   bhv_mgr->reg_io_bhv(generic_cube3d_mgf, generic_cube3d_ff_hash,
                       geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(generic_molcas_grid_mgf, generic_molcas_grid_ff_hash,
+                      geom_view_t::get_type_static());
+  bhv_mgr->reg_io_bhv(write_raw_coord_mgf, generic_raw_coord_ff_hash,
                       geom_view_t::get_type_static());
 
 }

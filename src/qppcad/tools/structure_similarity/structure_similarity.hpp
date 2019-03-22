@@ -53,9 +53,14 @@ namespace qpp {
         void cmb_ws(QComboBox *_cmb);
         void cmb_it(QComboBox *_cmb, std::shared_ptr<workspace_t> _ws, size_t itm_idx);
         void compute_structure_similarity(ws_item_t *g1, ws_item_t *g2);
-        void compute_structure_similarity_naive(geom_view_t *g1,
-                                                geom_view_t *g2);
+        void compute_structure_similarity_naive(geom_view_t *g1, geom_view_t *g2);
+        void compute_structure_similarity_tws_tree(geom_view_t *g1, geom_view_t *g2);
+        void set_out_table_data(geom_view_t *g1,
+                                geom_view_t *g2,
+                                size_t atom_idx,
+                                vector3<float> _dp);
         void cmb_it_changed_marshall(int index, size_t actor_id);
+        void cmb_anim_changed_marshall(int index, size_t actor_id);
 
       public slots:
 
@@ -64,6 +69,8 @@ namespace qpp {
         void cmb_ws2_changed(int index);
         void cmb_it1_changed(int index);
         void cmb_it2_changed(int index);
+        void cmb_anim1_changed(int index);
+        void cmb_anim2_changed(int index);
 
     };
 
