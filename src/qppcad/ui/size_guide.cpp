@@ -90,3 +90,11 @@ int size_guide_t::obj_insp_button_w() {
 int size_guide_t::obj_insp_lbl_w() {
   return 140;
 }
+
+int size_guide_t::common_tools_panel_w() {
+  return 320;
+}
+
+int size_guide_t::common_tools_panel_label_w() {
+  return 100;
+}

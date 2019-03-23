@@ -37,6 +37,7 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   gb_select_actors = new QGroupBox(tr("Actors"));
   gb_select_actors_lt = new QFormLayout;
   gb_select_actors->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  gb_select_actors->setFixedWidth(astate->size_guide.common_tools_panel_w());
 
   cmb_it1 = new QComboBox;
   cmb_ws1 = new QComboBox;
@@ -53,9 +54,9 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
           this,
           &structure_similarity_widget_t::compute_button_clicked);
 
-  gb_select_actors_lt->addRow(tr("Workspace №1"), cmb_ws1);
+  gb_select_actors_lt->addRow(tr("Wrksp. №1"), cmb_ws1);
   gb_select_actors_lt->addRow(tr("Item №1"), cmb_it1);
-  gb_select_actors_lt->addRow(tr("Workspace №2"), cmb_ws2);
+  gb_select_actors_lt->addRow(tr("Wrksp. №2"), cmb_ws2);
   gb_select_actors_lt->addRow(tr("Item №2"), cmb_it2);
   gb_select_actors_lt->addRow(tr("Method"), cmb_method);
   gb_select_actors_lt->addRow(tr(""), btn_compute);
@@ -134,11 +135,11 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   widget_top_lt->addWidget(gb_str_sim_output);
 
   qt_helpers::resize_form_lt_lbls(gb_select_actors_lt,
-                                  astate->size_guide.obj_insp_lbl_w());
+                                  astate->size_guide.common_tools_panel_label_w());
   qt_helpers::resize_form_lt_lbls(m_anim_info[0]->gb_itm_anim_lt,
-                                  astate->size_guide.obj_insp_lbl_w());
+                                  astate->size_guide.common_tools_panel_label_w());
   qt_helpers::resize_form_lt_lbls(m_anim_info[1]->gb_itm_anim_lt,
-                                  astate->size_guide.obj_insp_lbl_w());
+                                  astate->size_guide.common_tools_panel_label_w());
   widget_lt->addStretch(1);
 
 }
@@ -467,6 +468,8 @@ void structure_similarity_anim_info_t::set_visible(bool visible) {
 
 structure_similarity_anim_info_t::structure_similarity_anim_info_t(QLayout *lt, QString gb_title) {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   gb_itm_anim = new QGroupBox(gb_title);
   gb_itm_anim_lt = new QFormLayout;
   gb_itm_anim->setLayout(gb_itm_anim_lt);
@@ -478,5 +481,7 @@ structure_similarity_anim_info_t::structure_similarity_anim_info_t(QLayout *lt, 
   gb_itm_anim_lt->addRow(QObject::tr("Anim frame"), cmb_anim_frame);
 
   lt->addWidget(gb_itm_anim);
+
+  gb_itm_anim->setFixedWidth(astate->size_guide.common_tools_panel_w());
 
 }

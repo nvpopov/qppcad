@@ -61,6 +61,12 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS      = "sel_vis_affect_bonds";
 
     const auto JSON_ATOMS_LIST_LABELS_TYPE               = "labels";
+    const auto JSON_ATOMS_LIST_LABELS_SIZE               = "labels_size";
+    const auto JSON_ATOMS_LIST_LABELS_DRAW_OUTLINE       = "labels_draw_outline";
+    const auto JSON_ATOMS_LIST_LABELS_INPLACE            = "labels_inplace";
+    const auto JSON_ATOMS_LIST_LABELS_SEL_VIS            = "labels_sel_vis";
+    const auto JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE   = "labels_scrn_spc_scale";
+
     const auto JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE       = "type_color_override";
 
     const auto JSON_WS_CUBE_P_COLOR = "cube_color";

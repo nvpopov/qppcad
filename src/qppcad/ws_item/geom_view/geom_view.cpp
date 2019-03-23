@@ -1035,6 +1035,11 @@ void geom_view_t::save_to_json (json &data) {
   data[JSON_ATOMS_LIST_SPECULAR] = m_shading_specular_power;
 
   data[JSON_ATOMS_LIST_LABELS_TYPE] = m_labels->m_style;
+  data[JSON_ATOMS_LIST_LABELS_SIZE] = m_labels->m_label_font_size;
+  data[JSON_ATOMS_LIST_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines;
+  data[JSON_ATOMS_LIST_LABELS_INPLACE] = m_labels->m_render_inplace_hud;
+  data[JSON_ATOMS_LIST_LABELS_SEL_VIS] = m_labels->m_selective_label_render;
+  data[JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale;
 
   data[JSON_CELL_COLOR] = json::array({m_cell_color[0], m_cell_color[1], m_cell_color[2]});
   data[JSON_BONDING_TABLE] = json::array({});
@@ -1078,6 +1083,18 @@ void geom_view_t::save_to_json (json &data) {
       atom.push_back(m_geom->xfield<bool>(xgeom_label_show, i));
       atom.push_back(m_geom->xfield<std::string>(xgeom_label_text, i));
       data[JSON_ATOMS].push_back(atom);
+    }
+
+  if (!m_type_color_override.empty()) {
+      data[JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE] = json::array({});
+      for (auto &elem : m_type_color_override) {
+          json color_override_rec = json::array({});
+          color_override_rec.push_back(elem.first);
+          color_override_rec.push_back(elem.second[0]);
+          color_override_rec.push_back(elem.second[1]);
+          color_override_rec.push_back(elem.second[2]);
+          data[JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE].push_back(color_override_rec);
+        }
     }
 
   if (m_anim->animable()) {
@@ -1144,6 +1161,21 @@ void geom_view_t::load_from_json (json &data) {
   if (data.find(JSON_ATOMS_LIST_LABELS_TYPE) != data.end())
     m_labels->m_style = data[JSON_ATOMS_LIST_LABELS_TYPE];
 
+  if (data.find(JSON_ATOMS_LIST_LABELS_SIZE) != data.end())
+    m_labels->m_label_font_size = data[JSON_ATOMS_LIST_LABELS_SIZE];
+
+  if (data.find(JSON_ATOMS_LIST_LABELS_DRAW_OUTLINE) != data.end())
+    m_labels->m_render_outlines = data[JSON_ATOMS_LIST_LABELS_DRAW_OUTLINE];
+
+  if (data.find(JSON_ATOMS_LIST_LABELS_INPLACE) != data.end())
+    m_labels->m_render_inplace_hud = data[JSON_ATOMS_LIST_LABELS_INPLACE];
+
+  if (data.find(JSON_ATOMS_LIST_LABELS_SEL_VIS) != data.end())
+    m_labels->m_selective_label_render = data[JSON_ATOMS_LIST_LABELS_SEL_VIS];
+
+  if (data.find(JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE) != data.end())
+    m_labels->m_screen_scale = data[JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE];
+
   if (data.find(JSON_SHOW_IMG_BONDS) != data.end())
     m_draw_img_bonds = data[JSON_SHOW_IMG_BONDS];
 
@@ -1170,6 +1202,17 @@ void geom_view_t::load_from_json (json &data) {
       int sc_b = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][1].get<int>();
       int sc_c = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][2].get<int>();
       m_subcells_range = vector3<int>(sc_a, sc_b, sc_c);
+    }
+
+  if (data.find(JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE) != data.end()) {
+      m_type_color_override.clear();
+      for (const auto &rec : data[JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE]) {
+          size_t type_idx = rec[0].get<size_t>();
+          float tco_r = rec[1].get<float>();
+          float tco_g = rec[2].get<float>();
+          float tco_b = rec[3].get<float>();
+          m_type_color_override.insert({type_idx, vector3<float>{tco_r, tco_g, tco_b}});
+        }
     }
 
   m_tws_tr->do_action(act_lock | act_clear_all);
