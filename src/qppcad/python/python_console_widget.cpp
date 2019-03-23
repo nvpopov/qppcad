@@ -284,7 +284,8 @@ void python_text_editor_t::run_cmd() {
               append(QLatin1String(""));
             } else {
               app_state_t* astate = app_state_t::get_inst();
-              bool result = astate->py_manager->execute(text.toStdString());
+              QString proc_command = text.replace(".  .  .", "    ");
+              bool result = astate->py_manager->execute(proc_command.toStdString());
               append(QString::fromStdString(astate->py_manager->m_output_buffer));
             }
         }
@@ -336,12 +337,15 @@ void python_text_editor_t::move_cursor_to_end() {
 }
 
 void python_text_editor_t::clear_signal_received() {
+
   clear();
   //print_promt();
 }
 
 void python_text_editor_t::focus_signal_received() {
+
   setFocus();
+
 }
 
 void python_text_editor_t::font_size_updated_signal_received() {
