@@ -18,6 +18,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QToolButton>
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QMessageBox>
@@ -69,13 +70,14 @@ namespace qpp {
         QPushButton *tp_edit_mode_content;
         QFrame *tp_edit_mode_end;
 
-        QPushButton *tp_camera_x;
-        QPushButton *tp_camera_y;
-        QPushButton *tp_camera_z;
-        QPushButton *tp_camera_cart_c;
-        QPushButton *tp_camera_a;
-        QPushButton *tp_camera_b;
-        QPushButton *tp_camera_c;
+        QToolButton *tp_camera_tool;
+        qextended_action *tp_camera_tool_act_x;
+        qextended_action *tp_camera_tool_act_y;
+        qextended_action *tp_camera_tool_act_z;
+        qextended_action *tp_camera_tool_act_cc;
+        qextended_action *tp_camera_tool_act_a;
+        qextended_action *tp_camera_tool_act_b;
+        qextended_action *tp_camera_tool_act_c;
 
         QPushButton *tp_force_sel_lbl_vis;
         QPushButton *tp_toggle_atom_override;
@@ -191,6 +193,7 @@ namespace qpp {
         void ws_edit_mode_selector_button_clicked(int id);
         void tp_force_sel_lbl_vis_button_clicked(bool checked);
         void tp_toggle_atom_override_button_clicked(bool checked);
+        void tp_camera_tool_button_triggered(QAction *action);
 
         void apply_camera_view_change(cam_target_view_t target_view);
 

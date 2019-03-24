@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum cam_target_view_t : int {
+    enum cam_target_view_t : size_t {
       tv_x_axis,
       tv_y_axis,
       tv_z_axis,
@@ -20,12 +20,12 @@ namespace qpp {
       tv_c_star_axis
     };
 
-    enum cam_proj_t {
+    enum cam_proj_t : size_t {
       proj_ortho,
       proj_persp
     };
 
-    class camera_t{
+    class camera_t {
 
       public:
 

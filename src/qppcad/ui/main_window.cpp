@@ -422,63 +422,54 @@ void main_window::init_widgets() {
           this,
           &main_window::ws_edit_mode_selector_button_clicked);
 
-  tp_camera_x = new QPushButton(tr("C:X"));
-  tp_camera_x->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_x->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_x,
-          &QPushButton::pressed,
-          this,
-          [this](){this->apply_camera_view_change(cam_target_view_t::tv_x_axis);});
+  tp_camera_tool = new QToolButton;
+  tp_camera_tool->setIcon(QIcon("://images/outline-videocam-24px.svg"));
+  tp_camera_tool->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                    astate->size_guide.tool_panel_icon_size()));
 
-  tp_camera_y = new QPushButton(tr("C:Y"));
-  tp_camera_y->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_y->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_y,
-          &QPushButton::pressed,
+  tp_camera_tool->setPopupMode(QToolButton::InstantPopup);
+  tp_camera_tool->setArrowType(Qt::NoArrow);
+  tp_camera_tool->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_camera_tool->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  connect(tp_camera_tool,
+          &QToolButton::triggered,
           this,
-          [this](){this->apply_camera_view_change(cam_target_view_t::tv_y_axis);});
+          &main_window::tp_camera_tool_button_triggered);
 
-  tp_camera_z = new QPushButton(tr("C:Z"));
-  tp_camera_z->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_z->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_z,
-          &QPushButton::pressed,
-          this,
-          [this](){this->apply_camera_view_change(cam_target_view_t::tv_z_axis);});
+  tp_camera_tool_act_x = new qextended_action(this);
+  tp_camera_tool_act_x->m_joined_data[0] = cam_target_view_t::tv_x_axis;
+  tp_camera_tool_act_x->setText(tr( "X - axis"));
+  tp_camera_tool->addAction(tp_camera_tool_act_x);
 
-  tp_camera_cart_c = new QPushButton(tr("C:C"));
-  tp_camera_cart_c->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_cart_c->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_cart_c,
-          &QPushButton::pressed,
-          this,
-          [this](){this->apply_camera_view_change(cam_target_view_t::tv_cart_center);});
+  tp_camera_tool_act_y = new qextended_action(this);
+  tp_camera_tool_act_y->m_joined_data[0] = cam_target_view_t::tv_y_axis;
+  tp_camera_tool_act_y->setText(tr( "Y - axis"));
+  tp_camera_tool->addAction(tp_camera_tool_act_y);
 
-  tp_camera_a = new QPushButton(tr("C:a"));
-  tp_camera_a->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_a->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_a,
-          &QPushButton::pressed,
-          this,
-          [this](){this->apply_camera_view_change(cam_target_view_t::tv_a_axis);});
+  tp_camera_tool_act_z = new qextended_action(this);
+  tp_camera_tool_act_z->m_joined_data[0] = cam_target_view_t::tv_z_axis;
+  tp_camera_tool_act_z->setText(tr( "Z - axis"));
+  tp_camera_tool->addAction(tp_camera_tool_act_z);
 
-  tp_camera_b = new QPushButton(tr("C:b"));
-  tp_camera_b->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_b->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_b,
-          &QPushButton::pressed,
-          this,
-          [this](){this->apply_camera_view_change(cam_target_view_t::tv_b_axis);});
+  tp_camera_tool_act_cc = new qextended_action(this);
+  tp_camera_tool_act_cc->m_joined_data[0] = cam_target_view_t::tv_cart_center;
+  tp_camera_tool_act_cc->setText(tr("Cart. cnt."));
+  tp_camera_tool->addAction(tp_camera_tool_act_cc);
 
-  tp_camera_c = new QPushButton(tr("C:c"));
-  tp_camera_c->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_c->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_c,
-          &QPushButton::pressed,
-          this,
-          [this](){this->apply_camera_view_change(cam_target_view_t::tv_c_axis);});
+  tp_camera_tool_act_a = new qextended_action(this);
+  tp_camera_tool_act_a->m_joined_data[0] = cam_target_view_t::tv_a_axis;
+  tp_camera_tool_act_a->setText(tr( "a - axis"));
+  tp_camera_tool->addAction(tp_camera_tool_act_a);
 
-  change_camera_buttons_visible(false, false);
+  tp_camera_tool_act_b = new qextended_action(this);
+  tp_camera_tool_act_b->m_joined_data[0] = cam_target_view_t::tv_b_axis;
+  tp_camera_tool_act_b->setText(tr( "b - axis"));
+  tp_camera_tool->addAction(tp_camera_tool_act_b);
+
+  tp_camera_tool_act_c = new qextended_action(this);
+  tp_camera_tool_act_c->m_joined_data[0] = cam_target_view_t::tv_c_axis;
+  tp_camera_tool_act_c->setText(tr( "c - axis"));
+  tp_camera_tool->addAction(tp_camera_tool_act_c);
 
   tp_measure_dist = new QPushButton();
   tp_measure_dist->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -587,13 +578,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_add_ws_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_print_screen, 0, Qt::AlignLeft);
 
-  tool_panel_layout->addWidget(tp_camera_x, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_camera_y, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_camera_z, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_camera_cart_c, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_camera_a, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_camera_b, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_camera_c, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
@@ -605,13 +590,7 @@ void main_window::init_layouts() {
 }
 
 void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
-  tp_camera_x->setVisible(cart_c);
-  tp_camera_y->setVisible(cart_c);
-  tp_camera_z->setVisible(cart_c);
-  tp_camera_cart_c->setVisible(cart_c);
-  tp_camera_a->setVisible(cell_c);
-  tp_camera_b->setVisible(cell_c);
-  tp_camera_c->setVisible(cell_c);
+
 }
 
 void main_window::dragEnterEvent(QDragEnterEvent *event) {
@@ -914,20 +893,35 @@ void main_window::cur_ws_selected_item_changed() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_manager->has_wss()) {
+
       auto cur_ws = astate->ws_manager->get_cur_ws();
+
       if (cur_ws) {
+
+          bool show_cam_button{true};
           auto cur_it = cur_ws->get_selected();
-          auto cur_it_as_al = dynamic_cast<geom_view_t*>(cur_it);
-          if (cur_it_as_al) {
-              //tp_measure_dist->show();
-              if (cur_it_as_al->m_geom->DIM == 3) change_camera_buttons_visible(false, true);
-              else change_camera_buttons_visible(true, false);
-            }
+
+          if (!cur_it) show_cam_button = false;
           else {
-              change_camera_buttons_visible(false, false);
-              //tp_measure_dist->hide();
+              auto al = cur_it->cast_as<geom_view_t>();
+
+              if (al) {
+                  show_cam_button = true;
+                  bool al_is_3d = al->m_geom->DIM == 3;
+                  tp_camera_tool_act_a->setEnabled(al_is_3d);
+                  tp_camera_tool_act_b->setEnabled(al_is_3d);
+                  tp_camera_tool_act_c->setEnabled(al_is_3d);
+                  tp_camera_tool_act_x->setEnabled(!al_is_3d);
+                  tp_camera_tool_act_y->setEnabled(!al_is_3d);
+                  tp_camera_tool_act_z->setEnabled(!al_is_3d);
+                  tp_camera_tool_act_cc->setEnabled(!al_is_3d);
+                }
             }
+
+          tp_camera_tool->setVisible(show_cam_button);
+
         }
+
     }
 
   cur_ws_edit_type_changed();
@@ -1238,40 +1232,49 @@ void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
 
 }
 
-void main_window::apply_camera_view_change(cam_target_view_t target_view) {
+void main_window::tp_camera_tool_button_triggered(QAction *action) {
+
+  if (!action) return;
+
+  qextended_action *ext_act = qobject_cast<qextended_action*>(action);
+  if (!ext_act) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
-      if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<geom_view_t*>(cur_it);
+  if (!astate->ws_manager->has_wss()) return;
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
 
-          if (al) {
+  auto cur_it = cur_ws->get_selected();
+  if (!cur_it) return;
 
-              vector3<float> look_from;
-              vector3<float> look_to;
-              vector3<float> look_up{0.0, 1.0, 0.0};
-              bool need_to_update_camera{false};
+  auto cur_it_as_al = cur_it->cast_as<geom_view_t>();
+  if (!cur_it_as_al) return;
 
-              al->target_view(target_view, look_from, look_to, look_up, need_to_update_camera);
+  vector3<float> look_from;
+  vector3<float> look_to;
+  vector3<float> look_up{0.0, 1.0, 0.0};
+  bool need_to_update_camera{false};
 
-              if (need_to_update_camera) {
-                  astate->camera->m_view_point = look_from;
-                  astate->camera->m_look_at = look_to;
-                  astate->camera->m_look_up = look_up;
-                  astate->camera->orthogonalize_gs();
-                  astate->camera->update_camera();
-                  //astate->make_viewport_dirty();
-                }
+  cam_target_view_t _tv = static_cast<cam_target_view_t>(ext_act->m_joined_data[0]);
 
-            } // end of if (cur_it_as_al)
+  cur_it_as_al->target_view(_tv, look_from, look_to, look_up, need_to_update_camera);
 
-        }
+  if (need_to_update_camera) {
+      astate->camera->m_view_point = look_from;
+      astate->camera->m_look_at = look_to;
+      astate->camera->m_look_up = look_up;
+      astate->camera->orthogonalize_gs();
+      astate->camera->update_camera();
+      //astate->make_viewport_dirty();
     }
 
   astate->make_viewport_dirty();
+
+}
+
+void main_window::apply_camera_view_change(cam_target_view_t target_view) {
+
 }
 
 void main_window::toggle_ws_edit_mode() {

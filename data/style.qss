@@ -111,7 +111,7 @@ QGroupBox::title {
  background-color: rgb(85, 85, 85);
 }
 
-QComboBox, QSpinBox, QDoubleSpinBox, QPushButton {
+QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
  background-color: rgb(80, 80, 80);
 }
 
