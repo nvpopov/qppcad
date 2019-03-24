@@ -36,5 +36,8 @@
         <file>fonts/Roboto/Roboto-Light.ttf</file>
         <file>images/outline-my_location-24px.svg</file>
         <file>images/outline-videocam-24px.svg</file>
+        <file>images/outline-delete-24px.svg</file>
+        <file>images/outline-slideshow-24px.svg</file>
+        <file>images/outline-receipt-24px.svg</file>
     </qresource>
 </RCC>

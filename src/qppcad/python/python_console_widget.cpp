@@ -9,10 +9,46 @@ using namespace qpp::cad;
 
 python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (parent) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   py_tedit = new python_text_editor_t(nullptr);
-  console_layout = new QVBoxLayout;
-  setLayout(console_layout);
-  console_layout->addWidget(py_tedit);
+
+  console_lt = new QHBoxLayout;
+  buttons_lt = new QVBoxLayout;
+
+  btn_clear = new QPushButton();
+  btn_clear->setIcon(QIcon("://images/outline-delete-24px.svg"));
+  btn_clear->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                               astate->size_guide.tool_panel_icon_size()));
+  btn_clear->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
+                                astate->size_guide.tool_panel_h()));
+  btn_clear->setToolTip(tr("Clear the console output"));
+
+  btn_editor_toggle = new QPushButton();
+  btn_editor_toggle->setIcon(QIcon("://images/outline-receipt-24px.svg"));
+  btn_editor_toggle->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                               astate->size_guide.tool_panel_icon_size()));
+  btn_editor_toggle->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
+                                astate->size_guide.tool_panel_h()));
+  btn_editor_toggle->setCheckable(true);
+  btn_editor_toggle->setToolTip(tr("Toggle script editor"));
+
+  btn_run_code = new QPushButton();
+  btn_run_code->setIcon(QIcon("://images/outline-slideshow-24px.svg"));
+  btn_run_code->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                               astate->size_guide.tool_panel_icon_size()));
+  btn_run_code->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
+                                astate->size_guide.tool_panel_h()));
+  btn_run_code->setToolTip(tr("Run script"));
+
+  buttons_lt->addWidget(btn_clear);
+  buttons_lt->addWidget(btn_editor_toggle);
+  buttons_lt->addWidget(btn_run_code);
+  buttons_lt->addStretch(0);
+
+  setLayout(console_lt);
+  console_lt->addLayout(buttons_lt);
+  console_lt->addWidget(py_tedit);
   setMinimumHeight(200);
   setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 

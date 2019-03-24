@@ -18,6 +18,7 @@
 #include <QAbstractItemModel>
 #include <QAbstractItemView>
 #include <QScrollBar>
+#include <QPushButton>
 
 /*
  * inspired(==copied) by avogadro (http://avogadro.cc/) pythonterminal extension
@@ -35,7 +36,14 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        QVBoxLayout *console_layout;
+
+        QHBoxLayout *console_lt;
+        QVBoxLayout *buttons_lt;
+
+        QPushButton *btn_clear;
+        QPushButton *btn_editor_toggle;
+        QPushButton *btn_run_code;
+
         python_text_editor_t *py_tedit;
         python_console_widget_t(QWidget *parent);
 
