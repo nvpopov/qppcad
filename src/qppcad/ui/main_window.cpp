@@ -438,22 +438,22 @@ void main_window::init_widgets() {
 
   tp_camera_tool_act_x = new qextended_action(this);
   tp_camera_tool_act_x->m_joined_data[0] = cam_target_view_t::tv_x_axis;
-  tp_camera_tool_act_x->setText(tr( "X - axis"));
+  tp_camera_tool_act_x->setText(tr( "x - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_x);
 
   tp_camera_tool_act_y = new qextended_action(this);
   tp_camera_tool_act_y->m_joined_data[0] = cam_target_view_t::tv_y_axis;
-  tp_camera_tool_act_y->setText(tr( "Y - axis"));
+  tp_camera_tool_act_y->setText(tr( "y - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_y);
 
   tp_camera_tool_act_z = new qextended_action(this);
   tp_camera_tool_act_z->m_joined_data[0] = cam_target_view_t::tv_z_axis;
-  tp_camera_tool_act_z->setText(tr( "Z - axis"));
+  tp_camera_tool_act_z->setText(tr( "z - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_z);
 
   tp_camera_tool_act_cc = new qextended_action(this);
   tp_camera_tool_act_cc->m_joined_data[0] = cam_target_view_t::tv_cart_center;
-  tp_camera_tool_act_cc->setText(tr("Cart. cnt."));
+  tp_camera_tool_act_cc->setText(tr("cart. c."));
   tp_camera_tool->addAction(tp_camera_tool_act_cc);
 
   tp_camera_tool_act_a = new qextended_action(this);

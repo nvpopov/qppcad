@@ -63,10 +63,30 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   setLayout(console_lt);
   console_lt->addLayout(buttons_lt);
 
+  script_editor_plh = new QWidget;
+  pyconsole_plh = new QWidget;
+
+  script_editor_lt = new QVBoxLayout;
+  pyconsole_lt = new QVBoxLayout;
+
+  script_editor_lbl = new QLabel(tr("[Script editor]"));
+  pyconsole_lbl = new QLabel(tr("[Console]"));
+
+  script_editor_plh->setLayout(script_editor_lt);
+  script_editor_lt->setContentsMargins(0, 0, 0, 0);
+  script_editor_lt->addWidget(script_editor_lbl);
+  script_editor_lt->addWidget(script_editor);
+
+  pyconsole_plh->setLayout(pyconsole_lt);
+  pyconsole_lt->setContentsMargins(0, 0, 0, 0);
+  pyconsole_lt->addWidget(pyconsole_lbl);
+  pyconsole_lt->addWidget(py_tedit);
+
   edt_splitter = new QSplitter;
   edt_splitter->setHandleWidth(10);
-  edt_splitter->addWidget(script_editor);
-  edt_splitter->addWidget(py_tedit);
+  edt_splitter->addWidget(script_editor_plh);
+  edt_splitter->addWidget(pyconsole_plh);
+
   edt_splitter->setCollapsible(0, false);
   edt_splitter->setCollapsible(1, false);
 
@@ -87,7 +107,7 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
 void python_console_widget_t::editor_toggle_signal_toggled(bool checked) {
 
-  script_editor->setVisible(checked);
+  script_editor_plh->setVisible(checked);
   btn_run_code->setEnabled(checked);
 
 }
@@ -186,8 +206,8 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
     }
 
   if (event->key() == Qt::Key_QuoteLeft || event->key() == Qt::Key_AsciiTilde) {
-      parentWidget()->parentWidget()->setFocus();
-      parentWidget()->parentWidget()->hide();
+      parentWidget()->parentWidget()->parentWidget()->setFocus();
+      parentWidget()->parentWidget()->parentWidget()->hide();
       return;
     }
 

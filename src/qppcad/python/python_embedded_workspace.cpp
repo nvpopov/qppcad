@@ -8,6 +8,7 @@
 #include <qppcad/workspace.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
+#include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -261,5 +262,8 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_point_sym_group_t.def_readwrite("pg_axes", &psg_view_t::m_pg_axes);
   py_point_sym_group_t.def("update_view", &psg_view_t::update_view);
   py_point_sym_group_t.def_readwrite("center", &psg_view_t::m_new_centre);
+
+  py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
+  py_volume_view_t(m, "volume_view_t", py_ws_item_t);
 
 }

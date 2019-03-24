@@ -19,6 +19,7 @@
 #include <QAbstractItemView>
 #include <QScrollBar>
 #include <QPushButton>
+#include <QLabel>
 #include <QSplitter>
 
 /*
@@ -39,6 +40,13 @@ namespace qpp {
       public:
 
         QHBoxLayout *console_lt;
+        QVBoxLayout *script_editor_lt;
+        QVBoxLayout *pyconsole_lt;
+        QLabel *script_editor_lbl;
+        QLabel *pyconsole_lbl;
+        QWidget *script_editor_plh;
+        QWidget *pyconsole_plh;
+
         QVBoxLayout *buttons_lt;
 
         QPushButton *btn_clear;
