@@ -12,6 +12,8 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   app_state_t* astate = app_state_t::get_inst();
 
   py_tedit = new python_text_editor_t(nullptr);
+  script_editor = new QTextEdit;
+  script_editor_syntax_hl = new python_text_editor_syntax_highilighter_t(script_editor->document());
 
   console_lt = new QHBoxLayout;
   buttons_lt = new QVBoxLayout;
@@ -23,6 +25,10 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   btn_clear->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
                                 astate->size_guide.tool_panel_h()));
   btn_clear->setToolTip(tr("Clear the console output"));
+  connect(btn_clear,
+          &QPushButton::clicked,
+          this,
+          &python_console_widget_t::clear_btn_clicked);
 
   btn_editor_toggle = new QPushButton();
   btn_editor_toggle->setIcon(QIcon("://images/outline-receipt-24px.svg"));
@@ -32,6 +38,10 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
                                 astate->size_guide.tool_panel_h()));
   btn_editor_toggle->setCheckable(true);
   btn_editor_toggle->setToolTip(tr("Toggle script editor"));
+  connect(btn_editor_toggle,
+          &QPushButton::toggled,
+          this,
+          &python_console_widget_t::editor_toggle_signal_toggled);
 
   btn_run_code = new QPushButton();
   btn_run_code->setIcon(QIcon("://images/outline-slideshow-24px.svg"));
@@ -40,6 +50,10 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   btn_run_code->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
                                 astate->size_guide.tool_panel_h()));
   btn_run_code->setToolTip(tr("Run script"));
+  connect(btn_run_code,
+          &QPushButton::clicked,
+          this,
+          &python_console_widget_t::run_script_button_clicked);
 
   buttons_lt->addWidget(btn_clear);
   buttons_lt->addWidget(btn_editor_toggle);
@@ -48,9 +62,63 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
   setLayout(console_lt);
   console_lt->addLayout(buttons_lt);
-  console_lt->addWidget(py_tedit);
+
+  edt_splitter = new QSplitter;
+  edt_splitter->setHandleWidth(10);
+  edt_splitter->addWidget(script_editor);
+  edt_splitter->addWidget(py_tedit);
+  edt_splitter->setCollapsible(0, false);
+  edt_splitter->setCollapsible(1, false);
+
+  console_lt->addWidget(edt_splitter);
+
   setMinimumHeight(200);
   setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::python_console_font_size_updated_signal,
+          this,
+          &python_console_widget_t::font_size_updated_signal_received);
+
+  font_size_updated_signal_received();
+  editor_toggle_signal_toggled(false);
+
+}
+
+void python_console_widget_t::editor_toggle_signal_toggled(bool checked) {
+
+  script_editor->setVisible(checked);
+  btn_run_code->setEnabled(checked);
+
+}
+
+void python_console_widget_t::font_size_updated_signal_received() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  int new_font_point_size = astate->m_console_font_size;
+
+  py_tedit->setStyleSheet(tr("font-size:%1pt;").arg(new_font_point_size));
+  script_editor->setStyleSheet(tr("font-size:%1pt;").arg(new_font_point_size));
+
+}
+
+void python_console_widget_t::clear_btn_clicked() {
+
+  py_tedit->clear();
+  py_tedit->print_promt();
+
+}
+
+void python_console_widget_t::run_script_button_clicked() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  QString _script = script_editor->toPlainText();
+  if (_script.length() > 0) {
+      astate->py_manager->execute(_script.toStdString());
+      py_tedit->insert_text_at_cursor("execute_script()");
+      py_tedit->append(QString::fromStdString(astate->py_manager->m_output_buffer));
+      py_tedit->print_promt();
+    }
 
 }
 
@@ -60,7 +128,6 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
   print_promt();
 
   app_state_t* astate = app_state_t::get_inst();
-  set_font_point_size(astate->m_console_font_size);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::python_console_clear_requested_signal,
@@ -71,11 +138,6 @@ python_text_editor_t::python_text_editor_t(QWidget *parent) : QTextEdit (parent)
           &app_state_event_disp_t::python_console_focus_requested_signal,
           this,
           &python_text_editor_t::focus_signal_received);
-
-  connect(astate->astate_evd,
-          &app_state_event_disp_t::python_console_font_size_updated_signal,
-          this,
-          &python_text_editor_t::font_size_updated_signal_received);
 
   m_c = new QCompleter(this);
   m_c->popup()->setFont(m_font);
@@ -124,8 +186,8 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
     }
 
   if (event->key() == Qt::Key_QuoteLeft || event->key() == Qt::Key_AsciiTilde) {
-      parentWidget()->setFocus();
-      parentWidget()->hide();
+      parentWidget()->parentWidget()->setFocus();
+      parentWidget()->parentWidget()->hide();
       return;
     }
 
@@ -139,11 +201,6 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
       event->accept();
       return;
     }
-
-//  if (event->modifiers() == Qt::ControlModifier) {
-//      event->accept();
-//      return;
-//    }
 
   if (event->key() == Qt::Key_Up) {
 
@@ -288,12 +345,6 @@ QString python_text_editor_t::text_under_cursor() const {
 
 }
 
-void python_text_editor_t::set_font_point_size(int new_size) {
-
-  setStyleSheet(tr("font-size:%1pt;").arg(new_size));
-
-}
-
 void python_text_editor_t::run_cmd() {
 
   int indent = 0;
@@ -341,7 +392,7 @@ void python_text_editor_t::run_cmd() {
 
 }
 
-void python_text_editor_t::print_promt() {
+void python_text_editor_t::print_promt(QString additional_text) {
 
   QTextCursor cursor(textCursor());
   cursor.clearSelection();
@@ -353,14 +404,12 @@ void python_text_editor_t::print_promt() {
       QString indentString;
       for (int i = 0; i < m_indent; i++)
         indentString += QLatin1String(" ");
-      cursor.insertText(QLatin1String(".  .  . ") + indentString);
+      cursor.insertText(QLatin1String(".  .  . ") + indentString + additional_text);
     }
 
   m_curs_pos = cursor.position();
   m_curs_pos -= m_indent;
   setTextCursor(cursor);
-
-  //move_cursor_to_end();
 
 }
 
@@ -384,13 +433,6 @@ void python_text_editor_t::focus_signal_received() {
 
 }
 
-void python_text_editor_t::font_size_updated_signal_received() {
-
-  app_state_t* astate = app_state_t::get_inst();
-  set_font_point_size(astate->m_console_font_size);
-
-}
-
 void python_text_editor_t::insert_completion(const QString &completion) {
 
   if (m_c->widget() != this) return;
@@ -399,6 +441,18 @@ void python_text_editor_t::insert_completion(const QString &completion) {
   tc.movePosition(QTextCursor::Left);
   tc.movePosition(QTextCursor::EndOfWord);
   tc.insertText(completion.right(extra));
+  setTextCursor(tc);
+
+}
+
+void python_text_editor_t::insert_text_at_cursor(const QString &text_to_insert) {
+
+  if (m_c->widget() != this) return;
+  QTextCursor tc = textCursor();
+  int extra = text_to_insert.length();
+  tc.movePosition(QTextCursor::Left);
+  tc.movePosition(QTextCursor::EndOfWord);
+  tc.insertText(text_to_insert.right(extra));
   setTextCursor(tc);
 
 }

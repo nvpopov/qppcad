@@ -19,6 +19,7 @@
 #include <QAbstractItemView>
 #include <QScrollBar>
 #include <QPushButton>
+#include <QSplitter>
 
 /*
  * inspired(==copied) by avogadro (http://avogadro.cc/) pythonterminal extension
@@ -45,7 +46,18 @@ namespace qpp {
         QPushButton *btn_run_code;
 
         python_text_editor_t *py_tedit;
+        QTextEdit *script_editor;
+        python_text_editor_syntax_highilighter_t *script_editor_syntax_hl;
+        QSplitter *edt_splitter;
+
         python_console_widget_t(QWidget *parent);
+
+      public slots:
+
+        void editor_toggle_signal_toggled(bool checked);
+        void font_size_updated_signal_received();
+        void clear_btn_clicked();
+        void run_script_button_clicked();
 
     };
 
@@ -67,17 +79,16 @@ namespace qpp {
         void keyPressEvent(QKeyEvent *event);
         void last_command_reached();
         QString text_under_cursor() const;
-        void set_font_point_size(int new_size);
 
-      private slots:
+      public slots:
 
         void run_cmd();
-        void print_promt();
+        void print_promt(QString additional_text = "");
         void move_cursor_to_end();
         void clear_signal_received();
         void focus_signal_received();
-        void font_size_updated_signal_received();
         void insert_completion(const QString &completion);
+        void insert_text_at_cursor(const QString &text_to_insert);
 
     };
 
