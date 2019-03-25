@@ -74,6 +74,14 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2     = "at2";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX2    = "idx2";
 
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE         = "angles";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT1     = "at1";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX1    = "idx1";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT2     = "at2";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX2    = "idx2";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT3     = "at3";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX3    = "idx3";
+
     const auto JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE       = "type_color_override";
 
     const auto JSON_WS_CUBE_P_COLOR = "cube_color";

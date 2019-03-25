@@ -396,18 +396,13 @@ namespace qpp {
 
       json msr_object;
 
-      json msr_dist = json::array({});
+      json msr_dists = json::array({});
 
       for (auto &rec : m_dist_recs) {
 
-          size_t at1 = rec.m_at1;
-          size_t at2 = rec.m_at2;
-          index idx1 = rec.m_idx1;
-          index idx2 = rec.m_idx2;
-
           json msr_dist_inst;
-          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1] = at1;
-          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2] = at2;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1] = rec.m_at1;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2] = rec.m_at2;
 
           if (p_owner->m_geom->DIM != 0) {
               json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1,
@@ -416,11 +411,34 @@ namespace qpp {
                                       rec.m_idx2, msr_dist_inst);
             }
 
-          msr_dist.push_back(msr_dist_inst);
+          msr_dists.push_back(msr_dist_inst);
 
         }
 
-      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_DIST] = msr_dist;
+      json msr_angles = json::array({});
+
+      for (auto &rec : m_angle_recs) {
+
+          json msr_angle_inst;
+          msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT1] = rec.m_at1;
+          msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT2] = rec.m_at2;
+          msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT3] = rec.m_at3;
+
+          if (p_owner->m_geom->DIM != 0) {
+              json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX1,
+                                      rec.m_idx1, msr_angle_inst);
+              json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX2,
+                                      rec.m_idx2, msr_angle_inst);
+              json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX3,
+                                      rec.m_idx3, msr_angle_inst);
+            }
+
+          msr_angles.push_back(msr_angle_inst);
+
+        }
+
+      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_DIST] = msr_dists;
+      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE] = msr_angles;
       data[JSON_ATOMS_LIST_MEASUREMENTS] = msr_object;
 
     }
@@ -431,27 +449,48 @@ namespace qpp {
       if (msr_object == data.end()) return;
 
       auto msr_dist = msr_object.value().find(JSON_ATOMS_LIST_MEASUREMENTS_DIST);
-      if (msr_dist != msr_object.value().end()) {
+      if (msr_dist != msr_object.value().end())
+        for (auto &msr_record : msr_dist.value()) {
 
-          for (auto &msr_record : msr_dist.value()) {
+            size_t at1 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1];
+            size_t at2 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2];
+            index idx1 = index::D(p_owner->m_geom->DIM).all(0);
+            index idx2 = index::D(p_owner->m_geom->DIM).all(0);
 
-              size_t at1 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1];
-              size_t at2 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2];
-              index idx1 = index::D(p_owner->m_geom->DIM).all(0);
-              index idx2 = index::D(p_owner->m_geom->DIM).all(0);
+            if (p_owner->m_geom->DIM != 0) {
+                idx1 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1,
+                                               msr_record);
+                idx2 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX2,
+                                               msr_record);
+              }
 
-              if (p_owner->m_geom->DIM != 0) {
-                  idx1 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1,
-                                                 msr_record);
-                  idx2 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX2,
-                                                 msr_record);
-                }
+            add_bond_msr(at1, at2, idx1, idx2);
 
-              add_bond_msr(at1, at2, idx1, idx2);
+          }
 
-            }
+      auto msr_angle = msr_object.value().find(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE);
+      if (msr_angle != msr_object.value().end())
+        for (auto &msr_record : msr_angle.value()) {
 
-        }
+            size_t at1 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT1];
+            size_t at2 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT2];
+            size_t at3 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT3];
+            index idx1 = index::D(p_owner->m_geom->DIM).all(0);
+            index idx2 = index::D(p_owner->m_geom->DIM).all(0);
+            index idx3 = index::D(p_owner->m_geom->DIM).all(0);
+
+            if (p_owner->m_geom->DIM != 0) {
+                idx1 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX1,
+                                               msr_record);
+                idx2 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX2,
+                                               msr_record);
+                idx3 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX3,
+                                               msr_record);
+              }
+
+            add_angle_msr(at1, at2, at3, idx1, idx2, idx3);
+
+          }
 
     }
 
