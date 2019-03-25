@@ -908,13 +908,14 @@ void main_window::cur_ws_selected_item_changed() {
               if (al) {
                   show_cam_button = true;
                   bool al_is_3d = al->m_geom->DIM == 3;
-                  tp_camera_tool_act_a->setEnabled(al_is_3d);
-                  tp_camera_tool_act_b->setEnabled(al_is_3d);
-                  tp_camera_tool_act_c->setEnabled(al_is_3d);
-                  tp_camera_tool_act_x->setEnabled(!al_is_3d);
-                  tp_camera_tool_act_y->setEnabled(!al_is_3d);
-                  tp_camera_tool_act_z->setEnabled(!al_is_3d);
-                  tp_camera_tool_act_cc->setEnabled(!al_is_3d);
+                  //tp_camera_tool_act_a->setVisible(al_is_3d)
+                  tp_camera_tool_act_a->setVisible(al_is_3d);
+                  tp_camera_tool_act_b->setVisible(al_is_3d);
+                  tp_camera_tool_act_c->setVisible(al_is_3d);
+                  tp_camera_tool_act_x->setVisible(!al_is_3d);
+                  tp_camera_tool_act_y->setVisible(!al_is_3d);
+                  tp_camera_tool_act_z->setVisible(!al_is_3d);
+                  tp_camera_tool_act_cc->setVisible(!al_is_3d);
                 }
             }
 

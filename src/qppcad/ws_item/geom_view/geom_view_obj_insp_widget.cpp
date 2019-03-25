@@ -339,8 +339,14 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
   tms_render_dist = new qbinded_checkbox;
   tms_render_angle = new qbinded_checkbox;
+  tms_render_dist_legend = new qbinded_checkbox;
+  tms_render_angle_legend = new qbinded_checkbox;
+
   tms_common_settings_gb_lt->addRow(tr("Draw dists"), tms_render_dist);
   tms_common_settings_gb_lt->addRow(tr("Draw angles"), tms_render_angle);
+  tms_common_settings_gb_lt->addRow(tr("Dists legend"), tms_render_dist_legend);
+  tms_common_settings_gb_lt->addRow(tr("Angles legend"), tms_render_angle_legend);
+
   init_form_lt(tms_common_settings_gb_lt);
 
   tms_pair_dist_gb = new qspoiler_widget_t(tr("Interatomic distance"));

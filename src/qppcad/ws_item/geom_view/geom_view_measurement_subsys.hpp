@@ -89,6 +89,8 @@ namespace qpp {
 
       bool m_render_dist{true};
       bool m_render_angle{true};
+      bool m_render_dist_legend{false};
+      bool m_render_angle_legend{false};
 
       int m_cur_dist_rec_ui{0}; // 0 - none, real = +1
       int m_cur_angle_rec_ui{0}; // 0 - none, real = +1

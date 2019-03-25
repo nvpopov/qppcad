@@ -117,8 +117,11 @@ void python_console_widget_t::font_size_updated_signal_received() {
   app_state_t* astate = app_state_t::get_inst();
   int new_font_point_size = astate->m_console_font_size;
 
-  py_tedit->setStyleSheet(tr("font-size:%1pt;").arg(new_font_point_size));
-  script_editor->setStyleSheet(tr("font-size:%1pt;").arg(new_font_point_size));
+  QString new_qss = QString("font-size:%1pt;").arg(new_font_point_size);
+  py_tedit->setStyleSheet(new_qss);
+  script_editor->setStyleSheet(new_qss);
+  script_editor_lbl->setStyleSheet(new_qss);
+  pyconsole_lbl->setStyleSheet(new_qss);
 
 }
 

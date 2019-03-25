@@ -124,6 +124,8 @@ namespace qpp {
         QFormLayout *tms_common_settings_gb_lt;
         qbinded_checkbox *tms_render_dist;
         qbinded_checkbox *tms_render_angle;
+        qbinded_checkbox *tms_render_dist_legend;
+        qbinded_checkbox *tms_render_angle_legend;
 
         //pair dist
         qspoiler_widget_t *tms_pair_dist_gb;
