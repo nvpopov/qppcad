@@ -55,10 +55,10 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
           this,
           &python_console_widget_t::run_script_button_clicked);
 
+  buttons_lt->addStretch(0);
   buttons_lt->addWidget(btn_clear);
   buttons_lt->addWidget(btn_editor_toggle);
   buttons_lt->addWidget(btn_run_code);
-  buttons_lt->addStretch(0);
 
   setLayout(console_lt);
   console_lt->addLayout(buttons_lt);

@@ -33,16 +33,25 @@ namespace qpp {
     typedef std::int32_t int32_t;
     typedef std::int64_t int64_t;
 
+    /**
+     * @brief The spatial_units_e enum
+     */
     enum spatial_units_e : int {
       spatial_units_ang,
       spatial_units_bohr
     };
 
+    /**
+     * @brief The ws_edit_e enum
+     */
     enum ws_edit_e {
       edit_item = 0,
       edit_content = 1
     };
 
+    /**
+     * @brief max_recent_files
+     */
     const size_t max_recent_files = 10;
 
     template<typename T>

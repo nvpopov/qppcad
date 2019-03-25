@@ -134,6 +134,7 @@ add_executable(qppcad
     src/qppcad/ws_item/ws_item.cpp
     src/qppcad/ws_item/ws_item_obj_insp_widget.cpp
     src/qppcad/ws_item/ws_item_behaviour_manager.cpp
+    src/qppcad/ws_item/ws_item_extended_editor.cpp
 
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp

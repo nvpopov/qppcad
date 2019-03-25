@@ -23,6 +23,9 @@ namespace qpp {
 
   namespace cad {
 
+    /**
+     * @brief The geom_view_render_style_e enum
+     */
     enum geom_view_render_style_e : int {
 
       ball_and_stick,
@@ -33,6 +36,9 @@ namespace qpp {
 
     };
 
+    /**
+     * @brief The geom_view_role_e enum
+     */
     enum geom_view_role_e : int {
 
       r_generic,
@@ -43,6 +49,9 @@ namespace qpp {
 
     };
 
+    /**
+     * @brief The geom_view_color_e enum
+     */
     enum geom_view_color_e : int {
 
       color_from_ptable,
@@ -50,6 +59,9 @@ namespace qpp {
 
     };
 
+    /**
+     * @brief The pair_dist_mode_e enum
+     */
     enum pair_dist_mode_e : int {
 
       transform_both,
@@ -71,7 +83,9 @@ namespace qpp {
 
     const int max_sel_in_deque = 4;
 
-    /// \brief The ws_atom_list_t class
+    /**
+     * @brief The geom_view_t class
+     */
     class geom_view_t : public ws_item_t {
 
         QPP_OBJECT(geom_view_t, ws_item_t)
@@ -125,6 +139,14 @@ namespace qpp {
         void vote_for_view_vectors(vector3<float> &out_look_pos,
                                    vector3<float> &out_look_at) override ;
 
+        /**
+         * @brief target_view
+         * @param _target_view
+         * @param look_from
+         * @param look_to
+         * @param look_up
+         * @param need_to_update_camera
+         */
         void target_view(cam_target_view_t _target_view,
                          vector3<float> &look_from,
                          vector3<float> &look_to,
@@ -139,8 +161,23 @@ namespace qpp {
 
         bool mouse_click(ray_t<float> *click_ray) override;
 
+        /**
+         * @brief select_atoms
+         * @param all
+         */
         void select_atoms(bool all);
+
+        /**
+         * @brief select_atom
+         * @param atom_id
+         */
         void select_atom(int atom_id);
+
+        /**
+         * @brief select_atom
+         * @param atom_id
+         * @param atom_idx
+         */
         void select_atom(int atom_id, index atom_idx);
 
         void unselect_atom(int atom_id);
@@ -215,8 +252,11 @@ namespace qpp {
         void recalc_gizmo_barycenter();
         const vector3<float> get_gizmo_content_barycenter() override;
         void updated_internally() override;
-        /// \brief shift
-        /// \param vShift
+
+        /**
+         * @brief shift
+         * @param shift
+         */
         void shift(const vector3<float> shift);
 
         void save_to_json(json &data) override;

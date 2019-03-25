@@ -13,15 +13,21 @@ namespace qpp {
       public:
 
         template<typename T>
-        static void reg_ws_item_fbr_t(ws_item_behaviour_manager_t *bhv_mgr){
+        static void reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr){
           bhv_mgr->reg_item_fbr(T::get_type_static(),
                                 [](){return std::make_shared<T>();});
         }
 
         template<typename T, typename U>
-        static void reg_ws_item_obj_insp_t(ws_item_behaviour_manager_t *bhv_mgr){
+        static void reg_ws_item_obj_insp_fbr(ws_item_behaviour_manager_t *bhv_mgr){
           bhv_mgr->reg_obj_insp_fbr(T::get_type_static(),
                                     [](){return std::make_shared<U>();});
+        }
+
+        template<typename T, typename U>
+        static void reg_ws_item_ext_editor_fbr(ws_item_behaviour_manager_t *bhv_mgr){
+          bhv_mgr->reg_ext_editor_fbr(T::get_type_static(),
+                                      [](){return std::make_shared<U>();});
         }
 
         static void reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr);

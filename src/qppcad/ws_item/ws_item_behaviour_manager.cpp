@@ -296,17 +296,30 @@ void ws_item_behaviour_manager_t::reg_item_fbr(size_t hash,
 void ws_item_behaviour_manager_t::reg_obj_insp_fbr(
     size_t hash,
     std::function<std::shared_ptr<ws_item_obj_insp_widget_t> ()> func) {
+
   m_obj_insp_fabric[hash] = func;
+
+}
+
+void ws_item_behaviour_manager_t::reg_ext_editor_fbr(
+    size_t hash, std::function<std::shared_ptr<ws_item_extended_editor_t> ()> func) {
+
+  m_ext_editors_fabric[hash] = func;
+
 }
 
 bool ws_item_behaviour_manager_t::is_obj_insp_fbr_exists(size_t hash) {
+
   auto it = m_obj_insp_fabric.find(hash);
   return it != m_obj_insp_fabric.end();
+
 }
 
 bool ws_item_behaviour_manager_t::is_obj_insp_exists(size_t hash) {
+
   auto it = m_obj_insp_widgets.find(hash);
   return it != m_obj_insp_widgets.end();
+
 }
 
 std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_insp_widget_sp(

@@ -38,27 +38,27 @@ using namespace qpp::cad;
 
 void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr) {
 
-  reg_ws_item_fbr_t<geom_view_t>(bhv_mgr);
-  reg_ws_item_fbr_t<ccd_view_t>(bhv_mgr);
-  reg_ws_item_fbr_t<volume_view_t>(bhv_mgr);
-  reg_ws_item_fbr_t<psg_view_t>(bhv_mgr);
-  reg_ws_item_fbr_t<traj_hl_t>(bhv_mgr);
-  reg_ws_item_fbr_t<cube_primitive_t>(bhv_mgr);
-  reg_ws_item_fbr_t<arrow_primitive_t>(bhv_mgr);
-  reg_ws_item_fbr_t<pgf_producer_t>(bhv_mgr);
+  reg_ws_item_fbr<geom_view_t>(bhv_mgr);
+  reg_ws_item_fbr<ccd_view_t>(bhv_mgr);
+  reg_ws_item_fbr<volume_view_t>(bhv_mgr);
+  reg_ws_item_fbr<psg_view_t>(bhv_mgr);
+  reg_ws_item_fbr<traj_hl_t>(bhv_mgr);
+  reg_ws_item_fbr<cube_primitive_t>(bhv_mgr);
+  reg_ws_item_fbr<arrow_primitive_t>(bhv_mgr);
+  reg_ws_item_fbr<pgf_producer_t>(bhv_mgr);
 
 }
 
 void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr) {
 
-  reg_ws_item_obj_insp_t<geom_view_t, geom_view_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<volume_view_t, volume_view_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<ccd_view_t, ccd_view_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<psg_view_t, psg_view_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<traj_hl_t, traj_hl_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<cube_primitive_t, cube_primitive_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<arrow_primitive_t, arrow_primitive_obj_insp_widget_t>(bhv_mgr);
-  reg_ws_item_obj_insp_t<pgf_producer_t, pgf_producer_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<geom_view_t, geom_view_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<volume_view_t, volume_view_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<ccd_view_t, ccd_view_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<psg_view_t, psg_view_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<traj_hl_t, traj_hl_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<cube_primitive_t, cube_primitive_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<arrow_primitive_t, arrow_primitive_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<pgf_producer_t, pgf_producer_obj_insp_widget_t>(bhv_mgr);
 
 }
 
