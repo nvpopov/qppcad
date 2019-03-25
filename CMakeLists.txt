@@ -139,6 +139,10 @@ add_executable(qppcad
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
 
+    src/qppcad/ws_item/node_book/node_book.cpp
+    src/qppcad/ws_item/node_book/node_book_obj_insp_widget.cpp
+    src/qppcad/ws_item/node_book/node_book_extended_editor.cpp
+
     src/qppcad/ws_item/cube_primitive/cube_primitive.cpp
     src/qppcad/ws_item/cube_primitive/cube_primitive_obj_insp_widget.cpp
 

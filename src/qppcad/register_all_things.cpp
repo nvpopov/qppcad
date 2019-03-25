@@ -22,6 +22,10 @@
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive_obj_insp_widget.hpp>
 
+#include <qppcad/ws_item/node_book/node_book.hpp>
+#include <qppcad/ws_item/node_book/node_book_obj_insp_widget.hpp>
+#include <qppcad/ws_item/node_book/node_book_extended_editor.hpp>
+
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
@@ -46,6 +50,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr<cube_primitive_t>(bhv_mgr);
   reg_ws_item_fbr<arrow_primitive_t>(bhv_mgr);
   reg_ws_item_fbr<pgf_producer_t>(bhv_mgr);
+  reg_ws_item_fbr<node_book_t>(bhv_mgr);
 
 }
 
@@ -59,6 +64,13 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
   reg_ws_item_obj_insp_fbr<cube_primitive_t, cube_primitive_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<arrow_primitive_t, arrow_primitive_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<pgf_producer_t, pgf_producer_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<node_book_t, node_book_obj_insp_widget_t>(bhv_mgr);
+
+}
+
+void registration_helper_t::reg_ws_item_extended_editor(ws_item_behaviour_manager_t *bhv_mgr) {
+
+  reg_ws_item_ext_editor_fbr<node_book_t, node_book_extended_editor_t>(bhv_mgr);
 
 }
 

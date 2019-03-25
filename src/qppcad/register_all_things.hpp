@@ -32,6 +32,7 @@ namespace qpp {
 
         static void reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr);
         static void reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr);
+        static void reg_ws_item_extended_editor(ws_item_behaviour_manager_t *bhv_mgr);
         static void reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr);
 
         template<typename T, typename U>
