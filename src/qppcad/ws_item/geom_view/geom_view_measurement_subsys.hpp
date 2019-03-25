@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <vector>
 #include <algorithm>
+#include <qppcad/json_adapter.hpp>
 
 namespace qpp {
 
@@ -128,6 +129,9 @@ namespace qpp {
       void render ();
       void render_overlay(QPainter &painter);
       void notify_atom_has_been_deleted(const uint32_t atm);
+
+      void save_to_json(json &data);
+      void load_from_json(json &data);
 
     };
 

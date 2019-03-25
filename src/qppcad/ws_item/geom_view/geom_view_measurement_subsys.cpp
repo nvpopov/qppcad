@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/json_helpers.hpp>
 
 namespace qpp {
 
@@ -304,9 +305,11 @@ namespace qpp {
 
                     float line_len = std::min(line_f_s.length(), line_t_s.length()) * 0.2f;
                     int angle1 =
-                        (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0]) * 180 / float(pi)) ;
+                        (std::atan2((*l_f)[1]- (*l_s)[1], (*l_f)[0] - (*l_s)[0])
+                        * 180 / float(pi)) ;
                     int angle2 =
-                        (std::atan2((*l_t)[1]- (*l_s)[1], (*l_t)[0] - (*l_s)[0]) * 180 / float(pi)) ;
+                        (std::atan2((*l_t)[1]- (*l_s)[1], (*l_t)[0] - (*l_s)[0])
+                        * 180 / float(pi)) ;
 
                     angle1 -= 360. * std::floor((angle1) * (1. / 360.));
                     angle2 -= 360. * std::floor((angle2) * (1. / 360.));
@@ -328,7 +331,8 @@ namespace qpp {
                           QColor::fromRgbF(1, 0, 0) : QColor::fromRgbF(record.m_angle_color[0],
                         record.m_angle_color[1],
                         record.m_angle_color[2]);
-                    QPen linepen_inline(QPen(pen_color, 2, Qt::PenStyle::SolidLine, Qt::RoundCap));
+                    QPen linepen_inline(
+                          QPen(pen_color, 2, Qt::PenStyle::SolidLine, Qt::RoundCap));
 
                     painter.setPen(linepen_inline);
 
@@ -384,6 +388,69 @@ namespace qpp {
             m_angle_recs.erase(it);
           else
             ++it;
+        }
+
+    }
+
+    void geom_view_msr_subsys_t::save_to_json(json &data) {
+
+      json msr_object;
+
+      json msr_dist = json::array({});
+
+      for (auto &rec : m_dist_recs) {
+
+          size_t at1 = rec.m_at1;
+          size_t at2 = rec.m_at2;
+          index idx1 = rec.m_idx1;
+          index idx2 = rec.m_idx2;
+
+          json msr_dist_inst;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1] = at1;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2] = at2;
+
+          if (p_owner->m_geom->DIM != 0) {
+              json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1,
+                                      rec.m_idx1, msr_dist_inst);
+              json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX2,
+                                      rec.m_idx2, msr_dist_inst);
+            }
+
+          msr_dist.push_back(msr_dist_inst);
+
+        }
+
+      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_DIST] = msr_dist;
+      data[JSON_ATOMS_LIST_MEASUREMENTS] = msr_object;
+
+    }
+
+    void geom_view_msr_subsys_t::load_from_json(json &data) {
+
+      auto msr_object = data.find(JSON_ATOMS_LIST_MEASUREMENTS);
+      if (msr_object == data.end()) return;
+
+      auto msr_dist = msr_object.value().find(JSON_ATOMS_LIST_MEASUREMENTS_DIST);
+      if (msr_dist != msr_object.value().end()) {
+
+          for (auto &msr_record : msr_dist.value()) {
+
+              size_t at1 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1];
+              size_t at2 = msr_record[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2];
+              index idx1 = index::D(p_owner->m_geom->DIM).all(0);
+              index idx2 = index::D(p_owner->m_geom->DIM).all(0);
+
+              if (p_owner->m_geom->DIM != 0) {
+                  idx1 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1,
+                                                 msr_record);
+                  idx2 = json_helper::load_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX2,
+                                                 msr_record);
+                }
+
+              add_bond_msr(at1, at2, idx1, idx2);
+
+            }
+
         }
 
     }

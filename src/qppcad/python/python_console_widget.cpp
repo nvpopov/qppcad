@@ -25,6 +25,7 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   btn_clear->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
                                 astate->size_guide.tool_panel_h()));
   btn_clear->setToolTip(tr("Clear the console output"));
+
   connect(btn_clear,
           &QPushButton::clicked,
           this,
@@ -38,6 +39,7 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
                                 astate->size_guide.tool_panel_h()));
   btn_editor_toggle->setCheckable(true);
   btn_editor_toggle->setToolTip(tr("Toggle script editor"));
+
   connect(btn_editor_toggle,
           &QPushButton::toggled,
           this,
@@ -50,15 +52,16 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   btn_run_code->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
                                 astate->size_guide.tool_panel_h()));
   btn_run_code->setToolTip(tr("Run script"));
+
   connect(btn_run_code,
           &QPushButton::clicked,
           this,
           &python_console_widget_t::run_script_button_clicked);
 
-  buttons_lt->addStretch(0);
   buttons_lt->addWidget(btn_clear);
   buttons_lt->addWidget(btn_editor_toggle);
   buttons_lt->addWidget(btn_run_code);
+  buttons_lt->addStretch(0);
 
   setLayout(console_lt);
   console_lt->addLayout(buttons_lt);
@@ -109,6 +112,8 @@ void python_console_widget_t::editor_toggle_signal_toggled(bool checked) {
 
   script_editor_plh->setVisible(checked);
   btn_run_code->setEnabled(checked);
+  script_editor_lbl->setVisible(checked);
+  pyconsole_lbl->setVisible(checked);
 
 }
 

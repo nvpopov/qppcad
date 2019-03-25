@@ -67,6 +67,13 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_LABELS_SEL_VIS            = "labels_sel_vis";
     const auto JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE   = "labels_scrn_spc_scale";
 
+    const auto JSON_ATOMS_LIST_MEASUREMENTS              = "measurements";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST         = "dists";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1     = "at1";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1    = "idx1";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2     = "at2";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX2    = "idx2";
+
     const auto JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE       = "type_color_override";
 
     const auto JSON_WS_CUBE_P_COLOR = "cube_color";

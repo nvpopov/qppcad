@@ -1129,6 +1129,8 @@ void geom_view_t::save_to_json (json &data) {
       data[JSON_ATOMS_LIST_ANIMATIONS] = animations;
     }
 
+  m_measure->save_to_json(data);
+
 }
 
 void geom_view_t::load_from_json (json &data) {
@@ -1308,6 +1310,7 @@ void geom_view_t::load_from_json (json &data) {
     }
 
   //reading measurement subsystem
+  m_measure->load_from_json(data);
 
   geometry_changed();
   m_tws_tr->do_action(act_unlock | act_build_all);

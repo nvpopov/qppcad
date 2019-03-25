@@ -2,6 +2,7 @@
 #define QPPCAD_JSON_HELPERS
 
 #include <qppcad/json_adapter.hpp>
+#include <symm/index.hpp>
 
 namespace qpp {
 
@@ -35,6 +36,30 @@ namespace qpp {
         static void load_vec3(const std::string &varname, vector3<T> &var, json &data) {
           if (data.find(varname) != data.end())
             for(auto i = 0; i < 3; i++) var[i] = data[varname][i].get<T>();
+        }
+
+        static void save_index(const std::string &varname, const index idx, json &data) {
+
+          json idx_array = json::array({});
+          for (int i = 0; i < idx.DIM; i++)
+            idx_array.push_back(idx(i));
+
+          data[varname] = idx_array;
+
+        }
+
+        static index load_index(const std::string &varname, json &data) {
+
+          if (data.find(varname) != data.end()) {
+              json dt = data[varname];
+              index ret = index::D(dt.size());
+              for (int i = 0; i < ret.DIM; i++)
+                ret(i) = dt[i].get<int>();
+              return ret;
+            }
+
+          return index::D(0);
+
         }
 
     };
