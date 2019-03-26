@@ -773,6 +773,7 @@ void main_window::save_ws() {
                                                                astate->m_last_dir,
                                                                "*.json");
               if (file_name != "") {
+                  if (!file_name.endsWith(".json")) file_name += ".json";
                   cur_ws->save_ws_to_json(file_name.toStdString());
                   cur_ws->m_is_ws_imported = false;
                   cur_ws->m_fs_path = file_name.toStdString();
