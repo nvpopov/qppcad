@@ -74,6 +74,7 @@ namespace qpp {
                        const index _idx2,
                        const index _idx3) :
         m_at1(_at1), m_at2(_at2), m_at3(_at3), m_idx1(_idx1), m_idx2(_idx2), m_idx3(_idx3) {}
+
     };
 
 

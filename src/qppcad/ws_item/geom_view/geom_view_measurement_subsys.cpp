@@ -403,6 +403,16 @@ namespace qpp {
           json msr_dist_inst;
           msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1] = rec.m_at1;
           msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2] = rec.m_at2;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_SHOW] = rec.m_show;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_SH_LBL] = rec.m_show_label;
+
+          json_helper::save_vec3(JSON_ATOMS_LIST_MEASUREMENTS_DIST_COLOR, rec.m_bond_color,
+                                 msr_dist_inst);
+
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_LSIZE] = rec.m_line_size;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_FSIZE] = rec.m_font_size;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_LSTYLE] = rec.m_line_render_style;
+          msr_dist_inst[JSON_ATOMS_LIST_MEASUREMENTS_DIST_FSTYLE] = rec.m_label_render_style;
 
           if (p_owner->m_geom->DIM != 0) {
               json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1,
@@ -423,6 +433,8 @@ namespace qpp {
           msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT1] = rec.m_at1;
           msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT2] = rec.m_at2;
           msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT3] = rec.m_at3;
+          msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_SHOW] = rec.m_show;
+          msr_angle_inst[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_ORDER] = rec.m_order;
 
           if (p_owner->m_geom->DIM != 0) {
               json_helper::save_index(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX1,
@@ -439,6 +451,11 @@ namespace qpp {
 
       msr_object[JSON_ATOMS_LIST_MEASUREMENTS_DIST] = msr_dists;
       msr_object[JSON_ATOMS_LIST_MEASUREMENTS_ANGLE] = msr_angles;
+      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_SHOW_DIST] = m_render_dist;
+      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_SHOW_ANGLE] = m_render_angle;
+      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_SHOW_LDIST] = m_render_dist_legend;
+      msr_object[JSON_ATOMS_LIST_MEASUREMENTS_SHOW_LANGLE] = m_render_angle_legend;
+
       data[JSON_ATOMS_LIST_MEASUREMENTS] = msr_object;
 
     }
@@ -447,6 +464,19 @@ namespace qpp {
 
       auto msr_object = data.find(JSON_ATOMS_LIST_MEASUREMENTS);
       if (msr_object == data.end()) return;
+
+      json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_SHOW_DIST,
+                            m_render_dist,
+                            *msr_object);
+      json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_SHOW_ANGLE,
+                            m_render_angle,
+                            *msr_object);
+      json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_SHOW_LDIST,
+                            m_render_dist_legend,
+                            *msr_object);
+      json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_SHOW_LANGLE,
+                            m_render_angle_legend,
+                            *msr_object);
 
       auto msr_dist = msr_object.value().find(JSON_ATOMS_LIST_MEASUREMENTS_DIST);
       if (msr_dist != msr_object.value().end())
@@ -465,6 +495,30 @@ namespace qpp {
               }
 
             add_bond_msr(at1, at2, idx1, idx2);
+
+            auto &last_msr = m_dist_recs.back();
+
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_DIST_SHOW,
+                                  last_msr.m_show,
+                                  msr_record);
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_DIST_SH_LBL,
+                                  last_msr.m_show_label,
+                                  msr_record);
+            json_helper::load_vec3(JSON_ATOMS_LIST_MEASUREMENTS_DIST_COLOR,
+                                   last_msr.m_bond_color,
+                                   msr_record);
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_DIST_LSIZE,
+                                  last_msr.m_line_size,
+                                  msr_record);
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_DIST_FSIZE,
+                                  last_msr.m_font_size,
+                                  msr_record);
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_DIST_LSTYLE,
+                                  last_msr.m_line_render_style,
+                                  msr_record);
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_DIST_FSTYLE,
+                                  last_msr.m_label_render_style,
+                                  msr_record);
 
           }
 
@@ -489,6 +543,14 @@ namespace qpp {
               }
 
             add_angle_msr(at1, at2, at3, idx1, idx2, idx3);
+
+            auto &last_msr = m_angle_recs.back();
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_SHOW,
+                                  last_msr.m_show,
+                                  msr_record);
+            json_helper::load_var(JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_ORDER,
+                                  last_msr.m_order,
+                                  msr_record);
 
           }
 

@@ -68,11 +68,22 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE   = "labels_scrn_spc_scale";
 
     const auto JSON_ATOMS_LIST_MEASUREMENTS              = "measurements";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_SHOW_DIST    = "show_dist";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_SHOW_ANGLE   = "show_angle";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_SHOW_LDIST   = "show_dist_legend";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_SHOW_LANGLE  = "show_angle_legend";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST         = "dists";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT1     = "at1";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX1    = "idx1";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_AT2     = "at2";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_IDX2    = "idx2";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_SHOW    = "show";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_SH_LBL  = "show_lbl";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_COLOR   = "color";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_LSIZE   = "line_size";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_FSIZE   = "font_size";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_LSTYLE  = "line_style";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_DIST_FSTYLE  = "font_style";
 
     const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE         = "angles";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT1     = "at1";
@@ -81,6 +92,8 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX2    = "idx2";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_AT3     = "at3";
     const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_IDX3    = "idx3";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_SHOW    = "show";
+    const auto JSON_ATOMS_LIST_MEASUREMENTS_ANGLE_ORDER   = "order";
 
     const auto JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE       = "type_color_override";
 
