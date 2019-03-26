@@ -44,6 +44,9 @@ namespace qpp {
     const auto JSON_CELL           = "cell";
 
     //qjson v0.2
+    const auto JSON_ATOMS_LIST_XFIELD_NAMES     = "xfield_names";
+    const auto JSON_ATOMS_LIST_XFIELD_TYPES     = "xfield_types";
+
     const auto JSON_ATOMS_LIST_RENDER_TYPE      = "render_type";
     const auto JSON_ATOMS_LIST_DRAW_SPECULAR    = "draw_specular";
     const auto JSON_ATOMS_LIST_SPECULAR         = "render_type_specular_power";

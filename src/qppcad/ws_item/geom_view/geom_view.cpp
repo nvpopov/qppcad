@@ -1072,17 +1072,73 @@ void geom_view_t::save_to_json (json &data) {
       data[JSON_CELL] = cell;
     }
 
+  json xfield_names = json::array({});
+  for (size_t i = 0; i < m_geom->nfields(); i++)
+    xfield_names.push_back(m_geom->field_name(i));
+
+  json xfield_types = json::array({});
+  for (size_t i = 0; i < m_geom->nfields(); i++)
+    switch (m_geom->field_type(i)) {
+      case basic_types::type_bool : {
+          xfield_types.push_back("b");
+          break;
+        }
+      case basic_types::type_int : {
+          xfield_types.push_back("i");
+          break;
+        }
+      case basic_types::type_real : {
+          xfield_types.push_back("r");
+          break;
+        }
+      case basic_types::type_double : {
+          xfield_types.push_back("d");
+          break;
+        }
+      case basic_types::type_float : {
+          xfield_types.push_back("f");
+          break;
+        }
+      case basic_types::type_string : {
+          xfield_types.push_back("s");
+          break;
+        }
+      }
+
+  data[JSON_ATOMS_LIST_XFIELD_NAMES] = xfield_names;
+  data[JSON_ATOMS_LIST_XFIELD_TYPES] = xfield_types;
+
   data[JSON_ATOMS] = json::array({});
-  for (auto i = 0; i < m_geom->nat(); i++){
+  for (auto q = 0; q < m_geom->nat(); q++) {
       json atom = json::array({});
-      atom.push_back(m_geom->atom(i));
-      atom.push_back(m_geom->pos(i)[0]);
-      atom.push_back(m_geom->pos(i)[1]);
-      atom.push_back(m_geom->pos(i)[2]);
-      atom.push_back(m_geom->xfield<bool>(xgeom_sel_vis, i));
-      atom.push_back(m_geom->xfield<bool>(xgeom_label_show, i));
-      atom.push_back(m_geom->xfield<std::string>(xgeom_label_text, i));
-      data[JSON_ATOMS].push_back(atom);
+      for (int i = 0; i < m_geom->nfields(); i++)
+          switch (m_geom->field_type(i)) {
+            case basic_types::type_bool : {
+                atom.push_back(m_geom->xfield<bool>(i, q));
+                break;
+              }
+            case basic_types::type_int : {
+                atom.push_back(m_geom->xfield<int>(i, q));
+                break;
+              }
+            case basic_types::type_real : {
+                atom.push_back(m_geom->xfield<float>(i, q));
+                break;
+              }
+            case basic_types::type_double : {
+                atom.push_back(m_geom->xfield<double>(i, q));
+                break;
+              }
+            case basic_types::type_float : {
+                atom.push_back(m_geom->xfield<bool>(i, q));
+                break;
+              }
+            case basic_types::type_string : {
+                atom.push_back(m_geom->xfield<std::string>(i, q));
+                break;
+              }
+            }
+       data[JSON_ATOMS].push_back(atom);
     }
 
   if (!m_type_color_override.empty()) {
@@ -1235,18 +1291,64 @@ void geom_view_t::load_from_json (json &data) {
         }
     }
 
+  if (data.find(JSON_ATOMS_LIST_XFIELD_NAMES) != data.end()) {
+
+      std::vector<STRING_EX> fn;
+      std::vector<basic_types> ft;
+
+      for (auto &elem : data[JSON_ATOMS_LIST_XFIELD_NAMES]) fn.push_back(elem.get<std::string>());
+
+      if (data.find(JSON_ATOMS_LIST_XFIELD_TYPES) != data.end())
+        for (auto &elem : data[JSON_ATOMS_LIST_XFIELD_TYPES]) {
+            std::string fv = elem.get<std::string>();
+            if (fv == "b") ft.push_back(type_bool);
+            if (fv == "i") ft.push_back(type_int);
+            if (fv == "r") ft.push_back(type_real);
+            if (fv == "d") ft.push_back(type_double);
+            if (fv == "f") ft.push_back(type_float);
+            if (fv == "s") ft.push_back(type_string);
+
+          } else throw std::runtime_error("Invalid xfield types");
+
+      m_geom->set_format(fn, ft);
+
+    }
+
   if (data.find(JSON_ATOMS) != data.end())
     for (const auto &atom : data[JSON_ATOMS]) {
+
         m_geom->add(atom[0].get<std::string>(),
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
 
-        if (atom.size() > 4) {
-            m_geom->xfield<bool>(xgeom_sel_vis, m_geom->nat()-1) = atom[4].get<bool>();
-            if (atom.size() > 6) {
-                m_geom->xfield<bool>(xgeom_label_show, m_geom->nat()-1) = atom[5].get<bool>();
-                m_geom->xfield<std::string>(xgeom_label_text, m_geom->nat()-1) =
-                    atom[6].get<std::string>();
+        size_t atom_id = m_geom->nat() - 1;
+        for (size_t i = 4; i < atom.size(); i++) {
+            switch (m_geom->field_type(i)) {
+              case basic_types::type_bool : {
+                  m_geom->xfield<bool>(i, atom_id) = atom[i].get<bool>();
+                  break;
+                }
+              case basic_types::type_int : {
+                  m_geom->xfield<int>(i, atom_id) = atom[i].get<int>();
+                  break;
+                }
+              case basic_types::type_real : {
+                  m_geom->xfield<float>(i, atom_id) = atom[i].get<float>();
+                  break;
+                }
+              case basic_types::type_double : {
+                  m_geom->xfield<double>(i, atom_id) = atom[i].get<double>();
+                  break;
+                }
+              case basic_types::type_float : {
+                  m_geom->xfield<float>(i, atom_id) = atom[i].get<float>();
+                  break;
+                }
+              case basic_types::type_string : {
+                  m_geom->xfield<std::string>(i, atom_id) = atom[i].get<std::string>();
+                  break;
+                }
               }
+
           }
       }
 
