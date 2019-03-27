@@ -88,7 +88,7 @@ int size_guide_t::obj_insp_button_w() {
 }
 
 int size_guide_t::obj_insp_lbl_w() {
-  return 140;
+  return 160;
 }
 
 int size_guide_t::common_tools_panel_w() {

@@ -637,14 +637,18 @@ std::vector<std::string> simple_query::get_xgeom_dfn() {
       "ccr",//8
       "ccg",//9
       "ccb",//10
-      "ltext"//11
+      "ltext",//11
+      "override",//12
+      "atom_r", // 13
+      "external" //14
     };
 
 }
 
 std::vector<basic_types> simple_query::get_xgeom_dft() {
+
   return  {
-      type_string, //0
+          type_string, //0
           type_real, //1
           type_real, //2
           type_real, //3
@@ -655,7 +659,10 @@ std::vector<basic_types> simple_query::get_xgeom_dft() {
           type_real, //8
           type_real, //9
           type_real, //10
-          type_string //11
+          type_string, //11
+          type_bool, // 12
+          type_real, // 13
+          type_real //14
     };
 }
 
