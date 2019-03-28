@@ -57,6 +57,7 @@ namespace qpp {
 
         int obj_insp_w();
         int obj_insp_table_w();
+        int obj_insp_anim_w();
         int obj_insp_item_list_max_h();
         int obj_insp_ctrl_max_w();
         int obj_insp_combo_max_w();

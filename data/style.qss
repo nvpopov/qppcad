@@ -1,6 +1,6 @@
 * {
  font-family : "Roboto";
- font-size: 13pt;
+ font-size: 12pt;
  font-weight: 1;
 }
 
@@ -71,10 +71,6 @@ QTableView::indicator {
   margin-left:35%;
 }
 
-ws_viewer_widget_t {
- margin-top:-12px;
-}
-
 QListWidget[s_class="ws_items_list"]::item {
   margin: 6px;
 }
@@ -93,8 +89,15 @@ QTabWidget::pane {
 }
 
 QTabBar::tab {
- width:55px;
- height:44px;
+ width:44px;
+ height:42px;
+ padding-top:3px;
+ padding-left:12px;
+ border: 0;
+}
+
+QTabBar::tab:selected {
+ background-color: rgb(85, 85, 85);
 }
 
 QGroupBox {

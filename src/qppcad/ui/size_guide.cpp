@@ -52,11 +52,15 @@ int size_guide_t::tool_panel_icon_size() {
 }
 
 int size_guide_t::obj_insp_w() {
-  return 430;
+  return 390;
 }
 
 int size_guide_t::obj_insp_table_w() {
   return int(obj_insp_w() * 0.86);
+}
+
+int size_guide_t::obj_insp_anim_w(){
+  return int(obj_insp_w() * 0.92);
 }
 
 int size_guide_t::obj_insp_item_list_max_h() {
@@ -88,7 +92,7 @@ int size_guide_t::obj_insp_button_w() {
 }
 
 int size_guide_t::obj_insp_lbl_w() {
-  return 160;
+  return 140;
 }
 
 int size_guide_t::common_tools_panel_w() {

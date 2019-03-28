@@ -6,12 +6,11 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-object_inspector_widget_t::object_inspector_widget_t() {
+object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_window_t(parent) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  obj_insp_layout = new QVBoxLayout;
-  setLayout(obj_insp_layout);
+  ew_header->setText(tr("Object inspector"));
 
   setProperty("s_class", "obj_insp");
 
@@ -27,10 +26,10 @@ object_inspector_widget_t::object_inspector_widget_t() {
   none_item_placeholder = new QWidget;
   none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  obj_insp_layout->addWidget(ws_items_label);
-  obj_insp_layout->addWidget(ws_items_list);
-  obj_insp_layout->addWidget(none_item_placeholder);
-  obj_insp_layout->setContentsMargins(10, 4, 0, 0);
+  main_lt->addWidget(ws_items_label);
+  main_lt->addWidget(ws_items_list);
+  main_lt->addWidget(none_item_placeholder);
+  //main_lt->setContentsMargins(10, 4, 0, 0);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
@@ -67,7 +66,7 @@ object_inspector_widget_t::~object_inspector_widget_t() {
 
   if (m_cur_obj_insp_widget) {
       m_cur_obj_insp_widget->unbind_item();
-      obj_insp_layout->removeWidget(m_cur_obj_insp_widget.get());
+      main_lt->removeWidget(m_cur_obj_insp_widget.get());
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
     }
@@ -84,7 +83,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
   if (m_cur_obj_insp_widget) {
       m_cur_obj_insp_widget->unbind_item();
       auto coiw_ptr = m_cur_obj_insp_widget.get();
-      if (coiw_ptr) obj_insp_layout->removeWidget(coiw_ptr);
+      if (coiw_ptr) main_lt->removeWidget(coiw_ptr);
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
       none_item_placeholder->show();
@@ -106,7 +105,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
                   for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
 
                   none_item_placeholder->hide();
-                  obj_insp_layout->addWidget(obj_insp_w.get());
+                  main_lt->addWidget(obj_insp_w.get());
                   m_cur_obj_insp_widget = obj_insp_w;
                   obj_insp_w->bind_to_item(cur_it);
                   obj_insp_w->show();

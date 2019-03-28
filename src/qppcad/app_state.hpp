@@ -132,6 +132,7 @@ namespace qpp {
         QPalette m_app_palette;
         QPalette m_bgfg_light_pal;
         QPalette m_bg_light_pal;
+        QPalette m_bg_embwnd_pal;
 
         icon_repository_t icons;
 

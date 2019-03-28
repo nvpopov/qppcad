@@ -13,7 +13,6 @@ namespace qpp {
 
   namespace cad {
 
-
     class qspoiler_widget_t : public QFrame {
 
         Q_OBJECT

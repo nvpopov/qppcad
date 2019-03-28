@@ -7,6 +7,7 @@
 #include <qppcad/python/python_console_widget.hpp>
 #include <qppcad/ui/qextended_action.hpp>
 #include <qppcad/ws_item/ws_item_extended_editor_compositor.hpp>
+#include <qppcad/render/camera.hpp>
 
 #include <QMainWindow>
 #include <QShortcut>

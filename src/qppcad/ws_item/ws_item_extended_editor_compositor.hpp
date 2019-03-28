@@ -2,6 +2,7 @@
 #define QPPCAD_WS_ITEM_EXTENDED_EDITOR_COMPOSITOR
 
 #include <qppcad/qppcad.hpp>
+#include <qppcad/ui/qembed_window.hpp>
 #include <QWidget>
 #include <QFrame>
 #include <QVBoxLayout>
@@ -12,20 +13,15 @@ namespace qpp {
 
   namespace cad {
 
-    class ws_item_extended_editor_compositor_t : public QFrame {
+    class ws_item_extended_editor_compositor_t : public qembed_window_t {
 
         Q_OBJECT
 
       public:
 
-        QVBoxLayout *main_lt;
-        QHBoxLayout *top_btn_lt;
-
-        QPushButton *top_btn_close;
-
         QWidget *ext_edt_plch;
 
-        ws_item_extended_editor_compositor_t();
+        ws_item_extended_editor_compositor_t(QWidget *parent = nullptr);
 
       public slots:
 

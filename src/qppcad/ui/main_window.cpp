@@ -3,6 +3,7 @@
 #include <qppcad/ui/app_settings_widget.hpp>
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <QDateTime>
 
 using namespace qpp;
@@ -554,7 +555,8 @@ void main_window::init_layouts() {
   splitter_ws_viewer_extended_editor = new QSplitter(Qt::Horizontal);
   splitter_ws_viewer_extended_editor->addWidget(ws_viewer_widget);
   splitter_ws_viewer_extended_editor->addWidget(extended_editor_compositor);
-  splitter_ws_viewer_extended_editor->setHandleWidth(12);
+  splitter_ws_viewer_extended_editor->setHandleWidth(0);
+  splitter_ws_viewer_extended_editor->setContentsMargins(0,0,0,0);
   splitter_ws_viewer_extended_editor->setCollapsible(1, false);
   splitter_ws_viewer_extended_editor->setCollapsible(0, false);
   extended_editor_compositor->hide();
@@ -564,6 +566,7 @@ void main_window::init_layouts() {
   splitter_ws_viewer_py_console->addWidget(py_console_widget);
   splitter_ws_viewer_py_console->setHandleWidth(9);
   splitter_ws_viewer_py_console->setSizes(QList<int>({3, 1}));
+  splitter_ws_viewer_py_console->setContentsMargins(0,0,0,0);
   py_console_widget->hide();
   splitter_ws_viewer_py_console->setCollapsible(1, false);
   splitter_ws_viewer_py_console->setCollapsible(0, false);
@@ -571,7 +574,7 @@ void main_window::init_layouts() {
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console);
   layout_ws_viewer_obj_insp->addWidget(obj_insp_widget);
-  //layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
+  layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
   layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
   layout_ws_viewer_obj_insp->setHandleWidth(0);

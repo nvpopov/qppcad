@@ -56,9 +56,11 @@ namespace qpp {
     }
 
     void app_state_t::init_managers() {
+
       hash_reg = std::make_unique<string_hash_register_t>();
       ws_manager   = std::make_shared<workspace_manager_t>(this);
       py_manager = std::make_unique<python_manager_t>();
+
     }
 
     void app_state_t::init_styles() {
@@ -88,10 +90,13 @@ namespace qpp {
       m_app_palette.setColor(QPalette::Disabled, QPalette::HighlightedText,
                                      QColor(127,127,127));
 
-      m_bgfg_light_pal.setColor(QPalette::Foreground, QColor(100,100,100));
-      m_bgfg_light_pal.setColor(QPalette::Background, QColor(100,100,100));
+      m_bgfg_light_pal.setColor(QPalette::Foreground, QColor(100, 100, 100));
+      m_bgfg_light_pal.setColor(QPalette::Background, QColor(100, 100, 100));
 
-      m_bg_light_pal.setColor(QPalette::Background, QColor(100,100,100));
+      m_bg_light_pal.setColor(QPalette::Background, QColor(100, 100, 100));
+
+      m_bg_embwnd_pal.setColor(QPalette::Background, QColor(40, 40, 40));
+
 
     }
 
@@ -252,16 +257,19 @@ namespace qpp {
     }
 
     void app_state_t::log(std::string logstr, bool flush) {
+
       std::setlocale(LC_ALL, "C");
       std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
       std::string ts( ctime( &t) );
       std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), logstr);
       if (flush) std::cout << std::flush;
+
     }
 
     void app_state_t::pylog(std::string logstr) {
-      if (py_manager)
-        py_manager->m_output_buffer += "\n" + logstr;
+
+      if (py_manager) py_manager->m_output_buffer += "\n" + logstr;
+
     }
 
     void app_state_t::add_recent_file(const std::string file_name,

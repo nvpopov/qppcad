@@ -8,21 +8,19 @@
 #include <QSpacerItem>
 #include <QLabel>
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
-#include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>
-#include <qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.hpp>
-#include <qppcad/ws_item/volume_view/volume_view_obj_insp_widget.hpp>
+#include <qppcad/ui/qembed_window.hpp>
 
 namespace qpp {
 
   namespace cad {
 
-    class object_inspector_widget_t : public QWidget {
+    class object_inspector_widget_t : public qembed_window_t {
 
         Q_OBJECT
 
       public:
 
-        object_inspector_widget_t();
+        object_inspector_widget_t(QWidget *parent = 0);
         ~object_inspector_widget_t();
 
         Q_PROPERTY(QString class READ cssClass)
@@ -32,8 +30,8 @@ namespace qpp {
 
         QLabel *ws_items_label;
         QListWidget *ws_items_list;
-        QVBoxLayout *obj_insp_layout;
-        QSpacerItem *obj_insp_layout_spacer;
+        //QVBoxLayout *obj_insp_layout;
+        //QSpacerItem *obj_insp_layout_spacer;
 
         //property view by ws_item type
         QWidget *none_item_placeholder;
