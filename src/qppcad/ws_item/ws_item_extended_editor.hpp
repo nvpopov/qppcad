@@ -23,6 +23,15 @@ namespace qpp {
 
   namespace cad {
 
+    enum extended_editor_geom_policy_e : int {
+
+      always_max,
+      always_min,
+      start_max,
+      start_min
+
+    };
+
     class ws_item_extended_editor_t : public QWidget {
 
         Q_OBJECT
@@ -30,7 +39,8 @@ namespace qpp {
     public:
 
         ws_item_t *m_binded_item{nullptr};
-        bool m_claim_full_space{false};
+        virtual extended_editor_geom_policy_e get_geom_policy();
+        virtual int get_minimum_width();
         virtual void bind_to_item(ws_item_t *_binding_item);
         virtual void unbind_item();
         virtual void update_from_ws_item();

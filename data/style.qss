@@ -84,12 +84,12 @@ QListWidget[s_class="ws_items_list"] {
 }
 
 QTabWidget {
- border:none;
+ border: 0;
  margin-bottom:15px;
 }
 
 QTabWidget::pane {
- border:none;
+ border: 0;
 }
 
 QTabBar::tab {

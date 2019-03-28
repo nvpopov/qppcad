@@ -53,6 +53,14 @@ void app_state_event_disp_t::cur_ws_selected_item_need_to_update_obj_insp() {
   emit(cur_ws_selected_item_need_to_update_obj_insp_signal());
 }
 
+void app_state_event_disp_t::extended_editor_open_requested() {
+  emit(extended_editor_open_requested_signal());
+}
+
+void app_state_event_disp_t::extended_editor_close_requested() {
+  emit(extended_editor_close_requested_signal());
+}
+
 void app_state_event_disp_t::new_file_loaded(const std::string &file_name,
                                              const size_t ff,
                                              const bool is_native) {

@@ -13,8 +13,6 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   vbox_general_lt->setContentsMargins(0, 0, 0, 0);
   setLayout(vbox_general_lt);
   setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
- // setPalette(astate->m_app_palette);
-
   setPalette(astate->m_bg_light_pal);
 
   top_frm = new QFrame;

@@ -27,6 +27,10 @@ namespace qpp {
         void cur_ws_selected_atoms_list_cell_changed_signal();
         void cur_ws_selected_item_position_changed_signal();
         void cur_ws_selected_item_need_to_update_obj_insp_signal();
+
+        void extended_editor_open_requested_signal();
+        void extended_editor_close_requested_signal();
+
         void new_file_loaded_signal();
         void python_console_clear_requested_signal();
         void python_console_focus_requested_signal();
@@ -45,9 +49,14 @@ namespace qpp {
         void cur_ws_selected_atoms_list_selected_content_changed();
         void cur_ws_selected_item_measurements_changed();
         void cur_ws_selected_item_need_to_update_obj_insp();
+
+        void extended_editor_open_requested();
+        void extended_editor_close_requested();
+
         void new_file_loaded(const std::string &file_name,
                              const size_t ff,
                              const bool is_native);
+
         void python_console_clear_requested();
         void python_console_focus_requested();
         void python_console_font_size_updated();

@@ -6,6 +6,8 @@
 #include <qppcad/ui/object_inspector_widget.hpp>
 #include <qppcad/python/python_console_widget.hpp>
 #include <qppcad/ui/qextended_action.hpp>
+#include <qppcad/ws_item/ws_item_extended_editor_compositor.hpp>
+
 #include <QMainWindow>
 #include <QShortcut>
 #include <QApplication>
@@ -86,6 +88,7 @@ namespace qpp {
 
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
+        ws_item_extended_editor_compositor_t *extended_editor_compositor;
 
         python_console_widget_t *py_console_widget;
         ws_viewer_widget_t *ws_viewer_widget;
@@ -153,8 +156,8 @@ namespace qpp {
         //end of layouts
 
         //Shortcuts
-        QShortcut       *sc_terminate_app;
-        QShortcut       *sc_toggle_console;
+        QShortcut *sc_terminate_app;
+        QShortcut *sc_toggle_console;
 
         //End of shortcuts
       protected:

@@ -26,26 +26,35 @@ main_window::main_window(QWidget *parent) : QMainWindow(parent) {
   init_widgets();
   init_layouts();
 
-  connect(astate->astate_evd, &app_state_event_disp_t::wss_changed_signal,
-          this, &main_window::wss_changed_slot);
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::wss_changed_signal,
+          this,
+          &main_window::wss_changed_slot);
 
-  connect(astate->astate_evd, &app_state_event_disp_t::cur_ws_changed_signal,
-          this, &main_window::cur_ws_changed);
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_changed_signal,
+          this,
+          &main_window::cur_ws_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
-          this, &main_window::cur_ws_selected_item_changed);
+          this,
+          &main_window::cur_ws_selected_item_changed);
 
-  connect(astate->astate_evd, &app_state_event_disp_t::cur_ws_edit_type_changed_signal,
-          this, &main_window::cur_ws_edit_type_changed);
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_edit_type_changed_signal,
+          this,
+          &main_window::cur_ws_edit_type_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
-          this, &main_window::cur_ws_selected_atoms_list_selection_changed);
+          this,
+          &main_window::cur_ws_selected_atoms_list_selection_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::new_file_loaded_signal,
-          this, &main_window::rebuild_recent_files_menu);
+          this,
+          &main_window::rebuild_recent_files_menu);
 
   wss_changed_slot();
   cur_ws_changed();
@@ -530,6 +539,7 @@ void main_window::init_widgets() {
 
   py_console_widget = new python_console_widget_t(this);
   widget_ws_viewer_py_console = new QWidget();
+  extended_editor_compositor = new ws_item_extended_editor_compositor_t;
 
 }
 
@@ -541,8 +551,16 @@ void main_window::init_layouts() {
   main_layout->setContentsMargins(0,0,0,0);
   main_layout->setSpacing(0);
 
+  splitter_ws_viewer_extended_editor = new QSplitter(Qt::Horizontal);
+  splitter_ws_viewer_extended_editor->addWidget(ws_viewer_widget);
+  splitter_ws_viewer_extended_editor->addWidget(extended_editor_compositor);
+  splitter_ws_viewer_extended_editor->setHandleWidth(12);
+  splitter_ws_viewer_extended_editor->setCollapsible(1, false);
+  splitter_ws_viewer_extended_editor->setCollapsible(0, false);
+  extended_editor_compositor->hide();
+
   splitter_ws_viewer_py_console = new QSplitter(Qt::Vertical);
-  splitter_ws_viewer_py_console->addWidget(ws_viewer_widget);
+  splitter_ws_viewer_py_console->addWidget(splitter_ws_viewer_extended_editor);
   splitter_ws_viewer_py_console->addWidget(py_console_widget);
   splitter_ws_viewer_py_console->setHandleWidth(9);
   splitter_ws_viewer_py_console->setSizes(QList<int>({3, 1}));

@@ -30,7 +30,7 @@ object_inspector_widget_t::object_inspector_widget_t() {
   obj_insp_layout->addWidget(ws_items_label);
   obj_insp_layout->addWidget(ws_items_list);
   obj_insp_layout->addWidget(none_item_placeholder);
-  obj_insp_layout->setContentsMargins(10, 0, 5, 0);
+  obj_insp_layout->setContentsMargins(10, 4, 0, 0);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
@@ -51,6 +51,11 @@ object_inspector_widget_t::object_inspector_widget_t() {
           &app_state_event_disp_t::cur_ws_selected_item_need_to_update_obj_insp_signal,
           this,
           &object_inspector_widget_t::need_to_update_obj_insp_received);
+
+  connect(ws_items_list,
+          &QListWidget::itemDoubleClicked,
+          this,
+          &object_inspector_widget_t::ws_item_list_double_clicked);
 
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();
@@ -204,5 +209,12 @@ void object_inspector_widget_t::need_to_update_obj_insp_received() {
   if (m_cur_obj_insp_widget) {
       m_cur_obj_insp_widget->update_from_ws_item();
     }
+
+}
+
+void object_inspector_widget_t::ws_item_list_double_clicked(QListWidgetItem *item) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->extended_editor_open_requested();
 
 }

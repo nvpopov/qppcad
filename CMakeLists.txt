@@ -135,6 +135,7 @@ add_executable(qppcad
     src/qppcad/ws_item/ws_item_obj_insp_widget.cpp
     src/qppcad/ws_item/ws_item_behaviour_manager.cpp
     src/qppcad/ws_item/ws_item_extended_editor.cpp
+    src/qppcad/ws_item/ws_item_extended_editor_compositor.cpp
 
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
@@ -170,6 +171,7 @@ add_executable(qppcad
     src/qppcad/ws_item/geom_view/geom_view_labels_subsys.cpp
     src/qppcad/ws_item/geom_view/geom_view_colorizer.cpp
     src/qppcad/ws_item/geom_view/geom_view_obj_insp_widget.cpp
+    src/qppcad/ws_item/geom_view/geom_view_extended_editor.cpp
     src/qppcad/ws_item/geom_view/geom_view_io.cpp
     src/qppcad/ws_item/geom_view/qtype_specific_rendering_model.cpp
     src/qppcad/ws_item/geom_view/qbonding_table_model.cpp

@@ -2,7 +2,6 @@
 #define QPP_CAD_OBJECT_INSPECTOR_H
 
 #include <qppcad/qppcad.hpp>
-#include <QWidget>
 #include <QGroupBox>
 #include <QListWidget>
 #include <QVBoxLayout>
@@ -47,6 +46,8 @@ namespace qpp {
         void cur_ws_selected_item_changed();
         void ui_cur_ws_selected_item_changed();
         void need_to_update_obj_insp_received();
+
+        void ws_item_list_double_clicked(QListWidgetItem * item);
 
     };
 
