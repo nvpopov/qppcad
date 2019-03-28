@@ -62,6 +62,9 @@ namespace qpp {
         bool m_show_bb{true};
         bool m_selected{false}; ///
         bool m_marked_for_deletion{false};
+        bool m_extended_editor_opened{false};
+        size_t m_extended_editor_id{0};
+        size_t m_extended_editor_width{300};
 
         vector3<float> get_pos();
         void set_pos(vector3<float> new_pos);

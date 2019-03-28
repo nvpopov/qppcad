@@ -12,8 +12,8 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   vbox_general_lt = new QVBoxLayout;
   vbox_general_lt->setContentsMargins(0, 0, 0, 0);
   setLayout(vbox_general_lt);
-  setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
-  setPalette(astate->m_bg_light_pal);
+//  setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
+//  setPalette(astate->m_bg_light_pal);
 
   top_frm = new QFrame;
   top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -22,8 +22,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   top_frm->setAutoFillBackground(true);
 
   hbox_frm = new QHBoxLayout;
-  hbox_frm->setContentsMargins(2, 1, 2, 1);
-
+  hbox_frm->setContentsMargins(2, 0, 2, 0);
   top_frm->setLayout(hbox_frm);
 
   lbl_frm = new QLabel(title);

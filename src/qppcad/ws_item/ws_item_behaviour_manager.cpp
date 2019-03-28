@@ -341,12 +341,42 @@ std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_
           astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, constructing", hash));
           auto cnstr = it_f->second();
           m_obj_insp_widgets.emplace(hash, cnstr);
-          return it_f->second();
+          return cnstr;
         }
       else return nullptr;
     }
 
   astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, not found", hash));
+
+  return nullptr;
+
+}
+
+std::shared_ptr<ws_item_extended_editor_t> ws_item_behaviour_manager_t::get_ext_editor_widget_sp(
+    size_t hash, size_t ed_order) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, query?", hash));
+
+  auto it = m_ext_editors.find(hash);
+  if (it != m_ext_editors.end() && it->second != nullptr) {
+      astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, exists", hash));
+      return it->second;
+    }
+
+  if (it == m_ext_editors.end()) {
+      auto it_f = m_ext_editors_fabric.find(hash);
+      if (it_f != m_ext_editors_fabric.end()) {
+          astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, constructing", hash));
+          auto cnstr = it_f->second();
+          m_ext_editors.emplace(hash, cnstr);
+          return cnstr;
+        }
+      else return nullptr;
+    }
+
+  astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, not found", hash));
 
   return nullptr;
 

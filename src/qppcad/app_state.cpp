@@ -97,6 +97,8 @@ namespace qpp {
 
       m_bg_embwnd_pal.setColor(QPalette::Background, QColor(40, 40, 40));
 
+      m_bgfg_embwnd_pal.setColor(QPalette::Foreground, QColor(80, 80, 80));
+      m_bgfg_embwnd_pal.setColor(QPalette::Background, QColor(90, 90, 90));
 
     }
 

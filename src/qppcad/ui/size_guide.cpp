@@ -95,6 +95,14 @@ int size_guide_t::obj_insp_lbl_w() {
   return 140;
 }
 
+int size_guide_t::ext_editor_btn_h() {
+  return 19;
+}
+
+int size_guide_t::ext_editor_icon() {
+  return 18;
+}
+
 int size_guide_t::common_tools_panel_w() {
   return 320;
 }

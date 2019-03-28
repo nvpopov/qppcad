@@ -150,7 +150,6 @@ namespace qpp {
         QGridLayout *layout_tools_main_window;
         QVBoxLayout *main_layout;
         QSplitter   *layout_ws_viewer_obj_insp;
-        QWidget *widget_ws_viewer_py_console;
         QSplitter *splitter_ws_viewer_extended_editor;
         QSplitter *splitter_editor_py_console;
         QSplitter   *splitter_ws_viewer_py_console;

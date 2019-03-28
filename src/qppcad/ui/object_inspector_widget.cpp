@@ -10,8 +10,9 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   app_state_t* astate = app_state_t::get_inst();
 
-  ew_header->setText(tr("Object inspector"));
-
+  ew_header->setText(tr("OBJECT INSPECTOR"));
+  setObjectName("obj_insp");
+  header_frm->setObjectName("obj_insp_header_frame");
   setProperty("s_class", "obj_insp");
 
   ws_items_label = new QLabel;

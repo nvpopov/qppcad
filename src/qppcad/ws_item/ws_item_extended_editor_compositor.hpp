@@ -20,12 +20,16 @@ namespace qpp {
       public:
 
         QWidget *ext_edt_plch;
-
+        QPushButton *top_btn_close;
         ws_item_extended_editor_compositor_t(QWidget *parent = nullptr);
 
       public slots:
 
         void open_requested();
+        void cur_ws_selected_item_changed();
+        void cur_ws_changed();
+
+        void close_ext_editor_btn_clicked();
 
     };
 

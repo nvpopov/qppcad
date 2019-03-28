@@ -67,6 +67,9 @@ namespace qpp {
         int obj_insp_button_w();
         int obj_insp_lbl_w();
 
+        int ext_editor_btn_h();
+        int ext_editor_icon();
+
         /**
          * @brief common_tools_panel_w
          * @return fixed width for various tools left panels

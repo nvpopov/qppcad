@@ -539,7 +539,7 @@ void main_window::init_widgets() {
   obj_insp_widget->setFixedWidth(astate->size_guide.obj_insp_w());
 
   py_console_widget = new python_console_widget_t(this);
-  widget_ws_viewer_py_console = new QWidget();
+ // widget_ws_viewer_py_console = new QWidget();
   extended_editor_compositor = new ws_item_extended_editor_compositor_t;
 
 }
@@ -557,6 +557,7 @@ void main_window::init_layouts() {
   splitter_ws_viewer_extended_editor->addWidget(extended_editor_compositor);
   splitter_ws_viewer_extended_editor->setHandleWidth(0);
   splitter_ws_viewer_extended_editor->setContentsMargins(0,0,0,0);
+  //splitter_ws_viewer_extended_editor->setSizes(QList<int>({1, 3}));
   splitter_ws_viewer_extended_editor->setCollapsible(1, false);
   splitter_ws_viewer_extended_editor->setCollapsible(0, false);
   extended_editor_compositor->hide();
@@ -607,6 +608,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
+  tool_panel_widget->stackUnder(ws_viewer_widget);
 
 }
 

@@ -96,6 +96,10 @@ QTabBar::tab {
  border: 0;
 }
 
+QTabBar::tab::first {
+ margin-left:12px;
+}
+
 QTabBar::tab:selected {
  background-color: rgb(85, 85, 85);
 }
@@ -120,4 +124,22 @@ QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
 
 QToolTip {
  color: black;
+}
+
+#obj_insp {
+ border-top: 4px solid black;
+ border-left: 2px solid black;
+ border-right: 1px solid black;
+ margin-top: -3px;
+}
+
+#ext_editor_compositor {
+ border-top: 4px solid black;
+ border-left: 2px solid black;
+ border-right: 0;
+ margin-top: -3px;
+}
+
+#obj_insp_header_frame {
+ border-bottom:2px solid black;
 }

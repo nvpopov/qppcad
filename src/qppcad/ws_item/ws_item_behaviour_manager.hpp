@@ -426,6 +426,15 @@ namespace qpp {
         std::shared_ptr<ws_item_obj_insp_widget_t> get_obj_insp_widget_sp(size_t hash);
 
         /**
+         * @brief get_ext_editor_widget_sp
+         * @param hash
+         * @param ed_order
+         * @return
+         */
+        std::shared_ptr<ws_item_extended_editor_t> get_ext_editor_widget_sp(size_t hash,
+                                                                            size_t ed_order = 0);
+
+        /**
          * @brief fabric_by_type
          * @param type_id
          * @return
