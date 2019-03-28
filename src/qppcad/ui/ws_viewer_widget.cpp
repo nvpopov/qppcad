@@ -8,16 +8,25 @@ using namespace qpp::cad;
 ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent) {
 
   m_update_timer = new QTimer;
-  //m_update_timer->setInterval(16);
-  m_update_timer->connect(m_update_timer, &QTimer::timeout, this,
+
+  m_update_timer->connect(m_update_timer,
+                          &QTimer::timeout,
+                          this,
                           &ws_viewer_widget_t::update_cycle);
+
   m_update_timer->setTimerType(Qt::PreciseTimer);
   m_update_timer->start(16);
+
   setMouseTracking(true);
   setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
-  connect(this, &ws_viewer_widget_t::customContextMenuRequested,
-          this, &ws_viewer_widget_t::show_context_menu);
+
+  connect(this,
+          &ws_viewer_widget_t::customContextMenuRequested,
+          this,
+          &ws_viewer_widget_t::show_context_menu);
+
   setMinimumHeight(300);
+  setMinimumWidth(300);
 
   m_update_timer_cpu = new QElapsedTimer;
   m_update_timer_gpu = new QElapsedTimer;

@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ui/qembed_window.hpp>
+#include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <QWidget>
 #include <QFrame>
 #include <QVBoxLayout>
@@ -21,6 +22,9 @@ namespace qpp {
 
         QWidget *ext_edt_plch;
         QPushButton *top_btn_close;
+
+        std::shared_ptr<ws_item_extended_editor_t> m_cur_ext_editor_widget{nullptr};
+
         ws_item_extended_editor_compositor_t(QWidget *parent = nullptr);
 
       public slots:

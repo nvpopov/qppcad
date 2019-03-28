@@ -557,7 +557,6 @@ void main_window::init_layouts() {
   splitter_ws_viewer_extended_editor->addWidget(extended_editor_compositor);
   splitter_ws_viewer_extended_editor->setHandleWidth(0);
   splitter_ws_viewer_extended_editor->setContentsMargins(0,0,0,0);
-  //splitter_ws_viewer_extended_editor->setSizes(QList<int>({1, 3}));
   splitter_ws_viewer_extended_editor->setCollapsible(1, false);
   splitter_ws_viewer_extended_editor->setCollapsible(0, false);
   extended_editor_compositor->hide();
@@ -565,7 +564,7 @@ void main_window::init_layouts() {
   splitter_ws_viewer_py_console = new QSplitter(Qt::Vertical);
   splitter_ws_viewer_py_console->addWidget(splitter_ws_viewer_extended_editor);
   splitter_ws_viewer_py_console->addWidget(py_console_widget);
-  splitter_ws_viewer_py_console->setHandleWidth(9);
+  splitter_ws_viewer_py_console->setHandleWidth(0);
   splitter_ws_viewer_py_console->setSizes(QList<int>({3, 1}));
   splitter_ws_viewer_py_console->setContentsMargins(0,0,0,0);
   py_console_widget->hide();
@@ -591,7 +590,6 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
-  //  tool_panel_layout->addWidget(tp_show_node_editor, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);

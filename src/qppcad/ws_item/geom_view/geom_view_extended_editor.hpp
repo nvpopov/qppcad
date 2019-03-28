@@ -14,6 +14,9 @@ namespace qpp {
 
       public:
 
+        QLabel *ext_editor_gv_label;
+        QVBoxLayout *main_lt;
+
         geom_view_extended_editor_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;

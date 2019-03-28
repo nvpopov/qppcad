@@ -53,6 +53,16 @@ void ws_item_extended_editor_compositor_t::open_requested() {
 
   bool need_to_hide_compositor = true;
 
+  if (m_cur_ext_editor_widget) {
+
+      m_cur_ext_editor_widget->unbind_item();
+      auto coiw_ptr = m_cur_ext_editor_widget.get();
+      if (coiw_ptr) main_lt->removeWidget(coiw_ptr);
+      m_cur_ext_editor_widget->setParent(nullptr);
+      m_cur_ext_editor_widget = nullptr;
+
+    }
+
   if (astate->ws_manager->has_wss()) {
 
       auto cur_ws = astate->ws_manager->get_cur_ws();
@@ -63,14 +73,14 @@ void ws_item_extended_editor_compositor_t::open_requested() {
           if (cur_it) {
               size_t thash = cur_it->get_type();
               auto ext_editor_w = bhv_mgr->get_ext_editor_widget_sp(thash);
-              //              for (auto elem : bhv_mgr->m_ext_editors)
-              // elem.second->setVisible(false);
-              //              QLayoutItem *item;
-              //              while ((item = layout()->takeAt(0)))
-              //                item->widget()->setParent(nullptr);
+
               if (ext_editor_w) {
-                  // layout()->addWidget(ext_editor_w.get());
                   need_to_hide_compositor = false;
+                  ext_editor_w->bind_to_item(cur_it);
+                  m_cur_ext_editor_widget = ext_editor_w;
+                  main_lt->addWidget(ext_editor_w.get());
+                  ew_header->setText(tr("EXTENDED EDITOR [%1]")
+                                     .arg(QString::fromStdString(cur_it->m_name)));
                   show();
                   cur_it->m_extended_editor_opened = true;
                 }
@@ -100,7 +110,7 @@ void ws_item_extended_editor_compositor_t::cur_ws_selected_item_changed() {
           auto cur_it = cur_ws->get_selected();
 
           if (cur_it && cur_it->m_extended_editor_opened) {
-              show();
+              open_requested();
             }
           else {
               hide();
