@@ -14,20 +14,20 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
   main_lt->setContentsMargins(10,0,0,0);
   setLayout(main_lt_zero_lvl);
 
-  setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
+  setFrameStyle(QFrame::StyledPanel);
   setPalette(astate->m_bg_embwnd_pal);
 
   header_frm = new QFrame;
   header_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   header_frm->setPalette(astate->m_bgfg_embwnd_pal);
-  header_frm->setFrameStyle(QFrame::Box);
+  header_frm->setFrameStyle(QFrame::StyledPanel);
   header_frm->setAutoFillBackground(true);
 
   header_lt = new QHBoxLayout;
 
   ew_header = new QLabel("qembed_window header");
   header_frm->setLayout(header_lt);
-  header_lt->setContentsMargins(3, 3, 3, 3);
+  header_lt->setContentsMargins(4, 2, 2, 2);
   header_lt->addWidget(ew_header);
 
   main_lt_zero_lvl->addWidget(header_frm);

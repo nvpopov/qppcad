@@ -653,10 +653,12 @@ void geom_view_t::load_color_from_static_anim() {
 
   if (!m_geom) return;
 
-  if (m_anim->m_anim_data.size()>0) {
+  if (m_anim->m_anim_data.size() > 0) {
+
       int static_anim = -1;
       for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
         if (m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_static) static_anim = i;
+
       if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
           m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
           for (int i = 0; i < m_geom->nat(); i++) {

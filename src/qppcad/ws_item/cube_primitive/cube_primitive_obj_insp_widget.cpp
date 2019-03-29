@@ -1,10 +1,13 @@
 #include <qppcad/ws_item/cube_primitive/cube_primitive_obj_insp_widget.hpp>
 #include <qppcad/ws_item/cube_primitive/cube_primitive.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   tg_cube_params = new QGroupBox(tr("Cube parameters"));
   tg_cube_params_lt = new QFormLayout;
@@ -15,14 +18,13 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
 
   cube_param_scale = new qbinded_float3_input;
   cube_param_scale->set_min_max_step(0.05f, 20.0f, 0.05f);
-  cube_param_scale->set_default_suffix();
 
   cube_render_mode = new qbinded_combobox;
   cube_render_mode->addItem(tr("Solid"));
   cube_render_mode->addItem(tr("Lines"));
 
   tg_cube_params_lt->addRow(tr("Color"), cube_param_color);
-  tg_cube_params_lt->addRow(tr("Size"), cube_param_scale);
+  tg_cube_params_lt->addRow(tr("Size[%1]").arg(astate->m_spatial_suffix), cube_param_scale);
   tg_cube_params_lt->addRow(tr("Render style"), cube_render_mode);
 
   post_init_gb(tg_cube_params, tg_cube_params_lt);

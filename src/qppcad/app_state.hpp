@@ -96,6 +96,11 @@ namespace qpp {
         draw_pipeline_t *dp;
         size_guide_t size_guide;
 
+        std::unordered_map<std::string, float> m_cache_float;
+        std::unordered_map<std::string, int> m_cache_int;
+        std::unordered_map<std::string, bool> m_cache_bool;
+        std::unordered_map<std::string, vector3<float>> m_cache_vector;
+
         shader_program_t *sp_default;
         shader_program_t *sp_unit_line;
         shader_program_t *sp_unit_line_styled;
