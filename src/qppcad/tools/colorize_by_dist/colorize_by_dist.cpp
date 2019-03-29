@@ -22,11 +22,12 @@ void colorize_by_dist_tool_t::exec(ws_item_t *item) {
 
   colorize_by_dist_widget_t cw;
   cw.b_gv = gv_ptr;
-  cw.populate_atom_type_cmb();
+  cw.init_data();
 
   int res = cw.exec();
 
   if (res == QDialog::Accepted) {
+
       geom_view_colorizer_helper::colorize_by_distance(
                       cw.b_gv,
                       cw.atom_dist_max->value(),
@@ -36,12 +37,22 @@ void colorize_by_dist_tool_t::exec(ws_item_t *item) {
                       cw.atom1_type->currentText().toStdString(),
                       cw.atom2_type->currentText().toStdString());
       cw.b_gv->m_color_mode = geom_view_color_e::color_from_xgeom;
+
+      //cache tool data
+      astate->m_cache_float["T_CLRD_DIST"] = cw.atom_dist_max->value();
+      astate->m_cache_string["T_CLRD_T1"] = cw.atom1_type->currentText().toStdString();
+      astate->m_cache_string["T_CLRD_T2"] = cw.atom2_type->currentText().toStdString();
+      astate->m_cache_vector["T_CLRD_CLR"] = cw.clr_low;
+
       astate->make_viewport_dirty();
+
     }
 
 }
 
-void colorize_by_dist_widget_t::populate_atom_type_cmb() {
+void colorize_by_dist_widget_t::init_data() {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   if (!b_gv) return;
 
@@ -49,6 +60,30 @@ void colorize_by_dist_widget_t::populate_atom_type_cmb() {
       QString atom_type = QString::fromStdString(b_gv->m_geom->atom_of_type(i));
       atom1_type->addItem(atom_type);
       atom2_type->addItem(atom_type);
+    }
+
+  auto it_d = astate->m_cache_float.find("T_CLRD_DIST");
+  if (it_d != astate->m_cache_float.end()) atom_dist_max->setValue(it_d->second);
+
+  auto it_clr = astate->m_cache_vector.find("T_CLRD_CLR");
+  if (it_clr != astate->m_cache_vector.end()) {
+      clr_low = it_clr->second;
+      clr_input->load_value_ex();
+    }
+
+  auto it_t1 = astate->m_cache_string.find("T_CLRD_T1");
+  auto it_t2 = astate->m_cache_string.find("T_CLRD_T2");
+
+  if (it_t1 != astate->m_cache_string.end()) {
+      QString type1 = QString::fromStdString(it_t1->second);
+      int type1_idx = atom1_type->findText(type1);
+      if (type1_idx >= 0) atom1_type->setCurrentIndex(type1_idx);
+    }
+
+  if (it_t2 != astate->m_cache_string.end()) {
+      QString type2 = QString::fromStdString(it_t2->second);
+      int type2_idx = atom1_type->findText(type2);
+      if (type2_idx >= 0) atom2_type->setCurrentIndex(type2_idx);
     }
 
 }

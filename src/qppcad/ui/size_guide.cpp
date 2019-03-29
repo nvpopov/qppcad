@@ -103,6 +103,14 @@ int size_guide_t::ext_editor_icon() {
   return 18;
 }
 
+int size_guide_t::spoiler_button_h() {
+  return 19;
+}
+
+int size_guide_t::spoiler_button_icon_h() {
+  return 18;
+}
+
 int size_guide_t::common_tools_panel_w() {
   return 320;
 }

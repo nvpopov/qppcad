@@ -70,6 +70,9 @@ namespace qpp {
         int ext_editor_btn_h();
         int ext_editor_icon();
 
+        int spoiler_button_h();
+        int spoiler_button_icon_h();
+
         /**
          * @brief common_tools_panel_w
          * @return fixed width for various tools left panels

@@ -12,8 +12,6 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   vbox_general_lt = new QVBoxLayout;
   vbox_general_lt->setContentsMargins(0, 0, 0, 0);
   setLayout(vbox_general_lt);
-//  setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
-//  setPalette(astate->m_bg_light_pal);
 
   top_frm = new QFrame;
   top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -29,7 +27,10 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   lbl_frm->setAlignment(Qt::AlignCenter);
   action_btn = new QPushButton;
   action_btn->setFlat(true);
-  action_btn->setMaximumWidth(24);
+  action_btn->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+                                 astate->size_guide.spoiler_button_h()));
+  action_btn->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+                                astate->size_guide.spoiler_button_icon_h()));
 
   widget_list = new QWidget;
 

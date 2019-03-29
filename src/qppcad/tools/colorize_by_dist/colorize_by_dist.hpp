@@ -49,7 +49,7 @@ namespace qpp {
 
         geom_view_t *b_gv{nullptr};
 
-        void populate_atom_type_cmb();
+        void init_data();
         colorize_by_dist_widget_t();
 
     };
