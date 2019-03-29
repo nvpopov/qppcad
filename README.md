@@ -42,7 +42,3 @@ apt install libpython3-dev
 
 ### CI Status
 1. Travis CI [![Build Status](https://travis-ci.org/nvpopov/qppcad.svg?branch=master)](https://travis-ci.org/nvpopov/qppcad)
-
-### Current implemented features
-  [Go to implemented features gallery](docs/features-milestone.md)
-
