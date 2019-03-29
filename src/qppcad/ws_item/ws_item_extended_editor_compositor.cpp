@@ -79,8 +79,9 @@ void ws_item_extended_editor_compositor_t::open_requested() {
                   ext_editor_w->bind_to_item(cur_it);
                   m_cur_ext_editor_widget = ext_editor_w;
                   main_lt->addWidget(ext_editor_w.get());
-                  ew_header->setText(tr("EXTENDED EDITOR [%1]")
-                                     .arg(QString::fromStdString(cur_it->m_name)));
+                  ew_header->setText(tr("EXTENDED EDITOR [%1/%2]")
+                                     .arg(QString::fromStdString(cur_it->m_name))
+                                     .arg(QString::fromStdString(cur_ws->m_ws_name)));
                   show();
                   cur_it->m_extended_editor_opened = true;
                 }

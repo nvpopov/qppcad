@@ -101,7 +101,7 @@ QTabBar::tab::first {
 }
 
 QTabBar::tab:selected {
- background-color: rgb(85, 85, 85);
+ background-color: rgb(120, 120, 120);
 }
 
 QGroupBox {
@@ -119,7 +119,7 @@ QGroupBox::title {
 }
 
 QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
- background-color: rgb(80, 80, 80);
+ background-color: rgb(110, 110, 110);
 }
 
 QToolTip {
