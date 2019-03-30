@@ -678,9 +678,9 @@ void main_window::wss_changed_slot() {
       tp_rnm_ws->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
       tp_add_ws_item->setEnabled(true);
-      for (auto ws : astate->ws_manager->m_ws) {
-          QString dest = QString::fromStdString(ws->m_ws_name);
-          //astate->log(fmt::format("DEBUG COMBOBOX: add new item {}", dest.toStdString()));
+      for (size_t i = 0; i < astate->ws_manager->m_ws.size(); i++) {
+          auto ws = astate->ws_manager->m_ws[i];
+          QString dest = QString::fromStdString(fmt::format("[{}]{}", i, ws->m_ws_name));
           tp_ws_selector->addItem(dest);
         }
 
