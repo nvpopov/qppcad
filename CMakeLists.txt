@@ -177,6 +177,7 @@ add_executable(qppcad
     src/qppcad/ws_item/geom_view/qtype_specific_rendering_model.cpp
     src/qppcad/ws_item/geom_view/qbonding_table_model.cpp
     src/qppcad/ws_item/geom_view/qmeasurements_table_model.cpp
+    src/qppcad/ws_item/geom_view/xgeom_table_model.cpp
     src/qppcad/ws_item/geom_view/geom_view_type_summary_popup.cpp
 
     src/qppcad/ws_item/psg_view/psg_view.cpp

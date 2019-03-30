@@ -34,3 +34,4 @@ void ws_item_extended_editor_t::update_from_ws_item() {
 ws_item_extended_editor_t::ws_item_extended_editor_t() : QWidget() {
 
 }
+

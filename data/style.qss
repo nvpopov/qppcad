@@ -71,12 +71,24 @@ QTableView::indicator {
   margin-left:35%;
 }
 
+QTableView {
+ border-style: none;
+ border: 0px;
+ background-color: rgb(100, 100, 100);
+}
+
+QHeaderView::section {
+ border-style: none;
+ border: 0px;
+ background-color: rgb(120, 120, 120);
+}
+
 QListWidget[s_class="ws_items_list"]::item {
   margin: 6px;
 }
 
-QListWidget[s_class="ws_items_list"] {
- margin-right:10px;
+#ws_items_spoiler_e {
+  margin-left:4px;
 }
 
 QTabWidget {

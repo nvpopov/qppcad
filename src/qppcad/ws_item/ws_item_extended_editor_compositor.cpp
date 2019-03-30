@@ -46,6 +46,17 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
 
 }
 
+ws_item_extended_editor_compositor_t::~ws_item_extended_editor_compositor_t() {
+
+  if (m_cur_ext_editor_widget) {
+      m_cur_ext_editor_widget->unbind_item();
+      main_lt->removeWidget(m_cur_ext_editor_widget.get());
+      m_cur_ext_editor_widget->setParent(nullptr);
+      m_cur_ext_editor_widget = nullptr;
+    }
+
+}
+
 void ws_item_extended_editor_compositor_t::open_requested() {
 
   app_state_t *astate = app_state_t::get_inst();

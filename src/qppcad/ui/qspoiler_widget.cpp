@@ -5,7 +5,10 @@ using namespace qpp;
 using namespace qpp::cad;
 
 qspoiler_widget_t::qspoiler_widget_t(const QString & title,
-                                     QWidget *parent) : QFrame(parent) {
+                                     QWidget *parent,
+                                     bool _collapsable) : QFrame(parent) {
+
+  m_collapsable = _collapsable;
 
   app_state_t *astate = app_state_t::get_inst();
 

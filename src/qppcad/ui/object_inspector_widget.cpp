@@ -15,22 +15,26 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   header_frm->setObjectName("obj_insp_header_frame");
   setProperty("s_class", "obj_insp");
 
-  ws_items_label = new QLabel;
-  ws_items_label->setText(tr("Workspace items:"));
-
   ws_items_list = new QListWidget;
-
-  ws_items_list->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
   ws_items_list->setProperty("s_class", "ws_items_list");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
+
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true);
+  ws_items_spoiler->setObjectName("ws_items_spoiler_e");
+  ws_items_spoiler_lt = new QVBoxLayout;
+  ws_items_spoiler_lt->setContentsMargins(0,0,0,0);
+  ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
+  ws_items_spoiler_lt->addWidget(ws_items_list);
+  ws_items_spoiler->vbox_general_lt->setContentsMargins(0,0,20,0);
+  ws_items_spoiler->add_content_layout(ws_items_spoiler_lt);
+  ws_items_spoiler->widget_list_lt->setContentsMargins(0,0,0,0);
 
   none_item_placeholder = new QWidget;
   none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  main_lt->addWidget(ws_items_label);
-  main_lt->addWidget(ws_items_list);
+  main_lt->addWidget(ws_items_spoiler);
   main_lt->addWidget(none_item_placeholder);
-  //main_lt->setContentsMargins(10, 4, 0, 0);
+  main_lt->addSpacing(0);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,

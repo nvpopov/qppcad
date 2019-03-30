@@ -3,6 +3,8 @@
 
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 namespace qpp {
 

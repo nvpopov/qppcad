@@ -28,9 +28,11 @@ namespace qpp {
         QVBoxLayout *widget_list_lt;
 
         bool m_state{true};
+        bool m_collapsable{false};
 
         explicit qspoiler_widget_t(const QString & title = "",
-                                   QWidget *parent = 0);
+                                   QWidget *parent = 0,
+                                   bool _collapsable = false);
 
         void add_content_layout(QLayout *new_lt);
         void process_state();

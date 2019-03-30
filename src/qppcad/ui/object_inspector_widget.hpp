@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ui/qembed_window.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
 
 namespace qpp {
 
@@ -30,8 +31,8 @@ namespace qpp {
 
         QLabel *ws_items_label;
         QListWidget *ws_items_list;
-        //QVBoxLayout *obj_insp_layout;
-        //QSpacerItem *obj_insp_layout_spacer;
+        qspoiler_widget_t *ws_items_spoiler;
+        QVBoxLayout *ws_items_spoiler_lt;
 
         //property view by ws_item type
         QWidget *none_item_placeholder;

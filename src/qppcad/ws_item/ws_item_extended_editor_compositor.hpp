@@ -26,6 +26,7 @@ namespace qpp {
         std::shared_ptr<ws_item_extended_editor_t> m_cur_ext_editor_widget{nullptr};
 
         ws_item_extended_editor_compositor_t(QWidget *parent = nullptr);
+        ~ws_item_extended_editor_compositor_t();
 
       public slots:
 

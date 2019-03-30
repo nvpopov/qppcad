@@ -7,8 +7,15 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
 
   ext_editor_gv_label = new QLabel(tr("geom_view_extended_editor_t"));
   main_lt = new QVBoxLayout;
+  main_lt->setContentsMargins(0,0,10,0);
   setLayout(main_lt);
-  main_lt->addWidget(ext_editor_gv_label);
+
+//  xgeom_tv = new QTableView(this);
+//  xgeom_tv->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//  xgeom_tv->verticalHeader()->hide();
+
+//  main_lt->addWidget(xgeom_tv);
+  main_lt->addStretch(1);
 
 }
 

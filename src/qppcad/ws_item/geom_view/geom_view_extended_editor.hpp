@@ -4,6 +4,9 @@
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 
+#include <QTableView>
+#include <QHeaderView>
+
 namespace qpp {
 
   namespace cad {
@@ -16,6 +19,7 @@ namespace qpp {
 
         QLabel *ext_editor_gv_label;
         QVBoxLayout *main_lt;
+        QTableView *xgeom_tv;
 
         geom_view_extended_editor_t();
 
