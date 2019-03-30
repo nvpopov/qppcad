@@ -99,6 +99,8 @@ QVariant xgeom_table_model_t::headerData(int section,
         return QVariant();
     }
 
+  return QVariant();
+
 }
 
 Qt::ItemFlags xgeom_table_model_t::flags(const QModelIndex &index) const {

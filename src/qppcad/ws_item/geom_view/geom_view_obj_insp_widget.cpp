@@ -588,28 +588,60 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_u_scale_sb_z->setSingleStep(0.01);
   tm_u_scale_sb_z->setValue(1.0);
 
+  tm_u_scale_x_proxy_widget = new QWidget;
+  tm_u_scale_x_proxy_lt = new QHBoxLayout;
+  tm_u_scale_x_proxy_lt->setContentsMargins(0,0,0,0);
+  tm_u_scale_x_proxy_widget->setLayout(tm_u_scale_x_proxy_lt);
+
+  tm_u_scale_y_proxy_widget = new QWidget;
+  tm_u_scale_y_proxy_lt = new QHBoxLayout;
+  tm_u_scale_y_proxy_lt->setContentsMargins(0,0,0,0);
+  tm_u_scale_y_proxy_widget->setLayout(tm_u_scale_y_proxy_lt);
+
+  tm_u_scale_z_proxy_widget = new QWidget;
+  tm_u_scale_z_proxy_lt = new QHBoxLayout;
+  tm_u_scale_z_proxy_lt->setContentsMargins(0,0,0,0);
+  tm_u_scale_z_proxy_widget->setLayout(tm_u_scale_z_proxy_lt);
+
   tm_u_scale_x_enabled = new QCheckBox;
   tm_u_scale_x_enabled->setChecked(true);
+  connect(tm_u_scale_x_enabled,
+          static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
+          [this](int state){this->tm_u_scale_sb_x->setEnabled(state == Qt::Checked);});
 
   tm_u_scale_y_enabled = new QCheckBox;
   tm_u_scale_y_enabled->setChecked(true);
+  connect(tm_u_scale_y_enabled,
+          static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
+          [this](int state){this->tm_u_scale_sb_y->setEnabled(state == Qt::Checked);});
 
   tm_u_scale_z_enabled = new QCheckBox;
   tm_u_scale_z_enabled->setChecked(true);
+  connect(tm_u_scale_z_enabled,
+          static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
+          [this](int state){this->tm_u_scale_sb_z->setEnabled(state == Qt::Checked);});
+
+  //compose proxy widgets for uniform scale
+  tm_u_scale_x_proxy_lt->addWidget(tm_u_scale_sb_x);
+  tm_u_scale_x_proxy_lt->addWidget(tm_u_scale_x_enabled);
+
+  tm_u_scale_y_proxy_lt->addWidget(tm_u_scale_sb_y);
+  tm_u_scale_y_proxy_lt->addWidget(tm_u_scale_y_enabled);
+
+  tm_u_scale_z_proxy_lt->addWidget(tm_u_scale_sb_z);
+  tm_u_scale_z_proxy_lt->addWidget(tm_u_scale_z_enabled);
 
   tm_u_apply_scale_button = new QPushButton(tr("Apply"));
   tm_u_apply_scale_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
+
   connect(tm_u_apply_scale_button,
           &QPushButton::pressed,
           this,
           &geom_view_obj_insp_widget_t::modify_barycentric_scale_button_clicked);
 
-  tm_gb_u_scale_lt->addRow("Scale X", tm_u_scale_sb_x);
-  tm_gb_u_scale_lt->addRow("Scale Y", tm_u_scale_sb_y);
-  tm_gb_u_scale_lt->addRow("Scale Z", tm_u_scale_sb_z);
-  tm_gb_u_scale_lt->addRow("Enable X", tm_u_scale_x_enabled);
-  tm_gb_u_scale_lt->addRow("Enable Y", tm_u_scale_y_enabled);
-  tm_gb_u_scale_lt->addRow("Enable Z", tm_u_scale_z_enabled);
+  tm_gb_u_scale_lt->addRow("Scale X", tm_u_scale_x_proxy_widget);
+  tm_gb_u_scale_lt->addRow("Scale Y", tm_u_scale_y_proxy_widget);
+  tm_gb_u_scale_lt->addRow("Scale Z", tm_u_scale_z_proxy_widget);
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
   init_form_lt(tm_gb_u_scale_lt);
 
@@ -672,8 +704,8 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this,
           &geom_view_obj_insp_widget_t::modify_bc_rot_angle_type_change);
 
-  tm_bc_rot_angle_type->addItem("Degrees");
-  tm_bc_rot_angle_type->addItem("Radians");
+  tm_bc_rot_angle_type->addItem("Degr.");
+  tm_bc_rot_angle_type->addItem("Rad.");
   tm_bc_rot_apply = new QPushButton(tr("Apply"));
   tm_bc_rot_apply->setMaximumWidth(astate->size_guide.obj_insp_button_w());
   connect(tm_bc_rot_apply,
@@ -2015,3 +2047,4 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
     }
 
 }
+

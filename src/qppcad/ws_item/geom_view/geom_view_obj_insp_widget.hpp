@@ -194,6 +194,12 @@ namespace qpp {
         QCheckBox *tm_u_scale_x_enabled;
         QCheckBox *tm_u_scale_y_enabled;
         QCheckBox *tm_u_scale_z_enabled;
+        QWidget *tm_u_scale_x_proxy_widget;
+        QHBoxLayout *tm_u_scale_x_proxy_lt;
+        QWidget *tm_u_scale_y_proxy_widget;
+        QHBoxLayout *tm_u_scale_y_proxy_lt;
+        QWidget *tm_u_scale_z_proxy_widget;
+        QHBoxLayout *tm_u_scale_z_proxy_lt;
         QPushButton *tm_u_apply_scale_button;
 
         qspoiler_widget_t *tm_gb_translate;
