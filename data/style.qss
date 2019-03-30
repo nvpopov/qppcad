@@ -87,6 +87,10 @@ QListWidget[s_class="ws_items_list"]::item {
   margin: 6px;
 }
 
+#ws_items_spoler_widget_list_e {
+
+}
+
 #ws_items_spoiler_e {
   margin-left:4px;
 }

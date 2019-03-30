@@ -19,7 +19,7 @@ namespace qpp {
 
       public:
 
-        QVBoxLayout *vbox_general_lt;
+        QVBoxLayout *main_lt;
         QFrame *top_frm;
         QHBoxLayout *hbox_frm;
         QLabel *lbl_frm;
@@ -32,7 +32,8 @@ namespace qpp {
 
         explicit qspoiler_widget_t(const QString & title = "",
                                    QWidget *parent = 0,
-                                   bool _collapsable = false);
+                                   bool _collapsable = false,
+                                   int _spacing = 6);
 
         void add_content_layout(QLayout *new_lt);
         void process_state();

@@ -6,15 +6,16 @@ using namespace qpp::cad;
 
 qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                      QWidget *parent,
-                                     bool _collapsable) : QFrame(parent) {
+                                     bool _collapsable,
+                                     int _spacing) : QFrame(parent) {
 
   m_collapsable = _collapsable;
 
   app_state_t *astate = app_state_t::get_inst();
 
-  vbox_general_lt = new QVBoxLayout;
-  vbox_general_lt->setContentsMargins(0, 0, 0, 0);
-  setLayout(vbox_general_lt);
+  main_lt = new QVBoxLayout;
+  main_lt->setContentsMargins(0, 0, 0, 0);
+  setLayout(main_lt);
 
   top_frm = new QFrame;
   top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -23,7 +24,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   top_frm->setAutoFillBackground(true);
 
   hbox_frm = new QHBoxLayout;
-  hbox_frm->setContentsMargins(2, 0, 2, 0);
+  hbox_frm->setContentsMargins(2, 0, 0, 0);
   top_frm->setLayout(hbox_frm);
 
   lbl_frm = new QLabel(title);
@@ -36,17 +37,20 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                 astate->size_guide.spoiler_button_icon_h()));
 
   widget_list = new QWidget;
+  widget_list->setContentsMargins(0, 0, 0, 0);
 
   widget_list_lt = new QVBoxLayout;
-  widget_list_lt->setContentsMargins(10, 0, 10, 5);
+  widget_list_lt->setContentsMargins(0, 0, 0, 0);
   widget_list->setLayout(widget_list_lt);
 
   hbox_frm->addWidget(action_btn);
   hbox_frm->addWidget(lbl_frm);
   hbox_frm->addSpacing(24);
 
-  vbox_general_lt->addWidget(top_frm);
-  vbox_general_lt->addWidget(widget_list);
+  main_lt->addWidget(top_frm);
+  main_lt->addWidget(widget_list);
+  main_lt->setSpacing(_spacing);
+  main_lt->addSpacing(0);
 
   connect(action_btn,
           &QPushButton::clicked,

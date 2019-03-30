@@ -17,17 +17,19 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   ws_items_list = new QListWidget;
   ws_items_list->setProperty("s_class", "ws_items_list");
+  ws_items_list->setObjectName("ws_items_list_e");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true);
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0);
+  //ws_items_spoiler->widget_list->setObjectName("")
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
-  ws_items_spoiler_lt->setContentsMargins(0,0,0,0);
+  ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
   ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
   ws_items_spoiler_lt->addWidget(ws_items_list);
-  ws_items_spoiler->vbox_general_lt->setContentsMargins(0,0,20,0);
+  ws_items_spoiler->main_lt->setContentsMargins(0, 0, 20, 0);
   ws_items_spoiler->add_content_layout(ws_items_spoiler_lt);
-  ws_items_spoiler->widget_list_lt->setContentsMargins(0,0,0,0);
+  ws_items_spoiler->widget_list_lt->setContentsMargins(0, 0, 0, 0);
 
   none_item_placeholder = new QWidget;
   none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

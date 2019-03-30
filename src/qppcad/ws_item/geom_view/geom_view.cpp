@@ -50,13 +50,13 @@ geom_view_t::geom_view_t(): ws_item_t () {
    "number", //5
    "hide",//6
    "lshow",//7
-   "ccr",//8
-   "ccg",//9
-   "ccb",//10
+   "r",//8
+   "g",//9
+   "b",//10
    "ltext",//11
-   "override",//12
+   "ov",//12
    "atom_r", // 13
-   "external" //14
+   "ex0" //14
         },
 
   {type_string, //0

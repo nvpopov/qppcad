@@ -56,7 +56,7 @@ int size_guide_t::obj_insp_w() {
 }
 
 int size_guide_t::obj_insp_table_w() {
-  return int(obj_insp_w() * 0.86);
+  return int(obj_insp_w() * 0.92);
 }
 
 int size_guide_t::obj_insp_anim_w(){

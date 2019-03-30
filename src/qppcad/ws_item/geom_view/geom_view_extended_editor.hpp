@@ -3,6 +3,7 @@
 
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/xgeom_table_model.hpp>
 
 #include <QTableView>
 #include <QHeaderView>
@@ -20,6 +21,9 @@ namespace qpp {
         QLabel *ext_editor_gv_label;
         QVBoxLayout *main_lt;
         QTableView *xgeom_tv;
+
+        xgeom_table_model_t *xgeom_tmdl;
+        geom_view_t *m_binded_gv{nullptr};
 
         geom_view_extended_editor_t();
 
