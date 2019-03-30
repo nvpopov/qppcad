@@ -1,6 +1,7 @@
 #include <qppcad/python/python_simple_query.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_colorizer.hpp>
 #include <qppcad/ui/color_map.hpp>
+#include <pybind11/functional.h>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -36,8 +37,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   //tools module begin
   py::module tools = m.def_submodule("tools", "Generic tools");
 
-  py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools,
-                                                                       "color_map_t");
+  py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools, "color_map_t");
   py_color_map_t.def(py::init<>());
   py_color_map_t.def("get_color", &color_map_t::get_color);
   py_color_map_t.def("push_color", &color_map_t::push_color);
@@ -94,6 +94,26 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   sel.def("sph", &simple_query::sel_cnt_sphere);
   sel.def("inv", &simple_query::sel_invert);
   sel.def("hemisph", &simple_query::sel_hemisphere);
+  sel.def("f", &simple_query::sel_cnt_fn);
+
+  sel.def("gx",
+          [](float bound){simple_query::sel_cnt_fn(
+            [&bound](float x, float y, float z){return x > bound;});});
+  sel.def("lx",
+          [](float bound){simple_query::sel_cnt_fn(
+            [&bound](float x, float y, float z){return x < bound;});});
+  sel.def("gy",
+          [](float bound){simple_query::sel_cnt_fn(
+            [&bound](float x, float y, float z){return y > bound;});});
+  sel.def("ly",
+          [](float bound){simple_query::sel_cnt_fn(
+            [&bound](float x, float y, float z){return y < bound;});});
+  sel.def("gz",
+          [](float bound){simple_query::sel_cnt_fn(
+            [&bound](float x, float y, float z){return z > bound;});});
+  sel.def("lz",
+          [](float bound){simple_query::sel_cnt_fn(
+            [&bound](float x, float y, float z){return z < bound;});});
 
   py::module pt = m.def_submodule("pt", "Periodic table manipulations");
   pt.def("c", &simple_query::ptable_set_color_by_number);

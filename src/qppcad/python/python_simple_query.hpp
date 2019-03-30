@@ -48,6 +48,7 @@ namespace qpp {
         static void select_ws(int ws_idx);
         static void select_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);
+        static void sel_cnt_fn(std::function<bool(float, float, float)> cfn);
         static void sel_cnt_parity();
         static void sel_invert();
         static void sel_cnt_all();

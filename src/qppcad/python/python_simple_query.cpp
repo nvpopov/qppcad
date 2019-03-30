@@ -122,6 +122,26 @@ void simple_query::sel_cnt(int cnt_idx) {
 
 }
 
+void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (!astate->ws_manager->has_wss()) return;
+
+  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!cur_ws) return;
+
+  auto al = astate->ws_manager->get_sel_itm_sp_as<geom_view_t>();
+  if (!al) return;
+
+  for (size_t i = 0; i < al->m_geom->nat(); i++)
+    if (cfn(al->m_geom->pos(i)[0], al->m_geom->pos(i)[1], al->m_geom->pos(i)[2]))
+     al->select_atom(i);
+
+  astate->make_viewport_dirty();
+
+}
+
 void simple_query::sel_cnt_parity() {
 
   app_state_t *astate = app_state_t::get_inst();
