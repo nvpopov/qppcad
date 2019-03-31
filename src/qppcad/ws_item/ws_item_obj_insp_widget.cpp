@@ -11,7 +11,7 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name,
 
   ws_item_tab_widget_t *tmp = new ws_item_tab_widget_t;
   tmp->tab_scroll = new QScrollArea;
-  tmp->tab_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  tmp->tab_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   tmp->tab_scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   tmp->tab_scroll->setWidgetResizable(true);
   tmp->tab_scroll->setStyleSheet("QScrollArea {border:0;}");

@@ -13,17 +13,18 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
   py_tedit = new python_text_editor_t(nullptr);
   script_editor = new QTextEdit;
-  script_editor_syntax_hl = new python_text_editor_syntax_highilighter_t(script_editor->document());
+  script_editor_syntax_hl =
+      new python_text_editor_syntax_highilighter_t(script_editor->document());
 
   console_lt = new QHBoxLayout;
   buttons_lt = new QVBoxLayout;
 
   btn_clear = new QPushButton();
   btn_clear->setIcon(QIcon("://images/outline-delete-24px.svg"));
-  btn_clear->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                               astate->size_guide.tool_panel_icon_size()));
-  btn_clear->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
-                                astate->size_guide.tool_panel_h()));
+  btn_clear->setIconSize(QSize(astate->size_guide.script_edtior_button_icon_w(),
+                               astate->size_guide.script_edtior_button_icon_w()));
+  btn_clear->setFixedSize(QSize(astate->size_guide.script_editor_button_w(),
+                                astate->size_guide.script_editor_button_w()));
   btn_clear->setToolTip(tr("Clear the console output"));
 
   connect(btn_clear,
@@ -33,10 +34,10 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
   btn_editor_toggle = new QPushButton();
   btn_editor_toggle->setIcon(QIcon("://images/outline-receipt-24px.svg"));
-  btn_editor_toggle->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                               astate->size_guide.tool_panel_icon_size()));
-  btn_editor_toggle->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
-                                astate->size_guide.tool_panel_h()));
+  btn_editor_toggle->setIconSize(QSize(astate->size_guide.script_edtior_button_icon_w(),
+                               astate->size_guide.script_edtior_button_icon_w()));
+  btn_editor_toggle->setFixedSize(QSize(astate->size_guide.script_editor_button_w(),
+                                astate->size_guide.script_editor_button_w()));
   btn_editor_toggle->setCheckable(true);
   btn_editor_toggle->setToolTip(tr("Toggle script editor"));
 
@@ -47,10 +48,10 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
   btn_run_code = new QPushButton();
   btn_run_code->setIcon(QIcon("://images/outline-slideshow-24px.svg"));
-  btn_run_code->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                               astate->size_guide.tool_panel_icon_size()));
-  btn_run_code->setFixedSize(QSize(astate->size_guide.tool_panel_h(),
-                                astate->size_guide.tool_panel_h()));
+  btn_run_code->setIconSize(QSize(astate->size_guide.script_edtior_button_icon_w(),
+                               astate->size_guide.script_edtior_button_icon_w()));
+  btn_run_code->setFixedSize(QSize(astate->size_guide.script_editor_button_w(),
+                                astate->size_guide.script_editor_button_w()));
   btn_run_code->setToolTip(tr("Run script"));
 
   connect(btn_run_code,

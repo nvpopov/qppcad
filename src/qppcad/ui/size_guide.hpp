@@ -78,9 +78,10 @@ namespace qpp {
          * @return fixed width for various tools left panels
          */
         int common_tools_panel_w();
-
         int common_tools_panel_label_w();
 
+        int script_editor_button_w();
+        int script_edtior_button_icon_w();
     };
 
   }

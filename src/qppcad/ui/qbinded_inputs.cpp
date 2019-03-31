@@ -242,20 +242,22 @@ void qbinded_float3_input::set_default_suffix() {
 qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
 
   widget_layout = new QHBoxLayout;
-  widget_layout->setContentsMargins(2,2,2,2);
+  widget_layout->setContentsMargins(2, 2, 4, 2);
   setLayout(widget_layout);
 
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
 
   sb_x = new QDoubleSpinBox(this);
   sb_x->setMaximumWidth(100);
+  sb_x->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   sb_y = new QDoubleSpinBox(this);
   sb_y->setMaximumWidth(100);
+  sb_y->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   sb_z = new QDoubleSpinBox(this);
   sb_z->setMaximumWidth(100);
-
+  sb_z->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   widget_layout->addWidget(sb_x);
   widget_layout->addWidget(sb_y);

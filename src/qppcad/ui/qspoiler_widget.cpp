@@ -7,9 +7,11 @@ using namespace qpp::cad;
 qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                      QWidget *parent,
                                      bool _collapsable,
-                                     int _spacing) : QFrame(parent) {
+                                     int _spacing,
+                                     int _max_width) : QFrame(parent) {
 
   m_collapsable = _collapsable;
+  setMaximumWidth(_max_width);
 
   app_state_t *astate = app_state_t::get_inst();
 

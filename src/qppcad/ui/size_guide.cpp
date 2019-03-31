@@ -56,11 +56,11 @@ int size_guide_t::obj_insp_w() {
 }
 
 int size_guide_t::obj_insp_table_w() {
-  return int(obj_insp_w() * 0.92);
+  return int(obj_insp_w() * 0.93);
 }
 
 int size_guide_t::obj_insp_anim_w(){
-  return int(obj_insp_w() * 0.92);
+  return int(obj_insp_w() * 0.93);
 }
 
 int size_guide_t::obj_insp_item_list_max_h() {
@@ -92,7 +92,7 @@ int size_guide_t::obj_insp_button_w() {
 }
 
 int size_guide_t::obj_insp_lbl_w() {
-  return 140;
+  return 165;
 }
 
 int size_guide_t::ext_editor_btn_h() {
@@ -117,4 +117,12 @@ int size_guide_t::common_tools_panel_w() {
 
 int size_guide_t::common_tools_panel_label_w() {
   return 100;
+}
+
+int size_guide_t::script_editor_button_w() {
+  return 28;
+}
+
+int size_guide_t::script_edtior_button_icon_w() {
+  return 26;
 }
