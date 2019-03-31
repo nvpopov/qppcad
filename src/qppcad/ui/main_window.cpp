@@ -661,6 +661,7 @@ void main_window::resizeEvent(QResizeEvent *event) {
     }
 
   QMainWindow::resizeEvent(event);
+
 }
 
 void main_window::wss_changed_slot() {

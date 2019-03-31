@@ -105,7 +105,12 @@ QVariant xgeom_table_model_t::headerData(int section,
 
 Qt::ItemFlags xgeom_table_model_t::flags(const QModelIndex &index) const {
 
-  Qt::ItemFlags flags = Qt::ItemFlag::ItemIsEnabled | Qt::ItemFlag::ItemIsEditable;
+  Qt::ItemFlags flags =  QAbstractItemModel::flags(index) |
+                         Qt::ItemFlag::ItemIsEnabled |
+                         Qt::ItemFlag::ItemIsEditable;
+
+  if (!index.isValid())
+        return Qt::ItemIsEnabled;
 
   if (m_xgeom) {
       int xfield_index = index.column();

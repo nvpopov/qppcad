@@ -34,12 +34,14 @@ namespace qpp {
         qspoiler_widget_t *ws_items_spoiler;
         QVBoxLayout *ws_items_spoiler_lt;
 
+        QPushButton *btn_refresh_oi;
+
         //property view by ws_item type
         QWidget *none_item_placeholder;
         //QWidget *ws_current_view{nullptr};
         std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
 
-      private slots:
+      public slots:
 
         void cur_ws_changed();
         void cur_ws_selected_item_changed();
@@ -47,6 +49,7 @@ namespace qpp {
         void need_to_update_obj_insp_received();
 
         void ws_item_list_double_clicked(QListWidgetItem * item);
+        void refresh_button_clicked();
 
     };
 

@@ -21,6 +21,7 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
   top_btn_close->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
                                     astate->size_guide.ext_editor_btn_h()));
   top_btn_close->setIcon(QIcon("://images/outline-close-24px.svg"));
+  top_btn_close->setFlat(true);
 
   connect(top_btn_close,
           &QPushButton::clicked,
@@ -91,8 +92,8 @@ void ws_item_extended_editor_compositor_t::open_requested() {
                   m_cur_ext_editor_widget = ext_editor_w;
                   main_lt->addWidget(ext_editor_w.get());
                   ew_header->setText(tr("EXTENDED EDITOR [%1/%2]")
-                                     .arg(QString::fromStdString(cur_it->m_name))
-                                     .arg(QString::fromStdString(cur_ws->m_ws_name)));
+                                     .arg(QString::fromStdString(cur_ws->m_ws_name))
+                                     .arg(QString::fromStdString(cur_it->m_name)));
                   show();
                   cur_it->m_extended_editor_opened = true;
                 }

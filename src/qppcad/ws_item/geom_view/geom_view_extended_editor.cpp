@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/geom_view/geom_view_extended_editor.hpp>
+#include <QResizeEvent>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -15,8 +16,6 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
   xgeom_tv->verticalHeader()->hide();
   xgeom_tv->setShowGrid(false);
   xgeom_tv->horizontalHeader()->setStretchLastSection(true);
-  //xgeom_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-  //xgeom_tv->setItemDelegate(nullptr);
 
   main_lt->addWidget(xgeom_tv);
   main_lt->addStretch(1);
@@ -49,8 +48,6 @@ void geom_view_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
   xgeom_tmdl->bind(m_binded_gv->m_geom.get());
   xgeom_tv->update();
 
-  std::cout << "MGEOM BINDED " << m_binded_gv->m_geom->nfields() << std::endl;
-
 }
 
 void geom_view_extended_editor_t::update_from_ws_item() {
@@ -63,5 +60,15 @@ void geom_view_extended_editor_t::unbind_item() {
 
   ws_item_extended_editor_t::unbind_item();
   xgeom_tmdl->unbind();
+
+}
+
+void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
+
+  if (xgeom_tv) {
+      xgeom_tv->setFixedHeight(event->size().height() * 0.98);
+    }
+
+  ws_item_extended_editor_t::resizeEvent(event);
 
 }

@@ -15,6 +15,19 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   header_frm->setObjectName("obj_insp_header_frame");
   setProperty("s_class", "obj_insp");
 
+  btn_refresh_oi = new QPushButton;
+  btn_refresh_oi->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
+                                    astate->size_guide.ext_editor_btn_h()));
+  btn_refresh_oi->setIcon(QIcon("://images/outline-refresh-24px.svg"));
+  btn_refresh_oi->setFlat(true);
+
+  connect(btn_refresh_oi,
+          &QPushButton::clicked,
+          this,
+          &object_inspector_widget_t::refresh_button_clicked);
+
+  header_lt->insertWidget(1, btn_refresh_oi);
+
   ws_items_list = new QListWidget;
   ws_items_list->setProperty("s_class", "ws_items_list");
   ws_items_list->setObjectName("ws_items_list_e");
@@ -221,5 +234,12 @@ void object_inspector_widget_t::ws_item_list_double_clicked(QListWidgetItem *ite
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->extended_editor_open_requested();
+
+}
+
+void object_inspector_widget_t::refresh_button_clicked() {
+
+  if (m_cur_obj_insp_widget)
+    m_cur_obj_insp_widget->update_from_ws_item();
 
 }

@@ -150,7 +150,7 @@ qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
 
   widget_layout = new QHBoxLayout;
   setLayout(widget_layout);
-  widget_layout->setContentsMargins(0,0,0,0);
+  widget_layout->setContentsMargins(2, 2, 8, 2);
   sb_x = new QSpinBox(this);
   sb_y = new QSpinBox(this);
   sb_z = new QSpinBox(this);
@@ -242,7 +242,7 @@ void qbinded_float3_input::set_default_suffix() {
 qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
 
   widget_layout = new QHBoxLayout;
-  widget_layout->setContentsMargins(2, 2, 4, 2);
+  widget_layout->setContentsMargins(2, 2, 8, 2);
   setLayout(widget_layout);
 
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
