@@ -681,7 +681,7 @@ void main_window::wss_changed_slot() {
       tp_add_ws_item->setEnabled(true);
       for (size_t i = 0; i < astate->ws_manager->m_ws.size(); i++) {
           auto ws = astate->ws_manager->m_ws[i];
-          QString dest = QString::fromStdString(fmt::format("[{}]{}", i, ws->m_ws_name));
+          QString dest = QString::fromStdString(fmt::format("[{}] {}", i, ws->m_ws_name));
           tp_ws_selector->addItem(dest);
         }
 

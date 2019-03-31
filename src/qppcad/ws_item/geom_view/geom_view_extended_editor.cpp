@@ -52,6 +52,7 @@ void geom_view_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
 
 void geom_view_extended_editor_t::update_from_ws_item() {
 
+  xgeom_tv->update();
   ws_item_extended_editor_t::update_from_ws_item();
 
 }

@@ -22,6 +22,7 @@ namespace qpp {
 
         QWidget *ext_edt_plch;
         QPushButton *top_btn_close;
+        QPushButton *top_btn_refresh;
 
         std::shared_ptr<ws_item_extended_editor_t> m_cur_ext_editor_widget{nullptr};
 
@@ -35,6 +36,7 @@ namespace qpp {
         void cur_ws_changed();
 
         void close_ext_editor_btn_clicked();
+        void refresh_ext_editor_btn_clicked();
 
     };
 

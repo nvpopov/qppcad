@@ -28,6 +28,18 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
           this,
           &ws_item_extended_editor_compositor_t::close_ext_editor_btn_clicked);
 
+  top_btn_refresh = new QPushButton;
+  top_btn_refresh->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
+                                    astate->size_guide.ext_editor_btn_h()));
+  top_btn_refresh->setIcon(QIcon("://images/outline-refresh-24px.svg"));
+  top_btn_refresh->setFlat(true);
+
+  connect(top_btn_refresh,
+          &QPushButton::clicked,
+          this,
+          &ws_item_extended_editor_compositor_t::refresh_ext_editor_btn_clicked);
+
+  header_lt->insertWidget(0, top_btn_refresh);
   header_lt->insertWidget(0, top_btn_close);
 
   connect(astate->astate_evd,
@@ -163,5 +175,12 @@ void ws_item_extended_editor_compositor_t::close_ext_editor_btn_clicked() {
     }
 
   hide();
+
+}
+
+void ws_item_extended_editor_compositor_t::refresh_ext_editor_btn_clicked() {
+
+  if (m_cur_ext_editor_widget)
+    m_cur_ext_editor_widget->update_from_ws_item();
 
 }
