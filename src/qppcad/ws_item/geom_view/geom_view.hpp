@@ -172,6 +172,7 @@ namespace qpp {
          * @param atom_id
          */
         void select_atom(int atom_id);
+        void toggle_atom_selection(int atom_id);
 
         /**
          * @brief select_atom

@@ -31,9 +31,14 @@ namespace qpp {
         void update_from_ws_item() override;
         void unbind_item() override;
 
+      public slots:
+
+        void selection_changed();
+
       protected:
 
         void resizeEvent(QResizeEvent *event) override;
+        void data_double_clicked(int logical_index);
 
     };
 

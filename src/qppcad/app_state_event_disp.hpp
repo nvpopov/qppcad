@@ -14,6 +14,7 @@ namespace qpp {
         Q_OBJECT
 
       signals:
+
         void wss_changed_signal();
         void cur_ws_changed_signal();
 
@@ -23,8 +24,8 @@ namespace qpp {
         void cur_ws_selected_item_frame_changed_signal();
         void cur_ws_selected_atoms_list_selection_changed_signal();
         void cur_ws_selected_atoms_list_selected_content_changed_signal();
-        void cur_ws_selected_item_measurements_changed_signal();
         void cur_ws_selected_atoms_list_cell_changed_signal();
+        void cur_ws_selected_item_measurements_changed_signal();
         void cur_ws_selected_item_position_changed_signal();
         void cur_ws_selected_item_need_to_update_obj_insp_signal();
 
@@ -37,6 +38,7 @@ namespace qpp {
         void python_console_font_size_updated_signal();
 
       public:
+
         void wss_changed();
         void cur_ws_changed();
         void cur_ws_edit_type_changed();

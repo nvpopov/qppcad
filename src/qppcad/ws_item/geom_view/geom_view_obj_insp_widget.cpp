@@ -1128,13 +1128,13 @@ void geom_view_obj_insp_widget_t::update_anim_tab_visibility() {
   if (b_al) {
 
       auto cur_anim = b_al->m_anim->get_current_anim();
-      if (cur_anim && cur_anim->m_anim_type == geom_anim_t::anim_static) {
-          gb_anim_buttons->hide();
-          gb_anim_timeline->hide();
+      if (cur_anim) {
+          gb_anim_buttons->show();
+          gb_anim_timeline->show();
         }
       else {
-          gb_anim_timeline->show();
-          gb_anim_buttons->show();
+          gb_anim_timeline->hide();
+          gb_anim_buttons->hide();
         }
     }
 
@@ -2018,9 +2018,11 @@ void geom_view_obj_insp_widget_t::cur_ws_edit_mode_changed() {
 
 void geom_view_obj_insp_widget_t::cur_it_selected_content_changed() {
 
-  update_modify_tab();
-  update_measurement_tab();
-  update_select_tab();
+  if (b_al) {
+      update_modify_tab();
+      update_measurement_tab();
+      update_select_tab();
+    }
 
 }
 

@@ -13,9 +13,12 @@ namespace qpp {
 
         Q_OBJECT
 
-      private:
+      public:
 
         geom_view_t *m_gv{nullptr};
+
+
+      private:
 
         int rowCount(const QModelIndex &parent) const;
         int columnCount(const QModelIndex &parent) const;

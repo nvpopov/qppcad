@@ -386,6 +386,10 @@ void geom_view_t::select_atom (int atom_id) {
 
 }
 
+void geom_view_t::toggle_atom_selection(int atom_id) {
+
+}
+
 void geom_view_t::select_atom(int atom_id, index atom_idx) {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -1154,7 +1158,9 @@ void geom_view_t::save_to_json (json &data) {
     }
 
   if (!m_type_color_override.empty()) {
+
       data[JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE] = json::array({});
+
       for (auto &elem : m_type_color_override) {
           json color_override_rec = json::array({});
           color_override_rec.push_back(elem.first);

@@ -1,10 +1,13 @@
 #include <qppcad/ws_item/geom_view/geom_view_extended_editor.hpp>
+#include <qppcad/app_state.hpp>
 #include <QResizeEvent>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 geom_view_extended_editor_t::geom_view_extended_editor_t() {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   ext_editor_gv_label = new QLabel(tr("geom_view_extended_editor_t"));
   main_lt = new QVBoxLayout;
@@ -15,11 +18,26 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
   xgeom_tv->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   xgeom_tv->setShowGrid(false);
   xgeom_tv->verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
+
+
+  xgeom_tv->setFocusPolicy(Qt::NoFocus);
+  xgeom_tv->setSelectionMode(QAbstractItemView::NoSelection);
+
   main_lt->addWidget(xgeom_tv);
   main_lt->addStretch(1);
 
   xgeom_tmdl = new xgeom_table_model_t;
   xgeom_tv->setModel(xgeom_tmdl);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
+          this,
+          &geom_view_extended_editor_t::selection_changed);
+
+  connect(xgeom_tv->verticalHeader(),
+          &QHeaderView::sectionDoubleClicked,
+          this,
+          &geom_view_extended_editor_t::data_double_clicked);
 
 }
 
@@ -63,6 +81,14 @@ void geom_view_extended_editor_t::unbind_item() {
 
 }
 
+void geom_view_extended_editor_t::selection_changed() {
+
+  if (m_binded_gv) {
+      xgeom_tv->update();
+    }
+
+}
+
 void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
 
   if (xgeom_tv) {
@@ -70,5 +96,15 @@ void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
     }
 
   ws_item_extended_editor_t::resizeEvent(event);
+
+}
+
+void geom_view_extended_editor_t::data_double_clicked(int logical_index) {
+
+  if (xgeom_tv && xgeom_tmdl && xgeom_tmdl->m_gv) {
+
+      std::cout << "@int logical_index =" << logical_index << std::endl;
+
+    }
 
 }
