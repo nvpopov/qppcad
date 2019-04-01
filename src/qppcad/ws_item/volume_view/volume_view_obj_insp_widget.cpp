@@ -18,15 +18,16 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   vol_alpha = new qbinded_float_spinbox;
   vol_alpha->set_min_max_step(0.1, 1.0, 0.05, 2);
   vol_render_permanent = new qbinded_checkbox;
-  gb_volume_detail = new QGroupBox(tr("Volume details"));
+
+  gb_volume_detail = new qspoiler_widget_t(tr("Volume details"));
   gb_volume_detail_lt = new QFormLayout;
+  gb_volume_detail->add_content_layout(gb_volume_detail_lt);
 
   cb_current_volume = new QComboBox;
   cb_current_volume->setEditable(false);
 
   //cb_current_volume->setMaximumWidth(def_control_width);
 
-  pre_init_gb(gb_volume_detail, gb_volume_detail_lt);
   gb_volume_detail_lt->addRow(tr("Current volume"), cb_current_volume);
   gb_volume_detail_lt->addRow(tr("Permanent"), vol_render_permanent);
   gb_volume_detail_lt->addRow(tr("Type"), general_volume_type);
@@ -36,7 +37,7 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   gb_volume_detail_lt->addRow(tr("Color positive"), vol_color_pos);
   gb_volume_detail_lt->addRow(tr("Color negative"), vol_color_neg);
   gb_volume_detail_lt->addRow(tr("Color density"), vol_color_vol);
-  post_init_gb(gb_volume_detail, gb_volume_detail_lt);
+  init_form_lt(gb_volume_detail_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(gb_volume_detail);
   tab_general->tab_inner_widget_lt->addStretch();

@@ -15,7 +15,7 @@ namespace qpp {
 
       private:
 
-        xgeometry<float, periodic_cell<float>> *m_xgeom{nullptr};
+        geom_view_t *m_gv{nullptr};
 
         int rowCount(const QModelIndex &parent) const;
         int columnCount(const QModelIndex &parent) const;
@@ -26,7 +26,7 @@ namespace qpp {
 
       public:
 
-        void bind(xgeometry<float, periodic_cell<float>> *_xgeom);
+        void bind(geom_view_t *_gv);
         void unbind();
 
     };

@@ -7,27 +7,21 @@ using namespace qpp::cad;
 
 int xgeom_table_model_t::rowCount(const QModelIndex &parent) const {
 
-  if (m_xgeom) {
-      return m_xgeom->nat();
-    } else {
-      return 0;
-    }
+  if (!m_gv || !m_gv->m_geom) return 0;
+  return m_gv->m_geom->nat();
 
 }
 
 int xgeom_table_model_t::columnCount(const QModelIndex &parent) const {
 
-  if (m_xgeom) {
-      return m_xgeom->nfields();
-    } else {
-      return 0;
-    }
+  if (!m_gv || !m_gv->m_geom) return 0;
+  return m_gv->m_geom->nfields();
 
 }
 
 QVariant xgeom_table_model_t::data(const QModelIndex &index, int role) const {
 
-  if (!m_xgeom) return QVariant();
+  if (!m_gv || !m_gv->m_geom) return QVariant();
 
   if (!index.isValid()) return QVariant();
 
@@ -37,7 +31,14 @@ QVariant xgeom_table_model_t::data(const QModelIndex &index, int role) const {
 
   int xfield_index = index.column();
   int atom_id = index.row();
-  basic_types field_type = m_xgeom->field_type(xfield_index);
+  basic_types field_type = m_gv->m_geom->field_type(xfield_index);
+
+  if (role == Qt::BackgroundRole &&
+      m_gv->m_atom_idx_sel.find({atom_id, index::D(m_gv->m_geom->DIM).all(0)}) !=
+      m_gv->m_atom_idx_sel.end()) {
+
+      return QVariant(QColor(Qt::gray));
+    }
 
   if (role == Qt::DisplayRole || role == Qt::EditRole) {
 
@@ -47,27 +48,27 @@ QVariant xgeom_table_model_t::data(const QModelIndex &index, int role) const {
            break;
          }
        case basic_types::type_double : {
-           double field_val = m_xgeom->xfield<double>(xfield_index, atom_id);
+           double field_val = m_gv->m_geom->xfield<double>(xfield_index, atom_id);
            return QVariant(field_val);
            break;
          }
        case basic_types::type_float : {
-           float field_val = m_xgeom->xfield<float>(xfield_index, atom_id);
+           float field_val = m_gv->m_geom->xfield<float>(xfield_index, atom_id);
            return QVariant(field_val);
            break;
          }
        case basic_types::type_real : {
-           float field_val = m_xgeom->xfield<float>(xfield_index, atom_id);
+           float field_val = m_gv->m_geom->xfield<float>(xfield_index, atom_id);
            return QVariant(field_val);
            break;
          }
        case basic_types::type_int : {
-           return QString("%1").arg(m_xgeom->xfield<int>(xfield_index, atom_id));
+           return QString("%1").arg(m_gv->m_geom->xfield<int>(xfield_index, atom_id));
            break;
          }
        case basic_types::type_string : {
            QString field_val = QString::fromStdString(
-                              m_xgeom->xfield<std::string>(xfield_index, atom_id));
+                              m_gv->m_geom->xfield<std::string>(xfield_index, atom_id));
            return field_val;
            break;
          }
@@ -78,7 +79,7 @@ QVariant xgeom_table_model_t::data(const QModelIndex &index, int role) const {
     }
 
  if (field_type == basic_types::type_bool && role == Qt::CheckStateRole) {
-     if (m_xgeom->xfield<bool>(xfield_index, atom_id)) return Qt::Checked;
+     if (m_gv->m_geom->xfield<bool>(xfield_index, atom_id)) return Qt::Checked;
      else return Qt::Unchecked;
    }
 
@@ -89,11 +90,11 @@ QVariant xgeom_table_model_t::data(const QModelIndex &index, int role) const {
 QVariant xgeom_table_model_t::headerData(int section,
                                          Qt::Orientation orientation, int role) const {
 
-  if (!m_xgeom) return QVariant();
+  if (!m_gv || !m_gv->m_geom) return QVariant();
 
   if (role == Qt::DisplayRole) {
       if (orientation == Qt::Horizontal) {
-          std::string field_name = m_xgeom->field_name(section);
+          std::string field_name = m_gv->m_geom->field_name(section);
           return QVariant(QString::fromStdString(field_name));
         }
       if (orientation == Qt::Vertical) {
@@ -111,13 +112,15 @@ Qt::ItemFlags xgeom_table_model_t::flags(const QModelIndex &index) const {
                          Qt::ItemFlag::ItemIsEnabled |
                          Qt::ItemFlag::ItemIsEditable;
 
+  if (!m_gv || !m_gv->m_geom) return flags;
+
   if (!index.isValid())
         return Qt::ItemIsEnabled;
 
-  if (m_xgeom) {
+  if (m_gv->m_geom) {
       int xfield_index = index.column();
       int atom_id = index.row();
-      basic_types field_type = m_xgeom->field_type(xfield_index);
+      basic_types field_type = m_gv->m_geom->field_type(xfield_index);
       if (field_type == basic_types::type_bool)
         flags = flags | Qt::ItemFlag::ItemIsUserCheckable;
     }
@@ -130,14 +133,14 @@ bool xgeom_table_model_t::setData(const QModelIndex &index, const QVariant &valu
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (m_xgeom) {
+  if (m_gv->m_geom) {
 
       int xfield_index = index.column();
       int atom_id = index.row();
-      basic_types field_type = m_xgeom->field_type(xfield_index);
+      basic_types field_type = m_gv->m_geom->field_type(xfield_index);
 
       if (role == Qt::CheckStateRole && field_type == basic_types::type_bool) {
-          m_xgeom->xfield<bool>(xfield_index, atom_id) = value == Qt::Checked;
+          m_gv->m_geom->xfield<bool>(xfield_index, atom_id) = value == Qt::Checked;
           astate->make_viewport_dirty();
           return true;
         }
@@ -149,35 +152,35 @@ bool xgeom_table_model_t::setData(const QModelIndex &index, const QVariant &valu
               break;
             }
           case basic_types::type_double : {
-              m_xgeom->xfield<double>(xfield_index, atom_id) = value.toDouble();
+              m_gv->m_geom->xfield<double>(xfield_index, atom_id) = value.toDouble();
               astate->make_viewport_dirty();
               return true;
               break;
             }
           case basic_types::type_float : {
-              m_xgeom->xfield<float>(xfield_index, atom_id) = value.toDouble();
+              m_gv->m_geom->xfield<float>(xfield_index, atom_id) = value.toDouble();
               astate->make_viewport_dirty();
               return true;
               break;
             }
           case basic_types::type_real : {
-              m_xgeom->xfield<float>(xfield_index, atom_id) = value.toDouble();
+              m_gv->m_geom->xfield<float>(xfield_index, atom_id) = value.toDouble();
               astate->make_viewport_dirty();
               return true;
               break;
             }
           case basic_types::type_int : {
-              m_xgeom->xfield<int>(xfield_index, atom_id) = value.toInt();
+              m_gv->m_geom->xfield<int>(xfield_index, atom_id) = value.toInt();
               astate->make_viewport_dirty();
               return true;
               break;
             }
           case basic_types::type_string : {
               std::string new_val = value.toString().toStdString();
-              if (m_xgeom->field_name(xfield_index) == "atom") {
-                  m_xgeom->change(atom_id, new_val, m_xgeom->pos(atom_id));
+              if (m_gv->m_geom->field_name(xfield_index) == "atom") {
+                  m_gv->m_geom->change(atom_id, new_val, m_gv->m_geom->pos(atom_id));
                 } else {
-                  m_xgeom->xfield<std::string>(xfield_index, atom_id) = new_val;
+                  m_gv->m_geom->xfield<std::string>(xfield_index, atom_id) = new_val;
                 }
               astate->make_viewport_dirty();
               return true;
@@ -191,14 +194,14 @@ bool xgeom_table_model_t::setData(const QModelIndex &index, const QVariant &valu
 
 }
 
-void xgeom_table_model_t::bind(xgeometry<float, periodic_cell<float> > *_xgeom) {
+void xgeom_table_model_t::bind(geom_view_t *_gv) {
 
-  m_xgeom = _xgeom;
+  m_gv = _gv;
 
 }
 
 void xgeom_table_model_t::unbind() {
 
-  m_xgeom = nullptr;
+  m_gv = nullptr;
 
 }

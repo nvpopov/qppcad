@@ -223,6 +223,7 @@ namespace qpp {
         QPushButton *tm_group_op_sv_show_all;
         QPushButton *tm_group_op_sel_ngbs;
         QPushButton *tm_group_op_del_sel;
+        QPushButton *tm_group_make_animable;
 
         qspoiler_widget_t *tm_gb_override_atom;
         QFormLayout *tm_gb_override_atom_lt;
@@ -297,6 +298,7 @@ namespace qpp {
         void modify_group_op_sv_show_all();
         void modify_group_op_sel_ngbs();
         void modify_group_op_del_sel();
+        void modify_group_op_make_static_anim();
 
         void msr_pair_cur_idx_changed(int index);
         void msr_angle_cur_idx_changed(int index);

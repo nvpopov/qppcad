@@ -62,12 +62,15 @@ bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
   //astate->make_viewport_dirty();
   if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
   return false;
+
 }
 
 void workspace_t::unselect_all (bool emit_signal) {
+
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
   app_state_t* astate = app_state_t::get_inst();
   if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
+
 }
 
 void workspace_t::toggle_edit_mode () {
@@ -86,8 +89,10 @@ void workspace_t::ws_changed () {
 }
 
 void workspace_t::reset_camera () {
+
   m_camera->reset_camera();
   set_best_view();
+
 }
 
 void workspace_t::set_best_view () {
@@ -99,13 +104,19 @@ void workspace_t::set_best_view () {
     }
 
   vector3<float> vec_look_at  = vector3<float>(0.0, 0.0, 0.0);
-  vector3<float> vec_look_pos = vector3<float>(0.0, 0.0, -3.0);
+  vector3<float> vec_look_pos = vector3<float>(0.0, 0.0, 0.0);
 
+  size_t total_voters = 0;
   for (auto &ws_item : m_ws_items)
-    ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
+    if (ws_item->get_flags() & ws_item_flags_support_view_voting) {
+        total_voters+=1;
+        ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
+      }
 
-  vec_look_at  /= m_ws_items.size();
-  vec_look_pos /= m_ws_items.size();
+  total_voters = std::clamp<size_t>(total_voters, 1, 20);
+
+  vec_look_at  /= total_voters;
+  vec_look_pos /= total_voters;
 
   m_camera->m_look_at = vec_look_at;
   m_camera->m_view_point = vec_look_pos;
@@ -117,6 +128,7 @@ void workspace_t::set_best_view () {
 
   if ((m_camera->m_look_at-m_camera->m_view_point).norm() < 0.4f || vec_look_at == vec_look_pos)
     m_camera->reset_camera();
+
 }
 
 void workspace_t::render() {

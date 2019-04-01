@@ -22,22 +22,26 @@ void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
   m_parent_ws = _parent_ws;
 }
 
-const std::string ws_item_t::get_name(){
+const std::string ws_item_t::get_name() {
   return m_name;
 }
 
-void ws_item_t::set_name(const std::string &_name){
+void ws_item_t::set_name(const std::string &_name) {
+
   if (m_name != _name){
       m_name = _name;
       m_parent_ws->ws_changed();
     }
+
 }
 
-void ws_item_t::set_name(const char *_name){
+void ws_item_t::set_name(const char *_name) {
+
   if (m_name != _name){
       m_name = std::string(_name);
       m_parent_ws->ws_changed();
     }
+
 }
 
 void ws_item_t::add_connected_item(std::shared_ptr<ws_item_t> new_item) {
@@ -45,14 +49,18 @@ void ws_item_t::add_connected_item(std::shared_ptr<ws_item_t> new_item) {
 }
 
 void ws_item_t::rm_connected_item(std::shared_ptr<ws_item_t> item_to_remove) {
+
   auto idx = get_connected_idx(item_to_remove);
   if (idx) m_connected_items.erase(m_connected_items.begin() + *idx);
+
 }
 
 std::optional<size_t> ws_item_t::get_connected_idx(std::shared_ptr<ws_item_t> item_to_find) {
+
   for (size_t i = 0; i < m_connected_items.size(); i++)
     if (m_connected_items[i].get() == item_to_find.get()) return std::optional<size_t>(i);
   return std::nullopt;
+
 }
 
 bool ws_item_t::is_connected(std::shared_ptr<ws_item_t> item_to_find) {
@@ -60,15 +68,19 @@ bool ws_item_t::is_connected(std::shared_ptr<ws_item_t> item_to_find) {
 }
 
 void ws_item_t::add_follower(std::shared_ptr<ws_item_t> new_item) {
+
   if (!is_follower(new_item)) m_followers.push_back(new_item);
   new_item->m_leader = shared_from_this();
   new_item->on_leader_changed();
+
 }
 
 std::optional<size_t> ws_item_t::get_follower_idx(std::shared_ptr<ws_item_t> item_to_find) {
+
   for (size_t i = 0; i < m_followers.size(); i++)
     if (m_followers[i].get() == item_to_find.get()) return std::optional<size_t>(i);
   return std::nullopt;
+
 }
 
 bool ws_item_t::is_follower(std::shared_ptr<ws_item_t> item_to_find) {
@@ -76,12 +88,14 @@ bool ws_item_t::is_follower(std::shared_ptr<ws_item_t> item_to_find) {
 }
 
 void ws_item_t::rm_follower(std::shared_ptr<ws_item_t> item_to_remove) {
+
   auto idx = get_follower_idx(item_to_remove);
   if (idx) {
       m_followers.erase(m_followers.begin() + *idx);
       item_to_remove->m_leader = nullptr;
       item_to_remove->on_leader_changed();
     }
+
 }
 
 bool ws_item_t::is_selected() {
@@ -109,6 +123,7 @@ void ws_item_t::render () {
 
       astate->dp->end_render_aabb();
     }
+
 }
 
 void ws_item_t::render_overlay(QPainter &painter) {

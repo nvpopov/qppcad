@@ -273,6 +273,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_timeline_slider = new QSlider(Qt::Orientation::Horizontal);
   gb_anim_timeline_slider->setTickPosition(QSlider::TicksBothSides);
   gb_anim_timeline_slider->setTickInterval(10);
+
   connect(gb_anim_timeline_slider,
           &QSlider::valueChanged,
           this,
@@ -289,30 +290,35 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
 
   anim_play = new QPushButton(tr("PLAY"));
   anim_play->setCheckable(true);
+
   connect(anim_play,
           &QPushButton::toggled,
           this,
           &geom_view_obj_insp_widget_t::play_anim_button_toggle);
 
   anim_to_start = new QPushButton(tr("<<"));
+
   connect(anim_to_start,
           &QPushButton::clicked,
           this,
           &geom_view_obj_insp_widget_t::anim_button_begin_clicked);
 
   anim_to_end = new QPushButton(tr(">>"));
+
   connect(anim_to_end,
           &QPushButton::clicked,
           this,
           &geom_view_obj_insp_widget_t::anim_button_end_clicked);
 
   anim_frame_forward = new QPushButton(tr("+F"));
+
   connect(anim_frame_forward,
           &QPushButton::clicked,
           this,
           &geom_view_obj_insp_widget_t::anim_button_frame_move_forward_clicked);
 
   anim_frame_backward = new QPushButton(tr("-F"));
+
   connect(anim_frame_backward,
           &QPushButton::clicked,
           this,
@@ -742,22 +748,31 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           &geom_view_obj_insp_widget_t::modify_group_op_sv_show_all);
 
   tm_group_op_sel_ngbs = new QPushButton(tr("SEL:NGB"));
+
   connect(tm_group_op_sel_ngbs,
           &QPushButton::pressed,
           this,
           &geom_view_obj_insp_widget_t::modify_group_op_sel_ngbs);
 
   tm_group_op_del_sel = new QPushButton(tr("SEL:DEL"));
+
   connect(tm_group_op_del_sel,
           &QPushButton::pressed,
           this,
           &geom_view_obj_insp_widget_t::modify_group_op_del_sel);
 
+  tm_group_make_animable = new QPushButton(tr("MAKE STC"));
+  connect(tm_group_make_animable,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_group_op_make_static_anim);
+
   tm_group_op_lt->addWidget(tm_group_op_sv_show,     0, 0, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_sv_hide,     0, 1, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_sv_show_all, 0, 2, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_sel_ngbs,    1, 0, 1, 1);
-  tm_group_op_lt->addWidget(tm_group_op_del_sel,    1, 1, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_del_sel,     1, 1, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_make_animable,  1, 2, 1, 1);
 
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_override_atom);
@@ -1102,8 +1117,8 @@ void geom_view_obj_insp_widget_t::unbind_angle_measure_tab() {
 void geom_view_obj_insp_widget_t::update_anim_tab() {
 
   if (b_al) {
-      update_anim_tab_visibility();
       cur_anim_index_changed(b_al->m_anim->m_cur_anim);
+      update_anim_tab_visibility();
     }
 
 }
@@ -1542,17 +1557,10 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
 
           app_state_t* astate = app_state_t::get_inst();
 
-//          astate->log(fmt::format("BEFORE CHG ANIM {} {}",
-//                                  b_al->m_anim->m_cur_anim,
-//                                  b_al->m_anim->m_cur_anim_time));
-
           if (b_al->m_anim->m_cur_anim != index) {
               b_al->m_anim->m_cur_anim = index;
               b_al->m_anim->m_cur_anim_time = 0.0f;
               b_al->m_anim->update_geom_to_anim();
-//              astate->log(fmt::format("AFTER CHG ANIM {} {}",
-//                                      b_al->m_anim->m_cur_anim,
-//                                      b_al->m_anim->m_cur_anim_time));
             }
 
           auto cur_anim = b_al->m_anim->get_current_anim();
@@ -1960,6 +1968,17 @@ void geom_view_obj_insp_widget_t::modify_group_op_del_sel() {
   app_state_t *astate = app_state_t::get_inst();
   if (b_al) b_al->delete_selected_atoms();
   astate->make_viewport_dirty();
+
+}
+
+void geom_view_obj_insp_widget_t::modify_group_op_make_static_anim() {
+
+  if (!b_al) return;
+
+  b_al->m_anim->make_animable();
+
+  std::string _anim_name = fmt::format("static_{}", b_al->m_anim->get_total_anims());
+  b_al->m_anim->make_anim(_anim_name, geom_anim_t::anim_static, 1);
 
 }
 

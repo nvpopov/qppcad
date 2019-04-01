@@ -14,7 +14,7 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
   xgeom_tv = new QTableView(this);
   xgeom_tv->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   xgeom_tv->setShowGrid(false);
-  xgeom_tv->verticalHeader()->setDefaultAlignment(Qt::AlignHCenter);
+  xgeom_tv->verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
   main_lt->addWidget(xgeom_tv);
   main_lt->addStretch(1);
 
@@ -43,7 +43,7 @@ void geom_view_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
     }
 
   m_binded_gv = gv;
-  xgeom_tmdl->bind(m_binded_gv->m_geom.get());
+  xgeom_tmdl->bind(m_binded_gv);
   xgeom_tv->update();
   xgeom_tv->resizeColumnsToContents();
 

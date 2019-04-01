@@ -23,7 +23,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
                     ws_item_flags_support_delete |
                     ws_item_flags_support_clone |
                     ws_item_flags_support_moveto |
-                    ws_item_flags_support_rendering);
+                    ws_item_flags_support_rendering |
+                    ws_item_flags_support_view_voting);
 
   m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
@@ -376,12 +377,13 @@ void geom_view_t::select_atoms (bool all) {
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   astate->make_viewport_dirty();
 
-
 }
 
 void geom_view_t::select_atom (int atom_id) {
+
   if (!m_geom) return;
   select_atom(atom_id, index::D(m_geom->DIM).all(0));
+
 }
 
 void geom_view_t::select_atom(int atom_id, index atom_idx) {
@@ -454,6 +456,7 @@ void geom_view_t::unselect_atom(int atom_id) {
     astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
   return;
+
 }
 
 void geom_view_t::unselect_atom(int atom_id, index atom_idx) {
@@ -507,6 +510,7 @@ void geom_view_t::select_by_type (const int item_type_to_select) {
 void geom_view_t::unselect_by_type(const int item_type_to_unselect) {
 
   app_state_t* astate = app_state_t::get_inst();
+
   if (!m_geom) return;
 
   for (auto i = 0; i < m_geom->nat(); i++)
@@ -524,6 +528,7 @@ void geom_view_t::unselect_by_type(const int item_type_to_unselect) {
 void geom_view_t::invert_selected_atoms () {
 
   app_state_t* astate = app_state_t::get_inst();
+
   if (!m_geom) return;
 
   std::set<int> sel_atm;
@@ -547,6 +552,7 @@ void geom_view_t::invert_selected_atoms () {
 void geom_view_t::insert_atom (const int atom_type, const vector3<float> &pos) {
 
   if (!m_geom) return;
+
   m_anim->m_force_non_animable = true;
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
 
@@ -770,6 +776,7 @@ void geom_view_t::select_atom_ngbs(const int at_id) {
   for (int i = 0; i < m_tws_tr->n(at_id); i++)
     if (m_tws_tr->table_idx(at_id, i) == index::D(m_geom->DIM).all(0))
       select_atom(m_tws_tr->table_atm(at_id, i));
+
 }
 
 void geom_view_t::select_selected_atoms_ngbs() {
@@ -781,6 +788,7 @@ void geom_view_t::select_selected_atoms_ngbs() {
     if (rec.m_idx == index::D(m_geom->DIM).all(0)) stored_sel.insert(rec.m_atm);
 
   for (auto &rec : stored_sel) select_atom_ngbs(rec);
+
 }
 
 void geom_view_t::update_inter_atomic_dist(float new_dist,
@@ -815,6 +823,7 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
     }
 
   astate->make_viewport_dirty();
+
 }
 
 void geom_view_t::update_inter_atomic_dist(float new_dist,
@@ -826,6 +835,7 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 
   update_inter_atomic_dist(new_dist, at1, at2,
                            index::D(m_geom->DIM).all(0), index::D(m_geom->DIM).all(0), mode);
+
 }
 
 void geom_view_t::translate_selected (const vector3<float> &t_vec) {
@@ -1159,8 +1169,7 @@ void geom_view_t::save_to_json (json &data) {
 
       json animations = json::array({});
 
-      for (auto &anim : m_anim->m_anim_data)
-        if (anim.m_anim_type != geom_anim_t::anim_static) {
+      for (auto &anim : m_anim->m_anim_data) {
 
             json animation = json::object();
             animation[JSON_ATOMS_LIST_ANIMATION_NAME] = anim.m_anim_name;

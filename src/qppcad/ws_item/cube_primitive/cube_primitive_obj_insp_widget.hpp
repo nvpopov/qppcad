@@ -15,7 +15,7 @@ namespace qpp {
 
       public:
         cube_primitive_t *b_cp{nullptr};
-        QGroupBox *tg_cube_params;
+        qspoiler_widget_t *tg_cube_params;
         QFormLayout *tg_cube_params_lt;
         qbinded_float3_input *cube_param_scale;
         qbinded_color3_input *cube_param_color;

@@ -9,10 +9,10 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  tg_cube_params = new QGroupBox(tr("Cube parameters"));
+  tg_cube_params = new qspoiler_widget_t(tr("Cube parameters"));
   tg_cube_params_lt = new QFormLayout;
 
-  pre_init_gb(tg_cube_params, tg_cube_params_lt);
+  tg_cube_params->add_content_layout(tg_cube_params_lt);
 
   cube_param_color = new qbinded_color3_input;
 
@@ -27,7 +27,7 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
   tg_cube_params_lt->addRow(tr("Size[%1]").arg(astate->m_spatial_suffix), cube_param_scale);
   tg_cube_params_lt->addRow(tr("Render style"), cube_render_mode);
 
-  post_init_gb(tg_cube_params, tg_cube_params_lt);
+  init_form_lt(tg_cube_params_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(tg_cube_params);
 

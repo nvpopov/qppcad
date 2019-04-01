@@ -13,8 +13,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
-//        ws_item_tab_widget_t *tab_geo_opt;
-//        ws_item_tab_widget_t *tab_vibs;
+
         volume_view_t *b_vol{nullptr};
         QLabel *general_volume_type;
         qbinded_float_spinbox *vol_isovalue;
@@ -27,7 +26,7 @@ namespace qpp {
         qbinded_color3_input *vol_color_neg;
         qbinded_color3_input *vol_color_vol;
 
-        QGroupBox *gb_volume_detail;
+        qspoiler_widget_t *gb_volume_detail;
         QFormLayout *gb_volume_detail_lt;
         QComboBox *cb_current_volume;
 
@@ -39,7 +38,9 @@ namespace qpp {
         void update_binded_volume_controls();
 
       public slots:
+
         void cur_volume_index_changed(int index);
+
     };
 
   }
