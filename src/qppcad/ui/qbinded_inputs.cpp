@@ -57,6 +57,7 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
   app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+  setAlignment(Qt::AlignCenter);
 
   connect(this,
           static_cast<void(qbinded_float_spinbox::*)(double)>(&qbinded_float_spinbox::valueChanged),
@@ -151,9 +152,13 @@ qbinded_int3_input::qbinded_int3_input(QWidget *parent) : QWidget (parent) {
   widget_layout = new QHBoxLayout;
   setLayout(widget_layout);
   widget_layout->setContentsMargins(2, 2, 8, 2);
+
   sb_x = new QSpinBox(this);
+  sb_x->setAlignment(Qt::AlignCenter);
   sb_y = new QSpinBox(this);
+  sb_y->setAlignment(Qt::AlignCenter);
   sb_z = new QSpinBox(this);
+  sb_z->setAlignment(Qt::AlignCenter);
   widget_layout->addWidget(sb_x);
   widget_layout->addWidget(sb_y);
   widget_layout->addWidget(sb_z);
@@ -250,14 +255,17 @@ qbinded_float3_input::qbinded_float3_input(QWidget *parent) : QWidget(parent) {
   sb_x = new QDoubleSpinBox(this);
   sb_x->setMaximumWidth(100);
   sb_x->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  sb_x->setAlignment(Qt::AlignCenter);
 
   sb_y = new QDoubleSpinBox(this);
   sb_y->setMaximumWidth(100);
   sb_y->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  sb_y->setAlignment(Qt::AlignCenter);
 
   sb_z = new QDoubleSpinBox(this);
   sb_z->setMaximumWidth(100);
   sb_z->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  sb_z->setAlignment(Qt::AlignCenter);
 
   widget_layout->addWidget(sb_x);
   widget_layout->addWidget(sb_y);
@@ -358,6 +366,7 @@ qbinded_int_spinbox::qbinded_int_spinbox(QWidget *parent) : QSpinBox(parent) {
   app_state_t *astate = app_state_t::get_inst();
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+  setAlignment(Qt::AlignCenter);
 
   connect(this,
           static_cast<void (qbinded_int_spinbox::*)(int)>(&qbinded_int_spinbox::valueChanged),

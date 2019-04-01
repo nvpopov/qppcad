@@ -147,6 +147,10 @@ QHeaderView::section {
  background-color: rgb(120, 120, 120);
 }
 
+QHeaderView::section::vertical {
+ min-width:30px;
+}
+
 QListWidget[s_class="ws_items_list"]::item {
   margin: 6px;
 }
