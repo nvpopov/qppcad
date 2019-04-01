@@ -388,13 +388,20 @@ void geom_view_t::select_atom (int atom_id) {
 
 void geom_view_t::toggle_atom_selection(int atom_id) {
 
+  auto it_0 = m_atom_idx_sel.find({atom_id, index::D(m_geom->DIM).all(0)});
+  if (it_0 != m_atom_idx_sel.end()) {
+      unselect_atom(atom_id);
+    } else {
+      select_atom(atom_id);
+    }
+
 }
 
 void geom_view_t::select_atom(int atom_id, index atom_idx) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
-  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+
   if (!m_geom) return;
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
@@ -404,22 +411,24 @@ void geom_view_t::select_atom(int atom_id, index atom_idx) {
           m_atom_ord_sel.pop_front();
         }
       m_atom_ord_sel.push_back(atom_index_set_key(atom_id, atom_idx));
-      //astate->make_viewport_dirty();
+
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
       for (int i = 0; i < m_atom_ord_sel.size(); i++)
         astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
+      astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
       return;
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-  for (int i = 0; i < m_atom_ord_sel.size(); i++)
-    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+//  for (int i = 0; i < m_atom_ord_sel.size(); i++)
+//    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   return;
 
 }
@@ -428,7 +437,7 @@ void geom_view_t::unselect_atom(int atom_id) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
-  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+
   if (!m_geom) return;
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
@@ -447,18 +456,14 @@ void geom_view_t::unselect_atom(int atom_id) {
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-      for (int i = 0; i < m_atom_ord_sel.size(); i++)
-        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
-
+     astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
       return;
     }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-  for (int i = 0; i < m_atom_ord_sel.size(); i++)
-    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
-
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   return;
 
 }

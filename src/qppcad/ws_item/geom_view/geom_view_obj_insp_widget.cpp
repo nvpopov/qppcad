@@ -476,8 +476,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_single_atom_combo->setEditable(true);
   tm_single_atom_vec3 = new qbinded_float3_input;
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
-  tm_single_atom_idx = new QLabel;
-  tm_single_atom_num = new QLabel;
+  tm_single_atom_info = new QLabel;
 
   tm_single_atom_commit = new QPushButton(tr("Commit"));
   tm_single_atom_commit->setMaximumWidth(astate->size_guide.obj_insp_button_w());
@@ -493,13 +492,15 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this,
           &geom_view_obj_insp_widget_t::modify_single_atom_delete_button_clicked);
 
+  tm_single_atom_btn_lt = new QHBoxLayout;
+  tm_single_atom_btn_lt->addWidget(tm_single_atom_commit);
+  tm_single_atom_btn_lt->addWidget(tm_single_atom_delete);
+
   tm_gb_single_atom_lt->addRow(tr("Atom name"), tm_single_atom_combo);
-  tm_gb_single_atom_lt->addRow(tr("Atom idx."), tm_single_atom_idx);
-  tm_gb_single_atom_lt->addRow(tr("Atom num."), tm_single_atom_num);
+  tm_gb_single_atom_lt->addRow(tr("Atom info"), tm_single_atom_info);
   tm_gb_single_atom_lt->addRow(tr("Atom pos.[%1]").arg(astate->m_spatial_suffix),
                                tm_single_atom_vec3);
-  tm_gb_single_atom_lt->addRow("", tm_single_atom_commit);
-  tm_gb_single_atom_lt->addRow("", tm_single_atom_delete);
+  tm_gb_single_atom_lt->addRow("", tm_single_atom_btn_lt);
   init_form_lt(tm_gb_single_atom_lt);
 
   tm_gb_override_atom = new qspoiler_widget_t(tr("Override atom"));
@@ -520,8 +521,6 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_pair_dist->add_content_layout(tm_gb_pair_dist_lt);
   tm_pair_dist_atom1 = new QLabel;
   tm_pair_dist_atom2 = new QLabel;
-  tm_pair_dist_atom1_idx = new QLabel;
-  tm_pair_dist_atom2_idx = new QLabel;
   tm_pair_dist_spinbox = new QDoubleSpinBox;
   tm_pair_dist_note_label = new QLabel;
   tm_pair_dist_t_mode = new QComboBox;
@@ -538,8 +537,6 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_gb_pair_dist_lt->addRow(tr("Atom №1"), tm_pair_dist_atom1);
   tm_gb_pair_dist_lt->addRow(tr("Atom №2"), tm_pair_dist_atom2);
-  tm_gb_pair_dist_lt->addRow(tr("Atom №1 idx"), tm_pair_dist_atom1_idx);
-  tm_gb_pair_dist_lt->addRow(tr("Atom №2 idx"), tm_pair_dist_atom2_idx);
   tm_gb_pair_dist_lt->addRow(tr("Trnsf. mode"), tm_pair_dist_t_mode);
   tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
   init_form_lt(tm_gb_pair_dist_lt);
@@ -554,8 +551,11 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_pair_creation_button = new QPushButton("Append");
   tm_pair_creation_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
-  tm_gb_pair_creation_lt->addRow(tr("New atom"), tm_pair_creation_combo);
-  tm_gb_pair_creation_lt->addRow("", tm_pair_creation_button);
+
+  tm_pair_creation_combo_btn_lt = new QHBoxLayout;
+  tm_pair_creation_combo_btn_lt->addWidget(tm_pair_creation_combo);
+  tm_pair_creation_combo_btn_lt->addWidget(tm_pair_creation_button);
+  tm_gb_pair_creation_lt->addRow(tr("New atom"), tm_pair_creation_combo_btn_lt);
   init_form_lt(tm_gb_pair_creation_lt);
 
   connect(tm_pair_creation_button,
@@ -661,16 +661,18 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_translate_apply_button = new QPushButton(tr("Apply"));
   tm_translate_apply_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
 
-  tm_translate_coord_type_label = new QLabel("Coord. type");
   tm_translate_coord_type = new QComboBox;
   tm_translate_coord_type->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   tm_translate_coord_type->addItem("Cart.");
   tm_translate_coord_type->addItem("Frac.");
 
-  tm_gb_translate_lt->addRow(tm_translate_coord_type_label, tm_translate_coord_type);
+  tm_translate_combo_btn_lt = new QHBoxLayout;
+  tm_translate_combo_btn_lt->addWidget(tm_translate_coord_type);
+  tm_translate_combo_btn_lt->addWidget(tm_translate_apply_button);
+
   tm_gb_translate_lt->addRow(tr("Tr. vector"), tm_translate_vec3);
-  tm_gb_translate_lt->addRow("", tm_translate_apply_button);
+  tm_gb_translate_lt->addRow("", tm_translate_combo_btn_lt);
   init_form_lt(tm_gb_translate_lt);
 
   connect(tm_translate_coord_type,
@@ -719,10 +721,15 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this,
           &geom_view_obj_insp_widget_t::modify_bc_rot_apply);
 
-  tm_gb_bc_rot_lt->addRow(tr("Rotation axis"), tm_bc_rot_axis);
-  tm_gb_bc_rot_lt->addRow(tr("Angle type"), tm_bc_rot_angle_type);
-  tm_gb_bc_rot_lt->addRow(tr("Angle"), tm_bc_rot_angle);
-  tm_gb_bc_rot_lt->addRow("", tm_bc_rot_apply);
+  tm_bc_rot_cmb_lt1 = new QHBoxLayout;
+  tm_bc_rot_cmb_lt1->addWidget(tm_bc_rot_angle);
+  tm_bc_rot_cmb_lt1->addWidget(tm_bc_rot_angle_type);
+  tm_bc_rot_cmb_lt2 = new QHBoxLayout;
+  tm_bc_rot_cmb_lt2->addWidget(tm_bc_rot_axis);
+  tm_bc_rot_cmb_lt2->addWidget(tm_bc_rot_apply);
+
+  tm_gb_bc_rot_lt->addRow(tr("Angle"), tm_bc_rot_cmb_lt1);
+  tm_gb_bc_rot_lt->addRow("", tm_bc_rot_cmb_lt2);
   init_form_lt(tm_gb_bc_rot_lt);
 
   tm_gb_group_op = new qspoiler_widget_t(tr("Group operations"));
@@ -1183,11 +1190,8 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               auto it = b_al->m_atom_idx_sel.begin();
               if (it != b_al->m_atom_idx_sel.end()) {
 
-                  tm_single_atom_idx->setText(
-                        QString::fromStdString(fmt::format("{}", it->m_idx)));
-
-                  tm_single_atom_num->setText(
-                        QString::fromStdString(fmt::format("{}", it->m_atm)));
+                  tm_single_atom_info->setText(
+                        QString::fromStdString(fmt::format("№{} {}", it->m_atm, it->m_idx)));
 
                   tm_single_atom_combo->setCurrentText(
                         QString::fromStdString(b_al->m_geom->atom_name(it->m_atm)));
@@ -1236,17 +1240,15 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               if (it2 != b_al->m_atom_idx_sel.end()) {
 
                   tm_pair_dist_atom1->setText(
-                        QString::fromStdString(fmt::format("{}{}",
+                        QString::fromStdString(fmt::format("{}{} {}",
                                                            b_al->m_geom->atom_name(it1->m_atm),
-                                                           it1->m_atm)));
+                                                           it1->m_atm,
+                                                           it1->m_idx)));
                   tm_pair_dist_atom2->setText(
-                        QString::fromStdString(fmt::format("{}{}",
+                        QString::fromStdString(fmt::format("{}{} {}",
                                                            b_al->m_geom->atom_name(it2->m_atm),
-                                                           it2->m_atm)));
-                  tm_pair_dist_atom1_idx->setText(
-                        QString::fromStdString(fmt::format("{}", it1->m_idx)));
-                  tm_pair_dist_atom2_idx->setText(
-                        QString::fromStdString(fmt::format("{}", it2->m_idx)));
+                                                           it2->m_atm,
+                                                           it1->m_idx)));
 
                   if (it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
                       it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
@@ -1285,12 +1287,12 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
 
           if (b_al->m_atom_idx_sel.size() > 0) {
               if (b_al->m_geom->DIM == 3) {
-                  tm_translate_coord_type_label->show();
+                  //tm_translate_coord_type_label->show();
                   tm_translate_coord_type->show();
                 } else {
                   tm_translate_coord_type->setCurrentIndex(0);
                   tm_translate_coord_type->hide();
-                  tm_translate_coord_type_label->hide();
+                  //tm_translate_coord_type_label->hide();
                 }
             }
 

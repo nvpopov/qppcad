@@ -17,7 +17,6 @@ namespace qpp {
 
         geom_view_t *m_gv{nullptr};
 
-
       private:
 
         int rowCount(const QModelIndex &parent) const;

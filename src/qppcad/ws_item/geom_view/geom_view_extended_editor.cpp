@@ -101,9 +101,11 @@ void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
 
 void geom_view_extended_editor_t::data_double_clicked(int logical_index) {
 
-  if (xgeom_tv && xgeom_tmdl && xgeom_tmdl->m_gv) {
+  if (xgeom_tv && xgeom_tmdl && m_binded_gv) {
 
       std::cout << "@int logical_index =" << logical_index << std::endl;
+      m_binded_gv->toggle_atom_selection(logical_index);
+      //xgeom_tv->update();
 
     }
 

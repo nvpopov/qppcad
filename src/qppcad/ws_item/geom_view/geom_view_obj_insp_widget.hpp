@@ -164,10 +164,10 @@ namespace qpp {
 
         qspoiler_widget_t *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_lt;
-        QLabel *tm_single_atom_idx;
-        QLabel *tm_single_atom_num;
+        QLabel *tm_single_atom_info;
         QComboBox *tm_single_atom_combo;
         qbinded_float3_input *tm_single_atom_vec3;
+        QHBoxLayout *tm_single_atom_btn_lt;
         QPushButton *tm_single_atom_commit;
         QPushButton *tm_single_atom_delete;
 
@@ -175,8 +175,6 @@ namespace qpp {
         QFormLayout *tm_gb_pair_dist_lt;
         QLabel *tm_pair_dist_atom1;
         QLabel *tm_pair_dist_atom2;
-        QLabel *tm_pair_dist_atom1_idx;
-        QLabel *tm_pair_dist_atom2_idx;
         QComboBox *tm_pair_dist_t_mode;
         QDoubleSpinBox *tm_pair_dist_spinbox;
         QLabel *tm_pair_dist_note_label;
@@ -184,6 +182,7 @@ namespace qpp {
         qspoiler_widget_t *tm_gb_pair_creation;
         QFormLayout *tm_gb_pair_creation_lt;
         QComboBox *tm_pair_creation_combo;
+        QHBoxLayout *tm_pair_creation_combo_btn_lt;
         QPushButton *tm_pair_creation_button;
 
         qspoiler_widget_t *tm_gb_u_scale;
@@ -205,9 +204,9 @@ namespace qpp {
         qspoiler_widget_t *tm_gb_translate;
         QFormLayout *tm_gb_translate_lt;
         qbinded_float3_input *tm_translate_vec3;
-        QLabel *tm_translate_coord_type_label;
         QComboBox *tm_translate_coord_type;
         QPushButton *tm_translate_apply_button;
+        QHBoxLayout *tm_translate_combo_btn_lt;
 
         qspoiler_widget_t *tm_gb_bc_rot;
         QFormLayout *tm_gb_bc_rot_lt;
@@ -215,6 +214,8 @@ namespace qpp {
         QComboBox *tm_bc_rot_angle_type;
         QDoubleSpinBox *tm_bc_rot_angle;
         QPushButton *tm_bc_rot_apply;
+        QHBoxLayout *tm_bc_rot_cmb_lt1;
+        QHBoxLayout *tm_bc_rot_cmb_lt2;
 
         qspoiler_widget_t *tm_gb_group_op;
         QGridLayout *tm_group_op_lt;
