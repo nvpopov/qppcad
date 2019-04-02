@@ -34,7 +34,8 @@ namespace qpp {
                                    QWidget *parent = 0,
                                    bool _collapsable = false,
                                    int _spacing = 6,
-                                   int _max_width = 360);
+                                   int _max_width = 360,
+                                   bool add_spacing_at_the_end = true);
 
         void add_content_layout(QLayout *new_lt);
         void process_state();

@@ -23,12 +23,26 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_geom_summary_lt->addRow(tr("Total types"), tg_geom_summary_total_types);
   init_form_lt(tg_geom_summary_lt);
 
-  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"), this, true, 0);
+  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"), this, true, 0, 360, false);
   tg_type_summary_lt = new QVBoxLayout;
   tg_type_summary_widget->add_content_layout(tg_type_summary_lt);
   tg_type_summary_tbl = new QTableWidget;
   tg_type_summary_tbl->setFixedWidth(astate->size_guide.obj_insp_table_w());
   tg_type_summary_tbl->setColumnCount(3);
+
+  type_summary_clear_tclr_override = new QPushButton;
+  type_summary_clear_tclr_override->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
+                                    astate->size_guide.ext_editor_btn_h()));
+  type_summary_clear_tclr_override->setIcon(QIcon("://images/outline-refresh-24px.svg"));
+  type_summary_clear_tclr_override->setFlat(true);
+  type_summary_clear_tclr_override->setToolTip("Rebond the structure");
+
+  connect(type_summary_clear_tclr_override,
+          &QPushButton::clicked,
+          this,
+          &geom_view_obj_insp_widget_t::clear_color_override_button_clicked);
+
+  tg_type_summary_widget->hbox_frm->insertWidget(3, type_summary_clear_tclr_override);
 
   QStringList table_hdr_cell;
   table_hdr_cell.push_back("X");
@@ -202,7 +216,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_type_spec_tv->setModel(disp_type_spec_mdl);
 
   //display - bonding table
-  gb_disp_bt = new qspoiler_widget_t(tr("Bonding table"), this, true, 0);
+  gb_disp_bt = new qspoiler_widget_t(tr("Bonding table"), this, true, 0, 360, false);
   gb_disp_bt->setContentsMargins(0,0,0,0);
   disp_bt_lt = new QVBoxLayout;
   gb_disp_bt->add_content_layout(disp_bt_lt);
@@ -2091,6 +2105,16 @@ void geom_view_obj_insp_widget_t::rebond_button_clicked() {
 
   if (!b_al) return;
   b_al->rebond();
+
+}
+
+void geom_view_obj_insp_widget_t::clear_color_override_button_clicked() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  if (!b_al) return;
+  b_al->m_type_color_override.clear();
+  update_from_ws_item();
+  astate->make_viewport_dirty();
 
 }
 

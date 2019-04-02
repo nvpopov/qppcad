@@ -34,6 +34,7 @@ namespace qpp {
         qspoiler_widget_t *tg_type_summary_widget;
         QVBoxLayout *tg_type_summary_lt;
         QTableWidget *tg_type_summary_tbl;
+        QPushButton *type_summary_clear_tclr_override;
 
         qspoiler_widget_t *tg_gb_cell;
         QVBoxLayout *tg_gb_cell_lt;
@@ -310,6 +311,7 @@ namespace qpp {
 
         void type_summary_clicked(const QModelIndex &index);
         void rebond_button_clicked();
+        void clear_color_override_button_clicked();
 
     };
 
