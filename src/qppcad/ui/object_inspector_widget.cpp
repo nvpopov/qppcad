@@ -33,7 +33,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_list->setObjectName("ws_items_list_e");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 380);
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 390);
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);

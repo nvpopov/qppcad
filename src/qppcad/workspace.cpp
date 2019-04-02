@@ -5,6 +5,7 @@
 #include <qppcad/register_all_things.hpp>
 #include <io/parsing_exceptions.hpp>
 #include <qppcad/ui/qrich_error_message_box.hpp>
+#include <qppcad/json_helpers.hpp>
 
 #include <QDir>
 
@@ -121,8 +122,6 @@ void workspace_t::set_best_view () {
   m_camera->m_look_at = vec_look_at;
   m_camera->m_view_point = vec_look_pos;
 
-  //  std::cout << "set bv " << _vLookAt << std::endl << _vLookPos << std::endl
-  //            << "end bv " << std::endl;
   m_camera->orthogonalize_gs();
   m_camera->update_camera();
 
@@ -185,7 +184,6 @@ void workspace_t::render_overlay(QPainter &painter) {
 
 void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
-  //if (ImGui::GetIO().WantCaptureMouse) return;
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
@@ -240,7 +238,6 @@ void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> item_to_add) 
   item_to_add->set_parent_workspace(this);
   m_ws_items.push_back(item_to_add);
   app_state_t::get_inst()->astate_evd->cur_ws_changed();
-  //c_app::log(fmt::format("New workspace {} size = {}", m_ws_name, m_ws_items.size()));
 
 }
 
@@ -262,11 +259,13 @@ void workspace_t::save_ws_to_json (const std::string filename) {
   json data;
 
   data[JSON_QPPCAD_VERSION] = "1.0-aa";
-  data[JSON_WS_NAME] = m_ws_name;
-  json j_workspace_background = json::array({m_background_color[0],
-                                             m_background_color[1],
-                                             m_background_color[2], });
-  data[JSON_BG_CLR] = j_workspace_background;
+
+  json_helper::save_var(JSON_WS_NAME, m_ws_name, data);
+  json_helper::save_vec3(JSON_BG_CLR, m_background_color, data);
+
+  json camera_data;
+  m_camera->save_to_json(camera_data);
+  data[JSON_WS_CAMERA] = camera_data;
 
   json ws_objects = json::array({});
   for (const auto &ws_item : m_ws_items)
@@ -292,11 +291,14 @@ void workspace_t::load_ws_from_json (const std::string filename) {
   json data;
 
   try {
+
     data = json::parse(ifile);
 
-    if (data.find(JSON_WS_NAME) != data.end()) m_ws_name = data[JSON_WS_NAME];
-    if (data.find(JSON_BG_CLR) != data.end())
-      for (uint8_t i = 0; i < 3; i++) m_background_color[i] = data[JSON_BG_CLR][i];
+    json_helper::load_var(JSON_WS_NAME, m_ws_name, data);
+    json_helper::load_vec3(JSON_BG_CLR, m_background_color, data);
+
+    auto data_camera = data.find(JSON_WS_CAMERA);
+    if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());
 
     if (data.find(JSON_OBJECTS) != data.end()){
         json objects = data[JSON_OBJECTS];
@@ -329,7 +331,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
 void workspace_t::update (float delta_time) {
 
   if (m_first_render) {
-      set_best_view();
+      if (!m_camera->m_already_loaded) set_best_view();
       m_first_render = false;
     }
 
@@ -649,7 +651,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
           if (need_to_create_new_ws && p_new_item) {
               exec_ws->m_ws_name = p_new_item->m_name;
-              exec_ws->set_best_view();
+              if (!exec_ws->m_camera->m_already_loaded) exec_ws->set_best_view();
             }
 
           astate->astate_evd->new_file_loaded(

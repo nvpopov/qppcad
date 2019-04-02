@@ -1,5 +1,6 @@
 #include <qppcad/render/camera.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -287,5 +288,26 @@ std::optional<vector2<float> > camera_t::project (const vector3<float> point) {
   ret_v2[1] = tmpv[1];
 
   return std::optional(ret_v2);
+
+}
+
+void camera_t::save_to_json(json &data) {
+
+  json_helper::save_vec3(JSON_WS_CAMERA_LOOK_AT, m_look_at, data);
+  json_helper::save_vec3(JSON_WS_CAMERA_VIEW_POINT, m_view_point, data);
+  json_helper::save_var(JSON_WS_CAMERA_ORTHO_SCALE, m_ortho_scale, data);
+
+}
+
+void camera_t::load_from_json(json &data) {
+
+  json_helper::load_vec3(JSON_WS_CAMERA_LOOK_AT, m_look_at, data);
+  json_helper::load_vec3(JSON_WS_CAMERA_VIEW_POINT, m_view_point, data);
+  json_helper::load_var(JSON_WS_CAMERA_ORTHO_SCALE, m_ortho_scale, data);
+
+  m_already_loaded = true;
+
+  orthogonalize_gs();
+  update_camera();
 
 }

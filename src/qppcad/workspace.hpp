@@ -20,9 +20,9 @@ namespace qpp {
 
     class app_state_t;
 
-    ///
-    /// \brief The workspace_t class
-    ///
+    /**
+     * @brief The workspace_t class
+     */
     class workspace_t : public std::enable_shared_from_this<workspace_t> {
 
       public:

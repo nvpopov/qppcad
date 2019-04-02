@@ -2,6 +2,7 @@
 #define QPP_CAMERA_H
 #include <geom/lace3d.hpp>
 #include <qppcad/render/gl_math.hpp>
+#include <qppcad/serializable.hpp>
 
 namespace qpp {
 
@@ -25,7 +26,7 @@ namespace qpp {
       proj_persp
     };
 
-    class camera_t {
+    class camera_t : public serializable_t {
 
       public:
 
@@ -47,6 +48,7 @@ namespace qpp {
         matrix3<float> m_view_inv_tr;
         matrix3<float> m3_proj_view;
 
+        bool m_already_loaded{false};
         bool m_rotate_camera{false};
         bool m_move_camera{false};
         bool m_rotate_over{false};
@@ -89,8 +91,12 @@ namespace qpp {
         float distance(const vector3<float> &point);
         vector3<float> unproject(const float x, const float y, const float _z = 0.5f);
         std::optional<vector2<float> > project(const vector3<float> point);
+
+        void save_to_json(json &data) override ;
+        void load_from_json(json &data) override ;
     };
 
   }
+
 }
 #endif

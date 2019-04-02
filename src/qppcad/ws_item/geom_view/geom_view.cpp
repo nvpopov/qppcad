@@ -1413,7 +1413,7 @@ void geom_view_t::load_from_json (json &data) {
                       frame_coord[0] = frame_data[0].get<float>();
                       frame_coord[1] = frame_data[1].get<float>();
                       frame_coord[2] = frame_data[2].get<float>();
-                      std::cout << frame_coord.to_string_vec() << std::endl;
+                      //std::cout << frame_coord.to_string_vec() << std::endl;
                       tmp_anim_rec.frames[nf_id].atom_pos.push_back(frame_coord);
                     }
                 }

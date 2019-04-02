@@ -29,13 +29,15 @@ namespace qpp {
 
         template<typename T>
         static void load_var(const std::string &varname, T &var, json &data) {
-          if (data.find(varname) != data.end()) var = data[varname].get<T>();
+          auto it = data.find(varname);
+          if (it != data.end()) var = it.value().get<T>();
         }
 
         template<typename T>
         static void load_vec3(const std::string &varname, vector3<T> &var, json &data) {
-          if (data.find(varname) != data.end())
-            for(auto i = 0; i < 3; i++) var[i] = data[varname][i].get<T>();
+          auto it = data.find(varname);
+          if (it != data.end())
+            for(auto i = 0; i < 3; i++) var[i] = it.value()[i].get<T>();
         }
 
         static void save_index(const std::string &varname, const index idx, json &data) {

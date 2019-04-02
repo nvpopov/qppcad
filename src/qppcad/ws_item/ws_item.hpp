@@ -5,7 +5,7 @@
 #include <geom/lace3d.hpp>
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
-#include <qppcad/json_adapter.hpp>
+#include <qppcad/serializable.hpp>
 #include <qppcad/qpp_object.hpp>
 
 #include <QPainter>
@@ -35,7 +35,8 @@ namespace qpp {
     const uint32_t ws_item_flags_translate_emit_upd_event = 1 << 14;
     const uint32_t ws_item_flags_support_view_voting      = 1 << 15;
 
-    class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
+    class ws_item_t : public std::enable_shared_from_this<ws_item_t>,
+        public qpp_object_t, public serializable_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
 
@@ -151,8 +152,8 @@ namespace qpp {
         virtual void apply_intermediate_translate_content(const vector3<float> &new_pos);
         virtual void on_end_content_gizmo_translate();
         void translate(const vector3<float> &tr_vec);
-        virtual void save_to_json(json &data);
-        virtual void load_from_json(json &data);
+        void save_to_json(json &data) override ;
+        void load_from_json(json &data) override ;
         void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream);
         void save_to_stream(std::basic_istream<CHAR_EX,TRAITS> &stream);
         void load_from_file(std::string &file_name);

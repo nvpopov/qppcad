@@ -39,6 +39,7 @@ namespace qpp {
     const auto JSON_ATOM_SCALE     = "atom_scale";
     const auto JSON_BOND_SCALE     = "bond_scale";
     const auto JSON_CELL_COLOR     = "cell_color";
+    const auto JSON_DRAW_CELL      = "draw_cell";
     const auto JSON_BONDING_TABLE  = "bonding_table";
     const auto JSON_ATOMS          = "atoms";
     const auto JSON_CELL           = "cell";
@@ -103,6 +104,12 @@ namespace qpp {
     const auto JSON_WS_CUBE_P_COLOR = "cube_color";
     const auto JSON_WS_CUBE_P_STYLE = "cube_style";
     const auto JSON_WS_CUBE_P_SCALE = "cube_scale";
+
+    const auto JSON_WS_CAMERA             = "ws_camera";
+    const auto JSON_WS_CAMERA_VIEW_POINT  = "view_point";
+    const auto JSON_WS_CAMERA_LOOK_AT     = "look_at";
+    const auto JSON_WS_CAMERA_LOOK_UP     = "look_up";
+    const auto JSON_WS_CAMERA_ORTHO_SCALE = "ortho_scale";
 
   }
 
