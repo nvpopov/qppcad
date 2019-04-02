@@ -87,6 +87,7 @@ namespace qpp {
         QVBoxLayout *gb_disp_type_spec_rend_lt;
 
         qspoiler_widget_t *gb_disp_bt;
+        QPushButton *disp_bt_rebond_btn;
         QVBoxLayout *disp_bt_lt;
         QTableView *disp_bt;
         qbonding_table_model_t *bt_mdl;
@@ -308,6 +309,7 @@ namespace qpp {
         void cur_it_selected_content_changed();
 
         void type_summary_clicked(const QModelIndex &index);
+        void rebond_button_clicked();
 
     };
 

@@ -206,6 +206,21 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_bt->setContentsMargins(0,0,0,0);
   disp_bt_lt = new QVBoxLayout;
   gb_disp_bt->add_content_layout(disp_bt_lt);
+
+  disp_bt_rebond_btn = new QPushButton;
+  disp_bt_rebond_btn->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
+                                    astate->size_guide.ext_editor_btn_h()));
+  disp_bt_rebond_btn->setIcon(QIcon("://images/outline-refresh-24px.svg"));
+  disp_bt_rebond_btn->setFlat(true);
+  disp_bt_rebond_btn->setToolTip("Rebond the structure");
+
+  connect(disp_bt_rebond_btn,
+          &QPushButton::clicked,
+          this,
+          &geom_view_obj_insp_widget_t::rebond_button_clicked);
+
+  gb_disp_bt->hbox_frm->insertWidget(3, disp_bt_rebond_btn);
+
   bt_mdl = new qbonding_table_model_t;
   disp_bt = new QTableView;
 
@@ -2033,11 +2048,12 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
   app_state_t *astate = app_state_t::get_inst();
 
   if (b_al) {
-      astate->log(fmt::format("DEBUG: Type summary clicked: {} {}", index.row(), index.column()));
+
       int atom_type_idx = index.row();
+      int col_idx = index.column();
 
       //type is valid
-      if (atom_type_idx < b_al->m_geom->n_types()) {
+      if (atom_type_idx < b_al->m_geom->n_types() && col_idx == 2) {
 
           auto it = b_al->m_type_color_override.find(atom_type_idx);
           auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(atom_type_idx));
@@ -2068,6 +2084,13 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
         }
 
     }
+
+}
+
+void geom_view_obj_insp_widget_t::rebond_button_clicked() {
+
+  if (!b_al) return;
+  b_al->rebond();
 
 }
 
