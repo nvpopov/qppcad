@@ -30,21 +30,22 @@ namespace qpp {
     const auto JSON_WS_ITEM_TYPE   = "type";
     const auto JSON_IS_VISIBLE     = "is_visible";
     const auto JSON_POS            = "pos";
-    const auto JSON_DIM            = "dim";
-    const auto JSON_SHOW_IMG_ATOMS = "show_img_atoms";
-    const auto JSON_SHOW_IMG_BONDS = "show_img_bonds";
-    const auto JSON_SHOW_BONDS     = "show_bonds";
-    const auto JSON_SHOW_ATOMS     = "show_atoms";
-    const auto JSON_BT_SHOW_DSBL   = "bt_show_disabled_records";
-    const auto JSON_ATOM_SCALE     = "atom_scale";
-    const auto JSON_BOND_SCALE     = "bond_scale";
-    const auto JSON_CELL_COLOR     = "cell_color";
-    const auto JSON_DRAW_CELL      = "draw_cell";
-    const auto JSON_BONDING_TABLE  = "bonding_table";
-    const auto JSON_ATOMS          = "atoms";
-    const auto JSON_CELL           = "cell";
 
     //qjson v0.2
+    const auto JSON_ATOMS_LIST_DIM             = "dim";
+    const auto JSON_ATOMS_LIST_SHOW_IMG_ATOMS  = "show_img_atoms";
+    const auto JSON_ATOMS_LIST_SHOW_IMG_BONDS  = "show_img_bonds";
+    const auto JSON_ATOMS_LIST_SHOW_BONDS      = "show_bonds";
+    const auto JSON_ATOMS_LIST_SHOW_ATOMS      = "show_atoms";
+    const auto JSON_ATOMS_LIST_BT_SHOW_DSBL    = "bt_show_disabled_records";
+    const auto JSON_ATOMS_LIST_ATOM_SCALE      = "atom_scale";
+    const auto JSON_ATOMS_LIST_BOND_SCALE      = "bond_scale";
+    const auto JSON_ATOMS_LIST_CELL_COLOR      = "cell_color";
+    const auto JSON_ATOMS_LIST_DRAW_CELL       = "draw_cell";
+    const auto JSON_ATOMS_LIST_BONDING_TABLE   = "bonding_table";
+    const auto JSON_ATOMS_LIST_ATOMS           = "atoms";
+    const auto JSON_ATOMS_LIST_CELL            = "cell";
+
     const auto JSON_ATOMS_LIST_XFIELD_NAMES     = "xfield_names";
     const auto JSON_ATOMS_LIST_XFIELD_TYPES     = "xfield_types";
 
