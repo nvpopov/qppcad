@@ -637,6 +637,10 @@ void qbinded_line_edit_t::load_value_ex() {
 
 qbinded_line_edit_t::qbinded_line_edit_t(QWidget *parent) : QLineEdit (parent) {
 
+  app_state_t *astate = app_state_t::get_inst();
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+  setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
+
   connect(this,
           &QLineEdit::editingFinished,
           this,
@@ -646,8 +650,11 @@ qbinded_line_edit_t::qbinded_line_edit_t(QWidget *parent) : QLineEdit (parent) {
 
 void qbinded_line_edit_t::editing_finished() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   if (m_binded_value) {
       *m_binded_value = text().toStdString();
+      astate->make_viewport_dirty();
     }
 
 }

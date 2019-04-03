@@ -452,6 +452,9 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_action_lt->addWidget(tms_pair_action_copy);
   tms_pair_action_lt->addWidget(tms_pair_action_del);
 
+  tms_pair_custom_text_edit = new qbinded_line_edit_t;
+  tms_pair_custom_text_enabled = new qbinded_checkbox;
+
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1"), tms_pair_at1_info);
   tms_pair_dist_gb_lt->addRow(tr("Atom №2"), tms_pair_at2_info);
@@ -461,7 +464,10 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label enabled"), tms_pair_label_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label style"), tms_pair_label_style);
+  tms_pair_dist_gb_lt->addRow(tr("Custom lbl. enabled"), tms_pair_custom_text_enabled);
+  tms_pair_dist_gb_lt->addRow(tr("Custom lbl. text"), tms_pair_custom_text_edit);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
+
   tms_pair_dist_gb_lt->addRow(tr("Actions"), tms_pair_action_lt);
   init_form_lt(tms_pair_dist_gb_lt);
 
@@ -1122,6 +1128,10 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_font_screen_size->bind_value(&rec.m_font_size);
           tms_pair_line_style->bind_value(reinterpret_cast<int*>(&rec.m_line_render_style));
           tms_pair_label_style->bind_value(reinterpret_cast<int*>(&rec.m_label_render_style));
+
+          tms_pair_custom_text_edit->bind_value(&rec.m_custom_label_text);
+          tms_pair_custom_text_enabled->bind_value(&rec.m_show_custom_label);
+
           tms_pair_enabled->setEnabled(true);
           tms_pair_dist_color->setEnabled(true);
           tms_pair_line_style->setEnabled(true);
@@ -1133,6 +1143,9 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_pair_action_sel->setEnabled(true);
           tms_pair_action_del->setEnabled(true);
           tms_pair_action_copy->setEnabled(true);
+
+          tms_pair_custom_text_edit->setEnabled(true);
+          tms_pair_custom_text_enabled->setEnabled(true);
 
         } else {
           unbind_dist_measure_tab();
@@ -1152,6 +1165,9 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_pair_label_style->unbind_value();
   tms_pair_label_enabled->unbind_value();
 
+  tms_pair_custom_text_enabled->unbind_value();
+  tms_pair_custom_text_edit->unbind_value();
+
   tms_pair_line_style->setEnabled(false);
   tms_pair_dist_color->setEnabled(false);
   tms_pair_line_size->setEnabled(false);
@@ -1164,6 +1180,9 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_pair_action_sel->setEnabled(false);
   tms_pair_action_del->setEnabled(false);
   tms_pair_action_copy->setEnabled(false);
+
+  tms_pair_custom_text_edit->setEnabled(false);
+  tms_pair_custom_text_enabled->setEnabled(false);
 
 }
 

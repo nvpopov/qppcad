@@ -37,8 +37,8 @@ namespace qpp {
       index m_idx2;
       bool m_show{true};
       bool m_show_label{true};
-      bool m_show_text{false};
-      std::string m_text_label;
+      bool m_show_custom_label{false};
+      std::string m_custom_label_text;
       vector3<float> m_bond_color{0};
       int m_line_size{2};
       int m_font_size{13};

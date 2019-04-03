@@ -158,11 +158,6 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
             QFont font(astate->m_font_name, record.m_font_size);
             painter.setFont(font);
 
-            //13 = 70
-            //26 = 140 ?
-            const float rect_w = (record.m_font_size / 13.0f) * 70.0f;
-            const float rect_h = record.m_font_size * 2.2;
-
             QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
                 round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);
 
@@ -210,15 +205,25 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
             painter.translate(mid[0], mid[1]);
             painter.rotate(angle);
 
+            QString _label_text = record.m_show_custom_label ?
+                                    QString::fromStdString(record.m_custom_label_text) :
+                                    QString("%1 Å").arg(QString::number(dist, 'f', 2));
+
+            QFontMetrics fmetric(font);
+
+            //13 = 70
+            //26 = 140 ?
+            const float rect_w = (record.m_font_size / 13.0f) *
+                                 (fmetric.boundingRect(_label_text).width() + 20);
+            const float rect_h = record.m_font_size * 2.2;
+
             if (record.m_show_label)
               switch (record.m_label_render_style) {
 
                 case msr_label_style_e::msr_label_std : {
                     QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
                     painter.setPen(rectpen);
-                    painter.drawText(text_rect,
-                                     Qt::AlignCenter,
-                                     QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                    painter.drawText(text_rect, Qt::AlignCenter, _label_text);
                     break;
                   }
 
@@ -229,9 +234,7 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
                     painter.fillPath(path, Qt::white);
                     painter.setPen(rectpen);
                     painter.drawPath(path);
-                    painter.drawText(text_rect,
-                                     Qt::AlignCenter,
-                                     QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                    painter.drawText(text_rect, Qt::AlignCenter, _label_text);
                     break;
                   }
 
@@ -240,16 +243,12 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
                     QRect text_rect(-rect_w*0.5f, rect_h*0.5f, rect_w, rect_h);
                     painter.setPen(rectpen2);
                     painter.setBrush(text_fill_color);
-                    text_path.addText(text_rect.left(),
-                                      text_rect.bottom(),
-                                      font,
-                                      QString("%1 Å").arg(QString::number(dist, 'f', 2)));
+                    text_path.addText(text_rect.left(), text_rect.bottom(), font, _label_text);
                     painter.drawPath(text_path);
                     break;
                   }
 
                 }
-
 
             painter.resetTransform();
 
@@ -419,7 +418,8 @@ void geom_view_msr_subsys_t::dist_copy(size_t msr_id) {
           m_dist_recs[i].m_line_size = m_dist_recs[msr_id].m_line_size;
           m_dist_recs[i].m_show = m_dist_recs[msr_id].m_show;
           m_dist_recs[i].m_show_label = m_dist_recs[msr_id].m_show_label;
-          m_dist_recs[i].m_text_label = m_dist_recs[msr_id].m_text_label;
+          m_dist_recs[i].m_show_custom_label = m_dist_recs[msr_id].m_show_custom_label;
+          m_dist_recs[i].m_custom_label_text = m_dist_recs[msr_id].m_custom_label_text;
         }
 
   astate->make_viewport_dirty();

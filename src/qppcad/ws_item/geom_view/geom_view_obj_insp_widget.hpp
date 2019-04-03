@@ -147,6 +147,9 @@ namespace qpp {
         QPushButton *tms_pair_action_sel;
         QPushButton *tms_pair_action_copy;
         QPushButton *tms_pair_action_del;
+        //QHBoxLayout *tms_pair_custom_text;
+        qbinded_line_edit_t *tms_pair_custom_text_edit;
+        qbinded_checkbox *tms_pair_custom_text_enabled;
 
         //interatomic angle
         qspoiler_widget_t *tms_angle_gb;
