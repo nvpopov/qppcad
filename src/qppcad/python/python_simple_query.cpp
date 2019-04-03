@@ -59,7 +59,6 @@ void simple_query::open_file_query(std::string file_name,
 void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_c) {
 
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_manager->get_sel_tuple<geom_view_t>();
 
   supercell_tool_t sct;
@@ -73,7 +72,6 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
 void simple_query::select_ws(int ws_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_manager->has_wss()) return;
 
   astate->ws_manager->set_cur_id(opt<size_t>(ws_idx));
@@ -110,7 +108,6 @@ void simple_query::sel_cnt(int cnt_idx) {
 void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
 
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_manager->get_sel_tuple<geom_view_t>();
 
   for (size_t i = 0; i < al->m_geom->nat(); i++)
@@ -171,7 +168,6 @@ void simple_query::sel_cnt_all() {
 void simple_query::sel_cnt_list(pybind11::list sel_list) {
 
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_manager->get_sel_tuple<geom_view_t>();
 
   for (auto itm : sel_list)
@@ -184,7 +180,6 @@ void simple_query::sel_cnt_list(pybind11::list sel_list) {
 void simple_query::sel_cnt_type(pybind11::str sel_type) {
 
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_manager->get_sel_tuple<geom_view_t>();
 
   std::string type_name = py::cast<std::string>(sel_type);
@@ -266,7 +261,6 @@ void simple_query::unsel_cnt(int cnt_idx) {
 void simple_query::unsel_cnt_list(pybind11::list sel_list) {
 
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_manager->get_sel_tuple<geom_view_t>();
 
   for (auto itm : sel_list)

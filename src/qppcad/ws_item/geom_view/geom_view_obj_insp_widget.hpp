@@ -143,6 +143,10 @@ namespace qpp {
         qbinded_int_spinbox *tms_pair_line_size;
         qbinded_int_spinbox *tms_font_screen_size;
         qbinded_combobox *tms_pair_label_style;
+        QHBoxLayout *tms_pair_action_lt;
+        QPushButton *tms_pair_action_sel;
+        QPushButton *tms_pair_action_copy;
+        QPushButton *tms_pair_action_del;
 
         //interatomic angle
         qspoiler_widget_t *tms_angle_gb;
@@ -308,6 +312,9 @@ namespace qpp {
 
         void msr_pair_cur_idx_changed(int index);
         void msr_angle_cur_idx_changed(int index);
+        void msr_pair_select_clicked();
+        void msr_pair_delete_clicked();
+        void msr_pair_copy_clicked();
 
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();
@@ -321,4 +328,5 @@ namespace qpp {
   }
 
 }
+
 #endif

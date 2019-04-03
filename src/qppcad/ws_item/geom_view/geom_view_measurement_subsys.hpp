@@ -37,6 +37,8 @@ namespace qpp {
       index m_idx2;
       bool m_show{true};
       bool m_show_label{true};
+      bool m_show_text{false};
+      std::string m_text_label;
       vector3<float> m_bond_color{0};
       int m_line_size{2};
       int m_font_size{13};
@@ -130,6 +132,12 @@ namespace qpp {
       void render ();
       void render_overlay(QPainter &painter);
       void notify_atom_has_been_deleted(const uint32_t atm);
+
+      void dist_select_atoms(size_t msr_id);
+      void dist_select_selected_atoms();
+      void dist_copy(size_t msr_id);
+      void dist_copy_selected();
+      void dist_delete_selected();
 
       void save_to_json(json &data);
       void load_from_json(json &data);

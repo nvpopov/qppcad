@@ -35,7 +35,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
                                     astate->size_guide.ext_editor_btn_h()));
   type_summary_clear_tclr_override->setIcon(QIcon("://images/outline-refresh-24px.svg"));
   type_summary_clear_tclr_override->setFlat(true);
-  type_summary_clear_tclr_override->setToolTip("Rebond the structure");
+  type_summary_clear_tclr_override->setToolTip("Clear the color override");
 
   connect(type_summary_clear_tclr_override,
           &QPushButton::clicked,
@@ -425,6 +425,33 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_label_style->addItem("Outline");
   tms_pair_label_style->addItem("Border");
 
+  tms_pair_action_sel = new QPushButton(tr("SEL"));
+
+  connect(tms_pair_action_sel,
+          &QPushButton::clicked,
+          this,
+          &geom_view_obj_insp_widget_t::msr_pair_select_clicked);
+
+  tms_pair_action_copy = new QPushButton(tr("COPY"));
+
+  connect(tms_pair_action_copy,
+          &QPushButton::clicked,
+          this,
+          &geom_view_obj_insp_widget_t::msr_pair_copy_clicked);
+
+  tms_pair_action_del = new QPushButton(tr("DEL"));
+
+  connect(tms_pair_action_del,
+          &QPushButton::clicked,
+          this,
+          &geom_view_obj_insp_widget_t::msr_pair_delete_clicked);
+
+  tms_pair_action_lt = new QHBoxLayout;
+  tms_pair_action_lt->setContentsMargins(4, 0, 8, 0);
+  tms_pair_action_lt->addWidget(tms_pair_action_sel);
+  tms_pair_action_lt->addWidget(tms_pair_action_copy);
+  tms_pair_action_lt->addWidget(tms_pair_action_del);
+
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1"), tms_pair_at1_info);
   tms_pair_dist_gb_lt->addRow(tr("Atom №2"), tms_pair_at2_info);
@@ -435,6 +462,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Label enabled"), tms_pair_label_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label style"), tms_pair_label_style);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
+  tms_pair_dist_gb_lt->addRow(tr("Actions"), tms_pair_action_lt);
   init_form_lt(tms_pair_dist_gb_lt);
 
   tms_angle_gb = new qspoiler_widget_t(tr("Interatomic angle"));
@@ -1085,6 +1113,7 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
       int cur_msr = b_al->m_measure->m_cur_dist_rec_ui - 1;
       if (cur_msr < b_al->m_measure->m_dist_recs.size() &&
           !b_al->m_measure->m_dist_recs.empty()) {
+
           auto &rec = b_al->m_measure->m_dist_recs[cur_msr];
           tms_pair_dist_color->bind_value(&rec.m_bond_color);
           tms_pair_enabled->bind_value(&rec.m_show);
@@ -1100,6 +1129,11 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_font_screen_size->setEnabled(true);
           tms_pair_label_style->setEnabled(true);
           tms_pair_label_enabled->setEnabled(true);
+
+          tms_pair_action_sel->setEnabled(true);
+          tms_pair_action_del->setEnabled(true);
+          tms_pair_action_copy->setEnabled(true);
+
         } else {
           unbind_dist_measure_tab();
         }
@@ -1126,6 +1160,10 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_font_screen_size->setEnabled(false);
   tms_pair_label_style->setEnabled(false);
   tms_pair_label_enabled->setEnabled(false);
+
+  tms_pair_action_sel->setEnabled(false);
+  tms_pair_action_del->setEnabled(false);
+  tms_pair_action_copy->setEnabled(false);
 
 }
 
@@ -2072,6 +2110,18 @@ void geom_view_obj_insp_widget_t::msr_angle_cur_idx_changed(int index) {
 
   astate->make_viewport_dirty();
 
+}
+
+void geom_view_obj_insp_widget_t::msr_pair_select_clicked() {
+  if (b_al) b_al->m_measure->dist_select_selected_atoms();
+}
+
+void geom_view_obj_insp_widget_t::msr_pair_delete_clicked() {
+  if (b_al) b_al->m_measure->dist_delete_selected();
+}
+
+void geom_view_obj_insp_widget_t::msr_pair_copy_clicked() {
+  if (b_al) b_al->m_measure->dist_copy_selected();
 }
 
 void geom_view_obj_insp_widget_t::cur_ws_edit_mode_changed() {
