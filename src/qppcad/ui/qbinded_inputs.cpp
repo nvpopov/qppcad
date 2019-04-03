@@ -626,3 +626,28 @@ void qbinded_xgeom_float_spinbox::value_changed(double d) {
     }
 
 }
+
+void qbinded_line_edit_t::load_value_ex() {
+
+  if (m_binded_value) {
+      setText(QString::fromStdString(*m_binded_value));
+    }
+
+}
+
+qbinded_line_edit_t::qbinded_line_edit_t(QWidget *parent) : QLineEdit (parent) {
+
+  connect(this,
+          &QLineEdit::editingFinished,
+          this,
+          &qbinded_line_edit_t::editing_finished);
+
+}
+
+void qbinded_line_edit_t::editing_finished() {
+
+  if (m_binded_value) {
+      *m_binded_value = text().toStdString();
+    }
+
+}

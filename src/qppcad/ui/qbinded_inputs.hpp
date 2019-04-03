@@ -6,6 +6,7 @@
 #include <QCheckBox>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QLineEdit>
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QHBoxLayout>
@@ -54,7 +55,7 @@ namespace qpp {
         virtual void load_value_ex() = 0;
     };
 
-    class qbinded_checkbox : public QCheckBox ,
+    class qbinded_checkbox : public QCheckBox,
             public generic_binded_input_t<bool> {
 
         Q_OBJECT
@@ -65,6 +66,22 @@ namespace qpp {
 
       public slots:
         void check_state_changed(int state);
+    };
+
+    class qbinded_line_edit_t : public QLineEdit,
+        public generic_binded_input_t<std::string> {
+
+        Q_OBJECT
+
+      public:
+
+        void load_value_ex() override;
+        qbinded_line_edit_t(QWidget *parent = nullptr);
+
+      public slots:
+
+        void editing_finished();
+
     };
 
     class qbinded_float_spinbox : public QDoubleSpinBox,
