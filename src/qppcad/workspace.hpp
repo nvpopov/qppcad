@@ -136,15 +136,33 @@ namespace qpp {
 
         void utility_event_loop();
 
-        template<typename T>
-        std::shared_ptr<T> get_sel_itm_sp_as() {
-          auto sel_sp = get_sel_itm_sp();
-          if (!sel_sp) return nullptr;
-          return std::static_pointer_cast<T>(sel_sp);
-        };
+        template<typename T, bool THROW_ERROR = true>
+        std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*> get_sel_tuple(){
+
+          auto cur_ws = get_cur_ws();
+          if (!cur_ws) {
+              if (THROW_ERROR) throw std::invalid_argument("invalid workspace!");
+              return {nullptr, nullptr, nullptr};
+            }
+
+          auto cur_it = cur_ws->get_selected_sp();
+          if (!cur_it) {
+              if (THROW_ERROR) throw std::invalid_argument("ws_item not selected!");
+              return {cur_ws, nullptr, nullptr};
+            }
+
+          auto casted_it = cur_it->cast_as<T>();
+          if (!casted_it) {
+              if (THROW_ERROR) throw std::invalid_argument(
+                    fmt::format("Cast error ({})", T::get_type_info_static()->get_type_name()));
+              return  {cur_ws, cur_it, nullptr};
+            }
+
+          return {cur_ws, cur_it, casted_it};
+
+        }
 
     };
-
 
   }
 
