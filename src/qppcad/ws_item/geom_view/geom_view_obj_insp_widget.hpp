@@ -180,6 +180,8 @@ namespace qpp {
         QComboBox *tm_pair_dist_t_mode;
         QDoubleSpinBox *tm_pair_dist_spinbox;
         QLabel *tm_pair_dist_note_label;
+        QHBoxLayout *tm_pair_dist_cmb_lt;
+        QPushButton *tm_pair_dist_swap_atoms;
 
         qspoiler_widget_t *tm_gb_pair_creation;
         QFormLayout *tm_gb_pair_creation_lt;
@@ -289,6 +291,7 @@ namespace qpp {
         void modify_single_atom_button_clicked();
         void modify_single_atom_delete_button_clicked();
         void modify_pair_dist_spinbox_value_changed(double newval);
+        void modify_pair_dist_swap_button_clicked();
         void modify_add_atom_between_pair();
         void modify_barycentric_scale_button_clicked();
         void modify_translate_selected_atoms_clicked();

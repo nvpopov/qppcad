@@ -7,6 +7,7 @@ using namespace qpp::cad;
 node_book_t::node_book_t() {
 
   set_default_flags(ws_item_flags_default);
+  m_scene = new QGraphicsScene;
 
 }
 
@@ -52,5 +53,6 @@ void node_book_t::load_from_json(json &data) {
 }
 
 void node_book_t::updated_internally() {
+
 }
 

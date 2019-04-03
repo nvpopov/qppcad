@@ -211,6 +211,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
           &ws_item_obj_insp_widget_t::rename_current_item);
 
   tg_actions_clone = new QPushButton(tr("Clone"));
+  tg_actions_clone->setEnabled(false);
+
   tg_actions_layout->addWidget(tg_actions_delete);
   tg_actions_layout->addWidget(tg_actions_rename);
   tg_actions_layout->addWidget(tg_actions_clone);

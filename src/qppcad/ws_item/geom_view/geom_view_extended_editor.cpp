@@ -105,7 +105,10 @@ void geom_view_extended_editor_t::data_double_clicked(int logical_index) {
 
       std::cout << "@int logical_index =" << logical_index << std::endl;
       m_binded_gv->toggle_atom_selection(logical_index);
-      //xgeom_tv->update();
+
+      if (m_binded_gv->m_parent_ws &&
+          m_binded_gv->m_parent_ws->m_edit_type != ws_edit_e::edit_content)
+        m_binded_gv->m_parent_ws->set_edit_type(ws_edit_e::edit_content);
 
     }
 

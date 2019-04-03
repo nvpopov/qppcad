@@ -16,6 +16,10 @@ namespace qpp {
 
       public:
 
+        node_book_t *m_binded_nb{nullptr};
+        QGraphicsView *m_gr_view;
+        QVBoxLayout *main_lt;
+
         node_book_extended_editor_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;

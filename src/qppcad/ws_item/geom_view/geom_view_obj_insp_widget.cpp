@@ -564,10 +564,22 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_pair_dist_spinbox->setSingleStep(0.01);
   tm_pair_dist_spinbox->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
+  tm_pair_dist_swap_atoms = new QPushButton(tr("Swap"));
+  tm_pair_dist_swap_atoms->setMaximumWidth(astate->size_guide.obj_insp_button_w());
+
+  connect(tm_pair_dist_swap_atoms,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::modify_pair_dist_swap_button_clicked);
+
+  tm_pair_dist_cmb_lt = new QHBoxLayout;
+  tm_pair_dist_cmb_lt->addWidget(tm_pair_dist_spinbox);
+  tm_pair_dist_cmb_lt->addWidget(tm_pair_dist_swap_atoms);
+
   tm_gb_pair_dist_lt->addRow(tr("Atom №1"), tm_pair_dist_atom1);
   tm_gb_pair_dist_lt->addRow(tr("Atom №2"), tm_pair_dist_atom2);
   tm_gb_pair_dist_lt->addRow(tr("Trnsf. mode"), tm_pair_dist_t_mode);
-  tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_spinbox);
+  tm_gb_pair_dist_lt->addRow(tm_pair_dist_note_label, tm_pair_dist_cmb_lt);
   init_form_lt(tm_gb_pair_dist_lt);
 
   tm_gb_pair_creation = new qspoiler_widget_t(tr("Insert atom between"));
@@ -1290,9 +1302,11 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
                       tm_pair_dist_spinbox->blockSignals(false);
                       tm_pair_dist_note_label->show();
                       tm_pair_dist_spinbox->show();
+                      tm_pair_dist_swap_atoms->show();
                     } else {
                       tm_pair_dist_note_label->hide();
                       tm_pair_dist_spinbox->hide();
+                      tm_pair_dist_swap_atoms->hide();
                     }
 
                   //atom between
@@ -1793,6 +1807,27 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
           astate->make_viewport_dirty();
         }
     }
+}
+
+void geom_view_obj_insp_widget_t::modify_pair_dist_swap_button_clicked() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (b_al && b_al->m_atom_idx_sel.size() == 2) {
+      auto it1 = b_al->m_atom_idx_sel.begin();
+      auto it2 = it1++;
+      if (it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
+          it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
+          std::string atom1_name = b_al->m_geom->atom_name(it1->m_atm);
+          std::string atom2_name = b_al->m_geom->atom_name(it2->m_atm);
+          vector3<float> atom1_pos = b_al->m_geom->pos(it1->m_atm);
+          vector3<float> atom2_pos = b_al->m_geom->pos(it2->m_atm);
+          b_al->m_geom->change(it1->m_atm, atom1_name, atom2_pos);
+          b_al->m_geom->change(it2->m_atm, atom2_name, atom1_pos);
+          astate->make_viewport_dirty();
+        }
+    }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_add_atom_between_pair() {
