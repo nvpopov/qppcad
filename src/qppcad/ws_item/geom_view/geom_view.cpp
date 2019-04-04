@@ -645,6 +645,44 @@ void geom_view_t::swap_atoms(const size_t at1, const size_t at2, bool swap_names
 
 }
 
+void geom_view_t::sv_modify_selected(bool state) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  for (auto &rec : m_atom_idx_sel)
+    if (rec.m_idx == index::D(m_geom->DIM).all(0))
+      m_geom->xfield<bool>(xgeom_sel_vis, rec.m_atm) = state;
+
+  if (!m_sel_vis) {
+      m_sel_vis = true;
+      m_sel_vis_affect_bonds = true;
+    }
+
+  astate->make_viewport_dirty();
+
+}
+
+void geom_view_t::sv_hide_invert_selected() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  std::unordered_set<size_t> cap_idx;
+
+  for (auto &elem : m_atom_idx_sel) cap_idx.insert(elem.m_atm);
+
+  for (size_t i = 0; i < m_geom->nat(); i++)
+    if (cap_idx.find(i) == cap_idx.end())
+      m_geom->xfield<bool>(xgeom_sel_vis, i) = true;
+
+  if (!m_sel_vis) {
+      m_sel_vis = true;
+      m_sel_vis_affect_bonds = true;
+    }
+
+  astate->make_viewport_dirty();
+
+}
+
 void geom_view_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
 
   if (!m_geom) return;

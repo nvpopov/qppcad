@@ -242,15 +242,8 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
       astate->mouse_y_dc = (0.5f - astate->mouse_y / float(this->height())) * 2.0f;
 
 
-      astate->is_mouse_moving = (abs(astate->mouse_x_dc - astate->mouse_x_dc_old) > 0.00001f ||
-                                 abs(astate->mouse_y_dc - astate->mouse_y_dc_old) > 0.00001f);
-
-//      std::cout << fmt::format("MOUSE DEBUG MM={}, XDC={}, YDC={}, XDCO={}, YDCO={}",
-//                               astate->is_mouse_moving,
-//                               astate->mouse_x_dc,
-//                               astate->mouse_y_dc,
-//                               astate->mouse_x_dc_old,
-//                               astate->mouse_y_dc_old) << std::endl;
+      astate->is_mouse_moving = (abs(astate->mouse_x - astate->mouse_x_old) > 0 ||
+                                 abs(astate->mouse_y - astate->mouse_y_old) > 0);
 
       astate->mouse_distance_pp += abs(astate->mouse_x - astate->mouse_x_old) +
                                    abs(astate->mouse_y - astate->mouse_y_old);

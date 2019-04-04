@@ -817,7 +817,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_group_op->add_content_layout(tm_group_op_lt);
   tm_group_op_sv_show = new QPushButton(tr("SV:SHOW"));
   tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
-  tm_group_op_sv_show_all = new QPushButton(tr("SV:SHOW ALL"));
+  tm_group_op_sv_hide_invert = new QPushButton(tr("SV:HIDE INV"));
 
   connect(tm_group_op_sv_show,
           &QPushButton::pressed,
@@ -829,10 +829,10 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this,
           &geom_view_obj_insp_widget_t::modify_group_op_sv_hide);
 
-  connect(tm_group_op_sv_show_all,
+  connect(tm_group_op_sv_hide_invert,
           &QPushButton::pressed,
           this,
-          &geom_view_obj_insp_widget_t::modify_group_op_sv_show_all);
+          &geom_view_obj_insp_widget_t::modify_group_op_sv_hide_invert);
 
   tm_group_op_sel_ngbs = new QPushButton(tr("SEL:NGB"));
 
@@ -856,7 +856,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_group_op_lt->addWidget(tm_group_op_sv_show,     0, 0, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_sv_hide,     0, 1, 1, 1);
-  tm_group_op_lt->addWidget(tm_group_op_sv_show_all, 0, 2, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_sv_hide_invert, 0, 2, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_sel_ngbs,    1, 0, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_del_sel,     1, 1, 1, 1);
   tm_group_op_lt->addWidget(tm_group_make_animable,  1, 2, 1, 1);
@@ -2028,44 +2028,15 @@ void geom_view_obj_insp_widget_t::modify_bc_rot_apply() {
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_sv_show() {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  if (b_al) {
-      for (auto &rec : b_al->m_atom_idx_sel)
-        if (rec.m_idx == index::D(b_al->m_geom->DIM).all(0))
-          b_al->m_geom->xfield<bool>(xgeom_sel_vis, rec.m_atm) = false;
-    }
-
-  astate->make_viewport_dirty();
-
+  if (b_al) b_al->sv_modify_selected(false);
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_sv_hide() {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  if (b_al) {
-      for (auto &rec : b_al->m_atom_idx_sel)
-        if (rec.m_idx == index::D(b_al->m_geom->DIM).all(0))
-          b_al->m_geom->xfield<bool>(xgeom_sel_vis, rec.m_atm) = true;
-    }
-
-  astate->make_viewport_dirty();
-
+  if (b_al) b_al->sv_modify_selected(true);
 }
 
-void geom_view_obj_insp_widget_t::modify_group_op_sv_show_all() {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  if (b_al) {
-      for (int i = 0; i < b_al->m_geom->nat(); i++)
-        b_al->m_geom->xfield<bool>(xgeom_sel_vis, i) = false;
-    }
-
-  astate->make_viewport_dirty();
-
+void geom_view_obj_insp_widget_t::modify_group_op_sv_hide_invert() {
+  if (b_al) b_al->sv_hide_invert_selected();
 }
 
 void geom_view_obj_insp_widget_t::modify_group_op_sel_ngbs() {

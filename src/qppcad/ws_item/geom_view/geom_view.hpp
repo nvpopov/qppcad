@@ -200,6 +200,9 @@ namespace qpp {
 
         void swap_atoms(const size_t at1, const size_t at2, bool swap_names = true);
 
+        void sv_modify_selected(bool state);
+        void sv_hide_invert_selected();
+
         template <typename TRANSFORM_CLASS>
         void transform_selected(const TRANSFORM_CLASS &tm) {
           for (auto &elem : m_atom_idx_sel)

@@ -232,7 +232,7 @@ namespace qpp {
         QGridLayout *tm_group_op_lt;
         QPushButton *tm_group_op_sv_show;
         QPushButton *tm_group_op_sv_hide;
-        QPushButton *tm_group_op_sv_show_all;
+        QPushButton *tm_group_op_sv_hide_invert;
         QPushButton *tm_group_op_sel_ngbs;
         QPushButton *tm_group_op_del_sel;
         QPushButton *tm_group_make_animable;
@@ -308,7 +308,7 @@ namespace qpp {
 
         void modify_group_op_sv_show();
         void modify_group_op_sv_hide();
-        void modify_group_op_sv_show_all();
+        void modify_group_op_sv_hide_invert();
         void modify_group_op_sel_ngbs();
         void modify_group_op_del_sel();
         void modify_group_op_make_static_anim();
