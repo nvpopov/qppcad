@@ -232,3 +232,42 @@ QSplitter {
 #obj_insp_header_frame {
  border-bottom:2px solid black;
 }
+
+QPushButton, QComboBox, QSpinBox, QDoubleSpinBox{
+ background : rgb(74, 74, 74);
+ border: 1px solid black;
+ border-radius: 4px;
+ padding: 3px;
+}
+
+QToolButton {
+ background : rgb(74, 74, 74);
+ border: 1px solid black;
+ border-radius: 4px;
+ padding: 2px;
+}
+
+#tool_panel_widget_e QCheckBox {
+ background : rgb(74, 74, 74);
+ border: 1px solid black;
+ border-radius: 4px;
+ padding: 3px;
+}
+
+QPushButton:pressed {
+ background : rgb(114, 114, 114);
+}
+
+QComboBox::drop-down  {
+ border:none;
+}
+
+QComboBox::down-arrow {
+ image: url(://images/combo_arrow.svg);
+ padding-right:3px;
+}
+
+QPushButton::flat {
+ border: none;
+ background: transparent;
+}

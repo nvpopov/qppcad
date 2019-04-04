@@ -302,6 +302,7 @@ void main_window::init_widgets() {
   tool_panel_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   tool_panel_widget->setFixedHeight(astate->size_guide.tool_panel_h());
   tool_panel_widget->setProperty("s_class", "tp_generic");
+  tool_panel_widget->setObjectName("tool_panel_widget_e");
 
   tp_ws_selector = new QComboBox;
   connect(tp_ws_selector,
@@ -314,8 +315,8 @@ void main_window::init_widgets() {
   tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
 
   tp_add_ws = new QPushButton;
-  tp_add_ws->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_add_ws->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_add_ws->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_add_ws->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_add_ws->setText("+");
   connect(tp_add_ws,
           &QPushButton::pressed,
@@ -324,8 +325,8 @@ void main_window::init_widgets() {
 
   tp_rm_ws = new QPushButton;
   tp_rm_ws->setText("-");
-  tp_rm_ws->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_rm_ws->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_rm_ws->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_rm_ws->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_rm_ws,
           &QPushButton::pressed,
           this,
@@ -333,8 +334,8 @@ void main_window::init_widgets() {
 
   tp_rnm_ws = new QPushButton;
   tp_rnm_ws->setText("RN");
-  tp_rnm_ws->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_rnm_ws->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_rnm_ws->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_rnm_ws->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   connect(tp_rnm_ws,
           &QPushButton::pressed,
           this,

@@ -41,5 +41,6 @@
         <file>images/outline-receipt-24px.svg</file>
         <file>images/outline-close-24px.svg</file>
         <file>images/outline-refresh-24px.svg</file>
+        <file>images/combo_arrow.svg</file>
     </qresource>
 </RCC>

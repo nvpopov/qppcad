@@ -58,6 +58,7 @@ qbinded_float_spinbox::qbinded_float_spinbox(QWidget *parent) : QDoubleSpinBox (
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setAlignment(Qt::AlignCenter);
+  setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   connect(this,
           static_cast<void(qbinded_float_spinbox::*)(double)>(&qbinded_float_spinbox::valueChanged),
@@ -367,6 +368,7 @@ qbinded_int_spinbox::qbinded_int_spinbox(QWidget *parent) : QSpinBox(parent) {
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setAlignment(Qt::AlignCenter);
+  setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   connect(this,
           static_cast<void (qbinded_int_spinbox::*)(int)>(&qbinded_int_spinbox::valueChanged),
