@@ -332,6 +332,7 @@ bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
           std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
 
           if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
+
               atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
               if (atom_sel_it == m_atom_idx_sel.end()) select_atom(res[0].m_atm, res[0].m_idx);
@@ -346,12 +347,12 @@ bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
 
         } else {
 
-          //TODO: need refractoring
           if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
               select_atoms(false);
             }
 
         }
+
     }
 
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();

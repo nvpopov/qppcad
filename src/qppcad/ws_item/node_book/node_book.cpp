@@ -7,7 +7,7 @@ using namespace qpp::cad;
 node_book_t::node_book_t() {
 
   set_default_flags(ws_item_flags_default);
-  m_scene = new QGraphicsScene;
+  m_scene = new node_book_graphics_scene_t(nullptr);
 
 }
 

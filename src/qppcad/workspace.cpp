@@ -199,7 +199,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
     }
 
   if (m_gizmo->m_is_visible && m_gizmo->attached_item)
-    if (m_gizmo->process_ray(&m_ray)){
+    if (m_gizmo->process_ray(&m_ray)) {
         astate->log("gizmo clicked");
         return;
       }
@@ -242,6 +242,7 @@ void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> item_to_add) 
 }
 
 void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete) {
+
   for (auto elem : m_ws_items) {
       auto it = std::find(elem->m_connected_items.begin(),
                           elem->m_connected_items.end(),
@@ -249,6 +250,7 @@ void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delet
       if (it != elem->m_connected_items.end())
         elem->m_connected_items.erase(it);
     }
+
 }
 
 void workspace_t::save_ws_to_json (const std::string filename) {
@@ -419,9 +421,11 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
+
   if (!m_cur_ws_id) return nullptr;
   if (*m_cur_ws_id >= m_ws.size()) return nullptr;
   return m_ws[*m_cur_ws_id];
+
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target_name) {
@@ -434,8 +438,10 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target
 }
 
 opt<size_t> workspace_manager_t::get_cur_id () {
+
   if (!m_ws.empty()) return m_cur_ws_id;
   return std::nullopt;
+
 }
 
 bool workspace_manager_t::set_cur_id (const opt<size_t> ws_index) {
@@ -459,8 +465,10 @@ bool workspace_manager_t::set_cur_id (const opt<size_t> ws_index) {
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
+
   if (!m_ws.empty() && id >= 0 && id < m_ws.size()) return m_ws[id];
   else return nullptr;
+
 }
 
 void workspace_manager_t::init_default () {

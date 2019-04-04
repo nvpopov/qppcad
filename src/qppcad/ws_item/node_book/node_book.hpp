@@ -3,7 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
-#include <QGraphicsScene>
+#include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
 
 namespace qpp {
 
@@ -15,7 +15,7 @@ namespace qpp {
 
         public:
 
-          QGraphicsScene *m_scene;
+          node_book_graphics_scene_t *m_scene;
 
           node_book_t();
 

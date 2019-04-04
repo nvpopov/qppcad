@@ -1597,21 +1597,21 @@ void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
 
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
-  tab_disp = define_tab(tr("Display settings"),
+  tab_disp = def_tab(tr("Display settings"),
                         "://images/monitor.svg");
 
-  tab_anim = define_tab(tr("Animation"),
+  tab_anim = def_tab(tr("Animation"),
                         "://images/film.svg",
                         "://images/film_d.svg");
 
-  tab_modify = define_tab(tr("Modify"),
+  tab_modify = def_tab(tr("Modify"),
                           "://images/outline-build-24px.svg",
                           "://images/outline-build-24px_d.svg");
 
-  tab_measurement = define_tab(tr("Measurement"),
+  tab_measurement = def_tab(tr("Measurement"),
                                "://images/outline-straighten-24px.svg");
 
-  tab_select = define_tab(tr("Atom selection groups"),
+  tab_select = def_tab(tr("Atom selection groups"),
                           "://images/outline-select_all-24px.svg",
                           "://images/outline-select_all-24px_d.svg");
 

@@ -10,12 +10,12 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  tab_cell_range = define_tab(tr("Define geometry_pg{f,d} cell"),
-                        "://images/outline-tune-24px.svg");
+  tab_cell_range = def_tab(tr("Define geometry_pg{f,d} cell"),
+                              "://images/outline-tune-24px.svg");
 
-  gb_pgf_data = new QGroupBox(tr("Pos. gen. form settings"));
+  gb_pgf_data = new qspoiler_widget_t(tr("Pos. gen. form settings"));
   gb_pgf_data_lt = new QFormLayout;
-  pre_init_gb(gb_pgf_data, gb_pgf_data_lt);
+  gb_pgf_data->add_content_layout(gb_pgf_data_lt);
 
   pgf_data_src = new qbinded_ws_item_combobox;
   pgf_data_src->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
@@ -32,8 +32,8 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   gb_pgf_data_lt->addRow(tr("Source"), pgf_data_src);
   gb_pgf_data_lt->addRow(tr("Destination"), pgf_data_dst);
   gb_pgf_data_lt->addRow(tr("Array group"), pgf_data_ag);
+  init_form_lt(gb_pgf_data_lt);
 
-  post_init_gb(gb_pgf_data, gb_pgf_data_lt);
   tab_general->tab_inner_widget_lt->addWidget(gb_pgf_data);
 
   tab_general->tab_inner_widget_lt->addStretch();

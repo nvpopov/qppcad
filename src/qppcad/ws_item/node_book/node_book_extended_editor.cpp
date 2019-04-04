@@ -9,7 +9,7 @@ node_book_extended_editor_t::node_book_extended_editor_t() {
   main_lt->setContentsMargins(0,0,10,10);
   setLayout(main_lt);
 
-  m_gr_view = new QGraphicsView;
+  m_gr_view = new node_book_graphics_view_t;
   main_lt->addWidget(m_gr_view);
 
 }

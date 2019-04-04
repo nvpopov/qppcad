@@ -5,7 +5,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-ws_item_tab_widget_t *ws_item_obj_insp_widget_t::define_tab(QString tab_name,
+ws_item_tab_widget_t *ws_item_obj_insp_widget_t::def_tab(QString tab_name,
                                                             QString icon_name_enabled,
                                                             QString icon_name_disabled) {
 
@@ -159,7 +159,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setIconSize(QSize(32,32));
-  tab_general = define_tab(tr("General settings of workspace item"),
+  tab_general = def_tab(tr("General settings of workspace item"),
                            "://images/settings.svg");
 
   //begin group box Item information
