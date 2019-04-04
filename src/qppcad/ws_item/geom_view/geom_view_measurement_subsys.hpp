@@ -6,7 +6,7 @@
 #include <QPainter>
 #include <vector>
 #include <algorithm>
-#include <qppcad/json_adapter.hpp>
+#include <qppcad/serializable.hpp>
 
 namespace qpp {
 
@@ -80,7 +80,7 @@ namespace qpp {
     };
 
 
-    class geom_view_msr_subsys_t {
+    class geom_view_msr_subsys_t : public serializable_t {
 
     private:
 
@@ -139,8 +139,8 @@ namespace qpp {
       void dist_copy_selected();
       void dist_delete_selected();
 
-      void save_to_json(json &data);
-      void load_from_json(json &data);
+      void save_to_json(json &data) override;
+      void load_from_json(json &data) override;
 
     };
 

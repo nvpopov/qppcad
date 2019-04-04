@@ -198,6 +198,8 @@ namespace qpp {
         void transform_atom(const int at_id, const matrix3<float> &tm);
         void transform_atom(const int at_id, const matrix4<float> &tm);
 
+        void swap_atoms(const size_t at1, const size_t at2, bool swap_names = true);
+
         template <typename TRANSFORM_CLASS>
         void transform_selected(const TRANSFORM_CLASS &tm) {
           for (auto &elem : m_atom_idx_sel)

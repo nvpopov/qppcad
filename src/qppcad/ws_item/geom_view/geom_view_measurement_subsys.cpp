@@ -189,9 +189,10 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
 
             QColor pen_color =
                 ((i + 1 == m_cur_dist_rec_ui) && p_owner->m_selected) ?
-                  QColor::fromRgbF(1, 0, 0) : QColor::fromRgbF(record.m_bond_color[0],
-                record.m_bond_color[1],
-                record.m_bond_color[2]);
+                  QColor::fromRgbF(1, 0, 0) :
+                  QColor::fromRgbF(record.m_bond_color[0],
+                                   record.m_bond_color[1],
+                                   record.m_bond_color[2]);
             QPen linepen_inline(QPen(pen_color, record.m_line_size, pen_style, Qt::RoundCap));
             painter.setPen(linepen_inline);
             painter.drawLine(linef);
@@ -213,9 +214,8 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
 
             //13 = 70
             //26 = 140 ?
-            const float rect_w = (record.m_font_size / 13.0f) *
-                                 (fmetric.boundingRect(_label_text).width() + 20);
-            const float rect_h = record.m_font_size * 2.2;
+            const float rect_w = fmetric.boundingRect(_label_text).width() * 1.2;
+            const float rect_h = fmetric.boundingRect(_label_text).height() * 1.2;
 
             if (record.m_show_label)
               switch (record.m_label_render_style) {
@@ -458,6 +458,8 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
       msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_FSIZE] = rec.m_font_size;
       msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_LSTYLE] = rec.m_line_render_style;
       msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_FSTYLE] = rec.m_label_render_style;
+      msr_dist_inst[JSON_ATOMS_LIST_MSR_SHOW_CL] = rec.m_show_custom_label;
+      msr_dist_inst[JSON_ATOMS_LIST_MSR_CL_TEXT] = rec.m_custom_label_text;
 
       if (p_owner->m_geom->DIM != 0) {
           json_helper::save_index(JSON_ATOMS_LIST_MSR_DIST_IDX1, rec.m_idx1, msr_dist_inst);
@@ -537,8 +539,12 @@ void geom_view_msr_subsys_t::load_from_json(json &data) {
                               msr_record);
         json_helper::load_var(JSON_ATOMS_LIST_MSR_DIST_FSTYLE, last_msr.m_label_render_style,
                               msr_record);
-
+        json_helper::load_var(JSON_ATOMS_LIST_MSR_SHOW_CL, last_msr.m_show_custom_label,
+                              msr_record);
+        json_helper::load_var(JSON_ATOMS_LIST_MSR_CL_TEXT, last_msr.m_custom_label_text,
+                              msr_record);
       }
+
 
   auto msr_angle = msr_object.value().find(JSON_ATOMS_LIST_MSR_ANGLE);
   if (msr_angle != msr_object.value().end())

@@ -630,6 +630,21 @@ void geom_view_t::transform_atom(const int at_id,
 
 }
 
+void geom_view_t::swap_atoms(const size_t at1, const size_t at2, bool swap_names) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  std::string atom1_name = swap_names ? m_geom->atom_name(at1) : m_geom->atom_name(at2);
+  std::string atom2_name = swap_names ? m_geom->atom_name(at2) : m_geom->atom_name(at1);
+  vector3<float> atom1_pos = m_geom->pos(at1);
+  vector3<float> atom2_pos = m_geom->pos(at2);
+  m_geom->change(at1, atom1_name, atom2_pos);
+  m_geom->change(at2, atom2_name, atom1_pos);
+
+  astate->make_viewport_dirty();
+
+}
+
 void geom_view_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
 
   if (!m_geom) return;

@@ -32,7 +32,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
 
   type_summary_clear_tclr_override = new QPushButton;
   type_summary_clear_tclr_override->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
-                                    astate->size_guide.ext_editor_btn_h()));
+                                                       astate->size_guide.ext_editor_btn_h()));
   type_summary_clear_tclr_override->setIcon(QIcon("://images/outline-refresh-24px.svg"));
   type_summary_clear_tclr_override->setFlat(true);
   type_summary_clear_tclr_override->setToolTip("Clear the color override");
@@ -223,7 +223,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
 
   disp_bt_rebond_btn = new QPushButton;
   disp_bt_rebond_btn->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
-                                    astate->size_guide.ext_editor_btn_h()));
+                                         astate->size_guide.ext_editor_btn_h()));
   disp_bt_rebond_btn->setIcon(QIcon("://images/outline-refresh-24px.svg"));
   disp_bt_rebond_btn->setFlat(true);
   disp_bt_rebond_btn->setToolTip("Rebond the structure");
@@ -411,7 +411,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_line_size->set_min_max_step(1, 20, 1);
 
   tms_font_screen_size = new qbinded_int_spinbox;
-  tms_font_screen_size->set_min_max_step(5, 40, 1);
+  tms_font_screen_size->set_min_max_step(5, 80, 1);
 
   tms_pair_line_style = new qbinded_combobox;
   tms_pair_line_style->addItem("Solid");
@@ -928,7 +928,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
           auto it = b_al->m_type_color_override.find(i);
           if (it != b_al->m_type_color_override.end())
-              color_bck.setRgbF(it->second[0], it->second[1], it->second[2]);
+            color_bck.setRgbF(it->second[0], it->second[1], it->second[2]);
           else color_bck.setRgbF(bc[0], bc[1], bc[2]);
 
           n_clr->setBackgroundColor(color_bck);
@@ -1307,7 +1307,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
 
                       tm_gb_override_atom->show();
                       tm_override_atom_color->bind_value(b_al->m_geom.get(),
-                                                         {xgeom_ccr, xgeom_ccg, xgeom_ccb},
+                      {xgeom_ccr, xgeom_ccg, xgeom_ccb},
                                                          it->m_atm);
                       tm_override_atom_radii->bind_value(b_al->m_geom.get(),
                                                          xgeom_atom_r,
@@ -1809,7 +1809,7 @@ void geom_view_obj_insp_widget_t::modify_add_atom_button_clicked() {
 
   if (b_al) {
       vector3<float> new_atom_pos{
-            float(tm_add_atom_vec3->sb_x->value()),
+        float(tm_add_atom_vec3->sb_x->value()),
             float(tm_add_atom_vec3->sb_y->value()),
             float(tm_add_atom_vec3->sb_z->value())
       };
@@ -1874,15 +1874,8 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_swap_button_clicked() {
       auto it1 = b_al->m_atom_idx_sel.begin();
       auto it2 = it1++;
       if (it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
-          it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
-          std::string atom1_name = b_al->m_geom->atom_name(it1->m_atm);
-          std::string atom2_name = b_al->m_geom->atom_name(it2->m_atm);
-          vector3<float> atom1_pos = b_al->m_geom->pos(it1->m_atm);
-          vector3<float> atom2_pos = b_al->m_geom->pos(it2->m_atm);
-          b_al->m_geom->change(it1->m_atm, atom1_name, atom2_pos);
-          b_al->m_geom->change(it2->m_atm, atom2_name, atom1_pos);
-          astate->make_viewport_dirty();
-        }
+          it2->m_idx == index::D(b_al->m_geom->DIM).all(0))
+        b_al->swap_atoms(it1->m_atm, it2->m_atm);
     }
 
 }
@@ -1960,9 +1953,7 @@ void geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked() {
           tr_vec = b_al->m_geom->cell.frac2cart(tr_vec_c);
         }
 
-      for (auto &rec : b_al->m_atom_idx_sel) {
-          b_al->update_atom(rec.m_atm, b_al->m_geom->pos(rec.m_atm) + tr_vec);
-        }
+      b_al->translate_selected(tr_vec);
 
     }
 
@@ -1972,13 +1963,8 @@ void geom_view_obj_insp_widget_t::modify_translate_selected_atoms_clicked() {
 
 void geom_view_obj_insp_widget_t::modify_translate_coord_type_changed(int coord_type) {
 
-  if (coord_type == 0) {
-      //tm_translate_vec3->set_default_suffix();
-      tm_translate_vec3->set_min_max_step(-100, 100, 0.01);
-    } else {
-     // tm_translate_vec3->set_empty_suffix();
-      tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
-    }
+  if (coord_type == 0) tm_translate_vec3->set_min_max_step(-100, 100, 0.01);
+  else tm_translate_vec3->set_min_max_step(-1.0, 1.0, 0.01);
 
 }
 
@@ -1986,7 +1972,6 @@ void geom_view_obj_insp_widget_t::modify_bc_rot_angle_type_change(int new_angle_
 
   if (new_angle_type == 0) tm_bc_rot_angle->setSingleStep(0.5);
   else tm_bc_rot_angle->setSingleStep(0.01);
-
   tm_bc_rot_angle->setValue(0.0);
 
 }
@@ -2182,8 +2167,8 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
           if (ap_idx && *ap_idx > 0 && *ap_idx <100) {
               _stored_color = QColor::fromRgbF(
                                 ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[0],
-                                ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[1],
-                                ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[2]);
+                  ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[1],
+                  ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[2]);
             }
 
           if (it != b_al->m_type_color_override.end())

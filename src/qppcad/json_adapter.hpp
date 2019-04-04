@@ -89,6 +89,8 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_MSR_DIST_FSIZE   = "font_size";
     const auto JSON_ATOMS_LIST_MSR_DIST_LSTYLE  = "line_style";
     const auto JSON_ATOMS_LIST_MSR_DIST_FSTYLE  = "font_style";
+    const auto JSON_ATOMS_LIST_MSR_SHOW_CL      = "show_custom_label";
+    const auto JSON_ATOMS_LIST_MSR_CL_TEXT      = "custom_label_text";
 
     const auto JSON_ATOMS_LIST_MSR_ANGLE         = "angles";
     const auto JSON_ATOMS_LIST_MSR_ANGLE_AT1     = "at1";
