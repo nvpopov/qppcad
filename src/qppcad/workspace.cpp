@@ -309,7 +309,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
               std::string obj_type = object[JSON_WS_ITEM_TYPE];
               size_t obj_hash = astate->hash_reg->calc_hash(obj_type);
               std::shared_ptr<ws_item_t> obj =
-                  astate->ws_manager->m_bhv_mgr->fabric_by_type(obj_hash);
+                  astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
               if (obj) {
                   obj->load_from_json(object);
                   add_item_to_ws(obj);
@@ -399,7 +399,7 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
       return nullptr;
     }
 
-  auto new_item = m_owner->m_bhv_mgr->fabric_by_type(type_hash);
+  auto new_item = m_owner->m_bhv_mgr->fbr_ws_item_by_type(type_hash);
 
   if (!new_item) {
       astate->log("ERROR: workspace_t::py_construct_item -> fabric error");
@@ -473,6 +473,8 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
 
 void workspace_manager_t::init_default () {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   if (!test_in_dev_env.good()) return;
 
@@ -484,6 +486,10 @@ void workspace_manager_t::init_default () {
 
   for (auto &file : files)
     load_from_file_autodeduce(QDir::toNativeSeparators(file).toStdString());
+
+  auto new_node_book = m_bhv_mgr->fbr_ws_item_by_name("node_book_t");
+  new_node_book->m_name = "test_nb1";
+  m_ws.back()->add_item_to_ws(new_node_book);
 
 }
 
@@ -508,16 +514,15 @@ void workspace_manager_t::render_cur_ws () {
 
   astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
   astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }
 
 void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
-  if (has_wss()) {
+  if (!has_wss()) return;
 
-      if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
-          m_ws[*m_cur_ws_id]->render_overlay(painter);
-        }
-
+  if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
+      m_ws[*m_cur_ws_id]->render_overlay(painter);
     }
 
 }

@@ -439,7 +439,15 @@ namespace qpp {
          * @param type_id
          * @return
          */
-        std::shared_ptr<ws_item_t> fabric_by_type(size_t type_id);
+        std::shared_ptr<ws_item_t> fbr_ws_item_by_type(size_t type_id);
+
+        /**
+         * @brief fabric_by_name
+         * @param type_id
+         * @return
+         */
+        std::shared_ptr<ws_item_t> fbr_ws_item_by_name(const std::string _type_name);
+
 
         /**
          * @brief ws_item_fbr_by_type_p

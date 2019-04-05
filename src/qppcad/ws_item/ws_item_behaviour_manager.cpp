@@ -23,7 +23,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 
   astate->log(fmt::format("Loading ws_item from file {}", file_name));
 
-  auto new_ws_item = fabric_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
+  auto new_ws_item = fbr_ws_item_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
   ws->add_item_to_ws(new_ws_item);
 
   if (new_ws_item) {
@@ -382,7 +382,7 @@ std::shared_ptr<ws_item_extended_editor_t> ws_item_behaviour_manager_t::get_ext_
 
 }
 
-std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t type_id) {
+std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_type(size_t type_id) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -393,6 +393,14 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fabric_by_type(size_t ty
 
   astate->log(fmt::format("Cannot fabric new ws_item with type_id = {}!", type_id));
   return nullptr;
+
+}
+
+std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_name(
+    const std::string _type_name) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  return fbr_ws_item_by_type(astate->hash_reg->calc_hash<std::string>(_type_name));
 
 }
 

@@ -462,7 +462,7 @@ void simple_query::make_psg_view(float tolerance) {
   if (al && al->m_parent_ws && cur_ws) {
 
       if (cur_ws->m_edit_type == ws_edit_e::edit_item && al->m_geom->DIM == 0) {
-          auto ws_pg = astate->ws_manager->m_bhv_mgr->fabric_by_type(
+          auto ws_pg = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(
                          psg_view_t::get_type_static());
           auto ws_pg_c = ws_pg->cast_as<psg_view_t>();
 
@@ -476,7 +476,7 @@ void simple_query::make_psg_view(float tolerance) {
 
         } else if (cur_ws->m_edit_type == ws_edit_e::edit_content &&
                    !al->m_atom_idx_sel.empty()) {
-          auto ws_pg_partial = astate->ws_manager->m_bhv_mgr->fabric_by_type(
+          auto ws_pg_partial = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(
                                  psg_view_t::get_type_static());
           auto ws_pg_partial_c = ws_pg_partial->cast_as<psg_view_t>();
           if (ws_pg_partial_c) {
@@ -503,7 +503,7 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   auto [cur_ws, cur_it, al] = astate->ws_manager->get_sel_tuple<geom_view_t>();
 
   auto traj_hl =
-      astate->ws_manager->m_bhv_mgr->fabric_by_type(traj_hl_t::get_type_static());
+      astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(traj_hl_t::get_type_static());
 
   if (!traj_hl) return;
 

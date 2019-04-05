@@ -324,7 +324,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
       if (rb_ctor_geom0d->isChecked()) {
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
-          auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(geom_view_t::get_type_static());
+          auto nt = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
           auto nt_gv = nt->cast_as<geom_view_t>();
           if (!nt_gv) return;
           nt_gv->m_name = type_param_name->text().toStdString();
@@ -338,7 +338,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
 
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
-          auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(geom_view_t::get_type_static());
+          auto nt = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
           auto nt_gv = nt->cast_as<geom_view_t>();
           if (!nt_gv) return;
           nt_gv->m_tws_tr->do_action(act_lock | act_clear_all);
@@ -397,7 +397,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
       if (rb_ctor_psg->isChecked()) {
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
-          auto nt = astate->ws_manager->m_bhv_mgr->fabric_by_type(psg_view_t::get_type_static());
+          auto nt = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
           auto nt_psg = nt->cast_as<psg_view_t>();
           if (!nt_psg) return;
           auto ag = shnfl<float>::group(type_param_ag->currentText().toStdString());
@@ -412,7 +412,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fabric_by_type(pgf_producer_t::get_type_static());
+              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(pgf_producer_t::get_type_static());
           auto nt_pgfp = nt->cast_as<pgf_producer_t>();
           if (!nt_pgfp) return;
           nt_pgfp->m_name = type_param_name->text().toStdString();
@@ -423,7 +423,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fabric_by_type(cube_primitive_t::get_type_static());
+              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(cube_primitive_t::get_type_static());
           auto nt_cp = nt->cast_as<cube_primitive_t>();
           if (!nt_cp) return;
           nt_cp->m_name = type_param_name->text().toStdString();
@@ -434,7 +434,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fabric_by_type(arrow_primitive_t::get_type_static());
+              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(arrow_primitive_t::get_type_static());
           auto nt_ap = nt->cast_as<arrow_primitive_t>();
           if (!nt_ap) return;
           nt_ap->m_name = type_param_name->text().toStdString();
@@ -445,7 +445,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           auto cur_ws = astate->ws_manager->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fabric_by_type(node_book_t::get_type_static());
+              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(node_book_t::get_type_static());
           auto nb_ap = nt->cast_as<node_book_t>();
           if (!nb_ap) return;
           nb_ap->m_name = type_param_name->text().toStdString();
