@@ -48,7 +48,7 @@ namespace qpp {
         QLabel *ws_item_name;
         QLabel *ws_item_type;
         QLabel *ws_item_pos_label;
-        qbinded_float3_input *ws_item_pos;
+        qbinded_float3_input_t *ws_item_pos;
 
         qspoiler_widget_t *tg_actions;
         QHBoxLayout *tg_actions_layout;
@@ -57,9 +57,9 @@ namespace qpp {
         QPushButton *tg_actions_clone;
 
         QLabel *ws_item_is_visible_label;
-        qbinded_checkbox *ws_item_is_visible;
+        qbinded_checkbox_t *ws_item_is_visible;
         QLabel *ws_item_bb_visible_label;
-        qbinded_checkbox *ws_item_bb_visible;
+        qbinded_checkbox_t *ws_item_bb_visible;
 
         ws_item_tab_widget_t* def_tab(QString tab_name,
                                       QString icon_name_enabled,

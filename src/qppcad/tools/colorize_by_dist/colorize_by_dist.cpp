@@ -97,7 +97,7 @@ colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
   main_gb_lt = new QFormLayout;
   main_gb->setLayout(main_gb_lt);
 
-  clr_input = new qbinded_color3_input;
+  clr_input = new qbinded_color3_input_t;
   clr_input->bind_value(&clr_low);
 
   atom1_type = new QComboBox;
@@ -106,6 +106,8 @@ colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
   atom_dist_max->setMinimum(0);
   atom_dist_max->setMaximum(30);
   atom_dist_max->setSingleStep(0.1);
+  atom_dist_max->setAlignment(Qt::AlignCenter);
+  atom_dist_max->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   main_gb_lt->addRow(tr("Atom №1 type"), atom1_type);
   main_gb_lt->addRow(tr("Atom №2 type"), atom2_type);
@@ -119,9 +121,10 @@ colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
   button_apply = new QPushButton(tr("Apply"));
   button_cancel = new QPushButton((tr("Cancel")));
 
-
+  buttons_lt->addSpacing(0);
   buttons_lt->addWidget(button_apply);
   buttons_lt->addWidget(button_cancel);
+  buttons_lt->addSpacing(0);
 
   main_lt->addWidget(main_gb);
   main_lt->addLayout(buttons_lt);

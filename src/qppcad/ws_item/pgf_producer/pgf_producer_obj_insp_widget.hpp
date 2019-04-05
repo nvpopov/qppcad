@@ -18,9 +18,9 @@ namespace qpp {
         ws_item_tab_widget_t *tab_cell_range;
         qspoiler_widget_t *gb_pgf_data;
         QFormLayout *gb_pgf_data_lt;
-        qbinded_ws_item_combobox *pgf_data_src;
-        qbinded_ws_item_combobox *pgf_data_dst;
-        qbinded_ws_item_combobox *pgf_data_ag;
+        qbinded_ws_item_combobox_t *pgf_data_src;
+        qbinded_ws_item_combobox_t *pgf_data_dst;
+        qbinded_ws_item_combobox_t *pgf_data_ag;
 
         pgf_producer_obj_insp_widget_t();
 

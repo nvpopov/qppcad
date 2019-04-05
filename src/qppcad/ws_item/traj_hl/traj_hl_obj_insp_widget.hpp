@@ -16,7 +16,7 @@ namespace qpp {
         QFormLayout *gb_traj_settings_lt;
         traj_hl_t *b_th{nullptr};
 
-        qbinded_color3_input *disp_traj_color;
+        qbinded_color3_input_t *disp_traj_color;
 
         traj_hl_obj_insp_widget_t();
 

@@ -150,6 +150,8 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
 
 super_cell_widget_t::super_cell_widget_t () : QDialog () {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   setWindowTitle(tr("Supercell generation"));
   dialog_layout = new QVBoxLayout;
   setLayout(dialog_layout);
@@ -158,23 +160,26 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
   gb_rep_par_layout = new QFormLayout;
   gb_rep_par->setLayout(gb_rep_par_layout);
 
-  sp_rep_a = new QSpinBox;
-  sp_rep_a->setMinimum(1);
-  sp_rep_a->setMaximum(10);
+  auto make_spinbox = [](){
+      auto ret = new QSpinBox;
+      ret->setMinimum(1);
+      ret->setMaximum(10);
+      ret->setAlignment(Qt::AlignCenter);
+      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      return ret;
+    };
 
-  sp_rep_b = new QSpinBox;
-  sp_rep_b->setMinimum(1);
-  sp_rep_b->setMaximum(10);
-
-  sp_rep_c = new QSpinBox;
-  sp_rep_c->setMinimum(1);
-  sp_rep_c->setMaximum(10);
+  sp_rep_a = make_spinbox();
+  sp_rep_b = make_spinbox();
+  sp_rep_c = make_spinbox();
 
   gb_rep_par_layout->addRow(tr("Replicate along a-axis"), sp_rep_a);
   gb_rep_par_layout->addRow(tr("Replicate along b-axis"), sp_rep_b);
   gb_rep_par_layout->addRow(tr("Replicate along c-axis"), sp_rep_c);
 
   dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  for (auto btn : dialog_bb->buttons())
+    btn->setFixedWidth(astate->size_guide.common_button_fixed_w());
 
   connect(dialog_bb,
           &QDialogButtonBox::accepted,

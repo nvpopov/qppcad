@@ -126,3 +126,7 @@ int size_guide_t::script_editor_button_w() {
 int size_guide_t::script_edtior_button_icon_w() {
   return 26;
 }
+
+int size_guide_t::common_button_fixed_w() {
+  return 80;
+}

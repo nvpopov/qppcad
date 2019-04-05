@@ -82,6 +82,9 @@ namespace qpp {
 
         int script_editor_button_w();
         int script_edtior_button_icon_w();
+
+        int common_button_fixed_w();
+
     };
 
   }

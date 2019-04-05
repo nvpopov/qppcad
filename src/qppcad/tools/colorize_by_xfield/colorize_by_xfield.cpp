@@ -64,9 +64,9 @@ colorize_by_xfield_widget_t::colorize_by_xfield_widget_t() {
   main_gb_lt = new QFormLayout;
   main_gb->setLayout(main_gb_lt);
 
-  clr_low_input = new qbinded_color3_input;
+  clr_low_input = new qbinded_color3_input_t;
   clr_low_input->bind_value(&clr_low);
-  clr_high_input = new qbinded_color3_input;
+  clr_high_input = new qbinded_color3_input_t;
   clr_high_input->bind_value(&clr_high);
 
   cmb_xfield_name = new QComboBox;

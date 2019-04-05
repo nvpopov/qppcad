@@ -43,7 +43,7 @@ namespace qpp {
         QComboBox *atom1_type;
         QComboBox *atom2_type;
         QDoubleSpinBox *atom_dist_max;
-        qbinded_color3_input *clr_input;
+        qbinded_color3_input_t *clr_input;
 
         vector3<float> clr_low{0};
 

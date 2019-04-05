@@ -21,14 +21,14 @@ namespace qpp {
         QFormLayout *tg_info_summary_lt;
         QLabel *tg_info_sym_gr;
         QLabel *tg_info_total_sym_op;
-        qbinded_checkbox *tg_plane_alpha_enabled;
+        qbinded_checkbox_t *tg_plane_alpha_enabled;
 
-        qbinded_checkbox *cb_show_axes;
-        qbinded_checkbox *cb_show_planes;
+        qbinded_checkbox_t *cb_show_axes;
+        qbinded_checkbox_t *cb_show_planes;
 
-        qbinded_float_spinbox *tg_plane_scale;
-        qbinded_float_spinbox *tg_axis_scale;
-        qbinded_float_spinbox *tg_axis_len_mod;
+        qbinded_float_spinbox_t *tg_plane_scale;
+        qbinded_float_spinbox_t *tg_axis_scale;
+        qbinded_float_spinbox_t *tg_axis_len_mod;
 
         QGroupBox *tg_general_appearance;
         QFormLayout *tg_general_appearance_lt;

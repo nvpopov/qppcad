@@ -24,6 +24,7 @@ namespace qpp {
     class generic_binded_input_t {
 
       public:
+
         bool m_ignore_state_change{false};
         bool m_updated_internally_event{false};
         T *m_binded_value{nullptr};
@@ -53,23 +54,24 @@ namespace qpp {
         }
 
         virtual void load_value_ex() = 0;
+
     };
 
-    class qbinded_checkbox : public QCheckBox,
-            public generic_binded_input_t<bool> {
+    class qbinded_checkbox_t : public QCheckBox, public generic_binded_input_t<bool> {
 
         Q_OBJECT
 
       public:
+
         void load_value_ex() override;
-        qbinded_checkbox(QWidget *parent = nullptr);
+        qbinded_checkbox_t(QWidget *parent = nullptr);
 
       public slots:
+
         void check_state_changed(int state);
     };
 
-    class qbinded_line_edit_t : public QLineEdit,
-        public generic_binded_input_t<std::string> {
+    class qbinded_line_edit_t : public QLineEdit, public generic_binded_input_t<std::string> {
 
         Q_OBJECT
 
@@ -84,81 +86,88 @@ namespace qpp {
 
     };
 
-    class qbinded_float_spinbox : public QDoubleSpinBox,
-            public generic_binded_input_t<float> {
+    class qbinded_float_spinbox_t : public QDoubleSpinBox, public generic_binded_input_t<float> {
 
         Q_OBJECT
 
       public:
+
         void load_value_ex() override;
         void set_min_max_step(double new_min,
                               double new_max,
                               double new_step,
                               int decimals = 2);
-        qbinded_float_spinbox(QWidget *parent = nullptr);
+        qbinded_float_spinbox_t(QWidget *parent = nullptr);
         void set_suffix(QString &new_suffix);
         void set_default_suffix();
+
       public slots:
+
         void value_changed(double d);
 
     };
 
-    class qbinded_int_spinbox : public QSpinBox,
-            public generic_binded_input_t<int> {
+    class qbinded_int_spinbox_t : public QSpinBox, public generic_binded_input_t<int> {
 
         Q_OBJECT
 
       public:
+
         void load_value_ex() override;
         void set_min_max_step(int new_min,
                               int new_max,
                               int new_step);
-        qbinded_int_spinbox(QWidget *parent = nullptr);
+        qbinded_int_spinbox_t(QWidget *parent = nullptr);
         void set_suffix(QString &new_suffix);
         void set_default_suffix();
+
       public slots:
+
         void value_changed(int value);
 
     };
 
-    class qbinded_combobox : public QComboBox,
-            public generic_binded_input_t<int> {
+    class qbinded_combobox_t : public QComboBox, public generic_binded_input_t<int> {
 
         Q_OBJECT
 
       public:
+
         void load_value_ex() override;
-        qbinded_combobox(QWidget *parent = nullptr);
+        qbinded_combobox_t(QWidget *parent = nullptr);
 
       public slots:
+
         void value_changed(int i);
+
     };
 
-    class qbinded_int3_input : public QWidget,
-            public generic_binded_input_t<vector3<int> > {
+    class qbinded_int3_input_t : public QWidget, public generic_binded_input_t<vector3<int> > {
 
         Q_OBJECT
 
       public:
+
         QHBoxLayout *widget_layout;
         QSpinBox *sb_x;
         QSpinBox *sb_y;
         QSpinBox *sb_z;
         void load_value_ex() override;
         void set_min_max_step(int min, int max, int step);
-        qbinded_int3_input(QWidget *parent = nullptr);
+        qbinded_int3_input_t(QWidget *parent = nullptr);
 
       private slots:
+
         void spinbox_value_changed(int newval);
 
     };
 
-    class qbinded_float3_input : public QWidget,
-            public generic_binded_input_t<vector3<float> > {
+    class qbinded_float3_input_t : public QWidget, public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 
       public:
+
         QHBoxLayout *widget_layout;
 
         QDoubleSpinBox *sb_x;
@@ -170,29 +179,29 @@ namespace qpp {
         void set_suffix(QString &new_suffix);
         void set_empty_suffix();
         void set_default_suffix();
-        qbinded_float3_input(QWidget *parent = nullptr);
+        qbinded_float3_input_t(QWidget *parent = nullptr);
 
       private slots:
+
         void spinbox_value_changed(double newval);
 
     };
 
-    class qbinded_color3_input : public QFrame, public generic_binded_input_t<vector3<float> > {
+    class qbinded_color3_input_t : public QFrame, public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 
       public:
+
         QColor m_stored_color;
-        qbinded_color3_input(QWidget *parent = nullptr);
+        qbinded_color3_input_t(QWidget *parent = nullptr);
         void load_value_ex() override;
         void mousePressEvent(QMouseEvent *event) override;
-
-      private slots:
 
     };
 
 
-    class qbinded_xgeom_color3_input : public QFrame {
+    class qbinded_xgeom_color3_input_t : public QFrame {
 
         Q_OBJECT
 
@@ -203,7 +212,7 @@ namespace qpp {
         size_t m_binded_atom_id;
         QColor m_stored_color;
         bool m_apply_to_selected{false};
-        qbinded_xgeom_color3_input(QWidget *parent = nullptr);
+        qbinded_xgeom_color3_input_t(QWidget *parent = nullptr);
         void bind_value(xgeometry<float, periodic_cell<float>> *_binded_xgeom,
                         std::array<int, 3> _binding_indicies,
                         size_t _binded_atom_id);
@@ -213,7 +222,7 @@ namespace qpp {
 
     };
 
-    class qbinded_xgeom_float_spinbox : public QDoubleSpinBox {
+    class qbinded_xgeom_float_spinbox_t : public QDoubleSpinBox {
 
         Q_OBJECT
 
@@ -232,7 +241,7 @@ namespace qpp {
                               double new_max,
                               double new_step,
                               int decimals = 2);
-        qbinded_xgeom_float_spinbox(QWidget *parent = nullptr);
+        qbinded_xgeom_float_spinbox_t(QWidget *parent = nullptr);
         void set_suffix(QString &new_suffix);
         void set_default_suffix();
 
@@ -242,7 +251,7 @@ namespace qpp {
 
     };
 
-    class qbinded_ws_item_combobox : public QComboBox {
+    class qbinded_ws_item_combobox_t : public QComboBox {
 
         Q_OBJECT
 
@@ -252,7 +261,7 @@ namespace qpp {
         ws_item_t *m_binded_ws_item{nullptr};
         workspace_t *m_binded_ws{nullptr};
         size_t m_type_id{0};
-        qbinded_ws_item_combobox(QWidget *parent = nullptr);
+        qbinded_ws_item_combobox_t(QWidget *parent = nullptr);
 
         void bind_value(std::shared_ptr<ws_item_t> *_binded_value,
                         ws_item_t *item_to_bind = nullptr);
@@ -261,7 +270,9 @@ namespace qpp {
         void rebuild_variants();
 
       public slots:
+
         void value_changed(int i);
+
     };
 
   }

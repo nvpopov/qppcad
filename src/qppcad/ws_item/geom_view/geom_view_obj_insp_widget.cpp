@@ -100,50 +100,50 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt = new QFormLayout;
   gb_disp_s->add_content_layout(gb_disp_s_lt);
 
-  disp_s_draw_atoms = new qbinded_checkbox;
-  disp_s_draw_bonds = new qbinded_checkbox;
-  disp_s_draw_img_atoms = new qbinded_checkbox;
-  disp_s_draw_img_bonds = new qbinded_checkbox;
+  disp_s_draw_atoms = new qbinded_checkbox_t;
+  disp_s_draw_bonds = new qbinded_checkbox_t;
+  disp_s_draw_img_atoms = new qbinded_checkbox_t;
+  disp_s_draw_img_bonds = new qbinded_checkbox_t;
 
-  disp_s_atom_scale = new qbinded_float_spinbox;
+  disp_s_atom_scale = new qbinded_float_spinbox_t;
   disp_s_atom_scale->set_min_max_step(0.01, 3.0, 0.01);
-  disp_s_bond_scale = new qbinded_float_spinbox;
+  disp_s_bond_scale = new qbinded_float_spinbox_t;
   disp_s_bond_scale->set_min_max_step(0.01, 3.0, 0.01);
 
-  disp_s_render_style = new qbinded_combobox;
+  disp_s_render_style = new qbinded_combobox_t;
   disp_s_render_style->addItem("Balls and sticks");
   disp_s_render_style->addItem("Dynamic lines");
   disp_s_render_style->addItem("X-atom lines");
   disp_s_render_style->addItem("Billboards");
   disp_s_render_style->addItem("Buffered billboards");
 
-  disp_s_color_mode = new qbinded_combobox;
+  disp_s_color_mode = new qbinded_combobox_t;
   disp_s_color_mode->addItem(tr("Color from ptable"));
   disp_s_color_mode->addItem(tr("Color from xgeom"));
 
-  disp_draw_subcells = new qbinded_checkbox;
+  disp_draw_subcells = new qbinded_checkbox_t;
   disp_draw_subcells_lbl = new QLabel(tr("Draw subcells"));
-  disp_subcells_idx = new qbinded_int3_input;
+  disp_subcells_idx = new qbinded_int3_input_t;
   disp_subcells_idx_lbl = new QLabel(tr("Subcells range"));
   disp_subcells_idx->set_min_max_step(1, 10, 1);
-  disp_subcells_clr = new qbinded_color3_input;
+  disp_subcells_clr = new qbinded_color3_input_t;
   disp_subcells_color_lbl = new QLabel(tr("Subcell color"));
   init_form_lt_lbl(disp_draw_subcells_lbl);
   init_form_lt_lbl(disp_subcells_idx_lbl);
   init_form_lt_lbl(disp_subcells_color_lbl);
 
   connect(disp_draw_subcells,
-          &qbinded_checkbox::stateChanged,
+          &qbinded_checkbox_t::stateChanged,
           this,
           &geom_view_obj_insp_widget_t::draw_subcells_changed);
 
-  disp_s_sel_vis = new qbinded_checkbox;
-  disp_s_sel_vis_affect_bonds = new qbinded_checkbox;
+  disp_s_sel_vis = new qbinded_checkbox_t;
+  disp_s_sel_vis_affect_bonds = new qbinded_checkbox_t;
 
-  disp_draw_cell = new qbinded_checkbox;
+  disp_draw_cell = new qbinded_checkbox_t;
   disp_draw_cell_label = new QLabel(tr("Draw cell"));
   init_form_lt_lbl(disp_draw_cell_label);
-  disp_cell_color = new qbinded_color3_input;
+  disp_cell_color = new qbinded_color3_input_t;
   disp_cell_color_label = new QLabel(tr("Cell color"));
   init_form_lt_lbl(disp_cell_color_label);
 
@@ -163,19 +163,19 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_labels_lt = new QFormLayout;
   gb_disp_labels->add_content_layout(gb_disp_labels_lt);
 
-  disp_labels_style = new qbinded_combobox;
+  disp_labels_style = new qbinded_combobox_t;
   disp_labels_style->addItem("None");
   disp_labels_style->addItem("Id");
   disp_labels_style->addItem("Type");
   disp_labels_style->addItem("Type and Id");
   disp_labels_style->addItem("Charge");
   disp_labels_style->addItem("Custom");
-  disp_labels_size = new qbinded_int_spinbox;
+  disp_labels_size = new qbinded_int_spinbox_t;
   disp_labels_size->set_min_max_step(5, 35, 1);
-  disp_inplace_labels = new qbinded_checkbox;
-  disp_sl_labels = new qbinded_checkbox;
-  disp_labels_screen_scale = new qbinded_checkbox;
-  disp_labels_draw_outline = new qbinded_checkbox;
+  disp_inplace_labels = new qbinded_checkbox_t;
+  disp_sl_labels = new qbinded_checkbox_t;
+  disp_labels_screen_scale = new qbinded_checkbox_t;
+  disp_labels_draw_outline = new qbinded_checkbox_t;
 
   gb_disp_labels_lt->addRow(tr("Labels style"), disp_labels_style);
   gb_disp_labels_lt->addRow(tr("Labels size"), disp_labels_size);
@@ -190,8 +190,8 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_shading_lt = new QFormLayout;
   gb_disp_shading->add_content_layout(gb_disp_shading_lt);
 
-  disp_shading_spec = new qbinded_checkbox;
-  disp_shading_spec_value = new qbinded_float_spinbox;
+  disp_shading_spec = new qbinded_checkbox_t;
+  disp_shading_spec_value = new qbinded_float_spinbox_t;
   disp_shading_spec_value->set_min_max_step(0.25, 50, 0.25);
   gb_disp_shading_lt->addRow(tr("Enable specular"), disp_shading_spec);
   gb_disp_shading_lt->addRow(tr("Specular power"), disp_shading_spec_value);
@@ -271,9 +271,9 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
 
   gb_anim_summary->setMaximumHeight(250);
   gb_anim_total_anims = new QLabel;
-  gb_rebuild_bonds = new qbinded_checkbox;
-  gb_play_cyclic = new qbinded_checkbox;
-  gb_anim_speed = new qbinded_float_spinbox;
+  gb_rebuild_bonds = new qbinded_checkbox_t;
+  gb_play_cyclic = new qbinded_checkbox_t;
+  gb_anim_speed = new qbinded_float_spinbox_t;
   gb_anim_speed->set_min_max_step(0.01,1.0,0.01);
   gb_anim_total_frames_in_anim = new QLabel;
   gb_anim_cur_frame = new QLabel;
@@ -375,10 +375,10 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_common_settings_gb_lt = new QFormLayout;
   tms_common_settings_gb->add_content_layout(tms_common_settings_gb_lt);
 
-  tms_render_dist = new qbinded_checkbox;
-  tms_render_angle = new qbinded_checkbox;
-  tms_render_dist_legend = new qbinded_checkbox;
-  tms_render_angle_legend = new qbinded_checkbox;
+  tms_render_dist = new qbinded_checkbox_t;
+  tms_render_angle = new qbinded_checkbox_t;
+  tms_render_dist_legend = new qbinded_checkbox_t;
+  tms_render_angle_legend = new qbinded_checkbox_t;
 
   tms_common_settings_gb_lt->addRow(tr("Draw dists"), tms_render_dist);
   tms_common_settings_gb_lt->addRow(tr("Draw angles"), tms_render_angle);
@@ -403,24 +403,24 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_at2_info = new QLabel();
   tms_pair_dist = new QLabel();
 
-  tms_pair_dist_color = new qbinded_color3_input;
-  tms_pair_enabled = new qbinded_checkbox;
-  tms_pair_label_enabled = new qbinded_checkbox;
+  tms_pair_dist_color = new qbinded_color3_input_t;
+  tms_pair_enabled = new qbinded_checkbox_t;
+  tms_pair_label_enabled = new qbinded_checkbox_t;
 
-  tms_pair_line_size = new qbinded_int_spinbox;
+  tms_pair_line_size = new qbinded_int_spinbox_t;
   tms_pair_line_size->set_min_max_step(1, 20, 1);
 
-  tms_font_screen_size = new qbinded_int_spinbox;
+  tms_font_screen_size = new qbinded_int_spinbox_t;
   tms_font_screen_size->set_min_max_step(5, 80, 1);
 
-  tms_pair_line_style = new qbinded_combobox;
+  tms_pair_line_style = new qbinded_combobox_t;
   tms_pair_line_style->addItem("Solid");
   tms_pair_line_style->addItem("Dotted");
   tms_pair_line_style->addItem("Dashed");
   tms_pair_line_style->addItem("Dash-Dot");
   tms_pair_line_style->addItem("Dash-Dot-Dot");
 
-  tms_pair_label_style = new qbinded_combobox;
+  tms_pair_label_style = new qbinded_combobox_t;
   tms_pair_label_style->addItem("Standart");
   tms_pair_label_style->addItem("Outline");
   tms_pair_label_style->addItem("Border");
@@ -453,7 +453,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_action_lt->addWidget(tms_pair_action_del);
 
   tms_pair_custom_text_edit = new qbinded_line_edit_t;
-  tms_pair_custom_text_enabled = new qbinded_checkbox;
+  tms_pair_custom_text_enabled = new qbinded_checkbox_t;
 
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1"), tms_pair_at1_info);
@@ -482,8 +482,8 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
           this,
           &geom_view_obj_insp_widget_t::msr_angle_cur_idx_changed);
 
-  tms_angle_enabled = new qbinded_checkbox;
-  tms_angle_order = new qbinded_int_spinbox;
+  tms_angle_enabled = new qbinded_checkbox_t;
+  tms_angle_order = new qbinded_int_spinbox_t;
   tms_angle_order->set_min_max_step(0, 10, 1);
 
   tms_angle_at1_info = new QLabel;
@@ -515,7 +515,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_add_atom_combo = new QComboBox;
   tm_add_atom_combo->setEditable(true);
   tm_add_atom_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
-  tm_add_atom_vec3 = new qbinded_float3_input;
+  tm_add_atom_vec3 = new qbinded_float3_input_t;
   tm_add_atom_vec3->set_min_max_step(-1000, 1000, 0.01);
 
   tm_add_atom_button = new QPushButton(tr("Add"));
@@ -537,7 +537,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_single_atom_combo = new QComboBox;
   tm_single_atom_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_single_atom_combo->setEditable(true);
-  tm_single_atom_vec3 = new qbinded_float3_input;
+  tm_single_atom_vec3 = new qbinded_float3_input_t;
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
   tm_single_atom_info = new QLabel;
 
@@ -570,8 +570,8 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_override_atom_lt = new QFormLayout;
   tm_gb_override_atom->add_content_layout(tm_gb_override_atom_lt);
   tm_override_atom_info = new QLabel;
-  tm_override_atom_color = new qbinded_xgeom_color3_input;
-  tm_override_atom_radii = new qbinded_xgeom_float_spinbox;
+  tm_override_atom_color = new qbinded_xgeom_color3_input_t(this);
+  tm_override_atom_radii = new qbinded_xgeom_float_spinbox_t(this);
   tm_override_atom_radii->set_min_max_step(0.01, 5, 0.1);
   tm_gb_override_atom_lt->addRow(tr("Atom info"), tm_override_atom_info);
   tm_gb_override_atom_lt->addRow(tr("Atom color"), tm_override_atom_color);
@@ -734,7 +734,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_translate_lt = new QFormLayout;
   tm_gb_translate_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_translate->add_content_layout(tm_gb_translate_lt);
-  tm_translate_vec3 = new qbinded_float3_input;
+  tm_translate_vec3 = new qbinded_float3_input_t;
   tm_translate_vec3->set_min_max_step(-10000, 10000, 0.01);
 
   tm_translate_apply_button = new QPushButton(tr("Apply"));

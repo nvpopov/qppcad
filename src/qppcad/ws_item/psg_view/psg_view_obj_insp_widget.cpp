@@ -17,19 +17,19 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   tab_general->tab_inner_widget_lt->addWidget(tg_info_summary_widget);
   tg_info_sym_gr = new QLabel;
   tg_info_total_sym_op = new QLabel;
-  tg_plane_alpha_enabled = new qbinded_checkbox;
-  cb_show_axes = new qbinded_checkbox;
-  cb_show_planes = new qbinded_checkbox;
+  tg_plane_alpha_enabled = new qbinded_checkbox_t;
+  cb_show_axes = new qbinded_checkbox_t;
+  cb_show_planes = new qbinded_checkbox_t;
 
-  tg_plane_scale = new qbinded_float_spinbox;
+  tg_plane_scale = new qbinded_float_spinbox_t;
   tg_plane_scale->set_min_max_step(1, 20, 0.1, 2);
   tg_plane_scale->m_updated_internally_event = true;
 
-  tg_axis_scale = new qbinded_float_spinbox;
+  tg_axis_scale = new qbinded_float_spinbox_t;
   tg_axis_scale->set_min_max_step(1, 20, 0.1, 2);
   tg_axis_scale->m_updated_internally_event = true;
 
-  tg_axis_len_mod = new qbinded_float_spinbox;
+  tg_axis_len_mod = new qbinded_float_spinbox_t;
   tg_axis_len_mod->set_min_max_step(0.5, 10, 0.1, 2);
   tg_axis_len_mod->m_updated_internally_event = true;
 

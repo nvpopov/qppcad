@@ -44,43 +44,43 @@ namespace qpp {
         ws_item_tab_widget_t *tab_disp;
         qspoiler_widget_t *gb_disp_s;
         QFormLayout *gb_disp_s_lt;
-        qbinded_checkbox *disp_s_draw_atoms;
-        qbinded_checkbox *disp_s_draw_bonds;
-        qbinded_checkbox *disp_s_draw_img_atoms;
-        qbinded_checkbox *disp_s_draw_img_bonds;
-        qbinded_float_spinbox *disp_s_atom_scale;
-        qbinded_float_spinbox *disp_s_bond_scale;
-        qbinded_combobox *disp_s_render_style;
-        qbinded_combobox *disp_s_color_mode;
+        qbinded_checkbox_t *disp_s_draw_atoms;
+        qbinded_checkbox_t *disp_s_draw_bonds;
+        qbinded_checkbox_t *disp_s_draw_img_atoms;
+        qbinded_checkbox_t *disp_s_draw_img_bonds;
+        qbinded_float_spinbox_t *disp_s_atom_scale;
+        qbinded_float_spinbox_t *disp_s_bond_scale;
+        qbinded_combobox_t *disp_s_render_style;
+        qbinded_combobox_t *disp_s_color_mode;
 
         qspoiler_widget_t *gb_disp_labels;
         QFormLayout *gb_disp_labels_lt;
-        qbinded_combobox *disp_labels_style;
-        qbinded_checkbox *disp_inplace_labels;
-        qbinded_int_spinbox *disp_labels_size;
-        qbinded_checkbox *disp_sl_labels;
-        qbinded_checkbox *disp_labels_screen_scale;
-        qbinded_checkbox *disp_labels_draw_outline;
+        qbinded_combobox_t *disp_labels_style;
+        qbinded_checkbox_t *disp_inplace_labels;
+        qbinded_int_spinbox_t *disp_labels_size;
+        qbinded_checkbox_t *disp_sl_labels;
+        qbinded_checkbox_t *disp_labels_screen_scale;
+        qbinded_checkbox_t *disp_labels_draw_outline;
 
-        qbinded_checkbox *disp_s_sel_vis;
-        qbinded_checkbox *disp_s_sel_vis_affect_bonds;
+        qbinded_checkbox_t *disp_s_sel_vis;
+        qbinded_checkbox_t *disp_s_sel_vis_affect_bonds;
 
         QLabel *disp_draw_cell_label;
-        qbinded_checkbox *disp_draw_cell;
+        qbinded_checkbox_t *disp_draw_cell;
         QLabel *disp_cell_color_label;
-        qbinded_color3_input *disp_cell_color;
+        qbinded_color3_input_t *disp_cell_color;
 
         QLabel *disp_draw_subcells_lbl;
-        qbinded_checkbox *disp_draw_subcells;
+        qbinded_checkbox_t *disp_draw_subcells;
         QLabel *disp_subcells_idx_lbl;
-        qbinded_int3_input *disp_subcells_idx;
+        qbinded_int3_input_t *disp_subcells_idx;
         QLabel *disp_subcells_color_lbl;
-        qbinded_color3_input *disp_subcells_clr;
+        qbinded_color3_input_t *disp_subcells_clr;
 
         qspoiler_widget_t *gb_disp_shading;
         QFormLayout *gb_disp_shading_lt;
-        qbinded_checkbox *disp_shading_spec;
-        qbinded_float_spinbox *disp_shading_spec_value;
+        qbinded_checkbox_t *disp_shading_spec;
+        qbinded_float_spinbox_t *disp_shading_spec_value;
 
         qspoiler_widget_t *gb_disp_type_spec_rend;
         QTableView *disp_type_spec_tv;
@@ -98,9 +98,9 @@ namespace qpp {
         ws_item_tab_widget_t *tab_anim;
         qspoiler_widget_t *gb_anim_summary;
         QLabel *gb_anim_total_anims;
-        qbinded_checkbox *gb_rebuild_bonds;
-        qbinded_checkbox *gb_play_cyclic;
-        qbinded_float_spinbox *gb_anim_speed;
+        qbinded_checkbox_t *gb_rebuild_bonds;
+        qbinded_checkbox_t *gb_play_cyclic;
+        qbinded_float_spinbox_t *gb_anim_speed;
         QComboBox *gb_current_anim;
         QFormLayout *gb_anim_summary_lt;
 
@@ -124,10 +124,10 @@ namespace qpp {
         //common measurements settings
         qspoiler_widget_t *tms_common_settings_gb;
         QFormLayout *tms_common_settings_gb_lt;
-        qbinded_checkbox *tms_render_dist;
-        qbinded_checkbox *tms_render_angle;
-        qbinded_checkbox *tms_render_dist_legend;
-        qbinded_checkbox *tms_render_angle_legend;
+        qbinded_checkbox_t *tms_render_dist;
+        qbinded_checkbox_t *tms_render_angle;
+        qbinded_checkbox_t *tms_render_dist_legend;
+        qbinded_checkbox_t *tms_render_angle_legend;
 
         //pair dist
         qspoiler_widget_t *tms_pair_dist_gb;
@@ -136,20 +136,20 @@ namespace qpp {
         QLabel *tms_pair_at1_info;
         QLabel *tms_pair_at2_info;
         QLabel *tms_pair_dist;
-        qbinded_color3_input *tms_pair_dist_color;
-        qbinded_checkbox *tms_pair_enabled;
-        qbinded_checkbox *tms_pair_label_enabled;
-        qbinded_combobox *tms_pair_line_style;
-        qbinded_int_spinbox *tms_pair_line_size;
-        qbinded_int_spinbox *tms_font_screen_size;
-        qbinded_combobox *tms_pair_label_style;
+        qbinded_color3_input_t *tms_pair_dist_color;
+        qbinded_checkbox_t *tms_pair_enabled;
+        qbinded_checkbox_t *tms_pair_label_enabled;
+        qbinded_combobox_t *tms_pair_line_style;
+        qbinded_int_spinbox_t *tms_pair_line_size;
+        qbinded_int_spinbox_t *tms_font_screen_size;
+        qbinded_combobox_t *tms_pair_label_style;
         QHBoxLayout *tms_pair_action_lt;
         QPushButton *tms_pair_action_sel;
         QPushButton *tms_pair_action_copy;
         QPushButton *tms_pair_action_del;
         //QHBoxLayout *tms_pair_custom_text;
         qbinded_line_edit_t *tms_pair_custom_text_edit;
-        qbinded_checkbox *tms_pair_custom_text_enabled;
+        qbinded_checkbox_t *tms_pair_custom_text_enabled;
 
         //interatomic angle
         qspoiler_widget_t *tms_angle_gb;
@@ -158,8 +158,8 @@ namespace qpp {
         QLabel *tms_angle_at1_info;
         QLabel *tms_angle_at2_info;
         QLabel *tms_angle_at3_info;
-        qbinded_checkbox *tms_angle_enabled;
-        qbinded_int_spinbox *tms_angle_order;
+        qbinded_checkbox_t *tms_angle_enabled;
+        qbinded_int_spinbox_t *tms_angle_order;
         //END TAB MEASUREMENT
 
         //START TAB MODIFY
@@ -168,14 +168,14 @@ namespace qpp {
         qspoiler_widget_t *tm_gb_add_atom;
         QFormLayout *tm_gb_add_atom_lt;
         QComboBox *tm_add_atom_combo;
-        qbinded_float3_input *tm_add_atom_vec3;
+        qbinded_float3_input_t *tm_add_atom_vec3;
         QPushButton *tm_add_atom_button;
 
         qspoiler_widget_t *tm_gb_single_atom;
         QFormLayout *tm_gb_single_atom_lt;
         QLabel *tm_single_atom_info;
         QComboBox *tm_single_atom_combo;
-        qbinded_float3_input *tm_single_atom_vec3;
+        qbinded_float3_input_t *tm_single_atom_vec3;
         QHBoxLayout *tm_single_atom_btn_lt;
         QPushButton *tm_single_atom_commit;
         QPushButton *tm_single_atom_delete;
@@ -214,7 +214,7 @@ namespace qpp {
 
         qspoiler_widget_t *tm_gb_translate;
         QFormLayout *tm_gb_translate_lt;
-        qbinded_float3_input *tm_translate_vec3;
+        qbinded_float3_input_t *tm_translate_vec3;
         QComboBox *tm_translate_coord_type;
         QPushButton *tm_translate_apply_button;
         QHBoxLayout *tm_translate_combo_btn_lt;
@@ -240,8 +240,8 @@ namespace qpp {
         qspoiler_widget_t *tm_gb_override_atom;
         QFormLayout *tm_gb_override_atom_lt;
         QLabel *tm_override_atom_info;
-        qbinded_xgeom_color3_input *tm_override_atom_color;
-        qbinded_xgeom_float_spinbox *tm_override_atom_radii;
+        qbinded_xgeom_color3_input_t *tm_override_atom_color;
+        qbinded_xgeom_float_spinbox_t *tm_override_atom_radii;
         //END TAB MODIFY
 
         //START TAB SELECTIONS

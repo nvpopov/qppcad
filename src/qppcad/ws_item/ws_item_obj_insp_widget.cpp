@@ -172,13 +172,13 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   ws_item_name = new QLabel;
   ws_item_type = new QLabel;
   ws_item_is_visible_label = new QLabel(tr("Is visible"));
-  ws_item_is_visible = new qbinded_checkbox;
+  ws_item_is_visible = new qbinded_checkbox_t;
 
   ws_item_bb_visible_label = new QLabel(tr("Show bbox"));
-  ws_item_bb_visible = new qbinded_checkbox;
+  ws_item_bb_visible = new qbinded_checkbox_t;
 
   ws_item_pos_label = new QLabel(tr("Position[%1]").arg(astate->m_spatial_suffix));
-  ws_item_pos = new qbinded_float3_input;
+  ws_item_pos = new qbinded_float3_input_t;
   ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
 
   tg_form_layout->addRow(tr("Name"), ws_item_name);

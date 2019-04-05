@@ -271,3 +271,8 @@ QPushButton::flat {
  border: none;
  background: transparent;
 }
+
+qpp--cad--qbinded_color3_input_t {
+ border-radius : 3px;
+ border: 1px solid white;
+}

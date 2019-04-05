@@ -78,6 +78,10 @@ void ws_viewer_widget_t::update_cycle() {
       astate->m_last_frame_time_cpu = m_update_timer_cpu->nsecsElapsed();
     }
 
+  if (astate->mouse_rb_pressed) {
+      astate->make_viewport_dirty();
+    }
+
   astate->is_mouse_moving = false;
 
   astate->ws_manager->utility_event_loop();

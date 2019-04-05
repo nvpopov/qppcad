@@ -17,9 +17,9 @@ namespace qpp {
         cube_primitive_t *b_cp{nullptr};
         qspoiler_widget_t *tg_cube_params;
         QFormLayout *tg_cube_params_lt;
-        qbinded_float3_input *cube_param_scale;
-        qbinded_color3_input *cube_param_color;
-        qbinded_combobox *cube_render_mode;
+        qbinded_float3_input_t *cube_param_scale;
+        qbinded_color3_input_t *cube_param_color;
+        qbinded_combobox_t *cube_render_mode;
 
         cube_primitive_obj_insp_widget_t();
 

@@ -43,8 +43,8 @@ namespace qpp {
 
         QComboBox *cmb_xfield_name;
 
-        qbinded_color3_input *clr_low_input;
-        qbinded_color3_input *clr_high_input;
+        qbinded_color3_input_t *clr_low_input;
+        qbinded_color3_input_t *clr_high_input;
 
         vector3<float> clr_low{0};
         vector3<float> clr_high{1};

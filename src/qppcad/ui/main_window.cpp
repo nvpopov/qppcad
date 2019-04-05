@@ -213,11 +213,13 @@ void main_window::init_menus() {
   edit_menu->addSeparator();
 
   edit_menu_settings = new QAction(this);
+  edit_menu_settings->setEnabled(false);
   edit_menu_settings->setText(tr("Settings"));
   connect(edit_menu_settings,
           &QAction::triggered,[](){app_settings_widget_t aset;aset.exec();});
 
   edit_menu_ws_settings = new QAction(this);
+  edit_menu_ws_settings->setEnabled(false);
   edit_menu_ws_settings->setText(tr("Workspace settings"));
   edit_menu->addSeparator();
   edit_menu->addAction(edit_menu_settings);
@@ -225,7 +227,6 @@ void main_window::init_menus() {
 
   edit_menu_console = new QAction(this);
   edit_menu_console->setText(tr("Console"));
-  //edit_menu_console->setCheckable(true);
   edit_menu_console->setShortcut(QKeySequence(tr("~")));
   edit_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
   connect(edit_menu_console,
@@ -1243,8 +1244,12 @@ void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
 
               size_t atom_idx = cur_it_as_al->m_atom_idx_sel.begin()->m_atm;
               cur_it_as_al->m_geom->xfield<bool>(xgeom_override, atom_idx) = checked;
-              if (cur_it_as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) < 0.01f)
-                cur_it_as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) = 1.0f;
+              if (cur_it_as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) < 0.01f) {
+                  auto ap_idx = ptable::number_by_symbol(cur_it_as_al->m_geom->atom(atom_idx));
+                  float _rad = 1.0f;
+                  if (ap_idx) _rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
+                  cur_it_as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) = _rad;
+                }
 
             }
 

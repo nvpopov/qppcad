@@ -71,19 +71,19 @@ namespace qpp {
         QDoubleSpinBox *type_cell_ctor_cubic_size{nullptr};
         QLabel *type_cell_ctor_cubic_size_lbl{nullptr};
 
-        qbinded_float3_input *type_cell_ctor_ortho{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_ortho{nullptr};
         QLabel *type_cell_ctor_ortho_lbl{nullptr};
 
-        qbinded_float3_input *type_cell_ctor_a3{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_a3{nullptr};
         QLabel *type_cell_ctor_a3_lbl{nullptr};
-        qbinded_float3_input *type_cell_ctor_l3{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_l3{nullptr};
         QLabel *type_cell_ctor_l3_lbl{nullptr};
 
-        qbinded_float3_input *type_cell_ctor_a{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_a{nullptr};
         QLabel *type_cell_ctor_a_lbl{nullptr};
-        qbinded_float3_input *type_cell_ctor_b{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_b{nullptr};
         QLabel *type_cell_ctor_b_lbl{nullptr};
-        qbinded_float3_input *type_cell_ctor_c{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_c{nullptr};
         QLabel *type_cell_ctor_c_lbl{nullptr};
 
         QGroupBox *gb_type_param{nullptr};

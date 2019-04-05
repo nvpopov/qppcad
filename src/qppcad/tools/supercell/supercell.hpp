@@ -23,6 +23,7 @@ namespace qpp {
       private:
 
       public:
+
         QSpinBox *sp_rep_a;
         QSpinBox *sp_rep_b;
         QSpinBox *sp_rep_c;
@@ -36,10 +37,13 @@ namespace qpp {
 
         int get_replication_coeff(int dim_num);
         super_cell_widget_t();
+
     };
 
     class supercell_tool_t : public ws_item_tool_t {
+
       public:
+
         void exec(ws_item_t *item) override;
         void make_super_cell(geom_view_t *al,
                              const int a_steps,
