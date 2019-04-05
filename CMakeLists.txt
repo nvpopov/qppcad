@@ -195,6 +195,8 @@ add_executable(qppcad
     src/qppcad/tools/colorize_by_dist/colorize_by_dist.cpp
     src/qppcad/tools/structure_similarity/structure_similarity.cpp
 
+    src/qppcad/flow/sflow.cpp
+
     src/qppcad/python/python_console_output_redirectors.cpp
     src/qppcad/python/python_console_widget.cpp
     src/qppcad/python/python_manager.cpp

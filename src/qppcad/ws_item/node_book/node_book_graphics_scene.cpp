@@ -12,6 +12,8 @@ node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
   for (auto p : {&p_pen_light, &p_pen_dark}) p->setWidth(0);
   setBackgroundBrush(p_brush_bckgr);
 
+  addSimpleText("Hello diagram world!");
+
 }
 
 void node_book_graphics_scene_t::drawBackground(QPainter *painter, const QRectF &rect) {

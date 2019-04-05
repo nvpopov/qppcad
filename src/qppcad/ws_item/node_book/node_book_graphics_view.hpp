@@ -18,6 +18,8 @@ namespace qpp {
 
       public:
 
+        bool m_drag_view{false};
+
         explicit node_book_graphics_view_t(QWidget *parent = nullptr);
         node_book_graphics_view_t(QGraphicsScene *scene, QWidget *parent = nullptr);
 
