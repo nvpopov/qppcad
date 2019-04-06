@@ -94,6 +94,7 @@ include_directories(${Qt5Charts_INCLUDE_DIRS})
 
 qt5_add_resources(QRCS data/resources.qrc)
 
+add_executable(sflow_test src/qppcad/flow/sflow.cpp src/qppcad/flow/sflow_test.cpp)
 add_executable(qppcad
 
     src/qppcad/main.cpp

@@ -159,6 +159,9 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   type_cell_ctor_cubic_size->setValue(5);
   type_cell_ctor_cubic_size->setSuffix(astate->m_spatial_suffix);
   type_cell_ctor_cubic_size->setVisible(false);
+  type_cell_ctor_cubic_size->setAlignment(Qt::AlignCenter);
+  type_cell_ctor_cubic_size->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  type_cell_ctor_cubic_size->setFixedWidth(astate->size_guide.obj_insp_ctrl_max_w());
   type_cell_ctor_cubic_size_lbl = new QLabel(tr("Cube size"));
   label_setup(type_cell_ctor_cubic_size_lbl);
 

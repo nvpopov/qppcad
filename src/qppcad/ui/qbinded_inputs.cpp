@@ -60,10 +60,12 @@ qbinded_float_spinbox_t::qbinded_float_spinbox_t(QWidget *parent) : QDoubleSpinB
   setAlignment(Qt::AlignCenter);
   setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-  connect(this,
-          static_cast<void(qbinded_float_spinbox_t::*)(double)>(&qbinded_float_spinbox_t::valueChanged),
-          this,
-          &qbinded_float_spinbox_t::value_changed);
+  connect(
+        this,
+        static_cast<void(qbinded_float_spinbox_t::*)(double)>(&qbinded_float_spinbox_t::valueChanged),
+        this,
+        &qbinded_float_spinbox_t::value_changed
+        );
 
 }
 
