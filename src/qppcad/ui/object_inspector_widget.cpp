@@ -2,6 +2,7 @@
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
+#include <qppcad/ui/add_new_ws_item_widget.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -15,6 +16,12 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   header_frm->setObjectName("obj_insp_header_frame");
   setProperty("s_class", "obj_insp");
 
+  btn_add_new_ws_item = new QPushButton;
+  btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
+                                    astate->size_guide.ext_editor_btn_h()));
+  btn_add_new_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
+  btn_add_new_ws_item->setFlat(true);
+
   btn_refresh_oi = new QPushButton;
   btn_refresh_oi->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
                                     astate->size_guide.ext_editor_btn_h()));
@@ -26,7 +33,13 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::refresh_button_clicked);
 
+  connect(btn_add_new_ws_item,
+          &QPushButton::clicked,
+          this,
+          &object_inspector_widget_t::add_new_ws_item_button_clicked);
+
   header_lt->insertWidget(1, btn_refresh_oi);
+  header_lt->insertWidget(1, btn_add_new_ws_item);
 
   ws_items_list = new QListWidget;
   ws_items_list->setProperty("s_class", "ws_items_list");
@@ -247,5 +260,14 @@ void object_inspector_widget_t::refresh_button_clicked() {
 
   if (m_cur_obj_insp_widget)
     m_cur_obj_insp_widget->update_from_ws_item();
+
+}
+
+void object_inspector_widget_t::add_new_ws_item_button_clicked() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  if (!astate->ws_mgr->has_wss()) return;
+  add_new_ws_item_widget_t add_dialog;
+  add_dialog.exec();
 
 }

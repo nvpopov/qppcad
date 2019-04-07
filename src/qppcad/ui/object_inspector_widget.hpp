@@ -34,6 +34,7 @@ namespace qpp {
         qspoiler_widget_t *ws_items_spoiler;
         QVBoxLayout *ws_items_spoiler_lt;
 
+        QPushButton *btn_add_new_ws_item;
         QPushButton *btn_refresh_oi;
 
         //property view by ws_item type
@@ -50,6 +51,7 @@ namespace qpp {
 
         void ws_item_list_double_clicked(QListWidgetItem * item);
         void refresh_button_clicked();
+        void add_new_ws_item_button_clicked();
 
     };
 

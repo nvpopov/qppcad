@@ -364,19 +364,6 @@ void main_window::init_widgets() {
                    this,
                    &main_window::tp_show_gizmo_state_changed);
 
-  tp_add_ws_item = new QPushButton();
-  tp_add_ws_item->setProperty("s_class", "tp_cb");
-  tp_add_ws_item->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_add_ws_item->setMaximumWidth(astate->size_guide.tool_panel_ctrl_sys_w());
-  tp_add_ws_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                    astate->size_guide.tool_panel_icon_size()));
-  tp_add_ws_item->setToolTip(tr("Add new item to current workspace"));
-  tp_add_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
-  connect(tp_add_ws_item,
-          &QPushButton::pressed,
-          this,
-          [](){ add_new_ws_item_widget_t add_dialog; add_dialog.exec();});
-
   tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");
   tp_print_screen->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
@@ -597,7 +584,6 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_add_ws_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_print_screen, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
@@ -680,7 +666,6 @@ void main_window::wss_changed_slot() {
       tp_rm_ws->setEnabled(true);
       tp_rnm_ws->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
-      tp_add_ws_item->setEnabled(true);
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
           auto ws = astate->ws_mgr->m_ws[i];
           QString dest = QString::fromStdString(fmt::format("[{}] {}", i, ws->m_ws_name));
@@ -690,7 +675,6 @@ void main_window::wss_changed_slot() {
       tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
 
     } else {
-      tp_add_ws_item->setEnabled(false);
       tp_rm_ws->setEnabled(false);
       tp_rnm_ws->setEnabled(false);
       tp_show_gizmo->setEnabled(false);

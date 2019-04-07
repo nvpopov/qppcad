@@ -189,6 +189,10 @@ QTabBar::tab:selected {
  background-color: rgb(120, 120, 120);
 }
 
+QTabBar::tab:hover {
+ background-color: rgb(110, 110, 110);
+}
+
 QGroupBox {
  border: 1px solid rgb(85, 85, 85);
  padding-top: 25px;
@@ -270,6 +274,11 @@ QComboBox::down-arrow {
 QPushButton::flat {
  border: none;
  background: transparent;
+ padding:2px;
+}
+
+QPushButton::flat:hover {
+ background : rgb(74, 74, 74);
 }
 
 qpp--cad--qbinded_color3_input_t {

@@ -134,7 +134,9 @@ void arrow_array_t::updated_internally() {
   if (m_src) {
       auto _as_gv = m_src->cast_as<geom_view_t>();
       if (_as_gv) m_binded_gv = _as_gv;
-      else _as_gv = nullptr;
+      else m_binded_gv = nullptr;
+    } else {
+      m_binded_gv = nullptr;
     }
 
 }
