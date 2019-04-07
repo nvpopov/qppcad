@@ -42,9 +42,7 @@ namespace qpp {
 
           if (p_owner->m_color_mode == geom_view_color_e::color_from_xgeom) {
 
-             // astate->log("RUNNING ANIM");
               // check the colors in frame_data are avaiable
-              //throw std::out_of_range("sds");
               if (m_anim_data[anim_id].frames[start_frame_n].atom_color.size() == nat &&
                   m_anim_data[anim_id].frames[end_frame_n].atom_color.size() == nat) {
                   vector3<float> new_color =
@@ -60,6 +58,7 @@ namespace qpp {
                   p_owner->m_geom->xfield<float>(xgeom_ccg, i) = 0.0f;
                   p_owner->m_geom->xfield<float>(xgeom_ccb, i) = 0.0f;
                 }
+
             }
 
         }

@@ -61,11 +61,11 @@ qbinded_float_spinbox_t::qbinded_float_spinbox_t(QWidget *parent) : QDoubleSpinB
   setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   connect(
-        this,
-        static_cast<void(qbinded_float_spinbox_t::*)(double)>(&qbinded_float_spinbox_t::valueChanged),
-        this,
-        &qbinded_float_spinbox_t::value_changed
-        );
+    this,
+    static_cast<void(qbinded_float_spinbox_t::*)(double)>(&qbinded_float_spinbox_t::valueChanged),
+    this,
+    &qbinded_float_spinbox_t::value_changed
+    );
 
 }
 
@@ -490,6 +490,7 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
 
   if (i == 0) {
       *m_binded_ws_item_p = nullptr;
+      if (m_binded_ws_item && m_updated_internally_event) m_binded_ws_item->updated_internally();
       return;
     }
 
@@ -499,6 +500,8 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
   if (itm && itm->get_type() == m_type_id) {
       *m_binded_ws_item_p = itm;
     }
+
+  if (m_binded_ws_item && m_updated_internally_event) m_binded_ws_item->updated_internally();
 
 }
 

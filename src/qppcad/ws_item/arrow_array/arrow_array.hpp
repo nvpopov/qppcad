@@ -1,17 +1,29 @@
 #ifndef QPP_CAD_ARROW_ARRAY
 #define QPP_CAD_ARROW_ARRAY
 #include <qppcad/qppcad.hpp>
+#include <data/color.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 
 namespace qpp {
 
   namespace cad {
 
+    class geom_view_t;
+
     class arrow_array_t : public ws_item_t {
 
         QPP_OBJECT(arrow_array_t, ws_item_t)
 
       public:
+
+        geom_view_t *m_binded_gv{nullptr};
+        std::shared_ptr<ws_item_t> m_src{nullptr};
+
+        float m_unf_arrow_len{1.0f};
+        float m_unf_arrow_cap_len{0.15f};
+        float m_unf_arrow_scale{0.05f};
+        float m_unf_arrow_cap_scale{0.12f};
+        vector3<float> m_color{clr_red};
 
         arrow_array_t();
 
@@ -35,4 +47,5 @@ namespace qpp {
   }
 
 }
+
 #endif

@@ -261,6 +261,8 @@ namespace qpp {
         ws_item_t *m_binded_ws_item{nullptr};
         workspace_t *m_binded_ws{nullptr};
         size_t m_type_id{0};
+        bool m_updated_internally_event{false};
+
         qbinded_ws_item_combobox_t(QWidget *parent = nullptr);
 
         void bind_value(std::shared_ptr<ws_item_t> *_binded_value,
