@@ -194,8 +194,9 @@ QTabBar::tab:hover {
 }
 
 QGroupBox {
- border: 1px solid rgb(85, 85, 85);
+ border: 1px solid rgb(65, 65, 65);
  padding-top: 25px;
+ background: rgb(65, 65, 65);
 }
 
 QGroupBox::title {
@@ -208,7 +209,7 @@ QGroupBox::title {
 }
 
 QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
- background-color: rgb(82, 82, 82);
+ background-color: rgb(69, 69, 69);
 }
 
 QToolTip {
@@ -281,9 +282,17 @@ QPushButton::flat:hover {
  background : rgb(74, 74, 74);
 }
 
+QPushButton::flat:pressed {
+ background : rgb(124, 124, 124);
+}
+
 qpp--cad--qbinded_color3_input_t {
  border-radius : 3px;
  border: 1px solid white;
+}
+
+qpp--cad--qspoiler_widget_t {
+ background : rgb(76, 76, 76);
 }
 
 QRadioButton:disabled {

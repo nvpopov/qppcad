@@ -23,7 +23,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_geom_summary_lt->addRow(tr("Total types"), tg_geom_summary_total_types);
   init_form_lt(tg_geom_summary_lt);
 
-  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"), this, true, 0, 360, false);
+  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"), this, true, 0, 360, false, 0);
   tg_type_summary_lt = new QVBoxLayout;
   tg_type_summary_widget->add_content_layout(tg_type_summary_lt);
   tg_type_summary_tbl = new QTableWidget;
@@ -49,7 +49,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   table_hdr_cell.push_back("Y");
   table_hdr_cell.push_back("Z");
 
-  tg_gb_cell = new qspoiler_widget_t(tr("Lattice parameters"), this, true, 0);
+  tg_gb_cell = new qspoiler_widget_t(tr("Lattice parameters"), this, true, 0, 360, false, 0);
   tg_gb_cell_lt = new QVBoxLayout;
   tg_gb_cell->add_content_layout(tg_gb_cell_lt);
   tg_gb_cell_tbl = new QTableWidget;
@@ -198,7 +198,8 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   init_form_lt(gb_disp_shading_lt);
 
   //display - type specific rendering
-  gb_disp_type_spec_rend = new qspoiler_widget_t(tr("Type specific rendering"), this, true, 0);
+  gb_disp_type_spec_rend = new qspoiler_widget_t(tr("Type specific rendering"),
+                                                 this, true, 0, 360, false, 0);
   gb_disp_type_spec_rend_lt = new QVBoxLayout;
   gb_disp_type_spec_rend->add_content_layout(gb_disp_type_spec_rend_lt);
 
@@ -216,7 +217,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_type_spec_tv->setModel(disp_type_spec_mdl);
 
   //display - bonding table
-  gb_disp_bt = new qspoiler_widget_t(tr("Bonding table"), this, true, 0, 360, false);
+  gb_disp_bt = new qspoiler_widget_t(tr("Bonding table"), this, true, 0, 360, false, 0);
   gb_disp_bt->setContentsMargins(0,0,0,0);
   disp_bt_lt = new QVBoxLayout;
   gb_disp_bt->add_content_layout(disp_bt_lt);

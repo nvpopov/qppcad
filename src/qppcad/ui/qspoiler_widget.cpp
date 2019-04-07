@@ -9,7 +9,8 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                      bool _collapsable,
                                      int _spacing,
                                      int _max_width,
-                                     bool add_spacing_at_the_end) : QFrame(parent) {
+                                     bool header_add_spacing_at_the_end,
+                                     int main_lt_spacing_at_the_end) : QFrame(parent) {
 
   m_collapsable = _collapsable;
   setMaximumWidth(_max_width);
@@ -48,12 +49,12 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   hbox_frm->addWidget(action_btn);
   hbox_frm->addWidget(lbl_frm);
-  if (add_spacing_at_the_end) hbox_frm->addSpacing(24);
+  if (header_add_spacing_at_the_end) hbox_frm->addSpacing(24);
 
   main_lt->addWidget(top_frm);
   main_lt->addWidget(widget_list);
   main_lt->setSpacing(_spacing);
-  main_lt->addSpacing(0);
+  main_lt->addSpacing(main_lt_spacing_at_the_end);
 
   connect(action_btn,
           &QPushButton::clicked,

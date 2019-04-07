@@ -34,6 +34,7 @@ namespace qpp {
     const uint32_t ws_item_flags_support_extended_editor  = 1 << 13;
     const uint32_t ws_item_flags_translate_emit_upd_event = 1 << 14;
     const uint32_t ws_item_flags_support_view_voting      = 1 << 15;
+    const uint32_t ws_item_flags_support_cam_target_view  = 1 << 16;
 
     class ws_item_t : public std::enable_shared_from_this<ws_item_t>,
         public qpp_object_t, public serializable_t {

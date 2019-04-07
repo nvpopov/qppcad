@@ -17,14 +17,18 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   setProperty("s_class", "obj_insp");
 
   btn_add_new_ws_item = new QPushButton;
-  btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
-                                    astate->size_guide.ext_editor_btn_h()));
+  btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+                                 astate->size_guide.spoiler_button_h()));
+  btn_add_new_ws_item->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+                                astate->size_guide.spoiler_button_icon_h()));
   btn_add_new_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
   btn_add_new_ws_item->setFlat(true);
 
   btn_refresh_oi = new QPushButton;
-  btn_refresh_oi->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
-                                    astate->size_guide.ext_editor_btn_h()));
+  btn_refresh_oi->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+                                 astate->size_guide.spoiler_button_h()));
+  btn_refresh_oi->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+                                astate->size_guide.spoiler_button_icon_h()));
   btn_refresh_oi->setIcon(QIcon("://images/outline-refresh-24px.svg"));
   btn_refresh_oi->setFlat(true);
 
@@ -46,7 +50,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_list->setObjectName("ws_items_list_e");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 390);
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 390, true, 0);
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);

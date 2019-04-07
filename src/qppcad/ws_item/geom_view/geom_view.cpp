@@ -25,7 +25,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
                     ws_item_flags_support_clone |
                     ws_item_flags_support_moveto |
                     ws_item_flags_support_rendering |
-                    ws_item_flags_support_view_voting);
+                    ws_item_flags_support_view_voting |
+                    ws_item_flags_support_cam_target_view);
 
   m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 

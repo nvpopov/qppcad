@@ -4,7 +4,6 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-
 ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidget *parent) :
   qembed_window_t (parent) {
 
@@ -18,8 +17,10 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
   main_lt->addWidget(ext_edt_plch);
 
   top_btn_close = new QPushButton;
-  top_btn_close->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
-                                    astate->size_guide.ext_editor_btn_h()));
+  top_btn_close->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+                                    astate->size_guide.spoiler_button_h()));
+  top_btn_close->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+                                   astate->size_guide.spoiler_button_icon_h()));
   top_btn_close->setIcon(QIcon("://images/outline-close-24px.svg"));
   top_btn_close->setFlat(true);
 
@@ -29,8 +30,10 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
           &ws_item_extended_editor_compositor_t::close_ext_editor_btn_clicked);
 
   top_btn_refresh = new QPushButton;
-  top_btn_refresh->setFixedSize(QSize(astate->size_guide.ext_editor_btn_h(),
-                                    astate->size_guide.ext_editor_btn_h()));
+  top_btn_refresh->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+                                      astate->size_guide.spoiler_button_h()));
+  top_btn_refresh->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+                                     astate->size_guide.spoiler_button_icon_h()));
   top_btn_refresh->setIcon(QIcon("://images/outline-refresh-24px.svg"));
   top_btn_refresh->setFlat(true);
 

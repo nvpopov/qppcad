@@ -31,31 +31,31 @@ void arrow_array_t::render() {
 
   if (cur_anim->frames.size() == 0) return;
 
-  float start_frame = int(m_binded_gv->m_anim->m_cur_anim_time);
-  float end_frame   = std::ceil(m_binded_gv->m_anim->m_cur_anim_time);
-  float frame_delta = 1 - (m_binded_gv->m_anim->m_cur_anim_time - start_frame);
-  int start_frame_n = int(start_frame);
-  int end_frame_n   = int(end_frame);
+  float start_frame_0 = int(m_binded_gv->m_anim->m_cur_anim_time);
+  float end_frame_0   = std::ceil(m_binded_gv->m_anim->m_cur_anim_time);
+  float frame_delta_0 = 1 - (m_binded_gv->m_anim->m_cur_anim_time - start_frame_0);
+  int start_frame_n_0 = int(start_frame_0);
+  int end_frame_n_0   = int(end_frame_0);
 
-  float next_frame_delta = frame_delta + 1 / (m_binded_gv->m_anim->m_anim_frame_time * 60);
+  float next_frame_delta = frame_delta_0 + 1 / (m_binded_gv->m_anim->m_anim_frame_time * 60);
 
-  if (start_frame >= cur_anim->frames.size() || end_frame_n >= cur_anim->frames.size()) return;
-  if (cur_anim->frames[start_frame_n].atom_pos.size() != m_binded_gv->m_geom->nat()) return;
-  if (cur_anim->frames[end_frame_n].atom_pos.size() != m_binded_gv->m_geom->nat()) return;
+  if (start_frame_0 >= cur_anim->frames.size() || end_frame_n_0 >= cur_anim->frames.size()) return;
+  if (cur_anim->frames[start_frame_n_0].atom_pos.size() != m_binded_gv->m_geom->nat()) return;
+  if (cur_anim->frames[end_frame_n_0].atom_pos.size() != m_binded_gv->m_geom->nat()) return;
 
-  if (start_frame_n == 0 && end_frame_n == start_frame_n) return;
-  if (start_frame_n == end_frame_n) start_frame_n += -1;
+  if (start_frame_n_0 == 0 && end_frame_n_0 == start_frame_n_0) return;
+  if (start_frame_n_0 == end_frame_n_0) start_frame_n_0 += -1;
 
   //astate->log(fmt::format("ENTER AA RENDERING sf={} ef={}", start_frame_n, end_frame_n));
 
   astate->dp->begin_render_general_mesh();
   for (size_t i = 0; i < m_binded_gv->m_geom->nat(); i++) {
 
-      vector3<float> start_pos = cur_anim->frames[start_frame_n].atom_pos[i] * (frame_delta) +
-                                 cur_anim->frames[end_frame_n].atom_pos[i] * (1-frame_delta) +
+      vector3<float> start_pos = cur_anim->frames[start_frame_n_0].atom_pos[i] * (frame_delta_0) +
+                                 cur_anim->frames[end_frame_n_0].atom_pos[i] * (1-frame_delta_0) +
                                  m_binded_gv->m_pos;
 
-      vector3<float> end_pos = cur_anim->frames[end_frame_n].atom_pos[i]  +
+      vector3<float> end_pos = cur_anim->frames[end_frame_n_0].atom_pos[i]  +
                                m_binded_gv->m_pos;
 
       vector3<float> dir = (end_pos - start_pos).normalized();

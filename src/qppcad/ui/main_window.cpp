@@ -910,7 +910,9 @@ void main_window::cur_ws_selected_item_changed() {
           bool show_cam_button{true};
           auto cur_it = cur_ws->get_selected();
 
-          if (!cur_it) show_cam_button = false;
+          if (!cur_it ||
+              !(cur_it->get_flags() & ws_item_flags_support_cam_target_view) )
+            show_cam_button = false;
           else {
               auto al = cur_it->cast_as<geom_view_t>();
 

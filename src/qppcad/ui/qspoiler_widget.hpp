@@ -35,7 +35,8 @@ namespace qpp {
                                    bool _collapsable = false,
                                    int _spacing = 6,
                                    int _max_width = 360,
-                                   bool add_spacing_at_the_end = true);
+                                   bool header_add_spacing_at_the_end = true,
+                                   int main_lt_spacing_at_the_end = 5);
 
         void add_content_layout(QLayout *new_lt);
         void process_state();

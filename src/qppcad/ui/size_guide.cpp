@@ -104,11 +104,11 @@ int size_guide_t::ext_editor_icon() {
 }
 
 int size_guide_t::spoiler_button_h() {
-  return 19;
+  return 22;
 }
 
 int size_guide_t::spoiler_button_icon_h() {
-  return 18;
+  return 20;
 }
 
 int size_guide_t::common_tools_panel_w() {
