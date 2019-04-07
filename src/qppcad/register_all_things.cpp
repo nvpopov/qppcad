@@ -37,6 +37,10 @@
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
 
+#include <qppcad/ws_item/arrow_array/arrow_array.hpp>
+#include <qppcad/ws_item/arrow_array/arrow_array_obj_insp_widget.hpp>
+
+
 #include <io/write_coord.hpp>
 
 using namespace qpp;
@@ -53,6 +57,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr<arrow_primitive_t>(bhv_mgr);
   reg_ws_item_fbr<pgf_producer_t>(bhv_mgr);
   reg_ws_item_fbr<node_book_t>(bhv_mgr);
+  reg_ws_item_fbr<arrow_array_t>(bhv_mgr);
 
 }
 
@@ -67,13 +72,14 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
   reg_ws_item_obj_insp_fbr<arrow_primitive_t, arrow_primitive_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<pgf_producer_t, pgf_producer_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<node_book_t, node_book_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<arrow_array_t, arrow_array_obj_insp_widget_t>(bhv_mgr);
 
 }
 
-void registration_helper_t::reg_ws_item_extended_editor(ws_item_behaviour_manager_t *bhv_mgr) {
+void registration_helper_t::reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv_mgr) {
 
-  reg_ws_item_ext_editor_fbr<node_book_t, node_book_extended_editor_t>(bhv_mgr);
-  reg_ws_item_ext_editor_fbr<geom_view_t, geom_view_extended_editor_t>(bhv_mgr);
+  reg_ws_item_ext_edt_fbr<node_book_t, node_book_extended_editor_t>(bhv_mgr);
+  reg_ws_item_ext_edt_fbr<geom_view_t, geom_view_extended_editor_t>(bhv_mgr);
 
 }
 
@@ -92,7 +98,8 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("UC(XYZQ)", "uc", xyz_ff_g_hash, {".uc"});
 
   size_t poscar_ff_hash =
-      bhv_mgr->reg_ff("VASP POSCAR", "poscar", vasp_ff_g_hash, {"POSCAR", ".vasp", ".VASP"} );
+      bhv_mgr->reg_ff("VASP POSCAR", "poscar", vasp_ff_g_hash,
+  {"POSCAR", ".vasp", ".VASP"} );
 
   size_t outcar_ff_hash =
       bhv_mgr->reg_ff("VASP OUTCAR", "outcar", vasp_ff_g_hash, {"OUTCAR"} );
@@ -210,7 +217,8 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(vasp_poscar_s_mgf, poscar_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash, geom_view_t::get_type_static());
-  bhv_mgr->reg_io_bhv(generic_cube_mgf, generic_cube_ff_hash, geom_view_t::get_type_static());
+  bhv_mgr->reg_io_bhv(generic_cube_mgf, generic_cube_ff_hash,
+                      geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(generic_cube3d_mgf, generic_cube3d_ff_hash,
                       geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(generic_molcas_grid_mgf, generic_molcas_grid_ff_hash,

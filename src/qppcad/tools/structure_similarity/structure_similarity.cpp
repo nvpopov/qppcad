@@ -9,7 +9,7 @@ void structure_similarity_tool_t::exec(ws_item_t *item) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
       structure_similarity_widget_t scw;
 
@@ -148,12 +148,12 @@ void structure_similarity_widget_t::cmb_ws(QComboBox *_cmb) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
       _cmb->clear();
       _cmb->setEnabled(true);
-      for (size_t i = 0; i < astate->ws_manager->m_ws.size(); i++)
-        _cmb->addItem(QString::fromStdString(astate->ws_manager->m_ws[i]->m_ws_name));
+      for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
+        _cmb->addItem(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name));
 
     } else {
 
@@ -343,10 +343,10 @@ void structure_similarity_widget_t::cmb_it_changed_marshall(int index, size_t ac
 
   size_t ws_id = actor_id == 0 ? cmb_ws1->currentIndex() : cmb_ws2->currentIndex();
 
-  if (ws_id >= astate->ws_manager->m_ws.size()) return;
-  if (index >= astate->ws_manager->m_ws[ws_id]->m_ws_items.size()) return;
+  if (ws_id >= astate->ws_mgr->m_ws.size()) return;
+  if (index >= astate->ws_mgr->m_ws[ws_id]->m_ws_items.size()) return;
 
-  auto ws_itm = astate->ws_manager->m_ws[ws_id]->m_ws_items[index];
+  auto ws_itm = astate->ws_mgr->m_ws[ws_id]->m_ws_items[index];
 
   if (!ws_itm) return;
 
@@ -374,10 +374,10 @@ void structure_similarity_widget_t::cmb_anim_changed_marshall(int index, size_t 
   size_t anim_id =  m_anim_info[actor_id]->cmb_anim_name->currentIndex();
   size_t itm_id = 0 ? cmb_it1->currentIndex() : cmb_it2->currentIndex();
 
-  if (ws_id >= astate->ws_manager->m_ws.size()) return;
-  if (index >= astate->ws_manager->m_ws[ws_id]->m_ws_items.size()) return;
+  if (ws_id >= astate->ws_mgr->m_ws.size()) return;
+  if (index >= astate->ws_mgr->m_ws[ws_id]->m_ws_items.size()) return;
 
-  auto ws_itm = astate->ws_manager->m_ws[ws_id]->m_ws_items[itm_id];
+  auto ws_itm = astate->ws_mgr->m_ws[ws_id]->m_ws_items[itm_id];
 
   if (!ws_itm) return;
 
@@ -409,13 +409,13 @@ void structure_similarity_widget_t::compute_button_clicked() {
   if (cmb_ws1->isEnabled() && cmb_it1->isEnabled()) {
       ws_i1 = cmb_ws1->currentIndex();
       it_i1 = cmb_it1->currentIndex();
-      it1 = astate->ws_manager->m_ws[ws_i1]->m_ws_items[it_i1].get();
+      it1 = astate->ws_mgr->m_ws[ws_i1]->m_ws_items[it_i1].get();
     }
 
   if (cmb_ws2->isEnabled() && cmb_it2->isEnabled()) {
       ws_i2 = cmb_ws2->currentIndex();
       it_i2 = cmb_it2->currentIndex();
-      it2 = astate->ws_manager->m_ws[ws_i2]->m_ws_items[it_i2].get();
+      it2 = astate->ws_mgr->m_ws[ws_i2]->m_ws_items[it_i2].get();
     }
 
   compute_structure_similarity(it1, it2);
@@ -425,14 +425,14 @@ void structure_similarity_widget_t::compute_button_clicked() {
 void structure_similarity_widget_t::cmb_ws1_changed(int index) {
 
   app_state_t *astate = app_state_t::get_inst();
-  cmb_it(cmb_it1, astate->ws_manager->m_ws[cmb_ws1->currentIndex()], 0);
+  cmb_it(cmb_it1, astate->ws_mgr->m_ws[cmb_ws1->currentIndex()], 0);
 
 }
 
 void structure_similarity_widget_t::cmb_ws2_changed(int index) {
 
   app_state_t *astate = app_state_t::get_inst();
-  cmb_it(cmb_it2, astate->ws_manager->m_ws[cmb_ws2->currentIndex()], 1);
+  cmb_it(cmb_it2, astate->ws_mgr->m_ws[cmb_ws2->currentIndex()], 1);
 
 }
 

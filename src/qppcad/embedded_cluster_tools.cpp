@@ -213,9 +213,9 @@ void embedded_cluster_tools::gen_spherical_cluster_cur(vector3<float> displ,
                                                        bool do_legacy) {
     app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_manager->has_wss()) {
+    if (astate->ws_mgr->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+        auto cur_ws = astate->ws_mgr->get_cur_ws();
 
         if (cur_ws) {
             //
@@ -234,9 +234,9 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
                                                           bool do_legacy) {
     app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_manager->has_wss()) {
+    if (astate->ws_mgr->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+        auto cur_ws = astate->ws_mgr->get_cur_ws();
 
         bool succes{false};
 
@@ -337,9 +337,9 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls_cur() {
 
     app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_manager->has_wss()) {
+    if (astate->ws_mgr->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+        auto cur_ws = astate->ws_mgr->get_cur_ws();
 
         if (cur_ws) {
             auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
@@ -365,9 +365,9 @@ void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
 
     app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_manager->has_wss()) {
+    if (astate->ws_mgr->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+        auto cur_ws = astate->ws_mgr->get_cur_ws();
 
         if (cur_ws) {
             auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
@@ -396,9 +396,9 @@ void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<geom_view_
                                                       std::shared_ptr<geom_view_t> &qm) {
     app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_manager->has_wss()) {
+    if (astate->ws_mgr->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+        auto cur_ws = astate->ws_mgr->get_cur_ws();
 
         if (cur_ws) {
 
@@ -436,9 +436,9 @@ vector3<float> embedded_cluster_tools::calc_dipole_moment() {
 
     vector3<float> accum_dm{0,0,0};
 
-    if (astate->ws_manager->has_wss()) {
+    if (astate->ws_mgr->has_wss()) {
 
-        auto cur_ws = astate->ws_manager->get_cur_ws();
+        auto cur_ws = astate->ws_mgr->get_cur_ws();
 
         if (cur_ws) {
             auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
@@ -458,9 +458,9 @@ void embedded_cluster_tools::generate_molcas_embc_sp_input(std::string outdir) {
 
     app_state_t *astate = app_state_t::get_inst();
 
-    if (!astate->ws_manager->has_wss()) return;
+    if (!astate->ws_mgr->has_wss()) return;
 
-    auto cur_ws = astate->ws_manager->get_cur_ws();
+    auto cur_ws = astate->ws_mgr->get_cur_ws();
     if (!cur_ws) return;
 
     std::shared_ptr<geom_view_t> uc{nullptr};
@@ -548,9 +548,9 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
 
     app_state_t *astate = app_state_t::get_inst();
 
-    if (!astate->ws_manager->has_wss()) return;
+    if (!astate->ws_mgr->has_wss()) return;
 
-    auto cur_ws = astate->ws_manager->get_cur_ws();
+    auto cur_ws = astate->ws_mgr->get_cur_ws();
     if (!cur_ws) return;
 
     std::shared_ptr<geom_view_t> uc{nullptr};

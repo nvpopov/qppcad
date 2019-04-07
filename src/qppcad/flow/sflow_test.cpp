@@ -1,41 +1,142 @@
+#define CATCH_CONFIG_MAIN
 #include <qppcad/flow/sflow.hpp>
 #include <qppcad/qppcad.hpp>
+#include <catch.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-int main() {
+TEST_CASE( "sflow base testing" ) {
 
-  std::cout << "Heflow, world!" << std::endl;
+  SECTION ("sflow |0| (0,0)-> |1| (0,0)-> |2| (0,0)-> |3|, direct flow testing") {
 
-  sflow_context_t *fc = new sflow_context_t;
+    auto fc = std::make_shared<sflow_context_t>();
 
-  for (int i = 0; i <= 9; i++) {
-      auto _nd = std::make_shared<sflow_node_t>();
-      _nd->m_node_name = fmt::format("n{}", i);
-      fc->add_node(_nd);
-    }
+    auto n0 = std::make_shared<sflow_soi_node_t>(); n0->m_node_name = "n0";
+    auto n1 = std::make_shared<sflow_sgi_node_t>(); n1->m_node_name = "n1";
+    auto n2 = std::make_shared<sflow_sgi_node_t>(); n2->m_node_name = "n2";
+    auto n3 = std::make_shared<sflow_sii_node_t>(); n3->m_node_name = "n3";
 
-  fc->connect_node(fc->m_nodes[0], fc->m_nodes[1]);
-  fc->connect_node(fc->m_nodes[1], fc->m_nodes[2]);
-  fc->connect_node(fc->m_nodes[2], fc->m_nodes[3]);
+    fc->add_node(n0);
+    fc->add_node(n1);
+    fc->add_node(n2);
+    fc->add_node(n3);
 
-  fc->connect_node(fc->m_nodes[9], fc->m_nodes[4]);
-  fc->connect_node(fc->m_nodes[4], fc->m_nodes[1]);
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n1, n2, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n2, n3, 0, 0) == sflow_error_e::no_error);
 
-  fc->connect_node(fc->m_nodes[5], fc->m_nodes[6]);
-  fc->connect_node(fc->m_nodes[6], fc->m_nodes[1]);
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(!n1->m_is_outer);
+    REQUIRE(!n2->m_is_outer);
+    REQUIRE(!n3->m_is_outer);
 
-  fc->connect_node(fc->m_nodes[7], fc->m_nodes[2]);
-  fc->connect_node(fc->m_nodes[8], fc->m_nodes[3]);
+    fc->execute();
 
-  fc->compile_flow();
-  fc->execute();
+    fc->clear_context();
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(n1->m_is_outer);
+    REQUIRE(n2->m_is_outer);
+    REQUIRE(n3->m_is_outer);
 
-  fmt::print(std::cout, "total connections = {}\n", fc->m_con_data.size());
+  }
 
-  delete fc;
+  SECTION ("sflow |0|(0) -> (0)|1|  , error for multiple inputs for socket 0"
+           "                   ^(0)                                         "
+           "      |2|(0)--------                                           ") {
 
-  return 0;
+    auto fc = std::make_shared<sflow_context_t>();
+    auto n0 = std::make_shared<sflow_soi_node_t>(); n0->m_node_name = "n0";
+    auto n1 = std::make_shared<sflow_sgi_node_t>(); n1->m_node_name = "n1";
+    auto n2 = std::make_shared<sflow_sgi_node_t>(); n2->m_node_name = "n2";
+
+    fc->add_node(n0);
+    fc->add_node(n1);
+    fc->add_node(n2);
+
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n2, n1, 0, 0) == sflow_error_e::too_many_inputs);
+
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(!n1->m_is_outer);
+    REQUIRE(n2->m_is_outer);
+
+    fc->execute();
+
+    fc->clear_context();
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(n1->m_is_outer);
+    REQUIRE(n2->m_is_outer);
+
+  }
+
+  SECTION ("sflow |0|(0) -> (0)|1|  ,  multiple outputs                      "
+           "       |                                                         "
+           "       -------> (0)|2|                                           "
+           "       |                                                         "
+           "       -------> (0)|3|                                           ") {
+    auto fc = std::make_shared<sflow_context_t>();
+    auto n0 = std::make_shared<sflow_soi_node_t>(); n0->m_node_name = "n0";
+    auto n1 = std::make_shared<sflow_sgi_node_t>(); n1->m_node_name = "n1";
+    auto n2 = std::make_shared<sflow_sgi_node_t>(); n2->m_node_name = "n2";
+    auto n3 = std::make_shared<sflow_sgi_node_t>(); n3->m_node_name = "n3";
+
+    fc->add_node(n0);
+    fc->add_node(n1);
+    fc->add_node(n2);
+    fc->add_node(n3);
+
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n0, n2, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n0, n3, 0, 0) == sflow_error_e::no_error);
+
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(!n1->m_is_outer);
+    REQUIRE(!n2->m_is_outer);
+    REQUIRE(!n3->m_is_outer);
+
+    fc->execute();
+
+    fc->clear_context();
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(n1->m_is_outer);
+    REQUIRE(n2->m_is_outer);
+    REQUIRE(n3->m_is_outer);
+
+  }
+
+  SECTION ("sflow |0|(0) -> (0)|1|(0) -> (0)|2| , flow branching"
+           "                   |-------> (0)|3|") {
+
+    auto fc = std::make_shared<sflow_context_t>();
+
+    auto n0 = std::make_shared<sflow_soi_node_t>(); n0->m_node_name = "nb0";
+    auto n1 = std::make_shared<sflow_sgi_node_t>(); n1->m_node_name = "nb1";
+    auto n2 = std::make_shared<sflow_sgi_node_t>(); n2->m_node_name = "nb2";
+    auto n3 = std::make_shared<sflow_sii_node_t>(); n3->m_node_name = "nb3";
+
+    fc->add_node(n0);
+    fc->add_node(n1);
+    fc->add_node(n2);
+    fc->add_node(n3);
+
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n1, n2, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n1, n3, 0, 0) == sflow_error_e::no_error);
+
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(!n1->m_is_outer);
+    REQUIRE(!n2->m_is_outer);
+    REQUIRE(!n3->m_is_outer);
+
+    fc->execute();
+
+    fc->clear_context();
+    REQUIRE(n0->m_is_outer);
+    REQUIRE(n1->m_is_outer);
+    REQUIRE(n2->m_is_outer);
+    REQUIRE(n3->m_is_outer);
+
+  }
 
 }

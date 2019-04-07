@@ -309,7 +309,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
               std::string obj_type = object[JSON_WS_ITEM_TYPE];
               size_t obj_hash = astate->hash_reg->calc_hash(obj_type);
               std::shared_ptr<ws_item_t> obj =
-                  astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
+                  astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
               if (obj) {
                   obj->load_from_json(object);
                   add_item_to_ws(obj);
@@ -565,7 +565,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   registration_helper_t::reg_ws_item_io_bhv(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
-  registration_helper_t::reg_ws_item_extended_editor(m_bhv_mgr.get());
+  registration_helper_t::reg_ws_item_ext_edt(m_bhv_mgr.get());
 
 }
 

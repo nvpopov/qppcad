@@ -143,9 +143,9 @@ void python_console_widget_t::run_script_button_clicked() {
   app_state_t* astate = app_state_t::get_inst();
   QString _script = script_editor->toPlainText();
   if (_script.length() > 0) {
-      astate->py_manager->execute(_script.toStdString());
+      astate->py_mgr->execute(_script.toStdString());
       py_tedit->insert_text_at_cursor("execute_script()");
-      py_tedit->append(QString::fromStdString(astate->py_manager->m_output_buffer));
+      py_tedit->append(QString::fromStdString(astate->py_mgr->m_output_buffer));
       py_tedit->print_promt();
     }
 
@@ -233,9 +233,9 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
   if (event->key() == Qt::Key_Up) {
 
-      if (!astate->py_manager->m_commands.empty()) {
+      if (!astate->py_mgr->m_commands.empty()) {
           m_cur_cmd--;
-          if (m_cur_cmd < 0) m_cur_cmd = astate->py_manager->m_commands.size();
+          if (m_cur_cmd < 0) m_cur_cmd = astate->py_mgr->m_commands.size();
           last_command_reached();
         }
 
@@ -246,9 +246,9 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
 
   if (event->key() == Qt::Key_Down) {
 
-      if (!astate->py_manager->m_commands.empty()) {
+      if (!astate->py_mgr->m_commands.empty()) {
           m_cur_cmd++;
-          if(m_cur_cmd > astate->py_manager->m_commands.size()) m_cur_cmd = 0;
+          if(m_cur_cmd > astate->py_mgr->m_commands.size()) m_cur_cmd = 0;
           last_command_reached();
         }
 
@@ -261,12 +261,12 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
       QString text = toPlainText();
       QString t = text.right(text.size() - m_curs_pos);
       if (!t.isEmpty()) {
-          astate->py_manager->m_commands.append(t);
-          if (astate->py_manager->m_commands.size() > 100) {
-              astate->py_manager->m_commands.removeFirst();
+          astate->py_mgr->m_commands.append(t);
+          if (astate->py_mgr->m_commands.size() > 100) {
+              astate->py_mgr->m_commands.removeFirst();
             }
         }
-      m_cur_cmd = astate->py_manager->m_commands.size();
+      m_cur_cmd = astate->py_mgr->m_commands.size();
       run_cmd();
       event->accept();
       return;
@@ -302,7 +302,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
       QString completion_prefix = text_under_cursor();
       if (completion_prefix != m_c->completionPrefix()) {
           app_state_t* astate = app_state_t::get_inst();
-          astate->py_manager->get_completion_list(completion_prefix, m_wl);
+          astate->py_mgr->get_completion_list(completion_prefix, m_wl);
           m_sl_model->setStringList(m_wl);
           m_c->setCompletionPrefix(completion_prefix);
         }
@@ -314,7 +314,7 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
   if (is_completer_shortcut) {
       QString completion_prefix = text_under_cursor();
       app_state_t* astate = app_state_t::get_inst();
-      astate->py_manager->get_completion_list(completion_prefix, m_wl);
+      astate->py_mgr->get_completion_list(completion_prefix, m_wl);
       m_sl_model->setStringList(m_wl);
 
       if (completion_prefix != m_c->completionPrefix()) {
@@ -335,7 +335,7 @@ void python_text_editor_t::last_command_reached() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (m_cur_cmd == astate->py_manager->m_commands.size()) {
+  if (m_cur_cmd == astate->py_mgr->m_commands.size()) {
       setText(toPlainText().left(m_curs_pos));
       QTextCursor cursor(textCursor());
       cursor.movePosition(QTextCursor::End);
@@ -344,7 +344,7 @@ void python_text_editor_t::last_command_reached() {
       setText(toPlainText().left(m_curs_pos));
       QTextCursor cursor(textCursor());
       cursor.movePosition(QTextCursor::End);
-      cursor.insertText(astate->py_manager->m_commands.at(m_cur_cmd));
+      cursor.insertText(astate->py_mgr->m_commands.at(m_cur_cmd));
       cursor.movePosition(QTextCursor::End);
       setTextCursor(cursor);
     }
@@ -401,8 +401,8 @@ void python_text_editor_t::run_cmd() {
             } else {
               app_state_t* astate = app_state_t::get_inst();
               QString proc_command = text.replace(".  .  .", "    ");
-              bool result = astate->py_manager->execute(proc_command.toStdString());
-              append(QString::fromStdString(astate->py_manager->m_output_buffer));
+              bool result = astate->py_mgr->execute(proc_command.toStdString());
+              append(QString::fromStdString(astate->py_mgr->m_output_buffer));
             }
         }
 
@@ -411,8 +411,8 @@ void python_text_editor_t::run_cmd() {
 
     } else {
       app_state_t* astate = app_state_t::get_inst();
-      bool result = astate->py_manager->execute(m_line_data.toStdString());
-      append(QString::fromStdString(astate->py_manager->m_output_buffer));
+      bool result = astate->py_mgr->execute(m_line_data.toStdString());
+      append(QString::fromStdString(astate->py_mgr->m_output_buffer));
       m_line_data.clear();
     }
 

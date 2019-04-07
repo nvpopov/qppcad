@@ -193,7 +193,7 @@ namespace qpp {
 
       public:
 
-        QColor m_stored_color;
+        QColor m_stored_color{Qt::black};
         qbinded_color3_input_t(QWidget *parent = nullptr);
         void load_value_ex() override;
         void mousePressEvent(QMouseEvent *event) override;

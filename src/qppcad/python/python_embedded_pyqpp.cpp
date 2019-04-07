@@ -20,8 +20,8 @@ void pyqpp_autosymm_export(py::module m);
 qpp::xgeometry<float, qpp::periodic_cell<float>  >* claim_xgeom() {
 
   app_state_t *astate = app_state_t::get_inst();
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
           if (cur_it_al) {

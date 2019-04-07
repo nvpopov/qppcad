@@ -58,8 +58,8 @@ namespace qpp {
     void app_state_t::init_managers() {
 
       hash_reg = std::make_unique<string_hash_register_t>();
-      ws_manager   = std::make_shared<workspace_manager_t>(this);
-      py_manager = std::make_unique<python_manager_t>();
+      ws_mgr   = std::make_shared<workspace_manager_t>(this);
+      py_mgr = std::make_unique<python_manager_t>();
 
     }
 
@@ -175,7 +175,7 @@ namespace qpp {
       for(int i = 0; i < cmd_size; i++) {
           settings.setArrayIndex(i);
           QString cmd = settings.value("cmd").toString();
-          if (!cmd.trimmed().isEmpty()) py_manager->m_commands.push_back(cmd);
+          if (!cmd.trimmed().isEmpty()) py_mgr->m_commands.push_back(cmd);
         }
 
       settings.endArray();
@@ -186,7 +186,7 @@ namespace qpp {
           QString rc_filename = settings.value("filename").toString();
           //size_t _loaded_fft = settings.value("ff",0).toUInt();
           std::string ff_name = settings.value("ff").toString().toStdString();
-          auto ff_hsh = ws_manager->m_bhv_mgr->get_ff_by_short_name(ff_name);
+          auto ff_hsh = ws_mgr->m_bhv_mgr->get_ff_by_short_name(ff_name);
           bool _loaded_is_native = settings.value("isnat", false).toBool();
           if (ff_hsh && !_loaded_is_native)
             add_recent_file(rc_filename.toStdString(), _loaded_is_native, *ff_hsh);
@@ -238,9 +238,9 @@ namespace qpp {
       settings.endGroup();
 
       settings.beginWriteArray("pyconsole_history");
-      for (int i = 0; i < py_manager->m_commands.size(); i++) {
+      for (int i = 0; i < py_mgr->m_commands.size(); i++) {
           settings.setArrayIndex(i);
-          settings.setValue("cmd", py_manager->m_commands[i]);
+          settings.setValue("cmd", py_mgr->m_commands[i]);
         }
 
       settings.endArray();
@@ -250,7 +250,7 @@ namespace qpp {
           settings.setArrayIndex(i);
           settings.setValue("filename", QString::fromStdString(m_recent_files[i].m_file_name));
           std::string ff_name =
-              ws_manager->m_bhv_mgr->get_ff_short_name(m_recent_files[i].m_ff_id);
+              ws_mgr->m_bhv_mgr->get_ff_short_name(m_recent_files[i].m_ff_id);
           settings.setValue("ff", QString::fromStdString(ff_name));
           settings.setValue("isnat", m_recent_files[i].m_native);
         }
@@ -270,7 +270,7 @@ namespace qpp {
 
     void app_state_t::pylog(std::string logstr) {
 
-      if (py_manager) py_manager->m_output_buffer += "\n" + logstr;
+      if (py_mgr) py_mgr->m_output_buffer += "\n" + logstr;
 
     }
 

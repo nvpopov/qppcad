@@ -7,8 +7,8 @@ using namespace qpp::cad;
 void axial_scale_tool_t::exec(ws_item_t *item) {
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
           auto al = dynamic_cast<geom_view_t*>(cur_it);

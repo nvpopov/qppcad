@@ -119,9 +119,9 @@ void geom_view_colorizer_helper::py_colorize_by_distance(float min_dist,
                                                          vector3<float> over_dist_color) {
   app_state_t *astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
           //
@@ -147,9 +147,9 @@ void geom_view_colorizer_helper::py_colorize_by_distance_with_pairs(
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
           //

@@ -638,7 +638,7 @@ void main_window::dropEvent(QDropEvent *event) {
           QString native_path = urlList.at(i).toLocalFile();
           std::string native_path_str = native_path.toStdString();
           astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
-          astate->ws_manager->load_from_file_autodeduce(native_path_str);
+          astate->ws_mgr->load_from_file_autodeduce(native_path_str);
         }
     }
 }
@@ -676,18 +676,18 @@ void main_window::wss_changed_slot() {
 
   tp_ws_selector->clear();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
       tp_rm_ws->setEnabled(true);
       tp_rnm_ws->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
       tp_add_ws_item->setEnabled(true);
-      for (size_t i = 0; i < astate->ws_manager->m_ws.size(); i++) {
-          auto ws = astate->ws_manager->m_ws[i];
+      for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
+          auto ws = astate->ws_mgr->m_ws[i];
           QString dest = QString::fromStdString(fmt::format("[{}] {}", i, ws->m_ws_name));
           tp_ws_selector->addItem(dest);
         }
 
-      tp_ws_selector->setCurrentIndex(*(astate->ws_manager->get_cur_id()));
+      tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
 
     } else {
       tp_add_ws_item->setEnabled(false);
@@ -698,7 +698,7 @@ void main_window::wss_changed_slot() {
 
   tp_ws_selector->blockSignals(false);
   astate->log(fmt::format("main_window::workspaces_changed_slot(), total ws = {}",
-                          astate->ws_manager->m_ws.size()));
+                          astate->ws_mgr->m_ws.size()));
 
 }
 
@@ -706,12 +706,12 @@ void main_window::ws_selector_selection_changed(int index) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto current = astate->ws_manager->get_cur_id();
+  if (astate->ws_mgr->has_wss()) {
+      auto current = astate->ws_mgr->get_cur_id();
       astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
                               index, *current));
       if (current) {
-          astate->ws_manager->set_cur_id(opt<size_t>(index));
+          astate->ws_mgr->set_cur_id(opt<size_t>(index));
           astate->make_viewport_dirty();
         }
     }
@@ -721,7 +721,7 @@ void main_window::tp_show_obj_insp_state_changed(int state) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
 
   if (!cur_ws) {
       obj_insp_widget->hide();
@@ -744,8 +744,8 @@ void main_window::tp_show_gizmo_state_changed(int state) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           cur_ws->m_gizmo->m_is_visible = state == Qt::Checked;
           astate->make_viewport_dirty();
@@ -758,7 +758,7 @@ void main_window::tp_show_gizmo_state_changed(int state) {
 void main_window::create_new_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->ws_manager->create_new_ws(true);
+  astate->ws_mgr->create_new_ws(true);
   wss_changed_slot();
   astate->make_viewport_dirty();
 
@@ -772,7 +772,7 @@ void main_window::open_ws() {
                                                    astate->m_last_dir,
                                                    "*.json");
   if (file_name != "") {
-      astate->ws_manager->load_from_file(file_name.toStdString(), true);
+      astate->ws_mgr->load_from_file(file_name.toStdString(), true);
       wss_changed_slot();
     }
 }
@@ -783,8 +783,8 @@ void main_window::save_ws() {
 
   stop_update_cycle();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           QFileInfo check_file(QString::fromStdString(cur_ws->m_fs_path));
           if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "" &&
@@ -818,8 +818,8 @@ void main_window::save_ws_as() {
 
   stop_update_cycle();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           QString file_name = QFileDialog::getSaveFileName(this,
                                                            "Save qpp::cad workspace",
@@ -843,8 +843,8 @@ void main_window::close_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           QMessageBox::StandardButton reply;
           reply = QMessageBox::question(this, tr("Workspace -> Close"),
@@ -865,8 +865,8 @@ void main_window::rename_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           bool ok;
           QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
@@ -887,8 +887,8 @@ void main_window::cur_ws_changed() {
 
   change_camera_buttons_visible(false, false);
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           tp_show_obj_insp->setChecked(cur_ws->m_show_obj_insp);
           tp_show_obj_insp->setVisible(true);
@@ -917,9 +917,9 @@ void main_window::cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
 
@@ -960,8 +960,8 @@ void main_window::cur_ws_properties_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
           tp_edit_mode_item->blockSignals(true);
@@ -992,9 +992,9 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
   bool need_to_hide_force_sel_lbl_vis{true};
   bool need_to_hide_atom_override{true};
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
 
@@ -1097,9 +1097,9 @@ void main_window::tp_dist_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
 
@@ -1135,9 +1135,9 @@ void main_window::tp_angle_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
 
@@ -1181,8 +1181,8 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           if (id == 0) cur_ws->m_edit_type = ws_edit_e::edit_item;
           else cur_ws->m_edit_type = ws_edit_e::edit_content;
@@ -1197,9 +1197,9 @@ void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
 
@@ -1228,9 +1228,9 @@ void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
 
@@ -1271,8 +1271,8 @@ void main_window::tp_camera_tool_button_triggered(QAction *action) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!astate->ws_manager->has_wss()) return;
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!astate->ws_mgr->has_wss()) return;
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return;
 
   auto cur_it = cur_ws->get_selected();
@@ -1311,8 +1311,8 @@ void main_window::toggle_ws_edit_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           cur_ws->toggle_edit_mode();
           cur_ws_changed();
@@ -1360,7 +1360,7 @@ void main_window::action_select_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
       auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
@@ -1376,7 +1376,7 @@ void main_window::action_unselect_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
       auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
@@ -1391,7 +1391,7 @@ void main_window::action_invert_selected_content() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (cur_ws && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
       auto cur_it = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
@@ -1426,7 +1426,7 @@ void main_window::rebuild_recent_files_menu() {
   app_state_t* astate = app_state_t::get_inst();
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
       file_menu_recent_entries[i]->setVisible(true);
-      std::string ff_name = astate->ws_manager->m_bhv_mgr->get_ff_full_name(
+      std::string ff_name = astate->ws_mgr->m_bhv_mgr->get_ff_full_name(
                               astate->m_recent_files[i].m_ff_id);
 
       std::string rec_menu_entry;
@@ -1458,11 +1458,11 @@ void main_window::recent_files_clicked() {
 
   if (idx != -1 && idx < astate->m_recent_files.size()) {
       auto &rec_idx = astate->m_recent_files[idx];
-      if (rec_idx.m_native) astate->ws_manager->load_from_file(rec_idx.m_file_name, false);
+      if (rec_idx.m_native) astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
       else {
-          auto bhv_id = astate->ws_manager->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
-          if (bhv_id) astate->ws_manager->import_from_file(rec_idx.m_file_name, *bhv_id, true);
-          else astate->ws_manager->load_from_file_autodeduce(rec_idx.m_file_name);
+          auto bhv_id = astate->ws_mgr->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
+          if (bhv_id) astate->ws_mgr->import_from_file(rec_idx.m_file_name, *bhv_id, true);
+          else astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name);
         }
     }
 
@@ -1471,7 +1471,7 @@ void main_window::recent_files_clicked() {
 void main_window::build_bhv_menus_and_actions() {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   if (!bhv_mgr) return;
 
@@ -1550,13 +1550,13 @@ void main_window::build_bhv_tools_menus() {
   app_state_t* astate = app_state_t::get_inst();
 
   //construct tools groups
-  for (auto &ffg : astate->ws_manager->m_bhv_mgr->m_tools_groups) {
+  for (auto &ffg : astate->ws_mgr->m_bhv_mgr->m_tools_groups) {
       QMenu *new_menu = tools_menu->addMenu(QString::fromStdString(ffg.second.m_full_name));
       tools_menu_groups.emplace(ffg.first, new_menu);
     }
 
   //construct tools actions
-  for (auto &ff : astate->ws_manager->m_bhv_mgr->m_tools_info) {
+  for (auto &ff : astate->ws_mgr->m_bhv_mgr->m_tools_info) {
       //construct tool's action
       qextended_action *new_act = new qextended_action(this);
       new_act->m_joined_data[0] = ff.first;
@@ -1575,7 +1575,7 @@ void main_window::build_bhv_tools_menus() {
 void main_window::action_bhv_tools_menus_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
   if (!ext_act) return;
@@ -1584,7 +1584,7 @@ void main_window::action_bhv_tools_menus_clicked() {
 
   auto it_t = bhv_mgr->m_tools_info.find(t_hash);
 
-  std::shared_ptr<workspace_t> cur_ws = astate->ws_manager->get_cur_ws();
+  std::shared_ptr<workspace_t> cur_ws = astate->ws_mgr->get_cur_ws();
   std::shared_ptr<ws_item_t> cur_it{nullptr};
   if (cur_ws) cur_it = cur_ws->get_selected_sp();
 
@@ -1595,9 +1595,9 @@ void main_window::action_bhv_tools_menus_clicked() {
 void main_window::control_bhv_tools_menus_activity() {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
-  std::shared_ptr<workspace_t> cur_ws = astate->ws_manager->get_cur_ws();
+  std::shared_ptr<workspace_t> cur_ws = astate->ws_mgr->get_cur_ws();
   std::shared_ptr<ws_item_t> cur_it{nullptr};
   if (cur_ws) cur_it = cur_ws->get_selected_sp();
 
@@ -1618,7 +1618,7 @@ void main_window::control_bhv_tools_menus_activity() {
 void main_window::action_bhv_import_to_cur_workspace() {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
   if (!ext_act) return;
@@ -1634,7 +1634,7 @@ void main_window::action_bhv_import_to_cur_workspace() {
                                        "dialog_name",
                                        astate->m_last_dir,
                                        "*").toStdString();
-      if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id, false);
+      if (!file_name.empty()) astate->ws_mgr->import_from_file(file_name, b_id, false);
     }
 
 }
@@ -1642,7 +1642,7 @@ void main_window::action_bhv_import_to_cur_workspace() {
 void main_window::action_bhv_import_as_new_workspace() {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
   if (!ext_act) return;
@@ -1658,7 +1658,7 @@ void main_window::action_bhv_import_as_new_workspace() {
                                                            "dialog_name",
                                                            astate->m_last_dir,
                                                            "*").toStdString();
-      if (!file_name.empty()) astate->ws_manager->import_from_file(file_name, b_id);
+      if (!file_name.empty()) astate->ws_mgr->import_from_file(file_name, b_id);
     }
 
 }
@@ -1666,12 +1666,12 @@ void main_window::action_bhv_import_as_new_workspace() {
 void main_window::action_bhv_export_selected() {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
   if (!ext_act) return;
 
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return;
 
   auto cur_it = cur_ws->get_selected_sp();
@@ -1688,7 +1688,7 @@ void main_window::action_bhv_export_selected() {
                                                            "dialog_name",
                                                            "*").toStdString();
       if (!file_name.empty())
-        astate->ws_manager->save_ws_item_to_file(file_name, cur_it, b_id);
+        astate->ws_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
     }
 
 }
@@ -1697,17 +1697,17 @@ void main_window::control_bhv_menus_activity() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!astate->ws_manager) return;
+  if (!astate->ws_mgr) return;
 
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
-  if (!astate->ws_manager->has_wss()) {
+  if (!astate->ws_mgr->has_wss()) {
       file_menu_import_to_cur_ws->setEnabled(false);
       file_menu_export_sel_as->setEnabled(false);
     } else {
       file_menu_import_to_cur_ws->setEnabled(true);
       //bool need_to_enable_export_menu{false};
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected_sp();
           if (cur_it) {
@@ -1734,8 +1734,8 @@ void main_window::control_bhv_menus_activity() {
 void main_window::make_screenshot() {
 
   app_state_t* astate = app_state_t::get_inst();
-  if (!astate->ws_manager) return;
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (!astate->ws_mgr) return;
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return;
 
   QDateTime date = QDateTime::currentDateTime();

@@ -95,7 +95,7 @@ object_inspector_widget_t::~object_inspector_widget_t() {
 void object_inspector_widget_t::update_ws_items_view_widget() {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_manager->m_bhv_mgr.get();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   setUpdatesEnabled(false);
 
@@ -110,9 +110,9 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       none_item_placeholder->show();
     }
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
           auto cur_it = cur_ws->get_selected();
@@ -153,8 +153,8 @@ void object_inspector_widget_t::cur_ws_changed() {
   ws_items_list->clear();
   ws_items_list->clearSelection();
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++) {
               ws_items_list->addItem(
@@ -178,9 +178,9 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
 
   ws_items_list->blockSignals(true);
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
 
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
 
@@ -208,8 +208,8 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
 
   astate->log("DEBUG: object_inspector_widget_t::ui_cur_ws_selected_item_changed");
 
-  if (astate->ws_manager->has_wss()) {
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
           cur_ws->set_selected_item(size_t(ws_items_list->currentRow()), true);
 

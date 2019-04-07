@@ -91,6 +91,7 @@ find_package(Qt5Charts)
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Charts_INCLUDE_DIRS})
+include_directories(deps/qpp/tests)
 
 qt5_add_resources(QRCS data/resources.qrc)
 
@@ -182,6 +183,9 @@ add_executable(qppcad
     src/qppcad/ws_item/geom_view/qmeasurements_table_model.cpp
     src/qppcad/ws_item/geom_view/xgeom_table_model.cpp
     src/qppcad/ws_item/geom_view/geom_view_type_summary_popup.cpp
+
+    src/qppcad/ws_item/arrow_array/arrow_array.cpp
+    src/qppcad/ws_item/arrow_array/arrow_array_obj_insp_widget.cpp
 
     src/qppcad/ws_item/psg_view/psg_view.cpp
     src/qppcad/ws_item/psg_view/psg_view_obj_insp_widget.cpp

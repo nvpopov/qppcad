@@ -126,7 +126,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_subcells_idx = new qbinded_int3_input_t;
   disp_subcells_idx_lbl = new QLabel(tr("Subcells range"));
   disp_subcells_idx->set_min_max_step(1, 10, 1);
-  disp_subcells_clr = new qbinded_color3_input_t;
+  disp_subcells_clr = new qbinded_color3_input_t();
   disp_subcells_color_lbl = new QLabel(tr("Subcell color"));
   init_form_lt_lbl(disp_draw_subcells_lbl);
   init_form_lt_lbl(disp_subcells_idx_lbl);
@@ -143,7 +143,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_draw_cell = new qbinded_checkbox_t;
   disp_draw_cell_label = new QLabel(tr("Draw cell"));
   init_form_lt_lbl(disp_draw_cell_label);
-  disp_cell_color = new qbinded_color3_input_t;
+  disp_cell_color = new qbinded_color3_input_t();
   disp_cell_color_label = new QLabel(tr("Cell color"));
   init_form_lt_lbl(disp_cell_color_label);
 

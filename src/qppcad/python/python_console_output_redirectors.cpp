@@ -5,5 +5,5 @@ using namespace qpp;
 using namespace qpp::cad;
 
 void python_std_output_redirector_t::write(pybind11::str data) {
-  app_state_t::get_inst()->py_manager->m_output_buffer += data.cast<std::string>();
+  app_state_t::get_inst()->py_mgr->m_output_buffer += data.cast<std::string>();
 }

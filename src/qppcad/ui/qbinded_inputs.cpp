@@ -342,14 +342,19 @@ void qbinded_color3_input_t::mousePressEvent(QMouseEvent *event) {
 qbinded_color3_input_t::qbinded_color3_input_t(QWidget *parent) : QFrame (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setFixedHeight(astate->size_guide.obj_insp_ctrl_t2_h());
-  setFrameStyle(QFrame::Panel);
+
   QPalette pal = palette();
   pal.setColor(QPalette::Background, Qt::black);
   pal.setColor(QPalette::Foreground, Qt::white);
   setAutoFillBackground(true);
   setPalette(pal);
+
+  setFrameStyle(QFrame::Panel);
+
+  update();
 
 }
 

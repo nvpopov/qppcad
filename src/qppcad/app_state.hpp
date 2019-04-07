@@ -124,8 +124,8 @@ namespace qpp {
         mesh_t *mesh_zl_plane;
         mesh_t *mesh_xline_mesh;
 
-        std::shared_ptr<workspace_manager_t> ws_manager;
-        std::unique_ptr<python_manager_t> py_manager;
+        std::shared_ptr<workspace_manager_t> ws_mgr;
+        std::unique_ptr<python_manager_t> py_mgr;
         std::unique_ptr<string_hash_register_t> hash_reg;
 
         std::vector<recent_file_record_t> m_recent_files;

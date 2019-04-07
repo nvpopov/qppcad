@@ -39,8 +39,8 @@ int main (int argc, char **argv) {
 
   app_state_t *astate = app_state_t::get_inst();
   astate->init_managers();
-  astate->ws_manager->init_ws_item_bhv_mgr();
-  astate->ws_manager->init_default();
+  astate->ws_mgr->init_ws_item_bhv_mgr();
+  astate->ws_mgr->init_default();
   astate->load_settings();
 
   if (!args.empty()) {
@@ -51,7 +51,7 @@ int main (int argc, char **argv) {
       if (parser.isSet(target_fmt_option))
         file_format = parser.value(target_fmt_option).toStdString();
 
-      astate->ws_manager->load_from_file_autodeduce(file_name, file_format);
+      astate->ws_mgr->load_from_file_autodeduce(file_name, file_format);
 
     }
 

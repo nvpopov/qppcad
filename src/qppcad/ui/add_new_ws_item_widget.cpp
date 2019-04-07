@@ -7,6 +7,7 @@
 #include <qppcad/ws_item/cube_primitive/cube_primitive.hpp>
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
+#include <qppcad/ws_item/arrow_array/arrow_array.hpp>
 
 #include <qppcad/ui/qt_helpers.hpp>
 
@@ -23,7 +24,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   setWindowTitle(tr("Add new item to workspace"));
 
-  descr_list.reserve(9);
+  descr_list.reserve(10);
 
   descr_list.push_back(tr("Description for geom_view_t [DIM=0D]"));
   descr_list.push_back(tr("Description for geom_view_t [DIM=1D]"));
@@ -34,6 +35,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   descr_list.push_back(tr("Description for cube_primitive_t"));
   descr_list.push_back(tr("Description for arrow_primitive_t"));
   descr_list.push_back(tr("Description for node_book_t"));
+  descr_list.push_back(tr("Description for arrow_array_t"));
 
   main_lt = new QVBoxLayout;
   data_lt = new QHBoxLayout;
@@ -120,6 +122,12 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
           this,
           &add_new_ws_item_widget_t::react_gb_ctor_node_book_checked);
 
+  rb_ctor_arrow_array = new QRadioButton(tr("arrow array"));
+  connect(rb_ctor_arrow_array,
+          &QRadioButton::toggled,
+          this,
+          &add_new_ws_item_widget_t::react_gb_ctor_arrow_array_checked);
+
   rb_ctor_geom0d->setChecked(true);
 
   gb_ctor_lt->addWidget(rb_ctor_geom0d);
@@ -131,6 +139,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   gb_ctor_lt->addWidget(rb_ctor_cube);
   gb_ctor_lt->addWidget(rb_ctor_arrow);
   gb_ctor_lt->addWidget(rb_ctor_node_book);
+  gb_ctor_lt->addWidget(rb_ctor_arrow_array);
 
   auto label_setup = [](QLabel *label, bool visible = false) {
     label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -239,7 +248,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   gb_type_param_lt->addRow(type_param_name_lbl, type_param_name);
 
-  auto cur_ws = astate->ws_manager->get_cur_ws();
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (cur_ws) type_param_name->setText(tr("new_item_%1").arg(cur_ws->m_ws_items.size()));
 
   main_lt->addLayout(data_lt);
@@ -325,9 +334,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
       app_state_t *astate = app_state_t::get_inst();
 
       if (rb_ctor_geom0d->isChecked()) {
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           if (!cur_ws) return;
-          auto nt = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
+          auto nt =
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
           auto nt_gv = nt->cast_as<geom_view_t>();
           if (!nt_gv) return;
           nt_gv->m_name = type_param_name->text().toStdString();
@@ -339,9 +349,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           cell_construct_mode ccm =
               static_cast<cell_construct_mode>(type_cell_ctor_mode->currentIndex());
 
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           if (!cur_ws) return;
-          auto nt = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
+          auto nt =
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
           auto nt_gv = nt->cast_as<geom_view_t>();
           if (!nt_gv) return;
           nt_gv->m_tws_tr->do_action(act_lock | act_clear_all);
@@ -398,9 +409,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
         }
 
       if (rb_ctor_psg->isChecked()) {
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           if (!cur_ws) return;
-          auto nt = astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
+          auto nt =
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
           auto nt_psg = nt->cast_as<psg_view_t>();
           if (!nt_psg) return;
           auto ag = shnfl<float>::group(type_param_ag->currentText().toStdString());
@@ -412,10 +424,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
         }
 
       if (rb_ctor_pgf_prod->isChecked()) {
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(pgf_producer_t::get_type_static());
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(pgf_producer_t::get_type_static());
           auto nt_pgfp = nt->cast_as<pgf_producer_t>();
           if (!nt_pgfp) return;
           nt_pgfp->m_name = type_param_name->text().toStdString();
@@ -423,10 +435,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
         }
 
       if (rb_ctor_cube->isChecked()) {
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(cube_primitive_t::get_type_static());
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(cube_primitive_t::get_type_static());
           auto nt_cp = nt->cast_as<cube_primitive_t>();
           if (!nt_cp) return;
           nt_cp->m_name = type_param_name->text().toStdString();
@@ -434,10 +446,10 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
         }
 
       if (rb_ctor_arrow->isChecked()) {
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(arrow_primitive_t::get_type_static());
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(arrow_primitive_t::get_type_static());
           auto nt_ap = nt->cast_as<arrow_primitive_t>();
           if (!nt_ap) return;
           nt_ap->m_name = type_param_name->text().toStdString();
@@ -445,13 +457,24 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
         }
 
       if (rb_ctor_node_book->isChecked()) {
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           if (!cur_ws) return;
           auto nt =
-              astate->ws_manager->m_bhv_mgr->fbr_ws_item_by_type(node_book_t::get_type_static());
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(node_book_t::get_type_static());
           auto nb_ap = nt->cast_as<node_book_t>();
           if (!nb_ap) return;
           nb_ap->m_name = type_param_name->text().toStdString();
+          cur_ws->add_item_to_ws(nt);
+        }
+
+      if (rb_ctor_arrow_array->isChecked()) {
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt =
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(arrow_array_t::get_type_static());
+          auto aa_ap = nt->cast_as<arrow_array_t>();
+          if (!aa_ap) return;
+          aa_ap->m_name = type_param_name->text().toStdString();
           cur_ws->add_item_to_ws(nt);
         }
 
@@ -562,6 +585,17 @@ void add_new_ws_item_widget_t::react_gb_ctor_node_book_checked(bool checked) {
   if (checked) {
       set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[8]);
+    }
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_arrow_array_checked(bool checked) {
+
+  control_top_type_parameters_visibility();
+
+  if (checked) {
+      set_cell_ctors_visibility(false);
+      type_descr_lbl->setText(descr_list[9]);
     }
 
 }

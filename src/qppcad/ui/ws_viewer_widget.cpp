@@ -71,9 +71,9 @@ void ws_viewer_widget_t::update_cycle() {
 
     }
 
-  if (astate->ws_manager->has_wss()) {
+  if (astate->ws_mgr->has_wss()) {
       m_update_timer_cpu->start();
-      auto cur_ws = astate->ws_manager->get_cur_ws();
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) cur_ws->update(0.016f);
       astate->m_last_frame_time_cpu = m_update_timer_cpu->nsecsElapsed();
     }
@@ -84,7 +84,7 @@ void ws_viewer_widget_t::update_cycle() {
 
   astate->is_mouse_moving = false;
 
-  astate->ws_manager->utility_event_loop();
+  astate->ws_mgr->utility_event_loop();
 
 }
 
@@ -133,7 +133,7 @@ void ws_viewer_widget_t::paintGL() {
   glapi->glDepthFunc(GL_LEQUAL);
   glapi->glEnable(GL_CULL_FACE);
   glapi->glCullFace(GL_BACK);
-  astate->ws_manager->render_cur_ws();
+  astate->ws_mgr->render_cur_ws();
   glapi->glDisable(GL_CULL_FACE);
   glapi->glDisable(GL_DEPTH_TEST);
 
@@ -145,8 +145,8 @@ void ws_viewer_widget_t::paintGL() {
 
       //build contrast color for font
       QColor debug_hud_color = Qt::black;
-      if (astate->ws_manager->has_wss()) {
-          auto cur_ws = astate->ws_manager->get_cur_ws();
+      if (astate->ws_mgr->has_wss()) {
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
           debug_hud_color.setRedF(1 - cur_ws->m_background_color[0]);
           debug_hud_color.setGreenF(1 - cur_ws->m_background_color[1]);
           debug_hud_color.setBlueF(1 - cur_ws->m_background_color[2]);
@@ -166,9 +166,9 @@ void ws_viewer_widget_t::paintGL() {
                        );
     }
 
-  astate->ws_manager->render_cur_ws_overlay(painter);
+  astate->ws_mgr->render_cur_ws_overlay(painter);
 
-  if (!astate->ws_manager->has_wss()) draw_text_logo(painter);
+  if (!astate->ws_mgr->has_wss()) draw_text_logo(painter);
 
   painter.end();
   astate->m_last_frame_time_gpu = m_update_timer_gpu->nsecsElapsed();
@@ -183,7 +183,7 @@ void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
 
       if (event->button() == Qt::LeftButton)  {
           astate->mouse_lb_pressed = true;
-          astate->ws_manager->mouse_click();
+          astate->ws_mgr->mouse_click();
           astate->mouse_distance_pp = 0.0f;
         }
 
