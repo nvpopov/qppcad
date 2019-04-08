@@ -1046,7 +1046,9 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       for (size_t i = 0; i < b_al->m_anim->get_total_anims(); i++) {
           gb_current_anim->addItem(
-                QString::fromStdString(b_al->m_anim->m_anim_data[i].m_anim_name));
+                QString::fromStdString(fmt::format("[{}] {}",
+                                                   i,
+                                                   b_al->m_anim->m_anim_data[i].m_anim_name)));
         }
 
       gb_current_anim->setCurrentIndex(b_al->m_anim->m_cur_anim);

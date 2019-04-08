@@ -46,6 +46,22 @@ namespace qpp {
         void prev_anim();
         void traverse_anim(int travel_dir);
 
+        /**
+         * @brief make_interpolated_anim
+         * @param new_anim_name
+         * @param num_frames
+         * @param anim1_id
+         * @param anim1_frm
+         * @param anim2_id
+         * @param anim2_frm
+         */
+        void make_interpolated_anim(std::string new_anim_name,
+                                    size_t num_frames,
+                                    size_t anim1_id,
+                                    size_t anim1_frm,
+                                    size_t anim2_id,
+                                    size_t anim2_frm);
+
         void make_animable();
         void make_anim(const std::string _anim_name,
                        const geom_anim_t _anim_type,

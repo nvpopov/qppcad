@@ -140,6 +140,7 @@ void geom_view_anim_subsys_t::update(const float delta_time) {
       //m_play_cyclic = false;
     }
   //astate->make_viewport_dirty();
+
 }
 
 bool geom_view_anim_subsys_t::animable() const {
@@ -202,6 +203,93 @@ void geom_view_anim_subsys_t::traverse_anim(int travel_dir) {
     }
 
   if (p_owner->m_selected)
+    astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+}
+
+void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
+                                                     size_t num_frames,
+                                                     size_t anim1_id,
+                                                     size_t anim1_frm,
+                                                     size_t anim2_id,
+                                                     size_t anim2_frm) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  auto validate_anim_idx =
+      [this](size_t _anim_n_id, size_t _anim_n_frm, size_t _order) {
+
+    if (_anim_n_id >= this->m_anim_data.size()) {
+        throw std::out_of_range(fmt::format("invalid anim{} index={}", _order, _anim_n_id));
+        return;
+      }
+
+    if (_anim_n_frm >= this->m_anim_data[_anim_n_id].frames.size()) {
+        throw std::out_of_range(fmt::format("invalid anim{} index={} frame={} of total={}",
+                                            _order,
+                                            _anim_n_id,
+                                            _anim_n_frm,
+                                            this->m_anim_data[_anim_n_id].frames.size()
+                                            ));
+        return;
+      }
+
+    size_t _frame_data_size =
+        this->m_anim_data[_anim_n_id].frames[_anim_n_frm].atom_pos.size();
+
+    if (_frame_data_size != this->p_owner->m_geom->nat()) {
+        throw std::out_of_range(fmt::format("invalid anim{} index={} frame={} framedata={}",
+                                            _order,
+                                            _anim_n_id,
+                                            _anim_n_frm,
+                                            _frame_data_size
+                                            ));
+        return;
+      }
+
+  };
+
+  validate_anim_idx(anim1_id, anim1_frm, 1);
+  validate_anim_idx(anim2_id, anim2_frm, 2);
+
+  if (num_frames <= 1) {
+      throw std::out_of_range("invalid number of frames!");
+      return;
+    }
+
+  // validate target frames
+  auto &rec1 = m_anim_data[anim1_id];
+  auto &rec2 = m_anim_data[anim2_id];
+
+  auto &r_fr1 = rec1.frames[anim1_frm];
+  auto &r_fr2 = rec2.frames[anim2_frm];
+
+  geom_anim_record_t<float> new_anim;
+  new_anim.m_anim_name = new_anim_name;
+  new_anim.m_anim_type = geom_anim_t::anim_generic;
+
+  new_anim.frames.resize(num_frames);
+
+  size_t tot_at = p_owner->m_geom->nat();
+
+  for (size_t i = 0; i < num_frames; i++) {
+
+      new_anim.frames[i].atom_pos.resize(tot_at);
+      float alpha = 1 - ((i+1) / float(num_frames));
+
+      for (size_t q = 0; q < tot_at; q++) {
+
+          vector3<float> s_fr = r_fr1.atom_pos[q];
+          vector3<float> e_fr = r_fr2.atom_pos[q];
+
+          new_anim.frames[i].atom_pos[q] = s_fr * (alpha) + e_fr * (1-alpha);
+
+        }
+    }
+
+  m_anim_data.emplace_back(std::move(new_anim));
+
+  if (p_owner->is_selected())
     astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
 
 }
