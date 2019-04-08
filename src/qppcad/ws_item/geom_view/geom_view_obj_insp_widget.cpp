@@ -286,6 +286,23 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
           this,
           &geom_view_obj_insp_widget_t::cur_anim_index_changed);
 
+  anim_act_lt = new QHBoxLayout;
+  anim_act_lt->setContentsMargins(5, 0, 5, 0);
+  anim_act_ren = new QPushButton(tr("Rename"));
+  connect(anim_act_ren,
+          &QPushButton::clicked,
+          this,
+          &geom_view_obj_insp_widget_t::anim_act_ren_clicked);
+
+  anim_act_del = new QPushButton(tr("Delete"));
+  connect(anim_act_del,
+          &QPushButton::clicked,
+          this,
+          &geom_view_obj_insp_widget_t::anim_act_del_clicked);
+
+  anim_act_lt->addWidget(anim_act_ren);
+  anim_act_lt->addWidget(anim_act_del);
+
   gb_anim_summary_lt->addRow(tr("Num. of anim."), gb_anim_total_anims);
   gb_anim_summary_lt->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
   gb_anim_summary_lt->addRow(tr("Play in cycle"), gb_play_cyclic);
@@ -293,6 +310,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_summary_lt->addRow(tr("Frame time "), gb_anim_speed);
   gb_anim_summary_lt->addRow(tr("Num frm."), gb_anim_total_frames_in_anim);
   gb_anim_summary_lt->addRow(tr("Current frame:"), gb_anim_cur_frame);
+  gb_anim_summary_lt->addRow(tr("Actions"), anim_act_lt);
   init_form_lt(gb_anim_summary_lt);
 
   gb_anim_timeline = new qspoiler_widget_t(tr("Timeline"));
@@ -1748,6 +1766,65 @@ void geom_view_obj_insp_widget_t::anim_button_frame_move_forward_clicked() {
 
 void geom_view_obj_insp_widget_t::anim_button_frame_move_backward_clicked() {
   if (b_al) b_al->m_anim->manual_frame_manipulate(-1);
+}
+
+void geom_view_obj_insp_widget_t::anim_act_ren_clicked() {
+
+  if (!b_al || !b_al->m_anim->animable()) return;
+
+  auto cur_anim = b_al->m_anim->get_current_anim();
+  if (!cur_anim) return;
+
+  QString cur_name = QString::fromStdString(cur_anim->m_anim_name);
+
+  bool ok;
+  QString new_name = QInputDialog::getText(this,
+                                           tr("QInputDialog::getText()"),
+                                           tr("New animation name:"),
+                                           QLineEdit::Normal,
+                                           cur_name,
+                                           &ok);
+
+  if (ok && !new_name.isEmpty()) {
+      cur_anim->m_anim_name = new_name.toStdString();
+      update_from_ws_item();
+    }
+
+}
+
+void geom_view_obj_insp_widget_t::anim_act_del_clicked() {
+
+  if (!b_al || !b_al->m_anim->animable()) return;
+
+  if (b_al->m_anim->get_total_anims() == 1) {
+      QMessageBox::warning(nullptr,
+                           "Warning",
+                           "Cannot delete the last animation. \n"
+                           "Please make geom. view non animable first!");
+      return;
+    }
+
+  size_t cur_anim_idx = b_al->m_anim->m_cur_anim;
+  if (cur_anim_idx >= b_al->m_anim->get_total_anims()) {
+      return;
+    }
+
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(this, tr("Delete animation"),
+                                tr("Do you really want to delete the current animation?"),
+                                QMessageBox::Yes | QMessageBox::No);
+
+  if (reply == QMessageBox::No) {
+      return;
+    }
+
+  b_al->m_anim->m_anim_data.erase(b_al->m_anim->m_anim_data.begin() + cur_anim_idx);
+
+  int new_anim_idx =
+      std::clamp<int>(cur_anim_idx - 1, 0, b_al->m_anim->m_anim_data.size());
+  b_al->m_anim->m_cur_anim = new_anim_idx;
+  update_from_ws_item();
+
 }
 
 void geom_view_obj_insp_widget_t::cell_changed() {

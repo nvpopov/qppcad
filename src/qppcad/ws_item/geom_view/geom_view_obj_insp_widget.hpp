@@ -102,6 +102,9 @@ namespace qpp {
         qbinded_checkbox_t *gb_play_cyclic;
         qbinded_float_spinbox_t *gb_anim_speed;
         QComboBox *gb_current_anim;
+        QHBoxLayout *anim_act_lt;
+        QPushButton *anim_act_ren;
+        QPushButton *anim_act_del;
         QFormLayout *gb_anim_summary_lt;
 
         qspoiler_widget_t *gb_anim_timeline;
@@ -288,6 +291,8 @@ namespace qpp {
         void anim_button_end_clicked();
         void anim_button_frame_move_forward_clicked();
         void anim_button_frame_move_backward_clicked();
+        void anim_act_ren_clicked();
+        void anim_act_del_clicked();
 
         void cell_changed();
         void draw_subcells_changed(int state);

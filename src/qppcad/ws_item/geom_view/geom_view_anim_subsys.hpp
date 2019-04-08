@@ -66,7 +66,8 @@ namespace qpp {
         void manual_frame_manipulate(const int frame_mod);
 
         geom_anim_record_t<float>* get_current_anim();
-        geom_anim_t get_cur_anim_type () const;
+        geom_anim_t get_cur_anim_type() const;
+        geom_anim_t get_anim_type_by_idx(size_t anim_idx) const;
 
         size_t get_total_anims () const;
         size_t frame_count (const size_t anim_id) const;

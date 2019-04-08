@@ -169,6 +169,8 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_geom_view_anim.def("to_frame", &geom_view_anim_subsys_t::update_current_frame_to);
   py_geom_view_anim.def("make_animable", &geom_view_anim_subsys_t::make_animable);
   py_geom_view_anim.def("make_anim", &geom_view_anim_subsys_t::make_anim);
+  py_geom_view_anim.def("get_anim_type", &geom_view_anim_subsys_t::get_anim_type_by_idx);
+  py_geom_view_anim.def("get_cur_anim_type", &geom_view_anim_subsys_t::get_cur_anim_type);
   py_geom_view_anim.def("commit_apos", &geom_view_anim_subsys_t::commit_atom_pos,
                         py::arg("atom_id"),
                         py::arg("lerp_from_start") = false,
