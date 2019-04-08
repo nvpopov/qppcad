@@ -32,12 +32,15 @@ arrow_array_obj_insp_widget_t::arrow_array_obj_insp_widget_t() {
 
   aa_arrow_color = new qbinded_color3_input_t;
 
+  aa_affected_by_sv = new qbinded_checkbox_t;
+
   gb_aa_settings_lt->addRow(tr("Source"), aa_settings_src);
   gb_aa_settings_lt->addRow(tr("Unf. arrow len."), aa_unf_arrow_len);
   gb_aa_settings_lt->addRow(tr("Unf. arrow scl."), aa_unf_arrow_scale);
   gb_aa_settings_lt->addRow(tr("Unf. cap len."), aa_unf_arrow_cap_len);
   gb_aa_settings_lt->addRow(tr("Unf. cap scl."), aa_unf_arrow_cap_scale);
   gb_aa_settings_lt->addRow(tr("Arrow color"), aa_arrow_color);
+  gb_aa_settings_lt->addRow(tr("Affected by sel. vis."), aa_affected_by_sv);
 
   init_form_lt(gb_aa_settings_lt);
 
@@ -59,6 +62,7 @@ void arrow_array_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       aa_unf_arrow_cap_len->bind_value(&b_aa->m_unf_arrow_cap_len);
       aa_unf_arrow_cap_scale->bind_value(&b_aa->m_unf_arrow_cap_scale);
       aa_arrow_color->bind_value(&b_aa->m_color);
+      aa_affected_by_sv->bind_value(&b_aa->m_affected_by_sv);
     }
 
 }
@@ -77,5 +81,6 @@ void arrow_array_obj_insp_widget_t::unbind_item() {
   aa_unf_arrow_cap_len->unbind_value();
   aa_unf_arrow_cap_scale->unbind_value();
   aa_arrow_color->unbind_value();
+  aa_affected_by_sv->unbind_value();
 
 }

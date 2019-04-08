@@ -66,6 +66,9 @@ void arrow_array_t::render() {
                                cur_anim->frames[end_frame_n_1].atom_pos[i] * (1-frame_delta_1) +
                                m_binded_gv->m_pos;
 
+      float dnodem = (end_pos - start_pos).norm();
+      if (dnodem < 0.001f) continue;
+
       vector3<float> dir = (end_pos - start_pos).normalized();
 
       //astate->log(fmt::format("{}", dir));

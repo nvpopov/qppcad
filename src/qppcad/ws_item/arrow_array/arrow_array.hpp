@@ -23,6 +23,8 @@ namespace qpp {
         float m_unf_arrow_cap_len{0.15f};
         float m_unf_arrow_scale{0.05f};
         float m_unf_arrow_cap_scale{0.12f};
+
+        bool m_affected_by_sv{false};
         vector3<float> m_color{clr_red};
 
         arrow_array_t();

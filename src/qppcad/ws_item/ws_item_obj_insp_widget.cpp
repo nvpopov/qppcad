@@ -196,6 +196,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_actions = new qspoiler_widget_t(tr("Item actions"));
 
   tg_actions_layout = new QHBoxLayout;
+  tg_actions_layout->setContentsMargins(5, 0, 5, 0);
   tg_actions->add_content_layout(tg_actions_layout);
 
   tg_actions_delete = new QPushButton(tr("Delete"));
