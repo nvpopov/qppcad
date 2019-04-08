@@ -300,6 +300,38 @@ pybind11::list simple_query::get_sel() {
 
 }
 
+pybind11::list simple_query::get_tool_groups() {
+
+  py::list ret;
+
+  app_state_t *astate = app_state_t::get_inst();
+  for (auto &tg : astate->ws_mgr->m_bhv_mgr->m_tools_groups)
+    ret.append(py::str(tg.second.m_full_name));
+
+  return ret;
+
+}
+
+pybind11::list simple_query::get_tool_names() {
+
+  py::list ret;
+
+  app_state_t *astate = app_state_t::get_inst();
+  for (auto &tg : astate->ws_mgr->m_bhv_mgr->m_tools_info)
+    ret.append(py::str(tg.second.m_full_name));
+
+  return ret;
+
+}
+
+void simple_query::exec_tool(std::shared_ptr<ws_item_t> ws_item, std::string tool_name) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->ws_mgr->m_bhv_mgr->exec_tool_by_name(tool_name, ws_item.get());
+  astate->make_viewport_dirty();
+
+}
+
 py::str simple_query::get_type_name() {
 
   app_state_t *astate = app_state_t::get_inst();

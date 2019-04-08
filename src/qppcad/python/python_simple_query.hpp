@@ -63,6 +63,9 @@ namespace qpp {
         static void unsel_cnt_type(py::str sel_type);
         static py::list get_sel();
 
+        static py::list get_tool_groups();
+        static py::list get_tool_names();
+        static void exec_tool(std::shared_ptr<ws_item_t> ws_item, std::string tool_name);
         static py::str get_type_name();
         static py::int_ get_type_hash();
         static py::bool_ is_instance_of_by_hash(size_t _type_hash);

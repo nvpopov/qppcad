@@ -216,6 +216,16 @@ void ws_item_behaviour_manager_t::exec_tool(ws_item_t *item, size_t tool_hash) {
 
 }
 
+void ws_item_behaviour_manager_t::exec_tool_by_name(std::string tool_name, ws_item_t *item) {
+
+  auto it = std::find_if(m_tools_info.begin(),
+                         m_tools_info.end(),
+                         [&tool_name](const auto &e){return e.second.m_full_name == tool_name;});
+
+  if (it != m_tools_info.end()) exec_tool(item, it->first);
+
+}
+
 std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_finger_print(
     const std::string &file_name) {
 

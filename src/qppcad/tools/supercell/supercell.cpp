@@ -9,36 +9,41 @@ void supercell_tool_t::exec(ws_item_t *item) {
   app_state_t *astate = app_state_t::get_inst();
   astate->log("Supercell tools::exec()");
 
-  if (astate->ws_mgr->has_wss()) {
+  if (!item) {
+      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                           QObject::tr("ws_item == nullptr"));
+      return;
+    }
 
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
+  auto al = item->cast_as<geom_view_t>();
+  if (!al) {
+      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                           QObject::tr("ws_item.cast<geom_view_t>() == nullptr"));
+      return;
+    }
 
-      if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<geom_view_t*>(cur_it);
+  if (al->m_geom->DIM != 3) {
+      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                           QObject::tr("al->m_geom->DIM != 3"));
+      return;
+    }
 
-          if (al) {
-              if (al->m_geom->DIM == 3) {
-                  super_cell_widget_t scw;
-                  int ret_code = scw.exec();
-                  int rep_a = scw.get_replication_coeff(0);
-                  int rep_b = scw.get_replication_coeff(1);
-                  int rep_c = scw.get_replication_coeff(2);
+  if (!al->m_parent_ws) {
+      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                           QObject::tr("!al->m_parent_ws!al->m_parent_ws"));
+      return;
+    }
 
-                  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c > 3)) {
-                      make_super_cell(al, rep_a, rep_b, rep_c);
-                      astate->make_viewport_dirty();
-                    }
 
-                } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                                            QObject::tr("Invalid periodicity of input"));
+  super_cell_widget_t scw;
+  int ret_code = scw.exec();
+  int rep_a = scw.get_replication_coeff(0);
+  int rep_b = scw.get_replication_coeff(1);
+  int rep_c = scw.get_replication_coeff(2);
 
-            } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                                        QObject::tr("ws_item.type != geom_view"));
-
-        } else QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                                    QObject::tr("Workspace not selectected"));
-
+  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c > 3)) {
+      make_super_cell(al, rep_a, rep_b, rep_c);
+      astate->make_viewport_dirty();
     }
 
 }

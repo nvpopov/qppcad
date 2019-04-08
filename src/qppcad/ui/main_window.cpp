@@ -1576,6 +1576,7 @@ void main_window::action_bhv_tools_menus_clicked() {
 
   if (it_t != bhv_mgr->m_tools_info.end())
     bhv_mgr->exec_tool(cur_it.get(), t_hash);
+
 }
 
 void main_window::control_bhv_tools_menus_activity() {

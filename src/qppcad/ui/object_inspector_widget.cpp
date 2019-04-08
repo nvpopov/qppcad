@@ -23,6 +23,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
                                 astate->size_guide.spoiler_button_icon_h()));
   btn_add_new_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
   btn_add_new_ws_item->setFlat(true);
+  btn_add_new_ws_item->setToolTip(tr("Add new ws_item"));
 
   btn_refresh_oi = new QPushButton;
   btn_refresh_oi->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
@@ -31,6 +32,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
                                 astate->size_guide.spoiler_button_icon_h()));
   btn_refresh_oi->setIcon(QIcon("://images/outline-refresh-24px.svg"));
   btn_refresh_oi->setFlat(true);
+  btn_refresh_oi->setToolTip(tr("Refresh the object inspector"));
 
   connect(btn_refresh_oi,
           &QPushButton::clicked,

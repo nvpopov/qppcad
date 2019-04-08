@@ -485,6 +485,13 @@ namespace qpp {
          */
         void exec_tool(ws_item_t* item, size_t tool_hash);
 
+        /**
+         * @brief exec_tool_by_name
+         * @param tool_name
+         * @param item
+         */
+        void exec_tool_by_name(std::string tool_name, ws_item_t *item = nullptr);
+
     };
 
   }
