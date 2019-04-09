@@ -685,6 +685,13 @@ void geom_view_t::sv_hide_invert_selected() {
 
 }
 
+void geom_view_t::xbool_invert_selected(size_t field_id) {
+  index zero = index::D(m_geom->DIM).all(0);
+  for (auto &elem : m_atom_idx_sel)
+    if (elem.m_idx == zero)
+        m_geom->xfield<bool>(field_id, elem.m_atm) = !m_geom->xfield<bool>(field_id, elem.m_atm);
+}
+
 void geom_view_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
 
   if (!m_geom) return;

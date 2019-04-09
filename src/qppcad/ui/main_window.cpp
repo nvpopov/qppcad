@@ -125,7 +125,6 @@ void main_window::init_menus() {
   file_menu_export_sel_as = file_menu->addMenu(tr("Export selected item"));
 
   file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
-
   for (int i = 0; i < qpp::cad::max_recent_files; i++) {
       QAction *recent_act = new QAction(file_menu_recent_files);
       file_menu_recent_entries[i] = recent_act;

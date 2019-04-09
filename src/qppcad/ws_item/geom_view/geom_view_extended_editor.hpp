@@ -38,7 +38,8 @@ namespace qpp {
       protected:
 
         void resizeEvent(QResizeEvent *event) override;
-        void data_double_clicked(int logical_index);
+        void header_vertical_double_clicked(int logical_index);
+        void header_horizontal_clicked(int logical_index);
 
     };
 

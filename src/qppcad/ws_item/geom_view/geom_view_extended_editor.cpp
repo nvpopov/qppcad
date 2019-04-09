@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_extended_editor.hpp>
 #include <qppcad/app_state.hpp>
 #include <QResizeEvent>
+#include <QInputDialog>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -18,7 +19,7 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
   xgeom_tv->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   xgeom_tv->setShowGrid(false);
   xgeom_tv->verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
-
+  xgeom_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 
   xgeom_tv->setFocusPolicy(Qt::NoFocus);
   xgeom_tv->setSelectionMode(QAbstractItemView::NoSelection);
@@ -37,7 +38,12 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
   connect(xgeom_tv->verticalHeader(),
           &QHeaderView::sectionDoubleClicked,
           this,
-          &geom_view_extended_editor_t::data_double_clicked);
+          &geom_view_extended_editor_t::header_vertical_double_clicked);
+
+  connect(xgeom_tv->horizontalHeader(),
+          &QHeaderView::sectionDoubleClicked,
+          this,
+          &geom_view_extended_editor_t::header_horizontal_clicked);
 
 }
 
@@ -99,11 +105,11 @@ void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
 
 }
 
-void geom_view_extended_editor_t::data_double_clicked(int logical_index) {
+void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_index) {
 
   if (xgeom_tv && xgeom_tmdl && m_binded_gv) {
 
-      std::cout << "@int logical_index =" << logical_index << std::endl;
+      //std::cout << "@int logical_index =" << logical_index << std::endl;
       m_binded_gv->toggle_atom_selection(logical_index);
 
       if (m_binded_gv->m_parent_ws &&
@@ -111,5 +117,47 @@ void geom_view_extended_editor_t::data_double_clicked(int logical_index) {
         m_binded_gv->m_parent_ws->set_edit_type(ws_edit_e::edit_content);
 
     }
+
+}
+
+void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
+
+  if (!xgeom_tv || !xgeom_tmdl || !m_binded_gv) return;
+  if (m_binded_gv->m_atom_idx_sel.empty()) return;
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  basic_types field_type = m_binded_gv->m_geom->field_type(logical_index);
+
+  switch (field_type) {
+    case basic_types::type_bool : {
+        m_binded_gv->xbool_invert_selected(logical_index);
+        xgeom_tv->update();
+      }
+    case basic_types::type_double : {
+        break;
+      }
+    case basic_types::type_float : case basic_types::type_real : {
+        bool ok;
+        double new_val =
+            QInputDialog::getDouble(this,
+                                    "Enter new value",
+                                    QString::fromStdString(
+                                      m_binded_gv->m_geom->field_name(logical_index)
+                                      ),
+                                    0, -10000, 10000, 4, &ok
+                                    );
+        if (ok) m_binded_gv->xfill<float>(logical_index, float(new_val));
+        break;
+      }
+    case basic_types::type_int : {
+        break;
+      }
+    case basic_types::type_string : {
+        break;
+      }
+    }
+
+  astate->make_viewport_dirty();
 
 }

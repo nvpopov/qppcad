@@ -210,10 +210,18 @@ namespace qpp {
           recalc_gizmo_barycenter();
         }
 
+        template <typename XFIELD>
+        void xfill(size_t field_id, XFIELD value) {
+          index zero = index::D(m_geom->DIM).all(0);
+          for (auto &elem : m_atom_idx_sel)
+            if (elem.m_idx == zero) m_geom->xfield<XFIELD>(field_id, elem.m_atm) = value;
+        }
+        void xbool_invert_selected(size_t field_id);
         void copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
         void copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst,
                                bool copy_selected = false,
                                bool copy_cell = true);
+
         void load_color_from_static_anim();
 
         vector3<float> get_xcolor(const size_t atm);

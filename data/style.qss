@@ -21,49 +21,53 @@ QWidget[s_class="tp_generic"] QLabel {
   color:white;
 }
 
-QCheckBox[s_class="tp_cb"] {
-  border:1px solid gray; border-radius:2px; padding-left:5px;
-  padding-right:5px;
-}
-
 QCheckBox::indicator {
   width: 21px;height: 21px;
 }
 
 QCheckBox::indicator:checked,QTreeView::indicator:checked,QTableView::indicator:checked,QGroupBox::indicator:checked{
-  image:url(:/images/icon_checkbox_checked.png);
+  border-image: url(:/images/icon_checkbox_checked.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:checked:pressed,QTreeView::indicator:checked:pressed,QTableView::indicator:checked:pressed,QGroupBox::indicator:checked:pressed{
-  image:url(:/images/icon_checkbox_checked_pressed.png);
+  border-image: url(:/images/icon_checkbox_checked_pressed.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:checked:disabled,QTreeView::indicator:checked:disabled,QTableView::indicator:checked:disabled,QGroupBox::indicator:checked:disabled{
-  image:url(:/images/icon_checkbox_checked_disabled.png);
+  border-image: url(:/images/icon_checkbox_checked_disabled.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:unchecked,QTreeView::indicator:unchecked,QTableView::indicator:unchecked,QGroupBox::indicator:unchecked{
-  image:url(:/images/icon_checkbox_unchecked.png);
+  border-image: url(:/images/icon_checkbox_unchecked.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:unchecked:pressed,QTreeView::indicator:unchecked:pressed,QTableView::indicator:unchecked:pressed,QGroupBox::indicator:unchecked:pressed{
-  image:url(:/images/icon_checkbox_unchecked_pressed.png);
+  border-image: url(:/images/icon_checkbox_unchecked_pressed.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:unchecked:disabled,QTreeView::indicator:unchecked:disabled,QTableView::indicator:unchecked:disabled,QGroupBox::indicator:unchecked:disabled{
-  image:url(:/images/icon_checkbox_unchecked_disabled.png);
+  border-image: url(:/images/icon_checkbox_unchecked_disabled.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:indeterminate,QTreeView::indicator:indeterminate,QTableView::indicator:indeterminate,QGroupBox::indicator:indeterminate{
-  image:url(:/images/icon_checkbox_indeterminate.png);
+  border-image: url(:/images/icon_checkbox_indeterminate.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:indeterminate:pressed,QTreeView::indicator:indeterminate:pressed,QTableView::indicator:indeterminate:pressed,QGroupBox::indicator:indeterminate:pressed{
-  image:url(:/images/icon_checkbox_indeterminate_pressed.png);
+  border-image: url(:/images/icon_checkbox_indeterminate_pressed.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QCheckBox::indicator:indeterminate:disabled,QTreeView::indicator:indeterminate:disabled,QTableView::indicator:indeterminate:disabled,QGroupBox::indicator:indeterminate:disabled{
-  image:url(:/images/icon_checkbox_indeterminate_disabled.png);
+  border-image: url(:/images/icon_checkbox_indeterminate_disabled.png) 0 0 0 0 stretch stretch;
+  border-width: 0px;
 }
 
 QScrollBar:vertical {
