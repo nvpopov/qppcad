@@ -57,11 +57,13 @@ namespace qpp {
         QWidget *tool_panel_widget;
         QHBoxLayout *tool_panel_layout;
 
-        QLabel *tp_ws_selector_label;
         QComboBox *tp_ws_selector;
-        QPushButton *tp_add_ws;
-        QPushButton *tp_rnm_ws;
-        QPushButton *tp_rm_ws;
+
+        QToolButton *tp_ws_stuff;
+        qextended_action *tp_ws_stuff_add;
+        qextended_action *tp_ws_stuff_del;
+        qextended_action *tp_ws_stuff_ren;
+
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
         QPushButton *tp_print_screen;
@@ -196,6 +198,7 @@ namespace qpp {
         void tp_force_sel_lbl_vis_button_clicked(bool checked);
         void tp_toggle_atom_override_button_clicked(bool checked);
         void tp_camera_tool_button_triggered(QAction *action);
+        void tp_ws_stuff_tool_button_triggered(QAction *action);
 
         void apply_camera_view_change(cam_target_view_t target_view);
 

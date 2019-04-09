@@ -314,32 +314,31 @@ void main_window::init_widgets() {
   tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
   tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
 
-  tp_add_ws = new QPushButton;
-  tp_add_ws->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_add_ws->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_add_ws->setText("+");
-  connect(tp_add_ws,
-          &QPushButton::pressed,
+  tp_ws_stuff = new QToolButton;
+  tp_ws_stuff->setText(tr("WS"));
+  tp_ws_stuff->setPopupMode(QToolButton::InstantPopup);
+  tp_ws_stuff->setArrowType(Qt::NoArrow);
+  tp_ws_stuff->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_ws_stuff->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  connect(tp_ws_stuff,
+          &QToolButton::triggered,
           this,
-          &main_window::create_new_ws);
+          &main_window::tp_ws_stuff_tool_button_triggered);
 
-  tp_rm_ws = new QPushButton;
-  tp_rm_ws->setText("-");
-  tp_rm_ws->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_rm_ws->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_rm_ws,
-          &QPushButton::pressed,
-          this,
-          &main_window::close_cur_ws);
+  tp_ws_stuff_add = new qextended_action(this);
+  tp_ws_stuff_add->m_joined_data[0] = 0;
+  tp_ws_stuff_add->setText(tr("Add empty workspace"));
+  tp_ws_stuff->addAction(tp_ws_stuff_add);
 
-  tp_rnm_ws = new QPushButton;
-  tp_rnm_ws->setText("RN");
-  tp_rnm_ws->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_rnm_ws->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_rnm_ws,
-          &QPushButton::pressed,
-          this,
-          &main_window::rename_cur_ws);
+  tp_ws_stuff_del = new qextended_action(this);
+  tp_ws_stuff_del->m_joined_data[0] = 1;
+  tp_ws_stuff_del->setText(tr("Remove current workspace"));
+  tp_ws_stuff->addAction(tp_ws_stuff_del);
+
+  tp_ws_stuff_ren = new qextended_action(this);
+  tp_ws_stuff_ren->m_joined_data[0] = 2;
+  tp_ws_stuff_ren->setText(tr("Rename current workspace"));
+  tp_ws_stuff->addAction(tp_ws_stuff_ren);
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setProperty("s_class", "tp_cb");
@@ -573,9 +572,7 @@ void main_window::init_layouts() {
   tool_panel_layout->setContentsMargins(5,0,0,0);
 
   tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_add_ws, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_rm_ws, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_rnm_ws, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_ws_stuff, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
 
@@ -633,19 +630,19 @@ void main_window::resizeEvent(QResizeEvent *event) {
   app_state_t::get_inst()->log(fmt::format("main_window::resizeEvent(width={}, height={})",
                                            event->size().width(),
                                            event->size().height()));
-  if (event->size().width() < 700) {
-      tp_add_ws->hide();
-      tp_rnm_ws->hide();
-      tp_rm_ws->hide();
-      tp_show_gizmo->hide();
-      // tp_show_node_editor->hide();
-    } else {
-      tp_add_ws->show();
-      tp_rnm_ws->show();
-      tp_rm_ws->show();
-      tp_show_gizmo->show();
-      // tp_show_node_editor->show();
-    }
+//  if (event->size().width() < 700) {
+////      tp_add_ws->hide();
+////      tp_rnm_ws->hide();
+////      tp_rm_ws->hide();
+//      tp_show_gizmo->show();
+//      // tp_show_node_editor->hide();
+//    } else {
+////      tp_add_ws->show();
+////      tp_rnm_ws->show();
+////      tp_rm_ws->show();
+//      tp_show_gizmo->show();
+//      // tp_show_node_editor->show();
+//    }
 
   QMainWindow::resizeEvent(event);
 
@@ -662,8 +659,8 @@ void main_window::wss_changed_slot() {
   tp_ws_selector->clear();
 
   if (astate->ws_mgr->has_wss()) {
-      tp_rm_ws->setEnabled(true);
-      tp_rnm_ws->setEnabled(true);
+      tp_ws_stuff_del->setEnabled(true);
+      tp_ws_stuff_ren->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
           auto ws = astate->ws_mgr->m_ws[i];
@@ -674,8 +671,8 @@ void main_window::wss_changed_slot() {
       tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
 
     } else {
-      tp_rm_ws->setEnabled(false);
-      tp_rnm_ws->setEnabled(false);
+      tp_ws_stuff_del->setEnabled(false);
+      tp_ws_stuff_ren->setEnabled(false);
       tp_show_gizmo->setEnabled(false);
     }
 
@@ -1285,6 +1282,33 @@ void main_window::tp_camera_tool_button_triggered(QAction *action) {
     }
 
   astate->make_viewport_dirty();
+
+}
+
+void main_window::tp_ws_stuff_tool_button_triggered(QAction *action) {
+
+  if (!action) return;
+
+  qextended_action *ext_act = qobject_cast<qextended_action*>(action);
+  if (!ext_act) return;
+
+  switch (ext_act->m_joined_data[0]) {
+    case 0: {
+        create_new_ws();
+        break;
+      };
+    case 1: {
+        close_cur_ws();
+        break;
+      }
+    case 2: {
+        rename_cur_ws();
+        break;
+      }
+    default: {
+        break;
+      }
+    }
 
 }
 

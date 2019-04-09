@@ -95,7 +95,6 @@ include_directories(deps/qpp/tests)
 
 qt5_add_resources(QRCS data/resources.qrc)
 
-add_executable(sflow_test src/qppcad/flow/sflow.cpp src/qppcad/flow/sflow_test.cpp)
 add_executable(qppcad
 
     src/qppcad/main.cpp
@@ -238,6 +237,8 @@ target_link_libraries(qppcad
     m)
 
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
+
+add_executable(sflow_test src/qppcad/flow/sflow.cpp src/qppcad/flow/sflow_test.cpp)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

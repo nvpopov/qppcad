@@ -58,6 +58,8 @@ void arrow_array_t::render() {
   astate->dp->begin_render_general_mesh();
   for (size_t i = 0; i < m_binded_gv->m_geom->nat(); i++) {
 
+      if (m_affected_by_sv && m_binded_gv->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
+
       vector3<float> start_pos = cur_anim->frames[start_frame_n_0].atom_pos[i] * (frame_delta_0) +
                                  cur_anim->frames[end_frame_n_0].atom_pos[i] * (1-frame_delta_0) +
                                  m_binded_gv->m_pos;
@@ -67,7 +69,7 @@ void arrow_array_t::render() {
                                m_binded_gv->m_pos;
 
       float dnodem = (end_pos - start_pos).norm();
-      if (dnodem < 0.001f) continue;
+      if (dnodem < 0.0005f) continue;
 
       vector3<float> dir = (end_pos - start_pos).normalized();
 
