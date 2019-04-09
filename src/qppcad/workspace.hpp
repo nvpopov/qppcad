@@ -162,6 +162,24 @@ namespace qpp {
 
         }
 
+        template<typename T, bool THROW_ERROR = true>
+        std::tuple<bool, std::shared_ptr<workspace_t> > get_context(){
+
+          if (!has_wss()) {
+              if (THROW_ERROR) throw std::invalid_argument("!has_wss()");
+              return {false, nullptr};
+            }
+
+          auto cur_ws = get_cur_ws();
+          if (!cur_ws) {
+              if (THROW_ERROR) throw std::invalid_argument("!cur_ws");
+              return {true, nullptr};
+            }
+
+          return {true, cur_ws};
+
+        }
+
     };
 
   }

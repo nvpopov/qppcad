@@ -98,8 +98,8 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("UC(XYZQ)", "uc", xyz_ff_g_hash, {".uc"});
 
   size_t poscar_ff_hash =
-      bhv_mgr->reg_ff("VASP POSCAR", "poscar", vasp_ff_g_hash,
-  {"POSCAR", ".vasp", ".VASP"} );
+      bhv_mgr->reg_ff("VASP POSCAR[CONTCAR]", "poscar", vasp_ff_g_hash,
+  {"POSCAR", ".vasp", ".VASP", "CONTCAR"} );
 
   size_t outcar_ff_hash =
       bhv_mgr->reg_ff("VASP OUTCAR", "outcar", vasp_ff_g_hash, {"OUTCAR"} );

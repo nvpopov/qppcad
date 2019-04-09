@@ -332,7 +332,7 @@ void main_window::init_widgets() {
 
   tp_ws_stuff_del = new qextended_action(this);
   tp_ws_stuff_del->m_joined_data[0] = 1;
-  tp_ws_stuff_del->setText(tr("Remove current workspace"));
+  tp_ws_stuff_del->setText(tr("Close current workspace"));
   tp_ws_stuff->addAction(tp_ws_stuff_del);
 
   tp_ws_stuff_ren = new qextended_action(this);
@@ -630,19 +630,6 @@ void main_window::resizeEvent(QResizeEvent *event) {
   app_state_t::get_inst()->log(fmt::format("main_window::resizeEvent(width={}, height={})",
                                            event->size().width(),
                                            event->size().height()));
-//  if (event->size().width() < 700) {
-////      tp_add_ws->hide();
-////      tp_rnm_ws->hide();
-////      tp_rm_ws->hide();
-//      tp_show_gizmo->show();
-//      // tp_show_node_editor->hide();
-//    } else {
-////      tp_add_ws->show();
-////      tp_rnm_ws->show();
-////      tp_rm_ws->show();
-//      tp_show_gizmo->show();
-//      // tp_show_node_editor->show();
-//    }
 
   QMainWindow::resizeEvent(event);
 
@@ -655,7 +642,6 @@ void main_window::wss_changed_slot() {
   control_bhv_menus_activity();
 
   tp_ws_selector->blockSignals(true);
-
   tp_ws_selector->clear();
 
   if (astate->ws_mgr->has_wss()) {
@@ -695,6 +681,7 @@ void main_window::ws_selector_selection_changed(int index) {
           astate->make_viewport_dirty();
         }
     }
+
 }
 
 void main_window::tp_show_obj_insp_state_changed(int state) {
