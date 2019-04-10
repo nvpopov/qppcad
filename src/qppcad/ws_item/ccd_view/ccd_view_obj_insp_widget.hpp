@@ -23,18 +23,10 @@ namespace qpp {
         ws_item_tab_widget_t *tab_vibs;
 
         QLabel *tab_info_program;
-        QGroupBox *gb_gen_ccd_info;
+        qspoiler_widget_t *gb_gen_ccd_info;
         QFormLayout *gb_gen_ccd_info_lt;
         QLabel *gen_ccd_info_prog_name;
         QLabel *gen_ccd_info_run_type;
-
-        //start tab geometry optimization
-        QGroupBox *gb_go_conv_graph;
-        QHBoxLayout *gb_go_conv_graph_lt;
-        QLineSeries *gb_go_conv_series;
-        QChart *gb_go_conv_chart;
-        QChartView *gb_go_conv_chart_view;
-        //end tab geometry optimization
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;

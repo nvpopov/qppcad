@@ -70,82 +70,36 @@ void ccd_view_obj_insp_widget_t::unbind_item() {
 
 void ccd_view_obj_insp_widget_t::update_geo_opt() {
 
-  gb_go_conv_series->clear();
-
-  if (b_ccd->m_ccd->m_steps.empty()) {
-      gb_go_conv_graph->setVisible(false);
-      return;
-    } else {
-      gb_go_conv_graph->setVisible(true);
-    }
-
-  float max_energy = b_ccd->m_ccd->m_steps[0].m_toten;
-  float min_energy = b_ccd->m_ccd->m_steps[0].m_toten;
-
-  for (int i = 0 ; i < b_ccd->m_ccd->m_steps.size(); i++) {
-
-      if (max_energy < b_ccd->m_ccd->m_steps[i].m_toten)
-        max_energy = b_ccd->m_ccd->m_steps[i].m_toten;
-
-      if (min_energy > b_ccd->m_ccd->m_steps[i].m_toten)
-        min_energy = b_ccd->m_ccd->m_steps[i].m_toten;
-
-      gb_go_conv_series->append(
-            i, b_ccd->m_ccd->m_steps[i].m_toten);
-    }
-
-  gb_go_conv_chart->removeSeries(gb_go_conv_series);
-  gb_go_conv_chart->addSeries(gb_go_conv_series);
-  gb_go_conv_chart->axisX()->setMin(0);
-  gb_go_conv_chart->axisX()->setMax(gb_go_conv_series->count());
-  gb_go_conv_chart->axisY()->setRange(min_energy, max_energy);
-  //gb_go_conv_chart->axisY()->labe
 }
 
 ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   : ws_item_obj_insp_widget_t() {
 
-  tab_geo_opt = def_tab(tr("Geometry opt."),
-                           "://images/settings.svg",
-                           "://images/settings.svg");
-  tab_vibs = def_tab(tr("Vibrational analysis"),
-                        "://images/settings.svg",
-                        "://images/settings.svg");
+//  tab_geo_opt = def_tab(tr("Geometry opt."),
+//                           "://images/settings.svg",
+//                           "://images/settings.svg");
+//  tab_vibs = def_tab(tr("Vibrational analysis"),
+//                        "://images/settings.svg",
+//                        "://images/settings.svg");
 
   ws_item_is_visible->hide();
   ws_item_is_visible_label->hide();
 
-  gb_gen_ccd_info = new QGroupBox(tr("CCD info"));
+  gb_gen_ccd_info = new qspoiler_widget_t(tr("CCD info"));
   gb_gen_ccd_info_lt = new QFormLayout;
+  gb_gen_ccd_info->add_content_layout(gb_gen_ccd_info_lt);
+
   gen_ccd_info_prog_name = new QLabel;
   gen_ccd_info_run_type = new QLabel;
 
-  pre_init_gb(gb_gen_ccd_info, gb_gen_ccd_info_lt);
   gb_gen_ccd_info_lt->addRow(tr("Program"), gen_ccd_info_prog_name);
   gb_gen_ccd_info_lt->addRow(tr("Run type"), gen_ccd_info_run_type);
-  post_init_gb(gb_gen_ccd_info, gb_gen_ccd_info_lt);
+  init_form_lt(gb_gen_ccd_info_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);
   tab_general->tab_inner_widget_lt->addStretch(0);
 
-  gb_go_conv_graph = new QGroupBox(tr("Energy convergence"));
-  gb_go_conv_graph_lt = new QHBoxLayout;
-  gb_go_conv_graph->setLayout(gb_go_conv_graph_lt);
-
-  gb_go_conv_series = new QLineSeries();
-  gb_go_conv_chart = new QChart();
-  gb_go_conv_chart_view = new QChartView(gb_go_conv_chart);
-  gb_go_conv_chart_view->setRenderHint(QPainter::Antialiasing);
-  gb_go_conv_chart->setMargins(QMargins(2,2,2,2));
-  gb_go_conv_graph_lt->addWidget(gb_go_conv_chart_view);
-  gb_go_conv_chart->legend()->hide();
-  gb_go_conv_chart->addSeries(gb_go_conv_series);
-  gb_go_conv_chart->createDefaultAxes();
-  gb_go_conv_chart->axisX()->setTitleText(tr("Steps"));
-  gb_go_conv_chart->axisY()->setTitleText(tr("Energy, eV"));
-
-  tab_geo_opt->tab_inner_widget_lt->addWidget(gb_go_conv_graph);
-  tab_geo_opt->tab_inner_widget_lt->addStretch(0);
+  //tab_geo_opt->tab_inner_widget_lt->addStretch(0);
 
   //tg_form_layout->
 }

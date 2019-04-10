@@ -50,3 +50,7 @@ void node_book_extended_editor_t::unbind_item() {
   m_gr_view->setScene(nullptr);
 
 }
+
+bool node_book_extended_editor_t::can_be_binded_to(ws_item_t *item) {
+  return true;
+}

@@ -251,10 +251,11 @@ namespace qpp {
         std::function<std::shared_ptr<ws_item_obj_insp_widget_t>() > > m_obj_insp_fabric;
 
         /** @brief m_ext_editors */
-        std::map<size_t, std::shared_ptr<ws_item_extended_editor_t> > m_ext_editors;
+        std::map<std::tuple<size_t, size_t>,
+        std::shared_ptr<ws_item_extended_editor_t> > m_ext_editors;
 
         /** @brief m_ext_editors_fabric */
-        std::map<size_t,
+        std::map<std::tuple<size_t, size_t>,
         std::function<std::shared_ptr<ws_item_extended_editor_t>() > > m_ext_editors_fabric;
 
         /** @brief m_ws_item_io */
@@ -401,8 +402,9 @@ namespace qpp {
          * @param hash
          * @param func
          */
-        void reg_ext_editor_fbr(
-            size_t hash, std::function<std::shared_ptr<ws_item_extended_editor_t>()> func);
+        void reg_ext_editor_fbr(size_t hash,
+                                size_t editor_order,
+                                std::function<std::shared_ptr<ws_item_extended_editor_t>()> func);
 
         /**
          * @brief is_obj_insp_fbr_exists

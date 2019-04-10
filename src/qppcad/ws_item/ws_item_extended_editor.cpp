@@ -9,6 +9,12 @@ extended_editor_geom_policy_e ws_item_extended_editor_t::get_geom_policy() {
 
 }
 
+bool ws_item_extended_editor_t::can_be_binded_to(ws_item_t *_item_to_bind) {
+
+  return false;
+
+}
+
 int ws_item_extended_editor_t::get_minimum_width() {
 
   return 300;

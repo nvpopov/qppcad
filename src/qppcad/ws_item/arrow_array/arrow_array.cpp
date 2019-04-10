@@ -51,9 +51,9 @@ void arrow_array_t::render() {
   if (cur_anim->frames[start_frame_n_1].atom_pos.size() != m_binded_gv->m_geom->nat()) return;
   if (cur_anim->frames[end_frame_n_1].atom_pos.size() != m_binded_gv->m_geom->nat()) return;
 
-  astate->log(fmt::format("ENTER AA RENDERING s0={} e0={} d0={} s1={} e1={} d1={}",
-                          start_frame_0, end_frame_0, frame_delta_0,
-                          start_frame_1, end_frame_1, frame_delta_1));
+//  astate->log(fmt::format("ENTER AA RENDERING s0={} e0={} d0={} s1={} e1={} d1={}",
+//                          start_frame_0, end_frame_0, frame_delta_0,
+//                          start_frame_1, end_frame_1, frame_delta_1));
 
   astate->dp->begin_render_general_mesh();
   for (size_t i = 0; i < m_binded_gv->m_geom->nat(); i++) {

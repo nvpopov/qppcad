@@ -73,7 +73,7 @@ ws_item_extended_editor_compositor_t::~ws_item_extended_editor_compositor_t() {
 
 }
 
-void ws_item_extended_editor_compositor_t::open_requested() {
+void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id) {
 
   app_state_t *astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -99,9 +99,9 @@ void ws_item_extended_editor_compositor_t::open_requested() {
 
           if (cur_it) {
               size_t thash = cur_it->get_type();
-              auto ext_editor_w = bhv_mgr->get_ext_editor_widget_sp(thash);
+              auto ext_editor_w = bhv_mgr->get_ext_editor_widget_sp(thash, editor_id);
 
-              if (ext_editor_w) {
+              if (ext_editor_w && ext_editor_w->can_be_binded_to(cur_it)) {
                   need_to_hide_compositor = false;
                   ext_editor_w->bind_to_item(cur_it);
                   m_cur_ext_editor_widget = ext_editor_w;
@@ -122,6 +122,12 @@ void ws_item_extended_editor_compositor_t::open_requested() {
     }
 
   if (need_to_hide_compositor) hide();
+
+}
+
+void ws_item_extended_editor_compositor_t::open_requested() {
+
+  open_extended_editor();
 
 }
 

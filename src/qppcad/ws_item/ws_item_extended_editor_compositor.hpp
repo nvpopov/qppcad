@@ -29,6 +29,8 @@ namespace qpp {
         ws_item_extended_editor_compositor_t(QWidget *parent = nullptr);
         ~ws_item_extended_editor_compositor_t();
 
+        void open_extended_editor(size_t editor_id = 0);
+
       public slots:
 
         void open_requested();

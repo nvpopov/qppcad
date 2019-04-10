@@ -40,6 +40,9 @@ namespace qpp {
 
         ws_item_t *m_binded_item{nullptr};
         virtual extended_editor_geom_policy_e get_geom_policy();
+
+        virtual bool can_be_binded_to(ws_item_t* _item_to_bind);
+
         virtual int get_minimum_width();
         virtual void bind_to_item(ws_item_t *_binding_item);
         virtual void unbind_item();
