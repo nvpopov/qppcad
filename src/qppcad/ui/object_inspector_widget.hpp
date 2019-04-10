@@ -53,6 +53,8 @@ namespace qpp {
         void refresh_button_clicked();
         void add_new_ws_item_button_clicked();
 
+        void provide_context_menu_for_ws_items(const QPoint &pos);
+
     };
 
   }

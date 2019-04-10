@@ -3,6 +3,8 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
+#include <qppcad/ui/qextended_action.hpp>
+#include <QMenu>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -51,6 +53,11 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_list->setProperty("s_class", "ws_items_list");
   ws_items_list->setObjectName("ws_items_list_e");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
+  ws_items_list->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ws_items_list,
+          &QListWidget::customContextMenuRequested,
+          this,
+          &object_inspector_widget_t::provide_context_menu_for_ws_items);
 
   ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 390, true, 0);
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
@@ -275,5 +282,15 @@ void object_inspector_widget_t::add_new_ws_item_button_clicked() {
   if (!astate->ws_mgr->has_wss()) return;
   add_new_ws_item_widget_t add_dialog;
   add_dialog.exec();
+
+}
+
+void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &pos) {
+
+  QPoint item = ws_items_list->mapToGlobal(pos);
+  QMenu submenu;
+  submenu.addAction("ADD");
+  submenu.addAction("Delete");
+  QAction* rightClickItem = submenu.exec(item);
 
 }

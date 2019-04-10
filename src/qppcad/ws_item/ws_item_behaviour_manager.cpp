@@ -314,9 +314,16 @@ void ws_item_behaviour_manager_t::reg_obj_insp_fbr(
 void ws_item_behaviour_manager_t::reg_ext_editor_fbr(
     size_t hash,
     size_t editor_order,
+    std::string editor_name,
     std::function<std::shared_ptr<ws_item_extended_editor_t>()> func) {
 
-  m_ext_editors_fabric[{hash,editor_order}] = func;
+  ws_item_extended_editor_info_t new_ee_info;
+  new_ee_info.m_type = hash;
+  new_ee_info.m_order = editor_order;
+  new_ee_info.m_full_name = editor_name;
+  new_ee_info.m_fabric = func;
+
+  m_ext_editors_info[{hash, editor_order}] = std::move(new_ee_info);
 
 }
 
@@ -371,22 +378,16 @@ std::shared_ptr<ws_item_extended_editor_t> ws_item_behaviour_manager_t::get_ext_
 
   astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, query?", hash));
 
-  auto it = m_ext_editors.find({hash, ed_order});
-  if (it != m_ext_editors.end() && it->second != nullptr) {
-      astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, exists", hash));
-      return it->second;
-    }
+  auto it = m_ext_editors_info.find({hash, ed_order});
+  if (it != m_ext_editors_info.end()) {
 
-  if (it == m_ext_editors.end()) {
-      auto it_f = m_ext_editors_fabric.find({hash, ed_order});
-      if (it_f != m_ext_editors_fabric.end()) {
-          astate->log(
-                fmt::format("get_ext_editor_widget_sp with type_id = {}, constructing", hash));
-          auto cnstr = it_f->second();
-          m_ext_editors.emplace(std::tuple(hash, ed_order), cnstr);
-          return cnstr;
+      if (it->second.m_inst) {
+          astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, exists", hash));
+        } else {
+          astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, constr.", hash));
+           it->second.m_inst = it->second.m_fabric();
         }
-      else return nullptr;
+      return it->second.m_inst;
     }
 
   astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, not found", hash));

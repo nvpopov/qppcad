@@ -94,6 +94,21 @@ namespace qpp {
     };
 
     /**
+     * @brief The ws_item_extended_editor_info_t class
+     */
+    class ws_item_extended_editor_info_t {
+
+      public:
+
+        std::string m_full_name;
+        size_t m_type;
+        size_t m_order;
+        std::function<std::shared_ptr<ws_item_extended_editor_t>() > m_fabric;
+        std::shared_ptr<ws_item_extended_editor_t> m_inst{nullptr};
+
+    };
+
+    /**
      * @brief The ws_item_io_behaviour_t class
      */
     class ws_item_io_behaviour_t {
@@ -251,12 +266,8 @@ namespace qpp {
         std::function<std::shared_ptr<ws_item_obj_insp_widget_t>() > > m_obj_insp_fabric;
 
         /** @brief m_ext_editors */
-        std::map<std::tuple<size_t, size_t>,
-        std::shared_ptr<ws_item_extended_editor_t> > m_ext_editors;
-
-        /** @brief m_ext_editors_fabric */
-        std::map<std::tuple<size_t, size_t>,
-        std::function<std::shared_ptr<ws_item_extended_editor_t>() > > m_ext_editors_fabric;
+        std::vector<std::shared_ptr<ws_item_extended_editor_t> > m_ext_editors;
+        std::map<std::tuple<size_t, size_t>, ws_item_extended_editor_info_t> m_ext_editors_info;
 
         /** @brief m_ws_item_io */
         std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
@@ -404,6 +415,7 @@ namespace qpp {
          */
         void reg_ext_editor_fbr(size_t hash,
                                 size_t editor_order,
+                                std::string editor_name,
                                 std::function<std::shared_ptr<ws_item_extended_editor_t>()> func);
 
         /**
@@ -436,6 +448,7 @@ namespace qpp {
         std::shared_ptr<ws_item_extended_editor_t> get_ext_editor_widget_sp(size_t hash,
                                                                             size_t ed_order = 0);
 
+        size_t get_ext_editor_info(size_t hash);
         /**
          * @brief fabric_by_type
          * @param type_id

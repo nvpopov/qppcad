@@ -26,9 +26,11 @@ namespace qpp {
 
         template<typename T, typename U>
         static void reg_ws_item_ext_edt_fbr(size_t editor_order,
+                                            std::string editor_name,
                                             ws_item_behaviour_manager_t *bhv_mgr) {
           bhv_mgr->reg_ext_editor_fbr(T::get_type_static(),
                                       editor_order,
+                                      editor_name,
                                       [](){return std::make_shared<U>();});
         }
 
