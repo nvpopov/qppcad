@@ -57,6 +57,10 @@ void app_state_event_disp_t::extended_editor_open_requested() {
   emit(extended_editor_open_requested_signal());
 }
 
+void app_state_event_disp_t::extended_editor_open_requested_with_order(size_t editor_id) {
+  emit(extended_editor_open_requested_with_order_signal(editor_id));
+}
+
 void app_state_event_disp_t::extended_editor_close_requested() {
   emit(extended_editor_close_requested_signal());
 }

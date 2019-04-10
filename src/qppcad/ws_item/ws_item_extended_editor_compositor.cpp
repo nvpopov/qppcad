@@ -51,6 +51,11 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
           &ws_item_extended_editor_compositor_t::open_requested);
 
   connect(astate->astate_evd,
+          &app_state_event_disp_t::extended_editor_open_requested_with_order_signal,
+          this,
+          &ws_item_extended_editor_compositor_t::open_requested_with_order);
+
+  connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
           this,
           &ws_item_extended_editor_compositor_t::cur_ws_selected_item_changed);
@@ -130,6 +135,12 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
 void ws_item_extended_editor_compositor_t::open_requested() {
 
   open_extended_editor();
+
+}
+
+void ws_item_extended_editor_compositor_t::open_requested_with_order(size_t editor_id) {
+
+  open_extended_editor(editor_id);
 
 }
 

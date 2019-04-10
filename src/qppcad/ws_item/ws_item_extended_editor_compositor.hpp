@@ -34,6 +34,7 @@ namespace qpp {
       public slots:
 
         void open_requested();
+        void open_requested_with_order(size_t editor_id);
         void cur_ws_selected_item_changed();
         void cur_ws_changed();
 

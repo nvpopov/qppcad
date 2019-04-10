@@ -30,6 +30,7 @@ namespace qpp {
         void cur_ws_selected_item_need_to_update_obj_insp_signal();
 
         void extended_editor_open_requested_signal();
+        void extended_editor_open_requested_with_order_signal(size_t editor_id);
         void extended_editor_close_requested_signal();
 
         void new_file_loaded_signal();
@@ -53,6 +54,7 @@ namespace qpp {
         void cur_ws_selected_item_need_to_update_obj_insp();
 
         void extended_editor_open_requested();
+        void extended_editor_open_requested_with_order(size_t editor_id);
         void extended_editor_close_requested();
 
         void new_file_loaded(const std::string &file_name,

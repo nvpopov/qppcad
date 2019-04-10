@@ -162,6 +162,25 @@ namespace qpp {
 
         }
 
+        template<bool THROW_ERROR = true>
+        std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, bool > get_sel_tres(){
+
+          auto cur_ws = get_cur_ws();
+          if (!cur_ws) {
+              if (THROW_ERROR) throw std::invalid_argument("invalid workspace!");
+              return {nullptr, nullptr, false};
+            }
+
+          auto cur_it = cur_ws->get_selected_sp();
+          if (!cur_it) {
+              if (THROW_ERROR) throw std::invalid_argument("ws_item not selected!");
+              return {cur_ws, nullptr, false};
+            }
+
+          return {cur_ws, cur_it, true};
+
+        }
+
         template<typename T, bool THROW_ERROR = true>
         std::tuple<bool, std::shared_ptr<workspace_t> > get_context(){
 

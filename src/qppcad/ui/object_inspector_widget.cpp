@@ -287,10 +287,38 @@ void object_inspector_widget_t::add_new_ws_item_button_clicked() {
 
 void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &pos) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
+  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tres();
+
+  if (!ok) return;
+
+  size_t total_ext_editors{0};
+
+  std::vector<qextended_action*> ext_acts;
+
+  for (auto &ext_edt_info : astate->ws_mgr->m_bhv_mgr->m_ext_editors_info)
+      if (ext_edt_info.second.m_type == cur_it->get_type()) {
+          total_ext_editors++;
+          qextended_action *new_act = new qextended_action;
+          new_act->setText(QString::fromStdString(ext_edt_info.second.m_full_name));
+          new_act->m_joined_data[0] = ext_edt_info.second.m_type;
+          new_act->m_joined_data[1] = ext_edt_info.second.m_order;
+          ext_acts.push_back(new_act);
+        }
+
+  if (total_ext_editors <= 1) return;
+
   QPoint item = ws_items_list->mapToGlobal(pos);
   QMenu submenu;
-  submenu.addAction("ADD");
-  submenu.addAction("Delete");
-  QAction* rightClickItem = submenu.exec(item);
+  for (auto &elem : ext_acts) submenu.addAction(elem);
+
+  QAction* right_click_item = submenu.exec(item);
+  if (!right_click_item) return;
+
+  qextended_action *ext_act = qobject_cast<qextended_action*>(right_click_item);
+  if (!ext_act) return;
+
+  astate->astate_evd->extended_editor_open_requested_with_order(ext_act->m_joined_data[1]);
 
 }
