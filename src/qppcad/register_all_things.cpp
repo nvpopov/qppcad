@@ -7,6 +7,8 @@
 
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/ccd_view/ccd_vib_analyzer_extended_editor.hpp>
+#include <qppcad/ws_item/ccd_view/ccd_traj_analyzer_extended_editor.hpp>
 
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view_obj_insp_widget.hpp>
@@ -80,6 +82,8 @@ void registration_helper_t::reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv
 
   reg_ws_item_ext_edt_fbr<node_book_t, node_book_extended_editor_t>(0, bhv_mgr);
   reg_ws_item_ext_edt_fbr<geom_view_t, geom_view_extended_editor_t>(0, bhv_mgr);
+  reg_ws_item_ext_edt_fbr<ccd_view_t, ccd_vib_analyzer_extended_editor_t>(0, bhv_mgr);
+  reg_ws_item_ext_edt_fbr<ccd_view_t, ccd_traj_analyzer_extended_editor_t>(1, bhv_mgr);
 
 }
 

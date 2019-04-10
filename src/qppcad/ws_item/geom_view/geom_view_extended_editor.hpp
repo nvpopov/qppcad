@@ -32,6 +32,8 @@ namespace qpp {
         void unbind_item() override;
         bool can_be_binded_to(ws_item_t *item) override ;
 
+        QString header_name_hint() override ;
+
       public slots:
 
         void selection_changed();

@@ -106,7 +106,8 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
                   ext_editor_w->bind_to_item(cur_it);
                   m_cur_ext_editor_widget = ext_editor_w;
                   main_lt->addWidget(ext_editor_w.get());
-                  ew_header->setText(tr("EXTENDED EDITOR [%1/%2]")
+                  ew_header->setText(tr("%1 [%2/%3]")
+                                     .arg(ext_editor_w->header_name_hint())
                                      .arg(QString::fromStdString(cur_ws->m_ws_name))
                                      .arg(QString::fromStdString(cur_it->m_name)));
                   show();

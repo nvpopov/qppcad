@@ -54,3 +54,7 @@ void node_book_extended_editor_t::unbind_item() {
 bool node_book_extended_editor_t::can_be_binded_to(ws_item_t *item) {
   return true;
 }
+
+QString node_book_extended_editor_t::header_name_hint() {
+  return "NODE BOOK EDITOR";
+}

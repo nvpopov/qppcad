@@ -156,6 +156,8 @@ add_executable(qppcad
 
     src/qppcad/ws_item/ccd_view/ccd_view.cpp
     src/qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.cpp
+    src/qppcad/ws_item/ccd_view/ccd_vib_analyzer_extended_editor.cpp
+    src/qppcad/ws_item/ccd_view/ccd_traj_analyzer_extended_editor.cpp
 
     src/qppcad/ws_item/volume_view/volume_view.cpp
     src/qppcad/ws_item/volume_view/volume_view_obj_insp_widget.cpp

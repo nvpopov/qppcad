@@ -47,6 +47,7 @@ namespace qpp {
         virtual void bind_to_item(ws_item_t *_binding_item);
         virtual void unbind_item();
         virtual void update_from_ws_item();
+        virtual QString header_name_hint() = 0;
         ws_item_extended_editor_t();
 
     };
