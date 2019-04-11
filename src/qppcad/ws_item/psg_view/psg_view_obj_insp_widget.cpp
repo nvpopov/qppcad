@@ -91,3 +91,4 @@ void psg_view_obj_insp_widget_t::unbind_item() {
   b_pg = nullptr;
 
 }
+

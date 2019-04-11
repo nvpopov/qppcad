@@ -25,8 +25,8 @@ namespace qpp {
         QLabel *tab_info_program;
         qspoiler_widget_t *gb_gen_ccd_info;
         QFormLayout *gb_gen_ccd_info_lt;
-        QLabel *gen_ccd_info_prog_name;
-        QLabel *gen_ccd_info_run_type;
+        QLabel *gen_info_prog_name;
+        QLabel *gen_info_run_type;
 
         qspoiler_widget_t *gb_normal_modes;
         QVBoxLayout *gb_normal_modes_lt;

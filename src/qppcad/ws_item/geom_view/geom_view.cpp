@@ -336,8 +336,10 @@ bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
 
               atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
               auto atom_sel_it = m_atom_idx_sel.find(iskey);
-              if (atom_sel_it == m_atom_idx_sel.end()) select_atom(res[0].m_atm, res[0].m_idx);
-              else unselect_atom(res[0].m_atm, res[0].m_idx);
+              if (atom_sel_it == m_atom_idx_sel.end())
+                select_atom(res[0].m_atm, res[0].m_idx);
+              else
+                unselect_atom(res[0].m_atm, res[0].m_idx);
 
             }
 

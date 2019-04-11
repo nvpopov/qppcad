@@ -3,7 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
-#include <geom/geom.hpp>
+#include <geom/xgeom.hpp>
 #include <symm/gen_cell.hpp>
 
 namespace qpp {
@@ -23,11 +23,20 @@ namespace qpp {
         std::shared_ptr<ws_item_t> m_dst{nullptr};
         std::shared_ptr<ws_item_t> m_ag{nullptr};
 
+        /**
+         * @brief m_orders_range
+         * [0] - start
+         * [1] - end
+         * [2] - max
+         * min = 0
+         */
+        std::vector<vector3<int> > m_orders_range;
+
         geom_view_t *m_src_gv{nullptr};
         geom_view_t *m_dst_gv{nullptr};
         psg_view_t *m_psg{nullptr};
 
-        geometry<float, gen_cell<float, qpp::matrix3<float> > > m_imd;
+        xgeometry<float, gen_cell<float, qpp::matrix3<float> > > m_imd{0};
 
         pgf_producer_t();
 
@@ -48,6 +57,7 @@ namespace qpp {
 
         void generate_geom();
         bool check_consistency();
+        void compose_from_array_group();
 
     };
 

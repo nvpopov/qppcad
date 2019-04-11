@@ -80,9 +80,10 @@ namespace qpp {
 
           std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
           std::string ts( ctime( &t) );
-          fmt::print("[{}]", ts.substr( 0, ts.length() - 1));
-          fmt::vprint(format, fmt::make_format_args(args...));
-          fmt::print("\n");
+          std::string pf = fmt::format("[{}] ", ts.substr( 0, ts.length() - 1));
+          std::string body = fmt::vformat(format, fmt::make_format_args(args...));
+
+          std::cout << pf << body << "\n" << std::flush;
 
         }
 

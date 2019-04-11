@@ -71,12 +71,17 @@ void qt_helpers::form_lt_insert_before(QFormLayout *form_lt,
     }
 
   int row_ptr;
-  QFormLayout::ItemRole item_role_ptr;
-  form_lt->getWidgetPosition(target, &row_ptr, &item_role_ptr);
 
-  if (row_ptr == -1) {
-      //std::cout << "::form_lt_insert_before rrow_ptr == -1" << std::endl;
-      row_ptr = form_lt->rowCount() - 1;
+  if (target) {
+      QFormLayout::ItemRole item_role_ptr;
+      form_lt->getWidgetPosition(target, &row_ptr, &item_role_ptr);
+
+      if (row_ptr == -1) {
+          //std::cout << "::form_lt_insert_before rrow_ptr == -1" << std::endl;
+          row_ptr = form_lt->rowCount() - 1;
+        }
+    } else {
+      row_ptr = 0;
     }
 
   field_label->show();

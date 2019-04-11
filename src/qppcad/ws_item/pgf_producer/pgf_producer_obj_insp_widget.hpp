@@ -25,11 +25,20 @@ namespace qpp {
         qspoiler_widget_t *gb_gen_cell;
         QFormLayout *gb_gen_cell_lt;
 
+        /**
+         * @brief m_ci_ranges
+         * cell indexes range
+         */
+        std::vector<qbinded_int2b_input_t*> m_ci_ranges;
+        std::vector<QLabel*> m_ci_ranges_lbl;
+
         pgf_producer_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+
+        void update_cell_indexes_ranges();
 
     };
 

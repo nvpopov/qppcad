@@ -27,40 +27,36 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
 
   if (b_ccd) {
       // std::cout << "ALL IS GOOD" << std::endl;
-      gen_ccd_info_prog_name->setText(
-            QString::fromStdString(
-              qpp::ccdprog2str[b_ccd->m_ccd->m_comp_chem_program]
-            )
-          );
-      gen_ccd_info_run_type->setText(
-            QString::fromStdString(
-              qpp::ccdrt2str[b_ccd->m_ccd->m_run_t]
-            )
-          );
+      gen_info_prog_name->setText(QString::fromStdString(
+                                    qpp::ccdprog2str[b_ccd->m_ccd->m_comp_chem_program]));
+      gen_info_run_type->setText(QString::fromStdString(qpp::ccdrt2str[b_ccd->m_ccd->m_run_t]));
+
       switch (b_ccd->m_ccd->m_run_t) {
 
         case comp_chem_program_run_e::rt_unknown :
-          tabBar()->setTabEnabled(1, false);
-          tabBar()->setTabEnabled(2, false);
+          set_tab_enabled(tab_vibs, false);
           break;
 
         case comp_chem_program_run_e::rt_energy :
-          tabBar()->setTabEnabled(1, false);
-          tabBar()->setTabEnabled(2, false);
+          set_tab_enabled(tab_vibs, false);
           break;
 
         case comp_chem_program_run_e::rt_geo_opt :
-          tabBar()->setTabEnabled(1, true);
-          tabBar()->setTabEnabled(2, false);
+          set_tab_enabled(tab_vibs, false);
           update_geo_opt();
           break;
 
+        case comp_chem_program_run_e::rt_vib :
+          set_tab_enabled(tab_vibs, true);
+          break;
+
         default :
+          set_tab_enabled(tab_vibs, false);
           break;
         }
 
-      //
     }
+
 }
 
 void ccd_view_obj_insp_widget_t::unbind_item() {
@@ -89,11 +85,11 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   gb_gen_ccd_info_lt = new QFormLayout;
   gb_gen_ccd_info->add_content_layout(gb_gen_ccd_info_lt);
 
-  gen_ccd_info_prog_name = new QLabel;
-  gen_ccd_info_run_type = new QLabel;
+  gen_info_prog_name = new QLabel;
+  gen_info_run_type = new QLabel;
 
-  gb_gen_ccd_info_lt->addRow(tr("Program"), gen_ccd_info_prog_name);
-  gb_gen_ccd_info_lt->addRow(tr("Run type"), gen_ccd_info_run_type);
+  gb_gen_ccd_info_lt->addRow(tr("Program"), gen_info_prog_name);
+  gb_gen_ccd_info_lt->addRow(tr("Run type"), gen_info_run_type);
   init_form_lt(gb_gen_ccd_info_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);

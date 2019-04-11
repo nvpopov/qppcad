@@ -3,6 +3,8 @@
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/app_state.hpp>
 
+#include <geom/builders.hpp>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -46,6 +48,24 @@ bool pgf_producer_t::check_consistency() {
 
 }
 
+void pgf_producer_t::compose_from_array_group() {
+
+  m_imd.clear();
+  m_imd.clear_type_table();
+  if (m_psg) m_imd.cell = gen_cell<float, qpp::matrix3<float> >(m_psg->m_ag->group);
+  m_imd.cell.auto_orders();
+
+  m_orders_range.clear();
+  m_orders_range.resize(m_imd.cell.DIM);
+
+  for (size_t i = 0; i < m_orders_range.size(); i++) {
+      m_orders_range[i][0] = 0;
+      m_orders_range[i][1] = 0;
+      m_orders_range[i][3] = m_imd.cell.end()(i);
+    }
+
+}
+
 uint32_t pgf_producer_t::get_amount_of_selected_content() {
   return 0;
 }
@@ -76,16 +96,42 @@ void pgf_producer_t::generate_geom() {
   m_dst_gv->m_geom->clear();
   m_dst_gv->m_geom->clear_type_table();
 
-  m_imd.clear();
-  m_imd.clear_type_table();
-  m_imd.cell = gen_cell<float, qpp::matrix3<float> >(m_psg->m_ag->group);
-
   //print out cell dimensions
   astate->tlog("pgf_producer_t::generate_geom() info:");
   astate->tlog("m_imd.cell.DIM = {}", m_imd.cell.DIM);
-  astate->tlog("ag.orders.size() = {}", m_psg->m_pg_axes.orders.size());
-  for (size_t i = 0; i < m_psg->m_pg_axes.orders.size(); i++)
-    astate->tlog("ag.orders[{}] = {}", i, m_psg->m_pg_axes.orders[i]);
+  astate->tlog("m_orders_range.size() = {}", m_orders_range.size());
+  astate->tlog("m_imd.cell._begin = {}", m_imd.cell._begin);
+  astate->tlog("m_imd.cell._end = {}", m_imd.cell._end);
+
+  //generate geom
+  if (m_orders_range.size() == m_imd.DIM) {
+
+      astate->tlog("pgf_producer_t::generate_geom() entering in generation process");
+
+      size_t DIM = m_imd.DIM;
+
+      index gen_begin = index::D(DIM);
+      index gen_end = index::D(DIM);
+
+      for (size_t i = 0; i < DIM; i++) {
+          gen_begin(i) = m_orders_range[i][0];
+          gen_end(i) = m_orders_range[i][1];
+        }
+
+      astate->tlog("pgf_producer_t::generate_geom() copying atoms to intermediate");
+      for (size_t i = 0; i < m_src_gv->m_geom->nat(); i++)
+        m_imd.add(m_src_gv->m_geom->atom_name(i), m_src_gv->m_geom->pos(i));
+
+      astate->tlog("pgf_producer_t::generate_geom() replicate");
+      replicate(*(m_dst_gv->m_geom.get()),
+                m_imd,
+                m_imd.cell,
+                m_imd.cell._begin,
+                m_imd.cell._end);
+
+      astate->tlog("pgf_producer_t::generate_geom() exiting in generation process");
+
+    }
 
   m_dst_gv->m_tws_tr->do_action(act_rebuild_all);
 
@@ -100,7 +146,7 @@ void pgf_producer_t::updated_internally(uint32_t update_reason) {
 
   if (update_reason & ws_item_updf_generic) {
 
-      auto clean_intermediates = [this](){
+      auto clean_intermediates = [this]() {
           this->m_src_gv = nullptr;
           this->m_dst_gv = nullptr;
           this->m_psg = nullptr;
@@ -159,6 +205,7 @@ void pgf_producer_t::updated_internally(uint32_t update_reason) {
         }
 
       m_psg = _ag_as_psg;
+      compose_from_array_group();
 
     }
 

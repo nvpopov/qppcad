@@ -690,3 +690,61 @@ void qbinded_line_edit_t::editing_finished() {
     }
 
 }
+
+void qbinded_int2b_input_t::load_value_ex() {
+
+  if (m_binded_value) {
+
+      sb_x->setValue((*m_binded_value)[0]);
+      sb_x->setMinimum(0);
+      sb_x->setMaximum((*m_binded_value)[2]);
+
+      sb_y->setValue((*m_binded_value)[1]);
+      sb_y->setMinimum(0);
+      sb_y->setMaximum((*m_binded_value)[2]);
+
+    }
+
+}
+
+qbinded_int2b_input_t::qbinded_int2b_input_t(QWidget *parent) {
+
+  widget_layout = new QHBoxLayout;
+  setLayout(widget_layout);
+  widget_layout->setContentsMargins(2, 2, 8, 2);
+
+  auto make_spinbox = [](){
+      auto ret = new QSpinBox;
+      ret->setAlignment(Qt::AlignCenter);
+      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      return ret;
+    };
+
+  sb_x = make_spinbox();
+  sb_y = make_spinbox();
+
+  widget_layout->addWidget(sb_x);
+  widget_layout->addWidget(sb_y);
+
+  connect(sb_x,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this,
+          &qbinded_int2b_input_t::spinbox_value_changed);
+
+  connect(sb_y,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this,
+          &qbinded_int2b_input_t::spinbox_value_changed);
+
+}
+
+void qbinded_int2b_input_t::spinbox_value_changed(int newval) {
+
+  if (m_binded_value && !m_ignore_state_change) {
+      (*m_binded_value)[0] = sb_x->value();
+      (*m_binded_value)[1] = sb_y->value();
+      on_value_changed();
+      app_state_t::get_inst()->make_viewport_dirty();
+    }
+
+}

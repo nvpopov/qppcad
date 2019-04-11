@@ -2,6 +2,7 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -62,11 +63,14 @@ void pgf_producer_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       pgf_data_ag->bind_value(&b_pr->m_ag, b_pr);
     }
 
+  update_cell_indexes_ranges();
+
 }
 
 void pgf_producer_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
+  update_cell_indexes_ranges();
 
 }
 
@@ -78,5 +82,30 @@ void pgf_producer_obj_insp_widget_t::unbind_item() {
 
   m_binded_item = nullptr;
   b_pr = nullptr;
+
+  update_cell_indexes_ranges();
+
+}
+
+void pgf_producer_obj_insp_widget_t::update_cell_indexes_ranges() {
+
+  if (b_pr) {
+      //      if (m_ci_ranges.size() < b_pr->m_orders_range.size()) {
+      //          for (size_t i = 0; i < m_ci_ranges.size(); i++) {
+
+      //            }
+    }
+  else {
+      //      for (size_t i = 0; i < m_ci_ranges.size(); i++)
+      //        if (m_ci_ranges[i]) {
+      //            m_ci_ranges[i]->unbind_value();
+      //            qt_helpers::form_lt_ctrl_visibility(false,
+      //                                                gb_gen_cell_lt,
+      //                                                disp_s_sel_vis_affect_bonds,
+      //                                                disp_draw_cell_label,
+      //                                                disp_draw_cell);
+
+
+    }
 
 }
