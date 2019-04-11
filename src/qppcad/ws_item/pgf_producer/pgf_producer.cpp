@@ -67,7 +67,7 @@ void pgf_producer_t::generate_geom() {
   if (!check_consistency()) return;
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("pgf_producer_t::generate_geom()");
+  //astate->log("pgf_producer_t::generate_geom()");
 
   m_dst_gv->m_tws_tr->do_action(act_lock);
   m_dst_gv->m_tws_tr->do_action(act_lock_img);
@@ -79,6 +79,13 @@ void pgf_producer_t::generate_geom() {
   m_imd.clear();
   m_imd.clear_type_table();
   m_imd.cell = gen_cell<float, qpp::matrix3<float> >(m_psg->m_ag->group);
+
+  //print out cell dimensions
+  astate->tlog("pgf_producer_t::generate_geom() info:");
+  astate->tlog("m_imd.cell.DIM = {}", m_imd.cell.DIM);
+  astate->tlog("ag.orders.size() = {}", m_psg->m_pg_axes.orders.size());
+  for (size_t i = 0; i < m_psg->m_pg_axes.orders.size(); i++)
+    astate->tlog("ag.orders[{}] = {}", i, m_psg->m_pg_axes.orders[i]);
 
   m_dst_gv->m_tws_tr->do_action(act_rebuild_all);
 

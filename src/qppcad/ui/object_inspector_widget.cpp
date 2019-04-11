@@ -232,7 +232,7 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  astate->log("DEBUG: object_inspector_widget_t::ui_cur_ws_selected_item_changed");
+  astate->log("DEBUG: ui_cur_ws_selected_item_changed");
 
   if (astate->ws_mgr->has_wss()) {
       auto cur_ws = astate->ws_mgr->get_cur_ws();

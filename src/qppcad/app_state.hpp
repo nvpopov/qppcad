@@ -75,16 +75,16 @@ namespace qpp {
 
         void pylog(std::string logstr);
 
-//        template <bool FLUSH, typename... Args>
-//        void tlog(const char *format, const Args & ... args) {
+        template <typename... Args>
+        void tlog(const char *format, const Args & ... args) {
 
-//          std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-//          std::string ts( ctime( &t) );
-//          std::string log_str = fmt::format(format, fmt::make_format_args(args...));
-//          std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), log_str);
-//          if (FLUSH) std::cout << std::flush;
+          std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+          std::string ts( ctime( &t) );
+          fmt::print("[{}]", ts.substr( 0, ts.length() - 1));
+          fmt::vprint(format, fmt::make_format_args(args...));
+          fmt::print("\n");
 
-//        }
+        }
 
         void add_recent_file(const std::string file_name,
                              const bool is_native,
