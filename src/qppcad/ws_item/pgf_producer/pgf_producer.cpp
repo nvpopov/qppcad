@@ -9,7 +9,9 @@ using namespace qpp;
 using namespace qpp::cad;
 
 pgf_producer_t::pgf_producer_t() {
+
   set_default_flags(ws_item_flags_default);
+
 }
 
 void pgf_producer_t::vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -40,28 +42,41 @@ float pgf_producer_t::get_bb_prescaller() {
 bool pgf_producer_t::check_consistency() {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log(fmt::format("pgf_producer_t::check_consistency() {} {} {}",
+
+  astate->log(fmt::format("pgf_producer_t::check_consistency() -> "
+                          "src.is_valid? = {}, "
+                          "dst.is_valid? = {}, "
+                          "psg.is_valid? = {}",
                           m_src_gv != nullptr,
                           m_dst_gv != nullptr,
                           m_psg != nullptr));
+
   return m_src_gv && m_dst_gv && m_psg /*&& m_src_gv->m_geom->DIM == m_dst_gv->m_geom->DIM*/;
 
 }
 
 void pgf_producer_t::compose_from_array_group() {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   m_imd.clear();
   m_imd.clear_type_table();
   if (m_psg) m_imd.cell = gen_cell<float, qpp::matrix3<float> >(m_psg->m_ag->group);
   m_imd.cell.auto_orders();
 
-  m_orders_range.clear();
+  //m_orders_range.clear();
   m_orders_range.resize(m_imd.cell.DIM);
 
+  astate->tlog("pgf_producer_t::compose_from_array_group() ->");
   for (size_t i = 0; i < m_orders_range.size(); i++) {
       m_orders_range[i][0] = 0;
       m_orders_range[i][1] = 0;
-      m_orders_range[i][3] = m_imd.cell.end()(i);
+      m_orders_range[i][2] = m_imd.cell.end()(i);
+      astate->tlog(" m_orders_range[{}] = [0] = {}, [1] = {}, [2] = {}",
+                   i,
+                   m_orders_range[i][0],
+                   m_orders_range[i][1],
+                   m_orders_range[i][2]);
     }
 
 }
@@ -206,6 +221,8 @@ void pgf_producer_t::updated_internally(uint32_t update_reason) {
 
       m_psg = _ag_as_psg;
       compose_from_array_group();
+
+      if (is_selected()) astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
 
     }
 

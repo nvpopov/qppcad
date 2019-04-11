@@ -30,7 +30,7 @@ namespace qpp {
          * [2] - max
          * min = 0
          */
-        std::vector<vector3<int> > m_orders_range;
+        std::vector<vector3<int> > m_orders_range{};
 
         geom_view_t *m_src_gv{nullptr};
         geom_view_t *m_dst_gv{nullptr};

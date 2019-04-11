@@ -694,15 +694,10 @@ void qbinded_line_edit_t::editing_finished() {
 void qbinded_int2b_input_t::load_value_ex() {
 
   if (m_binded_value) {
-
       sb_x->setValue((*m_binded_value)[0]);
-      sb_x->setMinimum(0);
-      sb_x->setMaximum((*m_binded_value)[2]);
-
+      sb_x->setRange(0, (*m_binded_value)[2]);
       sb_y->setValue((*m_binded_value)[1]);
-      sb_y->setMinimum(0);
-      sb_y->setMaximum((*m_binded_value)[2]);
-
+      sb_y->setRange(0, (*m_binded_value)[2]);
     }
 
 }
@@ -715,6 +710,7 @@ qbinded_int2b_input_t::qbinded_int2b_input_t(QWidget *parent) {
 
   auto make_spinbox = [](){
       auto ret = new QSpinBox;
+      ret->setFixedWidth(40);
       ret->setAlignment(Qt::AlignCenter);
       ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
       return ret;
@@ -725,6 +721,7 @@ qbinded_int2b_input_t::qbinded_int2b_input_t(QWidget *parent) {
 
   widget_layout->addWidget(sb_x);
   widget_layout->addWidget(sb_y);
+  widget_layout->addStretch(0);
 
   connect(sb_x,
           static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),

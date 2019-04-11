@@ -53,8 +53,6 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
 
 void pgf_producer_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
-  ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
-
   auto p_b_rp = _binding_item->cast_as<pgf_producer_t>();
   if (p_b_rp) {
       b_pr = p_b_rp;
@@ -63,7 +61,9 @@ void pgf_producer_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       pgf_data_ag->bind_value(&b_pr->m_ag, b_pr);
     }
 
-  update_cell_indexes_ranges();
+  ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
+
+  //update_cell_indexes_ranges();
 
 }
 
@@ -89,22 +89,55 @@ void pgf_producer_obj_insp_widget_t::unbind_item() {
 
 void pgf_producer_obj_insp_widget_t::update_cell_indexes_ranges() {
 
-  if (b_pr) {
-      //      if (m_ci_ranges.size() < b_pr->m_orders_range.size()) {
-      //          for (size_t i = 0; i < m_ci_ranges.size(); i++) {
+  app_state_t* astate = app_state_t::get_inst();
 
-      //            }
+  astate->tlog(
+        "pgf_prod..::update_cell_indexes_ranges() -> b_pr is valid ? = {}", b_pr != nullptr);
+
+  if (b_pr) {
+
+      //check size of controlers
+      astate->tlog("pgf_prod..::update_cell_indexes_ranges() -> before resizing, ci_rng> = {},"
+                   "orders_range> = {}", m_ci_ranges.size(), b_pr->m_orders_range.size());
+
+      if (!b_pr->m_orders_range.empty() && (m_ci_ranges.size() < b_pr->m_orders_range.size()) ) {
+          m_ci_ranges.resize(b_pr->m_orders_range.size());
+        }
+
+      //check existence of binded inputs
+      for (size_t i = 0; i < b_pr->m_orders_range.size(); i++)
+        if (!m_ci_ranges[i]) {
+            m_ci_ranges[i] = std::make_shared<qbinded_int2b_input_t>();
+          }
+
+      //do we need to rebuild layout?
+      if (m_last_ci_ranges_size != b_pr->m_orders_range.size()) {
+
+          //clear layout
+          while(gb_gen_cell_lt->count() > 0) {
+              gb_gen_cell_lt->takeAt(0);
+            }
+
+          //fill layout with new elements
+          for (size_t i = 0; i < b_pr->m_orders_range.size(); i++)
+            gb_gen_cell_lt->addRow(tr("DIM [%1]").arg(i+1), m_ci_ranges[i].get());
+
+          init_form_lt(gb_gen_cell_lt);
+
+          m_last_ci_ranges_size = b_pr->m_orders_range.size();
+        }
+
+      //bind values
+      astate->tlog("pgf_prod..::update_cell_indexes_ranges() -> bind values[size={}]",
+                   m_ci_ranges.size());
+      for (size_t i = 0; i < b_pr->m_orders_range.size(); i++)
+        if (!m_ci_ranges[i]) m_ci_ranges[i]->bind_value(&b_pr->m_orders_range[i], b_pr);
     }
   else {
-      //      for (size_t i = 0; i < m_ci_ranges.size(); i++)
-      //        if (m_ci_ranges[i]) {
-      //            m_ci_ranges[i]->unbind_value();
-      //            qt_helpers::form_lt_ctrl_visibility(false,
-      //                                                gb_gen_cell_lt,
-      //                                                disp_s_sel_vis_affect_bonds,
-      //                                                disp_draw_cell_label,
-      //                                                disp_draw_cell);
 
+      //unbind all non null elements
+      for (size_t i = 0; i < m_ci_ranges.size(); i++)
+        if (m_ci_ranges[i]) m_ci_ranges[i]->unbind_value();
 
     }
 

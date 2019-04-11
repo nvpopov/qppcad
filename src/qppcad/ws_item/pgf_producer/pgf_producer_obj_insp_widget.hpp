@@ -14,7 +14,7 @@ namespace qpp {
 
       public:
 
-        pgf_producer_t *b_pr;
+        pgf_producer_t *b_pr{nullptr};
         ws_item_tab_widget_t *tab_cell_range;
         qspoiler_widget_t *gb_pgf_data;
         QFormLayout *gb_pgf_data_lt;
@@ -29,8 +29,9 @@ namespace qpp {
          * @brief m_ci_ranges
          * cell indexes range
          */
-        std::vector<qbinded_int2b_input_t*> m_ci_ranges;
-        std::vector<QLabel*> m_ci_ranges_lbl;
+        std::vector<std::shared_ptr<qbinded_int2b_input_t> > m_ci_ranges;
+
+        int m_last_ci_ranges_size{-1};
 
         pgf_producer_obj_insp_widget_t();
 
