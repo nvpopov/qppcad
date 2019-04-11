@@ -20,23 +20,32 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   pgf_data_src = new qbinded_ws_item_combobox_t;
   pgf_data_src->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_src->m_type_id = geom_view_t::get_type_static();
+  pgf_data_src->m_updated_internally_event = true;
 
   pgf_data_dst = new qbinded_ws_item_combobox_t;
   pgf_data_dst->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_dst->m_type_id = geom_view_t::get_type_static();
+  pgf_data_dst->m_updated_internally_event = true;
 
   pgf_data_ag = new qbinded_ws_item_combobox_t;
   pgf_data_ag->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_ag->m_type_id = psg_view_t::get_type_static();
+  pgf_data_ag->m_updated_internally_event = true;
 
   gb_pgf_data_lt->addRow(tr("Source"), pgf_data_src);
   gb_pgf_data_lt->addRow(tr("Destination"), pgf_data_dst);
   gb_pgf_data_lt->addRow(tr("Array group"), pgf_data_ag);
   init_form_lt(gb_pgf_data_lt);
 
+  gb_gen_cell = new qspoiler_widget_t(tr("Generalized cell"));
+  gb_gen_cell_lt = new QFormLayout;
+  gb_gen_cell->add_content_layout(gb_gen_cell_lt);
+
   tab_general->tab_inner_widget_lt->addWidget(gb_pgf_data);
 
   tab_general->tab_inner_widget_lt->addStretch();
+
+  tab_cell_range->tab_inner_widget_lt->addWidget(gb_gen_cell);
   tab_cell_range->tab_inner_widget_lt->addStretch();
 
 }

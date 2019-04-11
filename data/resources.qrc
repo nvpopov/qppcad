@@ -42,5 +42,7 @@
         <file>images/outline-close-24px.svg</file>
         <file>images/outline-refresh-24px.svg</file>
         <file>images/combo_arrow.svg</file>
+        <file>images/vib_anal_d.svg</file>
+        <file>images/vib_anal.svg</file>
     </qresource>
 </RCC>

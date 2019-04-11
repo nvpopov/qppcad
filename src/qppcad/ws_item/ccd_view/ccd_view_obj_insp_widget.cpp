@@ -78,9 +78,9 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
 //  tab_geo_opt = def_tab(tr("Geometry opt."),
 //                           "://images/settings.svg",
 //                           "://images/settings.svg");
-//  tab_vibs = def_tab(tr("Vibrational analysis"),
-//                        "://images/settings.svg",
-//                        "://images/settings.svg");
+  tab_vibs = def_tab(tr("Vibrational analysis"),
+                        "://images/vib_anal.svg",
+                        "://images/vib_anal_d.svg");
 
   ws_item_is_visible->hide();
   ws_item_is_visible_label->hide();
@@ -99,7 +99,12 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t()
   tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);
   tab_general->tab_inner_widget_lt->addStretch(0);
 
-  //tab_geo_opt->tab_inner_widget_lt->addStretch(0);
+  gb_normal_modes = new qspoiler_widget_t(tr("Normal modes"));
+  gb_normal_modes_lt = new QVBoxLayout;
+  gb_normal_modes->add_content_layout(gb_normal_modes_lt);
+
+  tab_vibs->tab_inner_widget_lt->addWidget(gb_normal_modes);
+  tab_vibs->tab_inner_widget_lt->addStretch(0);
 
   //tg_form_layout->
 }

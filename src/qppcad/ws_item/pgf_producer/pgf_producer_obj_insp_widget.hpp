@@ -22,11 +22,15 @@ namespace qpp {
         qbinded_ws_item_combobox_t *pgf_data_dst;
         qbinded_ws_item_combobox_t *pgf_data_ag;
 
+        qspoiler_widget_t *gb_gen_cell;
+        QFormLayout *gb_gen_cell_lt;
+
         pgf_producer_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+
     };
 
   }

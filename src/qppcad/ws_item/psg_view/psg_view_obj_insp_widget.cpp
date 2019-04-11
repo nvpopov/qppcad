@@ -5,16 +5,14 @@ using namespace qpp::cad;
 
 psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
 
-  tg_info_summary_widget = new QGroupBox;
-  tg_info_summary_lt = new QFormLayout;
+  gb_psg_summary = new qspoiler_widget_t(tr("Symmetry group summary"));
+  gb_psg_summary_lt = new QFormLayout;
+  gb_psg_summary->add_content_layout(gb_psg_summary_lt);
 
-  pre_init_gb(tg_info_summary_widget, tg_info_summary_lt);
+  gb_psg_summary_lt->setLabelAlignment(Qt::AlignRight);
+  gb_psg_summary->setLayout(gb_psg_summary_lt);
 
-  tg_info_summary_lt->setLabelAlignment(Qt::AlignRight);
-  tg_info_summary_widget->setLayout(tg_info_summary_lt);
-
-  tg_info_summary_widget->setTitle("Symmetry group summary");
-  tab_general->tab_inner_widget_lt->addWidget(tg_info_summary_widget);
+  tab_general->tab_inner_widget_lt->addWidget(gb_psg_summary);
   tg_info_sym_gr = new QLabel;
   tg_info_total_sym_op = new QLabel;
   tg_plane_alpha_enabled = new qbinded_checkbox_t;
@@ -33,16 +31,16 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   tg_axis_len_mod->set_min_max_step(0.5, 10, 0.1, 2);
   tg_axis_len_mod->m_updated_internally_event = true;
 
-  tg_info_summary_lt->addRow(tr("Sym. gr. name"), tg_info_sym_gr);
-  tg_info_summary_lt->addRow(tr("Num. of op."), tg_info_total_sym_op);
-  tg_info_summary_lt->addRow(tr("Show axes"), cb_show_axes);
-  tg_info_summary_lt->addRow(tr("Show planes"), cb_show_planes);
-  tg_info_summary_lt->addRow(tr("Plane transp."), tg_plane_alpha_enabled);
-  tg_info_summary_lt->addRow(tr("Plane scale"), tg_plane_scale);
-  tg_info_summary_lt->addRow(tr("Axis scale"), tg_axis_scale);
-  tg_info_summary_lt->addRow(tr("Axis length"), tg_axis_len_mod);
+  gb_psg_summary_lt->addRow(tr("Sym. gr. name"), tg_info_sym_gr);
+  gb_psg_summary_lt->addRow(tr("Num. of op."), tg_info_total_sym_op);
+  gb_psg_summary_lt->addRow(tr("Show axes"), cb_show_axes);
+  gb_psg_summary_lt->addRow(tr("Show planes"), cb_show_planes);
+  gb_psg_summary_lt->addRow(tr("Plane transp."), tg_plane_alpha_enabled);
+  gb_psg_summary_lt->addRow(tr("Plane scale"), tg_plane_scale);
+  gb_psg_summary_lt->addRow(tr("Axis scale"), tg_axis_scale);
+  gb_psg_summary_lt->addRow(tr("Axis length"), tg_axis_len_mod);
 
-  post_init_gb(tg_info_summary_widget, tg_info_summary_lt);
+  init_form_lt(gb_psg_summary_lt);
 
   tab_general->tab_inner_widget_lt->addStretch();
 

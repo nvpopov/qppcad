@@ -193,7 +193,7 @@ float psg_view_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-void psg_view_t::updated_internally() {
+void psg_view_t::updated_internally(uint32_t update_reason) {
   recalc_render_data();
 }
 

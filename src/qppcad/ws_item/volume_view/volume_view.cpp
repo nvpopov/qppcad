@@ -138,7 +138,7 @@ size_t volume_view_t::get_content_count() {
   return 0;
 }
 
-void volume_view_t::updated_internally() {
+void volume_view_t::updated_internally(uint32_t update_reason) {
 
   for (auto &vol : m_volumes) {
       vol.m_need_to_regenerate = true;

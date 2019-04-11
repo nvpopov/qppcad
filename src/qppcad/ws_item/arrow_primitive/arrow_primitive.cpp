@@ -112,7 +112,7 @@ void arrow_primitive_t::recalc_render_data() {
   m_model_arrow = mat_model_aux;
 }
 
-void arrow_primitive_t::updated_internally() {
+void arrow_primitive_t::updated_internally(uint32_t update_reason) {
 
   recalc_render_data();
 

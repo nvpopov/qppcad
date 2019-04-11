@@ -28,6 +28,9 @@ namespace qpp {
         QLabel *gen_ccd_info_prog_name;
         QLabel *gen_ccd_info_run_type;
 
+        qspoiler_widget_t *gb_normal_modes;
+        QVBoxLayout *gb_normal_modes_lt;
+
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;

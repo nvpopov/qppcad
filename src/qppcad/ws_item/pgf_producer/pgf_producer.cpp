@@ -35,6 +35,10 @@ float pgf_producer_t::get_bb_prescaller() {
   return 1.0f;
 }
 
+bool pgf_producer_t::check_consistency() {
+  return m_src_gv && m_dst_gv && m_psg && m_src_gv->m_geom->DIM == m_dst_gv->m_geom->DIM;
+}
+
 uint32_t pgf_producer_t::get_amount_of_selected_content() {
   return 0;
 }
@@ -51,6 +55,64 @@ void pgf_producer_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }
 
-void pgf_producer_t::updated_internally() {
+void pgf_producer_t::generate_geom() {
+
+  if (!check_consistency()) return;
+
+}
+
+void pgf_producer_t::updated_internally(uint32_t update_reason) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->log("pgf_producer_t::updated_internally()");
+
+  auto clean_intermediates = [this](){
+      this->m_src_gv = nullptr;
+      this->m_dst_gv = nullptr;
+      this->m_psg = nullptr;
+    };
+
+  //check src
+  if (!m_src) {
+      clean_intermediates();
+      return;
+    }
+
+  auto _src_as_gv = m_src->cast_as<geom_view_t>();
+  if (!_src_as_gv) {
+      clean_intermediates();
+      return;
+    }
+
+  m_src_gv = _src_as_gv;
+
+  //check dst
+  if (!m_dst) {
+      clean_intermediates();
+      return;
+    }
+
+  auto _dst_as_gv = m_dst->cast_as<geom_view_t>();
+  if (!_src_as_gv) {
+      clean_intermediates();
+      return;
+    }
+
+  m_dst_gv = _dst_as_gv;
+
+  //check psg
+  if (!m_ag) {
+      clean_intermediates();
+      return;
+    }
+
+  auto _ag_as_psg = m_dst->cast_as<psg_view_t>();
+  if (!_ag_as_psg) {
+      clean_intermediates();
+      return;
+    }
+
+  m_psg = _ag_as_psg;
+
 }
 

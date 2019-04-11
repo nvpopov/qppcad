@@ -17,8 +17,8 @@ namespace qpp {
 
         psg_view_obj_insp_widget_t();
 
-        QGroupBox *tg_info_summary_widget;
-        QFormLayout *tg_info_summary_lt;
+        qspoiler_widget_t *gb_psg_summary;
+        QFormLayout *gb_psg_summary_lt;
         QLabel *tg_info_sym_gr;
         QLabel *tg_info_total_sym_op;
         qbinded_checkbox_t *tg_plane_alpha_enabled;
@@ -30,16 +30,10 @@ namespace qpp {
         qbinded_float_spinbox_t *tg_axis_scale;
         qbinded_float_spinbox_t *tg_axis_len_mod;
 
-        QGroupBox *tg_general_appearance;
-        QFormLayout *tg_general_appearance_lt;
-
-        QGroupBox *gb_grepr_details;
-        QFormLayout *gb_grepr_details_lt;
-        QComboBox *gb_cur_grepr;
-
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+
     };
 
   }

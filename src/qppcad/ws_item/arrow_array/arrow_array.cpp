@@ -139,7 +139,7 @@ void arrow_array_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }
 
-void arrow_array_t::updated_internally() {
+void arrow_array_t::updated_internally(uint32_t update_reason) {
 
   app_state_t *astate = app_state_t::get_inst();
   astate->log(fmt::format("AARRAY[{}]::updated internally", m_name));

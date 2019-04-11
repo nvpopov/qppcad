@@ -52,7 +52,7 @@ void node_book_t::load_from_json(json &data) {
   ws_item_t::load_from_json(data);
 }
 
-void node_book_t::updated_internally() {
+void node_book_t::updated_internally(uint32_t update_reason) {
 
 }
 

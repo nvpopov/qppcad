@@ -75,7 +75,7 @@ float ccd_view_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-void ccd_view_t::updated_internally() {
+void ccd_view_t::updated_internally(uint32_t update_reason) {
 
 }
 

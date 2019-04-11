@@ -23,6 +23,10 @@ namespace qpp {
         std::shared_ptr<ws_item_t> m_dst{nullptr};
         std::shared_ptr<ws_item_t> m_ag{nullptr};
 
+        geom_view_t *m_src_gv{nullptr};
+        geom_view_t *m_dst_gv{nullptr};
+        psg_view_t *m_psg{nullptr};
+
         geometry<float, qpp::gen_cell<float, qpp::matrix3<float>>> m_imd;
 
         pgf_producer_t();
@@ -35,12 +39,15 @@ namespace qpp {
         std::string compose_type_descr() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
-        void updated_internally() override;
+        void updated_internally(uint32_t update_reason) override;
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;
 
         void save_to_json(json &data) override;
         void load_from_json(json &data) override;
+
+        void generate_geom();
+        bool check_consistency();
 
     };
 
