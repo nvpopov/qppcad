@@ -29,6 +29,7 @@ namespace qpp {
         bool m_updated_internally_event{false};
         T *m_binded_value{nullptr};
         ws_item_t *m_binded_ws_item{nullptr};
+        uint32_t m_upd_flag{ws_item_updf_generic};
 
         void bind_value(T *_binded_value, ws_item_t *item_to_bind = nullptr) {
           m_binded_value = _binded_value;
@@ -50,7 +51,7 @@ namespace qpp {
 
         void on_value_changed() {
           if (m_binded_ws_item && m_updated_internally_event)
-            m_binded_ws_item->updated_internally();
+            m_binded_ws_item->updated_internally(m_upd_flag);
         }
 
         virtual void load_value_ex() = 0;
@@ -262,6 +263,7 @@ namespace qpp {
         workspace_t *m_binded_ws{nullptr};
         size_t m_type_id{0};
         bool m_updated_internally_event{false};
+        uint32_t m_upd_flag{ws_item_updf_generic};
 
         qbinded_ws_item_combobox_t(QWidget *parent = nullptr);
 

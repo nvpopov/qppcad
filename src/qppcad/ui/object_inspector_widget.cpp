@@ -250,7 +250,8 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
 
     }
 
-  update_ws_items_view_widget();
+  //TODO: probably fix twin things
+  //update_ws_items_view_widget();
 
 }
 

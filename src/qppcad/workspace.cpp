@@ -17,27 +17,35 @@ using namespace qpp;
 using namespace qpp::cad;
 
 opt<size_t> workspace_t::get_selected_idx () {
+
   for (size_t i = 0; i < m_ws_items.size(); i++)
     if (m_ws_items[i]->m_selected) return opt<size_t>(i);
   return std::nullopt;
+
 }
 
 ws_item_t *workspace_t::get_selected () {
+
   std::optional<size_t> sel_idx = get_selected_idx();
   if (sel_idx) return m_ws_items[*sel_idx].get();
   else return nullptr;
+
 }
 
-std::shared_ptr<ws_item_t> workspace_t::get_selected_sp(){
+std::shared_ptr<ws_item_t> workspace_t::get_selected_sp() {
+
   std::optional<size_t> sel_idx = get_selected_idx();
   if (sel_idx) return m_ws_items[*sel_idx];
   else return nullptr;
+
 }
 
 std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
+
   for (auto item : m_ws_items)
     if (item->m_name == _name) return item;
   return nullptr;
+
 }
 
 bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {

@@ -27,7 +27,7 @@ namespace qpp {
         geom_view_t *m_dst_gv{nullptr};
         psg_view_t *m_psg{nullptr};
 
-        geometry<float, qpp::gen_cell<float, qpp::matrix3<float>>> m_imd;
+        geometry<float, gen_cell<float, qpp::matrix3<float> > > m_imd;
 
         pgf_producer_t();
 

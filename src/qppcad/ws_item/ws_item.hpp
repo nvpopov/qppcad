@@ -37,27 +37,28 @@ namespace qpp {
     const uint32_t ws_item_flags_support_cam_target_view  = 1 << 16;
 
     // ws_item_t update_externally flags
-    const uint32_t ws_item_updf_generic                 = 0;
-    const uint32_t ws_item_updf_pos_changed             = 1 << 1;
-    const uint32_t ws_item_updf_scale_changed           = 1 << 2;
-    const uint32_t ws_item_updf_leader_changed          = 1 << 3;
-    const uint32_t ws_item_updf_followers_changed       = 1 << 3;
-    const uint32_t ws_item_updf_connected_items_changed = 1 << 4;
-    const uint32_t ws_item_updf_added_to_ws             = 1 << 5;
-    const uint32_t ws_item_updf_removed_from_ws         = 1 << 6;
-    const uint32_t ws_item_updf_pre_delete              = 1 << 7;
-    const uint32_t ws_item_updf_channel_all             = 1 << 8;
-    const uint32_t ws_item_updf_channel_a               = 1 << 9;
-    const uint32_t ws_item_updf_channel_b               = 1 << 10;
-    const uint32_t ws_item_updf_channel_c               = 1 << 11;
-    const uint32_t ws_item_updf_channel_d               = 1 << 12;
-    const uint32_t ws_item_updf_channel_e               = 1 << 13;
-    const uint32_t ws_item_updf_channel_f               = 1 << 14;
-    const uint32_t ws_item_updf_channel_g               = 1 << 15;
-    const uint32_t ws_item_updf_channel_h               = 1 << 16;
-    const uint32_t ws_item_updf_channel_j               = 1 << 17;
-    const uint32_t ws_item_updf_channel_k               = 1 << 18;
-    const uint32_t ws_item_updf_channel_l               = 1 << 19;
+    const uint32_t ws_item_updf_flags                   = 0;
+    const uint32_t ws_item_updf_generic                 = 1 << 1;
+    const uint32_t ws_item_updf_pos_changed             = 1 << 2;
+    const uint32_t ws_item_updf_scale_changed           = 1 << 3;
+    const uint32_t ws_item_updf_leader_changed          = 1 << 4;
+    const uint32_t ws_item_updf_followers_changed       = 1 << 5;
+    const uint32_t ws_item_updf_connected_items_changed = 1 << 6;
+    const uint32_t ws_item_updf_added_to_ws             = 1 << 7;
+    const uint32_t ws_item_updf_removed_from_ws         = 1 << 8;
+    const uint32_t ws_item_updf_pre_delete              = 1 << 9;
+    const uint32_t ws_item_updf_channel_all             = 1 << 10;
+    const uint32_t ws_item_updf_channel_a               = 1 << 11;
+    const uint32_t ws_item_updf_channel_b               = 1 << 12;
+    const uint32_t ws_item_updf_channel_c               = 1 << 13;
+    const uint32_t ws_item_updf_channel_d               = 1 << 14;
+    const uint32_t ws_item_updf_channel_e               = 1 << 15;
+    const uint32_t ws_item_updf_channel_f               = 1 << 16;
+    const uint32_t ws_item_updf_channel_g               = 1 << 17;
+    const uint32_t ws_item_updf_channel_h               = 1 << 18;
+    const uint32_t ws_item_updf_channel_j               = 1 << 19;
+    const uint32_t ws_item_updf_channel_k               = 1 << 20;
+    const uint32_t ws_item_updf_channel_l               = 1 << 21;
 
     class ws_item_t : public std::enable_shared_from_this<ws_item_t>,
         public qpp_object_t, public serializable_t {

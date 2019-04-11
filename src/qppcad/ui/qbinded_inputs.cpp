@@ -427,29 +427,38 @@ void qbinded_ws_item_combobox_t::bind_value(std::shared_ptr<ws_item_t> *_binded_
   m_binded_ws_item_p = _binded_value;
   m_binded_ws_item = item_to_bind;
   m_binded_ws = item_to_bind->m_parent_ws;
+  blockSignals(true);
   load_value();
+  blockSignals(false);
 
 }
 
 void qbinded_ws_item_combobox_t::load_value() {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   rebuild_variants();
 
   if (!m_binded_ws_item_p->get()) {
+//      astate->log("!m_binded_ws_item_p->get()");
       setCurrentIndex(0);
       return;
     }
 
   if (!m_binded_ws) {
+//      astate->log("!m_binded_ws");
       setCurrentIndex(0);
       return;
     }
 
   for (size_t i = 0; i < count(); i++) {
       QString name_in_checkbox = itemText(i);
-      auto itm = m_binded_ws->get_by_name(name_in_checkbox.toStdString());
-      if (itm && itm->get_type() == m_type_id) {
-          setCurrentIndex(i);
+      std::string name_in_cb = name_in_checkbox.toStdString();
+      if (m_binded_ws_item_p->get()->m_name == name_in_cb
+          && m_binded_ws_item_p->get()->get_type() == m_type_id) {
+//          astate->log(
+//                fmt::format("qbinded_ws_item_combobox_t::load_value({}, {})", i, name_in_cb));
+          setCurrentIndex(i); // 0 == None
           return;
         }
     }
@@ -457,6 +466,8 @@ void qbinded_ws_item_combobox_t::load_value() {
 }
 
 void qbinded_ws_item_combobox_t::unbind_value() {
+
+  blockSignals(true);
 
   m_binded_ws_item_p = nullptr;
   m_binded_ws_item = nullptr;
@@ -471,10 +482,10 @@ void qbinded_ws_item_combobox_t::rebuild_variants() {
   addItem(tr("None"));
 
   if (m_binded_ws) {
-      for (auto item : m_binded_ws->m_ws_items)
-        if (item->get_type() == m_type_id) {
-            addItem(QString::fromStdString(item->m_name));
-          }
+      for (auto &item : m_binded_ws->m_ws_items)
+        if (item->get_type() == m_type_id)
+          addItem(QString::fromStdString(item->m_name));
+
     }
 
   blockSignals(false);
@@ -490,7 +501,8 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
 
   if (i == 0) {
       *m_binded_ws_item_p = nullptr;
-      if (m_binded_ws_item && m_updated_internally_event) m_binded_ws_item->updated_internally();
+      if (m_binded_ws_item && m_updated_internally_event)
+        m_binded_ws_item->updated_internally(m_upd_flag);
       return;
     }
 
@@ -501,7 +513,8 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
       *m_binded_ws_item_p = itm;
     }
 
-  if (m_binded_ws_item && m_updated_internally_event) m_binded_ws_item->updated_internally();
+  if (m_binded_ws_item && m_updated_internally_event)
+    m_binded_ws_item->updated_internally(m_upd_flag);
 
 }
 
@@ -515,9 +528,11 @@ qbinded_xgeom_color3_input_t::qbinded_xgeom_color3_input_t(QWidget *parent) : QF
 
 }
 
-void qbinded_xgeom_color3_input_t::bind_value(xgeometry<float, periodic_cell<float>> *_binded_xgeom,
-                                            std::array<int, 3> _binding_indicies,
-                                            size_t _binded_atom_id) {
+void qbinded_xgeom_color3_input_t::bind_value(
+    xgeometry<float, periodic_cell<float>> *_binded_xgeom,
+    std::array<int, 3> _binding_indicies,
+    size_t _binded_atom_id) {
+
   m_binded_xgeom = _binded_xgeom;
   m_binding_indicies = _binding_indicies;
   m_binded_atom_id = _binded_atom_id;
