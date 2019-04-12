@@ -312,20 +312,28 @@ void qbinded_float3_input_t::spinbox_value_changed(double newval) {
 
 void qbinded_color3_input_t::load_value_ex() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
+  QColor back_color = Qt::black;
+
   if (m_binded_value) {
+      astate->tlog("qbinded_color3_input_t::load_value_ex() -> [0] = {}, [1] = {}, [2] = {}",
+                   (*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
       m_stored_color.setRgbF((*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
-      QPalette pal = palette();
-      pal.setColor(QPalette::Background, m_stored_color);
-      pal.setColor(QPalette::Foreground, Qt::white);
-      setAutoFillBackground(true);
-      setPalette(pal);
-    } else {
-      QPalette pal = palette();
-      pal.setColor(QPalette::Background, Qt::black);
-      pal.setColor(QPalette::Foreground, Qt::white);
-      setAutoFillBackground(true);
-      setPalette(pal);
+      astate->tlog("qbinded_color3_input_t::load_value_ex() msc-> [0] = {}, [1] = {}, [2] = {}",
+                   m_stored_color.redF(), m_stored_color.greenF(), m_stored_color.blueF());
+      back_color = m_stored_color;
     }
+
+  astate->tlog("qbinded_color3_input_t::load_value_ex() bcc-> [0] = {}, [1] = {}, [2] = {}",
+               back_color.redF(), back_color.greenF(), back_color.blueF());
+
+  QPalette pal;
+  pal.setColor(QPalette::Background, back_color);
+  pal.setColor(QPalette::Foreground, Qt::white);
+  setPalette(pal);
+
+  setAutoFillBackground(true);
 
 }
 
@@ -337,7 +345,7 @@ void qbinded_color3_input_t::mousePressEvent(QMouseEvent *event) {
           (*m_binded_value)[0] = color.redF();
           (*m_binded_value)[1] = color.greenF();
           (*m_binded_value)[2] = color.blueF();
-          load_value();
+          load_value_ex();
           on_value_changed();
           app_state_t::get_inst()->make_viewport_dirty();
         }
@@ -345,22 +353,15 @@ void qbinded_color3_input_t::mousePressEvent(QMouseEvent *event) {
 
 }
 
-qbinded_color3_input_t::qbinded_color3_input_t(QWidget *parent) : QFrame (parent) {
+qbinded_color3_input_t::qbinded_color3_input_t(QWidget *parent) : QWidget (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+  setFixedWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setFixedHeight(astate->size_guide.obj_insp_ctrl_t2_h());
 
-  QPalette pal = palette();
-  pal.setColor(QPalette::Background, Qt::black);
-  pal.setColor(QPalette::Foreground, Qt::white);
-  setAutoFillBackground(true);
-  setPalette(pal);
-
-  setFrameStyle(QFrame::Panel);
-
-  update();
+  setBackgroundRole(QPalette::NoRole);
+  setAutoFillBackground(false);
 
 }
 

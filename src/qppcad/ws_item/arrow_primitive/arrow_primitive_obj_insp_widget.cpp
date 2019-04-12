@@ -28,9 +28,9 @@ arrow_primitive_obj_insp_widget_t::arrow_primitive_obj_insp_widget_t() {
   ap_arrow_color = new qbinded_color3_input_t;
 
   gb_arrow_settings_lt->addRow(tr("Target[GLOBAL]"), ap_target);
-  gb_arrow_settings_lt->addRow(tr("Unf. arrow scl."), ap_unf_arrow_scale);
-  gb_arrow_settings_lt->addRow(tr("Unf. cap len."), ap_unf_arrow_cap_len);
-  gb_arrow_settings_lt->addRow(tr("Unf. cap scl."), ap_unf_arrow_cap_scale);
+  gb_arrow_settings_lt->addRow(tr("Arrow scale"), ap_unf_arrow_scale);
+  gb_arrow_settings_lt->addRow(tr("Cap lenght"), ap_unf_arrow_cap_len);
+  gb_arrow_settings_lt->addRow(tr("Cap scale"), ap_unf_arrow_cap_scale);
   gb_arrow_settings_lt->addRow(tr("Arrow color"), ap_arrow_color);
 
   init_form_lt(gb_arrow_settings_lt);

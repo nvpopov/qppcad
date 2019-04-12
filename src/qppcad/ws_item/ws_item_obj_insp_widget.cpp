@@ -110,9 +110,9 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
       if (type_str.length() > trc) type_truncated += "...";
       ws_item_type->setText(type_truncated);
 
-      ws_item_is_visible->load_value();
-      ws_item_bb_visible->load_value();
-      ws_item_pos->load_value();
+      ws_item_is_visible->load_value_ex();
+      ws_item_bb_visible->load_value_ex();
+      ws_item_pos->load_value_ex();
 
     }
 
@@ -239,7 +239,7 @@ void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
 
   if (m_binded_item) {
       if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
-          ws_item_pos->load_value();
+          ws_item_pos->load_value_ex();
         }
     }
 

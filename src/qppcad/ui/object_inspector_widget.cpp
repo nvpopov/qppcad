@@ -123,8 +123,6 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
-  setUpdatesEnabled(false);
-
   if (!bhv_mgr) return;
 
   if (m_cur_obj_insp_widget) {
@@ -141,9 +139,11 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
+
           auto cur_it = cur_ws->get_selected();
 
           if (cur_it) {
+
               size_t thash = cur_it->get_type();
               auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
               if (obj_insp_w) {
@@ -154,17 +154,16 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
                   none_item_placeholder->hide();
                   main_lt->addWidget(obj_insp_w.get());
                   m_cur_obj_insp_widget = obj_insp_w;
-                  obj_insp_w->bind_to_item(cur_it);
                   obj_insp_w->show();
+                  obj_insp_w->bind_to_item(cur_it);
 
                 }
-            }
 
-        }
+            } // cur_it
 
-    }
+        } // cur_ws
 
-  setUpdatesEnabled(true);
+    } // astate->ws_mgr->has_wss()
 
 }
 

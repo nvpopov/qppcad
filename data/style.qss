@@ -9,12 +9,7 @@ QPushButton:checked {
 }
 
 QMainWindow {
-}
 
-QWidget[s_class="obj_insp"] {
-}
-
-QWidget[s_class="tp_generic"] {
 }
 
 QWidget[s_class="tp_generic"] QLabel {
@@ -159,10 +154,6 @@ QListWidget[s_class="ws_items_list"]::item {
   margin: 6px;
 }
 
-#ws_items_spoler_widget_list_e {
-
-}
-
 #ws_items_spoiler_e {
   margin-left:4px;
 }
@@ -288,11 +279,6 @@ QPushButton::flat:hover {
 
 QPushButton::flat:pressed {
  background : rgb(124, 124, 124);
-}
-
-qpp--cad--qbinded_color3_input_t {
- border-radius : 3px;
- border: 1px solid white;
 }
 
 qpp--cad--qspoiler_widget_t {

@@ -35,13 +35,8 @@ namespace qpp {
           m_binded_value = _binded_value;
           m_binded_ws_item = item_to_bind;
           m_ignore_state_change = true;
-          load_value();
-          m_ignore_state_change = false;
-        }
-
-        //from model to ui
-        void load_value() {
           if (m_binded_value) load_value_ex();
+          m_ignore_state_change = false;
         }
 
         void unbind_value() {
@@ -206,14 +201,15 @@ namespace qpp {
 
     };
 
-    class qbinded_color3_input_t : public QFrame, public generic_binded_input_t<vector3<float> > {
+    class qbinded_color3_input_t : public QWidget,
+        public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT
 
       public:
 
-        QColor m_stored_color{Qt::black};
-        qbinded_color3_input_t(QWidget *parent = nullptr);
+        QColor m_stored_color;
+        explicit qbinded_color3_input_t(QWidget *parent = nullptr);
         void load_value_ex() override;
         void mousePressEvent(QMouseEvent *event) override;
 
