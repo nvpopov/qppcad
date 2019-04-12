@@ -290,7 +290,7 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tres();
+  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
 
   if (!ok) return;
 

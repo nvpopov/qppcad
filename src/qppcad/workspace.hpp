@@ -20,6 +20,10 @@ namespace qpp {
 
     class app_state_t;
 
+    const uint32_t error_ctx_def   = 0;
+    const uint32_t error_ctx_throw = 1 << 1;
+    const uint32_t error_ctx_mbox  = 1 << 2;
+
     /**
      * @brief The workspace_t class
      */
@@ -136,25 +140,52 @@ namespace qpp {
 
         void utility_event_loop();
 
-        template<typename T, bool THROW_ERROR = true>
-        std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*> get_sel_tuple(){
+        /**
+         * @brief get_sel_tuple
+         * @param _error_context
+         * @return
+         */
+        template<typename T>
+        std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*>
+        get_sel_tpl_itm(uint32_t _error_context = error_ctx_def) {
 
           auto cur_ws = get_cur_ws();
           if (!cur_ws) {
-              if (THROW_ERROR) throw std::invalid_argument("invalid workspace!");
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("invalid workspace!");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("invalid workspace!"));
               return {nullptr, nullptr, nullptr};
             }
 
           auto cur_it = cur_ws->get_selected_sp();
           if (!cur_it) {
-              if (THROW_ERROR) throw std::invalid_argument("ws_item not selected!");
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("ws_item not selected!");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("ws_item not selected!"));
               return {cur_ws, nullptr, nullptr};
             }
 
           auto casted_it = cur_it->cast_as<T>();
           if (!casted_it) {
-              if (THROW_ERROR) throw std::invalid_argument(
-                    fmt::format("Cast error ({})", T::get_type_info_static()->get_type_name()));
+              if (_error_context & error_ctx_throw) {
+                  throw std::invalid_argument(
+                        fmt::format("cast error : from {} to {}",
+                                    cur_it->get_type_name(), T::get_type_name_static())
+                        );
+                }
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("cast error : from %1 to %2")
+                                     .arg(QString::fromStdString(cur_it->get_type_name()))
+                                     .arg(QString::fromStdString(T::get_type_name_static()))
+                                     );
               return  {cur_ws, cur_it, nullptr};
             }
 
@@ -162,18 +193,33 @@ namespace qpp {
 
         }
 
-        template<bool THROW_ERROR = true>
-        std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, bool > get_sel_tres(){
+        /**
+         * @brief get selection tuple without casting
+         * @param _error_context
+         * @return
+         */
+        std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, bool >
+        get_sel_tpl_itm_nc(uint32_t _error_context = error_ctx_def) {
 
           auto cur_ws = get_cur_ws();
           if (!cur_ws) {
-              if (THROW_ERROR) throw std::invalid_argument("invalid workspace!");
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("invalid workspace!");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("invalid workspace!"));
               return {nullptr, nullptr, false};
             }
 
           auto cur_it = cur_ws->get_selected_sp();
           if (!cur_it) {
-              if (THROW_ERROR) throw std::invalid_argument("ws_item not selected!");
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("ws_item not selected!");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("ws_item not selected!"));
               return {cur_ws, nullptr, false};
             }
 
@@ -181,17 +227,32 @@ namespace qpp {
 
         }
 
-        template<typename T, bool THROW_ERROR = true>
-        std::tuple<bool, std::shared_ptr<workspace_t> > get_context(){
+        /**
+         * @brief get_context
+         * @param _error_context
+         * @return
+         */
+        std::tuple<bool, std::shared_ptr<workspace_t> >
+        get_sel_tuple_ws(uint32_t _error_context = error_ctx_def) {
 
           if (!has_wss()) {
-              if (THROW_ERROR) throw std::invalid_argument("!has_wss()");
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("!has_wss()");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("!has_wss()"));
               return {false, nullptr};
             }
 
           auto cur_ws = get_cur_ws();
           if (!cur_ws) {
-              if (THROW_ERROR) throw std::invalid_argument("!cur_ws");
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("!cur_ws");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("!cur_ws"));
               return {true, nullptr};
             }
 
@@ -201,8 +262,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

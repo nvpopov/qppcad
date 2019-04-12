@@ -59,7 +59,7 @@ void simple_query::open_file_query(std::string file_name,
 void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_c) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   supercell_tool_t sct;
   sct.make_super_cell(al, sc_a, sc_b, sc_c);
@@ -99,7 +99,7 @@ void simple_query::select_itm(int itm_idx) {
 void simple_query::sel_cnt(int cnt_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->select_atom(cnt_idx);
   astate->make_viewport_dirty();
 
@@ -108,7 +108,7 @@ void simple_query::sel_cnt(int cnt_idx) {
 void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (size_t i = 0; i < al->m_geom->nat(); i++)
     if (cfn(al->m_geom->pos(i)[0], al->m_geom->pos(i)[1], al->m_geom->pos(i)[2]))
@@ -122,7 +122,7 @@ void simple_query::sel_cnt_parity() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   index zero = index::D(al->m_geom->DIM).all(0);
   for (auto &elem : al->m_atom_idx_sel)
@@ -150,7 +150,7 @@ void simple_query::sel_cnt_parity() {
 void simple_query::sel_invert() {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->invert_selected_atoms();
   astate->make_viewport_dirty();
 
@@ -159,7 +159,7 @@ void simple_query::sel_invert() {
 void simple_query::sel_cnt_all() {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->select_atoms(true);
   astate->make_viewport_dirty();
 
@@ -168,7 +168,7 @@ void simple_query::sel_cnt_all() {
 void simple_query::sel_cnt_list(pybind11::list sel_list) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (auto itm : sel_list)
     if (py::isinstance<py::int_>(itm)) al->select_atom(py::cast<int>(itm));
@@ -180,7 +180,7 @@ void simple_query::sel_cnt_list(pybind11::list sel_list) {
 void simple_query::sel_cnt_type(pybind11::str sel_type) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   std::string type_name = py::cast<std::string>(sel_type);
   int type_id = al->m_geom->type_of_atom(type_name);
@@ -194,7 +194,7 @@ void simple_query::sel_cnt_sphere(vector3<float> sph_center, float sph_rad) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   std::vector<tws_node_content_t<float> > cnt;
   al->m_tws_tr->query_sphere(sph_rad, sph_center, cnt);
@@ -213,7 +213,7 @@ void simple_query::sel_hemisphere(int coord_idx, bool positive) {
 
   if (coord_idx < 0 || coord_idx > 2) return;
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (int i = 0; i < al->m_geom->nat(); i++)
     if (positive == al->m_geom->pos(i)[coord_idx] > -0.01)
@@ -242,7 +242,7 @@ void simple_query::edit_mode(int mode) {
 void simple_query::unsel_cnt_all() {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->select_atoms(true);
   al->invert_selected_atoms();
   astate->make_viewport_dirty();
@@ -252,7 +252,7 @@ void simple_query::unsel_cnt_all() {
 void simple_query::unsel_cnt(int cnt_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->unselect_atom(cnt_idx);
   astate->make_viewport_dirty();
 
@@ -261,7 +261,7 @@ void simple_query::unsel_cnt(int cnt_idx) {
 void simple_query::unsel_cnt_list(pybind11::list sel_list) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (auto itm : sel_list)
     if (py::isinstance<py::int_>(itm)) al->unselect_atom(py::cast<int>(itm));
@@ -274,7 +274,7 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   std::string type_name = py::cast<std::string>(sel_type);
   int type_id = al->m_geom->type_of_atom(type_name);
@@ -289,7 +289,7 @@ pybind11::list simple_query::get_sel() {
   app_state_t *astate = app_state_t::get_inst();
   py::list res;
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   if (!al) return py::none();
 
@@ -337,7 +337,8 @@ py::str simple_query::get_type_name() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (!astate->ws_mgr->has_wss()) return py::none();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
   if (!cur_ws) return py::none();
   if (cur_it) return cur_it->get_type_name();
 
@@ -394,7 +395,9 @@ pybind11::bool_ simple_query::is_instance_of_by_type_name(std::string _type_name
 vector3<float> simple_query::gizmo_pos() {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
   if (!cur_ws) return vector3<float>::Zero();
   if (!al) return vector3<float>::Zero();
   if (al) return al->get_gizmo_content_barycenter();
@@ -407,7 +410,7 @@ std::tuple<std::string, vector3<float> >  simple_query::get_point_sym_group(floa
   app_state_t *astate = app_state_t::get_inst();
 
   auto ret_empty = [](){return std::make_tuple("C1", vector3<float>{0});};
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   if (!astate->ws_mgr->has_wss()) return ret_empty();
   if (!cur_ws) return ret_empty();
@@ -428,7 +431,7 @@ void simple_query::embed_cube() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   if (!al) {
       throw std::invalid_argument("embed_cube : select geom_view_t");
@@ -532,11 +535,9 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-  auto traj_hl =
-      astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(traj_hl_t::get_type_static());
-
+  auto traj_hl = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(traj_hl_t::get_type_static());
   if (!traj_hl) return;
 
   traj_hl->m_name = fmt::format("traj_highlighter_{}", cur_ws->m_ws_items.size());
@@ -602,7 +603,7 @@ void simple_query::rebond() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   al->m_tws_tr->m_bonding_table.init_default(al->m_geom.get());
   al->m_tws_tr->do_action(act_rebuild_ntable);
@@ -614,7 +615,7 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   if (cur_ws->m_edit_type == ws_edit_e::edit_item) al->translate(vector3<float>(tx, ty, tz));
   else al->translate_selected(vector3<float>(tx, ty, tz));
@@ -627,7 +628,7 @@ void simple_query::set_charge(float charge) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   if (al && cur_ws->m_edit_type == ws_edit_e::edit_content) {
       index zero = index::D(al->m_geom->DIM).all(0);
@@ -734,16 +735,19 @@ void simple_query::convert_selected_units(spatial_units_e new_unit) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   float mod = new_unit == spatial_units_ang ? qpp::bohr_to_angs : qpp::ang_to_bohr;
 
   al->m_tws_tr->do_action(act_lock | act_clear_all);
   al->m_ext_obs->first_data = true;
+
   //transform cell
   for (int i = 0; i < al->m_geom->DIM; i++) al->m_geom->cell.v[i] *= mod;
+
   //transform content
   for (int i = 0; i < al->m_geom->nat(); i++) al->m_geom->coord(i) *= mod;
+
   al->geometry_changed();
   al->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
   al->m_tws_tr->do_action(act_rebuild_ntable);
@@ -771,23 +775,23 @@ void simple_query::set_sel_color(float r, float g, float b) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  auto [cur_ws, cur_it, cur_it_al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-      for (auto &elem : cur_it_al->m_atom_idx_sel) {
-      cur_it_al->m_geom->xfield<float>(xgeom_ccr, elem.m_atm) = r;
-      cur_it_al->m_geom->xfield<float>(xgeom_ccg, elem.m_atm) = g;
-      cur_it_al->m_geom->xfield<float>(xgeom_ccb, elem.m_atm) = b;
+  for (auto &elem : al->m_atom_idx_sel) {
+  al->m_geom->xfield<float>(xgeom_ccr, elem.m_atm) = r;
+  al->m_geom->xfield<float>(xgeom_ccg, elem.m_atm) = g;
+  al->m_geom->xfield<float>(xgeom_ccb, elem.m_atm) = b;
 
-      if (cur_it_al->m_anim->get_total_anims() > 0 &&
-          !cur_it_al->m_anim->m_anim_data[0].frames.empty() &&
-          cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color.size() ==
-          cur_it_al->m_geom->nat()) {
-          cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][0] = r;
-          cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][1] = g;
-          cur_it_al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][2] = b;
-        }
-
+  if (al->m_anim->get_total_anims() > 0 &&
+      !al->m_anim->m_anim_data[0].frames.empty() &&
+      al->m_anim->m_anim_data[0].frames[0].atom_color.size() ==
+      al->m_geom->nat()) {
+      al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][0] = r;
+      al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][1] = g;
+      al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][2] = b;
     }
+
+  }
 
   astate->make_viewport_dirty();
 
@@ -934,7 +938,7 @@ pybind11::list simple_query::sv_get() {
 
   py::list ret;
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (int i = 0; i < al->m_geom->nat(); i++)
     ret.append(al->m_geom->xfield<bool>(xgeom_sel_vis, i));
@@ -947,7 +951,7 @@ pybind11::list simple_query::sv_get() {
 void simple_query::sv_edit(int at, bool status) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->m_geom->xfield<bool>(xgeom_sel_vis, at) = status;
   astate->make_viewport_dirty();
 
@@ -956,7 +960,7 @@ void simple_query::sv_edit(int at, bool status) {
 void simple_query::sv_edit_list(pybind11::list at_list, bool status) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (auto elem : at_list)
     if (py::isinstance<py::int_>(elem))
@@ -969,7 +973,7 @@ void simple_query::sv_edit_list(pybind11::list at_list, bool status) {
 void simple_query::sv_edit_all(bool status) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (int i = 0; i < al->m_geom->nat(); i++) al->m_geom->xfield<bool>(xgeom_sel_vis,i) = status;
 
@@ -981,7 +985,7 @@ pybind11::list simple_query::cl_get() {
 
   py::list ret;
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (int i = 0; i < al->m_geom->nat(); i++)
     ret.append(al->m_geom->xfield<bool>(xgeom_label_show, i));
@@ -994,7 +998,7 @@ pybind11::list simple_query::cl_get() {
 void simple_query::set_cl_state(int at, bool status) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->m_geom->xfield<bool>(xgeom_label_show, at) = status;
   astate->make_viewport_dirty();
 
@@ -1003,7 +1007,7 @@ void simple_query::set_cl_state(int at, bool status) {
 void simple_query::set_cl_text(int at, std::string text) {
 
   app_state_t *astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tuple<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->m_geom->xfield<std::string>(xgeom_label_text, at) = text;
   astate->make_viewport_dirty();
 

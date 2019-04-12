@@ -114,6 +114,7 @@ add_executable(qppcad
     src/qppcad/ui/color_map.cpp
     src/qppcad/ui/size_guide.cpp
     src/qppcad/ui/qembed_window.cpp
+    src/qppcad/ui/qpopup.cpp
 
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp

@@ -12,7 +12,8 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   app_state_t *astate = app_state_t::get_inst();
 
   tab_cell_range = def_tab(tr("Define geometry_pg{f,d} cell"),
-                              "://images/outline-tune-24px.svg");
+                           "://images/outline-tune-24px.svg",
+                           "://images/outline-tune-24px_d.svg");
 
   gb_pgf_data = new qspoiler_widget_t(tr("Pos. gen. form settings"));
   gb_pgf_data_lt = new QFormLayout;
@@ -71,6 +72,8 @@ void pgf_producer_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
   update_cell_indexes_ranges();
+
+  set_tab_enabled(tab_cell_range, (b_pr && b_pr->m_src && b_pr->m_dst && b_pr->m_ag));
 
 }
 

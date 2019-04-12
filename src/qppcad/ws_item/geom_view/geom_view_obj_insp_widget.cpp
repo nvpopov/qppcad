@@ -900,9 +900,7 @@ void geom_view_obj_insp_widget_t::construct_select_tab() {
 
 void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
-  geom_view_t* _tmp = dynamic_cast<geom_view_t*>(_binding_item);
-
-  assert(_tmp != nullptr);
+  auto _tmp = _binding_item->cast_as<geom_view_t>();
 
   if (_tmp) {
       b_al = _tmp;
