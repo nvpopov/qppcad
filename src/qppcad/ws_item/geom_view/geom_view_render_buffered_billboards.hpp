@@ -24,8 +24,8 @@ namespace qpp {
         void render();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

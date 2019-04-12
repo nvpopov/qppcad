@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_ARROW_ARRAY_OBJECT_INSP
-#define QPP_CAD_ARROW_ARRAY_OBJECT_INSP
+#ifndef QPPCAD_ARROW_ARRAY_OBJECT_INSP
+#define QPPCAD_ARROW_ARRAY_OBJECT_INSP
 
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/arrow_array/arrow_array.hpp>
@@ -33,8 +33,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

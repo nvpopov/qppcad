@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_ADD_NEW_WS_ITEM_WIDGET
-#define QPP_CAD_ADD_NEW_WS_ITEM_WIDGET
+#ifndef QPPCAD_ADD_NEW_WS_ITEM_WIDGET
+#define QPPCAD_ADD_NEW_WS_ITEM_WIDGET
 
 #include <qppcad/qppcad.hpp>
 #include <QWidget>
@@ -122,9 +122,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

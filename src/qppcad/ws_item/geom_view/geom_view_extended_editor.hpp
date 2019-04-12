@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_GEOM_VIEW_EXTENDED_EDITOR
-#define QPP_CAD_GEOM_VIEW_EXTENDED_EDITOR
+#ifndef QPPCAD_GEOM_VIEW_EXTENDED_EDITOR
+#define QPPCAD_GEOM_VIEW_EXTENDED_EDITOR
 
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -46,8 +46,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

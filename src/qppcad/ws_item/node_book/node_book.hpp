@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_NODE_BOOK
-#define QPP_CAD_NODE_BOOK
+#ifndef QPPCAD_NODE_BOOK
+#define QPPCAD_NODE_BOOK
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -36,8 +36,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

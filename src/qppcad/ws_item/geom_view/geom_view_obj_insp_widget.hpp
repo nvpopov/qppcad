@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ATOMS_LIST_OBJ_INSP_H
-#define QPP_CAD_WS_ATOMS_LIST_OBJ_INSP_H
+#ifndef QPPCAD_WS_ATOMS_LIST_OBJ_INSP_H
+#define QPPCAD_WS_ATOMS_LIST_OBJ_INSP_H
 
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -333,8 +333,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

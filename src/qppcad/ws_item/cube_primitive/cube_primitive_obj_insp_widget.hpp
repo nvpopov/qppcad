@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_CUBE_PRIMITIVE_OBJECT_INSP
-#define QPP_CAD_WS_CUBE_PRIMITIVE_OBJECT_INSP
+#ifndef QPPCAD_WS_CUBE_PRIMITIVE_OBJECT_INSP
+#define QPPCAD_WS_CUBE_PRIMITIVE_OBJECT_INSP
 
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 
@@ -28,8 +28,8 @@ namespace qpp {
         void unbind_item() override;
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

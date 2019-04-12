@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_QBONDING_TABLE_MODEL
-#define QPP_CAD_QBONDING_TABLE_MODEL
+#ifndef QPPCAD_QBONDING_TABLE_MODEL
+#define QPPCAD_QBONDING_TABLE_MODEL
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -27,9 +27,8 @@ namespace qpp {
         void unbind();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

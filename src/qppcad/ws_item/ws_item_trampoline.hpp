@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ITEM_TRAMPOLINE
-#define QPP_CAD_WS_ITEM_TRAMPOLINE
+#ifndef QPPCAD_WS_ITEM_TRAMPOLINE
+#define QPPCAD_WS_ITEM_TRAMPOLINE
 
 #include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/qppcad.hpp>
@@ -21,9 +21,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

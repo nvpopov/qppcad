@@ -1,5 +1,5 @@
-#ifndef QPP_WORKSPACE_H
-#define QPP_WORKSPACE_H
+#ifndef QPPCAD_WORKSPACE_H
+#define QPPCAD_WORKSPACE_H
 
 #include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
@@ -19,10 +19,6 @@ namespace qpp {
     class ws_item_t;
 
     class app_state_t;
-
-    const uint32_t error_ctx_def   = 0;
-    const uint32_t error_ctx_throw = 1 << 1;
-    const uint32_t error_ctx_mbox  = 1 << 2;
 
     /**
      * @brief The workspace_t class

@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ITEM_OBJ_INSP_H
-#define QPP_CAD_WS_ITEM_OBJ_INSP_H
+#ifndef QPPCAD_WS_ITEM_OBJ_INSP_H
+#define QPPCAD_WS_ITEM_OBJ_INSP_H
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -85,8 +85,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

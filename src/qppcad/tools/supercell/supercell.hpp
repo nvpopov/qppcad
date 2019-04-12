@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_TOOL_SUPERCELL
-#define QPP_CAD_TOOL_SUPERCELL
+#ifndef QPPCAD_TOOL_SUPERCELL
+#define QPPCAD_TOOL_SUPERCELL
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -44,15 +44,15 @@ namespace qpp {
 
       public:
 
-        void exec(ws_item_t *item) override;
+        void exec(ws_item_t *item, uint32_t _error_ctx) override;
         void make_super_cell(geom_view_t *al,
                              const int a_steps,
                              const int b_steps,
                              const int c_steps);
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

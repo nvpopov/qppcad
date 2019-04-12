@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_RENDER_BILLBOARDS
-#define QPP_CAD_RENDER_BILLBOARDS
+#ifndef QPPCAD_RENDER_BILLBOARDS
+#define QPPCAD_RENDER_BILLBOARDS
 
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 
@@ -19,8 +19,8 @@ namespace qpp {
                                 const index &at_index2);
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_CCD_TRAJ_ANALYZER_EXTENDED_EDITOR
-#define QPP_CAD_CCD_TRAJ_ANALYZER_EXTENDED_EDITOR
+#ifndef QPPCAD_CCD_TRAJ_ANALYZER_EXTENDED_EDITOR
+#define QPPCAD_CCD_TRAJ_ANALYZER_EXTENDED_EDITOR
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 
@@ -28,7 +28,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

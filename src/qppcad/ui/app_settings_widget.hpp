@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_APP_SETTINGS_WIDGET_H
-#define QPP_CAD_APP_SETTINGS_WIDGET_H
+#ifndef QPPCAD_APP_SETTINGS_WIDGET_H
+#define QPPCAD_APP_SETTINGS_WIDGET_H
 #include <qppcad/qppcad.hpp>
 #include <QWidget>
 #include <QSplitter>
@@ -34,9 +34,8 @@ namespace qpp {
         QWidget *settings_page_ptable;
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

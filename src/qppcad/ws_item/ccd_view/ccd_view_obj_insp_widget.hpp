@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_COMP_CHEM_DATA_OBJ_INSP_H
-#define QPP_CAD_WS_COMP_CHEM_DATA_OBJ_INSP_H
+#ifndef QPPCAD_WS_COMP_CHEM_DATA_OBJ_INSP_H
+#define QPPCAD_WS_COMP_CHEM_DATA_OBJ_INSP_H
 
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.hpp>
@@ -39,7 +39,8 @@ namespace qpp {
         ccd_view_obj_insp_widget_t();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

@@ -195,7 +195,9 @@ size_t ws_item_behaviour_manager_t::reg_tool(
 
 }
 
-void ws_item_behaviour_manager_t::exec_tool(ws_item_t *item, size_t tool_hash) {
+void ws_item_behaviour_manager_t::exec_tool(ws_item_t* item,
+                                            size_t tool_hash,
+                                            uint32_t _error_ctx) {
 
   auto tinfo = m_tools_info.find(tool_hash);
 
@@ -212,17 +214,19 @@ void ws_item_behaviour_manager_t::exec_tool(ws_item_t *item, size_t tool_hash) {
   auto tool_inst = tinfo->second.m_fabric();
 
   //bypass item
-  tool_inst->exec(item);
+  tool_inst->exec(item, _error_ctx);
 
 }
 
-void ws_item_behaviour_manager_t::exec_tool_by_name(std::string tool_name, ws_item_t *item) {
+void ws_item_behaviour_manager_t::exec_tool_by_name(std::string tool_name,
+                                                    ws_item_t *item,
+                                                    uint32_t _error_ctx) {
 
   auto it = std::find_if(m_tools_info.begin(),
                          m_tools_info.end(),
                          [&tool_name](const auto &e){return e.second.m_full_name == tool_name;});
 
-  if (it != m_tools_info.end()) exec_tool(item, it->first);
+  if (it != m_tools_info.end()) exec_tool(item, it->first, _error_ctx);
 
 }
 

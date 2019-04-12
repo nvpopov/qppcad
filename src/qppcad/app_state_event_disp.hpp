@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_ASTATE_EVENT_DISP
-#define QPP_CAD_ASTATE_EVENT_DISP
+#ifndef QPPCAD_ASTATE_EVENT_DISP
+#define QPPCAD_ASTATE_EVENT_DISP
 
 #include <qppcad/qppcad.hpp>
 #include <QObject>
@@ -68,8 +68,8 @@ namespace qpp {
         explicit app_state_event_disp_t(QObject *parent = 0);
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

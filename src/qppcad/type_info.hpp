@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_TYPE_INFO_H
-#define QPP_CAD_TYPE_INFO_H
+#ifndef QPPCAD_TYPE_INFO_H
+#define QPPCAD_TYPE_INFO_H
 #include <string>
 
 namespace qpp {
@@ -42,8 +42,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

@@ -4,7 +4,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void supercell_tool_t::exec(ws_item_t *item) {
+void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
   astate->log("Supercell tools::exec()");
@@ -52,8 +52,18 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
                                        const int a_steps,
                                        const int b_steps,
                                        const int c_steps) {
-  if (!al->m_parent_ws) return;
-  if (al->m_geom->DIM != 3) return;
+
+  if (al->m_geom->DIM != 3) {
+      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                           QObject::tr("al->m_geom->DIM != 3"));
+      return;
+    }
+
+  if (!al->m_parent_ws) {
+      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                           QObject::tr("!al->m_parent_ws!al->m_parent_ws"));
+      return;
+    }
 
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
   sc_al->m_geom->DIM = 3;

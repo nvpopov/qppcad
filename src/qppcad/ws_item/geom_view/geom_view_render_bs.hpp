@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_RENDER_BS
-#define QPP_CAD_RENDER_BS
+#ifndef QPPCAD_RENDER_BS
+#define QPPCAD_RENDER_BS
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 namespace qpp {
@@ -18,8 +18,8 @@ namespace qpp {
                                 const uint32_t at_num2, const index &at_index2);
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

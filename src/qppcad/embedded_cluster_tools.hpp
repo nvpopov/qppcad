@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_EMBEDDED_CLUSTER_TOOLS
-#define QPP_CAD_EMBEDDED_CLUSTER_TOOLS
+#ifndef QPPCAD_EMBEDDED_CLUSTER_TOOLS
+#define QPPCAD_EMBEDDED_CLUSTER_TOOLS
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -53,8 +53,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

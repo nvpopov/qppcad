@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_TOOL_COLORIZE_BY_DIST
-#define QPP_CAD_TOOL_COLORIZE_BY_DIST
+#ifndef QPPCAD_TOOL_COLORIZE_BY_DIST
+#define QPPCAD_TOOL_COLORIZE_BY_DIST
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -21,7 +21,7 @@ namespace qpp {
 
       public:
 
-        void exec(ws_item_t *item) override;
+        void exec(ws_item_t *item, uint32_t _error_ctx) override;
 
     };
 
@@ -54,8 +54,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

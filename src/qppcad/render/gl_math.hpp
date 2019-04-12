@@ -158,8 +158,8 @@ namespace qpp {
       return m1.inverse() * m2 * m1;
     }
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

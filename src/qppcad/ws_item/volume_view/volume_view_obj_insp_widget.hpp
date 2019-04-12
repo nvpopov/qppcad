@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_VOLUME_DATA_OBJ_INSP_H
-#define QPP_CAD_WS_VOLUME_DATA_OBJ_INSP_H
+#ifndef QPPCAD_WS_VOLUME_DATA_OBJ_INSP_H
+#define QPPCAD_WS_VOLUME_DATA_OBJ_INSP_H
 
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
@@ -43,7 +43,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

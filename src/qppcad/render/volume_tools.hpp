@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_MARCHING_CUBES_H
-#define QPP_CAD_MARCHING_CUBES_H
+#ifndef QPPCAD_MARCHING_CUBES_H
+#define QPPCAD_MARCHING_CUBES_H
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/render/mesh.hpp>
@@ -37,8 +37,8 @@ namespace qpp {
                                             float val_p1, float val_p2);
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

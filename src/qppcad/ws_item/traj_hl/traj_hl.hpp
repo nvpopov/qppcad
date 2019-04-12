@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_TRAJ_HIGHLIGHT
-#define QPP_CAD_WS_TRAJ_HIGHLIGHT
+#ifndef QPPCAD_WS_TRAJ_HIGHLIGHT
+#define QPPCAD_WS_TRAJ_HIGHLIGHT
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -46,8 +46,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

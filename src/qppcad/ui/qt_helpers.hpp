@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_QT_HELPERS
-#define QPP_CAD_QT_HELPERS
+#ifndef QPPCAD_QT_HELPERS
+#define QPPCAD_QT_HELPERS
 
 #include <QTableView>
 #include <QTableWidget>
@@ -46,8 +46,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

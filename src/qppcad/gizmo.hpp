@@ -77,7 +77,8 @@ namespace qpp {
         gizmo_t ();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

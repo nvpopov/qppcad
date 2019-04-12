@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_QSPOILER_WIDGET
-#define QPP_CAD_QSPOILER_WIDGET
+#ifndef QPPCAD_QSPOILER_WIDGET
+#define QPPCAD_QSPOILER_WIDGET
 
 #include <QFrame>
 #include <QVBoxLayout>
@@ -47,8 +47,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

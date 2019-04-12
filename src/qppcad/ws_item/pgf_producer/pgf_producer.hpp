@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_PGF_PRODUCER
-#define QPP_CAD_PGF_PRODUCER
+#ifndef QPPCAD_PGF_PRODUCER
+#define QPPCAD_PGF_PRODUCER
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -61,8 +61,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

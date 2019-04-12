@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_OBJECT_INSPECTOR_H
-#define QPP_CAD_OBJECT_INSPECTOR_H
+#ifndef QPPCAD_OBJECT_INSPECTOR_H
+#define QPPCAD_OBJECT_INSPECTOR_H
 
 #include <qppcad/qppcad.hpp>
 #include <QGroupBox>
@@ -57,9 +57,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

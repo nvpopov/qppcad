@@ -5,7 +5,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void structure_similarity_tool_t::exec(ws_item_t *item) {
+void structure_similarity_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
 

@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ATOMS_LIST_COLORIZER
-#define QPP_CAD_WS_ATOMS_LIST_COLORIZER
+#ifndef QPPCAD_WS_ATOMS_LIST_COLORIZER
+#define QPPCAD_WS_ATOMS_LIST_COLORIZER
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -30,7 +30,8 @@ namespace qpp {
                                                        std::string atom_type2);
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_PYTHON_CONSOLE_WIDGET_H
-#define QPP_CAD_PYTHON_CONSOLE_WIDGET_H
+#ifndef QPPCAD_PYTHON_CONSOLE_WIDGET_H
+#define QPPCAD_PYTHON_CONSOLE_WIDGET_H
 
 #include <qppcad/qppcad.hpp>
 #include <QWidget>
@@ -131,9 +131,8 @@ namespace qpp {
         QTextCharFormat function_fmt;
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_STRING_HASH_REGISTER_H
-#define QPP_CAD_STRING_HASH_REGISTER_H
+#ifndef QPPCAD_STRING_HASH_REGISTER_H
+#define QPPCAD_STRING_HASH_REGISTER_H
 
 #include <string>
 #include <functional>
@@ -33,9 +33,8 @@ namespace qpp {
         }
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

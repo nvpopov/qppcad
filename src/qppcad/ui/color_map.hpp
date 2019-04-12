@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_COLOR_MAP_H
-#define QPP_CAD_COLOR_MAP_H
+#ifndef QPPCAD_COLOR_MAP_H
+#define QPPCAD_COLOR_MAP_H
 
 #include <data/color.hpp>
 #include <qppcad/qppcad.hpp>
@@ -46,9 +46,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ATOMS_LIST_LATPL_S
-#define QPP_CAD_WS_ATOMS_LIST_LATPL_S
+#ifndef QPPCAD_WS_ATOMS_LIST_LATPL_S
+#define QPPCAD_WS_ATOMS_LIST_LATPL_S
 
 #include <geom/geom.hpp>
 #include <vector>
@@ -74,8 +74,8 @@ namespace qpp {
         //void render_ui_obj_insp ();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

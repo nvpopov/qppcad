@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_POINT_SYM_GROUP_OBJECT_INSP
-#define QPP_CAD_WS_POINT_SYM_GROUP_OBJECT_INSP
+#ifndef QPPCAD_WS_POINT_SYM_GROUP_OBJECT_INSP
+#define QPPCAD_WS_POINT_SYM_GROUP_OBJECT_INSP
 
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
@@ -36,7 +36,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

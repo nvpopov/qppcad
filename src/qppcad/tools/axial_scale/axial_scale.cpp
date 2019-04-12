@@ -4,7 +4,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void axial_scale_tool_t::exec(ws_item_t *item) {
+void axial_scale_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_mgr->has_wss()) {

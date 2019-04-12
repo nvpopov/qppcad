@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_POINT_SYM_GROUP
-#define QPP_CAD_WS_POINT_SYM_GROUP
+#ifndef QPPCAD_WS_POINT_SYM_GROUP
+#define QPPCAD_WS_POINT_SYM_GROUP
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <geom/xgeom.hpp>
@@ -72,7 +72,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

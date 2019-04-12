@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_TOOL_STRUCTURE_SIMILARITY
-#define QPP_CAD_TOOL_STRUCTURE_SIMILARITY
+#ifndef QPPCAD_TOOL_STRUCTURE_SIMILARITY
+#define QPPCAD_TOOL_STRUCTURE_SIMILARITY
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
@@ -78,12 +78,12 @@ namespace qpp {
 
       public:
 
-        void exec(ws_item_t *item) override;
+        void exec(ws_item_t *item, uint32_t _error_ctx) override;
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

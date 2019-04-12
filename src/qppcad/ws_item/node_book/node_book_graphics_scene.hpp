@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_NODE_BOOK_GRAPHICS_SCENE
-#define QPP_CAD_NODE_BOOK_GRAPHICS_SCENE
+#ifndef QPPCAD_NODE_BOOK_GRAPHICS_SCENE
+#define QPPCAD_NODE_BOOK_GRAPHICS_SCENE
 
 #include <qppcad/qppcad.hpp>
 #include <QRectF>
@@ -36,8 +36,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

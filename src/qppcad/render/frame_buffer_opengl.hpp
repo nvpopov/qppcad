@@ -213,7 +213,8 @@ namespace qpp {
       /// End destroy fbo section
       ///
 
-  };
-}
+  } // namespace qpp::cad
+
+} // namespace qpp
 
 #endif

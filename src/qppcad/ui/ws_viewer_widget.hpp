@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_VIEWER_WIDGET_H
-#define QPP_CAD_WS_VIEWER_WIDGET_H
+#ifndef QPPCAD_WS_VIEWER_WIDGET_H
+#define QPPCAD_WS_VIEWER_WIDGET_H
 
 #include <qppcad/qppcad.hpp>
 #include <QOpenGLWidget>
@@ -39,7 +39,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

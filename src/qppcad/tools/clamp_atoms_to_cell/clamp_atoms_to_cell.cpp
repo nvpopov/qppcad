@@ -5,12 +5,12 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item) {
+void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
   astate->log("clamp_atoms_to_cell_tool_t::exec()");
 
-  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(_error_ctx);
 
   if (!cur_ws || !cur_it || !al) return;
 

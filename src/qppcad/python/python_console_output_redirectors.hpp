@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_PYTHON_OUTPUT_REDIRECTORS_H
-#define QPP_CAD_PYTHON_OUTPUT_REDIRECTORS_H
+#ifndef QPPCAD_PYTHON_OUTPUT_REDIRECTORS_H
+#define QPPCAD_PYTHON_OUTPUT_REDIRECTORS_H
 
 #include <qppcad/qppcad.hpp>
 #pragma push_macro("slots")
@@ -21,8 +21,8 @@ namespace qpp {
 
 
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

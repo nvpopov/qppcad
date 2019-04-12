@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ATOMS_LIST_MEASURE_S
-#define QPP_CAD_WS_ATOMS_LIST_MEASURE_S
+#ifndef QPPCAD_WS_ATOMS_LIST_MEASURE_S
+#define QPPCAD_WS_ATOMS_LIST_MEASURE_S
 
 #include <geom/geom.hpp>
 #include <qppcad/qppcad.hpp>
@@ -144,8 +144,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

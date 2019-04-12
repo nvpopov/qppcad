@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_NODE_BOOK_EXTENDED_EDITOR
-#define QPP_CAD_NODE_BOOK_EXTENDED_EDITOR
+#ifndef QPPCAD_NODE_BOOK_EXTENDED_EDITOR
+#define QPPCAD_NODE_BOOK_EXTENDED_EDITOR
 
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
@@ -33,8 +33,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

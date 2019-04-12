@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_GLAPI_H
-#define QPP_CAD_GLAPI_H
+#ifndef QPPCAD_GLAPI_H
+#define QPPCAD_GLAPI_H
 
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>
@@ -13,9 +13,8 @@ namespace qpp {
         glapi_t();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

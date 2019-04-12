@@ -57,10 +57,12 @@ namespace qpp {
     template<typename T>
     using opt = std::optional<T>;
 
-  }
+    const uint32_t error_ctx_def   = 0;
+    const uint32_t error_ctx_throw = 1 << 1;
+    const uint32_t error_ctx_mbox  = 1 << 2;
 
-}
+  } // namespace qpp::cad
 
-
+} // namespace qpp
 
 #endif

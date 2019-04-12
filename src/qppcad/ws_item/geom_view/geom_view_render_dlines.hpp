@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ATOMS_RS_DL
-#define QPP_CAD_WS_ATOMS_RS_DL
+#ifndef QPPCAD_WS_ATOMS_RS_DL
+#define QPPCAD_WS_ATOMS_RS_DL
 
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/app_state.hpp>
@@ -29,8 +29,8 @@ namespace qpp {
         }
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

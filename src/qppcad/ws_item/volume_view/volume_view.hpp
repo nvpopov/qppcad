@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_VOLUME_DATA
-#define QPP_CAD_WS_VOLUME_DATA
+#ifndef QPPCAD_WS_VOLUME_DATA
+#define QPPCAD_WS_VOLUME_DATA
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -79,8 +79,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

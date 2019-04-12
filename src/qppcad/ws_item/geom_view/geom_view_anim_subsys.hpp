@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ATOMS_LIST_ANYM_SUBSYS
-#define QPP_CAD_WS_ATOMS_LIST_ANYM_SUBSYS
+#ifndef QPPCAD_WS_ATOMS_LIST_ANYM_SUBSYS
+#define QPPCAD_WS_ATOMS_LIST_ANYM_SUBSYS
 
 #include <geom/geom.hpp>
 #include <geom/geom_anim.hpp>
@@ -90,8 +90,8 @@ namespace qpp {
         size_t current_frame_count () const;
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

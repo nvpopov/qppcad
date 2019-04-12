@@ -1,11 +1,12 @@
-#ifndef QPPCAD_NORMAL_MODES_TABLE_MODEL
-#define QPPCAD_NORMAL_MODES_TABLE_MODEL
+#ifndef QPPCAD_QPOPUP
+#define QPPCAD_QPOPUP
 
 #include <qppcad/qppcad.hpp>
 
 namespace qpp {
 
   namespace cad {
+
 
 
   } // namespace qpp::cad

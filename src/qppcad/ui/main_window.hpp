@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_MAIN_WINDOW_H
-#define QPP_CAD_MAIN_WINDOW_H
+#ifndef QPPCAD_MAIN_WINDOW_H
+#define QPPCAD_MAIN_WINDOW_H
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ui/ws_viewer_widget.hpp>
@@ -231,8 +231,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

@@ -172,8 +172,8 @@ namespace qpp {
         } // end render_content_edit_menu
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_COMP_CHEM_DATA
-#define QPP_CAD_WS_COMP_CHEM_DATA
+#ifndef QPPCAD_WS_COMP_CHEM_DATA
+#define QPPCAD_WS_COMP_CHEM_DATA
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -43,8 +43,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

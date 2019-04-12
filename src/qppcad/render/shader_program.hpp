@@ -168,9 +168,10 @@ namespace qpp {
         void end_shader_program ();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif
 
 

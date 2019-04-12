@@ -96,7 +96,8 @@ namespace qpp {
         void load_from_json(json &data) override ;
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

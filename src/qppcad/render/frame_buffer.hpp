@@ -5,6 +5,8 @@
 
 namespace qpp {
 
+  namespace cad {
+
   template<typename PROVIDER = frame_buffer_opengl_provider>
   class frame_buffer_t {
 
@@ -56,6 +58,8 @@ namespace qpp {
 
   };
 
-}
+  } // namespace qpp::cad
+
+} // namespace qpp
 
 #endif

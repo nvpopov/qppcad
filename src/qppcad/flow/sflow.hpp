@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_SINGLE_FLOW
-#define QPP_CAD_SINGLE_FLOW
+#ifndef QPPCAD_SINGLE_FLOW
+#define QPPCAD_SINGLE_FLOW
 
 #include <qppcad/qppcad.hpp>
 #include <variant>
@@ -115,8 +115,8 @@ namespace qpp {
         sflow_sii_node_t();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

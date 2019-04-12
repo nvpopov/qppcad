@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_TOOL_AXIAL_SCALE
-#define QPP_CAD_TOOL_AXIAL_SCALE
+#ifndef QPPCAD_TOOL_AXIAL_SCALE
+#define QPPCAD_TOOL_AXIAL_SCALE
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <QWidget>
@@ -17,7 +17,7 @@ namespace qpp {
 
     class axial_scale_tool_t : public ws_item_tool_t {
       public:
-        void exec(ws_item_t *item) override;
+        void exec(ws_item_t *item, uint32_t _error_ctx) override;
         void apply_axial_scale (geom_view_t *al,
                                 const float scale_a,
                                 const float scale_b,
@@ -41,8 +41,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

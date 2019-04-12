@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_REAL_SPINBOX_DELEGATE
-#define QPP_CAD_REAL_SPINBOX_DELEGATE
+#ifndef QPPCAD_REAL_SPINBOX_DELEGATE
+#define QPPCAD_REAL_SPINBOX_DELEGATE
 
 #include <qppcad/qppcad.hpp>
 #include <QStyledItemDelegate>
@@ -41,8 +41,8 @@ namespace qpp {
                                   const QModelIndex &) const override;
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

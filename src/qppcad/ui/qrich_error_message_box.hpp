@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_QRICH_ERROR_MESSAGE_BOX
-#define QPP_CAD_QRICH_ERROR_MESSAGE_BOX
+#ifndef QPPCAD_QRICH_ERROR_MESSAGE_BOX
+#define QPPCAD_QRICH_ERROR_MESSAGE_BOX
 
 #include <qppcad/qppcad.hpp>
 #include <QWidget>
@@ -28,8 +28,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

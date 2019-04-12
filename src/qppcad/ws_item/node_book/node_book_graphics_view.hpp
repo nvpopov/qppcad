@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_NODE_BOOK_GRAPHICS_VIEW
-#define QPP_CAD_NODE_BOOK_GRAPHICS_VIEW
+#ifndef QPPCAD_NODE_BOOK_GRAPHICS_VIEW
+#define QPPCAD_NODE_BOOK_GRAPHICS_VIEW
 
 #include <qppcad/qppcad.hpp>
 #include <QGraphicsView>
@@ -33,8 +33,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

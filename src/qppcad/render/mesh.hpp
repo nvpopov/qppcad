@@ -54,7 +54,8 @@ namespace qpp {
       for (uint8_t i = 0; i < 3; i++) invec.push_back(_v(i));
     }
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 #endif

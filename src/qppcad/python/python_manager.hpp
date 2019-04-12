@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_PYTHON_MANAGER_H
-#define QPP_CAD_PYTHON_MANAGER_H
+#ifndef QPPCAD_PYTHON_MANAGER_H
+#define QPPCAD_PYTHON_MANAGER_H
 
 #include <qppcad/qppcad.hpp>
 
@@ -35,9 +35,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

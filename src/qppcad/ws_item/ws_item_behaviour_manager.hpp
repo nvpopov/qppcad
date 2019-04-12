@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ITEM_BHV_MGR
-#define QPP_CAD_WS_ITEM_BHV_MGR
+#ifndef QPPCAD_WS_ITEM_BHV_MGR
+#define QPPCAD_WS_ITEM_BHV_MGR
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -64,7 +64,7 @@ namespace qpp {
          * @brief exec
          * @param item
          */
-      virtual void exec(ws_item_t *item) = 0;
+      virtual void exec(ws_item_t *item, uint32_t _error_ctx) = 0;
 
     };
 
@@ -498,20 +498,21 @@ namespace qpp {
          * @param item
          * @param tool_hash
          */
-        void exec_tool(ws_item_t* item, size_t tool_hash);
+        void exec_tool(ws_item_t* item, size_t tool_hash, uint32_t _error_ctx = error_ctx_mbox);
 
         /**
          * @brief exec_tool_by_name
          * @param tool_name
          * @param item
          */
-        void exec_tool_by_name(std::string tool_name, ws_item_t *item = nullptr);
+        void exec_tool_by_name(std::string tool_name,
+                               ws_item_t *item = nullptr,
+                               uint32_t _error_ctx = error_ctx_mbox);
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

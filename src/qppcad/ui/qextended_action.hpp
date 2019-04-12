@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_EXTENDED_QACTION
-#define QPP_CAD_EXTENDED_QACTION
+#ifndef QPPCAD_EXTENDED_QACTION
+#define QPPCAD_EXTENDED_QACTION
 
 #include <QAction>
 #include <array>
@@ -15,9 +15,8 @@ namespace qpp {
         explicit qextended_action(QObject *parent = 0);
     };
 
-  }
+  } // namespace qpp::cad
 
-}
-
+} // namespace qpp
 
 #endif

@@ -39,8 +39,8 @@ namespace qpp {
         static shader_program_t *gen_sp_2c_cylinder();
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

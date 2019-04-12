@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_ARROW_ARRAY
-#define QPP_CAD_ARROW_ARRAY
+#ifndef QPPCAD_ARROW_ARRAY
+#define QPPCAD_ARROW_ARRAY
 #include <qppcad/qppcad.hpp>
 #include <data/color.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
@@ -46,8 +46,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif

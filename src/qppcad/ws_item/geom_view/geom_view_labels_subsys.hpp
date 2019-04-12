@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_WS_ATOMS_LIST_LABELS_S
-#define QPP_CAD_WS_ATOMS_LIST_LABELS_S
+#ifndef QPPCAD_WS_ATOMS_LIST_LABELS_S
+#define QPPCAD_WS_ATOMS_LIST_LABELS_S
 
 #include <geom/geom.hpp>
 #include <vector>
@@ -43,8 +43,8 @@ namespace qpp {
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
 
 #endif
