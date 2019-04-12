@@ -319,6 +319,12 @@ void qbinded_color3_input_t::load_value_ex() {
       pal.setColor(QPalette::Foreground, Qt::white);
       setAutoFillBackground(true);
       setPalette(pal);
+    } else {
+      QPalette pal = palette();
+      pal.setColor(QPalette::Background, Qt::black);
+      pal.setColor(QPalette::Foreground, Qt::white);
+      setAutoFillBackground(true);
+      setPalette(pal);
     }
 
 }

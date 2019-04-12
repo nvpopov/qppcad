@@ -16,9 +16,13 @@ namespace qpp {
 
         matrix4<float> m_model_body;
         matrix4<float> m_model_arrow;
-        vector3<float> m_arrow_to{0};
-        vector3<float> m_color{0};
-        float m_axis_scale{1.0f};
+        vector3<float> m_arrow_to{1, 1, 1};
+        vector3<float> m_color{0,0,0};
+
+        float m_unf_arrow_cap_len{0.15f};
+        float m_unf_arrow_scale{0.05f};
+        float m_unf_arrow_cap_scale{0.12f};
+
         bool m_need_to_recalc_render_data{true};
 
         arrow_primitive_t();
