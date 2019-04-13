@@ -1,5 +1,6 @@
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -66,11 +67,25 @@ bool arrow_primitive_t::can_be_written_to_json() {
 }
 
 void arrow_primitive_t::save_to_json(json &data) {
+
   ws_item_t::save_to_json(data);
+  json_helper::save_vec3(JSON_ARROW_PR_ARROW_TO, m_arrow_to, data);
+  json_helper::save_vec3(JSON_ARROW_PR_COLOR, m_color, data);
+  json_helper::save_var(JSON_ARROW_PR_ARROW_SCALE, m_arrow_scale, data);
+  json_helper::save_var(JSON_ARROW_PR_CAP_SCALE, m_arrow_cap_scale, data);
+  json_helper::save_var(JSON_ARROW_PR_CAP_LEN, m_arrow_cap_len, data);
+
 }
 
 void arrow_primitive_t::load_from_json(json &data) {
+
   ws_item_t::load_from_json(data);
+  json_helper::load_vec3(JSON_ARROW_PR_ARROW_TO, m_arrow_to, data);
+  json_helper::load_vec3(JSON_ARROW_PR_COLOR, m_color, data);
+  json_helper::load_var(JSON_ARROW_PR_ARROW_SCALE, m_arrow_scale, data);
+  json_helper::load_var(JSON_ARROW_PR_CAP_SCALE, m_arrow_cap_scale, data);
+  json_helper::load_var(JSON_ARROW_PR_CAP_LEN, m_arrow_cap_len, data);
+
 }
 
 void arrow_primitive_t::recalc_render_data() {
@@ -85,7 +100,7 @@ void arrow_primitive_t::recalc_render_data() {
 
   vector3<float> vec_axis_norm = mat_model.block<3,1>(0,2).normalized();
 
-  mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * m_unf_arrow_scale;
+  mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * m_arrow_scale;
   mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
   mat_model.block<3,1>(0,3) = m_pos ;
 
@@ -93,14 +108,14 @@ void arrow_primitive_t::recalc_render_data() {
 
   //cap
   vector3<float> start_aux = m_arrow_to ;
-  vector3<float> end_aux = m_arrow_to + dir * m_unf_arrow_cap_len;
+  vector3<float> end_aux = m_arrow_to + dir * m_arrow_cap_len;
 
   matrix4<float> mat_model_aux = matrix4<float>::Identity();
   mat_model_aux.block<3,1>(0,3) = start_aux;
   mat_model_aux.block<3,1>(0,2) = end_aux - start_aux;
 
   vector3<float> vec_axis_norm_aux = mat_model_aux.block<3,1>(0,2).normalized();
-  mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * m_unf_arrow_cap_scale;
+  mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * m_arrow_cap_scale;
   mat_model_aux.block<3,1>(0,1) = vec_axis_norm_aux.cross(mat_model_aux.block<3,1>(0,0));
   mat_model_aux.block<3,1>(0,3) = start_aux;
 

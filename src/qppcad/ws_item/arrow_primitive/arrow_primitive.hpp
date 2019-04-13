@@ -19,9 +19,9 @@ namespace qpp {
         vector3<float> m_arrow_to{1, 1, 1};
         vector3<float> m_color{1, 0, 0};
 
-        float m_unf_arrow_cap_len{0.15f};
-        float m_unf_arrow_scale{0.05f};
-        float m_unf_arrow_cap_scale{0.12f};
+        float m_arrow_cap_len{0.15f};
+        float m_arrow_scale{0.05f};
+        float m_arrow_cap_scale{0.12f};
 
         bool m_need_to_recalc_render_data{true};
 

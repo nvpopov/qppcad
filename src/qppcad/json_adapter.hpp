@@ -114,6 +114,12 @@ namespace qpp {
     const auto JSON_WS_CAMERA_LOOK_UP     = "look_up";
     const auto JSON_WS_CAMERA_ORTHO_SCALE = "ortho_scale";
 
+    const auto JSON_ARROW_PR_ARROW_TO     = "arrow_to";
+    const auto JSON_ARROW_PR_COLOR        = "arrow_color";
+    const auto JSON_ARROW_PR_CAP_LEN      = "cap_len";
+    const auto JSON_ARROW_PR_ARROW_SCALE  = "arrow_scale";
+    const auto JSON_ARROW_PR_CAP_SCALE    = "cap_scale";
+
   } // namespace qpp::cad
 
 } // namespace qpp

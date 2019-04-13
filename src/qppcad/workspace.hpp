@@ -148,22 +148,22 @@ namespace qpp {
           auto cur_ws = get_cur_ws();
           if (!cur_ws) {
               if (_error_context & error_ctx_throw)
-                throw std::invalid_argument("invalid workspace!");
+                throw std::invalid_argument("Invalid workspace!");
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
-                                     QObject::tr("invalid workspace!"));
+                                     QObject::tr("Invalid workspace!"));
               return {nullptr, nullptr, nullptr};
             }
 
           auto cur_it = cur_ws->get_selected_sp();
           if (!cur_it) {
               if (_error_context & error_ctx_throw)
-                throw std::invalid_argument("ws_item not selected!");
+                throw std::invalid_argument("No item selected in the workspace");
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
-                                     QObject::tr("ws_item not selected!"));
+                                     QObject::tr("No item selected in the workspace"));
               return {cur_ws, nullptr, nullptr};
             }
 
@@ -171,14 +171,14 @@ namespace qpp {
           if (!casted_it) {
               if (_error_context & error_ctx_throw) {
                   throw std::invalid_argument(
-                        fmt::format("cast error : from {} to {}",
+                        fmt::format("Cannot cast types: from {} to {}",
                                     cur_it->get_type_name(), T::get_type_name_static())
                         );
                 }
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
-                                     QObject::tr("cast error : from %1 to %2")
+                                     QObject::tr("Cannot cast types: from %1 to %2")
                                      .arg(QString::fromStdString(cur_it->get_type_name()))
                                      .arg(QString::fromStdString(T::get_type_name_static()))
                                      );
@@ -186,6 +186,59 @@ namespace qpp {
             }
 
           return {cur_ws, cur_it, casted_it};
+
+        }
+
+        /**
+         * @brief get_sel_tpl_itmc
+         * @param _error_context
+         * @return
+         */
+        template<typename T>
+        std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*, bool>
+        get_sel_tpl_itmc(uint32_t _error_context = error_ctx_def) {
+
+          auto cur_ws = get_cur_ws();
+          if (!cur_ws) {
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("Invalid workspace!");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("Invalid workspace!"));
+              return {nullptr, nullptr, nullptr, false};
+            }
+
+          auto cur_it = cur_ws->get_selected_sp();
+          if (!cur_it) {
+              if (_error_context & error_ctx_throw)
+                throw std::invalid_argument("No item selected in the workspace");
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("No item selected in the workspace"));
+              return {cur_ws, nullptr, nullptr, false};
+            }
+
+          auto casted_it = cur_it->cast_as<T>();
+          if (!casted_it) {
+              if (_error_context & error_ctx_throw) {
+                  throw std::invalid_argument(
+                        fmt::format("Cannot cast types: from {} to {}",
+                                    cur_it->get_type_name(), T::get_type_name_static())
+                        );
+                }
+              if (_error_context & error_ctx_mbox)
+                QMessageBox::warning(nullptr,
+                                     QObject::tr("Error"),
+                                     QObject::tr("Cannot cast types: from %1 to %2")
+                                     .arg(QString::fromStdString(cur_it->get_type_name()))
+                                     .arg(QString::fromStdString(T::get_type_name_static()))
+                                     );
+              return  {cur_ws, cur_it, nullptr, false};
+            }
+
+          return {cur_ws, cur_it, casted_it, true};
 
         }
 
@@ -200,22 +253,22 @@ namespace qpp {
           auto cur_ws = get_cur_ws();
           if (!cur_ws) {
               if (_error_context & error_ctx_throw)
-                throw std::invalid_argument("invalid workspace!");
+                throw std::invalid_argument("Invalid workspace!");
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
-                                     QObject::tr("invalid workspace!"));
+                                     QObject::tr("Invalid workspace!"));
               return {nullptr, nullptr, false};
             }
 
           auto cur_it = cur_ws->get_selected_sp();
           if (!cur_it) {
               if (_error_context & error_ctx_throw)
-                throw std::invalid_argument("ws_item not selected!");
+                throw std::invalid_argument("No item selected in the workspace");
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
-                                     QObject::tr("ws_item not selected!"));
+                                     QObject::tr("No item selected in the workspace"));
               return {cur_ws, nullptr, false};
             }
 
@@ -233,22 +286,22 @@ namespace qpp {
 
           if (!has_wss()) {
               if (_error_context & error_ctx_throw)
-                throw std::invalid_argument("!has_wss()");
+                throw std::invalid_argument("There are`t workspaces in the field");
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
-                                     QObject::tr("!has_wss()"));
+                                     QObject::tr("There are`t workspaces in the field"));
               return {false, nullptr};
             }
 
           auto cur_ws = get_cur_ws();
           if (!cur_ws) {
               if (_error_context & error_ctx_throw)
-                throw std::invalid_argument("!cur_ws");
+                throw std::invalid_argument("Invalid workspace!");
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
-                                     QObject::tr("!cur_ws"));
+                                     QObject::tr("Invalid workspace!"));
               return {true, nullptr};
             }
 

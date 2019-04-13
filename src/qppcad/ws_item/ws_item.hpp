@@ -17,6 +17,12 @@ namespace qpp {
     class workspace_t;
     class app_state_t;
 
+    class repair_connection_info_t {
+      public:
+        std::map<std::string, std::vector<std::string> > m_two_way_con_info;
+        std::map<std::string, std::string> m_leader_con_info;
+    };
+
     // ws_item_t capabilities
     const uint32_t ws_item_flags_default                  = 0;
     const uint32_t ws_item_flags_support_tr               = 1 << 1;
@@ -177,13 +183,18 @@ namespace qpp {
         virtual void apply_intermediate_translate_content(const vector3<float> &new_pos);
         virtual void on_end_content_gizmo_translate();
         void translate(const vector3<float> &tr_vec);
+
         void save_to_json(json &data) override ;
         void load_from_json(json &data) override ;
+        void save_connection_data_to_json(json &data);
+        void load_connection_data_from_json(json &data, repair_connection_info_t &rep_info);
+        virtual bool can_be_written_to_json();
+
         void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream);
         void save_to_stream(std::basic_istream<CHAR_EX,TRAITS> &stream);
+
         void load_from_file(std::string &file_name);
         void save_from_file(std::string &file_name);
-        virtual bool can_be_written_to_json();
 
         std::string py_get_repr();
 

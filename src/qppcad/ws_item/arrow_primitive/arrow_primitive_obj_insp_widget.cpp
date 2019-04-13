@@ -53,9 +53,9 @@ void arrow_primitive_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   if (b_ap) {
       ap_target->bind_value(&b_ap->m_arrow_to, b_ap);
-      ap_unf_arrow_scale->bind_value(&b_ap->m_unf_arrow_scale, b_ap);
-      ap_unf_arrow_cap_len->bind_value(&b_ap->m_unf_arrow_cap_len, b_ap);
-      ap_unf_arrow_cap_scale->bind_value(&b_ap->m_unf_arrow_cap_scale, b_ap);
+      ap_unf_arrow_scale->bind_value(&b_ap->m_arrow_scale, b_ap);
+      ap_unf_arrow_cap_len->bind_value(&b_ap->m_arrow_cap_len, b_ap);
+      ap_unf_arrow_cap_scale->bind_value(&b_ap->m_arrow_cap_scale, b_ap);
       ap_arrow_color->bind_value(&b_ap->m_color);
     }
 

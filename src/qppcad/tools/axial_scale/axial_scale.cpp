@@ -5,43 +5,33 @@ using namespace qpp;
 using namespace qpp::cad;
 
 void axial_scale_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
+
   app_state_t* astate = app_state_t::get_inst();
+  astate->log("axial_scale_tool_t::exec()");
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
-          auto al = dynamic_cast<geom_view_t*>(cur_it);
+  auto [cur_ws, cur_it, al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>(_error_ctx);
 
-          if (al) {
-              if (al->m_geom->DIM == 3) {
-                  axial_scale_widget_t asw;
-                  int ret_code = asw.exec();
-                  double sc_a = asw.get_scale_value(0);
-                  double sc_b = asw.get_scale_value(1);
-                  double sc_c = asw.get_scale_value(2);
+  if (!ok) return;
 
-                  if (ret_code == QDialog::Accepted) {
-                      //  al->make_super_cell(rep_a + 1, rep_b + 1, rep_c + 1);
-                      apply_axial_scale(al, float(sc_a), float(sc_b), float(sc_c));
-                      astate->make_viewport_dirty();
-                    }
-                } else QMessageBox::warning(nullptr,
-                                            QObject::tr("Axial scale"),
-                                            QObject::tr("m_geom.DIM !=3"));
-            }
-          else { // is not an atoms list
-              QMessageBox::warning(nullptr,
-                                   QObject::tr("Axial scale"),
-                                   QObject::tr("ws_item.type != geom_view"));
-            }
-
-        } else {
-          QMessageBox::warning(nullptr,
-                               QObject::tr("Axial scale"),
-                               QObject::tr("Workspace not select"));
-        }
+  if (al->m_geom->DIM != 3) {
+      QMessageBox::warning(nullptr,
+                           QObject::tr("Axial scale"),
+                           QObject::tr("Structure`s dimension is not equal to 3")
+                           );
+      return;
     }
+
+  axial_scale_widget_t asw;
+  int ret_code = asw.exec();
+  double sc_a = asw.get_scale_value(0);
+  double sc_b = asw.get_scale_value(1);
+  double sc_c = asw.get_scale_value(2);
+
+  if (ret_code == QDialog::Accepted) {
+      apply_axial_scale(al, float(sc_a), float(sc_b), float(sc_c));
+      astate->make_viewport_dirty();
+    }
+
 }
 
 void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,

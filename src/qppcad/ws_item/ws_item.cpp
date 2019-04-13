@@ -222,6 +222,14 @@ void ws_item_t::load_from_json(json &data) {
   if (get_flags() | ws_item_flags_support_tr) json_helper::load_vec3(JSON_POS, m_pos, data);
 }
 
+void ws_item_t::save_connection_data_to_json(json &data) {
+
+}
+
+void ws_item_t::load_connection_data_from_json(json &data, repair_connection_info_t &rep_info) {
+
+}
+
 void ws_item_t::load_from_stream(std::basic_istream<char, TRAITS> &stream) {
 
 }
