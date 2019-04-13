@@ -19,7 +19,7 @@ namespace qpp {
 
     class repair_connection_info_t {
       public:
-        std::map<std::string, std::vector<std::string> > m_two_way_con_info;
+        std::map<std::string, std::vector<std::string> > m_connected_items;
         std::map<std::string, std::string> m_leader_con_info;
     };
 

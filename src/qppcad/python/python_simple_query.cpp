@@ -362,6 +362,18 @@ py::int_ simple_query::get_type_hash() {
 
 }
 
+py::list simple_query::get_connected_items(std::shared_ptr<ws_item_t> ws_item) {
+
+  py::list retl;
+
+  if (ws_item)
+    for (auto &elem : ws_item->m_connected_items)
+      if (elem) retl.append(elem->m_name);
+
+  return retl;
+
+}
+
 pybind11::bool_ simple_query::is_instance_of_by_hash(size_t _type_hash) {
 
   app_state_t *astate = app_state_t::get_inst();

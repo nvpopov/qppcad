@@ -237,6 +237,13 @@ void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
   if (get_flags() | ws_item_flags_support_tr) json_helper::load_vec3(JSON_POS, m_pos, data);
 
+  auto _con_items = data.find(JSON_WS_ITEM_CONNECTED_ITEMS);
+  if (_con_items != data.end()) {
+      std::vector<std::string> rc_ci;
+      for (auto &elem : _con_items.value()) rc_ci.push_back(elem);
+      rep_info.m_connected_items[m_name] = rc_ci;
+    }
+
 }
 
 

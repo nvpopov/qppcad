@@ -1126,6 +1126,7 @@ void geom_view_t::save_to_json (json &data) {
   data[JSON_ATOMS_LIST_LABELS_INPLACE] = m_labels->m_render_inplace_hud;
   data[JSON_ATOMS_LIST_LABELS_SEL_VIS] = m_labels->m_selective_label_render;
   data[JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale;
+  data[JSON_ATOMS_LIST_ROLE] = m_role;
 
   data[JSON_ATOMS_LIST_DRAW_CELL] = m_draw_cell;
   json_helper::save_vec3(JSON_ATOMS_LIST_CELL_COLOR, m_cell_color, data);
@@ -1307,6 +1308,7 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
   json_helper::load_var(JSON_ATOMS_LIST_DRAW_SUBCELLS, m_draw_subcells, data);
   json_helper::load_var(JSON_ATOMS_LIST_SEL_VIS, m_sel_vis, data);
   json_helper::load_var(JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
+  json_helper::load_var(JSON_ATOMS_LIST_ROLE, m_role, data);
 
   json_helper::load_var(JSON_ATOMS_LIST_DRAW_CELL, m_draw_cell, data);
   json_helper::load_vec3(JSON_ATOMS_LIST_CELL_COLOR, m_cell_color, data);

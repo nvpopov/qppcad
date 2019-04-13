@@ -107,6 +107,7 @@ namespace qpp {
     const auto JSON_ATOMS_LIST_MSR_ANGLE_ORDER   = "order";
 
     const auto JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE       = "type_color_override";
+    const auto JSON_ATOMS_LIST_ROLE = "role";
 
     const auto JSON_WS_CUBE_P_COLOR = "cube_color";
     const auto JSON_WS_CUBE_P_STYLE = "cube_style";

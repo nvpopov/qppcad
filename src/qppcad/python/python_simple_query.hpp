@@ -68,6 +68,7 @@ namespace qpp {
         static void exec_tool(std::shared_ptr<ws_item_t> ws_item, std::string tool_name);
         static py::str get_type_name();
         static py::int_ get_type_hash();
+        static py::list get_connected_items(std::shared_ptr<ws_item_t> ws_item);
         static py::bool_ is_instance_of_by_hash(size_t _type_hash);
         static py::bool_ is_instance_of_by_type_name(std::string _type_name);
         //static void bopen(std::string _file_name);

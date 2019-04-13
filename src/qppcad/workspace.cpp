@@ -336,6 +336,17 @@ void workspace_t::load_ws_from_json (const std::string filename) {
             }
       }
 
+    //repair connections
+    for (auto &rec : rep_info.m_connected_items) {
+        auto cur_obj = get_by_name(rec.first);
+        if (cur_obj)
+          for (auto &rec_values : rec.second) {
+              auto con_obj = get_by_name(rec_values);
+              if (con_obj) cur_obj->m_connected_items.push_back(con_obj);
+            }
+      }
+    //end of repair connections
+
     m_fs_path = filename;
 
   } catch (json::parse_error &e) {
