@@ -66,8 +66,7 @@ namespace qpp {
     const uint32_t ws_item_updf_channel_k               = 1 << 20;
     const uint32_t ws_item_updf_channel_l               = 1 << 21;
 
-    class ws_item_t : public std::enable_shared_from_this<ws_item_t>,
-        public qpp_object_t, public serializable_t {
+    class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
 
@@ -184,10 +183,8 @@ namespace qpp {
         virtual void on_end_content_gizmo_translate();
         void translate(const vector3<float> &tr_vec);
 
-        void save_to_json(json &data) override ;
-        void load_from_json(json &data) override ;
-        void save_connection_data_to_json(json &data);
-        void load_connection_data_from_json(json &data, repair_connection_info_t &rep_info);
+        virtual void save_to_json(json &data) ;
+        virtual void load_from_json(json &data, repair_connection_info_t &rep_info);
         virtual bool can_be_written_to_json();
 
         void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream);

@@ -93,6 +93,8 @@ void ccd_view_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 }
 
-void ccd_view_t::load_from_json(json &data) {
-  ws_item_t::load_from_json(data);
+void ccd_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
+
+  ws_item_t::load_from_json(data, rep_info);
+
 }

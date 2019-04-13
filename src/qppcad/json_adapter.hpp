@@ -31,6 +31,10 @@ namespace qpp {
     const auto JSON_IS_VISIBLE     = "is_visible";
     const auto JSON_POS            = "pos";
 
+    const auto JSON_WS_ITEM_CONNECTED_ITEMS = "connected_items";
+    const auto JSON_WS_ITEM_LEADER          = "leader";
+    const auto JSON_WS_ITEM_FOLLOWERS       = "followers";
+
     //qjson v0.2
     const auto JSON_ATOMS_LIST_DIM             = "dim";
     const auto JSON_ATOMS_LIST_SHOW_IMG_ATOMS  = "show_img_atoms";

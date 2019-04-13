@@ -212,23 +212,33 @@ void ws_item_t::save_to_json(json &data) {
   json_helper::save_var(JSON_IS_VISIBLE, m_is_visible, data);
   json_helper::save_vec3(JSON_POS, m_pos, data);
 
+  if (m_leader) json_helper::save_var(JSON_WS_ITEM_LEADER, m_leader->m_name, data);
+
+  if (!m_connected_items.empty()) {
+      json _con_items = json::array({});
+      for (auto &elem : m_connected_items)
+        if(elem) _con_items.push_back(elem->m_name);
+      data[JSON_WS_ITEM_CONNECTED_ITEMS] = _con_items;
+    }
+
+  if (!m_followers.empty()) {
+      json _flw_items = json::array({});
+      for (auto &elem : m_followers)
+        if(elem) _flw_items.push_back(elem->m_name);
+      data[JSON_WS_ITEM_CONNECTED_ITEMS] = _flw_items;
+    }
+
 }
 
-void ws_item_t::load_from_json(json &data) {
+void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
   json_helper::load_var(JSON_WS_ITEM_NAME, m_name, data);
   json_helper::load_var(JSON_IS_VISIBLE, m_is_visible, data);
 
   if (get_flags() | ws_item_flags_support_tr) json_helper::load_vec3(JSON_POS, m_pos, data);
-}
-
-void ws_item_t::save_connection_data_to_json(json &data) {
 
 }
 
-void ws_item_t::load_connection_data_from_json(json &data, repair_connection_info_t &rep_info) {
-
-}
 
 void ws_item_t::load_from_stream(std::basic_istream<char, TRAITS> &stream) {
 

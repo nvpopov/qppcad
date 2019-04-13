@@ -90,11 +90,15 @@ size_t pgf_producer_t::get_content_count() {
 }
 
 void pgf_producer_t::save_to_json(json &data) {
+
   ws_item_t::save_to_json(data);
+
 }
 
-void pgf_producer_t::load_from_json(json &data) {
-  ws_item_t::load_from_json(data);
+void pgf_producer_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
+
+  ws_item_t::load_from_json(data, rep_info);
+
 }
 
 void pgf_producer_t::generate_geom() {

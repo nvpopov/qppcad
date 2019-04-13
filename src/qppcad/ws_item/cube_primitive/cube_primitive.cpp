@@ -76,9 +76,9 @@ void cube_primitive_t::save_to_json(json &data) {
 
 }
 
-void cube_primitive_t::load_from_json(json &data) {
+void cube_primitive_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
-  ws_item_t::load_from_json(data);
+  ws_item_t::load_from_json(data, rep_info);
 
   json_helper::load_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
   json_helper::load_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);

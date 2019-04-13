@@ -152,7 +152,7 @@ void volume_view_t::save_to_json(json &data) {
 
 }
 
-void volume_view_t::load_from_json(json &data) {
+void volume_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
 }
 

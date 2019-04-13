@@ -1278,9 +1278,9 @@ void geom_view_t::save_to_json (json &data) {
 
 }
 
-void geom_view_t::load_from_json (json &data) {
+void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info) {
 
-  ws_item_t::load_from_json(data);
+  ws_item_t::load_from_json(data, rep_info);
 
   if (data.find(JSON_ATOMS_LIST_DIM) != data.end()) {
       m_geom->DIM = data[JSON_ATOMS_LIST_DIM];

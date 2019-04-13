@@ -274,7 +274,7 @@ namespace qpp {
         void shift(const vector3<float> shift);
 
         void save_to_json(json &data) override;
-        void load_from_json(json &data) override;
+        void load_from_json(json &data, repair_connection_info_t &rep_info) override;
         bool can_be_written_to_json() override;
         //void post_load();
 

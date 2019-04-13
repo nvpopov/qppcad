@@ -45,11 +45,15 @@ size_t node_book_t::get_content_count() {
 }
 
 void node_book_t::save_to_json(json &data) {
+
   ws_item_t::save_to_json(data);
+
 }
 
-void node_book_t::load_from_json(json &data) {
-  ws_item_t::load_from_json(data);
+void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
+
+  ws_item_t::load_from_json(data, rep_info);
+
 }
 
 void node_book_t::updated_internally(uint32_t update_reason) {

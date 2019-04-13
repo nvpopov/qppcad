@@ -77,9 +77,9 @@ void arrow_primitive_t::save_to_json(json &data) {
 
 }
 
-void arrow_primitive_t::load_from_json(json &data) {
+void arrow_primitive_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
-  ws_item_t::load_from_json(data);
+  ws_item_t::load_from_json(data, rep_info);
   json_helper::load_vec3(JSON_ARROW_PR_ARROW_TO, m_arrow_to, data);
   json_helper::load_vec3(JSON_ARROW_PR_COLOR, m_color, data);
   json_helper::load_var(JSON_ARROW_PR_ARROW_SCALE, m_arrow_scale, data);

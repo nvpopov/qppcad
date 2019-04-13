@@ -306,6 +306,8 @@ void workspace_t::load_ws_from_json (const std::string filename) {
 
   try {
 
+    repair_connection_info_t rep_info;
+
     data = json::parse(ifile);
 
     json_helper::load_var(JSON_WS_NAME, m_ws_name, data);
@@ -323,7 +325,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
               std::shared_ptr<ws_item_t> obj =
                   astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
               if (obj) {
-                  obj->load_from_json(object);
+                  obj->load_from_json(object, rep_info);
                   add_item_to_ws(obj);
                 }
             } else {
