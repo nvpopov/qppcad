@@ -125,6 +125,9 @@ namespace qpp {
     const auto JSON_ARROW_PR_ARROW_SCALE  = "arrow_scale";
     const auto JSON_ARROW_PR_CAP_SCALE    = "cap_scale";
 
+    const auto JSON_PGF_PRODUCER_SRC = "geom_src";
+    const auto JSON_PGF_PRODUCER_DST = "geom_dst";
+
   } // namespace qpp::cad
 
 } // namespace qpp

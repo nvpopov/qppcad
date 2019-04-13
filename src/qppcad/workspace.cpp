@@ -336,7 +336,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
             }
       }
 
-    //repair connections
+    //revive connections
     for (auto &rec : rep_info.m_connected_items) {
         auto cur_obj = get_by_name(rec.first);
         if (cur_obj)
@@ -345,7 +345,15 @@ void workspace_t::load_ws_from_json (const std::string filename) {
               if (con_obj) cur_obj->m_connected_items.push_back(con_obj);
             }
       }
-    //end of repair connections
+    //end of revive connections
+
+    //revive ws_item_t class fields
+    for (auto &rec : rep_info.m_fields) {
+        astate->tlog("revive class field {}", rec.m_field_name);
+        auto target_obj = get_by_name(rec.m_field_name);
+        if (target_obj) *rec.m_field = target_obj;
+      }
+    //end of revive ws_item_t class fields
 
     m_fs_path = filename;
 

@@ -92,13 +92,21 @@ size_t pgf_producer_t::get_content_count() {
 void pgf_producer_t::save_to_json(json &data) {
 
   ws_item_t::save_to_json(data);
+  save_ws_item_field(JSON_PGF_PRODUCER_SRC, m_src, data);
+  save_ws_item_field(JSON_PGF_PRODUCER_DST, m_dst, data);
 
 }
 
 void pgf_producer_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
   ws_item_t::load_from_json(data, rep_info);
+  load_ws_item_field(JSON_PGF_PRODUCER_SRC, &m_src, data, rep_info);
+  load_ws_item_field(JSON_PGF_PRODUCER_DST, &m_dst, data, rep_info);
 
+}
+
+bool pgf_producer_t::can_be_written_to_json() {
+  return true;
 }
 
 void pgf_producer_t::generate_geom() {

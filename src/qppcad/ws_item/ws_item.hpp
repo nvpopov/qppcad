@@ -16,11 +16,17 @@ namespace qpp {
 
     class workspace_t;
     class app_state_t;
+    class ws_item_t;
 
-    class repair_connection_info_t {
-      public:
+    struct repair_ws_item_field_t {
+        std::shared_ptr<ws_item_t> *m_field;
+        std::string m_field_name;
+    };
+
+    struct repair_connection_info_t {
         std::map<std::string, std::vector<std::string> > m_connected_items;
         std::map<std::string, std::string> m_leader_con_info;
+        std::vector<repair_ws_item_field_t> m_fields;
     };
 
     // ws_item_t capabilities
@@ -186,6 +192,13 @@ namespace qpp {
         virtual void save_to_json(json &data) ;
         virtual void load_from_json(json &data, repair_connection_info_t &rep_info);
         virtual bool can_be_written_to_json();
+        void save_ws_item_field(const std::string &field_name,
+                                std::shared_ptr<ws_item_t> field_ws_item,
+                                json &data);
+        void load_ws_item_field(const std::string &field_name,
+                                std::shared_ptr<ws_item_t> *field_ws_item,
+                                json &data,
+                                repair_connection_info_t &rep_info);
 
         void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream);
         void save_to_stream(std::basic_istream<CHAR_EX,TRAITS> &stream);

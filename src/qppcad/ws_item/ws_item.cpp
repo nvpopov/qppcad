@@ -267,6 +267,29 @@ bool ws_item_t::can_be_written_to_json() {
   return false;
 }
 
+void ws_item_t::save_ws_item_field(const std::string &field_name,
+                                   std::shared_ptr<ws_item_t> field_ws_item,
+                                   json &data) {
+
+  if (field_ws_item) data[field_name] = field_ws_item->m_name;
+
+}
+
+void ws_item_t::load_ws_item_field(const std::string &field_name,
+                                   std::shared_ptr<ws_item_t> *field_ws_item,
+                                   json &data,
+                                   repair_connection_info_t &rep_info) {
+
+  auto it = data.find(field_name);
+  if (it != data.end()) {
+      repair_ws_item_field_t rep_ws_item;
+      rep_ws_item.m_field_name = it.value();
+      rep_ws_item.m_field = field_ws_item;
+      rep_info.m_fields.emplace_back(std::move(rep_ws_item));
+    }
+
+}
+
 std::string ws_item_t::py_get_repr() {
   return fmt::format("[ws_item, type=\"{}\", name=\"{}\"]", get_type_name(), m_name);
 }
