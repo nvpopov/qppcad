@@ -127,6 +127,15 @@ namespace qpp {
 
     const auto JSON_PGF_PRODUCER_SRC = "geom_src";
     const auto JSON_PGF_PRODUCER_DST = "geom_dst";
+    const auto JSON_PGF_PRODUCER_PSG = "psg";
+
+    const auto JSON_AARRAY_SRD = "src";
+    const auto JSON_AARRAY_ARROW_LEN = "arrow_len";
+    const auto JSON_AARRAY_ARROW_CAP_LEN = "arrow_cap_len";
+    const auto JSON_AARRAY_ARROW_SCALE = "arrow_scale";
+    const auto JSON_AARRAY_ARROW_CAP_SCALE = "arrow_cap_scale";
+    const auto JSON_AARRAY_AFFECTED_BY_SV = "affected_by_sv";
+    const auto JSON_AARRAY_COLOR = "color";
 
   } // namespace qpp::cad
 

@@ -59,7 +59,7 @@ void pgf_producer_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       b_pr = p_b_rp;
       pgf_data_src->bind_value(&b_pr->m_src, b_pr);
       pgf_data_dst->bind_value(&b_pr->m_dst, b_pr);
-      pgf_data_ag->bind_value(&b_pr->m_ag, b_pr);
+      pgf_data_ag->bind_value(&b_pr->m_psg, b_pr);
     }
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
@@ -73,7 +73,7 @@ void pgf_producer_obj_insp_widget_t::update_from_ws_item() {
   ws_item_obj_insp_widget_t::update_from_ws_item();
   update_cell_indexes_ranges();
 
-  set_tab_enabled(tab_cell_range, (b_pr && b_pr->m_src && b_pr->m_dst && b_pr->m_ag));
+  set_tab_enabled(tab_cell_range, (b_pr && b_pr->m_src && b_pr->m_dst && b_pr->m_psg));
 
 }
 

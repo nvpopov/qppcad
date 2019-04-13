@@ -49,9 +49,9 @@ bool pgf_producer_t::check_consistency() {
                           "psg.is_valid? = {}",
                           m_src_gv != nullptr,
                           m_dst_gv != nullptr,
-                          m_psg != nullptr));
+                          m_sg_psg != nullptr));
 
-  return m_src_gv && m_dst_gv && m_psg /*&& m_src_gv->m_geom->DIM == m_dst_gv->m_geom->DIM*/;
+  return m_src_gv && m_dst_gv && m_sg_psg /*&& m_src_gv->m_geom->DIM == m_dst_gv->m_geom->DIM*/;
 
 }
 
@@ -61,7 +61,7 @@ void pgf_producer_t::compose_from_array_group() {
 
   m_imd.clear();
   m_imd.clear_type_table();
-  if (m_psg) m_imd.cell = gen_cell<float, qpp::matrix3<float> >(m_psg->m_ag->group);
+  if (m_sg_psg) m_imd.cell = gen_cell<float, qpp::matrix3<float> >(m_sg_psg->m_ag->group);
   m_imd.cell.auto_orders();
 
   //m_orders_range.clear();
@@ -94,6 +94,7 @@ void pgf_producer_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
   save_ws_item_field(JSON_PGF_PRODUCER_SRC, m_src, data);
   save_ws_item_field(JSON_PGF_PRODUCER_DST, m_dst, data);
+  save_ws_item_field(JSON_PGF_PRODUCER_PSG, m_psg, data);
 
 }
 
@@ -102,6 +103,7 @@ void pgf_producer_t::load_from_json(json &data, repair_connection_info_t &rep_in
   ws_item_t::load_from_json(data, rep_info);
   load_ws_item_field(JSON_PGF_PRODUCER_SRC, &m_src, data, rep_info);
   load_ws_item_field(JSON_PGF_PRODUCER_DST, &m_dst, data, rep_info);
+  load_ws_item_field(JSON_PGF_PRODUCER_PSG, &m_psg, data, rep_info);
 
 }
 
@@ -114,7 +116,6 @@ void pgf_producer_t::generate_geom() {
   if (!check_consistency()) return;
 
   app_state_t* astate = app_state_t::get_inst();
-  //astate->log("pgf_producer_t::generate_geom()");
 
   m_dst_gv->m_tws_tr->do_action(act_lock);
   m_dst_gv->m_tws_tr->do_action(act_lock_img);
@@ -176,7 +177,7 @@ void pgf_producer_t::updated_internally(uint32_t update_reason) {
       auto clean_intermediates = [this]() {
           this->m_src_gv = nullptr;
           this->m_dst_gv = nullptr;
-          this->m_psg = nullptr;
+          this->m_sg_psg = nullptr;
         };
 
       //check src
@@ -218,20 +219,20 @@ void pgf_producer_t::updated_internally(uint32_t update_reason) {
       m_dst_gv = _dst_as_gv;
 
       //check psg
-      if (!m_ag) {
+      if (!m_psg) {
           astate->log("pgf_producer_t::updated_internally() !m_ag");
           clean_intermediates();
           return;
         }
 
-      auto _ag_as_psg = m_ag->cast_as<psg_view_t>();
+      auto _ag_as_psg = m_psg->cast_as<psg_view_t>();
       if (!_ag_as_psg) {
           astate->log("pgf_producer_t::updated_internally() !_ag_as_psg");
           clean_intermediates();
           return;
         }
 
-      m_psg = _ag_as_psg;
+      m_sg_psg = _ag_as_psg;
       compose_from_array_group();
 
       if (is_selected()) astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();

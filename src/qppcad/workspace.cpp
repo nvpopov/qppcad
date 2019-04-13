@@ -349,11 +349,14 @@ void workspace_t::load_ws_from_json (const std::string filename) {
 
     //revive ws_item_t class fields
     for (auto &rec : rep_info.m_fields) {
-        astate->tlog("revive class field {}", rec.m_field_name);
+        //astate->tlog("revive class field {}", rec.m_field_name);
         auto target_obj = get_by_name(rec.m_field_name);
         if (target_obj) *rec.m_field = target_obj;
       }
+
     //end of revive ws_item_t class fields
+
+    for (auto &item : m_ws_items) if (item) item->updated_internally();
 
     m_fs_path = filename;
 

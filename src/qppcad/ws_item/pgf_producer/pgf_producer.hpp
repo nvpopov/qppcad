@@ -21,7 +21,7 @@ namespace qpp {
 
         std::shared_ptr<ws_item_t> m_src{nullptr};
         std::shared_ptr<ws_item_t> m_dst{nullptr};
-        std::shared_ptr<ws_item_t> m_ag{nullptr};
+        std::shared_ptr<ws_item_t> m_psg{nullptr};
 
         /**
          * @brief m_orders_range
@@ -34,7 +34,7 @@ namespace qpp {
 
         geom_view_t *m_src_gv{nullptr};
         geom_view_t *m_dst_gv{nullptr};
-        psg_view_t *m_psg{nullptr};
+        psg_view_t *m_sg_psg{nullptr};
 
         xgeometry<float, gen_cell<float, qpp::matrix3<float> > > m_imd{0};
 
