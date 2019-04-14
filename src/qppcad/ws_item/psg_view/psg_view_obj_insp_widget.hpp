@@ -29,8 +29,10 @@ namespace qpp {
         qbinded_checkbox_t *cb_show_planes;
 
         qbinded_float_spinbox_t *tg_plane_scale;
-        qbinded_float_spinbox_t *tg_axis_scale;
-        qbinded_float_spinbox_t *tg_axis_len_mod;
+        qbinded_float_spinbox_t *tg_arrow_len;
+        qbinded_float_spinbox_t *tg_arrow_scale;
+        qbinded_float_spinbox_t *tg_arrow_cap_len;
+        qbinded_float_spinbox_t *tg_arrow_cap_scale;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;

@@ -73,9 +73,6 @@ void arrow_array_t::render() {
       if (dnodem < 0.0005f) continue;
 
       vector3<float> dir = (end_pos - start_pos).normalized();
-
-      //astate->log(fmt::format("{}", dir));
-
       vector3<float> end = start_pos + dir * m_unf_arrow_len;
 
       matrix4<float> mat_body = matrix4<float>::Identity();

@@ -57,19 +57,8 @@ void psg_view_t::recalc_render_data() {
         (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*0.05f
       };
 
-      vector3<float> start = (elem.m_axis * 5);
-      vector3<float> end = (elem.m_axis * -5);
-
-      vector3<float> tr = m_pos;
-
-      start += tr;
-      end += tr;
-
-      float scale_val = m_axis_scale * 0.02f;
-
       if (elem.m_is_plane) {
 
-          start += aliasing;
           matrix4<float> mat_model = matrix4<float>::Identity();
           vector3<float> plane_normal_ut = vector3<float>(0, 0, 1);
           vector3<float> plane_rot_axis = plane_normal_ut.cross(elem.m_axis).normalized();
@@ -78,44 +67,45 @@ void psg_view_t::recalc_render_data() {
           Eigen::Affine3f t;
           t = Eigen::AngleAxisf(rot_angle, plane_rot_axis);
           t.prescale(vector3<float>(m_plane_scale));
-          t.pretranslate(tr);
+          t.pretranslate(m_pos);
           mat_model = t.matrix();
-          elem.m_render_mat = mat_model;
+          elem.m_arrow_body_mat = mat_model;
 
         } else {
 
+          vector3<float> dir = elem.m_axis.normalized();
+
+          vector3<float> start = dir * (-0.5f * m_arrow_len) + m_pos;
+          vector3<float> end   = dir * ( 0.5f * m_arrow_len) + m_pos;
+
           matrix4<float> mat_model = matrix4<float>::Identity();
-          start *= m_axis_len_mod;
-          end *= m_axis_len_mod;
 
           mat_model.block<3,1>(0,3) = start;
           mat_model.block<3,1>(0,2) = end - start;
 
           vector3<float> vec_axis_norm = mat_model.block<3,1>(0,2).normalized();
 
-          mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * scale_val;
+          mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * m_arrow_scale;
           mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
           mat_model.block<3,1>(0,3) = start ;
 
-          elem.m_render_mat = mat_model;
+          elem.m_arrow_body_mat = mat_model;
 
           //aux
-          vector3<float> start_aux = elem.m_axis * 5 + tr;
-          vector3<float> end_aux = elem.m_axis * 5.25 + tr;
-
-          start_aux *= m_axis_len_mod;
-          end_aux *= m_axis_len_mod;
+          vector3<float> start_aux = end;
+          vector3<float> end_aux = end + dir * m_arrow_cap_len;
 
           matrix4<float> mat_model_aux = matrix4<float>::Identity();
           mat_model_aux.block<3,1>(0,3) = start_aux;
           mat_model_aux.block<3,1>(0,2) = end_aux - start_aux;
 
           vector3<float> vec_axis_norm_aux = mat_model_aux.block<3,1>(0,2).normalized();
-          mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() * scale_val * 1.4;
+          mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() *
+                                          m_arrow_cap_scale;
           mat_model_aux.block<3,1>(0,1) = vec_axis_norm_aux.cross(mat_model_aux.block<3,1>(0,0));
           mat_model_aux.block<3,1>(0,3) = start_aux;
 
-          elem.m_render_mat_aux = mat_model_aux;
+          elem.m_arrow_cap_mat = mat_model_aux;
 
         }
 
@@ -140,10 +130,10 @@ void psg_view_t::render() {
   if (m_show_axes)
     for (auto &elem : m_atf)
       if (!elem.m_is_plane && elem.m_is_visible) {
-          astate->dp->render_general_mesh(elem.m_render_mat,
+          astate->dp->render_general_mesh(elem.m_arrow_body_mat,
                                           elem.m_color,
                                           astate->mesh_cylinder);
-          astate->dp->render_general_mesh(elem.m_render_mat_aux,
+          astate->dp->render_general_mesh(elem.m_arrow_cap_mat,
                                           elem.m_color,
                                           astate->mesh_unit_cone);
         }
@@ -158,7 +148,7 @@ void psg_view_t::render() {
           astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
           for (auto &elem : m_atf)
             if (elem.m_is_plane && elem.m_is_visible) {
-                astate->dp->render_general_mesh(elem.m_render_mat,
+                astate->dp->render_general_mesh(elem.m_arrow_body_mat,
                                                 elem.m_color,
                                                 astate->mesh_zl_plane,
                                                 m_plane_alpha,
@@ -172,7 +162,7 @@ void psg_view_t::render() {
           astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
           for (auto &elem : m_atf)
             if (elem.m_is_plane && elem.m_is_visible) {
-                astate->dp->render_general_mesh(elem.m_render_mat,
+                astate->dp->render_general_mesh(elem.m_arrow_body_mat,
                                                 elem.m_color,
                                                 astate->mesh_zl_plane);
               }
@@ -243,7 +233,8 @@ void psg_view_t::update_view() {
       new_tr.m_is_plane = false;
       new_tr.m_axis = m_pg_axes.axes[i];
       new_tr.m_color = {1,0,0};
-      std::cout << "PGAXES " << m_pg_axes.orders[i] << " " << m_pg_axes.axes[i] << std::endl;
+      astate->tlog("psg_view_t::update_view() -> axes[{}] -> order = {}, {} ",
+                   i, m_pg_axes.orders[i], m_pg_axes.axes[i]);
       m_atf.push_back(std::move(new_tr));
     }
 
@@ -252,7 +243,7 @@ void psg_view_t::update_view() {
       new_tr.m_is_plane = true;
       new_tr.m_axis =  m_pg_axes.planes[i];
       new_tr.m_color = {0, 1, 0};
-      std::cout << "PGPLANES " << m_pg_axes.planes[i] << std::endl;
+      astate->tlog("psg_view_t::update_view() -> planes[{}] -> {} ", i, m_pg_axes.planes[i]);
       m_atf.push_back(std::move(new_tr));
     }
 

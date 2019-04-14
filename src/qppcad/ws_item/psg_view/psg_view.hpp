@@ -9,17 +9,17 @@ namespace qpp {
 
   namespace cad {
 
-    class transform_record_t {
-      public:
+    struct transform_record_t {
+
         vector3<float> m_axis;
         float m_phi;
         bool m_inversion;
         bool m_is_plane;
         bool m_is_visible{true};
-        matrix4<float> m_render_mat;
-        matrix4<float> m_render_mat_aux;
-        float m_norm_mod{1};
+        matrix4<float> m_arrow_body_mat;
+        matrix4<float> m_arrow_cap_mat;
         vector3<float> m_color{1,1,1};
+
     };
 
     class psg_view_t : public ws_item_t {
@@ -37,8 +37,12 @@ namespace qpp {
         float m_plane_alpha{0.64f};
         bool m_plane_alpha_enabled{false};
         float m_plane_scale{6.0f};
-        float m_axis_scale{5.0f};
-        float m_axis_len_mod{1.0f};
+
+        float m_arrow_len{9.0f};
+        float m_arrow_cap_len{0.51f};
+        float m_arrow_scale{0.15f};
+        float m_arrow_cap_scale{0.26f};
+
         int m_current_repr;
         bool m_show_planes{true};
         bool m_show_axes{true};
@@ -61,7 +65,6 @@ namespace qpp {
         float get_bb_prescaller() override;
         void updated_externally(uint32_t update_reason) override;
         void on_leader_call() override ;
-
 
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;

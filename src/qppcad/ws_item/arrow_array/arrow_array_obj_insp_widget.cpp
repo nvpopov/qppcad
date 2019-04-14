@@ -35,10 +35,10 @@ arrow_array_obj_insp_widget_t::arrow_array_obj_insp_widget_t() {
   aa_affected_by_sv = new qbinded_checkbox_t;
 
   gb_aa_settings_lt->addRow(tr("Source"), aa_settings_src);
-  gb_aa_settings_lt->addRow(tr("Unf. arrow len."), aa_unf_arrow_len);
-  gb_aa_settings_lt->addRow(tr("Unf. arrow scl."), aa_unf_arrow_scale);
-  gb_aa_settings_lt->addRow(tr("Unf. cap len."), aa_unf_arrow_cap_len);
-  gb_aa_settings_lt->addRow(tr("Unf. cap scl."), aa_unf_arrow_cap_scale);
+  gb_aa_settings_lt->addRow(tr("Arrow length"), aa_unf_arrow_len);
+  gb_aa_settings_lt->addRow(tr("Arrow scale"), aa_unf_arrow_scale);
+  gb_aa_settings_lt->addRow(tr("Cap length"), aa_unf_arrow_cap_len);
+  gb_aa_settings_lt->addRow(tr("Cap scale"), aa_unf_arrow_cap_scale);
   gb_aa_settings_lt->addRow(tr("Arrow color"), aa_arrow_color);
   gb_aa_settings_lt->addRow(tr("Affected by sel. vis."), aa_affected_by_sv);
 

@@ -25,13 +25,21 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   tg_plane_scale->set_min_max_step(1, 20, 0.1, 2);
   tg_plane_scale->m_updated_externally_event = true;
 
-  tg_axis_scale = new qbinded_float_spinbox_t;
-  tg_axis_scale->set_min_max_step(1, 20, 0.1, 2);
-  tg_axis_scale->m_updated_externally_event = true;
+  tg_arrow_len = new qbinded_float_spinbox_t;
+  tg_arrow_len->set_min_max_step(0.01, 20, 0.05);
+  tg_arrow_len->m_updated_externally_event = true;
 
-  tg_axis_len_mod = new qbinded_float_spinbox_t;
-  tg_axis_len_mod->set_min_max_step(0.5, 10, 0.1, 2);
-  tg_axis_len_mod->m_updated_externally_event = true;
+  tg_arrow_scale = new qbinded_float_spinbox_t;
+  tg_arrow_scale->set_min_max_step(0.01, 20, 0.05);
+  tg_arrow_scale->m_updated_externally_event = true;
+
+  tg_arrow_cap_len = new qbinded_float_spinbox_t;
+  tg_arrow_cap_len->set_min_max_step(0.01, 20, 0.05);
+  tg_arrow_cap_len->m_updated_externally_event = true;
+
+  tg_arrow_cap_scale = new qbinded_float_spinbox_t;
+  tg_arrow_cap_scale->set_min_max_step(0.01, 20, 0.05);
+  tg_arrow_cap_scale->m_updated_externally_event = true;
 
   gb_psg_summary_lt->addRow(tr("Bounded ?"), tg_bounded_info);
   gb_psg_summary_lt->addRow(tr("Sym. gr. name"), tg_info_sym_gr);
@@ -40,8 +48,10 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   gb_psg_summary_lt->addRow(tr("Show planes"), cb_show_planes);
   gb_psg_summary_lt->addRow(tr("Plane transp."), tg_plane_alpha_enabled);
   gb_psg_summary_lt->addRow(tr("Plane scale"), tg_plane_scale);
-  gb_psg_summary_lt->addRow(tr("Axis scale"), tg_axis_scale);
-  gb_psg_summary_lt->addRow(tr("Axis length"), tg_axis_len_mod);
+  gb_psg_summary_lt->addRow(tr("Arrow length"), tg_arrow_len);
+  gb_psg_summary_lt->addRow(tr("Arrow scale"), tg_arrow_scale);
+  gb_psg_summary_lt->addRow(tr("Cap length"), tg_arrow_cap_len);
+  gb_psg_summary_lt->addRow(tr("Cap scale"), tg_arrow_cap_scale);
 
   init_form_lt(gb_psg_summary_lt);
 
@@ -61,8 +71,10 @@ void psg_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
       tg_plane_alpha_enabled->bind_value(&b_pg->m_plane_alpha_enabled, b_pg);
       tg_plane_scale->bind_value(&b_pg->m_plane_scale, b_pg);
-      tg_axis_scale->bind_value(&b_pg->m_axis_scale, b_pg);
-      tg_axis_len_mod->bind_value(&b_pg->m_axis_len_mod, b_pg);
+      tg_arrow_len->bind_value(&b_pg->m_arrow_len, b_pg);
+      tg_arrow_scale->bind_value(&b_pg->m_arrow_scale, b_pg);
+      tg_arrow_cap_len->bind_value(&b_pg->m_arrow_cap_len, b_pg);
+      tg_arrow_cap_scale->bind_value(&b_pg->m_arrow_cap_scale, b_pg);
       cb_show_axes->bind_value(&b_pg->m_show_axes);
       cb_show_planes->bind_value(&b_pg->m_show_planes);
 
@@ -92,8 +104,10 @@ void psg_view_obj_insp_widget_t::unbind_item() {
 
   tg_plane_alpha_enabled->unbind_value();
   tg_plane_scale->unbind_value();
-  tg_axis_scale->unbind_value();
-  tg_axis_len_mod->unbind_value();
+  tg_arrow_len->unbind_value();
+  tg_arrow_scale->unbind_value();
+  tg_arrow_cap_len->unbind_value();
+  tg_arrow_cap_scale->unbind_value();
   cb_show_axes->unbind_value();
   cb_show_planes->unbind_value();
 

@@ -38,6 +38,10 @@ int main (int argc, char **argv) {
   app_state_t::init_inst();
 
   app_state_t *astate = app_state_t::get_inst();
+
+  astate->tlog("@GIT_REVISION={}, @BUILD_DATE={}",
+               build_info_helper::get_git_version(), build_info_helper::get_git_version());
+
   astate->init_managers();
   astate->ws_mgr->init_ws_item_bhv_mgr();
   astate->ws_mgr->init_default();
