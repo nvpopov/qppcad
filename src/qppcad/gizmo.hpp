@@ -1,5 +1,5 @@
-#ifndef QPP_GIZMO_H
-#define QPP_GIZMO_H
+#ifndef QPPCAD_GIZMO_H
+#define QPPCAD_GIZMO_H
 #include <geom/lace3d.hpp>
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>

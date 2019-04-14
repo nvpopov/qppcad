@@ -1,5 +1,5 @@
-#ifndef QPP_WS_ATOM_LIST_H
-#define QPP_WS_ATOM_LIST_H
+#ifndef QPPCAD_GEOM_VIEW_H
+#define QPPCAD_GEOM_VIEW_H
 
 #include <qppcad/qppcad.hpp>
 #include <geom/xgeom.hpp>

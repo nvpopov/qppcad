@@ -1108,37 +1108,37 @@ void geom_view_t::save_to_json (json &data) {
 
   ws_item_t::save_to_json(data);
 
-  data[JSON_ATOMS_LIST_DIM] = m_geom->DIM;
-  data[JSON_ATOMS_LIST_SHOW_IMG_ATOMS] = m_draw_img_atoms;
-  data[JSON_ATOMS_LIST_SHOW_IMG_BONDS] = m_draw_img_bonds;
-  data[JSON_ATOMS_LIST_SHOW_BONDS] = m_draw_bonds;
-  data[JSON_ATOMS_LIST_SHOW_ATOMS] = m_draw_atoms;
-  data[JSON_ATOMS_LIST_BT_SHOW_DSBL] = m_bt_show_disabled_record;
-  data[JSON_ATOMS_LIST_ATOM_SCALE] = m_atom_scale_factor;
-  data[JSON_ATOMS_LIST_BOND_SCALE] = m_bond_scale_factor;
-  data[JSON_ATOMS_LIST_RENDER_TYPE] = m_render_style;
-  data[JSON_ATOMS_LIST_DRAW_SPECULAR] = m_draw_specular;
-  data[JSON_ATOMS_LIST_SPECULAR] = m_shading_specular_power;
+  data[JSON_GEOM_VIEW_DIM] = m_geom->DIM;
+  data[JSON_GEOM_VIEW_SHOW_IMG_ATOMS] = m_draw_img_atoms;
+  data[JSON_GEOM_VIEW_SHOW_IMG_BONDS] = m_draw_img_bonds;
+  data[JSON_GEOM_VIEW_SHOW_BONDS] = m_draw_bonds;
+  data[JSON_GEOM_VIEW_SHOW_ATOMS] = m_draw_atoms;
+  data[JSON_GEOM_VIEW_BT_SHOW_DSBL] = m_bt_show_disabled_record;
+  data[JSON_GEOM_VIEW_ATOM_SCALE] = m_atom_scale_factor;
+  data[JSON_GEOM_VIEW_BOND_SCALE] = m_bond_scale_factor;
+  data[JSON_GEOM_VIEW_RENDER_TYPE] = m_render_style;
+  data[JSON_GEOM_VIEW_DRAW_SPECULAR] = m_draw_specular;
+  data[JSON_GEOM_VIEW_SPECULAR] = m_shading_specular_power;
 
-  data[JSON_ATOMS_LIST_LABELS_TYPE] = m_labels->m_style;
-  data[JSON_ATOMS_LIST_LABELS_SIZE] = m_labels->m_label_font_size;
-  data[JSON_ATOMS_LIST_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines;
-  data[JSON_ATOMS_LIST_LABELS_INPLACE] = m_labels->m_render_inplace_hud;
-  data[JSON_ATOMS_LIST_LABELS_SEL_VIS] = m_labels->m_selective_label_render;
-  data[JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale;
-  data[JSON_ATOMS_LIST_ROLE] = m_role;
+  data[JSON_GEOM_VIEW_LABELS_TYPE] = m_labels->m_style;
+  data[JSON_GEOM_VIEW_LABELS_SIZE] = m_labels->m_label_font_size;
+  data[JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines;
+  data[JSON_GEOM_VIEW_LABELS_INPLACE] = m_labels->m_render_inplace_hud;
+  data[JSON_GEOM_VIEW_LABELS_SEL_VIS] = m_labels->m_selective_label_render;
+  data[JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale;
+  data[JSON_GEOM_VIEW_ROLE] = m_role;
 
-  data[JSON_ATOMS_LIST_DRAW_CELL] = m_draw_cell;
-  json_helper::save_vec3(JSON_ATOMS_LIST_CELL_COLOR, m_cell_color, data);
+  data[JSON_GEOM_VIEW_DRAW_CELL] = m_draw_cell;
+  json_helper::save_vec3(JSON_GEOM_VIEW_CELL_COLOR, m_cell_color, data);
 
-  data[JSON_ATOMS_LIST_BONDING_TABLE] = json::array({});
+  data[JSON_GEOM_VIEW_BONDING_TABLE] = json::array({});
 
-  data[JSON_ATOMS_LIST_SEL_VIS] = m_sel_vis;
-  data[JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds;
+  data[JSON_GEOM_VIEW_SEL_VIS] = m_sel_vis;
+  data[JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds;
 
   if (m_geom->DIM == 3) {
-      data[JSON_ATOMS_LIST_DRAW_SUBCELLS] = m_draw_subcells;
-      data[JSON_ATOMS_LIST_SUBCELLS_RANGE] =
+      data[JSON_GEOM_VIEW_DRAW_SUBCELLS] = m_draw_subcells;
+      data[JSON_GEOM_VIEW_SUBCELLS_RANGE] =
           json::array({m_subcells_range[0], m_subcells_range[1], m_subcells_range[2]});
     }
 
@@ -1148,7 +1148,7 @@ void geom_view_t::save_to_json (json &data) {
       bt_rec.push_back(m_geom->atom_of_type(record.first.m_b));
       bt_rec.push_back(record.second.m_bonding_dist);
       bt_rec.push_back(record.second.m_enabled);
-      data[JSON_ATOMS_LIST_BONDING_TABLE].push_back(bt_rec);
+      data[JSON_GEOM_VIEW_BONDING_TABLE].push_back(bt_rec);
     }
 
   if (m_geom->DIM > 0) {
@@ -1158,7 +1158,7 @@ void geom_view_t::save_to_json (json &data) {
           for (uint8_t q = 0; q < 3; q++) cell_data.push_back(m_geom->cell.v[i][q]);
           cell.push_back(cell_data);
         }
-      data[JSON_ATOMS_LIST_CELL] = cell;
+      data[JSON_GEOM_VIEW_CELL] = cell;
     }
 
   json xfield_names = json::array({});
@@ -1194,10 +1194,10 @@ void geom_view_t::save_to_json (json &data) {
         }
       }
 
-  data[JSON_ATOMS_LIST_XFIELD_NAMES] = xfield_names;
-  data[JSON_ATOMS_LIST_XFIELD_TYPES] = xfield_types;
+  data[JSON_GEOM_VIEW_XFIELD_NAMES] = xfield_names;
+  data[JSON_GEOM_VIEW_XFIELD_TYPES] = xfield_types;
 
-  data[JSON_ATOMS_LIST_ATOMS] = json::array({});
+  data[JSON_GEOM_VIEW_ATOMS] = json::array({});
   for (auto q = 0; q < m_geom->nat(); q++) {
       json atom = json::array({});
       for (int i = 0; i < m_geom->nfields(); i++)
@@ -1227,12 +1227,12 @@ void geom_view_t::save_to_json (json &data) {
                 break;
               }
             }
-       data[JSON_ATOMS_LIST_ATOMS].push_back(atom);
+       data[JSON_GEOM_VIEW_ATOMS].push_back(atom);
     }
 
   if (!m_type_color_override.empty()) {
 
-      data[JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE] = json::array({});
+      data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE] = json::array({});
 
       for (auto &elem : m_type_color_override) {
           json color_override_rec = json::array({});
@@ -1240,7 +1240,7 @@ void geom_view_t::save_to_json (json &data) {
           color_override_rec.push_back(elem.second[0]);
           color_override_rec.push_back(elem.second[1]);
           color_override_rec.push_back(elem.second[2]);
-          data[JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE].push_back(color_override_rec);
+          data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE].push_back(color_override_rec);
         }
     }
 
@@ -1251,8 +1251,8 @@ void geom_view_t::save_to_json (json &data) {
       for (auto &anim : m_anim->m_anim_data) {
 
             json animation = json::object();
-            animation[JSON_ATOMS_LIST_ANIMATION_NAME] = anim.m_anim_name;
-            animation[JSON_ATOMS_LIST_ANIMATION_TYPE] = anim.m_anim_type;
+            animation[JSON_GEOM_VIEW_ANIMATION_NAME] = anim.m_anim_name;
+            animation[JSON_GEOM_VIEW_ANIMATION_TYPE] = anim.m_anim_type;
             json frames = json::array();
 
             for (auto &frame : anim.frames) {
@@ -1268,11 +1268,11 @@ void geom_view_t::save_to_json (json &data) {
                 frames.push_back(frame_chunk);
               }
 
-            animation[JSON_ATOMS_LIST_ANIMATION_FRAMES] = frames;
+            animation[JSON_GEOM_VIEW_ANIMATION_FRAMES] = frames;
             animations.push_back(animation);
           }
 
-      data[JSON_ATOMS_LIST_ANIMATIONS] = animations;
+      data[JSON_GEOM_VIEW_ANIMATIONS] = animations;
     }
 
   m_measure->save_to_json(data);
@@ -1283,46 +1283,46 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
 
   ws_item_t::load_from_json(data, rep_info);
 
-  if (data.find(JSON_ATOMS_LIST_DIM) != data.end()) {
-      m_geom->DIM = data[JSON_ATOMS_LIST_DIM];
+  if (data.find(JSON_GEOM_VIEW_DIM) != data.end()) {
+      m_geom->DIM = data[JSON_GEOM_VIEW_DIM];
       m_geom->cell.DIM = m_geom->DIM;
     }
 
-  json_helper::load_var(JSON_ATOMS_LIST_ATOM_SCALE, m_atom_scale_factor, data);
-  json_helper::load_var(JSON_ATOMS_LIST_BOND_SCALE, m_bond_scale_factor, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
-  json_helper::load_var(JSON_ATOMS_LIST_RENDER_TYPE, m_render_style, data);
-  json_helper::load_var(JSON_ATOMS_LIST_DRAW_SPECULAR, m_draw_specular, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SPECULAR, m_shading_specular_power, data);
-  json_helper::load_var(JSON_ATOMS_LIST_LABELS_TYPE, m_labels->m_style, data);
-  json_helper::load_var(JSON_ATOMS_LIST_LABELS_SIZE, m_labels->m_label_font_size, data);
-  json_helper::load_var(JSON_ATOMS_LIST_LABELS_DRAW_OUTLINE, m_labels->m_render_outlines, data);
-  json_helper::load_var(JSON_ATOMS_LIST_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
-  json_helper::load_var(JSON_ATOMS_LIST_LABELS_SEL_VIS, m_labels->m_selective_label_render, data);
-  json_helper::load_var(JSON_ATOMS_LIST_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SHOW_IMG_BONDS, m_draw_img_bonds, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SHOW_BONDS, m_draw_bonds, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SHOW_ATOMS, m_draw_atoms, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
-  json_helper::load_var(JSON_ATOMS_LIST_BT_SHOW_DSBL, m_bt_show_disabled_record, data);
-  json_helper::load_var(JSON_ATOMS_LIST_DRAW_SUBCELLS, m_draw_subcells, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SEL_VIS, m_sel_vis, data);
-  json_helper::load_var(JSON_ATOMS_LIST_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
-  json_helper::load_var(JSON_ATOMS_LIST_ROLE, m_role, data);
+  json_helper::load_var(JSON_GEOM_VIEW_ATOM_SCALE, m_atom_scale_factor, data);
+  json_helper::load_var(JSON_GEOM_VIEW_BOND_SCALE, m_bond_scale_factor, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
+  json_helper::load_var(JSON_GEOM_VIEW_RENDER_TYPE, m_render_style, data);
+  json_helper::load_var(JSON_GEOM_VIEW_DRAW_SPECULAR, m_draw_specular, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SPECULAR, m_shading_specular_power, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_TYPE, m_labels->m_style, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SIZE, m_labels->m_label_font_size, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE, m_labels->m_render_outlines, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SEL_VIS, m_labels->m_selective_label_render, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SHOW_ATOMS, m_draw_atoms, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
+  json_helper::load_var(JSON_GEOM_VIEW_BT_SHOW_DSBL, m_bt_show_disabled_record, data);
+  json_helper::load_var(JSON_GEOM_VIEW_DRAW_SUBCELLS, m_draw_subcells, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SEL_VIS, m_sel_vis, data);
+  json_helper::load_var(JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
+  json_helper::load_var(JSON_GEOM_VIEW_ROLE, m_role, data);
 
-  json_helper::load_var(JSON_ATOMS_LIST_DRAW_CELL, m_draw_cell, data);
-  json_helper::load_vec3(JSON_ATOMS_LIST_CELL_COLOR, m_cell_color, data);
+  json_helper::load_var(JSON_GEOM_VIEW_DRAW_CELL, m_draw_cell, data);
+  json_helper::load_vec3(JSON_GEOM_VIEW_CELL_COLOR, m_cell_color, data);
 
-  if (data.find(JSON_ATOMS_LIST_SUBCELLS_RANGE) != data.end()) {
-      int sc_a = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][0].get<int>();
-      int sc_b = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][1].get<int>();
-      int sc_c = data[JSON_ATOMS_LIST_SUBCELLS_RANGE][2].get<int>();
+  if (data.find(JSON_GEOM_VIEW_SUBCELLS_RANGE) != data.end()) {
+      int sc_a = data[JSON_GEOM_VIEW_SUBCELLS_RANGE][0].get<int>();
+      int sc_b = data[JSON_GEOM_VIEW_SUBCELLS_RANGE][1].get<int>();
+      int sc_c = data[JSON_GEOM_VIEW_SUBCELLS_RANGE][2].get<int>();
       m_subcells_range = vector3<int>(sc_a, sc_b, sc_c);
     }
 
-  if (data.find(JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE) != data.end()) {
+  if (data.find(JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE) != data.end()) {
       m_type_color_override.clear();
-      for (const auto &rec : data[JSON_ATOMS_LIST_TYPE_COLOR_OVERRIDE]) {
+      for (const auto &rec : data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE]) {
           size_t type_idx = rec[0].get<size_t>();
           float tco_r = rec[1].get<float>();
           float tco_g = rec[2].get<float>();
@@ -1336,11 +1336,11 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
   m_ext_obs->first_data = true;
 
   if (m_geom->DIM>0) {
-      if (data.find(JSON_ATOMS_LIST_CELL) != data.end()) {
+      if (data.find(JSON_GEOM_VIEW_CELL) != data.end()) {
           for (uint8_t i = 0; i < m_geom->DIM; i++) {
-              vector3<float> cellv(data[JSON_ATOMS_LIST_CELL][i][0].get<float>(),
-                  data[JSON_ATOMS_LIST_CELL][i][1].get<float>(),
-                  data[JSON_ATOMS_LIST_CELL][i][2].get<float>());
+              vector3<float> cellv(data[JSON_GEOM_VIEW_CELL][i][0].get<float>(),
+                  data[JSON_GEOM_VIEW_CELL][i][1].get<float>(),
+                  data[JSON_GEOM_VIEW_CELL][i][2].get<float>());
               m_geom->cell.v[i] = cellv;
             }
         } else {
@@ -1349,15 +1349,15 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
         }
     }
 
-  if (data.find(JSON_ATOMS_LIST_XFIELD_NAMES) != data.end()) {
+  if (data.find(JSON_GEOM_VIEW_XFIELD_NAMES) != data.end()) {
 
       std::vector<STRING_EX> fn;
       std::vector<basic_types> ft;
 
-      for (auto &elem : data[JSON_ATOMS_LIST_XFIELD_NAMES]) fn.push_back(elem.get<std::string>());
+      for (auto &elem : data[JSON_GEOM_VIEW_XFIELD_NAMES]) fn.push_back(elem.get<std::string>());
 
-      if (data.find(JSON_ATOMS_LIST_XFIELD_TYPES) != data.end())
-        for (auto &elem : data[JSON_ATOMS_LIST_XFIELD_TYPES]) {
+      if (data.find(JSON_GEOM_VIEW_XFIELD_TYPES) != data.end())
+        for (auto &elem : data[JSON_GEOM_VIEW_XFIELD_TYPES]) {
             std::string fv = elem.get<std::string>();
             if (fv == "b") ft.push_back(type_bool);
             if (fv == "i") ft.push_back(type_int);
@@ -1372,8 +1372,8 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
 
     }
 
-  if (data.find(JSON_ATOMS_LIST_ATOMS) != data.end())
-    for (const auto &atom : data[JSON_ATOMS_LIST_ATOMS]) {
+  if (data.find(JSON_GEOM_VIEW_ATOMS) != data.end())
+    for (const auto &atom : data[JSON_GEOM_VIEW_ATOMS]) {
 
         m_geom->add(atom[0].get<std::string>(),
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
@@ -1410,8 +1410,8 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
           }
       }
 
-  if (data.find(JSON_ATOMS_LIST_BONDING_TABLE) != data.end()) {
-      for (auto &elem : data[JSON_ATOMS_LIST_BONDING_TABLE]) {
+  if (data.find(JSON_GEOM_VIEW_BONDING_TABLE) != data.end()) {
+      for (auto &elem : data[JSON_GEOM_VIEW_BONDING_TABLE]) {
           int type1 = m_geom->type_of_atom(elem[0].get<std::string>());
           int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
           float dist = elem[2].get<float>();
@@ -1422,23 +1422,23 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
       m_tws_tr->m_bonding_table.update_pair_max_dist_all();
     }
 
-  if (data.find(JSON_ATOMS_LIST_ANIMATIONS) != data.end()) {
+  if (data.find(JSON_GEOM_VIEW_ANIMATIONS) != data.end()) {
       bool static_anim_found{false};
-      for (auto &anim : data[JSON_ATOMS_LIST_ANIMATIONS]) {
+      for (auto &anim : data[JSON_GEOM_VIEW_ANIMATIONS]) {
 
           geom_anim_record_t<float> tmp_anim_rec;
 
-          if (anim.find(JSON_ATOMS_LIST_ANIMATION_NAME) != anim.end())
-            tmp_anim_rec.m_anim_name = anim[JSON_ATOMS_LIST_ANIMATION_NAME];
+          if (anim.find(JSON_GEOM_VIEW_ANIMATION_NAME) != anim.end())
+            tmp_anim_rec.m_anim_name = anim[JSON_GEOM_VIEW_ANIMATION_NAME];
           else tmp_anim_rec.m_anim_name = "generic1";
 
-          if (anim.find(JSON_ATOMS_LIST_ANIMATION_TYPE) != anim.end())
-            tmp_anim_rec.m_anim_type = anim[JSON_ATOMS_LIST_ANIMATION_TYPE];
+          if (anim.find(JSON_GEOM_VIEW_ANIMATION_TYPE) != anim.end())
+            tmp_anim_rec.m_anim_type = anim[JSON_GEOM_VIEW_ANIMATION_TYPE];
 
-          if (anim.find(JSON_ATOMS_LIST_ANIMATION_FRAMES) != anim.end()) {
-              tmp_anim_rec.frames.reserve(anim[JSON_ATOMS_LIST_ANIMATION_FRAMES].size());
+          if (anim.find(JSON_GEOM_VIEW_ANIMATION_FRAMES) != anim.end()) {
+              tmp_anim_rec.frames.reserve(anim[JSON_GEOM_VIEW_ANIMATION_FRAMES].size());
 
-              for (auto &frame : anim[JSON_ATOMS_LIST_ANIMATION_FRAMES]) {
+              for (auto &frame : anim[JSON_GEOM_VIEW_ANIMATION_FRAMES]) {
                   tmp_anim_rec.frames.resize(tmp_anim_rec.frames.size() + 1);
                   size_t nf_id = tmp_anim_rec.frames.size() - 1;
 

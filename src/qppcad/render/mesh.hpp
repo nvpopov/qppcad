@@ -1,5 +1,5 @@
-#ifndef QPP_MESH_H
-#define QPP_MESH_H
+#ifndef QPPCAD_MESH_H
+#define QPPCAD_MESH_H
 
 #include <qppcad/qppcad.hpp>
 #include <QOpenGLContext>

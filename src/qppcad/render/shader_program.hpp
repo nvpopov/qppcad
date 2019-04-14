@@ -1,5 +1,5 @@
-#ifndef QPP_SHADER_PROGRAM_H
-#define QPP_SHADER_PROGRAM_H
+#ifndef QPPCAD_SHADER_PROGRAM_H
+#define QPPCAD_SHADER_PROGRAM_H
 
 #include <qppcad/qppcad.hpp>
 #include <QOpenGLContext>

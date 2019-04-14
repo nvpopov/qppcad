@@ -447,23 +447,23 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
   for (auto &rec : m_dist_recs) {
 
       json msr_dist_inst;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_AT1] = rec.m_at1;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_AT2] = rec.m_at2;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_SHOW] = rec.m_show;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_SH_LBL] = rec.m_show_label;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_AT1] = rec.m_at1;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_AT2] = rec.m_at2;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_SHOW] = rec.m_show;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_SH_LBL] = rec.m_show_label;
 
-      json_helper::save_vec3(JSON_ATOMS_LIST_MSR_DIST_COLOR, rec.m_bond_color, msr_dist_inst);
+      json_helper::save_vec3(JSON_GEOM_VIEW_MSR_DIST_COLOR, rec.m_bond_color, msr_dist_inst);
 
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_LSIZE] = rec.m_line_size;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_FSIZE] = rec.m_font_size;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_LSTYLE] = rec.m_line_render_style;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_DIST_FSTYLE] = rec.m_label_render_style;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_SHOW_CL] = rec.m_show_custom_label;
-      msr_dist_inst[JSON_ATOMS_LIST_MSR_CL_TEXT] = rec.m_custom_label_text;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_LSIZE] = rec.m_line_size;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_FSIZE] = rec.m_font_size;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_LSTYLE] = rec.m_line_render_style;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_FSTYLE] = rec.m_label_render_style;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_SHOW_CL] = rec.m_show_custom_label;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_CL_TEXT] = rec.m_custom_label_text;
 
       if (p_owner->m_geom->DIM != 0) {
-          json_helper::save_index(JSON_ATOMS_LIST_MSR_DIST_IDX1, rec.m_idx1, msr_dist_inst);
-          json_helper::save_index(JSON_ATOMS_LIST_MSR_DIST_IDX2, rec.m_idx2, msr_dist_inst);
+          json_helper::save_index(JSON_GEOM_VIEW_MSR_DIST_IDX1, rec.m_idx1, msr_dist_inst);
+          json_helper::save_index(JSON_GEOM_VIEW_MSR_DIST_IDX2, rec.m_idx2, msr_dist_inst);
         }
 
       msr_dists.push_back(msr_dist_inst);
@@ -475,99 +475,99 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
   for (auto &rec : m_angle_recs) {
 
       json msr_angle_inst;
-      msr_angle_inst[JSON_ATOMS_LIST_MSR_ANGLE_AT1] = rec.m_at1;
-      msr_angle_inst[JSON_ATOMS_LIST_MSR_ANGLE_AT2] = rec.m_at2;
-      msr_angle_inst[JSON_ATOMS_LIST_MSR_ANGLE_AT3] = rec.m_at3;
-      msr_angle_inst[JSON_ATOMS_LIST_MSR_ANGLE_SHOW] = rec.m_show;
-      msr_angle_inst[JSON_ATOMS_LIST_MSR_ANGLE_ORDER] = rec.m_order;
+      msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_AT1] = rec.m_at1;
+      msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_AT2] = rec.m_at2;
+      msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_AT3] = rec.m_at3;
+      msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_SHOW] = rec.m_show;
+      msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_ORDER] = rec.m_order;
 
       if (p_owner->m_geom->DIM != 0) {
-          json_helper::save_index(JSON_ATOMS_LIST_MSR_ANGLE_IDX1, rec.m_idx1, msr_angle_inst);
-          json_helper::save_index(JSON_ATOMS_LIST_MSR_ANGLE_IDX2, rec.m_idx2, msr_angle_inst);
-          json_helper::save_index(JSON_ATOMS_LIST_MSR_ANGLE_IDX3, rec.m_idx3, msr_angle_inst);
+          json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX1, rec.m_idx1, msr_angle_inst);
+          json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX2, rec.m_idx2, msr_angle_inst);
+          json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX3, rec.m_idx3, msr_angle_inst);
         }
 
       msr_angles.push_back(msr_angle_inst);
 
     }
 
-  msr_object[JSON_ATOMS_LIST_MSR_DIST] = msr_dists;
-  msr_object[JSON_ATOMS_LIST_MSR_ANGLE] = msr_angles;
-  msr_object[JSON_ATOMS_LIST_MSR_SHOW_DIST] = m_render_dist;
-  msr_object[JSON_ATOMS_LIST_MSR_SHOW_ANGLE] = m_render_angle;
-  msr_object[JSON_ATOMS_LIST_MSR_SHOW_LDIST] = m_render_dist_legend;
-  msr_object[JSON_ATOMS_LIST_MSR_SHOW_LANGLE] = m_render_angle_legend;
+  msr_object[JSON_GEOM_VIEW_MSR_DIST] = msr_dists;
+  msr_object[JSON_GEOM_VIEW_MSR_ANGLE] = msr_angles;
+  msr_object[JSON_GEOM_VIEW_MSR_SHOW_DIST] = m_render_dist;
+  msr_object[JSON_GEOM_VIEW_MSR_SHOW_ANGLE] = m_render_angle;
+  msr_object[JSON_GEOM_VIEW_MSR_SHOW_LDIST] = m_render_dist_legend;
+  msr_object[JSON_GEOM_VIEW_MSR_SHOW_LANGLE] = m_render_angle_legend;
 
-  data[JSON_ATOMS_LIST_MSR] = msr_object;
+  data[JSON_GEOM_VIEW_MSR] = msr_object;
 
 }
 
 void geom_view_msr_subsys_t::load_from_json(json &data) {
 
-  auto msr_object = data.find(JSON_ATOMS_LIST_MSR);
+  auto msr_object = data.find(JSON_GEOM_VIEW_MSR);
   if (msr_object == data.end()) return;
 
-  json_helper::load_var(JSON_ATOMS_LIST_MSR_SHOW_DIST, m_render_dist, *msr_object);
-  json_helper::load_var(JSON_ATOMS_LIST_MSR_SHOW_ANGLE, m_render_angle, *msr_object);
-  json_helper::load_var(JSON_ATOMS_LIST_MSR_SHOW_LDIST, m_render_dist_legend, *msr_object);
-  json_helper::load_var(JSON_ATOMS_LIST_MSR_SHOW_LANGLE, m_render_angle_legend, *msr_object);
+  json_helper::load_var(JSON_GEOM_VIEW_MSR_SHOW_DIST, m_render_dist, *msr_object);
+  json_helper::load_var(JSON_GEOM_VIEW_MSR_SHOW_ANGLE, m_render_angle, *msr_object);
+  json_helper::load_var(JSON_GEOM_VIEW_MSR_SHOW_LDIST, m_render_dist_legend, *msr_object);
+  json_helper::load_var(JSON_GEOM_VIEW_MSR_SHOW_LANGLE, m_render_angle_legend, *msr_object);
 
-  auto msr_dist = msr_object.value().find(JSON_ATOMS_LIST_MSR_DIST);
+  auto msr_dist = msr_object.value().find(JSON_GEOM_VIEW_MSR_DIST);
   if (msr_dist != msr_object.value().end())
     for (auto &msr_record : msr_dist.value()) {
 
-        size_t at1 = msr_record[JSON_ATOMS_LIST_MSR_DIST_AT1];
-        size_t at2 = msr_record[JSON_ATOMS_LIST_MSR_DIST_AT2];
+        size_t at1 = msr_record[JSON_GEOM_VIEW_MSR_DIST_AT1];
+        size_t at2 = msr_record[JSON_GEOM_VIEW_MSR_DIST_AT2];
         index idx1 = index::D(p_owner->m_geom->DIM).all(0);
         index idx2 = index::D(p_owner->m_geom->DIM).all(0);
 
         if (p_owner->m_geom->DIM != 0) {
-            idx1 = json_helper::load_index(JSON_ATOMS_LIST_MSR_DIST_IDX1, msr_record);
-            idx2 = json_helper::load_index(JSON_ATOMS_LIST_MSR_DIST_IDX2, msr_record);
+            idx1 = json_helper::load_index(JSON_GEOM_VIEW_MSR_DIST_IDX1, msr_record);
+            idx2 = json_helper::load_index(JSON_GEOM_VIEW_MSR_DIST_IDX2, msr_record);
           }
 
         add_bond_msr(at1, at2, idx1, idx2);
 
         auto &last_msr = m_dist_recs.back();
 
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_DIST_SHOW, last_msr.m_show, msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_DIST_SH_LBL, last_msr.m_show_label, msr_record);
-        json_helper::load_vec3(JSON_ATOMS_LIST_MSR_DIST_COLOR, last_msr.m_bond_color, msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_DIST_LSIZE, last_msr.m_line_size, msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_DIST_FSIZE, last_msr.m_font_size, msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_DIST_LSTYLE, last_msr.m_line_render_style,
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_SHOW, last_msr.m_show, msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_SH_LBL, last_msr.m_show_label, msr_record);
+        json_helper::load_vec3(JSON_GEOM_VIEW_MSR_DIST_COLOR, last_msr.m_bond_color, msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_LSIZE, last_msr.m_line_size, msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_FSIZE, last_msr.m_font_size, msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_LSTYLE, last_msr.m_line_render_style,
                               msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_DIST_FSTYLE, last_msr.m_label_render_style,
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_FSTYLE, last_msr.m_label_render_style,
                               msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_SHOW_CL, last_msr.m_show_custom_label,
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_SHOW_CL, last_msr.m_show_custom_label,
                               msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_CL_TEXT, last_msr.m_custom_label_text,
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_CL_TEXT, last_msr.m_custom_label_text,
                               msr_record);
       }
 
 
-  auto msr_angle = msr_object.value().find(JSON_ATOMS_LIST_MSR_ANGLE);
+  auto msr_angle = msr_object.value().find(JSON_GEOM_VIEW_MSR_ANGLE);
   if (msr_angle != msr_object.value().end())
     for (auto &msr_record : msr_angle.value()) {
 
-        size_t at1 = msr_record[JSON_ATOMS_LIST_MSR_ANGLE_AT1];
-        size_t at2 = msr_record[JSON_ATOMS_LIST_MSR_ANGLE_AT2];
-        size_t at3 = msr_record[JSON_ATOMS_LIST_MSR_ANGLE_AT3];
+        size_t at1 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT1];
+        size_t at2 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT2];
+        size_t at3 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT3];
         index idx1 = index::D(p_owner->m_geom->DIM).all(0);
         index idx2 = index::D(p_owner->m_geom->DIM).all(0);
         index idx3 = index::D(p_owner->m_geom->DIM).all(0);
 
         if (p_owner->m_geom->DIM != 0) {
-            idx1 = json_helper::load_index(JSON_ATOMS_LIST_MSR_ANGLE_IDX1, msr_record);
-            idx2 = json_helper::load_index(JSON_ATOMS_LIST_MSR_ANGLE_IDX2, msr_record);
-            idx3 = json_helper::load_index(JSON_ATOMS_LIST_MSR_ANGLE_IDX3, msr_record);
+            idx1 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX1, msr_record);
+            idx2 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX2, msr_record);
+            idx3 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX3, msr_record);
           }
 
         add_angle_msr(at1, at2, at3, idx1, idx2, idx3);
 
         auto &last_msr = m_angle_recs.back();
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_ANGLE_SHOW, last_msr.m_show, msr_record);
-        json_helper::load_var(JSON_ATOMS_LIST_MSR_ANGLE_ORDER, last_msr.m_order, msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_ANGLE_SHOW, last_msr.m_show, msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_ANGLE_ORDER, last_msr.m_order, msr_record);
 
       }
 

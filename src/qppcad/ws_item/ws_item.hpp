@@ -1,5 +1,5 @@
-#ifndef QPP_WORKSPACE_ITEM_H
-#define QPP_WORKSPACE_ITEM_H
+#ifndef QPPCAD_WORKSPACE_ITEM_H
+#define QPPCAD_WORKSPACE_ITEM_H
 
 #include <qppcad/qppcad.hpp>
 #include <geom/lace3d.hpp>
@@ -123,13 +123,13 @@ namespace qpp {
         /// \param _name
         void set_name(const char * _name);
 
-        //connected items means many-to-many
+        // "many-to-many" data relationship
         void add_connected_item(std::shared_ptr<ws_item_t> new_item);
         void rm_connected_item(std::shared_ptr<ws_item_t> item_to_remove);
         std::optional<size_t> get_connected_idx(std::shared_ptr<ws_item_t> item_to_find);
         bool is_connected(std::shared_ptr<ws_item_t> item_to_find);
 
-        //leader-followers means one-to-many
+        // "one-to-many" data relationship
         void add_follower(std::shared_ptr<ws_item_t> new_item);
         std::optional<size_t> get_follower_idx(std::shared_ptr<ws_item_t> item_to_find);
         bool is_follower(std::shared_ptr<ws_item_t> item_to_find);

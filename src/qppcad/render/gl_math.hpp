@@ -1,5 +1,5 @@
-#ifndef QPP_GLMATH_H
-#define QPP_GLMATH_H
+#ifndef QPPCAD_GLMATH_H
+#define QPPCAD_GLMATH_H
 #include <Eigen/Eigen>
 #include <geom/lace3d.hpp>
 #include <mathf/math.hpp>

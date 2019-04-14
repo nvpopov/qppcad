@@ -1,5 +1,5 @@
-#ifndef QPP_OBJECT_H
-#define QPP_OBJECT_H
+#ifndef QPPCAD_OBJECT_H
+#define QPPCAD_OBJECT_H
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/type_info.hpp>

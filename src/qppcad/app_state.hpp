@@ -1,5 +1,5 @@
-#ifndef QPP_APP_STATE_H
-#define QPP_APP_STATE_H
+#ifndef QPPCAD_APP_STATE_H
+#define QPPCAD_APP_STATE_H
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/render/shader_generators.hpp>

@@ -1,5 +1,5 @@
-#ifndef QPP_XGEOM_TABLE_MODEL
-#define QPP_XGEOM_TABLE_MODEL
+#ifndef QPPCAD_XGEOM_TABLE_MODEL
+#define QPPCAD_XGEOM_TABLE_MODEL
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>

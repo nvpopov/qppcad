@@ -1,5 +1,5 @@
-#ifndef QPP_CAMERA_H
-#define QPP_CAMERA_H
+#ifndef QPPCAD_CAMERA_H
+#define QPPCAD_CAMERA_H
 #include <geom/lace3d.hpp>
 #include <qppcad/render/gl_math.hpp>
 #include <qppcad/serializable.hpp>
