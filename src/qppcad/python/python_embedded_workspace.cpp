@@ -131,7 +131,8 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
                         [](ws_item_t &src, const vector3<float> value)
                         {src.m_pos = value; upd_oi(&src);})
           .def("__repr__", &ws_item_t::py_get_repr)
-          .def("__str__", &ws_item_t::py_get_repr);
+          .def("__str__", &ws_item_t::py_get_repr)
+          .def_readwrite("offset", &ws_item_t::m_leader_offset);
 
   py::enum_<geom_view_render_style_e>(m, "geom_view_render_style_t", py::arithmetic(), "")
           .value("ball_and_stick", ball_and_stick, "ball_and_stick")
@@ -265,7 +266,6 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_point_sym_group_t.def_readwrite("ag", &psg_view_t::m_ag, py::return_value_policy::reference);
   py_point_sym_group_t.def_readwrite("pg_axes", &psg_view_t::m_pg_axes);
   py_point_sym_group_t.def("update_view", &psg_view_t::update_view);
-  py_point_sym_group_t.def_readwrite("center", &psg_view_t::m_new_centre);
 
   py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
   py_volume_view_t(m, "volume_view_t", py_ws_item_t);

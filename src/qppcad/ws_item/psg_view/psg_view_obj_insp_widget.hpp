@@ -19,8 +19,10 @@ namespace qpp {
 
         qspoiler_widget_t *gb_psg_summary;
         QFormLayout *gb_psg_summary_lt;
+
         QLabel *tg_info_sym_gr;
         QLabel *tg_info_total_sym_op;
+        QLabel *tg_bounded_info;
         qbinded_checkbox_t *tg_plane_alpha_enabled;
 
         qbinded_checkbox_t *cb_show_axes;

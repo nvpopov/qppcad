@@ -265,7 +265,7 @@ namespace qpp {
         void on_end_content_gizmo_translate() override;
         void recalc_gizmo_barycenter();
         const vector3<float> get_gizmo_content_barycenter() override;
-        void updated_internally(uint32_t update_reason) override;
+        void updated_externally(uint32_t update_reason) override;
 
         /**
          * @brief shift

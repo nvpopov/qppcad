@@ -90,7 +90,7 @@ bool cube_primitive_t::can_be_written_to_json() {
   return true;
 }
 
-void cube_primitive_t::updated_internally(uint32_t update_reason) {
-
+void cube_primitive_t::updated_externally(uint32_t update_reason) {
+  ws_item_t::updated_externally(update_reason);
 }
 

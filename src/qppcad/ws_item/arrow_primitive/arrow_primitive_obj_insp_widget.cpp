@@ -11,19 +11,19 @@ arrow_primitive_obj_insp_widget_t::arrow_primitive_obj_insp_widget_t() {
 
   ap_target = new qbinded_float3_input_t;
   ap_target->set_min_max_step(-10000, 10000, 0.01);
-  ap_target->m_updated_internally_event = true;
+  ap_target->m_updated_externally_event = true;
 
   ap_unf_arrow_scale = new qbinded_float_spinbox_t;
   ap_unf_arrow_scale->set_min_max_step(0.01, 20, 0.05);
-  ap_unf_arrow_scale->m_updated_internally_event = true;
+  ap_unf_arrow_scale->m_updated_externally_event = true;
 
   ap_unf_arrow_cap_len = new qbinded_float_spinbox_t;
   ap_unf_arrow_cap_len->set_min_max_step(0.01, 20, 0.05);
-  ap_unf_arrow_cap_len->m_updated_internally_event = true;
+  ap_unf_arrow_cap_len->m_updated_externally_event = true;
 
   ap_unf_arrow_cap_scale = new qbinded_float_spinbox_t;
   ap_unf_arrow_cap_scale->set_min_max_step(0.01, 20, 0.05);
-  ap_unf_arrow_cap_scale->m_updated_internally_event = true;
+  ap_unf_arrow_cap_scale->m_updated_externally_event = true;
 
   ap_arrow_color = new qbinded_color3_input_t;
 
@@ -37,7 +37,7 @@ arrow_primitive_obj_insp_widget_t::arrow_primitive_obj_insp_widget_t() {
 
   tab_general->tab_inner_widget_lt->addWidget(gb_arrow_settings);
   tab_general->tab_inner_widget_lt->addStretch(1);
-  ws_item_pos->m_updated_internally_event = true;
+  ws_item_pos->m_updated_externally_event = true;
 
 }
 

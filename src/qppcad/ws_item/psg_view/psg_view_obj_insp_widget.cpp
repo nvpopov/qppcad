@@ -13,24 +13,27 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   gb_psg_summary->setLayout(gb_psg_summary_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(gb_psg_summary);
+
   tg_info_sym_gr = new QLabel;
   tg_info_total_sym_op = new QLabel;
+  tg_bounded_info = new QLabel;
   tg_plane_alpha_enabled = new qbinded_checkbox_t;
   cb_show_axes = new qbinded_checkbox_t;
   cb_show_planes = new qbinded_checkbox_t;
 
   tg_plane_scale = new qbinded_float_spinbox_t;
   tg_plane_scale->set_min_max_step(1, 20, 0.1, 2);
-  tg_plane_scale->m_updated_internally_event = true;
+  tg_plane_scale->m_updated_externally_event = true;
 
   tg_axis_scale = new qbinded_float_spinbox_t;
   tg_axis_scale->set_min_max_step(1, 20, 0.1, 2);
-  tg_axis_scale->m_updated_internally_event = true;
+  tg_axis_scale->m_updated_externally_event = true;
 
   tg_axis_len_mod = new qbinded_float_spinbox_t;
   tg_axis_len_mod->set_min_max_step(0.5, 10, 0.1, 2);
-  tg_axis_len_mod->m_updated_internally_event = true;
+  tg_axis_len_mod->m_updated_externally_event = true;
 
+  gb_psg_summary_lt->addRow(tr("Bounded ?"), tg_bounded_info);
   gb_psg_summary_lt->addRow(tr("Sym. gr. name"), tg_info_sym_gr);
   gb_psg_summary_lt->addRow(tr("Num. of op."), tg_info_total_sym_op);
   gb_psg_summary_lt->addRow(tr("Show axes"), cb_show_axes);
@@ -47,8 +50,6 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
 }
 
 void psg_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
-
-  ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
 
   if (_binding_item && _binding_item->get_type() == psg_view_t::get_type_static()) {
       b_pg = _binding_item->cast_as<psg_view_t>();
@@ -69,11 +70,19 @@ void psg_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       b_pg = nullptr;
     }
 
+  ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
+
 }
 
 void psg_view_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
+
+  if (b_pg) {
+
+      tg_bounded_info->setText(b_pg->is_bounded() ? tr("Yes") : tr("No"));
+
+    }
 
 }
 

@@ -123,8 +123,9 @@ void arrow_primitive_t::recalc_render_data() {
 
 }
 
-void arrow_primitive_t::updated_internally(uint32_t update_reason) {
+void arrow_primitive_t::updated_externally(uint32_t update_reason) {
 
+  ws_item_t::updated_externally(update_reason);
   recalc_render_data();
 
 }

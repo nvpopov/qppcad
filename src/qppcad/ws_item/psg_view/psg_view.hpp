@@ -27,12 +27,12 @@ namespace qpp {
         QPP_OBJECT(psg_view_t, ws_item_t)
 
       public:
-        vector3<float> m_new_centre{0,0,0};
 
-        bool m_nested{false};
         std::shared_ptr<array_group<matrix3<float> > > m_ag{nullptr};
         point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
+
+        bool m_bounded{false};
 
         float m_plane_alpha{0.64f};
         bool m_plane_alpha_enabled{false};
@@ -59,7 +59,9 @@ namespace qpp {
         std::string compose_type_descr() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
-        void updated_internally(uint32_t update_reason) override;
+        void updated_externally(uint32_t update_reason) override;
+        void on_leader_call() override ;
+
 
         uint32_t get_amount_of_selected_content() override;
         size_t get_content_count() override;
@@ -68,7 +70,6 @@ namespace qpp {
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
         void update_view();
-        //void py_set_new_center(vector3<float> new_center);
 
     };
 

@@ -1082,8 +1082,8 @@ const vector3<float> geom_view_t::get_gizmo_content_barycenter() {
   return m_gizmo_barycenter;
 }
 
-void geom_view_t::updated_internally(uint32_t update_reason) {
-
+void geom_view_t::updated_externally(uint32_t update_reason) {
+  ws_item_t::updated_externally(update_reason);
 }
 
 void geom_view_t::shift(const vector3<float> shift) {

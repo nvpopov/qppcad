@@ -179,6 +179,9 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   ws_item_pos_label = new QLabel(tr("Position[%1]").arg(astate->m_spatial_suffix));
   ws_item_pos = new qbinded_float3_input_t;
+  ws_item_pos->m_updated_externally_event = true;
+  ws_item_pos->m_upd_flag = ws_item_updf_pos_changed;
+
   ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
 
   tg_form_layout->addRow(tr("Name"), ws_item_name);

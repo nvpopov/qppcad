@@ -77,8 +77,8 @@ float ccd_view_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-void ccd_view_t::updated_internally(uint32_t update_reason) {
-
+void ccd_view_t::updated_externally(uint32_t update_reason) {
+  ws_item_t::updated_externally(update_reason);
 }
 
 uint32_t ccd_view_t::get_amount_of_selected_content() {
@@ -90,7 +90,9 @@ size_t ccd_view_t::get_content_count() {
 }
 
 void ccd_view_t::save_to_json(json &data) {
+
   ws_item_t::save_to_json(data);
+
 }
 
 void ccd_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) {

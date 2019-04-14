@@ -167,8 +167,9 @@ void pgf_producer_t::generate_geom() {
 
 }
 
-void pgf_producer_t::updated_internally(uint32_t update_reason) {
+void pgf_producer_t::updated_externally(uint32_t update_reason) {
 
+  ws_item_t::updated_externally(update_reason);
   app_state_t* astate = app_state_t::get_inst();
   astate->log("pgf_producer_t::updated_internally()");
 

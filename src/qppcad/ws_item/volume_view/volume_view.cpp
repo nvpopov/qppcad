@@ -138,13 +138,16 @@ size_t volume_view_t::get_content_count() {
   return 0;
 }
 
-void volume_view_t::updated_internally(uint32_t update_reason) {
+void volume_view_t::updated_externally(uint32_t update_reason) {
 
-  for (auto &vol : m_volumes) {
-      vol.m_need_to_regenerate = true;
-      vol.m_ready_to_render = false;
-    }
+  ws_item_t::updated_externally(update_reason);
 
+  //regenerate meshes
+  if (get_flags() & ws_item_updf_regenerate_content)
+    for (auto &vol : m_volumes) {
+        vol.m_need_to_regenerate = true;
+        vol.m_ready_to_render = false;
+      }
 
 }
 

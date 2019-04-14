@@ -12,10 +12,15 @@ vector3<float> ws_item_t::get_pos() {
 }
 
 void ws_item_t::set_pos(vector3<float> new_pos) {
+
   app_state_t* astate = app_state_t::get_inst();
   m_pos = new_pos;
-  call_followers();
+
+  //notify followers about changes
+  updated_externally(ws_item_updf_pos_changed);
+
   astate->make_viewport_dirty();
+
 }
 
 void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
@@ -78,7 +83,9 @@ void ws_item_t::add_follower(std::shared_ptr<ws_item_t> new_item) {
 std::optional<size_t> ws_item_t::get_follower_idx(std::shared_ptr<ws_item_t> item_to_find) {
 
   for (size_t i = 0; i < m_followers.size(); i++)
-    if (m_followers[i].get() == item_to_find.get()) return std::optional<size_t>(i);
+    if (m_followers[i].get() == item_to_find.get())
+      return std::optional<size_t>(i);
+
   return std::nullopt;
 
 }
@@ -98,6 +105,25 @@ void ws_item_t::rm_follower(std::shared_ptr<ws_item_t> item_to_remove) {
 
 }
 
+void ws_item_t::set_bounded_to_leader(bool bounding) {
+
+  if (bounding) {
+      unset_flag(ws_item_flags_support_tr);
+      unset_flag(ws_item_flags_translate_emit_upd_event);
+      set_flag(ws_item_flags_fetch_leader_pos);
+    }
+  else {
+      set_flag(ws_item_flags_support_tr);
+      set_flag(ws_item_flags_translate_emit_upd_event);
+      unset_flag(ws_item_flags_fetch_leader_pos);
+    }
+
+}
+
+bool ws_item_t::is_bounded() {
+  return p_flags & ws_item_flags_fetch_leader_pos;
+}
+
 bool ws_item_t::is_selected() {
 
   if (m_parent_ws) {
@@ -113,8 +139,12 @@ void ws_item_t::render () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_selected && (get_flags() & ws_item_flags_support_sel) &&
-      (get_flags() & ws_item_flags_support_render_bb) && is_bb_visible() && m_show_bb) {
+  if (m_selected &&
+      (get_flags() & ws_item_flags_support_sel) &&
+      (get_flags() & ws_item_flags_support_render_bb) &&
+      is_bb_visible()
+      && m_show_bb) {
+
       astate->dp->begin_render_aabb();
 
       (m_parent_ws->m_edit_type == ws_edit_e::edit_item) ?
@@ -122,6 +152,7 @@ void ws_item_t::render () {
           : astate->dp->render_aabb_segmented(clr_olive, m_pos + m_aabb.min, m_pos + m_aabb.max);
 
       astate->dp->end_render_aabb();
+
     }
 
 }
@@ -139,12 +170,20 @@ uint32_t ws_item_t::get_flags() const {
   return p_flags;
 }
 
+void ws_item_t::set_flag(uint32_t flag) {
+  p_flags |= flag;
+}
+
+void ws_item_t::unset_flag(uint32_t flag) {
+  p_flags &= ~flag;
+}
+
 void ws_item_t::on_leader_changed() {
 
 }
 
 void ws_item_t::on_leader_call() {
-
+  updated_externally(ws_item_updf_leader_changed);
 }
 
 void ws_item_t::call_followers() {
@@ -168,26 +207,36 @@ const vector3<float> ws_item_t::get_gizmo_content_barycenter() {
   return vector3<float>::Zero();
 }
 
-//ws_item_t::~ws_item_t(){
+void ws_item_t::updated_externally(uint32_t update_reason) {
 
-//}
+  if (update_reason & ws_item_updf_pos_changed) {
+      //notify followers about changes
+      for (auto &follower : m_followers)
+        if (follower) follower->updated_externally(ws_item_updf_leader_changed);
+    }
 
-void ws_item_t::on_begin_node_gizmo_translate(){
-  m_pos_old = m_pos;
-  //  c_app::log(fmt::format("Start of translation of node [{}], pos = {}",
-  //                         m_name, m_pos.to_string_vec()));
+  if ((update_reason & ws_item_updf_leader_changed) &&
+      m_leader &&
+      p_flags & ws_item_flags_fetch_leader_pos) {
+      //copy pos from leader and apply offset
+      m_pos = m_leader->m_pos + m_leader_offset;
+    }
+
 }
 
-void ws_item_t::on_end_node_gizmo_translate(){
-  //  c_app::log(fmt::format("End of translation of node [{}], pos = {}",
-  //                         m_name, m_pos.to_string_vec()));
+void ws_item_t::on_begin_node_gizmo_translate() {
+  m_pos_old = m_pos;
+}
+
+void ws_item_t::on_end_node_gizmo_translate() {
+
 }
 
 void ws_item_t::on_begin_content_gizmo_translate() {
 
 }
 
-void ws_item_t::apply_intermediate_translate_content(const vector3<float> &new_pos){
+void ws_item_t::apply_intermediate_translate_content(const vector3<float> &new_pos) {
 
 }
 
@@ -199,8 +248,12 @@ void ws_item_t::translate(const vector3<float> &tr_vec) {
 
   app_state_t* astate = app_state_t::get_inst();
   if (get_flags() & ws_item_flags_support_tr) m_pos += tr_vec;
-  if (get_flags() & ws_item_flags_translate_emit_upd_event) updated_internally();
+  if (get_flags() & ws_item_flags_translate_emit_upd_event) updated_externally();
   if (is_selected()) astate->astate_evd->cur_ws_selected_item_position_changed();
+
+  //notify followers about changes
+  updated_externally(ws_item_updf_pos_changed);
+
   astate->make_viewport_dirty();
 
 }
@@ -216,15 +269,13 @@ void ws_item_t::save_to_json(json &data) {
 
   if (!m_connected_items.empty()) {
       json _con_items = json::array({});
-      for (auto &elem : m_connected_items)
-        if(elem) _con_items.push_back(elem->m_name);
+      for (auto &elem : m_connected_items) if(elem) _con_items.push_back(elem->m_name);
       data[JSON_WS_ITEM_CONNECTED_ITEMS] = _con_items;
     }
 
   if (!m_followers.empty()) {
       json _flw_items = json::array({});
-      for (auto &elem : m_followers)
-        if(elem) _flw_items.push_back(elem->m_name);
+      for (auto &elem : m_followers) if(elem) _flw_items.push_back(elem->m_name);
       data[JSON_WS_ITEM_CONNECTED_ITEMS] = _flw_items;
     }
 

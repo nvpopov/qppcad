@@ -26,7 +26,7 @@ namespace qpp {
       public:
 
         bool m_ignore_state_change{false};
-        bool m_updated_internally_event{false};
+        bool m_updated_externally_event{false};
         T *m_binded_value{nullptr};
         ws_item_t *m_binded_ws_item{nullptr};
         uint32_t m_upd_flag{ws_item_updf_generic};
@@ -45,8 +45,8 @@ namespace qpp {
         }
 
         void on_value_changed() {
-          if (m_binded_ws_item && m_updated_internally_event)
-            m_binded_ws_item->updated_internally(m_upd_flag);
+          if (m_binded_ws_item && m_updated_externally_event)
+            m_binded_ws_item->updated_externally(m_upd_flag);
         }
 
         virtual void load_value_ex() = 0;

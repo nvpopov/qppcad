@@ -47,6 +47,7 @@ namespace qpp {
     const uint32_t ws_item_flags_translate_emit_upd_event = 1 << 14;
     const uint32_t ws_item_flags_support_view_voting      = 1 << 15;
     const uint32_t ws_item_flags_support_cam_target_view  = 1 << 16;
+    const uint32_t ws_item_flags_fetch_leader_pos         = 1 << 17;
 
     // ws_item_t update_externally flags
     const uint32_t ws_item_updf_flags                   = 0;
@@ -71,6 +72,7 @@ namespace qpp {
     const uint32_t ws_item_updf_channel_j               = 1 << 19;
     const uint32_t ws_item_updf_channel_k               = 1 << 20;
     const uint32_t ws_item_updf_channel_l               = 1 << 21;
+    const uint32_t ws_item_updf_regenerate_content      = 1 << 22;
 
     class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
 
@@ -89,15 +91,17 @@ namespace qpp {
 
         std::string      m_name;
         aabb_3d_t<float> m_aabb;
+        vector3<float>   m_leader_offset{0, 0, 0};
         vector3<float>   m_pos_old;
-        vector3<float>   m_pos{0.0f, 0.0f, 0.0f}; ///
-        vector3<float>   m_scale{1.0f, 1.0f, 1.0f}; ///
-        vector3<float>   m_rotation{1.0f, 1.0f, 1.0f}; ///
+        vector3<float>   m_pos{0.0f, 0.0f, 0.0f};
+        vector3<float>   m_scale{1.0f, 1.0f, 1.0f};
+        vector3<float>   m_rotation{1.0f, 1.0f, 1.0f};
         vector3<float>   explicit_translation;
+
         int m_last_tab{-1};
-        bool m_is_visible{true}; ///
+        bool m_is_visible{true};
         bool m_show_bb{true};
-        bool m_selected{false}; ///
+        bool m_selected{false};
         bool m_marked_for_deletion{false};
         bool m_extended_editor_opened{false};
         size_t m_extended_editor_id{0};
@@ -107,20 +111,28 @@ namespace qpp {
         void set_pos(vector3<float> new_pos);
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
                                            vector3<float> &out_look_at) = 0;
-        /// \brief set_parent_workspace
-        /// \param _parent_ws
+        /**
+         * @brief set_parent_workspace
+         * @param _parent_ws
+         */
         void set_parent_workspace(workspace_t *_parent_ws);
 
-        /// \brief get_name
-        /// \return
+        /**
+         * @brief get_name
+         * @return
+         */
         const std::string get_name();
 
-        /// \brief set_name
-        /// \param _name
+        /**
+         * @brief set_name
+         * @param _name
+         */
         void set_name(const std::string &_name);
 
-        /// \brief set_name
-        /// \param _name
+        /**
+         * @brief set_name
+         * @param _name
+         */
         void set_name(const char * _name);
 
         // "many-to-many" data relationship
@@ -135,52 +147,51 @@ namespace qpp {
         bool is_follower(std::shared_ptr<ws_item_t> item_to_find);
         void rm_follower(std::shared_ptr<ws_item_t> item_to_remove);
 
+        void set_bounded_to_leader(bool bounding);
+        bool is_bounded();
+
         bool is_selected();
 
-        /// \brief render
+
         virtual void render();
         virtual void render_overlay(QPainter &painter);
 
         virtual size_t get_content_count() = 0;
-        /// \brief render_ui
-
-
-        /// \brief mouse_click
-        /// \param ray
-        /// \return
         virtual bool mouse_click(ray_t<float> *ray) = 0;
 
         void set_default_flags(uint32_t);
-
         uint32_t get_flags() const ;
+        void set_flag(uint32_t flag);
+        void unset_flag(uint32_t flag);
 
-        /// \brief get_amount_of_selected_content
-        /// \return
         virtual uint32_t get_amount_of_selected_content() = 0;
 
-        /// \brief compose_item_name
-        /// \return
         virtual std::string compose_type_descr() = 0;
 
-        //when a leader changed
         virtual void on_leader_changed();
-        //when a leader telling about his updates
         virtual void on_leader_call();
         void call_followers();
 
-        /// \brief update
-        /// \param delta_time
+        /**
+         * @brief update
+         * @param delta_time
+         */
         virtual void update(float delta_time);
 
-        /// \brief get_bb_prescaller
-        /// \return
+        /**
+         * @brief get_bb_prescaller
+         * @return
+         */
         virtual float get_bb_prescaller();
         virtual bool is_bb_visible();
-        /// \brief get_gizmo_content_barycenter
-        /// \return
+
+        /**
+         * @brief get_gizmo_content_barycenter
+         * @return
+         */
         virtual const vector3<float> get_gizmo_content_barycenter();
 
-        virtual void updated_internally(uint32_t update_reason = ws_item_updf_generic) = 0;
+        virtual void updated_externally(uint32_t update_reason = ws_item_updf_generic);
 
         virtual void on_begin_node_gizmo_translate();
         virtual void on_end_node_gizmo_translate();

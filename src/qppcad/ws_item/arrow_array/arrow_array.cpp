@@ -163,10 +163,11 @@ bool arrow_array_t::can_be_written_to_json() {
   return true;
 }
 
-void arrow_array_t::updated_internally(uint32_t update_reason) {
+void arrow_array_t::updated_externally(uint32_t update_reason) {
+
+  ws_item_t::updated_externally(update_reason);
 
   app_state_t *astate = app_state_t::get_inst();
-  astate->log(fmt::format("AARRAY[{}]::updated internally", m_name));
 
   if (m_src) {
       auto _as_gv = m_src->cast_as<geom_view_t>();

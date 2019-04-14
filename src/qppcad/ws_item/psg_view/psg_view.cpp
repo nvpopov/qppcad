@@ -5,7 +5,11 @@ using namespace qpp;
 using namespace qpp::cad;
 
 psg_view_t::psg_view_t() {
-  set_default_flags(ws_item_flags_default);
+
+  set_default_flags(ws_item_flags_default |
+                    ws_item_flags_support_tr |
+                    ws_item_flags_translate_emit_upd_event);
+
 }
 
 void psg_view_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
@@ -15,7 +19,11 @@ void psg_view_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
   //app_state_t* astate = app_state_t::get_inst();
 
   if (!m_ag) m_ag = std::make_shared<array_group<matrix3<float> > > ();
-  find_point_symm(*m_ag, geom, m_new_centre, tolerance);
+  find_point_symm(*m_ag, geom, m_leader_offset, tolerance);
+
+  //fetch bounded position from leader(geom_view)
+  updated_externally(ws_item_updf_leader_changed);
+
   m_pg_axes = point_group_axes<float>(*m_ag);
   m_atf.clear();
 
@@ -45,16 +53,14 @@ void psg_view_t::recalc_render_data() {
 
   for (auto &elem : m_atf) {
 
-      vector3<float> aliasing{(static_cast <float> (rand()) /
-            static_cast <float> (RAND_MAX))*0.05f};
+      vector3<float> aliasing {
+        (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*0.05f
+      };
 
       vector3<float> start = (elem.m_axis * 5);
       vector3<float> end = (elem.m_axis * -5);
 
-      vector3<float> tr = m_new_centre;
-
-      //threat first connected item as master
-      if (!m_connected_items.empty()) tr += m_connected_items.front()->m_pos;
+      vector3<float> tr = m_pos;
 
       start += tr;
       end += tr;
@@ -110,6 +116,7 @@ void psg_view_t::recalc_render_data() {
           mat_model_aux.block<3,1>(0,3) = start_aux;
 
           elem.m_render_mat_aux = mat_model_aux;
+
         }
 
     }
@@ -193,8 +200,15 @@ float psg_view_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-void psg_view_t::updated_internally(uint32_t update_reason) {
+void psg_view_t::updated_externally(uint32_t update_reason) {
+
+  ws_item_t::updated_externally(update_reason);
   recalc_render_data();
+
+}
+
+void psg_view_t::on_leader_call() {
+
 }
 
 uint32_t psg_view_t::get_amount_of_selected_content() {

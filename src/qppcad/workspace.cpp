@@ -356,7 +356,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
 
     //end of revive ws_item_t class fields
 
-    for (auto &item : m_ws_items) if (item) item->updated_internally();
+    for (auto &item : m_ws_items) if (item) item->updated_externally();
 
     m_fs_path = filename;
 

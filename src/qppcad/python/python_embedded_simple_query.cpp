@@ -40,6 +40,8 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("get_tool_groups", &simple_query::get_tool_groups);
   tools.def("get_tool_names", &simple_query::get_tool_names);
   tools.def("get_connected_items", &simple_query::get_connected_items);
+  tools.def("get_followers", &simple_query::get_followers);
+  tools.def("get_leader", &simple_query::get_leader);
   tools.def("exec_tool", &simple_query::exec_tool);
 
   py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools, "color_map_t");

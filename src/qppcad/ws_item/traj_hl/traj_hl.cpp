@@ -117,6 +117,6 @@ void traj_hl_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
 }
 
-void traj_hl_t::updated_internally(uint32_t update_reason) {
+void traj_hl_t::updated_externally(uint32_t update_reason) {
 }
 

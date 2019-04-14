@@ -140,8 +140,8 @@ void gizmo_t::translate_attached(float delta_time){
 
               if (astate->camera->m_cur_proj == cam_proj_t::proj_ortho) proj_dep_mod = 350.0f;
 
-              vector3<float> new_transform =
-                  gizmo_axis[m_touched_axis] * delta_time * d_unproj[m_touched_axis] * proj_dep_mod;
+              vector3<float> new_transform = gizmo_axis[m_touched_axis] * delta_time *
+                                             d_unproj[m_touched_axis] * proj_dep_mod;
 
               m_acc_tr += new_transform;
 

@@ -374,6 +374,25 @@ py::list simple_query::get_connected_items(std::shared_ptr<ws_item_t> ws_item) {
 
 }
 
+py::list simple_query::get_followers(std::shared_ptr<ws_item_t> ws_item) {
+
+  py::list retl;
+
+  if (ws_item)
+    for (auto &elem : ws_item->m_followers)
+      if (elem) retl.append(elem->m_name);
+
+  return retl;
+
+}
+
+py::str simple_query::get_leader(std::shared_ptr<ws_item_t> ws_item) {
+
+  if (ws_item->m_leader) return ws_item->m_leader->m_name;
+  else return py::none();
+
+}
+
 pybind11::bool_ simple_query::is_instance_of_by_hash(size_t _type_hash) {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -514,7 +533,8 @@ void simple_query::make_psg_view(float tolerance) {
           auto ws_pg_c = ws_pg->cast_as<psg_view_t>();
 
           if (ws_pg_c) {
-              ws_pg_c->m_connected_items.push_back(al->m_parent_ws->get_selected_sp());
+              al->add_follower(ws_pg);
+              ws_pg_c->set_bounded_to_leader(true);
               ws_pg_c->gen_from_geom(*al->m_geom, tolerance, true);
               al->m_parent_ws->add_item_to_ws(ws_pg);
               ws_pg_c->m_name =
@@ -527,14 +547,16 @@ void simple_query::make_psg_view(float tolerance) {
                                  psg_view_t::get_type_static());
           auto ws_pg_partial_c = ws_pg_partial->cast_as<psg_view_t>();
           if (ws_pg_partial_c) {
+              al->add_follower(ws_pg_partial);
+              ws_pg_partial_c->set_bounded_to_leader(true);
               xgeometry<float, periodic_cell<float> > buffer{0};
               al->copy_to_xgeometry(buffer, true, false);
-              ws_pg_partial_c->m_connected_items.push_back(al->m_parent_ws->get_selected_sp());
               ws_pg_partial_c->gen_from_geom(buffer, tolerance, true);
               al->m_parent_ws->add_item_to_ws(ws_pg_partial);
               ws_pg_partial_c->m_name =
                   fmt::format("point_sym_grp_part{}", al->m_parent_ws->m_ws_items.size());
             }
+
         }
 
     }
