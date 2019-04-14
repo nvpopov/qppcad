@@ -75,6 +75,13 @@ void upd_oi(ws_item_t *_item) {
 
 }
 
+void mvd() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->make_viewport_dirty();
+
+}
+
 PYBIND11_EMBEDDED_MODULE(wss, m) {
 
   py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >(m, "workspace_manager_t")
@@ -106,6 +113,11 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
       .def("construct", &workspace_t::py_construct_item)
       .def("construct", &construct_from_geom)
       .def("construct", &construct_from_array_group)
+      .def_property("bg",
+                    [](workspace_t &src)
+                    {return src.m_background_color;},
+                    [](workspace_t &src, const vector3<float> value)
+                    {src.m_background_color = value; mvd();})
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr);
 
