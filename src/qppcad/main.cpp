@@ -49,13 +49,13 @@ int main (int argc, char **argv) {
 
   if (!args.empty()) {
 
-      std::string file_name = args[0].toStdString();
       std::string file_format = "";
 
       if (parser.isSet(target_fmt_option))
         file_format = parser.value(target_fmt_option).toStdString();
 
-      astate->ws_mgr->load_from_file_autodeduce(file_name, file_format);
+      for (auto &rec : args)
+        astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format);
 
     }
 
