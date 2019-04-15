@@ -6,10 +6,13 @@ using namespace qpp::cad;
 
 volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   general_volume_type = new QLabel(tr("Molecular orbitals"));
   vol_isovalue = new qbinded_float_spinbox_t;
-  vol_isovalue->set_min_max_step(-0.03, 0.03, 0.001, 3);
+  vol_isovalue->set_min_max_step(-0.04, 0.04, 0.001, 3);
   vol_isovalue->m_updated_externally_event = true;
+  vol_isovalue->m_upd_flag = ws_item_updf_regenerate_content;
 
   vol_color_pos = new qbinded_color3_input_t;
   vol_color_neg = new qbinded_color3_input_t;
@@ -24,6 +27,7 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   gb_volume_detail->add_content_layout(gb_volume_detail_lt);
 
   cb_current_volume = new QComboBox;
+  cb_current_volume->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
   cb_current_volume->setEditable(false);
 
   //cb_current_volume->setMaximumWidth(def_control_width);
@@ -67,17 +71,20 @@ void volume_view_obj_insp_widget_t::update_from_ws_item() {
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
   if (b_vol) {
-      //      if (b_vol->m_volume.m_has_negative_values) general_volume_type->setText(tr("MO"));
-      //      else general_volume_type->setText(tr("DENSITY"));
+
       cb_current_volume->blockSignals(true);
       cb_current_volume->clear();
+
       for (size_t i = 0; i < b_vol->m_volumes.size(); i++) {
           cb_current_volume->addItem(
                 QString::fromStdString(b_vol->m_volumes[i].m_volume.m_name));
         }
+
       cb_current_volume->setCurrentIndex(b_vol->m_current_volume);
       cb_current_volume->blockSignals(false);
+
     }
+
 }
 
 void volume_view_obj_insp_widget_t::unbind_item() {
@@ -89,6 +96,7 @@ void volume_view_obj_insp_widget_t::unbind_item() {
   vol_alpha->unbind_value();
   vol_transparent->unbind_value();
   vol_render_permanent->unbind_value();
+
 }
 
 void volume_view_obj_insp_widget_t::update_binded_volume_controls() {
@@ -98,6 +106,9 @@ void volume_view_obj_insp_widget_t::update_binded_volume_controls() {
       auto cvi = b_vol->m_current_volume;
       auto &cv = b_vol->m_volumes[cvi];
 
+      general_volume_type->setText(cv.m_volume_type != def_isovalue_mo ?
+                                   tr("Density") :
+                                   tr("Molecular orbitals"));
       vol_isovalue->bind_value(&cv.m_isolevel, b_vol);
       vol_color_pos->bind_value(&cv.m_color_pos);
       vol_color_neg->bind_value(&cv.m_color_neg);
@@ -107,6 +118,7 @@ void volume_view_obj_insp_widget_t::update_binded_volume_controls() {
       vol_transparent->bind_value(&cv.m_transparent_volume);
 
     }
+
 }
 
 void volume_view_obj_insp_widget_t::cur_volume_index_changed(int index) {
@@ -119,4 +131,5 @@ void volume_view_obj_insp_widget_t::cur_volume_index_changed(int index) {
     }
 
   astate->make_viewport_dirty();
+
 }

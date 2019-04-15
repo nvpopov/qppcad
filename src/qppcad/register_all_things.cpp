@@ -110,7 +110,10 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
   size_t poscar_ff_hash =
       bhv_mgr->reg_ff("VASP POSCAR[CONTCAR]", "poscar", vasp_ff_g_hash,
-  {"POSCAR", ".vasp", ".VASP", "CONTCAR"} );
+      {"POSCAR", ".vasp", ".VASP", "CONTCAR"} );
+
+  size_t chgcar_ff_hash =
+      bhv_mgr->reg_ff("VASP CHGCAR", "chgcar", vasp_ff_g_hash, {"CHGCAR", "chgcar"} );
 
   size_t outcar_ff_hash =
       bhv_mgr->reg_ff("VASP OUTCAR", "outcar", vasp_ff_g_hash, {"OUTCAR"} );
@@ -191,6 +194,8 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       float, periodic_cell<float> >, true, 3 >
       >();
 
+  auto vasp_chgcar_mgf = std::make_shared<geom_view_vasp_chgcar_t>();
+
   auto write_raw_coord_mgf =
       std::make_shared<
       geom_view_io_saver_t<
@@ -208,15 +213,11 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       std::make_shared<geom_view_io_cube_t
       >();
 
-  auto generic_cube3d_mgf =
-      std::make_shared<geom_view_io_cube_t
-      >();
+  auto generic_cube3d_mgf = std::make_shared<geom_view_io_cube_t>();
 
   generic_cube3d_mgf->m_cell_emplace = true;
 
-  auto generic_molcas_grid_mgf =
-      std::make_shared<geom_view_molcas_grid_t
-      >();
+  auto generic_molcas_grid_mgf = std::make_shared<geom_view_molcas_grid_t>();
 
   bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(xyz_s_ff_mgr, xyz_ff_hash, geom_view_t::get_type_static());
@@ -225,9 +226,12 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   bhv_mgr->reg_io_bhv(ff_output_mgf, firefly_out_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(cp2k_output_mgf, cp2k_out_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(cp2k_cs_mgf, cp2k_cs_ff_hash, geom_view_t::get_type_static());
+
   bhv_mgr->reg_io_bhv(vasp_poscar_mgf, poscar_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(vasp_poscar_s_mgf, poscar_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(vasp_outcar_mgf, outcar_ff_hash, geom_view_t::get_type_static());
+  bhv_mgr->reg_io_bhv(vasp_chgcar_mgf, chgcar_ff_hash, geom_view_t::get_type_static());
+
   bhv_mgr->reg_io_bhv(generic_cube_mgf, generic_cube_ff_hash,
                       geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(generic_cube3d_mgf, generic_cube3d_ff_hash,

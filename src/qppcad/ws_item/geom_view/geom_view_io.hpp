@@ -252,7 +252,7 @@ namespace qpp {
           //do nothing
         }
 
-    };
+    }; // class geom_view_io_cube_t
 
 
     class geom_view_molcas_grid_t : public ws_item_io_bt_bhv_t {
@@ -267,11 +267,25 @@ namespace qpp {
                                  workspace_t *ws) override ;
 
         void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                               geom_view_t *_item) override {
-          //do nothing
-        }
+                               geom_view_t *_item) override {}
 
-    };
+    }; // class geom_view_molcas_grid_t
+
+    class geom_view_vasp_chgcar_t : public ws_item_io_bt_bhv_t {
+
+      public:
+
+        bool can_save() override { return false; }
+        bool can_load() override { return true; }
+
+        void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
+                                 geom_view_t *_item,
+                                 workspace_t *ws) override ;
+
+        void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
+                               geom_view_t *_item) override {}
+
+    }; // class geom_view_molcas_grid_t
 
   } // namespace qpp::cad
 

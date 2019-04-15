@@ -142,12 +142,15 @@ void volume_view_t::updated_externally(uint32_t update_reason) {
 
   ws_item_t::updated_externally(update_reason);
 
+  app_state_t *astate = app_state_t::get_inst();
+
   //regenerate meshes
-  if (get_flags() & ws_item_updf_regenerate_content)
-    for (auto &vol : m_volumes) {
-        vol.m_need_to_regenerate = true;
-        vol.m_ready_to_render = false;
-      }
+  if (update_reason & ws_item_updf_regenerate_content) {
+      for (auto &vol : m_volumes) {
+          vol.m_need_to_regenerate = true;
+          vol.m_ready_to_render = false;
+        }
+    }
 
 }
 
@@ -156,13 +159,6 @@ void volume_view_t::save_to_json(json &data) {
 }
 
 void volume_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
-
-}
-
-void volume_view_t::update_isolevel(float new_isolevel) {
-
-  app_state_t* astate = app_state_t::get_inst();
-  astate->make_viewport_dirty();
 
 }
 

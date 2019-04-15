@@ -71,8 +71,6 @@ namespace qpp {
         void save_to_json(json &data) override;
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
-        void update_isolevel(float new_isolevel);
-
         void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> & inp,
                               geometry<float, periodic_cell<float> > &geom,
                               std::string &fname);
