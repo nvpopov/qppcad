@@ -22,9 +22,9 @@ TEST_CASE( "sflow base testing" ) {
     fc->add_node(n2);
     fc->add_node(n3);
 
-    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
-    REQUIRE(fc->connect_node(n1, n2, 0, 0) == sflow_error_e::no_error);
-    REQUIRE(fc->connect_node(n2, n3, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_status_e::no_error);
+    REQUIRE(fc->connect_node(n1, n2, 0, 0) == sflow_status_e::no_error);
+    REQUIRE(fc->connect_node(n2, n3, 0, 0) == sflow_status_e::no_error);
 
     REQUIRE(n0->m_is_outer);
     REQUIRE(!n1->m_is_outer);
@@ -54,8 +54,8 @@ TEST_CASE( "sflow base testing" ) {
     fc->add_node(n1);
     fc->add_node(n2);
 
-    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
-    REQUIRE(fc->connect_node(n2, n1, 0, 0) == sflow_error_e::too_many_inputs);
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_status_e::no_error);
+    REQUIRE(fc->connect_node(n2, n1, 0, 0) == sflow_status_e::too_many_inputs);
 
     REQUIRE(n0->m_is_outer);
     REQUIRE(!n1->m_is_outer);
@@ -86,9 +86,9 @@ TEST_CASE( "sflow base testing" ) {
     fc->add_node(n2);
     fc->add_node(n3);
 
-    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
-    REQUIRE(fc->connect_node(n0, n2, 0, 0) == sflow_error_e::no_error);
-    REQUIRE(fc->connect_node(n0, n3, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_status_e::no_error);
+    REQUIRE(fc->connect_node(n0, n2, 0, 0) == sflow_status_e::no_error);
+    REQUIRE(fc->connect_node(n0, n3, 0, 0) == sflow_status_e::no_error);
 
     REQUIRE(n0->m_is_outer);
     REQUIRE(!n1->m_is_outer);
@@ -120,9 +120,9 @@ TEST_CASE( "sflow base testing" ) {
     fc->add_node(n2);
     fc->add_node(n3);
 
-    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_error_e::no_error);
-    REQUIRE(fc->connect_node(n1, n2, 0, 0) == sflow_error_e::no_error);
-    REQUIRE(fc->connect_node(n1, n3, 0, 0) == sflow_error_e::no_error);
+    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_status_e::no_error);
+    REQUIRE(fc->connect_node(n1, n2, 0, 0) == sflow_status_e::no_error);
+    REQUIRE(fc->connect_node(n1, n3, 0, 0) == sflow_status_e::no_error);
 
     REQUIRE(n0->m_is_outer);
     REQUIRE(!n1->m_is_outer);

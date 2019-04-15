@@ -243,6 +243,7 @@ target_link_libraries(qppcad
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
 
 add_executable(sflow_test src/qppcad/flow/sflow.cpp src/qppcad/flow/sflow_test.cpp)
+target_link_libraries(sflow_test qpp m)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
