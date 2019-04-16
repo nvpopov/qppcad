@@ -72,6 +72,7 @@ namespace qpp {
         void save_to_json(json &data) override;
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
+        void regenerate_atf();
         void update_view();
 
     };

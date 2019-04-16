@@ -16,35 +16,11 @@ void psg_view_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
                                float tolerance,
                                bool nested) {
 
-  //app_state_t* astate = app_state_t::get_inst();
-
   if (!m_ag) m_ag = std::make_shared<array_group<matrix3<float> > > ();
   find_point_symm(*m_ag, geom, m_leader_offset, tolerance);
 
-  //fetch bounded position from leader(geom_view)
-  updated_externally(ws_item_updf_leader_changed);
-
-  m_pg_axes = point_group_axes<float>(*m_ag);
-  m_atf.clear();
-
-  for (int i = 0; i < m_pg_axes.axes.size(); i++) {
-      transform_record_t new_tr;
-      new_tr.m_is_plane = false;
-      new_tr.m_axis = m_pg_axes.axes[i];
-      new_tr.m_color = {1,0,0};
-      std::cout << "PGAXES " << m_pg_axes.orders[i] << " " << m_pg_axes.axes[i] << std::endl;
-      m_atf.push_back(std::move(new_tr));
-    }
-
-  for (int i = 0; i < m_pg_axes.planes.size(); i++) {
-      transform_record_t new_tr;
-      new_tr.m_is_plane = true;
-      new_tr.m_axis =  m_pg_axes.planes[i];
-      new_tr.m_color = {0, 1, 0};
-      std::cout << "PGPLANES " << m_pg_axes.planes[i] << std::endl;
-      m_atf.push_back(std::move(new_tr));
-    }
-
+  updated_externally(ws_item_updf_leader_changed); //fetch bounded position from leader(geom_view)
+  regenerate_atf();
   recalc_render_data();
 
 }
@@ -221,20 +197,21 @@ void psg_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) 
 
 }
 
-void psg_view_t::update_view() {
+void psg_view_t::regenerate_atf() {
 
-  app_state_t* astate = app_state_t::get_inst();
+  m_atf.clear();
+
+  if (!m_ag) return;
 
   m_pg_axes = point_group_axes<float>(*m_ag);
-  m_atf.clear();
 
   for (int i = 0; i < m_pg_axes.axes.size(); i++) {
       transform_record_t new_tr;
       new_tr.m_is_plane = false;
       new_tr.m_axis = m_pg_axes.axes[i];
       new_tr.m_color = {1,0,0};
-      astate->tlog("psg_view_t::update_view() -> axes[{}] -> order = {}, {} ",
-                   i, m_pg_axes.orders[i], m_pg_axes.axes[i]);
+
+      //std::cout << "PGAXES " << m_pg_axes.orders[i] << " " << m_pg_axes.axes[i] << std::endl;
       m_atf.push_back(std::move(new_tr));
     }
 
@@ -243,10 +220,16 @@ void psg_view_t::update_view() {
       new_tr.m_is_plane = true;
       new_tr.m_axis =  m_pg_axes.planes[i];
       new_tr.m_color = {0, 1, 0};
-      astate->tlog("psg_view_t::update_view() -> planes[{}] -> {} ", i, m_pg_axes.planes[i]);
+      //std::cout << "PGPLANES " << m_pg_axes.planes[i] << std::endl;
       m_atf.push_back(std::move(new_tr));
     }
+}
 
+void psg_view_t::update_view() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  regenerate_atf();
   recalc_render_data();
 
   astate->astate_evd->cur_ws_selected_item_changed();
