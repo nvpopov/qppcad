@@ -257,7 +257,7 @@ namespace qpp {
         float get_bb_prescaller() override;
         bool is_bb_visible() override;
 
-        uint32_t get_amount_of_selected_content() override;
+        uint32_t get_num_cnt_selected() override;
         size_t get_content_count() override;
 
         void on_begin_content_gizmo_translate() override;

@@ -129,6 +129,8 @@ void ws_viewer_widget_t::paintGL() {
   astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
   astate->dp->cull_func(draw_pipeline_cull_func::cull_back);
   astate->ws_mgr->render_cur_ws();
+  astate->dp->depth_func(draw_pipeline_depth_func::depth_disabled);
+  astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
 
   if (astate->m_show_debug_frame_stats) {
 

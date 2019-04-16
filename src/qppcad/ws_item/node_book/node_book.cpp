@@ -36,7 +36,7 @@ float node_book_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-uint32_t node_book_t::get_amount_of_selected_content() {
+uint32_t node_book_t::get_num_cnt_selected() {
   return 0;
 }
 

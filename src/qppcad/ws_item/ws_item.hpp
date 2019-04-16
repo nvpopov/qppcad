@@ -164,7 +164,7 @@ namespace qpp {
         void set_flag(uint32_t flag);
         void unset_flag(uint32_t flag);
 
-        virtual uint32_t get_amount_of_selected_content() = 0;
+        virtual uint32_t get_num_cnt_selected() = 0;
 
         virtual std::string compose_type_descr() = 0;
 

@@ -28,7 +28,7 @@ void gizmo_t::render () {
   ws_edit_e cur_edit_type = astate->ws_mgr->get_cur_ws()->m_edit_type;
 
   //prevent showing gizmo when no content selected
-  if (attached_item && attached_item->get_amount_of_selected_content() == 0 &&
+  if (attached_item && attached_item->get_num_cnt_selected() == 0 &&
       cur_edit_type == ws_edit_e::edit_content) return;
 
   astate->dp->begin_render_general_mesh();
@@ -38,8 +38,8 @@ void gizmo_t::render () {
 
   if ( !m_is_interacting &&
        (cur_edit_type == ws_edit_e::edit_item ||
-        (cur_edit_type == ws_edit_e::edit_content &&
-         attached_item->get_amount_of_selected_content() > 0)) ){
+        (cur_edit_type == ws_edit_e::edit_content && attached_item->get_num_cnt_selected() > 0))
+       ) {
 
       astate->dp->render_cube(m_pos, _v_scale * 1.2f, clr_gray);
 
@@ -91,8 +91,10 @@ void gizmo_t::render () {
       astate->dp->end_render_general_mesh();
 
     } else {
+
       vector3<float> vec_small_aliasing(0.05f, 0.05f, 0.05f);
       astate->dp->begin_render_line();
+
       for (uint8_t i = 0; i < 3; i++)
         if (m_bx_touched[i])
           astate->dp->render_line(gizmo_color[i],
@@ -102,10 +104,12 @@ void gizmo_t::render () {
                                      m_pos - gizmo_axis[i] * 2 + vec_small_aliasing,
                                      m_pos + gizmo_axis[i] * 2 + vec_small_aliasing);
       astate->dp->end_render_line();
+
     }
+
 }
 
-void gizmo_t::translate_attached(float delta_time){
+void gizmo_t::translate_attached(float delta_time) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -253,6 +257,5 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
       astate->make_viewport_dirty();
     }
   //End transform in node edit mode
-
 
 }

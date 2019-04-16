@@ -202,7 +202,7 @@ void psg_view_t::on_leader_call() {
 
 }
 
-uint32_t psg_view_t::get_amount_of_selected_content() {
+uint32_t psg_view_t::get_num_cnt_selected() {
   return 0;
 }
 

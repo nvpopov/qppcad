@@ -81,7 +81,7 @@ void pgf_producer_t::compose_from_array_group() {
 
 }
 
-uint32_t pgf_producer_t::get_amount_of_selected_content() {
+uint32_t pgf_producer_t::get_num_cnt_selected() {
   return 0;
 }
 

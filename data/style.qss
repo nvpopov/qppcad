@@ -1,6 +1,6 @@
 * {
- font-family : "Roboto";
- font-size: 12pt;
+ font-family : "SourceSansPro";
+ font-size: 13pt;
  font-weight: 1;
 }
 
@@ -254,9 +254,15 @@ QToolButton {
  padding: 3px;
 }
 
-QPushButton:pressed {
- background : rgb(114, 114, 114);
+QPushButton:pressed, QToolButton:pressed {
+ background : rgb(124, 124, 124);
+ border-style: inset;
 }
+
+QPushButton:hover, QToolButton:hover {
+ background : rgb(94, 94, 94);
+}
+
 
 QComboBox::drop-down  {
  border:none;

@@ -31,9 +31,6 @@
         <file>images/outline-select_all-24px.svg</file>
         <file>images/outline-arrow_upward-24px.svg</file>
         <file>images/outline-arrow_downward-24px.svg</file>
-        <file>fonts/Roboto/Roboto-Bold.ttf</file>
-        <file>fonts/Roboto/Roboto-Regular.ttf</file>
-        <file>fonts/Roboto/Roboto-Light.ttf</file>
         <file>images/outline-my_location-24px.svg</file>
         <file>images/outline-videocam-24px.svg</file>
         <file>images/outline-delete-24px.svg</file>
@@ -47,5 +44,9 @@
         <file>images/outline-tune-24px_d.svg</file>
         <file>images/outline-palette-24px_d.svg</file>
         <file>images/outline-palette-24px.svg</file>
+        <file>fonts/SourceSansPro-Bold.ttf</file>
+        <file>fonts/SourceSansPro-Italic.ttf</file>
+        <file>fonts/SourceSansPro-Regular.ttf</file>
+        <file>fonts/SourceSansPro-Light.ttf</file>
     </qresource>
 </RCC>

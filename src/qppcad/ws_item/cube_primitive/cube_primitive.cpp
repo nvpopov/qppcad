@@ -58,7 +58,7 @@ float cube_primitive_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-uint32_t cube_primitive_t::get_amount_of_selected_content() {
+uint32_t cube_primitive_t::get_num_cnt_selected() {
   return 0;
 }
 

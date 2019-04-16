@@ -33,7 +33,7 @@ namespace qpp {
         void update(float delta_time) override;
         float get_bb_prescaller() override;
         void updated_externally(uint32_t update_reason) override;
-        uint32_t get_amount_of_selected_content() override;
+        uint32_t get_num_cnt_selected() override;
         size_t get_content_count() override;
 
         void on_leader_changed() override;

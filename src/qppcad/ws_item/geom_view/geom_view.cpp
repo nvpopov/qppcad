@@ -1029,7 +1029,7 @@ bool geom_view_t::is_bb_visible() {
   return m_geom && m_geom->DIM == 0;
 }
 
-uint32_t geom_view_t::get_amount_of_selected_content () {
+uint32_t geom_view_t::get_num_cnt_selected () {
   return this->m_atom_idx_sel.size();
 }
 

@@ -81,7 +81,7 @@ void ccd_view_t::updated_externally(uint32_t update_reason) {
   ws_item_t::updated_externally(update_reason);
 }
 
-uint32_t ccd_view_t::get_amount_of_selected_content() {
+uint32_t ccd_view_t::get_num_cnt_selected() {
   return 0;
 }
 
