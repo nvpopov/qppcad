@@ -92,14 +92,16 @@ void gizmo_t::render () {
 
     } else {
       vector3<float> vec_small_aliasing(0.05f, 0.05f, 0.05f);
+      astate->dp->begin_render_line();
       for (uint8_t i = 0; i < 3; i++)
-        if (m_bx_touched[i]){
-            astate->dp->begin_render_line();
-            astate->dp->render_line(gizmo_color[i],
-                                    m_pos - gizmo_axis[i] * 120 + vec_small_aliasing,
-                                    m_pos + gizmo_axis[i] * 120 + vec_small_aliasing);
-            astate->dp->end_render_line();
-          }
+        if (m_bx_touched[i])
+          astate->dp->render_line(gizmo_color[i],
+                                  m_pos - gizmo_axis[i] * 120 + vec_small_aliasing,
+                                  m_pos + gizmo_axis[i] * 120 + vec_small_aliasing);
+        else astate->dp->render_line(gizmo_color[i],
+                                     m_pos - gizmo_axis[i] * 2 + vec_small_aliasing,
+                                     m_pos + gizmo_axis[i] * 2 + vec_small_aliasing);
+      astate->dp->end_render_line();
     }
 }
 
