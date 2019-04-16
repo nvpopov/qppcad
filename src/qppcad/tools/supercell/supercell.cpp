@@ -93,10 +93,14 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
       }
 
   sc_al->m_pos = al->m_pos + al->m_geom->cell.v[0] * 1.4f;
-
   sc_al->m_name = al->m_name + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps);
 
   al->m_parent_ws->add_item_to_ws(sc_al);
+
+  if (sc_al->m_geom->nat() > 200) {
+      sc_al->m_draw_img_atoms = false;
+      sc_al->m_draw_img_bonds = false;
+    }
 
   sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
   sc_al->geometry_changed();
@@ -105,15 +109,14 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   if (al->m_role == geom_view_role_e::r_uc) {
 
       sc_al->m_tws_tr->do_action(act_lock);
-      //intermediage xgeom
-      xgeometry<float, periodic_cell<float> > g(3);
+      xgeometry<float, periodic_cell<float> > g(3); //intermediate xgeom
       g.set_format({"charge"},{type_real});
       g.DIM = 3;
       g.cell.DIM = 3;
       g.cell.v[0] = sc_al->m_geom->cell.v[0];
       g.cell.v[1] = sc_al->m_geom->cell.v[1];
       g.cell.v[2] = sc_al->m_geom->cell.v[2];
-      // tws_tree_t<float, periodic_cell<float> > sum_tree(g);
+
       const float equality_dist = 0.01f;
       for (int i = 0; i < sc_al->m_geom->nat(); i++) {
           std::vector<tws_node_content_t<float> > res;
