@@ -40,6 +40,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   main_lt = new QVBoxLayout;
   data_lt = new QHBoxLayout;
   button_lt = new QHBoxLayout;
+  sub_data_lt = new QVBoxLayout;
 
   ok_button = new QPushButton(tr("Ok"));
   ok_button->setFixedWidth(astate->size_guide.common_button_fixed_w());
@@ -53,6 +54,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   gb_type_descr = new QGroupBox(tr("Type description"));
   gb_type_descr->setMinimumWidth(240);
+  gb_type_descr->setMaximumHeight(130);
   gb_type_descr_lt = new QVBoxLayout;
   gb_type_descr->setLayout(gb_type_descr_lt);
 
@@ -253,14 +255,15 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   main_lt->addLayout(data_lt);
   data_lt->addWidget(gb_ctor);
-  data_lt->addWidget(gb_type_descr);
-  data_lt->addWidget(gb_type_param);
+  data_lt->addLayout(sub_data_lt);
+  sub_data_lt->addWidget(gb_type_descr);
+  sub_data_lt->addWidget(gb_type_param);
   main_lt->addStretch();
   main_lt->addLayout(button_lt);
 
   setLayout(main_lt);
   setMinimumWidth(300);
-  setMinimumHeight(300);
+  setMinimumHeight(400);
 
   connect(ok_button, &QPushButton::clicked,
           this, &add_new_ws_item_widget_t::ok_button_clicked);

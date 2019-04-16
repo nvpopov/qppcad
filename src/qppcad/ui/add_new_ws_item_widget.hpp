@@ -43,11 +43,12 @@ namespace qpp {
         vector3<float> m_b_g3d_cell{0, 5, 0};
         vector3<float> m_c_g3d_cell{0, 0, 5};
 
-        QVBoxLayout *main_lt{nullptr};
-        QHBoxLayout *data_lt{nullptr};
-        QHBoxLayout *button_lt{nullptr};
-        QPushButton *ok_button{nullptr};
-        QPushButton *cancel_button{nullptr};
+        QVBoxLayout *main_lt;
+        QHBoxLayout *data_lt;
+        QVBoxLayout *sub_data_lt;
+        QHBoxLayout *button_lt;
+        QPushButton *ok_button;
+        QPushButton *cancel_button;
 
         QGroupBox *gb_ctor{nullptr};
         QVBoxLayout *gb_ctor_lt{nullptr};

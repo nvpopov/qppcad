@@ -271,7 +271,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_summary_lt = new QFormLayout;
   gb_anim_summary->add_content_layout(gb_anim_summary_lt);
 
-  gb_anim_summary->setMaximumHeight(250);
+  //gb_anim_summary->setMaximumHeight(250);
   gb_anim_total_anims = new QLabel;
   gb_rebuild_bonds = new qbinded_checkbox_t;
   gb_play_cyclic = new qbinded_checkbox_t;
@@ -280,7 +280,8 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_total_frames_in_anim = new QLabel;
   gb_anim_cur_frame = new QLabel;
   gb_current_anim = new QComboBox;
-  gb_current_anim->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
+  gb_current_anim->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
+  //gb_current_anim->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
   connect(gb_current_anim,
           static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -335,7 +336,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_buttons_lt = new QHBoxLayout;
   gb_anim_buttons->add_content_layout(gb_anim_buttons_lt);
   gb_anim_buttons->setMaximumWidth(astate->size_guide.obj_insp_anim_w());
-  gb_anim_buttons->setMaximumHeight(90);
+ //gb_anim_buttons->setMaximumHeight(90);
 
   anim_play = new QPushButton(tr("PLAY"));
   anim_play->setCheckable(true);
