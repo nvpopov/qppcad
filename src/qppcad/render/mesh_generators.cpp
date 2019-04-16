@@ -8,35 +8,46 @@ mesh_t *mesh_generators::plane_zl() {
 
   mesh_t* _mesh = new mesh_t();
 
-  float quad_vert[12] = {
-    -0.5, -0.5, 0,
-    0.5, -0.5,  0,
-    0.5,  0.5,  0,
-    -0.5,  0.5,  0
+  float quad_vert[24] = {
+    -0.5, -0.5,  0,
+     0.5, -0.5,  0,
+     0.5,  0.5,  0,
+    -0.5,  0.5,  0,
+    -0.5, -0.5,  -0.001,
+     0.5, -0.5,  -0.001,
+     0.5,  0.5,  -0.001,
+    -0.5,  0.5,  -0.001,
   };
 
-  float quad_n[12] = {
-    0,  0,   1,
-    0,  0,   1,
-    0,  0,   1,
-    0,  0,   1
+  float quad_n[24] = {
+    0,  0,  1,
+    0,  0,  1,
+    0,  0,  1,
+    0,  0,  1,
+    0,  0, -1,
+    0,  0, -1,
+    0,  0, -1,
+    0,  0, -1
   };
 
-  uint8_t quad_idx[6] = {
+  uint8_t quad_idx[12] = {
     0, 1, 2,
-    2, 3, 0
+    2, 3, 0,
+    4, 5, 6,
+    6, 7, 4
   };
 
-  for (uint8_t i = 0; i < 12; i++){
+  for (uint8_t i = 0; i < 24; i++){
       _mesh->vertecies.push_back(quad_vert[i]);
       _mesh->normals.push_back(quad_n[i]);
     }
 
-  for (uint8_t i = 0; i < 6; i++) _mesh->indices.push_back(quad_idx[i]);
+  for (uint8_t i = 0; i < 12; i++) _mesh->indices.push_back(quad_idx[i]);
 
   _mesh->num_primitives = _mesh->indices.size();
   _mesh->bind_data();
   return _mesh;
+
 }
 
 mesh_t *mesh_generators::quad_zup( ) {

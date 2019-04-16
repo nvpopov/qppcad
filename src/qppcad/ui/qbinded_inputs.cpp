@@ -317,16 +317,9 @@ void qbinded_color3_input_t::load_value_ex() {
   QColor back_color = Qt::black;
 
   if (m_binded_value) {
-//      astate->tlog("qbinded_color3_input_t::load_value_ex() -> [0] = {}, [1] = {}, [2] = {}",
-//                   (*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
       m_stored_color.setRgbF((*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
-//      astate->tlog("qbinded_color3_input_t::load_value_ex() msc-> [0] = {}, [1] = {}, [2] = {}",
-//                   m_stored_color.redF(), m_stored_color.greenF(), m_stored_color.blueF());
       back_color = m_stored_color;
     }
-
-//  astate->tlog("qbinded_color3_input_t::load_value_ex() bcc-> [0] = {}, [1] = {}, [2] = {}",
-//               back_color.redF(), back_color.greenF(), back_color.blueF());
 
   QPalette pal;
   pal.setColor(QPalette::Background, back_color);

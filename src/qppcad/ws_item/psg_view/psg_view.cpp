@@ -10,6 +10,20 @@ psg_view_t::psg_view_t() {
                     ws_item_flags_support_tr |
                     ws_item_flags_translate_emit_upd_event);
 
+  //set default axes colors by order
+
+  m_axes_color_by_order[0]  = {  32.0 / 255.0,  32.0 / 255.0,  32.0 / 255.0 };
+  m_axes_color_by_order[1]  = {  62.0 / 255.0,   6.0 / 255.0,   7.0 / 255.0 };
+  m_axes_color_by_order[2]  = {  55.0 / 255.0, 126.0 / 255.0, 184.0 / 255.0 };
+  m_axes_color_by_order[3]  = {  77.0 / 255.0, 175.0 / 255.0,  74.0 / 255.0 };
+  m_axes_color_by_order[4]  = { 152.0 / 255.0,  78.0 / 255.0, 163.0 / 255.0 };
+  m_axes_color_by_order[5]  = { 255.0 / 255.0, 127.0 / 255.0,   0.0 / 255.0 };
+  m_axes_color_by_order[6]  = { 255.0 / 255.0, 255.0 / 255.0,  51.0 / 255.0 };
+  m_axes_color_by_order[7]  = { 166.0 / 255.0,  86.0 / 255.0,  40.0 / 255.0 };
+  m_axes_color_by_order[8]  = { 247.0 / 255.0, 129.0 / 255.0, 191.0 / 255.0 };
+  m_axes_color_by_order[9]  = { 166.0 / 255.0, 206.0 / 255.0, 227.0 / 255.0 };
+  //m_axes_color_by_order[10] = {  31.0 / 255.0, 120.0 / 255.0, 180.0 / 255.0 };
+
 }
 
 void psg_view_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
@@ -54,6 +68,8 @@ void psg_view_t::recalc_render_data() {
           vector3<float> start = dir * (-0.5f * m_arrow_len) + m_pos;
           vector3<float> end   = dir * ( 0.5f * m_arrow_len) + m_pos;
 
+          if (elem.m_roto_inv) elem.m_ri_cube_center = start;
+
           matrix4<float> mat_model = matrix4<float>::Identity();
 
           mat_model.block<3,1>(0,3) = start;
@@ -87,6 +103,8 @@ void psg_view_t::recalc_render_data() {
 
     }
 
+  update_axes_color();
+
 }
 
 void psg_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -112,6 +130,12 @@ void psg_view_t::render() {
           astate->dp->render_general_mesh(elem.m_arrow_cap_mat,
                                           elem.m_color,
                                           astate->mesh_unit_cone);
+          if (elem.m_roto_inv)
+            astate->dp->render_general_mesh(elem.m_ri_cube_center,
+                                            vector3<float>{m_arrow_scale * 1.2f},
+                                            vector3<float>{0},
+                                            elem.m_color,
+                                            astate->mesh_unit_cube);
         }
 
   astate->dp->end_render_general_mesh();
@@ -170,6 +194,7 @@ void psg_view_t::updated_externally(uint32_t update_reason) {
 
   ws_item_t::updated_externally(update_reason);
   recalc_render_data();
+ // update_axes_color();
 
 }
 
@@ -199,19 +224,30 @@ void psg_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) 
 
 void psg_view_t::regenerate_atf() {
 
+  app_state_t* astate = app_state_t::get_inst();
   m_atf.clear();
-
   if (!m_ag) return;
-
   m_pg_axes = point_group_axes<float>(*m_ag);
 
+  astate->tlog("pg_axes_info: inversion ? = {}", m_pg_axes.inversion);
+  astate->tlog("pg_axes_info: axes.size() = {}", m_pg_axes.axes.size());
+  astate->tlog("pg_axes_info: planes.size() = {}", m_pg_axes.planes.size());
+
+  astate->tlog("pg_axes_info: rotoinversion.size() = {}", m_pg_axes.rotoinversion.size());
+  for (size_t i = 0; i < m_pg_axes.rotoinversion.size(); i++)
+    astate->tlog("pg_axes_info: rotoinversion[{}] = {}", i, m_pg_axes.rotoinversion[i]);
+
+  astate->tlog("pg_axes_info: orders.size() = {}", m_pg_axes.orders.size());
+  for (size_t i = 0; i < m_pg_axes.orders.size(); i++)
+    astate->tlog("pg_axes_info: orders[{}] = {}", i, m_pg_axes.orders[i]);
+
   for (int i = 0; i < m_pg_axes.axes.size(); i++) {
+
       transform_record_t new_tr;
       new_tr.m_is_plane = false;
       new_tr.m_axis = m_pg_axes.axes[i];
-      new_tr.m_color = {1,0,0};
-
-      //std::cout << "PGAXES " << m_pg_axes.orders[i] << " " << m_pg_axes.axes[i] << std::endl;
+      new_tr.m_order = m_pg_axes.orders[i];
+      new_tr.m_roto_inv = m_pg_axes.rotoinversion[i];
       m_atf.push_back(std::move(new_tr));
     }
 
@@ -220,9 +256,9 @@ void psg_view_t::regenerate_atf() {
       new_tr.m_is_plane = true;
       new_tr.m_axis =  m_pg_axes.planes[i];
       new_tr.m_color = {0, 1, 0};
-      //std::cout << "PGPLANES " << m_pg_axes.planes[i] << std::endl;
       m_atf.push_back(std::move(new_tr));
     }
+
 }
 
 void psg_view_t::update_view() {
@@ -234,6 +270,18 @@ void psg_view_t::update_view() {
 
   astate->astate_evd->cur_ws_selected_item_changed();
   astate->make_viewport_dirty();
+
+}
+
+void psg_view_t::update_axes_color() {
+
+  for (size_t i = 0; i < m_atf.size(); i++)
+    if (!m_atf[i].m_is_plane) {
+        size_t clr_lk = std::clamp<size_t>(m_atf[i].m_order - 1, 0, AXIS_COLORIZE_SIZE);
+        m_atf[i].m_color =  m_axes_color_by_order[clr_lk];
+      } else {
+        m_atf[i].m_color = m_plane_color;
+      }
 
 }
 

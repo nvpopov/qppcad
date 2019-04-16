@@ -76,6 +76,7 @@ void draw_pipeline_t::begin_atom_render (float specular_power, float specular_al
   astate->sp_default->set_u(sp_u_name::f_specular_intensity, &specular_power);
   astate->sp_default->set_u(sp_u_name::f_specular_alpha, &specular_alpha);
   astate->mesh_spheres[0]->begin_render_batch();
+
 }
 
 void draw_pipeline_t::render_atom (const vector3<float> &color,
@@ -248,9 +249,8 @@ void draw_pipeline_t::begin_render_general_mesh (shader_program_t *custom_sp) {
     } else {
       app_state_t* astate = app_state_t::get_inst();
       astate->sp_mvp_ssl->begin_shader_program();
-      //float specular_power = 12.0f;
-      //float specular_alpha = 0.0f;
     }
+
 }
 
 void draw_pipeline_t::render_general_mesh (const vector3<float> &mesh_pos,
@@ -278,6 +278,7 @@ void draw_pipeline_t::render_general_mesh (const vector3<float> &mesh_pos,
 
   matrix4<float> mat_model = t.matrix()*matrix4<float>::Identity();
   render_general_mesh(mat_model, mesh_color, mesh, alpha, custom_sp);
+
 }
 
 
@@ -322,7 +323,6 @@ void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
       t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
   t.prescale(cube_size);
   t.pretranslate(cube_pos);
-
 
   // cube has a = 2 (-1 .. 1), so scale it
   matrix4<float> mat_model = t.matrix()*matrix4<float>::Identity();

@@ -116,9 +116,6 @@ void ws_viewer_widget_t::paintGL() {
 
   if (astate->m_disable_app) return;
 
-  //  glapi->glClearColor(1.0, 1.0, 1.0, 1.0);
-  //  glapi->glClear(GL_COLOR_BUFFER_BIT);
-
   glapi->glViewport(static_cast<int>(0),
                     static_cast<int>(0),
                     static_cast<int>(astate->viewport_size(0)),
@@ -127,17 +124,11 @@ void ws_viewer_widget_t::paintGL() {
   QPainter painter(this);
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-  //painter.beginNativePainting();
-
-  glapi->glEnable(GL_DEPTH_TEST);
-  glapi->glDepthFunc(GL_LEQUAL);
-  glapi->glEnable(GL_CULL_FACE);
-  glapi->glCullFace(GL_BACK);
+  astate->dp->depth_func(draw_pipeline_depth_func::depth_enabled);
+  astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
+  astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
+  astate->dp->cull_func(draw_pipeline_cull_func::cull_back);
   astate->ws_mgr->render_cur_ws();
-  glapi->glDisable(GL_CULL_FACE);
-  glapi->glDisable(GL_DEPTH_TEST);
-
-  // painter.endNativePainting();
 
   if (astate->m_show_debug_frame_stats) {
 

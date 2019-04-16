@@ -9,15 +9,19 @@ namespace qpp {
 
   namespace cad {
 
+    const auto AXIS_COLORIZE_SIZE = 10;
+
     struct transform_record_t {
 
         vector3<float> m_axis;
         float m_phi;
-        bool m_inversion;
+        bool m_roto_inv{false};
         bool m_is_plane;
         bool m_is_visible{true};
+        int m_order{1};
         matrix4<float> m_arrow_body_mat;
         matrix4<float> m_arrow_cap_mat;
+        vector3<float> m_ri_cube_center;
         vector3<float> m_color{1,1,1};
 
     };
@@ -32,16 +36,17 @@ namespace qpp {
         point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
 
-        bool m_bounded{false};
-
         float m_plane_alpha{0.64f};
         bool m_plane_alpha_enabled{false};
         float m_plane_scale{6.0f};
+        vector3<float> m_plane_color{0, 0.9f, 0};
 
         float m_arrow_len{9.0f};
         float m_arrow_cap_len{0.51f};
         float m_arrow_scale{0.15f};
         float m_arrow_cap_scale{0.26f};
+
+        std::array<vector3<float>, AXIS_COLORIZE_SIZE> m_axes_color_by_order;
 
         int m_current_repr;
         bool m_show_planes{true};
@@ -74,6 +79,7 @@ namespace qpp {
 
         void regenerate_atf();
         void update_view();
+        void update_axes_color();
 
     };
 

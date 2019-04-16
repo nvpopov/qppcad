@@ -6,8 +6,8 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_item_tab_widget_t *ws_item_obj_insp_widget_t::def_tab(QString tab_name,
-                                                            QString icon_name_enabled,
-                                                            QString icon_name_disabled) {
+                                                         QString icon_name_enabled,
+                                                         QString icon_name_disabled) {
 
   ws_item_tab_widget_t *tmp = new ws_item_tab_widget_t;
   tmp->tab_scroll = new QScrollArea;

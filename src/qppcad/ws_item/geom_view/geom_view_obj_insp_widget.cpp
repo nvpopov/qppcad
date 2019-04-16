@@ -23,7 +23,8 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_geom_summary_lt->addRow(tr("Total types"), tg_geom_summary_total_types);
   init_form_lt(tg_geom_summary_lt);
 
-  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"), this, true, 0, 360, false, 0);
+  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"),
+                                                 this, true, 0, 360, false, 0);
   tg_type_summary_lt = new QVBoxLayout;
   tg_type_summary_widget->add_content_layout(tg_type_summary_lt);
   tg_type_summary_tbl = new QTableWidget;

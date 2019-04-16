@@ -45,5 +45,7 @@
         <file>images/vib_anal_d.svg</file>
         <file>images/vib_anal.svg</file>
         <file>images/outline-tune-24px_d.svg</file>
+        <file>images/outline-palette-24px_d.svg</file>
+        <file>images/outline-palette-24px.svg</file>
     </qresource>
 </RCC>
