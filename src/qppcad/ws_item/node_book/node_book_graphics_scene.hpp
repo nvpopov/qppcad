@@ -19,7 +19,6 @@ namespace qpp {
       public:
 
         node_book_graphics_scene_t(QObject *parent);
-        std::vector<std::shared_ptr<qnode>> m_qnodes;
 
       protected:
 

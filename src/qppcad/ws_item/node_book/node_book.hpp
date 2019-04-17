@@ -16,6 +16,7 @@ namespace qpp {
         public:
 
           node_book_graphics_scene_t *m_scene;
+          std::vector<std::shared_ptr<qnode_t> > m_qnodes;
 
           node_book_t();
 

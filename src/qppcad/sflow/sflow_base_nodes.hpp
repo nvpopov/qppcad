@@ -34,6 +34,15 @@ namespace qpp {
         bool execute() override;
     };
 
+    /**
+     * @brief The sflow_sum_i_node_t class
+     */
+    class sflow_sum_i_node_t : public sflow_node_t {
+      public:
+        sflow_sum_i_node_t();
+        bool execute() override;
+    };
+
   } // namespace cad
 
 } // namespace qpp
