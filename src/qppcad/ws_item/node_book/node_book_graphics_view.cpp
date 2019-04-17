@@ -16,8 +16,8 @@ node_book_graphics_view_t::node_book_graphics_view_t(QGraphicsScene *scene, QWid
       QPainter::HighQualityAntialiasing |
       QPainter::SmoothPixmapTransform);
 
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setResizeAnchor(NoAnchor);
   setTransformationAnchor(AnchorUnderMouse);
 

@@ -5,14 +5,16 @@ using namespace qpp::cad;
 
 
 node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
-  : QGraphicsScene(parent) , p_clr_bckgr(QColor("#393939")) , p_clr_light(QColor("#2F2F2F")),
-    p_clr_dark(QColor("#292929")), p_pen_light(QPen(p_clr_light)), p_pen_dark(QPen(p_clr_dark)),
+  : QGraphicsScene(parent) ,
+    p_clr_bckgr(QColor("#393939")),
+    p_clr_light(QColor("#2F2F2F")),
+    p_clr_dark(QColor("#292929")),
+    p_pen_light(QPen(p_clr_light)),
+    p_pen_dark(QPen(p_clr_dark)),
     p_brush_bckgr(p_clr_bckgr) {
 
   for (auto p : {&p_pen_light, &p_pen_dark}) p->setWidth(0);
   setBackgroundBrush(p_brush_bckgr);
-
-  addSimpleText("Hello diagram world!");
 
 }
 

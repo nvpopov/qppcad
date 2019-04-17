@@ -95,6 +95,20 @@ include_directories(deps/qpp/tests)
 
 qt5_add_resources(QRCS data/resources.qrc)
 
+#build sflow library
+add_library(sflow STATIC
+
+    src/qppcad/sflow/sflow.cpp
+    src/qppcad/sflow/sflow_node.cpp
+    src/qppcad/sflow/sflow_base_nodes.cpp
+    src/qppcad/sflow/sflow_parameter.cpp
+
+    )
+
+add_executable(sflow_test src/qppcad/sflow/sflow_test.cpp)
+target_link_libraries(sflow_test sflow qpp m)
+
+#build qppcad application
 add_executable(qppcad
 
     src/qppcad/main.cpp
@@ -148,6 +162,7 @@ add_executable(qppcad
     src/qppcad/ws_item/node_book/node_book_extended_editor.cpp
     src/qppcad/ws_item/node_book/node_book_graphics_view.cpp
     src/qppcad/ws_item/node_book/node_book_graphics_scene.cpp
+    src/qppcad/ws_item/node_book/qnode.cpp
 
     src/qppcad/ws_item/cube_primitive/cube_primitive.cpp
     src/qppcad/ws_item/cube_primitive/cube_primitive_obj_insp_widget.cpp
@@ -203,8 +218,6 @@ add_executable(qppcad
     src/qppcad/tools/colorize_by_dist/colorize_by_dist.cpp
     src/qppcad/tools/structure_similarity/structure_similarity.cpp
 
-    src/qppcad/flow/sflow.cpp
-
     src/qppcad/python/python_console_output_redirectors.cpp
     src/qppcad/python/python_console_widget.cpp
     src/qppcad/python/python_manager.cpp
@@ -228,6 +241,7 @@ qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 
 target_link_libraries(qppcad
     qpp
+    sflow
     Qt5::Widgets
     Qt5::OpenGL
     Qt5::Charts
@@ -241,9 +255,6 @@ target_link_libraries(qppcad
     m)
 
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
-
-add_executable(sflow_test src/qppcad/flow/sflow.cpp src/qppcad/flow/sflow_test.cpp)
-target_link_libraries(sflow_test qpp m)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

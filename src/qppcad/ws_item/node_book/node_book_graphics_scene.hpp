@@ -5,6 +5,7 @@
 #include <QRectF>
 #include <QGraphicsScene>
 #include <QPainter>
+#include <qppcad/ws_item/node_book/qnode.hpp>
 
 namespace qpp {
 
@@ -18,6 +19,7 @@ namespace qpp {
       public:
 
         node_book_graphics_scene_t(QObject *parent);
+        std::vector<std::shared_ptr<qnode>> m_qnodes;
 
       protected:
 

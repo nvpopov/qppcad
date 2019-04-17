@@ -12,6 +12,7 @@
 #include <symm/shoenflis.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/node_book/node_book.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -526,29 +527,38 @@ void workspace_manager_t::init_default () {
   create_new_ws();
 
   auto g1 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
-  auto g2 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
-  auto ag = shnfl<float>::group("C4v");
-  auto psg_prod = m_bhv_mgr->fbr_ws_item_by_name("pgf_producer_t");
-
   auto g1_gv = g1->cast_as<geom_view_t>();
   g1_gv->insert_atom("Si", vector3<float>(0,-2,0));
   g1_gv->insert_atom("Si", vector3<float>(0,2,0));
-
-  auto psgv1 = m_bhv_mgr->fbr_ws_item_by_name("psg_view_t");
-  auto psgv1_c = psgv1->cast_as<psg_view_t>();
-  psgv1_c->m_ag =
-      std::make_shared<array_group<matrix3<float>>>(ag);
-  psgv1->m_name = "psg_c4v1";
-  psgv1_c->update_view();
-
   g1->m_name = "g1_src";
-  g2->m_name = "g2_dst";
-  psg_prod->m_name = "psg_prod1";
-
   m_ws.back()->add_item_to_ws(g1);
-  m_ws.back()->add_item_to_ws(g2);
-  m_ws.back()->add_item_to_ws(psgv1);
-  m_ws.back()->add_item_to_ws(psg_prod);
+
+  auto nb1 = m_bhv_mgr->fbr_ws_item_by_name("node_book_t");
+  auto nb1_c = nb1->cast_as<node_book_t>();
+  nb1_c->m_name = "nodebook1";
+  m_ws.back()->add_item_to_ws(nb1);
+
+//  auto g2 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
+//  auto ag = shnfl<float>::group("C4v");
+//  auto psg_prod = m_bhv_mgr->fbr_ws_item_by_name("pgf_producer_t");
+
+
+
+//  auto psgv1 = m_bhv_mgr->fbr_ws_item_by_name("psg_view_t");
+//  auto psgv1_c = psgv1->cast_as<psg_view_t>();
+//  psgv1_c->m_ag =
+//      std::make_shared<array_group<matrix3<float>>>(ag);
+//  psgv1->m_name = "psg_c4v1";
+//  psgv1_c->update_view();
+
+
+//  g2->m_name = "g2_dst";
+//  psg_prod->m_name = "psg_prod1";
+
+
+//  m_ws.back()->add_item_to_ws(g2);
+//  m_ws.back()->add_item_to_ws(psgv1);
+//  m_ws.back()->add_item_to_ws(psg_prod);
 
 }
 

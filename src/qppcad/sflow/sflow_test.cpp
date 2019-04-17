@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
-#include <qppcad/flow/sflow.hpp>
+#include <qppcad/sflow/sflow.hpp>
+#include <qppcad/sflow/sflow_base_nodes.hpp>
 #include <qppcad/qppcad.hpp>
 #include <catch.hpp>
 
@@ -40,35 +41,6 @@ TEST_CASE( "sflow base testing" ) {
     REQUIRE(n3->m_is_outer);
 
   }
-
-//  SECTION ("sflow |0|(0) -> (0)|1|  , error for multiple inputs for socket 0"
-//           "                   ^(0)                                         "
-//           "      |2|(0)--------                                           ") {
-
-//    auto fc = std::make_shared<sflow_context_t>();
-//    auto n0 = std::make_shared<sflow_soi_node_t>(); n0->m_node_name = "n0";
-//    auto n1 = std::make_shared<sflow_sgi_node_t>(); n1->m_node_name = "n1";
-//    auto n2 = std::make_shared<sflow_sgi_node_t>(); n2->m_node_name = "n2";
-
-//    fc->add_node(n0);
-//    fc->add_node(n1);
-//    fc->add_node(n2);
-
-//    REQUIRE(fc->connect_node(n0, n1, 0, 0) == sflow_status_e::no_error);
-//    REQUIRE(fc->connect_node(n2, n1, 0, 0) == sflow_status_e::too_many_inputs);
-
-//    REQUIRE(n0->m_is_outer);
-//    REQUIRE(!n1->m_is_outer);
-//    REQUIRE(n2->m_is_outer);
-
-//    fc->execute();
-
-//    fc->clear_context();
-//    REQUIRE(n0->m_is_outer);
-//    REQUIRE(n1->m_is_outer);
-//    REQUIRE(n2->m_is_outer);
-
-//  }
 
   SECTION ("sflow |0|(0) -> (0)|1|  ,  multiple outputs                      "
            "       |                                                         "
