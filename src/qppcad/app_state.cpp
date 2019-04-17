@@ -84,7 +84,7 @@ namespace qpp {
       m_app_palette.setColor(QPalette::Disabled, QPalette::ButtonText,QColor(127,127,127));
       m_app_palette.setColor(QPalette::BrightText, Qt::red);
       m_app_palette.setColor(QPalette::Link, QColor(42,130,218));
-      m_app_palette.setColor(QPalette::Highlight, QColor(42,130,218));
+      m_app_palette.setColor(QPalette::Highlight, QColor(66, 66, 66));
       m_app_palette.setColor(QPalette::Disabled, QPalette::Highlight,QColor(50,50,50));
       m_app_palette.setColor(QPalette::HighlightedText, Qt::white);
       m_app_palette.setColor(QPalette::Disabled, QPalette::HighlightedText,
@@ -196,6 +196,40 @@ namespace qpp {
 
       settings.endArray();
 
+      settings.beginGroup("cache_float");
+      QStringList keys_f = settings.childKeys();
+      for (auto &key : keys_f)
+        m_cache_float[key.toStdString()] = settings.value(key).toDouble();
+      settings.endGroup();
+
+      settings.beginGroup("cache_int");
+      QStringList keys_i = settings.childKeys();
+      for (auto &key : keys_i)
+        m_cache_int[key.toStdString()] = settings.value(key).toInt();
+      settings.endGroup();
+
+      settings.beginGroup("cache_bool");
+      QStringList keys_b = settings.childKeys();
+      for (auto &key : keys_b)
+        m_cache_bool[key.toStdString()] = settings.value(key).toBool();
+      settings.endGroup();
+
+      settings.beginGroup("cache_string");
+      QStringList keys_s = settings.childKeys();
+      for (auto &key : keys_s)
+        m_cache_string[key.toStdString()] = settings.value(key).toString().toStdString();
+      settings.endGroup();
+
+      settings.beginGroup("cache_vector");
+      QStringList keys_v = settings.childKeys();
+      for (auto &key : keys_v) {
+          QStringList _sl = settings.value(key).toStringList();
+          if (_sl.size() == 3)
+              m_cache_vector[key.toStdString()] =
+                  vector3<float>(_sl[0].toDouble(), _sl[1].toDouble(), _sl[2].toDouble());
+        }
+      settings.endGroup();
+
     }
 
     void app_state_t::save_settings() {
@@ -256,6 +290,37 @@ namespace qpp {
         }
 
       settings.endArray();
+
+      settings.beginGroup("cache_float");
+      for (auto &rec : m_cache_float)
+        settings.setValue(QString::fromStdString(rec.first), rec.second);
+      settings.endGroup();
+
+      settings.beginGroup("cache_int");
+      for (auto &rec : m_cache_int)
+        settings.setValue(QString::fromStdString(rec.first), rec.second);
+      settings.endGroup();
+
+      settings.beginGroup("cache_bool");
+      for (auto &rec : m_cache_bool)
+        settings.setValue(QString::fromStdString(rec.first), rec.second);
+      settings.endGroup();
+
+      settings.beginGroup("cache_string");
+      for (auto &rec : m_cache_string)
+        settings.setValue(QString::fromStdString(rec.first), QString::fromStdString(rec.second));
+      settings.endGroup();
+
+      settings.beginGroup("cache_vector");
+      for (auto &rec : m_cache_vector) {
+          QStringList vecl;
+          vecl.reserve(3);
+          for (size_t i = 0; i < 3; i++) vecl.push_back(QString("%1").arg(rec.second[i]));
+          settings.setValue(QString::fromStdString(rec.first), vecl);
+        }
+
+      settings.endGroup();
+
     }
 
     void app_state_t::log(std::string logstr, bool flush) {

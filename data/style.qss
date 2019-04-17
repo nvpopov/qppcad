@@ -150,12 +150,8 @@ QHeaderView::section::vertical {
  min-width:30px;
 }
 
-QListWidget[s_class="ws_items_list"]::item {
-  margin: 6px;
-}
-
-#ws_items_spoiler_e {
-  margin-left:4px;
+qpp--cad--object_inspector_widget_t QListWidget::item {
+  margin: 5px;
 }
 
 QTabWidget {
@@ -189,7 +185,7 @@ QTabBar::tab:hover {
 }
 
 QGroupBox {
- border: 1px solid rgb(65, 65, 65);
+ border: 1px inset rgb(65, 65, 65);
  padding-top: 25px;
  background: rgb(65, 65, 65);
 }
@@ -230,26 +226,26 @@ QSplitter {
 }
 
 #obj_insp_header_frame {
- border-bottom:2px solid black;
+ border-bottom:2px inset black;
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox{
  background : rgb(74, 74, 74);
- border: 1px solid black;
+ border: 1px inset black;
  border-radius: 4px;
  padding: 3px;
 }
 
 QToolButton {
  background : rgb(74, 74, 74);
- border: 1px solid black;
+ border: 1px inset black;
  border-radius: 4px;
  padding: 2px;
 }
 
 #tool_panel_widget_e QCheckBox {
  background : rgb(74, 74, 74);
- border: 1px solid black;
+ border: 1px inset black;
  border-radius: 4px;
  padding: 3px;
 }
@@ -293,4 +289,12 @@ qpp--cad--qspoiler_widget_t {
 
 QRadioButton:disabled {
     color: #787878;
+}
+
+QMenu {
+background : rgb(46, 46, 46);
+}
+
+QMenu::item:selected {
+background : rgb(76, 76, 76);
 }

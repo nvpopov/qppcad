@@ -50,8 +50,6 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   header_lt->insertWidget(1, btn_add_new_ws_item);
 
   ws_items_list = new QListWidget;
-  ws_items_list->setProperty("s_class", "ws_items_list");
-  ws_items_list->setObjectName("ws_items_list_e");
   ws_items_list->setFocusPolicy(Qt::NoFocus);
   ws_items_list->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(ws_items_list,
