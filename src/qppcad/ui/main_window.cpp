@@ -5,6 +5,7 @@
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <QDateTime>
+#include <QColorDialog>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -339,6 +340,11 @@ void main_window::init_widgets() {
   tp_ws_stuff_ren->m_joined_data[0] = 2;
   tp_ws_stuff_ren->setText(tr("Rename current workspace"));
   tp_ws_stuff->addAction(tp_ws_stuff_ren);
+
+  tp_ws_stuff_bg = new qextended_action(this);
+  tp_ws_stuff_bg->m_joined_data[0] = 3;
+  tp_ws_stuff_bg->setText(tr("Change workspace`s background"));
+  tp_ws_stuff->addAction(tp_ws_stuff_bg);
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setProperty("s_class", "tp_cb");
@@ -1280,6 +1286,8 @@ void main_window::tp_camera_tool_button_triggered(QAction *action) {
 
 void main_window::tp_ws_stuff_tool_button_triggered(QAction *action) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   if (!action) return;
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(action);
@@ -1296,6 +1304,21 @@ void main_window::tp_ws_stuff_tool_button_triggered(QAction *action) {
       }
     case 2: {
         rename_cur_ws();
+        break;
+      }
+    case 3: {
+        auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+        if (ok) {
+            QColor _stored_color = QColor::fromRgbF(cur_ws->m_background_color[0],
+                cur_ws->m_background_color[1], cur_ws->m_background_color[2]);
+            const QColor clr = QColorDialog::getColor(_stored_color, this,
+                                                      "Select workspace`s background color");
+            if (clr.isValid()) {
+                cur_ws->m_background_color =
+                    vector3<float> {clr.redF(), clr.greenF(), clr.blueF()};
+                astate->make_viewport_dirty();
+              }
+          }
         break;
       }
     default: {

@@ -341,6 +341,7 @@ void qbinded_color3_input_t::mousePressEvent(QMouseEvent *event) {
           load_value_ex();
           on_value_changed();
           app_state_t::get_inst()->make_viewport_dirty();
+          update();
         }
     }
 

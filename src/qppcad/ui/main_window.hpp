@@ -63,6 +63,7 @@ namespace qpp {
         qextended_action *tp_ws_stuff_add;
         qextended_action *tp_ws_stuff_del;
         qextended_action *tp_ws_stuff_ren;
+        qextended_action *tp_ws_stuff_bg;
 
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
