@@ -11,19 +11,22 @@ namespace qpp {
 
   namespace cad {
 
-    class qnode_t : public QObject, public QGraphicsItem {
-
-      Q_OBJECT
+    class qnode_t : public QGraphicsItem {
 
       public:
 
         int m_width{180};
         int m_height{140};
         int m_pin_size{10};
+        int m_pin_spacing{8};
+        int m_x_offset{8};
 
         std::shared_ptr<sflow_node_t> m_sflow_node{nullptr};
 
-        qnode_t();
+        qnode_t(QGraphicsItem *parent = nullptr);
+        ~qnode_t();
+
+        void set_sflow_node(std::shared_ptr<sflow_node_t> node);
         QRectF boundingRect() const;
 
         // overriding paint()

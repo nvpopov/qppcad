@@ -13,14 +13,14 @@ node_book_t::node_book_t() {
 
   auto new_node1 = std::make_shared<sflow_soi_node_t>();
   auto qnode1 = std::make_shared<qnode_t>();
-  qnode1->m_sflow_node = new_node1;
+  qnode1->set_sflow_node(new_node1);
   qnode1->setPos(QPoint(0,0));
   m_qnodes.push_back(qnode1);
   m_scene->addItem(qnode1.get());
 
   auto new_node2 = std::make_shared<sflow_sgi_node_t>();
   auto qnode2 = std::make_shared<qnode_t>();
-  qnode2->m_sflow_node = new_node2;
+  qnode2->set_sflow_node(new_node2);
   qnode2->setPos(QPoint(300,0));
   m_qnodes.push_back(qnode2);
   m_scene->addItem(qnode2.get());
@@ -28,14 +28,14 @@ node_book_t::node_book_t() {
   auto new_node3 = std::make_shared<sflow_sii_node_t>();
   auto qnode3 = std::make_shared<qnode_t>();
   qnode3->setPos(QPoint(600,0));
-  qnode3->m_sflow_node = new_node3;
+  qnode3->set_sflow_node(new_node3);
   m_qnodes.push_back(qnode3);
   m_scene->addItem(qnode3.get());
 
   auto new_node4 = std::make_shared<sflow_sum_i_node_t>();
   auto qnode4 = std::make_shared<qnode_t>();
   qnode4->setPos(QPoint(300,300));
-  qnode4->m_sflow_node = new_node4;
+  qnode4->set_sflow_node(new_node4);
   m_qnodes.push_back(qnode4);
   m_scene->addItem(qnode4.get());
 
