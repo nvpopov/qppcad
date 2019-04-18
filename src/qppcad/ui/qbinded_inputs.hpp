@@ -213,6 +213,9 @@ namespace qpp {
         void load_value_ex() override;
         void mousePressEvent(QMouseEvent *event) override;
 
+      protected:
+          void paintEvent(QPaintEvent *event) override;
+
     };
 
 

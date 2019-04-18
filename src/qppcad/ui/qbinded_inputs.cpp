@@ -321,12 +321,12 @@ void qbinded_color3_input_t::load_value_ex() {
       back_color = m_stored_color;
     }
 
-  QPalette pal;
-  pal.setColor(QPalette::Background, back_color);
-  pal.setColor(QPalette::Foreground, Qt::white);
-  setPalette(pal);
+//  QPalette pal;
+//  pal.setColor(QPalette::Background, back_color);
+//  pal.setColor(QPalette::Foreground, Qt::white);
+//  setPalette(pal);
 
-  setAutoFillBackground(true);
+//  setAutoFillBackground(true);
 
 }
 
@@ -346,15 +346,25 @@ void qbinded_color3_input_t::mousePressEvent(QMouseEvent *event) {
 
 }
 
+void qbinded_color3_input_t::paintEvent(QPaintEvent *event) {
+
+  QPainter p(this);
+  p.setRenderHint(QPainter::Antialiasing);
+  QPainterPath path;
+  path.addRoundedRect(QRectF(1, 1, width() - 2, height() - 2), 1, 1);
+  QPen pen(Qt::black, 1);
+  p.setPen(pen);
+  p.fillPath(path, m_stored_color);
+  p.drawPath(path);
+
+}
+
 qbinded_color3_input_t::qbinded_color3_input_t(QWidget *parent) : QWidget (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
   setFixedWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setFixedHeight(astate->size_guide.obj_insp_ctrl_t2_h());
-
-  setBackgroundRole(QPalette::NoRole);
-  setAutoFillBackground(false);
 
 }
 
