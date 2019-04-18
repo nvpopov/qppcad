@@ -217,6 +217,7 @@ add_executable(qppcad
     src/qppcad/tools/colorize_by_xfield/colorize_by_xfield.cpp
     src/qppcad/tools/colorize_by_dist/colorize_by_dist.cpp
     src/qppcad/tools/structure_similarity/structure_similarity.cpp
+    src/qppcad/tools/nn_dist_msr/nn_dist_msr.cpp
 
     src/qppcad/python/python_console_output_redirectors.cpp
     src/qppcad/python/python_console_widget.cpp

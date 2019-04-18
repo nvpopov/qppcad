@@ -15,6 +15,7 @@ namespace qpp {
       public:
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         size_t m_total_con{0};
+        std::string m_pin_name{"Unknown"};
     };
 
     class sflow_connectivity_data_t {

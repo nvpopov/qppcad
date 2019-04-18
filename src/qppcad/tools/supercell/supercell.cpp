@@ -7,6 +7,7 @@ using namespace qpp::cad;
 void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   astate->log("Supercell tools::exec()");
 
   if (!item) {

@@ -43,9 +43,9 @@ void qnode_t::paint(QPainter *painter,
   painter->setRenderHint(QPainter::Antialiasing);
   QPainterPath path;
   path.addRoundedRect(rect, 4, 4);
-  QPen pen(Qt::black, 3);
+  QPen pen(Qt::black, 2);
   painter->setPen(pen);
-  painter->fillPath(path, Qt::gray);
+  painter->fillPath(path, m_node_bg_color);
   painter->drawPath(path);
 
   QString label =
@@ -53,9 +53,13 @@ void qnode_t::paint(QPainter *painter,
   QFontMetrics fm(painter->font());
 
   auto fmh125 = fm.height()*1.35;
-  auto fmh01 = fm.height()*1.01;
-  painter->drawText( QPoint(( m_width - fm.width(label)) / 2, fmh01), label);
+  auto fmh01 = fm.height()*0.9;
   painter->drawLine(QLine(0, fmh125, m_width, fmh125));
+
+  QPen pen_label(m_node_label_color, 1);
+  painter->setPen(pen_label);
+  painter->drawText( QPoint(( m_width - fm.width(label)) / 2, fmh01), label);
+
 
   if (!m_sflow_node) return;
 

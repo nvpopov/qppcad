@@ -29,10 +29,10 @@ sflow_sgi_node_t::sflow_sgi_node_t() : sflow_node_t () {
   m_node_name = "integer increment node";
 
   m_out_types.resize(1);
-  m_out_types[0] = {sflow_parameter_e::sfpar_int, 0};
+  m_out_types[0] = {sflow_parameter_e::sfpar_int, 0, "a"};
 
   m_inp_types.resize(1);
-  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0};
+  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0, "b"};
 
 }
 
@@ -59,7 +59,7 @@ sflow_sii_node_t::sflow_sii_node_t() : sflow_node_t () {
 
   m_node_name = "integer output node";
   m_inp_types.resize(1);
-  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0};
+  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0, "a"};
 
 }
 
@@ -85,11 +85,11 @@ sflow_sum_i_node_t::sflow_sum_i_node_t() {
   m_node_name = "integer sum node";
 
   m_out_types.resize(1);
-  m_out_types[0] = {sflow_parameter_e::sfpar_int, 0};
+  m_out_types[0] = {sflow_parameter_e::sfpar_int, 0, "dst"};
 
   m_inp_types.resize(2);
-  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0};
-  m_inp_types[1] = {sflow_parameter_e::sfpar_int, 0};
+  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0, "src1"};
+  m_inp_types[1] = {sflow_parameter_e::sfpar_int, 0, "src2"};
 
 }
 

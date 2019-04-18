@@ -17,9 +17,15 @@ namespace qpp {
 
         int m_width{180};
         int m_height{140};
-        int m_pin_size{10};
+        int m_pin_size{8};
         int m_pin_spacing{8};
-        int m_x_offset{8};
+        int m_x_offset{6};
+
+        QPen m_node_border_pen;
+        QPen m_node_label_pen;
+
+        QColor m_node_bg_color{QColor::fromRgb(34, 34, 34)};
+        QColor m_node_label_color{QColor::fromRgb(224, 224, 224)};
 
         std::shared_ptr<sflow_node_t> m_sflow_node{nullptr};
 

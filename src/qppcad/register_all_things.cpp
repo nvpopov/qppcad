@@ -35,6 +35,7 @@
 #include <qppcad/tools/colorize_by_xfield/colorize_by_xfield.hpp>
 #include <qppcad/tools/colorize_by_dist/colorize_by_dist.hpp>
 #include <qppcad/tools/structure_similarity/structure_similarity.hpp>
+#include <qppcad/tools/nn_dist_msr/nn_dist_msr.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -251,34 +252,24 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
   size_t hash_t_generic = bhv_mgr->reg_tool_grp("Generic tools");
 
   registration_helper_t::reg_ws_item_tool<supercell_tool_t, geom_view_t>(
-        "Supercell",
-        hash_t_generator,
-        bhv_mgr);
+        "Supercell", hash_t_generator, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, geom_view_t>(
-        "Axial scale",
-        hash_t_tr,
-        bhv_mgr);
+        "Axial scale", hash_t_tr, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<clamp_atoms_to_cell_tool_t, geom_view_t>(
-        "Clamp atoms to cell(3D)",
-        hash_t_tr,
-        bhv_mgr);
+        "Clamp atoms to cell(3D)", hash_t_tr, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<colorize_by_xfield_tool_t, geom_view_t>(
-        "Colorize by xfield",
-        hash_t_colorize,
-        bhv_mgr);
+        "Colorize by xfield", hash_t_colorize, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<colorize_by_dist_tool_t, geom_view_t>(
-        "Colorize by dist",
-        hash_t_colorize,
-        bhv_mgr);
+        "Colorize by dist", hash_t_colorize, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<structure_similarity_tool_t, geom_view_t>(
-        "Structure similarity",
-        hash_t_generic,
-        bhv_mgr,
-        false);
+        "Structure similarity", hash_t_generic, bhv_mgr, false);
+
+  registration_helper_t::reg_ws_item_tool<nn_dist_msr_tool_t, geom_view_t>(
+        "NN dist. msr.", hash_t_generic, bhv_mgr);
 
 }
