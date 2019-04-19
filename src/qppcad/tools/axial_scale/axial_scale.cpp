@@ -91,23 +91,20 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
   gb_sc_par_layout = new QFormLayout;
   gb_sc_par->setLayout(gb_sc_par_layout);
 
-  sb_sc_a = new QDoubleSpinBox;
-  sb_sc_a->setMinimum(0.01);
-  sb_sc_a->setMaximum(2.00);
-  sb_sc_a->setValue(1.0);
-  sb_sc_a->setSingleStep(0.01);
+  auto make_spinbox = [](){
+      auto ret = new QDoubleSpinBox;
+      ret->setMinimum(0.01);
+      ret->setMaximum(5.00);
+      ret->setValue(1.0);
+      ret->setSingleStep(0.01);
+      ret->setAlignment(Qt::AlignCenter);
+      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      return ret;
+    };
 
-  sb_sc_b= new QDoubleSpinBox;
-  sb_sc_b->setMinimum(0.01);
-  sb_sc_b->setMaximum(2.00);
-  sb_sc_b->setValue(1.0);
-  sb_sc_b->setSingleStep(0.01);
-
-  sb_sc_c = new QDoubleSpinBox;
-  sb_sc_c->setMinimum(0.01);
-  sb_sc_c->setMaximum(2.00);
-  sb_sc_c->setValue(1.0);
-  sb_sc_c->setSingleStep(0.01);
+  sb_sc_a = make_spinbox();
+  sb_sc_b = make_spinbox();
+  sb_sc_c = make_spinbox();
 
   gb_sc_par_layout->addRow(tr("Scale a-axis"), sb_sc_a);
   gb_sc_par_layout->addRow(tr("Scale b-axis"), sb_sc_b);
@@ -127,4 +124,5 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
 
   dialog_layout->addWidget(gb_sc_par);
   dialog_layout->addWidget(dialog_bb);
+
 }

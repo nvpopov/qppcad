@@ -203,6 +203,11 @@ QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
  background-color: rgb(69, 69, 69);
 }
 
+QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover{
+ background-color: rgb(102, 102, 102);
+}
+
+
 QToolTip {
  color: black;
 }

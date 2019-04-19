@@ -17,9 +17,12 @@ namespace qpp {
 
         int m_width{180};
         int m_height{140};
-        int m_pin_size{8};
+        int m_pin_size{6};
         int m_pin_spacing{8};
-        int m_x_offset{6};
+        int m_x_offset{5};
+
+        QPen m_node_outline_pen;
+        QPen m_text_pen;
 
         QPen m_node_border_pen;
         QPen m_node_label_pen;

@@ -163,6 +163,7 @@ add_executable(qppcad
     src/qppcad/ws_item/node_book/node_book_graphics_view.cpp
     src/qppcad/ws_item/node_book/node_book_graphics_scene.cpp
     src/qppcad/ws_item/node_book/qnode.cpp
+    src/qppcad/ws_item/node_book/qnode_socket.cpp
 
     src/qppcad/ws_item/cube_primitive/cube_primitive.cpp
     src/qppcad/ws_item/cube_primitive/cube_primitive_obj_insp_widget.cpp
