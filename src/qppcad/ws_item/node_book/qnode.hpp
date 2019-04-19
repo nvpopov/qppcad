@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QPainter>
 #include <qppcad/sflow/sflow_node.hpp>
+#include <qppcad/ws_item/node_book/qnode_socket.hpp>
 
 namespace qpp {
 
@@ -17,9 +18,9 @@ namespace qpp {
 
         int m_width{180};
         int m_height{140};
-        int m_pin_size{6};
-        int m_pin_spacing{8};
-        int m_x_offset{5};
+        int m_socket_size{8};
+        int m_socket_spacing{8};
+        int m_x_offset{-16};
 
         QPen m_node_outline_pen;
         QPen m_text_pen;
@@ -29,6 +30,9 @@ namespace qpp {
 
         QColor m_node_bg_color{QColor::fromRgb(34, 34, 34)};
         QColor m_node_label_color{QColor::fromRgb(224, 224, 224)};
+
+        std::vector<std::shared_ptr<qnode_socket_t>> m_input_nodes;
+        std::vector<std::shared_ptr<qnode_socket_t>> m_output_nodes;
 
         std::shared_ptr<sflow_node_t> m_sflow_node{nullptr};
 
