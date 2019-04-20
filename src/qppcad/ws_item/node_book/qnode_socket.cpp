@@ -23,3 +23,9 @@ qnode_socket_t::qnode_socket_t(QGraphicsItem *parent,
 qnode_socket_t::~qnode_socket_t() {
 
 }
+
+void qnode_socket_t::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+
+  QGraphicsItem::mousePressEvent(event);
+
+}

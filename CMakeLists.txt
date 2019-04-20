@@ -108,127 +108,37 @@ add_library(sflow STATIC
 add_executable(sflow_test src/qppcad/sflow/sflow_test.cpp)
 target_link_libraries(sflow_test sflow qpp m)
 
+#gather ws_item src
+file(GLOB_RECURSE SRC_WS_ITEM "src/qppcad/ws_item/*.cpp")
+
+#gather ui src
+file(GLOB_RECURSE SRC_UI "src/qppcad/ui/*.cpp")
+
+#gather tools src
+file(GLOB_RECURSE SRC_TOOLS "src/qppcad/tools/*.cpp")
+
+#gather python src
+file(GLOB_RECURSE SRC_PYTHON_EMBEDDED "src/qppcad/python/*.cpp")
+
+#gather render src
+file(GLOB_RECURSE SRC_RENDER "src/qppcad/render/*.cpp")
+
 #build qppcad application
 add_executable(qppcad
 
     src/qppcad/main.cpp
     src/qppcad/gitversion.cpp
-    src/qppcad/ui/main_window.cpp
-
-    src/qppcad/ui/ws_viewer_widget.cpp
-    src/qppcad/ui/object_inspector_widget.cpp
-    src/qppcad/ui/app_settings_widget.cpp
-    src/qppcad/ui/qextended_action.cpp
-    src/qppcad/ui/qspoiler_widget.cpp
-    src/qppcad/ui/qt_helpers.cpp
-    src/qppcad/ui/qbinded_inputs.cpp
-    src/qppcad/ui/qrealspinbox_delegate.cpp
-    src/qppcad/ui/add_new_ws_item_widget.cpp
-    src/qppcad/ui/qrich_error_message_box.cpp
-    src/qppcad/ui/color_map.cpp
-    src/qppcad/ui/size_guide.cpp
-    src/qppcad/ui/qembed_window.cpp
-    src/qppcad/ui/qpopup.cpp
 
     src/qppcad/app_state.cpp
     src/qppcad/app_state_event_disp.cpp
-
-    src/qppcad/render/shader_program.cpp
-    src/qppcad/render/shader_generators.cpp
-    src/qppcad/render/mesh.cpp
-    src/qppcad/render/mesh_generators.cpp
-    src/qppcad/render/glapi.cpp
-    src/qppcad/render/draw_pipeline.cpp
-    src/qppcad/render/camera.cpp
-    src/qppcad/render/volume_tools.cpp
 
     src/qppcad/workspace.cpp
     src/qppcad/string_hash_register.cpp
     src/qppcad/type_info.cpp
     src/qppcad/qpp_object.cpp
     src/qppcad/register_all_things.cpp
-
-    src/qppcad/ws_item/ws_item.cpp
-    src/qppcad/ws_item/ws_item_obj_insp_widget.cpp
-    src/qppcad/ws_item/ws_item_behaviour_manager.cpp
-    src/qppcad/ws_item/ws_item_extended_editor.cpp
-    src/qppcad/ws_item/ws_item_extended_editor_compositor.cpp
-
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
-
-    src/qppcad/ws_item/node_book/node_book.cpp
-    src/qppcad/ws_item/node_book/node_book_obj_insp_widget.cpp
-    src/qppcad/ws_item/node_book/node_book_extended_editor.cpp
-    src/qppcad/ws_item/node_book/node_book_graphics_view.cpp
-    src/qppcad/ws_item/node_book/node_book_graphics_scene.cpp
-    src/qppcad/ws_item/node_book/qnode.cpp
-    src/qppcad/ws_item/node_book/qnode_socket.cpp
-
-    src/qppcad/ws_item/cube_primitive/cube_primitive.cpp
-    src/qppcad/ws_item/cube_primitive/cube_primitive_obj_insp_widget.cpp
-
-    src/qppcad/ws_item/arrow_primitive/arrow_primitive.cpp
-    src/qppcad/ws_item/arrow_primitive/arrow_primitive_obj_insp_widget.cpp
-
-    src/qppcad/ws_item/ccd_view/ccd_view.cpp
-    src/qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.cpp
-    src/qppcad/ws_item/ccd_view/ccd_vib_analyzer_extended_editor.cpp
-    src/qppcad/ws_item/ccd_view/ccd_traj_analyzer_extended_editor.cpp
-    src/qppcad/ws_item/ccd_view/normal_modes_table_model.cpp
-
-    src/qppcad/ws_item/volume_view/volume_view.cpp
-    src/qppcad/ws_item/volume_view/volume_view_obj_insp_widget.cpp
-
-    src/qppcad/ws_item/pgf_producer/pgf_producer.cpp
-    src/qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.cpp
-
-    src/qppcad/ws_item/geom_view/geom_view.cpp
-    src/qppcad/ws_item/geom_view/geom_view_render_bs.cpp
-    src/qppcad/ws_item/geom_view/geom_view_render_billboards.cpp
-    src/qppcad/ws_item/geom_view/geom_view_render_buffered_billboards.cpp
-    src/qppcad/ws_item/geom_view/geom_view_render_dlines.cpp
-    src/qppcad/ws_item/geom_view/geom_view_render_xlines.cpp
-    src/qppcad/ws_item/geom_view/geom_view_anim_subsys.cpp
-    src/qppcad/ws_item/geom_view/geom_view_measurement_subsys.cpp
-    src/qppcad/ws_item/geom_view/geom_view_lattice_planes_subsys.cpp
-    src/qppcad/ws_item/geom_view/geom_view_labels_subsys.cpp
-    src/qppcad/ws_item/geom_view/geom_view_colorizer.cpp
-    src/qppcad/ws_item/geom_view/geom_view_obj_insp_widget.cpp
-    src/qppcad/ws_item/geom_view/geom_view_extended_editor.cpp
-    src/qppcad/ws_item/geom_view/geom_view_io.cpp
-    src/qppcad/ws_item/geom_view/qtype_specific_rendering_model.cpp
-    src/qppcad/ws_item/geom_view/qbonding_table_model.cpp
-    src/qppcad/ws_item/geom_view/qmeasurements_table_model.cpp
-    src/qppcad/ws_item/geom_view/xgeom_table_model.cpp
-    src/qppcad/ws_item/geom_view/geom_view_type_summary_popup.cpp
-
-    src/qppcad/ws_item/arrow_array/arrow_array.cpp
-    src/qppcad/ws_item/arrow_array/arrow_array_obj_insp_widget.cpp
-
-    src/qppcad/ws_item/psg_view/psg_view.cpp
-    src/qppcad/ws_item/psg_view/psg_view_obj_insp_widget.cpp
-
-    src/qppcad/ws_item/traj_hl/traj_hl.cpp
-    src/qppcad/ws_item/traj_hl/traj_hl_obj_insp_widget.cpp
-
-    src/qppcad/tools/supercell/supercell.cpp
-    src/qppcad/tools/axial_scale/axial_scale.cpp
-    src/qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.cpp
-    src/qppcad/tools/colorize_by_xfield/colorize_by_xfield.cpp
-    src/qppcad/tools/colorize_by_dist/colorize_by_dist.cpp
-    src/qppcad/tools/structure_similarity/structure_similarity.cpp
-    src/qppcad/tools/nn_dist_msr/nn_dist_msr.cpp
-
-    src/qppcad/python/python_console_output_redirectors.cpp
-    src/qppcad/python/python_console_widget.cpp
-    src/qppcad/python/python_manager.cpp
-    src/qppcad/python/python_embedded_core.cpp
-    src/qppcad/python/python_embedded_simple_query.cpp
-    src/qppcad/python/python_embedded_pyqpp.cpp
-    src/qppcad/python/python_embedded_embc.cpp
-    src/qppcad/python/python_simple_query.cpp
-    src/qppcad/python/python_embedded_workspace.cpp
 
     deps/qpp/modules/pyqpp/pyqpp_linalg.cpp
     deps/qpp/modules/pyqpp/pyqpp_geom.cpp
@@ -237,7 +147,14 @@ add_executable(qppcad
     deps/qpp/modules/pyqpp/pyqpp_autosymm.cpp
     deps/qpp/modules/pyqpp/pyqpp_builders.cpp
     deps/qpp/modules/data/errors.cpp
-    ${QRCS})
+
+    ${SRC_RENDER}
+    ${SRC_WS_ITEM}
+    ${SRC_UI}
+    ${SRC_TOOLS}
+    ${SRC_PYTHON_EMBEDDED}
+    ${QRCS}
+    )
 
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 

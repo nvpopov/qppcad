@@ -21,10 +21,14 @@ namespace qpp {
                        QColor _socket_color = Qt::red);
         ~qnode_socket_t();
 
+      protected:
+
+        void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
     };
 
-  }
+  } // namespace cad
 
-}
+} // namespace qpp
 
 #endif

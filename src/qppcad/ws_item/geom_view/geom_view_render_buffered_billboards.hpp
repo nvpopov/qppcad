@@ -1,7 +1,6 @@
 #ifndef QPPCAD_BUFFERED_BILLBOARDS
 #define QPPCAD_BUFFERED_BILLBOARDS
 //#include <qppcad/app.hpp>
-#include <qppcad/render/texture_buffer.hpp>
 
 namespace qpp {
 
