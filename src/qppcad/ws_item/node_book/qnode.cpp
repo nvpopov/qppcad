@@ -1,6 +1,8 @@
 #include <qppcad/ws_item/node_book/qnode.hpp>
+#include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
 #include <QGraphicsScene>
 #include <QApplication>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -8,22 +10,23 @@ using namespace qpp::cad;
 qnode_t::qnode_t(QGraphicsItem *parent) : QGraphicsItem(parent)  {
 
   m_pressed = false;
-  setFlag(ItemIsMovable);
+  setFlag(QGraphicsItem::ItemIsMovable);
+  setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
 }
 
 qnode_t::~qnode_t() {
 
-  m_input_nodes.clear();
-  m_output_nodes.clear();
+  m_inp_sockets.clear();
+  m_out_sockets.clear();
 
 }
 
 void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
   m_sflow_node = node;
-  m_input_nodes.clear();
-  m_output_nodes.clear();
+  m_inp_sockets.clear();
+  m_out_sockets.clear();
 
   QFontMetrics fm(QApplication::font());
   QRectF rect = boundingRect();
@@ -46,28 +49,37 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
   for (size_t i = 0; i < m_sflow_node->m_inp_types.size(); i++) {
 
       auto inp_sck = std::make_shared<qnode_socket_t>(this, m_socket_size, Qt::red);
-      this->scene()->addItem(inp_sck.get());
+
       QPoint inp_sck_pos = {
         m_x_offset,
         fmh125 + dm_i + (m_socket_size * 2 + m_socket_spacing) * i
       };
-      inp_sck->setPos(inp_sck_pos);
 
-      m_input_nodes.push_back(inp_sck);
+      inp_sck->setPos(inp_sck_pos);
+      inp_sck->m_node = this;
+      inp_sck->m_socket_id = i;
+      inp_sck->m_is_inp_socket = true;
+      m_inp_sockets.push_back(inp_sck);
+      m_scene->m_sockets.push_back(inp_sck.get());
 
     }
 
   for (size_t i = 0; i < m_sflow_node->m_out_types.size(); i++) {
 
       auto out_sck = std::make_shared<qnode_socket_t>(this, m_socket_size, Qt::blue);
-      this->scene()->addItem(out_sck.get());
+
       QPoint out_sck_pos = {
         m_width - 2*m_socket_size - m_x_offset,
         fmh125 + dm_o + (m_socket_size * 2 + m_socket_spacing) * i
       };
-      out_sck->setPos(out_sck_pos);
 
-      m_output_nodes.push_back(out_sck);
+      out_sck->setPos(out_sck_pos);
+      out_sck->m_node = this;
+      out_sck->m_socket_id = i;
+      out_sck->m_is_inp_socket = false;
+
+      m_out_sockets.push_back(out_sck);
+      m_scene->m_sockets.push_back(out_sck.get());
 
     }
 
@@ -112,45 +124,7 @@ void qnode_t::paint(QPainter *painter,
   painter->setPen(pen_label);
   painter->drawText( QPoint(( m_width - fm.width(label)) / 2, fmh01), label);
 
-
   if (!m_sflow_node) return;
-
-  int num_inps = m_sflow_node->m_inp_types.size();
-  int h = rect.height();
-  int h_a = h - fmh125;
-
-  int l_p = 10;
-  int dh_i = 2 * m_socket_size * num_inps + m_socket_spacing * (num_inps - 1);
-  int dm_i = (h_a - dh_i) / 2;
-
-  //draw inps
-//  QPen pen_inps(Qt::darkRed, 3);
-//  QBrush brsh_inps(Qt::black);
-//  painter->setPen(pen_inps);
-//  painter->setBrush(brsh_inps);
-//  for (size_t i = 0; i < num_inps; i++) {
-//      //int dti = i >= 1 ? link_padding*(i) : 0 ;
-//      painter->drawEllipse(QRectF(m_x_offset,
-//                                  fmh125 + dm_i +
-//                                  + (m_pin_size * 2 + m_pin_spacing) * i,
-//                                  2*m_pin_size, 2*m_pin_size));
-//    }
-
-  //draw outs
-//  int num_outs = m_sflow_node->m_out_types.size();
-//  int dh_o = 2 * m_pin_size * num_outs + m_pin_spacing * (num_outs - 1);
-//  int dm_o = (h_a - dh_o) / 2;
-//  QPen pen_outs(Qt::darkGreen, 3);
-//  QBrush brsh_outs(Qt::black);
-//  painter->setPen(pen_outs);
-//  painter->setBrush(brsh_outs);
-//  for (size_t i = 0; i < num_outs; i++) {
-//      //int dti = i >= 1 ? link_padding*(i) : 0 ;
-//      painter->drawEllipse(QRectF(m_width - 2*m_pin_size - m_x_offset,
-//                                  fmh125 + dm_o +
-//                                  + (m_pin_size * 2 + m_pin_spacing) * i,
-//                                  2*m_pin_size, 2*m_pin_size));
-//    }
 
 }
 
@@ -167,5 +141,21 @@ void qnode_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   m_pressed = false;
   update();
   QGraphicsItem::mouseReleaseEvent(event);
+
+}
+
+QVariant qnode_t::itemChange(QGraphicsItem::GraphicsItemChange change,
+                             const QVariant &value) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+   if (change == ItemPositionChange && scene()) {
+
+      astate->tlog("qnode_t::itemChange()");
+      m_scene->update_connections_with_node(this);
+
+     }
+
+   return QGraphicsItem::itemChange(change, value);
 
 }

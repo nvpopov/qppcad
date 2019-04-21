@@ -12,13 +12,25 @@ namespace qpp {
   namespace cad {
 
     //https://github.com/rochus/qt5-node-editor
+
+    class qnode_t;
+    class qnode_socket_t;
+    class qnode_connection_t;
+
     class node_book_graphics_scene_t : public QGraphicsScene {
 
       Q_OBJECT
 
       public:
 
+        std::vector<qnode_t*> m_nodes;
+        std::vector<qnode_socket_t*> m_sockets;
+        std::vector<qnode_connection_t*> m_connections;
+
         node_book_graphics_scene_t(QObject *parent);
+        void add_connection(qnode_connection_t *_con);
+        void add_node(qnode_t *_node);
+        void update_connections_with_node(qnode_t *_node);
 
       protected:
 

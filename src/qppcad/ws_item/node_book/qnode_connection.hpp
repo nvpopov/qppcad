@@ -12,23 +12,29 @@ namespace qpp {
   namespace cad {
 
     class qnode_t;
+    class qnode_socket_t;
 
     class qnode_connection_t : public QGraphicsPathItem {
 
       public:
 
-        qnode_t *m_node_0;
-        qnode_t *m_node_1;
+        qnode_socket_t *m_out_socket{nullptr};
+        qnode_socket_t *m_inp_socket{nullptr};
 
-        opt<size_t> m_node_0_socket_id;
-        opt<size_t> m_node_1_socket_id;
+        QColor m_connection_color{Qt::gray};
+
+        size_t m_node_out_socket_id;
+        size_t m_node_inp_socket_id;
 
         bool m_temporary{false};
+
 
         qnode_connection_t(QGraphicsItem *parent = 0);
         ~qnode_connection_t();
 
-        void update_path();
+        void update_path(QPointF point,
+                         bool finalize = false);
+        void clear_path();
 
       protected:
 
