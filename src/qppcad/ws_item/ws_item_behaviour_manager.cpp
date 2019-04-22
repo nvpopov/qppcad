@@ -21,7 +21,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 
   std::setlocale(LC_ALL, "C");
 
-  astate->log(fmt::format("Loading ws_item from file {}", file_name));
+  astate->tlog("Loading ws_item from file {}", file_name);
 
   auto new_ws_item = fbr_ws_item_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
   ws->add_item_to_ws(new_ws_item);
@@ -73,8 +73,8 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
 
   if (bhv_id < m_ws_item_io.size() && m_ws_item_io[bhv_id]->can_save() &&
       m_ws_item_io[bhv_id]->m_accepted_type == ws_item->get_type()) {
-      astate->log(fmt::format("Saving ws_item[{}] to file {} from workspace {}",
-                              ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name));
+      astate->tlog("Saving ws_item[{}] to file {} from workspace {}",
+                   ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name);
 
       bool check = m_ws_item_io[bhv_id]->check_before_save(ws_item.get(), message);
       if (check) {
@@ -82,8 +82,8 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
           m_ws_item_io[bhv_id]->save_to_stream(output, ws_item.get());
           return true;
         } else {
-          astate->log(fmt::format("Checking failed for ws_item={}, file={}, workspace={}",
-                                  ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name));
+          astate->tlog("Checking failed for ws_item={}, file={}, workspace={}",
+                       ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name);
           return false;
         }
 
@@ -133,8 +133,8 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
       m_file_formats.emplace(_ff_hash, std::move(new_file_format));
     }
 
-  astate->log(fmt::format("Registering file format {}[{}] - hash {}, ghash {}",
-                          _full_name, _short_name, _ff_hash, _file_format_group_hash));
+  astate->tlog("Registering file format {}[{}] - hash {}, ghash {}",
+               _full_name, _short_name, _ff_hash, _file_format_group_hash);
 
   return _ff_hash;
 }
@@ -154,8 +154,8 @@ size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
       m_file_format_groups.emplace(_file_format_group_hash, std::move(new_file_format_group));
     }
 
-  astate->log(fmt::format("Registering file format group {}[{}] - hash {}",
-                          _full_name, _short_name, _file_format_group_hash));
+  astate->tlog("Registering file format group {}[{}] - hash {}",
+               _full_name, _short_name, _file_format_group_hash);
 
   return _file_format_group_hash;
 }
@@ -237,8 +237,8 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_finger_print(
     for (auto &ffp : elem.second.m_finger_prints)
       if (file_name.find(ffp) != std::string::npos) {
           app_state_t *astate = app_state_t::get_inst();
-          astate->log(fmt::format("Compare ff {} {} - fname {}",
-                                  elem.first, elem.second.m_full_name, file_name));
+          astate->tlog("Compare ff {} {} - fname {}",
+                       elem.first, elem.second.m_full_name, file_name);
           return std::optional<size_t>(elem.first);
         }
 
@@ -258,7 +258,7 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format(siz
   for (size_t i = 0; i < m_ws_item_io.size(); i++)
     if (m_ws_item_io[i]->m_accepted_file_format == file_format) {
         app_state_t *astate = app_state_t::get_inst();
-        astate->log(fmt::format("Compare ff {} - io_bhv {}",file_format, i));
+        astate->tlog("Compare ff {} - io_bhv {}",file_format, i);
         return std::optional<size_t>(i);
       }
 
@@ -287,14 +287,14 @@ void ws_item_behaviour_manager_t::reg_io_bhv(
   io_bhv_inst->m_accepted_type = accepted_type;
   io_bhv_inst->m_accepted_file_format = accepted_file_format;
 
-  astate->log(
-        fmt::format("Registering io behaviour for type {}, file format[{}], save[{}], load[{}]",
-                    accepted_type,
-                    get_ff_full_name(accepted_file_format),
-                    io_bhv_inst->can_save(),
-                    io_bhv_inst->can_load()));
+  astate->tlog("Registering io behaviour for type {}, file format[{}], save[{}], load[{}]",
+               accepted_type,
+               get_ff_full_name(accepted_file_format),
+               io_bhv_inst->can_save(),
+               io_bhv_inst->can_load());
 
   m_ws_item_io.push_back(io_bhv_inst);
+
 }
 
 void ws_item_behaviour_manager_t::unreg_ff(size_t _file_format_hash) {
@@ -350,18 +350,18 @@ std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, query?", hash));
+  astate->tlog("get_obj_insp_widget_sp with type_id = {}, query?", hash);
 
   auto it = m_obj_insp_widgets.find(hash);
   if (it != m_obj_insp_widgets.end() && it->second != nullptr) {
-      astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, exists", hash));
+      astate->tlog("get_obj_insp_widget_sp with type_id = {}, exists", hash);
       return it->second;
     }
 
   if (it == m_obj_insp_widgets.end()) {
       auto it_f = m_obj_insp_fabric.find(hash);
       if (it_f != m_obj_insp_fabric.end()) {
-          astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, constructing", hash));
+          astate->tlog("get_obj_insp_widget_sp with type_id = {}, constructing", hash);
           auto cnstr = it_f->second();
           m_obj_insp_widgets.emplace(hash, cnstr);
           return cnstr;
@@ -369,7 +369,7 @@ std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_
       else return nullptr;
     }
 
-  astate->log(fmt::format("get_obj_insp_widget_sp with type_id = {}, not found", hash));
+  astate->tlog("get_obj_insp_widget_sp with type_id = {}, not found", hash);
 
   return nullptr;
 
@@ -380,21 +380,21 @@ std::shared_ptr<ws_item_extended_editor_t> ws_item_behaviour_manager_t::get_ext_
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, query?", hash));
+  astate->tlog("get_ext_editor_widget_sp with type_id = {}, query?", hash);
 
   auto it = m_ext_editors_info.find({hash, ed_order});
   if (it != m_ext_editors_info.end()) {
 
       if (it->second.m_inst) {
-          astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, exists", hash));
+          astate->tlog("get_ext_editor_widget_sp with type_id = {}, exists", hash);
         } else {
-          astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, constr.", hash));
+          astate->tlog("get_ext_editor_widget_sp with type_id = {}, constr.", hash);
            it->second.m_inst = it->second.m_fabric();
         }
       return it->second.m_inst;
     }
 
-  astate->log(fmt::format("get_ext_editor_widget_sp with type_id = {}, not found", hash));
+  astate->tlog("get_ext_editor_widget_sp with type_id = {}, not found", hash);
 
   return nullptr;
 
@@ -404,12 +404,12 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_type(size
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->log(fmt::format("Fabric new ws_item with type_id = {}", type_id));
+  astate->tlog("Fabric new ws_item with type_id = {}", type_id);
 
   auto it = m_fabric_ws_item.find(type_id);
   if (it != m_fabric_ws_item.end()) return it->second();
 
-  astate->log(fmt::format("Cannot fabric new ws_item with type_id = {}!", type_id));
+  astate->tlog("Cannot fabric new ws_item with type_id = {}!", type_id);
   return nullptr;
 
 }
@@ -419,26 +419,6 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_name(
 
   app_state_t *astate = app_state_t::get_inst();
   return fbr_ws_item_by_type(astate->hash_reg->calc_hash<std::string>(_type_name));
-
-}
-
-ws_item_t *ws_item_behaviour_manager_t::ws_item_fbr_by_type_p(size_t type_id) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  astate->log(fmt::format("Fabric new ws_item with type_id = {}", type_id));
-
-  if (type_id == geom_view_t::get_type_static())
-    return new geom_view_t();
-
-  if (type_id == ccd_view_t::get_type_static())
-    return new ccd_view_t();
-
-  if (type_id == volume_view_t::get_type_static())
-    return new volume_view_t();
-
-  astate->log(fmt::format("Cannot fabric new ws_item with type_id = {}!", type_id));
-  return nullptr;
 
 }
 

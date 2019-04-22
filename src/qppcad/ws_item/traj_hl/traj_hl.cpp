@@ -58,18 +58,20 @@ size_t traj_hl_t::get_content_count() {
 }
 
 void traj_hl_t::on_leader_changed() {
+
    app_state_t* astate = app_state_t::get_inst();
-   astate->log(fmt::format("{} ::on_leader_changed()", m_name));
+   astate->tlog("{} ::on_leader_changed()", m_name);
 
    if (m_leader->get_type() == geom_view_t::get_type_static()) {
          m_need_to_rebuild = true;
          b_al = m_leader->cast_as<geom_view_t>();
      }
+
 }
 
 void traj_hl_t::on_leader_call() {
-//  app_state_t* astate = app_state_t::get_inst();
-//  astate->log(fmt::format("{} ::on_leader_call()", m_name));
+
+
 }
 
 void traj_hl_t::rebuild_line_mesh() {
@@ -99,7 +101,7 @@ void traj_hl_t::rebuild_line_mesh() {
       m_line_mesh->indices.push_back(frame_id);
     }
 
-  astate->log(fmt::format("traj_hler_t total points : {}", m_line_mesh->indices.size()));
+  astate->tlog("traj_hler_t total points : {}", m_line_mesh->indices.size());
   m_line_mesh->mesh_rt = GL_LINES;
   m_line_mesh->num_primitives = m_line_mesh->indices.size();
   m_line_mesh->bind_data();

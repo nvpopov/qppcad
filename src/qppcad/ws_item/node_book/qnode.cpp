@@ -13,6 +13,7 @@ qnode_t::qnode_t(QGraphicsItem *parent) : QGraphicsItem(parent)  {
   m_pressed = false;
   setFlag(QGraphicsItem::ItemIsMovable);
   setFlag(QGraphicsItem::ItemSendsGeometryChanges);
+  setFlag(QGraphicsItem::ItemIsSelectable);
 
 }
 
@@ -118,7 +119,7 @@ void qnode_t::paint(QPainter *painter,
   painter->setRenderHint(QPainter::Antialiasing);
   QPainterPath path;
   path.addRoundedRect(rect, 4, 4);
-  QPen pen(Qt::black, 2);
+  QPen pen(isSelected() ? Qt::darkGray : Qt::black, 2);
   painter->setPen(pen);
   painter->fillPath(path, m_node_bg_color);
   painter->drawPath(path);
@@ -179,6 +180,8 @@ void qnode_t::paint(QPainter *painter,
 
 void qnode_t::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
+  scene()->clearSelection();
+  setSelected(true);
   m_pressed = true;
   update();
   QGraphicsItem::mousePressEvent(event);
@@ -199,10 +202,8 @@ QVariant qnode_t::itemChange(QGraphicsItem::GraphicsItemChange change,
   app_state_t *astate = app_state_t::get_inst();
 
   if (change == ItemPositionChange && scene()) {
-
-      astate->tlog("qnode_t::itemChange()");
+      //astate->tlog("qnode_t::itemChange()");
       m_scene->update_connections_with_node(this);
-
     }
 
   return QGraphicsItem::itemChange(change, value);

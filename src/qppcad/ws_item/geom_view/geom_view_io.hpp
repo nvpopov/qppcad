@@ -178,7 +178,7 @@ namespace qpp {
           if (COMPILE_CCD) {
               bool succes_comp_ccd = compile_ccd(cc_inst, ccd_cf_default_flags |
                                                  ccd_cf_remove_empty_geom_steps);
-              astate->log(fmt::format("Is ccd compilation succes? {}", succes_comp_ccd));
+              astate->tlog("Is ccd compilation succes? {}", succes_comp_ccd);
             }
 
           if (COPY_DIM_FROM_CCD) {
@@ -192,10 +192,11 @@ namespace qpp {
                   compile_static_animation(cc_inst, _item->m_anim->m_anim_data);
               bool succes_anims = compile_animation(cc_inst, _item->m_anim->m_anim_data);
 
-              astate->log(fmt::format("Is geometry compilation succes? {}",
-                                      succes_comp_geom && succes_comp_static_anim));
+              astate->tlog("Is geometry compilation succes? {}",
+                           succes_comp_geom && succes_comp_static_anim);
+
               if (_item->m_anim->get_total_anims() > 1 && succes_anims)
-                astate->log("Animations have been added to geom");
+                astate->tlog("Animations have been added to geom");
             }
 
           if (EXTRACT_CCD) {

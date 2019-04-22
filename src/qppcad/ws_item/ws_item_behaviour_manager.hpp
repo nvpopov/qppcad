@@ -463,14 +463,6 @@ namespace qpp {
          */
         std::shared_ptr<ws_item_t> fbr_ws_item_by_name(const std::string _type_name);
 
-
-        /**
-         * @brief ws_item_fbr_by_type_p
-         * @param type_id
-         * @return
-         */
-        ws_item_t* ws_item_fbr_by_type_p(size_t type_id);
-
         /**
          * @brief reg_tool_grp
          * @param _full_name

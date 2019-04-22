@@ -58,9 +58,7 @@ void mesh_t::bind_data() {
   glapi_t* glapi = astate->glapi;
   glapi->glBindVertexArray(0);
 
-  astate->log(
-        fmt::format("Pre bind data to mesh[vao={}, vbo={}, nbo={}, vio={}]",
-                          vao, vbo, nbo, vio));
+  astate->tlog("Pre bind data to mesh[vao={}, vbo={}, nbo={}, vio={}]", vao, vbo, nbo, vio);
   glapi->glBindVertexArray(vao);
 
   glapi->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -83,12 +81,12 @@ void mesh_t::bind_data() {
                       &indices[0], GL_STATIC_DRAW);
   glapi->glBindVertexArray(0);
 
-  astate->log(
-        fmt::format("Binded data to mesh[vao={}, vbo={}, nbo={}, vio={}] with vs={}, ns={}, is={}",
+  astate->tlog("Binded data to mesh[vao={}, vbo={}, nbo={}, vio={}] with vs={}, ns={}, is={}",
                           vao, vbo, nbo, vio,
                           vertecies.size(),
                           normals.size(),
-                          indices.size()));
+                          indices.size());
+
 }
 
 

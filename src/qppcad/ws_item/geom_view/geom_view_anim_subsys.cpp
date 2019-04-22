@@ -120,8 +120,6 @@ void geom_view_anim_subsys_t::update(const float delta_time) {
   if (!animable()) return;
   if (!m_play_anim) return;
 
-  //      astate->log("ANIM");
-
   m_cur_anim_time += 1 / (m_anim_frame_time * 60);
   if (m_cur_anim_time > m_anim_data[m_cur_anim].frames.size() - 1) {
       if (m_play_cyclic) m_cur_anim_time = 0.0f;
