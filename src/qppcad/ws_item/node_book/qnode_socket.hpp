@@ -16,6 +16,8 @@ namespace qpp {
 
       public:
 
+        enum { Type = UserType + 33 };
+
         int m_socket_radius{6};
         bool m_is_inp_socket{false};
         size_t m_socket_id;
@@ -28,6 +30,9 @@ namespace qpp {
                        int _socket_radius = 4,
                        QColor _socket_color = Qt::red);
         ~qnode_socket_t();
+
+        opt<size_t> connections_count();
+        int type() const override;
 
       protected:
 

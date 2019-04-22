@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QApplication>
 #include <qppcad/app_state.hpp>
+#include <qppcad/ws_item/node_book/qnode_socket_colorize.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -20,6 +21,10 @@ qnode_t::~qnode_t() {
   m_inp_sockets.clear();
   m_out_sockets.clear();
 
+}
+
+int qnode_t::type() const {
+  return Type;
 }
 
 void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
@@ -48,7 +53,10 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
   for (size_t i = 0; i < m_sflow_node->m_inp_types.size(); i++) {
 
-      auto inp_sck = std::make_shared<qnode_socket_t>(this, m_socket_size, Qt::red);
+      auto inp_sck = std::make_shared<qnode_socket_t>(
+                       this,
+                       m_socket_size,
+                       sck_colorize_helper::get_color(m_sflow_node->m_inp_types[i].m_type));
 
       QPoint inp_sck_pos = {
         m_x_offset,
@@ -66,7 +74,10 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
   for (size_t i = 0; i < m_sflow_node->m_out_types.size(); i++) {
 
-      auto out_sck = std::make_shared<qnode_socket_t>(this, m_socket_size, Qt::blue);
+      auto out_sck = std::make_shared<qnode_socket_t>(
+                       this,
+                       m_socket_size,
+                       sck_colorize_helper::get_color(m_sflow_node->m_out_types[i].m_type));
 
       QPoint out_sck_pos = {
         m_width - 2*m_socket_size - m_x_offset,
@@ -149,13 +160,13 @@ QVariant qnode_t::itemChange(QGraphicsItem::GraphicsItemChange change,
 
   app_state_t *astate = app_state_t::get_inst();
 
-   if (change == ItemPositionChange && scene()) {
+  if (change == ItemPositionChange && scene()) {
 
       astate->tlog("qnode_t::itemChange()");
       m_scene->update_connections_with_node(this);
 
-     }
+    }
 
-   return QGraphicsItem::itemChange(change, value);
+  return QGraphicsItem::itemChange(change, value);
 
 }

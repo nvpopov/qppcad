@@ -17,6 +17,8 @@ namespace qpp {
 
       public:
 
+        enum { Type = UserType + 32 };
+
         node_book_graphics_scene_t *m_scene;
 
         int m_width{180};
@@ -41,6 +43,8 @@ namespace qpp {
 
         qnode_t(QGraphicsItem *parent = nullptr);
         ~qnode_t();
+
+        int type() const override;
 
         void set_sflow_node(std::shared_ptr<sflow_node_t> node);
         QRectF boundingRect() const override;

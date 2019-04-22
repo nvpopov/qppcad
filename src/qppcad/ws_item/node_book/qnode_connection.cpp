@@ -20,6 +20,10 @@ qnode_connection_t::~qnode_connection_t() {
 
 }
 
+int qnode_connection_t::type() const {
+  return Type;
+}
+
 void qnode_connection_t::update_path(QPointF point, bool finalize) {
 
   app_state_t *astate = app_state_t::get_inst();

@@ -18,6 +18,8 @@ namespace qpp {
 
       public:
 
+        enum { Type = UserType + 34 };
+
         qnode_socket_t *m_out_socket{nullptr};
         qnode_socket_t *m_inp_socket{nullptr};
 
@@ -31,6 +33,8 @@ namespace qpp {
 
         qnode_connection_t(QGraphicsItem *parent = 0);
         ~qnode_connection_t();
+
+        int type() const override;
 
         void update_path(QPointF point,
                          bool finalize = false);
