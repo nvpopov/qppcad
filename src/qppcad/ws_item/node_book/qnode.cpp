@@ -155,7 +155,7 @@ void qnode_t::paint(QPainter *painter,
 
       QPoint inp_sck_pos = {
         5,
-        fmh125 + dm_i + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.38
+        fmh125 + dm_i + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.37
       };
 
       painter->drawText(inp_sck_pos, _pin_name);
@@ -168,7 +168,7 @@ void qnode_t::paint(QPainter *painter,
 
       QPoint out_sck_pos = {
         m_width - 5 - fm.width(_pin_name),
-        fmh125 + dm_o + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.38
+        fmh125 + dm_o + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.37
       };
 
       painter->drawText(out_sck_pos, _pin_name);

@@ -175,7 +175,7 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
   dialog_layout = new QVBoxLayout;
   setLayout(dialog_layout);
 
-  gb_rep_par = new QGroupBox(tr("Parameters of supercell generation"));
+  gb_rep_par = new QGroupBox(tr("Parameters"));
   gb_rep_par_layout = new QFormLayout;
   gb_rep_par->setLayout(gb_rep_par_layout);
 

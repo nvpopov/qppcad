@@ -36,6 +36,7 @@
 #include <qppcad/tools/colorize_by_dist/colorize_by_dist.hpp>
 #include <qppcad/tools/structure_similarity/structure_similarity.hpp>
 #include <qppcad/tools/nn_dist_msr/nn_dist_msr.hpp>
+#include <qppcad/tools/anim_lerp/anim_lerp.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -271,5 +272,8 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
 
   registration_helper_t::reg_ws_item_tool<nn_dist_msr_tool_t, geom_view_t>(
         "NN dist. msr.", hash_t_generic, bhv_mgr);
+
+  registration_helper_t::reg_ws_item_tool<anim_lerp_tool_t, geom_view_t>(
+        "Make anim. from 2 frames", hash_t_generic, bhv_mgr);
 
 }
