@@ -10,37 +10,49 @@ namespace qpp {
     /**
      * @brief The sflow_soi_node_t class
      */
-    class sflow_soi_node_t : public sflow_node_t {
+    class sf_i_prop_node_t : public sflow_node_t {
       public:
-        sflow_soi_node_t();
+        sf_i_prop_node_t();
         bool execute() override;
     };
 
     /**
      * @brief The sflow_sgi_node_t class
      */
-    class sflow_sgi_node_t : public sflow_node_t {
+    class sf_i_final_node_t : public sflow_node_t {
       public:
-        sflow_sgi_node_t();
+        sf_i_final_node_t();
         bool execute() override;
     };
 
     /**
      * @brief The sflow_sii_node_t class
      */
-    class sflow_sii_node_t : public sflow_node_t {
+    class sf_i_p_const_node_t : public sflow_node_t {
       public:
-        sflow_sii_node_t();
+        sf_i_p_const_node_t();
         bool execute() override;
     };
 
     /**
      * @brief The sflow_sum_i_node_t class
      */
-    class sflow_sum_i_node_t : public sflow_node_t {
+    class sf_i_sum_i_node_t : public sflow_node_t {
       public:
-        sflow_sum_i_node_t();
+        sf_i_sum_i_node_t();
         bool execute() override;
+    };
+
+    class sf_f_prop_node_t : public sflow_node_t {
+    public:
+      sf_f_prop_node_t();
+      bool execute() override;
+    };
+
+    class sf_f_p_const_node_t : public sflow_node_t {
+    public:
+      sf_f_p_const_node_t();
+      bool execute() override;
     };
 
   } // namespace cad

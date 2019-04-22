@@ -25,9 +25,6 @@ namespace qpp {
 
         QColor m_connection_color{Qt::gray};
 
-        size_t m_node_out_socket_id;
-        size_t m_node_inp_socket_id;
-
         bool m_temporary{false};
 
 
@@ -39,6 +36,7 @@ namespace qpp {
         void update_path(QPointF point,
                          bool finalize = false);
         void clear_path();
+        bool is_connection_valid();
 
       protected:
 

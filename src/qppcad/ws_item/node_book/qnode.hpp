@@ -39,7 +39,7 @@ namespace qpp {
         std::vector<std::shared_ptr<qnode_socket_t>> m_inp_sockets;
         std::vector<std::shared_ptr<qnode_socket_t>> m_out_sockets;
 
-        std::shared_ptr<sflow_node_t> m_sflow_node{nullptr};
+        std::shared_ptr<sflow_node_t> m_sf_node{nullptr};
 
         qnode_t(QGraphicsItem *parent = nullptr);
         ~qnode_t();

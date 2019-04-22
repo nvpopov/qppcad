@@ -38,7 +38,7 @@ qnode_socket_t::~qnode_socket_t() {
 opt<size_t> qnode_socket_t::connections_count() {
 
   if (!m_node) return std::nullopt;
-  if (!m_node->m_sflow_node) return std::nullopt;
+  if (!m_node->m_sf_node) return std::nullopt;
 
   size_t ret_con_count{0};
 
@@ -128,13 +128,7 @@ void qnode_socket_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
                   m_connection->m_out_socket = this;
                 }
 
-              bool input_are_valid{false};
-              if (m_connection->m_inp_socket) {
-                  auto con_cnt = m_connection->m_inp_socket->connections_count();
-                  input_are_valid = con_cnt && *con_cnt == 0;
-                }
-
-              if (m_connection->m_out_socket && m_connection->m_inp_socket && input_are_valid) {
+              if (m_connection->is_connection_valid()) {
                   m_connection->update_path(event->scenePos(), true);
                   delete_item = false;
                   m_node->m_scene->m_connections.push_back(m_connection);

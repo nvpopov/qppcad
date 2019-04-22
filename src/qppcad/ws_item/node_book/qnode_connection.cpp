@@ -102,6 +102,35 @@ void qnode_connection_t::clear_path() {
 
 }
 
+bool qnode_connection_t::is_connection_valid() {
+
+  if (!m_inp_socket) return false;
+  if (!m_out_socket) return false;
+  if (!m_inp_socket->m_node) return false;
+  if (!m_out_socket->m_node) return false;
+  if (m_inp_socket->m_node == m_out_socket->m_node) return false;
+
+  if (m_inp_socket->m_is_inp_socket == m_out_socket->m_is_inp_socket) return false;
+  if (!m_inp_socket->m_node->m_sf_node) return false;
+  if (!m_out_socket->m_node->m_sf_node) return false;
+
+  auto _inp_sck_id = m_inp_socket->m_socket_id;
+  auto _out_sck_id = m_out_socket->m_socket_id;
+
+  if (_inp_sck_id >= m_inp_socket->m_node->m_sf_node->m_inp_types.size()) return false;
+  if (_out_sck_id >= m_out_socket->m_node->m_sf_node->m_out_types.size()) return false;
+
+  if (m_inp_socket->m_node->m_sf_node->m_inp_types[_inp_sck_id].m_type !=
+      m_out_socket->m_node->m_sf_node->m_out_types[_out_sck_id].m_type) return false;
+
+  auto con_cnt = m_inp_socket->connections_count();
+  if (!con_cnt) return false;
+  if (*con_cnt != 0) return false;
+
+  return true;
+
+}
+
 void qnode_connection_t::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
   QGraphicsItem::mousePressEvent(event);
