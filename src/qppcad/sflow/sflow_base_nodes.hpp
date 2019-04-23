@@ -17,7 +17,7 @@ namespace qpp {
       public:
 
         sf_i_prop_node_t();
-        bool execute() override;
+        bool execute_ex() override;
 
     };
 
@@ -31,7 +31,7 @@ namespace qpp {
       public:
 
         sf_i_final_node_t();
-        bool execute() override;
+        bool execute_ex() override;
 
     };
 
@@ -45,7 +45,7 @@ namespace qpp {
       public:
 
         sf_i_p_const_node_t();
-        bool execute() override;
+        bool execute_ex() override;
 
     };
 
@@ -59,7 +59,7 @@ namespace qpp {
       public:
 
         sf_i_sum_i_node_t();
-        bool execute() override;
+        bool execute_ex() override;
 
     };
 
@@ -70,7 +70,7 @@ namespace qpp {
       public:
 
         sf_f_prop_node_t();
-        bool execute() override;
+        bool execute_ex() override;
 
     };
 
@@ -81,7 +81,7 @@ namespace qpp {
       public:
 
         sf_f_p_const_node_t();
-        bool execute() override;
+        bool execute_ex() override;
 
     };
 

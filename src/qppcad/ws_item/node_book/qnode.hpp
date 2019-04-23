@@ -7,6 +7,10 @@
 #include <QPainter>
 #include <qppcad/sflow/sflow_node.hpp>
 #include <qppcad/ws_item/node_book/qnode_socket.hpp>
+#include <QGraphicsProxyWidget>
+#include <QWidget>
+#include <QFormLayout>
+#include <QHBoxLayout>
 
 namespace qpp {
 
@@ -36,13 +40,22 @@ namespace qpp {
         QColor m_node_bg_color{QColor::fromRgb(34, 34, 34)};
         QColor m_node_label_color{QColor::fromRgb(224, 224, 224)};
 
+        QString m_node_name;
+
         std::vector<qnode_socket_t*> m_inp_sockets;
         std::vector<qnode_socket_t*> m_out_sockets;
 
         std::shared_ptr<sflow_node_t> m_sf_node{nullptr};
 
+        QGraphicsProxyWidget *m_inplace_pars_widget{nullptr};
+        QWidget *m_inplace_wdgt{nullptr};
+        QHBoxLayout *m_inplace_wdgt_top_lt{nullptr};
+        QFormLayout *m_inplace_wdgt_lt{nullptr};
+
         qnode_t(QGraphicsItem *parent = nullptr);
         ~qnode_t();
+
+        void construct_inplace_widgets();
 
         int type() const override;
 

@@ -23,6 +23,7 @@ namespace qpp {
     struct sflow_inplace_parameter_t {
 
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
+        std::string m_name{"Unknown"};
         bool m_editable{false};
 
     };
@@ -60,9 +61,11 @@ namespace qpp {
 
         size_t m_total_gain{0};
         bool validate_inputs();
+        bool validate_inplace_parameters();
 
         //if false flow stops
-        virtual bool execute();
+        bool execute();
+        virtual bool execute_ex();
 
         sflow_node_t();
 

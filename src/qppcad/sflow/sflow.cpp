@@ -79,9 +79,7 @@ void sflow_context_t::execute() {
   fmt::print(std::cout, "\nstart executing \n");
 
   for (auto &node : m_nodes)
-    if (node->m_is_outer) {
-        execute_traverse(node.get(), nullptr);
-      }
+    if (node->m_is_outer) execute_traverse(node.get(), nullptr);
 
   fmt::print(std::cout, "end executing \n");
 

@@ -6,14 +6,20 @@ using namespace qpp::cad;
 sf_i_prop_node_t::sf_i_prop_node_t() : sflow_node_t () {
 
   m_node_name = "integer propagator";
-  m_out_types.resize(1);
-  m_out_types[0] = {sflow_parameter_e::sfpar_int, 0, "value"};
+
+  m_out_types = {
+    {sflow_parameter_e::sfpar_int, 0, "value"}
+  };
+
+  m_inplace_types = {
+    {sflow_parameter_e::sfpar_int, "value", true}
+  };
 
 }
 
-bool sf_i_prop_node_t::execute() {
+bool sf_i_prop_node_t::execute_ex() {
 
-  bool pres = sflow_node_t::execute();
+  bool pres = sflow_node_t::execute_ex();
   if (!pres) return false;
 
   auto out0 = std::make_shared<sflow_parameter_int_t>();
@@ -28,12 +34,13 @@ sf_i_final_node_t::sf_i_final_node_t() : sflow_node_t () {
 
   m_node_name = "integer finalize";
 
-  m_inp_types.resize(1);
-  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0, "a"};
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_int, 0, "a"}
+  };
 
 }
 
-bool sf_i_final_node_t::execute() {
+bool sf_i_final_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
   if (inp0) {
@@ -51,18 +58,17 @@ sf_i_p_const_node_t::sf_i_p_const_node_t() : sflow_node_t () {
 
   m_node_name = "integer + c";
 
-  m_out_types.resize(1);
-  m_out_types[0] = {sflow_parameter_e::sfpar_int, 0, "a"};
+  m_out_types = {
+   {sflow_parameter_e::sfpar_int, 0, "a"}
+  };
 
-  m_inp_types.resize(1);
-  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0, "b"};
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_int, 0, "b"}
+  };
 
 }
 
-bool sf_i_p_const_node_t::execute() {
-
-  bool pres = sflow_node_t::execute();
-  if (!pres) return false;
+bool sf_i_p_const_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
 
@@ -82,19 +88,18 @@ sf_i_sum_i_node_t::sf_i_sum_i_node_t() {
 
   m_node_name = "integer sum";
 
-  m_out_types.resize(1);
-  m_out_types[0] = {sflow_parameter_e::sfpar_int, 0, "dst"};
+  m_out_types = {
+   {sflow_parameter_e::sfpar_int, 0, "dst"}
+  };
 
-  m_inp_types.resize(2);
-  m_inp_types[0] = {sflow_parameter_e::sfpar_int, 0, "src1"};
-  m_inp_types[1] = {sflow_parameter_e::sfpar_int, 0, "src2"};
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_int, 0, "src1"},
+    {sflow_parameter_e::sfpar_int, 0, "src2"}
+  };
 
 }
 
-bool sf_i_sum_i_node_t::execute() {
-
-  bool pres = sflow_node_t::execute();
-  if (!pres) return false;
+bool sf_i_sum_i_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
   auto inp1 = static_cast<sflow_parameter_int_t*>(m_inps[1].get());
@@ -115,15 +120,13 @@ sf_f_prop_node_t::sf_f_prop_node_t() {
 
   m_node_name = "float propagator";
 
-  m_out_types.resize(1);
-  m_out_types[0] = {sflow_parameter_e::sfpar_float, 0, "dst"};
+  m_out_types = {
+    {sflow_parameter_e::sfpar_float, 0, "dst"}
+  };
 
 }
 
-bool sf_f_prop_node_t::execute() {
-
-  bool pres = sflow_node_t::execute();
-  if (!pres) return false;
+bool sf_f_prop_node_t::execute_ex() {
 
   auto out0 = std::make_shared<sflow_parameter_float_t>();
   out0->m_value = 0.5f;
@@ -137,18 +140,17 @@ sf_f_p_const_node_t::sf_f_p_const_node_t() {
 
   m_node_name = "float + c";
 
-  m_out_types.resize(1);
-  m_out_types[0] = {sflow_parameter_e::sfpar_float, 0, "dst"};
+  m_out_types = {
+    {sflow_parameter_e::sfpar_float, 0, "dst"}
+  };
 
-  m_inp_types.resize(1);
-  m_inp_types[0] = {sflow_parameter_e::sfpar_float, 0, "src"};
+  m_inp_types = {
+   {sflow_parameter_e::sfpar_float, 0, "src"}
+  };
 
 }
 
-bool sf_f_p_const_node_t::execute() {
-
-  bool pres = sflow_node_t::execute();
-  if (!pres) return false;
+bool sf_f_p_const_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_float_t*>(m_inps[0].get());
 

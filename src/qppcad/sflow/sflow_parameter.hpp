@@ -43,6 +43,18 @@ namespace qpp {
 
     };
 
+    class sflow_parameter_bool_t : public sflow_parameter_t {
+
+        QPP_OBJECT(sflow_parameter_bool_t, sflow_parameter_t)
+
+      public:
+
+        bool m_value;
+        sflow_parameter_e get_param_meta() override ;
+        std::shared_ptr<sflow_parameter_t> clone() override;
+
+    };
+
     class sflow_parameter_float_t : public sflow_parameter_t {
 
         QPP_OBJECT(sflow_parameter_float_t, sflow_parameter_t)
