@@ -56,7 +56,7 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
   for (size_t i = 0; i < m_sf_node->m_inp_types.size(); i++) {
 
-      auto inp_sck = std::make_shared<qnode_socket_t>(
+      auto inp_sck = new qnode_socket_t(
                        this,
                        m_socket_size,
                        sck_colorize_helper::get_color(m_sf_node->m_inp_types[i].m_type));
@@ -71,13 +71,13 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
       inp_sck->m_socket_id = i;
       inp_sck->m_is_inp_socket = true;
       m_inp_sockets.push_back(inp_sck);
-      m_scene->m_sockets.push_back(inp_sck.get());
+      m_scene->m_sockets.push_back(inp_sck);
 
     }
 
   for (size_t i = 0; i < m_sf_node->m_out_types.size(); i++) {
 
-      auto out_sck = std::make_shared<qnode_socket_t>(
+      auto out_sck = new qnode_socket_t(
                        this,
                        m_socket_size,
                        sck_colorize_helper::get_color(m_sf_node->m_out_types[i].m_type));
@@ -93,7 +93,7 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
       out_sck->m_is_inp_socket = false;
 
       m_out_sockets.push_back(out_sck);
-      m_scene->m_sockets.push_back(out_sck.get());
+      m_scene->m_sockets.push_back(out_sck);
 
     }
 
@@ -212,19 +212,19 @@ QVariant qnode_t::itemChange(QGraphicsItem::GraphicsItemChange change,
 
 }
 
-void qnode_t::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+//void qnode_t::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
-  app_state_t *astate = app_state_t::get_inst();
+//  app_state_t *astate = app_state_t::get_inst();
 
-  QMenu menu;
-  QAction *remove_action = menu.addAction("Remove");
-  QAction *unlink_all_action = menu.addAction("Unlink all");
-  QAction *selected_action = menu.exec(event->screenPos());
+//  QMenu menu;
+//  QAction *remove_action = menu.addAction("Remove");
+//  QAction *unlink_all_action = menu.addAction("Unlink all");
+//  QAction *selected_action = menu.exec(event->screenPos());
 
-  //if (m_scene) m_scene->sendEvent(
-  if (selected_action == remove_action && m_scene) {
-      m_scene->removeItem(this);
-      astate->tlog("qnode_t::contextMenuEvent(), remove");
-    }
+//  //if (m_scene) m_scene->sendEvent(
+//  if (selected_action == remove_action && m_scene) {
+//      m_scene->removeItem(this);
+//      astate->tlog("qnode_t::contextMenuEvent(), remove");
+//    }
 
-}
+//}

@@ -158,8 +158,7 @@ void workspace_t::render() {
 
   if (astate->dp) {
 
-      ///// Draw axis /////
-      if (astate->m_show_axis) {
+      if (astate->m_show_axis) { // Draw axis
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
           float axis_magn = 0.07f *astate->camera->m_stored_dist;
           if (astate->camera->m_cur_proj == cam_proj_t::proj_persp) axis_magn = 0.015f;
@@ -182,8 +181,7 @@ void workspace_t::render() {
                           vector3<float>(0.0, 0.0, axis_magn) + vScrTW);
           astate->dp->end_render_line();
 
-        }
-      ///// Draw axis end /////
+        } // Draw axis end
     }
 
   for (auto &ws_item : m_ws_items) ws_item->render();
@@ -225,10 +223,13 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
     }
 
   for (auto &ws_item : m_ws_items) {
+
       bool is_hit = ws_item->mouse_click(&m_ray);
       hit_any = hit_any || is_hit;
+
       if (is_hit && m_edit_type == ws_edit_e::edit_item && ws_item->m_is_visible &&
           (ws_item->get_flags() & ws_item_flags_support_sel)) {
+
           m_gizmo->attached_item = ws_item.get();
           auto it = std::find(m_ws_items.begin(), m_ws_items.end(), ws_item);
           if (it != m_ws_items.end()) {
@@ -236,7 +237,9 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
               set_selected_item(index);
               break;
             }
+
         }
+
     }
 
   if (m_edit_type != ws_edit_e::edit_content && !hit_any) {
@@ -380,27 +383,26 @@ void workspace_t::update (float delta_time) {
 
   bool need_to_emit_ws_changed{false};
 
-  for (auto it = m_ws_items.begin(); it != m_ws_items.end(); ) {
-      if ((*it)->m_marked_for_deletion) {
+  for (auto it = m_ws_items.begin(); it != m_ws_items.end(); )
+    if ((*it)->m_marked_for_deletion) {
 
-          if (it->get() == m_gizmo->attached_item)
-            m_gizmo->attached_item = nullptr;
+        if (it->get() == m_gizmo->attached_item)
+          m_gizmo->attached_item = nullptr;
 
-          if (it->get()->m_selected) unselect_all(true);
+        if (it->get()->m_selected) unselect_all(true);
 
-          clear_connected_items(*it);
-          it->get()->m_parent_ws = nullptr;
-          it->get()->m_connected_items.clear();
-          it = m_ws_items.erase(it);
-          //it->reset();
-          need_to_emit_ws_changed = true;
-          app_state_t* astate = app_state_t::get_inst();
-          astate->astate_evd->cur_ws_changed();
-        }
-      else {
-          ++it;
-        }
-    }
+        clear_connected_items(*it);
+        it->get()->m_parent_ws = nullptr;
+        it->get()->m_connected_items.clear();
+        it = m_ws_items.erase(it);
+        //it->reset();
+        need_to_emit_ws_changed = true;
+        app_state_t* astate = app_state_t::get_inst();
+        astate->astate_evd->cur_ws_changed();
+      }
+    else {
+        ++it;
+      }
 
   ws_changed();
 

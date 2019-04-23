@@ -9,6 +9,7 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
+#include <qppcad/ws_item/node_book/node_book.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -281,5 +282,13 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
 
   py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
   py_volume_view_t(m, "volume_view_t", py_ws_item_t);
+
+  py::class_<node_book_t, std::shared_ptr<node_book_t> >
+  py_node_book_t(m, "node_book_t", py_ws_item_t);
+
+  py_node_book_t.def("num_nds", [](node_book_t &src){return src.m_scene->m_nodes.size();});
+  py_node_book_t.def("num_sck", [](node_book_t &src){return src.m_scene->m_sockets.size();});
+  py_node_book_t.def("num_con", [](node_book_t &src){return src.m_scene->m_connections.size();});
+
 
 }

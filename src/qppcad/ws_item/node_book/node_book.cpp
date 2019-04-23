@@ -12,46 +12,40 @@ node_book_t::node_book_t() {
   m_scene = new node_book_graphics_scene_t(nullptr);
 
   auto new_node1 = std::make_shared<sf_i_prop_node_t>();
-  auto qnode1 = std::make_shared<qnode_t>();
+  auto qnode1 = new qnode_t();
   m_scene->add_node(qnode1);
   qnode1->set_sflow_node(new_node1);
   qnode1->setPos(QPoint(0,0));
-  m_scene->m_nodes.push_back(qnode1);
 
   auto new_node2 = std::make_shared<sf_i_final_node_t>();
-  auto qnode2 = std::make_shared<qnode_t>();
+  auto qnode2 = new qnode_t();
   m_scene->add_node(qnode2);
   qnode2->set_sflow_node(new_node2);
   qnode2->setPos(QPoint(300,0));
-  m_scene->m_nodes.push_back(qnode2);
 
   auto new_node3 = std::make_shared<sf_i_p_const_node_t>();
-  auto qnode3 = std::make_shared<qnode_t>();
+  auto qnode3 = new qnode_t();
   m_scene->add_node(qnode3);
   qnode3->setPos(QPoint(600,0));
   qnode3->set_sflow_node(new_node3);
-  m_scene->m_nodes.push_back(qnode3);
 
   auto new_node4 = std::make_shared<sf_i_sum_i_node_t>();
-  auto qnode4 = std::make_shared<qnode_t>();
+  auto qnode4 = new qnode_t();
   m_scene->add_node(qnode4);
   qnode4->setPos(QPoint(0,300));
   qnode4->set_sflow_node(new_node4);
-  m_scene->m_nodes.push_back(qnode4);
 
   auto new_node5 = std::make_shared<sf_f_prop_node_t>();
-  auto qnode5 = std::make_shared<qnode_t>();
+  auto qnode5 = new qnode_t();
   m_scene->add_node(qnode5);
   qnode5->setPos(QPoint(300,300));
   qnode5->set_sflow_node(new_node5);
-  m_scene->m_nodes.push_back(qnode5);
 
   auto new_node6 = std::make_shared<sf_f_p_const_node_t>();
-  auto qnode6 = std::make_shared<qnode_t>();
+  auto qnode6 = new qnode_t();
   m_scene->add_node(qnode6);
   qnode6->setPos(QPoint(600,300));
   qnode6->set_sflow_node(new_node6);
-  m_scene->m_nodes.push_back(qnode6);
 
 }
 

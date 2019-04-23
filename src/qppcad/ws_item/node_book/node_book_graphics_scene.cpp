@@ -19,6 +19,16 @@ node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
   for (auto p : {&p_pen_light, &p_pen_dark}) p->setWidth(0);
   setBackgroundBrush(p_brush_bckgr);
 
+  gs_global_menu = new QMenu;
+  gs_global_menu->addAction("A1");
+  gs_global_menu->addAction("A2");
+
+  gs_qnode_menu = new QMenu;
+  gs_qnode_menu_delete = new QAction("Delete");
+  gs_qnode_menu_unlink_all = new QAction("Unlink all");
+  gs_qnode_menu->addAction(gs_qnode_menu_delete);
+  gs_qnode_menu->addAction(gs_qnode_menu_unlink_all);
+
 }
 
 void node_book_graphics_scene_t::add_connection(qnode_connection_t *_con) {
@@ -30,10 +40,10 @@ void node_book_graphics_scene_t::add_connection(qnode_connection_t *_con) {
 
 }
 
-void node_book_graphics_scene_t::add_node(std::shared_ptr<qnode_t> _node) {
+void node_book_graphics_scene_t::add_node(qnode_t *_node) {
 
   if (_node) {
-      addItem(_node.get());
+      addItem(_node);
       _node->m_scene = this;
       m_nodes.push_back(_node);
     }
@@ -50,9 +60,46 @@ void node_book_graphics_scene_t::update_connections_with_node(qnode_t *_node) {
       }
 }
 
-void node_book_graphics_scene_t::remove_node(qnode_t *_node) {
+void node_book_graphics_scene_t::delete_node(qnode_t *_node) {
 
   if (!_node) return;
+
+  unlink_node(_node);
+
+  for (auto it = m_sockets.begin(); it != m_sockets.end();)
+    if ((*it) && (*it)->m_node == _node) {
+        qnode_socket_t *_temp = (*it);
+        it = m_sockets.erase(it);
+        //removeItem(_temp);
+      } else {
+        ++it;
+      }
+
+  for (auto it = m_nodes.begin(); it != m_nodes.end();)
+    if ((*it) && (*it) == _node) {
+        qnode_t *_temp = (*it);
+        it = m_nodes.erase(it);
+        removeItem(_temp);
+        delete _temp;
+      } else {
+        ++it;
+      }
+
+}
+
+void node_book_graphics_scene_t::unlink_node(qnode_t *_node) {
+
+  if (!_node) return;
+  for (auto it = m_connections.begin(); it != m_connections.end();)
+    if (((*it) && (*it)->m_inp_socket && (*it)->m_inp_socket->m_node == _node) ||
+        ((*it) && (*it)->m_out_socket && (*it)->m_out_socket->m_node == _node)) {
+        qnode_connection_t *_temp = (*it);
+        it = m_connections.erase(it);
+        removeItem(_temp);
+        delete _temp;
+      } else {
+        ++it;
+      }
 
 }
 
@@ -93,7 +140,30 @@ void node_book_graphics_scene_t::drawBackground(QPainter *painter, const QRectF 
 bool node_book_graphics_scene_t::event(QEvent *event) {
 
   app_state_t *astate = app_state_t::get_inst();
-  astate->tlog("node_book_graphics_scene_t::event(QEvent) {}", event->type());
+  //astate->tlog("node_book_graphics_scene_t::event(QEvent) {}", event->type());
   return QGraphicsScene::event(event);
 
+}
+
+void node_book_graphics_scene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+
+  QList<QGraphicsItem *> items_uc = items(event->scenePos());
+  if (items_uc.empty()) {
+      gs_global_menu->exec(event->screenPos());
+    } else {
+
+       QGraphicsItem *item_qnode{nullptr};
+       for (auto _item : items_uc) {
+           if (_item && _item->type() == qnode_t::Type)
+             item_qnode = _item;
+         }
+
+       if (item_qnode) {
+           auto retv = gs_qnode_menu->exec(event->screenPos());
+           qnode_t* item_qnode_casted = qgraphicsitem_cast<qnode_t*>(item_qnode);
+           if (retv == gs_qnode_menu_delete) delete_node(item_qnode_casted);
+           if (retv == gs_qnode_menu_unlink_all) unlink_node(item_qnode_casted);
+         }
+
+    }
 }

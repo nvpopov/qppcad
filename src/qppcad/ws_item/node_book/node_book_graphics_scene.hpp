@@ -6,6 +6,8 @@
 #include <QGraphicsScene>
 #include <QPainter>
 #include <qppcad/ws_item/node_book/qnode.hpp>
+#include <QMenu>
+#include <QGraphicsSceneContextMenuEvent>
 
 namespace qpp {
 
@@ -23,20 +25,27 @@ namespace qpp {
 
       public:
 
-        std::vector<std::shared_ptr<qnode_t> > m_nodes;
+        QMenu *gs_global_menu;
+        QMenu *gs_qnode_menu;
+        QAction *gs_qnode_menu_delete;
+        QAction *gs_qnode_menu_unlink_all;
+
+        std::vector<qnode_t*> m_nodes;
         std::vector<qnode_socket_t*> m_sockets;
         std::vector<qnode_connection_t*> m_connections;
 
         node_book_graphics_scene_t(QObject *parent);
         void add_connection(qnode_connection_t *_con);
-        void add_node(std::shared_ptr<qnode_t> _node);
+        void add_node(qnode_t *_node);
         void update_connections_with_node(qnode_t *_node);
-        void remove_node(qnode_t *_node);
+        void delete_node(qnode_t *_node);
+        void unlink_node(qnode_t *_node);
 
       protected:
 
         void drawBackground(QPainter *painter, const QRectF &rect) override;
         bool event(QEvent *event) override;
+        void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
       private:
 

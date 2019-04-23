@@ -36,8 +36,8 @@ namespace qpp {
         QColor m_node_bg_color{QColor::fromRgb(34, 34, 34)};
         QColor m_node_label_color{QColor::fromRgb(224, 224, 224)};
 
-        std::vector<std::shared_ptr<qnode_socket_t>> m_inp_sockets;
-        std::vector<std::shared_ptr<qnode_socket_t>> m_out_sockets;
+        std::vector<qnode_socket_t*> m_inp_sockets;
+        std::vector<qnode_socket_t*> m_out_sockets;
 
         std::shared_ptr<sflow_node_t> m_sf_node{nullptr};
 
@@ -64,7 +64,7 @@ namespace qpp {
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
         QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
-        void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+        //void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
     };
 
