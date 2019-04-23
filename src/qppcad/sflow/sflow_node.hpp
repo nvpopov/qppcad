@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
+#include <qppcad/qpp_object.hpp>
 
 namespace qpp {
 
@@ -11,44 +12,59 @@ namespace qpp {
     class sflow_node_t;
     class sflow_connectivity_data_t;
 
-    class sflow_pin_info_t {
-      public:
+    struct sflow_pin_info_t {
+
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         size_t m_total_con{0};
         std::string m_pin_name{"Unknown"};
+
     };
 
-    class sflow_connectivity_data_t {
-      public:
+    struct sflow_inplace_parameter_t {
+
+        sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
+        bool m_editable{false};
+
+    };
+
+    struct sflow_connectivity_data_t {
+
         std::shared_ptr<sflow_node_t> m_inp_node{nullptr};
         std::shared_ptr<sflow_node_t> m_out_node{nullptr};
         std::optional<size_t> m_inp_socket;
         std::optional<size_t> m_out_socket;
+
     };
 
     /**
      * @brief The sflow_node_t class
      */
-    class sflow_node_t {
+    class sflow_node_t : public qpp_object_t {
 
-    public:
+        QPP_OBJECT(sflow_node_t, qpp_object_t)
 
-      std::string m_node_name;
-      bool m_is_outer{true};
-      size_t m_idx_lookup{0};
+      public:
 
-      std::vector<sflow_pin_info_t> m_inp_types;
-      std::vector<sflow_pin_info_t> m_out_types;
-      std::vector<std::shared_ptr<sflow_parameter_t>> m_inps;
-      std::vector<std::shared_ptr<sflow_parameter_t>> m_outs;
+        std::string m_node_name;
+        bool m_is_outer{true};
+        size_t m_idx_lookup{0};
 
-      size_t m_total_gain{0};
-      bool validate_inputs();
+        std::vector<sflow_pin_info_t> m_inp_types;
+        std::vector<sflow_pin_info_t> m_out_types;
 
-      //if false flow stops
-      virtual bool execute();
+        std::vector<std::shared_ptr<sflow_parameter_t>> m_inps;
+        std::vector<std::shared_ptr<sflow_parameter_t>> m_outs;
 
-      sflow_node_t();
+        std::vector<sflow_inplace_parameter_t> m_inplace_types;
+        std::vector<std::shared_ptr<sflow_parameter_t>> m_inplace_parameters;
+
+        size_t m_total_gain{0};
+        bool validate_inputs();
+
+        //if false flow stops
+        virtual bool execute();
+
+        sflow_node_t();
 
     };
 

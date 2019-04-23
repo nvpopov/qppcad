@@ -95,19 +95,6 @@ include_directories(deps/qpp/tests)
 
 qt5_add_resources(QRCS data/resources.qrc)
 
-#build sflow library
-add_library(sflow STATIC
-
-    src/qppcad/sflow/sflow.cpp
-    src/qppcad/sflow/sflow_node.cpp
-    src/qppcad/sflow/sflow_base_nodes.cpp
-    src/qppcad/sflow/sflow_parameter.cpp
-
-    )
-
-add_executable(sflow_test src/qppcad/sflow/sflow_test.cpp)
-target_link_libraries(sflow_test sflow qpp m)
-
 #gather ws_item src
 file(GLOB_RECURSE SRC_WS_ITEM "src/qppcad/ws_item/*.cpp")
 
@@ -140,6 +127,11 @@ add_executable(qppcad
     src/qppcad/gizmo.cpp
     src/qppcad/embedded_cluster_tools.cpp
 
+    src/qppcad/sflow/sflow.cpp
+    src/qppcad/sflow/sflow_node.cpp
+    src/qppcad/sflow/sflow_base_nodes.cpp
+    src/qppcad/sflow/sflow_parameter.cpp
+
     deps/qpp/modules/pyqpp/pyqpp_linalg.cpp
     deps/qpp/modules/pyqpp/pyqpp_geom.cpp
     deps/qpp/modules/pyqpp/pyqpp_xgeom.cpp
@@ -160,7 +152,6 @@ qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 
 target_link_libraries(qppcad
     qpp
-    sflow
     Qt5::Widgets
     Qt5::OpenGL
     Qt5::Charts
