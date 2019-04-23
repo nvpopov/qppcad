@@ -2,6 +2,8 @@
 #include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
 #include <QGraphicsScene>
 #include <QApplication>
+#include <QMenu>
+#include <QGraphicsSceneContextMenuEvent>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_item/node_book/qnode_socket_colorize.hpp>
 
@@ -115,11 +117,11 @@ void qnode_t::paint(QPainter *painter,
                     QWidget *widget) {
 
   QRectF rect = boundingRect();
-  //QRectF rect_m = rect.to
+
   painter->setRenderHint(QPainter::Antialiasing);
   QPainterPath path;
   path.addRoundedRect(rect, 4, 4);
-  QPen pen(isSelected() ? Qt::darkGray : Qt::black, 2);
+  QPen pen(Qt::black, 2);
   painter->setPen(pen);
   painter->fillPath(path, m_node_bg_color);
   painter->drawPath(path);
@@ -207,5 +209,22 @@ QVariant qnode_t::itemChange(QGraphicsItem::GraphicsItemChange change,
     }
 
   return QGraphicsItem::itemChange(change, value);
+
+}
+
+void qnode_t::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  QMenu menu;
+  QAction *remove_action = menu.addAction("Remove");
+  QAction *unlink_all_action = menu.addAction("Unlink all");
+  QAction *selected_action = menu.exec(event->screenPos());
+
+  //if (m_scene) m_scene->sendEvent(
+  if (selected_action == remove_action && m_scene) {
+      m_scene->removeItem(this);
+      astate->tlog("qnode_t::contextMenuEvent(), remove");
+    }
 
 }

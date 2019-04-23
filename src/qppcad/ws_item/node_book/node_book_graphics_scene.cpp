@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
 #include <qppcad/ws_item/node_book/qnode_socket.hpp>
 #include <qppcad/ws_item/node_book/qnode_connection.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -29,10 +30,10 @@ void node_book_graphics_scene_t::add_connection(qnode_connection_t *_con) {
 
 }
 
-void node_book_graphics_scene_t::add_node(qnode_t *_node) {
+void node_book_graphics_scene_t::add_node(std::shared_ptr<qnode_t> _node) {
 
   if (_node) {
-      addItem(_node);
+      addItem(_node.get());
       _node->m_scene = this;
       m_nodes.push_back(_node);
     }
@@ -47,6 +48,12 @@ void node_book_graphics_scene_t::update_connections_with_node(qnode_t *_node) {
         (elem->m_inp_socket->m_node == _node || elem->m_out_socket->m_node == _node)) {
         elem->update_path(QPointF(0,0), true);
       }
+}
+
+void node_book_graphics_scene_t::remove_node(qnode_t *_node) {
+
+  if (!_node) return;
+
 }
 
 void node_book_graphics_scene_t::drawBackground(QPainter *painter, const QRectF &rect) {
@@ -80,5 +87,13 @@ void node_book_graphics_scene_t::drawBackground(QPainter *painter, const QRectF 
 
   painter->setPen(p_pen_dark);
   painter->drawLines(lines_dark.data(), lines_dark.size());
+
+}
+
+bool node_book_graphics_scene_t::event(QEvent *event) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->tlog("node_book_graphics_scene_t::event(QEvent) {}", event->type());
+  return QGraphicsScene::event(event);
 
 }

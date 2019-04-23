@@ -64,6 +64,8 @@ namespace qpp {
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
         QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
+        void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+
     };
 
   } // namespace cad

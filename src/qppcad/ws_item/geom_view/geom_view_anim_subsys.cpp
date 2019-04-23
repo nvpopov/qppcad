@@ -273,7 +273,7 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
   for (size_t i = 0; i < num_frames; i++) {
 
       new_anim.frames[i].atom_pos.resize(tot_at);
-      float alpha = 1 - ((i+1) / float(num_frames));
+      float alpha = 1 - ((i) / float(num_frames-1));
 
       for (size_t q = 0; q < tot_at; q++) {
 

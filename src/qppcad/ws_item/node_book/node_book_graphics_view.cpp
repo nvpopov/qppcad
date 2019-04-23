@@ -46,10 +46,10 @@ void node_book_graphics_view_t::mouseMoveEvent(QMouseEvent *event) {
 
 void node_book_graphics_view_t::mousePressEvent(QMouseEvent *event) {
 
-  if (event->button() == Qt::RightButton) {
-      m_drag_view = true;
-      setDragMode(QGraphicsView::ScrollHandDrag);
-    }
+//  if (event->button() == Qt::LeftButton) {
+//      m_drag_view = true;
+//      setDragMode(QGraphicsView::ScrollHandDrag);
+//    }
 
   QGraphicsView::mousePressEvent(event);
 
@@ -57,10 +57,10 @@ void node_book_graphics_view_t::mousePressEvent(QMouseEvent *event) {
 
 void node_book_graphics_view_t::mouseReleaseEvent(QMouseEvent *event) {
 
-  if (event->button() == Qt::RightButton) {
-      m_drag_view = false;
-      setDragMode(QGraphicsView::NoDrag);
-    }
+//  if (event->button() == Qt::LeftButton) {
+//      m_drag_view = false;
+//      setDragMode(QGraphicsView::NoDrag);
+//    }
 
   QGraphicsView::mouseReleaseEvent(event);
 

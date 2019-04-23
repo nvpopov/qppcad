@@ -93,7 +93,9 @@ int main (int argc, char **argv) {
 
   main_window w;
   w.rebuild_recent_files_menu();
+  astate->ws_mgr->m_bhv_mgr->cache_obj_insp_widgets();
   w.showMaximized();
+
   int ret_code = app.exec();
 
   app_state_t::get_inst()->save_settings();

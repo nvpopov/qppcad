@@ -375,6 +375,12 @@ std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_
 
 }
 
+void ws_item_behaviour_manager_t::cache_obj_insp_widgets() {
+
+  auto obj_insp_w = get_obj_insp_widget_sp(geom_view_t::get_type_static());
+
+}
+
 std::shared_ptr<ws_item_extended_editor_t> ws_item_behaviour_manager_t::get_ext_editor_widget_sp(
     size_t hash, size_t ed_order) {
 

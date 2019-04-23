@@ -439,6 +439,8 @@ namespace qpp {
          */
         std::shared_ptr<ws_item_obj_insp_widget_t> get_obj_insp_widget_sp(size_t hash);
 
+        void cache_obj_insp_widgets();
+
         /**
          * @brief get_ext_editor_widget_sp
          * @param hash

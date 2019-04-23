@@ -23,18 +23,20 @@ namespace qpp {
 
       public:
 
-        std::vector<qnode_t*> m_nodes;
+        std::vector<std::shared_ptr<qnode_t> > m_nodes;
         std::vector<qnode_socket_t*> m_sockets;
         std::vector<qnode_connection_t*> m_connections;
 
         node_book_graphics_scene_t(QObject *parent);
         void add_connection(qnode_connection_t *_con);
-        void add_node(qnode_t *_node);
+        void add_node(std::shared_ptr<qnode_t> _node);
         void update_connections_with_node(qnode_t *_node);
+        void remove_node(qnode_t *_node);
 
       protected:
 
-        virtual void drawBackground(QPainter *painter, const QRectF &rect) override;
+        void drawBackground(QPainter *painter, const QRectF &rect) override;
+        bool event(QEvent *event) override;
 
       private:
 
