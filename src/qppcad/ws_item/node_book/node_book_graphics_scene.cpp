@@ -2,6 +2,7 @@
 #include <qppcad/ws_item/node_book/qnode_socket.hpp>
 #include <qppcad/ws_item/node_book/qnode_connection.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/ui/qextended_action.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -16,18 +17,35 @@ node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
     p_pen_dark(QPen(p_clr_dark)),
     p_brush_bckgr(p_clr_bckgr) {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   for (auto p : {&p_pen_light, &p_pen_dark}) p->setWidth(0);
   setBackgroundBrush(p_brush_bckgr);
-
-  gs_global_menu = new QMenu;
-  gs_global_menu->addAction("A1");
-  gs_global_menu->addAction("A2");
 
   gs_qnode_menu = new QMenu;
   gs_qnode_menu_delete = new QAction("Delete");
   gs_qnode_menu_unlink_all = new QAction("Unlink all");
   gs_qnode_menu->addAction(gs_qnode_menu_delete);
   gs_qnode_menu->addAction(gs_qnode_menu_unlink_all);
+
+  gs_global_menu = new QMenu;
+
+  std::map<size_t, QMenu*> _sflow_grp_lookup;
+
+  for (auto &rec : astate->ws_mgr->m_bhv_mgr->m_sflow_node_group_info) {
+      QMenu *_temp = gs_global_menu->addMenu(QString::fromStdString(rec.second.m_group_name));
+      _sflow_grp_lookup[rec.first] = _temp;
+    }
+
+  for (auto &rec : astate->ws_mgr->m_bhv_mgr->m_sflow_node_info) {
+      auto it = _sflow_grp_lookup.find(rec.second.m_group_hash);
+      if (it != _sflow_grp_lookup.end()) {
+          qextended_action *_temp_act = new qextended_action();
+          _temp_act->setText(QString::fromStdString(rec.second.m_full_name));
+          _temp_act->m_joined_data[0] = rec.first;
+          if (it->second) it->second->addAction(_temp_act);
+        }
+    }
 
 }
 
@@ -103,6 +121,21 @@ void node_book_graphics_scene_t::unlink_node(qnode_t *_node) {
 
 }
 
+void node_book_graphics_scene_t::construct_new_node(QPointF pos, size_t sflow_fbr_hash) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  auto it = astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.find(sflow_fbr_hash);
+  if (it == astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.end()) return;
+
+  auto new_node1 = it->second.m_fabric();
+  auto qnode1 = new qnode_t();
+  add_node(qnode1);
+  qnode1->set_sflow_node(new_node1);
+  qnode1->setPos(pos);
+
+}
+
 void node_book_graphics_scene_t::drawBackground(QPainter *painter, const QRectF &rect) {
 
   QGraphicsScene::drawBackground(painter, rect);
@@ -140,7 +173,6 @@ void node_book_graphics_scene_t::drawBackground(QPainter *painter, const QRectF 
 bool node_book_graphics_scene_t::event(QEvent *event) {
 
   app_state_t *astate = app_state_t::get_inst();
-  //astate->tlog("node_book_graphics_scene_t::event(QEvent) {}", event->type());
   return QGraphicsScene::event(event);
 
 }
@@ -148,8 +180,13 @@ bool node_book_graphics_scene_t::event(QEvent *event) {
 void node_book_graphics_scene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
 
   QList<QGraphicsItem *> items_uc = items(event->scenePos());
+
   if (items_uc.empty()) {
-      gs_global_menu->exec(event->screenPos());
+      auto res = gs_global_menu->exec(event->screenPos());
+      if (res) {
+          qextended_action *ext_act = qobject_cast<qextended_action*>(res);
+          if (ext_act) construct_new_node(event->scenePos(), ext_act->m_joined_data[0]);
+        }
     } else {
 
        QGraphicsItem *item_qnode{nullptr};
@@ -165,5 +202,6 @@ void node_book_graphics_scene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent
            if (retv == gs_qnode_menu_unlink_all) unlink_node(item_qnode_casted);
          }
 
-    }
+    } // else
+
 }

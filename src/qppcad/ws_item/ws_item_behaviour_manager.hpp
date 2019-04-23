@@ -5,6 +5,7 @@
 #include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
+#include <qppcad/ws_item/sflow_behaviour_manager.hpp>
 
 namespace qpp {
 
@@ -29,9 +30,7 @@ namespace qpp {
     /**
      * @brief The ws_item_io_file_format_group_t class
      */
-    class ws_item_io_file_format_group_t {
-
-      public:
+    struct ws_item_io_file_format_group_t {
 
         std::string m_full_name;
         std::string m_short_name;
@@ -42,9 +41,7 @@ namespace qpp {
     /**
      * @brief The ws_item_io_file_format_t class
      */
-    class ws_item_io_file_format_t {
-
-      public:
+    struct ws_item_io_file_format_t {
 
         std::string m_full_name;
         std::string m_shortname;
@@ -56,9 +53,7 @@ namespace qpp {
     /**
      * @brief The ws_item_tool_t class
      */
-    class ws_item_tool_t {
-
-    public:
+    struct ws_item_tool_t {
 
          /**
          * @brief exec
@@ -71,19 +66,14 @@ namespace qpp {
     /**
      * @brief The ws_item_tool_group_t class
      */
-    class ws_item_tool_group_t {
-
-      public:
-
+    struct ws_item_tool_group_t {
         std::string m_full_name;
     };
 
     /**
      * @brief The ws_item_tool_info_t class
      */
-    class ws_item_tool_info_t {
-
-      public:
+    struct ws_item_tool_info_t {
 
         std::string m_full_name;
         size_t m_group_hash;
@@ -96,9 +86,7 @@ namespace qpp {
     /**
      * @brief The ws_item_extended_editor_info_t class
      */
-    class ws_item_extended_editor_info_t {
-
-      public:
+    struct ws_item_extended_editor_info_t {
 
         std::string m_full_name;
         size_t m_type;
@@ -111,9 +99,7 @@ namespace qpp {
     /**
      * @brief The ws_item_io_behaviour_t class
      */
-    class ws_item_io_behaviour_t {
-
-      public:
+    struct ws_item_io_behaviour_t {
 
         size_t m_accepted_type;
         size_t m_accepted_file_format;
@@ -277,6 +263,9 @@ namespace qpp {
 
         /** @brief m_tools_info */
         std::map<size_t, ws_item_tool_info_t> m_tools_info;
+
+        std::map<size_t, sflow_node_group_info_t> m_sflow_node_group_info;
+        std::map<size_t, sflow_node_info_t> m_sflow_node_info;
 
         /**
          * @brief load_ws_itm_from_file
@@ -487,6 +476,10 @@ namespace qpp {
                         bool _itm_req,
                         std::function<std::shared_ptr<ws_item_tool_t>() > _fabric);
 
+        size_t reg_sflow_grp(std::string group_name);
+        size_t reg_reg_sflow_fbr(std::string _full_name,
+                                 size_t _g_hash,
+                                 std::function<std::shared_ptr<sflow_node_t>() > _fabric);
         /**
          * @brief exec_tool
          * @param item

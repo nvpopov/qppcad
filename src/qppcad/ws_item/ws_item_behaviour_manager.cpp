@@ -195,6 +195,41 @@ size_t ws_item_behaviour_manager_t::reg_tool(
 
 }
 
+size_t ws_item_behaviour_manager_t::reg_sflow_grp(std::string group_name) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  size_t _g_hash = astate->hash_reg->calc_hash(group_name);
+
+  sflow_node_group_info_t sflow_grp;
+  sflow_grp.m_group_name = group_name;
+  sflow_grp.m_group_hash = _g_hash;
+
+  m_sflow_node_group_info.emplace(_g_hash, std::move(sflow_grp));
+
+  return _g_hash;
+
+}
+
+size_t ws_item_behaviour_manager_t::reg_reg_sflow_fbr(
+    std::string _full_name,
+    size_t _g_hash,
+    std::function<std::shared_ptr<sflow_node_t> ()> _fabric) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  sflow_node_info_t sinfo;
+  sinfo.m_full_name = _full_name;
+  sinfo.m_group_hash = _g_hash;
+  sinfo.m_fabric = _fabric;
+
+  size_t sinfo_hash = astate->hash_reg->calc_hash(_full_name);
+
+  m_sflow_node_info.emplace(sinfo_hash, std::move(sinfo));
+  return sinfo_hash;
+
+}
+
 void ws_item_behaviour_manager_t::exec_tool(ws_item_t* item,
                                             size_t tool_hash,
                                             uint32_t _error_ctx) {

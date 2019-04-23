@@ -3,6 +3,7 @@
 #include <data/ptable.hpp>
 #include <mathf/math.hpp>
 #include <qppcad/register_all_things.hpp>
+#include <qppcad/ws_item/sflow_register.hpp>
 #include <io/parsing_exceptions.hpp>
 #include <qppcad/ui/qrich_error_message_box.hpp>
 #include <qppcad/json_helpers.hpp>
@@ -637,6 +638,8 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_ext_edt(m_bhv_mgr.get());
+
+  sflow_node_reg_helper_t::reg_sflow_info(m_bhv_mgr.get());
 
 }
 

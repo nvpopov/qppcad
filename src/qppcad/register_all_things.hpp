@@ -8,9 +8,7 @@ namespace qpp {
 
   namespace cad {
 
-    class registration_helper_t {
-
-      public:
+    struct registration_helper_t {
 
         template<typename T>
         static void reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr) {
