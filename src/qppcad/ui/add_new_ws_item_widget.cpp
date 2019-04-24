@@ -8,6 +8,7 @@
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
 #include <qppcad/ws_item/arrow_array/arrow_array.hpp>
+#include <qppcad/ws_item/py_note_book/py_note_book.hpp>
 
 #include <qppcad/ui/qt_helpers.hpp>
 
@@ -24,7 +25,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   setWindowTitle(tr("Add new item to workspace"));
 
-  descr_list.reserve(10);
+  descr_list.reserve(11);
 
   descr_list.push_back(tr("Description for geom_view_t [DIM=0D]"));
   descr_list.push_back(tr("Description for geom_view_t [DIM=1D]"));
@@ -36,6 +37,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   descr_list.push_back(tr("Description for arrow_primitive_t"));
   descr_list.push_back(tr("Description for node_book_t"));
   descr_list.push_back(tr("Description for arrow_array_t"));
+  descr_list.push_back(tr("Description for py_note_book_t"));
 
   main_lt = new QVBoxLayout;
   data_lt = new QHBoxLayout;
@@ -130,6 +132,12 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
           this,
           &add_new_ws_item_widget_t::react_gb_ctor_arrow_array_checked);
 
+  rb_ctor_py_note_book = new QRadioButton(tr("python note book"));
+  connect(rb_ctor_py_note_book,
+          &QRadioButton::toggled,
+          this,
+          &add_new_ws_item_widget_t::react_gb_ctor_py_note_book_checked);
+
   rb_ctor_geom0d->setChecked(true);
 
   gb_ctor_lt->addWidget(rb_ctor_geom0d);
@@ -142,6 +150,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   gb_ctor_lt->addWidget(rb_ctor_arrow);
   gb_ctor_lt->addWidget(rb_ctor_node_book);
   gb_ctor_lt->addWidget(rb_ctor_arrow_array);
+  gb_ctor_lt->addWidget(rb_ctor_py_note_book);
 
   auto label_setup = [](QLabel *label, bool visible = false) {
     label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -487,6 +496,18 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
             }
         }
 
+      if (rb_ctor_py_note_book->isChecked()) {
+          auto cur_ws = astate->ws_mgr->get_cur_ws();
+          if (!cur_ws) return;
+          auto nt =
+              astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(py_note_book_t::get_type_static());
+          auto aa_ap = nt->cast_as<py_note_book_t>();
+          if (!aa_ap) return;
+          aa_ap->m_name = type_param_name->text().toStdString();
+          cur_ws->add_item_to_ws(nt);
+
+        }
+
       accept();
 
     }
@@ -605,6 +626,17 @@ void add_new_ws_item_widget_t::react_gb_ctor_arrow_array_checked(bool checked) {
   if (checked) {
       set_cell_ctors_visibility(false);
       type_descr_lbl->setText(descr_list[9]);
+    }
+
+}
+
+void add_new_ws_item_widget_t::react_gb_ctor_py_note_book_checked(bool checked) {
+
+  control_top_type_parameters_visibility();
+
+  if (checked) {
+      set_cell_ctors_visibility(false);
+      type_descr_lbl->setText(descr_list[10]);
     }
 
 }
