@@ -20,15 +20,15 @@ hpp_tmp = """#include <qppcad/qppcad.hpp>
         void render() override;
         bool mouse_click(ray_t<float> *click_ray) override;
 
-        std::string compose_item_name() override;
+        std::string compose_type_descr() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
-	void updated_internally() override;	
-        uint32_t get_amount_of_selected_content() override;
+	void updated_externally(uint32_t update_reason) override;	
+        uint32_t get_num_cnt_selected() override;
         size_t get_content_count() override;
-			
+
         void save_to_json(json &data) override;
-        void load_from_json(json &data) override;
+        void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
     };
 
@@ -60,7 +60,7 @@ bool #CLASS_NAME_t::mouse_click(ray_t<float> *click_ray) {
   return false;
 }
 
-std::string #CLASS_NAME_t::compose_item_name() {
+std::string #CLASS_NAME_t::compose_type_descr() {
   return "#CLASS_NAME";
 }
 
@@ -72,7 +72,7 @@ float #CLASS_NAME_t::get_bb_prescaller() {
   return 1.0f;
 }
 
-uint32_t #CLASS_NAME_t::get_amount_of_selected_content() {
+uint32_t #CLASS_NAME_t::get_num_cnt_selected() {
   return 0;
 }
 
@@ -84,11 +84,14 @@ void #CLASS_NAME_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 }
 
-void #CLASS_NAME_t::load_from_json(json &data) {
-  ws_item_t::load_from_json(data);
+void #CLASS_NAME_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
+  ws_item_t::load_from_json(data, rep_info);
 }
 
-void #CLASS_NAME_t::updated_internally() {
+void #CLASS_NAME_t::updated_externally(uint32_t update_reason) {
+
+  ws_item_t::updated_externally(update_reason);
+
 }
 
 """

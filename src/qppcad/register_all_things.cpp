@@ -29,6 +29,10 @@
 #include <qppcad/ws_item/node_book/node_book_obj_insp_widget.hpp>
 #include <qppcad/ws_item/node_book/node_book_extended_editor.hpp>
 
+#include <qppcad/ws_item/py_note_book/py_note_book.hpp>
+#include <qppcad/ws_item/py_note_book/py_note_book_obj_insp_widget.hpp>
+#include <qppcad/ws_item/py_note_book/py_note_book_extended_editor.hpp>
+
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
@@ -62,6 +66,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr<pgf_producer_t>(bhv_mgr);
   reg_ws_item_fbr<node_book_t>(bhv_mgr);
   reg_ws_item_fbr<arrow_array_t>(bhv_mgr);
+  reg_ws_item_fbr<py_note_book_t>(bhv_mgr);
 
 }
 
@@ -77,6 +82,7 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
   reg_ws_item_obj_insp_fbr<pgf_producer_t, pgf_producer_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<node_book_t, node_book_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<arrow_array_t, arrow_array_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<py_note_book_t, py_note_book_obj_insp_widget_t>(bhv_mgr);
 
 }
 
@@ -93,6 +99,9 @@ void registration_helper_t::reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv
 
   reg_ws_item_ext_edt_fbr<ccd_view_t, ccd_traj_analyzer_extended_editor_t>(
         1, "ccd traj_analyzer", bhv_mgr);
+
+  reg_ws_item_ext_edt_fbr<py_note_book_t, py_note_book_extended_editor_t>(
+        0, "py_note_book editor", bhv_mgr);
 
 }
 

@@ -1,5 +1,5 @@
 #include <qppcad/type_info.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/string_hash_register.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -8,7 +8,7 @@ qtype_info::qtype_info(std::string type_name,
                        const qtype_info *base_type_info) {
 
   p_type_name = type_name;
-  p_type_hash = app_state_t::get_inst()->hash_reg->calc_hash(type_name);
+  p_type_hash = string_hash_register_t::calc_hash_ub(type_name);
   p_base_type_info = base_type_info;
 
 }

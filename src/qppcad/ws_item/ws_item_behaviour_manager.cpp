@@ -113,9 +113,10 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
                                            std::string _short_name,
                                            size_t _file_format_group_hash,
                                            std::vector<std::string> _finger_prints) {
+
   app_state_t *astate = app_state_t::get_inst();
 
-  size_t _ff_hash = astate->hash_reg->calc_hash(_full_name);
+  size_t _ff_hash = astate->hash_reg->calc_hash_ub(_full_name);
 
   auto it = m_file_formats.find(_ff_hash);
 
@@ -137,13 +138,14 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
                _full_name, _short_name, _ff_hash, _file_format_group_hash);
 
   return _ff_hash;
+
 }
 
-size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
-                                            std::string _short_name) {
+size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name, std::string _short_name) {
+
   app_state_t *astate = app_state_t::get_inst();
 
-  size_t _file_format_group_hash = astate->hash_reg->calc_hash(_full_name);
+  size_t _file_format_group_hash = astate->hash_reg->calc_hash_ub(_full_name);
 
   auto it = m_file_format_groups.find(_file_format_group_hash);
 
@@ -158,6 +160,7 @@ size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name,
                _full_name, _short_name, _file_format_group_hash);
 
   return _file_format_group_hash;
+
 }
 
 size_t ws_item_behaviour_manager_t::reg_tool_grp(std::string _full_name) {
@@ -166,7 +169,7 @@ size_t ws_item_behaviour_manager_t::reg_tool_grp(std::string _full_name) {
 
   ws_item_tool_group_t tool_grp;
   tool_grp.m_full_name = _full_name;
-  size_t _g_hash = astate->hash_reg->calc_hash(_full_name);
+  size_t _g_hash = astate->hash_reg->calc_hash_ub(_full_name);
   m_tools_groups.emplace(_g_hash, std::move(tool_grp));
 
   return _g_hash;
@@ -188,7 +191,7 @@ size_t ws_item_behaviour_manager_t::reg_tool(
   tinfo.m_item_required = _itm_req;
   tinfo.m_fabric = _fabric;
 
-  size_t tinfo_hash = astate->hash_reg->calc_hash(_full_name);
+  size_t tinfo_hash = astate->hash_reg->calc_hash_ub(_full_name);
 
   m_tools_info.emplace(tinfo_hash, std::move(tinfo));
   return tinfo_hash;
@@ -199,7 +202,7 @@ size_t ws_item_behaviour_manager_t::reg_sflow_grp(std::string group_name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  size_t _g_hash = astate->hash_reg->calc_hash(group_name);
+  size_t _g_hash = astate->hash_reg->calc_hash_ub(group_name);
 
   sflow_node_group_info_t sflow_grp;
   sflow_grp.m_group_name = group_name;
@@ -223,7 +226,7 @@ size_t ws_item_behaviour_manager_t::reg_reg_sflow_fbr(
   sinfo.m_group_hash = _g_hash;
   sinfo.m_fabric = _fabric;
 
-  size_t sinfo_hash = astate->hash_reg->calc_hash(_full_name);
+  size_t sinfo_hash = astate->hash_reg->calc_hash_ub(_full_name);
 
   m_sflow_node_info.emplace(sinfo_hash, std::move(sinfo));
   return sinfo_hash;
@@ -459,7 +462,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_name(
     const std::string _type_name) {
 
   app_state_t *astate = app_state_t::get_inst();
-  return fbr_ws_item_by_type(astate->hash_reg->calc_hash<std::string>(_type_name));
+  return fbr_ws_item_by_type(astate->hash_reg->calc_hash_ub<std::string>(_type_name));
 
 }
 

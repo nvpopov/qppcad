@@ -326,7 +326,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
         for (auto &object : objects)
           if (object.find(JSON_WS_ITEM_TYPE) != object.end()) {
               std::string obj_type = object[JSON_WS_ITEM_TYPE];
-              size_t obj_hash = astate->hash_reg->calc_hash(obj_type);
+              size_t obj_hash = astate->hash_reg->calc_hash_ub(obj_type);
               std::shared_ptr<ws_item_t> obj =
                   astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
               if (obj) {
@@ -432,7 +432,7 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
       return nullptr;
     }
 
-  auto type_hash = astate->hash_reg->calc_hash(class_name);
+  auto type_hash = astate->hash_reg->calc_hash_ub(class_name);
 
   if (!type_hash) {
       astate->log("ERROR: workspace_t::py_construct_item -> invalid hash");
