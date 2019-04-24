@@ -18,6 +18,7 @@ namespace qpp {
 
         sf_i_prop_node_t();
         bool execute_ex() override;
+        bool is_single_node() override;
 
     };
 
@@ -32,6 +33,7 @@ namespace qpp {
 
         sf_i_final_node_t();
         bool execute_ex() override;
+        bool is_single_node() override;
 
     };
 

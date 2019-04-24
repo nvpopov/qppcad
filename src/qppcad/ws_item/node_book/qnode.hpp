@@ -11,6 +11,7 @@
 #include <QWidget>
 #include <QFormLayout>
 #include <QHBoxLayout>
+#include <QTextOption>
 
 namespace qpp {
 
@@ -30,12 +31,15 @@ namespace qpp {
         int m_socket_size{8};
         int m_socket_spacing{8};
         int m_x_offset{-16};
+        int m_label_height{40};
 
         QPen m_node_outline_pen;
         QPen m_text_pen;
 
         QPen m_node_border_pen;
         QPen m_node_label_pen;
+
+        QTextOption m_label_text_opt;
 
         QColor m_node_bg_color{QColor::fromRgb(34, 34, 34)};
         QColor m_node_label_color{QColor::fromRgb(224, 224, 224)};
@@ -49,15 +53,16 @@ namespace qpp {
 
         QGraphicsProxyWidget *m_inplace_pars_widget{nullptr};
         QWidget *m_inplace_wdgt{nullptr};
-        QHBoxLayout *m_inplace_wdgt_top_lt{nullptr};
         QFormLayout *m_inplace_wdgt_lt{nullptr};
+        std::vector<QWidget*> m_inplace_wdgts;
 
         qnode_t(QGraphicsItem *parent = nullptr);
         ~qnode_t();
 
         void construct_inplace_widgets();
-
         int type() const override;
+        size_t num_inps();
+        size_t num_outs();
 
         void set_sflow_node(std::shared_ptr<sflow_node_t> node);
         QRectF boundingRect() const override;

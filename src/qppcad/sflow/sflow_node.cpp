@@ -26,9 +26,9 @@ bool sflow_node_t::validate_inplace_parameters() {
 
   m_inplace_parameters.resize(m_inplace_types.size());
 
-  for (size_t i = 0; i < m_inp_types.size(); i++) {
+  for (size_t i = 0; i < m_inplace_types.size(); i++) {
 
-      switch (m_inp_types[i].m_type) {
+      switch (m_inplace_types[i].m_type) {
 
         case sflow_parameter_e::sfpar_int : {
             m_inplace_parameters[i] = std::make_shared<sflow_parameter_int_t>();
@@ -73,4 +73,8 @@ bool sflow_node_t::execute() {
 
 bool sflow_node_t::execute_ex() {
   return true;
+}
+
+bool sflow_node_t::is_single_node() {
+  return false;
 }

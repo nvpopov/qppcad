@@ -66,6 +66,7 @@ namespace qpp {
         //if false flow stops
         bool execute();
         virtual bool execute_ex();
+        virtual bool is_single_node();
 
         sflow_node_t();
 

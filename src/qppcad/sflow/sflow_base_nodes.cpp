@@ -5,10 +5,10 @@ using namespace qpp::cad;
 
 sf_i_prop_node_t::sf_i_prop_node_t() : sflow_node_t () {
 
-  m_node_name = "integer propagator";
+  m_node_name = "integer";
 
   m_out_types = {
-    {sflow_parameter_e::sfpar_int, 0, "value"}
+    {sflow_parameter_e::sfpar_int, 0, ""}
   };
 
   m_inplace_types = {
@@ -30,12 +30,20 @@ bool sf_i_prop_node_t::execute_ex() {
 
 }
 
+bool sf_i_prop_node_t::is_single_node() {
+  return true;
+}
+
 sf_i_final_node_t::sf_i_final_node_t() : sflow_node_t () {
 
-  m_node_name = "integer finalize";
+  m_node_name = "integer show";
 
   m_inp_types = {
-    {sflow_parameter_e::sfpar_int, 0, "a"}
+    {sflow_parameter_e::sfpar_int, 0, ""}
+  };
+
+  m_inplace_types = {
+    {sflow_parameter_e::sfpar_int, "value", false}
   };
 
 }
@@ -52,6 +60,10 @@ bool sf_i_final_node_t::execute_ex() {
 
   return true;
 
+}
+
+bool sf_i_final_node_t::is_single_node() {
+  return true;
 }
 
 sf_i_p_const_node_t::sf_i_p_const_node_t() : sflow_node_t () {
@@ -118,7 +130,7 @@ bool sf_i_sum_i_node_t::execute_ex() {
 
 sf_f_prop_node_t::sf_f_prop_node_t() {
 
-  m_node_name = "float propagator";
+  m_node_name = "float";
 
   m_out_types = {
     {sflow_parameter_e::sfpar_float, 0, "dst"}

@@ -110,6 +110,22 @@ file(GLOB_RECURSE SRC_PYTHON_EMBEDDED "src/qppcad/python/*.cpp")
 #gather render src
 file(GLOB_RECURSE SRC_RENDER "src/qppcad/render/*.cpp")
 
+#build sflow tests
+#build qppcad application
+add_executable(sflow-tests
+    src/qppcad/sflow/sflow_test.cpp
+    src/qppcad/sflow/sflow.cpp
+    src/qppcad/sflow/sflow_node.cpp
+    src/qppcad/sflow/sflow_base_nodes.cpp
+    src/qppcad/sflow/sflow_parameter.cpp
+    src/qppcad/type_info.cpp
+    src/qppcad/string_hash_register.cpp
+    )
+
+target_link_libraries(sflow-tests
+    qpp
+    )
+
 #build qppcad application
 add_executable(qppcad
 
