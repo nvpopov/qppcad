@@ -32,6 +32,12 @@ namespace qpp {
         int m_socket_spacing{8};
         int m_x_offset{-16};
         int m_label_height{40};
+        int m_lp{10};
+
+        int m_dh_i{0};
+        int m_dm_i{0};
+        int m_dh_o{0};
+        int m_dm_o{0};
 
         QPen m_node_outline_pen;
         QPen m_text_pen;

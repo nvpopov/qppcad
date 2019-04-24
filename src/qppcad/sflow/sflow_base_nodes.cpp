@@ -177,3 +177,38 @@ bool sf_f_p_const_node_t::execute_ex() {
   return true;
 
 }
+
+sf_ipatb_const_node_t::sf_ipatb_const_node_t() {
+
+  m_node_name = "(int + a) * b";
+
+  m_out_types = {
+   {sflow_parameter_e::sfpar_int, 0, "src"}
+  };
+
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_int, 0, "dst"}
+  };
+
+  m_inplace_types = {
+    {sflow_parameter_e::sfpar_int, "a", true},
+    {sflow_parameter_e::sfpar_int, "b", true}
+  };
+
+}
+
+bool sf_ipatb_const_node_t::execute_ex() {
+
+  auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
+
+  if (inp0) {
+      auto out0 = std::make_shared<sflow_parameter_int_t>();
+      out0->m_value = inp0->m_value + 1;
+      m_outs[0] = out0;
+    } else {
+      return false;
+    }
+
+  return true;
+
+}

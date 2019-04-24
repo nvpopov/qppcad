@@ -22,6 +22,9 @@ void sflow_node_reg_helper_t::reg_sflow_info(ws_item_behaviour_manager_t *bhv_mg
   sflow_node_reg_helper_t::reg_sflow_info_fbr<sf_i_sum_i_node_t>(
         bhv_mgr, "int + int", int_grp);
 
+  sflow_node_reg_helper_t::reg_sflow_info_fbr<sf_ipatb_const_node_t>(
+        bhv_mgr, "(int + a)*b", int_grp);
+
   sflow_node_reg_helper_t::reg_sflow_info_fbr<sf_f_prop_node_t>(
         bhv_mgr, "float", float_grp);
 

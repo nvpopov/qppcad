@@ -26,11 +26,16 @@ node_book_graphics_view_t::node_book_graphics_view_t(QGraphicsScene *scene, QWid
 void node_book_graphics_view_t::wheelEvent(QWheelEvent *event) {
 
   setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-  double scaleFactor = 1.05;
-  if (event->delta() > 0) scale(scaleFactor, scaleFactor);
-  else scale(1.0 / scaleFactor, 1.0 / scaleFactor);
-  event->accept();
-  QGraphicsView::wheelEvent(event);
+
+  if (event && event->modifiers() == Qt::ControlModifier) {
+      double scaleFactor = 1.05;
+      if (event->delta() > 0) scale(scaleFactor, scaleFactor);
+      else scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+      event->accept();
+
+      QGraphicsView::wheelEvent(event);
+    }
+
 
 }
 

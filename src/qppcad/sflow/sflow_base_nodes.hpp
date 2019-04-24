@@ -51,6 +51,17 @@ namespace qpp {
 
     };
 
+    class sf_ipatb_const_node_t : public sflow_node_t {
+
+        QPP_OBJECT(sf_ipatb_const_node_t, sflow_node_t)
+
+      public:
+
+        sf_ipatb_const_node_t();
+        bool execute_ex() override;
+
+    };
+
     /**
      * @brief The sflow_sum_i_node_t class
      */

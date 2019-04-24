@@ -129,19 +129,16 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
   if (m_sf_node->validate_inplace_parameters()) construct_inplace_widgets();
 
   QRectF rect = boundingRect();
-  int h = rect.height();
+  int h = rect.height() - m_label_height;
 
   bool is_single_node = m_sf_node->is_single_node();
   if (m_inplace_wdgt && !is_single_node) h -= m_inplace_wdgt->height();
 
-  int h_a = h - m_label_height;
-
-  int l_p = 10;
   int dh_i = 2 * m_socket_size * num_inps() + m_socket_spacing * (num_inps() - 1);
-  int dm_i = (h_a - dh_i) / 2;
+  int dm_i = (h - dh_i) / 2;
 
   int dh_o = 2 * m_socket_size * num_outs() + m_socket_spacing * (num_outs() - 1);
-  int dm_o = (h_a - dh_o) / 2;
+  int dm_o = (h - dh_o) / 2;
 
   for (size_t i = 0; i < m_sf_node->m_inp_types.size(); i++) {
 
@@ -192,14 +189,16 @@ QRectF qnode_t::boundingRect() const {
 
   if (!m_sf_node) return QRectF(0, 0, m_width, m_height);
 
+  int additional_h_from_inplace = 0;
+  if (m_inplace_wdgt) additional_h_from_inplace = m_inplace_wdgt->height();
+
   if (m_sf_node->is_single_node())
-    return QRectF(0, 0, m_width, m_label_height +
-                  (m_inplace_wdgt != nullptr ? m_inplace_wdgt->height() : 0));
+    return QRectF(0, 0, m_width, m_label_height + additional_h_from_inplace);
 
   int max_c = std::max(m_sf_node->m_inp_types.size(), m_sf_node->m_out_types.size());
   int new_height = m_label_height
-      + max_c * 2 * m_socket_size + (max_c - 1) * m_socket_spacing
-      + (m_inplace_wdgt != nullptr ? m_inplace_wdgt->height() : 0);
+      + max_c * 4 * m_socket_size + (max_c - 1) * m_socket_spacing
+      + additional_h_from_inplace;
 
   return QRectF(0, 0, m_width, new_height);
 
@@ -252,7 +251,7 @@ void qnode_t::paint(QPainter *painter,
       QString _pin_name = QString::fromStdString(m_sf_node->m_inp_types[i].m_pin_name);
       QPoint inp_sck_pos = {
         5,
-        m_label_height + dm_i + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.37
+        m_label_height + dm_i + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.55
       };
       painter->drawText(inp_sck_pos, _pin_name);
     }
@@ -261,7 +260,7 @@ void qnode_t::paint(QPainter *painter,
       QString _pin_name = QString::fromStdString(m_sf_node->m_out_types[i].m_pin_name);
       QPoint out_sck_pos = {
         m_width - 5 - fm.width(_pin_name),
-        m_label_height + dm_o + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.37
+        m_label_height + dm_o + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.55
       };
       painter->drawText(out_sck_pos, _pin_name);
     }
