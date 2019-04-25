@@ -12,11 +12,11 @@ namespace qpp {
     class sflow_node_t;
     class sflow_connectivity_data_t;
 
-    struct sflow_pin_info_t {
+    struct sflow_socket_info_t {
 
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         size_t m_total_con{0};
-        std::string m_pin_name{"Unknown"};
+        std::string m_socket_name{"Unknown"};
 
     };
 
@@ -49,9 +49,10 @@ namespace qpp {
         std::string m_node_name;
         bool m_is_outer{true};
         size_t m_idx_lookup{0};
+        size_t m_total_gain{0};
 
-        std::vector<sflow_pin_info_t> m_inp_types;
-        std::vector<sflow_pin_info_t> m_out_types;
+        std::vector<sflow_socket_info_t> m_inp_types;
+        std::vector<sflow_socket_info_t> m_out_types;
 
         std::vector<std::shared_ptr<sflow_parameter_t>> m_inps;
         std::vector<std::shared_ptr<sflow_parameter_t>> m_outs;
@@ -59,7 +60,6 @@ namespace qpp {
         std::vector<sflow_inplace_parameter_t> m_inplace_types;
         std::vector<std::shared_ptr<sflow_parameter_t>> m_inplace_parameters;
 
-        size_t m_total_gain{0};
         bool validate_inputs();
         void validate_outputs();
         bool validate_inplace_parameters();

@@ -18,12 +18,15 @@ namespace qpp {
     class qnode_t;
     class qnode_socket_t;
     class qnode_connection_t;
+    class node_book_t;
 
     class node_book_graphics_scene_t : public QGraphicsScene {
 
       Q_OBJECT
 
       public:
+
+        node_book_t *m_parent_node_book{nullptr};
 
         QMenu *gs_global_menu;
         QMenu *gs_qnode_menu;

@@ -30,19 +30,8 @@ void qnode_connection_t::update_path(QPointF point, bool finalize) {
 
   if (finalize && m_out_socket && m_inp_socket) {
 
-     // astate->tlog("qnode_connection_t::update_path() -> finalize");
-
       QPointF out_pos = (m_out_socket->scenePos());
       QPointF inp_pos = (m_inp_socket->scenePos());
-
-//      astate->tlog("OUTSCK ? = {}, INPSCK ? = {}, O == I ? {}",
-//                   m_out_socket != nullptr, m_inp_socket != nullptr, m_out_socket == m_inp_socket);
-//      astate->tlog("OUT_NN = {}, INP_NN = {}",
-//                   m_out_socket->m_node != nullptr,
-//                   m_inp_socket->m_node != nullptr);
-
-//      astate->tlog("qnode_connection_t::update_path() -> {} {} {} {}",
-//                   out_pos.x(), out_pos.y(), inp_pos.x(), inp_pos.y());
 
       out_pos += QPointF(6,6);
       inp_pos += QPointF(6,6);

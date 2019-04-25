@@ -108,10 +108,9 @@ void qnode_socket_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
           qnode_socket_t* item_c = qgraphicsitem_cast<qnode_socket_t*>(item);
 
           if (item_c && item_c != this && m_is_inp_socket != item_c->m_is_inp_socket) {
+
               //determine who is who
               //this is inp, target in out
-
-
               if (m_is_inp_socket && !item_c->m_is_inp_socket) {
                   m_connection->m_inp_socket = this;
                   m_connection->m_out_socket = item_c;

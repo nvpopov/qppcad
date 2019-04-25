@@ -52,8 +52,11 @@ sf_i_final_node_t::sf_i_final_node_t() : sflow_node_t () {
 bool sf_i_final_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
-  if (inp0) {
-      fmt::print(std::cout, "NODE_MESSAGE {}\n", inp0->m_value);
+  auto inp_p0 = m_inplace_parameters[0]->cast_as<sflow_parameter_int_t>();
+
+  if (inp0 && inp_p0) {
+      inp_p0->m_value = inp0->m_value;
+      fmt::print(std::cout, "NODE_MESSAGE {}\n", inp_p0->m_value);
       return true;
     } else {
       return false;

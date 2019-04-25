@@ -23,10 +23,10 @@ namespace qpp {
         sflow_context_t();
 
         void add_node(std::shared_ptr<sflow_node_t> node);
-        sflow_status_e connect_node(std::shared_ptr<sflow_node_t> node1,
-                                    std::shared_ptr<sflow_node_t> node2,
-                                    size_t pin1,
-                                    size_t pin2);
+        sflow_status_e connect_node(std::shared_ptr<sflow_node_t> out_node,
+                                    std::shared_ptr<sflow_node_t> inp_node,
+                                    size_t out_socket,
+                                    size_t inp_socket);
 
         void clear_context();
         void clear_outer_nodes();

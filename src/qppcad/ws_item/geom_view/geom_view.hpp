@@ -29,6 +29,7 @@ namespace qpp {
     enum geom_view_render_style_e : int {
 
       ball_and_stick,
+      suprematic_atoms,
       dynamic_lines,
       xatom_lines,
       billboards,

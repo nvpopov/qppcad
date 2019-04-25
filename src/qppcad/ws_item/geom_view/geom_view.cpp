@@ -247,6 +247,10 @@ void geom_view_t::render () {
           geom_view_render_bs::render(*this);
           break;
 
+        case geom_view_render_style_e::suprematic_atoms :
+          geom_view_render_bs::render(*this);
+          break;
+
         case geom_view_render_style_e::dynamic_lines:
           geom_view_render_dlines::render(*this);
           break;

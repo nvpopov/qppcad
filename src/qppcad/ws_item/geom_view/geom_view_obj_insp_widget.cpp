@@ -113,6 +113,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
 
   disp_s_render_style = new qbinded_combobox_t;
   disp_s_render_style->addItem("Balls and sticks");
+  disp_s_render_style->addItem("Suprematic atoms");
   disp_s_render_style->addItem("Dynamic lines");
   disp_s_render_style->addItem("X-atom lines");
   disp_s_render_style->addItem("Billboards");

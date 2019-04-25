@@ -106,7 +106,7 @@ void node_book_t::execute() {
   m_sflow_context->m_nodes.clear();
 
   for (auto &elem : m_scene->m_nodes)
-    m_sflow_context->m_nodes.push_back(elem->m_sf_node);
+    m_sflow_context->add_node(elem->m_sf_node);
 
   for (auto &con : m_scene->m_connections)
     if (con->m_inp_socket && con->m_out_socket)
@@ -115,8 +115,22 @@ void node_book_t::execute() {
                                     con->m_out_socket->m_socket_id,
                                     con->m_inp_socket->m_socket_id);
 
+//      assert(m_sflow_context->connect_node(con->m_out_socket->m_node->m_sf_node,
+//                                           con->m_inp_socket->m_node->m_sf_node,
+//                                           con->m_out_socket->m_socket_id,
+//                                           con->m_inp_socket->m_socket_id) ==
+//             sflow_status_e::no_error);
+
   m_sflow_context->execute();
 
+  for (auto &elem : m_scene->m_nodes)
+    for (auto wdgt : elem->m_inplace_wdgts)
+      if (wdgt) {
+          qbinded_int_spinbox_t *c_int_sb = qobject_cast<qbinded_int_spinbox_t*>(wdgt);
+          if (c_int_sb) {
+              c_int_sb->load_value_ex();
+            }
+        }
 
   //update output values
 }
