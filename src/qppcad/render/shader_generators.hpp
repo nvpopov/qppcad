@@ -17,6 +17,8 @@ namespace qpp {
         /// Default shader testing program - Gourand shading
         static shader_program_t* gen_sp_default();
 
+        static shader_program_t* gen_sp_default_suprematic();
+
         /// \brief gen_unit_line_program
         static shader_program_t* gen_sp_unit_line();
 
@@ -37,6 +39,8 @@ namespace qpp {
         static shader_program_t *gen_sp_buf_bs_sphere();
 
         static shader_program_t *gen_sp_2c_cylinder();
+
+        static shader_program_t *gen_sp_2c_cylinder_suprematic();
     };
 
   } // namespace qpp::cad

@@ -28,6 +28,7 @@ namespace qpp {
     void app_state_t::init_shaders() {
 
       sp_default    = shader_generators::gen_sp_default();
+      sp_default_suprematic = shader_generators::gen_sp_default_suprematic();
       sp_unit_line  = shader_generators::gen_sp_unit_line();
       sp_line_mesh  = shader_generators::gen_sp_line_mesh();
       sp_mvp_ssl    = shader_generators::gen_sp_mv_screen_space_lighting();
@@ -37,6 +38,7 @@ namespace qpp {
       sp_bs_sphere = shader_generators::gen_sp_bs_sphere();
       sp_buf_bs = shader_generators::gen_sp_buf_bs_sphere();
       sp_2c_cylinder = shader_generators::gen_sp_2c_cylinder();
+      sp_2c_cylinder_suprematic = shader_generators::gen_sp_2c_cylinder_suprematic();
 
     }
 

@@ -45,52 +45,49 @@ namespace qpp {
         void depth_func(draw_pipeline_depth_func _action);
         void cull_func(draw_pipeline_cull_func _action);
 
-        /// \brief begin_atom_render
         void begin_atom_render (float specular_power, float specular_alpha);
-
-        /// \brief render_atom
-        /// \param color
-        /// \param pos
-        /// \param radius
         void render_atom (const vector3<float> &color,
                           const vector3<float> &pos,
                           const float radius);
-
-        /// \brief end_atom_render
         void end_atom_render ();
 
+        void begin_atom_render_suprematic();
+        void render_atom_suprematic(const vector3<float> &color,
+                                    const vector3<float> &pos,
+                                    const float radius);
+        void end_atom_render_suprematic();
+
         /// \brief begin_render_bond
-        void begin_render_bond (float specular_power, float specular_alpha);
+        void begin_render_bond(float specular_power, float specular_alpha);
 
         /// \brief render_bond
         /// \param color
         /// \param vBondStart
         /// \param vBondEnd
         /// \param fBondRadius
-        void render_bond (const vector3<float> &color,
-                          const vector3<float> &bond_start,
-                          const vector3<float> &bond_end,
-                          const float bond_radius);
+        void render_bond(const vector3<float> &color,
+                         const vector3<float> &bond_start,
+                         const vector3<float> &bond_end,
+                         const float bond_radius);
 
         /// \brief end_render_bond
         void end_render_bond ();
 
-        /// \brief begin_render_bond
-        void begin_render_2c_bond (float specular_power, float specular_alpha);
+        void begin_render_2c_bond(float specular_power, float specular_alpha);
+        void render_2c_bond(const vector3<float> &color1,
+                            const vector3<float> &color2,
+                            const vector3<float> &bond_start,
+                            const vector3<float> &bond_end,
+                            const float bond_radius);
+        void end_render_2c_bond();
 
-        /// \brief render_bond
-        /// \param color
-        /// \param vBondStart
-        /// \param vBondEnd
-        /// \param fBondRadius
-        void render_2c_bond (const vector3<float> &color1,
-                             const vector3<float> &color2,
-                             const vector3<float> &bond_start,
-                             const vector3<float> &bond_end,
-                             const float bond_radius);
-
-        /// \brief end_render_bond
-        void end_render_2c_bond ();
+        void begin_render_2c_bond_suprematic();
+        void render_2c_bond_suprematic(const vector3<float> &color1,
+                                       const vector3<float> &color2,
+                                       const vector3<float> &bond_start,
+                                       const vector3<float> &bond_end,
+                                       const float bond_radius);
+        void end_render_2c_bond_suprematic();
 
 
         /// \brief render_molecule

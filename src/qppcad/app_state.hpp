@@ -104,6 +104,7 @@ namespace qpp {
         std::unordered_map<std::string, vector3<float>> m_cache_vector;
 
         shader_program_t *sp_default;
+        shader_program_t *sp_default_suprematic;
         shader_program_t *sp_unit_line;
         shader_program_t *sp_unit_line_styled;
         shader_program_t *sp_line_mesh;
@@ -113,6 +114,7 @@ namespace qpp {
         shader_program_t *sp_bs_sphere;
         shader_program_t *sp_buf_bs;
         shader_program_t *sp_2c_cylinder;
+        shader_program_t *sp_2c_cylinder_suprematic;
 
         std::vector<mesh_t*> mesh_spheres;
         mesh_t *mesh_cylinder;
