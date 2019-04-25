@@ -13,9 +13,9 @@ void sflow_context_t::add_node(std::shared_ptr<sflow_node_t> node) {
 }
 
 sflow_status_e sflow_context_t::connect_node(std::shared_ptr<sflow_node_t> node1,
-                                            std::shared_ptr<sflow_node_t> node2,
-                                            size_t pin1,
-                                            size_t pin2) {
+                                             std::shared_ptr<sflow_node_t> node2,
+                                             size_t pin1,
+                                             size_t pin2) {
 
   //check output pin
   bool pin1_valid = pin1 < node1->m_out_types.size();
@@ -89,14 +89,14 @@ void sflow_context_t::execute_traverse(sflow_node_t *cur_node,
                                        sflow_node_t *prev_node,
                                        bool debug_print) {
 
-  fmt::print(std::cout, "exec_traverse : {} -> {}\n",
+  fmt::print(std::cout, "exec_traverse : [{}] -> [{}]\n",
              prev_node ? prev_node->m_node_name : "None",
              cur_node->m_node_name);
 
   if (!cur_node) return;
 
   bool node_exec_res = cur_node->execute();
-  fmt::print(std::cout, "node {} exec result {}\n", cur_node->m_node_name, node_exec_res);
+  fmt::print(std::cout, "node [{}] exec result {}\n", cur_node->m_node_name, node_exec_res);
   if (!node_exec_res) return;
 
   for (size_t i = 0; i < m_connectivity.size(); i++) {
@@ -112,11 +112,11 @@ void sflow_context_t::execute_traverse(sflow_node_t *cur_node,
 }
 
 sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd,
-                                              bool copy_par) {
+                                               bool copy_par) {
 
   if (cd && cd->m_inp_node && cd->m_out_node) {
 
-      fmt::print(std::cout, "propagate_data from={} to={} copy_data?={} "
+      fmt::print(std::cout, "propagate_data from=[{}] to=[{}] copy_data?={} "
                             "out_sck={} in_sck={} out_t={} in_t={} ",
                  cd->m_out_node->m_node_name,
                  cd->m_inp_node->m_node_name,
@@ -124,7 +124,7 @@ sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd,
                  *(cd->m_out_socket),
                  *(cd->m_inp_socket),
                  cd->m_out_node->m_out_types[*(cd->m_out_socket)].m_type,
-                 cd->m_inp_node->m_inp_types[*(cd->m_inp_socket)].m_type
+          cd->m_inp_node->m_inp_types[*(cd->m_inp_socket)].m_type
           );
 
       //check that inputs have space for fun

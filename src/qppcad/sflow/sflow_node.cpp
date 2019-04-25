@@ -20,13 +20,40 @@ bool sflow_node_t::validate_inputs() {
 
 }
 
+void sflow_node_t::validate_outputs() {
+
+  if (m_out_types.empty()) return;
+
+  if (m_out_types.size() != m_outs.size()) m_outs.resize(m_out_types.size());
+
+  //for (size_t i = 0; i < m_out_types.size(); i++)
+
+}
+
 bool sflow_node_t::validate_inplace_parameters() {
 
-  if (m_inplace_types.empty()) return false;
+  if (m_inplace_types.empty()) return true;
 
-  m_inplace_parameters.resize(m_inplace_types.size());
+  if (m_inplace_types.size() != m_inplace_parameters.size()) return false;
 
-  for (size_t i = 0; i < m_inplace_types.size(); i++) {
+  for (size_t i = 0; i < m_inplace_types.size(); i++)
+    if (!m_inplace_parameters[i]) return false;
+
+  return true;
+
+}
+
+bool sflow_node_t::has_inplace_parameters() {
+  return !m_inplace_types.empty();
+}
+
+void sflow_node_t::create_inplace_parameters() {
+
+  if (m_inplace_types.size() != m_inplace_parameters.size())
+    m_inplace_parameters.resize(m_inplace_types.size(), nullptr);
+
+  for (size_t i = 0; i < m_inplace_types.size(); i++)
+    if (!m_inplace_parameters[i]) {
 
       switch (m_inplace_types[i].m_type) {
 
@@ -46,15 +73,12 @@ bool sflow_node_t::validate_inplace_parameters() {
           }
 
         default :  {
-            return false;
             break;
           }
 
         }
 
     }
-
-  return true;
 
 }
 
@@ -65,8 +89,12 @@ bool sflow_node_t::execute() {
       return false;
     }
 
-  m_outs.resize(m_out_types.size(), nullptr);
+  if (has_inplace_parameters() && !validate_inplace_parameters()) {
+      fmt::print(std::cout, "!validate_inplace_parameters() for {}\n", m_node_name);
+      return false;
+    }
 
+  m_outs.resize(m_out_types.size(), nullptr);
   return execute_ex();
 
 }

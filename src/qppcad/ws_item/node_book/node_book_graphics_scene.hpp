@@ -30,14 +30,14 @@ namespace qpp {
         QAction *gs_qnode_menu_delete;
         QAction *gs_qnode_menu_unlink_all;
 
-        std::vector<qnode_t*> m_nodes;
-        std::vector<qnode_socket_t*> m_sockets;
-        std::vector<qnode_connection_t*> m_connections;
+        std::vector<std::shared_ptr<qnode_t>> m_nodes;
+        std::vector<std::shared_ptr<qnode_socket_t>> m_sockets;
+        std::vector<std::shared_ptr<qnode_connection_t>> m_connections;
 
         node_book_graphics_scene_t(QObject *parent);
-        void add_connection(qnode_connection_t *_con);
-        void add_node(qnode_t *_node);
-        void update_connections_with_node(qnode_t *_node);
+        void add_connection(std::shared_ptr<qnode_connection_t> _con);
+        void add_node(std::shared_ptr<qnode_t> _node);
+        void update_connections_with_node(std::shared_ptr<qnode_t> _node);
         void delete_node(qnode_t *_node);
         void unlink_node(qnode_t *_node);
         void construct_new_node(QPointF pos, size_t sflow_fbr_hash);

@@ -85,6 +85,8 @@ namespace qpp {
 
         int common_button_fixed_w();
 
+        int node_book_inplace_par_width();
+
     };
 
   } // namespace qpp::cad

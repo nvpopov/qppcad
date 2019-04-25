@@ -57,14 +57,12 @@ int qnode_socket_t::type() const {
 
 void qnode_socket_t::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-  app_state_t *astate = app_state_t::get_inst();
-  astate->tlog("qnode_socket_t::mousePressEvent()");
   QGraphicsItem::mousePressEvent(event);
   event->accept();
 
   if (!m_connection) {
-      m_connection = new qnode_connection_t();
-      scene()->addItem(m_connection);
+      m_connection = std::make_shared<qnode_connection_t>();
+      scene()->addItem(m_connection.get());
 
       if (m_is_inp_socket) {
           m_connection->m_inp_socket = this;
@@ -81,8 +79,6 @@ void qnode_socket_t::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void qnode_socket_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
-  app_state_t *astate = app_state_t::get_inst();
-  astate->tlog("qnode_socket_t::mouseMoveEvent()");
   QGraphicsItem::mouseMoveEvent(event);
 
   if (m_connection) {
@@ -93,8 +89,6 @@ void qnode_socket_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
 void qnode_socket_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
-  app_state_t *astate = app_state_t::get_inst();
-  astate->tlog("qnode_socket_t::mouseReleaseEvent()");
   QGraphicsItem::mouseReleaseEvent(event);
 
   if (m_connection) {
@@ -140,8 +134,8 @@ void qnode_socket_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         } // if (item)
 
       if (delete_item) {
-          scene()->removeItem(m_connection);
-          delete m_connection;
+          scene()->removeItem(m_connection.get());
+          m_connection.reset();
           m_connection = nullptr;
           return;
         }

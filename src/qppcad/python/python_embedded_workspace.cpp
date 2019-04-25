@@ -289,6 +289,6 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_node_book_t.def("num_nds", [](node_book_t &src){return src.m_scene->m_nodes.size();});
   py_node_book_t.def("num_sck", [](node_book_t &src){return src.m_scene->m_sockets.size();});
   py_node_book_t.def("num_con", [](node_book_t &src){return src.m_scene->m_connections.size();});
-
+  py_node_book_t.def("execute", &node_book_t::execute);
 
 }

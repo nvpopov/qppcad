@@ -420,8 +420,8 @@ void geom_view_t::select_atom(int atom_id, index atom_idx) {
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-      for (int i = 0; i < m_atom_ord_sel.size(); i++)
-        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+//      for (int i = 0; i < m_atom_ord_sel.size(); i++)
+//        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
       astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
       return;
@@ -488,8 +488,8 @@ void geom_view_t::unselect_atom(int atom_id, index atom_idx) {
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-      for (int i = 0; i < m_atom_ord_sel.size(); i++)
-        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+//      for (int i = 0; i < m_atom_ord_sel.size(); i++)
+//        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
       return;
     }
@@ -497,8 +497,8 @@ void geom_view_t::unselect_atom(int atom_id, index atom_idx) {
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-  for (int i = 0; i < m_atom_ord_sel.size(); i++)
-    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+//  for (int i = 0; i < m_atom_ord_sel.size(); i++)
+//    astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
   return;
 

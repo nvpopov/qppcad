@@ -18,7 +18,7 @@ namespace qpp {
   namespace cad {
 
     class node_book_graphics_scene_t;
-    class qnode_t : public QGraphicsItem {
+    class qnode_t : public QGraphicsItem, public std::enable_shared_from_this<qnode_t> {
 
       public:
 
@@ -31,7 +31,7 @@ namespace qpp {
         int m_socket_size{8};
         int m_socket_spacing{8};
         int m_x_offset{-16};
-        int m_label_height{40};
+        int m_label_height{32};
         int m_lp{10};
 
         int m_dh_i{0};
@@ -52,8 +52,8 @@ namespace qpp {
 
         QString m_node_name;
 
-        std::vector<qnode_socket_t*> m_inp_sockets;
-        std::vector<qnode_socket_t*> m_out_sockets;
+        std::vector<std::shared_ptr<qnode_socket_t>> m_inp_sockets;
+        std::vector<std::shared_ptr<qnode_socket_t>> m_out_sockets;
 
         std::shared_ptr<sflow_node_t> m_sf_node{nullptr};
 

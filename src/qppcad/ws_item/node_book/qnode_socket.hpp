@@ -23,8 +23,8 @@ namespace qpp {
         size_t m_socket_id;
         QColor m_socket_color;
 
-        qnode_t *m_node{nullptr};
-        qnode_connection_t* m_connection{nullptr};
+        std::shared_ptr<qnode_t> m_node{nullptr};
+        std::shared_ptr<qnode_connection_t> m_connection{nullptr};
 
         qnode_socket_t(QGraphicsItem *parent = 0,
                        int _socket_radius = 4,

@@ -19,11 +19,12 @@ sf_i_prop_node_t::sf_i_prop_node_t() : sflow_node_t () {
 
 bool sf_i_prop_node_t::execute_ex() {
 
-  bool pres = sflow_node_t::execute_ex();
-  if (!pres) return false;
-
   auto out0 = std::make_shared<sflow_parameter_int_t>();
-  out0->m_value = 1;
+
+  auto inp0 = m_inplace_parameters[0]->cast_as<sflow_parameter_int_t>();
+  if (!inp0) return false;
+
+  out0->m_value = inp0->m_value;
   m_outs[0] = out0;
 
   return true;

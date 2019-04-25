@@ -49,26 +49,28 @@ node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
 
 }
 
-void node_book_graphics_scene_t::add_connection(qnode_connection_t *_con) {
+void node_book_graphics_scene_t::add_connection(std::shared_ptr<qnode_connection_t> _con) {
 
   if (_con) {
       m_connections.push_back(_con);
-      addItem(_con);
+      addItem(_con.get());
     }
 
 }
 
-void node_book_graphics_scene_t::add_node(qnode_t *_node) {
+void node_book_graphics_scene_t::add_node(std::shared_ptr<qnode_t> _node) {
 
   if (_node) {
-      addItem(_node);
+      addItem(_node.get());
       _node->m_scene = this;
       m_nodes.push_back(_node);
+      for (auto elem : _node->m_inp_sockets) m_sockets.push_back(elem);
+      for (auto elem : _node->m_out_sockets) m_sockets.push_back(elem);
     }
 
 }
 
-void node_book_graphics_scene_t::update_connections_with_node(qnode_t *_node) {
+void node_book_graphics_scene_t::update_connections_with_node(std::shared_ptr<qnode_t> _node) {
 
   for (auto elem : m_connections)
     if (elem && elem->m_inp_socket && elem->m_out_socket &&
@@ -84,21 +86,19 @@ void node_book_graphics_scene_t::delete_node(qnode_t *_node) {
 
   unlink_node(_node);
 
-  for (auto it = m_sockets.begin(); it != m_sockets.end();)
-    if ((*it) && (*it)->m_node == _node) {
-        qnode_socket_t *_temp = (*it);
-        it = m_sockets.erase(it);
-        //removeItem(_temp);
+  //first delete node with sockets from graphics scene
+  for (auto it = m_nodes.begin(); it != m_nodes.end();)
+    if ((*it) && (*it).get() == _node) {
+        removeItem((*it).get());
+        it = m_nodes.erase(it);
       } else {
         ++it;
       }
 
-  for (auto it = m_nodes.begin(); it != m_nodes.end();)
-    if ((*it) && (*it) == _node) {
-        qnode_t *_temp = (*it);
-        it = m_nodes.erase(it);
-        removeItem(_temp);
-        delete _temp;
+  //now raii shared ptrs
+  for (auto it = m_sockets.begin(); it != m_sockets.end();)
+    if ((*it) && (*it)->m_node.get() == _node) {
+        it = m_sockets.erase(it);
       } else {
         ++it;
       }
@@ -109,12 +109,10 @@ void node_book_graphics_scene_t::unlink_node(qnode_t *_node) {
 
   if (!_node) return;
   for (auto it = m_connections.begin(); it != m_connections.end();)
-    if (((*it) && (*it)->m_inp_socket && (*it)->m_inp_socket->m_node == _node) ||
-        ((*it) && (*it)->m_out_socket && (*it)->m_out_socket->m_node == _node)) {
-        qnode_connection_t *_temp = (*it);
+    if (((*it) && (*it)->m_inp_socket && (*it)->m_inp_socket->m_node.get() == _node) ||
+        ((*it) && (*it)->m_out_socket && (*it)->m_out_socket->m_node.get() == _node)) {
+        removeItem((*it).get());
         it = m_connections.erase(it);
-        removeItem(_temp);
-        delete _temp;
       } else {
         ++it;
       }
@@ -129,9 +127,9 @@ void node_book_graphics_scene_t::construct_new_node(QPointF pos, size_t sflow_fb
   if (it == astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.end()) return;
 
   auto new_node1 = it->second.m_fabric();
-  auto qnode1 = new qnode_t();
-  add_node(qnode1);
+  auto qnode1 = std::make_shared<qnode_t>();
   qnode1->set_sflow_node(new_node1);
+  add_node(qnode1);
   qnode1->setPos(pos);
 
 }

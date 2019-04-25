@@ -112,7 +112,8 @@ file(GLOB_RECURSE SRC_RENDER "src/qppcad/render/*.cpp")
 
 #build sflow tests
 #build qppcad application
-add_executable(sflow-tests
+add_executable(
+    sflow-tests
     src/qppcad/sflow/sflow_test.cpp
     src/qppcad/sflow/sflow.cpp
     src/qppcad/sflow/sflow_node.cpp
@@ -120,14 +121,14 @@ add_executable(sflow-tests
     src/qppcad/sflow/sflow_parameter.cpp
     src/qppcad/type_info.cpp
     src/qppcad/string_hash_register.cpp
+    src/qppcad/qpp_object.cpp
     )
 
-target_link_libraries(sflow-tests
-    qpp
-    )
+target_link_libraries(sflow-tests qpp )
 
 #build qppcad application
-add_executable(qppcad
+add_executable(
+    qppcad
 
     src/qppcad/main.cpp
     src/qppcad/gitversion.cpp

@@ -61,7 +61,10 @@ namespace qpp {
 
         size_t m_total_gain{0};
         bool validate_inputs();
+        void validate_outputs();
         bool validate_inplace_parameters();
+        bool has_inplace_parameters();
+        void create_inplace_parameters();
 
         //if false flow stops
         bool execute();
