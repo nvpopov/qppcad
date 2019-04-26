@@ -23,6 +23,7 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
 
   xgeom_tv->setFocusPolicy(Qt::NoFocus);
   xgeom_tv->setSelectionMode(QAbstractItemView::NoSelection);
+  xgeom_tv->setLocale(QLocale::C);
 
   main_lt->addWidget(xgeom_tv);
   main_lt->addStretch(1);

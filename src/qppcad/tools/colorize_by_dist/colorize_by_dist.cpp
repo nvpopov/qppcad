@@ -107,6 +107,7 @@ colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
   atom_dist_max->setMaximum(30);
   atom_dist_max->setSingleStep(0.1);
   atom_dist_max->setAlignment(Qt::AlignCenter);
+  atom_dist_max->setLocale(QLocale::C);
   atom_dist_max->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
   main_gb_lt->addRow(tr("Atom №1 type"), atom1_type);

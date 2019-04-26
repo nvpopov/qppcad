@@ -59,6 +59,7 @@ qbinded_float_spinbox_t::qbinded_float_spinbox_t(QWidget *parent) : QDoubleSpinB
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setAlignment(Qt::AlignCenter);
   setButtonSymbols(QAbstractSpinBox::NoButtons);
+  setLocale(QLocale::C);
 
   connect(
     this,
@@ -260,20 +261,18 @@ qbinded_float3_input_t::qbinded_float3_input_t(QWidget *parent) : QWidget(parent
 
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
 
-  sb_x = new QDoubleSpinBox(this);
-  sb_x->setMaximumWidth(100);
-  sb_x->setButtonSymbols(QAbstractSpinBox::NoButtons);
-  sb_x->setAlignment(Qt::AlignCenter);
+  auto make_dspinbox = [](){
+      auto ret = new QDoubleSpinBox;
+      ret->setMaximumWidth(100);
+      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      ret->setAlignment(Qt::AlignCenter);
+      ret->setLocale(QLocale::C);
+      return ret;
+    };
 
-  sb_y = new QDoubleSpinBox(this);
-  sb_y->setMaximumWidth(100);
-  sb_y->setButtonSymbols(QAbstractSpinBox::NoButtons);
-  sb_y->setAlignment(Qt::AlignCenter);
-
-  sb_z = new QDoubleSpinBox(this);
-  sb_z->setMaximumWidth(100);
-  sb_z->setButtonSymbols(QAbstractSpinBox::NoButtons);
-  sb_z->setAlignment(Qt::AlignCenter);
+  sb_x = make_dspinbox();
+  sb_y = make_dspinbox();
+  sb_z = make_dspinbox();
 
   widget_layout->addWidget(sb_x);
   widget_layout->addWidget(sb_y);

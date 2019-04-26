@@ -13,6 +13,8 @@ node_book_t::node_book_t() {
   set_default_flags(ws_item_flags_default);
 
   m_scene = new node_book_graphics_scene_t(nullptr);
+  m_scene->m_parent_node_book = this;
+
   m_sflow_context = std::make_shared<sflow_context_t>();
 
   auto new_node1 = std::make_shared<sf_i_prop_node_t>();

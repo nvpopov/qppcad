@@ -15,6 +15,7 @@ namespace qpp {
 
       private:
         geom_view_t *m_al{nullptr};
+
         int rowCount(const QModelIndex &parent) const;
         int columnCount(const QModelIndex &parent) const;
         QVariant data(const QModelIndex &index, int role) const;

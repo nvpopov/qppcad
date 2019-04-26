@@ -43,6 +43,9 @@ void draw_pipeline_t::depth_func(draw_pipeline_depth_func _action) {
     case draw_pipeline_depth_func::depth_less :
       astate->glapi->glDepthFunc(GL_LESS);
       break;
+    case draw_pipeline_depth_func::depth_greater :
+      astate->glapi->glDepthFunc(GL_GREATER);
+      break;
     }
 
 }

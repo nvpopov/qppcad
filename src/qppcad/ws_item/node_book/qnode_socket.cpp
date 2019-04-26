@@ -2,6 +2,7 @@
 #include <qppcad/ws_item/node_book/qnode_socket.hpp>
 #include <qppcad/ws_item/node_book/qnode_connection.hpp>
 #include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
+#include <qppcad/ws_item/node_book/node_book.hpp>
 #include <qppcad/app_state.hpp>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
@@ -126,6 +127,8 @@ void qnode_socket_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
                   delete_item = false;
                   m_node->m_scene->m_connections.push_back(m_connection);
                   m_connection = nullptr;
+                  if (m_node && m_node->m_scene && m_node->m_scene->m_parent_node_book)
+                    m_node->m_scene->m_parent_node_book->execute();
                 }
 
             } // if (item_c && item_c != this)

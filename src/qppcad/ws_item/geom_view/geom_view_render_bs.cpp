@@ -75,11 +75,41 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
 
   float spec = al.m_draw_specular ? 1.0f : 0.0f;
 
+  astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
   for (auto is_backpass : {true, false}) {
 
       if (is_backpass) {
           astate->dp->cull_func(draw_pipeline_cull_func::cull_front);
-          astate->dp->depth_func(draw_pipeline_depth_func::depth_less);
+        } else {
+          astate->dp->cull_func(draw_pipeline_cull_func::cull_back);
+        }
+
+      astate->dp->begin_atom_render_suprematic();
+
+      // draw {0,..} atoms
+      for (uint32_t i = 0; i < al.m_geom->nat(); i++)
+        if (al.m_draw_atoms &&
+            al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
+            al.m_atom_type_to_hide.end())
+          render_atom_suprematic(al, i, all_null, is_backpass);
+
+      // draw imaginary atoms
+      if (al.m_geom->DIM > 0 && al.m_draw_atoms && al.m_draw_img_atoms)
+        for (const auto &at_img : al.m_tws_tr->m_img_atoms)
+          if (al.m_atom_type_to_hide.find(al.m_geom->type_table(at_img.m_atm)) ==
+              al.m_atom_type_to_hide.end())
+            render_atom_suprematic(al, at_img.m_atm, at_img.m_idx, is_backpass);
+
+      astate->dp->end_atom_render_suprematic();
+      // atom render end
+
+    }
+
+  astate->dp->depth_func(draw_pipeline_depth_func::depth_less);
+  for (auto is_backpass : {true, false}) {
+
+      if (is_backpass) {
+          astate->dp->cull_func(draw_pipeline_cull_func::cull_front);
         } else {
           astate->dp->cull_func(draw_pipeline_cull_func::cull_back);
         }
@@ -122,35 +152,7 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
 
     }
 
-  for (auto is_backpass : {true, false}) {
-
-      if (is_backpass) {
-          astate->dp->cull_func(draw_pipeline_cull_func::cull_front);
-        } else {
-          astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
-          astate->dp->cull_func(draw_pipeline_cull_func::cull_back);
-        }
-
-      astate->dp->begin_atom_render_suprematic();
-
-      // draw {0,..} atoms
-      for (uint32_t i = 0; i < al.m_geom->nat(); i++)
-        if (al.m_draw_atoms &&
-            al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
-            al.m_atom_type_to_hide.end())
-          render_atom_suprematic(al, i, all_null, is_backpass);
-
-      // draw imaginary atoms
-      if (al.m_geom->DIM > 0 && al.m_draw_atoms && al.m_draw_img_atoms)
-        for (const auto &at_img : al.m_tws_tr->m_img_atoms)
-          if (al.m_atom_type_to_hide.find(al.m_geom->type_table(at_img.m_atm)) ==
-              al.m_atom_type_to_hide.end())
-            render_atom_suprematic(al, at_img.m_atm, at_img.m_idx, is_backpass);
-
-      astate->dp->end_atom_render_suprematic();
-      // atom render end
-
-    }
+  astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
 
 }
 

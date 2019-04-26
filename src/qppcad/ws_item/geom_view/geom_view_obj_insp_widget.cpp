@@ -249,6 +249,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_bt->setFixedWidth(astate->size_guide.obj_insp_table_w());
   disp_bt->setShowGrid(false);
   disp_bt->setModel(bt_mdl);
+  disp_bt->setLocale(QLocale::C);
   disp_bt_lt->addWidget(disp_bt);
   bt_dist_delegate = new qrealspinbox_delegate_t;
   bt_dist_delegate->set_min_max_step(0.1, 5.0, 0.01);

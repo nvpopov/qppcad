@@ -14,6 +14,7 @@ namespace qpp {
     enum draw_pipeline_depth_func {
       depth_equal,
       depth_lequal,
+      depth_greater,
       depth_less,
       depth_always,
       depth_disabled,

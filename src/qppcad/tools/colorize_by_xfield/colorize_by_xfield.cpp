@@ -31,7 +31,7 @@ void colorize_by_xfield_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       auto xfield_idx = std::distance(cw.b_fn.begin(), xfield_it);
 
       if (xfield_idx >=0 && xfield_idx < cw.b_fn.size()) {
-          std::cout << "COLORIZE_BY_XFIELD " << xfield_idx << std::endl;
+          //std::cout << "COLORIZE_BY_XFIELD " << xfield_idx << std::endl;
           gv_ptr->colorize_by_xfield(cw.clr_low, cw.clr_high, xfield_idx);
           gv_ptr->m_color_mode = geom_view_color_e::color_from_xgeom;
           astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();

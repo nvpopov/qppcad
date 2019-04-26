@@ -1,12 +1,13 @@
+#include <qppcad/ws_item/node_book/node_book.hpp>
 #include <qppcad/ws_item/node_book/qnode.hpp>
 #include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
+#include <qppcad/ws_item/node_book/qnode_socket_colorize.hpp>
+#include <qppcad/app_state.hpp>
+#include <qppcad/ui/qbinded_inputs.hpp>
 #include <QGraphicsScene>
 #include <QApplication>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
-#include <qppcad/app_state.hpp>
-#include <qppcad/ws_item/node_book/qnode_socket_colorize.hpp>
-#include <qppcad/ui/qbinded_inputs.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -49,6 +50,9 @@ void qnode_t::construct_inplace_widgets() {
     if (m_sf_node->m_inplace_parameters.size() > i && m_sf_node->m_inplace_parameters[i]) {
 
         QWidget *_inpl_widget{nullptr};
+        ws_item_t *master_item{nullptr};
+
+        if (m_scene && m_scene->m_parent_node_book) master_item = m_scene->m_parent_node_book;
 
         switch (m_sf_node->m_inplace_types[i].m_type) {
 
@@ -57,7 +61,7 @@ void qnode_t::construct_inplace_widgets() {
               sflow_parameter_int_t *sf_par_int =
                   m_sf_node->m_inplace_parameters[i]->cast_as<sflow_parameter_int_t>();
               if (sf_par_int) {
-                  b_sb->bind_value(&sf_par_int->m_value);
+                  b_sb->bind_value(&sf_par_int->m_value, master_item);
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
@@ -70,7 +74,7 @@ void qnode_t::construct_inplace_widgets() {
               sflow_parameter_float_t *sf_par_int =
                   m_sf_node->m_inplace_parameters[i]->cast_as<sflow_parameter_float_t>();
               if (sf_par_int) {
-                  b_sb->bind_value(&sf_par_int->m_value);
+                  b_sb->bind_value(&sf_par_int->m_value, master_item);
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
