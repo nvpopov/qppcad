@@ -127,11 +127,18 @@ void node_book_graphics_scene_t::construct_new_node(QPointF pos, size_t sflow_fb
   auto it = astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.find(sflow_fbr_hash);
   if (it == astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.end()) return;
 
-  auto new_node1 = it->second.m_fabric();
-  auto qnode1 = std::make_shared<qnode_t>();
-  qnode1->set_sflow_node(new_node1);
-  add_node(qnode1);
-  qnode1->setPos(pos);
+  auto new_node = it->second.m_fabric();
+  auto new_qnode = std::make_shared<qnode_t>();
+
+  // set m_scene for connecting qbinded_input_* ws_item_t
+  new_qnode->m_scene = this;
+
+  // form node geometry first
+  new_qnode->set_sflow_node(new_node);
+
+  // then submit node to qgraphics_scene
+  add_node(new_qnode);
+  new_qnode->setPos(pos);
 
 }
 

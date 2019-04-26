@@ -62,6 +62,10 @@ void qnode_t::construct_inplace_widgets() {
                   m_sf_node->m_inplace_parameters[i]->cast_as<sflow_parameter_int_t>();
               if (sf_par_int) {
                   b_sb->bind_value(&sf_par_int->m_value, master_item);
+                  if (master_item) {
+                      b_sb->m_updated_externally_event = true;
+                      b_sb->m_upd_flag = ws_item_updf_regenerate_content;
+                    }
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
@@ -71,10 +75,10 @@ void qnode_t::construct_inplace_widgets() {
 
           case sflow_parameter_e::sfpar_float : {
               qbinded_float_spinbox_t *b_sb = new qbinded_float_spinbox_t;
-              sflow_parameter_float_t *sf_par_int =
+              sflow_parameter_float_t *sf_par_float =
                   m_sf_node->m_inplace_parameters[i]->cast_as<sflow_parameter_float_t>();
-              if (sf_par_int) {
-                  b_sb->bind_value(&sf_par_int->m_value, master_item);
+              if (sf_par_float) {
+                  b_sb->bind_value(&sf_par_float->m_value, master_item);
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
@@ -97,6 +101,7 @@ void qnode_t::construct_inplace_widgets() {
 
         if (_inpl_widget) m_inplace_wdgt_lt->addRow(
               QString::fromStdString(m_sf_node->m_inplace_types[i].m_name), _inpl_widget);
+
       }
 
   m_inplace_pars_widget->setPos(
@@ -158,9 +163,9 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
   for (size_t i = 0; i < m_sf_node->m_inp_types.size(); i++) {
 
       auto inp_sck = std::make_shared<qnode_socket_t>(
-            this,
-            m_socket_size,
-            sck_colorize_helper::get_color(m_sf_node->m_inp_types[i].m_type));
+                       this,
+                       m_socket_size,
+                       sck_colorize_helper::get_color(m_sf_node->m_inp_types[i].m_type));
 
       QPoint inp_sck_pos = {
         m_x_offset,
@@ -178,9 +183,9 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
   for (size_t i = 0; i < m_sf_node->m_out_types.size(); i++) {
 
       auto out_sck = std::make_shared<qnode_socket_t>(
-            this,
-            m_socket_size,
-            sck_colorize_helper::get_color(m_sf_node->m_out_types[i].m_type));
+                       this,
+                       m_socket_size,
+                       sck_colorize_helper::get_color(m_sf_node->m_out_types[i].m_type));
 
       QPoint out_sck_pos = {
         m_width - 2 * m_socket_size - m_x_offset,
@@ -210,8 +215,8 @@ QRectF qnode_t::boundingRect() const {
 
   int max_c = std::max(m_sf_node->m_inp_types.size(), m_sf_node->m_out_types.size());
   int new_height = m_label_height
-      + max_c * 4 * m_socket_size + (max_c - 1) * m_socket_spacing
-      + additional_h_from_inplace + 10;
+                   + max_c * 4 * m_socket_size + (max_c - 1) * m_socket_spacing
+                   + additional_h_from_inplace + 10;
 
   return QRectF(0, 0, m_width, new_height);
 

@@ -31,8 +31,8 @@ namespace qpp {
         ws_item_t *m_binded_ws_item{nullptr};
         uint32_t m_upd_flag{ws_item_updf_generic};
 
-        void bind_value(T *_binded_value, ws_item_t *item_to_bind = nullptr) {
-          m_binded_value = _binded_value;
+        void bind_value(T *binded_value, ws_item_t *item_to_bind = nullptr) {
+          m_binded_value = binded_value;
           m_binded_ws_item = item_to_bind;
           m_ignore_state_change = true;
           if (m_binded_value) load_value_ex();

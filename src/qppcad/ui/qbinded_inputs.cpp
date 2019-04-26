@@ -37,7 +37,9 @@ void qbinded_checkbox_t::check_state_changed(int state) {
 void qbinded_float_spinbox_t::load_value_ex() {
 
   if (m_binded_value) {
+      blockSignals(true);
       setValue(*m_binded_value);
+      blockSignals(false);
     }
 
 }
