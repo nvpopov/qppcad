@@ -124,9 +124,9 @@ void node_book_t::execute() {
   for (auto &elem : m_scene->m_nodes)
     for (auto wdgt : elem->m_inplace_wdgts)
       if (wdgt) {
-          for (size_t i = 0; i < elem->m_sf_node->m_inplace_types.size(); i++)
+          for (size_t i = 0; i < elem->m_sf_node->m_ipl.size(); i++)
 
-            switch (elem->m_sf_node->m_inplace_types[i].m_type) {
+            switch (elem->m_sf_node->m_ipl_types[i].m_type) {
 
               case sflow_parameter_e::sfpar_int : {
                   qbinded_int_spinbox_t *c_int_sb = qobject_cast<qbinded_int_spinbox_t*>(wdgt);

@@ -8,91 +8,25 @@ sflow_node_t::sflow_node_t() {
 
 }
 
-bool sflow_node_t::validate_inputs() {
-
-  if (m_inp_types.size() != m_inps.size()) return false;
-
-  for (size_t i = 0; i < m_inp_types.size(); i++)
-    if (m_inps[i] && m_inps[i]->get_param_meta() != m_inp_types[i].m_type)
-      return false;
-
-  return true;
-
+bool sflow_node_t::has_ipls() {
+  return !m_ipl_types.empty();
 }
 
-void sflow_node_t::validate_outputs() {
+void sflow_node_t::explicit_create_ipl() {
 
-  if (m_out_types.empty()) return;
-
-  if (m_out_types.size() != m_outs.size()) m_outs.resize(m_out_types.size());
-
-  //for (size_t i = 0; i < m_out_types.size(); i++)
-
-}
-
-bool sflow_node_t::validate_inplace_parameters() {
-
-  if (m_inplace_types.empty()) return true;
-
-  if (m_inplace_types.size() != m_inplace_parameters.size()) return false;
-
-  for (size_t i = 0; i < m_inplace_types.size(); i++)
-    if (!m_inplace_parameters[i]) return false;
-
-  return true;
-
-}
-
-bool sflow_node_t::has_inplace_parameters() {
-  return !m_inplace_types.empty();
-}
-
-void sflow_node_t::create_inplace_parameters() {
-
-  if (m_inplace_types.size() != m_inplace_parameters.size())
-    m_inplace_parameters.resize(m_inplace_types.size(), nullptr);
-
-  for (size_t i = 0; i < m_inplace_types.size(); i++)
-    if (!m_inplace_parameters[i]) {
-
-      switch (m_inplace_types[i].m_type) {
-
-        case sflow_parameter_e::sfpar_int : {
-            m_inplace_parameters[i] = std::make_shared<sflow_parameter_int_t>();
-            break;
-          }
-
-        case sflow_parameter_e::sfpar_float : {
-            m_inplace_parameters[i] = std::make_shared<sflow_parameter_float_t>();
-            break;
-          }
-
-        case sflow_parameter_e::sfpar_bool : {
-            m_inplace_parameters[i] = std::make_shared<sflow_parameter_bool_t>();
-            break;
-          }
-
-        default :  {
-            break;
-          }
-
-        }
-
-    }
+    fill_data_vec(m_ipl_types, m_ipl);
 
 }
 
 bool sflow_node_t::execute() {
 
-  if (!validate_inputs()) {
-      fmt::print(std::cout, "!validate_inputs() for {}\n", m_node_name);
-      return false;
-    }
+  fill_data_vec(m_inp_types, m_inps);
+  fill_data_vec(m_out_types, m_outs);
+  fill_data_vec(m_ipl_types, m_ipl);
 
-  if (has_inplace_parameters() && !validate_inplace_parameters()) {
-      fmt::print(std::cout, "!validate_inplace_parameters() for {}\n", m_node_name);
-      return false;
-    }
+  validate_data_vec(m_inp_types, m_inps);
+  validate_data_vec(m_out_types, m_outs);
+  validate_data_vec(m_ipl_types, m_ipl);
 
   m_outs.resize(m_out_types.size(), nullptr);
   return execute_ex();

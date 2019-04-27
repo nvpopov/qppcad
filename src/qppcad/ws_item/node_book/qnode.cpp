@@ -45,21 +45,21 @@ void qnode_t::construct_inplace_widgets() {
   m_inplace_pars_widget = new QGraphicsProxyWidget(this);
   m_inplace_pars_widget->setWidget(m_inplace_wdgt);
 
-  for (size_t i = 0; i < m_sf_node->m_inplace_types.size(); i++)
+  for (size_t i = 0; i < m_sf_node->m_ipl_types.size(); i++)
 
-    if (m_sf_node->m_inplace_parameters.size() > i && m_sf_node->m_inplace_parameters[i]) {
+    if (m_sf_node->m_ipl.size() > i && m_sf_node->m_ipl[i]) {
 
         QWidget *_inpl_widget{nullptr};
         ws_item_t *master_item{nullptr};
 
         if (m_scene && m_scene->m_parent_node_book) master_item = m_scene->m_parent_node_book;
 
-        switch (m_sf_node->m_inplace_types[i].m_type) {
+        switch (m_sf_node->m_ipl_types[i].m_type) {
 
           case sflow_parameter_e::sfpar_int : {
               qbinded_int_spinbox_t *b_sb = new qbinded_int_spinbox_t;
               sflow_parameter_int_t *sf_par_int =
-                  m_sf_node->m_inplace_parameters[i]->cast_as<sflow_parameter_int_t>();
+                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
               if (sf_par_int) {
                   b_sb->bind_value(&sf_par_int->m_value, master_item);
                   if (master_item) {
@@ -76,7 +76,7 @@ void qnode_t::construct_inplace_widgets() {
           case sflow_parameter_e::sfpar_float : {
               qbinded_float_spinbox_t *b_sb = new qbinded_float_spinbox_t;
               sflow_parameter_float_t *sf_par_float =
-                  m_sf_node->m_inplace_parameters[i]->cast_as<sflow_parameter_float_t>();
+                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
               if (sf_par_float) {
                   b_sb->bind_value(&sf_par_float->m_value, master_item);
                   if (master_item) {
@@ -100,11 +100,11 @@ void qnode_t::construct_inplace_widgets() {
 
           }
 
-        if (!m_sf_node->m_inplace_types[i].m_editable && _inpl_widget)
+        if (!m_sf_node->m_ipl_types[i].m_editable && _inpl_widget)
           _inpl_widget->setEnabled(false);
 
         if (_inpl_widget) m_inplace_wdgt_lt->addRow(
-              QString::fromStdString(m_sf_node->m_inplace_types[i].m_name), _inpl_widget);
+              QString::fromStdString(m_sf_node->m_ipl_types[i].m_name), _inpl_widget);
 
       }
 
@@ -142,8 +142,8 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
   m_node_name =
       m_sf_node ? QString::fromStdString(m_sf_node->m_node_name) : QObject::tr("Unknown");
 
-  if (m_sf_node->has_inplace_parameters()) {
-      m_sf_node->create_inplace_parameters();
+  if (m_sf_node->has_ipls()) {
+      m_sf_node->explicit_create_ipl();
       construct_inplace_widgets();
     }
 
