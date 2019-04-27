@@ -17,37 +17,37 @@ node_book_t::node_book_t() {
 
   m_sflow_context = std::make_shared<sflow_context_t>();
 
-  auto new_node1 = std::make_shared<sf_i_prop_node_t>();
+  auto new_node1 = std::make_shared<sf_int_prop_node_t>();
   auto qnode1 = std::make_shared<qnode_t>();
   m_scene->add_node(qnode1);
   qnode1->set_sflow_node(new_node1);
   qnode1->setPos(QPoint(0,0));
 
-  auto new_node2 = std::make_shared<sf_i_final_node_t>();
+  auto new_node2 = std::make_shared<sf_int_final_node_t>();
   auto qnode2 = std::make_shared<qnode_t>();
   m_scene->add_node(qnode2);
   qnode2->set_sflow_node(new_node2);
   qnode2->setPos(QPoint(300,0));
 
-  auto new_node3 = std::make_shared<sf_i_p_const_node_t>();
+  auto new_node3 = std::make_shared<sf_int_p_const_node_t>();
   auto qnode3 = std::make_shared<qnode_t>();
   m_scene->add_node(qnode3);
   qnode3->setPos(QPoint(600,0));
   qnode3->set_sflow_node(new_node3);
 
-  auto new_node4 = std::make_shared<sf_i_sum_i_node_t>();
+  auto new_node4 = std::make_shared<sf_int_sum_i_node_t>();
   auto qnode4 = std::make_shared<qnode_t>();
   m_scene->add_node(qnode4);
   qnode4->setPos(QPoint(0,300));
   qnode4->set_sflow_node(new_node4);
 
-  auto new_node5 = std::make_shared<sf_f_prop_node_t>();
+  auto new_node5 = std::make_shared<sf_float_prop_node_t>();
   auto qnode5 = std::make_shared<qnode_t>();
   m_scene->add_node(qnode5);
   qnode5->setPos(QPoint(300,300));
   qnode5->set_sflow_node(new_node5);
 
-  auto new_node6 = std::make_shared<sf_f_p_const_node_t>();
+  auto new_node6 = std::make_shared<sf_float_p_const_node_t>();
   auto qnode6 = std::make_shared<qnode_t>();
   m_scene->add_node(qnode6);
   qnode6->setPos(QPoint(600,300));
@@ -117,24 +117,42 @@ void node_book_t::execute() {
                                     con->m_out_socket->m_socket_id,
                                     con->m_inp_socket->m_socket_id);
 
-//      assert(m_sflow_context->connect_node(con->m_out_socket->m_node->m_sf_node,
-//                                           con->m_inp_socket->m_node->m_sf_node,
-//                                           con->m_out_socket->m_socket_id,
-//                                           con->m_inp_socket->m_socket_id) ==
-//             sflow_status_e::no_error);
-
   m_sflow_context->execute();
 
+
+  //update output values
   for (auto &elem : m_scene->m_nodes)
     for (auto wdgt : elem->m_inplace_wdgts)
       if (wdgt) {
-          qbinded_int_spinbox_t *c_int_sb = qobject_cast<qbinded_int_spinbox_t*>(wdgt);
-          if (c_int_sb) {
-              c_int_sb->load_value_ex();
-            }
+          for (size_t i = 0; i < elem->m_sf_node->m_inplace_types.size(); i++)
+
+            switch (elem->m_sf_node->m_inplace_types[i].m_type) {
+
+              case sflow_parameter_e::sfpar_int : {
+                  qbinded_int_spinbox_t *c_int_sb = qobject_cast<qbinded_int_spinbox_t*>(wdgt);
+                  if (c_int_sb) c_int_sb->load_value_ex();
+                  break;
+                }
+
+              case sflow_parameter_e::sfpar_float : {
+                  qbinded_float_spinbox_t *c_f_sb = qobject_cast<qbinded_float_spinbox_t*>(wdgt);
+                  if (c_f_sb) c_f_sb->load_value_ex();
+                  break;
+                }
+
+              case sflow_parameter_e::sfpar_bool : {
+                  break;
+                }
+
+              default : {
+                  break;
+                }
+
+              }
+
         }
 
-  //update output values
+
 }
 
 void node_book_t::updated_externally(uint32_t update_reason) {

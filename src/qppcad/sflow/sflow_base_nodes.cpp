@@ -3,9 +3,9 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-sf_i_prop_node_t::sf_i_prop_node_t() : sflow_node_t () {
+sf_int_prop_node_t::sf_int_prop_node_t() : sflow_node_t () {
 
-  m_node_name = "integer";
+  m_node_name = "int";
 
   m_out_types = {
     {sflow_parameter_e::sfpar_int, 0, ""}
@@ -17,7 +17,7 @@ sf_i_prop_node_t::sf_i_prop_node_t() : sflow_node_t () {
 
 }
 
-bool sf_i_prop_node_t::execute_ex() {
+bool sf_int_prop_node_t::execute_ex() {
 
   auto out0 = std::make_shared<sflow_parameter_int_t>();
 
@@ -31,13 +31,13 @@ bool sf_i_prop_node_t::execute_ex() {
 
 }
 
-bool sf_i_prop_node_t::is_single_node() {
+bool sf_int_prop_node_t::is_single_node() {
   return true;
 }
 
-sf_i_final_node_t::sf_i_final_node_t() : sflow_node_t () {
+sf_int_final_node_t::sf_int_final_node_t() : sflow_node_t () {
 
-  m_node_name = "integer show";
+  m_node_name = "show int";
 
   m_inp_types = {
     {sflow_parameter_e::sfpar_int, 0, ""}
@@ -49,7 +49,7 @@ sf_i_final_node_t::sf_i_final_node_t() : sflow_node_t () {
 
 }
 
-bool sf_i_final_node_t::execute_ex() {
+bool sf_int_final_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
   auto inp_p0 = m_inplace_parameters[0]->cast_as<sflow_parameter_int_t>();
@@ -66,13 +66,13 @@ bool sf_i_final_node_t::execute_ex() {
 
 }
 
-bool sf_i_final_node_t::is_single_node() {
+bool sf_int_final_node_t::is_single_node() {
   return true;
 }
 
-sf_i_p_const_node_t::sf_i_p_const_node_t() : sflow_node_t () {
+sf_int_p_const_node_t::sf_int_p_const_node_t() : sflow_node_t () {
 
-  m_node_name = "integer + c";
+  m_node_name = "int + const";
 
   m_out_types = {
    {sflow_parameter_e::sfpar_int, 0, "a"}
@@ -84,7 +84,7 @@ sf_i_p_const_node_t::sf_i_p_const_node_t() : sflow_node_t () {
 
 }
 
-bool sf_i_p_const_node_t::execute_ex() {
+bool sf_int_p_const_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
 
@@ -100,9 +100,9 @@ bool sf_i_p_const_node_t::execute_ex() {
 
 }
 
-sf_i_sum_i_node_t::sf_i_sum_i_node_t() {
+sf_int_sum_i_node_t::sf_int_sum_i_node_t() {
 
-  m_node_name = "integer sum";
+  m_node_name = "int + int";
 
   m_out_types = {
    {sflow_parameter_e::sfpar_int, 0, "dst"}
@@ -115,7 +115,7 @@ sf_i_sum_i_node_t::sf_i_sum_i_node_t() {
 
 }
 
-bool sf_i_sum_i_node_t::execute_ex() {
+bool sf_int_sum_i_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
   auto inp1 = static_cast<sflow_parameter_int_t*>(m_inps[1].get());
@@ -132,7 +132,7 @@ bool sf_i_sum_i_node_t::execute_ex() {
 
 }
 
-sf_f_prop_node_t::sf_f_prop_node_t() {
+sf_float_prop_node_t::sf_float_prop_node_t() {
 
   m_node_name = "float";
 
@@ -140,19 +140,31 @@ sf_f_prop_node_t::sf_f_prop_node_t() {
     {sflow_parameter_e::sfpar_float, 0, "dst"}
   };
 
+  m_inplace_types = {
+    {sflow_parameter_e::sfpar_float, "value", true}
+  };
+
 }
 
-bool sf_f_prop_node_t::execute_ex() {
+bool sf_float_prop_node_t::execute_ex() {
 
   auto out0 = std::make_shared<sflow_parameter_float_t>();
-  out0->m_value = 0.5f;
+
+  auto inp0 = m_inplace_parameters[0]->cast_as<sflow_parameter_float_t>();
+  if (!inp0) return false;
+
+  out0->m_value = inp0->m_value;
   m_outs[0] = out0;
 
   return true;
 
 }
 
-sf_f_p_const_node_t::sf_f_p_const_node_t() {
+bool sf_float_prop_node_t::is_single_node() {
+  return true;
+}
+
+sf_float_p_const_node_t::sf_float_p_const_node_t() {
 
   m_node_name = "float + c";
 
@@ -166,7 +178,7 @@ sf_f_p_const_node_t::sf_f_p_const_node_t() {
 
 }
 
-bool sf_f_p_const_node_t::execute_ex() {
+bool sf_float_p_const_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_float_t*>(m_inps[0].get());
 
@@ -182,7 +194,7 @@ bool sf_f_p_const_node_t::execute_ex() {
 
 }
 
-sf_ipatb_const_node_t::sf_ipatb_const_node_t() {
+sf_int_patb_const_node_t::sf_int_patb_const_node_t() {
 
   m_node_name = "(int + a) * b";
 
@@ -201,7 +213,7 @@ sf_ipatb_const_node_t::sf_ipatb_const_node_t() {
 
 }
 
-bool sf_ipatb_const_node_t::execute_ex() {
+bool sf_int_patb_const_node_t::execute_ex() {
 
   auto inp0 = static_cast<sflow_parameter_int_t*>(m_inps[0].get());
 
@@ -215,4 +227,38 @@ bool sf_ipatb_const_node_t::execute_ex() {
 
   return true;
 
+}
+
+sf_float_final_node_t::sf_float_final_node_t() {
+
+  m_node_name = "show float";
+
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_float, 0, ""}
+  };
+
+  m_inplace_types = {
+    {sflow_parameter_e::sfpar_float, "value", false}
+  };
+
+}
+
+bool sf_float_final_node_t::execute_ex() {
+
+  auto inp0 = m_inps[0]->cast_as<sflow_parameter_float_t>();
+  auto inp_p0 = m_inplace_parameters[0]->cast_as<sflow_parameter_float_t>();
+
+  if (inp0 && inp_p0) {
+      inp_p0->m_value = inp0->m_value;
+      return true;
+    } else {
+      return false;
+    }
+
+  return true;
+
+}
+
+bool sf_float_final_node_t::is_single_node() {
+  return true;
 }

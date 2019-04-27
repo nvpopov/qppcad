@@ -13,10 +13,10 @@ TEST_CASE( "sflow base testing" ) {
 
     auto fc = std::make_shared<sflow_context_t>();
 
-    auto n0 = std::make_shared<sf_i_prop_node_t>(); n0->m_node_name = "n0";
-    auto n1 = std::make_shared<sf_i_p_const_node_t>(); n1->m_node_name = "n1";
-    auto n2 = std::make_shared<sf_i_p_const_node_t>(); n2->m_node_name = "n2";
-    auto n3 = std::make_shared<sf_i_final_node_t>(); n3->m_node_name = "n3";
+    auto n0 = std::make_shared<sf_int_prop_node_t>(); n0->m_node_name = "n0";
+    auto n1 = std::make_shared<sf_int_p_const_node_t>(); n1->m_node_name = "n1";
+    auto n2 = std::make_shared<sf_int_p_const_node_t>(); n2->m_node_name = "n2";
+    auto n3 = std::make_shared<sf_int_final_node_t>(); n3->m_node_name = "n3";
 
     fc->add_node(n0);
     fc->add_node(n1);
@@ -48,10 +48,10 @@ TEST_CASE( "sflow base testing" ) {
            "       |                                                         "
            "       -------> (0)|3|                                           ") {
     auto fc = std::make_shared<sflow_context_t>();
-    auto n0 = std::make_shared<sf_i_prop_node_t>(); n0->m_node_name = "n0";
-    auto n1 = std::make_shared<sf_i_final_node_t>(); n1->m_node_name = "n1";
-    auto n2 = std::make_shared<sf_i_final_node_t>(); n2->m_node_name = "n2";
-    auto n3 = std::make_shared<sf_i_final_node_t>(); n3->m_node_name = "n3";
+    auto n0 = std::make_shared<sf_int_prop_node_t>(); n0->m_node_name = "n0";
+    auto n1 = std::make_shared<sf_int_final_node_t>(); n1->m_node_name = "n1";
+    auto n2 = std::make_shared<sf_int_final_node_t>(); n2->m_node_name = "n2";
+    auto n3 = std::make_shared<sf_int_final_node_t>(); n3->m_node_name = "n3";
 
     fc->add_node(n0);
     fc->add_node(n1);
@@ -82,10 +82,10 @@ TEST_CASE( "sflow base testing" ) {
 
     auto fc = std::make_shared<sflow_context_t>();
 
-    auto n0 = std::make_shared<sf_i_prop_node_t>(); n0->m_node_name = "nb0";
-    auto n1 = std::make_shared<sf_i_p_const_node_t>(); n1->m_node_name = "nb1";
-    auto n2 = std::make_shared<sf_i_p_const_node_t>(); n2->m_node_name = "nb2";
-    auto n3 = std::make_shared<sf_i_final_node_t>(); n3->m_node_name = "nb3";
+    auto n0 = std::make_shared<sf_int_prop_node_t>(); n0->m_node_name = "nb0";
+    auto n1 = std::make_shared<sf_int_p_const_node_t>(); n1->m_node_name = "nb1";
+    auto n2 = std::make_shared<sf_int_p_const_node_t>(); n2->m_node_name = "nb2";
+    auto n3 = std::make_shared<sf_int_final_node_t>(); n3->m_node_name = "nb3";
 
     fc->add_node(n0);
     fc->add_node(n1);

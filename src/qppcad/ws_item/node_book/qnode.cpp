@@ -79,6 +79,10 @@ void qnode_t::construct_inplace_widgets() {
                   m_sf_node->m_inplace_parameters[i]->cast_as<sflow_parameter_float_t>();
               if (sf_par_float) {
                   b_sb->bind_value(&sf_par_float->m_value, master_item);
+                  if (master_item) {
+                      b_sb->m_updated_externally_event = true;
+                      b_sb->m_upd_flag = ws_item_updf_regenerate_content;
+                    }
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
