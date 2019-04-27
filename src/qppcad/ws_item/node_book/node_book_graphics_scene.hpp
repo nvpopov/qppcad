@@ -2,10 +2,11 @@
 #define QPPCAD_NODE_BOOK_GRAPHICS_SCENE
 
 #include <qppcad/qppcad.hpp>
+#include <qppcad/ws_item/node_book/qnode.hpp>
+
 #include <QRectF>
 #include <QGraphicsScene>
 #include <QPainter>
-#include <qppcad/ws_item/node_book/qnode.hpp>
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 

@@ -1,5 +1,6 @@
 #include <qppcad/ws_item/sflow_register.hpp>
-#include <qppcad/sflow/sflow_base_nodes.hpp>
+#include <qppcad/sflow/sflow_base_nodes_int.hpp>
+#include <qppcad/sflow/sflow_base_nodes_float.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
