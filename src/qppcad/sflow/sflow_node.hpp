@@ -13,28 +13,22 @@ namespace qpp {
     class sflow_connectivity_data_t;
 
     struct sflow_socket_info_t {
-
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         size_t m_total_con{0};
         std::string m_socket_name{"Unknown"};
-
     };
 
     struct sflow_inplace_parameter_t {
-
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         std::string m_name{"Unknown"};
         bool m_editable{false};
-
     };
 
     struct sflow_connectivity_data_t {
-
         std::shared_ptr<sflow_node_t> m_inp_node{nullptr};
         std::shared_ptr<sflow_node_t> m_out_node{nullptr};
         std::optional<size_t> m_inp_socket;
         std::optional<size_t> m_out_socket;
-
     };
 
     /**
@@ -46,10 +40,19 @@ namespace qpp {
 
       public:
 
+        /* The name that will be displayed in the node widget */
         std::string m_node_name;
+
+        /* Means that this node has no input links and is external to the calculation flow. */
         bool m_is_outer{true};
-        size_t m_idx_lookup{0};
+
+        /* This value is interpreted as the number of transitions to this node from other nodes
+         * during the execution of the calculation flow */
         size_t m_total_gain{0};
+
+        size_t m_idx_lookup{0};
+
+        opt<int> m_front_end_width{std::nullopt};
 
         std::vector<sflow_socket_info_t> m_inp_types;
         std::vector<std::shared_ptr<sflow_parameter_t>> m_inps;
@@ -81,37 +84,34 @@ namespace qpp {
 
           for (size_t i = 0; i < data_types.size(); i++)
             if (!data[i]) {
-
                 switch (data_types[i].m_type) {
-
                   case sflow_parameter_e::sfpar_int : {
                       data[i] = std::make_shared<sflow_parameter_int_t>();
                       break;
                     }
-
                   case sflow_parameter_e::sfpar_float : {
                       data[i] = std::make_shared<sflow_parameter_float_t>();
                       break;
                     }
-
+                  case sflow_parameter_e::sfpar_v3f : {
+                      data[i] = std::make_shared<sflow_parameter_v3f_t>();
+                      break;
+                    }
                   case sflow_parameter_e::sfpar_bool : {
                       data[i] = std::make_shared<sflow_parameter_bool_t>();
                       break;
                     }
-
                   default :  {
                       break;
                     }
-
                   }
-
-              }
+              } // end for
 
         }
 
         /**
          * @brief has_ipls
-         * @return Returns the true, if there are inplace parameters. Helper for frontend calls
+         * @return Returns true, if there are inplace parameters. Helper for frontend calls
          */
         bool has_ipls();
 

@@ -49,12 +49,30 @@ namespace qpp {
     /**
      * @brief The sflow_sum_i_node_t class
      */
-    class sf_int_sum_i_node_t : public sflow_node_t {
-        QPP_OBJECT(sf_int_sum_i_node_t, sflow_node_t)
+    class sf_int_sum_int_node_t : public sflow_node_t {
+        QPP_OBJECT(sf_int_sum_int_node_t, sflow_node_t)
       public:
-        sf_int_sum_i_node_t();
+        sf_int_sum_int_node_t();
         bool execute_ex() override;
     };
+
+    /**
+     * @brief
+     */
+    class sf_int_mul_int_node_t : public sflow_node_t {
+        QPP_OBJECT(sf_int_mul_int_node_t, sflow_node_t)
+      public:
+        sf_int_mul_int_node_t();
+        bool execute_ex() override;
+    };
+
+    class sf_int_div_int_node_t : public sflow_node_t {
+        QPP_OBJECT(sf_int_div_int_node_t, sflow_node_t)
+      public:
+        sf_int_div_int_node_t();
+        bool execute_ex() override;
+    };
+
 
   } // namespace cad
 

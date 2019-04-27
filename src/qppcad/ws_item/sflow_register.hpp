@@ -9,7 +9,7 @@ namespace qpp {
 
   namespace cad {
 
-    struct sflow_node_reg_helper_t {
+    struct sf_node_reg_hlp_t {
 
         template<typename T>
         static void reg_sflow_info_fbr(ws_item_behaviour_manager_t *bhv_mgr,

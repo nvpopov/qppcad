@@ -100,7 +100,7 @@ bool sf_int_p_const_node_t::execute_ex() {
 
 }
 
-sf_int_sum_i_node_t::sf_int_sum_i_node_t() {
+sf_int_sum_int_node_t::sf_int_sum_int_node_t() {
 
   m_node_name = "int + int";
 
@@ -113,9 +113,11 @@ sf_int_sum_i_node_t::sf_int_sum_i_node_t() {
     {sflow_parameter_e::sfpar_int, 0, "src2"}
   };
 
+  m_front_end_width = opt<int>(120);
+
 }
 
-bool sf_int_sum_i_node_t::execute_ex() {
+bool sf_int_sum_int_node_t::execute_ex() {
 
   auto out0 = get_pars_as<sflow_parameter_int_t>(0, m_outs);
   auto inp0 = get_pars_as<sflow_parameter_int_t>(0, m_inps);
@@ -159,6 +161,72 @@ bool sf_int_patb_const_node_t::execute_ex() {
 
   if (out0 && inp0 && ipl0 && ipl1) {
       out0->m_value = (inp0->m_value + ipl0->m_value) * ipl1->m_value;
+    } else {
+      return false;
+    }
+
+  return true;
+
+}
+
+sf_int_mul_int_node_t::sf_int_mul_int_node_t() {
+
+  m_node_name = "int * int";
+
+  m_out_types = {
+   {sflow_parameter_e::sfpar_int, 0, "dst"}
+  };
+
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_int, 0, "src1"},
+    {sflow_parameter_e::sfpar_int, 0, "src2"}
+  };
+
+  m_front_end_width = opt<int>(120);
+
+}
+
+bool sf_int_mul_int_node_t::execute_ex() {
+
+  auto out0 = get_pars_as<sflow_parameter_int_t>(0, m_outs);
+  auto inp0 = get_pars_as<sflow_parameter_int_t>(0, m_inps);
+  auto inp1 = get_pars_as<sflow_parameter_int_t>(1, m_inps);
+
+  if (out0 && inp0 && inp1) {
+      out0->m_value = inp0->m_value * inp1->m_value;
+    } else {
+      return false;
+    }
+
+  return true;
+
+}
+
+sf_int_div_int_node_t::sf_int_div_int_node_t() {
+
+  m_node_name = "int / int";
+
+  m_out_types = {
+   {sflow_parameter_e::sfpar_int, 0, "dst"}
+  };
+
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_int, 0, "src1"},
+    {sflow_parameter_e::sfpar_int, 0, "src2"}
+  };
+
+}
+
+bool sf_int_div_int_node_t::execute_ex() {
+
+  auto out0 = get_pars_as<sflow_parameter_int_t>(0, m_outs);
+  auto inp0 = get_pars_as<sflow_parameter_int_t>(0, m_inps);
+  auto inp1 = get_pars_as<sflow_parameter_int_t>(1, m_inps);
+
+  if (out0 && inp0 && inp1) {
+      out0->m_value = inp1->m_value == 0 ?
+                        0 :
+                        inp0->m_value / inp1->m_value;
     } else {
       return false;
     }

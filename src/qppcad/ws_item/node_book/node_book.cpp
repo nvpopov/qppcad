@@ -36,7 +36,7 @@ node_book_t::node_book_t() {
   qnode3->setPos(QPoint(600,0));
   qnode3->set_sflow_node(new_node3);
 
-  auto new_node4 = std::make_shared<sf_int_sum_i_node_t>();
+  auto new_node4 = std::make_shared<sf_int_sum_int_node_t>();
   auto qnode4 = std::make_shared<qnode_t>();
   m_scene->add_node(qnode4);
   qnode4->setPos(QPoint(0,300));
@@ -138,6 +138,12 @@ void node_book_t::execute() {
               case sflow_parameter_e::sfpar_float : {
                   qbinded_float_spinbox_t *c_f_sb = qobject_cast<qbinded_float_spinbox_t*>(wdgt);
                   if (c_f_sb) c_f_sb->load_value_ex();
+                  break;
+                }
+
+              case sflow_parameter_e::sfpar_v3f : {
+                  qbinded_float3_input_t *c_v3f = qobject_cast<qbinded_float3_input_t*>(wdgt);
+                  if (c_v3f) c_v3f->load_value_ex();
                   break;
                 }
 

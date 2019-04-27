@@ -90,6 +90,23 @@ void qnode_t::construct_inplace_widgets() {
               break;
             }
 
+          case sflow_parameter_e::sfpar_v3f : {
+              qbinded_float3_input_t *b_v3f = new qbinded_float3_input_t;
+              sflow_parameter_v3f_t *sf_par_v3f =
+                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_v3f_t>();
+              if (sf_par_v3f) {
+                  b_v3f->bind_value(&sf_par_v3f->m_value, master_item);
+                  if (master_item) {
+                      b_v3f->m_updated_externally_event = true;
+                      b_v3f->m_upd_flag = ws_item_updf_regenerate_content;
+                    }
+                  //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
+                  _inpl_widget = b_v3f;
+                  m_inplace_wdgts.push_back(b_v3f);
+                }
+              break;
+            }
+
           case sflow_parameter_e::sfpar_bool : {
               break;
             }
@@ -104,7 +121,8 @@ void qnode_t::construct_inplace_widgets() {
           _inpl_widget->setEnabled(false);
 
         if (_inpl_widget) m_inplace_wdgt_lt->addRow(
-              QString::fromStdString(m_sf_node->m_ipl_types[i].m_name), _inpl_widget);
+              QString::fromStdString(m_sf_node->m_ipl_types[i].m_name),
+              _inpl_widget);
 
       }
 
@@ -141,6 +159,8 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
   m_node_name =
       m_sf_node ? QString::fromStdString(m_sf_node->m_node_name) : QObject::tr("Unknown");
+
+  if (node->m_front_end_width) m_width = *(node->m_front_end_width);
 
   if (m_sf_node->has_ipls()) {
       m_sf_node->explicit_create_ipl();

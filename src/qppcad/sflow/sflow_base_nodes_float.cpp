@@ -101,3 +101,36 @@ bool sf_float_final_node_t::execute_ex() {
 bool sf_float_final_node_t::is_single_node() {
   return true;
 }
+
+sf_float_sum_float_node_t::sf_float_sum_float_node_t() {
+
+  m_node_name = "float + float";
+
+  m_out_types = {
+    {sflow_parameter_e::sfpar_float, 0, "dst"}
+  };
+
+  m_inp_types = {
+    {sflow_parameter_e::sfpar_float, 0, "src"},
+    {sflow_parameter_e::sfpar_float, 1, "src"}
+  };
+
+  m_front_end_width = opt<int>(120);
+
+}
+
+bool sf_float_sum_float_node_t::execute_ex() {
+
+  auto out0 = get_pars_as<sflow_parameter_float_t>(0, m_outs);
+  auto inp0 = get_pars_as<sflow_parameter_float_t>(0, m_inps);
+  auto inp1 = get_pars_as<sflow_parameter_float_t>(1, m_inps);
+
+  if (out0 && inp0 && inp1) {
+      out0->m_value = inp0->m_value + inp1->m_value;
+    } else {
+      return false;
+    }
+
+  return true;
+
+}

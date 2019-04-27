@@ -119,6 +119,7 @@ add_executable(
     src/qppcad/sflow/sflow_node.cpp
     src/qppcad/sflow/sflow_base_nodes_int.cpp
     src/qppcad/sflow/sflow_base_nodes_float.cpp
+    src/qppcad/sflow/sflow_base_nodes_vec3.cpp
     src/qppcad/sflow/sflow_parameter.cpp
     src/qppcad/type_info.cpp
     src/qppcad/string_hash_register.cpp
@@ -149,6 +150,7 @@ add_executable(
     src/qppcad/sflow/sflow_node.cpp
     src/qppcad/sflow/sflow_base_nodes_int.cpp
     src/qppcad/sflow/sflow_base_nodes_float.cpp
+    src/qppcad/sflow/sflow_base_nodes_vec3.cpp
     src/qppcad/sflow/sflow_parameter.cpp
 
     deps/qpp/modules/pyqpp/pyqpp_linalg.cpp

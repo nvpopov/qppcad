@@ -49,3 +49,13 @@ std::shared_ptr<sflow_parameter_t> sflow_parameter_bool_t::clone() {
   _clone->m_value = m_value;
   return _clone;
 }
+
+sflow_parameter_e sflow_parameter_v3f_t::get_param_meta() {
+  return sflow_parameter_e::sfpar_v3f;
+}
+
+std::shared_ptr<sflow_parameter_t> sflow_parameter_v3f_t::clone() {
+  auto _clone = std::make_shared<sflow_parameter_v3f_t>();
+  _clone->m_value = m_value;
+  return _clone;
+}
