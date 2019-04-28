@@ -60,7 +60,8 @@ namespace qpp {
                                     size_t anim1_id,
                                     size_t anim1_frm,
                                     size_t anim2_id,
-                                    size_t anim2_frm);
+                                    size_t anim2_frm,
+                                    bool bounce = false);
 
         void make_animable();
         void make_anim(const std::string _anim_name,

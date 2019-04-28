@@ -210,7 +210,8 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
                                                      size_t anim1_id,
                                                      size_t anim1_frm,
                                                      size_t anim2_id,
-                                                     size_t anim2_frm) {
+                                                     size_t anim2_frm,
+                                                     bool bounce) {
 
   app_state_t* astate = app_state_t::get_inst();
 

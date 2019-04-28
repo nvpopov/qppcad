@@ -236,7 +236,7 @@ QSplitter {
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox{
  background : rgb(74, 74, 74);
- border: 1px inset black;
+ border: 1px solid rgb(14, 14, 14);
  border-radius: 4px;
  padding: 3px;
 }
