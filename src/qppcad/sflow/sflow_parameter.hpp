@@ -4,6 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <geom/xgeom.hpp>
 #include <qppcad/qpp_object.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
 
 namespace qpp {
 
@@ -16,7 +17,8 @@ namespace qpp {
       sfpar_float,
       sfpar_v3f,
       sfpar_string,
-      sfpar_xgeom
+      sfpar_xgeom,
+      sfpar_ws_item
     };
 
     class sflow_parameter_t : public qpp_object_t {

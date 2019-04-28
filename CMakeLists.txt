@@ -120,6 +120,7 @@ add_executable(
     src/qppcad/sflow/sflow_base_nodes_int.cpp
     src/qppcad/sflow/sflow_base_nodes_float.cpp
     src/qppcad/sflow/sflow_base_nodes_vec3.cpp
+    src/qppcad/sflow/sflow_base_nodes_xgeom.cpp
     src/qppcad/sflow/sflow_parameter.cpp
     src/qppcad/type_info.cpp
     src/qppcad/string_hash_register.cpp
@@ -127,6 +128,7 @@ add_executable(
     )
 
 target_link_libraries(sflow-tests qpp )
+qt5_use_modules(sflow-tests Core Gui Widgets)
 
 #build qppcad application
 add_executable(
@@ -151,7 +153,9 @@ add_executable(
     src/qppcad/sflow/sflow_base_nodes_int.cpp
     src/qppcad/sflow/sflow_base_nodes_float.cpp
     src/qppcad/sflow/sflow_base_nodes_vec3.cpp
+    src/qppcad/sflow/sflow_base_nodes_xgeom.cpp
     src/qppcad/sflow/sflow_parameter.cpp
+    src/qppcad/sflow/sflow_parameter_ws_item.cpp
 
     deps/qpp/modules/pyqpp/pyqpp_linalg.cpp
     deps/qpp/modules/pyqpp/pyqpp_geom.cpp

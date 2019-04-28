@@ -19,7 +19,7 @@ node_book_graphics_view_t::node_book_graphics_view_t(QGraphicsScene *scene, QWid
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setResizeAnchor(NoAnchor);
-  setTransformationAnchor(AnchorViewCenter);
+  setTransformationAnchor(AnchorUnderMouse);
 
 }
 
@@ -27,7 +27,7 @@ void node_book_graphics_view_t::wheelEvent(QWheelEvent *event) {
 
   //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
-  if (event && event->modifiers() == Qt::ControlModifier) {
+  if (event /*&& event->modifiers() == Qt::ControlModifier*/) {
       double scaleFactor = 1.05;
       if (event->delta() > 0) scale(scaleFactor, scaleFactor);
       else scale(1.0 / scaleFactor, 1.0 / scaleFactor);
@@ -88,5 +88,12 @@ void node_book_graphics_view_t::resizeEvent(QResizeEvent *event) {
   }
 
   QGraphicsView::resizeEvent(event);
+
+}
+
+void node_book_graphics_view_t::mouseDoubleClickEvent(QMouseEvent *event) {
+
+  //assert(false);
+  QGraphicsView::mouseDoubleClickEvent(event);
 
 }
