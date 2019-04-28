@@ -19,54 +19,61 @@ node_book_graphics_view_t::node_book_graphics_view_t(QGraphicsScene *scene, QWid
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setResizeAnchor(NoAnchor);
-  setTransformationAnchor(AnchorUnderMouse);
+  setTransformationAnchor(AnchorViewCenter);
 
 }
 
 void node_book_graphics_view_t::wheelEvent(QWheelEvent *event) {
 
-  setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+  //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
   if (event && event->modifiers() == Qt::ControlModifier) {
       double scaleFactor = 1.05;
       if (event->delta() > 0) scale(scaleFactor, scaleFactor);
       else scale(1.0 / scaleFactor, 1.0 / scaleFactor);
       event->accept();
-
-      QGraphicsView::wheelEvent(event);
+      return;
     }
 
+  //QGraphicsView::wheelEvent(event);
 
 }
 
 void node_book_graphics_view_t::mouseMoveEvent(QMouseEvent *event) {
 
+  viewport()->setCursor(Qt::ArrowCursor);
+
   if (m_drag_view) {
       //translate(1, 1);
     }
-
   QGraphicsView::mouseMoveEvent(event);
 
 }
 
 void node_book_graphics_view_t::mousePressEvent(QMouseEvent *event) {
 
-//  if (event->button() == Qt::LeftButton) {
-//      m_drag_view = true;
-//      setDragMode(QGraphicsView::ScrollHandDrag);
-//    }
+  viewport()->setCursor(Qt::ArrowCursor);
 
+  if (event->button() == Qt::LeftButton) {
+      m_drag_view = true;
+      setDragMode(QGraphicsView::ScrollHandDrag);
+      viewport()->setCursor(Qt::ArrowCursor);
+    }
+
+  event->accept();
   QGraphicsView::mousePressEvent(event);
 
 }
 
 void node_book_graphics_view_t::mouseReleaseEvent(QMouseEvent *event) {
 
-//  if (event->button() == Qt::LeftButton) {
-//      m_drag_view = false;
-//      setDragMode(QGraphicsView::NoDrag);
-//    }
+  viewport()->setCursor(Qt::ArrowCursor);
 
+  if (event->button() == Qt::LeftButton) {
+      m_drag_view = false;
+      setDragMode(QGraphicsView::NoDrag);
+    }
+  event->accept();
   QGraphicsView::mouseReleaseEvent(event);
 
 }

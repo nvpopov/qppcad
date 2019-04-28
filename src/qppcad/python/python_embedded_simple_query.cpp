@@ -18,7 +18,14 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   m.def("get_wsm", &simple_query::get_ws_mgr, py::return_value_policy::reference);
 
-  m.def("set_font_size", &simple_query::set_font_size);
+  m.def("set_font_size", &simple_query::set_font_size,
+    R"str(
+    Sets the font size in the console. The value is saved between sessions.
+    Parameters
+    ----------
+    arg0: int - new font size in pt
+    )str");
+
   m.def("get_build_info", &simple_query::get_build_info);
   m.def("qopen", &simple_query::open_file,
         py::arg("file_name"), py::arg("to_current") = false);
@@ -27,9 +34,28 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   m.def("mode", &simple_query::edit_mode);
 
-  m.def("bg", &simple_query::set_ws_bg);
-  m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));} );
-  m.def("gpos", &simple_query::gizmo_pos);
+  m.def("bg", &simple_query::set_ws_bg,
+    R"str(
+    Sets the background color for the current workspace.
+    Parameters
+    ----------
+    arg0: pq.vector3f - rgb color as 3d vector
+    )str");
+
+  m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));},
+    R"str(
+    Sets the background color for the current workspace.
+    Parameters
+    ----------
+    arg0: float - red component
+    arg1: float - green component
+    arg2: float - blue component
+    )str" );
+
+  m.def("gpos", &simple_query::gizmo_pos,
+        R"str(
+        Returns the current position of the gizmo-object
+        )str" );
 
   m.def("xgeom_dfn", &simple_query::get_xgeom_dfn);
   m.def("xgeom_dft", &simple_query::get_xgeom_dft);
@@ -52,8 +78,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("get_isolevel", &simple_query::get_isolevel);
   tools.def("set_isolevel", &simple_query::set_isolevel);
 
-  tools.def("add_al_0d", &simple_query::add_atoms_list_0d);
-  tools.def("add_al_3d", &simple_query::add_atoms_list_3d);
   tools.def("rebond", &simple_query::rebond);
   tools.def("t", &simple_query::translate_selected);
   tools.def("sc", &simple_query::make_super_cell);
@@ -86,18 +110,74 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 
-  sel.def("ws",  &simple_query::select_ws);
-  sel.def("it",  &simple_query::select_itm);
-  sel.def("c", &simple_query::sel_cnt);
-  sel.def("c", &simple_query::sel_cnt_list);
-  sel.def("c", &simple_query::sel_cnt_type);
-  sel.def("c", &simple_query::sel_cnt_all);
-  sel.def("c_p", &simple_query::sel_cnt_parity);
-  sel.def("uc", &simple_query::unsel_cnt_all);
-  sel.def("uc", &simple_query::unsel_cnt);
-  sel.def("uc", &simple_query::unsel_cnt_list);
-  sel.def("uc", &simple_query::unsel_cnt_type);
-  sel.def("get", &simple_query::get_sel);
+  sel.def("ws",  &simple_query::select_ws,
+          R"str(
+          Selects nth workspace
+          )str" );
+
+  sel.def("it",  &simple_query::select_itm,
+          R"str(
+          Selects nth object from the current workspace
+          :param arg0: an workspace index that needs to be selected
+          )str");
+
+  sel.def("c", &simple_query::sel_cnt,
+          R"str(
+          Only for geom_view_t. Selects an atom under a certain index.
+          :param arg0: int an atom index that needs to be selected
+          )str");
+
+  sel.def("c", &simple_query::sel_cnt_list,
+          R"str(
+          Only for geom_view_t. Selects several atoms.
+          :param arg0: list the list of atoms to be selected
+          )str");
+
+  sel.def("c", &simple_query::sel_cnt_type,
+          R"str(
+          Only for geom_view_t. Selects several atoms by type.
+          :param arg0: str the type of atoms that need to be selected
+          )str");
+
+  sel.def("c", &simple_query::sel_cnt_all,
+          R"str(
+          Only for geom_view_t. Selects all atoms.
+          )str");
+
+  sel.def("c_p", &simple_query::sel_cnt_parity,
+          R"str(
+          Adds to the currently selected atoms those that are additional to them by
+          inversion symmetry relative to the origin of coordinates
+          )str");
+
+  sel.def("uc", &simple_query::unsel_cnt_all,
+          R"str(
+          Only for geom_view_t. Unselects all atoms.
+          )str");
+
+  sel.def("uc", &simple_query::unsel_cnt,
+          R"str(
+          Only for geom_view_t. Unselects an atom under a certain index.
+          :param arg0: int an atom index that needs to be unselected
+          )str");
+
+  sel.def("uc", &simple_query::unsel_cnt_list,
+          R"str(
+          Only for geom_view_t. Unselects several atoms.
+          :param arg0: list the list of atoms to be unselected
+          )str");
+
+  sel.def("uc", &simple_query::unsel_cnt_type,
+          R"str(
+          Only for geom_view_t. Unselects several atoms by type.
+          :param arg0: str the type of atoms that need to be unselected
+          )str");
+
+  sel.def("get", &simple_query::get_sel,
+          R"str(
+          Get a list of selected atoms.
+          )str");
+
   sel.def("sph", &simple_query::sel_cnt_sphere);
   sel.def("inv", &simple_query::sel_invert);
   sel.def("hemisph", &simple_query::sel_hemisphere);

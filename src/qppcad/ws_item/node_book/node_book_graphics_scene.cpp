@@ -48,6 +48,8 @@ node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
         }
     }
 
+  setSceneRect(-5000, -5000, 2*5000, 2*5000);
+
 }
 
 void node_book_graphics_scene_t::add_connection(std::shared_ptr<qnode_connection_t> _con) {
