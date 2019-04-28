@@ -24,7 +24,7 @@ sflow_status_e sflow_context_t::connect_node(std::shared_ptr<sflow_node_t> out_n
                                              size_t out_socket,
                                              size_t inp_socket) {
 
-  fmt::print(std::cout, "connect_node on={} in={} os={} is={} ",
+  fmt::print(std::cout, "connect_node on=\"{}\" in=\"{}\" os={} is={} ",
              out_node->m_node_name, inp_node->m_node_name, out_socket, inp_socket);
 
   if (out_node == inp_node) {

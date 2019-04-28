@@ -2,6 +2,8 @@
 #include <qppcad/ws_item/node_book/qnode.hpp>
 #include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
 #include <qppcad/ws_item/node_book/qnode_socket_colorize.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/sflow/sflow_parameter_ws_item.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ui/qbinded_inputs.hpp>
 #include <QGraphicsScene>
@@ -103,6 +105,24 @@ void qnode_t::construct_inplace_widgets() {
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_v3f;
                   m_inplace_wdgts.push_back(b_v3f);
+                }
+              break;
+            }
+
+          case sflow_parameter_e::sfpar_ws_item : {
+              qbinded_ws_item_combobox_t *b_wsc = new qbinded_ws_item_combobox_t;
+              b_wsc->m_type_id = geom_view_t::get_type_static();
+              sflow_parameter_ws_item_t *sf_par_wsi =
+                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_ws_item_t>();
+              if (sf_par_wsi) {
+                  b_wsc->bind_value(&sf_par_wsi->m_value, master_item);
+                  if (master_item) {
+                      //b_wsc->m_updated_externally_event = true;
+                      b_wsc->m_upd_flag = ws_item_updf_regenerate_content;
+                    }
+                  //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
+                  _inpl_widget = b_wsc;
+                  m_inplace_wdgts.push_back(b_wsc);
                 }
               break;
             }

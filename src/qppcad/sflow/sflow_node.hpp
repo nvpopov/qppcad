@@ -4,6 +4,9 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
 #include <qppcad/qpp_object.hpp>
+#ifdef EXTENDED_SFLOW
+#include <qppcad/sflow/sflow_parameter_ws_item.hpp>
+#endif
 
 namespace qpp {
 
@@ -85,25 +88,43 @@ namespace qpp {
           for (size_t i = 0; i < data_types.size(); i++)
             if (!data[i]) {
                 switch (data_types[i].m_type) {
+
                   case sflow_parameter_e::sfpar_int : {
                       data[i] = std::make_shared<sflow_parameter_int_t>();
                       break;
                     }
+
                   case sflow_parameter_e::sfpar_float : {
                       data[i] = std::make_shared<sflow_parameter_float_t>();
                       break;
                     }
+
                   case sflow_parameter_e::sfpar_v3f : {
                       data[i] = std::make_shared<sflow_parameter_v3f_t>();
                       break;
                     }
+
+                  #ifdef EXTENDED_SFLOW
+                  case sflow_parameter_e::sfpar_ws_item : {
+                      data[i] = std::make_shared<sflow_parameter_ws_item_t>();
+                      break;
+                    }
+                  #endif
+
+                  case sflow_parameter_e::sfpar_xgeom : {
+                      data[i] = std::make_shared<sflow_parameter_xgeom_t>();
+                      break;
+                    }
+
                   case sflow_parameter_e::sfpar_bool : {
                       data[i] = std::make_shared<sflow_parameter_bool_t>();
                       break;
                     }
+
                   default :  {
                       break;
                     }
+
                   }
               } // end for
 

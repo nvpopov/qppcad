@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
 
-#set(CMAKE_BUILD_TYPE "Debug")
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
+#set(CMAKE_BUILD_TYPE "Release")
 
 add_definitions(-DFMT_HEADER_ONLY)
 if(NOT MSVC)
@@ -154,6 +154,7 @@ add_executable(
     src/qppcad/sflow/sflow_base_nodes_float.cpp
     src/qppcad/sflow/sflow_base_nodes_vec3.cpp
     src/qppcad/sflow/sflow_base_nodes_xgeom.cpp
+    src/qppcad/sflow/sflow_base_nodes_ws_item.cpp
     src/qppcad/sflow/sflow_parameter.cpp
     src/qppcad/sflow/sflow_parameter_ws_item.cpp
 
@@ -189,7 +190,7 @@ target_link_libraries(qppcad
     util
     m)
 
-target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT)
+target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT -DEXTENDED_SFLOW)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

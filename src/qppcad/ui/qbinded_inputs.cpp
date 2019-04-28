@@ -513,7 +513,7 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
 
   if (i == 0) {
       *m_binded_ws_item_p = nullptr;
-      if (m_binded_ws_item && m_updated_internally_event)
+      if (m_binded_ws_item && m_updated_externally_event)
         m_binded_ws_item->updated_externally(m_upd_flag);
       return;
     }
@@ -525,7 +525,7 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
       *m_binded_ws_item_p = itm;
     }
 
-  if (m_binded_ws_item && m_updated_internally_event)
+  if (m_binded_ws_item && m_updated_externally_event)
     m_binded_ws_item->updated_externally(m_upd_flag);
 
 }

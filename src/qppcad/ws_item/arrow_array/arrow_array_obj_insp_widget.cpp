@@ -14,7 +14,7 @@ arrow_array_obj_insp_widget_t::arrow_array_obj_insp_widget_t() {
   gb_aa_settings->add_content_layout(gb_aa_settings_lt);
 
   aa_settings_src = new qbinded_ws_item_combobox_t;
-  aa_settings_src->m_updated_internally_event = true;
+  aa_settings_src->m_updated_externally_event = true;
   aa_settings_src->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   aa_settings_src->m_type_id = geom_view_t::get_type_static();
 

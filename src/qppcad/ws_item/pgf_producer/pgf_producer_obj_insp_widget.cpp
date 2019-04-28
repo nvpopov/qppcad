@@ -22,17 +22,17 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   pgf_data_src = new qbinded_ws_item_combobox_t;
   pgf_data_src->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_src->m_type_id = geom_view_t::get_type_static();
-  pgf_data_src->m_updated_internally_event = true;
+  pgf_data_src->m_updated_externally_event = true;
 
   pgf_data_dst = new qbinded_ws_item_combobox_t;
   pgf_data_dst->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_dst->m_type_id = geom_view_t::get_type_static();
-  pgf_data_dst->m_updated_internally_event = true;
+  pgf_data_dst->m_updated_externally_event = true;
 
   pgf_data_ag = new qbinded_ws_item_combobox_t;
   pgf_data_ag->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
   pgf_data_ag->m_type_id = psg_view_t::get_type_static();
-  pgf_data_ag->m_updated_internally_event = true;
+  pgf_data_ag->m_updated_externally_event = true;
 
   gb_pgf_data_lt->addRow(tr("Source"), pgf_data_src);
   gb_pgf_data_lt->addRow(tr("Destination"), pgf_data_dst);

@@ -34,6 +34,10 @@ QColor sck_colorize_helper::get_color(sflow_parameter_e par_type) {
     case sflow_parameter_e::sfpar_xgeom :
       return Qt::darkMagenta;
       break;
+
+    case sflow_parameter_e::sfpar_ws_item :
+      return Qt::black;
+      break;
     }
 
   return Qt::darkBlue;

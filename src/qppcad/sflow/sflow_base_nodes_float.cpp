@@ -22,7 +22,8 @@ bool sf_float_prop_node_t::execute_ex() {
   auto out0 = get_pars_as<sflow_parameter_float_t>(0, m_outs);
   auto ipl0 = get_pars_as<sflow_parameter_float_t>(0, m_ipl);
 
-  out0->m_value = ipl0->m_value;
+  if (out0 && ipl0) out0->m_value = ipl0->m_value;
+  else return false;
 
   return true;
 
