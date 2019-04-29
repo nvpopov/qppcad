@@ -112,6 +112,8 @@ void node_book_graphics_scene_t::unlink_node(qnode_t *_node) {
 
   if (!_node) return;
 
+  notify_linked_nodes_about_unlinking(_node);
+
   for (auto it = m_connections.begin(); it != m_connections.end();)
 
     if (((*it) && (*it)->m_inp_socket && (*it)->m_inp_socket->m_node.get() == _node) ||
@@ -139,56 +141,56 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *_n
   if (!_node) return;
 
   for (size_t i = 0; i < _node->m_inplace_wdgts.size(); i++)
-    if (_node->m_inplace_wdgts[i] && !_node->m_sf_node->m_ipl_types[i].m_editable) {
+    if (_node->m_inplace_wdgts[i] && !(_node->m_sf_node->m_ipl_types[i].m_editable)) {
 
-          switch (_node->m_sf_node->m_ipl_types[i].m_type) {
+        switch (_node->m_sf_node->m_ipl_types[i].m_type) {
 
-            case sflow_parameter_e::sfpar_int : {
-                qbinded_int_spinbox_t *c_int_sb =
-                    qobject_cast<qbinded_int_spinbox_t*>(_node->m_inplace_wdgts[i]);
-                if (c_int_sb) {
-                    *(c_int_sb->m_binded_value) = 0;
-                    c_int_sb->load_value_ex();
-                  }
-                break;
-              }
-
-            case sflow_parameter_e::sfpar_float : {
-                qbinded_float_spinbox_t *c_f_sb =
-                    qobject_cast<qbinded_float_spinbox_t*>(_node->m_inplace_wdgts[i]);
-                if (c_f_sb) {
-                    *(c_f_sb->m_binded_value) = 0;
-                    c_f_sb->load_value_ex();
-                  }
-                break;
-              }
-
-            case sflow_parameter_e::sfpar_v3f : {
-                qbinded_float3_input_t *c_v3f =
-                    qobject_cast<qbinded_float3_input_t*>(_node->m_inplace_wdgts[i]);
-                if (c_v3f) {
-                    *(c_v3f->m_binded_value) = vector3<float>{0};
-                    c_v3f->load_value_ex();
-                  }
-                break;
-              }
-
-//              case sflow_parameter_e::sfpar_ws_item : {
-//                  qbinded_ws_item_combobox_t *c_wsi =
-//                      qobject_cast<qbinded_ws_item_combobox_t*>(wdgt);
-//                  if (c_wsi) c_wsi->load_value();
-//                  break;
-//                }
-
-            case sflow_parameter_e::sfpar_bool : {
-                break;
-              }
-
-            default : {
-                break;
-              }
-
+          case sflow_parameter_e::sfpar_int : {
+              qbinded_int_spinbox_t *c_int_sb =
+                  qobject_cast<qbinded_int_spinbox_t*>(_node->m_inplace_wdgts[i]);
+              if (c_int_sb) {
+                  *(c_int_sb->m_binded_value) = 0;
+                  c_int_sb->load_value_ex();
+                }
+              break;
             }
+
+          case sflow_parameter_e::sfpar_float : {
+              qbinded_float_spinbox_t *c_f_sb =
+                  qobject_cast<qbinded_float_spinbox_t*>(_node->m_inplace_wdgts[i]);
+              if (c_f_sb) {
+                  *(c_f_sb->m_binded_value) = 0;
+                  c_f_sb->load_value_ex();
+                }
+              break;
+            }
+
+          case sflow_parameter_e::sfpar_v3f : {
+              qbinded_float3_input_t *c_v3f =
+                  qobject_cast<qbinded_float3_input_t*>(_node->m_inplace_wdgts[i]);
+              if (c_v3f) {
+                  *(c_v3f->m_binded_value) = vector3<float>{0};
+                  c_v3f->load_value_ex();
+                }
+              break;
+            }
+
+            //              case sflow_parameter_e::sfpar_ws_item : {
+            //                  qbinded_ws_item_combobox_t *c_wsi =
+            //                      qobject_cast<qbinded_ws_item_combobox_t*>(wdgt);
+            //                  if (c_wsi) c_wsi->load_value();
+            //                  break;
+            //                }
+
+          case sflow_parameter_e::sfpar_bool : {
+              break;
+            }
+
+          default : {
+              break;
+            }
+
+          }
 
       }
 
@@ -269,18 +271,18 @@ void node_book_graphics_scene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent
         }
     } else {
 
-       QGraphicsItem *item_qnode{nullptr};
-       for (auto _item : items_uc) {
-           if (_item && _item->type() == qnode_t::Type)
-             item_qnode = _item;
-         }
+      QGraphicsItem *item_qnode{nullptr};
+      for (auto _item : items_uc) {
+          if (_item && _item->type() == qnode_t::Type)
+            item_qnode = _item;
+        }
 
-       if (item_qnode) {
-           auto retv = gs_qnode_menu->exec(event->screenPos());
-           qnode_t* item_qnode_casted = qgraphicsitem_cast<qnode_t*>(item_qnode);
-           if (retv == gs_qnode_menu_delete) delete_node(item_qnode_casted);
-           if (retv == gs_qnode_menu_unlink_all) unlink_node(item_qnode_casted);
-         }
+      if (item_qnode) {
+          auto retv = gs_qnode_menu->exec(event->screenPos());
+          qnode_t* item_qnode_casted = qgraphicsitem_cast<qnode_t*>(item_qnode);
+          if (retv == gs_qnode_menu_delete) delete_node(item_qnode_casted);
+          if (retv == gs_qnode_menu_unlink_all) unlink_node(item_qnode_casted);
+        }
 
     } // else
 

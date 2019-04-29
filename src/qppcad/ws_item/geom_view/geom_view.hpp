@@ -222,6 +222,7 @@ namespace qpp {
         void copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst,
                                bool copy_selected = false,
                                bool copy_cell = true);
+        void copy_cell(geom_view_t &src, bool rebuild_tws_tree = true);
 
         void load_color_from_static_anim();
 

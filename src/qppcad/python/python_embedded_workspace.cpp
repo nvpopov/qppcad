@@ -270,6 +270,8 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_atoms_list_t.def("set_xcolor", &geom_view_t::set_xcolorf);
   py_atoms_list_t.def("min_max_xfield", &geom_view_t::get_min_max_xfield);
   py_atoms_list_t.def("colorize_xfield", &geom_view_t::colorize_by_xfield);
+  py_atoms_list_t.def("copy_cell", &geom_view_t::copy_cell, py::arg("src"),
+                      py::arg("rebuild_tws_tree") = true);
 
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
   py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);

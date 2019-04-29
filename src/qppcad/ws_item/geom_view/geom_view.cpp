@@ -300,7 +300,7 @@ void geom_view_t::rebond() {
   m_tws_tr->m_bonding_table.init_default(m_geom.get());
   m_tws_tr->do_action(act_rebuild_ntable);
 
-  astate->astate_evd->cur_ws_selected_item_changed();
+  if (is_selected()) astate->astate_evd->cur_ws_selected_item_changed();
 
 }
 
@@ -689,10 +689,12 @@ void geom_view_t::sv_hide_invert_selected() {
 }
 
 void geom_view_t::xbool_invert_selected(size_t field_id) {
+
   index zero = index::D(m_geom->DIM).all(0);
   for (auto &elem : m_atom_idx_sel)
     if (elem.m_idx == zero)
         m_geom->xfield<bool>(field_id, elem.m_atm) = !m_geom->xfield<bool>(field_id, elem.m_atm);
+
 }
 
 void geom_view_t::copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
@@ -727,6 +729,30 @@ void geom_view_t::copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xge
       for (int i = 0; i < m_geom->nat(); i++)
         xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
     }
+
+}
+
+void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tws_tree) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (rebuild_tws_tree) {
+      m_tws_tr->do_action(act_lock | act_clear_all);
+      m_ext_obs->first_data = true;
+    }
+
+  m_geom->DIM = src.m_geom->DIM;
+  m_geom->cell.DIM = src.m_geom->cell.DIM;
+
+  for (int i = 0; i < 3; i++)
+    if (m_geom->DIM > i) m_geom->cell.v[i] = src.m_geom->cell.v[i];
+
+  if (rebuild_tws_tree) {
+      m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+      m_tws_tr->do_action(act_rebuild_ntable);
+    }
+
+  if (is_selected()) astate->astate_evd->cur_ws_selected_item_changed();
 
 }
 

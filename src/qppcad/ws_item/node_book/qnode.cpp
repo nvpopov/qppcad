@@ -42,7 +42,7 @@ void qnode_t::construct_inplace_widgets() {
   m_inplace_wdgt->setFixedWidth(m_width);
   m_inplace_wdgt->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
   m_inplace_wdgt->setLayout(m_inplace_wdgt_lt);
-  //m_inplace_wdgt->setPalette(Qt::transparent);
+  m_inplace_wdgt->setPalette(Qt::transparent);
 
   m_inplace_pars_widget = new QGraphicsProxyWidget(this);
   m_inplace_pars_widget->setWidget(m_inplace_wdgt);
