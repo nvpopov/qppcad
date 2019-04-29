@@ -147,12 +147,12 @@ void node_book_t::execute() {
                   break;
                 }
 
-              case sflow_parameter_e::sfpar_ws_item : {
-                  qbinded_ws_item_combobox_t *c_wsi =
-                      qobject_cast<qbinded_ws_item_combobox_t*>(wdgt);
-                  if (c_wsi) c_wsi->load_value();
-                  break;
-                }
+//              case sflow_parameter_e::sfpar_ws_item : {
+//                  qbinded_ws_item_combobox_t *c_wsi =
+//                      qobject_cast<qbinded_ws_item_combobox_t*>(wdgt);
+//                  if (c_wsi) c_wsi->load_value();
+//                  break;
+//                }
 
               case sflow_parameter_e::sfpar_bool : {
                   break;

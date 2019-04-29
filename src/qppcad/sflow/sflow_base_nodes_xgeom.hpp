@@ -14,6 +14,12 @@ namespace qpp {
         bool execute_ex() override;
     };
 
+    class sf_xgeom_ntypes_node_t : public sflow_node_t {
+        QPP_OBJECT(sf_xgeom_ntypes_node_t, sflow_node_t)
+      public:
+        sf_xgeom_ntypes_node_t();
+        bool execute_ex() override;
+    };
 
   } // namespace cad
 

@@ -45,9 +45,9 @@ void qbinded_float_spinbox_t::load_value_ex() {
 }
 
 void qbinded_float_spinbox_t::set_min_max_step(double new_min,
-                                             double new_max,
-                                             double new_step,
-                                             int decimals) {
+                                               double new_max,
+                                               double new_step,
+                                               int decimals) {
   setRange(new_min, new_max);
   setSingleStep(new_step);
   setDecimals(decimals);
@@ -64,11 +64,11 @@ qbinded_float_spinbox_t::qbinded_float_spinbox_t(QWidget *parent) : QDoubleSpinB
   setLocale(QLocale::C);
 
   connect(
-    this,
-    static_cast<void(qbinded_float_spinbox_t::*)(double)>(&qbinded_float_spinbox_t::valueChanged),
-    this,
-    &qbinded_float_spinbox_t::value_changed
-    );
+        this,
+        static_cast<void(qbinded_float_spinbox_t::*)(double)>(&qbinded_float_spinbox_t::valueChanged),
+        this,
+        &qbinded_float_spinbox_t::value_changed
+        );
 
 }
 
@@ -322,12 +322,12 @@ void qbinded_color3_input_t::load_value_ex() {
       back_color = m_stored_color;
     }
 
-//  QPalette pal;
-//  pal.setColor(QPalette::Background, back_color);
-//  pal.setColor(QPalette::Foreground, Qt::white);
-//  setPalette(pal);
+  //  QPalette pal;
+  //  pal.setColor(QPalette::Background, back_color);
+  //  pal.setColor(QPalette::Foreground, Qt::white);
+  //  setPalette(pal);
 
-//  setAutoFillBackground(true);
+  //  setAutoFillBackground(true);
 
 }
 
@@ -379,8 +379,8 @@ void qbinded_int_spinbox_t::load_value_ex() {
 }
 
 void qbinded_int_spinbox_t::set_min_max_step(int new_min,
-                                           int new_max,
-                                           int new_step) {
+                                             int new_max,
+                                             int new_step) {
 
   setRange(new_min, new_max);
 
@@ -435,7 +435,7 @@ qbinded_ws_item_combobox_t::qbinded_ws_item_combobox_t(QWidget *parent) {
 }
 
 void qbinded_ws_item_combobox_t::bind_value(std::shared_ptr<ws_item_t> *_binded_value,
-                                          ws_item_t *item_to_bind) {
+                                            ws_item_t *item_to_bind) {
   m_binded_ws_item_p = _binded_value;
   m_binded_ws_item = item_to_bind;
   m_binded_ws = item_to_bind->m_parent_ws;
@@ -452,13 +452,13 @@ void qbinded_ws_item_combobox_t::load_value() {
   rebuild_variants();
 
   if (!m_binded_ws_item_p->get()) {
-//      astate->log("!m_binded_ws_item_p->get()");
+      //      astate->log("!m_binded_ws_item_p->get()");
       setCurrentIndex(0);
       return;
     }
 
   if (!m_binded_ws) {
-//      astate->log("!m_binded_ws");
+      //      astate->log("!m_binded_ws");
       setCurrentIndex(0);
       return;
     }
@@ -468,8 +468,8 @@ void qbinded_ws_item_combobox_t::load_value() {
       std::string name_in_cb = name_in_checkbox.toStdString();
       if (m_binded_ws_item_p->get()->m_name == name_in_cb
           && m_binded_ws_item_p->get()->get_type() == m_type_id) {
-//          astate->log(
-//                fmt::format("qbinded_ws_item_combobox_t::load_value({}, {})", i, name_in_cb));
+          //          astate->log(
+          //                fmt::format("qbinded_ws_item_combobox_t::load_value({}, {})", i, name_in_cb));
           setCurrentIndex(i); // 0 == None
           return;
         }
@@ -599,8 +599,8 @@ void qbinded_xgeom_color3_input_t::mousePressEvent(QMouseEvent *event) {
 }
 
 void qbinded_xgeom_float_spinbox_t::bind_value(xgeometry<float, periodic_cell<float> > *_binded_xgeom,
-                                             int _binding_index,
-                                             size_t _binded_atom_id) {
+                                               int _binding_index,
+                                               size_t _binded_atom_id) {
 
   m_binded_xgeom = _binded_xgeom;
   m_binding_index = _binding_index;
@@ -625,9 +625,9 @@ void qbinded_xgeom_float_spinbox_t::unbind_value() {
 }
 
 void qbinded_xgeom_float_spinbox_t::set_min_max_step(double new_min,
-                                                   double new_max,
-                                                   double new_step,
-                                                   int decimals) {
+                                                     double new_max,
+                                                     double new_step,
+                                                     int decimals) {
 
   setRange(new_min, new_max);
   setSingleStep(new_step);

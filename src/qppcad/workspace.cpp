@@ -639,7 +639,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_ext_edt(m_bhv_mgr.get());
 
-  sf_node_reg_hlp_t::reg_sflow_info(m_bhv_mgr.get());
+  sf_node_reg_hlp_t::reg_sf_info(m_bhv_mgr.get());
 
 }
 

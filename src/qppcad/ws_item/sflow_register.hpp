@@ -12,12 +12,12 @@ namespace qpp {
     struct sf_node_reg_hlp_t {
 
         template<typename T>
-        static void reg_sflow_info_fbr(ws_item_behaviour_manager_t *bhv_mgr,
-                                       std::string full_name,
-                                       size_t group_hash) {
-          bhv_mgr->reg_reg_sflow_fbr(full_name, group_hash, [](){return std::make_shared<T>();});
+        static void reg_sf_info_fbr(ws_item_behaviour_manager_t *bhv_mgr,
+                                    std::string full_name,
+                                    size_t group_hash) {
+          bhv_mgr->reg_reg_sf_fbr(full_name, group_hash, [](){return std::make_shared<T>();});
         }
-        static void reg_sflow_info(ws_item_behaviour_manager_t *bhv_mgr);
+        static void reg_sf_info(ws_item_behaviour_manager_t *bhv_mgr);
 
     }; // struct sflow_node_registration_helper_t
 

@@ -15,6 +15,8 @@ sf_int_prop_node_t::sf_int_prop_node_t() : sflow_node_t () {
     {sflow_parameter_e::sfpar_int, "value", true}
   };
 
+  m_front_end_width = opt<int>(120);
+
 }
 
 bool sf_int_prop_node_t::execute_ex() {
@@ -43,6 +45,8 @@ sf_int_final_node_t::sf_int_final_node_t() : sflow_node_t () {
   m_ipl_types = {
     {sflow_parameter_e::sfpar_int, "value", false}
   };
+
+  m_front_end_width = opt<int>(120);
 
 }
 

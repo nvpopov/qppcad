@@ -132,5 +132,5 @@ int size_guide_t::common_button_fixed_w() {
 }
 
 int size_guide_t::node_book_inplace_par_width() {
-  return 40;
+  return 55;
 }

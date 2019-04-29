@@ -355,7 +355,7 @@ namespace qpp {
                       std::function<std::shared_ptr<ws_item_tool_t>() > _fabric);
 
       size_t reg_sflow_grp(std::string group_name);
-      size_t reg_reg_sflow_fbr(std::string _full_name,
+      size_t reg_reg_sf_fbr(std::string _full_name,
                                size_t _g_hash,
                                std::function<std::shared_ptr<sflow_node_t>() > _fabric);
       /**

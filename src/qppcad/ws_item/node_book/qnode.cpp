@@ -60,6 +60,7 @@ void qnode_t::construct_inplace_widgets() {
 
           case sflow_parameter_e::sfpar_int : {
               qbinded_int_spinbox_t *b_sb = new qbinded_int_spinbox_t;
+              b_sb->set_min_max_step(-100000, 100000, 1);
               sflow_parameter_int_t *sf_par_int =
                   m_sf_node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
               if (sf_par_int) {
@@ -117,7 +118,7 @@ void qnode_t::construct_inplace_widgets() {
               if (sf_par_wsi) {
                   b_wsc->bind_value(&sf_par_wsi->m_value, master_item);
                   if (master_item) {
-                      //b_wsc->m_updated_externally_event = true;
+                      b_wsc->m_updated_externally_event = true;
                       b_wsc->m_upd_flag = ws_item_updf_regenerate_content;
                     }
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
