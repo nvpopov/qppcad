@@ -111,13 +111,85 @@ void node_book_graphics_scene_t::delete_node(qnode_t *_node) {
 void node_book_graphics_scene_t::unlink_node(qnode_t *_node) {
 
   if (!_node) return;
+
   for (auto it = m_connections.begin(); it != m_connections.end();)
+
     if (((*it) && (*it)->m_inp_socket && (*it)->m_inp_socket->m_node.get() == _node) ||
         ((*it) && (*it)->m_out_socket && (*it)->m_out_socket->m_node.get() == _node)) {
+
         removeItem((*it).get());
+
+        if ((*it)->m_inp_socket->m_node.get() == _node)
+          notify_linked_nodes_about_unlinking((*it)->m_out_socket->m_node.get());
+        else
+          notify_linked_nodes_about_unlinking((*it)->m_inp_socket->m_node.get());
+
         it = m_connections.erase(it);
+
       } else {
+
         ++it;
+
+      }
+
+}
+
+void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *_node) {
+
+  if (!_node) return;
+
+  for (size_t i = 0; i < _node->m_inplace_wdgts.size(); i++)
+    if (_node->m_inplace_wdgts[i] && !_node->m_sf_node->m_ipl_types[i].m_editable) {
+
+          switch (_node->m_sf_node->m_ipl_types[i].m_type) {
+
+            case sflow_parameter_e::sfpar_int : {
+                qbinded_int_spinbox_t *c_int_sb =
+                    qobject_cast<qbinded_int_spinbox_t*>(_node->m_inplace_wdgts[i]);
+                if (c_int_sb) {
+                    *(c_int_sb->m_binded_value) = 0;
+                    c_int_sb->load_value_ex();
+                  }
+                break;
+              }
+
+            case sflow_parameter_e::sfpar_float : {
+                qbinded_float_spinbox_t *c_f_sb =
+                    qobject_cast<qbinded_float_spinbox_t*>(_node->m_inplace_wdgts[i]);
+                if (c_f_sb) {
+                    *(c_f_sb->m_binded_value) = 0;
+                    c_f_sb->load_value_ex();
+                  }
+                break;
+              }
+
+            case sflow_parameter_e::sfpar_v3f : {
+                qbinded_float3_input_t *c_v3f =
+                    qobject_cast<qbinded_float3_input_t*>(_node->m_inplace_wdgts[i]);
+                if (c_v3f) {
+                    *(c_v3f->m_binded_value) = vector3<float>{0};
+                    c_v3f->load_value_ex();
+                  }
+                break;
+              }
+
+//              case sflow_parameter_e::sfpar_ws_item : {
+//                  qbinded_ws_item_combobox_t *c_wsi =
+//                      qobject_cast<qbinded_ws_item_combobox_t*>(wdgt);
+//                  if (c_wsi) c_wsi->load_value();
+//                  break;
+//                }
+
+            case sflow_parameter_e::sfpar_bool : {
+                break;
+              }
+
+            default : {
+                break;
+              }
+
+            }
+
       }
 
 }

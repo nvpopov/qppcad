@@ -123,26 +123,28 @@ void node_book_t::execute() {
 
   //update output values
   for (auto &elem : m_scene->m_nodes)
-    for (auto wdgt : elem->m_inplace_wdgts)
-      if (wdgt) {
-          for (size_t i = 0; i < elem->m_sf_node->m_ipl.size(); i++)
+    for (size_t i = 0; i < elem->m_inplace_wdgts.size(); i++)
+      if (elem->m_inplace_wdgts[i]) {
 
             switch (elem->m_sf_node->m_ipl_types[i].m_type) {
 
               case sflow_parameter_e::sfpar_int : {
-                  qbinded_int_spinbox_t *c_int_sb = qobject_cast<qbinded_int_spinbox_t*>(wdgt);
+                  qbinded_int_spinbox_t *c_int_sb =
+                      qobject_cast<qbinded_int_spinbox_t*>(elem->m_inplace_wdgts[i]);
                   if (c_int_sb) c_int_sb->load_value_ex();
                   break;
                 }
 
               case sflow_parameter_e::sfpar_float : {
-                  qbinded_float_spinbox_t *c_f_sb = qobject_cast<qbinded_float_spinbox_t*>(wdgt);
+                  qbinded_float_spinbox_t *c_f_sb =
+                      qobject_cast<qbinded_float_spinbox_t*>(elem->m_inplace_wdgts[i]);
                   if (c_f_sb) c_f_sb->load_value_ex();
                   break;
                 }
 
               case sflow_parameter_e::sfpar_v3f : {
-                  qbinded_float3_input_t *c_v3f = qobject_cast<qbinded_float3_input_t*>(wdgt);
+                  qbinded_float3_input_t *c_v3f =
+                      qobject_cast<qbinded_float3_input_t*>(elem->m_inplace_wdgts[i]);
                   if (c_v3f) c_v3f->load_value_ex();
                   break;
                 }

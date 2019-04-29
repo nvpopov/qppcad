@@ -154,6 +154,8 @@ sf_int_patb_const_node_t::sf_int_patb_const_node_t() {
     {sflow_parameter_e::sfpar_int, "b", true}
   };
 
+  m_front_end_width = opt<int>(120);
+
 }
 
 bool sf_int_patb_const_node_t::execute_ex() {
