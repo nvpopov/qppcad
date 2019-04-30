@@ -59,6 +59,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   m.def("xgeom_dfn", &simple_query::get_xgeom_dfn);
   m.def("xgeom_dft", &simple_query::get_xgeom_dft);
+  m.def("cw", &simple_query::cur_ws);
 
   //tools module begin
   py::module tools = m.def_submodule("tools", "Generic tools");
@@ -74,9 +75,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   py_color_map_t.def(py::init<>());
   py_color_map_t.def("get_color", &color_map_t::get_color);
   py_color_map_t.def("push_color", &color_map_t::push_color);
-
-  tools.def("get_isolevel", &simple_query::get_isolevel);
-  tools.def("set_isolevel", &simple_query::set_isolevel);
 
   tools.def("rebond", &simple_query::rebond);
   tools.def("t", &simple_query::translate_selected);

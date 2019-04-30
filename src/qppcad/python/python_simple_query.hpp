@@ -95,12 +95,7 @@ namespace qpp {
                                        float tz);
         static void set_charge(float charge);
         static void set_ws_bg(vector3<float> bg);
-
-        static void add_atoms_list_0d(std::string name);
-        static void add_atoms_list_3d(std::string name,
-                                      vector3<float> a,
-                                      vector3<float> b,
-                                      vector3<float> c);
+        static std::shared_ptr<workspace_t> cur_ws();
 
         static void make_cube_p(std::string name,
                                 vector3<float> pos,
@@ -113,9 +108,6 @@ namespace qpp {
                                  vector3<float> to);
 
         static void convert_selected_units(spatial_units_e new_unit);
-
-        static float get_isolevel();
-        static void set_isolevel(float new_isolevel);
 
         static void set_sel_color_vec(vector3<float> color);
         static void set_sel_color(float r, float g, float b);
