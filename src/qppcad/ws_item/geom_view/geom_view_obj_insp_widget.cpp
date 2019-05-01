@@ -1706,8 +1706,11 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
             }
 
           gb_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frames.size()));
+
+
           gb_anim_timeline_slider->setMinimum(0);
           gb_anim_timeline_slider->setMaximum(cur_anim->frames.size()-1);
+          anim_updated_external();
 
         }
 
