@@ -37,6 +37,7 @@ namespace qpp {
         void mouseMoveEvent(QMouseEvent * event) override;
         void wheelEvent(QWheelEvent *event) override;
 
+
     };
 
   } // namespace qpp::cad

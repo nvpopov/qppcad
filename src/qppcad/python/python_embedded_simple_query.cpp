@@ -52,7 +52,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
     arg2: float - blue component
     )str" );
 
-  m.def("gpos", &simple_query::gizmo_pos,
+  m.def("gp", &simple_query::gizmo_pos,
         R"str(
         Returns the current position of the gizmo-object
         )str" );

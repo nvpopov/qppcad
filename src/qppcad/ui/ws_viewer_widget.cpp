@@ -290,4 +290,15 @@ void ws_viewer_widget_t::wheelEvent(QWheelEvent *event) {
 
 void ws_viewer_widget_t::show_context_menu(const QPoint &pos) {
 
+//  QMenu contextMenu(tr("Context menu"), this);
+//  QAction action1("Action 1", this);
+//  contextMenu.addAction(&action1);
+//  contextMenu.exec(mapToGlobal(pos));
+
+//  app_state_t* astate = app_state_t::get_inst();
+//  astate->is_mouse_moving = false;
+//  astate->mouse_lb_pressed = false;
+//  astate->mouse_rb_pressed = false;
+//  astate->mouse_rb_pressed = false;
+
 }

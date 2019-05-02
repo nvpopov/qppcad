@@ -4,6 +4,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
 #include <qppcad/qpp_object.hpp>
+#include <qppcad/sflow/sflow_calc_meta.hpp>
 #ifdef EXTENDED_SFLOW
 #include <qppcad/sflow/sflow_parameter_ws_item.hpp>
 #endif
@@ -56,6 +57,8 @@ namespace qpp {
         size_t m_idx_lookup{0};
 
         opt<int> m_front_end_width{std::nullopt};
+
+        sflow_calc_meta_t m_calc_meta;
 
         std::vector<sflow_socket_info_t> m_inp_types;
         std::vector<std::shared_ptr<sflow_parameter_t>> m_inps;

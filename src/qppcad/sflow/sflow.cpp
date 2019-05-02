@@ -132,10 +132,14 @@ void sflow_context_t::execute_traverse(sflow_node_t *cur_node,
 
   for (size_t i = 0; i < m_connectivity.size(); i++) {
       if (m_connectivity[i].m_out_node.get() == cur_node) {
+
           //last parameter - by reference, otherwise - copy
           bool last_element = i + 1 == m_connectivity.size();
           auto pg_res = propagate_data(&m_connectivity[i], !last_element);
-          if (pg_res == sflow_status_e::propagate_succes)
+          auto pg_meta_info_res = propagate_meta_info(&m_connectivity[i]);
+
+          if (pg_res == sflow_status_e::propagate_data_succes &&
+              pg_meta_info_res == sflow_status_e::propagate_meta_succes)
             execute_traverse(m_connectivity[i].m_inp_node.get(), cur_node);
         }
     }
@@ -167,15 +171,21 @@ sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd, bo
           cd->m_inp_node->m_inps[*cd->m_inp_socket] =
               cd->m_out_node->m_outs[*cd->m_out_socket]->clone();
           fmt::print(std::cout, "!succes!\n");
-          return sflow_status_e::propagate_succes;
+          return sflow_status_e::propagate_data_succes;
         } else {
           fmt::print(std::cout, "error\n");
-          return sflow_status_e::propagate_error;
+          return sflow_status_e::propagate_data_error;
         }
 
-    } else return sflow_status_e::propagate_error;
+    } else return sflow_status_e::propagate_data_error;
 
-  return sflow_status_e::propagate_succes;
+  return sflow_status_e::propagate_data_succes;
+
+}
+
+sflow_status_e sflow_context_t::propagate_meta_info(sflow_connectivity_data_t *cd) {
+
+  return sflow_status_e::propagate_meta_succes;
 
 }
 

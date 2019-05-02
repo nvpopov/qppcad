@@ -39,6 +39,7 @@ namespace qpp {
                               bool debug_print = false);
 
         sflow_status_e propagate_data(sflow_connectivity_data_t *cd, bool copy_par = true);
+        sflow_status_e propagate_meta_info(sflow_connectivity_data_t *cd);
 
     };
 
