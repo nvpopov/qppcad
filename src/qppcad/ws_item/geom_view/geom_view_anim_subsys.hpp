@@ -89,6 +89,10 @@ namespace qpp {
         size_t get_total_anims () const;
         size_t frame_count (const size_t anim_id) const;
         size_t current_frame_count () const;
+
+        bool is_cell_animable(size_t anim_id, size_t frame_id);
+        vector3<float> get_cell_vectors(size_t anim_id, size_t frame_id, size_t cell_id);
+
     };
 
   } // namespace qpp::cad

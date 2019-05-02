@@ -191,6 +191,8 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
                         py::arg("atom_id"),
                         py::arg("lerp_from_start") = false,
                         py::arg("propagate_to_the_end") = false);
+  py_geom_view_anim.def("is_cell_animable", &geom_view_anim_subsys_t::is_cell_animable);
+  py_geom_view_anim.def("get_cell_vectors", &geom_view_anim_subsys_t::get_cell_vectors);
 
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(m, "geom_view_t", py_ws_item_t);
