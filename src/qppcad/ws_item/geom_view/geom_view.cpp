@@ -756,6 +756,32 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tws_tree) {
 
 }
 
+std::shared_ptr<ws_item_t> geom_view_t::clone_on_the_spot() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto cloned = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
+  if (!cloned) return nullptr;
+  cloned->m_name = fmt::format("{}_clone", m_name);
+
+  auto c_gv = cloned->cast_as<geom_view_t>();
+  if (!c_gv) return nullptr;
+
+  c_gv->m_tws_tr->do_action(act_lock | act_clear_all);
+
+  copy_to_xgeometry(*(c_gv->m_geom));
+
+  c_gv->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+  c_gv->m_tws_tr->do_action(act_rebuild_ntable);
+
+  if (m_parent_ws) {
+      m_parent_ws->add_item_to_ws(cloned);
+    }
+
+  return cloned;
+
+}
+
 void geom_view_t::load_color_from_static_anim() {
 
   if (!m_geom) return;

@@ -27,7 +27,7 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
 
   // tws_tree setup before modification the geometry
   if (is_variable_cell_anim) {
-      p_owner->m_tws_tr->do_action(act_lock | act_clear_all);
+      p_owner->m_tws_tr->do_action(act_lock | act_clear_all | act_clear_img);
       // update cell
       for (size_t vc_i = 0; vc_i < p_owner->m_geom->DIM; vc_i++)
         p_owner->m_geom->cell.v[vc_i] =
@@ -77,8 +77,8 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
     }  // end of update atom data
 
   if (is_variable_cell_anim) {
-      p_owner->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
-      p_owner->m_tws_tr->do_action(act_rebuild_ntable);
+      p_owner->m_tws_tr->do_action(act_unlock | act_rebuild_tree | act_unlock_img);
+      p_owner->m_tws_tr->do_action(act_rebuild_all);
     } else {
       if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_unlock);
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_unlock_img);

@@ -223,6 +223,7 @@ namespace qpp {
                                bool copy_selected = false,
                                bool copy_cell = true);
         void copy_cell(geom_view_t &src, bool rebuild_tws_tree = true);
+        std::shared_ptr<ws_item_t> clone_on_the_spot();
 
         void load_color_from_static_anim();
 
