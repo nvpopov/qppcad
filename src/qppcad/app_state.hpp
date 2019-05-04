@@ -144,6 +144,8 @@ namespace qpp {
         QPalette m_bg_embwnd_pal;
         QPalette m_bgfg_embwnd_pal;
 
+        int m_spatial_measurements_digits_count{2};
+
         icon_repository_t icons;
 
         vector2<float> viewport_xy;

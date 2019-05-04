@@ -69,6 +69,14 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
 
 }
 
+void simple_query::set_msr_digits(int digits){
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->m_spatial_measurements_digits_count = digits;
+  astate->make_viewport_dirty();
+
+}
+
 std::shared_ptr<ws_item_t> simple_query::get_current_selected() {
 
   app_state_t *astate = app_state_t::get_inst();

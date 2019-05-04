@@ -206,9 +206,13 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
             painter.translate(mid[0], mid[1]);
             painter.rotate(angle);
 
-            QString _label_text = record.m_show_custom_label ?
-                                    QString::fromStdString(record.m_custom_label_text) :
-                                    QString("%1 Å").arg(QString::number(dist, 'f', 2));
+            QString _label_text =
+                record.m_show_custom_label ?
+                  QString::fromStdString(record.m_custom_label_text) :
+                  QString("%1 Å").arg(QString::number(
+                                        dist,
+                                        'f',
+                                        astate->m_spatial_measurements_digits_count));
 
             QFontMetrics fmetric(font);
 

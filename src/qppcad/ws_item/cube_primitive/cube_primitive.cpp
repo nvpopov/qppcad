@@ -97,6 +97,8 @@ void cube_primitive_t::save_to_json(json &data) {
   json_helper::save_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
   json_helper::save_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
   json_helper::save_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
+  json_helper::save_var(JSON_WS_CUBE_P_EALPHA, m_alpha_enabled, data);
+  json_helper::save_var(JSON_WS_CUBE_P_ALPHA, m_alpha, data);
 
 }
 
@@ -107,6 +109,8 @@ void cube_primitive_t::load_from_json(json &data, repair_connection_info_t &rep_
   json_helper::load_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
   json_helper::load_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
   json_helper::load_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
+  json_helper::load_var(JSON_WS_CUBE_P_EALPHA, m_alpha_enabled, data);
+  json_helper::load_var(JSON_WS_CUBE_P_ALPHA, m_alpha, data);
 
 }
 

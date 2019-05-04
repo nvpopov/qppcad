@@ -636,7 +636,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_pair_dist_note_label->setText(tr("Distance"));
   tm_pair_dist_spinbox->setMinimum(0.0);
   tm_pair_dist_spinbox->setMaximum(10);
-  tm_pair_dist_spinbox->setSingleStep(0.01);
+  tm_pair_dist_spinbox->setSingleStep(0.005);
+  tm_pair_dist_spinbox->setDecimals(3);
+  tm_pair_dist_spinbox->setLocale(QLocale::C);
   tm_pair_dist_spinbox->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   tm_pair_dist_swap_atoms = new QPushButton(tr("Swap"));

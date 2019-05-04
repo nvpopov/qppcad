@@ -69,6 +69,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   //****************************** tools module begin *********************************************
   py::module tools = m.def_submodule("tools", "Generic tools");
 
+  tools.def("set_msr_digits", &simple_query::set_msr_digits);
   tools.def("get_tool_groups", &simple_query::get_tool_groups);
   tools.def("get_tool_names", &simple_query::get_tool_names);
   tools.def("get_connected_items", &simple_query::get_connected_items);

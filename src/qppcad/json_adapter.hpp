@@ -109,9 +109,11 @@ namespace qpp {
     const auto JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE       = "type_color_override";
     const auto JSON_GEOM_VIEW_ROLE = "role";
 
-    const auto JSON_WS_CUBE_P_COLOR = "cube_color";
-    const auto JSON_WS_CUBE_P_STYLE = "cube_style";
-    const auto JSON_WS_CUBE_P_SCALE = "cube_scale";
+    const auto JSON_WS_CUBE_P_COLOR  = "cube_color";
+    const auto JSON_WS_CUBE_P_STYLE  = "cube_style";
+    const auto JSON_WS_CUBE_P_SCALE  = "cube_scale";
+    const auto JSON_WS_CUBE_P_ALPHA  = "cube_alpha";
+    const auto JSON_WS_CUBE_P_EALPHA = "cube_alpha_enabled";
 
     const auto JSON_WS_CAMERA             = "ws_camera";
     const auto JSON_WS_CAMERA_VIEW_POINT  = "view_point";
