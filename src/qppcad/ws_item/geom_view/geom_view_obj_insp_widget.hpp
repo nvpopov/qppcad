@@ -65,17 +65,21 @@ namespace qpp {
         qbinded_checkbox_t *disp_s_sel_vis;
         qbinded_checkbox_t *disp_s_sel_vis_affect_bonds;
 
-        QLabel *disp_draw_cell_label;
-        qbinded_checkbox_t *disp_draw_cell;
-        QLabel *disp_cell_color_label;
-        qbinded_color3_input_t *disp_cell_color;
+        // Periodic related render
+        qspoiler_widget_t *gb_periodic_related_render;
+        QFormLayout *gb_periodic_related_render_lt;
+        qbinded_checkbox_t *periodic_draw_cell_v;
+        qbinded_float_spinbox_t *periodic_cell_v_ratio;
+        std::array<qbinded_color3_input_t*, 3> periodic_cell_vectors_color;
 
-        QLabel *disp_draw_subcells_lbl;
+        qbinded_checkbox_t *disp_draw_cell;
+        qbinded_color3_input_t *disp_cell_color;
         qbinded_checkbox_t *disp_draw_subcells;
         QLabel *disp_subcells_idx_lbl;
         qbinded_int3_input_t *disp_subcells_idx;
         QLabel *disp_subcells_color_lbl;
         qbinded_color3_input_t *disp_subcells_clr;
+        // End of Periodic related render
 
         qspoiler_widget_t *gb_disp_shading;
         QFormLayout *gb_disp_shading_lt;

@@ -450,8 +450,8 @@ void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
 void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
                                    const vector3<float> &cone_size,
                                    const vector3<float> &cone_color) {
-  app_state_t* astate = app_state_t::get_inst();
 
+  app_state_t* astate = app_state_t::get_inst();
 
   Eigen::Transform<float, 3, Eigen::Affine>
       t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
@@ -470,6 +470,50 @@ void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
   //glDisable(GL_CULL_FACE);
   astate->mesh_unit_cone->render();
   //glEnable(GL_CULL_FACE);
+}
+
+void draw_pipeline_t::render_arrow(const vector3<float> &arrow_start,
+                                   const vector3<float> &arrow_end,
+                                   const vector3<float> &arrow_color,
+                                   const float arrow_body_scale,
+                                   const float arrow_cap_scale,
+                                   const float arrow_cap_len,
+                                   const bool inner_cap) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  float dnodem = (arrow_end - arrow_start).norm();
+  if (dnodem < 0.0005f) return;
+
+  vector3<float> _arrow_end = arrow_end;
+
+  vector3<float> dir = (arrow_end - arrow_start).normalized();
+  if (!inner_cap) _arrow_end += -dir * arrow_cap_len;
+
+  matrix4<float> mat_body = matrix4<float>::Identity();
+  mat_body.block<3,1>(0,3) = arrow_start;
+  mat_body.block<3,1>(0,2) = _arrow_end - arrow_start;
+
+  vector3<float> vec_axis_norm = mat_body.block<3,1>(0,2).normalized();
+  mat_body.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * arrow_body_scale;
+  mat_body.block<3,1>(0,1) = vec_axis_norm.cross(mat_body.block<3,1>(0,0));
+  mat_body.block<3,1>(0,3) = arrow_start ;
+
+  vector3<float> start_ar = _arrow_end;
+  vector3<float> end_ar = _arrow_end + dir * arrow_cap_len;
+
+  matrix4<float> mat_arrow = matrix4<float>::Identity();
+  mat_arrow.block<3,1>(0,3) = start_ar;
+  mat_arrow.block<3,1>(0,2) = end_ar - start_ar;
+
+  vector3<float> veca_axis_norm = mat_arrow.block<3,1>(0,2).normalized();
+  mat_arrow.block<3,1>(0,0) = veca_axis_norm.unitOrthogonal() * arrow_cap_scale;
+  mat_arrow.block<3,1>(0,1) = veca_axis_norm.cross(mat_arrow.block<3,1>(0,0));
+  mat_arrow.block<3,1>(0,3) = start_ar ;
+
+  astate->dp->render_general_mesh(mat_body, arrow_color, astate->mesh_cylinder);
+  astate->dp->render_general_mesh(mat_arrow, arrow_color, astate->mesh_unit_cone);
+
 }
 
 void draw_pipeline_t::end_render_general_mesh (shader_program_t *custom_sp) {
@@ -679,7 +723,7 @@ void draw_pipeline_t::begin_render_line_mesh() {
   app_state_t* astate = app_state_t::get_inst();
   astate->sp_line_mesh->begin_shader_program();
   astate->sp_line_mesh->set_u(sp_u_name::m_model_view_proj,
-                                   astate->camera->m_proj_view.data());
+                              astate->camera->m_proj_view.data());
 }
 
 void draw_pipeline_t::render_line_mesh(const vector3<float> &pos,
@@ -699,13 +743,13 @@ void draw_pipeline_t::render_screen_quad () {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->sp_fbo_quad->begin_shader_program();
- //glDisable(GL_DEPTH_TEST);
+  //glDisable(GL_DEPTH_TEST);
 
   //glActiveTexture(GL_TEXTURE0);
   //glBindTexture(GL_TEXTURE_2D, astate->frame_buffer->get_color_texture());
 
   astate->mesh_fbo_quad->render();
- // glEnable(GL_DEPTH_TEST);
+  // glEnable(GL_DEPTH_TEST);
   astate->sp_fbo_quad->end_shader_program();
 
 }

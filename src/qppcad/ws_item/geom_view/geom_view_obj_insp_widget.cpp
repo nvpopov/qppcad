@@ -123,14 +123,22 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_color_mode->addItem(tr("Color from ptable"));
   disp_s_color_mode->addItem(tr("Color from xgeom"));
 
+  // ******************  Periodic related render ***************************************************
+  gb_periodic_related_render = new qspoiler_widget_t(tr("Periodic related settings"));
+  gb_periodic_related_render_lt = new QFormLayout;
+  gb_periodic_related_render->add_content_layout(gb_periodic_related_render_lt);
+
+  periodic_draw_cell_v = new qbinded_checkbox_t;
+  periodic_cell_v_ratio = new qbinded_float_spinbox_t;
+  periodic_cell_v_ratio->set_min_max_step(-5, 5, 0.01);
+
   disp_draw_subcells = new qbinded_checkbox_t;
-  disp_draw_subcells_lbl = new QLabel(tr("Draw subcells"));
   disp_subcells_idx = new qbinded_int3_input_t;
   disp_subcells_idx_lbl = new QLabel(tr("Subcells range"));
   disp_subcells_idx->set_min_max_step(1, 10, 1);
   disp_subcells_clr = new qbinded_color3_input_t();
   disp_subcells_color_lbl = new QLabel(tr("Subcell color"));
-  init_form_lt_lbl(disp_draw_subcells_lbl);
+
   init_form_lt_lbl(disp_subcells_idx_lbl);
   init_form_lt_lbl(disp_subcells_color_lbl);
 
@@ -143,11 +151,19 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox_t;
 
   disp_draw_cell = new qbinded_checkbox_t;
-  disp_draw_cell_label = new QLabel(tr("Draw cell"));
-  init_form_lt_lbl(disp_draw_cell_label);
   disp_cell_color = new qbinded_color3_input_t();
-  disp_cell_color_label = new QLabel(tr("Cell color"));
-  init_form_lt_lbl(disp_cell_color_label);
+  for (size_t i = 0; i < 3; i++) periodic_cell_vectors_color[i] = new qbinded_color3_input_t;
+
+  gb_periodic_related_render_lt->addRow(tr("Draw vectors"), periodic_draw_cell_v);
+  gb_periodic_related_render_lt->addRow(tr("Vectors ratio"), periodic_cell_v_ratio);
+  gb_periodic_related_render_lt->addRow(tr("Vector a color"), periodic_cell_vectors_color[0]);
+  gb_periodic_related_render_lt->addRow(tr("Vector b color"), periodic_cell_vectors_color[1]);
+  gb_periodic_related_render_lt->addRow(tr("Vector c color"), periodic_cell_vectors_color[2]);
+  gb_periodic_related_render_lt->addRow(tr("Cell color"), disp_cell_color);
+  gb_periodic_related_render_lt->addRow(tr("Draw subcells"), disp_draw_subcells);
+
+  init_form_lt(gb_periodic_related_render_lt);
+  // ******************  End of Periodic related render *********************************************
 
   gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
@@ -258,6 +274,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_s);
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_shading);
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_labels);
+  tab_disp->tab_inner_widget_lt->addWidget(gb_periodic_related_render);
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_type_spec_rend);
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_bt);
 
@@ -338,7 +355,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_buttons_lt = new QHBoxLayout;
   gb_anim_buttons->add_content_layout(gb_anim_buttons_lt);
   gb_anim_buttons->setMaximumWidth(astate->size_guide.obj_insp_anim_w());
- //gb_anim_buttons->setMaximumHeight(90);
+  //gb_anim_buttons->setMaximumHeight(90);
 
   anim_play = new QPushButton(tr("PLAY"));
   anim_play->setCheckable(true);
@@ -992,6 +1009,11 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_s_sel_vis->bind_value(&b_al->m_sel_vis);
       disp_s_sel_vis_affect_bonds->bind_value(&b_al->m_sel_vis_affect_bonds);
 
+      periodic_draw_cell_v->bind_value(&b_al->m_draw_cell_vectors);
+      periodic_cell_v_ratio->bind_value(&b_al->m_cell_vectors_ratio);
+      for (size_t i = 0; i < 3; i++)
+        periodic_cell_vectors_color[i]->bind_value(&b_al->m_cell_vector_color[i]);
+
       disp_draw_cell->bind_value(&b_al->m_draw_cell);
       disp_draw_subcells->bind_value(&b_al->m_draw_subcells);
       disp_subcells_idx->bind_value(&b_al->m_subcells_range);
@@ -1001,35 +1023,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       // 3d geom section
       bool _al3d = b_al->m_geom->DIM == 3;
 
-      qt_helpers::form_lt_ctrl_visibility(_al3d,
-                                          gb_disp_s_lt,
-                                          disp_s_sel_vis_affect_bonds,
-                                          disp_draw_cell_label,
-                                          disp_draw_cell);
-
-      qt_helpers::form_lt_ctrl_visibility(_al3d,
-                                          gb_disp_s_lt,
-                                          disp_draw_cell,
-                                          disp_cell_color_label,
-                                          disp_cell_color);
-
-      qt_helpers::form_lt_ctrl_visibility(_al3d,
-                                          gb_disp_s_lt,
-                                          disp_cell_color,
-                                          disp_draw_subcells_lbl,
-                                          disp_draw_subcells);
-
-      qt_helpers::form_lt_ctrl_visibility(_al3d && b_al->m_draw_subcells,
-                                          gb_disp_s_lt,
-                                          disp_draw_subcells,
-                                          disp_subcells_idx_lbl,
-                                          disp_subcells_idx);
-
-      qt_helpers::form_lt_ctrl_visibility(_al3d && b_al->m_draw_subcells,
-                                          gb_disp_s_lt,
-                                          disp_subcells_idx,
-                                          disp_subcells_color_lbl,
-                                          disp_subcells_clr);
+      gb_periodic_related_render->setVisible(_al3d);
 
       // end 3d geom section
       //gb_disp_s_lt->invalidate();
@@ -1046,12 +1040,12 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       gb_current_anim->blockSignals(true);
       gb_current_anim->clear();
 
-      for (size_t i = 0; i < b_al->m_anim->get_total_anims(); i++) {
-          gb_current_anim->addItem(QString::fromStdString(
-                                     fmt::format("[{}] {}",
+      for (size_t i = 0; i < b_al->m_anim->get_total_anims(); i++)
+        gb_current_anim->addItem(
+              QString::fromStdString(fmt::format("[{}] {}",
                                                  i,
-                                                 b_al->m_anim->m_anim_data[i].m_anim_name)));
-        }
+                                                 b_al->m_anim->m_anim_data[i].m_anim_name))
+              );
 
       gb_current_anim->setCurrentIndex(b_al->m_anim->m_cur_anim);
       gb_current_anim->blockSignals(false);
@@ -1114,11 +1108,16 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_shading_spec_value->unbind_value();
   disp_s_sel_vis->unbind_value();
   disp_s_sel_vis_affect_bonds->unbind_value();
+
+  periodic_draw_cell_v->unbind_value();
+  periodic_cell_v_ratio->unbind_value();
+  for (size_t i = 0; i < 3; i++) periodic_cell_vectors_color[i]->unbind_value();
   disp_draw_cell->unbind_value();
   disp_cell_color->unbind_value();
   disp_draw_subcells->unbind_value();
   disp_subcells_idx->unbind_value();
   disp_subcells_clr->unbind_value();
+
   gb_rebuild_bonds->unbind_value();
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
@@ -1621,22 +1620,22 @@ void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
   tab_disp = def_tab(tr("Display settings"),
-                        "://images/monitor.svg");
+                     "://images/monitor.svg");
 
   tab_anim = def_tab(tr("Animation"),
-                        "://images/film.svg",
-                        "://images/film_d.svg");
+                     "://images/film.svg",
+                     "://images/film_d.svg");
 
   tab_modify = def_tab(tr("Modify"),
-                          "://images/outline-build-24px.svg",
-                          "://images/outline-build-24px_d.svg");
+                       "://images/outline-build-24px.svg",
+                       "://images/outline-build-24px_d.svg");
 
   tab_measurement = def_tab(tr("Measurement"),
-                               "://images/outline-straighten-24px.svg");
+                            "://images/outline-straighten-24px.svg");
 
   tab_select = def_tab(tr("Atom selection groups"),
-                          "://images/outline-select_all-24px.svg",
-                          "://images/outline-select_all-24px_d.svg");
+                       "://images/outline-select_all-24px.svg",
+                       "://images/outline-select_all-24px_d.svg");
 
   construct_general_tab();
   construct_display_tab();
@@ -1866,13 +1865,13 @@ void geom_view_obj_insp_widget_t::cell_changed() {
 void geom_view_obj_insp_widget_t::draw_subcells_changed(int state) {
 
   qt_helpers::form_lt_ctrl_visibility(state == Qt::Checked,
-                                      gb_disp_s_lt,
+                                      gb_periodic_related_render_lt,
                                       disp_draw_subcells,
                                       disp_subcells_idx_lbl,
                                       disp_subcells_idx);
 
   qt_helpers::form_lt_ctrl_visibility(state == Qt::Checked,
-                                      gb_disp_s_lt,
+                                      gb_periodic_related_render_lt,
                                       disp_subcells_idx,
                                       disp_subcells_color_lbl,
                                       disp_subcells_clr);
@@ -1917,9 +1916,9 @@ void geom_view_obj_insp_widget_t::modify_single_atom_button_clicked() {
       if (it != b_al->m_atom_idx_sel.end()) {
           auto itv = *it;
           b_al->upd_atom(itv.m_atm, tm_single_atom_combo->currentText().toStdString(),
-                            vector3<float>(float(tm_single_atom_vec3->sb_x->value()),
-                                           float(tm_single_atom_vec3->sb_y->value()),
-                                           float(tm_single_atom_vec3->sb_z->value())));
+                         vector3<float>(float(tm_single_atom_vec3->sb_x->value()),
+                                        float(tm_single_atom_vec3->sb_y->value()),
+                                        float(tm_single_atom_vec3->sb_z->value())));
           update_animate_section_status();
         }
     }

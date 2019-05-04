@@ -210,6 +210,8 @@ void geom_view_t::render () {
           astate->dp->end_render_aabb();
         }
 
+      if (!m_is_visible) return;
+
       if (m_geom->DIM == 3 && m_is_visible && m_draw_cell) {
           astate->dp->begin_render_line();
 
@@ -237,9 +239,15 @@ void geom_view_t::render () {
           astate->dp->end_render_line();
         }
 
-
-
-      if (!m_is_visible) return;
+      if (m_geom->DIM == 3 && m_draw_cell_vectors) {
+          astate->dp->begin_render_general_mesh();
+          for (size_t i = 0; i < m_geom->DIM; i++) {
+              vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio;
+              astate->dp->render_arrow(m_pos, m_pos + cell_v, m_cell_vector_color[i],
+                  0.1f, 0.17f, 0.25f, false);
+            }
+          astate->dp->end_render_general_mesh();
+        }
 
       switch (m_render_style) {
 
