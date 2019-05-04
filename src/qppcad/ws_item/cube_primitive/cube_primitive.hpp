@@ -22,6 +22,8 @@ namespace qpp {
         ws_cube_rendering_mode m_render_mode{render_solid};
         vector3<float> m_scale{1, 1, 1};
         vector3<float> m_color{1, 0, 0};
+        float m_alpha{0.9f};
+        bool m_alpha_enabled{false};
 
         cube_primitive_t();
 

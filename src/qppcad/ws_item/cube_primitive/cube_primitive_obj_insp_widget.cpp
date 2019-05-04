@@ -23,9 +23,15 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
   cube_render_mode->addItem(tr("Solid"));
   cube_render_mode->addItem(tr("Lines"));
 
+  cube_render_alpha_enabled = new qbinded_checkbox_t;
+  cube_render_alpha = new qbinded_float_spinbox_t;
+  cube_render_alpha->set_min_max_step(0.01, 1.0, 0.01);
+
   tg_cube_params_lt->addRow(tr("Color"), cube_param_color);
   tg_cube_params_lt->addRow(tr("Size[%1]").arg(astate->m_spatial_suffix), cube_param_scale);
   tg_cube_params_lt->addRow(tr("Render style"), cube_render_mode);
+  tg_cube_params_lt->addRow(tr("Alpha enabled"), cube_render_alpha_enabled);
+  tg_cube_params_lt->addRow(tr("Alpha"), cube_render_alpha);
 
   init_form_lt(tg_cube_params_lt);
 
@@ -43,6 +49,8 @@ void cube_primitive_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       b_cp = _binding_item->cast_as<cube_primitive_t>();
       cube_param_scale->bind_value(&b_cp->m_scale);
       cube_param_color->bind_value(&b_cp->m_color);
+      cube_render_alpha_enabled->bind_value(&b_cp->m_alpha_enabled);
+      cube_render_alpha->bind_value(&b_cp->m_alpha);
       cube_render_mode->bind_value(reinterpret_cast<int*>(&b_cp->m_render_mode));
     } else {
       b_cp = nullptr;
@@ -62,6 +70,8 @@ void cube_primitive_obj_insp_widget_t::unbind_item() {
 
   cube_param_scale->unbind_value();
   cube_param_color->unbind_value();
+  cube_render_alpha_enabled->unbind_value();
+  cube_render_alpha->unbind_value();
 
   b_cp = nullptr;
 

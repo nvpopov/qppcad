@@ -15,7 +15,7 @@ cube_primitive_t::cube_primitive_t() {
 }
 
 void cube_primitive_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                                vector3<float> &out_look_at) {
+                                             vector3<float> &out_look_at) {
   //do nothing
 }
 
@@ -26,11 +26,34 @@ void cube_primitive_t::render() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_render_mode == ws_cube_rendering_mode::render_solid) {
-      astate->dp->begin_render_general_mesh();
-      vector3<float> scale = m_scale * 0.5f;
-      astate->dp->render_cube(m_pos, scale, m_color);
-      astate->dp->end_render_general_mesh();
+
+      if (m_alpha_enabled) {
+
+          astate->dp->begin_render_line();
+          vector3<float> sc_a {m_scale[0], 0, 0};
+          vector3<float> sc_b {0, m_scale[1], 0};
+          vector3<float> sc_c {0, 0, m_scale[2]};
+          vector3<float> pos = m_pos - m_scale * 0.5f;
+          astate->dp->render_cell_3d(m_color, sc_a, sc_b, sc_c, pos);
+          astate->dp->end_render_line();
+
+          astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
+          vector3<float> scale = m_scale * 0.5f;
+          astate->dp->render_general_mesh(m_pos, scale, vector3<float>{0}, m_color,
+                                          astate->mesh_unit_cube, m_alpha, astate->sp_mvap_ssl);
+          astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
+
+        }
+      else {
+          astate->dp->begin_render_general_mesh();
+          vector3<float> scale = m_scale * 0.5f;
+          astate->dp->render_general_mesh(m_pos, scale, vector3<float>{0}, m_color,
+                                          astate->mesh_unit_cube);
+          astate->dp->end_render_general_mesh();
+        }
+
     } else {
+
       astate->dp->begin_render_line();
       vector3<float> sc_a {m_scale[0], 0, 0};
       vector3<float> sc_b {0, m_scale[1], 0};
@@ -38,6 +61,7 @@ void cube_primitive_t::render() {
       vector3<float> pos = m_pos - m_scale * 0.5f;
       astate->dp->render_cell_3d(m_color, sc_a, sc_b, sc_c, pos);
       astate->dp->end_render_line();
+
     }
 
 }
