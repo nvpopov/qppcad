@@ -297,7 +297,7 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
 
     for (int i = 0; i < cls->m_geom->nat(); i++)
         if (redu_cls_set.find(i) != redu_cls_set.end())
-            qm->insert_atom(cls->m_geom->atom(i), cls->m_geom->pos(i));
+            qm->ins_atom(cls->m_geom->atom(i), cls->m_geom->pos(i));
 
     //delete atoms from cls
     cls->delete_atoms(redu_cls_set);
@@ -313,7 +313,7 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
     // redu_qm_outside = set(ALL) - set(INSIDE)
     for (int i = 0; i < qm->m_geom->nat(); i++)
         if (redu_qm_inside.find(i) == redu_qm_inside.end()) {
-            cls->insert_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
+            cls->ins_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
             redu_qm_outside.insert(i);
         }
 
@@ -328,7 +328,7 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls(std::shared_ptr<geom_view_t
         return;
     } else {
         for (auto &elem : qm->m_atom_idx_sel)
-            cls->insert_atom(qm->m_geom->atom(elem.m_atm), qm->m_geom->pos(elem.m_atm));
+            cls->ins_atom(qm->m_geom->atom(elem.m_atm), qm->m_geom->pos(elem.m_atm));
         qm->delete_selected_atoms();
     }
 }

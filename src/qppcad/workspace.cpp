@@ -531,8 +531,8 @@ void workspace_manager_t::init_default () {
 
   auto g1 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
   auto g1_gv = g1->cast_as<geom_view_t>();
-  g1_gv->insert_atom("Si", vector3<float>(0,-2,0));
-  g1_gv->insert_atom("Si", vector3<float>(0,2,0));
+  g1_gv->ins_atom("Si", vector3<float>(0,-2,0));
+  g1_gv->ins_atom("Si", vector3<float>(0,2,0));
   g1->m_name = "g1_src";
   m_ws.back()->add_item_to_ws(g1);
 
@@ -541,27 +541,27 @@ void workspace_manager_t::init_default () {
   nb1_c->m_name = "nodebook1";
   m_ws.back()->add_item_to_ws(nb1);
 
-//  auto g2 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
-//  auto ag = shnfl<float>::group("C4v");
-//  auto psg_prod = m_bhv_mgr->fbr_ws_item_by_name("pgf_producer_t");
+  //  auto g2 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
+  //  auto ag = shnfl<float>::group("C4v");
+  //  auto psg_prod = m_bhv_mgr->fbr_ws_item_by_name("pgf_producer_t");
 
 
 
-//  auto psgv1 = m_bhv_mgr->fbr_ws_item_by_name("psg_view_t");
-//  auto psgv1_c = psgv1->cast_as<psg_view_t>();
-//  psgv1_c->m_ag =
-//      std::make_shared<array_group<matrix3<float>>>(ag);
-//  psgv1->m_name = "psg_c4v1";
-//  psgv1_c->update_view();
+  //  auto psgv1 = m_bhv_mgr->fbr_ws_item_by_name("psg_view_t");
+  //  auto psgv1_c = psgv1->cast_as<psg_view_t>();
+  //  psgv1_c->m_ag =
+  //      std::make_shared<array_group<matrix3<float>>>(ag);
+  //  psgv1->m_name = "psg_c4v1";
+  //  psgv1_c->update_view();
 
 
-//  g2->m_name = "g2_dst";
-//  psg_prod->m_name = "psg_prod1";
+  //  g2->m_name = "g2_dst";
+  //  psg_prod->m_name = "psg_prod1";
 
 
-//  m_ws.back()->add_item_to_ws(g2);
-//  m_ws.back()->add_item_to_ws(psgv1);
-//  m_ws.back()->add_item_to_ws(psg_prod);
+  //  m_ws.back()->add_item_to_ws(g2);
+  //  m_ws.back()->add_item_to_ws(psgv1);
+  //  m_ws.back()->add_item_to_ws(psg_prod);
 
 }
 
@@ -702,7 +702,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
         //compose error message
         QString msg_box_title = "Error";
         QString error_message = QObject::tr("An error has occured while parsing the file:\n"
-                                "%1").arg(QString::fromStdString(fname));
+                                            "%1").arg(QString::fromStdString(fname));
         QString error_detail =
             QObject::tr("File name : \n"
                         "\"%1\"\n"
@@ -751,6 +751,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
         }
 
       astate->astate_evd->wss_changed();
+
     }
 
 }

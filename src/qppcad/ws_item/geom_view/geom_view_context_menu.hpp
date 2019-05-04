@@ -51,8 +51,8 @@ namespace qpp {
                           al.select_by_type(i);
                       ImGui::EndMenu();
                     }
-                  if (ImGui::MenuItem("Select all")) al.select_atoms(true);
-                  if (ImGui::MenuItem("Unselect all")) al.select_atoms(false);
+                  if (ImGui::MenuItem("Select all")) al.sel_atoms(true);
+                  if (ImGui::MenuItem("Unselect all")) al.sel_atoms(false);
                   if (ImGui::MenuItem("Invert selection")) al.invert_selected_atoms();
                   ImGui::EndMenu();
                 }

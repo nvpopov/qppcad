@@ -47,7 +47,7 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
   index zero = index::D(al->m_geom->DIM).all(0);
 
   //copy initial geometry
-  al->copy_to_xgeometry(g);
+  al->copy_to_xgeom(g);
 
   //iterate over all animations
   for (size_t a_id = 0; a_id < al->m_anim->get_total_anims(); a_id++)

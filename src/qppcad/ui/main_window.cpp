@@ -1385,7 +1385,7 @@ void main_window::action_select_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
-  if (al) al->select_atoms(true);
+  if (al) al->sel_atoms(true);
 
 }
 
@@ -1393,7 +1393,7 @@ void main_window::action_unselect_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
-  if (al) al->select_atoms(false);
+  if (al) al->sel_atoms(false);
 
 }
 
@@ -1401,7 +1401,7 @@ void main_window::action_invert_selected_content() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
-  if (al) al->invert_selected_atoms();
+  if (al) al->inv_sel_atoms();
 
 }
 

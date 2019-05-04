@@ -163,38 +163,38 @@ namespace qpp {
         bool mouse_click(ray_t<float> *click_ray) override;
 
         /**
-         * @brief select_atoms
+         * @brief sel_atoms
          * @param all
          */
-        void select_atoms(bool all);
+        void sel_atoms(bool all);
 
         /**
-         * @brief select_atom
+         * @brief sel_atom
          * @param atom_id
          */
-        void select_atom(int atom_id);
-        void toggle_atom_selection(int atom_id);
+        void sel_atom(int atom_id);
+        void toggle_atom_sel(int atom_id);
 
         /**
-         * @brief select_atom
+         * @brief sel_atom
          * @param atom_id
          * @param atom_idx
          */
-        void select_atom(int atom_id, index atom_idx);
+        void sel_atom(int atom_id, index atom_idx);
 
-        void unselect_atom(int atom_id);
-        void unselect_atom(int atom_id, index atom_idx);
+        void unsel_atom(int atom_id);
+        void unsel_atom(int atom_id, index atom_idx);
 
-        void select_by_type(const int item_type_to_select);
-        void unselect_by_type(const int item_type_to_unselect);
-        void invert_selected_atoms();
+        void sel_by_type(const int item_type_to_select);
+        void unsel_by_type(const int item_type_to_unselect);
+        void inv_sel_atoms();
 
-        void insert_atom(const int atom_type, const vector3<float> &pos);
-        void insert_atom(const std::string &atom_name, const vector3<float> &pos);
+        void ins_atom(const int atom_type, const vector3<float> &pos);
+        void ins_atom(const std::string &atom_name, const vector3<float> &pos);
 
-        void update_atom(const int at_id, const vector3<float> &pos);
-        void update_atom(const int at_id, const std::string &at_name);
-        void update_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
+        void upd_atom(const int at_id, const vector3<float> &pos);
+        void upd_atom(const int at_id, const std::string &at_name);
+        void upd_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
 
         void transform_atom(const int at_id, const matrix3<float> &tm);
         void transform_atom(const int at_id, const matrix4<float> &tm);
@@ -205,7 +205,7 @@ namespace qpp {
         void sv_hide_invert_selected();
 
         template <typename TRANSFORM_CLASS>
-        void transform_selected(const TRANSFORM_CLASS &tm) {
+        void transform_sel(const TRANSFORM_CLASS &tm) {
           for (auto &elem : m_atom_idx_sel)
             if (elem.m_idx == index::D(m_geom->DIM).all(0)) transform_atom(elem.m_atm, tm);
           recalc_gizmo_barycenter();
@@ -218,10 +218,10 @@ namespace qpp {
             if (elem.m_idx == zero) m_geom->xfield<XFIELD>(field_id, elem.m_atm) = value;
         }
         void xbool_invert_selected(size_t field_id);
-        void copy_from_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst);
-        void copy_to_xgeometry(xgeometry<float, periodic_cell<float> > &xgeom_inst,
-                               bool copy_selected = false,
-                               bool copy_cell = true);
+        void copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst);
+        void copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst,
+                           bool copy_selected = false,
+                           bool copy_cell = true);
         void copy_cell(geom_view_t &src, bool rebuild_tws_tree = true);
         std::shared_ptr<ws_item_t> clone_on_the_spot();
 
@@ -239,8 +239,8 @@ namespace qpp {
                                 const size_t xfield_id);
         std::tuple<float, float> get_min_max_xfield(const size_t xfield_id);
 
-        void select_atom_ngbs(const int at_id);
-        void select_selected_atoms_ngbs();
+        void sel_atom_ngbs(const int at_id);
+        void sel_selected_atoms_ngbs();
 
         void update_inter_atomic_dist(float new_dist,
                                       const int at1, const int at2,

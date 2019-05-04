@@ -138,7 +138,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
         }
 
       sc_al->m_geom->clear();
-      sc_al->copy_from_xgeometry(g);
+      sc_al->copy_from_xgeom(g);
       sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
     }

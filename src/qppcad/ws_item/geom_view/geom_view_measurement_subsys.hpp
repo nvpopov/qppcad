@@ -133,7 +133,7 @@ namespace qpp {
       void render_overlay(QPainter &painter);
       void notify_atom_has_been_deleted(const uint32_t atm);
 
-      void dist_select_atoms(size_t msr_id);
+      void dist_sel_atoms(size_t msr_id);
       void dist_select_selected_atoms();
       void dist_copy(size_t msr_id);
       void dist_copy_selected();

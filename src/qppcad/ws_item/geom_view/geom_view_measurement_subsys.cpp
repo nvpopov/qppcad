@@ -390,18 +390,18 @@ void geom_view_msr_subsys_t::notify_atom_has_been_deleted(const uint32_t atm) {
 
 }
 
-void geom_view_msr_subsys_t::dist_select_atoms(size_t msr_id) {
+void geom_view_msr_subsys_t::dist_sel_atoms(size_t msr_id) {
 
   if (msr_id < m_dist_recs.size() && p_owner) {
-      p_owner->select_atoms(false);
-      p_owner->select_atom(m_dist_recs[msr_id].m_at1, m_dist_recs[msr_id].m_idx1);
-      p_owner->select_atom(m_dist_recs[msr_id].m_at2, m_dist_recs[msr_id].m_idx2);
+      p_owner->sel_atoms(false);
+      p_owner->sel_atom(m_dist_recs[msr_id].m_at1, m_dist_recs[msr_id].m_idx1);
+      p_owner->sel_atom(m_dist_recs[msr_id].m_at2, m_dist_recs[msr_id].m_idx2);
     }
 
 }
 
 void geom_view_msr_subsys_t::dist_select_selected_atoms() {
-  dist_select_atoms(m_cur_dist_rec_ui - 1);
+  dist_sel_atoms(m_cur_dist_rec_ui - 1);
 }
 
 void geom_view_msr_subsys_t::dist_copy(size_t msr_id) {

@@ -1904,7 +1904,7 @@ void geom_view_obj_insp_widget_t::modify_add_atom_button_clicked() {
             float(tm_add_atom_vec3->sb_z->value())
       };
       std::string new_atom_name = tm_add_atom_combo->currentText().toStdString();
-      b_al->insert_atom(new_atom_name, new_atom_pos);
+      b_al->ins_atom(new_atom_name, new_atom_pos);
       update_animate_section_status();
       astate->make_viewport_dirty();
     }
@@ -1916,7 +1916,7 @@ void geom_view_obj_insp_widget_t::modify_single_atom_button_clicked() {
       auto it = b_al->m_atom_idx_sel.begin();
       if (it != b_al->m_atom_idx_sel.end()) {
           auto itv = *it;
-          b_al->update_atom(itv.m_atm, tm_single_atom_combo->currentText().toStdString(),
+          b_al->upd_atom(itv.m_atm, tm_single_atom_combo->currentText().toStdString(),
                             vector3<float>(float(tm_single_atom_vec3->sb_x->value()),
                                            float(tm_single_atom_vec3->sb_y->value()),
                                            float(tm_single_atom_vec3->sb_z->value())));
@@ -1985,7 +1985,7 @@ void geom_view_obj_insp_widget_t::modify_add_atom_between_pair() {
                  b_al->m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
 
       std::string new_atom_name = tm_pair_creation_combo->currentText().toStdString();
-      b_al->insert_atom(new_atom_name, r_btw);
+      b_al->ins_atom(new_atom_name, r_btw);
       update_animate_section_status();
       astate->make_viewport_dirty();
     }
@@ -2019,7 +2019,7 @@ void geom_view_obj_insp_widget_t::modify_barycentric_scale_button_clicked() {
           new_pos[1] +=  (1-float(tm_u_scale_sb_y->value())) * new_pos_dist[1] * scale_mod_y;
           new_pos[2] +=  (1-float(tm_u_scale_sb_z->value())) * new_pos_dist[2] * scale_mod_z;
 
-          b_al->update_atom(rec.m_atm, new_pos);
+          b_al->upd_atom(rec.m_atm, new_pos);
         }
 
       update_animate_section_status();
@@ -2104,7 +2104,7 @@ void geom_view_obj_insp_widget_t::modify_bc_rot_apply() {
 
       matrix4<float> tm = t.matrix();
 
-      b_al->transform_selected(tm);
+      b_al->transform_sel(tm);
       app_state_t *astate = app_state_t::get_inst();
       astate->make_viewport_dirty();
 
@@ -2127,7 +2127,7 @@ void geom_view_obj_insp_widget_t::modify_group_op_sv_hide_invert() {
 void geom_view_obj_insp_widget_t::modify_group_op_sel_ngbs() {
 
   app_state_t *astate = app_state_t::get_inst();
-  if (b_al) b_al->select_selected_atoms_ngbs();
+  if (b_al) b_al->sel_selected_atoms_ngbs();
   astate->make_viewport_dirty();
 
 }
