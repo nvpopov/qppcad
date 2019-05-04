@@ -156,9 +156,9 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
 
   gb_periodic_related_render_lt->addRow(tr("Draw vectors"), periodic_draw_cell_v);
   gb_periodic_related_render_lt->addRow(tr("Vectors ratio"), periodic_cell_v_ratio);
-  gb_periodic_related_render_lt->addRow(tr("Vector a color"), periodic_cell_vectors_color[0]);
-  gb_periodic_related_render_lt->addRow(tr("Vector b color"), periodic_cell_vectors_color[1]);
-  gb_periodic_related_render_lt->addRow(tr("Vector c color"), periodic_cell_vectors_color[2]);
+  gb_periodic_related_render_lt->addRow(tr("a color"), periodic_cell_vectors_color[0]);
+  gb_periodic_related_render_lt->addRow(tr("b color"), periodic_cell_vectors_color[1]);
+  gb_periodic_related_render_lt->addRow(tr("c color"), periodic_cell_vectors_color[2]);
   gb_periodic_related_render_lt->addRow(tr("Cell color"), disp_cell_color);
   gb_periodic_related_render_lt->addRow(tr("Draw subcells"), disp_draw_subcells);
 
@@ -1022,11 +1022,8 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       // 3d geom section
       bool _al3d = b_al->m_geom->DIM == 3;
-
       gb_periodic_related_render->setVisible(_al3d);
-
       // end 3d geom section
-      //gb_disp_s_lt->invalidate();
 
       //anim bindings
       update_animate_section_status();
@@ -1066,10 +1063,6 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_bt->setModel(bt_mdl);
       disp_bt->update();
       qt_helpers::vrt_resize_tv_to_cnt(disp_bt);
-
-      //bind tab modify
-
-      //end bind tab modify
 
       //bind tab measurement common settings
       tms_render_dist->bind_value(&b_al->m_measure->m_render_dist);

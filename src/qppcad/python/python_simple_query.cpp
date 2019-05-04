@@ -69,6 +69,14 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
 
 }
 
+std::shared_ptr<ws_item_t> simple_query::get_current_selected() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_throw);
+  return cur_it;
+
+}
+
 void simple_query::select_ws(int ws_idx) {
 
   app_state_t *astate = app_state_t::get_inst();

@@ -57,11 +57,16 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
         Returns the current position of the gizmo-object
         )str" );
 
+  m.def("cs", &simple_query::get_current_selected,
+        R"str(
+        Returns the current selected ws_item
+        )str");
+
   m.def("xgeom_dfn", &simple_query::get_xgeom_dfn);
   m.def("xgeom_dft", &simple_query::get_xgeom_dft);
   m.def("cw", &simple_query::cur_ws);
 
-  //tools module begin
+  //****************************** tools module begin *********************************************
   py::module tools = m.def_submodule("tools", "Generic tools");
 
   tools.def("get_tool_groups", &simple_query::get_tool_groups);
@@ -103,8 +108,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("make_arrow", &simple_query::make_arrow_p);
 
   tools.def("convert_spatial", &simple_query::convert_selected_units);
-
-  //tools module end
+  //******************************** tools module end **********************************************
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 

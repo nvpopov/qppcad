@@ -45,6 +45,8 @@ namespace qpp {
                                     const int sc_b,
                                     const int sc_c);
 
+        static std::shared_ptr<ws_item_t> get_current_selected();
+
         static void select_ws(int ws_idx);
         static void select_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);
