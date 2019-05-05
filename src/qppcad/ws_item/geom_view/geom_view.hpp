@@ -134,11 +134,7 @@ namespace qpp {
 
         bool m_draw_cell_vectors{false};
         float m_cell_vectors_ratio{0.35f};
-        std::array<vector3<float>, 3> m_cell_vector_color{
-          vector3<float>{1.0f, 1.0f, 0.0f},
-          vector3<float>{1.0f, 1.0f, 0.0f},
-          vector3<float>{1.0f, 1.0f, 0.0f}
-        };
+        vector3<float> m_cell_vector_color{1.0f, 1.0f, 0.0f};
 
         vector3<float> m_subcell_color{0.1f, 0.1f, 0.1f};
         bool m_sel_vis{false};

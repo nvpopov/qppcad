@@ -243,7 +243,7 @@ void geom_view_t::render () {
           astate->dp->begin_render_general_mesh();
           for (size_t i = 0; i < m_geom->DIM; i++) {
               vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio;
-              astate->dp->render_arrow(m_pos, m_pos + cell_v, m_cell_vector_color[i],
+              astate->dp->render_arrow(m_pos, m_pos + cell_v, m_cell_vector_color,
                   0.1f, 0.17f, 0.25f, false);
             }
           astate->dp->end_render_general_mesh();

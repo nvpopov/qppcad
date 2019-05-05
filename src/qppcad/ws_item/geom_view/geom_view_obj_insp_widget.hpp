@@ -70,7 +70,7 @@ namespace qpp {
         QFormLayout *gb_periodic_related_render_lt;
         qbinded_checkbox_t *periodic_draw_cell_v;
         qbinded_float_spinbox_t *periodic_cell_v_ratio;
-        std::array<qbinded_color3_input_t*, 3> periodic_cell_vectors_color;
+        qbinded_color3_input_t *periodic_cell_vectors_color;
 
         qbinded_checkbox_t *disp_draw_cell;
         qbinded_color3_input_t *disp_cell_color;
