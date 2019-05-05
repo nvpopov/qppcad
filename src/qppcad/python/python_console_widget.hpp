@@ -42,20 +42,16 @@ namespace qpp {
         QHBoxLayout *console_lt;
         QVBoxLayout *script_editor_lt;
         QVBoxLayout *pyconsole_lt;
-        QLabel *script_editor_lbl;
-        QLabel *pyconsole_lbl;
-        QWidget *script_editor_plh;
         QWidget *pyconsole_plh;
 
         QVBoxLayout *buttons_lt;
 
         QPushButton *btn_clear;
-        QPushButton *btn_editor_toggle;
+        //QPushButton *btn_editor_toggle;
         QPushButton *btn_run_code;
 
         python_text_editor_t *py_tedit;
         QTextEdit *script_editor;
-        python_text_editor_syntax_highilighter_t *script_editor_syntax_hl;
         QSplitter *edt_splitter;
 
         python_console_widget_t(QWidget *parent);

@@ -13,8 +13,6 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
   py_tedit = new python_text_editor_t(nullptr);
   script_editor = new QTextEdit;
-  script_editor_syntax_hl =
-      new python_text_editor_syntax_highilighter_t(script_editor->document());
 
   console_lt = new QHBoxLayout;
   buttons_lt = new QVBoxLayout;
@@ -32,20 +30,6 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
           this,
           &python_console_widget_t::clear_btn_clicked);
 
-  btn_editor_toggle = new QPushButton();
-  btn_editor_toggle->setIcon(QIcon("://images/outline-receipt-24px.svg"));
-  btn_editor_toggle->setIconSize(QSize(astate->size_guide.script_edtior_button_icon_w(),
-                               astate->size_guide.script_edtior_button_icon_w()));
-  btn_editor_toggle->setFixedSize(QSize(astate->size_guide.script_editor_button_w(),
-                                astate->size_guide.script_editor_button_w()));
-  btn_editor_toggle->setCheckable(true);
-  btn_editor_toggle->setToolTip(tr("Toggle script editor"));
-
-  connect(btn_editor_toggle,
-          &QPushButton::toggled,
-          this,
-          &python_console_widget_t::editor_toggle_signal_toggled);
-
   btn_run_code = new QPushButton();
   btn_run_code->setIcon(QIcon("://images/outline-slideshow-24px.svg"));
   btn_run_code->setIconSize(QSize(astate->size_guide.script_edtior_button_icon_w(),
@@ -60,35 +44,27 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
           &python_console_widget_t::run_script_button_clicked);
 
   buttons_lt->addWidget(btn_clear);
-  buttons_lt->addWidget(btn_editor_toggle);
   buttons_lt->addWidget(btn_run_code);
   buttons_lt->addStretch(0);
 
   setLayout(console_lt);
   console_lt->addLayout(buttons_lt);
 
-  script_editor_plh = new QWidget;
   pyconsole_plh = new QWidget;
 
   script_editor_lt = new QVBoxLayout;
   pyconsole_lt = new QVBoxLayout;
 
-  script_editor_lbl = new QLabel(tr("[Script editor]"));
-  pyconsole_lbl = new QLabel(tr("[Console]"));
 
-  script_editor_plh->setLayout(script_editor_lt);
   script_editor_lt->setContentsMargins(0, 0, 0, 0);
-  script_editor_lt->addWidget(script_editor_lbl);
   script_editor_lt->addWidget(script_editor);
 
   pyconsole_plh->setLayout(pyconsole_lt);
   pyconsole_lt->setContentsMargins(0, 0, 0, 0);
-  pyconsole_lt->addWidget(pyconsole_lbl);
   pyconsole_lt->addWidget(py_tedit);
 
   edt_splitter = new QSplitter;
   edt_splitter->setHandleWidth(10);
-  edt_splitter->addWidget(script_editor_plh);
   edt_splitter->addWidget(pyconsole_plh);
 
   edt_splitter->setCollapsible(0, false);
@@ -111,10 +87,7 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
 void python_console_widget_t::editor_toggle_signal_toggled(bool checked) {
 
-  script_editor_plh->setVisible(checked);
   btn_run_code->setEnabled(checked);
-  script_editor_lbl->setVisible(checked);
-  pyconsole_lbl->setVisible(checked);
 
 }
 
@@ -126,8 +99,6 @@ void python_console_widget_t::font_size_updated_signal_received() {
   QString new_qss = QString("font-size:%1pt;").arg(new_font_point_size);
   py_tedit->setStyleSheet(new_qss);
   script_editor->setStyleSheet(new_qss);
-  script_editor_lbl->setStyleSheet(new_qss);
-  pyconsole_lbl->setStyleSheet(new_qss);
 
 }
 
