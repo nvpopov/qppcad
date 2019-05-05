@@ -19,6 +19,7 @@ namespace qpp {
 
         std::vector<std::shared_ptr<sflow_node_t> > m_nodes;
         std::vector<sflow_connectivity_data_t> m_connectivity;
+        sflow_calc_meta_global_t m_calc_meta_global;
 
         sflow_context_t();
 
@@ -33,15 +34,17 @@ namespace qpp {
         void clear_connectivity();
 
         void compile_flow();
-        void execute();
+        void execute(bool debug_print = false);
         void execute_traverse(sflow_node_t *cur_node,
                               sflow_node_t *prev_node,
                               bool debug_print = false);
 
-        sflow_status_e propagate_data(sflow_connectivity_data_t *cd, bool copy_par = true);
-        sflow_status_e propagate_meta_info(sflow_connectivity_data_t *cd);
+        sflow_status_e propagate_data(sflow_connectivity_data_t *cd,
+                                      bool copy_par = true,
+                                      bool debug_print = true);
+        sflow_status_e propagate_meta_info(sflow_connectivity_data_t *cd, bool debug_print = true);
 
-    };
+    }; // class sflow_context_t
 
   } // namespace qpp::cad
 

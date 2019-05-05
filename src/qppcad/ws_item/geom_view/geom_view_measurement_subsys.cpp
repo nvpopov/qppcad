@@ -262,6 +262,7 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
 
 
   painter.resetTransform();
+  painter.setFont(QFont(astate->m_font_name, 13));
 
   if (m_render_angle)
     for (size_t i = 0; i < m_angle_recs.size(); i++) {

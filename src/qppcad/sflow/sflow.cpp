@@ -81,6 +81,7 @@ sflow_status_e sflow_context_t::connect_node(std::shared_ptr<sflow_node_t> out_n
 
 void sflow_context_t::clear_context() {
 
+  m_calc_meta_global.clear();
   clear_outer_nodes();
   clear_connectivity();
 
@@ -105,14 +106,14 @@ void sflow_context_t::compile_flow() {
 
 }
 
-void sflow_context_t::execute() {
+void sflow_context_t::execute(bool debug_print) {
 
-  fmt::print(std::cout, "\nstart executing \n");
+  if (debug_print) fmt::print(std::cout, "\nstart executing \n");
 
   for (auto &node : m_nodes)
-    if (node->m_is_outer) execute_traverse(node.get(), nullptr);
+    if (node->m_is_outer) execute_traverse(node.get(), nullptr, debug_print);
 
-  fmt::print(std::cout, "end executing \n");
+  if (debug_print) fmt::print(std::cout, "end executing \n");
 
 }
 
@@ -120,14 +121,17 @@ void sflow_context_t::execute_traverse(sflow_node_t *cur_node,
                                        sflow_node_t *prev_node,
                                        bool debug_print) {
 
-  fmt::print(std::cout, "exec_traverse : [{}] -> [{}]\n",
-             prev_node ? prev_node->m_node_name : "None",
-             cur_node->m_node_name);
+  if (debug_print) fmt::print(std::cout, "exec_traverse : [{}] -> [{}]\n",
+                              prev_node ? prev_node->m_node_name : "None",
+                              cur_node->m_node_name);
 
   if (!cur_node) return;
 
   bool node_exec_res = cur_node->execute();
-  fmt::print(std::cout, "node [{}] exec result {}\n", cur_node->m_node_name, node_exec_res);
+
+  if (debug_print) fmt::print(std::cout, "node [{}] exec result {}\n",
+                              cur_node->m_node_name, node_exec_res);
+
   if (!node_exec_res) return;
 
   for (size_t i = 0; i < m_connectivity.size(); i++) {
@@ -146,20 +150,22 @@ void sflow_context_t::execute_traverse(sflow_node_t *cur_node,
 
 }
 
-sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd, bool copy_par) {
+sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd,
+                                               bool copy_par,
+                                               bool debug_print) {
 
   if (cd && cd->m_inp_node && cd->m_out_node) {
 
-      fmt::print(std::cout, "propagate_data from=[{}] to=[{}] copy_data?={} "
-                            "out_sck={} in_sck={} out_t={} in_t={} ",
-                 cd->m_out_node->m_node_name,
-                 cd->m_inp_node->m_node_name,
-                 copy_par,
-                 *(cd->m_out_socket),
-                 *(cd->m_inp_socket),
-                 cd->m_out_node->m_out_types[*(cd->m_out_socket)].m_type,
-                 cd->m_inp_node->m_inp_types[*(cd->m_inp_socket)].m_type
-          );
+      if (debug_print) fmt::print(std::cout, "propagate_data from=[{}] to=[{}] copy_data?={} "
+                                             "out_sck={} in_sck={} out_t={} in_t={} ",
+                                  cd->m_out_node->m_node_name,
+                                  cd->m_inp_node->m_node_name,
+                                  copy_par,
+                                  *(cd->m_out_socket),
+                                  *(cd->m_inp_socket),
+                                  cd->m_out_node->m_out_types[*(cd->m_out_socket)].m_type,
+                                  cd->m_inp_node->m_inp_types[*(cd->m_inp_socket)].m_type
+                                 );
 
       //check that inputs have space for fun
       if (cd->m_inp_node->m_inps.size() != cd->m_inp_node->m_inp_types.size())
@@ -170,11 +176,17 @@ sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd, bo
           cd->m_out_node->m_outs[*cd->m_out_socket]) {
           cd->m_inp_node->m_inps[*cd->m_inp_socket] =
               cd->m_out_node->m_outs[*cd->m_out_socket]->clone();
-          fmt::print(std::cout, "!succes!\n");
+
+          if (debug_print) fmt::print(std::cout, "!succes!\n");
+
           return sflow_status_e::propagate_data_succes;
+
         } else {
-          fmt::print(std::cout, "error\n");
+
+          if (debug_print) fmt::print(std::cout, "error\n");
+
           return sflow_status_e::propagate_data_error;
+
         }
 
     } else return sflow_status_e::propagate_data_error;
@@ -183,7 +195,8 @@ sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd, bo
 
 }
 
-sflow_status_e sflow_context_t::propagate_meta_info(sflow_connectivity_data_t *cd) {
+sflow_status_e sflow_context_t::propagate_meta_info(sflow_connectivity_data_t *cd,
+                                                    bool debug_print) {
 
   return sflow_status_e::propagate_meta_succes;
 
