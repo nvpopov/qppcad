@@ -118,20 +118,51 @@ void workspace_t::set_best_view () {
       return;
     }
 
-  vector3<float> vec_look_at  = vector3<float>(0.0, 0.0, 0.0);
-  vector3<float> vec_look_pos = vector3<float>(0.0, 0.0, 0.0);
+  vector3<float> vec_look_at{0.0, 0.0, 0.0};
+  vector3<float> vec_look_pos{0.0, 0.0, 0.0};
+  vector3<float> vec_look_up{0.0, 0.0, 0.0};
 
-  size_t total_voters = 0;
-  for (auto &ws_item : m_ws_items)
-    if (ws_item->get_flags() & ws_item_flags_support_view_voting) {
-        total_voters+=1;
-        ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
+  // special case : there is only one element in the workspace that supports cam_target_view
+
+  int num_items_tv = 0;
+  bool need_to_update_camera{false};
+  bool cam_staged{false};
+
+  std::shared_ptr<ws_item_t> acc_item{nullptr};
+  for (auto item : m_ws_items)
+    if (item->get_flags() & ws_item_flags_cam_target_view) {
+        num_items_tv++;
+        acc_item = item;
       }
 
-  total_voters = std::clamp<size_t>(total_voters, 1, 20);
+  if (num_items_tv == 1 && acc_item) {
 
-  vec_look_at  /= total_voters;
-  vec_look_pos /= total_voters;
+      acc_item->target_view(cam_target_view_t::tv_auto,
+                            vec_look_pos,
+                            vec_look_at,
+                            vec_look_up,
+                            need_to_update_camera);
+
+      if (need_to_update_camera) cam_staged = true;
+
+    }
+
+  // if special case failed fallback to vote view
+  if (!cam_staged) {
+
+      size_t total_voters = 0;
+      for (auto &ws_item : m_ws_items)
+        if (ws_item->get_flags() & ws_item_flags_support_view_voting) {
+            total_voters+=1;
+            ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
+          }
+
+      total_voters = std::clamp<size_t>(total_voters, 1, 20);
+
+      vec_look_at  /= total_voters;
+      vec_look_pos /= total_voters;
+
+    }
 
   m_camera->m_look_at = vec_look_at;
   m_camera->m_view_point = vec_look_pos;
@@ -241,7 +272,7 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
         }
 
-    }
+    } // end of for (auto &ws_item : m_ws_items)
 
   if (m_edit_type != ws_edit_e::edit_content && !hit_any) {
       m_gizmo->attached_item = nullptr;

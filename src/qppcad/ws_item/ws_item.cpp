@@ -23,6 +23,14 @@ void ws_item_t::set_pos(vector3<float> new_pos) {
 
 }
 
+void ws_item_t::target_view(cam_target_view_t _target_view,
+                            vector3<float> &look_from,
+                            vector3<float> &look_to,
+                            vector3<float> &look_up,
+                            bool &need_to_update_camera) {
+
+}
+
 void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
   m_parent_ws = _parent_ws;
 }

@@ -157,7 +157,7 @@ namespace qpp {
                          vector3<float> &look_from,
                          vector3<float> &look_to,
                          vector3<float> &look_up,
-                         bool &need_to_update_camera);
+                         bool &need_to_update_camera) override;
 
         void geometry_changed();
         void render() override;

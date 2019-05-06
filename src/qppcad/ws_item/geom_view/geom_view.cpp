@@ -26,7 +26,7 @@ geom_view_t::geom_view_t(): ws_item_t () {
                     ws_item_flags_support_moveto |
                     ws_item_flags_support_rendering |
                     ws_item_flags_support_view_voting |
-                    ws_item_flags_support_cam_target_view);
+                    ws_item_flags_cam_target_view);
 
   m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 
@@ -112,7 +112,15 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
                               vector3<float> &look_to,
                               vector3<float> &look_up,
                               bool &need_to_update_camera) {
-  switch (_target_view) {
+
+  auto __target_view = _target_view;
+
+  if (__target_view == cam_target_view_t::tv_auto) {
+      if (m_geom->DIM == 3) __target_view = cam_target_view_t::tv_a_axis;
+      else __target_view = cam_target_view_t::tv_x_axis;
+    }
+
+  switch (__target_view) {
 
     case cam_target_view_t::tv_x_axis : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
@@ -182,6 +190,7 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
       }
 
     }
+
 }
 
 void geom_view_t::geometry_changed () {

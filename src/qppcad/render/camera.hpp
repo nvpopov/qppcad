@@ -1,25 +1,14 @@
 #ifndef QPPCAD_CAMERA_H
 #define QPPCAD_CAMERA_H
+
 #include <geom/lace3d.hpp>
+#include <qppcad/qppcad.hpp>
 #include <qppcad/render/gl_math.hpp>
 #include <qppcad/serializable.hpp>
 
 namespace qpp {
 
   namespace cad {
-
-    enum cam_target_view_t : size_t {
-      tv_x_axis,
-      tv_y_axis,
-      tv_z_axis,
-      tv_cart_center,
-      tv_a_axis,
-      tv_b_axis,
-      tv_c_axis,
-      tv_a_star_axis,
-      tv_b_star_axis,
-      tv_c_star_axis
-    };
 
     enum cam_proj_t : size_t {
       proj_ortho,

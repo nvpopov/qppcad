@@ -33,6 +33,10 @@ namespace qpp {
     typedef std::int32_t int32_t;
     typedef std::int64_t int64_t;
 
+    /* alias for std::optional*/
+    template<typename T>
+    using opt = std::optional<T>;
+
     /**
      * @brief The spatial_units_e enum
      */
@@ -54,12 +58,24 @@ namespace qpp {
      */
     const size_t max_recent_files = 10;
 
-    template<typename T>
-    using opt = std::optional<T>;
-
+    /* error context flags*/
     const uint32_t error_ctx_def   = 0;
     const uint32_t error_ctx_throw = 1 << 1;
     const uint32_t error_ctx_mbox  = 1 << 2;
+
+    enum cam_target_view_t : size_t {
+      tv_x_axis,
+      tv_y_axis,
+      tv_z_axis,
+      tv_cart_center,
+      tv_a_axis,
+      tv_b_axis,
+      tv_c_axis,
+      tv_a_star_axis,
+      tv_b_star_axis,
+      tv_c_star_axis,
+      tv_auto
+    };
 
   } // namespace qpp::cad
 

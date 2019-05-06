@@ -50,7 +50,7 @@ namespace qpp {
     const uint32_t ws_item_flags_support_extended_editor  = 1 << 13;
     const uint32_t ws_item_flags_translate_emit_upd_event = 1 << 14;
     const uint32_t ws_item_flags_support_view_voting      = 1 << 15;
-    const uint32_t ws_item_flags_support_cam_target_view  = 1 << 16;
+    const uint32_t ws_item_flags_cam_target_view          = 1 << 16;
     const uint32_t ws_item_flags_fetch_leader_pos         = 1 << 17;
 
     // ws_item_t update_externally flags
@@ -115,6 +115,12 @@ namespace qpp {
         void set_pos(vector3<float> new_pos);
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
                                            vector3<float> &out_look_at) = 0;
+
+        virtual void target_view(cam_target_view_t _target_view,
+                                 vector3<float> &look_from,
+                                 vector3<float> &look_to,
+                                 vector3<float> &look_up,
+                                 bool &need_to_update_camera);
         /**
          * @brief set_parent_workspace
          * @param _parent_ws
