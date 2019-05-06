@@ -11,14 +11,37 @@ namespace qpp {
 
   namespace cad {
 
-    struct structure_similarity_anim_info_t {
+    class str_sim_ws_item_rec_t : public QWidget {
 
-        QGroupBox *gb_itm_anim;
-        QFormLayout *gb_itm_anim_lt;
+        Q_OBJECT
+
+      public:
+
+        QVBoxLayout *main_lt;
+
+        QGroupBox *gb_ws_ws_item;
+        QFormLayout *gb_ws_ws_item_lt;
+        QComboBox *cmb_ws;
+        QComboBox *cmb_it;
+
+        QGroupBox *gb_gv_item;
+        QFormLayout *gb_gv_item_lt;
         QComboBox *cmb_anim_name;
         QComboBox *cmb_anim_frame;
+
+        geom_view_t *m_binded_gv{nullptr};
+
         void set_visible(bool visible);
-        structure_similarity_anim_info_t(QLayout *lt, QString gb_title);
+        explicit str_sim_ws_item_rec_t(int index, QWidget *parent = 0);
+
+        void rebuild_wss_list();
+        void rebuild_anim_list();
+
+      public slots:
+
+        void cmb_ws_changed(int idx);
+        void cmb_it_changed(int idx);
+        void cmb_anim_changed(int idx);
 
     };
 
@@ -30,17 +53,13 @@ namespace qpp {
 
       public:
 
-        QGroupBox *gb_select_actors;
-        QFormLayout *gb_select_actors_lt;
+        QGroupBox *gb_str_sim_main;
+        QFormLayout *gb_str_sim_main_lt;
         QHBoxLayout *widget_top_lt;
         QVBoxLayout *widget_lt;
 
-        std::array<structure_similarity_anim_info_t*, 2> m_anim_info;
+        std::array<str_sim_ws_item_rec_t*, 2> m_anim_info;
 
-        QComboBox *cmb_ws1;
-        QComboBox *cmb_it1;
-        QComboBox *cmb_ws2;
-        QComboBox *cmb_it2;
         QComboBox *cmb_method;
         QPushButton *btn_compute;
 
@@ -50,27 +69,16 @@ namespace qpp {
         QTableWidget *str_sim_table;
 
         structure_similarity_widget_t();
-        void cmb_ws(QComboBox *_cmb);
-        void cmb_it(QComboBox *_cmb, std::shared_ptr<workspace_t> _ws, size_t itm_idx);
         void compute_structure_similarity(ws_item_t *g1, ws_item_t *g2);
         void compute_structure_similarity_naive(geom_view_t *g1, geom_view_t *g2);
         void compute_structure_similarity_tws_tree(geom_view_t *g1, geom_view_t *g2);
-        void set_out_table_data(geom_view_t *g1,
-                                geom_view_t *g2,
-                                size_t atom_idx,
-                                vector3<float> _dp);
-        void cmb_it_changed_marshall(int index, size_t actor_id);
-        void cmb_anim_changed_marshall(int index, size_t actor_id);
+        void set_out_table_data(geom_view_t *g1, geom_view_t *g2,
+                                size_t atom_idx, vector3<float> _dp);
 
       public slots:
 
         void compute_button_clicked();
-        void cmb_ws1_changed(int index);
-        void cmb_ws2_changed(int index);
-        void cmb_it1_changed(int index);
-        void cmb_it2_changed(int index);
-        void cmb_anim1_changed(int index);
-        void cmb_anim2_changed(int index);
+
 
     };
 

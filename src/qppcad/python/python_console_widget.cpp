@@ -68,7 +68,7 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   edt_splitter->addWidget(pyconsole_plh);
 
   edt_splitter->setCollapsible(0, false);
-  edt_splitter->setCollapsible(1, false);
+  //edt_splitter->setCollapsible(1, false);
 
   console_lt->addWidget(edt_splitter);
 

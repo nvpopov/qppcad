@@ -34,15 +34,10 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   setLayout(widget_top_lt);
   widget_top_lt->addLayout(widget_lt);
 
-  gb_select_actors = new QGroupBox(tr("Actors"));
-  gb_select_actors_lt = new QFormLayout;
-  gb_select_actors->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-  gb_select_actors->setFixedWidth(astate->size_guide.common_tools_panel_w());
-
-  cmb_it1 = new QComboBox;
-  cmb_ws1 = new QComboBox;
-  cmb_it2 = new QComboBox;
-  cmb_ws2 = new QComboBox;
+  gb_str_sim_main = new QGroupBox(tr("Actions"));
+  gb_str_sim_main_lt = new QFormLayout;
+  gb_str_sim_main->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  //gb_str_sim_main->setFixedWidth(astate->size_guide.common_tools_panel_w());
 
   cmb_method = new QComboBox;
   cmb_method->addItem(tr("compare-naive"));
@@ -54,51 +49,16 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
           this,
           &structure_similarity_widget_t::compute_button_clicked);
 
-  gb_select_actors_lt->addRow(tr("Wrksp. №1"), cmb_ws1);
-  gb_select_actors_lt->addRow(tr("Item №1"), cmb_it1);
-  gb_select_actors_lt->addRow(tr("Wrksp. №2"), cmb_ws2);
-  gb_select_actors_lt->addRow(tr("Item №2"), cmb_it2);
-  gb_select_actors_lt->addRow(tr("Method"), cmb_method);
-  gb_select_actors_lt->addRow(tr(""), btn_compute);
+  gb_str_sim_main_lt->addRow(tr("Method"), cmb_method);
+  gb_str_sim_main_lt->addRow(tr(""), btn_compute);
 
-  gb_select_actors->setLayout(gb_select_actors_lt);
-  widget_lt->addWidget(gb_select_actors);
+  gb_str_sim_main->setLayout(gb_str_sim_main_lt);
+  widget_lt->addWidget(gb_str_sim_main);
 
-  m_anim_info[0] = new structure_similarity_anim_info_t(widget_lt, "Actor №1 anim");
-  m_anim_info[1] = new structure_similarity_anim_info_t(widget_lt, "Actor №2 anim");
-
-  connect(cmb_ws1,
-          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this,
-          &structure_similarity_widget_t::cmb_ws1_changed);
-
-  connect(cmb_ws2,
-          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this,
-          &structure_similarity_widget_t::cmb_ws2_changed);
-
-  connect(cmb_it1,
-          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this,
-          &structure_similarity_widget_t::cmb_it1_changed);
-
-  connect(cmb_it2,
-          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this,
-          &structure_similarity_widget_t::cmb_it2_changed);
-
-  connect(m_anim_info[0]->cmb_anim_name,
-          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this,
-          &structure_similarity_widget_t::cmb_anim1_changed);
-
-  connect(m_anim_info[1]->cmb_anim_name,
-          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this,
-          &structure_similarity_widget_t::cmb_anim2_changed);
-
-  cmb_ws(cmb_ws1);
-  cmb_ws(cmb_ws2);
+  for (size_t i = 0; i < 2; i++) {
+      m_anim_info[i] = new str_sim_ws_item_rec_t(i + 1, nullptr);
+      widget_lt->addWidget(m_anim_info[i]);
+    }
 
   gb_str_sim_output = new QGroupBox(tr("Results"));
   gb_str_sim_output_lt = new QVBoxLayout;
@@ -127,65 +87,16 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
 
   str_sim_output = new QTextEdit;
   str_sim_output->setReadOnly(true);
-  str_sim_output->setMaximumHeight(110);
+  str_sim_output->setMaximumHeight(150);
 
   gb_str_sim_output_lt->addWidget(str_sim_table);
   gb_str_sim_output_lt->addWidget(str_sim_output);
 
   widget_top_lt->addWidget(gb_str_sim_output);
 
-  qt_helpers::resize_form_lt_lbls(gb_select_actors_lt,
-                                  astate->size_guide.common_tools_panel_label_w());
-  qt_helpers::resize_form_lt_lbls(m_anim_info[0]->gb_itm_anim_lt,
-                                  astate->size_guide.common_tools_panel_label_w());
-  qt_helpers::resize_form_lt_lbls(m_anim_info[1]->gb_itm_anim_lt,
-                                  astate->size_guide.common_tools_panel_label_w());
+  qt_hlp::resize_form_lt_lbls(gb_str_sim_main_lt, astate->size_guide.common_tools_panel_label_w());
+
   widget_lt->addStretch(1);
-
-}
-
-void structure_similarity_widget_t::cmb_ws(QComboBox *_cmb) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  if (astate->ws_mgr->has_wss()) {
-
-      _cmb->clear();
-      _cmb->setEnabled(true);
-      for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
-        _cmb->addItem(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name));
-
-    } else {
-
-      _cmb->clear();
-      _cmb->setEnabled(false);
-
-    }
-
-}
-
-void structure_similarity_widget_t::cmb_it(QComboBox *_cmb,
-                                           std::shared_ptr<workspace_t> _ws,
-                                           size_t itm_idx) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  if (!_ws->m_ws_items.empty()) {
-
-      _cmb->clear();
-      _cmb->setEnabled(true);
-      for (size_t i = 0; i < _ws->m_ws_items.size(); i++) {
-          _cmb->addItem(tr("[%1]%2")
-                        .arg(i)
-                        .arg(QString::fromStdString(_ws->m_ws_items[i]->m_name)));
-        }
-
-    } else {
-
-      _cmb->clear();
-      _cmb->setEnabled(false);
-
-    }
 
 }
 
@@ -335,153 +246,189 @@ void structure_similarity_widget_t::set_out_table_data(geom_view_t *g1,
 
 }
 
-void structure_similarity_widget_t::cmb_it_changed_marshall(int index, size_t actor_id) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  m_anim_info[actor_id]->set_visible(false);
-
-  size_t ws_id = actor_id == 0 ? cmb_ws1->currentIndex() : cmb_ws2->currentIndex();
-
-  if (ws_id >= astate->ws_mgr->m_ws.size()) return;
-  if (index >= astate->ws_mgr->m_ws[ws_id]->m_ws_items.size()) return;
-
-  auto ws_itm = astate->ws_mgr->m_ws[ws_id]->m_ws_items[index];
-
-  if (!ws_itm) return;
-
-  auto as_al = ws_itm->cast_as<geom_view_t>();
-  if (!as_al) return;
-  if (!as_al->m_anim->animable()) return;
-
-  m_anim_info[actor_id]->cmb_anim_name->clear();
-
-  for (size_t i = 0 ; i < as_al->m_anim->m_anim_data.size(); i++)
-    m_anim_info[actor_id]->cmb_anim_name->addItem(QString::fromStdString(
-                                                    as_al->m_anim->m_anim_data[i].m_anim_name));
-
-  m_anim_info[actor_id]->set_visible(true);
-
-  //std::cout << "cmb_it_changed_marshall " << std::endl;
-
-}
-
-void structure_similarity_widget_t::cmb_anim_changed_marshall(int index, size_t actor_id) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  size_t ws_id = actor_id == 0 ? cmb_ws1->currentIndex() : cmb_ws2->currentIndex();
-  size_t anim_id =  m_anim_info[actor_id]->cmb_anim_name->currentIndex();
-  size_t itm_id = 0 ? cmb_it1->currentIndex() : cmb_it2->currentIndex();
-
-  if (ws_id >= astate->ws_mgr->m_ws.size()) return;
-  if (index >= astate->ws_mgr->m_ws[ws_id]->m_ws_items.size()) return;
-
-  auto ws_itm = astate->ws_mgr->m_ws[ws_id]->m_ws_items[itm_id];
-
-  if (!ws_itm) return;
-
-  auto as_al = ws_itm->cast_as<geom_view_t>();
-  if (!as_al) return;
-  if (!as_al->m_anim->animable()) return;
-
-  m_anim_info[actor_id]->cmb_anim_frame->clear();
-
-  for (size_t i = 0 ; i < as_al->m_anim->m_anim_data[anim_id].frames.size(); i++)
-    m_anim_info[actor_id]->cmb_anim_frame->addItem(QString("%1").arg(i));
-
-  //std::cout << "cmb_anim_changed_marshall " << std::endl;
-
-}
-
 void structure_similarity_widget_t::compute_button_clicked() {
 
-  app_state_t *astate = app_state_t::get_inst();
-
-  ws_item_t *it1{nullptr};
-  ws_item_t *it2{nullptr};
-
-  size_t ws_i1 = 0;
-  size_t ws_i2 = 0;
-  size_t it_i1 = 0;
-  size_t it_i2 = 0;
-
-  if (cmb_ws1->isEnabled() && cmb_it1->isEnabled()) {
-      ws_i1 = cmb_ws1->currentIndex();
-      it_i1 = cmb_it1->currentIndex();
-      it1 = astate->ws_mgr->m_ws[ws_i1]->m_ws_items[it_i1].get();
-    }
-
-  if (cmb_ws2->isEnabled() && cmb_it2->isEnabled()) {
-      ws_i2 = cmb_ws2->currentIndex();
-      it_i2 = cmb_it2->currentIndex();
-      it2 = astate->ws_mgr->m_ws[ws_i2]->m_ws_items[it_i2].get();
-    }
-
-  compute_structure_similarity(it1, it2);
+  compute_structure_similarity(m_anim_info[0]->m_binded_gv, m_anim_info[1]->m_binded_gv);
 
 }
 
-void structure_similarity_widget_t::cmb_ws1_changed(int index) {
-
-  app_state_t *astate = app_state_t::get_inst();
-  cmb_it(cmb_it1, astate->ws_mgr->m_ws[cmb_ws1->currentIndex()], 0);
-
-}
-
-void structure_similarity_widget_t::cmb_ws2_changed(int index) {
-
-  app_state_t *astate = app_state_t::get_inst();
-  cmb_it(cmb_it2, astate->ws_mgr->m_ws[cmb_ws2->currentIndex()], 1);
-
-}
-
-void structure_similarity_widget_t::cmb_it1_changed(int index) {
-
-  cmb_it_changed_marshall(index, 0);
-
-}
-
-void structure_similarity_widget_t::cmb_it2_changed(int index) {
-
-  cmb_it_changed_marshall(index, 1);
-
-}
-
-void structure_similarity_widget_t::cmb_anim1_changed(int index) {
-
-  cmb_anim_changed_marshall(index, 0);
-
-}
-
-void structure_similarity_widget_t::cmb_anim2_changed(int index) {
-
-  cmb_anim_changed_marshall(index, 1);
-
-}
-
-void structure_similarity_anim_info_t::set_visible(bool visible) {
-
-  gb_itm_anim->setVisible(visible);
-
-}
-
-structure_similarity_anim_info_t::structure_similarity_anim_info_t(QLayout *lt, QString gb_title) {
+str_sim_ws_item_rec_t::str_sim_ws_item_rec_t(int index, QWidget *parent) : QWidget(parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  gb_itm_anim = new QGroupBox(gb_title);
-  gb_itm_anim_lt = new QFormLayout;
-  gb_itm_anim->setLayout(gb_itm_anim_lt);
+  main_lt = new QVBoxLayout;
+  setLayout(main_lt);
+  main_lt->setContentsMargins(0, 0, 0, 0);
+
+  gb_ws_ws_item = new QGroupBox(tr("Workspace item №%1:").arg(index));
+  gb_ws_ws_item_lt = new QFormLayout;
+  gb_ws_ws_item->setLayout(gb_ws_ws_item_lt);
+  //gb_ws_ws_item->setFixedWidth(astate->size_guide.common_tools_panel_w());
+
+  cmb_ws = new QComboBox;
+  cmb_it = new QComboBox;
+  gb_ws_ws_item_lt->addRow("Workspace", cmb_ws);
+  gb_ws_ws_item_lt->addRow("Item", cmb_it);
+  qt_hlp::resize_form_lt_lbls(gb_ws_ws_item_lt, astate->size_guide.common_tools_panel_label_w());
+
+  gb_gv_item = new QGroupBox(tr("Anim info for item №%1:").arg(index));
+  gb_gv_item_lt = new QFormLayout;
+  gb_gv_item->setLayout(gb_gv_item_lt);
+  //gb_gv_item->setFixedWidth(astate->size_guide.common_tools_panel_w());
 
   cmb_anim_name = new QComboBox;
   cmb_anim_frame = new QComboBox;
+  gb_gv_item_lt->addRow("Animation", cmb_anim_name);
+  gb_gv_item_lt->addRow("Frame", cmb_anim_frame);
+  qt_hlp::resize_form_lt_lbls(gb_gv_item_lt, astate->size_guide.common_tools_panel_label_w());
 
-  gb_itm_anim_lt->addRow(QObject::tr("Anim name"), cmb_anim_name);
-  gb_itm_anim_lt->addRow(QObject::tr("Anim frame"), cmb_anim_frame);
+  main_lt->addWidget(gb_ws_ws_item);
+  main_lt->addWidget(gb_gv_item);
 
-  lt->addWidget(gb_itm_anim);
+  setFixedWidth(astate->size_guide.common_tools_panel_w());
 
-  gb_itm_anim->setFixedWidth(astate->size_guide.common_tools_panel_w());
+  connect(cmb_ws,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &str_sim_ws_item_rec_t::cmb_ws_changed);
+
+  connect(cmb_it,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &str_sim_ws_item_rec_t::cmb_it_changed);
+
+  connect(cmb_anim_name,
+          static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+          this,
+          &str_sim_ws_item_rec_t::cmb_anim_changed);
+
+  rebuild_wss_list();
+
+}
+
+void str_sim_ws_item_rec_t::rebuild_wss_list() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (astate->ws_mgr->has_wss()) {
+
+      cmb_ws->clear();
+      cmb_ws->setEnabled(true);
+      cmb_ws->blockSignals(true);
+      for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
+        cmb_ws->addItem(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name));
+      cmb_ws->blockSignals(false);
+      cmb_ws_changed(0);
+
+    } else {
+
+      cmb_ws->clear();
+      cmb_ws->setEnabled(false);
+
+    }
+
+}
+
+void str_sim_ws_item_rec_t::rebuild_anim_list() {
+
+  cmb_anim_frame->blockSignals(true);
+  cmb_anim_name->clear();
+
+  if (m_binded_gv && m_binded_gv->m_anim->animable()) {
+      for (size_t i = 0 ; i < m_binded_gv->m_anim->m_anim_data.size(); i++)
+         cmb_anim_name->addItem(
+               QString::fromStdString(m_binded_gv->m_anim->m_anim_data[i].m_anim_name)
+               );
+    }
+
+  cmb_anim_frame->blockSignals(false);
+
+}
+
+void str_sim_ws_item_rec_t::cmb_ws_changed(int index) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (index >=0 &&
+      index < astate->ws_mgr->m_ws.size() &&
+      !astate->ws_mgr->m_ws[index]->m_ws_items.empty()) {
+
+      cmb_it->clear();
+      cmb_it->setEnabled(true);
+      cmb_it->blockSignals(true);
+
+      for (size_t i = 0; i < astate->ws_mgr->m_ws[index]->m_ws_items.size(); i++) {
+          cmb_it->addItem(tr("[%1]%2")
+                        .arg(i)
+                        .arg(QString::fromStdString(
+                               astate->ws_mgr->m_ws[index]->m_ws_items[i]->m_name))
+                          );
+        }
+
+      cmb_it->blockSignals(false);
+      cmb_it->setCurrentIndex(0);
+      cmb_it_changed(0);
+
+    } else {
+
+      cmb_it->clear();
+      cmb_it->setEnabled(false);
+      gb_gv_item->hide();
+
+    }
+
+}
+
+void str_sim_ws_item_rec_t::cmb_it_changed(int idx) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  auto wsm = astate->ws_mgr.get();
+
+  auto ws_idx = cmb_ws->currentIndex();
+
+  if (ws_idx >= 0 &&
+      ws_idx < astate->ws_mgr->m_ws.size() &&
+      !wsm->m_ws[ws_idx]->m_ws_items.empty() &&
+      idx >= 0 &&
+      idx < wsm->m_ws[ws_idx]->m_ws_items.size() &&
+      wsm->m_ws[ws_idx]->m_ws_items[idx] &&
+      wsm->m_ws[ws_idx]->m_ws_items[idx]->get_type() == geom_view_t::get_type_static()) {
+
+      auto as_gv = wsm->m_ws[ws_idx]->m_ws_items[idx]->cast_as<geom_view_t>();
+      m_binded_gv = as_gv;
+
+      if (as_gv->m_anim->animable()) {
+          gb_gv_item->show();
+          rebuild_anim_list();
+        } else {
+          gb_gv_item->hide();
+        }
+
+    } else {
+
+      m_binded_gv = nullptr;
+      gb_gv_item->hide();
+
+    }
+
+}
+
+void str_sim_ws_item_rec_t::cmb_anim_changed(int idx) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  cmb_anim_frame->blockSignals(true);
+  cmb_anim_frame->clear();
+
+  if (m_binded_gv && m_binded_gv->m_anim->animable()) {
+
+      size_t anim_id = cmb_anim_name->currentIndex();
+
+      if (anim_id >= 0 && anim_id < m_binded_gv->m_anim->get_total_anims())
+        for (size_t i = 0 ; i < m_binded_gv->m_anim->m_anim_data[anim_id].frames.size(); i++)
+          cmb_anim_frame->addItem(QString("%1").arg(i));
+
+    }
+
+  cmb_anim_frame->blockSignals(false);
 
 }

@@ -284,31 +284,31 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
 void add_new_ws_item_widget_t::set_cell_ctors_visibility(bool show) {
 
-  qt_helpers::form_lt_ctrl_visibility(show, gb_type_param_lt,
+  qt_hlp::form_lt_ctrl_visibility(show, gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_cubic_size_lbl, type_cell_ctor_cubic_size);
 
-  qt_helpers::form_lt_ctrl_visibility(show, gb_type_param_lt,
+  qt_hlp::form_lt_ctrl_visibility(show, gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_ortho_lbl, type_cell_ctor_ortho);
 
-  qt_helpers::form_lt_ctrl_visibility(show, gb_type_param_lt,
+  qt_hlp::form_lt_ctrl_visibility(show, gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_l3_lbl, type_cell_ctor_l3);
 
-  qt_helpers::form_lt_ctrl_visibility(show, gb_type_param_lt,
+  qt_hlp::form_lt_ctrl_visibility(show, gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_a3_lbl, type_cell_ctor_a3);
 
-  qt_helpers::form_lt_ctrl_visibility(show, gb_type_param_lt,
+  qt_hlp::form_lt_ctrl_visibility(show, gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_a_lbl, type_cell_ctor_a);
 
-  qt_helpers::form_lt_ctrl_visibility(show, gb_type_param_lt,
+  qt_hlp::form_lt_ctrl_visibility(show, gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_b_lbl, type_cell_ctor_b);
 
-  qt_helpers::form_lt_ctrl_visibility(show, gb_type_param_lt,
+  qt_hlp::form_lt_ctrl_visibility(show, gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_c_lbl, type_cell_ctor_c);
 
@@ -318,17 +318,17 @@ void add_new_ws_item_widget_t::control_top_type_parameters_visibility() {
 
   //hide all
   set_cell_ctors_visibility(false);
-  qt_helpers::form_lt_ctrl_visibility(false,
+  qt_hlp::form_lt_ctrl_visibility(false,
                                       gb_type_param_lt,
                                       type_param_name,
                                       type_param_ag_lbl, type_param_ag);
 
-  qt_helpers::form_lt_ctrl_visibility(rb_ctor_geom3d->isChecked(),
+  qt_hlp::form_lt_ctrl_visibility(rb_ctor_geom3d->isChecked(),
                                       gb_type_param_lt,
                                       type_param_name,
                                       type_cell_ctor_mode_lbl, type_cell_ctor_mode);
 
-  qt_helpers::form_lt_ctrl_visibility(rb_ctor_psg->isChecked(),
+  qt_hlp::form_lt_ctrl_visibility(rb_ctor_psg->isChecked(),
                                       gb_type_param_lt,
                                       type_param_name,
                                       type_param_ag_lbl, type_param_ag);
@@ -645,37 +645,37 @@ void add_new_ws_item_widget_t::geom3d_ctor_changed(int index) {
 
   cell_construct_mode ccm = static_cast<cell_construct_mode>(index);
 
-  qt_helpers::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_cubic,
+  qt_hlp::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_cubic,
                                       gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_cubic_size_lbl, type_cell_ctor_cubic_size);
 
-  qt_helpers::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_ortho,
+  qt_hlp::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_ortho,
                                       gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_ortho_lbl, type_cell_ctor_ortho);
 
-  qt_helpers::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_3angles_3len,
+  qt_hlp::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_3angles_3len,
                                       gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_a3_lbl, type_cell_ctor_a3);
 
-  qt_helpers::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_3angles_3len,
+  qt_hlp::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_3angles_3len,
                                       gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_l3_lbl, type_cell_ctor_l3);
 
-  qt_helpers::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_9el,
+  qt_hlp::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_9el,
                                       gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_c_lbl, type_cell_ctor_c);
 
-  qt_helpers::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_9el,
+  qt_hlp::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_9el,
                                       gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_b_lbl, type_cell_ctor_b);
 
-  qt_helpers::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_9el,
+  qt_hlp::form_lt_ctrl_visibility(ccm == cell_construct_mode::construct_9el,
                                       gb_type_param_lt,
                                       type_cell_ctor_mode,
                                       type_cell_ctor_a_lbl, type_cell_ctor_a);

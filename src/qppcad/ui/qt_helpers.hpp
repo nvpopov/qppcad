@@ -12,7 +12,7 @@ namespace qpp {
 
   namespace cad {
 
-    class qt_helpers {
+    class qt_hlp {
 
       public:
 

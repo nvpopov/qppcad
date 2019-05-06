@@ -981,11 +981,11 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
         }
 
       //resize type table view
-      qt_helpers::vrt_resize_tv_to_cnt(tg_type_summary_tbl);
+      qt_hlp::vrt_resize_tv_to_cnt(tg_type_summary_tbl);
 
       //update cell
       cell_changed();
-      qt_helpers::vrt_resize_tv_to_cnt(tg_gb_cell_tbl);
+      qt_hlp::vrt_resize_tv_to_cnt(tg_gb_cell_tbl);
 
       //display tab
       disp_s_draw_atoms->bind_value(&b_al->m_draw_atoms);
@@ -1056,13 +1056,13 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_type_spec_mdl->bind(b_al);
       disp_type_spec_tv->setModel(disp_type_spec_mdl);
       disp_type_spec_tv->update();
-      qt_helpers::vrt_resize_tv_to_cnt(disp_type_spec_tv);
+      qt_hlp::vrt_resize_tv_to_cnt(disp_type_spec_tv);
 
       disp_bt->setModel(nullptr);
       bt_mdl->bind(b_al);
       disp_bt->setModel(bt_mdl);
       disp_bt->update();
-      qt_helpers::vrt_resize_tv_to_cnt(disp_bt);
+      qt_hlp::vrt_resize_tv_to_cnt(disp_bt);
 
       //bind tab measurement common settings
       tms_render_dist->bind_value(&b_al->m_measure->m_render_dist);
@@ -1857,13 +1857,13 @@ void geom_view_obj_insp_widget_t::cell_changed() {
 
 void geom_view_obj_insp_widget_t::draw_subcells_changed(int state) {
 
-  qt_helpers::form_lt_ctrl_visibility(state == Qt::Checked,
+  qt_hlp::form_lt_ctrl_visibility(state == Qt::Checked,
                                       gb_periodic_related_render_lt,
                                       disp_draw_subcells,
                                       disp_subcells_idx_lbl,
                                       disp_subcells_idx);
 
-  qt_helpers::form_lt_ctrl_visibility(state == Qt::Checked,
+  qt_hlp::form_lt_ctrl_visibility(state == Qt::Checked,
                                       gb_periodic_related_render_lt,
                                       disp_subcells_idx,
                                       disp_subcells_color_lbl,

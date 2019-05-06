@@ -57,19 +57,19 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       ws_item_bb_visible->bind_value(&m_binded_item->m_show_bb);
       ws_item_is_visible->bind_value(&m_binded_item->m_is_visible);
 
-      qt_helpers::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
                                           tg_form_layout,
                                           ws_item_type,
                                           ws_item_is_visible_label,
                                           ws_item_is_visible);
 
-      qt_helpers::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
                                           tg_form_layout,
                                           ws_item_is_visible,
                                           ws_item_bb_visible_label,
                                           ws_item_bb_visible);
 
-      qt_helpers::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
                                           tg_form_layout,
                                           ws_item_bb_visible,
                                           ws_item_pos_label,
@@ -135,21 +135,21 @@ void ws_item_obj_insp_widget_t::pre_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
 void ws_item_obj_insp_widget_t::post_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
 
   app_state_t *astate = app_state_t::get_inst();
-  qt_helpers::resize_form_lt_lbls(gb_lt, astate->size_guide.obj_insp_lbl_w());
+  qt_hlp::resize_form_lt_lbls(gb_lt, astate->size_guide.obj_insp_lbl_w());
 
 }
 
 void ws_item_obj_insp_widget_t::init_form_lt(QFormLayout *frm_lt) {
 
   app_state_t *astate = app_state_t::get_inst();
-  qt_helpers::resize_form_lt_lbls(frm_lt, astate->size_guide.obj_insp_lbl_w());
+  qt_hlp::resize_form_lt_lbls(frm_lt, astate->size_guide.obj_insp_lbl_w());
 
 }
 
 void ws_item_obj_insp_widget_t::init_form_lt_lbl(QLabel *_label) {
 
   app_state_t *astate = app_state_t::get_inst();
-  qt_helpers::resize_form_lt_lbl(_label, astate->size_guide.obj_insp_lbl_w());
+  qt_hlp::resize_form_lt_lbl(_label, astate->size_guide.obj_insp_lbl_w());
 
 }
 

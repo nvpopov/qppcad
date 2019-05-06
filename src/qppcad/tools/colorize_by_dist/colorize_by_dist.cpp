@@ -116,7 +116,7 @@ colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
   main_gb_lt->addRow(tr("Color"), clr_input);
 
   app_state_t *astate = app_state_t::get_inst();
-  qt_helpers::resize_form_lt_lbls(main_gb_lt, astate->size_guide.obj_insp_lbl_w());
+  qt_hlp::resize_form_lt_lbls(main_gb_lt, astate->size_guide.obj_insp_lbl_w());
 
   buttons_lt = new QHBoxLayout;
   button_apply = new QPushButton(tr("Apply"));

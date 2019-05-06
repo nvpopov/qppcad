@@ -5,7 +5,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void qt_helpers::resize_form_lt_lbl(QLabel *label, int new_size) {
+void qt_hlp::resize_form_lt_lbl(QLabel *label, int new_size) {
 
   label->setMaximumWidth(new_size);
   label->setMinimumWidth(new_size);
@@ -14,7 +14,7 @@ void qt_helpers::resize_form_lt_lbl(QLabel *label, int new_size) {
 
 }
 
-void qt_helpers::resize_form_lt_lbls(QFormLayout *form_lt, int new_size) {
+void qt_hlp::resize_form_lt_lbls(QFormLayout *form_lt, int new_size) {
   for (int i = 0; i < form_lt->rowCount(); i++) {
       //get row lt
       QLayoutItem *lt = form_lt->itemAt(i, QFormLayout::LabelRole);
@@ -25,9 +25,7 @@ void qt_helpers::resize_form_lt_lbls(QFormLayout *form_lt, int new_size) {
     }
 }
 
-void qt_helpers::form_lt_hide_row(QFormLayout *form_lt,
-                                  QLabel *field_label,
-                                  QWidget *field_widget) {
+void qt_hlp::form_lt_hide_row(QFormLayout *form_lt, QLabel *field_label, QWidget *field_widget) {
 
   //TODO: throw error
   if (!form_lt || !field_label || !field_widget) {
@@ -51,10 +49,10 @@ void qt_helpers::form_lt_hide_row(QFormLayout *form_lt,
 
 }
 
-void qt_helpers::form_lt_insert_before(QFormLayout *form_lt,
-                                       QWidget *target,
-                                       QLabel *field_label,
-                                       QWidget *field_widget) {
+void qt_hlp::form_lt_insert_before(QFormLayout *form_lt,
+                                   QWidget *target,
+                                   QLabel *field_label,
+                                   QWidget *field_widget) {
 
   if (!form_lt || !target || !field_label || !field_widget) {
       return;
@@ -90,11 +88,11 @@ void qt_helpers::form_lt_insert_before(QFormLayout *form_lt,
 
 }
 
-void qt_helpers::form_lt_ctrl_visibility(bool show,
-                                         QFormLayout *form_lt,
-                                         QWidget *target,
-                                         QLabel *field_label,
-                                         QWidget *field_widget) {
+void qt_hlp::form_lt_ctrl_visibility(bool show,
+                                     QFormLayout *form_lt,
+                                     QWidget *target,
+                                     QLabel *field_label,
+                                     QWidget *field_widget) {
 
   if (show) form_lt_insert_before(form_lt, target, field_label, field_widget);
   else form_lt_hide_row(form_lt, field_label, field_widget);
