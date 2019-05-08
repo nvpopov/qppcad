@@ -48,6 +48,10 @@
 #include <qppcad/ws_item/arrow_array/arrow_array.hpp>
 #include <qppcad/ws_item/arrow_array/arrow_array_obj_insp_widget.hpp>
 
+#include <qppcad/ws_item/pdos_view/pdos_view.hpp>
+#include <qppcad/ws_item/pdos_view/pdos_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/pdos_view/pdos_view_extended_editor.hpp>
+
 #include <io/ccd_molden.hpp>
 #include <io/write_coord.hpp>
 
@@ -67,6 +71,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr<node_book_t>(bhv_mgr);
   reg_ws_item_fbr<arrow_array_t>(bhv_mgr);
   reg_ws_item_fbr<py_note_book_t>(bhv_mgr);
+  reg_ws_item_fbr<pdos_view_t>(bhv_mgr);
 
 }
 
@@ -83,6 +88,7 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
   reg_ws_item_obj_insp_fbr<node_book_t, node_book_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<arrow_array_t, arrow_array_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<py_note_book_t, py_note_book_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<pdos_view_t, pdos_view_obj_insp_widget_t>(bhv_mgr);
 
 }
 
@@ -102,6 +108,9 @@ void registration_helper_t::reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv
 
   reg_ws_item_ext_edt_fbr<py_note_book_t, py_note_book_extended_editor_t>(
         0, "py_note_book editor", bhv_mgr);
+
+  reg_ws_item_ext_edt_fbr<pdos_view_t, pdos_view_extended_editor_t>(
+        0, "pdos viewer", bhv_mgr);
 
 }
 
