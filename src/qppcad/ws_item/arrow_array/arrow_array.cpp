@@ -70,7 +70,7 @@ void arrow_array_t::render() {
                                m_binded_gv->m_pos;
 
       float dnodem = (end_pos - start_pos).norm();
-      if (dnodem < 0.0005f) continue;
+      if (dnodem < m_displ_eps) continue;
 
       vector3<float> dir = (end_pos - start_pos).normalized();
       vector3<float> end = start_pos + dir * m_unf_arrow_len;

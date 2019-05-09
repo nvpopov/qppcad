@@ -22,6 +22,7 @@ namespace qpp {
         qbinded_float_spinbox_t *aa_unf_arrow_scale;
         qbinded_float_spinbox_t *aa_unf_arrow_cap_len;
         qbinded_float_spinbox_t *aa_unf_arrow_cap_scale;
+        qbinded_float_spinbox_t *aa_displ_eps;
         qbinded_color3_input_t *aa_arrow_color;
         qbinded_checkbox_t *aa_affected_by_sv;
 

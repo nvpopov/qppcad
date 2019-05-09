@@ -24,6 +24,8 @@ namespace qpp {
         float m_unf_arrow_scale{0.05f};
         float m_unf_arrow_cap_scale{0.12f};
 
+        float m_displ_eps{0.0005f};
+
         bool m_affected_by_sv{false};
         vector3<float> m_color{clr_red};
 

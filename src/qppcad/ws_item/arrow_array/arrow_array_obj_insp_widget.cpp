@@ -30,11 +30,16 @@ arrow_array_obj_insp_widget_t::arrow_array_obj_insp_widget_t() {
   aa_unf_arrow_cap_scale = new qbinded_float_spinbox_t;
   aa_unf_arrow_cap_scale->set_min_max_step(0.01, 20, 0.05);
 
+  aa_displ_eps = new qbinded_float_spinbox_t;
+  aa_displ_eps->set_min_max_step(0.0001f, 1, 0.0001f);
+  aa_displ_eps->setDecimals(4);
+
   aa_arrow_color = new qbinded_color3_input_t;
 
   aa_affected_by_sv = new qbinded_checkbox_t;
 
   gb_aa_settings_lt->addRow(tr("Source"), aa_settings_src);
+  gb_aa_settings_lt->addRow(tr("Displ. eps."), aa_displ_eps);
   gb_aa_settings_lt->addRow(tr("Arrow length"), aa_unf_arrow_len);
   gb_aa_settings_lt->addRow(tr("Arrow scale"), aa_unf_arrow_scale);
   gb_aa_settings_lt->addRow(tr("Cap length"), aa_unf_arrow_cap_len);
@@ -57,6 +62,7 @@ void arrow_array_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
   if (_as_aa) {
       b_aa = _as_aa;
       aa_settings_src->bind_value(&b_aa->m_src, _as_aa);
+      aa_displ_eps->bind_value(&b_aa->m_displ_eps, _as_aa);
       aa_unf_arrow_len->bind_value(&b_aa->m_unf_arrow_len);
       aa_unf_arrow_scale->bind_value(&b_aa->m_unf_arrow_scale);
       aa_unf_arrow_cap_len->bind_value(&b_aa->m_unf_arrow_cap_len);
@@ -76,6 +82,7 @@ void arrow_array_obj_insp_widget_t::update_from_ws_item() {
 void arrow_array_obj_insp_widget_t::unbind_item() {
 
   aa_settings_src->unbind_value();
+  aa_displ_eps->unbind_value();
   aa_unf_arrow_len->unbind_value();
   aa_unf_arrow_scale->unbind_value();
   aa_unf_arrow_cap_len->unbind_value();
