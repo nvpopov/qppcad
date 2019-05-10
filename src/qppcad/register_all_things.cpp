@@ -159,6 +159,9 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   size_t generic_raw_coord_ff_hash =
       bhv_mgr->reg_ff("Simple coord.", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
+  size_t generic_atoms_coord_ff_hash =
+      bhv_mgr->reg_ff("Simple coord w. names", "coord", generic_ff_g_hash, {"coord", "coord"} );
+
   size_t molden_ff_hash =
       bhv_mgr->reg_ff("Molden", "molden", generic_ff_g_hash, {"mol", "molden"} );
 
@@ -221,10 +224,11 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
   auto write_raw_coord_mgf =
       std::make_shared<
-      geom_view_io_saver_t<
-      write_raw_coord<
-      float, periodic_cell<float> >, false, 0 >
-      >();
+      geom_view_io_saver_t<write_raw_coord<float, periodic_cell<float> >, false, 0 > >();
+
+  auto write_atoms_with_coord_mgf =
+      std::make_shared<
+      geom_view_io_saver_t<write_atoms_with_coord<float, periodic_cell<float> >, false, 0 > >();
 
   auto vasp_outcar_mgf =
       std::make_shared<
@@ -232,15 +236,11 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       read_vasp_outcar_md_with_frames<float, periodic_cell<float> >, 3 >
       >();
 
-  auto generic_cube_mgf =
-      std::make_shared<geom_view_io_cube_t
-      >();
+  auto generic_cube_mgf = std::make_shared<geom_view_io_cube_t>();
 
   auto molden_mgf =
       std::make_shared<
-      geom_view_io_ccd_t<
-      read_ccd_from_molden<float>,  true, true, true, false, false, 0>
-      >();
+      geom_view_io_ccd_t<read_ccd_from_molden<float>,  true, true, true, false, false, 0> >();
 
   auto generic_cube3d_mgf = std::make_shared<geom_view_io_cube_t>();
 
@@ -268,6 +268,8 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   bhv_mgr->reg_io_bhv(generic_molcas_grid_mgf, generic_molcas_grid_ff_hash,
                       geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(write_raw_coord_mgf, generic_raw_coord_ff_hash,
+                      geom_view_t::get_type_static());
+  bhv_mgr->reg_io_bhv(write_atoms_with_coord_mgf, generic_atoms_coord_ff_hash,
                       geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(molden_mgf, molden_ff_hash,
                       geom_view_t::get_type_static());
