@@ -8,9 +8,11 @@ ws_tabbar_t::ws_tabbar_t(QWidget *parent) : QTabBar (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setFixedHeight(30);
+  setFixedHeight(28);
   setDrawBase(false);
   setExpanding(false);
+  setTabsClosable(true);
+
   update_tabs();
   cur_ws_changed();
 
@@ -29,6 +31,11 @@ ws_tabbar_t::ws_tabbar_t(QWidget *parent) : QTabBar (parent) {
           this,
           &ws_tabbar_t::current_changed);
 
+  connect(this,
+          &ws_tabbar_t::tabCloseRequested,
+          this,
+          &ws_tabbar_t::tabs_closed);
+
 }
 
 void ws_tabbar_t::update_tabs() {
@@ -40,9 +47,33 @@ void ws_tabbar_t::update_tabs() {
   while(count() != 0) removeTab(0);
 
   for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
-    addTab(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name));
+    addTab(tr("[%1] %2")
+           .arg(i)
+           .arg(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name)));
 
   blockSignals(false);
+
+}
+
+void ws_tabbar_t::tabs_closed(int index) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_mgr->has_wss()) {
+      auto cur_ws = astate->ws_mgr->get_cur_ws();
+      if (cur_ws) {
+          QMessageBox::StandardButton reply;
+          reply = QMessageBox::question(this, tr("Workspace -> Close"),
+                                        tr("Do you really want to close the workspace?"),
+                                        QMessageBox::Yes | QMessageBox::No);
+          if (reply == QMessageBox::Yes) {
+              cur_ws->m_marked_for_deletion = true;
+            }
+          else if (reply == QMessageBox::No) {
+
+            }
+        }
+    }
 
 }
 

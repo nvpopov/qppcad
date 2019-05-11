@@ -19,6 +19,7 @@ namespace qpp {
 
       public slots:
 
+        void tabs_closed(int index);
         void cur_ws_changed();
         void wss_changed_slot();
         void current_changed(int current);
