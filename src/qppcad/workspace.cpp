@@ -853,8 +853,11 @@ void workspace_manager_t::utility_event_loop() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  bool has_been_deleted{false};
+
   for (auto it = m_ws.begin(); it != m_ws.end(); ) {
       if ((*it)->m_marked_for_deletion) {
+          has_been_deleted = true;
           auto cur_ws_idx = get_cur_id();
           if (cur_ws_idx) {
               //last?
@@ -870,6 +873,8 @@ void workspace_manager_t::utility_event_loop() {
           ++it;
         }
     }
+
+  if (has_been_deleted) astate->astate_evd->wss_changed();
 
 }
 

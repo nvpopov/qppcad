@@ -154,16 +154,50 @@ qpp--cad--object_inspector_widget_t QListWidget::item {
   margin: 5px;
 }
 
-QTabWidget {
+qpp--cad--ws_tabbar_t::tab {
+ height:26px;
+ border: 0px;
+ margin-right:3px;
+ margin-left:3px;
+ background-color: rgb(50, 50, 50);
+ border-top-left-radius: 4px;
+ border-top-right-radius: 4px;
+ padding-left:5px;
+ padding-right:5px;
+ padding-top:2px;
+ padding-bottom:2px;
+}
+
+qpp--cad--ws_tabbar_t {
+ height:50px;
+}
+
+qpp--cad--ws_tabbar_t::tab::first {
+ margin-left:5px;
+}
+
+qpp--cad--ws_tabbar_t::tab:selected {
+ background-color: rgb(140, 140, 140);
+}
+
+qpp--cad--ws_tabbar_t::tab:hover {
+ background-color: rgb(90, 90, 90);
+}
+
+qpp--cad--ws_tabbar_t::tab:selected:hover {
+ background-color: rgb(140, 140, 140);
+}
+
+qpp--cad--object_inspector_widget_t QTabWidget {
  border: 0;
  margin-bottom:15px;
 }
 
-QTabWidget::pane {
+qpp--cad--object_inspector_widget_t QTabWidget::pane {
  border: 0;
 }
 
-QTabBar::tab {
+qpp--cad--object_inspector_widget_t QTabBar::tab {
  width:44px;
  height:42px;
  padding-top:3px;
@@ -172,15 +206,15 @@ QTabBar::tab {
  margin-bottom: 2px;
 }
 
-QTabBar::tab::first {
+qpp--cad--object_inspector_widget_t QTabBar::tab::first {
  margin-left:12px;
 }
 
-QTabBar::tab:selected {
+qpp--cad--object_inspector_widget_t QTabBar::tab:selected {
  background-color: rgb(120, 120, 120);
 }
 
-QTabBar::tab:hover {
+qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
  background-color: rgb(110, 110, 110);
 }
 

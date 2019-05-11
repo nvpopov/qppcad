@@ -8,6 +8,7 @@
 #include <qppcad/ui/qextended_action.hpp>
 #include <qppcad/ws_item/ws_item_extended_editor_compositor.hpp>
 #include <qppcad/render/camera.hpp>
+#include <qppcad/ui/ws_tabbar.hpp>
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -96,6 +97,8 @@ namespace qpp {
         python_console_widget_t *py_console_widget;
         ws_viewer_widget_t *ws_viewer_widget;
         object_inspector_widget_t *obj_insp_widget;
+
+        ws_tabbar_t *ws_tabbar_wdgt;
         //End of widgets
 
         //Menus
@@ -125,16 +128,6 @@ namespace qpp {
         QAction *edit_menu_undo;
         QAction *edit_menu_redo;
         QAction *edit_menu_switch_ws_edit_mode;
-        QAction *edit_menu_toggle_fullscreen;
-        QAction *edit_menu_console;
-        QAction *edit_menu_settings;
-        QAction *edit_menu_ws_settings;
-
-        QMenu *edit_menu_debug;
-        QAction *edit_menu_toggle_debug_info;
-        QAction *edit_menu_toggle_debug_tws_tree;
-        QAction *edit_menu_toggle_sel_deque;
-
         QMenu *edit_menu_selection;
         QAction *edit_menu_selection_select_all;
         QAction *edit_menu_selection_unselect_all;
@@ -143,6 +136,16 @@ namespace qpp {
         QMenu *tools_menu;
         std::map<size_t, QMenu*> tools_menu_groups;
         std::vector<qextended_action*> tools_menu_actions;
+
+        QMenu *view_menu;
+        QAction *view_menu_toggle_fullscreen;
+        QAction *view_menu_console;
+        QAction *view_menu_settings;
+        QAction *view_menu_ws_settings;
+        QMenu *view_menu_debug;
+        QAction *view_menu_toggle_debug_info;
+        QAction *view_menu_toggle_debug_tws_tree;
+        QAction *view_menu_toggle_sel_deque;
 
         QMenu *help_menu;
         QAction *help_menu_about;

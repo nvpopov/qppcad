@@ -199,49 +199,53 @@ void main_window::init_menus() {
 
   edit_menu->addAction(edit_menu_switch_ws_edit_mode);
 
-  edit_menu_toggle_fullscreen = new QAction(this);
-  edit_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
-  edit_menu_toggle_fullscreen->setCheckable(true);
-  edit_menu_toggle_fullscreen->setShortcut(Qt::Key::Key_F11);
-  connect(edit_menu_toggle_fullscreen,
+  // tools menu
+  tools_menu = menuBar()->addMenu(tr("&Tools"));
+  // end tools menu
+
+  // view menu
+  view_menu = menuBar()->addMenu(tr("&View"));
+
+  view_menu_toggle_fullscreen = new QAction(this);
+  view_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
+  view_menu_toggle_fullscreen->setCheckable(true);
+  view_menu_toggle_fullscreen->setShortcut(Qt::Key::Key_F11);
+  connect(view_menu_toggle_fullscreen,
           &QAction::toggled,
           this,
           &main_window::toggle_fullscreen);
 
-  edit_menu->addAction(edit_menu_toggle_fullscreen);
+  view_menu->addAction(view_menu_toggle_fullscreen);
 
-  edit_menu->addSeparator();
-
-  edit_menu_settings = new QAction(this);
-  edit_menu_settings->setEnabled(false);
-  edit_menu_settings->setText(tr("Settings"));
-  connect(edit_menu_settings,
+  view_menu_settings = new QAction(this);
+  view_menu_settings->setEnabled(false);
+  view_menu_settings->setText(tr("Settings"));
+  connect(view_menu_settings,
           &QAction::triggered,[](){app_settings_widget_t aset;aset.exec();});
 
-  edit_menu_ws_settings = new QAction(this);
-  edit_menu_ws_settings->setEnabled(false);
-  edit_menu_ws_settings->setText(tr("Workspace settings"));
-  edit_menu->addSeparator();
-  edit_menu->addAction(edit_menu_settings);
-  edit_menu->addAction(edit_menu_ws_settings);
+  view_menu_ws_settings = new QAction(this);
+  view_menu_ws_settings->setEnabled(false);
+  view_menu_ws_settings->setText(tr("Workspace settings"));
+  view_menu->addAction(view_menu_settings);
+  view_menu->addAction(view_menu_ws_settings);
 
-  edit_menu_console = new QAction(this);
-  edit_menu_console->setText(tr("Console"));
-  edit_menu_console->setShortcut(QKeySequence(tr("~")));
-  edit_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
-  connect(edit_menu_console,
+  view_menu_console = new QAction(this);
+  view_menu_console->setText(tr("Console"));
+  view_menu_console->setShortcut(QKeySequence(tr("~")));
+  view_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
+  connect(view_menu_console,
           &QAction::triggered,
           this,
           &main_window::action_toggle_console);
-  edit_menu->addAction(edit_menu_console);
+  view_menu->addAction(view_menu_console);
 
-  edit_menu_debug = edit_menu->addMenu(tr("Debug"));
+  view_menu_debug = view_menu->addMenu(tr("Debug"));
 
-  edit_menu_toggle_debug_info = new QAction(this);
-  edit_menu_toggle_debug_info->setText(tr("Show frame info"));
-  edit_menu_toggle_debug_info->setCheckable(true);
-  edit_menu_debug->addAction(edit_menu_toggle_debug_info);
-  connect(edit_menu_toggle_debug_info,
+  view_menu_toggle_debug_info = new QAction(this);
+  view_menu_toggle_debug_info->setText(tr("Show frame info"));
+  view_menu_toggle_debug_info->setCheckable(true);
+  view_menu_debug->addAction(view_menu_toggle_debug_info);
+  connect(view_menu_toggle_debug_info,
           &QAction::toggled,
           [](bool checked){
             app_state_t* astate = app_state_t::get_inst();
@@ -249,11 +253,11 @@ void main_window::init_menus() {
             astate->make_viewport_dirty();
           });
 
-  edit_menu_toggle_debug_tws_tree = new QAction(this);
-  edit_menu_toggle_debug_tws_tree->setText(tr("Render tws-tree"));
-  edit_menu_toggle_debug_tws_tree->setCheckable(true);
-  edit_menu_debug->addAction(edit_menu_toggle_debug_tws_tree);
-  connect(edit_menu_toggle_debug_tws_tree,
+  view_menu_toggle_debug_tws_tree = new QAction(this);
+  view_menu_toggle_debug_tws_tree->setText(tr("Render tws-tree"));
+  view_menu_toggle_debug_tws_tree->setCheckable(true);
+  view_menu_debug->addAction(view_menu_toggle_debug_tws_tree);
+  connect(view_menu_toggle_debug_tws_tree,
           &QAction::toggled,
           [](bool checked){
             app_state_t* astate = app_state_t::get_inst();
@@ -261,11 +265,11 @@ void main_window::init_menus() {
             astate->make_viewport_dirty();
           });
 
-  edit_menu_toggle_sel_deque = new QAction(this);
-  edit_menu_toggle_sel_deque->setText(tr("Show selection deque"));
-  edit_menu_toggle_sel_deque->setCheckable(true);
-  edit_menu_debug->addAction(edit_menu_toggle_sel_deque);
-  connect(edit_menu_toggle_debug_tws_tree,
+  view_menu_toggle_sel_deque = new QAction(this);
+  view_menu_toggle_sel_deque->setText(tr("Show selection deque"));
+  view_menu_toggle_sel_deque->setCheckable(true);
+  view_menu_debug->addAction(view_menu_toggle_sel_deque);
+  connect(view_menu_toggle_debug_tws_tree,
           &QAction::toggled,
           [](bool checked){
             app_state_t* astate = app_state_t::get_inst();
@@ -273,8 +277,9 @@ void main_window::init_menus() {
             astate->make_viewport_dirty();
           });
 
-  tools_menu = menuBar()->addMenu(tr("&Tools"));
+  // end of view menu
 
+  // help menu
   help_menu  = menuBar()->addMenu(tr("&Help"));
   help_menu_about = new QAction(this);
   help_menu_about->setText(tr("About"));
@@ -292,6 +297,8 @@ void main_window::init_menus() {
                                .arg(QString::fromStdString(build_info_helper::get_git_version()))
                                .arg(QString::fromStdString(build_info_helper::get_build_date())));
           });
+
+  // end of help menu
 
 }
 
@@ -526,6 +533,8 @@ void main_window::init_widgets() {
           this,
           &main_window::tp_angle_button_clicked);
 
+  tp_ws_selector->setVisible(false);
+
   ws_viewer_widget = new ws_viewer_widget_t(this);
 
   obj_insp_widget = new object_inspector_widget_t();
@@ -554,15 +563,19 @@ void main_window::init_layouts() {
   splitter_ws_viewer_extended_editor->setCollapsible(0, false);
   extended_editor_compositor->hide();
 
+  ws_tabbar_wdgt = new ws_tabbar_t;
+
   splitter_ws_viewer_py_console = new QSplitter(Qt::Vertical);
+  splitter_ws_viewer_py_console->addWidget(ws_tabbar_wdgt);
   splitter_ws_viewer_py_console->addWidget(splitter_ws_viewer_extended_editor);
   splitter_ws_viewer_py_console->addWidget(py_console_widget);
   splitter_ws_viewer_py_console->setHandleWidth(0);
-  splitter_ws_viewer_py_console->setSizes(QList<int>({3, 1}));
+  splitter_ws_viewer_py_console->setSizes(QList<int>({1, 3, 1}));
   splitter_ws_viewer_py_console->setContentsMargins(0,0,0,0);
   py_console_widget->hide();
-  splitter_ws_viewer_py_console->setCollapsible(1, false);
   splitter_ws_viewer_py_console->setCollapsible(0, false);
+  splitter_ws_viewer_py_console->setCollapsible(1, false);
+  splitter_ws_viewer_py_console->setCollapsible(2, false);
 
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console);
@@ -651,6 +664,7 @@ void main_window::wss_changed_slot() {
   tp_ws_selector->clear();
 
   if (astate->ws_mgr->has_wss()) {
+      ws_tabbar_wdgt->setVisible(true);
       tp_ws_stuff_del->setEnabled(true);
       tp_ws_stuff_ren->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
@@ -663,6 +677,7 @@ void main_window::wss_changed_slot() {
       tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
 
     } else {
+      ws_tabbar_wdgt->setVisible(false);
       tp_ws_stuff_del->setEnabled(false);
       tp_ws_stuff_ren->setEnabled(false);
       tp_show_gizmo->setEnabled(false);
@@ -847,7 +862,7 @@ void main_window::rename_cur_ws() {
                                                QString::fromStdString(cur_ws->m_ws_name), &ok);
           if (ok && text != "") {
               cur_ws->m_ws_name = text.toStdString();
-              wss_changed_slot();
+              astate->astate_evd->wss_changed();
             }
         }
     }
