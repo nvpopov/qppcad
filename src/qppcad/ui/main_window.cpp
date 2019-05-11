@@ -93,6 +93,14 @@ void main_window::init_menus() {
           this,
           &main_window::create_new_ws);
 
+  file_menu_close_ws = new QAction(this);
+  file_menu_close_ws->setText(tr("Close workspace"));
+  file_menu->addAction(file_menu_close_ws);
+  connect(file_menu_close_ws,
+          &QAction::triggered,
+          this,
+          &main_window::close_cur_ws);
+
   file_menu_open_ws = new QAction(this);
   file_menu_open_ws->setText(tr("Open workspace"));
   file_menu_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
@@ -202,6 +210,26 @@ void main_window::init_menus() {
   // tools menu
   tools_menu = menuBar()->addMenu(tr("&Tools"));
   // end tools menu
+
+  // workspace menu
+  ws_menu = menuBar()->addMenu(tr("&Workspace"));
+
+  ws_menu_rename_ws = new QAction(this);
+  ws_menu_rename_ws->setText(tr("Rename workspace"));
+  ws_menu->addAction(ws_menu_rename_ws);
+  connect(ws_menu_rename_ws,
+          &QAction::triggered,
+          this,
+          &main_window::rename_cur_ws);
+
+  ws_menu_bg_color = new QAction(this);
+  ws_menu_bg_color->setText(tr("Change background"));
+  ws_menu->addAction(ws_menu_bg_color);
+  connect(ws_menu_bg_color,
+          &QAction::triggered,
+          this,
+          &main_window::change_cur_ws_bg);
+  // end workspace menu
 
   // view menu
   view_menu = menuBar()->addMenu(tr("&View"));
@@ -321,37 +349,6 @@ void main_window::init_widgets() {
   tp_ws_selector->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
   tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
-
-  tp_ws_stuff = new QToolButton;
-  tp_ws_stuff->setText(tr("WS"));
-  tp_ws_stuff->setPopupMode(QToolButton::InstantPopup);
-  tp_ws_stuff->setArrowType(Qt::NoArrow);
-  tp_ws_stuff->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_ws_stuff->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_ws_stuff,
-          &QToolButton::triggered,
-          this,
-          &main_window::tp_ws_stuff_tool_button_triggered);
-
-  tp_ws_stuff_add = new qextended_action(this);
-  tp_ws_stuff_add->m_joined_data[0] = 0;
-  tp_ws_stuff_add->setText(tr("Add empty workspace"));
-  tp_ws_stuff->addAction(tp_ws_stuff_add);
-
-  tp_ws_stuff_del = new qextended_action(this);
-  tp_ws_stuff_del->m_joined_data[0] = 1;
-  tp_ws_stuff_del->setText(tr("Close current workspace"));
-  tp_ws_stuff->addAction(tp_ws_stuff_del);
-
-  tp_ws_stuff_ren = new qextended_action(this);
-  tp_ws_stuff_ren->m_joined_data[0] = 2;
-  tp_ws_stuff_ren->setText(tr("Rename current workspace"));
-  tp_ws_stuff->addAction(tp_ws_stuff_ren);
-
-  tp_ws_stuff_bg = new qextended_action(this);
-  tp_ws_stuff_bg->m_joined_data[0] = 3;
-  tp_ws_stuff_bg->setText(tr("Change workspace`s background"));
-  tp_ws_stuff->addAction(tp_ws_stuff_bg);
 
   tp_show_obj_insp = new QCheckBox;
   tp_show_obj_insp->setProperty("s_class", "tp_cb");
@@ -591,7 +588,6 @@ void main_window::init_layouts() {
   tool_panel_layout->setContentsMargins(5,0,0,0);
 
   tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_ws_stuff, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
 
@@ -664,9 +660,10 @@ void main_window::wss_changed_slot() {
   tp_ws_selector->clear();
 
   if (astate->ws_mgr->has_wss()) {
+      tool_panel_widget->setVisible(true);
       ws_tabbar_wdgt->setVisible(true);
-      tp_ws_stuff_del->setEnabled(true);
-      tp_ws_stuff_ren->setEnabled(true);
+      file_menu_close_ws->setEnabled(true);
+      ws_menu_rename_ws->setEnabled(true);
       tp_show_gizmo->setEnabled(true);
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
           auto ws = astate->ws_mgr->m_ws[i];
@@ -677,9 +674,10 @@ void main_window::wss_changed_slot() {
       tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
 
     } else {
+      tool_panel_widget->setVisible(false);
       ws_tabbar_wdgt->setVisible(false);
-      tp_ws_stuff_del->setEnabled(false);
-      tp_ws_stuff_ren->setEnabled(false);
+      file_menu_close_ws->setEnabled(false);
+      ws_menu_rename_ws->setEnabled(false);
       tp_show_gizmo->setEnabled(false);
     }
 
@@ -864,6 +862,25 @@ void main_window::rename_cur_ws() {
               cur_ws->m_ws_name = text.toStdString();
               astate->astate_evd->wss_changed();
             }
+        }
+    }
+
+}
+
+void main_window::change_cur_ws_bg() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+  if (ok) {
+      QColor _stored_color = QColor::fromRgbF(cur_ws->m_background_color[0],
+          cur_ws->m_background_color[1], cur_ws->m_background_color[2]);
+      const QColor clr = QColorDialog::getColor(_stored_color, this,
+                                                "Select workspace`s background color");
+      if (clr.isValid()) {
+          cur_ws->m_background_color =
+              vector3<float> {clr.redF(), clr.greenF(), clr.blueF()};
+          astate->make_viewport_dirty();
         }
     }
 
@@ -1296,50 +1313,6 @@ void main_window::tp_camera_tool_button_triggered(QAction *action) {
     }
 
   astate->make_viewport_dirty();
-
-}
-
-void main_window::tp_ws_stuff_tool_button_triggered(QAction *action) {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (!action) return;
-
-  qextended_action *ext_act = qobject_cast<qextended_action*>(action);
-  if (!ext_act) return;
-
-  switch (ext_act->m_joined_data[0]) {
-    case 0: {
-        create_new_ws();
-        break;
-      };
-    case 1: {
-        close_cur_ws();
-        break;
-      }
-    case 2: {
-        rename_cur_ws();
-        break;
-      }
-    case 3: {
-        auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
-        if (ok) {
-            QColor _stored_color = QColor::fromRgbF(cur_ws->m_background_color[0],
-                cur_ws->m_background_color[1], cur_ws->m_background_color[2]);
-            const QColor clr = QColorDialog::getColor(_stored_color, this,
-                                                      "Select workspace`s background color");
-            if (clr.isValid()) {
-                cur_ws->m_background_color =
-                    vector3<float> {clr.redF(), clr.greenF(), clr.blueF()};
-                astate->make_viewport_dirty();
-              }
-          }
-        break;
-      }
-    default: {
-        break;
-      }
-    }
 
 }
 

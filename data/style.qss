@@ -238,7 +238,7 @@ QGroupBox::title {
 }
 
 QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
- background-color: rgb(69, 69, 69);
+ background : rgb(94, 94, 94);
 }
 
 QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover{
@@ -273,22 +273,22 @@ QSplitter {
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox{
- background : rgb(74, 74, 74);
- border: 1px solid rgb(14, 14, 14);
+ background : rgb(94, 94, 94);
+ border: 1px solid rgb(55, 55, 55);
  border-radius: 4px;
  padding: 3px;
 }
 
 QToolButton {
- background : rgb(74, 74, 74);
- border: 1px inset black;
+ background : rgb(94, 94, 94);
+ border: 1px solid rgb(55, 55, 55);
  border-radius: 4px;
  padding: 2px;
 }
 
 #tool_panel_widget_e QCheckBox {
  background : rgb(74, 74, 74);
- border: 1px inset black;
+ border: 1px solid rgb(55, 55, 55);
  border-radius: 4px;
  padding: 3px;
 }

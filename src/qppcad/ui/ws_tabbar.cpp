@@ -12,6 +12,7 @@ ws_tabbar_t::ws_tabbar_t(QWidget *parent) : QTabBar (parent) {
   setDrawBase(false);
   setExpanding(false);
   setTabsClosable(true);
+  //setMovable(true);
 
   update_tabs();
   cur_ws_changed();
@@ -35,6 +36,11 @@ ws_tabbar_t::ws_tabbar_t(QWidget *parent) : QTabBar (parent) {
           &ws_tabbar_t::tabCloseRequested,
           this,
           &ws_tabbar_t::tabs_closed);
+
+//  connect(this,
+//          &ws_tabbar_t::tabMoved,
+//          this,
+//          &ws_tabbar_t::tab_moved);
 
 }
 
@@ -111,5 +117,14 @@ void ws_tabbar_t::current_changed(int current) {
 
   if (current >= 0 && current < astate->ws_mgr->m_ws.size())
     astate->ws_mgr->set_cur_id(opt<size_t>(current));
+
+}
+
+void ws_tabbar_t::tab_moved(int from, int to) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->tlog("ws_tabbar_t::tab_moved(from={}, to={})", from, to);
+
+  astate->ws_mgr->move_ws(from, to);
 
 }

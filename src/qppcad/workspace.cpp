@@ -674,6 +674,18 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
 
 }
 
+void workspace_manager_t::move_ws(size_t from, size_t to) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (from == to || from >= m_ws.size() || to >= m_ws.size()) return;
+  std::swap(m_ws[from], m_ws[to]);
+  set_cur_id(opt<size_t>(to));
+
+  astate->astate_evd->wss_changed();
+
+}
+
 
 void workspace_manager_t::load_from_file(const std::string &fname,
                                          bool override) {

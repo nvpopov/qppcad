@@ -60,12 +60,6 @@ namespace qpp {
 
         QComboBox *tp_ws_selector;
 
-        QToolButton *tp_ws_stuff;
-        qextended_action *tp_ws_stuff_add;
-        qextended_action *tp_ws_stuff_del;
-        qextended_action *tp_ws_stuff_ren;
-        qextended_action *tp_ws_stuff_bg;
-
         QCheckBox *tp_show_obj_insp;
         QCheckBox *tp_show_gizmo;
         QPushButton *tp_print_screen;
@@ -104,6 +98,7 @@ namespace qpp {
         //Menus
         QMenu *file_menu;
         QAction *file_menu_new_ws;
+        QAction *file_menu_close_ws;
         QAction *file_menu_open_ws;
 
         QMenu *file_menu_import_as_new_ws;
@@ -136,6 +131,10 @@ namespace qpp {
         QMenu *tools_menu;
         std::map<size_t, QMenu*> tools_menu_groups;
         std::vector<qextended_action*> tools_menu_actions;
+
+        QMenu *ws_menu;
+        QAction *ws_menu_rename_ws;
+        QAction *ws_menu_bg_color;
 
         QMenu *view_menu;
         QAction *view_menu_toggle_fullscreen;
@@ -189,6 +188,7 @@ namespace qpp {
         void save_ws_as();
         void close_cur_ws();
         void rename_cur_ws();
+        void change_cur_ws_bg();
 
         void cur_ws_changed();
         void cur_ws_selected_item_changed();
@@ -202,7 +202,6 @@ namespace qpp {
         void tp_force_sel_lbl_vis_button_clicked(bool checked);
         void tp_toggle_atom_override_button_clicked(bool checked);
         void tp_camera_tool_button_triggered(QAction *action);
-        void tp_ws_stuff_tool_button_triggered(QAction *action);
 
         void apply_camera_view_change(cam_target_view_t target_view);
 
