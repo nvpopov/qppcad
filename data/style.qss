@@ -4,20 +4,12 @@
  font-weight: 1;
 }
 
-QPushButton:checked {
-  background-color: rgb(150, 150, 150);
-}
-
-QMainWindow {
-
-}
-
 QWidget[s_class="tp_generic"] QLabel {
   color:white;
 }
 
 QCheckBox::indicator {
-  width: 21px;height: 21px;
+  width: 21px; height: 21px;
 }
 
 QCheckBox::indicator:checked,QTreeView::indicator:checked,QTableView::indicator:checked,QGroupBox::indicator:checked{
@@ -63,6 +55,25 @@ QCheckBox::indicator:indeterminate:pressed,QTreeView::indicator:indeterminate:pr
 QCheckBox::indicator:indeterminate:disabled,QTreeView::indicator:indeterminate:disabled,QTableView::indicator:indeterminate:disabled,QGroupBox::indicator:indeterminate:disabled{
   border-image: url(:/images/icon_checkbox_indeterminate_disabled.png) 0 0 0 0 stretch stretch;
   border-width: 0px;
+}
+
+QMenu::item {
+    padding: 6px 27px 6px 27px;
+    border: 1px solid transparent; /* reserve space for selection border */
+}
+
+QMenu::icon {
+      margin-left:4px;
+      width:30px;
+}
+
+QMenu::indicator:non-exclusive:unchecked {
+
+    image: url(:/images/icon_checkbox_unchecked.png);
+}
+
+QMenu::indicator:non-exclusive:checked {
+    image: url(:/images/icon_checkbox_checked.png);
 }
 
 QScrollBar:vertical {
@@ -154,8 +165,34 @@ qpp--cad--object_inspector_widget_t QListWidget::item {
   margin: 5px;
 }
 
+QToolTip {
+ color: black;
+}
+
+#obj_insp {
+ border-left: 2px solid black;
+ border-right: 1px solid black;
+ margin-top: -5px;
+ margin-left: -4px;
+}
+
+#ext_editor_compositor {
+ border-left: 3px solid black;
+ border-right: 0;
+ margin-top: -5px;
+ margin-left: -4px;
+}
+
+QSplitter {
+ width:0px;
+}
+
+#obj_insp_header_frame {
+ border-bottom:2px inset black;
+}
+
 qpp--cad--ws_tabbar_t {
- background-color: rgb(90, 90, 90);
+ background-color: rgb(95, 95, 95);
 }
 
 qpp--cad--ws_tabbar_t::tab {
@@ -245,31 +282,12 @@ QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover{
  background-color: rgb(102, 102, 102);
 }
 
-
-QToolTip {
- color: black;
+QComboBox {
+ padding-left:2px !important;
 }
 
-#obj_insp {
- border-left: 2px solid black;
- border-right: 1px solid black;
- margin-top: -5px;
- margin-left: -4px;
-}
-
-#ext_editor_compositor {
- border-left: 3px solid black;
- border-right: 0;
- margin-top: -5px;
- margin-left: -4px;
-}
-
-QSplitter {
- width:0px;
-}
-
-#obj_insp_header_frame {
- border-bottom:2px inset black;
+QPushButton:checked {
+   background : rgb(124, 124, 124);
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox{

@@ -234,6 +234,24 @@ void main_window::init_menus() {
   // view menu
   view_menu = menuBar()->addMenu(tr("&View"));
 
+  view_menu_show_oi = new QAction(this);
+  view_menu_show_oi->setText(tr("Show object inspector"));
+  view_menu_show_oi->setCheckable(true);
+  view_menu->addAction(view_menu_show_oi);
+  connect(view_menu_show_oi,
+          &QAction::toggled,
+          this,
+          &main_window::show_obj_insp_state_changed);
+
+  view_menu_show_gizmo = new QAction(this);
+  view_menu_show_gizmo->setText(tr("Show gizmo"));
+  view_menu_show_gizmo->setCheckable(true);
+  view_menu->addAction(view_menu_show_gizmo);
+  connect(view_menu_show_gizmo,
+          &QAction::toggled,
+          this,
+          &main_window::show_gizmo_state_changed);
+
   view_menu_toggle_fullscreen = new QAction(this);
   view_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
   view_menu_toggle_fullscreen->setCheckable(true);
@@ -335,7 +353,7 @@ void main_window::init_widgets() {
   app_state_t* astate = app_state_t::get_inst();
 
   tool_panel_widget = new QWidget;
-  tool_panel_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  tool_panel_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   tool_panel_widget->setFixedHeight(astate->size_guide.tool_panel_h());
   tool_panel_widget->setProperty("s_class", "tp_generic");
   tool_panel_widget->setObjectName("tool_panel_widget_e");
@@ -350,27 +368,27 @@ void main_window::init_widgets() {
   tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
   tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
 
-  tp_show_obj_insp = new QCheckBox;
-  tp_show_obj_insp->setProperty("s_class", "tp_cb");
-  tp_show_obj_insp->setCheckState(Qt::Checked);
-  tp_show_obj_insp->setText("INS");
-  tp_show_obj_insp->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
-  tp_show_obj_insp->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
-  QObject::connect(tp_show_obj_insp,
-                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
-                   this,
-                   &main_window::tp_show_obj_insp_state_changed);
+//  tp_show_obj_insp = new QCheckBox;
+//  tp_show_obj_insp->setProperty("s_class", "tp_cb");
+//  tp_show_obj_insp->setCheckState(Qt::Checked);
+//  tp_show_obj_insp->setText("INS");
+//  tp_show_obj_insp->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
+//  tp_show_obj_insp->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
+//  QObject::connect(tp_show_obj_insp,
+//                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
+//                   this,
+//                   &main_window::show_obj_insp_state_changed);
 
-  tp_show_gizmo = new QCheckBox;
-  tp_show_gizmo->setProperty("s_class", "tp_cb");
-  tp_show_gizmo->setCheckState(Qt::Checked);
-  tp_show_gizmo->setText("GZM");
-  tp_show_gizmo->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
-  tp_show_gizmo->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
-  QObject::connect(tp_show_gizmo,
-                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
-                   this,
-                   &main_window::tp_show_gizmo_state_changed);
+//  tp_show_gizmo = new QCheckBox;
+//  tp_show_gizmo->setProperty("s_class", "tp_cb");
+//  tp_show_gizmo->setCheckState(Qt::Checked);
+//  tp_show_gizmo->setText("GZM");
+//  tp_show_gizmo->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
+//  tp_show_gizmo->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
+//  QObject::connect(tp_show_gizmo,
+//                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
+//                   this,
+//                   &main_window::show_gizmo_state_changed);
 
   tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");
@@ -588,8 +606,6 @@ void main_window::init_layouts() {
   tool_panel_layout->setContentsMargins(5,0,0,0);
 
   tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_show_obj_insp, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_show_gizmo, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
@@ -664,7 +680,7 @@ void main_window::wss_changed_slot() {
       ws_tabbar_wdgt->setVisible(true);
       file_menu_close_ws->setEnabled(true);
       ws_menu_rename_ws->setEnabled(true);
-      tp_show_gizmo->setEnabled(true);
+      view_menu_show_gizmo->setEnabled(true);
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
           auto ws = astate->ws_mgr->m_ws[i];
           QString dest = QString::fromStdString(fmt::format("[{}] {}", i, ws->m_ws_name));
@@ -678,7 +694,8 @@ void main_window::wss_changed_slot() {
       ws_tabbar_wdgt->setVisible(false);
       file_menu_close_ws->setEnabled(false);
       ws_menu_rename_ws->setEnabled(false);
-      tp_show_gizmo->setEnabled(false);
+      view_menu_show_gizmo->setEnabled(false);
+      view_menu_show_gizmo->setVisible(false);
     }
 
   tp_ws_selector->blockSignals(false);
@@ -703,7 +720,7 @@ void main_window::ws_selector_selection_changed(int index) {
 
 }
 
-void main_window::tp_show_obj_insp_state_changed(int state) {
+void main_window::show_obj_insp_state_changed(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -714,28 +731,25 @@ void main_window::tp_show_obj_insp_state_changed(int state) {
       return;
     }
 
-  if (state == Qt::Checked) {
+  if (checked) {
       obj_insp_widget->show();
       cur_ws->m_show_obj_insp = true;
-    }
-
-  if (state == Qt::Unchecked) {
+    } else {
       obj_insp_widget->hide();
       cur_ws->m_show_obj_insp = false;
     }
 
 }
 
-void main_window::tp_show_gizmo_state_changed(int state) {
+void main_window::show_gizmo_state_changed(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_mgr->has_wss()) {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
-          cur_ws->m_gizmo->m_is_visible = state == Qt::Checked;
+          cur_ws->m_gizmo->m_is_visible = checked;
           astate->make_viewport_dirty();
-          std::cout << "STATE DEBUG " << state << std::endl;
         }
     }
 
@@ -895,9 +909,9 @@ void main_window::cur_ws_changed() {
   if (astate->ws_mgr->has_wss()) {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
-          tp_show_obj_insp->setChecked(cur_ws->m_show_obj_insp);
-          tp_show_obj_insp->setVisible(true);
-          tp_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
+          view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
+          view_menu_show_oi->setVisible(true);
+          view_menu_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
           std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
                                                cur_ws->m_ws_name, cur_ws->m_fs_path);
           this->setWindowTitle(QString::fromStdString(title_text));
@@ -907,8 +921,8 @@ void main_window::cur_ws_changed() {
         }
     } else {
       //tools_menu_sc_generator->setEnabled(false);
-      tp_show_obj_insp->setChecked(false);
-      tp_show_obj_insp->setVisible(false);
+      view_menu_show_oi->setChecked(false);
+      view_menu_show_oi->setVisible(false);
       this->setWindowTitle("qpp::cad");
     }
 

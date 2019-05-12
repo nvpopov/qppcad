@@ -60,8 +60,8 @@ namespace qpp {
 
         QComboBox *tp_ws_selector;
 
-        QCheckBox *tp_show_obj_insp;
-        QCheckBox *tp_show_gizmo;
+//        QCheckBox *tp_show_obj_insp;
+//        QCheckBox *tp_show_gizmo;
         QPushButton *tp_print_screen;
 
         QFrame *tp_edit_mode_start;
@@ -137,6 +137,8 @@ namespace qpp {
         QAction *ws_menu_bg_color;
 
         QMenu *view_menu;
+        QAction *view_menu_show_oi;
+        QAction *view_menu_show_gizmo;
         QAction *view_menu_toggle_fullscreen;
         QAction *view_menu_console;
         QAction *view_menu_settings;
@@ -179,8 +181,8 @@ namespace qpp {
         void wss_changed_slot();
 
         void ws_selector_selection_changed(int index);
-        void tp_show_obj_insp_state_changed(int state);
-        void tp_show_gizmo_state_changed(int state);
+        void show_obj_insp_state_changed(bool checked);
+        void show_gizmo_state_changed(bool checked);
 
         void create_new_ws();
         void open_ws();
