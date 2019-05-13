@@ -65,15 +65,15 @@ void ws_tabbar_t::tabs_closed(int index) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
+  if (astate->ws_mgr->has_wss() && index >=0 && index < astate->ws_mgr->m_ws.size()) {
+      auto cls_ws = astate->ws_mgr->m_ws[index];
+      if (cls_ws) {
           QMessageBox::StandardButton reply;
           reply = QMessageBox::question(this, tr("Workspace -> Close"),
                                         tr("Do you really want to close the workspace?"),
                                         QMessageBox::Yes | QMessageBox::No);
           if (reply == QMessageBox::Yes) {
-              cur_ws->m_marked_for_deletion = true;
+              cls_ws->m_marked_for_deletion = true;
             }
           else if (reply == QMessageBox::No) {
 
