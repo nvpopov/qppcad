@@ -51,6 +51,8 @@ namespace qpp {
 
           bool _gizmo_touched = false;
 
+          if (!check_attached_item_in_content_mode()) return false;
+
           if (ray) {
               m_touched_axis = 4;
               for(uint8_t i = 0; i < 3; i++){
@@ -69,6 +71,7 @@ namespace qpp {
 
         }
 
+        bool check_attached_item_in_content_mode();
         void translate_attached (float delta_time);
         void clear_selected_axis ();
         void update_gizmo (float delta_time, bool force_repaint = false);

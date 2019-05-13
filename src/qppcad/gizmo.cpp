@@ -109,6 +109,17 @@ void gizmo_t::render () {
 
 }
 
+bool gizmo_t::check_attached_item_in_content_mode() {
+
+  return
+      (attached_item && attached_item->m_parent_ws &&
+      attached_item->m_parent_ws->m_edit_type == ws_edit_e::edit_content &&
+      attached_item->get_num_cnt_selected() > 0) ||
+      (attached_item && attached_item->m_parent_ws &&
+       attached_item->m_parent_ws->m_edit_type == ws_edit_e::edit_item);
+
+}
+
 void gizmo_t::translate_attached(float delta_time) {
 
   app_state_t* astate = app_state_t::get_inst();

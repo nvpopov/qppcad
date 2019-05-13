@@ -667,6 +667,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_pair_creation_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
   tm_pair_creation_button = new QPushButton("Append");
+  tm_pair_creation_button->setAutoRepeat(true);
+  tm_pair_creation_button->setAutoRepeatDelay(10000);
+  tm_pair_creation_button->setAutoRepeatInterval(10000);
   tm_pair_creation_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
 
   tm_pair_creation_combo_btn_lt = new QHBoxLayout;
