@@ -681,6 +681,8 @@ void main_window::wss_changed_slot() {
       file_menu_close_ws->setEnabled(true);
       ws_menu_rename_ws->setEnabled(true);
       view_menu_show_gizmo->setEnabled(true);
+      view_menu_show_gizmo->setVisible(true);
+      //obj_insp_widget->setVisible()
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
           auto ws = astate->ws_mgr->m_ws[i];
           QString dest = QString::fromStdString(fmt::format("[{}] {}", i, ws->m_ws_name));
@@ -690,6 +692,7 @@ void main_window::wss_changed_slot() {
       tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
 
     } else {
+      obj_insp_widget->setVisible(false);
       tool_panel_widget->setVisible(false);
       ws_tabbar_wdgt->setVisible(false);
       file_menu_close_ws->setEnabled(false);
