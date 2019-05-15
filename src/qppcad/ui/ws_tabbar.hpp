@@ -23,6 +23,7 @@ namespace qpp {
         void cur_ws_changed();
         void wss_changed_slot();
         void current_changed(int current);
+        void tab_double_clicked(int index);
         void tab_moved(int from, int to);
 
     };

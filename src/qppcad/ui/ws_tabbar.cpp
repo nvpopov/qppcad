@@ -37,6 +37,11 @@ ws_tabbar_t::ws_tabbar_t(QWidget *parent) : QTabBar (parent) {
           this,
           &ws_tabbar_t::tabs_closed);
 
+  connect(this,
+          &ws_tabbar_t::tabBarDoubleClicked,
+          this,
+          &ws_tabbar_t::tab_double_clicked);
+
 //  connect(this,
 //          &ws_tabbar_t::tabMoved,
 //          this,
@@ -65,6 +70,7 @@ void ws_tabbar_t::tabs_closed(int index) {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  // TODO: refractor::code_duplicate(main_window.cpp)
   if (astate->ws_mgr->has_wss() && index >=0 && index < astate->ws_mgr->m_ws.size()) {
       auto cls_ws = astate->ws_mgr->m_ws[index];
       if (cls_ws) {
@@ -117,6 +123,26 @@ void ws_tabbar_t::current_changed(int current) {
 
   if (current >= 0 && current < astate->ws_mgr->m_ws.size())
     astate->ws_mgr->set_cur_id(opt<size_t>(current));
+
+}
+
+void ws_tabbar_t::tab_double_clicked(int index) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (astate->ws_mgr->has_wss() && index >=0 && index < astate->ws_mgr->m_ws.size()) {
+      auto target_ws = astate->ws_mgr->m_ws[index];
+      if (target_ws) {
+          bool ok;
+          QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
+                                               tr("User name:"), QLineEdit::Normal,
+                                               QString::fromStdString(target_ws->m_ws_name), &ok);
+          if (ok && text != "") {
+              target_ws->m_ws_name = text.toStdString();
+              astate->astate_evd->wss_changed();
+            }
+        }
+    }
 
 }
 
