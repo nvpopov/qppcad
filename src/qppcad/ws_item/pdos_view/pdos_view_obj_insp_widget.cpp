@@ -95,4 +95,6 @@ void pdos_view_obj_insp_widget_t::add_data_btn_clicked() {
 
     }
 
+  update_from_ws_item();
+
 }

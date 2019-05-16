@@ -55,19 +55,25 @@ void pdos_view_t::add_data_from_file(const std::string &file_name) {
 
 size_t pdos_view_t::get_num_species() {
 
-  return 0;
+  std::set<size_t> species;
+  for (auto &rec : m_pdos_recs) species.insert(rec.m_atom_kind);
+
+  return species.size();
 
 }
 
 size_t pdos_view_t::get_num_channels() {
 
-  return 0;
+  return m_pdos_recs.size();
 
 }
 
 bool pdos_view_t::is_spin_polarized() {
 
-  return true;
+  for (auto &rec : m_pdos_recs)
+    if (rec.m_spin_polarized) return true;
+
+  return false;
 
 }
 

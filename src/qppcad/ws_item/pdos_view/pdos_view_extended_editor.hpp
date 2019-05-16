@@ -2,6 +2,10 @@
 #define QPP_CAD_PDOS_VIEW_EXTENDED_EDITOR
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/pdos_view/pdos_view.hpp>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+
+QT_CHARTS_USE_NAMESPACE
 
 namespace qpp {
 
@@ -24,11 +28,12 @@ namespace qpp {
 
         bool can_be_binded_to(ws_item_t *item) override;
 
-		QString header_name_hint() override;
-		
+    QString header_name_hint() override;
+
     };
 
-  }
+  } // namespace cad
 
-}
+} // namespace qpp
+
 #endif
