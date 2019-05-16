@@ -58,13 +58,12 @@ QCheckBox::indicator:indeterminate:disabled,QTreeView::indicator:indeterminate:d
 }
 
 QMenu::item {
- padding: 6px 27px 6px 27px;
+ padding: 4px 26px 4px 26px;
  border: 1px solid transparent; /* reserve space for selection border */
 }
 
 QMenu::icon {
  margin-left:4px;
- width:30px;
 }
 
 QMenu::indicator:non-exclusive:unchecked {

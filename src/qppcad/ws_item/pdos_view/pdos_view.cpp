@@ -49,6 +49,28 @@ void pdos_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   ws_item_t::load_from_json(data, rep_info);
 }
 
+void pdos_view_t::add_data_from_file(const std::string &file_name) {
+
+}
+
+size_t pdos_view_t::get_num_species() {
+
+  return 0;
+
+}
+
+size_t pdos_view_t::get_num_channels() {
+
+  return 0;
+
+}
+
+bool pdos_view_t::is_spin_polarized() {
+
+  return true;
+
+}
+
 void pdos_view_t::updated_externally(uint32_t update_reason) {
 
   ws_item_t::updated_externally(update_reason);
