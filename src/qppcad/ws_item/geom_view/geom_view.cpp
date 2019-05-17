@@ -1068,6 +1068,32 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
 
 }
 
+void geom_view_t::begin_structure_change() {
+
+  m_tws_tr->do_action(act_lock | act_clear_all);
+  m_ext_obs->first_data = true;
+
+}
+
+void geom_view_t::end_structure_change() {
+
+  geometry_changed();
+  m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+  m_tws_tr->do_action(act_rebuild_ntable);
+
+}
+
+void geom_view_t::refine_from_frac_coord() {
+
+  begin_structure_change();
+
+  for (size_t i = 0; i < m_geom->nat(); i++)
+    m_geom->coord(i) = m_geom->cell.frac2cart(m_geom->pos(i));
+
+  end_structure_change();
+
+}
+
 std::string geom_view_t::compose_type_descr () {
   return m_geom ? fmt::format("geom. view, DIM = [{}d]", m_geom->DIM) : "geom. view(empty)";
 }

@@ -260,6 +260,10 @@ namespace qpp {
         void delete_selected_atoms();
         void delete_atoms(std::set<int> &to_delete);
 
+        void begin_structure_change();
+        void end_structure_change();
+        void refine_from_frac_coord();
+
         std::string compose_type_descr() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
