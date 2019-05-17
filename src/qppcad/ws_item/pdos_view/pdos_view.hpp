@@ -15,6 +15,8 @@ namespace qpp {
       public:
 
         std::vector<pdos_data_t<float> > m_pdos_recs;
+        float m_pdos_ewindow_low{0};
+        float m_pdos_ewindow_high{1};
 
         pdos_view_t();
 

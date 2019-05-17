@@ -24,6 +24,7 @@ int ws_item_extended_editor_t::get_minimum_width() {
 void ws_item_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
 
   m_binded_item = _binding_item;
+  update_from_ws_item();
 
 }
 

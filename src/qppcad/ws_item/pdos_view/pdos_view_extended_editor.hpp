@@ -20,6 +20,11 @@ namespace qpp {
         pdos_view_t *m_binded_nx{nullptr};
         QVBoxLayout *main_lt;
 
+        // general pdos plot
+        QChart *pdos_gen_chart;
+        QChartView *pdos_gen_chart_view;
+        // end of general pdos plot
+
         pdos_view_extended_editor_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
@@ -28,7 +33,7 @@ namespace qpp {
 
         bool can_be_binded_to(ws_item_t *item) override;
 
-    QString header_name_hint() override;
+        QString header_name_hint() override;
 
     };
 
