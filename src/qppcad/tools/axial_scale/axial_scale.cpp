@@ -39,7 +39,7 @@ void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,
                                            const float scale_b,
                                            const float scale_c) {
   if (al->m_geom->DIM != 3) return;
-  al->m_tws_tr->do_action(act_lock | act_clear_all);
+  al->begin_structure_change();
 
   periodic_cell<float> new_cell(3);
   new_cell.v[0] = al->m_geom->cell.v[0] * scale_a;
@@ -55,7 +55,7 @@ void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,
   al->m_geom->cell.v[1] = new_cell.v[1];
   al->m_geom->cell.v[2] = new_cell.v[2];
 
-  al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+  al->end_structure_change();
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_cell_changed();

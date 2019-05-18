@@ -20,6 +20,9 @@ namespace qpp {
 
   namespace cad {
 
+    /**
+     * @brief The ws_item_io_bt_bhv_t class
+     */
     class ws_item_io_bt_bhv_t : public ws_item_io_inherited_bhv_hooked_t<geom_view_t> {
 
       public:
@@ -28,11 +31,13 @@ namespace qpp {
         bool can_load() override { return false; }
 
          void pre_load_hook(geom_view_t *_item, workspace_t *ws) override {
-          _item->m_tws_tr->do_action(act_lock | act_clear_all);
-          _item->m_ext_obs->first_data = true;
+
+          _item->begin_structure_change();
+
         }
 
          void post_load_hook(geom_view_t *_item, workspace_t *ws) override {
+
           if (_item->m_geom->nat() > 20000) {
               _item->m_render_style = geom_view_render_style_e::billboards;
             }
@@ -41,14 +46,13 @@ namespace qpp {
               _item->m_draw_img_bonds = false;
             }
 
-          _item->geometry_changed();
+          _item->end_structure_change() ;
 
-          _item->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
-          _item->m_tws_tr->do_action(act_rebuild_ntable);
         }
 
         void pre_save_hook(geom_view_t *_item) override {}
         void post_save_hook(geom_view_t *_item) override {}
+
     };
 
     template<auto GENERIC_FUNC_GEOM,

@@ -11,6 +11,7 @@ namespace qpp {
     class embedded_cluster_tools {
 
       public:
+
         static void gen_spherical_cluster(std::shared_ptr<geom_view_t> uc,
                                           vector3<float> displ,
                                           float cluster_r = 30,

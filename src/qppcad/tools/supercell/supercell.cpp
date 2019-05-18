@@ -71,7 +71,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   sc_al->m_geom->cell.DIM = 3;
 
   //sc_al->set_parent_workspace(parent_ws);
-  sc_al->m_tws_tr->do_action(act_lock | act_clear_all);
+  sc_al->begin_structure_change();
 
   sc_al->m_geom->cell.v[0] = al->m_geom->cell.v[0] * (a_steps);
   sc_al->m_geom->cell.v[1] = al->m_geom->cell.v[1] * (b_steps);
@@ -103,8 +103,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
       sc_al->m_draw_img_bonds = false;
     }
 
-  sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
-  sc_al->geometry_changed();
+  sc_al->end_structure_change();
 
   //perform purification
   if (al->m_role == geom_view_role_e::r_uc) {
