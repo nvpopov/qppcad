@@ -6,7 +6,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> uc,
+void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
                                                    vector3<float> displ,
                                                    float cluster_r,
                                                    float cls_r,
@@ -187,15 +187,15 @@ void embedded_cluster_tools::gen_spherical_cluster(std::shared_ptr<geom_view_t> 
     //add connection info
     ws_chg->add_connected_item(ws_cls);
     ws_chg->add_connected_item(ws_qm);
-    ws_chg->add_connected_item(uc);
+    ws_chg->add_connected_item(uc->shared_from_this());
 
     ws_cls->add_connected_item(ws_chg);
     ws_cls->add_connected_item(ws_qm);
-    ws_cls->add_connected_item(uc);
+    ws_cls->add_connected_item(uc->shared_from_this());
 
     ws_qm->add_connected_item(ws_chg);
     ws_qm->add_connected_item(ws_cls);
-    ws_qm->add_connected_item(uc);
+    ws_qm->add_connected_item(uc->shared_from_this());
 
     uc->add_connected_item(ws_cls);
     uc->add_connected_item(ws_qm);
@@ -213,18 +213,14 @@ void embedded_cluster_tools::gen_spherical_cluster_cur(vector3<float> displ,
                                                        bool do_legacy) {
     app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_mgr->has_wss()) {
+    auto [cur_ws, cur_it, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
 
-        auto cur_ws = astate->ws_mgr->get_cur_ws();
-
-        if (cur_ws) {
-            //
-            std::shared_ptr<geom_view_t> as_al =
-                    std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
-
-            if (as_al) gen_spherical_cluster(as_al, displ, cluster_r, cls_r, do_legacy);
-        }
+    if (!ok) {
+      return;
     }
+
+    gen_spherical_cluster(as_al, displ, cluster_r, cls_r, do_legacy);
+
 }
 
 void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
@@ -234,47 +230,41 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
                                                           bool do_legacy) {
     app_state_t *astate = app_state_t::get_inst();
 
-    if (astate->ws_mgr->has_wss()) {
+    auto [cur_ws, cur_it, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
 
-        auto cur_ws = astate->ws_mgr->get_cur_ws();
+    if (!ok) {
+      return;
+    }
 
-        bool succes{false};
 
-        if (cur_ws) {
+    bool succes{false};
 
-            std::shared_ptr<geom_view_t> as_al =
-                    std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
+    if (as_al && as_al->m_role == geom_view_role_e::r_uc) {
+        succes = true;
+        gen_spherical_cluster(as_al, displ, cluster_r, cls_r, true, qm_r, do_legacy);
+        return;
+    }
 
-            if (as_al && as_al->m_role == geom_view_role_e::r_uc) {
+    //try to deduce uc from connected items
+    if (as_al && (as_al->m_role == geom_view_role_e::r_embc_qm ||
+                  as_al->m_role == geom_view_role_e::r_embc_chg ||
+                  as_al->m_role == geom_view_role_e::r_embc_cls ))
+
+        for (auto elem : as_al->m_connected_items) {
+            auto con_al = elem->cast_as<geom_view_t>();
+            if (con_al && con_al->m_role == geom_view_role_e::r_uc) {
                 succes = true;
-                gen_spherical_cluster(as_al, displ, cluster_r, cls_r, true, qm_r, do_legacy);
+                gen_spherical_cluster(con_al, displ, cluster_r, cls_r,
+                                      true, qm_r, do_legacy);
                 return;
             }
-
-            //try to deduce uc from connected items
-            if (as_al && (as_al->m_role == geom_view_role_e::r_embc_qm ||
-                          as_al->m_role == geom_view_role_e::r_embc_chg ||
-                          as_al->m_role == geom_view_role_e::r_embc_cls ))
-
-                for (auto elem : as_al->m_connected_items) {
-                    std::shared_ptr<geom_view_t> con_al =
-                            std::dynamic_pointer_cast<geom_view_t>(elem);
-                    if (con_al && con_al->m_role == geom_view_role_e::r_uc) {
-                        succes = true;
-                        gen_spherical_cluster(con_al, displ, cluster_r, cls_r,
-                                              true, qm_r, do_legacy);
-                        return;
-                    }
-                }
-
         }
 
-        if (!succes) {
-            throw std::runtime_error("Cannot deduce context for embedded cluster generation");
-            return;
-        }
-
+    if (!succes) {
+        throw std::runtime_error("Cannot deduce context for embedded cluster generation");
+        return;
     }
+
 }
 
 void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,

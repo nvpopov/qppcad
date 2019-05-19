@@ -12,7 +12,7 @@ namespace qpp {
 
       public:
 
-        static void gen_spherical_cluster(std::shared_ptr<geom_view_t> uc,
+        static void gen_spherical_cluster(geom_view_t* uc,
                                           vector3<float> displ,
                                           float cluster_r = 30,
                                           float cls_r = 12,
