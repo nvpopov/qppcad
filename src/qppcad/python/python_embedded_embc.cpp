@@ -19,4 +19,6 @@ PYBIND11_EMBEDDED_MODULE(embc, m) {
   m.def("move_qm_to_mm", &embedded_cluster_tools::move_sel_from_qm_to_cls_cur);
   m.def("gen_molcas_embc_sp", &embedded_cluster_tools::generate_molcas_embc_sp_input);
   m.def("gen_orca_embc_sp", &embedded_cluster_tools::generate_orca_embc_sp_input);
+  m.def("find_hs_qm_cluster", &embedded_cluster_tools::find_high_symmetry_qm_cluster);
+
 }

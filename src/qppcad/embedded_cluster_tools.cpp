@@ -6,6 +6,42 @@
 using namespace qpp;
 using namespace qpp::cad;
 
+void embedded_cluster_tools::find_high_symmetry_qm_cluster(geom_view_t *uc,
+                                                           vector3<float> sphere_center,
+                                                           float qm_r_start_scan,
+                                                           float qm_r_end_scan,
+                                                           float symm_tolerance,
+                                                           size_t total_steps) {
+
+  if (qm_r_start_scan > qm_r_end_scan) {
+      throw std::runtime_error("qm_r_start_scan > qm_r_end_scan!");
+      return;
+    }
+
+  if (!uc) {
+      throw std::runtime_error("uc == nullptr");
+      return;
+    }
+
+  float dr = (qm_r_end_scan - qm_r_start_scan) / float(total_steps);
+
+  for (size_t i = 0; i < total_steps; i++) {
+
+      xgeometry<float, periodic_cell<float> > g_all_m(0);
+      g_all_m.set_format({"charge"},{type_real});
+      g_all_m.additive(4) = true;
+      g_all_m.tol_geom = 0.01f;
+
+      float cluster_r = qm_r_start_scan + dr * i;
+      shape_sphere<float> sp(cluster_r, sphere_center);
+      qpp::fill(g_all_m, *uc->m_geom, sp, crowd_ignore | fill_cells);
+
+      py::print(fmt::format("find_hs: i={} r={} nat={}", i, cluster_r, g_all_m.nat()));
+
+    }
+
+}
+
 void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
                                                    vector3<float> displ,
                                                    float cluster_r,
@@ -180,8 +216,8 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
 
     //if (generate_qm && )
 
-    if (ws_chg->m_geom->nat() > 1800) ws_chg->m_render_style =
-        geom_view_render_style_e::xatom_lines;
+    if (ws_chg->m_geom->nat() > 1800)
+      ws_chg->m_render_style = geom_view_render_style_e::xatom_lines;
     //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
     //add connection info

@@ -12,6 +12,13 @@ namespace qpp {
 
       public:
 
+        static void find_high_symmetry_qm_cluster(geom_view_t *uc,
+                                                  vector3<float> sphere_center,
+                                                  float qm_r_start_scan,
+                                                  float qm_r_end_scan,
+                                                  float symm_tolerance,
+                                                  size_t total_steps);
+
         static void gen_spherical_cluster(geom_view_t* uc,
                                           vector3<float> displ,
                                           float cluster_r = 30,
