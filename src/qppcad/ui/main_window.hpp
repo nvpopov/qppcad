@@ -76,6 +76,7 @@ namespace qpp {
         qextended_action *tp_camera_tool_act_b;
         qextended_action *tp_camera_tool_act_c;
 
+        QPushButton *tp_anim_fast_forward;
         QPushButton *tp_force_sel_lbl_vis;
         QPushButton *tp_toggle_atom_override;
         QPushButton *tp_measure_dist;
@@ -203,6 +204,7 @@ namespace qpp {
         void tp_force_sel_lbl_vis_button_clicked(bool checked);
         void tp_toggle_atom_override_button_clicked(bool checked);
         void tp_camera_tool_button_triggered(QAction *action);
+        void tp_fast_forward_anim_clicked();
 
         void apply_camera_view_change(cam_target_view_t target_view);
 
