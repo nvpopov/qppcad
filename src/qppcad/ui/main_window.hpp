@@ -97,6 +97,7 @@ namespace qpp {
         QMenu *file_menu;
         QAction *file_menu_new_ws;
         QAction *file_menu_close_ws;
+        QAction *file_menu_close_all_ws;
         QAction *file_menu_open_ws;
 
         QMenu *file_menu_import_as_new_ws;
@@ -188,6 +189,7 @@ namespace qpp {
         void save_ws();
         void save_ws_as();
         void close_cur_ws();
+        void close_all_ws();
         void rename_cur_ws();
         void change_cur_ws_bg();
         void cam_copy_to_all();

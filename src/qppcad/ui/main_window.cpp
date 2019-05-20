@@ -101,6 +101,14 @@ void main_window::init_menus() {
           this,
           &main_window::close_cur_ws);
 
+  file_menu_close_all_ws = new QAction(this);
+  file_menu_close_all_ws->setText(tr("Close all workspaces"));
+  file_menu->addAction(file_menu_close_all_ws);
+  connect(file_menu_close_all_ws,
+          &QAction::triggered,
+          this,
+          &main_window::close_all_ws);
+
   file_menu_open_ws = new QAction(this);
   file_menu_open_ws->setText(tr("Open workspace"));
   file_menu_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
@@ -867,40 +875,47 @@ void main_window::save_ws_as() {
 void main_window::close_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          QMessageBox::StandardButton reply;
-          reply = QMessageBox::question(this, tr("Workspace -> Close"),
-                                        tr("Do you really want to close the workspace?"),
-                                        QMessageBox::Yes | QMessageBox::No);
-          if (reply == QMessageBox::Yes) {
-              cur_ws->m_marked_for_deletion = true;
-            }
-          else if (reply == QMessageBox::No) {
-
-            }
+  if (ok) {
+      QMessageBox::StandardButton reply;
+      reply = QMessageBox::question(this, tr("Workspace -> Close"),
+                                    tr("Do you really want to close the workspace?"),
+                                    QMessageBox::Yes | QMessageBox::No);
+      if (reply == QMessageBox::Yes) {
+          cur_ws->m_marked_for_deletion = true;
         }
     }
+
+}
+
+void main_window::close_all_ws() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(this, tr("Workspaces -> Close"),
+                                tr("Do you really want to close all workspaces?"),
+                                QMessageBox::Yes | QMessageBox::No);
+  if (reply == QMessageBox::Yes)
+    for (auto ws : astate->ws_mgr->m_ws) ws->m_marked_for_deletion = true;
 
 }
 
 void main_window::rename_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          bool ok;
-          QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
-                                               tr("User name:"), QLineEdit::Normal,
-                                               QString::fromStdString(cur_ws->m_ws_name), &ok);
-          if (ok && text != "") {
-              cur_ws->m_ws_name = text.toStdString();
-              astate->astate_evd->wss_changed();
-            }
+  if (ok) {
+      bool ok_q;
+      QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
+                                           tr("User name:"), QLineEdit::Normal,
+                                           QString::fromStdString(cur_ws->m_ws_name), &ok_q);
+      if (ok_q && text != "") {
+          cur_ws->m_ws_name = text.toStdString();
+          astate->astate_evd->wss_changed();
         }
     }
 
@@ -944,25 +959,20 @@ void main_window::cur_ws_changed() {
 
   change_camera_buttons_visible(false, false);
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
-          view_menu_show_oi->setVisible(true);
-          view_menu_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
-          std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
-                                               cur_ws->m_ws_name, cur_ws->m_fs_path);
-          this->setWindowTitle(QString::fromStdString(title_text));
-          //tools_menu_sc_generator->setEnabled(true);
-        } else {
-          this->setWindowTitle("qpp::cad");
-        }
-    } else {
-      //tools_menu_sc_generator->setEnabled(false);
-      view_menu_show_oi->setChecked(false);
-      view_menu_show_oi->setVisible(false);
-      this->setWindowTitle("qpp::cad");
-    }
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+
+  if (ok) {
+      view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
+      view_menu_show_oi->setVisible(true);
+      view_menu_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
+      std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
+                                           cur_ws->m_ws_name, cur_ws->m_fs_path);
+      this->setWindowTitle(QString::fromStdString(title_text));
+  } else {
+    view_menu_show_oi->setChecked(false);
+    view_menu_show_oi->setVisible(false);
+    this->setWindowTitle("qpp::cad");
+  }
 
   wss_changed_slot();
   cur_ws_properties_changed();
@@ -1014,17 +1024,16 @@ void main_window::cur_ws_properties_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
-          tp_edit_mode_item->blockSignals(true);
-          tp_edit_mode_content->blockSignals(true);
-          tp_edit_mode_item->setChecked(check_t);
-          tp_edit_mode_content->setChecked(!check_t);
-          tp_edit_mode_item->blockSignals(false);
-          tp_edit_mode_content->blockSignals(false);
-        }
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+
+  if (ok) {
+      bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
+      tp_edit_mode_item->blockSignals(true);
+      tp_edit_mode_content->blockSignals(true);
+      tp_edit_mode_item->setChecked(check_t);
+      tp_edit_mode_content->setChecked(!check_t);
+      tp_edit_mode_item->blockSignals(false);
+      tp_edit_mode_content->blockSignals(false);
     }
 
   astate->make_viewport_dirty();
@@ -1240,14 +1249,13 @@ void main_window::tp_angle_button_clicked(bool checked) {
 void main_window::ws_edit_mode_selector_button_clicked(int id) {
 
   app_state_t* astate = app_state_t::get_inst();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          if (id == 0) cur_ws->m_edit_type = ws_edit_e::edit_item;
-          else cur_ws->m_edit_type = ws_edit_e::edit_content;
-        }
+  if (ok) {
+      if (id == 0) cur_ws->m_edit_type = ws_edit_e::edit_item;
+      else cur_ws->m_edit_type = ws_edit_e::edit_content;
     }
+
   astate->astate_evd->cur_ws_edit_type_changed();
   cur_ws_properties_changed();
 
@@ -1386,13 +1394,13 @@ void main_window::toggle_ws_edit_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          cur_ws->toggle_edit_mode();
-          cur_ws_changed();
-        }
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+
+  if (ok) {
+      cur_ws->toggle_edit_mode();
+      cur_ws_changed();
     }
+
 }
 
 void main_window::toggle_fullscreen(bool checked) {
@@ -1788,9 +1796,9 @@ void main_window::control_bhv_menus_activity() {
 void main_window::make_screenshot() {
 
   app_state_t* astate = app_state_t::get_inst();
-  if (!astate->ws_mgr) return;
-  auto cur_ws = astate->ws_mgr->get_cur_ws();
-  if (!cur_ws) return;
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+
+  if (!ok) return;
 
   QDateTime date = QDateTime::currentDateTime();
   QString date_s = date.toString("dd_MM_yyyy_hh_mm_ss");
