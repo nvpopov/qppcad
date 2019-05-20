@@ -75,6 +75,7 @@ namespace qpp {
         void load_ws_from_json(const std::string filename);
         void update(float delta_time);
         void set_edit_type(const ws_edit_e new_edit_type);
+        void copy_camera(std::shared_ptr<workspace_t> source);
 
         std::string py_get_repr();
         std::shared_ptr<ws_item_t> py_construct_item(std::string class_name,

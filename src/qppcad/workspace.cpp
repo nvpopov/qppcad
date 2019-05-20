@@ -451,6 +451,17 @@ void workspace_t::set_edit_type (const ws_edit_e new_edit_type) {
 
 }
 
+void workspace_t::copy_camera(std::shared_ptr<workspace_t> source) {
+
+  if (!source) return;
+  if (!source->m_camera) return;
+  if (!m_camera) return;
+
+  app_state_t *astate = app_state_t::get_inst();
+  m_camera->copy_from_camera(*source->m_camera);
+
+}
+
 std::string workspace_t::py_get_repr() {
   return fmt::format("[workspace, name=\"{}\"]", m_ws_name);
 }

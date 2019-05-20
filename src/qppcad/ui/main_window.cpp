@@ -229,6 +229,14 @@ void main_window::init_menus() {
           &QAction::triggered,
           this,
           &main_window::change_cur_ws_bg);
+
+  ws_copy_cam = new QAction(this);
+  ws_copy_cam->setText(tr("Copy camera to all"));
+  ws_menu->addAction(ws_copy_cam);
+  connect(ws_copy_cam,
+          &QAction::triggered,
+          this,
+          &main_window::cam_copy_to_all);
   // end workspace menu
 
   // view menu
@@ -682,6 +690,7 @@ void main_window::wss_changed_slot() {
       ws_menu_rename_ws->setEnabled(true);
       view_menu_show_gizmo->setEnabled(true);
       view_menu_show_gizmo->setVisible(true);
+      ws_copy_cam->setEnabled(true);
       //obj_insp_widget->setVisible()
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
           auto ws = astate->ws_mgr->m_ws[i];
@@ -699,6 +708,7 @@ void main_window::wss_changed_slot() {
       ws_menu_rename_ws->setEnabled(false);
       view_menu_show_gizmo->setEnabled(false);
       view_menu_show_gizmo->setVisible(false);
+      ws_copy_cam->setEnabled(false);
     }
 
   tp_ws_selector->blockSignals(false);
@@ -889,6 +899,7 @@ void main_window::change_cur_ws_bg() {
   app_state_t* astate = app_state_t::get_inst();
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+
   if (ok) {
       QColor _stored_color = QColor::fromRgbF(cur_ws->m_background_color[0],
           cur_ws->m_background_color[1], cur_ws->m_background_color[2]);
@@ -900,6 +911,18 @@ void main_window::change_cur_ws_bg() {
           astate->make_viewport_dirty();
         }
     }
+
+}
+
+void main_window::cam_copy_to_all() {
+
+  app_state_t* astate = app_state_t::get_inst();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+  if (!ok && !cur_ws) return;
+
+  for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
+    if (cur_ws != astate->ws_mgr->m_ws[i])
+      astate->ws_mgr->m_ws[i]->copy_camera(cur_ws);
 
 }
 

@@ -59,9 +59,6 @@ namespace qpp {
         QHBoxLayout *tool_panel_layout;
 
         QComboBox *tp_ws_selector;
-
-//        QCheckBox *tp_show_obj_insp;
-//        QCheckBox *tp_show_gizmo;
         QPushButton *tp_print_screen;
 
         QFrame *tp_edit_mode_start;
@@ -135,6 +132,7 @@ namespace qpp {
         QMenu *ws_menu;
         QAction *ws_menu_rename_ws;
         QAction *ws_menu_bg_color;
+        QAction *ws_copy_cam;
 
         QMenu *view_menu;
         QAction *view_menu_show_oi;
@@ -191,6 +189,7 @@ namespace qpp {
         void close_cur_ws();
         void rename_cur_ws();
         void change_cur_ws_bg();
+        void cam_copy_to_all();
 
         void cur_ws_changed();
         void cur_ws_selected_item_changed();

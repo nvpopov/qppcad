@@ -934,10 +934,10 @@ void simple_query::camera_mode(int mode) {
 void simple_query::copy_camera_from_ws(int ws_id) {
 
   app_state_t *astate = app_state_t::get_inst();
-  if (astate->camera) {
-      auto ws_ref = astate->ws_mgr->get_ws(ws_id);
-      if (ws_ref) astate->camera->copy_from_camera(*(ws_ref->m_camera));
-    }
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+  if (!ok) return;
+  auto ws_ref = astate->ws_mgr->get_ws(ws_id);
+  cur_ws->copy_camera(ws_ref);
 
 }
 
