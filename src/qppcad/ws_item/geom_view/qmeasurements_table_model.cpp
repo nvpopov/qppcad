@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/geom_view/qmeasurements_table_model.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

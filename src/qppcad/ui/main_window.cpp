@@ -4,6 +4,9 @@
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <QDateTime>
 #include <QColorDialog>
 

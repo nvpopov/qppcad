@@ -1,4 +1,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>

@@ -1,6 +1,7 @@
 #include <qppcad/python/python_simple_query.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/traj_hl/traj_hl.hpp>

@@ -3,6 +3,11 @@
 #include <qppcad/ws_item/geom_view/geom_view_render_dlines.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_render_xlines.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_render_billboards.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_lattice_planes_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_sel_groups_subsys.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/json_helpers.hpp>
 #include <qppcad/app_state.hpp>

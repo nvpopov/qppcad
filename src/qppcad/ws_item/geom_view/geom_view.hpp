@@ -11,17 +11,19 @@
 #include <io/comp_chem_data.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/render/camera.hpp>
-
-#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
-#include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
-#include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
-#include <qppcad/ws_item/geom_view/geom_view_lattice_planes_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_render_buffered_billboards.hpp>
 #include <deque>
 
 namespace qpp {
 
   namespace cad {
+
+    /** Fwd decls */
+
+    class geom_view_anim_subsys_t;
+    class geom_view_msr_subsys_t;
+    class geom_view_labels_subsys_t;
+    class geom_view_lat_planes_subsys_t;
 
     /**
      * @brief The geom_view_render_style_e enum
