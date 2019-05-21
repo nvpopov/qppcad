@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_sel_groups_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
 #include <qppcad/app_state.hpp>
@@ -924,6 +925,33 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
 void geom_view_obj_insp_widget_t::construct_select_tab() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
+  // general settings
+  ts_gb_general = new qspoiler_widget_t(tr("Selection groups"));
+  ts_gb_general_lt = new QFormLayout;
+  ts_gb_general->add_content_layout(ts_gb_general_lt);
+
+  ts_total_groups = new QLabel;
+  ts_auto_apply = new qbinded_checkbox_t;
+  ts_cur_sel_grp = new QComboBox;
+  ts_cur_sel_grp->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
+
+  ts_gb_general_lt->addRow(tr("Total groups"), ts_total_groups);
+  ts_gb_general_lt->addRow(tr("Auto apply"), ts_auto_apply);
+  ts_gb_general_lt->addRow(tr("Current group"), ts_cur_sel_grp);
+
+  init_form_lt(ts_gb_general_lt);
+
+  // detail settings
+  ts_gb_sel_grp_details = new qspoiler_widget_t(tr("Selection group - Details"));
+  ts_gb_sel_grp_details_lt = new QFormLayout;
+  ts_gb_sel_grp_details->add_content_layout(ts_gb_sel_grp_details_lt);
+
+  tab_select->tab_inner_widget_lt->addWidget(ts_gb_general);
+  tab_select->tab_inner_widget_lt->addWidget(ts_gb_sel_grp_details);
+  tab_select->tab_inner_widget_lt->addStretch(1);
+
 }
 
 void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
@@ -1133,6 +1161,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   bt_mdl->unbind();
 
   unbind_dist_measure_tab();
+  unbind_select_tab();
 
   b_al = nullptr;
 
@@ -1242,6 +1271,18 @@ void geom_view_obj_insp_widget_t::unbind_angle_measure_tab() {
 
   tms_angle_order->unbind_value();
   tms_angle_order->setEnabled(false);
+
+}
+
+void geom_view_obj_insp_widget_t::bind_select_tab() {
+
+  ts_auto_apply->bind_value(&b_al->m_selg->m_auto_apply);
+
+}
+
+void geom_view_obj_insp_widget_t::unbind_select_tab() {
+
+  ts_auto_apply->unbind_value();
 
 }
 
@@ -1596,12 +1637,29 @@ void geom_view_obj_insp_widget_t::update_select_tab() {
 
   if (b_al) {
 
+      bind_select_tab();
+
+      ts_total_groups->setText(QString("%1").arg(b_al->m_selg->m_sel_grps.size()));
+      ts_cur_sel_grp->blockSignals(true);
+      ts_cur_sel_grp->clear();
+      ts_cur_sel_grp->addItem(tr("None"));
+      for (size_t i = 0 ; i < b_al->m_selg->m_sel_grps.size(); i++)
+        ts_cur_sel_grp->addItem(QString("[%1] %2")
+                                .arg(i)
+                                .arg(QString::fromStdString(b_al->m_selg->m_sel_grps[i].m_name)));
+      ts_cur_sel_grp->blockSignals(false);
+
       if (b_al->m_parent_ws &&
           b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
           set_tab_enabled(tab_select, true);
         } else {
           set_tab_enabled(tab_select, false);
         }
+
+    } else {
+
+      unbind_select_tab();
+
     }
 
 }

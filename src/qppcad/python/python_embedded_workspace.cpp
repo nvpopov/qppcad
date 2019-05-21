@@ -6,9 +6,11 @@
 
 #include <qppcad/ws_item/ws_item_trampoline.hpp>
 #include <qppcad/workspace.hpp>
+#include <symm/index.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_sel_groups_subsys.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
@@ -196,6 +198,38 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
   py_geom_view_anim.def("is_cell_animable", &geom_view_anim_subsys_t::is_cell_animable);
   py_geom_view_anim.def("get_cell_vectors", &geom_view_anim_subsys_t::get_cell_vectors);
 
+  py::class_<atom_index_set_key, std::shared_ptr<atom_index_set_key> >
+  py_atom_index_set_key(m, "atom_index_set_key_t");
+  py_atom_index_set_key.def_readwrite("atm", &atom_index_set_key::m_atm);
+  py_atom_index_set_key.def_readwrite("idx", &atom_index_set_key::m_idx);
+  py_atom_index_set_key.def(py::init<const int, const qpp::index>());
+  py_atom_index_set_key.def("__str__",
+                            [](atom_index_set_key &src) {
+                              return fmt::format("atm={}, idx={}", src.m_atm, src.m_idx);
+                            });
+
+  py::class_<geom_view_sel_group_t, std::shared_ptr<geom_view_sel_group_t> >
+  py_geom_view_sel_group(m, "geom_view_sel_group_t");
+  py_geom_view_sel_group.def_readwrite("name", &geom_view_sel_group_t::m_name);
+  py_geom_view_sel_group.def(py::init<std::string&>());
+  py_geom_view_sel_group.def("append", &geom_view_sel_group_t::append);
+  py_geom_view_sel_group.def("remove", &geom_view_sel_group_t::remove);
+  py_geom_view_sel_group.def("__len__", [](geom_view_sel_group_t &selg) {
+    return selg.m_data.size();
+  });
+  py_geom_view_sel_group.def("__getitem__", [](geom_view_sel_group_t &selg, size_t i) {
+    if (i >= selg.m_data.size()) throw py::index_error();
+    return selg.m_data[i];
+  }, py::return_value_policy::reference_internal);
+
+  py::class_<geom_view_sel_groups_subsys_t, std::shared_ptr<geom_view_sel_groups_subsys_t> >
+  pygeom_view_sel_groups_subsys(m, "geom_view_sel_groups_subsys_t");
+  pygeom_view_sel_groups_subsys.def("make_from_selected",
+                                    &geom_view_sel_groups_subsys_t::make_from_selected);
+  pygeom_view_sel_groups_subsys.def("__len__", [](geom_view_sel_groups_subsys_t &sels) {
+    return sels.m_sel_grps.size();
+  });
+
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(m, "geom_view_t", py_ws_item_t);
   py_atoms_list_t.def_readwrite("geom", &geom_view_t::m_geom);
@@ -281,6 +315,7 @@ PYBIND11_EMBEDDED_MODULE(wss, m) {
 
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
   py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);
+  py_atoms_list_t.def_readonly("sg", &geom_view_t::m_selg);
 
   py::class_<psg_view_t, std::shared_ptr<psg_view_t> >
   py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);

@@ -253,6 +253,15 @@ namespace qpp {
 
         //START TAB SELECTIONS
         ws_item_tab_widget_t *tab_select;
+        qspoiler_widget_t *ts_gb_general;
+        QFormLayout *ts_gb_general_lt;
+        QLabel *ts_total_groups;
+        qbinded_checkbox_t *ts_auto_apply;
+        QComboBox *ts_cur_sel_grp;
+
+        qspoiler_widget_t *ts_gb_sel_grp_details;
+        QFormLayout *ts_gb_sel_grp_details_lt;
+
         //END TAB SELECTIONS
 
         void construct_general_tab();
@@ -271,6 +280,9 @@ namespace qpp {
         void unbind_dist_measure_tab();
         void bind_angle_measure_tab();
         void unbind_angle_measure_tab();
+
+        void bind_select_tab();
+        void unbind_select_tab();
 
         void update_anim_tab();
         void update_anim_tab_visibility();

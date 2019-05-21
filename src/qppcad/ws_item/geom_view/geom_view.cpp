@@ -96,6 +96,7 @@ geom_view_t::geom_view_t(): ws_item_t () {
   m_measure = std::make_shared<geom_view_msr_subsys_t>(*this);
   m_labels = std::make_shared<geom_view_labels_subsys_t>(*this);
   m_lat_planes = std::make_shared<geom_view_lat_planes_subsys_t>(*this);
+  m_selg = std::make_shared<geom_view_sel_groups_subsys_t>(*this);
 
 }
 

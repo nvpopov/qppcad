@@ -24,6 +24,7 @@ namespace qpp {
     class geom_view_msr_subsys_t;
     class geom_view_labels_subsys_t;
     class geom_view_lat_planes_subsys_t;
+    class geom_view_sel_groups_subsys_t;
 
     /**
      * @brief The geom_view_render_style_e enum
@@ -100,6 +101,7 @@ namespace qpp {
         std::shared_ptr<geom_view_msr_subsys_t> m_measure{};
         std::shared_ptr<geom_view_labels_subsys_t> m_labels{};
         std::shared_ptr<geom_view_lat_planes_subsys_t> m_lat_planes{};
+        std::shared_ptr<geom_view_sel_groups_subsys_t> m_selg{};
         std::unique_ptr<bonding_table<float> > m_bt{};
         std::unique_ptr<tws_tree_t<float, periodic_cell<float> > > m_tws_tr{};
         std::unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs{};
