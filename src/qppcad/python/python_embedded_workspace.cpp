@@ -87,7 +87,7 @@ void mvd() {
 
 }
 
-PYBIND11_EMBEDDED_MODULE(wss, m) {
+PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >(m, "workspace_manager_t")
       .def("__len__", [](const workspace_manager_t &wsm){ return wsm.m_ws.size();})

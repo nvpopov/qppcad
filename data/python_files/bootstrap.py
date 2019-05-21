@@ -5,7 +5,7 @@ import pyqpp as pq
 import rlcompleter
 import sys
 import embc
-import wss
+import cad
 
 ws = get_wsm()
 

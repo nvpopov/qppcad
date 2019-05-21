@@ -3,6 +3,10 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <io/pdos.hpp>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+
+QT_CHARTS_USE_NAMESPACE
 
 namespace qpp {
 
