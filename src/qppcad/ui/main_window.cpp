@@ -1063,63 +1063,63 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
       need_to_hide_atom_override = true;
 
     if (as_al->m_atom_idx_sel.size() == 1 &&
-        cur_ws->m_edit_type == ws_edit_e::edit_content) {
-        need_to_hide_atom_override = false;
-        tp_toggle_atom_override->show();
-        size_t atom_idx = as_al->m_atom_idx_sel.begin()->m_atm;
+      cur_ws->m_edit_type == ws_edit_e::edit_content) {
+      need_to_hide_atom_override = false;
+      tp_toggle_atom_override->show();
+      size_t atom_idx = as_al->m_atom_idx_sel.begin()->m_atm;
 
-        tp_toggle_atom_override->blockSignals(true);
+      tp_toggle_atom_override->blockSignals(true);
 
-        tp_toggle_atom_override->setChecked(
-              as_al->m_geom->xfield<bool>(xgeom_override,atom_idx));
+      tp_toggle_atom_override->setChecked(
+            as_al->m_geom->xfield<bool>(xgeom_override,atom_idx));
 
-        tp_toggle_atom_override->blockSignals(false);
-      }
+      tp_toggle_atom_override->blockSignals(false);
+    }
 
     if (as_al->m_atom_idx_sel.size() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
-        tp_measure_angle->hide();
-        tp_measure_dist->show();
-        need_to_hide_al_cntls = false;
-        auto it1 = as_al->m_atom_idx_sel.begin();
-        auto it2 = ++(as_al->m_atom_idx_sel.begin());
+      tp_measure_angle->hide();
+      tp_measure_dist->show();
+      need_to_hide_al_cntls = false;
+      auto it1 = as_al->m_atom_idx_sel.begin();
+      auto it2 = ++(as_al->m_atom_idx_sel.begin());
 
-        auto cur_sel = as_al->m_measure->is_bond_msr_exists(
-                         it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
-        tp_measure_dist->blockSignals(true);
-        tp_measure_dist->setChecked(cur_sel != std::nullopt);
-        tp_measure_dist->blockSignals(false);
+      auto cur_sel = as_al->m_measure->is_bond_msr_exists(
+                       it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
+      tp_measure_dist->blockSignals(true);
+      tp_measure_dist->setChecked(cur_sel != std::nullopt);
+      tp_measure_dist->blockSignals(false);
 
-      }
+    }
 
     if (as_al->m_atom_idx_sel.size() == 3 &&
         cur_ws->m_edit_type == ws_edit_e::edit_content &&
         as_al->m_atom_ord_sel.size() == 3) {
 
-        need_to_hide_al_cntls = false;
+      need_to_hide_al_cntls = false;
 
-        auto cur_sel = as_al->m_measure->is_angle_msr_exists(as_al->m_atom_ord_sel[0].m_atm,
-                                                             as_al->m_atom_ord_sel[1].m_atm,
-                                                             as_al->m_atom_ord_sel[2].m_atm,
-                                                             as_al->m_atom_ord_sel[0].m_idx,
-                                                             as_al->m_atom_ord_sel[1].m_idx,
-                                                             as_al->m_atom_ord_sel[2].m_idx);
+      auto cur_sel = as_al->m_measure->is_angle_msr_exists(as_al->m_atom_ord_sel[0].m_atm,
+                                                           as_al->m_atom_ord_sel[1].m_atm,
+                                                           as_al->m_atom_ord_sel[2].m_atm,
+                                                           as_al->m_atom_ord_sel[0].m_idx,
+                                                           as_al->m_atom_ord_sel[1].m_idx,
+                                                           as_al->m_atom_ord_sel[2].m_idx);
 
-        tp_measure_dist->hide();
-        tp_measure_angle->show();
-        tp_measure_angle->blockSignals(true);
-        tp_measure_angle->setChecked(cur_sel != std::nullopt);
-        tp_measure_angle->blockSignals(false);
+      tp_measure_dist->hide();
+      tp_measure_angle->show();
+      tp_measure_angle->blockSignals(true);
+      tp_measure_angle->setChecked(cur_sel != std::nullopt);
+      tp_measure_angle->blockSignals(false);
 
-      }
+    }
 
     //process labels state
     bool all_sel_lbls_vis = true;
     for (auto &rec : as_al->m_atom_idx_sel)
       if (!as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm)) {
-          all_sel_lbls_vis = false;
-          break;
-        }
+        all_sel_lbls_vis = false;
+        break;
+      }
 
     tp_force_sel_lbl_vis->blockSignals(true);
     tp_force_sel_lbl_vis->setChecked(all_sel_lbls_vis || as_al->m_atom_idx_sel.empty());

@@ -827,6 +827,13 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
                                                     const std::string file_format,
                                                     bool create_new_ws) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (!QFileInfo(QString::fromStdString(file_name)).exists()) {
+      astate->tlog("@ERROR while opening file \"{}\" - invalid name of the file", file_name);
+      return;
+    }
+
   if (file_name.find("json") != std::string::npos ||
       file_format.find("json") != std::string::npos) {
       load_from_file(file_name, false);

@@ -57,6 +57,13 @@ int main (int argc, char **argv) {
       for (auto &rec : args)
         astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format);
 
+    } else {
+
+      if (parser.isSet(target_fmt_option)) {
+          astate->tlog("Invalid input");
+          return 0;
+        }
+
     }
 
   QSurfaceFormat format;
