@@ -22,6 +22,8 @@ namespace qpp {
         float m_pdos_ewindow_low{0};
         float m_pdos_ewindow_high{1};
 
+        QChart *pdos_gen_chart;
+
         pdos_view_t();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -40,6 +42,7 @@ namespace qpp {
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
         void add_data_from_file(const std::string &file_name);
+        void rebuild_plots();
 
         size_t get_num_species();
         size_t get_num_channels();

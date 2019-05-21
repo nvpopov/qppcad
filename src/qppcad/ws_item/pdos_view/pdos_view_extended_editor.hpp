@@ -21,7 +21,6 @@ namespace qpp {
         QVBoxLayout *main_lt;
 
         // general pdos plot
-        QChart *pdos_gen_chart;
         QChartView *pdos_gen_chart_view;
         // end of general pdos plot
 

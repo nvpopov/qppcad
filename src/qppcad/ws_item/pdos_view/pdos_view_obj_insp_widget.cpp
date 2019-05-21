@@ -92,19 +92,7 @@ void pdos_view_obj_insp_widget_t::add_data_btn_clicked() {
 
       for (auto &file_name : ls) {
 
-          bool succes{false};
-          auto _file_name = file_name.toStdString();
-          pdos_data_t<float> pdos_rec;
-          std::ifstream pdos_file(_file_name);
 
-          if (res == m_data_target_cp2k) {
-              read_cp2k_pdos(_file_name, pdos_file, pdos_rec);
-              succes = true;
-            } else if (res == m_data_target_vasp) {
-
-            }
-
-          if (succes && m_pdv) m_pdv->m_pdos_recs.push_back(std::move(pdos_rec));
 
         }
 
