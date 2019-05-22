@@ -15,6 +15,7 @@ pdos_view_extended_editor_t::pdos_view_extended_editor_t() {
 
 
   pdos_gen_chart_view = new QChartView;
+  pdos_gen_chart_view->setRubberBand(QChartView::RectangleRubberBand);
  // pdos_gen_chart_view->setChart(pdos_gen_chart);
 
   main_lt->addWidget(pdos_gen_chart_view);
@@ -26,16 +27,19 @@ void pdos_view_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
 
   if (!_binding_item) {
       m_binded_nx = nullptr;
+      pdos_gen_chart_view->setChart(nullptr);
       return;
     }
 
   auto as_nx = _binding_item->cast_as<pdos_view_t>();
   if (!as_nx) {
       m_binded_nx = nullptr;
+      pdos_gen_chart_view->setChart(nullptr);
       return;
     }
 
   m_binded_nx = as_nx;
+  pdos_gen_chart_view->setChart(m_binded_nx->m_pdos_gen_chart);
 
   ws_item_extended_editor_t::bind_to_item(_binding_item);
 
