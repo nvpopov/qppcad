@@ -2,8 +2,7 @@
 import sys
 import os
 
-hpp_tmp = """
-#ifndef QPP_CAD_TOOL_#UCLASS_NAME
+hpp_tmp = """#ifndef QPP_CAD_TOOL_#UCLASS_NAME
 #define QPP_CAD_TOOL_#UCLASS_NAME
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
@@ -14,23 +13,23 @@ namespace qpp {
 
     class #CLASS_NAME_tool_t : public ws_item_tool_t {
       public:
-        void exec(ws_item_t *item) override;
+        void exec(ws_item_t *item, uint32_t _error_ctx) override;
     };
-  }
-
-}
+    
+  } // namespace cad
+ 
+} // namespace qpp
 
 #endif
 """
 
-cpp_tmp = """
-#include <qppcad/tools/#CLASS_NAME/#CLASS_NAME.hpp>
+cpp_tmp = """#include <qppcad/tools/#CLASS_NAME/#CLASS_NAME.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-void #CLASS_NAME_tool_t::exec(ws_item_t *item) {
+void #CLASS_NAME_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
 }
 """
