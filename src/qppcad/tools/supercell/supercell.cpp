@@ -35,7 +35,6 @@ void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-
   super_cell_widget_t scw;
   int ret_code = scw.exec();
   int rep_a = scw.get_replication_coeff(0);
