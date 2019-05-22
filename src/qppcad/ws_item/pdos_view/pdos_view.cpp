@@ -13,12 +13,12 @@ pdos_view_t::pdos_view_t() {
 }
 
 void pdos_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                          vector3<float> &out_look_at) {
+                                        vector3<float> &out_look_at) {
   //do nothing
 }
 
 void pdos_view_t::render() {
- //do nothing
+  //do nothing
 }
 
 bool pdos_view_t::mouse_click(ray_t<float> *click_ray) {
@@ -86,25 +86,25 @@ void pdos_view_t::rebuild_plots() {
       QLineSeries* series = new QLineSeries();
 
       auto last_e = rec.m_data[0](0,0);
-      const auto last_e_th = 0.1;
+      const auto last_e_th = 0.01;
 
       for (auto &inner_rec : rec.m_data) {
 
           float cur_e = inner_rec(0,0);
-//          int zr_steps = 5;
-//          float d_e = cur_e - last_e;
-//          float dd_e = d_e / zr_steps;
+          int zr_steps = 5;
+          float d_e = cur_e - last_e;
+          float dd_e = d_e / zr_steps;
 
-//          if (d_e > last_e_th) {
-//              for (size_t i = 0; i > 5; i++)
-//                series->append(cur_e + dd_e * i, 0);
-//            }
+          if (d_e > last_e_th) {
+              for (size_t i = 0; i > 5; i++)
+                series->append(cur_e + dd_e * i, 0);
+            }
 
           // sum over occupancy
           float occ = 0;
           for (size_t i = 2; i < inner_rec.size(); i++) occ += inner_rec(0,i);
           astate->tlog("@PLOT_BUILD {} {}", cur_e, rec.m_is_alpha ? occ : -occ);
-          series->append(cur_e, rec.m_is_alpha ? occ : -occ);
+          series->append(cur_e,rec.m_spin_polarized ?(rec.m_is_alpha ? occ : -occ) : occ);
           last_e = cur_e;
 
         }
@@ -113,7 +113,7 @@ void pdos_view_t::rebuild_plots() {
                       .arg(QString::fromStdString(rec.m_specie_name))
                       .arg(rec.m_spin_polarized ?
                              rec.m_is_alpha ? "(↑)" : "(↓)" :
-                             "(↑↓)")
+                                              "(↑↓)")
                       );
       m_pdos_gen_chart->addSeries(series);
 
