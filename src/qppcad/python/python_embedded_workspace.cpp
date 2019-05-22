@@ -14,6 +14,8 @@
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
+#include <qppcad/ws_item/pdos_view/pdos_view.hpp>
+#include <io/ccd_programs.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -176,6 +178,17 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
           .value("anim_vib", anim_vib, "anim_vib")
           .export_values();
 
+  py::enum_<comp_chem_program_e>(m, "comp_chem_program_e", py::arithmetic(), "")
+          .value("pr_unknown", pr_unknown, "pr_unknown")
+          .value("pr_vasp", pr_vasp, "pr_vasp")
+          .value("pr_firefly", pr_firefly, "pr_firefly")
+          .value("pr_pc_gamess", pr_pc_gamess, "pr_pc_gamess")
+          .value("pr_cp2k", pr_cp2k, "pr_cp2k")
+          .value("pr_orca", pr_orca, "pr_orca")
+          .value("pr_molcas", pr_molcas, "pr_molcas")
+          .value("pr_molden", pr_molden, "pr_molden")
+          .export_values();
+
   py::class_<geom_view_anim_subsys_t, std::shared_ptr<geom_view_anim_subsys_t> >
   py_geom_view_anim(m, "geom_view_anim_subsys_t");
   py_geom_view_anim.def("nanim", &geom_view_anim_subsys_t::get_total_anims);
@@ -333,5 +346,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_node_book_t.def("num_sck", [](node_book_t &src){return src.m_scene->m_sockets.size();});
   py_node_book_t.def("num_con", [](node_book_t &src){return src.m_scene->m_connections.size();});
   py_node_book_t.def("execute", &node_book_t::execute);
+
+  py::class_<pdos_view_t, std::shared_ptr<pdos_view_t> >
+  py_pdos_view_t(m, "pdos_view_t", py_ws_item_t);
+  py_pdos_view_t.def("load", &pdos_view_t::py_load_from_list);
 
 }

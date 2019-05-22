@@ -28,8 +28,6 @@ namespace qpp {
         QLabel *pdos_info_is_spin_polarized;
         QLabel *pdos_info_num_species;
         QLabel *pdos_info_num_channels;
-        qbinded_float_spinbox_t *pdos_ewindow_low;
-        qbinded_float_spinbox_t *pdos_ewindow_high;
 
         pdos_view_obj_insp_widget_t();
 
