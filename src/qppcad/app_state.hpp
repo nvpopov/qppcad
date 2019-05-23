@@ -91,6 +91,8 @@ namespace qpp {
                              const bool is_native,
                              const size_t bhv_id);
 
+        size_t m_utility_thread_count;
+
         app_state_event_disp_t *astate_evd;
         glapi_t *glapi;
         camera_t *camera{nullptr};

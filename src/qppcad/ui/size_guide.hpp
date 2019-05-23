@@ -35,6 +35,7 @@ namespace qpp {
          * @return fixed height of app`s tool panel
          */
         int tool_panel_h();
+        int tool_panel_h_exact();
 
         /**
          * @brief tool_panel_ws_selector_w

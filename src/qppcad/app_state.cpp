@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <data/ptable.hpp>
+#include <thread>
 
 namespace qpp {
 
@@ -17,7 +18,10 @@ namespace qpp {
     }
 
     app_state_t::app_state_t() {
+
       astate_evd = new app_state_event_disp_t;
+      m_utility_thread_count = std::thread::hardware_concurrency();
+
     }
 
     void app_state_t::init_glapi(){
@@ -90,7 +94,7 @@ namespace qpp {
       m_app_palette.setColor(QPalette::Disabled, QPalette::Highlight,QColor(50,50,50));
       m_app_palette.setColor(QPalette::HighlightedText, Qt::white);
       m_app_palette.setColor(QPalette::Disabled, QPalette::HighlightedText,
-                                     QColor(127,127,127));
+                             QColor(127,127,127));
 
       m_bgfg_light_pal.setColor(QPalette::Foreground, QColor(110, 110, 110));
       m_bgfg_light_pal.setColor(QPalette::Background, QColor(110, 110, 110));
@@ -227,8 +231,8 @@ namespace qpp {
       for (auto &key : keys_v) {
           QStringList _sl = settings.value(key).toStringList();
           if (_sl.size() == 3)
-              m_cache_vector[key.toStdString()] =
-                  vector3<float>(_sl[0].toDouble(), _sl[1].toDouble(), _sl[2].toDouble());
+            m_cache_vector[key.toStdString()] =
+                vector3<float>(_sl[0].toDouble(), _sl[1].toDouble(), _sl[2].toDouble());
         }
       settings.endGroup();
 
@@ -366,11 +370,11 @@ namespace qpp {
       //log(fmt::format("RECENT FILES ADD: {} {} {}", file_name, bhv_id, is_native));
       if (QFileInfo::exists(QString::fromStdString(file_name)) &&
           QFileInfo(QString::fromStdString(file_name)).isFile())
-          m_recent_files.emplace_back(file_name, ff_id, is_native);
+        m_recent_files.emplace_back(file_name, ff_id, is_native);
     }
 
     app_state_t* app_state_t::g_inst = nullptr;
 
-  }
+  } // namespace qpp
 
-}
+} // namespace cad

@@ -373,7 +373,7 @@ void main_window::init_widgets() {
 
   tool_panel_widget = new QWidget;
   tool_panel_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  tool_panel_widget->setFixedHeight(astate->size_guide.tool_panel_h());
+  tool_panel_widget->setFixedHeight(astate->size_guide.tool_panel_h_exact());
   tool_panel_widget->setProperty("s_class", "tp_generic");
   tool_panel_widget->setObjectName("tool_panel_widget_e");
 
@@ -386,28 +386,6 @@ void main_window::init_widgets() {
   tp_ws_selector->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
   tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
-
-//  tp_show_obj_insp = new QCheckBox;
-//  tp_show_obj_insp->setProperty("s_class", "tp_cb");
-//  tp_show_obj_insp->setCheckState(Qt::Checked);
-//  tp_show_obj_insp->setText("INS");
-//  tp_show_obj_insp->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
-//  tp_show_obj_insp->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
-//  QObject::connect(tp_show_obj_insp,
-//                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
-//                   this,
-//                   &main_window::show_obj_insp_state_changed);
-
-//  tp_show_gizmo = new QCheckBox;
-//  tp_show_gizmo->setProperty("s_class", "tp_cb");
-//  tp_show_gizmo->setCheckState(Qt::Checked);
-//  tp_show_gizmo->setText("GZM");
-//  tp_show_gizmo->setMinimumWidth(astate->size_guide.tool_panel_checkable_ctrl_w());
-//  tp_show_gizmo->setMaximumHeight(astate->size_guide.tool_panel_ctrl_h());
-//  QObject::connect(tp_show_gizmo,
-//                   static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
-//                   this,
-//                   &main_window::show_gizmo_state_changed);
 
   tp_print_screen = new QPushButton();
   tp_print_screen->setProperty("s_class", "tp_cb");
