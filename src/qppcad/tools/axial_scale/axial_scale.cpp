@@ -93,12 +93,14 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
 
   auto make_spinbox = [](){
       auto ret = new QDoubleSpinBox;
-      ret->setMinimum(0.01);
+      ret->setMinimum(0.001);
       ret->setMaximum(5.00);
       ret->setValue(1.0);
-      ret->setSingleStep(0.01);
+      ret->setSingleStep(0.00001);
+      ret->setDecimals(6);
       ret->setAlignment(Qt::AlignCenter);
       ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      ret->setLocale(QLocale::C);
       return ret;
     };
 
