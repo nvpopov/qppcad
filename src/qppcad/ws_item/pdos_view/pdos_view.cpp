@@ -103,7 +103,7 @@ void pdos_view_t::rebuild_plots() {
           // sum over occupancy
           float occ = 0;
           for (size_t i = 2; i < inner_rec.size(); i++) occ += inner_rec(0,i);
-          astate->tlog("@PLOT_BUILD {} {}", cur_e, rec.m_is_alpha ? occ : -occ);
+          //astate->tlog("@PLOT_BUILD {} {}", cur_e, rec.m_is_alpha ? occ : -occ);
           series->append(cur_e,rec.m_spin_polarized ?(rec.m_is_alpha ? occ : -occ) : occ);
           last_e = cur_e;
 
@@ -112,7 +112,7 @@ void pdos_view_t::rebuild_plots() {
       series->setName(QString("%1 %2")
                       .arg(QString::fromStdString(rec.m_specie_name))
                       .arg(rec.m_spin_polarized ?
-                             rec.m_is_alpha ? "(↑)" : "(↓)" :
+                             (rec.m_is_alpha ? "(↑)" : "(↓)"):
                                               "(↑↓)")
                       );
       m_pdos_gen_chart->addSeries(series);

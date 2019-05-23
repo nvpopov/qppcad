@@ -704,6 +704,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_u_scale_sb_x->setSingleStep(0.01);
   tm_u_scale_sb_x->setValue(1.0);
   tm_u_scale_sb_x->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  tm_u_scale_sb_x->setLocale(QLocale::C);
 
   tm_u_scale_sb_y = new QDoubleSpinBox;
   tm_u_scale_sb_y->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
@@ -712,6 +713,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_u_scale_sb_y->setSingleStep(0.01);
   tm_u_scale_sb_y->setValue(1.0);
   tm_u_scale_sb_y->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  tm_u_scale_sb_y->setLocale(QLocale::C);
 
   tm_u_scale_sb_z = new QDoubleSpinBox;
   tm_u_scale_sb_z->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
@@ -720,6 +722,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_u_scale_sb_z->setSingleStep(0.01);
   tm_u_scale_sb_z->setValue(1.0);
   tm_u_scale_sb_z->setButtonSymbols(QAbstractSpinBox::NoButtons);
+  tm_u_scale_sb_z->setLocale(QLocale::C);
 
   tm_u_scale_x_proxy_widget = new QWidget;
   tm_u_scale_x_proxy_lt = new QHBoxLayout;
