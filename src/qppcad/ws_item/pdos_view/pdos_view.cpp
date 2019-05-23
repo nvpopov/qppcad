@@ -1,6 +1,8 @@
 #include <qppcad/ws_item/pdos_view/pdos_view.hpp>
 #include <io/cp2k_pdos.hpp>
 #include <qppcad/app_state.hpp>
+#include <QDir>
+#include <QFileInfo>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -9,6 +11,10 @@ pdos_view_t::pdos_view_t() {
 
   set_default_flags(ws_item_flags_default);
   m_pdos_gen_chart = new QChart();
+  m_pdos_chart_view = new QChartView();
+  m_pdos_chart_view->setRubberBand(QChartView::HorizontalRubberBand);
+  m_pdos_chart_view->setChart(m_pdos_gen_chart);
+  m_pdos_chart_view->setRenderHint(QPainter::Antialiasing);
 
 }
 
@@ -81,40 +87,73 @@ void pdos_view_t::rebuild_plots() {
 
   m_pdos_gen_chart->removeAllSeries();
 
+  float pdos_sigma = 0.1f;
+
   for (auto &rec : m_pdos_recs) {
 
-      QLineSeries* series = new QLineSeries();
+      bool _rec_is_spin_polarized = rec.m_is_alpha != rec.m_is_beta;
 
-      auto last_e = rec.m_data[0](0,0);
-      const auto last_e_th = 0.01;
+      // with gaussian smearing
+      float e_min = rec.m_data.front()(0,0);
+      float e_max = rec.m_data.back()(0,0);
 
-      for (auto &inner_rec : rec.m_data) {
+      int steps = 5000;
+      float e_step = (e_max - e_min) / float(steps);
+      int e_cnt = rec.m_data.size();
 
-          float cur_e = inner_rec(0,0);
-          int zr_steps = 5;
-          float d_e = cur_e - last_e;
-          float dd_e = d_e / zr_steps;
+      astate->tlog("@PDOS_SMEAR: e_min={}, e_max={}, e_step={}, e_cnt={}",
+                   e_min, e_max, e_step, e_cnt);
 
-          if (d_e > last_e_th) {
-              for (size_t i = 0; i > 5; i++)
-                series->append(cur_e + dd_e * i, 0);
+      using pda_t = Eigen::Array<float, 1, Eigen::Dynamic>;
+
+      pda_t _per_data;
+      _per_data.resize(Eigen::NoChange, steps);
+      _per_data = 0;
+
+      std::vector<pda_t> _per_e;
+      _per_e.resize(e_cnt);
+
+      // generate arrays per eigenstate
+      for (size_t i = 0; i < e_cnt; i++) {
+
+          _per_e[i].resize(Eigen::NoChange, steps);
+          _per_e[i] = 0;
+          float e_0 = rec.m_data[i](0,0);
+
+          //compute amplitude - i.e. m_l occupancy
+          float occ{0};
+          for (size_t occ_i = 2; occ_i < rec.m_data[i].cols(); occ_i++)
+            occ += rec.m_data[i](0, occ_i);
+
+          astate->tlog("@PDOS_SMEAR: i={}, occ={}, e_0={}", i, occ, e_0);
+
+          //generate gaussian
+          for (size_t q = 0; q < steps; q++) {
+              float e_q = e_min + e_step * q;
+              _per_e[i](0, q) =
+                  (1 / (pdos_sigma * (std::sqrt(2*qpp::pi)))) * occ * std::exp(
+                    -0.5f * std::pow((e_q - e_0)/pdos_sigma, 2)
+                    );
             }
-
-          // sum over occupancy
-          float occ = 0;
-          for (size_t i = 2; i < inner_rec.size(); i++) occ += inner_rec(0,i);
-          //astate->tlog("@PLOT_BUILD {} {}", cur_e, rec.m_is_alpha ? occ : -occ);
-          series->append(cur_e,rec.m_spin_polarized ?(rec.m_is_alpha ? occ : -occ) : occ);
-          last_e = cur_e;
 
         }
 
+      // compose generated arrays
+      float compose_coeff = 1.0f;
+      if (_rec_is_spin_polarized && rec.m_is_beta) compose_coeff = -1.0f;
+      for (size_t i = 0; i < e_cnt; i++) _per_data += compose_coeff*_per_e[i];
+
+      // compose QLineSeries from "composed" array
+      QLineSeries* series = new QLineSeries();
+      for (size_t i = 1; i < steps - 1; i++) series->append(e_min + e_step * i, _per_data(0, i));
+
       series->setName(QString("%1 %2")
                       .arg(QString::fromStdString(rec.m_specie_name))
-                      .arg(rec.m_spin_polarized ?
+                      .arg(_rec_is_spin_polarized ?
                              (rec.m_is_alpha ? "(↑)" : "(↓)"):
-                                              "(↑↓)")
+                             "(↑↓)")
                       );
+
       m_pdos_gen_chart->addSeries(series);
 
     }
@@ -141,9 +180,21 @@ size_t pdos_view_t::get_num_channels() {
 bool pdos_view_t::is_spin_polarized() {
 
   for (auto &rec : m_pdos_recs)
-    if (rec.m_spin_polarized) return true;
+    if (rec.m_is_alpha != rec.m_is_beta) return true;
 
   return false;
+
+}
+
+void pdos_view_t::scale_channel(size_t channel_idx, float magn) {
+
+  if (channel_idx >= m_pdos_recs.size()) return;
+
+  auto &pd_rec = m_pdos_recs[channel_idx];
+
+  for (size_t eigv_i = 0; eigv_i < pd_rec.m_data.size(); eigv_i++)
+    for (size_t occ_i = 2; occ_i < pd_rec.m_data[eigv_i].cols(); occ_i++)
+      pd_rec.m_data[eigv_i](0, occ_i) *= magn;
 
 }
 
@@ -159,6 +210,28 @@ void pdos_view_t::py_load_from_list(py::list _pdos_files, comp_chem_program_e _c
       }
 
   if (need_to_rebuild_plots) rebuild_plots();
+
+}
+
+void pdos_view_t::py_load_from_dir(std::string _dir,
+                                   std::string _pattern,
+                                   comp_chem_program_e _ccd_prog) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto promted_dir = QDir(QString::fromStdString(_dir));
+  auto files_info = promted_dir.entryInfoList();
+
+  QString qpattern = QString::fromStdString(_pattern);
+
+  for (auto &file_entry : files_info) {
+      astate->tlog("@PDOS_VIEW_T::PY_LOAD_DIR file_name = {}",
+                   file_entry.absoluteFilePath().toStdString());
+      if (file_entry.fileName().contains(qpattern))
+        add_data_from_file(file_entry.absoluteFilePath().toStdString(), _ccd_prog);
+    }
+
+  rebuild_plots();
 
 }
 

@@ -31,6 +31,7 @@ namespace qpp {
         float m_pdos_ewindow_high{1};
 
         QChart *m_pdos_gen_chart;
+        QChartView *m_pdos_chart_view;
 
         pdos_view_t();
 
@@ -56,7 +57,11 @@ namespace qpp {
         size_t get_num_channels();
         bool is_spin_polarized();
 
+        void scale_channel(size_t channel_idx, float magn);
         void py_load_from_list(py::list _pdos_files, comp_chem_program_e _ccd_prog);
+        void py_load_from_dir(std::string _dir,
+                              std::string _pattern,
+                              comp_chem_program_e _ccd_prog);
 
     };
 
