@@ -57,6 +57,7 @@ namespace qpp {
         size_t get_num_channels();
         bool is_spin_polarized();
 
+        float py_get_efermi_for_channel(size_t channel_idx);
         void scale_channel(size_t channel_idx, float magn);
         void py_load_from_list(py::list _pdos_files, comp_chem_program_e _ccd_prog);
         void py_load_from_dir(std::string _dir,

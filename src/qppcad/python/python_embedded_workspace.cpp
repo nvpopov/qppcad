@@ -353,5 +353,6 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_pdos_view_t.def("load_dir", &pdos_view_t::py_load_from_dir);
   py_pdos_view_t.def("rebuild", &pdos_view_t::rebuild_plots);
   py_pdos_view_t.def("scale_chn", &pdos_view_t::scale_channel);
+  py_pdos_view_t.def("e_fermi", &pdos_view_t::py_get_efermi_for_channel);
 
 }

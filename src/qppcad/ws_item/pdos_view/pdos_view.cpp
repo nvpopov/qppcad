@@ -187,6 +187,13 @@ bool pdos_view_t::is_spin_polarized() {
 
 }
 
+float pdos_view_t::py_get_efermi_for_channel(size_t channel_idx) {
+
+  if (channel_idx >= m_pdos_recs.size()) return 0;
+  return m_pdos_recs[channel_idx].m_efermi;
+
+}
+
 void pdos_view_t::scale_channel(size_t channel_idx, float magn) {
 
   if (channel_idx >= m_pdos_recs.size()) return;
