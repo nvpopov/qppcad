@@ -692,6 +692,7 @@ void main_window::wss_changed_slot() {
       view_menu_show_gizmo->setEnabled(true);
       view_menu_show_gizmo->setVisible(true);
       ws_copy_cam->setEnabled(true);
+      ws_menu_bg_color->setEnabled(true);
       //obj_insp_widget->setVisible()
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
           auto ws = astate->ws_mgr->m_ws[i];
@@ -710,6 +711,7 @@ void main_window::wss_changed_slot() {
       view_menu_show_gizmo->setEnabled(false);
       view_menu_show_gizmo->setVisible(false);
       ws_copy_cam->setEnabled(false);
+      ws_menu_bg_color->setEnabled(false);
     }
 
   tp_ws_selector->blockSignals(false);

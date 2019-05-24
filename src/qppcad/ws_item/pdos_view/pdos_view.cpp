@@ -87,7 +87,7 @@ void pdos_view_t::rebuild_plots() {
 
   m_pdos_gen_chart->removeAllSeries();
 
-  float pdos_sigma = 0.1f;
+  float pdos_sigma = 0.05f;
 
   for (auto &rec : m_pdos_recs) {
 
@@ -101,8 +101,8 @@ void pdos_view_t::rebuild_plots() {
       float e_step = (e_max - e_min) / float(steps);
       int e_cnt = rec.m_data.size();
 
-      astate->tlog("@PDOS_SMEAR: e_min={}, e_max={}, e_step={}, e_cnt={}",
-                   e_min, e_max, e_step, e_cnt);
+//      astate->tlog("@PDOS_SMEAR: e_min={}, e_max={}, e_step={}, e_cnt={}",
+//                   e_min, e_max, e_step, e_cnt);
 
       using pda_t = Eigen::Array<float, 1, Eigen::Dynamic>;
 
@@ -114,6 +114,7 @@ void pdos_view_t::rebuild_plots() {
       _per_e.resize(e_cnt);
 
       // generate arrays per eigenstate
+      // threaded version
       for (size_t i = 0; i < e_cnt; i++) {
 
           _per_e[i].resize(Eigen::NoChange, steps);
@@ -125,7 +126,7 @@ void pdos_view_t::rebuild_plots() {
           for (size_t occ_i = 2; occ_i < rec.m_data[i].cols(); occ_i++)
             occ += rec.m_data[i](0, occ_i);
 
-          astate->tlog("@PDOS_SMEAR: i={}, occ={}, e_0={}", i, occ, e_0);
+//          astate->tlog("@PDOS_SMEAR: i={}, occ={}, e_0={}", i, occ, e_0);
 
           //generate gaussian
           for (size_t q = 0; q < steps; q++) {
