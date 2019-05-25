@@ -22,6 +22,7 @@ namespace qpp {
         QAction *m_data_target_cp2k;
         QAction *m_data_target_vasp;
         QPushButton *tg_actions_add_channel;
+        QPushButton *tg_actions_rebuild;
 
         qspoiler_widget_t *gb_pdos_info;
         QFormLayout *gb_pdos_info_lt;
@@ -42,6 +43,7 @@ namespace qpp {
       public slots:
 
         void add_data_btn_clicked();
+        void rebuild_btn_clicked();
 
     };
 
