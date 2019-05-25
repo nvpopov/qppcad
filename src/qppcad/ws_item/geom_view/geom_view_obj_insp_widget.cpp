@@ -834,6 +834,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_bc_rot_angle->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   tm_bc_rot_angle->setMinimum(-1000);
   tm_bc_rot_angle->setMaximum(1000);
+  tm_bc_rot_angle->setLocale(QLocale::C);
 
   tm_bc_rot_angle_type = new QComboBox;
   tm_bc_rot_angle_type->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
@@ -865,6 +866,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
   tm_gb_group_op = new qspoiler_widget_t(tr("Group operations"));
   tm_group_op_lt = new QGridLayout;
+  tm_group_op_lt->setContentsMargins(5, 0, 5, 0);
   tm_gb_group_op->add_content_layout(tm_group_op_lt);
   tm_group_op_sv_show = new QPushButton(tr("SV:SHOW"));
   tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
