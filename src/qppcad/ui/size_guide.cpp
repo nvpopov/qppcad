@@ -95,6 +95,10 @@ int size_guide_t::obj_insp_button_w() {
   return 80;
 }
 
+int size_guide_t::obj_insp_button_h() {
+  return 25;
+}
+
 int size_guide_t::obj_insp_lbl_w() {
   return 165;
 }

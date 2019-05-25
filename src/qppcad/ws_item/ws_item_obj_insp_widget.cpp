@@ -58,22 +58,22 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       ws_item_is_visible->bind_value(&m_binded_item->m_is_visible);
 
       qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
-                                          tg_form_layout,
-                                          ws_item_type,
-                                          ws_item_is_visible_label,
-                                          ws_item_is_visible);
+                                      tg_form_layout,
+                                      ws_item_type,
+                                      ws_item_is_visible_label,
+                                      ws_item_is_visible);
 
       qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
-                                          tg_form_layout,
-                                          ws_item_is_visible,
-                                          ws_item_bb_visible_label,
-                                          ws_item_bb_visible);
+                                      tg_form_layout,
+                                      ws_item_is_visible,
+                                      ws_item_bb_visible_label,
+                                      ws_item_bb_visible);
 
       qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
-                                          tg_form_layout,
-                                          ws_item_bb_visible,
-                                          ws_item_pos_label,
-                                          ws_item_pos);
+                                      tg_form_layout,
+                                      ws_item_bb_visible,
+                                      ws_item_pos_label,
+                                      ws_item_pos);
 
     }
 
@@ -160,7 +160,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setIconSize(QSize(32,32));
   tab_general = def_tab(tr("General settings of workspace item"),
-                           "://images/settings.svg");
+                        "://images/settings.svg");
 
   //begin group box Item information
   sp_info_widget = new qspoiler_widget_t(tr("Item information"));
@@ -198,7 +198,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   //Begin group box Item actions
   tg_actions = new qspoiler_widget_t(tr("Item actions"));
 
-  tg_actions_layout = new QHBoxLayout;
+  tg_actions_layout = new QGridLayout;
   tg_actions_layout->setContentsMargins(5, 0, 5, 0);
   tg_actions->add_content_layout(tg_actions_layout);
 
@@ -217,10 +217,11 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   tg_actions_clone = new QPushButton(tr("Clone"));
   tg_actions_clone->setEnabled(false);
 
-  tg_actions_layout->addWidget(tg_actions_delete);
-  tg_actions_layout->addWidget(tg_actions_rename);
-  tg_actions_layout->addWidget(tg_actions_clone);
-  tg_actions->setMaximumHeight(90);
+  tg_actions_layout->addWidget(tg_actions_delete, 0, 0);
+  tg_actions_layout->addWidget(tg_actions_rename, 0, 1);
+  tg_actions_layout->addWidget(tg_actions_clone,  0, 2);
+
+  //tg_actions->setMaximumHeight(90);
   //end group box Item actions
 
   connect(astate->astate_evd,

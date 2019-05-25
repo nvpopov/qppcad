@@ -94,20 +94,16 @@ void pdos_view_t::rebuild_plots() {
 
   m_pdos_gen_chart->removeAllSeries();
 
+  // with smearing
   for (auto &rec : m_pdos_recs) {
 
       bool _rec_is_spin_polarized = rec.m_is_alpha != rec.m_is_beta;
 
-      // with gaussian smearing
-      float e_min = std::min(rec.m_data.front()(0,0), m_pdos_ewindow_low);
+      float e_min = std::max(rec.m_data.front()(0,0), m_pdos_ewindow_low);
       float e_max = std::min(rec.m_data.back()(0,0), m_pdos_ewindow_high);
 
-      //int m_smearing_steps = 5000;
       float e_step = (e_max - e_min) / float(m_smearing_steps);
       int e_cnt = rec.m_data.size();
-
-//      astate->tlog("@PDOS_SMEAR: e_min={}, e_max={}, e_step={}, e_cnt={}",
-//                   e_min, e_max, e_step, e_cnt);
 
       using pda_t = Eigen::Array<float, 1, Eigen::Dynamic>;
 
@@ -134,8 +130,6 @@ void pdos_view_t::rebuild_plots() {
           for (size_t occ_i = 2; occ_i < rec.m_data[i].cols(); occ_i++)
             occ += rec.m_data[i](0, occ_i);
 
-//          astate->tlog("@PDOS_SMEAR: i={}, occ={}, e_0={}", i, occ, e_0);
-
           //generate gaussian
           for (size_t q = 0; q < m_smearing_steps; q++) {
               float e_q = e_min + e_step * q;
@@ -143,9 +137,9 @@ void pdos_view_t::rebuild_plots() {
                   (1 / (m_pdos_sigma * (std::sqrt(2*qpp::pi)))) * occ * std::exp(
                     -0.5f * std::pow((e_q - e_0)/m_pdos_sigma, 2)
                     );
-            }
+            } // end inner for
 
-        }
+        } // end for
 
       // compose generated arrays
       float compose_coeff = 1.0f;

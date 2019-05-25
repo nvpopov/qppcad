@@ -1,5 +1,6 @@
 #include <qppcad/ws_item/pdos_view/pdos_view_obj_insp_widget.hpp>
 #include <io/cp2k_pdos.hpp>
+#include <qppcad/app_state.hpp>
 #include <QFileDialog>
 
 using namespace qpp;
@@ -7,13 +8,17 @@ using namespace qpp::cad;
 
 pdos_view_obj_insp_widget_t::pdos_view_obj_insp_widget_t() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   tg_actions_add_channel = new QPushButton(tr("Add data"));
   connect(tg_actions_add_channel,
           &QPushButton::clicked,
           this,
           &pdos_view_obj_insp_widget_t::add_data_btn_clicked);
+  //tg_actions_add_channel->setFixedHeight(astate->size_guide.obj_insp_button_h());
 
-  tg_actions_layout->addWidget(tg_actions_add_channel);
+  tg_actions_layout->addWidget(tg_actions_add_channel, 1, 0);
+  tg_actions_layout->setRowMinimumHeight(1, astate->size_guide.obj_insp_button_h()+5);
 
   m_data_target_menu = new QMenu(this);
   m_data_target_cp2k = new QAction(tr("CP2K"));

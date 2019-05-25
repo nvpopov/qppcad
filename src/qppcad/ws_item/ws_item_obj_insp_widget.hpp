@@ -9,6 +9,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QScrollArea>
 #include <QFormLayout>
 #include <QPushButton>
@@ -51,7 +52,7 @@ namespace qpp {
         qbinded_float3_input_t *ws_item_pos;
 
         qspoiler_widget_t *tg_actions;
-        QHBoxLayout *tg_actions_layout;
+        QGridLayout *tg_actions_layout;
         QPushButton *tg_actions_delete;
         QPushButton *tg_actions_rename;
         QPushButton *tg_actions_clone;
