@@ -64,7 +64,7 @@ geom_view_t::geom_view_t(): ws_item_t () {
    "ltext",//11
    "ov",//12
    "atom_r", // 13
-   "ex0" //14
+   "tag" //14
         },
 
   {type_string, //0
@@ -81,7 +81,7 @@ geom_view_t::geom_view_t(): ws_item_t () {
    type_string, //11
    type_bool, // 12
    type_real, // 13
-   type_real //14
+   type_string //14
         });
 
   m_geom->DIM = 0;

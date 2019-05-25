@@ -27,9 +27,11 @@ namespace qpp {
       public:
 
         std::vector<pdos_data_t<float> > m_pdos_recs;
+        float m_pdos_sigma{0.05f};
+        int m_smearing_steps{5000};
         float m_pdos_ewindow_low{0};
         float m_pdos_ewindow_high{1};
-
+        float m_pdos_fwhm{1};
         QChart *m_pdos_gen_chart;
         QChartView *m_pdos_chart_view;
 

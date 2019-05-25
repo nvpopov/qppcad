@@ -30,9 +30,22 @@ pdos_view_obj_insp_widget_t::pdos_view_obj_insp_widget_t() {
   pdos_info_num_species = new QLabel;
   pdos_info_num_channels = new QLabel;
 
+  pdos_ewindow_low = new qbinded_float_spinbox_t;
+  pdos_ewindow_low->set_min_max_step(-1000, 1000, 0.001, 4);
+  pdos_ewindow_high = new qbinded_float_spinbox_t;
+  pdos_ewindow_high->set_min_max_step(-1000, 1000, 0.001, 4);
+  pdos_steps = new qbinded_int_spinbox_t;
+  pdos_steps->set_min_max_step(1, 10000, 1);
+  pdos_sigma = new qbinded_float_spinbox_t;
+  pdos_sigma->set_min_max_step(-10, 10, 0.001, 4);
+
   gb_pdos_info_lt->addRow(tr("Num. of channels"), pdos_info_num_channels);
   gb_pdos_info_lt->addRow(tr("Num. of species"), pdos_info_num_species);
   gb_pdos_info_lt->addRow(tr("Is spin polarized"), pdos_info_is_spin_polarized);
+  gb_pdos_info_lt->addRow(tr("E_w_low "), pdos_ewindow_low);
+  gb_pdos_info_lt->addRow(tr("E_w_high"), pdos_ewindow_high);
+  gb_pdos_info_lt->addRow(tr("Steps"), pdos_steps);
+  gb_pdos_info_lt->addRow(tr("Sigma"), pdos_sigma);
 
   init_form_lt(gb_pdos_info_lt);
 
@@ -49,7 +62,10 @@ void pdos_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
     }
 
   if (m_pdv) {
-
+      pdos_ewindow_low->bind_value(&m_pdv->m_pdos_ewindow_low);
+      pdos_ewindow_high->bind_value(&m_pdv->m_pdos_ewindow_high);
+      pdos_sigma->bind_value(&m_pdv->m_pdos_sigma);
+      pdos_steps->bind_value(&m_pdv->m_smearing_steps);
     }
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
@@ -69,6 +85,11 @@ void pdos_view_obj_insp_widget_t::update_from_ws_item() {
 }
 
 void pdos_view_obj_insp_widget_t::unbind_item() {
+
+  pdos_ewindow_low->unbind_value();
+  pdos_ewindow_high->unbind_value();
+  pdos_sigma->unbind_value();
+  pdos_steps->unbind_value();
 
 }
 

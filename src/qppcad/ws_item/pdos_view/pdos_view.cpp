@@ -77,6 +77,13 @@ void pdos_view_t::add_data_from_file(const std::string &file_name, comp_chem_pro
       break;
     }
 
+  //update energy window
+  //low energy
+  m_pdos_ewindow_low = std::min(m_pdos_ewindow_low, pdos_rec.m_data.front()(0,0));
+
+  //high energy
+  m_pdos_ewindow_high = std::max(m_pdos_ewindow_high, pdos_rec.m_data.back()(0,0));
+
   if (succes) m_pdos_recs.push_back(std::move(pdos_rec));
 
 }
@@ -87,18 +94,16 @@ void pdos_view_t::rebuild_plots() {
 
   m_pdos_gen_chart->removeAllSeries();
 
-  float pdos_sigma = 0.05f;
-
   for (auto &rec : m_pdos_recs) {
 
       bool _rec_is_spin_polarized = rec.m_is_alpha != rec.m_is_beta;
 
       // with gaussian smearing
-      float e_min = rec.m_data.front()(0,0);
-      float e_max = rec.m_data.back()(0,0);
+      float e_min = std::min(rec.m_data.front()(0,0), m_pdos_ewindow_low);
+      float e_max = std::min(rec.m_data.back()(0,0), m_pdos_ewindow_high);
 
-      int steps = 5000;
-      float e_step = (e_max - e_min) / float(steps);
+      //int m_smearing_steps = 5000;
+      float e_step = (e_max - e_min) / float(m_smearing_steps);
       int e_cnt = rec.m_data.size();
 
 //      astate->tlog("@PDOS_SMEAR: e_min={}, e_max={}, e_step={}, e_cnt={}",
@@ -107,7 +112,7 @@ void pdos_view_t::rebuild_plots() {
       using pda_t = Eigen::Array<float, 1, Eigen::Dynamic>;
 
       pda_t _per_data;
-      _per_data.resize(Eigen::NoChange, steps);
+      _per_data.resize(Eigen::NoChange, m_smearing_steps);
       _per_data = 0;
 
       std::vector<pda_t> _per_e;
@@ -115,9 +120,12 @@ void pdos_view_t::rebuild_plots() {
 
       // generate arrays per eigenstate
       // threaded version
+
+      auto thread_cnt = astate->m_utility_thread_count;
+
       for (size_t i = 0; i < e_cnt; i++) {
 
-          _per_e[i].resize(Eigen::NoChange, steps);
+          _per_e[i].resize(Eigen::NoChange, m_smearing_steps);
           _per_e[i] = 0;
           float e_0 = rec.m_data[i](0,0);
 
@@ -129,11 +137,11 @@ void pdos_view_t::rebuild_plots() {
 //          astate->tlog("@PDOS_SMEAR: i={}, occ={}, e_0={}", i, occ, e_0);
 
           //generate gaussian
-          for (size_t q = 0; q < steps; q++) {
+          for (size_t q = 0; q < m_smearing_steps; q++) {
               float e_q = e_min + e_step * q;
               _per_e[i](0, q) =
-                  (1 / (pdos_sigma * (std::sqrt(2*qpp::pi)))) * occ * std::exp(
-                    -0.5f * std::pow((e_q - e_0)/pdos_sigma, 2)
+                  (1 / (m_pdos_sigma * (std::sqrt(2*qpp::pi)))) * occ * std::exp(
+                    -0.5f * std::pow((e_q - e_0)/m_pdos_sigma, 2)
                     );
             }
 
@@ -146,7 +154,8 @@ void pdos_view_t::rebuild_plots() {
 
       // compose QLineSeries from "composed" array
       QLineSeries* series = new QLineSeries();
-      for (size_t i = 1; i < steps - 1; i++) series->append(e_min + e_step * i, _per_data(0, i));
+      for (size_t i = 1; i < m_smearing_steps - 1; i++)
+        series->append(e_min + e_step * i, _per_data(0, i));
 
       series->setName(QString("%1 %2")
                       .arg(QString::fromStdString(rec.m_specie_name))

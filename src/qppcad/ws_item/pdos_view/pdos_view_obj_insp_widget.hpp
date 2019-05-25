@@ -1,5 +1,5 @@
-#ifndef QPP_CAD_PDOS_VIEW_OBJECT_INSP
-#define QPP_CAD_PDOS_VIEW_OBJECT_INSP
+#ifndef QPPCAD_PDOS_VIEW_OBJECT_INSP
+#define QPPCAD_PDOS_VIEW_OBJECT_INSP
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/pdos_view/pdos_view.hpp>
 #include <QMenu>
@@ -28,6 +28,10 @@ namespace qpp {
         QLabel *pdos_info_is_spin_polarized;
         QLabel *pdos_info_num_species;
         QLabel *pdos_info_num_channels;
+        qbinded_float_spinbox_t *pdos_ewindow_low;
+        qbinded_float_spinbox_t *pdos_ewindow_high;
+        qbinded_int_spinbox_t *pdos_steps;
+        qbinded_float_spinbox_t *pdos_sigma;
 
         pdos_view_obj_insp_widget_t();
 
