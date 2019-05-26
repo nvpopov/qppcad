@@ -66,7 +66,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("xgeom_dft", &simple_query::get_xgeom_dft);
   m.def("cw", &simple_query::cur_ws);
 
-  //****************************** tools module begin *********************************************
+  //****************************** tools module begin ******************************
   py::module tools = m.def_submodule("tools", "Generic tools");
 
   tools.def("set_msr_digits", &simple_query::set_msr_digits);
@@ -103,13 +103,14 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   tools.def("make_traj_highlighter", &simple_query::make_traj_highlight,  py::arg("atom_id"),
             py::arg("anim_id") = 1);
+  tools.def("compose_gb_from_images", &simple_query::compose_gv_from_images);
 
   tools.def("make_cube", &simple_query::make_cube_p);
   tools.def("embed_cube", &simple_query::embed_cube);
   tools.def("make_arrow", &simple_query::make_arrow_p);
 
   tools.def("convert_spatial", &simple_query::convert_selected_units);
-  //******************************** tools module end **********************************************
+  //******************************** tools module end *******************************
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 

@@ -24,9 +24,11 @@ std::shared_ptr<workspace_manager_t> simple_query::get_ws_mgr() {
 }
 
 void simple_query::set_font_size(int new_font_size) {
+
   app_state_t *astate = app_state_t::get_inst();
   astate->m_console_font_size = new_font_size;
   astate->astate_evd->python_console_font_size_updated();
+
 }
 
 std::tuple<std::string, std::string> simple_query::get_build_info() {
@@ -66,6 +68,58 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
   sct.make_super_cell(al, sc_a, sc_b, sc_c);
   cur_ws->set_selected_item(cur_ws->m_ws_items.size()-1);
   astate->astate_evd->python_console_focus_requested();
+  astate->make_viewport_dirty();
+
+}
+
+void simple_query::compose_gv_from_images(pybind11::list gvs) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+
+  if (!ok) throw std::invalid_argument("invalid ws");
+
+  bool succes{false};
+
+  auto new_gv = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
+  new_gv->m_name = fmt::format("composed_{}", cur_ws->m_ws_items.size());
+  cur_ws->add_item_to_ws(new_gv);
+
+  auto new_as_gv = new_gv->cast_as<geom_view_t>();
+  new_as_gv->begin_structure_change();
+
+  int img_idx = 0;
+  geom_anim_record_t<float> new_anim;
+  new_anim.frames.resize(gvs.size());
+  new_anim.m_anim_name = "composed0";
+  new_anim.m_anim_type = geom_anim_t::anim_geo_opt;
+
+  for (auto &list_itm : gvs)
+    if (py::isinstance<geom_view_t &>(list_itm)) {
+
+        geom_view_t &gv_src = py::cast<geom_view_t &>(list_itm);
+        //py::print(fmt::format("{} fff", gv_src.m_name));
+
+        if (img_idx == 0) {
+            gv_src.copy_to_xgeom(*new_as_gv->m_geom);
+          }
+
+        new_anim.frames[img_idx].atom_pos.resize(new_as_gv->m_geom->nat());
+
+        for (size_t i = 0; i < new_as_gv->m_geom->nat(); i++)
+          new_anim.frames[img_idx].atom_pos[i] = gv_src.m_geom->pos(i);
+
+        img_idx++;
+
+        gv_src.m_is_visible = false;
+
+      }
+
+
+  new_as_gv->m_anim->m_anim_data.emplace_back(std::move(new_anim));
+
+  new_as_gv->end_structure_change();
+
   astate->make_viewport_dirty();
 
 }

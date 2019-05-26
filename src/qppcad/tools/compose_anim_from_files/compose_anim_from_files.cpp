@@ -10,6 +10,14 @@ void compose_anim_from_files_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) 
 
   astate->log("compose_anim_from_files_tool_t::exec()");
 
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+
+  if (!ok) {
+      QMessageBox::warning(nullptr, QObject::tr("compose_anim_from_files_tool_t"),
+                           QObject::tr("cur_ws == nullptr"));
+      return;
+    }
+
   compose_anim_from_files_widget_t caw;
   int ret_code = caw.exec();
 

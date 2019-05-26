@@ -44,6 +44,7 @@ namespace qpp {
         static void make_super_cell(const int sc_a,
                                     const int sc_b,
                                     const int sc_c);
+        static void compose_gv_from_images(py::list gvs);
 
         static void set_msr_digits(int digits);
 
