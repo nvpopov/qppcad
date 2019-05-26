@@ -2,8 +2,8 @@
 import sys
 import os
 
-hpp_tmp = """#ifndef QPP_CAD_TOOL_#UCLASS_NAME
-#define QPP_CAD_TOOL_#UCLASS_NAME
+hpp_tmp = """#ifndef QPPCAD_TOOL_#UCLASS_NAME
+#define QPPCAD_TOOL_#UCLASS_NAME
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
@@ -12,8 +12,11 @@ namespace qpp {
   namespace cad {
 
     class #CLASS_NAME_tool_t : public ws_item_tool_t {
+    
       public:
+      
         void exec(ws_item_t *item, uint32_t _error_ctx) override;
+        
     };
     
   } // namespace cad

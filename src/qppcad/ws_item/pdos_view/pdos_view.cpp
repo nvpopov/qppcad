@@ -134,7 +134,7 @@ void pdos_view_t::rebuild_plots() {
           for (size_t q = 0; q < m_smearing_steps; q++) {
               float e_q = e_min + e_step * q;
               _per_e[i](0, q) =
-                  (1 / (m_pdos_sigma * (std::sqrt(2*qpp::pi)))) * occ * std::exp(
+                  (1 / (m_pdos_sigma * (std::sqrt(2*qpp::pi)))) * rec.m_scale * occ * std::exp(
                     -0.5f * std::pow((e_q - e_0)/m_pdos_sigma, 2)
                     );
             } // end inner for
@@ -203,9 +203,7 @@ void pdos_view_t::scale_channel(size_t channel_idx, float magn) {
 
   auto &pd_rec = m_pdos_recs[channel_idx];
 
-  for (size_t eigv_i = 0; eigv_i < pd_rec.m_data.size(); eigv_i++)
-    for (size_t occ_i = 2; occ_i < pd_rec.m_data[eigv_i].cols(); occ_i++)
-      pd_rec.m_data[eigv_i](0, occ_i) *= magn;
+  pd_rec.m_scale = magn;
 
 }
 

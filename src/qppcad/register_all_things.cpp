@@ -42,6 +42,7 @@
 #include <qppcad/tools/nn_dist_msr/nn_dist_msr.hpp>
 #include <qppcad/tools/anim_lerp/anim_lerp.hpp>
 #include <qppcad/tools/center_cell_on_atom/center_cell_on_atom.hpp>
+#include <qppcad/tools/compose_anim_from_files/compose_anim_from_files.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -310,5 +311,8 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
 
   registration_helper_t::reg_ws_item_tool<center_cell_on_atom_tool_t, geom_view_t>(
         "Center cell on atoms", hash_t_tr, bhv_mgr);
+
+  registration_helper_t::reg_ws_item_tool<compose_anim_from_files_tool_t, geom_view_t>(
+        "Compose anim from files", hash_t_generic, bhv_mgr, false);
 
 }
