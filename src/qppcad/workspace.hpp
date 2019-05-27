@@ -43,9 +43,9 @@ namespace qpp {
 
         workspace_t(std::string _ws_name = "default") {
           m_ws_name = _ws_name;
-          m_camera = std::unique_ptr<camera_t>(new camera_t());
+          m_camera = std::make_unique<camera_t>();
           m_camera->reset_camera();
-          m_gizmo = std::unique_ptr<gizmo_t>(new gizmo_t());
+          m_gizmo = std::make_unique<gizmo_t>();
         }
 
         opt<size_t>  get_selected_idx();

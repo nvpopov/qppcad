@@ -458,17 +458,23 @@ void workspace_t::copy_camera(std::shared_ptr<workspace_t> source) {
   if (!m_camera) return;
 
   app_state_t *astate = app_state_t::get_inst();
+  m_first_render = false;
+  m_camera->update_camera();
   m_camera->copy_from_camera(*source->m_camera);
 
 }
 
 std::string workspace_t::py_get_repr() {
+
   return fmt::format("[workspace, name=\"{}\"]", m_ws_name);
+
 }
 
 std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name,
                                                           std::string item_name) {
+
   app_state_t* astate = app_state_t::get_inst();
+
   if (!m_owner) {
       astate->log("ERROR: workspace_t::py_construct_item -> no ws mgr");
       return nullptr;
@@ -877,6 +883,7 @@ std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
   if (!cur_it) return nullptr;
 
   return cur_it;
+
 }
 
 void workspace_manager_t::utility_event_loop() {
