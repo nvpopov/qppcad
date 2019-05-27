@@ -278,6 +278,18 @@ void simple_query::sel_cnt_sphere(vector3<float> sph_center, float sph_rad) {
 
 }
 
+void simple_query::sel_cnt_gsph(float sph_rad) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
+  if (!al) return;
+
+  simple_query::sel_cnt_sphere(cur_ws->m_gizmo->m_pos, sph_rad);
+
+}
+
 void simple_query::sel_hemisphere(int coord_idx, bool positive) {
 
   app_state_t *astate = app_state_t::get_inst();

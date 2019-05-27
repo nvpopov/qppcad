@@ -183,6 +183,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
           )str");
 
   sel.def("sph", &simple_query::sel_cnt_sphere);
+  sel.def("gsp", &simple_query::sel_cnt_gsph);
   sel.def("inv", &simple_query::sel_invert);
   sel.def("hemisph", &simple_query::sel_hemisphere);
   sel.def("f", &simple_query::sel_cnt_fn);
