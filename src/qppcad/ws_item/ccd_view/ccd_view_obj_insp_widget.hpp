@@ -4,6 +4,7 @@
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
+#include <QListWidget>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 
@@ -18,7 +19,9 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        ccd_view_t *b_ccd{nullptr};
+
+        ccd_view_t *b_ccdv{nullptr};
+
         ws_item_tab_widget_t *tab_geo_opt;
         ws_item_tab_widget_t *tab_vibs;
 
@@ -27,6 +30,12 @@ namespace qpp {
         QFormLayout *gb_gen_ccd_info_lt;
         QLabel *gen_info_prog_name;
         QLabel *gen_info_run_type;
+
+        qspoiler_widget_t *tgo_select_step;
+        QHBoxLayout *tgo_select_step_lt;
+        QListWidget *tgo_steps_ex;
+        qspoiler_widget_t *tgo_step_info;
+        QFormLayout *tgo_step_info_lt;
 
         qspoiler_widget_t *gb_normal_modes;
         QVBoxLayout *gb_normal_modes_lt;

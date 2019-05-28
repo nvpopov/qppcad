@@ -51,5 +51,7 @@
         <file>images/outline-save-24px.svg</file>
         <file>images/outline-play_circle_filled_white-24px.svg</file>
         <file>images/outline-fast_forward-24px.svg</file>
+        <file>images/baseline-graphic_eq-24px_d.svg</file>
+        <file>images/baseline-graphic_eq-24px.svg</file>
     </qresource>
 </RCC>
