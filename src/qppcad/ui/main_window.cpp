@@ -74,12 +74,12 @@ main_window::~main_window() {
 
 void main_window::init_base_shortcuts() {
 
-//  sc_toggle_console = new QShortcut(this);
-//  sc_toggle_console->setKey(Qt::Key_QuoteLeft);
-//  connect(sc_toggle_console,
-//          &QShortcut::activated,
-//          this,
-//          &main_window::action_toggle_console);
+  sc_toggle_console = new QShortcut(this);
+  sc_toggle_console->setKey(Qt::Key_QuoteLeft);
+  connect(sc_toggle_console,
+          &QShortcut::activated,
+          this,
+          &main_window::action_toggle_console);
 
 }
 

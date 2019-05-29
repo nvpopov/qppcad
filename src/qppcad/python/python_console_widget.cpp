@@ -108,8 +108,8 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
     }
 
   if (event->key() == Qt::Key_QuoteLeft || event->key() == Qt::Key_AsciiTilde) {
-      parentWidget()->parentWidget()->parentWidget()->setFocus();
-      parentWidget()->parentWidget()->parentWidget()->hide();
+      parentWidget()->setFocus();
+      parentWidget()->hide();
       return;
     }
 
