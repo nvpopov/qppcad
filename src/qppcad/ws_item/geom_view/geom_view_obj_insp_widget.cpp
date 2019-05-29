@@ -298,7 +298,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_rebuild_bonds = new qbinded_checkbox_t;
   gb_play_cyclic = new qbinded_checkbox_t;
   gb_anim_speed = new qbinded_float_spinbox_t;
-  gb_anim_speed->set_min_max_step(0.01,1.0,0.01);
+  gb_anim_speed->set_min_max_step(0.01,10.0,0.01);
   gb_anim_total_frames_in_anim = new QLabel;
   gb_anim_cur_frame = new QLabel;
   gb_current_anim = new QComboBox;
