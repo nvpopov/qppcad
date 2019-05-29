@@ -40,15 +40,6 @@ namespace qpp {
       public:
 
         QHBoxLayout *console_lt;
-        QVBoxLayout *script_editor_lt;
-        QVBoxLayout *pyconsole_lt;
-        QWidget *pyconsole_plh;
-
-        QVBoxLayout *buttons_lt;
-
-        QPushButton *btn_clear;
-        //QPushButton *btn_editor_toggle;
-        QPushButton *btn_run_code;
 
         python_text_editor_t *py_tedit;
         QTextEdit *script_editor;
@@ -58,10 +49,7 @@ namespace qpp {
 
       public slots:
 
-        void editor_toggle_signal_toggled(bool checked);
         void font_size_updated_signal_received();
-        void clear_btn_clicked();
-        void run_script_button_clicked();
 
     };
 

@@ -36,14 +36,9 @@ namespace qpp {
          */
         static std::tuple<std::string, std::string> get_build_info();
 
-        static void open_file(std::string file_name,
-                              bool to_current);
-        static void open_file_query(std::string file_name,
-                                    std::string file_format,
-                                    bool to_current);
-        static void make_super_cell(const int sc_a,
-                                    const int sc_b,
-                                    const int sc_c);
+        static void open_file(std::string file_name, bool to_current);
+        static void open_file_query(std::string f_name, std::string f_format,bool to_current);
+        static void make_super_cell(const int sc_a, const int sc_b, const int sc_c);
         static void compose_gv_from_images(py::list gvs);
 
         static void set_msr_digits(int digits);
@@ -59,8 +54,7 @@ namespace qpp {
         static void sel_cnt_all();
         static void sel_cnt_list(py::list sel_list);
         static void sel_cnt_type(py::str sel_type);
-        static void sel_cnt_sphere(vector3<float> sph_center,
-                                   float sph_rad);
+        static void sel_cnt_sphere(vector3<float> sph_center, float sph_rad);
         static void sel_cnt_gsph(float sph_rad);
         static void sel_hemisphere(int coord_idx, bool positive);
         static void unsel_cnt_all();
@@ -89,16 +83,13 @@ namespace qpp {
         static void embed_cube();
 
         static void make_psg_view(float tolerance);
-        static void make_traj_highlight(size_t atom_id,
-                                        size_t anim_id);
+        static void make_traj_highlight(size_t atom_id, size_t anim_id);
 
         static std::vector<std::string> get_xgeom_dfn();
         static std::vector<basic_types> get_xgeom_dft();
         static void edit_mode(int mode);
         static void rebond();
-        static void translate_selected(float tx,
-                                       float ty,
-                                       float tz);
+        static void translate_selected(float tx, float ty, float tz);
         static void set_charge(float charge);
         static void set_ws_bg(vector3<float> bg);
         static std::shared_ptr<workspace_t> cur_ws();
@@ -109,27 +100,17 @@ namespace qpp {
                                 float size_b,
                                 float size_c);
 
-        static void make_arrow_p(std::string name,
-                                 vector3<float> from,
-                                 vector3<float> to);
+        static void make_arrow_p(std::string name, vector3<float> from, vector3<float> to);
 
         static void convert_selected_units(spatial_units_e new_unit);
 
         static void set_sel_color_vec(vector3<float> color);
         static void set_sel_color(float r, float g, float b);
 
-        static void ptable_set_color_by_number(int num,
-                                               float r,
-                                               float g,
-                                               float b);
-        static void ptable_set_color_by_name(std::string name,
-                                             float r,
-                                             float g,
-                                             float b);
-        static void ptable_set_radius_by_number(int num,
-                                                float r);
-        static void ptable_set_radius_by_name(std::string name,
-                                              float r);
+        static void ptable_set_color_by_number(int num, float r, float g, float b);
+        static void ptable_set_color_by_name(std::string name, float r, float g, float b);
+        static void ptable_set_radius_by_number(int num, float r);
+        static void ptable_set_radius_by_name(std::string name, float r);
 
         static vector3<float> ptable_get_color_by_number(int num);
         static vector3<float> ptable_get_color_by_name(std::string name);
@@ -145,17 +126,13 @@ namespace qpp {
         static void copy_camera_from_ws(int ws_id);
 
         static py::list sv_get();
-        static void sv_edit(int at,
-                            bool status);
-        static void sv_edit_list(py::list at_list,
-                                 bool status);
+        static void sv_edit(int at, bool status);
+        static void sv_edit_list(py::list at_list, bool status);
         static void sv_edit_all(bool status);
 
         static py::list cl_get();
-        static void set_cl_state(int at,
-                                 bool status);
-        static void set_cl_text(int at,
-                                std::string text);
+        static void set_cl_state(int at, bool status);
+        static void set_cl_text(int at, std::string text);
 
     };
 

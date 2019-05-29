@@ -15,62 +15,11 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   script_editor = new QTextEdit;
 
   console_lt = new QHBoxLayout;
-  buttons_lt = new QVBoxLayout;
-
-  btn_clear = new QPushButton();
-  btn_clear->setIcon(QIcon("://images/outline-delete-24px.svg"));
-  btn_clear->setIconSize(QSize(astate->size_guide.script_edtior_button_icon_w(),
-                               astate->size_guide.script_edtior_button_icon_w()));
-  btn_clear->setFixedSize(QSize(astate->size_guide.script_editor_button_w(),
-                                astate->size_guide.script_editor_button_w()));
-  btn_clear->setToolTip(tr("Clear the console output"));
-
-  connect(btn_clear,
-          &QPushButton::clicked,
-          this,
-          &python_console_widget_t::clear_btn_clicked);
-
-  btn_run_code = new QPushButton();
-  btn_run_code->setIcon(QIcon("://images/outline-slideshow-24px.svg"));
-  btn_run_code->setIconSize(QSize(astate->size_guide.script_edtior_button_icon_w(),
-                               astate->size_guide.script_edtior_button_icon_w()));
-  btn_run_code->setFixedSize(QSize(astate->size_guide.script_editor_button_w(),
-                                astate->size_guide.script_editor_button_w()));
-  btn_run_code->setToolTip(tr("Run script"));
-
-  connect(btn_run_code,
-          &QPushButton::clicked,
-          this,
-          &python_console_widget_t::run_script_button_clicked);
-
-  buttons_lt->addWidget(btn_clear);
-  buttons_lt->addWidget(btn_run_code);
-  buttons_lt->addStretch(0);
 
   setLayout(console_lt);
-  console_lt->addLayout(buttons_lt);
 
-  pyconsole_plh = new QWidget;
-
-  script_editor_lt = new QVBoxLayout;
-  pyconsole_lt = new QVBoxLayout;
-
-
-  script_editor_lt->setContentsMargins(0, 0, 0, 0);
-  script_editor_lt->addWidget(script_editor);
-
-  pyconsole_plh->setLayout(pyconsole_lt);
-  pyconsole_lt->setContentsMargins(0, 0, 0, 0);
-  pyconsole_lt->addWidget(py_tedit);
-
-  edt_splitter = new QSplitter;
-  edt_splitter->setHandleWidth(10);
-  edt_splitter->addWidget(pyconsole_plh);
-
-  edt_splitter->setCollapsible(0, false);
-  //edt_splitter->setCollapsible(1, false);
-
-  console_lt->addWidget(edt_splitter);
+  console_lt->setContentsMargins(0, 0, 0, 0);
+  console_lt->addWidget(py_tedit);
 
   setMinimumHeight(200);
   setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
@@ -81,13 +30,6 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
           &python_console_widget_t::font_size_updated_signal_received);
 
   font_size_updated_signal_received();
-  editor_toggle_signal_toggled(false);
-
-}
-
-void python_console_widget_t::editor_toggle_signal_toggled(bool checked) {
-
-  btn_run_code->setEnabled(checked);
 
 }
 
@@ -99,26 +41,6 @@ void python_console_widget_t::font_size_updated_signal_received() {
   QString new_qss = QString("font-size:%1pt;").arg(new_font_point_size);
   py_tedit->setStyleSheet(new_qss);
   script_editor->setStyleSheet(new_qss);
-
-}
-
-void python_console_widget_t::clear_btn_clicked() {
-
-  py_tedit->clear();
-  py_tedit->print_promt();
-
-}
-
-void python_console_widget_t::run_script_button_clicked() {
-
-  app_state_t* astate = app_state_t::get_inst();
-  QString _script = script_editor->toPlainText();
-  if (_script.length() > 0) {
-      astate->py_mgr->execute(_script.toStdString());
-      py_tedit->insert_text_at_cursor("execute_script()");
-      py_tedit->append(QString::fromStdString(astate->py_mgr->m_output_buffer));
-      py_tedit->print_promt();
-    }
 
 }
 

@@ -32,12 +32,13 @@ void simple_query::set_font_size(int new_font_size) {
 }
 
 std::tuple<std::string, std::string> simple_query::get_build_info() {
+
   return {build_info_helper::get_git_version(),
           build_info_helper::get_build_date()};
+
 }
 
-void simple_query::open_file(std::string file_name,
-                             bool to_current) {
+void simple_query::open_file(std::string file_name, bool to_current) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -47,13 +48,11 @@ void simple_query::open_file(std::string file_name,
 
 }
 
-void simple_query::open_file_query(std::string file_name,
-                                   std::string file_format,
-                                   bool to_current) {
+void simple_query::open_file_query(std::string f_name,  std::string f_format, bool to_current) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->ws_mgr->load_from_file_autodeduce(file_name, file_format, !to_current);
+  astate->ws_mgr->load_from_file_autodeduce(f_name, f_format, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 
