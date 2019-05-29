@@ -97,7 +97,7 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
       ret->setMaximum(5.00);
       ret->setValue(1.0);
       ret->setSingleStep(0.00001);
-      ret->setDecimals(6);
+      ret->setDecimals(10);
       ret->setAlignment(Qt::AlignCenter);
       ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
       ret->setLocale(QLocale::C);
