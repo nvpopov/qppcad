@@ -21,5 +21,11 @@ def complete_text(text):
                 else:
                         ret_list.append(x)
         return ret_list
+
+def input_wrapper():
+    print("input(...) is blocked")
+
+input = input_wrapper
+
 )"
 
