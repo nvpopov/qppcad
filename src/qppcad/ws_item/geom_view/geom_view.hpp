@@ -14,6 +14,13 @@
 #include <qppcad/ws_item/geom_view/geom_view_render_buffered_billboards.hpp>
 #include <deque>
 
+#pragma push_macro("slots")
+#undef slots
+#include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
+#pragma pop_macro("slots")
+namespace py = pybind11;
+
 namespace qpp {
 
   namespace cad {
@@ -226,23 +233,19 @@ namespace qpp {
           for (auto &elem : m_atom_idx_sel)
             if (elem.m_idx == zero) m_geom->xfield<XFIELD>(field_id, elem.m_atm) = value;
         }
+
         void xbool_invert_selected(size_t field_id);
         void copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst);
         void copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst,
-                           bool copy_selected = false,
-                           bool copy_cell = true);
+                           bool copy_selected = false, bool copy_cell = true);
         void copy_cell(geom_view_t &src, bool rebuild_tws_tree = true);
         std::shared_ptr<ws_item_t> clone_on_the_spot();
 
         void load_color_from_static_anim();
 
         vector3<float> get_xcolor(const size_t atm);
-        void set_xcolorv(const size_t atm,
-                         const vector3<float> color);
-        void set_xcolorf(const size_t atm,
-                         const float _r,
-                         const float _g,
-                         const float _b);
+        void set_xcolorv(const size_t atm, const vector3<float> color);
+        void set_xcolorf(const size_t atm, const float _r, const float _g, const float _b);
         void colorize_by_xfield(const vector3<float> color_low,
                                 const vector3<float> color_high,
                                 const size_t xfield_id);
@@ -255,9 +258,7 @@ namespace qpp {
                                       const int at1, const int at2,
                                       const index id1, const index id2,
                                       pair_dist_mode_e mode);
-        void update_inter_atomic_dist(float new_dist,
-                                      const int at1,
-                                      const int at2,
+        void update_inter_atomic_dist(float new_dist, const int at1, const int at2,
                                       pair_dist_mode_e mode);
 
         void translate_selected(const vector3<float> &t_vec);
@@ -293,6 +294,8 @@ namespace qpp {
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
         bool can_be_written_to_json() override;
         //void post_load();
+
+        py::list py_get_sel_pos_in_frame(vector3<float> t_frame);
 
     };
 

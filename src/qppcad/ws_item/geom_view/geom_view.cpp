@@ -1580,7 +1580,15 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
 }
 
 bool geom_view_t::can_be_written_to_json() {
+
   return true;
+
+}
+
+pybind11::list geom_view_t::py_get_sel_pos_in_frame(vector3<float> t_frame) {
+
+
+
 }
 
 
