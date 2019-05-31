@@ -93,6 +93,8 @@ namespace qpp {
         bool is_cell_animable(size_t anim_id, size_t frame_id);
         vector3<float> get_cell_vectors(size_t anim_id, size_t frame_id, size_t cell_id);
 
+        vector3<float> get_atom_pos(size_t anim_id, size_t frame_id, size_t atom_id);
+
     };
 
   } // namespace qpp::cad

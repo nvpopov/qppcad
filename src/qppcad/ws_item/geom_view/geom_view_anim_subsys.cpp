@@ -487,8 +487,8 @@ size_t geom_view_anim_subsys_t::current_frame_count() const {
 
 bool geom_view_anim_subsys_t::is_cell_animable(size_t anim_id, size_t frame_id) {
 
-  if (anim_id < m_anim_data.size()) return false;
-  if (frame_id < m_anim_data[anim_id].frames.size()) return false;
+  if (anim_id >= m_anim_data.size()) return false;
+  if (frame_id >= m_anim_data[anim_id].frames.size()) return false;
   return m_anim_data[anim_id].frames[frame_id].m_cell_is_animable;
 
 }
@@ -503,5 +503,17 @@ vector3<float> geom_view_anim_subsys_t::get_cell_vectors(size_t anim_id,
     return p_owner->m_geom->cell.v[cell_id];
 
   return vector3<float>{0};
+
+}
+
+vector3<float> geom_view_anim_subsys_t::get_atom_pos(size_t anim_id,
+                                                     size_t frame_id,
+                                                     size_t atom_id) {
+
+  if (anim_id >= m_anim_data.size()) return vector3<float>{0};
+  if (frame_id >= m_anim_data[anim_id].frames.size()) return vector3<float>{0};
+  if (atom_id >= m_anim_data[anim_id].frames[frame_id].atom_pos.size()) return vector3<float>{0};
+
+  return m_anim_data[anim_id].frames[frame_id].atom_pos[atom_id];
 
 }

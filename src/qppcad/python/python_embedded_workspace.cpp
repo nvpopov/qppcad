@@ -210,6 +210,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                         py::arg("propagate_to_the_end") = false);
   py_geom_view_anim.def("is_cell_animable", &geom_view_anim_subsys_t::is_cell_animable);
   py_geom_view_anim.def("get_cell_vectors", &geom_view_anim_subsys_t::get_cell_vectors);
+  py_geom_view_anim.def("get_atom_pos", &geom_view_anim_subsys_t::get_atom_pos);
 
   py::class_<atom_index_set_key, std::shared_ptr<atom_index_set_key> >
   py_atom_index_set_key(m, "atom_index_set_key_t");
