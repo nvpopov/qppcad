@@ -34,8 +34,14 @@ namespace qpp {
         qspoiler_widget_t *tgo_select_step;
         QHBoxLayout *tgo_select_step_lt;
         QListWidget *tgo_steps_ex;
+
         qspoiler_widget_t *tgo_step_info;
         QFormLayout *tgo_step_info_lt;
+        QLabel *tgo_step_info_etotal;
+        QLabel *tgo_step_info_dipole_moment;
+        QLabel *tgo_step_info_gr_min;
+        QLabel *tgo_step_info_gr_max;
+        QLabel *tgo_step_info_gr_av;
 
         qspoiler_widget_t *gb_normal_modes;
         QVBoxLayout *gb_normal_modes_lt;
@@ -45,6 +51,7 @@ namespace qpp {
         void unbind_item() override;
 
         void update_geo_opt();
+        void update_geo_opt_step_info();
         ccd_view_obj_insp_widget_t();
 
       public slots:

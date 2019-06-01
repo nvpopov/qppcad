@@ -92,9 +92,14 @@ void ccd_view_obj_insp_widget_t::update_geo_opt() {
 
       //select step
       tgo_steps_ex->setCurrentRow(b_ccdv->m_cur_step);
+      ui_cur_selected_step_item_changed();
     }
 
   tgo_steps_ex->blockSignals(false);
+
+}
+
+void ccd_view_obj_insp_widget_t::update_geo_opt_step_info() {
 
 }
 
@@ -148,6 +153,20 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tgo_step_info_lt = new QFormLayout;
   tgo_step_info->add_content_layout(tgo_step_info_lt);
 
+  tgo_step_info_etotal = new QLabel;
+  tgo_step_info_dipole_moment = new QLabel;
+  tgo_step_info_gr_min = new QLabel;
+  tgo_step_info_gr_max = new QLabel;
+  tgo_step_info_gr_av = new QLabel;
+
+  tgo_step_info_lt->addRow(tr("Energy[a.u]"), tgo_step_info_etotal);
+  tgo_step_info_lt->addRow(tr("Dipole moment"), tgo_step_info_dipole_moment);
+  tgo_step_info_lt->addRow(tr("Gradient min"), tgo_step_info_gr_min);
+  tgo_step_info_lt->addRow(tr("Gradient max"), tgo_step_info_gr_max);
+  tgo_step_info_lt->addRow(tr("Gradient aver."), tgo_step_info_gr_av);
+
+  init_form_lt(tgo_step_info_lt);
+
   tab_geo_opt->tab_inner_widget_lt->addWidget(tgo_select_step);
   tab_geo_opt->tab_inner_widget_lt->addWidget(tgo_step_info);
   tab_geo_opt->tab_inner_widget_lt->addStretch(0);
@@ -158,11 +177,53 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
 
 void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
 
+  tgo_step_info_etotal->setText("-");
+  tgo_step_info_dipole_moment->setText("-");
+  tgo_step_info_gr_min->setText("-");
+  tgo_step_info_gr_max->setText("-");
+  tgo_step_info_gr_av->setText("-");
+
   if (!b_ccdv) return;
   if (b_ccdv->m_ccd->m_run_t != comp_chem_program_run_e::rt_geo_opt) return;
   if (tgo_steps_ex->selectedItems().empty()) return;
 
   b_ccdv->m_cur_step = tgo_steps_ex->currentRow();
   b_ccdv->update_connected_items();
+
+  if (b_ccdv->m_cur_step < b_ccdv->m_ccd->m_steps.size()) {
+
+      auto &step = b_ccdv->m_ccd->m_steps[b_ccdv->m_cur_step];
+
+      tgo_step_info_etotal->setText(tr("%1").arg(QString::number(step.m_toten, 'g', 15)));
+
+      tgo_step_info_dipole_moment->setText(
+            tr("x=%1 \ny=%2 \nz=%3")
+            .arg(QString::number(step.m_dipole_moment[0], 'g', 6))
+            .arg(QString::number(step.m_dipole_moment[1], 'g', 6))
+            .arg(QString::number(step.m_dipole_moment[2], 'g', 6))
+          );
+
+      tgo_step_info_gr_min->setText(
+            tr("x=%1 \ny=%2 \nz=%3")
+            .arg(QString::number(step.m_gradient_min[0], 'g', 6))
+            .arg(QString::number(step.m_gradient_min[1], 'g', 6))
+            .arg(QString::number(step.m_gradient_min[2], 'g', 6))
+          );
+
+      tgo_step_info_gr_max->setText(
+            tr("x=%1 \ny=%2 \nz=%3")
+            .arg(QString::number(step.m_gradient_max[0], 'g', 6))
+            .arg(QString::number(step.m_gradient_max[1], 'g', 6))
+            .arg(QString::number(step.m_gradient_max[2], 'g', 6))
+          );
+
+      tgo_step_info_gr_av->setText(
+            tr("x=%1 \ny=%2 \nz=%3")
+            .arg(QString::number(step.m_gradient_average[0], 'g', 6))
+            .arg(QString::number(step.m_gradient_average[1], 'g', 6))
+            .arg(QString::number(step.m_gradient_average[2], 'g', 6))
+          );
+
+    }
 
 }
