@@ -47,6 +47,10 @@ namespace qpp {
         void update_geo_opt();
         ccd_view_obj_insp_widget_t();
 
+      public slots:
+
+        void ui_cur_selected_step_item_changed();
+
     };
 
   } // namespace qpp::cad

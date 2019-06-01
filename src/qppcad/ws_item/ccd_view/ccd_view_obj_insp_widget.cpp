@@ -126,12 +126,16 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tab_vibs->tab_inner_widget_lt->addStretch(0);
 
   //tab geo opt
-  tgo_select_step = new qspoiler_widget_t(tr("Select geo. opt. step"));
+  tgo_select_step = new qspoiler_widget_t(tr("Geometry optimization step"));
   tgo_select_step_lt = new QHBoxLayout;
   tgo_select_step->add_content_layout(tgo_select_step_lt);
 
   tgo_steps_ex = new QListWidget;
   tgo_select_step_lt->addWidget(tgo_steps_ex);
+  connect(tgo_steps_ex,
+          &QListWidget::itemSelectionChanged,
+          this,
+          &ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed);
 
   tgo_step_info = new qspoiler_widget_t(tr("Step info"));
   tgo_step_info_lt = new QFormLayout;
@@ -143,4 +147,8 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   //end tab geo opt
 
   //tg_form_layout->
+}
+
+void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
+
 }

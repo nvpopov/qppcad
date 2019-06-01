@@ -90,7 +90,7 @@ namespace qpp {
       m_app_palette.setColor(QPalette::Disabled, QPalette::ButtonText,QColor(127,127,127));
       m_app_palette.setColor(QPalette::BrightText, Qt::red);
       m_app_palette.setColor(QPalette::Link, QColor(42,130,218));
-      m_app_palette.setColor(QPalette::Highlight, QColor(66, 66, 66));
+      m_app_palette.setColor(QPalette::Highlight, QColor(96, 96, 96));
       m_app_palette.setColor(QPalette::Disabled, QPalette::Highlight,QColor(50,50,50));
       m_app_palette.setColor(QPalette::HighlightedText, Qt::white);
       m_app_palette.setColor(QPalette::Disabled, QPalette::HighlightedText,

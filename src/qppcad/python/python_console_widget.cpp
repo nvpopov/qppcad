@@ -384,7 +384,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
 
   python_highlighting_rule_t rule;
 
-  prompt_fmt.setForeground(Qt::green);
+  prompt_fmt.setForeground(Qt::gray);
 
   //  prompt_fmt.setFontWeight(QFont::Bold);
   QStringList promptPatterns;
