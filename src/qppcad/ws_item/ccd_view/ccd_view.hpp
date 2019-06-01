@@ -14,6 +14,7 @@ namespace qpp {
        QPP_OBJECT(ccd_view_t, ws_item_t)
 
       public:
+
         std::unique_ptr<comp_chem_program_data_t<float> > m_ccd{nullptr};
         std::vector<size_t> m_connected_items_stride;
 
@@ -24,6 +25,7 @@ namespace qpp {
         void manual_step_update(const int dir);
         void manual_update_vib();
         void fill_custom_colors_of_geom_anim(const std::string color_map_name);
+        void update_connected_items();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
                                    vector3<float> &out_look_at) override ;

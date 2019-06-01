@@ -1587,7 +1587,7 @@ bool geom_view_t::can_be_written_to_json() {
 
 pybind11::list geom_view_t::py_get_sel_pos_in_frame(vector3<float> t_frame) {
 
-
+  return py::none();
 
 }
 

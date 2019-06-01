@@ -29,9 +29,10 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
   if (b_ccdv) {
-      // std::cout << "ALL IS GOOD" << std::endl;
-      gen_info_prog_name->setText(QString::fromStdString(
-                                    qpp::ccdprog2str[b_ccdv->m_ccd->m_comp_chem_program]));
+
+      gen_info_prog_name->setText(
+            QString::fromStdString(qpp::ccdprog2str[b_ccdv->m_ccd->m_comp_chem_program]));
+
       gen_info_run_type->setText(QString::fromStdString(qpp::ccdrt2str[b_ccdv->m_ccd->m_run_t]));
 
       switch (b_ccdv->m_ccd->m_run_t) {
@@ -80,11 +81,17 @@ void ccd_view_obj_insp_widget_t::update_geo_opt() {
   tgo_steps_ex->clear();
   tgo_steps_ex->setEnabled(!(!b_ccdv || !b_ccdv->m_ccd || b_ccdv->m_ccd->m_steps.empty()));
 
-  for (size_t i = 0; i < b_ccdv->m_ccd->m_steps.size(); i++) {
-      QString nl = tr("Step № %1, E= %2 [au]")
-                   .arg(i)
-                   .arg( QString::number(b_ccdv->m_ccd->m_steps[i].m_toten, 'g', 15));
-      tgo_steps_ex->addItem(nl);
+  if (b_ccdv) {
+      //rebuild steps list
+      for (size_t i = 0; i < b_ccdv->m_ccd->m_steps.size(); i++) {
+          QString nl = tr("Step № %1, E= %2 [au]")
+                       .arg(i)
+                       .arg( QString::number(b_ccdv->m_ccd->m_steps[i].m_toten, 'g', 15));
+          tgo_steps_ex->addItem(nl);
+        }
+
+      //select step
+      tgo_steps_ex->setCurrentRow(b_ccdv->m_cur_step);
     }
 
   tgo_steps_ex->blockSignals(false);
@@ -150,5 +157,12 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
 }
 
 void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
+
+  if (!b_ccdv) return;
+  if (b_ccdv->m_ccd->m_run_t != comp_chem_program_run_e::rt_geo_opt) return;
+  if (tgo_steps_ex->selectedItems().empty()) return;
+
+  b_ccdv->m_cur_step = tgo_steps_ex->currentRow();
+  b_ccdv->update_connected_items();
 
 }

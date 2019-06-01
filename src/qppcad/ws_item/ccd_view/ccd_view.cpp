@@ -7,14 +7,18 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ccd_view_t::ccd_view_t() {
+
   set_default_flags(ws_item_flags_default);
+
 }
 
 void ccd_view_t::manual_step_update(const int dir) {
+
   auto old_step = m_cur_step;
   auto new_step = m_cur_step + dir;
   if (new_step >= 0 && new_step < m_ccd->m_steps.size()) m_cur_step = new_step;
   if (old_step != m_cur_step) update_joined_atoms_list_animation(m_cur_step);
+
 }
 
 void ccd_view_t::manual_update_vib() {
@@ -35,6 +39,42 @@ void ccd_view_t::manual_update_vib() {
 void ccd_view_t::fill_custom_colors_of_geom_anim(const std::string color_map_name) {
 
   app_state_t* astate = app_state_t::get_inst();
+
+}
+
+void ccd_view_t::update_connected_items() {
+
+  switch (m_ccd->m_run_t) {
+
+    case comp_chem_program_run_e::rt_unknown : {
+        break;
+      }
+
+    case comp_chem_program_run_e::rt_energy : {
+        break;
+      }
+
+    case comp_chem_program_run_e::rt_geo_opt : {
+
+        for (auto con_itm : m_connected_items)
+          if (auto as_gv = con_itm->cast_as<geom_view_t>(); as_gv && as_gv->m_anim->animable()) {
+              as_gv->m_anim->update_geom_to_anim(1, m_cur_step);
+              as_gv->m_anim->m_play_anim = false;
+            }
+
+        break;
+
+      }
+
+    case comp_chem_program_run_e::rt_vib : {
+        break;
+      }
+
+    default : {
+        break;
+      }
+
+    }
 
 }
 
