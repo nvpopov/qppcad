@@ -58,7 +58,7 @@ void ccd_view_t::update_connected_items() {
 
         for (auto con_itm : m_connected_items)
           if (auto as_gv = con_itm->cast_as<geom_view_t>(); as_gv && as_gv->m_anim->animable()) {
-              as_gv->m_anim->update_geom_to_anim(1, m_cur_step);
+              as_gv->m_anim->update_and_set_anim(1, m_cur_step);
               as_gv->m_anim->m_play_anim = false;
             }
 

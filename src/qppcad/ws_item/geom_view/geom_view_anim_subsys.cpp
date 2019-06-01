@@ -6,7 +6,9 @@ using namespace qpp;
 using namespace qpp::cad;
 
 geom_view_anim_subsys_t::geom_view_anim_subsys_t(geom_view_t &_p_owner) {
+
   p_owner = &_p_owner;
+
 }
 
 void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
