@@ -103,6 +103,10 @@ int size_guide_t::obj_insp_lbl_w() {
   return 165;
 }
 
+int size_guide_t::obj_insp_list_wdgt_h() {
+  return 120;
+}
+
 int size_guide_t::ext_editor_btn_h() {
   return 19;
 }

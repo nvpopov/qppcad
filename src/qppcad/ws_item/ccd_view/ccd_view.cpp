@@ -58,8 +58,12 @@ void ccd_view_t::update_connected_items() {
 
         for (auto con_itm : m_connected_items)
           if (auto as_gv = con_itm->cast_as<geom_view_t>(); as_gv && as_gv->m_anim->animable()) {
-              as_gv->m_anim->update_and_set_anim(1, m_cur_step);
-              as_gv->m_anim->m_play_anim = false;
+              for (size_t i = 0; i < as_gv->m_anim->get_total_anims(); i++)
+                if (as_gv->m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_geo_opt) {
+                    as_gv->m_anim->update_and_set_anim(i, m_cur_step);
+                    as_gv->m_anim->m_play_anim = false;
+                    break;
+                  }
             }
 
         break;

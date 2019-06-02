@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/ccd_view/ccd_view_obj_insp_widget.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -105,6 +106,8 @@ void ccd_view_obj_insp_widget_t::update_geo_opt_step_info() {
 
 ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   tab_geo_opt = def_tab(tr("Geometry opt."),
                         "://images/baseline-graphic_eq-24px.svg",
                         "://images/baseline-graphic_eq-24px_d.svg");
@@ -143,6 +146,7 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tgo_select_step->add_content_layout(tgo_select_step_lt);
 
   tgo_steps_ex = new QListWidget;
+  tgo_steps_ex->setFixedHeight(astate->size_guide.obj_insp_list_wdgt_h());
   tgo_select_step_lt->addWidget(tgo_steps_ex);
   connect(tgo_steps_ex,
           &QListWidget::itemSelectionChanged,
@@ -169,13 +173,15 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
 
   tab_geo_opt->tab_inner_widget_lt->addWidget(tgo_select_step);
   tab_geo_opt->tab_inner_widget_lt->addWidget(tgo_step_info);
-  tab_geo_opt->tab_inner_widget_lt->addStretch(0);
+  tab_geo_opt->tab_inner_widget_lt->addStretch(1);
   //end tab geo opt
 
-  //tg_form_layout->
 }
 
 void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
+
+  const auto float_digits = 6;
+  const auto vector_template = "x = %1 \ny = %2 \nz = %3";
 
   tgo_step_info_etotal->setText("-");
   tgo_step_info_dipole_moment->setText("-");
@@ -197,31 +203,31 @@ void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
       tgo_step_info_etotal->setText(tr("%1").arg(QString::number(step.m_toten, 'g', 15)));
 
       tgo_step_info_dipole_moment->setText(
-            tr("x=%1 \ny=%2 \nz=%3")
-            .arg(QString::number(step.m_dipole_moment[0], 'g', 6))
-            .arg(QString::number(step.m_dipole_moment[1], 'g', 6))
-            .arg(QString::number(step.m_dipole_moment[2], 'g', 6))
+            tr(vector_template)
+            .arg(QString::number(step.m_dipole_moment[0], 'g', float_digits))
+            .arg(QString::number(step.m_dipole_moment[1], 'g', float_digits))
+            .arg(QString::number(step.m_dipole_moment[2], 'g', float_digits))
           );
 
       tgo_step_info_gr_min->setText(
-            tr("x=%1 \ny=%2 \nz=%3")
-            .arg(QString::number(step.m_gradient_min[0], 'g', 6))
-            .arg(QString::number(step.m_gradient_min[1], 'g', 6))
-            .arg(QString::number(step.m_gradient_min[2], 'g', 6))
+            tr(vector_template)
+            .arg(QString::number(step.m_gradient_min[0], 'g', float_digits))
+            .arg(QString::number(step.m_gradient_min[1], 'g', float_digits))
+            .arg(QString::number(step.m_gradient_min[2], 'g', float_digits))
           );
 
       tgo_step_info_gr_max->setText(
-            tr("x=%1 \ny=%2 \nz=%3")
-            .arg(QString::number(step.m_gradient_max[0], 'g', 6))
-            .arg(QString::number(step.m_gradient_max[1], 'g', 6))
-            .arg(QString::number(step.m_gradient_max[2], 'g', 6))
+            tr(vector_template)
+            .arg(QString::number(step.m_gradient_max[0], 'g', float_digits))
+            .arg(QString::number(step.m_gradient_max[1], 'g', float_digits))
+            .arg(QString::number(step.m_gradient_max[2], 'g', float_digits))
           );
 
       tgo_step_info_gr_av->setText(
-            tr("x=%1 \ny=%2 \nz=%3")
-            .arg(QString::number(step.m_gradient_average[0], 'g', 6))
-            .arg(QString::number(step.m_gradient_average[1], 'g', 6))
-            .arg(QString::number(step.m_gradient_average[2], 'g', 6))
+            tr(vector_template)
+            .arg(QString::number(step.m_gradient_average[0], 'g', float_digits))
+            .arg(QString::number(step.m_gradient_average[1], 'g', float_digits))
+            .arg(QString::number(step.m_gradient_average[2], 'g', float_digits))
           );
 
     }

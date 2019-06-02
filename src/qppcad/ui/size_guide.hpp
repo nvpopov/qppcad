@@ -68,6 +68,7 @@ namespace qpp {
         int obj_insp_button_w();
         int obj_insp_button_h();
         int obj_insp_lbl_w();
+        int obj_insp_list_wdgt_h();
 
         int ext_editor_btn_h();
         int ext_editor_icon();
