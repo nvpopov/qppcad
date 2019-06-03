@@ -207,32 +207,34 @@ QSplitter {
 
 qpp--cad--ws_tabbar_t {
  background-color: rgb(95, 95, 95);
+ padding-top: 5px;
 }
 
 qpp--cad--ws_tabbar_t::tab {
- height:26px;
+ height: 26px;
  border: 0px;
- margin-right:3px;
- margin-left:3px;
- background-color: rgb(50, 50, 50);
+ margin-top:4px;
+ margin-right: 3px;
+ margin-left: 3px;
+ background-color: rgb(60, 60, 60);
  border-top-left-radius: 4px;
  border-top-right-radius: 4px;
- padding-left:6px;
- padding-right:6px;
- padding-top:1px;
- padding-bottom:1px;
+ padding-left: 6px;
+ padding-right: 6px;
+ padding-top: 1px;
+ padding-bottom: 1px;
 }
 
 qpp--cad--ws_tabbar_t {
- height:50px;
+ height: 50px;
 }
 
 qpp--cad--ws_tabbar_t::tab::first {
- margin-left:5px;
+ margin-left: 5px;
 }
 
 qpp--cad--ws_tabbar_t::tab:selected {
- background-color: rgb(140, 140, 140);
+ background-color: rgb(83, 83, 83);
 }
 
 qpp--cad--ws_tabbar_t::tab:hover {
@@ -244,7 +246,7 @@ qpp--cad--ws_tabbar_t::tab:selected:hover {
 }
 
 qpp--cad--ws_tabbar_t::close-button {
- border-radius:2px;
+ border-radius: 2px;
  image: url(://images/outline-close-24px.svg);
 }
 

@@ -8,7 +8,7 @@ ws_tabbar_t::ws_tabbar_t(QWidget *parent) : QTabBar (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setFixedHeight(28);
+  //setFixedHeight(28);
   setDrawBase(false);
   setExpanding(false);
   setTabsClosable(true);

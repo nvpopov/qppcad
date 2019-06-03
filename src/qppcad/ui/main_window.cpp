@@ -573,7 +573,10 @@ void main_window::init_widgets() {
 void main_window::init_layouts() {
 
   main_layout = new QVBoxLayout;
+  ws_tabbar_wdgt = new ws_tabbar_t;
+
   main_widget->setLayout(main_layout);
+  main_layout->addWidget(ws_tabbar_wdgt);
   main_layout->addWidget(tool_panel_widget);
   main_layout->setContentsMargins(0,0,0,0);
   main_layout->setSpacing(0);
@@ -587,19 +590,15 @@ void main_window::init_layouts() {
   splitter_ws_viewer_extended_editor->setCollapsible(0, false);
   extended_editor_compositor->hide();
 
-  ws_tabbar_wdgt = new ws_tabbar_t;
-
   splitter_ws_viewer_py_console = new QSplitter(Qt::Vertical);
-  splitter_ws_viewer_py_console->addWidget(ws_tabbar_wdgt);
   splitter_ws_viewer_py_console->addWidget(splitter_ws_viewer_extended_editor);
   splitter_ws_viewer_py_console->addWidget(py_console_widget);
   splitter_ws_viewer_py_console->setHandleWidth(0);
-  splitter_ws_viewer_py_console->setSizes(QList<int>({1, 3, 1}));
+  splitter_ws_viewer_py_console->setSizes(QList<int>({1, 3}));
   splitter_ws_viewer_py_console->setContentsMargins(0,0,0,0);
   py_console_widget->hide();
   splitter_ws_viewer_py_console->setCollapsible(0, false);
   splitter_ws_viewer_py_console->setCollapsible(1, false);
-  splitter_ws_viewer_py_console->setCollapsible(2, false);
 
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console);
