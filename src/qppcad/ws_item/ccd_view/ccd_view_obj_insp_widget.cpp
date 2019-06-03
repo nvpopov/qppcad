@@ -51,6 +51,8 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
         case comp_chem_program_run_e::rt_geo_opt :
           set_tab_enabled(tab_vibs, false);
           set_tab_enabled(tab_geo_opt, true);
+          tgo_step_copy_charges->bind_value(reinterpret_cast<int*>(&b_ccdv->m_copy_charges),
+                                            b_ccdv);
           update_geo_opt();
           break;
 
@@ -72,6 +74,7 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
 void ccd_view_obj_insp_widget_t::unbind_item() {
 
   ws_item_obj_insp_widget_t::unbind_item();
+  tgo_step_copy_charges->unbind_value();
   b_ccdv = nullptr;
 
 }
@@ -163,11 +166,19 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tgo_step_info_gr_max = new QLabel;
   tgo_step_info_gr_av = new QLabel;
 
+  tgo_step_copy_charges = new qbinded_combobox_t;
+  tgo_step_copy_charges->m_updated_externally_event = true;
+  tgo_step_copy_charges->m_upd_flag = ws_item_updf_regenerate_content;
+  tgo_step_copy_charges->addItem("Do not copy");
+  tgo_step_copy_charges->addItem("Mulliken charges");
+  tgo_step_copy_charges->addItem("Lowdin charges");
+
   tgo_step_info_lt->addRow(tr("Energy[a.u]"), tgo_step_info_etotal);
   tgo_step_info_lt->addRow(tr("Dipole moment"), tgo_step_info_dipole_moment);
   tgo_step_info_lt->addRow(tr("Gradient min"), tgo_step_info_gr_min);
   tgo_step_info_lt->addRow(tr("Gradient max"), tgo_step_info_gr_max);
   tgo_step_info_lt->addRow(tr("Gradient aver."), tgo_step_info_gr_av);
+  tgo_step_info_lt->addRow(tr("Copy charges"), tgo_step_copy_charges);
 
   init_form_lt(tgo_step_info_lt);
 

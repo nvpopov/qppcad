@@ -62,6 +62,12 @@ void ccd_view_t::update_connected_items() {
                 if (as_gv->m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_geo_opt) {
                     as_gv->m_anim->update_and_set_anim(i, m_cur_step);
                     as_gv->m_anim->m_play_anim = false;
+
+                    //copy charges
+                    if (m_copy_charges != ccd_copy_charges_mode::do_not_copy_charges &&
+                        m_cur_step < m_ccd->m_steps.size() && m_connected_items.size() == 1)
+                      update_charges(as_gv, 0, as_gv->m_geom->nat());
+                    //end copy charges
                     break;
                   }
             }
@@ -82,8 +88,33 @@ void ccd_view_t::update_connected_items() {
 
 }
 
+void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_atom) {
+
+  for (size_t c = start_atom; c < end_atom; c++) {
+
+      bool succes{false};
+
+      if (m_copy_charges == ccd_copy_charges_mode::copy_mulliken &&
+          c < m_ccd->m_steps[m_cur_step].m_mulliken_pop_per_atom.size()) {
+          gv->m_geom->xfield<float>(xgeom_charge, c) =
+              m_ccd->m_steps[m_cur_step].m_mulliken_pop_per_atom[c].first;
+          succes = true;
+        }
+      else if (m_copy_charges == ccd_copy_charges_mode::copy_lowdin &&
+               c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
+          gv->m_geom->xfield<float>(xgeom_charge, c) =
+              m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom[c].first;
+          succes = true;
+        }
+
+      if (!succes) gv->m_geom->xfield<float>(xgeom_charge, c) = 0;
+
+    }
+
+}
+
 void ccd_view_t::vote_for_view_vectors(vector3<float> &vOutLookPos,
-                                                vector3<float> &vOutLookAt) {
+                                       vector3<float> &vOutLookAt) {
   //do nothing
 }
 
@@ -123,7 +154,19 @@ float ccd_view_t::get_bb_prescaller() {
 }
 
 void ccd_view_t::updated_externally(uint32_t update_reason) {
+
   ws_item_t::updated_externally(update_reason);
+
+  switch (update_reason) {
+    case ws_item_updf_regenerate_content: {
+        update_connected_items();
+        break;
+      }
+    default: {
+        break;
+      }
+    }
+
 }
 
 uint32_t ccd_view_t::get_num_cnt_selected() {

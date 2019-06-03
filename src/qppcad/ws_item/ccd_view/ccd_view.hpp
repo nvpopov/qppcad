@@ -9,6 +9,14 @@ namespace qpp {
 
   namespace cad {
 
+    enum ccd_copy_charges_mode : int {
+      do_not_copy_charges,
+      copy_mulliken,
+      copy_lowdin
+    };
+
+    class geom_view_t;
+
     class ccd_view_t : public ws_item_t {
 
        QPP_OBJECT(ccd_view_t, ws_item_t)
@@ -20,12 +28,14 @@ namespace qpp {
 
         int m_cur_step{0};
         int m_cur_vib{-1};
+        ccd_copy_charges_mode m_copy_charges{ccd_copy_charges_mode::do_not_copy_charges};
         ccd_view_t();
 
         void manual_step_update(const int dir);
         void manual_update_vib();
         void fill_custom_colors_of_geom_anim(const std::string color_map_name);
         void update_connected_items();
+        void update_charges(geom_view_t *gv, size_t start_atom, size_t end_atom);
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
                                    vector3<float> &out_look_at) override ;
