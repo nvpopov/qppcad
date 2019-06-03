@@ -42,6 +42,7 @@ namespace qpp {
         QLabel *tgo_step_info_gr_min;
         QLabel *tgo_step_info_gr_max;
         QLabel *tgo_step_info_gr_av;
+        QLabel *tgo_step_info_gr_norm;
         qbinded_combobox_t *tgo_step_copy_charges;
 
         qspoiler_widget_t *gb_normal_modes;
