@@ -798,9 +798,9 @@ void simple_query::make_cube_p(std::string name,
 
 }
 
-void simple_query::make_arrow_p(std::string name,
-                                vector3<float> from,
-                                vector3<float> to) {
+void simple_query::make_arrow_p(vector3<float> from,
+                                vector3<float> to,
+                                std::string name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -810,7 +810,9 @@ void simple_query::make_arrow_p(std::string name,
   if (!cur_ws) return;
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
-  new_arr->m_name = name;
+  new_arr->m_name = name.empty() ?
+        fmt::format("arrow_{}", cur_ws->m_ws_items.size()) :
+        name;
   new_arr->m_pos = from;
   new_arr->m_arrow_to = to;
   cur_ws->add_item_to_ws(new_arr);

@@ -100,7 +100,9 @@ namespace qpp {
                                 float size_b,
                                 float size_c);
 
-        static void make_arrow_p(std::string name, vector3<float> from, vector3<float> to);
+        static void make_arrow_p(vector3<float> from,
+                                 vector3<float> to,
+                                 std::string name="");
 
         static void convert_selected_units(spatial_units_e new_unit);
 
