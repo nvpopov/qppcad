@@ -188,3 +188,16 @@ void ccd_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) 
   ws_item_t::load_from_json(data, rep_info);
 
 }
+
+void ccd_view_t::traverse_step_manual(int delta_step) {
+
+  m_cur_step += delta_step;
+  m_cur_step = std::clamp<int>(m_cur_step, 0, m_ccd->m_steps.size() - 1);
+
+}
+
+void ccd_view_t::traverse_step_boundary(bool to_the_begin) {
+
+  (to_the_begin ? m_cur_step = 0 : m_cur_step = m_ccd->m_steps.size() - 1);
+
+}

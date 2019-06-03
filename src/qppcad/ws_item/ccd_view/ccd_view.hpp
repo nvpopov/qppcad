@@ -53,6 +53,9 @@ namespace qpp {
         void save_to_json(json &data) override;
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
+        void traverse_step_manual(int delta_step);
+        void traverse_step_boundary(bool to_the_begin);
+
     };
 
   } // namespace qpp::cad

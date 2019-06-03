@@ -81,29 +81,34 @@ void ccd_view_obj_insp_widget_t::unbind_item() {
 
 void ccd_view_obj_insp_widget_t::update_geo_opt() {
 
-  tgo_steps_ex->blockSignals(true);
-  tgo_steps_ex->clear();
-  tgo_steps_ex->setEnabled(!(!b_ccdv || !b_ccdv->m_ccd || b_ccdv->m_ccd->m_steps.empty()));
+//  tgo_steps_ex->blockSignals(true);
+//  tgo_steps_ex->clear();
+//  tgo_steps_ex->setEnabled(!(!b_ccdv || !b_ccdv->m_ccd || b_ccdv->m_ccd->m_steps.empty()));
 
   if (b_ccdv) {
-      //rebuild steps list
-      for (size_t i = 0; i < b_ccdv->m_ccd->m_steps.size(); i++) {
-          QString nl = tr("Step № %1, E= %2 [au]")
-                       .arg(i)
-                       .arg( QString::number(b_ccdv->m_ccd->m_steps[i].m_toten, 'g', 15));
-          tgo_steps_ex->addItem(nl);
-        }
-
-      //select step
-      tgo_steps_ex->setCurrentRow(b_ccdv->m_cur_step);
+      update_geo_opt_step_info_lbl();
       ui_cur_selected_step_item_changed();
     }
 
-  tgo_steps_ex->blockSignals(false);
+//  tgo_steps_ex->blockSignals(false);
 
 }
 
 void ccd_view_obj_insp_widget_t::update_geo_opt_step_info() {
+
+}
+
+void ccd_view_obj_insp_widget_t::update_geo_opt_step_info_lbl() {
+
+  if (b_ccdv) {
+      tgo_steps_current->setText(
+            tr(" %1 / %2")
+            .arg(b_ccdv->m_cur_step + 1)
+            .arg(b_ccdv->m_ccd->m_steps.size())
+            );
+    } else {
+      tgo_steps_current->setText("0 / 0");
+    }
 
 }
 
@@ -145,16 +150,46 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
 
   //tab geo opt
   tgo_select_step = new qspoiler_widget_t(tr("Geometry optimization step"));
-  tgo_select_step_lt = new QHBoxLayout;
+  tgo_select_step_lt = new QFormLayout;
   tgo_select_step->add_content_layout(tgo_select_step_lt);
 
-  tgo_steps_ex = new QListWidget;
-  tgo_steps_ex->setFixedHeight(astate->size_guide.obj_insp_list_wdgt_h());
-  tgo_select_step_lt->addWidget(tgo_steps_ex);
-  connect(tgo_steps_ex,
-          &QListWidget::itemSelectionChanged,
+  tgo_steps_current = new QLabel;
+  tgo_actions_lt = new QHBoxLayout;
+  tgo_actions_lt->setContentsMargins(7, 0, 7, 0);
+
+  tgo_steps_forward = new QPushButton(tr("+"));
+  connect(tgo_steps_forward,
+          &QPushButton::clicked,
           this,
-          &ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed);
+          &ccd_view_obj_insp_widget_t::ui_step_forward);
+
+  tgo_steps_backward = new QPushButton(tr("-"));
+  connect(tgo_steps_backward,
+          &QPushButton::clicked,
+          this,
+          &ccd_view_obj_insp_widget_t::ui_step_backward);
+
+  tgo_steps_begin = new QPushButton(tr("bgn"));
+  connect(tgo_steps_begin,
+          &QPushButton::clicked,
+          this,
+          &ccd_view_obj_insp_widget_t::ui_step_to_the_begin);
+
+  tgo_steps_end = new QPushButton(tr("end"));
+  connect(tgo_steps_end,
+          &QPushButton::clicked,
+          this,
+          &ccd_view_obj_insp_widget_t::ui_step_to_the_end);
+
+  tgo_actions_lt->addWidget(tgo_steps_forward);
+  tgo_actions_lt->addWidget(tgo_steps_backward);
+  tgo_actions_lt->addWidget(tgo_steps_begin);
+  tgo_actions_lt->addWidget(tgo_steps_end);
+
+  tgo_select_step_lt->addRow(tr("Current step"), tgo_steps_current);
+  tgo_select_step_lt->addRow(tr("Actions"), tgo_actions_lt);
+
+  init_form_lt(tgo_select_step_lt);
 
   tgo_step_info = new qspoiler_widget_t(tr("Step info"));
   tgo_step_info_lt = new QFormLayout;
@@ -207,9 +242,9 @@ void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
 
   if (!b_ccdv) return;
   if (b_ccdv->m_ccd->m_run_t != comp_chem_program_run_e::rt_geo_opt) return;
-  if (tgo_steps_ex->selectedItems().empty()) return;
+  //if (tgo_steps_ex->selectedItems().empty()) return;
 
-  b_ccdv->m_cur_step = tgo_steps_ex->currentRow();
+  //b_ccdv->m_cur_step = tgo_steps_ex->currentRow();
   b_ccdv->update_connected_items();
 
   if (b_ccdv->m_cur_step < b_ccdv->m_ccd->m_steps.size()) {
@@ -261,5 +296,38 @@ void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
           );
 
     }
+
+}
+
+void ccd_view_obj_insp_widget_t::ui_step_forward() {
+
+  if (b_ccdv) b_ccdv->traverse_step_manual(1);
+  update_geo_opt_step_info_lbl();
+  ui_cur_selected_step_item_changed();
+
+}
+
+void ccd_view_obj_insp_widget_t::ui_step_backward() {
+
+  if (b_ccdv) b_ccdv->traverse_step_manual(-1);
+  update_geo_opt_step_info_lbl();
+  ui_cur_selected_step_item_changed();
+
+}
+
+void ccd_view_obj_insp_widget_t::ui_step_to_the_begin() {
+
+  if (b_ccdv) b_ccdv->traverse_step_boundary(true);
+  update_geo_opt_step_info_lbl();
+  ui_cur_selected_step_item_changed();
+
+}
+
+void ccd_view_obj_insp_widget_t::ui_step_to_the_end() {
+
+  if (b_ccdv) b_ccdv->traverse_step_boundary(false);
+  update_geo_opt_step_info_lbl();
+  ui_cur_selected_step_item_changed();
+
 
 }

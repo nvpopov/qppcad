@@ -32,8 +32,14 @@ namespace qpp {
         QLabel *gen_info_run_type;
 
         qspoiler_widget_t *tgo_select_step;
-        QHBoxLayout *tgo_select_step_lt;
-        QListWidget *tgo_steps_ex;
+        QFormLayout *tgo_select_step_lt;
+        //QListWidget *tgo_steps_ex;
+        QHBoxLayout *tgo_actions_lt;
+        QLabel *tgo_steps_current;
+        QPushButton *tgo_steps_forward;
+        QPushButton *tgo_steps_backward;
+        QPushButton *tgo_steps_begin;
+        QPushButton *tgo_steps_end;
 
         qspoiler_widget_t *tgo_step_info;
         QFormLayout *tgo_step_info_lt;
@@ -54,11 +60,16 @@ namespace qpp {
 
         void update_geo_opt();
         void update_geo_opt_step_info();
+        void update_geo_opt_step_info_lbl();
         ccd_view_obj_insp_widget_t();
 
       public slots:
 
         void ui_cur_selected_step_item_changed();
+        void ui_step_forward();
+        void ui_step_backward();
+        void ui_step_to_the_begin();
+        void ui_step_to_the_end();
 
     };
 
