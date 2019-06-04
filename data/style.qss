@@ -223,6 +223,9 @@ qpp--cad--ws_tabbar_t::tab {
  padding-right: 6px;
  padding-top: 1px;
  padding-bottom: 1px;
+ border-left: 1px solid rgb(73, 73, 73);
+ border-right: 1px solid rgb(73, 73, 73);
+ border-top: 1px solid rgb(73, 73, 73);
 }
 
 qpp--cad--ws_tabbar_t {
@@ -246,6 +249,8 @@ qpp--cad--ws_tabbar_t::tab:selected:hover {
 }
 
 qpp--cad--ws_tabbar_t::close-button {
+ margin-top:4px;
+ margin-right:2px;
  border-radius: 2px;
  image: url(://images/outline-close-24px.svg);
 }
@@ -282,6 +287,10 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:selected {
 
 qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
  background-color: rgb(110, 110, 110);
+}
+
+qpp--cad--qembed_window_t {
+ margin-top:-4px;
 }
 
 QGroupBox {
@@ -337,6 +346,10 @@ QToolButton {
  border: 1px solid rgb(55, 55, 55);
  border-radius: 4px;
  padding: 3px;
+}
+
+#tool_panel_widget_e {
+ border-top: 1px solid rgb(63, 63, 63);
 }
 
 QPushButton:pressed, QToolButton:pressed {

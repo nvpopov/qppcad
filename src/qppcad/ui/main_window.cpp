@@ -581,6 +581,8 @@ void main_window::init_layouts() {
   main_layout->setContentsMargins(0,0,0,0);
   main_layout->setSpacing(0);
 
+  ws_tabbar_wdgt->raise();
+
   splitter_ws_viewer_extended_editor = new QSplitter(Qt::Horizontal);
   splitter_ws_viewer_extended_editor->addWidget(ws_viewer_widget);
   splitter_ws_viewer_extended_editor->addWidget(extended_editor_compositor);
@@ -629,7 +631,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
-  tool_panel_widget->stackUnder(ws_viewer_widget);
+  //tool_panel_widget->stackUnder(ws_viewer_widget);
 
 }
 
