@@ -6,6 +6,7 @@ import rlcompleter
 import sys
 import embc
 import cad
+import cc
 
 ws = get_wsm()
 

@@ -68,7 +68,7 @@ int size_guide_t::obj_insp_anim_w(){
 }
 
 int size_guide_t::obj_insp_item_list_max_h() {
-  return 200;
+  return 170;
 }
 
 int size_guide_t::obj_insp_ctrl_max_w() {

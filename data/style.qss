@@ -211,7 +211,7 @@ qpp--cad--ws_tabbar_t {
 }
 
 qpp--cad--ws_tabbar_t::tab {
- height: 26px;
+ height: 27px;
  border: 0px;
  margin-top:4px;
  margin-right: 3px;
@@ -238,14 +238,16 @@ qpp--cad--ws_tabbar_t::tab::first {
 
 qpp--cad--ws_tabbar_t::tab:selected {
  background-color: rgb(83, 83, 83);
+ margin-top: 2px;
+ height: 28px;
+ border-left: 2px solid rgb(115, 115, 115);
+ border-right: 2px solid rgb(115, 115, 115);
+ border-top: 2px solid rgb(115, 115, 115);
+ font-weight: 75;
 }
 
 qpp--cad--ws_tabbar_t::tab:hover {
  background-color: rgb(90, 90, 90);
-}
-
-qpp--cad--ws_tabbar_t::tab:selected:hover {
- background-color: rgb(140, 140, 140);
 }
 
 qpp--cad--ws_tabbar_t::close-button {
@@ -346,10 +348,6 @@ QToolButton {
  border: 1px solid rgb(55, 55, 55);
  border-radius: 4px;
  padding: 3px;
-}
-
-#tool_panel_widget_e {
- border-top: 1px solid rgb(63, 63, 63);
 }
 
 QPushButton:pressed, QToolButton:pressed {
