@@ -518,7 +518,7 @@ vector3<float> simple_query::gizmo_pos() {
 
 }
 
-std::tuple<std::string, vector3<float> >  simple_query::get_point_sym_group(float tolerance) {
+std::tuple<std::string, vector3<float> > simple_query::get_point_sym_group(float tolerance) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -584,6 +584,38 @@ void simple_query::embed_cube() {
   new_cube->m_pos = center;
   new_cube->m_scale = len;
   cur_ws->add_item_to_ws(new_cube);
+
+  }
+
+void simple_query::embed_arrow() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
+  if (!al || cur_ws->m_edit_type != ws_edit_e::edit_content) return;
+
+  if (al->m_atom_ord_sel.size() != 2) return;
+
+  auto new_arr = std::make_shared<arrow_primitive_t>();
+  new_arr->m_name = fmt::format("arrow_{}", cur_ws->m_ws_items.size());
+  auto sel_first = al->m_atom_ord_sel.begin();
+  auto sel_second = ++(al->m_atom_ord_sel.begin());
+
+  auto pos_first = al->m_geom->pos(sel_first->m_atm, sel_first->m_idx);
+  auto pos_second = al->m_geom->pos(sel_second->m_atm, sel_second->m_idx);
+
+  auto dir = (pos_second - pos_first).normalized();
+
+  auto ap_idx = ptable::number_by_symbol(al->m_geom->atom(sel_second->m_atm));
+  float dr_rad = 0.4f;
+  float pre_rad = 0.4f;
+  if (ap_idx) pre_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
+  dr_rad = pre_rad * al->m_atom_scale_factor;
+
+  auto pos_end = pos_second - dir * dr_rad * 1.8;
+  new_arr->m_pos = pos_first;
+  new_arr->m_arrow_to = pos_end;
+  cur_ws->add_item_to_ws(new_arr);
 
 }
 

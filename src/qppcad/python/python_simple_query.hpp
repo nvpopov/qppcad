@@ -81,6 +81,7 @@ namespace qpp {
          * @brief embed_cube create cube_primitive_t based on selected atoms from geom_view_ts
          */
         static void embed_cube();
+        static void embed_arrow();
 
         static void make_psg_view(float tolerance);
         static void make_traj_highlight(size_t atom_id, size_t anim_id);
