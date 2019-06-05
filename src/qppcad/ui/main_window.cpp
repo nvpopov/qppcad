@@ -557,6 +557,18 @@ void main_window::init_widgets() {
           this,
           &main_window::tp_angle_button_clicked);
 
+  tp_add_cube = new QPushButton;
+  tp_add_cube->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_add_cube->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_add_cube->setIcon(QIcon("://images/add_cube.svg"));
+  tp_add_cube->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                 astate->size_guide.tool_panel_icon_size()));
+  tp_add_arrow = new QPushButton;
+  tp_add_arrow->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_add_arrow->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_add_arrow->setIcon(QIcon("://images/add_arrow.svg"));
+  tp_add_arrow->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                  astate->size_guide.tool_panel_icon_size()));
   tp_ws_selector->setVisible(false);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
@@ -629,6 +641,9 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
+
+  tool_panel_layout->addWidget(tp_add_cube, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_add_arrow, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
   //tool_panel_widget->stackUnder(ws_viewer_widget);

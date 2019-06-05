@@ -53,5 +53,7 @@
         <file>images/outline-fast_forward-24px.svg</file>
         <file>images/baseline-graphic_eq-24px_d.svg</file>
         <file>images/baseline-graphic_eq-24px.svg</file>
+        <file>images/add_arrow.svg</file>
+        <file>images/add_cube.svg</file>
     </qresource>
 </RCC>

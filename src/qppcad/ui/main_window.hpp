@@ -81,6 +81,8 @@ namespace qpp {
         QPushButton *tp_toggle_atom_override;
         QPushButton *tp_measure_dist;
         QPushButton *tp_measure_angle;
+        QPushButton *tp_add_cube;
+        QPushButton *tp_add_arrow;
 
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
