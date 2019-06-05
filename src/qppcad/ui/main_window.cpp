@@ -7,6 +7,8 @@
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
+#include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
+#include <qppcad/python/python_simple_query.hpp>
 #include <QDateTime>
 #include <QColorDialog>
 
@@ -563,12 +565,22 @@ void main_window::init_widgets() {
   tp_add_cube->setIcon(QIcon("://images/add_cube.svg"));
   tp_add_cube->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                  astate->size_guide.tool_panel_icon_size()));
+  connect(tp_add_cube,
+          &QPushButton::clicked,
+          this,
+          &main_window::tp_add_cube_clicked);
+
   tp_add_arrow = new QPushButton;
   tp_add_arrow->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_add_arrow->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_add_arrow->setIcon(QIcon("://images/add_arrow.svg"));
   tp_add_arrow->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                   astate->size_guide.tool_panel_icon_size()));
+  connect(tp_add_arrow,
+          &QPushButton::clicked,
+          this,
+          &main_window::tp_add_arrow_clicked);
+
   tp_ws_selector->setVisible(false);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
@@ -1051,6 +1063,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
   bool need_to_hide_al_cntls{true};
   bool need_to_hide_force_sel_lbl_vis{true};
   bool need_to_hide_atom_override{true};
+  bool need_to_hide_add_primitives{true};
 
   if (ok) {
 
@@ -1076,6 +1089,10 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
     }
 
     if (as_al->m_atom_idx_sel.size() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
+
+      tp_add_arrow->show();
+      tp_add_cube->show();
+      need_to_hide_add_primitives = false;
 
       tp_measure_angle->hide();
       tp_measure_dist->show();
@@ -1126,9 +1143,16 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
 
   }
 
+  if (need_to_hide_add_primitives) {
+      tp_add_arrow->hide();
+      tp_add_cube->hide();
+    }
+
   if (need_to_hide_al_cntls) {
     tp_measure_dist->hide();
     tp_measure_angle->hide();
+    tp_add_arrow->hide();
+    tp_add_cube->hide();
   }
 
   if (need_to_hide_force_sel_lbl_vis) {
@@ -1318,6 +1342,42 @@ void main_window::tp_fast_forward_anim_clicked() {
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
 
+}
+
+void main_window::tp_add_arrow_clicked() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
+  if (!al || cur_ws->m_edit_type != ws_edit_e::edit_content) return;
+
+  if (al->m_atom_ord_sel.size() != 2) return;
+
+  auto new_arr = std::make_shared<arrow_primitive_t>();
+  new_arr->m_name = fmt::format("arrow_{}", cur_ws->m_ws_items.size());
+  auto sel_first = al->m_atom_ord_sel.begin();
+  auto sel_second = ++(al->m_atom_ord_sel.begin());
+
+  auto pos_first = al->m_geom->pos(sel_first->m_atm, sel_first->m_idx);
+  auto pos_second = al->m_geom->pos(sel_second->m_atm, sel_second->m_idx);
+
+  auto dir = (pos_second - pos_first).normalized();
+
+  auto ap_idx = ptable::number_by_symbol(al->m_geom->atom(sel_second->m_atm));
+  float dr_rad = 0.4f;
+  float pre_rad = 0.4f;
+  if (ap_idx) pre_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
+  dr_rad = pre_rad * al->m_atom_scale_factor;
+
+  auto pos_end = pos_second - dir * dr_rad * 2;
+  new_arr->m_pos = pos_first;
+  new_arr->m_arrow_to = pos_end;
+  cur_ws->add_item_to_ws(new_arr);
+
+}
+
+void main_window::tp_add_cube_clicked() {
+  simple_query::embed_cube();
 }
 
 void main_window::apply_camera_view_change(cam_target_view_t target_view) {
