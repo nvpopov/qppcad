@@ -35,7 +35,7 @@ std::string cp2k_helper_t::gen_fixed_atoms_section(py::list &fixed_atoms) {
   const auto items_per_section = 14;
   size_t num_sections = fixed_atoms.size() / items_per_section;
 
-  for (size_t sec = 0; sec < num_sections; sec++) {
+  for (size_t sec = 0; sec <= num_sections; sec++) {
       ret += "LIST ";
       for (size_t itm_c = 0; itm_c < items_per_section; itm_c++) {
           size_t idx_in_list = sec * items_per_section + itm_c;
