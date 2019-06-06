@@ -324,6 +324,12 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_atoms_list_t.def("colorize_xfield", &geom_view_t::colorize_by_xfield);
   py_atoms_list_t.def("copy_cell", &geom_view_t::copy_cell, py::arg("src"),
                       py::arg("rebuild_tws_tree") = true);
+
+  py_atoms_list_t.def("get_sel_atoms", &geom_view_t::get_sel_atoms,
+                      py::arg("index_offset") = 0);
+  py_atoms_list_t.def("get_unsel_atoms", &geom_view_t::get_unsel_atoms,
+                      py::arg("index_offset") = 0);
+
   py_atoms_list_t.def("clone_on_the_spot", &geom_view_t::clone_on_the_spot);
   py_atoms_list_t.def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord);
 

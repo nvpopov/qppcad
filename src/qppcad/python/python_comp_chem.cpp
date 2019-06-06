@@ -10,23 +10,6 @@ void cp2k_helper_t::save_neb_data(std::shared_ptr<ws_item_t> g_start,
 
 }
 
-py::list cp2k_helper_t::get_unselected_list(std::shared_ptr<geom_view_t> item) {
-
-  py::list ret;
-
-  if (!item) return py::none();
-
-  std::set<size_t> sels;
-
-  for (auto &sel : item->m_atom_idx_sel) sels.insert(sel.m_atm);
-
-  for (size_t i = 0; i < item->m_geom->nat(); i++)
-    if (sels.find(i) == sels.end()) ret.append(i+1);
-
-  return ret;
-
-}
-
 std::string cp2k_helper_t::gen_fixed_atoms_section(py::list &fixed_atoms) {
 
   std::string ret;

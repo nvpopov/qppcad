@@ -1591,5 +1591,35 @@ pybind11::list geom_view_t::py_get_sel_pos_in_frame(vector3<float> t_frame) {
 
 }
 
+py::list geom_view_t::get_sel_atoms(int index_offset) {
+
+  py::list ret;
+
+  std::set<size_t> sels;
+
+  for (auto &sel : m_atom_idx_sel) sels.insert(sel.m_atm);
+
+  for (size_t i = 0; i < m_geom->nat(); i++)
+    if (sels.find(i) != sels.end()) ret.append(i+index_offset);
+
+  return ret;
+
+}
+
+py::list geom_view_t::get_unsel_atoms(int index_offset) {
+
+  py::list ret;
+
+  std::set<size_t> sels;
+
+  for (auto &sel : m_atom_idx_sel) sels.insert(sel.m_atm);
+
+  for (size_t i = 0; i < m_geom->nat(); i++)
+    if (sels.find(i) == sels.end()) ret.append(i+index_offset);
+
+  return ret;
+
+}
+
 
 

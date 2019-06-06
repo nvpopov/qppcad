@@ -26,7 +26,6 @@ namespace qpp {
                                   std::shared_ptr<ws_item_t> g_end,
                                   std::string path);
 
-        static py::list get_unselected_list(std::shared_ptr<geom_view_t> item);
         static std::string gen_fixed_atoms_section(py::list &fixed_atoms);
 
     };
