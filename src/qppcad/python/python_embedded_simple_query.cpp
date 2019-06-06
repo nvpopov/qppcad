@@ -31,7 +31,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
         py::arg("file_name"), py::arg("to_current") = false);
   m.def("qopen", &simple_query::open_file_query,
         py::arg("file_name"), py::arg("file_format") = "", py::arg("to_current") = false);
-
   m.def("mode", &simple_query::edit_mode);
 
   m.def("bg", &simple_query::set_ws_bg,
@@ -69,6 +68,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   //****************************** tools module begin ******************************
   py::module tools = m.def_submodule("tools", "Generic tools");
 
+  tools.def("to_clipboard", &simple_query::to_clipboard);
   tools.def("set_msr_digits", &simple_query::set_msr_digits);
   tools.def("get_tool_groups", &simple_query::get_tool_groups);
   tools.def("get_tool_names", &simple_query::get_tool_names);

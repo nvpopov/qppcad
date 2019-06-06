@@ -8,3 +8,7 @@ void cp2k_helper_t::save_neb_data(std::shared_ptr<ws_item_t> g_start,
                                   std::string path) {
 
 }
+
+void cp2k_helper_t::gen_fixed_list_from_sel(std::shared_ptr<ws_item_t> item) {
+
+}

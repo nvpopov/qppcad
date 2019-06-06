@@ -10,5 +10,6 @@ PYBIND11_EMBEDDED_MODULE(cc, m) {
   module_cp2k.def("make_neb_calc",
                   &cp2k_helper_t::save_neb_data,
                   py::arg("g_start"), py::arg("g_end"), py::arg("path") = "");
+  module_cp2k.def("gen_fixed_list_from_sel", &cp2k_helper_t::gen_fixed_list_from_sel);
 
 }

@@ -19,9 +19,13 @@ namespace qpp {
   namespace cad {
 
     struct cp2k_helper_t {
+
         static void save_neb_data(std::shared_ptr<ws_item_t> g_start,
                                   std::shared_ptr<ws_item_t> g_end,
                                   std::string path);
+
+        static void gen_fixed_list_from_sel(std::shared_ptr<ws_item_t> item);
+
     };
 
   } // namespace cad

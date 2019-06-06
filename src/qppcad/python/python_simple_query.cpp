@@ -11,6 +11,8 @@
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>
 
+#include <QClipboard>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -55,6 +57,13 @@ void simple_query::open_file_query(std::string f_name,  std::string f_format, bo
   astate->ws_mgr->load_from_file_autodeduce(f_name, f_format, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
+
+}
+
+void simple_query::to_clipboard(std::string data) {
+
+  QClipboard *_clipboard = QApplication::clipboard();
+  _clipboard->setText(QString::fromStdString(data));
 
 }
 
