@@ -18,13 +18,16 @@ namespace qpp {
 
   namespace cad {
 
+    class geom_view_t;
+
     struct cp2k_helper_t {
 
         static void save_neb_data(std::shared_ptr<ws_item_t> g_start,
                                   std::shared_ptr<ws_item_t> g_end,
                                   std::string path);
 
-        static void gen_fixed_list_from_sel(std::shared_ptr<ws_item_t> item);
+        static py::list get_unselected_list(std::shared_ptr<geom_view_t> item);
+        static std::string gen_fixed_atoms_section(py::list &fixed_atoms);
 
     };
 
