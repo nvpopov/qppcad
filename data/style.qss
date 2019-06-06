@@ -292,7 +292,8 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 }
 
 qpp--cad--qembed_window_t {
- margin-top:-4px;
+ border-top: 0;
+ padding-top: 0px;
 }
 
 QGroupBox {
@@ -314,8 +315,8 @@ QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
  background : rgb(94, 94, 94);
 }
 
-QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover{
- background-color: rgb(102, 102, 102);
+QPushButton:hover, QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover, QToolButton:hover{
+ background-color: rgb(111, 111, 111);
 }
 
 QComboBox {
