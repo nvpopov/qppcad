@@ -302,7 +302,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_total_frames_in_anim = new QLabel;
   gb_anim_cur_frame = new QLabel;
   gb_current_anim = new QComboBox;
-  gb_current_anim->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
+  gb_current_anim->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   //gb_current_anim->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
   connect(gb_current_anim,
