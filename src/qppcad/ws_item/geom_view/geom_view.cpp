@@ -1585,6 +1585,36 @@ bool geom_view_t::can_be_written_to_json() {
 
 }
 
+void geom_view_t::purify_boundary_atoms(std::shared_ptr<geom_view_t> src) {
+
+  if (!src || src->m_geom->nat() != m_geom->nat()) return;
+
+  begin_structure_change();
+
+  for (size_t i = 0; i < m_geom->nat(); i++) {
+
+      float min_dist = 100.0f;
+      auto goal_vector = m_geom->pos(i);
+      auto pos_in_src = src->m_geom->pos(i);
+      for (iterator idx(index::D(m_geom->DIM).all(-1),
+                        index::D(m_geom->DIM).all(1)); !idx.end(); idx++ ) {
+          auto t_pos_cf = m_geom->cell.transform(m_geom->pos(i), idx);
+          auto dist = (pos_in_src - t_pos_cf).norm();
+          if (dist < min_dist) {
+              min_dist = dist;
+              //min_dist_index = i;
+              goal_vector = t_pos_cf;
+            }
+        }
+
+      m_geom->coord(i) = goal_vector;
+
+    }
+
+  end_structure_change();
+
+}
+
 pybind11::list geom_view_t::py_get_sel_pos_in_frame(vector3<float> t_frame) {
 
   return py::none();

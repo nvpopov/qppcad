@@ -294,6 +294,7 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 qpp--cad--qembed_window_t {
  border-top: 0;
  padding-top: 0px;
+ margin-top: -5px;
 }
 
 QGroupBox {

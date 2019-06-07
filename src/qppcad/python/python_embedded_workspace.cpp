@@ -332,7 +332,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   py_atoms_list_t.def("clone_on_the_spot", &geom_view_t::clone_on_the_spot);
   py_atoms_list_t.def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord);
-
+  py_atoms_list_t.def("purify_boundary_atoms", &geom_view_t::purify_boundary_atoms);
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
   py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);
   py_atoms_list_t.def_readonly("sg", &geom_view_t::m_selg);
