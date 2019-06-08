@@ -14,15 +14,15 @@ arrow_primitive_obj_insp_widget_t::arrow_primitive_obj_insp_widget_t() {
   ap_target->m_updated_externally_event = true;
 
   ap_unf_arrow_scale = new qbinded_float_spinbox_t;
-  ap_unf_arrow_scale->set_min_max_step(0.01, 20, 0.05);
+  ap_unf_arrow_scale->set_min_max_step(0.01, 20, 0.01);
   ap_unf_arrow_scale->m_updated_externally_event = true;
 
   ap_unf_arrow_cap_len = new qbinded_float_spinbox_t;
-  ap_unf_arrow_cap_len->set_min_max_step(0.01, 20, 0.05);
+  ap_unf_arrow_cap_len->set_min_max_step(0.01, 20, 0.01);
   ap_unf_arrow_cap_len->m_updated_externally_event = true;
 
   ap_unf_arrow_cap_scale = new qbinded_float_spinbox_t;
-  ap_unf_arrow_cap_scale->set_min_max_step(0.01, 20, 0.05);
+  ap_unf_arrow_cap_scale->set_min_max_step(0.01, 20, 0.01);
   ap_unf_arrow_cap_scale->m_updated_externally_event = true;
 
   ap_arrow_color = new qbinded_color3_input_t;

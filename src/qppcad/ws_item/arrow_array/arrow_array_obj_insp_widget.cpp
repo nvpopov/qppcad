@@ -19,16 +19,16 @@ arrow_array_obj_insp_widget_t::arrow_array_obj_insp_widget_t() {
   aa_settings_src->m_type_id = geom_view_t::get_type_static();
 
   aa_unf_arrow_len = new qbinded_float_spinbox_t;
-  aa_unf_arrow_len->set_min_max_step(0.01, 20, 0.05);
+  aa_unf_arrow_len->set_min_max_step(0.01, 20, 0.01);
 
   aa_unf_arrow_scale = new qbinded_float_spinbox_t;
-  aa_unf_arrow_scale->set_min_max_step(0.01, 20, 0.05);
+  aa_unf_arrow_scale->set_min_max_step(0.01, 20, 0.01);
 
   aa_unf_arrow_cap_len = new qbinded_float_spinbox_t;
-  aa_unf_arrow_cap_len->set_min_max_step(0.01, 20, 0.05);
+  aa_unf_arrow_cap_len->set_min_max_step(0.01, 20, 0.01);
 
   aa_unf_arrow_cap_scale = new qbinded_float_spinbox_t;
-  aa_unf_arrow_cap_scale->set_min_max_step(0.01, 20, 0.05);
+  aa_unf_arrow_cap_scale->set_min_max_step(0.01, 20, 0.01);
 
   aa_displ_eps = new qbinded_float_spinbox_t;
   aa_displ_eps->set_min_max_step(0.0001f, 1, 0.0001f);
