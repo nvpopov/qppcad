@@ -73,6 +73,8 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   main_lt->addWidget(ws_items_spoiler);
   main_lt->addWidget(none_item_placeholder);
   main_lt->addSpacing(0);
+  //main_lt->setContentsMargins(5,0,5,0);
+  //main_lt->setSpacing(0);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,

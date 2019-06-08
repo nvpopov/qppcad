@@ -611,6 +611,7 @@ void main_window::init_layouts() {
   splitter_ws_viewer_extended_editor->addWidget(ws_viewer_widget);
   splitter_ws_viewer_extended_editor->addWidget(extended_editor_compositor);
   splitter_ws_viewer_extended_editor->setHandleWidth(0);
+
   splitter_ws_viewer_extended_editor->setContentsMargins(0,0,0,0);
   splitter_ws_viewer_extended_editor->setCollapsible(1, false);
   splitter_ws_viewer_extended_editor->setCollapsible(0, false);
@@ -659,6 +660,7 @@ void main_window::init_layouts() {
 
   tool_panel_layout->addStretch(1);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
+  ws_viewer_widget->lower();
 
 }
 

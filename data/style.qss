@@ -292,9 +292,7 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 }
 
 qpp--cad--qembed_window_t {
- border-top: 0;
- padding-top: 0px;
- margin-top: -5px;
+ border-top: 1px inset rgb(65, 65, 65);
 }
 
 QGroupBox {
@@ -350,6 +348,10 @@ QToolButton {
  border: 1px solid rgb(55, 55, 55);
  border-radius: 4px;
  padding: 3px;
+}
+
+#tool_panel_widget_e {
+ border-bottom: 2px solid rgb(83, 83, 83);
 }
 
 QPushButton:pressed, QToolButton:pressed {
