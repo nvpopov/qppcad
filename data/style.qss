@@ -205,6 +205,10 @@ QSplitter {
  border-bottom:2px inset black;
 }
 
+qpp--cad--ws_viewer_widget_t {
+ margin-top:15px;
+}
+
 qpp--cad--ws_tabbar_t {
  background-color: rgb(95, 95, 95);
  padding-top: 5px;
@@ -239,11 +243,10 @@ qpp--cad--ws_tabbar_t::tab::first {
 qpp--cad--ws_tabbar_t::tab:selected {
  background-color: rgb(83, 83, 83);
  margin-top: 2px;
- height: 28px;
- border-left: 2px solid rgb(100, 100, 100);
- border-right: 2px solid rgb(100, 100, 100);
- border-top: 2px solid rgb(100, 100, 100);
- font-weight: 75;
+ height: 29px;
+ border-left: 1px solid rgb(60, 60, 60);
+ border-right: 1px solid rgb(60, 60, 60);
+ border-top: 1px solid rgb(60, 60, 60);
 }
 
 qpp--cad--ws_tabbar_t::tab:hover {
@@ -293,6 +296,7 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 
 qpp--cad--qembed_window_t {
  border-top: 1px inset rgb(65, 65, 65);
+ border-left: 1px inset rgb(35, 35, 35);
 }
 
 QGroupBox {

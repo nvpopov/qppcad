@@ -16,19 +16,26 @@ namespace qpp {
   namespace cad {
 
     class ws_viewer_widget_t : public QOpenGLWidget {
+
+      Q_OBJECT
+
       public:
+
         ws_viewer_widget_t(QWidget *parent);
         QTimer *m_update_timer;
         QElapsedTimer *m_update_timer_gpu;
         QElapsedTimer *m_update_timer_cpu;
 
         void draw_text_logo(QPainter &painter);
+        void draw_scanline(QPainter &painter);
 
       public slots:
+
         void update_cycle();
         void show_context_menu(const QPoint &pos);
 
       protected:
+
         void initializeGL() override;
         void resizeGL(int w, int h) override;
         void paintGL() override;
@@ -36,7 +43,6 @@ namespace qpp {
         void mouseReleaseEvent(QMouseEvent * event) override;
         void mouseMoveEvent(QMouseEvent * event) override;
         void wheelEvent(QWheelEvent *event) override;
-
 
     };
 

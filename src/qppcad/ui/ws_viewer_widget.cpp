@@ -53,6 +53,14 @@ void ws_viewer_widget_t::draw_text_logo(QPainter &painter) {
 
 }
 
+void ws_viewer_widget_t::draw_scanline(QPainter &painter) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  painter.setPen(QPen(astate->m_app_palette.color(QPalette::Window), 3));
+  painter.drawLine(0, 0, painter.window().width(), 0);
+
+}
+
 void ws_viewer_widget_t::update_cycle() {
 
   app_state_t* astate = app_state_t::get_inst();
@@ -162,6 +170,8 @@ void ws_viewer_widget_t::paintGL() {
   astate->ws_mgr->render_cur_ws_overlay(painter);
 
   if (!astate->ws_mgr->has_wss()) draw_text_logo(painter);
+
+  draw_scanline(painter);
 
   painter.end();
   astate->m_last_frame_time_gpu = m_update_timer_gpu->nsecsElapsed();

@@ -135,7 +135,7 @@ void ws_tabbar_t::tab_double_clicked(int index) {
       if (target_ws) {
           bool ok;
           QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
-                                               tr("User name:"), QLineEdit::Normal,
+                                               tr("New workspace name:"), QLineEdit::Normal,
                                                QString::fromStdString(target_ws->m_ws_name), &ok);
           if (ok && text != "") {
               target_ws->m_ws_name = text.toStdString();

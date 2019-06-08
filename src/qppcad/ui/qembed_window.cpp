@@ -14,7 +14,7 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
   main_lt->setContentsMargins(10,0,0,0);
   setLayout(main_lt_zero_lvl);
 
-  setFrameStyle(QFrame::StyledPanel);
+  setFrameStyle(QFrame::Panel);
   setPalette(astate->m_bg_embwnd_pal);
 
   header_frm = new QFrame;
