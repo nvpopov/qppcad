@@ -673,6 +673,27 @@ void geom_view_t::swap_atoms(const size_t at1, const size_t at2, bool swap_names
 
 }
 
+void geom_view_t::flip_atom_in_cell(size_t at_id, size_t dim_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (at_id >= m_geom->nat() || dim_id > m_geom->DIM) return;
+
+  begin_structure_change();
+
+  auto as_frac = m_geom->cell.cart2frac(m_geom->pos(at_id));
+  as_frac[dim_id] = 1 - as_frac[dim_id];
+  auto as_cart = m_geom->cell.frac2cart(as_frac);
+  m_geom->coord(at_id) = as_cart;
+
+  end_structure_change();
+
+  astate->tlog("@DEBUG: flip_atom_in_cell");
+
+  astate->make_viewport_dirty();
+
+}
+
 void geom_view_t::sv_modify_selected(bool state) {
 
   app_state_t *astate = app_state_t::get_inst();
