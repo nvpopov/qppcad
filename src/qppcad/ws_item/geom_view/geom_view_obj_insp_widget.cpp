@@ -1343,6 +1343,10 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
       if (b_al->m_parent_ws &&
           b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
 
+          tm_group_op_flip_a->setEnabled(b_al->m_geom->DIM > 0);
+          tm_group_op_flip_b->setEnabled(b_al->m_geom->DIM > 1);
+          tm_group_op_flip_c->setEnabled(b_al->m_geom->DIM > 2);
+
           set_tab_enabled(tab_modify, true);
 
           tm_override_atom_color->unbind_value();
