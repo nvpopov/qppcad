@@ -673,24 +673,40 @@ void geom_view_t::swap_atoms(const size_t at1, const size_t at2, bool swap_names
 
 }
 
-void geom_view_t::flip_atom_in_cell(size_t at_id, size_t dim_id) {
+void geom_view_t::flip_atom_in_cell(size_t at_id, size_t dim_id, bool rebuild_tree) {
 
   app_state_t *astate = app_state_t::get_inst();
 
   if (at_id >= m_geom->nat() || dim_id > m_geom->DIM) return;
 
-  begin_structure_change();
+  if (rebuild_tree) begin_structure_change();
 
   auto as_frac = m_geom->cell.cart2frac(m_geom->pos(at_id));
   as_frac[dim_id] = 1 - as_frac[dim_id];
   auto as_cart = m_geom->cell.frac2cart(as_frac);
   m_geom->coord(at_id) = as_cart;
 
-  end_structure_change();
+  if (rebuild_tree) end_structure_change();
 
   astate->tlog("@DEBUG: flip_atom_in_cell");
 
   astate->make_viewport_dirty();
+
+}
+
+void geom_view_t::flip_sel_atoms_in_cell(size_t dim_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  begin_structure_change();
+
+  index zero = index::D(m_geom->DIM).all(0);
+
+  for (auto &sel : m_atom_idx_sel)
+    if (sel.m_idx == zero)
+      flip_atom_in_cell(sel.m_atm, dim_id, false);
+
+  end_structure_change();
 
 }
 

@@ -216,7 +216,8 @@ namespace qpp {
         void transform_atom(const int at_id, const matrix4<float> &tm);
 
         void swap_atoms(const size_t at1, const size_t at2, bool swap_names = true);
-        void flip_atom_in_cell(size_t at_id, size_t dim_id);
+        void flip_atom_in_cell(size_t at_id, size_t dim_id, bool rebuild_tree = false);
+        void flip_sel_atoms_in_cell(size_t dim_id);
 
         void sv_modify_selected(bool state);
         void sv_hide_invert_selected();
