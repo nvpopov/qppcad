@@ -1665,7 +1665,7 @@ void main_window::action_bhv_import_to_cur_workspace() {
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
       std::string file_name =
           QFileDialog::getOpenFileName(this,
-                                       "dialog_name",
+                                       "Import to current workspace",
                                        astate->m_last_dir,
                                        "*").toStdString();
       if (!file_name.empty()) astate->ws_mgr->import_from_file(file_name, b_id, false);
@@ -1689,7 +1689,7 @@ void main_window::action_bhv_import_as_new_workspace() {
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_as_new_ws) {
       // astate->log(fmt::format("{}", b_id));
       std::string file_name = QFileDialog::getOpenFileName(this,
-                                                           "dialog_name",
+                                                           "Import as new workspace",
                                                            astate->m_last_dir,
                                                            "*").toStdString();
       if (!file_name.empty()) astate->ws_mgr->import_from_file(file_name, b_id);
@@ -1715,12 +1715,18 @@ void main_window::action_bhv_export_selected() {
   if (b_id < bhv_mgr->m_ws_item_io.size() &&
       bhv_mgr->m_ws_item_io[b_id]->can_save() &&
       bhv_mgr->m_ws_item_io[b_id]->m_accepted_type == cur_it->get_type()) {
-      // astate->log(fmt::format("{}", b_id));
-      std::string file_name = QFileDialog::getSaveFileName(this,
-                                                           "dialog_name",
-                                                           "*").toStdString();
-      if (!file_name.empty())
-        astate->ws_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
+
+      QString qfile_name = QFileDialog::getSaveFileName(this,
+                                                        "Export selected",
+                                                        astate->m_last_dir
+                                                        );
+
+      if (qfile_name.size() != 0) {
+          QFileInfo file_nfo(qfile_name);
+          astate->m_last_dir = file_nfo.absoluteDir().canonicalPath();
+          std::string file_name = qfile_name.toStdString();
+          astate->ws_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
+        }
     }
 
 }
