@@ -30,11 +30,14 @@ namespace qpp {
 
       QVBoxLayout *main_lt;
       QDialogButtonBox *dialog_bb;
+      QHBoxLayout *actions_lt;
+      QPushButton *action_select_all;
 
       QListWidget *sub_gvs_wdgt;
 
       purify_boundary_atoms_widget_t();
       void rebuild_sub_gvs();
+      void select_all_clicked();
 
     };
 

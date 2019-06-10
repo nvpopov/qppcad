@@ -54,6 +54,17 @@ purify_boundary_atoms_widget_t::purify_boundary_atoms_widget_t() {
 
   sub_gvs_wdgt = new QListWidget;
 
+  actions_lt = new QHBoxLayout;
+  action_select_all = new QPushButton(tr("Select all"));
+  connect(action_select_all,
+          &QPushButton::clicked,
+          this,
+          &purify_boundary_atoms_widget_t::select_all_clicked);
+
+  actions_lt->addWidget(action_select_all);
+  actions_lt->addStretch(1);
+
+  main_lt->addLayout(actions_lt);
   main_lt->addWidget(sub_gvs_wdgt);
   main_lt->addWidget(dialog_bb);
 
@@ -89,5 +100,14 @@ void purify_boundary_atoms_widget_t::rebuild_sub_gvs() {
             m_sub_gvs.push_back(as_gv);
 
           }
+
+}
+
+void purify_boundary_atoms_widget_t::select_all_clicked() {
+
+  for (size_t i = 0; i < sub_gvs_wdgt->count(); i++) {
+      QListWidgetItem *item = sub_gvs_wdgt->item(i);
+      item->setCheckState(Qt::Checked);
+    }
 
 }
