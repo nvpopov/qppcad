@@ -243,9 +243,12 @@ namespace qpp {
         QPushButton *tm_group_op_sel_ngbs;
         QPushButton *tm_group_op_del_sel;
         QPushButton *tm_group_make_animable;
-        QPushButton *tm_group_op_flip_a;
-        QPushButton *tm_group_op_flip_b;
-        QPushButton *tm_group_op_flip_c;
+        QPushButton *tm_group_op_flip_a_p;
+        QPushButton *tm_group_op_flip_b_p;
+        QPushButton *tm_group_op_flip_c_p;
+        QPushButton *tm_group_op_flip_a_n;
+        QPushButton *tm_group_op_flip_b_n;
+        QPushButton *tm_group_op_flip_c_n;
 
         qspoiler_widget_t *tm_gb_override_atom;
         QFormLayout *tm_gb_override_atom_lt;
@@ -297,7 +300,7 @@ namespace qpp {
         void update_select_tab();
         void fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al);
 
-        void tab_modify_flip_cell_clicked(size_t flip_dim);
+        void tab_modify_flip_cell_clicked(size_t flip_dim, float flip_magn = 1);
 
         geom_view_obj_insp_widget_t();
 

@@ -873,20 +873,35 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_group_op_sv_hide = new QPushButton(tr("SV:HIDE"));
   tm_group_op_sv_hide_invert = new QPushButton(tr("SV:HIDE INV"));
 
-  tm_group_op_flip_a = new QPushButton(tr("FLIP:A"));
-  connect(tm_group_op_flip_a,
+  tm_group_op_flip_a_p = new QPushButton(tr("FLIP:+A"));
+  connect(tm_group_op_flip_a_p,
           &QPushButton::pressed,
-          [this](){this->tab_modify_flip_cell_clicked(0);});
+          [this](){this->tab_modify_flip_cell_clicked(0, 1);});
 
-  tm_group_op_flip_b = new QPushButton(tr("FLIP:B"));
-  connect(tm_group_op_flip_b,
+  tm_group_op_flip_b_p = new QPushButton(tr("FLIP:+B"));
+  connect(tm_group_op_flip_b_p,
           &QPushButton::pressed,
-          [this](){this->tab_modify_flip_cell_clicked(1);});
+          [this](){this->tab_modify_flip_cell_clicked(1, 1);});
 
-  tm_group_op_flip_c = new QPushButton(tr("FLIP:C"));
-  connect(tm_group_op_flip_c,
+  tm_group_op_flip_c_p = new QPushButton(tr("FLIP:+C"));
+  connect(tm_group_op_flip_c_p,
           &QPushButton::pressed,
-          [this](){this->tab_modify_flip_cell_clicked(2);});
+          [this](){this->tab_modify_flip_cell_clicked(2, 1);});
+
+  tm_group_op_flip_a_n = new QPushButton(tr("FLIP:-A"));
+  connect(tm_group_op_flip_a_n,
+          &QPushButton::pressed,
+          [this](){this->tab_modify_flip_cell_clicked(0, -1);});
+
+  tm_group_op_flip_b_n = new QPushButton(tr("FLIP:-B"));
+  connect(tm_group_op_flip_b_n,
+          &QPushButton::pressed,
+          [this](){this->tab_modify_flip_cell_clicked(1, -1);});
+
+  tm_group_op_flip_c_n = new QPushButton(tr("FLIP:-C"));
+  connect(tm_group_op_flip_c_n,
+          &QPushButton::pressed,
+          [this](){this->tab_modify_flip_cell_clicked(2, -1);});
 
   connect(tm_group_op_sv_show,
           &QPushButton::pressed,
@@ -929,9 +944,12 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_group_op_lt->addWidget(tm_group_op_sel_ngbs,       1, 0, 1, 1);
   tm_group_op_lt->addWidget(tm_group_op_del_sel,        1, 1, 1, 1);
   tm_group_op_lt->addWidget(tm_group_make_animable,     1, 2, 1, 1);
-  tm_group_op_lt->addWidget(tm_group_op_flip_a,         2, 0, 1, 1);
-  tm_group_op_lt->addWidget(tm_group_op_flip_b,         2, 1, 1, 1);
-  tm_group_op_lt->addWidget(tm_group_op_flip_c,         2, 2, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_flip_a_p,       2, 0, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_flip_b_p,       2, 1, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_flip_c_p,       2, 2, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_flip_a_n,       3, 0, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_flip_b_n,       3, 1, 1, 1);
+  tm_group_op_lt->addWidget(tm_group_op_flip_c_n,       3, 2, 1, 1);
 
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_add_atom);
   tab_modify->tab_inner_widget_lt->addWidget(tm_gb_override_atom);
@@ -1343,9 +1361,12 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
       if (b_al->m_parent_ws &&
           b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
 
-          tm_group_op_flip_a->setEnabled(b_al->m_geom->DIM > 0);
-          tm_group_op_flip_b->setEnabled(b_al->m_geom->DIM > 1);
-          tm_group_op_flip_c->setEnabled(b_al->m_geom->DIM > 2);
+          tm_group_op_flip_a_p->setEnabled(b_al->m_geom->DIM > 0);
+          tm_group_op_flip_b_p->setEnabled(b_al->m_geom->DIM > 1);
+          tm_group_op_flip_c_p->setEnabled(b_al->m_geom->DIM > 2);
+          tm_group_op_flip_a_n->setEnabled(b_al->m_geom->DIM > 0);
+          tm_group_op_flip_b_n->setEnabled(b_al->m_geom->DIM > 1);
+          tm_group_op_flip_c_n->setEnabled(b_al->m_geom->DIM > 2);
 
           set_tab_enabled(tab_modify, true);
 
@@ -1702,9 +1723,9 @@ void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
 
 }
 
-void geom_view_obj_insp_widget_t::tab_modify_flip_cell_clicked(size_t flip_dim) {
+void geom_view_obj_insp_widget_t::tab_modify_flip_cell_clicked(size_t flip_dim, float flip_magn) {
 
-  if (b_al) b_al->flip_sel_atoms_in_cell(flip_dim);
+  if (b_al) b_al->flip_sel_atoms_in_cell(flip_dim, flip_magn);
 
 }
 
