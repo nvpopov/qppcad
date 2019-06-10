@@ -301,7 +301,7 @@ namespace qpp {
         bool can_be_written_to_json() override;
         //void post_load();
 
-        void purify_boundary_atoms(std::shared_ptr<geom_view_t> src);
+        void purify_boundary_atoms(geom_view_t *src);
 
         py::list py_get_sel_pos_in_frame(vector3<float> t_frame);
         py::list get_sel_atoms(int index_offset);

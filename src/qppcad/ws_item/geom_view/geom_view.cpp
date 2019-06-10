@@ -1652,7 +1652,7 @@ bool geom_view_t::can_be_written_to_json() {
 
 }
 
-void geom_view_t::purify_boundary_atoms(std::shared_ptr<geom_view_t> src) {
+void geom_view_t::purify_boundary_atoms(geom_view_t *src) {
 
   if (!src || src->m_geom->nat() != m_geom->nat()) return;
 
