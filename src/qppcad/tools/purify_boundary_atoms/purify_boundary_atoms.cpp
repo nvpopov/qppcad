@@ -24,7 +24,7 @@ void purify_boundary_atoms_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
     for (size_t i = 0; i < paw.sub_gvs_wdgt->count(); i++) {
         QListWidgetItem *item = paw.sub_gvs_wdgt->item(i);
         if (item->checkState() == Qt::Checked) {
-            astate->tlog("@DEBUG: purify entered");
+            //astate->tlog("@DEBUG: purify entered");
             paw.m_sub_gvs[i]->purify_boundary_atoms(paw.master_gv);
           }
       }
@@ -34,6 +34,8 @@ void purify_boundary_atoms_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 purify_boundary_atoms_widget_t::purify_boundary_atoms_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
+
+  setWindowTitle(tr("Purify boundary atoms"));
 
   main_lt = new QVBoxLayout;
   setLayout(main_lt);
@@ -55,7 +57,7 @@ purify_boundary_atoms_widget_t::purify_boundary_atoms_widget_t() {
   sub_gvs_wdgt = new QListWidget;
 
   actions_lt = new QHBoxLayout;
-  action_select_all = new QPushButton(tr("Select all"));
+  action_select_all = new QPushButton(tr(" Toggle selection "));
   connect(action_select_all,
           &QPushButton::clicked,
           this,
@@ -86,7 +88,7 @@ void purify_boundary_atoms_widget_t::rebuild_sub_gvs() {
             as_gv && master_gv->m_geom->DIM == as_gv->m_geom->DIM &&
             master_gv->m_geom->nat() == as_gv->m_geom->nat()) {
 
-            astate->tlog("@DEBUG: purify_boundary_atoms_widget_t::rebuild_sub_gvs() -> in cycle");
+            //astate->tlog("@DEBUG: purify_boundary_atoms_widget_t::rebuild_sub_gvs() -> in cycle");
 
             QListWidgetItem *list_item = new QListWidgetItem(sub_gvs_wdgt);
 
@@ -107,7 +109,7 @@ void purify_boundary_atoms_widget_t::select_all_clicked() {
 
   for (size_t i = 0; i < sub_gvs_wdgt->count(); i++) {
       QListWidgetItem *item = sub_gvs_wdgt->item(i);
-      item->setCheckState(Qt::Checked);
+      item->setCheckState(item->checkState() == Qt::Checked ? Qt::Unchecked : Qt::Checked);
     }
 
 }
