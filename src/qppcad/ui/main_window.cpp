@@ -562,6 +562,7 @@ void main_window::init_widgets() {
   tp_add_cube = new QPushButton;
   tp_add_cube->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_add_cube->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_add_cube->setToolTip(tr("Embed cube between two atoms"));
   tp_add_cube->setIcon(QIcon("://images/add_cube.svg"));
   tp_add_cube->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                  astate->size_guide.tool_panel_icon_size()));
@@ -573,6 +574,7 @@ void main_window::init_widgets() {
   tp_add_arrow = new QPushButton;
   tp_add_arrow->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_add_arrow->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_add_arrow->setToolTip(tr("Embed arrow between two atoms"));
   tp_add_arrow->setIcon(QIcon("://images/add_arrow.svg"));
   tp_add_arrow->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                   astate->size_guide.tool_panel_icon_size()));
