@@ -7,12 +7,13 @@
 #include <qppcad/ws_item/ws_item_trampoline.hpp>
 #include <qppcad/workspace.hpp>
 #include <symm/index.hpp>
+#include <geom/lace3d.hpp>
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
+#include <qppcad/ws_item/ccd_view/python_ccd_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
 #include <qppcad/ws_item/pdos_view/pdos_view.hpp>
-#include <io/ccd_programs.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -150,18 +151,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
           .def("__str__", &ws_item_t::py_get_repr)
           .def_readwrite("offset", &ws_item_t::m_leader_offset);
 
-  py::enum_<comp_chem_program_e>(m, "comp_chem_program_e", py::arithmetic(), "")
-          .value("pr_unknown", pr_unknown, "pr_unknown")
-          .value("pr_vasp", pr_vasp, "pr_vasp")
-          .value("pr_firefly", pr_firefly, "pr_firefly")
-          .value("pr_pc_gamess", pr_pc_gamess, "pr_pc_gamess")
-          .value("pr_cp2k", pr_cp2k, "pr_cp2k")
-          .value("pr_orca", pr_orca, "pr_orca")
-          .value("pr_molcas", pr_molcas, "pr_molcas")
-          .value("pr_molden", pr_molden, "pr_molden")
-          .export_values();
 
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);
+  py_ccd_view_reg_helper_t::reg(m, py_ws_item_t);
 
   py::class_<psg_view_t, std::shared_ptr<psg_view_t> >
   py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);
