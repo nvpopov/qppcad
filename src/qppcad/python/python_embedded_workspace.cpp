@@ -13,10 +13,11 @@
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/python_ccd_view.hpp>
 #include <qppcad/ws_item/psg_view/python_psg_view.hpp>
+#include <qppcad/ws_item/pdos_view/python_pdos_view.hpp>
 
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
-#include <qppcad/ws_item/pdos_view/pdos_view.hpp>
+
 
 #include <qppcad/app_state.hpp>
 
@@ -159,6 +160,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);
   py_ccd_view_reg_helper_t::reg(m, py_ws_item_t);
   py_psg_view_reg_helper_t::reg(m, py_ws_item_t);
+  py_pdos_view_reg_helper_t::reg(m, py_ws_item_t);
 
   py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
   py_volume_view_t(m, "volume_view_t", py_ws_item_t);
@@ -171,12 +173,6 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_node_book_t.def("num_con", [](node_book_t &src){return src.m_scene->m_connections.size();});
   py_node_book_t.def("execute", &node_book_t::execute);
 
-  py::class_<pdos_view_t, std::shared_ptr<pdos_view_t> >
-  py_pdos_view_t(m, "pdos_view_t", py_ws_item_t);
-  py_pdos_view_t.def("load", &pdos_view_t::py_load_from_list);
-  py_pdos_view_t.def("load_dir", &pdos_view_t::py_load_from_dir);
-  py_pdos_view_t.def("rebuild", &pdos_view_t::rebuild_plots);
-  py_pdos_view_t.def("scale_chn", &pdos_view_t::scale_channel);
-  py_pdos_view_t.def("e_fermi", &pdos_view_t::py_get_efermi_for_channel);
+
 
 }
