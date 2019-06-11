@@ -1732,8 +1732,26 @@ void geom_view_t::py_copy_settings(geom_view_t *src) {
   m_atom_scale_factor      = src->m_atom_scale_factor;
   m_bond_scale_factor      = src->m_bond_scale_factor;
 
-  m_labels->m_style        = src->m_labels->m_style;
-  m_labels->m_screen_scale = src->m_labels->m_screen_scale;
+  m_labels->m_style                  = src->m_labels->m_style;
+  m_labels->m_screen_scale           = src->m_labels->m_screen_scale;
+  m_labels->m_selective_label_render = src->m_labels->m_selective_label_render;
+
+}
+
+void geom_view_t::py_copy_xgeom_aux(geom_view_t *src) {
+
+  if (!src || src->m_geom->nat() != m_geom->nat()) return;
+
+  for (size_t i = 0; i < m_geom->nat(); i++) {
+
+      m_geom->xfield<bool>(xgeom_sel_vis,i) = src->m_geom->xfield<bool>(xgeom_sel_vis,i);
+      m_geom->xfield<bool>(xgeom_override,i) = src->m_geom->xfield<bool>(xgeom_override,i);
+      m_geom->xfield<bool>(xgeom_label_show,i) = src->m_geom->xfield<bool>(xgeom_label_show,i);
+
+      m_geom->xfield<std::string>(xgeom_label_text, i) =
+          src->m_geom->xfield<std::string>(xgeom_label_text, i);
+
+    }
 
 }
 

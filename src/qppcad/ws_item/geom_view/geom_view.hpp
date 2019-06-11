@@ -307,6 +307,7 @@ namespace qpp {
         py::list get_sel_atoms(int index_offset);
         py::list get_unsel_atoms(int index_offset);
         void py_copy_settings(geom_view_t *src);
+        void py_copy_xgeom_aux(geom_view_t *src);
 
     };
 
