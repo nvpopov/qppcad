@@ -4,16 +4,20 @@
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 
-#include <qppcad/ws_item/ws_item_trampoline.hpp>
-#include <qppcad/workspace.hpp>
 #include <symm/index.hpp>
 #include <geom/lace3d.hpp>
+
+#include <qppcad/ws_item/ws_item_trampoline.hpp>
+#include <qppcad/workspace.hpp>
+
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/python_ccd_view.hpp>
-#include <qppcad/ws_item/psg_view/psg_view.hpp>
+#include <qppcad/ws_item/psg_view/python_psg_view.hpp>
+
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
 #include <qppcad/ws_item/pdos_view/pdos_view.hpp>
+
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -154,12 +158,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);
   py_ccd_view_reg_helper_t::reg(m, py_ws_item_t);
-
-  py::class_<psg_view_t, std::shared_ptr<psg_view_t> >
-  py_point_sym_group_t(m, "psg_view_t", py_ws_item_t);
-  py_point_sym_group_t.def_readwrite("ag", &psg_view_t::m_ag, py::return_value_policy::reference);
-  py_point_sym_group_t.def_readwrite("pg_axes", &psg_view_t::m_pg_axes);
-  py_point_sym_group_t.def("update_view", &psg_view_t::update_view);
+  py_psg_view_reg_helper_t::reg(m, py_ws_item_t);
 
   py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
   py_volume_view_t(m, "volume_view_t", py_ws_item_t);
