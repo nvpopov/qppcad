@@ -15,8 +15,7 @@
 #include <qppcad/ws_item/psg_view/python_psg_view.hpp>
 #include <qppcad/ws_item/pdos_view/python_pdos_view.hpp>
 #include <qppcad/ws_item/node_book/python_node_book.hpp>
-
-#include <qppcad/ws_item/volume_view/volume_view.hpp>
+#include <qppcad/ws_item/volume_view/python_volume_view.hpp>
 
 #include <qppcad/app_state.hpp>
 
@@ -160,8 +159,6 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_psg_view_reg_helper_t::reg(m, py_ws_item_t);
   py_pdos_view_reg_helper_t::reg(m, py_ws_item_t);
   py_node_book_reg_helper_t::reg(m, py_ws_item_t);
-
-  py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
-  py_volume_view_t(m, "volume_view_t", py_ws_item_t);
+  py_volume_view_reg_helper_t::reg(m, py_ws_item_t);
 
 }
