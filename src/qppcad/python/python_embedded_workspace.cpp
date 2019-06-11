@@ -329,7 +329,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                       py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false);
   py_atoms_list_t.def("flip_sel_atoms_in_cell", &geom_view_t::flip_sel_atoms_in_cell);
   py_atoms_list_t.def("align_atoms_to_point", &geom_view_t::align_atoms_to_point);
-
+  py_atoms_list_t.def("copy_settings", &geom_view_t::py_copy_settings);
   py_atoms_list_t.def("get_sel_atoms", &geom_view_t::get_sel_atoms,
                       py::arg("index_offset") = 0);
   py_atoms_list_t.def("get_unsel_atoms", &geom_view_t::get_unsel_atoms,

@@ -1718,5 +1718,24 @@ py::list geom_view_t::get_unsel_atoms(int index_offset) {
 
 }
 
+void geom_view_t::py_copy_settings(geom_view_t *src) {
+
+  if (!src) return;
+
+  m_draw_atoms             = src->m_draw_atoms;
+  m_draw_bonds             = src->m_draw_bonds;
+  m_draw_img_atoms         = src->m_draw_img_atoms;
+  m_draw_img_bonds         = src->m_draw_img_bonds;
+  m_render_style           = src->m_render_style;
+  m_sel_vis                = src->m_sel_vis;
+  m_sel_vis_affect_bonds   = src->m_sel_vis_affect_bonds;
+  m_atom_scale_factor      = src->m_atom_scale_factor;
+  m_bond_scale_factor      = src->m_bond_scale_factor;
+
+  m_labels->m_style        = src->m_labels->m_style;
+  m_labels->m_screen_scale = src->m_labels->m_screen_scale;
+
+}
+
 
 
