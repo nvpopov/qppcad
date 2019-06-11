@@ -322,6 +322,13 @@ void ws_item_t::save_from_file(std::string &file_name) {
 
 }
 
+void ws_item_t::update_oi() {
+
+  if (m_selected)
+    app_state_t::get_inst()->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+}
+
 bool ws_item_t::can_be_written_to_json() {
   return false;
 }

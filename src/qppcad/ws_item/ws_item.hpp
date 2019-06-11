@@ -227,6 +227,7 @@ namespace qpp {
         void load_from_file(std::string &file_name);
         void save_from_file(std::string &file_name);
 
+        void update_oi();
         std::string py_get_repr();
 
     };

@@ -2,6 +2,7 @@
 #define QPPCAD_TOOL_COMPOSE_ANIM_FROM_FILES
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_selector_widget.hpp>
 
 namespace qpp {
 
