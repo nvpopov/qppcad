@@ -3,6 +3,7 @@
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_selector_widget.hpp>
+#include <QDialogButtonBox>
 
 namespace qpp {
 
@@ -12,9 +13,11 @@ namespace qpp {
 
         Q_OBJECT
 
-      private:
-
       public:
+
+        QVBoxLayout *main_lt;
+        qgeom_view_selector_widget_t *gv_selector;
+        QDialogButtonBox *dialog_bb;
 
         compose_anim_from_files_widget_t();
 

@@ -44,14 +44,13 @@ namespace qpp {
     class purify_boundary_atoms_tool_t : public ws_item_tool_t {
 
     public:
-      
 
       void exec(ws_item_t *item, uint32_t _error_ctx) override;
 
     };
-    
+
   } // namespace cad
- 
+
 } // namespace qpp
 
 #endif
