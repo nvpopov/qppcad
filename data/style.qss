@@ -205,6 +205,14 @@ QSplitter {
  border-bottom:2px inset black;
 }
 
+qpp--cad--qgeom_view_result_widget_t {
+  background-color: rgb(45, 45, 45);
+}
+
+qpp--cad--qgeom_view_selector_entry_t {
+ border: 1px solid black;
+}
+
 qpp--cad--ws_viewer_widget_t {
  margin-top:15px;
 }
