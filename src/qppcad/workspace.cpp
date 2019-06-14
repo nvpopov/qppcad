@@ -414,19 +414,9 @@ void workspace_t::update (float delta_time) {
   m_gizmo->update_gizmo(delta_time);
 
   //scenic camera rotation
-  if (m_scenic_rotation[0]) {
+  if (m_scenic_rotation) {
       m_camera->rotate_camera_orbit_roll(m_scenic_rotation_speed[0] * delta_time);
-      m_camera->update_camera();
-      astate->make_viewport_dirty();
-    }
-
-  if (m_scenic_rotation[1]) {
       m_camera->rotate_camera_orbit_pitch(m_scenic_rotation_speed[1] * delta_time);
-      m_camera->update_camera();
-      astate->make_viewport_dirty();
-    }
-
-  if (m_scenic_rotation[2]) {
       m_camera->rotate_camera_orbit_yaw(m_scenic_rotation_speed[2] * delta_time);
       m_camera->update_camera();
       astate->make_viewport_dirty();

@@ -460,32 +460,16 @@ void main_window::init_widgets() {
           this,
           &main_window::tp_camera_tool_button_triggered);
 
-  tp_scenic_rot_cam_x = new QPushButton;
-  tp_scenic_rot_cam_x->setIcon(QIcon("://images/outline-3d_rotation-24px_x.svg"));
-  tp_scenic_rot_cam_x->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                         astate->size_guide.tool_panel_icon_size()));
-  tp_scenic_rot_cam_x->setCheckable(true);
-  connect(tp_scenic_rot_cam_x,
+  tp_scenic_rot_cam = new QPushButton;
+  tp_scenic_rot_cam->setToolTip(tr("Orbit the camera"));
+  tp_scenic_rot_cam->setIcon(QIcon("://images/baseline-3d_rotation_x-24px.svg"));
+  tp_scenic_rot_cam->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                       astate->size_guide.tool_panel_icon_size()));
+  tp_scenic_rot_cam->setCheckable(true);
+  connect(tp_scenic_rot_cam,
           &QPushButton::toggled,
-          [this](bool state){this->tp_scenic_rotation_toggle(0);});
-
-  tp_scenic_rot_cam_y = new QPushButton;
-  tp_scenic_rot_cam_y->setIcon(QIcon("://images/outline-3d_rotation-24px_y.svg"));
-  tp_scenic_rot_cam_y->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                         astate->size_guide.tool_panel_icon_size()));
-  tp_scenic_rot_cam_y->setCheckable(true);
-  connect(tp_scenic_rot_cam_y,
-          &QPushButton::toggled,
-          [this](bool state){this->tp_scenic_rotation_toggle(1);});
-
-  tp_scenic_rot_cam_z = new QPushButton;
-  tp_scenic_rot_cam_z->setIcon(QIcon("://images/outline-3d_rotation-24px_z.svg"));
-  tp_scenic_rot_cam_z->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                         astate->size_guide.tool_panel_icon_size()));
-  tp_scenic_rot_cam_z->setCheckable(true);
-  connect(tp_scenic_rot_cam_z,
-          &QPushButton::toggled,
-          [this](bool state){this->tp_scenic_rotation_toggle(2);});
+          this,
+          &main_window::tp_scenic_rotation_toggle);
 
   tp_camera_tool_act_x = new qextended_action(this);
   tp_camera_tool_act_x->m_joined_data[0] = cam_target_view_t::tv_x_axis;
@@ -677,9 +661,7 @@ void main_window::init_layouts() {
   tool_panel_layout->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_print_screen, 0, Qt::AlignLeft);
 
-  tool_panel_layout->addWidget(tp_scenic_rot_cam_x, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_scenic_rot_cam_y, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_scenic_rot_cam_z, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_scenic_rot_cam, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_anim_fast_forward, 0, Qt::AlignLeft);
@@ -1006,17 +988,9 @@ void main_window::cur_ws_changed() {
 
   if (ok) {
 
-      tp_scenic_rot_cam_x->blockSignals(true);
-      tp_scenic_rot_cam_y->blockSignals(true);
-      tp_scenic_rot_cam_z->blockSignals(true);
-
-      tp_scenic_rot_cam_x->setChecked(cur_ws->m_scenic_rotation[0]);
-      tp_scenic_rot_cam_y->setChecked(cur_ws->m_scenic_rotation[1]);
-      tp_scenic_rot_cam_z->setChecked(cur_ws->m_scenic_rotation[2]);
-
-      tp_scenic_rot_cam_x->blockSignals(false);
-      tp_scenic_rot_cam_y->blockSignals(false);
-      tp_scenic_rot_cam_z->blockSignals(false);
+      tp_scenic_rot_cam->blockSignals(true);
+      tp_scenic_rot_cam->setChecked(cur_ws->m_scenic_rotation);
+      tp_scenic_rot_cam->blockSignals(false);
 
       view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
       view_menu_show_oi->setVisible(true);
@@ -1406,14 +1380,11 @@ void main_window::tp_add_cube_clicked() {
 
 }
 
-void main_window::tp_scenic_rotation_toggle(size_t dim_id) {
+void main_window::tp_scenic_rotation_toggle() {
 
   app_state_t* astate = app_state_t::get_inst();
-
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
-  if (dim_id >= 3 || !ok) return;
-
-  cur_ws->m_scenic_rotation[dim_id] = !cur_ws->m_scenic_rotation[dim_id];
+  cur_ws->m_scenic_rotation = !cur_ws->m_scenic_rotation;
 
 }
 

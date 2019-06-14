@@ -55,8 +55,6 @@
         <file>images/baseline-graphic_eq-24px.svg</file>
         <file>images/add_arrow.svg</file>
         <file>images/add_cube.svg</file>
-        <file>images/outline-3d_rotation-24px_x.svg</file>
-        <file>images/outline-3d_rotation-24px_y.svg</file>
-        <file>images/outline-3d_rotation-24px_z.svg</file>
+        <file>images/baseline-3d_rotation_x-24px.svg</file>
     </qresource>
 </RCC>
