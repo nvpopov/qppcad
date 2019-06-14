@@ -15,14 +15,19 @@ void qt_hlp::resize_form_lt_lbl(QLabel *label, int new_size) {
 }
 
 void qt_hlp::resize_form_lt_lbls(QFormLayout *form_lt, int new_size) {
+
   for (int i = 0; i < form_lt->rowCount(); i++) {
+
       //get row lt
       QLayoutItem *lt = form_lt->itemAt(i, QFormLayout::LabelRole);
+
       if (lt) {
           QLabel *as_label = qobject_cast<QLabel *>(lt->widget());
           if (as_label) resize_form_lt_lbl(as_label, new_size);
         }
+
     }
+
 }
 
 void qt_hlp::form_lt_hide_row(QFormLayout *form_lt, QLabel *field_label, QWidget *field_widget) {

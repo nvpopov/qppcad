@@ -18,60 +18,75 @@ namespace qpp {
 
   namespace cad {
 
+    struct geom_view_selection_query_t {
+
+        geom_view_t *gv{nullptr};
+        int anim_id{-1};
+        int frame_id{-1};
+
+    };
+
     class qgeom_view_selector_entry_t : public QFrame {
 
-    public:
+      Q_OBJECT
 
-      geom_view_t *binded_gv{nullptr};
+      public:
 
-      QVBoxLayout *main_lt;
-      QHBoxLayout *ctrls_lt;
-      QLabel *gv_name;
-      QComboBox *gv_anim_name;
-      QComboBox *gv_frame_id;
-      QPushButton *close_button;
+        geom_view_t *binded_gv{nullptr};
 
-      explicit qgeom_view_selector_entry_t(QWidget *parent = nullptr);
+        QVBoxLayout *main_lt;
+        QHBoxLayout *ctrls_lt;
+        QLabel *gv_name;
+        QComboBox *gv_anim_name;
+        QComboBox *gv_frame_id;
+        QPushButton *close_button;
 
-      void rebuild();
+        explicit qgeom_view_selector_entry_t(QWidget *parent = nullptr);
+
+        void rebuild();
+
+      public slots:
+
+        void cmb_anim_name_changed(int idx);
 
     };
 
     class qgeom_view_result_widget_t : public QWidget {
 
-      Q_OBJECT
+        Q_OBJECT
 
-    public:
+      public:
 
-      QVBoxLayout *main_lt;
+        QVBoxLayout *main_lt;
 
-      explicit qgeom_view_result_widget_t(QWidget *parent = nullptr);
+        explicit qgeom_view_result_widget_t(QWidget *parent = nullptr);
 
     };
 
     class qgeom_view_selector_widget_t : public QWidget {
 
-      Q_OBJECT
+        Q_OBJECT
 
-    public:
+      public:
 
-      QHBoxLayout *main_lt;
-      QListWidget *list_gv{nullptr};
-      QScrollArea *list_gv_res_scroll_area;
-      qgeom_view_result_widget_t *list_gv_res{nullptr};
+        QHBoxLayout *main_lt;
+        QListWidget *list_gv{nullptr};
+        QScrollArea *list_gv_res_scroll_area;
+        qgeom_view_result_widget_t *list_gv_res{nullptr};
 
-      QVBoxLayout *add_btn_lt;
-      QPushButton *add_btn;
+        QVBoxLayout *add_btn_lt;
+        QPushButton *add_btn;
 
-      std::vector<geom_view_t*> m_sub_gvs;
+        std::vector<geom_view_t*> m_sub_gvs;
 
-      void generate_list_gv_items();
+        void generate_list_gv_items();
+        void compose_selection_query(std::vector<geom_view_selection_query_t> &sel_query);
+        qgeom_view_selector_widget_t(QWidget *parent = 0);
 
-      qgeom_view_selector_widget_t(QWidget *parent = 0);
 
-    public slots:
+      public slots:
 
-      void add_btn_clicked();
+        void add_btn_clicked();
 
     };
 

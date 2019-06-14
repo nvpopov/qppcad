@@ -1,4 +1,5 @@
 #include <qppcad/tools/compose_anim_from_files/compose_anim_from_files.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -21,9 +22,55 @@ void compose_anim_from_files_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) 
   compose_anim_from_files_widget_t caw;
   int ret_code = caw.exec();
 
-  if (ret_code == QDialog::Accepted) {
-      astate->make_viewport_dirty();
+  std::vector<geom_view_selection_query_t> sel_query;
+  caw.gv_selector->compose_selection_query(sel_query);
+
+  if (ret_code == QDialog::Accepted && !sel_query.empty()) {
+
+      //perform nat() check
+      std::set<size_t> nats;
+      for (auto &rec : sel_query) nats.insert(rec.gv->m_geom->nat());
+      if (nats.size() != 1) {
+          //throw error
+          return;
+        }
+
+      //fine, do the job
+      auto new_it = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
+      auto new_gv = new_it->cast_as<geom_view_t>();
+      new_gv->m_name = fmt::format("composed_gv{}", cur_ws->m_ws_items.size());
+      cur_ws->add_item_to_ws(new_it);
+
+      geom_anim_record_t<float> new_anim;
+      new_anim.frames.resize(sel_query.size());
+      new_anim.m_anim_name = "composed0";
+      new_anim.m_anim_type = geom_anim_t::anim_geo_opt;
+      int img_idx = 0;
+
+      for (auto &rec : sel_query) {
+
+          //init xgeom
+          if (img_idx == 0) {
+              new_gv->begin_structure_change();
+              rec.gv->copy_to_xgeom(*new_gv->m_geom);
+              new_gv->end_structure_change();
+            }
+
+          //copy frames
+          new_anim.frames[img_idx].atom_pos.resize(new_gv->m_geom->nat());
+
+          for (size_t i = 0; i < new_gv->m_geom->nat(); i++)
+            new_anim.frames[img_idx].atom_pos[i] = rec.gv->m_geom->pos(i);
+
+          img_idx++;
+
+        }
+
+      new_gv->m_anim->m_anim_data.emplace_back(std::move(new_anim));
+
     }
+
+  astate->make_viewport_dirty();
 
 }
 

@@ -18,8 +18,6 @@ void qgeom_view_selector_widget_t::generate_list_gv_items() {
       if (ws_item->get_type() == geom_view_t::get_type_static())
         if (auto as_gv = ws_item->cast_as<geom_view_t>(); as_gv) {
 
-            //astate->tlog("@DEBUG: purify_boundary_atoms_widget_t::rebuild_sub_gvs() -> in cycle");
-
             QListWidgetItem *list_item = new QListWidgetItem(list_gv);
 
             std::string list_item_name = fmt::format("{}/{}",
@@ -34,11 +32,33 @@ void qgeom_view_selector_widget_t::generate_list_gv_items() {
 
 }
 
+void qgeom_view_selector_widget_t::compose_selection_query(
+    std::vector<geom_view_selection_query_t> &sel_query) {
+
+  QList<qgeom_view_selector_entry_t*> list_wdgt = findChildren<qgeom_view_selector_entry_t*>();
+
+  for (auto &list_rec : list_wdgt) {
+
+      geom_view_selection_query_t sel_rec;
+      sel_rec.gv = list_rec->binded_gv;
+
+      if (list_rec->gv_anim_name->isEnabled())
+        sel_rec.anim_id = list_rec->gv_anim_name->currentIndex();
+
+      if (list_rec->gv_frame_id->isEnabled())
+        sel_rec.frame_id = list_rec->gv_frame_id->currentIndex();
+
+      sel_query.push_back(std::move(sel_rec));
+
+    }
+
+}
+
 qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QWidget(parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setMinimumHeight(250);
+  setMinimumHeight(350);
   setMinimumWidth(450);
 
   main_lt = new QHBoxLayout;
@@ -90,19 +110,23 @@ void qgeom_view_selector_widget_t::add_btn_clicked() {
 
 qgeom_view_selector_entry_t::qgeom_view_selector_entry_t(QWidget *parent): QFrame(parent) {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   main_lt = new QVBoxLayout;
   setLayout(main_lt);
 
-  setFrameStyle(QFrame::Panel);
+  setFrameStyle(QFrame::StyledPanel);
   ctrls_lt = new QHBoxLayout;
 
   gv_name = new QLabel("entry_name1");
   gv_anim_name = new QComboBox;
   gv_frame_id = new QComboBox;
+  close_button = new QPushButton(tr("Delete"));
 
   main_lt->addWidget(gv_name);
   ctrls_lt->addWidget(gv_anim_name);
   ctrls_lt->addWidget(gv_frame_id);
+  ctrls_lt->addWidget(close_button);
   ctrls_lt->addSpacing(1);
   main_lt->addLayout(ctrls_lt);
 
@@ -122,16 +146,45 @@ void qgeom_view_selector_entry_t::rebuild() {
 
   if (binded_gv->m_anim->animable()) {
 
+      gv_anim_name->setEnabled(true);
+      gv_frame_id->setEnabled(true);
+      gv_anim_name->blockSignals(true);
+      gv_frame_id->blockSignals(true);
+
+      gv_anim_name->clear();
+      for (size_t i = 0; i < binded_gv->m_anim->get_total_anims(); i++)
+        gv_anim_name->addItem(
+              QString::fromStdString(binded_gv->m_anim->m_anim_data[i].m_anim_name));
+
+      gv_anim_name->blockSignals(false);
+      gv_frame_id->blockSignals(false);
+
+    } else {
+      gv_anim_name->setEnabled(false);
+      gv_frame_id->setEnabled(false);
     }
 
-  gv_anim_name->setEnabled(false);
   //gv_frame_id->
+
+}
+
+void qgeom_view_selector_entry_t::cmb_anim_name_changed(int idx) {
+
+  if (!binded_gv || !binded_gv->m_anim->animable()) return;
+
+  auto cur_anim_idx = gv_anim_name->currentIndex();
+
+  gv_frame_id->clear();
+
+  for (size_t i = 0; i < binded_gv->m_anim->m_anim_data[cur_anim_idx].frames.size(); i++)
+    gv_frame_id->addItem(QString("%1").arg(i));
 
 }
 
 qgeom_view_result_widget_t::qgeom_view_result_widget_t(QWidget *parent) : QWidget(parent) {
 
   main_lt = new QVBoxLayout;
+  main_lt->addSpacing(1);
   setLayout(main_lt);
 
 }
