@@ -271,9 +271,14 @@ void ws_item_t::save_to_json(json &data) {
   json_helper::save_var(JSON_WS_ITEM_NAME, m_name, data);
   json_helper::save_var(JSON_WS_ITEM_TYPE, get_type_name(), data);
   json_helper::save_var(JSON_IS_VISIBLE, m_is_visible, data);
+
+  if (get_flags() & ws_item_flags_support_render_bb)
+    json_helper::save_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
+
   json_helper::save_vec3(JSON_POS, m_pos, data);
 
-  if (m_leader) json_helper::save_var(JSON_WS_ITEM_LEADER, m_leader->m_name, data);
+  if (m_leader)
+    json_helper::save_var(JSON_WS_ITEM_LEADER, m_leader->m_name, data);
 
   if (!m_connected_items.empty()) {
       json _con_items = json::array({});
@@ -294,7 +299,11 @@ void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
   json_helper::load_var(JSON_WS_ITEM_NAME, m_name, data);
   json_helper::load_var(JSON_IS_VISIBLE, m_is_visible, data);
 
-  if (get_flags() | ws_item_flags_support_tr) json_helper::load_vec3(JSON_POS, m_pos, data);
+  if (get_flags() & ws_item_flags_support_render_bb)
+    json_helper::load_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
+
+  if (get_flags() | ws_item_flags_support_tr)
+    json_helper::load_vec3(JSON_POS, m_pos, data);
 
   auto _con_items = data.find(JSON_WS_ITEM_CONNECTED_ITEMS);
   if (_con_items != data.end()) {

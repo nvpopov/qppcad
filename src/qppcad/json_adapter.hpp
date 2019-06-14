@@ -22,14 +22,15 @@ namespace qpp {
 
     const auto QPP_CAD_JSON_VERSION = "0.2";
     //qjson v0.1
-    const auto JSON_QPPCAD_VERSION = "qppcad_file_version";
-    const auto JSON_WS_NAME        = "ws_name";
-    const auto JSON_BG_CLR         = "bg_clr";
-    const auto JSON_OBJECTS        = "objects";
-    const auto JSON_WS_ITEM_NAME   = "name";
-    const auto JSON_WS_ITEM_TYPE   = "type";
-    const auto JSON_IS_VISIBLE     = "is_visible";
-    const auto JSON_POS            = "pos";
+    const auto JSON_QPPCAD_VERSION  = "qppcad_file_version";
+    const auto JSON_WS_NAME         = "ws_name";
+    const auto JSON_BG_CLR          = "bg_clr";
+    const auto JSON_OBJECTS         = "objects";
+    const auto JSON_WS_ITEM_NAME    = "name";
+    const auto JSON_WS_ITEM_TYPE    = "type";
+    const auto JSON_IS_VISIBLE      = "is_visible";
+    const auto JSON_POS             = "pos";
+    const auto JSON_WS_ITEM_SHOW_BB = "show_bb";
 
     const auto JSON_WS_ITEM_CONNECTED_ITEMS = "connected_items";
     const auto JSON_WS_ITEM_LEADER          = "leader";
