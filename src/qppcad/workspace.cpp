@@ -404,6 +404,8 @@ void workspace_t::load_ws_from_json (const std::string filename) {
 
 void workspace_t::update (float delta_time) {
 
+  app_state_t* astate = app_state_t::get_inst();
+
   if (m_first_render) {
       if (!m_camera->m_already_loaded) set_best_view();
       m_first_render = false;
@@ -411,8 +413,26 @@ void workspace_t::update (float delta_time) {
 
   m_gizmo->update_gizmo(delta_time);
 
-  //handle deletion
+  //scenic camera rotation
+  if (m_scenic_rotation[0]) {
+      m_camera->rotate_camera_orbit_roll(m_scenic_rotation_speed[0] * delta_time);
+      m_camera->update_camera();
+      astate->make_viewport_dirty();
+    }
 
+  if (m_scenic_rotation[1]) {
+      m_camera->rotate_camera_orbit_pitch(m_scenic_rotation_speed[1] * delta_time);
+      m_camera->update_camera();
+      astate->make_viewport_dirty();
+    }
+
+  if (m_scenic_rotation[2]) {
+      m_camera->rotate_camera_orbit_yaw(m_scenic_rotation_speed[2] * delta_time);
+      m_camera->update_camera();
+      astate->make_viewport_dirty();
+    }
+
+  //handle deletion
   bool need_to_emit_ws_changed{false};
 
   for (auto it = m_ws_items.begin(); it != m_ws_items.end(); )

@@ -40,6 +40,8 @@ namespace qpp {
         bool m_is_ws_imported{false};
         bool m_marked_for_deletion{false};
         bool m_first_render{true};
+        std::array<bool, 3> m_scenic_rotation{false, false, false};
+        vector3<float> m_scenic_rotation_speed{0.1f};
 
         workspace_t(std::string _ws_name = "default") {
           m_ws_name = _ws_name;

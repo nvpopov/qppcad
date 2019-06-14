@@ -76,6 +76,10 @@ namespace qpp {
         qextended_action *tp_camera_tool_act_b;
         qextended_action *tp_camera_tool_act_c;
 
+        QPushButton *tp_scenic_rot_cam_x;
+        QPushButton *tp_scenic_rot_cam_y;
+        QPushButton *tp_scenic_rot_cam_z;
+
         QPushButton *tp_anim_fast_forward;
         QPushButton *tp_force_sel_lbl_vis;
         QPushButton *tp_toggle_atom_override;
@@ -211,6 +215,7 @@ namespace qpp {
         void tp_fast_forward_anim_clicked();
         void tp_add_arrow_clicked();
         void tp_add_cube_clicked();
+        void tp_scenic_rotation_toggle(size_t dim_id);
 
         void apply_camera_view_change(cam_target_view_t target_view);
 
