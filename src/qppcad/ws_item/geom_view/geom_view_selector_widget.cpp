@@ -59,15 +59,22 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
   app_state_t *astate = app_state_t::get_inst();
 
   setMinimumHeight(350);
-  setMinimumWidth(450);
+  setMinimumWidth(550);
 
   main_lt = new QHBoxLayout;
   setLayout(main_lt);
+
+  list_gv_lbl_lt = new QVBoxLayout;
+  list_gv_res_lbl_lt = new QVBoxLayout;
+
+  list_gv_lbl = new QLabel(tr("Select geom. view:"));
+  list_gv_res_lbl = new QLabel(tr("Composed animation:"));
 
   list_gv = new QListWidget;
   list_gv->setMinimumWidth(400);
 
   add_btn = new QPushButton(">>");
+  add_btn->setFixedWidth(astate->size_guide.obj_insp_button_w());
   add_btn_lt = new QVBoxLayout;
   add_btn_lt->addSpacing(1);
   add_btn_lt->addWidget(add_btn);
@@ -88,9 +95,15 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
   list_gv_res_scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   list_gv_res_scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  main_lt->addWidget(list_gv);
+  list_gv_lbl_lt->addWidget(list_gv_lbl);
+  list_gv_lbl_lt->addWidget(list_gv);
+  main_lt->addLayout(list_gv_lbl_lt);
+
   main_lt->addLayout(add_btn_lt);
-  main_lt->addWidget(list_gv_res_scroll_area);
+
+  list_gv_res_lbl_lt->addWidget(list_gv_res_lbl);
+  list_gv_res_lbl_lt->addWidget(list_gv_res_scroll_area);
+  main_lt->addLayout(list_gv_res_lbl_lt);
 
   generate_list_gv_items();
 
@@ -121,16 +134,20 @@ qgeom_view_selector_entry_t::qgeom_view_selector_entry_t(QWidget *parent): QFram
   gv_name = new QLabel("entry_name1");
   gv_anim_name = new QComboBox;
   gv_frame_id = new QComboBox;
-  close_button = new QPushButton(tr("Delete"));
+  close_btn = new QPushButton(tr("DEL"));
+  up_btn = new QPushButton(tr("UP"));
+  down_btn = new QPushButton(tr("DOWN"));
 
   main_lt->addWidget(gv_name);
   ctrls_lt->addWidget(gv_anim_name);
   ctrls_lt->addWidget(gv_frame_id);
-  ctrls_lt->addWidget(close_button);
+  ctrls_lt->addWidget(close_btn);
+  ctrls_lt->addWidget(up_btn);
+  ctrls_lt->addWidget(down_btn);
   ctrls_lt->addSpacing(1);
   main_lt->addLayout(ctrls_lt);
 
-  setFixedHeight(80);
+  setFixedHeight(75);
 
 }
 
@@ -163,8 +180,6 @@ void qgeom_view_selector_entry_t::rebuild() {
       gv_anim_name->setEnabled(false);
       gv_frame_id->setEnabled(false);
     }
-
-  //gv_frame_id->
 
 }
 

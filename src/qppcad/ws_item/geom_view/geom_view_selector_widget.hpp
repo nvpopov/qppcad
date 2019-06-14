@@ -39,7 +39,9 @@ namespace qpp {
         QLabel *gv_name;
         QComboBox *gv_anim_name;
         QComboBox *gv_frame_id;
-        QPushButton *close_button;
+        QPushButton *close_btn;
+        QPushButton *up_btn;
+        QPushButton *down_btn;
 
         explicit qgeom_view_selector_entry_t(QWidget *parent = nullptr);
 
@@ -70,9 +72,15 @@ namespace qpp {
       public:
 
         QHBoxLayout *main_lt;
+        QVBoxLayout *list_gv_lbl_lt;
+        QVBoxLayout *list_gv_res_lbl_lt;
+
         QListWidget *list_gv{nullptr};
         QScrollArea *list_gv_res_scroll_area;
         qgeom_view_result_widget_t *list_gv_res{nullptr};
+
+        QLabel *list_gv_lbl;
+        QLabel *list_gv_res_lbl;
 
         QVBoxLayout *add_btn_lt;
         QPushButton *add_btn;
