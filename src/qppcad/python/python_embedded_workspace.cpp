@@ -90,6 +90,14 @@ void mvd() {
 
 }
 
+
+void cws_changed() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->astate_evd->cur_ws_changed();
+
+}
+
 PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >(m, "workspace_manager_t")
@@ -121,6 +129,12 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("construct", &workspace_t::py_construct_item)
       .def("construct", &construct_from_geom)
       .def("construct", &construct_from_array_group)
+      .def_readwrite("scenic_rot_magn", &workspace_t::m_scenic_rotation_speed)
+      .def_property("scenic_rot",
+                    [](workspace_t &src)
+                    {return src.m_scenic_rotation;},
+                    [](workspace_t &src, const bool value)
+                    {src.m_scenic_rotation = value; cws_changed();})
       .def_property("bg",
                     [](workspace_t &src)
                     {return src.m_background_color;},
