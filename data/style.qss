@@ -228,7 +228,7 @@ qpp--cad--ws_tabbar_t {
 }
 
 qpp--cad--ws_tabbar_t::tab {
- height: 27px;
+ height: 24px;
  border: 0px;
  margin-top:4px;
  margin-right: 3px;
@@ -243,10 +243,6 @@ qpp--cad--ws_tabbar_t::tab {
  border-left: 1px solid rgb(73, 73, 73);
  border-right: 1px solid rgb(73, 73, 73);
  border-top: 1px solid rgb(73, 73, 73);
-}
-
-qpp--cad--ws_tabbar_t {
- height: 50px;
 }
 
 qpp--cad--ws_tabbar_t::tab::first {
@@ -358,15 +354,12 @@ QToolButton {
  padding: 2px;
 }
 
-#tool_panel_widget_e QCheckBox {
- background : rgb(74, 74, 74);
- border: 1px solid rgb(55, 55, 55);
- border-radius: 4px;
- padding: 3px;
-}
-
 #tool_panel_widget_e {
  border-bottom: 2px solid rgb(83, 83, 83);
+}
+
+#tool_panel_widget_e QFrame {
+ background: rgb(83, 83, 83);
 }
 
 QPushButton:pressed, QToolButton:pressed {

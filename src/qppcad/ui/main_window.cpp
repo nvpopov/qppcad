@@ -433,13 +433,13 @@ void main_window_t::init_widgets() {
   tp_edit_mode_start = new QFrame;
   tp_edit_mode_start->setFrameShape(QFrame::VLine);
   tp_edit_mode_start->setFrameShadow(QFrame::Sunken);
-  tp_edit_mode_start->setFixedWidth(2);
+  tp_edit_mode_start->setFixedWidth(3);
   tp_edit_mode_start->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
   tp_edit_mode_end = new QFrame;
   tp_edit_mode_end->setFrameShape(QFrame::VLine);
   tp_edit_mode_end->setFrameShadow(QFrame::Sunken);
-  tp_edit_mode_end->setFixedWidth(2);
+  tp_edit_mode_end->setFixedWidth(3);
   tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
   connect(tp_edit_mode,
           static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
@@ -506,11 +506,16 @@ void main_window_t::init_widgets() {
   tp_camera_tool_act_c->setText(tr( "c - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_c);
 
+  tp_utility_frame_end = new QFrame;
+  tp_utility_frame_end->setFrameShape(QFrame::StyledPanel);
+  tp_utility_frame_end->setFixedWidth(3);
+  tp_utility_frame_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+
   tp_anim_fast_forward = new QPushButton();
   tp_anim_fast_forward->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_anim_fast_forward->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_anim_fast_forward->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                     astate->size_guide.tool_panel_icon_size()));
+                                          astate->size_guide.tool_panel_icon_size()));
   tp_anim_fast_forward->setToolTip(tr("Fast-forward to last frame of animated geometry"));
   tp_anim_fast_forward->setIcon(QIcon("://images/outline-fast_forward-24px.svg"));
   connect(tp_anim_fast_forward,
@@ -659,11 +664,12 @@ void main_window_t::init_layouts() {
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
+
   tool_panel_layout->addWidget(tp_print_screen, 0, Qt::AlignLeft);
-
   tool_panel_layout->addWidget(tp_scenic_rot_cam, 0, Qt::AlignLeft);
-
   tool_panel_layout->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_utility_frame_end, 0, Qt::AlignLeft);
+
   tool_panel_layout->addWidget(tp_anim_fast_forward, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
