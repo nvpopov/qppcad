@@ -35,7 +35,7 @@ namespace qpp {
 
   namespace cad {
 
-    class main_window : public QMainWindow {
+    class main_window_t : public QMainWindow {
 
         Q_OBJECT
 
@@ -45,8 +45,8 @@ namespace qpp {
 
       public:
 
-        explicit main_window(QWidget *parent = 0);
-        ~main_window();
+        explicit main_window_t(QWidget *parent = 0);
+        ~main_window_t();
         void init_base_shortcuts();
         void init_menus();
         void init_widgets();
@@ -59,7 +59,6 @@ namespace qpp {
         QHBoxLayout *tool_panel_layout;
 
         QComboBox *tp_ws_selector;
-        QPushButton *tp_print_screen;
 
         QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;
@@ -67,6 +66,7 @@ namespace qpp {
         QPushButton *tp_edit_mode_content;
         QFrame *tp_edit_mode_end;
 
+        QPushButton *tp_print_screen;
         QToolButton *tp_camera_tool;
         qextended_action *tp_camera_tool_act_x;
         qextended_action *tp_camera_tool_act_y;
@@ -75,8 +75,8 @@ namespace qpp {
         qextended_action *tp_camera_tool_act_a;
         qextended_action *tp_camera_tool_act_b;
         qextended_action *tp_camera_tool_act_c;
-
         QPushButton *tp_scenic_rot_cam;
+        QFrame *tp_utility_frame_end;
 
         QPushButton *tp_anim_fast_forward;
         QPushButton *tp_force_sel_lbl_vis;

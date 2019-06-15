@@ -15,7 +15,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-main_window::main_window(QWidget *parent) : QMainWindow(parent) {
+main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
 
   main_widget = new QWidget;
   app_state_t* astate = app_state_t::get_inst();
@@ -36,32 +36,32 @@ main_window::main_window(QWidget *parent) : QMainWindow(parent) {
   connect(astate->astate_evd,
           &app_state_event_disp_t::wss_changed_signal,
           this,
-          &main_window::wss_changed_slot);
+          &main_window_t::wss_changed_slot);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_changed_signal,
           this,
-          &main_window::cur_ws_changed);
+          &main_window_t::cur_ws_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
           this,
-          &main_window::cur_ws_selected_item_changed);
+          &main_window_t::cur_ws_selected_item_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_edit_type_changed_signal,
           this,
-          &main_window::cur_ws_edit_type_changed);
+          &main_window_t::cur_ws_edit_type_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this,
-          &main_window::cur_ws_selected_atoms_list_selection_changed);
+          &main_window_t::cur_ws_selected_atoms_list_selection_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::new_file_loaded_signal,
           this,
-          &main_window::rebuild_recent_files_menu);
+          &main_window_t::rebuild_recent_files_menu);
 
   wss_changed_slot();
   cur_ws_changed();
@@ -70,22 +70,22 @@ main_window::main_window(QWidget *parent) : QMainWindow(parent) {
 
 }
 
-main_window::~main_window() {
+main_window_t::~main_window_t() {
 
 }
 
-void main_window::init_base_shortcuts() {
+void main_window_t::init_base_shortcuts() {
 
   sc_toggle_console = new QShortcut(this);
   sc_toggle_console->setKey(Qt::Key_QuoteLeft);
   connect(sc_toggle_console,
           &QShortcut::activated,
           this,
-          &main_window::action_toggle_console);
+          &main_window_t::action_toggle_console);
 
 }
 
-void main_window::init_menus() {
+void main_window_t::init_menus() {
 
   file_menu  = menuBar()->addMenu(tr("&File"));
 
@@ -96,7 +96,7 @@ void main_window::init_menus() {
   connect(file_menu_new_ws,
           &QAction::triggered,
           this,
-          &main_window::create_new_ws);
+          &main_window_t::create_new_ws);
 
   file_menu_close_ws = new QAction(this);
   file_menu_close_ws->setText(tr("Close workspace"));
@@ -104,7 +104,7 @@ void main_window::init_menus() {
   connect(file_menu_close_ws,
           &QAction::triggered,
           this,
-          &main_window::close_cur_ws);
+          &main_window_t::close_cur_ws);
 
   file_menu_close_all_ws = new QAction(this);
   file_menu_close_all_ws->setText(tr("Close all workspaces"));
@@ -112,7 +112,7 @@ void main_window::init_menus() {
   connect(file_menu_close_all_ws,
           &QAction::triggered,
           this,
-          &main_window::close_all_ws);
+          &main_window_t::close_all_ws);
 
   file_menu_open_ws = new QAction(this);
   file_menu_open_ws->setText(tr("Open workspace"));
@@ -121,7 +121,7 @@ void main_window::init_menus() {
   connect(file_menu_open_ws,
           &QAction::triggered,
           this,
-          &main_window::open_ws);
+          &main_window_t::open_ws);
 
   file_menu_save_ws = new QAction(this);
   file_menu_save_ws->setText(tr("Save workspace"));
@@ -131,7 +131,7 @@ void main_window::init_menus() {
   connect(file_menu_save_ws,
           &QAction::triggered,
           this,
-          &main_window::save_ws);
+          &main_window_t::save_ws);
 
   file_menu_save_ws_as = new QAction(this);
   file_menu_save_ws_as->setText(tr("Save workspace as"));
@@ -139,7 +139,7 @@ void main_window::init_menus() {
   connect(file_menu_save_ws_as,
           &QAction::triggered,
           this,
-          &main_window::save_ws_as);
+          &main_window_t::save_ws_as);
 
   file_menu->addSeparator();
   file_menu_import_as_new_ws = file_menu->addMenu(tr("Import as new workspace"));
@@ -154,7 +154,7 @@ void main_window::init_menus() {
       connect(recent_act,
               &QAction::triggered,
               this,
-              &main_window::recent_files_clicked);
+              &main_window_t::recent_files_clicked);
     }
 
   file_menu_close_app = new QAction(this);
@@ -163,7 +163,7 @@ void main_window::init_menus() {
   file_menu->addSeparator();
   file_menu->addAction(file_menu_close_app);
   connect(file_menu_close_app, &QAction::triggered, this,
-          &main_window::slot_shortcut_terminate_app);
+          &main_window_t::slot_shortcut_terminate_app);
 
   edit_menu  = menuBar()->addMenu(tr("&Edit"));
   edit_menu_undo = new QAction(this);
@@ -189,7 +189,7 @@ void main_window::init_menus() {
   connect(edit_menu_selection_select_all,
           &QAction::triggered,
           this,
-          &main_window::action_select_all_content);
+          &main_window_t::action_select_all_content);
 
   edit_menu_selection_unselect_all = new QAction(this);
   edit_menu_selection_unselect_all->setText(tr("Unselect all"));
@@ -198,7 +198,7 @@ void main_window::init_menus() {
   connect(edit_menu_selection_unselect_all,
           &QAction::triggered,
           this,
-          &main_window::action_unselect_all_content);
+          &main_window_t::action_unselect_all_content);
 
   edit_menu_selection_invert = new QAction(this);
   edit_menu_selection_invert->setText(tr("Invert selection"));
@@ -207,7 +207,7 @@ void main_window::init_menus() {
   connect(edit_menu_selection_invert,
           &QAction::triggered,
           this,
-          &main_window::action_invert_selected_content);
+          &main_window_t::action_invert_selected_content);
   //End of selection menu
 
   edit_menu_switch_ws_edit_mode = new QAction(this);
@@ -216,7 +216,7 @@ void main_window::init_menus() {
   connect(edit_menu_switch_ws_edit_mode,
           &QAction::triggered,
           this,
-          &main_window::toggle_ws_edit_mode);
+          &main_window_t::toggle_ws_edit_mode);
 
   edit_menu->addAction(edit_menu_switch_ws_edit_mode);
 
@@ -233,7 +233,7 @@ void main_window::init_menus() {
   connect(ws_menu_rename_ws,
           &QAction::triggered,
           this,
-          &main_window::rename_cur_ws);
+          &main_window_t::rename_cur_ws);
 
   ws_menu_bg_color = new QAction(this);
   ws_menu_bg_color->setText(tr("Change background"));
@@ -241,7 +241,7 @@ void main_window::init_menus() {
   connect(ws_menu_bg_color,
           &QAction::triggered,
           this,
-          &main_window::change_cur_ws_bg);
+          &main_window_t::change_cur_ws_bg);
 
   ws_copy_cam = new QAction(this);
   ws_copy_cam->setText(tr("Copy camera to all"));
@@ -249,7 +249,7 @@ void main_window::init_menus() {
   connect(ws_copy_cam,
           &QAction::triggered,
           this,
-          &main_window::cam_copy_to_all);
+          &main_window_t::cam_copy_to_all);
   // end workspace menu
 
   // view menu
@@ -262,7 +262,7 @@ void main_window::init_menus() {
   connect(view_menu_show_oi,
           &QAction::toggled,
           this,
-          &main_window::show_obj_insp_state_changed);
+          &main_window_t::show_obj_insp_state_changed);
 
   view_menu_show_gizmo = new QAction(this);
   view_menu_show_gizmo->setText(tr("Show gizmo"));
@@ -271,7 +271,7 @@ void main_window::init_menus() {
   connect(view_menu_show_gizmo,
           &QAction::toggled,
           this,
-          &main_window::show_gizmo_state_changed);
+          &main_window_t::show_gizmo_state_changed);
 
   view_menu_toggle_fullscreen = new QAction(this);
   view_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
@@ -280,7 +280,7 @@ void main_window::init_menus() {
   connect(view_menu_toggle_fullscreen,
           &QAction::toggled,
           this,
-          &main_window::toggle_fullscreen);
+          &main_window_t::toggle_fullscreen);
 
   view_menu->addAction(view_menu_toggle_fullscreen);
 
@@ -303,7 +303,7 @@ void main_window::init_menus() {
   connect(view_menu_console,
           &QAction::triggered,
           this,
-          &main_window::action_toggle_console);
+          &main_window_t::action_toggle_console);
   view_menu->addAction(view_menu_console);
 
   view_menu_debug = view_menu->addMenu(tr("Debug"));
@@ -369,7 +369,7 @@ void main_window::init_menus() {
 
 }
 
-void main_window::init_widgets() {
+void main_window_t::init_widgets() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -383,7 +383,7 @@ void main_window::init_widgets() {
   connect(tp_ws_selector,
           static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
           this,
-          &main_window::ws_selector_selection_changed);
+          &main_window_t::ws_selector_selection_changed);
 
   tp_ws_selector->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
@@ -400,14 +400,14 @@ void main_window::init_widgets() {
   connect(tp_print_screen,
           &QPushButton::pressed,
           this,
-          &main_window::make_screenshot);
+          &main_window_t::make_screenshot);
 
   tp_edit_mode = new QButtonGroup;
   tp_edit_mode->setExclusive(true);
   connect(tp_edit_mode,
           static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this,
-          &main_window::ws_edit_mode_selector_button_clicked);
+          &main_window_t::ws_edit_mode_selector_button_clicked);
 
   tp_edit_mode_item = new QPushButton;
   tp_edit_mode_item->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
@@ -444,7 +444,7 @@ void main_window::init_widgets() {
   connect(tp_edit_mode,
           static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this,
-          &main_window::ws_edit_mode_selector_button_clicked);
+          &main_window_t::ws_edit_mode_selector_button_clicked);
 
   tp_camera_tool = new QToolButton;
   tp_camera_tool->setIcon(QIcon("://images/outline-videocam-24px.svg"));
@@ -458,7 +458,7 @@ void main_window::init_widgets() {
   connect(tp_camera_tool,
           &QToolButton::triggered,
           this,
-          &main_window::tp_camera_tool_button_triggered);
+          &main_window_t::tp_camera_tool_button_triggered);
 
   tp_scenic_rot_cam = new QPushButton;
   tp_scenic_rot_cam->setToolTip(tr("Orbit the camera"));
@@ -469,7 +469,7 @@ void main_window::init_widgets() {
   connect(tp_scenic_rot_cam,
           &QPushButton::toggled,
           this,
-          &main_window::tp_scenic_rotation_toggle);
+          &main_window_t::tp_scenic_rotation_toggle);
 
   tp_camera_tool_act_x = new qextended_action(this);
   tp_camera_tool_act_x->m_joined_data[0] = cam_target_view_t::tv_x_axis;
@@ -516,7 +516,7 @@ void main_window::init_widgets() {
   connect(tp_anim_fast_forward,
           &QPushButton::clicked,
           this,
-          &main_window::tp_fast_forward_anim_clicked);
+          &main_window_t::tp_fast_forward_anim_clicked);
 
   tp_measure_dist = new QPushButton();
   tp_measure_dist->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -529,7 +529,7 @@ void main_window::init_widgets() {
   connect(tp_measure_dist,
           &QPushButton::toggled,
           this,
-          &main_window::tp_dist_button_clicked);
+          &main_window_t::tp_dist_button_clicked);
 
   tp_toggle_atom_override = new QPushButton();
   tp_toggle_atom_override->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -542,7 +542,7 @@ void main_window::init_widgets() {
   connect(tp_toggle_atom_override,
           &QPushButton::toggled,
           this,
-          &main_window::tp_toggle_atom_override_button_clicked);
+          &main_window_t::tp_toggle_atom_override_button_clicked);
 
   tp_force_sel_lbl_vis = new QPushButton();
   tp_force_sel_lbl_vis->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -555,7 +555,7 @@ void main_window::init_widgets() {
   connect(tp_force_sel_lbl_vis,
           &QPushButton::toggled,
           this,
-          &main_window::tp_force_sel_lbl_vis_button_clicked);
+          &main_window_t::tp_force_sel_lbl_vis_button_clicked);
 
   tp_measure_angle = new QPushButton();
   tp_measure_angle->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -568,7 +568,7 @@ void main_window::init_widgets() {
   connect(tp_measure_angle,
           &QPushButton::toggled,
           this,
-          &main_window::tp_angle_button_clicked);
+          &main_window_t::tp_angle_button_clicked);
 
   tp_add_cube = new QPushButton;
   tp_add_cube->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -580,7 +580,7 @@ void main_window::init_widgets() {
   connect(tp_add_cube,
           &QPushButton::clicked,
           this,
-          &main_window::tp_add_cube_clicked);
+          &main_window_t::tp_add_cube_clicked);
 
   tp_add_arrow = new QPushButton;
   tp_add_arrow->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -592,7 +592,7 @@ void main_window::init_widgets() {
   connect(tp_add_arrow,
           &QPushButton::clicked,
           this,
-          &main_window::tp_add_arrow_clicked);
+          &main_window_t::tp_add_arrow_clicked);
 
   tp_ws_selector->setVisible(false);
 
@@ -607,7 +607,7 @@ void main_window::init_widgets() {
 
 }
 
-void main_window::init_layouts() {
+void main_window_t::init_layouts() {
 
   main_layout = new QVBoxLayout;
   ws_tabbar_wdgt = new ws_tabbar_t;
@@ -679,23 +679,23 @@ void main_window::init_layouts() {
 
 }
 
-void main_window::change_camera_buttons_visible(bool cart_c, bool cell_c) {
+void main_window_t::change_camera_buttons_visible(bool cart_c, bool cell_c) {
 
 }
 
-void main_window::dragEnterEvent(QDragEnterEvent *event) {
+void main_window_t::dragEnterEvent(QDragEnterEvent *event) {
   event->acceptProposedAction();
 }
 
-void main_window::dragMoveEvent(QDragMoveEvent *event) {
+void main_window_t::dragMoveEvent(QDragMoveEvent *event) {
   event->acceptProposedAction();
 }
 
-void main_window::dragLeaveEvent(QDragLeaveEvent *event) {
+void main_window_t::dragLeaveEvent(QDragLeaveEvent *event) {
   event->accept();
 }
 
-void main_window::dropEvent(QDropEvent *event) {
+void main_window_t::dropEvent(QDropEvent *event) {
 
   const QMimeData *mimeData = event->mimeData();
   if (mimeData && mimeData->hasUrls()) {
@@ -710,7 +710,7 @@ void main_window::dropEvent(QDropEvent *event) {
     }
 }
 
-void main_window::resizeEvent(QResizeEvent *event) {
+void main_window_t::resizeEvent(QResizeEvent *event) {
 
   app_state_t::get_inst()->log(fmt::format("main_window::resizeEvent(width={}, height={})",
                                            event->size().width(),
@@ -720,7 +720,7 @@ void main_window::resizeEvent(QResizeEvent *event) {
 
 }
 
-void main_window::wss_changed_slot() {
+void main_window_t::wss_changed_slot() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -765,7 +765,7 @@ void main_window::wss_changed_slot() {
 
 }
 
-void main_window::ws_selector_selection_changed(int index) {
+void main_window_t::ws_selector_selection_changed(int index) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -781,7 +781,7 @@ void main_window::ws_selector_selection_changed(int index) {
 
 }
 
-void main_window::show_obj_insp_state_changed(bool checked) {
+void main_window_t::show_obj_insp_state_changed(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -802,7 +802,7 @@ void main_window::show_obj_insp_state_changed(bool checked) {
 
 }
 
-void main_window::show_gizmo_state_changed(bool checked) {
+void main_window_t::show_gizmo_state_changed(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -815,7 +815,7 @@ void main_window::show_gizmo_state_changed(bool checked) {
 
 }
 
-void main_window::create_new_ws() {
+void main_window_t::create_new_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->ws_mgr->create_new_ws(true);
@@ -824,7 +824,7 @@ void main_window::create_new_ws() {
 
 }
 
-void main_window::open_ws() {
+void main_window_t::open_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
   QString file_name = QFileDialog::getOpenFileName(this,
@@ -837,7 +837,7 @@ void main_window::open_ws() {
     }
 }
 
-void main_window::save_ws() {
+void main_window_t::save_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -871,7 +871,7 @@ void main_window::save_ws() {
 
 }
 
-void main_window::save_ws_as() {
+void main_window_t::save_ws_as() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -897,7 +897,7 @@ void main_window::save_ws_as() {
 
 }
 
-void main_window::close_cur_ws() {
+void main_window_t::close_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
@@ -914,7 +914,7 @@ void main_window::close_cur_ws() {
 
 }
 
-void main_window::close_all_ws() {
+void main_window_t::close_all_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -928,7 +928,7 @@ void main_window::close_all_ws() {
 
 }
 
-void main_window::rename_cur_ws() {
+void main_window_t::rename_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
@@ -946,7 +946,7 @@ void main_window::rename_cur_ws() {
 
 }
 
-void main_window::change_cur_ws_bg() {
+void main_window_t::change_cur_ws_bg() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -966,7 +966,7 @@ void main_window::change_cur_ws_bg() {
 
 }
 
-void main_window::cam_copy_to_all() {
+void main_window_t::cam_copy_to_all() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
@@ -978,7 +978,7 @@ void main_window::cam_copy_to_all() {
 
 }
 
-void main_window::cur_ws_changed() {
+void main_window_t::cur_ws_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1012,7 +1012,7 @@ void main_window::cur_ws_changed() {
 
 }
 
-void main_window::cur_ws_selected_item_changed() {
+void main_window_t::cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1052,7 +1052,7 @@ void main_window::cur_ws_selected_item_changed() {
 
 }
 
-void main_window::cur_ws_properties_changed() {
+void main_window_t::cur_ws_properties_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1072,14 +1072,14 @@ void main_window::cur_ws_properties_changed() {
 
 }
 
-void main_window::cur_ws_edit_type_changed() {
+void main_window_t::cur_ws_edit_type_changed() {
 
   cur_ws_properties_changed();
   cur_ws_selected_atoms_list_selection_changed();
 
 }
 
-void main_window::cur_ws_selected_atoms_list_selection_changed() {
+void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
@@ -1189,7 +1189,7 @@ void main_window::cur_ws_selected_atoms_list_selection_changed() {
 
 }
 
-void main_window::tp_dist_button_clicked(bool checked) {
+void main_window_t::tp_dist_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
@@ -1221,7 +1221,7 @@ void main_window::tp_dist_button_clicked(bool checked) {
 
 }
 
-void main_window::tp_angle_button_clicked(bool checked) {
+void main_window_t::tp_angle_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
@@ -1255,7 +1255,7 @@ void main_window::tp_angle_button_clicked(bool checked) {
 
 }
 
-void main_window::ws_edit_mode_selector_button_clicked(int id) {
+void main_window_t::ws_edit_mode_selector_button_clicked(int id) {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
@@ -1270,7 +1270,7 @@ void main_window::ws_edit_mode_selector_button_clicked(int id) {
 
 }
 
-void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
+void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
@@ -1292,7 +1292,7 @@ void main_window::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 
 }
 
-void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
+void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1319,7 +1319,7 @@ void main_window::tp_toggle_atom_override_button_clicked(bool checked) {
 
 }
 
-void main_window::tp_camera_tool_button_triggered(QAction *action) {
+void main_window_t::tp_camera_tool_button_triggered(QAction *action) {
 
   if (!action) return;
 
@@ -1353,7 +1353,7 @@ void main_window::tp_camera_tool_button_triggered(QAction *action) {
 
 }
 
-void main_window::tp_fast_forward_anim_clicked() {
+void main_window_t::tp_fast_forward_anim_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_itm, as_al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
@@ -1368,19 +1368,19 @@ void main_window::tp_fast_forward_anim_clicked() {
 
 }
 
-void main_window::tp_add_arrow_clicked() {
+void main_window_t::tp_add_arrow_clicked() {
 
  simple_query::embed_arrow();
 
 }
 
-void main_window::tp_add_cube_clicked() {
+void main_window_t::tp_add_cube_clicked() {
 
  simple_query::embed_cube();
 
 }
 
-void main_window::tp_scenic_rotation_toggle() {
+void main_window_t::tp_scenic_rotation_toggle() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
@@ -1388,11 +1388,11 @@ void main_window::tp_scenic_rotation_toggle() {
 
 }
 
-void main_window::apply_camera_view_change(cam_target_view_t target_view) {
+void main_window_t::apply_camera_view_change(cam_target_view_t target_view) {
 
 }
 
-void main_window::toggle_ws_edit_mode() {
+void main_window_t::toggle_ws_edit_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1405,7 +1405,7 @@ void main_window::toggle_ws_edit_mode() {
 
 }
 
-void main_window::toggle_fullscreen(bool checked) {
+void main_window_t::toggle_fullscreen(bool checked) {
 
   if (checked) {
 
@@ -1423,7 +1423,7 @@ void main_window::toggle_fullscreen(bool checked) {
 
 }
 
-void main_window::start_update_cycle() {
+void main_window_t::start_update_cycle() {
 
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
       ws_viewer_widget->m_update_timer->start();
@@ -1431,7 +1431,7 @@ void main_window::start_update_cycle() {
 
 }
 
-void main_window::stop_update_cycle() {
+void main_window_t::stop_update_cycle() {
 
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
       p_elapsed_time_in_event_loop =  ws_viewer_widget->m_update_timer->remainingTime();
@@ -1441,7 +1441,7 @@ void main_window::stop_update_cycle() {
 
 }
 
-void main_window::action_select_all_content() {
+void main_window_t::action_select_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
@@ -1449,7 +1449,7 @@ void main_window::action_select_all_content() {
 
 }
 
-void main_window::action_unselect_all_content() {
+void main_window_t::action_unselect_all_content() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
@@ -1457,7 +1457,7 @@ void main_window::action_unselect_all_content() {
 
 }
 
-void main_window::action_invert_selected_content() {
+void main_window_t::action_invert_selected_content() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
@@ -1465,7 +1465,7 @@ void main_window::action_invert_selected_content() {
 
 }
 
-void main_window::action_toggle_console() {
+void main_window_t::action_toggle_console() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1479,7 +1479,7 @@ void main_window::action_toggle_console() {
     }
 }
 
-void main_window::rebuild_recent_files_menu() {
+void main_window_t::rebuild_recent_files_menu() {
 
   if (!file_menu_recent_files) return;
 
@@ -1508,7 +1508,7 @@ void main_window::rebuild_recent_files_menu() {
 
 }
 
-void main_window::recent_files_clicked() {
+void main_window_t::recent_files_clicked() {
 
   int idx = -1;
   app_state_t* astate = app_state_t::get_inst();
@@ -1531,7 +1531,7 @@ void main_window::recent_files_clicked() {
 
 }
 
-void main_window::build_bhv_menus_and_actions() {
+void main_window_t::build_bhv_menus_and_actions() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1568,7 +1568,7 @@ void main_window::build_bhv_menus_and_actions() {
                 qextended_action *new_act = new qextended_action(this);
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
-                        this, &main_window::action_bhv_import_to_cur_workspace);
+                        this, &main_window_t::action_bhv_import_to_cur_workspace);
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_to_cur_ws->addAction(new_act);
@@ -1582,7 +1582,7 @@ void main_window::build_bhv_menus_and_actions() {
                 qextended_action *new_act = new qextended_action(this);
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
-                        this, &main_window::action_bhv_import_as_new_workspace);
+                        this, &main_window_t::action_bhv_import_as_new_workspace);
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_as_new_ws->addAction(new_act);
@@ -1595,7 +1595,7 @@ void main_window::build_bhv_menus_and_actions() {
                 qextended_action *new_act = new qextended_action(this);
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
-                        this, &main_window::action_bhv_export_selected);
+                        this, &main_window_t::action_bhv_export_selected);
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_export_selected->addAction(new_act);
@@ -1608,7 +1608,7 @@ void main_window::build_bhv_menus_and_actions() {
 
 }
 
-void main_window::build_bhv_tools_menus() {
+void main_window_t::build_bhv_tools_menus() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1624,7 +1624,7 @@ void main_window::build_bhv_tools_menus() {
       qextended_action *new_act = new qextended_action(this);
       new_act->m_joined_data[0] = ff.first;
       connect(new_act, &QAction::triggered,
-              this, &main_window::action_bhv_tools_menus_clicked);
+              this, &main_window_t::action_bhv_tools_menus_clicked);
       new_act->setText(QString::fromStdString(ff.second.m_full_name));
       //locate menu for group
       auto it_g = tools_menu_groups.find(ff.second.m_group_hash);
@@ -1635,7 +1635,7 @@ void main_window::build_bhv_tools_menus() {
     }
 }
 
-void main_window::action_bhv_tools_menus_clicked() {
+void main_window_t::action_bhv_tools_menus_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1656,7 +1656,7 @@ void main_window::action_bhv_tools_menus_clicked() {
 
 }
 
-void main_window::control_bhv_tools_menus_activity() {
+void main_window_t::control_bhv_tools_menus_activity() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1679,7 +1679,7 @@ void main_window::control_bhv_tools_menus_activity() {
 
 }
 
-void main_window::action_bhv_import_to_cur_workspace() {
+void main_window_t::action_bhv_import_to_cur_workspace() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1703,7 +1703,7 @@ void main_window::action_bhv_import_to_cur_workspace() {
 
 }
 
-void main_window::action_bhv_import_as_new_workspace() {
+void main_window_t::action_bhv_import_as_new_workspace() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1727,7 +1727,7 @@ void main_window::action_bhv_import_as_new_workspace() {
 
 }
 
-void main_window::action_bhv_export_selected() {
+void main_window_t::action_bhv_export_selected() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1761,7 +1761,7 @@ void main_window::action_bhv_export_selected() {
 
 }
 
-void main_window::control_bhv_menus_activity() {
+void main_window_t::control_bhv_menus_activity() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1794,7 +1794,7 @@ void main_window::control_bhv_menus_activity() {
 
 }
 
-void main_window::make_screenshot() {
+void main_window_t::make_screenshot() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
@@ -1807,7 +1807,7 @@ void main_window::make_screenshot() {
 
 }
 
-void main_window::slot_shortcut_terminate_app() {
+void main_window_t::slot_shortcut_terminate_app() {
 
   QApplication::quit();
 

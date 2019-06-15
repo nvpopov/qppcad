@@ -98,7 +98,7 @@ int main (int argc, char **argv) {
   QString style_sheet = QLatin1String(file.readAll());
   app.setStyleSheet(style_sheet);
 
-  main_window w;
+  main_window_t w;
   w.rebuild_recent_files_menu();
   astate->ws_mgr->m_bhv_mgr->cache_obj_insp_widgets();
   w.showMaximized();
