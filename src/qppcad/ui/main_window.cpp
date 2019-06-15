@@ -83,6 +83,13 @@ void main_window_t::init_base_shortcuts() {
           this,
           &main_window_t::action_toggle_console);
 
+  sc_enter_immersive_mode = new QShortcut(this);
+  sc_enter_immersive_mode->setKey(Qt::Key_F12);
+  connect(sc_enter_immersive_mode,
+          &QShortcut::activated,
+          this,
+          &main_window_t::toggle_immersive_mode);
+
 }
 
 void main_window_t::init_menus() {
@@ -277,12 +284,11 @@ void main_window_t::init_menus() {
   view_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
   view_menu_toggle_fullscreen->setCheckable(true);
   view_menu_toggle_fullscreen->setShortcut(Qt::Key::Key_F11);
+  view_menu->addAction(view_menu_toggle_fullscreen);
   connect(view_menu_toggle_fullscreen,
           &QAction::toggled,
           this,
           &main_window_t::toggle_fullscreen);
-
-  view_menu->addAction(view_menu_toggle_fullscreen);
 
   view_menu_settings = new QAction(this);
   view_menu_settings->setEnabled(false);
@@ -736,8 +742,12 @@ void main_window_t::wss_changed_slot() {
   tp_ws_selector->clear();
 
   if (astate->ws_mgr->has_wss()) {
-      tool_panel_widget->setVisible(true);
-      ws_tabbar_wdgt->setVisible(true);
+
+      if (!astate->m_immersive_mode) {
+          ws_tabbar_wdgt->setVisible(true);
+          tool_panel_widget->setVisible(true);
+        }
+
       file_menu_close_ws->setEnabled(true);
       ws_menu_rename_ws->setEnabled(true);
       view_menu_show_gizmo->setEnabled(true);
@@ -1424,6 +1434,34 @@ void main_window_t::toggle_fullscreen(bool checked) {
                      Qt::WindowMaximizeButtonHint |
                      Qt::WindowCloseButtonHint);
       show();
+
+    }
+
+}
+
+void main_window_t::toggle_immersive_mode() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+//  if (!astate->ws_mgr->has_wss()) return;
+
+  astate->m_immersive_mode = !astate->m_immersive_mode;
+
+  if (astate->m_immersive_mode) {
+
+      menuBar()->hide();
+      tool_panel_widget->hide();
+      ws_tabbar_wdgt->hide();
+      obj_insp_widget->hide();
+      view_menu_toggle_fullscreen->setChecked(true);
+
+    } else {
+
+      tool_panel_widget->show();
+      ws_tabbar_wdgt->show();
+      obj_insp_widget->show();
+      menuBar()->show();
+      view_menu_toggle_fullscreen->setChecked(false);
 
     }
 

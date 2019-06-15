@@ -195,6 +195,7 @@ namespace qpp {
 
         bool m_disable_app{false};
         bool m_viewport_dirty{true};
+        bool m_immersive_mode{false};
 
     };
 

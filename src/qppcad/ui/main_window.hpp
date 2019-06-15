@@ -168,6 +168,7 @@ namespace qpp {
         //Shortcuts
         QShortcut *sc_terminate_app;
         QShortcut *sc_toggle_console;
+        QShortcut *sc_enter_immersive_mode;
 
         //End of shortcuts
       protected:
@@ -219,6 +220,7 @@ namespace qpp {
 
         void toggle_ws_edit_mode();
         void toggle_fullscreen(bool checked);
+        void toggle_immersive_mode();
         void start_update_cycle();
         void stop_update_cycle();
 
