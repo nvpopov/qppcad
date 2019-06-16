@@ -250,7 +250,7 @@ QString python_text_editor_t::text_under_cursor() const {
   text = text.right(text.size() - m_curs_pos);
 
   int last = text.lastIndexOf(QChar::Space);
-  std::cout <<"LAST " << last << " TEXT " << text.toStdString() << std::endl;
+  //std::cout <<"LAST " << last << " TEXT " << text.toStdString() << std::endl;
 
   int last_bracket = text.lastIndexOf("(");
   int last_eq_sign = text.lastIndexOf("=");
@@ -261,7 +261,7 @@ QString python_text_editor_t::text_under_cursor() const {
   if (last == -1) {
       return text;
     } else {
-      std::cout <<"LAST TEXT " << text.right(text.size()-last).toStdString() << std::endl;
+      //std::cout <<"LAST TEXT " << text.right(text.size()-last).toStdString() << std::endl;
       return text.right(text.size()-last).trimmed();
     }
 
