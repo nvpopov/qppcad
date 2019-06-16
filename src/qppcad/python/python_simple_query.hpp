@@ -35,7 +35,7 @@ namespace qpp {
          * @return git revision && build date
          */
         static std::tuple<std::string, std::string> get_build_info();
-
+        static void quit();
         static void open_file(std::string file_name, bool to_current);
         static void open_file_query(std::string f_name, std::string f_format,bool to_current);
         static void to_clipboard(std::string data);

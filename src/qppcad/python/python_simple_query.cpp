@@ -40,6 +40,12 @@ std::tuple<std::string, std::string> simple_query::get_build_info() {
 
 }
 
+void simple_query::quit() {
+
+  QApplication::quit();
+
+}
+
 void simple_query::open_file(std::string file_name, bool to_current) {
 
   app_state_t *astate = app_state_t::get_inst();

@@ -32,7 +32,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.def("qopen", &simple_query::open_file_query,
         py::arg("file_name"), py::arg("file_format") = "", py::arg("to_current") = false);
   m.def("mode", &simple_query::edit_mode);
-
+  m.def("quit", &simple_query::quit);
   m.def("bg", &simple_query::set_ws_bg,
     R"str(
     Sets the background color for the current workspace.
