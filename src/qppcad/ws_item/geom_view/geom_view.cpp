@@ -1290,10 +1290,10 @@ void geom_view_t::save_to_json (json &data) {
   data[JSON_GEOM_VIEW_SPECULAR] = m_shading_specular_power;
 
   data[JSON_GEOM_VIEW_LABELS_TYPE] = m_labels->m_style;
-  data[JSON_GEOM_VIEW_LABELS_SIZE] = m_labels->m_label_font_size;
+  data[JSON_GEOM_VIEW_LABELS_SIZE] = m_labels->m_lbl_font_size;
   data[JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines;
   data[JSON_GEOM_VIEW_LABELS_INPLACE] = m_labels->m_render_inplace_hud;
-  data[JSON_GEOM_VIEW_LABELS_SEL_VIS] = m_labels->m_selective_label_render;
+  data[JSON_GEOM_VIEW_LABELS_SEL_VIS] = m_labels->m_selective_lbl;
   data[JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale;
   data[JSON_GEOM_VIEW_ROLE] = m_role;
 
@@ -1464,10 +1464,10 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
   json_helper::load_var(JSON_GEOM_VIEW_DRAW_SPECULAR, m_draw_specular, data);
   json_helper::load_var(JSON_GEOM_VIEW_SPECULAR, m_shading_specular_power, data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_TYPE, m_labels->m_style, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SIZE, m_labels->m_label_font_size, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SIZE, m_labels->m_lbl_font_size, data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE, m_labels->m_render_outlines, data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SEL_VIS, m_labels->m_selective_label_render, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SEL_VIS, m_labels->m_selective_lbl, data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
@@ -1734,7 +1734,7 @@ void geom_view_t::py_copy_settings(geom_view_t *src) {
 
   m_labels->m_style                  = src->m_labels->m_style;
   m_labels->m_screen_scale           = src->m_labels->m_screen_scale;
-  m_labels->m_selective_label_render = src->m_labels->m_selective_label_render;
+  m_labels->m_selective_lbl = src->m_labels->m_selective_lbl;
 
 }
 

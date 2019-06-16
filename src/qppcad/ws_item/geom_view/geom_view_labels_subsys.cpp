@@ -26,10 +26,10 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   QPen rectpen(QPen(Qt::black, 1, Qt::SolidLine));
   QColor text_fill_color = QColor::fromRgbF(1,1,1);
 
-  float _font_size = m_label_font_size;
+  float _font_size = m_lbl_font_size;
   if (m_screen_scale) {
       float clmp_os = std::clamp(astate->camera->m_ortho_scale, 1.0f, 20.0f);
-      _font_size = m_label_font_size * 10 / clmp_os;
+      _font_size = m_lbl_font_size * 10 / clmp_os;
     }
 
   QFont text_font_lb(astate->m_font_name, int(_font_size), QFont::Weight::Bold);
@@ -49,7 +49,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
           p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
 
       if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) &&
-          m_selective_label_render) continue;
+          m_selective_lbl) continue;
 
       if (!p_owner->m_atom_type_to_hide.empty()) {
           auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));

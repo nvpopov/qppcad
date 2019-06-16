@@ -1074,9 +1074,9 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_s_color_mode->bind_value(reinterpret_cast<int*>(&b_al->m_color_mode));
 
       disp_labels_style->bind_value(reinterpret_cast<int*>(&b_al->m_labels->m_style));
-      disp_labels_size->bind_value(&b_al->m_labels->m_label_font_size);
+      disp_labels_size->bind_value(&b_al->m_labels->m_lbl_font_size);
       disp_inplace_labels->bind_value(&b_al->m_labels->m_render_inplace_hud);
-      disp_sl_labels->bind_value(&b_al->m_labels->m_selective_label_render);
+      disp_sl_labels->bind_value(&b_al->m_labels->m_selective_lbl);
       disp_labels_screen_scale->bind_value(&b_al->m_labels->m_screen_scale);
       disp_labels_draw_outline->bind_value(&b_al->m_labels->m_render_outlines);
 

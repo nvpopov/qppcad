@@ -1297,9 +1297,8 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
       as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = checked;
 
   // if selective labels rendering unchecked - force it and select some random style
-  if (!as_al->m_atom_idx_sel.empty() &&
-      !as_al->m_labels->m_selective_label_render) {
-        as_al->m_labels->m_selective_label_render = true;
+  if (!as_al->m_atom_idx_sel.empty() && !as_al->m_labels->m_selective_lbl) {
+        as_al->m_labels->m_selective_lbl = true;
         as_al->m_labels->m_style = geom_labels_style_e::show_id_type;
         astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
     }

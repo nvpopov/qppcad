@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
+#include <qppcad/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -54,6 +55,52 @@ void py_geom_view_reg_helper_t::reg(
   py_geom_view_anim.def("is_cell_animable", &geom_view_anim_subsys_t::is_cell_animable);
   py_geom_view_anim.def("get_cell_vectors", &geom_view_anim_subsys_t::get_cell_vectors);
   py_geom_view_anim.def("get_atom_pos", &geom_view_anim_subsys_t::get_atom_pos);
+
+  py::class_<geom_view_labels_subsys_t, std::shared_ptr<geom_view_labels_subsys_t> >
+  py_geom_view_labels(module, "geom_view_labels_subsys_t");
+  py_geom_view_labels.def_property("inplace_hud",
+                                   [](geom_view_labels_subsys_t &src)
+                                   {return src.m_render_inplace_hud;},
+                                   [](geom_view_labels_subsys_t &src, const bool value)
+                                   {src.m_render_inplace_hud = value;
+                                    src.p_owner->update_oi();
+                                    app_state_t::get_inst()->make_viewport_dirty();});
+  py_geom_view_labels.def_property("sel_vis",
+                                   [](geom_view_labels_subsys_t &src)
+                                   {return src.m_selective_lbl;},
+                                   [](geom_view_labels_subsys_t &src, const bool value)
+                                   {src.m_selective_lbl = value;
+                                    src.p_owner->update_oi();
+                                    app_state_t::get_inst()->make_viewport_dirty();});
+  py_geom_view_labels.def_property("screen_scale",
+                                   [](geom_view_labels_subsys_t &src)
+                                   {return src.m_screen_scale;},
+                                   [](geom_view_labels_subsys_t &src, const bool value)
+                                   {src.m_screen_scale = value;
+                                    src.p_owner->update_oi();
+                                    app_state_t::get_inst()->make_viewport_dirty();});
+  py_geom_view_labels.def_property("render_outlines",
+                                   [](geom_view_labels_subsys_t &src)
+                                   {return src.m_render_outlines;},
+                                   [](geom_view_labels_subsys_t &src, const bool value)
+                                   {src.m_render_outlines = value;
+                                    src.p_owner->update_oi();
+                                    app_state_t::get_inst()->make_viewport_dirty();});
+  py_geom_view_labels.def_property("style",
+                                   [](geom_view_labels_subsys_t &src)
+                                   {return src.m_style;},
+                                   [](geom_view_labels_subsys_t &src,
+                                   const geom_labels_style_e value)
+                                   {src.m_style = value;
+                                    src.p_owner->update_oi();
+                                    app_state_t::get_inst()->make_viewport_dirty();});
+  py_geom_view_labels.def_property("font_size",
+                                   [](geom_view_labels_subsys_t &src)
+                                   {return src.m_lbl_font_size;},
+                                   [](geom_view_labels_subsys_t &src,
+                                   const int value)
+                                   {src.m_lbl_font_size = value; src.p_owner->update_oi();
+                                    app_state_t::get_inst()->make_viewport_dirty();});
 
   py::class_<atom_index_set_key, std::shared_ptr<atom_index_set_key> >
   py_atom_index_set_key(module, "atom_index_set_key_t");
@@ -126,11 +173,6 @@ void py_geom_view_reg_helper_t::reg(
                                {return src.m_render_style;},
                                [](geom_view_t &src, const geom_view_render_style_e value)
                                {src.m_render_style = value; src.update_oi();});
-  py_atoms_list_t.def_property("labels_style",
-                               [](geom_view_t &src)
-                               {return src.m_labels->m_style;},
-                               [](geom_view_t &src, const geom_labels_style_e value)
-                               {src.m_labels->m_style = value; src.update_oi();});
   py_atoms_list_t.def_property("sel_vis",
                                [](geom_view_t &src)
                                {return src.m_sel_vis;},
@@ -186,6 +228,7 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("purify_boundary_atoms", &geom_view_t::purify_boundary_atoms);
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
   py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);
+  py_atoms_list_t.def_readonly("lbl", &geom_view_t::m_labels);
   py_atoms_list_t.def_readonly("sg", &geom_view_t::m_selg);
 
 }
