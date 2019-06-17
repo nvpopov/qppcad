@@ -13,15 +13,17 @@ void qgeom_view_selector_widget_t::generate_list_gv_items() {
 
   list_gv->clear();
 
-  for (auto ws : astate->ws_mgr->m_ws)
-    for (auto ws_item : ws->m_ws_items)
-      if (ws_item->get_type() == geom_view_t::get_type_static())
-        if (auto as_gv = ws_item->cast_as<geom_view_t>(); as_gv) {
+  for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
+    for (size_t q = 0; q < astate->ws_mgr->m_ws[i]->m_ws_items.size(); q++)
+      if (astate->ws_mgr->m_ws[i]->m_ws_items[q]->get_type() == geom_view_t::get_type_static())
+        if (auto as_gv = astate->ws_mgr->m_ws[i]->m_ws_items[q]->cast_as<geom_view_t>(); as_gv) {
 
             QListWidgetItem *list_item = new QListWidgetItem(list_gv);
 
-            std::string list_item_name = fmt::format("{}/{}",
+            std::string list_item_name = fmt::format("[{}]{}/[{}]{}",
+                                                     i,
                                                      as_gv->m_parent_ws->m_ws_name,
+                                                     q,
                                                      as_gv->m_name);
 
             list_item->setText(QString::fromStdString(list_item_name));
@@ -59,7 +61,7 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
   app_state_t *astate = app_state_t::get_inst();
 
   setMinimumHeight(350);
-  setMinimumWidth(550);
+  //setMinimumWidth(550);
 
   main_lt = new QHBoxLayout;
   setLayout(main_lt);
@@ -71,7 +73,7 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
   list_gv_res_lbl = new QLabel(tr("Composed animation:"));
 
   list_gv = new QListWidget;
-  list_gv->setMinimumWidth(400);
+  //list_gv->setMinimumWidth(400);
 
   add_btn = new QPushButton(">>");
   add_btn->setFixedWidth(astate->size_guide.obj_insp_button_w());
@@ -117,6 +119,7 @@ void qgeom_view_selector_widget_t::add_btn_clicked() {
   qgeom_view_selector_entry_t *new_entry = new qgeom_view_selector_entry_t;
   new_entry->binded_gv = m_sub_gvs[sel_id];
   new_entry->rebuild();
+  new_entry->gv_name->setText(list_gv->item(sel_id)->text());
   list_gv_res->main_lt->addWidget(new_entry);
 
 }
@@ -155,11 +158,11 @@ void qgeom_view_selector_entry_t::rebuild() {
 
   if (!binded_gv) return;
 
-  std::string list_item_name = fmt::format("{}/{}",
-                                           binded_gv->m_parent_ws->m_ws_name,
-                                           binded_gv->m_name);
+//  std::string list_item_name = fmt::format("{}/{}",
+//                                           binded_gv->m_parent_ws->m_ws_name,
+//                                           binded_gv->m_name);
 
-  gv_name->setText(QString::fromStdString(list_item_name));
+//  gv_name->setText(QString::fromStdString(list_item_name));
 
   if (binded_gv->m_anim->animable()) {
 

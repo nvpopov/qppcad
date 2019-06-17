@@ -34,6 +34,9 @@ namespace qpp {
 
         geom_view_t *binded_gv{nullptr};
 
+        size_t stored_ws_idx{0};
+        size_t stored_ws_itm_idx{0};
+
         QVBoxLayout *main_lt;
         QHBoxLayout *ctrls_lt;
         QLabel *gv_name;
@@ -44,7 +47,7 @@ namespace qpp {
         QPushButton *down_btn;
 
         explicit qgeom_view_selector_entry_t(QWidget *parent = nullptr);
-
+        //void delete_record();
         void rebuild();
 
       public slots:
@@ -90,7 +93,6 @@ namespace qpp {
         void generate_list_gv_items();
         void compose_selection_query(std::vector<geom_view_selection_query_t> &sel_query);
         qgeom_view_selector_widget_t(QWidget *parent = 0);
-
 
       public slots:
 
