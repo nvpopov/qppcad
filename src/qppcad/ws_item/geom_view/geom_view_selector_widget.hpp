@@ -42,7 +42,6 @@ namespace qpp {
         QLabel *gv_name;
         QComboBox *gv_anim_name;
         QComboBox *gv_frame_id;
-        QPushButton *close_btn;
         QPushButton *up_btn;
         QPushButton *down_btn;
 

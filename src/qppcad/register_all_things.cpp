@@ -44,6 +44,7 @@
 #include <qppcad/tools/center_cell_on_atom/center_cell_on_atom.hpp>
 #include <qppcad/tools/compose_anim_from_files/compose_anim_from_files.hpp>
 #include <qppcad/tools/purify_boundary_atoms/purify_boundary_atoms.hpp>
+#include <qppcad/tools/copy_geom_view_aux/copy_geom_view_aux.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -318,5 +319,8 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
 
   registration_helper_t::reg_ws_item_tool<purify_boundary_atoms_tool_t, geom_view_t>(
         "Purify boundary atoms", hash_t_tr, bhv_mgr, true);
+
+  registration_helper_t::reg_ws_item_tool<copy_geom_view_aux_tool_t, geom_view_t>(
+        "Copy geom. view aux data", hash_t_tr, bhv_mgr, true);
 
 }
