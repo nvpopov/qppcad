@@ -12,6 +12,7 @@
 #include <qppcad/json_helpers.hpp>
 #include <qppcad/app_state.hpp>
 
+#include <random>
 #include <clocale>
 
 using namespace qpp;
@@ -1649,6 +1650,43 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
 bool geom_view_t::can_be_written_to_json() {
 
   return true;
+
+}
+
+void geom_view_t::shake_atoms(std::set<size_t> atoms_to_shake, float magn) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  static std::default_random_engine e;
+  static std::uniform_real_distribution<> dis(0, magn);
+
+  for (auto &atom : atoms_to_shake)
+    if (atom < m_geom->nat()) {
+
+        vector3<float> new_pos = m_geom->coord(atom) +
+                                 vector3<float>(magn / 2) -
+                                 vector3<float>(dis(e), dis(e), dis(e));
+
+        m_geom->coord(atom) = new_pos;
+
+      }
+
+  astate->make_viewport_dirty();
+
+}
+
+void geom_view_t::py_shake_atoms(pybind11::list atoms_to_shake, float magn) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  std::set<size_t> atoms;
+  for (auto &elem : atoms_to_shake)
+    if (py::isinstance<py::int_>(elem)) {
+        astate->tlog("@DEBUG: shake_atoms {}", py::cast<int>(elem));
+        atoms.insert(py::cast<int>(elem));
+      }
+
+  shake_atoms(atoms, magn);
 
 }
 
