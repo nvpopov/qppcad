@@ -1681,10 +1681,7 @@ void geom_view_t::py_shake_atoms(pybind11::list atoms_to_shake, float magn) {
 
   std::set<size_t> atoms;
   for (auto &elem : atoms_to_shake)
-    if (py::isinstance<py::int_>(elem)) {
-        astate->tlog("@DEBUG: shake_atoms {}", py::cast<int>(elem));
-        atoms.insert(py::cast<int>(elem));
-      }
+    if (py::isinstance<py::int_>(elem)) atoms.insert(py::cast<int>(elem));
 
   shake_atoms(atoms, magn);
 
