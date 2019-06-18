@@ -88,8 +88,6 @@ void purify_boundary_atoms_widget_t::rebuild_sub_gvs() {
             as_gv && master_gv->m_geom->DIM == as_gv->m_geom->DIM &&
             master_gv->m_geom->nat() == as_gv->m_geom->nat()) {
 
-            //astate->tlog("@DEBUG: purify_boundary_atoms_widget_t::rebuild_sub_gvs() -> in cycle");
-
             QListWidgetItem *list_item = new QListWidgetItem(sub_gvs_wdgt);
 
             std::string list_item_name = fmt::format("{}/{}",
