@@ -26,8 +26,9 @@ void purify_boundary_atoms_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
     auto slave_as_gv = slave->cast_as<geom_view_t>();
     if (!master_as_gv || !slave_as_gv) return false;
 
-    return (master_as_gv->m_geom->DIM == slave_as_gv->m_geom->DIM &&
-            master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat());
+    return master_as_gv != slave_as_gv &&
+           master_as_gv->m_geom->DIM == slave_as_gv->m_geom->DIM &&
+           master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
 
   });
 
@@ -37,11 +38,13 @@ void purify_boundary_atoms_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   if (ret_code == QDialog::Accepted)
     for (size_t i = 0; i < paw.sub_gv->count(); i++) {
+
         QListWidgetItem *item = paw.sub_gv->item(i);
         if (item->checkState() == Qt::Checked) {
             auto slave_as_gv = paw.sub_gv->m_sub_items[i]->cast_as<geom_view_t>();
             if (slave_as_gv) slave_as_gv->purify_boundary_atoms(master_as_gv);
           }
+
       }
 
 }

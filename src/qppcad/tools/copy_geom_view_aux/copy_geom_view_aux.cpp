@@ -10,24 +10,46 @@ void copy_geom_view_aux_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   app_state_t *astate = app_state_t::get_inst();
 
   copy_geom_view_aux_widget_t cgv;
+  cgv.sub_gv->m_ws_item_class = geom_view_t::get_type_static();
 
   if (!item) return;
 
   auto as_gv = item->cast_as<geom_view_t>();
   if (!as_gv) return;
 
-  cgv.master_gv = as_gv;
-  cgv.rebuild_sub_gvs();
+  cgv.sub_gv->m_master_item = as_gv;
+  cgv.sub_gv->rebuild_sub_gvs([](ws_item_t *master, ws_item_t *slave) -> bool {
+
+    if (!master || !slave) return false;
+
+    auto master_as_gv = master->cast_as<geom_view_t>();
+    auto slave_as_gv = slave->cast_as<geom_view_t>();
+    if (!master_as_gv || !slave_as_gv) return false;
+
+    return master_as_gv != slave_as_gv &&
+           master_as_gv->m_geom->DIM == slave_as_gv->m_geom->DIM &&
+           master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
+
+  });
+
   int ret_code = cgv.exec();
 
+  auto master_as_gv = cgv.sub_gv->m_master_item->cast_as<geom_view_t>();
+
   if (ret_code == QDialog::Accepted)
-    for (size_t i = 0; i < cgv.sub_gvs_wdgt->count(); i++) {
-        QListWidgetItem *item = cgv.sub_gvs_wdgt->item(i);
+    for (size_t i = 0; i < cgv.sub_gv->count(); i++) {
+
+        QListWidgetItem *item = cgv.sub_gv->item(i);
+
         if (item->checkState() == Qt::Checked) {
-            //astate->tlog("@DEBUG: purify entered");
-            cgv.m_sub_gvs[i]->py_copy_settings(cgv.master_gv);
-            cgv.m_sub_gvs[i]->py_copy_xgeom_aux(cgv.master_gv);
+            auto slave_as_gv = cgv.sub_gv->m_sub_items[i]->cast_as<geom_view_t>();
+            if (slave_as_gv) {
+                slave_as_gv->py_copy_settings(master_as_gv);
+                slave_as_gv->py_copy_xgeom_aux(master_as_gv);
+              }
+
           }
+
       }
 
 }
@@ -55,60 +77,20 @@ copy_geom_view_aux_widget_t::copy_geom_view_aux_widget_t() {
           this,
           &copy_geom_view_aux_widget_t::reject);
 
-  sub_gvs_wdgt = new QListWidget;
+  sub_gv = new ws_item_list_widget_t;
 
   actions_lt = new QHBoxLayout;
   action_select_all = new QPushButton(tr(" Toggle selection "));
   connect(action_select_all,
           &QPushButton::clicked,
-          this,
-          &copy_geom_view_aux_widget_t::select_all_clicked);
+          sub_gv,
+          &ws_item_list_widget_t::select_all_clicked);
 
   actions_lt->addWidget(action_select_all);
   actions_lt->addStretch(1);
 
   main_lt->addLayout(actions_lt);
-  main_lt->addWidget(sub_gvs_wdgt);
+  main_lt->addWidget(sub_gv);
   main_lt->addWidget(dialog_bb);
-
-}
-
-void copy_geom_view_aux_widget_t::rebuild_sub_gvs() {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  sub_gvs_wdgt->clear();
-
-  if (!master_gv) return;
-
-  for (auto ws : astate->ws_mgr->m_ws)
-    for (auto ws_item : ws->m_ws_items)
-      if (ws_item->get_type() == geom_view_t::get_type_static())
-        if (auto as_gv = ws_item->cast_as<geom_view_t>();
-            as_gv != master_gv &&
-            as_gv && master_gv->m_geom->DIM == as_gv->m_geom->DIM &&
-            master_gv->m_geom->nat() == as_gv->m_geom->nat()) {
-
-            QListWidgetItem *list_item = new QListWidgetItem(sub_gvs_wdgt);
-
-            std::string list_item_name = fmt::format("{}/{}",
-                                                     as_gv->m_parent_ws->m_ws_name,
-                                                     as_gv->m_name);
-
-            list_item->setText(QString::fromStdString(list_item_name));
-            list_item->setCheckState(Qt::Unchecked);
-
-            m_sub_gvs.push_back(as_gv);
-
-          }
-
-}
-
-void copy_geom_view_aux_widget_t::select_all_clicked() {
-
-  for (size_t i = 0; i < sub_gvs_wdgt->count(); i++) {
-      QListWidgetItem *item = sub_gvs_wdgt->item(i);
-      item->setCheckState(item->checkState() == Qt::Checked ? Qt::Unchecked : Qt::Checked);
-    }
 
 }
