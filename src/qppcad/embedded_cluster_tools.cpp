@@ -657,5 +657,6 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
                     );
     }
 
+    fmt::print(embc_inp, "end\n");
 
 }

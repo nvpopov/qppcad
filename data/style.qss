@@ -329,6 +329,10 @@ QPushButton:hover, QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover, QToolB
  background-color: rgb(111, 111, 111);
 }
 
+QComboBox:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled {
+ color: black;
+}
+
 QComboBox {
  padding: 3px 8px 3px 8px;
 }
