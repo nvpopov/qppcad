@@ -34,6 +34,12 @@ void node_book_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
   m_binded_nb = as_nb;
   m_gr_view->setScene(m_binded_nb->m_scene);
 
+  if (m_binded_first_time) {
+      m_binded_first_time = false;
+    } else {
+      m_gr_view->updateSceneRect(m_stored_scene_rect);
+    }
+
 }
 
 void node_book_extended_editor_t::update_from_ws_item() {
@@ -46,6 +52,11 @@ void node_book_extended_editor_t::update_from_ws_item() {
 void node_book_extended_editor_t::unbind_item() {
 
   ws_item_extended_editor_t::unbind_item();
+
+  if (m_gr_view->scene() && m_binded_nb) {
+      m_stored_scene_rect = m_gr_view->get_visible_rect();
+    }
+
   m_binded_nb = nullptr;
   m_gr_view->setScene(nullptr);
 

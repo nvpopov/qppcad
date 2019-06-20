@@ -6,6 +6,8 @@
 #include <qppcad/sflow/sflow_base_nodes_int.hpp>
 #include <qppcad/sflow/sflow_base_nodes_float.hpp>
 
+#include <qppcad/ws_item/node_book/node_book_graphics_view.hpp>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -179,3 +181,28 @@ void node_book_t::updated_externally(uint32_t update_reason) {
 
 }
 
+py::list node_book_t::py_get_visible_rect() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto views = m_scene->views();
+
+  astate->tlog("@DEBUG: node_book_t::py_get_visible_rect -> views.size={}", views.size());
+  if (views.empty()) return py::none();
+  astate->tlog("@DEBUG: node_book_t::py_get_visible_rect -> views!empty");
+
+  auto nb_view = qobject_cast<node_book_graphics_view_t*>(views.first());
+  if (!nb_view) return py::none();
+  astate->tlog("@DEBUG: node_book_t::py_get_visible_rect -> nb_view");
+
+  auto vis_rect = nb_view->get_visible_rect();
+
+  py::list ret;
+  ret.append(vis_rect.left());
+  ret.append(vis_rect.top());
+  ret.append(vis_rect.right());
+  ret.append(vis_rect.bottom());
+
+  return ret;
+
+}

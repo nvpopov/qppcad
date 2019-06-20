@@ -6,6 +6,14 @@
 #include <qppcad/ws_item/node_book/node_book_graphics_scene.hpp>
 #include <qppcad/sflow/sflow.hpp>
 
+#pragma push_macro("slots")
+#undef slots
+#include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
+#pragma pop_macro("slots")
+
+namespace py = pybind11;
+
 namespace qpp {
 
   namespace cad {
@@ -37,6 +45,8 @@ namespace qpp {
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
         void execute();
+
+        py::list py_get_visible_rect();
 
     };
 

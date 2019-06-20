@@ -148,6 +148,7 @@ void ws_item_extended_editor_compositor_t::cur_ws_selected_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  if (m_cur_ext_editor_widget) m_cur_ext_editor_widget->unbind_item();
 
   if (astate->ws_mgr->has_wss()) {
 

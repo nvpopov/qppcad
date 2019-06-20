@@ -15,4 +15,6 @@ void py_node_book_reg_helper_t::reg(
   py_node_book_t.def("num_con", [](node_book_t &src){return src.m_scene->m_connections.size();});
   py_node_book_t.def("execute", &node_book_t::execute);
 
+  py_node_book_t.def("get_vis_rect", &node_book_t::py_get_visible_rect);
+
 }

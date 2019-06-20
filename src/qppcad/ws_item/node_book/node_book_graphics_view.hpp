@@ -23,6 +23,8 @@ namespace qpp {
         explicit node_book_graphics_view_t(QWidget *parent = nullptr);
         node_book_graphics_view_t(QGraphicsScene *scene, QWidget *parent = nullptr);
 
+        QRectF get_visible_rect();
+
       protected:
 
         void wheelEvent(QWheelEvent *event) override ;

@@ -2,9 +2,10 @@
 #include <qppcad/app_state.hpp>
 //#include <qppcad/app.hpp>
 
-qpp::cad::shader_program_t::shader_program_t (const std::string &_program_name,
-                                              const std::string &_vs_text,
-                                              const std::string &_fs_text) {
+qpp::cad::shader_program_t::shader_program_t(const std::string &_program_name,
+                                             const std::string &_vs_text,
+                                             const std::string &_fs_text) {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   unf_rec.resize(qpp::cad::map_u2s.size());
@@ -59,7 +60,7 @@ qpp::cad::shader_program_t::shader_program_t (const std::string &_program_name,
 
 }
 
-void qpp::cad::shader_program_t::u_on (qpp::cad::sp_u_name _val) {
+void qpp::cad::shader_program_t::u_on(qpp::cad::sp_u_name _val) {
 
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
@@ -67,11 +68,11 @@ void qpp::cad::shader_program_t::u_on (qpp::cad::sp_u_name _val) {
   unf_rec[_val].h_prog = glapi->glGetUniformLocation(program_id, map_u2s[_val].c_str());
 
   if (unf_rec[_val].h_prog == -1) {
-      astate->tlog("WARNING: invalid iniform[{}] in program {}", map_u2s[_val], program_name);
+      astate->tlog("WARNING: invalid uniform[{}] in program {}", map_u2s[_val], program_name);
     }
 }
 
-void qpp::cad::shader_program_t::set_u (qpp::cad::sp_u_name _ut, GLfloat *_val) {
+void qpp::cad::shader_program_t::set_u(qpp::cad::sp_u_name _ut, GLfloat *_val) {
 
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
@@ -120,39 +121,42 @@ void qpp::cad::shader_program_t::set_u_sampler(qpp::cad::sp_u_name _ut, GLint va
 
 }
 
-void qpp::cad::shader_program_t::begin_shader_program () {
+void qpp::cad::shader_program_t::begin_shader_program() {
 
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
 
   glapi->glUseProgram(program_id);
 
-//  if (unf_rec[sp_u_name::v_light_pos].enabled)
-//    set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
+  //  if (unf_rec[sp_u_name::v_light_pos].enabled)
+  //    set_u(sp_u_name::v_light_pos, c_app::get_state().light_pos_tr.data());
 
   if (unf_rec[sp_u_name::texture_0].enabled)
     glapi->glUniform1i(unf_rec[sp_u_name::texture_0].h_prog, 0);
 
-//  if (unf_rec[sp_u_name::screen_width].enabled)
-//    glUniform1i(unf_rec[sp_u_name::screen_width].h_prog,
-//        int(astate->viewport_size_c(0)));
+  //  if (unf_rec[sp_u_name::screen_width].enabled)
+  //    glUniform1i(unf_rec[sp_u_name::screen_width].h_prog,
+  //        int(astate->viewport_size_c(0)));
 
-//  if (unf_rec[sp_u_name::screen_height].enabled)
-//    glUniform1i(unf_rec[sp_u_name::screen_height].h_prog,
-//        int(astate->viewport_size_c(1)));
-//  if (unf_rec[sp_u_name::m_model_view_inv_tr].enabled && astate->camera) {
-//      set_u(sp_u_name::m_model_view_inv_tr, astate->camera->m);
-//    }
+  //  if (unf_rec[sp_u_name::screen_height].enabled)
+  //    glUniform1i(unf_rec[sp_u_name::screen_height].h_prog,
+  //        int(astate->viewport_size_c(1)));
+  //  if (unf_rec[sp_u_name::m_model_view_inv_tr].enabled && astate->camera) {
+  //      set_u(sp_u_name::m_model_view_inv_tr, astate->camera->m);
+  //    }
 
   if (unf_rec[sp_u_name::v_eye_pos].enabled && astate->camera) {
       set_u(sp_u_name::v_eye_pos, astate->camera->m_view_point.data());
     }
+
 }
 
-void qpp::cad::shader_program_t::end_shader_program () {
+void qpp::cad::shader_program_t::end_shader_program() {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glUseProgram(0);
+
 }
 
 
