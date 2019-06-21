@@ -1720,10 +1720,8 @@ void geom_view_t::purify_boundary_atoms(geom_view_t *src) {
 vector3<float> geom_view_t::dipole_moment() {
 
   vector3<float> accum_dm{0,0,0};
-
   for (int i = 0; i < m_geom->nat(); i++)
-    accum_dm += m_geom->pos(i) * m_geom->xfield<float>(4, i);
-
+    accum_dm += m_geom->pos(i) * m_geom->xfield<float>(xgeom_charge, i);
   return accum_dm;
 
 }
@@ -1731,7 +1729,8 @@ vector3<float> geom_view_t::dipole_moment() {
 float geom_view_t::total_charge() {
 
   float accum_charge{0};
-  for (int i = 0; i < m_geom->nat(); i++) accum_charge += m_geom->xfield<float>(4, i);
+  for (int i = 0; i < m_geom->nat(); i++)
+    accum_charge += m_geom->xfield<float>(xgeom_charge, i);
   return accum_charge;
 
 }
