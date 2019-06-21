@@ -247,10 +247,10 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   auto dm_qm  = ws_qm->dipole_moment();
   auto dm_tot = dm_chg + dm_cls + dm_qm;
 
-  py::print(fmt::format("chg_dipole_moment  = {}, {}, {}", dm_chg[0], dm_chg[1], dm_chg[2]));
-  py::print(fmt::format("cls_dipole_moment  = {}, {}, {}", dm_cls[0], dm_cls[1], dm_cls[2]));
-  py::print(fmt::format("qm_dipole_moment   = {}, {}, {}", dm_qm[0],  dm_qm[1],  dm_qm[2]));
-  py::print(fmt::format("tot_dipole_moment  = {}, {}, {}", dm_tot[0],  dm_tot[1],  dm_tot[2]));
+  py::print(fmt::format("  chg_dipole_moment  = {}, {}, {}", dm_chg[0],  dm_chg[1],  dm_chg[2]));
+  py::print(fmt::format("  cls_dipole_moment  = {}, {}, {}", dm_cls[0],  dm_cls[1],  dm_cls[2]));
+  py::print(fmt::format("  qm_dipole_moment   = {}, {}, {}", dm_qm[0],   dm_qm[1],   dm_qm[2]));
+  py::print(fmt::format("  tot_dipole_moment  = {}, {}, {}", dm_tot[0],  dm_tot[1],  dm_tot[2]));
 
 }
 
@@ -281,6 +281,7 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
   auto [cur_ws, cur_it, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
 
   if (!ok) {
+      throw std::runtime_error("Cannot deduce context for embedded cluster generation");
       return;
     }
 
@@ -632,7 +633,7 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
         );
 
   //printing cls atoms N> q x y z
-  if (merge_cls_and_chg) {
+  if (!merge_cls_and_chg) {
       //fmt::print(embc_inp, "{}\n", cls->m_geom->nat());
       for (int i = 0; i < cls->m_geom->nat(); i++) {
           bool add_ecp = cls->m_geom->atom_name(i).find("F") == std::string::npos;

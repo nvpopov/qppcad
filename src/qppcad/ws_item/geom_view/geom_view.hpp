@@ -33,6 +33,13 @@ namespace qpp {
     class geom_view_lat_planes_subsys_t;
     class geom_view_sel_groups_subsys_t;
 
+    template<typename REAL = float>
+    struct scalar_partition_per_type_t {
+        REAL value{0};
+        size_t atype{0};
+        size_t count{0};
+    };
+
     /**
      * @brief The geom_view_render_style_e enum
      */
@@ -314,6 +321,9 @@ namespace qpp {
         py::list get_unsel_atoms(int index_offset);
         void py_copy_settings(geom_view_t *src);
         void py_copy_xgeom_aux(geom_view_t *src);
+
+        std::vector<scalar_partition_per_type_t<>> get_charge_partition();
+        py::list py_get_charge_partition();
 
     };
 

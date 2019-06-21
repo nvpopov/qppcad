@@ -1808,5 +1808,58 @@ void geom_view_t::py_copy_xgeom_aux(geom_view_t *src) {
 
 }
 
+std::vector<scalar_partition_per_type_t<>> geom_view_t::get_charge_partition() {
+
+  std::vector<scalar_partition_per_type_t<>> retcp;
+
+  const auto ch_eps = 0.0001f;
+
+  for (size_t i = 0; i < m_geom->nat(); i++) {
+
+      bool rec_founded{false};
+      size_t rec_id{0};
+
+      for (size_t q = 0; q < retcp.size(); q++)
+        if (retcp[q].atype == m_geom->type(i) &&
+            (std::fabs(retcp[q].value - m_geom->xfield<float>(xgeom_charge, i)) < ch_eps)) {
+            rec_founded = true;
+            retcp[q].count++;
+          }
+
+      if (!rec_founded) {
+          scalar_partition_per_type_t<> tmp_rec;
+          tmp_rec.atype = m_geom->type(i);
+          tmp_rec.value = m_geom->xfield<float>(xgeom_charge, i);
+          tmp_rec.count = 1;
+          retcp.push_back(std::move(tmp_rec));
+        }
+
+    }
+
+  return retcp;
+
+}
+
+py::list geom_view_t::py_get_charge_partition() {
+
+  py::list ret_list;
+
+  auto charge_part = get_charge_partition();
+
+  for (auto &ch_rec : charge_part) {
+
+      py::list ch_rec_list;
+      ch_rec_list.append(ch_rec.atype);
+      ch_rec_list.append(ch_rec.value);
+      ch_rec_list.append(ch_rec.count);
+
+      ret_list.append(ch_rec_list);
+
+    }
+
+  return ret_list;
+
+}
+
 
 
