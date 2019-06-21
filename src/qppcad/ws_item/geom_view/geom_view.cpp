@@ -1717,6 +1717,17 @@ void geom_view_t::purify_boundary_atoms(geom_view_t *src) {
 
 }
 
+vector3<float> geom_view_t::dipole_moment() {
+
+  vector3<float> accum_dm{0,0,0};
+
+  for (int i = 0; i < m_geom->nat(); i++)
+      accum_dm += m_geom->pos(i) * m_geom->xfield<float>(4, i);
+
+  return accum_dm;
+
+}
+
 pybind11::list geom_view_t::py_get_sel_pos_in_frame(vector3<float> t_frame) {
 
   return py::none();

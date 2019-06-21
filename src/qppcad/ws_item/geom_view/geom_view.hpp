@@ -306,6 +306,8 @@ namespace qpp {
 
         void purify_boundary_atoms(geom_view_t *src);
 
+        vector3<float> dipole_moment();
+
         py::list py_get_sel_pos_in_frame(vector3<float> t_frame);
         py::list get_sel_atoms(int index_offset);
         py::list get_unsel_atoms(int index_offset);

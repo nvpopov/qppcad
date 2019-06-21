@@ -61,7 +61,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
-  ws_items_spoiler->setFixedHeight(astate->size_guide.obj_insp_item_list_max_h());
+  ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
   ws_items_spoiler_lt->addWidget(ws_items_list);
   ws_items_spoiler->main_lt->setContentsMargins(0, 0, 10, 0);
   ws_items_spoiler->add_content_layout(ws_items_spoiler_lt);
@@ -72,9 +72,6 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   main_lt->addWidget(ws_items_spoiler);
   main_lt->addWidget(none_item_placeholder);
-  main_lt->addSpacing(0);
-  //main_lt->setContentsMargins(5,0,5,0);
-  //main_lt->setSpacing(0);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,

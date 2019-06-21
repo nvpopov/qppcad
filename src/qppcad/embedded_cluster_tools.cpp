@@ -240,6 +240,10 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
     app_state_t *astate = app_state_t::get_inst();
     astate->astate_evd->cur_ws_changed();
 
+    //time to print dipole moments
+
+    //auto dm_chg = embedded_cluster_tools::calc_dipole_moment();
+
 }
 
 //embc.gen_sph(pq.vector3f(0,0,0), 16, 9)
