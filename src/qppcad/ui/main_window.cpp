@@ -1430,6 +1430,7 @@ void main_window_t::toggle_fullscreen(bool checked) {
 
       setWindowFlags(Qt::CustomizeWindowHint |
                      Qt::WindowStaysOnTopHint |
+                     Qt::WindowMinimizeButtonHint |
                      Qt::WindowMaximizeButtonHint |
                      Qt::WindowCloseButtonHint);
       show();
