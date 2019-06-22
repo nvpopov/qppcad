@@ -55,6 +55,8 @@ namespace qpp {
 
         void provide_context_menu_for_ws_items(const QPoint &pos);
 
+        void open_tab_requested(int tab_id);
+
     };
 
   } // namespace qpp::cad

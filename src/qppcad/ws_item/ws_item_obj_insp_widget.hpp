@@ -40,6 +40,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
+
         ws_item_t *m_binded_item{nullptr};
 
         ws_item_tab_widget_t *tab_general;
@@ -65,6 +66,7 @@ namespace qpp {
         ws_item_tab_widget_t* def_tab(QString tab_name,
                                       QString icon_name_enabled,
                                       QString icon_name_disabled = "");
+
         virtual void bind_to_item(ws_item_t *_binding_item);
         virtual void unbind_item();
         virtual void update_from_ws_item();

@@ -29,6 +29,8 @@ namespace qpp {
         void cur_ws_selected_item_position_changed_signal();
         void cur_ws_selected_item_need_to_update_obj_insp_signal();
 
+        void obj_insp_tab_open_requested_signal(int tab_id);
+
         void extended_editor_open_requested_signal();
         void extended_editor_open_requested_with_order_signal(size_t editor_id);
         void extended_editor_close_requested_signal();
@@ -52,6 +54,7 @@ namespace qpp {
         void cur_ws_selected_atoms_list_selected_content_changed();
         void cur_ws_selected_item_measurements_changed();
         void cur_ws_selected_item_need_to_update_obj_insp();
+        void obj_insp_tab_open_requested(int tab_id);
 
         void extended_editor_open_requested();
         void extended_editor_open_requested_with_order(size_t editor_id);

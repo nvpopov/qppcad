@@ -391,6 +391,17 @@ bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
 
 }
 
+void geom_view_t::mouse_double_click(ray_t<float> *ray) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (is_selected() && m_parent_ws && m_parent_ws->m_edit_type == ws_edit_e::edit_item) {
+      m_parent_ws->set_edit_type(ws_edit_e::edit_content);
+      astate->astate_evd->obj_insp_tab_open_requested(3);
+    }
+
+}
+
 void geom_view_t::sel_atoms (bool all) {
 
   app_state_t* astate = app_state_t::get_inst();

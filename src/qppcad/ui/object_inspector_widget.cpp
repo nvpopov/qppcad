@@ -79,6 +79,11 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           &object_inspector_widget_t::cur_ws_selected_item_changed);
 
   connect(astate->astate_evd,
+          &app_state_event_disp_t::obj_insp_tab_open_requested_signal,
+          this,
+          &object_inspector_widget_t::open_tab_requested);
+
+  connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_changed_signal,
           this,
           &object_inspector_widget_t::cur_ws_changed);
@@ -317,5 +322,23 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
   if (!ext_act) return;
 
   astate->astate_evd->extended_editor_open_requested_with_order(ext_act->m_joined_data[1]);
+
+}
+
+void object_inspector_widget_t::open_tab_requested(int tab_id) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  astate->tlog("@DEBUG: enter object_inspector_widget_t::open_tab_requested(tab_id={})", tab_id);
+
+  if (!m_cur_obj_insp_widget) return;
+
+  auto tab_cnt = m_cur_obj_insp_widget->count();
+  if (tab_cnt == 0 || tab_id < 0 || tab_id >= tab_cnt ||
+      !m_cur_obj_insp_widget->tabBar()->isTabEnabled(tab_id)) return;
+
+  m_cur_obj_insp_widget->setCurrentIndex(tab_id);
+
+  astate->tlog("@DEBUG: exit object_inspector_widget_t::open_tab_requested(tab_id={})", tab_id);
 
 }

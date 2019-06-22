@@ -53,6 +53,10 @@ void app_state_event_disp_t::cur_ws_selected_item_need_to_update_obj_insp() {
   emit(cur_ws_selected_item_need_to_update_obj_insp_signal());
 }
 
+void app_state_event_disp_t::obj_insp_tab_open_requested(int tab_id) {
+  emit(obj_insp_tab_open_requested_signal(tab_id));
+}
+
 void app_state_event_disp_t::extended_editor_open_requested() {
   emit(extended_editor_open_requested_signal());
 }
