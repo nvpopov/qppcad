@@ -281,6 +281,13 @@ void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
 
 }
 
+void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
+
+  auto cur_it = get_selected();
+  if (cur_it) cur_it->mouse_double_click(nullptr);
+
+}
+
 void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> item_to_add) {
 
   item_to_add->set_parent_workspace(this);
@@ -295,8 +302,7 @@ void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delet
       auto it = std::find(elem->m_connected_items.begin(),
                           elem->m_connected_items.end(),
                           item_to_delete);
-      if (it != elem->m_connected_items.end())
-        elem->m_connected_items.erase(it);
+      if (it != elem->m_connected_items.end()) elem->m_connected_items.erase(it);
     }
 
 }
@@ -667,6 +673,17 @@ void workspace_manager_t::mouse_click () {
 
   if (has_wss()) {
       get_cur_ws()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
+      astate->make_viewport_dirty();
+    }
+
+}
+
+void workspace_manager_t::mouse_double_click() {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (has_wss()) {
+      get_cur_ws()->mouse_double_click(astate->mouse_x_dc, astate->mouse_y_dc);
       astate->make_viewport_dirty();
     }
 

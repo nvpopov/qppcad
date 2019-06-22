@@ -285,6 +285,17 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
 
 }
 
+void ws_viewer_widget_t::mouseDoubleClickEvent(QMouseEvent *event) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  if (event) {
+      astate->ws_mgr->mouse_double_click();
+      event->accept();
+    }
+
+}
+
 void ws_viewer_widget_t::wheelEvent(QWheelEvent *event) {
 
   app_state_t* astate = app_state_t::get_inst();

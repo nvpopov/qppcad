@@ -169,6 +169,13 @@ void ws_item_t::render_overlay(QPainter &painter) {
 
 }
 
+void ws_item_t::mouse_double_click(ray_t<float> *ray) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->tlog("ws_item_t::mouse_double_click, name = {}", m_name);
+
+}
+
 
 void ws_item_t::set_default_flags(uint32_t flags){
   p_flags = flags;

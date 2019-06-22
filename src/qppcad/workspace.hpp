@@ -70,6 +70,7 @@ namespace qpp {
         void render();
         void render_overlay(QPainter &painter);
         void mouse_click(const float mouse_x, const float mouse_y);
+        void mouse_double_click(const float mouse_x, const float mouse_y);
         void add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add);
 
         void clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete);
@@ -114,6 +115,7 @@ namespace qpp {
         void render_cur_ws();
         void render_cur_ws_overlay(QPainter &painter);
         void mouse_click();
+        void mouse_double_click();
         void ws_mgr_changed();
         void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
         void init_ws_item_bhv_mgr();
