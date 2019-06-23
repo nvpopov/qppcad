@@ -17,8 +17,6 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::def_tab(QString tab_name,
   tmp->tab_scroll->setStyleSheet("QScrollArea {border:0;}");
 
   tmp->tab_inner_widget = new QFrame(tmp->tab_scroll);
-  //tmp->tab_inner_widget->setStyleSheet("QFrame {border: 0;}");
-  tmp->tab_inner_widget->setProperty("s_class", "tab_inner_widget");
   tmp->tab_scroll->setWidget(tmp->tab_inner_widget);
 
   tmp->tab_inner_widget_lt = new QVBoxLayout;

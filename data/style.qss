@@ -281,16 +281,20 @@ qpp--cad--object_inspector_widget_t QTabWidget::pane {
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab {
- width:44px;
- height:42px;
- padding-top:3px;
- padding-left:12px;
+ width: 32px;
+ height: 32px;
+ padding-top: 4px;
+ padding-left: 5px;
+ padding-bottom: 2px;
+ padding-right: 5px;
+
+ margin-left:14px;
  border: 0;
  margin-bottom: 2px;
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab::first {
- margin-left:12px;
+
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab:selected {

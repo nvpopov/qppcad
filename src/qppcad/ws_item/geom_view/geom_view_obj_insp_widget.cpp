@@ -127,7 +127,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_color_mode->addItem(tr("Color from ptable"));
   disp_s_color_mode->addItem(tr("Color from xgeom"));
 
-  // ******************  Periodic related render ***************************************************
+  // ******************  Periodic related render *****************************
   gb_periodic_related_render = new qspoiler_widget_t(tr("Periodic related settings"));
   gb_periodic_related_render_lt = new QFormLayout;
   gb_periodic_related_render->add_content_layout(gb_periodic_related_render_lt);
