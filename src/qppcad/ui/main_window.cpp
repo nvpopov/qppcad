@@ -1842,9 +1842,14 @@ void main_window_t::make_screenshot() {
 
   if (!ok) return;
 
+  astate->m_ignore_scanline = true;
+
   QDateTime date = QDateTime::currentDateTime();
   QString date_s = date.toString("dd_MM_yyyy_hh_mm_ss");
   ws_viewer_widget->grabFramebuffer().save(tr("%1_screenshot.png").arg(date_s));
+
+  astate->m_ignore_scanline = false;
+  astate->make_viewport_dirty();
 
 }
 

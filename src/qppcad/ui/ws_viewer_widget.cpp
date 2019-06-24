@@ -171,7 +171,7 @@ void ws_viewer_widget_t::paintGL() {
 
   if (!astate->ws_mgr->has_wss()) draw_text_logo(painter);
 
-  if (!astate->m_immersive_mode) draw_scanline(painter);
+  if (!astate->m_immersive_mode && !astate->m_ignore_scanline) draw_scanline(painter);
 
   painter.end();
   astate->m_last_frame_time_gpu = m_update_timer_gpu->nsecsElapsed();
