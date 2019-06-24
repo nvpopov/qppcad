@@ -1,4 +1,4 @@
-# qpp::cad
+# ![](/data/images/icon_big.png) qpp::cad
 ![qppcad_collage](/docs/images/qppcad_coolage.jpg)
 ### current status - under construction
  molecule and crystal editor written in c++
@@ -20,12 +20,12 @@ git submodule update --init --recursive
 git clone https://github.com/nvpopov/qppcad.git --recurse-submodules
 cd qppcad
 mkdir build
-cd build 
+cd build
 cmake ..
-make 
+make
 ```
 
-### Update 
+### Update
 ```bash
 git pull --recurse-submodules
 ```
