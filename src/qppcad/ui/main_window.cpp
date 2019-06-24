@@ -1346,23 +1346,20 @@ void main_window_t::tp_camera_tool_button_triggered(QAction *action) {
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
   if (!ok) return;
 
-  vector3<float> look_from;
-  vector3<float> look_to;
-  vector3<float> look_up{0.0, 1.0, 0.0};
-  bool need_to_update_camera{false};
-
   cam_target_view_t _tv = static_cast<cam_target_view_t>(ext_act->m_joined_data[0]);
 
-  as_al->target_view(_tv, look_from, look_to, look_up, need_to_update_camera);
+  //as_al->target_view(_tv, look_from, look_to, look_up, need_to_update_camera);
 
-  if (need_to_update_camera) {
-      astate->camera->m_view_point = look_from;
-      astate->camera->m_look_at = look_to;
-      astate->camera->m_look_up = look_up;
-      astate->camera->orthogonalize_gs();
-      astate->camera->update_camera();
-      //astate->make_viewport_dirty();
-    }
+//  if (need_to_update_camera) {
+//      astate->camera->m_view_point = look_from;
+//      astate->camera->m_look_at = look_to;
+//      astate->camera->m_look_up = look_up;
+//      astate->camera->orthogonalize_gs();
+//      astate->camera->update_camera();
+//      //astate->make_viewport_dirty();
+//    }
+
+  if (as_al) as_al->apply_target_view(_tv);
 
   astate->make_viewport_dirty();
 

@@ -23,11 +23,36 @@ void ws_item_t::set_pos(vector3<float> new_pos) {
 
 }
 
-void ws_item_t::target_view(cam_target_view_t _target_view,
+void ws_item_t::target_view(cam_target_view_t target_view,
                             vector3<float> &look_from,
                             vector3<float> &look_to,
                             vector3<float> &look_up,
                             bool &need_to_update_camera) {
+
+}
+
+void ws_item_t::apply_target_view(cam_target_view_t target_view_src) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  vector3<float> look_from;
+  vector3<float> look_to;
+  vector3<float> look_up{0.0, 1.0, 0.0};
+  bool need_to_update_camera{false};
+
+  target_view(target_view_src, look_from, look_to, look_up, need_to_update_camera);
+
+  if (need_to_update_camera && m_parent_ws && m_parent_ws->m_camera) {
+
+      m_parent_ws->m_camera->m_view_point = look_from;
+      m_parent_ws->m_camera->m_look_at = look_to;
+      m_parent_ws->m_camera->m_look_up = look_up;
+      m_parent_ws->m_camera->orthogonalize_gs();
+      m_parent_ws->m_camera->update_camera();
+
+      astate->make_viewport_dirty();
+
+    }
 
 }
 
