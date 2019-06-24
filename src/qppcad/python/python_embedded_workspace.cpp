@@ -156,6 +156,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                     {return src.m_background_color;},
                     [](workspace_t &src, const vector3<float> value)
                     {src.m_background_color = value; mvd();})
+      .def("delete_item", &workspace_t::delete_item_by_index)
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr);
 

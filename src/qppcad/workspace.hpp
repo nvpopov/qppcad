@@ -80,6 +80,8 @@ namespace qpp {
         void set_edit_type(const ws_edit_e new_edit_type);
         void copy_camera(std::shared_ptr<workspace_t> source);
 
+        void delete_item_by_index(size_t idx);
+
         std::string py_get_repr();
         std::shared_ptr<ws_item_t> py_construct_item(std::string class_name,
                                                      std::string item_name);

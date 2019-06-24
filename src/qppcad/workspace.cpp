@@ -480,6 +480,12 @@ void workspace_t::copy_camera(std::shared_ptr<workspace_t> source) {
 
 }
 
+void workspace_t::delete_item_by_index(size_t idx) {
+
+  if (idx < m_ws_items.size()) m_ws_items[idx]->m_marked_for_deletion = true;
+
+}
+
 std::string workspace_t::py_get_repr() {
 
   return fmt::format("[workspace, name=\"{}\"]", m_ws_name);
