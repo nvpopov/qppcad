@@ -137,7 +137,7 @@ void workspace_t::set_best_view () {
 
   if (num_items_tv == 1 && acc_item) {
 
-      acc_item->target_view(cam_target_view_t::tv_auto,
+      acc_item->target_view(cam_tv_e::tv_auto,
                             vec_look_pos,
                             vec_look_at,
                             vec_look_up,

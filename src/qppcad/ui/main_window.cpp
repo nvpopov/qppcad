@@ -478,37 +478,37 @@ void main_window_t::init_widgets() {
           &main_window_t::tp_scenic_rotation_toggle);
 
   tp_camera_tool_act_x = new qextended_action(this);
-  tp_camera_tool_act_x->m_joined_data[0] = cam_target_view_t::tv_x_axis;
+  tp_camera_tool_act_x->m_joined_data[0] = cam_tv_e::tv_x;
   tp_camera_tool_act_x->setText(tr( "x - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_x);
 
   tp_camera_tool_act_y = new qextended_action(this);
-  tp_camera_tool_act_y->m_joined_data[0] = cam_target_view_t::tv_y_axis;
+  tp_camera_tool_act_y->m_joined_data[0] = cam_tv_e::tv_y;
   tp_camera_tool_act_y->setText(tr( "y - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_y);
 
   tp_camera_tool_act_z = new qextended_action(this);
-  tp_camera_tool_act_z->m_joined_data[0] = cam_target_view_t::tv_z_axis;
+  tp_camera_tool_act_z->m_joined_data[0] = cam_tv_e::tv_z;
   tp_camera_tool_act_z->setText(tr( "z - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_z);
 
   tp_camera_tool_act_cc = new qextended_action(this);
-  tp_camera_tool_act_cc->m_joined_data[0] = cam_target_view_t::tv_cart_center;
+  tp_camera_tool_act_cc->m_joined_data[0] = cam_tv_e::tv_cc;
   tp_camera_tool_act_cc->setText(tr("cart. c."));
   tp_camera_tool->addAction(tp_camera_tool_act_cc);
 
   tp_camera_tool_act_a = new qextended_action(this);
-  tp_camera_tool_act_a->m_joined_data[0] = cam_target_view_t::tv_a_axis;
+  tp_camera_tool_act_a->m_joined_data[0] = cam_tv_e::tv_a;
   tp_camera_tool_act_a->setText(tr( "a - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_a);
 
   tp_camera_tool_act_b = new qextended_action(this);
-  tp_camera_tool_act_b->m_joined_data[0] = cam_target_view_t::tv_b_axis;
+  tp_camera_tool_act_b->m_joined_data[0] = cam_tv_e::tv_b;
   tp_camera_tool_act_b->setText(tr( "b - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_b);
 
   tp_camera_tool_act_c = new qextended_action(this);
-  tp_camera_tool_act_c->m_joined_data[0] = cam_target_view_t::tv_c_axis;
+  tp_camera_tool_act_c->m_joined_data[0] = cam_tv_e::tv_c;
   tp_camera_tool_act_c->setText(tr( "c - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_c);
 
@@ -1346,7 +1346,7 @@ void main_window_t::tp_camera_tool_button_triggered(QAction *action) {
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
   if (!ok) return;
 
-  cam_target_view_t _tv = static_cast<cam_target_view_t>(ext_act->m_joined_data[0]);
+  cam_tv_e _tv = static_cast<cam_tv_e>(ext_act->m_joined_data[0]);
 
   //as_al->target_view(_tv, look_from, look_to, look_up, need_to_update_camera);
 
@@ -1400,7 +1400,7 @@ void main_window_t::tp_scenic_rotation_toggle() {
 
 }
 
-void main_window_t::apply_camera_view_change(cam_target_view_t target_view) {
+void main_window_t::apply_camera_view_change(cam_tv_e target_view) {
 
 }
 

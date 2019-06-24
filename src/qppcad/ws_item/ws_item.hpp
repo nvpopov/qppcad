@@ -116,13 +116,13 @@ namespace qpp {
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
                                            vector3<float> &out_look_at) = 0;
 
-        virtual void target_view(cam_target_view_t target_view_src,
+        virtual void target_view(cam_tv_e target_view_src,
                                  vector3<float> &look_from,
                                  vector3<float> &look_to,
                                  vector3<float> &look_up,
                                  bool &need_to_update_camera);
 
-        void apply_target_view(cam_target_view_t target_view_src);
+        void apply_target_view(cam_tv_e target_view_src);
 
         /**
          * @brief set_parent_workspace

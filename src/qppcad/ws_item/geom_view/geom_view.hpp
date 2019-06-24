@@ -171,7 +171,7 @@ namespace qpp {
          * @param look_up
          * @param need_to_update_camera
          */
-        void target_view(cam_target_view_t _target_view,
+        void target_view(cam_tv_e target_view_src,
                          vector3<float> &look_from,
                          vector3<float> &look_to,
                          vector3<float> &look_up,

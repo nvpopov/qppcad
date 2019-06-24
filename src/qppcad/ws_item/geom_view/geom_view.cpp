@@ -114,22 +114,22 @@ void geom_view_t::vote_for_view_vectors (vector3<float> &out_look_pos,
 
 }
 
-void geom_view_t::target_view(cam_target_view_t _target_view,
+void geom_view_t::target_view(cam_tv_e target_view_src,
                               vector3<float> &look_from,
                               vector3<float> &look_to,
                               vector3<float> &look_up,
                               bool &need_to_update_camera) {
 
-  auto __target_view = _target_view;
+  auto new_target_view = target_view_src;
 
-  if (__target_view == cam_target_view_t::tv_auto) {
-      if (m_geom->DIM == 3) __target_view = cam_target_view_t::tv_a_axis;
-      else __target_view = cam_target_view_t::tv_x_axis;
+  if (new_target_view == cam_tv_e::tv_auto) {
+      if (m_geom->DIM == 3) new_target_view = cam_tv_e::tv_a;
+      else new_target_view = cam_tv_e::tv_x;
     }
 
-  switch (__target_view) {
+  switch (new_target_view) {
 
-    case cam_target_view_t::tv_x_axis : {
+    case cam_tv_e::tv_x : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
         look_from = m_pos - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
         look_to = m_pos;
@@ -138,7 +138,7 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
         break;
       }
 
-    case cam_target_view_t::tv_y_axis : {
+    case cam_tv_e::tv_y : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
         look_from = m_pos - 2.0f*vector3<float>(0.0, axis_size, 0.0);
         look_to = m_pos;
@@ -147,7 +147,7 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
         break;
       }
 
-    case cam_target_view_t::tv_z_axis : {
+    case cam_tv_e::tv_z : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
         look_from = m_pos - 2.0f*vector3<float>(0.0, 0.0, axis_size);
         look_to = m_pos;
@@ -156,7 +156,7 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
         break;
       }
 
-    case cam_target_view_t::tv_a_axis : {
+    case cam_tv_e::tv_a : {
         vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
         look_from = m_pos + center - 2.0f * m_geom->cell.v[0];
         look_to = m_pos  + center;
@@ -165,7 +165,7 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
         break;
       }
 
-    case cam_target_view_t::tv_b_axis : {
+    case cam_tv_e::tv_b : {
         vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
         look_from = m_pos + center - 2.0f * m_geom->cell.v[1];
         look_to = m_pos  + center;
@@ -174,7 +174,7 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
         break;
       }
 
-    case cam_target_view_t::tv_c_axis : {
+    case cam_tv_e::tv_c : {
         vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
         look_from = m_pos + center - 2.0f * m_geom->cell.v[2];
         look_to = m_pos  + center;
@@ -183,7 +183,7 @@ void geom_view_t::target_view(cam_target_view_t _target_view,
         break;
       }
 
-    case cam_target_view_t::tv_cart_center : {
+    case cam_tv_e::tv_cc : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
         look_from = m_pos - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
         look_to = m_pos + (m_ext_obs->aabb.max - m_ext_obs->aabb.min) * 0.5;

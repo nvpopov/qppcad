@@ -101,20 +101,19 @@ void cws_changed() {
 PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   //cam target view
-  py::enum_<cam_target_view_t>(m, "cam_target_view_t", py::arithmetic(), "")
-          .value("tv_x", tv_x_axis, "tv_x_axis")
-          .value("tv_y", tv_y_axis, "tv_y_axis")
-          .value("tv_z", tv_z_axis, "tv_z_axis")
-          .value("tv_cc", tv_cart_center, "tv_cart_center")
-          .value("tv_a", tv_a_axis, "tv_a_axis")
-          .value("tv_b", tv_b_axis, "tv_b_axis")
-          .value("tv_c", tv_c_axis, "tv_c_axis")
-          .value("tv_as", tv_a_star_axis, "tv_a_star_axis")
-          .value("tv_bs", tv_b_star_axis, "tv_b_star_axis")
-          .value("tv_cs", tv_c_star_axis, "tv_c_star_axis")
+  py::enum_<cam_tv_e>(m, "cam_tv_e", py::arithmetic(), "")
+          .value("tv_x", tv_x, "tv_x_axis")
+          .value("tv_y", tv_y, "tv_y_axis")
+          .value("tv_z", tv_z, "tv_z_axis")
+          .value("tv_cc", tv_cc, "tv_cart_center")
+          .value("tv_a", tv_a, "tv_a_axis")
+          .value("tv_b", tv_b, "tv_b_axis")
+          .value("tv_c", tv_c, "tv_c_axis")
+          .value("tv_as", tv_as, "tv_a_star_axis")
+          .value("tv_bs", tv_bs, "tv_b_star_axis")
+          .value("tv_cs", tv_cs, "tv_c_star_axis")
           .value("tv_auto", tv_auto, "tv_auto")
           .export_values();
-
   //end cam target view
 
   py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >(m, "workspace_manager_t")

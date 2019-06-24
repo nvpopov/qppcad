@@ -216,7 +216,7 @@ namespace qpp {
         void tp_add_cube_clicked();
         void tp_scenic_rotation_toggle();
 
-        void apply_camera_view_change(cam_target_view_t target_view);
+        void apply_camera_view_change(cam_tv_e target_view);
 
         void toggle_ws_edit_mode();
         void toggle_fullscreen(bool checked);

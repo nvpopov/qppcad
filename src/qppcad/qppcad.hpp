@@ -63,17 +63,18 @@ namespace qpp {
     const uint32_t error_ctx_throw = 1 << 1;
     const uint32_t error_ctx_mbox  = 1 << 2;
 
-    enum cam_target_view_t : size_t {
-      tv_x_axis,
-      tv_y_axis,
-      tv_z_axis,
-      tv_cart_center,
-      tv_a_axis,
-      tv_b_axis,
-      tv_c_axis,
-      tv_a_star_axis,
-      tv_b_star_axis,
-      tv_c_star_axis,
+    // camera target view
+    enum cam_tv_e : size_t {
+      tv_x,
+      tv_y,
+      tv_z,
+      tv_cc,
+      tv_a,
+      tv_b,
+      tv_c,
+      tv_as,
+      tv_bs,
+      tv_cs,
       tv_auto
     };
 

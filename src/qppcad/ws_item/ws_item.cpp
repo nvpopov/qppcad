@@ -23,7 +23,7 @@ void ws_item_t::set_pos(vector3<float> new_pos) {
 
 }
 
-void ws_item_t::target_view(cam_target_view_t target_view,
+void ws_item_t::target_view(cam_tv_e target_view,
                             vector3<float> &look_from,
                             vector3<float> &look_to,
                             vector3<float> &look_up,
@@ -31,7 +31,7 @@ void ws_item_t::target_view(cam_target_view_t target_view,
 
 }
 
-void ws_item_t::apply_target_view(cam_target_view_t target_view_src) {
+void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
 
   app_state_t* astate = app_state_t::get_inst();
 
