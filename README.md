@@ -1,4 +1,4 @@
-# ![](/data/images/icon_big.png) qpp::cad
+# ![](/data/images/icon_big.png)
 ![qppcad_collage](/docs/images/qppcad_coolage.jpg)
 ### current status - under construction
  molecule and crystal editor written in c++
