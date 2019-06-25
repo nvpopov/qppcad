@@ -11,11 +11,9 @@ void ccd_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       ccd_view_t *dp = _binding_item->cast_as<ccd_view_t>();
 
       if (dp) {
-          // std::cout << "accepted ccd_view_t in ::bind_to_item" << std::endl;
           b_ccdv = dp;
         }
       else {
-          //std::cout << "ALL IS WRONG" << std::endl;
           b_ccdv = nullptr;
         }
 
@@ -59,6 +57,7 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
         case comp_chem_program_run_e::rt_vib :
           set_tab_enabled(tab_vibs, true);
           set_tab_enabled(tab_geo_opt, false);
+          update_vib_anal();
           break;
 
         default :
@@ -112,6 +111,28 @@ void ccd_view_obj_insp_widget_t::update_geo_opt_step_info_lbl() {
 
 }
 
+void ccd_view_obj_insp_widget_t::update_vib_anal() {
+
+  normal_modes_list_wdgt->blockSignals(true);
+  normal_modes_list_wdgt->clear();
+
+  if (b_ccdv) {
+
+      for (size_t i = 0; i < b_ccdv->m_ccd->m_vibs.size(); i++)
+        normal_modes_list_wdgt->addItem(QString("[%1] Freq. = %2 cm-1, Intens. = %3")
+                                        .arg(i)
+                                        .arg(b_ccdv->m_ccd->m_vibs[i].m_frequency)
+                                        .arg(b_ccdv->m_ccd->m_vibs[i].m_intensity));
+
+      if (b_ccdv->m_cur_vib >= 0 && b_ccdv->m_cur_vib < normal_modes_list_wdgt->count())
+        normal_modes_list_wdgt->setCurrentRow(b_ccdv->m_cur_vib);
+
+    }
+
+  normal_modes_list_wdgt->blockSignals(false);
+
+}
+
 ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -145,8 +166,19 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   gb_normal_modes_lt = new QVBoxLayout;
   gb_normal_modes->add_content_layout(gb_normal_modes_lt);
 
+  normal_modes_list_wdgt = new QListWidget;
+  normal_modes_list_wdgt->setSizePolicy(
+        QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)
+        );
+  connect(normal_modes_list_wdgt,
+          &QListWidget::currentRowChanged,
+          this,
+          &ccd_view_obj_insp_widget_t::vib_anal_current_row_changed);
+
+  gb_normal_modes_lt->addWidget(normal_modes_list_wdgt);
+
   tab_vibs->tab_inner_widget_lt->addWidget(gb_normal_modes);
-  tab_vibs->tab_inner_widget_lt->addStretch(0);
+  //tab_vibs->tab_inner_widget_lt->addStretch(0);
 
   //tab geo opt
   tgo_select_step = new qspoiler_widget_t(tr("Geometry optimization step"));
@@ -329,5 +361,21 @@ void ccd_view_obj_insp_widget_t::ui_step_to_the_end() {
   update_geo_opt_step_info_lbl();
   ui_cur_selected_step_item_changed();
 
+
+}
+
+void ccd_view_obj_insp_widget_t::vib_anal_current_row_changed(int current_row) {
+
+  if (b_ccdv &&
+      (b_ccdv->m_ccd->m_run_t == comp_chem_program_run_e::rt_vib ||
+       b_ccdv->m_ccd->m_run_t == comp_chem_program_run_e::rt_raman) &&
+      !b_ccdv->m_ccd->m_vibs.empty() &&
+      current_row >= 0 &&
+      current_row < b_ccdv->m_ccd->m_vibs.size()) {
+
+        b_ccdv->m_cur_vib = current_row;
+        b_ccdv->update_connected_items();
+
+    }
 
 }

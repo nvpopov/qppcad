@@ -76,7 +76,16 @@ void ccd_view_t::update_connected_items() {
 
       }
 
-    case comp_chem_program_run_e::rt_vib : {
+    case comp_chem_program_run_e::rt_vib : case comp_chem_program_run_e::rt_raman : {
+        for (auto con_itm : m_connected_items)
+          if (auto as_gv = con_itm->cast_as<geom_view_t>();
+              as_gv &&
+              as_gv->m_anim->animable() &&
+              as_gv->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1 &&
+              as_gv->m_anim->m_anim_data[m_cur_vib+1].m_anim_type == geom_anim_t::anim_vib) {
+              as_gv->m_anim->update_and_set_anim(m_cur_vib+1, 0);
+              as_gv->m_anim->m_play_anim = true;
+            }
         break;
       }
 

@@ -53,6 +53,7 @@ namespace qpp {
 
         qspoiler_widget_t *gb_normal_modes;
         QVBoxLayout *gb_normal_modes_lt;
+        QListWidget *normal_modes_list_wdgt;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
@@ -61,6 +62,8 @@ namespace qpp {
         void update_geo_opt();
         void update_geo_opt_step_info();
         void update_geo_opt_step_info_lbl();
+
+        void update_vib_anal();
         ccd_view_obj_insp_widget_t();
 
       public slots:
@@ -70,6 +73,8 @@ namespace qpp {
         void ui_step_backward();
         void ui_step_to_the_begin();
         void ui_step_to_the_end();
+
+        void vib_anal_current_row_changed(int current_row);
 
     };
 
