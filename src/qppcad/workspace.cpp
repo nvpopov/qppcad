@@ -868,27 +868,32 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!QFileInfo(QString::fromStdString(file_name)).exists()) {
+  //restore file`s absolute path
+  QFileInfo file_info(QString::fromStdString(file_name));
+  QString absolute_file_name = file_info.absoluteFilePath();
+  auto absolute_file_name_native = absolute_file_name.toStdString();
+
+  if (!QFileInfo(absolute_file_name).exists()) {
       astate->tlog("@ERROR while opening file \"{}\" - invalid name of the file", file_name);
       return;
     }
 
   if (file_name.find("json") != std::string::npos ||
       file_format.find("json") != std::string::npos) {
-      load_from_file(file_name, false);
+      load_from_file(absolute_file_name_native, false);
     } else {
       //do autodeduce magic
       if (!file_format.empty()) {
-          auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
+          auto ff = m_bhv_mgr->get_ff_by_short_name(absolute_file_name_native);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-              if (bhv_id) import_from_file(file_name, *bhv_id, create_new_ws);
+              if (bhv_id) import_from_file(absolute_file_name_native, *bhv_id, create_new_ws);
             }
         } else {
-          auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
+          auto ff = m_bhv_mgr->get_ff_by_finger_print(absolute_file_name_native);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-              if (bhv_id) import_from_file(file_name, *bhv_id, create_new_ws);
+              if (bhv_id) import_from_file(absolute_file_name_native, *bhv_id, create_new_ws);
             }
         }
     }
