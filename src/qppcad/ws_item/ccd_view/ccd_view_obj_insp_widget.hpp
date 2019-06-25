@@ -51,9 +51,9 @@ namespace qpp {
         QLabel *tgo_step_info_gr_norm;
         qbinded_combobox_t *tgo_step_copy_charges;
 
-        qspoiler_widget_t *gb_normal_modes;
-        QVBoxLayout *gb_normal_modes_lt;
-        QListWidget *normal_modes_list_wdgt;
+        qspoiler_widget_t *gb_vib_modes;
+        QVBoxLayout *gb_vib_modes_lt;
+        QListWidget *vib_modes_list_wdgt;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;

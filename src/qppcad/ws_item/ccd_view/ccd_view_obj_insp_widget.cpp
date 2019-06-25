@@ -113,23 +113,23 @@ void ccd_view_obj_insp_widget_t::update_geo_opt_step_info_lbl() {
 
 void ccd_view_obj_insp_widget_t::update_vib_anal() {
 
-  normal_modes_list_wdgt->blockSignals(true);
-  normal_modes_list_wdgt->clear();
+  vib_modes_list_wdgt->blockSignals(true);
+  vib_modes_list_wdgt->clear();
 
   if (b_ccdv) {
 
       for (size_t i = 0; i < b_ccdv->m_ccd->m_vibs.size(); i++)
-        normal_modes_list_wdgt->addItem(QString("[%1] Freq. = %2 cm-1, Intens. = %3")
+        vib_modes_list_wdgt->addItem(QString("[%1] Freq. = %2 cm-1, Intens. = %3")
                                         .arg(i)
                                         .arg(b_ccdv->m_ccd->m_vibs[i].m_frequency)
                                         .arg(b_ccdv->m_ccd->m_vibs[i].m_intensity));
 
-      if (b_ccdv->m_cur_vib >= 0 && b_ccdv->m_cur_vib < normal_modes_list_wdgt->count())
-        normal_modes_list_wdgt->setCurrentRow(b_ccdv->m_cur_vib);
+      if (b_ccdv->m_cur_vib >= 0 && b_ccdv->m_cur_vib < vib_modes_list_wdgt->count())
+        vib_modes_list_wdgt->setCurrentRow(b_ccdv->m_cur_vib);
 
     }
 
-  normal_modes_list_wdgt->blockSignals(false);
+  vib_modes_list_wdgt->blockSignals(false);
 
 }
 
@@ -162,23 +162,23 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);
   tab_general->tab_inner_widget_lt->addStretch(0);
 
-  gb_normal_modes = new qspoiler_widget_t(tr("Normal modes"));
-  gb_normal_modes_lt = new QVBoxLayout;
-  gb_normal_modes->add_content_layout(gb_normal_modes_lt);
+  gb_vib_modes = new qspoiler_widget_t(tr("Vibrational modes"));
+  gb_vib_modes_lt = new QVBoxLayout;
+  gb_vib_modes->add_content_layout(gb_vib_modes_lt);
 
-  normal_modes_list_wdgt = new QListWidget;
-  normal_modes_list_wdgt->setSizePolicy(
+  vib_modes_list_wdgt = new QListWidget;
+  vib_modes_list_wdgt->setSizePolicy(
         QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)
         );
-  connect(normal_modes_list_wdgt,
+  connect(vib_modes_list_wdgt,
           &QListWidget::currentRowChanged,
           this,
           &ccd_view_obj_insp_widget_t::vib_anal_current_row_changed);
 
-  gb_normal_modes_lt->addWidget(normal_modes_list_wdgt);
+  gb_vib_modes_lt->addWidget(vib_modes_list_wdgt);
 
-  tab_vibs->tab_inner_widget_lt->addWidget(gb_normal_modes);
-  //tab_vibs->tab_inner_widget_lt->addStretch(0);
+  tab_vibs->tab_inner_widget_lt->addWidget(gb_vib_modes);
+  tab_vibs->tab_inner_widget_lt->addStretch(1);
 
   //tab geo opt
   tgo_select_step = new qspoiler_widget_t(tr("Geometry optimization step"));
