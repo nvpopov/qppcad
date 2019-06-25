@@ -209,7 +209,7 @@ namespace qpp {
                   std::make_shared<ccd_view_t>();
               extracted_ccd->m_name = _item->m_name+"_ccd";
               extracted_ccd->m_ccd =
-                  std::make_unique<comp_chem_program_data_t<float> >(std::move(cc_inst));
+                  std::make_shared<comp_chem_program_data_t<float> >(std::move(cc_inst));
               extracted_ccd->m_connected_items.push_back(_item->shared_from_this());
               extracted_ccd->m_connected_items_stride.push_back(0);
               _item->m_parent_ws->add_item_to_ws(extracted_ccd);

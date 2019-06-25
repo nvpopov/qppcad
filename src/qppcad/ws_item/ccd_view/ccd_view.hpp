@@ -23,7 +23,7 @@ namespace qpp {
 
       public:
 
-        std::unique_ptr<comp_chem_program_data_t<float> > m_ccd{nullptr};
+        std::shared_ptr<comp_chem_program_data_t<float> > m_ccd{nullptr};
         std::vector<size_t> m_connected_items_stride;
 
         int m_cur_step{0};
