@@ -139,6 +139,14 @@ namespace qpp {
 
       settings.beginGroup("general_settings");
       m_console_font_size = settings.value("console_font_size", 16).toInt();
+
+      //loading fixtures dir
+      QString fixtures_dir = settings.value("fixtures_dir").toString();
+      if (fixtures_dir.size() != 0) {
+          m_fixtures_dir = fixtures_dir.toStdString();
+          m_fixtures_dir_is_set = true;
+        }
+
       settings.endGroup();
 
       settings.beginGroup("render");
@@ -243,8 +251,15 @@ namespace qpp {
       QSettings settings;
       settings.setValue("test", 68);
 
+      // general settings
       settings.beginGroup("general_settings");
       settings.setValue("console_font_size", m_console_font_size);
+
+      if (m_fixtures_dir_is_set) {
+         settings.setValue("fixtures_dir", QString::fromStdString(m_fixtures_dir));
+        }
+      // end of general settings
+
       settings.endGroup();
 
       settings.beginGroup("render");
@@ -371,6 +386,26 @@ namespace qpp {
       if (QFileInfo::exists(QString::fromStdString(file_name)) &&
           QFileInfo(QString::fromStdString(file_name)).isFile())
         m_recent_files.emplace_back(file_name, ff_id, is_native);
+    }
+
+    void app_state_t::init_fixtures() {
+
+      // try to use ${USER}/.qppcad
+      if (!m_fixtures_dir_is_set) {
+          QString home_path = QDir::homePath();
+          QString qc_home_path = QString("%1/.qppcad").arg(home_path);
+          QDir si_qc_home_path(qc_home_path);
+          m_fixtures_dir = si_qc_home_path.path().toStdString();
+          m_fixtures_dir_is_set = true;
+        }
+
+      if (!m_fixtures_dir_is_set) {
+          tlog("Fixture dir is not set!");
+          return;
+        }
+
+      tlog("Fixtures dir = {}", m_fixtures_dir);
+
     }
 
     app_state_t* app_state_t::g_inst = nullptr;

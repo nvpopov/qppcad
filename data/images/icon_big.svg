@@ -15,8 +15,11 @@
    version="1.1"
    id="SVGRoot"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="icon _big.svg"
-   style="shape-rendering:crispEdges">
+   sodipodi:docname="icon_big.svg"
+   style="shape-rendering:crispEdges"
+   inkscape:export-filename="/usr/ssd/qppcad/data/images/icon_big.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -24,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="-128.1508"
-     inkscape:cy="-57.376956"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="-30.873136"
+     inkscape:cy="24.158813"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -49,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -68,13 +71,13 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:54.5190506px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#4f3845;stroke-width:0.82816577;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.97630334"
        x="9.0569315"
-       y="-18.594429"
+       y="-20.602318"
        id="text820"
        transform="scale(0.94652798,1.0564928)"><tspan
          sodipodi:role="line"
          id="tspan818"
          x="9.0569315"
-         y="-18.594429"
+         y="-20.602318"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:54.51870346px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#4f3845;stroke-width:0.82816577;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.97630334">qpp</tspan></text>
   </g>
 </svg>

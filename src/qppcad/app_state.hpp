@@ -11,11 +11,13 @@
 #include <qppcad/app_state_event_disp.hpp>
 #include <qppcad/python/python_manager.hpp>
 #include <qppcad/string_hash_register.hpp>
+#include <qppcad/ui/size_guide.hpp>
+#include <qppcad/fixture.hpp>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QString>
 #include <QPalette>
-#include <qppcad/ui/size_guide.hpp>
+
 
 namespace qpp {
 
@@ -91,6 +93,8 @@ namespace qpp {
                              const bool is_native,
                              const size_t bhv_id);
 
+        void init_fixtures();
+
         size_t m_utility_thread_count;
 
         app_state_event_disp_t *astate_evd;
@@ -135,6 +139,10 @@ namespace qpp {
 
         std::vector<recent_file_record_t> m_recent_files;
         // //       std::map<std::string, color_map_t> m_color_maps;
+
+        std::string m_fixtures_dir;
+        bool m_fixtures_dir_is_set{false};
+
         QString m_last_dir;
         QString m_font_name;
         QString m_screen_shots_dir{"."};
