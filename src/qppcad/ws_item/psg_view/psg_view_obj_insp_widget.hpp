@@ -35,6 +35,7 @@ namespace qpp {
         qbinded_checkbox_t *disp_vs_show_planes;
 
         qbinded_float_spinbox_t *disp_vs_plane_scale;
+        qbinded_float_spinbox_t *disp_vs_plane_alpha;
         qbinded_float_spinbox_t *disp_vs_arrow_len;
         qbinded_float_spinbox_t *disp_vs_arrow_scale;
         qbinded_float_spinbox_t *disp_vs_arrow_cap_len;

@@ -35,6 +35,10 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   disp_vs_arrow_cap_scale->set_min_max_step(0.01, 20, 0.05);
   disp_vs_arrow_cap_scale->m_updated_externally_event = true;
 
+  disp_vs_plane_alpha = new qbinded_float_spinbox_t;
+  disp_vs_plane_alpha->set_min_max_step(0.01, 1.0, 0.01);
+  disp_vs_plane_alpha->m_updated_externally_event = true;
+
   disp_vs_plane_color = new qbinded_color3_input_t;
   disp_vs_plane_color->m_updated_externally_event = true;
 
@@ -56,6 +60,7 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   gb_psg_view_settings_lt->addRow(tr("Show planes"), disp_vs_show_planes);
   gb_psg_view_settings_lt->addRow(tr("Plane transp."), disp_vs_plane_alpha_enabled);
   gb_psg_view_settings_lt->addRow(tr("Plane scale"), disp_vs_plane_scale);
+  gb_psg_view_settings_lt->addRow(tr("Plane alpha"), disp_vs_plane_alpha);
   gb_psg_view_settings_lt->addRow(tr("Arrow length"), disp_vs_arrow_len);
   gb_psg_view_settings_lt->addRow(tr("Arrow scale"), disp_vs_arrow_scale);
   gb_psg_view_settings_lt->addRow(tr("Cap length"), disp_vs_arrow_cap_len);
@@ -99,6 +104,7 @@ void psg_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
       disp_vs_plane_alpha_enabled->bind_value(&b_pg->m_plane_alpha_enabled, b_pg);
       disp_vs_plane_scale->bind_value(&b_pg->m_plane_scale, b_pg);
+      disp_vs_plane_alpha->bind_value(&b_pg->m_plane_alpha, b_pg);
       disp_vs_arrow_len->bind_value(&b_pg->m_arrow_len, b_pg);
       disp_vs_arrow_scale->bind_value(&b_pg->m_arrow_scale, b_pg);
       disp_vs_arrow_cap_len->bind_value(&b_pg->m_arrow_cap_len, b_pg);
@@ -140,6 +146,8 @@ void psg_view_obj_insp_widget_t::unbind_item() {
 
   disp_vs_plane_alpha_enabled->unbind_value();
   disp_vs_plane_scale->unbind_value();
+  disp_vs_plane_alpha->unbind_value();
+
   disp_vs_arrow_len->unbind_value();
   disp_vs_arrow_scale->unbind_value();
   disp_vs_arrow_cap_len->unbind_value();
