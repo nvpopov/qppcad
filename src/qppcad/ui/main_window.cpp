@@ -1812,11 +1812,16 @@ void main_window_t::control_bhv_menus_activity() {
 
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
 
-  if (!ok) {
+  if (cur_ws) {
+    file_menu_import_to_cur_ws->setEnabled(true);
+    } else {
     file_menu_import_to_cur_ws->setEnabled(false);
+  }
+
+  if (!ok) {
+    //
     file_menu_export_sel_as->setEnabled(false);
   } else {
-    file_menu_import_to_cur_ws->setEnabled(true);
     if (cur_it) {
         file_menu_export_sel_as->setEnabled(true);
         for (auto &exp_act : file_menu_export_sel_as_acts) {
