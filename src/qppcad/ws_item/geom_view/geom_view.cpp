@@ -124,7 +124,9 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
   if (new_target_view == cam_tv_e::tv_auto) {
       if (m_geom->DIM == 3) new_target_view = cam_tv_e::tv_a;
-      else new_target_view = cam_tv_e::tv_x;
+      else {
+          new_target_view = cam_tv_e::tv_x;
+        }
     }
 
   switch (new_target_view) {

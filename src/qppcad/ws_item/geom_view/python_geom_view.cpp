@@ -232,8 +232,7 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("total_charge", &geom_view_t::total_charge);
   py_atoms_list_t.def("get_charge_partition", &geom_view_t::py_get_charge_partition);
 
-  py_atoms_list_t.def("ext_min", [](geom_view_t &src){return src.m_ext_obs->aabb.min;});
-  py_atoms_list_t.def("ext_max", [](geom_view_t &src){return src.m_ext_obs->aabb.max;});
+  py_atoms_list_t.def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;});
 
   py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);
   py_atoms_list_t.def_readonly("lbl", &geom_view_t::m_labels);

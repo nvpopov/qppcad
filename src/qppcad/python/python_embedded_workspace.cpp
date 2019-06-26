@@ -160,6 +160,13 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr);
 
+  py::class_<aabb_3d_t<float>, std::shared_ptr<aabb_3d_t<float>>> py_aabb_3d_t(m, "aabb_3d_t");
+  py_aabb_3d_t.def_readwrite("min", &aabb_3d_t<float>::min);
+  py_aabb_3d_t.def_readwrite("max", &aabb_3d_t<float>::max);
+  py_aabb_3d_t.def("cnt", &aabb_3d_t<float>::center);
+  py_aabb_3d_t.def("tst_sph", &aabb_3d_t<float>::test_sphere);
+  py_aabb_3d_t.def("vol", &aabb_3d_t<float>::volume);
+
   py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> py_ws_item_t(m, "ws_item_t");
   py_ws_item_t
           .def_readwrite("name", &ws_item_t::m_name)
@@ -185,8 +192,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
           .def("__str__", &ws_item_t::py_get_repr)
           .def("apply_tv", &ws_item_t::apply_target_view)
           .def_readwrite("offset", &ws_item_t::m_leader_offset)
-          .def("bb_min", [](ws_item_t &src){return src.m_aabb.min;})
-          .def("bb_max", [](ws_item_t &src){return src.m_aabb.max;});
+          .def("bb", [](ws_item_t &src){return src.m_aabb;});
 
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);
   py_ccd_view_reg_helper_t::reg(m, py_ws_item_t);
