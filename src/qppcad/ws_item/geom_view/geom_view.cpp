@@ -123,10 +123,11 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   auto new_target_view = target_view_src;
 
   if (new_target_view == cam_tv_e::tv_auto) {
-      if (m_geom->DIM == 3) new_target_view = cam_tv_e::tv_a;
-      else {
-          new_target_view = cam_tv_e::tv_x;
-        }
+      if (m_geom->DIM != 0) new_target_view = cam_tv_e::tv_a;
+      else if (m_ext_obs->aabb.center().isApprox(vector3<float>{0}, 0.001f))
+        new_target_view = cam_tv_e::tv_x;
+      else
+        new_target_view = cam_tv_e::tv_cc;
     }
 
   switch (new_target_view) {
