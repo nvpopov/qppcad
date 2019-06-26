@@ -184,7 +184,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
           .def("__repr__", &ws_item_t::py_get_repr)
           .def("__str__", &ws_item_t::py_get_repr)
           .def("apply_tv", &ws_item_t::apply_target_view)
-          .def_readwrite("offset", &ws_item_t::m_leader_offset);
+          .def_readwrite("offset", &ws_item_t::m_leader_offset)
+          .def("bb_min", [](ws_item_t &src){return src.m_aabb.min;})
+          .def("bb_max", [](ws_item_t &src){return src.m_aabb.max;});
 
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);
   py_ccd_view_reg_helper_t::reg(m, py_ws_item_t);
