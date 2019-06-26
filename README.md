@@ -1,4 +1,5 @@
 # ![](/data/images/icon_big.png)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3257105.svg)](https://doi.org/10.5281/zenodo.3257105)
 ![qppcad_collage](/docs/images/qppcad_coolage.jpg)
 ### current status - under construction
  molecule and crystal editor written in c++
@@ -42,3 +43,4 @@ apt install libpython3-dev
 
 ### CI Status
 1. Travis CI [![Build Status](https://travis-ci.org/nvpopov/qppcad.svg?branch=master)](https://travis-ci.org/nvpopov/qppcad)
+
