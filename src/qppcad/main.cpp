@@ -55,13 +55,16 @@ int main (int argc, char **argv) {
       if (parser.isSet(target_fmt_option))
         file_format = parser.value(target_fmt_option).toStdString();
 
-      for (auto &rec : args)
-        astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format);
+      for (auto &rec : args) {
+          astate->tlog("@DEBUG: passed to load_from_file_autodeduce, path={}, ff={}",
+                       rec.toStdString(), file_format);
+          astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format);
+        }
 
     } else {
 
       if (parser.isSet(target_fmt_option)) {
-          astate->tlog("Invalid input");
+          astate->tlog("ERROR: Invalid input");
           return 0;
         }
 

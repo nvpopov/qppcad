@@ -873,6 +873,9 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
   QString absolute_file_name = file_info.absoluteFilePath();
   auto absolute_file_name_native = absolute_file_name.toStdString();
 
+  astate->tlog("@DEBUG: workspace_manager_t::load_from_file_autodeduce, {}",
+               absolute_file_name.toStdString());
+
   if (!QFileInfo(absolute_file_name).exists()) {
       astate->tlog("@ERROR while opening file \"{}\" - invalid name of the file", file_name);
       return;
@@ -884,13 +887,13 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
     } else {
       //do autodeduce magic
       if (!file_format.empty()) {
-          auto ff = m_bhv_mgr->get_ff_by_short_name(absolute_file_name_native);
+          auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
               if (bhv_id) import_from_file(absolute_file_name_native, *bhv_id, create_new_ws);
             }
         } else {
-          auto ff = m_bhv_mgr->get_ff_by_finger_print(absolute_file_name_native);
+          auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
           if (ff) {
               auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
               if (bhv_id) import_from_file(absolute_file_name_native, *bhv_id, create_new_ws);
