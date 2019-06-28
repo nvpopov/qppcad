@@ -1,16 +1,16 @@
 #ifndef QPPCAD_WS_COMP_CHEM_DATA
 #define QPPCAD_WS_COMP_CHEM_DATA
 
-#include <qppcad/qppcad.hpp>
-#include <qppcad/ws_item/ws_item.hpp>
-#include <io/comp_chem_data.hpp>
-
 #pragma push_macro("slots")
 #undef slots
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 namespace py = pybind11;
+
+#include <qppcad/qppcad.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
+#include <io/comp_chem_data.hpp>
 
 namespace qpp {
 

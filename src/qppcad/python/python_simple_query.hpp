@@ -1,10 +1,6 @@
 #ifndef QPPCAD_PYTHON_SQ_H
 #define QPPCAD_PYTHON_SQ_H
 
-#include <qppcad/qppcad.hpp>
-#include <geom/lace3d.hpp>
-#include <qppcad/workspace.hpp>
-
 #pragma push_macro("slots")
 #undef slots
 #include <pybind11/pybind11.h>
@@ -13,6 +9,10 @@
 #pragma pop_macro("slots")
 
 namespace py = pybind11;
+
+#include <qppcad/qppcad.hpp>
+#include <geom/lace3d.hpp>
+#include <qppcad/workspace.hpp>
 
 namespace qpp {
 

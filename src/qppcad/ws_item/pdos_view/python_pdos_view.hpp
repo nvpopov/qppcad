@@ -6,11 +6,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
+namespace py = pybind11;
 
 #include <qppcad/ws_item/pdos_view/pdos_view.hpp>
 #include <qppcad/ws_item/ws_item_trampoline.hpp>
-
-namespace py = pybind11;
 
 namespace qpp {
 

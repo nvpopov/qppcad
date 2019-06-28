@@ -1,5 +1,12 @@
 #ifndef QPP_CAD_PDOS_VIEW
 #define QPP_CAD_PDOS_VIEW
+
+#pragma push_macro("slots")
+#undef slots
+#include <pybind11/pybind11.h>
+#pragma pop_macro("slots")
+namespace py = pybind11;
+
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <io/pdos.hpp>
@@ -7,14 +14,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 
-#pragma push_macro("slots")
-#undef slots
-#include <pybind11/pybind11.h>
-#pragma pop_macro("slots")
-
 QT_CHARTS_USE_NAMESPACE
-
-namespace py = pybind11;
 
 namespace qpp {
 

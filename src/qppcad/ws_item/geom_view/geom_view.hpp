@@ -1,6 +1,13 @@
 #ifndef QPPCAD_GEOM_VIEW_H
 #define QPPCAD_GEOM_VIEW_H
 
+#pragma push_macro("slots")
+#undef slots
+#include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
+#pragma pop_macro("slots")
+namespace py = pybind11;
+
 #include <qppcad/qppcad.hpp>
 #include <geom/xgeom.hpp>
 #include <geom/geom_anim.hpp>
@@ -13,13 +20,6 @@
 #include <qppcad/render/camera.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_render_buffered_billboards.hpp>
 #include <deque>
-
-#pragma push_macro("slots")
-#undef slots
-#include <pybind11/pybind11.h>
-#include <pybind11/embed.h>
-#pragma pop_macro("slots")
-namespace py = pybind11;
 
 namespace qpp {
 

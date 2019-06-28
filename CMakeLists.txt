@@ -164,6 +164,7 @@ add_executable(
     deps/qpp/modules/pyqpp/pyqpp_cell.cpp
     deps/qpp/modules/pyqpp/pyqpp_autosymm.cpp
     deps/qpp/modules/pyqpp/pyqpp_builders.cpp
+    deps/qpp/modules/pyqpp/pyqpp_ccd.cpp
     deps/qpp/modules/data/errors.cpp
 
     ${SRC_RENDER}

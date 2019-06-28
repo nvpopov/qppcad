@@ -1,13 +1,13 @@
 #ifndef QPPCAD_PYTHON_MANAGER_H
 #define QPPCAD_PYTHON_MANAGER_H
 
-#include <qppcad/qppcad.hpp>
-
 #pragma push_macro("slots")
 #undef slots
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
+
+#include <qppcad/qppcad.hpp>
 
 #include <QStringList>
 #include <QString>

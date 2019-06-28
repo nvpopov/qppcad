@@ -16,6 +16,7 @@ void pyqpp_geom_export(py::module m);
 void pyqpp_xgeom_export(py::module m);
 void pyqpp_builders_export(py::module m);
 void pyqpp_autosymm_export(py::module m);
+void pyqpp_ccd_export(py::module m);
 
 qpp::xgeometry<float, qpp::periodic_cell<float>  >* claim_xgeom() {
 
@@ -35,12 +36,14 @@ qpp::xgeometry<float, qpp::periodic_cell<float>  >* claim_xgeom() {
 }
 
 PYBIND11_EMBEDDED_MODULE(pyqpp, m) {
+
   pyqpp_linalg_export(m);
   pyqpp_cell_export(m);
   pyqpp_geom_export(m);
   pyqpp_xgeom_export(m);
   pyqpp_autosymm_export(m);
   pyqpp_builders_export(m);
-
+  pyqpp_ccd_export(m);
   m.def("claim_xgeom", &claim_xgeom, py::return_value_policy::reference);
+
 }
