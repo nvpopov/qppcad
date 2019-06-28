@@ -176,6 +176,30 @@ namespace qpp {
 
     };
 
+    class qbinded_float2_input_t : public QWidget, public generic_binded_input_t<vector2<float> > {
+
+      Q_OBJECT
+
+    public:
+
+      QHBoxLayout *widget_layout;
+
+      QDoubleSpinBox *sb_x;
+      QDoubleSpinBox *sb_y;
+
+      void load_value_ex() override;
+      void set_min_max_step(double min, double max, double step);
+      void set_suffix(QString &new_suffix);
+      void set_empty_suffix();
+      void set_default_suffix();
+      qbinded_float2_input_t(QWidget *parent = nullptr);
+
+    private slots:
+
+      void spinbox_value_changed(double newval);
+
+    };
+
     class qbinded_float3_input_t : public QWidget, public generic_binded_input_t<vector3<float> > {
 
         Q_OBJECT

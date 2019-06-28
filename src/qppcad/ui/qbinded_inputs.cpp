@@ -758,3 +758,88 @@ void qbinded_int2b_input_t::spinbox_value_changed(int newval) {
     }
 
 }
+
+void qbinded_float2_input_t::load_value_ex() {
+
+  if (m_binded_value) {
+      sb_x->setValue((*m_binded_value)[0]);
+      sb_y->setValue((*m_binded_value)[1]);
+    }
+}
+
+void qbinded_float2_input_t::set_min_max_step(double min, double max, double step) {
+
+  sb_x->setMinimum(min);
+  sb_x->setMaximum(max);
+  sb_x->setSingleStep(step);
+
+  sb_y->setMinimum(min);
+  sb_y->setMaximum(max);
+  sb_y->setSingleStep(step);
+
+}
+
+void qbinded_float2_input_t::set_suffix(QString &new_suffix) {
+
+  sb_x->setSuffix(new_suffix);
+  sb_y->setSuffix(new_suffix);
+
+}
+
+void qbinded_float2_input_t::set_empty_suffix() {
+
+  sb_x->setSuffix("");
+  sb_y->setSuffix("");
+
+}
+
+void qbinded_float2_input_t::set_default_suffix() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  set_suffix(astate->m_spatial_suffix);
+
+}
+
+qbinded_float2_input_t::qbinded_float2_input_t(QWidget *parent) {
+
+  widget_layout = new QHBoxLayout;
+  setLayout(widget_layout);
+  widget_layout->setContentsMargins(2, 2, 8, 2);
+
+  auto make_spinbox = [](){
+      auto ret = new QDoubleSpinBox;
+      ret->setFixedWidth(40);
+      ret->setAlignment(Qt::AlignCenter);
+      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      return ret;
+    };
+
+  sb_x = make_spinbox();
+  sb_y = make_spinbox();
+
+  widget_layout->addWidget(sb_x);
+  widget_layout->addWidget(sb_y);
+  widget_layout->addStretch(0);
+
+  connect(sb_x,
+          static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          this,
+          &qbinded_float2_input_t::spinbox_value_changed);
+
+  connect(sb_y,
+          static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+          this,
+          &qbinded_float2_input_t::spinbox_value_changed);
+
+}
+
+void qbinded_float2_input_t::spinbox_value_changed(double newval) {
+
+  if (m_binded_value && !m_ignore_state_change) {
+      (*m_binded_value)[0] = sb_x->value();
+      (*m_binded_value)[1] = sb_y->value();
+      on_value_changed();
+      app_state_t::get_inst()->make_viewport_dirty();
+    }
+
+}
