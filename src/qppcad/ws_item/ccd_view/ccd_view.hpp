@@ -5,6 +5,13 @@
 #include <qppcad/ws_item/ws_item.hpp>
 #include <io/comp_chem_data.hpp>
 
+#pragma push_macro("slots")
+#undef slots
+#include <pybind11/pybind11.h>
+#include <pybind11/embed.h>
+#pragma pop_macro("slots")
+namespace py = pybind11;
+
 namespace qpp {
 
   namespace cad {
@@ -14,6 +21,7 @@ namespace qpp {
       copy_mulliken,
       copy_lowdin
     };
+
 
     class geom_view_t;
 
@@ -55,6 +63,9 @@ namespace qpp {
 
         void traverse_step_manual(int delta_step);
         void traverse_step_boundary(bool to_the_begin);
+
+        std::vector<size_t> query_vib_by_atoms(std::vector<size_t> atoms, float gate);
+        py::list py_query_vib_by_atoms(py::list atoms, float gate);
 
     };
 

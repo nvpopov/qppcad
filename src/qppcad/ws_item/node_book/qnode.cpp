@@ -200,7 +200,7 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
   m_dh_o = 2 * m_socket_size * num_outs() + m_socket_spacing * (num_outs() - 1);
   m_dm_o = (h - m_dh_o) / 2;
 
-  if (is_single_node) { // TODO: ?????? Does saying, or even thinking a demon's name summon it?
+  if (is_single_node) {
       m_dm_i = m_inplace_wdgt->height() + m_socket_size / 2;
       m_dm_o = m_inplace_wdgt->height() + m_socket_size / 2;
     }

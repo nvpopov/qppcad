@@ -210,3 +210,37 @@ void ccd_view_t::traverse_step_boundary(bool to_the_begin) {
   (to_the_begin ? m_cur_step = 0 : m_cur_step = m_ccd->m_steps.size() - 1);
 
 }
+
+std::vector<size_t> ccd_view_t::query_vib_by_atoms(std::vector<size_t> atoms, float gate) {
+
+  std::vector<size_t> ret;
+
+  for (size_t i = 0; i < m_ccd->m_vibs.size(); i++) {
+
+      bool passed = true;
+
+      for (size_t q = 0; q < m_ccd->m_tot_nat; q++)
+        if (m_ccd->m_vibs[i].m_disp[q].norm() < gate) passed = false;
+
+      if (passed) ret.push_back(i);
+
+    }
+
+  return ret;
+
+}
+
+py::list ccd_view_t::py_query_vib_by_atoms(py::list atoms, float gate) {
+
+  py::list ret;
+
+  std::vector<size_t> atomsl;
+  for (auto &elem : atoms)
+    if (py::isinstance<py::int_>(elem)) atomsl.push_back(py::cast<size_t>(elem));
+
+  auto ret_q = query_vib_by_atoms(atomsl, gate);
+  for (auto &rec : ret_q) ret.append(rec);
+
+  return ret;
+
+}

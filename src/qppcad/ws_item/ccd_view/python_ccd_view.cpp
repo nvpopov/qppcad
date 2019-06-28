@@ -19,10 +19,11 @@ void py_ccd_view_reg_helper_t::reg(
           .export_values();
 
   py::class_<comp_chem_program_data_t<float>, std::shared_ptr<comp_chem_program_data_t<float> > >
-  py_comp_chem_program_data_t(module, "comp_chem_program_data_t");
+  py_comp_chem_program_data(module, "comp_chem_program_data_t");
 
   py::class_<ccd_view_t, std::shared_ptr<ccd_view_t> >
   py_ccd_view_t(module, "ccd_view_t", ws_item_base);
   py_ccd_view_t.def_readonly("ccd", &ccd_view_t::m_ccd);
+  py_ccd_view_t.def("query_vib_by_atoms", &ccd_view_t::py_query_vib_by_atoms);
 
 }
