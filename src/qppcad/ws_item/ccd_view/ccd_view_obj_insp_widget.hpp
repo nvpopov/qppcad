@@ -66,6 +66,10 @@ namespace qpp {
         void update_vib_anal();
         ccd_view_obj_insp_widget_t();
 
+      protected:
+
+        void resizeEvent(QResizeEvent *event) override;
+
       public slots:
 
         void ui_cur_selected_step_item_changed();

@@ -163,13 +163,14 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tab_general->tab_inner_widget_lt->addStretch(0);
 
   gb_vib_modes = new qspoiler_widget_t(tr("Vibrational modes"));
+ // gb_vib_modes->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
   gb_vib_modes_lt = new QVBoxLayout;
   gb_vib_modes->add_content_layout(gb_vib_modes_lt);
 
   vib_modes_list_wdgt = new QListWidget;
-  vib_modes_list_wdgt->setSizePolicy(
-        QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)
-        );
+//  vib_modes_list_wdgt->setSizePolicy(
+//        QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)
+//        );
   connect(vib_modes_list_wdgt,
           &QListWidget::currentRowChanged,
           this,
@@ -178,7 +179,7 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   gb_vib_modes_lt->addWidget(vib_modes_list_wdgt);
 
   tab_vibs->tab_inner_widget_lt->addWidget(gb_vib_modes);
-  tab_vibs->tab_inner_widget_lt->addStretch(1);
+  tab_vibs->tab_inner_widget_lt->addStretch(0);
 
   //tab geo opt
   tgo_select_step = new qspoiler_widget_t(tr("Geometry optimization step"));
@@ -255,6 +256,14 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tab_geo_opt->tab_inner_widget_lt->addWidget(tgo_step_info);
   tab_geo_opt->tab_inner_widget_lt->addStretch(1);
   //end tab geo opt
+
+}
+
+void ccd_view_obj_insp_widget_t::resizeEvent(QResizeEvent *event) {
+
+  vib_modes_list_wdgt->setFixedHeight(height() * 0.85);
+
+  ws_item_obj_insp_widget_t::resizeEvent(event);
 
 }
 
