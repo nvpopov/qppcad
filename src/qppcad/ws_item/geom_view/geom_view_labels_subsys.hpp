@@ -30,6 +30,7 @@ namespace qpp {
         int m_lbl_font_size{17};
         geom_labels_style_e m_style{geom_labels_style_e::show_none};
         bool m_render_inplace_hud{false};
+        vector2<float> m_inplace_offset{0.5f,1};
         bool m_selective_lbl{false};
         bool m_screen_scale{false};
         bool m_render_outlines{true};

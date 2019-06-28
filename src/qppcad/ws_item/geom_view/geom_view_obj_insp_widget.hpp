@@ -57,6 +57,7 @@ namespace qpp {
         QFormLayout *gb_disp_labels_lt;
         qbinded_combobox_t *disp_labels_style;
         qbinded_checkbox_t *disp_inplace_labels;
+        qbinded_float2_input_t *disp_inplace_offset;
         qbinded_int_spinbox_t *disp_labels_size;
         qbinded_checkbox_t *disp_sl_labels;
         qbinded_checkbox_t *disp_labels_screen_scale;

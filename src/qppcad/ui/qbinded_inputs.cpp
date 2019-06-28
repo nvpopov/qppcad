@@ -1,4 +1,4 @@
-#include <qppcad/ui/qbinded_inputs.hpp>
+﻿#include <qppcad/ui/qbinded_inputs.hpp>
 #include <qppcad/app_state.hpp>
 #include <QMouseEvent>
 #include <QColorDialog>
@@ -723,7 +723,7 @@ qbinded_int2b_input_t::qbinded_int2b_input_t(QWidget *parent) {
 
   auto make_spinbox = [](){
       auto ret = new QSpinBox;
-      ret->setFixedWidth(40);
+      ret->setFixedWidth(70);
       ret->setAlignment(Qt::AlignCenter);
       ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
       return ret;
@@ -808,9 +808,10 @@ qbinded_float2_input_t::qbinded_float2_input_t(QWidget *parent) {
 
   auto make_spinbox = [](){
       auto ret = new QDoubleSpinBox;
-      ret->setFixedWidth(40);
+      ret->setFixedWidth(70);
       ret->setAlignment(Qt::AlignCenter);
       ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      ret->setLocale(QLocale::C);
       return ret;
     };
 

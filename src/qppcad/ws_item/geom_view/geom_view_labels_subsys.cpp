@@ -146,7 +146,8 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
   int sph_padding = 5;
   int w_w = sh * ntypes_wh + sph_padding * (ntypes_wh+1);
 
-  QRect lrect(w/2 - w_w/2, h - w_h - padding_h, w_w, w_h);
+  QRect lrect(w * m_inplace_offset[0] - w_w/2,
+              h * m_inplace_offset[1] - w_h - padding_h, w_w, w_h);
   QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
   QPen rectpen2(QPen(Qt::black, 2, Qt::SolidLine));
   QPainterPath path;
@@ -168,8 +169,8 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
       if (it != p_owner->m_atom_type_to_hide.end()) continue;
 
       painter.setPen(rectpen);
-      QRect sph(w/2 - w_w/2 + sh * r_i + sph_padding * (r_i+1),
-                h - w_h - padding_h + sph_padding,
+      QRect sph(w * m_inplace_offset[0] - w_w/2 + sh * r_i + sph_padding * (r_i+1),
+                h * m_inplace_offset[1] - w_h - padding_h + sph_padding,
                 sh,
                 sh);
 
