@@ -23,7 +23,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  QPen rectpen(QPen(Qt::black, 1, Qt::SolidLine));
+  QPen rectpen(QPen(Qt::black, m_render_outlines ? m_outline_size : 1, Qt::SolidLine));
   QColor text_fill_color = QColor::fromRgbF(1,1,1);
 
   float _font_size = m_lbl_font_size;
