@@ -199,8 +199,8 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_sl_labels = new qbinded_checkbox_t;
   disp_labels_screen_scale = new qbinded_checkbox_t;
   disp_labels_draw_outline = new qbinded_checkbox_t;
-  disp_labels_outline_size = new qbinded_int_spinbox_t;
-  disp_labels_outline_size->set_min_max_step(1, 20, 1);
+  disp_labels_outline_size = new qbinded_float_spinbox_t;
+  disp_labels_outline_size->set_min_max_step(1, 20, 0.1);
 
   gb_disp_labels_lt->addRow(tr("Labels style"), disp_labels_style);
   gb_disp_labels_lt->addRow(tr("Labels size"), disp_labels_size);

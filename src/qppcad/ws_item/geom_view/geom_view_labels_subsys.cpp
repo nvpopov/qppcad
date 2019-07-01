@@ -23,14 +23,17 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  QPen rectpen(QPen(Qt::black, m_render_outlines ? m_outline_size : 1, Qt::SolidLine));
-  QColor text_fill_color = QColor::fromRgbF(1,1,1);
-
   float _font_size = m_lbl_font_size;
+  float _outline_size = m_outline_size;
+
   if (m_screen_scale) {
       float clmp_os = std::clamp(astate->camera->m_ortho_scale, 1.0f, 20.0f);
       _font_size = m_lbl_font_size * 10 / clmp_os;
+      _outline_size = m_outline_size * 10 / clmp_os;
     }
+
+  QPen rectpen(QPen(Qt::black, m_render_outlines ? _outline_size : 1, Qt::SolidLine));
+  QColor text_fill_color = QColor::fromRgbF(1,1,1);
 
   QFont text_font_lb(astate->m_font_name, int(_font_size), QFont::Weight::Bold);
 
