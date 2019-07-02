@@ -205,3 +205,17 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
     }
 
 }
+
+void geom_view_labels_subsys_t::labelize_sel_by_neighbours_count() {
+
+  if (!p_owner) return;
+
+  for (auto &rec : p_owner->m_atom_idx_sel) {
+      p_owner->m_geom->xfield<std::string>(xgeom_label_text, rec.m_atm) =
+          fmt::format("{}_{}",
+                      p_owner->m_geom->atom_name(rec.m_atm),
+                      p_owner->m_tws_tr->n(rec.m_atm));
+      p_owner->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = true;
+    }
+
+}

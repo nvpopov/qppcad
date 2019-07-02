@@ -102,6 +102,9 @@ void py_geom_view_reg_helper_t::reg(
                                    {src.m_lbl_font_size = value; src.p_owner->update_oi();
                                     app_state_t::get_inst()->make_viewport_dirty();});
 
+  py_geom_view_labels.def("lbl_by_ngb_cnt",
+                          &geom_view_labels_subsys_t::labelize_sel_by_neighbours_count);
+
   py::class_<atom_index_set_key, std::shared_ptr<atom_index_set_key> >
   py_atom_index_set_key(module, "atom_index_set_key_t");
   py_atom_index_set_key.def_readwrite("atm", &atom_index_set_key::m_atm);

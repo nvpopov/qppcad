@@ -41,6 +41,8 @@ namespace qpp {
         void render_labels(QPainter &painter);
         void render_in_place_overlay(QPainter &painter);
 
+        void labelize_sel_by_neighbours_count();
+
     };
 
   } // namespace qpp::cad
