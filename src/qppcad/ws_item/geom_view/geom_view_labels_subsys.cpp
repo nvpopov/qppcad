@@ -210,6 +210,8 @@ void geom_view_labels_subsys_t::labelize_sel_by_neighbours_count() {
 
   if (!p_owner) return;
 
+  m_style = geom_labels_style_e::show_custom;
+
   for (auto &rec : p_owner->m_atom_idx_sel) {
       p_owner->m_geom->xfield<std::string>(xgeom_label_text, rec.m_atm) =
           fmt::format("{}_{}",
