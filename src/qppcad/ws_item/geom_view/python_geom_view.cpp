@@ -104,6 +104,8 @@ void py_geom_view_reg_helper_t::reg(
 
   py_geom_view_labels.def("lbl_sel_by_ngb_cnt",
                           &geom_view_labels_subsys_t::labelize_sel_by_neighbours_count);
+  py_geom_view_labels.def("lbl_sel_by_geom_fctr",
+                          &geom_view_labels_subsys_t::labelize_sel_by_dist_factor);
 
   py::class_<atom_index_set_key, std::shared_ptr<atom_index_set_key> >
   py_atom_index_set_key(module, "atom_index_set_key_t");

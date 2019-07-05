@@ -221,3 +221,29 @@ void geom_view_labels_subsys_t::labelize_sel_by_neighbours_count() {
     }
 
 }
+
+void geom_view_labels_subsys_t::labelize_sel_by_dist_factor() {
+
+  if (!p_owner) return;
+
+  m_style = geom_labels_style_e::show_custom;
+
+  //build classes
+
+  std::vector<std::vector<atom_dist_rec_t<float> > > ngbs_dp;
+  std::vector<size_t> ngbs_lookup;
+
+  for (auto &rec : p_owner->m_atom_idx_sel) {
+
+      ngbs_lookup.push_back(rec.m_atm);
+
+      atom_dist_rec_t<float> new_rec;
+
+      //iterate over all neighbours
+      for (size_t i = 0; i < p_owner->m_tws_tr->n(rec.m_atm); i++) {
+
+        }
+
+    }
+
+}

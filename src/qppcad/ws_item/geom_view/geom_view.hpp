@@ -40,6 +40,19 @@ namespace qpp {
         size_t count{0};
     };
 
+    template<typename REAL = float>
+    struct atom_dist_rec_t {
+        size_t atom_type;
+        REAL dist;
+    };
+
+    template<typename REAL = float>
+    struct atom_tdist_rec_t {
+        size_t atom_id;
+        size_t atom_type;
+        REAL dist;
+    };
+
     /**
      * @brief The geom_view_render_style_e enum
      */
