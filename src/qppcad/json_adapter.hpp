@@ -74,6 +74,9 @@ namespace qpp {
     const auto JSON_GEOM_VIEW_LABELS_SIZE               = "labels_size";
     const auto JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE       = "labels_draw_outline";
     const auto JSON_GEOM_VIEW_LABELS_INPLACE            = "labels_inplace";
+    const auto JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X   = "labels_inplace_offset_x";
+    const auto JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y   = "labels_inplace_offset_y";
+    const auto JSON_GEOM_VIEW_LABELS_OUTLINE_SZ         = "labels_outline_sz";
     const auto JSON_GEOM_VIEW_LABELS_SEL_VIS            = "labels_sel_vis";
     const auto JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE   = "labels_scrn_spc_scale";
 

@@ -1307,6 +1307,9 @@ void geom_view_t::save_to_json (json &data) {
   data[JSON_GEOM_VIEW_LABELS_INPLACE] = m_labels->m_render_inplace_hud;
   data[JSON_GEOM_VIEW_LABELS_SEL_VIS] = m_labels->m_selective_lbl;
   data[JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale;
+  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X] = m_labels->m_inplace_offset[0];
+  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y] = m_labels->m_inplace_offset[1];
+  data[JSON_GEOM_VIEW_LABELS_OUTLINE_SZ] = m_labels->m_outline_size;
   data[JSON_GEOM_VIEW_ROLE] = m_role;
 
   data[JSON_GEOM_VIEW_DRAW_CELL] = m_draw_cell;
@@ -1481,6 +1484,15 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_SEL_VIS, m_labels->m_selective_lbl, data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_OUTLINE_SZ, m_labels->m_outline_size, data);
+
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
+                        m_labels->m_inplace_offset[0],
+                        data);
+  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
+                        m_labels->m_inplace_offset[1],
+                        data);
+
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_ATOMS, m_draw_atoms, data);
