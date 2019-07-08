@@ -1884,5 +1884,14 @@ py::list geom_view_t::py_get_charge_partition() {
 
 }
 
+void geom_view_t::pertrub_via_normal_mode(std::vector<vector3<float> > &disp) {
+
+  if (m_geom->nat() != disp.size()) return;
+
+  for (size_t i = 0; i < m_geom->nat(); i++)
+    m_geom->coord(i) = m_geom->coord(i) + disp[i];
+
+}
+
 
 

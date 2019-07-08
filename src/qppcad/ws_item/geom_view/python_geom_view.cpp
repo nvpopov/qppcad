@@ -228,6 +228,7 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("get_unsel_atoms", &geom_view_t::get_unsel_atoms,
                       py::arg("index_offset") = 0);
 
+  py_atoms_list_t.def("pertrub_via_normal_mode", &geom_view_t::pertrub_via_normal_mode);
   py_atoms_list_t.def("clone_on_the_spot", &geom_view_t::clone_on_the_spot);
   py_atoms_list_t.def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord);
   py_atoms_list_t.def("purify_boundary_atoms", &geom_view_t::purify_boundary_atoms);
