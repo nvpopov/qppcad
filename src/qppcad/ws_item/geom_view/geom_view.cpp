@@ -1884,7 +1884,7 @@ py::list geom_view_t::py_get_charge_partition() {
 
 }
 
-void geom_view_t::pertrub_via_normal_mode(std::vector<vector3<float> > &disp) {
+void geom_view_t::pertrub_via_normal_mode(generic_array_t<vector3<float>, float> &disp) {
 
   if (m_geom->nat() != disp.size()) return;
 

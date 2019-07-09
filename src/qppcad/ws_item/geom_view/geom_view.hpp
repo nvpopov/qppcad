@@ -338,7 +338,7 @@ namespace qpp {
         std::vector<scalar_partition_per_type_t<>> get_charge_partition();
         py::list py_get_charge_partition();
 
-        void pertrub_via_normal_mode(std::vector<vector3<float> > &disp);
+        void pertrub_via_normal_mode(generic_array_t<vector3<float>, float> &disp);
 
     };
 
