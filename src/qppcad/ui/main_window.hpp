@@ -85,6 +85,7 @@ namespace qpp {
         QPushButton *tp_measure_angle;
         QPushButton *tp_add_cube;
         QPushButton *tp_add_arrow;
+        QPushButton *tp_add_point_sym_group;
 
         QWidget *ws_viewer_placeholder;
         QWidget *obj_inst_placeholder;
@@ -214,6 +215,7 @@ namespace qpp {
         void tp_fast_forward_anim_clicked();
         void tp_add_arrow_clicked();
         void tp_add_cube_clicked();
+        void tp_add_point_sym_group_clicked();
         void tp_scenic_rotation_toggle();
 
         void apply_camera_view_change(cam_tv_e target_view);

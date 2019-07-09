@@ -56,5 +56,6 @@
         <file>images/add_arrow.svg</file>
         <file>images/add_cube.svg</file>
         <file>images/baseline-3d_rotation_x-24px.svg</file>
+        <file>images/add_psg.svg</file>
     </qresource>
 </RCC>

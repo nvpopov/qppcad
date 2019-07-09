@@ -605,6 +605,18 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_add_arrow_clicked);
 
+  tp_add_point_sym_group = new QPushButton;
+  tp_add_point_sym_group->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_add_point_sym_group->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_add_point_sym_group->setToolTip(tr("Construct point symmetry group"));
+  tp_add_point_sym_group->setIcon(QIcon("://images/add_psg.svg"));
+  tp_add_point_sym_group->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                  astate->size_guide.tool_panel_icon_size()));
+  connect(tp_add_point_sym_group,
+          &QPushButton::clicked,
+          this,
+          &main_window_t::tp_add_point_sym_group_clicked);
+
   tp_ws_selector->setVisible(false);
 
   ws_viewer_widget = new ws_viewer_widget_t(this);
@@ -613,7 +625,7 @@ void main_window_t::init_widgets() {
   obj_insp_widget->setFixedWidth(astate->size_guide.obj_insp_w());
 
   py_console_widget = new python_console_widget_t(this);
- // widget_ws_viewer_py_console = new QWidget();
+
   extended_editor_compositor = new ws_item_extended_editor_compositor_t;
 
 }
@@ -684,6 +696,7 @@ void main_window_t::init_layouts() {
 
   tool_panel_layout->addWidget(tp_add_cube, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_add_arrow, 0, Qt::AlignLeft);
+  tool_panel_layout->addWidget(tp_add_point_sym_group, 0, Qt::AlignLeft);
 
   tool_panel_layout->addStretch(1);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
@@ -1104,12 +1117,17 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
   bool need_to_hide_force_sel_lbl_vis{true};
   bool need_to_hide_atom_override{true};
   bool need_to_hide_add_primitives{true};
+  bool need_to_hide_make_psg{true};
 
   if (ok) {
 
     need_to_hide_force_sel_lbl_vis =
         cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_atom_idx_sel.empty();
     tp_force_sel_lbl_vis->show();
+
+    need_to_hide_make_psg =
+        cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_atom_idx_sel.empty();
+    tp_add_point_sym_group->show();
 
     if (as_al->m_atom_idx_sel.size() != 1 || cur_ws->m_edit_type == ws_edit_e::edit_item)
       need_to_hide_atom_override = true;
@@ -1202,6 +1220,10 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
   if (need_to_hide_atom_override) {
     tp_toggle_atom_override->hide();
   }
+
+  if (need_to_hide_make_psg) {
+      tp_add_point_sym_group->hide();
+    }
 
 }
 
@@ -1389,6 +1411,12 @@ void main_window_t::tp_add_arrow_clicked() {
 void main_window_t::tp_add_cube_clicked() {
 
  simple_query::embed_cube();
+
+}
+
+void main_window_t::tp_add_point_sym_group_clicked() {
+
+  simple_query::make_psg_view(0.1);
 
 }
 
