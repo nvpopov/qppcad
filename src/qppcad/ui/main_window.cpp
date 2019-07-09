@@ -1125,8 +1125,7 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
         cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_atom_idx_sel.empty();
     tp_force_sel_lbl_vis->show();
 
-    need_to_hide_make_psg =
-        cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_atom_idx_sel.empty();
+    need_to_hide_make_psg = need_to_hide_force_sel_lbl_vis;
     tp_add_point_sym_group->show();
 
     if (as_al->m_atom_idx_sel.size() != 1 || cur_ws->m_edit_type == ws_edit_e::edit_item)
@@ -1269,21 +1268,19 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
 
     tp_measure_angle->show();
 
-    auto cur_sel = as_al->m_measure->is_angle_msr_exists(
-                     as_al->m_atom_ord_sel[0].m_atm,
-        as_al->m_atom_ord_sel[1].m_atm,
-        as_al->m_atom_ord_sel[2].m_atm,
-        as_al->m_atom_ord_sel[0].m_idx,
-        as_al->m_atom_ord_sel[1].m_idx,
-        as_al->m_atom_ord_sel[2].m_idx);
+    auto cur_sel = as_al->m_measure->is_angle_msr_exists(as_al->m_atom_ord_sel[0].m_atm,
+                                                         as_al->m_atom_ord_sel[1].m_atm,
+                                                         as_al->m_atom_ord_sel[2].m_atm,
+                                                         as_al->m_atom_ord_sel[0].m_idx,
+                                                         as_al->m_atom_ord_sel[1].m_idx,
+                                                         as_al->m_atom_ord_sel[2].m_idx);
 
-    if (checked) as_al->m_measure->add_angle_msr(
-          as_al->m_atom_ord_sel[0].m_atm,
-        as_al->m_atom_ord_sel[1].m_atm,
-        as_al->m_atom_ord_sel[2].m_atm,
-        as_al->m_atom_ord_sel[0].m_idx,
-        as_al->m_atom_ord_sel[1].m_idx,
-        as_al->m_atom_ord_sel[2].m_idx);
+    if (checked) as_al->m_measure->add_angle_msr(as_al->m_atom_ord_sel[0].m_atm,
+                                                 as_al->m_atom_ord_sel[1].m_atm,
+                                                 as_al->m_atom_ord_sel[2].m_atm,
+                                                 as_al->m_atom_ord_sel[0].m_idx,
+                                                 as_al->m_atom_ord_sel[1].m_idx,
+                                                 as_al->m_atom_ord_sel[2].m_idx);
 
     else as_al->m_measure->rm_angle_msr(*cur_sel);
 
