@@ -155,12 +155,15 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox_t;
 
   disp_draw_cell = new qbinded_checkbox_t;
+  disp_cell_offset = new qbinded_float3_input_t;
+  disp_cell_offset->set_min_max_step(-1000, 1000, 0.01);
   disp_cell_color = new qbinded_color3_input_t();
   periodic_cell_vectors_color = new qbinded_color3_input_t;
 
   gb_periodic_related_render_lt->addRow(tr("Draw cell"), disp_draw_cell);
   gb_periodic_related_render_lt->addRow(tr("Draw vectors"), periodic_draw_cell_v);
   gb_periodic_related_render_lt->addRow(tr("Vectors ratio"), periodic_cell_v_ratio);
+  gb_periodic_related_render_lt->addRow(tr("Vectors offset"), disp_cell_offset);
   gb_periodic_related_render_lt->addRow(tr("Vectors color"), periodic_cell_vectors_color);
   gb_periodic_related_render_lt->addRow(tr("Cell color"), disp_cell_color);
   gb_periodic_related_render_lt->addRow(tr("Draw subcells"), disp_draw_subcells);
@@ -1095,6 +1098,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_s_sel_vis_affect_bonds->bind_value(&b_al->m_sel_vis_affect_bonds);
 
       periodic_draw_cell_v->bind_value(&b_al->m_draw_cell_vectors);
+      disp_cell_offset->bind_value(&b_al->m_cell_vector_offset);
       periodic_cell_v_ratio->bind_value(&b_al->m_cell_vectors_ratio);
       periodic_cell_vectors_color->bind_value(&b_al->m_cell_vector_color);
 
@@ -1189,6 +1193,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_s_sel_vis_affect_bonds->unbind_value();
 
   periodic_draw_cell_v->unbind_value();
+  disp_cell_offset->unbind_value();
   periodic_cell_v_ratio->unbind_value();
   periodic_cell_vectors_color->unbind_value();
   disp_draw_cell->unbind_value();

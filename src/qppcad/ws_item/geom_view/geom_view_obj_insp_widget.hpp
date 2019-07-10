@@ -76,6 +76,7 @@ namespace qpp {
 
         qbinded_checkbox_t *disp_draw_cell;
         qbinded_color3_input_t *disp_cell_color;
+        qbinded_float3_input_t *disp_cell_offset;
         qbinded_checkbox_t *disp_draw_subcells;
         QLabel *disp_subcells_idx_lbl;
         qbinded_int3_input_t *disp_subcells_idx;
