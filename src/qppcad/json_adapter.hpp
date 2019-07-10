@@ -45,8 +45,7 @@ namespace qpp {
     const auto JSON_GEOM_VIEW_BT_SHOW_DSBL    = "bt_show_disabled_records";
     const auto JSON_GEOM_VIEW_ATOM_SCALE      = "atom_scale";
     const auto JSON_GEOM_VIEW_BOND_SCALE      = "bond_scale";
-    const auto JSON_GEOM_VIEW_CELL_COLOR      = "cell_color";
-    const auto JSON_GEOM_VIEW_DRAW_CELL       = "draw_cell";
+
     const auto JSON_GEOM_VIEW_BONDING_TABLE   = "bonding_table";
     const auto JSON_GEOM_VIEW_ATOMS           = "atoms";
     const auto JSON_GEOM_VIEW_CELL            = "cell";
@@ -65,8 +64,15 @@ namespace qpp {
     const auto JSON_GEOM_VIEW_MEASURE                   = "measurements";
     const auto JSON_GEOM_VIEW_MEASURE_INTER_ATOMIC_DIST = "inter_atomic";
 
-    const auto JSON_GEOM_VIEW_DRAW_SUBCELLS             = "draw_subcells";
-    const auto JSON_GEOM_VIEW_SUBCELLS_RANGE            = "subcells_range";
+    const auto JSON_GEOM_VIEW_PERIODIC_CELL_COLOR       = "cell_color";
+    const auto JSON_GEOM_VIEW_PERIODIC_DRAW_CELL        = "draw_cell";
+    const auto JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS    = "draw_subcells";
+    const auto JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE   = "subcells_range";
+    const auto JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS     = "draw_vecs";
+    const auto JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET   = "vecs_offset";
+    const auto JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO    = "vecs_ratio";
+    const auto JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR    = "vecs_color";
+
     const auto JSON_GEOM_VIEW_SEL_VIS                   = "sel_vis";
     const auto JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS      = "sel_vis_affect_bonds";
 

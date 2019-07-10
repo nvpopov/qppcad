@@ -1314,8 +1314,15 @@ void geom_view_t::save_to_json (json &data) {
   data[JSON_GEOM_VIEW_LABELS_OUTLINE_SZ] = m_labels->m_outline_size;
   data[JSON_GEOM_VIEW_ROLE] = m_role;
 
-  data[JSON_GEOM_VIEW_DRAW_CELL] = m_draw_cell;
-  json_helper::save_vec3(JSON_GEOM_VIEW_CELL_COLOR, m_cell_color, data);
+  //cell
+  data[JSON_GEOM_VIEW_PERIODIC_DRAW_CELL] = m_draw_cell;
+  json_helper::save_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
+
+  //cell vectors
+  data[JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS] = m_draw_cell_vectors;
+  data[JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO] = m_cell_vectors_ratio;
+  json_helper::save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
+  json_helper::save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
 
   data[JSON_GEOM_VIEW_BONDING_TABLE] = json::array({});
 
@@ -1323,8 +1330,8 @@ void geom_view_t::save_to_json (json &data) {
   data[JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds;
 
   if (m_geom->DIM == 3) {
-      data[JSON_GEOM_VIEW_DRAW_SUBCELLS] = m_draw_subcells;
-      data[JSON_GEOM_VIEW_SUBCELLS_RANGE] =
+      data[JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS] = m_draw_subcells;
+      data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE] =
           json::array({m_subcells_range[0], m_subcells_range[1], m_subcells_range[2]});
     }
 
@@ -1500,18 +1507,25 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_ATOMS, m_draw_atoms, data);
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
   json_helper::load_var(JSON_GEOM_VIEW_BT_SHOW_DSBL, m_bt_show_disabled_record, data);
-  json_helper::load_var(JSON_GEOM_VIEW_DRAW_SUBCELLS, m_draw_subcells, data);
+  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS, m_draw_subcells, data);
   json_helper::load_var(JSON_GEOM_VIEW_SEL_VIS, m_sel_vis, data);
   json_helper::load_var(JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
   json_helper::load_var(JSON_GEOM_VIEW_ROLE, m_role, data);
 
-  json_helper::load_var(JSON_GEOM_VIEW_DRAW_CELL, m_draw_cell, data);
-  json_helper::load_vec3(JSON_GEOM_VIEW_CELL_COLOR, m_cell_color, data);
+  //cell
+  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_CELL, m_draw_cell, data);
+  json_helper::load_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
 
-  if (data.find(JSON_GEOM_VIEW_SUBCELLS_RANGE) != data.end()) {
-      int sc_a = data[JSON_GEOM_VIEW_SUBCELLS_RANGE][0].get<int>();
-      int sc_b = data[JSON_GEOM_VIEW_SUBCELLS_RANGE][1].get<int>();
-      int sc_c = data[JSON_GEOM_VIEW_SUBCELLS_RANGE][2].get<int>();
+  //cell vectors
+  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS, m_draw_cell_vectors, data);
+  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO, m_cell_vectors_ratio, data);
+  json_helper::load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
+  json_helper::load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
+
+  if (data.find(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE) != data.end()) {
+      int sc_a = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][0].get<int>();
+      int sc_b = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][1].get<int>();
+      int sc_c = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][2].get<int>();
       m_subcells_range = vector3<int>(sc_a, sc_b, sc_c);
     }
 
