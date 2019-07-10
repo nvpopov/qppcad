@@ -136,17 +136,17 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   periodic_cell_v_ratio = new qbinded_float_spinbox_t;
   periodic_cell_v_ratio->set_min_max_step(-5, 5, 0.01);
 
-  disp_draw_subcells = new qbinded_checkbox_t;
-  disp_subcells_idx = new qbinded_int3_input_t;
-  disp_subcells_idx_lbl = new QLabel(tr("Subcells range"));
-  disp_subcells_idx->set_min_max_step(1, 10, 1);
-  disp_subcells_clr = new qbinded_color3_input_t();
-  disp_subcells_color_lbl = new QLabel(tr("Subcell color"));
+  periodic_draw_subcells = new qbinded_checkbox_t;
+  periodic_subcells_idx = new qbinded_int3_input_t;
+  periodic_subcells_idx_lbl = new QLabel(tr("Subcells range"));
+  periodic_subcells_idx->set_min_max_step(1, 10, 1);
+  periodic_subcells_clr = new qbinded_color3_input_t();
+  periodic_subcells_color_lbl = new QLabel(tr("Subcell color"));
 
-  init_form_lt_lbl(disp_subcells_idx_lbl);
-  init_form_lt_lbl(disp_subcells_color_lbl);
+  init_form_lt_lbl(periodic_subcells_idx_lbl);
+  init_form_lt_lbl(periodic_subcells_color_lbl);
 
-  connect(disp_draw_subcells,
+  connect(periodic_draw_subcells,
           &qbinded_checkbox_t::stateChanged,
           this,
           &geom_view_obj_insp_widget_t::draw_subcells_changed);
@@ -154,19 +154,19 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_sel_vis = new qbinded_checkbox_t;
   disp_s_sel_vis_affect_bonds = new qbinded_checkbox_t;
 
-  disp_draw_cell = new qbinded_checkbox_t;
-  disp_cell_offset = new qbinded_float3_input_t;
-  disp_cell_offset->set_min_max_step(-1000, 1000, 0.01);
-  disp_cell_color = new qbinded_color3_input_t();
+  periodic_draw_cell = new qbinded_checkbox_t;
+  periodic_cell_offset = new qbinded_float3_input_t;
+  periodic_cell_offset->set_min_max_step(-1000, 1000, 0.01);
+  periodic_cell_color = new qbinded_color3_input_t();
   periodic_cell_vectors_color = new qbinded_color3_input_t;
 
-  gb_periodic_related_render_lt->addRow(tr("Draw cell"), disp_draw_cell);
+  gb_periodic_related_render_lt->addRow(tr("Draw cell"), periodic_draw_cell);
   gb_periodic_related_render_lt->addRow(tr("Draw vectors"), periodic_draw_cell_v);
   gb_periodic_related_render_lt->addRow(tr("Vectors ratio"), periodic_cell_v_ratio);
-  gb_periodic_related_render_lt->addRow(tr("Vectors offset"), disp_cell_offset);
+  gb_periodic_related_render_lt->addRow(tr("Vectors offset"), periodic_cell_offset);
   gb_periodic_related_render_lt->addRow(tr("Vectors color"), periodic_cell_vectors_color);
-  gb_periodic_related_render_lt->addRow(tr("Cell color"), disp_cell_color);
-  gb_periodic_related_render_lt->addRow(tr("Draw subcells"), disp_draw_subcells);
+  gb_periodic_related_render_lt->addRow(tr("Cell color"), periodic_cell_color);
+  gb_periodic_related_render_lt->addRow(tr("Draw subcells"), periodic_draw_subcells);
 
   init_form_lt(gb_periodic_related_render_lt);
   // ******************  End of Periodic related render *********************************************
@@ -1098,15 +1098,15 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_s_sel_vis_affect_bonds->bind_value(&b_al->m_sel_vis_affect_bonds);
 
       periodic_draw_cell_v->bind_value(&b_al->m_draw_cell_vectors);
-      disp_cell_offset->bind_value(&b_al->m_cell_vector_offset);
+      periodic_cell_offset->bind_value(&b_al->m_cell_vector_offset);
       periodic_cell_v_ratio->bind_value(&b_al->m_cell_vectors_ratio);
       periodic_cell_vectors_color->bind_value(&b_al->m_cell_vector_color);
 
-      disp_draw_cell->bind_value(&b_al->m_draw_cell);
-      disp_draw_subcells->bind_value(&b_al->m_draw_subcells);
-      disp_subcells_idx->bind_value(&b_al->m_subcells_range);
-      disp_cell_color->bind_value(&b_al->m_cell_color);
-      disp_subcells_clr->bind_value(&b_al->m_subcell_color);
+      periodic_draw_cell->bind_value(&b_al->m_draw_cell);
+      periodic_draw_subcells->bind_value(&b_al->m_draw_subcells);
+      periodic_subcells_idx->bind_value(&b_al->m_subcells_range);
+      periodic_cell_color->bind_value(&b_al->m_cell_color);
+      periodic_subcells_clr->bind_value(&b_al->m_subcell_color);
 
       // 3d geom section
       bool _al3d = b_al->m_geom->DIM == 3;
@@ -1193,14 +1193,14 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_s_sel_vis_affect_bonds->unbind_value();
 
   periodic_draw_cell_v->unbind_value();
-  disp_cell_offset->unbind_value();
+  periodic_cell_offset->unbind_value();
   periodic_cell_v_ratio->unbind_value();
   periodic_cell_vectors_color->unbind_value();
-  disp_draw_cell->unbind_value();
-  disp_cell_color->unbind_value();
-  disp_draw_subcells->unbind_value();
-  disp_subcells_idx->unbind_value();
-  disp_subcells_clr->unbind_value();
+  periodic_draw_cell->unbind_value();
+  periodic_cell_color->unbind_value();
+  periodic_draw_subcells->unbind_value();
+  periodic_subcells_idx->unbind_value();
+  periodic_subcells_clr->unbind_value();
 
   gb_rebuild_bonds->unbind_value();
   gb_play_cyclic->unbind_value();
@@ -1992,16 +1992,16 @@ void geom_view_obj_insp_widget_t::cell_changed() {
 void geom_view_obj_insp_widget_t::draw_subcells_changed(int state) {
 
   qt_hlp::form_lt_ctrl_visibility(state == Qt::Checked,
-                                      gb_periodic_related_render_lt,
-                                      disp_draw_subcells,
-                                      disp_subcells_idx_lbl,
-                                      disp_subcells_idx);
+                                  gb_periodic_related_render_lt,
+                                  periodic_draw_subcells,
+                                  periodic_subcells_idx_lbl,
+                                  periodic_subcells_idx);
 
   qt_hlp::form_lt_ctrl_visibility(state == Qt::Checked,
-                                      gb_periodic_related_render_lt,
-                                      disp_subcells_idx,
-                                      disp_subcells_color_lbl,
-                                      disp_subcells_clr);
+                                  gb_periodic_related_render_lt,
+                                  periodic_subcells_idx,
+                                  periodic_subcells_color_lbl,
+                                  periodic_subcells_clr);
 
 }
 

@@ -74,14 +74,14 @@ namespace qpp {
         qbinded_float_spinbox_t *periodic_cell_v_ratio;
         qbinded_color3_input_t *periodic_cell_vectors_color;
 
-        qbinded_checkbox_t *disp_draw_cell;
-        qbinded_color3_input_t *disp_cell_color;
-        qbinded_float3_input_t *disp_cell_offset;
-        qbinded_checkbox_t *disp_draw_subcells;
-        QLabel *disp_subcells_idx_lbl;
-        qbinded_int3_input_t *disp_subcells_idx;
-        QLabel *disp_subcells_color_lbl;
-        qbinded_color3_input_t *disp_subcells_clr;
+        qbinded_checkbox_t *periodic_draw_cell;
+        qbinded_color3_input_t *periodic_cell_color;
+        qbinded_float3_input_t *periodic_cell_offset;
+        qbinded_checkbox_t *periodic_draw_subcells;
+        QLabel *periodic_subcells_idx_lbl;
+        qbinded_int3_input_t *periodic_subcells_idx;
+        QLabel *periodic_subcells_color_lbl;
+        qbinded_color3_input_t *periodic_subcells_clr;
         // End of Periodic related render
 
         qspoiler_widget_t *gb_disp_shading;
@@ -295,7 +295,7 @@ namespace qpp {
 
         void update_anim_tab();
         void update_anim_tab_visibility();
-       //
+        //
         void update_modify_tab();
         void update_measurement_tab();
         void update_dist_measurement_tab_info();
