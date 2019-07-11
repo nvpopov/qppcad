@@ -1913,7 +1913,25 @@ std::string geom_view_t::pretty_print_selected_atoms(vector3<float> new_frame) {
 
   std::string ret;
 
+  bool first = true;
   for (auto &rec : m_atom_idx_sel) {
+
+      vector3<float> pos_i = m_geom->pos(rec.m_atm) - new_frame;
+
+      geom_labels_style_e cur_style =
+          m_labels->m_style == geom_labels_style_e::show_none ?
+            geom_labels_style_e::show_id_type :
+            m_labels->m_style;
+
+      ret +=
+          fmt::format(first ? "{} {:8.8f} {:8.8f} {:8.8f}" : "\n{} {:8.8f} {:8.8f} {:8.8f}",
+                      geom_view_labels_subsys_t::label_gen_fn(this, cur_style, rec.m_atm),
+                      pos_i[0],
+                      pos_i[1],
+                      pos_i[2]
+          );
+
+      first = false;
 
     }
 

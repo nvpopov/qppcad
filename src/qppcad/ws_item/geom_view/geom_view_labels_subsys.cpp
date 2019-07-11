@@ -63,7 +63,8 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
       bool render_label{true};
 
-      label = label_gen_fn(p_owner, m_style, i, render_label);
+      label = label_gen_fn(p_owner, m_style, i);
+      render_label = !label.empty();
 
       if (render_label) {
 
@@ -217,8 +218,7 @@ void geom_view_labels_subsys_t::labelize_sel_by_dist_factor() {
 
 std::string geom_view_labels_subsys_t::label_gen_fn(geom_view_t *owner,
                                                     geom_labels_style_e lbl_style,
-                                                    size_t atom_id,
-                                                    bool &render_label) {
+                                                    size_t atom_id) {
 
   switch (lbl_style) {
 
@@ -245,8 +245,6 @@ std::string geom_view_labels_subsys_t::label_gen_fn(geom_view_t *owner,
     case geom_labels_style_e::show_custom : {
         if (owner->m_geom->xfield<bool>(xgeom_label_show, atom_id)) {
             return owner->m_geom->xfield<std::string>(xgeom_label_text, atom_id);
-          } else {
-            render_label = false;
           }
       }
 

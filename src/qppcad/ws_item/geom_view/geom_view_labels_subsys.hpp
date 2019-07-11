@@ -46,8 +46,7 @@ namespace qpp {
 
         static std::string label_gen_fn(geom_view_t *owner,
                                         geom_labels_style_e lbl_style,
-                                        size_t atom_id,
-                                        bool &render_label);
+                                        size_t atom_id);
 
     };
 
