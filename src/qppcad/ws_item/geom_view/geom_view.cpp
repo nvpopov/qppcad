@@ -1909,5 +1909,17 @@ void geom_view_t::pertrub_via_normal_mode(generic_array_t<vector3<float>, float>
 
 }
 
+std::string geom_view_t::pretty_print_selected_atoms(vector3<float> new_frame) {
+
+  std::string ret;
+
+  for (auto &rec : m_atom_idx_sel) {
+
+    }
+
+  return ret;
+
+}
+
 
 

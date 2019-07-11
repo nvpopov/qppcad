@@ -44,6 +44,11 @@ namespace qpp {
         void labelize_sel_by_neighbours_count();
         void labelize_sel_by_dist_factor();
 
+        static std::string label_gen_fn(geom_view_t *owner,
+                                        geom_labels_style_e lbl_style,
+                                        size_t atom_id,
+                                        bool &render_label);
+
     };
 
   } // namespace qpp::cad

@@ -340,6 +340,7 @@ namespace qpp {
         py::list py_get_charge_partition();
 
         void pertrub_via_normal_mode(generic_array_t<vector3<float>, float> &disp);
+        std::string pretty_print_selected_atoms(vector3<float> new_frame);
 
     };
 
