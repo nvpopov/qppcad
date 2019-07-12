@@ -61,6 +61,7 @@ namespace qpp {
         std::array<str_sim_ws_item_rec_t*, 2> m_anim_info;
 
         QComboBox *cmb_method;
+        QCheckBox *chck_only_selected;
         QPushButton *btn_compute;
 
         QGroupBox *gb_str_sim_output;
@@ -78,7 +79,6 @@ namespace qpp {
       public slots:
 
         void compute_button_clicked();
-
 
     };
 

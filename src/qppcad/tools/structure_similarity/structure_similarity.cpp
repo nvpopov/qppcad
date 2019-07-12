@@ -44,6 +44,8 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   cmb_method->addItem(tr("compare-naive"));
   cmb_method->addItem(tr("compare-tws_tree"));
 
+  chck_only_selected = new QCheckBox;
+
   btn_compute = new QPushButton(tr("Compute"));
   connect(btn_compute,
           &QPushButton::clicked,
@@ -51,7 +53,10 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
           &structure_similarity_widget_t::compute_button_clicked);
 
   gb_str_sim_main_lt->addRow(tr("Method"), cmb_method);
+  gb_str_sim_main_lt->addRow(tr("Only sel. atoms"), chck_only_selected);
   gb_str_sim_main_lt->addRow(tr(""), btn_compute);
+
+  qt_hlp::resize_form_lt_lbls(gb_str_sim_main_lt, 128);
 
   gb_str_sim_main->setLayout(gb_str_sim_main_lt);
   widget_lt->addWidget(gb_str_sim_main);
@@ -95,7 +100,7 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
 
   widget_top_lt->addWidget(gb_str_sim_output);
 
-  qt_hlp::resize_form_lt_lbls(gb_str_sim_main_lt, astate->size_guide.common_tools_panel_label_w());
+  //qt_hlp::resize_form_lt_lbls(gb_str_sim_main_lt, astate->size_guide.common_tools_panel_label_w());
 
   widget_lt->addStretch(1);
 
@@ -170,9 +175,18 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
   //All checks passed
   str_sim_output->insertPlainText("\nAll checks passed!\n");
 
-  str_sim_table->setRowCount(g1->m_geom->nat());
+  bool op_on_sel_atoms = chck_only_selected->checkState() == Qt::Checked;
+  std::set<size_t> sel_atoms;
 
-  for (size_t i = 0; i < g1->m_geom->nat(); i++) {
+  for (auto &gs : {g1, g2})
+    for (auto &rec : gs->m_atom_idx_sel) sel_atoms.insert(rec.m_atm);
+
+  str_sim_table->setRowCount(op_on_sel_atoms ? sel_atoms.size() : g1->m_geom->nat());
+
+  size_t table_data_idx{0};
+
+  for (size_t i = 0; i < g1->m_geom->nat(); i++)
+    if (!op_on_sel_atoms || (sel_atoms.find(i) != sel_atoms.end())) {
 
       vector3<float> p1 = g1->m_geom->pos(i);
       vector3<float> p2 = g2->m_geom->pos(i);
@@ -190,7 +204,8 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
         }
 
       vector3<float> dp = p2 - p1;
-      set_out_table_data(g1, g2, i, dp);
+      set_out_table_data(g1, g2, table_data_idx, dp);
+      table_data_idx++;
 
     }
 
