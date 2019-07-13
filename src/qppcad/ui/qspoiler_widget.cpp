@@ -39,6 +39,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                  astate->size_guide.spoiler_button_h()));
   action_btn->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
                                 astate->size_guide.spoiler_button_icon_h()));
+  action_btn->setVisible(m_collapsable);
 
   widget_list = new QWidget;
   widget_list->setContentsMargins(0, 0, 0, 0);
@@ -86,6 +87,8 @@ void qspoiler_widget_t::process_state() {
 }
 
 void qspoiler_widget_t::collapse_button_pressed() {
+
+  if (!m_collapsable) return;
 
   m_state = !m_state;
   process_state();

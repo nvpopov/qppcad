@@ -85,6 +85,7 @@ compose_anim_from_files_widget_t::compose_anim_from_files_widget_t() {
 
   gv_selector = new qgeom_view_selector_widget_t;
   dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
   for (auto btn : dialog_bb->buttons())
     btn->setFixedWidth(astate->size_guide.common_button_fixed_w());
 

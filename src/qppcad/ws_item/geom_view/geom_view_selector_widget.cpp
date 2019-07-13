@@ -60,27 +60,31 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setMinimumHeight(350);
+  //setMinimumHeight(350);
   //setMinimumWidth(550);
 
-  main_lt = new QHBoxLayout;
+  main_lt = new QVBoxLayout;
   setLayout(main_lt);
 
-  list_gv_lbl_lt = new QVBoxLayout;
-  list_gv_res_lbl_lt = new QVBoxLayout;
+  splr_list_gv = new qspoiler_widget_t(tr("Select geom. view:"), nullptr, false, 6, 480);
+  splr_list_gv_lt = new QVBoxLayout;
+  splr_list_gv->add_content_layout(splr_list_gv_lt);
 
-  list_gv_lbl = new QLabel(tr("Select geom. view:"));
-  list_gv_res_lbl = new QLabel(tr("Composed animation:"));
+  splr_list_gv_res = new qspoiler_widget_t(tr("Composed animation:"), nullptr, false, 6, 480);
+  splr_list_gv_res_lt = new QVBoxLayout;
+  splr_list_gv_res->add_content_layout(splr_list_gv_res_lt);
+
+  splr_acts = new qspoiler_widget_t(tr("Actions:"), nullptr, false, 6, 480);
+  splr_acts_lt = new QHBoxLayout;
+  splr_acts->add_content_layout(splr_acts_lt);
 
   list_gv = new QListWidget;
   //list_gv->setMinimumWidth(400);
 
-  add_btn = new QPushButton(">>");
+  add_btn = new QPushButton("Add");
   add_btn->setFixedWidth(astate->size_guide.obj_insp_button_w());
-  add_btn_lt = new QVBoxLayout;
-  add_btn_lt->addSpacing(1);
-  add_btn_lt->addWidget(add_btn);
-  add_btn_lt->addSpacing(1);
+  splr_acts_lt->addWidget(add_btn);
+  splr_acts_lt->addStretch(1);
 
   connect(add_btn,
           &QPushButton::clicked,
@@ -88,24 +92,22 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
           &qgeom_view_selector_widget_t::add_btn_clicked);
 
   list_gv_res = new qgeom_view_result_widget_t;
-  list_gv_res->setMinimumWidth(400);
+  //list_gv_res->setMinimumWidth(450);
 
   list_gv_res_scroll_area = new QScrollArea;
-  list_gv_res_scroll_area->setMinimumWidth(450);
+  list_gv_res_scroll_area->setMinimumWidth(460);
+  list_gv_res_scroll_area->setMinimumHeight(200);
   list_gv_res_scroll_area->setWidget(list_gv_res);
   list_gv_res_scroll_area->setWidgetResizable(true);
   list_gv_res_scroll_area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   list_gv_res_scroll_area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  list_gv_lbl_lt->addWidget(list_gv_lbl);
-  list_gv_lbl_lt->addWidget(list_gv);
-  main_lt->addLayout(list_gv_lbl_lt);
+  splr_list_gv_lt->addWidget(list_gv);
+  splr_list_gv_res_lt->addWidget(list_gv_res_scroll_area);
 
-  main_lt->addLayout(add_btn_lt);
-
-  list_gv_res_lbl_lt->addWidget(list_gv_res_lbl);
-  list_gv_res_lbl_lt->addWidget(list_gv_res_scroll_area);
-  main_lt->addLayout(list_gv_res_lbl_lt);
+  main_lt->addWidget(splr_list_gv);
+  main_lt->addWidget(splr_acts);
+  main_lt->addWidget(splr_list_gv_res);
 
   generate_list_gv_items();
 

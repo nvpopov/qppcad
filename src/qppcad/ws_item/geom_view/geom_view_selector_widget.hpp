@@ -3,6 +3,7 @@
 
 #include <qppcad/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -73,18 +74,21 @@ namespace qpp {
 
       public:
 
-        QHBoxLayout *main_lt;
-        QVBoxLayout *list_gv_lbl_lt;
-        QVBoxLayout *list_gv_res_lbl_lt;
+        QVBoxLayout *main_lt;
 
         QListWidget *list_gv{nullptr};
         QScrollArea *list_gv_res_scroll_area;
         qgeom_view_result_widget_t *list_gv_res{nullptr};
 
-        QLabel *list_gv_lbl;
-        QLabel *list_gv_res_lbl;
+        qspoiler_widget_t *splr_list_gv;
+        QVBoxLayout *splr_list_gv_lt;
 
-        QVBoxLayout *add_btn_lt;
+        qspoiler_widget_t *splr_list_gv_res;
+        QVBoxLayout *splr_list_gv_res_lt;
+
+        qspoiler_widget_t *splr_acts;
+        QHBoxLayout *splr_acts_lt;
+
         QPushButton *add_btn;
 
         std::vector<geom_view_t*> m_sub_gvs;
