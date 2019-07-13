@@ -83,13 +83,24 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
 
   add_btn = new QPushButton("Add");
   add_btn->setFixedWidth(astate->size_guide.obj_insp_button_w());
+
+  clear_all_btn = new QPushButton("Clear all");
+  clear_all_btn->setFixedWidth(astate->size_guide.obj_insp_button_w());
+
+  splr_acts_lt->addStretch(1);
   splr_acts_lt->addWidget(add_btn);
+  splr_acts_lt->addWidget(clear_all_btn);
   splr_acts_lt->addStretch(1);
 
   connect(add_btn,
           &QPushButton::clicked,
           this,
           &qgeom_view_selector_widget_t::add_btn_clicked);
+
+  connect(clear_all_btn,
+          &QPushButton::clicked,
+          this,
+          &qgeom_view_selector_widget_t::clear_all_btn_clicked);
 
   list_gv_res = new qgeom_view_result_widget_t;
   //list_gv_res->setMinimumWidth(450);
@@ -123,6 +134,17 @@ void qgeom_view_selector_widget_t::add_btn_clicked() {
   new_entry->rebuild();
   new_entry->gv_name->setText(list_gv->item(sel_id)->text());
   list_gv_res->main_lt->addWidget(new_entry);
+
+}
+
+void qgeom_view_selector_widget_t::clear_all_btn_clicked() {
+
+  m_sub_gvs.clear();
+
+  foreach (QObject *object, list_gv_res->children()) {
+    QWidget *widget = qobject_cast<QWidget*>(object);
+    if (widget) delete widget;
+  }
 
 }
 

@@ -90,6 +90,7 @@ namespace qpp {
         QHBoxLayout *splr_acts_lt;
 
         QPushButton *add_btn;
+        QPushButton *clear_all_btn;
 
         std::vector<geom_view_t*> m_sub_gvs;
 
@@ -100,6 +101,7 @@ namespace qpp {
       public slots:
 
         void add_btn_clicked();
+        void clear_all_btn_clicked();
 
     };
 
