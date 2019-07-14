@@ -93,7 +93,7 @@ void simple_query::compose_gv_from_images(pybind11::list gvs) {
 
   if (!ok) throw std::invalid_argument("invalid ws");
 
-  bool succes{false};
+  //bool succes{false};
 
   auto new_gv = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
   new_gv->m_name = fmt::format("composed_{}", cur_ws->m_ws_items.size());
@@ -563,22 +563,18 @@ void simple_query::embed_cube() {
 
   if (!al) {
       throw std::invalid_argument("embed_cube : select geom_view_t");
-      return;
     }
 
   if (!al->m_parent_ws || !cur_ws) {
       throw std::invalid_argument("embed_cube : invalid context");
-      return;
     }
 
   if (cur_ws->m_edit_type != ws_edit_e::edit_content) {
       throw std::invalid_argument("embed_cube : edit_type != edit_content");
-      return;
     }
 
   if (al->m_atom_idx_sel.size() != 2) {
       throw std::invalid_argument("embed_cube : sel.size() != 2 ");
-      return;
     }
 
   auto it1 = al->m_atom_idx_sel.begin();
@@ -600,7 +596,7 @@ void simple_query::embed_cube() {
   new_cube->m_scale = len;
   cur_ws->add_item_to_ws(new_cube);
 
-  }
+}
 
 void simple_query::embed_arrow() {
 

@@ -116,8 +116,8 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
   splr_list_gv_lt->addWidget(list_gv);
   splr_list_gv_res_lt->addWidget(list_gv_res_scroll_area);
 
-  main_lt->addWidget(splr_list_gv);
   main_lt->addWidget(splr_acts);
+  main_lt->addWidget(splr_list_gv);
   main_lt->addWidget(splr_list_gv_res);
 
   generate_list_gv_items();
@@ -161,14 +161,14 @@ qgeom_view_selector_entry_t::qgeom_view_selector_entry_t(QWidget *parent): QFram
   gv_name = new QLabel("entry_name1");
   gv_anim_name = new QComboBox;
   gv_frame_id = new QComboBox;
-//  close_btn = new QPushButton(tr("DEL"));
+
   up_btn = new QPushButton(tr("UP"));
   down_btn = new QPushButton(tr("DOWN"));
 
   main_lt->addWidget(gv_name);
   ctrls_lt->addWidget(gv_anim_name);
   ctrls_lt->addWidget(gv_frame_id);
-//  ctrls_lt->addWidget(close_btn);
+
   ctrls_lt->addWidget(up_btn);
   ctrls_lt->addWidget(down_btn);
   ctrls_lt->addSpacing(1);

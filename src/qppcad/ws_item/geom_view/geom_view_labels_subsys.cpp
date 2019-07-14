@@ -117,8 +117,8 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
   int sph_padding = 5;
   int w_w = sh * ntypes_wh + sph_padding * (ntypes_wh+1);
 
-  QRect lrect(w * m_inplace_offset[0] - w_w/2,
-              h * m_inplace_offset[1] - w_h - padding_h, w_w, w_h);
+  QRect lrect(static_cast<int>(w * m_inplace_offset[0] - w_w/2),
+              static_cast<int>(h * m_inplace_offset[1] - w_h - padding_h), w_w, w_h);
   QPen rectpen(QPen(Qt::black, 3, Qt::SolidLine));
   QPen rectpen2(QPen(Qt::black, 2, Qt::SolidLine));
   QPainterPath path;
@@ -140,10 +140,11 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
       if (it != p_owner->m_atom_type_to_hide.end()) continue;
 
       painter.setPen(rectpen);
-      QRect sph(w * m_inplace_offset[0] - w_w/2 + sh * r_i + sph_padding * (r_i+1),
-                h * m_inplace_offset[1] - w_h - padding_h + sph_padding,
-                sh,
-                sh);
+      QRect sph(
+            static_cast<int>(w * m_inplace_offset[0] - w_w/2 + sh * r_i + sph_padding * (r_i+1)),
+            static_cast<int>(h * m_inplace_offset[1] - w_h - padding_h + sph_padding),
+            sh,
+            sh);
 
       auto ap_idx = ptable::number_by_symbol(p_owner->m_geom->atom_of_type(i));
 
@@ -224,22 +225,18 @@ std::string geom_view_labels_subsys_t::label_gen_fn(geom_view_t *owner,
 
     case geom_labels_style_e::show_type : {
         return owner->m_geom->atom(atom_id);
-        break;
       }
 
     case geom_labels_style_e::show_id : {
         return fmt::format("{}", atom_id);
-        break;
       }
 
     case geom_labels_style_e::show_id_type : {
         return fmt::format("{}{}", owner->m_geom->atom(atom_id), atom_id);
-        break;
       }
 
     case geom_labels_style_e::show_charge : {
         return fmt::format("{:2.2f}", owner->m_geom->xfield<float>(xgeom_charge, atom_id));
-        break;
       }
 
     case geom_labels_style_e::show_custom : {

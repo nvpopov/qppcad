@@ -78,7 +78,8 @@ compose_anim_from_files_widget_t::compose_anim_from_files_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setWindowTitle(tr("Compose anim from files"));
+  setWindowTitle(tr("Compose animation from files"));
+  setMaximumWidth(480);
 
   main_lt = new QVBoxLayout;
   setLayout(main_lt);
