@@ -360,7 +360,7 @@ void main_window_t::init_menus() {
   connect(help_menu_about,
           &QAction::triggered,
           [](){
-            QMessageBox::about(0, "qpp::cad",
+            QMessageBox::about(nullptr, "qpp::cad",
                                QObject::tr(
                                  "Site : <a href='https://github.com/nvpopov/qppcad'>"
                                  "https://github.com/nvpopov/qppcad"

@@ -32,7 +32,7 @@ void mesh_t::render() {
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glBindVertexArray(vao);
-  glapi->glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, 0);
+  glapi->glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, nullptr);
 }
 
 void mesh_t::begin_render_batch() {
@@ -44,7 +44,7 @@ void mesh_t::begin_render_batch() {
 void mesh_t::render_batch() {
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
-  glapi->glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, 0);
+  glapi->glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, nullptr);
 }
 
 void mesh_t::end_render_batch() {
@@ -65,14 +65,14 @@ void mesh_t::bind_data() {
   glapi->glBufferData(GL_ARRAY_BUFFER,
                       vertecies.size()*sizeof(float),
                       &vertecies[0],GL_STATIC_DRAW);
-  glapi->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glapi->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glapi->glEnableVertexAttribArray(0);
 
   glapi->glBindBuffer(GL_ARRAY_BUFFER, nbo);
   glapi->glBufferData(GL_ARRAY_BUFFER,
                       normals.size()*sizeof(float),
                       &normals[0], GL_STATIC_DRAW);
-  glapi->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glapi->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glapi->glEnableVertexAttribArray(1);
 
   glapi->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vio);

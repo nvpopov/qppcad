@@ -108,7 +108,7 @@ void simple_query::compose_gv_from_images(pybind11::list gvs) {
   new_anim.m_anim_name = "composed0";
   new_anim.m_anim_type = geom_anim_t::anim_geo_opt;
 
-  for (auto &list_itm : gvs)
+  for (auto list_itm : gvs)
     if (py::isinstance<geom_view_t &>(list_itm)) {
 
         geom_view_t &gv_src = py::cast<geom_view_t &>(list_itm);
