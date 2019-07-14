@@ -35,8 +35,6 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
       return nullptr;
     }
 
-  return nullptr;
-
 }
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(

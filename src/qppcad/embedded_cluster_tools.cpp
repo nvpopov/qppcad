@@ -15,12 +15,10 @@ void embedded_cluster_tools::find_high_symmetry_qm_cluster(geom_view_t *uc,
 
   if (qm_r_start_scan > qm_r_end_scan) {
       throw std::runtime_error("qm_r_start_scan > qm_r_end_scan!");
-      return;
     }
 
   if (!uc) {
       throw std::runtime_error("uc == nullptr");
-      return;
     }
 
   float dr = (qm_r_end_scan - qm_r_start_scan) / float(total_steps);
@@ -53,13 +51,11 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   if (!uc || uc->m_role != geom_view_role_e::r_uc) {
       //throw py::error_already_set();
       throw std::runtime_error("uc || uc->m_role != geom_view_role_t::role_uc");
-      return;
     }
 
   if (cls_r > cluster_r) {
       //throw py::error_already_set();
       throw std::runtime_error("cls_r > cluster_r");
-      return;
     }
 
   //try to find charges, classic and quantum geom_view`s
@@ -282,7 +278,6 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
 
   if (!ok) {
       throw std::runtime_error("Cannot deduce context for embedded cluster generation");
-      return;
     }
 
   bool succes{false};
@@ -308,10 +303,7 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
           }
       }
 
-  if (!succes) {
-      throw std::runtime_error("Cannot deduce context for embedded cluster generation");
-      return;
-    }
+  if (!succes) throw std::runtime_error("Cannot deduce context for embedded cluster generation");
 
 }
 
@@ -321,7 +313,6 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
 
   if (!qm || !cls) {
       throw std::runtime_error("!qm || !cls");
-      return;
     }
 
   //phase 1 : move atoms from cls to qm
@@ -365,7 +356,6 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls(std::shared_ptr<geom_view_t
                                                      std::shared_ptr<geom_view_t> cls) {
   if (!cls || !qm) {
       throw std::runtime_error("!chg || !cls || !qm");
-      return;
     } else {
       for (auto &elem : qm->m_atom_idx_sel) {
           cls->ins_atom(qm->m_geom->atom(elem.m_atm), qm->m_geom->pos(elem.m_atm));
@@ -384,6 +374,7 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls_cur() {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
+
           auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
           std::shared_ptr<geom_view_t> uc{nullptr};
@@ -393,14 +384,13 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls_cur() {
 
           deduce_embedding_context(uc, chg, cls, qm);
 
-          if (!chg || !cls || !qm) {
-              throw std::runtime_error("!chg || !cls || !qm");
-              return;
-            } else {
-              move_sel_from_qm_to_cls(qm, cls);
-            }
+          if (!chg || !cls || !qm) throw std::runtime_error("!chg || !cls || !qm");
+          else move_sel_from_qm_to_cls(qm, cls);
+
         }
+
     }
+
 }
 
 void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
@@ -412,6 +402,7 @@ void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
+
           auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
 
           std::shared_ptr<geom_view_t> uc{nullptr};
@@ -421,13 +412,11 @@ void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
 
           deduce_embedding_context(uc, chg, cls, qm);
 
-          if (!chg || !cls || !qm) {
-              throw std::runtime_error("!chg || !cls || !qm");
-              return;
-            } else {
-              set_qm_cluster_r(qm, cls, new_r);
-            }
+          if (!chg || !cls || !qm) throw std::runtime_error("!chg || !cls || !qm");
+          else set_qm_cluster_r(qm, cls, new_r);
+
         }
+
     }
 
 }

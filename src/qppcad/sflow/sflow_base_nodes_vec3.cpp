@@ -62,8 +62,6 @@ bool sf_v3f_final_node_t::execute_ex() {
       return false;
     }
 
-  return true;
-
 }
 
 bool sf_v3f_final_node_t::is_single_node() {

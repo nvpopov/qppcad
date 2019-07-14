@@ -95,8 +95,6 @@ bool sf_float_final_node_t::execute_ex() {
       return false;
     }
 
-  return true;
-
 }
 
 bool sf_float_final_node_t::is_single_node() {

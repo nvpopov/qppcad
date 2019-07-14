@@ -915,21 +915,18 @@ vector3<float> geom_view_t::get_xcolor(const size_t atm) {
 
   if (atm >= m_geom->nat()) {
       throw std::out_of_range("invalid atom id");
-      return vector3<float>(0);
     }
 
-  return vector3<float>{
-      m_geom->xfield<float>(xgeom_ccr, atm),
-          m_geom->xfield<float>(xgeom_ccg, atm),
-          m_geom->xfield<float>(xgeom_ccb, atm)
-    };
+  return vector3<float>{m_geom->xfield<float>(xgeom_ccr, atm),
+                        m_geom->xfield<float>(xgeom_ccg, atm),
+                        m_geom->xfield<float>(xgeom_ccb, atm)};
+
 }
 
 void geom_view_t::set_xcolorv(const size_t atm, const vector3<float> color) {
 
   if (atm >= m_geom->nat()) {
       throw std::out_of_range("invalid atom id");
-      return;
     }
 
   m_geom->xfield<float>(xgeom_ccr, atm) = color[0];
@@ -979,12 +976,10 @@ std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id)
 
   if (m_geom->field_type(xfield_id) != type_real) {
       throw std::invalid_argument(fmt::format("wrong xfield type with id {} ", xfield_id));
-      return {0,0};
     }
 
   if (m_geom->nat() == 0) {
       throw std::invalid_argument("m_geom->nat() == 0");
-      return {0,0};
     }
 
   float min_v = m_geom->xfield<float>(xfield_id, 0);
@@ -1719,7 +1714,7 @@ void geom_view_t::py_shake_atoms(pybind11::list atoms_to_shake, float magn) {
   app_state_t* astate = app_state_t::get_inst();
 
   std::set<size_t> atoms;
-  for (auto &elem : atoms_to_shake)
+  for (auto elem : atoms_to_shake)
     if (py::isinstance<py::int_>(elem)) atoms.insert(py::cast<int>(elem));
 
   shake_atoms(atoms, magn);

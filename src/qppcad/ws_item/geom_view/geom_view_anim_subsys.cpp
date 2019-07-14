@@ -241,31 +241,26 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
 
     if (_anim_n_id >= this->m_anim_data.size()) {
         throw std::out_of_range(fmt::format("invalid anim{} index={}", _order, _anim_n_id));
-        return;
       }
 
-    if (_anim_n_frm >= this->m_anim_data[_anim_n_id].frames.size()) {
+    if (_anim_n_frm >= this->m_anim_data[_anim_n_id].frames.size())
         throw std::out_of_range(fmt::format("invalid anim{} index={} frame={} of total={}",
                                             _order,
                                             _anim_n_id,
                                             _anim_n_frm,
-                                            this->m_anim_data[_anim_n_id].frames.size()
-                                            ));
-        return;
-      }
+                                            this->m_anim_data[_anim_n_id].frames.size())
+                                );
 
     size_t _frame_data_size =
         this->m_anim_data[_anim_n_id].frames[_anim_n_frm].atom_pos.size();
 
-    if (_frame_data_size != this->p_owner->m_geom->nat()) {
+    if (_frame_data_size != this->p_owner->m_geom->nat())
         throw std::out_of_range(fmt::format("invalid anim{} index={} frame={} framedata={}",
                                             _order,
                                             _anim_n_id,
                                             _anim_n_frm,
-                                            _frame_data_size
-                                            ));
-        return;
-      }
+                                            _frame_data_size)
+                                );
 
   };
 
@@ -375,21 +370,18 @@ void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id,
 
   if (!animable()) {
       throw std::runtime_error("Object is not animable!");
-      return;
     }
 
   if (m_cur_anim >= m_anim_data.size()) {
       throw std::out_of_range(fmt::format("Invalid anim m_cur_anim={}, m_anim_data.size={}",
                                           m_cur_anim,
                                           m_anim_data.size()));
-      return;
     }
 
   auto cur_anim = get_current_anim();
 
   if (!cur_anim) {
       throw std::runtime_error("cur_anim is not valid!");
-      return;
     }
 
   int current_frame = current_frame_truncated();
@@ -406,33 +398,23 @@ void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id,
   int c_end_frame = propagate_to_the_end ? cur_anim->frames.size() : current_frame + 1;
 
   for (int i = c_start_frame; i < c_end_frame; i++) {
-      if (cur_anim->frames[i].atom_pos.size() <= atom_id) {
-          throw std::out_of_range(fmt::format(
-                                    "cur_anim->frames[{}].atom_pos not populated!", i));
-          return;
-        }
+      if (cur_anim->frames[i].atom_pos.size() <= atom_id)
+          throw std::out_of_range(fmt::format("cur_anim->frames[{}].atom_pos not populated!", i));
       cur_anim->frames[i].atom_pos[atom_id] = p_owner->m_geom->coord(atom_id);
     }
 
   for (int i = 0; i < c_start_frame; i++) {
 
-      if (cur_anim->frames[i].atom_pos.size() <= atom_id) {
-          throw std::out_of_range(fmt::format(
-                                    "cur_anim->frames[{}].atom_pos not populated!", i));
-          return;
-        }
+      if (cur_anim->frames[i].atom_pos.size() <= atom_id)
+        throw std::out_of_range(fmt::format("cur_anim->frames[{}].atom_pos not populated!", i));
 
-      if (cur_anim->frames[c_start_frame].atom_pos.size() <= atom_id) {
-          throw std::out_of_range(fmt::format(
-                                    "cur_anim->frames[{}].atom_pos not populated!",
-                                    c_start_frame));
-          return;
-        }
+      if (cur_anim->frames[c_start_frame].atom_pos.size() <= atom_id)
+        throw std::out_of_range(fmt::format("cur_anim->frames[{}].atom_pos not populated!",
+                                            c_start_frame));
 
       float i_c = i / (c_start_frame - i);
-      cur_anim->frames[i].atom_pos[atom_id] =
-          cur_anim->frames[i].atom_pos[atom_id] +
-          (cur_anim->frames[i].atom_pos[atom_id] - cur_anim->frames[i].atom_pos[atom_id])*i_c;
+      cur_anim->frames[i].atom_pos[atom_id] = cur_anim->frames[i].atom_pos[atom_id] +
+          (cur_anim->frames[i].atom_pos[atom_id] - cur_anim->frames[i].atom_pos[atom_id]) * i_c;
 
     }
 
@@ -442,7 +424,6 @@ void geom_view_anim_subsys_t::manual_frame_manipulate(const int frame_mod) {
 
   if (!animable()) {
       throw std::runtime_error("Object is not animable!");
-      return;
     }
 
   if (m_cur_anim >= m_anim_data.size()) return;

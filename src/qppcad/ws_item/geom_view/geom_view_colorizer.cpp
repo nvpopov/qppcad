@@ -15,7 +15,6 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
 
   if (!al) {
       throw std::runtime_error("colorize_by_distance -> !al");
-      return;
     }
 
   //populate static anim
@@ -132,7 +131,6 @@ void geom_view_colorizer_helper::py_colorize_by_distance(float min_dist,
                 as_al.get(), min_dist, min_dist_color, over_dist_color, true, false, "", "");
           else {
               throw std::runtime_error("colorize_by_distance -> !al");
-              return;
             }
         }
     }
@@ -161,9 +159,9 @@ void geom_view_colorizer_helper::py_colorize_by_distance_with_pairs(
                 true, true, atom_type1, atom_type2);
           else {
               throw std::runtime_error("colorize_by_distance -> !al");
-              return;
             }
         }
+
     }
 
 }
