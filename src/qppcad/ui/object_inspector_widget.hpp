@@ -21,11 +21,8 @@ namespace qpp {
 
       public:
 
-        object_inspector_widget_t(QWidget *parent = 0);
+        explicit object_inspector_widget_t(QWidget *parent = 0);
         ~object_inspector_widget_t();
-
-        Q_PROPERTY(QString class READ cssClass)
-        QString cssClass() { return QString("object_inspector_widget"); }
 
         void update_ws_items_view_widget();
 

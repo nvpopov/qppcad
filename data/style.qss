@@ -183,20 +183,6 @@ QToolTip {
  color: black;
 }
 
-#obj_insp {
- border-left: 2px solid black;
- border-right: 1px solid black;
- margin-top: -5px;
- margin-left: -4px;
-}
-
-#ext_editor_compositor {
- border-left: 3px solid black;
- border-right: 0;
- margin-top: -5px;
- margin-left: -4px;
-}
-
 QSplitter {
  width:0px;
 }
@@ -302,7 +288,8 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 
 qpp--cad--qembed_window_t {
  border-top: 1px inset rgb(65, 65, 65);
- border-left: 1px inset rgb(35, 35, 35);
+ border-left: 1px inset rgb(65, 65, 65);
+ margin-right: -2px;
 }
 
 QGroupBox {

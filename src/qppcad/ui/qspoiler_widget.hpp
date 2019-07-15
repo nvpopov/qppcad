@@ -32,7 +32,7 @@ namespace qpp {
 
         explicit qspoiler_widget_t(const QString & title = "",
                                    QWidget *parent = 0,
-                                   bool _collapsable = false,
+                                   bool _collapsable = true,
                                    int _spacing = 6,
                                    int _max_width = 360,
                                    bool header_add_spacing_at_the_end = true,
