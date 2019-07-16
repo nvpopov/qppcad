@@ -713,8 +713,6 @@ void geom_view_t::flip_atom_in_cell(size_t at_id,
 
 void geom_view_t::flip_sel_atoms_in_cell(size_t dim_id, float flip_magn) {
 
-  app_state_t *astate = app_state_t::get_inst();
-
   begin_structure_change();
 
   index zero = index::D(m_geom->DIM).all(0);
@@ -949,11 +947,9 @@ void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
                                      const vector3<float> color_high,
                                      const size_t xfield_id) {
 
-  app_state_t* astate = app_state_t::get_inst();
-
   auto field_min_max = get_min_max_xfield(xfield_id);
 
-  bool has_static_anim{false};
+//  bool has_static_anim{false};
   opt<size_t> static_anim_id;
 
   for (size_t i = 0; i < m_geom->nat(); i++) {
@@ -1558,11 +1554,13 @@ void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info
       std::vector<STRING_EX> fn;
       std::vector<basic_types> ft;
 
-      for (auto &elem : data[JSON_GEOM_VIEW_XFIELD_NAMES]) fn.push_back(elem.get<std::string>());
+      auto &data_xf_names = data[JSON_GEOM_VIEW_XFIELD_NAMES];
+      std::transform(data_xf_names.begin(), data_xf_names.end(), std::back_inserter(fn),
+                     [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
 
       if (data.find(JSON_GEOM_VIEW_XFIELD_TYPES) != data.end())
         for (auto &elem : data[JSON_GEOM_VIEW_XFIELD_TYPES]) {
-            std::string fv = elem.get<std::string>();
+            STRING_EX fv = elem.get<STRING_EX>();
             if (fv == "b") ft.push_back(type_bool);
             if (fv == "i") ft.push_back(type_int);
             if (fv == "r") ft.push_back(type_real);
@@ -1711,8 +1709,6 @@ void geom_view_t::shake_atoms(std::set<size_t> atoms_to_shake, float magn) {
 
 void geom_view_t::py_shake_atoms(pybind11::list atoms_to_shake, float magn) {
 
-  app_state_t* astate = app_state_t::get_inst();
-
   std::set<size_t> atoms;
   for (auto elem : atoms_to_shake)
     if (py::isinstance<py::int_>(elem)) atoms.insert(py::cast<int>(elem));
@@ -1851,7 +1847,6 @@ std::vector<scalar_partition_per_type_t<>> geom_view_t::get_charge_partition() {
   for (size_t i = 0; i < m_geom->nat(); i++) {
 
       bool rec_founded{false};
-      size_t rec_id{0};
 
       for (size_t q = 0; q < retcp.size(); q++)
         if (retcp[q].atype == m_geom->type(i) &&

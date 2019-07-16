@@ -84,7 +84,7 @@ namespace qpp {
 
       private:
 
-        uint32_t p_flags;
+          uint32_t p_flags{0};
 
       public:
 

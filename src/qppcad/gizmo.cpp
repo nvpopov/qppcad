@@ -43,50 +43,44 @@ void gizmo_t::render () {
 
       astate->dp->render_cube(m_pos, _v_scale * 1.2f, clr_gray);
 
-      astate->dp->render_general_mesh(
-            m_pos + gizmo_axis[0] * m_shift_magn,
-          _v_one * 0.35f,
-          vector3<float>( 0.0f, float(pi) / 2, 0.0f ),
-          gizmo_color[0],
-          astate->mesh_unit_cone);
+      astate->dp->render_general_mesh(m_pos + gizmo_axis[0] * m_shift_magn,
+                                      _v_one * 0.35f,
+                                      vector3<float>( 0.0f, float(pi) / 2, 0.0f ),
+                                      gizmo_color[0],
+                                      astate->mesh_unit_cone);
 
-      astate->dp->render_general_mesh(
-            m_pos + gizmo_axis[1] * m_shift_magn,
-          _v_one * 0.35f,
-          vector3<float>( 0.0f, 0.0f, -float(pi) / 2 ),
-          gizmo_color[1],
-          astate->mesh_unit_cone);
+      astate->dp->render_general_mesh(m_pos + gizmo_axis[1] * m_shift_magn,
+                                      _v_one * 0.35f,
+                                      vector3<float>( 0.0f, 0.0f, -float(pi) / 2 ),
+                                      gizmo_color[1],
+                                      astate->mesh_unit_cone);
 
-      astate->dp->render_general_mesh(
-            m_pos + gizmo_axis[2] * m_shift_magn,
-          _v_one * 0.35f,
-          vector3<float>( 0.0f, 0.0f, 0.0f),
-          gizmo_color[2],
-          astate->mesh_unit_cone);
+      astate->dp->render_general_mesh(m_pos + gizmo_axis[2] * m_shift_magn,
+                                      _v_one * 0.35f,
+                                      vector3<float>( 0.0f, 0.0f, 0.0f),
+                                      gizmo_color[2],
+                                      astate->mesh_unit_cone);
 
-      astate->dp->render_general_mesh(
-            m_pos + gizmo_axis[0] * (m_shift_magn-m_box_size-1.25f),
-          vector3<float>( _v_scale[0] , _v_scale[1] ,
-          (m_shift_magn/2-m_box_size) + 1.75f),
-          vector3<float>( 0.0f, float(pi) / 2.0,  0.0f),
-          gizmo_color[0],
-          astate->mesh_cylinder);
+      astate->dp->render_general_mesh(m_pos + gizmo_axis[0] * (m_shift_magn-m_box_size-1.25f),
+                                      vector3<float>( _v_scale[0] , _v_scale[1] ,
+                                      (m_shift_magn/2-m_box_size) + 1.75f),
+                                      vector3<float>( 0.0f, float(pi) / 2.0,  0.0f),
+                                      gizmo_color[0],
+                                      astate->mesh_cylinder);
 
-      astate->dp->render_general_mesh(
-            m_pos + gizmo_axis[1] * (m_shift_magn-m_box_size+0.75),
-          vector3<float>( _v_scale[0] , _v_scale[1] ,
-          (m_shift_magn/2-m_box_size) + 1.75f),
-          vector3<float>( 0.0f, 0.0f,  float(pi) / 2.0),
-          gizmo_color[1],
-          astate->mesh_cylinder);
+      astate->dp->render_general_mesh(m_pos + gizmo_axis[1] * (m_shift_magn-m_box_size+0.75),
+                                      vector3<float>( _v_scale[0] , _v_scale[1] ,
+                                      (m_shift_magn/2-m_box_size) + 1.75f),
+                                      vector3<float>( 0.0f, 0.0f,  float(pi) / 2.0),
+                                      gizmo_color[1],
+                                      astate->mesh_cylinder);
 
-      astate->dp->render_general_mesh(
-            m_pos + gizmo_axis[2] * (m_shift_magn-m_box_size-1.25f),
-          vector3<float>( _v_scale[0] , _v_scale[1] ,
-          (m_shift_magn/2-m_box_size) + 1.75f),
-          vector3<float>( 0.0f, 0.0f,  0.0f),
-          gizmo_color[2],
-          astate->mesh_cylinder);
+      astate->dp->render_general_mesh(m_pos + gizmo_axis[2] * (m_shift_magn-m_box_size-1.25f),
+                                      vector3<float>( _v_scale[0] , _v_scale[1] ,
+                                      (m_shift_magn/2-m_box_size) + 1.75f),
+                                      vector3<float>( 0.0f, 0.0f,  0.0f),
+                                      gizmo_color[2],
+                                      astate->mesh_cylinder);
 
       astate->dp->end_render_general_mesh();
 
@@ -96,10 +90,9 @@ void gizmo_t::render () {
       astate->dp->begin_render_line();
 
       for (uint8_t i = 0; i < 3; i++)
-        if (m_bx_touched[i])
-          astate->dp->render_line(gizmo_color[i],
-                                  m_pos - gizmo_axis[i] * 120 + vec_small_aliasing,
-                                  m_pos + gizmo_axis[i] * 120 + vec_small_aliasing);
+        if (m_bx_touched[i]) astate->dp->render_line(gizmo_color[i],
+                                                  m_pos - gizmo_axis[i] * 120 + vec_small_aliasing,
+                                                  m_pos + gizmo_axis[i] * 120 + vec_small_aliasing);
         else astate->dp->render_line(gizmo_color[i],
                                      m_pos - gizmo_axis[i] * 2 + vec_small_aliasing,
                                      m_pos + gizmo_axis[i] * 2 + vec_small_aliasing);
