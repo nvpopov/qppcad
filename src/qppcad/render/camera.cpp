@@ -35,18 +35,21 @@ void camera_t::orthogonalize_gs () {
 
 void camera_t::rotate_camera_around_origin (const matrix3<float> &mat_rot,
                                             const vector3<float> origin) {
+
   translate_camera(-origin);
   m_view_point = mat_rot * m_view_point;
   m_look_at    = mat_rot * m_look_at;
   m_look_up    = mat_rot * m_look_up;
   translate_camera(origin);
   orthogonalize_gs();
+
 }
 
 void camera_t::rotate_camera_around_axis (const float angle, const vector3<float> axis) {
-  Eigen::Matrix<float, 3, 3> mr = Eigen::Matrix<float, 3, 3>::Identity();
-  mr = Eigen::AngleAxisf(angle, axis);
+
+  Eigen::Matrix<float, 3, 3> mr{Eigen::AngleAxisf(angle, axis)};
   rotate_camera_around_origin(mr, m_look_at);
+
 }
 
 void camera_t::rotate_camera_orbit_yaw (const float yaw) {
@@ -62,26 +65,34 @@ void camera_t::rotate_camera_orbit_roll(const float roll) {
 }
 
 void camera_t::translate_camera_forward (const float amount) {
+
   vector3<float> view_dir_new = m_view_dir.normalized();
   m_view_point += view_dir_new * amount;
   m_look_at    += view_dir_new * amount;
+
 }
 
 void camera_t::translate_camera_right (const float amount) {
+
   vector3<float> _tmp_tr = m_right * amount;
   m_view_point += _tmp_tr;
   m_look_at += _tmp_tr;
+
 }
 
 void camera_t::translate_camera_up (const float amount) {
+
   vector3<float> _tmp_tr = m_look_up * amount;
   m_view_point += _tmp_tr;
   m_look_at += _tmp_tr;
+
 }
 
 void camera_t::translate_camera (const vector3<float> shift) {
+
   m_view_point += shift;
   m_look_at    += shift;
+
 }
 
 void camera_t::copy_from_camera(const camera_t &another) {
@@ -112,13 +123,12 @@ void camera_t::copy_from_camera(const camera_t &another) {
 }
 
 void camera_t::reset_camera () {
-  //
+
   m_view_point = vector3<float>(0.0, 9.0, 0.0);
   m_look_at    = vector3<float>(0.0, 0.0, 0.0);
   m_look_up    = vector3<float>(0.0, 0.0, 1.0);
   orthogonalize_gs();
 
-  //m_cur_proj = cam_proj_t::proj_persp;
 }
 
 void camera_t::update_camera () {
@@ -236,7 +246,7 @@ void camera_t::update_camera_rotation (bool rotate_camera) {
 
 void camera_t::set_projection (cam_proj_t _proj_to_set) {
 
-  if (m_cur_proj != _proj_to_set){
+  if (m_cur_proj != _proj_to_set) {
       reset_camera();
       m_cur_proj = _proj_to_set;
     }
@@ -251,9 +261,7 @@ vector3<float> camera_t::unproject (const float _x, const float _y, const float 
   //app_state_t* astate = &(c_app::get_state());
   matrix4<float> mat_mvp_inv = (m_mat_proj * m_mat_view).inverse();
   vector4<float> invec4(_x, _y, _z, 1.0f);
-  vector4<float> rvec4 = vector4<float>::Zero();
-
-  rvec4 = mat_mvp_inv * invec4;
+  vector4<float> rvec4 =  mat_mvp_inv * invec4;
 
   rvec4(3) = 1.0f / rvec4(3);
   rvec4(0) = rvec4(0) * rvec4(3);

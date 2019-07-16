@@ -293,21 +293,21 @@ namespace qpp {
       settings.endGroup();
 
       settings.beginWriteArray("pyconsole_history");
-      for (int i = 0; i < py_mgr->m_commands.size(); i++) {
-          settings.setArrayIndex(i);
-          settings.setValue("cmd", py_mgr->m_commands[i]);
+      for (int q = 0; q < py_mgr->m_commands.size(); q++) {
+          settings.setArrayIndex(q);
+          settings.setValue("cmd", py_mgr->m_commands[q]);
         }
 
       settings.endArray();
 
       settings.beginWriteArray("recent_files");
-      for (int i = 0; i < m_recent_files.size(); i++) {
-          settings.setArrayIndex(i);
-          settings.setValue("filename", QString::fromStdString(m_recent_files[i].m_file_name));
+      for (int q = 0; q < m_recent_files.size(); q++) {
+          settings.setArrayIndex(q);
+          settings.setValue("filename", QString::fromStdString(m_recent_files[q].m_file_name));
           std::string ff_name =
-              ws_mgr->m_bhv_mgr->get_ff_short_name(m_recent_files[i].m_ff_id);
+              ws_mgr->m_bhv_mgr->get_ff_short_name(m_recent_files[q].m_ff_id);
           settings.setValue("ff", QString::fromStdString(ff_name));
-          settings.setValue("isnat", m_recent_files[i].m_native);
+          settings.setValue("isnat", m_recent_files[q].m_native);
         }
 
       settings.endArray();
@@ -336,7 +336,7 @@ namespace qpp {
       for (auto &rec : m_cache_vector) {
           QStringList vecl;
           vecl.reserve(3);
-          for (size_t i = 0; i < 3; i++) vecl.push_back(QString("%1").arg(rec.second[i]));
+          for (size_t q = 0; q < 3; q++) vecl.push_back(QString("%1").arg(rec.second[q]));
           settings.setValue(QString::fromStdString(rec.first), vecl);
         }
 
@@ -360,13 +360,13 @@ namespace qpp {
 
     }
 
-    void app_state_t::add_recent_file(const std::string file_name,
+    void app_state_t::add_recent_file(const std::string &file_name,
                                       const bool is_native,
                                       const size_t ff_id) {
 
       QFileInfo file_info(QString::fromStdString(file_name));
       m_last_dir =  file_info.absoluteDir().path();
-      log(fmt::format("M_LAST_DIR= {}", m_last_dir.toStdString()));
+      tlog("M_LAST_DIR= {}", m_last_dir.toStdString());
 
       if (m_recent_files.size() >= max_recent_files)
         m_recent_files.erase(m_recent_files.begin() ,

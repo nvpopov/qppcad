@@ -33,7 +33,7 @@ namespace qpp {
         size_t m_ff_id;
         bool m_native;
         recent_file_record_t(){}
-        recent_file_record_t(const std::string _file_name ,
+        recent_file_record_t(const std::string &_file_name,
                              const size_t _ff,
                              const bool _native) :
           m_file_name(_file_name), m_ff_id(_ff), m_native(_native){}
@@ -89,7 +89,7 @@ namespace qpp {
 
         }
 
-        void add_recent_file(const std::string file_name,
+        void add_recent_file(const std::string &file_name,
                              const bool is_native,
                              const size_t bhv_id);
 
