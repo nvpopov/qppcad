@@ -20,18 +20,18 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   btn_add_new_ws_item = new QPushButton;
   btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
-                                 astate->size_guide.spoiler_button_h()));
+                                          astate->size_guide.spoiler_button_h()));
   btn_add_new_ws_item->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
-                                astate->size_guide.spoiler_button_icon_h()));
+                                         astate->size_guide.spoiler_button_icon_h()));
   btn_add_new_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
   btn_add_new_ws_item->setFlat(true);
   btn_add_new_ws_item->setToolTip(tr("Add new ws_item"));
 
   btn_refresh_oi = new QPushButton;
   btn_refresh_oi->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
-                                 astate->size_guide.spoiler_button_h()));
+                                     astate->size_guide.spoiler_button_h()));
   btn_refresh_oi->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
-                                astate->size_guide.spoiler_button_icon_h()));
+                                    astate->size_guide.spoiler_button_icon_h()));
   btn_refresh_oi->setIcon(QIcon("://images/outline-refresh-24px.svg"));
   btn_refresh_oi->setFlat(true);
   btn_refresh_oi->setToolTip(tr("Refresh the object inspector"));
@@ -294,21 +294,21 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
 
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
 
-  if (!ok) return;
+      if (!ok) return;
 
-  size_t total_ext_editors{0};
+      size_t total_ext_editors{0};
 
   std::vector<qextended_action*> ext_acts;
 
   for (auto &ext_edt_info : astate->ws_mgr->m_bhv_mgr->m_ext_editors_info)
-      if (ext_edt_info.second.m_type == cur_it->get_type()) {
-          total_ext_editors++;
-          qextended_action *new_act = new qextended_action;
-          new_act->setText(QString::fromStdString(ext_edt_info.second.m_full_name));
-          new_act->m_joined_data[0] = ext_edt_info.second.m_type;
-          new_act->m_joined_data[1] = ext_edt_info.second.m_order;
-          ext_acts.push_back(new_act);
-        }
+    if (ext_edt_info.second.m_type == cur_it->get_type()) {
+        total_ext_editors++;
+        qextended_action *new_act = new qextended_action;
+        new_act->setText(QString::fromStdString(ext_edt_info.second.m_full_name));
+        new_act->m_joined_data[0] = ext_edt_info.second.m_type;
+        new_act->m_joined_data[1] = ext_edt_info.second.m_order;
+        ext_acts.push_back(new_act);
+      }
 
   if (total_ext_editors <= 1) return;
 

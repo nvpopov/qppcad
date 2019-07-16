@@ -44,9 +44,11 @@ std::shared_ptr<ws_item_t> workspace_t::get_selected_sp() {
 
 std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
 
-  for (auto item : m_ws_items)
-    if (item->m_name == _name) return item;
-  return nullptr;
+  auto result = std::find_if(
+                  m_ws_items.begin(), m_ws_items.end(),
+                  [&_name](std::shared_ptr<ws_item_t> src){return src->m_name == _name;}
+                );
+  return *result;
 
 }
 
@@ -191,10 +193,11 @@ void workspace_t::render() {
   if (astate->dp) {
 
       if (astate->m_show_axis) { // Draw axis
+
           vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
-          float axis_magn = 0.07f *astate->camera->m_stored_dist;
-          if (astate->camera->m_cur_proj == cam_proj_t::proj_persp) axis_magn = 0.015f;
-          else axis_magn = m_camera->m_ortho_scale * 0.1f;
+          float axis_magn = astate->camera->m_cur_proj == cam_proj_t::proj_persp ?
+                              0.07f *astate->camera->m_stored_dist :
+                              m_camera->m_ortho_scale * 0.1f;
 
           astate->dp->begin_render_line();
           astate->dp->
@@ -429,7 +432,6 @@ void workspace_t::update (float delta_time) {
     }
 
   //handle deletion
-  bool need_to_emit_ws_changed{false};
 
   for (auto it = m_ws_items.begin(); it != m_ws_items.end(); )
     if ((*it)->m_marked_for_deletion) {
@@ -444,8 +446,6 @@ void workspace_t::update (float delta_time) {
         it->get()->m_connected_items.clear();
         it = m_ws_items.erase(it);
         //it->reset();
-        need_to_emit_ws_changed = true;
-        app_state_t* astate = app_state_t::get_inst();
         astate->astate_evd->cur_ws_changed();
       }
     else {
@@ -473,7 +473,6 @@ void workspace_t::copy_camera(std::shared_ptr<workspace_t> source) {
   if (!source->m_camera) return;
   if (!m_camera) return;
 
-  app_state_t *astate = app_state_t::get_inst();
   m_first_render = false;
   m_camera->update_camera();
   m_camera->copy_from_camera(*source->m_camera);
@@ -540,10 +539,11 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target_name) {
 
-  for (auto item : m_ws)
-    if (item->m_ws_name == target_name) return item;
-
-  return nullptr;
+  auto result = std::find_if(m_ws.begin(), m_ws.end(),
+                             [&target_name](std::shared_ptr<workspace_t> src)
+                             {return src->m_ws_name == target_name;}
+                            );
+  return *result;
 
 }
 
@@ -582,8 +582,6 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
 }
 
 void workspace_manager_t::init_default () {
-
-  app_state_t* astate = app_state_t::get_inst();
 
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   if (!test_in_dev_env.good()) return;
