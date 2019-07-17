@@ -18,6 +18,7 @@ namespace qpp {
 
     /// \brief The mesh_t class
     class mesh_t {
+
       public:
 
         /// Raw vertex data
@@ -47,6 +48,7 @@ namespace qpp {
 
         /// \brief bind_data
         void bind_data();
+
     };
 
     template<typename REAL = float>

@@ -50,7 +50,8 @@ mesh_t *mesh_generators::plane_zl() {
 
 }
 
-mesh_t *mesh_generators::quad_zup( ) {
+mesh_t *mesh_generators::quad_zup() {
+
   mesh_t* _mesh = new mesh_t();
 
   float quad_vert[12] = {
@@ -85,7 +86,8 @@ mesh_t *mesh_generators::quad_zup( ) {
 
 }
 
-mesh_t *mesh_generators::quad () {
+mesh_t *mesh_generators::quad() {
+
   mesh_t* _mesh = new mesh_t();
 
   float quad_vert[12] = {
@@ -114,13 +116,14 @@ mesh_t *mesh_generators::quad () {
 
   for (uint8_t i = 0; i < 6; i++) _mesh->indices.push_back(quad_idx[i]);
 
-
   _mesh->num_primitives = _mesh->indices.size()*3;
   _mesh->bind_data();
   return _mesh;
+
 }
 
-mesh_t *mesh_generators::sphere (const int lat_bands, const int long_bands) {
+mesh_t *mesh_generators::sphere(const int lat_bands, const int long_bands) {
+
   mesh_t* _mesh = new mesh_t();
 
   //float radius = 1.0f;
@@ -172,6 +175,7 @@ mesh_t *mesh_generators::sphere (const int lat_bands, const int long_bands) {
   _mesh->num_primitives = _mesh->indices.size()*3;
   _mesh->bind_data();
   return _mesh;
+
 }
 
 mesh_t *mesh_generators::cylinder_whole (const int num_phi, const int num_z) {
@@ -333,11 +337,11 @@ mesh_t *mesh_generators::cylinder_mk2 (const int num_segment_height,
       offset++;
     }
 
-
   _mesh->num_primitives = _mesh->indices.size();
   _mesh->bind_data();
   _mesh->mesh_rt = GL_TRIANGLES;
   return _mesh;
+
 }
 
 mesh_t *mesh_generators::unit_line() {
@@ -422,7 +426,7 @@ mesh_t *mesh_generators::cone(const float radius,
 
   offset++;
 
-  for (uint8_t j=0; j<= num_segment_base; j++){
+  for (uint8_t j=0; j<= num_segment_base; j++) {
 
       float x_0 = radius * cosf(j * delta_angle);
       float y_0 = radius * sinf(j * delta_angle);
@@ -449,10 +453,13 @@ mesh_t *mesh_generators::cone(const float radius,
   _mesh->bind_data();
   _mesh->mesh_rt = GL_TRIANGLES;
   return _mesh;
+
 }
 
 mesh_t *mesh_generators::unit_cube() {
+
   mesh_t* _mesh = new mesh_t();
+
   float cv[] = {
     -1.0f,-1.0f,-1.0f,
     -1.0f,-1.0f, 1.0f,
@@ -492,7 +499,8 @@ mesh_t *mesh_generators::unit_cube() {
     1.0f,-1.0f, 1.0f
   };
 
-  for (uint8_t i = 0 ; i < 12; i++){
+  for (uint8_t i = 0 ; i < 12; i++) {
+
       _mesh->vertecies.push_back(cv[i*9]);
       _mesh->vertecies.push_back(cv[i*9+1]);
       _mesh->vertecies.push_back(cv[i*9+2]);
@@ -528,16 +536,17 @@ mesh_t *mesh_generators::unit_cube() {
       _mesh->indices.push_back((i*3) + 1);
       _mesh->indices.push_back((i*3) + 2);
 
-
     }
 
   _mesh->num_primitives = 36;
   _mesh->bind_data();
   _mesh->mesh_rt = GL_TRIANGLES;
   return _mesh;
+
 }
 
-mesh_t *mesh_generators::xz_plane(const int n_x, const float dx, const int n_z, const float dz){
+mesh_t *mesh_generators::xz_plane(const int n_x, const float dx, const int n_z, const float dz) {
+
   mesh_t* _mesh = new mesh_t();
 
   for (int ix = 0; ix < n_x; ix++){
@@ -587,9 +596,11 @@ mesh_t *mesh_generators::xz_plane(const int n_x, const float dx, const int n_z, 
   _mesh->bind_data();
   _mesh->mesh_rt = GL_LINES;
   return _mesh;
+
 }
 
 mesh_t *mesh_generators::cross_line_atom () {
+
   mesh_t* _mesh = new mesh_t();
 
   // 0 - 0

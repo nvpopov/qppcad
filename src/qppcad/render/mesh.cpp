@@ -9,6 +9,7 @@ mesh_t::mesh_t() {
 }
 
 void mesh_t::construct_explicit() {
+
   mesh_rt = GL_TRIANGLES;
 
   app_state_t* astate = app_state_t::get_inst();
@@ -26,31 +27,40 @@ void mesh_t::construct_explicit() {
   glapi->glGenBuffers(1, &vio);
   glapi->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vio);
   glapi->glBindVertexArray(0);
+
 }
 
 void mesh_t::render() {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glBindVertexArray(vao);
   glapi->glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, nullptr);
+
 }
 
 void mesh_t::begin_render_batch() {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glBindVertexArray(vao);
+
 }
 
 void mesh_t::render_batch() {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glDrawElements(mesh_rt, num_primitives, GL_UNSIGNED_INT, nullptr);
+
 }
 
 void mesh_t::end_render_batch() {
+
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
   glapi->glBindVertexArray(0);
+
 }
 
 void mesh_t::bind_data() {
@@ -58,7 +68,9 @@ void mesh_t::bind_data() {
   glapi_t* glapi = astate->glapi;
   glapi->glBindVertexArray(0);
 
-  astate->tlog("Pre bind data to mesh[vao={}, vbo={}, nbo={}, vio={}]", vao, vbo, nbo, vio);
+  astate->tlog("Pre bind data to mesh[vao={}, vbo={}, nbo={}, vio={}]",
+               vao, vbo, nbo, vio);
+
   glapi->glBindVertexArray(vao);
 
   glapi->glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -82,10 +94,10 @@ void mesh_t::bind_data() {
   glapi->glBindVertexArray(0);
 
   astate->tlog("Binded data to mesh[vao={}, vbo={}, nbo={}, vio={}] with vs={}, ns={}, is={}",
-                          vao, vbo, nbo, vio,
-                          vertecies.size(),
-                          normals.size(),
-                          indices.size());
+               vao, vbo, nbo, vio,
+               vertecies.size(),
+               normals.size(),
+               indices.size());
 
 }
 

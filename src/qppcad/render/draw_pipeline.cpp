@@ -404,27 +404,28 @@ void draw_pipeline_t::render_general_mesh (const matrix4<float> &model_matrix,
 
   shader_program_t *_wrp{nullptr};
   if (custom_sp) _wrp = custom_sp;
-  else custom_sp = astate->sp_mvp_ssl;
+  else _wrp = astate->sp_mvp_ssl;
 
-  custom_sp->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
-  custom_sp->set_u(sp_u_name::m_model_view, mat_model_view.data());
-  custom_sp->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
-  custom_sp->set_u(sp_u_name::v_color, (GLfloat*)(mesh_color.data()));
+  _wrp->set_u(sp_u_name::m_model_view_proj, mat_model_view_proj.data());
+  _wrp->set_u(sp_u_name::m_model_view, mat_model_view.data());
+  _wrp->set_u(sp_u_name::m_model_view_inv_tr, mat_model_view_inv_tr.data());
+  _wrp->set_u(sp_u_name::v_color, (GLfloat*)(mesh_color.data()));
 
-  if (custom_sp->unf_rec[sp_u_name::f_color_alpha].h_prog != -1) {
-      custom_sp->set_u(sp_u_name::f_color_alpha, &alpha);
+  if (_wrp->unf_rec[sp_u_name::f_color_alpha].h_prog != -1) {
+      _wrp->set_u(sp_u_name::f_color_alpha, &alpha);
       astate->glapi->glEnable(GL_BLEND);
       astate->glapi->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
   mesh->render();
+
 }
 
 void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
                                    const vector3<float> &cube_size,
                                    const vector3<float> &cube_color) {
-  app_state_t* astate = app_state_t::get_inst();
 
+  app_state_t* astate = app_state_t::get_inst();
 
   Eigen::Transform<float, 3, Eigen::Affine>
       t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
@@ -445,6 +446,7 @@ void draw_pipeline_t::render_cube (const vector3<float> &cube_pos,
   //glDisable(GL_CULL_FACE);
   astate->mesh_unit_cube->render();
   //glEnable(GL_CULL_FACE);
+
 }
 
 void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
@@ -470,6 +472,7 @@ void draw_pipeline_t::render_cone (const vector3<float> &cone_pos,
   //glDisable(GL_CULL_FACE);
   astate->mesh_unit_cone->render();
   //glEnable(GL_CULL_FACE);
+
 }
 
 void draw_pipeline_t::render_arrow(const vector3<float> &arrow_start,
@@ -522,14 +525,14 @@ void draw_pipeline_t::end_render_general_mesh (shader_program_t *custom_sp) {
 
   shader_program_t *_wrp{nullptr};
   if (custom_sp) _wrp = custom_sp;
-  else custom_sp = astate->sp_mvp_ssl;
+  else _wrp = astate->sp_mvp_ssl;
 
-  if (custom_sp->unf_rec[sp_u_name::f_color_alpha].h_prog != -1) {
+  if (_wrp->unf_rec[sp_u_name::f_color_alpha].h_prog != -1) {
       astate->glapi->glDisable(GL_BLEND);
       // astate->glapi->glCullFace(GL_BACK);
       astate->glapi->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
-  custom_sp->end_shader_program();
+  _wrp->end_shader_program();
 
 }
 
@@ -656,6 +659,7 @@ void draw_pipeline_t::begin_render_line () {
                               astate->camera->m_proj_view.data());
   astate->sp_unit_line->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());
   astate->mesh_unit_line->begin_render_batch();
+
 }
 
 void draw_pipeline_t::render_line(const vector3<float> &color,
@@ -720,23 +724,28 @@ void draw_pipeline_t::end_render_line_styled () {
 }
 
 void draw_pipeline_t::begin_render_line_mesh() {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->sp_line_mesh->begin_shader_program();
-  astate->sp_line_mesh->set_u(sp_u_name::m_model_view_proj,
-                              astate->camera->m_proj_view.data());
+  astate->sp_line_mesh->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
+
 }
 
 void draw_pipeline_t::render_line_mesh(const vector3<float> &pos,
                                        const vector3<float> &color) {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->sp_line_mesh->set_u(sp_u_name::v_translate, (GLfloat*)pos.data());
   astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)color.data());
   astate->mesh_xline_mesh->render_batch();
+
 }
 
 void draw_pipeline_t::end_render_line_mesh() {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->sp_line_mesh->end_shader_program();
+
 }
 
 void draw_pipeline_t::render_screen_quad () {
