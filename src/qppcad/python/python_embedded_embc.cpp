@@ -2,6 +2,7 @@
 #undef slots
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
+#include <pybind11/stl.h>
 #pragma pop_macro("slots")
 
 //#include <qppcad/python_simple_query.hpp>

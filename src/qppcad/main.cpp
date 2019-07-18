@@ -57,7 +57,7 @@ int main (int argc, char **argv) {
 
       for (auto &rec : args) {
           astate->tlog("@DEBUG: passed to load_from_file_autodeduce, path={}, ff={}",
-                       rec.toStdString(), file_format);
+                       rec.toStdString(), file_format.empty() ? "NONE" : file_format);
           astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format);
         }
 

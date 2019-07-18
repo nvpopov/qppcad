@@ -340,8 +340,9 @@ void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
   auto _con_items = data.find(JSON_WS_ITEM_CONNECTED_ITEMS);
   if (_con_items != data.end()) {
       std::vector<std::string> rc_ci;
-      auto val = _con_items.value();
-      std::copy(val.begin(), val.end(), rc_ci.begin());
+      auto &val = _con_items.value();
+      std::transform(val.begin(), val.end(), std::back_inserter(rc_ci),
+                     [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
       rep_info.m_connected_items[m_name] = rc_ci;
     }
 
