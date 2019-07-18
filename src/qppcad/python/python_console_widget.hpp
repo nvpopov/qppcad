@@ -45,7 +45,7 @@ namespace qpp {
         QTextEdit *script_editor;
         QSplitter *edt_splitter;
 
-        python_console_widget_t(QWidget *parent);
+        explicit python_console_widget_t(QWidget *parent);
 
       public slots:
 
@@ -67,7 +67,7 @@ namespace qpp {
         QStringList m_wl;
         int m_cur_cmd{0}, m_curs_pos{0}, m_indent{0};
 
-        python_text_editor_t(QWidget *parent);
+        explicit python_text_editor_t(QWidget *parent);
         void keyPressEvent(QKeyEvent *event);
         void last_command_reached();
         QString text_under_cursor() const;
@@ -95,7 +95,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        python_text_editor_syntax_highilighter_t(QTextDocument *parent = 0);
+        explicit python_text_editor_syntax_highilighter_t(QTextDocument *parent = 0);
         QVector<python_highlighting_rule_t> hl_rules;
 
       protected:
