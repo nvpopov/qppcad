@@ -126,8 +126,7 @@ namespace qpp {
                                        const std::string file_format = "",
                                        bool create_new_ws = true);
 
-        void load_from_file(const std::string &fname,
-                            bool override = true);
+        void load_from_file(const std::string &fname, bool override = true);
 
         void import_from_file(const std::string &fname,
                               size_t bhv_id,

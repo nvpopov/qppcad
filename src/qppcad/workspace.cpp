@@ -547,29 +547,37 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target
 
 }
 
-opt<size_t> workspace_manager_t::get_cur_id () {
+opt<size_t> workspace_manager_t::get_cur_id() {
 
   if (!m_ws.empty()) return m_cur_ws_id;
   return std::nullopt;
 
 }
 
-bool workspace_manager_t::set_cur_id (const opt<size_t> ws_index) {
+bool workspace_manager_t::set_cur_id(const opt<size_t> ws_index) {
 
   //c_app::log("set current called");
   app_state_t* astate = app_state_t::get_inst();
 
-  if (ws_index && *ws_index < m_ws.size() && has_wss()) {
-      m_cur_ws_id = opt<size_t>(ws_index);
-      //update_window_title();
-      astate->camera = m_ws[*ws_index]->m_camera.get();
-      astate->camera->update_camera();
-      astate->astate_evd->cur_ws_changed();
-      return true;
-    }
+  astate->tlog("ws::set_cur_id({})", *ws_index);
 
-  astate->camera = nullptr;
-  astate->astate_evd->cur_ws_changed();
+  if (has_wss()) {
+
+      if (ws_index && *ws_index < m_ws.size()) {
+          m_cur_ws_id = opt<size_t>(ws_index);
+          //update_window_title();
+          astate->camera = m_ws[*ws_index]->m_camera.get();
+          astate->camera->update_camera();
+          astate->astate_evd->cur_ws_changed();
+          return true;
+        }
+    } else {
+      m_cur_ws_id = std::nullopt;
+      astate->camera = nullptr;
+      astate->astate_evd->cur_ws_changed();
+      return false;
+  }
+
   return false;
 
 }
