@@ -63,6 +63,7 @@ namespace qpp {
         QComboBox *cmb_method;
         QCheckBox *chck_only_selected;
         QPushButton *btn_compute;
+        QPushButton *btn_copy_to_clipboard;
 
         QGroupBox *gb_str_sim_output;
         QVBoxLayout *gb_str_sim_output_lt;
@@ -73,12 +74,16 @@ namespace qpp {
         void compute_structure_similarity(ws_item_t *g1, ws_item_t *g2);
         void compute_structure_similarity_naive(geom_view_t *g1, geom_view_t *g2);
         void compute_structure_similarity_tws_tree(geom_view_t *g1, geom_view_t *g2);
-        void set_out_table_data(geom_view_t *g1, geom_view_t *g2,
-                                size_t atom_idx, vector3<float> _dp);
+        void set_out_table_data(geom_view_t *g1,
+                                geom_view_t *g2,
+                                size_t table_idx,
+                                size_t atom_idx,
+                                vector3<float> _dp);
 
       public slots:
 
-        void compute_button_clicked();
+        void compute_btn_clck();
+        void copy_to_cb_btn_clck();
 
     };
 
