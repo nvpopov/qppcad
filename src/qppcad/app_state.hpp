@@ -84,8 +84,8 @@ namespace qpp {
           std::string ts( ctime( &t) );
           std::string pf = fmt::format("[{}] ", ts.substr( 0, ts.length() - 1));
           std::string body = fmt::vformat(format, fmt::make_format_args(args...));
-          std::string message = pf + body +"\n";
-          std::cout << message << std::flush;
+          std::string message = pf + body ;
+          std::cout << message << "\n" << std::flush;
           astate_evd->log_widget_query(message);
 
         }
