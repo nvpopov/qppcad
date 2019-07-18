@@ -88,6 +88,10 @@ void app_state_event_disp_t::python_console_font_size_updated(){
   emit(python_console_font_size_updated_signal());
 }
 
+void app_state_event_disp_t::log_widget_query(const std::string &message) {
+  emit(log_widget_query(message));
+}
+
 app_state_event_disp_t::app_state_event_disp_t(QObject *parent) : QObject (parent) {
 
 }

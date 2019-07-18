@@ -9,6 +9,7 @@
 #include <qppcad/ws_item/ws_item_extended_editor_compositor.hpp>
 #include <qppcad/render/camera.hpp>
 #include <qppcad/ui/ws_tabbar.hpp>
+#include <qppcad/ui/log_widget.hpp>
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -96,6 +97,7 @@ namespace qpp {
         object_inspector_widget_t *obj_insp_widget;
 
         ws_tabbar_t *ws_tabbar_wdgt;
+        log_widget_t *log_wdgt;
         //End of widgets
 
         //Menus
@@ -146,6 +148,7 @@ namespace qpp {
         QAction *view_menu_show_gizmo;
         QAction *view_menu_toggle_fullscreen;
         QAction *view_menu_console;
+        QAction *view_menu_log_wdgt;
         QAction *view_menu_settings;
         QAction *view_menu_ws_settings;
         QMenu *view_menu_debug;
@@ -160,10 +163,11 @@ namespace qpp {
         //Layouts
         QGridLayout *layout_tools_main_window;
         QVBoxLayout *main_layout;
-        QSplitter   *layout_ws_viewer_obj_insp;
+        QSplitter *layout_ws_viewer_obj_insp;
         QSplitter *splitter_ws_viewer_extended_editor;
         QSplitter *splitter_editor_py_console;
-        QSplitter   *splitter_ws_viewer_py_console;
+        QSplitter *splitter_ws_viewer_py_console_log;
+        QSplitter *splitter_py_console_log_widget;
         //end of layouts
 
         //Shortcuts
@@ -189,6 +193,7 @@ namespace qpp {
         void ws_selector_selection_changed(int index);
         void show_obj_insp_state_changed(bool checked);
         void show_gizmo_state_changed(bool checked);
+        void show_log_wdgt_state_changed(bool checked);
 
         void create_new_ws();
         void open_ws();

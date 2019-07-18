@@ -40,6 +40,8 @@ namespace qpp {
         void python_console_focus_requested_signal();
         void python_console_font_size_updated_signal();
 
+        void log_widget_query_signal(const std::string &message);
+
       public:
 
         void wss_changed();
@@ -68,7 +70,10 @@ namespace qpp {
         void python_console_focus_requested();
         void python_console_font_size_updated();
 
+        void log_widget_query(const std::string &message);
+
         explicit app_state_event_disp_t(QObject *parent = 0);
+
     };
 
   } // namespace qpp::cad
