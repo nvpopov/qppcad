@@ -86,7 +86,14 @@ namespace qpp {
           std::string body = fmt::vformat(format, fmt::make_format_args(args...));
           std::string message = pf + body ;
           std::cout << message << "\n" << std::flush;
-          astate_evd->log_widget_query(message);
+
+        }
+
+        template <typename... Args>
+        void wlog(const char *format, const Args & ... args) {
+
+          std::string body = fmt::vformat(format, fmt::make_format_args(args...));
+          astate_evd->log_widget_query(body);
 
         }
 

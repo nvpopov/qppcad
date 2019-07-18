@@ -666,6 +666,7 @@ void main_window_t::init_layouts() {
   splitter_py_console_log_widget = new QSplitter(Qt::Horizontal);
   splitter_py_console_log_widget->addWidget(py_console_widget);
   splitter_py_console_log_widget->addWidget(log_wdgt);
+  splitter_py_console_log_widget->setHandleWidth(1);
   splitter_py_console_log_widget->setCollapsible(0, false);
   splitter_py_console_log_widget->setCollapsible(1, false);
 
