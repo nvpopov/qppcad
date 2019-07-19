@@ -568,19 +568,22 @@ bool workspace_manager_t::set_cur_id(const opt<size_t> ws_index) {
           //update_window_title();
           astate->camera = m_ws[*ws_index]->m_camera.get();
           astate->camera->update_camera();
-          astate->wlog("\n*****************************************************"
+          astate->wlog("========================================================"
                        "\n    Workspace changed: {}\n"
-                       "*****************************************************",
+                       "========================================================",
                        m_ws[*ws_index]->m_ws_name);
           astate->astate_evd->cur_ws_changed();
           return true;
+
         }
     } else {
+
       m_cur_ws_id = std::nullopt;
       astate->camera = nullptr;
       astate->astate_evd->cur_ws_changed();
       return false;
-  }
+
+    }
 
   return false;
 
