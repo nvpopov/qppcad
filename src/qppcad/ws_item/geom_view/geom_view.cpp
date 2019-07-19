@@ -464,10 +464,10 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-      astate->wlog("SEL: {}{}{} {} {} {}",
+      astate->wlog(">> SEL: {}{}{:<5} {:10.5f} {:10.5f} {:10.5f}",
+                   atom_idx == index::D(m_geom->DIM).all(0) ? " " : "*",
                    m_geom->atom_name(atom_id),
                    atom_id,
-                   atom_idx == index::D(m_geom->DIM).all(0) ? " " : "*",
                    m_geom->pos(atom_id)[0],
                    m_geom->pos(atom_id)[1],
                    m_geom->pos(atom_id)[2]
