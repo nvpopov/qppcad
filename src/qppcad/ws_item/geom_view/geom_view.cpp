@@ -467,7 +467,7 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-      astate->wlog(">> SEL: {}{:<8} {:<16.5f} {:<16.5f} {:<16.5f} {}",
+      astate->wlog(">> SEL: {}{:<8} {:>16.5f} {:>16.5f} {:>16.5f} {}",
                    m_geom->atom_name(atom_id),
                    atom_id,
                    m_geom->pos(atom_id)[0],

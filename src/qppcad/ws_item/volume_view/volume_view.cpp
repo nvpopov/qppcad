@@ -142,8 +142,6 @@ void volume_view_t::updated_externally(uint32_t update_reason) {
 
   ws_item_t::updated_externally(update_reason);
 
-  app_state_t *astate = app_state_t::get_inst();
-
   //regenerate meshes
   if (update_reason & ws_item_updf_regenerate_content) {
       for (auto &vol : m_volumes) {
@@ -186,20 +184,50 @@ void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
 
 }
 
-void volume_view_t::volume_cut_sph(vector3<float> sph_cnt, float sph_rad) {
+void volume_view_t::volume_cut_sph_exp(size_t volume_id,
+                                       vector3<float> sph_cnt,
+                                       float sph_rad,
+                                       float emod) {
+
+  if (volume_id >= m_volumes.size()) return;
 
   vector3<float> gp{0};
-  float value{0};
+  float rad{0};
+  float val{0};
 
-  auto &volume = m_volumes.back().m_volume;
+  auto &volume = m_volumes[volume_id].m_volume;
 
-  for (int ix = -1; ix < volume.m_steps[0]; ix++)
-    for (int iy = -1; iy < volume.m_steps[1]; iy++)
-      for (int iz = 0-1; iz < volume.m_steps[2]; iz++) {
+  for (int ix = 0; ix < volume.m_steps[0]; ix++)
+    for (int iy = 0; iy < volume.m_steps[1]; iy++)
+      for (int iz = 0; iz < volume.m_steps[2]; iz++) {
+
+          gp = ix * volume.m_axis[0] + iy * volume.m_axis[1] + iz * volume.m_axis[2];
+          val = get_field_value_at(ix, iy, iz, volume);
+          rad = (gp - sph_cnt).norm();
+          if (rad > sph_rad)
+            set_field_value_at(ix, iy, iz, val * std::exp(-(rad-sph_rad)), volume);
+        }
+
+}
+
+void volume_view_t::volume_cut_sph(size_t volume_id,
+                                   vector3<float> sph_cnt,
+                                   float sph_rad) {
+
+  if (volume_id >= m_volumes.size()) return;
+
+  vector3<float> gp{0};
+
+  auto &volume = m_volumes[volume_id].m_volume;
+
+  for (int ix = 0; ix < volume.m_steps[0]; ix++)
+    for (int iy = 0; iy < volume.m_steps[1]; iy++)
+      for (int iz = 0; iz < volume.m_steps[2]; iz++) {
 
           gp = ix * volume.m_axis[0] + iy * volume.m_axis[1] + iz * volume.m_axis[2];
           if ((gp - sph_cnt).norm() > sph_rad)
             set_field_value_at(ix, iy, iz, 0.0f, volume);
 
         }
+
 }
