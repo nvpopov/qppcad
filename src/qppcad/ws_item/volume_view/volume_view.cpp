@@ -185,3 +185,21 @@ void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
   m_volumes.emplace_back(std::move(new_vol_rec));
 
 }
+
+void volume_view_t::volume_cut_sph(vector3<float> sph_cnt, float sph_rad) {
+
+  vector3<float> gp{0};
+  float value{0};
+
+  auto &volume = m_volumes.back().m_volume;
+
+  for (int ix = -1; ix < volume.m_steps[0]; ix++)
+    for (int iy = -1; iy < volume.m_steps[1]; iy++)
+      for (int iz = 0-1; iz < volume.m_steps[2]; iz++) {
+
+          gp = ix * volume.m_axis[0] + iy * volume.m_axis[1] + iz * volume.m_axis[2];
+          if ((gp - sph_cnt).norm() > sph_rad)
+            set_field_value_at(ix, iy, iz, 0.0f, volume);
+
+        }
+}

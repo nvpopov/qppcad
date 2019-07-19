@@ -75,6 +75,8 @@ namespace qpp {
                               geometry<float, periodic_cell<float> > &geom,
                               std::string &fname);
 
+        void volume_cut_sph(vector3<float> sph_cnt, float sph_rad);
+
     };
 
   } // namespace qpp::cad
