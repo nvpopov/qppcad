@@ -184,10 +184,11 @@ void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
 
 }
 
-void volume_view_t::volume_cut_sph_exp(size_t volume_id,
-                                       vector3<float> sph_cnt,
-                                       float sph_rad,
-                                       float emod) {
+void volume_view_t::volume_cut_sph(size_t volume_id,
+                                   vector3<float> sph_cnt,
+                                   float sph_rad) {
+
+  app_state_t *astate = app_state_t::get_inst();
 
   if (volume_id >= m_volumes.size()) return;
 
@@ -208,26 +209,9 @@ void volume_view_t::volume_cut_sph_exp(size_t volume_id,
             set_field_value_at(ix, iy, iz, val * std::exp(-(rad-sph_rad)), volume);
         }
 
-}
-
-void volume_view_t::volume_cut_sph(size_t volume_id,
-                                   vector3<float> sph_cnt,
-                                   float sph_rad) {
-
-  if (volume_id >= m_volumes.size()) return;
-
-  vector3<float> gp{0};
-
-  auto &volume = m_volumes[volume_id].m_volume;
-
-  for (int ix = 0; ix < volume.m_steps[0]; ix++)
-    for (int iy = 0; iy < volume.m_steps[1]; iy++)
-      for (int iz = 0; iz < volume.m_steps[2]; iz++) {
-
-          gp = ix * volume.m_axis[0] + iy * volume.m_axis[1] + iz * volume.m_axis[2];
-          if ((gp - sph_cnt).norm() > sph_rad)
-            set_field_value_at(ix, iy, iz, 0.0f, volume);
-
-        }
+  m_volumes[volume_id].m_need_to_regenerate = true;
+  m_volumes[volume_id].m_ready_to_render = false;
+  astate->make_viewport_dirty();
 
 }
+

@@ -79,12 +79,6 @@ namespace qpp {
                             vector3<float> sph_cnt,
                             float sph_rad);
 
-        void volume_cut_sph_exp(size_t volume_id,
-                                vector3<float> sph_cnt,
-                                float sph_rad,
-                                float emod);
-
-
     };
 
   } // namespace qpp::cad

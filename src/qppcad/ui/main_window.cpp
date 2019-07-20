@@ -303,7 +303,7 @@ void main_window_t::init_menus() {
   view_menu->addAction(view_menu_ws_settings);
 
   view_menu_log_wdgt = new QAction(this);
-  view_menu_log_wdgt->setText(tr("Log widget"));
+  view_menu_log_wdgt->setText(tr("Show log"));
   view_menu_log_wdgt->setCheckable(true);
   connect(view_menu_log_wdgt,
           &QAction::toggled,
