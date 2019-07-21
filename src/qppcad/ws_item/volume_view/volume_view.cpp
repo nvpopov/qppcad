@@ -186,7 +186,8 @@ void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
 
 void volume_view_t::volume_cut_sph(size_t volume_id,
                                    vector3<float> sph_cnt,
-                                   float sph_rad) {
+                                   float sph_rad,
+                                   bool cut_inner) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -195,6 +196,7 @@ void volume_view_t::volume_cut_sph(size_t volume_id,
   vector3<float> gp{0};
   float rad{0};
   float val{0};
+  bool rad_gr_sph_rad{false};
 
   auto &volume = m_volumes[volume_id].m_volume;
 
@@ -205,8 +207,15 @@ void volume_view_t::volume_cut_sph(size_t volume_id,
           gp = ix * volume.m_axis[0] + iy * volume.m_axis[1] + iz * volume.m_axis[2];
           val = get_field_value_at(ix, iy, iz, volume);
           rad = (gp - sph_cnt).norm();
-          if (rad > sph_rad)
-            set_field_value_at(ix, iy, iz, val * std::exp(-(rad-sph_rad)), volume);
+          rad_gr_sph_rad = rad > sph_rad;
+
+          if (cut_inner) {
+              if (!rad_gr_sph_rad)
+                set_field_value_at(ix, iy, iz, 0.0f, volume);
+            } else {
+              if (rad_gr_sph_rad)
+                set_field_value_at(ix, iy, iz, val * std::exp(-(rad-sph_rad)), volume);
+            }
         }
 
   m_volumes[volume_id].m_need_to_regenerate = true;

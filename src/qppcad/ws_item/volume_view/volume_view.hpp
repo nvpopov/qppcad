@@ -77,7 +77,8 @@ namespace qpp {
 
         void volume_cut_sph(size_t volume_id,
                             vector3<float> sph_cnt,
-                            float sph_rad);
+                            float sph_rad,
+                            bool cut_inner);
 
     };
 
