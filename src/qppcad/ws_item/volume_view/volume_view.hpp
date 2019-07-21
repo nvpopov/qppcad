@@ -80,6 +80,9 @@ namespace qpp {
                             float sph_rad,
                             bool cut_inner);
 
+        void volume_cut_fnc(size_t volume_id,
+                            std::function<bool(vector3<float>&)> cut_fnc);
+
     };
 
   } // namespace qpp::cad

@@ -224,3 +224,32 @@ void volume_view_t::volume_cut_sph(size_t volume_id,
 
 }
 
+void volume_view_t::volume_cut_fnc(size_t volume_id,
+                                   std::function<bool (vector3<float>&)> cut_fnc) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (volume_id >= m_volumes.size()) return;
+
+  vector3<float> gp{0};
+  bool cut_fnc_res{false};
+
+  auto &volume = m_volumes[volume_id].m_volume;
+
+  for (int ix = 0; ix < volume.m_steps[0]; ix++)
+    for (int iy = 0; iy < volume.m_steps[1]; iy++)
+      for (int iz = 0; iz < volume.m_steps[2]; iz++) {
+
+          gp = ix * volume.m_axis[0] + iy * volume.m_axis[1] + iz * volume.m_axis[2];
+          cut_fnc_res = cut_fnc(gp);
+
+          if (cut_fnc_res) set_field_value_at(ix, iy, iz, 0.0f, volume);
+
+        }
+
+  m_volumes[volume_id].m_need_to_regenerate = true;
+  m_volumes[volume_id].m_ready_to_render = false;
+  astate->make_viewport_dirty();
+
+}
+
