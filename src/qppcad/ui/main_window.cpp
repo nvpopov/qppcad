@@ -388,13 +388,13 @@ void main_window_t::init_widgets() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  tool_panel_widget = new QWidget;
+  tool_panel_widget = new QWidget(nullptr);
   tool_panel_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   tool_panel_widget->setFixedHeight(astate->size_guide.tool_panel_h_exact());
   tool_panel_widget->setProperty("s_class", "tp_generic");
   tool_panel_widget->setObjectName("tool_panel_widget_e");
 
-  tp_ws_selector = new QComboBox;
+  tp_ws_selector = new QComboBox(nullptr);
   connect(tp_ws_selector,
           static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
           this,
@@ -404,7 +404,7 @@ void main_window_t::init_widgets() {
   tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
   tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
 
-  tp_print_screen = new QPushButton();
+  tp_print_screen = new QPushButton(nullptr);
   tp_print_screen->setProperty("s_class", "tp_cb");
   tp_print_screen->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_print_screen->setMaximumWidth(astate->size_guide.tool_panel_ctrl_sys_w());
@@ -417,14 +417,14 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::make_screenshot);
 
-  tp_edit_mode = new QButtonGroup;
+  tp_edit_mode = new QButtonGroup(nullptr);
   tp_edit_mode->setExclusive(true);
   connect(tp_edit_mode,
           static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this,
           &main_window_t::ws_edit_mode_selector_button_clicked);
 
-  tp_edit_mode_item = new QPushButton;
+  tp_edit_mode_item = new QPushButton(nullptr);
   tp_edit_mode_item->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
   tp_edit_mode_item->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_edit_mode_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
@@ -433,7 +433,7 @@ void main_window_t::init_widgets() {
   tp_edit_mode_item->setIcon(QIcon("://images/edit0.svg"));
   tp_edit_mode_item->setCheckable(true);
 
-  tp_edit_mode_content= new QPushButton;
+  tp_edit_mode_content= new QPushButton(nullptr);
   tp_edit_mode_content->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
   tp_edit_mode_content->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_edit_mode_content->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
@@ -445,13 +445,13 @@ void main_window_t::init_widgets() {
   tp_edit_mode->addButton(tp_edit_mode_item, 0);
   tp_edit_mode->addButton(tp_edit_mode_content, 1);
 
-  tp_edit_mode_start = new QFrame;
+  tp_edit_mode_start = new QFrame(nullptr);
   tp_edit_mode_start->setFrameShape(QFrame::VLine);
   tp_edit_mode_start->setFrameShadow(QFrame::Sunken);
   tp_edit_mode_start->setFixedWidth(3);
   tp_edit_mode_start->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
-  tp_edit_mode_end = new QFrame;
+  tp_edit_mode_end = new QFrame(nullptr);
   tp_edit_mode_end->setFrameShape(QFrame::VLine);
   tp_edit_mode_end->setFrameShadow(QFrame::Sunken);
   tp_edit_mode_end->setFixedWidth(3);
@@ -461,7 +461,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::ws_edit_mode_selector_button_clicked);
 
-  tp_camera_tool = new QToolButton;
+  tp_camera_tool = new QToolButton(nullptr);
   tp_camera_tool->setIcon(QIcon("://images/outline-videocam-24px.svg"));
   tp_camera_tool->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                     astate->size_guide.tool_panel_icon_size()));
@@ -475,7 +475,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_camera_tool_button_triggered);
 
-  tp_scenic_rot_cam = new QPushButton;
+  tp_scenic_rot_cam = new QPushButton(nullptr);
   tp_scenic_rot_cam->setToolTip(tr("Orbit the camera"));
   tp_scenic_rot_cam->setIcon(QIcon("://images/baseline-3d_rotation_x-24px.svg"));
   tp_scenic_rot_cam->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
@@ -486,47 +486,47 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_scenic_rotation_toggle);
 
-  tp_camera_tool_act_x = new qextended_action(this);
+  tp_camera_tool_act_x = new qextended_action(nullptr);
   tp_camera_tool_act_x->m_joined_data[0] = cam_tv_e::tv_x;
   tp_camera_tool_act_x->setText(tr( "x - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_x);
 
-  tp_camera_tool_act_y = new qextended_action(this);
+  tp_camera_tool_act_y = new qextended_action(nullptr);
   tp_camera_tool_act_y->m_joined_data[0] = cam_tv_e::tv_y;
   tp_camera_tool_act_y->setText(tr( "y - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_y);
 
-  tp_camera_tool_act_z = new qextended_action(this);
+  tp_camera_tool_act_z = new qextended_action(nullptr);
   tp_camera_tool_act_z->m_joined_data[0] = cam_tv_e::tv_z;
   tp_camera_tool_act_z->setText(tr( "z - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_z);
 
-  tp_camera_tool_act_cc = new qextended_action(this);
+  tp_camera_tool_act_cc = new qextended_action(nullptr);
   tp_camera_tool_act_cc->m_joined_data[0] = cam_tv_e::tv_cc;
   tp_camera_tool_act_cc->setText(tr("cart. c."));
   tp_camera_tool->addAction(tp_camera_tool_act_cc);
 
-  tp_camera_tool_act_a = new qextended_action(this);
+  tp_camera_tool_act_a = new qextended_action(nullptr);
   tp_camera_tool_act_a->m_joined_data[0] = cam_tv_e::tv_a;
   tp_camera_tool_act_a->setText(tr( "a - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_a);
 
-  tp_camera_tool_act_b = new qextended_action(this);
+  tp_camera_tool_act_b = new qextended_action(nullptr);
   tp_camera_tool_act_b->m_joined_data[0] = cam_tv_e::tv_b;
   tp_camera_tool_act_b->setText(tr( "b - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_b);
 
-  tp_camera_tool_act_c = new qextended_action(this);
+  tp_camera_tool_act_c = new qextended_action(nullptr);
   tp_camera_tool_act_c->m_joined_data[0] = cam_tv_e::tv_c;
   tp_camera_tool_act_c->setText(tr( "c - axis"));
   tp_camera_tool->addAction(tp_camera_tool_act_c);
 
-  tp_utility_frame_end = new QFrame;
+  tp_utility_frame_end = new QFrame(nullptr);
   tp_utility_frame_end->setFrameShape(QFrame::StyledPanel);
   tp_utility_frame_end->setFixedWidth(3);
   tp_utility_frame_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
-  tp_anim_fast_forward = new QPushButton();
+  tp_anim_fast_forward = new QPushButton(nullptr);
   tp_anim_fast_forward->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_anim_fast_forward->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_anim_fast_forward->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
@@ -538,7 +538,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_fast_forward_anim_clicked);
 
-  tp_measure_dist = new QPushButton();
+  tp_measure_dist = new QPushButton(nullptr);
   tp_measure_dist->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_measure_dist->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_measure_dist->setCheckable(true);
@@ -551,7 +551,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_dist_button_clicked);
 
-  tp_toggle_atom_override = new QPushButton();
+  tp_toggle_atom_override = new QPushButton(nullptr);
   tp_toggle_atom_override->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_toggle_atom_override->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_toggle_atom_override->setCheckable(true);
@@ -564,7 +564,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_toggle_atom_override_button_clicked);
 
-  tp_force_sel_lbl_vis = new QPushButton();
+  tp_force_sel_lbl_vis = new QPushButton(nullptr);
   tp_force_sel_lbl_vis->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_force_sel_lbl_vis->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_force_sel_lbl_vis->setCheckable(true);
@@ -577,7 +577,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_force_sel_lbl_vis_button_clicked);
 
-  tp_measure_angle = new QPushButton();
+  tp_measure_angle = new QPushButton(nullptr);
   tp_measure_angle->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_measure_angle->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_measure_angle->setCheckable(true);
@@ -590,7 +590,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_angle_button_clicked);
 
-  tp_add_cube = new QPushButton;
+  tp_add_cube = new QPushButton(nullptr);
   tp_add_cube->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_add_cube->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_add_cube->setToolTip(tr("Embed cube between two atoms"));
@@ -602,7 +602,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_add_cube_clicked);
 
-  tp_add_arrow = new QPushButton;
+  tp_add_arrow = new QPushButton(nullptr);
   tp_add_arrow->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_add_arrow->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_add_arrow->setToolTip(tr("Embed arrow between two atoms"));
@@ -614,7 +614,7 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_add_arrow_clicked);
 
-  tp_add_point_sym_group = new QPushButton;
+  tp_add_point_sym_group = new QPushButton(nullptr);
   tp_add_point_sym_group->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   tp_add_point_sym_group->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_add_point_sym_group->setToolTip(tr("Construct point symmetry group"));
@@ -628,22 +628,22 @@ void main_window_t::init_widgets() {
 
   tp_ws_selector->setVisible(false);
 
-  ws_viewer_widget = new ws_viewer_widget_t(this);
+  ws_viewer_widget = new ws_viewer_widget_t(nullptr);
 
-  obj_insp_widget = new object_inspector_widget_t();
+  obj_insp_widget = new object_inspector_widget_t(nullptr);
   obj_insp_widget->setFixedWidth(astate->size_guide.obj_insp_w());
 
-  py_console_widget = new python_console_widget_t(this);
+  py_console_widget = new python_console_widget_t(nullptr);
 
-  extended_editor_compositor = new ws_item_extended_editor_compositor_t;
+  extended_editor_compositor = new ws_item_extended_editor_compositor_t(nullptr);
 
 }
 
 void main_window_t::init_layouts() {
 
   main_layout = new QVBoxLayout;
-  ws_tabbar_wdgt = new ws_tabbar_t;
-  log_wdgt = new log_widget_t;
+  ws_tabbar_wdgt = new ws_tabbar_t(nullptr);
+  log_wdgt = new log_widget_t(nullptr);
 
   main_widget->setLayout(main_layout);
   main_layout->addWidget(ws_tabbar_wdgt);
@@ -1577,7 +1577,9 @@ void main_window_t::rebuild_recent_files_menu() {
     elem->setVisible(false);
 
   app_state_t* astate = app_state_t::get_inst();
+
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
+
       file_menu_recent_entries[i]->setVisible(true);
       std::string ff_name = astate->ws_mgr->m_bhv_mgr->get_ff_full_name(
                               astate->m_recent_files[i].m_ff_id);
@@ -1594,6 +1596,7 @@ void main_window_t::rebuild_recent_files_menu() {
                                      astate->m_recent_files[i].m_file_name);
 
       file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
+
     }
 
 }
@@ -1655,7 +1658,7 @@ void main_window_t::build_bhv_menus_and_actions() {
                 bhv_mgr->m_ws_item_io[i]->can_load() &&
                 bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
                 bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
-                qextended_action *new_act = new qextended_action(this);
+                qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
                         this, &main_window_t::action_bhv_import_to_cur_workspace);
@@ -1669,7 +1672,7 @@ void main_window_t::build_bhv_menus_and_actions() {
                 bhv_mgr->m_ws_item_io[i]->can_load() &&
                 bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
                 bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
-                qextended_action *new_act = new qextended_action(this);
+                qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
                         this, &main_window_t::action_bhv_import_as_new_workspace);
@@ -1682,7 +1685,7 @@ void main_window_t::build_bhv_menus_and_actions() {
             if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
                 bhv_mgr->m_ws_item_io[i]->can_save() &&
                 bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
-                qextended_action *new_act = new qextended_action(this);
+                qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
                         this, &main_window_t::action_bhv_export_selected);
@@ -1711,7 +1714,7 @@ void main_window_t::build_bhv_tools_menus() {
   //construct tools actions
   for (auto &ff : astate->ws_mgr->m_bhv_mgr->m_tools_info) {
       //construct tool's action
-      qextended_action *new_act = new qextended_action(this);
+      qextended_action *new_act = new qextended_action((nullptr));
       new_act->m_joined_data[0] = ff.first;
       connect(new_act, &QAction::triggered,
               this, &main_window_t::action_bhv_tools_menus_clicked);
