@@ -96,7 +96,7 @@ void main_window_t::init_menus() {
 
   file_menu  = menuBar()->addMenu(tr("&File"));
 
-  file_menu_new_ws = new QAction(this);
+  file_menu_new_ws = new QAction(nullptr);
   file_menu_new_ws->setText(tr("New workspace"));
   file_menu_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
   file_menu->addAction(file_menu_new_ws);
@@ -105,7 +105,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::create_new_ws);
 
-  file_menu_close_ws = new QAction(this);
+  file_menu_close_ws = new QAction(nullptr);
   file_menu_close_ws->setText(tr("Close workspace"));
   file_menu->addAction(file_menu_close_ws);
   connect(file_menu_close_ws,
@@ -113,7 +113,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::close_cur_ws);
 
-  file_menu_close_all_ws = new QAction(this);
+  file_menu_close_all_ws = new QAction(nullptr);
   file_menu_close_all_ws->setText(tr("Close all workspaces"));
   file_menu->addAction(file_menu_close_all_ws);
   connect(file_menu_close_all_ws,
@@ -121,7 +121,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::close_all_ws);
 
-  file_menu_open_ws = new QAction(this);
+  file_menu_open_ws = new QAction(nullptr);
   file_menu_open_ws->setText(tr("Open workspace"));
   file_menu_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
   file_menu->addAction(file_menu_open_ws);
@@ -130,7 +130,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::open_ws);
 
-  file_menu_save_ws = new QAction(this);
+  file_menu_save_ws = new QAction(nullptr);
   file_menu_save_ws->setText(tr("Save workspace"));
   file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
   file_menu->addSeparator();
@@ -140,7 +140,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::save_ws);
 
-  file_menu_save_ws_as = new QAction(this);
+  file_menu_save_ws_as = new QAction(nullptr);
   file_menu_save_ws_as->setText(tr("Save workspace as"));
   file_menu->addAction(file_menu_save_ws_as);
   connect(file_menu_save_ws_as,
@@ -164,7 +164,7 @@ void main_window_t::init_menus() {
               &main_window_t::recent_files_clicked);
     }
 
-  file_menu_close_app = new QAction(this);
+  file_menu_close_app = new QAction(nullptr);
   file_menu_close_app->setText(tr("Close"));
   file_menu_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
   file_menu->addSeparator();
@@ -173,13 +173,13 @@ void main_window_t::init_menus() {
           &main_window_t::slot_shortcut_terminate_app);
 
   edit_menu  = menuBar()->addMenu(tr("&Edit"));
-  edit_menu_undo = new QAction(this);
+  edit_menu_undo = new QAction(nullptr);
   edit_menu_undo->setText(tr("Undo"));
   edit_menu_undo->setEnabled(false);
   edit_menu_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
   edit_menu->addAction(edit_menu_undo);
 
-  edit_menu_redo = new QAction(this);
+  edit_menu_redo = new QAction(nullptr);
   edit_menu_redo->setText(tr("Redo"));
   edit_menu_redo->setEnabled(false);
   edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
@@ -189,7 +189,7 @@ void main_window_t::init_menus() {
 
   //Selection menu
   edit_menu_selection = edit_menu->addMenu(tr("Content selection"));
-  edit_menu_selection_select_all = new QAction(this);
+  edit_menu_selection_select_all = new QAction(nullptr);
   edit_menu_selection_select_all->setText(tr("Select all"));
   edit_menu_selection_select_all->setShortcut(QKeySequence(tr("ctrl+a")));
   edit_menu_selection->addAction(edit_menu_selection_select_all);
@@ -198,7 +198,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::action_select_all_content);
 
-  edit_menu_selection_unselect_all = new QAction(this);
+  edit_menu_selection_unselect_all = new QAction(nullptr);
   edit_menu_selection_unselect_all->setText(tr("Unselect all"));
   edit_menu_selection_unselect_all->setShortcut(QKeySequence(tr("shift+a")));
   edit_menu_selection->addAction(edit_menu_selection_unselect_all);
@@ -207,7 +207,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::action_unselect_all_content);
 
-  edit_menu_selection_invert = new QAction(this);
+  edit_menu_selection_invert = new QAction(nullptr);
   edit_menu_selection_invert->setText(tr("Invert selection"));
   edit_menu_selection_invert->setShortcut(QKeySequence(tr("ctrl+i")));
   edit_menu_selection->addAction(edit_menu_selection_invert);
@@ -217,7 +217,7 @@ void main_window_t::init_menus() {
           &main_window_t::action_invert_selected_content);
   //End of selection menu
 
-  edit_menu_switch_ws_edit_mode = new QAction(this);
+  edit_menu_switch_ws_edit_mode = new QAction(nullptr);
   edit_menu_switch_ws_edit_mode->setText(tr("Switch edit mode"));
   edit_menu_switch_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
   connect(edit_menu_switch_ws_edit_mode,
@@ -234,7 +234,7 @@ void main_window_t::init_menus() {
   // workspace menu
   ws_menu = menuBar()->addMenu(tr("&Workspace"));
 
-  ws_menu_rename_ws = new QAction(this);
+  ws_menu_rename_ws = new QAction(nullptr);
   ws_menu_rename_ws->setText(tr("Rename workspace"));
   ws_menu->addAction(ws_menu_rename_ws);
   connect(ws_menu_rename_ws,
@@ -242,7 +242,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::rename_cur_ws);
 
-  ws_menu_bg_color = new QAction(this);
+  ws_menu_bg_color = new QAction(nullptr);
   ws_menu_bg_color->setText(tr("Change background"));
   ws_menu->addAction(ws_menu_bg_color);
   connect(ws_menu_bg_color,
@@ -250,7 +250,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::change_cur_ws_bg);
 
-  ws_copy_cam = new QAction(this);
+  ws_copy_cam = new QAction(nullptr);
   ws_copy_cam->setText(tr("Copy camera to all"));
   ws_menu->addAction(ws_copy_cam);
   connect(ws_copy_cam,
@@ -262,7 +262,7 @@ void main_window_t::init_menus() {
   // view menu
   view_menu = menuBar()->addMenu(tr("&View"));
 
-  view_menu_show_oi = new QAction(this);
+  view_menu_show_oi = new QAction(nullptr);
   view_menu_show_oi->setText(tr("Show object inspector"));
   view_menu_show_oi->setCheckable(true);
   view_menu->addAction(view_menu_show_oi);
@@ -271,7 +271,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::show_obj_insp_state_changed);
 
-  view_menu_show_gizmo = new QAction(this);
+  view_menu_show_gizmo = new QAction(nullptr);
   view_menu_show_gizmo->setText(tr("Show gizmo"));
   view_menu_show_gizmo->setCheckable(true);
   view_menu->addAction(view_menu_show_gizmo);
@@ -280,7 +280,7 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::show_gizmo_state_changed);
 
-  view_menu_toggle_fullscreen = new QAction(this);
+  view_menu_toggle_fullscreen = new QAction(nullptr);
   view_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
   view_menu_toggle_fullscreen->setCheckable(true);
   view_menu_toggle_fullscreen->setShortcut(Qt::Key::Key_F11);
@@ -290,19 +290,19 @@ void main_window_t::init_menus() {
           this,
           &main_window_t::toggle_fullscreen);
 
-  view_menu_settings = new QAction(this);
+  view_menu_settings = new QAction(nullptr);
   view_menu_settings->setEnabled(false);
   view_menu_settings->setText(tr("Settings"));
   connect(view_menu_settings,
           &QAction::triggered,[](){app_settings_widget_t aset;aset.exec();});
 
-  view_menu_ws_settings = new QAction(this);
+  view_menu_ws_settings = new QAction(nullptr);
   view_menu_ws_settings->setEnabled(false);
   view_menu_ws_settings->setText(tr("Workspace settings"));
   view_menu->addAction(view_menu_settings);
   view_menu->addAction(view_menu_ws_settings);
 
-  view_menu_log_wdgt = new QAction(this);
+  view_menu_log_wdgt = new QAction(nullptr);
   view_menu_log_wdgt->setText(tr("Show log"));
   view_menu_log_wdgt->setCheckable(true);
   connect(view_menu_log_wdgt,
@@ -311,7 +311,7 @@ void main_window_t::init_menus() {
           &main_window_t::show_log_wdgt_state_changed);
   view_menu->addAction(view_menu_log_wdgt);
 
-  view_menu_console = new QAction(this);
+  view_menu_console = new QAction(nullptr);
   view_menu_console->setText(tr("Console"));
   view_menu_console->setShortcut(QKeySequence(tr("~")));
   view_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
@@ -323,7 +323,7 @@ void main_window_t::init_menus() {
 
   view_menu_debug = view_menu->addMenu(tr("Debug"));
 
-  view_menu_toggle_debug_info = new QAction(this);
+  view_menu_toggle_debug_info = new QAction(nullptr);
   view_menu_toggle_debug_info->setText(tr("Show frame info"));
   view_menu_toggle_debug_info->setCheckable(true);
   view_menu_debug->addAction(view_menu_toggle_debug_info);
@@ -335,7 +335,7 @@ void main_window_t::init_menus() {
             astate->make_viewport_dirty();
           });
 
-  view_menu_toggle_debug_tws_tree = new QAction(this);
+  view_menu_toggle_debug_tws_tree = new QAction(nullptr);
   view_menu_toggle_debug_tws_tree->setText(tr("Render tws-tree"));
   view_menu_toggle_debug_tws_tree->setCheckable(true);
   view_menu_debug->addAction(view_menu_toggle_debug_tws_tree);
@@ -347,7 +347,7 @@ void main_window_t::init_menus() {
             astate->make_viewport_dirty();
           });
 
-  view_menu_toggle_sel_deque = new QAction(this);
+  view_menu_toggle_sel_deque = new QAction(nullptr);
   view_menu_toggle_sel_deque->setText(tr("Show selection deque"));
   view_menu_toggle_sel_deque->setCheckable(true);
   view_menu_debug->addAction(view_menu_toggle_sel_deque);
@@ -363,7 +363,7 @@ void main_window_t::init_menus() {
 
   // help menu
   help_menu  = menuBar()->addMenu(tr("&Help"));
-  help_menu_about = new QAction(this);
+  help_menu_about = new QAction(nullptr);
   help_menu_about->setText(tr("About"));
   help_menu->addAction(help_menu_about);
   connect(help_menu_about,

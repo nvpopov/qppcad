@@ -214,7 +214,7 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
       QPoint inp_sck_pos = {
         m_x_offset,
-        m_label_height + m_dm_i + (m_socket_size * 2 + m_socket_spacing) * i
+        m_label_height + m_dm_i + (m_socket_size * 2 + m_socket_spacing) * static_cast<int>(i)
       };
 
       inp_sck->setPos(inp_sck_pos);
@@ -234,7 +234,7 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
       QPoint out_sck_pos = {
         m_width - 2 * m_socket_size - m_x_offset,
-        m_label_height + m_dm_o + (m_socket_size * 2 + m_socket_spacing) * i
+        m_label_height + m_dm_o + (m_socket_size * 2 + m_socket_spacing) * static_cast<int>(i)
       };
 
       out_sck->setPos(out_sck_pos);
@@ -306,7 +306,7 @@ void qnode_t::paint(QPainter *painter,
       QString _pin_name = QString::fromStdString(m_sf_node->m_inp_types[i].m_socket_name);
       QPoint inp_sck_pos = {
         5,
-        m_label_height + m_dm_i + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.55
+		static_cast<int>(m_label_height + m_dm_i + (m_socket_size * 2 + m_socket_spacing) * static_cast<int>(i) + fm.height() * 0.55)
       };
       painter->drawText(inp_sck_pos, _pin_name);
     }
@@ -315,7 +315,7 @@ void qnode_t::paint(QPainter *painter,
       QString _pin_name = QString::fromStdString(m_sf_node->m_out_types[i].m_socket_name);
       QPoint out_sck_pos = {
         m_width - 5 - fm.width(_pin_name),
-        m_label_height + m_dm_o + (m_socket_size * 2 + m_socket_spacing) * i + fm.height() * 0.55
+		static_cast<int>(m_label_height + m_dm_o + (m_socket_size * 2 + m_socket_spacing) * static_cast<int>(i) + fm.height() * 0.55)
       };
       painter->drawText(out_sck_pos, _pin_name);
     }

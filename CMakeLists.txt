@@ -180,7 +180,18 @@ add_executable(
 
 qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 
-target_link_libraries(qppcad
+if(WIN32)
+   target_link_libraries(qppcad
+    qpp
+    Qt5::Widgets
+    Qt5::OpenGL
+    Qt5::Charts
+    Qt5::Svg
+    ${OPENGL_LIBRARIES}
+    pybind11::embed
+    ${PYTHON_LIBRARIES})
+else()
+    target_link_libraries(qppcad
     qpp
     Qt5::Widgets
     Qt5::OpenGL
@@ -193,6 +204,7 @@ target_link_libraries(qppcad
     dl
     util
     m)
+endif()
 
 target_compile_definitions(qppcad PUBLIC -DQPPCAD_PY_EXPORT -DEXTENDED_SFLOW)
 
