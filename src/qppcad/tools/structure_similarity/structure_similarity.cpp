@@ -313,13 +313,14 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
 
       vector3<float> dp = p2 - p1;
        //                     0   1   2   3   4   5   6   7   8   9   10  11  12
-      out_str += fmt::format("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n",
+      out_str += fmt::format("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n",
                              g1->m_geom->atom_name(i),
                              g2->m_geom->atom_name(i),
                              i,
                              p1[0], p1[1], p1[2],
                              p2[0], p2[1], p2[2],
-                             dp.norm(), dp[0], dp[1], dp[2]
+                             dp.norm(), dp[0], dp[1], dp[2],
+                             g1->m_geom->xfield<std::string>(xgeom_label_text,i)
                             );
 
     }
