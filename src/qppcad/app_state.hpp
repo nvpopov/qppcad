@@ -111,11 +111,11 @@ namespace qpp {
         draw_pipeline_t *dp;
         size_guide_t size_guide;
 
-        std::unordered_map<std::string, float> m_cache_float;
-        std::unordered_map<std::string, int> m_cache_int;
-        std::unordered_map<std::string, bool> m_cache_bool;
-        std::unordered_map<std::string, std::string> m_cache_string;
-        std::unordered_map<std::string, vector3<float>> m_cache_vector;
+        std::unordered_map<std::string, float> m_env_float;
+        std::unordered_map<std::string, int> m_env_int;
+        std::unordered_map<std::string, bool> m_env_bool;
+        std::unordered_map<std::string, std::string> m_env_str;
+        std::unordered_map<std::string, vector3<float> > m_env_vec3;
 
         shader_program_t *sp_default;
         shader_program_t *sp_default_suprematic;

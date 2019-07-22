@@ -57,14 +57,14 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::provide_context_menu_for_ws_items);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 370, true, 0);
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 365, true, 0);
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
   ws_items_spoiler->setMinimumHeight(140);
   ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
   ws_items_spoiler_lt->addWidget(ws_items_list);
-  ws_items_spoiler->main_lt->setContentsMargins(0, 0, 10, 0);
+  ws_items_spoiler->main_lt->setContentsMargins(0, 0, 0, 0);
   ws_items_spoiler->add_content_layout(ws_items_spoiler_lt);
   ws_items_spoiler->widget_list_lt->setContentsMargins(0, 0, 0, 0);
 

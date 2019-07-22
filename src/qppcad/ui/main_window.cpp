@@ -620,7 +620,7 @@ void main_window_t::init_widgets() {
   tp_add_point_sym_group->setToolTip(tr("Construct point symmetry group"));
   tp_add_point_sym_group->setIcon(QIcon("://images/add_psg.svg"));
   tp_add_point_sym_group->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                  astate->size_guide.tool_panel_icon_size()));
+                                            astate->size_guide.tool_panel_icon_size()));
   connect(tp_add_point_sym_group,
           &QPushButton::clicked,
           this,
