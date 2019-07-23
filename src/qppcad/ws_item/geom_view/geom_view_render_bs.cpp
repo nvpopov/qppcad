@@ -180,8 +180,7 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
 
   if (!al.m_type_color_override.empty()) {
       auto it = al.m_type_color_override.find(al.m_geom->type_table(at_num));
-      if (it != al.m_type_color_override.end())
-        color = it->second;
+      if (it != al.m_type_color_override.end()) color = it->second;
     }
 
   dr_rad = pre_rad * al.m_atom_scale_factor;
