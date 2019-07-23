@@ -467,15 +467,15 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-      astate->wlog(">> SEL: {}{:<8} {:>16.5f} {:>16.5f} {:>16.5f} {}",
-                   m_geom->atom_name(atom_id),
-                   atom_id,
-                   m_geom->pos(atom_id)[0],
-                   m_geom->pos(atom_id)[1],
-                   m_geom->pos(atom_id)[2],
-                   atom_idx == index::D(m_geom->DIM).all(0) ? "" : "*"
-                  );
-
+      if (m_geom->nat() < 1000) {
+          astate->wlog(">> SEL: {}{:<8} {:>16.5f} {:>16.5f} {:>16.5f} {}",
+                       m_geom->atom_name(atom_id),
+                       atom_id,
+                       m_geom->pos(atom_id)[0],
+                       m_geom->pos(atom_id)[1],
+                       m_geom->pos(atom_id)[2],
+                       atom_idx == index::D(m_geom->DIM).all(0) ? "" : "*");
+        }
       astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
       return;
 
