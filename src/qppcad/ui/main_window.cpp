@@ -1006,15 +1006,27 @@ void main_window_t::change_cur_ws_bg() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
   if (ok) {
-      QColor _stored_color = QColor::fromRgbF(cur_ws->m_background_color[0],
-          cur_ws->m_background_color[1], cur_ws->m_background_color[2]);
+
+      QColor _stored_color = QColor::fromRgbF(
+                               cur_ws->m_background_color[0],
+                               cur_ws->m_background_color[1],
+                               cur_ws->m_background_color[2]
+          );
       const QColor clr = QColorDialog::getColor(_stored_color, this,
                                                 "Select workspace`s background color");
       if (clr.isValid()) {
+
           cur_ws->m_background_color =
-              vector3<float> {clr.redF(), clr.greenF(), clr.blueF()};
+              vector3<float> {
+              static_cast<float>(clr.redF()),
+              static_cast<float>(clr.greenF()),
+              static_cast<float>(clr.blueF())
+          };
+
           astate->make_viewport_dirty();
+
         }
+
     }
 
 }

@@ -1,4 +1,4 @@
-﻿#include <qppcad/ui/qbinded_inputs.hpp>
+#include <qppcad/ui/qbinded_inputs.hpp>
 #include <qppcad/app_state.hpp>
 #include <QMouseEvent>
 #include <QColorDialog>
@@ -584,9 +584,9 @@ void qbinded_xgeom_color3_input_t::mousePressEvent(QMouseEvent *event) {
       const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
       if (color.isValid() && m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
 
-          float _r = color.redF();
-          float _g = color.greenF();
-          float _b = color.blueF();
+          float _r = static_cast<float>(color.redF());
+          float _g = static_cast<float>(color.greenF());
+          float _b = static_cast<float>(color.blueF());
 
           m_binded_xgeom->xfield<float>(m_binding_indicies[0], m_binded_atom_id) = _r;
           m_binded_xgeom->xfield<float>(m_binding_indicies[1], m_binded_atom_id) = _g;
