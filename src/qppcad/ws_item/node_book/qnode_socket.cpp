@@ -41,12 +41,11 @@ opt<size_t> qnode_socket_t::connections_count() {
   if (!m_node) return std::nullopt;
   if (!m_node->m_sf_node) return std::nullopt;
 
-  size_t ret_con_count{0};
-
-  for (auto con : m_node->m_scene->m_connections)
-    if (con && con->m_inp_socket && con->m_out_socket &&
-        (con->m_inp_socket == this || con->m_inp_socket == this))
-          ret_con_count++;
+  size_t ret_con_count = std::count_if(std::begin(m_node->m_scene->m_connections),
+                                       std::end(m_node->m_scene->m_connections),
+                                       [this](std::shared_ptr<qnode_connection_t> con)
+                                       {return con && con->m_inp_socket &&
+                                        con->m_out_socket && con->m_inp_socket == this;});
 
   return opt<size_t>(ret_con_count);
 

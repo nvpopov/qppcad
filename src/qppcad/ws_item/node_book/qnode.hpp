@@ -62,7 +62,7 @@ namespace qpp {
         QFormLayout *m_inplace_wdgt_lt{nullptr};
         std::vector<QWidget*> m_inplace_wdgts;
 
-        qnode_t(QGraphicsItem *parent = nullptr);
+        explicit qnode_t(QGraphicsItem *parent = nullptr);
         ~qnode_t();
 
         void construct_inplace_widgets();
@@ -87,8 +87,6 @@ namespace qpp {
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
         QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-
-        //void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
     };
 

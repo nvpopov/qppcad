@@ -254,7 +254,7 @@ void node_book_graphics_scene_t::drawBackground(QPainter *painter, const QRectF 
 
 bool node_book_graphics_scene_t::event(QEvent *event) {
 
-  app_state_t *astate = app_state_t::get_inst();
+  //app_state_t *astate = app_state_t::get_inst();
   return QGraphicsScene::event(event);
 
 }

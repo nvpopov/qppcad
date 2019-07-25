@@ -38,7 +38,7 @@ namespace qpp {
         std::vector<std::shared_ptr<qnode_socket_t>> m_sockets;
         std::vector<std::shared_ptr<qnode_connection_t>> m_connections;
 
-        node_book_graphics_scene_t(QObject *parent);
+        explicit node_book_graphics_scene_t(QObject *parent);
         void add_connection(std::shared_ptr<qnode_connection_t> _con);
         void add_node(std::shared_ptr<qnode_t> _node);
         void update_connections_with_node(std::shared_ptr<qnode_t> _node);

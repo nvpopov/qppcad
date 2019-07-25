@@ -172,8 +172,6 @@ size_t qnode_t::num_outs() {
 
 void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
-  app_state_t *astate = app_state_t::get_inst();
-
   m_sf_node = node;
   m_inp_sockets.clear();
   m_out_sockets.clear();
@@ -274,7 +272,6 @@ void qnode_t::paint(QPainter *painter,
   if (!m_sf_node) return;
 
   QRectF rect = boundingRect();
-  int h = rect.height();
 
   QFontMetrics fm(painter->font());
 
@@ -306,7 +303,8 @@ void qnode_t::paint(QPainter *painter,
       QString _pin_name = QString::fromStdString(m_sf_node->m_inp_types[i].m_socket_name);
       QPoint inp_sck_pos = {
         5,
-		static_cast<int>(m_label_height + m_dm_i + (m_socket_size * 2 + m_socket_spacing) * static_cast<int>(i) + fm.height() * 0.55)
+        static_cast<int>(m_label_height + m_dm_i + (m_socket_size * 2 + m_socket_spacing)
+        * static_cast<int>(i) + fm.height() * 0.55)
       };
       painter->drawText(inp_sck_pos, _pin_name);
     }
@@ -315,7 +313,8 @@ void qnode_t::paint(QPainter *painter,
       QString _pin_name = QString::fromStdString(m_sf_node->m_out_types[i].m_socket_name);
       QPoint out_sck_pos = {
         m_width - 5 - fm.width(_pin_name),
-		static_cast<int>(m_label_height + m_dm_o + (m_socket_size * 2 + m_socket_spacing) * static_cast<int>(i) + fm.height() * 0.55)
+        static_cast<int>(m_label_height + m_dm_o + (m_socket_size * 2 + m_socket_spacing)
+        * static_cast<int>(i) + fm.height() * 0.55)
       };
       painter->drawText(out_sck_pos, _pin_name);
     }
@@ -341,8 +340,6 @@ void qnode_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 QVariant qnode_t::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) {
-
-  app_state_t *astate = app_state_t::get_inst();
 
   if (change == ItemPositionChange && scene()) {
       m_scene->update_connections_with_node(shared_from_this());
