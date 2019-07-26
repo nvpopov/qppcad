@@ -23,6 +23,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
+
         geom_view_t *b_al{nullptr}; // binded atoms list
 
         qspoiler_widget_t *tg_geom_summary_widget;
@@ -208,18 +209,8 @@ namespace qpp {
 
         qspoiler_widget_t *tm_gb_u_scale;
         QFormLayout *tm_gb_u_scale_lt;
-        QDoubleSpinBox *tm_u_scale_sb_x;
-        QDoubleSpinBox *tm_u_scale_sb_y;
-        QDoubleSpinBox *tm_u_scale_sb_z;
-        QCheckBox *tm_u_scale_x_enabled;
-        QCheckBox *tm_u_scale_y_enabled;
-        QCheckBox *tm_u_scale_z_enabled;
-        QWidget *tm_u_scale_x_proxy_widget;
-        QHBoxLayout *tm_u_scale_x_proxy_lt;
-        QWidget *tm_u_scale_y_proxy_widget;
-        QHBoxLayout *tm_u_scale_y_proxy_lt;
-        QWidget *tm_u_scale_z_proxy_widget;
-        QHBoxLayout *tm_u_scale_z_proxy_lt;
+        qbinded_float3_input_t *tm_u_scale_vec;
+        vector3<float> tm_u_scale_vec_val{1};
         QPushButton *tm_u_apply_scale_button;
 
         qspoiler_widget_t *tm_gb_translate;

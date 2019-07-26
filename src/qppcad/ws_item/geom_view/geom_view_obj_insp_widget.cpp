@@ -707,75 +707,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_u_scale_lt->setLabelAlignment(Qt::AlignRight);
   tm_gb_u_scale->add_content_layout(tm_gb_u_scale_lt);
 
-  tm_u_scale_sb_x = new QDoubleSpinBox;
-  tm_u_scale_sb_x->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
-  tm_u_scale_sb_x->setMinimum(0.01);
-  tm_u_scale_sb_x->setMaximum(2.0);
-  tm_u_scale_sb_x->setSingleStep(0.01);
-  tm_u_scale_sb_x->setValue(1.0);
-  tm_u_scale_sb_x->setButtonSymbols(QAbstractSpinBox::NoButtons);
-  tm_u_scale_sb_x->setLocale(QLocale::C);
-
-  tm_u_scale_sb_y = new QDoubleSpinBox;
-  tm_u_scale_sb_y->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
-  tm_u_scale_sb_y->setMinimum(0.01);
-  tm_u_scale_sb_y->setMaximum(2.0);
-  tm_u_scale_sb_y->setSingleStep(0.01);
-  tm_u_scale_sb_y->setValue(1.0);
-  tm_u_scale_sb_y->setButtonSymbols(QAbstractSpinBox::NoButtons);
-  tm_u_scale_sb_y->setLocale(QLocale::C);
-
-  tm_u_scale_sb_z = new QDoubleSpinBox;
-  tm_u_scale_sb_z->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
-  tm_u_scale_sb_z->setMinimum(0.01);
-  tm_u_scale_sb_z->setMaximum(2.0);
-  tm_u_scale_sb_z->setSingleStep(0.01);
-  tm_u_scale_sb_z->setValue(1.0);
-  tm_u_scale_sb_z->setButtonSymbols(QAbstractSpinBox::NoButtons);
-  tm_u_scale_sb_z->setLocale(QLocale::C);
-
-  tm_u_scale_x_proxy_widget = new QWidget;
-  tm_u_scale_x_proxy_lt = new QHBoxLayout;
-  tm_u_scale_x_proxy_lt->setContentsMargins(0,0,0,0);
-  tm_u_scale_x_proxy_widget->setLayout(tm_u_scale_x_proxy_lt);
-
-  tm_u_scale_y_proxy_widget = new QWidget;
-  tm_u_scale_y_proxy_lt = new QHBoxLayout;
-  tm_u_scale_y_proxy_lt->setContentsMargins(0,0,0,0);
-  tm_u_scale_y_proxy_widget->setLayout(tm_u_scale_y_proxy_lt);
-
-  tm_u_scale_z_proxy_widget = new QWidget;
-  tm_u_scale_z_proxy_lt = new QHBoxLayout;
-  tm_u_scale_z_proxy_lt->setContentsMargins(0,0,0,0);
-  tm_u_scale_z_proxy_widget->setLayout(tm_u_scale_z_proxy_lt);
-
-  tm_u_scale_x_enabled = new QCheckBox;
-  tm_u_scale_x_enabled->setChecked(true);
-  connect(tm_u_scale_x_enabled,
-          static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
-          [this](int state){this->tm_u_scale_sb_x->setEnabled(state == Qt::Checked);});
-
-  tm_u_scale_y_enabled = new QCheckBox;
-  tm_u_scale_y_enabled->setChecked(true);
-  connect(tm_u_scale_y_enabled,
-          static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
-          [this](int state){this->tm_u_scale_sb_y->setEnabled(state == Qt::Checked);});
-
-  tm_u_scale_z_enabled = new QCheckBox;
-  tm_u_scale_z_enabled->setChecked(true);
-  connect(tm_u_scale_z_enabled,
-          static_cast<void(QCheckBox::*)(int)>(&QCheckBox::stateChanged),
-          [this](int state){this->tm_u_scale_sb_z->setEnabled(state == Qt::Checked);});
-
-  //compose proxy widgets for uniform scale
-  tm_u_scale_x_proxy_lt->addWidget(tm_u_scale_sb_x);
-  tm_u_scale_x_proxy_lt->addWidget(tm_u_scale_x_enabled);
-
-  tm_u_scale_y_proxy_lt->addWidget(tm_u_scale_sb_y);
-  tm_u_scale_y_proxy_lt->addWidget(tm_u_scale_y_enabled);
-
-  tm_u_scale_z_proxy_lt->addWidget(tm_u_scale_sb_z);
-  tm_u_scale_z_proxy_lt->addWidget(tm_u_scale_z_enabled);
+  tm_u_scale_vec = new qbinded_float3_input_t;
+  tm_u_scale_vec->set_min_max_step(0.01, 10, 0.01);
+  tm_u_scale_vec->bind_value(&tm_u_scale_vec_val);
 
   tm_u_apply_scale_button = new QPushButton(tr("Apply"));
   tm_u_apply_scale_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
@@ -785,9 +719,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
           this,
           &geom_view_obj_insp_widget_t::modify_barycentric_scale_button_clicked);
 
-  tm_gb_u_scale_lt->addRow("Scale X", tm_u_scale_x_proxy_widget);
-  tm_gb_u_scale_lt->addRow("Scale Y", tm_u_scale_y_proxy_widget);
-  tm_gb_u_scale_lt->addRow("Scale Z", tm_u_scale_z_proxy_widget);
+  tm_gb_u_scale_lt->addRow("Scale ", tm_u_scale_vec);
   tm_gb_u_scale_lt->addRow("", tm_u_apply_scale_button);
   init_form_lt(tm_gb_u_scale_lt);
 
@@ -2084,8 +2016,6 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
 
 void geom_view_obj_insp_widget_t::modify_pair_dist_swap_button_clicked() {
 
-  app_state_t *astate = app_state_t::get_inst();
-
   if (b_al && b_al->m_atom_idx_sel.size() == 2) {
       auto it1 = b_al->m_atom_idx_sel.begin();
       auto it2 = it1++;
@@ -2130,26 +2060,20 @@ void geom_view_obj_insp_widget_t::modify_barycentric_scale_button_clicked() {
 
       for (auto &rec : b_al->m_atom_idx_sel) {
 
-          float scale_mod_x = 0.0f;
-          float scale_mod_y = 0.0f;
-          float scale_mod_z = 0.0f;
-
-          if (tm_u_scale_x_enabled->checkState() == Qt::Checked) scale_mod_x = 1.0f;
-          if (tm_u_scale_y_enabled->checkState() == Qt::Checked) scale_mod_y = 1.0f;
-          if (tm_u_scale_z_enabled->checkState() == Qt::Checked) scale_mod_z = 1.0f;
-
           vector3<float> new_pos_dist = center - b_al->m_geom->pos(rec.m_atm);
           vector3<float> new_pos = b_al->m_geom->pos(rec.m_atm);
 
-          new_pos[0] +=  (1-float(tm_u_scale_sb_x->value())) * new_pos_dist[0] * scale_mod_x;
-          new_pos[1] +=  (1-float(tm_u_scale_sb_y->value())) * new_pos_dist[1] * scale_mod_y;
-          new_pos[2] +=  (1-float(tm_u_scale_sb_z->value())) * new_pos_dist[2] * scale_mod_z;
+          new_pos[0] +=  (1-tm_u_scale_vec_val[0]) * new_pos_dist[0];
+          new_pos[1] +=  (1-tm_u_scale_vec_val[1]) * new_pos_dist[1];
+          new_pos[2] +=  (1-tm_u_scale_vec_val[2]) * new_pos_dist[2] ;
 
           b_al->upd_atom(rec.m_atm, new_pos);
+
         }
 
       update_animate_section_status();
       astate->make_viewport_dirty();
+
     }
 
 }
