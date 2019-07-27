@@ -78,6 +78,14 @@ namespace qpp {
     const uint32_t ws_item_updf_channel_l               = 1 << 21;
     const uint32_t ws_item_updf_regenerate_content      = 1 << 22;
 
+    const uint8_t ws_item_render_order_0   = 0;
+    const uint8_t ws_item_render_order_1   = 1;
+    const uint8_t ws_item_render_order_2   = 2;
+    const uint8_t ws_item_render_order_3   = 3;
+    const uint8_t ws_item_render_order_4   = 4;
+    const uint8_t ws_item_render_order_5   = 5;
+    const uint8_t ws_item_render_order_max = 6;
+
     class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
@@ -87,6 +95,8 @@ namespace qpp {
           uint32_t p_flags{0};
 
       public:
+
+        int m_render_order{0};
 
         workspace_t *m_parent_ws{};
         std::vector<std::shared_ptr<ws_item_t> > m_connected_items;

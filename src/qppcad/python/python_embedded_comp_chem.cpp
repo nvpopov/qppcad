@@ -13,4 +13,6 @@ PYBIND11_EMBEDDED_MODULE(cc, m) {
                   py::arg("g_start"), py::arg("g_end"), py::arg("path") = "");
   module_cp2k.def("gen_fixed_atoms_section", &cp2k_helper_t::gen_fixed_atoms_section);
 
+  m.def("gen_pair_dist_calc_data", &generic_qc_helper_t::generate_pair_dist_calc_data);
+
 }
