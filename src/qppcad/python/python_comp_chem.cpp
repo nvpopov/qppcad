@@ -53,6 +53,9 @@ void generic_qc_helper_t::generate_pair_dist_calc_data(std::shared_ptr<geom_view
   auto dir2 = (cnt - gv->m_geom->pos(at2)).normalized();
   auto dr = 0.5f * (end_r - start_r)/(num_frames-1);
 
+  //create static anim for current state
+  gv->m_anim->make_static_anim();
+
   //compose new anim
   geom_anim_record_t<float> new_anim;
   new_anim.m_anim_name = fmt::format("pair_dist{}", gv->m_anim->get_total_anims());

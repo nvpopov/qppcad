@@ -339,15 +339,39 @@ void geom_view_anim_subsys_t::make_animable() {
 
 }
 
-void geom_view_anim_subsys_t::make_anim(const std::string _anim_name,
-                                        const geom_anim_t _anim_type,
-                                        const size_t _num_frames) {
+void geom_view_anim_subsys_t::make_anim(const std::string &anim_name,
+                                        const geom_anim_t anim_type,
+                                        const size_t num_frames) {
 
   geom_anim_record_t<float> new_anim_rec;
-  new_anim_rec.m_anim_name = _anim_name;
-  new_anim_rec.m_anim_type = _anim_type;
+  new_anim_rec.m_anim_name = anim_name;
+  new_anim_rec.m_anim_type = anim_type;
 
-  new_anim_rec.frames.resize(_num_frames);
+  new_anim_rec.frames.resize(num_frames);
+  m_anim_data.emplace_back(std::move(new_anim_rec));
+
+  make_animable();
+
+}
+
+void geom_view_anim_subsys_t::make_static_anim(bool do_it_anyway) {
+
+  auto static_it = std::find_if(std::cbegin(m_anim_data), std::cend(m_anim_data),
+                                [](const geom_anim_record_t<float> &rec)
+                                {return rec.m_anim_type == geom_anim_t::anim_static;});
+
+  if (static_it != std::cend(m_anim_data) && !do_it_anyway) return;
+
+  geom_anim_record_t<float> new_anim_rec;
+  new_anim_rec.m_anim_name = fmt::format("static{}", m_anim_data.size());
+  new_anim_rec.m_anim_type = geom_anim_t::anim_static;
+
+  new_anim_rec.frames.resize(1);
+  new_anim_rec.frames[0].atom_pos.resize(p_owner->m_geom->nat());
+
+  for (size_t i = 0; i < p_owner->m_geom->nat(); i++)
+    new_anim_rec.frames[0].atom_pos[i] = p_owner->m_geom->pos(i);
+
   m_anim_data.emplace_back(std::move(new_anim_rec));
 
   make_animable();

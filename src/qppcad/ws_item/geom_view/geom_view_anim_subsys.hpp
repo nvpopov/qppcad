@@ -64,9 +64,10 @@ namespace qpp {
                                     bool bounce = false);
 
         void make_animable();
-        void make_anim(const std::string _anim_name,
-                       const geom_anim_t _anim_type,
-                       const size_t _num_frames);
+        void make_anim(const std::string &anim_name,
+                       const geom_anim_t anim_type,
+                       const size_t num_frames);
+        void make_static_anim(bool do_it_anyway = false);
 
         int current_frame_truncated();
 
