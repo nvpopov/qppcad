@@ -134,8 +134,6 @@ void geom_view_anim_subsys_t::update_current_frame_to_end() {
 
 void geom_view_anim_subsys_t::update(const float delta_time) {
 
-  app_state_t* astate = app_state_t::get_inst();
-
   if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
   if (m_anim_data[m_cur_anim].frames.empty()) return;
   if (!animable()) return;
@@ -171,9 +169,10 @@ bool geom_view_anim_subsys_t::animable() const {
 //  if (m_anim_data.size() == 1)
 //    if (m_anim_data[0].m_anim_type == geom_anim_t::anim_static) return false;
 
-  for (auto &anim : m_anim_data)
-    if (anim.frames.empty()) return false;
-  return true;
+  bool has_empty_anims = std::any_of(m_anim_data.cbegin(), m_anim_data.cend(),
+                                     [](const geom_anim_record_t<float> &rec) -> bool
+                                     {return rec.frames.empty();});
+  return !has_empty_anims;
 
 }
 
@@ -269,7 +268,6 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
 
   if (num_frames <= 1) {
       throw std::out_of_range("invalid number of frames!");
-      return;
     }
 
   // validate target frames
@@ -345,8 +343,6 @@ void geom_view_anim_subsys_t::make_anim(const std::string _anim_name,
                                         const geom_anim_t _anim_type,
                                         const size_t _num_frames) {
 
-  app_state_t* astate = app_state_t::get_inst();
-
   geom_anim_record_t<float> new_anim_rec;
   new_anim_rec.m_anim_name = _anim_name;
   new_anim_rec.m_anim_type = _anim_type;
@@ -391,7 +387,6 @@ void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id,
                                           "cur_anim->frames.size={}",
                                           m_cur_anim,
                                           m_anim_data.size()));
-      return;
     }
 
   int c_start_frame = current_frame;

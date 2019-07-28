@@ -30,7 +30,7 @@ namespace qpp {
         bool m_play_anim{false};
         bool m_force_non_animable{false};
 
-        geom_view_anim_subsys_t (geom_view_t &_p_owner);
+        explicit geom_view_anim_subsys_t (geom_view_t &_p_owner);
 
         void update_geom_to_anim (const int anim_id, const float current_frame);
         void update_and_set_anim (const int anim_id, const float current_frame);
