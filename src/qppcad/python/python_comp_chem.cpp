@@ -37,9 +37,9 @@ std::string cp2k_helper_t::gen_fixed_atoms_section(py::list &fixed_atoms) {
 
 }
 
-void generic_qc_helper_t::generate_pair_dist_calc_data(std::shared_ptr<geom_view_t> gv,
-                                                       size_t at1, size_t at2, size_t num_frames,
-                                                       float start_r, float end_r) {
+void generic_qc_helper_t::gen_pair_dist_calc_data(std::shared_ptr<geom_view_t> gv,
+                                                  size_t at1, size_t at2, size_t num_frames,
+                                                  float start_r, float end_r) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -81,5 +81,53 @@ void generic_qc_helper_t::generate_pair_dist_calc_data(std::shared_ptr<geom_view
 
   if (gv->is_selected())
     astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+}
+
+std::string orca_helper_t::gen_multijob_from_anim(std::shared_ptr<geom_view_t> gv, size_t anim_id) {
+
+  //app_state_t* astate = app_state_t::get_inst();
+
+  std::string rets;
+
+  if (!gv) {
+      throw std::invalid_argument("invalid gv!");
+      return rets;
+    }
+
+  if (anim_id >= gv->m_anim->get_total_anims()) {
+      throw std::invalid_argument(fmt::format("invalid anim id! ctx=[anim_id={}, tot_anim={}]",
+                                              anim_id, gv->m_anim->get_total_anims()));
+      return rets;
+    }
+
+  if (gv->m_anim->m_anim_data[anim_id].frames.size() == 0) {
+      throw std::invalid_argument(
+            fmt::format("gv->m_anim->m_anim_data[anim_id].frames.size == {}!",
+            gv->m_anim->m_anim_data[anim_id].frames.size()));
+      return rets;
+    }
+
+  for (size_t i = 0; i < gv->m_anim->m_anim_data[anim_id].frames.size(); i++) {
+
+      rets += fmt::format("#step {}\n", i);
+      if (i > 0) rets += "$new_job\n";
+      rets += "! RHF aug-cc-pVQZ RIJK AutoAux VeryTightSCF DIRECT\n";
+      rets += "#params\n";
+      rets += "*xyz 0 1\n";
+
+      for (size_t q = 0; q < gv->m_geom->nat(); q++) {
+          rets += fmt::format("{} {:>16.5f} {:>16.5f} {:>16.5f}\n",
+                              gv->m_geom->atom_name(q),
+                              gv->m_anim->m_anim_data[anim_id].frames[i].atom_pos[q][0],
+                              gv->m_anim->m_anim_data[anim_id].frames[i].atom_pos[q][1],
+                              gv->m_anim->m_anim_data[anim_id].frames[i].atom_pos[q][2]);
+        }
+
+      rets += "*\n\n";
+
+    }
+
+  return rets;
 
 }

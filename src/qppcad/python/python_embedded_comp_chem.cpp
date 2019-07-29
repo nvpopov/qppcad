@@ -8,11 +8,13 @@ using namespace qpp::cad;
 PYBIND11_EMBEDDED_MODULE(cc, m) {
 
   auto module_cp2k = m.def_submodule("cp2k");
-  module_cp2k.def("make_neb_calc",
-                  &cp2k_helper_t::save_neb_data,
+  module_cp2k.def("make_neb_calc", &cp2k_helper_t::save_neb_data,
                   py::arg("g_start"), py::arg("g_end"), py::arg("path") = "");
   module_cp2k.def("gen_fixed_atoms_section", &cp2k_helper_t::gen_fixed_atoms_section);
 
-  m.def("gen_pair_dist_calc_data", &generic_qc_helper_t::generate_pair_dist_calc_data);
+  auto module_orca = m.def_submodule("orca");
+  module_orca.def("gen_multijob_from_anim", &orca_helper_t::gen_multijob_from_anim);
+
+  m.def("gen_pair_dist_calc_data", &generic_qc_helper_t::gen_pair_dist_calc_data);
 
 }
