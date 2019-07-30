@@ -9,6 +9,9 @@ void py_geom_view_reg_helper_t::reg(
     py::module &module,
     py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> &ws_item_base) {
 
+  /*
+   * geom_view_render_style_e pyexport
+   */
   py::enum_<geom_view_render_style_e>(module, "geom_view_render_style_t", py::arithmetic(), "")
           .value("ball_and_stick", ball_and_stick, "ball_and_stick")
           .value("dynamic_lines", dynamic_lines, "dynamic_lines")
@@ -17,6 +20,9 @@ void py_geom_view_reg_helper_t::reg(
           .value("buffered_billboards", buffered_billboards, "buffered_billboards")
           .export_values();
 
+  /*
+   * geom_labels_style_e pyexport
+   */
   py::enum_<geom_labels_style_e>(module, "geom_view_labels_style_t", py::arithmetic(), "")
           .value("show_none", show_none, "show_none")
           .value("show_id", show_id, "show_id")
@@ -25,7 +31,9 @@ void py_geom_view_reg_helper_t::reg(
           .value("show_charge", show_charge, "show_charge")
           .value("show_custom", show_custom, "show_custom")
           .export_values();
-
+  /*
+   * geom_anim_t pyexport
+   */
   py::enum_<geom_anim_t>(module, "geom_anim_t", py::arithmetic(), "")
           .value("anim_static", anim_static, "anim_static")
           .value("anim_generic", anim_generic, "anim_generic")
@@ -34,6 +42,9 @@ void py_geom_view_reg_helper_t::reg(
           .value("anim_vib", anim_vib, "anim_vib")
           .export_values();
 
+  /*
+   * py_geom_view_anim pyexport
+   */
   py::class_<geom_view_anim_subsys_t, std::shared_ptr<geom_view_anim_subsys_t> >
   py_geom_view_anim(module, "geom_view_anim_subsys_t");
   py_geom_view_anim.def("nanim", &geom_view_anim_subsys_t::get_total_anims);
@@ -57,6 +68,9 @@ void py_geom_view_reg_helper_t::reg(
   py_geom_view_anim.def("get_cell_vectors", &geom_view_anim_subsys_t::get_cell_vectors);
   py_geom_view_anim.def("get_atom_pos", &geom_view_anim_subsys_t::get_atom_pos);
 
+  /*
+   * geom_view_labels_subsys_t pyexport
+   */
   py::class_<geom_view_labels_subsys_t, std::shared_ptr<geom_view_labels_subsys_t> >
   py_geom_view_labels(module, "geom_view_labels_subsys_t");
   py_geom_view_labels.def_property("inplace_hud",
@@ -108,6 +122,9 @@ void py_geom_view_reg_helper_t::reg(
   py_geom_view_labels.def("lbl_sel_by_geom_fctr",
                           &geom_view_labels_subsys_t::labelize_sel_by_dist_factor);
 
+  /*
+   * atom_index_set_key pyexport
+   */
   py::class_<atom_index_set_key, std::shared_ptr<atom_index_set_key> >
   py_atom_index_set_key(module, "atom_index_set_key_t");
   py_atom_index_set_key.def_readwrite("atm", &atom_index_set_key::m_atm);
@@ -118,6 +135,9 @@ void py_geom_view_reg_helper_t::reg(
                               return fmt::format("atm={}, idx={}", src.m_atm, src.m_idx);
                             });
 
+  /*
+   * geom_view_sel_group_t pyexport
+   */
   py::class_<geom_view_sel_group_t, std::shared_ptr<geom_view_sel_group_t> >
   py_geom_view_sel_group(module, "geom_view_sel_group_t");
   py_geom_view_sel_group.def_readwrite("name", &geom_view_sel_group_t::m_name);
@@ -140,7 +160,9 @@ void py_geom_view_reg_helper_t::reg(
     return sels.m_sel_grps.size();
   });
 
-
+  /*
+   * geom_view_t pyexport
+   */
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_atoms_list_t(module, "geom_view_t", ws_item_base);
   py_atoms_list_t.def_readwrite("geom", &geom_view_t::m_geom);
@@ -251,6 +273,9 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def_readonly("lbl", &geom_view_t::m_labels);
   py_atoms_list_t.def_readonly("sg", &geom_view_t::m_selg);
 
+  /*
+   * displ_proj_set_t pyexport
+   */
   py_displ_proj_reg_helper_t::reg(module);
 
 }

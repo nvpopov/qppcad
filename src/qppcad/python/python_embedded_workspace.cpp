@@ -27,7 +27,7 @@ namespace py = pybind11;
 std::shared_ptr<ws_item_t> construct_from_geom(
     workspace_t &ws,
     std::shared_ptr<xgeometry<float, periodic_cell<float> > > geom,
-    std::string name) {
+    const std::string &name) {
 
     auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
     if (!new_item) return nullptr;
@@ -59,7 +59,7 @@ std::shared_ptr<ws_item_t> construct_from_geom(
 std::shared_ptr<ws_item_t> construct_from_array_group(
     workspace_t &ws,
     std::shared_ptr<array_group<matrix3<float> > > ag,
-    std::string name) {
+    const std::string &name) {
 
     auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
     if (!new_item) return nullptr;
