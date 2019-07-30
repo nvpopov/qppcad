@@ -37,9 +37,16 @@ namespace qpp {
 
         vector3<float> m_cnt;
         std::vector<displ_proj_record_t> m_recs;
+
+        void apply(std::shared_ptr<geom_view_t> gv,
+                   vector3<float> apply_point,
+                   float eps_sr = 1.0f);
+
         displ_proj_set_t(std::shared_ptr<geom_view_t> gs,
                          std::shared_ptr<geom_view_t> ge,
-                         std::vector<size_t> atlist);
+                         std::vector<size_t> atlist,
+                         std::optional<vector3<float> > exp_cnt);
+
     };
 
     struct py_displ_proj_reg_helper_t {
