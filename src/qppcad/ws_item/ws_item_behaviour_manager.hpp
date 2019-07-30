@@ -330,7 +330,7 @@ namespace qpp {
       size_t get_ext_editor_info(size_t hash);
 
       std::shared_ptr<ws_item_t> fbr_ws_item_by_type(size_t type_id);
-      std::shared_ptr<ws_item_t> fbr_ws_item_by_name(const std::string _type_name);
+      std::shared_ptr<ws_item_t> fbr_ws_item_by_name(const std::string &type_name);
 
       /**
        * @brief reg_tool_grp

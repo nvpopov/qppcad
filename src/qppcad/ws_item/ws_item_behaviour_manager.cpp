@@ -284,9 +284,15 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_finger_print(
 
 std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_short_name(
     const std::string &ffmt_short_name) {
-  for (auto &elem : m_file_formats)
-    if (elem.second.m_shortname == ffmt_short_name) return std::optional<size_t>(elem.first);
+
+  auto find_iter = std::find_if(std::begin(m_file_formats), std::end(m_file_formats),
+                                [&ffmt_short_name](const auto &rec){
+                                return rec.second.m_shortname == ffmt_short_name;});
+
+  if (find_iter != m_file_formats.cend()) return std::optional<size_t>(find_iter->first);
+
   return std::nullopt;
+
 }
 
 std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format(size_t file_format) {
@@ -457,10 +463,10 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_type(size
 }
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_name(
-    const std::string _type_name) {
+    const std::string &type_name) {
 
   app_state_t *astate = app_state_t::get_inst();
-  return fbr_ws_item_by_type(astate->hash_reg->calc_hash_ub<std::string>(_type_name));
+  return fbr_ws_item_by_type(astate->hash_reg->calc_hash_ub<std::string>(type_name));
 
 }
 
