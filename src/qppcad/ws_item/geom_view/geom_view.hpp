@@ -292,7 +292,7 @@ namespace qpp {
         void delete_selected_atoms();
         void delete_atoms(std::set<int> &to_delete);
         void clamp_atoms_to_cell(bool ignore_selection = true);
-        void center_cell_on(vector3<float> new_cnt, bool clamp_atoms = true);
+        vector3<float> center_cell_on(vector3<float> new_cnt, bool clamp_atoms = true);
 
         void begin_structure_change();
         void end_structure_change();

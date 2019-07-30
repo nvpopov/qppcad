@@ -50,15 +50,7 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   new_center /= al->m_atom_idx_sel.size();
 
-  //compute cell center
-  vector3<float> cell_center{0};
-  for (size_t i = 0 ; i < al->m_geom->DIM; i++)
-    cell_center += al->m_geom->cell.v[i] * 0.5f;
-
-  vector3<float> delta = cell_center - new_center;
-
-  for (size_t i = 0; i < al->m_geom->nat(); i++)
-    al->m_geom->coord(i) += delta;
+  al->center_cell_on(new_center);
 
   astate->make_viewport_dirty();
 

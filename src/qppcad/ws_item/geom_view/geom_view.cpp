@@ -1164,13 +1164,30 @@ void geom_view_t::clamp_atoms_to_cell(bool ignore_selection) {
   for (int i = 0; i < m_geom->nat(); i++)
     if (m_atom_idx_sel.find(atom_index_set_key(i, index::D(m_geom->DIM).all(0)))
         != m_atom_idx_sel.end() || ignore_selection) {
+
         vector3<float> pos = m_geom->pos(i);
         m_geom->change_pos(i, m_geom->cell.reduce(pos));
+
       }
 
 }
 
-void geom_view_t::center_cell_on(vector3<float> new_cnt, bool clamp_atoms) {
+vector3<float> geom_view_t::center_cell_on(vector3<float> new_cnt, bool clamp_atoms) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  //compute cell center
+  vector3<float> cell_cnt{0};
+  for (size_t i = 0 ; i < m_geom->DIM; i++) cell_cnt += m_geom->cell.v[i] * 0.5f;
+
+  vector3<float> delta = cell_cnt - new_cnt;
+  for (size_t i = 0; i < m_geom->nat(); i++) m_geom->coord(i) += delta;
+
+  if (clamp_atoms) clamp_atoms_to_cell();
+
+  astate->make_viewport_dirty();
+
+  return cell_cnt;
 
 }
 
