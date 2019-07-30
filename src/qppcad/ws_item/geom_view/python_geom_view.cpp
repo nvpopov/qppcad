@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
+#include <qppcad/ws_item/geom_view/displ_proj.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -245,5 +246,7 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def_readonly("anim", &geom_view_t::m_anim);
   py_atoms_list_t.def_readonly("lbl", &geom_view_t::m_labels);
   py_atoms_list_t.def_readonly("sg", &geom_view_t::m_selg);
+
+  py_displ_proj_reg_helper_t::reg(module);
 
 }
