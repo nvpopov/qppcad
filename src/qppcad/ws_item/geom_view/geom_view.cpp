@@ -1159,6 +1159,21 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
 
 }
 
+void geom_view_t::clamp_atoms_to_cell(bool ignore_selection) {
+
+  for (int i = 0; i < m_geom->nat(); i++)
+    if (m_atom_idx_sel.find(atom_index_set_key(i, index::D(m_geom->DIM).all(0)))
+        != m_atom_idx_sel.end() || ignore_selection) {
+        vector3<float> pos = m_geom->pos(i);
+        m_geom->change_pos(i, m_geom->cell.reduce(pos));
+      }
+
+}
+
+void geom_view_t::center_cell_on(vector3<float> new_cnt, bool clamp_atoms) {
+
+}
+
 void geom_view_t::begin_structure_change() {
 
   m_tws_tr->do_action(act_lock | act_clear_all);

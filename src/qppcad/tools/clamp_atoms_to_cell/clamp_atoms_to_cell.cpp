@@ -22,13 +22,7 @@ void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  for (int i = 0; i < al->m_geom->nat(); i++)
-    if (al->m_atom_idx_sel.find(
-          atom_index_set_key(i, index::D(al->m_geom->DIM).all(0)))
-        != al->m_atom_idx_sel.end() || ignore_selection) {
-        vector3<float> pos = al->m_geom->pos(i);
-        al->m_geom->change_pos(i, al->m_geom->cell.reduce(pos));
-      }
+  al->clamp_atoms_to_cell(ignore_selection);
 
   astate->make_viewport_dirty();
 
