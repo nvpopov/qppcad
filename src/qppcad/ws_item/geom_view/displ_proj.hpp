@@ -33,19 +33,20 @@ namespace qpp {
 
     };
 
-    struct displ_proj_set_t {
+    struct displ_proj_package_t {
 
         vector3<float> m_cnt;
         std::vector<displ_proj_record_t> m_recs;
 
         void apply(std::shared_ptr<geom_view_t> gv,
                    vector3<float> apply_point,
-                   float eps_sr = 1.0f);
+                   float eps_sr = 1.0f,
+                   bool dry_run = false);
 
-        displ_proj_set_t(std::shared_ptr<geom_view_t> gs,
-                         std::shared_ptr<geom_view_t> ge,
-                         std::vector<size_t> atlist,
-                         std::optional<vector3<float> > exp_cnt);
+        displ_proj_package_t(std::shared_ptr<geom_view_t> gs,
+                             std::shared_ptr<geom_view_t> ge,
+                             std::vector<size_t> atlist,
+                             std::optional<vector3<float> > exp_cnt);
 
     };
 

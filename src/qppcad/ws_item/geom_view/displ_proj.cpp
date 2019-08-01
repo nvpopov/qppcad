@@ -27,31 +27,35 @@ void py_displ_proj_reg_helper_t::reg(py::module &module) {
                                                   src.m_end_pos[2]);
                              });
 
-  py::class_<displ_proj_set_t, std::shared_ptr<displ_proj_set_t> >
-  py_displ_proj_set_t(module, "displ_proj_set_t");
-  py_displ_proj_set_t.def(py::init<std::shared_ptr<geom_view_t>, std::shared_ptr<geom_view_t>,
-                          std::vector<size_t>, std::optional<vector3<float> > >(),
-                          py::arg("gs"), py::arg("ge"), py::arg("atlist"),
-                          py::arg("exp_cnt") = std::nullopt);
-  py_displ_proj_set_t.def_readwrite("cnt", &displ_proj_set_t::m_cnt);
-  py_displ_proj_set_t.def("apply", &displ_proj_set_t::apply,
-                          py::arg("gv"), py::arg("apply_point"), py::arg("eps_sr") = 1.0f);
+  py::class_<displ_proj_package_t, std::shared_ptr<displ_proj_package_t> >
+  py_displ_proj_package_t(module, "displ_proj_package_t");
+  py_displ_proj_package_t.def(py::init<std::shared_ptr<geom_view_t>, std::shared_ptr<geom_view_t>,
+                              std::vector<size_t>, std::optional<vector3<float> > >(),
+                              py::arg("gs"), py::arg("ge"), py::arg("atlist"),
+                              py::arg("exp_cnt") = std::nullopt);
+  py_displ_proj_package_t.def_readwrite("cnt", &displ_proj_package_t::m_cnt);
+  py_displ_proj_package_t.def("apply", &displ_proj_package_t::apply,
+                              py::arg("gv"), py::arg("apply_point"),
+                              py::arg("eps_sr") = 1.0f, py::arg("dry_run") = true);
 
-  py_displ_proj_set_t.def("__len__", [](displ_proj_set_t &sels) {
+  py_displ_proj_package_t.def("__len__", [](displ_proj_package_t &sels) {
     return sels.m_recs.size();
   });
-  py_displ_proj_set_t.def("__getitem__", [](displ_proj_set_t &sels, size_t i) {
+  py_displ_proj_package_t.def("__getitem__", [](displ_proj_package_t &sels, size_t i) {
     if (i >= sels.m_recs.size()) throw py::index_error();
     return sels.m_recs[i];
   }, py::return_value_policy::reference_internal);
 
 }
 
-void displ_proj_set_t::apply(std::shared_ptr<geom_view_t> gv,
+void displ_proj_package_t::apply(std::shared_ptr<geom_view_t> gv,
                              vector3<float> apply_point,
-                             float eps_sr) {
+                             float eps_sr,
+                             bool dry_run) {
 
   if (!gv) return;
+
+  if (dry_run) py::print("Note: this is a dry run");
 
   //build lookup info
   std::vector<std::tuple<size_t, bool> > lkp_vec;
@@ -100,13 +104,13 @@ void displ_proj_set_t::apply(std::shared_ptr<geom_view_t> gv,
       auto atom_id = std::get<0>(lkp_vec[i]);
       auto pos = gv->m_geom->pos(atom_id);
       pos += m_recs[i].m_end_pos - m_recs[i].m_start_pos;
-      gv->m_geom->change_pos(atom_id, pos);
+      if (!dry_run) gv->m_geom->change_pos(atom_id, pos);
 
     }
 
 }
 
-displ_proj_set_t::displ_proj_set_t(std::shared_ptr<geom_view_t> gs,
+displ_proj_package_t::displ_proj_package_t(std::shared_ptr<geom_view_t> gs,
                                    std::shared_ptr<geom_view_t> ge,
                                    std::vector<size_t> atlist,
                                    std::optional<vector3<float> > exp_cnt) {
