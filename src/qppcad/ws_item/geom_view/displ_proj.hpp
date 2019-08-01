@@ -9,6 +9,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/qppcad.hpp>
+#include <data/generic_array.hpp>
 
 namespace py = pybind11;
 
@@ -33,15 +34,24 @@ namespace qpp {
 
     };
 
+    struct displ_proj_mapping_t {
+
+        bool m_mapped{false};
+        size_t m_displ_id{0};
+        size_t m_mapped_atom_id{0};
+
+    };
+
     struct displ_proj_package_t {
 
         vector3<float> m_cnt;
         std::vector<displ_proj_record_t> m_recs;
 
-        void apply(std::shared_ptr<geom_view_t> gv,
-                   vector3<float> apply_point,
-                   float eps_sr = 1.0f,
-                   bool check_run = false);
+        std::vector<displ_proj_mapping_t> gen_mapping(std::shared_ptr<geom_view_t> gv,
+                                                      vector3<float> apply_point,
+                                                      float eps_sr = 1.0f);
+
+        void apply(std::shared_ptr<geom_view_t> gv, std::vector<displ_proj_mapping_t> &map_vec);
 
         displ_proj_package_t(std::shared_ptr<geom_view_t> gs,
                              std::shared_ptr<geom_view_t> ge,

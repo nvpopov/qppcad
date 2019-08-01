@@ -7,7 +7,7 @@ using namespace qpp::cad;
 void py_displ_proj_reg_helper_t::reg(py::module &module) {
 
   /*
-   * bindings for displ_proj_record_tt
+   * python bindings for displ_proj_record_t
    */
   py::class_<displ_proj_record_t, std::shared_ptr<displ_proj_record_t> >
   py_displ_proj_record_t(module, "displ_proj_record_t");
@@ -31,7 +31,16 @@ void py_displ_proj_reg_helper_t::reg(py::module &module) {
                              });
 
   /*
-   * bindings for displ_proj_package_t
+   * python bindings for displ_proj_mapping_t
+   */
+  py::class_<displ_proj_mapping_t, std::shared_ptr<displ_proj_mapping_t> >
+  py_displ_proj_mapping_t(module, "displ_proj_mapping_t");
+  py_displ_proj_mapping_t.def_readonly("mapped", &displ_proj_mapping_t::m_mapped);
+  py_displ_proj_mapping_t.def_readwrite("displ_id", &displ_proj_mapping_t::m_displ_id);
+  py_displ_proj_mapping_t.def_readwrite("mapped_atom_id", &displ_proj_mapping_t::m_mapped_atom_id);
+
+  /*
+   * python bindings for displ_proj_package_t
    */
   py::class_<displ_proj_package_t, std::shared_ptr<displ_proj_package_t> >
   py_displ_proj_package_t(module, "displ_proj_package_t");
@@ -40,9 +49,8 @@ void py_displ_proj_reg_helper_t::reg(py::module &module) {
                               py::arg("gs"), py::arg("ge"), py::arg("atlist"),
                               py::arg("exp_cnt") = std::nullopt);
   py_displ_proj_package_t.def_readwrite("cnt", &displ_proj_package_t::m_cnt);
-  py_displ_proj_package_t.def("apply", &displ_proj_package_t::apply,
-                              py::arg("gv"), py::arg("apply_point"),
-                              py::arg("eps_sr") = 1.0f, py::arg("check_run") = true);
+  py_displ_proj_package_t.def("gen_mapping", &displ_proj_package_t::gen_mapping);
+  py_displ_proj_package_t.def("apply", &displ_proj_package_t::apply);
 
   py_displ_proj_package_t.def("__len__", [](displ_proj_package_t &sels) {
     return sels.m_recs.size();
@@ -54,18 +62,13 @@ void py_displ_proj_reg_helper_t::reg(py::module &module) {
 
 }
 
-void displ_proj_package_t::apply(std::shared_ptr<geom_view_t> gv,
-                             vector3<float> apply_point,
-                             float eps_sr,
-                             bool check_run) {
+std::vector<displ_proj_mapping_t> displ_proj_package_t::gen_mapping(std::shared_ptr<geom_view_t> gv,
+                                                                    vector3<float> apply_point,
+                                                                    float eps_sr) {
 
-  if (!gv) return;
+  std::vector<displ_proj_mapping_t> retv;
 
-  if (check_run) py::print("Note: this is a dry run");
-
-  //build lookup info
-  std::vector<std::tuple<size_t, bool> > lkp_vec;
-  lkp_vec.resize(m_recs.size());
+  if (!gv) return retv;
 
   for (size_t i = 0; i < m_recs.size(); i++) {
 
@@ -82,35 +85,64 @@ void displ_proj_package_t::apply(std::shared_ptr<geom_view_t> gv,
       std::vector<size_t> candidates;
       for (auto &elem : qs_res)
         if (gv->m_geom->atom_name(elem.m_atm).find(rec.m_atom_name) != std::string::npos) {
+
             py::print(fmt::format("   id = {}, an_m = \"{}\", pc = [{}, {}, {}]",
                       elem.m_atm, gv->m_geom->atom_name(elem.m_atm),
                       gv->m_geom->pos(elem.m_atm)[0],
                       gv->m_geom->pos(elem.m_atm)[1],
                       gv->m_geom->pos(elem.m_atm)[2]));
             candidates.push_back(elem.m_atm);
+
           }
 
+      displ_proj_mapping_t tmp_dm;
+      tmp_dm.m_displ_id = i;
+
       if (candidates.empty()) {
-          lkp_vec[i] = {0, false};
+          tmp_dm.m_mapped = false;
         } else {
-          lkp_vec[i] = {candidates.front(), true};
+          tmp_dm.m_mapped = true;
+          tmp_dm.m_mapped_atom_id = candidates.front();
         }
+
+      retv.push_back(std::move(tmp_dm));
 
     }
 
-  //debug print lookup table
-  py::print("Pattern matching stats:");
-  for (auto &elem : lkp_vec)
-    py::print(fmt::format("idx = {}, hit = {}", std::get<0>(elem), std::get<1>(elem)));
+  return retv;
+
+}
+
+void displ_proj_package_t::apply(std::shared_ptr<geom_view_t> gv,
+                                 std::vector<displ_proj_mapping_t> &map_vec) {
+
+  if (!gv) return;
 
   //apply transformation
-  for (size_t i = 0; i < m_recs.size(); i++)
-    if (std::get<1>(lkp_vec[i])) {
+  //old
+//  for (size_t i = 0; i < m_recs.size(); i++)
+//    if (std::get<1>(lkp_vec[i])) {
 
-      auto atom_id = std::get<0>(lkp_vec[i]);
-      auto pos = gv->m_geom->pos(atom_id);
-      pos += m_recs[i].m_end_pos - m_recs[i].m_start_pos;
-      if (!check_run) gv->m_geom->change_pos(atom_id, pos);
+//      auto atom_id = std::get<0>(lkp_vec[i]);
+//      auto pos = gv->m_geom->pos(atom_id);
+//      pos += m_recs[i].m_end_pos - m_recs[i].m_start_pos;
+//      if (!check_run) gv->m_geom->change_pos(atom_id, pos);
+
+//    }
+
+  //new
+  for (size_t i = 0; i < map_vec.size(); i++) {
+
+      auto &dmp = map_vec[i];
+
+      if (dmp.m_mapped && dmp.m_displ_id < m_recs.size()
+          && dmp.m_mapped_atom_id < gv->m_geom->nat()) {
+
+          auto pos = gv->m_geom->pos(dmp.m_mapped_atom_id);
+          pos += m_recs[dmp.m_displ_id].m_end_pos - m_recs[dmp.m_displ_id].m_start_pos;
+          gv->m_geom->change_pos(dmp.m_mapped_atom_id, pos);
+
+        }
 
     }
 
