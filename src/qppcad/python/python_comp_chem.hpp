@@ -34,6 +34,7 @@ namespace qpp {
 
         static std::string gen_multijob_from_anim(std::shared_ptr<geom_view_t> gv, size_t anim_id);
 
+
     };
 
     struct generic_qc_helper_t {
@@ -41,6 +42,8 @@ namespace qpp {
         static void gen_pair_dist_calc_data(std::shared_ptr<geom_view_t> gv,
                                             size_t at1, size_t at2, size_t num_frames,
                                             float start_r, float end_r);
+
+        static std::string get_raw_coords_section(std::shared_ptr<geom_view_t> gv);
 
     };
 

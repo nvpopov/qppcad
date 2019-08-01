@@ -131,3 +131,18 @@ std::string orca_helper_t::gen_multijob_from_anim(std::shared_ptr<geom_view_t> g
   return rets;
 
 }
+
+std::string generic_qc_helper_t::get_raw_coords_section(std::shared_ptr<geom_view_t> gv) {
+
+  std::string retv;
+
+  for (size_t i = 0; i < gv->m_geom->nat(); i++)
+    retv+= fmt::format("{} {:15.8f} {:15.8f} {:15.8f}\n",
+               gv->m_geom->atom(i),
+               gv->m_geom->pos(i)[0],
+               gv->m_geom->pos(i)[1],
+               gv->m_geom->pos(i)[2]);
+
+  return retv;
+
+}

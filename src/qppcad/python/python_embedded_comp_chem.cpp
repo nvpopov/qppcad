@@ -15,6 +15,7 @@ PYBIND11_EMBEDDED_MODULE(cc, m) {
   auto module_orca = m.def_submodule("orca");
   module_orca.def("gen_multijob_from_anim", &orca_helper_t::gen_multijob_from_anim);
 
+  m.def("get_raw_coords_section", &generic_qc_helper_t::get_raw_coords_section);
   m.def("gen_pair_dist_calc_data", &generic_qc_helper_t::gen_pair_dist_calc_data);
 
 }
