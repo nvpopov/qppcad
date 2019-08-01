@@ -94,18 +94,19 @@ void ws_item_obj_insp_widget_t::unbind_item() {
 
 void ws_item_obj_insp_widget_t::update_from_ws_item() {
 
-  const int trc = 22;
+  const int trc_name = 19;
+  const int trc_type = 22;
 
   if (m_binded_item) {
 
       std::string name_str = m_binded_item->get_name();
-      QString name_truncated = QString::fromStdString(name_str).left(trc);
-      if (name_str.length() > trc) name_truncated += "...";
+      QString name_truncated = QString::fromStdString(name_str).left(trc_name);
+      if (name_str.length() > trc_name) name_truncated += "...";
       ws_item_name->setText(name_truncated);
 
       std::string type_str = m_binded_item->compose_type_descr();
-      QString type_truncated = QString::fromStdString(type_str).left(trc);
-      if (type_str.length() > trc) type_truncated += "...";
+      QString type_truncated = QString::fromStdString(type_str).left(trc_type);
+      if (type_str.length() > trc_type) type_truncated += "...";
       ws_item_type->setText(type_truncated);
 
       ws_item_is_visible->load_value_ex();
