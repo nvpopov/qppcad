@@ -217,8 +217,8 @@ qpp--cad--ws_tabbar_t::tab {
  height: 24px;
  border: 0px;
  margin-top:4px;
- margin-right: 3px;
- margin-left: 3px;
+ margin-right: 1px;
+ margin-left: 1px;
  background-color: rgb(60, 60, 60);
  border-top-left-radius: 4px;
  border-top-right-radius: 4px;
