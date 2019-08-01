@@ -6,6 +6,9 @@ using namespace qpp::cad;
 
 void py_displ_proj_reg_helper_t::reg(py::module &module) {
 
+  /*
+   * bindings for displ_proj_record_tt
+   */
   py::class_<displ_proj_record_t, std::shared_ptr<displ_proj_record_t> >
   py_displ_proj_record_t(module, "displ_proj_record_t");
   py_displ_proj_record_t.def(py::init<vector3<float>, vector3<float>, const std::string&>());
@@ -27,6 +30,9 @@ void py_displ_proj_reg_helper_t::reg(py::module &module) {
                                                   src.m_end_pos[2]);
                              });
 
+  /*
+   * bindings for displ_proj_package_t
+   */
   py::class_<displ_proj_package_t, std::shared_ptr<displ_proj_package_t> >
   py_displ_proj_package_t(module, "displ_proj_package_t");
   py_displ_proj_package_t.def(py::init<std::shared_ptr<geom_view_t>, std::shared_ptr<geom_view_t>,
@@ -36,7 +42,7 @@ void py_displ_proj_reg_helper_t::reg(py::module &module) {
   py_displ_proj_package_t.def_readwrite("cnt", &displ_proj_package_t::m_cnt);
   py_displ_proj_package_t.def("apply", &displ_proj_package_t::apply,
                               py::arg("gv"), py::arg("apply_point"),
-                              py::arg("eps_sr") = 1.0f, py::arg("dry_run") = true);
+                              py::arg("eps_sr") = 1.0f, py::arg("check_run") = true);
 
   py_displ_proj_package_t.def("__len__", [](displ_proj_package_t &sels) {
     return sels.m_recs.size();
@@ -51,11 +57,11 @@ void py_displ_proj_reg_helper_t::reg(py::module &module) {
 void displ_proj_package_t::apply(std::shared_ptr<geom_view_t> gv,
                              vector3<float> apply_point,
                              float eps_sr,
-                             bool dry_run) {
+                             bool check_run) {
 
   if (!gv) return;
 
-  if (dry_run) py::print("Note: this is a dry run");
+  if (check_run) py::print("Note: this is a dry run");
 
   //build lookup info
   std::vector<std::tuple<size_t, bool> > lkp_vec;
@@ -104,7 +110,7 @@ void displ_proj_package_t::apply(std::shared_ptr<geom_view_t> gv,
       auto atom_id = std::get<0>(lkp_vec[i]);
       auto pos = gv->m_geom->pos(atom_id);
       pos += m_recs[i].m_end_pos - m_recs[i].m_start_pos;
-      if (!dry_run) gv->m_geom->change_pos(atom_id, pos);
+      if (!check_run) gv->m_geom->change_pos(atom_id, pos);
 
     }
 

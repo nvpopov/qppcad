@@ -41,7 +41,7 @@ namespace qpp {
         void apply(std::shared_ptr<geom_view_t> gv,
                    vector3<float> apply_point,
                    float eps_sr = 1.0f,
-                   bool dry_run = false);
+                   bool check_run = false);
 
         displ_proj_package_t(std::shared_ptr<geom_view_t> gs,
                              std::shared_ptr<geom_view_t> ge,
