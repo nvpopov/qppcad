@@ -70,6 +70,8 @@ std::vector<displ_proj_mapping_t> displ_proj_package_t::gen_mapping(std::shared_
 
   if (!gv) return retv;
 
+  py::list py_mapped_atoms_list;
+
   for (size_t i = 0; i < m_recs.size(); i++) {
 
       auto &rec = m_recs[i];
@@ -101,6 +103,7 @@ std::vector<displ_proj_mapping_t> displ_proj_package_t::gen_mapping(std::shared_
       if (candidates.empty()) {
           tmp_dm.m_mapped = false;
         } else {
+          py_mapped_atoms_list.append(candidates.front());
           tmp_dm.m_mapped = true;
           tmp_dm.m_mapped_atom_id = candidates.front();
         }
@@ -108,6 +111,8 @@ std::vector<displ_proj_mapping_t> displ_proj_package_t::gen_mapping(std::shared_
       retv.push_back(std::move(tmp_dm));
 
     }
+
+  py::print(py_mapped_atoms_list);
 
   return retv;
 

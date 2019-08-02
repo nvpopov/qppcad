@@ -186,10 +186,15 @@ namespace qpp {
       settings.endGroup();
 
       int cmd_size = settings.beginReadArray("pyconsole_history");
+      QString last_pycommand = "";
       for(int i = 0; i < cmd_size; i++) {
           settings.setArrayIndex(i);
           QString cmd = settings.value("cmd").toString();
-          if (!cmd.trimmed().isEmpty()) py_mgr->m_commands.push_back(cmd);
+          QString cmd_trimmed = cmd.trimmed();
+          if (!cmd_trimmed.isEmpty() && last_pycommand != cmd_trimmed) {
+              last_pycommand = cmd;
+              py_mgr->m_commands.push_back(cmd);
+            }
         }
 
       settings.endArray();
