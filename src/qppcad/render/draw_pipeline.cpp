@@ -93,7 +93,7 @@ void draw_pipeline_t::render_atom (const vector3<float> &color,
   astate->sp_default->set_u(sp_u_name::v_color, (GLfloat*)(color.data()));
 
   matrix4<float> mat_model_view_inv_tr =
-      (astate->camera->m_mat_view*matrix4<float>::Identity()).inverse().transpose();
+      (astate->camera->m_mat_view).inverse().transpose();
 
   astate->sp_default->set_u(sp_u_name::m_model_view_proj, astate->camera->m_proj_view.data());
   astate->sp_default->set_u(sp_u_name::m_model_view, astate->camera->m_mat_view.data());

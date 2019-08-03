@@ -267,6 +267,8 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("total_charge", &geom_view_t::total_charge);
   py_atoms_list_t.def("get_charge_partition", &geom_view_t::py_get_charge_partition);
   py_atoms_list_t.def("get_atoms_cn", &geom_view_t::get_atoms_cn);
+  py_atoms_list_t.def("get_atoms_sublattices", &geom_view_t::get_atoms_sublattices,
+                      py::arg("score_eps") = 0.1f);
 
   py_atoms_list_t.def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;});
 

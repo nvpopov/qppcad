@@ -178,14 +178,16 @@ void camera_t::update_camera () {
 
     }
 
-  if (m_cur_proj == cam_proj_t::proj_persp) m_look_at = (m_view_point - m_look_at).normalized();
-  m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
+  if (m_cur_proj == cam_proj_t::proj_persp) {
 
-  if (m_cur_proj == cam_proj_t::proj_persp)
-    m_mat_proj = perspective<float>(m_fov,
-                                    astate->viewport_size(0) / astate->viewport_size(1),
-                                    m_znear_persp, m_zfar_persp);
-  else {
+      m_look_at = (m_view_point - m_look_at).normalized();
+      m_mat_proj = perspective<float>(m_fov,
+                                      astate->viewport_size(0) / astate->viewport_size(1),
+                                      m_znear_persp, m_zfar_persp);
+
+    } else {
+
+      m_mat_view = look_at<float>(m_view_point, m_look_at, m_look_up);
 
       float width   = astate->viewport_size(0);
       float height  = astate->viewport_size(1);
@@ -212,7 +214,7 @@ void camera_t::update_camera () {
     }
 
   m_proj_view = m_mat_proj *  m_mat_view ;
-  m_view_inv_tr = mat4_to_mat3<float>((m_mat_view.transpose()).inverse());
+  m_view_inv_tr = mat4_to_mat3<float>((m_mat_view.inverse()).transpose());
   m3_proj_view = mat4_to_mat3<float>(m_proj_view);
 
 }
@@ -258,7 +260,7 @@ float camera_t::distance(const vector3<float> &point) {
 }
 
 vector3<float> camera_t::unproject (const float _x, const float _y, const float _z) {
-  //app_state_t* astate = &(c_app::get_state());
+
   matrix4<float> mat_mvp_inv = (m_mat_proj * m_mat_view).inverse();
   vector4<float> invec4(_x, _y, _z, 1.0f);
   vector4<float> rvec4 =  mat_mvp_inv * invec4;

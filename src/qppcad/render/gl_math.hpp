@@ -65,8 +65,7 @@ namespace qpp {
     matrix4<REAL> look_at(
         vector3<REAL> const & camPos,
         vector3<REAL> const & center,
-        vector3<REAL> const & up
-        ){
+        vector3<REAL> const & up) {
 
       vector3<REAL> f = (center - camPos).normalized();
       vector3<REAL> u = up.normalized();
@@ -80,10 +79,12 @@ namespace qpp {
           0,0,0,1;
 
       return res;
+
     }
 
     template<typename REAL>
     matrix3<REAL> align_vectors3(const vector3<REAL> v1, const vector3<REAL> v2) {
+
       matrix3<REAL> m_out = matrix4<REAL>::Identity();
       vector3<REAL> v3 = (v1.cross(v2)).normalized();
       vector3<REAL> v4 = (v3.cross(v1)).normalized();
@@ -111,10 +112,12 @@ namespace qpp {
       m2(1,1) = cosv;
 
       return m1.inverse() * m2 * m1;
+
     }
 
     template<typename REAL>
-    matrix4<REAL> align_vectors4(const vector3<REAL> v1, const vector3<REAL> v2){
+    matrix4<REAL> align_vectors4(const vector3<REAL> v1, const vector3<REAL> v2) {
+
       //   V3 = normalize(cross(V1, V2)). (the normalization here is mandatory.)
       //   V4 = cross(V3, V1).
 
