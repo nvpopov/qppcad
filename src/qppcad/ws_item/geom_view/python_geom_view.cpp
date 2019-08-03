@@ -266,6 +266,7 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("dipole_moment", &geom_view_t::dipole_moment);
   py_atoms_list_t.def("total_charge", &geom_view_t::total_charge);
   py_atoms_list_t.def("get_charge_partition", &geom_view_t::py_get_charge_partition);
+  py_atoms_list_t.def("get_atoms_cn", &geom_view_t::get_atoms_cn);
 
   py_atoms_list_t.def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;});
 

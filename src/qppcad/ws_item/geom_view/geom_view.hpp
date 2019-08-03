@@ -288,6 +288,7 @@ namespace qpp {
         void update_inter_atomic_dist(float new_dist, const int at1, const int at2,
                                       pair_dist_mode_e mode);
 
+        std::vector<size_t> get_atoms_cn();
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
         void delete_atoms(std::set<int> &to_delete);

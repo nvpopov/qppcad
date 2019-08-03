@@ -1073,6 +1073,23 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 
 }
 
+std::vector<size_t> geom_view_t::get_atoms_cn() {
+
+  std::vector<size_t> retv;
+  retv.resize(m_geom->nat(), 0);
+  tws_tree_t<float, periodic_cell<float> > l_tws_tree(*m_geom);
+
+  l_tws_tree.m_cell_within_eps = 0.3f;
+
+  l_tws_tree.do_action(act_unlock | act_rebuild_tree);
+  l_tws_tree.do_action(act_rebuild_ntable);
+
+  for (size_t i = 0; i < m_geom->nat(); i++) retv[i] = l_tws_tree.n(i);
+
+  return retv;
+
+}
+
 void geom_view_t::translate_selected (const vector3<float> &t_vec) {
 
   if (!m_geom) return;
