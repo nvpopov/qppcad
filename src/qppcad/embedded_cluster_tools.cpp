@@ -2,6 +2,7 @@
 #include <geom/builders.hpp>
 #include <geom/shape.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -238,9 +239,9 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
 
   //time to print dipole moments
 
-  auto dm_chg = ws_chg->dipole_moment();
-  auto dm_cls = ws_cls->dipole_moment();
-  auto dm_qm  = ws_qm->dipole_moment();
+  auto dm_chg = geom_view_tools_t::dipole_moment(ws_chg.get());
+  auto dm_cls = geom_view_tools_t::dipole_moment(ws_cls.get());
+  auto dm_qm  = geom_view_tools_t::dipole_moment(ws_qm.get());
   auto dm_tot = dm_chg + dm_cls + dm_qm;
 
   py::print(fmt::format("  chg_dipole_moment  = {}, {}, {}", dm_chg[0],  dm_chg[1],  dm_chg[2]));

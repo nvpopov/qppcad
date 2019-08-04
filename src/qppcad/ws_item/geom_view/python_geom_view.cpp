@@ -257,17 +257,11 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("get_unsel_atoms", &geom_view_t::get_unsel_atoms,
                       py::arg("index_offset") = 0);
 
-  py_atoms_list_t.def("pp_sel_atoms", &geom_view_t::pretty_print_selected_atoms,
-                      py::arg("new_frame") = vector3<float>{0});
-  py_atoms_list_t.def("pertrub_via_normal_mode", &geom_view_t::pertrub_via_normal_mode);
   py_atoms_list_t.def("clone_on_the_spot", &geom_view_t::clone_on_the_spot);
   py_atoms_list_t.def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord);
-  py_atoms_list_t.def("purify_boundary_atoms", &geom_view_t::purify_boundary_atoms);
+
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
 
-  py_atoms_list_t.def("dipole_moment", &geom_view_t::dipole_moment);
-  py_atoms_list_t.def("total_charge", &geom_view_t::total_charge);
-  py_atoms_list_t.def("get_charge_partition", &geom_view_t::py_get_charge_partition);
   py_atoms_list_t.def("get_atoms_cn", &geom_view_t::get_atoms_cn);
   py_atoms_list_t.def("get_atoms_sublattices", &geom_view_t::get_atoms_sublattices,
                       py::arg("score_eps") = 0.1f);
@@ -285,5 +279,14 @@ void py_geom_view_reg_helper_t::reg(
 
   auto gvt = module.def_submodule("gvt", "geom_view_t tools");
   gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms);
+  gvt.def("purify_boundary_atoms", &geom_view_tools_t::purify_boundary_atoms);
+
+  gvt.def("dipole_moment", &geom_view_tools_t::dipole_moment);
+  gvt.def("total_charge", &geom_view_tools_t::total_charge);
+  gvt.def("get_charge_partition", &geom_view_tools_t::py_get_charge_partition);
+
+  gvt.def("pertrub_via_normal_mode", &geom_view_tools_t::pertrub_via_normal_mode);
+  gvt.def("pretty_print_selected_atoms", &geom_view_tools_t::pretty_print_selected_atoms,
+          py::arg("gv"), py::arg("new_frame") = vector3<float>{0});
 
 }

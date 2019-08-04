@@ -1,6 +1,7 @@
 #include <qppcad/tools/purify_boundary_atoms/purify_boundary_atoms.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -42,7 +43,8 @@ void purify_boundary_atoms_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
         QListWidgetItem *item = paw.sub_gv->item(i);
         if (item->checkState() == Qt::Checked) {
             auto slave_as_gv = paw.sub_gv->m_sub_items[i]->cast_as<geom_view_t>();
-            if (slave_as_gv) slave_as_gv->purify_boundary_atoms(master_as_gv);
+            if (slave_as_gv)
+              geom_view_tools_t::purify_boundary_atoms(slave_as_gv, master_as_gv);
           }
 
       }

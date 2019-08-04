@@ -1835,60 +1835,6 @@ bool geom_view_t::can_be_written_to_json() {
 
 }
 
-void geom_view_t::purify_boundary_atoms(geom_view_t *src) {
-
-  if (!src || src->m_geom->nat() != m_geom->nat()) return;
-
-  begin_structure_change();
-
-  for (size_t i = 0; i < m_geom->nat(); i++) {
-
-      float min_dist = 100.0f;
-      auto goal_vector = m_geom->pos(i);
-      auto pos_in_src = src->m_geom->pos(i);
-      for (iterator idx(index::D(m_geom->DIM).all(-1),
-                        index::D(m_geom->DIM).all(1)); !idx.end(); idx++ ) {
-          auto t_pos_cf = m_geom->cell.transform(m_geom->pos(i), idx);
-          auto dist = (pos_in_src - t_pos_cf).norm();
-          if (dist < min_dist) {
-              min_dist = dist;
-              //min_dist_index = i;
-              goal_vector = t_pos_cf;
-            }
-        }
-
-      m_geom->coord(i) = goal_vector;
-
-    }
-
-  end_structure_change();
-
-}
-
-vector3<float> geom_view_t::dipole_moment() {
-
-  vector3<float> accum_dm{0,0,0};
-  for (int i = 0; i < m_geom->nat(); i++)
-    accum_dm += m_geom->pos(i) * m_geom->xfield<float>(xgeom_charge, i);
-  return accum_dm;
-
-}
-
-float geom_view_t::total_charge() {
-
-  float accum_charge{0};
-  for (int i = 0; i < m_geom->nat(); i++)
-    accum_charge += m_geom->xfield<float>(xgeom_charge, i);
-  return accum_charge;
-
-}
-
-pybind11::list geom_view_t::py_get_sel_pos_in_frame(vector3<float> t_frame) {
-
-  return py::none();
-
-}
-
 py::list geom_view_t::get_sel_atoms(int index_offset) {
 
   py::list ret;
@@ -1933,8 +1879,8 @@ void geom_view_t::py_copy_settings(geom_view_t *src) {
   m_atom_scale_factor      = src->m_atom_scale_factor;
   m_bond_scale_factor      = src->m_bond_scale_factor;
 
-  m_labels->m_style                  = src->m_labels->m_style;
-  m_labels->m_screen_scale           = src->m_labels->m_screen_scale;
+  m_labels->m_style         = src->m_labels->m_style;
+  m_labels->m_screen_scale  = src->m_labels->m_screen_scale;
   m_labels->m_selective_lbl = src->m_labels->m_selective_lbl;
 
 }
@@ -1955,97 +1901,3 @@ void geom_view_t::py_copy_xgeom_aux(geom_view_t *src) {
     }
 
 }
-
-std::vector<scalar_partition_per_type_t<>> geom_view_t::get_charge_partition() {
-
-  std::vector<scalar_partition_per_type_t<>> retcp;
-
-  const auto ch_eps = 0.0001f;
-
-  for (size_t i = 0; i < m_geom->nat(); i++) {
-
-      bool rec_founded{false};
-
-      for (size_t q = 0; q < retcp.size(); q++)
-        if (retcp[q].atype == m_geom->type(i) &&
-            (std::fabs(retcp[q].value - m_geom->xfield<float>(xgeom_charge, i)) < ch_eps)) {
-            rec_founded = true;
-            retcp[q].count++;
-          }
-
-      if (!rec_founded) {
-          scalar_partition_per_type_t<> tmp_rec;
-          tmp_rec.atype = m_geom->type(i);
-          tmp_rec.value = m_geom->xfield<float>(xgeom_charge, i);
-          tmp_rec.count = 1;
-          retcp.push_back(std::move(tmp_rec));
-        }
-
-    }
-
-  return retcp;
-
-}
-
-py::list geom_view_t::py_get_charge_partition() {
-
-  py::list ret_list;
-
-  auto charge_part = get_charge_partition();
-
-  for (auto &ch_rec : charge_part) {
-
-      py::list ch_rec_list;
-      ch_rec_list.append(ch_rec.atype);
-      ch_rec_list.append(ch_rec.value);
-      ch_rec_list.append(ch_rec.count);
-
-      ret_list.append(ch_rec_list);
-
-    }
-
-  return ret_list;
-
-}
-
-void geom_view_t::pertrub_via_normal_mode(generic_array_t<vector3<float>, float> &disp) {
-
-  if (m_geom->nat() != disp.size()) return;
-
-  for (size_t i = 0; i < m_geom->nat(); i++)
-    m_geom->coord(i) = m_geom->coord(i) + disp[i];
-
-}
-
-std::string geom_view_t::pretty_print_selected_atoms(vector3<float> new_frame) {
-
-  std::string ret;
-
-  bool first = true;
-  for (auto &rec : m_atom_idx_sel) {
-
-      vector3<float> pos_i = m_geom->pos(rec.m_atm) - new_frame;
-
-      geom_labels_style_e cur_style =
-          m_labels->m_style == geom_labels_style_e::show_none ?
-            geom_labels_style_e::show_id_type :
-            m_labels->m_style;
-
-      ret +=
-          fmt::format(first ? "{} {:8.8f} {:8.8f} {:8.8f}" : "\n{} {:8.8f} {:8.8f} {:8.8f}",
-                      geom_view_labels_subsys_t::label_gen_fn(this, cur_style, rec.m_atm),
-                      pos_i[0],
-                      pos_i[1],
-                      pos_i[2]
-          );
-
-      first = false;
-
-    }
-
-  return ret;
-
-}
-
-
-

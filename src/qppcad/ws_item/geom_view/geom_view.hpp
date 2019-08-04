@@ -329,22 +329,10 @@ namespace qpp {
         bool can_be_written_to_json() override;
         //void post_load();
 
-        void purify_boundary_atoms(geom_view_t *src);
-
-        vector3<float> dipole_moment();
-        float total_charge();
-
-        py::list py_get_sel_pos_in_frame(vector3<float> t_frame);
         py::list get_sel_atoms(int index_offset);
         py::list get_unsel_atoms(int index_offset);
         void py_copy_settings(geom_view_t *src);
         void py_copy_xgeom_aux(geom_view_t *src);
-
-        std::vector<scalar_partition_per_type_t<>> get_charge_partition();
-        py::list py_get_charge_partition();
-
-        void pertrub_via_normal_mode(generic_array_t<vector3<float>, float> &disp);
-        std::string pretty_print_selected_atoms(vector3<float> new_frame);
 
     };
 
