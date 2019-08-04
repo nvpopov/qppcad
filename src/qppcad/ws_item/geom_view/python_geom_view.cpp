@@ -1,5 +1,6 @@
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
 #include <qppcad/ws_item/geom_view/displ_proj.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -263,7 +264,7 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord);
   py_atoms_list_t.def("purify_boundary_atoms", &geom_view_t::purify_boundary_atoms);
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
-  py_atoms_list_t.def("shake", &geom_view_t::py_shake_atoms);
+
   py_atoms_list_t.def("dipole_moment", &geom_view_t::dipole_moment);
   py_atoms_list_t.def("total_charge", &geom_view_t::total_charge);
   py_atoms_list_t.def("get_charge_partition", &geom_view_t::py_get_charge_partition);
@@ -281,5 +282,8 @@ void py_geom_view_reg_helper_t::reg(
    * displ_proj_set_t pyexport
    */
   py_displ_proj_reg_helper_t::reg(module);
+
+  auto gvt = module.def_submodule("gvt", "geom_view_t tools");
+  gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms);
 
 }

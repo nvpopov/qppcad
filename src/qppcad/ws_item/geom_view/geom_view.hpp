@@ -329,9 +329,6 @@ namespace qpp {
         bool can_be_written_to_json() override;
         //void post_load();
 
-        void shake_atoms(std::set<size_t> atoms_to_shake, float magn = 1.0f);
-        void py_shake_atoms(py::list atoms_to_shake, float magn);
-
         void purify_boundary_atoms(geom_view_t *src);
 
         vector3<float> dipole_moment();
