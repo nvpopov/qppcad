@@ -981,6 +981,20 @@ void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
 
 }
 
+void geom_view_t::colorize_by_category(std::vector<size_t> &cat_data,
+                                       std::vector<vector3<float> > &clr) {
+
+  if (cat_data.size() != m_geom->nat()) return;
+
+  std::set<size_t> uniq{cat_data.begin(), cat_data.end()};
+  if (clr.size() < uniq.size()) return;
+
+  for (size_t i = 0; i < m_geom->nat(); i++) set_xcolorv(i, clr[cat_data[i]]);
+
+  m_color_mode = geom_view_color_e::color_from_xgeom;
+
+}
+
 std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id) {
 
   if (m_geom->field_type(xfield_id) != type_real) {

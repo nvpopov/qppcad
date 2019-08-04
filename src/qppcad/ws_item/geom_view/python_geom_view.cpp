@@ -236,7 +236,8 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("set_xcolor", &geom_view_t::set_xcolorv);
   py_atoms_list_t.def("set_xcolor", &geom_view_t::set_xcolorf);
   py_atoms_list_t.def("min_max_xfield", &geom_view_t::get_min_max_xfield);
-  py_atoms_list_t.def("colorize_xfield", &geom_view_t::colorize_by_xfield);
+  py_atoms_list_t.def("colorize_by_xfield", &geom_view_t::colorize_by_xfield);
+  py_atoms_list_t.def("colorize_by_category", &geom_view_t::colorize_by_category);
   py_atoms_list_t.def("copy_cell", &geom_view_t::copy_cell, py::arg("src"),
                       py::arg("rebuild_tws_tree") = true);
   py_atoms_list_t.def("flip_atom_in_cell", &geom_view_t::flip_atom_in_cell,

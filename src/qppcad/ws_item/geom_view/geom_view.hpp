@@ -276,6 +276,8 @@ namespace qpp {
         void colorize_by_xfield(const vector3<float> color_low,
                                 const vector3<float> color_high,
                                 const size_t xfield_id);
+        void colorize_by_category(std::vector<size_t> &cat_data,
+                                  std::vector<vector3<float> > &clr);
         std::tuple<float, float> get_min_max_xfield(const size_t xfield_id);
 
         void sel_atom_ngbs(const int at_id);
