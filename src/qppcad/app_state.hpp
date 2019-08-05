@@ -111,7 +111,6 @@ namespace qpp {
         camera_t *camera{nullptr};
         draw_pipeline_t *dp;
         size_guide_t size_guide;
-        hotkey_manager_t *hotkey_mgr;
 
         std::unordered_map<std::string, float> m_env_float;
         std::unordered_map<std::string, int> m_env_int;
@@ -146,6 +145,7 @@ namespace qpp {
         std::shared_ptr<workspace_manager_t> ws_mgr;
         std::unique_ptr<python_manager_t> py_mgr;
         std::unique_ptr<string_hash_register_t> hash_reg;
+        std::shared_ptr<hotkey_manager_t> hotkey_mgr;
 
         std::vector<recent_file_record_t> m_recent_files;
         // //       std::map<std::string, color_map_t> m_color_maps;

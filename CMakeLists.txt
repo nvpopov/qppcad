@@ -148,6 +148,7 @@ add_executable(
     src/qppcad/qpp_object.cpp
     src/qppcad/register_all_things.cpp
     src/qppcad/gizmo.cpp
+    src/qppcad/hotkey_manager.cpp
     src/qppcad/embedded_cluster_tools.cpp
 
     src/qppcad/sflow/sflow.cpp

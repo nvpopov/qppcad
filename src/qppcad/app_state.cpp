@@ -64,9 +64,10 @@ namespace qpp {
 
     void app_state_t::init_managers() {
 
-      hash_reg = std::make_unique<string_hash_register_t>();
-      ws_mgr   = std::make_shared<workspace_manager_t>(this);
-      py_mgr = std::make_unique<python_manager_t>();
+      hash_reg   = std::make_unique<string_hash_register_t>();
+      ws_mgr     = std::make_shared<workspace_manager_t>(this);
+      py_mgr     = std::make_unique<python_manager_t>();
+      hotkey_mgr = std::make_shared<hotkey_manager_t>();
 
     }
 
