@@ -241,11 +241,6 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("colorize_by_category", &geom_view_t::colorize_by_category);
   py_atoms_list_t.def("copy_cell", &geom_view_t::copy_cell, py::arg("src"),
                       py::arg("rebuild_tws_tree") = true);
-  py_atoms_list_t.def("flip_atom_in_cell", &geom_view_t::flip_atom_in_cell,
-                      py::arg("at_id"), py::arg("dim_id"),
-                      py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false);
-  py_atoms_list_t.def("flip_sel_atoms_in_cell", &geom_view_t::flip_sel_atoms_in_cell);
-  py_atoms_list_t.def("align_atoms_to_point", &geom_view_t::align_atoms_to_point);
   py_atoms_list_t.def("clamp_atoms_to_cell", &geom_view_t::clamp_atoms_to_cell,
                       py::arg("ignore_selection") = true);
   py_atoms_list_t.def("center_cell_on", &geom_view_t::center_cell_on,
@@ -288,5 +283,10 @@ void py_geom_view_reg_helper_t::reg(
   gvt.def("pertrub_via_normal_mode", &geom_view_tools_t::pertrub_via_normal_mode);
   gvt.def("pretty_print_selected_atoms", &geom_view_tools_t::pretty_print_selected_atoms,
           py::arg("gv"), py::arg("new_frame") = vector3<float>{0});
+  gvt.def("flip_atom_in_cell", &geom_view_tools_t::flip_atom_in_cell,
+                      py::arg("gv"), py::arg("at_id"), py::arg("dim_id"),
+                      py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false);
+  gvt.def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell);
+  gvt.def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point);
 
 }

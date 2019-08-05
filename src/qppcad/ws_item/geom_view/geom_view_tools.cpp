@@ -194,3 +194,73 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
   return ret;
 
 }
+
+void geom_view_tools_t::flip_atom_in_cell(geom_view_t *gv,
+                                          size_t at_id,
+                                          size_t dim_id,
+                                          float flip_magn,
+                                          bool rebuild_tree) {
+
+  if (!gv) return;
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (at_id >= gv->m_geom->nat() || dim_id > gv->m_geom->DIM) return;
+
+  if (rebuild_tree) gv->begin_structure_change();
+
+  auto as_frac = gv->m_geom->cell.cart2frac(gv->m_geom->pos(at_id));
+  as_frac[dim_id] = as_frac[dim_id] + flip_magn;
+  auto as_cart = gv->m_geom->cell.frac2cart(as_frac);
+  gv->m_geom->coord(at_id) = as_cart;
+
+  if (rebuild_tree) gv->end_structure_change();
+
+  astate->make_viewport_dirty();
+
+}
+
+void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, float flip_magn) {
+
+  if (!gv) return;
+
+  gv->begin_structure_change();
+
+  index zero = index::D(gv->m_geom->DIM).all(0);
+
+  for (auto &sel : gv->m_atom_idx_sel)
+    if (sel.m_idx == zero)
+      geom_view_tools_t::flip_atom_in_cell(gv, sel.m_atm, dim_id, flip_magn, false);
+
+  gv->end_structure_change();
+
+}
+
+void geom_view_tools_t::align_atoms_to_point(geom_view_t *gv, vector3<float> fpoint) {
+
+  if (!gv) return;
+
+  gv->begin_structure_change();
+
+  for (size_t i = 0; i < gv->m_geom->nat(); i++) {
+
+      float min_dist = 100.0f;
+      auto goal_vector = gv->m_geom->pos(i);
+      for (iterator idx(index::D(gv->m_geom->DIM).all(-1),
+                        index::D(gv->m_geom->DIM).all(1)); !idx.end(); idx++ ) {
+          auto t_pos_cf = gv->m_geom->cell.transform(gv->m_geom->pos(i), idx);
+          auto dist = (fpoint - t_pos_cf).norm();
+          if (dist < min_dist && gv->m_geom->cell.within(t_pos_cf)) {
+              min_dist = dist;
+              //min_dist_index = i;
+              goal_vector = t_pos_cf;
+            }
+        }
+
+      gv->m_geom->coord(i) = goal_vector;
+
+    }
+
+  gv->end_structure_change();
+
+}

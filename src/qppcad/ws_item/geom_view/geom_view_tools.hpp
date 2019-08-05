@@ -24,6 +24,14 @@ namespace qpp {
                                             generic_array_t<vector3<float>, float> &disp);
         static std::string pretty_print_selected_atoms(geom_view_t *gv, vector3<float> new_frame);
 
+        static void flip_atom_in_cell(geom_view_t *gv,
+                                      size_t at_id,
+                                      size_t dim_id,
+                                      float flip_magn = 1,
+                                      bool rebuild_tree = false);
+        static void flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, float flip_magn = 1);
+        static void align_atoms_to_point(geom_view_t *gv, vector3<float> fpoint);
+
     };
 
   } // namespace cad

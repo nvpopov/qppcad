@@ -4,6 +4,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_sel_groups_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
@@ -1672,25 +1673,20 @@ void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo,
 
 void geom_view_obj_insp_widget_t::tab_modify_flip_cell_clicked(size_t flip_dim, float flip_magn) {
 
-  if (b_al) b_al->flip_sel_atoms_in_cell(flip_dim, flip_magn);
+  if (b_al) geom_view_tools_t::flip_sel_atoms_in_cell(b_al, flip_dim, flip_magn);
 
 }
 
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
-  tab_disp = def_tab(tr("Display settings"),
-                     "://images/monitor.svg");
-
-  tab_anim = def_tab(tr("Animation"),
-                     "://images/film.svg",
-                     "://images/film_d.svg");
+  tab_disp = def_tab(tr("Display settings"), "://images/monitor.svg");
+  tab_anim = def_tab(tr("Animation"), "://images/film.svg", "://images/film_d.svg");
 
   tab_modify = def_tab(tr("Modify"),
                        "://images/outline-build-24px.svg",
                        "://images/outline-build-24px_d.svg");
 
-  tab_measurement = def_tab(tr("Measurement"),
-                            "://images/outline-straighten-24px.svg");
+  tab_measurement = def_tab(tr("Measurement"), "://images/outline-straighten-24px.svg");
 
   tab_select = def_tab(tr("Atom selection groups"),
                        "://images/outline-select_all-24px.svg",
