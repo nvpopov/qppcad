@@ -4,6 +4,7 @@
 #include <QDir>
 #include <data/ptable.hpp>
 #include <thread>
+#include <qppcad/hotkey_manager.hpp>
 
 namespace qpp {
 

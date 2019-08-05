@@ -24,6 +24,7 @@ namespace qpp {
   namespace cad {
 
     class app_state_t;
+    class hotkey_manager_t;
 
     class recent_file_record_t {
 
@@ -110,6 +111,7 @@ namespace qpp {
         camera_t *camera{nullptr};
         draw_pipeline_t *dp;
         size_guide_t size_guide;
+        hotkey_manager_t *hotkey_mgr;
 
         std::unordered_map<std::string, float> m_env_float;
         std::unordered_map<std::string, int> m_env_int;
