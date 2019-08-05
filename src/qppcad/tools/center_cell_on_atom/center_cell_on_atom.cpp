@@ -1,5 +1,6 @@
 #include <qppcad/tools/center_cell_on_atom/center_cell_on_atom.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -50,7 +51,7 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   new_center /= al->m_atom_idx_sel.size();
 
-  al->center_cell_on(new_center);
+  geom_view_tools_t::center_cell_on(al, new_center);
 
   astate->make_viewport_dirty();
 

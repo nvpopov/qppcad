@@ -32,6 +32,14 @@ namespace qpp {
         static void flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, float flip_magn = 1);
         static void align_atoms_to_point(geom_view_t *gv, vector3<float> fpoint);
 
+        static std::vector<size_t> get_atoms_cn(geom_view_t *gv);
+        static std::vector<size_t> get_atoms_sublattices(geom_view_t *gv,float score_eps = 0.1f);
+
+        static void clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection = true);
+        static vector3<float> center_cell_on(geom_view_t *gv,
+                                             vector3<float> new_cnt,
+                                             bool clamp_atoms = true);
+
     };
 
   } // namespace cad

@@ -1022,97 +1022,6 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 
 }
 
-std::vector<size_t> geom_view_t::get_atoms_cn() {
-
-  std::vector<size_t> retv;
-  retv.resize(m_geom->nat(), 0);
-  tws_tree_t<float, periodic_cell<float> > l_tws_tree(*m_geom);
-
-  l_tws_tree.m_cell_within_eps = 0.3f;
-
-  l_tws_tree.do_action(act_unlock | act_rebuild_tree);
-  l_tws_tree.do_action(act_rebuild_ntable);
-
-  for (size_t i = 0; i < m_geom->nat(); i++) retv[i] = l_tws_tree.n(i);
-
-  return retv;
-
-}
-
-std::vector<size_t> geom_view_t::get_atoms_sublattices(float score_eps) {
-
-  std::vector<size_t> retv, sfv;
-
-  retv.resize(m_geom->nat(), 0);
-  sfv.resize(m_geom->nat(), 0);
-
-  tws_tree_t<float, periodic_cell<float> > l_tws_tree(*m_geom);
-
-  l_tws_tree.m_cell_within_eps = 0.3f;
-
-  l_tws_tree.do_action(act_unlock | act_rebuild_tree);
-  l_tws_tree.do_action(act_rebuild_ntable);
-
-  for (size_t i = 0; i < m_geom->nat(); i++) sfv[i] = l_tws_tree.n(i);
-  auto max_sfv = std::max_element(sfv.begin(), sfv.end());
-
-  std::vector<Eigen::VectorXf> dl_subspace;
-  std::vector<Eigen::VectorXf> dl_uniq_subspace;
-  dl_subspace.resize(m_geom->nat(), Eigen::VectorXf::Zero(*max_sfv + 1));
-
-  for (size_t i = 0; i < m_geom->nat(); i++) {
-      auto pos_i = m_geom->pos(i);
-      dl_subspace[i](0) = m_geom->type_table(i);
-      for (size_t q = 0; q < l_tws_tree.n(i); q++) {
-          auto pos_q = m_geom->pos(l_tws_tree.table_atm(i,q), l_tws_tree.table_idx(i,q));
-          dl_subspace[i](q + 1) = (pos_q - pos_i).norm();
-        }
-    }
-
-  //sort by descending order
-  for (size_t i = 0; i < m_geom->nat(); i++)
-    std::sort(dl_subspace[i].data() + 1,
-              dl_subspace[i].data() + *max_sfv + 1,
-              std::greater<float>());
-
-  //build unique
-  for (size_t i = 0; i < m_geom->nat(); i++) {
-
-      int best_uniq_id = -1;
-
-      for (size_t q = 0; q < dl_uniq_subspace.size(); q++) {
-          auto score = (dl_uniq_subspace[q] - dl_subspace[i]).norm();
-          if (score < score_eps) best_uniq_id = q;
-        }
-
-      if (best_uniq_id == -1 ) {
-          dl_uniq_subspace.push_back(dl_subspace[i]);
-          retv[i] = dl_uniq_subspace.size() - 1;
-        } else {
-          retv[i] = best_uniq_id;
-        }
-
-    }
-
-  //debug print unique
-  py::print(fmt::format("Total unique types: {}", dl_uniq_subspace.size()));
-
-  //debug print to python console
-  for (size_t i = 0; i < m_geom->nat(); i++) {
-
-      std::string dp_str = "";
-
-      for (size_t q = 0; q < *max_sfv+1; q++)
-        dp_str += fmt::format("{}, ", dl_subspace[i][q]);
-
-      py::print(dp_str);
-
-    }
-
-  return retv;
-
-}
-
 void geom_view_t::translate_selected (const vector3<float> &t_vec) {
 
   if (!m_geom) return;
@@ -1196,38 +1105,6 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
     }
 
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
-
-}
-
-void geom_view_t::clamp_atoms_to_cell(bool ignore_selection) {
-
-  for (int i = 0; i < m_geom->nat(); i++)
-    if (m_atom_idx_sel.find(atom_index_set_key(i, index::D(m_geom->DIM).all(0)))
-        != m_atom_idx_sel.end() || ignore_selection) {
-
-        vector3<float> pos = m_geom->pos(i);
-        m_geom->change_pos(i, m_geom->cell.reduce(pos));
-
-      }
-
-}
-
-vector3<float> geom_view_t::center_cell_on(vector3<float> new_cnt, bool clamp_atoms) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  //compute cell center
-  vector3<float> cell_cnt{0};
-  for (size_t i = 0 ; i < m_geom->DIM; i++) cell_cnt += m_geom->cell.v[i] * 0.5f;
-
-  vector3<float> delta = cell_cnt - new_cnt;
-  for (size_t i = 0; i < m_geom->nat(); i++) m_geom->coord(i) += delta;
-
-  if (clamp_atoms) clamp_atoms_to_cell();
-
-  astate->make_viewport_dirty();
-
-  return cell_cnt;
 
 }
 

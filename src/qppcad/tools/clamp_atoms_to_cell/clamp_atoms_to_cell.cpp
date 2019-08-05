@@ -1,6 +1,7 @@
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
 #include <qppcad/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -22,7 +23,7 @@ void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  al->clamp_atoms_to_cell(ignore_selection);
+  geom_view_tools_t::clamp_atoms_to_cell(al, ignore_selection);
 
   astate->make_viewport_dirty();
 

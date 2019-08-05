@@ -284,14 +284,9 @@ namespace qpp {
         void update_inter_atomic_dist(float new_dist, const int at1, const int at2,
                                       pair_dist_mode_e mode);
 
-        std::vector<size_t> get_atoms_cn();
-        std::vector<size_t> get_atoms_sublattices(float score_eps = 0.1f);
-
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();
         void delete_atoms(std::set<int> &to_delete);
-        void clamp_atoms_to_cell(bool ignore_selection = true);
-        vector3<float> center_cell_on(vector3<float> new_cnt, bool clamp_atoms = true);
 
         void begin_structure_change();
         void end_structure_change();

@@ -241,10 +241,6 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("colorize_by_category", &geom_view_t::colorize_by_category);
   py_atoms_list_t.def("copy_cell", &geom_view_t::copy_cell, py::arg("src"),
                       py::arg("rebuild_tws_tree") = true);
-  py_atoms_list_t.def("clamp_atoms_to_cell", &geom_view_t::clamp_atoms_to_cell,
-                      py::arg("ignore_selection") = true);
-  py_atoms_list_t.def("center_cell_on", &geom_view_t::center_cell_on,
-                      py::arg("new_cnt"), py::arg("clamp_atoms") = true);
   py_atoms_list_t.def("copy_settings", &geom_view_t::py_copy_settings);
   py_atoms_list_t.def("copy_xgeom_aux", &geom_view_t::py_copy_xgeom_aux);
   py_atoms_list_t.def("get_sel_atoms", &geom_view_t::get_sel_atoms,
@@ -256,10 +252,6 @@ void py_geom_view_reg_helper_t::reg(
   py_atoms_list_t.def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord);
 
   py_atoms_list_t.def("rebond", &geom_view_t::rebond);
-
-  py_atoms_list_t.def("get_atoms_cn", &geom_view_t::get_atoms_cn);
-  py_atoms_list_t.def("get_atoms_sublattices", &geom_view_t::get_atoms_sublattices,
-                      py::arg("score_eps") = 0.1f);
 
   py_atoms_list_t.def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;});
 
@@ -288,5 +280,13 @@ void py_geom_view_reg_helper_t::reg(
                       py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false);
   gvt.def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell);
   gvt.def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point);
+
+  gvt.def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn);
+  gvt.def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
+                      py::arg("gv"), py::arg("score_eps") = 0.1f);
+  gvt.def("clamp_atoms_to_cell", &geom_view_tools_t::clamp_atoms_to_cell,
+                      py::arg("gv"), py::arg("ignore_selection") = true);
+  gvt.def("center_cell_on", &geom_view_tools_t::center_cell_on,
+                      py::arg("gv"), py::arg("new_cnt"), py::arg("clamp_atoms") = true);
 
 }
