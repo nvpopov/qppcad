@@ -106,6 +106,8 @@ int main (int argc, char **argv) {
 
   main_window_t w;
   astate->hotkey_mgr->m_main_window = &w;
+  astate->hotkey_mgr->bootstrap_from_restore_info();
+
   w.rebuild_recent_files_menu();
   astate->ws_mgr->m_bhv_mgr->cache_obj_insp_widgets();
   w.showMaximized();

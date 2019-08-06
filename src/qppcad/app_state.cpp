@@ -251,6 +251,10 @@ namespace qpp {
         }
       settings.endGroup();
 
+      settings.beginGroup("hotkey_manager");
+      hotkey_mgr->load_from_settings(settings);
+      settings.endGroup();
+
     }
 
     void app_state_t::save_settings() {
@@ -347,6 +351,10 @@ namespace qpp {
           settings.setValue(QString::fromStdString(rec.first), vecl);
         }
 
+      settings.endGroup();
+
+      settings.beginGroup("hotkey_manager");
+      hotkey_mgr->save_to_settings(settings);
       settings.endGroup();
 
     }
