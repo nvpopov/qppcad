@@ -922,8 +922,8 @@ void workspace_manager_t::save_ws_item_to_file(std::string &file_name,
 
 }
 
-void workspace_manager_t::load_from_file_autodeduce(const std::string file_name,
-                                                    const std::string file_format,
+void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name,
+                                                    const std::string &file_format,
                                                     bool create_new_ws) {
 
   app_state_t* astate = app_state_t::get_inst();
