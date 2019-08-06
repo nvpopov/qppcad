@@ -100,7 +100,7 @@ void cws_changed() {
 
 PYBIND11_EMBEDDED_MODULE(cad, m) {
 
-  //cam target view
+  /* cam_target_view pybindings */
   py::enum_<cam_tv_e>(m, "cam_tv_e", py::arithmetic(), "")
           .value("tv_x", tv_x, "tv_x_axis")
           .value("tv_y", tv_y, "tv_y_axis")
@@ -114,93 +114,98 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
           .value("tv_cs", tv_cs, "tv_c_star_axis")
           .value("tv_auto", tv_auto, "tv_auto")
           .export_values();
-  //end cam target view
 
-  py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >(m, "workspace_manager_t")
-      .def("__len__", [](const workspace_manager_t &wsm){ return wsm.m_ws.size();})
-      .def("__getitem__", [](const workspace_manager_t &wsm, size_t i) {
-        if (i >= wsm.m_ws.size()) throw py::index_error();
-        return wsm.m_ws[i];
-      }, py::return_value_policy::reference_internal)
-      .def("__getitem__", [](workspace_manager_t &wsm, std::string ws_name) {
-        auto retv = wsm.get_by_name(ws_name);
-        if (!retv) throw py::key_error();
-        return retv;
-       }, py::return_value_policy::reference_internal)
-      .def("next_ws", &workspace_manager_t::next_ws)
-      .def("prev_ws", &workspace_manager_t::prev_ws)
-      .def("next_item", &workspace_manager_t::cur_ws_next_item)
-      .def("prev_item", &workspace_manager_t::cur_ws_prev_item)
-      .def("has_wss", &workspace_manager_t::has_wss)
-      .def("set_cur", &workspace_manager_t::set_cur_id);
+  /* workspace_manager_t pybindings */
+  py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >
+      py_workspace_manager_t(m, "workspace_manager_t");
+      py_workspace_manager_t.def("__len__",
+                                 [](const workspace_manager_t &wsm){ return wsm.m_ws.size();})
+                            .def("__getitem__", [](const workspace_manager_t &wsm, size_t i) {
+                              if (i >= wsm.m_ws.size()) throw py::index_error();
+                              return wsm.m_ws[i];
+                            }, py::return_value_policy::reference_internal)
+                            .def("__getitem__", [](workspace_manager_t &wsm, std::string ws_name) {
+                              auto retv = wsm.get_by_name(ws_name);
+                              if (!retv) throw py::key_error();
+                              return retv;
+                             }, py::return_value_policy::reference_internal)
+                            .def("next_ws", &workspace_manager_t::next_ws)
+                            .def("prev_ws", &workspace_manager_t::prev_ws)
+                            .def("next_item", &workspace_manager_t::cur_ws_next_item)
+                            .def("prev_item", &workspace_manager_t::cur_ws_prev_item)
+                            .def("has_wss", &workspace_manager_t::has_wss)
+                            .def("set_cur", &workspace_manager_t::set_cur_id);
 
-  py::class_<workspace_t,  std::shared_ptr<workspace_t> >(m, "workspace_t")
-      .def_readwrite("name", &workspace_t::m_ws_name)
-      .def("__len__", [](workspace_t &ws) {return ws.m_ws_items.size();})
-      .def("__getitem__", [](workspace_t &ws, size_t i) {
-        if (i >= ws.m_ws_items.size()) throw py::index_error();
-        return ws.m_ws_items[i];
-      }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
-      .def("__getitem__", [](workspace_t &ws, std::string item_name) {
-        auto retv = ws.get_by_name(item_name);
-        if (!retv) throw py::key_error();
-        return retv;
-       }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
-      .def("next_item", &workspace_t::next_item)
-      .def("prev_item", &workspace_t::prev_item)
-      .def("construct", &workspace_t::py_construct_item)
-      .def("construct", &construct_from_geom)
-      .def("construct", &construct_from_array_group)
-      .def_readwrite("scenic_rot_magn", &workspace_t::m_scenic_rotation_speed)
-      .def_property("scenic_rot",
-                    [](workspace_t &src)
-                    {return src.m_scenic_rotation;},
-                    [](workspace_t &src, const bool value)
-                    {src.m_scenic_rotation = value; cws_changed();})
-      .def_property("bg",
-                    [](workspace_t &src)
-                    {return src.m_background_color;},
-                    [](workspace_t &src, const vector3<float> value)
-                    {src.m_background_color = value; mvd();})
-      .def("delete_item", &workspace_t::delete_item_by_index)
-      .def("gp", [](workspace_t &src){return src.m_gizmo->m_pos;})
-      .def("__repr__", &workspace_t::py_get_repr)
-      .def("__str__", &workspace_t::py_get_repr);
+  /* workspace_t pybindings */
+  py::class_<workspace_t,  std::shared_ptr<workspace_t> > py_workspace_t(m, "workspace_t");
+      py_workspace_t.def_readwrite("name", &workspace_t::m_ws_name)
+                    .def("__len__", [](workspace_t &ws) {return ws.m_ws_items.size();})
+                    .def("__getitem__", [](workspace_t &ws, size_t i) {
+                      if (i >= ws.m_ws_items.size()) throw py::index_error();
+                      return ws.m_ws_items[i];
+                    }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
+                    .def("__getitem__", [](workspace_t &ws, std::string item_name) {
+                      auto retv = ws.get_by_name(item_name);
+                      if (!retv) throw py::key_error();
+                      return retv;
+                     }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
+                    .def("next_item", &workspace_t::next_item)
+                    .def("prev_item", &workspace_t::prev_item)
+                    .def("construct", &workspace_t::py_construct_item)
+                    .def("construct", &construct_from_geom)
+                    .def("construct", &construct_from_array_group)
+                    .def_readwrite("scenic_rot_magn", &workspace_t::m_scenic_rotation_speed)
+                    .def_property("scenic_rot",
+                                  [](workspace_t &src)
+                                  {return src.m_scenic_rotation;},
+                                  [](workspace_t &src, const bool value)
+                                  {src.m_scenic_rotation = value; cws_changed();})
+                    .def_property("bg",
+                                  [](workspace_t &src)
+                                  {return src.m_background_color;},
+                                  [](workspace_t &src, const vector3<float> value)
+                                  {src.m_background_color = value; mvd();})
+                    .def("delete_item", &workspace_t::delete_item_by_index)
+                    .def("gp", [](workspace_t &src){return src.m_gizmo->m_pos;})
+                    .def("__repr__", &workspace_t::py_get_repr)
+                    .def("__str__", &workspace_t::py_get_repr);
 
+  /* aabb_3d_t pybindings */
   py::class_<aabb_3d_t<float>, std::shared_ptr<aabb_3d_t<float>>> py_aabb_3d_t(m, "aabb_3d_t");
-  py_aabb_3d_t.def_readwrite("min", &aabb_3d_t<float>::min);
-  py_aabb_3d_t.def_readwrite("max", &aabb_3d_t<float>::max);
-  py_aabb_3d_t.def("cnt", &aabb_3d_t<float>::center);
-  py_aabb_3d_t.def("tst_sph", &aabb_3d_t<float>::test_sphere);
-  py_aabb_3d_t.def("vol", &aabb_3d_t<float>::volume);
+  py_aabb_3d_t.def_readwrite("min", &aabb_3d_t<float>::min)
+              .def_readwrite("max", &aabb_3d_t<float>::max)
+              .def("cnt", &aabb_3d_t<float>::center)
+              .def("tst_sph", &aabb_3d_t<float>::test_sphere)
+              .def("vol", &aabb_3d_t<float>::volume);
 
+  /* ws_item_t pybindings */
   py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> py_ws_item_t(m, "ws_item_t");
-  py_ws_item_t
-          .def_readwrite("name", &ws_item_t::m_name)
-          .def("get_cnt_count", &ws_item_t::get_content_count)
-          .def("get_parent_ws", [](ws_item_t &wsi){return wsi.m_parent_ws;})
-         // .def_readwrite("m_pos", &ws_item_t::get_pos, &ws_item_t::set_pos)
-          .def_property("is_visible",
-                        [](ws_item_t &src)
-                        {return src.m_is_visible;},
-                        [](ws_item_t &src, const bool value)
-                        {src.m_is_visible = value; src.update_oi();})
-          .def_property("show_bb",
-                        [](ws_item_t &src)
-                        {return src.m_show_bb;},
-                        [](ws_item_t &src, const bool value)
-                        {src.m_show_bb = value; src.update_oi();})
-          .def_property("pos",
-                        [](ws_item_t &src)
-                        {return src.m_pos;},
-                        [](ws_item_t &src, const vector3<float> value)
-                        {src.m_pos = value; src.update_oi();})
-          .def("__repr__", &ws_item_t::py_get_repr)
-          .def("__str__", &ws_item_t::py_get_repr)
-          .def("apply_tv", &ws_item_t::apply_target_view)
-          .def_readwrite("offset", &ws_item_t::m_leader_offset)
-          .def("bb", [](ws_item_t &src){return src.m_aabb;});
+  py_ws_item_t.def_readwrite("name", &ws_item_t::m_name)
+              .def("get_cnt_count", &ws_item_t::get_content_count)
+              .def("get_parent_ws", [](ws_item_t &wsi){return wsi.m_parent_ws;})
+             // .def_readwrite("m_pos", &ws_item_t::get_pos, &ws_item_t::set_pos)
+              .def_property("is_visible",
+                            [](ws_item_t &src)
+                            {return src.m_is_visible;},
+                            [](ws_item_t &src, const bool value)
+                            {src.m_is_visible = value; src.update_oi();})
+              .def_property("show_bb",
+                            [](ws_item_t &src)
+                            {return src.m_show_bb;},
+                            [](ws_item_t &src, const bool value)
+                            {src.m_show_bb = value; src.update_oi();})
+              .def_property("pos",
+                            [](ws_item_t &src)
+                            {return src.m_pos;},
+                            [](ws_item_t &src, const vector3<float> value)
+                            {src.m_pos = value; src.update_oi();})
+              .def("__repr__", &ws_item_t::py_get_repr)
+              .def("__str__", &ws_item_t::py_get_repr)
+              .def("apply_tv", &ws_item_t::apply_target_view)
+              .def_readwrite("offset", &ws_item_t::m_leader_offset)
+              .def("bb", [](ws_item_t &src){return src.m_aabb;});
 
+  /* per ws_item_t types pybindings */
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);
   py_ccd_view_reg_helper_t::reg(m, py_ws_item_t);
   py_psg_view_reg_helper_t::reg(m, py_ws_item_t);
