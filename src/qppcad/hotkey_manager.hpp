@@ -24,6 +24,7 @@ namespace qpp {
                        QMainWindow *main_window = nullptr);
 
         std::string get_key_sequence();
+        std::string py_print();
 
       public slots:
 
@@ -38,6 +39,7 @@ namespace qpp {
         std::vector<std::shared_ptr<hotkey_entry_t> > m_hotkeys;
         QMainWindow *m_main_window{nullptr};
         void reg_hotkey(std::string hk_comb, std::string pycommand);
+        void unreg_hotkey(std::string hk_comb);
 
     };
 
