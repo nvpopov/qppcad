@@ -82,6 +82,22 @@ bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
 
 }
 
+void workspace_t::next_item() {
+
+  size_t target_id = get_selected_idx().value_or(0) + 1;
+  if (target_id >= m_ws_items.size()) target_id = 0;
+  set_selected_item(target_id);
+
+}
+
+void workspace_t::prev_item() {
+
+  int target_id = get_selected_idx().value_or(0) - 1;
+  if (target_id < 0) target_id = m_ws_items.size() - 1;
+  set_selected_item(target_id);
+
+}
+
 void workspace_t::unselect_all (bool emit_signal) {
 
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
@@ -609,6 +625,20 @@ void workspace_manager_t::prev_ws() {
   int target_id = get_cur_id().value_or(0) - 1;
   if (target_id < 0) target_id = m_ws.size() - 1;
   set_cur_id(opt<size_t>(target_id));
+
+}
+
+void workspace_manager_t::cur_ws_next_item() {
+
+  auto [ok, cur_ws] = get_sel_tuple_ws();
+  if (ok) cur_ws->next_item();
+
+}
+
+void workspace_manager_t::cur_ws_prev_item() {
+
+  auto [ok, cur_ws] = get_sel_tuple_ws();
+  if (ok) cur_ws->prev_item();
 
 }
 

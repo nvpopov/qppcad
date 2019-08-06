@@ -129,6 +129,8 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
        }, py::return_value_policy::reference_internal)
       .def("next_ws", &workspace_manager_t::next_ws)
       .def("prev_ws", &workspace_manager_t::prev_ws)
+      .def("next_item", &workspace_manager_t::cur_ws_next_item)
+      .def("prev_item", &workspace_manager_t::cur_ws_prev_item)
       .def("has_wss", &workspace_manager_t::has_wss)
       .def("set_cur", &workspace_manager_t::set_cur_id);
 
@@ -144,6 +146,8 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
         if (!retv) throw py::key_error();
         return retv;
        }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
+      .def("next_item", &workspace_t::next_item)
+      .def("prev_item", &workspace_t::prev_item)
       .def("construct", &workspace_t::py_construct_item)
       .def("construct", &construct_from_geom)
       .def("construct", &construct_from_array_group)

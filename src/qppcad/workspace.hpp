@@ -62,6 +62,8 @@ namespace qpp {
         }
 
         bool set_selected_item(const size_t sel_idx, bool emit_signal = true);
+        void next_item();
+        void prev_item();
         void unselect_all(bool emit_signal = true);
         void toggle_edit_mode();
         void ws_changed();
@@ -114,6 +116,8 @@ namespace qpp {
         std::shared_ptr<workspace_t> get_ws(int id);
         void next_ws();
         void prev_ws();
+        void cur_ws_next_item();
+        void cur_ws_prev_item();
         bool has_wss(){return m_ws.size()>0;}
         void init_default();
         void render_cur_ws();
