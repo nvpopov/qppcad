@@ -127,6 +127,8 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
         if (!retv) throw py::key_error();
         return retv;
        }, py::return_value_policy::reference_internal)
+      .def("next_ws", &workspace_manager_t::next_ws)
+      .def("prev_ws", &workspace_manager_t::prev_ws)
       .def("has_wss", &workspace_manager_t::has_wss)
       .def("set_cur", &workspace_manager_t::set_cur_id);
 

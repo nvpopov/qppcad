@@ -112,6 +112,8 @@ namespace qpp {
         void force_set_cur_ws(){set_cur_id(opt<size_t>(I));}
 
         std::shared_ptr<workspace_t> get_ws(int id);
+        void next_ws();
+        void prev_ws();
         bool has_wss(){return m_ws.size()>0;}
         void init_default();
         void render_cur_ws();

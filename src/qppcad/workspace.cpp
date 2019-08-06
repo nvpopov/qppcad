@@ -596,6 +596,22 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
 
 }
 
+void workspace_manager_t::next_ws() {
+
+  size_t target_id = get_cur_id().value_or(0) + 1;
+  if (target_id >= m_ws.size()) target_id = 0;
+  set_cur_id(opt<size_t>(target_id));
+
+}
+
+void workspace_manager_t::prev_ws() {
+
+  int target_id = get_cur_id().value_or(0) - 1;
+  if (target_id < 0) target_id = m_ws.size() - 1;
+  set_cur_id(opt<size_t>(target_id));
+
+}
+
 void workspace_manager_t::init_default () {
 
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
@@ -657,8 +673,9 @@ void workspace_manager_t::render_cur_ws () {
       if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
 
           astate->glapi->glClearColor(m_ws[*m_cur_ws_id]->m_background_color[0],
-              m_ws[*m_cur_ws_id]->m_background_color[1],
-              m_ws[*m_cur_ws_id]->m_background_color[2], 1);
+                                      m_ws[*m_cur_ws_id]->m_background_color[1],
+                                      m_ws[*m_cur_ws_id]->m_background_color[2],
+                                      1);
           astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
           m_ws[*m_cur_ws_id]->render();
           return ;
