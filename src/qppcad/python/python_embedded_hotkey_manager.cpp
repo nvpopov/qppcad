@@ -14,7 +14,7 @@ namespace py = pybind11;
 
 PYBIND11_EMBEDDED_MODULE(hk, m) {
 
-  m.def("hk", [](){return app_state_t::get_inst()->hotkey_mgr;});
+  m.def("mgr", [](){return app_state_t::get_inst()->hotkey_mgr;});
 
   py::class_<hotkey_entry_t, std::shared_ptr<hotkey_entry_t> >
       py_hotkey_entry_t(m, "hotkey_entry_t");

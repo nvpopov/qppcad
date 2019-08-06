@@ -3,40 +3,45 @@
 
 #include <qppcad/qppcad.hpp>
 #include <QShortcut>
+#include <QMainWindow>
 
 namespace qpp {
 
-    namespace cad {
+  namespace cad {
 
-        class hotkey_entry_t : public QObject {
+    class hotkey_entry_t : public QObject {
 
-           Q_OBJECT
+        Q_OBJECT
 
-           public:
+      public:
 
-                QKeySequence m_key_sequence;
-                std::unique_ptr<QShortcut> m_shortcut;
-                hotkey_entry_t(std::string hotkey_keys);
+        QKeySequence m_key_sequence;
+        std::unique_ptr<QShortcut> m_shortcut;
+        std::string m_pycommand;
+        bool m_is_pycommand{false};
+        hotkey_entry_t(std::string hotkey_keys,
+                       std::string pycommand,
+                       QMainWindow *main_window = nullptr);
 
-                std::string get_key_sequence();
+        std::string get_key_sequence();
 
-           public slots:
+      public slots:
 
-                void activated();
+        void activated();
 
-        };
+    };
 
-        class hotkey_manager_t {
+    class hotkey_manager_t {
 
-          public:
+      public:
 
-                std::vector<hotkey_entry_t> m_hotkeys;
+        std::vector<std::shared_ptr<hotkey_entry_t> > m_hotkeys;
+        QMainWindow *m_main_window{nullptr};
+        void reg_hotkey(std::string hk_comb, std::string pycommand);
 
-                void reg_hotkey(std::string hk_comb);
+    };
 
-        };
-
-    } // namespace qpp::cad
+  } // namespace qpp::cad
 
 } // namespace qpp
 

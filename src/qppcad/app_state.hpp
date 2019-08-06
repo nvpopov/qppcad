@@ -18,7 +18,6 @@
 #include <QString>
 #include <QPalette>
 
-
 namespace qpp {
 
   namespace cad {

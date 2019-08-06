@@ -4,6 +4,8 @@
 #include <QFontDatabase>
 #include <qppcad/ui/main_window.hpp>
 #include <qppcad/app_state.hpp>
+#include <qppcad/hotkey_manager.hpp>
+#include <QMainWindow>
 #include <QTextStream>
 #include <QCommandLineParser>
 
@@ -103,6 +105,7 @@ int main (int argc, char **argv) {
   app.setStyleSheet(style_sheet);
 
   main_window_t w;
+  astate->hotkey_mgr->m_main_window = &w;
   w.rebuild_recent_files_menu();
   astate->ws_mgr->m_bhv_mgr->cache_obj_insp_widgets();
   w.showMaximized();

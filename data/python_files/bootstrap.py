@@ -3,10 +3,7 @@ from core import *
 from sq import *
 import pyqpp as pq
 import rlcompleter
-import sys
-import embc
-import cad
-import cc
+import sys, embc, cad, cc, hk
 
 ws = get_wsm()
 
@@ -24,7 +21,7 @@ def complete_text(text):
         return ret_list
 
 def input_wrapper():
-    print("input(...) is blocked")
+    print("input(...) was blocked")
 
 input = input_wrapper
 
