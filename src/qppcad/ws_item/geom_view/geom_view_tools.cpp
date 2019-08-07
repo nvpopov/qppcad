@@ -6,7 +6,9 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void geom_view_tools_t::shake_atoms(geom_view_t *gv, std::set<size_t> atoms_to_shake, float magn) {
+void geom_view_tools_t::shake_atoms(geom_view_t *gv,
+                                    std::set<size_t> atoms_to_shake,
+                                    float magn) {
 
   if (!gv) return;
 
@@ -30,7 +32,9 @@ void geom_view_tools_t::shake_atoms(geom_view_t *gv, std::set<size_t> atoms_to_s
 
 }
 
-void geom_view_tools_t::py_shake_atoms(geom_view_t *gv, py::list atoms_to_shake, float magn) {
+void geom_view_tools_t::py_shake_atoms(geom_view_t *gv,
+                                       py::list atoms_to_shake,
+                                       float magn) {
 
   if (!gv) return;
 
@@ -42,7 +46,8 @@ void geom_view_tools_t::py_shake_atoms(geom_view_t *gv, py::list atoms_to_shake,
 
 }
 
-void geom_view_tools_t::purify_boundary_atoms(geom_view_t *dst, geom_view_t *src) {
+void geom_view_tools_t::purify_boundary_atoms(geom_view_t *dst,
+                                              geom_view_t *src) {
 
   if (!dst || !src) return;
 
@@ -220,7 +225,9 @@ void geom_view_tools_t::flip_atom_in_cell(geom_view_t *gv,
 
 }
 
-void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, float flip_magn) {
+void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv,
+                                               size_t dim_id,
+                                               float flip_magn) {
 
   if (!gv) return;
 
@@ -236,7 +243,8 @@ void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, f
 
 }
 
-void geom_view_tools_t::align_atoms_to_point(geom_view_t *gv, vector3<float> fpoint) {
+void geom_view_tools_t::align_atoms_to_point(geom_view_t *gv,
+                                             vector3<float> fpoint) {
 
   if (!gv) return;
 
@@ -285,7 +293,8 @@ std::vector<size_t> geom_view_tools_t::get_atoms_cn(geom_view_t *gv) {
 
 }
 
-std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv, float score_eps) {
+std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv,
+                                                             float score_eps) {
 
   std::vector<size_t> retv, sfv;
 
@@ -361,7 +370,8 @@ std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv, fl
 
 }
 
-void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection) {
+void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv,
+                                            bool ignore_selection) {
 
   if (!gv) return;
 
@@ -396,5 +406,85 @@ vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv,
   astate->make_viewport_dirty();
 
   return cell_cnt;
+
+}
+
+void geom_view_tools_t::tr_align_geoms(geom_view_t *what_gv,
+                                       geom_view_t *to_gv,
+                                       vector3<float> start_offset,
+                                       vector3<float> axis_steps,
+                                       size_t total_steps) {
+
+  if (!what_gv || !to_gv) return;
+
+  vector3<float> cur_offset{0};
+  float cur_score{0};
+
+  vector3<float> best_offset{0};
+  float best_score{0};
+
+  vector3<float> atom_pos{0};
+
+  const auto sphere_query_eps = 0.1f;
+
+  for (size_t ix = 0; ix < total_steps; ix++)
+    for (size_t iy = 0; iy < total_steps; iy++)
+      for (size_t iz = 0; iz < total_steps; iz++) {
+
+          cur_score = 0;
+
+          cur_offset[0] = start_offset[0] + axis_steps[0] * ix;
+          cur_offset[1] = start_offset[1] + axis_steps[1] * iy;
+          cur_offset[2] = start_offset[2] + axis_steps[2] * iz;
+
+          for (size_t q = 0; q < what_gv->m_geom->nat(); q++) {
+
+              atom_pos = what_gv->m_geom->pos(q) + cur_offset;
+              std::vector<tws_node_content_t<float, size_t> > res;
+              to_gv->m_tws_tr->query_sphere(sphere_query_eps, atom_pos, res);
+
+              for (auto &rec : res)
+                if (to_gv->m_geom->atom_name(rec.m_atm) == what_gv->m_geom->atom_name(q)) {
+                    cur_score += 100;
+                  }
+
+            }
+
+          if (best_score > cur_score) {
+              best_score = cur_score;
+              best_offset = cur_offset;
+            }
+
+        }
+
+  py::print(fmt::format("Best score = {}, Best offset = ({}, {}, {})",
+                        best_score, best_offset[0], best_offset[1], best_offset[2]));
+
+}
+
+void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
+                                               vector3<float> new_a,
+                                               vector3<float> new_b,
+                                               vector3<float> new_c) {
+
+  if (!gv) return;
+
+  gv->begin_structure_change();
+
+  periodic_cell<float> new_cell(3);
+  new_cell.v[0] = new_a;
+  new_cell.v[1] = new_b;
+  new_cell.v[2] = new_c;
+
+  for (auto i = 0; i < gv->m_geom->nat(); i++) {
+      vector3<float> frac_in_old_cell = gv->m_geom->cell.cart2frac(gv->m_geom->pos(i));
+      gv->m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
+    }
+
+  gv->m_geom->cell.v[0] = new_cell.v[0];
+  gv->m_geom->cell.v[1] = new_cell.v[1];
+  gv->m_geom->cell.v[2] = new_cell.v[2];
+
+  gv->end_structure_change();
 
 }

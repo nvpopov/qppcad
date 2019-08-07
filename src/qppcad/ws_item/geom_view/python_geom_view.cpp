@@ -235,28 +235,34 @@ void py_geom_view_reg_helper_t::reg(
   py_displ_proj_reg_helper_t::reg(module);
 
   auto gvt = module.def_submodule("gvt", "geom_view_t tools");
-  gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms);
-  gvt.def("purify_boundary_atoms", &geom_view_tools_t::purify_boundary_atoms);
+  gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms)
+     .def("purify_boundary_atoms", &geom_view_tools_t::purify_boundary_atoms)
 
-  gvt.def("dipole_moment", &geom_view_tools_t::dipole_moment);
-  gvt.def("total_charge", &geom_view_tools_t::total_charge);
-  gvt.def("get_charge_partition", &geom_view_tools_t::py_get_charge_partition);
+     .def("dipole_moment", &geom_view_tools_t::dipole_moment)
+     .def("total_charge", &geom_view_tools_t::total_charge)
+     .def("get_charge_partition", &geom_view_tools_t::py_get_charge_partition)
 
-  gvt.def("pertrub_via_normal_mode", &geom_view_tools_t::pertrub_via_normal_mode);
-  gvt.def("pretty_print_selected_atoms", &geom_view_tools_t::pretty_print_selected_atoms,
-          py::arg("gv"), py::arg("new_frame") = vector3<float>{0});
-  gvt.def("flip_atom_in_cell", &geom_view_tools_t::flip_atom_in_cell,
+     .def("pertrub_via_normal_mode", &geom_view_tools_t::pertrub_via_normal_mode)
+     .def("pretty_print_selected_atoms", &geom_view_tools_t::pretty_print_selected_atoms,
+          py::arg("gv"), py::arg("new_frame") = vector3<float>{0})
+     .def("flip_atom_in_cell", &geom_view_tools_t::flip_atom_in_cell,
                       py::arg("gv"), py::arg("at_id"), py::arg("dim_id"),
-                      py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false);
-  gvt.def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell);
-  gvt.def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point);
+                      py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false)
+     .def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell)
+     .def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point)
 
-  gvt.def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn);
-  gvt.def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
-                      py::arg("gv"), py::arg("score_eps") = 0.1f);
-  gvt.def("clamp_atoms_to_cell", &geom_view_tools_t::clamp_atoms_to_cell,
-                      py::arg("gv"), py::arg("ignore_selection") = true);
-  gvt.def("center_cell_on", &geom_view_tools_t::center_cell_on,
-                      py::arg("gv"), py::arg("new_cnt"), py::arg("clamp_atoms") = true);
+     .def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn)
+     .def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
+                      py::arg("gv"), py::arg("score_eps") = 0.1f)
+     .def("clamp_atoms_to_cell", &geom_view_tools_t::clamp_atoms_to_cell,
+                      py::arg("gv"), py::arg("ignore_selection") = true)
+     .def("center_cell_on", &geom_view_tools_t::center_cell_on,
+                      py::arg("gv"), py::arg("new_cnt"), py::arg("clamp_atoms") = true)
+
+      .def("tr_align_geoms", &geom_view_tools_t::tr_align_geoms,
+           py::arg("what_gv"), py::arg("to_gv"), py::arg("start_offset"),
+           py::arg("axis_steps") = vector3<float>{0.1}, py::arg("total_steps") = 200)
+
+      .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms);
 
 }

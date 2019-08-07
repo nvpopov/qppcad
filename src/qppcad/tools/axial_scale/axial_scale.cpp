@@ -1,4 +1,5 @@
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -39,23 +40,13 @@ void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,
                                            const float scale_b,
                                            const float scale_c) {
   if (al->m_geom->DIM != 3) return;
-  al->begin_structure_change();
 
-  periodic_cell<float> new_cell(3);
-  new_cell.v[0] = al->m_geom->cell.v[0] * scale_a;
-  new_cell.v[1] = al->m_geom->cell.v[1] * scale_b;
-  new_cell.v[2] = al->m_geom->cell.v[2] * scale_c;
+  std::array<vector3<float>, 3> new_cell;
+  new_cell[0] = al->m_geom->cell.v[0] * scale_a;
+  new_cell[1] = al->m_geom->cell.v[1] * scale_b;
+  new_cell[2] = al->m_geom->cell.v[2] * scale_c;
 
-  for (auto i = 0; i < al->m_geom->nat(); i++) {
-      vector3<float> frac_in_old_cell = al->m_geom->cell.cart2frac(al->m_geom->pos(i));
-      al->m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
-    }
-
-  al->m_geom->cell.v[0] = new_cell.v[0];
-  al->m_geom->cell.v[1] = new_cell.v[1];
-  al->m_geom->cell.v[2] = new_cell.v[2];
-
-  al->end_structure_change();
+  geom_view_tools_t::change_cell_keep_atoms(al, new_cell[0], new_cell[1], new_cell[2]);
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_cell_changed();
