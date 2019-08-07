@@ -1,5 +1,4 @@
 #include <qppcad/python/python_simple_query.hpp>
-#include <qppcad/ws_item/geom_view/geom_view_colorizer.hpp>
 #include <qppcad/ui/color_map.hpp>
 #include <pybind11/functional.h>
 
@@ -90,9 +89,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
        .def("set_sel_color", &simple_query::set_sel_color)
        .def("set_sel_color", &simple_query::set_sel_color_vec)
 
-       .def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance)
-       .def("color_by_dist_pairs",
-            &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs)
        .def("get_type_name", &simple_query::get_type_name)
        .def("get_type_hash", &simple_query::get_type_hash)
        .def("is_instance_of", &simple_query::is_instance_of_by_hash)
@@ -218,9 +214,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
     .def("r", &simple_query::ptable_get_radius_by_number);
 
   py::module cam = m.def_submodule("cam", "Camera manipulation");
-  cam.def("t", &simple_query::camera_move)
-     .def("ry", &simple_query::camera_rotate_yaw)
-     .def("rp", &simple_query::camera_rotate_pitch)
+  cam.def("t",   &simple_query::camera_move)
+     .def("ry",  &simple_query::camera_rotate_yaw)
+     .def("rp",  &simple_query::camera_rotate_pitch)
      .def("zoom", &simple_query::camera_zoom)
      .def("zoom", &simple_query::camera_get_zoom)
      .def("proj", &simple_query::camera_mode)
@@ -228,9 +224,9 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   py::module sv = m.def_submodule("sv", "Selective visibility manipulation");
   sv.def("state", &simple_query::sv_get)
-    .def("set", &simple_query::sv_edit)
-    .def("set", &simple_query::sv_edit_list)
-    .def("set", &simple_query::sv_edit_all);
+    .def("set",   &simple_query::sv_edit)
+    .def("set",   &simple_query::sv_edit_list)
+    .def("set",   &simple_query::sv_edit_all);
 
   py::module cl = m.def_submodule("cl", "Custom labels");
   cl.def("state", &simple_query::cl_get)

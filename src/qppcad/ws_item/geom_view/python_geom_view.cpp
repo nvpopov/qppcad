@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
 #include <qppcad/ws_item/geom_view/displ_proj.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools_colorize.hpp>
 #include <qppcad/app_state.hpp>
 
 using namespace qpp;
@@ -265,5 +266,9 @@ void py_geom_view_reg_helper_t::reg(
 
       .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms)
       .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images);
+
+  auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
+  clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance)
+     .def("color_by_dist_pairs", &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs);
 
 }

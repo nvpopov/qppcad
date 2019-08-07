@@ -2,14 +2,15 @@
 #define QPPCAD_WS_ATOMS_LIST_COLORIZER
 
 #include <qppcad/qppcad.hpp>
-#include <qppcad/ws_item/geom_view/geom_view.hpp>
-#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 
 namespace qpp {
 
   namespace cad {
 
+    class geom_view_t;
+
     class geom_view_colorizer_helper {
+
       public:
 
         static void colorize_by_distance(geom_view_t* al, float min_dist,
