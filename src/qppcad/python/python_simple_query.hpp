@@ -40,7 +40,6 @@ namespace qpp {
         static void open_file_query(std::string f_name, std::string f_format,bool to_current);
         static void to_clipboard(std::string data);
         static void make_super_cell(const int sc_a, const int sc_b, const int sc_c);
-        static void compose_gv_from_images(py::list gvs);
 
         static void set_msr_digits(int digits);
 

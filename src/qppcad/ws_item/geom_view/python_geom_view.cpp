@@ -263,6 +263,7 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("what_gv"), py::arg("to_gv"), py::arg("start_offset"),
            py::arg("axis_steps") = vector3<float>{0.1}, py::arg("total_steps") = 200)
 
-      .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms);
+      .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms)
+      .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images);
 
 }

@@ -68,6 +68,11 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   //****************************** tools module begin ******************************
   py::module tools = m.def_submodule("tools", "Generic tools");
 
+  py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools, "color_map_t");
+  py_color_map_t.def(py::init<>())
+                .def("get_color", &color_map_t::get_color)
+                .def("push_color", &color_map_t::push_color);
+
   tools.def("to_clipboard", &simple_query::to_clipboard);
   tools.def("set_msr_digits", &simple_query::set_msr_digits);
   tools.def("get_tool_groups", &simple_query::get_tool_groups);
@@ -76,11 +81,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   tools.def("get_followers", &simple_query::get_followers);
   tools.def("get_leader", &simple_query::get_leader);
   tools.def("exec_tool", &simple_query::exec_tool);
-
-  py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools, "color_map_t");
-  py_color_map_t.def(py::init<>());
-  py_color_map_t.def("get_color", &color_map_t::get_color);
-  py_color_map_t.def("push_color", &color_map_t::push_color);
 
   tools.def("rebond", &simple_query::rebond);
   tools.def("t", &simple_query::translate_selected);
@@ -102,7 +102,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   tools.def("make_traj_highlighter", &simple_query::make_traj_highlight,
             py::arg("atom_id"), py::arg("anim_id") = 1);
-  tools.def("compose_gb_from_images", &simple_query::compose_gv_from_images);
 
   tools.def("make_cube", &simple_query::make_cube_p);
   tools.def("embed_cube", &simple_query::embed_cube);
