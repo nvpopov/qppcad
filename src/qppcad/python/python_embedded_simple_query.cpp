@@ -16,32 +16,33 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   m.attr("def_isovalue_dens") = py::float_(qpp::def_isovalue_dens);
   m.attr("def_isovalue_mo") = py::float_(qpp::def_isovalue_mo);
 
-  m.def("get_wsm", &simple_query::get_ws_mgr, py::return_value_policy::reference);
+  m.def("get_wsm", &simple_query::get_ws_mgr, py::return_value_policy::reference)
 
-  m.def("set_font_size", &simple_query::set_font_size,
+   .def("set_font_size", &simple_query::set_font_size,
     R"str(
     Sets the font size in the console. The value is saved between sessions.
     Parameters
     ----------
     arg0: int - new font size in pt
-    )str");
+    )str")
 
-  m.def("get_build_info", &simple_query::get_build_info);
-  m.def("qopen", &simple_query::open_file,
-        py::arg("file_name"), py::arg("to_current") = false);
-  m.def("qopen", &simple_query::open_file_query,
-        py::arg("file_name"), py::arg("file_format") = "", py::arg("to_current") = false);
-  m.def("mode", &simple_query::edit_mode);
-  m.def("quit", &simple_query::quit);
-  m.def("bg", &simple_query::set_ws_bg,
+   .def("get_build_info", &simple_query::get_build_info)
+   .def("qopen", &simple_query::open_file,
+        py::arg("file_name"), py::arg("to_current") = false)
+   .def("qopen", &simple_query::open_file_query,
+        py::arg("file_name"), py::arg("file_format") = "", py::arg("to_current") = false)
+   .def("mode", &simple_query::edit_mode)
+   .def("quit", &simple_query::quit)
+
+   .def("bg", &simple_query::set_ws_bg,
     R"str(
     Sets the background color for the current workspace.
     Parameters
     ----------
     arg0: pq.vector3f - rgb color as 3d vector
-    )str");
+    )str")
 
-  m.def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));},
+   .def("bg", [](float r, float g, float b) {simple_query::set_ws_bg(vector3<float>(r,g,b));},
     R"str(
     Sets the background color for the current workspace.
     Parameters
@@ -49,21 +50,21 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
     arg0: float - red component
     arg1: float - green component
     arg2: float - blue component
-    )str" );
+    )str" )
 
-  m.def("gp", &simple_query::gizmo_pos,
+   .def("gp", &simple_query::gizmo_pos,
         R"str(
         Returns the current position of the gizmo-object
-        )str" );
+        )str" )
 
-  m.def("cs", &simple_query::get_current_selected,
+   .def("cs", &simple_query::get_current_selected,
         R"str(
         Returns the current selected ws_item
-        )str");
+        )str")
 
-  m.def("xgeom_dfn", &simple_query::get_xgeom_dfn);
-  m.def("xgeom_dft", &simple_query::get_xgeom_dft);
-  m.def("cw", &simple_query::cur_ws);
+   .def("xgeom_dfn", &simple_query::get_xgeom_dfn)
+   .def("xgeom_dft", &simple_query::get_xgeom_dft)
+   .def("cw", &simple_query::cur_ws);
 
   //****************************** tools module begin ******************************
   py::module tools = m.def_submodule("tools", "Generic tools");
@@ -73,42 +74,42 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
                 .def("get_color", &color_map_t::get_color)
                 .def("push_color", &color_map_t::push_color);
 
-  tools.def("to_clipboard", &simple_query::to_clipboard);
-  tools.def("set_msr_digits", &simple_query::set_msr_digits);
-  tools.def("get_tool_groups", &simple_query::get_tool_groups);
-  tools.def("get_tool_names", &simple_query::get_tool_names);
-  tools.def("get_connected_items", &simple_query::get_connected_items);
-  tools.def("get_followers", &simple_query::get_followers);
-  tools.def("get_leader", &simple_query::get_leader);
-  tools.def("exec_tool", &simple_query::exec_tool);
+  tools.def("to_clipboard", &simple_query::to_clipboard)
+       .def("set_msr_digits", &simple_query::set_msr_digits)
+       .def("get_tool_groups", &simple_query::get_tool_groups)
+       .def("get_tool_names", &simple_query::get_tool_names)
+       .def("get_connected_items", &simple_query::get_connected_items)
+       .def("get_followers", &simple_query::get_followers)
+       .def("get_leader", &simple_query::get_leader)
+       .def("exec_tool", &simple_query::exec_tool)
 
-  tools.def("rebond", &simple_query::rebond);
-  tools.def("t", &simple_query::translate_selected);
-  tools.def("sc", &simple_query::make_super_cell);
-  tools.def("set_chg", &simple_query::set_charge);
-  tools.def("set_sel_color", &simple_query::set_sel_color);
-  tools.def("set_sel_color", &simple_query::set_sel_color_vec);
+       .def("rebond", &simple_query::rebond)
+       .def("t", &simple_query::translate_selected)
+       .def("sc", &simple_query::make_super_cell)
+       .def("set_chg", &simple_query::set_charge)
+       .def("set_sel_color", &simple_query::set_sel_color)
+       .def("set_sel_color", &simple_query::set_sel_color_vec)
 
-  tools.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance);
-  tools.def("color_by_dist_pairs",
-            &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs);
-  tools.def("get_type_name", &simple_query::get_type_name);
-  tools.def("get_type_hash", &simple_query::get_type_hash);
-  tools.def("is_instance_of", &simple_query::is_instance_of_by_hash);
-  tools.def("is_instance_of", &simple_query::is_instance_of_by_type_name);
+       .def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance)
+       .def("color_by_dist_pairs",
+            &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs)
+       .def("get_type_name", &simple_query::get_type_name)
+       .def("get_type_hash", &simple_query::get_type_hash)
+       .def("is_instance_of", &simple_query::is_instance_of_by_hash)
+       .def("is_instance_of", &simple_query::is_instance_of_by_type_name)
 
-  tools.def("get_point_sym_g", &simple_query::get_point_sym_group, py::arg("tolerance") = 0.1f);
-  tools.def("make_point_sym_g", &simple_query::make_psg_view, py::arg("tolerance") = 0.1f);
+       .def("get_point_sym_g", &simple_query::get_point_sym_group, py::arg("tolerance") = 0.1f)
+       .def("make_point_sym_g", &simple_query::make_psg_view, py::arg("tolerance") = 0.1f)
 
-  tools.def("make_traj_highlighter", &simple_query::make_traj_highlight,
-            py::arg("atom_id"), py::arg("anim_id") = 1);
+       .def("make_traj_highlighter", &simple_query::make_traj_highlight,
+            py::arg("atom_id"), py::arg("anim_id") = 1)
 
-  tools.def("make_cube", &simple_query::make_cube_p);
-  tools.def("embed_cube", &simple_query::embed_cube);
-  tools.def("make_arrow", &simple_query::make_arrow_p,
-            py::arg("from"), py::arg("to"), py::arg("name")="");
+       .def("make_cube", &simple_query::make_cube_p)
+       .def("embed_cube", &simple_query::embed_cube)
+       .def("make_arrow", &simple_query::make_arrow_p,
+            py::arg("from"), py::arg("to"), py::arg("name")="")
 
-  tools.def("convert_spatial", &simple_query::convert_selected_units);
+       .def("convert_spatial", &simple_query::convert_selected_units);
   //******************************** tools module end *******************************
 
   py::module sel = m.def_submodule("sel", "Selection routines");
@@ -116,124 +117,124 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   sel.def("ws",  &simple_query::select_ws,
           R"str(
           Selects nth workspace
-          )str" );
+          )str" )
 
-  sel.def("it",  &simple_query::select_itm,
+     .def("it",  &simple_query::select_itm,
           R"str(
           Selects nth object from the current workspace
           :param arg0: an workspace index that needs to be selected
-          )str");
+          )str")
 
-  sel.def("c", &simple_query::sel_cnt,
+     .def("c", &simple_query::sel_cnt,
           R"str(
           Only for geom_view_t. Selects an atom under a certain index.
           :param arg0: int an atom index that needs to be selected
-          )str");
+          )str")
 
-  sel.def("c", &simple_query::sel_cnt_list,
+     .def("c", &simple_query::sel_cnt_list,
           R"str(
           Only for geom_view_t. Selects several atoms.
           :param arg0: list the list of atoms to be selected
-          )str");
+          )str")
 
-  sel.def("c", &simple_query::sel_cnt_type,
+     .def("c", &simple_query::sel_cnt_type,
           R"str(
           Only for geom_view_t. Selects several atoms by type.
           :param arg0: str the type of atoms that need to be selected
-          )str");
+          )str")
 
-  sel.def("c", &simple_query::sel_cnt_all,
+     .def("c", &simple_query::sel_cnt_all,
           R"str(
           Only for geom_view_t. Selects all atoms.
-          )str");
+          )str")
 
-  sel.def("c_p", &simple_query::sel_cnt_parity,
+     .def("c_p", &simple_query::sel_cnt_parity,
           R"str(
           Adds to the currently selected atoms those that are additional to them by
           inversion symmetry relative to the origin of coordinates
-          )str");
+          )str")
 
-  sel.def("uc", &simple_query::unsel_cnt_all,
+     .def("uc", &simple_query::unsel_cnt_all,
           R"str(
           Only for geom_view_t. Unselects all atoms.
-          )str");
+          )str")
 
-  sel.def("uc", &simple_query::unsel_cnt,
+     .def("uc", &simple_query::unsel_cnt,
           R"str(
           Only for geom_view_t. Unselects an atom under a certain index.
           :param arg0: int an atom index that needs to be unselected
-          )str");
+          )str")
 
-  sel.def("uc", &simple_query::unsel_cnt_list,
+     .def("uc", &simple_query::unsel_cnt_list,
           R"str(
           Only for geom_view_t. Unselects several atoms.
           :param arg0: list the list of atoms to be unselected
-          )str");
+          )str")
 
-  sel.def("uc", &simple_query::unsel_cnt_type,
+     .def("uc", &simple_query::unsel_cnt_type,
           R"str(
           Only for geom_view_t. Unselects several atoms by type.
           :param arg0: str the type of atoms that need to be unselected
-          )str");
+          )str")
 
-  sel.def("get", &simple_query::get_sel,
+     .def("get", &simple_query::get_sel,
           R"str(
           Get a list of selected atoms.
-          )str");
+          )str")
 
-  sel.def("sph", &simple_query::sel_cnt_sphere);
-  sel.def("gsp", &simple_query::sel_cnt_gsph);
-  sel.def("inv", &simple_query::sel_invert);
-  sel.def("hemisph", &simple_query::sel_hemisphere);
-  sel.def("f", &simple_query::sel_cnt_fn);
+     .def("sph", &simple_query::sel_cnt_sphere)
+     .def("gsp", &simple_query::sel_cnt_gsph)
+     .def("inv", &simple_query::sel_invert)
+     .def("hemisph", &simple_query::sel_hemisphere)
+     .def("f", &simple_query::sel_cnt_fn)
 
-  sel.def("gx",
+     .def("gx",
           [](float bound){simple_query::sel_cnt_fn(
-            [&bound](float x, float y, float z){return x > bound;});});
-  sel.def("lx",
+            [&bound](float x, float y, float z){return x > bound;});})
+     .def("lx",
           [](float bound){simple_query::sel_cnt_fn(
-            [&bound](float x, float y, float z){return x < bound;});});
-  sel.def("gy",
+            [&bound](float x, float y, float z){return x < bound;});})
+     .def("gy",
           [](float bound){simple_query::sel_cnt_fn(
-            [&bound](float x, float y, float z){return y > bound;});});
-  sel.def("ly",
+            [&bound](float x, float y, float z){return y > bound;});})
+     .def("ly",
           [](float bound){simple_query::sel_cnt_fn(
-            [&bound](float x, float y, float z){return y < bound;});});
-  sel.def("gz",
+            [&bound](float x, float y, float z){return y < bound;});})
+     .def("gz",
           [](float bound){simple_query::sel_cnt_fn(
-            [&bound](float x, float y, float z){return z > bound;});});
-  sel.def("lz",
+            [&bound](float x, float y, float z){return z > bound;});})
+     .def("lz",
           [](float bound){simple_query::sel_cnt_fn(
             [&bound](float x, float y, float z){return z < bound;});});
 
   py::module pt = m.def_submodule("pt", "Periodic table manipulations");
-  pt.def("c", &simple_query::ptable_set_color_by_number);
-  pt.def("c", &simple_query::ptable_set_color_by_name);
-  pt.def("r", &simple_query::ptable_set_radius_by_name);
-  pt.def("r", &simple_query::ptable_set_radius_by_number);
-  pt.def("c", &simple_query::ptable_get_color_by_number);
-  pt.def("c", &simple_query::ptable_get_color_by_name);
-  pt.def("r", &simple_query::ptable_get_radius_by_name);
-  pt.def("r", &simple_query::ptable_get_radius_by_number);
+  pt.def("c", &simple_query::ptable_set_color_by_number)
+    .def("c", &simple_query::ptable_set_color_by_name)
+    .def("r", &simple_query::ptable_set_radius_by_name)
+    .def("r", &simple_query::ptable_set_radius_by_number)
+    .def("c", &simple_query::ptable_get_color_by_number)
+    .def("c", &simple_query::ptable_get_color_by_name)
+    .def("r", &simple_query::ptable_get_radius_by_name)
+    .def("r", &simple_query::ptable_get_radius_by_number);
 
   py::module cam = m.def_submodule("cam", "Camera manipulation");
-  cam.def("t", &simple_query::camera_move);
-  cam.def("ry", &simple_query::camera_rotate_yaw);
-  cam.def("rp", &simple_query::camera_rotate_pitch);
-  cam.def("zoom", &simple_query::camera_zoom);
-  cam.def("zoom", &simple_query::camera_get_zoom);
-  cam.def("proj", &simple_query::camera_mode);
-  cam.def("copy", &simple_query::copy_camera_from_ws);
+  cam.def("t", &simple_query::camera_move)
+     .def("ry", &simple_query::camera_rotate_yaw)
+     .def("rp", &simple_query::camera_rotate_pitch)
+     .def("zoom", &simple_query::camera_zoom)
+     .def("zoom", &simple_query::camera_get_zoom)
+     .def("proj", &simple_query::camera_mode)
+     .def("copy", &simple_query::copy_camera_from_ws);
 
   py::module sv = m.def_submodule("sv", "Selective visibility manipulation");
-  sv.def("state", &simple_query::sv_get);
-  sv.def("set", &simple_query::sv_edit);
-  sv.def("set", &simple_query::sv_edit_list);
-  sv.def("set", &simple_query::sv_edit_all);
+  sv.def("state", &simple_query::sv_get)
+    .def("set", &simple_query::sv_edit)
+    .def("set", &simple_query::sv_edit_list)
+    .def("set", &simple_query::sv_edit_all);
 
   py::module cl = m.def_submodule("cl", "Custom labels");
-  cl.def("state", &simple_query::cl_get);
-  cl.def("set_st", &simple_query::set_cl_state);
-  cl.def("set_t", &simple_query::set_cl_text);
-  //cam.def("tu", )
+  cl.def("state", &simple_query::cl_get)
+    .def("set_st", &simple_query::set_cl_state)
+    .def("set_t", &simple_query::set_cl_text);
+
 }
