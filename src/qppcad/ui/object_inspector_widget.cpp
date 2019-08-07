@@ -217,6 +217,7 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
           auto cur_id = cur_ws->get_selected_idx();
           if (cur_id) {
               ws_items_list->item(*cur_id)->setSelected(true);
+              ws_items_list->scrollToItem(ws_items_list->item(*cur_id));
             }
           else {
               ws_items_list->clearSelection();

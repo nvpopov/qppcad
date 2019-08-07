@@ -101,6 +101,7 @@ namespace qpp {
         //End of widgets
 
         //Menus
+        std::map<std::string, QAction*> m_actions_lookup;
         QMenu *file_menu;
         QAction *file_menu_new_ws;
         QAction *file_menu_close_ws;
