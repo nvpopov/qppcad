@@ -44,10 +44,6 @@
         <file>images/outline-tune-24px_d.svg</file>
         <file>images/outline-palette-24px_d.svg</file>
         <file>images/outline-palette-24px.svg</file>
-        <file>fonts/SourceSansPro-Bold.ttf</file>
-        <file>fonts/SourceSansPro-Italic.ttf</file>
-        <file>fonts/SourceSansPro-Regular.ttf</file>
-        <file>fonts/SourceSansPro-Light.ttf</file>
         <file>images/outline-save-24px.svg</file>
         <file>images/outline-play_circle_filled_white-24px.svg</file>
         <file>images/outline-fast_forward-24px.svg</file>
@@ -57,5 +53,8 @@
         <file>images/add_cube.svg</file>
         <file>images/baseline-3d_rotation_x-24px.svg</file>
         <file>images/add_psg.svg</file>
+        <file>fonts/Rubik/Rubik-Medium.ttf</file>
+        <file>fonts/Rubik/Rubik-Regular.ttf</file>
+        <file>fonts/Rubik/Rubik-Light.ttf</file>
     </qresource>
 </RCC>

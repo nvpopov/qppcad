@@ -85,11 +85,17 @@ int main (int argc, char **argv) {
   astate->init_styles();
   qApp->setPalette(astate->m_app_palette);
 
+//  std::vector<int> fnt_id = {
+//    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Bold.ttf"),
+//    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Light.ttf"),
+//    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Regular.ttf"),
+//    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Italic.ttf"),
+//  };
+
   std::vector<int> fnt_id = {
-    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Bold.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Light.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Regular.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/SourceSansPro-Italic.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Rubik/Rubik-Light.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Rubik/Rubik-Regular.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Rubik/Rubik-Medium.ttf"),
   };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);

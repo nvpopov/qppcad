@@ -1,7 +1,7 @@
 * {
- font-family : "SourceSansPro";
- font-size: 13pt;
- font-weight: 1;
+ font-family : "Rubik";
+ font-size: 12pt;
+ font-weight: 350;
 }
 
 QWidget[s_class="tp_generic"] QLabel {
