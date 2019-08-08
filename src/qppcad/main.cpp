@@ -95,7 +95,6 @@ int main (int argc, char **argv) {
   std::vector<int> fnt_id = {
     QFontDatabase::addApplicationFont("://fonts/Roboto/Roboto-Light.ttf"),
     QFontDatabase::addApplicationFont("://fonts/Roboto/Roboto-Medium.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Roboto/Roboto-Black.ttf"),
   };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);

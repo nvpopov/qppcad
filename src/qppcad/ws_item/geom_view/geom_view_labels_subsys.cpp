@@ -43,8 +43,12 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
   opt<vector2<float> > proj_pos;
   std::string label;
+  std::string last_label;
   QString label_qs;
-  QString last_label;
+  QPainterPath text_path;
+  QFontMetrics fmetric(text_font_lb);
+  QTransform transform;
+  transform.reset();
 
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
 
@@ -70,31 +74,39 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
           label_qs = QString::fromStdString(label);
 
+          if (label != last_label) {
+              text_path = QPainterPath();
+              text_path.addText(0, 0, text_font_lb, label_qs);
+            }
+
           if (m_render_outlines) {
-              QPainterPath text_path;
-              QFontMetrics fmetric(text_font_lb);
+
               QRect font_rec = fmetric.boundingRect(label_qs);
 
-              //painter.setRenderHint(QPainter::Antialiasing);
-              text_path.addText((*proj_pos)[0] - fmetric.width(label_qs) / 2,
-                  (*proj_pos)[1] - font_rec.center().y(),
-                  text_font_lb,
-                  label_qs);
+              transform.reset();
+              transform.translate((*proj_pos)[0] - fmetric.width(label_qs) / 2,
+                                  (*proj_pos)[1] - font_rec.center().y());
+
+              painter.setTransform(transform);
               painter.drawPath(text_path);
+
             } else {
-              QFontMetrics fmetric(text_font_lb);
+
               QRect font_rec = fmetric.boundingRect(label_qs);
-              painter.drawText(
-                    int((*proj_pos)[0]-font_rec.width()*0.5f),
-                    int((*proj_pos)[1]-font_rec.height()*0.5f),
-                    font_rec.width(), font_rec.height(),
-                    Qt::AlignCenter, QString::fromStdString(label));
+              painter.drawText(int((*proj_pos)[0]-font_rec.width()*0.5f),
+                               int((*proj_pos)[1]-font_rec.height()*0.5f),
+                               font_rec.width(), font_rec.height(),
+                               Qt::AlignCenter, QString::fromStdString(label));
 
             }
 
         }
 
+      last_label = label;
+
     }
+
+  painter.resetTransform();
 
 }
 

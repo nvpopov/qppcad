@@ -1,7 +1,7 @@
 * {
  font-family : "Roboto";
  font-size: 13pt;
- font-weight: 311;
+ font-weight: 100;
 }
 
 QWidget[s_class="tp_generic"] QLabel {
@@ -384,20 +384,12 @@ qpp--cad--qspoiler_widget_t {
  background : rgb(76, 76, 76);
 }
 
-qpp--cad--qspoiler_widget_t QFrame QLabel {
- font-weight: 400;
-}
-
 QRadioButton:disabled {
     color: #787878;
 }
 
 QMenu {
  background : rgb(46, 46, 46);
-}
-
-QMenuBar {
- font-weight: 400;
 }
 
 QMenu::item:selected {
