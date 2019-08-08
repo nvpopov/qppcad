@@ -1,7 +1,7 @@
 * {
  font-family : "Rubik";
  font-size: 12pt;
- font-weight: 350;
+ font-weight: 200;
 }
 
 QWidget[s_class="tp_generic"] QLabel {
@@ -382,6 +382,10 @@ QPushButton::flat:pressed {
 
 qpp--cad--qspoiler_widget_t {
  background : rgb(76, 76, 76);
+}
+
+qpp--cad--qspoiler_widget_t QFrame QLabel {
+    font-weight:500;
 }
 
 QRadioButton:disabled {
