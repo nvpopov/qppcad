@@ -1135,7 +1135,7 @@ void geom_view_t::refine_from_frac_coord() {
 }
 
 std::string geom_view_t::compose_type_descr () {
-  return m_geom ? fmt::format("geom. view, DIM = [{}d]", m_geom->DIM) : "geom. view(empty)";
+  return m_geom ? fmt::format("geom. view, D = [{}d]", m_geom->DIM) : "geom. view(empty)";
 }
 
 void geom_view_t::update (float delta_time) {

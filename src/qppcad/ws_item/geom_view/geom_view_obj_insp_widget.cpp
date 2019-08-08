@@ -518,7 +518,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label enabled"), tms_pair_label_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label style"), tms_pair_label_style);
-  tms_pair_dist_gb_lt->addRow(tr("Custom lbl. enabled"), tms_pair_custom_text_enabled);
+  tms_pair_dist_gb_lt->addRow(tr("Custom lbl."), tms_pair_custom_text_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Custom lbl. text"), tms_pair_custom_text_edit);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
 

@@ -53,8 +53,8 @@
         <file>images/add_cube.svg</file>
         <file>images/baseline-3d_rotation_x-24px.svg</file>
         <file>images/add_psg.svg</file>
-        <file>fonts/Rubik/Rubik-Medium.ttf</file>
-        <file>fonts/Rubik/Rubik-Regular.ttf</file>
-        <file>fonts/Rubik/Rubik-Light.ttf</file>
+        <file>fonts/Roboto/Roboto-Black.ttf</file>
+        <file>fonts/Roboto/Roboto-Medium.ttf</file>
+        <file>fonts/Roboto/Roboto-Light.ttf</file>
     </qresource>
 </RCC>
