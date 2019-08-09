@@ -26,6 +26,7 @@ namespace qpp {
       public:
 
         geom_view_t* p_owner;
+        std::map<std::string, QPainterPath> m_pp_cache;
 
         int m_lbl_font_size{17};
         geom_labels_style_e m_style{geom_labels_style_e::show_none};
@@ -35,7 +36,7 @@ namespace qpp {
         bool m_screen_scale{false};
         bool m_render_outlines{true};
         float m_outline_size{1};
-        geom_view_labels_subsys_t (geom_view_t &_p_owner);
+        explicit geom_view_labels_subsys_t (geom_view_t &_p_owner);
 
         void render_overlay(QPainter &painter);
         void render_labels(QPainter &painter);
