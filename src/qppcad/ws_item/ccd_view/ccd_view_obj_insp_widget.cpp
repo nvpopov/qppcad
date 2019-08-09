@@ -148,7 +148,7 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   ws_item_is_visible->hide();
   ws_item_is_visible_label->hide();
 
-  gb_gen_ccd_info = new qspoiler_widget_t(tr("CCD info"));
+  gb_gen_ccd_info = new qspoiler_widget_t(tr("CCD Info"));
   gb_gen_ccd_info_lt = new QFormLayout;
   gb_gen_ccd_info->add_content_layout(gb_gen_ccd_info_lt);
 
@@ -162,7 +162,7 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);
   tab_general->tab_inner_widget_lt->addStretch(0);
 
-  gb_vib_modes = new qspoiler_widget_t(tr("Vibrational modes"));
+  gb_vib_modes = new qspoiler_widget_t(tr("Vibrational Modes"));
  // gb_vib_modes->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
   gb_vib_modes_lt = new QVBoxLayout;
   gb_vib_modes->add_content_layout(gb_vib_modes_lt);
@@ -182,7 +182,7 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tab_vibs->tab_inner_widget_lt->addStretch(0);
 
   //tab geo opt
-  tgo_select_step = new qspoiler_widget_t(tr("Geometry optimization step"));
+  tgo_select_step = new qspoiler_widget_t(tr("Geometry Optimization Step"));
   tgo_select_step_lt = new QFormLayout;
   tgo_select_step->add_content_layout(tgo_select_step_lt);
 
@@ -224,7 +224,7 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
 
   init_form_lt(tgo_select_step_lt);
 
-  tgo_step_info = new qspoiler_widget_t(tr("Step info"));
+  tgo_step_info = new qspoiler_widget_t(tr("Step Info"));
   tgo_step_info_lt = new QFormLayout;
   tgo_step_info->add_content_layout(tgo_step_info_lt);
 

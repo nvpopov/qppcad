@@ -34,7 +34,7 @@ pdos_view_obj_insp_widget_t::pdos_view_obj_insp_widget_t() {
   m_data_target_menu->addAction(m_data_target_cp2k);
   m_data_target_menu->addAction(m_data_target_vasp);
 
-  gb_pdos_info = new qspoiler_widget_t("PDOS info");
+  gb_pdos_info = new qspoiler_widget_t("PDOS Info");
   gb_pdos_info_lt = new QFormLayout;
   gb_pdos_info->add_content_layout(gb_pdos_info_lt);
 

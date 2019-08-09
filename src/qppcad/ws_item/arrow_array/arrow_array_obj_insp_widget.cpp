@@ -9,7 +9,7 @@ arrow_array_obj_insp_widget_t::arrow_array_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  gb_aa_settings = new qspoiler_widget_t(tr("Arrow array settings"));
+  gb_aa_settings = new qspoiler_widget_t(tr("Arrow Array Settings"));
   gb_aa_settings_lt = new QFormLayout;
   gb_aa_settings->add_content_layout(gb_aa_settings_lt);
 

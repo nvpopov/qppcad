@@ -9,7 +9,7 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  tg_cube_params = new qspoiler_widget_t(tr("Cube parameters"));
+  tg_cube_params = new qspoiler_widget_t(tr("Cube Parameters"));
   tg_cube_params_lt = new QFormLayout;
 
   tg_cube_params->add_content_layout(tg_cube_params_lt);

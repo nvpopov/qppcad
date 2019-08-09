@@ -42,7 +42,7 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   disp_vs_plane_color = new qbinded_color3_input_t;
   disp_vs_plane_color->m_updated_externally_event = true;
 
-  gb_psg_summary = new qspoiler_widget_t(tr("Symmetry group summary"));
+  gb_psg_summary = new qspoiler_widget_t(tr("Symmetry Group Summary"));
   gb_psg_summary_lt = new QFormLayout;
   gb_psg_summary->add_content_layout(gb_psg_summary_lt);
   gb_psg_summary_lt->addRow(tr("Sym. gr. name"), tg_info_sym_gr);
@@ -53,7 +53,7 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   gb_psg_summary_lt->addRow(tr("Bounded ?"), tg_bounded_info);
   init_form_lt(gb_psg_summary_lt);
 
-  gb_psg_view_settings = new qspoiler_widget_t(tr("View settings"));
+  gb_psg_view_settings = new qspoiler_widget_t(tr("View Settings"));
   gb_psg_view_settings_lt = new QFormLayout;
   gb_psg_view_settings->add_content_layout(gb_psg_view_settings_lt);
   gb_psg_view_settings_lt->addRow(tr("Show axes"), disp_vs_show_axes);
@@ -71,7 +71,7 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   //tab colorize orders
   tab_display = def_tab("Colorize group elements", "://images/monitor.svg");
 
-  gb_colorize = new qspoiler_widget_t(tr("Axis colors by order"));
+  gb_colorize = new qspoiler_widget_t(tr("Axis Colors by Order"));
   gb_colorize_lt = new QFormLayout;
   gb_colorize->add_content_layout(gb_colorize_lt);
   for (size_t i = 0; i < AXIS_COLORIZE_SIZE; i++) {

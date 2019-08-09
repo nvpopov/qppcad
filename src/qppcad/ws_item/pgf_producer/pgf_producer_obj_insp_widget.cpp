@@ -15,7 +15,7 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
                            "://images/outline-tune-24px.svg",
                            "://images/outline-tune-24px_d.svg");
 
-  gb_pgf_data = new qspoiler_widget_t(tr("Pos. gen. form settings"));
+  gb_pgf_data = new qspoiler_widget_t(tr("Pos. Gen. Form Settings"));
   gb_pgf_data_lt = new QFormLayout;
   gb_pgf_data->add_content_layout(gb_pgf_data_lt);
 
@@ -39,7 +39,7 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   gb_pgf_data_lt->addRow(tr("Array group"), pgf_data_ag);
   init_form_lt(gb_pgf_data_lt);
 
-  gb_gen_cell = new qspoiler_widget_t(tr("Generalized cell"));
+  gb_gen_cell = new qspoiler_widget_t(tr("Generalized Cell"));
   gb_gen_cell_lt = new QFormLayout;
   gb_gen_cell->add_content_layout(gb_gen_cell_lt);
 

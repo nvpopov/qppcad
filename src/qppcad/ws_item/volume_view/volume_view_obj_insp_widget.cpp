@@ -22,7 +22,7 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   vol_alpha->set_min_max_step(0.1, 1.0, 0.05, 2);
   vol_render_permanent = new qbinded_checkbox_t;
 
-  gb_volume_detail = new qspoiler_widget_t(tr("Volume details"));
+  gb_volume_detail = new qspoiler_widget_t(tr("Volume Details"));
   gb_volume_detail_lt = new QFormLayout;
   gb_volume_detail->add_content_layout(gb_volume_detail_lt);
 
