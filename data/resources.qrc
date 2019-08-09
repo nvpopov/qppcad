@@ -53,8 +53,8 @@
         <file>images/add_cube.svg</file>
         <file>images/baseline-3d_rotation_x-24px.svg</file>
         <file>images/add_psg.svg</file>
-        <file>fonts/Ubuntu/Ubuntu-Medium.ttf</file>
-        <file>fonts/Ubuntu/Ubuntu-Regular.ttf</file>
-        <file>fonts/Ubuntu/Ubuntu-Light.ttf</file>
+        <file>fonts/Open_Sans/OpenSans-Bold.ttf</file>
+        <file>fonts/Open_Sans/OpenSans-Regular.ttf</file>
+        <file>fonts/Open_Sans/OpenSans-Light.ttf</file>
     </qresource>
 </RCC>
