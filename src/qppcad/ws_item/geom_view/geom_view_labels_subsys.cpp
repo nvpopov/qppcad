@@ -43,20 +43,18 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
   opt<vector2<float> > proj_pos;
   std::string label;
-  std::string last_label;
   QString label_qs;
-  QPainterPath text_path;
+  QPainterPath *text_path{nullptr};
   QFontMetrics fmetric(text_font_lb);
   QTransform transform;
+  QRect font_rec;
   transform.reset();
 
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
 
-      if (p_owner->m_sel_vis &&
-          p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
+      if (p_owner->m_sel_vis && p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
 
-      if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) &&
-          m_selective_lbl) continue;
+      if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) && m_selective_lbl) continue;
 
       if (!p_owner->m_atom_type_to_hide.empty()) {
           auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));
@@ -70,39 +68,44 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       label = label_gen_fn(p_owner, m_style, i);
       render_label = !label.empty();
 
+      /* render label */
       if (render_label) {
 
           label_qs = QString::fromStdString(label);
+          font_rec = fmetric.boundingRect(label_qs);
 
-          if (label != last_label) {
-              text_path = QPainterPath();
-              text_path.addText(0, 0, text_font_lb, label_qs);
-            }
-
+          /* render outlines */
           if (m_render_outlines) {
 
-              QRect font_rec = fmetric.boundingRect(label_qs);
+              auto cached_pp = m_pp_cache.find({label, _font_size});
+
+              if (cached_pp == m_pp_cache.end()) {
+                  auto &new_pp = m_pp_cache[{label, _font_size}];
+                  new_pp.addText(0, 0, text_font_lb, label_qs);
+                  text_path = &new_pp;
+                } else {
+                  text_path = &cached_pp->second;
+                }
 
               transform.reset();
               transform.translate((*proj_pos)[0] - fmetric.width(label_qs) / 2,
                                   (*proj_pos)[1] - font_rec.center().y());
 
               painter.setTransform(transform);
-              painter.drawPath(text_path);
+              if (text_path) painter.drawPath(*text_path);
+              text_path = nullptr;
 
             } else {
-
-              QRect font_rec = fmetric.boundingRect(label_qs);
+              /* render default */
               painter.drawText(int((*proj_pos)[0]-font_rec.width()*0.5f),
                                int((*proj_pos)[1]-font_rec.height()*0.5f),
                                font_rec.width(), font_rec.height(),
-                               Qt::AlignCenter, QString::fromStdString(label));
+                               Qt::AlignCenter, label_qs);
 
             }
 
         }
-
-      last_label = label;
+      /* end of render label */
 
     }
 
@@ -163,7 +166,9 @@ void geom_view_labels_subsys_t::render_in_place_overlay(QPainter &painter) {
       if (ap_idx) {
           vector3<float> color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
           fill_color.setRgbF(color[0], color[1], color[2]);
-        } else fill_color = QColor::fromRgbF(0, 0, 1);
+        } else {
+          fill_color = QColor::fromRgbF(0, 0, 1);
+        }
 
       painter.setBrush(fill_color);
       painter.drawEllipse(sph);

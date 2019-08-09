@@ -26,7 +26,7 @@ namespace qpp {
       public:
 
         geom_view_t* p_owner;
-        std::map<std::string, QPainterPath> m_pp_cache;
+        std::map<std::tuple<std::string, size_t>, QPainterPath> m_pp_cache;
 
         int m_lbl_font_size{17};
         geom_labels_style_e m_style{geom_labels_style_e::show_none};
