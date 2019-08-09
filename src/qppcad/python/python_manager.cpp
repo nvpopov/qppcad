@@ -38,14 +38,16 @@ bool python_manager_t::execute(std::string command) {
       }
 
   } catch (py::error_already_set &err) {
+
     m_output_buffer+= err.what();
-    m_output_buffer+= "\n";
     astate->make_viewport_dirty();
     ret_status = true;
+
   }
 
   astate->make_viewport_dirty();
   return ret_status;
+
 }
 
 void python_manager_t::get_completion_list(QString text, QStringList &sl) {
