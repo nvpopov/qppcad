@@ -33,6 +33,8 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   lbl_frm = new QLabel(title);
   lbl_frm->setAlignment(Qt::AlignCenter);
+  lbl_frm->setProperty("s_class", "bold_label");
+
   action_btn = new QPushButton;
   action_btn->setFlat(true);
   action_btn->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),

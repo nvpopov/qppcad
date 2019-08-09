@@ -16,7 +16,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ew_header->setText(tr("OBJECT INSPECTOR"));
   //setObjectName("obj_insp");
   header_frm->setObjectName("obj_insp_header_frame");
-  //setProperty("s_class", "obj_insp");
+  //setProperty("s_class", "bold_label");
 
   btn_add_new_ws_item = new QPushButton;
   btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),

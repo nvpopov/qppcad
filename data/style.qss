@@ -8,6 +8,10 @@ QWidget[s_class="tp_generic"] QLabel {
  color:white;
 }
 
+QLabel[s_class="bold_label"] {
+ font-weight: 500;
+}
+
 QCheckBox::indicator {
  width: 21px; height: 21px;
 }
