@@ -59,5 +59,8 @@
         <file>fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf</file>
         <file>fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf</file>
         <file>fonts/Roboto_Condensed/RobotoCondensed-Light.ttf</file>
+        <file>fonts/Ubuntu/Ubuntu-Medium.ttf</file>
+        <file>fonts/Ubuntu/Ubuntu-Regular.ttf</file>
+        <file>fonts/Ubuntu/Ubuntu-Light.ttf</file>
     </qresource>
 </RCC>

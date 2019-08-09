@@ -1,7 +1,7 @@
 * {
- font-family : "RobotoCondensed";
+ font-family : "Ubuntu";
  font-size: 13pt;
- font-weight: 100;
+ font-weight: 200;
 }
 
 QWidget[s_class="tp_generic"] QLabel {

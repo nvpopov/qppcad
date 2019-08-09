@@ -93,8 +93,8 @@ int main (int argc, char **argv) {
 //  };
 
   std::vector<int> fnt_id = {
-    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Light.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Ubuntu/Ubuntu-Light.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Ubuntu/Ubuntu-Regular.ttf"),
   };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
