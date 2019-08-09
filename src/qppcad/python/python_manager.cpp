@@ -64,6 +64,7 @@ void python_manager_t::get_completion_list(QString text, QStringList &sl) {
       if (py::isinstance<py::str>(elem))
         sl.append(QString::fromStdString(elem.cast<std::string>()));
     }
+
 }
 
 
