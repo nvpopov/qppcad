@@ -19,14 +19,10 @@ namespace qpp {
 
         std::string m_fixture_name;
         std::string m_fixure_path;
+        std::string m_tool_group;
         fixture_type_e m_fixture_type{fixture_type_e::ft_none};
         bool m_initialized{false};
-
-    };
-
-    struct fixture_loader_helper {
-
-        static void load_fixtures_from_file(app_state_t *astate);
+        void load_from_file(const std::string &file_name);
 
     };
 

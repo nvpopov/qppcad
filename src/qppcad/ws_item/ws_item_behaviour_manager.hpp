@@ -6,6 +6,7 @@
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/sflow_behaviour_manager.hpp>
+#include <qppcad/fixture.hpp>
 
 namespace qpp {
 
@@ -232,40 +233,46 @@ namespace qpp {
 
     public:
 
-      /** @brief ws_item_behaviour_manager_t */
+      /* ws_item_behaviour_manager_t */
       ws_item_behaviour_manager_t();
 
-      /** @brief m_file_formats */
+      /* m_file_formats */
       std::map<size_t, ws_item_io_file_format_t> m_file_formats;
 
-      /** @brief m_file_format_groups */
+      /* m_file_format_groups */
       std::map<size_t, ws_item_io_file_format_group_t> m_file_format_groups;
 
-      /** @brief m_fabric_ws_item */
+      /* m_fabric_ws_item */
       std::map<size_t, std::function<std::shared_ptr<ws_item_t>() > > m_fabric_ws_item;
 
-      /** @brief m_obj_insp_widgets */
+      /* m_obj_insp_widgets */
       std::map<size_t, std::shared_ptr<ws_item_obj_insp_widget_t> > m_obj_insp_widgets;
 
-      /** @brief m_obj_insp_fabric */
+      /* m_obj_insp_fabric */
       std::map<size_t,
       std::function<std::shared_ptr<ws_item_obj_insp_widget_t>() > > m_obj_insp_fabric;
 
-      /** @brief m_ext_editors */
+      /* m_ext_editors */
       std::vector<std::shared_ptr<ws_item_extended_editor_t> > m_ext_editors;
       std::map<std::tuple<size_t, size_t>, ws_item_extended_editor_info_t> m_ext_editors_info;
 
-      /** @brief m_ws_item_io */
+      /* m_ws_item_io */
       std::vector<std::shared_ptr<ws_item_io_behaviour_t> > m_ws_item_io;
 
-      /** @brief m_tools_groups */
+      /* m_tools_groups */
       std::map<size_t, ws_item_tool_group_t> m_tools_groups;
 
-      /** @brief m_tools_info */
+      /* m_tools_info */
       std::map<size_t, ws_item_tool_info_t> m_tools_info;
 
+      /* sflow framework info */
       std::map<size_t, sflow_node_group_info_t> m_sflow_node_group_info;
       std::map<size_t, sflow_node_info_t> m_sflow_node_info;
+
+      /* fixtures framework info */
+      std::map<size_t, fixture_info_t> m_fixtures_info;
+
+      void load_fixtures_from_path(const std::string &file_path);
 
       std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                        size_t io_bhv_idx,
@@ -283,28 +290,21 @@ namespace qpp {
       std::string get_ff_short_name(size_t _file_format_hash);
 
 
-      size_t reg_ff(std::string _full_name,
-                    std::string _short_name,
-                    size_t _file_format_group_hash,
-                    std::vector<std::string> _finger_prints);
+      size_t reg_ff(std::string _full_name, std::string _short_name,
+                    size_t _file_format_group_hash, std::vector<std::string> _finger_prints);
+      void unreg_ff(size_t _file_format_hash);
 
-      size_t reg_ffg(std::string _full_name,
-                     std::string _short_name);
+      size_t reg_ffg(std::string _full_name, std::string _short_name);
 
       std::optional<size_t> get_ff_by_finger_print(const std::string &file_name);
       std::optional<size_t> get_ff_by_short_name(const std::string &ffmt_short_name);
 
-
       std::optional<size_t> get_io_bhv_by_file_format(size_t file_format);
-      std::optional<size_t> get_io_bhv_by_file_format_ex(size_t file_format,
-                                                         size_t type_hash);
+      std::optional<size_t> get_io_bhv_by_file_format_ex(size_t file_format, size_t type_hash);
 
       void reg_io_bhv(std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
                       size_t accepted_file_format,
                       size_t accepted_type);
-
-
-      void unreg_ff(size_t _file_format_hash);
 
       void reg_item_fbr(size_t hash, std::function<std::shared_ptr<ws_item_t>()> func);
 

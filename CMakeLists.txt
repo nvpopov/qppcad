@@ -150,6 +150,7 @@ add_executable(
     src/qppcad/gizmo.cpp
     src/qppcad/hotkey_manager.cpp
     src/qppcad/embedded_cluster_tools.cpp
+    src/qppcad/fixture.cpp
 
     src/qppcad/sflow/sflow.cpp
     src/qppcad/sflow/sflow_node.cpp

@@ -407,19 +407,22 @@ namespace qpp {
 
       // try to use ${USER}/.qppcad
       if (!m_fixtures_dir_is_set) {
+
           QString home_path = QDir::homePath();
           QString qc_home_path = QString("%1/.qppcad").arg(home_path);
           QDir si_qc_home_path(qc_home_path);
           m_fixtures_dir = si_qc_home_path.path().toStdString();
           m_fixtures_dir_is_set = true;
+
         }
 
       if (!m_fixtures_dir_is_set) {
           tlog("Fixture dir is not set!");
           return;
+        } else {
+          tlog("Fixtures dir = {}", m_fixtures_dir);
+          ws_mgr->m_bhv_mgr->load_fixtures_from_path(m_fixtures_dir);
         }
-
-      tlog("Fixtures dir = {}", m_fixtures_dir);
 
     }
 

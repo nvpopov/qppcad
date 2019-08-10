@@ -4,11 +4,40 @@
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <QFileInfo>
+#include <QDirIterator>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 ws_item_behaviour_manager_t::ws_item_behaviour_manager_t() {
+
+}
+
+void ws_item_behaviour_manager_t::load_fixtures_from_path(const std::string &file_path) {
+
+  app_state_t* astate = app_state_t::get_inst();
+
+  QDirIterator fixs_dir(QString::fromStdString(file_path), QDirIterator::NoIteratorFlags);
+
+  while (fixs_dir.hasNext()) {
+
+      auto fix_dir = fixs_dir.next();
+      auto fix_manifest_file_name = QString("%1/%2").arg(fix_dir).arg("manifest.json");
+      QFileInfo check_file(fix_manifest_file_name);
+
+      if (check_file.exists() && check_file.isFile()) {
+
+          fixture_info_t new_fixture;
+          new_fixture.load_from_file(fix_manifest_file_name.toStdString());
+
+          if (new_fixture.m_initialized) {
+              size_t fixture_hash = astate->hash_reg->calc_hash(new_fixture.m_fixture_name);
+              m_fixtures_info.insert({fixture_hash, std::move(new_fixture)});
+            }
+
+        }
+
+    } // end while
 
 }
 

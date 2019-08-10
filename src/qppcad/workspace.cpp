@@ -18,7 +18,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-opt<size_t> workspace_t::get_selected_idx () {
+opt<size_t> workspace_t::get_selected_idx() {
 
   for (size_t i = 0; i < m_ws_items.size(); i++)
     if (m_ws_items[i]->m_selected) return opt<size_t>(i);
@@ -26,7 +26,7 @@ opt<size_t> workspace_t::get_selected_idx () {
 
 }
 
-ws_item_t *workspace_t::get_selected () {
+ws_item_t *workspace_t::get_selected() {
 
   std::optional<size_t> sel_idx = get_selected_idx();
   if (sel_idx) return m_ws_items[*sel_idx].get();
@@ -52,7 +52,7 @@ std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
 
 }
 
-bool workspace_t::set_selected_item (const size_t sel_idx, bool emit_signal) {
+bool workspace_t::set_selected_item(const size_t sel_idx, bool emit_signal) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -98,7 +98,7 @@ void workspace_t::prev_item() {
 
 }
 
-void workspace_t::unselect_all (bool emit_signal) {
+void workspace_t::unselect_all(bool emit_signal) {
 
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
   app_state_t* astate = app_state_t::get_inst();
@@ -106,7 +106,7 @@ void workspace_t::unselect_all (bool emit_signal) {
 
 }
 
-void workspace_t::toggle_edit_mode () {
+void workspace_t::toggle_edit_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -117,18 +117,18 @@ void workspace_t::toggle_edit_mode () {
 
 }
 
-void workspace_t::ws_changed () {
+void workspace_t::ws_changed() {
 
 }
 
-void workspace_t::reset_camera () {
+void workspace_t::reset_camera() {
 
   m_camera->reset_camera();
   set_best_view();
 
 }
 
-void workspace_t::set_best_view () {
+void workspace_t::set_best_view() {
 
   if (m_ws_items.size() == 0) {
       m_camera->reset_camera();
@@ -199,11 +199,13 @@ void workspace_t::render() {
 
   if (m_gizmo->m_is_active && m_gizmo->attached_item) m_gizmo->render();
 
-  if (astate->m_debug_show_selection_ray){
+  if (astate->m_debug_show_selection_ray) {
+
       astate->dp->begin_render_line();
       astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), m_ray.start,
                               m_ray.start + m_ray.dir * 155.0);
       astate->dp->end_render_line();
+
     }
 
   if (astate->dp) {
@@ -240,11 +242,13 @@ void workspace_t::render() {
 }
 
 void workspace_t::render_overlay(QPainter &painter) {
+
   for (auto &ws_item : m_ws_items)
     if (ws_item->m_is_visible) ws_item->render_overlay(painter);
+
 }
 
-void workspace_t::mouse_click (const float mouse_x, const float mouse_y) {
+void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -307,7 +311,7 @@ void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
 }
 
-void workspace_t::add_item_to_ws (const std::shared_ptr<ws_item_t> item_to_add) {
+void workspace_t::add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add) {
 
   item_to_add->set_parent_workspace(this);
   m_ws_items.push_back(item_to_add);
@@ -326,7 +330,7 @@ void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delet
 
 }
 
-void workspace_t::save_ws_to_json (const std::string filename) {
+void workspace_t::save_ws_to_json(const std::string filename) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -358,7 +362,7 @@ void workspace_t::save_ws_to_json (const std::string filename) {
 
 }
 
-void workspace_t::load_ws_from_json (const std::string filename) {
+void workspace_t::load_ws_from_json(const std::string filename) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -427,7 +431,7 @@ void workspace_t::load_ws_from_json (const std::string filename) {
 
 }
 
-void workspace_t::update (float delta_time) {
+void workspace_t::update(float delta_time) {
 
   app_state_t* astate = app_state_t::get_inst();
 

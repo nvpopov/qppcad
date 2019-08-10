@@ -12,7 +12,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        QGroupBox *gb_traj_settings;
+        qspoiler_widget_t *gb_traj_settings;
         QFormLayout *gb_traj_settings_lt;
         traj_hl_t *b_th{nullptr};
 
