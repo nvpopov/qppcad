@@ -49,11 +49,20 @@ PYBIND11_EMBEDDED_MODULE(core, m) {
   /* bhv helpers */
   auto bhv_module = m.def_submodule("bhv", "ws_item bhv manager");
 
+  py::enum_<fixture_type_e>(bhv_module, "fixture_type_e", py::arithmetic(), "")
+          .value("ft_none", ft_none, "ft_none")
+          .value("ft_ws_item_tool", ft_ws_item_tool, "ft_ws_item_tool")
+          .value("ft_file_format", ft_file_format, "ft_file_format")
+          .export_values();
+
   /* fixture info */
   py::class_<fixture_info_t> py_fixture_info_t(bhv_module, "fixture_info_t");
-  py_fixture_info_t.def_readwrite("fixture_name", &fixture_info_t::m_fixture_name)
-                   .def_readwrite("fixture_path", &fixture_info_t::m_fixure_path)
-                   .def_readwrite("tool_group", &fixture_info_t::m_tool_group);
+  py_fixture_info_t.def_readonly("fxt_name", &fixture_info_t::m_fxt_name)
+                   .def_readonly("fxt_path", &fixture_info_t::m_fxt_path)
+                   .def_readonly("fxt_script", &fixture_info_t::m_fxt_script)
+                   .def_readonly("fxt_script_fn", &fixture_info_t::m_fxt_script_fn)
+                   .def_readonly("fxt_type", &fixture_info_t::m_fxt_type)
+                   .def_readonly("tool_group", &fixture_info_t::m_tool_group);
 
   /* bhv manager */
   bhv_module.def("mgr", [](){return app_state_t::get_inst()->ws_mgr->m_bhv_mgr;});

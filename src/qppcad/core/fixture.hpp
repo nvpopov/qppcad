@@ -17,10 +17,12 @@ namespace qpp {
 
     struct fixture_info_t {
 
-        std::string m_fixture_name;
-        std::string m_fixure_path;
+        std::string m_fxt_name;
+        std::string m_fxt_path;
+        std::string m_fxt_script;
+        std::string m_fxt_script_fn;
         std::string m_tool_group;
-        fixture_type_e m_fixture_type{fixture_type_e::ft_none};
+        fixture_type_e m_fxt_type{fixture_type_e::ft_none};
         bool m_initialized{false};
         void load_from_file(const std::string &file_name);
 

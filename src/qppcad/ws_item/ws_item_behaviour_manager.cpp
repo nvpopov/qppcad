@@ -22,6 +22,8 @@ void ws_item_behaviour_manager_t::load_fixtures_from_path(const std::string &fil
   while (fixs_dir.hasNext()) {
 
       auto fix_dir = fixs_dir.next();
+      if (fix_dir.endsWith("/..") || fix_dir.endsWith("/.")) continue;
+
       auto fix_manifest_file_name = QString("%1/%2").arg(fix_dir).arg("manifest.json");
       QFileInfo check_file(fix_manifest_file_name);
 
@@ -35,8 +37,8 @@ void ws_item_behaviour_manager_t::load_fixtures_from_path(const std::string &fil
 
           if (new_fixture.m_initialized) {
 
-              size_t fixture_hash = astate->hash_reg->calc_hash(new_fixture.m_fixture_name);
-              astate->tlog("Fixture \"{}\" loaded!", new_fixture.m_fixture_name);
+              size_t fixture_hash = astate->hash_reg->calc_hash(new_fixture.m_fxt_name);
+              astate->tlog("Fixture \"{}\" loaded!", new_fixture.m_fxt_name);
               m_fixtures_info.insert({fixture_hash, std::move(new_fixture)});
 
             } else {
