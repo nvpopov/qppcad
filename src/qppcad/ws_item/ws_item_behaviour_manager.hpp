@@ -272,7 +272,7 @@ namespace qpp {
       /* fixtures framework info */
       std::map<size_t, fixture_info_t> m_fixtures_info;
 
-      void load_fixtures_from_path(const std::string &file_path);
+      void load_fixtures_from_path(const std::vector<std::string> &file_paths);
 
       std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                        size_t io_bhv_idx,

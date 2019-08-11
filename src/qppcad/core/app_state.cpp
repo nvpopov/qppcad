@@ -145,7 +145,8 @@ namespace qpp {
       //loading fixtures dir
       QString fixtures_dir = settings.value("fixtures_dir").toString();
       if (fixtures_dir.size() != 0) {
-          m_fixtures_dir = fixtures_dir.toStdString();
+          auto fixtures_line = fixtures_dir.toStdString();
+          split(fixtures_line, m_fixtures_dirs, ";");
           m_fixtures_dir_is_set = true;
         }
 
@@ -267,7 +268,14 @@ namespace qpp {
       settings.setValue("console_font_size", m_console_font_size);
 
       if (m_fixtures_dir_is_set) {
-         settings.setValue("fixtures_dir", QString::fromStdString(m_fixtures_dir));
+
+          // join fixtures dir
+          std::string fd_joined;
+          std::for_each(m_fixtures_dirs.begin(), m_fixtures_dirs.end(),
+                        [&fd_joined](const std::string &piece){ fd_joined += piece + ";"; });
+
+          settings.setValue("fixtures_dir", QString::fromStdString(fd_joined));
+
         }
       // end of general settings
 
@@ -411,7 +419,7 @@ namespace qpp {
           QString home_path = QDir::homePath();
           QString qc_home_path = QString("%1/.qppcad").arg(home_path);
           QDir si_qc_home_path(qc_home_path);
-          m_fixtures_dir = si_qc_home_path.path().toStdString();
+          m_fixtures_dirs.push_back(si_qc_home_path.path().toStdString());
           m_fixtures_dir_is_set = true;
 
         }
@@ -420,8 +428,8 @@ namespace qpp {
           tlog("Fixture dir is not set!");
           return;
         } else {
-          tlog("Fixtures dir = {}", m_fixtures_dir);
-          ws_mgr->m_bhv_mgr->load_fixtures_from_path(m_fixtures_dir);
+          tlog("Fixtures dir size = {}", m_fixtures_dirs.size());
+          ws_mgr->m_bhv_mgr->load_fixtures_from_path(m_fixtures_dirs);
         }
 
     }

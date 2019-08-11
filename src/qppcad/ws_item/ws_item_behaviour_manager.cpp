@@ -13,41 +13,46 @@ ws_item_behaviour_manager_t::ws_item_behaviour_manager_t() {
 
 }
 
-void ws_item_behaviour_manager_t::load_fixtures_from_path(const std::string &file_path) {
+void ws_item_behaviour_manager_t::load_fixtures_from_path(
+    const std::vector<std::string> &file_paths) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  QDirIterator fixs_dir(QString::fromStdString(file_path), QDirIterator::NoIteratorFlags);
+  for (const auto &rec : file_paths) {
 
-  while (fixs_dir.hasNext()) {
+      QDirIterator fixs_dir(QString::fromStdString(rec), QDirIterator::NoIteratorFlags);
 
-      auto fix_dir = fixs_dir.next();
-      if (fix_dir.endsWith("/..") || fix_dir.endsWith("/.")) continue;
+      while (fixs_dir.hasNext()) {
 
-      auto fix_manifest_file_name = QString("%1/%2").arg(fix_dir).arg("manifest.json");
-      QFileInfo check_file(fix_manifest_file_name);
+          auto fix_dir = fixs_dir.next();
+          if (fix_dir.endsWith("/..") || fix_dir.endsWith("/.")) continue;
 
-      astate->tlog("Loading fixture from path {}, manifest path = {}",
-                   fix_dir.toStdString(), fix_manifest_file_name.toStdString());
+          auto fix_manifest_file_name = QString("%1/%2").arg(fix_dir).arg("manifest.json");
+          QFileInfo check_file(fix_manifest_file_name);
 
-      if (check_file.exists() && check_file.isFile()) {
+          astate->tlog("Loading fixture from path {}, manifest path = {}",
+                       fix_dir.toStdString(), fix_manifest_file_name.toStdString());
 
-          fixture_info_t new_fixture;
-          new_fixture.load_from_file(fix_manifest_file_name.toStdString());
+          if (check_file.exists() && check_file.isFile()) {
 
-          if (new_fixture.m_initialized) {
+              fixture_info_t new_fixture;
+              new_fixture.load_from_file(fix_manifest_file_name.toStdString());
 
-              size_t fixture_hash = astate->hash_reg->calc_hash(new_fixture.m_fxt_name);
-              astate->tlog("Fixture \"{}\" loaded!", new_fixture.m_fxt_name);
-              m_fixtures_info.insert({fixture_hash, std::move(new_fixture)});
+              if (new_fixture.m_initialized) {
 
-            } else {
-              astate->tlog("Cannot load fixture!");
+                  size_t fixture_hash = astate->hash_reg->calc_hash(new_fixture.m_fxt_name);
+                  astate->tlog("Fixture \"{}\" loaded!", new_fixture.m_fxt_name);
+                  m_fixtures_info.insert({fixture_hash, std::move(new_fixture)});
+
+                } else {
+                  astate->tlog("Cannot load fixture!");
+                }
+
             }
 
-        }
+        } // end while
 
-    } // end while
+    }
 
 }
 
