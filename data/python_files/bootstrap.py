@@ -1,13 +1,13 @@
 R"(
-from core import *
+import core
 from sq import *
 import pyqpp as pq
 import rlcompleter
-import sys, embc, cad, cc, hk
+import sys, embc, cad, cc
 
 ws = get_wsm()
 
-sys.stdout = output_redirector()
+sys.stdout = core.output_redirector()
 cm = rlcompleter.Completer()
 
 def complete_text(text):
