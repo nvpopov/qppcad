@@ -25,14 +25,22 @@ void ws_item_behaviour_manager_t::load_fixtures_from_path(const std::string &fil
       auto fix_manifest_file_name = QString("%1/%2").arg(fix_dir).arg("manifest.json");
       QFileInfo check_file(fix_manifest_file_name);
 
+      astate->tlog("Loading fixture from path {}, manifest path = {}",
+                   fix_dir.toStdString(), fix_manifest_file_name.toStdString());
+
       if (check_file.exists() && check_file.isFile()) {
 
           fixture_info_t new_fixture;
           new_fixture.load_from_file(fix_manifest_file_name.toStdString());
 
           if (new_fixture.m_initialized) {
+
               size_t fixture_hash = astate->hash_reg->calc_hash(new_fixture.m_fixture_name);
+              astate->tlog("Fixture \"{}\" loaded!", new_fixture.m_fixture_name);
               m_fixtures_info.insert({fixture_hash, std::move(new_fixture)});
+
+            } else {
+              astate->tlog("Cannot load fixture!");
             }
 
         }

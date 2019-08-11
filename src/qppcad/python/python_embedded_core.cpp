@@ -1,6 +1,7 @@
 #pragma push_macro("slots")
 #undef slots
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 
@@ -36,14 +37,28 @@ PYBIND11_EMBEDDED_MODULE(core, m) {
   py::class_<hotkey_manager_t, std::shared_ptr<hotkey_manager_t> >
       py_hotkey_manager_t(hk_module, "hotkey_manager_t");
 
-  py_hotkey_manager_t.def("reg_hotkey", &hotkey_manager_t::reg_hotkey)
-                     .def("unreg_hotkey", &hotkey_manager_t::unreg_hotkey_by_index)
-                     .def("unreg_hotkey", &hotkey_manager_t::unreg_hotkey_by_key_sequence)
+  py_hotkey_manager_t.def("reg_hk", &hotkey_manager_t::reg_hotkey)
+                     .def("unreg_hk", &hotkey_manager_t::unreg_hotkey_by_index)
+                     .def("unreg_hk", &hotkey_manager_t::unreg_hotkey_by_key_sequence)
                      .def("__len__", [](hotkey_manager_t &hkm) {return hkm.m_hotkeys.size();})
                      .def("__getitem__", [](hotkey_manager_t &hkm, size_t i) {
                        if (i >= hkm.m_hotkeys.size()) throw py::index_error();
                        return hkm.m_hotkeys[i];
                      }, py::return_value_policy::reference_internal, py::keep_alive<0,2>());
 
+  /* bhv helpers */
+  auto bhv_module = m.def_submodule("bhv", "ws_item bhv manager");
+
+  /* fixture info */
+  py::class_<fixture_info_t> py_fixture_info_t(bhv_module, "fixture_info_t");
+  py_fixture_info_t.def_readwrite("fixture_name", &fixture_info_t::m_fixture_name)
+                   .def_readwrite("fixture_path", &fixture_info_t::m_fixure_path)
+                   .def_readwrite("tool_group", &fixture_info_t::m_tool_group);
+
+  /* bhv manager */
+  bhv_module.def("mgr", [](){return app_state_t::get_inst()->ws_mgr->m_bhv_mgr;});
+  py::class_<ws_item_behaviour_manager_t, std::shared_ptr<ws_item_behaviour_manager_t> >
+      py_ws_item_bhv_mgr_t(bhv_module, "ws_item_behaviour_manager_t");
+  py_ws_item_bhv_mgr_t.def_readonly("fxt_nfo", &ws_item_behaviour_manager_t::m_fixtures_info);
 
 }

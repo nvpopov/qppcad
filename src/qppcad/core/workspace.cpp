@@ -777,7 +777,8 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 
 void workspace_manager_t::init_ws_item_bhv_mgr() {
 
-  m_bhv_mgr = std::make_unique<ws_item_behaviour_manager_t>();
+  m_bhv_mgr = std::make_shared<ws_item_behaviour_manager_t>();
+
   registration_helper_t::reg_ws_item_fbr(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_io_bhv(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());

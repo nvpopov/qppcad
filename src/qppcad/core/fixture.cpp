@@ -31,6 +31,8 @@ void fixture_info_t::load_from_file(const std::string &file_name) {
         auto fixture_tool_grp = data.find("tool_group");
         m_tool_group = fixture_tool_grp != data.end() ? fixture_tool_grp.value() : "Generic";
 
+        m_initialized = true;
+
       }
 
     if (!fixture_type_is_set) return;
