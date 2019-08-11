@@ -111,6 +111,8 @@ qbinded_combobox_t::qbinded_combobox_t(QWidget *parent) : QComboBox (parent) {
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());
 
+  //lineEdit()->setAlignment(Qt::AlignCenter);
+
   connect(this,
           static_cast<void(qbinded_combobox_t::*)(int)>(&qbinded_combobox_t::currentIndexChanged),
           this,
@@ -314,21 +316,12 @@ void qbinded_float3_input_t::spinbox_value_changed(double newval) {
 
 void qbinded_color3_input_t::load_value_ex() {
 
-  app_state_t *astate = app_state_t::get_inst();
-
   QColor back_color = Qt::black;
 
   if (m_binded_value) {
       m_stored_color.setRgbF((*m_binded_value)[0],(*m_binded_value)[1], (*m_binded_value)[2]);
       back_color = m_stored_color;
     }
-
-  //  QPalette pal;
-  //  pal.setColor(QPalette::Background, back_color);
-  //  pal.setColor(QPalette::Foreground, Qt::white);
-  //  setPalette(pal);
-
-  //  setAutoFillBackground(true);
 
 }
 
@@ -448,32 +441,29 @@ void qbinded_ws_item_combobox_t::bind_value(std::shared_ptr<ws_item_t> *_binded_
 
 void qbinded_ws_item_combobox_t::load_value() {
 
-  app_state_t* astate = app_state_t::get_inst();
-
   rebuild_variants();
 
   if (!m_binded_ws_item_p->get()) {
-      //      astate->log("!m_binded_ws_item_p->get()");
       setCurrentIndex(0);
       return;
     }
 
   if (!m_binded_ws) {
-      //      astate->log("!m_binded_ws");
       setCurrentIndex(0);
       return;
     }
 
   for (size_t i = 0; i < count(); i++) {
+
       QString name_in_checkbox = itemText(i);
       std::string name_in_cb = name_in_checkbox.toStdString();
+
       if (m_binded_ws_item_p->get()->m_name == name_in_cb
           && m_binded_ws_item_p->get()->get_type() == m_type_id) {
-          //          astate->log(
-          //                fmt::format("qbinded_ws_item_combobox_t::load_value({}, {})", i, name_in_cb));
           setCurrentIndex(i); // 0 == None
           return;
         }
+
     }
 
 }
@@ -568,6 +558,7 @@ void qbinded_xgeom_color3_input_t::load_value() {
       pal.setColor(QPalette::Foreground, Qt::white);
       setAutoFillBackground(true);
       setPalette(pal);
+
     }
 
 }
@@ -599,9 +590,10 @@ void qbinded_xgeom_color3_input_t::mousePressEvent(QMouseEvent *event) {
 
 }
 
-void qbinded_xgeom_float_spinbox_t::bind_value(xgeometry<float, periodic_cell<float> > *_binded_xgeom,
-                                               int _binding_index,
-                                               size_t _binded_atom_id) {
+void qbinded_xgeom_float_spinbox_t::bind_value(
+    xgeometry<float, periodic_cell<float> > *_binded_xgeom,
+    int _binding_index,
+    size_t _binded_atom_id) {
 
   m_binded_xgeom = _binded_xgeom;
   m_binding_index = _binding_index;
@@ -614,9 +606,11 @@ void qbinded_xgeom_float_spinbox_t::bind_value(xgeometry<float, periodic_cell<fl
 void qbinded_xgeom_float_spinbox_t::load_value() {
 
   if (m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+
       blockSignals(true);
       setValue(m_binded_xgeom->xfield<float>(m_binding_index, m_binded_atom_id));
       blockSignals(false);
+
     }
 
 }
