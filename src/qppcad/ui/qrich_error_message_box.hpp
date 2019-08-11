@@ -1,7 +1,7 @@
 #ifndef QPPCAD_QRICH_ERROR_MESSAGE_BOX
 #define QPPCAD_QRICH_ERROR_MESSAGE_BOX
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QWidget>
 #include <QMessageBox>
 #include <QDialogButtonBox>

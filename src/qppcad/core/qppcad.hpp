@@ -17,7 +17,7 @@
 #include <array>
 #include <unordered_set>
 #include <io/strfun.hpp>
-#include <qppcad/gitversion.h>
+#include <qppcad/core/gitversion.h>
 
 namespace qpp {
 

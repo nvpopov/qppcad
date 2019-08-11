@@ -1,12 +1,12 @@
-#include <qppcad/workspace.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/workspace.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <data/ptable.hpp>
 #include <mathf/math.hpp>
-#include <qppcad/register_all_things.hpp>
+#include <qppcad/core/register_all_things.hpp>
 #include <qppcad/ws_item/sflow_register.hpp>
 #include <io/parsing_exceptions.hpp>
 #include <qppcad/ui/qrich_error_message_box.hpp>
-#include <qppcad/json_helpers.hpp>
+#include <qppcad/core/json_helpers.hpp>
 
 #include <QDir>
 

@@ -1,12 +1,12 @@
 #ifndef QPPCAD_WS_ITEM_BHV_MGR
 #define QPPCAD_WS_ITEM_BHV_MGR
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/sflow_behaviour_manager.hpp>
-#include <qppcad/fixture.hpp>
+#include <qppcad/core/fixture.hpp>
 
 namespace qpp {
 

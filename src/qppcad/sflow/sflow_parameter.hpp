@@ -1,9 +1,9 @@
 #ifndef QPPCAD_SFLOW_PARAMETER
 #define QPPCAD_SFLOW_PARAMETER
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <geom/xgeom.hpp>
-#include <qppcad/qpp_object.hpp>
+#include <qppcad/core/qpp_object.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 
 namespace qpp {

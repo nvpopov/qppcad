@@ -1,6 +1,6 @@
 #ifndef QPP_CAD_TOOL_NN_DIST_MSR
 #define QPP_CAD_TOOL_NN_DIST_MSR
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {

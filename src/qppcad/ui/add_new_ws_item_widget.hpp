@@ -1,7 +1,7 @@
 #ifndef QPPCAD_ADD_NEW_WS_ITEM_WIDGET
 #define QPPCAD_ADD_NEW_WS_ITEM_WIDGET
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QWidget>
 #include <QDialog>
 #include <QSpinBox>

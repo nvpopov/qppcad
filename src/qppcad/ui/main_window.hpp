@@ -1,7 +1,7 @@
 #ifndef QPPCAD_MAIN_WINDOW_H
 #define QPPCAD_MAIN_WINDOW_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ui/ws_viewer_widget.hpp>
 #include <qppcad/ui/object_inspector_widget.hpp>
 #include <qppcad/python/python_console_widget.hpp>

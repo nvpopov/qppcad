@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SFLOW_CALC_META
 #define QPPCAD_SFLOW_CALC_META
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #ifdef EXTENDED_SFLOW
 #include <qppcad/sflow/sflow_parameter_ws_item.hpp>
 #endif

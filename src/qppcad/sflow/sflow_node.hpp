@@ -1,9 +1,9 @@
 #ifndef QPPCAD_SFLOW_NODE
 #define QPPCAD_SFLOW_NODE
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
-#include <qppcad/qpp_object.hpp>
+#include <qppcad/core/qpp_object.hpp>
 #include <qppcad/sflow/sflow_calc_meta.hpp>
 #ifdef EXTENDED_SFLOW
 #include <qppcad/sflow/sflow_parameter_ws_item.hpp>

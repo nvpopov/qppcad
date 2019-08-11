@@ -2,7 +2,7 @@
 #define QPPCAD_WS_ITEM_TRAMPOLINE
 
 #include <qppcad/ws_item/ws_item.hpp>
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 
 namespace qpp {
 

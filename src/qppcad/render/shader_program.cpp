@@ -1,5 +1,5 @@
 #include <qppcad/render/shader_program.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 //#include <qppcad/app.hpp>
 
 qpp::cad::shader_program_t::shader_program_t(const std::string &_program_name,

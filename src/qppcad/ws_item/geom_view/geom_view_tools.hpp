@@ -1,7 +1,7 @@
 #ifndef QPPCAD_GEOM_VIEW_TOOLS
 #define QPPCAD_GEOM_VIEW_TOOLS
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 namespace qpp {

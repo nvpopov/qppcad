@@ -1,7 +1,7 @@
 #ifndef QPPCAD_JSON_HELPERS
 #define QPPCAD_JSON_HELPERS
 
-#include <qppcad/json_adapter.hpp>
+#include <qppcad/core/json_adapter.hpp>
 #include <symm/index.hpp>
 
 namespace qpp {

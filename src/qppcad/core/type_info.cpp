@@ -1,5 +1,5 @@
-#include <qppcad/type_info.hpp>
-#include <qppcad/string_hash_register.hpp>
+#include <qppcad/core/type_info.hpp>
+#include <qppcad/core/string_hash_register.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

@@ -3,8 +3,8 @@
 #include <QStyleFactory>
 #include <QFontDatabase>
 #include <qppcad/ui/main_window.hpp>
-#include <qppcad/app_state.hpp>
-#include <qppcad/hotkey_manager.hpp>
+#include <qppcad/core/app_state.hpp>
+#include <qppcad/core/hotkey_manager.hpp>
 #include <QMainWindow>
 #include <QTextStream>
 #include <QCommandLineParser>

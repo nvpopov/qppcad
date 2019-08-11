@@ -1,6 +1,6 @@
 #ifndef QPP_CAD_PY_NOTE_BOOK
 #define QPP_CAD_PY_NOTE_BOOK
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
   namespace qpp {
   

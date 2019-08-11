@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_VOLUME_DATA
 #define QPPCAD_WS_VOLUME_DATA
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <io/cube.hpp>
 #include <qppcad/render/mesh.hpp>

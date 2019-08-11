@@ -1,5 +1,5 @@
-#include <qppcad/fixture.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/fixture.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

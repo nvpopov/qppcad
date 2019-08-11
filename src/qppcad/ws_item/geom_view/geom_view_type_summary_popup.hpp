@@ -1,7 +1,7 @@
 #ifndef QPPCAD_GEOM_VIEW_TYPE_SUMMARY_POPUP
 #define QPPCAD_GEOM_VIEW_TYPE_SUMMARY_POPUP
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QPushButton>

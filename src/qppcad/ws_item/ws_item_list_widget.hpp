@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_ITEM_LIST_WIDGET
 #define QPPCAD_WS_ITEM_LIST_WIDGET
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 
 #include <QWidget>

@@ -1,6 +1,6 @@
 #ifndef QPPCAD_JSON_ADAPTER
 #define QPPCAD_JSON_ADAPTER
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <fifo_map.hpp>
 #include <nlohmann/json.hpp>
 

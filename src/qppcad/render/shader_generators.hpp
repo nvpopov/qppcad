@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SHADER_GENERATORS
 #define QPPCAD_SHADER_GENERATORS
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/render/shader_program.hpp>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>

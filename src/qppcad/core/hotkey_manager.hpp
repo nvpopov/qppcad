@@ -1,7 +1,7 @@
 #ifndef QPPCAD_HOTKEY_MANAGER
 #define QPPCAD_HOTKEY_MANAGER
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QShortcut>
 #include <QMainWindow>
 #include <QSettings>

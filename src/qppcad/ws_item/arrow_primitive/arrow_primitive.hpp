@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_ARROW_PRIMITIVE
 #define QPPCAD_WS_ARROW_PRIMITIVE
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 
 namespace qpp {

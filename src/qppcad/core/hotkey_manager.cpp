@@ -1,5 +1,5 @@
-#include <qppcad/hotkey_manager.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/hotkey_manager.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

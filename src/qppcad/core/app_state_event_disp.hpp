@@ -1,7 +1,7 @@
 #ifndef QPPCAD_ASTATE_EVENT_DISP
 #define QPPCAD_ASTATE_EVENT_DISP
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QObject>
 #include <QMetaObject>
 

@@ -81,8 +81,8 @@ endif()
 
 string(TIMESTAMP _time_stamp)
 
-configure_file(${CMAKE_SOURCE_DIR}/src/qppcad/gitversion_ex.h.in
-               ${CMAKE_SOURCE_DIR}/src/qppcad/gitversion_ex.h @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/src/qppcad/core/gitversion_ex.h.in
+               ${CMAKE_SOURCE_DIR}/src/qppcad/core/gitversion_ex.h @ONLY)
 
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
@@ -124,9 +124,9 @@ add_executable(
     src/qppcad/sflow/sflow_base_nodes_vec3.cpp
     src/qppcad/sflow/sflow_base_nodes_xgeom.cpp
     src/qppcad/sflow/sflow_parameter.cpp
-    src/qppcad/type_info.cpp
-    src/qppcad/string_hash_register.cpp
-    src/qppcad/qpp_object.cpp
+    src/qppcad/core/type_info.cpp
+    src/qppcad/core/string_hash_register.cpp
+    src/qppcad/core/qpp_object.cpp
     )
 
 target_link_libraries(sflow-tests qpp )
@@ -136,21 +136,21 @@ qt5_use_modules(sflow-tests Core Gui Widgets)
 add_executable(
     qppcad
 
-    src/qppcad/main.cpp
-    src/qppcad/gitversion.cpp
+    src/qppcad/core/main.cpp
+    src/qppcad/core/gitversion.cpp
 
-    src/qppcad/app_state.cpp
-    src/qppcad/app_state_event_disp.cpp
+    src/qppcad/core/app_state.cpp
+    src/qppcad/core/app_state_event_disp.cpp
 
-    src/qppcad/workspace.cpp
-    src/qppcad/string_hash_register.cpp
-    src/qppcad/type_info.cpp
-    src/qppcad/qpp_object.cpp
-    src/qppcad/register_all_things.cpp
-    src/qppcad/gizmo.cpp
-    src/qppcad/hotkey_manager.cpp
-    src/qppcad/embedded_cluster_tools.cpp
-    src/qppcad/fixture.cpp
+    src/qppcad/core/workspace.cpp
+    src/qppcad/core/string_hash_register.cpp
+    src/qppcad/core/type_info.cpp
+    src/qppcad/core/qpp_object.cpp
+    src/qppcad/core/register_all_things.cpp
+    src/qppcad/core/gizmo.cpp
+    src/qppcad/core/hotkey_manager.cpp
+    src/qppcad/core/embedded_cluster_tools.cpp
+    src/qppcad/core/fixture.cpp
 
     src/qppcad/sflow/sflow.cpp
     src/qppcad/sflow/sflow_node.cpp

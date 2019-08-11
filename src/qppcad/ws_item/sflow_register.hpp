@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SFLOW_REGISTER_NODES_INFO
 #define QPPCAD_SFLOW_REGISTER_NODES_INFO
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/sflow/sflow_node.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 

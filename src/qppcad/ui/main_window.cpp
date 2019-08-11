@@ -1,5 +1,5 @@
 #include <qppcad/ui/main_window.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/app_settings_widget.hpp>
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>

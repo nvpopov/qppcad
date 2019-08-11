@@ -1,7 +1,7 @@
 #ifndef QPPCAD_THREAD_POOL
 #define QPPCAD_THREAD_POOL
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <queue>
 #include <memory>
 #include <thread>

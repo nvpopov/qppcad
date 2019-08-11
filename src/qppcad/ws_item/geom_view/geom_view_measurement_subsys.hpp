@@ -2,11 +2,11 @@
 #define QPPCAD_WS_ATOMS_LIST_MEASURE_S
 
 #include <geom/geom.hpp>
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QPainter>
 #include <vector>
 #include <algorithm>
-#include <qppcad/serializable.hpp>
+#include <qppcad/core/serializable.hpp>
 
 namespace qpp {
 

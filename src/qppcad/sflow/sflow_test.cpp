@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <qppcad/sflow/sflow.hpp>
 #include <qppcad/sflow/sflow_base_nodes_int.hpp>
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <catch.hpp>
 
 using namespace qpp;

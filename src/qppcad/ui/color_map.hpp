@@ -2,7 +2,7 @@
 #define QPPCAD_COLOR_MAP_H
 
 #include <data/color.hpp>
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <vector>
 #include <initializer_list>
 

@@ -1,5 +1,5 @@
 #include <qppcad/ui/log_widget.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <QScrollBar>
 
 using namespace qpp;

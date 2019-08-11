@@ -1,7 +1,7 @@
 #ifndef QPPCAD_PYTHON_CONSOLE_WIDGET_H
 #define QPPCAD_PYTHON_CONSOLE_WIDGET_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QWidget>
 #include <QFrame>
 #include <QTextEdit>

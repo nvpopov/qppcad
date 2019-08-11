@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_VIEWER_WIDGET_H
 #define QPPCAD_WS_VIEWER_WIDGET_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QOpenGLWidget>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>

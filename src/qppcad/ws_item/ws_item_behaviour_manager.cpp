@@ -1,5 +1,5 @@
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>

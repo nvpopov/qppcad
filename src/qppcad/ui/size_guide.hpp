@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SIZE_GUIDE
 #define QPPCAD_SIZE_GUIDE
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QScreen>
 
 namespace qpp {

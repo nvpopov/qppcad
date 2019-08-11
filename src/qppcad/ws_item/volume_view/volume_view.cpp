@@ -1,6 +1,6 @@
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/render/volume_tools.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

@@ -2,7 +2,7 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <io/molcas.hpp>
 #include <io/vasp_chgcar.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

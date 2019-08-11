@@ -1,7 +1,7 @@
 #ifndef QPPCAD_FIXTURE
 #define QPPCAD_FIXTURE
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 
 namespace qpp {
 

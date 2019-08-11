@@ -8,7 +8,7 @@
 #pragma pop_macro("slots")
 namespace py = pybind11;
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <geom/xgeom.hpp>
 #include <geom/geom_anim.hpp>
 #include <geom/extents_observer.hpp>

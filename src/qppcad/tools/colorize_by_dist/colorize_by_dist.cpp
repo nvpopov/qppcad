@@ -1,6 +1,6 @@
 #include <qppcad/tools/colorize_by_dist/colorize_by_dist.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools_colorize.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;

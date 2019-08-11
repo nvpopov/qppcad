@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SHADER_PROGRAM_H
 #define QPPCAD_SHADER_PROGRAM_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>
 

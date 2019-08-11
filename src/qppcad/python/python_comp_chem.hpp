@@ -10,9 +10,9 @@
 
 namespace py = pybind11;
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <geom/lace3d.hpp>
-#include <qppcad/workspace.hpp>
+#include <qppcad/core/workspace.hpp>
 
 namespace qpp {
 

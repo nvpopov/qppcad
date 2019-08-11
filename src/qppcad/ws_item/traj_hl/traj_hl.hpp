@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_TRAJ_HIGHLIGHT
 #define QPPCAD_WS_TRAJ_HIGHLIGHT
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/render/mesh.hpp>
 

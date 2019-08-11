@@ -1,7 +1,7 @@
 #ifndef QPPCAD_REAL_SPINBOX_DELEGATE
 #define QPPCAD_REAL_SPINBOX_DELEGATE
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QStyledItemDelegate>
 #include <QDoubleSpinBox>
 

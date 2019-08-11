@@ -1,5 +1,5 @@
-#include <qppcad/gitversion.h>
-#include <qppcad/gitversion_ex.h>
+#include <qppcad/core/gitversion.h>
+#include <qppcad/core/gitversion_ex.h>
 
 using namespace qpp;
 using namespace qpp::cad;

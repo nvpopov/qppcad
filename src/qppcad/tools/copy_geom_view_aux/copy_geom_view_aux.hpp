@@ -1,7 +1,7 @@
 #ifndef QPPCAD_TOOL_COPY_GEOM_VIEW_AUX
 #define QPPCAD_TOOL_COPY_GEOM_VIEW_AUX
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/ws_item_list_widget.hpp>
 

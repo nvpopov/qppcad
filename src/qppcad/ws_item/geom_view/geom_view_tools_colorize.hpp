@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_ATOMS_LIST_COLORIZER
 #define QPPCAD_WS_ATOMS_LIST_COLORIZER
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 
 namespace qpp {
 

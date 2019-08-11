@@ -1,7 +1,7 @@
 #ifndef QPPCAD_QPOPUP
 #define QPPCAD_QPOPUP
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 
 namespace qpp {
 

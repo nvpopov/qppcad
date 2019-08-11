@@ -1,7 +1,7 @@
 #ifndef QPPCAD_QEMBED_WINDOW
 #define QPPCAD_QEMBED_WINDOW
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QFrame>
 #include <QLabel>
 #include <QVBoxLayout>

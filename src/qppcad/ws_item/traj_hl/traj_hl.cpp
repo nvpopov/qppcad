@@ -1,7 +1,7 @@
 #include <qppcad/ws_item/traj_hl/traj_hl.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

@@ -2,9 +2,9 @@
 #define QPPCAD_CAMERA_H
 
 #include <geom/lace3d.hpp>
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/render/gl_math.hpp>
-#include <qppcad/serializable.hpp>
+#include <qppcad/core/serializable.hpp>
 
 namespace qpp {
 

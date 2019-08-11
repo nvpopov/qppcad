@@ -1,6 +1,6 @@
 #include <qppcad/ws_item/cube_primitive/cube_primitive_obj_insp_widget.hpp>
 #include <qppcad/ws_item/cube_primitive/cube_primitive.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

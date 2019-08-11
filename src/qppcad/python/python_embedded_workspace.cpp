@@ -8,7 +8,7 @@
 #include <geom/lace3d.hpp>
 
 #include <qppcad/ws_item/ws_item_trampoline.hpp>
-#include <qppcad/workspace.hpp>
+#include <qppcad/core/workspace.hpp>
 
 #include <qppcad/ws_item/geom_view/python_geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/python_ccd_view.hpp>
@@ -17,7 +17,7 @@
 #include <qppcad/ws_item/node_book/python_node_book.hpp>
 #include <qppcad/ws_item/volume_view/python_volume_view.hpp>
 
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

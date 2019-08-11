@@ -1,18 +1,18 @@
 #ifndef QPPCAD_APP_STATE_H
 #define QPPCAD_APP_STATE_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/render/shader_generators.hpp>
 #include <qppcad/render/mesh_generators.hpp>
 #include <qppcad/render/camera.hpp>
 #include <qppcad/render/glapi.hpp>
 #include <qppcad/render/draw_pipeline.hpp>
-#include <qppcad/workspace.hpp>
-#include <qppcad/app_state_event_disp.hpp>
+#include <qppcad/core/workspace.hpp>
+#include <qppcad/core/app_state_event_disp.hpp>
 #include <qppcad/python/python_manager.hpp>
-#include <qppcad/string_hash_register.hpp>
+#include <qppcad/core/string_hash_register.hpp>
 #include <qppcad/ui/size_guide.hpp>
-#include <qppcad/fixture.hpp>
+#include <qppcad/core/fixture.hpp>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QString>

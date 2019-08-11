@@ -7,7 +7,7 @@
 #pragma pop_macro("slots")
 namespace py = pybind11;
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <io/pdos.hpp>
 #include <io/ccd_programs.hpp>

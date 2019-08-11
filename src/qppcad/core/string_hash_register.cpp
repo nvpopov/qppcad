@@ -1,4 +1,4 @@
-#include <qppcad/string_hash_register.hpp>
+#include <qppcad/core/string_hash_register.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

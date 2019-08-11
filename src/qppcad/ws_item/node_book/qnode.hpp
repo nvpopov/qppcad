@@ -1,7 +1,7 @@
 #ifndef QPPCAD_NODE_BOOK_QNODE
 #define QPPCAD_NODE_BOOK_QNODE
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QGraphicsItem>
 #include <QObject>
 #include <QPainter>

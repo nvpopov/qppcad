@@ -1,6 +1,6 @@
 #ifndef QPPCAD_WS_POINT_SYM_GROUP
 #define QPPCAD_WS_POINT_SYM_GROUP
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <geom/xgeom.hpp>
 #include <symm/point_groups.hpp>

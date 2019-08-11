@@ -1,5 +1,5 @@
 #include <qppcad/tools/copy_geom_view_aux/copy_geom_view_aux.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 using namespace qpp;

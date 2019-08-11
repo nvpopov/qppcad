@@ -5,7 +5,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
 #include <QColorDialog>

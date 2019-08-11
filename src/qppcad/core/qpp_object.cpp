@@ -1,4 +1,4 @@
-#include <qppcad/qpp_object.hpp>
+#include <qppcad/core/qpp_object.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

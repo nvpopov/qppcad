@@ -6,7 +6,7 @@
 #pragma pop_macro("slots")
 
 //#include <qppcad/python_simple_query.hpp>
-#include <qppcad/embedded_cluster_tools.hpp>
+#include <qppcad/core/embedded_cluster_tools.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

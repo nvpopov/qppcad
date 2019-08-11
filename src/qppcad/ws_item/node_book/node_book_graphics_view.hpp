@@ -1,7 +1,7 @@
 #ifndef QPPCAD_NODE_BOOK_GRAPHICS_VIEW
 #define QPPCAD_NODE_BOOK_GRAPHICS_VIEW
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QGraphicsView>
 #include <QPoint>
 #include <QEvent>

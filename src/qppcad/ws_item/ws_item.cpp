@@ -1,8 +1,8 @@
 #include <qppcad/ws_item/ws_item.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <data/color.hpp>
-#include <qppcad/workspace.hpp>
-#include <qppcad/json_helpers.hpp>
+#include <qppcad/core/workspace.hpp>
+#include <qppcad/core/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

@@ -7,7 +7,7 @@
 #include <pybind11/embed.h>
 #pragma pop_macro("slots")
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 
 #include <QStringList>
 #include <QString>

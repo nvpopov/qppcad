@@ -1,7 +1,7 @@
 #ifndef QPPCAD_TOOL_COLORIZE_BY_XFIELD
 #define QPPCAD_TOOL_COLORIZE_BY_XFIELD
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ui/qbinded_inputs.hpp>

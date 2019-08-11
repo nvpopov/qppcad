@@ -4,7 +4,7 @@
 #include <qppcad/ws_item/node_book/qnode_socket_colorize.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/sflow/sflow_parameter_ws_item.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qbinded_inputs.hpp>
 #include <QGraphicsScene>
 #include <QApplication>

@@ -1,6 +1,6 @@
 #ifndef QPPCAD_DRAW_PIPELINE
 #define QPPCAD_DRAW_PIPELINE
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/render/mesh.hpp>
 #include <qppcad/render/shader_program.hpp>
 #include <string>

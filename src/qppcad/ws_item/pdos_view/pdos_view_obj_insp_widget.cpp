@@ -1,6 +1,6 @@
 #include <qppcad/ws_item/pdos_view/pdos_view_obj_insp_widget.hpp>
 #include <io/cp2k_pdos.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <QFileDialog>
 
 using namespace qpp;

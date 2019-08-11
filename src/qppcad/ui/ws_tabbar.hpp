@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_TABBAR
 #define QPPCAD_WS_TABBAR
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QTabBar>
 
 namespace qpp {

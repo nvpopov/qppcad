@@ -1,7 +1,7 @@
 #ifndef QPPCAD_QBINDED_INPUTS
 #define QPPCAD_QBINDED_INPUTS
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QWidget>
 #include <QCheckBox>
 #include <QSpinBox>

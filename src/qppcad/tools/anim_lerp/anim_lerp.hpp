@@ -1,7 +1,7 @@
 #ifndef QPPCAD_TOOL_ANIM_LERP
 #define QPPCAD_TOOL_ANIM_LERP
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <QWidget>
 #include <QDialog>

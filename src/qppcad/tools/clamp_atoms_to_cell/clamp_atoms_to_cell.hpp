@@ -1,7 +1,7 @@
 #ifndef QPPCAD_TOOL_CLAMP_ATOMS_TO_CELL
 #define QPPCAD_TOOL_CLAMP_ATOMS_TO_CELL
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {

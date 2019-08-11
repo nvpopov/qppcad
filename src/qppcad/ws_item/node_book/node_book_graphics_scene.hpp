@@ -1,7 +1,7 @@
 #ifndef QPPCAD_NODE_BOOK_GRAPHICS_SCENE
 #define QPPCAD_NODE_BOOK_GRAPHICS_SCENE
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/node_book/qnode.hpp>
 
 #include <QRectF>

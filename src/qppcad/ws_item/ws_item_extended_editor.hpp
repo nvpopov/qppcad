@@ -1,7 +1,7 @@
 #ifndef QPPCAD_WS_ITEM_EXTENDED_EDITOR
 #define QPPCAD_WS_ITEM_EXTENDED_EDITOR
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/ui/qbinded_inputs.hpp>
 #include <qppcad/ui/qspoiler_widget.hpp>

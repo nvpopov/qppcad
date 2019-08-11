@@ -1,5 +1,5 @@
 #include <qppcad/ui/object_inspector_widget.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ui/add_new_ws_item_widget.hpp>

@@ -1,7 +1,7 @@
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;

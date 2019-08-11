@@ -1,7 +1,7 @@
 #ifndef QPPCAD_OBJECT_INSPECTOR_H
 #define QPPCAD_OBJECT_INSPECTOR_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QGroupBox>
 #include <QListWidget>
 #include <QVBoxLayout>

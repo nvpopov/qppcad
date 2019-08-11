@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SFLOW_BEHAVIOUR_MANAGER
 #define QPPCAD_SFLOW_BEHAVIOUR_MANAGER
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/sflow/sflow_node.hpp>
 
 namespace qpp {

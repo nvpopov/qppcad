@@ -2,7 +2,7 @@
 #define QPPCAD_FRAMEBUFFER_OPENGL
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 
 
 namespace qpp {

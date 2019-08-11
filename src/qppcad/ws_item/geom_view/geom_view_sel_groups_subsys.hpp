@@ -1,7 +1,7 @@
 #ifndef QPPCAD_GEOM_VIEW_SEL_GROUPS_SUBSYS
 #define QPPCAD_GEOM_VIEW_SEL_GROUPS_SUBSYS
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <symm/index_set.hpp>
 
 namespace qpp {

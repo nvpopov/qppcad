@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SINGLE_FLOW
 #define QPPCAD_SINGLE_FLOW
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/sflow/sflow_node.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
 #include <qppcad/sflow/sflow_status.hpp>

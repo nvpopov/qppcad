@@ -1,7 +1,7 @@
 #ifndef QPPCAD_PGF_PRODUCER
 #define QPPCAD_PGF_PRODUCER
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 #include <geom/xgeom.hpp>
 #include <symm/gen_cell.hpp>

@@ -1,6 +1,6 @@
 #ifndef QPPCAD_ARROW_ARRAY
 #define QPPCAD_ARROW_ARRAY
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <data/color.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 

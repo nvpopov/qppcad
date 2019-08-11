@@ -1,12 +1,12 @@
 #ifndef QPPCAD_WORKSPACE_ITEM_H
 #define QPPCAD_WORKSPACE_ITEM_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <geom/lace3d.hpp>
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
-#include <qppcad/serializable.hpp>
-#include <qppcad/qpp_object.hpp>
+#include <qppcad/core/serializable.hpp>
+#include <qppcad/core/qpp_object.hpp>
 
 #include <QPainter>
 

@@ -1,5 +1,5 @@
 #include <qppcad/ws_item/geom_view/qtype_specific_rendering_model.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

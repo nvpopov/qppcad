@@ -1,4 +1,4 @@
-#include <qppcad/register_all_things.hpp>
+#include <qppcad/core/register_all_things.hpp>
 
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_obj_insp_widget.hpp>

@@ -2,7 +2,7 @@
 #include <qppcad/ws_item/geom_view/displ_proj.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools_colorize.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

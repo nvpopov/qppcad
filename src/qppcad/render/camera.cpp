@@ -1,6 +1,6 @@
 #include <qppcad/render/camera.hpp>
-#include <qppcad/app_state.hpp>
-#include <qppcad/json_helpers.hpp>
+#include <qppcad/core/app_state.hpp>
+#include <qppcad/core/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

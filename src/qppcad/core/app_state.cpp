@@ -1,10 +1,10 @@
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <QSettings>
 #include <QFileInfo>
 #include <QDir>
 #include <data/ptable.hpp>
 #include <thread>
-#include <qppcad/hotkey_manager.hpp>
+#include <qppcad/core/hotkey_manager.hpp>
 
 namespace qpp {
 
@@ -384,7 +384,7 @@ namespace qpp {
       tlog("M_LAST_DIR= {}", m_last_dir.toStdString());
 
       if (m_recent_files.size() >= max_recent_files)
-        m_recent_files.erase(m_recent_files.begin() ,
+        m_recent_files.erase(m_recent_files.begin(),
                              m_recent_files.begin() + 1 +
                              (m_recent_files.size() - max_recent_files));
 

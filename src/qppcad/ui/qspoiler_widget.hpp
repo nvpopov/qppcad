@@ -7,7 +7,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QWidget>
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 
 namespace qpp {
 

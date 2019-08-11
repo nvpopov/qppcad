@@ -1,13 +1,13 @@
 #ifndef QPPCAD_WORKSPACE_H
 #define QPPCAD_WORKSPACE_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <geom/lace3d.hpp>
 #include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
 #include <qppcad/render/camera.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
-#include <qppcad/gizmo.hpp>
+#include <qppcad/core/gizmo.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {

@@ -1,7 +1,7 @@
 #ifndef QPPCAD_SFLOW_PARAMETER_WS_ITEM
 #define QPPCAD_SFLOW_PARAMETER_WS_ITEM
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
 

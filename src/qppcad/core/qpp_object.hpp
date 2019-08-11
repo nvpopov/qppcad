@@ -1,8 +1,8 @@
 #ifndef QPPCAD_OBJECT_H
 #define QPPCAD_OBJECT_H
 
-#include <qppcad/qppcad.hpp>
-#include <qppcad/type_info.hpp>
+#include <qppcad/core/qppcad.hpp>
+#include <qppcad/core/type_info.hpp>
 
 namespace qpp {
 

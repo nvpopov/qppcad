@@ -1,7 +1,7 @@
 #ifndef QPPCAD_PYTHON_OUTPUT_REDIRECTORS_H
 #define QPPCAD_PYTHON_OUTPUT_REDIRECTORS_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #pragma push_macro("slots")
 #undef slots
 #include <pybind11/pybind11.h>

@@ -1,7 +1,7 @@
 #ifndef QPPCAD_QNODE_SOCKET
 #define QPPCAD_QNODE_SOCKET
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QGraphicsPathItem>
 #include <QColor>
 

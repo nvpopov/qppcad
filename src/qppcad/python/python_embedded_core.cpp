@@ -5,7 +5,7 @@
 #pragma pop_macro("slots")
 
 #include <qppcad/python/python_console_output_redirectors.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

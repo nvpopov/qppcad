@@ -1,6 +1,6 @@
 #include <qppcad/tools/structure_similarity/structure_similarity.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 #include <QApplication>
 #include <QClipboard>

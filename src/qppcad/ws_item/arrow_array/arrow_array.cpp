@@ -1,8 +1,8 @@
 #include <qppcad/ws_item/arrow_array/arrow_array.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
-#include <qppcad/app_state.hpp>
-#include <qppcad/json_helpers.hpp>
+#include <qppcad/core/app_state.hpp>
+#include <qppcad/core/json_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;

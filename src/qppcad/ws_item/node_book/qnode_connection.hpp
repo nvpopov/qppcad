@@ -1,7 +1,7 @@
 #ifndef QPPCAD_QNODE_CONNECTION
 #define QPPCAD_QNODE_CONNECTION
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QGraphicsPathItem>
 #include <QColor>
 #include <QMouseEvent>

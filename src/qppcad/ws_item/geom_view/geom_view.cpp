@@ -9,8 +9,8 @@
 #include <qppcad/ws_item/geom_view/geom_view_lattice_planes_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_sel_groups_subsys.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
-#include <qppcad/json_helpers.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/json_helpers.hpp>
+#include <qppcad/core/app_state.hpp>
 
 #include <random>
 #include <clocale>

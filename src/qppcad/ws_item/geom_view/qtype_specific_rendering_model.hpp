@@ -1,7 +1,7 @@
 #ifndef QPPCAD_TYPE_SPEC_RENDERING_MODEL
 #define QPPCAD_TYPE_SPEC_RENDERING_MODEL
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <QAbstractTableModel>
 

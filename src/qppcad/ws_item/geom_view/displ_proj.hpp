@@ -8,7 +8,7 @@
 #include <pybind11/stl.h>
 #pragma pop_macro("slots")
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <data/generic_array.hpp>
 
 namespace py = pybind11;

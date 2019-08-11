@@ -1,7 +1,7 @@
 #ifndef QPPCAD_EMBEDDED_CLUSTER_TOOLS
 #define QPPCAD_EMBEDDED_CLUSTER_TOOLS
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 namespace qpp {
@@ -28,13 +28,15 @@ namespace qpp {
                                           bool do_legacy = true);
 
         static void gen_spherical_cluster_cur(vector3<float> displ,
-                                          float cluster_r = 30,
-                                          float cls_r = 12, bool do_legacy = true);
+                                              float cluster_r = 30,
+                                              float cls_r = 12,
+                                              bool do_legacy = true);
 
         static void gen_spherical_cluster_cur_qm(vector3<float> displ,
-                                          float cluster_r = 30,
-                                          float cls_r = 12,
-                                          float qm_r = 2, bool do_legacy = true);
+                                                 float cluster_r = 30,
+                                                 float cls_r = 12,
+                                                 float qm_r = 2,
+                                                 bool do_legacy = true);
 
         static void set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
                                      std::shared_ptr<geom_view_t> cls,

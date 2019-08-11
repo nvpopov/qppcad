@@ -1,13 +1,13 @@
 #ifndef QPPCAD_WS_ATOMS_LIST_IO_XYZ
 #define QPPCAD_WS_ATOMS_LIST_IO_XYZ
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 #include <io/ccd_firefly.hpp>
 #include <io/ccd_xyz.hpp>
 #include <io/ccd_cp2k.hpp>

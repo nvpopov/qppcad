@@ -1,7 +1,7 @@
 #ifndef QPPCAD_MESH_H
 #define QPPCAD_MESH_H
 
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>
 #include <geom/lace3d.hpp>
