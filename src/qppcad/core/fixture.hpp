@@ -24,7 +24,7 @@ namespace qpp {
         std::string m_tool_group;
         fixture_type_e m_fxt_type{fixture_type_e::ft_none};
         bool m_initialized{false};
-        void load_from_file(const std::string &file_name);
+        void load_from_file(const std::string &file_name, const std::string &dir_name);
 
     };
 
