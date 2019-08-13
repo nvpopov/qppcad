@@ -36,7 +36,7 @@ void ccd_view_t::manual_update_vib() {
 
 }
 
-void ccd_view_t::fill_custom_colors_of_geom_anim(const std::string color_map_name) {
+void ccd_view_t::fill_custom_colors_of_geom_anim(const std::string &color_map_name) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -115,7 +115,12 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
               m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom[c].second;
           succes = true;
         }
-
+      else if (m_copy_charges == ccd_copy_charges_mode::copy_mulliken_spin &&
+               c < m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom.size()) {
+          gv->m_geom->xfield<float>(xgeom_charge, c) =
+              m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom[c];
+          succes = true;
+        }
       if (!succes) gv->m_geom->xfield<float>(xgeom_charge, c) = 0;
 
     }

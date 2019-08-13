@@ -238,9 +238,11 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tgo_step_copy_charges = new qbinded_combobox_t;
   tgo_step_copy_charges->m_updated_externally_event = true;
   tgo_step_copy_charges->m_upd_flag = ws_item_updf_regenerate_content;
-  tgo_step_copy_charges->addItem("Do not copy");
-  tgo_step_copy_charges->addItem("Mulliken charges");
-  tgo_step_copy_charges->addItem("Lowdin charges");
+  tgo_step_copy_charges->addItem("Do not Copy");
+  tgo_step_copy_charges->addItem("Mulliken Charges");
+  tgo_step_copy_charges->addItem("Mulliken Spin Pop.");
+  tgo_step_copy_charges->addItem("Lowdin Charges");
+  tgo_step_copy_charges->addItem("Lowdin Spin Pop.");
 
   tgo_step_info_lt->addRow(tr("Energy[a.u]"), tgo_step_info_etotal);
   tgo_step_info_lt->addRow(tr("Dipole moment"), tgo_step_info_dipole_moment);

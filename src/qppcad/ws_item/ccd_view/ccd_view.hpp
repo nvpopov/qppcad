@@ -17,9 +17,13 @@ namespace qpp {
   namespace cad {
 
     enum ccd_copy_charges_mode : int {
+
       do_not_copy_charges,
       copy_mulliken,
-      copy_lowdin
+      copy_mulliken_spin,
+      copy_lowdin,
+      copy_lowdin_spin
+
     };
 
 
@@ -41,7 +45,7 @@ namespace qpp {
 
         void manual_step_update(const int dir);
         void manual_update_vib();
-        void fill_custom_colors_of_geom_anim(const std::string color_map_name);
+        void fill_custom_colors_of_geom_anim(const std::string &color_map_name);
         void update_connected_items();
         void update_charges(geom_view_t *gv, size_t start_atom, size_t end_atom);
 

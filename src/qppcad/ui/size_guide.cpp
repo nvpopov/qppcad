@@ -80,7 +80,7 @@ int size_guide_t::obj_insp_combo_max_w() {
 }
 
 int size_guide_t::obj_insp_combo_max_w_v2() {
-  return 230;
+  return 180;
 }
 
 int size_guide_t::obj_insp_ctrl_t2_w() {
