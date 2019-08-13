@@ -194,8 +194,10 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_labels_style->addItem("Type");
   disp_labels_style->addItem("Type & Id");
   disp_labels_style->addItem("Charge");
+  disp_labels_style->addItem("Charge, Type");
   disp_labels_style->addItem("Charge, Type & Id");
   disp_labels_style->addItem("Custom");
+
   disp_labels_size = new qbinded_int_spinbox_t;
   disp_labels_size->set_min_max_step(5, 35, 1);
   disp_inplace_labels = new qbinded_checkbox_t;

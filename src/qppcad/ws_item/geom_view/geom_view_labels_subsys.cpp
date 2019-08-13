@@ -256,6 +256,12 @@ std::string geom_view_labels_subsys_t::label_gen_fn(geom_view_t *owner,
         return fmt::format("{:2.2f}", owner->m_geom->xfield<float>(xgeom_charge, atom_id));
       }
 
+    case geom_labels_style_e::show_charge_type : {
+        return fmt::format("{}[{:2.2f}]",
+                           owner->m_geom->atom(atom_id),
+                           owner->m_geom->xfield<float>(xgeom_charge, atom_id));
+      }
+
     case geom_labels_style_e::show_charge_id_type : {
         return fmt::format("{}{}[{:2.2f}]",
                            owner->m_geom->atom(atom_id),
