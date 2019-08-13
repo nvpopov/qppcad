@@ -109,7 +109,7 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
 
             if (c < m_ccd->m_steps[m_cur_step].m_mulliken_pop_per_atom.size()) {
                 gv->m_geom->xfield<float>(xgeom_charge, c) =
-                    m_ccd->m_steps[m_cur_step].m_mulliken_pop_per_atom[c].second;
+                    m_ccd->m_steps[m_cur_step].m_mulliken_net_chg_per_atom[c];
                 succes = true;
               }
             break;
@@ -131,7 +131,18 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
 
             if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
                 gv->m_geom->xfield<float>(xgeom_charge, c) =
-                    m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom[c].second;
+                    m_ccd->m_steps[m_cur_step].m_lowdin_net_chg_per_atom[c];
+                succes = true;
+              }
+            break;
+
+          };
+
+        case ccd_copy_charges_mode::copy_lowdin_spin : {
+
+            if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
+                gv->m_geom->xfield<float>(xgeom_charge, c) =
+                    m_ccd->m_steps[m_cur_step].m_lowdin_spin_pop_per_atom[c];
                 succes = true;
               }
             break;
