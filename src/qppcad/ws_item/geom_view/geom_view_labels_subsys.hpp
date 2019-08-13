@@ -16,6 +16,7 @@ namespace qpp {
       show_type,
       show_id_type,
       show_charge,
+      show_charge_id_type,
       show_custom
     };
 
