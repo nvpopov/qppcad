@@ -129,6 +129,10 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                               if (!retv) throw py::key_error();
                               return retv;
                              }, py::return_value_policy::reference_internal)
+                            .def("get_sel_itm", [](workspace_manager_t &wsm) {
+                              auto [cur_ws, cur_it, ok] = wsm.get_sel_tpl_itm_nc();
+                              return cur_it;
+                             })
                             .def("next_ws", &workspace_manager_t::next_ws)
                             .def("prev_ws", &workspace_manager_t::prev_ws)
                             .def("next_item", &workspace_manager_t::cur_ws_next_item)
