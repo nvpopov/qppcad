@@ -38,6 +38,7 @@ include_directories(data/)
 include_directories(deps/qpp/modules)
 include_directories(deps/qpp/deps/pybind11/include)
 include_directories(deps/qpp/deps/fmtlib/include)
+include_directories(deps/qpp/deps/pugixml/src)
 include_directories(deps/qpp/deps/CppNumericalSolvers/include)
 include_directories(deps/qpp/deps/eigen3)
 include_directories(deps/fifo_map)
@@ -185,6 +186,7 @@ qt5_use_modules(qppcad Core OpenGL Gui Widgets)
 if(WIN32)
    target_link_libraries(qppcad
     qpp
+    pugixml
     Qt5::Widgets
     Qt5::OpenGL
     Qt5::Charts
@@ -195,6 +197,7 @@ if(WIN32)
 else()
     target_link_libraries(qppcad
     qpp
+    pugixml
     Qt5::Widgets
     Qt5::OpenGL
     Qt5::Charts
