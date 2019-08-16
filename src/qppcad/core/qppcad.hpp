@@ -56,7 +56,7 @@ namespace qpp {
     /**
      * @brief max_recent_files
      */
-    const size_t max_recent_files = 10;
+    const size_t max_recent_files = 15;
 
     /* error context flags*/
     const uint32_t error_ctx_def   = 0;
