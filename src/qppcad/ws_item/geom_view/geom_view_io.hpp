@@ -56,9 +56,7 @@ namespace qpp {
 
     };
 
-    template<auto GENERIC_FUNC_GEOM,
-             bool CHECK_DIM = false,
-             int REQUIRED_DIM = -1>
+    template<auto GEN_FUNC_GEOM, bool CHECK_DIM = false, int REQUIRED_DIM = -1>
     class geom_view_io_saver_t : public ws_item_io_inherited_bhv_t<geom_view_t> {
 
       public:
@@ -87,12 +85,12 @@ namespace qpp {
 
         void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                                geom_view_t *_item) override {
-          GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
+          GEN_FUNC_GEOM(stream, *(_item->m_geom.get()));
         }
 
     };
 
-    template<auto GENERIC_FUNC_GEOM,
+    template<auto GEN_FUNC_GEOM,
              geom_view_role_e ROLE = geom_view_role_e::r_generic,
              int FORCED_DIM = -1>
     class geom_view_io_loader_t : public ws_item_io_bt_bhv_t {
@@ -111,9 +109,10 @@ namespace qpp {
               _item->m_geom->cell.DIM = FORCED_DIM;
             }
 
-          GENERIC_FUNC_GEOM(stream, *(_item->m_geom.get()));
+          GEN_FUNC_GEOM(stream, *(_item->m_geom.get()));
 
           _item->m_role = ROLE;
+
         }
 
         void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
@@ -123,8 +122,7 @@ namespace qpp {
 
     };
 
-    template<auto GENERIC_FUNC_GEOM_ANIM,
-             int FORCED_DIM = -1>
+    template<auto GENERIC_FUNC_GEOM_ANIM, int FORCED_DIM = -1>
     class geom_view_io_anim_loader_t : public ws_item_io_bt_bhv_t {
 
       public:
@@ -192,6 +190,7 @@ namespace qpp {
             }
 
           if (COMPILE_FROM_CCD) {
+
               bool succes_comp_geom = compile_geometry(cc_inst, *(_item->m_geom.get()));
               bool succes_comp_static_anim =
                   compile_static_animation(cc_inst, _item->m_anim->m_anim_data);
@@ -202,9 +201,11 @@ namespace qpp {
 
               if (_item->m_anim->get_total_anims() > 1 && succes_anims)
                 astate->tlog("Animations have been added to geom");
+
             }
 
           if (EXTRACT_CCD) {
+
               std::shared_ptr<ccd_view_t> extracted_ccd =
                   std::make_shared<ccd_view_t>();
               extracted_ccd->m_name = _item->m_name+"_ccd";
@@ -213,10 +214,13 @@ namespace qpp {
               extracted_ccd->m_connected_items.push_back(_item->shared_from_this());
               extracted_ccd->m_connected_items_stride.push_back(0);
               _item->m_parent_ws->add_item_to_ws(extracted_ccd);
+
             }
 
           if (AUTO_CENTER) {
+
               vector3<float> center(0.0, 0.0, 0.0);
+
               for (int i = 0; i < _item->m_geom->nat(); i++)
                 center += _item->m_geom->pos(i);
               center *= (1.0f / _item->m_geom->nat());
@@ -230,6 +234,7 @@ namespace qpp {
                 for (auto &anim_frame : anim.frames)
                   for (auto &anim_frame_rec : anim_frame.atom_pos)
                     anim_frame_rec -= center;
+
             }
 
         }
@@ -245,6 +250,7 @@ namespace qpp {
     class geom_view_io_cube_t : public ws_item_io_bt_bhv_t {
 
       public:
+
         bool m_cell_emplace{false};
         bool can_save() override { return false; }
         bool can_load() override { return true; }
@@ -264,6 +270,7 @@ namespace qpp {
     class geom_view_molcas_grid_t : public ws_item_io_bt_bhv_t {
 
       public:
+
         bool m_cell_emplace{false};
         bool can_save() override { return false; }
         bool can_load() override { return true; }

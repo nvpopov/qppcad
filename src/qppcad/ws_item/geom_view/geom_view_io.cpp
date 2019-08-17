@@ -51,7 +51,7 @@ void geom_view_molcas_grid_t::load_from_stream_ex(std::basic_istream<char, TRAIT
           vold->m_volumes[i].m_isolevel = qpp::def_isovalue_dens;
         }
 
-    }
+    } // end for
 
 }
 
@@ -75,6 +75,7 @@ void geom_view_vasp_chgcar_t::load_from_stream_ex(std::basic_istream<char, TRAIT
       vold->m_volumes[i].m_volume = std::move(tmp_volumes[i]);
       vold->m_volumes[i].m_ready_to_render = false;
       vold->m_volumes[i].m_need_to_regenerate = true;
+
       if (vold->m_volumes[i].m_volume.m_has_negative_values) {
           vold->m_volumes[i].m_volume_type = ws_volume_t::volume_mo;
           vold->m_volumes[i].m_isolevel = qpp::def_isovalue_mo;
@@ -83,6 +84,6 @@ void geom_view_vasp_chgcar_t::load_from_stream_ex(std::basic_istream<char, TRAIT
           vold->m_volumes[i].m_isolevel = qpp::def_isovalue_dens;
         }
 
-    }
+    } // end for
 
 }
