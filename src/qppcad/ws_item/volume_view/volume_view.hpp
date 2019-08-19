@@ -47,7 +47,7 @@ namespace qpp {
 
       public:
 
-        std::vector<ws_volume_record_t> m_volumes;
+        std::vector<std::shared_ptr<ws_volume_record_t> > m_volumes;
         int m_current_volume{0};
 
         void gen_repr();

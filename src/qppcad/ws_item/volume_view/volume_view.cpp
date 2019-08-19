@@ -35,42 +35,42 @@ void volume_view_t::render() {
 
   for (size_t i = 0; i < m_volumes.size(); i++) {
 
-      if (m_volumes[i].m_ready_to_render && m_is_visible &&
-          (i == m_current_volume || m_volumes[i].m_render_permanent)) {
+      if (m_volumes[i]->m_ready_to_render && m_is_visible &&
+          (i == m_current_volume || m_volumes[i]->m_render_permanent)) {
 
           shader_program_t *custom_sp =
-              m_volumes[i].m_transparent_volume ? astate->sp_mvap_ssl : nullptr;
+              m_volumes[i]->m_transparent_volume ? astate->sp_mvap_ssl : nullptr;
           astate->dp->begin_render_general_mesh(custom_sp);
           vector3<float> scale{1,1,1};
           vector3<float> rot{0};
           vector3<float> color{0.5f};
 
           //astate->glapi->glDisable(GL_CULL_FACE);
-          if (m_volumes[i].m_volume_type == ws_volume_t::volume_mo) {
+          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_mo) {
               astate->dp->render_general_mesh(m_pos,
                                               scale,
                                               rot,
-                                              m_volumes[i].m_color_pos,
-                                              m_volumes[i].m_first_mesh,
-                                              m_volumes[i].m_alpha,
+                                              m_volumes[i]->m_color_pos,
+                                              m_volumes[i]->m_first_mesh,
+                                              m_volumes[i]->m_alpha,
                                               custom_sp);
 
               astate->dp->render_general_mesh(m_pos,
                                               scale,
                                               rot,
-                                              m_volumes[i].m_color_neg,
-                                              m_volumes[i].m_second_mesh,
-                                              m_volumes[i].m_alpha,
+                                              m_volumes[i]->m_color_neg,
+                                              m_volumes[i]->m_second_mesh,
+                                              m_volumes[i]->m_alpha,
                                               custom_sp);
             }
 
-          if (m_volumes[i].m_volume_type == ws_volume_t::volume_density) {
+          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_density) {
               astate->dp->render_general_mesh(m_pos,
                                               scale,
                                               rot,
-                                              m_volumes[i].m_color_vol,
-                                              m_volumes[i].m_first_mesh,
-                                              m_volumes[i].m_alpha,
+                                              m_volumes[i]->m_color_vol,
+                                              m_volumes[i]->m_first_mesh,
+                                              m_volumes[i]->m_alpha,
                                               custom_sp);
             }
           //astate->glapi->glEnable(GL_CULL_FACE);
@@ -78,34 +78,34 @@ void volume_view_t::render() {
 
         }
 
-      if (m_volumes[i].m_need_to_regenerate) {
+      if (m_volumes[i]->m_need_to_regenerate) {
 
-          if (!m_volumes[i].m_first_mesh) m_volumes[i].m_first_mesh = new mesh_t();
-          if (!m_volumes[i].m_second_mesh) m_volumes[i].m_second_mesh = new mesh_t();
+          if (!m_volumes[i]->m_first_mesh) m_volumes[i]->m_first_mesh = new mesh_t();
+          if (!m_volumes[i]->m_second_mesh) m_volumes[i]->m_second_mesh = new mesh_t();
 
-          if (m_volumes[i].m_volume_type == ws_volume_t::volume_mo) {
-              volume_helper::polygonise_vol_mc(*(m_volumes[i].m_first_mesh),
-                                               m_volumes[i].m_volume,
-                                               m_volumes[i].m_isolevel,
+          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_mo) {
+              volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_first_mesh),
+                                               m_volumes[i]->m_volume,
+                                               m_volumes[i]->m_isolevel,
                                                100,
-                                               m_volumes[i].m_volume.m_addr_mode);
-              volume_helper::polygonise_vol_mc(*(m_volumes[i].m_second_mesh),
-                                               m_volumes[i].m_volume,
-                                               -m_volumes[i].m_isolevel,
+                                               m_volumes[i]->m_volume.m_addr_mode);
+              volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_second_mesh),
+                                               m_volumes[i]->m_volume,
+                                               -m_volumes[i]->m_isolevel,
                                                100,
-                                               m_volumes[i].m_volume.m_addr_mode);
+                                               m_volumes[i]->m_volume.m_addr_mode);
             }
 
-          if (m_volumes[i].m_volume_type == ws_volume_t::volume_density) {
-              volume_helper::polygonise_vol_mc(*(m_volumes[i].m_first_mesh),
-                                               m_volumes[i].m_volume,
-                                               m_volumes[i].m_isolevel,
+          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_density) {
+              volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_first_mesh),
+                                               m_volumes[i]->m_volume,
+                                               m_volumes[i]->m_isolevel,
                                                100,
-                                               m_volumes[i].m_volume.m_addr_mode);
+                                               m_volumes[i]->m_volume.m_addr_mode);
             }
 
-          m_volumes[i].m_ready_to_render = true;
-          m_volumes[i].m_need_to_regenerate = false;
+          m_volumes[i]->m_ready_to_render = true;
+          m_volumes[i]->m_need_to_regenerate = false;
           astate->make_viewport_dirty();
 
         }
@@ -145,8 +145,8 @@ void volume_view_t::updated_externally(uint32_t update_reason) {
   //regenerate meshes
   if (update_reason & ws_item_updf_regenerate_content) {
       for (auto &vol : m_volumes) {
-          vol.m_need_to_regenerate = true;
-          vol.m_ready_to_render = false;
+          vol->m_need_to_regenerate = true;
+          vol->m_ready_to_render = false;
         }
     }
 
@@ -180,7 +180,9 @@ void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
     }
 
   new_vol_rec.m_volume.m_name = "From CUBE";
-  m_volumes.emplace_back(std::move(new_vol_rec));
+
+  auto new_vol_rec_sp = std::make_shared<ws_volume_record_t>(std::move(new_vol_rec));
+  m_volumes.push_back(new_vol_rec_sp);
 
 }
 
@@ -198,7 +200,7 @@ void volume_view_t::volume_cut_sph(size_t volume_id,
   float val{0};
   bool rad_gr_sph_rad{false};
 
-  auto &volume = m_volumes[volume_id].m_volume;
+  auto &volume = m_volumes[volume_id]->m_volume;
 
   for (int ix = 0; ix < volume.m_steps[0]; ix++)
     for (int iy = 0; iy < volume.m_steps[1]; iy++)
@@ -218,8 +220,8 @@ void volume_view_t::volume_cut_sph(size_t volume_id,
             }
         }
 
-  m_volumes[volume_id].m_need_to_regenerate = true;
-  m_volumes[volume_id].m_ready_to_render = false;
+  m_volumes[volume_id]->m_need_to_regenerate = true;
+  m_volumes[volume_id]->m_ready_to_render = false;
   astate->make_viewport_dirty();
 
 }
@@ -234,7 +236,7 @@ void volume_view_t::volume_cut_fnc(size_t volume_id,
   vector3<float> gp{0};
   bool cut_fnc_res{false};
 
-  auto &volume = m_volumes[volume_id].m_volume;
+  auto &volume = m_volumes[volume_id]->m_volume;
 
   for (int ix = 0; ix < volume.m_steps[0]; ix++)
     for (int iy = 0; iy < volume.m_steps[1]; iy++)
@@ -247,8 +249,8 @@ void volume_view_t::volume_cut_fnc(size_t volume_id,
 
         }
 
-  m_volumes[volume_id].m_need_to_regenerate = true;
-  m_volumes[volume_id].m_ready_to_render = false;
+  m_volumes[volume_id]->m_need_to_regenerate = true;
+  m_volumes[volume_id]->m_ready_to_render = false;
   astate->make_viewport_dirty();
 
 }

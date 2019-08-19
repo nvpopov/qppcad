@@ -35,21 +35,27 @@ void geom_view_molcas_grid_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   vold->m_name = fmt::format("{}.volume", _item->m_name);
 
   //process volumes
-  vold->m_volumes.resize(tmp_volumes.size());
+  vold->m_volumes.reserve(tmp_volumes.size());
 
   for (size_t i = 0; i < tmp_volumes.size(); i++) {
 
-      vold->m_volumes[i].m_volume = std::move(tmp_volumes[i]);
-      vold->m_volumes[i].m_ready_to_render = false;
-      vold->m_volumes[i].m_need_to_regenerate = true;
+      ws_volume_record_t new_vol_rec;
 
-      if (vold->m_volumes[i].m_volume.m_has_negative_values) {
-          vold->m_volumes[i].m_volume_type = ws_volume_t::volume_mo;
-          vold->m_volumes[i].m_isolevel = qpp::def_isovalue_mo;
+      new_vol_rec.m_volume = std::move(tmp_volumes[i]);
+      new_vol_rec.m_ready_to_render = false;
+      new_vol_rec.m_need_to_regenerate = true;
+
+      if (new_vol_rec.m_volume.m_has_negative_values) {
+          new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
+          new_vol_rec.m_isolevel = qpp::def_isovalue_mo;
         } else {
-          vold->m_volumes[i].m_volume_type = ws_volume_t::volume_density;
-          vold->m_volumes[i].m_isolevel = qpp::def_isovalue_dens;
+          new_vol_rec.m_volume_type = ws_volume_t::volume_density;
+          new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
         }
+
+      auto new_vol_rec_ptr = std::make_shared<ws_volume_record_t>(std::move(new_vol_rec));
+
+      vold->m_volumes.push_back(new_vol_rec_ptr);
 
     } // end for
 
@@ -68,21 +74,27 @@ void geom_view_vasp_chgcar_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   _item->m_parent_ws->add_item_to_ws(vold);
   vold->m_name = fmt::format("{}.volume", _item->m_name);
 
-  vold->m_volumes.resize(tmp_volumes.size());
+  vold->m_volumes.reserve(tmp_volumes.size());
 
   for (size_t i = 0; i < tmp_volumes.size(); i++) {
 
-      vold->m_volumes[i].m_volume = std::move(tmp_volumes[i]);
-      vold->m_volumes[i].m_ready_to_render = false;
-      vold->m_volumes[i].m_need_to_regenerate = true;
+      ws_volume_record_t new_vol_rec;
 
-      if (vold->m_volumes[i].m_volume.m_has_negative_values) {
-          vold->m_volumes[i].m_volume_type = ws_volume_t::volume_mo;
-          vold->m_volumes[i].m_isolevel = qpp::def_isovalue_mo;
+      new_vol_rec.m_volume = std::move(tmp_volumes[i]);
+      new_vol_rec.m_ready_to_render = false;
+      new_vol_rec.m_need_to_regenerate = true;
+
+      if (new_vol_rec.m_volume.m_has_negative_values) {
+          new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
+          new_vol_rec.m_isolevel = qpp::def_isovalue_mo;
         } else {
-          vold->m_volumes[i].m_volume_type = ws_volume_t::volume_density;
-          vold->m_volumes[i].m_isolevel = qpp::def_isovalue_dens;
+          new_vol_rec.m_volume_type = ws_volume_t::volume_density;
+          new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
         }
+
+      auto new_vol_rec_ptr = std::make_shared<ws_volume_record_t>(std::move(new_vol_rec));
+
+      vold->m_volumes.push_back(new_vol_rec_ptr);
 
     } // end for
 
