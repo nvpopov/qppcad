@@ -192,7 +192,7 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
             angle = angle + std::ceil(-angle / 360) * 360;
             if (angle > 90 && angle < 270) angle = angle + 180;
 
-            painter.translate(mid[0], mid[1]);
+            painter.translate(mid[0] + record.m_delta_offset[0], mid[1] + record.m_delta_offset[1]);
             painter.rotate(angle + record.m_delta_angle);
 
             QString _label_text =

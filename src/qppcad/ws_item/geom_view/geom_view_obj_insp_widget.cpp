@@ -513,6 +513,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_custom_text_enabled = new qbinded_checkbox_t;
   tms_pair_delta_angle = new qbinded_float_spinbox_t;
   tms_pair_delta_angle->set_min_max_step(-90, 90, 0.1);
+  tms_pair_delta_offset = new qbinded_int2b_input_t;
 
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1"), tms_pair_at1_info);
@@ -527,6 +528,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Custom lbl. text"), tms_pair_custom_text_edit);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
   tms_pair_dist_gb_lt->addRow(tr("Delta angle"), tms_pair_delta_angle);
+  tms_pair_dist_gb_lt->addRow(tr("Delta offset"), tms_pair_delta_offset);
   tms_pair_dist_gb_lt->addRow(tr("Actions"), tms_pair_action_lt);
   init_form_lt(tms_pair_dist_gb_lt);
 
@@ -1183,6 +1185,7 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_pair_custom_text_enabled->bind_value(&rec.m_show_custom_label);
 
           tms_pair_delta_angle->bind_value(&rec.m_delta_angle);
+          tms_pair_delta_offset->bind_value(&rec.m_delta_offset);
 
           tms_pair_enabled->setEnabled(true);
           tms_pair_dist_color->setEnabled(true);
@@ -1192,6 +1195,7 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_pair_label_style->setEnabled(true);
           tms_pair_label_enabled->setEnabled(true);
           tms_pair_delta_angle->setEnabled(true);
+          tms_pair_delta_offset->setEnabled(true);
 
           tms_pair_action_sel->setEnabled(true);
           tms_pair_action_del->setEnabled(true);
@@ -1218,6 +1222,7 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_pair_label_style->unbind_value();
   tms_pair_label_enabled->unbind_value();
   tms_pair_delta_angle->unbind_value();
+  tms_pair_delta_offset->unbind_value();
 
   tms_pair_custom_text_enabled->unbind_value();
   tms_pair_custom_text_edit->unbind_value();
@@ -1231,6 +1236,7 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_pair_label_style->setEnabled(false);
   tms_pair_label_enabled->setEnabled(false);
   tms_pair_delta_angle->setEnabled(false);
+  tms_pair_delta_offset->setEnabled(false);
 
   tms_pair_action_sel->setEnabled(false);
   tms_pair_action_del->setEnabled(false);
@@ -1690,7 +1696,10 @@ void geom_view_obj_insp_widget_t::tab_modify_flip_cell_clicked(size_t flip_dim, 
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
   tab_disp = def_tab(tr("Display settings"), "://images/monitor.svg");
-  tab_anim = def_tab(tr("Animation"), "://images/film.svg", "://images/film_d.svg");
+
+  tab_anim = def_tab(tr("Animation"),
+                     "://images/film.svg",
+                     "://images/film_d.svg");
 
   tab_modify = def_tab(tr("Modify"),
                        "://images/outline-build-24px.svg",

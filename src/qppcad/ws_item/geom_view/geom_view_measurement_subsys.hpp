@@ -43,6 +43,7 @@ namespace qpp {
       int m_line_size{2};
       int m_font_size{13};
       float m_delta_angle{0};
+      vector3<int> m_delta_offset{0, 0, -1};
       msr_line_style_e m_line_render_style{msr_line_style_e::msr_line_dashed};
       msr_label_style_e m_label_render_style{msr_label_style_e::msr_label_border};
 

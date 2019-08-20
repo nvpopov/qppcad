@@ -701,10 +701,18 @@ void qbinded_line_edit_t::editing_finished() {
 void qbinded_int2b_input_t::load_value_ex() {
 
   if (m_binded_value) {
+
       sb_x->setValue((*m_binded_value)[0]);
-      sb_x->setRange(0, (*m_binded_value)[2]);
       sb_y->setValue((*m_binded_value)[1]);
-      sb_y->setRange(0, (*m_binded_value)[2]);
+
+      if ((*m_binded_value)[2] > 0) {
+          sb_x->setRange(0, (*m_binded_value)[2]);
+          sb_y->setRange(0, (*m_binded_value)[2]);
+        } else {
+          sb_x->setRange(-2000, 2000);
+          sb_y->setRange(-2000, 2000);
+        }
+
     }
 
 }
