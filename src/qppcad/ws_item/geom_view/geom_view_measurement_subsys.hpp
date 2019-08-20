@@ -42,13 +42,12 @@ namespace qpp {
       vector3<float> m_bond_color{0};
       int m_line_size{2};
       int m_font_size{13};
+      float m_delta_angle{0};
       msr_line_style_e m_line_render_style{msr_line_style_e::msr_line_dashed};
       msr_label_style_e m_label_render_style{msr_label_style_e::msr_label_border};
 
-      msr_bond_rec_t (const AINT _atm1,
-                      const AINT _atm2,
-                      const index _idx1,
-                      const index _idx2) :
+      msr_bond_rec_t (const AINT _atm1, const AINT _atm2,
+                      const index _idx1, const index _idx2) :
         m_at1(_atm1), m_at2(_atm2), m_idx1(_idx1), m_idx2(_idx2) {}
 
     };
@@ -69,12 +68,8 @@ namespace qpp {
       bool m_show_label{true};
       vector3<float> m_angle_color{0};
 
-      msr_angle_rec_t (const AINT _at1,
-                       const AINT _at2,
-                       const AINT _at3,
-                       const index _idx1,
-                       const index _idx2,
-                       const index _idx3) :
+      msr_angle_rec_t(const AINT _at1, const AINT _at2, const AINT _at3,
+                      const index _idx1, const index _idx2, const index _idx3) :
         m_at1(_at1), m_at2(_at2), m_at3(_at3), m_idx1(_idx1), m_idx2(_idx2), m_idx3(_idx3) {}
 
     };
@@ -103,32 +98,20 @@ namespace qpp {
 
       float dist(const size_t idx);
 
-      void add_bond_msr(const uint32_t atm1,
-                        const uint32_t atm2,
-                        const index idx1,
-                        const index idx2);
+      void add_bond_msr(const uint32_t atm1, const uint32_t atm2,
+                        const index idx1, const index idx2);
 
-      void add_angle_msr(const uint32_t atm1,
-                         const uint32_t atm2,
-                         const uint32_t atm3,
-                         const index idx1,
-                         const index idx2,
-                         const index idx3);
+      void add_angle_msr(const uint32_t atm1, const uint32_t atm2, const uint32_t atm3,
+                         const index idx1, const index idx2, const index idx3);
 
       void rm_bond_msr(const size_t measure_idx);
       void rm_angle_msr(const size_t measure_idx);
 
-      opt<size_t> is_bond_msr_exists(const uint32_t atm1,
-                                     const uint32_t atm2,
-                                     const index idx1,
-                                     const index idx2);
+      opt<size_t> is_bond_msr_exists(const uint32_t atm1, const uint32_t atm2,
+                                     const index idx1, const index idx2);
 
-      opt<size_t> is_angle_msr_exists(const uint32_t atm1,
-                                      const uint32_t atm2,
-                                      const uint32_t atm3,
-                                      const index idx1,
-                                      const index idx2,
-                                      const index idx3);
+      opt<size_t> is_angle_msr_exists(const uint32_t atm1, const uint32_t atm2, const uint32_t atm3,
+                                      const index idx1, const index idx2, const index idx3);
       void render ();
       void render_overlay(QPainter &painter);
       void notify_atom_has_been_deleted(const uint32_t atm);

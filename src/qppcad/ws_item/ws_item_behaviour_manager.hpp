@@ -134,10 +134,12 @@ namespace qpp {
 
       bool check_before_save(ws_item_t *_item, std::string &message) override {
         if (_item && _item->get_type() == T::get_type_static()) {
+
             T* casted_item = _item->cast_as<T>();
             return check_before_save_ex(casted_item, message);
           }
         return true;
+
       }
 
       virtual bool check_before_save_ex(T *_item, std::string &message) {
@@ -147,10 +149,12 @@ namespace qpp {
       void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
                             ws_item_t *_item,
                             workspace_t *ws) override {
+
         if (_item && _item->get_type() == T::get_type_static()) {
             T* casted_item = _item->cast_as<T>();
             if (casted_item) load_from_stream_ex(stream, casted_item, ws);
           }
+
       }
 
       virtual void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
@@ -159,10 +163,12 @@ namespace qpp {
 
       void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                           ws_item_t *_item) override {
+
         if (_item && _item->get_type() == T::get_type_static()) {
             T* casted_item = _item->cast_as<T>();
             if (casted_item) save_to_stream_ex(stream, casted_item);
           }
+
       }
 
       virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
@@ -176,11 +182,13 @@ namespace qpp {
     public:
 
       bool check_before_save(ws_item_t *_item, std::string &message) override {
+
         if (_item && _item->get_type() == T::get_type_static()) {
             T* casted_item = _item->cast_as<T>();
             return check_before_save_ex(casted_item, message);
           }
         return true;
+
       }
 
       virtual bool check_before_save_ex(T *_item, std::string &message) {
@@ -195,6 +203,7 @@ namespace qpp {
       void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
                             ws_item_t *_item,
                             workspace_t *ws) override {
+
         if (_item && _item->get_type() == T::get_type_static()) {
             T* casted_item = _item->cast_as<T>();
             if (casted_item) {
@@ -203,6 +212,7 @@ namespace qpp {
                 post_load_hook(casted_item, ws);
               }
           }
+
       }
 
       virtual void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
@@ -211,6 +221,7 @@ namespace qpp {
 
       void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
                           ws_item_t *_item) override {
+
         if (_item && _item->get_type() == T::get_type_static()) {
             T* casted_item = _item->cast_as<T>();
             if (casted_item) {
@@ -219,6 +230,7 @@ namespace qpp {
                 post_save_hook(casted_item);
               }
           }
+
       }
 
       virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
@@ -356,8 +368,8 @@ namespace qpp {
 
       size_t reg_sflow_grp(std::string group_name);
       size_t reg_reg_sf_fbr(std::string _full_name,
-                               size_t _g_hash,
-                               std::function<std::shared_ptr<sflow_node_t>() > _fabric);
+                            size_t _g_hash,
+                            std::function<std::shared_ptr<sflow_node_t>() > _fabric);
       /**
        * @brief exec_tool
        * @param item

@@ -15,10 +15,8 @@ float geom_view_msr_subsys_t::dist (const size_t idx) {
   return (l_e - l_s).norm();
 }
 
-void geom_view_msr_subsys_t::add_bond_msr (const uint32_t atm1,
-                                           const uint32_t atm2,
-                                           const index idx1,
-                                           const index idx2) {
+void geom_view_msr_subsys_t::add_bond_msr (const uint32_t atm1, const uint32_t atm2,
+                                           const index idx1, const index idx2) {
 
   if (!is_bond_msr_exists(atm1, atm2, idx1, idx2)) {
       m_dist_recs.emplace_back(atm1, atm2, idx1, idx2);
@@ -28,12 +26,8 @@ void geom_view_msr_subsys_t::add_bond_msr (const uint32_t atm1,
 }
 
 void geom_view_msr_subsys_t::add_angle_msr(
-    const uint32_t atm1,
-    const uint32_t atm2,
-    const uint32_t atm3,
-    const index idx1,
-    const index idx2,
-    const index idx3) {
+    const uint32_t atm1, const uint32_t atm2, const uint32_t atm3,
+    const index idx1, const index idx2, const index idx3) {
 
   if (!is_angle_msr_exists(atm1, atm2, atm3, idx1, idx2, idx3)) {
       m_angle_recs.emplace_back(atm1, atm2, atm3, idx1, idx2, idx3);
@@ -72,10 +66,8 @@ void geom_view_msr_subsys_t::rm_angle_msr(const size_t measure_idx) {
 }
 
 
-opt<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (const uint32_t atm1,
-                                                        const uint32_t atm2,
-                                                        const index idx1,
-                                                        const index idx2) {
+opt<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (const uint32_t atm1, const uint32_t atm2,
+                                                        const index idx1, const index idx2) {
 
   for (auto i = 0; i < m_dist_recs.size(); i++)
     if ((m_dist_recs[i].m_at1 == atm1 && m_dist_recs[i].m_at2 == atm2 &&
@@ -88,12 +80,9 @@ opt<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (const uint32_t atm1,
 
 }
 
-opt<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(const uint32_t atm1,
-                                                        const uint32_t atm2,
-                                                        const uint32_t atm3,
-                                                        const index idx1,
-                                                        const index idx2,
-                                                        const index idx3) {
+opt<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(
+    const uint32_t atm1, const uint32_t atm2, const uint32_t atm3,
+    const index idx1, const index idx2, const index idx3) {
 
   for (auto i = 0; i < m_angle_recs.size(); i++)
     if (m_angle_recs[i].m_at1 == atm1 &&
@@ -265,9 +254,9 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
   painter.setFont(QFont(astate->m_font_name, 13));
 
   if (m_render_angle)
-    for (size_t i = 0; i < m_angle_recs.size(); i++) {
+    for (size_t q = 0; q < m_angle_recs.size(); q++) {
 
-        auto &record = m_angle_recs[i];
+        auto &record = m_angle_recs[q];
 
         if (record.m_show) {
 
@@ -330,7 +319,7 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
                   }
 
                 QColor pen_color =
-                    ((i + 1 == m_cur_angle_rec_ui) && p_owner->m_selected) ?
+                    ((q + 1 == m_cur_angle_rec_ui) && p_owner->m_selected) ?
                       QColor::fromRgbF(1, 0, 0) : QColor::fromRgbF(record.m_angle_color[0],
                     record.m_angle_color[1],
                     record.m_angle_color[2]);
