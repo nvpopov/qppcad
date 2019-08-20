@@ -60,7 +60,7 @@ namespace qpp {
       public:
 
         void load_value_ex() override;
-        qbinded_checkbox_t(QWidget *parent = nullptr);
+        explicit qbinded_checkbox_t(QWidget *parent = nullptr);
 
       public slots:
 
@@ -74,7 +74,7 @@ namespace qpp {
       public:
 
         void load_value_ex() override;
-        qbinded_line_edit_t(QWidget *parent = nullptr);
+        explicit qbinded_line_edit_t(QWidget *parent = nullptr);
 
       public slots:
 
@@ -93,7 +93,7 @@ namespace qpp {
                               double new_max,
                               double new_step,
                               int decimals = 2);
-        qbinded_float_spinbox_t(QWidget *parent = nullptr);
+        explicit qbinded_float_spinbox_t(QWidget *parent = nullptr);
         void set_suffix(QString &new_suffix);
         void set_default_suffix();
 
@@ -113,7 +113,7 @@ namespace qpp {
         void set_min_max_step(int new_min,
                               int new_max,
                               int new_step);
-        qbinded_int_spinbox_t(QWidget *parent = nullptr);
+        explicit qbinded_int_spinbox_t(QWidget *parent = nullptr);
         void set_suffix(QString &new_suffix);
         void set_default_suffix();
 
@@ -130,7 +130,7 @@ namespace qpp {
       public:
 
         void load_value_ex() override;
-        qbinded_combobox_t(QWidget *parent = nullptr);
+        explicit qbinded_combobox_t(QWidget *parent = nullptr);
 
       public slots:
 
@@ -150,7 +150,7 @@ namespace qpp {
         QSpinBox *sb_z;
         void load_value_ex() override;
         void set_min_max_step(int min, int max, int step);
-        qbinded_int3_input_t(QWidget *parent = nullptr);
+        explicit qbinded_int3_input_t(QWidget *parent = nullptr);
 
       private slots:
 
@@ -168,7 +168,7 @@ namespace qpp {
         QSpinBox *sb_x;
         QSpinBox *sb_y;
         void load_value_ex() override;
-        qbinded_int2b_input_t(QWidget *parent = nullptr);
+        explicit qbinded_int2b_input_t(QWidget *parent = nullptr);
 
       private slots:
 
@@ -192,7 +192,7 @@ namespace qpp {
       void set_suffix(QString &new_suffix);
       void set_empty_suffix();
       void set_default_suffix();
-      qbinded_float2_input_t(QWidget *parent = nullptr);
+      explicit qbinded_float2_input_t(QWidget *parent = nullptr);
 
     private slots:
 
@@ -217,7 +217,7 @@ namespace qpp {
         void set_suffix(QString &new_suffix);
         void set_empty_suffix();
         void set_default_suffix();
-        qbinded_float3_input_t(QWidget *parent = nullptr);
+        explicit qbinded_float3_input_t(QWidget *parent = nullptr);
 
       private slots:
 
@@ -254,7 +254,7 @@ namespace qpp {
         size_t m_binded_atom_id;
         QColor m_stored_color;
         bool m_apply_to_selected{false};
-        qbinded_xgeom_color3_input_t(QWidget *parent = nullptr);
+        explicit qbinded_xgeom_color3_input_t(QWidget *parent = nullptr);
         void bind_value(xgeometry<float, periodic_cell<float>> *_binded_xgeom,
                         std::array<int, 3> _binding_indicies,
                         size_t _binded_atom_id);
@@ -283,7 +283,7 @@ namespace qpp {
                               double new_max,
                               double new_step,
                               int decimals = 2);
-        qbinded_xgeom_float_spinbox_t(QWidget *parent = nullptr);
+        explicit qbinded_xgeom_float_spinbox_t(QWidget *parent = nullptr);
         void set_suffix(QString &new_suffix);
         void set_default_suffix();
 
@@ -306,7 +306,7 @@ namespace qpp {
         bool m_updated_externally_event{false};
         uint32_t m_upd_flag{ws_item_updf_generic};
 
-        qbinded_ws_item_combobox_t(QWidget *parent = nullptr);
+        explicit qbinded_ws_item_combobox_t(QWidget *parent = nullptr);
 
         void bind_value(std::shared_ptr<ws_item_t> *_binded_value,
                         ws_item_t *item_to_bind = nullptr);
