@@ -153,6 +153,7 @@ namespace qpp {
         qbinded_combobox_t *tms_pair_line_style;
         qbinded_int_spinbox_t *tms_pair_line_size;
         qbinded_int_spinbox_t *tms_font_screen_size;
+        qbinded_float_spinbox_t *tms_pair_delta_angle;
         qbinded_combobox_t *tms_pair_label_style;
         QHBoxLayout *tms_pair_action_lt;
         QPushButton *tms_pair_action_sel;

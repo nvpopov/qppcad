@@ -511,6 +511,8 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
   tms_pair_custom_text_edit = new qbinded_line_edit_t;
   tms_pair_custom_text_enabled = new qbinded_checkbox_t;
+  tms_pair_delta_angle = new qbinded_float_spinbox_t;
+  tms_pair_delta_angle->set_min_max_step(-90, 90, 0.1);
 
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1"), tms_pair_at1_info);
@@ -524,7 +526,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Custom lbl."), tms_pair_custom_text_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Custom lbl. text"), tms_pair_custom_text_edit);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
-
+  tms_pair_dist_gb_lt->addRow(tr("Delta angle"), tms_pair_delta_angle);
   tms_pair_dist_gb_lt->addRow(tr("Actions"), tms_pair_action_lt);
   init_form_lt(tms_pair_dist_gb_lt);
 
@@ -1180,6 +1182,8 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_pair_custom_text_edit->bind_value(&rec.m_custom_label_text);
           tms_pair_custom_text_enabled->bind_value(&rec.m_show_custom_label);
 
+          tms_pair_delta_angle->bind_value(&rec.m_delta_angle);
+
           tms_pair_enabled->setEnabled(true);
           tms_pair_dist_color->setEnabled(true);
           tms_pair_line_style->setEnabled(true);
@@ -1187,6 +1191,7 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_font_screen_size->setEnabled(true);
           tms_pair_label_style->setEnabled(true);
           tms_pair_label_enabled->setEnabled(true);
+          tms_pair_delta_angle->setEnabled(true);
 
           tms_pair_action_sel->setEnabled(true);
           tms_pair_action_del->setEnabled(true);
@@ -1212,6 +1217,7 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_font_screen_size->unbind_value();
   tms_pair_label_style->unbind_value();
   tms_pair_label_enabled->unbind_value();
+  tms_pair_delta_angle->unbind_value();
 
   tms_pair_custom_text_enabled->unbind_value();
   tms_pair_custom_text_edit->unbind_value();
@@ -1224,6 +1230,7 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_font_screen_size->setEnabled(false);
   tms_pair_label_style->setEnabled(false);
   tms_pair_label_enabled->setEnabled(false);
+  tms_pair_delta_angle->setEnabled(false);
 
   tms_pair_action_sel->setEnabled(false);
   tms_pair_action_del->setEnabled(false);

@@ -193,7 +193,7 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
             if (angle > 90 && angle < 270) angle = angle + 180;
 
             painter.translate(mid[0], mid[1]);
-            painter.rotate(angle);
+            painter.rotate(angle + record.m_delta_angle);
 
             QString _label_text =
                 record.m_show_custom_label ?
