@@ -255,3 +255,42 @@ void volume_view_t::volume_cut_fnc(size_t volume_id,
 
 }
 
+size_t volume_view_t::clone_volume(size_t volume_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (volume_id >= m_volumes.size()) return 0;
+
+  std::shared_ptr<ws_volume_record_t> new_vol_rec = std::make_shared<ws_volume_record_t>();
+  new_vol_rec->copy_from(*m_volumes[volume_id]);
+  new_vol_rec->m_volume.m_name = fmt::format("{}{}",
+                                             m_volumes[volume_id]->m_volume.m_name,
+                                             m_volumes.size());
+
+  m_volumes.push_back(new_vol_rec);
+
+  if (m_selected) astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+  return m_volumes.size()-1;
+
+}
+
+
+void ws_volume_record_t::copy_from(ws_volume_record_t &other) {
+
+  m_volume             = other.m_volume;
+
+  m_alpha              = other.m_alpha;
+  m_isolevel           = other.m_isolevel;
+
+  m_color_vol          = other.m_color_vol;
+  m_color_pos          = other.m_color_pos;
+  m_color_neg          = other.m_color_neg;
+
+  m_transparent_volume = other.m_transparent_volume;
+  m_volume_type        = other.m_volume_type;
+
+  m_ready_to_render    = false;
+  m_need_to_regenerate = true;
+
+}

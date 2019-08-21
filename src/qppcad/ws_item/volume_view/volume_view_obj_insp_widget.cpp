@@ -38,9 +38,9 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   gb_volume_detail_lt->addRow(tr("Isolevel"), vol_isovalue);
   gb_volume_detail_lt->addRow(tr("Transparent"), vol_transparent);
   gb_volume_detail_lt->addRow(tr("Alpha"), vol_alpha);
-  gb_volume_detail_lt->addRow(tr("Color positive"), vol_color_pos);
-  gb_volume_detail_lt->addRow(tr("Color negative"), vol_color_neg);
-  gb_volume_detail_lt->addRow(tr("Color density"), vol_color_vol);
+  gb_volume_detail_lt->addRow(tr("Color - positive"), vol_color_pos);
+  gb_volume_detail_lt->addRow(tr("Color - negative"), vol_color_neg);
+  gb_volume_detail_lt->addRow(tr("Color - density"), vol_color_vol);
   init_form_lt(gb_volume_detail_lt);
 
   tab_general->tab_inner_widget_lt->addWidget(gb_volume_detail);
@@ -76,8 +76,12 @@ void volume_view_obj_insp_widget_t::update_from_ws_item() {
       cb_current_volume->clear();
 
       for (size_t i = 0; i < b_vol->m_volumes.size(); i++) {
-          cb_current_volume->addItem(
-                QString::fromStdString(b_vol->m_volumes[i]->m_volume.m_name));
+          cb_current_volume->addItem(QString("[%1]%2")
+                                     .arg(i)
+                                     .arg(QString::fromStdString(
+                                            b_vol->m_volumes[i]->m_volume.m_name)
+                                          )
+                                     );
         }
 
       cb_current_volume->setCurrentIndex(b_vol->m_current_volume);

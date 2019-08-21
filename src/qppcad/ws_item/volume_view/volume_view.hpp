@@ -24,8 +24,6 @@ namespace qpp {
         mesh_t *m_first_mesh{nullptr};
         mesh_t *m_second_mesh{nullptr};
 
-        //std::string m_volume_name; move to scalar_volume_t::m_volume name
-
         bool m_ready_to_render{false};
         bool m_need_to_regenerate{false};
         bool m_transparent_volume{false};
@@ -38,6 +36,8 @@ namespace qpp {
         vector3<float> m_color_vol{clr_yellow};
 
         ws_volume_t m_volume_type;
+
+        void copy_from(ws_volume_record_t &other);
 
     };
 
@@ -80,8 +80,9 @@ namespace qpp {
                             float sph_rad,
                             bool cut_inner);
 
-        void volume_cut_fnc(size_t volume_id,
-                            std::function<bool(vector3<float>&)> cut_fnc);
+        void volume_cut_fnc(size_t volume_id, std::function<bool(vector3<float>&)> cut_fnc);
+
+        size_t clone_volume(size_t volume_id);
 
     };
 
