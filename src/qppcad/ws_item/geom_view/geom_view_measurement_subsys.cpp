@@ -7,12 +7,14 @@ using namespace qpp;
 using namespace qpp::cad;
 
 float geom_view_msr_subsys_t::dist (const size_t idx) {
+
   vector3<float> l_s, l_e;
   l_s = p_owner->m_pos +
         p_owner->m_geom->pos(m_dist_recs[idx].m_at1,m_dist_recs[idx].m_idx1);
   l_e = p_owner->m_pos +
         p_owner->m_geom->pos(m_dist_recs[idx].m_at2,m_dist_recs[idx].m_idx2);
   return (l_e - l_s).norm();
+
 }
 
 void geom_view_msr_subsys_t::add_bond_msr (const uint32_t atm1, const uint32_t atm2,
@@ -23,6 +25,7 @@ void geom_view_msr_subsys_t::add_bond_msr (const uint32_t atm1, const uint32_t a
       app_state_t* astate = app_state_t::get_inst();
       astate->astate_evd->cur_ws_selected_item_measurements_changed();
     }
+
 }
 
 void geom_view_msr_subsys_t::add_angle_msr(
@@ -34,10 +37,10 @@ void geom_view_msr_subsys_t::add_angle_msr(
       app_state_t* astate = app_state_t::get_inst();
       astate->astate_evd->cur_ws_selected_item_measurements_changed();
     }
+
 }
 
-geom_view_msr_subsys_t::geom_view_msr_subsys_t(
-    geom_view_t &_p_owner) {
+geom_view_msr_subsys_t::geom_view_msr_subsys_t(geom_view_t &_p_owner) {
   p_owner = &_p_owner;
 }
 
@@ -454,6 +457,9 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
       msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_FSTYLE] = rec.m_label_render_style;
       msr_dist_inst[JSON_GEOM_VIEW_MSR_SHOW_CL] = rec.m_show_custom_label;
       msr_dist_inst[JSON_GEOM_VIEW_MSR_CL_TEXT] = rec.m_custom_label_text;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_DANGLE] = rec.m_delta_angle;
+
+      json_helper::save_vec3(JSON_GEOM_VIEW_MSR_DIST_DOFFSET, rec.m_delta_offset, msr_dist_inst);
 
       if (p_owner->m_geom->DIM != 0) {
           json_helper::save_index(JSON_GEOM_VIEW_MSR_DIST_IDX1, rec.m_idx1, msr_dist_inst);
@@ -537,6 +543,10 @@ void geom_view_msr_subsys_t::load_from_json(json &data) {
                               msr_record);
         json_helper::load_var(JSON_GEOM_VIEW_MSR_CL_TEXT, last_msr.m_custom_label_text,
                               msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_DANGLE, last_msr.m_delta_angle, msr_record);
+        json_helper::load_vec3(JSON_GEOM_VIEW_MSR_DIST_DOFFSET, last_msr.m_delta_offset,
+                               msr_record);
+
       }
 
 

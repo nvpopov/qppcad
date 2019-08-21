@@ -105,6 +105,8 @@ namespace qpp {
     const auto JSON_GEOM_VIEW_MSR_DIST_FSTYLE  = "font_style";
     const auto JSON_GEOM_VIEW_MSR_SHOW_CL      = "show_custom_label";
     const auto JSON_GEOM_VIEW_MSR_CL_TEXT      = "custom_label_text";
+    const auto JSON_GEOM_VIEW_MSR_DIST_DANGLE  = "delta_angle";
+    const auto JSON_GEOM_VIEW_MSR_DIST_DOFFSET = "delta_offset";
 
     const auto JSON_GEOM_VIEW_MSR_ANGLE         = "angles";
     const auto JSON_GEOM_VIEW_MSR_ANGLE_AT1     = "at1";
