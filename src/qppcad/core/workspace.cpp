@@ -307,7 +307,19 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
   auto cur_it = get_selected();
-  if (cur_it) cur_it->mouse_double_click(nullptr);
+
+  if (cur_it) {
+
+      if (m_edit_type == ws_edit_e::edit_item) {
+          cur_it->mouse_double_click(nullptr);
+          return;
+        }
+
+      if (cur_it->get_num_cnt_selected() == 0 && m_edit_type == ws_edit_e::edit_content) {
+          set_edit_type(ws_edit_e::edit_item);
+        }
+
+    }
 
 }
 

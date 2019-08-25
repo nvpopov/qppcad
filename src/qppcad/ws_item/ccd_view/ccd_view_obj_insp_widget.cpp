@@ -305,37 +305,37 @@ void ccd_view_obj_insp_widget_t::ui_cur_selected_step_item_changed() {
 
       tgo_step_info_gr_min->setText(
             tr(vector_template)
-            .arg(QString::number(step.m_gradient_min[0], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_min[1], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_min[2], 'g', float_digits))
+            .arg(QString::number(step.m_grad_min[0], 'g', float_digits))
+            .arg(QString::number(step.m_grad_min[1], 'g', float_digits))
+            .arg(QString::number(step.m_grad_min[2], 'g', float_digits))
           );
 
       tgo_step_info_gr_max->setText(
             tr(vector_template)
-            .arg(QString::number(step.m_gradient_max[0], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_max[1], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_max[2], 'g', float_digits))
+            .arg(QString::number(step.m_grad_max[0], 'g', float_digits))
+            .arg(QString::number(step.m_grad_max[1], 'g', float_digits))
+            .arg(QString::number(step.m_grad_max[2], 'g', float_digits))
           );
 
       tgo_step_info_gr_av->setText(
             tr(vector_template)
-            .arg(QString::number(step.m_gradient_average[0], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_average[1], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_average[2], 'g', float_digits))
+            .arg(QString::number(step.m_grad_aver[0], 'g', float_digits))
+            .arg(QString::number(step.m_grad_aver[1], 'g', float_digits))
+            .arg(QString::number(step.m_grad_aver[2], 'g', float_digits))
           );
 
       tgo_step_info_gr_av->setText(
             tr(vector_template)
-            .arg(QString::number(step.m_gradient_average[0], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_average[1], 'g', float_digits))
-            .arg(QString::number(step.m_gradient_average[2], 'g', float_digits))
+            .arg(QString::number(step.m_grad_aver[0], 'g', float_digits))
+            .arg(QString::number(step.m_grad_aver[1], 'g', float_digits))
+            .arg(QString::number(step.m_grad_aver[2], 'g', float_digits))
           );
 
       tgo_step_info_gr_norm->setText(
             tr(gr_norm_template)
-            .arg(QString::number(step.m_gradient_norm_min, 'g', float_digits))
-            .arg(QString::number(step.m_gradient_norm_max, 'g', float_digits))
-            .arg(QString::number(step.m_gradient_norm_average, 'g', float_digits))
+            .arg(QString::number(step.m_grad_norm_min, 'g', float_digits))
+            .arg(QString::number(step.m_grad_norm_max, 'g', float_digits))
+            .arg(QString::number(step.m_grad_norm_average, 'g', float_digits))
           );
 
     }
