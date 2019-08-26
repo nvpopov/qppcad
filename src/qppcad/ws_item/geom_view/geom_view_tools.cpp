@@ -514,6 +514,40 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
 
 }
 
+std::shared_ptr<geom_view_t> geom_view_tools_t::generate_ncells(geom_view_t *gv,
+                                                                int s_a, int e_a,
+                                                                int s_b, int e_b,
+                                                                int s_c, int e_c) {
+
+  if (!gv) return nullptr;
+  if (gv->m_geom->DIM != 3) return nullptr;
+
+  std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
+  sc_al->m_geom->DIM = 0;
+  sc_al->m_geom->cell.DIM = 0;
+  sc_al->m_name = fmt::format("composed_{}", gv->m_parent_ws->m_ws_items.size());
+
+  sc_al->begin_structure_change();
+
+  for (auto i = 0; i < gv->m_geom->nat(); i++)
+    for (iterator idx_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c}));
+         !idx_it.end(); idx_it++ ) {
+        vector3<float> new_atom_pos = gv->m_geom->pos(i, idx_it);
+        sc_al->m_geom->add(gv->m_geom->atom(i), new_atom_pos);
+      }
+
+  sc_al->end_structure_change();
+
+  gv->m_parent_ws->add_item_to_ws(sc_al);
+
+  return sc_al;
+
+}
+
+void geom_view_tools_t::filter_uniq(geom_view_t *gv) {
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,

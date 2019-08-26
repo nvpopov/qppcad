@@ -267,7 +267,9 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("axis_steps") = vector3<float>{0.1}, py::arg("total_steps") = 200)
 
       .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms)
-      .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images);
+      .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images)
+
+      .def("generate_ncells", &geom_view_tools_t::generate_ncells);
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance)

@@ -71,6 +71,15 @@ namespace qpp {
         /* composing */
         static void compose_gv_from_images(py::list gvs);
 
+        /* generators */
+        static std::shared_ptr<geom_view_t> generate_ncells(geom_view_t *gv,
+                                                            int s_a, int e_a,
+                                                            int s_b, int e_b,
+                                                            int s_c, int e_c);
+
+        /* filters */
+        static void filter_uniq(geom_view_t *gv);
+
     };
 
   } // namespace cad
