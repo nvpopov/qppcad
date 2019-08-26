@@ -226,6 +226,8 @@ void py_geom_view_reg_helper_t::reg(
          .def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord)
          .def("rebond", &geom_view_t::rebond)
          .def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;})
+         .def("begin_structure_change", &geom_view_t::begin_structure_change)
+         .def("end_structure_change", &geom_view_t::end_structure_change)
          .def_readonly("anim", &geom_view_t::m_anim)
          .def_readonly("lbl", &geom_view_t::m_labels)
          .def_readonly("sg", &geom_view_t::m_selg);
