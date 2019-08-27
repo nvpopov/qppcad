@@ -80,7 +80,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
   index sc_dim{a_steps - 1 , b_steps - 1 , c_steps - 1};
 
-  geom_view_tools_t::generate_supercell(al, sc_al.get(), sc_dim);
+  geom_view_tools_t::generate_supercell(al->m_geom.get(), sc_al->m_geom.get(), sc_dim, al->m_role);
 
   sc_al->m_pos = al->m_pos + al->m_geom->cell.v[0] * 1.4f;
   sc_al->m_name = al->m_name + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps);
@@ -107,7 +107,9 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
       g.cell.v[2] = sc_al->m_geom->cell.v[2];
 
       const float equality_dist = 0.01f;
+
       for (int i = 0; i < sc_al->m_geom->nat(); i++) {
+
           std::vector<tws_node_content_t<float> > res;
           sc_al->m_tws_tr->query_sphere(equality_dist, sc_al->m_geom->pos(i), res);
           float accum_chg = 0;
@@ -123,6 +125,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
               g.add(sc_al->m_geom->atom(i), sc_al->m_geom->pos(i));
               g.xfield<float>(xgeom_charge, g.nat()-1) = accum_chg;
             }
+
         }
 
       sc_al->m_geom->clear();

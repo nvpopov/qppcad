@@ -189,8 +189,8 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
           fmt::format(first ? "{} {:8.8f} {:8.8f} {:8.8f}" : "\n{} {:8.8f} {:8.8f} {:8.8f}",
                       geom_view_labels_subsys_t::label_gen_fn(gv, cur_style, rec.m_atm),
                       pos_i[0],
-                      pos_i[1],
-                      pos_i[2]
+          pos_i[1],
+          pos_i[2]
           );
 
       first = false;
@@ -468,43 +468,43 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
   app_state_t *astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
 
-  if (!ok) throw std::invalid_argument("invalid ws");
+      if (!ok) throw std::invalid_argument("invalid ws");
 
-  //bool succes{false};
+      //bool succes{false};
 
-  auto new_gv = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
-  new_gv->m_name = fmt::format("composed_{}", cur_ws->m_ws_items.size());
-  cur_ws->add_item_to_ws(new_gv);
+      auto new_gv = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
+      new_gv->m_name = fmt::format("composed_{}", cur_ws->m_ws_items.size());
+      cur_ws->add_item_to_ws(new_gv);
 
-  auto new_as_gv = new_gv->cast_as<geom_view_t>();
-  new_as_gv->begin_structure_change();
+      auto new_as_gv = new_gv->cast_as<geom_view_t>();
+      new_as_gv->begin_structure_change();
 
-  int img_idx = 0;
-  geom_anim_record_t<float> new_anim;
-  new_anim.frames.resize(gvs.size());
-  new_anim.m_anim_name = "composed0";
-  new_anim.m_anim_type = geom_anim_t::anim_geo_opt;
+      int img_idx = 0;
+      geom_anim_record_t<float> new_anim;
+      new_anim.frames.resize(gvs.size());
+      new_anim.m_anim_name = "composed0";
+      new_anim.m_anim_type = geom_anim_t::anim_geo_opt;
 
-  for (auto list_itm : gvs)
-    if (py::isinstance<geom_view_t &>(list_itm)) {
+      for (auto list_itm : gvs)
+      if (py::isinstance<geom_view_t &>(list_itm)) {
 
-        geom_view_t &gv_src = py::cast<geom_view_t &>(list_itm);
-        //py::print(fmt::format("{} fff", gv_src.m_name));
+      geom_view_t &gv_src = py::cast<geom_view_t &>(list_itm);
+      //py::print(fmt::format("{} fff", gv_src.m_name));
 
-        if (img_idx == 0) {
-            gv_src.copy_to_xgeom(*new_as_gv->m_geom);
-          }
+      if (img_idx == 0) {
+          gv_src.copy_to_xgeom(*new_as_gv->m_geom);
+        }
 
-        new_anim.frames[img_idx].atom_pos.resize(new_as_gv->m_geom->nat());
+      new_anim.frames[img_idx].atom_pos.resize(new_as_gv->m_geom->nat());
 
-        for (size_t i = 0; i < new_as_gv->m_geom->nat(); i++)
-          new_anim.frames[img_idx].atom_pos[i] = gv_src.m_geom->pos(i);
+      for (size_t i = 0; i < new_as_gv->m_geom->nat(); i++)
+        new_anim.frames[img_idx].atom_pos[i] = gv_src.m_geom->pos(i);
 
-        img_idx++;
+      img_idx++;
 
-        gv_src.m_is_visible = false;
+      gv_src.m_is_visible = false;
 
-      }
+    }
 
   new_as_gv->m_anim->m_anim_data.emplace_back(std::move(new_anim));
 
@@ -544,34 +544,39 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::generate_ncells(geom_view_t *gv,
 
 }
 
-void geom_view_tools_t::generate_supercell(geom_view_t *src, geom_view_t *dst, index sc_dim) {
+void geom_view_tools_t::generate_supercell(geometry<float, periodic_cell<float> > *src,
+                                           geometry<float, periodic_cell<float> > *dst,
+                                           index sc_dim,
+                                           std::optional<geom_view_role_e> role) {
+
+  app_state_t::get_inst()->tlog("@SUPERCELL IDX {}", sc_dim);
 
   if (!src || !dst /*|| sc_dim != src->m_geom->DIM*/) {
       return;
     }
 
-  if (src->m_geom->DIM != dst->m_geom->DIM) {
+  if (src->DIM != dst->DIM) {
       return;
     }
 
-//  if (src->m_geom->DIM != sc_dim.DIM) {
-//      return;
-//    }
-
   for (auto i = 0; i < sc_dim.DIM; i++)
-    dst->m_geom->cell.v[i] = src->m_geom->cell.v[i] * (sc_dim(i) + 1);
+    dst->cell.v[i] = src->cell.v[i] * (sc_dim(i) + 1);
 
-  app_state_t::get_inst()->tlog("@SUPERCELL IDX {}", sc_dim);
+  xgeometry<float, periodic_cell<float> > *xsrc = nullptr;
+  xgeometry<float, periodic_cell<float> > *xdst = nullptr;
 
-  for (auto i = 0; i < src->m_geom->nat(); i++)
-    for (iterator idx_it(index::D(src->m_geom->DIM).all(0), sc_dim); !idx_it.end(); idx_it++ ) {
-        vector3<float> new_atom_pos = src->m_geom->pos(i, idx_it);
+  if (src->is_xgeometry()) xsrc = (xgeometry<float, periodic_cell<float> > *)(&src);
+  if (dst->is_xgeometry()) xdst = (xgeometry<float, periodic_cell<float> > *)(&dst);
+
+  for (auto i = 0; i < src->nat(); i++)
+    for (iterator idx_it(index::D(src->DIM).all(0), sc_dim); !idx_it.end(); idx_it++ ) {
+        vector3<float> new_atom_pos = src->pos(i, idx_it);
         app_state_t::get_inst()->tlog("@SUPERCELL {} {} {} {}",
                                       i, new_atom_pos[0], new_atom_pos[1], new_atom_pos[2]);
-        dst->m_geom->add(src->m_geom->atom(i), new_atom_pos);
-        if (src->m_role == geom_view_role_e::r_uc)
-          dst->m_geom->xfield<float>(xgeom_charge, src->m_geom->nat()-1) =
-              src->m_geom->xfield<float>(xgeom_charge, i);
+        dst->add(src->atom(i), new_atom_pos);
+
+        if (xsrc && xdst && role && *role == geom_view_role_e::r_uc)
+          xdst->xfield<float>(xgeom_charge, src->nat()-1) = xsrc->xfield<float>(xgeom_charge, i);
       }
 
 }
