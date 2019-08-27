@@ -549,7 +549,7 @@ void geom_view_tools_t::generate_supercell(geometry<float, periodic_cell<float> 
                                            index sc_dim,
                                            std::optional<geom_view_role_e> role) {
 
-  app_state_t::get_inst()->tlog("@SUPERCELL IDX {}", sc_dim);
+  //app_state_t::get_inst()->tlog("@SUPERCELL IDX {}", sc_dim);
 
   if (!src || !dst /*|| sc_dim != src->m_geom->DIM*/) {
       return;
@@ -571,8 +571,8 @@ void geom_view_tools_t::generate_supercell(geometry<float, periodic_cell<float> 
   for (auto i = 0; i < src->nat(); i++)
     for (iterator idx_it(index::D(src->DIM).all(0), sc_dim); !idx_it.end(); idx_it++ ) {
         vector3<float> new_atom_pos = src->pos(i, idx_it);
-        app_state_t::get_inst()->tlog("@SUPERCELL {} {} {} {}",
-                                      i, new_atom_pos[0], new_atom_pos[1], new_atom_pos[2]);
+//        app_state_t::get_inst()->tlog("@SUPERCELL {} {} {} {}",
+//                                      i, new_atom_pos[0], new_atom_pos[1], new_atom_pos[2]);
         dst->add(src->atom(i), new_atom_pos);
 
         if (xsrc && xdst && role && *role == geom_view_role_e::r_uc)
