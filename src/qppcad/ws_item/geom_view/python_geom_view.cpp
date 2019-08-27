@@ -238,23 +238,28 @@ void py_geom_view_reg_helper_t::reg(
   py_displ_proj_reg_helper_t::reg(module);
 
   auto gvt = module.def_submodule("gvt", "geom_view_t tools");
-  gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms)
-     .def("purify_boundary_atoms", &geom_view_tools_t::purify_boundary_atoms)
+  gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms,
+          py::arg("gv"), py::arg("atoms_to_shake"), py::arg("magn"))
+     .def("purify_boundary_atoms", &geom_view_tools_t::purify_boundary_atoms,
+          py::arg("dst"), py::arg("src"))
 
-     .def("dipole_moment", &geom_view_tools_t::dipole_moment)
-     .def("total_charge", &geom_view_tools_t::total_charge)
-     .def("get_charge_partition", &geom_view_tools_t::py_get_charge_partition)
+     .def("dipole_moment", &geom_view_tools_t::dipole_moment, py::arg("gv"))
+     .def("total_charge", &geom_view_tools_t::total_charge, py::arg("gv"))
+     .def("get_charge_partition", &geom_view_tools_t::py_get_charge_partition, py::arg("gv"))
 
-     .def("pertrub_via_normal_mode", &geom_view_tools_t::pertrub_via_normal_mode)
+     .def("pertrub_via_normal_mode", &geom_view_tools_t::pertrub_via_normal_mode,
+          py::arg("gv"), py::arg("disp"))
      .def("pretty_print_selected_atoms", &geom_view_tools_t::pretty_print_selected_atoms,
           py::arg("gv"), py::arg("new_frame") = vector3<float>{0})
      .def("flip_atom_in_cell", &geom_view_tools_t::flip_atom_in_cell,
                       py::arg("gv"), py::arg("at_id"), py::arg("dim_id"),
                       py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false)
-     .def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell)
-     .def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point)
+     .def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell,
+          py::arg("gv"), py::arg("dim_id"), py::arg("flip_magn") = 1)
+     .def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point,
+          py::arg("gv"), py::arg("fpoint"))
 
-     .def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn)
+     .def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn, py::arg("gv"))
      .def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
                       py::arg("gv"), py::arg("score_eps") = 0.1f)
      .def("clamp_atoms_to_cell", &geom_view_tools_t::clamp_atoms_to_cell,
@@ -266,13 +271,23 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("what_gv"), py::arg("to_gv"), py::arg("start_offset"),
            py::arg("axis_steps") = vector3<float>{0.1}, py::arg("total_steps") = 200)
 
-      .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms)
-      .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images)
+      .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms,
+           py::arg("gv"), py::arg("new_a"), py::arg("new_b"), py::arg("new_c"))
+      .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images, py::arg("gvs"))
 
-      .def("generate_ncells", &geom_view_tools_t::generate_ncells);
+      .def("generate_scell", &geom_view_tools_t::generate_supercell,
+           py::arg("src"), py::arg("dst"), py::arg("index"), py::arg("role") = std::nullopt)
+      .def("generate_ncells", &geom_view_tools_t::generate_ncells, py::arg("gv"),
+           py::arg("s_a"), py::arg("e_a"),
+           py::arg("s_b"), py::arg("e_b"),
+           py::arg("s_c"), py::arg("e_c"));
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
-  clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance)
-     .def("color_by_dist_pairs", &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs);
+  clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,
+          py::arg("min_dist"), py::arg("min_dist_color"),
+          py::arg("over_dist_color"))
+     .def("color_by_dist_pairs", &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs,
+          py::arg("min_dist"), py::arg("min_dist_color"), py::arg("over_dist_color"),
+          py::arg("atom_type1"), py::arg("atom_type2"));
 
 }
