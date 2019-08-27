@@ -1,4 +1,5 @@
 #include <qppcad/tools/supercell/supercell.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
@@ -72,25 +73,14 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   //sc_al->set_parent_workspace(parent_ws);
   sc_al->begin_structure_change();
 
-  sc_al->m_geom->cell.v[0] = al->m_geom->cell.v[0] * (a_steps);
-  sc_al->m_geom->cell.v[1] = al->m_geom->cell.v[1] * (b_steps);
-  sc_al->m_geom->cell.v[2] = al->m_geom->cell.v[2] * (c_steps);
-
   if (al->m_role == geom_view_role_e::r_uc) {
       sc_al->m_draw_img_atoms = false;
       sc_al->m_draw_img_bonds = false;
     }
 
-  for (auto i = 0; i < al->m_geom->nat(); i++)
-    for (iterator idx_it(index::D(al->m_geom->DIM).all(0),
-                         index({a_steps-1, b_steps-1, c_steps-1}));
-         !idx_it.end(); idx_it++ ) {
-        vector3<float> new_atom_pos = al->m_geom->pos(i, idx_it);
-        sc_al->m_geom->add(al->m_geom->atom(i), new_atom_pos);
-        if (al->m_role == geom_view_role_e::r_uc)
-          sc_al->m_geom->xfield<float>(xgeom_charge, sc_al->m_geom->nat()-1) =
-              al->m_geom->xfield<float>(xgeom_charge, i);
-      }
+  index sc_dim{a_steps - 1 , b_steps - 1 , c_steps - 1};
+
+  geom_view_tools_t::generate_supercell(al, sc_al.get(), sc_dim);
 
   sc_al->m_pos = al->m_pos + al->m_geom->cell.v[0] * 1.4f;
   sc_al->m_name = al->m_name + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps);
@@ -125,7 +115,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
           bool need_to_add{true};
           for (auto &elem : res)
             if (elem.m_idx == index::D(sc_al->m_geom->DIM).all(0)) {
-                accum_chg +=  sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
+                accum_chg += sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
                 if (i > elem.m_atm) need_to_add = false;
               }
 

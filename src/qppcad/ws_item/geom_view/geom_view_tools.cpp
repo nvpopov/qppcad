@@ -544,6 +544,38 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::generate_ncells(geom_view_t *gv,
 
 }
 
+void geom_view_tools_t::generate_supercell(geom_view_t *src, geom_view_t *dst, index sc_dim) {
+
+  if (!src || !dst /*|| sc_dim != src->m_geom->DIM*/) {
+      return;
+    }
+
+  if (src->m_geom->DIM != dst->m_geom->DIM) {
+      return;
+    }
+
+//  if (src->m_geom->DIM != sc_dim.DIM) {
+//      return;
+//    }
+
+  for (auto i = 0; i < sc_dim.DIM; i++)
+    dst->m_geom->cell.v[i] = src->m_geom->cell.v[i] * (sc_dim(i) + 1);
+
+  app_state_t::get_inst()->tlog("@SUPERCELL IDX {}", sc_dim);
+
+  for (auto i = 0; i < src->m_geom->nat(); i++)
+    for (iterator idx_it(index::D(src->m_geom->DIM).all(0), sc_dim); !idx_it.end(); idx_it++ ) {
+        vector3<float> new_atom_pos = src->m_geom->pos(i, idx_it);
+        app_state_t::get_inst()->tlog("@SUPERCELL {} {} {} {}",
+                                      i, new_atom_pos[0], new_atom_pos[1], new_atom_pos[2]);
+        dst->m_geom->add(src->m_geom->atom(i), new_atom_pos);
+        if (src->m_role == geom_view_role_e::r_uc)
+          dst->m_geom->xfield<float>(xgeom_charge, src->m_geom->nat()-1) =
+              src->m_geom->xfield<float>(xgeom_charge, i);
+      }
+
+}
+
 void geom_view_tools_t::filter_uniq(geom_view_t *gv) {
 
 }

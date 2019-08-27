@@ -76,7 +76,7 @@ namespace qpp {
                                                             int s_a, int e_a,
                                                             int s_b, int e_b,
                                                             int s_c, int e_c);
-
+        static void generate_supercell(geom_view_t *src, geom_view_t *dst, index sc_dim);
         /* filters */
         static void filter_uniq(geom_view_t *gv);
 
