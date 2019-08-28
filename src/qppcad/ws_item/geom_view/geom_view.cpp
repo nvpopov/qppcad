@@ -18,7 +18,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-geom_view_t::geom_view_t(): ws_item_t () {
+geom_view_t::geom_view_t(): ws_item_t() {
 
   set_default_flags(ws_item_flags_default |
                     ws_item_flags_support_tr |
@@ -66,7 +66,7 @@ geom_view_t::geom_view_t(): ws_item_t () {
    "ov",//12
    "atom_r", // 13
    "tag" //14
-        },
+  },
 
   {type_string, //0
    type_real, //1
@@ -83,7 +83,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
    type_bool, // 12
    type_real, // 13
    type_string //14
-        });
+   }
+        );
 
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;
@@ -101,8 +102,8 @@ geom_view_t::geom_view_t(): ws_item_t () {
 
 }
 
-void geom_view_t::vote_for_view_vectors (vector3<float> &out_look_pos,
-                                         vector3<float> &out_look_at) {
+void geom_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
+                                        vector3<float> &out_look_at) {
   if (m_geom->nat() > 1) {
       out_look_at += (m_ext_obs->aabb.max + m_ext_obs->aabb.min) / 2.0;
       vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
@@ -203,12 +204,12 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
 }
 
-void geom_view_t::geometry_changed () {
+void geom_view_t::geometry_changed() {
   if (m_ext_obs)
     m_aabb = m_ext_obs->aabb;
 }
 
-void geom_view_t::render () {
+void geom_view_t::render() {
 
   ws_item_t::render();
 
@@ -333,7 +334,7 @@ void geom_view_t::rebond() {
 
 }
 
-bool geom_view_t::mouse_click (ray_t<float> *click_ray) {
+bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -407,7 +408,7 @@ void geom_view_t::mouse_double_click(ray_t<float> *ray) {
 
 }
 
-void geom_view_t::sel_atoms (bool all) {
+void geom_view_t::sel_atoms(bool all) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -428,7 +429,7 @@ void geom_view_t::sel_atoms (bool all) {
 
 }
 
-void geom_view_t::sel_atom (int atom_id) {
+void geom_view_t::sel_atom(int atom_id) {
 
   if (!m_geom) return;
   sel_atom(atom_id, index::D(m_geom->DIM).all(0));
@@ -558,7 +559,7 @@ void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
 
 }
 
-void geom_view_t::sel_by_type (const int item_type_to_select) {
+void geom_view_t::sel_by_type(const int item_type_to_select) {
 
   app_state_t* astate = app_state_t::get_inst();
   if (!m_geom) return;
@@ -590,7 +591,7 @@ void geom_view_t::unsel_by_type(const int item_type_to_unselect) {
 
 }
 
-void geom_view_t::inv_sel_atoms () {
+void geom_view_t::inv_sel_atoms() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -655,7 +656,7 @@ void geom_view_t::sq_sel_by_box(const float box_scale = 1.1) {
 
 }
 
-void geom_view_t::ins_atom (const int atom_type, const vector3<float> &pos) {
+void geom_view_t::ins_atom(const int atom_type, const vector3<float> &pos) {
 
   if (!m_geom) return;
 
@@ -664,7 +665,7 @@ void geom_view_t::ins_atom (const int atom_type, const vector3<float> &pos) {
 
 }
 
-void geom_view_t::ins_atom (const std::string &atom_name, const vector3<float> &pos) {
+void geom_view_t::ins_atom(const std::string &atom_name, const vector3<float> &pos) {
 
   if (!m_geom) return;
   m_anim->m_force_non_animable = true;
@@ -672,7 +673,7 @@ void geom_view_t::ins_atom (const std::string &atom_name, const vector3<float> &
 
 }
 
-void geom_view_t::upd_atom (const int at_id, const vector3<float> &pos) {
+void geom_view_t::upd_atom(const int at_id, const vector3<float> &pos) {
 
   if (!m_geom) return;
   m_anim->m_force_non_animable = true;
@@ -682,7 +683,7 @@ void geom_view_t::upd_atom (const int at_id, const vector3<float> &pos) {
 
 }
 
-void geom_view_t::upd_atom (const int at_id, const std::string &at_name) {
+void geom_view_t::upd_atom(const int at_id, const std::string &at_name) {
 
   if (!m_geom) return;
   m_anim->m_force_non_animable = true;
@@ -1063,7 +1064,7 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 
 }
 
-void geom_view_t::translate_selected (const vector3<float> &t_vec) {
+void geom_view_t::translate_selected(const vector3<float> &t_vec) {
 
   if (!m_geom) return;
 
@@ -1075,7 +1076,7 @@ void geom_view_t::translate_selected (const vector3<float> &t_vec) {
 
 }
 
-void geom_view_t::delete_selected_atoms () {
+void geom_view_t::delete_selected_atoms() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1175,7 +1176,7 @@ void geom_view_t::refine_from_frac_coord() {
 
 }
 
-std::string geom_view_t::compose_type_descr () {
+std::string geom_view_t::compose_type_descr() {
   return m_geom ? fmt::format("geom. view, D = [{}d]", m_geom->DIM) : "geom. view(empty)";
 }
 
@@ -1197,7 +1198,7 @@ void geom_view_t::update (float delta_time) {
 
 }
 
-float geom_view_t::get_bb_prescaller () {
+float geom_view_t::get_bb_prescaller() {
   if (m_geom && m_geom->DIM == 3) return 1.5f;
   return 1.1f;
 }
@@ -1206,20 +1207,20 @@ bool geom_view_t::is_bb_visible() {
   return m_geom && m_geom->DIM == 0;
 }
 
-uint32_t geom_view_t::get_num_cnt_selected () {
+uint32_t geom_view_t::get_num_cnt_selected() {
   return this->m_atom_idx_sel.size();
 }
 
-size_t geom_view_t::get_content_count () {
+size_t geom_view_t::get_content_count() {
   return m_geom ? m_geom->nat() : 0;
 }
 
-void geom_view_t::on_begin_content_gizmo_translate () {
+void geom_view_t::on_begin_content_gizmo_translate() {
   //c_app::log(fmt::format("Start of translating node [{}] content", m_name));
   //m_tws_tr->do_action(act_lock);
 }
 
-void geom_view_t::apply_intermediate_translate_content (const vector3<float> &pos) {
+void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos) {
 
   app_state_t* astate = app_state_t::get_inst();
   if (!m_geom) return;
@@ -1237,12 +1238,12 @@ void geom_view_t::apply_intermediate_translate_content (const vector3<float> &po
 
 }
 
-void geom_view_t::on_end_content_gizmo_translate () {
+void geom_view_t::on_end_content_gizmo_translate() {
   //c_app::log(fmt::format("End of translating node [{}] content", m_name));
   //m_tws_tr->do_action(act_unlock);
 }
 
-void geom_view_t::recalc_gizmo_barycenter () {
+void geom_view_t::recalc_gizmo_barycenter() {
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
 
@@ -1281,7 +1282,7 @@ void geom_view_t::shift(const vector3<float> shift) {
 
 }
 
-void geom_view_t::save_to_json (json &data) {
+void geom_view_t::save_to_json(json &data) {
 
   ws_item_t::save_to_json(data);
 
@@ -1466,7 +1467,7 @@ void geom_view_t::save_to_json (json &data) {
 
 }
 
-void geom_view_t::load_from_json (json &data, repair_connection_info_t &rep_info) {
+void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
   ws_item_t::load_from_json(data, rep_info);
 

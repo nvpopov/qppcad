@@ -210,6 +210,7 @@ void py_geom_view_reg_helper_t::reg(
                        {return src.m_subcells_range;},
                        [](geom_view_t &src, const vector3<int> value)
                        {src.m_subcells_range = value; src.update_oi();})
+         .def("ts", &geom_view_t::translate_selected)
          .def("get_xcolor", &geom_view_t::get_xcolor)
          .def("set_xcolor", &geom_view_t::set_xcolorv)
          .def("set_xcolor", &geom_view_t::set_xcolorf)
