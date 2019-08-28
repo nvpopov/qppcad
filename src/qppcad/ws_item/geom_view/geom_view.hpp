@@ -225,6 +225,8 @@ namespace qpp {
         void sel_by_type(const int item_type_to_select);
         void unsel_by_type(const int item_type_to_unselect);
         void inv_sel_atoms();
+        void sel_by_box(vector3<float> start_pos, vector3<float> end_pos);
+        void sq_sel_by_box(const float box_scale);
 
         void ins_atom(const int atom_type, const vector3<float> &pos);
         void ins_atom(const std::string &atom_name, const vector3<float> &pos);

@@ -614,6 +614,47 @@ void geom_view_t::inv_sel_atoms () {
 
 }
 
+void geom_view_t::sel_by_box(vector3<float> start_pos, vector3<float> end_pos) {
+
+  /**
+   * brute force solution
+  */
+  for (size_t i = 0; i < m_geom->nat(); i++) {
+
+     aabb_3d_t<float> aabb{start_pos, end_pos};
+     auto is_inside_aabb = aabb.test_point(m_geom->pos(i));
+//     app_state_t::get_inst()->tlog("@DEBUG gv::sel_by_box ap={} sp={}, ep={}, is_inside={}",
+//                                   m_geom->pos(i), start_pos, end_pos, is_inside_aabb);
+     if (is_inside_aabb) sel_atom(i);
+
+    }
+
+}
+
+void geom_view_t::sq_sel_by_box(const float box_scale = 1.1) {
+
+  if (m_atom_idx_sel.size() != 2) return;
+
+  auto idx1 = m_atom_idx_sel.begin();
+  auto idx2 = ++m_atom_idx_sel.begin();
+  auto pos1 = m_geom->pos(idx1->m_atm, idx1->m_idx);
+  auto pos2 = m_geom->pos(idx2->m_atm, idx2->m_idx);
+
+//  app_state_t::get_inst()->tlog("@DEBUG gv::sq_sel_by_box {} {}", pos1, pos2);
+
+  vector3<float> center = (pos1 + pos2) * 0.5f;
+  vector3<float> len{0};
+
+  for (size_t i = 0; i < 3; i++)
+    len[i] = std::max(std::max(pos1[i], pos2[i]) - std::min(pos1[i], pos2[i]), 0.1f);
+
+  auto pos1_r = center - len * 0.5f * box_scale;
+  auto pos2_r = center + len * 0.5f * box_scale;
+
+  sel_by_box(pos1_r, pos2_r);
+
+}
+
 void geom_view_t::ins_atom (const int atom_type, const vector3<float> &pos) {
 
   if (!m_geom) return;

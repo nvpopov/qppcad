@@ -534,9 +534,8 @@ void simple_query::embed_cube() {
   vector3<float> center = (p1 + p2) * 0.5f;
   vector3<float> len{0};
 
-  for (size_t i = 0; i < 3; i++) len[i] = std::max(
-                                            std::max(p1[i], p2[i]) - std::min(p1[i], p2[i]),
-                                            0.1f);
+  for (size_t i = 0; i < 3; i++)
+    len[i] = std::max(std::max(p1[i], p2[i]) - std::min(p1[i], p2[i]), 0.1f);
 
   auto new_cube = std::make_shared<cube_primitive_t>();
   new_cube->m_name = fmt::format("cube{}", cur_ws->m_ws_items.size());
