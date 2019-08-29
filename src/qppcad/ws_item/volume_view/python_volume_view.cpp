@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/volume_view/python_volume_view.hpp>
+#include <qppcad/ws_item/volume_view/volume_view_tools.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
