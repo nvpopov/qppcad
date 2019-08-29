@@ -11,12 +11,8 @@ namespace qpp {
     struct geom_view_tools_t {
 
         /* shake tools */
-        static void shake_atoms(geom_view_t *gv,
-                                std::set<size_t> atoms_to_shake,
-                                float magn);
-        static void py_shake_atoms(geom_view_t *gv,
-                                   py::list atoms_to_shake,
-                                   float magn);
+        static void shake_atoms(geom_view_t *gv, std::set<size_t> atoms_to_shake, float magn);
+        static void py_shake_atoms(geom_view_t *gv, py::list atoms_to_shake, float magn);
 
         /* charge, multipole moment tools */
         static vector3<float> dipole_moment(geom_view_t *gv);
@@ -49,8 +45,7 @@ namespace qpp {
                                            vector3<float> new_c);
         static void purify_boundary_atoms(geom_view_t *dst,
                                           geom_view_t *src);
-        static void clamp_atoms_to_cell(geom_view_t *gv,
-                                        bool ignore_selection = true);
+        static void clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection = true);
 
         static vector3<float> center_cell_on(geom_view_t *gv,
                                              vector3<float> new_cnt,
@@ -58,8 +53,7 @@ namespace qpp {
 
         /* sublattices, atoms clustering */
         static std::vector<size_t> get_atoms_cn(geom_view_t *gv);
-        static std::vector<size_t> get_atoms_sublattices(geom_view_t *gv,
-                                                         float score_eps = 0.1f);
+        static std::vector<size_t> get_atoms_sublattices(geom_view_t *gv, float score_eps = 0.1f);
 
         /* structure aligning */
         static void tr_align_geoms(geom_view_t *what_gv,

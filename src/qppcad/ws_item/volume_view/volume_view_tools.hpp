@@ -10,7 +10,9 @@ namespace qpp {
 
     struct volume_view_tools_t {
 
-
+      static void sum_volumes(volume_view_t *src1, size_t vol1_idx, float prefactor1,
+                              volume_view_t *src2, size_t vol2_idx, float prefactor2,
+                              volume_view_t *dst);
 
     };
 

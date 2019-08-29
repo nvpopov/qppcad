@@ -16,4 +16,10 @@ void py_volume_view_reg_helper_t::reg(
                        py::arg("volume_id"), py::arg("cut_fnc"))
                   .def("clone_volume", &volume_view_t::clone_volume);
 
+  auto vvt_module = module.def_submodule("vvt", "volume_view_t tools");
+  vvt_module.def("sum_volumes", &volume_view_tools_t::sum_volumes,
+                 py::arg("src1"), py::arg("vol1_idx"), py::arg("prefactor1"),
+                 py::arg("src2"), py::arg("vol2_idx"), py::arg("prefactor2"),
+                 py::arg("dst"));
+
 }

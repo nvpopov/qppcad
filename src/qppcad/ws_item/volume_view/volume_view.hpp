@@ -37,7 +37,7 @@ namespace qpp {
 
         ws_volume_t m_volume_type;
 
-        void copy_from(ws_volume_record_t &other);
+        void copy_from(ws_volume_record_t &other, bool clear_volume = false);
 
     };
 

@@ -276,9 +276,21 @@ size_t volume_view_t::clone_volume(size_t volume_id) {
 }
 
 
-void ws_volume_record_t::copy_from(ws_volume_record_t &other) {
+void ws_volume_record_t::copy_from(ws_volume_record_t &other, bool clear_volume) {
 
-  m_volume             = other.m_volume;
+  if (clear_volume) {
+
+      m_volume.m_axis = other.m_volume.m_axis;
+      m_volume.m_steps = other.m_volume.m_steps;
+      m_volume.m_addr_mode = other.m_volume.m_addr_mode;
+      m_volume.m_tot_atoms = other.m_volume.m_tot_atoms;
+      m_volume.m_name = other.m_volume.m_name;
+      m_volume.m_has_negative_values = other.m_volume.m_has_negative_values;
+      m_volume.m_field.resize(other.m_volume.m_field.size(), 0);
+
+    } else {
+      m_volume             = other.m_volume;
+    }
 
   m_alpha              = other.m_alpha;
   m_isolevel           = other.m_isolevel;

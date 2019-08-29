@@ -33,9 +33,7 @@ void geom_view_tools_t::shake_atoms(geom_view_t *gv,
 
 }
 
-void geom_view_tools_t::py_shake_atoms(geom_view_t *gv,
-                                       py::list atoms_to_shake,
-                                       float magn) {
+void geom_view_tools_t::py_shake_atoms(geom_view_t *gv, py::list atoms_to_shake, float magn) {
 
   if (!gv) return;
 
@@ -47,8 +45,7 @@ void geom_view_tools_t::py_shake_atoms(geom_view_t *gv,
 
 }
 
-void geom_view_tools_t::purify_boundary_atoms(geom_view_t *dst,
-                                              geom_view_t *src) {
+void geom_view_tools_t::purify_boundary_atoms(geom_view_t *dst, geom_view_t *src) {
 
   if (!dst || !src) return;
 
