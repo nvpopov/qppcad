@@ -283,7 +283,10 @@ void py_geom_view_reg_helper_t::reg(
       .def("generate_ncells", &geom_view_tools_t::generate_ncells, py::arg("gv"),
            py::arg("s_a"), py::arg("e_a"),
            py::arg("s_b"), py::arg("e_b"),
-           py::arg("s_c"), py::arg("e_c"));
+           py::arg("s_c"), py::arg("e_c"))
+
+      .def("set_charge_for_type", &geom_view_tools_t::set_charge_for_type,
+           py::arg("gv"), py::arg("atype"), py::arg("chg"));
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,

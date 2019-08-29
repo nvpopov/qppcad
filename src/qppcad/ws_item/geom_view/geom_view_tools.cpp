@@ -582,6 +582,18 @@ void geom_view_tools_t::filter_uniq(geom_view_t *gv) {
 
 }
 
+void geom_view_tools_t::set_charge_for_type(geom_view_t *gv,
+                                            const std::string &atype,
+                                            const float chg) {
+
+  if (!gv) return;
+
+  for (size_t i = 0; i < gv->m_geom->nat(); i++)
+    if (gv->m_geom->atom_name(i) == atype)
+      gv->m_geom->charge(i) = chg;
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,

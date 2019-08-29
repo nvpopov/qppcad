@@ -77,6 +77,10 @@ namespace qpp {
         /* filters */
         static void filter_uniq(geom_view_t *gv);
 
+        static void set_charge_for_type(geom_view_t *gv,
+                                        const std::string &atype,
+                                        const float chg);
+
     };
 
   } // namespace cad
