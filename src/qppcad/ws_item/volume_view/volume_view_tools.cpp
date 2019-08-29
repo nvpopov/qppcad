@@ -7,7 +7,7 @@ using namespace qpp::cad;
 
 void volume_view_tools_t::sum_volumes(volume_view_t *src1, size_t vol1_idx, float prefactor1,
                                       volume_view_t *src2, size_t vol2_idx, float prefactor2,
-                                      volume_view_t *dst) {
+                                      volume_view_t *dst, std::optional<size_t> dst_id) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -30,7 +30,18 @@ void volume_view_tools_t::sum_volumes(volume_view_t *src1, size_t vol1_idx, floa
       return;
     }
 
-  std::shared_ptr<ws_volume_record_t> new_vol_rec = std::make_shared<ws_volume_record_t>();
+  if (dst_id && *dst_id >= dst->m_volumes.size()) {
+      return;
+    }
+
+  std::shared_ptr<ws_volume_record_t> new_vol_rec;
+
+  if (dst_id) {
+      new_vol_rec = dst->m_volumes[*dst_id];
+    } else {
+      new_vol_rec = std::make_shared<ws_volume_record_t>();
+    }
+
   new_vol_rec->copy_from(*vol1, true);
 
   auto &volume = new_vol_rec->m_volume;
@@ -49,7 +60,8 @@ void volume_view_tools_t::sum_volumes(volume_view_t *src1, size_t vol1_idx, floa
   new_vol_rec->m_need_to_regenerate = true;
   new_vol_rec->m_ready_to_render = false;
 
-  dst->m_volumes.push_back(new_vol_rec);
+  if (!dst_id) dst->m_volumes.push_back(new_vol_rec);
+
   if (dst->m_selected) astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
 
 }

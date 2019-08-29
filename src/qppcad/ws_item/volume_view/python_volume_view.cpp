@@ -20,6 +20,6 @@ void py_volume_view_reg_helper_t::reg(
   vvt_module.def("sum_volumes", &volume_view_tools_t::sum_volumes,
                  py::arg("src1"), py::arg("vol1_idx"), py::arg("prefactor1"),
                  py::arg("src2"), py::arg("vol2_idx"), py::arg("prefactor2"),
-                 py::arg("dst"));
+                 py::arg("dst"), py::arg("dst_id") = std::nullopt);
 
 }
