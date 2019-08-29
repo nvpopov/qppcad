@@ -10,16 +10,17 @@ void py_volume_view_reg_helper_t::reg(
 
   py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
   py_volume_view_t(module, "volume_view_t", ws_item_base);
-  py_volume_view_t.def("cut_sph", &volume_view_t::volume_cut_sph, py::arg("volume_id"),
-                       py::arg("sph_cnt"), py::arg("sph_rad"), py::arg("cut_inner") = false)
-                  .def("cut_fnc", &volume_view_t::volume_cut_fnc,
-                       py::arg("volume_id"), py::arg("cut_fnc"))
-                  .def("clone_volume", &volume_view_t::clone_volume);
+  py_volume_view_t.def("clone_volume", &volume_view_t::clone_volume);
 
   auto vvt_module = module.def_submodule("vvt", "volume_view_t tools");
   vvt_module.def("sum_volumes", &volume_view_tools_t::sum_volumes,
                  py::arg("src1"), py::arg("vol1_idx"), py::arg("prefactor1"),
                  py::arg("src2"), py::arg("vol2_idx"), py::arg("prefactor2"),
-                 py::arg("dst"), py::arg("dst_id") = std::nullopt);
+                 py::arg("dst"), py::arg("dst_id") = std::nullopt)
+            .def("cut_sph", &volume_view_tools_t::volume_cut_sph,
+                 py::arg("volume_id"), py::arg("dst"), py::arg("sph_cnt"),
+                 py::arg("sph_rad"), py::arg("cut_inner") = false)
+            .def("cut_fnc", &volume_view_tools_t::volume_cut_fnc,
+                 py::arg("dst"), py::arg("volume_id"), py::arg("cut_fnc"));
 
 }
