@@ -286,7 +286,8 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("s_c"), py::arg("e_c"))
 
       .def("set_charge_for_type", &geom_view_tools_t::set_charge_for_type,
-           py::arg("gv"), py::arg("atype"), py::arg("chg"));
+           py::arg("gv"), py::arg("atype"), py::arg("chg"))
+      .def("purify_atom_names_from_numbers", &geom_view_tools_t::purify_atom_names_from_numbers);
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,

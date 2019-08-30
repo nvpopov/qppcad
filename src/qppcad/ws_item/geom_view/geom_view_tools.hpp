@@ -81,6 +81,8 @@ namespace qpp {
                                         const std::string &atype,
                                         const float chg);
 
+        static void purify_atom_names_from_numbers(geom_view_t *gv);
+
     };
 
   } // namespace cad

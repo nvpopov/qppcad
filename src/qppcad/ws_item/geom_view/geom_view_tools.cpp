@@ -594,6 +594,28 @@ void geom_view_tools_t::set_charge_for_type(geom_view_t *gv,
 
 }
 
+void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (!gv) return;
+
+  for (size_t i = 0; i < gv->m_geom->nat(); i++) {
+
+      auto &atom_name = gv->m_geom->atom(i);
+      atom_name.erase(remove_if(atom_name.begin(),
+                                atom_name.end(),
+                                [](char c) {return !isalpha(c);} ),
+                      atom_name.end());
+
+    }
+
+  gv->m_geom->build_types();
+
+  if (gv->m_selected) astate->astate_evd->cur_ws_selected_item_changed();
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,
