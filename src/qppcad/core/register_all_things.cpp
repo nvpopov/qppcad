@@ -59,6 +59,7 @@
 #include <io/ccd_molden.hpp>
 #include <io/ccd_hoomd_xml.hpp>
 #include <io/write_coord.hpp>
+#include <io/adme.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -167,11 +168,19 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   size_t generic_atoms_coord_ff_hash =
       bhv_mgr->reg_ff("Simple coord w. names", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
+  size_t generic_atoms_coord_chg_ff_hash =
+      bhv_mgr->reg_ff("Simple coord w. names and chg.", "coord", generic_ff_g_hash,
+  {"coord", "coord"} );
+
   size_t molden_ff_hash =
       bhv_mgr->reg_ff("Molden", "molden", generic_ff_g_hash, {"mol", "molden"} );
 
   size_t hoomd_xml_ff_hash =
       bhv_mgr->reg_ff("Hoomd xml", "hoomd_xml", generic_ff_g_hash, {"hoomd", "xml"} );
+
+  size_t adme_ewald_uc_ff_hash =
+      bhv_mgr->reg_ff("Adme Ewald uc", "adme_ewald", generic_ff_g_hash, {"adme_ewald"} );
+
 
   auto xyz_ff_mgr =
       std::make_shared<
@@ -234,9 +243,18 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       std::make_shared<
       geom_view_io_saver_t<write_raw_coord<float, periodic_cell<float> >, false, 0 > >();
 
+  auto write_adme_ewald_uc_mgf =
+      std::make_shared<
+      geom_view_io_saver_t<write_adme_ewald_uc<float, periodic_cell<float> >, false, 0 > >();
+
   auto write_atoms_with_coord_mgf =
       std::make_shared<
       geom_view_io_saver_t<write_atoms_with_coord<float, periodic_cell<float> >, false, 0 > >();
+
+  auto write_atoms_with_coord_and_chg_mgf =
+      std::make_shared<
+      geom_view_io_saver_t<write_atoms_with_coord_and_chg<float, periodic_cell<float> >,
+      false, 0 > >();
 
   auto vasp_outcar_mgf =
       std::make_shared<
@@ -252,7 +270,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
   auto hoomd_xml_mgf =
       std::make_shared<
-      geom_view_io_ccd_t<read_ccd_from_hoomd_xml<float>,  true, true, true, false, false, 0> >();
+      geom_view_io_ccd_t<read_ccd_from_hoomd_xml<float>,  true, true, true, false, false, 3> >();
 
   auto generic_cube3d_mgf = std::make_shared<geom_view_io_cube_t>();
 
@@ -286,6 +304,12 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
                       geom_view_t::get_type_static());
 
   bhv_mgr->reg_io_bhv(write_atoms_with_coord_mgf, generic_atoms_coord_ff_hash,
+                      geom_view_t::get_type_static());
+
+  bhv_mgr->reg_io_bhv(write_atoms_with_coord_and_chg_mgf, generic_atoms_coord_chg_ff_hash,
+                      geom_view_t::get_type_static());
+
+  bhv_mgr->reg_io_bhv(write_adme_ewald_uc_mgf, adme_ewald_uc_ff_hash,
                       geom_view_t::get_type_static());
 
   bhv_mgr->reg_io_bhv(molden_mgf, molden_ff_hash,
