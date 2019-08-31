@@ -527,9 +527,8 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::generate_ncells(geom_view_t *gv,
   sc_al->begin_structure_change();
 
   for (auto i = 0; i < gv->m_geom->nat(); i++)
-    for (iterator idx_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c}));
-         !idx_it.end(); idx_it++ ) {
-        vector3<float> new_atom_pos = gv->m_geom->pos(i, idx_it);
+    for (iterator i_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c})); !i_it.end(); i_it++ ) {
+        vector3<float> new_atom_pos = gv->m_geom->pos(i, i_it);
         sc_al->m_geom->add(gv->m_geom->atom(i), new_atom_pos);
       }
 
@@ -614,6 +613,29 @@ void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
   gv->rebond();
 
   if (gv->m_selected) astate->astate_evd->cur_ws_selected_item_changed();
+
+}
+
+void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selected) {
+
+  if (!gv) return;
+  if (gv->m_atom_idx_sel.empty()) return;
+
+  std::shared_ptr<geom_view_t> ret_gv = std::make_shared<geom_view_t>();
+  ret_gv->copy_cell(*gv, false);
+  ret_gv->begin_structure_change();
+
+  index zero_gv = index::D(gv->m_geom->DIM).all(0);
+  for (auto &rec : gv->m_atom_idx_sel)
+    if (rec.m_idx == zero_gv) ret_gv->m_geom->add(gv->m_geom->atom(rec.m_atm),
+                                                  gv->m_geom->pos(rec.m_atm, rec.m_idx));
+
+  ret_gv->end_structure_change();
+
+  if (cut_selected) gv->delete_selected_atoms();
+
+  ret_gv->m_name = fmt::format("{}{}", gv->m_name, gv->m_parent_ws->m_ws_items.size());
+  gv->m_parent_ws->add_item_to_ws(ret_gv);
 
 }
 

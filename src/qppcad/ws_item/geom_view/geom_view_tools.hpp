@@ -83,6 +83,8 @@ namespace qpp {
 
         static void purify_atom_names_from_numbers(geom_view_t *gv);
 
+        static void cut_selected_as_new_gv(geom_view_t *gv, bool cut_selected = false);
+
     };
 
   } // namespace cad

@@ -844,7 +844,7 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tws_tree) {
       m_tws_tr->do_action(act_rebuild_ntable);
     }
 
-  if (is_selected()) astate->astate_evd->cur_ws_selected_item_changed();
+  if (is_selected() && m_parent_ws) astate->astate_evd->cur_ws_selected_item_changed();
 
 }
 
@@ -1071,6 +1071,7 @@ void geom_view_t::translate_selected(const vector3<float> &t_vec) {
   for (auto &elem : m_atom_idx_sel)
     if (elem.m_idx == index::D(m_geom->DIM).all(0))
       upd_atom(elem.m_atm, m_geom->pos(elem.m_atm) + t_vec);
+
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
 
@@ -1224,11 +1225,13 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
   if (!m_geom) return;
 
   bool someone_from_atoms_were_translated = false;
+
   for (auto &it : m_atom_idx_sel) {
       vector3<float> acc_pos = m_geom->coord(it.m_atm) + pos;
       m_geom->change_pos(it.m_atm, acc_pos);
       someone_from_atoms_were_translated = true;
     }
+
   if (someone_from_atoms_were_translated) {
       recalc_gizmo_barycenter();
       astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
