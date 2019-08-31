@@ -611,6 +611,7 @@ void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
     }
 
   gv->m_geom->build_types();
+  gv->rebond();
 
   if (gv->m_selected) astate->astate_evd->cur_ws_selected_item_changed();
 

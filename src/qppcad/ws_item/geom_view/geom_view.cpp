@@ -1101,13 +1101,12 @@ void geom_view_t::delete_selected_atoms() {
 
   m_atom_idx_sel.clear();
 
-  for (uint16_t delta = 0; delta < all_atom_num.size(); delta++) {
-      if (delta == 0 && all_atom_num.size() > 1)
-        m_tws_tr->do_action(act_lock);
-      if ((delta == all_atom_num.size() - 1) && all_atom_num.size() > 1)
-        m_tws_tr->do_action(act_unlock);
-      m_geom->erase(all_atom_num[delta] - delta);
-    }
+  begin_structure_change();
+
+  for (uint16_t delta = 0; delta < all_atom_num.size(); delta++)
+    m_geom->erase(all_atom_num[delta] - delta);
+
+  end_structure_change();
 
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
 
@@ -1138,13 +1137,12 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
 
   m_atom_idx_sel.clear();
 
-  for (uint16_t delta = 0; delta < all_atom_num.size(); delta++) {
-      if (delta == 0 && all_atom_num.size() > 1)
-        m_tws_tr->do_action(act_lock);
-      if ((delta == all_atom_num.size() - 1) && all_atom_num.size() > 1)
-        m_tws_tr->do_action(act_unlock);
-      m_geom->erase(all_atom_num[delta] - delta);
-    }
+  begin_structure_change();
+
+  for (uint16_t delta = 0; delta < all_atom_num.size(); delta++)
+    m_geom->erase(all_atom_num[delta] - delta);
+
+  end_structure_change();
 
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
 
