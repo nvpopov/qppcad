@@ -77,9 +77,7 @@ namespace qpp {
         /* filters */
         static void filter_uniq(geom_view_t *gv);
 
-        static void set_charge_for_type(geom_view_t *gv,
-                                        const std::string &atype,
-                                        const float chg);
+        static void set_charge_for_type(geom_view_t *gv, std::map<std::string, float> &map_t_chg);
 
         static void purify_atom_names_from_numbers(geom_view_t *gv);
 

@@ -582,14 +582,13 @@ void geom_view_tools_t::filter_uniq(geom_view_t *gv) {
 }
 
 void geom_view_tools_t::set_charge_for_type(geom_view_t *gv,
-                                            const std::string &atype,
-                                            const float chg) {
+                                            std::map<std::string, float> &map_t_chg) {
 
   if (!gv) return;
 
   for (size_t i = 0; i < gv->m_geom->nat(); i++)
-    if (gv->m_geom->atom_name(i) == atype)
-      gv->m_geom->charge(i) = chg;
+      if (auto chg_rec_ex = map_t_chg.find(gv->m_geom->atom_name(i));
+          chg_rec_ex != map_t_chg.end()) gv->m_geom->charge(i) = chg_rec_ex->second;
 
 }
 
