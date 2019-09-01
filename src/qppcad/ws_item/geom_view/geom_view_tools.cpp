@@ -622,6 +622,7 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
   std::shared_ptr<geom_view_t> ret_gv = std::make_shared<geom_view_t>();
   ret_gv->copy_cell(*gv, false);
+
   ret_gv->begin_structure_change();
 
   index zero_gv = index::D(gv->m_geom->DIM).all(0);

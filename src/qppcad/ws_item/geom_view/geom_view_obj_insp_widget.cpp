@@ -2013,11 +2013,11 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (b_al) {
-      auto it1 = b_al->m_atom_idx_sel.begin();
+  if (b_al && b_al->m_atom_ord_sel.size() == 2) {
+
+      auto it1 = b_al->m_atom_ord_sel.begin();
       auto it2 = it1++;
-      if (it2 != b_al->m_atom_idx_sel.end() &&
-          it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
+      if (it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
           it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
 
           pair_dist_mode_e mode;
@@ -2027,6 +2027,7 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
           astate->make_viewport_dirty();
         }
     }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_pair_dist_swap_button_clicked() {
