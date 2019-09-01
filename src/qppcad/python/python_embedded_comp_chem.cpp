@@ -14,6 +14,9 @@ PYBIND11_EMBEDDED_MODULE(cc, m) {
 
   auto module_orca = m.def_submodule("orca");
   module_orca.def("gen_multijob_from_anim", &orca_helper_t::gen_multijob_from_anim);
+  module_orca.def("gen_coord_section", &orca_helper_t::gen_coord_section,
+                  py::arg("gv"), py::arg("is_point_charge"),
+                  py::arg("basis_less_cnt"), py::arg("ecp_name"));
 
   m.def("get_raw_coords_section", &generic_qc_helper_t::get_raw_coords_section);
   m.def("gen_pair_dist_calc_data", &generic_qc_helper_t::gen_pair_dist_calc_data);

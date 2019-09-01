@@ -5,6 +5,7 @@
 #undef slots
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
+#include <pybind11/stl.h>
 //#include <pybind11/eigen.h>
 #pragma pop_macro("slots")
 
@@ -33,7 +34,10 @@ namespace qpp {
     struct orca_helper_t {
 
         static std::string gen_multijob_from_anim(std::shared_ptr<geom_view_t> gv, size_t anim_id);
-
+        static std::string gen_coord_section(geom_view_t *gv,
+                                             std::vector<std::string> &is_point_charge,
+                                             std::vector<std::string> &basis_less_cnt,
+                                             std::map<std::string, std::string> &ecp_name);
 
     };
 

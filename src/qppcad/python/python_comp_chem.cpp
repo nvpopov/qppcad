@@ -132,6 +132,49 @@ std::string orca_helper_t::gen_multijob_from_anim(std::shared_ptr<geom_view_t> g
 
 }
 
+std::string orca_helper_t::gen_coord_section(geom_view_t *gv,
+                                             std::vector<std::string> &is_point_charge,
+                                             std::vector<std::string> &basis_less_cnt,
+                                             std::map<std::string, std::string> &ecp_name) {
+
+  std::string rets;
+
+  if (!gv) {
+      throw std::invalid_argument("invalid gv!");
+      return rets;
+    }
+
+  for (size_t q = 0; q < gv->m_geom->nat(); q++) {
+
+      auto &pos = gv->m_geom->coord(q);
+      auto &atom_name = gv->m_geom->atom(q);
+
+      auto is_point_charge_itr =
+          std::find(is_point_charge.begin(), is_point_charge.end(), atom_name);
+      bool is_pc = is_point_charge_itr != is_point_charge.end();
+
+      auto is_basis_less_cnt_itr =
+          std::find(basis_less_cnt.begin(), basis_less_cnt.end(), atom_name);
+      bool is_blc = is_basis_less_cnt_itr != basis_less_cnt.end();
+
+      auto has_blc_ecp_it = ecp_name.find(atom_name);
+      bool has_blc_ecp = has_blc_ecp_it != ecp_name.end();
+
+      rets += fmt::format("{}{} {} {:>16.5f} {:>16.5f} {:>16.5f} {}\n",
+                          is_pc ? "Q" : gv->m_geom->atom_name(q),
+                          is_blc ? ">" : "",
+                          !is_pc && !is_blc ? "" : "   "+std::to_string(gv->m_geom->charge(q)),
+                          pos[0], pos[1], pos[2],
+                          is_blc && has_blc_ecp ?
+                            fmt::format("   NewECP \"{}\" end", has_blc_ecp_it->second) : ""
+          );
+
+    }
+
+  return rets;
+
+}
+
 std::string generic_qc_helper_t::get_raw_coords_section(std::shared_ptr<geom_view_t> gv) {
 
   std::string retv;
@@ -139,9 +182,7 @@ std::string generic_qc_helper_t::get_raw_coords_section(std::shared_ptr<geom_vie
   for (size_t i = 0; i < gv->m_geom->nat(); i++)
     retv+= fmt::format("{} {:15.8f} {:15.8f} {:15.8f}\n",
                gv->m_geom->atom(i),
-               gv->m_geom->pos(i)[0],
-               gv->m_geom->pos(i)[1],
-               gv->m_geom->pos(i)[2]);
+               gv->m_geom->pos(i)[0], gv->m_geom->pos(i)[1], gv->m_geom->pos(i)[2]);
 
   return retv;
 
