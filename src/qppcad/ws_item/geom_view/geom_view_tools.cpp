@@ -626,8 +626,12 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
   index zero_gv = index::D(gv->m_geom->DIM).all(0);
   for (auto &rec : gv->m_atom_idx_sel)
-    if (rec.m_idx == zero_gv) ret_gv->m_geom->add(gv->m_geom->atom(rec.m_atm),
-                                                  gv->m_geom->pos(rec.m_atm, rec.m_idx));
+    if (rec.m_idx == zero_gv) {
+        ret_gv->m_geom->add(gv->m_geom->atom(rec.m_atm), gv->m_geom->pos(rec.m_atm, rec.m_idx));
+        std::vector<datum> v;
+        gv->m_geom->get_fields(rec.m_atm, v);
+        ret_gv->m_geom->set_fields(ret_gv->m_geom->nat()-1, v);
+      }
 
   ret_gv->end_structure_change();
 
