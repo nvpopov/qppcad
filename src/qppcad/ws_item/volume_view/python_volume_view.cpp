@@ -14,8 +14,7 @@ void py_volume_view_reg_helper_t::reg(
 
   auto vvt_module = module.def_submodule("vvt", "volume_view_t tools");
   vvt_module.def("sum_volumes", &volume_view_tools_t::sum_volumes,
-                 py::arg("src1"), py::arg("vol1_idx"), py::arg("prefactor1"),
-                 py::arg("src2"), py::arg("vol2_idx"), py::arg("prefactor2"),
+                 py::arg("src"), py::arg("vol_idx"), py::arg("prefactor"),
                  py::arg("dst"), py::arg("dst_id") = std::nullopt)
             .def("cut_sph", &volume_view_tools_t::volume_cut_sph,
                  py::arg("volume_id"), py::arg("dst"), py::arg("sph_cnt"),

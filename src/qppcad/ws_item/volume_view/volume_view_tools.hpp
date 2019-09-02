@@ -10,9 +10,11 @@ namespace qpp {
 
     struct volume_view_tools_t {
 
-      static void sum_volumes(volume_view_t *src1, size_t vol1_idx, float prefactor1,
-                              volume_view_t *src2, size_t vol2_idx, float prefactor2,
-                              volume_view_t *dst, std::optional<size_t> dst_id = std::nullopt);
+      static void sum_volumes(std::vector<volume_view_t*> src,
+                              std::vector<size_t> vol_idx,
+                              std::vector<float> prefactor,
+                              volume_view_t *dst,
+                              std::optional<size_t> dst_id = std::nullopt);
 
       static void volume_cut_sph(volume_view_t *dst,
                                  size_t volume_id,
