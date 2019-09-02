@@ -213,6 +213,7 @@ void ws_volume_record_t::copy_from(ws_volume_record_t &other, bool clear_volume)
 
       m_volume.m_axis = other.m_volume.m_axis;
       m_volume.m_steps = other.m_volume.m_steps;
+      m_volume.m_offset = other.m_volume.m_offset;
       m_volume.m_addr_mode = other.m_volume.m_addr_mode;
       m_volume.m_tot_atoms = other.m_volume.m_tot_atoms;
       m_volume.m_name = other.m_volume.m_name;
