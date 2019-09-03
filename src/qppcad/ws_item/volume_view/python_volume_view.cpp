@@ -8,9 +8,57 @@ void py_volume_view_reg_helper_t::reg(
     pybind11::module &module,
     py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> &ws_item_base) {
 
+  py::class_<ws_volume_record_t, std::shared_ptr<ws_volume_record_t> >
+  py_ws_volume_record_t(module, "ws_volume_record_t");
+  py_ws_volume_record_t
+      .def_readonly("state_id", &ws_volume_record_t::m_state_id)
+      .def_readonly("spin_subspace", &ws_volume_record_t::m_spin_subspace)
+      .def_property("ready_to_render",
+                    [](ws_volume_record_t &src)
+                    {return src.m_ready_to_render;},
+                    [](ws_volume_record_t &src, const bool value)
+                    {src.m_ready_to_render = value; if(src.m_owner) src.m_owner->update_oi();})
+      .def_property("need_to_regenerate",
+                    [](ws_volume_record_t &src)
+                    {return src.m_need_to_regenerate;},
+                    [](ws_volume_record_t &src, const bool value)
+                    {src.m_need_to_regenerate = value; if(src.m_owner) src.m_owner->update_oi();})
+      .def_property("transparent_volume",
+                    [](ws_volume_record_t &src)
+                    {return src.m_transparent_volume;},
+                    [](ws_volume_record_t &src, const bool value)
+                    {src.m_transparent_volume = value; if(src.m_owner) src.m_owner->update_oi();})
+      .def_property("render_permanent",
+                    [](ws_volume_record_t &src)
+                    {return src.m_render_permanent;},
+                    [](ws_volume_record_t &src, const bool value)
+                    {src.m_render_permanent = value; if(src.m_owner) src.m_owner->update_oi();})
+      .def_property("color_pos",
+                    [](ws_volume_record_t &src)
+                    {return src.m_color_pos;},
+                    [](ws_volume_record_t &src, const vector3<float> value)
+                    {src.m_color_pos = value; if(src.m_owner) src.m_owner->update_oi();})
+      .def_property("color_neg",
+                    [](ws_volume_record_t &src)
+                    {return src.m_color_neg;},
+                    [](ws_volume_record_t &src, const vector3<float> value)
+                    {src.m_color_neg = value; if(src.m_owner) src.m_owner->update_oi();})
+      .def_property("color_vol",
+                    [](ws_volume_record_t &src)
+                    {return src.m_color_vol;},
+                    [](ws_volume_record_t &src, const vector3<float> value)
+                    {src.m_color_vol = value; if(src.m_owner) src.m_owner->update_oi();});
+
+
   py::class_<volume_view_t, std::shared_ptr<volume_view_t> >
   py_volume_view_t(module, "volume_view_t", ws_item_base);
-  py_volume_view_t.def("clone_volume", &volume_view_t::clone_volume);
+  py_volume_view_t
+      .def("clone_volume", &volume_view_t::clone_volume)
+      .def("__len__", [](volume_view_t &vv) {return vv.m_volumes.size();})
+      .def("__getitem__", [](volume_view_t &vv, size_t i) {
+                            if (i >= vv.m_volumes.size()) throw py::index_error();
+                            return vv.m_volumes[i];
+                          }, py::return_value_policy::reference_internal);
 
   auto vvt_module = module.def_submodule("vvt", "volume_view_t tools");
   vvt_module.def("sum_volumes", &volume_view_tools_t::sum_volumes,

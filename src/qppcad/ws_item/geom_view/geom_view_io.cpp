@@ -16,7 +16,28 @@ void geom_view_io_cube_t::load_from_stream_ex(std::basic_istream<char, TRAITS> &
   _item->m_geom->DIM = 0;
   _item->m_geom->cell.DIM = 0;
 
-  vold->load_from_stream(stream, *(_item->m_geom.get()), _item->m_name);
+  ws_volume_record_t new_vol_rec;
+
+  read_cube(stream, *_item->m_geom, new_vol_rec.m_volume);
+  new_vol_rec.m_owner = vold.get();
+  new_vol_rec.m_need_to_regenerate = true;
+  new_vol_rec.m_ready_to_render = false;
+
+  vold->m_name = fmt::format("v_{}", _item->m_name);
+
+  if (new_vol_rec.m_volume.m_has_negative_values) {
+      new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
+      new_vol_rec.m_isolevel = qpp::def_isovalue_mo;
+    } else {
+      new_vol_rec.m_volume_type = ws_volume_t::volume_density;
+      new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
+    }
+
+  new_vol_rec.m_volume.m_name = "From CUBE";
+
+  auto new_vol_rec_sp = std::make_shared<ws_volume_record_t>(std::move(new_vol_rec));
+  vold->m_volumes.push_back(new_vol_rec_sp);
+
   _item->m_parent_ws->add_item_to_ws(vold);
 
 }
@@ -40,6 +61,8 @@ void geom_view_molcas_grid_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   for (size_t i = 0; i < tmp_volumes.size(); i++) {
 
       ws_volume_record_t new_vol_rec;
+
+      new_vol_rec.m_owner = vold.get();
 
       new_vol_rec.m_volume = std::move(tmp_volumes[i]);
       new_vol_rec.m_ready_to_render = false;
@@ -79,6 +102,8 @@ void geom_view_vasp_chgcar_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   for (size_t i = 0; i < tmp_volumes.size(); i++) {
 
       ws_volume_record_t new_vol_rec;
+
+      new_vol_rec.m_owner = vold.get();
 
       new_vol_rec.m_volume = std::move(tmp_volumes[i]);
       new_vol_rec.m_ready_to_render = false;

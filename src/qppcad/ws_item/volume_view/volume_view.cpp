@@ -160,32 +160,6 @@ void volume_view_t::load_from_json(json &data, repair_connection_info_t &rep_inf
 
 }
 
-void volume_view_t::load_from_stream(std::basic_istream<char, TRAITS> &inp,
-                                     geometry<float, periodic_cell<float> > &geom,
-                                     std::string &fname) {
-
-  ws_volume_record_t new_vol_rec;
-
-  read_cube(inp, geom, new_vol_rec.m_volume);
-  new_vol_rec.m_need_to_regenerate = true;
-
-  m_name = fmt::format("v_{}", fname);
-
-  if (new_vol_rec.m_volume.m_has_negative_values) {
-      new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
-      new_vol_rec.m_isolevel = qpp::def_isovalue_mo;
-    } else {
-      new_vol_rec.m_volume_type = ws_volume_t::volume_density;
-      new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
-    }
-
-  new_vol_rec.m_volume.m_name = "From CUBE";
-
-  auto new_vol_rec_sp = std::make_shared<ws_volume_record_t>(std::move(new_vol_rec));
-  m_volumes.push_back(new_vol_rec_sp);
-
-}
-
 size_t volume_view_t::clone_volume(size_t volume_id) {
 
   app_state_t *astate = app_state_t::get_inst();

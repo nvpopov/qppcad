@@ -16,9 +16,13 @@ namespace qpp {
       volume_density
     };
 
+    class volume_view_t;
+
     class ws_volume_record_t {
 
       public:
+
+        volume_view_t *m_owner{nullptr};
 
         scalar_volume_t<float> m_volume;
         mesh_t *m_first_mesh{nullptr};
@@ -36,6 +40,9 @@ namespace qpp {
         vector3<float> m_color_vol{clr_yellow};
 
         ws_volume_t m_volume_type;
+
+        size_t m_state_id{0};
+        size_t m_spin_subspace{0};
 
         void copy_from(ws_volume_record_t &other, bool clear_volume = false);
 
@@ -70,10 +77,6 @@ namespace qpp {
 
         void save_to_json(json &data) override;
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
-
-        void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> & inp,
-                              geometry<float, periodic_cell<float> > &geom,
-                              std::string &fname);
 
         size_t clone_volume(size_t volume_id);
 
