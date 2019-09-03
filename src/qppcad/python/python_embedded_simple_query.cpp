@@ -178,6 +178,11 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
           Get a list of selected atoms.
           )str")
 
+      .def("vis", &simple_query::sel_vis,
+           R"str(
+           Select visible atoms
+           )str")
+
      .def("sph", &simple_query::sel_cnt_sphere)
      .def("gsp", &simple_query::sel_cnt_gsph)
      .def("inv", &simple_query::sel_invert)

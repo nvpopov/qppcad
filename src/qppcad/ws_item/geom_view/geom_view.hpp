@@ -218,6 +218,7 @@ namespace qpp {
          * @param atom_idx
          */
         void sel_atom(int atom_id, index atom_idx);
+        void sel_visible();
 
         void unsel_atom(int atom_id);
         void unsel_atom(int atom_id, index atom_idx);

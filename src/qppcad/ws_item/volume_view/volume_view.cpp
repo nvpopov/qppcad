@@ -5,11 +5,6 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-
-void volume_view_t::gen_repr() {
-
-}
-
 void volume_view_t::mc_polygonise(float _isolevel) {
   //volume_helper::polygonise_volume_mc_naive(*(m_first_mesh), m_volume, _isolevel, 100);
 }

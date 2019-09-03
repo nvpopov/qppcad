@@ -268,6 +268,18 @@ void simple_query::sel_hemisphere(int coord_idx, bool positive) {
 
 }
 
+void simple_query::sel_vis() {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
+  if (!al) return;
+
+  al->sel_visible();
+
+}
+
 void simple_query::edit_mode(int mode) {
 
   app_state_t *astate = app_state_t::get_inst();
