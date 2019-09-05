@@ -284,6 +284,9 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("s_a"), py::arg("e_a"),
            py::arg("s_b"), py::arg("e_b"),
            py::arg("s_c"), py::arg("e_c"))
+      .def("gen_pair_dist_calc_data", &geom_view_tools_t::gen_pair_dist_anim,
+           py::arg("gv"), py::arg("at1"), py::arg("at2"),
+           py::arg("num_frames"), py::arg("start_r"), py::arg("end_r"))
 
       .def("set_charge_for_type", &geom_view_tools_t::set_charge_for_type,
            py::arg("gv"), py::arg("map_t_chg"))

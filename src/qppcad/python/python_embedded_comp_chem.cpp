@@ -19,6 +19,5 @@ PYBIND11_EMBEDDED_MODULE(cc, m) {
                   py::arg("basis_less_cnt"), py::arg("ecp_name"));
 
   m.def("get_raw_coords_section", &generic_qc_helper_t::get_raw_coords_section);
-  m.def("gen_pair_dist_calc_data", &generic_qc_helper_t::gen_pair_dist_calc_data);
 
 }

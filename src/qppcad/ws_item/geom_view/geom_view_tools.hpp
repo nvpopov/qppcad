@@ -74,6 +74,14 @@ namespace qpp {
                                        geometry<float, periodic_cell<float> > *dst,
                                        index sc_dim,
                                        std::optional<geom_view_role_e> role = std::nullopt);
+
+        static void gen_pair_dist_anim(geom_view_t *gv,
+                                       size_t at1,
+                                       size_t at2,
+                                       size_t num_frames,
+                                       float start_r,
+                                       float end_r);
+
         /* filters */
         static void filter_uniq(geom_view_t *gv);
 
