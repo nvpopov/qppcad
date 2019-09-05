@@ -2,6 +2,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3257167.svg)](https://doi.org/10.5281/zenodo.3257167)
 [![Build Status](https://travis-ci.org/nvpopov/qppcad.svg?branch=master)](https://travis-ci.org/nvpopov/qppcad)
 ![qppcad_collage](/docs/images/qppcad_coolage.jpg)
+[![Documentation Status](https://readthedocs.org/projects/qppcad-doc/badge/?version=latest)](https://qppcad-doc.readthedocs.io/en/latest/?badge=latest)
 ### current status - under construction
  molecule and crystal editor written in c++
 ### How to obtain the code

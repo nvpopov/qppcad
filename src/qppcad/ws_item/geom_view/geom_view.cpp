@@ -493,7 +493,7 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
 void geom_view_t::sel_visible() {
 
   for (size_t i = 0; i < m_geom->nat(); i++)
-    if (m_geom->xfield<bool>(xgeom_sel_vis, i))
+    if (!m_geom->xfield<bool>(xgeom_sel_vis, i))
       sel_atom(i);
 
 }
