@@ -284,8 +284,8 @@ namespace qpp {
                                       const int at1, const int at2,
                                       const index id1, const index id2,
                                       pair_dist_mode_e mode);
-        void update_inter_atomic_dist(float new_dist, const int at1, const int at2,
-                                      pair_dist_mode_e mode);
+        void update_inter_atomic_dist_ex(float new_dist, const int at1, const int at2,
+                                         pair_dist_mode_e mode);
 
         void translate_selected(const vector3<float> &t_vec);
         void delete_selected_atoms();

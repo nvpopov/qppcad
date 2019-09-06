@@ -1035,6 +1035,7 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
   app_state_t* astate = app_state_t::get_inst();
 
   if (!m_geom) return;
+  if (at1 >= m_geom->nat() || at2 >= m_geom->nat()) return;
 
   vector3<float> r_btw = (m_geom->pos(at1, id1) + m_geom->pos(at2, id2))*0.5f;
   vector3<float> dir_f = (m_geom->pos(at1, id1) - r_btw).normalized();
@@ -1060,10 +1061,10 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 
 }
 
-void geom_view_t::update_inter_atomic_dist(float new_dist,
-                                           const int at1,
-                                           const int at2,
-                                           pair_dist_mode_e mode) {
+void geom_view_t::update_inter_atomic_dist_ex(float new_dist,
+                                              const int at1,
+                                              const int at2,
+                                              pair_dist_mode_e mode) {
 
   if (!m_geom) return;
 

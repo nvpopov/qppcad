@@ -11,8 +11,15 @@ void py_geom_view_reg_helper_t::reg(
     py::module &module,
     py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> &ws_item_base) {
 
+  /* pair_dist_mode_e pyexport */
+  py::enum_<pair_dist_mode_e>(module, "pair_dist_mode_e", py::arithmetic(), "")
+          .value("transform_both", transform_both, "transform_both")
+          .value("fix_first", fix_first, "fix_first")
+          .value("fix_second", fix_second, "fix_second")
+          .export_values();
+
   /* geom_view_render_style_e pyexport */
-  py::enum_<geom_view_render_style_e>(module, "geom_view_render_style_t", py::arithmetic(), "")
+  py::enum_<geom_view_render_style_e>(module, "geom_view_render_style_e", py::arithmetic(), "")
           .value("ball_and_stick", ball_and_stick, "ball_and_stick")
           .value("dynamic_lines", dynamic_lines, "dynamic_lines")
           .value("xatom_lines", xatom_lines, "xatom_lines")
@@ -21,7 +28,7 @@ void py_geom_view_reg_helper_t::reg(
           .export_values();
 
   /* geom_labels_style_e pyexport */
-  py::enum_<geom_labels_style_e>(module, "geom_view_labels_style_t", py::arithmetic(), "")
+  py::enum_<geom_labels_style_e>(module, "geom_view_labels_style_e", py::arithmetic(), "")
           .value("show_none", show_none, "show_none")
           .value("show_id", show_id, "show_id")
           .value("show_type", show_type, "show_type")
@@ -31,7 +38,7 @@ void py_geom_view_reg_helper_t::reg(
           .export_values();
 
   /* geom_anim_t pyexport */
-  py::enum_<geom_anim_t>(module, "geom_anim_t", py::arithmetic(), "")
+  py::enum_<geom_anim_t>(module, "geom_anim_e", py::arithmetic(), "")
           .value("anim_static", anim_static, "anim_static")
           .value("anim_generic", anim_generic, "anim_generic")
           .value("anim_geo_opt", anim_geo_opt, "anim_geo_opt")
@@ -229,6 +236,9 @@ void py_geom_view_reg_helper_t::reg(
          .def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord)
          .def("rebond", &geom_view_t::rebond)
          .def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;})
+         .def("upd_dist", &geom_view_t::update_inter_atomic_dist_ex,
+              py::arg("new_dist"), py::arg("at1"), py::arg("at2"),
+              py::arg("mode") = pair_dist_mode_e::transform_both)
          .def("begin_structure_change", &geom_view_t::begin_structure_change)
          .def("end_structure_change", &geom_view_t::end_structure_change)
          .def_readonly("anim", &geom_view_t::m_anim)

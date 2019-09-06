@@ -43,7 +43,7 @@ apt install libqt5opengl5-dev libqt5charts5-dev libqt5svg5-dev libqt5core5a libq
 ```bash
 apt install libpython3-dev
 ```
-# Dependencies
+# Dependencies and resources
 1. Qt5 - https://www.qt.io
 2. Eigen3 - http://eigen.tuxfamily.org
 3. Python3 - https://www.python.org/
@@ -53,3 +53,5 @@ apt install libpython3-dev
 7. Pugixml - https://pugixml.org/
 8. CppOptimizationLibrary - https://github.com/PatWie/CppNumericalSolvers
 9. qpp - https://github.com/nvpopov/qpp
+10. icons - https://material.io/resources/icons/
+11. font - OpenSans

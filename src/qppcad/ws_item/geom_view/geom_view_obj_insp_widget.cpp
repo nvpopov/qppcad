@@ -2022,7 +2022,7 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
 
           pair_dist_mode_e mode;
           mode = static_cast<pair_dist_mode_e>(tm_pair_dist_t_mode->currentIndex());
-          b_al->update_inter_atomic_dist(float(newval), it1->m_atm, it2->m_atm, mode);
+          b_al->update_inter_atomic_dist_ex(float(newval), it1->m_atm, it2->m_atm, mode);
 
           astate->make_viewport_dirty();
         }
