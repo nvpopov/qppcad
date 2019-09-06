@@ -227,15 +227,4 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
      .def("proj", &simple_query::camera_mode)
      .def("copy", &simple_query::copy_camera_from_ws);
 
-  py::module sv = m.def_submodule("sv", "Selective visibility manipulation");
-  sv.def("state", &simple_query::sv_get)
-    .def("set",   &simple_query::sv_edit)
-    .def("set",   &simple_query::sv_edit_list)
-    .def("set",   &simple_query::sv_edit_all);
-
-  py::module cl = m.def_submodule("cl", "Custom labels");
-  cl.def("state", &simple_query::cl_get)
-    .def("set_st", &simple_query::set_cl_state)
-    .def("set_t", &simple_query::set_cl_text);
-
 }
