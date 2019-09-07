@@ -19,9 +19,9 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
 
   header_frm = new QFrame;
   header_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  header_frm->setPalette(astate->m_bgfg_embwnd_pal);
-  header_frm->setFrameStyle(QFrame::StyledPanel);
-  header_frm->setAutoFillBackground(true);
+//  header_frm->setPalette(astate->m_bgfg_embwnd_pal);
+//  header_frm->setFrameStyle(QFrame::StyledPanel);
+//  header_frm->setAutoFillBackground(true);
 
   header_lt = new QHBoxLayout;
 
