@@ -44,8 +44,9 @@ void copy_geom_view_aux_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
         if (item->checkState() == Qt::Checked) {
             auto slave_as_gv = cgv.sub_gv->m_sub_items[i]->cast_as<geom_view_t>();
             if (slave_as_gv) {
-                slave_as_gv->py_copy_settings(master_as_gv);
-                slave_as_gv->py_copy_xgeom_aux(master_as_gv);
+                slave_as_gv->copy_settings(master_as_gv);
+                slave_as_gv->copy_xgeom_aux(master_as_gv);
+                slave_as_gv->copy_measurements(master_as_gv);
               }
 
           }

@@ -226,8 +226,9 @@ void py_geom_view_reg_helper_t::reg(
          .def("colorize_by_category", &geom_view_t::colorize_by_category)
          .def("copy_cell", &geom_view_t::copy_cell, py::arg("src"),
               py::arg("rebuild_tws_tree") = true)
-         .def("copy_settings", &geom_view_t::py_copy_settings)
-         .def("copy_xgeom_aux", &geom_view_t::py_copy_xgeom_aux)
+         .def("copy_settings", &geom_view_t::copy_settings)
+         .def("copy_xgeom_aux", &geom_view_t::copy_xgeom_aux)
+         .def("copy_msr", &geom_view_t::copy_measurements)
          .def("get_sel_atoms", &geom_view_t::get_sel_atoms, py::arg("index_offset") = 0)
          .def("get_unsel_atoms", &geom_view_t::get_unsel_atoms, py::arg("index_offset") = 0)
          .def("sel_by_box", &geom_view_t::sel_by_box)

@@ -1729,7 +1729,7 @@ py::list geom_view_t::get_unsel_atoms(int index_offset) {
 
 }
 
-void geom_view_t::py_copy_settings(geom_view_t *src) {
+void geom_view_t::copy_settings(geom_view_t *src) {
 
   if (!src) return;
 
@@ -1747,9 +1747,11 @@ void geom_view_t::py_copy_settings(geom_view_t *src) {
   m_labels->m_screen_scale  = src->m_labels->m_screen_scale;
   m_labels->m_selective_lbl = src->m_labels->m_selective_lbl;
 
+  m_show_bb                 = src->m_show_bb;
+
 }
 
-void geom_view_t::py_copy_xgeom_aux(geom_view_t *src) {
+void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
 
   if (!src || src->m_geom->nat() != m_geom->nat()) return;
 
@@ -1763,5 +1765,17 @@ void geom_view_t::py_copy_xgeom_aux(geom_view_t *src) {
           src->m_geom->xfield<std::string>(xgeom_label_text, i);
 
     }
+
+}
+
+void geom_view_t::copy_measurements(geom_view_t *src) {
+
+  if (!src || src->m_geom->nat() != m_geom->nat()) return;
+
+  m_measure->m_dist_recs.clear();
+  m_measure->m_angle_recs.clear();
+
+  m_measure->m_dist_recs = src->m_measure->m_dist_recs;
+  m_measure->m_angle_recs = src->m_measure->m_angle_recs;
 
 }
