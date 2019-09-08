@@ -1,5 +1,6 @@
 #ifndef QPPCAD_JSON_ADAPTER
 #define QPPCAD_JSON_ADAPTER
+
 #include <qppcad/core/qppcad.hpp>
 #include <fifo_map.hpp>
 #include <nlohmann/json.hpp>
@@ -107,6 +108,8 @@ namespace qpp {
     const auto JSON_GEOM_VIEW_MSR_CL_TEXT      = "custom_label_text";
     const auto JSON_GEOM_VIEW_MSR_DIST_DANGLE  = "delta_angle";
     const auto JSON_GEOM_VIEW_MSR_DIST_DOFFSET = "delta_offset";
+    const auto JSON_GEOM_VIEW_MSR_DIST_TRM_WD  = "term_width";
+    const auto JSON_GEOM_VIEW_MSR_DIST_TRM_ST  = "term_style";
 
     const auto JSON_GEOM_VIEW_MSR_ANGLE         = "angles";
     const auto JSON_GEOM_VIEW_MSR_ANGLE_AT1     = "at1";

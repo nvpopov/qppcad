@@ -213,8 +213,8 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
 
             if (record.m_pair_term_style == msr_pair_term_style_second ||
                 record.m_pair_term_style == msr_pair_term_style_both)
-              painter.drawLine( (line_len)*0.5, record.m_pair_term_width,
-                                (line_len)*0.5, -record.m_pair_term_width);
+              painter.drawLine( (line_len)*0.505, record.m_pair_term_width,
+                                (line_len)*0.505, -record.m_pair_term_width);
 
             /* end draw line terminators */
 
@@ -482,6 +482,8 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
       msr_dist_inst[JSON_GEOM_VIEW_MSR_SHOW_CL] = rec.m_show_custom_label;
       msr_dist_inst[JSON_GEOM_VIEW_MSR_CL_TEXT] = rec.m_custom_label_text;
       msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_DANGLE] = rec.m_delta_angle;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_TRM_ST] = rec.m_pair_term_style;
+      msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_TRM_WD] = rec.m_pair_term_width;
 
       json_helper::save_vec3(JSON_GEOM_VIEW_MSR_DIST_DOFFSET, rec.m_delta_offset, msr_dist_inst);
 
@@ -571,8 +573,12 @@ void geom_view_msr_subsys_t::load_from_json(json &data) {
         json_helper::load_vec3(JSON_GEOM_VIEW_MSR_DIST_DOFFSET, last_msr.m_delta_offset,
                                msr_record);
 
-      }
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_TRM_ST, last_msr.m_pair_term_style,
+                              msr_record);
+        json_helper::load_var(JSON_GEOM_VIEW_MSR_DIST_TRM_WD, last_msr.m_pair_term_width,
+                              msr_record);
 
+      }
 
   auto msr_angle = msr_object.value().find(JSON_GEOM_VIEW_MSR_ANGLE);
   if (msr_angle != msr_object.value().end())
