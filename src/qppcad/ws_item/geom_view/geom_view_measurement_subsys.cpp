@@ -153,6 +153,8 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
             QLineF linef(round((*l_s)[0]) + 0.5, round((*l_s)[1]) + 0.5,
                 round((*l_e)[0]) + 0.5, round((*l_e)[1]) + 0.5);
 
+            auto line_len = linef.length();
+
             //compose pen
             Qt::PenStyle pen_style;
 
@@ -186,6 +188,8 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
                                    record.m_bond_color[1],
                                    record.m_bond_color[2]);
             QPen linepen_inline(QPen(pen_color, record.m_line_size, pen_style, Qt::RoundCap));
+            QPen linepen_inline2(
+                  QPen(pen_color, record.m_line_size, Qt::PenStyle::SolidLine, Qt::RoundCap));
             painter.setPen(linepen_inline);
             painter.drawLine(linef);
 
@@ -195,6 +199,26 @@ void geom_view_msr_subsys_t::render_overlay(QPainter &painter) {
             angle = angle + std::ceil(-angle / 360) * 360;
             if (angle > 90 && angle < 270) angle = angle + 180;
 
+            /* draw line terminators
+             we now at (mid[0] + record.m_delta_offset[0], mid[1] + record.m_delta_offset[1]) */
+
+            painter.setPen(linepen_inline2);
+            painter.translate(mid[0], mid[1]);
+            painter.rotate(angle);
+
+            if (record.m_pair_term_style == msr_pair_term_style_first ||
+                record.m_pair_term_style == msr_pair_term_style_both)
+              painter.drawLine(-(line_len)*0.5, record.m_pair_term_width,
+                               -(line_len)*0.5, -record.m_pair_term_width);
+
+            if (record.m_pair_term_style == msr_pair_term_style_second ||
+                record.m_pair_term_style == msr_pair_term_style_both)
+              painter.drawLine( (line_len)*0.5, record.m_pair_term_width,
+                                (line_len)*0.5, -record.m_pair_term_width);
+
+            /* end draw line terminators */
+
+            painter.resetTransform();
             painter.translate(mid[0] + record.m_delta_offset[0], mid[1] + record.m_delta_offset[1]);
             painter.rotate(angle + record.m_delta_angle);
 

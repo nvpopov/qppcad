@@ -28,6 +28,13 @@ namespace qpp {
       msr_label_border
     };
 
+    enum msr_pair_term_style : int {
+      msr_pair_term_style_none,
+      msr_pair_term_style_first,
+      msr_pair_term_style_second,
+      msr_pair_term_style_both
+    };
+
     template<typename AINT = uint32_t>
     struct msr_bond_rec_t {
 
@@ -40,10 +47,16 @@ namespace qpp {
       bool m_show_custom_label{false};
       std::string m_custom_label_text;
       vector3<float> m_bond_color{0};
+
       int m_line_size{2};
       int m_font_size{13};
+
+      int m_pair_term_width{8};
+      msr_pair_term_style m_pair_term_style{msr_pair_term_style::msr_pair_term_style_both};
+
       float m_delta_angle{0};
       vector3<int> m_delta_offset{0, 0, -1};
+
       msr_line_style_e m_line_render_style{msr_line_style_e::msr_line_dashed};
       msr_label_style_e m_label_render_style{msr_label_style_e::msr_label_border};
 
