@@ -303,7 +303,9 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("gv"), py::arg("map_t_chg"))
       .def("purify_atom_names_from_numbers", &geom_view_tools_t::purify_atom_names_from_numbers)
       .def("cut_selected_as_new_gv", &geom_view_tools_t::cut_selected_as_new_gv,
-           py::arg("gv"), py::arg("cut_selected") = true);
+           py::arg("gv"), py::arg("cut_selected") = true)
+
+      .def("get_sel_types", &geom_view_tools_t::get_sel_types, py::arg("gv"));
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,

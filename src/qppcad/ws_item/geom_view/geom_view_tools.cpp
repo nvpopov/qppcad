@@ -693,6 +693,27 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
 }
 
+std::map<std::string, size_t> geom_view_tools_t::get_sel_types(geom_view_t *gv) {
+
+  std::map<std::string, size_t> retv;
+
+  if (!gv) return retv;
+
+  std::vector<size_t> tmp_tc;
+  tmp_tc.resize(gv->m_geom->n_types());
+
+  index zero = index::D(gv->m_geom->DIM).all(0);
+  for (auto &rec : gv->m_atom_idx_sel)
+    if (rec.m_idx == zero)
+      tmp_tc[gv->m_geom->type_table(rec.m_atm)]++;
+
+  for (size_t i = 0; i < gv->m_geom->n_types(); i++)
+    retv[gv->m_geom->atom_of_type(i)] = tmp_tc[i];
+
+  return retv;
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,

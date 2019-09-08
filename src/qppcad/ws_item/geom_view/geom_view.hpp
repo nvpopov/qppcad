@@ -310,16 +310,11 @@ namespace qpp {
         const vector3<float> get_gizmo_content_barycenter() override;
         void updated_externally(uint32_t update_reason) override;
 
-        /**
-         * @brief shift
-         * @param shift
-         */
         void shift(const vector3<float> shift);
 
         void save_to_json(json &data) override;
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
         bool can_be_written_to_json() override;
-        //void post_load();
 
         py::list get_sel_atoms(int index_offset);
         py::list get_unsel_atoms(int index_offset);

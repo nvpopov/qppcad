@@ -91,6 +91,8 @@ namespace qpp {
 
         static void cut_selected_as_new_gv(geom_view_t *gv, bool cut_selected = false);
 
+        static std::map<std::string, size_t> get_sel_types(geom_view_t *gv);
+
     };
 
   } // namespace cad
