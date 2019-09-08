@@ -157,7 +157,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   app_state_t *astate = app_state_t::get_inst();
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  setIconSize(QSize(32,32));
+  setIconSize(QSize(26,26));
   tab_general = def_tab(tr("General settings of workspace item"),
                         "://images/settings.svg");
 

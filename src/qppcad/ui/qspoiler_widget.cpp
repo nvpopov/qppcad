@@ -23,12 +23,9 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   top_frm = new QFrame;
   top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-//  top_frm->setPalette(astate->m_bgfg_light_pal);
-//  top_frm->setFrameStyle(QFrame::Panel);
-//  top_frm->setAutoFillBackground(true);
 
   hbox_frm = new QHBoxLayout;
-  hbox_frm->setContentsMargins(2, 4, 0, 4);
+  hbox_frm->setContentsMargins(2, 4, 2, 4);
   top_frm->setLayout(hbox_frm);
 
   lbl_frm = new QLabel(title);
