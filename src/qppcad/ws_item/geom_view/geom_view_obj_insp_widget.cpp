@@ -515,6 +515,15 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_delta_angle->set_min_max_step(-90, 90, 0.1);
   tms_pair_delta_offset = new qbinded_int2b_input_t;
 
+  tms_pair_term_size = new qbinded_int_spinbox_t;
+  tms_pair_term_size->set_min_max_step(0, 20, 1);
+
+  tms_pair_term_style = new qbinded_combobox_t;
+  tms_pair_term_style->addItem("None");
+  tms_pair_term_style->addItem("First");
+  tms_pair_term_style->addItem("Second");
+  tms_pair_term_style->addItem("Both");
+
   tms_pair_dist_gb_lt->addRow(tr("Current"), tms_pair_cur_msr);
   tms_pair_dist_gb_lt->addRow(tr("Atom №1"), tms_pair_at1_info);
   tms_pair_dist_gb_lt->addRow(tr("Atom №2"), tms_pair_at2_info);
@@ -529,6 +538,8 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
   tms_pair_dist_gb_lt->addRow(tr("Delta angle"), tms_pair_delta_angle);
   tms_pair_dist_gb_lt->addRow(tr("Delta offset"), tms_pair_delta_offset);
+  tms_pair_dist_gb_lt->addRow(tr("Terminator style"), tms_pair_term_style);
+  tms_pair_dist_gb_lt->addRow(tr("Terminator size"), tms_pair_term_size);
   tms_pair_dist_gb_lt->addRow(tr("Actions"), tms_pair_action_lt);
   init_form_lt(tms_pair_dist_gb_lt);
 
@@ -1180,6 +1191,8 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_font_screen_size->bind_value(&rec.m_font_size);
           tms_pair_line_style->bind_value(reinterpret_cast<int*>(&rec.m_line_render_style));
           tms_pair_label_style->bind_value(reinterpret_cast<int*>(&rec.m_label_render_style));
+          tms_pair_term_size->bind_value(&rec.m_pair_term_width);
+          tms_pair_term_style->bind_value(reinterpret_cast<int*>(&rec.m_pair_term_style));
 
           tms_pair_custom_text_edit->bind_value(&rec.m_custom_label_text);
           tms_pair_custom_text_enabled->bind_value(&rec.m_show_custom_label);
@@ -1196,6 +1209,9 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_pair_label_enabled->setEnabled(true);
           tms_pair_delta_angle->setEnabled(true);
           tms_pair_delta_offset->setEnabled(true);
+
+          tms_pair_term_size->setEnabled(true);
+          tms_pair_term_style->setEnabled(true);
 
           tms_pair_action_sel->setEnabled(true);
           tms_pair_action_del->setEnabled(true);
@@ -1224,6 +1240,9 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_pair_delta_angle->unbind_value();
   tms_pair_delta_offset->unbind_value();
 
+  tms_pair_term_size->unbind_value();
+  tms_pair_term_style->unbind_value();
+
   tms_pair_custom_text_enabled->unbind_value();
   tms_pair_custom_text_edit->unbind_value();
 
@@ -1237,6 +1256,9 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
   tms_pair_label_enabled->setEnabled(false);
   tms_pair_delta_angle->setEnabled(false);
   tms_pair_delta_offset->setEnabled(false);
+
+  tms_pair_term_size->setEnabled(false);
+  tms_pair_term_style->setEnabled(false);
 
   tms_pair_action_sel->setEnabled(false);
   tms_pair_action_del->setEnabled(false);
@@ -2007,6 +2029,7 @@ void geom_view_obj_insp_widget_t::modify_single_atom_delete_button_clicked() {
       astate->make_viewport_dirty();
       update_animate_section_status();
     }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double newval) {

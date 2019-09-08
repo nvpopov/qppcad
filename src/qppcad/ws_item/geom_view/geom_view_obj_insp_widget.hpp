@@ -147,6 +147,7 @@ namespace qpp {
         QLabel *tms_pair_at1_info;
         QLabel *tms_pair_at2_info;
         QLabel *tms_pair_dist;
+
         qbinded_color3_input_t *tms_pair_dist_color;
         qbinded_checkbox_t *tms_pair_enabled;
         qbinded_checkbox_t *tms_pair_label_enabled;
@@ -156,13 +157,15 @@ namespace qpp {
         qbinded_float_spinbox_t *tms_pair_delta_angle;
         qbinded_int2b_input_t *tms_pair_delta_offset;
         qbinded_combobox_t *tms_pair_label_style;
+        qbinded_combobox_t *tms_pair_term_style;
+        qbinded_int_spinbox_t *tms_pair_term_size;
+        qbinded_line_edit_t *tms_pair_custom_text_edit;
+        qbinded_checkbox_t *tms_pair_custom_text_enabled;
+
         QHBoxLayout *tms_pair_action_lt;
         QPushButton *tms_pair_action_sel;
         QPushButton *tms_pair_action_copy;
         QPushButton *tms_pair_action_del;
-        //QHBoxLayout *tms_pair_custom_text;
-        qbinded_line_edit_t *tms_pair_custom_text_edit;
-        qbinded_checkbox_t *tms_pair_custom_text_enabled;
 
         //interatomic angle
         qspoiler_widget_t *tms_angle_gb;
