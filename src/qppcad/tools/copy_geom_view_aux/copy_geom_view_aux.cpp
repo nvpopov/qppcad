@@ -36,22 +36,15 @@ void copy_geom_view_aux_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   auto master_as_gv = cgv.sub_gv->m_master_item->cast_as<geom_view_t>();
 
-  if (ret_code == QDialog::Accepted)
-    for (size_t i = 0; i < cgv.sub_gv->count(); i++) {
+  if (ret_code != QDialog::Accepted) return;
 
-        QListWidgetItem *item = cgv.sub_gv->item(i);
-
-        if (item->checkState() == Qt::Checked) {
-            auto slave_as_gv = cgv.sub_gv->m_sub_items[i]->cast_as<geom_view_t>();
-            if (slave_as_gv) {
-                slave_as_gv->copy_settings(master_as_gv);
-                slave_as_gv->copy_xgeom_aux(master_as_gv);
-                slave_as_gv->copy_measurements(master_as_gv);
-              }
-
-          }
-
-      }
+  for (size_t i = 0; i < cgv.sub_gv->count(); i++)
+    if (QListWidgetItem *item = cgv.sub_gv->item(i); item && item->checkState() == Qt::Checked)
+      if (auto slave_as_gv = cgv.sub_gv->m_sub_items[i]->cast_as<geom_view_t>(); slave_as_gv) {
+          if (cgv.cb_copy_settings->isChecked()) slave_as_gv->copy_settings(master_as_gv);
+          if (cgv.cb_copy_xgeom->isChecked()) slave_as_gv->copy_xgeom_aux(master_as_gv);
+          if (cgv.cb_copy_msr->isChecked()) slave_as_gv->copy_measurements(master_as_gv);
+        }
 
 }
 
@@ -87,7 +80,22 @@ copy_geom_view_aux_widget_t::copy_geom_view_aux_widget_t() {
           sub_gv,
           &ws_item_list_widget_t::select_all_clicked);
 
+  cb_copy_settings = new QCheckBox(nullptr);
+  cb_copy_settings->setText(tr("Copy settings"));
+  cb_copy_settings->setChecked(true);
+
+  cb_copy_xgeom = new QCheckBox(nullptr);
+  cb_copy_xgeom->setText(tr("Copy xgeometry"));
+  cb_copy_xgeom->setChecked(true);
+
+  cb_copy_msr = new QCheckBox(nullptr);
+  cb_copy_msr->setText(tr("Copy measurements"));
+  cb_copy_msr->setChecked(true);
+
   actions_lt->addWidget(action_select_all);
+  actions_lt->addWidget(cb_copy_settings);
+  actions_lt->addWidget(cb_copy_xgeom);
+  actions_lt->addWidget(cb_copy_msr);
   actions_lt->addStretch(1);
 
   main_lt->addLayout(actions_lt);

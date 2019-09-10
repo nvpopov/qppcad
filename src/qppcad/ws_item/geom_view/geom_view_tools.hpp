@@ -93,6 +93,8 @@ namespace qpp {
 
         static std::map<std::string, size_t> get_sel_types(geom_view_t *gv);
 
+        static void align_gvs_2atoms();
+
     };
 
   } // namespace cad

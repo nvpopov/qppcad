@@ -303,6 +303,7 @@ namespace qpp {
         ws_item_t *m_binded_ws_item{nullptr};
         workspace_t *m_binded_ws{nullptr};
         size_t m_type_id{0};
+        bool m_allow_other_ws{false};
         bool m_updated_externally_event{false};
         uint32_t m_upd_flag{ws_item_updf_generic};
 

@@ -14,9 +14,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   app_state_t* astate = app_state_t::get_inst();
 
   ew_header->setText(tr("OBJECT INSPECTOR"));
-  //setObjectName("obj_insp");
   header_frm->setObjectName("obj_insp_header_frame");
-  //setProperty("s_class", "bold_label");
 
   btn_add_new_ws_item = new QPushButton;
   btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
@@ -52,6 +50,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_list = new QListWidget;
   ws_items_list->setFocusPolicy(Qt::NoFocus);
   ws_items_list->setContextMenuPolicy(Qt::CustomContextMenu);
+
   connect(ws_items_list,
           &QListWidget::customContextMenuRequested,
           this,
@@ -61,7 +60,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
-  ws_items_spoiler->setMinimumHeight(140);
+
   ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
   ws_items_spoiler_lt->addWidget(ws_items_list);
   ws_items_spoiler->main_lt->setContentsMargins(0, 0, 0, 0);

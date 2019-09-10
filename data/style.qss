@@ -263,7 +263,7 @@ qpp--cad--ws_tabbar_t::close-button:hover {
 
 qpp--cad--object_inspector_widget_t QTabWidget {
  border: 0;
- margin-bottom:15px;
+ margin-bottom:16px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget::pane {

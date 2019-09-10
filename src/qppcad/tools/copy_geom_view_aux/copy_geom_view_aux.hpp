@@ -33,6 +33,10 @@ namespace qpp {
       QHBoxLayout *actions_lt;
       QPushButton *action_select_all;
 
+      QCheckBox *cb_copy_settings;
+      QCheckBox *cb_copy_xgeom;
+      QCheckBox *cb_copy_msr;
+
       ws_item_list_widget_t *sub_gv;
 
       copy_geom_view_aux_widget_t();
