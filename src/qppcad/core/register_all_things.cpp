@@ -122,6 +122,8 @@ void registration_helper_t::reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv
 
 void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
 
+  /* ff hashes */
+
   size_t xyz_ff_g_hash = bhv_mgr->reg_ffg("XYZ", "xyz");
   size_t vasp_ff_g_hash = bhv_mgr->reg_ffg("VASP", "vasp");
   size_t firefly_ff_g_hash = bhv_mgr->reg_ffg("Firefly", "ff");
@@ -151,7 +153,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("CP2K OUTPUT", "cp2k", cp2k_ff_g_hash, {"cp2k", ".cout"} );
 
   size_t cp2k_cs_ff_hash =
-      bhv_mgr->reg_ff("CP2K Coord.", "cp2kcs", cp2k_ff_g_hash, {".coord", ".cp2k_crd"} );
+      bhv_mgr->reg_ff("CP2K crd. section", "cp2kcs", cp2k_ff_g_hash, {".coord", ".cp2k_crd"} );
 
   size_t generic_cube_ff_hash =
       bhv_mgr->reg_ff("CUBE file", "cube", generic_ff_g_hash, {".cube", ".CUBE"} );
@@ -163,14 +165,13 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("Molcas ASCII Grid", "gv", generic_ff_g_hash, {".grid", ".GRID"} );
 
   size_t generic_raw_coord_ff_hash =
-      bhv_mgr->reg_ff("Simple coord.", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple crd.", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t generic_atoms_coord_ff_hash =
-      bhv_mgr->reg_ff("Simple coord w. names", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple crd.[name]", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t generic_atoms_coord_chg_ff_hash =
-      bhv_mgr->reg_ff("Simple coord w. names and chg.", "coord", generic_ff_g_hash,
-  {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple crd.[name, chg.]", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t molden_ff_hash =
       bhv_mgr->reg_ff("Molden", "molden", generic_ff_g_hash, {"mol", "molden"} );
@@ -179,9 +180,10 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("Hoomd xml", "hoomd_xml", generic_ff_g_hash, {"hoomd", "xml"} );
 
   size_t adme_ewald_uc_ff_hash =
-      bhv_mgr->reg_ff("Adme Ewald uc", "adme_ewald", generic_ff_g_hash, {"adme_ewald"} );
+      bhv_mgr->reg_ff("Adme Ewald cell", "adme_ewald", generic_ff_g_hash, {"adme_ewald"} );
 
 
+  /* ws_item_t io mgrs */
   auto xyz_ff_mgr =
       std::make_shared<
       geom_view_io_ccd_t<
@@ -278,6 +280,8 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
   auto generic_molcas_grid_mgf = std::make_shared<geom_view_molcas_grid_t>();
 
+  /* register ws_item io bhv */
+
   bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(xyz_s_ff_mgr, xyz_ff_hash, geom_view_t::get_type_static());
   bhv_mgr->reg_io_bhv(xyzq_mgf, xyzq_ff_hash, geom_view_t::get_type_static());
@@ -355,12 +359,12 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         "Center cell on atoms", hash_t_tr, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<compose_anim_from_files_tool_t, geom_view_t>(
-        "Compose anim from files", hash_t_generic, bhv_mgr, false);
+        "Compose anim. from files", hash_t_generic, bhv_mgr, false);
 
   registration_helper_t::reg_ws_item_tool<purify_boundary_atoms_tool_t, geom_view_t>(
         "Purify boundary atoms", hash_t_tr, bhv_mgr, true);
 
   registration_helper_t::reg_ws_item_tool<copy_geom_view_aux_tool_t, geom_view_t>(
-        "Copy geom. view aux data", hash_t_tr, bhv_mgr, true);
+        "Copy geom. view settings", hash_t_tr, bhv_mgr, true);
 
 }
