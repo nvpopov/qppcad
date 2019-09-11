@@ -365,6 +365,6 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         "Purify boundary atoms", hash_t_tr, bhv_mgr, true);
 
   registration_helper_t::reg_ws_item_tool<copy_geom_view_aux_tool_t, geom_view_t>(
-        "Copy geom. view settings", hash_t_tr, bhv_mgr, true);
+        "Copy geom. view data", hash_t_tr, bhv_mgr, true);
 
 }

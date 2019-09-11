@@ -1760,6 +1760,10 @@ void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
       m_geom->xfield<bool>(xgeom_sel_vis,i) = src->m_geom->xfield<bool>(xgeom_sel_vis,i);
       m_geom->xfield<bool>(xgeom_override,i) = src->m_geom->xfield<bool>(xgeom_override,i);
       m_geom->xfield<bool>(xgeom_label_show,i) = src->m_geom->xfield<bool>(xgeom_label_show,i);
+      m_geom->xfield<float>(xgeom_atom_r, i) = src->m_geom->xfield<float>(xgeom_atom_r, i);
+      m_geom->xfield<float>(xgeom_ccr, i) = src->m_geom->xfield<float>(xgeom_ccr, i);
+      m_geom->xfield<float>(xgeom_ccg, i) = src->m_geom->xfield<float>(xgeom_ccg, i);
+      m_geom->xfield<float>(xgeom_ccb, i) = src->m_geom->xfield<float>(xgeom_ccb, i);
 
       m_geom->xfield<std::string>(xgeom_label_text, i) =
           src->m_geom->xfield<std::string>(xgeom_label_text, i);
