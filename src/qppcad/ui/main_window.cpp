@@ -1167,8 +1167,8 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
     if (as_al->m_atom_idx_sel.size() != 1 || cur_ws->m_edit_type == ws_edit_e::edit_item)
       need_to_hide_atom_override = true;
 
-    if (as_al->m_atom_idx_sel.size() == 1 &&
-      cur_ws->m_edit_type == ws_edit_e::edit_content) {
+    if (as_al->m_atom_idx_sel.size() == 1 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
+
       need_to_hide_atom_override = false;
       tp_toggle_atom_override->show();
       size_t atom_idx = as_al->m_atom_idx_sel.begin()->m_atm;
@@ -1179,6 +1179,7 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
             as_al->m_geom->xfield<bool>(xgeom_override,atom_idx));
 
       tp_toggle_atom_override->blockSignals(false);
+
     }
 
     if (as_al->m_atom_idx_sel.size() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {

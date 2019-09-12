@@ -532,13 +532,13 @@ qbinded_xgeom_color3_input_t::qbinded_xgeom_color3_input_t(QWidget *parent) : QF
 }
 
 void qbinded_xgeom_color3_input_t::bind_value(
-    xgeometry<float, periodic_cell<float>> *_binded_xgeom,
-    std::array<int, 3> _binding_indicies,
-    size_t _binded_atom_id) {
+    xgeometry<float, periodic_cell<float> > *binded_xgeom,
+    std::array<int, 3> binding_indicies,
+    std::set<size_t> &&binded_atom_id) {
 
-  m_binded_xgeom = _binded_xgeom;
-  m_binding_indicies = _binding_indicies;
-  m_binded_atom_id = _binded_atom_id;
+  m_binded_xgeom = binded_xgeom;
+  m_binding_indicies = binding_indicies;
+  m_binded_atom_id = binded_atom_id;
 
   load_value();
 
@@ -546,11 +546,14 @@ void qbinded_xgeom_color3_input_t::bind_value(
 
 void qbinded_xgeom_color3_input_t::load_value() {
 
-  if (m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+  if (m_binded_xgeom && !m_binded_atom_id.empty() &&
+      *m_binded_atom_id.begin() < m_binded_xgeom->nat()) {
 
-      float _r = m_binded_xgeom->xfield<float>(m_binding_indicies[0], m_binded_atom_id);
-      float _g = m_binded_xgeom->xfield<float>(m_binding_indicies[1], m_binded_atom_id);
-      float _b = m_binded_xgeom->xfield<float>(m_binding_indicies[2], m_binded_atom_id);
+      size_t first_atom_id = *m_binded_atom_id.begin();
+
+      float _r = m_binded_xgeom->xfield<float>(m_binding_indicies[0], first_atom_id);
+      float _g = m_binded_xgeom->xfield<float>(m_binding_indicies[1], first_atom_id);
+      float _b = m_binded_xgeom->xfield<float>(m_binding_indicies[2], first_atom_id);
 
       m_stored_color.setRgbF(_r, _g, _b);
       QPalette pal = palette();
@@ -572,32 +575,38 @@ void qbinded_xgeom_color3_input_t::unbind_value() {
 void qbinded_xgeom_color3_input_t::mousePressEvent(QMouseEvent *event) {
 
   if (event->button() == Qt::LeftButton) {
+
       const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
-      if (color.isValid() && m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+
+      if (color.isValid() && m_binded_xgeom && !m_binded_atom_id.empty())
+        for (const auto &atom_id : m_binded_atom_id)
+          if (atom_id < m_binded_xgeom->nat()) {
 
           float _r = static_cast<float>(color.redF());
           float _g = static_cast<float>(color.greenF());
           float _b = static_cast<float>(color.blueF());
 
-          m_binded_xgeom->xfield<float>(m_binding_indicies[0], m_binded_atom_id) = _r;
-          m_binded_xgeom->xfield<float>(m_binding_indicies[1], m_binded_atom_id) = _g;
-          m_binded_xgeom->xfield<float>(m_binding_indicies[2], m_binded_atom_id) = _b;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[0], atom_id) = _r;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[1], atom_id) = _g;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[2], atom_id) = _b;
 
           load_value();
-          app_state_t::get_inst()->make_viewport_dirty();
         }
+
     }
+
+  app_state_t::get_inst()->make_viewport_dirty();
 
 }
 
 void qbinded_xgeom_float_spinbox_t::bind_value(
-    xgeometry<float, periodic_cell<float> > *_binded_xgeom,
-    int _binding_index,
-    size_t _binded_atom_id) {
+    xgeometry<float, periodic_cell<float> > *binded_xgeom,
+    int binding_index,
+    std::set<size_t> &&binded_atom_id) {
 
-  m_binded_xgeom = _binded_xgeom;
-  m_binding_index = _binding_index;
-  m_binded_atom_id = _binded_atom_id;
+  m_binded_xgeom = binded_xgeom;
+  m_binding_index = binding_index;
+  m_binded_atom_id = binded_atom_id;
 
   load_value();
 
@@ -605,10 +614,11 @@ void qbinded_xgeom_float_spinbox_t::bind_value(
 
 void qbinded_xgeom_float_spinbox_t::load_value() {
 
-  if (m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
+  if (m_binded_xgeom && !m_binded_atom_id.empty() &&
+      *m_binded_atom_id.begin() < m_binded_xgeom->nat()) {
 
       blockSignals(true);
-      setValue(m_binded_xgeom->xfield<float>(m_binding_index, m_binded_atom_id));
+      setValue(m_binded_xgeom->xfield<float>(m_binding_index, *m_binded_atom_id.begin()));
       blockSignals(false);
 
     }
@@ -633,8 +643,12 @@ void qbinded_xgeom_float_spinbox_t::set_min_max_step(double new_min,
 qbinded_xgeom_float_spinbox_t::qbinded_xgeom_float_spinbox_t(QWidget *parent) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
+  setAlignment(Qt::AlignCenter);
+  setButtonSymbols(QAbstractSpinBox::NoButtons);
+  setLocale(QLocale::C);
 
   connect(this,
           static_cast<void (qbinded_xgeom_float_spinbox_t::*)(double)>
@@ -659,8 +673,11 @@ void qbinded_xgeom_float_spinbox_t::set_default_suffix() {
 
 void qbinded_xgeom_float_spinbox_t::value_changed(double d) {
 
-  if (m_binded_xgeom && m_binded_atom_id < m_binded_xgeom->nat()) {
-      m_binded_xgeom->xfield<float>(m_binding_index, m_binded_atom_id) = float(d);
+  if (!m_binded_xgeom) return;
+
+  for (const auto &atom_id : m_binded_atom_id)
+    if (atom_id < m_binded_xgeom->nat()) {
+      m_binded_xgeom->xfield<float>(m_binding_index, atom_id) = float(d);
       app_state_t::get_inst()->make_viewport_dirty();
     }
 

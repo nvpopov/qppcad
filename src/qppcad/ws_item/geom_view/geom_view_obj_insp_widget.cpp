@@ -1409,11 +1409,11 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
 
                       tm_gb_override_atom->show();
                       tm_override_atom_color->bind_value(b_al->m_geom.get(),
-                      {xgeom_ccr, xgeom_ccg, xgeom_ccb},
-                                                         it->m_atm);
+                                                         {xgeom_ccr, xgeom_ccg, xgeom_ccb},
+                                                         {it->m_atm});
                       tm_override_atom_radii->bind_value(b_al->m_geom.get(),
                                                          xgeom_atom_r,
-                                                         it->m_atm);
+                                                         {it->m_atm});
 
                     }
 
