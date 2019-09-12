@@ -15,6 +15,7 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
 
   ext_edt_plch = new QWidget;
   main_lt->addWidget(ext_edt_plch);
+  main_lt->setSpacing(0);
 
   top_btn_close = new QPushButton;
   top_btn_close->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
