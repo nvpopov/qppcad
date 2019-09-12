@@ -1157,9 +1157,20 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
 
   if (ok) {
 
+    /* detect selective labels */
     need_to_hide_force_sel_lbl_vis =
         cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_atom_idx_sel.empty();
-    tp_force_sel_lbl_vis->show();
+    if (!need_to_hide_force_sel_lbl_vis) {
+        tp_force_sel_lbl_vis->show();
+
+        tp_force_sel_lbl_vis->blockSignals(true);
+        tp_force_sel_lbl_vis->setChecked(
+              !as_al->any_of_sel_xfield_equal<bool>(xgeom_label_show, false)
+              );
+        tp_force_sel_lbl_vis->blockSignals(false);
+        /* end of detect selective labels */
+
+      }
 
     need_to_hide_make_psg = need_to_hide_force_sel_lbl_vis;
     tp_add_point_sym_group->show();
@@ -1226,18 +1237,6 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
 
     }
     /* end of angle between 3 atoms */
-
-    //process labels state
-    bool all_sel_lbls_vis = true;
-    for (auto &rec : as_al->m_atom_idx_sel)
-      if (!as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm)) {
-        all_sel_lbls_vis = false;
-        break;
-      }
-
-    tp_force_sel_lbl_vis->blockSignals(true);
-    tp_force_sel_lbl_vis->setChecked(all_sel_lbls_vis || as_al->m_atom_idx_sel.empty());
-    tp_force_sel_lbl_vis->blockSignals(false);
 
   }
 
@@ -1405,17 +1404,6 @@ void main_window_t::tp_camera_tool_button_triggered(QAction *action) {
   if (!ok) return;
 
   cam_tv_e _tv = static_cast<cam_tv_e>(ext_act->m_joined_data[0]);
-
-  //as_al->target_view(_tv, look_from, look_to, look_up, need_to_update_camera);
-
-//  if (need_to_update_camera) {
-//      astate->camera->m_view_point = look_from;
-//      astate->camera->m_look_at = look_to;
-//      astate->camera->m_look_up = look_up;
-//      astate->camera->orthogonalize_gs();
-//      astate->camera->update_camera();
-//      //astate->make_viewport_dirty();
-//    }
 
   if (as_al) as_al->apply_target_view(_tv);
 
