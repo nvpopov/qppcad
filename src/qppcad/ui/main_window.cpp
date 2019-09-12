@@ -1164,24 +1164,24 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
     need_to_hide_make_psg = need_to_hide_force_sel_lbl_vis;
     tp_add_point_sym_group->show();
 
-    if (as_al->m_atom_idx_sel.size() != 1 || cur_ws->m_edit_type == ws_edit_e::edit_item)
-      need_to_hide_atom_override = true;
+    /* detect atom override */
+    if (!(as_al->m_atom_idx_sel.empty() || cur_ws->m_edit_type == ws_edit_e::edit_item)) {
 
-    if (as_al->m_atom_idx_sel.size() == 1 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
+        need_to_hide_atom_override = false;
 
-      need_to_hide_atom_override = false;
-      tp_toggle_atom_override->show();
-      size_t atom_idx = as_al->m_atom_idx_sel.begin()->m_atm;
+        tp_toggle_atom_override->show();
+        tp_toggle_atom_override->blockSignals(true);
 
-      tp_toggle_atom_override->blockSignals(true);
+        tp_toggle_atom_override->setChecked(
+                !as_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)
+              );
 
-      tp_toggle_atom_override->setChecked(
-            as_al->m_geom->xfield<bool>(xgeom_override,atom_idx));
+        tp_toggle_atom_override->blockSignals(false);
 
-      tp_toggle_atom_override->blockSignals(false);
+      }
+    /* end of detect atom override */
 
-    }
-
+    /* add cube or arrow between 2 atoms */
     if (as_al->m_atom_idx_sel.size() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
       tp_add_arrow->show();
@@ -1194,14 +1194,17 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
       auto it1 = as_al->m_atom_idx_sel.begin();
       auto it2 = ++(as_al->m_atom_idx_sel.begin());
 
-      auto cur_sel = as_al->m_measure->is_bond_msr_exists(
-                       it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
+      auto cur_sel =
+          as_al->m_measure->is_bond_msr_exists(it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
+
       tp_measure_dist->blockSignals(true);
       tp_measure_dist->setChecked(cur_sel != std::nullopt);
       tp_measure_dist->blockSignals(false);
 
     }
+    /* end of add cube or arrow between 2 atoms */
 
+    /* angle between 3 atoms */
     if (as_al->m_atom_idx_sel.size() == 3 &&
         cur_ws->m_edit_type == ws_edit_e::edit_content &&
         as_al->m_atom_ord_sel.size() == 3) {
@@ -1222,6 +1225,7 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
       tp_measure_angle->blockSignals(false);
 
     }
+    /* end of angle between 3 atoms */
 
     //process labels state
     bool all_sel_lbls_vis = true;
@@ -1368,19 +1372,17 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
   app_state_t* astate = app_state_t::get_inst();
 
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
-  if (!ok) return;
+  if (!ok || cur_ws->m_edit_type == ws_edit_e::edit_item) return;
 
-  //TODO: add boundary check
-  if (cur_ws->m_edit_type == ws_edit_e::edit_content &&
-      as_al->m_atom_idx_sel.size() == 1) {
+  for (auto &rec : as_al->m_atom_idx_sel)
+    if (rec.m_atm < as_al->m_geom->nat()) {
 
-      size_t atom_idx = as_al->m_atom_idx_sel.begin()->m_atm;
-      as_al->m_geom->xfield<bool>(xgeom_override, atom_idx) = checked;
-      if (as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) < 0.01f) {
-          auto ap_idx = ptable::number_by_symbol(as_al->m_geom->atom(atom_idx));
+      as_al->m_geom->xfield<bool>(xgeom_override, rec.m_atm) = checked;
+      if (as_al->m_geom->xfield<float>(xgeom_atom_r, rec.m_atm) < 0.01f) {
+          auto ap_idx = ptable::number_by_symbol(as_al->m_geom->atom(rec.m_atm));
           float _rad = 1.0f;
           if (ap_idx) _rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
-          as_al->m_geom->xfield<float>(xgeom_atom_r, atom_idx) = _rad;
+          as_al->m_geom->xfield<float>(xgeom_atom_r, rec.m_atm) = _rad;
         }
 
     }

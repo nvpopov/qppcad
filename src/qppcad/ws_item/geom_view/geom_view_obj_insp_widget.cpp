@@ -641,11 +641,9 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
   tm_gb_override_atom = new qspoiler_widget_t(tr("Override Atom"));
   tm_gb_override_atom_lt = new QFormLayout;
   tm_gb_override_atom->add_content_layout(tm_gb_override_atom_lt);
-  tm_override_atom_info = new QLabel;
   tm_override_atom_color = new qbinded_xgeom_color3_input_t(this);
   tm_override_atom_radii = new qbinded_xgeom_float_spinbox_t(this);
   tm_override_atom_radii->set_min_max_step(0.01, 5, 0.1);
-  tm_gb_override_atom_lt->addRow(tr("Atom info"), tm_override_atom_info);
   tm_gb_override_atom_lt->addRow(tr("Atom color"), tm_override_atom_color);
   tm_gb_override_atom_lt->addRow(tr("Atom radius"), tm_override_atom_radii);
   init_form_lt(tm_gb_override_atom_lt);
@@ -1388,6 +1386,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
               fill_combo_with_atom_types(tm_single_atom_combo, b_al);
 
               auto it = b_al->m_atom_idx_sel.begin();
+
               if (it != b_al->m_atom_idx_sel.end()) {
 
                   tm_single_atom_info->setText(
@@ -1399,25 +1398,6 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
                   tm_single_atom_vec3->sb_x->setValue(double(b_al->m_geom->pos(it->m_atm)[0]));
                   tm_single_atom_vec3->sb_y->setValue(double(b_al->m_geom->pos(it->m_atm)[1]));
                   tm_single_atom_vec3->sb_z->setValue(double(b_al->m_geom->pos(it->m_atm)[2]));
-
-                  if (b_al->m_geom->xfield<bool>(xgeom_override, it->m_atm)) {
-
-                      tm_override_atom_info->setText(
-                            QString::fromStdString(fmt::format("{}{}",
-                                                               b_al->m_geom->atom_name(it->m_atm),
-                                                               it->m_atm)));
-
-                      tm_gb_override_atom->show();
-                      tm_override_atom_color->bind_value(b_al->m_geom.get(),
-                                                         {xgeom_ccr, xgeom_ccg, xgeom_ccb},
-                                                         {it->m_atm});
-                      tm_override_atom_radii->bind_value(b_al->m_geom.get(),
-                                                         xgeom_atom_r,
-                                                         {it->m_atm});
-
-                    }
-
-                } else {
 
                 }
 
@@ -1488,6 +1468,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
             }
 
           if (b_al->m_atom_idx_sel.size() > 0) {
+
               if (b_al->m_geom->DIM == 3) {
                   //tm_translate_coord_type_label->show();
                   tm_translate_coord_type->show();
@@ -1496,6 +1477,32 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
                   tm_translate_coord_type->hide();
                   //tm_translate_coord_type_label->hide();
                 }
+
+              /* begin atom override */
+              if (!b_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)) {
+
+                  std::set<size_t> atoms_id_to_bind;
+                  std::transform(
+                        b_al->m_atom_idx_sel.begin(),
+                        b_al->m_atom_idx_sel.end(),
+                        std::inserter(atoms_id_to_bind, atoms_id_to_bind.begin()),
+                        [](auto &sel_rec){return sel_rec.m_atm;}
+                  );
+
+                  tm_gb_override_atom->show();
+                  tm_override_atom_color->bind_value(b_al->m_geom.get(),
+                                                     {xgeom_ccr, xgeom_ccg, xgeom_ccb},
+                                                     std::set<size_t>(atoms_id_to_bind)
+                                                     );
+
+                  tm_override_atom_radii->bind_value(b_al->m_geom.get(),
+                                                     xgeom_atom_r,
+                                                     std::move(atoms_id_to_bind)
+                                                     );
+
+                }
+              /* end atom override */
+
             }
 
         } else {

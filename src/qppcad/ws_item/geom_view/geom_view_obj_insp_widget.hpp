@@ -251,7 +251,6 @@ namespace qpp {
 
         qspoiler_widget_t *tm_gb_override_atom;
         QFormLayout *tm_gb_override_atom_lt;
-        QLabel *tm_override_atom_info;
         qbinded_xgeom_color3_input_t *tm_override_atom_color;
         qbinded_xgeom_float_spinbox_t *tm_override_atom_radii;
         //END TAB MODIFY

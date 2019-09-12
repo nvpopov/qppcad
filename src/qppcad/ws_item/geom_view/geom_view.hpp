@@ -258,6 +258,18 @@ namespace qpp {
             if (elem.m_idx == zero) m_geom->xfield<XFIELD>(field_id, elem.m_atm) = value;
         }
 
+        template <typename XFIELD>
+        bool any_of_sel_xfield_equal(int xfield_id, XFIELD xfield_val) {
+
+          auto cnt_override =
+              [this, &xfield_id, &xfield_val](const atom_index_set_key &rec) -> bool {
+              return this->m_geom->xfield<XFIELD>(xfield_id, rec.m_atm) == xfield_val;
+            };
+
+          return std::any_of(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), cnt_override);
+
+        }
+
         void xbool_invert_selected(size_t field_id);
         void copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst);
         void copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst,
