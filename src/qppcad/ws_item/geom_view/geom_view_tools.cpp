@@ -714,6 +714,40 @@ std::map<std::string, size_t> geom_view_tools_t::get_sel_types(geom_view_t *gv) 
 
 }
 
+void geom_view_tools_t::naive_project_displ(geom_view_t *src,
+                                            geom_view_t *dst,
+                                            float eps_dist,
+                                            bool check_run) {
+
+  if (!src || !dst || eps_dist < 0) return;
+
+  py::print(fmt::format("Check run = {}", check_run));
+
+  for (size_t i = 0; i < dst->m_geom->nat(); i++) {
+
+      std::vector<tws_node_content_t<float> > qs_res;
+      src->m_tws_tr->query_sphere(eps_dist, dst->m_geom->pos(i), qs_res);
+
+      if (qs_res.empty()) continue;
+
+      auto pos_src = src->m_geom->pos(qs_res.front().m_atm);
+      auto pos_dst = dst->m_geom->pos(i);
+
+      py::print(
+            fmt::format("Hit: src_i = {}, src_p = {}, dst_i = {}, dst_p = {}, dr = {}",
+                        qs_res.front().m_atm,
+                        pos_src,
+                        i,
+                        pos_dst,
+                        (pos_src-pos_dst).norm())
+            );
+
+      if (!check_run) dst->m_geom->coord(i) = pos_src;
+
+    }
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,

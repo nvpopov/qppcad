@@ -123,19 +123,6 @@ void displ_proj_package_t::apply(std::shared_ptr<geom_view_t> gv,
 
   if (!gv) return;
 
-  //apply transformation
-  //old
-//  for (size_t i = 0; i < m_recs.size(); i++)
-//    if (std::get<1>(lkp_vec[i])) {
-
-//      auto atom_id = std::get<0>(lkp_vec[i]);
-//      auto pos = gv->m_geom->pos(atom_id);
-//      pos += m_recs[i].m_end_pos - m_recs[i].m_start_pos;
-//      if (!check_run) gv->m_geom->change_pos(atom_id, pos);
-
-//    }
-
-  //new
   for (size_t i = 0; i < map_vec.size(); i++) {
 
       auto &dmp = map_vec[i];

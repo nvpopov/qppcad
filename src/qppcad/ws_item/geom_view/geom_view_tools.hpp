@@ -95,6 +95,11 @@ namespace qpp {
 
         static void align_gvs_2atoms();
 
+        static void naive_project_displ(geom_view_t *src,
+                                        geom_view_t *dst,
+                                        float eps_dist,
+                                        bool check_run = true);
+
     };
 
   } // namespace cad

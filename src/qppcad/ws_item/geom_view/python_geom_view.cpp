@@ -305,7 +305,10 @@ void py_geom_view_reg_helper_t::reg(
       .def("cut_selected_as_new_gv", &geom_view_tools_t::cut_selected_as_new_gv,
            py::arg("gv"), py::arg("cut_selected") = true)
 
-      .def("get_sel_types", &geom_view_tools_t::get_sel_types, py::arg("gv"));
+      .def("get_sel_types", &geom_view_tools_t::get_sel_types, py::arg("gv"))
+      .def("naive_proj_displ", &geom_view_tools_t::naive_project_displ,
+           py::arg("src"), py::arg("dst"),
+           py::arg("eps_dist") = 0.01f, py::arg("check_run") = true);
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,
