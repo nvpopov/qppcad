@@ -50,6 +50,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_list = new QListWidget;
   ws_items_list->setFocusPolicy(Qt::NoFocus);
   ws_items_list->setContextMenuPolicy(Qt::CustomContextMenu);
+  ws_items_list->setMinimumHeight(200);
 
   connect(ws_items_list,
           &QListWidget::customContextMenuRequested,

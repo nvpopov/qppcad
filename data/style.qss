@@ -218,7 +218,7 @@ qpp--cad--ws_tabbar_t {
 }
 
 qpp--cad--ws_tabbar_t::tab {
- height: 24px;
+ height: 21px;
  border: 0px;
  margin-top:4px;
  margin-right: 1px;

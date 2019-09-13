@@ -17,15 +17,26 @@ void ws_item_list_widget_t::rebuild_sub_gvs(
 
   if (!m_master_item) return;
 
-  for (auto ws : astate->ws_mgr->m_ws)
-    for (auto ws_item : ws->m_ws_items)
-      if (ws_item && ws_item->get_type() == m_ws_item_class
-          && comparator(m_master_item, ws_item.get())) {
+  int ws_id{-1};
+
+  for (auto ws : astate->ws_mgr->m_ws) {
+
+      ws_id++;
+      int itm_id{-1};
+
+      for (auto ws_item : ws->m_ws_items) {
+
+        itm_id++;
+
+        if (ws_item && ws_item->get_type() == m_ws_item_class
+            && comparator(m_master_item, ws_item.get())) {
 
             QListWidgetItem *list_item = new QListWidgetItem(this);
 
-            std::string list_item_name = fmt::format("{}/{}",
+            std::string list_item_name = fmt::format("[{}]{}/[{}]{}",
+                                                     ws_id,
                                                      ws_item->m_parent_ws->m_ws_name,
+                                                     itm_id,
                                                      ws_item->m_name);
 
             list_item->setText(QString::fromStdString(list_item_name));
@@ -34,6 +45,10 @@ void ws_item_list_widget_t::rebuild_sub_gvs(
             m_sub_items.push_back(ws_item.get());
 
           }
+
+        }
+
+    }
 
 }
 
