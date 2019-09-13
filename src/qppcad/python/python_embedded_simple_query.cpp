@@ -209,14 +209,45 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
             [&bound](float x, float y, float z){return z < bound;});});
 
   py::module pt = m.def_submodule("pt", "Periodic table manipulations");
-  pt.def("c", &simple_query::ptable_set_color_by_number)
-    .def("c", &simple_query::ptable_set_color_by_name)
-    .def("r", &simple_query::ptable_set_radius_by_name)
-    .def("r", &simple_query::ptable_set_radius_by_number)
-    .def("c", &simple_query::ptable_get_color_by_number)
-    .def("c", &simple_query::ptable_get_color_by_name)
-    .def("r", &simple_query::ptable_get_radius_by_name)
-    .def("r", &simple_query::ptable_get_radius_by_number);
+
+  pt.def("c", &simple_query::ptable_set_color_by_number,
+         py::arg("num"), py::arg("r"), py::arg("g"), py::arg("b"),
+         R"str(
+         Set color(r, g, b) for element with number <num> as 3 floats.
+         )str")
+
+    .def("c", &simple_query::ptable_set_color_by_number_as_vector,
+         py::arg("num"), py::arg("color"),
+         R"str(
+         Set color(r, g, b) for element with number <num> as vector.
+         )str")
+
+    .def("c", &simple_query::ptable_set_color_by_name,
+         py::arg("name"), py::arg("r"), py::arg("g"), py::arg("b"),
+         R"str(
+         Set color(r, g, b) for element with name as 3 floats.
+         )str")
+
+    .def("c", &simple_query::ptable_set_color_by_name_as_vector,
+         py::arg("name"), py::arg("color"),
+         R"str(
+         Set color(r, g, b) for element with name as vector.
+         )str")
+
+    .def("c", &simple_query::ptable_get_color_by_number, py::arg("number"),
+         R"str(
+         Get color(r, g, b) for element with number as vector.
+         )str")
+    .def("c", &simple_query::ptable_get_color_by_name, py::arg("name"),
+         R"str(
+         Get color(r, g, b) for element with name as vector.
+         )str")
+
+    .def("ir", &simple_query::ptable_set_ionic_r_by_name, py::arg("name"), py::arg("ionic_r"))
+    .def("ir", &simple_query::ptable_set_ionic_r_by_number, py::arg("number"), py::arg("ionic_r"))
+
+    .def("ir", &simple_query::ptable_get_ionic_r_by_name, py::arg("name"))
+    .def("ir", &simple_query::ptable_get_ionic_r_by_number, py::arg("number"));
 
   py::module cam = m.def_submodule("cam", "Camera manipulation");
   cam.def("t",   &simple_query::camera_move)

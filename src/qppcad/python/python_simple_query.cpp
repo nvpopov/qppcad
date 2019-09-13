@@ -888,6 +888,10 @@ void simple_query::ptable_set_color_by_number(int num, float r, float g, float b
 
 }
 
+void simple_query::ptable_set_color_by_number_as_vector(int num, vector3<float> color) {
+  simple_query::ptable_set_color_by_number(num, color[0], color[1], color[2]);
+}
+
 void simple_query::ptable_set_color_by_name(std::string name, float r, float g, float b) {
 
   auto ap_idx = ptable::number_by_symbol(name);
@@ -895,7 +899,11 @@ void simple_query::ptable_set_color_by_name(std::string name, float r, float g, 
 
 }
 
-void simple_query::ptable_set_radius_by_number(int num, float r) {
+void simple_query::ptable_set_color_by_name_as_vector(std::string name, vector3<float> color) {
+  simple_query::ptable_set_color_by_name(name, color[0], color[1], color[2]);
+}
+
+void simple_query::ptable_set_ionic_r_by_number(int num, float r) {
 
   if (num > 0 && num <100) {
       ptable_atom_record &rec = ptable::get_inst()->arecs[num-1];
@@ -905,10 +913,10 @@ void simple_query::ptable_set_radius_by_number(int num, float r) {
 
 }
 
-void simple_query::ptable_set_radius_by_name(std::string name, float r) {
+void simple_query::ptable_set_ionic_r_by_name(std::string name, float r) {
 
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) ptable_set_radius_by_number(*ap_idx, r);
+  if (ap_idx) ptable_set_ionic_r_by_number(*ap_idx, r);
 
 }
 
@@ -927,17 +935,17 @@ vector3<float> simple_query::ptable_get_color_by_name(std::string name) {
 
 }
 
-float simple_query::ptable_get_radius_by_number(int num) {
+float simple_query::ptable_get_ionic_r_by_number(int num) {
 
   if (num > 0 && num <100) return ptable::get_inst()->arecs[num-1].m_radius;
   else return 0.0f;
 
 }
 
-float simple_query::ptable_get_radius_by_name(std::string name) {
+float simple_query::ptable_get_ionic_r_by_name(std::string name) {
 
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) return ptable_get_radius_by_number(*ap_idx);
+  if (ap_idx) return ptable_get_ionic_r_by_number(*ap_idx);
   else return 0.0f;
 
 }

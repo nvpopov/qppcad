@@ -112,14 +112,16 @@ namespace qpp {
         static void set_sel_color(float r, float g, float b);
 
         static void ptable_set_color_by_number(int num, float r, float g, float b);
+        static void ptable_set_color_by_number_as_vector(int num, vector3<float> color);
         static void ptable_set_color_by_name(std::string name, float r, float g, float b);
-        static void ptable_set_radius_by_number(int num, float r);
-        static void ptable_set_radius_by_name(std::string name, float r);
-
+        static void ptable_set_color_by_name_as_vector(std::string name, vector3<float> color);
         static vector3<float> ptable_get_color_by_number(int num);
         static vector3<float> ptable_get_color_by_name(std::string name);
-        static float ptable_get_radius_by_number(int num);
-        static float ptable_get_radius_by_name(std::string name);
+
+        static void ptable_set_ionic_r_by_number(int num, float r);
+        static void ptable_set_ionic_r_by_name(std::string name, float r);
+        static float ptable_get_ionic_r_by_number(int num);
+        static float ptable_get_ionic_r_by_name(std::string name);
 
         static void camera_move(vector3<float> axis, float magnitude);
         static void camera_rotate_yaw(float magnitude);
