@@ -45,11 +45,13 @@ namespace qpp {
                                            vector3<float> new_c);
         static void purify_boundary_atoms(geom_view_t *dst,
                                           geom_view_t *src);
-        static void clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection = true);
-
+        static void clamp_atoms_to_cell(geom_view_t *gv,
+                                        bool ignore_selection = true,
+                                        bool affect_anim = true);
         static vector3<float> center_cell_on(geom_view_t *gv,
                                              vector3<float> new_cnt,
-                                             bool clamp_atoms = true);
+                                             bool clamp_atoms = true,
+                                             bool affect_anim = true);
 
         /* sublattices, atoms clustering */
         static std::vector<size_t> get_atoms_cn(geom_view_t *gv);

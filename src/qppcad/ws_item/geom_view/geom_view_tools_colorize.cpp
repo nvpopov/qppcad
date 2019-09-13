@@ -71,7 +71,7 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
         for (int i = 0; i < g.nat(); i++) {
 
             std::vector<tws_node_content_t<float> > res;
-            g_t.query_sphere(min_dist, g.coord(i), res);
+            g_t.query_sphere(min_dist + 0.05f, g.coord(i), res);
 
             vector3<float> final_color = over_dist_color;
 
@@ -84,13 +84,9 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
             int second_n = i;
 
             for (auto &elem : res)
-              if (elem.m_idx == zero && elem.m_atm != size_t(i)) {
-                  second_n = elem.m_atm;
-                }
+              if (elem.m_idx == zero && elem.m_atm != size_t(i)) second_n = elem.m_atm;
 
             if (first_n != second_n && res.size() > 1) {
-
-                //std::cout << "RES SIZE " << res.size() << std::endl;
 
                 bool pair1_d = al->m_geom->atom(first_n) == atom_type1;
                 bool pair2_d = al->m_geom->atom(second_n) == atom_type2;
@@ -101,8 +97,8 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
                 bool p1 = pair1_d && pair2_d;
                 bool p2 = pair1_i && pair2_i;
 
-                if (!affect_pairs || (affect_pairs && (p1 || p2)))
-                  final_color = min_dist_color;
+                if (!affect_pairs || p1 || p2) final_color = min_dist_color;
+
               }
 
             al->m_anim->m_anim_data[a_id].frames[f_id].atom_color[i] = final_color;

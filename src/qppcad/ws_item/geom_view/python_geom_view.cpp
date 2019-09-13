@@ -277,9 +277,11 @@ void py_geom_view_reg_helper_t::reg(
      .def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
                       py::arg("gv"), py::arg("score_eps") = 0.1f)
      .def("clamp_atoms_to_cell", &geom_view_tools_t::clamp_atoms_to_cell,
-                      py::arg("gv"), py::arg("ignore_selection") = true)
+                      py::arg("gv"), py::arg("ignore_selection") = true,
+          py::arg("affect_anim") = true)
      .def("center_cell_on", &geom_view_tools_t::center_cell_on,
-                      py::arg("gv"), py::arg("new_cnt"), py::arg("clamp_atoms") = true)
+                      py::arg("gv"), py::arg("new_cnt"),
+                      py::arg("clamp_atoms") = true, py::arg("affect_anim") = true)
 
       .def("tr_align_geoms", &geom_view_tools_t::tr_align_geoms,
            py::arg("what_gv"), py::arg("to_gv"), py::arg("start_offset"),

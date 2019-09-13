@@ -1,6 +1,7 @@
 #include <qppcad/tools/center_cell_on_atom/center_cell_on_atom.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/core/app_state.hpp>
 
 using namespace qpp;

@@ -369,10 +369,12 @@ std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv,
 }
 
 void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv,
-                                            bool ignore_selection) {
+                                            bool ignore_selection,
+                                            bool affect_anim) {
 
   if (!gv) return;
 
+  //update geometry
   for (int i = 0; i < gv->m_geom->nat(); i++)
     if (gv->m_atom_idx_sel.find(atom_index_set_key(i, index::D(gv->m_geom->DIM).all(0)))
         != gv->m_atom_idx_sel.end() || ignore_selection) {
@@ -382,11 +384,21 @@ void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv,
 
       }
 
+  //update animations
+  if (affect_anim)
+    for (auto &anim_rec : gv->m_anim->m_anim_data)
+      for (auto &frame : anim_rec.frames)
+        for (auto &atom_pos : frame.atom_pos) {
+            auto reduced = gv->m_geom->cell.reduce(atom_pos);
+            atom_pos = reduced;
+          }
+
 }
 
 vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv,
                                                  vector3<float> new_cnt,
-                                                 bool clamp_atoms) {
+                                                 bool clamp_atoms,
+                                                 bool affect_anim) {
 
   //compute cell center
   vector3<float> cell_cnt{0};
@@ -399,7 +411,13 @@ vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv,
   vector3<float> delta = cell_cnt - new_cnt;
   for (size_t i = 0; i < gv->m_geom->nat(); i++) gv->m_geom->coord(i) += delta;
 
-  if (clamp_atoms) geom_view_tools_t::clamp_atoms_to_cell(gv);
+  if (affect_anim)
+    for (auto &anim_rec : gv->m_anim->m_anim_data)
+      for (auto &frame : anim_rec.frames)
+        for (auto &atom_pos : frame.atom_pos)
+          atom_pos += delta;
+
+  if (clamp_atoms) geom_view_tools_t::clamp_atoms_to_cell(gv, true, affect_anim);
 
   astate->make_viewport_dirty();
 
