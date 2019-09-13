@@ -123,6 +123,11 @@ namespace qpp {
         static float ptable_get_ionic_r_by_number(int num);
         static float ptable_get_ionic_r_by_name(std::string name);
 
+        static void ptable_set_cov_r_by_number(int num, float r);
+        static void ptable_set_cov_r_by_name(std::string name, float r);
+        static float ptable_get_cov_r_by_number(int num);
+        static float ptable_get_cov_r_by_name(std::string name);
+
         static void camera_move(vector3<float> axis, float magnitude);
         static void camera_rotate_yaw(float magnitude);
         static void camera_rotate_pitch(float magnitude);

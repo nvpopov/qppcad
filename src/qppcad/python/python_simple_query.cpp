@@ -950,6 +950,38 @@ float simple_query::ptable_get_ionic_r_by_name(std::string name) {
 
 }
 
+void simple_query::ptable_set_cov_r_by_number(int num, float r) {
+
+  if (num > 0 && num <100) {
+      ptable_atom_record &rec = ptable::get_inst()->arecs[num-1];
+      rec.m_covrad_slater = r;
+      rec.m_redefined = true;
+    }
+
+}
+
+void simple_query::ptable_set_cov_r_by_name(std::string name, float r) {
+
+  auto ap_idx = ptable::number_by_symbol(name);
+  if (ap_idx) ptable_set_cov_r_by_number(*ap_idx, r);
+
+}
+
+float simple_query::ptable_get_cov_r_by_number(int num) {
+
+  if (num > 0 && num <100) return ptable::get_inst()->arecs[num-1].m_covrad_slater;
+  else return 0.0f;
+
+}
+
+float simple_query::ptable_get_cov_r_by_name(std::string name) {
+
+  auto ap_idx = ptable::number_by_symbol(name);
+  if (ap_idx) return ptable_get_cov_r_by_number(*ap_idx);
+  else return 0.0f;
+
+}
+
 void simple_query::camera_move(vector3<float> axis, float magnitude) {
 
   app_state_t *astate = app_state_t::get_inst();
