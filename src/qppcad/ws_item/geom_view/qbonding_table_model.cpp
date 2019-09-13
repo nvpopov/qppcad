@@ -30,6 +30,7 @@ QVariant qbonding_table_model_t::data(const QModelIndex &index, int role) const 
       std::advance(brec, index.row());
 
       if (brec != m_al->m_tws_tr->m_bonding_table.m_dist.end()) {
+
           switch (index.column()) {
             case 0 :
               return QString::fromStdString(m_al->m_geom->atom_of_type(brec->first.m_a));
@@ -45,13 +46,16 @@ QVariant qbonding_table_model_t::data(const QModelIndex &index, int role) const 
               break;
             }
         }
+
     }
 
   if(index.column() == 3 && role == Qt::CheckStateRole) {
+
       auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
       std::advance(brec, index.row());
       if (brec->second.m_enabled) return Qt::Checked;
       else return Qt::Unchecked;
+
     }
 
   if (role == Qt::TextAlignmentRole) {
@@ -67,7 +71,9 @@ QVariant qbonding_table_model_t::headerData(int section,
                                             int role) const {
 
   if (role == Qt::DisplayRole) {
+
       if (orientation == Qt::Horizontal) {
+
           switch (section) {
             case 0:
               return tr("First");
@@ -84,7 +90,9 @@ QVariant qbonding_table_model_t::headerData(int section,
             default:
               return QString("");
             }
+
         }
+
     }
 
   return QVariant();
@@ -118,6 +126,7 @@ bool qbonding_table_model_t::setData(const QModelIndex &index, const QVariant &v
   if (!m_al) return false;
 
   if (index.column() == 3 && role == Qt::CheckStateRole) {
+
       auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
       std::advance(brec, index.row());
       brec->second.m_enabled = value == Qt::Checked;
@@ -125,18 +134,24 @@ bool qbonding_table_model_t::setData(const QModelIndex &index, const QVariant &v
       m_al->m_tws_tr->do_action(act_rebuild_ntable);
       astate->make_viewport_dirty();
       return true;
+
     }
 
   if (index.column() == 2 && role == Qt::EditRole) {
+
       auto brec = m_al->m_tws_tr->m_bonding_table.m_dist.begin();
       std::advance(brec, index.row());
+
       if (value.type() == QVariant::Double) {
+
           brec->second.m_bonding_dist = float(value.toDouble());
           m_al->m_tws_tr->m_bonding_table.update_pair_max_dist(brec->first.m_a, brec->first.m_b);
           m_al->m_tws_tr->do_action(act_rebuild_ntable);
           astate->make_viewport_dirty();
           return true;
+
        }
+
     }
 
   return QAbstractTableModel::setData(index, value, role);

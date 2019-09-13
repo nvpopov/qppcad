@@ -46,9 +46,9 @@ int main (int argc, char **argv) {
 
   astate->init_managers();
   astate->ws_mgr->init_ws_item_bhv_mgr();
-  astate->ws_mgr->init_default();
   astate->load_settings();
   astate->init_fixtures();
+  astate->ws_mgr->init_default();
 
   if (!args.empty()) {
 

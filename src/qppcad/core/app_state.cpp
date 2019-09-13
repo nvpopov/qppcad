@@ -163,18 +163,36 @@ namespace qpp {
 
       for(int i = 0; i < ovr_size; i++) {
           settings.setArrayIndex(i);
-          int number = settings.value("number").toInt();
-          float c_r = settings.value("c_r").toFloat();
-          float c_g = settings.value("c_g").toFloat();
-          float c_b = settings.value("c_b").toFloat();
-          float rad = settings.value("r").toFloat();
-          if (number > 0 && number < 100) {
-              table->arecs[number-1].m_color_jmol[0] = c_r;
-              table->arecs[number-1].m_color_jmol[1] = c_g;
-              table->arecs[number-1].m_color_jmol[2] = c_b;
-              table->arecs[number-1].m_radius = rad;
+
+          bool ok_number{false};
+          int number = settings.value("number").toInt(&ok_number);
+
+          bool ok_c_r{false};
+          float c_r = settings.value("c_r").toFloat(&ok_c_r);
+
+          bool ok_c_g{false};
+          float c_g = settings.value("c_g").toFloat(&ok_c_g);
+
+          bool ok_c_b{false};
+          float c_b = settings.value("c_b").toFloat(&ok_c_b);
+
+          bool ok_rad{false};
+          float rad = settings.value("r").toFloat(&ok_rad);
+
+          bool ok_cov_rad{false};
+          float cov_rad = settings.value("covrad").toFloat(&ok_cov_rad);
+
+          if (ok_number && number > 0 && number < 100) {
+
+              if (ok_c_r) table->arecs[number-1].m_color_jmol[0] = c_r;
+              if (ok_c_g) table->arecs[number-1].m_color_jmol[1] = c_g;
+              if (ok_c_b) table->arecs[number-1].m_color_jmol[2] = c_b;
+              if (ok_rad) table->arecs[number-1].m_radius = rad;
+              if (ok_cov_rad) table->arecs[number-1].m_covrad_slater = cov_rad;
               table->arecs[number-1].m_redefined = true;
+
             }
+
         }
 
       settings.endArray();
@@ -293,13 +311,16 @@ namespace qpp {
 
       for (auto &rec : table->arecs)
         if (rec.m_redefined) {
+
             settings.setArrayIndex(i);
             settings.setValue("number", int(rec.m_number));
             settings.setValue("c_r", double(rec.m_color_jmol[0]));
             settings.setValue("c_g", double(rec.m_color_jmol[1]));
             settings.setValue("c_b", double(rec.m_color_jmol[2]));
             settings.setValue("r", double(rec.m_radius));
+            settings.setValue("covrad", double(rec.m_covrad_slater));
             i+=1;
+
           }
 
       settings.endArray();
@@ -312,6 +333,7 @@ namespace qpp {
       settings.endGroup();
 
       settings.beginWriteArray("pyconsole_history");
+
       for (int q = 0; q < py_mgr->m_commands.size(); q++) {
           settings.setArrayIndex(q);
           settings.setValue("cmd", py_mgr->m_commands[q]);
@@ -321,12 +343,14 @@ namespace qpp {
 
       settings.beginWriteArray("recent_files");
       for (int q = 0; q < m_recent_files.size(); q++) {
+
           settings.setArrayIndex(q);
           settings.setValue("filename", QString::fromStdString(m_recent_files[q].m_file_name));
           std::string ff_name =
               ws_mgr->m_bhv_mgr->get_ff_short_name(m_recent_files[q].m_ff_id);
           settings.setValue("ff", QString::fromStdString(ff_name));
           settings.setValue("isnat", m_recent_files[q].m_native);
+
         }
 
       settings.endArray();
@@ -353,10 +377,12 @@ namespace qpp {
 
       settings.beginGroup("cache_vector");
       for (auto &rec : m_env_vec3) {
+
           QStringList vecl;
           vecl.reserve(3);
           for (size_t q = 0; q < 3; q++) vecl.push_back(QString("%1").arg(rec.second[q]));
           settings.setValue(QString::fromStdString(rec.first), vecl);
+
         }
 
       settings.endGroup();
@@ -397,12 +423,16 @@ namespace qpp {
                              (m_recent_files.size() - max_recent_files));
 
       for (auto it = m_recent_files.begin(); it != m_recent_files.end(); ++it) {
+
           if ((*it).m_file_name.find(file_name) != std::string::npos) {
+
               auto x = std::move(*it);
               m_recent_files.erase(it);
               m_recent_files.insert(m_recent_files.end(), std::move(x));
               return;
+
             }
+
         }
 
       //log(fmt::format("RECENT FILES ADD: {} {} {}", file_name, bhv_id, is_native));
