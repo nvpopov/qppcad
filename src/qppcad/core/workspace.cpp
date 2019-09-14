@@ -235,6 +235,7 @@ void workspace_t::render() {
           astate->dp->end_render_line();
 
         } // Draw axis end
+
     }
 
   for (auto &ws_item : m_ws_items) ws_item->render();
@@ -253,6 +254,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
+
       m_ray.start = m_camera->m_view_point;
       m_ray.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
     } else {
@@ -264,8 +266,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
     }
 
-  if (m_gizmo->m_is_visible && m_gizmo->attached_item)
-    if (m_gizmo->process_ray(&m_ray)) {
+  if (m_gizmo->m_is_visible && m_gizmo->attached_item && m_gizmo->process_ray(&m_ray)) {
         astate->log("gizmo clicked");
         return;
       }
@@ -456,11 +457,14 @@ void workspace_t::update(float delta_time) {
 
   //scenic camera rotation
   if (m_scenic_rotation) {
+
       m_camera->rotate_camera_orbit_roll(m_scenic_rotation_speed[0] * delta_time);
       m_camera->rotate_camera_orbit_pitch(m_scenic_rotation_speed[1] * delta_time);
       m_camera->rotate_camera_orbit_yaw(m_scenic_rotation_speed[2] * delta_time);
       m_camera->update_camera();
+
       astate->make_viewport_dirty();
+
     }
 
   //handle deletion
@@ -479,6 +483,7 @@ void workspace_t::update(float delta_time) {
         it = m_ws_items.erase(it);
         //it->reset();
         astate->astate_evd->cur_ws_changed();
+
       }
     else {
         ++it;

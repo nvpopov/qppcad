@@ -57,6 +57,7 @@ namespace qpp {
         //Widgets
         QWidget *main_widget;
         QWidget *tool_panel_widget;
+
         QHBoxLayout *tool_panel_layout;
 
         QComboBox *tp_ws_selector;
@@ -130,6 +131,7 @@ namespace qpp {
         QAction *edit_menu_undo;
         QAction *edit_menu_redo;
         QAction *edit_menu_switch_ws_edit_mode;
+        QAction *edit_menu_ptable_widget;
         QMenu *edit_menu_selection;
         QAction *edit_menu_selection_select_all;
         QAction *edit_menu_selection_unselect_all;

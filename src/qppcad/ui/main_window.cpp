@@ -9,6 +9,9 @@
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/python/python_simple_query.hpp>
+
+#include <qppcad/ui/ptable_rich_widget.hpp>
+
 #include <QDateTime>
 #include <QColorDialog>
 
@@ -184,6 +187,14 @@ void main_window_t::init_menus() {
   edit_menu_redo->setEnabled(false);
   edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
   edit_menu->addAction(edit_menu_redo);
+
+  edit_menu->addSeparator();
+  edit_menu_ptable_widget = new QAction(nullptr);
+  edit_menu_ptable_widget->setText(tr("Periodic table"));
+  edit_menu->addAction(edit_menu_ptable_widget);
+  connect(edit_menu_ptable_widget,
+          &QAction::triggered,
+          [](){ ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec(); });
 
   edit_menu->addSeparator();
 
