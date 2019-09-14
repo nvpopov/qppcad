@@ -86,7 +86,6 @@ namespace qpp {
         qspoiler_widget_t *splr_list_gv_res;
         QVBoxLayout *splr_list_gv_res_lt;
 
-        qspoiler_widget_t *splr_acts;
         QHBoxLayout *splr_acts_lt;
 
         QPushButton *add_btn;

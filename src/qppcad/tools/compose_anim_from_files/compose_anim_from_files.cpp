@@ -5,7 +5,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void compose_anim_from_files_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
+void compose_anim_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -19,7 +19,7 @@ void compose_anim_from_files_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) 
       return;
     }
 
-  compose_anim_from_files_widget_t caw;
+  compose_anim_widget_t caw;
   int ret_code = caw.exec();
 
   std::vector<geom_view_selection_query_t> sel_query;
@@ -74,7 +74,7 @@ void compose_anim_from_files_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) 
 
 }
 
-compose_anim_from_files_widget_t::compose_anim_from_files_widget_t() {
+compose_anim_widget_t::compose_anim_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -93,12 +93,12 @@ compose_anim_from_files_widget_t::compose_anim_from_files_widget_t() {
   connect(dialog_bb,
           &QDialogButtonBox::accepted,
           this,
-          &compose_anim_from_files_widget_t::accept);
+          &compose_anim_widget_t::accept);
 
   connect(dialog_bb,
           &QDialogButtonBox::rejected,
           this,
-          &compose_anim_from_files_widget_t::reject);
+          &compose_anim_widget_t::reject);
 
   main_lt->addWidget(gv_selector);
   main_lt->addWidget(dialog_bb);

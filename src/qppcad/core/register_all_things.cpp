@@ -358,8 +358,8 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
   registration_helper_t::reg_ws_item_tool<center_cell_on_atom_tool_t, geom_view_t>(
         "Center cell on atoms", hash_t_tr, bhv_mgr);
 
-  registration_helper_t::reg_ws_item_tool<compose_anim_from_files_tool_t, geom_view_t>(
-        "Compose anim. from files", hash_t_generic, bhv_mgr, false);
+  registration_helper_t::reg_ws_item_tool<compose_anim_tool_t, geom_view_t>(
+        "Compose animation", hash_t_generic, bhv_mgr, false);
 
   registration_helper_t::reg_ws_item_tool<purify_boundary_atoms_tool_t, geom_view_t>(
         "Purify boundary atoms", hash_t_tr, bhv_mgr, true);

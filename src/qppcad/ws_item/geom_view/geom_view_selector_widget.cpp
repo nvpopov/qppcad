@@ -74,9 +74,7 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
   splr_list_gv_res_lt = new QVBoxLayout;
   splr_list_gv_res->add_content_layout(splr_list_gv_res_lt);
 
-  splr_acts = new qspoiler_widget_t(tr("Actions:"), nullptr, false, 6, 480);
   splr_acts_lt = new QHBoxLayout;
-  splr_acts->add_content_layout(splr_acts_lt);
 
   list_gv = new QListWidget;
   //list_gv->setMinimumWidth(400);
@@ -116,8 +114,8 @@ qgeom_view_selector_widget_t::qgeom_view_selector_widget_t(QWidget *parent) : QW
   splr_list_gv_lt->addWidget(list_gv);
   splr_list_gv_res_lt->addWidget(list_gv_res_scroll_area);
 
-  main_lt->addWidget(splr_acts);
   main_lt->addWidget(splr_list_gv);
+  main_lt->addLayout(splr_acts_lt);
   main_lt->addWidget(splr_list_gv_res);
 
   generate_list_gv_items();
