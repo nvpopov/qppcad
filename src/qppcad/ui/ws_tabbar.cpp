@@ -42,11 +42,6 @@ ws_tabbar_t::ws_tabbar_t(QWidget *parent) : QTabBar (parent) {
           this,
           &ws_tabbar_t::tab_double_clicked);
 
-//  connect(this,
-//          &ws_tabbar_t::tabMoved,
-//          this,
-//          &ws_tabbar_t::tab_moved);
-
 }
 
 void ws_tabbar_t::update_tabs() {
@@ -71,21 +66,17 @@ void ws_tabbar_t::tabs_closed(int index) {
   app_state_t* astate = app_state_t::get_inst();
 
   // TODO: refractor::code_duplicate(main_window.cpp)
-  if (astate->ws_mgr->has_wss() && index >=0 && index < astate->ws_mgr->m_ws.size()) {
-      auto cls_ws = astate->ws_mgr->m_ws[index];
-      if (cls_ws) {
-          QMessageBox::StandardButton reply;
-          reply = QMessageBox::question(this, tr("Workspace -> Close"),
-                                        tr("Do you really want to close the workspace?"),
-                                        QMessageBox::Yes | QMessageBox::No);
-          if (reply == QMessageBox::Yes) {
-              cls_ws->m_marked_for_deletion = true;
-            }
-          else if (reply == QMessageBox::No) {
+   if (!(astate->ws_mgr->has_wss() && index >=0 && index < astate->ws_mgr->m_ws.size())) return;
 
-            }
-        }
-    }
+   auto cls_ws = astate->ws_mgr->m_ws[index];
+   if (!cls_ws) return;
+
+   QMessageBox::StandardButton reply;
+   reply = QMessageBox::question(this, tr("Workspace -> Close"),
+                                 tr("Do you really want to close the workspace?"),
+                                 QMessageBox::Yes | QMessageBox::No);
+
+   if (reply == QMessageBox::Yes) cls_ws->m_marked_for_deletion = true;
 
 }
 
@@ -106,7 +97,7 @@ void ws_tabbar_t::cur_ws_changed() {
 void ws_tabbar_t::wss_changed_slot() {
 
   app_state_t *astate = app_state_t::get_inst();
-  astate->tlog("@@@ DEBUG: ws_tabbar_t::wss_changed_slot()");
+  //astate->tlog("@@@ DEBUG: ws_tabbar_t::wss_changed_slot()");
   update_tabs();
 
   blockSignals(true);
@@ -130,27 +121,18 @@ void ws_tabbar_t::tab_double_clicked(int index) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (astate->ws_mgr->has_wss() && index >=0 && index < astate->ws_mgr->m_ws.size()) {
-      auto target_ws = astate->ws_mgr->m_ws[index];
-      if (target_ws) {
-          bool ok;
-          QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
-                                               tr("New workspace name:"), QLineEdit::Normal,
-                                               QString::fromStdString(target_ws->m_ws_name), &ok);
-          if (ok && text != "") {
-              target_ws->m_ws_name = text.toStdString();
-              astate->astate_evd->wss_changed();
-            }
-        }
+  if (!(astate->ws_mgr->has_wss() && index >=0 && index < astate->ws_mgr->m_ws.size())) return;
+
+  auto target_ws = astate->ws_mgr->m_ws[index];
+  if (!target_ws) return;
+
+  bool ok;
+  QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
+                                       tr("New workspace name:"), QLineEdit::Normal,
+                                       QString::fromStdString(target_ws->m_ws_name), &ok);
+  if (ok && text != "") {
+      target_ws->m_ws_name = text.toStdString();
+      astate->astate_evd->wss_changed();
     }
-
-}
-
-void ws_tabbar_t::tab_moved(int from, int to) {
-
-  app_state_t *astate = app_state_t::get_inst();
-  astate->tlog("ws_tabbar_t::tab_moved(from={}, to={})", from, to);
-
-  astate->ws_mgr->move_ws(from, to);
 
 }
