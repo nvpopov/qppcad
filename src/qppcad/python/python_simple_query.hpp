@@ -118,10 +118,10 @@ namespace qpp {
         static vector3<float> ptable_get_color_by_number(int num);
         static vector3<float> ptable_get_color_by_name(std::string name);
 
-        static void ptable_set_ionic_r_by_number(int num, float r);
-        static void ptable_set_ionic_r_by_name(std::string name, float r);
-        static float ptable_get_ionic_r_by_number(int num);
-        static float ptable_get_ionic_r_by_name(std::string name);
+        static void ptable_set_r_by_number(int num, float r);
+        static void ptable_set_r_by_name(std::string name, float r);
+        static float ptable_get_r_by_number(int num);
+        static float ptable_get_r_by_name(std::string name);
 
         static void ptable_set_cov_r_by_number(int num, float r);
         static void ptable_set_cov_r_by_name(std::string name, float r);

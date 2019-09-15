@@ -243,11 +243,11 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
          Get color(r, g, b) for element with name as vector.
          )str")
 
-    .def("ir", &simple_query::ptable_set_ionic_r_by_name, py::arg("name"), py::arg("ionic_r"))
-    .def("ir", &simple_query::ptable_set_ionic_r_by_number, py::arg("number"), py::arg("ionic_r"))
+    .def("r", &simple_query::ptable_set_r_by_name, py::arg("name"), py::arg("r"))
+    .def("r", &simple_query::ptable_set_r_by_number, py::arg("number"), py::arg("r"))
 
-    .def("ir", &simple_query::ptable_get_ionic_r_by_name, py::arg("name"))
-    .def("ir", &simple_query::ptable_get_ionic_r_by_number, py::arg("number"))
+    .def("r", &simple_query::ptable_get_r_by_name, py::arg("name"))
+    .def("r", &simple_query::ptable_get_r_by_number, py::arg("number"))
 
     .def("cr", &simple_query::ptable_set_cov_r_by_name, py::arg("name"), py::arg("cov_r"))
     .def("cr", &simple_query::ptable_set_cov_r_by_number, py::arg("number"), py::arg("cov_r"))
