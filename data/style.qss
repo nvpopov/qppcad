@@ -408,4 +408,15 @@ QMenu::item:selected {
 qpp--cad--ptable_rich_widget_t QPushButton {
  width: 1.2em;
  height: 1.2em;
+ color:black;
 }
+
+qpp--cad--ptable_rich_widget_t QPushButton:hover {
+ background-color: rgb(33, 33, 33);
+ border:3px solid black;
+}
+
+qpp--cad--ptable_rich_widget_t QPushButton:pressed {
+ background-color: rgb(33, 33, 33);
+}
+

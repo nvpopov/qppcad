@@ -1,12 +1,16 @@
 #include <qppcad/ui/ptable_rich_widget.hpp>
 #include <data/ptable.hpp>
+#include <qppcad/core/app_state.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
 ptable_rich_widget_t::ptable_rich_widget_t(QWidget *parent) : QDialog(parent) {
 
-  setWindowTitle(tr("Periodic table"));
+  setWindowTitle(tr("Periodic Table"));
+
+  m_btn_grp = new QButtonGroup;
 
   m_main_lt = new QHBoxLayout;
   m_elem_lt = new QGridLayout;
@@ -14,6 +18,11 @@ ptable_rich_widget_t::ptable_rich_widget_t(QWidget *parent) : QDialog(parent) {
   setLayout(m_main_lt);
 
   construct_widgets();
+
+  connect(m_btn_grp,
+          QOverload<int>::of(&QButtonGroup::buttonClicked),
+          this,
+          &ptable_rich_widget_t::btn_grp_clicked);
 
 }
 
@@ -28,10 +37,31 @@ void ptable_rich_widget_t::construct_widgets() {
       if (!elem_pos) continue;
 
       QPushButton *tst = new QPushButton;
+      m_btn_grp->addButton(tst, i);
+      colorize_element_btn(i);
+
       tst->setText(QString::fromStdString(pt_inst->arecs[i].m_symbol));
       m_elem_lt->addWidget(tst, std::get<1>(*elem_pos), std::get<0>(*elem_pos));
 
     }
+
+
+
+}
+
+void ptable_rich_widget_t::colorize_element_btn(int btn_id) {
+
+  QAbstractButton *btn = m_btn_grp->button(btn_id);
+  if (!btn) return;
+
+  ptable *pt_inst = ptable::get_inst();
+
+  btn->setStyleSheet(QString("QPushButton {"
+                             "background-color: rgb(%1, %2, %3);"
+                             "}")
+                        .arg(int(pt_inst->arecs[btn_id].m_color_jmol[0]*255))
+                        .arg(int(pt_inst->arecs[btn_id].m_color_jmol[1]*255))
+                        .arg(int(pt_inst->arecs[btn_id].m_color_jmol[2]*255)));
 
 }
 
@@ -67,5 +97,102 @@ std::optional<std::tuple<int, int> > ptable_rich_widget_t::get_ptable_x_y(size_t
   if (elem >= 89 && elem <= 103) return pair_int({elem - 87, 9});
 
   return std::nullopt;
+
+}
+
+void ptable_rich_widget_t::btn_grp_clicked(int id) {
+
+  ptable_element_editor_t elem_edtr(id);
+
+  if (elem_edtr.exec() == QDialog::Accepted) {
+
+      elem_edtr.update_element_data();
+      colorize_element_btn(elem_edtr.m_elem_id);
+      app_state_t::get_inst()->make_viewport_dirty();
+
+    }
+
+}
+
+ptable_element_editor_t::ptable_element_editor_t(int elem_id, QWidget *parent) : QDialog (parent) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  ptable *pt_inst = ptable::get_inst();
+
+  m_elem_id = elem_id;
+
+  setFixedWidth(340);
+
+  setWindowTitle(
+        QString("Edit element - %1").arg(QString::fromStdString(pt_inst->arecs[elem_id].m_symbol))
+        );
+
+  m_main_lt = new QVBoxLayout;
+  setLayout(m_main_lt);
+
+  m_main_splr = new qspoiler_widget_t(tr("Element properties"), nullptr, false);
+  m_splr_lt = new QFormLayout;
+  m_main_splr->add_content_layout(m_splr_lt);
+
+  m_radius = new qbinded_float_spinbox_t;
+  m_radius->set_min_max_step(-1, 20, 0.01);
+
+  m_ionic_rad = new qbinded_float_spinbox_t;
+  m_ionic_rad->set_min_max_step(0.0, 50, 0.01);
+
+  m_cov_rad = new qbinded_float_spinbox_t;
+  m_cov_rad->set_min_max_step(0.0, 50, 0.01);
+
+  m_color = new qbinded_color3_input_t;
+
+  m_splr_lt->addRow(tr("Radius"), m_radius);
+  m_splr_lt->addRow(tr("Ionic Radius"), m_ionic_rad);
+  m_splr_lt->addRow(tr("Covalent Radius"), m_cov_rad);
+  m_splr_lt->addRow(tr("Color"), m_color);
+
+  qt_hlp::resize_form_lt_lbls(m_splr_lt, astate->size_guide.obj_insp_lbl_w());
+
+  m_dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+  for (auto btn : m_dialog_bb->buttons())
+    btn->setFixedWidth(astate->size_guide.common_button_fixed_w());
+
+  connect(m_dialog_bb,
+          &QDialogButtonBox::accepted,
+          this,
+          &ptable_element_editor_t::accept);
+
+  connect(m_dialog_bb,
+          &QDialogButtonBox::rejected,
+          this,
+          &ptable_element_editor_t::reject);
+
+  m_main_lt->addWidget(m_main_splr);
+  m_main_lt->addWidget(m_dialog_bb);
+
+  /* load data from ptable and then bind inputs*/
+  m_binded_radius = pt_inst->arecs[m_elem_id].m_radius;
+  m_binded_ionic_rad = pt_inst->arecs[m_elem_id].m_ionic_radius;
+  m_binded_cov_rad = pt_inst->arecs[m_elem_id].m_covrad_slater;
+  m_binded_color = pt_inst->arecs[m_elem_id].m_color_jmol;
+
+  m_radius->bind_value(&m_binded_radius);
+  m_ionic_rad->bind_value(&m_binded_ionic_rad);
+  m_cov_rad->bind_value(&m_binded_cov_rad);
+  m_color->bind_value(&m_binded_color);
+
+}
+
+void ptable_element_editor_t::update_element_data() {
+
+  if (m_elem_id == -1) return;
+
+  ptable *pt_inst = ptable::get_inst();
+
+  pt_inst->arecs[m_elem_id].m_radius = m_binded_radius;
+  pt_inst->arecs[m_elem_id].m_ionic_radius = m_binded_ionic_rad;
+  pt_inst->arecs[m_elem_id].m_covrad_slater = m_binded_cov_rad;
+  pt_inst->arecs[m_elem_id].m_color_jmol = m_binded_color;
+  pt_inst->arecs[m_elem_id].m_redefined = true;
 
 }

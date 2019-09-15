@@ -194,7 +194,10 @@ void main_window_t::init_menus() {
   edit_menu->addAction(edit_menu_ptable_widget);
   connect(edit_menu_ptable_widget,
           &QAction::triggered,
-          [](){ ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec(); });
+          [](){
+                ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec();
+                app_state_t::get_inst()->make_viewport_dirty();
+          });
 
   edit_menu->addSeparator();
 
