@@ -404,3 +404,8 @@ QMenu {
 QMenu::item:selected {
  background : rgb(76, 76, 76);
 }
+
+qpp--cad--ptable_rich_widget_t QPushButton {
+ width: 1.2em;
+ height: 1.2em;
+}
