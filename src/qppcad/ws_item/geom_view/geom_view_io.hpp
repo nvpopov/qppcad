@@ -21,6 +21,14 @@ namespace qpp {
 
   namespace cad {
 
+    class geom_view_io_helpers_t {
+
+      public :
+        static std::optional<std::tuple<size_t, size_t> >
+        extract_state_spin_subspace_from_name(const std::string &file_name);
+
+    };
+
     /**
      * @brief The ws_item_io_bt_bhv_t class
      */
