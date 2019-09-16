@@ -1693,7 +1693,7 @@ void geom_view_obj_insp_widget_t::update_select_tab() {
 
       if (b_al->m_parent_ws &&
           b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
-          set_tab_enabled(tab_select, true);
+          set_tab_enabled(tab_select, false);
         } else {
           set_tab_enabled(tab_select, false);
         }

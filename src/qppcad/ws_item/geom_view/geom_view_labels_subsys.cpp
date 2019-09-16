@@ -52,7 +52,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
 
-      if (p_owner->m_sel_vis && p_owner->m_geom->xfield<bool>(xgeom_sel_vis, i)) continue;
+      if (p_owner->m_sel_vis && p_owner->m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) continue;
 
       if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) && m_selective_lbl) continue;
 

@@ -811,27 +811,55 @@ std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compliance
 
   for (size_t i = 0; i < target->m_geom->nat(); i++)
     if (!only_affect_visible_atoms ||
-        (only_affect_visible_atoms && target->m_geom->xfield<bool>(xgeom_sel_vis, i))) {
+        (only_affect_visible_atoms && !target->m_geom->xfield<bool>(xgeom_sel_vis_hide, i))) {
 
         // accuire atom pos
         auto atom_pos = target->m_geom->pos(i);
 
         // transform to world frame
-        atom_pos -= target->m_pos;
+        atom_pos += target->m_pos;
 
         // transform from world to model frame
-        atom_pos += model->m_pos;
+        atom_pos -= model->m_pos;
 
         std::vector<tws_node_content_t<float> > qs_res;
         model->m_tws_tr->query_sphere(compl_eps, atom_pos, qs_res);
 
         if (!qs_res.empty() && qs_res.front().m_atm < model->m_geom->nat() &&
-            model->m_geom->xfield<bool>(xgeom_sel_vis, qs_res.front().m_atm))
+            !model->m_geom->xfield<bool>(xgeom_sel_vis_hide, qs_res.front().m_atm))
           retv.push_back({qs_res.front().m_atm, i});
 
       }
 
   return retv;
+
+}
+
+void geom_view_tools_t::displ_geom_by_compliance_list(
+    geom_view_t *target,
+    geom_view_t *displ_start,
+    geom_view_t *displ_end,
+    std::vector<std::tuple<size_t, size_t> > &comp_l) {
+
+  if (!displ_start || !displ_end || !target || comp_l.empty() ||
+      displ_start->m_geom->nat() != displ_end->m_geom->nat()) return ;
+
+  for (auto const &rec : comp_l) {
+
+      // unpack tuple - { model idx , target idx }
+      auto model_idx = std::get<0>(rec);
+      auto target_idx = std::get<1>(rec);
+
+      if (model_idx >= displ_start->m_geom->nat() || target_idx >= target->m_geom->nat())
+        continue;
+
+      // process displacements
+
+      auto &target_coord = target->m_geom->coord(target_idx);
+      target_coord += (displ_end->m_geom->pos(model_idx) - displ_start->m_geom->pos(model_idx));
+
+    }
+
 
 }
 

@@ -352,14 +352,14 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
                                                        m_atom_type_to_hide,
                                                        m_atom_scale_factor,
                                                        m_sel_vis,
-                                                       xgeom_sel_vis);
+                                                       xgeom_sel_vis_hide);
       else
         m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray,
                                                               res,
                                                               m_atom_type_to_hide,
                                                               m_atom_scale_factor,
                                                               m_sel_vis,
-                                                              xgeom_sel_vis);
+                                                              xgeom_sel_vis_hide);
       recalc_gizmo_barycenter();
 
       if (!res.empty()) {
@@ -493,7 +493,7 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
 void geom_view_t::sel_visible() {
 
   for (size_t i = 0; i < m_geom->nat(); i++)
-    if (!m_geom->xfield<bool>(xgeom_sel_vis, i))
+    if (!m_geom->xfield<bool>(xgeom_sel_vis_hide, i))
       sel_atom(i);
 
 }
@@ -756,7 +756,7 @@ void geom_view_t::sv_modify_selected(bool state) {
 
   for (auto &rec : m_atom_idx_sel)
     if (rec.m_idx == index::D(m_geom->DIM).all(0))
-      m_geom->xfield<bool>(xgeom_sel_vis, rec.m_atm) = state;
+      m_geom->xfield<bool>(xgeom_sel_vis_hide, rec.m_atm) = state;
 
   if (!m_sel_vis) {
       m_sel_vis = true;
@@ -777,7 +777,7 @@ void geom_view_t::sv_hide_invert_selected() {
 
   for (size_t i = 0; i < m_geom->nat(); i++)
     if (cap_idx.find(i) == cap_idx.end())
-      m_geom->xfield<bool>(xgeom_sel_vis, i) = true;
+      m_geom->xfield<bool>(xgeom_sel_vis_hide, i) = true;
 
   if (!m_sel_vis) {
       m_sel_vis = true;
@@ -1757,7 +1757,7 @@ void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
 
   for (size_t i = 0; i < m_geom->nat(); i++) {
 
-      m_geom->xfield<bool>(xgeom_sel_vis,i) = src->m_geom->xfield<bool>(xgeom_sel_vis,i);
+      m_geom->xfield<bool>(xgeom_sel_vis_hide,i) = src->m_geom->xfield<bool>(xgeom_sel_vis_hide,i);
       m_geom->xfield<bool>(xgeom_override,i) = src->m_geom->xfield<bool>(xgeom_override,i);
       m_geom->xfield<bool>(xgeom_label_show,i) = src->m_geom->xfield<bool>(xgeom_label_show,i);
       m_geom->xfield<float>(xgeom_atom_r, i) = src->m_geom->xfield<float>(xgeom_atom_r, i);

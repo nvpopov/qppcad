@@ -315,7 +315,9 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("model"), py::arg("target"), py::arg("model_idx"), py::arg("target_idx"))
       .def("gen_geoms_compliance_list", &geom_view_tools_t::gen_geoms_compliance_list,
            py::arg("model"), py::arg("target"),
-           py::arg("compl_eps"), py::arg("only_affect_visible_atoms") = true);
+           py::arg("compl_eps"), py::arg("only_affect_visible_atoms") = true)
+      .def("displ_geom_by_compliance_list", &geom_view_tools_t::displ_geom_by_compliance_list,
+           py::arg("target"), py::arg("displ_start"), py::arg("displ_end"), py::arg("comp_l"));
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,

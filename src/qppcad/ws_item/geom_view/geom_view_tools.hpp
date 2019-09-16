@@ -113,6 +113,12 @@ namespace qpp {
             float compl_eps = 0.1f,
             bool only_affect_visible_atoms = true);
 
+        static void displ_geom_by_compliance_list(
+            geom_view_t *target,
+            geom_view_t *displ_start,
+            geom_view_t *displ_end,
+            std::vector<std::tuple<size_t, size_t> > &comp_l);
+
     };
 
   } // namespace cad

@@ -160,7 +160,7 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
                                        const uint32_t at_num,
                                        const index &at_index) {
 
-  if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis, at_num)) return;
+  if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -207,7 +207,7 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
                                                  const index &at_index,
                                                  bool backpass) {
 
-  if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis, at_num)) return;
+  if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -261,8 +261,8 @@ void geom_view_render_bs::render_bond (geom_view_t &al,
   app_state_t* astate = app_state_t::get_inst();
 
   if (al.m_sel_vis && al.m_sel_vis_affect_bonds &&
-      (al.m_geom->xfield<bool>(xgeom_sel_vis, at_num1) ||
-       al.m_geom->xfield<bool>(xgeom_sel_vis, at_num2) )) return;
+      (al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num1) ||
+       al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num2) )) return;
 
   if (al.m_atom_type_to_hide_bond.find(al.m_geom->type_table(at_num1)) !=
       al.m_atom_type_to_hide_bond.end() ||
@@ -328,8 +328,8 @@ void geom_view_render_bs::render_bond_suprematic(geom_view_t &al,
   app_state_t* astate = app_state_t::get_inst();
 
   if (al.m_sel_vis && al.m_sel_vis_affect_bonds &&
-      (al.m_geom->xfield<bool>(xgeom_sel_vis, at_num1) ||
-       al.m_geom->xfield<bool>(xgeom_sel_vis, at_num2) )) return;
+      (al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num1) ||
+       al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num2) )) return;
 
   if (al.m_atom_type_to_hide_bond.find(al.m_geom->type_table(at_num1)) !=
       al.m_atom_type_to_hide_bond.end() ||

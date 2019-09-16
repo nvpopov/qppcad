@@ -32,7 +32,7 @@ namespace qpp {
 
       for (uint32_t i = 0; i < al.m_geom->nat(); i++) {
 
-          if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis, i)) return;
+          if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) return;
 
           auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
           if (ap_idx) {

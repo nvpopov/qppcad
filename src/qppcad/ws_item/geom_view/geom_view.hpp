@@ -101,16 +101,16 @@ namespace qpp {
 
     };
 
-    const int xgeom_charge      = 4;
-    const int xgeom_sel_vis     = 6;
-    const int xgeom_label_show  = 7;
-    const int xgeom_ccr         = 8;
-    const int xgeom_ccg         = 9;
-    const int xgeom_ccb         = 10;
-    const int xgeom_label_text  = 11;
-    const int xgeom_override    = 12;
-    const int xgeom_atom_r      = 13;
-    const int xgeom_external    = 14;
+    const int xgeom_charge       = 4;
+    const int xgeom_sel_vis_hide = 6;
+    const int xgeom_label_show   = 7;
+    const int xgeom_ccr          = 8;
+    const int xgeom_ccg          = 9;
+    const int xgeom_ccb          = 10;
+    const int xgeom_label_text   = 11;
+    const int xgeom_override     = 12;
+    const int xgeom_atom_r       = 13;
+    const int xgeom_external     = 14;
 
     const int max_sel_in_deque = 4;
 
