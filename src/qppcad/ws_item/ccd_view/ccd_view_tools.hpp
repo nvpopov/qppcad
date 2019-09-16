@@ -14,6 +14,10 @@ namespace qpp {
                                                              size_t root_id,
                                                              float min_amplitude);
 
+        static std::vector<float> get_amplitudes_for_tddft_root(ccd_view_t *ccd,
+                                                                size_t root_id,
+                                                                std::vector<size_t> &states);
+
     };
 
   } // namespace qpp::cad

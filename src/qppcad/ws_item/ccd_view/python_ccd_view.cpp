@@ -15,6 +15,8 @@ void py_ccd_view_reg_helper_t::reg(
 
   auto cvt_module = module.def_submodule("cvt", "ccd_view_t tools");
   cvt_module.def("get_states_for_tddft_root", &ccd_view_tools_t::get_states_for_tddft_root,
-                 py::arg("ccd"), py::arg("root_id"), py::arg("min_amplitude") = 0.05);
+                 py::arg("ccd"), py::arg("root_id"), py::arg("min_amplitude") = 0.05)
+            .def("get_amplitudes_for_tddft_root", &ccd_view_tools_t::get_amplitudes_for_tddft_root,
+                 py::arg("ccd"), py::arg("root_id"), py::arg("states"));
 
 }

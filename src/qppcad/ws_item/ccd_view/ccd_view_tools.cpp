@@ -8,6 +8,7 @@ std::vector<size_t> ccd_view_tools_t::get_states_for_tddft_root(ccd_view_t *ccd,
                                                                 float min_amplitude) {
 
   std::set<size_t> rets;
+  if (!ccd) return {};
 
   if (root_id < ccd->m_ccd->m_tddft_trans_rec.size()) {
 
@@ -26,5 +27,28 @@ std::vector<size_t> ccd_view_tools_t::get_states_for_tddft_root(ccd_view_t *ccd,
   std::copy(rets.begin(), rets.end(), retv.begin());
 
   return  retv;
+
+}
+
+std::vector<float> ccd_view_tools_t::get_amplitudes_for_tddft_root(ccd_view_t *ccd,
+                                                                   size_t root_id,
+                                                                   std::vector<size_t> &states) {
+
+  if (!ccd) return {};
+
+  std::vector<float> retv;
+  if (root_id < ccd->m_ccd->m_tddft_trans_rec.size()) {
+
+      for (auto &tr_rec : ccd->m_ccd->m_tddft_trans_rec[root_id].m_transition) {
+
+          if (std::find(states.begin(), states.end(), tr_rec.m_from) != states.end() ||
+              std::find(states.begin(), states.end(), tr_rec.m_to) != states.end())
+            retv.push_back(tr_rec.m_amplitude);
+
+        }
+
+    }
+
+  return retv;
 
 }
