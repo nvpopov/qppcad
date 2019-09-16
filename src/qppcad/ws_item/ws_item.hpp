@@ -104,6 +104,7 @@ namespace qpp {
         std::shared_ptr<ws_item_t> m_leader{nullptr};
 
         std::string      m_name;
+        std::string      m_genesis_file_name;
         aabb_3d_t<float> m_aabb;
         vector3<float>   m_leader_offset{0, 0, 0};
         vector3<float>   m_pos_old;

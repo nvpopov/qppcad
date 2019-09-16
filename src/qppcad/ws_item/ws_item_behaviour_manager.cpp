@@ -68,6 +68,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
   astate->tlog("Loading ws_item from file {}", file_name);
 
   auto new_ws_item = fbr_ws_item_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
+  new_ws_item->m_genesis_file_name = file_name;
   ws->add_item_to_ws(new_ws_item);
 
   if (new_ws_item) {

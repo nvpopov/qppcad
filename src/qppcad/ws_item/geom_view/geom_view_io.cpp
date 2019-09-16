@@ -24,6 +24,7 @@ void geom_view_io_cube_t::load_from_stream_ex(std::basic_istream<char, TRAITS> &
   new_vol_rec.m_ready_to_render = false;
 
   vold->m_name = fmt::format("v_{}", _item->m_name);
+  vold->m_genesis_file_name = _item->m_genesis_file_name;
 
   if (new_vol_rec.m_volume.m_has_negative_values) {
       new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
@@ -54,6 +55,7 @@ void geom_view_molcas_grid_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   load_grid_ascii(stream, *(_item->m_geom.get()), tmp_volumes);
   _item->m_parent_ws->add_item_to_ws(vold);
   vold->m_name = fmt::format("{}.volume", _item->m_name);
+  vold->m_genesis_file_name = _item->m_genesis_file_name;
 
   //process volumes
   vold->m_volumes.reserve(tmp_volumes.size());
@@ -96,6 +98,7 @@ void geom_view_vasp_chgcar_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   read_vasp_chgcar(stream, *(_item->m_geom.get()), tmp_volumes);
   _item->m_parent_ws->add_item_to_ws(vold);
   vold->m_name = fmt::format("{}.volume", _item->m_name);
+  vold->m_genesis_file_name = _item->m_genesis_file_name;
 
   vold->m_volumes.reserve(tmp_volumes.size());
 

@@ -31,6 +31,8 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
    .def("qopen", &simple_query::open_file_query,
         py::arg("file_name"), py::arg("file_format") = "", py::arg("to_current") = false)
    .def("mode", &simple_query::edit_mode)
+   .def("mode_itm", [](){simple_query::edit_mode(0);})
+   .def("mode_cnt", [](){simple_query::edit_mode(1);})
    .def("quit", &simple_query::quit)
 
    .def("bg", &simple_query::set_ws_bg,

@@ -188,6 +188,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
               .def("get_cnt_count", &ws_item_t::get_content_count)
               .def("get_parent_ws", [](ws_item_t &wsi){return wsi.m_parent_ws;})
              // .def_readwrite("m_pos", &ws_item_t::get_pos, &ws_item_t::set_pos)
+              .def_readonly("genesis_file_name", &ws_item_t::m_genesis_file_name)
               .def_property("is_visible",
                             [](ws_item_t &src)
                             {return src.m_is_visible;},
