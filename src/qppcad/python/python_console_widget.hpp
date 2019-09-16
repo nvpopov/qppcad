@@ -68,7 +68,10 @@ namespace qpp {
         int m_cur_cmd{0}, m_curs_pos{0}, m_indent{0};
 
         explicit python_text_editor_t(QWidget *parent);
-        void keyPressEvent(QKeyEvent *event);
+
+        void keyPressEvent(QKeyEvent *event) override;
+        void insertFromMimeData(const QMimeData *source) override;
+
         void last_command_reached();
         QString text_under_cursor() const;
 

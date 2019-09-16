@@ -2,6 +2,7 @@
 #include <qppcad/core/app_state.hpp>
 
 #include <QAction>
+#include <QMimeData>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -222,6 +223,10 @@ void python_text_editor_t::keyPressEvent(QKeyEvent *event) {
       m_c->complete(cr);
     }
 
+}
+
+void python_text_editor_t::insertFromMimeData(const QMimeData *source) {
+  QTextEdit::insertPlainText(source->text());
 }
 
 void python_text_editor_t::last_command_reached() {
