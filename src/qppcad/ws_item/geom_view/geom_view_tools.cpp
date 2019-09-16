@@ -766,6 +766,75 @@ void geom_view_tools_t::naive_project_displ(geom_view_t *src,
 
 }
 
+void geom_view_tools_t::naive_fit_str(geom_view_t *model,
+                                      geom_view_t *target,
+                                      std::vector<size_t> &model_idx,
+                                      std::vector<size_t> &target_idx) {
+
+  if (!model || !target || (model_idx.size() != target_idx.size())) return;
+
+  std::vector<vector3<float> > model_pos;
+  std::vector<vector3<float> > target_pos;
+
+  std::transform(model_idx.begin(),
+                 model_idx.end(),
+                 std::back_inserter(model_pos),
+                 [model](auto atm_idx){return model->m_geom->pos(atm_idx);});
+
+  std::transform(target_idx.begin(),
+                 target_idx.end(),
+                 std::back_inserter(target_pos),
+                 [target](auto atm_idx){return target->m_geom->pos(atm_idx);});
+
+  std::vector<vector3<float> > diff_pos;
+  std::transform(target_pos.begin(),
+                 target_pos.end(),
+                 model_pos.begin(),
+                 std::back_inserter(diff_pos),
+                 [](auto &t1, auto &t2){ return t1 - t2;});
+
+  vector3<float> aver_pos =
+      std::accumulate(diff_pos.begin(), diff_pos.end(), vector3<float>{0}) / diff_pos.size();
+
+  model->m_pos = aver_pos;
+
+}
+
+std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compliance_list(
+    geom_view_t *model,
+    geom_view_t *target,
+    float compl_eps,
+    bool only_affect_visible_atoms) {
+
+  std::vector<std::tuple<size_t, size_t> > retv;
+  if (!model || !target) return retv;
+
+  for (size_t i = 0; i < target->m_geom->nat(); i++)
+    if (!only_affect_visible_atoms ||
+        (only_affect_visible_atoms && target->m_geom->xfield<bool>(xgeom_sel_vis, i))) {
+
+        // accuire atom pos
+        auto atom_pos = target->m_geom->pos(i);
+
+        // transform to world frame
+        atom_pos -= target->m_pos;
+
+        // transform from world to model frame
+        atom_pos += model->m_pos;
+
+        std::vector<tws_node_content_t<float> > qs_res;
+        model->m_tws_tr->query_sphere(compl_eps, atom_pos, qs_res);
+
+        if (!qs_res.empty() && qs_res.front().m_atm < model->m_geom->nat() &&
+            model->m_geom->xfield<bool>(xgeom_sel_vis, qs_res.front().m_atm))
+          retv.push_back({qs_res.front().m_atm, i});
+
+      }
+
+  return retv;
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,

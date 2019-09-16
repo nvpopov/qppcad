@@ -102,6 +102,17 @@ namespace qpp {
                                         float eps_dist,
                                         bool check_run = true);
 
+        static void naive_fit_str(geom_view_t *model,
+                                  geom_view_t *target,
+                                  std::vector<size_t> &model_idx,
+                                  std::vector<size_t> &target_idx);
+
+        static std::vector<std::tuple<size_t, size_t> > gen_geoms_compliance_list(
+            geom_view_t *model,
+            geom_view_t *target,
+            float compl_eps = 0.1f,
+            bool only_affect_visible_atoms = true);
+
     };
 
   } // namespace cad

@@ -310,7 +310,12 @@ void py_geom_view_reg_helper_t::reg(
       .def("get_sel_types", &geom_view_tools_t::get_sel_types, py::arg("gv"))
       .def("naive_proj_displ", &geom_view_tools_t::naive_project_displ,
            py::arg("src"), py::arg("dst"),
-           py::arg("eps_dist") = 0.01f, py::arg("check_run") = true);
+           py::arg("eps_dist") = 0.01f, py::arg("check_run") = true)
+      .def("naive_fit_str", &geom_view_tools_t::naive_fit_str,
+           py::arg("model"), py::arg("target"), py::arg("model_idx"), py::arg("target_idx"))
+      .def("gen_geoms_compliance_list", &geom_view_tools_t::gen_geoms_compliance_list,
+           py::arg("model"), py::arg("target"),
+           py::arg("compl_eps"), py::arg("only_affect_visible_atoms") = true);
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,
