@@ -1749,6 +1749,12 @@ void geom_view_t::copy_settings(geom_view_t *src) {
 
   m_show_bb                 = src->m_show_bb;
 
+  m_type_color_override     = src->m_type_color_override;
+  m_atom_idx_sel            = src->m_atom_idx_sel;
+  m_atom_ord_sel            = src->m_atom_ord_sel;
+  m_atom_type_to_hide       = src->m_atom_type_to_hide;
+  m_atom_type_to_hide_bond  = src->m_atom_type_to_hide_bond;
+
 }
 
 void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
