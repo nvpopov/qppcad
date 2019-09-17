@@ -236,6 +236,9 @@ void py_geom_view_reg_helper_t::reg(
          .def("clone_on_the_spot", &geom_view_t::clone_on_the_spot)
          .def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord)
          .def("rebond", &geom_view_t::rebond)
+         .def_property("cell_within_eps",
+                       [](geom_view_t &src){ return src.m_tws_tr->m_cell_within_eps;},
+                       &geom_view_t::set_cell_within_eps)
          .def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;})
          .def("upd_dist", &geom_view_t::update_inter_atomic_dist_ex,
               py::arg("new_dist"), py::arg("at1"), py::arg("at2"),

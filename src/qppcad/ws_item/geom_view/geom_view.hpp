@@ -196,6 +196,7 @@ namespace qpp {
         void render_overlay(QPainter &painter) override;
 
         void rebond();
+        void set_cell_within_eps(float value);
 
         bool mouse_click(ray_t<float> *click_ray) override;
         void mouse_double_click(ray_t<float> *ray) override;

@@ -334,6 +334,14 @@ void geom_view_t::rebond() {
 
 }
 
+void geom_view_t::set_cell_within_eps(float value) {
+
+  begin_structure_change();
+  m_tws_tr->m_cell_within_eps = value;
+  end_structure_change();
+
+}
+
 bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
 
   app_state_t* astate = app_state_t::get_inst();
