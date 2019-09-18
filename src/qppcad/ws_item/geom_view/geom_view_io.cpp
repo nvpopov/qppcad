@@ -157,5 +157,24 @@ std::optional<std::tuple<size_t, size_t> > geom_view_io_helpers_t::extract_state
 
     }
 
+  /*
+   * orca style name
+   * orca.mo394a.cube
+  */
+  if (auto dot_mo_pos = file_name.find(".mo"); dot_mo_pos != std::string::npos) {
+
+      auto dot_cube_pos = file_name.find(".cube");
+      auto substr_state = file_name.substr(dot_mo_pos + 3, dot_cube_pos - dot_mo_pos - 3);
+      auto has_a_dot_cube = file_name.find("a.cube") != std::string::npos;
+      //auto has_b_dot_cube = file_name.find("b.cube") != std::string::npos;
+
+      return std::optional<std::tuple<size_t, size_t> >({
+                                                          std::stoul(substr_state),
+                                                          has_a_dot_cube ? 1 : 2
+                                                        });
+
+  }
+
   return std::nullopt;
+
 }
