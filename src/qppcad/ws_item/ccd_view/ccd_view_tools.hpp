@@ -37,6 +37,12 @@ namespace qpp {
             std::vector<size_t> &vols,
             std::vector<float> &ampls);
 
+        static void build_volume_for_root(
+            ccd_view_t *ccd,
+            volume_view_t *target_vv,
+            size_t root_id,
+            float min_amplitude);
+
     };
 
   } // namespace qpp::cad

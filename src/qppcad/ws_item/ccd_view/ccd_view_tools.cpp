@@ -1,5 +1,6 @@
 #include <qppcad/ws_item/ccd_view/ccd_view_tools.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
+#include <qppcad/ws_item/volume_view/volume_view_tools.hpp>
 #include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
@@ -113,5 +114,26 @@ void ccd_view_tools_t::get_data_for_cube_sum_by_root(
   vvs = all_vv;
   vols = all_vr;
   ampls = all_ampl;
+
+}
+
+void ccd_view_tools_t::build_volume_for_root(
+    ccd_view_t *ccd,
+    volume_view_t *target_vv,
+    size_t root_id,
+    float min_amplitude) {
+
+  if (!ccd || !target_vv) return;
+
+  std::vector<std::shared_ptr<volume_view_t> > vvs;
+  std::vector<size_t> vols;
+  std::vector<float> ampls;
+
+  std::vector<volume_view_t*> vvs_as_p;
+  std::transform(vvs.begin(), vvs.end(), std::back_inserter(vvs_as_p),
+                 [](auto vv_sp){return vv_sp.get();});
+
+  ccd_view_tools_t::get_data_for_cube_sum_by_root(ccd, root_id, min_amplitude, vvs, vols, ampls);
+  volume_view_tools_t::sum_volumes(vvs_as_p, vols, ampls, target_vv);
 
 }

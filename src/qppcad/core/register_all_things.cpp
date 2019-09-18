@@ -58,6 +58,7 @@
 
 #include <io/ccd_molden.hpp>
 #include <io/ccd_hoomd_xml.hpp>
+#include <io/ccd_orca.hpp>
 #include <io/write_coord.hpp>
 #include <io/adme.hpp>
 
@@ -128,6 +129,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   size_t vasp_ff_g_hash = bhv_mgr->reg_ffg("VASP", "vasp");
   size_t firefly_ff_g_hash = bhv_mgr->reg_ffg("Firefly", "ff");
   size_t cp2k_ff_g_hash = bhv_mgr->reg_ffg("CP2K", "cp2k");
+  size_t orca_ff_g_hash = bhv_mgr->reg_ffg("Orca", "orca");
   size_t generic_ff_g_hash = bhv_mgr->reg_ffg("Generic formats", "generic");
 
   size_t xyz_ff_hash =
@@ -147,41 +149,43 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("VASP OUTCAR", "outcar", vasp_ff_g_hash, {"OUTCAR"} );
 
   size_t firefly_out_ff_hash =
-      bhv_mgr->reg_ff("FF OUTPUT", "ffout", firefly_ff_g_hash, {".out", ".ff"} );
+      bhv_mgr->reg_ff("FF Output", "ffout", firefly_ff_g_hash, {".out", ".ff"} );
 
   size_t cp2k_out_ff_hash =
-      bhv_mgr->reg_ff("CP2K OUTPUT", "cp2k", cp2k_ff_g_hash, {"cp2k", ".cout"} );
+      bhv_mgr->reg_ff("CP2K Output", "cp2k", cp2k_ff_g_hash, {"cp2k", ".cout"} );
 
   size_t cp2k_cs_ff_hash =
-      bhv_mgr->reg_ff("CP2K crd. section", "cp2kcs", cp2k_ff_g_hash, {".coord", ".cp2k_crd"} );
+      bhv_mgr->reg_ff("CP2K Crd. Section", "cp2kcs", cp2k_ff_g_hash, {".coord", ".cp2k_crd"} );
 
   size_t generic_cube_ff_hash =
-      bhv_mgr->reg_ff("CUBE file", "cube", generic_ff_g_hash, {".cube", ".CUBE"} );
+      bhv_mgr->reg_ff("CUBE File", "cube", generic_ff_g_hash, {".cube", ".CUBE"} );
 
   size_t generic_cube3d_ff_hash =
-      bhv_mgr->reg_ff("CUBE file(3d)", "cube3d", generic_ff_g_hash, {".cube", ".CUBE"} );
+      bhv_mgr->reg_ff("CUBE File(3d)", "cube3d", generic_ff_g_hash, {".cube", ".CUBE"} );
 
   size_t generic_molcas_grid_ff_hash =
       bhv_mgr->reg_ff("Molcas ASCII Grid", "gv", generic_ff_g_hash, {".grid", ".GRID"} );
 
   size_t generic_raw_coord_ff_hash =
-      bhv_mgr->reg_ff("Simple crd.", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple Crd.", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t generic_atoms_coord_ff_hash =
-      bhv_mgr->reg_ff("Simple crd.[name]", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple Crd.[name]", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t generic_atoms_coord_chg_ff_hash =
-      bhv_mgr->reg_ff("Simple crd.[name, chg.]", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple Crd.[name, chg.]", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t molden_ff_hash =
       bhv_mgr->reg_ff("Molden", "molden", generic_ff_g_hash, {"mol", "molden"} );
 
   size_t hoomd_xml_ff_hash =
-      bhv_mgr->reg_ff("Hoomd xml", "hoomd_xml", generic_ff_g_hash, {"hoomd", "xml"} );
+      bhv_mgr->reg_ff("Hoomd Xml", "hoomd_xml", generic_ff_g_hash, {"hoomd", "xml"} );
 
   size_t adme_ewald_uc_ff_hash =
-      bhv_mgr->reg_ff("Adme Ewald cell", "adme_ewald", generic_ff_g_hash, {"adme_ewald"} );
+      bhv_mgr->reg_ff("Adme Ewald Cell", "adme_ewald", generic_ff_g_hash, {"adme_ewald"} );
 
+  size_t orca_output_ff_hash =
+      bhv_mgr->reg_ff("Orca Output", "orca_out", orca_ff_g_hash, {"orca.out"} );
 
   /* ws_item_t io mgrs */
   auto xyz_ff_mgr =
@@ -280,6 +284,10 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
   auto generic_molcas_grid_mgf = std::make_shared<geom_view_molcas_grid_t>();
 
+  auto orca_output_mgf =
+      std::make_shared<
+      geom_view_io_ccd_t<read_ccd_from_orca_output<float>,  true, true, true, false, false, 0> >();
+
   /* register ws_item io bhv */
 
   bhv_mgr->reg_io_bhv(xyz_ff_mgr, xyz_ff_hash, geom_view_t::get_type_static());
@@ -320,6 +328,9 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
                       geom_view_t::get_type_static());
 
   bhv_mgr->reg_io_bhv(hoomd_xml_mgf, hoomd_xml_ff_hash,
+                      geom_view_t::get_type_static());
+
+  bhv_mgr->reg_io_bhv(orca_output_mgf, orca_output_ff_hash,
                       geom_view_t::get_type_static());
 
 }
