@@ -1,4 +1,6 @@
 #include <qppcad/ws_item/ccd_view/ccd_view_tools.hpp>
+#include <qppcad/ws_item/volume_view/volume_view.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -50,5 +52,66 @@ std::vector<float> ccd_view_tools_t::get_amplitudes_for_tddft_root(ccd_view_t *c
     }
 
   return retv;
+
+}
+
+void ccd_view_tools_t::get_data_for_cube_sum_by_root(
+    ccd_view_t *ccd,
+    size_t root_id,
+    float min_amplitude,
+    std::vector<std::shared_ptr<volume_view_t> > &vvs,
+    std::vector<size_t> &vols,
+    std::vector<float> &ampls) {
+
+  if (!ccd) return;
+  if (root_id >= ccd->m_ccd->m_tddft_trans_rec.size()) return;
+
+  std::vector<size_t> target_states = get_states_for_tddft_root(ccd, root_id, min_amplitude);
+  std::vector<float> target_ampl = get_amplitudes_for_tddft_root(ccd, root_id, target_states);
+  //std::vector<bool> target_accepted{target_states.size(), false};
+
+  std::vector<std::shared_ptr<volume_view_t> > all_vv;
+  std::vector<size_t> all_vr;
+  std::vector<float> all_ampl;
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  size_t ts_i{0}; // counter for target_states
+  size_t vr_i{0}; // counter for volumes of volume_view
+
+  for (auto target_state : target_states) {
+
+      for (auto ws : astate->ws_mgr->m_ws)
+        for (auto ws_itm : ws->m_ws_items)
+          if (volume_view_t *vv = ws_itm->cast_as<volume_view_t>(); vv != nullptr) {
+
+              vr_i = 0;
+
+              for (auto vol_rec : vv->m_volumes) { // begin iterate over volume records
+
+                  if (vol_rec->m_state_id == target_state) {
+
+                      auto sp_vol_v = std::static_pointer_cast<volume_view_t>(ws_itm);
+                      if (!sp_vol_v) continue;
+
+                      all_vv.push_back(sp_vol_v);
+                      all_vr.push_back(vr_i);
+                      all_ampl.push_back(target_ampl[ts_i]);
+
+                    }
+
+                  vr_i++;
+
+                } // end iterate over volume records
+
+            }
+
+      ts_i++;
+
+    }
+
+  vvs = all_vv;
+  vols = all_vr;
+  ampls = all_ampl;
 
 }

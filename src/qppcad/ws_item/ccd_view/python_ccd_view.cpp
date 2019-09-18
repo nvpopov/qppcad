@@ -1,5 +1,6 @@
 #include <qppcad/ws_item/ccd_view/python_ccd_view.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view_tools.hpp>
+#include <qppcad/ws_item/volume_view/volume_view_tools.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -17,6 +18,9 @@ void py_ccd_view_reg_helper_t::reg(
   cvt_module.def("get_states_for_tddft_root", &ccd_view_tools_t::get_states_for_tddft_root,
                  py::arg("ccd"), py::arg("root_id"), py::arg("min_amplitude") = 0.05)
             .def("get_amplitudes_for_tddft_root", &ccd_view_tools_t::get_amplitudes_for_tddft_root,
-                 py::arg("ccd"), py::arg("root_id"), py::arg("states"));
+                 py::arg("ccd"), py::arg("root_id"), py::arg("states"))
+            .def("get_data_for_cube_sum_by_root", &ccd_view_tools_t::get_data_for_cube_sum_by_root,
+                 py::arg("ccd"), py::arg("root_id"), py::arg("min_amplitude"),
+                 py::arg("vvs"), py::arg("vols"), py::arg("ampls"));
 
 }
