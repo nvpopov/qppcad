@@ -846,7 +846,7 @@ void main_window_t::show_obj_insp_state_changed(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (!ok) {
       obj_insp_widget->hide();
@@ -867,7 +867,7 @@ void main_window_t::show_gizmo_state_changed(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (ok) {
       cur_ws->m_gizmo->m_is_visible = checked;
@@ -985,11 +985,11 @@ void main_window_t::close_all_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-
   QMessageBox::StandardButton reply;
   reply = QMessageBox::question(this, tr("Workspaces -> Close"),
                                 tr("Do you really want to close all workspaces?"),
                                 QMessageBox::Yes | QMessageBox::No);
+
   if (reply == QMessageBox::Yes)
     for (auto ws : astate->ws_mgr->m_ws) ws->m_marked_for_deletion = true;
 
@@ -1001,6 +1001,7 @@ void main_window_t::rename_cur_ws() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
   if (ok) {
+
       bool ok_q;
       QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
                                            tr("User name:"), QLineEdit::Normal,
@@ -1009,6 +1010,7 @@ void main_window_t::rename_cur_ws() {
           cur_ws->m_ws_name = text.toStdString();
           astate->astate_evd->wss_changed();
         }
+
     }
 
 }
@@ -1025,7 +1027,8 @@ void main_window_t::change_cur_ws_bg() {
                                cur_ws->m_background_color[0],
                                cur_ws->m_background_color[1],
                                cur_ws->m_background_color[2]
-          );
+                             );
+
       const QColor clr = QColorDialog::getColor(_stored_color, this,
                                                 "Select workspace`s background color");
       if (clr.isValid()) {
@@ -1063,7 +1066,7 @@ void main_window_t::cur_ws_changed() {
 
   change_camera_buttons_visible(false, false);
 
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (ok) {
 
@@ -1135,7 +1138,7 @@ void main_window_t::cur_ws_properties_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (ok) {
       bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;

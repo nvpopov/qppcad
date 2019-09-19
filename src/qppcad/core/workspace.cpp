@@ -651,14 +651,14 @@ void workspace_manager_t::prev_ws() {
 
 void workspace_manager_t::cur_ws_next_item() {
 
-  auto [ok, cur_ws] = get_sel_tuple_ws();
+  auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
   if (ok) cur_ws->next_item();
 
 }
 
 void workspace_manager_t::cur_ws_prev_item() {
 
-  auto [ok, cur_ws] = get_sel_tuple_ws();
+  auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
   if (ok) cur_ws->prev_item();
 
 }
@@ -1016,22 +1016,27 @@ void workspace_manager_t::utility_event_loop() {
   bool has_been_deleted{false};
 
   for (auto it = m_ws.begin(); it != m_ws.end(); ) {
+
       if ((*it)->m_marked_for_deletion) {
+
           has_been_deleted = true;
           auto cur_ws_idx = get_cur_id();
+
           if (cur_ws_idx) {
               //last?
               if (m_ws.size() == 1) m_cur_ws_id = std::nullopt;
               else if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = opt<size_t>(0);
               else m_cur_ws_id = opt<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
             }
+
           it = m_ws.erase(it);
           set_cur_id(m_cur_ws_id);
           astate->astate_evd->cur_ws_changed();
-        }
-      else {
+
+        } else {
           ++it;
         }
+
     }
 
   if (has_been_deleted) astate->astate_evd->wss_changed();
