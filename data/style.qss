@@ -268,7 +268,7 @@ qpp--cad--ws_tabbar_t::close-button:hover {
 
 qpp--cad--object_inspector_widget_t QTabWidget {
  border: 0;
- margin-bottom:16px;
+ margin-bottom:18px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget::pane {
@@ -283,7 +283,8 @@ qpp--cad--object_inspector_widget_t QTabBar::tab {
  padding-bottom: 2px;
  padding-right: 6px;
  margin-left:10px;
- border: 0;
+ border: 1px solid rgb(70, 70, 70);
+ border-radius: 3px;
  margin-bottom: 2px;
 }
 

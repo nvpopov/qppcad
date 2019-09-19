@@ -913,22 +913,31 @@ void main_window_t::save_ws() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
   if (ok) {
+
       QFileInfo check_file(QString::fromStdString(cur_ws->m_fs_path));
+
       if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "" &&
           !cur_ws->m_is_ws_imported) {
+
           cur_ws->m_is_ws_imported = false;
           cur_ws->save_ws_to_json(cur_ws->m_fs_path);
+
         } else {
+
           QString file_name = QFileDialog::getSaveFileName(this,
                                                            "Save qpp::cad workspace",
                                                            astate->m_last_dir,
                                                            "*.json");
+
           if (file_name != "") {
+
               if (!file_name.endsWith(".json")) file_name += ".json";
               cur_ws->save_ws_to_json(file_name.toStdString());
               cur_ws->m_is_ws_imported = false;
               cur_ws->m_fs_path = file_name.toStdString();
+
             }
+
         }
     }
 
@@ -947,15 +956,20 @@ void main_window_t::save_ws_as() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
   if (ok) {
+
       QString file_name = QFileDialog::getSaveFileName(this,
                                                        "Save qpp::cad workspace",
                                                        astate->m_last_dir,
                                                        "*.json");
+
       if (file_name != "") {
+
           cur_ws->save_ws_to_json(file_name.toStdString());
           cur_ws->m_is_ws_imported = false;
           cur_ws->m_fs_path = file_name.toStdString();
+
         }
+
     }
 
   cur_ws_changed();
@@ -970,13 +984,16 @@ void main_window_t::close_cur_ws() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
   if (ok) {
+
       QMessageBox::StandardButton reply;
       reply = QMessageBox::question(this, tr("Workspace -> Close"),
                                     tr("Do you really want to close the workspace?"),
                                     QMessageBox::Yes | QMessageBox::No);
+
       if (reply == QMessageBox::Yes) {
           cur_ws->m_marked_for_deletion = true;
         }
+
     }
 
 }
@@ -1033,8 +1050,7 @@ void main_window_t::change_cur_ws_bg() {
                                                 "Select workspace`s background color");
       if (clr.isValid()) {
 
-          cur_ws->m_background_color =
-              vector3<float> {
+          cur_ws->m_background_color = vector3<float> {
               static_cast<float>(clr.redF()),
               static_cast<float>(clr.greenF()),
               static_cast<float>(clr.blueF())
@@ -1083,9 +1099,11 @@ void main_window_t::cur_ws_changed() {
       this->setWindowTitle(QString::fromStdString(title_text));
 
   } else {
+
     view_menu_show_oi->setChecked(false);
     view_menu_show_oi->setVisible(false);
     this->setWindowTitle("qpp::cad");
+
   }
 
   wss_changed_slot();
@@ -1141,6 +1159,7 @@ void main_window_t::cur_ws_properties_changed() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (ok) {
+
       bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
       tp_edit_mode_item->blockSignals(true);
       tp_edit_mode_content->blockSignals(true);
@@ -1148,6 +1167,7 @@ void main_window_t::cur_ws_properties_changed() {
       tp_edit_mode_content->setChecked(!check_t);
       tp_edit_mode_item->blockSignals(false);
       tp_edit_mode_content->blockSignals(false);
+
     }
 
   astate->make_viewport_dirty();
@@ -1177,7 +1197,9 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
     /* detect selective labels */
     need_to_hide_force_sel_lbl_vis =
         cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_atom_idx_sel.empty();
+
     if (!need_to_hide_force_sel_lbl_vis) {
+
         tp_force_sel_lbl_vis->show();
 
         tp_force_sel_lbl_vis->blockSignals(true);
@@ -1258,15 +1280,19 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
   }
 
   if (need_to_hide_add_primitives) {
+
       tp_add_arrow->hide();
       tp_add_cube->hide();
+
     }
 
   if (need_to_hide_al_cntls) {
+
     tp_measure_dist->hide();
     tp_measure_angle->hide();
     tp_add_arrow->hide();
     tp_add_cube->hide();
+
   }
 
   if (need_to_hide_force_sel_lbl_vis) {
@@ -1374,9 +1400,11 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 
   // if selective labels rendering unchecked - force it and select some random style
   if (!as_al->m_atom_idx_sel.empty() && !as_al->m_labels->m_selective_lbl) {
+
         as_al->m_labels->m_selective_lbl = true;
         as_al->m_labels->m_style = geom_labels_style_e::show_id_type;
         astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
     }
 
   astate->make_viewport_dirty();
@@ -1394,11 +1422,14 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
     if (rec.m_atm < as_al->m_geom->nat()) {
 
       as_al->m_geom->xfield<bool>(xgeom_override, rec.m_atm) = checked;
+
       if (as_al->m_geom->xfield<float>(xgeom_atom_r, rec.m_atm) < 0.01f) {
+
           auto ap_idx = ptable::number_by_symbol(as_al->m_geom->atom(rec.m_atm));
           float _rad = 1.0f;
           if (ap_idx) _rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
           as_al->m_geom->xfield<float>(xgeom_atom_r, rec.m_atm) = _rad;
+
         }
 
     }
@@ -1544,9 +1575,11 @@ void main_window_t::start_update_cycle() {
 void main_window_t::stop_update_cycle() {
 
   if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
+
       p_elapsed_time_in_event_loop =  ws_viewer_widget->m_update_timer->remainingTime();
       ws_viewer_widget->m_update_timer->stop();
       ws_viewer_widget->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
+
     }
 
 }
@@ -1633,13 +1666,17 @@ void main_window_t::recent_files_clicked() {
       }
 
   if (idx != -1 && idx < astate->m_recent_files.size()) {
+
       auto &rec_idx = astate->m_recent_files[idx];
-      if (rec_idx.m_native) astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
+
+      if (rec_idx.m_native)
+        astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
       else {
           auto bhv_id = astate->ws_mgr->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
           if (bhv_id) astate->ws_mgr->import_from_file(rec_idx.m_file_name, *bhv_id, true);
           else astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name);
         }
+
     }
 
 }
@@ -1678,6 +1715,7 @@ void main_window_t::build_bhv_menus_and_actions() {
                 bhv_mgr->m_ws_item_io[i]->can_load() &&
                 bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
                 bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
+
                 qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
@@ -1685,6 +1723,7 @@ void main_window_t::build_bhv_menus_and_actions() {
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_to_cur_ws->addAction(new_act);
+
               }
 
             //deduce import as new ws
@@ -1692,6 +1731,7 @@ void main_window_t::build_bhv_menus_and_actions() {
                 bhv_mgr->m_ws_item_io[i]->can_load() &&
                 bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
                 bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
+
                 qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
@@ -1699,12 +1739,14 @@ void main_window_t::build_bhv_menus_and_actions() {
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_as_new_ws->addAction(new_act);
+
               }
 
             //deduce save selected item
             if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
                 bhv_mgr->m_ws_item_io[i]->can_save() &&
                 bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
+
                 qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
@@ -1713,8 +1755,11 @@ void main_window_t::build_bhv_menus_and_actions() {
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_export_selected->addAction(new_act);
                 file_menu_export_sel_as_acts.push_back(new_act);
+
               }
+
           }
+
     }
 
   //TODO: make lookup for bhv
@@ -1733,6 +1778,7 @@ void main_window_t::build_bhv_tools_menus() {
 
   //construct tools actions
   for (auto &ff : astate->ws_mgr->m_bhv_mgr->m_tools_info) {
+
       //construct tool's action
       qextended_action *new_act = new qextended_action((nullptr));
       new_act->m_joined_data[0] = ff.first;
@@ -1745,7 +1791,9 @@ void main_window_t::build_bhv_tools_menus() {
       else tools_menu->addAction(new_act);
 
       tools_menu_actions.push_back(new_act);
+
     }
+
 }
 
 void main_window_t::action_bhv_tools_menus_clicked() {
@@ -1779,15 +1827,21 @@ void main_window_t::control_bhv_tools_menus_activity() {
   if (cur_ws) cur_it = cur_ws->get_selected_sp();
 
   for (auto elem : tools_menu_actions) {
+
       elem->setEnabled(false);
+
       if (cur_ws) {
+
           auto it_t = bhv_mgr->m_tools_info.find(elem->m_joined_data[0]);
           if (it_t != bhv_mgr->m_tools_info.end()) {
+
               if (!it_t->second.m_item_required) elem->setEnabled(true);
               if (cur_it && it_t->second.m_item_required &&
                   it_t->second.m_accepted_type == cur_it->get_type()) elem->setEnabled(true);
             }
+
         }
+
     }
 
 }
@@ -1806,12 +1860,15 @@ void main_window_t::action_bhv_import_to_cur_workspace() {
   if (b_id < bhv_mgr->m_ws_item_io.size() &&
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
+
       std::string file_name =
           QFileDialog::getOpenFileName(this,
                                        "Import to current workspace",
                                        astate->m_last_dir,
                                        "*").toStdString();
-      if (!file_name.empty()) astate->ws_mgr->import_from_file(file_name, b_id, false);
+      if (!file_name.empty())
+        astate->ws_mgr->import_from_file(file_name, b_id, false);
+
     }
 
 }
@@ -1830,12 +1887,15 @@ void main_window_t::action_bhv_import_as_new_workspace() {
   if (b_id < bhv_mgr->m_ws_item_io.size() &&
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_as_new_ws) {
+
       // astate->log(fmt::format("{}", b_id));
       std::string file_name = QFileDialog::getOpenFileName(this,
                                                            "Import as new workspace",
                                                            astate->m_last_dir,
                                                            "*").toStdString();
-      if (!file_name.empty()) astate->ws_mgr->import_from_file(file_name, b_id);
+      if (!file_name.empty())
+        astate->ws_mgr->import_from_file(file_name, b_id);
+
     }
 
 }
@@ -1865,11 +1925,14 @@ void main_window_t::action_bhv_export_selected() {
                                                         );
 
       if (qfile_name.size() != 0) {
+
           QFileInfo file_nfo(qfile_name);
           astate->m_last_dir = file_nfo.absoluteDir().canonicalPath();
           std::string file_name = qfile_name.toStdString();
           astate->ws_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
+
         }
+
     }
 
 }
@@ -1884,19 +1947,20 @@ void main_window_t::control_bhv_menus_activity() {
 
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
 
-  if (cur_ws) {
-    file_menu_import_to_cur_ws->setEnabled(true);
-    } else {
-    file_menu_import_to_cur_ws->setEnabled(false);
-  }
+  if (cur_ws) file_menu_import_to_cur_ws->setEnabled(true);
+  else file_menu_import_to_cur_ws->setEnabled(false);
 
   if (!ok) {
     //
     file_menu_export_sel_as->setEnabled(false);
   } else {
+
     if (cur_it) {
+
         file_menu_export_sel_as->setEnabled(true);
+
         for (auto &exp_act : file_menu_export_sel_as_acts) {
+
             size_t bhv_id = exp_act->m_joined_data[0];
             if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
                 bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
@@ -1906,8 +1970,11 @@ void main_window_t::control_bhv_menus_activity() {
               } else {
                 exp_act->setEnabled(false);
               }
+
           }
+
       }
+
   } // not ok
 
 }
