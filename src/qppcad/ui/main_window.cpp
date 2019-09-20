@@ -1962,6 +1962,7 @@ void main_window_t::control_bhv_menus_activity() {
         for (auto &exp_act : file_menu_export_sel_as_acts) {
 
             size_t bhv_id = exp_act->m_joined_data[0];
+
             if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
                 bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
                 //need_to_enable_export_menu = true;
