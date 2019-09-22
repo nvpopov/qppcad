@@ -118,9 +118,10 @@ namespace qpp {
         void unbind_item() override;
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 """
 
 cpp_oi_tmp = """#include <qppcad/ws_item/#CLASS_NAME/#CLASS_NAME_obj_insp_widget.hpp>
@@ -179,7 +180,7 @@ if (argc == 2):
     file_hpp.write("#endif")
 
     #write oi
-    hpp_guard_oi = ("QPP_CAD_{}_OBJECT_INSP".format(class_name)).upper()
+    hpp_guard_oi = ("QPPCAD_{}_OBJECT_INSP".format(class_name)).upper()
     file_oi_hpp.write("#ifndef {}\n".format(hpp_guard_oi))
     file_oi_hpp.write("#define {}\n".format(hpp_guard_oi))
 
