@@ -2,9 +2,10 @@
 import sys
 import os
 
-hpp_tmp = """#include <qppcad/qppcad.hpp>
+hpp_tmp = """#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item.hpp>
-  namespace qpp {
+
+namespace qpp {
   
   namespace cad {
 
@@ -23,7 +24,7 @@ hpp_tmp = """#include <qppcad/qppcad.hpp>
         std::string compose_type_descr() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
-	void updated_externally(uint32_t update_reason) override;	
+        void updated_externally(uint32_t update_reason) override;	
         uint32_t get_num_cnt_selected() override;
         size_t get_content_count() override;
 
@@ -32,13 +33,14 @@ hpp_tmp = """#include <qppcad/qppcad.hpp>
 
     };
 
-  }
+  } // namespace qpp::cad
 
-}
+} // namespace qpp
+
 """
 
 cpp_tmp = """#include <qppcad/ws_item/#CLASS_NAME/#CLASS_NAME.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -164,7 +166,7 @@ if (argc == 2):
     file_oi_cpp = open("{}/{}_obj_insp_widget.cpp".format(new_path, class_name), "w")
 
     #write main
-    hpp_guard = ("QPP_CAD_{}".format(class_name)).upper()
+    hpp_guard = ("QPPCAD_{}".format(class_name)).upper()
     file_hpp.write("#ifndef {}\n".format(hpp_guard))
     file_hpp.write("#define {}\n".format(hpp_guard))
 
