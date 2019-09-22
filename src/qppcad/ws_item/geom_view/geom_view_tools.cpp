@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
+#include <qppcad/ws_item/compl_list_view/compl_list_view.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <random>
 
@@ -800,7 +801,7 @@ void geom_view_tools_t::naive_fit_str(geom_view_t *model,
 
 }
 
-std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compliance_list(
+std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compl_list(
     geom_view_t *model,
     geom_view_t *target,
     float compl_eps,
@@ -835,7 +836,24 @@ std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compliance
 
 }
 
-void geom_view_tools_t::displ_geom_by_compliance_list(
+void geom_view_tools_t::construct_compl_list_view(geom_view_t *model,
+                                                  geom_view_t *target,
+                                                  float compl_eps,
+                                                  bool only_affect_visible_atoms) {
+
+  std::vector<std::tuple<size_t, size_t> > res =
+      geom_view_tools_t::gen_geoms_compl_list(model, target, compl_eps, only_affect_visible_atoms);
+
+  std::shared_ptr<compl_list_view_t> clv = std::make_shared<compl_list_view_t>();
+  clv->m_name = fmt::format("clv_{}", model->m_name);
+
+  clv->m_compl_list = std::move(res);
+
+  model->m_parent_ws->add_item_to_ws(clv);
+
+}
+
+void geom_view_tools_t::displ_geom_by_comp_list(
     geom_view_t *target,
     geom_view_t *displ_start,
     geom_view_t *displ_end,

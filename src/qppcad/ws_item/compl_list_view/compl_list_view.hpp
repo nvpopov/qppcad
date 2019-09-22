@@ -7,12 +7,15 @@ namespace qpp {
 
   namespace cad {
 
+    using compl_list_t = std::vector<std::tuple<size_t, size_t> >;
+
     class compl_list_view_t : public ws_item_t {
 
        QPP_OBJECT(compl_list_view_t, ws_item_t)
 
       public:
 
+        compl_list_t m_compl_list;
         compl_list_view_t();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -29,6 +32,7 @@ namespace qpp {
 
         void save_to_json(json &data) override;
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
+        bool can_be_written_to_json() override;
 
     };
 

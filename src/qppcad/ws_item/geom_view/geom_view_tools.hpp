@@ -107,13 +107,19 @@ namespace qpp {
                                   std::vector<size_t> &model_idx,
                                   std::vector<size_t> &target_idx);
 
-        static std::vector<std::tuple<size_t, size_t> > gen_geoms_compliance_list(
+        static std::vector<std::tuple<size_t, size_t> > gen_geoms_compl_list(
             geom_view_t *model,
             geom_view_t *target,
             float compl_eps = 0.1f,
             bool only_affect_visible_atoms = true);
 
-        static void displ_geom_by_compliance_list(
+        static void construct_compl_list_view(
+            geom_view_t *model,
+            geom_view_t *target,
+            float compl_eps = 0.1f,
+            bool only_affect_visible_atoms = true);
+
+        static void displ_geom_by_comp_list(
             geom_view_t *target,
             geom_view_t *displ_start,
             geom_view_t *displ_end,

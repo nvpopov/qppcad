@@ -1536,21 +1536,28 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   json_helper::load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
 
   if (data.find(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE) != data.end()) {
+
       int sc_a = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][0].get<int>();
       int sc_b = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][1].get<int>();
       int sc_c = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][2].get<int>();
       m_subcells_range = vector3<int>(sc_a, sc_b, sc_c);
+
     }
 
   if (data.find(JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE) != data.end()) {
+
       m_type_color_override.clear();
+
       for (const auto &rec : data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE]) {
+
           size_t type_idx = rec[0].get<size_t>();
           float tco_r = rec[1].get<float>();
           float tco_g = rec[2].get<float>();
           float tco_b = rec[3].get<float>();
           m_type_color_override.insert({type_idx, vector3<float>{tco_r, tco_g, tco_b}});
+
         }
+
     }
 
   m_tws_tr->do_action(act_lock | act_clear_all);
@@ -1558,7 +1565,9 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   m_ext_obs->first_data = true;
 
   if (m_geom->DIM>0) {
+
       if (data.find(JSON_GEOM_VIEW_CELL) != data.end()) {
+
           for (uint8_t i = 0; i < m_geom->DIM; i++) {
               vector3<float> cellv(data[JSON_GEOM_VIEW_CELL][i][0].get<float>(),
                   data[JSON_GEOM_VIEW_CELL][i][1].get<float>(),
@@ -1569,6 +1578,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
           m_geom->DIM = 0;
           //("Cannot load cell data for geom with DIM>0");
         }
+
     }
 
   if (data.find(JSON_GEOM_VIEW_XFIELD_NAMES) != data.end()) {
@@ -1603,8 +1613,11 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
 
         size_t atom_id = m_geom->nat() - 1;
+
         for (size_t i = 4; i < atom.size(); i++) {
+
             switch (m_geom->field_type(i)) {
+
               case basic_types::type_bool : {
                   m_geom->xfield<bool>(i, atom_id) = atom[i].get<bool>();
                   break;
@@ -1629,25 +1642,34 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
                   m_geom->xfield<std::string>(i, atom_id) = atom[i].get<std::string>();
                   break;
                 }
+
               }
 
           }
+
       }
 
   if (data.find(JSON_GEOM_VIEW_BONDING_TABLE) != data.end()) {
+
       for (auto &elem : data[JSON_GEOM_VIEW_BONDING_TABLE]) {
+
           int type1 = m_geom->type_of_atom(elem[0].get<std::string>());
           int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
           float dist = elem[2].get<float>();
           bool br_enabled = elem[3].get<bool>();
           m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_bonding_dist = dist;
           m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_enabled = br_enabled;
+
         }
+
       m_tws_tr->m_bonding_table.update_pair_max_dist_all();
+
     }
 
   if (data.find(JSON_GEOM_VIEW_ANIMATIONS) != data.end()) {
+
       bool static_anim_found{false};
+
       for (auto &anim : data[JSON_GEOM_VIEW_ANIMATIONS]) {
 
           geom_anim_record_t<float> tmp_anim_rec;
@@ -1663,12 +1685,14 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
               tmp_anim_rec.frames.reserve(anim[JSON_GEOM_VIEW_ANIMATION_FRAMES].size());
 
               for (auto &frame : anim[JSON_GEOM_VIEW_ANIMATION_FRAMES]) {
+
                   tmp_anim_rec.frames.resize(tmp_anim_rec.frames.size() + 1);
                   size_t nf_id = tmp_anim_rec.frames.size() - 1;
 
                   tmp_anim_rec.frames[nf_id].atom_pos.reserve(frame.size());
 
                   for (auto &frame_data : frame) {
+
                       vector3<float> frame_coord;
                       frame_coord[0] = frame_data[0].get<float>();
                       frame_coord[1] = frame_data[1].get<float>();
@@ -1676,13 +1700,18 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
                       //std::cout << frame_coord.to_string_vec() << std::endl;
                       tmp_anim_rec.frames[nf_id].atom_pos.push_back(frame_coord);
                     }
+
                 }
+
             }
+
           if (tmp_anim_rec.m_anim_type == geom_anim_t::anim_static) static_anim_found = true;
           m_anim->m_anim_data.push_back(std::move(tmp_anim_rec));
+
         }
 
       if (!static_anim_found) {
+
           geom_anim_record_t<float> tmp_anim_static;
           tmp_anim_static.m_anim_name = "static";
           tmp_anim_static.m_anim_type = geom_anim_t::anim_static;
@@ -1690,7 +1719,9 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
           for (auto i = 0; i < m_geom->nat(); i++)
             tmp_anim_static.frames[0].atom_pos.push_back(m_geom->pos(i));
           m_anim->m_anim_data.insert(m_anim->m_anim_data.begin(), std::move(tmp_anim_static));
+
         }
+
     }
 
   //reading measurement subsystem

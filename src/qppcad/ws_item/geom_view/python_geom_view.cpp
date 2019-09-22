@@ -316,10 +316,13 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("eps_dist") = 0.01f, py::arg("check_run") = true)
       .def("naive_fit_str", &geom_view_tools_t::naive_fit_str,
            py::arg("model"), py::arg("target"), py::arg("model_idx"), py::arg("target_idx"))
-      .def("gen_geoms_compliance_list", &geom_view_tools_t::gen_geoms_compliance_list,
+      .def("gen_geoms_compliance_list", &geom_view_tools_t::gen_geoms_compl_list,
            py::arg("model"), py::arg("target"),
            py::arg("compl_eps"), py::arg("only_affect_visible_atoms") = true)
-      .def("displ_geom_by_compliance_list", &geom_view_tools_t::displ_geom_by_compliance_list,
+      .def("construct_compl_list_view", &geom_view_tools_t::construct_compl_list_view,
+           py::arg("model"), py::arg("target"),
+           py::arg("compl_eps"), py::arg("only_affect_visible_atoms") = true)
+      .def("displ_geom_by_compliance_list", &geom_view_tools_t::displ_geom_by_comp_list,
            py::arg("target"), py::arg("displ_start"), py::arg("displ_end"), py::arg("comp_l"));
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
