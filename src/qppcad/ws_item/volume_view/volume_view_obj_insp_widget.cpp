@@ -10,7 +10,7 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
 
   general_volume_type = new QLabel(tr("Molecular orbitals"));
   vol_isovalue = new qbinded_float_spinbox_t;
-  vol_isovalue->set_min_max_step(-0.8, 0.8, 0.001, 3);
+  vol_isovalue->set_min_max_step(-0.8, 0.8, 0.0001, 4);
   vol_isovalue->m_updated_externally_event = true;
   vol_isovalue->m_upd_flag = ws_item_updf_regenerate_content;
 
