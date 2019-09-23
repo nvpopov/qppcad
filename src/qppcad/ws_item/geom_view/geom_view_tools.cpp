@@ -859,8 +859,7 @@ void geom_view_tools_t::displ_geom_by_comp_list(
     geom_view_t *displ_end,
     std::vector<std::tuple<size_t, size_t> > &comp_l) {
 
-  if (!displ_start || !displ_end || !target || comp_l.empty() ||
-      displ_start->m_geom->nat() != displ_end->m_geom->nat()) return ;
+  if (!displ_start || !displ_end || !target || comp_l.empty()) return ;
 
   for (auto const &rec : comp_l) {
 
