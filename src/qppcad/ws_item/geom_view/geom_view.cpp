@@ -189,7 +189,7 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_cc : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos - axis_size*(m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
+        look_from = m_pos + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
         look_to = m_pos + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
         look_up = {0.0 , 0.0 , 1.0};
         need_to_update_camera = true;
