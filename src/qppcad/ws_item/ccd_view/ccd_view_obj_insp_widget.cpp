@@ -34,6 +34,8 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
 
       gen_info_run_type->setText(QString::fromStdString(qpp::ccdrt2str[b_ccdv->m_ccd->m_run_t]));
 
+      set_tab_enabled(tab_tddft, !b_ccdv->m_ccd->m_tddft_trans_rec.empty());
+
       switch (b_ccdv->m_ccd->m_run_t) {
 
         case comp_chem_program_run_e::rt_unknown :
@@ -144,6 +146,8 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tab_vibs = def_tab(tr("Vibrational analysis"),
                      "://images/vib_anal.svg",
                      "://images/vib_anal_d.svg");
+
+  tab_tddft = def_tab(tr("TDDFT"), "://images/settings.svg",  "://images/settings.svg");
 
   ws_item_is_visible->hide();
   ws_item_is_visible_label->hide();

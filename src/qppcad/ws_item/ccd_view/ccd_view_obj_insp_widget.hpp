@@ -24,6 +24,7 @@ namespace qpp {
 
         ws_item_tab_widget_t *tab_geo_opt;
         ws_item_tab_widget_t *tab_vibs;
+        ws_item_tab_widget_t *tab_tddft;
 
         QLabel *tab_info_program;
         qspoiler_widget_t *gb_gen_ccd_info;

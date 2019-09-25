@@ -274,8 +274,8 @@ qpp--cad--object_inspector_widget_t QTabWidget::pane {
  border: 0;
 }
 
-qpp--cad--object_inspector_widget_t QTabBar::tab:first {
- margin-left:34px !important;
+qpp--cad--object_inspector_widget_t QTabBar::tab:first, qpp--cad--object_inspector_widget_t QTabBar::tab:only-one {
+ margin-left:4px !important;
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab {
@@ -285,7 +285,7 @@ qpp--cad--object_inspector_widget_t QTabBar::tab {
  padding-left: 6px;
  padding-bottom: 2px;
  padding-right: 6px;
- margin-left:10px;
+ margin-left:6px;
  border: 1px solid rgb(70, 70, 70);
  border-radius: 3px;
  margin-bottom: 5px;
