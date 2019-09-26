@@ -47,7 +47,6 @@
         <file>images/outline-save-24px.svg</file>
         <file>images/outline-play_circle_filled_white-24px.svg</file>
         <file>images/outline-fast_forward-24px.svg</file>
-        <file>images/baseline-graphic_eq-24px_d.svg</file>
         <file>images/baseline-graphic_eq-24px.svg</file>
         <file>images/add_arrow.svg</file>
         <file>images/add_cube.svg</file>
@@ -56,5 +55,8 @@
         <file>fonts/Open_Sans/OpenSans-Bold.ttf</file>
         <file>fonts/Open_Sans/OpenSans-Regular.ttf</file>
         <file>fonts/Open_Sans/OpenSans-Light.ttf</file>
+        <file>images/sync_alt-24px.svg</file>
+        <file>images/sync_alt-24px_d.svg</file>
+        <file>images/baseline-graphic_eq-24px_d.svg</file>
     </qresource>
 </RCC>

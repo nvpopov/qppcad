@@ -222,12 +222,18 @@ void geom_view_t::render() {
   if (astate->dp) {
 
       if (astate->m_debug_show_tws_tree) {
+
           astate->dp->begin_render_aabb();
-          m_tws_tr->apply_visitor( [astate, _pos](tws_node_t<float> *in_node,
-                                   int deep_level){
-              astate->dp->render_aabb(clr_maroon,
-                                      in_node->m_bb.min+_pos, in_node->m_bb.max+_pos);});
+
+          m_tws_tr->apply_visitor(
+                [astate, _pos](tws_node_t<float> *in_node, int deep_level) {
+                astate->dp->render_aabb(clr_maroon,
+                                        in_node->m_bb.min+_pos,
+                                        in_node->m_bb.max+_pos);
+            });
+
           astate->dp->end_render_aabb();
+
         }
 
       if (!m_is_visible) return;
@@ -236,21 +242,29 @@ void geom_view_t::render() {
           astate->dp->begin_render_line();
 
           if (m_draw_subcells) {
+
               vector3<float> sc_a = m_geom->cell.v[0] / m_subcells_range[0];
               vector3<float> sc_b = m_geom->cell.v[1] / m_subcells_range[1];
               vector3<float> sc_c = m_geom->cell.v[2] / m_subcells_range[2];
+
               for (int i_a = 0; i_a < m_subcells_range[0]; i_a++)
                 for (int i_b = 0; i_b < m_subcells_range[1]; i_b++)
                   for (int i_c = 0; i_c < m_subcells_range[2]; i_c++) {
+
                       vector3<float> new_pos = m_pos + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
                       astate->dp->render_cell_3d(m_subcell_color, sc_a, sc_b, sc_c, new_pos);
+
                     }
+
             }
 
           vector3<float> cell_clr = m_cell_color;
+
           if (m_selected) {
+
               if(m_parent_ws->m_edit_type == ws_edit_e::edit_item) cell_clr = clr_red;
               if(m_parent_ws->m_edit_type == ws_edit_e::edit_content) cell_clr = clr_maroon;
+
             }
 
           astate->dp->render_cell_3d(
@@ -260,15 +274,21 @@ void geom_view_t::render() {
         }
 
       if (m_geom->DIM == 3 && m_draw_cell_vectors) {
+
           astate->dp->begin_render_general_mesh();
+
           for (size_t i = 0; i < m_geom->DIM; i++) {
+
               vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio;
               astate->dp->render_arrow(m_pos + m_cell_vector_offset,
                                        m_pos + m_cell_vector_offset + cell_v,
                                        m_cell_vector_color,
                                        0.1f, 0.17f, 0.25f, false);
+
             }
+
           astate->dp->end_render_general_mesh();
+
         }
 
       switch (m_render_style) {
@@ -447,6 +467,7 @@ void geom_view_t::sel_atom(int atom_id) {
 void geom_view_t::toggle_atom_sel(int atom_id) {
 
   auto it_0 = m_atom_idx_sel.find({atom_id, index::D(m_geom->DIM).all(0)});
+
   if (it_0 != m_atom_idx_sel.end()) {
       unsel_atom(atom_id);
     } else {
@@ -549,6 +570,7 @@ void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
   if (!m_geom) return;
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
+
       auto key = atom_index_set_key(atom_id, atom_idx);
       auto i2 = std::find(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), key);
       if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
@@ -563,6 +585,7 @@ void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
       //        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
       return;
+
     }
 
   recalc_gizmo_barycenter();
@@ -808,6 +831,7 @@ void geom_view_t::xbool_invert_selected(size_t field_id) {
 void geom_view_t::copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
 
   if (!m_geom) return;
+
   for (int i = 0; i < xgeom_inst.nat(); i++) {
       m_geom->add(xgeom_inst.atom(i), xgeom_inst.pos(i));
       m_geom->xfield<float>(xgeom_charge, i) = xgeom_inst.xfield<float>(xgeom_charge, i);
@@ -823,17 +847,22 @@ void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_i
   xgeom_inst.clear();
 
   if (copy_cell) {
+
       xgeom_inst.DIM = m_geom->DIM;
       xgeom_inst.cell.DIM = m_geom->cell.DIM;
 
       for (int i = 0; i < 3; i++)
         if (m_geom->DIM > i) xgeom_inst.cell.v[i] = m_geom->cell.v[i];
+
     }
 
   if (copy_selected) {
+
       for (auto &sel : m_atom_idx_sel)
         xgeom_inst.add(m_geom->atom(sel.m_atm), m_geom->pos(sel.m_atm, sel.m_idx));
+
     } else {
+
       for (int i = 0; i < m_geom->nat(); i++)
         xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
     }
@@ -902,15 +931,20 @@ void geom_view_t::load_color_from_static_anim() {
 
       if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
           m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
+
           for (int i = 0; i < m_geom->nat(); i++) {
+
               m_geom->xfield<float>(xgeom_ccr, i) =
                   m_anim->m_anim_data[static_anim].frames[0].atom_color[i][0];
               m_geom->xfield<float>(xgeom_ccg, i) =
                   m_anim->m_anim_data[static_anim].frames[0].atom_color[i][1];
               m_geom->xfield<float>(xgeom_ccb, i) =
                   m_anim->m_anim_data[static_anim].frames[0].atom_color[i][2];
+
             }
+
         }
+
     }
 
 }

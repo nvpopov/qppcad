@@ -300,15 +300,19 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
       vector3<float> p2 = g2->m_geom->pos(i);
 
       if (m_anim_info[0]->cmb_anim_name->isVisible()) {
+
           size_t anim_id = m_anim_info[0]->cmb_anim_name->currentIndex();
           size_t frame_id = m_anim_info[0]->cmb_anim_frame->currentIndex();
           p1 = g1->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+
         }
 
       if (m_anim_info[1]->cmb_anim_name->isVisible()) {
+
           size_t anim_id = m_anim_info[1]->cmb_anim_name->currentIndex();
           size_t frame_id = m_anim_info[1]->cmb_anim_frame->currentIndex();
           p2 = g2->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+
         }
 
       vector3<float> dp = p2 - p1;

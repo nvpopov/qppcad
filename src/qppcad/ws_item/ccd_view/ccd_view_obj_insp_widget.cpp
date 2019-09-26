@@ -147,7 +147,9 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
                      "://images/vib_anal.svg",
                      "://images/vib_anal_d.svg");
 
-  tab_tddft = def_tab(tr("TDDFT"), "://images/settings.svg",  "://images/settings.svg");
+  tab_tddft = def_tab(tr("TDDFT"),
+                      "://images/sync_alt-24px.svg",
+                      "://images/sync_alt-24px_d.svg");
 
   ws_item_is_visible->hide();
   ws_item_is_visible_label->hide();
