@@ -52,6 +52,10 @@ namespace qpp {
         QLabel *tgo_step_info_gr_norm;
         qbinded_combobox_t *tgo_step_copy_charges;
 
+        qspoiler_widget_t *ttd_info;
+        QFormLayout *ttd_info_lt;
+        QLabel *ttd_info_total_trans;
+
         qspoiler_widget_t *gb_vib_modes;
         QVBoxLayout *gb_vib_modes_lt;
         QListWidget *vib_modes_list_wdgt;

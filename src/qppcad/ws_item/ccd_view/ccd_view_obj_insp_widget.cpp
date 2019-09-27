@@ -34,7 +34,9 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
 
       gen_info_run_type->setText(QString::fromStdString(qpp::ccdrt2str[b_ccdv->m_ccd->m_run_t]));
 
+      //tddft tab
       set_tab_enabled(tab_tddft, !b_ccdv->m_ccd->m_tddft_trans_rec.empty());
+      ttd_info_total_trans->setText(QString("%1").arg(b_ccdv->m_ccd->m_tddft_trans_rec.size()));
 
       switch (b_ccdv->m_ccd->m_run_t) {
 
@@ -259,6 +261,16 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   tgo_step_info_lt->addRow(tr("Copy charges"), tgo_step_copy_charges);
 
   init_form_lt(tgo_step_info_lt);
+
+  ttd_info = new qspoiler_widget_t(tr("TDDFT info"));
+  ttd_info_lt = new QFormLayout;
+  ttd_info->add_content_layout(ttd_info_lt);
+  ttd_info_total_trans = new QLabel;
+  ttd_info_lt->addRow(tr("Total transitions"), ttd_info_total_trans);
+  init_form_lt(ttd_info_lt);
+
+  tab_tddft->tab_inner_widget_lt->addWidget(ttd_info);
+  tab_tddft->tab_inner_widget_lt->addStretch(1);
 
   tab_geo_opt->tab_inner_widget_lt->addWidget(tgo_select_step);
   tab_geo_opt->tab_inner_widget_lt->addWidget(tgo_step_info);
