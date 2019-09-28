@@ -190,7 +190,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("Adme Ewald Cell", "adme_ewald", generic_ff_g_hash, {"adme_ewald"} );
 
   size_t orca_output_ff_hash =
-      bhv_mgr->reg_ff("Orca Output", "orca_out", orca_ff_g_hash, {"orca.out"} );
+      bhv_mgr->reg_ff("Orca Output", "orca", orca_ff_g_hash, {"orca.out"} );
 
   /* ws_item_t io mgrs */
   auto xyz_ff_mgr =
