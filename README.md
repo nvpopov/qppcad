@@ -35,14 +35,10 @@ git pull --recurse-submodules
 ```
 
 ## Debian - based distro dependencies :
-### Qt5:
 ```bash
-apt install libqt5opengl5-dev libqt5charts5-dev libqt5svg5-dev libqt5core5a libqt5widgets5 libqt5gui5
+apt install libqt5opengl5-dev libqt5charts5-dev libqt5svg5-dev libqt5core5a libqt5widgets5 libqt5gui5 libpython3-dev
 ```
-### Python3:
-```bash
-apt install libpython3-dev
-```
+
 # Dependencies and resources
 1. Qt5 - https://www.qt.io
 2. Eigen3 - http://eigen.tuxfamily.org
