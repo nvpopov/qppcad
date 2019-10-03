@@ -9,7 +9,7 @@ QWidget[s_class="tp_generic"] QLabel {
 }
 
 QLabel[s_class="bold_label"] {
- font-weight: bold;
+ color: rgb(211, 211, 211);
 }
 
 QCheckBox::indicator {
@@ -238,6 +238,7 @@ qpp--cad--ws_tabbar_t::tab {
  border-left: 1px solid rgb(73, 73, 73);
  border-right: 1px solid rgb(73, 73, 73);
  border-top: 1px solid rgb(73, 73, 73);
+ color: rgb(171, 171, 171);
 }
 
 qpp--cad--ws_tabbar_t::tab::first {
@@ -249,6 +250,7 @@ qpp--cad--ws_tabbar_t::tab:selected {
  border-left: 1px solid rgb(60, 60, 60);
  border-right: 1px solid rgb(60, 60, 60);
  border-top: 1px solid rgb(60, 60, 60);
+ color: rgb(251, 251, 251);
 }
 
 qpp--cad--ws_tabbar_t::tab:hover {
@@ -292,7 +294,7 @@ qpp--cad--object_inspector_widget_t QTabBar::tab {
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget qpp--cad--qspoiler_widget_t {
- margin-bottom: 10px;
+ margin-bottom: 5px;
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab:selected {
@@ -427,4 +429,3 @@ qpp--cad--ptable_rich_widget_t QPushButton:hover {
 qpp--cad--ptable_rich_widget_t QPushButton:pressed {
  background-color: rgb(33, 33, 33);
 }
-
