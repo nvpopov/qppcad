@@ -158,6 +158,7 @@ void main_window_t::init_menus() {
 
   file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
   for (int i = 0; i < qpp::cad::max_recent_files; i++) {
+
       QAction *recent_act = new QAction(file_menu_recent_files);
       file_menu_recent_entries[i] = recent_act;
       file_menu_recent_files->addAction(recent_act);
@@ -165,6 +166,7 @@ void main_window_t::init_menus() {
               &QAction::triggered,
               this,
               &main_window_t::recent_files_clicked);
+
     }
 
   file_menu_close_app = new QAction(nullptr);
@@ -194,7 +196,7 @@ void main_window_t::init_menus() {
   edit_menu->addAction(edit_menu_ptable_widget);
   connect(edit_menu_ptable_widget,
           &QAction::triggered,
-          [](){
+          []() {
                 ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec();
                 app_state_t::get_inst()->make_viewport_dirty();
           });
@@ -343,7 +345,7 @@ void main_window_t::init_menus() {
   view_menu_debug->addAction(view_menu_toggle_debug_info);
   connect(view_menu_toggle_debug_info,
           &QAction::toggled,
-          [](bool checked){
+          [](bool checked) {
             app_state_t* astate = app_state_t::get_inst();
             astate->m_show_debug_frame_stats = checked;
             astate->make_viewport_dirty();
@@ -355,7 +357,7 @@ void main_window_t::init_menus() {
   view_menu_debug->addAction(view_menu_toggle_debug_tws_tree);
   connect(view_menu_toggle_debug_tws_tree,
           &QAction::toggled,
-          [](bool checked){
+          [](bool checked) {
             app_state_t* astate = app_state_t::get_inst();
             astate->m_debug_show_tws_tree = checked;
             astate->make_viewport_dirty();
@@ -367,7 +369,7 @@ void main_window_t::init_menus() {
   view_menu_debug->addAction(view_menu_toggle_sel_deque);
   connect(view_menu_toggle_debug_tws_tree,
           &QAction::toggled,
-          [](bool checked){
+          [](bool checked) {
             app_state_t* astate = app_state_t::get_inst();
             astate->m_debug_show_sel_deque = checked;
             astate->make_viewport_dirty();
@@ -382,16 +384,21 @@ void main_window_t::init_menus() {
   help_menu->addAction(help_menu_about);
   connect(help_menu_about,
           &QAction::triggered,
-          [](){
+          []() {
             QMessageBox::about(nullptr, "qpp::cad",
                                QObject::tr(
                                  "Site : <a href='https://github.com/nvpopov/qppcad'>"
                                  "https://github.com/nvpopov/qppcad"
                                  "</a><br>"
                                  "Git rev : %1<br>"
-                                 "Build time : %2")
+                                 "Build time : %2<br>"
+                                 "Qt version : %3<br>"
+                                 "Python : %4")
                                .arg(QString::fromStdString(build_info_helper::get_git_version()))
-                               .arg(QString::fromStdString(build_info_helper::get_build_date())));
+                               .arg(QString::fromStdString(build_info_helper::get_build_date()))
+                               .arg(QString::fromStdString(build_info_helper::get_qt_version()))
+                               .arg(QString::fromStdString(build_info_helper::get_python_version()))
+                               );
           });
 
   // end of help menu

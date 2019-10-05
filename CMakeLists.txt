@@ -81,14 +81,16 @@ endif()
 
 string(TIMESTAMP _time_stamp)
 
-configure_file(${CMAKE_SOURCE_DIR}/src/qppcad/core/gitversion_ex.h.in
-               ${CMAKE_SOURCE_DIR}/src/qppcad/core/gitversion_ex.h @ONLY)
-
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
 find_package(Qt5OpenGL CONFIG REQUIRED)
 find_package(Qt5Svg)
 find_package(Qt5Charts)
+
+set(_qppcad_qt_build_version ${Qt5Widgets_VERSION})
+
+configure_file(${CMAKE_SOURCE_DIR}/src/qppcad/core/gitversion_ex.h.in
+               ${CMAKE_SOURCE_DIR}/src/qppcad/core/gitversion_ex.h @ONLY)
 
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})

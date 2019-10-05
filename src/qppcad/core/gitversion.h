@@ -13,6 +13,8 @@ namespace qpp {
 
         static std::string get_git_version();
         static std::string get_build_date();
+        static std::string get_qt_version();
+        static std::string get_python_version();
 
     };
 

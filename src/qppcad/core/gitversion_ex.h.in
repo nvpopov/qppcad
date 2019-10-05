@@ -3,5 +3,6 @@
 
 #define GIT_REVISION "@_build_version@"
 #define BUILD_TIMESTAMP "@_time_stamp@"
-
+#define QPPCAD_QT_BUILD_VERSION "@_qppcad_qt_build_version@"
+#define QPPCAD_PYTHON_VERSION "@PYTHON_LIBRARY@"
 #endif

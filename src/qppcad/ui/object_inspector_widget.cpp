@@ -57,7 +57,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::provide_context_menu_for_ws_items);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 363, true, 0);
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 359, true, 0);
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
@@ -113,10 +113,12 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 object_inspector_widget_t::~object_inspector_widget_t() {
 
   if (m_cur_obj_insp_widget) {
+
       m_cur_obj_insp_widget->unbind_item();
       main_lt->removeWidget(m_cur_obj_insp_widget.get());
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
+
     }
 
 }
@@ -129,12 +131,14 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
   if (!bhv_mgr) return;
 
   if (m_cur_obj_insp_widget) {
+
       m_cur_obj_insp_widget->unbind_item();
       auto coiw_ptr = m_cur_obj_insp_widget.get();
       if (coiw_ptr) main_lt->removeWidget(coiw_ptr);
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
       none_item_placeholder->show();
+
     }
 
   if (astate->ws_mgr->has_wss()) {
@@ -182,7 +186,9 @@ void object_inspector_widget_t::cur_ws_changed() {
   ws_items_list->clearSelection();
 
   if (astate->ws_mgr->has_wss()) {
+
       auto cur_ws = astate->ws_mgr->get_cur_ws();
+
       if (cur_ws) {
           for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++) {
               ws_items_list->addItem(
@@ -191,6 +197,7 @@ void object_inspector_widget_t::cur_ws_changed() {
                     );
             }
         }
+
     }
 
   cur_ws_selected_item_changed();

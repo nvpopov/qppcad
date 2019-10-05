@@ -104,6 +104,7 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
       QString name_truncated = QString::fromStdString(name_str).left(trc_name);
       if (name_str.length() > trc_name) name_truncated += "...";
       ws_item_name->setText(name_truncated);
+      ws_item_name->setToolTip(QString::fromStdString(name_str));
 
       std::string type_str = m_binded_item->compose_type_descr();
       QString type_truncated = QString::fromStdString(type_str).left(trc_type);

@@ -401,6 +401,8 @@ QPushButton::flat:pressed {
 
 qpp--cad--qspoiler_widget_t {
  background : rgb(71, 71, 71);
+ border: 1px solid rgb(68, 68, 68);
+ border-radius: 2px;
 }
 
 QRadioButton:disabled {
