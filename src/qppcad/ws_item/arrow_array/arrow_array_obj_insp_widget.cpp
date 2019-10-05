@@ -58,8 +58,8 @@ void arrow_array_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
 
-  auto _as_aa = _binding_item->cast_as<arrow_array_t>();
-  if (_as_aa) {
+  if (auto _as_aa = _binding_item->cast_as<arrow_array_t>(); _as_aa != nullptr) {
+
       b_aa = _as_aa;
       aa_settings_src->bind_value(&b_aa->m_src, _as_aa);
       aa_displ_eps->bind_value(&b_aa->m_displ_eps, _as_aa);
@@ -69,6 +69,7 @@ void arrow_array_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       aa_unf_arrow_cap_scale->bind_value(&b_aa->m_unf_arrow_cap_scale);
       aa_arrow_color->bind_value(&b_aa->m_color);
       aa_affected_by_sv->bind_value(&b_aa->m_affected_by_sv);
+
     }
 
 }

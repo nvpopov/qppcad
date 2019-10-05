@@ -14,11 +14,19 @@ namespace qpp {
 
       public:
 
+        node_book_t *b_nb{nullptr};
+
+        qspoiler_widget_t *gb_nb_settings;
+        QFormLayout *gb_nb_settings_lt;
+        qbinded_checkbox_t *nb_highlight_dirty_nodes;
+        qbinded_checkbox_t *nb_auto_recompute;
+
         node_book_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+
     };
 
   } // namespace qpp::cad

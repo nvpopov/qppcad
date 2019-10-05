@@ -37,15 +37,21 @@ void node_book_graphics_view_t::wheelEvent(QWheelEvent *event) {
 
   //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
-  if (event /*&& event->modifiers() == Qt::ControlModifier*/) {
+  if (event && event->modifiers() == Qt::ControlModifier) {
+
       double scaleFactor = 1.05;
       if (event->delta() > 0) scale(scaleFactor, scaleFactor);
       else scale(1.0 / scaleFactor, 1.0 / scaleFactor);
       event->accept();
       return;
+
     }
 
-  //QGraphicsView::wheelEvent(event);
+  if (QGraphicsItem *item = itemAt(event->pos()); item != nullptr) {
+
+      QGraphicsView::wheelEvent(event);
+
+    }
 
 }
 

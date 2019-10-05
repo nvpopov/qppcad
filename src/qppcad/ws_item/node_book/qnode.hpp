@@ -18,6 +18,7 @@ namespace qpp {
   namespace cad {
 
     class node_book_graphics_scene_t;
+
     class qnode_t : public QGraphicsItem, public std::enable_shared_from_this<qnode_t> {
 
       public:

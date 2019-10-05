@@ -59,64 +59,92 @@ void qnode_t::construct_inplace_widgets() {
         switch (m_sf_node->m_ipl_types[i].m_type) {
 
           case sflow_parameter_e::sfpar_int : {
+
               qbinded_int_spinbox_t *b_sb = new qbinded_int_spinbox_t;
               b_sb->set_min_max_step(-100000, 100000, 1);
               sflow_parameter_int_t *sf_par_int =
                   m_sf_node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
+
               if (sf_par_int) {
+
                   b_sb->bind_value(&sf_par_int->m_value, master_item);
+
                   if (master_item) {
                       b_sb->m_updated_externally_event = true;
                       b_sb->m_upd_flag = ws_item_updf_regenerate_content;
                     }
+
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
+
                 }
+
               break;
+
             }
 
           case sflow_parameter_e::sfpar_float : {
+
               qbinded_float_spinbox_t *b_sb = new qbinded_float_spinbox_t;
               sflow_parameter_float_t *sf_par_float =
                   m_sf_node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
+
               if (sf_par_float) {
+
                   b_sb->bind_value(&sf_par_float->m_value, master_item);
+
                   if (master_item) {
                       b_sb->m_updated_externally_event = true;
                       b_sb->m_upd_flag = ws_item_updf_regenerate_content;
                     }
+
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
                 }
+
               break;
+
             }
 
           case sflow_parameter_e::sfpar_v3f : {
+
               qbinded_float3_input_t *b_v3f = new qbinded_float3_input_t;
               sflow_parameter_v3f_t *sf_par_v3f =
                   m_sf_node->m_ipl[i]->cast_as<sflow_parameter_v3f_t>();
+
               if (sf_par_v3f) {
+
                   b_v3f->bind_value(&sf_par_v3f->m_value, master_item);
+
                   if (master_item) {
                       b_v3f->m_updated_externally_event = true;
                       b_v3f->m_upd_flag = ws_item_updf_regenerate_content;
                     }
+
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_v3f;
                   m_inplace_wdgts.push_back(b_v3f);
+
                 }
+
               break;
+
             }
 
           case sflow_parameter_e::sfpar_ws_item : {
+
               qbinded_ws_item_combobox_t *b_wsc = new qbinded_ws_item_combobox_t;
               b_wsc->m_type_id = geom_view_t::get_type_static();
+
               sflow_parameter_ws_item_t *sf_par_wsi =
                   m_sf_node->m_ipl[i]->cast_as<sflow_parameter_ws_item_t>();
+
               if (sf_par_wsi) {
+
                   b_wsc->bind_value(&sf_par_wsi->m_value, master_item);
+
                   if (master_item) {
                       b_wsc->m_updated_externally_event = true;
                       b_wsc->m_upd_flag = ws_item_updf_regenerate_content;
@@ -124,8 +152,11 @@ void qnode_t::construct_inplace_widgets() {
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_wsc;
                   m_inplace_wdgts.push_back(b_wsc);
+
                 }
+
               break;
+
             }
 
           case sflow_parameter_e::sfpar_bool : {

@@ -14,7 +14,8 @@ namespace qpp {
 
       public:
 
-        arrow_array_t *b_aa;
+        arrow_array_t *b_aa{nullptr};
+
         qspoiler_widget_t *gb_aa_settings;
         QFormLayout *gb_aa_settings_lt;
         qbinded_ws_item_combobox_t *aa_settings_src;
