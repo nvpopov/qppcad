@@ -12,8 +12,10 @@ sf_float_prop_node_t::sf_float_prop_node_t() {
   };
 
   m_ipl_types = {
-    {sflow_parameter_e::sfpar_float, "value", true}
+    {sflow_parameter_e::sfpar_float, "", true}
   };
+
+  m_front_end_width = opt<int>(130);
 
 }
 
@@ -78,8 +80,10 @@ sf_float_final_node_t::sf_float_final_node_t() {
   };
 
   m_ipl_types = {
-    {sflow_parameter_e::sfpar_float, "value", false}
+    {sflow_parameter_e::sfpar_float, "", false}
   };
+
+  m_front_end_width = opt<int>(130);
 
 }
 

@@ -5,6 +5,7 @@
 #include <qppcad/sflow/sflow_parameter.hpp>
 #include <qppcad/core/qpp_object.hpp>
 #include <qppcad/sflow/sflow_calc_meta.hpp>
+
 #ifdef EXTENDED_SFLOW
 #include <qppcad/sflow/sflow_parameter_ws_item.hpp>
 #endif
@@ -17,22 +18,28 @@ namespace qpp {
     class sflow_connectivity_data_t;
 
     struct sflow_socket_info_t {
+
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         size_t m_total_con{0};
         std::string m_socket_name{"Unknown"};
+
     };
 
     struct sflow_inplace_parameter_t {
+
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         std::string m_name{"Unknown"};
         bool m_editable{false};
+
     };
 
     struct sflow_connectivity_data_t {
+
         std::shared_ptr<sflow_node_t> m_inp_node{nullptr};
         std::shared_ptr<sflow_node_t> m_out_node{nullptr};
         std::optional<size_t> m_inp_socket;
         std::optional<size_t> m_out_socket;
+
     };
 
     /**
@@ -146,9 +153,11 @@ namespace qpp {
 
         template<typename T>
         T* get_pars_as(size_t inp_idx, std::vector<std::shared_ptr<sflow_parameter_t>> &data_vec) {
+
           if (inp_idx >= data_vec.size()) return nullptr;
           if (!data_vec[inp_idx]) return nullptr;
           return data_vec[inp_idx]->cast_as<T>();
+
         }
 
         //if false flow stops

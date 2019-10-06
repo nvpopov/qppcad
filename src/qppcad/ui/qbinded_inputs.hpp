@@ -217,6 +217,7 @@ namespace qpp {
         void set_suffix(QString &new_suffix);
         void set_empty_suffix();
         void set_default_suffix();
+        void set_size(int new_size);
         explicit qbinded_float3_input_t(QWidget *parent = nullptr);
 
       private slots:
@@ -233,11 +234,13 @@ namespace qpp {
       public:
 
         QColor m_stored_color;
+
         explicit qbinded_color3_input_t(QWidget *parent = nullptr);
         void load_value_ex() override;
         void mousePressEvent(QMouseEvent *event) override;
 
       protected:
+
           void paintEvent(QPaintEvent *event) override;
 
     };

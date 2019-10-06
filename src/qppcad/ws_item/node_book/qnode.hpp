@@ -63,6 +63,9 @@ namespace qpp {
         QFormLayout *m_inplace_wdgt_lt{nullptr};
         std::vector<QWidget*> m_inplace_wdgts;
 
+        // item state
+        bool m_pressed;
+
         explicit qnode_t(QGraphicsItem *parent = nullptr);
         ~qnode_t();
 
@@ -79,9 +82,6 @@ namespace qpp {
                    const QStyleOptionGraphicsItem * option,
                    QWidget * widget) override;
 
-        // item state
-        bool m_pressed;
-
       protected:
 
         // overriding mouse events
@@ -91,7 +91,7 @@ namespace qpp {
 
     };
 
-  } // namespace cad
+  } // namespace qpp::cad
 
 } // namespace qpp
 

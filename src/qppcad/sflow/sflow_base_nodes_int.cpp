@@ -15,7 +15,7 @@ sf_int_prop_node_t::sf_int_prop_node_t() : sflow_node_t () {
     {sflow_parameter_e::sfpar_int, "value", true}
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = opt<int>(130);
 
 }
 
@@ -46,7 +46,7 @@ sf_int_final_node_t::sf_int_final_node_t() : sflow_node_t () {
     {sflow_parameter_e::sfpar_int, "value", false}
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = opt<int>(130);
 
 }
 
@@ -115,7 +115,7 @@ sf_int_sum_int_node_t::sf_int_sum_int_node_t() {
     {sflow_parameter_e::sfpar_int, 0, "src2"}
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = opt<int>(130);
 
 }
 
@@ -152,7 +152,7 @@ sf_int_patb_const_node_t::sf_int_patb_const_node_t() {
     {sflow_parameter_e::sfpar_int, "b", true}
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = opt<int>(130);
 
 }
 
@@ -186,7 +186,7 @@ sf_int_mul_int_node_t::sf_int_mul_int_node_t() {
     {sflow_parameter_e::sfpar_int, 0, "src2"}
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = opt<int>(130);
 
 }
 

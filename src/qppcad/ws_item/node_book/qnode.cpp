@@ -87,6 +87,9 @@ void qnode_t::construct_inplace_widgets() {
           case sflow_parameter_e::sfpar_float : {
 
               qbinded_float_spinbox_t *b_sb = new qbinded_float_spinbox_t;
+              b_sb->set_min_max_step(-100000, 100000, 0.001, 3);
+              //b_sb->setFixedWidth(170);
+
               sflow_parameter_float_t *sf_par_float =
                   m_sf_node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
 
@@ -111,6 +114,8 @@ void qnode_t::construct_inplace_widgets() {
           case sflow_parameter_e::sfpar_v3f : {
 
               qbinded_float3_input_t *b_v3f = new qbinded_float3_input_t;
+              b_v3f->set_min_max_step(-10000, 10000, 0.01);
+
               sflow_parameter_v3f_t *sf_par_v3f =
                   m_sf_node->m_ipl[i]->cast_as<sflow_parameter_v3f_t>();
 

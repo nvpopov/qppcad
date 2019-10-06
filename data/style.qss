@@ -297,6 +297,10 @@ qpp--cad--object_inspector_widget_t QTabWidget qpp--cad--qspoiler_widget_t {
  margin-bottom: 5px;
 }
 
+qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
+ margin-left: 3px;
+}
+
 qpp--cad--object_inspector_widget_t QTabBar::tab:selected {
  background-color: rgb(120, 120, 120);
 }

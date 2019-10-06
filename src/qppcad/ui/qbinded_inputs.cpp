@@ -57,6 +57,7 @@ void qbinded_float_spinbox_t::set_min_max_step(double new_min,
 qbinded_float_spinbox_t::qbinded_float_spinbox_t(QWidget *parent) : QDoubleSpinBox (parent) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   setAlignment(Qt::AlignCenter);
@@ -255,6 +256,12 @@ void qbinded_float3_input_t::set_default_suffix() {
 
   app_state_t *astate = app_state_t::get_inst();
   set_suffix(astate->m_spatial_suffix);
+
+}
+
+void qbinded_float3_input_t::set_size(int new_size) {
+
+  for (auto sb : {sb_x, sb_y, sb_z}) sb->setFixedWidth(new_size);
 
 }
 
