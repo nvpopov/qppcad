@@ -45,6 +45,9 @@ void node_book_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
 void node_book_extended_editor_t::update_from_ws_item() {
 
   ws_item_extended_editor_t::update_from_ws_item();
+
+  if (m_binded_nb) m_binded_nb->execute();
+
   m_gr_view->update();
 
 }

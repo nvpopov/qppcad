@@ -177,7 +177,7 @@ void node_book_t::updated_externally(uint32_t update_reason) {
 
   ws_item_t::updated_externally(update_reason);
 
-  if (update_reason & ws_item_updf_regenerate_content) execute();
+  if (m_auto_recompute && (update_reason & ws_item_updf_regenerate_content)) execute();
 
 }
 
