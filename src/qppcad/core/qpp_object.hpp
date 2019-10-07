@@ -64,49 +64,6 @@ namespace qpp {
 
     };
 
-    template <char... chars>
-    using char_as_int_seq = std::integer_sequence<char, chars...>;
-
-    template <typename T, T... chars>
-    constexpr char_as_int_seq<chars...> operator""_t_name() { return { }; }
-
-
-    template<class base, char... chars>
-    class derived_qpp_object_t : public qpp_object_t {
-
-      public:
-
-        static const char* get_chars() {
-          static constexpr char str[sizeof...(chars) + 1] = { chars..., '\0' };
-          return str;
-        }
-
-        virtual size_t get_type() const override {
-          return get_type_info_static()->get_type();
-        }
-
-        virtual const std::string& get_type_name() const override {
-          return get_type_info_static()->get_type_name();
-        }
-
-        virtual const qtype_info* get_type_info() const override {
-          return get_type_info_static();
-        }
-
-        static size_t get_type_static() {
-          return get_type_info_static()->get_type();
-        }
-        static const std::string& get_type_name_static() {
-          return get_type_info_static()->get_type_name();
-        }
-
-        static const qtype_info* get_type_info_static() {
-          static const qtype_info type_info_static(get_chars(), base::get_type_info_static());
-          return &type_info_static;
-        }
-
-    };
-
   } // namespace qpp::cad
 
 } // namespace qpp

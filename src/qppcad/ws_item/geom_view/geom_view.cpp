@@ -1523,8 +1523,8 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   ws_item_t::load_from_json(data, rep_info);
 
-  if (data.find(JSON_GEOM_VIEW_DIM) != data.end()) {
-      m_geom->DIM = data[JSON_GEOM_VIEW_DIM];
+  if (auto val_itr = data.find(JSON_GEOM_VIEW_DIM); val_itr != data.end()) {
+      m_geom->DIM = val_itr.value();
       m_geom->cell.DIM = m_geom->DIM;
     }
 
@@ -1578,11 +1578,11 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
     }
 
-  if (data.find(JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE) != data.end()) {
+  if (auto val_itr = data.find(JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE); val_itr != data.end()) {
 
       m_type_color_override.clear();
 
-      for (const auto &rec : data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE]) {
+      for (const auto &rec : val_itr.value()) {
 
           size_t type_idx = rec[0].get<size_t>();
           float tco_r = rec[1].get<float>();
@@ -1600,12 +1600,12 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   if (m_geom->DIM>0) {
 
-      if (data.find(JSON_GEOM_VIEW_CELL) != data.end()) {
+      if (auto val_itr = data.find(JSON_GEOM_VIEW_CELL); val_itr != data.end()) {
 
           for (uint8_t i = 0; i < m_geom->DIM; i++) {
-              vector3<float> cellv(data[JSON_GEOM_VIEW_CELL][i][0].get<float>(),
-                  data[JSON_GEOM_VIEW_CELL][i][1].get<float>(),
-                  data[JSON_GEOM_VIEW_CELL][i][2].get<float>());
+              vector3<float> cellv(val_itr.value()[i][0].get<float>(),
+                                   val_itr.value()[i][1].get<float>(),
+                                   val_itr.value()[i][2].get<float>());
               m_geom->cell.v[i] = cellv;
             }
         } else {
@@ -1615,17 +1615,17 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
     }
 
-  if (data.find(JSON_GEOM_VIEW_XFIELD_NAMES) != data.end()) {
+  if (auto val_itr = data.find(JSON_GEOM_VIEW_XFIELD_NAMES); val_itr != data.end()) {
 
       std::vector<STRING_EX> fn;
       std::vector<basic_types> ft;
 
-      auto &data_xf_names = data[JSON_GEOM_VIEW_XFIELD_NAMES];
+      auto &data_xf_names = val_itr.value();
       std::transform(data_xf_names.begin(), data_xf_names.end(), std::back_inserter(fn),
                      [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
 
-      if (data.find(JSON_GEOM_VIEW_XFIELD_TYPES) != data.end())
-        for (auto &elem : data[JSON_GEOM_VIEW_XFIELD_TYPES]) {
+      if (auto val_itr2 = data.find(JSON_GEOM_VIEW_XFIELD_TYPES); val_itr2 != data.end())
+        for (auto &elem : val_itr2.value()) {
             STRING_EX fv = elem.get<STRING_EX>();
             if (fv == "b") ft.push_back(type_bool);
             if (fv == "i") ft.push_back(type_int);
@@ -1640,8 +1640,8 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
     }
 
-  if (data.find(JSON_GEOM_VIEW_ATOMS) != data.end())
-    for (const auto &atom : data[JSON_GEOM_VIEW_ATOMS]) {
+  if (auto val_itr = data.find(JSON_GEOM_VIEW_ATOMS); val_itr != data.end())
+    for (const auto &atom : val_itr.value()) {
 
         m_geom->add(atom[0].get<std::string>(),
             vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
@@ -1683,9 +1683,9 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
       }
 
-  if (data.find(JSON_GEOM_VIEW_BONDING_TABLE) != data.end()) {
+  if (auto val_itr = data.find(JSON_GEOM_VIEW_BONDING_TABLE); val_itr != data.end()) {
 
-      for (auto &elem : data[JSON_GEOM_VIEW_BONDING_TABLE]) {
+      for (auto &elem : val_itr.value()) {
 
           int type1 = m_geom->type_of_atom(elem[0].get<std::string>());
           int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
@@ -1700,25 +1700,26 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
     }
 
-  if (data.find(JSON_GEOM_VIEW_ANIMATIONS) != data.end()) {
+  if (auto val_itr = data.find(JSON_GEOM_VIEW_ANIMATIONS); val_itr != data.end()) {
 
       bool static_anim_found{false};
 
-      for (auto &anim : data[JSON_GEOM_VIEW_ANIMATIONS]) {
+      for (auto &anim : val_itr.value()) {
 
           geom_anim_record_t<float> tmp_anim_rec;
 
-          if (anim.find(JSON_GEOM_VIEW_ANIMATION_NAME) != anim.end())
-            tmp_anim_rec.m_anim_name = anim[JSON_GEOM_VIEW_ANIMATION_NAME];
-          else tmp_anim_rec.m_anim_name = "generic1";
+          if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_NAME); val_itr2 != anim.end())
+            tmp_anim_rec.m_anim_name = val_itr2.value();
+          else
+            tmp_anim_rec.m_anim_name = "generic1";
 
-          if (anim.find(JSON_GEOM_VIEW_ANIMATION_TYPE) != anim.end())
-            tmp_anim_rec.m_anim_type = anim[JSON_GEOM_VIEW_ANIMATION_TYPE];
+          if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_TYPE); val_itr2 != anim.end())
+            tmp_anim_rec.m_anim_type = val_itr2.value();
 
-          if (anim.find(JSON_GEOM_VIEW_ANIMATION_FRAMES) != anim.end()) {
-              tmp_anim_rec.frames.reserve(anim[JSON_GEOM_VIEW_ANIMATION_FRAMES].size());
+          if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_FRAMES); val_itr2 != anim.end()) {
+              tmp_anim_rec.frames.reserve(val_itr2.value().size());
 
-              for (auto &frame : anim[JSON_GEOM_VIEW_ANIMATION_FRAMES]) {
+              for (auto &frame : val_itr2.value()) {
 
                   tmp_anim_rec.frames.resize(tmp_anim_rec.frames.size() + 1);
                   size_t nf_id = tmp_anim_rec.frames.size() - 1;

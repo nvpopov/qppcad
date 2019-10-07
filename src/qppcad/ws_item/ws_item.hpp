@@ -86,7 +86,8 @@ namespace qpp {
     const uint8_t ws_item_render_order_5   = 5;
     const uint8_t ws_item_render_order_max = 6;
 
-    class ws_item_t : public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
+    class ws_item_t :
+        public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
 
