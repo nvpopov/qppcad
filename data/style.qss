@@ -277,7 +277,7 @@ qpp--cad--object_inspector_widget_t QTabWidget::pane {
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab:first, qpp--cad--object_inspector_widget_t QTabBar::tab:only-one {
- margin-left:4px !important;
+ margin-left: 0px !important;
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab {
@@ -287,7 +287,7 @@ qpp--cad--object_inspector_widget_t QTabBar::tab {
  padding-left: 6px;
  padding-bottom: 2px;
  padding-right: 6px;
- margin-left:6px;
+ margin-left: 3px;
  border: 1px solid rgb(70, 70, 70);
  border-radius: 3px;
  margin-bottom: 5px;
@@ -298,7 +298,7 @@ qpp--cad--object_inspector_widget_t QTabWidget qpp--cad--qspoiler_widget_t {
 }
 
 qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
- margin-left: 3px;
+ margin-left: 0px;
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab:selected {
@@ -313,21 +313,6 @@ qpp--cad--qembed_window_t {
  border-top: 1px inset rgb(65, 65, 65);
  border-left: 1px inset rgb(65, 65, 65);
  margin-right: -2px;
-}
-
-QGroupBox {
- border: 1px inset rgb(65, 65, 65);
- padding-top: 25px;
- background: rgb(65, 65, 65);
-}
-
-QGroupBox::title {
- subcontrol-origin: margin;
- subcontrol-position: top center;
- padding-left: 2000px;
- padding-right: 2000px;
- padding-bottom:2px;
- background-color: rgb(115, 115, 115);
 }
 
 QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
@@ -405,7 +390,7 @@ QPushButton::flat:pressed {
 
 qpp--cad--qspoiler_widget_t {
  background : rgb(71, 71, 71);
- border: 1px solid rgb(68, 68, 68);
+ border: 1px solid rgb(64, 64, 64);
  border-radius: 2px;
 }
 

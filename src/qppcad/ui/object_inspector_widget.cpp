@@ -57,7 +57,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::provide_context_menu_for_ws_items);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 361, true, 0);
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 359, true, 0);
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
@@ -141,36 +141,24 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
 
     }
 
-  if (astate->ws_mgr->has_wss()) {
+  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
 
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
+  if (!ok) return;
 
-      if (cur_ws) {
+  size_t thash = cur_it->get_type();
+  auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
+  if (obj_insp_w) {
 
-          auto cur_it = cur_ws->get_selected();
+      // a dirty hack for preventing object inspectors widgets from being unbounded
+      for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
 
-          if (cur_it) {
+      none_item_placeholder->hide();
+      main_lt->addWidget(obj_insp_w.get());
+      m_cur_obj_insp_widget = obj_insp_w;
+      obj_insp_w->show();
+      obj_insp_w->bind_to_item(cur_it.get());
 
-              size_t thash = cur_it->get_type();
-              auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
-              if (obj_insp_w) {
-
-                  // a dirty hack for preventing object inspectors widgets to be unbounded
-                  for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
-
-                  none_item_placeholder->hide();
-                  main_lt->addWidget(obj_insp_w.get());
-                  m_cur_obj_insp_widget = obj_insp_w;
-                  obj_insp_w->show();
-                  obj_insp_w->bind_to_item(cur_it);
-
-                }
-
-            } // cur_it
-
-        } // cur_ws
-
-    } // astate->ws_mgr->has_wss()
+    }
 
 }
 
@@ -185,20 +173,12 @@ void object_inspector_widget_t::cur_ws_changed() {
   ws_items_list->clear();
   ws_items_list->clearSelection();
 
-  if (astate->ws_mgr->has_wss()) {
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-
-      if (cur_ws) {
-          for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++) {
-              ws_items_list->addItem(
-                    QString::fromStdString(fmt::format("[{}] {} ",
-                                                       i, cur_ws->m_ws_items[i]->m_name))
-                    );
-            }
-        }
-
-    }
+  if (cur_ws)
+    for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++)
+      ws_items_list->addItem(QString::fromStdString(fmt::format("[{}] {} ",
+                             i, cur_ws->m_ws_items[i]->m_name)));
 
   cur_ws_selected_item_changed();
   ws_items_list->blockSignals(false);
@@ -213,22 +193,20 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
 
   ws_items_list->blockSignals(true);
 
-  if (astate->ws_mgr->has_wss()) {
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
+  if (cur_ws) {
 
-      if (cur_ws) {
+      astate->log(fmt::format("DEBUG ::cur_ws_selected_item_changed(), "
+                              "[num_wsi = {}]", cur_ws->m_ws_items.size()));
 
-          astate->log(fmt::format("DEBUG ::cur_ws_selected_item_changed(), "
-                                  "[num_wsi = {}]", cur_ws->m_ws_items.size()));
-          auto cur_id = cur_ws->get_selected_idx();
-          if (cur_id) {
-              ws_items_list->item(*cur_id)->setSelected(true);
-              ws_items_list->scrollToItem(ws_items_list->item(*cur_id));
-            }
-          else {
-              ws_items_list->clearSelection();
-            }
+      auto cur_id = cur_ws->get_selected_idx();
+
+      if (cur_id) {
+          ws_items_list->item(*cur_id)->setSelected(true);
+          ws_items_list->scrollToItem(ws_items_list->item(*cur_id));
+        } else {
+          ws_items_list->clearSelection();
         }
 
     }
@@ -244,21 +222,23 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
 
   astate->log("DEBUG: ui_cur_ws_selected_item_changed");
 
-  if (astate->ws_mgr->has_wss()) {
-      auto cur_ws = astate->ws_mgr->get_cur_ws();
-      if (cur_ws) {
-          cur_ws->set_selected_item(size_t(ws_items_list->currentRow()), true);
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
-          if (ws_items_list->currentRow() != -1) {
-              ws_items_list->blockSignals(true);
-              ws_items_list->item(ws_items_list->currentRow())->setSelected(true);
-              ws_items_list->blockSignals(false);
-            }
+  if (cur_ws) {
 
-          astate->make_viewport_dirty();
-        }
+    cur_ws->set_selected_item(size_t(ws_items_list->currentRow()), true);
 
-    }
+    if (ws_items_list->currentRow() != -1) {
+
+        ws_items_list->blockSignals(true);
+        ws_items_list->item(ws_items_list->currentRow())->setSelected(true);
+        ws_items_list->blockSignals(false);
+
+      }
+
+    astate->make_viewport_dirty();
+
+  }
 
   //TODO: probably fix twin things
   //update_ws_items_view_widget();
@@ -290,7 +270,9 @@ void object_inspector_widget_t::refresh_button_clicked() {
 void object_inspector_widget_t::add_new_ws_item_button_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
+
   if (!astate->ws_mgr->has_wss()) return;
+
   add_new_ws_item_widget_t add_dialog;
   add_dialog.exec();
 
@@ -302,20 +284,22 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
 
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
 
-      if (!ok) return;
+  if (!ok) return;
 
-      size_t total_ext_editors{0};
+  size_t total_ext_editors{0};
 
   std::vector<qextended_action*> ext_acts;
 
   for (auto &ext_edt_info : astate->ws_mgr->m_bhv_mgr->m_ext_editors_info)
     if (ext_edt_info.second.m_type == cur_it->get_type()) {
+
         total_ext_editors++;
         qextended_action *new_act = new qextended_action;
         new_act->setText(QString::fromStdString(ext_edt_info.second.m_full_name));
         new_act->m_joined_data[0] = ext_edt_info.second.m_type;
         new_act->m_joined_data[1] = ext_edt_info.second.m_order;
         ext_acts.push_back(new_act);
+
       }
 
   if (total_ext_editors <= 1) return;

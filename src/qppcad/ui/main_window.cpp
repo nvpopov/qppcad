@@ -1167,15 +1167,15 @@ void main_window_t::cur_ws_properties_changed() {
 
   if (ok) {
 
-      bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
-      tp_edit_mode_item->blockSignals(true);
-      tp_edit_mode_content->blockSignals(true);
-      tp_edit_mode_item->setChecked(check_t);
-      tp_edit_mode_content->setChecked(!check_t);
-      tp_edit_mode_item->blockSignals(false);
-      tp_edit_mode_content->blockSignals(false);
+    bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
+    tp_edit_mode_item->blockSignals(true);
+    tp_edit_mode_content->blockSignals(true);
+    tp_edit_mode_item->setChecked(check_t);
+    tp_edit_mode_content->setChecked(!check_t);
+    tp_edit_mode_item->blockSignals(false);
+    tp_edit_mode_content->blockSignals(false);
 
-    }
+  }
 
   astate->make_viewport_dirty();
 

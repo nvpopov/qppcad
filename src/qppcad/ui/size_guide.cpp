@@ -56,15 +56,15 @@ int size_guide_t::tool_panel_icon_size() {
 }
 
 int size_guide_t::obj_insp_w() {
-  return 390;
+  return 380;
 }
 
 int size_guide_t::obj_insp_table_w() {
-  return int(obj_insp_w() * 0.93);
+  return int(obj_insp_w() * 0.94);
 }
 
 int size_guide_t::obj_insp_anim_w(){
-  return int(obj_insp_w() * 0.93);
+  return int(obj_insp_w() * 0.94);
 }
 
 int size_guide_t::obj_insp_item_list_max_h() {
