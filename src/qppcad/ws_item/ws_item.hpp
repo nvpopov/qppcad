@@ -7,6 +7,7 @@
 #include <geom/ray.hpp>
 #include <qppcad/core/serializable.hpp>
 #include <qppcad/core/qpp_object.hpp>
+#include <qppcad/core/iupdatable.hpp>
 
 #include <QPainter>
 
@@ -87,7 +88,9 @@ namespace qpp {
     const uint8_t ws_item_render_order_max = 6;
 
     class ws_item_t :
-        public std::enable_shared_from_this<ws_item_t>, public qpp_object_t {
+        public std::enable_shared_from_this<ws_item_t>,
+        public qpp_object_t,
+        public iupdatable_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
 
@@ -216,7 +219,7 @@ namespace qpp {
          */
         virtual const vector3<float> get_gizmo_content_barycenter();
 
-        virtual void updated_externally(uint32_t update_reason = ws_item_updf_generic);
+        void updated_externally(uint32_t update_reason = ws_item_updf_generic) override;
 
         virtual void on_begin_node_gizmo_translate();
         virtual void on_end_node_gizmo_translate();

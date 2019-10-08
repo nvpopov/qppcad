@@ -2,11 +2,12 @@
 #define QPPCAD_NODE_BOOK_QNODE
 
 #include <qppcad/core/qppcad.hpp>
+#include <qppcad/sflow/sflow_node.hpp>
+#include <qppcad/ws_item/node_book/qnode_socket.hpp>
+#include <qppcad/core/iupdatable.hpp>
 #include <QGraphicsItem>
 #include <QObject>
 #include <QPainter>
-#include <qppcad/sflow/sflow_node.hpp>
-#include <qppcad/ws_item/node_book/qnode_socket.hpp>
 #include <QGraphicsProxyWidget>
 #include <QWidget>
 #include <QFormLayout>
@@ -19,8 +20,9 @@ namespace qpp {
 
     class node_book_graphics_scene_t;
 
-    class qnode_t : public QGraphicsItem, public std::enable_shared_from_this<qnode_t> {
-
+    class qnode_t : public QGraphicsItem,
+                    public std::enable_shared_from_this<qnode_t>,
+                    public iupdatable_t {
       public:
 
         enum { Type = UserType + 32 };
@@ -68,6 +70,8 @@ namespace qpp {
 
         explicit qnode_t(QGraphicsItem *parent = nullptr);
         ~qnode_t();
+
+        void updated_externally(uint32_t update_reason) override;
 
         void construct_inplace_widgets();
         int type() const override;

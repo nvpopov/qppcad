@@ -32,6 +32,15 @@ qnode_t::~qnode_t() {
 
 }
 
+void qnode_t::updated_externally(uint32_t update_reason) {
+
+  if (!m_scene) return;
+  if (!m_scene->m_parent_node_book) return;
+
+  m_scene->m_parent_node_book->updated_externally(update_reason);
+
+}
+
 void qnode_t::construct_inplace_widgets() {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -52,9 +61,9 @@ void qnode_t::construct_inplace_widgets() {
     if (m_sf_node->m_ipl.size() > i && m_sf_node->m_ipl[i]) {
 
         QWidget *_inpl_widget{nullptr};
-        ws_item_t *master_item{nullptr};
+        //iupdatable_t *master_item{nullptr};
 
-        if (m_scene && m_scene->m_parent_node_book) master_item = m_scene->m_parent_node_book;
+        //if (m_scene && m_scene->m_parent_node_book) master_item = m_scene->m_parent_node_book;
 
         switch (m_sf_node->m_ipl_types[i].m_type) {
 
@@ -67,12 +76,9 @@ void qnode_t::construct_inplace_widgets() {
 
               if (sf_par_int) {
 
-                  b_sb->bind_value(&sf_par_int->m_value, master_item);
-
-                  if (master_item) {
-                      b_sb->m_updated_externally_event = true;
-                      b_sb->m_upd_flag = ws_item_updf_regenerate_content;
-                    }
+                  b_sb->bind_value(&sf_par_int->m_value, this);
+                  b_sb->m_updated_externally_event = true;
+                  b_sb->m_upd_flag = ws_item_updf_regenerate_content;
 
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
@@ -95,16 +101,14 @@ void qnode_t::construct_inplace_widgets() {
 
               if (sf_par_float) {
 
-                  b_sb->bind_value(&sf_par_float->m_value, master_item);
-
-                  if (master_item) {
-                      b_sb->m_updated_externally_event = true;
-                      b_sb->m_upd_flag = ws_item_updf_regenerate_content;
-                    }
+                  b_sb->bind_value(&sf_par_float->m_value,  this);
+                  b_sb->m_updated_externally_event = true;
+                  b_sb->m_upd_flag = ws_item_updf_regenerate_content;
 
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
+
                 }
 
               break;
@@ -121,12 +125,9 @@ void qnode_t::construct_inplace_widgets() {
 
               if (sf_par_v3f) {
 
-                  b_v3f->bind_value(&sf_par_v3f->m_value, master_item);
-
-                  if (master_item) {
-                      b_v3f->m_updated_externally_event = true;
-                      b_v3f->m_upd_flag = ws_item_updf_regenerate_content;
-                    }
+                  b_v3f->bind_value(&sf_par_v3f->m_value, this);
+                  b_v3f->m_updated_externally_event = true;
+                  b_v3f->m_upd_flag = ws_item_updf_regenerate_content;
 
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_v3f;
@@ -148,12 +149,13 @@ void qnode_t::construct_inplace_widgets() {
 
               if (sf_par_wsi) {
 
-                  b_wsc->bind_value(&sf_par_wsi->m_value, master_item);
+                  b_wsc->bind_value(&sf_par_wsi->m_value,
+                                    this,
+                                    m_scene->m_parent_node_book->m_parent_ws);
 
-                  if (master_item) {
-                      b_wsc->m_updated_externally_event = true;
-                      b_wsc->m_upd_flag = ws_item_updf_regenerate_content;
-                    }
+                  b_wsc->m_updated_externally_event = true;
+                  b_wsc->m_upd_flag = ws_item_updf_regenerate_content;
+
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
                   _inpl_widget = b_wsc;
                   m_inplace_wdgts.push_back(b_wsc);

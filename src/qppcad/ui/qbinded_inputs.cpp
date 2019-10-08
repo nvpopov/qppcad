@@ -436,10 +436,12 @@ qbinded_ws_item_combobox_t::qbinded_ws_item_combobox_t(QWidget *parent) {
 }
 
 void qbinded_ws_item_combobox_t::bind_value(std::shared_ptr<ws_item_t> *_binded_value,
-                                            ws_item_t *item_to_bind) {
+                                            iupdatable_t *item_to_bind,
+                                            workspace_t *binded_ws) {
   m_binded_ws_item_p = _binded_value;
-  m_binded_ws_item = item_to_bind;
-  m_binded_ws = item_to_bind->m_parent_ws;
+  m_binded_item = item_to_bind;
+  m_binded_ws = binded_ws;
+
   blockSignals(true);
   load_value();
   blockSignals(false);
@@ -480,7 +482,7 @@ void qbinded_ws_item_combobox_t::unbind_value() {
   blockSignals(true);
 
   m_binded_ws_item_p = nullptr;
-  m_binded_ws_item = nullptr;
+  m_binded_item = nullptr;
   m_binded_ws = nullptr;
 
 }
@@ -511,8 +513,8 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
 
   if (i == 0) {
       *m_binded_ws_item_p = nullptr;
-      if (m_binded_ws_item && m_updated_externally_event)
-        m_binded_ws_item->updated_externally(m_upd_flag);
+      if (m_binded_item && m_updated_externally_event)
+        m_binded_item->updated_externally(m_upd_flag);
       return;
     }
 
@@ -523,8 +525,8 @@ void qbinded_ws_item_combobox_t::value_changed(int i) {
       *m_binded_ws_item_p = itm;
     }
 
-  if (m_binded_ws_item && m_updated_externally_event)
-    m_binded_ws_item->updated_externally(m_upd_flag);
+  if (m_binded_item && m_updated_externally_event)
+    m_binded_item->updated_externally(m_upd_flag);
 
 }
 

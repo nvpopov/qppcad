@@ -206,13 +206,16 @@ void ccd_view_t::updated_externally(uint32_t update_reason) {
   ws_item_t::updated_externally(update_reason);
 
   switch (update_reason) {
+
     case ws_item_updf_regenerate_content: {
         update_connected_items();
         break;
       }
+
     default: {
         break;
       }
+
     }
 
 }

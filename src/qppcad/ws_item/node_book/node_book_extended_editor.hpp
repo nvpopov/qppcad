@@ -19,7 +19,7 @@ namespace qpp {
 
         node_book_t *m_binded_nb{nullptr};
         node_book_graphics_view_t *m_gr_view;
-        QVBoxLayout *main_lt;
+        QHBoxLayout *main_lt;
         QRectF m_stored_scene_rect;
         bool m_binded_first_time{true};
 

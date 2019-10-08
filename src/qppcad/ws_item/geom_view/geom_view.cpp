@@ -1084,19 +1084,23 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
   vector3<float> dir_s = (m_geom->pos(at2, id2) - r_btw).normalized();
 
   switch (mode) {
+
     case pair_dist_mode_e::transform_both : {
         m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
         m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
         break;
       }
+
     case pair_dist_mode_e::fix_first : {
         m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f );
         break;
       }
+
     case pair_dist_mode_e::fix_second : {
         m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
         break;
       }
+
     }
 
   astate->make_viewport_dirty();
@@ -1300,9 +1304,11 @@ void geom_view_t::recalc_gizmo_barycenter() {
   m_gizmo_barycenter = vector3<float>::Zero();
 
   if (!m_atom_idx_sel.empty() || m_geom->nat() == 0) {
+
       for (const auto& atm_idx : m_atom_idx_sel)
         m_gizmo_barycenter += m_geom->pos(atm_idx.m_atm, atm_idx.m_idx);
       m_gizmo_barycenter /= m_atom_idx_sel.size();
+
     }
   else m_gizmo_barycenter = m_aabb.min;
 
@@ -1313,7 +1319,9 @@ const vector3<float> geom_view_t::get_gizmo_content_barycenter() {
 }
 
 void geom_view_t::updated_externally(uint32_t update_reason) {
+
   ws_item_t::updated_externally(update_reason);
+
 }
 
 void geom_view_t::shift(const vector3<float> shift) {

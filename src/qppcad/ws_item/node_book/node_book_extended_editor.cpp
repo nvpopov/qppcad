@@ -5,7 +5,7 @@ using namespace qpp::cad;
 
 node_book_extended_editor_t::node_book_extended_editor_t() {
 
-  main_lt = new QVBoxLayout;
+  main_lt = new QHBoxLayout;
   main_lt->setContentsMargins(0,0,10,10);
   setLayout(main_lt);
 
