@@ -6,6 +6,7 @@
 #include <qppcad/sflow/sflow_parameter_ws_item.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qbinded_inputs.hpp>
+
 #include <QGraphicsScene>
 #include <QApplication>
 #include <QMenu>
@@ -338,23 +339,31 @@ void qnode_t::paint(QPainter *painter,
   if (is_single_node) return;
 
   for (size_t i = 0; i < m_sf_node->m_inp_types.size(); i++) {
+
       QString _pin_name = QString::fromStdString(m_sf_node->m_inp_types[i].m_socket_name);
+
       QPoint inp_sck_pos = {
         5,
         static_cast<int>(m_label_height + m_dm_i + (m_socket_size * 2 + m_socket_spacing)
         * static_cast<int>(i) + fm.height() * 0.55)
       };
+
       painter->drawText(inp_sck_pos, _pin_name);
+
     }
 
   for (size_t i = 0; i < m_sf_node->m_out_types.size(); i++) {
+
       QString _pin_name = QString::fromStdString(m_sf_node->m_out_types[i].m_socket_name);
+
       QPoint out_sck_pos = {
         m_width - 5 - fm.width(_pin_name),
         static_cast<int>(m_label_height + m_dm_o + (m_socket_size * 2 + m_socket_spacing)
         * static_cast<int>(i) + fm.height() * 0.55)
       };
+
       painter->drawText(out_sck_pos, _pin_name);
+
     }
 
 }

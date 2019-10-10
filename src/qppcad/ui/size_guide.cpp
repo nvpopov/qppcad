@@ -56,7 +56,7 @@ int size_guide_t::tool_panel_icon_size() {
 }
 
 int size_guide_t::obj_insp_w() {
-  return 380;
+  return 382;
 }
 
 int size_guide_t::obj_insp_table_w() {

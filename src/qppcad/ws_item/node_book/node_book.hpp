@@ -48,6 +48,8 @@ namespace qpp {
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;
 
         void execute();
+        void post_execute();
+        void update_output_values();
 
         py::list py_get_visible_rect();
 
