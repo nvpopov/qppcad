@@ -66,7 +66,9 @@ void pdos_view_extended_editor_t::unbind_item() {
 }
 
 bool pdos_view_extended_editor_t::can_be_binded_to(ws_item_t *item) {
-  return true;
+
+  return item && item->get_type() == pdos_view_t::get_type_static();
+
 }
 
 QString pdos_view_extended_editor_t::header_name_hint() {

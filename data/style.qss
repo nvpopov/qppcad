@@ -102,7 +102,7 @@ QSlider::handle:horizontal {
 QScrollBar:vertical {
  border: 0;
  background: rgb(90, 90, 90);
- width: 10px;
+ width: 8px;
  margin: 0;
 }
 
@@ -134,7 +134,7 @@ QScrollBar::sub-line:vertical {
 QScrollBar:horizontal {
  border: 0;
  background: rgb(90, 90, 90);
- height: 14px;
+ height: 10px;
  margin: 0;
 }
 

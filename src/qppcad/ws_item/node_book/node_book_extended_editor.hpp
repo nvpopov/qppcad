@@ -6,6 +6,7 @@
 #include <qppcad/ws_item/node_book/node_book_graphics_view.hpp>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QTreeView>
 
 namespace qpp {
 
@@ -19,6 +20,7 @@ namespace qpp {
 
         node_book_t *m_binded_nb{nullptr};
         node_book_graphics_view_t *m_gr_view;
+        QTreeView *m_nodes_trv;
         QHBoxLayout *main_lt;
         QRectF m_stored_scene_rect;
         bool m_binded_first_time{true};
