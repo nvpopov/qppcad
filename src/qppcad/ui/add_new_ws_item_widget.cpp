@@ -24,6 +24,8 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   app_state_t *astate = app_state_t::get_inst();
 
   setWindowTitle(tr("Add new item to workspace"));
+  setFixedWidth(650);
+  setFixedHeight(500);
 
   descr_list.reserve(11);
 
@@ -54,21 +56,22 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   button_lt->addWidget(cancel_button, 0, Qt::AlignCenter);
   button_lt->addStretch();
 
-  gb_type_descr = new QGroupBox(tr("Type description"));
-  gb_type_descr->setMinimumWidth(240);
-  gb_type_descr->setMaximumHeight(130);
+  gb_type_descr = new qspoiler_widget_t(tr("Type description"), nullptr, false);
+  //gb_type_descr->setMinimumWidth(240);
+  //gb_type_descr->setMaximumHeight(130);
   gb_type_descr_lt = new QVBoxLayout;
-  gb_type_descr->setLayout(gb_type_descr_lt);
+  gb_type_descr->add_content_layout(gb_type_descr_lt);
 
   type_descr_lbl = new QLabel;
+  type_descr_lbl->setObjectName("add_new_ws_item_type_desc");
   type_descr_lbl->setWordWrap(true);
   gb_type_descr_lt->addWidget(type_descr_lbl);
   gb_type_descr_lt->addStretch();
 
-  gb_ctor = new QGroupBox(tr("Constructible types"));
-  gb_ctor->setMinimumWidth(240);
+  gb_ctor = new qspoiler_widget_t(tr("Constructible types"), nullptr, false);
+  //gb_ctor->setMinimumWidth(240);
   gb_ctor_lt = new QVBoxLayout;
-  gb_ctor->setLayout(gb_ctor_lt);
+  gb_ctor->add_content_layout(gb_ctor_lt);
 
   rb_ctor_geom0d = new QRadioButton(tr("geometry [DIM=0D]"));
   connect(rb_ctor_geom0d,
@@ -160,12 +163,14 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   };
 
   type_param_ag = new QComboBox(this);
+  type_param_ag->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
   type_param_ag->setVisible(false);
   type_param_ag_lbl = new QLabel(tr("Point group"));
   type_param_ag_lbl->setVisible(false);
   label_setup(type_param_ag_lbl);
 
   type_cell_ctor_mode = new QComboBox(this);
+  type_cell_ctor_mode->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
   type_cell_ctor_mode->addItem(tr("Cubic cell"));
   type_cell_ctor_mode->addItem(tr("Ortho[3 len]"));
   type_cell_ctor_mode->addItem(tr("3 angles & 3 len"));
@@ -175,6 +180,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   label_setup(type_cell_ctor_mode_lbl);
 
   type_cell_ctor_cubic_size = new QDoubleSpinBox(this);
+  type_cell_ctor_cubic_size->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
   type_cell_ctor_cubic_size->setRange(0.00001, 100);
   type_cell_ctor_cubic_size->setValue(5);
   type_cell_ctor_cubic_size->setSuffix(astate->m_spatial_suffix);
@@ -249,12 +255,13 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
     }
   //end of construct ag_labels
 
-  gb_type_param = new QGroupBox(tr("Type parameters"), this);
-  gb_type_param->setMinimumWidth(360);
-  gb_type_param_lt = new QFormLayout(this);
-  gb_type_param->setLayout(gb_type_param_lt);
+  gb_type_param = new qspoiler_widget_t(tr("Type parameters"), nullptr, false);
+  //gb_type_param->setMinimumWidth(360);
+  gb_type_param_lt = new QFormLayout;
+  gb_type_param->add_content_layout(gb_type_param_lt);
 
   type_param_name = new QLineEdit(this);
+  type_param_name->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
   type_param_name_lbl = new QLabel("Name", this);
   label_setup(type_param_name_lbl, true);
 
@@ -272,8 +279,6 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   main_lt->addLayout(button_lt);
 
   setLayout(main_lt);
-  setMinimumWidth(300);
-  setMinimumHeight(400);
 
   connect(ok_button, &QPushButton::clicked,
           this, &add_new_ws_item_widget_t::ok_button_clicked);

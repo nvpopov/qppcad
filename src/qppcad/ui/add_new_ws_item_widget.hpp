@@ -2,6 +2,9 @@
 #define QPPCAD_ADD_NEW_WS_ITEM_WIDGET
 
 #include <qppcad/core/qppcad.hpp>
+#include <qppcad/ui/qbinded_inputs.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
+
 #include <QWidget>
 #include <QDialog>
 #include <QSpinBox>
@@ -18,7 +21,6 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QDoubleSpinBox>
-#include <qppcad/ui/qbinded_inputs.hpp>
 
 namespace qpp {
 
@@ -50,7 +52,7 @@ namespace qpp {
         QPushButton *ok_button;
         QPushButton *cancel_button;
 
-        QGroupBox *gb_ctor{nullptr};
+        qspoiler_widget_t *gb_ctor{nullptr};
         QVBoxLayout *gb_ctor_lt{nullptr};
         QRadioButton *rb_ctor_geom0d{nullptr};
         QRadioButton *rb_ctor_geom1d{nullptr};
@@ -64,7 +66,7 @@ namespace qpp {
         QRadioButton *rb_ctor_arrow_array{nullptr};
         QRadioButton *rb_ctor_py_note_book{nullptr};
 
-        QGroupBox *gb_type_descr{nullptr};
+        qspoiler_widget_t *gb_type_descr{nullptr};
         QVBoxLayout *gb_type_descr_lt{nullptr};
         QLabel *type_descr_lbl{nullptr};
 
@@ -89,7 +91,7 @@ namespace qpp {
         qbinded_float3_input_t *type_cell_ctor_c{nullptr};
         QLabel *type_cell_ctor_c_lbl{nullptr};
 
-        QGroupBox *gb_type_param{nullptr};
+        qspoiler_widget_t *gb_type_param{nullptr};
         QFormLayout *gb_type_param_lt{nullptr};
 
         QLabel *type_param_name_lbl{nullptr};
