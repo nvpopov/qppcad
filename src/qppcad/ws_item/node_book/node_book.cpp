@@ -86,6 +86,8 @@ void node_book_t::execute() {
 
   m_sflow_context->execute();
 
+  update_output_values();
+
 }
 
 void node_book_t::post_execute() {

@@ -40,6 +40,8 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                 astate->size_guide.spoiler_button_icon_h()));
   action_btn->setVisible(m_collapsable);
 
+  if (!m_collapsable) hbox_frm->addSpacing(astate->size_guide.spoiler_button_h());
+
   widget_list = new QWidget;
   widget_list->setContentsMargins(0, 0, 0, 0);
 

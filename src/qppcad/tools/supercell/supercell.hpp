@@ -3,6 +3,7 @@
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
 #include <QWidget>
 #include <QDialog>
 #include <QSpinBox>
@@ -28,7 +29,7 @@ namespace qpp {
         QSpinBox *sp_rep_b;
         QSpinBox *sp_rep_c;
 
-        QGroupBox *gb_rep_par;
+        qspoiler_widget_t *gb_rep_par;
         QFormLayout *gb_rep_par_layout;
 
         QVBoxLayout *dialog_layout;

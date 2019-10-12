@@ -1,6 +1,7 @@
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/core/app_state.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -162,30 +163,37 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
 
   app_state_t *astate = app_state_t::get_inst();
 
+  setFixedWidth(200);
   setWindowTitle(tr("Supercell generation"));
+
   dialog_layout = new QVBoxLayout;
   setLayout(dialog_layout);
 
-  gb_rep_par = new QGroupBox(tr("Parameters"));
+  gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false);
   gb_rep_par_layout = new QFormLayout;
-  gb_rep_par->setLayout(gb_rep_par_layout);
+  gb_rep_par->add_content_layout(gb_rep_par_layout);
 
   auto make_spinbox = [](){
+
       auto ret = new QSpinBox;
       ret->setMinimum(1);
       ret->setMaximum(10);
       ret->setAlignment(Qt::AlignCenter);
       ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      ret->setFixedWidth(app_state_t::get_inst()->size_guide.obj_insp_ctrl_max_w());
       return ret;
+
     };
 
   sp_rep_a = make_spinbox();
   sp_rep_b = make_spinbox();
   sp_rep_c = make_spinbox();
 
-  gb_rep_par_layout->addRow(tr("Replicate along a-axis"), sp_rep_a);
-  gb_rep_par_layout->addRow(tr("Replicate along b-axis"), sp_rep_b);
-  gb_rep_par_layout->addRow(tr("Replicate along c-axis"), sp_rep_c);
+  gb_rep_par_layout->addRow(tr("a"), sp_rep_a);
+  gb_rep_par_layout->addRow(tr("b"), sp_rep_b);
+  gb_rep_par_layout->addRow(tr("c"), sp_rep_c);
+
+  qt_hlp::resize_form_lt_lbls(gb_rep_par_layout, 70);
 
   dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   for (auto btn : dialog_bb->buttons())
