@@ -1,6 +1,6 @@
-
 #include <qppcad/tools/colorize_by_xfield/colorize_by_xfield.hpp>
 #include <qppcad/core/app_state.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -57,12 +57,15 @@ void colorize_by_xfield_widget_t::build_xfield() {
 
 colorize_by_xfield_widget_t::colorize_by_xfield_widget_t() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   main_lt = new QVBoxLayout;
   setLayout(main_lt);
+  setFixedWidth(300);
 
-  main_gb = new QGroupBox(tr("Colorize parameters"));
+  main_gb = new qspoiler_widget_t(tr("Colorize parameters"), nullptr, false, 6, 300);
   main_gb_lt = new QFormLayout;
-  main_gb->setLayout(main_gb_lt);
+  main_gb->add_content_layout(main_gb_lt);
 
   clr_low_input = new qbinded_color3_input_t;
   clr_low_input->bind_value(&clr_low);
@@ -70,10 +73,12 @@ colorize_by_xfield_widget_t::colorize_by_xfield_widget_t() {
   clr_high_input->bind_value(&clr_high);
 
   cmb_xfield_name = new QComboBox;
+  cmb_xfield_name->setFixedWidth(astate->size_guide.obj_insp_ctrl_max_w());
 
-  main_gb_lt->addRow(tr("XField name :"), cmb_xfield_name);
-  main_gb_lt->addRow(tr("Color at min :"), clr_low_input);
-  main_gb_lt->addRow(tr("Color at max :"), clr_high_input);
+  main_gb_lt->addRow(tr("XField name"), cmb_xfield_name);
+  main_gb_lt->addRow(tr("Color at min"), clr_low_input);
+  main_gb_lt->addRow(tr("Color at max"), clr_high_input);
+  qt_hlp::resize_form_lt_lbls(main_gb_lt, 170);
 
   buttons_lt = new QHBoxLayout;
   button_apply = new QPushButton(tr("Apply"));
