@@ -44,8 +44,10 @@ void node_book_t::update(float delta_time) {
   //do nothing
   ws_item_t::update(delta_time);
 
-  if (m_sflow_context->is_finished())
-    update_output_values();
+  if (m_sflow_context->is_finished()) {
+      update_output_values();
+      if (m_sflow_context->is_force_execute()) execute();
+    }
 
 }
 
@@ -77,8 +79,12 @@ void node_book_t::execute() {
 
   if (!m_sflow_context) return;
 
+  if (m_sflow_context->is_running()) {
+      m_sflow_context->force_execute();
+      return;
+    }
+
   m_sflow_context->clear_context();
-  m_sflow_context->m_nodes.clear();
 
   for (auto &elem : m_scene->m_nodes)
     m_sflow_context->add_node(elem->m_sf_node);
@@ -91,8 +97,6 @@ void node_book_t::execute() {
                                     con->m_inp_socket->m_socket_id);
 
   m_sflow_context->execute_threaded();
-
-  //update_output_values();
 
 }
 

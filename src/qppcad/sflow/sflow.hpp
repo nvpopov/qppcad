@@ -17,15 +17,18 @@ namespace qpp {
      */
     class sflow_context_t {
 
-      public:
+      private:
 
         std::vector<std::shared_ptr<sflow_node_t> > m_nodes;
         std::vector<sflow_connectivity_data_t> m_connectivity;
         sflow_calc_meta_global_t m_calc_meta_global;
 
-        std::atomic_bool m_task_executed_threaded{false};
-        std::atomic_bool m_task_finished_threaded{false};
+        std::atomic_bool m_task_is_being_executed{false};
+        std::atomic_bool m_task_has_been_finished{false};
         std::thread m_thread;
+        bool m_force_execute{false};
+
+      public:
 
         sflow_context_t();
 
@@ -39,9 +42,13 @@ namespace qpp {
         void clear_outer_nodes();
         void clear_connectivity();
 
+        void force_execute();
+        bool is_force_execute();
+
         void execute_threaded(bool debug_print = false);
         void execute_threaded_fn();
         bool is_finished();
+        bool is_running();
 
         void execute(bool debug_print = false);
         void execute_traverse(sflow_node_t *cur_node,

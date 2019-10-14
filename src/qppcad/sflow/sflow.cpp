@@ -85,6 +85,7 @@ void sflow_context_t::clear_context() {
   m_calc_meta_global.clear();
   clear_outer_nodes();
   clear_connectivity();
+  m_nodes.clear();
 
 }
 
@@ -103,17 +104,25 @@ void sflow_context_t::clear_connectivity() {
 
 }
 
+void sflow_context_t::force_execute() {
+  m_force_execute = true;
+}
+
+bool sflow_context_t::is_force_execute() {
+  return m_force_execute;
+}
+
 void sflow_context_t::execute_threaded(bool debug_print) {
 
   // tasks already executed
-  if (m_task_executed_threaded.load()) {
+  if (m_task_is_being_executed.load()) {
       return;
     }
 
   // start executing
-  m_task_executed_threaded.store(true);
+  m_task_is_being_executed.store(true);
   m_thread = std::thread(&sflow_context_t::execute_threaded_fn, this);
-  //m_thread.detach();
+  m_force_execute = false;
 
 }
 
@@ -122,22 +131,28 @@ void sflow_context_t::execute_threaded_fn() {
   for (auto &node : m_nodes)
     if (node->m_is_outer) execute_traverse(node.get(), nullptr, false);
 
-  m_task_finished_threaded.store(true);
+  m_task_has_been_finished.store(true);
 
 }
 
 bool sflow_context_t::is_finished() {
 
-  if (m_task_finished_threaded.load()) {
+  if (m_task_has_been_finished.load()) {
 
-      m_task_executed_threaded.store(false);
-      m_task_finished_threaded.store(false);
+      m_task_is_being_executed.store(false);
+      m_task_has_been_finished.store(false);
       if (m_thread.joinable()) m_thread.join();
       return true;
 
     }
 
   return false;
+
+}
+
+bool sflow_context_t::is_running() {
+
+  return m_task_is_being_executed.load();
 
 }
 
