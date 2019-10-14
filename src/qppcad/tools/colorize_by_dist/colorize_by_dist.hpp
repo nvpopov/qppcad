@@ -4,10 +4,11 @@
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ui/qbinded_inputs.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
+
 #include <QWidget>
 #include <QDialog>
 #include <QSpinBox>
-#include <QGroupBox>
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QDialogButtonBox>
@@ -33,7 +34,7 @@ namespace qpp {
 
         QVBoxLayout *main_lt;
 
-        QGroupBox *main_gb;
+        qspoiler_widget_t *main_gb;
         QFormLayout *main_gb_lt;
 
         QHBoxLayout *buttons_lt;

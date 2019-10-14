@@ -90,19 +90,27 @@ void colorize_by_dist_widget_t::init_data() {
 
 colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   main_lt = new QVBoxLayout;
   setLayout(main_lt);
+  setFixedWidth(320);
 
-  main_gb = new QGroupBox(tr("Colorize by distance : parameters"));
+  main_gb = new qspoiler_widget_t(tr("Colorize by distance : parameters"), nullptr, false, 6, 300);
   main_gb_lt = new QFormLayout;
-  main_gb->setLayout(main_gb_lt);
+  main_gb->add_content_layout(main_gb_lt);
 
   clr_input = new qbinded_color3_input_t;
   clr_input->bind_value(&clr_low);
 
   atom1_type = new QComboBox;
+  atom1_type->setFixedWidth(astate->size_guide.obj_insp_ctrl_max_w());
+
   atom2_type = new QComboBox;
+  atom2_type->setFixedWidth(astate->size_guide.obj_insp_ctrl_max_w());
+
   atom_dist_max = new QDoubleSpinBox;
+  atom_dist_max->setFixedWidth(astate->size_guide.obj_insp_ctrl_max_w());
   atom_dist_max->setMinimum(0);
   atom_dist_max->setMaximum(30);
   atom_dist_max->setSingleStep(0.1);
@@ -115,8 +123,7 @@ colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
   main_gb_lt->addRow(tr("Max. dist"), atom_dist_max);
   main_gb_lt->addRow(tr("Color"), clr_input);
 
-  app_state_t *astate = app_state_t::get_inst();
-  qt_hlp::resize_form_lt_lbls(main_gb_lt, astate->size_guide.obj_insp_lbl_w());
+  qt_hlp::resize_form_lt_lbls(main_gb_lt, 170);
 
   buttons_lt = new QHBoxLayout;
   button_apply = new QPushButton(tr("Apply"));
