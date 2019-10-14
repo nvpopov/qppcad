@@ -6,6 +6,7 @@ using namespace qpp::cad;
 void sflow_context_t::add_node(std::shared_ptr<sflow_node_t> node) {
 
   if (node) {
+
       node->m_idx_lookup = m_nodes.size();
       m_nodes.push_back(node);
 
@@ -102,7 +103,41 @@ void sflow_context_t::clear_connectivity() {
 
 }
 
-void sflow_context_t::compile_flow() {
+void sflow_context_t::execute_threaded(bool debug_print) {
+
+  // tasks already executed
+  if (m_task_executed_threaded.load()) {
+      return;
+    }
+
+  // start executing
+  m_task_executed_threaded.store(true);
+  m_thread = std::thread(&sflow_context_t::execute_threaded_fn, this);
+  //m_thread.detach();
+
+}
+
+void sflow_context_t::execute_threaded_fn() {
+
+  for (auto &node : m_nodes)
+    if (node->m_is_outer) execute_traverse(node.get(), nullptr, false);
+
+  m_task_finished_threaded.store(true);
+
+}
+
+bool sflow_context_t::is_finished() {
+
+  if (m_task_finished_threaded.load()) {
+
+      m_task_executed_threaded.store(false);
+      m_task_finished_threaded.store(false);
+      if (m_thread.joinable()) m_thread.join();
+      return true;
+
+    }
+
+  return false;
 
 }
 
@@ -135,6 +170,7 @@ void sflow_context_t::execute_traverse(sflow_node_t *cur_node,
   if (!node_exec_res) return;
 
   for (size_t i = 0; i < m_connectivity.size(); i++) {
+
       if (m_connectivity[i].m_out_node.get() == cur_node) {
 
           //last parameter - by reference, otherwise - copy
@@ -145,7 +181,9 @@ void sflow_context_t::execute_traverse(sflow_node_t *cur_node,
           if (pg_res == sflow_status_e::propagate_data_succes &&
               pg_meta_info_res == sflow_status_e::propagate_meta_succes)
             execute_traverse(m_connectivity[i].m_inp_node.get(), cur_node);
+
         }
+
     }
 
 }

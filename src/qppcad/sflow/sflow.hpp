@@ -1,6 +1,8 @@
 #ifndef QPPCAD_SINGLE_FLOW
 #define QPPCAD_SINGLE_FLOW
 
+#include <thread>
+
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/sflow/sflow_node.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
@@ -21,6 +23,10 @@ namespace qpp {
         std::vector<sflow_connectivity_data_t> m_connectivity;
         sflow_calc_meta_global_t m_calc_meta_global;
 
+        std::atomic_bool m_task_executed_threaded{false};
+        std::atomic_bool m_task_finished_threaded{false};
+        std::thread m_thread;
+
         sflow_context_t();
 
         void add_node(std::shared_ptr<sflow_node_t> node);
@@ -33,7 +39,10 @@ namespace qpp {
         void clear_outer_nodes();
         void clear_connectivity();
 
-        void compile_flow();
+        void execute_threaded(bool debug_print = false);
+        void execute_threaded_fn();
+        bool is_finished();
+
         void execute(bool debug_print = false);
         void execute_traverse(sflow_node_t *cur_node,
                               sflow_node_t *prev_node,

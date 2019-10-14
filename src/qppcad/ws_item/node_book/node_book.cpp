@@ -40,7 +40,13 @@ std::string node_book_t::compose_type_descr() {
 }
 
 void node_book_t::update(float delta_time) {
+
   //do nothing
+  ws_item_t::update(delta_time);
+
+  if (m_sflow_context->is_finished())
+    update_output_values();
+
 }
 
 float node_book_t::get_bb_prescaller() {
@@ -84,9 +90,9 @@ void node_book_t::execute() {
                                     con->m_out_socket->m_socket_id,
                                     con->m_inp_socket->m_socket_id);
 
-  m_sflow_context->execute();
+  m_sflow_context->execute_threaded();
 
-  update_output_values();
+  //update_output_values();
 
 }
 
