@@ -39,13 +39,18 @@ node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
     }
 
   for (auto &rec : astate->ws_mgr->m_bhv_mgr->m_sflow_node_info) {
+
       auto it = _sflow_grp_lookup.find(rec.second.m_group_hash);
+
       if (it != _sflow_grp_lookup.end()) {
+
           qextended_action *_temp_act = new qextended_action();
           _temp_act->setText(QString::fromStdString(rec.second.m_full_name));
           _temp_act->m_joined_data[0] = rec.first;
           if (it->second) it->second->addAction(_temp_act);
+
         }
+
     }
 
   setSceneRect(-5000, -5000, 2*5000, 2*5000);
@@ -64,11 +69,13 @@ void node_book_graphics_scene_t::add_connection(std::shared_ptr<qnode_connection
 void node_book_graphics_scene_t::add_node(std::shared_ptr<qnode_t> _node) {
 
   if (_node) {
+
       addItem(_node.get());
       _node->m_scene = this;
       m_nodes.push_back(_node);
       for (auto elem : _node->m_inp_sockets) m_sockets.push_back(elem);
       for (auto elem : _node->m_out_sockets) m_sockets.push_back(elem);
+
     }
 
 }

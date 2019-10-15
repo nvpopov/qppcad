@@ -12,8 +12,6 @@ namespace qpp {
      */
     class sf_int_prop_node_t : public sflow_node_t {
 
-        QPP_OBJECT(sf_int_prop_node_t, sflow_node_t)
-
       public:
 
         sf_int_prop_node_t();
@@ -26,8 +24,6 @@ namespace qpp {
      * @brief The sflow_sgi_node_t class
      */
     class sf_int_final_node_t : public sflow_node_t {
-
-        QPP_OBJECT(sf_int_final_node_t, sflow_node_t)
 
       public:
 
@@ -42,8 +38,6 @@ namespace qpp {
      */
     class sf_int_p_const_node_t : public sflow_node_t {
 
-        QPP_OBJECT(sf_int_p_const_node_t, sflow_node_t)
-
       public:
 
         sf_int_p_const_node_t();
@@ -52,8 +46,6 @@ namespace qpp {
     };
 
     class sf_int_patb_const_node_t : public sflow_node_t {
-
-        QPP_OBJECT(sf_int_patb_const_node_t, sflow_node_t)
 
       public:
 
@@ -67,8 +59,6 @@ namespace qpp {
      */
     class sf_int_sum_int_node_t : public sflow_node_t {
 
-        QPP_OBJECT(sf_int_sum_int_node_t, sflow_node_t)
-
       public:
 
         sf_int_sum_int_node_t();
@@ -81,8 +71,6 @@ namespace qpp {
      */
     class sf_int_mul_int_node_t : public sflow_node_t {
 
-        QPP_OBJECT(sf_int_mul_int_node_t, sflow_node_t)
-
       public:
 
         sf_int_mul_int_node_t();
@@ -91,8 +79,6 @@ namespace qpp {
     };
 
     class sf_int_div_int_node_t : public sflow_node_t {
-
-        QPP_OBJECT(sf_int_div_int_node_t, sflow_node_t)
 
       public:
 

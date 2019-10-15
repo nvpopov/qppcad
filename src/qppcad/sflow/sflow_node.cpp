@@ -3,18 +3,19 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-
 sflow_node_t::sflow_node_t() {
 
 }
 
 bool sflow_node_t::has_ipls() {
+
   return !m_ipl_types.empty();
+
 }
 
 void sflow_node_t::explicit_create_ipl() {
 
-    fill_data_vec(m_ipl_types, m_ipl);
+  fill_data_vec(m_ipl_types, m_ipl);
 
 }
 
@@ -34,9 +35,13 @@ bool sflow_node_t::execute() {
 }
 
 bool sflow_node_t::execute_ex() {
+
   return true;
+
 }
 
 bool sflow_node_t::is_single_node() {
+
   return false;
+
 }

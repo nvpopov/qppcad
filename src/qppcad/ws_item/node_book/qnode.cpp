@@ -18,6 +18,7 @@ using namespace qpp::cad;
 qnode_t::qnode_t(QGraphicsItem *parent) : QGraphicsItem(parent)  {
 
   m_pressed = false;
+
   setFlag(QGraphicsItem::ItemIsMovable);
   setFlag(QGraphicsItem::ItemSendsGeometryChanges);
   setFlag(QGraphicsItem::ItemIsSelectable);
@@ -37,6 +38,11 @@ void qnode_t::updated_externally(uint32_t update_reason) {
 
   if (!m_scene) return;
   if (!m_scene->m_parent_node_book) return;
+
+  // make sflow node dirty
+  if (m_sf_node) {
+
+    }
 
   m_scene->m_parent_node_book->updated_externally(update_reason);
 
@@ -298,7 +304,7 @@ QRectF qnode_t::boundingRect() const {
   int max_c = std::max(m_sf_node->m_inp_types.size(), m_sf_node->m_out_types.size());
   int new_height = m_label_height
                    + max_c * 4 * m_socket_size + (max_c - 1) * m_socket_spacing
-                   + additional_h_from_inplace + 10;
+                   + additional_h_from_inplace;
 
   return QRectF(0, 0, m_width, new_height);
 
@@ -340,7 +346,7 @@ void qnode_t::paint(QPainter *painter,
 
   for (size_t i = 0; i < m_sf_node->m_inp_types.size(); i++) {
 
-      QString _pin_name = QString::fromStdString(m_sf_node->m_inp_types[i].m_socket_name);
+      QString _pin_name = QString::fromStdString(m_sf_node->m_inp_types[i].m_sck_name);
 
       QPoint inp_sck_pos = {
         5,
@@ -354,7 +360,7 @@ void qnode_t::paint(QPainter *painter,
 
   for (size_t i = 0; i < m_sf_node->m_out_types.size(); i++) {
 
-      QString _pin_name = QString::fromStdString(m_sf_node->m_out_types[i].m_socket_name);
+      QString _pin_name = QString::fromStdString(m_sf_node->m_out_types[i].m_sck_name);
 
       QPoint out_sck_pos = {
         m_width - 5 - fm.width(_pin_name),

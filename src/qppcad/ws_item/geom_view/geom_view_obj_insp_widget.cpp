@@ -128,7 +128,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   disp_s_color_mode->addItem(tr("Color from ptable"));
   disp_s_color_mode->addItem(tr("Color from xgeom"));
 
-  // ******************  Periodic related render *****************************
+  // periodic related render
   gb_periodic_related_render = new qspoiler_widget_t(tr("Periodic Related Settings"));
   gb_periodic_related_render_lt = new QFormLayout;
   gb_periodic_related_render->add_content_layout(gb_periodic_related_render_lt);
@@ -170,7 +170,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_periodic_related_render_lt->addRow(tr("Draw subcells"), periodic_draw_subcells);
 
   init_form_lt(gb_periodic_related_render_lt);
-  // ******************  End of Periodic related render *********************************************
+  // end of periodic related render
 
   gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
@@ -1739,6 +1739,10 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   tab_select = def_tab(tr("Atom selection groups"),
                        "://images/outline-select_all-24px.svg",
                        "://images/outline-select_all-24px_d.svg");
+
+  tab_xgeom = def_tab(tr("XGeometry fields"),
+                      "://images/format_list_numbered-24px.svg",
+                      "://images/format_list_numbered-24px_d.svg");
 
   construct_general_tab();
   construct_display_tab();

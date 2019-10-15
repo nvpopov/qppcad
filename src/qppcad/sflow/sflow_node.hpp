@@ -20,8 +20,8 @@ namespace qpp {
     struct sflow_socket_info_t {
 
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
-        size_t m_total_con{0};
-        std::string m_socket_name{"Unknown"};
+        size_t m_tot_con{0}; // total connections
+        std::string m_sck_name{"Unknown"};
 
     };
 
@@ -37,17 +37,15 @@ namespace qpp {
 
         std::shared_ptr<sflow_node_t> m_inp_node{nullptr};
         std::shared_ptr<sflow_node_t> m_out_node{nullptr};
-        std::optional<size_t> m_inp_socket;
-        std::optional<size_t> m_out_socket;
+        std::optional<size_t> m_inp_sck;
+        std::optional<size_t> m_out_sck;
 
     };
 
     /**
      * @brief The sflow_node_t class
      */
-    class sflow_node_t : public qpp_object_t {
-
-        QPP_OBJECT(sflow_node_t, qpp_object_t)
+    class sflow_node_t {
 
       public:
 
@@ -97,6 +95,7 @@ namespace qpp {
 
           for (size_t i = 0; i < data_types.size(); i++)
             if (!data[i]) {
+
                 switch (data_types[i].m_type) {
 
                   case sflow_parameter_e::sfpar_int : {
@@ -136,6 +135,7 @@ namespace qpp {
                     }
 
                   }
+
               } // end for
 
         }
@@ -171,6 +171,56 @@ namespace qpp {
         virtual bool is_single_node();
 
         sflow_node_t();
+
+    };
+
+    template<class T>
+    constexpr sflow_parameter_e type_to_sflow_parameter{sflow_parameter_e::sfpar_none};
+
+    template<>
+    constexpr sflow_parameter_e type_to_sflow_parameter<float>{sflow_parameter_e::sfpar_float};
+
+    template<>
+    constexpr sflow_parameter_e type_to_sflow_parameter<double>{sflow_parameter_e::sfpar_float};
+
+    template<>
+    constexpr sflow_parameter_e type_to_sflow_parameter<int>{sflow_parameter_e::sfpar_int};
+
+    template<>
+    constexpr sflow_parameter_e type_to_sflow_parameter<bool>{sflow_parameter_e::sfpar_bool};
+
+#ifdef EXTENDED_SFLOW
+
+    template<>
+    constexpr sflow_parameter_e
+    type_to_sflow_parameter<ws_item_t> {
+      sflow_parameter_e::sfpar_ws_item
+    };
+
+    template<>
+    constexpr sflow_parameter_e
+    type_to_sflow_parameter<xgeometry<float, periodic_cell<float> > > {
+      sflow_parameter_e::sfpar_xgeom
+    };
+
+#endif
+
+    template<auto FUNC, typename ... args>
+    class sf_func_node_t : public sflow_node_t {
+
+      public:
+
+        sf_func_node_t() {
+
+        };
+
+        bool execute_ex() override {
+          return true;
+        };
+
+        bool is_single_node() override {
+          return true;
+        };
 
     };
 

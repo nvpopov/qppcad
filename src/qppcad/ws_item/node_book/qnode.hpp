@@ -30,12 +30,11 @@ namespace qpp {
         node_book_graphics_scene_t *m_scene;
 
         int m_width{180};
-        int m_height{140};
+        int m_height{120};
         int m_socket_size{8};
         int m_socket_spacing{8};
         int m_x_offset{-16};
-        int m_label_height{32};
-        int m_lp{10};
+        int m_label_height{28};
 
         int m_dh_i{0};
         int m_dm_i{0};

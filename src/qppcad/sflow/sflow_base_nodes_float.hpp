@@ -9,8 +9,6 @@ namespace qpp {
 
     class sf_float_prop_node_t : public sflow_node_t {
 
-        QPP_OBJECT(sf_float_prop_node_t, sflow_node_t)
-
       public:
 
         sf_float_prop_node_t();
@@ -21,8 +19,6 @@ namespace qpp {
 
     class sf_float_p_const_node_t : public sflow_node_t {
 
-        QPP_OBJECT(sf_float_p_const_node_t, sflow_node_t)
-
       public:
 
         sf_float_p_const_node_t();
@@ -31,8 +27,6 @@ namespace qpp {
     };
 
     class sf_float_sum_float_node_t : public sflow_node_t {
-
-        QPP_OBJECT(sf_float_sum_float_node_t, sflow_node_t)
 
       public:
 
@@ -43,8 +37,6 @@ namespace qpp {
 
     class sf_float_final_node_t : public sflow_node_t {
 
-        QPP_OBJECT(sf_float_final_node_t, sflow_node_t)
-
       public:
 
         sf_float_final_node_t();
@@ -53,7 +45,7 @@ namespace qpp {
 
     };
 
-  } // namespace cad
+  } // namespace qpp::cad
 
 } // namespace qpp
 

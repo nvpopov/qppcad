@@ -8,15 +8,16 @@ namespace qpp {
   namespace cad {
 
     class sf_claim_xgeom_node_t : public sflow_node_t {
-        QPP_OBJECT(sf_claim_xgeom_node_t, sflow_node_t)
+
       public:
+
         sf_claim_xgeom_node_t();
         bool execute_ex() override;
         bool is_single_node() override;
+
     };
 
-
-  } // namespace cad
+  } // namespace qpp::cad
 
 } // namespace qpp
 

@@ -178,7 +178,7 @@ namespace qpp {
         qbinded_int_spinbox_t *tms_angle_order;
         //END TAB MEASUREMENT
 
-        //START TAB MODIFY
+        // start tab modify
         ws_item_tab_widget_t *tab_modify;
 
         qspoiler_widget_t *tm_gb_add_atom;
@@ -253,9 +253,9 @@ namespace qpp {
         QFormLayout *tm_gb_override_atom_lt;
         qbinded_xgeom_color3_input_t *tm_override_atom_color;
         qbinded_xgeom_float_spinbox_t *tm_override_atom_radii;
-        //END TAB MODIFY
+        // end tab modify
 
-        //START TAB SELECTIONS
+        // start tab sels
         ws_item_tab_widget_t *tab_select;
         qspoiler_widget_t *ts_gb_general;
         QFormLayout *ts_gb_general_lt;
@@ -265,8 +265,11 @@ namespace qpp {
 
         qspoiler_widget_t *ts_gb_sel_grp_details;
         QFormLayout *ts_gb_sel_grp_details_lt;
+        // end tab sels
 
-        //END TAB SELECTIONS
+        // start tab xgeom
+        ws_item_tab_widget_t *tab_xgeom;
+        // end tab xgeom
 
         void construct_general_tab();
         void construct_display_tab();
