@@ -3,9 +3,6 @@
 
 #include <qppcad/ws_item/ws_item_obj_insp_widget.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
-#include <qppcad/ws_item/geom_view/qbonding_table_model.hpp>
-#include <qppcad/ws_item/geom_view/qtype_specific_rendering_model.hpp>
-#include <qppcad/ws_item/geom_view/qmeasurements_table_model.hpp>
 #include <qppcad/ui/qrealspinbox_delegate.hpp>
 #include <qppcad/ui/qspoiler_widget.hpp>
 
@@ -17,6 +14,9 @@
 namespace qpp {
 
   namespace cad {
+
+    class qtype_specific_rendering_model_t;
+    class qbonding_table_model_t;
 
     class geom_view_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
 
@@ -269,6 +269,9 @@ namespace qpp {
 
         // start tab xgeom
         ws_item_tab_widget_t *tab_xgeom;
+        qspoiler_widget_t *txg_gb_info;
+        QVBoxLayout *txg_gb_info_lt;
+        QTableView *txg_info_tv;
         // end tab xgeom
 
         void construct_general_tab();
@@ -277,6 +280,7 @@ namespace qpp {
         void construct_measure_tab();
         void construct_modify_tab();
         void construct_select_tab();
+        void construct_xgeom_tab();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;

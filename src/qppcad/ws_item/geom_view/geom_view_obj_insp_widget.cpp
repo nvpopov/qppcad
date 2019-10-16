@@ -5,6 +5,11 @@
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
+
+#include <qppcad/ws_item/geom_view/qbonding_table_model.hpp>
+#include <qppcad/ws_item/geom_view/qtype_specific_rendering_model.hpp>
+#include <qppcad/ws_item/geom_view/qmeasurements_table_model.hpp>
+
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
@@ -954,6 +959,20 @@ void geom_view_obj_insp_widget_t::construct_select_tab() {
 
 }
 
+void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
+
+  txg_gb_info = new qspoiler_widget_t(tr("XGeometry Fields"));
+  txg_gb_info_lt = new QVBoxLayout;
+  txg_gb_info->add_content_layout(txg_gb_info_lt);
+
+  txg_info_tv = new QTableView;
+  txg_gb_info_lt->addWidget(txg_info_tv);
+
+  tab_xgeom->tab_inner_widget_lt->addWidget(txg_gb_info);
+  tab_xgeom->tab_inner_widget_lt->addStretch(1);
+
+}
+
 void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   auto _tmp = _binding_item->cast_as<geom_view_t>();
@@ -1724,7 +1743,8 @@ void geom_view_obj_insp_widget_t::tab_modify_flip_cell_clicked(size_t flip_dim, 
 
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
-  tab_disp = def_tab(tr("Display settings"), "://images/monitor.svg");
+  tab_disp = def_tab(tr("Display settings"),
+                     "://images/monitor.svg");
 
   tab_anim = def_tab(tr("Animation"),
                      "://images/film.svg",
@@ -1734,7 +1754,8 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
                        "://images/outline-build-24px.svg",
                        "://images/outline-build-24px_d.svg");
 
-  tab_measurement = def_tab(tr("Measurement"), "://images/outline-straighten-24px.svg");
+  tab_measurement = def_tab(tr("Measurement"),
+                            "://images/outline-straighten-24px.svg");
 
   tab_select = def_tab(tr("Atom selection groups"),
                        "://images/outline-select_all-24px.svg",
@@ -1750,6 +1771,7 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   construct_measure_tab();
   construct_modify_tab();
   construct_select_tab();
+  construct_xgeom_tab();
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -1794,25 +1816,30 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
           app_state_t* astate = app_state_t::get_inst();
 
           if (b_al->m_anim->m_cur_anim != index) {
+
               b_al->m_anim->m_cur_anim = index;
               b_al->m_anim->m_cur_anim_time = 0.0f;
               b_al->m_anim->update_geom_to_anim();
+
             }
 
           auto cur_anim = b_al->m_anim->get_current_anim();
 
           if (cur_anim && cur_anim->m_anim_type != geom_anim_t::anim_static) {
+
               anim_play->blockSignals(true);
               anim_play->setChecked(b_al->m_anim->m_play_anim);
               anim_play->blockSignals(false);
+
             } else {
+
               anim_play->blockSignals(true);
               anim_play->setChecked(false);
               anim_play->blockSignals(false);
+
             }
 
           gb_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frames.size()));
-
 
           gb_anim_timeline_slider->setMinimum(0);
           gb_anim_timeline_slider->setMaximum(cur_anim->frames.size()-1);
@@ -1932,10 +1959,9 @@ void geom_view_obj_insp_widget_t::anim_act_del_clicked() {
     }
 
   b_al->m_anim->m_anim_data.erase(b_al->m_anim->m_anim_data.begin() + cur_anim_idx);
-
-  int new_anim_idx =
-      std::clamp<int>(cur_anim_idx - 1, 0, b_al->m_anim->m_anim_data.size());
+  int new_anim_idx = std::clamp<int>(cur_anim_idx - 1, 0, b_al->m_anim->m_anim_data.size());
   b_al->m_anim->m_cur_anim = new_anim_idx;
+
   update_from_ws_item();
 
 }
@@ -1955,16 +1981,20 @@ void geom_view_obj_insp_widget_t::cell_changed() {
 
           for (int c = 0; c < b_al->m_geom->DIM; c++)
             for (int i = 0; i < 3; i++) {
+
                 float cell_amp = b_al->m_geom->cell.v[c][i];
                 QTableWidgetItem *n_ax = new QTableWidgetItem(tr("%1").arg(double(cell_amp)));
                 tg_gb_cell_tbl->setItem(c, i, n_ax);
+
               }
 
           tg_gb_cell_tbl->resizeRowsToContents();
           tg_gb_cell->show();
+
         } else {
           tg_gb_cell->hide();
         }
+
     }
 
 }

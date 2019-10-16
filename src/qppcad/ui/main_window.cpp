@@ -27,6 +27,7 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   setCentralWidget(main_widget);
   setMinimumHeight(astate->size_guide.main_window_h());
   setMinimumWidth(astate->size_guide.main_window_w());
+
   init_base_shortcuts();
   init_menus();
   build_bhv_menus_and_actions();
@@ -762,16 +763,23 @@ void main_window_t::dragLeaveEvent(QDragLeaveEvent *event) {
 void main_window_t::dropEvent(QDropEvent *event) {
 
   const QMimeData *mimeData = event->mimeData();
+
   if (mimeData && mimeData->hasUrls()) {
+
       app_state_t* astate = app_state_t::get_inst();
       QList<QUrl> urlList = mimeData->urls();
+
       for (int i = 0; i < urlList.size(); i++) {
+
           QString native_path = urlList.at(i).toLocalFile();
           std::string native_path_str = native_path.toStdString();
           astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
           astate->ws_mgr->load_from_file_autodeduce(native_path_str);
+
         }
+
     }
+
 }
 
 void main_window_t::resizeEvent(QResizeEvent *event) {
@@ -807,15 +815,19 @@ void main_window_t::wss_changed_slot() {
       ws_copy_cam->setEnabled(true);
       ws_menu_bg_color->setEnabled(true);
       //obj_insp_widget->setVisible()
+
       for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
+
           auto ws = astate->ws_mgr->m_ws[i];
           QString dest = QString::fromStdString(fmt::format("[{}] {}", i, ws->m_ws_name));
           tp_ws_selector->addItem(dest);
+
         }
 
       tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
 
     } else {
+
       obj_insp_widget->setVisible(false);
       tool_panel_widget->setVisible(false);
       ws_tabbar_wdgt->setVisible(false);
@@ -825,6 +837,7 @@ void main_window_t::wss_changed_slot() {
       view_menu_show_gizmo->setVisible(false);
       ws_copy_cam->setEnabled(false);
       ws_menu_bg_color->setEnabled(false);
+
     }
 
   tp_ws_selector->blockSignals(false);
@@ -838,6 +851,7 @@ void main_window_t::ws_selector_selection_changed(int index) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->ws_mgr->has_wss()) {
+
       auto current = astate->ws_mgr->get_cur_id();
       astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
                               index, *current));
@@ -845,6 +859,7 @@ void main_window_t::ws_selector_selection_changed(int index) {
           astate->ws_mgr->set_cur_id(opt<size_t>(index));
           astate->make_viewport_dirty();
         }
+
     }
 
 }
@@ -905,10 +920,14 @@ void main_window_t::open_ws() {
                                                    "Open qpp::cad workspace",
                                                    astate->m_last_dir,
                                                    "*.json");
+
   if (file_name != "") {
+
       astate->ws_mgr->load_from_file(file_name.toStdString(), true);
       wss_changed_slot();
+
     }
+
 }
 
 void main_window_t::save_ws() {
@@ -1627,6 +1646,7 @@ void main_window_t::action_toggle_console() {
       py_console_widget->py_tedit->setFocus();
       astate->m_show_console = false;
     }
+
 }
 
 void main_window_t::rebuild_recent_files_menu() {

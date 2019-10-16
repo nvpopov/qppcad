@@ -253,19 +253,23 @@ void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
 void ws_item_obj_insp_widget_t::rename_current_item() {
 
   if (m_binded_item) {
+
       app_state_t* astate = app_state_t::get_inst();
       bool ok;
       QString text = QInputDialog::getText(this,
-                                           tr("Workspace item-> Rename"),
+                                           tr("Workspace item -> Rename"),
                                            tr("User name:"),
                                            QLineEdit::Normal,
                                            QString::fromStdString(m_binded_item->m_name),
                                            &ok);
       if (ok && text != "") {
+
           m_binded_item->m_name = text.toStdString();
           astate->astate_evd->cur_ws_selected_item_changed();
           astate->astate_evd->cur_ws_changed();
+
         }
+
     }
 
 }
