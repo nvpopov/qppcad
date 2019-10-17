@@ -43,45 +43,46 @@ QVariant xgeom_table_model_t::data(const QModelIndex &index, int role) const {
   if (role == Qt::DisplayRole || role == Qt::EditRole) {
 
      switch (field_type) {
+
        case basic_types::type_bool : {
            return QVariant();
-           break;
          }
+
        case basic_types::type_double : {
            double field_val = m_gv->m_geom->xfield<double>(xfield_index, atom_id);
            return QVariant(field_val);
-           break;
          }
+
        case basic_types::type_float : {
            float field_val = m_gv->m_geom->xfield<float>(xfield_index, atom_id);
            return QVariant(field_val);
-           break;
          }
+
        case basic_types::type_real : {
            float field_val = m_gv->m_geom->xfield<float>(xfield_index, atom_id);
            return QVariant(field_val);
-           break;
          }
+
        case basic_types::type_int : {
            return QString("%1").arg(m_gv->m_geom->xfield<int>(xfield_index, atom_id));
-           break;
          }
+
        case basic_types::type_string : {
            QString field_val = QString::fromStdString(
                               m_gv->m_geom->xfield<std::string>(xfield_index, atom_id));
            return field_val;
-           break;
          }
+
        }
 
      return QVariant();
 
     }
 
- if (field_type == basic_types::type_bool && role == Qt::CheckStateRole) {
-     if (m_gv->m_geom->xfield<bool>(xfield_index, atom_id)) return Qt::Checked;
-     else return Qt::Unchecked;
-   }
+  if (field_type == basic_types::type_bool && role == Qt::CheckStateRole) {
+      if (m_gv->m_geom->xfield<bool>(xfield_index, atom_id)) return Qt::Checked;
+      else return Qt::Unchecked;
+    }
 
   return QVariant();
 

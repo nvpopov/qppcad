@@ -17,6 +17,7 @@ namespace qpp {
 
     class qtype_specific_rendering_model_t;
     class qbonding_table_model_t;
+    class qxgeom_fields_model_t;
 
     class geom_view_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
 
@@ -272,6 +273,7 @@ namespace qpp {
         qspoiler_widget_t *txg_gb_info;
         QVBoxLayout *txg_gb_info_lt;
         QTableView *txg_info_tv;
+        qxgeom_fields_model_t *txg_info_tmdl;
         // end tab xgeom
 
         void construct_general_tab();
@@ -303,6 +305,7 @@ namespace qpp {
         void update_dist_measurement_tab_info();
         void update_angle_measurement_tab_info();
         void update_select_tab();
+        void update_xgeom_tab();
         void fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al);
 
         void tab_modify_flip_cell_clicked(size_t flip_dim, float flip_magn = 1);

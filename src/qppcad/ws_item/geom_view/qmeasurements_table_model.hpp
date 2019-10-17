@@ -14,6 +14,7 @@ namespace qpp {
         Q_OBJECT
 
       private:
+
         geom_view_t *m_al{nullptr};
         int rowCount(const QModelIndex &parent) const;
         int columnCount(const QModelIndex &parent) const;
@@ -23,6 +24,7 @@ namespace qpp {
         bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
       public:
+
         void bind(geom_view_t *_al);
         void unbind();
 

@@ -9,6 +9,7 @@
 #include <qppcad/ws_item/geom_view/qbonding_table_model.hpp>
 #include <qppcad/ws_item/geom_view/qtype_specific_rendering_model.hpp>
 #include <qppcad/ws_item/geom_view/qmeasurements_table_model.hpp>
+#include <qppcad/ws_item/geom_view/xgeom_fields_model.hpp>
 
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
@@ -961,12 +962,25 @@ void geom_view_obj_insp_widget_t::construct_select_tab() {
 
 void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   txg_gb_info = new qspoiler_widget_t(tr("XGeometry Fields"));
   txg_gb_info_lt = new QVBoxLayout;
   txg_gb_info->add_content_layout(txg_gb_info_lt);
 
   txg_info_tv = new QTableView;
   txg_gb_info_lt->addWidget(txg_info_tv);
+
+  txg_info_tmdl = new qxgeom_fields_model_t;
+  txg_info_tv->setModel(txg_info_tmdl);
+
+  txg_info_tv->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+  txg_info_tv->verticalHeader()->hide();
+  txg_info_tv->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+  txg_info_tv->setFocusPolicy(Qt::NoFocus);
+  txg_info_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  txg_info_tv->setFixedWidth(astate->size_guide.obj_insp_table_w());
+  txg_info_tv->setShowGrid(false);
 
   tab_xgeom->tab_inner_widget_lt->addWidget(txg_gb_info);
   tab_xgeom->tab_inner_widget_lt->addStretch(1);
@@ -1125,9 +1139,16 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       tms_render_angle->bind_value(&b_al->m_measure->m_render_angle);
       //end of bind tab measurement common settings
 
+      txg_info_tv->setModel(nullptr);
+      txg_info_tmdl->bind(b_al);
+      txg_info_tv->setModel(txg_info_tmdl);
+      txg_info_tv->update();
+      //qt_hlp::vrt_resize_tv_to_cnt(txg_info_tv);
+
       update_modify_tab();
       update_measurement_tab();
       update_select_tab();
+      update_xgeom_tab();
 
     }
 
@@ -1720,6 +1741,14 @@ void geom_view_obj_insp_widget_t::update_select_tab() {
     } else {
 
       unbind_select_tab();
+
+    }
+
+}
+
+void geom_view_obj_insp_widget_t::update_xgeom_tab() {
+
+  if (b_al) {
 
     }
 
@@ -2345,9 +2374,11 @@ void geom_view_obj_insp_widget_t::cur_ws_edit_mode_changed() {
 void geom_view_obj_insp_widget_t::cur_it_selected_content_changed() {
 
   if (b_al) {
+
       update_modify_tab();
       update_measurement_tab();
       update_select_tab();
+
     }
 
 }
@@ -2356,39 +2387,39 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (b_al) {
+  if (!b_al) return;
 
-      int atom_type_idx = index.row();
-      int col_idx = index.column();
+  int atom_type_idx = index.row();
+  int col_idx = index.column();
 
-      //type is valid
-      if (atom_type_idx < b_al->m_geom->n_types() && col_idx == 2) {
+  //type is valid
+  if (atom_type_idx < b_al->m_geom->n_types() && col_idx == 2) {
 
-          auto it = b_al->m_type_color_override.find(atom_type_idx);
-          auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(atom_type_idx));
+      auto it = b_al->m_type_color_override.find(atom_type_idx);
+      auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(atom_type_idx));
 
-          QColor _stored_color = Qt::black;
+      QColor _stored_color = Qt::black;
 
-          //first load a color from ptable
-          if (ap_idx && *ap_idx > 0 && *ap_idx <100) {
-              _stored_color = QColor::fromRgbF(
-                                ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[0],
-                  ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[1],
-                  ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[2]);
-            }
+      //first load a color from ptable
+      if (ap_idx && *ap_idx > 0 && *ap_idx <100) {
+          _stored_color = QColor::fromRgbF(
+                            ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[0],
+              ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[1],
+              ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[2]);
+        }
 
-          if (it != b_al->m_type_color_override.end())
-            _stored_color = QColor::fromRgbF(it->second[0], it->second[1], it->second[2]);
+      if (it != b_al->m_type_color_override.end())
+        _stored_color = QColor::fromRgbF(it->second[0], it->second[1], it->second[2]);
 
-          const QColor clr = QColorDialog::getColor(_stored_color, this, "Select Color");
-          if (clr.isValid()) {
-              if (it != b_al->m_type_color_override.end()) b_al->m_type_color_override.erase(it);
-              auto new_c = std::make_pair(size_t(atom_type_idx),
-                                          vector3<float>(clr.redF(), clr.greenF(), clr.blueF()));
-              b_al->m_type_color_override.insert(new_c);
-              update_from_ws_item();
-              astate->make_viewport_dirty();
-            }
+      const QColor clr = QColorDialog::getColor(_stored_color, this, "Select Color");
+      if (clr.isValid()) {
+
+          if (it != b_al->m_type_color_override.end()) b_al->m_type_color_override.erase(it);
+          auto new_c = std::make_pair(size_t(atom_type_idx),
+                                      vector3<float>(clr.redF(), clr.greenF(), clr.blueF()));
+          b_al->m_type_color_override.insert(new_c);
+          update_from_ws_item();
+          astate->make_viewport_dirty();
 
         }
 

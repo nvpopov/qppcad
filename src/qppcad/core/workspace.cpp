@@ -394,10 +394,12 @@ void workspace_t::load_ws_from_json(const std::string filename) {
     auto data_camera = data.find(JSON_WS_CAMERA);
     if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());
 
-    if (data.find(JSON_OBJECTS) != data.end()){
+    if (data.find(JSON_OBJECTS) != data.end()) {
+
         json objects = data[JSON_OBJECTS];
         for (auto &object : objects)
           if (object.find(JSON_WS_ITEM_TYPE) != object.end()) {
+
               std::string obj_type = object[JSON_WS_ITEM_TYPE];
               size_t obj_hash = astate->hash_reg->calc_hash_ub(obj_type);
               std::shared_ptr<ws_item_t> obj =
@@ -406,22 +408,28 @@ void workspace_t::load_ws_from_json(const std::string filename) {
                   obj->load_from_json(object, rep_info);
                   add_item_to_ws(obj);
                 }
+
             } else {
+
               astate->log(
                     fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
                                 object[JSON_WS_ITEM_NAME].get<std::string>(), filename)
                     );
+
             }
+
       }
 
     //revive connections
     for (auto &rec : rep_info.m_connected_items) {
+
         auto cur_obj = get_by_name(rec.first);
         if (cur_obj)
           for (auto &rec_values : rec.second) {
               auto con_obj = get_by_name(rec_values);
               if (con_obj) cur_obj->m_connected_items.push_back(con_obj);
             }
+
       }
     //end of revive connections
 
