@@ -11,7 +11,7 @@ namespace qpp {
 
     class geom_view_t;
 
-    class traj_hl_t : public ws_item_t {
+    class traj_hl_t final: public ws_item_t {
 
         QPP_OBJECT(traj_hl_t, ws_item_t)
 

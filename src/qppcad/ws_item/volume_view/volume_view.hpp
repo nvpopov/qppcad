@@ -48,7 +48,7 @@ namespace qpp {
 
     };
 
-    class volume_view_t : public ws_item_t {
+    class volume_view_t final: public ws_item_t {
 
         QPP_OBJECT(volume_view_t, ws_item_t)
 

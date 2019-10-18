@@ -8,7 +8,7 @@ namespace qpp {
 
   namespace cad {
 
-    class arrow_primitive_t : public ws_item_t {
+    class arrow_primitive_t final: public ws_item_t {
 
         QPP_OBJECT(arrow_primitive_t, ws_item_t)
 

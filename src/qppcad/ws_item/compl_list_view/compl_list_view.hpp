@@ -9,7 +9,7 @@ namespace qpp {
 
     using compl_list_t = std::vector<std::tuple<size_t, size_t> >;
 
-    class compl_list_view_t : public ws_item_t {
+    class compl_list_view_t final: public ws_item_t {
 
        QPP_OBJECT(compl_list_view_t, ws_item_t)
 

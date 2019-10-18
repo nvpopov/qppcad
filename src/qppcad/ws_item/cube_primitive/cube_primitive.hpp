@@ -13,7 +13,7 @@ namespace qpp {
       render_lines
     };
 
-    class cube_primitive_t : public ws_item_t {
+    class cube_primitive_t final: public ws_item_t {
 
          QPP_OBJECT(cube_primitive_t, ws_item_t)
 

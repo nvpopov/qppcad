@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    class py_note_book_t : public ws_item_t {
+    class py_note_book_t final: public ws_item_t {
 
         QPP_OBJECT(py_note_book_t, ws_item_t)
 

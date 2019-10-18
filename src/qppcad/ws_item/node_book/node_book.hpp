@@ -18,7 +18,7 @@ namespace qpp {
 
   namespace cad {
 
-    class node_book_t : public ws_item_t {
+    class node_book_t final: public ws_item_t {
 
         QPP_OBJECT(node_book_t, ws_item_t)
 

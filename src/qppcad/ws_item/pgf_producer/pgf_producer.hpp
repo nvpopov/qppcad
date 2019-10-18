@@ -13,7 +13,7 @@ namespace qpp {
     class geom_view_t;
     class psg_view_t;
 
-    class pgf_producer_t : public ws_item_t {
+    class pgf_producer_t final: public ws_item_t {
 
         QPP_OBJECT(pgf_producer_t, ws_item_t)
 

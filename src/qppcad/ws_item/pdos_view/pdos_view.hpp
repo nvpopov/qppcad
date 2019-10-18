@@ -20,7 +20,7 @@ namespace qpp {
 
   namespace cad {
 
-    class pdos_view_t : public ws_item_t {
+    class pdos_view_t final: public ws_item_t {
 
         QPP_OBJECT(pdos_view_t, ws_item_t)
 

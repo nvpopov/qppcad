@@ -29,7 +29,7 @@ namespace qpp {
 
     class geom_view_t;
 
-    class ccd_view_t : public ws_item_t {
+    class ccd_view_t final: public ws_item_t {
 
        QPP_OBJECT(ccd_view_t, ws_item_t)
 

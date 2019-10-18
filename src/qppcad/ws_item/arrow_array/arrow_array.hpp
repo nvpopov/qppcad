@@ -10,7 +10,7 @@ namespace qpp {
 
     class geom_view_t;
 
-    class arrow_array_t : public ws_item_t {
+    class arrow_array_t final: public ws_item_t {
 
         QPP_OBJECT(arrow_array_t, ws_item_t)
 

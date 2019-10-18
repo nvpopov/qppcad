@@ -26,7 +26,7 @@ namespace qpp {
 
     };
 
-    class psg_view_t : public ws_item_t {
+    class psg_view_t final: public ws_item_t {
 
         QPP_OBJECT(psg_view_t, ws_item_t)
 
