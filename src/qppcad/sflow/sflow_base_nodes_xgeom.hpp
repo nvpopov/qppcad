@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    class sf_xgeom_nat_node_t : public sflow_node_t {
+    class sf_xgeom_nat_node_t final : public sflow_node_t {
 
       public:
 
@@ -16,7 +16,7 @@ namespace qpp {
 
     };
 
-    class sf_xgeom_ntypes_node_t : public sflow_node_t {
+    class sf_xgeom_ntypes_node_t final : public sflow_node_t {
 
       public:
 

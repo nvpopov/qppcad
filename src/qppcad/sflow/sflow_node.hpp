@@ -206,7 +206,7 @@ namespace qpp {
 #endif
 
     template<auto FUNC, typename ... args>
-    class sf_func_node_t : public sflow_node_t {
+    class sf_func_node_t final : public sflow_node_t {
 
       public:
 

@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    class sf_v3f_prop_node_t : public sflow_node_t {
+    class sf_v3f_prop_node_t final : public sflow_node_t {
 
       public:
 
@@ -17,7 +17,7 @@ namespace qpp {
 
     };
 
-    class sf_v3f_final_node_t : public sflow_node_t {
+    class sf_v3f_final_node_t final : public sflow_node_t {
 
       public:
 
@@ -27,7 +27,7 @@ namespace qpp {
 
     };
 
-    class sf_v3f_sum_v3f_node_t : public sflow_node_t {
+    class sf_v3f_sum_v3f_node_t final : public sflow_node_t {
 
       public:
 
@@ -36,7 +36,7 @@ namespace qpp {
 
     };
 
-    class sf_v3f_dot_node_t : public sflow_node_t {
+    class sf_v3f_dot_node_t final : public sflow_node_t {
 
       public:
 
@@ -45,7 +45,7 @@ namespace qpp {
 
     };
 
-    class sf_v3f_normalized_node_t : public sflow_node_t {
+    class sf_v3f_normalized_node_t final : public sflow_node_t {
 
       public:
 
@@ -54,7 +54,7 @@ namespace qpp {
 
     };
 
-    class sf_v3f_norm_node_t : public sflow_node_t {
+    class sf_v3f_norm_node_t final : public sflow_node_t {
 
       public:
 
@@ -63,7 +63,7 @@ namespace qpp {
 
     };
 
-    class sf_v3f_cross_node_t : public sflow_node_t {
+    class sf_v3f_cross_node_t final : public sflow_node_t {
 
       public:
 

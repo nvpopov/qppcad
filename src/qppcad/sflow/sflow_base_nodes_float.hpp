@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    class sf_float_prop_node_t : public sflow_node_t {
+    class sf_float_prop_node_t final : public sflow_node_t {
 
       public:
 
@@ -17,7 +17,7 @@ namespace qpp {
 
     };
 
-    class sf_float_p_const_node_t : public sflow_node_t {
+    class sf_float_p_const_node_t final : public sflow_node_t {
 
       public:
 
@@ -26,7 +26,7 @@ namespace qpp {
 
     };
 
-    class sf_float_sum_float_node_t : public sflow_node_t {
+    class sf_float_sum_float_node_t final : public sflow_node_t {
 
       public:
 
@@ -35,7 +35,7 @@ namespace qpp {
 
     };
 
-    class sf_float_final_node_t : public sflow_node_t {
+    class sf_float_final_node_t final : public sflow_node_t {
 
       public:
 

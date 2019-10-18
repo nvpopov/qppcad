@@ -981,6 +981,7 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
   txg_info_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   txg_info_tv->setFixedWidth(astate->size_guide.obj_insp_table_w());
   txg_info_tv->setShowGrid(false);
+  txg_info_tv->setMinimumHeight(180);
 
   tab_xgeom->tab_inner_widget_lt->addWidget(txg_gb_info);
   tab_xgeom->tab_inner_widget_lt->addStretch(1);
