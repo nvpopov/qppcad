@@ -9,7 +9,7 @@ namespace qpp {
 
   namespace cad {
 
-    class pdos_view_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class pdos_view_obj_insp_widget_t final: public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 

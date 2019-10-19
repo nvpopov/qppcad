@@ -14,7 +14,7 @@ namespace qpp {
 
   namespace cad {
 
-    class ccd_view_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class ccd_view_obj_insp_widget_t final: public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 

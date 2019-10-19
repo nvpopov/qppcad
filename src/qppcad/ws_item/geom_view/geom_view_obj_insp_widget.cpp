@@ -981,9 +981,14 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
   txg_info_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   txg_info_tv->setFixedWidth(astate->size_guide.obj_insp_table_w());
   txg_info_tv->setShowGrid(false);
-  txg_info_tv->setMinimumHeight(180);
+  txg_info_tv->setMinimumHeight(210);
+
+  txg_gb_comp_prop = new qspoiler_widget_t(tr("Computed Property"));
+  txg_gb_comp_prop_lt = new QVBoxLayout;
+  txg_gb_comp_prop->add_content_layout(txg_gb_comp_prop_lt);
 
   tab_xgeom->tab_inner_widget_lt->addWidget(txg_gb_info);
+  tab_xgeom->tab_inner_widget_lt->addWidget(txg_gb_comp_prop);
   tab_xgeom->tab_inner_widget_lt->addStretch(1);
 
 }

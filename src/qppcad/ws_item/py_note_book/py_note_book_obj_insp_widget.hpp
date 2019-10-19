@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    class py_note_book_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class py_note_book_obj_insp_widget_t final: public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 

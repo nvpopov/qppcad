@@ -19,7 +19,7 @@ namespace qpp {
     class qbonding_table_model_t;
     class qxgeom_fields_model_t;
 
-    class geom_view_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class geom_view_obj_insp_widget_t final: public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 
@@ -274,6 +274,10 @@ namespace qpp {
         QVBoxLayout *txg_gb_info_lt;
         QTableView *txg_info_tv;
         qxgeom_fields_model_t *txg_info_tmdl;
+
+        qspoiler_widget_t *txg_gb_comp_prop;
+        QVBoxLayout *txg_gb_comp_prop_lt;
+
         // end tab xgeom
 
         void construct_general_tab();

@@ -8,7 +8,7 @@ namespace qpp {
 
   namespace cad {
 
-    class arrow_array_obj_insp_widget_t : public ws_item_obj_insp_widget_t {
+    class arrow_array_obj_insp_widget_t final: public ws_item_obj_insp_widget_t {
 
         Q_OBJECT
 
