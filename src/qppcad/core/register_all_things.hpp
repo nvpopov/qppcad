@@ -32,10 +32,21 @@ namespace qpp {
                                       [](){return std::make_shared<U>();});
         }
 
+        template<typename T>
+        static void reg_toolbar_elements_fbr(ws_item_behaviour_manager_t *bhv_mgr,
+                                             std::size_t tb_el_hash,
+                                             const std::string &tb_el_name) {
+          bhv_mgr->reg_toolbar_elem_fbr(T::get_type_static(),
+                                        tb_el_hash,
+                                        tb_el_name,
+                                        [](){return std::make_shared<T>();});
+        }
+
         static void reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr);
         static void reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr);
         static void reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv_mgr);
         static void reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr);
+        static void reg_toolbar_elements_bhv(ws_item_behaviour_manager_t *bhv_mgr);
 
         template<typename T, typename U>
         static void reg_ws_item_tool(std::string _full_name,

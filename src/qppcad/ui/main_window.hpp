@@ -10,7 +10,6 @@
 #include <qppcad/render/camera.hpp>
 #include <qppcad/ui/ws_tabbar.hpp>
 #include <qppcad/ui/log_widget.hpp>
-#include <qppcad/ui/toolbar_element.hpp>
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -36,6 +35,8 @@
 namespace qpp {
 
   namespace cad {
+
+    class toolbar_element_t;
 
     class main_window_t : public QMainWindow {
 

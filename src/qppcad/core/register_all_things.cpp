@@ -340,6 +340,10 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
 }
 
+void registration_helper_t::reg_toolbar_elements_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
+
+}
+
 void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr) {
 
   size_t hash_t_generator = bhv_mgr->reg_tool_grp("Generators");

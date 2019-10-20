@@ -17,9 +17,17 @@ namespace qpp {
       toolbar_element_style_group
     };
 
+    class toolbar_element_t;
     class app_state_t;
     class ws_item_t;
     class workspace_t;
+
+    struct toolbar_element_info_t {
+
+        std::string m_full_name;
+        std::function<std::shared_ptr<toolbar_element_t>()> m_fabric;
+
+    };
 
     class toolbar_element_t {
 
@@ -40,9 +48,9 @@ namespace qpp {
       public:
 
         // methods
-        explicit toolbar_element_t(toolbar_element_style_e style,
-                                   std::set<size_t> &&applicable_types,
-                                   QWidget *parent = nullptr);
+        explicit toolbar_element_t();
+
+        void init_element(QWidget *parent = nullptr);
 
         virtual QString get_tooltip_for(size_t btn_id = 0);
         virtual QString get_icon_for(size_t btn_id = 0);

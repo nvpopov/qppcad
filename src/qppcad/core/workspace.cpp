@@ -61,19 +61,24 @@ bool workspace_t::set_selected_item(const size_t sel_idx, bool emit_signal) {
   astate->log(fmt::format("workspace_t::set_selected_item ({} {})", sel_idx, emit_signal));
 
   if (sel_idx < m_ws_items.size() && !m_ws_items.empty()) {
+
       m_ws_items[sel_idx]->m_selected = true;
+
       if (m_ws_items[sel_idx]->get_flags() & ws_item_flags_support_tr) {
+
           m_gizmo->attached_item = m_ws_items[sel_idx].get();
           m_gizmo->update_gizmo(0.1f, true);
           astate->make_viewport_dirty();
-        }
-      else {
+
+        } else {
           m_gizmo->attached_item = nullptr;
           m_gizmo->update_gizmo(0.1f, true);
         }
+
       //astate->make_viewport_dirty();
       if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
       return true;
+
     }
 
   //astate->make_viewport_dirty();
@@ -131,9 +136,11 @@ void workspace_t::reset_camera() {
 void workspace_t::set_best_view() {
 
   if (m_ws_items.size() == 0) {
+
       m_camera->reset_camera();
       m_camera->update_camera();
       return;
+
     }
 
   vector3<float> vec_look_at{0.0, 0.0, 0.0};
@@ -360,11 +367,14 @@ void workspace_t::save_ws_to_json(const std::string filename) {
   data[JSON_WS_CAMERA] = camera_data;
 
   json ws_objects = json::array({});
+
   for (const auto &ws_item : m_ws_items)
     if (ws_item->can_be_written_to_json()) {
+
         json ws_object;
         ws_item->save_to_json(ws_object);
         ws_objects.push_back(ws_object);
+
       }
 
   data[JSON_OBJECTS] = ws_objects;
@@ -404,6 +414,7 @@ void workspace_t::load_ws_from_json(const std::string filename) {
               size_t obj_hash = astate->hash_reg->calc_hash_ub(obj_type);
               std::shared_ptr<ws_item_t> obj =
                   astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
+
               if (obj) {
                   obj->load_from_json(object, rep_info);
                   add_item_to_ws(obj);
@@ -809,6 +820,7 @@ void workspace_manager_t::init_ws_item_bhv_mgr() {
   registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_ext_edt(m_bhv_mgr.get());
+  registration_helper_t::reg_toolbar_elements_bhv(m_bhv_mgr.get());
 
   sf_node_reg_hlp_t::reg_sf_info(m_bhv_mgr.get());
 

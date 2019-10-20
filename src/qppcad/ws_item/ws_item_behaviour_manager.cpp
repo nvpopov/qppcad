@@ -3,6 +3,7 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
+
 #include <QFileInfo>
 #include <QDirIterator>
 
@@ -72,10 +73,12 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
   ws->add_item_to_ws(new_ws_item);
 
   if (new_ws_item) {
+
       std::ifstream input(file_name);
       new_ws_item->m_name = extract_base_name(file_name);
       m_ws_item_io[io_bhv_idx]->load_from_stream(input, new_ws_item.get(), ws);
       return new_ws_item;
+
     } else {
       return nullptr;
     }
@@ -93,12 +96,14 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
   auto file_format = get_ff_by_finger_print(file_name);
 
   if (file_format) {
+
       std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
 
       if (io_bhv_id) {
           auto ret_sp = load_ws_itm_from_file(file_name, *io_bhv_id, ws);
           return ret_sp;
         }
+
     }
 
   return nullptr;
@@ -121,13 +126,17 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
 
       bool check = m_ws_item_io[bhv_id]->check_before_save(ws_item.get(), message);
       if (check) {
+
           std::ofstream output(file_name);
           m_ws_item_io[bhv_id]->save_to_stream(output, ws_item.get());
           return true;
+
         } else {
+
           astate->tlog("Checking failed for ws_item={}, file={}, workspace={}",
                        ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name);
           return false;
+
         }
 
     }
@@ -164,6 +173,7 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
   auto it = m_file_formats.find(_ff_hash);
 
   if (it == m_file_formats.end()) {
+
       ws_item_io_file_format_t new_file_format;
       new_file_format.m_full_name = _full_name;
       new_file_format.m_shortname = _short_name;
@@ -175,6 +185,7 @@ size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
         m_file_format_groups[_file_format_group_hash].m_ffs_lookup.insert(_ff_hash);
 
       m_file_formats.emplace(_ff_hash, std::move(new_file_format));
+
     }
 
   astate->tlog("Registering file format {}[{}] - hash {}, ghash {}",
@@ -193,10 +204,12 @@ size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name, std::string 
   auto it = m_file_format_groups.find(_file_format_group_hash);
 
   if (it == m_file_format_groups.end()) {
+
       ws_item_io_file_format_group_t new_file_format_group;
       new_file_format_group.m_full_name = _full_name;
       new_file_format_group.m_short_name = _short_name;
       m_file_format_groups.emplace(_file_format_group_hash, std::move(new_file_format_group));
+
     }
 
   astate->tlog("Registering file format group {}[{}] - hash {}",
@@ -317,10 +330,12 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_finger_print(
   for (auto &elem : m_file_formats)
     for (auto &ffp : elem.second.m_finger_prints)
       if (file_name.find(ffp) != std::string::npos) {
+
           app_state_t *astate = app_state_t::get_inst();
           astate->tlog("Compare ff {} {} - fname {}",
                        elem.first, elem.second.m_full_name, file_name);
           return std::optional<size_t>(elem.first);
+
         }
 
   return std::nullopt;
@@ -344,9 +359,11 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format(siz
 
   for (size_t i = 0; i < m_ws_item_io.size(); i++)
     if (m_ws_item_io[i]->m_accepted_file_format == file_format) {
+
         app_state_t *astate = app_state_t::get_inst();
         astate->tlog("Compare ff {} - io_bhv {}",file_format, i);
         return std::optional<size_t>(i);
+
       }
 
   return std::nullopt;
@@ -418,6 +435,13 @@ void ws_item_behaviour_manager_t::reg_ext_editor_fbr(
 
 }
 
+void ws_item_behaviour_manager_t::reg_toolbar_elem_fbr(
+    size_t hash,
+    std::string editor_name,
+    std::function<std::shared_ptr<toolbar_element_t> ()> func) {
+
+}
+
 bool ws_item_behaviour_manager_t::is_obj_insp_fbr_exists(size_t hash) {
 
   auto it = m_obj_insp_fabric.find(hash);
@@ -448,12 +472,16 @@ std::shared_ptr<ws_item_obj_insp_widget_t> ws_item_behaviour_manager_t::get_obj_
   if (it == m_obj_insp_widgets.end()) {
       auto it_f = m_obj_insp_fabric.find(hash);
       if (it_f != m_obj_insp_fabric.end()) {
+
           astate->tlog("get_obj_insp_widget_sp with type_id = {}, constructing", hash);
           auto cnstr = it_f->second();
           m_obj_insp_widgets.emplace(hash, cnstr);
           return cnstr;
+
         }
-      else return nullptr;
+      else {
+          return nullptr;
+        }
     }
 
   astate->tlog("get_obj_insp_widget_sp with type_id = {}, not found", hash);

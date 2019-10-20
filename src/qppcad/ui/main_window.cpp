@@ -1,7 +1,12 @@
 #include <qppcad/ui/main_window.hpp>
 #include <qppcad/core/app_state.hpp>
+
 #include <qppcad/ui/app_settings_widget.hpp>
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
+#include <qppcad/ui/toolbar_element.hpp>
+#include <qppcad/ui/ptable_rich_widget.hpp>
+#include <qppcad/ui/toolbar_element.hpp>
+
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
@@ -9,8 +14,6 @@
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/python/python_simple_query.hpp>
-
-#include <qppcad/ui/ptable_rich_widget.hpp>
 
 #include <QDateTime>
 #include <QColorDialog>

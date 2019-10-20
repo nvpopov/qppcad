@@ -7,6 +7,7 @@
 #include <qppcad/ws_item/ws_item_extended_editor.hpp>
 #include <qppcad/ws_item/sflow_behaviour_manager.hpp>
 #include <qppcad/core/fixture.hpp>
+#include <qppcad/ui/toolbar_element.hpp>
 
 namespace qpp {
 
@@ -56,7 +57,7 @@ namespace qpp {
      */
     struct ws_item_tool_t {
 
-      /**
+        /**
          * @brief exec
          * @param item
          */
@@ -205,12 +206,17 @@ namespace qpp {
                             workspace_t *ws) override {
 
         if (_item && _item->get_type() == T::get_type_static()) {
+
             T* casted_item = _item->cast_as<T>();
+
             if (casted_item) {
+
                 pre_load_hook(casted_item, ws);
                 load_from_stream_ex(stream, casted_item, ws);
                 post_load_hook(casted_item, ws);
+
               }
+
           }
 
       }
@@ -223,11 +229,15 @@ namespace qpp {
                           ws_item_t *_item) override {
 
         if (_item && _item->get_type() == T::get_type_static()) {
+
             T* casted_item = _item->cast_as<T>();
+
             if (casted_item) {
+
                 pre_save_hook(casted_item);
                 save_to_stream_ex(stream, casted_item);
                 post_save_hook(casted_item);
+
               }
           }
 
@@ -284,6 +294,9 @@ namespace qpp {
       /* fixtures framework info */
       std::map<size_t, fixture_info_t> m_fixtures_info;
 
+      /* toolbar_element framework info*/
+      std::map<size_t, toolbar_element_info_t> m_toolbar_elements_info;
+
       void load_fixtures_from_path(const std::vector<std::string> &file_paths);
 
       std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
@@ -327,6 +340,10 @@ namespace qpp {
                               size_t editor_order,
                               std::string editor_name,
                               std::function<std::shared_ptr<ws_item_extended_editor_t>()> func);
+
+      void reg_toolbar_elem_fbr(size_t hash,
+                                std::string editor_name,
+                                std::function<std::shared_ptr<toolbar_element_t>()> func);
 
       bool is_obj_insp_fbr_exists(size_t hash);
 
