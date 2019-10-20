@@ -744,10 +744,6 @@ void main_window_t::init_layouts() {
 
 }
 
-void main_window_t::change_camera_buttons_visible(bool cart_c, bool cell_c) {
-
-}
-
 void main_window_t::dragEnterEvent(QDragEnterEvent *event) {
   event->acceptProposedAction();
 }
@@ -1105,8 +1101,6 @@ void main_window_t::cam_copy_to_all() {
 void main_window_t::cur_ws_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
-
-  change_camera_buttons_visible(false, false);
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 

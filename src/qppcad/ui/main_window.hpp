@@ -10,6 +10,7 @@
 #include <qppcad/render/camera.hpp>
 #include <qppcad/ui/ws_tabbar.hpp>
 #include <qppcad/ui/log_widget.hpp>
+#include <qppcad/ui/toolbar_element.hpp>
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -52,7 +53,6 @@ namespace qpp {
         void init_menus();
         void init_widgets();
         void init_layouts();
-        void change_camera_buttons_visible(bool cart_c, bool cell_c);
 
         //Widgets
         QWidget *main_widget;

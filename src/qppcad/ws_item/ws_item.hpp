@@ -119,7 +119,7 @@ namespace qpp {
 
         int m_last_tab{-1};
         bool m_is_visible{true};
-        bool m_show_bb{true};
+        bool m_show_bb{true}; // whether to show object`s bounding box
         bool m_selected{false};
         bool m_marked_for_deletion{false};
         bool m_extended_editor_opened{false};
