@@ -30,6 +30,16 @@ size_t toolbar_element_t::get_btn_cnt() {
   return 1;
 }
 
+std::tuple<size_t, size_t> toolbar_element_t::get_size(size_t btn_id) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  return {
+      astate->size_guide.tool_panel_ctrl_w(),
+      astate->size_guide.tool_panel_ctrl_h()
+    };
+
+}
+
 void toolbar_element_t::clicked(size_t btn_id) {
 
 }

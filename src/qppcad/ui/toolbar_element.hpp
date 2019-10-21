@@ -55,6 +55,7 @@ namespace qpp {
         virtual QString get_tooltip_for(size_t btn_id = 0);
         virtual QString get_icon_for(size_t btn_id = 0);
         virtual size_t get_btn_cnt();
+        virtual std::tuple<size_t, size_t> get_size(size_t btn_id = 0);
         virtual void clicked(size_t btn_id = 0);
         virtual void on_wss_changed(app_state_t *astate);
         virtual void on_cur_ws_changed(app_state_t *astate, workspace_t *cur_ws);

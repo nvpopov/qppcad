@@ -39,6 +39,7 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   control_bhv_tools_menus_activity();
   init_widgets();
   init_layouts();
+  build_bhv_toolpanel();
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::wss_changed_signal,
@@ -431,8 +432,8 @@ void main_window_t::init_widgets() {
 
   tp_print_screen = new QPushButton(nullptr);
   tp_print_screen->setProperty("s_class", "tp_cb");
-  tp_print_screen->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_print_screen->setMaximumWidth(astate->size_guide.tool_panel_ctrl_sys_w());
+  tp_print_screen->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_print_screen->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_print_screen->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                      astate->size_guide.tool_panel_icon_size()));
   tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
@@ -450,8 +451,8 @@ void main_window_t::init_widgets() {
           &main_window_t::ws_edit_mode_selector_button_clicked);
 
   tp_edit_mode_item = new QPushButton(nullptr);
-  tp_edit_mode_item->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
-  tp_edit_mode_item->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_edit_mode_item->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_edit_mode_item->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_edit_mode_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                        astate->size_guide.tool_panel_icon_size()));
   tp_edit_mode_item->setToolTip(tr("Set current workspace's edit mode to <edit item>"));
@@ -459,8 +460,8 @@ void main_window_t::init_widgets() {
   tp_edit_mode_item->setCheckable(true);
 
   tp_edit_mode_content= new QPushButton(nullptr);
-  tp_edit_mode_content->setMaximumWidth(astate->size_guide.tool_panel_edit_sel_w());
-  tp_edit_mode_content->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_edit_mode_content->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_edit_mode_content->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_edit_mode_content->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                           astate->size_guide.tool_panel_icon_size()));
   tp_edit_mode_content->setToolTip(tr("Set current workspace's edit mode to <edit content>"));
@@ -503,6 +504,8 @@ void main_window_t::init_widgets() {
   tp_scenic_rot_cam = new QPushButton(nullptr);
   tp_scenic_rot_cam->setToolTip(tr("Orbit the camera"));
   tp_scenic_rot_cam->setIcon(QIcon("://images/baseline-3d_rotation_x-24px.svg"));
+  tp_scenic_rot_cam->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_scenic_rot_cam->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_scenic_rot_cam->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                        astate->size_guide.tool_panel_icon_size()));
   tp_scenic_rot_cam->setCheckable(true);
@@ -552,8 +555,8 @@ void main_window_t::init_widgets() {
   tp_utility_frame_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
   tp_anim_fast_forward = new QPushButton(nullptr);
-  tp_anim_fast_forward->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_anim_fast_forward->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_anim_fast_forward->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_anim_fast_forward->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_anim_fast_forward->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                           astate->size_guide.tool_panel_icon_size()));
   tp_anim_fast_forward->setToolTip(tr("Fast-forward to last frame of animated geometry"));
@@ -564,8 +567,8 @@ void main_window_t::init_widgets() {
           &main_window_t::tp_fast_forward_anim_clicked);
 
   tp_measure_dist = new QPushButton(nullptr);
-  tp_measure_dist->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_measure_dist->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_measure_dist->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_measure_dist->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_measure_dist->setCheckable(true);
   tp_measure_dist->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                      astate->size_guide.tool_panel_icon_size()));
@@ -577,8 +580,8 @@ void main_window_t::init_widgets() {
           &main_window_t::tp_dist_button_clicked);
 
   tp_toggle_atom_override = new QPushButton(nullptr);
-  tp_toggle_atom_override->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_toggle_atom_override->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_toggle_atom_override->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_toggle_atom_override->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_toggle_atom_override->setCheckable(true);
   tp_toggle_atom_override->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                              astate->size_guide.tool_panel_icon_size()));
@@ -590,8 +593,8 @@ void main_window_t::init_widgets() {
           &main_window_t::tp_toggle_atom_override_button_clicked);
 
   tp_force_sel_lbl_vis = new QPushButton(nullptr);
-  tp_force_sel_lbl_vis->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_force_sel_lbl_vis->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_force_sel_lbl_vis->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_force_sel_lbl_vis->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_force_sel_lbl_vis->setCheckable(true);
   tp_force_sel_lbl_vis->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                           astate->size_guide.tool_panel_icon_size()));
@@ -603,8 +606,8 @@ void main_window_t::init_widgets() {
           &main_window_t::tp_force_sel_lbl_vis_button_clicked);
 
   tp_measure_angle = new QPushButton(nullptr);
-  tp_measure_angle->setMaximumWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_measure_angle->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_measure_angle->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_measure_angle->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   tp_measure_angle->setCheckable(true);
   tp_measure_angle->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                       astate->size_guide.tool_panel_icon_size()));
@@ -1815,6 +1818,23 @@ void main_window_t::build_bhv_tools_menus() {
       else tools_menu->addAction(new_act);
 
       tools_menu_actions.push_back(new_act);
+
+    }
+
+}
+
+void main_window_t::build_bhv_toolpanel() {
+
+  app_state_t *astate = app_state_t::get_inst();
+  ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
+
+  m_toolbar_elements.reserve(bhv_mgr->m_toolbar_elements_info.size());
+
+  for (auto &tb_info : bhv_mgr->m_toolbar_elements_info) {
+
+      auto new_tb = tb_info.second.m_fabric();
+      new_tb->init_element(tool_panel_widget);
+      m_toolbar_elements.push_back(new_tb);
 
     }
 

@@ -162,9 +162,9 @@ namespace qpp {
 
         QMenu *help_menu;
         QAction *help_menu_about;
-        //end of menus
+        // End of Menus
 
-        //Layouts
+        // Layouts
         QGridLayout *layout_tools_main_window;
         QVBoxLayout *main_layout;
         QSplitter *layout_ws_viewer_obj_insp;
@@ -172,14 +172,18 @@ namespace qpp {
         QSplitter *splitter_editor_py_console;
         QSplitter *splitter_ws_viewer_py_console_log;
         QSplitter *splitter_py_console_log_widget;
-        //end of layouts
+        // End of Layouts
 
-        //Shortcuts
+        // Shortcuts
         QShortcut *sc_terminate_app;
         QShortcut *sc_toggle_console;
         QShortcut *sc_enter_immersive_mode;
+        // End of Shortcuts
 
-        //End of shortcuts
+        // Toolpanel
+        std::vector<std::shared_ptr<toolbar_element_t> > m_toolbar_elements;
+        // End of Toolpanel
+
       protected:
 
         void dragEnterEvent(QDragEnterEvent *event) override;
@@ -248,6 +252,7 @@ namespace qpp {
          */
         void build_bhv_menus_and_actions();
         void build_bhv_tools_menus();
+        void build_bhv_toolpanel();
         void action_bhv_tools_menus_clicked();
         void control_bhv_tools_menus_activity();
         void action_bhv_import_to_cur_workspace();
