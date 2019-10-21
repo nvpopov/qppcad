@@ -61,8 +61,6 @@ namespace qpp {
 
         QHBoxLayout *tool_panel_layout;
 
-        QComboBox *tp_ws_selector;
-
         QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;
         QPushButton *tp_edit_mode_item;

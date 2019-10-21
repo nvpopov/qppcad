@@ -32,11 +32,11 @@ int size_guide_t::tool_panel_ws_selector_h() {
 }
 
 int size_guide_t::tool_panel_ctrl_h() {
-  return 32;
+  return 36;
 }
 
 int size_guide_t::tool_panel_ctrl_w() {
-  return 32;
+  return 36;
 }
 
 int size_guide_t::tool_panel_edit_sel_w() {

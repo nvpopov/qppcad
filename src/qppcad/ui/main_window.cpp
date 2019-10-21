@@ -420,16 +420,6 @@ void main_window_t::init_widgets() {
   tool_panel_widget->setProperty("s_class", "tp_generic");
   tool_panel_widget->setObjectName("tool_panel_widget_e");
 
-  tp_ws_selector = new QComboBox(nullptr);
-  connect(tp_ws_selector,
-          static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-          this,
-          &main_window_t::ws_selector_selection_changed);
-
-  tp_ws_selector->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  tp_ws_selector->setFixedWidth(astate->size_guide.tool_panel_ws_selector_w());
-  tp_ws_selector->setFixedHeight(astate->size_guide.tool_panel_ws_selector_h());
-
   tp_print_screen = new QPushButton(nullptr);
   tp_print_screen->setProperty("s_class", "tp_cb");
   tp_print_screen->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -654,8 +644,6 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_add_point_sym_group_clicked);
 
-  tp_ws_selector->setVisible(false);
-
   ws_viewer_widget = new ws_viewer_widget_t(nullptr);
 
   obj_insp_widget = new object_inspector_widget_t(nullptr);
@@ -721,8 +709,6 @@ void main_window_t::init_layouts() {
   tool_panel_layout = new QHBoxLayout;
   tool_panel_widget->setLayout(tool_panel_layout);
   tool_panel_layout->setContentsMargins(5,0,0,0);
-
-  tool_panel_layout->addWidget(tp_ws_selector, 0, Qt::AlignLeft);
 
   tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
   tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
@@ -800,8 +786,6 @@ void main_window_t::wss_changed_slot() {
 
   control_bhv_menus_activity();
 
-  tp_ws_selector->blockSignals(true);
-  tp_ws_selector->clear();
 
   if (astate->ws_mgr->has_wss()) {
 
@@ -818,16 +802,6 @@ void main_window_t::wss_changed_slot() {
       ws_menu_bg_color->setEnabled(true);
       //obj_insp_widget->setVisible()
 
-      for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++) {
-
-          auto ws = astate->ws_mgr->m_ws[i];
-          QString dest = QString::fromStdString(fmt::format("[{}] {}", i, ws->m_ws_name));
-          tp_ws_selector->addItem(dest);
-
-        }
-
-      tp_ws_selector->setCurrentIndex(*(astate->ws_mgr->get_cur_id()));
-
     } else {
 
       obj_insp_widget->setVisible(false);
@@ -842,7 +816,6 @@ void main_window_t::wss_changed_slot() {
 
     }
 
-  tp_ws_selector->blockSignals(false);
   astate->log(fmt::format("main_window::workspaces_changed_slot(), total ws = {}",
                           astate->ws_mgr->m_ws.size()));
 
