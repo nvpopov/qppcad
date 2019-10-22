@@ -26,6 +26,8 @@ namespace qpp {
 
     struct ws_item_tab_widget_t {
 
+        QWidget *tab_top_wdgt;
+        QVBoxLayout *tab_top_wdgt_lt;
         QScrollArea *tab_scroll;
         QFrame *tab_inner_widget;
         QVBoxLayout *tab_inner_widget_lt;

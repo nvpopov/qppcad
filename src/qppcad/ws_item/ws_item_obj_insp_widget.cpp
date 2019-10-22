@@ -10,10 +10,18 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::def_tab(QString tab_name,
                                                          QString icon_name_disabled) {
 
   ws_item_tab_widget_t *tmp = new ws_item_tab_widget_t;
+
+  tmp->tab_top_wdgt = new QWidget(nullptr);
+  tmp->tab_top_wdgt_lt = new QVBoxLayout;
+  tmp->tab_top_wdgt->setLayout(tmp->tab_top_wdgt_lt);
+  tmp->tab_top_wdgt_lt->setContentsMargins(0, 0, 0, 3);
+  tmp->tab_top_wdgt_lt->setSpacing(0);
+
   tmp->tab_scroll = new QScrollArea;
   tmp->tab_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   tmp->tab_scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   tmp->tab_scroll->setWidgetResizable(true);
+  // todo: move to qss
   tmp->tab_scroll->setStyleSheet("QScrollArea {border:0;}");
 
   tmp->tab_inner_widget = new QFrame(tmp->tab_scroll);
@@ -25,8 +33,12 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::def_tab(QString tab_name,
   tmp->tab_inner_widget_lt->setSpacing(0);
   tmp->tab_inner_widget->setLayout(tmp->tab_inner_widget_lt);
 
-  tmp->tab_id = addTab(tmp->tab_scroll, "");
+  tmp->tab_top_wdgt_lt->addWidget(tmp->tab_scroll);
+
+  tmp->tab_id = addTab(tmp->tab_top_wdgt, "");
+
   setTabToolTip(tmp->tab_id, tab_name);
+
   tmp->icon_enabled = new QIcon(icon_name_enabled);
   if (icon_name_disabled != "") tmp->icon_disabled = new QIcon(icon_name_disabled);
   setTabIcon(tmp->tab_id, *tmp->icon_enabled);
