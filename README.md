@@ -49,5 +49,6 @@ apt install libqt5opengl5-dev libqt5charts5-dev libqt5svg5-dev libqt5core5a libq
 7. Pugixml - https://pugixml.org/
 8. CppOptimizationLibrary - https://github.com/PatWie/CppNumericalSolvers
 9. qpp - https://github.com/nvpopov/qpp
-10. icons - https://material.io/resources/icons/
-11. font - OpenSans
+11. exprtk - http://www.partow.net/programming/exprtk/index.html
+12. icons - https://material.io/resources/icons/
+13. font - OpenSans

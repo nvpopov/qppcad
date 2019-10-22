@@ -10,6 +10,7 @@
 #include <QTableView>
 #include <QHeaderView>
 #include <QSlider>
+#include <QButtonGroup>
 
 namespace qpp {
 
@@ -132,6 +133,11 @@ namespace qpp {
 
         //START TAB MEASUREMENT
         ws_item_tab_widget_t *tab_measurement;
+
+        QButtonGroup *tms_btg_switch;
+        QPushButton *tms_btg_settings;
+        QPushButton *tms_btg_pair_dist;
+        QPushButton *tms_btg_angles;
 
         //common measurements settings
         qspoiler_widget_t *tms_common_settings_gb;
