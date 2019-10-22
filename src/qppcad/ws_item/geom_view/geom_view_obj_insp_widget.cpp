@@ -575,6 +575,17 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_angle_gb_lt->addRow(tr("Order"), tms_angle_order);
   init_form_lt(tms_angle_gb_lt);
 
+  tms_switch = new QTabBar;
+  tms_switch->setDrawBase(false);
+  //tms_switch->setExpanding(false);
+  tms_switch->setProperty("s_class", "big_tab");
+  tms_switch->addTab(tr("General"));
+  tms_switch->addTab(tr("Pair distance"));
+  tms_switch->addTab(tr("Angle"));
+  connect(tms_switch, &QTabBar::currentChanged,
+          this, &geom_view_obj_insp_widget_t::msr_switch_current_changed);
+
+  tab_measurement->tab_top_wdgt_lt->insertWidget(0, tms_switch);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_common_settings_gb);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_pair_dist_gb);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_angle_gb);
@@ -1808,6 +1819,8 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   construct_select_tab();
   construct_xgeom_tab();
 
+  msr_switch_current_changed(0);
+
   app_state_t *astate = app_state_t::get_inst();
 
   connect(astate->astate_evd,
@@ -2328,6 +2341,14 @@ void geom_view_obj_insp_widget_t::modify_group_op_make_static_anim() {
 
   std::string _anim_name = fmt::format("static_{}", b_al->m_anim->get_total_anims());
   b_al->m_anim->make_anim(_anim_name, geom_anim_t::anim_static, 1);
+
+}
+
+void geom_view_obj_insp_widget_t::msr_switch_current_changed(int index) {
+
+  tms_common_settings_gb->setVisible(index == 0);
+  tms_pair_dist_gb->setVisible(index == 1);
+  tms_angle_gb->setVisible(index == 2);
 
 }
 

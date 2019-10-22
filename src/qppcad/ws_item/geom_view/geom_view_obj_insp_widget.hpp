@@ -134,10 +134,7 @@ namespace qpp {
         //START TAB MEASUREMENT
         ws_item_tab_widget_t *tab_measurement;
 
-        QButtonGroup *tms_btg_switch;
-        QPushButton *tms_btg_settings;
-        QPushButton *tms_btg_pair_dist;
-        QPushButton *tms_btg_angles;
+        QTabBar *tms_switch;
 
         //common measurements settings
         qspoiler_widget_t *tms_common_settings_gb;
@@ -361,6 +358,7 @@ namespace qpp {
         void modify_group_op_del_sel();
         void modify_group_op_make_static_anim();
 
+        void msr_switch_current_changed(int index);
         void msr_pair_cur_idx_changed(int index);
         void msr_angle_cur_idx_changed(int index);
         void msr_pair_select_clicked();

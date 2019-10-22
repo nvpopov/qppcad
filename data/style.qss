@@ -293,6 +293,24 @@ qpp--cad--object_inspector_widget_t QTabBar::tab {
  margin-bottom: 5px;
 }
 
+QTabBar[s_class="big_tab"] {
+ alignment: left;
+}
+
+qpp--cad--object_inspector_widget_t QTabBar[s_class="big_tab"]::tab {
+ width: 100%;
+ height: 22px;
+ padding-top: 2px;
+ padding-left: 4px;
+ padding-bottom: 2px;
+ padding-right: 4px;
+ margin-left: 0px;
+ margin-right: 0px;
+ border: 1px solid rgb(70, 70, 70);
+ border-radius: 3px;
+ margin-bottom: 5px;
+}
+
 qpp--cad--object_inspector_widget_t QTabWidget qpp--cad--qspoiler_widget_t {
  margin-bottom: 5px;
 }
