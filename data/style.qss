@@ -276,11 +276,12 @@ qpp--cad--object_inspector_widget_t QTabWidget::pane {
  border: 0;
 }
 
-qpp--cad--object_inspector_widget_t QTabBar::tab:first, qpp--cad--object_inspector_widget_t QTabBar::tab:only-one {
+qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:first,
+qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:only-one {
  margin-left: 0px !important;
 }
 
-qpp--cad--object_inspector_widget_t QTabBar::tab {
+qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
  width: 26px;
  height: 26px;
  padding-top: 5px;
@@ -298,17 +299,22 @@ QTabBar[s_class="big_tab"] {
 }
 
 qpp--cad--object_inspector_widget_t QTabBar[s_class="big_tab"]::tab {
- width: 100%;
- height: 22px;
+ width: 74%;
  padding-top: 2px;
  padding-left: 4px;
  padding-bottom: 2px;
  padding-right: 4px;
- margin-left: 0px;
- margin-right: 0px;
  border: 1px solid rgb(70, 70, 70);
  border-radius: 3px;
- margin-bottom: 5px;
+}
+
+qpp--cad--object_inspector_widget_t QTabBar[s_class="big_tab"]::scroller {
+ width: 30px;
+ padding-bottom:10px;
+}
+
+qpp--cad--object_inspector_widget_t QTabBar QToolButton {
+ height: 6px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget qpp--cad--qspoiler_widget_t {

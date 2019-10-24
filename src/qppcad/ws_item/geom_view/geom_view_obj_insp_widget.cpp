@@ -293,6 +293,31 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   bt_dist_delegate->set_min_max_step(0.1, 5.0, 0.01);
   disp_bt->setItemDelegateForColumn(2, bt_dist_delegate);
 
+  tdisp_switch = new QButtonGroup;
+  tdisp_switch->setExclusive(true);
+
+  connect(tdisp_switch, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed),
+          this, &geom_view_obj_insp_widget_t::disp_switch_current_changed);
+
+  QHBoxLayout *tmp_lt = new QHBoxLayout;
+  tmp_lt->setContentsMargins(0, 0, 11, 5);
+  tmp_lt->setSpacing(2);
+
+  QPushButton *tmp_b1 = new QPushButton(tr("General"));
+  QPushButton *tmp_b2 = new QPushButton(tr("Labels"));
+  QPushButton *tmp_b3 = new QPushButton(tr("Bonding"));
+  QPushButton *tmp_b4 = new QPushButton(tr("Misc"));
+
+  size_t i = 0;
+  for (auto btn : {tmp_b1, tmp_b2, tmp_b3, tmp_b4}) {
+      tmp_lt->addWidget(btn);
+      tdisp_switch->addButton(btn, i);
+      btn->setCheckable(true);
+      i++;
+    }
+
+  tab_disp->tab_top_wdgt_lt->insertLayout(0, tmp_lt);
+
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_s);
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_shading);
   tab_disp->tab_inner_widget_lt->addWidget(gb_disp_labels);
@@ -577,10 +602,11 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
   tms_switch = new QTabBar;
   tms_switch->setDrawBase(false);
-  //tms_switch->setExpanding(false);
+  tms_switch->setUsesScrollButtons(false);
+  tms_switch->setDocumentMode(true);
   tms_switch->setProperty("s_class", "big_tab");
   tms_switch->addTab(tr("General"));
-  tms_switch->addTab(tr("Pair distance"));
+  tms_switch->addTab(tr("Distance"));
   tms_switch->addTab(tr("Angle"));
   connect(tms_switch, &QTabBar::currentChanged,
           this, &geom_view_obj_insp_widget_t::msr_switch_current_changed);
@@ -1819,6 +1845,8 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   construct_select_tab();
   construct_xgeom_tab();
 
+  tdisp_switch->button(0)->setChecked(true);
+  disp_switch_current_changed(0);
   msr_switch_current_changed(0);
 
   app_state_t *astate = app_state_t::get_inst();
@@ -2014,6 +2042,18 @@ void geom_view_obj_insp_widget_t::anim_act_del_clicked() {
 
 }
 
+void geom_view_obj_insp_widget_t::disp_switch_current_changed(int index) {
+
+  gb_disp_s->setVisible(index == 0);
+  gb_periodic_related_render->setVisible(index == 0 && b_al && b_al->m_geom->DIM > 0);
+  gb_disp_shading->setVisible(index == 0);
+
+  gb_disp_labels->setVisible(index == 1);
+  gb_disp_bt->setVisible(index == 2);
+  gb_disp_type_spec_rend->setVisible(index == 3);
+
+}
+
 void geom_view_obj_insp_widget_t::cell_changed() {
 
   if (b_al) {
@@ -2082,22 +2122,28 @@ void geom_view_obj_insp_widget_t::modify_add_atom_button_clicked() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (b_al) {
+
       vector3<float> new_atom_pos{
         float(tm_add_atom_vec3->sb_x->value()),
             float(tm_add_atom_vec3->sb_y->value()),
             float(tm_add_atom_vec3->sb_z->value())
       };
+
       std::string new_atom_name = tm_add_atom_combo->currentText().toStdString();
       b_al->ins_atom(new_atom_name, new_atom_pos);
       update_animate_section_status();
       astate->make_viewport_dirty();
+
     }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_single_atom_button_clicked() {
 
   if (b_al && b_al->m_atom_idx_sel.size() == 1) {
+
       auto it = b_al->m_atom_idx_sel.begin();
+
       if (it != b_al->m_atom_idx_sel.end()) {
           auto itv = *it;
           b_al->upd_atom(itv.m_atm, tm_single_atom_combo->currentText().toStdString(),
@@ -2106,7 +2152,9 @@ void geom_view_obj_insp_widget_t::modify_single_atom_button_clicked() {
                                         float(tm_single_atom_vec3->sb_z->value())));
           update_animate_section_status();
         }
+
     }
+
 }
 
 void geom_view_obj_insp_widget_t::modify_single_atom_delete_button_clicked() {
@@ -2114,9 +2162,11 @@ void geom_view_obj_insp_widget_t::modify_single_atom_delete_button_clicked() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (b_al) {
+
       b_al->delete_selected_atoms();
       astate->make_viewport_dirty();
       update_animate_section_status();
+
     }
 
 }
@@ -2129,6 +2179,7 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
 
       auto it1 = b_al->m_atom_ord_sel.begin();
       auto it2 = it1++;
+
       if (it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
           it2->m_idx == index::D(b_al->m_geom->DIM).all(0)) {
 
@@ -2138,6 +2189,7 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
 
           astate->make_viewport_dirty();
         }
+
     }
 
 }
@@ -2145,11 +2197,14 @@ void geom_view_obj_insp_widget_t::modify_pair_dist_spinbox_value_changed(double 
 void geom_view_obj_insp_widget_t::modify_pair_dist_swap_button_clicked() {
 
   if (b_al && b_al->m_atom_idx_sel.size() == 2) {
+
       auto it1 = b_al->m_atom_idx_sel.begin();
       auto it2 = it1++;
+
       if (it1->m_idx == index::D(b_al->m_geom->DIM).all(0) &&
           it2->m_idx == index::D(b_al->m_geom->DIM).all(0))
         b_al->swap_atoms(it1->m_atm, it2->m_atm);
+
     }
 
 }
@@ -2172,6 +2227,7 @@ void geom_view_obj_insp_widget_t::modify_add_atom_between_pair() {
       b_al->ins_atom(new_atom_name, r_btw);
       update_animate_section_status();
       astate->make_viewport_dirty();
+
     }
 
 }

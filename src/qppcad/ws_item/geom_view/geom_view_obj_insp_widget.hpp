@@ -45,6 +45,9 @@ namespace qpp {
 
         //START: Display tab
         ws_item_tab_widget_t *tab_disp;
+
+        QButtonGroup *tdisp_switch;
+
         qspoiler_widget_t *gb_disp_s;
         QFormLayout *gb_disp_s_lt;
         qbinded_checkbox_t *disp_s_draw_atoms;
@@ -334,6 +337,7 @@ namespace qpp {
         void anim_act_ren_clicked();
         void anim_act_del_clicked();
 
+        void disp_switch_current_changed(int index);
         void cell_changed();
         void draw_subcells_changed(int state);
         void update_animate_section_status();
