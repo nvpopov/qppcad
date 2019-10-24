@@ -137,7 +137,7 @@ namespace qpp {
         //START TAB MEASUREMENT
         ws_item_tab_widget_t *tab_measurement;
 
-        QTabBar *tms_switch;
+        QButtonGroup *tms_switch;
 
         //common measurements settings
         qspoiler_widget_t *tms_common_settings_gb;

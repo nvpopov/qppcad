@@ -303,7 +303,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   tmp_lt->setContentsMargins(0, 0, 11, 5);
   tmp_lt->setSpacing(2);
 
-  QPushButton *tmp_b1 = new QPushButton(tr("General"));
+  QPushButton *tmp_b1 = new QPushButton(tr("Appearance"));
   QPushButton *tmp_b2 = new QPushButton(tr("Labels"));
   QPushButton *tmp_b3 = new QPushButton(tr("Bonding"));
   QPushButton *tmp_b4 = new QPushButton(tr("Misc"));
@@ -600,18 +600,30 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_angle_gb_lt->addRow(tr("Order"), tms_angle_order);
   init_form_lt(tms_angle_gb_lt);
 
-  tms_switch = new QTabBar;
-  tms_switch->setDrawBase(false);
-  tms_switch->setUsesScrollButtons(false);
-  tms_switch->setDocumentMode(true);
-  tms_switch->setProperty("s_class", "big_tab");
-  tms_switch->addTab(tr("General"));
-  tms_switch->addTab(tr("Distance"));
-  tms_switch->addTab(tr("Angle"));
-  connect(tms_switch, &QTabBar::currentChanged,
+
+  tms_switch = new QButtonGroup;
+  tms_switch->setExclusive(true);
+
+  connect(tms_switch, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed),
           this, &geom_view_obj_insp_widget_t::msr_switch_current_changed);
 
-  tab_measurement->tab_top_wdgt_lt->insertWidget(0, tms_switch);
+  QHBoxLayout *tmp_lt = new QHBoxLayout;
+  tmp_lt->setContentsMargins(0, 0, 11, 5);
+  tmp_lt->setSpacing(2);
+
+  QPushButton *tmp_b1 = new QPushButton(tr("General"));
+  QPushButton *tmp_b2 = new QPushButton(tr("Distance"));
+  QPushButton *tmp_b3 = new QPushButton(tr("Angle"));
+
+  size_t i = 0;
+  for (auto btn : {tmp_b1, tmp_b2, tmp_b3}) {
+      tmp_lt->addWidget(btn);
+      tms_switch->addButton(btn, i);
+      btn->setCheckable(true);
+      i++;
+    }
+
+  tab_measurement->tab_top_wdgt_lt->insertLayout(0, tmp_lt);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_common_settings_gb);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_pair_dist_gb);
   tab_measurement->tab_inner_widget_lt->addWidget(tms_angle_gb);
@@ -1847,6 +1859,8 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
 
   tdisp_switch->button(0)->setChecked(true);
   disp_switch_current_changed(0);
+
+  tms_switch->button(0)->setChecked(true);
   msr_switch_current_changed(0);
 
   app_state_t *astate = app_state_t::get_inst();
