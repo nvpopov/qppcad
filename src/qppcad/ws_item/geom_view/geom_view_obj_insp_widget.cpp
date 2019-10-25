@@ -186,7 +186,7 @@ void geom_view_obj_insp_widget_t::construct_display_tab() {
   gb_disp_s_lt->addRow(tr("Draw im. bonds"), disp_s_draw_img_bonds);
   gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
-  gb_disp_s_lt->addRow(tr("Sel. vis."), disp_s_sel_vis);
+  gb_disp_s_lt->addRow(tr("Selective visibility"), disp_s_sel_vis);
   gb_disp_s_lt->addRow(tr("Sel. vis. bonds"), disp_s_sel_vis_affect_bonds);
   init_form_lt(gb_disp_s_lt);
 
@@ -564,8 +564,8 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
   tms_pair_dist_gb_lt->addRow(tr("Enabled"), tms_pair_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label enabled"), tms_pair_label_enabled);
   tms_pair_dist_gb_lt->addRow(tr("Label style"), tms_pair_label_style);
-  tms_pair_dist_gb_lt->addRow(tr("Custom lbl."), tms_pair_custom_text_enabled);
-  tms_pair_dist_gb_lt->addRow(tr("Custom lbl. text"), tms_pair_custom_text_edit);
+  tms_pair_dist_gb_lt->addRow(tr("Custom label"), tms_pair_custom_text_enabled);
+  tms_pair_dist_gb_lt->addRow(tr("Custom label text"), tms_pair_custom_text_edit);
   tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), tms_font_screen_size);
   tms_pair_dist_gb_lt->addRow(tr("Delta angle"), tms_pair_delta_angle);
   tms_pair_dist_gb_lt->addRow(tr("Delta offset"), tms_pair_delta_offset);
@@ -1147,7 +1147,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       // 3d geom section
       bool _al3d = b_al->m_geom->DIM == 3;
-      gb_periodic_related_render->setVisible(_al3d);
+      gb_periodic_related_render->setVisible(_al3d && tdisp_switch->button(0)->isChecked());
       // end 3d geom section
 
       //anim bindings

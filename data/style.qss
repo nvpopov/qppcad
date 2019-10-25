@@ -321,6 +321,11 @@ qpp--cad--object_inspector_widget_t QTabWidget qpp--cad--qspoiler_widget_t {
  margin-bottom: 5px;
 }
 
+qpp--cad--object_inspector_widget_t QPushButton {
+ padding-left: 12px;
+ padding-right: 12px;
+}
+
 qpp--cad--qspoiler_widget_t QRadioButton {
  margin: 3px;
 }
@@ -328,7 +333,6 @@ qpp--cad--qspoiler_widget_t QRadioButton {
 qpp--cad--qspoiler_widget_t QLabel#add_new_ws_item_type_desc {
  margin: 3px;
 }
-
 
 qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
  margin-left: 0px;
