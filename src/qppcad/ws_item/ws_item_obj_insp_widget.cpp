@@ -68,13 +68,13 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       ws_item_bb_visible->bind_value(&m_binded_item->m_show_bb);
       ws_item_is_visible->bind_value(&m_binded_item->m_is_visible);
 
-      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_rendering,
                                       tg_form_layout,
                                       ws_item_type,
                                       ws_item_is_visible_label,
                                       ws_item_is_visible);
 
-      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_render_bb,
                                       tg_form_layout,
                                       ws_item_is_visible,
                                       ws_item_bb_visible_label,
