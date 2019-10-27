@@ -337,30 +337,30 @@ namespace qpp {
         void anim_act_ren_clicked();
         void anim_act_del_clicked();
 
-        void disp_switch_current_changed(int index);
+        void disp_switch_cur_changed(int index);
         void cell_changed();
         void draw_subcells_changed(int state);
-        void update_animate_section_status();
-        void cur_it_list_selection_changed();
+        void update_anim_section_status();
+        void cur_it_list_sel_changed();
 
-        void modify_add_atom_button_clicked();
-        void modify_single_atom_button_clicked();
-        void modify_single_atom_delete_button_clicked();
-        void modify_pair_dist_spinbox_value_changed(double newval);
-        void modify_pair_dist_swap_button_clicked();
-        void modify_add_atom_between_pair();
-        void modify_barycentric_scale_button_clicked();
-        void modify_translate_selected_atoms_clicked();
-        void modify_translate_coord_type_changed(int coord_type);
-        void modify_bc_rot_angle_type_change(int new_angle_type);
-        void modify_bc_rot_apply();
+        void mod_add_atom_button_clicked();
+        void mod_single_atom_button_clicked();
+        void mod_single_atom_delete_button_clicked();
+        void mod_pair_dist_spinbox_value_changed(double newval);
+        void mod_pair_dist_swap_button_clicked();
+        void mod_add_atom_between_pair();
+        void mod_barycentric_scale_button_clicked();
+        void mod_translate_selected_atoms_clicked();
+        void mod_translate_coord_type_changed(int coord_type);
+        void mod_bc_rot_angle_type_change(int new_angle_type);
+        void mod_bc_rot_apply();
 
-        void modify_group_op_sv_show();
-        void modify_group_op_sv_hide();
-        void modify_group_op_sv_hide_invert();
-        void modify_group_op_sel_ngbs();
-        void modify_group_op_del_sel();
-        void modify_group_op_make_static_anim();
+        void mod_group_op_sv_show();
+        void mod_group_op_sv_hide();
+        void mod_group_op_sv_hide_invert();
+        void mod_group_op_sel_ngbs();
+        void mod_group_op_del_sel();
+        void mod_group_op_make_static_anim();
 
         void msr_switch_current_changed(int index);
         void msr_pair_cur_idx_changed(int index);
