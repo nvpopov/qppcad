@@ -287,11 +287,11 @@ namespace qpp {
         // end tab xgeom
 
         void construct_general_tab();
-        void construct_display_tab();
+        void construct_disp_tab();
         void construct_anim_tab();
-        void construct_measure_tab();
-        void construct_modify_tab();
-        void construct_select_tab();
+        void construct_msr_tab();
+        void construct_mod_tab();
+        void construct_sel_tab();
         void construct_xgeom_tab();
 
         void bind_to_item(ws_item_t *_binding_item) override;
@@ -299,22 +299,22 @@ namespace qpp {
 
         void unbind_item() override;
 
-        void bind_dist_measure_tab();
-        void unbind_dist_measure_tab();
-        void bind_angle_measure_tab();
-        void unbind_angle_measure_tab();
+        void bind_dist_msr_tab();
+        void unbind_dist_msr_tab();
+        void bind_angle_msr_tab();
+        void unbind_angle_msr_tab();
 
-        void bind_select_tab();
-        void unbind_select_tab();
+        void bind_sel_tab();
+        void unbind_sel_tab();
 
         void update_anim_tab();
         void update_anim_tab_visibility();
         //
-        void update_modify_tab();
-        void update_measurement_tab();
-        void update_dist_measurement_tab_info();
-        void update_angle_measurement_tab_info();
-        void update_select_tab();
+        void update_mod_tab();
+        void update_msr_tab();
+        void update_dist_msr_tab_info();
+        void update_angle_msr_tab_info();
+        void update_sel_tab();
         void update_xgeom_tab();
         void fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al);
 

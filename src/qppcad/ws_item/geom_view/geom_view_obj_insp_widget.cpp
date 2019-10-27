@@ -104,7 +104,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::construct_display_tab() {
+void geom_view_obj_insp_widget_t::construct_disp_tab() {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -455,7 +455,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::construct_measure_tab() {
+void geom_view_obj_insp_widget_t::construct_msr_tab() {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -631,7 +631,7 @@ void geom_view_obj_insp_widget_t::construct_measure_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::construct_modify_tab() {
+void geom_view_obj_insp_widget_t::construct_mod_tab() {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -978,7 +978,7 @@ void geom_view_obj_insp_widget_t::construct_modify_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::construct_select_tab() {
+void geom_view_obj_insp_widget_t::construct_sel_tab() {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -1200,9 +1200,9 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       txg_info_tv->update();
       //qt_hlp::vrt_resize_tv_to_cnt(txg_info_tv);
 
-      update_modify_tab();
-      update_measurement_tab();
-      update_select_tab();
+      update_mod_tab();
+      update_msr_tab();
+      update_sel_tab();
       update_xgeom_tab();
 
     }
@@ -1261,14 +1261,14 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   disp_type_spec_mdl->unbind();
   bt_mdl->unbind();
 
-  unbind_dist_measure_tab();
-  unbind_select_tab();
+  unbind_dist_msr_tab();
+  unbind_sel_tab();
 
   b_al = nullptr;
 
 }
 
-void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
+void geom_view_obj_insp_widget_t::bind_dist_msr_tab() {
 
   if (b_al) {
 
@@ -1314,14 +1314,14 @@ void geom_view_obj_insp_widget_t::bind_dist_measure_tab() {
           tms_pair_custom_text_enabled->setEnabled(true);
 
         } else {
-          unbind_dist_measure_tab();
+          unbind_dist_msr_tab();
         }
 
     }
 
 }
 
-void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
+void geom_view_obj_insp_widget_t::unbind_dist_msr_tab() {
 
   tms_pair_dist_color->unbind_value();
   tms_pair_enabled->unbind_value();
@@ -1362,7 +1362,7 @@ void geom_view_obj_insp_widget_t::unbind_dist_measure_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::bind_angle_measure_tab() {
+void geom_view_obj_insp_widget_t::bind_angle_msr_tab() {
 
   if (b_al) {
 
@@ -1378,14 +1378,14 @@ void geom_view_obj_insp_widget_t::bind_angle_measure_tab() {
           tms_angle_order->setEnabled(true);
 
         } else {
-          unbind_angle_measure_tab();
+          unbind_angle_msr_tab();
         }
 
     }
 
 }
 
-void geom_view_obj_insp_widget_t::unbind_angle_measure_tab() {
+void geom_view_obj_insp_widget_t::unbind_angle_msr_tab() {
 
   tms_angle_enabled->unbind_value();
   tms_angle_enabled->setEnabled(false);
@@ -1395,13 +1395,13 @@ void geom_view_obj_insp_widget_t::unbind_angle_measure_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::bind_select_tab() {
+void geom_view_obj_insp_widget_t::bind_sel_tab() {
 
   ts_auto_apply->bind_value(&b_al->m_selg->m_auto_apply);
 
 }
 
-void geom_view_obj_insp_widget_t::unbind_select_tab() {
+void geom_view_obj_insp_widget_t::unbind_sel_tab() {
 
   ts_auto_apply->unbind_value();
 
@@ -1433,7 +1433,7 @@ void geom_view_obj_insp_widget_t::update_anim_tab_visibility() {
 
 }
 
-void geom_view_obj_insp_widget_t::update_modify_tab() {
+void geom_view_obj_insp_widget_t::update_mod_tab() {
 
   if (b_al) {
 
@@ -1620,7 +1620,7 @@ void geom_view_obj_insp_widget_t::update_modify_tab() {
 
 }
 
-void geom_view_obj_insp_widget_t::update_measurement_tab() {
+void geom_view_obj_insp_widget_t::update_msr_tab() {
 
   if (b_al) {
 
@@ -1646,7 +1646,7 @@ void geom_view_obj_insp_widget_t::update_measurement_tab() {
         }
 
       tms_pair_cur_msr->setCurrentIndex(b_al->m_measure->m_cur_dist_rec_ui);
-      update_dist_measurement_tab_info();
+      update_dist_msr_tab_info();
       tms_pair_cur_msr->blockSignals(false);
 
       //angle recs
@@ -1681,14 +1681,14 @@ void geom_view_obj_insp_widget_t::update_measurement_tab() {
 
 
       tms_angle_cur_msr->setCurrentIndex(b_al->m_measure->m_cur_angle_rec_ui);
-      update_angle_measurement_tab_info();
+      update_angle_msr_tab_info();
       tms_angle_cur_msr->blockSignals(false);
 
     }
 
 }
 
-void geom_view_obj_insp_widget_t::update_dist_measurement_tab_info() {
+void geom_view_obj_insp_widget_t::update_dist_msr_tab_info() {
 
   if (b_al) {
 
@@ -1700,7 +1700,7 @@ void geom_view_obj_insp_widget_t::update_dist_measurement_tab_info() {
           const QString empty_label = "-";
           tms_pair_at1_info->setText(empty_label);
           tms_pair_at2_info->setText(empty_label);
-          unbind_dist_measure_tab();
+          unbind_dist_msr_tab();
 
         } else {
 
@@ -1718,7 +1718,7 @@ void geom_view_obj_insp_widget_t::update_dist_measurement_tab_info() {
                                .arg(QString::fromStdString(fmt::format("{}",rec.m_idx2)));
           tms_pair_at2_info->setText(atom2_info);
 
-          bind_dist_measure_tab();
+          bind_dist_msr_tab();
 
         }
 
@@ -1726,7 +1726,7 @@ void geom_view_obj_insp_widget_t::update_dist_measurement_tab_info() {
 
 }
 
-void geom_view_obj_insp_widget_t::update_angle_measurement_tab_info()  {
+void geom_view_obj_insp_widget_t::update_angle_msr_tab_info()  {
 
   if (b_al) {
       //transform dist msr id
@@ -1738,7 +1738,7 @@ void geom_view_obj_insp_widget_t::update_angle_measurement_tab_info()  {
           tms_angle_at1_info->setText(empty_label);
           tms_angle_at2_info->setText(empty_label);
           tms_angle_at3_info->setText(empty_label);
-          unbind_angle_measure_tab();
+          unbind_angle_msr_tab();
 
         } else {
 
@@ -1762,7 +1762,7 @@ void geom_view_obj_insp_widget_t::update_angle_measurement_tab_info()  {
                                .arg(QString::fromStdString(fmt::format("{}",rec.m_idx3)));
           tms_angle_at3_info->setText(atom3_info);
 
-          bind_angle_measure_tab();
+          bind_angle_msr_tab();
 
         }
 
@@ -1770,11 +1770,11 @@ void geom_view_obj_insp_widget_t::update_angle_measurement_tab_info()  {
 
 }
 
-void geom_view_obj_insp_widget_t::update_select_tab() {
+void geom_view_obj_insp_widget_t::update_sel_tab() {
 
   if (b_al) {
 
-      bind_select_tab();
+      bind_sel_tab();
 
       ts_total_groups->setText(QString("%1").arg(b_al->m_selg->m_sel_grps.size()));
       ts_cur_sel_grp->blockSignals(true);
@@ -1795,7 +1795,7 @@ void geom_view_obj_insp_widget_t::update_select_tab() {
 
     } else {
 
-      unbind_select_tab();
+      unbind_sel_tab();
 
     }
 
@@ -1850,11 +1850,11 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
                       "://images/format_list_numbered-24px_d.svg");
 
   construct_general_tab();
-  construct_display_tab();
+  construct_disp_tab();
   construct_anim_tab();
-  construct_measure_tab();
-  construct_modify_tab();
-  construct_select_tab();
+  construct_msr_tab();
+  construct_mod_tab();
+  construct_sel_tab();
   construct_xgeom_tab();
 
   tdisp_switch->button(0)->setChecked(true);
@@ -1893,7 +1893,7 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_measurements_changed_signal,
           this,
-          &geom_view_obj_insp_widget_t::update_measurement_tab);
+          &geom_view_obj_insp_widget_t::update_msr_tab);
 
 }
 
@@ -2126,7 +2126,7 @@ void geom_view_obj_insp_widget_t::update_animate_section_status() {
 void geom_view_obj_insp_widget_t::cur_it_list_selection_changed() {
 
   if (b_al && b_al->is_selected()) {
-      update_modify_tab();
+      update_mod_tab();
     }
 
 }
@@ -2428,7 +2428,7 @@ void geom_view_obj_insp_widget_t::msr_pair_cur_idx_changed(int index) {
 
   if (b_al) {
       b_al->m_measure->m_cur_dist_rec_ui = index;
-      update_dist_measurement_tab_info();
+      update_dist_msr_tab_info();
     }
 
   astate->make_viewport_dirty();
@@ -2441,7 +2441,7 @@ void geom_view_obj_insp_widget_t::msr_angle_cur_idx_changed(int index) {
 
   if (b_al) {
       b_al->m_measure->m_cur_angle_rec_ui = index;
-      update_angle_measurement_tab_info();
+      update_angle_msr_tab_info();
     }
 
   astate->make_viewport_dirty();
@@ -2462,9 +2462,9 @@ void geom_view_obj_insp_widget_t::msr_pair_copy_clicked() {
 
 void geom_view_obj_insp_widget_t::cur_ws_edit_mode_changed() {
 
-  update_modify_tab();
-  update_measurement_tab();
-  update_select_tab();
+  update_mod_tab();
+  update_msr_tab();
+  update_sel_tab();
 
 }
 
@@ -2472,9 +2472,9 @@ void geom_view_obj_insp_widget_t::cur_it_selected_content_changed() {
 
   if (b_al) {
 
-      update_modify_tab();
-      update_measurement_tab();
-      update_select_tab();
+      update_mod_tab();
+      update_msr_tab();
+      update_sel_tab();
 
     }
 
