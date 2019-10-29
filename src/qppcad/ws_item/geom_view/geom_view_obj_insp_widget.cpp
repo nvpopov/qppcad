@@ -308,7 +308,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   QPushButton *tmp_b3 = new QPushButton(tr("Bonding"));
   QPushButton *tmp_b4 = new QPushButton(tr("Misc"));
 
-  size_t i = 0;
+  int i = 0;
   for (auto btn : {tmp_b1, tmp_b2, tmp_b3, tmp_b4}) {
       tmp_lt->addWidget(btn);
       tdisp_switch->addButton(btn, i);
@@ -615,7 +615,7 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
   QPushButton *tmp_b2 = new QPushButton(tr("Distance"));
   QPushButton *tmp_b3 = new QPushButton(tr("Angle"));
 
-  size_t i = 0;
+  int i = 0;
   for (auto btn : {tmp_b1, tmp_b2, tmp_b3}) {
       tmp_lt->addWidget(btn);
       tms_switch->addButton(btn, i);
