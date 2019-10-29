@@ -276,6 +276,7 @@ namespace qpp {
 
         // start tab xgeom
         ws_item_tab_widget_t *tab_xgeom;
+        QButtonGroup *txg_switch;
         qspoiler_widget_t *txg_gb_info;
         QVBoxLayout *txg_gb_info_lt;
         QTableView *txg_info_tv;
@@ -325,7 +326,7 @@ namespace qpp {
       public slots:
 
         void cur_anim_index_changed(int index);
-        void play_anim_button_toggle(bool value);
+        void play_anim_button_toggle(bool value); //TODO: refc toggle -> toggled
         void anim_updated_external();
         void cur_ws_sel_item_frame_changed();
 
@@ -368,6 +369,8 @@ namespace qpp {
         void msr_pair_select_clicked();
         void msr_pair_delete_clicked();
         void msr_pair_copy_clicked();
+
+        void xgeom_switch_current_changed(int index);
 
         void cur_ws_edit_mode_changed();
         void cur_it_selected_content_changed();

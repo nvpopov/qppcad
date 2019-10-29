@@ -1036,6 +1036,28 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
   txg_gb_comp_prop_lt = new QVBoxLayout;
   txg_gb_comp_prop->add_content_layout(txg_gb_comp_prop_lt);
 
+  txg_switch = new QButtonGroup;
+  txg_switch->setExclusive(true);
+
+  connect(txg_switch, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed),
+          this, &geom_view_obj_insp_widget_t::xgeom_switch_current_changed);
+
+  QHBoxLayout *tmp_lt = new QHBoxLayout;
+  tmp_lt->setContentsMargins(0, 0, 11, 5);
+  tmp_lt->setSpacing(2);
+
+  QPushButton *tmp_b1 = new QPushButton(tr("XGeometry Structure"));
+  QPushButton *tmp_b2 = new QPushButton(tr("Computed Property"));
+
+  int i = 0;
+  for (auto btn : {tmp_b1, tmp_b2}) {
+      tmp_lt->addWidget(btn);
+      txg_switch->addButton(btn, i);
+      btn->setCheckable(true);
+      i++;
+    }
+
+  tab_xgeom->tab_top_wdgt_lt->insertLayout(0, tmp_lt);
   tab_xgeom->tab_inner_widget_lt->addWidget(txg_gb_info);
   tab_xgeom->tab_inner_widget_lt->addWidget(txg_gb_comp_prop);
   tab_xgeom->tab_inner_widget_lt->addStretch(1);
@@ -1863,6 +1885,9 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
   tms_switch->button(0)->setChecked(true);
   msr_switch_current_changed(0);
 
+  txg_switch->button(0)->setChecked(true);
+  xgeom_switch_current_changed(0);
+
   app_state_t *astate = app_state_t::get_inst();
 
   connect(astate->astate_evd,
@@ -1902,8 +1927,6 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
   if (b_al) {
 
       if (index < int(b_al->m_anim->get_total_anims())) {
-
-          app_state_t* astate = app_state_t::get_inst();
 
           if (b_al->m_anim->m_cur_anim != index) {
 
@@ -2458,6 +2481,13 @@ void geom_view_obj_insp_widget_t::msr_pair_delete_clicked() {
 
 void geom_view_obj_insp_widget_t::msr_pair_copy_clicked() {
   if (b_al) b_al->m_measure->dist_copy_selected();
+}
+
+void geom_view_obj_insp_widget_t::xgeom_switch_current_changed(int index) {
+
+  txg_gb_info->setVisible(index == 0);
+  txg_gb_comp_prop->setVisible(index == 1);
+
 }
 
 void geom_view_obj_insp_widget_t::cur_ws_edit_mode_changed() {
