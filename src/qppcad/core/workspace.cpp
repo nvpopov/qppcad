@@ -761,10 +761,29 @@ void workspace_manager_t::render_cur_ws () {
 
 void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   if (!has_wss()) return;
 
   if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
+
       m_ws[*m_cur_ws_id]->render_overlay(painter);
+
+//      if (m_ws[*m_cur_ws_id]->m_gizmo->m_is_visible) {
+
+//          auto &gizmo = m_ws[*m_cur_ws_id]->m_gizmo;
+
+//          auto proj_pos_x =
+//              astate->camera->project(gizmo->m_pos + gizmo_axis[0] * gizmo->m_shift_magn);
+
+//          auto proj_pos_y =
+//              astate->camera->project(gizmo->m_pos + gizmo_axis[1] * gizmo->m_shift_magn);
+
+//          auto proj_pos_z =
+//              astate->camera->project(gizmo->m_pos + gizmo_axis[2] * gizmo->m_shift_magn);
+
+//        }
+
     }
 
 }

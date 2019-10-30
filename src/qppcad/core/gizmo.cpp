@@ -42,20 +42,32 @@ void gizmo_t::render () {
        ) {
 
       astate->dp->render_cube(m_pos, _v_scale * 1.2f, clr_gray);
+      std::array<vector3<float>, 3> tmp_pos_hat {
+        m_pos + gizmo_axis[0] * m_shift_magn,
+        m_pos + gizmo_axis[1] * m_shift_magn,
+        m_pos + gizmo_axis[2] * m_shift_magn
+      };
 
-      astate->dp->render_general_mesh(m_pos + gizmo_axis[0] * m_shift_magn,
+      std::transform(std::begin(tmp_pos_hat),
+                     std::end(tmp_pos_hat),
+                     std::begin(m_proj_axes),
+                     [astate](const vector3<float> &pos){
+                       return astate->camera->project(pos);
+                     });
+
+      astate->dp->render_general_mesh(tmp_pos_hat[0],
                                       _v_one * 0.35f,
                                       vector3<float>( 0.0f, float(pi) / 2, 0.0f ),
                                       gizmo_color[0],
                                       astate->mesh_unit_cone);
 
-      astate->dp->render_general_mesh(m_pos + gizmo_axis[1] * m_shift_magn,
+      astate->dp->render_general_mesh(tmp_pos_hat[1],
                                       _v_one * 0.35f,
                                       vector3<float>( 0.0f, 0.0f, -float(pi) / 2 ),
                                       gizmo_color[1],
                                       astate->mesh_unit_cone);
 
-      astate->dp->render_general_mesh(m_pos + gizmo_axis[2] * m_shift_magn,
+      astate->dp->render_general_mesh(tmp_pos_hat[2],
                                       _v_one * 0.35f,
                                       vector3<float>( 0.0f, 0.0f, 0.0f),
                                       gizmo_color[2],

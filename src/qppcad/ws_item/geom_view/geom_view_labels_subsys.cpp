@@ -27,9 +27,11 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   float _outline_size = m_outline_size;
 
   if (m_screen_scale) {
+
       float clmp_os = std::clamp(astate->camera->m_ortho_scale, 1.0f, 20.0f);
       _font_size = m_lbl_font_size * 10 / clmp_os;
       _outline_size = m_outline_size * 10 / clmp_os;
+
     }
 
   QPen rectpen(QPen(Qt::black, m_render_outlines ? _outline_size : 1, Qt::SolidLine));
@@ -80,11 +82,15 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
               auto cached_pp = m_pp_cache.find({label, _font_size});
 
               if (cached_pp == m_pp_cache.end()) {
+
                   auto &new_pp = m_pp_cache[{label, _font_size}];
                   new_pp.addText(0, 0, text_font_lb, label_qs);
                   text_path = &new_pp;
+
                 } else {
+
                   text_path = &cached_pp->second;
+
                 }
 
               transform.reset();

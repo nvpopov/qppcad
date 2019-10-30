@@ -339,8 +339,10 @@ void geom_view_t::render() {
 }
 
 void geom_view_t::render_overlay(QPainter &painter) {
+
   m_measure->render_overlay(painter);
   m_labels->render_overlay(painter);
+
 }
 
 void geom_view_t::rebond() {
