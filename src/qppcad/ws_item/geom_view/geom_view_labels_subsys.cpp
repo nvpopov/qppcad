@@ -52,22 +52,40 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   QRect font_rec;
   transform.reset();
 
-  for (auto i = 0; i < p_owner->m_geom->nat(); i++) {
+  //render labels
+  for (auto i = 0; i < p_owner->m_geom->nat() + 3; i++) {
 
-      if (p_owner->m_sel_vis && p_owner->m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) continue;
+      // n = 2 -> 0 1 2 3 4
+      bool is_axis = i >= p_owner->m_geom->nat();
+      int axis_id = i - p_owner->m_geom->nat();
 
-      if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) && m_selective_lbl) continue;
+      //std::cout << fmt::format("DEBUG !!!{}\n", axis_id) << std::endl;
+      auto parent_ws = p_owner->m_parent_ws;
 
-      if (!p_owner->m_atom_type_to_hide.empty()) {
-          auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));
-          if (it != p_owner->m_atom_type_to_hide.end()) return;
+      if (is_axis && parent_ws->m_edit_type == ws_edit_e::edit_content &&
+          p_owner->m_atom_idx_sel.empty()) continue;
+      if (is_axis && !p_owner->m_selected) continue;
+      if (is_axis && !parent_ws->m_gizmo->m_is_visible) continue;
+
+      if (!is_axis) {
+
+          if (p_owner->m_sel_vis && p_owner->m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) continue;
+
+          if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i) && m_selective_lbl) continue;
+
+          if (!p_owner->m_atom_type_to_hide.empty()) {
+              auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));
+              if (it != p_owner->m_atom_type_to_hide.end()) return;
+            }
+
         }
 
-      proj_pos = astate->camera->project(p_owner->m_pos + p_owner->m_geom->pos(i));
+      proj_pos = is_axis ? p_owner->m_parent_ws->m_gizmo->m_proj_axes[axis_id] :
+            astate->camera->project(p_owner->m_pos + p_owner->m_geom->pos(i));
 
       bool render_label{true};
 
-      label = label_gen_fn(p_owner, m_style, i);
+      label = is_axis ? std::array<std::string,3>{"x","y","z"}[axis_id] : label_gen_fn(p_owner, m_style, i);
       render_label = !label.empty();
 
       /* render label */
@@ -279,6 +297,7 @@ std::string geom_view_labels_subsys_t::label_gen_fn(geom_view_t *owner,
         if (owner->m_geom->xfield<bool>(xgeom_label_show, atom_id)) {
             return owner->m_geom->xfield<std::string>(xgeom_label_text, atom_id);
           }
+        break;
       }
 
     default:
