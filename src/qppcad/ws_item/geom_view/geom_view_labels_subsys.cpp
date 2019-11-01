@@ -85,7 +85,10 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
       bool render_label{true};
 
-      label = is_axis ? std::array<std::string,3>{"x","y","z"}[axis_id] : label_gen_fn(p_owner, m_style, i);
+      label = is_axis ?
+            std::array<std::string,3>{"x","y","z"}[axis_id] :
+            label_gen_fn(p_owner, m_style, i);
+
       render_label = !label.empty();
 
       /* render label */

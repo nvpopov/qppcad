@@ -27,7 +27,9 @@ endmacro()
 
 #to prevent building qpp python bindings
 set_option(PYTHON_BINDINGS OFF)
-set_option(BUILD_TESTS ON)
+set_option(BUILD_TESTS OFF)
+set_option(BUILD_EXAMPLES OFF)
+set_option(BUILD_QPP_TESTS OFF)
 
 find_package(Doxygen)
 
