@@ -69,6 +69,7 @@ namespace qpp {
         qbinded_checkbox_t *disp_labels_screen_scale;
         qbinded_checkbox_t *disp_labels_draw_outline;
         qbinded_float_spinbox_t *disp_labels_outline_size;
+        qbinded_checkbox_t *disp_labels_draw_axis_labels;
 
         qbinded_checkbox_t *disp_s_sel_vis;
         qbinded_checkbox_t *disp_s_sel_vis_affect_bonds;
