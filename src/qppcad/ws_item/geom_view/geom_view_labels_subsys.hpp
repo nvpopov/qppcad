@@ -39,6 +39,7 @@ namespace qpp {
         bool m_selective_lbl{false};
         bool m_screen_scale{false};
         bool m_render_outlines{true};
+        bool m_render_axis_labels{true};
         float m_outline_size{1};
         explicit geom_view_labels_subsys_t (geom_view_t &_p_owner);
 

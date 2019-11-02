@@ -64,8 +64,10 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
       if (is_axis && parent_ws->m_edit_type == ws_edit_e::edit_content &&
           p_owner->m_atom_idx_sel.empty()) continue;
-      if (is_axis && !p_owner->m_selected) continue;
-      if (is_axis && !parent_ws->m_gizmo->m_is_visible) continue;
+
+      if (is_axis && (!p_owner->m_selected ||
+                     !parent_ws->m_gizmo->m_is_visible ||
+                     !m_render_axis_labels)) continue;
 
       if (!is_axis) {
 
