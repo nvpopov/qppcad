@@ -28,6 +28,10 @@ namespace qpp {
         static std::string pretty_print_selected_atoms(geom_view_t *gv,
                                                        vector3<float> new_frame);
 
+        /* naming tools */
+        static void name_sel_atoms_by_order(geom_view_t *gv);
+        static void name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3<float> point);
+
         /* periodic cell related tools */
         static void flip_atom_in_cell(geom_view_t *gv,
                                       size_t at_id,

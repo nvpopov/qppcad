@@ -276,6 +276,11 @@ void py_geom_view_reg_helper_t::reg(
      .def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point,
           py::arg("gv"), py::arg("fpoint"))
 
+     .def("name_sel_atoms_by_order", &geom_view_tools_t::name_sel_atoms_by_order,
+          py::arg("gv"))
+      .def("name_sel_atoms_by_dist_to_point", &geom_view_tools_t::name_sel_atoms_by_dist_to_point,
+           py::arg("gv"), py::arg("point") = vector3<float>{0})
+
      .def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn, py::arg("gv"))
      .def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
                       py::arg("gv"), py::arg("score_eps") = 0.1f)

@@ -199,6 +199,56 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
 
 }
 
+void geom_view_tools_t::name_sel_atoms_by_order(geom_view_t *gv) {
+
+  if (!gv) return;
+
+  gv->m_labels->m_style = geom_labels_style_e::show_custom;
+
+  size_t atom_ord_c{0};
+
+  for (auto &rec : gv->m_atom_idx_sel) {
+
+      gv->m_geom->xfield<std::string>(xgeom_label_text, rec.m_atm) = std::to_string(atom_ord_c);
+      gv->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = true;
+      atom_ord_c++;
+
+    }
+
+}
+
+void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3<float> point) {
+
+
+  if (!gv) return;
+
+  gv->m_labels->m_style = geom_labels_style_e::show_custom;
+
+  std::vector<std::tuple<size_t, float> > tmp_dists;
+
+  for (auto &rec : gv->m_atom_idx_sel) {
+
+      float dist = (gv->m_geom->pos(rec.m_atm, rec.m_idx) - point).norm();
+      std::tuple<size_t, float> tmp_dist_rec{rec.m_atm, dist};
+      tmp_dists.push_back(std::move(tmp_dist_rec));
+
+    }
+
+  std::sort(std::begin(tmp_dists),
+            std::end(tmp_dists),
+            [](const auto & a, const auto & b) -> bool
+            {return std::get<1>(a) < std::get<1>(b);});
+
+  for (size_t i = 0; i < std::size(tmp_dists); i++) {
+
+      gv->m_geom->xfield<bool>(xgeom_label_show, std::get<0>(tmp_dists[i])) = true;
+      gv->m_geom->xfield<std::string>(xgeom_label_text, std::get<0>(tmp_dists[i])) =
+          std::to_string(i);
+
+    }
+
+}
+
 void geom_view_tools_t::flip_atom_in_cell(geom_view_t *gv,
                                           size_t at_id,
                                           size_t dim_id,
