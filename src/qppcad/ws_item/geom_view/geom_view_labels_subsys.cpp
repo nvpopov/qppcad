@@ -19,7 +19,7 @@ void geom_view_labels_subsys_t::render_overlay(QPainter &painter) {
 
 void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
-  if (m_style == geom_labels_style_e::show_none) return;
+  //if (m_style == geom_labels_style_e::show_none) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -53,11 +53,13 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   transform.reset();
 
   //render labels
-  for (auto i = 0; i < p_owner->m_geom->nat() + 3; i++) {
+  for (int i = -3; i < p_owner->m_geom->nat(); i++) {
 
       // n = 2 -> 0 1 2 3 4
-      bool is_axis = i >= p_owner->m_geom->nat();
-      int axis_id = i - p_owner->m_geom->nat();
+      bool is_axis = i < 0;
+      int axis_id = 3 + i;
+
+      if (i >= 0 && m_style == geom_labels_style_e::show_none) return;
 
       //std::cout << fmt::format("DEBUG !!!{}\n", axis_id) << std::endl;
       auto parent_ws = p_owner->m_parent_ws;
