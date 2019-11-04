@@ -44,11 +44,18 @@ int main (int argc, char **argv) {
   astate->tlog("@GIT_REVISION={}, @BUILD_DATE={}",
                build_info_helper::get_git_version(), build_info_helper::get_git_version());
 
+  std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
+  bool under_dev_env = test_in_dev_env.good();
+
   astate->init_managers();
   astate->ws_mgr->init_ws_item_bhv_mgr();
   astate->load_settings();
   astate->init_fixtures();
-  astate->ws_mgr->init_default();
+
+  if (under_dev_env) {
+      astate->ws_mgr->init_default();
+      astate->m_show_debug_frame_stats = true;
+    }
 
   if (!args.empty()) {
 

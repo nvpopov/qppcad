@@ -684,9 +684,6 @@ void workspace_manager_t::cur_ws_prev_item() {
 
 void workspace_manager_t::init_default () {
 
-  std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
-  if (!test_in_dev_env.good()) return;
-
   QStringList files = {
     "../data/refs/POSCAR.mp-558947_SiO2",
     "../data/refs/mp-971662_Si.vasp",
