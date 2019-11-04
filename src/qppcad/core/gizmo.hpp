@@ -36,13 +36,14 @@ namespace qpp {
         vector3<float> m_acc_tr;
 
         std::array<opt<vector2<float> >, 3> m_proj_axes;
+        vector2<float> m_proj_axes_cnt;
 
         float m_box_size;
         float m_shift_magn;
         bool m_is_active{false};
         bool m_is_interacting{false};
         bool m_is_visible{true};
-        gizmo_transform_type m_cur_ttype{gizmo_transform_type::translation};
+        gizmo_transform_type m_cur_type{gizmo_transform_type::translation};
 
         int8_t m_touched_axis{-1};
         std::array<aabb_3d_t<float>,3> m_bx;

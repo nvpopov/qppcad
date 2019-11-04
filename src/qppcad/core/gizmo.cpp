@@ -48,12 +48,18 @@ void gizmo_t::render () {
         m_pos + gizmo_axis[2] * m_shift_magn
       };
 
+      auto lambda_proj_pos = [astate](const vector3<float> &pos){
+          return astate->camera->project(pos);
+        };
+
       std::transform(std::begin(tmp_pos_hat),
                      std::end(tmp_pos_hat),
                      std::begin(m_proj_axes),
-                     [astate](const vector3<float> &pos){
-                       return astate->camera->project(pos);
-                     });
+                     lambda_proj_pos);
+
+      m_proj_axes_cnt = (m_proj_axes[0].value_or(vector2<float>{0}) +
+                         m_proj_axes[1].value_or(vector2<float>{0}) +
+                         m_proj_axes[2].value_or(vector2<float>{0})) / 3.0f;
 
       astate->dp->render_general_mesh(tmp_pos_hat[0],
                                       _v_one * 0.35f,
