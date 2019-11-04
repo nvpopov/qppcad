@@ -35,7 +35,7 @@ namespace qpp {
         vector3<float> m_pos; // gizmo pos in world coordinates
         vector3<float> m_acc_tr;
 
-        std::array<opt<vector2<float> >, 3> m_proj_axes;
+        std::array<vector2<float> , 3> m_proj_axes;
         vector2<float> m_proj_axes_cnt;
 
         float m_box_size;
