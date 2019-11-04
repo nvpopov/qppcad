@@ -5,23 +5,11 @@
 #include <vector>
 #include <algorithm>
 #include <QPainter>
+#include <qppcad/ws_item/geom_view/geom_view_labels_style.hpp>
 
 namespace qpp {
 
   namespace cad {
-
-    enum geom_labels_style_e : int {
-
-      show_none,
-      show_id,
-      show_type,
-      show_id_type,
-      show_charge,
-      show_charge_type,
-      show_charge_id_type,
-      show_custom
-
-    };
 
     class geom_view_t;
 
