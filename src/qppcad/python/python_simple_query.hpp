@@ -13,6 +13,7 @@ namespace py = pybind11;
 #include <qppcad/core/qppcad.hpp>
 #include <geom/lace3d.hpp>
 #include <qppcad/core/workspace.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_labels_style.hpp>
 
 namespace qpp {
 
@@ -63,6 +64,8 @@ namespace qpp {
         static void unsel_cnt_list(py::list sel_list);
         static void unsel_cnt_type(py::str sel_type);
         static py::list get_sel();
+
+        static void py_labels(geom_labels_style_e lstyle);
 
         static py::list get_tool_groups();
         static py::list get_tool_names();

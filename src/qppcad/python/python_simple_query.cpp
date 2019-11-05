@@ -1,12 +1,15 @@
 #include <qppcad/python/python_simple_query.hpp>
 #include <qppcad/core/app_state.hpp>
+
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/traj_hl/traj_hl.hpp>
 #include <qppcad/ws_item/cube_primitive/cube_primitive.hpp>
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
+
 #include <data/ptable.hpp>
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <symm/point_groups.hpp>
@@ -354,6 +357,16 @@ pybind11::list simple_query::get_sel() {
     if (elem.m_idx == index::D(al->m_geom->DIM).all(0)) res.append(elem.m_atm);
 
   return res;
+
+}
+
+void simple_query::py_labels(geom_labels_style_e lstyle){
+
+  app_state_t *astate = app_state_t::get_inst();
+  auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+  if (!al) return;
+
+  al->m_labels->m_style = lstyle;
 
 }
 

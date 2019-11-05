@@ -65,7 +65,14 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
    .def("xgeom_dfn", &simple_query::get_xgeom_dfn)
    .def("xgeom_dft", &simple_query::get_xgeom_dft)
-   .def("cw", &simple_query::cur_ws);
+   .def("cw", &simple_query::cur_ws)
+   .def("labels", &simple_query::py_labels)
+   .def("rebond", &simple_query::rebond)
+   .def("t", &simple_query::translate_selected)
+   .def("sc", &simple_query::make_super_cell)
+   .def("set_chg", &simple_query::set_charge)
+   .def("set_sel_color", &simple_query::set_sel_color)
+   .def("set_sel_color", &simple_query::set_sel_color_vec);
 
   //****************************** tools module begin ******************************
   py::module tools = m.def_submodule("tools", "Generic tools");
@@ -83,13 +90,6 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
        .def("get_followers", &simple_query::get_followers)
        .def("get_leader", &simple_query::get_leader)
        .def("exec_tool", &simple_query::exec_tool)
-
-       .def("rebond", &simple_query::rebond)
-       .def("t", &simple_query::translate_selected)
-       .def("sc", &simple_query::make_super_cell)
-       .def("set_chg", &simple_query::set_charge)
-       .def("set_sel_color", &simple_query::set_sel_color)
-       .def("set_sel_color", &simple_query::set_sel_color_vec)
 
        .def("get_type_name", &simple_query::get_type_name)
        .def("get_type_hash", &simple_query::get_type_hash)
