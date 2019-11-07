@@ -95,6 +95,7 @@ namespace qpp {
         static void edit_mode(int mode);
         static void rebond();
         static void translate_selected(float tx, float ty, float tz);
+        static void translate_selected_v3(const vector3<float> vec);
         static void set_charge(float charge);
         static void set_ws_bg(vector3<float> bg);
         static std::shared_ptr<workspace_t> cur_ws();

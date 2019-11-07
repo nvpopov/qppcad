@@ -69,6 +69,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
    .def("labels", &simple_query::py_labels)
    .def("rebond", &simple_query::rebond)
    .def("t", &simple_query::translate_selected)
+   .def("t", &simple_query::translate_selected_v3)
    .def("sc", &simple_query::make_super_cell)
    .def("set_chg", &simple_query::set_charge)
    .def("set_sel_color", &simple_query::set_sel_color)

@@ -755,6 +755,12 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
 
 }
 
+void simple_query::translate_selected_v3(const vector3<float> vec) {
+
+  simple_query::translate_selected(vec[0], vec[1], vec[2]);
+
+}
+
 void simple_query::set_charge(float charge) {
 
   app_state_t *astate = app_state_t::get_inst();
