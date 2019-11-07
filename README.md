@@ -10,18 +10,18 @@ qpp::cad - molecule and crystal editor written in c++
 
 ### Init submodules in one command
 ```bash
-git clone https://github.com/nvpopov/qppcad.git --recurse-submodules
+git clone git@github.com:nvpopov/qppcad.git --recurse-submodules
 ```
 
 ### or in two!
 ```bash
-git clone https://github.com/nvpopov/qppcad.git
+git clone git@github.com:nvpopov/qppcad.git
 git submodule update --init --recursive
 ```
 
 ### Init && compile
 ```bash
-git clone https://github.com/nvpopov/qppcad.git --recurse-submodules
+git clone git@github.com:nvpopov/qppcad.git --recurse-submodules
 cd qppcad
 mkdir build
 cd build
