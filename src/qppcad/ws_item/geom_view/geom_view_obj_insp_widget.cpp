@@ -670,7 +670,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   tm_single_atom_vec3->set_min_max_step(-10000, 10000, 0.01);
   tm_single_atom_info = new QLabel;
 
-  tm_single_atom_commit = new QPushButton(tr("Commit"));
+  tm_single_atom_commit = new QPushButton(tr("Apply"));
   tm_single_atom_commit->setMaximumWidth(astate->size_guide.obj_insp_button_w());
   connect(tm_single_atom_commit,
           &QPushButton::pressed,
