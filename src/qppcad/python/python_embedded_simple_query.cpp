@@ -118,7 +118,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
           Selects nth workspace
           )str" )
 
-     .def("it",  &simple_query::select_itm,
+     .def("i",  &simple_query::select_itm,
           R"str(
           Selects nth object from the current workspace
           :param arg0: an workspace index that needs to be selected
