@@ -75,6 +75,7 @@ namespace qpp {
 
         }
 
+        vector2<float> get_axis_coord(size_t axis_id, float displ);
         bool check_attached_item_in_content_mode();
         void translate_attached (float delta_time);
         void clear_selected_axis ();

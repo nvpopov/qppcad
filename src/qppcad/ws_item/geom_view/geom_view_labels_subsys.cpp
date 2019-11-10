@@ -85,7 +85,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
         }
 
       proj_pos = is_axis ?
-                 p_owner->m_parent_ws->m_gizmo->m_proj_axes[axis_id] :
+                 p_owner->m_parent_ws->m_gizmo->get_axis_coord(axis_id, -25) :
                  astate->camera->project(p_owner->m_pos + p_owner->m_geom->pos(i));
 
       bool render_label{true};

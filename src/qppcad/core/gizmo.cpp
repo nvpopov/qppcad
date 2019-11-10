@@ -118,6 +118,10 @@ void gizmo_t::render () {
 
 }
 
+vector2<float> gizmo_t::get_axis_coord(size_t axis_id, float displ) {
+  return m_proj_axes[axis_id] + (m_proj_axes_cnt - m_proj_axes[axis_id]).normalized() * displ;
+}
+
 bool gizmo_t::check_attached_item_in_content_mode() {
 
   return

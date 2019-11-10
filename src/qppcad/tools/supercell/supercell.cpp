@@ -145,16 +145,12 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
   switch (dim_num) {
     case 0:
       return sp_rep_a->value();
-      break;
     case 1:
       return sp_rep_b->value();
-      break;
     case 2:
       return sp_rep_c->value();
-      break;
     default:
       return 0;
-      break;
     }
 
 }
