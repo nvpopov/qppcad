@@ -3,6 +3,7 @@
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/ui/qspoiler_widget.hpp>
 #include <QTextEdit>
 #include <QTableWidget>
 #include <QHeaderView>
@@ -19,12 +20,12 @@ namespace qpp {
 
         QVBoxLayout *main_lt;
 
-        QGroupBox *gb_ws_ws_item;
+        qspoiler_widget_t *gb_ws_ws_item;
         QFormLayout *gb_ws_ws_item_lt;
         QComboBox *cmb_ws;
         QComboBox *cmb_it;
 
-        QGroupBox *gb_gv_item;
+        qspoiler_widget_t *gb_gv_item;
         QFormLayout *gb_gv_item_lt;
         QComboBox *cmb_anim_name;
         QComboBox *cmb_anim_frame;
@@ -32,7 +33,7 @@ namespace qpp {
         geom_view_t *m_binded_gv{nullptr};
 
         void set_visible(bool visible);
-        explicit str_sim_ws_item_rec_t(int index, QWidget *parent = 0);
+        explicit str_sim_ws_item_rec_t(int index, QWidget *parent = nullptr);
 
         void rebuild_wss_list();
         void rebuild_anim_list();
@@ -53,7 +54,7 @@ namespace qpp {
 
       public:
 
-        QGroupBox *gb_str_sim_main;
+        qspoiler_widget_t *gb_str_sim_main;
         QFormLayout *gb_str_sim_main_lt;
         QHBoxLayout *widget_top_lt;
         QVBoxLayout *widget_lt;
@@ -65,7 +66,7 @@ namespace qpp {
         QPushButton *btn_compute;
         QPushButton *btn_copy_to_clipboard;
 
-        QGroupBox *gb_str_sim_output;
+        qspoiler_widget_t *gb_str_sim_output;
         QVBoxLayout *gb_str_sim_output_lt;
         QTextEdit *str_sim_output;
         QTableWidget *str_sim_table;

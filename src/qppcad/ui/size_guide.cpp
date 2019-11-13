@@ -131,6 +131,10 @@ int size_guide_t::common_tools_panel_label_w() {
   return 100;
 }
 
+int size_guide_t::common_tools_panel_label_w_big() {
+  return 140;
+}
+
 int size_guide_t::script_editor_button_w() {
   return 28;
 }

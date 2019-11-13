@@ -26,6 +26,13 @@ namespace qpp {
 
     };
 
+    enum ws_item_tool_type_e {
+
+      ws_item_tool_modal,
+      ws_item_tool_inline
+
+    };
+
 
     class workspace_t; //fwd decl
 
@@ -57,10 +64,6 @@ namespace qpp {
      */
     struct ws_item_tool_t {
 
-        /**
-         * @brief exec
-         * @param item
-         */
       virtual void exec(ws_item_t *item, uint32_t _error_ctx) = 0;
 
     };

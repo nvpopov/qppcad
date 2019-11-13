@@ -82,6 +82,7 @@ namespace qpp {
          */
         int common_tools_panel_w();
         int common_tools_panel_label_w();
+        int common_tools_panel_label_w_big();
 
         int script_editor_button_w();
         int script_edtior_button_icon_w();

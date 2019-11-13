@@ -23,6 +23,8 @@ void structure_similarity_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
 structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   Qt::WindowFlags flags = 0;
   flags |= Qt::WindowMaximizeButtonHint;
   flags |= Qt::WindowCloseButtonHint;
@@ -34,10 +36,9 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   setLayout(widget_top_lt);
   widget_top_lt->addLayout(widget_lt);
 
-  gb_str_sim_main = new QGroupBox(tr("Actions"));
+  gb_str_sim_main = new qspoiler_widget_t(tr("Actions"), nullptr, false, 6, 370);
   gb_str_sim_main_lt = new QFormLayout;
-  gb_str_sim_main->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-  //gb_str_sim_main->setFixedWidth(astate->size_guide.common_tools_panel_w());
+  gb_str_sim_main->add_content_layout(gb_str_sim_main_lt);
 
   cmb_method = new QComboBox;
   cmb_method->addItem(tr("compare-naive"));
@@ -58,13 +59,12 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
           &structure_similarity_widget_t::copy_to_cb_btn_clck);
 
   gb_str_sim_main_lt->addRow(tr("Method"), cmb_method);
-  gb_str_sim_main_lt->addRow(tr("Only sel. atoms"), chck_only_selected);
+  gb_str_sim_main_lt->addRow(tr("Only selected"), chck_only_selected);
   gb_str_sim_main_lt->addRow(tr(""), btn_compute);
   gb_str_sim_main_lt->addRow(tr(""), btn_copy_to_clipboard);
 
-  qt_hlp::resize_form_lt_lbls(gb_str_sim_main_lt, 128);
-
-  gb_str_sim_main->setLayout(gb_str_sim_main_lt);
+  qt_hlp::resize_form_lt_lbls(gb_str_sim_main_lt,
+                              astate->size_guide.common_tools_panel_label_w_big());
   widget_lt->addWidget(gb_str_sim_main);
 
   for (size_t i = 0; i < 2; i++) {
@@ -72,9 +72,10 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
       widget_lt->addWidget(m_anim_info[i]);
     }
 
-  gb_str_sim_output = new QGroupBox(tr("Results"));
+  gb_str_sim_output = new qspoiler_widget_t(tr("Results"));
+  gb_str_sim_output->setFixedWidth(QWIDGETSIZE_MAX);
   gb_str_sim_output_lt = new QVBoxLayout;
-  gb_str_sim_output->setLayout(gb_str_sim_output_lt);
+  gb_str_sim_output->add_content_layout(gb_str_sim_output_lt);
 
   str_sim_table = new QTableWidget;
   QStringList table_hdr;
@@ -342,32 +343,35 @@ str_sim_ws_item_rec_t::str_sim_ws_item_rec_t(int index, QWidget *parent) : QWidg
   setLayout(main_lt);
   main_lt->setContentsMargins(0, 0, 0, 0);
 
-  gb_ws_ws_item = new QGroupBox(tr("Workspace item №%1:").arg(index));
+  gb_ws_ws_item = new qspoiler_widget_t(tr("Workspace item №%1:").arg(index),
+                                        nullptr, false, 6, 370);
   gb_ws_ws_item_lt = new QFormLayout;
-  gb_ws_ws_item->setLayout(gb_ws_ws_item_lt);
+  gb_ws_ws_item->add_content_layout(gb_ws_ws_item_lt);
   //gb_ws_ws_item->setFixedWidth(astate->size_guide.common_tools_panel_w());
 
   cmb_ws = new QComboBox;
   cmb_it = new QComboBox;
   gb_ws_ws_item_lt->addRow("Workspace", cmb_ws);
   gb_ws_ws_item_lt->addRow("Item", cmb_it);
-  qt_hlp::resize_form_lt_lbls(gb_ws_ws_item_lt, astate->size_guide.common_tools_panel_label_w());
+  qt_hlp::resize_form_lt_lbls(gb_ws_ws_item_lt,
+                              astate->size_guide.common_tools_panel_label_w_big());
 
-  gb_gv_item = new QGroupBox(tr("Anim info for item №%1:").arg(index));
+  gb_gv_item = new qspoiler_widget_t(tr("Anim info for item №%1:").arg(index),
+                                     nullptr, false, 6, 370);
   gb_gv_item_lt = new QFormLayout;
-  gb_gv_item->setLayout(gb_gv_item_lt);
-  //gb_gv_item->setFixedWidth(astate->size_guide.common_tools_panel_w());
+  gb_gv_item->add_content_layout(gb_gv_item_lt);
 
   cmb_anim_name = new QComboBox;
   cmb_anim_frame = new QComboBox;
   gb_gv_item_lt->addRow("Animation", cmb_anim_name);
   gb_gv_item_lt->addRow("Frame", cmb_anim_frame);
-  qt_hlp::resize_form_lt_lbls(gb_gv_item_lt, astate->size_guide.common_tools_panel_label_w());
+  qt_hlp::resize_form_lt_lbls(gb_gv_item_lt,
+                              astate->size_guide.common_tools_panel_label_w_big());
 
   main_lt->addWidget(gb_ws_ws_item);
   main_lt->addWidget(gb_gv_item);
 
-  setFixedWidth(astate->size_guide.common_tools_panel_w());
+  setFixedWidth(375);
 
   connect(cmb_ws,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
