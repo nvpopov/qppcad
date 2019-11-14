@@ -1,4 +1,4 @@
-#ifndef QPPCAD_MAIN_WINDOW_H
+﻿#ifndef QPPCAD_MAIN_WINDOW_H
 #define QPPCAD_MAIN_WINDOW_H
 
 #include <qppcad/core/qppcad.hpp>
@@ -48,18 +48,19 @@ namespace qpp {
 
       public:
 
-        explicit main_window_t(QWidget *parent = 0);
+        explicit main_window_t(QWidget *parent = nullptr);
         ~main_window_t();
+
         void init_base_shortcuts();
         void init_menus();
         void init_widgets();
         void init_layouts();
 
         //Widgets
-        QWidget *main_widget;
-        QWidget *tool_panel_widget;
+        QWidget *main_wdgt;
+        QWidget *tool_panel_wdgt;
 
-        QHBoxLayout *tool_panel_layout;
+        QHBoxLayout *tool_panel_lt;
 
         QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;
@@ -88,13 +89,16 @@ namespace qpp {
         QPushButton *tp_add_arrow;
         QPushButton *tp_add_point_sym_group;
 
-        QWidget *ws_viewer_placeholder;
-        QWidget *obj_inst_placeholder;
-        ws_item_extended_editor_compositor_t *extended_editor_compositor;
+        QWidget *ws_viewer_plch;
+        QWidget *obj_inst_plch;
+        QWidget *inline_left_tool_plch;
+        QWidget *inline_bottom_tool_plch;
 
-        python_console_widget_t *py_console_widget;
-        ws_viewer_widget_t *ws_viewer_widget;
-        object_inspector_widget_t *obj_insp_widget;
+        ws_item_extended_editor_compositor_t *ext_editor_compositor;
+
+        python_console_widget_t *py_console_wdgt;
+        ws_viewer_widget_t *ws_viewer_wdgt;
+        object_inspector_widget_t *obj_insp_wdgt;
 
         ws_tabbar_t *ws_tabbar_wdgt;
         log_widget_t *log_wdgt;
@@ -130,7 +134,7 @@ namespace qpp {
         QAction *edit_menu_undo;
         QAction *edit_menu_redo;
         QAction *edit_menu_switch_ws_edit_mode;
-        QAction *edit_menu_ptable_widget;
+        QAction *edit_menu_ptable_wdgt;
         QMenu *edit_menu_selection;
         QAction *edit_menu_selection_select_all;
         QAction *edit_menu_selection_unselect_all;
@@ -163,13 +167,13 @@ namespace qpp {
         // End of Menus
 
         // Layouts
-        QGridLayout *layout_tools_main_window;
-        QVBoxLayout *main_layout;
+        QGridLayout *tools_main_window_lt;
+        QVBoxLayout *main_lt;
         QSplitter *layout_ws_viewer_obj_insp;
         QSplitter *splitter_ws_viewer_extended_editor;
         QSplitter *splitter_editor_py_console;
         QSplitter *splitter_ws_viewer_py_console_log;
-        QSplitter *splitter_py_console_log_widget;
+        QSplitter *splitter_py_console_log_wdgt;
         // End of Layouts
 
         // Shortcuts

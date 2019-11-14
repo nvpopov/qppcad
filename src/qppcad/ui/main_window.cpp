@@ -23,11 +23,11 @@ using namespace qpp::cad;
 
 main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
 
-  main_widget = new QWidget;
+  main_wdgt = new QWidget;
   app_state_t* astate = app_state_t::get_inst();
 
   setAcceptDrops(true);
-  setCentralWidget(main_widget);
+  setCentralWidget(main_wdgt);
   setMinimumHeight(astate->size_guide.main_window_h());
   setMinimumWidth(astate->size_guide.main_window_w());
 
@@ -196,10 +196,10 @@ void main_window_t::init_menus() {
   edit_menu->addAction(edit_menu_redo);
 
   edit_menu->addSeparator();
-  edit_menu_ptable_widget = new QAction(nullptr);
-  edit_menu_ptable_widget->setText(tr("Periodic table"));
-  edit_menu->addAction(edit_menu_ptable_widget);
-  connect(edit_menu_ptable_widget,
+  edit_menu_ptable_wdgt = new QAction(nullptr);
+  edit_menu_ptable_wdgt->setText(tr("Periodic table"));
+  edit_menu->addAction(edit_menu_ptable_wdgt);
+  connect(edit_menu_ptable_wdgt,
           &QAction::triggered,
           []() {
                 ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec();
@@ -414,11 +414,11 @@ void main_window_t::init_widgets() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  tool_panel_widget = new QWidget(nullptr);
-  tool_panel_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  tool_panel_widget->setFixedHeight(astate->size_guide.tool_panel_h_exact());
-  tool_panel_widget->setProperty("s_class", "tp_generic");
-  tool_panel_widget->setObjectName("tool_panel_widget_e");
+  tool_panel_wdgt = new QWidget(nullptr);
+  tool_panel_wdgt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  tool_panel_wdgt->setFixedHeight(astate->size_guide.tool_panel_h_exact());
+  tool_panel_wdgt->setProperty("s_class", "tp_generic");
+  tool_panel_wdgt->setObjectName("tool_panel_widget_e");
 
   tp_print_screen = new QPushButton(nullptr);
   tp_print_screen->setProperty("s_class", "tp_cb");
@@ -644,95 +644,95 @@ void main_window_t::init_widgets() {
           this,
           &main_window_t::tp_add_point_sym_group_clicked);
 
-  ws_viewer_widget = new ws_viewer_widget_t(nullptr);
+  ws_viewer_wdgt = new ws_viewer_widget_t(nullptr);
 
-  obj_insp_widget = new object_inspector_widget_t(nullptr);
-  obj_insp_widget->setFixedWidth(astate->size_guide.obj_insp_w());
+  obj_insp_wdgt = new object_inspector_widget_t(nullptr);
+  obj_insp_wdgt->setFixedWidth(astate->size_guide.obj_insp_w());
 
-  py_console_widget = new python_console_widget_t(nullptr);
+  py_console_wdgt = new python_console_widget_t(nullptr);
 
-  extended_editor_compositor = new ws_item_extended_editor_compositor_t(nullptr);
+  ext_editor_compositor = new ws_item_extended_editor_compositor_t(nullptr);
 
 }
 
 void main_window_t::init_layouts() {
 
-  main_layout = new QVBoxLayout;
+  main_lt = new QVBoxLayout;
   ws_tabbar_wdgt = new ws_tabbar_t(nullptr);
   log_wdgt = new log_widget_t(nullptr);
 
-  main_widget->setLayout(main_layout);
-  main_layout->addWidget(ws_tabbar_wdgt);
-  main_layout->addWidget(tool_panel_widget);
-  main_layout->setContentsMargins(0,0,0,0);
-  main_layout->setSpacing(0);
+  main_wdgt->setLayout(main_lt);
+  main_lt->addWidget(ws_tabbar_wdgt);
+  main_lt->addWidget(tool_panel_wdgt);
+  main_lt->setContentsMargins(0,0,0,0);
+  main_lt->setSpacing(0);
 
   ws_tabbar_wdgt->raise();
 
   splitter_ws_viewer_extended_editor = new QSplitter(Qt::Horizontal);
-  splitter_ws_viewer_extended_editor->addWidget(ws_viewer_widget);
-  splitter_ws_viewer_extended_editor->addWidget(extended_editor_compositor);
+  splitter_ws_viewer_extended_editor->addWidget(ws_viewer_wdgt);
+  splitter_ws_viewer_extended_editor->addWidget(ext_editor_compositor);
   splitter_ws_viewer_extended_editor->setHandleWidth(0);
 
   splitter_ws_viewer_extended_editor->setContentsMargins(0,0,0,0);
   splitter_ws_viewer_extended_editor->setCollapsible(1, false);
   splitter_ws_viewer_extended_editor->setCollapsible(0, false);
-  extended_editor_compositor->hide();
+  ext_editor_compositor->hide();
 
-  splitter_py_console_log_widget = new QSplitter(Qt::Horizontal);
-  splitter_py_console_log_widget->addWidget(py_console_widget);
-  splitter_py_console_log_widget->addWidget(log_wdgt);
-  splitter_py_console_log_widget->setHandleWidth(1);
-  splitter_py_console_log_widget->setCollapsible(0, false);
-  splitter_py_console_log_widget->setCollapsible(1, false);
+  splitter_py_console_log_wdgt = new QSplitter(Qt::Horizontal);
+  splitter_py_console_log_wdgt->addWidget(py_console_wdgt);
+  splitter_py_console_log_wdgt->addWidget(log_wdgt);
+  splitter_py_console_log_wdgt->setHandleWidth(1);
+  splitter_py_console_log_wdgt->setCollapsible(0, false);
+  splitter_py_console_log_wdgt->setCollapsible(1, false);
 
   splitter_ws_viewer_py_console_log = new QSplitter(Qt::Vertical);
   splitter_ws_viewer_py_console_log->addWidget(splitter_ws_viewer_extended_editor);
-  splitter_ws_viewer_py_console_log->addWidget(splitter_py_console_log_widget);
+  splitter_ws_viewer_py_console_log->addWidget(splitter_py_console_log_wdgt);
   splitter_ws_viewer_py_console_log->setHandleWidth(0);
   splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 3}));
   splitter_ws_viewer_py_console_log->setContentsMargins(0,0,0,0);
-  py_console_widget->hide();
+  py_console_wdgt->hide();
   log_wdgt->hide();
   splitter_ws_viewer_py_console_log->setCollapsible(0, false);
   splitter_ws_viewer_py_console_log->setCollapsible(1, false);
 
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console_log);
-  layout_ws_viewer_obj_insp->addWidget(obj_insp_widget);
+  layout_ws_viewer_obj_insp->addWidget(obj_insp_wdgt);
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
   layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
   layout_ws_viewer_obj_insp->setHandleWidth(0);
-  main_layout->addWidget(layout_ws_viewer_obj_insp);
+  main_lt->addWidget(layout_ws_viewer_obj_insp);
 
-  tool_panel_layout = new QHBoxLayout;
-  tool_panel_widget->setLayout(tool_panel_layout);
-  tool_panel_layout->setContentsMargins(5,0,0,0);
+  tool_panel_lt = new QHBoxLayout;
+  tool_panel_wdgt->setLayout(tool_panel_lt);
+  tool_panel_lt->setContentsMargins(5,0,0,0);
 
-  tool_panel_layout->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
 
-  tool_panel_layout->addWidget(tp_print_screen, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_scenic_rot_cam, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_utility_frame_end, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_print_screen, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_scenic_rot_cam, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_utility_frame_end, 0, Qt::AlignLeft);
 
-  tool_panel_layout->addWidget(tp_anim_fast_forward, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_anim_fast_forward, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
 
-  tool_panel_layout->addWidget(tp_add_cube, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_add_arrow, 0, Qt::AlignLeft);
-  tool_panel_layout->addWidget(tp_add_point_sym_group, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_add_cube, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_add_arrow, 0, Qt::AlignLeft);
+  tool_panel_lt->addWidget(tp_add_point_sym_group, 0, Qt::AlignLeft);
 
-  tool_panel_layout->addStretch(1);
+  tool_panel_lt->addStretch(1);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
-  ws_viewer_widget->lower();
+  ws_viewer_wdgt->lower();
 
 }
 
@@ -791,7 +791,7 @@ void main_window_t::wss_changed_slot() {
 
       if (!astate->m_immersive_mode) {
           ws_tabbar_wdgt->setVisible(true);
-          tool_panel_widget->setVisible(true);
+          tool_panel_wdgt->setVisible(true);
         }
 
       file_menu_close_ws->setEnabled(true);
@@ -804,8 +804,8 @@ void main_window_t::wss_changed_slot() {
 
     } else {
 
-      obj_insp_widget->setVisible(false);
-      tool_panel_widget->setVisible(false);
+      obj_insp_wdgt->setVisible(false);
+      tool_panel_wdgt->setVisible(false);
       ws_tabbar_wdgt->setVisible(false);
       file_menu_close_ws->setEnabled(false);
       ws_menu_rename_ws->setEnabled(false);
@@ -846,15 +846,15 @@ void main_window_t::show_obj_insp_state_changed(bool checked) {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (!ok) {
-      obj_insp_widget->hide();
+      obj_insp_wdgt->hide();
       return;
     }
 
   if (checked) {
-      obj_insp_widget->show();
+      obj_insp_wdgt->show();
       cur_ws->m_show_obj_insp = true;
     } else {
-      obj_insp_widget->hide();
+      obj_insp_wdgt->hide();
       cur_ws->m_show_obj_insp = false;
     }
 
@@ -1546,16 +1546,16 @@ void main_window_t::toggle_immersive_mode() {
   if (astate->m_immersive_mode) {
 
       menuBar()->hide();
-      tool_panel_widget->hide();
+      tool_panel_wdgt->hide();
       ws_tabbar_wdgt->hide();
-      obj_insp_widget->hide();
+      obj_insp_wdgt->hide();
       view_menu_toggle_fullscreen->setChecked(true);
 
     } else {
 
-      tool_panel_widget->show();
+      tool_panel_wdgt->show();
       ws_tabbar_wdgt->show();
-      obj_insp_widget->show();
+      obj_insp_wdgt->show();
       menuBar()->show();
       view_menu_toggle_fullscreen->setChecked(false);
 
@@ -1565,19 +1565,19 @@ void main_window_t::toggle_immersive_mode() {
 
 void main_window_t::start_update_cycle() {
 
-  if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
-      ws_viewer_widget->m_update_timer->start();
+  if (ws_viewer_wdgt && ws_viewer_wdgt->m_update_timer) {
+      ws_viewer_wdgt->m_update_timer->start();
     }
 
 }
 
 void main_window_t::stop_update_cycle() {
 
-  if (ws_viewer_widget && ws_viewer_widget->m_update_timer) {
+  if (ws_viewer_wdgt && ws_viewer_wdgt->m_update_timer) {
 
-      p_elapsed_time_in_event_loop =  ws_viewer_widget->m_update_timer->remainingTime();
-      ws_viewer_widget->m_update_timer->stop();
-      ws_viewer_widget->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
+      p_elapsed_time_in_event_loop =  ws_viewer_wdgt->m_update_timer->remainingTime();
+      ws_viewer_wdgt->m_update_timer->stop();
+      ws_viewer_wdgt->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
 
     }
 
@@ -1611,12 +1611,12 @@ void main_window_t::action_toggle_console() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (py_console_widget->isVisible()) {
-      py_console_widget->hide();
+  if (py_console_wdgt->isVisible()) {
+      py_console_wdgt->hide();
       astate->m_show_console = true;
     } else {
-      py_console_widget->show();
-      py_console_widget->py_tedit->setFocus();
+      py_console_wdgt->show();
+      py_console_wdgt->py_tedit->setFocus();
       astate->m_show_console = false;
     }
 
@@ -1806,7 +1806,7 @@ void main_window_t::build_bhv_toolpanel() {
   for (auto &tb_info : bhv_mgr->m_toolbar_elements_info) {
 
       auto new_tb = tb_info.second.m_fabric();
-      new_tb->init_element(tool_panel_widget);
+      new_tb->init_element(tool_panel_wdgt);
       m_toolbar_elements.push_back(new_tb);
 
     }
@@ -2008,7 +2008,7 @@ void main_window_t::make_screenshot() {
 
   QDateTime date = QDateTime::currentDateTime();
   QString date_s = date.toString("dd_MM_yyyy_hh_mm_ss");
-  ws_viewer_widget->grabFramebuffer().save(tr("%1_screenshot.png").arg(date_s));
+  ws_viewer_wdgt->grabFramebuffer().save(tr("%1_screenshot.png").arg(date_s));
 
   astate->m_ignore_scanline = false;
   astate->make_viewport_dirty();
