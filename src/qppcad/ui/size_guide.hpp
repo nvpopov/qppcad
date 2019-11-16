@@ -30,6 +30,8 @@ namespace qpp {
          */
         int main_window_w();
 
+        int tool_left_part_w();
+
         /**
          * @brief tool_panel_h
          * @return fixed height of app`s tool panel

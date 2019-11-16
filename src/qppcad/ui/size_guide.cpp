@@ -15,6 +15,10 @@ int size_guide_t::main_window_w() {
   return 600;
 }
 
+int size_guide_t::tool_left_part_w() {
+  return 340;
+}
+
 int size_guide_t::tool_panel_h() {
   return 42;
 }

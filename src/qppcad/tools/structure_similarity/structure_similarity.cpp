@@ -36,23 +36,28 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   setLayout(widget_top_lt);
   widget_top_lt->addLayout(widget_lt);
 
-  gb_str_sim_main = new qspoiler_widget_t(tr("Actions"), nullptr, false, 6, 370);
+  gb_str_sim_main = new qspoiler_widget_t(tr("Actions"), nullptr, false, 6,
+                                          astate->size_guide.tool_left_part_w());
   gb_str_sim_main_lt = new QFormLayout;
   gb_str_sim_main->add_content_layout(gb_str_sim_main_lt);
 
   cmb_method = new QComboBox;
+
   cmb_method->addItem(tr("compare-naive"));
   cmb_method->addItem(tr("compare-tws_tree"));
+  cmb_method->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
 
   chck_only_selected = new QCheckBox;
 
   btn_compute = new QPushButton(tr("Compute"));
+  btn_compute->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   connect(btn_compute,
           &QPushButton::clicked,
           this,
           &structure_similarity_widget_t::compute_btn_clck);
 
   btn_copy_to_clipboard = new QPushButton(tr("Copy to clipboard"));
+  btn_copy_to_clipboard->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   connect(btn_copy_to_clipboard,
           &QPushButton::clicked,
           this,
@@ -344,25 +349,31 @@ str_sim_ws_item_rec_t::str_sim_ws_item_rec_t(int index, QWidget *parent) : QWidg
   main_lt->setContentsMargins(0, 0, 0, 0);
 
   gb_ws_ws_item = new qspoiler_widget_t(tr("Workspace item №%1:").arg(index),
-                                        nullptr, false, 6, 370);
+                                        nullptr, false, 6,
+                                        astate->size_guide.tool_left_part_w());
   gb_ws_ws_item_lt = new QFormLayout;
   gb_ws_ws_item->add_content_layout(gb_ws_ws_item_lt);
   //gb_ws_ws_item->setFixedWidth(astate->size_guide.common_tools_panel_w());
 
   cmb_ws = new QComboBox;
+  cmb_ws->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   cmb_it = new QComboBox;
+  cmb_it->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   gb_ws_ws_item_lt->addRow("Workspace", cmb_ws);
   gb_ws_ws_item_lt->addRow("Item", cmb_it);
   qt_hlp::resize_form_lt_lbls(gb_ws_ws_item_lt,
                               astate->size_guide.common_tools_panel_label_w_big());
 
   gb_gv_item = new qspoiler_widget_t(tr("Anim info for item №%1:").arg(index),
-                                     nullptr, false, 6, 370);
+                                     nullptr, false, 6,
+                                     astate->size_guide.tool_left_part_w());
   gb_gv_item_lt = new QFormLayout;
   gb_gv_item->add_content_layout(gb_gv_item_lt);
 
   cmb_anim_name = new QComboBox;
+  cmb_anim_name->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   cmb_anim_frame = new QComboBox;
+  cmb_anim_frame->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   gb_gv_item_lt->addRow("Animation", cmb_anim_name);
   gb_gv_item_lt->addRow("Frame", cmb_anim_frame);
   qt_hlp::resize_form_lt_lbls(gb_gv_item_lt,
@@ -371,7 +382,7 @@ str_sim_ws_item_rec_t::str_sim_ws_item_rec_t(int index, QWidget *parent) : QWidg
   main_lt->addWidget(gb_ws_ws_item);
   main_lt->addWidget(gb_gv_item);
 
-  setFixedWidth(375);
+  setFixedWidth(astate->size_guide.tool_left_part_w());
 
   connect(cmb_ws,
           static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),

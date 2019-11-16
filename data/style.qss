@@ -317,7 +317,7 @@ qpp--cad--object_inspector_widget_t QTabBar QToolButton {
  height: 6px;
 }
 
-qpp--cad--object_inspector_widget_t QTabWidget qpp--cad--qspoiler_widget_t {
+qpp--cad--qspoiler_widget_t {
  margin-bottom: 5px;
 }
 
