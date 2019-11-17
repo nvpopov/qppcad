@@ -39,6 +39,15 @@ void mesh_t::render() {
 
 }
 
+void mesh_t::render_ex(GLenum new_mesh_rt) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  glapi_t* glapi = astate->glapi;
+  glapi->glBindVertexArray(vao);
+  glapi->glDrawElements(new_mesh_rt, num_primitives, GL_UNSIGNED_INT, nullptr);
+
+}
+
 void mesh_t::begin_render_batch() {
 
   app_state_t* astate = app_state_t::get_inst();

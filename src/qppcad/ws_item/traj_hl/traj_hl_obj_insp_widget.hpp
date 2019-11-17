@@ -12,17 +12,22 @@ namespace qpp {
         Q_OBJECT
 
       public:
-        qspoiler_widget_t *gb_traj_settings;
-        QFormLayout *gb_traj_settings_lt;
+
+        qspoiler_widget_t *m_gb_traj_settings;
+        QFormLayout *m_gb_traj_settings_lt;
+
+        qbinded_combobox_t *m_combo_traj_style;
+
         traj_hl_t *b_th{nullptr};
 
-        qbinded_color3_input_t *disp_traj_color;
+        qbinded_color3_input_t *m_disp_traj_color;
 
         traj_hl_obj_insp_widget_t();
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
         void unbind_item() override;
+
     };
 
   } // namespace qpp::cad

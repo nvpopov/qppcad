@@ -16,22 +16,37 @@ void traj_hl_t::vote_for_view_vectors(vector3<float> &out_look_pos,
 }
 
 void traj_hl_t::render() {
+
   app_state_t* astate = app_state_t::get_inst();
+
   //do nothing
   if (!m_line_mesh) {
       m_line_mesh = std::make_unique<mesh_t>();
     }
+
   if (m_need_to_rebuild) {
       rebuild_line_mesh();
       m_need_to_rebuild = false;
     }
+
+  //render mesh
   if (m_is_visible && !m_need_to_rebuild && m_leader) {
-      astate->dp->begin_render_line_mesh();
-      astate->sp_line_mesh->set_u(sp_u_name::v_translate, (GLfloat*)m_leader->m_pos.data());
-      astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)m_traj_color.data());
-      m_line_mesh->render();
-      astate->dp->end_render_line_mesh();
+
+      if (m_traj_style == traj_hl_style_points ||
+          m_traj_style == traj_hl_style_lines ||
+          m_traj_style == traj_hl_style_lines_loop) {
+
+          astate->dp->begin_render_line_mesh();
+          astate->sp_line_mesh->set_u(sp_u_name::v_translate, (GLfloat*)m_leader->m_pos.data());
+          astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)m_traj_color.data());
+          m_line_mesh->render_ex(GL_POINTS + m_traj_style);
+          astate->dp->end_render_line_mesh();
+        } else {
+
+        }
+
     }
+
 }
 
 bool traj_hl_t::mouse_click(ray_t<float> *click_ray) {
@@ -103,9 +118,10 @@ void traj_hl_t::rebuild_line_mesh() {
     }
 
   astate->tlog("traj_hler_t total points : {}", m_line_mesh->indices.size());
-  m_line_mesh->mesh_rt = GL_LINES;
+  m_line_mesh->mesh_rt = GL_LINE_LOOP;
   m_line_mesh->num_primitives = m_line_mesh->indices.size();
   m_line_mesh->bind_data();
+
 }
 
 void traj_hl_t::save_to_json(json &data) {

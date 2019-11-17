@@ -11,17 +11,32 @@ namespace qpp {
 
     class geom_view_t;
 
+    enum traj_hl_style_e {
+      traj_hl_style_points,
+      traj_hl_style_lines,
+      traj_hl_style_lines_loop,
+      traj_hl_style_xmarks,
+      traj_hl_style_spheres
+    };
+
     class traj_hl_t final: public ws_item_t {
 
         QPP_OBJECT(traj_hl_t, ws_item_t)
 
       public:
+
         geom_view_t *b_al;
         std::unique_ptr<mesh_t> m_line_mesh;
+
+        traj_hl_style_e m_traj_style{traj_hl_style_e::traj_hl_style_points};
+
         bool m_need_to_rebuild{true};
+
         size_t m_anim_id{1};
         size_t m_atm_id{0};
+
         vector3<float> m_traj_color{1, 0, 0};
+
         traj_hl_t();
 
         void vote_for_view_vectors(vector3<float> &out_look_pos,

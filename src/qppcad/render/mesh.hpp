@@ -41,6 +41,7 @@ namespace qpp {
         void construct_explicit();
         /// \brief render
         void render();
+        void render_ex(GLenum new_mesh_rt);
 
         void begin_render_batch();
         void render_batch();

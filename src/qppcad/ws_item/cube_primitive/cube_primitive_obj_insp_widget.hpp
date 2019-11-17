@@ -14,6 +14,7 @@ namespace qpp {
         Q_OBJECT
 
       public:
+
         cube_primitive_t *b_cp{nullptr};
         qspoiler_widget_t *tg_cube_params;
         QFormLayout *tg_cube_params_lt;
