@@ -25,7 +25,7 @@ qpp::xgeometry<float, qpp::periodic_cell<float>  >* claim_xgeom() {
   if (astate->ws_mgr->has_wss()) {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
       if (cur_ws) {
-          auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
+          auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_sel());
           if (cur_it_al) {
               return cur_it_al->m_geom.get();
             }

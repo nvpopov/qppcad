@@ -83,7 +83,7 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
 
   supercell_tool_t sct;
   sct.make_super_cell(al, sc_a, sc_b, sc_c);
-  cur_ws->set_selected_item(cur_ws->m_ws_items.size()-1);
+  cur_ws->set_sel_item(cur_ws->m_ws_items.size()-1);
   astate->astate_evd->python_console_focus_requested();
   astate->make_viewport_dirty();
 
@@ -124,7 +124,7 @@ void simple_query::select_itm(int itm_idx) {
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return;
-  cur_ws->set_selected_item(itm_idx);
+  cur_ws->set_sel_item(itm_idx);
 
   astate->make_viewport_dirty();
 
@@ -425,7 +425,7 @@ py::int_ simple_query::get_type_hash() {
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return py::none();
 
-  auto cur_it = cur_ws->get_selected();
+  auto cur_it = cur_ws->get_sel();
   if (cur_it) return cur_it->get_type();
 
   return py::none();
@@ -472,7 +472,7 @@ pybind11::bool_ simple_query::is_instance_of_by_hash(size_t _type_hash) {
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return false;
 
-  auto cur_it = cur_ws->get_selected();
+  auto cur_it = cur_ws->get_sel();
   if (cur_it) return cur_it->is_instance_of(_type_hash);
 
   return false;
@@ -486,7 +486,7 @@ pybind11::bool_ simple_query::is_instance_of_by_type_name(std::string _type_name
   if (!astate->ws_mgr->has_wss()) return false;
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return false;
-  auto cur_it = cur_ws->get_selected();
+  auto cur_it = cur_ws->get_sel();
   if (cur_it) return cur_it->get_type_name() == _type_name;
   return false;
 
@@ -612,7 +612,7 @@ void simple_query::make_psg_view(float tolerance) {
       return;
     }
 
-  auto cur_it = cur_ws->get_selected();
+  auto cur_it = cur_ws->get_sel();
   if (!cur_it) {
       return;
     }
@@ -787,7 +787,7 @@ void simple_query::set_ws_bg(vector3<float> bg) {
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws) return;
 
-  cur_ws->m_background_color = bg;
+  cur_ws->m_bg_color = bg;
 
  }
 

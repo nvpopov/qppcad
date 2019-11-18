@@ -56,7 +56,7 @@ void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
 
 }
 
-void ws_item_t::set_parent_workspace(workspace_t *_parent_ws){
+void ws_item_t::set_parent_ws(workspace_t *_parent_ws){
   m_parent_ws = _parent_ws;
 }
 
@@ -160,7 +160,7 @@ bool ws_item_t::is_bounded() {
 bool ws_item_t::is_selected() {
 
   if (m_parent_ws) {
-      return m_parent_ws->get_selected() == this;
+      return m_parent_ws->get_sel() == this;
     }
   else {
       return false;

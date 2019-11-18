@@ -495,7 +495,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           aa_ap->m_name = type_param_name->text().toStdString();
           cur_ws->add_item_to_ws(nt);
 
-          auto cur_it = cur_ws->get_selected_sp();
+          auto cur_it = cur_ws->get_sel_sp();
           if (cur_it && cur_it->get_type() == geom_view_t::get_type_static()) {
               aa_ap->m_src = cur_it;
               aa_ap->updated_externally(ws_item_updf_generic);

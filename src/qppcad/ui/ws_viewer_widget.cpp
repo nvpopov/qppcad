@@ -149,9 +149,9 @@ void ws_viewer_widget_t::paintGL() {
       QColor debug_hud_color = Qt::black;
       if (astate->ws_mgr->has_wss()) {
           auto cur_ws = astate->ws_mgr->get_cur_ws();
-          debug_hud_color.setRedF(1 - cur_ws->m_background_color[0]);
-          debug_hud_color.setGreenF(1 - cur_ws->m_background_color[1]);
-          debug_hud_color.setBlueF(1 - cur_ws->m_background_color[2]);
+          debug_hud_color.setRedF(1 - cur_ws->m_bg_color[0]);
+          debug_hud_color.setGreenF(1 - cur_ws->m_bg_color[1]);
+          debug_hud_color.setBlueF(1 - cur_ws->m_bg_color[2]);
         }
 
       painter.setPen(debug_hud_color);

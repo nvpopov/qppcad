@@ -35,7 +35,7 @@ namespace qpp {
         std::unique_ptr<camera_t>                m_camera;
         ray_t<float>                             m_ray;
         std::unique_ptr<gizmo_t>                 m_gizmo;
-        vector3<float>                           m_background_color{1, 1, 1};
+        vector3<float>                           m_bg_color{1, 1, 1};
         bool m_show_obj_insp{true};
         bool m_is_ws_imported{false};
         bool m_marked_for_deletion{false};
@@ -50,21 +50,21 @@ namespace qpp {
           m_gizmo = std::make_unique<gizmo_t>();
         }
 
-        opt<size_t>  get_selected_idx();
-        ws_item_t *get_selected();
-        std::shared_ptr<ws_item_t> get_selected_sp();
+        opt<size_t>  get_sel_idx();
+        ws_item_t *get_sel();
+        std::shared_ptr<ws_item_t> get_sel_sp();
         std::shared_ptr<ws_item_t> get_by_name(std::string _name);
 
         template<typename T>
-        T* get_selected_as() {
-          auto cur_it = get_selected();
+        T* get_sel_as() {
+          auto cur_it = get_sel();
           return  cur_it->cast_as<T>();
         }
 
-        bool set_selected_item(const size_t sel_idx, bool emit_signal = true);
+        bool set_sel_item(const size_t sel_idx, bool emit_signal = true);
         void next_item();
         void prev_item();
-        void unselect_all(bool emit_signal = true);
+        void unsel_all(bool emit_signal = true);
         void toggle_edit_mode();
         void ws_changed();
         void reset_camera();
@@ -82,7 +82,7 @@ namespace qpp {
         void set_edit_type(const ws_edit_e new_edit_type);
         void copy_camera(std::shared_ptr<workspace_t> source);
 
-        void delete_item_by_index(size_t idx);
+        void del_item_by_index(size_t idx);
 
         std::string py_get_repr();
         std::shared_ptr<ws_item_t> py_construct_item(std::string class_name,
@@ -168,7 +168,7 @@ namespace qpp {
               return {nullptr, nullptr, nullptr};
             }
 
-          auto cur_it = cur_ws->get_selected_sp();
+          auto cur_it = cur_ws->get_sel_sp();
           if (!cur_it) {
               if (_error_context & error_ctx_throw)
                 throw std::invalid_argument("No item selected in the workspace");
@@ -211,7 +211,9 @@ namespace qpp {
         get_sel_tpl_itmc(uint32_t _error_context = error_ctx_def) {
 
           auto cur_ws = get_cur_ws();
+
           if (!cur_ws) {
+
               if (_error_context & error_ctx_throw)
                 throw std::invalid_argument("Invalid workspace!");
               if (_error_context & error_ctx_mbox)
@@ -219,10 +221,13 @@ namespace qpp {
                                      QObject::tr("Error"),
                                      QObject::tr("Invalid workspace!"));
               return {nullptr, nullptr, nullptr, false};
+
             }
 
-          auto cur_it = cur_ws->get_selected_sp();
+          auto cur_it = cur_ws->get_sel_sp();
+
           if (!cur_it) {
+
               if (_error_context & error_ctx_throw)
                 throw std::invalid_argument("No item selected in the workspace");
               if (_error_context & error_ctx_mbox)
@@ -230,16 +235,20 @@ namespace qpp {
                                      QObject::tr("Error"),
                                      QObject::tr("No item selected in the workspace"));
               return {cur_ws, nullptr, nullptr, false};
+
             }
 
           auto casted_it = cur_it->cast_as<T>();
+
           if (!casted_it) {
+
               if (_error_context & error_ctx_throw) {
                   throw std::invalid_argument(
                         fmt::format("Cannot cast types: from {} to {}",
                                     cur_it->get_type_name(), T::get_type_name_static())
                         );
                 }
+
               if (_error_context & error_ctx_mbox)
                 QMessageBox::warning(nullptr,
                                      QObject::tr("Error"),
@@ -247,7 +256,9 @@ namespace qpp {
                                      .arg(QString::fromStdString(cur_it->get_type_name()))
                                      .arg(QString::fromStdString(T::get_type_name_static()))
                                      );
+
               return  {cur_ws, cur_it, nullptr, false};
+
             }
 
           return {cur_ws, cur_it, casted_it, true};
@@ -263,7 +274,9 @@ namespace qpp {
         get_sel_tpl_itm_nc(uint32_t _error_context = error_ctx_def) {
 
           auto cur_ws = get_cur_ws();
+
           if (!cur_ws) {
+
               if (_error_context & error_ctx_throw)
                 throw std::invalid_argument("Invalid workspace!");
               if (_error_context & error_ctx_mbox)
@@ -271,10 +284,13 @@ namespace qpp {
                                      QObject::tr("Error"),
                                      QObject::tr("Invalid workspace!"));
               return {nullptr, nullptr, false};
+
             }
 
-          auto cur_it = cur_ws->get_selected_sp();
+          auto cur_it = cur_ws->get_sel_sp();
+
           if (!cur_it) {
+
               if (_error_context & error_ctx_throw)
                 throw std::invalid_argument("No item selected in the workspace");
               if (_error_context & error_ctx_mbox)
@@ -282,6 +298,7 @@ namespace qpp {
                                      QObject::tr("Error"),
                                      QObject::tr("No item selected in the workspace"));
               return {cur_ws, nullptr, false};
+
             }
 
           return {cur_ws, cur_it, true};
@@ -297,6 +314,7 @@ namespace qpp {
         get_sel_tuple_ws(uint32_t _error_context = error_ctx_def) {
 
           if (!has_wss()) {
+
               if (_error_context & error_ctx_throw)
                 throw std::invalid_argument("There are`t workspaces in the field");
               if (_error_context & error_ctx_mbox)
@@ -304,10 +322,13 @@ namespace qpp {
                                      QObject::tr("Error"),
                                      QObject::tr("There are`t workspaces in the field"));
               return {false, nullptr};
+
             }
 
           auto cur_ws = get_cur_ws();
+
           if (!cur_ws) {
+
               if (_error_context & error_ctx_throw)
                 throw std::invalid_argument("Invalid workspace!");
               if (_error_context & error_ctx_mbox)
@@ -315,6 +336,7 @@ namespace qpp {
                                      QObject::tr("Error"),
                                      QObject::tr("Invalid workspace!"));
               return {true, nullptr};
+
             }
 
           return {true, cur_ws};

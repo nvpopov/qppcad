@@ -101,7 +101,7 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
       auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
+          auto cur_it = cur_ws->get_sel();
 
           if (cur_it) {
               size_t thash = cur_it->get_type();
@@ -110,7 +110,7 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
               if (ext_editor_w && ext_editor_w->can_be_binded_to(cur_it)) {
                   need_to_hide_compositor = false;
                   ext_editor_w->bind_to_item(cur_it);
-                  cur_it->m_extended_editor_id = editor_id;
+                  cur_it->m_ext_editor_id = editor_id;
                   m_cur_ext_editor_widget = ext_editor_w;
                   main_lt->addWidget(ext_editor_w.get());
                   ew_header->setText(tr("%1 [%2/%3]")
@@ -118,7 +118,7 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
                                      .arg(QString::fromStdString(cur_ws->m_ws_name))
                                      .arg(QString::fromStdString(cur_it->m_name)));
                   show();
-                  cur_it->m_extended_editor_opened = true;
+                  cur_it->m_ext_editor_opened = true;
                 }
             }
           else {
@@ -156,10 +156,10 @@ void ws_item_extended_editor_compositor_t::cur_ws_selected_item_changed() {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
-          auto cur_it = cur_ws->get_selected();
+          auto cur_it = cur_ws->get_sel();
 
-          if (cur_it && cur_it->m_extended_editor_opened) {
-              open_extended_editor(cur_it->m_extended_editor_id);
+          if (cur_it && cur_it->m_ext_editor_opened) {
+              open_extended_editor(cur_it->m_ext_editor_id);
             }
           else {
               hide();
@@ -188,10 +188,10 @@ void ws_item_extended_editor_compositor_t::close_ext_editor_btn_clicked() {
 
       if (cur_ws) {
 
-          auto cur_it = cur_ws->get_selected();
+          auto cur_it = cur_ws->get_sel();
 
-          if (cur_it && cur_it->m_extended_editor_opened) {
-              cur_it->m_extended_editor_opened = false;
+          if (cur_it && cur_it->m_ext_editor_opened) {
+              cur_it->m_ext_editor_opened = false;
             }
 
         }

@@ -7,6 +7,7 @@
 #include <qppcad/sflow/sflow_node.hpp>
 #include <qppcad/sflow/sflow_parameter.hpp>
 #include <qppcad/sflow/sflow_status.hpp>
+#include <atomic>
 
 namespace qpp {
 

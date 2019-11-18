@@ -167,10 +167,10 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                                   {src.m_scenic_rotation = value; cws_changed();})
                     .def_property("bg",
                                   [](workspace_t &src)
-                                  {return src.m_background_color;},
+                                  {return src.m_bg_color;},
                                   [](workspace_t &src, const vector3<float> value)
-                                  {src.m_background_color = value; mvd();})
-                    .def("delete_item", &workspace_t::delete_item_by_index)
+                                  {src.m_bg_color = value; mvd();})
+                    .def("delete_item", &workspace_t::del_item_by_index)
                     .def("gp", [](workspace_t &src){return src.m_gizmo->m_pos;})
                     .def("__repr__", &workspace_t::py_get_repr)
                     .def("__str__", &workspace_t::py_get_repr);

@@ -200,7 +200,7 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
       astate->log(fmt::format("DEBUG ::cur_ws_selected_item_changed(), "
                               "[num_wsi = {}]", cur_ws->m_ws_items.size()));
 
-      auto cur_id = cur_ws->get_selected_idx();
+      auto cur_id = cur_ws->get_sel_idx();
 
       if (cur_id) {
           ws_items_list->item(*cur_id)->setSelected(true);
@@ -226,7 +226,7 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
 
   if (cur_ws) {
 
-    cur_ws->set_selected_item(size_t(ws_items_list->currentRow()), true);
+    cur_ws->set_sel_item(size_t(ws_items_list->currentRow()), true);
 
     if (ws_items_list->currentRow() != -1) {
 

@@ -18,7 +18,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-opt<size_t> workspace_t::get_selected_idx() {
+opt<size_t> workspace_t::get_sel_idx() {
 
   for (size_t i = 0; i < m_ws_items.size(); i++)
     if (m_ws_items[i]->m_selected) return opt<size_t>(i);
@@ -26,17 +26,17 @@ opt<size_t> workspace_t::get_selected_idx() {
 
 }
 
-ws_item_t *workspace_t::get_selected() {
+ws_item_t *workspace_t::get_sel() {
 
-  std::optional<size_t> sel_idx = get_selected_idx();
+  std::optional<size_t> sel_idx = get_sel_idx();
   if (sel_idx) return m_ws_items[*sel_idx].get();
   else return nullptr;
 
 }
 
-std::shared_ptr<ws_item_t> workspace_t::get_selected_sp() {
+std::shared_ptr<ws_item_t> workspace_t::get_sel_sp() {
 
-  std::optional<size_t> sel_idx = get_selected_idx();
+  std::optional<size_t> sel_idx = get_sel_idx();
   if (sel_idx) return m_ws_items[*sel_idx];
   else return nullptr;
 
@@ -52,11 +52,11 @@ std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
 
 }
 
-bool workspace_t::set_selected_item(const size_t sel_idx, bool emit_signal) {
+bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  unselect_all();
+  unsel_all();
 
   astate->log(fmt::format("workspace_t::set_selected_item ({} {})", sel_idx, emit_signal));
 
@@ -89,21 +89,21 @@ bool workspace_t::set_selected_item(const size_t sel_idx, bool emit_signal) {
 
 void workspace_t::next_item() {
 
-  size_t target_id = get_selected_idx().value_or(0) + 1;
+  size_t target_id = get_sel_idx().value_or(0) + 1;
   if (target_id >= m_ws_items.size()) target_id = 0;
-  set_selected_item(target_id);
+  set_sel_item(target_id);
 
 }
 
 void workspace_t::prev_item() {
 
-  int target_id = get_selected_idx().value_or(0) - 1;
+  int target_id = get_sel_idx().value_or(0) - 1;
   if (target_id < 0) target_id = m_ws_items.size() - 1;
-  set_selected_item(target_id);
+  set_sel_item(target_id);
 
 }
 
-void workspace_t::unselect_all(bool emit_signal) {
+void workspace_t::unsel_all(bool emit_signal) {
 
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
   app_state_t* astate = app_state_t::get_inst();
@@ -297,7 +297,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
           auto it = std::find(m_ws_items.begin(), m_ws_items.end(), ws_item);
           if (it != m_ws_items.end()) {
               auto index = std::distance(m_ws_items.begin(), it);
-              set_selected_item(index);
+              set_sel_item(index);
               break;
             }
 
@@ -307,14 +307,14 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
   if (m_edit_type != ws_edit_e::edit_content && !hit_any) {
       m_gizmo->attached_item = nullptr;
-      unselect_all();
+      unsel_all();
     }
 
 }
 
 void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
-  auto cur_it = get_selected();
+  auto cur_it = get_sel();
 
   if (cur_it) {
 
@@ -333,7 +333,7 @@ void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
 void workspace_t::add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add) {
 
-  item_to_add->set_parent_workspace(this);
+  item_to_add->set_parent_ws(this);
   m_ws_items.push_back(item_to_add);
   app_state_t::get_inst()->astate_evd->cur_ws_changed();
 
@@ -360,7 +360,7 @@ void workspace_t::save_ws_to_json(const std::string filename) {
   data[JSON_QPPCAD_VERSION] = "1.0-aa";
 
   json_helper::save_var(JSON_WS_NAME, m_ws_name, data);
-  json_helper::save_vec3(JSON_BG_CLR, m_background_color, data);
+  json_helper::save_vec3(JSON_BG_CLR, m_bg_color, data);
 
   json camera_data;
   m_camera->save_to_json(camera_data);
@@ -399,7 +399,7 @@ void workspace_t::load_ws_from_json(const std::string filename) {
     data = json::parse(ifile);
 
     json_helper::load_var(JSON_WS_NAME, m_ws_name, data);
-    json_helper::load_vec3(JSON_BG_CLR, m_background_color, data);
+    json_helper::load_vec3(JSON_BG_CLR, m_bg_color, data);
 
     auto data_camera = data.find(JSON_WS_CAMERA);
     if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());
@@ -494,7 +494,7 @@ void workspace_t::update(float delta_time) {
         if (it->get() == m_gizmo->attached_item)
           m_gizmo->attached_item = nullptr;
 
-        if (it->get()->m_selected) unselect_all(true);
+        if (it->get()->m_selected) unsel_all(true);
 
         clear_connected_items(*it);
         it->get()->m_parent_ws = nullptr;
@@ -535,7 +535,7 @@ void workspace_t::copy_camera(std::shared_ptr<workspace_t> source) {
 
 }
 
-void workspace_t::delete_item_by_index(size_t idx) {
+void workspace_t::del_item_by_index(size_t idx) {
 
   if (idx < m_ws_items.size()) m_ws_items[idx]->m_marked_for_deletion = true;
 
@@ -739,9 +739,9 @@ void workspace_manager_t::render_cur_ws () {
 
       if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
 
-          astate->glapi->glClearColor(m_ws[*m_cur_ws_id]->m_background_color[0],
-                                      m_ws[*m_cur_ws_id]->m_background_color[1],
-                                      m_ws[*m_cur_ws_id]->m_background_color[2],
+          astate->glapi->glClearColor(m_ws[*m_cur_ws_id]->m_bg_color[0],
+                                      m_ws[*m_cur_ws_id]->m_bg_color[1],
+                                      m_ws[*m_cur_ws_id]->m_bg_color[2],
                                       1);
           astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
           m_ws[*m_cur_ws_id]->render();
@@ -1038,7 +1038,7 @@ std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
   auto cur_ws = get_cur_ws();
   if (!cur_ws) return nullptr;
 
-  auto cur_it = cur_ws->get_selected_sp();
+  auto cur_it = cur_ws->get_sel_sp();
   if (!cur_it) return nullptr;
 
   return cur_it;

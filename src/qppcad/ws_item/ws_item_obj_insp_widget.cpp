@@ -302,7 +302,7 @@ void ws_item_obj_insp_widget_t::delete_current_item() {
       ws_item_t *_binded_item = m_binded_item;
       unbind_item();
 
-      astate->ws_mgr->get_cur_ws()->unselect_all();
+      astate->ws_mgr->get_cur_ws()->unsel_all();
       _binded_item->m_marked_for_deletion = true;
 
       astate->astate_evd->cur_ws_changed();
@@ -310,7 +310,7 @@ void ws_item_obj_insp_widget_t::delete_current_item() {
 
     } else {
 
-      astate->ws_mgr->get_cur_ws()->unselect_all();
+      astate->ws_mgr->get_cur_ws()->unsel_all();
       astate->astate_evd->cur_ws_changed();
       astate->astate_evd->wss_changed();
 

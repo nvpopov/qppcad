@@ -123,7 +123,7 @@ void geom_view_colorizer_helper::py_colorize_by_distance(float min_dist,
       if (cur_ws) {
           //
           std::shared_ptr<geom_view_t> as_al =
-              std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
+              std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_sel_sp());
 
           if (as_al) geom_view_colorizer_helper::colorize_by_distance(
                 as_al.get(), min_dist, min_dist_color, over_dist_color, true, false, "", "");
@@ -150,7 +150,7 @@ void geom_view_colorizer_helper::py_colorize_by_distance_with_pairs(
       if (cur_ws) {
           //
           std::shared_ptr<geom_view_t> as_al =
-              std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
+              std::dynamic_pointer_cast<geom_view_t>(cur_ws->get_sel_sp());
 
           if (as_al) geom_view_colorizer_helper::colorize_by_distance(
                 as_al.get(), min_dist, min_dist_color, over_dist_color,

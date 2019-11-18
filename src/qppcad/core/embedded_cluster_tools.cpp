@@ -376,7 +376,7 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls_cur() {
 
       if (cur_ws) {
 
-          auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
+          auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_sel_sp());
 
           std::shared_ptr<geom_view_t> uc{nullptr};
           std::shared_ptr<geom_view_t> chg{nullptr};
@@ -404,7 +404,7 @@ void embedded_cluster_tools::set_qm_cluster_r_cur(float new_r) {
 
       if (cur_ws) {
 
-          auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
+          auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_sel_sp());
 
           std::shared_ptr<geom_view_t> uc{nullptr};
           std::shared_ptr<geom_view_t> chg{nullptr};
@@ -434,7 +434,7 @@ void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<geom_view_
 
       if (cur_ws) {
 
-          auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_selected_sp());
+          auto cur_it_al = std::static_pointer_cast<geom_view_t>(cur_ws->get_sel_sp());
 
           if (cur_it_al) {
 
@@ -473,7 +473,7 @@ vector3<float> embedded_cluster_tools::calc_dipole_moment() {
       auto cur_ws = astate->ws_mgr->get_cur_ws();
 
       if (cur_ws) {
-          auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_selected());
+          auto cur_it_al = dynamic_cast<geom_view_t*>(cur_ws->get_sel());
           if (cur_it_al) {
               for (int i = 0; i < cur_it_al->m_geom->nat(); i++)
                 accum_dm += cur_it_al->m_geom->pos(i) *

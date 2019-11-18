@@ -122,9 +122,9 @@ namespace qpp {
         bool m_show_bb{true}; // whether to show object`s bounding box
         bool m_selected{false};
         bool m_marked_for_deletion{false};
-        bool m_extended_editor_opened{false};
-        size_t m_extended_editor_id{0};
-        size_t m_extended_editor_width{300};
+        bool m_ext_editor_opened{false};
+        size_t m_ext_editor_id{0};
+        size_t m_ext_editor_width{300};
 
         vector3<float> get_pos();
         void set_pos(vector3<float> new_pos);
@@ -143,7 +143,7 @@ namespace qpp {
          * @brief set_parent_workspace
          * @param _parent_ws
          */
-        void set_parent_workspace(workspace_t *_parent_ws);
+        void set_parent_ws(workspace_t *_parent_ws);
 
         /**
          * @brief get_name

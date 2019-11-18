@@ -1042,16 +1042,16 @@ void main_window_t::change_cur_ws_bg() {
   if (ok) {
 
       QColor _stored_color = QColor::fromRgbF(
-                               cur_ws->m_background_color[0],
-                               cur_ws->m_background_color[1],
-                               cur_ws->m_background_color[2]
+                               cur_ws->m_bg_color[0],
+                               cur_ws->m_bg_color[1],
+                               cur_ws->m_bg_color[2]
                              );
 
       const QColor clr = QColorDialog::getColor(_stored_color, this,
                                                 "Select workspace`s background color");
       if (clr.isValid()) {
 
-          cur_ws->m_background_color = vector3<float> {
+          cur_ws->m_bg_color = vector3<float> {
               static_cast<float>(clr.redF()),
               static_cast<float>(clr.greenF()),
               static_cast<float>(clr.blueF())
@@ -1827,7 +1827,7 @@ void main_window_t::action_bhv_tools_menus_clicked() {
 
   std::shared_ptr<workspace_t> cur_ws = astate->ws_mgr->get_cur_ws();
   std::shared_ptr<ws_item_t> cur_it{nullptr};
-  if (cur_ws) cur_it = cur_ws->get_selected_sp();
+  if (cur_ws) cur_it = cur_ws->get_sel_sp();
 
   if (it_t != bhv_mgr->m_tools_info.end())
     bhv_mgr->exec_tool(cur_it.get(), t_hash);
@@ -1841,7 +1841,7 @@ void main_window_t::control_bhv_tools_menus_activity() {
 
   std::shared_ptr<workspace_t> cur_ws = astate->ws_mgr->get_cur_ws();
   std::shared_ptr<ws_item_t> cur_it{nullptr};
-  if (cur_ws) cur_it = cur_ws->get_selected_sp();
+  if (cur_ws) cur_it = cur_ws->get_sel_sp();
 
   for (auto elem : tools_menu_actions) {
 
