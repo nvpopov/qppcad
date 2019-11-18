@@ -2,12 +2,15 @@
 #define QPPCAD_WORKSPACE_ITEM_H
 
 #include <qppcad/core/qppcad.hpp>
+#include <geom/xgeom.hpp>
 #include <geom/lace3d.hpp>
 #include <geom/aabb.hpp>
 #include <geom/ray.hpp>
 #include <qppcad/core/serializable.hpp>
 #include <qppcad/core/qpp_object.hpp>
 #include <qppcad/core/iupdatable.hpp>
+#include <variant>
+#include <stack>
 
 #include <QPainter>
 
@@ -87,6 +90,18 @@ namespace qpp {
     const uint8_t ws_item_render_order_5   = 5;
     const uint8_t ws_item_render_order_max = 6;
 
+    using ws_item_state_record_t = std::variant<
+                                    vector3<float>,
+                                    float,
+                                    bool,
+                                    int,
+                                    xgeometry<float, periodic_cell<float> >*
+                                   >;
+
+    struct ws_item_state_t {
+      std::map<std::string, ws_item_state_record_t> m_data;
+    };
+
     class ws_item_t :
         public std::enable_shared_from_this<ws_item_t>,
         public qpp_object_t,
@@ -106,6 +121,7 @@ namespace qpp {
         std::vector<std::shared_ptr<ws_item_t> > m_connected_items;
         std::vector<std::shared_ptr<ws_item_t> > m_followers;
         std::shared_ptr<ws_item_t> m_leader{nullptr};
+        std::stack<ws_item_state_t> m_ws_item_state;
 
         std::string      m_name;
         std::string      m_genesis_file_name;
@@ -130,6 +146,10 @@ namespace qpp {
         void set_pos(vector3<float> new_pos);
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
                                            vector3<float> &out_look_at) = 0;
+
+        void push_state();
+        virtual void apply_state(ws_item_state_t &state);
+        void pop_state();
 
         virtual void target_view(cam_tv_e target_view_src,
                                  vector3<float> &look_from,
