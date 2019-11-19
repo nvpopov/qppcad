@@ -28,10 +28,10 @@ namespace qpp {
         bool m_ignore_state_change{false};
         bool m_updated_externally_event{false};
         T *m_binded_value{nullptr};
-        iupdatable_t *m_binded_item{nullptr};
+        iupdatable_externally_t *m_binded_item{nullptr};
         uint32_t m_upd_flag{ws_item_updf_generic};
 
-        void bind_value(T *binded_value, iupdatable_t *item_to_bind = nullptr) {
+        void bind_value(T *binded_value, iupdatable_externally_t *item_to_bind = nullptr) {
           m_binded_value = binded_value;
           m_binded_item = item_to_bind;
           m_ignore_state_change = true;
@@ -303,7 +303,7 @@ namespace qpp {
       public:
 
         std::shared_ptr<ws_item_t> *m_binded_ws_item_p{nullptr};
-        iupdatable_t *m_binded_item{nullptr};
+        iupdatable_externally_t *m_binded_item{nullptr};
         workspace_t *m_binded_ws{nullptr};
         size_t m_type_id{0};
         bool m_allow_other_ws{false};
@@ -313,7 +313,7 @@ namespace qpp {
         explicit qbinded_ws_item_combobox_t(QWidget *parent = nullptr);
 
         void bind_value(std::shared_ptr<ws_item_t> *_binded_value,
-                        iupdatable_t *item_to_bind = nullptr,
+                        iupdatable_externally_t *item_to_bind = nullptr,
                         workspace_t *binded_ws = nullptr);
         void load_value();
         void unbind_value();

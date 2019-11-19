@@ -7,11 +7,19 @@ namespace qpp {
 
   namespace cad {
 
-    class iupdatable_t {
+    class iupdatable_externally_t {
 
       public:
 
         virtual void updated_externally(uint32_t update_reason) = 0;
+
+    };
+
+    class iupdatable_t {
+
+      public:
+
+        virtual void updated(float deltatime) = 0;
 
     };
 

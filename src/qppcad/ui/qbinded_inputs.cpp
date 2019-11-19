@@ -436,7 +436,7 @@ qbinded_ws_item_combobox_t::qbinded_ws_item_combobox_t(QWidget *parent) {
 }
 
 void qbinded_ws_item_combobox_t::bind_value(std::shared_ptr<ws_item_t> *_binded_value,
-                                            iupdatable_t *item_to_bind,
+                                            iupdatable_externally_t *item_to_bind,
                                             workspace_t *binded_ws) {
   m_binded_ws_item_p = _binded_value;
   m_binded_item = item_to_bind;

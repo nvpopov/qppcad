@@ -4,6 +4,7 @@
 #include <geom/geom.hpp>
 #include <geom/geom_anim.hpp>
 #include <geom/tws_tree.hpp>
+#include <qppcad/ws_item/ws_item_subsystem.hpp>
 #include <vector>
 #include <algorithm>
 

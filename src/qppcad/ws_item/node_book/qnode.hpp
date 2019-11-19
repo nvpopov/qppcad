@@ -22,7 +22,7 @@ namespace qpp {
 
     class qnode_t : public QGraphicsItem,
                     public std::enable_shared_from_this<qnode_t>,
-                    public iupdatable_t {
+                    public iupdatable_externally_t {
       public:
 
         enum { Type = UserType + 32 };
