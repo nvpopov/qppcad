@@ -19,7 +19,7 @@ namespace qpp {
 
       public:
 
-        virtual void updated(float deltatime) = 0;
+      virtual void update(const float deltatime) {}
 
     };
 

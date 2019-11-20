@@ -14,7 +14,9 @@ namespace qpp {
 
     class geom_view_t;
 
-    class geom_view_anim_subsys_t {
+    class geom_view_anim_subsys_t : public ws_item_subsystem_t {
+
+      QPP_OBJECT(geom_view_anim_subsys_t, ws_item_subsystem_t)
 
       private:
 
@@ -41,7 +43,7 @@ namespace qpp {
         void update_current_frame_to_begin();
         void update_current_frame_to_end();
 
-        void update (const float delta_time);
+        void update (const float delta_time) override ;
         bool animable () const;
         void next_anim();
         void prev_anim();

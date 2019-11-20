@@ -9,6 +9,7 @@
 #include <qppcad/core/serializable.hpp>
 #include <qppcad/core/qpp_object.hpp>
 #include <qppcad/core/iupdatable.hpp>
+#include <qppcad/ws_item/ws_item_subsystem.hpp>
 #include <variant>
 #include <stack>
 
@@ -95,7 +96,8 @@ namespace qpp {
                                     float,
                                     bool,
                                     int,
-                                    xgeometry<float, periodic_cell<float> >*
+                                    xgeometry<float, periodic_cell<float> >*,
+                                    ws_item_subsystem_t*
                                    >;
 
     struct ws_item_state_t {

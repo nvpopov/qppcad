@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <QPainter>
 #include <qppcad/ws_item/geom_view/geom_view_labels_style.hpp>
+#include <qppcad/ws_item/ws_item_subsystem.hpp>
 
 namespace qpp {
 
@@ -13,7 +14,9 @@ namespace qpp {
 
     class geom_view_t;
 
-    class geom_view_labels_subsys_t {
+    class geom_view_labels_subsys_t: public ws_item_subsystem_t {
+
+      QPP_OBJECT(geom_view_labels_subsys_t, ws_item_subsystem_t)
 
       public:
 

@@ -11,8 +11,8 @@ namespace qpp {
 
       public:
 
-        virtual void save_to_json(json &data) = 0;
-        virtual void load_from_json(json &data) = 0;
+        virtual void save_to_json(json &data) {}
+        virtual void load_from_json(json &data) {}
 
     };
 

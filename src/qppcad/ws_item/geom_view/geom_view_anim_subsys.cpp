@@ -134,6 +134,8 @@ void geom_view_anim_subsys_t::update_current_frame_to_end() {
 
 void geom_view_anim_subsys_t::update(const float delta_time) {
 
+  ws_item_subsystem_t::update(delta_time);
+
   if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
   if (m_anim_data[m_cur_anim].frames.empty()) return;
   if (!animable()) return;

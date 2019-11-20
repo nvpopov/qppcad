@@ -12,7 +12,7 @@ namespace qpp {
 
     class ws_item_subsystem_t :
         public qpp_object_t,
-        public iupdatable_externally_t,
+        public serializable_t,
         public iupdatable_t{
 
       QPP_OBJECT(ws_item_subsystem_t, qpp_object_t)

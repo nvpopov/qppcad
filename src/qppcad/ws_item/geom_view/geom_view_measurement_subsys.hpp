@@ -6,7 +6,7 @@
 #include <QPainter>
 #include <vector>
 #include <algorithm>
-#include <qppcad/core/serializable.hpp>
+#include <qppcad/ws_item/ws_item_subsystem.hpp>
 
 namespace qpp {
 
@@ -89,7 +89,9 @@ namespace qpp {
     };
 
 
-    class geom_view_msr_subsys_t : public serializable_t {
+    class geom_view_msr_subsys_t : public ws_item_subsystem_t {
+
+      QPP_OBJECT(geom_view_msr_subsys_t, ws_item_subsystem_t)
 
     private:
 
