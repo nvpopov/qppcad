@@ -652,6 +652,11 @@ void main_window_t::init_widgets() {
   py_console_wdgt = new python_console_widget_t(nullptr);
 
   ext_editor_compositor = new ws_item_extended_editor_compositor_t(nullptr);
+  inline_left_tool_plch = new qembed_window_t(nullptr);
+  inline_left_tool_plch->setVisible(false);
+
+  inline_bottom_tool_plch = new qembed_window_t(nullptr);
+  inline_bottom_tool_plch->setVisible(false);
 
 }
 
@@ -680,6 +685,7 @@ void main_window_t::init_layouts() {
   ext_editor_compositor->hide();
 
   splitter_py_console_log_wdgt = new QSplitter(Qt::Horizontal);
+
   splitter_py_console_log_wdgt->addWidget(py_console_wdgt);
   splitter_py_console_log_wdgt->addWidget(log_wdgt);
   splitter_py_console_log_wdgt->setHandleWidth(1);
@@ -688,16 +694,19 @@ void main_window_t::init_layouts() {
 
   splitter_ws_viewer_py_console_log = new QSplitter(Qt::Vertical);
   splitter_ws_viewer_py_console_log->addWidget(splitter_ws_viewer_extended_editor);
+  splitter_ws_viewer_py_console_log->addWidget(inline_bottom_tool_plch);
   splitter_ws_viewer_py_console_log->addWidget(splitter_py_console_log_wdgt);
   splitter_ws_viewer_py_console_log->setHandleWidth(0);
-  splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 3}));
+  splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 1, 3}));
   splitter_ws_viewer_py_console_log->setContentsMargins(0,0,0,0);
   py_console_wdgt->hide();
   log_wdgt->hide();
   splitter_ws_viewer_py_console_log->setCollapsible(0, false);
   splitter_ws_viewer_py_console_log->setCollapsible(1, false);
+  splitter_ws_viewer_py_console_log->setCollapsible(2, false);
 
   layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
+  layout_ws_viewer_obj_insp->addWidget(inline_left_tool_plch);
   layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console_log);
   layout_ws_viewer_obj_insp->addWidget(obj_insp_wdgt);
   layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);

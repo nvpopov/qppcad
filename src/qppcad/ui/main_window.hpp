@@ -91,8 +91,8 @@ namespace qpp {
 
         QWidget *ws_viewer_plch;
         QWidget *obj_inst_plch;
-        QWidget *inline_left_tool_plch;
-        QWidget *inline_bottom_tool_plch;
+        qembed_window_t *inline_left_tool_plch;
+        qembed_window_t *inline_bottom_tool_plch;
 
         ws_item_extended_editor_compositor_t *ext_editor_compositor;
 
