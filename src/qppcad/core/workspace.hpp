@@ -23,7 +23,11 @@ namespace qpp {
     /**
      * @brief The workspace_t class
      */
-    class workspace_t : public std::enable_shared_from_this<workspace_t> {
+    class workspace_t :
+        public qpp_object_t,
+        public std::enable_shared_from_this<workspace_t> {
+
+        QPP_OBJECT(workspace_t, qpp_object_t)
 
       public:
 

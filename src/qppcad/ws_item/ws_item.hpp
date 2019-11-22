@@ -10,6 +10,7 @@
 #include <qppcad/core/qpp_object.hpp>
 #include <qppcad/core/iupdatable.hpp>
 #include <qppcad/ws_item/ws_item_subsystem.hpp>
+#include <qppcad/core/property.hpp>
 #include <variant>
 #include <stack>
 
