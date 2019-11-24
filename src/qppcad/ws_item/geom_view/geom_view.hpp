@@ -162,6 +162,7 @@ namespace qpp {
         bool m_bt_show_disabled_record{true};
         bool m_draw_cell{true}; ///
         bool m_draw_subcells{false};
+        bool m_need_to_update_overview{false};
 
         bool m_draw_cell_vectors{false};
         float m_cell_vectors_ratio{0.35f};

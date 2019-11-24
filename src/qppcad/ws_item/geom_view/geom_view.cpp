@@ -367,6 +367,7 @@ void geom_view_t::set_cell_within_eps(float value) {
 bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
 
   app_state_t* astate = app_state_t::get_inst();
+  m_need_to_update_overview = true;
 
   if (click_ray && m_geom && m_parent_ws) {
 
@@ -482,6 +483,7 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
+  m_need_to_update_overview = true;
 
   if (!m_geom) return;
 
@@ -533,6 +535,7 @@ void geom_view_t::unsel_atom(int atom_id) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
+  m_need_to_update_overview = true;
 
   if (!m_geom) return;
 
@@ -569,6 +572,8 @@ void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+  m_need_to_update_overview = true;
+
   if (!m_geom) return;
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
@@ -1210,6 +1215,7 @@ void geom_view_t::begin_structure_change() {
 
   m_tws_tr->do_action(act_lock | act_clear_all);
   m_ext_obs->first_data = true;
+  m_need_to_update_overview = true;
 
 }
 
@@ -1218,6 +1224,7 @@ void geom_view_t::end_structure_change() {
   geometry_changed();
   m_tws_tr->do_action(act_unlock | act_rebuild_tree);
   m_tws_tr->do_action(act_rebuild_ntable);
+  m_need_to_update_overview = true;
 
 }
 
@@ -1259,6 +1266,11 @@ void geom_view_t::update (float delta_time) {
       m_tws_tr->m_atoms_existence_is_broken = false;
       if (m_selected) astate->astate_evd->cur_ws_selected_item_changed();
     }
+
+  if (m_need_to_update_overview && m_selected && m_parent_ws) {
+    m_parent_ws->update_overview(compose_overview());
+    m_need_to_update_overview = false;
+  }
 
 }
 
