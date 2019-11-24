@@ -218,7 +218,7 @@ namespace qpp {
         virtual uint32_t get_num_cnt_selected() = 0;
 
         virtual std::string compose_type_descr() = 0;
-        virtual std::string compose_overview() {return "[]";}
+        virtual std::string compose_overview() {return "";}
         virtual void on_leader_changed();
         virtual void on_leader_call();
         void call_followers();

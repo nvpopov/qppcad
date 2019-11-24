@@ -1236,6 +1236,14 @@ std::string geom_view_t::compose_type_descr() {
   return m_geom ? fmt::format("geom. view, D = [{}d]", m_geom->DIM) : "geom. view(empty)";
 }
 
+std::string geom_view_t::compose_overview() {
+  return fmt::format("[atoms : {}, types : {}, selected : {}]",
+                     m_geom->nat(),
+                     m_geom->n_types(),
+                     m_atom_idx_sel.size()
+                     );
+}
+
 void geom_view_t::update (float delta_time) {
 
   app_state_t* astate = app_state_t::get_inst();

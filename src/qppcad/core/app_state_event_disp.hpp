@@ -35,6 +35,8 @@ namespace qpp {
         void extended_editor_open_requested_with_order_signal(size_t editor_id);
         void extended_editor_close_requested_signal();
 
+        void request_update_overview_signal(const std::string &newoverview);
+
         void new_file_loaded_signal();
         void python_console_clear_requested_signal();
         void python_console_focus_requested_signal();
@@ -61,6 +63,8 @@ namespace qpp {
         void extended_editor_open_requested();
         void extended_editor_open_requested_with_order(size_t editor_id);
         void extended_editor_close_requested();
+
+        void request_update_overview(const std::string &newoverview);
 
         void new_file_loaded(const std::string &file_name,
                              const size_t ff,

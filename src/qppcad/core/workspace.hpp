@@ -79,6 +79,7 @@ namespace qpp {
         void mouse_click(const float mouse_x, const float mouse_y);
         void mouse_double_click(const float mouse_x, const float mouse_y);
         void add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add);
+        void update_overview(const std::string &overview_text);
 
         void clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete);
         void save_ws_to_json(const std::string filename);

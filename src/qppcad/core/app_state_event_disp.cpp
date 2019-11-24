@@ -69,6 +69,10 @@ void app_state_event_disp_t::extended_editor_close_requested() {
   emit(extended_editor_close_requested_signal());
 }
 
+void app_state_event_disp_t::request_update_overview(const std::string &newoverview) {
+   emit(request_update_overview_signal(newoverview));
+}
+
 void app_state_event_disp_t::new_file_loaded(const std::string &file_name,
                                              const size_t ff,
                                              const bool is_native) {

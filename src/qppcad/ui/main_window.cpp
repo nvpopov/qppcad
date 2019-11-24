@@ -71,6 +71,11 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
           this,
           &main_window_t::rebuild_recent_files_menu);
 
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::request_update_overview_signal,
+          this,
+          &main_window_t::overview_changed);
+
   wss_changed_slot();
   cur_ws_changed();
   cur_ws_edit_type_changed();
@@ -420,7 +425,7 @@ void main_window_t::init_widgets() {
   tp_wdgt->setProperty("s_class", "tp_generic");
   tp_wdgt->setObjectName("tool_panel_widget_e");
   tp_overview = new QLabel(nullptr);
-  tp_overview->setText("[]");
+  //tp_overview->setText("[]");
 
   tp_print_screen = new QPushButton(nullptr);
   tp_print_screen->setProperty("s_class", "tp_cb");
@@ -2007,6 +2012,13 @@ void main_window_t::control_bhv_menus_activity() {
       }
 
   } // not ok
+
+}
+
+void main_window_t::overview_changed(const std::string &new_overview_text) {
+
+  if (tp_overview)
+    tp_overview->setText(QString::fromStdString(new_overview_text));
 
 }
 

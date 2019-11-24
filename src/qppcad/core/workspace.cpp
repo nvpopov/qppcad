@@ -77,11 +77,13 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
       //astate->make_viewport_dirty();
       if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
+      update_overview(m_ws_items[sel_idx]->compose_overview());
       return true;
 
     }
 
   //astate->make_viewport_dirty();
+  update_overview("");
   if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
   return false;
 
@@ -107,6 +109,7 @@ void workspace_t::unsel_all(bool emit_signal) {
 
   for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
   app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->request_update_overview("");
   if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
 
 }
@@ -336,6 +339,13 @@ void workspace_t::add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add) {
   item_to_add->set_parent_ws(this);
   m_ws_items.push_back(item_to_add);
   app_state_t::get_inst()->astate_evd->cur_ws_changed();
+
+}
+
+void workspace_t::update_overview(const std::string &overview_text) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  astate->astate_evd->request_update_overview(overview_text);
 
 }
 

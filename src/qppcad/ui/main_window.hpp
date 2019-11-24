@@ -263,6 +263,8 @@ namespace qpp {
         void action_bhv_export_selected();
         void control_bhv_menus_activity();
 
+        void overview_changed(const std::string &new_overview_text);
+
         void make_screenshot();
 
     };

@@ -309,6 +309,7 @@ namespace qpp {
         void refine_from_frac_coord();
 
         std::string compose_type_descr() override;
+        std::string compose_overview() override;
         void update(float delta_time) override;
         float get_bb_prescaller() override;
         bool is_bb_visible() override;
