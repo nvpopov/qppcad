@@ -541,6 +541,10 @@ void workspace_t::del_item_by_index(size_t idx) {
 
 }
 
+void workspace_t::make_overview_dirty() {
+  m_need_to_update_overview = true;
+}
+
 std::string workspace_t::py_get_repr() {
 
   return fmt::format("[workspace, name=\"{}\"]", m_ws_name);

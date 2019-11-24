@@ -40,6 +40,7 @@ namespace qpp {
         ray_t<float>                             m_ray;
         std::unique_ptr<gizmo_t>                 m_gizmo;
         vector3<float>                           m_bg_color{1, 1, 1};
+        bool m_need_to_update_overview{false};
         bool m_show_obj_insp{true};
         bool m_is_ws_imported{false};
         bool m_marked_for_deletion{false};
@@ -87,7 +88,7 @@ namespace qpp {
         void copy_camera(std::shared_ptr<workspace_t> source);
 
         void del_item_by_index(size_t idx);
-
+        void make_overview_dirty();
         std::string py_get_repr();
         std::shared_ptr<ws_item_t> py_construct_item(std::string class_name,
                                                      std::string item_name);

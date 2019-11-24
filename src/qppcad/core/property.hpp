@@ -3,6 +3,7 @@
 
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/core/qpp_object.hpp>
+#include <stack>
 
 namespace qpp {
 
@@ -16,6 +17,27 @@ namespace qpp {
 
         qpp_object_t *m_owner{nullptr};
         virtual bool is_trivially_changes_state() {return true;}
+
+    };
+
+    template<typename T>
+    struct property_record_t {
+      size_t m_ws_seed;
+      T m_value;
+    };
+
+    template<typename T>
+    class property_t: public generalized_property_t {
+
+    public:
+
+      std::stack<property_record_t<T> > m_data;
+
+    };
+
+    class bool_property_t : public property_t<bool> {
+
+      QPP_OBJECT(bool_property_t, generalized_property_t)
 
     };
 

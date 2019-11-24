@@ -58,9 +58,10 @@ namespace qpp {
 
         //Widgets
         QWidget *main_wdgt;
-        QWidget *tool_panel_wdgt;
+        QWidget *tp_wdgt;
 
-        QHBoxLayout *tool_panel_lt;
+        QHBoxLayout *tp_lt;
+        QLabel *tp_overview;
 
         QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;

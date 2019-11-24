@@ -414,11 +414,13 @@ void main_window_t::init_widgets() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  tool_panel_wdgt = new QWidget(nullptr);
-  tool_panel_wdgt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  tool_panel_wdgt->setFixedHeight(astate->size_guide.tool_panel_h_exact());
-  tool_panel_wdgt->setProperty("s_class", "tp_generic");
-  tool_panel_wdgt->setObjectName("tool_panel_widget_e");
+  tp_wdgt = new QWidget(nullptr);
+  tp_wdgt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  tp_wdgt->setFixedHeight(astate->size_guide.tool_panel_h_exact());
+  tp_wdgt->setProperty("s_class", "tp_generic");
+  tp_wdgt->setObjectName("tool_panel_widget_e");
+  tp_overview = new QLabel(nullptr);
+  tp_overview->setText("[]");
 
   tp_print_screen = new QPushButton(nullptr);
   tp_print_screen->setProperty("s_class", "tp_cb");
@@ -668,7 +670,7 @@ void main_window_t::init_layouts() {
 
   main_wdgt->setLayout(main_lt);
   main_lt->addWidget(ws_tabbar_wdgt);
-  main_lt->addWidget(tool_panel_wdgt);
+  main_lt->addWidget(tp_wdgt);
   main_lt->setContentsMargins(0,0,0,0);
   main_lt->setSpacing(0);
 
@@ -715,31 +717,33 @@ void main_window_t::init_layouts() {
   layout_ws_viewer_obj_insp->setHandleWidth(0);
   main_lt->addWidget(layout_ws_viewer_obj_insp);
 
-  tool_panel_lt = new QHBoxLayout;
-  tool_panel_wdgt->setLayout(tool_panel_lt);
-  tool_panel_lt->setContentsMargins(5,0,0,0);
+  tp_lt = new QHBoxLayout;
+  tp_wdgt->setLayout(tp_lt);
+  tp_lt->setContentsMargins(5,0,0,0);
 
-  tool_panel_lt->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
 
-  tool_panel_lt->addWidget(tp_print_screen, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_scenic_rot_cam, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_utility_frame_end, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_print_screen, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_scenic_rot_cam, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_utility_frame_end, 0, Qt::AlignLeft);
 
-  tool_panel_lt->addWidget(tp_anim_fast_forward, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_anim_fast_forward, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
 
-  tool_panel_lt->addWidget(tp_add_cube, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_add_arrow, 0, Qt::AlignLeft);
-  tool_panel_lt->addWidget(tp_add_point_sym_group, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_add_cube, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_add_arrow, 0, Qt::AlignLeft);
+  tp_lt->addWidget(tp_add_point_sym_group, 0, Qt::AlignLeft);
 
-  tool_panel_lt->addStretch(1);
+  tp_lt->addStretch(1);
+  tp_lt->addWidget(tp_overview, 0, Qt::AlignRight);
+  tp_lt->addSpacing(10);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
   ws_viewer_wdgt->lower();
 
@@ -800,7 +804,7 @@ void main_window_t::wss_changed_slot() {
 
       if (!astate->m_immersive_mode) {
           ws_tabbar_wdgt->setVisible(true);
-          tool_panel_wdgt->setVisible(true);
+          tp_wdgt->setVisible(true);
         }
 
       file_menu_close_ws->setEnabled(true);
@@ -814,7 +818,7 @@ void main_window_t::wss_changed_slot() {
     } else {
 
       obj_insp_wdgt->setVisible(false);
-      tool_panel_wdgt->setVisible(false);
+      tp_wdgt->setVisible(false);
       ws_tabbar_wdgt->setVisible(false);
       file_menu_close_ws->setEnabled(false);
       ws_menu_rename_ws->setEnabled(false);
@@ -1555,14 +1559,14 @@ void main_window_t::toggle_immersive_mode() {
   if (astate->m_immersive_mode) {
 
       menuBar()->hide();
-      tool_panel_wdgt->hide();
+      tp_wdgt->hide();
       ws_tabbar_wdgt->hide();
       obj_insp_wdgt->hide();
       view_menu_toggle_fullscreen->setChecked(true);
 
     } else {
 
-      tool_panel_wdgt->show();
+      tp_wdgt->show();
       ws_tabbar_wdgt->show();
       obj_insp_wdgt->show();
       menuBar()->show();
@@ -1815,7 +1819,7 @@ void main_window_t::build_bhv_toolpanel() {
   for (auto &tb_info : bhv_mgr->m_toolbar_elements_info) {
 
       auto new_tb = tb_info.second.m_fabric();
-      new_tb->init_element(tool_panel_wdgt);
+      new_tb->init_element(tp_wdgt);
       m_toolbar_elements.push_back(new_tb);
 
     }
