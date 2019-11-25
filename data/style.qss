@@ -16,47 +16,56 @@ QCheckBox::indicator {
  width: 21px; height: 21px;
 }
 
-QCheckBox::indicator:checked,QTreeView::indicator:checked,QTableView::indicator:checked,QGroupBox::indicator:checked{
+QCheckBox::indicator:checked,QTreeView::indicator:checked,QTableView::indicator:checked,
+QGroupBox::indicator:checked{
  border-image: url(:/images/icon_checkbox_checked.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:checked:pressed,QTreeView::indicator:checked:pressed,QTableView::indicator:checked:pressed,QGroupBox::indicator:checked:pressed{
+QCheckBox::indicator:checked:pressed,QTreeView::indicator:checked:pressed,
+QTableView::indicator:checked:pressed,QGroupBox::indicator:checked:pressed{
  border-image: url(:/images/icon_checkbox_checked_pressed.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:checked:disabled,QTreeView::indicator:checked:disabled,QTableView::indicator:checked:disabled,QGroupBox::indicator:checked:disabled{
+QCheckBox::indicator:checked:disabled,QTreeView::indicator:checked:disabled,
+QTableView::indicator:checked:disabled,QGroupBox::indicator:checked:disabled{
  border-image: url(:/images/icon_checkbox_checked_disabled.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:unchecked,QTreeView::indicator:unchecked,QTableView::indicator:unchecked,QGroupBox::indicator:unchecked{
+QCheckBox::indicator:unchecked,QTreeView::indicator:unchecked,QTableView::indicator:unchecked,
+QGroupBox::indicator:unchecked{
  border-image: url(:/images/icon_checkbox_unchecked.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:unchecked:pressed,QTreeView::indicator:unchecked:pressed,QTableView::indicator:unchecked:pressed,QGroupBox::indicator:unchecked:pressed{
+QCheckBox::indicator:unchecked:pressed,QTreeView::indicator:unchecked:pressed,
+QTableView::indicator:unchecked:pressed,QGroupBox::indicator:unchecked:pressed{
  border-image: url(:/images/icon_checkbox_unchecked_pressed.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:unchecked:disabled,QTreeView::indicator:unchecked:disabled,QTableView::indicator:unchecked:disabled,QGroupBox::indicator:unchecked:disabled{
+QCheckBox::indicator:unchecked:disabled,QTreeView::indicator:unchecked:disabled,
+QTableView::indicator:unchecked:disabled,QGroupBox::indicator:unchecked:disabled{
  border-image: url(:/images/icon_checkbox_unchecked_disabled.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:indeterminate,QTreeView::indicator:indeterminate,QTableView::indicator:indeterminate,QGroupBox::indicator:indeterminate{
+QCheckBox::indicator:indeterminate,QTreeView::indicator:indeterminate,
+QTableView::indicator:indeterminate,QGroupBox::indicator:indeterminate{
  border-image: url(:/images/icon_checkbox_indeterminate.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:indeterminate:pressed,QTreeView::indicator:indeterminate:pressed,QTableView::indicator:indeterminate:pressed,QGroupBox::indicator:indeterminate:pressed{
+QCheckBox::indicator:indeterminate:pressed,QTreeView::indicator:indeterminate:pressed,
+QTableView::indicator:indeterminate:pressed,QGroupBox::indicator:indeterminate:pressed{
  border-image: url(:/images/icon_checkbox_indeterminate_pressed.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
 
-QCheckBox::indicator:indeterminate:disabled,QTreeView::indicator:indeterminate:disabled,QTableView::indicator:indeterminate:disabled,QGroupBox::indicator:indeterminate:disabled{
+QCheckBox::indicator:indeterminate:disabled,QTreeView::indicator:indeterminate:disabled,
+QTableView::indicator:indeterminate:disabled,QGroupBox::indicator:indeterminate:disabled{
  border-image: url(:/images/icon_checkbox_indeterminate_disabled.png) 0 0 0 0 stretch stretch;
  border-width: 0px;
 }
@@ -218,7 +227,7 @@ qpp--cad--ws_viewer_widget_t {
 }
 
 qpp--cad--ws_tabbar_t {
- background-color: rgb(95, 95, 95);
+ background-color: rgb(105, 105, 105);
  padding-top: 5px;
 }
 
@@ -228,7 +237,7 @@ qpp--cad--ws_tabbar_t::tab {
  margin-top:4px;
  margin-right: 1px;
  margin-left: 1px;
- background-color: rgb(60, 60, 60);
+ background-color: rgb(70, 70, 70);
  border-top-left-radius: 4px;
  border-top-right-radius: 4px;
  padding-left: 6px;
