@@ -677,7 +677,7 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   if (!traj_hl_casted) return;
 
   traj_hl_casted->m_anim_id = anim_id;
-  traj_hl_casted->m_atm_id = atom_id;
+  traj_hl_casted->m_atom_id = atom_id;
 
   al->add_follower(traj_hl);
   cur_ws->add_item_to_ws(traj_hl);

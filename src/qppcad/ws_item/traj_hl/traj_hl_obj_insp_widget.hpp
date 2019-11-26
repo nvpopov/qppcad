@@ -13,14 +13,14 @@ namespace qpp {
 
       public:
 
+        traj_hl_t *b_th{nullptr};
+
         qspoiler_widget_t *m_gb_traj_settings;
         QFormLayout *m_gb_traj_settings_lt;
 
         qbinded_combobox_t *m_combo_traj_style;
-
-        traj_hl_t *b_th{nullptr};
-
         qbinded_color3_input_t *m_disp_traj_color;
+        qbinded_float_spinbox_t *m_elem_size;
 
         traj_hl_obj_insp_widget_t();
 

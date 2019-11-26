@@ -33,7 +33,8 @@ namespace qpp {
         bool m_need_to_rebuild{true};
 
         size_t m_anim_id{1};
-        size_t m_atm_id{0};
+        size_t m_atom_id{0};
+        float m_elem_size{0.5f};
 
         vector3<float> m_traj_color{1, 0, 0};
 

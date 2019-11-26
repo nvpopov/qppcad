@@ -43,6 +43,20 @@ void traj_hl_t::render() {
           astate->dp->end_render_line_mesh();
         } else {
 
+          if (m_traj_style == traj_hl_style_spheres && b_al &&
+              m_anim_id < b_al->m_anim->get_total_anims()  &&
+              m_atom_id < b_al->m_geom->nat()) {
+
+              astate->dp->begin_atom_render(12, 1.0f);
+              for (size_t i = 0; i < b_al->m_anim->m_anim_data[m_anim_id].frames.size(); i++)
+                astate->dp->render_atom(
+                      m_traj_color,
+                      b_al->m_anim->m_anim_data[m_anim_id].frames[i].atom_pos[m_atom_id],
+                      m_elem_size);
+              astate->dp->end_atom_render();
+
+            }
+
         }
 
     }
@@ -98,7 +112,7 @@ void traj_hl_t::rebuild_line_mesh() {
   if (b_al->m_anim->get_total_anims() < 1) return;
 
   int anm_idx = m_anim_id;
-  int atm_idx = m_atm_id;
+  int atm_idx = m_atom_id;
 
   m_line_mesh->vertecies.clear();
   m_line_mesh->normals.clear();
