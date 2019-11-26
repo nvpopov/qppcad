@@ -18,6 +18,7 @@ traj_hl_obj_insp_widget_t::traj_hl_obj_insp_widget_t() {
 
   m_disp_traj_color = new qbinded_color3_input_t;
   m_elem_size = new qbinded_float_spinbox_t;
+  m_elem_size->set_min_max_step(0.01, 10, 0.01);
 
   m_gb_traj_settings_lt->addRow(tr("Trajectory color"), m_disp_traj_color);
   m_gb_traj_settings_lt->addRow(tr("Trajectory style"), m_combo_traj_style);
