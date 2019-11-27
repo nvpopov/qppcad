@@ -25,7 +25,8 @@ namespace qpp {
 
       public:
 
-        geom_view_t *b_al;
+        geom_view_t *m_binded_gv;
+        std::shared_ptr<ws_item_t> m_src{nullptr};
         std::unique_ptr<mesh_t> m_line_mesh;
 
         traj_hl_style_e m_traj_style{traj_hl_style_e::traj_hl_style_points};

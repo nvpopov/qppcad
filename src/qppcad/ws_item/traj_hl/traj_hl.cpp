@@ -43,15 +43,15 @@ void traj_hl_t::render() {
           astate->dp->end_render_line_mesh();
         } else {
 
-          if (m_traj_style == traj_hl_style_spheres && b_al &&
-              m_anim_id < b_al->m_anim->get_total_anims()  &&
-              m_atom_id < b_al->m_geom->nat()) {
+          if (m_traj_style == traj_hl_style_spheres && m_binded_gv &&
+              m_anim_id < m_binded_gv->m_anim->get_total_anims()  &&
+              m_atom_id < m_binded_gv->m_geom->nat()) {
 
               astate->dp->begin_atom_render(12, 1.0f);
-              for (size_t i = 0; i < b_al->m_anim->m_anim_data[m_anim_id].frames.size(); i++)
+              for (size_t i = 0; i < m_binded_gv->m_anim->m_anim_data[m_anim_id].frames.size(); i++)
                 astate->dp->render_atom(
                       m_traj_color,
-                      b_al->m_anim->m_anim_data[m_anim_id].frames[i].atom_pos[m_atom_id],
+                      m_binded_gv->m_anim->m_anim_data[m_anim_id].frames[i].atom_pos[m_atom_id],
                       m_elem_size);
               astate->dp->end_atom_render();
 
@@ -90,11 +90,11 @@ size_t traj_hl_t::get_content_count() {
 void traj_hl_t::on_leader_changed() {
 
    app_state_t* astate = app_state_t::get_inst();
-   astate->tlog("{} ::on_leader_changed()", m_name);
+   //astate->tlog("{} ::on_leader_changed()", m_name);
 
    if (m_leader->get_type() == geom_view_t::get_type_static()) {
          m_need_to_rebuild = true;
-         b_al = m_leader->cast_as<geom_view_t>();
+         m_binded_gv = m_leader->cast_as<geom_view_t>();
      }
 
 }
@@ -108,8 +108,8 @@ void traj_hl_t::rebuild_line_mesh() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!b_al) return;
-  if (b_al->m_anim->get_total_anims() < 1) return;
+  if (!m_binded_gv) return;
+  if (m_binded_gv->m_anim->get_total_anims() < 1) return;
 
   int anm_idx = m_anim_id;
   int atm_idx = m_atom_id;
@@ -118,10 +118,10 @@ void traj_hl_t::rebuild_line_mesh() {
   m_line_mesh->normals.clear();
   m_line_mesh->indices.clear();
 
-  for (int frame_id = 0; frame_id < b_al->m_anim->m_anim_data[anm_idx].frames.size(); frame_id++) {
-      if (b_al->m_anim->m_anim_data[anm_idx].frames[frame_id].atom_pos.size() < atm_idx) return;
+  for (int frame_id = 0; frame_id < m_binded_gv->m_anim->m_anim_data[anm_idx].frames.size(); frame_id++) {
+      if (m_binded_gv->m_anim->m_anim_data[anm_idx].frames[frame_id].atom_pos.size() < atm_idx) return;
       vector3<float> atm_pos =
-          b_al->m_anim->m_anim_data[anm_idx].frames[frame_id].atom_pos[atm_idx];
+          m_binded_gv->m_anim->m_anim_data[anm_idx].frames[frame_id].atom_pos[atm_idx];
       m_line_mesh->vertecies.push_back(atm_pos[0]);
       m_line_mesh->vertecies.push_back(atm_pos[1]);
       m_line_mesh->vertecies.push_back(atm_pos[2]);
@@ -151,5 +151,19 @@ void traj_hl_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 }
 
 void traj_hl_t::updated_externally(uint32_t update_reason) {
+
+  ws_item_t::updated_externally(update_reason);
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (m_src) {
+      auto _as_gv = m_src->cast_as<geom_view_t>();
+      //if (_as_gv && _as_gv == m_binded_gv)
+      if (_as_gv) m_binded_gv = _as_gv;
+      else m_binded_gv = nullptr;
+    } else {
+      m_binded_gv = nullptr;
+    }
+
 }
 

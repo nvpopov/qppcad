@@ -24,7 +24,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   app_state_t *astate = app_state_t::get_inst();
 
   setWindowTitle(tr("Add new item to workspace"));
-  setFixedWidth(650);
+  setFixedWidth(670);
   setFixedHeight(500);
 
   descr_list.reserve(11);
@@ -68,7 +68,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   gb_type_descr_lt->addWidget(type_descr_lbl);
   gb_type_descr_lt->addStretch();
 
-  gb_ctor = new qspoiler_widget_t(tr("Constructible types"), nullptr, false);
+  gb_ctor = new qspoiler_widget_t(tr("Constructible types"), nullptr, false, 6, 280);
   //gb_ctor->setMinimumWidth(240);
   gb_ctor_lt = new QVBoxLayout;
   gb_ctor->add_content_layout(gb_ctor_lt);
