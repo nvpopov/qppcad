@@ -118,6 +118,14 @@ void gizmo_t::render () {
 
 }
 
+bool gizmo_t::is_any_axis_touched() {
+
+  return std::any_of(std::begin(m_bx_touched),
+                     std::end(m_bx_touched),
+                     [](const auto &elem){return elem;});
+
+}
+
 vector2<float> gizmo_t::get_axis_coord(size_t axis_id, float displ) {
   return m_proj_axes[axis_id] + (m_proj_axes_cnt - m_proj_axes[axis_id]).normalized() * displ;
 }

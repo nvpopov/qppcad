@@ -81,6 +81,7 @@ namespace qpp {
         void clear_selected_axis ();
         void update_gizmo (float delta_time, bool force_repaint = false);
         void render ();
+        bool is_any_axis_touched();
 
         gizmo_t ();
     };

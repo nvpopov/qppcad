@@ -69,7 +69,8 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
       if (is_axis && (!p_owner->m_selected ||
                      !parent_ws->m_gizmo->m_is_visible ||
-                     !m_render_axis_labels)) continue;
+                     !m_render_axis_labels ||
+                     parent_ws->m_gizmo->is_any_axis_touched())) continue;
 
       if (!is_axis) {
 
