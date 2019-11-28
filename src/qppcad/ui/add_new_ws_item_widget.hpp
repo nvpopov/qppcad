@@ -52,52 +52,53 @@ namespace qpp {
         QPushButton *ok_button;
         QPushButton *cancel_button;
 
-        qspoiler_widget_t *gb_ctor{nullptr};
-        QVBoxLayout *gb_ctor_lt{nullptr};
-        QRadioButton *rb_ctor_geom0d{nullptr};
-        QRadioButton *rb_ctor_geom1d{nullptr};
-        QRadioButton *rb_ctor_geom2d{nullptr};
-        QRadioButton *rb_ctor_geom3d{nullptr};
-        QRadioButton *rb_ctor_psg{nullptr};
-        QRadioButton *rb_ctor_pgf_prod{nullptr};
-        QRadioButton *rb_ctor_cube{nullptr};
-        QRadioButton *rb_ctor_arrow{nullptr};
-        QRadioButton *rb_ctor_node_book{nullptr};
-        QRadioButton *rb_ctor_arrow_array{nullptr};
-        QRadioButton *rb_ctor_py_note_book{nullptr};
+        qspoiler_widget_t *gb_ctor{};
+        QVBoxLayout *gb_ctor_lt{};
+        QRadioButton *rb_ctor_geom0d{};
+        QRadioButton *rb_ctor_geom1d{};
+        QRadioButton *rb_ctor_geom2d{};
+        QRadioButton *rb_ctor_geom3d{};
+        QRadioButton *rb_ctor_psg{};
+        QRadioButton *rb_ctor_pgf_prod{};
+        QRadioButton *rb_ctor_cube{};
+        QRadioButton *rb_ctor_arrow{};
+        QRadioButton *rb_ctor_node_book{};
+        QRadioButton *rb_ctor_arrow_array{};
+        QRadioButton *rb_ctor_py_note_book{};
+        QRadioButton *rb_ctor_traj_hl{};
 
-        qspoiler_widget_t *gb_type_descr{nullptr};
-        QVBoxLayout *gb_type_descr_lt{nullptr};
-        QLabel *type_descr_lbl{nullptr};
+        qspoiler_widget_t *gb_type_descr{};
+        QVBoxLayout *gb_type_descr_lt{};
+        QLabel *type_descr_lbl{};
 
-        QComboBox *type_cell_ctor_mode{nullptr};
-        QLabel *type_cell_ctor_mode_lbl{nullptr};
+        QComboBox *type_cell_ctor_mode{};
+        QLabel *type_cell_ctor_mode_lbl{};
 
-        QDoubleSpinBox *type_cell_ctor_cubic_size{nullptr};
-        QLabel *type_cell_ctor_cubic_size_lbl{nullptr};
+        QDoubleSpinBox *type_cell_ctor_cubic_size{};
+        QLabel *type_cell_ctor_cubic_size_lbl{};
 
-        qbinded_float3_input_t *type_cell_ctor_ortho{nullptr};
-        QLabel *type_cell_ctor_ortho_lbl{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_ortho{};
+        QLabel *type_cell_ctor_ortho_lbl{};
 
-        qbinded_float3_input_t *type_cell_ctor_a3{nullptr};
-        QLabel *type_cell_ctor_a3_lbl{nullptr};
-        qbinded_float3_input_t *type_cell_ctor_l3{nullptr};
-        QLabel *type_cell_ctor_l3_lbl{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_a3{};
+        QLabel *type_cell_ctor_a3_lbl{};
+        qbinded_float3_input_t *type_cell_ctor_l3{};
+        QLabel *type_cell_ctor_l3_lbl{};
 
-        qbinded_float3_input_t *type_cell_ctor_a{nullptr};
-        QLabel *type_cell_ctor_a_lbl{nullptr};
-        qbinded_float3_input_t *type_cell_ctor_b{nullptr};
-        QLabel *type_cell_ctor_b_lbl{nullptr};
-        qbinded_float3_input_t *type_cell_ctor_c{nullptr};
-        QLabel *type_cell_ctor_c_lbl{nullptr};
+        qbinded_float3_input_t *type_cell_ctor_a{};
+        QLabel *type_cell_ctor_a_lbl{};
+        qbinded_float3_input_t *type_cell_ctor_b{};
+        QLabel *type_cell_ctor_b_lbl{};
+        qbinded_float3_input_t *type_cell_ctor_c{};
+        QLabel *type_cell_ctor_c_lbl{};
 
-        qspoiler_widget_t *gb_type_param{nullptr};
-        QFormLayout *gb_type_param_lt{nullptr};
+        qspoiler_widget_t *gb_type_param{};
+        QFormLayout *gb_type_param_lt{};
 
-        QLabel *type_param_name_lbl{nullptr};
-        QLineEdit *type_param_name{nullptr};
-        QLabel *type_param_ag_lbl{nullptr};
-        QComboBox *type_param_ag{nullptr};
+        QLabel *type_param_name_lbl{};
+        QLineEdit *type_param_name{};
+        QLabel *type_param_ag_lbl{};
+        QComboBox *type_param_ag{};
 
         QStringList descr_list;
 
@@ -122,7 +123,7 @@ namespace qpp {
         void react_gb_ctor_node_book_checked(bool checked);
         void react_gb_ctor_arrow_array_checked(bool checked);
         void react_gb_ctor_py_note_book_checked(bool checked);
-
+        void react_gb_ctor_traj_hl_checked(bool checked);
         void geom3d_ctor_changed(int index);
 
     };
