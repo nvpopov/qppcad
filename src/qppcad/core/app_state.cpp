@@ -76,7 +76,7 @@ namespace qpp {
       icons.icon_arrow_up = new QIcon("://images/outline-arrow_upward-24px.svg");
       icons.icon_arrow_down = new QIcon("://images/outline-arrow_downward-24px.svg");
 
-      m_app_palette.setColor(QPalette::Window, QColor(83, 83, 83));
+      m_app_palette.setColor(QPalette::Window, QColor(93, 93, 93));
       m_app_palette.setColor(QPalette::WindowText, Qt::white);
       m_app_palette.setColor(QPalette::Disabled, QPalette::WindowText,QColor(87,87,87));
       m_app_palette.setColor(QPalette::Base, QColor(52,52,52));

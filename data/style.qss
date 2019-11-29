@@ -255,7 +255,7 @@ qpp--cad--ws_tabbar_t::tab::first {
 }
 
 qpp--cad--ws_tabbar_t::tab:selected {
- background-color: rgb(83, 83, 83);
+ background-color: rgb(93, 93, 93);
  border-left: 1px solid rgb(60, 60, 60);
  border-right: 1px solid rgb(60, 60, 60);
  border-top: 1px solid rgb(60, 60, 60);
@@ -399,12 +399,8 @@ QToolButton {
  padding: 2px;
 }
 
-#tool_panel_widget_e {
- border-bottom: 2px solid rgb(83, 83, 83);
-}
-
 #tool_panel_widget_e QFrame {
- background: rgb(83, 83, 83);
+ background: rgb(93, 93, 93);
 }
 
 QPushButton:pressed, QToolButton:pressed {
