@@ -343,6 +343,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_total_anims = new QLabel;
   gb_rebuild_bonds = new qbinded_checkbox_t;
   gb_play_cyclic = new qbinded_checkbox_t;
+  gb_interpolate_anim = new qbinded_checkbox_t;
   gb_anim_speed = new qbinded_float_spinbox_t;
   gb_anim_speed->set_min_max_step(0.01,10.0,0.01);
   gb_anim_total_frames_in_anim = new QLabel;
@@ -376,6 +377,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   gb_anim_summary_lt->addRow(tr("Num. of anim."), gb_anim_total_anims);
   gb_anim_summary_lt->addRow(tr("Rebuild bonds"), gb_rebuild_bonds);
   gb_anim_summary_lt->addRow(tr("Play in cycle"), gb_play_cyclic);
+  gb_anim_summary_lt->addRow(tr("Interpolate"), gb_interpolate_anim);
   gb_anim_summary_lt->addRow(tr("Current anim."), gb_current_anim);
   gb_anim_summary_lt->addRow(tr("Frame time "), gb_anim_speed);
   gb_anim_summary_lt->addRow(tr("Num frm."), gb_anim_total_frames_in_anim);
@@ -1182,6 +1184,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       gb_rebuild_bonds->bind_value(&b_al->m_anim->m_rebuild_bonds_in_anim);
       gb_play_cyclic->bind_value(&b_al->m_anim->m_play_cyclic);
       gb_anim_speed->bind_value(&b_al->m_anim->m_anim_frame_time);
+      gb_interpolate_anim->bind_value(&b_al->m_anim->m_interpolate_anim);
 
       //binding current anim combobox
       gb_current_anim->blockSignals(true);
@@ -1274,6 +1277,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   gb_rebuild_bonds->unbind_value();
   gb_play_cyclic->unbind_value();
   gb_anim_speed->unbind_value();
+  gb_interpolate_anim->unbind_value();
 
   //tab modify spec
   tm_override_atom_color->unbind_value();

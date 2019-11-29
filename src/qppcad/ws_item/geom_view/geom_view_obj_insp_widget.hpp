@@ -114,6 +114,7 @@ namespace qpp {
         QLabel *gb_anim_total_anims;
         qbinded_checkbox_t *gb_rebuild_bonds;
         qbinded_checkbox_t *gb_play_cyclic;
+        qbinded_checkbox_t *gb_interpolate_anim;
         qbinded_float_spinbox_t *gb_anim_speed;
         QComboBox *gb_current_anim;
         QHBoxLayout *anim_act_lt;

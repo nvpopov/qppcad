@@ -32,6 +32,7 @@ namespace qpp {
         bool m_play_cyclic{true};
         bool m_play_anim{false};
         bool m_force_non_animable{false};
+        bool m_interpolate_anim{true};
 
         explicit geom_view_anim_subsys_t (geom_view_t &_p_owner);
 

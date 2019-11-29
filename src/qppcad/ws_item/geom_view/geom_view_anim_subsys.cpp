@@ -50,8 +50,10 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) { // update atom data
 
       vector3<float> new_pos =
-          m_anim_data[anim_id].frames[start_frame_n].atom_pos[i] * (frame_delta) +
-          m_anim_data[anim_id].frames[end_frame_n].atom_pos[i] * (1-frame_delta);
+          m_interpolate_anim ?
+            m_anim_data[anim_id].frames[start_frame_n].atom_pos[i] * (frame_delta) +
+            m_anim_data[anim_id].frames[end_frame_n].atom_pos[i] * (1-frame_delta) :
+            m_anim_data[anim_id].frames[start_frame_n].atom_pos[i];
 
       p_owner->m_geom->change_pos(i, new_pos);
 
