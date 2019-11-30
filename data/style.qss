@@ -193,6 +193,10 @@ QHeaderView::section::vertical {
  min-width:30px;
 }
 
+qpp--cad--object_inspector_widget_t QListWidget {
+ background-color: rgb(61, 61, 61);
+}
+
 qpp--cad--object_inspector_widget_t QListWidget::item {
   margin: 5px;
 }
@@ -298,7 +302,8 @@ qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
  padding-bottom: 2px;
  padding-right: 6px;
  margin-left: 3px;
- border: 1px solid rgb(70, 70, 70);
+ border: 1px solid rgb(80, 80, 80);
+ background: rgb(94, 94, 94);
  border-radius: 3px;
  margin-bottom: 5px;
 }
@@ -362,12 +367,12 @@ qpp--cad--qembed_window_t {
  margin-right: -2px;
 }
 
-QComboBox, QSpinBox, QDoubleSpinBox, QPushButton, QToolButton {
- background : rgb(94, 94, 94);
+#tool_panel_widget_e QFrame {
+ background: rgb(93, 93, 93);
 }
 
 QPushButton:hover, QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover, QToolButton:hover{
- background-color: rgb(111, 111, 111);
+ background-color: rgb(141, 141, 141);
 }
 
 QComboBox:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled {
@@ -378,14 +383,14 @@ QComboBox {
  padding: 3px 8px 3px 8px;
 }
 
-QPushButton:checked {
- background : rgb(124, 124, 124);
+QPushButton, QComboBox, QSpinBox, QDoubleSpinBox, QToolButton{
+ background : rgb(114, 114, 114);
+ border: 1px solid rgb(75, 75, 75);
+ border-radius: 4px;
 }
 
-QPushButton, QComboBox, QSpinBox, QDoubleSpinBox{
- background : rgb(94, 94, 94);
- border: 1px solid rgb(55, 55, 55);
- border-radius: 4px;
+QPushButton:checked {
+ background : rgb(152, 152, 152);
 }
 
 QPushButton, QSpinBox, QDoubleSpinBox{
@@ -393,14 +398,7 @@ QPushButton, QSpinBox, QDoubleSpinBox{
 }
 
 QToolButton {
- background : rgb(94, 94, 94);
- border: 1px solid rgb(55, 55, 55);
- border-radius: 4px;
  padding: 2px;
-}
-
-#tool_panel_widget_e QFrame {
- background: rgb(93, 93, 93);
 }
 
 QPushButton:pressed, QToolButton:pressed {
