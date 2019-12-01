@@ -178,6 +178,7 @@ namespace qpp {
 
         bool m_show_debug_frame_stats{false};
         bool m_ignore_scanline{false};
+        bool m_show_modern_menu{false};
 
         //Settings begin
         int m_sphere_quality{18};

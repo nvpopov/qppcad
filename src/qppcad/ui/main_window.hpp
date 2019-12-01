@@ -38,6 +38,11 @@ namespace qpp {
 
     class toolbar_element_t;
 
+    struct stored_action_hotkeys_t {
+      QAction *act{};
+      QShortcut *shortcut{};
+    };
+
     class main_window_t : public QMainWindow {
 
         Q_OBJECT
@@ -49,12 +54,14 @@ namespace qpp {
       public:
 
         explicit main_window_t(QWidget *parent = nullptr);
-        ~main_window_t();
+        ~main_window_t() override;
 
         void init_base_shortcuts();
         void init_menus();
         void init_widgets();
         void init_layouts();
+
+        std::vector<stored_action_hotkeys_t> m_shortcuts;
 
         //Widgets
         QWidget *main_wdgt;
@@ -62,6 +69,7 @@ namespace qpp {
 
         QHBoxLayout *tp_lt;
         QLabel *tp_overview;
+        QPushButton *tp_modern_menu;
 
         QFrame *tp_edit_mode_start;
         QButtonGroup *tp_edit_mode;
@@ -106,6 +114,7 @@ namespace qpp {
         //End of widgets
 
         //Menus
+        QMenu *modern_menu;
         std::map<std::string, QAction*> m_actions_lookup;
         QMenu *file_menu;
         QAction *file_menu_new_ws;
@@ -151,6 +160,7 @@ namespace qpp {
         QAction *ws_copy_cam;
 
         QMenu *view_menu;
+        QAction *view_menu_show_modern_menu;
         QAction *view_menu_show_oi;
         QAction *view_menu_show_gizmo;
         QAction *view_menu_toggle_fullscreen;
@@ -205,6 +215,7 @@ namespace qpp {
         void show_obj_insp_state_changed(bool checked);
         void show_gizmo_state_changed(bool checked);
         void show_log_wdgt_state_changed(bool checked);
+        void show_modern_menu_state_changed(bool checked);
 
         void create_new_ws();
         void open_ws();
@@ -249,6 +260,8 @@ namespace qpp {
 
         void rebuild_recent_files_menu();
         void recent_files_clicked();
+
+        void modern_menu_clicked();
 
         /**
          * ws_item_t io behaviour related stuff

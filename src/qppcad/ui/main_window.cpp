@@ -31,7 +31,7 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   setMinimumHeight(astate->size_guide.main_window_h());
   setMinimumWidth(astate->size_guide.main_window_w());
 
-  init_base_shortcuts();
+
   init_menus();
   build_bhv_menus_and_actions();
   build_bhv_tools_menus();
@@ -40,6 +40,7 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   init_widgets();
   init_layouts();
   build_bhv_toolpanel();
+  init_base_shortcuts();
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::wss_changed_signal,
@@ -80,6 +81,9 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   cur_ws_changed();
   cur_ws_edit_type_changed();
   cur_ws_selected_atoms_list_selection_changed();
+
+  view_menu_show_modern_menu->setChecked(astate->m_show_modern_menu);
+  show_modern_menu_state_changed(astate->m_show_modern_menu);
 
 }
 
@@ -245,7 +249,7 @@ void main_window_t::init_menus() {
 
   edit_menu_switch_ws_edit_mode = new QAction(nullptr);
   edit_menu_switch_ws_edit_mode->setText(tr("Switch edit mode"));
-  edit_menu_switch_ws_edit_mode->setShortcut(Qt::Key::Key_Tab);
+  edit_menu_switch_ws_edit_mode->setShortcut(tr("ctrl+e"));
   connect(edit_menu_switch_ws_edit_mode,
           &QAction::triggered,
           this,
@@ -296,6 +300,15 @@ void main_window_t::init_menus() {
           &QAction::toggled,
           this,
           &main_window_t::show_obj_insp_state_changed);
+
+  view_menu_show_modern_menu = new QAction(nullptr);
+  view_menu_show_modern_menu->setText(tr("Show modern menu"));
+  view_menu_show_modern_menu->setCheckable(true);
+  //view_menu->addAction(view_menu_show_modern_menu);
+  connect(view_menu_show_modern_menu,
+          &QAction::toggled,
+          this,
+          &main_window_t::show_modern_menu_state_changed);
 
   view_menu_show_gizmo = new QAction(nullptr);
   view_menu_show_gizmo->setText(tr("Show gizmo"));
@@ -413,6 +426,15 @@ void main_window_t::init_menus() {
 
   // end of help menu
 
+  modern_menu = new QMenu;
+  //modern_menu->setLayoutDirection( Qt::RightToLeft );
+  modern_menu->addMenu(file_menu);
+  modern_menu->addMenu(edit_menu);
+  modern_menu->addMenu(tools_menu);
+  modern_menu->addMenu(ws_menu);
+  modern_menu->addMenu(view_menu);
+  modern_menu->addMenu(help_menu);
+
 }
 
 void main_window_t::init_widgets() {
@@ -425,6 +447,18 @@ void main_window_t::init_widgets() {
   tp_wdgt->setProperty("s_class", "tp_generic");
   tp_wdgt->setObjectName("tool_panel_widget_e");
   tp_overview = new QLabel(nullptr);
+
+  tp_modern_menu = new QPushButton(nullptr);
+  tp_modern_menu->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  tp_modern_menu->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  tp_modern_menu->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+                                     astate->size_guide.tool_panel_icon_size()));
+  tp_modern_menu->setToolTip(tr("Show modern menu"));
+  tp_modern_menu->setIcon(QIcon("://images/more_vert-24px.svg"));
+  connect(tp_modern_menu,
+          &QPushButton::clicked,
+          this,
+          &main_window_t::modern_menu_clicked);
   //tp_overview->setText("[]");
 
   tp_print_screen = new QPushButton(nullptr);
@@ -748,6 +782,7 @@ void main_window_t::init_layouts() {
 
   tp_lt->addStretch(1);
   tp_lt->addWidget(tp_overview, 0, Qt::AlignRight);
+  tp_lt->addWidget(tp_modern_menu, 0, Qt::AlignRight);
   tp_lt->addSpacing(10);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
   ws_viewer_wdgt->lower();
@@ -894,6 +929,21 @@ void main_window_t::show_gizmo_state_changed(bool checked) {
 void main_window_t::show_log_wdgt_state_changed(bool checked) {
 
   log_wdgt->setVisible(checked);
+
+}
+
+void main_window_t::show_modern_menu_state_changed(bool checked) {
+
+  app_state_t* astate = app_state_t::get_inst();
+  astate->m_show_modern_menu = checked;
+
+  if (checked) {
+      menuBar()->hide();
+      tp_modern_menu->show();
+    } else {
+      menuBar()->show();
+      tp_modern_menu->hide();
+    }
 
 }
 
@@ -1524,7 +1574,7 @@ void main_window_t::apply_camera_view_change(cam_tv_e target_view) {
 void main_window_t::toggle_ws_edit_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
-
+  //astate->log("RERERERERER");
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
 
   if (ok) {
@@ -1696,6 +1746,12 @@ void main_window_t::recent_files_clicked() {
         }
 
     }
+
+}
+
+void main_window_t::modern_menu_clicked() {
+
+  modern_menu->exec(QCursor::pos());
 
 }
 
