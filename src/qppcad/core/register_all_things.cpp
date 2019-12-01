@@ -48,6 +48,7 @@
 #include <qppcad/tools/compose_anim_from_files/compose_anim_from_files.hpp>
 #include <qppcad/tools/purify_boundary_atoms/purify_boundary_atoms.hpp>
 #include <qppcad/tools/copy_geom_view_aux/copy_geom_view_aux.hpp>
+#include <qppcad/tools/shift_start_of_cell/shift_start_of_cell.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -377,6 +378,9 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
 
   registration_helper_t::reg_ws_item_tool<center_cell_on_atom_tool_t, geom_view_t>(
         "Center cell on atoms", hash_t_tr, bhv_mgr);
+
+  registration_helper_t::reg_ws_item_tool<shift_start_of_cell_tool_t, geom_view_t>(
+        "Shift start of cell to atoms", hash_t_tr, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<compose_anim_tool_t, geom_view_t>(
         "Compose animation", hash_t_generic, bhv_mgr, false);

@@ -1,4 +1,4 @@
-#include <qppcad/tools/center_cell_on_atom/center_cell_on_atom.hpp>
+#include <qppcad/tools/shift_start_of_cell/shift_start_of_cell.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
@@ -7,39 +7,39 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
+void shift_start_of_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->log("center_cell_on_atom_tool_t::exec()");
+  astate->log("shift_center_of_cell_tool_t::exec()");
 
   if (!item) {
-      QMessageBox::warning(nullptr, QObject::tr("Center cell on atom"),
+      QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
                            QObject::tr("Invalid item."));
       return;
     }
 
   auto al = item->cast_as<geom_view_t>();
   if (!al) {
-      QMessageBox::warning(nullptr, QObject::tr("Center cell on atom"),
+      QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
                            QObject::tr("Invalid item."));
       return;
     }
 
   if (al->m_geom->DIM == 0) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+      QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
                            QObject::tr("The structure must be 3d."));
       return;
     }
 
   if (!al->m_parent_ws) {
-      QMessageBox::warning(nullptr, QObject::tr("Center cell on atom"),
+      QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
                            QObject::tr("Invalid workspace"));
       return;
     }
 
   if (al->m_atom_idx_sel.empty()) {
-      QMessageBox::warning(nullptr, QObject::tr("Center cell on atom"),
+      QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
                            QObject::tr("The list of selected atoms is empty."));
       return;
     }
@@ -52,7 +52,10 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   new_center /= al->m_atom_idx_sel.size();
 
-  geom_view_tools_t::center_cell_on(al, new_center);
+  for (size_t i = 0; i < al->m_geom->nat(); i++)
+    al->m_geom->coord(i) -= new_center;
+
+  //geom_view_tools_t::center_cell_on(al, new_center);
 
   astate->make_viewport_dirty();
 
