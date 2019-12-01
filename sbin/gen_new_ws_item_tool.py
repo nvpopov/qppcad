@@ -4,7 +4,7 @@ import os
 
 hpp_tmp = """#ifndef QPPCAD_TOOL_#UCLASS_NAME
 #define QPPCAD_TOOL_#UCLASS_NAME
-#include <qppcad/qppcad.hpp>
+#include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {
@@ -19,7 +19,7 @@ namespace qpp {
         
     };
     
-  } // namespace cad
+  } // namespace qpp::cad
  
 } // namespace qpp
 
@@ -27,7 +27,7 @@ namespace qpp {
 """
 
 cpp_tmp = """#include <qppcad/tools/#CLASS_NAME/#CLASS_NAME.hpp>
-#include <qppcad/app_state.hpp>
+#include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
