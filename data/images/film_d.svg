@@ -19,7 +19,7 @@
    version="1.1"
    id="svg18"
    sodipodi:docname="film_d.svg"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata24">
     <rdf:RDF>
@@ -28,7 +28,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -44,13 +44,13 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="967"
+     inkscape:window-height="970"
      id="namedview20"
      showgrid="false"
      inkscape:pagecheckerboard="true"
      inkscape:zoom="13.906433"
-     inkscape:cx="3.0717923"
-     inkscape:cy="16.453647"
+     inkscape:cx="-11.741496"
+     inkscape:cy="4.6605438"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -63,54 +63,54 @@
      rx="2.18"
      ry="2.18"
      id="rect2"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
   <line
      x1="7"
      y1="2"
      x2="7"
      y2="22"
      id="line4"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
   <line
      x1="17"
      y1="2"
      x2="17"
      y2="22"
      id="line6"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
   <line
      x1="2"
      y1="12"
      x2="22"
      y2="12"
      id="line8"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
   <line
      x1="2"
      y1="7"
      x2="7"
      y2="7"
      id="line10"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
   <line
      x1="2"
      y1="17"
      x2="7"
      y2="17"
      id="line12"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
   <line
      x1="17"
      y1="17"
      x2="22"
      y2="17"
      id="line14"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
   <line
      x1="17"
      y1="7"
      x2="22"
      y2="7"
      id="line16"
-     style="stroke:#414141;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="stroke:#7a7a7a;stroke-opacity:1;stroke-width:1.2;stroke-miterlimit:4;stroke-dasharray:none" />
 </svg>

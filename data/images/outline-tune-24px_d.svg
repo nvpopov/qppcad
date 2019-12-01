@@ -13,7 +13,7 @@
    version="1.1"
    id="svg6"
    sodipodi:docname="outline-tune-24px_d.svg"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata12">
     <rdf:RDF>
@@ -38,13 +38,13 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="967"
+     inkscape:window-height="970"
      id="namedview8"
      showgrid="false"
      inkscape:pagecheckerboard="true"
-     inkscape:zoom="2.4583333"
-     inkscape:cx="-124.67534"
-     inkscape:cy="-9.1650456"
+     inkscape:zoom="19.666666"
+     inkscape:cx="-7.7774324"
+     inkscape:cy="8.1498093"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -53,9 +53,9 @@
      fill="none"
      d="M0 0h24v24H0V0z"
      id="path2"
-     style="stroke:#414141;stroke-opacity:1;fill:none;fill-opacity:1" />
+     style="stroke:#7a7a7a;stroke-opacity:1;fill:none;fill-opacity:1" />
   <path
      d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"
      id="path4"
-     style="stroke:#414141;stroke-opacity:1;fill:none;fill-opacity:1" />
+     style="stroke:#7a7a7a;stroke-opacity:1;fill:none;fill-opacity:1" />
 </svg>

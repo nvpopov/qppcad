@@ -13,7 +13,7 @@
    version="1.1"
    id="svg6"
    sodipodi:docname="outline-select_all-24px_d.svg"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
   <metadata
      id="metadata12">
     <rdf:RDF>
@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -38,13 +38,13 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="967"
+     inkscape:window-height="970"
      id="namedview8"
      showgrid="false"
      inkscape:pagecheckerboard="true"
-     inkscape:zoom="9.8333332"
-     inkscape:cx="-12.282743"
-     inkscape:cy="-9.6440096"
+     inkscape:zoom="9.8333333"
+     inkscape:cx="-33.231895"
+     inkscape:cy="-13.080469"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -58,37 +58,37 @@
      id="path4"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-     style="fill:none;stroke:#414141;stroke-opacity:1;stroke-width:0.9;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="fill:none;stroke:#7a7a7a;stroke-opacity:1;stroke-width:0.9;stroke-miterlimit:4;stroke-dasharray:none" />
   <ellipse
-     style="fill:#414141;fill-opacity:1;stroke:#414141;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
+     style="fill:#7a7a7a;fill-opacity:1;stroke:#7a7a7a;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
      id="path822"
      cx="8.4915257"
      cy="9.0508471"
      rx="1.3409028"
      ry="1.3917502" />
   <ellipse
-     style="fill:#414141;fill-opacity:1;stroke:#414141;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
+     style="fill:#7a7a7a;fill-opacity:1;stroke:#7a7a7a;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
      id="path822-3"
      cx="14.238015"
      cy="7.8923469"
      rx="1.3409028"
      ry="1.3917502" />
   <ellipse
-     style="fill:#414141;fill-opacity:1;stroke:#414141;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
+     style="fill:#7a7a7a;fill-opacity:1;stroke:#7a7a7a;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
      id="path822-6"
      cx="12.224558"
      cy="11.91926"
      rx="1.3409028"
      ry="1.3917502" />
   <ellipse
-     style="fill:#414141;fill-opacity:1;stroke:#414141;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
+     style="fill:#7a7a7a;fill-opacity:1;stroke:#7a7a7a;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
      id="path822-7"
      cx="9.4920101"
      cy="15.227081"
      rx="1.3409028"
      ry="1.3917502" />
   <ellipse
-     style="fill:#414141;fill-opacity:1;stroke:#414141;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
+     style="fill:#7a7a7a;fill-opacity:1;stroke:#7a7a7a;stroke-width:0.46056747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:6.58432293;stroke-opacity:1"
      id="path822-5"
      cx="14.957107"
      cy="15.802355"

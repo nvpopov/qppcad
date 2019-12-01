@@ -303,9 +303,13 @@ qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
  padding-right: 6px;
  margin-left: 3px;
  border: 1px solid rgb(80, 80, 80);
- background: rgb(94, 94, 94);
+ background: rgb(114, 114, 114);
  border-radius: 3px;
  margin-bottom: 5px;
+}
+
+qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab::selected {
+ background: rgb(154, 154, 154);
 }
 
 QTabBar[s_class="big_tab"] {
