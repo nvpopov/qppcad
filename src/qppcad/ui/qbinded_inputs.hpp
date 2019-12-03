@@ -67,6 +67,7 @@ namespace qpp {
         void check_state_changed(int state);
     };
 
+
     class qbinded_line_edit_t : public QLineEdit, public generic_binded_input_t<std::string> {
 
         Q_OBJECT

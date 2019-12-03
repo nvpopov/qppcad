@@ -52,6 +52,10 @@ namespace qpp {
         static void clamp_atoms_to_cell(geom_view_t *gv,
                                         bool ignore_selection = true,
                                         bool affect_anim = true);
+        static void translate_atoms_in_cell(geom_view_t *gv,
+                                            vector3<float> tr_vec,
+                                            bool clamp_atoms = true,
+                                            bool affect_anim = true);
         static vector3<float> center_cell_on(geom_view_t *gv,
                                              vector3<float> new_cnt,
                                              bool clamp_atoms = true,

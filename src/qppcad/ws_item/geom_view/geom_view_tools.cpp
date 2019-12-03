@@ -446,6 +446,26 @@ void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv,
 
 }
 
+void geom_view_tools_t::translate_atoms_in_cell(geom_view_t *gv, vector3<float> tr_vec,
+                                                bool clamp_atoms, bool affect_anim) {
+
+ if (!gv) return;
+
+ app_state_t *astate = app_state_t::get_inst();
+
+ for (size_t i = 0; i < gv->m_geom->nat(); i++) gv->m_geom->coord(i) += tr_vec;
+ if (affect_anim)
+   for (auto &anim_rec : gv->m_anim->m_anim_data)
+     for (auto &frame : anim_rec.frames)
+       for (auto &atom_pos : frame.atom_pos)
+         atom_pos += tr_vec;
+
+ if (clamp_atoms) geom_view_tools_t::clamp_atoms_to_cell(gv, true, affect_anim);
+
+ astate->make_viewport_dirty();
+
+}
+
 vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv,
                                                  vector3<float> new_cnt,
                                                  bool clamp_atoms,
@@ -455,22 +475,10 @@ vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv,
   vector3<float> cell_cnt{0};
   if (!gv) return cell_cnt;
 
-  app_state_t *astate = app_state_t::get_inst();
-
   for (size_t i = 0 ; i < gv->m_geom->DIM; i++) cell_cnt += gv->m_geom->cell.v[i] * 0.5f;
 
   vector3<float> delta = cell_cnt - new_cnt;
-  for (size_t i = 0; i < gv->m_geom->nat(); i++) gv->m_geom->coord(i) += delta;
-
-  if (affect_anim)
-    for (auto &anim_rec : gv->m_anim->m_anim_data)
-      for (auto &frame : anim_rec.frames)
-        for (auto &atom_pos : frame.atom_pos)
-          atom_pos += delta;
-
-  if (clamp_atoms) geom_view_tools_t::clamp_atoms_to_cell(gv, true, affect_anim);
-
-  astate->make_viewport_dirty();
+  geom_view_tools_t::translate_atoms_in_cell(gv, delta, clamp_atoms, affect_anim);
 
   return cell_cnt;
 
