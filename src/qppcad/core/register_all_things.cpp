@@ -377,7 +377,7 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         "Create interpolated animation", hash_t_generic, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<center_cell_on_atom_tool_t, geom_view_t>(
-        "Center cell on atoms", hash_t_tr, bhv_mgr);
+        "Shift center of cell to atoms", hash_t_tr, bhv_mgr);
 
   registration_helper_t::reg_ws_item_tool<shift_start_of_cell_tool_t, geom_view_t>(
         "Shift start of cell to atoms", hash_t_tr, bhv_mgr);

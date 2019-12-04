@@ -52,10 +52,10 @@ void shift_start_of_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   new_center /= al->m_atom_idx_sel.size();
 
-  for (size_t i = 0; i < al->m_geom->nat(); i++)
-    al->m_geom->coord(i) -= new_center;
+//  for (size_t i = 0; i < al->m_geom->nat(); i++)
+//    al->m_geom->coord(i) -= new_center;
 
-  //geom_view_tools_t::center_cell_on(al, new_center);
+  geom_view_tools_t::translate_atoms_in_cell(al, -new_center, false);
 
   astate->make_viewport_dirty();
 

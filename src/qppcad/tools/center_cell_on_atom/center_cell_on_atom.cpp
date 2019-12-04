@@ -52,7 +52,7 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   new_center /= al->m_atom_idx_sel.size();
 
-  geom_view_tools_t::center_cell_on(al, new_center);
+  geom_view_tools_t::center_cell_on(al, new_center, false);
 
   astate->make_viewport_dirty();
 
