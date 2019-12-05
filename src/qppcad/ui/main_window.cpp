@@ -1844,10 +1844,23 @@ void main_window_t::build_bhv_tools_menus() {
 
   app_state_t* astate = app_state_t::get_inst();
 
+  using pss = std::tuple<size_t, std::string>;
+  std::vector<std::tuple<size_t, std::string> > tool_grp_sort;
+  for (auto &ffg : astate->ws_mgr->m_bhv_mgr->m_tools_groups)
+    tool_grp_sort.push_back({ffg.first, ffg.second.m_full_name});
+
+  std::sort(std::begin(tool_grp_sort),
+            std::end(tool_grp_sort),
+            [](const pss &a, const pss &b){return std::get<1>(a) > std::get<1>(b);});
+
   //construct tools groups
-  for (auto &ffg : astate->ws_mgr->m_bhv_mgr->m_tools_groups) {
-      QMenu *new_menu = tools_menu->addMenu(QString::fromStdString(ffg.second.m_full_name));
-      tools_menu_groups.emplace(ffg.first, new_menu);
+  for (auto &ffg : tool_grp_sort) {
+      //astate->ws_mgr->m_bhv_mgr->m_tools_groups
+      QMenu *new_menu = tools_menu->addMenu(
+            QString::fromStdString(
+              astate->ws_mgr->m_bhv_mgr->m_tools_groups[std::get<0>(ffg)].m_full_name)
+            );
+      tools_menu_groups.emplace(std::get<0>(ffg), new_menu);
     }
 
   //construct tools actions
