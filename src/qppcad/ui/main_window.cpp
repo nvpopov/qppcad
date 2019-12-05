@@ -1845,7 +1845,8 @@ void main_window_t::build_bhv_tools_menus() {
   app_state_t* astate = app_state_t::get_inst();
 
   using pss = std::tuple<size_t, std::string>;
-  std::vector<std::tuple<size_t, std::string> > tool_grp_sort;
+  std::vector<std::tuple<size_t, std::string> > tool_grp_sort, tool_sort;
+
   for (auto &ffg : astate->ws_mgr->m_bhv_mgr->m_tools_groups)
     tool_grp_sort.push_back({ffg.first, ffg.second.m_full_name});
 
@@ -1863,17 +1864,36 @@ void main_window_t::build_bhv_tools_menus() {
       tools_menu_groups.emplace(std::get<0>(ffg), new_menu);
     }
 
+
+  for (auto &ff : astate->ws_mgr->m_bhv_mgr->m_tools_info)
+    tool_sort.push_back({ff.first, ff.second.m_full_name});
+
+  std::sort(std::begin(tool_sort),
+            std::end(tool_sort),
+            [](const pss &a, const pss &b){return std::get<1>(a) > std::get<1>(b);});
+
   //construct tools actions
-  for (auto &ff : astate->ws_mgr->m_bhv_mgr->m_tools_info) {
+  for (auto &ff : tool_sort) {
 
       //construct tool's action
       qextended_action *new_act = new qextended_action((nullptr));
-      new_act->m_joined_data[0] = ff.first;
+      size_t tool_hash = std::get<0>(ff);
+
+      new_act->m_joined_data[0] = tool_hash;
+
       connect(new_act, &QAction::triggered,
               this, &main_window_t::action_bhv_tools_menus_clicked);
-      new_act->setText(QString::fromStdString(ff.second.m_full_name));
+
+      new_act->setText(
+            QString::fromStdString(
+              astate->ws_mgr->m_bhv_mgr->m_tools_info[tool_hash].m_full_name)
+            );
+
       //locate menu for group
-      auto it_g = tools_menu_groups.find(ff.second.m_group_hash);
+      auto it_g = tools_menu_groups.find(
+            astate->ws_mgr->m_bhv_mgr->m_tools_info[tool_hash].m_group_hash
+            );
+
       if (it_g != tools_menu_groups.end()) it_g->second->addAction(new_act);
       else tools_menu->addAction(new_act);
 
