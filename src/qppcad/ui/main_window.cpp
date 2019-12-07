@@ -23,11 +23,11 @@ using namespace qpp::cad;
 
 main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
 
-  main_wdgt = new QWidget;
+  m_main_wdgt = new QWidget;
   app_state_t* astate = app_state_t::get_inst();
 
   setAcceptDrops(true);
-  setCentralWidget(main_wdgt);
+  setCentralWidget(m_main_wdgt);
   setMinimumHeight(astate->size_guide.main_window_h());
   setMinimumWidth(astate->size_guide.main_window_w());
 
@@ -55,7 +55,7 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
           this,
-          &main_window_t::cur_ws_selected_item_changed);
+          &main_window_t::cur_ws_sel_item_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_edit_type_changed_signal,
@@ -65,7 +65,7 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this,
-          &main_window_t::cur_ws_selected_atoms_list_selection_changed);
+          &main_window_t::cur_ws_sel_atoms_list_sel_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::new_file_loaded_signal,
@@ -80,9 +80,9 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   wss_changed_slot();
   cur_ws_changed();
   cur_ws_edit_type_changed();
-  cur_ws_selected_atoms_list_selection_changed();
+  cur_ws_sel_atoms_list_sel_changed();
 
-  view_menu_show_modern_menu->setChecked(astate->m_show_modern_menu);
+  m_view_menu_show_modern_menu->setChecked(astate->m_show_modern_menu);
   show_modern_menu_state_changed(astate->m_show_modern_menu);
 
 }
@@ -93,16 +93,16 @@ main_window_t::~main_window_t() {
 
 void main_window_t::init_base_shortcuts() {
 
-  sc_toggle_console = new QShortcut(this);
-  sc_toggle_console->setKey(Qt::Key_QuoteLeft);
-  connect(sc_toggle_console,
+  m_sc_toggle_console = new QShortcut(this);
+  m_sc_toggle_console->setKey(Qt::Key_QuoteLeft);
+  connect(m_sc_toggle_console,
           &QShortcut::activated,
           this,
-          &main_window_t::action_toggle_console);
+          &main_window_t::act_toggle_console);
 
-  sc_enter_immersive_mode = new QShortcut(this);
-  sc_enter_immersive_mode->setKey(Qt::Key_F12);
-  connect(sc_enter_immersive_mode,
+  m_sc_enter_immersive_mode = new QShortcut(this);
+  m_sc_enter_immersive_mode->setKey(Qt::Key_F12);
+  connect(m_sc_enter_immersive_mode,
           &QShortcut::activated,
           this,
           &main_window_t::toggle_immersive_mode);
@@ -111,71 +111,71 @@ void main_window_t::init_base_shortcuts() {
 
 void main_window_t::init_menus() {
 
-  file_menu  = menuBar()->addMenu(tr("&File"));
+  m_file_menu  = menuBar()->addMenu(tr("&File"));
 
-  file_menu_new_ws = new QAction(nullptr);
-  file_menu_new_ws->setText(tr("New workspace"));
-  file_menu_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
-  file_menu->addAction(file_menu_new_ws);
-  connect(file_menu_new_ws,
+  m_file_menu_new_ws = new QAction(nullptr);
+  m_file_menu_new_ws->setText(tr("New workspace"));
+  m_file_menu_new_ws->setShortcut(QKeySequence(tr("Ctrl+n")));
+  m_file_menu->addAction(m_file_menu_new_ws);
+  connect(m_file_menu_new_ws,
           &QAction::triggered,
           this,
           &main_window_t::create_new_ws);
 
-  file_menu_close_ws = new QAction(nullptr);
-  file_menu_close_ws->setText(tr("Close workspace"));
-  file_menu->addAction(file_menu_close_ws);
-  connect(file_menu_close_ws,
+  m_file_menu_close_ws = new QAction(nullptr);
+  m_file_menu_close_ws->setText(tr("Close workspace"));
+  m_file_menu->addAction(m_file_menu_close_ws);
+  connect(m_file_menu_close_ws,
           &QAction::triggered,
           this,
           &main_window_t::close_cur_ws);
 
-  file_menu_close_all_ws = new QAction(nullptr);
-  file_menu_close_all_ws->setText(tr("Close all workspaces"));
-  file_menu->addAction(file_menu_close_all_ws);
-  connect(file_menu_close_all_ws,
+  m_file_menu_close_all_ws = new QAction(nullptr);
+  m_file_menu_close_all_ws->setText(tr("Close all workspaces"));
+  m_file_menu->addAction(m_file_menu_close_all_ws);
+  connect(m_file_menu_close_all_ws,
           &QAction::triggered,
           this,
           &main_window_t::close_all_ws);
 
-  file_menu_open_ws = new QAction(nullptr);
-  file_menu_open_ws->setText(tr("Open workspace"));
-  file_menu_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
-  file_menu->addAction(file_menu_open_ws);
-  connect(file_menu_open_ws,
+  m_file_menu_open_ws = new QAction(nullptr);
+  m_file_menu_open_ws->setText(tr("Open workspace"));
+  m_file_menu_open_ws->setShortcut(QKeySequence(tr("Ctrl+o")));
+  m_file_menu->addAction(m_file_menu_open_ws);
+  connect(m_file_menu_open_ws,
           &QAction::triggered,
           this,
           &main_window_t::open_ws);
 
-  file_menu_save_ws = new QAction(nullptr);
-  file_menu_save_ws->setText(tr("Save workspace"));
-  file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
-  file_menu->addSeparator();
-  file_menu->addAction(file_menu_save_ws);
-  connect(file_menu_save_ws,
+  m_file_menu_save_ws = new QAction(nullptr);
+  m_file_menu_save_ws->setText(tr("Save workspace"));
+  m_file_menu_save_ws->setShortcut(QKeySequence(tr("Ctrl+s")));
+  m_file_menu->addSeparator();
+  m_file_menu->addAction(m_file_menu_save_ws);
+  connect(m_file_menu_save_ws,
           &QAction::triggered,
           this,
           &main_window_t::save_ws);
 
-  file_menu_save_ws_as = new QAction(nullptr);
-  file_menu_save_ws_as->setText(tr("Save workspace as"));
-  file_menu->addAction(file_menu_save_ws_as);
-  connect(file_menu_save_ws_as,
+  m_file_menu_save_ws_as = new QAction(nullptr);
+  m_file_menu_save_ws_as->setText(tr("Save workspace as"));
+  m_file_menu->addAction(m_file_menu_save_ws_as);
+  connect(m_file_menu_save_ws_as,
           &QAction::triggered,
           this,
           &main_window_t::save_ws_as);
 
-  file_menu->addSeparator();
-  file_menu_import_as_new_ws = file_menu->addMenu(tr("Import as new workspace"));
-  file_menu_import_to_cur_ws = file_menu->addMenu(tr("Import to current workspace"));
-  file_menu_export_sel_as = file_menu->addMenu(tr("Export selected item"));
+  m_file_menu->addSeparator();
+  m_file_menu_import_as_new_ws = m_file_menu->addMenu(tr("Import as new workspace"));
+  m_file_menu_import_to_cur_ws = m_file_menu->addMenu(tr("Import to current workspace"));
+  m_file_menu_export_sel_as = m_file_menu->addMenu(tr("Export selected item"));
 
-  file_menu_recent_files = file_menu->addMenu(tr("Recent files"));
+  m_file_menu_recent_files = m_file_menu->addMenu(tr("Recent files"));
   for (int i = 0; i < qpp::cad::max_recent_files; i++) {
 
-      QAction *recent_act = new QAction(file_menu_recent_files);
-      file_menu_recent_entries[i] = recent_act;
-      file_menu_recent_files->addAction(recent_act);
+      QAction *recent_act = new QAction(m_file_menu_recent_files);
+      m_file_menu_recent_entries[i] = recent_act;
+      m_file_menu_recent_files->addAction(recent_act);
       connect(recent_act,
               &QAction::triggered,
               this,
@@ -183,190 +183,190 @@ void main_window_t::init_menus() {
 
     }
 
-  file_menu_close_app = new QAction(nullptr);
-  file_menu_close_app->setText(tr("Close"));
-  file_menu_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
-  file_menu->addSeparator();
-  file_menu->addAction(file_menu_close_app);
-  connect(file_menu_close_app, &QAction::triggered, this,
+  m_file_menu_close_app = new QAction(nullptr);
+  m_file_menu_close_app->setText(tr("Close"));
+  m_file_menu_close_app->setShortcut(QKeySequence(tr("Ctrl+q")));
+  m_file_menu->addSeparator();
+  m_file_menu->addAction(m_file_menu_close_app);
+  connect(m_file_menu_close_app, &QAction::triggered, this,
           &main_window_t::slot_shortcut_terminate_app);
 
-  edit_menu  = menuBar()->addMenu(tr("&Edit"));
-  edit_menu_undo = new QAction(nullptr);
-  edit_menu_undo->setText(tr("Undo"));
-  edit_menu_undo->setEnabled(false);
-  edit_menu_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
-  edit_menu->addAction(edit_menu_undo);
+  m_edit_menu  = menuBar()->addMenu(tr("&Edit"));
+  m_edit_menu_undo = new QAction(nullptr);
+  m_edit_menu_undo->setText(tr("Undo"));
+  m_edit_menu_undo->setEnabled(false);
+  m_edit_menu_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
+  m_edit_menu->addAction(m_edit_menu_undo);
 
-  edit_menu_redo = new QAction(nullptr);
-  edit_menu_redo->setText(tr("Redo"));
-  edit_menu_redo->setEnabled(false);
-  edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
-  edit_menu->addAction(edit_menu_redo);
+  m_edit_menu_redo = new QAction(nullptr);
+  m_edit_menu_redo->setText(tr("Redo"));
+  m_edit_menu_redo->setEnabled(false);
+  m_edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
+  m_edit_menu->addAction(m_edit_menu_redo);
 
-  edit_menu->addSeparator();
-  edit_menu_ptable_wdgt = new QAction(nullptr);
-  edit_menu_ptable_wdgt->setText(tr("Periodic table"));
-  edit_menu->addAction(edit_menu_ptable_wdgt);
-  connect(edit_menu_ptable_wdgt,
+  m_edit_menu->addSeparator();
+  m_edit_menu_ptable_wdgt = new QAction(nullptr);
+  m_edit_menu_ptable_wdgt->setText(tr("Periodic table"));
+  m_edit_menu->addAction(m_edit_menu_ptable_wdgt);
+  connect(m_edit_menu_ptable_wdgt,
           &QAction::triggered,
           []() {
                 ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec();
                 app_state_t::get_inst()->make_viewport_dirty();
           });
 
-  edit_menu->addSeparator();
+  m_edit_menu->addSeparator();
 
   //Selection menu
-  edit_menu_selection = edit_menu->addMenu(tr("Content selection"));
-  edit_menu_selection_select_all = new QAction(nullptr);
-  edit_menu_selection_select_all->setText(tr("Select all"));
-  edit_menu_selection_select_all->setShortcut(QKeySequence(tr("ctrl+a")));
-  edit_menu_selection->addAction(edit_menu_selection_select_all);
-  connect(edit_menu_selection_select_all,
+  m_edit_menu_sel = m_edit_menu->addMenu(tr("Content selection"));
+  m_edit_menu_sel_sel_all = new QAction(nullptr);
+  m_edit_menu_sel_sel_all->setText(tr("Select all"));
+  m_edit_menu_sel_sel_all->setShortcut(QKeySequence(tr("ctrl+a")));
+  m_edit_menu_sel->addAction(m_edit_menu_sel_sel_all);
+  connect(m_edit_menu_sel_sel_all,
           &QAction::triggered,
           this,
-          &main_window_t::action_select_all_content);
+          &main_window_t::act_sel_all_cnt);
 
-  edit_menu_selection_unselect_all = new QAction(nullptr);
-  edit_menu_selection_unselect_all->setText(tr("Unselect all"));
-  edit_menu_selection_unselect_all->setShortcut(QKeySequence(tr("shift+a")));
-  edit_menu_selection->addAction(edit_menu_selection_unselect_all);
-  connect(edit_menu_selection_unselect_all,
+  m_edit_menu_sel_unsel_all = new QAction(nullptr);
+  m_edit_menu_sel_unsel_all->setText(tr("Unselect all"));
+  m_edit_menu_sel_unsel_all->setShortcut(QKeySequence(tr("shift+a")));
+  m_edit_menu_sel->addAction(m_edit_menu_sel_unsel_all);
+  connect(m_edit_menu_sel_unsel_all,
           &QAction::triggered,
           this,
-          &main_window_t::action_unselect_all_content);
+          &main_window_t::act_unsel_all_cnt);
 
-  edit_menu_selection_invert = new QAction(nullptr);
-  edit_menu_selection_invert->setText(tr("Invert selection"));
-  edit_menu_selection_invert->setShortcut(QKeySequence(tr("ctrl+i")));
-  edit_menu_selection->addAction(edit_menu_selection_invert);
-  connect(edit_menu_selection_invert,
+  m_edit_menu_sel_invert = new QAction(nullptr);
+  m_edit_menu_sel_invert->setText(tr("Invert selection"));
+  m_edit_menu_sel_invert->setShortcut(QKeySequence(tr("ctrl+i")));
+  m_edit_menu_sel->addAction(m_edit_menu_sel_invert);
+  connect(m_edit_menu_sel_invert,
           &QAction::triggered,
           this,
-          &main_window_t::action_invert_selected_content);
+          &main_window_t::act_invert_sel_cnt);
   //End of selection menu
 
-  edit_menu_switch_ws_edit_mode = new QAction(nullptr);
-  edit_menu_switch_ws_edit_mode->setText(tr("Switch edit mode"));
-  edit_menu_switch_ws_edit_mode->setShortcut(tr("ctrl+e"));
-  connect(edit_menu_switch_ws_edit_mode,
+  m_edit_menu_switch_ws_edit_mode = new QAction(nullptr);
+  m_edit_menu_switch_ws_edit_mode->setText(tr("Switch edit mode"));
+  m_edit_menu_switch_ws_edit_mode->setShortcut(tr("ctrl+e"));
+  connect(m_edit_menu_switch_ws_edit_mode,
           &QAction::triggered,
           this,
           &main_window_t::toggle_ws_edit_mode);
 
-  edit_menu->addAction(edit_menu_switch_ws_edit_mode);
+  m_edit_menu->addAction(m_edit_menu_switch_ws_edit_mode);
 
   // tools menu
-  tools_menu = menuBar()->addMenu(tr("&Tools"));
+  m_tools_menu = menuBar()->addMenu(tr("&Tools"));
   // end tools menu
 
   // workspace menu
-  ws_menu = menuBar()->addMenu(tr("&Workspace"));
+  m_ws_menu = menuBar()->addMenu(tr("&Workspace"));
 
-  ws_menu_rename_ws = new QAction(nullptr);
-  ws_menu_rename_ws->setText(tr("Rename workspace"));
-  ws_menu->addAction(ws_menu_rename_ws);
-  connect(ws_menu_rename_ws,
+  m_ws_menu_rename_ws = new QAction(nullptr);
+  m_ws_menu_rename_ws->setText(tr("Rename workspace"));
+  m_ws_menu->addAction(m_ws_menu_rename_ws);
+  connect(m_ws_menu_rename_ws,
           &QAction::triggered,
           this,
           &main_window_t::rename_cur_ws);
 
-  ws_menu_bg_color = new QAction(nullptr);
-  ws_menu_bg_color->setText(tr("Change background"));
-  ws_menu->addAction(ws_menu_bg_color);
-  connect(ws_menu_bg_color,
+  m_ws_menu_bg_color = new QAction(nullptr);
+  m_ws_menu_bg_color->setText(tr("Change background"));
+  m_ws_menu->addAction(m_ws_menu_bg_color);
+  connect(m_ws_menu_bg_color,
           &QAction::triggered,
           this,
           &main_window_t::change_cur_ws_bg);
 
-  ws_copy_cam = new QAction(nullptr);
-  ws_copy_cam->setText(tr("Copy camera to all"));
-  ws_menu->addAction(ws_copy_cam);
-  connect(ws_copy_cam,
+  m_ws_copy_cam = new QAction(nullptr);
+  m_ws_copy_cam->setText(tr("Copy camera to all"));
+  m_ws_menu->addAction(m_ws_copy_cam);
+  connect(m_ws_copy_cam,
           &QAction::triggered,
           this,
           &main_window_t::cam_copy_to_all);
   // end workspace menu
 
   // view menu
-  view_menu = menuBar()->addMenu(tr("&View"));
+  m_view_menu = menuBar()->addMenu(tr("&View"));
 
-  view_menu_show_oi = new QAction(nullptr);
-  view_menu_show_oi->setText(tr("Show object inspector"));
-  view_menu_show_oi->setCheckable(true);
-  view_menu->addAction(view_menu_show_oi);
-  connect(view_menu_show_oi,
+  m_view_menu_show_oi = new QAction(nullptr);
+  m_view_menu_show_oi->setText(tr("Show object inspector"));
+  m_view_menu_show_oi->setCheckable(true);
+  m_view_menu->addAction(m_view_menu_show_oi);
+  connect(m_view_menu_show_oi,
           &QAction::toggled,
           this,
           &main_window_t::show_obj_insp_state_changed);
 
-  view_menu_show_modern_menu = new QAction(nullptr);
-  view_menu_show_modern_menu->setText(tr("Show modern menu"));
-  view_menu_show_modern_menu->setCheckable(true);
+  m_view_menu_show_modern_menu = new QAction(nullptr);
+  m_view_menu_show_modern_menu->setText(tr("Show modern menu"));
+  m_view_menu_show_modern_menu->setCheckable(true);
   //view_menu->addAction(view_menu_show_modern_menu);
-  connect(view_menu_show_modern_menu,
+  connect(m_view_menu_show_modern_menu,
           &QAction::toggled,
           this,
           &main_window_t::show_modern_menu_state_changed);
 
-  view_menu_show_gizmo = new QAction(nullptr);
-  view_menu_show_gizmo->setText(tr("Show gizmo"));
-  view_menu_show_gizmo->setCheckable(true);
-  view_menu->addAction(view_menu_show_gizmo);
-  connect(view_menu_show_gizmo,
+  m_view_menu_show_gizmo = new QAction(nullptr);
+  m_view_menu_show_gizmo->setText(tr("Show gizmo"));
+  m_view_menu_show_gizmo->setCheckable(true);
+  m_view_menu->addAction(m_view_menu_show_gizmo);
+  connect(m_view_menu_show_gizmo,
           &QAction::toggled,
           this,
           &main_window_t::show_gizmo_state_changed);
 
-  view_menu_toggle_fullscreen = new QAction(nullptr);
-  view_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
-  view_menu_toggle_fullscreen->setCheckable(true);
-  view_menu_toggle_fullscreen->setShortcut(Qt::Key::Key_F11);
-  view_menu->addAction(view_menu_toggle_fullscreen);
-  connect(view_menu_toggle_fullscreen,
+  m_view_menu_toggle_fullscreen = new QAction(nullptr);
+  m_view_menu_toggle_fullscreen->setText(tr("Toggle Fullscreen"));
+  m_view_menu_toggle_fullscreen->setCheckable(true);
+  m_view_menu_toggle_fullscreen->setShortcut(Qt::Key::Key_F11);
+  m_view_menu->addAction(m_view_menu_toggle_fullscreen);
+  connect(m_view_menu_toggle_fullscreen,
           &QAction::toggled,
           this,
           &main_window_t::toggle_fullscreen);
 
-  view_menu_settings = new QAction(nullptr);
-  view_menu_settings->setEnabled(false);
-  view_menu_settings->setText(tr("Settings"));
-  connect(view_menu_settings,
+  m_view_menu_settings = new QAction(nullptr);
+  m_view_menu_settings->setEnabled(false);
+  m_view_menu_settings->setText(tr("Settings"));
+  connect(m_view_menu_settings,
           &QAction::triggered,[](){app_settings_widget_t aset;aset.exec();});
 
-  view_menu_ws_settings = new QAction(nullptr);
-  view_menu_ws_settings->setEnabled(false);
-  view_menu_ws_settings->setText(tr("Workspace settings"));
-  view_menu->addAction(view_menu_settings);
-  view_menu->addAction(view_menu_ws_settings);
+  m_view_menu_ws_settings = new QAction(nullptr);
+  m_view_menu_ws_settings->setEnabled(false);
+  m_view_menu_ws_settings->setText(tr("Workspace settings"));
+  m_view_menu->addAction(m_view_menu_settings);
+  m_view_menu->addAction(m_view_menu_ws_settings);
 
-  view_menu_log_wdgt = new QAction(nullptr);
-  view_menu_log_wdgt->setText(tr("Show log"));
-  view_menu_log_wdgt->setCheckable(true);
-  connect(view_menu_log_wdgt,
+  m_view_menu_log_wdgt = new QAction(nullptr);
+  m_view_menu_log_wdgt->setText(tr("Show log"));
+  m_view_menu_log_wdgt->setCheckable(true);
+  connect(m_view_menu_log_wdgt,
           &QAction::toggled,
           this,
           &main_window_t::show_log_wdgt_state_changed);
-  view_menu->addAction(view_menu_log_wdgt);
+  m_view_menu->addAction(m_view_menu_log_wdgt);
 
-  view_menu_console = new QAction(nullptr);
-  view_menu_console->setText(tr("Console"));
-  view_menu_console->setShortcut(QKeySequence(tr("~")));
-  view_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
-  connect(view_menu_console,
+  m_view_menu_console = new QAction(nullptr);
+  m_view_menu_console->setText(tr("Console"));
+  m_view_menu_console->setShortcut(QKeySequence(tr("~")));
+  m_view_menu_console->setShortcutContext(Qt::ShortcutContext::ApplicationShortcut);
+  connect(m_view_menu_console,
           &QAction::triggered,
           this,
-          &main_window_t::action_toggle_console);
-  view_menu->addAction(view_menu_console);
+          &main_window_t::act_toggle_console);
+  m_view_menu->addAction(m_view_menu_console);
 
-  view_menu_debug = view_menu->addMenu(tr("Debug"));
+  m_view_menu_debug = m_view_menu->addMenu(tr("Debug"));
 
-  view_menu_toggle_debug_info = new QAction(nullptr);
-  view_menu_toggle_debug_info->setText(tr("Show frame info"));
-  view_menu_toggle_debug_info->setCheckable(true);
-  view_menu_debug->addAction(view_menu_toggle_debug_info);
-  connect(view_menu_toggle_debug_info,
+  m_view_menu_toggle_debug_info = new QAction(nullptr);
+  m_view_menu_toggle_debug_info->setText(tr("Show frame info"));
+  m_view_menu_toggle_debug_info->setCheckable(true);
+  m_view_menu_debug->addAction(m_view_menu_toggle_debug_info);
+  connect(m_view_menu_toggle_debug_info,
           &QAction::toggled,
           [](bool checked) {
             app_state_t* astate = app_state_t::get_inst();
@@ -374,11 +374,11 @@ void main_window_t::init_menus() {
             astate->make_viewport_dirty();
           });
 
-  view_menu_toggle_debug_tws_tree = new QAction(nullptr);
-  view_menu_toggle_debug_tws_tree->setText(tr("Render tws-tree"));
-  view_menu_toggle_debug_tws_tree->setCheckable(true);
-  view_menu_debug->addAction(view_menu_toggle_debug_tws_tree);
-  connect(view_menu_toggle_debug_tws_tree,
+  m_view_menu_toggle_debug_tws_tree = new QAction(nullptr);
+  m_view_menu_toggle_debug_tws_tree->setText(tr("Render tws-tree"));
+  m_view_menu_toggle_debug_tws_tree->setCheckable(true);
+  m_view_menu_debug->addAction(m_view_menu_toggle_debug_tws_tree);
+  connect(m_view_menu_toggle_debug_tws_tree,
           &QAction::toggled,
           [](bool checked) {
             app_state_t* astate = app_state_t::get_inst();
@@ -386,11 +386,11 @@ void main_window_t::init_menus() {
             astate->make_viewport_dirty();
           });
 
-  view_menu_toggle_sel_deque = new QAction(nullptr);
-  view_menu_toggle_sel_deque->setText(tr("Show selection deque"));
-  view_menu_toggle_sel_deque->setCheckable(true);
-  view_menu_debug->addAction(view_menu_toggle_sel_deque);
-  connect(view_menu_toggle_debug_tws_tree,
+  m_view_menu_toggle_sel_deque = new QAction(nullptr);
+  m_view_menu_toggle_sel_deque->setText(tr("Show selection deque"));
+  m_view_menu_toggle_sel_deque->setCheckable(true);
+  m_view_menu_debug->addAction(m_view_menu_toggle_sel_deque);
+  connect(m_view_menu_toggle_debug_tws_tree,
           &QAction::toggled,
           [](bool checked) {
             app_state_t* astate = app_state_t::get_inst();
@@ -401,11 +401,11 @@ void main_window_t::init_menus() {
   // end of view menu
 
   // help menu
-  help_menu  = menuBar()->addMenu(tr("&Help"));
-  help_menu_about = new QAction(nullptr);
-  help_menu_about->setText(tr("About"));
-  help_menu->addAction(help_menu_about);
-  connect(help_menu_about,
+  m_help_menu  = menuBar()->addMenu(tr("&Help"));
+  m_help_menu_about = new QAction(nullptr);
+  m_help_menu_about->setText(tr("About"));
+  m_help_menu->addAction(m_help_menu_about);
+  connect(m_help_menu_about,
           &QAction::triggered,
           []() {
             QMessageBox::about(nullptr, "qpp::cad",
@@ -426,14 +426,14 @@ void main_window_t::init_menus() {
 
   // end of help menu
 
-  modern_menu = new QMenu;
+  m_modern_menu = new QMenu;
   //modern_menu->setLayoutDirection( Qt::RightToLeft );
-  modern_menu->addMenu(file_menu);
-  modern_menu->addMenu(edit_menu);
-  modern_menu->addMenu(tools_menu);
-  modern_menu->addMenu(ws_menu);
-  modern_menu->addMenu(view_menu);
-  modern_menu->addMenu(help_menu);
+  m_modern_menu->addMenu(m_file_menu);
+  m_modern_menu->addMenu(m_edit_menu);
+  m_modern_menu->addMenu(m_tools_menu);
+  m_modern_menu->addMenu(m_ws_menu);
+  m_modern_menu->addMenu(m_view_menu);
+  m_modern_menu->addMenu(m_help_menu);
 
 }
 
@@ -441,351 +441,351 @@ void main_window_t::init_widgets() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  tp_wdgt = new QWidget(nullptr);
-  tp_wdgt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  tp_wdgt->setFixedHeight(astate->size_guide.tool_panel_h_exact());
-  tp_wdgt->setProperty("s_class", "tp_generic");
-  tp_wdgt->setObjectName("tool_panel_widget_e");
-  tp_overview = new QLabel(nullptr);
+  m_tp_wdgt = new QWidget(nullptr);
+  m_tp_wdgt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  m_tp_wdgt->setFixedHeight(astate->size_guide.tool_panel_h_exact());
+  m_tp_wdgt->setProperty("s_class", "tp_generic");
+  m_tp_wdgt->setObjectName("tool_panel_widget_e");
+  m_tp_overview = new QLabel(nullptr);
 
-  tp_modern_menu = new QPushButton(nullptr);
-  tp_modern_menu->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_modern_menu->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_modern_menu->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_modern_menu = new QPushButton(nullptr);
+  m_tp_modern_menu->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_modern_menu->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_modern_menu->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                      astate->size_guide.tool_panel_icon_size()));
-  tp_modern_menu->setToolTip(tr("Show modern menu"));
-  tp_modern_menu->setIcon(QIcon("://images/more_vert-24px.svg"));
-  connect(tp_modern_menu,
+  m_tp_modern_menu->setToolTip(tr("Show modern menu"));
+  m_tp_modern_menu->setIcon(QIcon("://images/more_vert-24px.svg"));
+  connect(m_tp_modern_menu,
           &QPushButton::clicked,
           this,
           &main_window_t::modern_menu_clicked);
   //tp_overview->setText("[]");
 
-  tp_print_screen = new QPushButton(nullptr);
-  tp_print_screen->setProperty("s_class", "tp_cb");
-  tp_print_screen->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_print_screen->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_print_screen->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_print_screen = new QPushButton(nullptr);
+  m_tp_print_screen->setProperty("s_class", "tp_cb");
+  m_tp_print_screen->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_print_screen->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_print_screen->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                      astate->size_guide.tool_panel_icon_size()));
-  tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
-  tp_print_screen->setIcon(QIcon("://images/outline-camera_enhance-24px.svg"));
-  connect(tp_print_screen,
+  m_tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
+  m_tp_print_screen->setIcon(QIcon("://images/outline-camera_enhance-24px.svg"));
+  connect(m_tp_print_screen,
           &QPushButton::pressed,
           this,
           &main_window_t::make_screenshot);
 
-  tp_edit_mode = new QButtonGroup(nullptr);
-  tp_edit_mode->setExclusive(true);
-  connect(tp_edit_mode,
+  m_tp_edit_mode = new QButtonGroup(nullptr);
+  m_tp_edit_mode->setExclusive(true);
+  connect(m_tp_edit_mode,
           static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this,
           &main_window_t::ws_edit_mode_selector_button_clicked);
 
-  tp_edit_mode_item = new QPushButton(nullptr);
-  tp_edit_mode_item->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_edit_mode_item->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_edit_mode_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_edit_mode_item = new QPushButton(nullptr);
+  m_tp_edit_mode_item->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_edit_mode_item->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_edit_mode_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                        astate->size_guide.tool_panel_icon_size()));
-  tp_edit_mode_item->setToolTip(tr("Set current workspace's edit mode to <edit item>"));
-  tp_edit_mode_item->setIcon(QIcon("://images/edit0.svg"));
-  tp_edit_mode_item->setCheckable(true);
+  m_tp_edit_mode_item->setToolTip(tr("Set current workspace's edit mode to <edit item>"));
+  m_tp_edit_mode_item->setIcon(QIcon("://images/edit0.svg"));
+  m_tp_edit_mode_item->setCheckable(true);
 
-  tp_edit_mode_content= new QPushButton(nullptr);
-  tp_edit_mode_content->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_edit_mode_content->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_edit_mode_content->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_edit_mode_cnt= new QPushButton(nullptr);
+  m_tp_edit_mode_cnt->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_edit_mode_cnt->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_edit_mode_cnt->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                           astate->size_guide.tool_panel_icon_size()));
-  tp_edit_mode_content->setToolTip(tr("Set current workspace's edit mode to <edit content>"));
-  tp_edit_mode_content->setIcon(QIcon("://images/edit1.svg"));
-  tp_edit_mode_content->setCheckable(true);
+  m_tp_edit_mode_cnt->setToolTip(tr("Set current workspace's edit mode to <edit content>"));
+  m_tp_edit_mode_cnt->setIcon(QIcon("://images/edit1.svg"));
+  m_tp_edit_mode_cnt->setCheckable(true);
 
-  tp_edit_mode->addButton(tp_edit_mode_item, 0);
-  tp_edit_mode->addButton(tp_edit_mode_content, 1);
+  m_tp_edit_mode->addButton(m_tp_edit_mode_item, 0);
+  m_tp_edit_mode->addButton(m_tp_edit_mode_cnt, 1);
 
-  tp_edit_mode_start = new QFrame(nullptr);
-  tp_edit_mode_start->setFrameShape(QFrame::VLine);
-  tp_edit_mode_start->setFrameShadow(QFrame::Sunken);
-  tp_edit_mode_start->setFixedWidth(3);
-  tp_edit_mode_start->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+  m_tp_edit_mode_start = new QFrame(nullptr);
+  m_tp_edit_mode_start->setFrameShape(QFrame::VLine);
+  m_tp_edit_mode_start->setFrameShadow(QFrame::Sunken);
+  m_tp_edit_mode_start->setFixedWidth(3);
+  m_tp_edit_mode_start->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
-  tp_edit_mode_end = new QFrame(nullptr);
-  tp_edit_mode_end->setFrameShape(QFrame::VLine);
-  tp_edit_mode_end->setFrameShadow(QFrame::Sunken);
-  tp_edit_mode_end->setFixedWidth(3);
-  tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
-  connect(tp_edit_mode,
+  m_tp_edit_mode_end = new QFrame(nullptr);
+  m_tp_edit_mode_end->setFrameShape(QFrame::VLine);
+  m_tp_edit_mode_end->setFrameShadow(QFrame::Sunken);
+  m_tp_edit_mode_end->setFixedWidth(3);
+  m_tp_edit_mode_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+  connect(m_tp_edit_mode,
           static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
           this,
           &main_window_t::ws_edit_mode_selector_button_clicked);
 
-  tp_camera_tool = new QToolButton(nullptr);
-  tp_camera_tool->setIcon(QIcon("://images/outline-videocam-24px.svg"));
-  tp_camera_tool->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_cam_tool = new QToolButton(nullptr);
+  m_tp_cam_tool->setIcon(QIcon("://images/outline-videocam-24px.svg"));
+  m_tp_cam_tool->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                     astate->size_guide.tool_panel_icon_size()));
 
-  tp_camera_tool->setPopupMode(QToolButton::InstantPopup);
-  tp_camera_tool->setArrowType(Qt::NoArrow);
-  tp_camera_tool->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_camera_tool->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
-  connect(tp_camera_tool,
+  m_tp_cam_tool->setPopupMode(QToolButton::InstantPopup);
+  m_tp_cam_tool->setArrowType(Qt::NoArrow);
+  m_tp_cam_tool->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_cam_tool->setMinimumHeight(astate->size_guide.tool_panel_ctrl_h());
+  connect(m_tp_cam_tool,
           &QToolButton::triggered,
           this,
           &main_window_t::tp_camera_tool_button_triggered);
 
-  tp_scenic_rot_cam = new QPushButton(nullptr);
-  tp_scenic_rot_cam->setToolTip(tr("Orbit the camera"));
-  tp_scenic_rot_cam->setIcon(QIcon("://images/baseline-3d_rotation_x-24px.svg"));
-  tp_scenic_rot_cam->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_scenic_rot_cam->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_scenic_rot_cam->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_scenic_rot_cam = new QPushButton(nullptr);
+  m_tp_scenic_rot_cam->setToolTip(tr("Orbit the camera"));
+  m_tp_scenic_rot_cam->setIcon(QIcon("://images/baseline-3d_rotation_x-24px.svg"));
+  m_tp_scenic_rot_cam->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_scenic_rot_cam->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_scenic_rot_cam->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                        astate->size_guide.tool_panel_icon_size()));
-  tp_scenic_rot_cam->setCheckable(true);
-  connect(tp_scenic_rot_cam,
+  m_tp_scenic_rot_cam->setCheckable(true);
+  connect(m_tp_scenic_rot_cam,
           &QPushButton::toggled,
           this,
           &main_window_t::tp_scenic_rotation_toggle);
 
-  tp_camera_tool_act_x = new qextended_action(nullptr);
-  tp_camera_tool_act_x->m_joined_data[0] = cam_tv_e::tv_x;
-  tp_camera_tool_act_x->setText(tr( "x - axis"));
-  tp_camera_tool->addAction(tp_camera_tool_act_x);
+  m_tp_cam_tool_act_x = new qextended_action(nullptr);
+  m_tp_cam_tool_act_x->m_joined_data[0] = cam_tv_e::tv_x;
+  m_tp_cam_tool_act_x->setText(tr( "x - axis"));
+  m_tp_cam_tool->addAction(m_tp_cam_tool_act_x);
 
-  tp_camera_tool_act_y = new qextended_action(nullptr);
-  tp_camera_tool_act_y->m_joined_data[0] = cam_tv_e::tv_y;
-  tp_camera_tool_act_y->setText(tr( "y - axis"));
-  tp_camera_tool->addAction(tp_camera_tool_act_y);
+  m_tp_cam_tool_act_y = new qextended_action(nullptr);
+  m_tp_cam_tool_act_y->m_joined_data[0] = cam_tv_e::tv_y;
+  m_tp_cam_tool_act_y->setText(tr( "y - axis"));
+  m_tp_cam_tool->addAction(m_tp_cam_tool_act_y);
 
-  tp_camera_tool_act_z = new qextended_action(nullptr);
-  tp_camera_tool_act_z->m_joined_data[0] = cam_tv_e::tv_z;
-  tp_camera_tool_act_z->setText(tr( "z - axis"));
-  tp_camera_tool->addAction(tp_camera_tool_act_z);
+  m_tp_cam_tool_act_z = new qextended_action(nullptr);
+  m_tp_cam_tool_act_z->m_joined_data[0] = cam_tv_e::tv_z;
+  m_tp_cam_tool_act_z->setText(tr( "z - axis"));
+  m_tp_cam_tool->addAction(m_tp_cam_tool_act_z);
 
-  tp_camera_tool_act_cc = new qextended_action(nullptr);
-  tp_camera_tool_act_cc->m_joined_data[0] = cam_tv_e::tv_cc;
-  tp_camera_tool_act_cc->setText(tr("cart. c."));
-  tp_camera_tool->addAction(tp_camera_tool_act_cc);
+  m_tp_cam_tool_act_cc = new qextended_action(nullptr);
+  m_tp_cam_tool_act_cc->m_joined_data[0] = cam_tv_e::tv_cc;
+  m_tp_cam_tool_act_cc->setText(tr("cart. c."));
+  m_tp_cam_tool->addAction(m_tp_cam_tool_act_cc);
 
-  tp_camera_tool_act_a = new qextended_action(nullptr);
-  tp_camera_tool_act_a->m_joined_data[0] = cam_tv_e::tv_a;
-  tp_camera_tool_act_a->setText(tr( "a - axis"));
-  tp_camera_tool->addAction(tp_camera_tool_act_a);
+  m_tp_cam_tool_act_a = new qextended_action(nullptr);
+  m_tp_cam_tool_act_a->m_joined_data[0] = cam_tv_e::tv_a;
+  m_tp_cam_tool_act_a->setText(tr( "a - axis"));
+  m_tp_cam_tool->addAction(m_tp_cam_tool_act_a);
 
-  tp_camera_tool_act_b = new qextended_action(nullptr);
-  tp_camera_tool_act_b->m_joined_data[0] = cam_tv_e::tv_b;
-  tp_camera_tool_act_b->setText(tr( "b - axis"));
-  tp_camera_tool->addAction(tp_camera_tool_act_b);
+  m_tp_cam_tool_act_b = new qextended_action(nullptr);
+  m_tp_cam_tool_act_b->m_joined_data[0] = cam_tv_e::tv_b;
+  m_tp_cam_tool_act_b->setText(tr( "b - axis"));
+  m_tp_cam_tool->addAction(m_tp_cam_tool_act_b);
 
-  tp_camera_tool_act_c = new qextended_action(nullptr);
-  tp_camera_tool_act_c->m_joined_data[0] = cam_tv_e::tv_c;
-  tp_camera_tool_act_c->setText(tr( "c - axis"));
-  tp_camera_tool->addAction(tp_camera_tool_act_c);
+  m_tp_cam_tool_act_c = new qextended_action(nullptr);
+  m_tp_cam_tool_act_c->m_joined_data[0] = cam_tv_e::tv_c;
+  m_tp_cam_tool_act_c->setText(tr( "c - axis"));
+  m_tp_cam_tool->addAction(m_tp_cam_tool_act_c);
 
-  tp_utility_frame_end = new QFrame(nullptr);
-  tp_utility_frame_end->setFrameShape(QFrame::StyledPanel);
-  tp_utility_frame_end->setFixedWidth(3);
-  tp_utility_frame_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
+  m_tp_utility_frame_end = new QFrame(nullptr);
+  m_tp_utility_frame_end->setFrameShape(QFrame::StyledPanel);
+  m_tp_utility_frame_end->setFixedWidth(3);
+  m_tp_utility_frame_end->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Maximum);
 
-  tp_anim_fast_forward = new QPushButton(nullptr);
-  tp_anim_fast_forward->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_anim_fast_forward->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_anim_fast_forward->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_anim_fast_forward = new QPushButton(nullptr);
+  m_tp_anim_fast_forward->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_anim_fast_forward->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_anim_fast_forward->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                           astate->size_guide.tool_panel_icon_size()));
-  tp_anim_fast_forward->setToolTip(tr("Fast-forward to last frame of animated geometry"));
-  tp_anim_fast_forward->setIcon(QIcon("://images/outline-fast_forward-24px.svg"));
-  connect(tp_anim_fast_forward,
+  m_tp_anim_fast_forward->setToolTip(tr("Fast-forward to last frame of animated geometry"));
+  m_tp_anim_fast_forward->setIcon(QIcon("://images/outline-fast_forward-24px.svg"));
+  connect(m_tp_anim_fast_forward,
           &QPushButton::clicked,
           this,
           &main_window_t::tp_fast_forward_anim_clicked);
 
-  tp_measure_dist = new QPushButton(nullptr);
-  tp_measure_dist->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_measure_dist->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_measure_dist->setCheckable(true);
-  tp_measure_dist->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_msr_dist = new QPushButton(nullptr);
+  m_tp_msr_dist->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_msr_dist->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_msr_dist->setCheckable(true);
+  m_tp_msr_dist->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                      astate->size_guide.tool_panel_icon_size()));
-  tp_measure_dist->setToolTip(tr("Measure distance between pair of atoms"));
-  tp_measure_dist->setIcon(QIcon("://images/dist.svg"));
-  connect(tp_measure_dist,
+  m_tp_msr_dist->setToolTip(tr("Measure distance between pair of atoms"));
+  m_tp_msr_dist->setIcon(QIcon("://images/dist.svg"));
+  connect(m_tp_msr_dist,
           &QPushButton::toggled,
           this,
           &main_window_t::tp_dist_button_clicked);
 
-  tp_toggle_atom_override = new QPushButton(nullptr);
-  tp_toggle_atom_override->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_toggle_atom_override->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_toggle_atom_override->setCheckable(true);
-  tp_toggle_atom_override->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_toggle_atom_override = new QPushButton(nullptr);
+  m_tp_toggle_atom_override->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_toggle_atom_override->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_toggle_atom_override->setCheckable(true);
+  m_tp_toggle_atom_override->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                              astate->size_guide.tool_panel_icon_size()));
-  tp_toggle_atom_override->setToolTip(tr("Toggle atom override"));
-  tp_toggle_atom_override->setIcon(QIcon("://images/outline-my_location-24px.svg"));
-  connect(tp_toggle_atom_override,
+  m_tp_toggle_atom_override->setToolTip(tr("Toggle atom override"));
+  m_tp_toggle_atom_override->setIcon(QIcon("://images/outline-my_location-24px.svg"));
+  connect(m_tp_toggle_atom_override,
           &QPushButton::toggled,
           this,
           &main_window_t::tp_toggle_atom_override_button_clicked);
 
-  tp_force_sel_lbl_vis = new QPushButton(nullptr);
-  tp_force_sel_lbl_vis->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_force_sel_lbl_vis->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_force_sel_lbl_vis->setCheckable(true);
-  tp_force_sel_lbl_vis->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_force_sel_lbl_vis = new QPushButton(nullptr);
+  m_tp_force_sel_lbl_vis->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_force_sel_lbl_vis->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_force_sel_lbl_vis->setCheckable(true);
+  m_tp_force_sel_lbl_vis->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                           astate->size_guide.tool_panel_icon_size()));
-  tp_force_sel_lbl_vis->setToolTip(tr("Force labels selective visibility"));
-  tp_force_sel_lbl_vis->setIcon(QIcon("://images/outline-font_download-24px.svg"));
-  connect(tp_force_sel_lbl_vis,
+  m_tp_force_sel_lbl_vis->setToolTip(tr("Force labels selective visibility"));
+  m_tp_force_sel_lbl_vis->setIcon(QIcon("://images/outline-font_download-24px.svg"));
+  connect(m_tp_force_sel_lbl_vis,
           &QPushButton::toggled,
           this,
           &main_window_t::tp_force_sel_lbl_vis_button_clicked);
 
-  tp_measure_angle = new QPushButton(nullptr);
-  tp_measure_angle->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_measure_angle->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_measure_angle->setCheckable(true);
-  tp_measure_angle->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_msr_angle = new QPushButton(nullptr);
+  m_tp_msr_angle->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_msr_angle->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_msr_angle->setCheckable(true);
+  m_tp_msr_angle->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                       astate->size_guide.tool_panel_icon_size()));
-  tp_measure_angle->setToolTip(tr("Measure angle between atoms triple"));
-  tp_measure_angle->setIcon(QIcon("://images/angle.svg"));
-  connect(tp_measure_angle,
+  m_tp_msr_angle->setToolTip(tr("Measure angle between atoms triple"));
+  m_tp_msr_angle->setIcon(QIcon("://images/angle.svg"));
+  connect(m_tp_msr_angle,
           &QPushButton::toggled,
           this,
           &main_window_t::tp_angle_button_clicked);
 
-  tp_add_cube = new QPushButton(nullptr);
-  tp_add_cube->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_add_cube->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_add_cube->setToolTip(tr("Embed cube between two atoms"));
-  tp_add_cube->setIcon(QIcon("://images/add_cube.svg"));
-  tp_add_cube->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_add_cube = new QPushButton(nullptr);
+  m_tp_add_cube->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_add_cube->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_add_cube->setToolTip(tr("Embed cube between two atoms"));
+  m_tp_add_cube->setIcon(QIcon("://images/add_cube.svg"));
+  m_tp_add_cube->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                  astate->size_guide.tool_panel_icon_size()));
-  connect(tp_add_cube,
+  connect(m_tp_add_cube,
           &QPushButton::clicked,
           this,
           &main_window_t::tp_add_cube_clicked);
 
-  tp_add_arrow = new QPushButton(nullptr);
-  tp_add_arrow->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_add_arrow->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_add_arrow->setToolTip(tr("Embed arrow between two atoms"));
-  tp_add_arrow->setIcon(QIcon("://images/add_arrow.svg"));
-  tp_add_arrow->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_add_arrow = new QPushButton(nullptr);
+  m_tp_add_arrow->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_add_arrow->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_add_arrow->setToolTip(tr("Embed arrow between two atoms"));
+  m_tp_add_arrow->setIcon(QIcon("://images/add_arrow.svg"));
+  m_tp_add_arrow->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                   astate->size_guide.tool_panel_icon_size()));
-  connect(tp_add_arrow,
+  connect(m_tp_add_arrow,
           &QPushButton::clicked,
           this,
           &main_window_t::tp_add_arrow_clicked);
 
-  tp_add_point_sym_group = new QPushButton(nullptr);
-  tp_add_point_sym_group->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
-  tp_add_point_sym_group->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
-  tp_add_point_sym_group->setToolTip(tr("Construct point symmetry group"));
-  tp_add_point_sym_group->setIcon(QIcon("://images/add_psg.svg"));
-  tp_add_point_sym_group->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
+  m_tp_add_point_sym_group = new QPushButton(nullptr);
+  m_tp_add_point_sym_group->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
+  m_tp_add_point_sym_group->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
+  m_tp_add_point_sym_group->setToolTip(tr("Construct point symmetry group"));
+  m_tp_add_point_sym_group->setIcon(QIcon("://images/add_psg.svg"));
+  m_tp_add_point_sym_group->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
                                             astate->size_guide.tool_panel_icon_size()));
-  connect(tp_add_point_sym_group,
+  connect(m_tp_add_point_sym_group,
           &QPushButton::clicked,
           this,
           &main_window_t::tp_add_point_sym_group_clicked);
 
-  ws_viewer_wdgt = new ws_viewer_widget_t(nullptr);
+  m_ws_viewer_wdgt = new ws_viewer_widget_t(nullptr);
 
-  obj_insp_wdgt = new object_inspector_widget_t(nullptr);
-  obj_insp_wdgt->setFixedWidth(astate->size_guide.obj_insp_w());
+  m_obj_insp_wdgt = new object_inspector_widget_t(nullptr);
+  m_obj_insp_wdgt->setFixedWidth(astate->size_guide.obj_insp_w());
 
-  py_console_wdgt = new python_console_widget_t(nullptr);
+  m_py_console_wdgt = new python_console_widget_t(nullptr);
 
-  ext_editor_compositor = new ws_item_extended_editor_compositor_t(nullptr);
-  inline_left_tool_plch = new qembed_window_t(nullptr);
-  inline_left_tool_plch->setVisible(false);
+  m_ext_edtr_compositor = new ws_item_extended_editor_compositor_t(nullptr);
+  m_inline_left_tool_plch = new qembed_window_t(nullptr);
+  m_inline_left_tool_plch->setVisible(false);
 
-  inline_bottom_tool_plch = new qembed_window_t(nullptr);
-  inline_bottom_tool_plch->setVisible(false);
+  m_inline_bottom_tool_plch = new qembed_window_t(nullptr);
+  m_inline_bottom_tool_plch->setVisible(false);
 
 }
 
 void main_window_t::init_layouts() {
 
-  main_lt = new QVBoxLayout;
-  ws_tabbar_wdgt = new ws_tabbar_t(nullptr);
-  log_wdgt = new log_widget_t(nullptr);
+  m_main_lt = new QVBoxLayout;
+  m_ws_tabbar_wdgt = new ws_tabbar_t(nullptr);
+  m_log_wdgt = new log_widget_t(nullptr);
 
-  main_wdgt->setLayout(main_lt);
-  main_lt->addWidget(ws_tabbar_wdgt);
-  main_lt->addWidget(tp_wdgt);
-  main_lt->setContentsMargins(0,0,0,0);
-  main_lt->setSpacing(0);
+  m_main_wdgt->setLayout(m_main_lt);
+  m_main_lt->addWidget(m_ws_tabbar_wdgt);
+  m_main_lt->addWidget(m_tp_wdgt);
+  m_main_lt->setContentsMargins(0,0,0,0);
+  m_main_lt->setSpacing(0);
 
-  ws_tabbar_wdgt->raise();
+  m_ws_tabbar_wdgt->raise();
 
-  splitter_ws_viewer_extended_editor = new QSplitter(Qt::Horizontal);
-  splitter_ws_viewer_extended_editor->addWidget(ws_viewer_wdgt);
-  splitter_ws_viewer_extended_editor->addWidget(ext_editor_compositor);
-  splitter_ws_viewer_extended_editor->setHandleWidth(0);
+  m_splitter_ws_viewer_ext_edt = new QSplitter(Qt::Horizontal);
+  m_splitter_ws_viewer_ext_edt->addWidget(m_ws_viewer_wdgt);
+  m_splitter_ws_viewer_ext_edt->addWidget(m_ext_edtr_compositor);
+  m_splitter_ws_viewer_ext_edt->setHandleWidth(0);
 
-  splitter_ws_viewer_extended_editor->setContentsMargins(0,0,0,0);
-  splitter_ws_viewer_extended_editor->setCollapsible(1, false);
-  splitter_ws_viewer_extended_editor->setCollapsible(0, false);
-  ext_editor_compositor->hide();
+  m_splitter_ws_viewer_ext_edt->setContentsMargins(0,0,0,0);
+  m_splitter_ws_viewer_ext_edt->setCollapsible(1, false);
+  m_splitter_ws_viewer_ext_edt->setCollapsible(0, false);
+  m_ext_edtr_compositor->hide();
 
-  splitter_py_console_log_wdgt = new QSplitter(Qt::Horizontal);
+  m_splitter_py_console_log_wdgt = new QSplitter(Qt::Horizontal);
 
-  splitter_py_console_log_wdgt->addWidget(py_console_wdgt);
-  splitter_py_console_log_wdgt->addWidget(log_wdgt);
-  splitter_py_console_log_wdgt->setHandleWidth(1);
-  splitter_py_console_log_wdgt->setCollapsible(0, false);
-  splitter_py_console_log_wdgt->setCollapsible(1, false);
+  m_splitter_py_console_log_wdgt->addWidget(m_py_console_wdgt);
+  m_splitter_py_console_log_wdgt->addWidget(m_log_wdgt);
+  m_splitter_py_console_log_wdgt->setHandleWidth(1);
+  m_splitter_py_console_log_wdgt->setCollapsible(0, false);
+  m_splitter_py_console_log_wdgt->setCollapsible(1, false);
 
-  splitter_ws_viewer_py_console_log = new QSplitter(Qt::Vertical);
-  splitter_ws_viewer_py_console_log->addWidget(splitter_ws_viewer_extended_editor);
-  splitter_ws_viewer_py_console_log->addWidget(inline_bottom_tool_plch);
-  splitter_ws_viewer_py_console_log->addWidget(splitter_py_console_log_wdgt);
-  splitter_ws_viewer_py_console_log->setHandleWidth(0);
-  splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 1, 3}));
-  splitter_ws_viewer_py_console_log->setContentsMargins(0,0,0,0);
-  py_console_wdgt->hide();
-  log_wdgt->hide();
-  splitter_ws_viewer_py_console_log->setCollapsible(0, false);
-  splitter_ws_viewer_py_console_log->setCollapsible(1, false);
-  splitter_ws_viewer_py_console_log->setCollapsible(2, false);
+  m_splitter_ws_viewer_py_console_log = new QSplitter(Qt::Vertical);
+  m_splitter_ws_viewer_py_console_log->addWidget(m_splitter_ws_viewer_ext_edt);
+  m_splitter_ws_viewer_py_console_log->addWidget(m_inline_bottom_tool_plch);
+  m_splitter_ws_viewer_py_console_log->addWidget(m_splitter_py_console_log_wdgt);
+  m_splitter_ws_viewer_py_console_log->setHandleWidth(0);
+  m_splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 1, 3}));
+  m_splitter_ws_viewer_py_console_log->setContentsMargins(0,0,0,0);
+  m_py_console_wdgt->hide();
+  m_log_wdgt->hide();
+  m_splitter_ws_viewer_py_console_log->setCollapsible(0, false);
+  m_splitter_ws_viewer_py_console_log->setCollapsible(1, false);
+  m_splitter_ws_viewer_py_console_log->setCollapsible(2, false);
 
-  layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
-  layout_ws_viewer_obj_insp->addWidget(inline_left_tool_plch);
-  layout_ws_viewer_obj_insp->addWidget(splitter_ws_viewer_py_console_log);
-  layout_ws_viewer_obj_insp->addWidget(obj_insp_wdgt);
-  layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
-  layout_ws_viewer_obj_insp->setCollapsible(1, false);
+  m_layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
+  m_layout_ws_viewer_obj_insp->addWidget(m_inline_left_tool_plch);
+  m_layout_ws_viewer_obj_insp->addWidget(m_splitter_ws_viewer_py_console_log);
+  m_layout_ws_viewer_obj_insp->addWidget(m_obj_insp_wdgt);
+  m_layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
+  m_layout_ws_viewer_obj_insp->setCollapsible(1, false);
 
-  layout_ws_viewer_obj_insp->setHandleWidth(0);
-  main_lt->addWidget(layout_ws_viewer_obj_insp);
+  m_layout_ws_viewer_obj_insp->setHandleWidth(0);
+  m_main_lt->addWidget(m_layout_ws_viewer_obj_insp);
 
-  tp_lt = new QHBoxLayout;
-  tp_wdgt->setLayout(tp_lt);
-  tp_lt->setContentsMargins(5,0,0,0);
+  m_tp_lt = new QHBoxLayout;
+  m_tp_wdgt->setLayout(m_tp_lt);
+  m_tp_lt->setContentsMargins(5,0,0,0);
 
-  tp_lt->addWidget(tp_edit_mode_start, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_edit_mode_item, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_edit_mode_content, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_edit_mode_end, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_edit_mode_start, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_edit_mode_item, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_edit_mode_cnt, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_edit_mode_end, 0, Qt::AlignLeft);
 
-  tp_lt->addWidget(tp_print_screen, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_scenic_rot_cam, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_camera_tool, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_utility_frame_end, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_print_screen, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_scenic_rot_cam, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_cam_tool, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_utility_frame_end, 0, Qt::AlignLeft);
 
-  tp_lt->addWidget(tp_anim_fast_forward, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_measure_dist, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_measure_angle, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_toggle_atom_override, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_anim_fast_forward, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_msr_dist, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_msr_angle, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_force_sel_lbl_vis, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_toggle_atom_override, 0, Qt::AlignLeft);
 
-  tp_lt->addWidget(tp_add_cube, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_add_arrow, 0, Qt::AlignLeft);
-  tp_lt->addWidget(tp_add_point_sym_group, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_add_cube, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_add_arrow, 0, Qt::AlignLeft);
+  m_tp_lt->addWidget(m_tp_add_point_sym_group, 0, Qt::AlignLeft);
 
-  tp_lt->addStretch(1);
-  tp_lt->addWidget(tp_overview, 0, Qt::AlignRight);
-  tp_lt->addWidget(tp_modern_menu, 0, Qt::AlignRight);
-  tp_lt->addSpacing(10);
+  m_tp_lt->addStretch(1);
+  m_tp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
+  m_tp_lt->addWidget(m_tp_modern_menu, 0, Qt::AlignRight);
+  m_tp_lt->addSpacing(10);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
-  ws_viewer_wdgt->lower();
+  m_ws_viewer_wdgt->lower();
 
 }
 
@@ -843,29 +843,29 @@ void main_window_t::wss_changed_slot() {
   if (astate->ws_mgr->has_wss()) {
 
       if (!astate->m_immersive_mode) {
-          ws_tabbar_wdgt->setVisible(true);
-          tp_wdgt->setVisible(true);
+          m_ws_tabbar_wdgt->setVisible(true);
+          m_tp_wdgt->setVisible(true);
         }
 
-      file_menu_close_ws->setEnabled(true);
-      ws_menu_rename_ws->setEnabled(true);
-      view_menu_show_gizmo->setEnabled(true);
-      view_menu_show_gizmo->setVisible(true);
-      ws_copy_cam->setEnabled(true);
-      ws_menu_bg_color->setEnabled(true);
+      m_file_menu_close_ws->setEnabled(true);
+      m_ws_menu_rename_ws->setEnabled(true);
+      m_view_menu_show_gizmo->setEnabled(true);
+      m_view_menu_show_gizmo->setVisible(true);
+      m_ws_copy_cam->setEnabled(true);
+      m_ws_menu_bg_color->setEnabled(true);
       //obj_insp_widget->setVisible()
 
     } else {
 
-      obj_insp_wdgt->setVisible(false);
-      tp_wdgt->setVisible(false);
-      ws_tabbar_wdgt->setVisible(false);
-      file_menu_close_ws->setEnabled(false);
-      ws_menu_rename_ws->setEnabled(false);
-      view_menu_show_gizmo->setEnabled(false);
-      view_menu_show_gizmo->setVisible(false);
-      ws_copy_cam->setEnabled(false);
-      ws_menu_bg_color->setEnabled(false);
+      m_obj_insp_wdgt->setVisible(false);
+      m_tp_wdgt->setVisible(false);
+      m_ws_tabbar_wdgt->setVisible(false);
+      m_file_menu_close_ws->setEnabled(false);
+      m_ws_menu_rename_ws->setEnabled(false);
+      m_view_menu_show_gizmo->setEnabled(false);
+      m_view_menu_show_gizmo->setVisible(false);
+      m_ws_copy_cam->setEnabled(false);
+      m_ws_menu_bg_color->setEnabled(false);
 
     }
 
@@ -899,15 +899,15 @@ void main_window_t::show_obj_insp_state_changed(bool checked) {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (!ok) {
-      obj_insp_wdgt->hide();
+      m_obj_insp_wdgt->hide();
       return;
     }
 
   if (checked) {
-      obj_insp_wdgt->show();
+      m_obj_insp_wdgt->show();
       cur_ws->m_show_obj_insp = true;
     } else {
-      obj_insp_wdgt->hide();
+      m_obj_insp_wdgt->hide();
       cur_ws->m_show_obj_insp = false;
     }
 
@@ -928,7 +928,7 @@ void main_window_t::show_gizmo_state_changed(bool checked) {
 
 void main_window_t::show_log_wdgt_state_changed(bool checked) {
 
-  log_wdgt->setVisible(checked);
+  m_log_wdgt->setVisible(checked);
 
 }
 
@@ -939,10 +939,10 @@ void main_window_t::show_modern_menu_state_changed(bool checked) {
 
   if (checked) {
       menuBar()->hide();
-      tp_modern_menu->show();
+      m_tp_modern_menu->show();
     } else {
       menuBar()->show();
-      tp_modern_menu->hide();
+      m_tp_modern_menu->hide();
     }
 
 }
@@ -1153,13 +1153,13 @@ void main_window_t::cur_ws_changed() {
 
   if (ok) {
 
-      tp_scenic_rot_cam->blockSignals(true);
-      tp_scenic_rot_cam->setChecked(cur_ws->m_scenic_rotation);
-      tp_scenic_rot_cam->blockSignals(false);
+      m_tp_scenic_rot_cam->blockSignals(true);
+      m_tp_scenic_rot_cam->setChecked(cur_ws->m_scenic_rotation);
+      m_tp_scenic_rot_cam->blockSignals(false);
 
-      view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
-      view_menu_show_oi->setVisible(true);
-      view_menu_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
+      m_view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
+      m_view_menu_show_oi->setVisible(true);
+      m_view_menu_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
 
       std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
                                            cur_ws->m_ws_name, cur_ws->m_fs_path);
@@ -1167,19 +1167,19 @@ void main_window_t::cur_ws_changed() {
 
   } else {
 
-    view_menu_show_oi->setChecked(false);
-    view_menu_show_oi->setVisible(false);
+    m_view_menu_show_oi->setChecked(false);
+    m_view_menu_show_oi->setVisible(false);
     this->setWindowTitle("qpp::cad");
 
   }
 
   wss_changed_slot();
-  cur_ws_properties_changed();
-  cur_ws_selected_item_changed();
+  cur_ws_props_changed();
+  cur_ws_sel_item_changed();
 
 }
 
-void main_window_t::cur_ws_selected_item_changed() {
+void main_window_t::cur_ws_sel_item_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1196,13 +1196,13 @@ void main_window_t::cur_ws_selected_item_changed() {
 
         bool al_is_3d = as_al->m_geom->DIM == 3;
         //tp_camera_tool_act_a->setVisible(al_is_3d)
-        tp_camera_tool_act_a->setVisible(al_is_3d);
-        tp_camera_tool_act_b->setVisible(al_is_3d);
-        tp_camera_tool_act_c->setVisible(al_is_3d);
-        tp_camera_tool_act_x->setVisible(!al_is_3d);
-        tp_camera_tool_act_y->setVisible(!al_is_3d);
-        tp_camera_tool_act_z->setVisible(!al_is_3d);
-        tp_camera_tool_act_cc->setVisible(!al_is_3d);
+        m_tp_cam_tool_act_a->setVisible(al_is_3d);
+        m_tp_cam_tool_act_b->setVisible(al_is_3d);
+        m_tp_cam_tool_act_c->setVisible(al_is_3d);
+        m_tp_cam_tool_act_x->setVisible(!al_is_3d);
+        m_tp_cam_tool_act_y->setVisible(!al_is_3d);
+        m_tp_cam_tool_act_z->setVisible(!al_is_3d);
+        m_tp_cam_tool_act_cc->setVisible(!al_is_3d);
 
         show_fast_forward_button = as_al->m_anim->animable();
 
@@ -1210,8 +1210,8 @@ void main_window_t::cur_ws_selected_item_changed() {
 
   }
 
-  tp_camera_tool->setVisible(show_cam_button);
-  tp_anim_fast_forward->setVisible(show_fast_forward_button);
+  m_tp_cam_tool->setVisible(show_cam_button);
+  m_tp_anim_fast_forward->setVisible(show_fast_forward_button);
 
   cur_ws_edit_type_changed();
   control_bhv_menus_activity();
@@ -1219,7 +1219,7 @@ void main_window_t::cur_ws_selected_item_changed() {
 
 }
 
-void main_window_t::cur_ws_properties_changed() {
+void main_window_t::cur_ws_props_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1228,12 +1228,12 @@ void main_window_t::cur_ws_properties_changed() {
   if (ok) {
 
     bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
-    tp_edit_mode_item->blockSignals(true);
-    tp_edit_mode_content->blockSignals(true);
-    tp_edit_mode_item->setChecked(check_t);
-    tp_edit_mode_content->setChecked(!check_t);
-    tp_edit_mode_item->blockSignals(false);
-    tp_edit_mode_content->blockSignals(false);
+    m_tp_edit_mode_item->blockSignals(true);
+    m_tp_edit_mode_cnt->blockSignals(true);
+    m_tp_edit_mode_item->setChecked(check_t);
+    m_tp_edit_mode_cnt->setChecked(!check_t);
+    m_tp_edit_mode_item->blockSignals(false);
+    m_tp_edit_mode_cnt->blockSignals(false);
 
   }
 
@@ -1243,12 +1243,12 @@ void main_window_t::cur_ws_properties_changed() {
 
 void main_window_t::cur_ws_edit_type_changed() {
 
-  cur_ws_properties_changed();
-  cur_ws_selected_atoms_list_selection_changed();
+  cur_ws_props_changed();
+  cur_ws_sel_atoms_list_sel_changed();
 
 }
 
-void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
+void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
@@ -1267,33 +1267,33 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
 
     if (!need_to_hide_force_sel_lbl_vis) {
 
-        tp_force_sel_lbl_vis->show();
+        m_tp_force_sel_lbl_vis->show();
 
-        tp_force_sel_lbl_vis->blockSignals(true);
-        tp_force_sel_lbl_vis->setChecked(
+        m_tp_force_sel_lbl_vis->blockSignals(true);
+        m_tp_force_sel_lbl_vis->setChecked(
               !as_al->any_of_sel_xfield_equal<bool>(xgeom_label_show, false)
               );
-        tp_force_sel_lbl_vis->blockSignals(false);
+        m_tp_force_sel_lbl_vis->blockSignals(false);
         /* end of detect selective labels */
 
       }
 
     need_to_hide_make_psg = need_to_hide_force_sel_lbl_vis;
-    tp_add_point_sym_group->show();
+    m_tp_add_point_sym_group->show();
 
     /* detect atom override */
     if (!(as_al->m_atom_idx_sel.empty() || cur_ws->m_edit_type == ws_edit_e::edit_item)) {
 
         need_to_hide_atom_override = false;
 
-        tp_toggle_atom_override->show();
-        tp_toggle_atom_override->blockSignals(true);
+        m_tp_toggle_atom_override->show();
+        m_tp_toggle_atom_override->blockSignals(true);
 
-        tp_toggle_atom_override->setChecked(
+        m_tp_toggle_atom_override->setChecked(
                 !as_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)
               );
 
-        tp_toggle_atom_override->blockSignals(false);
+        m_tp_toggle_atom_override->blockSignals(false);
 
       }
     /* end of detect atom override */
@@ -1301,12 +1301,12 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
     /* add cube or arrow between 2 atoms */
     if (as_al->m_atom_idx_sel.size() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
-      tp_add_arrow->show();
-      tp_add_cube->show();
+      m_tp_add_arrow->show();
+      m_tp_add_cube->show();
       need_to_hide_add_primitives = false;
 
-      tp_measure_angle->hide();
-      tp_measure_dist->show();
+      m_tp_msr_angle->hide();
+      m_tp_msr_dist->show();
       need_to_hide_al_cntls = false;
       auto it1 = as_al->m_atom_idx_sel.begin();
       auto it2 = ++(as_al->m_atom_idx_sel.begin());
@@ -1314,9 +1314,9 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
       auto cur_sel =
           as_al->m_measure->is_bond_msr_exists(it1->m_atm, it2->m_atm, it1->m_idx, it2->m_idx);
 
-      tp_measure_dist->blockSignals(true);
-      tp_measure_dist->setChecked(cur_sel != std::nullopt);
-      tp_measure_dist->blockSignals(false);
+      m_tp_msr_dist->blockSignals(true);
+      m_tp_msr_dist->setChecked(cur_sel != std::nullopt);
+      m_tp_msr_dist->blockSignals(false);
 
     }
     /* end of add cube or arrow between 2 atoms */
@@ -1335,11 +1335,11 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
                                                            as_al->m_atom_ord_sel[1].m_idx,
                                                            as_al->m_atom_ord_sel[2].m_idx);
 
-      tp_measure_dist->hide();
-      tp_measure_angle->show();
-      tp_measure_angle->blockSignals(true);
-      tp_measure_angle->setChecked(cur_sel != std::nullopt);
-      tp_measure_angle->blockSignals(false);
+      m_tp_msr_dist->hide();
+      m_tp_msr_angle->show();
+      m_tp_msr_angle->blockSignals(true);
+      m_tp_msr_angle->setChecked(cur_sel != std::nullopt);
+      m_tp_msr_angle->blockSignals(false);
 
     }
     /* end of angle between 3 atoms */
@@ -1348,30 +1348,30 @@ void main_window_t::cur_ws_selected_atoms_list_selection_changed() {
 
   if (need_to_hide_add_primitives) {
 
-      tp_add_arrow->hide();
-      tp_add_cube->hide();
+      m_tp_add_arrow->hide();
+      m_tp_add_cube->hide();
 
     }
 
   if (need_to_hide_al_cntls) {
 
-    tp_measure_dist->hide();
-    tp_measure_angle->hide();
-    tp_add_arrow->hide();
-    tp_add_cube->hide();
+    m_tp_msr_dist->hide();
+    m_tp_msr_angle->hide();
+    m_tp_add_arrow->hide();
+    m_tp_add_cube->hide();
 
   }
 
   if (need_to_hide_force_sel_lbl_vis) {
-    tp_force_sel_lbl_vis->hide();
+    m_tp_force_sel_lbl_vis->hide();
   }
 
   if (need_to_hide_atom_override) {
-    tp_toggle_atom_override->hide();
+    m_tp_toggle_atom_override->hide();
   }
 
   if (need_to_hide_make_psg) {
-      tp_add_point_sym_group->hide();
+      m_tp_add_point_sym_group->hide();
     }
 
 }
@@ -1384,7 +1384,7 @@ void main_window_t::tp_dist_button_clicked(bool checked) {
 
   if (as_al->m_atom_idx_sel.size() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
-    tp_measure_dist->show();
+    m_tp_msr_dist->show();
 
     auto it1 = as_al->m_atom_idx_sel.begin();
     auto it2 = ++(as_al->m_atom_idx_sel.begin());
@@ -1416,7 +1416,7 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
 
   if (as_al->m_atom_idx_sel.size() == 3 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
-    tp_measure_angle->show();
+    m_tp_msr_angle->show();
 
     auto cur_sel = as_al->m_measure->is_angle_msr_exists(as_al->m_atom_ord_sel[0].m_atm,
                                                          as_al->m_atom_ord_sel[1].m_atm,
@@ -1451,7 +1451,7 @@ void main_window_t::ws_edit_mode_selector_button_clicked(int id) {
     }
 
   astate->astate_evd->cur_ws_edit_type_changed();
-  cur_ws_properties_changed();
+  cur_ws_props_changed();
 
 }
 
@@ -1614,18 +1614,18 @@ void main_window_t::toggle_immersive_mode() {
   if (astate->m_immersive_mode) {
 
       menuBar()->hide();
-      tp_wdgt->hide();
-      ws_tabbar_wdgt->hide();
-      obj_insp_wdgt->hide();
-      view_menu_toggle_fullscreen->setChecked(true);
+      m_tp_wdgt->hide();
+      m_ws_tabbar_wdgt->hide();
+      m_obj_insp_wdgt->hide();
+      m_view_menu_toggle_fullscreen->setChecked(true);
 
     } else {
 
-      tp_wdgt->show();
-      ws_tabbar_wdgt->show();
-      obj_insp_wdgt->show();
+      m_tp_wdgt->show();
+      m_ws_tabbar_wdgt->show();
+      m_obj_insp_wdgt->show();
       menuBar()->show();
-      view_menu_toggle_fullscreen->setChecked(false);
+      m_view_menu_toggle_fullscreen->setChecked(false);
 
     }
 
@@ -1633,25 +1633,25 @@ void main_window_t::toggle_immersive_mode() {
 
 void main_window_t::start_update_cycle() {
 
-  if (ws_viewer_wdgt && ws_viewer_wdgt->m_update_timer) {
-      ws_viewer_wdgt->m_update_timer->start();
+  if (m_ws_viewer_wdgt && m_ws_viewer_wdgt->m_update_timer) {
+      m_ws_viewer_wdgt->m_update_timer->start();
     }
 
 }
 
 void main_window_t::stop_update_cycle() {
 
-  if (ws_viewer_wdgt && ws_viewer_wdgt->m_update_timer) {
+  if (m_ws_viewer_wdgt && m_ws_viewer_wdgt->m_update_timer) {
 
-      p_elapsed_time_in_event_loop =  ws_viewer_wdgt->m_update_timer->remainingTime();
-      ws_viewer_wdgt->m_update_timer->stop();
-      ws_viewer_wdgt->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
+      p_elapsed_time_in_event_loop =  m_ws_viewer_wdgt->m_update_timer->remainingTime();
+      m_ws_viewer_wdgt->m_update_timer->stop();
+      m_ws_viewer_wdgt->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
 
     }
 
 }
 
-void main_window_t::action_select_all_content() {
+void main_window_t::act_sel_all_cnt() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
@@ -1659,7 +1659,7 @@ void main_window_t::action_select_all_content() {
 
 }
 
-void main_window_t::action_unselect_all_content() {
+void main_window_t::act_unsel_all_cnt() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
@@ -1667,7 +1667,7 @@ void main_window_t::action_unselect_all_content() {
 
 }
 
-void main_window_t::action_invert_selected_content() {
+void main_window_t::act_invert_sel_cnt() {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
@@ -1675,16 +1675,16 @@ void main_window_t::action_invert_selected_content() {
 
 }
 
-void main_window_t::action_toggle_console() {
+void main_window_t::act_toggle_console() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (py_console_wdgt->isVisible()) {
-      py_console_wdgt->hide();
+  if (m_py_console_wdgt->isVisible()) {
+      m_py_console_wdgt->hide();
       astate->m_show_console = true;
     } else {
-      py_console_wdgt->show();
-      py_console_wdgt->py_tedit->setFocus();
+      m_py_console_wdgt->show();
+      m_py_console_wdgt->py_tedit->setFocus();
       astate->m_show_console = false;
     }
 
@@ -1692,16 +1692,16 @@ void main_window_t::action_toggle_console() {
 
 void main_window_t::rebuild_recent_files_menu() {
 
-  if (!file_menu_recent_files) return;
+  if (!m_file_menu_recent_files) return;
 
-  for (auto &elem : file_menu_recent_entries)
+  for (auto &elem : m_file_menu_recent_entries)
     elem->setVisible(false);
 
   app_state_t* astate = app_state_t::get_inst();
 
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
 
-      file_menu_recent_entries[i]->setVisible(true);
+      m_file_menu_recent_entries[i]->setVisible(true);
       std::string ff_name = astate->ws_mgr->m_bhv_mgr->get_ff_full_name(
                               astate->m_recent_files[i].m_ff_id);
 
@@ -1716,7 +1716,7 @@ void main_window_t::rebuild_recent_files_menu() {
                                      i,
                                      astate->m_recent_files[i].m_file_name);
 
-      file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
+      m_file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
 
     }
 
@@ -1728,8 +1728,8 @@ void main_window_t::recent_files_clicked() {
   app_state_t* astate = app_state_t::get_inst();
 
   QObject* obj = sender();
-  for (int i = 0 ; i < file_menu_recent_entries.size(); i++)
-    if (file_menu_recent_entries[i]->isVisible() && file_menu_recent_entries[i] == obj) {
+  for (int i = 0 ; i < m_file_menu_recent_entries.size(); i++)
+    if (m_file_menu_recent_entries[i]->isVisible() && m_file_menu_recent_entries[i] == obj) {
         idx = i;
       }
 
@@ -1751,7 +1751,7 @@ void main_window_t::recent_files_clicked() {
 
 void main_window_t::modern_menu_clicked() {
 
-  modern_menu->exec(QCursor::pos());
+  m_modern_menu->exec(QCursor::pos());
 
 }
 
@@ -1767,17 +1767,17 @@ void main_window_t::build_bhv_menus_and_actions() {
 
       //spawn top-level menus
       QMenu *new_menu_as_new_ws =
-          file_menu_import_as_new_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+          m_file_menu_import_as_new_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
       QMenu *new_menu_to_cur_ws =
-          file_menu_import_to_cur_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+          m_file_menu_import_to_cur_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
       QMenu *new_menu_export_selected =
-          file_menu_export_sel_as->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+          m_file_menu_export_sel_as->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
-      file_menu_import_as_new_ws_menus.emplace(ff_grp.first, new_menu_as_new_ws);
-      file_menu_import_to_cur_ws_menus.emplace(ff_grp.first, new_menu_to_cur_ws);
-      file_menu_export_sel_as_menus.emplace(ff_grp.first, new_menu_export_selected);
+      m_file_menu_import_as_new_ws_menus.emplace(ff_grp.first, new_menu_as_new_ws);
+      m_file_menu_import_to_cur_ws_menus.emplace(ff_grp.first, new_menu_to_cur_ws);
+      m_file_menu_export_sel_as_menus.emplace(ff_grp.first, new_menu_export_selected);
 
       //iterate over file formats from group
       for (auto &ff : ff_grp.second.m_ffs_lookup)
@@ -1793,7 +1793,7 @@ void main_window_t::build_bhv_menus_and_actions() {
                 qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
-                        this, &main_window_t::action_bhv_import_to_cur_workspace);
+                        this, &main_window_t::act_bhv_import_to_cur_ws);
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_to_cur_ws->addAction(new_act);
@@ -1809,7 +1809,7 @@ void main_window_t::build_bhv_menus_and_actions() {
                 qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
-                        this, &main_window_t::action_bhv_import_as_new_workspace);
+                        this, &main_window_t::act_bhv_import_as_new_ws);
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_as_new_ws->addAction(new_act);
@@ -1824,11 +1824,11 @@ void main_window_t::build_bhv_menus_and_actions() {
                 qextended_action *new_act = new qextended_action((nullptr));
                 new_act->m_joined_data[0] = i;
                 connect(new_act, &QAction::triggered,
-                        this, &main_window_t::action_bhv_export_selected);
+                        this, &main_window_t::act_bhv_export_sel);
                 new_act->setText(
                       QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
                 new_menu_export_selected->addAction(new_act);
-                file_menu_export_sel_as_acts.push_back(new_act);
+                m_file_menu_export_sel_as_acts.push_back(new_act);
 
               }
 
@@ -1857,11 +1857,11 @@ void main_window_t::build_bhv_tools_menus() {
   //construct tools groups
   for (auto &ffg : tool_grp_sort) {
       //astate->ws_mgr->m_bhv_mgr->m_tools_groups
-      QMenu *new_menu = tools_menu->addMenu(
+      QMenu *new_menu = m_tools_menu->addMenu(
             QString::fromStdString(
               astate->ws_mgr->m_bhv_mgr->m_tools_groups[std::get<0>(ffg)].m_full_name)
             );
-      tools_menu_groups.emplace(std::get<0>(ffg), new_menu);
+      m_tools_menu_grps.emplace(std::get<0>(ffg), new_menu);
     }
 
 
@@ -1882,7 +1882,7 @@ void main_window_t::build_bhv_tools_menus() {
       new_act->m_joined_data[0] = tool_hash;
 
       connect(new_act, &QAction::triggered,
-              this, &main_window_t::action_bhv_tools_menus_clicked);
+              this, &main_window_t::act_bhv_tools_menus_clicked);
 
       new_act->setText(
             QString::fromStdString(
@@ -1890,14 +1890,14 @@ void main_window_t::build_bhv_tools_menus() {
             );
 
       //locate menu for group
-      auto it_g = tools_menu_groups.find(
+      auto it_g = m_tools_menu_grps.find(
             astate->ws_mgr->m_bhv_mgr->m_tools_info[tool_hash].m_group_hash
             );
 
-      if (it_g != tools_menu_groups.end()) it_g->second->addAction(new_act);
-      else tools_menu->addAction(new_act);
+      if (it_g != m_tools_menu_grps.end()) it_g->second->addAction(new_act);
+      else m_tools_menu->addAction(new_act);
 
-      tools_menu_actions.push_back(new_act);
+      m_tools_menu_acts.push_back(new_act);
 
     }
 
@@ -1913,14 +1913,14 @@ void main_window_t::build_bhv_toolpanel() {
   for (auto &tb_info : bhv_mgr->m_toolbar_elements_info) {
 
       auto new_tb = tb_info.second.m_fabric();
-      new_tb->init_element(tp_wdgt);
+      new_tb->init_element(m_tp_wdgt);
       m_toolbar_elements.push_back(new_tb);
 
     }
 
 }
 
-void main_window_t::action_bhv_tools_menus_clicked() {
+void main_window_t::act_bhv_tools_menus_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1950,7 +1950,7 @@ void main_window_t::control_bhv_tools_menus_activity() {
   std::shared_ptr<ws_item_t> cur_it{nullptr};
   if (cur_ws) cur_it = cur_ws->get_sel_sp();
 
-  for (auto elem : tools_menu_actions) {
+  for (auto elem : m_tools_menu_acts) {
 
       elem->setEnabled(false);
 
@@ -1970,7 +1970,7 @@ void main_window_t::control_bhv_tools_menus_activity() {
 
 }
 
-void main_window_t::action_bhv_import_to_cur_workspace() {
+void main_window_t::act_bhv_import_to_cur_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -1997,7 +1997,7 @@ void main_window_t::action_bhv_import_to_cur_workspace() {
 
 }
 
-void main_window_t::action_bhv_import_as_new_workspace() {
+void main_window_t::act_bhv_import_as_new_ws() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -2024,7 +2024,7 @@ void main_window_t::action_bhv_import_as_new_workspace() {
 
 }
 
-void main_window_t::action_bhv_export_selected() {
+void main_window_t::act_bhv_export_sel() {
 
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
@@ -2071,19 +2071,19 @@ void main_window_t::control_bhv_menus_activity() {
 
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
 
-  if (cur_ws) file_menu_import_to_cur_ws->setEnabled(true);
-  else file_menu_import_to_cur_ws->setEnabled(false);
+  if (cur_ws) m_file_menu_import_to_cur_ws->setEnabled(true);
+  else m_file_menu_import_to_cur_ws->setEnabled(false);
 
   if (!ok) {
     //
-    file_menu_export_sel_as->setEnabled(false);
+    m_file_menu_export_sel_as->setEnabled(false);
   } else {
 
     if (cur_it) {
 
-        file_menu_export_sel_as->setEnabled(true);
+        m_file_menu_export_sel_as->setEnabled(true);
 
-        for (auto &exp_act : file_menu_export_sel_as_acts) {
+        for (auto &exp_act : m_file_menu_export_sel_as_acts) {
 
             size_t bhv_id = exp_act->m_joined_data[0];
 
@@ -2106,8 +2106,8 @@ void main_window_t::control_bhv_menus_activity() {
 
 void main_window_t::overview_changed(const std::string &new_overview_text) {
 
-  if (tp_overview)
-    tp_overview->setText(QString::fromStdString(new_overview_text));
+  if (m_tp_overview)
+    m_tp_overview->setText(QString::fromStdString(new_overview_text));
 
 }
 
@@ -2122,7 +2122,7 @@ void main_window_t::make_screenshot() {
 
   QDateTime date = QDateTime::currentDateTime();
   QString date_s = date.toString("dd_MM_yyyy_hh_mm_ss");
-  ws_viewer_wdgt->grabFramebuffer().save(tr("%1_screenshot.png").arg(date_s));
+  m_ws_viewer_wdgt->grabFramebuffer().save(tr("%1_screenshot.png").arg(date_s));
 
   astate->m_ignore_scanline = false;
   astate->make_viewport_dirty();

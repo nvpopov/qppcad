@@ -64,133 +64,133 @@ namespace qpp {
         std::vector<stored_action_hotkeys_t> m_shortcuts;
 
         //Widgets
-        QWidget *main_wdgt;
-        QWidget *tp_wdgt;
+        QWidget *m_main_wdgt; //main application widget
+        QWidget *m_tp_wdgt; //tool panel widget
 
-        QHBoxLayout *tp_lt;
-        QLabel *tp_overview;
-        QPushButton *tp_modern_menu;
+        QHBoxLayout *m_tp_lt; //tool panel layout
+        QLabel *m_tp_overview; //tool panel overbiew information(right text)
+        QPushButton *m_tp_modern_menu;
 
-        QFrame *tp_edit_mode_start;
-        QButtonGroup *tp_edit_mode;
-        QPushButton *tp_edit_mode_item;
-        QPushButton *tp_edit_mode_content;
-        QFrame *tp_edit_mode_end;
+        QFrame *m_tp_edit_mode_start;
+        QButtonGroup *m_tp_edit_mode;
+        QPushButton *m_tp_edit_mode_item;
+        QPushButton *m_tp_edit_mode_cnt;
+        QFrame *m_tp_edit_mode_end;
 
-        QPushButton *tp_print_screen;
-        QToolButton *tp_camera_tool;
-        qextended_action *tp_camera_tool_act_x;
-        qextended_action *tp_camera_tool_act_y;
-        qextended_action *tp_camera_tool_act_z;
-        qextended_action *tp_camera_tool_act_cc;
-        qextended_action *tp_camera_tool_act_a;
-        qextended_action *tp_camera_tool_act_b;
-        qextended_action *tp_camera_tool_act_c;
-        QPushButton *tp_scenic_rot_cam;
-        QFrame *tp_utility_frame_end;
+        QPushButton *m_tp_print_screen;
+        QToolButton *m_tp_cam_tool;
+        qextended_action *m_tp_cam_tool_act_x;
+        qextended_action *m_tp_cam_tool_act_y;
+        qextended_action *m_tp_cam_tool_act_z;
+        qextended_action *m_tp_cam_tool_act_cc;
+        qextended_action *m_tp_cam_tool_act_a;
+        qextended_action *m_tp_cam_tool_act_b;
+        qextended_action *m_tp_cam_tool_act_c;
+        QPushButton *m_tp_scenic_rot_cam;
+        QFrame *m_tp_utility_frame_end;
 
-        QPushButton *tp_anim_fast_forward;
-        QPushButton *tp_force_sel_lbl_vis;
-        QPushButton *tp_toggle_atom_override;
-        QPushButton *tp_measure_dist;
-        QPushButton *tp_measure_angle;
-        QPushButton *tp_add_cube;
-        QPushButton *tp_add_arrow;
-        QPushButton *tp_add_point_sym_group;
+        QPushButton *m_tp_anim_fast_forward;
+        QPushButton *m_tp_force_sel_lbl_vis;
+        QPushButton *m_tp_toggle_atom_override;
+        QPushButton *m_tp_msr_dist;
+        QPushButton *m_tp_msr_angle;
+        QPushButton *m_tp_add_cube;
+        QPushButton *m_tp_add_arrow;
+        QPushButton *m_tp_add_point_sym_group;
 
-        QWidget *ws_viewer_plch;
-        QWidget *obj_inst_plch;
-        qembed_window_t *inline_left_tool_plch;
-        qembed_window_t *inline_bottom_tool_plch;
+        QWidget *m_ws_viewer_plch;
+        QWidget *m_obj_inst_plch;
+        qembed_window_t *m_inline_left_tool_plch;
+        qembed_window_t *m_inline_bottom_tool_plch;
 
-        ws_item_extended_editor_compositor_t *ext_editor_compositor;
+        ws_item_extended_editor_compositor_t *m_ext_edtr_compositor;
 
-        python_console_widget_t *py_console_wdgt;
-        ws_viewer_widget_t *ws_viewer_wdgt;
-        object_inspector_widget_t *obj_insp_wdgt;
+        python_console_widget_t *m_py_console_wdgt;
+        ws_viewer_widget_t *m_ws_viewer_wdgt;
+        object_inspector_widget_t *m_obj_insp_wdgt;
 
-        ws_tabbar_t *ws_tabbar_wdgt;
-        log_widget_t *log_wdgt;
+        ws_tabbar_t *m_ws_tabbar_wdgt;
+        log_widget_t *m_log_wdgt;
         //End of widgets
 
         //Menus
-        QMenu *modern_menu;
+        QMenu *m_modern_menu;
         std::map<std::string, QAction*> m_actions_lookup;
-        QMenu *file_menu;
-        QAction *file_menu_new_ws;
-        QAction *file_menu_close_ws;
-        QAction *file_menu_close_all_ws;
-        QAction *file_menu_open_ws;
+        QMenu *m_file_menu;
+        QAction *m_file_menu_new_ws;
+        QAction *m_file_menu_close_ws;
+        QAction *m_file_menu_close_all_ws;
+        QAction *m_file_menu_open_ws;
 
-        QMenu *file_menu_import_as_new_ws;
-        std::map<size_t, QMenu*> file_menu_import_as_new_ws_menus;
-        std::vector<qextended_action*> file_menu_import_as_new_ws_acts;
+        QMenu *m_file_menu_import_as_new_ws;
+        std::map<size_t, QMenu*> m_file_menu_import_as_new_ws_menus;
+        std::vector<qextended_action*> m_file_menu_import_as_new_ws_acts;
 
-        QMenu *file_menu_import_to_cur_ws;
-        std::map<size_t, QMenu*> file_menu_import_to_cur_ws_menus;
-        std::vector<qextended_action*> file_menu_import_to_cur_ws_acts;
+        QMenu *m_file_menu_import_to_cur_ws;
+        std::map<size_t, QMenu*> m_file_menu_import_to_cur_ws_menus;
+        std::vector<qextended_action*> m_file_menu_import_to_cur_ws_acts;
 
-        QMenu *file_menu_export_sel_as;
-        std::map<size_t, QMenu*> file_menu_export_sel_as_menus;
-        std::vector<qextended_action*> file_menu_export_sel_as_acts;
+        QMenu *m_file_menu_export_sel_as;
+        std::map<size_t, QMenu*> m_file_menu_export_sel_as_menus;
+        std::vector<qextended_action*> m_file_menu_export_sel_as_acts;
 
-        QAction *file_menu_save_ws;
-        QAction *file_menu_save_ws_as;
-        QMenu *file_menu_recent_files;
-        std::array<QAction*, max_recent_files> file_menu_recent_entries;
-        QAction *file_menu_close_app;
+        QAction *m_file_menu_save_ws;
+        QAction *m_file_menu_save_ws_as;
+        QMenu *m_file_menu_recent_files;
+        std::array<QAction*, max_recent_files> m_file_menu_recent_entries;
+        QAction *m_file_menu_close_app;
 
-        QMenu *edit_menu;
-        QAction *edit_menu_undo;
-        QAction *edit_menu_redo;
-        QAction *edit_menu_switch_ws_edit_mode;
-        QAction *edit_menu_ptable_wdgt;
-        QMenu *edit_menu_selection;
-        QAction *edit_menu_selection_select_all;
-        QAction *edit_menu_selection_unselect_all;
-        QAction *edit_menu_selection_invert;
+        QMenu *m_edit_menu;
+        QAction *m_edit_menu_undo;
+        QAction *m_edit_menu_redo;
+        QAction *m_edit_menu_switch_ws_edit_mode;
+        QAction *m_edit_menu_ptable_wdgt;
+        QMenu *m_edit_menu_sel;
+        QAction *m_edit_menu_sel_sel_all;
+        QAction *m_edit_menu_sel_unsel_all;
+        QAction *m_edit_menu_sel_invert;
 
-        QMenu *tools_menu;
-        std::map<size_t, QMenu*> tools_menu_groups;
-        std::vector<qextended_action*> tools_menu_actions;
+        QMenu *m_tools_menu;
+        std::map<size_t, QMenu*> m_tools_menu_grps;
+        std::vector<qextended_action*> m_tools_menu_acts;
 
-        QMenu *ws_menu;
-        QAction *ws_menu_rename_ws;
-        QAction *ws_menu_bg_color;
-        QAction *ws_copy_cam;
+        QMenu *m_ws_menu;
+        QAction *m_ws_menu_rename_ws;
+        QAction *m_ws_menu_bg_color;
+        QAction *m_ws_copy_cam;
 
-        QMenu *view_menu;
-        QAction *view_menu_show_modern_menu;
-        QAction *view_menu_show_oi;
-        QAction *view_menu_show_gizmo;
-        QAction *view_menu_toggle_fullscreen;
-        QAction *view_menu_console;
-        QAction *view_menu_log_wdgt;
-        QAction *view_menu_settings;
-        QAction *view_menu_ws_settings;
-        QMenu *view_menu_debug;
-        QAction *view_menu_toggle_debug_info;
-        QAction *view_menu_toggle_debug_tws_tree;
-        QAction *view_menu_toggle_sel_deque;
+        QMenu *m_view_menu;
+        QAction *m_view_menu_show_modern_menu;
+        QAction *m_view_menu_show_oi;
+        QAction *m_view_menu_show_gizmo;
+        QAction *m_view_menu_toggle_fullscreen;
+        QAction *m_view_menu_console;
+        QAction *m_view_menu_log_wdgt;
+        QAction *m_view_menu_settings;
+        QAction *m_view_menu_ws_settings;
+        QMenu *m_view_menu_debug;
+        QAction *m_view_menu_toggle_debug_info;
+        QAction *m_view_menu_toggle_debug_tws_tree;
+        QAction *m_view_menu_toggle_sel_deque;
 
-        QMenu *help_menu;
-        QAction *help_menu_about;
+        QMenu *m_help_menu;
+        QAction *m_help_menu_about;
         // End of Menus
 
         // Layouts
-        QGridLayout *tools_main_window_lt;
-        QVBoxLayout *main_lt;
-        QSplitter *layout_ws_viewer_obj_insp;
-        QSplitter *splitter_ws_viewer_extended_editor;
-        QSplitter *splitter_editor_py_console;
-        QSplitter *splitter_ws_viewer_py_console_log;
-        QSplitter *splitter_py_console_log_wdgt;
+        QGridLayout *m_tools_main_window_lt;
+        QVBoxLayout *m_main_lt;
+        QSplitter *m_layout_ws_viewer_obj_insp;
+        QSplitter *m_splitter_ws_viewer_ext_edt;
+        QSplitter *m_splitter_editor_py_console;
+        QSplitter *m_splitter_ws_viewer_py_console_log;
+        QSplitter *m_splitter_py_console_log_wdgt;
         // End of Layouts
 
         // Shortcuts
-        QShortcut *sc_terminate_app;
-        QShortcut *sc_toggle_console;
-        QShortcut *sc_enter_immersive_mode;
+        QShortcut *m_sc_terminate_app;
+        QShortcut *m_sc_toggle_console;
+        QShortcut *m_sc_enter_immersive_mode;
         // End of Shortcuts
 
         // Toolpanel
@@ -228,10 +228,10 @@ namespace qpp {
         void cam_copy_to_all();
 
         void cur_ws_changed();
-        void cur_ws_selected_item_changed();
-        void cur_ws_properties_changed();
+        void cur_ws_sel_item_changed();
+        void cur_ws_props_changed();
         void cur_ws_edit_type_changed();
-        void cur_ws_selected_atoms_list_selection_changed();
+        void cur_ws_sel_atoms_list_sel_changed();
 
         void tp_dist_button_clicked(bool checked);
         void tp_angle_button_clicked(bool checked);
@@ -253,10 +253,10 @@ namespace qpp {
         void start_update_cycle();
         void stop_update_cycle();
 
-        void action_select_all_content();
-        void action_unselect_all_content();
-        void action_invert_selected_content();
-        void action_toggle_console();
+        void act_sel_all_cnt();
+        void act_unsel_all_cnt();
+        void act_invert_sel_cnt();
+        void act_toggle_console();
 
         void rebuild_recent_files_menu();
         void recent_files_clicked();
@@ -269,11 +269,11 @@ namespace qpp {
         void build_bhv_menus_and_actions();
         void build_bhv_tools_menus();
         void build_bhv_toolpanel();
-        void action_bhv_tools_menus_clicked();
+        void act_bhv_tools_menus_clicked();
         void control_bhv_tools_menus_activity();
-        void action_bhv_import_to_cur_workspace();
-        void action_bhv_import_as_new_workspace();
-        void action_bhv_export_selected();
+        void act_bhv_import_to_cur_ws();
+        void act_bhv_import_as_new_ws();
+        void act_bhv_export_sel();
         void control_bhv_menus_activity();
 
         void overview_changed(const std::string &new_overview_text);
