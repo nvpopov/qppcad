@@ -178,7 +178,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
   gb_disp_s_lt->addRow(tr("Draw real"), disp_s_draw_atoms_bonds);
-  gb_disp_s_lt->addRow(tr("Draw imaginary"), disp_s_draw_img_atoms_bonds);
+  gb_disp_s_lt->addRow(tr("Draw img."), disp_s_draw_img_atoms_bonds);
   gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
   gb_disp_s_lt->addRow(tr("Selective visibility"), disp_s_sel_vis_p_affect_bonds);

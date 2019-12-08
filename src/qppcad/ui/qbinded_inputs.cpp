@@ -907,6 +907,8 @@ qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&
 
     }
 
+   widget_layout->addStretch(1);
+
 }
 
 void qbinded_bool_named_vector_t::bind_value(std::vector<bool *> &&binded_data) {

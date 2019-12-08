@@ -65,26 +65,25 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
         }
 
       ws_item_pos->bind_value(&m_binded_item->m_pos, m_binded_item);
-      ws_item_bb_visible->bind_value(&m_binded_item->m_show_bb);
-      ws_item_is_visible->bind_value(&m_binded_item->m_is_visible);
+      ws_item_show_item_bb->bind_value({&m_binded_item->m_is_visible, &m_binded_item->m_show_bb});
 
-      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_rendering,
-                                      tg_form_layout,
-                                      ws_item_type,
-                                      ws_item_is_visible_label,
-                                      ws_item_is_visible);
+//      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_rendering,
+//                                      tg_form_layout,
+//                                      ws_item_type,
+//                                      ws_item_is_visible_label,
+//                                      ws_item_is_visible);
 
-      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_render_bb,
-                                      tg_form_layout,
-                                      ws_item_is_visible,
-                                      ws_item_bb_visible_label,
-                                      ws_item_bb_visible);
+//      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_render_bb,
+//                                      tg_form_layout,
+//                                      ws_item_is_visible,
+//                                      ws_item_bb_visible_label,
+//                                      ws_item_bb_visible);
 
-      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
-                                      tg_form_layout,
-                                      ws_item_bb_visible,
-                                      ws_item_pos_label,
-                                      ws_item_pos);
+//      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+//                                      tg_form_layout,
+//                                      ws_item_bb_visible,
+//                                      ws_item_pos_label,
+//                                      ws_item_pos);
 
     }
 
@@ -99,9 +98,8 @@ void ws_item_obj_insp_widget_t::unbind_item() {
     }
 
   m_binded_item = nullptr;
-  ws_item_is_visible->unbind_value();
+  ws_item_show_item_bb->unbind_value();
   ws_item_pos->unbind_value();
-  ws_item_bb_visible->unbind_value();
 
 }
 
@@ -123,8 +121,7 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
       if (type_str.length() > trc_type) type_truncated += "...";
       ws_item_type->setText(type_truncated);
 
-      ws_item_is_visible->load_value_ex();
-      ws_item_bb_visible->load_value_ex();
+      ws_item_show_item_bb->load_value();
       ws_item_pos->load_value_ex();
 
     }
@@ -184,11 +181,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   ws_item_name = new QLabel;
   ws_item_type = new QLabel;
-  ws_item_is_visible_label = new QLabel(tr("Is visible"));
-  ws_item_is_visible = new qbinded_checkbox_t;
 
-  ws_item_bb_visible_label = new QLabel(tr("Show bbox"));
-  ws_item_bb_visible = new qbinded_checkbox_t;
+  ws_item_show_item_bb = new qbinded_bool_named_vector_t({tr("Item"), tr("BBox")});
 
   ws_item_pos_label = new QLabel(tr("Position[%1]").arg(astate->m_spatial_suffix));
   ws_item_pos = new qbinded_float3_input_t;
@@ -199,10 +193,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   tg_form_layout->addRow(tr("Name"), ws_item_name);
   tg_form_layout->addRow(tr("Type"), ws_item_type);
-
-  init_form_lt_lbl(ws_item_pos_label);
-  init_form_lt_lbl(ws_item_bb_visible_label);
-  init_form_lt_lbl(ws_item_is_visible_label);
+  tg_form_layout->addRow(tr("Show"), ws_item_show_item_bb);
 
   init_form_lt(tg_form_layout);
 

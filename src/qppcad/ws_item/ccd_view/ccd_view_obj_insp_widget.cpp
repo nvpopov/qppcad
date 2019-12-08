@@ -153,8 +153,8 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
                       "://images/sync_alt-24px.svg",
                       "://images/sync_alt-24px_d.svg");
 
-  ws_item_is_visible->hide();
-  ws_item_is_visible_label->hide();
+//  ws_item_is_visible->hide();
+//  ws_item_is_visible_label->hide();
 
   gb_gen_ccd_info = new qspoiler_widget_t(tr("CCD Info"));
   gb_gen_ccd_info_lt = new QFormLayout;

@@ -60,10 +60,12 @@ namespace qpp {
         QPushButton *tg_actions_rename;
         QPushButton *tg_actions_clone;
 
-        QLabel *ws_item_is_visible_label;
-        qbinded_checkbox_t *ws_item_is_visible;
-        QLabel *ws_item_bb_visible_label;
-        qbinded_checkbox_t *ws_item_bb_visible;
+//        QLabel *ws_item_is_visible_label;
+//        qbinded_checkbox_t *ws_item_is_visible;
+//        QLabel *ws_item_bb_visible_label;
+//        qbinded_checkbox_t *ws_item_bb_visible;
+
+        qbinded_bool_named_vector_t *ws_item_show_item_bb;
 
         ws_item_tab_widget_t* def_tab(QString tab_name,
                                       QString icon_name_enabled,
