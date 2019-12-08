@@ -26,6 +26,24 @@ using namespace qpp::cad;
 
 namespace py = pybind11;
 
+std::shared_ptr<ws_item_t> construct_from_vector3f(
+    workspace_t &ws,
+    vector3<float> vec,
+    const std::string &name) {
+
+    auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(ws_vector3_t::get_type_static());
+    if (!new_item) return nullptr;
+
+    auto as_wsv3 = new_item->cast_as<ws_vector3_t>();
+    if(!as_wsv3) return nullptr;
+    as_wsv3->set_pos(vec);
+    as_wsv3->m_name = name;
+    ws.add_item_to_ws(new_item);
+
+    return new_item;
+
+}
+
 std::shared_ptr<ws_item_t> construct_from_geom(
     workspace_t &ws,
     std::shared_ptr<xgeometry<float, periodic_cell<float> > > geom,
@@ -157,9 +175,10 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                      }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
                     .def("next_item", &workspace_t::next_item)
                     .def("prev_item", &workspace_t::prev_item)
-                    .def("construct", &workspace_t::py_construct_item)
-                    .def("construct", &construct_from_geom)
-                    .def("construct", &construct_from_array_group)
+                    .def("ctr", &workspace_t::py_construct_item)
+                    .def("ctr", &construct_from_geom)
+                    .def("ctr", &construct_from_array_group)
+                    .def("ctr", &construct_from_vector3f)
                     .def_readwrite("scenic_rot_magn", &workspace_t::m_scenic_rotation_speed)
                     .def_property("scenic_rot",
                                   [](workspace_t &src)
