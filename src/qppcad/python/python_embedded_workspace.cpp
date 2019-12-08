@@ -17,6 +17,7 @@
 #include <qppcad/ws_item/node_book/python_node_book.hpp>
 #include <qppcad/ws_item/volume_view/python_volume_view.hpp>
 #include <qppcad/ws_item/compl_list_view/python_compl_list_view.hpp>
+#include <qppcad/ws_item/ws_vector3/python_ws_vector3.hpp>
 
 #include <qppcad/core/app_state.hpp>
 
@@ -219,5 +220,6 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_node_book_reg_helper_t::reg(m, py_ws_item_t);
   py_volume_view_reg_helper_t::reg(m, py_ws_item_t);
   py_compl_list_view_reg_helper_t::reg(m, py_ws_item_t);
+  py_ws_vector3_reg_helper_t::reg(m, py_ws_item_t);
 
 }

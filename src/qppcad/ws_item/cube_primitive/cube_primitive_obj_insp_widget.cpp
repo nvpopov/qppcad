@@ -46,14 +46,18 @@ void cube_primitive_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
 
   if (_binding_item && _binding_item->get_type() == cube_primitive_t::get_type_static()) {
+
       b_cp = _binding_item->cast_as<cube_primitive_t>();
       cube_param_scale->bind_value(&b_cp->m_scale);
       cube_param_color->bind_value(&b_cp->m_color);
       cube_render_alpha_enabled->bind_value(&b_cp->m_alpha_enabled);
       cube_render_alpha->bind_value(&b_cp->m_alpha);
       cube_render_mode->bind_value(reinterpret_cast<int*>(&b_cp->m_render_mode));
+
     } else {
+
       b_cp = nullptr;
+
     }
 
 }
