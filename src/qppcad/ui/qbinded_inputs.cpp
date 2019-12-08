@@ -872,3 +872,81 @@ void qbinded_float2_input_t::spinbox_value_changed(double newval) {
     }
 
 }
+
+qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&names,
+                                                         QWidget *parent) {
+
+  m_binded_names = names;
+  m_binded_data.resize(m_binded_names.size(), nullptr);
+
+  widget_layout = new QHBoxLayout;
+  widget_layout->setContentsMargins(0, 2, 0, 0);
+  setLayout(widget_layout);
+
+  m_boxes.reserve(m_binded_names.size());
+  m_labels.reserve(m_binded_names.size());
+
+  for (size_t i = 0; i < m_binded_names.size(); i++) {
+
+      QLabel *lbl = new QLabel(nullptr);
+      lbl->setText(m_binded_names[i]);
+      QCheckBox *cbx = new QCheckBox(nullptr);
+      widget_layout->addWidget(lbl);
+      widget_layout->addWidget(cbx);
+      m_boxes.push_back(cbx);
+      m_labels.push_back(lbl);
+
+      connect(cbx, &QCheckBox::stateChanged, [this, i](int state) {
+
+            if (i < this->m_binded_data.size() && this->m_binded_data[i])
+              *(this->m_binded_data[i]) = state != Qt::CheckState::Unchecked;
+
+            app_state_t::get_inst()->make_viewport_dirty();
+
+          });
+
+    }
+
+}
+
+void qbinded_bool_named_vector_t::bind_value(std::vector<bool *> &&binded_data) {
+
+  if (m_binded_data.size() == m_binded_names.size() &&
+      binded_data.size() == m_binded_names.size()) {
+
+      m_binded_data = binded_data;
+
+    } else {
+
+      //raise error
+
+    }
+
+  load_value();
+
+}
+
+void qbinded_bool_named_vector_t::load_value() {
+
+  if (m_binded_data.size() == m_binded_names.size())
+    for (size_t i = 0; i < m_boxes.size(); i++)
+      if (i < m_boxes.size() && m_boxes[i]) {
+
+          m_boxes[i]->blockSignals(true);
+          m_boxes[i]->setCheckState(
+                i < m_binded_data.size() && m_binded_data[i] && *(m_binded_data[i]) ?
+                  Qt::Checked :
+                  Qt::Unchecked
+                );
+          m_boxes[i]->blockSignals(false);
+
+        }
+
+
+}
+
+void qbinded_bool_named_vector_t::unbind_value() {
+
+  std::fill(std::begin(m_binded_data), std::end(m_binded_data), nullptr);
+
+}

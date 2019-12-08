@@ -146,9 +146,11 @@ namespace qpp {
       public:
 
         QHBoxLayout *widget_layout;
+
         QSpinBox *sb_x;
         QSpinBox *sb_y;
         QSpinBox *sb_z;
+
         void load_value_ex() override;
         void set_min_max_step(int min, int max, int step);
         explicit qbinded_int3_input_t(QWidget *parent = nullptr);
@@ -166,8 +168,10 @@ namespace qpp {
       public:
 
         QHBoxLayout *widget_layout;
+
         QSpinBox *sb_x;
         QSpinBox *sb_y;
+
         void load_value_ex() override;
         explicit qbinded_int2b_input_t(QWidget *parent = nullptr);
 
@@ -258,6 +262,7 @@ namespace qpp {
         std::set<size_t> m_binded_atom_id;
         QColor m_stored_color;
         bool m_apply_to_selected{false};
+
         explicit qbinded_xgeom_color3_input_t(QWidget *parent = nullptr);
         void bind_value(xgeometry<float, periodic_cell<float> > *binded_xgeom,
                         std::array<int, 3> binding_indicies,
@@ -323,6 +328,26 @@ namespace qpp {
       public slots:
 
         void value_changed(int i);
+
+    };
+
+    class qbinded_bool_named_vector_t : public QFrame {
+
+        Q_OBJECT
+
+      public:
+
+        std::vector<bool*> m_binded_data;
+        std::vector<QString> m_binded_names;
+        QHBoxLayout *widget_layout;
+        std::vector<QCheckBox*> m_boxes;
+        std::vector<QLabel*> m_labels;
+
+        explicit qbinded_bool_named_vector_t(std::vector<QString> &&names,
+                                             QWidget *parent = nullptr);
+        void bind_value(std::vector<bool*> &&binded_data);
+        void load_value();
+        void unbind_value();
 
     };
 

@@ -50,10 +50,8 @@ namespace qpp {
 
         qspoiler_widget_t *gb_disp_s;
         QFormLayout *gb_disp_s_lt;
-        qbinded_checkbox_t *disp_s_draw_atoms;
-        qbinded_checkbox_t *disp_s_draw_bonds;
-        qbinded_checkbox_t *disp_s_draw_img_atoms;
-        qbinded_checkbox_t *disp_s_draw_img_bonds;
+        qbinded_bool_named_vector_t *disp_s_draw_atoms_bonds;
+        qbinded_bool_named_vector_t *disp_s_draw_img_atoms_bonds;
         qbinded_float_spinbox_t *disp_s_atom_scale;
         qbinded_float_spinbox_t *disp_s_bond_scale;
         qbinded_combobox_t *disp_s_render_style;
@@ -71,8 +69,7 @@ namespace qpp {
         qbinded_float_spinbox_t *disp_labels_outline_size;
         qbinded_checkbox_t *disp_labels_draw_axis_labels;
 
-        qbinded_checkbox_t *disp_s_sel_vis;
-        qbinded_checkbox_t *disp_s_sel_vis_affect_bonds;
+        qbinded_bool_named_vector_t *disp_s_sel_vis_p_affect_bonds;
 
         // Periodic related render
         qspoiler_widget_t *gb_periodic_related_render;

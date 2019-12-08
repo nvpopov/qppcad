@@ -112,11 +112,6 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   gb_disp_s_lt = new QFormLayout;
   gb_disp_s->add_content_layout(gb_disp_s_lt);
 
-  disp_s_draw_atoms = new qbinded_checkbox_t;
-  disp_s_draw_bonds = new qbinded_checkbox_t;
-  disp_s_draw_img_atoms = new qbinded_checkbox_t;
-  disp_s_draw_img_bonds = new qbinded_checkbox_t;
-
   disp_s_atom_scale = new qbinded_float_spinbox_t;
   disp_s_atom_scale->set_min_max_step(0.01, 3.0, 0.01);
   disp_s_bond_scale = new qbinded_float_spinbox_t;
@@ -133,6 +128,9 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   disp_s_color_mode = new qbinded_combobox_t;
   disp_s_color_mode->addItem(tr("Color from ptable"));
   disp_s_color_mode->addItem(tr("Color from xgeom"));
+
+  disp_s_draw_atoms_bonds = new qbinded_bool_named_vector_t({"Atoms", "Bonds"});
+  disp_s_draw_img_atoms_bonds = new qbinded_bool_named_vector_t({"Atoms", "Bonds"});
 
   // periodic related render
   gb_periodic_related_render = new qspoiler_widget_t(tr("Periodic Related Settings"));
@@ -158,8 +156,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
           this,
           &geom_view_obj_insp_widget_t::draw_subcells_changed);
 
-  disp_s_sel_vis = new qbinded_checkbox_t;
-  disp_s_sel_vis_affect_bonds = new qbinded_checkbox_t;
+  disp_s_sel_vis_p_affect_bonds = new qbinded_bool_named_vector_t({"Atoms", "Bonds"});
 
   periodic_draw_cell = new qbinded_checkbox_t;
   periodic_cell_offset = new qbinded_float3_input_t;
@@ -180,14 +177,12 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
 
   gb_disp_s_lt->addRow(tr("Draw style"), disp_s_render_style);
   gb_disp_s_lt->addRow(tr("Color style"), disp_s_color_mode);
-  gb_disp_s_lt->addRow(tr("Draw atoms"), disp_s_draw_atoms);
-  gb_disp_s_lt->addRow(tr("Draw bonds"), disp_s_draw_bonds);
-  gb_disp_s_lt->addRow(tr("Draw im. atoms"), disp_s_draw_img_atoms);
-  gb_disp_s_lt->addRow(tr("Draw im. bonds"), disp_s_draw_img_bonds);
+  gb_disp_s_lt->addRow(tr("Draw real"), disp_s_draw_atoms_bonds);
+  gb_disp_s_lt->addRow(tr("Draw imaginary"), disp_s_draw_img_atoms_bonds);
   gb_disp_s_lt->addRow(tr("Atom scale"), disp_s_atom_scale);
   gb_disp_s_lt->addRow(tr("Bond scale"), disp_s_bond_scale);
-  gb_disp_s_lt->addRow(tr("Selective visibility"), disp_s_sel_vis);
-  gb_disp_s_lt->addRow(tr("Sel. vis. bonds"), disp_s_sel_vis_affect_bonds);
+  gb_disp_s_lt->addRow(tr("Selective visibility"), disp_s_sel_vis_p_affect_bonds);
+
   init_form_lt(gb_disp_s_lt);
 
   gb_disp_labels = new qspoiler_widget_t(tr("Labels"));
@@ -1136,10 +1131,9 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       qt_hlp::vrt_resize_tv_to_cnt(tg_gb_cell_tbl);
 
       //display tab
-      disp_s_draw_atoms->bind_value(&b_al->m_draw_atoms);
-      disp_s_draw_bonds->bind_value(&b_al->m_draw_bonds);
-      disp_s_draw_img_atoms->bind_value(&b_al->m_draw_img_atoms);
-      disp_s_draw_img_bonds->bind_value(&b_al->m_draw_img_bonds);
+      disp_s_draw_atoms_bonds->bind_value({&b_al->m_draw_atoms, &b_al->m_draw_bonds});
+      disp_s_draw_img_atoms_bonds->bind_value({&b_al->m_draw_img_atoms, &b_al->m_draw_img_bonds});
+
       disp_s_atom_scale->bind_value(&b_al->m_atom_scale_factor);
       disp_s_bond_scale->bind_value(&b_al->m_bond_scale_factor);
       disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_render_style));
@@ -1158,8 +1152,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       disp_shading_spec->bind_value(&b_al->m_draw_specular);
       disp_shading_spec_value->bind_value(&b_al->m_shading_specular_power);
 
-      disp_s_sel_vis->bind_value(&b_al->m_sel_vis);
-      disp_s_sel_vis_affect_bonds->bind_value(&b_al->m_sel_vis_affect_bonds);
+      disp_s_sel_vis_p_affect_bonds->bind_value({&b_al->m_sel_vis, &b_al->m_sel_vis_affect_bonds});
 
       periodic_draw_cell_v->bind_value(&b_al->m_draw_cell_vectors);
       periodic_cell_offset->bind_value(&b_al->m_cell_vector_offset);
@@ -1241,10 +1234,9 @@ void geom_view_obj_insp_widget_t::unbind_item() {
 
   ws_item_obj_insp_widget_t::unbind_item();
 
-  disp_s_draw_atoms->unbind_value();
-  disp_s_draw_bonds->unbind_value();
-  disp_s_draw_img_atoms->unbind_value();
-  disp_s_draw_img_bonds->unbind_value();
+  disp_s_draw_atoms_bonds->unbind_value();
+  disp_s_draw_img_atoms_bonds->unbind_value();
+
   disp_s_atom_scale->unbind_value();
   disp_s_bond_scale->unbind_value();
   disp_s_render_style->unbind_value();
@@ -1261,8 +1253,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
 
   disp_shading_spec->unbind_value();
   disp_shading_spec_value->unbind_value();
-  disp_s_sel_vis->unbind_value();
-  disp_s_sel_vis_affect_bonds->unbind_value();
+  disp_s_sel_vis_p_affect_bonds->unbind_value();
 
   periodic_draw_cell_v->unbind_value();
   periodic_cell_offset->unbind_value();

@@ -607,6 +607,8 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::generate_ncells(geom_view_t *gv,
     for (iterator i_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c})); !i_it.end(); i_it++ ) {
         vector3<float> new_atom_pos = gv->m_geom->pos(i, i_it);
         sc_al->m_geom->add(gv->m_geom->atom(i), new_atom_pos);
+        sc_al->m_geom->xfield<float>(xgeom_charge, sc_al->m_geom->nat()-1) =
+            gv->m_geom->xfield<float>(xgeom_charge, i);
       }
 
   sc_al->end_structure_change();
