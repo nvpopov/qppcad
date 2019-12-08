@@ -10,4 +10,7 @@ void py_ws_vector3_reg_helper_t::reg(
   py::class_<ws_vector3_t, std::shared_ptr<ws_vector3_t> >
   py_ws_vector3_t(module, "ws_vector3_t", ws_item_base);
 
+  //implicitly_convertible<A, B> need B::B(&A)
+  //py::implicitly_convertible<ws_vector3_t, vector3<float>>();
+
 }

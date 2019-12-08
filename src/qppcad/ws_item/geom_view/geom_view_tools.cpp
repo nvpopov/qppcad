@@ -913,11 +913,27 @@ void geom_view_tools_t::construct_compl_list_view(geom_view_t *model,
 
 void geom_view_tools_t::displ_geom_by_comp_list(
     geom_view_t *target,
-    geom_view_t *displ_start,
-    geom_view_t *displ_end,
-    std::vector<std::tuple<size_t, size_t> > &comp_l) {
+    geom_view_t *d_start,
+    geom_view_t *d_end,
+    std::vector<std::tuple<size_t, size_t> > &comp_l,
+    int d_start_anim,
+    int d_end_anim,
+    int d_start_frame,
+    int d_end_frame) {
 
-  if (!displ_start || !displ_end || !target || comp_l.empty()) return ;
+  if (!d_start || !d_end || !target || comp_l.empty()) return ;
+
+  //first anim invalid
+  if (d_start_anim > -1 && d_start_anim >= d_start->m_anim->m_anim_data.size() &&
+      !d_start->m_anim->m_anim_data[d_start_anim].frames.empty() &&
+      d_start_frame < d_start->m_anim->m_anim_data[d_start_anim].frames.size())
+    return;
+
+  //first anim invalid
+  if (d_end_anim > -1 && d_end_anim >= d_end->m_anim->m_anim_data.size() &&
+      !d_end->m_anim->m_anim_data[d_end_anim].frames.empty() &&
+      d_end_frame < d_end->m_anim->m_anim_data[d_end_anim].frames.size())
+    return;
 
   for (auto const &rec : comp_l) {
 
@@ -925,13 +941,22 @@ void geom_view_tools_t::displ_geom_by_comp_list(
       auto model_idx = std::get<0>(rec);
       auto target_idx = std::get<1>(rec);
 
-      if (model_idx >= displ_start->m_geom->nat() || target_idx >= target->m_geom->nat())
+      if (model_idx >= d_start->m_geom->nat() || target_idx >= target->m_geom->nat())
         continue;
 
       // process displacements
 
-      auto &target_coord = target->m_geom->coord(target_idx);
-      target_coord += (displ_end->m_geom->pos(model_idx) - displ_start->m_geom->pos(model_idx));
+      vector3<float> &target_coord = target->m_geom->coord(target_idx);
+
+      vector3<float> start_coord = d_start_anim == -1 ?
+            d_start->m_geom->pos(model_idx) :
+            d_start->m_anim->m_anim_data[d_start_anim].frames[d_start_frame].atom_pos[model_idx];
+
+      vector3<float> end_coord = d_end_anim == -1 ?
+            d_end->m_geom->pos(model_idx) :
+            d_end->m_anim->m_anim_data[d_end_anim].frames[d_end_frame].atom_pos[model_idx];
+
+      target_coord += (end_coord - start_coord);
 
     }
 

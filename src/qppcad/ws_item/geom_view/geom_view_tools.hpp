@@ -131,7 +131,11 @@ namespace qpp {
             geom_view_t *target,
             geom_view_t *displ_start,
             geom_view_t *displ_end,
-            std::vector<std::tuple<size_t, size_t> > &comp_l);
+            std::vector<std::tuple<size_t, size_t> > &comp_l,
+            int displ_start_anim = -1,
+            int displ_end_anim = -1,
+            int displ_start_frame = 0,
+            int displ_end_frame = 0);
 
     };
 
