@@ -74,14 +74,18 @@ namespace qpp {
         // Periodic related render
         qspoiler_widget_t *gb_periodic_related_render;
         QFormLayout *gb_periodic_related_render_lt;
-        qbinded_checkbox_t *periodic_draw_cell_v;
+
+        qbinded_bool_named_vector_t *periodic_draw_settings;
+
+        //qbinded_checkbox_t *periodic_draw_cell_v;
         qbinded_float_spinbox_t *periodic_cell_v_ratio;
         qbinded_color3_input_t *periodic_cell_vectors_color;
 
-        qbinded_checkbox_t *periodic_draw_cell;
+        //qbinded_checkbox_t *periodic_draw_cell;
         qbinded_color3_input_t *periodic_cell_color;
         qbinded_float3_input_t *periodic_cell_offset;
         qbinded_checkbox_t *periodic_draw_subcells;
+
         QLabel *periodic_subcells_idx_lbl;
         qbinded_int3_input_t *periodic_subcells_idx;
         QLabel *periodic_subcells_color_lbl;
