@@ -145,10 +145,12 @@ namespace qpp {
         //common measurements settings
         qspoiler_widget_t *tms_common_settings_gb;
         QFormLayout *tms_common_settings_gb_lt;
-        qbinded_checkbox_t *tms_render_dist;
-        qbinded_checkbox_t *tms_render_angle;
-        qbinded_checkbox_t *tms_render_dist_legend;
-        qbinded_checkbox_t *tms_render_angle_legend;
+        qbinded_bool_named_vector_t *tms_render_dist_angle;
+        qbinded_bool_named_vector_t *tms_render_dist_angle_legend;
+//        qbinded_checkbox_t *tms_render_dist;
+//        qbinded_checkbox_t *tms_render_angle;
+//        qbinded_checkbox_t *tms_render_dist_legend;
+//        qbinded_checkbox_t *tms_render_angle_legend;
 
         //pair dist
         qspoiler_widget_t *tms_pair_dist_gb;

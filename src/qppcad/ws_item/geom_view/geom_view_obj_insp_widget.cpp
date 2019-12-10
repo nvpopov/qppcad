@@ -464,15 +464,11 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
   tms_common_settings_gb_lt = new QFormLayout;
   tms_common_settings_gb->add_content_layout(tms_common_settings_gb_lt);
 
-  tms_render_dist = new qbinded_checkbox_t;
-  tms_render_angle = new qbinded_checkbox_t;
-  tms_render_dist_legend = new qbinded_checkbox_t;
-  tms_render_angle_legend = new qbinded_checkbox_t;
+  tms_render_dist_angle = new qbinded_bool_named_vector_t({tr("Dists"), tr("Angles")});
+  tms_render_dist_angle_legend = new qbinded_bool_named_vector_t({tr("Dists"), tr("Angles")});
 
-  tms_common_settings_gb_lt->addRow(tr("Draw dists"), tms_render_dist);
-  tms_common_settings_gb_lt->addRow(tr("Draw angles"), tms_render_angle);
-  tms_common_settings_gb_lt->addRow(tr("Dists legend"), tms_render_dist_legend);
-  tms_common_settings_gb_lt->addRow(tr("Angles legend"), tms_render_angle_legend);
+  tms_common_settings_gb_lt->addRow(tr("Draw"), tms_render_dist_angle);
+  tms_common_settings_gb_lt->addRow(tr("Legend"), tms_render_dist_angle_legend);
 
   init_form_lt(tms_common_settings_gb_lt);
 
@@ -1215,8 +1211,9 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       qt_hlp::vrt_resize_tv_to_cnt(disp_bt);
 
       //bind tab measurement common settings
-      tms_render_dist->bind_value(&b_al->m_measure->m_render_dist);
-      tms_render_angle->bind_value(&b_al->m_measure->m_render_angle);
+      tms_render_dist_angle->bind_value({&b_al->m_measure->m_render_dist,
+                                         &b_al->m_measure->m_render_angle
+                                        });
       //end of bind tab measurement common settings
 
       txg_info_tv->setModel(nullptr);
@@ -1279,8 +1276,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   tm_override_atom_radii->unbind_value();
   //end tab modify spec
 
-  tms_render_dist->unbind_value();
-  tms_render_angle->unbind_value();
+  tms_render_dist_angle->unbind_value();
 
   disp_type_spec_mdl->unbind();
   bt_mdl->unbind();
