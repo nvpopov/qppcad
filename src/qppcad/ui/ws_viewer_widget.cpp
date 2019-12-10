@@ -189,14 +189,18 @@ void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
           astate->mouse_lb_pressed = true;
           astate->ws_mgr->mouse_click();
           astate->mouse_distance_pp = 0.0f;
+          event->accept();
         }
 
       if (event->button() == Qt::RightButton) {
+          event->accept();
           astate->mouse_rb_pressed = true;
-
         }
 
-      if (event->button() == Qt::MiddleButton) astate->mouse_md_pressed = true;
+      if (event->button() == Qt::MiddleButton) {
+          event->accept();
+          astate->mouse_md_pressed = true;
+        }
     }
 
 }
@@ -290,7 +294,7 @@ void ws_viewer_widget_t::mouseDoubleClickEvent(QMouseEvent *event) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (event) {
+  if (event && event->button() == Qt::LeftButton) {
       astate->ws_mgr->mouse_double_click();
       event->accept();
     }
