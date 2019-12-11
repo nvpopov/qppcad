@@ -106,6 +106,8 @@ namespace qpp {
         ws_item_extended_editor_compositor_t *m_ext_edtr_compositor;
 
         python_console_widget_t *m_py_console_wdgt;
+        QFrame *m_ws_viewer_wdgt_frame;
+        QHBoxLayout *m_ws_viewer_wdgt_frame_lt;
         ws_viewer_widget_t *m_ws_viewer_wdgt;
         object_inspector_widget_t *m_obj_insp_wdgt;
 

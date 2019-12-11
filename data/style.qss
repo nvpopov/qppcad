@@ -213,6 +213,10 @@ QSplitter {
  border-bottom:2px inset black;
 }
 
+#ws_viewer_frame {
+  border-top: 1px solid black;
+}
+
 qpp--cad--qgeom_view_selector_widget_t QListWidget:item {
  padding : 6px;
 }

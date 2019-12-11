@@ -686,6 +686,12 @@ void main_window_t::init_widgets() {
           &main_window_t::tp_add_point_sym_group_clicked);
 
   m_ws_viewer_wdgt = new ws_viewer_widget_t(nullptr);
+  m_ws_viewer_wdgt_frame = new QFrame(nullptr);
+  m_ws_viewer_wdgt_frame_lt = new QHBoxLayout;
+  m_ws_viewer_wdgt_frame->setLayout(m_ws_viewer_wdgt_frame_lt);
+  m_ws_viewer_wdgt_frame_lt->setContentsMargins(0,0,0,0);
+  m_ws_viewer_wdgt_frame->setObjectName("ws_viewer_frame");
+  m_ws_viewer_wdgt_frame_lt->addWidget(m_ws_viewer_wdgt);
 
   m_obj_insp_wdgt = new object_inspector_widget_t(nullptr);
   m_obj_insp_wdgt->setFixedWidth(astate->size_guide.obj_insp_w());
@@ -716,7 +722,7 @@ void main_window_t::init_layouts() {
   m_ws_tabbar_wdgt->raise();
 
   m_splitter_ws_viewer_ext_edt = new QSplitter(Qt::Horizontal);
-  m_splitter_ws_viewer_ext_edt->addWidget(m_ws_viewer_wdgt);
+  m_splitter_ws_viewer_ext_edt->addWidget(m_ws_viewer_wdgt_frame);
   m_splitter_ws_viewer_ext_edt->addWidget(m_ext_edtr_compositor);
   m_splitter_ws_viewer_ext_edt->setHandleWidth(0);
 
