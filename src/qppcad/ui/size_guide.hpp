@@ -59,6 +59,7 @@ namespace qpp {
         int tool_panel_icon_size();
 
         int obj_insp_w();
+        int obj_insp_splr_w();
         int obj_insp_table_w();
         int obj_insp_anim_w();
         int obj_insp_item_list_max_h();

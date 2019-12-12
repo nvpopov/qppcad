@@ -285,6 +285,10 @@ qpp--cad--ws_tabbar_t::close-button:hover {
  background-color: rgb(100, 100, 100);
 }
 
+qpp--cad--object_inspector_widget_t QButtonGroup {
+ margin-left: 7px;
+}
+
 qpp--cad--object_inspector_widget_t QTabWidget {
  border: 0;
 }
@@ -295,7 +299,7 @@ qpp--cad--object_inspector_widget_t QTabWidget::pane {
 
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:first,
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:only-one {
- margin-left: 0px !important;
+ margin-left: 7px !important;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
@@ -341,6 +345,7 @@ qpp--cad--object_inspector_widget_t QTabBar QToolButton {
 
 qpp--cad--qspoiler_widget_t {
  margin-bottom: 5px;
+ margin-left: 7px;
 }
 
 qpp--cad--object_inspector_widget_t QPushButton {
@@ -357,9 +362,17 @@ qpp--cad--qspoiler_widget_t QLabel#add_new_ws_item_type_desc {
 }
 
 qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
- margin-left: 0px;
+ margin-left: 7px;
  font-size:10pt !important;
  background: rgb(81, 81, 81);
+}
+
+QFrame[s_class="separator"] {
+ border-top: 1px solid rgb(70, 70, 70);
+}
+
+qpp--cad--object_inspector_widget_t QTabWidget {
+ margin-left: 7px;
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab:selected {

@@ -34,7 +34,7 @@ namespace qpp {
                                    QWidget *parent = 0,
                                    bool _collapsable = true,
                                    int _spacing = 6,
-                                   int _max_width = 360,
+                                   int _max_width = -1,
                                    bool header_add_spacing_at_the_end = true,
                                    int main_lt_spacing_at_the_end = 5);
 

@@ -33,6 +33,7 @@ namespace qpp {
 
         QPushButton *btn_add_new_ws_item;
         QPushButton *btn_refresh_oi;
+        QFrame *sep_ws_items_props;
 
         //property view by ws_item type
         QWidget *none_item_placeholder;

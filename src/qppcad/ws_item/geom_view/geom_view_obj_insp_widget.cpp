@@ -34,8 +34,8 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   tg_geom_summary_lt->addRow(tr("Total types"), tg_geom_summary_total_types);
   init_form_lt(tg_geom_summary_lt);
 
-  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"),
-                                                 this, true, 0, 360, false, 0);
+  tg_type_summary_widget = new qspoiler_widget_t(tr("Type Summary"), this, true, 0,
+                                                 astate->size_guide.obj_insp_splr_w(), false, 0);
   tg_type_summary_lt = new QVBoxLayout;
   tg_type_summary_widget->add_content_layout(tg_type_summary_lt);
   tg_type_summary_tbl = new QTableWidget;
@@ -61,7 +61,8 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   table_hdr_cell.push_back("Y");
   table_hdr_cell.push_back("Z");
 
-  tg_gb_cell = new qspoiler_widget_t(tr("Lattice Parameters"), this, true, 0, 360, false, 0);
+  tg_gb_cell = new qspoiler_widget_t(tr("Lattice Parameters"), this, true, 0,
+                                     astate->size_guide.obj_insp_splr_w(), false, 0);
   tg_gb_cell_lt = new QVBoxLayout;
   tg_gb_cell->add_content_layout(tg_gb_cell_lt);
   tg_gb_cell_tbl = new QTableWidget;
@@ -238,7 +239,8 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
 
   //display - type specific rendering
   gb_disp_type_spec_rend = new qspoiler_widget_t(tr("Type Specific Rendering"),
-                                                 this, true, 0, 360, false, 0);
+                                                 this, true, 0,
+                                                 astate->size_guide.obj_insp_splr_w(), false, 0);
   gb_disp_type_spec_rend_lt = new QVBoxLayout;
   gb_disp_type_spec_rend->add_content_layout(gb_disp_type_spec_rend_lt);
 
@@ -256,7 +258,8 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   disp_type_spec_tv->setModel(disp_type_spec_mdl);
 
   //display - bonding table
-  gb_disp_bt = new qspoiler_widget_t(tr("Bonding Table"), this, true, 0, 360, false, 0);
+  gb_disp_bt = new qspoiler_widget_t(tr("Bonding Table"), this, true, 0,
+                                     astate->size_guide.obj_insp_splr_w(), false, 0);
   gb_disp_bt->setContentsMargins(0,0,0,0);
   disp_bt_lt = new QVBoxLayout;
   gb_disp_bt->add_content_layout(disp_bt_lt);
@@ -299,7 +302,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
           this, &geom_view_obj_insp_widget_t::disp_switch_cur_changed);
 
   QHBoxLayout *tmp_lt = new QHBoxLayout;
-  tmp_lt->setContentsMargins(0, 0, 11, 5);
+  tmp_lt->setContentsMargins(7, 0, 7, 5);
   tmp_lt->setSpacing(2);
 
   QPushButton *tmp_b1 = new QPushButton(tr("Appearance"));
@@ -605,7 +608,7 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
           this, &geom_view_obj_insp_widget_t::msr_switch_current_changed);
 
   QHBoxLayout *tmp_lt = new QHBoxLayout;
-  tmp_lt->setContentsMargins(0, 0, 11, 5);
+  tmp_lt->setContentsMargins(7, 0, 7, 5);
   tmp_lt->setSpacing(2);
 
   QPushButton *tmp_b1 = new QPushButton(tr("General"));
@@ -1040,7 +1043,7 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
           this, &geom_view_obj_insp_widget_t::xgeom_switch_current_changed);
 
   QHBoxLayout *tmp_lt = new QHBoxLayout;
-  tmp_lt->setContentsMargins(0, 0, 11, 5);
+  tmp_lt->setContentsMargins(7, 0, 7, 5);
   tmp_lt->setSpacing(2);
 
   QPushButton *tmp_b1 = new QPushButton(tr("XGeometry Structure"));

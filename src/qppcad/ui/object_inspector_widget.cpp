@@ -57,7 +57,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::provide_context_menu_for_ws_items);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 360, true, 0);
+  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0, 374, true, 0);
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
@@ -71,7 +71,12 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   none_item_placeholder = new QWidget;
   none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+  sep_ws_items_props = new QFrame;
+  sep_ws_items_props->setProperty("s_class", "separator");
+  sep_ws_items_props->setFrameShape(QFrame::HLine);
+
   main_lt->addWidget(ws_items_spoiler);
+  main_lt->addWidget(sep_ws_items_props);
   main_lt->addWidget(none_item_placeholder);
 
   connect(astate->astate_evd,

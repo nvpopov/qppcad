@@ -11,7 +11,7 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
   main_lt = new QVBoxLayout;
   main_lt_zero_lvl = new QVBoxLayout;
   main_lt_zero_lvl->setContentsMargins(0,0,0,0);
-  main_lt->setContentsMargins(10,0,0,0);
+  main_lt->setContentsMargins(0,0,0,0);
   setLayout(main_lt_zero_lvl);
 
   setFrameStyle(QFrame::Panel);

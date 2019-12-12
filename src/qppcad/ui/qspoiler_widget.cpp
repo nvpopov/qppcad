@@ -13,9 +13,11 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                      int main_lt_spacing_at_the_end) : QFrame(parent) {
 
   m_collapsable = _collapsable;
-  setFixedWidth(_max_width);
 
   app_state_t *astate = app_state_t::get_inst();
+
+  if (_max_width == -1 ) setFixedWidth(astate->size_guide.obj_insp_splr_w());
+  else setFixedWidth(_max_width);
 
   main_lt = new QVBoxLayout;
   main_lt->setContentsMargins(0, 0, 0, 0);
