@@ -60,19 +60,19 @@ int size_guide_t::tool_panel_icon_size() {
 }
 
 int size_guide_t::obj_insp_w() {
-  return 382;
+  return 376;
 }
 
 int size_guide_t::obj_insp_splr_w() {
-  return int(obj_insp_w() * 0.98);
+  return int(obj_insp_w() * 0.99);
 }
 
 int size_guide_t::obj_insp_table_w() {
-  return int(obj_insp_w() * 0.96);
+  return int(obj_insp_w() * 0.98);
 }
 
 int size_guide_t::obj_insp_anim_w(){
-  return int(obj_insp_w() * 0.94);
+  return int(obj_insp_w() * 0.98);
 }
 
 int size_guide_t::obj_insp_item_list_max_h() {

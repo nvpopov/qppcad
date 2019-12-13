@@ -302,7 +302,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
           this, &geom_view_obj_insp_widget_t::disp_switch_cur_changed);
 
   QHBoxLayout *tmp_lt = new QHBoxLayout;
-  tmp_lt->setContentsMargins(7, 0, 7, 5);
+  tmp_lt->setContentsMargins(4, 0, 4, 5);
   tmp_lt->setSpacing(2);
 
   QPushButton *tmp_b1 = new QPushButton(tr("Appearance"));
@@ -608,7 +608,7 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
           this, &geom_view_obj_insp_widget_t::msr_switch_current_changed);
 
   QHBoxLayout *tmp_lt = new QHBoxLayout;
-  tmp_lt->setContentsMargins(7, 0, 7, 5);
+  tmp_lt->setContentsMargins(4, 0, 4, 5);
   tmp_lt->setSpacing(2);
 
   QPushButton *tmp_b1 = new QPushButton(tr("General"));
@@ -1043,7 +1043,7 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
           this, &geom_view_obj_insp_widget_t::xgeom_switch_current_changed);
 
   QHBoxLayout *tmp_lt = new QHBoxLayout;
-  tmp_lt->setContentsMargins(7, 0, 7, 5);
+  tmp_lt->setContentsMargins(4, 0, 4, 5);
   tmp_lt->setSpacing(2);
 
   QPushButton *tmp_b1 = new QPushButton(tr("XGeometry Structure"));

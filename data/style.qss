@@ -259,7 +259,7 @@ qpp--cad--ws_tabbar_t::tab {
 }
 
 qpp--cad--ws_tabbar_t::tab::first {
- margin-left: 5px;
+ margin-left: 4px;
 }
 
 qpp--cad--ws_tabbar_t::tab:selected {
@@ -286,7 +286,7 @@ qpp--cad--ws_tabbar_t::close-button:hover {
 }
 
 qpp--cad--object_inspector_widget_t QButtonGroup {
- margin-left: 7px;
+ margin-left: 4px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget {
@@ -299,7 +299,7 @@ qpp--cad--object_inspector_widget_t QTabWidget::pane {
 
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:first,
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:only-one {
- margin-left: 7px !important;
+ margin-left: 4px !important;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
@@ -314,6 +314,7 @@ qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
  background: rgb(114, 114, 114);
  border-radius: 3px;
  margin-bottom: 5px;
+ margin-top: 2px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab::selected {
@@ -344,8 +345,8 @@ qpp--cad--object_inspector_widget_t QTabBar QToolButton {
 }
 
 qpp--cad--qspoiler_widget_t {
- margin-bottom: 5px;
- margin-left: 7px;
+ margin-bottom: 2px;
+ margin-left: 4px;
 }
 
 qpp--cad--object_inspector_widget_t QPushButton {
@@ -362,17 +363,19 @@ qpp--cad--qspoiler_widget_t QLabel#add_new_ws_item_type_desc {
 }
 
 qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
- margin-left: 7px;
+ margin-left: 4px;
  font-size:10pt !important;
  background: rgb(81, 81, 81);
 }
 
 QFrame[s_class="separator"] {
  border-top: 1px solid rgb(70, 70, 70);
+ margin-top:1px;
+ margin-bottom:1px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget {
- margin-left: 7px;
+ margin-left: 4px;
 }
 
 qpp--cad--object_inspector_widget_t QTabBar::tab:selected {
