@@ -330,7 +330,10 @@ void py_geom_view_reg_helper_t::reg(
       .def("displ_geom_by_compliance_list", &geom_view_tools_t::displ_geom_by_comp_list,
            py::arg("target"), py::arg("d_start"), py::arg("d_end"), py::arg("comp_l"),
            py::arg("d_start_anim") = -1, py::arg("d_end_anim") = -1,
-           py::arg("d_start_frame") = -1, py::arg("d_end_frame") = -1);
+           py::arg("d_start_frame") = -1, py::arg("d_end_frame") = -1)
+      .def("rename_atoms", &geom_view_tools_t::change_atom_type,
+           py::arg("src"), py::arg("dst"), py::arg("gv") = nullptr)
+      ;
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,

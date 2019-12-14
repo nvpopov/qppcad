@@ -137,6 +137,10 @@ namespace qpp {
             int displ_start_frame = 0,
             int displ_end_frame = 0);
 
+        static void change_atom_type(const std::string &src,
+                                     const std::string &dst,
+                                     geom_view_t *gv);
+
     };
 
   } // namespace cad

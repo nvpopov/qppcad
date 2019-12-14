@@ -965,6 +965,36 @@ void geom_view_tools_t::displ_geom_by_comp_list(
 
 }
 
+void geom_view_tools_t::change_atom_type(const std::string &src,
+                                         const std::string &dst,
+                                         geom_view_t *gv) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto tmp_gv = gv;
+
+  if (!tmp_gv) {
+      auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+      if (al) tmp_gv = al;
+    }
+
+  int src_id = tmp_gv->m_geom->type_of_atom(src);
+  //int dst_id = gv->m_geom->type_of_atom(dst);
+
+  if (src_id == -1) {
+      return;
+    }
+
+  tmp_gv->begin_structure_change();
+
+  for (size_t i = 0; i < tmp_gv->m_geom->nat(); i++)
+    if (tmp_gv->m_geom->type_table(i) == src_id)
+      tmp_gv->m_geom->change(i, dst, tmp_gv->m_geom->pos(i));
+
+  tmp_gv->end_structure_change();
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,
