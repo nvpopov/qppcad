@@ -180,16 +180,16 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
 
       geom_labels_style_e cur_style =
           gv->m_labels->m_style == geom_labels_style_e::show_none ?
-            geom_labels_style_e::show_id_type :
-            gv->m_labels->m_style;
+                                   geom_labels_style_e::show_id_type :
+                                   gv->m_labels->m_style;
 
       ret +=
           fmt::format(first ? "{} {:8.8f} {:8.8f} {:8.8f}" : "\n{} {:8.8f} {:8.8f} {:8.8f}",
                       geom_view_labels_subsys_t::label_gen_fn(gv, cur_style, rec.m_atm),
                       pos_i[0],
-          pos_i[1],
-          pos_i[2]
-          );
+                      pos_i[1],
+                      pos_i[2]
+                     );
 
       first = false;
 
@@ -1014,7 +1014,7 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
 
       std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
       
-      cur_ws->add_item_to_ws(sc_al);
+      gv_src1->m_parent_ws->add_item_to_ws(sc_al);
       tmp_dst = sc_al.get();
 
     }
@@ -1071,12 +1071,18 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
 
     }
 
+  astate->tlog("MERGE DIM {}", tmp_dst->m_geom->DIM);
+  astate->tlog("MERGE CELL DIM {}", tmp_dst->m_geom->cell.DIM);
+
+  for (size_t i = 0 ; i < tmp_dst->m_geom->DIM; i++)
+    astate->tlog("MERGE VEC {} {}", i, tmp_dst->m_geom->cell.v[i]);
+
   for (auto elem : {gv_src1, gv_src2})
     if (elem != tmp_dst)
       for (size_t i = 0; i < elem->m_geom->nat(); i++) {
           tmp_dst->m_geom->add(elem->m_geom->atom(i), elem->m_geom->pos(i));
-          tmp_dst->m_geom->xfield<float>(xgeom_charge, elem->m_geom->nat()-1) =
-              elem->m_geom->xfield<float>(xgeom_charge,i);
+          tmp_dst->m_geom->xfield<float>(xgeom_charge, tmp_dst->m_geom->nat()-1) =
+              elem->m_geom->xfield<float>(xgeom_charge, i);
         }
 
   tmp_dst->end_structure_change();
