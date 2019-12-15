@@ -79,11 +79,11 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 //                                      ws_item_bb_visible_label,
 //                                      ws_item_bb_visible);
 
-//      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
-//                                      tg_form_layout,
-//                                      ws_item_bb_visible,
-//                                      ws_item_pos_label,
-//                                      ws_item_pos);
+      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+                                      tg_form_layout,
+                                      ws_item_type,
+                                      ws_item_pos_label,
+                                      ws_item_pos);
 
     }
 
@@ -193,6 +193,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   tg_form_layout->addRow(tr("Name"), ws_item_name);
   tg_form_layout->addRow(tr("Type"), ws_item_type);
+  tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
   tg_form_layout->addRow(tr("Show"), ws_item_show_item_bb);
 
   init_form_lt(tg_form_layout);
