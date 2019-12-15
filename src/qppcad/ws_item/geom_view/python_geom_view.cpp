@@ -333,6 +333,8 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("d_start_frame") = -1, py::arg("d_end_frame") = -1)
       .def("rename_atoms", &geom_view_tools_t::change_atom_type,
            py::arg("src"), py::arg("dst"), py::arg("gv") = nullptr)
+      .def("merge", &geom_view_tools_t::merge_gv,
+           py::arg("gv_src1"), py::arg("gv_src2"), py::arg("gv_dist") = nullptr)
       ;
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");

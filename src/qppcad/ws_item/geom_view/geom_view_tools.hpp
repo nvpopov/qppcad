@@ -141,6 +141,10 @@ namespace qpp {
                                      const std::string &dst,
                                      geom_view_t *gv);
 
+        static void merge_gv(geom_view_t *gv_src1,
+                             geom_view_t *gv_src2,
+                             geom_view_t *gv_dist);
+
     };
 
   } // namespace cad

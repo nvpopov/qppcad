@@ -993,6 +993,99 @@ void geom_view_tools_t::change_atom_type(const std::string &src,
 
   tmp_gv->end_structure_change();
 
+    }
+
+void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
+                                 geom_view_t *gv_src2,
+                                 geom_view_t *gv_dst) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
+  if (!cur_ws) return;
+
+  if (!gv_src1 || !gv_src2) {
+      return;
+    }
+
+  geom_view_t *tmp_dst = gv_dst;
+
+  if (!tmp_dst) {
+
+      std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
+      
+      cur_ws->add_item_to_ws(sc_al);
+      tmp_dst = sc_al.get();
+
+    }
+
+  if (!tmp_dst) {
+      return;
+    }
+
+  tmp_dst->begin_structure_change();
+
+  //make decision about cell
+  if (gv_src1->m_geom->DIM == gv_src2->m_geom->DIM) {
+
+      int DIM = gv_src1->m_geom->DIM;
+      tmp_dst->m_geom->DIM = DIM;
+      tmp_dst->m_geom->cell.DIM = DIM;
+
+      if (DIM == 1) {
+          if (gv_src1->m_geom->cell.v[0].norm() > gv_src2->m_geom->cell.v[0].norm())
+            tmp_dst->copy_cell(*gv_src1, false);
+          else
+            tmp_dst->copy_cell(*gv_src2, false);
+        }
+
+      if (DIM == 2) {
+
+          float sq1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).norm();
+          float sq2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).norm();
+
+          if (sq1 > sq2) tmp_dst->copy_cell(*gv_src1, false);
+          else tmp_dst->copy_cell(*gv_src2, false);
+
+        }
+
+      if (DIM == 3) {
+
+          float vol1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).dot(
+                gv_src1->m_geom->cell.v[2]);
+          float vol2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).dot(
+                gv_src2->m_geom->cell.v[2]);
+
+          if (vol1 > vol2) tmp_dst->copy_cell(*gv_src1, false);
+          else tmp_dst->copy_cell(*gv_src2, false);
+
+        }
+
+    } else if (gv_src1->m_geom->DIM > gv_src2->m_geom->DIM) {
+
+      tmp_dst->copy_cell(*gv_src1, false);
+
+    } else if (gv_src1->m_geom->DIM < gv_src2->m_geom->DIM) {
+
+      tmp_dst->copy_cell(*gv_src2, false);
+
+    }
+
+  for (auto elem : {gv_src1, gv_src2})
+    if (elem != tmp_dst)
+      for (size_t i = 0; i < elem->m_geom->nat(); i++) {
+          tmp_dst->m_geom->add(elem->m_geom->atom(i), elem->m_geom->pos(i));
+          tmp_dst->m_geom->xfield<float>(xgeom_charge, elem->m_geom->nat()-1) =
+              elem->m_geom->xfield<float>(xgeom_charge,i);
+        }
+
+  tmp_dst->end_structure_change();
+
+  if (tmp_dst->m_name.empty())
+    tmp_dst->set_name(fmt::format("merged_{}", gv_src1->m_parent_ws->m_ws_items.size()));
+
+  astate->astate_evd->cur_ws_changed();
+
 }
 
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
