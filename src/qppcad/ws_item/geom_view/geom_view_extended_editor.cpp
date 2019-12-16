@@ -12,7 +12,7 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
 
   ext_editor_gv_label = new QLabel(tr("geom_view_extended_editor_t"));
   main_lt = new QVBoxLayout;
-  main_lt->setContentsMargins(0,0,10,0);
+  main_lt->setContentsMargins(0,0,0,0);
   setLayout(main_lt);
 
   xgeom_tv = new QTableView(this);

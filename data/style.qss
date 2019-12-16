@@ -209,12 +209,8 @@ QSplitter {
  width:0px;
 }
 
-#obj_insp_header_frame {
- border-bottom:2px inset black;
-}
-
 #ws_viewer_frame {
-  border-top: 1px solid black;
+  border-top: 1px solid rgb(75, 75, 75);
 }
 
 qpp--cad--qgeom_view_selector_widget_t QListWidget:item {
@@ -227,7 +223,7 @@ qpp--cad--qgeom_view_selector_entry_t {
 }
 
 qpp--cad--qgeom_view_selector_entry_t {
- border: 1px solid black;
+ border: 1px solid rgb(75, 75, 75);;
 }
 
 qpp--cad--ws_viewer_widget_t {
@@ -346,12 +342,17 @@ qpp--cad--object_inspector_widget_t QTabBar QToolButton {
 
 qpp--cad--qspoiler_widget_t {
  margin-bottom: 2px;
- margin-left: 4px;
+ margin-left: 2px;
 }
 
 qpp--cad--object_inspector_widget_t QPushButton {
  padding-left: 12px;
  padding-right: 12px;
+}
+
+qpp--cad--qspoiler_widget_t QTableView {
+ margin-left: 2px;
+ margin-bottom: 2px;
 }
 
 qpp--cad--qspoiler_widget_t QRadioButton {
@@ -363,15 +364,16 @@ qpp--cad--qspoiler_widget_t QLabel#add_new_ws_item_type_desc {
 }
 
 qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
- margin-left: 4px;
+ margin-left: 2px;
  font-size:10pt !important;
  background: rgb(81, 81, 81);
+ border: 0;
 }
 
 QFrame[s_class="separator"] {
  border-top: 1px solid rgb(70, 70, 70);
- margin-top:1px;
- margin-bottom:1px;
+ margin-top: 1px;
+ margin-bottom: 1px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget {
@@ -389,7 +391,11 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 qpp--cad--qembed_window_t {
  border-top: 1px inset rgb(65, 65, 65);
  border-left: 1px inset rgb(65, 65, 65);
- margin-right: -2px;
+}
+
+qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] {
+ background: rgb(113, 113, 113);
+ border-bottom: 1px solid rgb(75, 75, 75);
 }
 
 #tool_panel_widget_e QFrame {
@@ -454,10 +460,9 @@ QPushButton::flat:pressed {
  background : rgb(124, 124, 124);
 }
 
-qpp--cad--qspoiler_widget_t {
- background : rgb(81, 81, 81);
- border: 1px solid rgb(74, 74, 74);
- border-radius: 2px;
+qpp--cad--qspoiler_widget_t QFrame[s_class="qsplrhdr"] {
+  background: rgb(113, 113, 113);
+  border: 1px solid rgb(75, 75, 75);
 }
 
 QRadioButton:disabled {

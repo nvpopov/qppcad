@@ -19,14 +19,14 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
 
   header_frm = new QFrame;
   header_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
+  header_frm->setProperty("s_class", "qembedwndhdr");
   header_lt = new QHBoxLayout;
 
   ew_header = new QLabel("qembed_window header");
-  ew_header->setProperty("s_class", "bold_label");
+  //ew_header->setProperty("s_class", "bold_label");
 
   header_frm->setLayout(header_lt);
-  header_lt->setContentsMargins(9, 2, 4, 0);
+  header_lt->setContentsMargins(9, 2, 4, 4);
   header_lt->addWidget(ew_header);
 
   main_lt_zero_lvl->addWidget(header_frm);

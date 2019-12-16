@@ -6,7 +6,7 @@ using namespace qpp::cad;
 node_book_extended_editor_t::node_book_extended_editor_t() {
 
   main_lt = new QHBoxLayout;
-  main_lt->setContentsMargins(0,0,10,10);
+  main_lt->setContentsMargins(2,2,2,2);
   setLayout(main_lt);
 
   m_gr_view = new node_book_graphics_view_t;
