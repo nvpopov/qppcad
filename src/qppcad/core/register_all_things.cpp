@@ -202,7 +202,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   auto xyz_ff_mgr =
       std::make_shared<
       geom_view_io_ccd_t<
-      read_ccd_from_xyz_file<float>, true, false, true, false, false >
+      read_ccd_from_xyz_file<float>, true, true, true, false, false >
       >();
 
   auto xyz_s_ff_mgr =
