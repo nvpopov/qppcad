@@ -77,6 +77,7 @@ namespace qpp {
         static py::str get_leader(std::shared_ptr<ws_item_t> ws_item);
         static py::bool_ is_instance_of_by_hash(size_t _type_hash);
         static py::bool_ is_instance_of_by_type_name(std::string _type_name);
+        static void set_inline_tool_visibility(size_t id, bool visible);
         //static void bopen(std::string _file_name);
         static vector3<float> gizmo_pos();
         static std::tuple<std::string, vector3<float> > get_point_sym_group(float tolerance);

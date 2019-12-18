@@ -492,6 +492,15 @@ pybind11::bool_ simple_query::is_instance_of_by_type_name(std::string _type_name
 
 }
 
+void simple_query::set_inline_tool_visibility(size_t id, bool visible) {
+
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (id == 0) astate->astate_evd->set_left_inline_tool_visibility(visible);
+  else astate->astate_evd->set_bottom_inline_tool_visibility(visible);
+
+}
+
 
 vector3<float> simple_query::gizmo_pos() {
 

@@ -62,6 +62,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ws_items_spoiler->setObjectName("ws_items_spoiler_e");
   ws_items_spoiler_lt = new QVBoxLayout;
   ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
+  ws_items_spoiler_lt->setSpacing(0);
 
   ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
   ws_items_spoiler_lt->addWidget(ws_items_list);
@@ -76,7 +77,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   sep_ws_items_props->setProperty("s_class", "separator");
   sep_ws_items_props->setFrameShape(QFrame::HLine);
 
-  main_lt->setSpacing(1);
+  main_lt->setSpacing(0);
   main_lt->addWidget(ws_items_spoiler);
   main_lt->addWidget(sep_ws_items_props);
   main_lt->addWidget(none_item_placeholder);

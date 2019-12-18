@@ -263,6 +263,9 @@ namespace qpp {
         void rebuild_recent_files_menu();
         void recent_files_clicked();
 
+        void inline_tool_left_ctrl_visibility(bool visible);
+        void inline_tool_bottom_ctrl_visibility(bool visible);
+
         void modern_menu_clicked();
 
         /**

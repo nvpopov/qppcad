@@ -368,6 +368,7 @@ qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
  font-size:10pt !important;
  background: rgb(81, 81, 81);
  border: 0;
+ margin-top: 0px;
 }
 
 QFrame[s_class="separator"] {

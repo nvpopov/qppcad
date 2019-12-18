@@ -42,6 +42,9 @@ namespace qpp {
         void python_console_focus_requested_signal();
         void python_console_font_size_updated_signal();
 
+        void set_left_inline_tool_visibility_signal(bool visible);
+        void set_bottom_inline_tool_visibility_signal(bool visible);
+
         void log_widget_query_signal(const std::string &message);
 
       public:
@@ -74,9 +77,12 @@ namespace qpp {
         void python_console_focus_requested();
         void python_console_font_size_updated();
 
+        void set_left_inline_tool_visibility(bool visible);
+        void set_bottom_inline_tool_visibility(bool visible);
+
         void log_widget_query(const std::string &message);
 
-        explicit app_state_event_disp_t(QObject *parent = 0);
+        explicit app_state_event_disp_t(QObject *parent = nullptr);
 
     };
 

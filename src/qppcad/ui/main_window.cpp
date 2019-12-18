@@ -77,6 +77,16 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
           this,
           &main_window_t::overview_changed);
 
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::set_left_inline_tool_visibility_signal,
+          this,
+          &main_window_t::inline_tool_left_ctrl_visibility);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::set_bottom_inline_tool_visibility_signal,
+          this,
+          &main_window_t::inline_tool_bottom_ctrl_visibility);
+
   wss_changed_slot();
   cur_ws_changed();
   cur_ws_edit_type_changed();
@@ -1743,15 +1753,28 @@ void main_window_t::recent_files_clicked() {
 
       auto &rec_idx = astate->m_recent_files[idx];
 
-      if (rec_idx.m_native)
-        astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
+      if (rec_idx.m_native) astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
       else {
+
           auto bhv_id = astate->ws_mgr->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
           if (bhv_id) astate->ws_mgr->import_from_file(rec_idx.m_file_name, *bhv_id, true);
           else astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name);
+
         }
 
     }
+
+}
+
+void main_window_t::inline_tool_left_ctrl_visibility(bool visible) {
+
+  m_inline_left_tool_plch->setVisible(visible);
+
+}
+
+void main_window_t::inline_tool_bottom_ctrl_visibility(bool visible) {
+
+  m_inline_bottom_tool_plch->setVisible(visible);
 
 }
 

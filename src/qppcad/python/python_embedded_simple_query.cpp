@@ -97,6 +97,8 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
        .def("is_instance_of", &simple_query::is_instance_of_by_hash)
        .def("is_instance_of", &simple_query::is_instance_of_by_type_name)
 
+       .def("inline_tool_vsb", &simple_query::set_inline_tool_visibility)
+
        .def("get_point_sym_g", &simple_query::get_point_sym_group, py::arg("tolerance") = 0.1f)
        .def("make_point_sym_g", &simple_query::make_psg_view, py::arg("tolerance") = 0.1f)
 
