@@ -12,15 +12,15 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
 
   app_state_t* astate = app_state_t::get_inst();
 
-  py_tedit = new python_text_editor_t(nullptr);
-  script_editor = new QTextEdit;
+  m_py_tedit = new python_text_editor_t(nullptr);
+  m_script_editor = new QTextEdit;
 
-  console_lt = new QHBoxLayout;
+  m_console_lt = new QHBoxLayout;
 
-  setLayout(console_lt);
+  setLayout(m_console_lt);
 
-  console_lt->setContentsMargins(0, 0, 0, 0);
-  console_lt->addWidget(py_tedit);
+  m_console_lt->setContentsMargins(0, 0, 0, 0);
+  m_console_lt->addWidget(m_py_tedit);
 
   setMinimumHeight(200);
   setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
@@ -40,8 +40,8 @@ void python_console_widget_t::font_size_updated_signal_received() {
   int new_font_point_size = astate->m_console_font_size;
 
   QString new_qss = QString("font-size:%1pt;").arg(new_font_point_size);
-  py_tedit->setStyleSheet(new_qss);
-  script_editor->setStyleSheet(new_qss);
+  m_py_tedit->setStyleSheet(new_qss);
+  m_script_editor->setStyleSheet(new_qss);
 
 }
 

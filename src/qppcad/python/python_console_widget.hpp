@@ -39,11 +39,11 @@ namespace qpp {
 
       public:
 
-        QHBoxLayout *console_lt;
+        QHBoxLayout *m_console_lt;
 
-        python_text_editor_t *py_tedit;
-        QTextEdit *script_editor;
-        QSplitter *edt_splitter;
+        python_text_editor_t *m_py_tedit;
+        QTextEdit *m_script_editor;
+        QSplitter *m_edt_splt;
 
         explicit python_console_widget_t(QWidget *parent);
 

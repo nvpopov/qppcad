@@ -1700,7 +1700,7 @@ void main_window_t::act_toggle_console() {
       astate->m_show_console = true;
     } else {
       m_py_console_wdgt->show();
-      m_py_console_wdgt->py_tedit->setFocus();
+      m_py_console_wdgt->m_py_tedit->setFocus();
       astate->m_show_console = false;
     }
 
