@@ -1,4 +1,4 @@
-#ifndef QPPCAD_OBJECT_INSPECTOR_H
+﻿#ifndef QPPCAD_OBJECT_INSPECTOR_H
 #define QPPCAD_OBJECT_INSPECTOR_H
 
 #include <qppcad/core/qppcad.hpp>
@@ -21,22 +21,22 @@ namespace qpp {
 
       public:
 
-        explicit object_inspector_widget_t(QWidget *parent = 0);
+        explicit object_inspector_widget_t(QWidget *parent = nullptr);
         ~object_inspector_widget_t();
 
         void update_ws_items_view_widget();
 
-        QLabel *ws_items_label;
-        QListWidget *ws_items_list;
-        qspoiler_widget_t *ws_items_spoiler;
-        QVBoxLayout *ws_items_spoiler_lt;
+        QLabel *m_ws_items_label;
+        QListWidget *m_ws_items_list;
+        qspoiler_widget_t *m_ws_items_spoiler;
+        QVBoxLayout *m_ws_items_spoiler_lt;
 
-        QPushButton *btn_add_new_ws_item;
-        QPushButton *btn_refresh_oi;
-        QFrame *sep_ws_items_props;
+        QPushButton *m_btn_add_new_ws_item;
+        QPushButton *m_btn_refresh_oi;
+        QFrame *m_sep_ws_items_props;
 
         //property view by ws_item type
-        QWidget *none_item_placeholder;
+        QWidget *m_none_item_placeholder;
         //QWidget *ws_current_view{nullptr};
         std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
 

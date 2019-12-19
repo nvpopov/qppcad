@@ -16,71 +16,71 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   ew_header->setText(tr("OBJECT INSPECTOR"));
   header_frm->setObjectName("obj_insp_header_frame");
 
-  btn_add_new_ws_item = new QPushButton;
-  btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+  m_btn_add_new_ws_item = new QPushButton;
+  m_btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
                                           astate->size_guide.spoiler_button_h()));
-  btn_add_new_ws_item->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+  m_btn_add_new_ws_item->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
                                          astate->size_guide.spoiler_button_icon_h()));
-  btn_add_new_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
-  btn_add_new_ws_item->setFlat(true);
-  btn_add_new_ws_item->setToolTip(tr("Add new ws_item"));
+  m_btn_add_new_ws_item->setIcon(QIcon("://images/outline-add_to_photos-24px.svg"));
+  m_btn_add_new_ws_item->setFlat(true);
+  m_btn_add_new_ws_item->setToolTip(tr("Add new ws_item"));
 
-  btn_refresh_oi = new QPushButton;
-  btn_refresh_oi->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+  m_btn_refresh_oi = new QPushButton;
+  m_btn_refresh_oi->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
                                      astate->size_guide.spoiler_button_h()));
-  btn_refresh_oi->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+  m_btn_refresh_oi->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
                                     astate->size_guide.spoiler_button_icon_h()));
-  btn_refresh_oi->setIcon(QIcon("://images/outline-refresh-24px.svg"));
-  btn_refresh_oi->setFlat(true);
-  btn_refresh_oi->setToolTip(tr("Refresh the object inspector"));
+  m_btn_refresh_oi->setIcon(QIcon("://images/outline-refresh-24px.svg"));
+  m_btn_refresh_oi->setFlat(true);
+  m_btn_refresh_oi->setToolTip(tr("Refresh the object inspector"));
 
-  connect(btn_refresh_oi,
+  connect(m_btn_refresh_oi,
           &QPushButton::clicked,
           this,
           &object_inspector_widget_t::refresh_button_clicked);
 
-  connect(btn_add_new_ws_item,
+  connect(m_btn_add_new_ws_item,
           &QPushButton::clicked,
           this,
           &object_inspector_widget_t::add_new_ws_item_button_clicked);
 
-  header_lt->insertWidget(1, btn_refresh_oi);
-  header_lt->insertWidget(1, btn_add_new_ws_item);
+  header_lt->insertWidget(1, m_btn_refresh_oi);
+  header_lt->insertWidget(1, m_btn_add_new_ws_item);
 
-  ws_items_list = new QListWidget;
-  ws_items_list->setFocusPolicy(Qt::NoFocus);
-  ws_items_list->setContextMenuPolicy(Qt::CustomContextMenu);
-  ws_items_list->setMinimumHeight(astate->size_guide.obj_insp_item_list_max_h() - 10);
+  m_ws_items_list = new QListWidget;
+  m_ws_items_list->setFocusPolicy(Qt::NoFocus);
+  m_ws_items_list->setContextMenuPolicy(Qt::CustomContextMenu);
+  m_ws_items_list->setMinimumHeight(astate->size_guide.obj_insp_item_list_max_h() - 10);
 
-  connect(ws_items_list,
+  connect(m_ws_items_list,
           &QListWidget::customContextMenuRequested,
           this,
           &object_inspector_widget_t::provide_context_menu_for_ws_items);
 
-  ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0,
+  m_ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0,
                                            astate->size_guide.obj_insp_splr_w(), true, 0);
-  ws_items_spoiler->setObjectName("ws_items_spoiler_e");
-  ws_items_spoiler_lt = new QVBoxLayout;
-  ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
-  ws_items_spoiler_lt->setSpacing(0);
+  m_ws_items_spoiler->setObjectName("ws_items_spoiler_e");
+  m_ws_items_spoiler_lt = new QVBoxLayout;
+  m_ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
+  m_ws_items_spoiler_lt->setSpacing(0);
 
-  ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
-  ws_items_spoiler_lt->addWidget(ws_items_list);
-  ws_items_spoiler->main_lt->setContentsMargins(0, 0, 0, 0);
-  ws_items_spoiler->add_content_layout(ws_items_spoiler_lt);
-  ws_items_spoiler->widget_list_lt->setContentsMargins(0, 0, 0, 0);
+  m_ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
+  m_ws_items_spoiler_lt->addWidget(m_ws_items_list);
+  m_ws_items_spoiler->main_lt->setContentsMargins(0, 0, 0, 0);
+  m_ws_items_spoiler->add_content_layout(m_ws_items_spoiler_lt);
+  m_ws_items_spoiler->widget_list_lt->setContentsMargins(0, 0, 0, 0);
 
-  none_item_placeholder = new QWidget;
-  none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_none_item_placeholder = new QWidget;
+  m_none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  sep_ws_items_props = new QFrame;
-  sep_ws_items_props->setProperty("s_class", "separator");
-  sep_ws_items_props->setFrameShape(QFrame::HLine);
+  m_sep_ws_items_props = new QFrame;
+  m_sep_ws_items_props->setProperty("s_class", "separator");
+  m_sep_ws_items_props->setFrameShape(QFrame::HLine);
 
   main_lt->setSpacing(0);
-  main_lt->addWidget(ws_items_spoiler);
-  main_lt->addWidget(sep_ws_items_props);
-  main_lt->addWidget(none_item_placeholder);
+  main_lt->addWidget(m_ws_items_spoiler);
+  main_lt->addWidget(m_sep_ws_items_props);
+  main_lt->addWidget(m_none_item_placeholder);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
@@ -97,7 +97,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::cur_ws_changed);
 
-  connect(ws_items_list,
+  connect(m_ws_items_list,
           &QListWidget::itemSelectionChanged,
           this,
           &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
@@ -107,14 +107,14 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::need_to_update_obj_insp_received);
 
-  connect(ws_items_list,
+  connect(m_ws_items_list,
           &QListWidget::itemDoubleClicked,
           this,
           &object_inspector_widget_t::ws_item_list_double_clicked);
 
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();
-  ws_items_list->clearSelection();
+  m_ws_items_list->clearSelection();
 
 }
 
@@ -145,7 +145,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       if (coiw_ptr) main_lt->removeWidget(coiw_ptr);
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
-      none_item_placeholder->show();
+      m_none_item_placeholder->show();
 
     }
 
@@ -160,7 +160,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       // a dirty hack for preventing object inspectors widgets from being unbounded
       for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
 
-      none_item_placeholder->hide();
+      m_none_item_placeholder->hide();
       main_lt->addWidget(obj_insp_w.get());
       m_cur_obj_insp_widget = obj_insp_w;
       obj_insp_w->show();
@@ -176,20 +176,20 @@ void object_inspector_widget_t::cur_ws_changed() {
 
   astate->log("DEBUG: object_inspector_widget_t::cur_ws_changed");
 
-  ws_items_list->blockSignals(true);
+  m_ws_items_list->blockSignals(true);
 
-  ws_items_list->clear();
-  ws_items_list->clearSelection();
+  m_ws_items_list->clear();
+  m_ws_items_list->clearSelection();
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (cur_ws)
     for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++)
-      ws_items_list->addItem(QString::fromStdString(fmt::format("[{}] {} ",
+      m_ws_items_list->addItem(QString::fromStdString(fmt::format("[{}] {} ",
                              i, cur_ws->m_ws_items[i]->m_name)));
 
   cur_ws_selected_item_changed();
-  ws_items_list->blockSignals(false);
+  m_ws_items_list->blockSignals(false);
 
 }
 
@@ -199,7 +199,7 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
 
   astate->log("DEBUG: obj_insp_widget_t::cur_ws_selected_item_changed");
 
-  ws_items_list->blockSignals(true);
+  m_ws_items_list->blockSignals(true);
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
@@ -211,16 +211,16 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
       auto cur_id = cur_ws->get_sel_idx();
 
       if (cur_id) {
-          ws_items_list->item(*cur_id)->setSelected(true);
-          ws_items_list->scrollToItem(ws_items_list->item(*cur_id));
+          m_ws_items_list->item(*cur_id)->setSelected(true);
+          m_ws_items_list->scrollToItem(m_ws_items_list->item(*cur_id));
         } else {
-          ws_items_list->clearSelection();
+          m_ws_items_list->clearSelection();
         }
 
     }
 
   update_ws_items_view_widget();
-  ws_items_list->blockSignals(false);
+  m_ws_items_list->blockSignals(false);
 
 }
 
@@ -234,13 +234,13 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
 
   if (cur_ws) {
 
-    cur_ws->set_sel_item(size_t(ws_items_list->currentRow()), true);
+    cur_ws->set_sel_item(size_t(m_ws_items_list->currentRow()), true);
 
-    if (ws_items_list->currentRow() != -1) {
+    if (m_ws_items_list->currentRow() != -1) {
 
-        ws_items_list->blockSignals(true);
-        ws_items_list->item(ws_items_list->currentRow())->setSelected(true);
-        ws_items_list->blockSignals(false);
+        m_ws_items_list->blockSignals(true);
+        m_ws_items_list->item(m_ws_items_list->currentRow())->setSelected(true);
+        m_ws_items_list->blockSignals(false);
 
       }
 
@@ -312,7 +312,7 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
 
   if (total_ext_editors <= 1) return;
 
-  QPoint item = ws_items_list->mapToGlobal(pos);
+  QPoint item = m_ws_items_list->mapToGlobal(pos);
   QMenu submenu;
   for (auto &elem : ext_acts) submenu.addAction(elem);
 
