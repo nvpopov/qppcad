@@ -343,6 +343,7 @@ qpp--cad--object_inspector_widget_t QTabBar QToolButton {
 qpp--cad--qspoiler_widget_t {
  margin-bottom: 2px;
  margin-left: 2px;
+ background: rgb(82, 82, 82);
 }
 
 qpp--cad--object_inspector_widget_t QPushButton {
