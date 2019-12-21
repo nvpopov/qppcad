@@ -39,7 +39,9 @@ bool python_manager_t::execute(std::string command) {
 
   } catch (py::error_already_set &err) {
 
-    m_output_buffer+= err.what();
+    std::string tmp_what(err.what());
+    replace_string_inplace(tmp_what, "\n\n", "\n");
+    m_output_buffer+= tmp_what;
     astate->make_viewport_dirty();
     ret_status = true;
 

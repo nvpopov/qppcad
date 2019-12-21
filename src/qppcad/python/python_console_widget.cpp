@@ -234,17 +234,21 @@ void python_text_editor_t::last_command_reached() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (m_cur_cmd == astate->py_mgr->m_commands.size()) {
+
       setText(toPlainText().left(m_curs_pos));
       QTextCursor cursor(textCursor());
       cursor.movePosition(QTextCursor::End);
       setTextCursor(cursor);
+
     } else {
+
       setText(toPlainText().left(m_curs_pos));
       QTextCursor cursor(textCursor());
       cursor.movePosition(QTextCursor::End);
       cursor.insertText(astate->py_mgr->m_commands.at(m_cur_cmd));
       cursor.movePosition(QTextCursor::End);
       setTextCursor(cursor);
+
     }
 
 }
@@ -289,29 +293,39 @@ void python_text_editor_t::run_cmd() {
       line += text.trimmed();
 
       if (line.endsWith(':')) {
+
           indent += 2;
           m_line_data.append(text + "\n");
           append(QLatin1String(""));
+
         } else {
+
           if (indent && !m_line_data.isEmpty()) {
+
               m_line_data.append(text + "\n");
               append(QLatin1String(""));
+
             } else {
+
               app_state_t* astate = app_state_t::get_inst();
               QString proc_command = text.replace(".  .  .", "    ");
               bool result = astate->py_mgr->execute(proc_command.toStdString());
               append(QString::fromStdString(astate->py_mgr->m_output_buffer));
+
             }
+
         }
 
       for (int i = 0; i < indent; ++i)
         indentString += QLatin1String(" ");
 
     } else {
+
       app_state_t* astate = app_state_t::get_inst();
       bool result = astate->py_mgr->execute(m_line_data.toStdString());
       append(QString::fromStdString(astate->py_mgr->m_output_buffer));
       m_line_data.clear();
+
     }
 
   m_indent = indent;
