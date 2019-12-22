@@ -24,7 +24,7 @@ namespace qpp {
         QFrame *header_frm;
         QHBoxLayout *header_lt;
 
-        explicit qembed_window_t(QWidget *parent = 0);
+        explicit qembed_window_t(QWidget *parent = nullptr);
 
     };
 

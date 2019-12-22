@@ -59,6 +59,18 @@ int size_guide_t::tool_panel_icon_size() {
   return 26;
 }
 
+int size_guide_t::inline_tool_vertical_max_width() {
+  return size_guide_t::obj_insp_w();
+}
+
+int size_guide_t::inline_tool_horizontal_max_height() {
+  return 300;
+}
+
+int size_guide_t::inline_tool_horizontal_min_height() {
+  return 220;
+}
+
 int size_guide_t::obj_insp_w() {
   return 376;
 }

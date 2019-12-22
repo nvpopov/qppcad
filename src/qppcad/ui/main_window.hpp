@@ -10,6 +10,7 @@
 #include <qppcad/render/camera.hpp>
 #include <qppcad/ui/ws_tabbar.hpp>
 #include <qppcad/ui/log_widget.hpp>
+#include <qppcad/ui/qinline_tool_window.hpp>
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -100,8 +101,8 @@ namespace qpp {
 
         QWidget *m_ws_viewer_plch;
         QWidget *m_obj_inst_plch;
-        qembed_window_t *m_inline_left_tool_plch;
-        qembed_window_t *m_inline_bottom_tool_plch;
+        qinline_tool_window_t *m_inline_left_tool_plch;
+        qinline_tool_window_t *m_inline_bottom_tool_plch;
 
         ws_item_extended_editor_compositor_t *m_ext_edtr_compositor;
 

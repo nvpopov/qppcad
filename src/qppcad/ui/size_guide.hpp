@@ -58,6 +58,10 @@ namespace qpp {
         int tool_panel_checkable_ctrl_w();
         int tool_panel_icon_size();
 
+        int inline_tool_vertical_max_width();
+        int inline_tool_horizontal_max_height();
+        int inline_tool_horizontal_min_height();
+
         int obj_insp_w();
         int obj_insp_splr_w();
         int obj_insp_table_w();

@@ -709,11 +709,13 @@ void main_window_t::init_widgets() {
   m_py_console_wdgt = new python_console_widget_t(nullptr);
 
   m_ext_edtr_compositor = new ws_item_extended_editor_compositor_t(nullptr);
-  m_inline_left_tool_plch = new qembed_window_t(nullptr);
+  m_inline_left_tool_plch = new qinline_tool_window_t(nullptr);
   m_inline_left_tool_plch->setVisible(false);
+  m_inline_left_tool_plch->mark_as_vertical();
 
-  m_inline_bottom_tool_plch = new qembed_window_t(nullptr);
+  m_inline_bottom_tool_plch = new qinline_tool_window_t(nullptr);
   m_inline_bottom_tool_plch->setVisible(false);
+  m_inline_bottom_tool_plch->mark_as_horizontal();
 
 }
 
@@ -768,6 +770,7 @@ void main_window_t::init_layouts() {
   m_layout_ws_viewer_obj_insp->addWidget(m_splitter_ws_viewer_py_console_log);
   m_layout_ws_viewer_obj_insp->addWidget(m_obj_insp_wdgt);
   m_layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
+  //m_layout_ws_viewer_obj_insp->setSizes(QList<int>({1, 6, 3}));
   m_layout_ws_viewer_obj_insp->setCollapsible(0, false);
   m_layout_ws_viewer_obj_insp->setCollapsible(1, false);
   m_layout_ws_viewer_obj_insp->setCollapsible(2, false);
