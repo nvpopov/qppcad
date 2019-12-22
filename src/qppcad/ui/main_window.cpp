@@ -761,13 +761,16 @@ void main_window_t::init_layouts() {
   m_splitter_ws_viewer_py_console_log->setCollapsible(0, false);
   m_splitter_ws_viewer_py_console_log->setCollapsible(1, false);
   m_splitter_ws_viewer_py_console_log->setCollapsible(2, false);
+  //m_splitter_ws_viewer_py_console_log->setCollapsible(3, false);
 
   m_layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   m_layout_ws_viewer_obj_insp->addWidget(m_inline_left_tool_plch);
   m_layout_ws_viewer_obj_insp->addWidget(m_splitter_ws_viewer_py_console_log);
   m_layout_ws_viewer_obj_insp->addWidget(m_obj_insp_wdgt);
   m_layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
+  m_layout_ws_viewer_obj_insp->setCollapsible(0, false);
   m_layout_ws_viewer_obj_insp->setCollapsible(1, false);
+  m_layout_ws_viewer_obj_insp->setCollapsible(2, false);
 
   m_layout_ws_viewer_obj_insp->setHandleWidth(0);
   m_main_lt->addWidget(m_layout_ws_viewer_obj_insp);
