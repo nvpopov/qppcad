@@ -31,5 +31,6 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
 
   main_lt_zero_lvl->addWidget(header_frm);
   main_lt_zero_lvl->addLayout(main_lt);
+  main_lt_zero_lvl->setSpacing(1);
 
 }
