@@ -312,6 +312,14 @@ void ws_item_behaviour_manager_t::exec_tool(ws_item_t* item,
 
 }
 
+ws_item_tool_type_e ws_item_behaviour_manager_t::get_tool_type(size_t tool_hash) {
+
+  auto tinfo = m_tools_info.find(tool_hash);
+  if (tinfo == m_tools_info.end()) return ws_item_tool_type_e::ws_item_tool_invalid;
+  return tinfo->second.m_tool_type;
+
+}
+
 void ws_item_behaviour_manager_t::exec_tool_by_name(std::string tool_name,
                                                     ws_item_t *item,
                                                     uint32_t _error_ctx) {

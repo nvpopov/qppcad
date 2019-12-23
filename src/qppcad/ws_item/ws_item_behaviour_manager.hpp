@@ -28,8 +28,11 @@ namespace qpp {
 
     enum ws_item_tool_type_e {
 
+      ws_item_tool_invalid,
       ws_item_tool_modal,
-      ws_item_tool_inline
+      ws_item_tool_inline_horizontal,
+      ws_item_tool_inline_vertical,
+      ws_item_tool_popup
 
     };
 
@@ -65,6 +68,7 @@ namespace qpp {
     struct ws_item_tool_t {
 
       virtual void exec(ws_item_t *item, uint32_t _error_ctx) = 0;
+      virtual QWidget* construct_inline_tool() {return nullptr;}
 
     };
 
@@ -83,6 +87,7 @@ namespace qpp {
       std::string m_full_name;
       size_t m_group_hash;
       size_t m_accepted_type;
+      ws_item_tool_type_e m_tool_type{ws_item_tool_type_e::ws_item_tool_modal};
       bool m_item_required{true};
       std::function<std::shared_ptr<ws_item_tool_t>() > m_fabric;
 
@@ -397,6 +402,7 @@ namespace qpp {
        * @param _error_ctx
        */
       void exec_tool(ws_item_t* item, size_t tool_hash, uint32_t _error_ctx = error_ctx_mbox);
+      ws_item_tool_type_e get_tool_type(size_t tool_hash);
 
       /**
        * @brief exec_tool_by_name

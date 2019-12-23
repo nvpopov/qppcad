@@ -159,13 +159,13 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setFixedWidth(200);
+  setFixedWidth(250);
   setWindowTitle(tr("Supercell generation"));
 
   dialog_layout = new QVBoxLayout;
   setLayout(dialog_layout);
 
-  gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false);
+  gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false, 6, 220);
   gb_rep_par_layout = new QFormLayout;
   gb_rep_par->add_content_layout(gb_rep_par_layout);
 

@@ -1971,8 +1971,25 @@ void main_window_t::act_bhv_tools_menus_clicked() {
   std::shared_ptr<ws_item_t> cur_it{nullptr};
   if (cur_ws) cur_it = cur_ws->get_sel_sp();
 
-  if (it_t != bhv_mgr->m_tools_info.end())
-    bhv_mgr->exec_tool(cur_it.get(), t_hash);
+  if (it_t != bhv_mgr->m_tools_info.end()) {
+
+      switch (it_t->second.m_tool_type) {
+
+        case ws_item_tool_invalid:
+          break;
+
+        case ws_item_tool_modal:
+          bhv_mgr->exec_tool(cur_it.get(), t_hash);
+          break;
+
+        case ws_item_tool_inline_vertical:
+          break;
+
+        case ws_item_tool_inline_horizontal:
+          break;
+        }
+
+    }
 
 }
 

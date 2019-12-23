@@ -26,7 +26,7 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
   //ew_header->setProperty("s_class", "bold_label");
 
   header_frm->setLayout(header_lt);
-  header_lt->setContentsMargins(9, 1, 4, 1);
+  header_lt->setContentsMargins(9, 3, 4, 3);
   header_lt->addWidget(ew_header);
 
   main_lt_zero_lvl->addWidget(header_frm);
