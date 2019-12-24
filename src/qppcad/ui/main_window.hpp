@@ -274,7 +274,7 @@ namespace qpp {
          */
         void build_bhv_menus_and_actions();
         void build_bhv_tools_menus();
-        void build_bhv_toolpanel();
+        void build_bhv_tool_panel();
         void act_bhv_tools_menus_clicked();
         void control_bhv_tools_menus_activity();
         void act_bhv_import_to_cur_ws();

@@ -88,6 +88,7 @@ namespace qpp {
       size_t m_group_hash;
       size_t m_accepted_type;
       ws_item_tool_type_e m_tool_type{ws_item_tool_type_e::ws_item_tool_modal};
+      bool m_show_in_menu{true};
       bool m_item_required{true};
       std::function<std::shared_ptr<ws_item_tool_t>() > m_fabric;
 

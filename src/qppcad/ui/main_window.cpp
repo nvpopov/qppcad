@@ -39,7 +39,7 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   control_bhv_tools_menus_activity();
   init_widgets();
   init_layouts();
-  build_bhv_toolpanel();
+  build_bhv_tool_panel();
   init_base_shortcuts();
 
   connect(astate->astate_evd,
@@ -1901,7 +1901,7 @@ void main_window_t::build_bhv_tools_menus() {
 
 
   for (auto &ff : astate->ws_mgr->m_bhv_mgr->m_tools_info)
-    tool_sort.push_back({ff.first, ff.second.m_full_name});
+    if (ff.second.m_show_in_menu) tool_sort.push_back({ff.first, ff.second.m_full_name});
 
   std::sort(std::begin(tool_sort),
             std::end(tool_sort),
@@ -1938,7 +1938,7 @@ void main_window_t::build_bhv_tools_menus() {
 
 }
 
-void main_window_t::build_bhv_toolpanel() {
+void main_window_t::build_bhv_tool_panel() {
 
   app_state_t *astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
