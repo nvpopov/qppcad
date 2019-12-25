@@ -222,7 +222,7 @@ void workspace_t::render() {
 
       if (astate->m_show_axis) { // Draw axis
 
-          vector3<float> vScrTW = astate->camera->unproject(-0.95f, -0.90f);
+          vector3<float> vScrTW = astate->camera->unproject(-0.92f, -0.90f);
           float axis_magn = astate->camera->m_cur_proj == cam_proj_t::proj_persp ?
                               0.07f *astate->camera->m_stored_dist :
                               m_camera->m_ortho_scale * 0.1f;

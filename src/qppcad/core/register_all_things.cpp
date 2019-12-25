@@ -356,6 +356,7 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
   size_t hash_t_colorize = bhv_mgr->reg_tool_grp("Colorize");
   size_t hash_t_tr = bhv_mgr->reg_tool_grp("Modify geometry");
   size_t hash_t_generic = bhv_mgr->reg_tool_grp("Generic tools");
+  size_t hash_t_selection = bhv_mgr->reg_tool_grp("Selection");
 
   registration_helper_t::reg_ws_item_tool<supercell_tool_t, geom_view_t>(
         "Supercell", hash_t_generator, bhv_mgr);
