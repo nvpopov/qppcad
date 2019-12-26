@@ -7,17 +7,17 @@ using namespace qpp::cad;
 
 void sel_vis_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
-  app_state_t *astate = app_state_t::get_inst();
+  //app_state_t *astate = app_state_t::get_inst();
 
   if (!item) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+      QMessageBox::warning(nullptr, QObject::tr("Select by visibility"),
                            QObject::tr("ws_item == nullptr"));
       return;
     }
 
   auto al = item->cast_as<geom_view_t>();
   if (!al) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+      QMessageBox::warning(nullptr, QObject::tr("Select by visibility"),
                            QObject::tr("ws_item.cast<geom_view_t>() == nullptr"));
       return;
     }

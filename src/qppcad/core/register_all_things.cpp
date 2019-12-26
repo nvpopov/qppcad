@@ -54,7 +54,7 @@
 #include <qppcad/tools/shift_start_of_cell/shift_start_of_cell.hpp>
 
 #include <qppcad/tools/sel_vis/sel_vis.hpp>
-
+#include <qppcad/tools/sel_parity/sel_parity.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
 
@@ -401,5 +401,8 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
 
   registration_helper_t::reg_ws_item_tool<sel_vis_tool_t, geom_view_t>(
         "Select visible atoms", hash_t_selection, bhv_mgr, true);
+
+  registration_helper_t::reg_ws_item_tool<sel_parity_tool_t, geom_view_t>(
+        "Select atoms by parity", hash_t_selection, bhv_mgr, true);
 
 }
