@@ -66,7 +66,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
    "ov",//12
    "atom_r", // 13
    "tag" //14
-  },
+        },
 
   {type_string, //0
    type_real, //1
@@ -83,7 +83,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
    type_bool, // 12
    type_real, // 13
    type_string //14
-   }
+        }
         );
 
   m_geom->DIM = 0;
@@ -227,9 +227,9 @@ void geom_view_t::render() {
 
           m_tws_tr->apply_visitor(
                 [astate, _pos](tws_node_t<float> *in_node, int deep_level) {
-                astate->dp->render_aabb(clr_maroon,
-                                        in_node->m_bb.min+_pos,
-                                        in_node->m_bb.max+_pos);
+              astate->dp->render_aabb(clr_maroon,
+                                      in_node->m_bb.min+_pos,
+                                      in_node->m_bb.max+_pos);
             });
 
           astate->dp->end_render_aabb();
@@ -506,9 +506,9 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
                        m_geom->atom_name(atom_id),
                        atom_id,
                        m_geom->pos(atom_id)[0],
-                       m_geom->pos(atom_id)[1],
-                       m_geom->pos(atom_id)[2],
-                       atom_idx == index::D(m_geom->DIM).all(0) ? "" : "*");
+              m_geom->pos(atom_id)[1],
+              m_geom->pos(atom_id)[2],
+              atom_idx == index::D(m_geom->DIM).all(0) ? "" : "*");
         }
       astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
       return;
@@ -668,11 +668,11 @@ void geom_view_t::sel_by_box(vector3<float> start_pos, vector3<float> end_pos) {
   */
   for (size_t i = 0; i < m_geom->nat(); i++) {
 
-     aabb_3d_t<float> aabb{start_pos, end_pos};
-     auto is_inside_aabb = aabb.test_point(m_geom->pos(i));
-//     app_state_t::get_inst()->tlog("@DEBUG gv::sel_by_box ap={} sp={}, ep={}, is_inside={}",
-//                                   m_geom->pos(i), start_pos, end_pos, is_inside_aabb);
-     if (is_inside_aabb) sel_atom(i);
+      aabb_3d_t<float> aabb{start_pos, end_pos};
+      auto is_inside_aabb = aabb.test_point(m_geom->pos(i));
+      //     app_state_t::get_inst()->tlog("@DEBUG gv::sel_by_box ap={} sp={}, ep={}, is_inside={}",
+      //                                   m_geom->pos(i), start_pos, end_pos, is_inside_aabb);
+      if (is_inside_aabb) sel_atom(i);
 
     }
 
@@ -687,7 +687,7 @@ void geom_view_t::sq_sel_by_box(const float box_scale = 1.1) {
   auto pos1 = m_geom->pos(idx1->m_atm, idx1->m_idx);
   auto pos2 = m_geom->pos(idx2->m_atm, idx2->m_idx);
 
-//  app_state_t::get_inst()->tlog("@DEBUG gv::sq_sel_by_box {} {}", pos1, pos2);
+  //  app_state_t::get_inst()->tlog("@DEBUG gv::sq_sel_by_box {} {}", pos1, pos2);
 
   vector3<float> center = (pos1 + pos2) * 0.5f;
   vector3<float> len{0};
@@ -963,8 +963,8 @@ vector3<float> geom_view_t::get_xcolor(const size_t atm) {
     }
 
   return vector3<float>{m_geom->xfield<float>(xgeom_ccr, atm),
-                        m_geom->xfield<float>(xgeom_ccg, atm),
-                        m_geom->xfield<float>(xgeom_ccb, atm)};
+          m_geom->xfield<float>(xgeom_ccg, atm),
+          m_geom->xfield<float>(xgeom_ccb, atm)};
 
 }
 
@@ -996,7 +996,7 @@ void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
 
   auto field_min_max = get_min_max_xfield(xfield_id);
 
-//  bool has_static_anim{false};
+  //  bool has_static_anim{false};
   opt<size_t> static_anim_id;
 
   for (size_t i = 0; i < m_geom->nat(); i++) {
@@ -1244,11 +1244,62 @@ std::string geom_view_t::compose_type_descr() {
 }
 
 std::string geom_view_t::compose_overview() {
+
+  if (m_atom_idx_sel.size() < 15000 && !m_atom_idx_sel.empty()) {
+
+      std::map<size_t, size_t> lkp_sel_types;
+      bool succes{true};
+      size_t tot_sel_types{0};
+
+      for (auto const &i : m_atom_idx_sel) {
+
+          auto it = lkp_sel_types.find(m_geom->type_of_atom(i.m_atm));
+          if (it == lkp_sel_types.end()) {
+
+              tot_sel_types++;
+              if (tot_sel_types > 6) {
+                  succes = false;
+                  break;
+                }
+              lkp_sel_types[m_geom->type_of_atom(i.m_atm)]++;
+
+            } else {
+              it->second++;
+            }
+
+        }
+
+      if (succes) {
+
+          std::string selection;
+          size_t elemc{0};
+
+          for (auto const &elem : lkp_sel_types) {
+
+              elemc++;
+
+              selection += fmt::format("{}:{}{}",
+                                       m_geom->atom_of_type(elem.first),
+                                       elem.second,
+                                       elemc == lkp_sel_types.size() ? "" : ", ");
+
+            }
+
+          return fmt::format("[atoms : {}, types : {}, selected : [{}]]",
+                             m_geom->nat(),
+                             m_geom->n_types(),
+                             selection);
+
+        }
+
+    }
+
   return fmt::format("[atoms : {}, types : {}, selected : {}]",
                      m_geom->nat(),
                      m_geom->n_types(),
                      m_atom_idx_sel.size()
                      );
+
 }
 
 void geom_view_t::update (float delta_time) {
@@ -1268,9 +1319,9 @@ void geom_view_t::update (float delta_time) {
     }
 
   if (m_need_to_update_overview && m_selected && m_parent_ws) {
-    m_parent_ws->update_overview(compose_overview());
-    m_need_to_update_overview = false;
-  }
+      m_parent_ws->update_overview(compose_overview());
+      m_need_to_update_overview = false;
+    }
 
 }
 
@@ -1574,10 +1625,10 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
                         m_labels->m_inplace_offset[0],
-                        data);
+      data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
                         m_labels->m_inplace_offset[1],
-                        data);
+      data);
 
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
@@ -1634,8 +1685,8 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
           for (uint8_t i = 0; i < m_geom->DIM; i++) {
               vector3<float> cellv(val_itr.value()[i][0].get<float>(),
-                                   val_itr.value()[i][1].get<float>(),
-                                   val_itr.value()[i][2].get<float>());
+                  val_itr.value()[i][1].get<float>(),
+                  val_itr.value()[i][2].get<float>());
               m_geom->cell.v[i] = cellv;
             }
         } else {
