@@ -1245,7 +1245,9 @@ std::string geom_view_t::compose_type_descr() {
 
 std::string geom_view_t::compose_overview() {
 
-  if (m_atom_idx_sel.size() < 15000 && !m_atom_idx_sel.empty()) {
+  app_state_t *astate = app_state_t::get_inst();
+
+  if (m_atom_idx_sel.size() < astate->m_gv_overview_max_atoms && !m_atom_idx_sel.empty()) {
 
       std::map<size_t, size_t> lkp_sel_types;
       bool succes{true};
@@ -1257,7 +1259,7 @@ std::string geom_view_t::compose_overview() {
           if (it == lkp_sel_types.end()) {
 
               tot_sel_types++;
-              if (tot_sel_types > 6) {
+              if (tot_sel_types > astate->m_gv_overview_max_sel_types) {
                   succes = false;
                   break;
                 }
