@@ -25,16 +25,16 @@ namespace qpp {
 
       public:
 
-        QSpinBox *sp_rep_a;
-        QSpinBox *sp_rep_b;
-        QSpinBox *sp_rep_c;
+        QSpinBox *m_sp_rep_a;
+        QSpinBox *m_sp_rep_b;
+        QSpinBox *m_sp_rep_c;
 
-        qspoiler_widget_t *gb_rep_par;
-        QFormLayout *gb_rep_par_layout;
+        qspoiler_widget_t *m_gb_rep_par;
+        QFormLayout *m_gb_rep_par_lt;
 
-        QVBoxLayout *dialog_layout;
+        QVBoxLayout *m_dialog_lt;
 
-        QDialogButtonBox *dialog_bb;
+        QDialogButtonBox *m_dialog_bb;
 
         int get_replication_coeff(int dim_num);
         super_cell_widget_t();

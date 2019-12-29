@@ -144,11 +144,11 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
 
   switch (dim_num) {
     case 0:
-      return sp_rep_a->value();
+      return m_sp_rep_a->value();
     case 1:
-      return sp_rep_b->value();
+      return m_sp_rep_b->value();
     case 2:
-      return sp_rep_c->value();
+      return m_sp_rep_c->value();
     default:
       return 0;
     }
@@ -162,12 +162,12 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
   setFixedWidth(250);
   setWindowTitle(tr("Supercell generation"));
 
-  dialog_layout = new QVBoxLayout;
-  setLayout(dialog_layout);
+  m_dialog_lt = new QVBoxLayout;
+  setLayout(m_dialog_lt);
 
-  gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false, 6, 220);
-  gb_rep_par_layout = new QFormLayout;
-  gb_rep_par->add_content_layout(gb_rep_par_layout);
+  m_gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false, 6, 220);
+  m_gb_rep_par_lt = new QFormLayout;
+  m_gb_rep_par->add_content_layout(m_gb_rep_par_lt);
 
   auto make_spinbox = [](){
 
@@ -181,31 +181,31 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
 
     };
 
-  sp_rep_a = make_spinbox();
-  sp_rep_b = make_spinbox();
-  sp_rep_c = make_spinbox();
+  m_sp_rep_a = make_spinbox();
+  m_sp_rep_b = make_spinbox();
+  m_sp_rep_c = make_spinbox();
 
-  gb_rep_par_layout->addRow(tr("a"), sp_rep_a);
-  gb_rep_par_layout->addRow(tr("b"), sp_rep_b);
-  gb_rep_par_layout->addRow(tr("c"), sp_rep_c);
+  m_gb_rep_par_lt->addRow(tr("a"), m_sp_rep_a);
+  m_gb_rep_par_lt->addRow(tr("b"), m_sp_rep_b);
+  m_gb_rep_par_lt->addRow(tr("c"), m_sp_rep_c);
 
-  qt_hlp::resize_form_lt_lbls(gb_rep_par_layout, 70);
+  qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, 70);
 
-  dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  for (auto btn : dialog_bb->buttons())
+  m_dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  for (auto btn : m_dialog_bb->buttons())
     btn->setFixedWidth(astate->size_guide.common_button_fixed_w());
 
-  connect(dialog_bb,
+  connect(m_dialog_bb,
           &QDialogButtonBox::accepted,
           this,
           &super_cell_widget_t::accept);
 
-  connect(dialog_bb,
+  connect(m_dialog_bb,
           &QDialogButtonBox::rejected,
           this,
           &super_cell_widget_t::reject);
 
-  dialog_layout->addWidget(gb_rep_par);
-  dialog_layout->addWidget(dialog_bb);
+  m_dialog_lt->addWidget(m_gb_rep_par);
+  m_dialog_lt->addWidget(m_dialog_bb);
 
 }
