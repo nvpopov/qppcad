@@ -57,13 +57,13 @@ double axial_scale_widget_t::get_scale_value(int dim_id) {
 
   switch (dim_id) {
     case 0:
-      return sb_sc_a->value();
+      return m_sb_sc_a->value();
       break;
     case 1:
-      return sb_sc_b->value();
+      return m_sb_sc_b->value();
       break;
     case 2:
-      return sb_sc_c->value();
+      return m_sb_sc_c->value();
       break;
     default:
       return 1.0;
@@ -75,12 +75,12 @@ double axial_scale_widget_t::get_scale_value(int dim_id) {
 axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
 
   setWindowTitle("Axial scale");
-  dialog_layout = new QVBoxLayout;
-  setLayout(dialog_layout);
+  m_dialog_lt = new QVBoxLayout;
+  setLayout(m_dialog_lt);
 
-  gb_sc_par = new QGroupBox(tr("Parameters of axial scaling"));
-  gb_sc_par_layout = new QFormLayout;
-  gb_sc_par->setLayout(gb_sc_par_layout);
+  m_gb_sc_par = new QGroupBox(tr("Parameters of axial scaling"));
+  m_gb_sc_par_lt = new QFormLayout;
+  m_gb_sc_par->setLayout(m_gb_sc_par_lt);
 
   auto make_spinbox = [](){
       auto ret = new QDoubleSpinBox;
@@ -95,27 +95,27 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
       return ret;
     };
 
-  sb_sc_a = make_spinbox();
-  sb_sc_b = make_spinbox();
-  sb_sc_c = make_spinbox();
+  m_sb_sc_a = make_spinbox();
+  m_sb_sc_b = make_spinbox();
+  m_sb_sc_c = make_spinbox();
 
-  gb_sc_par_layout->addRow(tr("Scale a-axis"), sb_sc_a);
-  gb_sc_par_layout->addRow(tr("Scale b-axis"), sb_sc_b);
-  gb_sc_par_layout->addRow(tr("Scale c-axis"), sb_sc_c);
+  m_gb_sc_par_lt->addRow(tr("Scale a-axis"), m_sb_sc_a);
+  m_gb_sc_par_lt->addRow(tr("Scale b-axis"), m_sb_sc_b);
+  m_gb_sc_par_lt->addRow(tr("Scale c-axis"), m_sb_sc_c);
 
-  dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  m_dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
-  connect(dialog_bb,
+  connect(m_dialog_bb,
           &QDialogButtonBox::accepted,
           this,
           &axial_scale_widget_t::accept);
 
-  connect(dialog_bb,
+  connect(m_dialog_bb,
           &QDialogButtonBox::rejected,
           this,
           &axial_scale_widget_t::reject);
 
-  dialog_layout->addWidget(gb_sc_par);
-  dialog_layout->addWidget(dialog_bb);
+  m_dialog_lt->addWidget(m_gb_sc_par);
+  m_dialog_lt->addWidget(m_dialog_bb);
 
 }
