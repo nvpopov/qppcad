@@ -1,6 +1,7 @@
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/core/app_state.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -78,9 +79,9 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
   m_dialog_lt = new QVBoxLayout;
   setLayout(m_dialog_lt);
 
-  m_gb_sc_par = new QGroupBox(tr("Parameters of axial scaling"));
+  m_gb_sc_par = new qspoiler_widget_t(tr("Parameters of axial scaling"));
   m_gb_sc_par_lt = new QFormLayout;
-  m_gb_sc_par->setLayout(m_gb_sc_par_lt);
+  m_gb_sc_par->add_content_layout(m_gb_sc_par_lt);
 
   auto make_spinbox = [](){
       auto ret = new QDoubleSpinBox;
@@ -103,6 +104,8 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
   m_gb_sc_par_lt->addRow(tr("Scale b-axis"), m_sb_sc_b);
   m_gb_sc_par_lt->addRow(tr("Scale c-axis"), m_sb_sc_c);
 
+  qt_hlp::resize_form_lt_lbls(m_gb_sc_par_lt, 130);
+
   m_dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
   connect(m_dialog_bb,
@@ -117,5 +120,6 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
 
   m_dialog_lt->addWidget(m_gb_sc_par);
   m_dialog_lt->addWidget(m_dialog_bb);
+  m_dialog_lt->addStretch(1);
 
 }

@@ -35,7 +35,7 @@ namespace qpp {
         QDoubleSpinBox *m_sb_sc_a;
         QDoubleSpinBox *m_sb_sc_b;
         QDoubleSpinBox *m_sb_sc_c;
-        QGroupBox *m_gb_sc_par;
+        qspoiler_widget_t *m_gb_sc_par;
         QFormLayout *m_gb_sc_par_lt;
         QVBoxLayout *m_dialog_lt;
         QDialogButtonBox *m_dialog_bb;
