@@ -57,33 +57,44 @@ void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,
 double axial_scale_widget_t::get_scale_value(int dim_id) {
 
   switch (dim_id) {
+
     case 0:
       return m_sb_sc_a->value();
       break;
+
     case 1:
       return m_sb_sc_b->value();
       break;
+
     case 2:
       return m_sb_sc_c->value();
       break;
+
     default:
       return 1.0;
       break;
+
     }
 
 }
 
 axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   setWindowTitle("Axial scale");
   m_dialog_lt = new QVBoxLayout;
   setLayout(m_dialog_lt);
 
-  m_gb_sc_par = new qspoiler_widget_t(tr("Parameters of axial scaling"));
+  m_gb_sc_par = new qspoiler_widget_t(tr("Parameters of axial scaling"), nullptr, false, 6, 300);
   m_gb_sc_par_lt = new QFormLayout;
   m_gb_sc_par->add_content_layout(m_gb_sc_par_lt);
 
-  auto make_spinbox = [](){
+  setFixedWidth(320);
+  setFixedHeight(212);
+
+  auto make_spinbox = [astate]() {
+
       auto ret = new QDoubleSpinBox;
       ret->setMinimum(0.001);
       ret->setMaximum(5.00);
@@ -93,7 +104,9 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
       ret->setAlignment(Qt::AlignCenter);
       ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
       ret->setLocale(QLocale::C);
+      ret->setFixedWidth(astate->size_guide.obj_insp_list_wdgt_h());
       return ret;
+
     };
 
   m_sb_sc_a = make_spinbox();
@@ -119,7 +132,7 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
           &axial_scale_widget_t::reject);
 
   m_dialog_lt->addWidget(m_gb_sc_par);
-  m_dialog_lt->addWidget(m_dialog_bb);
   m_dialog_lt->addStretch(1);
+  m_dialog_lt->addWidget(m_dialog_bb);
 
 }
