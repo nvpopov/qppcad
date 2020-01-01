@@ -387,9 +387,10 @@ namespace qpp {
        * @return
        */
       size_t reg_tool(std::string _full_name,
-                      size_t _g_hash,
-                      size_t _t_hash,
+                      size_t grgp_hash,
+                      size_t type_hash,
                       bool _itm_req,
+                      ws_item_tool_type_e tool_type,
                       std::function<std::shared_ptr<ws_item_tool_t>() > _fabric);
 
       size_t reg_sflow_grp(std::string group_name);

@@ -140,6 +140,12 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
 }
 
+QWidget *supercell_tool_t::construct_inline_tool() {
+
+  return nullptr;
+
+}
+
 int super_cell_widget_t::get_replication_coeff(int dim_num) {
 
   switch (dim_num) {

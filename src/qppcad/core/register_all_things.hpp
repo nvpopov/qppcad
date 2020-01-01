@@ -68,6 +68,7 @@ namespace qpp {
                             _g_hash,
                             U::get_type_static(),
                             _item_required,
+                            tool_type,
                             [](){return std::make_shared<T>();});
 
         }

@@ -50,6 +50,8 @@ namespace qpp {
                              const int a_steps,
                              const int b_steps,
                              const int c_steps);
+        QWidget *construct_inline_tool() override;
+
     };
 
   } // namespace qpp::cad

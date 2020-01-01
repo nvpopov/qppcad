@@ -234,16 +234,19 @@ size_t ws_item_behaviour_manager_t::reg_tool_grp(std::string _full_name) {
 
 size_t ws_item_behaviour_manager_t::reg_tool(
     std::string _full_name,
-    size_t _g_hash,
-    size_t _t_hash,
-    bool _itm_req, std::function<std::shared_ptr<ws_item_tool_t> ()> _fabric) {
+    size_t grgp_hash,
+    size_t type_hash,
+    bool _itm_req,
+    ws_item_tool_type_e tool_type,
+    std::function<std::shared_ptr<ws_item_tool_t>() > _fabric) {
 
   app_state_t *astate = app_state_t::get_inst();
 
   ws_item_tool_info_t tinfo;
   tinfo.m_full_name = _full_name;
-  tinfo.m_accepted_type = _t_hash;
-  tinfo.m_group_hash = _g_hash;
+  tinfo.m_accepted_type = type_hash;
+  tinfo.m_group_hash = grgp_hash;
+  tinfo.m_tool_type = tool_type;
   tinfo.m_item_required = _itm_req;
   tinfo.m_fabric = _fabric;
 
