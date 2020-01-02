@@ -4,6 +4,7 @@
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ui/qspoiler_widget.hpp>
+#include <qppcad/ui/ws_item_inline_tool_widget.hpp>
 #include <QWidget>
 #include <QDialog>
 #include <QSpinBox>
@@ -17,7 +18,7 @@ namespace qpp {
 
   namespace cad {
 
-    class super_cell_widget_t : public QWidget {
+    class super_cell_widget_t : public ws_item_inline_tool_widget_t {
 
         Q_OBJECT
 
@@ -35,7 +36,10 @@ namespace qpp {
         QVBoxLayout *m_dialog_lt;
 
         int get_replication_coeff(int dim_num);
-        super_cell_widget_t();
+        super_cell_widget_t(QWidget *parent = nullptr);
+
+        void on_apply() override;
+        void on_cancel() override;
 
     };
 
@@ -49,7 +53,7 @@ namespace qpp {
                              const int b_steps,
                              const int c_steps);
 
-        QWidget *construct_inline_tool() override;
+        ws_item_inline_tool_widget_t *construct_inline_tool() override;
 
     };
 

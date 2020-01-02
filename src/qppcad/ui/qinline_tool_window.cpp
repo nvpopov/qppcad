@@ -7,7 +7,7 @@ using namespace qpp::cad;
 qinline_tool_window_t::qinline_tool_window_t(QWidget *parent) : qembed_window_t(parent) {
 
   m_btn_apply_tool = new QPushButton(tr("Apply"));
-  m_btn_cancel_tool = new QPushButton(tr("Close"));
+  m_btn_cancel_tool = new QPushButton(tr("Cancel"));
 
   connect(m_btn_apply_tool, &QPushButton::clicked,
           this, &qinline_tool_window_t::apply_triggered);

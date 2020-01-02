@@ -3,6 +3,7 @@
 
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/ui/qembed_window.hpp>
+#include <qppcad/ui/ws_item_inline_tool_widget.hpp>
 #include <QPushButton>
 
 namespace qpp {
@@ -17,7 +18,7 @@ namespace qpp {
 
       QPushButton *m_btn_apply_tool;
       QPushButton *m_btn_cancel_tool;
-      QWidget *m_cur_wdgt{nullptr};
+      ws_item_inline_tool_widget_t *m_cur_wdgt{nullptr};
       bool m_is_vertical{false};
       bool m_is_horizontal{false};
 

@@ -2020,7 +2020,7 @@ void main_window_t::process_bhv_tool(size_t tool_id) {
 
     }
 
-  std::shared_ptr<QWidget> target{nullptr};
+  std::shared_ptr<ws_item_inline_tool_widget_t> target{nullptr};
   //locate tool if exist
   auto it_trq = m_inline_tools.find(tool_id);
   if (it_trq != m_inline_tools.end() && it_trq->second != nullptr) {
@@ -2034,7 +2034,7 @@ void main_window_t::process_bhv_tool(size_t tool_id) {
     if (it_fit != bhv_mgr.m_tools_info.end()) {
 
         auto ws_item_tool = it_fit->second.m_fabric();
-        target = std::shared_ptr<QWidget>{ws_item_tool->construct_inline_tool()};
+        target = std::shared_ptr<ws_item_inline_tool_widget_t>{ws_item_tool->construct_inline_tool()};
         m_inline_tools.insert({tool_id, target});
 
       }

@@ -140,7 +140,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
 }
 
-QWidget *supercell_tool_t::construct_inline_tool() {
+ws_item_inline_tool_widget_t *supercell_tool_t::construct_inline_tool() {
 
   //TODO: test widget
   return new super_cell_widget_t();
@@ -167,7 +167,8 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
 
 }
 
-super_cell_widget_t::super_cell_widget_t () : QWidget () {
+super_cell_widget_t::super_cell_widget_t (QWidget *parent)
+  : ws_item_inline_tool_widget_t(parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -206,5 +207,13 @@ super_cell_widget_t::super_cell_widget_t () : QWidget () {
   qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, astate->size_guide.obj_insp_lbl_w());
 
   m_dialog_lt->addWidget(m_gb_rep_par);
+
+}
+
+void super_cell_widget_t::on_apply() {
+
+}
+
+void super_cell_widget_t::on_cancel() {
 
 }

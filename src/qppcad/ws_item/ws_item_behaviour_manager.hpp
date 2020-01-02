@@ -8,6 +8,7 @@
 #include <qppcad/ws_item/sflow_behaviour_manager.hpp>
 #include <qppcad/core/fixture.hpp>
 #include <qppcad/ui/toolbar_element.hpp>
+#include <qppcad/ui/ws_item_inline_tool_widget.hpp>
 
 namespace qpp {
 
@@ -68,7 +69,7 @@ namespace qpp {
     struct ws_item_tool_t {
 
       virtual void exec(ws_item_t *item, uint32_t _error_ctx) = 0;
-      virtual QWidget* construct_inline_tool() {return nullptr;}
+      virtual ws_item_inline_tool_widget_t* construct_inline_tool() {return nullptr;}
 
     };
 

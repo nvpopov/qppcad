@@ -11,6 +11,7 @@
 #include <qppcad/ui/ws_tabbar.hpp>
 #include <qppcad/ui/log_widget.hpp>
 #include <qppcad/ui/qinline_tool_window.hpp>
+#include <qppcad/ui/ws_item_inline_tool_widget.hpp>
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -103,7 +104,7 @@ namespace qpp {
         QWidget *m_obj_inst_plch;
         qinline_tool_window_t *m_inline_left_tool_plch;
         qinline_tool_window_t *m_inline_bottom_tool_plch;
-        std::map<size_t, std::shared_ptr<QWidget> > m_inline_tools;
+        std::map<size_t, std::shared_ptr<ws_item_inline_tool_widget_t> > m_inline_tools;
         ws_item_extended_editor_compositor_t *m_ext_edtr_compositor;
 
         python_console_widget_t *m_py_console_wdgt;
