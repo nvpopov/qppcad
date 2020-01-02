@@ -361,7 +361,7 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
   size_t hash_t_selection = bhv_mgr->reg_tool_grp("Selection");
 
   registration_helper_t::reg_ws_item_tool<supercell_tool_t, geom_view_t>(
-        "Supercell", hash_t_generator, bhv_mgr,
+        "Supercell Generator", hash_t_generator, bhv_mgr,
         true, ws_item_tool_type_e::ws_item_tool_inline_vertical);
 
   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, geom_view_t>(

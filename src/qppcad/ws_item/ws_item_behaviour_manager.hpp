@@ -69,7 +69,6 @@ namespace qpp {
 
       virtual void exec(ws_item_t *item, uint32_t _error_ctx) = 0;
       virtual QWidget* construct_inline_tool() {return nullptr;}
-      virtual std::string compose_tool_name() {return "Generic tool";}
 
     };
 
