@@ -17,7 +17,7 @@ namespace qpp {
 
   namespace cad {
 
-    class super_cell_widget_t : public QDialog {
+    class super_cell_widget_t : public QWidget {
 
         Q_OBJECT
 
@@ -34,8 +34,6 @@ namespace qpp {
 
         QVBoxLayout *m_dialog_lt;
 
-        QDialogButtonBox *m_dialog_bb;
-
         int get_replication_coeff(int dim_num);
         super_cell_widget_t();
 
@@ -50,6 +48,7 @@ namespace qpp {
                              const int a_steps,
                              const int b_steps,
                              const int c_steps);
+
         QWidget *construct_inline_tool() override;
 
     };

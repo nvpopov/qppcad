@@ -37,16 +37,16 @@ void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  super_cell_widget_t scw;
-  int ret_code = scw.exec();
-  int rep_a = scw.get_replication_coeff(0);
-  int rep_b = scw.get_replication_coeff(1);
-  int rep_c = scw.get_replication_coeff(2);
+//  super_cell_widget_t scw;
+//  int ret_code = scw.exec();
+//  int rep_a = scw.get_replication_coeff(0);
+//  int rep_b = scw.get_replication_coeff(1);
+//  int rep_c = scw.get_replication_coeff(2);
 
-  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c > 3)) {
-      make_super_cell(al, rep_a, rep_b, rep_c);
-      astate->make_viewport_dirty();
-    }
+//  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c > 3)) {
+//      make_super_cell(al, rep_a, rep_b, rep_c);
+//      astate->make_viewport_dirty();
+//    }
 
 }
 
@@ -142,36 +142,44 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
 QWidget *supercell_tool_t::construct_inline_tool() {
 
-  return nullptr;
+  //TODO: test widget
+  return new super_cell_widget_t();
 
 }
 
 int super_cell_widget_t::get_replication_coeff(int dim_num) {
 
   switch (dim_num) {
+
     case 0:
       return m_sp_rep_a->value();
+
     case 1:
       return m_sp_rep_b->value();
+
     case 2:
       return m_sp_rep_c->value();
+
     default:
       return 0;
+
     }
 
 }
 
-super_cell_widget_t::super_cell_widget_t () : QDialog () {
+super_cell_widget_t::super_cell_widget_t () : QWidget () {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  setFixedWidth(250);
+  //setFixedWidth(250);
   setWindowTitle(tr("Supercell generation"));
 
   m_dialog_lt = new QVBoxLayout;
+  m_dialog_lt->setContentsMargins(1, 1, 1, 1);
   setLayout(m_dialog_lt);
 
-  m_gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false, 6, 220);
+  m_gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false, 6,
+                                       astate->size_guide.obj_insp_table_w());
   m_gb_rep_par_lt = new QFormLayout;
   m_gb_rep_par->add_content_layout(m_gb_rep_par_lt);
 
@@ -195,23 +203,8 @@ super_cell_widget_t::super_cell_widget_t () : QDialog () {
   m_gb_rep_par_lt->addRow(tr("b"), m_sp_rep_b);
   m_gb_rep_par_lt->addRow(tr("c"), m_sp_rep_c);
 
-  qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, 70);
-
-  m_dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  for (auto btn : m_dialog_bb->buttons())
-    btn->setFixedWidth(astate->size_guide.common_button_fixed_w());
-
-  connect(m_dialog_bb,
-          &QDialogButtonBox::accepted,
-          this,
-          &super_cell_widget_t::accept);
-
-  connect(m_dialog_bb,
-          &QDialogButtonBox::rejected,
-          this,
-          &super_cell_widget_t::reject);
+  qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, astate->size_guide.obj_insp_lbl_w());
 
   m_dialog_lt->addWidget(m_gb_rep_par);
-  m_dialog_lt->addWidget(m_dialog_bb);
 
 }

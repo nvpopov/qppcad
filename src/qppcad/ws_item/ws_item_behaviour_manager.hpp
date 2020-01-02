@@ -69,6 +69,7 @@ namespace qpp {
 
       virtual void exec(ws_item_t *item, uint32_t _error_ctx) = 0;
       virtual QWidget* construct_inline_tool() {return nullptr;}
+      virtual std::string compose_tool_name() {return "Generic tool";}
 
     };
 
@@ -143,11 +144,13 @@ namespace qpp {
     public:
 
       bool check_before_save(ws_item_t *_item, std::string &message) override {
+
         if (_item && _item->get_type() == T::get_type_static()) {
 
             T* casted_item = _item->cast_as<T>();
             return check_before_save_ex(casted_item, message);
           }
+
         return true;
 
       }
@@ -197,6 +200,7 @@ namespace qpp {
             T* casted_item = _item->cast_as<T>();
             return check_before_save_ex(casted_item, message);
           }
+
         return true;
 
       }

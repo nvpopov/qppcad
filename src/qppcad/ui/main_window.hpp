@@ -103,7 +103,7 @@ namespace qpp {
         QWidget *m_obj_inst_plch;
         qinline_tool_window_t *m_inline_left_tool_plch;
         qinline_tool_window_t *m_inline_bottom_tool_plch;
-
+        std::map<size_t, std::shared_ptr<QWidget> > m_inline_tools;
         ws_item_extended_editor_compositor_t *m_ext_edtr_compositor;
 
         python_console_widget_t *m_py_console_wdgt;
@@ -276,6 +276,7 @@ namespace qpp {
         void build_bhv_tools_menus();
         void build_bhv_tool_panel();
         void act_bhv_tools_menus_clicked();
+        void process_bhv_tool(size_t tool_id);
         void control_bhv_tools_menus_activity();
         void act_bhv_import_to_cur_ws();
         void act_bhv_import_as_new_ws();

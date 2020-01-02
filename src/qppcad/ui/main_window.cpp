@@ -1983,11 +1983,95 @@ void main_window_t::act_bhv_tools_menus_clicked() {
           break;
 
         case ws_item_tool_inline_vertical:
+          process_bhv_tool(it_t->first);
+          break;
+
+        case ws_item_tool_popup:
           break;
 
         case ws_item_tool_inline_horizontal:
+          process_bhv_tool(it_t->first);
           break;
+
         }
+
+    }
+
+}
+
+void main_window_t::process_bhv_tool(size_t tool_id) {
+
+  app_state_t *astate = app_state_t::get_inst();
+  auto &bhv_mgr = *astate->ws_mgr->m_bhv_mgr.get();
+
+  //locate tool info
+  auto it = bhv_mgr.m_tools_info.find(tool_id);
+  if (it == bhv_mgr.m_tools_info.end()) {
+
+      return;
+
+    }
+
+  if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_invalid ||
+      it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_modal ||
+      it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_popup) {
+
+      return;
+
+    }
+
+  std::shared_ptr<QWidget> target{nullptr};
+  //locate tool if exist
+  auto it_trq = m_inline_tools.find(tool_id);
+  if (it_trq != m_inline_tools.end() && it_trq->second != nullptr) {
+      target = it_trq->second;
+    }
+
+  //try to construct
+  if (!target) {
+
+    auto it_fit = bhv_mgr.m_tools_info.find(tool_id);
+    if (it_fit != bhv_mgr.m_tools_info.end()) {
+
+        auto ws_item_tool = it_fit->second.m_fabric();
+        target = std::shared_ptr<QWidget>{ws_item_tool->construct_inline_tool()};
+        m_inline_tools.insert({tool_id, target});
+
+      }
+
+  }
+
+  if (!target) {
+      return;
+    }
+
+  if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_vertical) {
+
+      if (m_inline_left_tool_plch->m_cur_wdgt) {
+          m_inline_left_tool_plch->m_cur_wdgt->setVisible(false);
+          m_inline_left_tool_plch->main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
+        }
+
+      m_inline_left_tool_plch->m_cur_wdgt = target.get();
+      m_inline_left_tool_plch->main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
+      m_inline_left_tool_plch->m_cur_wdgt->setVisible(true);
+      //m_inline_left_tool_plch->ew_header->setText(QString::fromStdString(it_trq->second))
+      inline_tool_left_ctrl_visibility(true);
+      inline_tool_bottom_ctrl_visibility(false);
+
+
+    } else if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_horizontal) {
+
+      if (m_inline_bottom_tool_plch->m_cur_wdgt) {
+          m_inline_bottom_tool_plch->m_cur_wdgt->setVisible(false);
+          m_inline_left_tool_plch->main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
+        }
+
+      m_inline_bottom_tool_plch->m_cur_wdgt = target.get();
+      m_inline_bottom_tool_plch->main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
+      m_inline_bottom_tool_plch->m_cur_wdgt->setVisible(true);
+      inline_tool_left_ctrl_visibility(false);
+      inline_tool_bottom_ctrl_visibility(true);
 
     }
 
