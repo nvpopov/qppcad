@@ -20,7 +20,7 @@ qinline_tool_window_t::qinline_tool_window_t(QWidget *parent) : qembed_window_t(
   header_lt->addStretch(1);
   header_lt->setContentsMargins(9, 6, 4, 6);
 
-  main_lt->setContentsMargins(2, 1, 2, 1);
+  main_lt->setContentsMargins(2, 1, 3, 1);
   main_lt->addStretch(1);
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -46,9 +46,21 @@ void qinline_tool_window_t::mark_as_vertical() {
 
 void qinline_tool_window_t::apply_triggered() {
 
+  if (m_cur_wdgt) {
+      m_cur_wdgt->on_apply();
+    }
+
+  app_state_t *astate = app_state_t::get_inst();
+  if (m_is_vertical) astate->astate_evd->set_left_inline_tool_visibility(false);
+  if (m_is_horizontal) astate->astate_evd->set_bottom_inline_tool_visibility(false);
+
 }
 
 void qinline_tool_window_t::close_triggered() {
+
+  if (m_cur_wdgt) {
+      m_cur_wdgt->on_cancel();
+    }
 
   app_state_t *astate = app_state_t::get_inst();
   if (m_is_vertical) astate->astate_evd->set_left_inline_tool_visibility(false);

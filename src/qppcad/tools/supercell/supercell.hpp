@@ -26,9 +26,7 @@ namespace qpp {
 
       public:
 
-        QSpinBox *m_sp_rep_a;
-        QSpinBox *m_sp_rep_b;
-        QSpinBox *m_sp_rep_c;
+        qbinded_int3_input_t *m_sp_rep;
 
         qspoiler_widget_t *m_gb_rep_par;
         QFormLayout *m_gb_rep_par_lt;

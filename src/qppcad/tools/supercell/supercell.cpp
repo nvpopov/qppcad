@@ -152,13 +152,13 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
   switch (dim_num) {
 
     case 0:
-      return m_sp_rep_a->value();
+      return m_sp_rep->sb_x->value();
 
     case 1:
-      return m_sp_rep_b->value();
+      return m_sp_rep->sb_y->value();
 
     case 2:
-      return m_sp_rep_c->value();
+      return m_sp_rep->sb_z->value();
 
     default:
       return 0;
@@ -184,25 +184,10 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
   m_gb_rep_par_lt = new QFormLayout;
   m_gb_rep_par->add_content_layout(m_gb_rep_par_lt);
 
-  auto make_spinbox = [](){
+  m_sp_rep = new qbinded_int3_input_t;
+  m_sp_rep->set_min_max_step(1, 20, 1);
 
-      auto ret = new QSpinBox;
-      ret->setMinimum(1);
-      ret->setMaximum(10);
-      ret->setAlignment(Qt::AlignCenter);
-      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
-      ret->setFixedWidth(app_state_t::get_inst()->size_guide.obj_insp_ctrl_max_w());
-      return ret;
-
-    };
-
-  m_sp_rep_a = make_spinbox();
-  m_sp_rep_b = make_spinbox();
-  m_sp_rep_c = make_spinbox();
-
-  m_gb_rep_par_lt->addRow(tr("a"), m_sp_rep_a);
-  m_gb_rep_par_lt->addRow(tr("b"), m_sp_rep_b);
-  m_gb_rep_par_lt->addRow(tr("c"), m_sp_rep_c);
+  m_gb_rep_par_lt->addRow(tr("Cell ratio"), m_sp_rep);
 
   qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, astate->size_guide.obj_insp_lbl_w());
 
