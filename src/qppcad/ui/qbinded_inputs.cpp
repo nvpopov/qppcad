@@ -157,6 +157,24 @@ void qbinded_int3_input_t::set_min_max_step(int min, int max, int step) {
 
 }
 
+void qbinded_int3_input_t::set_min_max_step(vector3<int> min,
+                                            vector3<int> max,
+                                            vector3<int> step) {
+
+  sb_x->setMinimum(min[0]);
+  sb_x->setMaximum(max[0]);
+  sb_x->setSingleStep(step[0]);
+
+  sb_y->setMinimum(min[1]);
+  sb_y->setMaximum(max[1]);
+  sb_y->setSingleStep(step[1]);
+
+  sb_z->setMinimum(min[2]);
+  sb_z->setMaximum(max[2]);
+  sb_z->setSingleStep(step[2]);
+
+}
+
 qbinded_int3_input_t::qbinded_int3_input_t(QWidget *parent) : QWidget (parent) {
 
   widget_layout = new QHBoxLayout;

@@ -131,6 +131,7 @@ namespace qpp {
       public:
 
         void load_value_ex() override;
+
         explicit qbinded_combobox_t(QWidget *parent = nullptr);
 
       public slots:
@@ -153,6 +154,8 @@ namespace qpp {
 
         void load_value_ex() override;
         void set_min_max_step(int min, int max, int step);
+        void set_min_max_step(vector3<int> min, vector3<int> max, vector3<int> step);
+
         explicit qbinded_int3_input_t(QWidget *parent = nullptr);
 
       private slots:
