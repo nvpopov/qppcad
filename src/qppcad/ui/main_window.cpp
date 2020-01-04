@@ -2008,10 +2008,8 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
   //locate tool info
   auto it = bhv_mgr.m_tools_info.find(tool_id);
   if (it == bhv_mgr.m_tools_info.end()) {
-
       //invalid tool
       return;
-
     }
 
   if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_invalid ||
@@ -2023,7 +2021,7 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
     }
 
   if (it->second.m_item_required) {
-     if (!sel_item || it->second.m_accepted_type != sel_item->get_type_static())
+     if (!sel_item || it->second.m_accepted_type != sel_item->get_type())
        return;
     }
 
@@ -2041,7 +2039,8 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
     if (it_fit != bhv_mgr.m_tools_info.end()) {
 
         auto ws_item_tool = it_fit->second.m_fabric();
-        target = std::shared_ptr<ws_item_inline_tool_widget_t>{ws_item_tool->construct_inline_tool()};
+        target =
+            std::shared_ptr<ws_item_inline_tool_widget_t>{ws_item_tool->construct_inline_tool()};
         m_inline_tools.insert({tool_id, target});
 
       }
