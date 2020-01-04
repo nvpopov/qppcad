@@ -33,6 +33,8 @@ namespace qpp {
 
         QVBoxLayout *m_dialog_lt;
 
+        std::shared_ptr<geom_view_t> m_dst{nullptr};
+
         int get_replication_coeff(int dim_num);
         super_cell_widget_t(QWidget *parent = nullptr);
 

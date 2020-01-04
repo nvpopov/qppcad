@@ -193,6 +193,9 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
 
   m_dialog_lt->addWidget(m_gb_rep_par);
 
+//  m_dst = std::make_shared<geom_view_t>();
+//  m_dst
+
 }
 
 void super_cell_widget_t::on_apply() {

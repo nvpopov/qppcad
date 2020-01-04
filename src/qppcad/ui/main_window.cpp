@@ -1958,6 +1958,12 @@ void main_window_t::build_bhv_tool_panel() {
 void main_window_t::act_bhv_tools_menus_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
+  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_throw);
+
+  if (!ok) {
+   return;
+  }
+
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(sender());
@@ -1966,11 +1972,6 @@ void main_window_t::act_bhv_tools_menus_clicked() {
   size_t t_hash = ext_act->m_joined_data[0];
 
   auto it_t = bhv_mgr->m_tools_info.find(t_hash);
-
-  std::shared_ptr<workspace_t> cur_ws = astate->ws_mgr->get_cur_ws();
-  std::shared_ptr<ws_item_t> cur_it{nullptr};
-  if (cur_ws) cur_it = cur_ws->get_sel_sp();
-
   if (it_t != bhv_mgr->m_tools_info.end()) {
 
       switch (it_t->second.m_tool_type) {
@@ -1983,14 +1984,14 @@ void main_window_t::act_bhv_tools_menus_clicked() {
           break;
 
         case ws_item_tool_inline_vertical:
-          process_bhv_tool(it_t->first);
+          process_bhv_tool(it_t->first, cur_it.get());
           break;
 
         case ws_item_tool_popup:
           break;
 
         case ws_item_tool_inline_horizontal:
-          process_bhv_tool(it_t->first);
+          process_bhv_tool(it_t->first, cur_it.get());
           break;
 
         }
@@ -1999,7 +2000,7 @@ void main_window_t::act_bhv_tools_menus_clicked() {
 
 }
 
-void main_window_t::process_bhv_tool(size_t tool_id) {
+void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
 
   app_state_t *astate = app_state_t::get_inst();
   auto &bhv_mgr = *astate->ws_mgr->m_bhv_mgr.get();
@@ -2008,6 +2009,7 @@ void main_window_t::process_bhv_tool(size_t tool_id) {
   auto it = bhv_mgr.m_tools_info.find(tool_id);
   if (it == bhv_mgr.m_tools_info.end()) {
 
+      //invalid tool
       return;
 
     }
@@ -2015,9 +2017,14 @@ void main_window_t::process_bhv_tool(size_t tool_id) {
   if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_invalid ||
       it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_modal ||
       it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_popup) {
-
+      //we can process only inline tools here
       return;
 
+    }
+
+  if (it->second.m_item_required) {
+     if (!sel_item || it->second.m_accepted_type != sel_item->get_type_static())
+       return;
     }
 
   std::shared_ptr<ws_item_inline_tool_widget_t> target{nullptr};
@@ -2058,6 +2065,7 @@ void main_window_t::process_bhv_tool(size_t tool_id) {
       m_inline_left_tool_plch->ew_header->setText(QString::fromStdString(it->second.m_full_name));
       inline_tool_left_ctrl_visibility(true);
       inline_tool_bottom_ctrl_visibility(false);
+      //if (it->second.m_item_required)
 
 
     } else if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_horizontal) {

@@ -2,6 +2,7 @@
 #define QPPCAD_WS_ITEM_INLINE_TOOL
 
 #include <qppcad/core/qppcad.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
 #include <QWidget>
 
 namespace qpp {
@@ -13,6 +14,8 @@ namespace qpp {
       Q_OBJECT
 
     public:
+
+      ws_item_t *m_src{nullptr};
 
       ws_item_inline_tool_widget_t(QWidget *parent = nullptr);
       virtual void on_apply();

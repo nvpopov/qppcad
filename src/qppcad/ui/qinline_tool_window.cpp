@@ -20,7 +20,7 @@ qinline_tool_window_t::qinline_tool_window_t(QWidget *parent) : qembed_window_t(
   header_lt->addStretch(1);
   header_lt->setContentsMargins(9, 6, 4, 6);
 
-  main_lt->setContentsMargins(2, 1, 3, 1);
+  main_lt->setContentsMargins(2, 1, 4, 1);
   main_lt->addStretch(1);
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
