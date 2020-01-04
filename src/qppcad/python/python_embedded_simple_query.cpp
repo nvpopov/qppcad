@@ -58,7 +58,7 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
         Returns the current position of the gizmo-object
         )str" )
 
-   .def("cs", &simple_query::get_current_selected,
+   .def("cs", &simple_query::get_cur_sel,
         R"str(
         Returns the current selected ws_item
         )str")
@@ -115,12 +115,12 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
 
   py::module sel = m.def_submodule("sel", "Selection routines");
 
-  sel.def("ws",  &simple_query::select_ws,
+  sel.def("ws",  &simple_query::sel_ws,
           R"str(
           Selects nth workspace
           )str" )
 
-     .def("i",  &simple_query::select_itm,
+     .def("i",  &simple_query::sel_itm,
           R"str(
           Selects nth object from the current workspace
           :param arg0: an workspace index that needs to be selected

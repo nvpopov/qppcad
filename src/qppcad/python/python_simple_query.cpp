@@ -97,7 +97,7 @@ void simple_query::set_msr_digits(int digits){
 
 }
 
-std::shared_ptr<ws_item_t> simple_query::get_current_selected() {
+std::shared_ptr<ws_item_t> simple_query::get_cur_sel() {
 
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_throw);
@@ -105,7 +105,7 @@ std::shared_ptr<ws_item_t> simple_query::get_current_selected() {
 
 }
 
-void simple_query::select_ws(int ws_idx) {
+void simple_query::sel_ws(int ws_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
   if (!astate->ws_mgr->has_wss()) return;
@@ -116,7 +116,7 @@ void simple_query::select_ws(int ws_idx) {
 
 }
 
-void simple_query::select_itm(int itm_idx) {
+void simple_query::sel_itm(int itm_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
 

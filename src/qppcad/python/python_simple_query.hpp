@@ -44,10 +44,10 @@ namespace qpp {
 
         static void set_msr_digits(int digits);
 
-        static std::shared_ptr<ws_item_t> get_current_selected();
+        static std::shared_ptr<ws_item_t> get_cur_sel();
 
-        static void select_ws(int ws_idx);
-        static void select_itm(int itm_idx);
+        static void sel_ws(int ws_idx);
+        static void sel_itm(int itm_idx);
         static void sel_cnt(int cnt_idx);
         static void sel_cnt_fn(std::function<bool(float, float, float)> cfn);
         static void sel_cnt_parity();
