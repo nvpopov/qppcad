@@ -32,22 +32,22 @@ namespace qpp {
 
       public:
 
-        QVBoxLayout *main_lt;
+        QVBoxLayout *m_main_lt;
 
-        qspoiler_widget_t *main_gb;
-        QFormLayout *main_gb_lt;
+        qspoiler_widget_t *m_main_gb;
+        QFormLayout *m_main_gb_lt;
 
-        QHBoxLayout *buttons_lt;
-        QPushButton *button_apply;
-        QPushButton *button_cancel;
+        QHBoxLayout *m_buttons_lt;
+        QPushButton *m_button_apply;
+        QPushButton *m_button_cancel;
 
-        QComboBox *cmb_xfield_name;
+        QComboBox *m_cmb_xfield_name;
 
-        qbinded_color3_input_t *clr_low_input;
-        qbinded_color3_input_t *clr_high_input;
+        qbinded_color3_input_t *m_clr_low_input;
+        qbinded_color3_input_t *m_clr_high_input;
 
-        vector3<float> clr_low{0};
-        vector3<float> clr_high{1};
+        vector3<float> m_clr_low{0};
+        vector3<float> m_clr_high{1};
 
         geom_view_t *b_gv{nullptr};
         std::vector<STRING_EX> b_fn;
