@@ -18,17 +18,17 @@ namespace qpp {
 
       public:
 
-        QVBoxLayout *main_lt;
+        QVBoxLayout *m_main_lt;
 
-        qspoiler_widget_t *gb_ws_ws_item;
-        QFormLayout *gb_ws_ws_item_lt;
-        QComboBox *cmb_ws;
-        QComboBox *cmb_it;
+        qspoiler_widget_t *m_gb_ws_ws_item;
+        QFormLayout *m_gb_ws_ws_item_lt;
+        QComboBox *m_cmb_ws;
+        QComboBox *m_cmb_it;
 
-        qspoiler_widget_t *gb_gv_item;
-        QFormLayout *gb_gv_item_lt;
-        QComboBox *cmb_anim_name;
-        QComboBox *cmb_anim_frame;
+        qspoiler_widget_t *m_gb_gv_item;
+        QFormLayout *m_gb_gv_item_lt;
+        QComboBox *m_cmb_anim_name;
+        QComboBox *m_cmb_anim_frame;
 
         geom_view_t *m_binded_gv{nullptr};
 
@@ -50,35 +50,31 @@ namespace qpp {
 
         Q_OBJECT
 
-      private:
-
       public:
 
-        qspoiler_widget_t *gb_str_sim_main;
-        QFormLayout *gb_str_sim_main_lt;
-        QHBoxLayout *widget_top_lt;
-        QVBoxLayout *widget_lt;
+        qspoiler_widget_t *m_gb_str_sim_main;
+        QFormLayout *m_gb_str_sim_main_lt;
+        QHBoxLayout *m_wdgt_top_lt;
+        QVBoxLayout *m_wdgt_lt;
 
         std::array<str_sim_ws_item_rec_t*, 2> m_anim_info;
 
-        QComboBox *cmb_method;
-        QCheckBox *chck_only_selected;
-        QPushButton *btn_compute;
-        QPushButton *btn_copy_to_clipboard;
+        QComboBox *m_cmb_method;
+        QCheckBox *m_chck_only_selected;
+        QPushButton *m_btn_compute;
+        QPushButton *m_btn_copy_to_clipboard;
 
-        qspoiler_widget_t *gb_str_sim_output;
-        QVBoxLayout *gb_str_sim_output_lt;
-        QTextEdit *str_sim_output;
-        QTableWidget *str_sim_table;
+        qspoiler_widget_t *m_gb_str_sim_out;
+        QVBoxLayout *m_gb_str_sim_out_lt;
+        QTextEdit *m_str_sim_out;
+        QTableWidget *m_str_sim_table;
 
         structure_similarity_widget_t();
         void compute_structure_similarity(ws_item_t *g1, ws_item_t *g2);
         void compute_structure_similarity_naive(geom_view_t *g1, geom_view_t *g2);
         void compute_structure_similarity_tws_tree(geom_view_t *g1, geom_view_t *g2);
-        void set_out_table_data(geom_view_t *g1,
-                                geom_view_t *g2,
-                                size_t table_idx,
-                                size_t atom_idx,
+        void set_out_table_data(geom_view_t *g1, geom_view_t *g2,
+                                size_t table_idx, size_t atom_idx,
                                 vector3<float> _dp);
 
       public slots:
