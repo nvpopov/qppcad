@@ -13,12 +13,14 @@
 #include <QFormLayout>
 #include <QDialogButtonBox>
 #include <QApplication>
+#include <qppcad/core/iupdatable.hpp>
 
 namespace qpp {
 
   namespace cad {
 
-    class super_cell_widget_t : public ws_item_inline_tool_widget_t {
+    class super_cell_widget_t : public ws_item_inline_tool_widget_t,
+                                public iupdatable_externally_t {
 
         Q_OBJECT
 
@@ -35,16 +37,19 @@ namespace qpp {
 
         std::shared_ptr<geom_view_t> m_dst{nullptr};
         geom_view_t *m_src_gv{nullptr};
+        vector3<int> m_sc_dim{1,1,1};
 
         int get_replication_coeff(int dim_num);
         super_cell_widget_t(QWidget *parent = nullptr);
 
-        void make_super_cell(const int a_max, const int b_max, const int c_max);
+        void make_super_cell(const int a_max, const int b_max, const int c_max,
+                             bool target_cam = true);
 
         //void bind_item(ws_item_t *item);
         void on_apply() override;
         void on_cancel() override;
         void bind_item(ws_item_t *item) override;
+        void updated_externally(uint32_t update_reason) override;
 
     };
 

@@ -37,17 +37,6 @@ void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-//  super_cell_widget_t scw;
-//  int ret_code = scw.exec();
-//  int rep_a = scw.get_replication_coeff(0);
-//  int rep_b = scw.get_replication_coeff(1);
-//  int rep_c = scw.get_replication_coeff(2);
-
-//  if (ret_code == QDialog::Accepted && (rep_a + rep_b + rep_c > 3)) {
-//      make_super_cell(al, rep_a, rep_b, rep_c);
-//      astate->make_viewport_dirty();
-//    }
-
 }
 
 void supercell_tool_t::make_super_cell(geom_view_t *al,
@@ -186,6 +175,8 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
 
   m_sp_rep = new qbinded_int3_input_t;
   m_sp_rep->set_min_max_step(1, 20, 1);
+  m_sp_rep->bind_value(&m_sc_dim, this);
+  m_sp_rep->m_updated_externally_event = true;
 
   m_gb_rep_par_lt->addRow(tr("Cell ratio"), m_sp_rep);
 
@@ -193,16 +184,36 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
 
   m_dialog_lt->addWidget(m_gb_rep_par);
 
-//  m_dst = std::make_shared<geom_view_t>();
-//  m_dst
-
 }
 
-void super_cell_widget_t::make_super_cell(const int a_max, const int b_max, const int c_max) {
+void super_cell_widget_t::make_super_cell(const int a_max, const int b_max, const int c_max,
+                                          bool target_cam) {
+
+  if (!m_src_gv) {
+      return;
+    }
+
+  if (m_src_gv->m_geom->DIM != 3) {
+      return;
+    }
 
   if (!m_dst) {
       m_dst = std::make_shared<geom_view_t>();
+      m_dst->m_name = m_src->m_name + fmt::format("_sc_{}_{}_{}", a_max, b_max, c_max);
+      m_src->m_parent_ws->add_item_to_ws(m_dst);
     }
+
+  m_dst->m_geom->DIM = 3;
+  m_dst->m_geom->cell.DIM = 3;
+
+  m_dst->begin_structure_change();
+  m_dst->m_geom->clear();
+  geom_view_tools_t::generate_supercell(m_src_gv->m_geom.get(), m_dst->m_geom.get(),
+                                        index{a_max -1 , b_max - 1 , c_max - 1});
+  m_dst->m_pos = m_src->m_pos + m_src_gv->m_geom->cell.v[0] * 1.4f;
+  if (target_cam) m_dst->apply_target_view(cam_tv_e::tv_b);
+  m_dst->end_structure_change();
+
 }
 
 void super_cell_widget_t::on_apply() {
@@ -210,6 +221,12 @@ void super_cell_widget_t::on_apply() {
 }
 
 void super_cell_widget_t::on_cancel() {
+
+  if (m_dst) {
+
+      m_dst->m_marked_for_deletion = true;
+
+    }
 
 }
 
@@ -227,6 +244,14 @@ void super_cell_widget_t::bind_item(ws_item_t *item) {
       m_src_gv = nullptr;
 
     }
+
+  make_super_cell(m_sc_dim[0], m_sc_dim[1], m_sc_dim[2]);
+
+}
+
+void super_cell_widget_t::updated_externally(uint32_t update_reason) {
+
+  make_super_cell(m_sc_dim[0], m_sc_dim[1], m_sc_dim[2], false);
 
 }
 
