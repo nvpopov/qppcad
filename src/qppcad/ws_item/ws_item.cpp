@@ -56,9 +56,9 @@ void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
 
   if (need_to_update_camera && m_parent_ws && m_parent_ws->m_camera) {
 
-      m_parent_ws->m_camera->m_view_point = look_from;
-      m_parent_ws->m_camera->m_look_at = look_to;
-      m_parent_ws->m_camera->m_look_up = look_up;
+      m_parent_ws->m_camera->m_cam_state.m_view_point = look_from;
+      m_parent_ws->m_camera->m_cam_state.m_look_at = look_to;
+      m_parent_ws->m_camera->m_cam_state.m_look_up = look_up;
       m_parent_ws->m_camera->orthogonalize_gs();
       m_parent_ws->m_camera->update_camera();
 

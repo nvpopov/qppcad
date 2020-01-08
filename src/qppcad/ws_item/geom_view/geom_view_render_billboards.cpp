@@ -12,7 +12,8 @@ namespace qpp {
 
       astate->mesh_zup_quad->begin_render_batch();
       astate->sp_bs_sphere->begin_shader_program();
-      astate->sp_bs_sphere->set_u(sp_u_name::m_proj, astate->camera->m_mat_proj.data());
+      astate->sp_bs_sphere->set_u(sp_u_name::m_proj,
+                                  astate->camera->m_cam_state.m_mat_proj.data());
 
       //(GL_CULL_FACE);
 
@@ -71,7 +72,7 @@ namespace qpp {
           //          t.prerotate(matrix3<float>::Identity());
           //          t.prescale(vector3<float>(dr_rad, dr_rad, dr_rad));
           t.pretranslate(al.m_geom->pos(i)+al.m_pos);
-          mat_model_view = astate->camera->m_mat_view * t.matrix();
+          mat_model_view = astate->camera->m_cam_state.m_mat_view * t.matrix();
 
           astate->sp_bs_sphere->set_u(sp_u_name::m_model_view, mat_model_view.data());
           astate->mesh_zup_quad->render_batch();

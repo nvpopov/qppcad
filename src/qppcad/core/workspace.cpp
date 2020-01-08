@@ -192,13 +192,14 @@ void workspace_t::set_best_view() {
 
     }
 
-  m_camera->m_look_at = vec_look_at;
-  m_camera->m_view_point = vec_look_pos;
+  m_camera->m_cam_state.m_look_at = vec_look_at;
+  m_camera->m_cam_state.m_view_point = vec_look_pos;
 
   m_camera->orthogonalize_gs();
   m_camera->update_camera();
 
-  if ((m_camera->m_look_at-m_camera->m_view_point).norm() < 0.4f || vec_look_at == vec_look_pos)
+  if ((m_camera->m_cam_state.m_look_at-m_camera->m_cam_state.m_view_point).norm() < 0.4f ||
+      vec_look_at == vec_look_pos)
     m_camera->reset_camera();
 
 }
@@ -265,14 +266,17 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
   if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
 
-      m_ray.start = m_camera->m_view_point;
-      m_ray.dir = (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_view_point).normalized();
+      m_ray.start = m_camera->m_cam_state.m_view_point;
+      m_ray.dir =
+          (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_cam_state.m_view_point).normalized();
     } else {
+
       float z_p =  (m_camera->m_znear_ortho + m_camera->m_zfar_ortho) /
                    (m_camera->m_znear_ortho - m_camera->m_zfar_ortho);
 
       m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
-      m_ray.dir = (m_camera->m_look_at - m_camera->m_view_point).normalized();
+      m_ray.dir =
+          (m_camera->m_cam_state.m_look_at - m_camera->m_cam_state.m_view_point).normalized();
 
     }
 

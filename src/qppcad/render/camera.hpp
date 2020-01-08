@@ -15,6 +15,23 @@ namespace qpp {
       proj_persp
     };
 
+    struct camera_state_t {
+
+      vector3<float> m_view_point;
+      vector3<float> m_view_dir;
+      vector3<float> m_look_at;
+      vector3<float> m_look_up;
+      vector3<float> m_right;
+      vector3<float> m_forward;
+
+      matrix4<float> m_mat_view;
+      matrix4<float> m_mat_proj;
+      matrix4<float> m_proj_view;
+      matrix3<float> m_view_inv_tr;
+      matrix3<float> m3_proj_view;
+
+    };
+
     class camera_t : public serializable_t {
 
       public:
@@ -24,18 +41,7 @@ namespace qpp {
         static constexpr int   nav_div_step_translation = 13;
         static constexpr int   nav_div_step_rotation = 43;
 
-        vector3<float> m_view_point;
-        vector3<float> m_view_dir;
-        vector3<float> m_look_at;
-        vector3<float> m_look_up;
-        vector3<float> m_right;
-        vector3<float> m_forward;
-
-        matrix4<float> m_mat_view;
-        matrix4<float> m_mat_proj;
-        matrix4<float> m_proj_view;
-        matrix3<float> m_view_inv_tr;
-        matrix3<float> m3_proj_view;
+        camera_state_t m_cam_state;
 
         bool m_already_loaded{false};
         bool m_rotate_camera{false};

@@ -146,7 +146,7 @@ void qpp::cad::shader_program_t::begin_shader_program() {
   //    }
 
   if (unf_rec[sp_u_name::v_eye_pos].enabled && astate->camera) {
-      set_u(sp_u_name::v_eye_pos, astate->camera->m_view_point.data());
+      set_u(sp_u_name::v_eye_pos, astate->camera->m_cam_state.m_view_point.data());
     }
 
 }
