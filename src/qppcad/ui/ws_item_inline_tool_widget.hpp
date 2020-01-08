@@ -20,6 +20,7 @@ namespace qpp {
       ws_item_inline_tool_widget_t(QWidget *parent = nullptr);
       virtual void on_apply();
       virtual void on_cancel();
+      virtual void bind_item(ws_item_t *item);
 
     };
 

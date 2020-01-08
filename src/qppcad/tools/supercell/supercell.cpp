@@ -198,6 +198,13 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
 
 }
 
+void super_cell_widget_t::make_super_cell(const int a_max, const int b_max, const int c_max) {
+
+  if (!m_dst) {
+      m_dst = std::make_shared<geom_view_t>();
+    }
+}
+
 void super_cell_widget_t::on_apply() {
 
 }
@@ -205,3 +212,21 @@ void super_cell_widget_t::on_apply() {
 void super_cell_widget_t::on_cancel() {
 
 }
+
+void super_cell_widget_t::bind_item(ws_item_t *item) {
+
+  ws_item_inline_tool_widget_t::bind_item(item);
+
+  if (m_src->get_type() == geom_view_t::get_type_static()) {
+
+      m_src_gv = m_src->cast_as<geom_view_t>();
+
+    } else {
+
+      m_src = nullptr;
+      m_src_gv = nullptr;
+
+    }
+
+}
+

@@ -34,12 +34,17 @@ namespace qpp {
         QVBoxLayout *m_dialog_lt;
 
         std::shared_ptr<geom_view_t> m_dst{nullptr};
+        geom_view_t *m_src_gv{nullptr};
 
         int get_replication_coeff(int dim_num);
         super_cell_widget_t(QWidget *parent = nullptr);
 
+        void make_super_cell(const int a_max, const int b_max, const int c_max);
+
+        //void bind_item(ws_item_t *item);
         void on_apply() override;
         void on_cancel() override;
+        void bind_item(ws_item_t *item) override;
 
     };
 

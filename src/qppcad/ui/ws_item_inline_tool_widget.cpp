@@ -15,3 +15,9 @@ void ws_item_inline_tool_widget_t::on_apply() {
 void ws_item_inline_tool_widget_t::on_cancel() {
 
 }
+
+void ws_item_inline_tool_widget_t::bind_item(ws_item_t *item) {
+
+  m_src = item;
+
+}
