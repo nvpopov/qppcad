@@ -237,6 +237,7 @@ void super_cell_widget_t::bind_item(ws_item_t *item) {
   if (m_src->get_type() == geom_view_t::get_type_static()) {
 
       m_src_gv = m_src->cast_as<geom_view_t>();
+      m_dst = nullptr;
 
     } else {
 
