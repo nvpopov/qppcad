@@ -18,6 +18,10 @@ namespace qpp {
       ws_item_t *m_src{nullptr};
 
       ws_item_inline_tool_widget_t(QWidget *parent = nullptr);
+
+      void apply();
+      void cancel();
+
       virtual void on_apply();
       virtual void on_cancel();
       virtual void bind_item(ws_item_t *item);

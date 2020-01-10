@@ -222,6 +222,7 @@ void super_cell_widget_t::on_apply() {
 
 void super_cell_widget_t::on_cancel() {
 
+
   if (m_dst) {
 
       m_dst->m_marked_for_deletion = true;

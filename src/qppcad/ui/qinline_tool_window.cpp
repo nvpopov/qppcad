@@ -47,7 +47,7 @@ void qinline_tool_window_t::mark_as_vertical() {
 void qinline_tool_window_t::apply_triggered() {
 
   if (m_cur_wdgt) {
-      m_cur_wdgt->on_apply();
+      m_cur_wdgt->apply();
     }
 
   app_state_t *astate = app_state_t::get_inst();
@@ -59,7 +59,7 @@ void qinline_tool_window_t::apply_triggered() {
 void qinline_tool_window_t::close_triggered() {
 
   if (m_cur_wdgt) {
-      m_cur_wdgt->on_cancel();
+      m_cur_wdgt->cancel();
     }
 
   app_state_t *astate = app_state_t::get_inst();
