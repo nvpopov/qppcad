@@ -549,6 +549,20 @@ void workspace_t::copy_camera(std::shared_ptr<workspace_t> source) {
 
 }
 
+void workspace_t::push_cam_state() {
+
+  if (m_camera)
+    m_camera->push_cam_state();
+
+}
+
+void workspace_t::pop_cam_state() {
+
+  if (m_camera)
+    m_camera->pop_cam_state();
+
+}
+
 void workspace_t::del_item_by_index(size_t idx) {
 
   if (idx < m_ws_items.size()) m_ws_items[idx]->m_marked_for_deletion = true;

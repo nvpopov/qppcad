@@ -5,6 +5,7 @@
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/render/gl_math.hpp>
 #include <qppcad/core/serializable.hpp>
+#include <stack>
 
 namespace qpp {
 
@@ -42,6 +43,7 @@ namespace qpp {
         static constexpr int   nav_div_step_rotation = 43;
 
         camera_state_t m_cam_state;
+        std::stack<camera_state_t> m_cam_states;
 
         bool m_already_loaded{false};
         bool m_rotate_camera{false};
@@ -62,6 +64,7 @@ namespace qpp {
         cam_proj_t m_cur_proj{cam_proj_t::proj_ortho};
 
         camera_t();
+
         void orthogonalize_gs();
         void rotate_camera_around_origin(const matrix3<float> &mat_rot,
                                          const vector3<float> origin);
@@ -75,6 +78,9 @@ namespace qpp {
         void translate_camera(const vector3<float> shift);
 
         void copy_from_camera(const camera_t &another);
+
+        void push_cam_state();
+        void pop_cam_state();
 
         void reset_camera();
         void update_camera();

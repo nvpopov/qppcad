@@ -87,7 +87,8 @@ namespace qpp {
         void update(float delta_time);
         void set_edit_type(const ws_edit_e new_edit_type);
         void copy_camera(std::shared_ptr<workspace_t> source);
-
+        void push_cam_state();
+        void pop_cam_state();
         void del_item_by_index(size_t idx);
         void make_overview_dirty();
         std::string py_get_repr();

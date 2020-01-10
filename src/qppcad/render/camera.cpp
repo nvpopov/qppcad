@@ -129,6 +129,25 @@ void camera_t::copy_from_camera(const camera_t &another) {
 
 }
 
+void camera_t::push_cam_state() {
+
+  camera_state_t tmp_cam_state(m_cam_state);
+  m_cam_states.push(std::move(tmp_cam_state));
+
+}
+
+void camera_t::pop_cam_state() {
+
+  if (m_cam_states.empty()) {
+      return;
+    }
+
+  m_cam_state = m_cam_states.top();
+  m_cam_states.pop();
+  update_camera();
+
+}
+
 void camera_t::reset_camera () {
 
   m_cam_state.m_view_point = vector3<float>(0.0, 9.0, 0.0);

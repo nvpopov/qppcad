@@ -179,6 +179,8 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                     .def("ctr", &construct_from_geom)
                     .def("ctr", &construct_from_array_group)
                     .def("ctr", &construct_from_vector3f)
+                    .def("push_cam", &workspace_t::push_cam_state)
+                    .def("pop_cam", &workspace_t::pop_cam_state)
                     .def_readwrite("scenic_rot_magn", &workspace_t::m_scenic_rotation_speed)
                     .def_property("scenic_rot",
                                   [](workspace_t &src)
