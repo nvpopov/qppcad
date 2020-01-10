@@ -31,6 +31,14 @@ namespace qpp {
       matrix3<float> m_view_inv_tr;
       matrix3<float> m3_proj_view;
 
+      float m_ortho_scale{10.0f};
+      float m_fov{50.0};
+      float m_znear_persp{0.1f};
+      float m_zfar_persp{800};
+      float m_znear_ortho{-1000};
+      float m_zfar_ortho{1000};
+      float m_stored_dist;
+
     };
 
     class camera_t : public serializable_t {
@@ -52,14 +60,6 @@ namespace qpp {
 
         float m_mouse_whell_camera_step{2.0f};
         float m_mouse_zoom_min_distance{4.0f};
-
-        float m_ortho_scale{10.0f};
-        float m_fov{50.0};
-        float m_znear_persp{0.1f};
-        float m_zfar_persp{800};
-        float m_znear_ortho{-1000};
-        float m_zfar_ortho{1000};
-        float m_stored_dist;
 
         cam_proj_t m_cur_proj{cam_proj_t::proj_ortho};
 

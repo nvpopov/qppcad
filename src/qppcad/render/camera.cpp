@@ -16,7 +16,7 @@ camera_t::camera_t () {
 void camera_t::orthogonalize_gs () {
 
   m_cam_state.m_view_dir = m_cam_state.m_look_at - m_cam_state.m_view_point;
-  m_stored_dist = m_cam_state.m_view_dir.norm();
+  m_cam_state.m_stored_dist = m_cam_state.m_view_dir.norm();
   vector3<float> view_dir_new = m_cam_state.m_view_dir.normalized();
 
   if (m_cam_state.m_view_dir.isMuchSmallerThan(camera_t::norm_eps)) {
@@ -102,27 +102,7 @@ void camera_t::translate_camera (const vector3<float> shift) {
 
 void camera_t::copy_from_camera(const camera_t &another) {
 
-//  m_view_point = another.m_view_point;
-//  m_view_dir = another.m_view_dir;
-//  m_look_at = another.m_look_at;
-//  m_look_up = another.m_look_up;
-//  m_right = another.m_right;
-
-//  m_mat_view = another.m_mat_view;
-//  m_mat_proj = another.m_mat_proj;
-//  m_proj_view = another.m_proj_view;
-//  m_view_inv_tr = another.m_view_inv_tr;
-//  m3_proj_view = another.m3_proj_view;
-
   m_cam_state = another.m_cam_state;
-
-  m_ortho_scale = another.m_ortho_scale;
-  m_fov = another.m_fov;
-  m_znear_persp = another.m_znear_persp;
-  m_zfar_persp = another.m_zfar_persp;
-  m_znear_ortho = another.m_znear_ortho;
-  m_zfar_ortho = another.m_zfar_ortho;
-  m_stored_dist = another.m_stored_dist;
 
   m_cur_proj = another.m_cur_proj;
   update_camera();
@@ -207,9 +187,10 @@ void camera_t::update_camera () {
   if (m_cur_proj == cam_proj_t::proj_persp) {
 
       m_cam_state.m_look_at = (m_cam_state.m_view_point - m_cam_state.m_look_at).normalized();
-      m_cam_state.m_mat_proj = perspective<float>(m_fov,
-                                      astate->viewport_size(0) / astate->viewport_size(1),
-                                      m_znear_persp, m_zfar_persp);
+      m_cam_state.m_mat_proj =
+          perspective<float>(m_cam_state.m_fov,
+                             astate->viewport_size(0) / astate->viewport_size(1),
+                             m_cam_state.m_znear_persp, m_cam_state.m_zfar_persp);
 
     } else {
 
@@ -232,14 +213,14 @@ void camera_t::update_camera () {
           y_scale = height / (width );
         }
 
-      float left   = - x_scale * (m_ortho_scale);
-      float right  =   x_scale * (m_ortho_scale);
-      float bottom = - y_scale * (m_ortho_scale);
-      float top    =   y_scale * (m_ortho_scale);
+      float left   = - x_scale * (m_cam_state.m_ortho_scale);
+      float right  =   x_scale * (m_cam_state.m_ortho_scale);
+      float bottom = - y_scale * (m_cam_state.m_ortho_scale);
+      float top    =   y_scale * (m_cam_state.m_ortho_scale);
       //std::cout<<"ortho_scale"<<m_ortho_scale<<std::endl;
       m_cam_state.m_mat_proj = ortho<float>(left, right,
                                             bottom, top,
-                                            m_znear_ortho, m_zfar_ortho);
+                                            m_cam_state.m_znear_ortho, m_cam_state.m_zfar_ortho);
 
     }
 
@@ -252,18 +233,21 @@ void camera_t::update_camera () {
 void camera_t::update_camera_zoom (const float dist) {
 
   if (m_cur_proj == cam_proj_t::proj_persp) {
+
       vector3<float> m_view_dir_n = - m_cam_state.m_view_point + m_cam_state.m_look_at;
       float f_dist = m_view_dir_n.norm();
-      m_stored_dist = f_dist;
+      m_cam_state.m_stored_dist = f_dist;
       m_view_dir_n.normalize();
       float f_dist_delta = dist * m_mouse_whell_camera_step;
-      //bool bCanZoom = true;
+
       if (f_dist + f_dist_delta > m_mouse_zoom_min_distance || f_dist_delta < 0.0f)
         m_cam_state.m_view_point += m_view_dir_n * f_dist_delta;
 
     } else {
-      m_ortho_scale -= dist;
-      m_ortho_scale = clamp(m_ortho_scale, 1.0f, 150.0f);
+
+      m_cam_state.m_ortho_scale -= dist;
+      m_cam_state.m_ortho_scale = clamp(m_cam_state.m_ortho_scale, 1.0f, 150.0f);
+
     }
 
 }
@@ -337,7 +321,7 @@ void camera_t::save_to_json(json &data) {
 
   json_helper::save_vec3(JSON_WS_CAMERA_LOOK_AT, m_cam_state.m_look_at, data);
   json_helper::save_vec3(JSON_WS_CAMERA_VIEW_POINT, m_cam_state.m_view_point, data);
-  json_helper::save_var(JSON_WS_CAMERA_ORTHO_SCALE, m_ortho_scale, data);
+  json_helper::save_var(JSON_WS_CAMERA_ORTHO_SCALE, m_cam_state.m_ortho_scale, data);
 
 }
 
@@ -345,7 +329,7 @@ void camera_t::load_from_json(json &data) {
 
   json_helper::load_vec3(JSON_WS_CAMERA_LOOK_AT, m_cam_state.m_look_at, data);
   json_helper::load_vec3(JSON_WS_CAMERA_VIEW_POINT, m_cam_state.m_view_point, data);
-  json_helper::load_var(JSON_WS_CAMERA_ORTHO_SCALE, m_ortho_scale, data);
+  json_helper::load_var(JSON_WS_CAMERA_ORTHO_SCALE, m_cam_state.m_ortho_scale, data);
 
   m_already_loaded = true;
 

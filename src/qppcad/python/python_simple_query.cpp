@@ -1042,9 +1042,12 @@ void simple_query::camera_rotate_pitch(float magnitude) {
 void simple_query::camera_zoom(float magnitude) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->camera) {
+
       astate->camera->update_camera_zoom(magnitude);
       astate->camera->update_camera();
+
     }
 
 }
@@ -1052,8 +1055,10 @@ void simple_query::camera_zoom(float magnitude) {
 float simple_query::camera_get_zoom() {
 
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->camera && astate->camera->m_cur_proj == cam_proj_t::proj_ortho)
-    return astate->camera->m_ortho_scale;
+    return astate->camera->m_cam_state.m_ortho_scale;
+
   return 0.0f;
 
 }
@@ -1061,10 +1066,13 @@ float simple_query::camera_get_zoom() {
 void simple_query::camera_mode(int mode) {
 
   app_state_t *astate = app_state_t::get_inst();
+
   if (astate->camera) {
+
       if (mode == 0) astate->camera->set_projection(cam_proj_t::proj_persp);
       else astate->camera->set_projection(cam_proj_t::proj_ortho);
       astate->camera->update_camera();
+
     }
 
 }

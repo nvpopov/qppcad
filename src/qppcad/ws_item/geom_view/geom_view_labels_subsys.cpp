@@ -28,7 +28,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
 
   if (m_screen_scale) {
 
-      float clmp_os = std::clamp(astate->camera->m_ortho_scale, 1.0f, 20.0f);
+      float clmp_os = std::clamp(astate->camera->m_cam_state.m_ortho_scale, 1.0f, 20.0f);
       _font_size = m_lbl_font_size * 10 / clmp_os;
       _outline_size = m_outline_size * 10 / clmp_os;
 

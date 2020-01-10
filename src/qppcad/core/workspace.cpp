@@ -225,8 +225,8 @@ void workspace_t::render() {
 
           vector3<float> vScrTW = astate->camera->unproject(-0.92f, -0.90f);
           float axis_magn = astate->camera->m_cur_proj == cam_proj_t::proj_persp ?
-                              0.07f *astate->camera->m_stored_dist :
-                              m_camera->m_ortho_scale * 0.1f;
+                              0.07f *astate->camera->m_cam_state.m_stored_dist :
+                              m_camera->m_cam_state.m_ortho_scale * 0.1f;
 
           astate->dp->begin_render_line();
           astate->dp->
@@ -271,8 +271,8 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
           (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_cam_state.m_view_point).normalized();
     } else {
 
-      float z_p =  (m_camera->m_znear_ortho + m_camera->m_zfar_ortho) /
-                   (m_camera->m_znear_ortho - m_camera->m_zfar_ortho);
+      float z_p =  (m_camera->m_cam_state.m_znear_ortho + m_camera->m_cam_state.m_zfar_ortho) /
+                   (m_camera->m_cam_state.m_znear_ortho - m_camera->m_cam_state.m_zfar_ortho);
 
       m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
       m_ray.dir =
