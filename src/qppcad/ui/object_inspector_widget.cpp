@@ -17,9 +17,9 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   header_frm->setObjectName("obj_insp_header_frame");
 
   m_ws_items_hdr = new qembed_window_sub_header_t;
-  m_ws_items_hdr->m_text->setText(tr("Workspace items:"));
+  m_ws_items_hdr->m_text->setText(tr("Workspace Items"));
   m_ws_item_prop_hdr = new qembed_window_sub_header_t;
-  m_ws_item_prop_hdr->m_text->setText(tr("Properties:"));
+  m_ws_item_prop_hdr->m_text->setText(tr("Properties"));
 
   m_btn_add_new_ws_item = new QPushButton;
   m_btn_add_new_ws_item->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
