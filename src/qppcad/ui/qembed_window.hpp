@@ -28,6 +28,19 @@ namespace qpp {
 
     };
 
+    class qembed_window_sub_header_t : public QFrame {
+
+      Q_OBJECT
+
+    public:
+
+      QLabel *m_text;
+      QVBoxLayout *m_main_lt;
+
+      explicit qembed_window_sub_header_t(QWidget *parent = nullptr);
+
+    };
+
   } // namespace qpp::cad
 
 } // namespace qpp

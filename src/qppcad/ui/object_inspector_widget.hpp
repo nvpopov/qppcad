@@ -28,12 +28,15 @@ namespace qpp {
 
         QLabel *m_ws_items_label;
         QListWidget *m_ws_items_list;
-        qspoiler_widget_t *m_ws_items_spoiler;
-        QVBoxLayout *m_ws_items_spoiler_lt;
+        //qspoiler_widget_t *m_ws_items_spoiler;
+        //QVBoxLayout *m_ws_items_spoiler_lt;
 
         QPushButton *m_btn_add_new_ws_item;
         QPushButton *m_btn_refresh_oi;
-        QFrame *m_sep_ws_items_props;
+        //QFrame *m_sep_ws_items_props;
+
+        qembed_window_sub_header_t *m_ws_items_hdr;
+        qembed_window_sub_header_t *m_ws_item_prop_hdr;
 
         //property view by ws_item type
         QWidget *m_none_item_placeholder;

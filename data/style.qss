@@ -398,6 +398,11 @@ qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] {
  border-bottom: 1px solid rgb(75, 75, 75);
 }
 
+qpp--cad--qembed_window_sub_header_t{
+ background: rgb(113, 113, 113);
+ border-bottom: 1px solid rgb(75, 75, 75);
+}
+
 #tool_panel_widget_e QFrame {
  background: rgb(93, 93, 93);
 }
