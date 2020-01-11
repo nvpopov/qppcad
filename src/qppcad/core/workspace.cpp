@@ -129,7 +129,7 @@ void workspace_t::ws_changed() {
 
 }
 
-void workspace_t::reset_camera() {
+void workspace_t::reset_cam() {
 
   m_camera->reset_camera();
   set_best_view();
@@ -537,7 +537,7 @@ void workspace_t::set_edit_type (const ws_edit_e new_edit_type) {
 
 }
 
-void workspace_t::copy_camera(std::shared_ptr<workspace_t> source) {
+void workspace_t::copy_cam(std::shared_ptr<workspace_t> source) {
 
   if (!source) return;
   if (!source->m_camera) return;

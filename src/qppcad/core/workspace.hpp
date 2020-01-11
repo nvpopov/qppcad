@@ -72,8 +72,7 @@ namespace qpp {
         void unsel_all(bool emit_signal = true);
         void toggle_edit_mode();
         void ws_changed();
-        void reset_camera();
-        void set_best_view();
+
         void render();
         void render_overlay(QPainter &painter);
         void mouse_click(const float mouse_x, const float mouse_y);
@@ -86,9 +85,13 @@ namespace qpp {
         void load_ws_from_json(const std::string filename);
         void update(float delta_time);
         void set_edit_type(const ws_edit_e new_edit_type);
-        void copy_camera(std::shared_ptr<workspace_t> source);
+
+        void copy_cam(std::shared_ptr<workspace_t> source);
         void push_cam_state();
         void pop_cam_state();
+        void reset_cam();
+        void set_best_view();
+
         void del_item_by_index(size_t idx);
         void make_overview_dirty();
         std::string py_get_repr();

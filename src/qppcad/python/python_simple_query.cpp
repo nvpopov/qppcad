@@ -1083,7 +1083,7 @@ void simple_query::copy_camera_from_ws(int ws_id) {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
   if (!ok) return;
   auto ws_ref = astate->ws_mgr->get_ws(ws_id);
-  cur_ws->copy_camera(ws_ref);
+  cur_ws->copy_cam(ws_ref);
 
 }
 

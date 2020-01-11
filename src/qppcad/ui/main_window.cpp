@@ -1163,7 +1163,7 @@ void main_window_t::cam_copy_to_all() {
 
   for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
     if (cur_ws != astate->ws_mgr->m_ws[i])
-      astate->ws_mgr->m_ws[i]->copy_camera(cur_ws);
+      astate->ws_mgr->m_ws[i]->copy_cam(cur_ws);
 
 }
 

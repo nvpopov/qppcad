@@ -374,8 +374,6 @@ qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
 
 QFrame[s_class="separator"] {
  border-top: 1px solid rgb(70, 70, 70);
- margin-top: 1px;
- margin-bottom: 1px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget {
