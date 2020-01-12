@@ -216,6 +216,10 @@ void super_cell_widget_t::make_super_cell(const int a_max, const int b_max, cons
 
 }
 
+bool super_cell_widget_t::restore_cam_on_cancel() {
+  return true;
+}
+
 void super_cell_widget_t::on_apply() {
 
 }

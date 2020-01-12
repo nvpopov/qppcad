@@ -45,7 +45,7 @@ namespace qpp {
         void make_super_cell(const int a_max, const int b_max, const int c_max,
                              bool target_cam = true);
 
-        //void bind_item(ws_item_t *item);
+        bool restore_cam_on_cancel() override;
         void on_apply() override;
         void on_cancel() override;
         void bind_item(ws_item_t *item) override;

@@ -17,7 +17,7 @@ void ws_item_inline_tool_widget_t::apply() {
 
 void ws_item_inline_tool_widget_t::cancel() {
 
-  if (m_src && m_src->m_parent_ws) {
+  if (m_src && m_src->m_parent_ws && restore_cam_on_cancel()) {
 
       m_src->m_parent_ws->m_camera->pop_cam_state();
 
@@ -25,6 +25,10 @@ void ws_item_inline_tool_widget_t::cancel() {
 
   on_cancel();
 
+}
+
+bool ws_item_inline_tool_widget_t::restore_cam_on_cancel() {
+  return false;
 }
 
 void ws_item_inline_tool_widget_t::on_apply() {
@@ -41,7 +45,7 @@ void ws_item_inline_tool_widget_t::bind_item(ws_item_t *item) {
 
   m_src = item;
 
-  if (m_src && m_src->m_parent_ws) {
+  if (m_src && m_src->m_parent_ws && restore_cam_on_cancel()) {
 
       m_src->m_parent_ws->m_camera->push_cam_state();
 

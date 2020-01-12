@@ -22,6 +22,7 @@ namespace qpp {
       void apply();
       void cancel();
 
+      virtual bool restore_cam_on_cancel();
       virtual void on_apply();
       virtual void on_cancel();
       virtual void bind_item(ws_item_t *item);
