@@ -40,7 +40,7 @@ qembed_window_sub_header_t::qembed_window_sub_header_t(QWidget *parent) : QFrame
   //app_state_t *astate = app_state_t::get_inst();
 
   m_main_lt = new QVBoxLayout;
-  m_main_lt->setContentsMargins(12, 0, 0, 0);
+  m_main_lt->setContentsMargins(10, 0, 0, 0);
   setLayout(m_main_lt);
 
   m_text = new QLabel;

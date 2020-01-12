@@ -13,7 +13,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   app_state_t* astate = app_state_t::get_inst();
 
-  ew_header->setText(tr("OBJECT INSPECTOR"));
+  ew_header->setText(tr("Object Inspector"));
   header_frm->setObjectName("obj_insp_header_frame");
 
   m_ws_items_hdr = new qembed_window_sub_header_t;
