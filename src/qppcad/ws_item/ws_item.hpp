@@ -201,7 +201,7 @@ namespace qpp {
         void set_bounded_to_leader(bool bounding);
         bool is_bounded();
 
-        bool is_selected();
+        bool is_selected(); // selected in workspaces
 
         virtual void render();
         virtual void render_overlay(QPainter &painter);

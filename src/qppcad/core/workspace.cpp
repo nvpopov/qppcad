@@ -52,6 +52,17 @@ std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
 
 }
 
+opt<size_t> workspace_t::get_item_idx(ws_item_t *item) {
+
+  auto fidx = std::find_if(m_ws_items.begin(), m_ws_items.end(),
+                           [item](std::shared_ptr<ws_item_t> itemc){ return itemc.get() == item;});
+
+  if (fidx == m_ws_items.end()) return std::nullopt;
+
+  return opt<size_t>{std::distance(m_ws_items.begin(), fidx)};
+
+}
+
 bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
   app_state_t* astate = app_state_t::get_inst();

@@ -66,6 +66,7 @@ namespace qpp {
           return  cur_it->cast_as<T>();
         }
 
+        opt<size_t> get_item_idx(ws_item_t *item);
         bool set_sel_item(const size_t sel_idx, bool emit_signal = true);
         void next_item();
         void prev_item();
