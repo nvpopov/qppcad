@@ -229,6 +229,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
                             {src.m_pos = value; src.update_oi();})
               .def("__repr__", &ws_item_t::py_get_repr)
               .def("__str__", &ws_item_t::py_get_repr)
+              .def("set_selected", &ws_item_t::set_selected)
               .def("apply_tv", &ws_item_t::apply_target_view)
               .def_readwrite("offset", &ws_item_t::m_leader_offset)
               .def("bb", [](ws_item_t &src){return src.m_aabb;});

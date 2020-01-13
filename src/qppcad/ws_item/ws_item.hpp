@@ -150,6 +150,8 @@ namespace qpp {
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
                                            vector3<float> &out_look_at) = 0;
 
+        void set_selected();
+
         void push_state();
         virtual void apply_state(ws_item_state_t &state);
         void pop_state();

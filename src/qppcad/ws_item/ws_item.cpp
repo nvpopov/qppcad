@@ -23,6 +23,16 @@ void ws_item_t::set_pos(vector3<float> new_pos) {
 
 }
 
+void ws_item_t::set_selected() {
+
+  if (!m_parent_ws) {
+      return;
+    }
+
+  m_parent_ws->set_sel_item(this);
+
+}
+
 void ws_item_t::push_state() {
 
 }

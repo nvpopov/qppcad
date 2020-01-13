@@ -100,6 +100,15 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
 }
 
+bool workspace_t::set_sel_item(ws_item_t *item, bool emit_signal) {
+
+  auto itm_idx = get_item_idx(item);
+  if (!itm_idx) return false;
+
+  return set_sel_item(*itm_idx, emit_signal);
+
+}
+
 void workspace_t::next_item() {
 
   size_t target_id = get_sel_idx().value_or(0) + 1;

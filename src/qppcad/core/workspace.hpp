@@ -68,6 +68,7 @@ namespace qpp {
 
         opt<size_t> get_item_idx(ws_item_t *item);
         bool set_sel_item(const size_t sel_idx, bool emit_signal = true);
+        bool set_sel_item(ws_item_t *item, bool emit_signal = true);
         void next_item();
         void prev_item();
         void unsel_all(bool emit_signal = true);
