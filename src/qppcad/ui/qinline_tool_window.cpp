@@ -44,6 +44,12 @@ void qinline_tool_window_t::mark_as_vertical() {
 
 }
 
+bool qinline_tool_window_t::is_active() {
+
+  return m_cur_wdgt && m_cur_wdgt->isVisible();
+
+}
+
 void qinline_tool_window_t::apply_triggered() {
 
   if (m_cur_wdgt) {

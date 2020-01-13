@@ -1191,6 +1191,7 @@ void main_window_t::cur_ws_changed() {
 
     m_view_menu_show_oi->setChecked(false);
     m_view_menu_show_oi->setVisible(false);
+
     this->setWindowTitle("qpp::cad");
 
   }
