@@ -13,11 +13,9 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   app_state_t* astate = app_state_t::get_inst();
 
-  ew_header->setText(tr("Object Inspector"));
+  ew_header->setText(tr("Workspace's items"));
   header_frm->setObjectName("obj_insp_header_frame");
 
-  m_ws_items_hdr = new qembed_window_sub_header_t;
-  m_ws_items_hdr->m_text->setText(tr("Workspace Items"));
   m_ws_item_prop_hdr = new qembed_window_sub_header_t;
   m_ws_item_prop_hdr->m_text->setText(tr("Properties"));
 
@@ -62,28 +60,10 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::provide_context_menu_for_ws_items);
 
-//  m_ws_items_spoiler = new qspoiler_widget_t(tr("Workspace items"), this, true, 0,
-//                                           astate->size_guide.obj_insp_splr_w(), true, 0);
-//  m_ws_items_spoiler->setObjectName("ws_items_spoiler_e");
-//  m_ws_items_spoiler_lt = new QVBoxLayout;
-//  m_ws_items_spoiler_lt->setContentsMargins(0, 0, 0, 0);
-//  m_ws_items_spoiler_lt->setSpacing(0);
-
-//  m_ws_items_spoiler->setMaximumHeight(astate->size_guide.obj_insp_item_list_max_h());
-//  m_ws_items_spoiler_lt->addWidget(m_ws_items_list);
-//  m_ws_items_spoiler->main_lt->setContentsMargins(0, 0, 0, 0);
-//  m_ws_items_spoiler->add_content_layout(m_ws_items_spoiler_lt);
-//  m_ws_items_spoiler->widget_list_lt->setContentsMargins(0, 0, 0, 0);
-
   m_none_item_placeholder = new QWidget;
   m_none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-//  m_sep_ws_items_props = new QFrame;
-//  m_sep_ws_items_props->setProperty("s_class", "separator");
-//  m_sep_ws_items_props->setFrameShape(QFrame::HLine);
-
   main_lt->setSpacing(0);
-  main_lt->addWidget(m_ws_items_hdr);
   main_lt->addWidget(m_ws_items_list);
   //main_lt->addWidget(m_sep_ws_items_props);
   main_lt->addWidget(m_ws_item_prop_hdr);
@@ -220,6 +200,13 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
       if (cur_id) {
 
           m_ws_item_prop_hdr->setVisible(true);
+
+          m_ws_item_prop_hdr->m_text->setText(
+                tr("%1 <b>%2</b>")
+                .arg(tr("Properties of"))
+                .arg(QString::fromStdString(cur_ws->m_ws_items[*cur_id]->m_name))
+              );
+
           m_ws_items_list->item(*cur_id)->setSelected(true);
           m_ws_items_list->scrollToItem(m_ws_items_list->item(*cur_id));
 
