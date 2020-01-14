@@ -1173,6 +1173,10 @@ void main_window_t::cur_ws_changed() {
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
+  for (auto elem : {m_inline_left_tool_plch, m_inline_bottom_tool_plch})
+    if (elem && elem->is_active())
+      elem->close_triggered();
+
   if (ok) {
 
       m_tp_scenic_rot_cam->blockSignals(true);

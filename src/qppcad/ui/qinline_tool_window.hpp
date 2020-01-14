@@ -27,6 +27,8 @@ namespace qpp {
       void mark_as_horizontal();
       void mark_as_vertical();
 
+      bool is_active();
+
     public slots:
 
       void apply_triggered();
