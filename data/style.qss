@@ -364,18 +364,6 @@ qpp--cad--qspoiler_widget_t QLabel#add_new_ws_item_type_desc {
  margin: 3px;
 }
 
-qpp--cad--qspoiler_widget_t#ws_items_spoiler_e {
- margin-left: 2px;
- font-size:10pt !important;
- background: rgb(81, 81, 81);
- border: 0;
- margin-top: 0px;
-}
-
-QFrame[s_class="separator"] {
- border-top: 1px solid rgb(70, 70, 70);
-}
-
 qpp--cad--object_inspector_widget_t QTabWidget {
  margin-left: 4px;
 }
@@ -396,6 +384,7 @@ qpp--cad--qembed_window_t {
 qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] {
  background: rgb(113, 113, 113);
  border-bottom: 1px solid rgb(75, 75, 75);
+ margin-top: 1px;
 }
 
 qpp--cad--qembed_window_sub_header_t{

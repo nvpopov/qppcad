@@ -54,6 +54,7 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   m_ws_items_list->setFocusPolicy(Qt::NoFocus);
   m_ws_items_list->setContextMenuPolicy(Qt::CustomContextMenu);
   m_ws_items_list->setFixedHeight(astate->size_guide.obj_insp_item_list_max_h() - 10);
+  m_ws_items_list->setFixedWidth(astate->size_guide.obj_insp_w());
 
   connect(m_ws_items_list,
           &QListWidget::customContextMenuRequested,
