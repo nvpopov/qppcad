@@ -13,8 +13,8 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   app_state_t* astate = app_state_t::get_inst();
 
-  ew_header->setText(tr("Workspace's items"));
-  header_frm->setObjectName("obj_insp_header_frame");
+  m_ew_header->setText(tr("Workspace's items"));
+  m_header_frm->setObjectName("obj_insp_header_frame");
 
   m_ws_item_prop_hdr = new qembed_window_sub_header_t;
   m_ws_item_prop_hdr->m_text->setText(tr("Properties"));
@@ -47,8 +47,8 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
           this,
           &object_inspector_widget_t::add_new_ws_item_button_clicked);
 
-  header_lt->insertWidget(1, m_btn_refresh_oi);
-  header_lt->insertWidget(1, m_btn_add_new_ws_item);
+  m_header_lt->insertWidget(1, m_btn_refresh_oi);
+  m_header_lt->insertWidget(1, m_btn_add_new_ws_item);
 
   m_ws_items_list = new QListWidget;
   m_ws_items_list->setFocusPolicy(Qt::NoFocus);
@@ -64,11 +64,11 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   m_none_item_placeholder = new QWidget;
   m_none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  main_lt->setSpacing(0);
-  main_lt->addWidget(m_ws_items_list);
+  m_main_lt->setSpacing(0);
+  m_main_lt->addWidget(m_ws_items_list);
   //main_lt->addWidget(m_sep_ws_items_props);
-  main_lt->addWidget(m_ws_item_prop_hdr);
-  main_lt->addWidget(m_none_item_placeholder);
+  m_main_lt->addWidget(m_ws_item_prop_hdr);
+  m_main_lt->addWidget(m_none_item_placeholder);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
@@ -111,7 +111,7 @@ object_inspector_widget_t::~object_inspector_widget_t() {
   if (m_cur_obj_insp_widget) {
 
       m_cur_obj_insp_widget->unbind_item();
-      main_lt->removeWidget(m_cur_obj_insp_widget.get());
+      m_main_lt->removeWidget(m_cur_obj_insp_widget.get());
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
 
@@ -130,7 +130,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
 
       m_cur_obj_insp_widget->unbind_item();
       auto coiw_ptr = m_cur_obj_insp_widget.get();
-      if (coiw_ptr) main_lt->removeWidget(coiw_ptr);
+      if (coiw_ptr) m_main_lt->removeWidget(coiw_ptr);
       m_cur_obj_insp_widget->setParent(nullptr);
       m_cur_obj_insp_widget = nullptr;
       m_none_item_placeholder->show();
@@ -149,7 +149,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
 
       m_none_item_placeholder->hide();
-      main_lt->addWidget(obj_insp_w.get());
+      m_main_lt->addWidget(obj_insp_w.get());
       m_cur_obj_insp_widget = obj_insp_w;
       obj_insp_w->show();
       obj_insp_w->bind_to_item(cur_it.get());

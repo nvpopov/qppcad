@@ -11,11 +11,11 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
 
   setMinimumWidth(300);
   setObjectName("ext_editor_compositor");
-  ew_header->setText(tr("EXTENDED EDITOR"));
+  m_ew_header->setText(tr("EXTENDED EDITOR"));
 
   ext_edt_plch = new QWidget;
-  main_lt->addWidget(ext_edt_plch);
-  main_lt->setSpacing(0);
+  m_main_lt->addWidget(ext_edt_plch);
+  m_main_lt->setSpacing(0);
 
   top_btn_close = new QPushButton;
   top_btn_close->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
@@ -43,8 +43,8 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
           this,
           &ws_item_extended_editor_compositor_t::refresh_ext_editor_btn_clicked);
 
-  header_lt->insertWidget(0, top_btn_refresh);
-  header_lt->insertWidget(0, top_btn_close);
+  m_header_lt->insertWidget(0, top_btn_refresh);
+  m_header_lt->insertWidget(0, top_btn_close);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::extended_editor_open_requested_signal,
@@ -72,7 +72,7 @@ ws_item_extended_editor_compositor_t::~ws_item_extended_editor_compositor_t() {
 
   if (m_cur_ext_editor_widget) {
       m_cur_ext_editor_widget->unbind_item();
-      main_lt->removeWidget(m_cur_ext_editor_widget.get());
+      m_main_lt->removeWidget(m_cur_ext_editor_widget.get());
       m_cur_ext_editor_widget->setParent(nullptr);
       m_cur_ext_editor_widget = nullptr;
     }
@@ -90,7 +90,7 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
 
       m_cur_ext_editor_widget->unbind_item();
       auto coiw_ptr = m_cur_ext_editor_widget.get();
-      if (coiw_ptr) main_lt->removeWidget(coiw_ptr);
+      if (coiw_ptr) m_main_lt->removeWidget(coiw_ptr);
       m_cur_ext_editor_widget->setParent(nullptr);
       m_cur_ext_editor_widget = nullptr;
 
@@ -112,8 +112,8 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
                   ext_editor_w->bind_to_item(cur_it);
                   cur_it->m_ext_editor_id = editor_id;
                   m_cur_ext_editor_widget = ext_editor_w;
-                  main_lt->addWidget(ext_editor_w.get());
-                  ew_header->setText(tr("%1 [%2/%3]")
+                  m_main_lt->addWidget(ext_editor_w.get());
+                  m_ew_header->setText(tr("%1 [%2/%3]")
                                      .arg(ext_editor_w->header_name_hint())
                                      .arg(QString::fromStdString(cur_ws->m_ws_name))
                                      .arg(QString::fromStdString(cur_it->m_name)));

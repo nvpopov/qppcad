@@ -17,12 +17,12 @@ namespace qpp {
 
       public:
 
-        QLabel *ew_header;
-        QVBoxLayout *main_lt;
-        QVBoxLayout *main_lt_zero_lvl;
+        QLabel *m_ew_header;
+        QVBoxLayout *m_main_lt;
+        QVBoxLayout *m_main_lt_zero_lvl;
 
-        QFrame *header_frm;
-        QHBoxLayout *header_lt;
+        QFrame *m_header_frm;
+        QHBoxLayout *m_header_lt;
 
         explicit qembed_window_t(QWidget *parent = nullptr);
 

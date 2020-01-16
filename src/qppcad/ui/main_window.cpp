@@ -2060,13 +2060,13 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
 
       if (m_inline_left_tool_plch->m_cur_wdgt) {
           m_inline_left_tool_plch->m_cur_wdgt->setVisible(false);
-          m_inline_left_tool_plch->main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
+          m_inline_left_tool_plch->m_main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
         }
 
       m_inline_left_tool_plch->m_cur_wdgt = target.get();
-      m_inline_left_tool_plch->main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
+      m_inline_left_tool_plch->m_main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
       m_inline_left_tool_plch->m_cur_wdgt->setVisible(true);
-      m_inline_left_tool_plch->ew_header->setText(QString::fromStdString(it->second.m_full_name));
+      m_inline_left_tool_plch->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
       m_inline_left_tool_plch->m_cur_wdgt->bind_item(sel_item);
       inline_tool_left_ctrl_visibility(true);
       inline_tool_bottom_ctrl_visibility(false);
@@ -2077,13 +2077,13 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
 
       if (m_inline_bottom_tool_plch->m_cur_wdgt) {
           m_inline_bottom_tool_plch->m_cur_wdgt->setVisible(false);
-          m_inline_left_tool_plch->main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
+          m_inline_left_tool_plch->m_main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
         }
 
       m_inline_bottom_tool_plch->m_cur_wdgt = target.get();
-      m_inline_bottom_tool_plch->main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
+      m_inline_bottom_tool_plch->m_main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
       m_inline_bottom_tool_plch->m_cur_wdgt->setVisible(true);
-      m_inline_bottom_tool_plch->ew_header->setText(QString::fromStdString(it->second.m_full_name));
+      m_inline_bottom_tool_plch->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
       m_inline_bottom_tool_plch->m_cur_wdgt->bind_item(sel_item);
       inline_tool_left_ctrl_visibility(false);
       inline_tool_bottom_ctrl_visibility(true);
