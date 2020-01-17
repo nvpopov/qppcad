@@ -13,38 +13,38 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
   setObjectName("ext_editor_compositor");
   m_ew_header->setText(tr("EXTENDED EDITOR"));
 
-  ext_edt_plch = new QWidget;
-  m_main_lt->addWidget(ext_edt_plch);
+  m_ext_edt_plch = new QWidget;
+  m_main_lt->addWidget(m_ext_edt_plch);
   m_main_lt->setSpacing(0);
 
-  top_btn_close = new QPushButton;
-  top_btn_close->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+  m_top_btn_close = new QPushButton;
+  m_top_btn_close->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
                                     astate->size_guide.spoiler_button_h()));
-  top_btn_close->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+  m_top_btn_close->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
                                    astate->size_guide.spoiler_button_icon_h()));
-  top_btn_close->setIcon(QIcon("://images/outline-close-24px.svg"));
-  top_btn_close->setFlat(true);
+  m_top_btn_close->setIcon(QIcon("://images/outline-close-24px.svg"));
+  m_top_btn_close->setFlat(true);
 
-  connect(top_btn_close,
+  connect(m_top_btn_close,
           &QPushButton::clicked,
           this,
           &ws_item_extended_editor_compositor_t::close_ext_editor_btn_clicked);
 
-  top_btn_refresh = new QPushButton;
-  top_btn_refresh->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+  m_top_btn_refresh = new QPushButton;
+  m_top_btn_refresh->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
                                       astate->size_guide.spoiler_button_h()));
-  top_btn_refresh->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+  m_top_btn_refresh->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
                                      astate->size_guide.spoiler_button_icon_h()));
-  top_btn_refresh->setIcon(QIcon("://images/outline-refresh-24px.svg"));
-  top_btn_refresh->setFlat(true);
+  m_top_btn_refresh->setIcon(QIcon("://images/outline-refresh-24px.svg"));
+  m_top_btn_refresh->setFlat(true);
 
-  connect(top_btn_refresh,
+  connect(m_top_btn_refresh,
           &QPushButton::clicked,
           this,
           &ws_item_extended_editor_compositor_t::refresh_ext_editor_btn_clicked);
 
-  m_header_lt->insertWidget(0, top_btn_refresh);
-  m_header_lt->insertWidget(0, top_btn_close);
+  m_header_lt->insertWidget(0, m_top_btn_refresh);
+  m_header_lt->insertWidget(0, m_top_btn_close);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::extended_editor_open_requested_signal,

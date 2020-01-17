@@ -10,38 +10,38 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  ext_editor_gv_label = new QLabel(tr("geom_view_extended_editor_t"));
-  main_lt = new QVBoxLayout;
-  main_lt->setContentsMargins(0,0,0,0);
-  setLayout(main_lt);
+  m_ext_editor_gv_lbl = new QLabel(tr("geom_view_extended_editor_t"));
+  m_main_lt = new QVBoxLayout;
+  m_main_lt->setContentsMargins(0,0,0,0);
+  setLayout(m_main_lt);
 
-  xgeom_tv = new QTableView(this);
-  xgeom_tv->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  xgeom_tv->setShowGrid(false);
-  xgeom_tv->verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
-  xgeom_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+  m_xgeom_tv = new QTableView(this);
+  m_xgeom_tv->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_xgeom_tv->setShowGrid(false);
+  m_xgeom_tv->verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
+  m_xgeom_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 
-  xgeom_tv->setFocusPolicy(Qt::NoFocus);
-  xgeom_tv->setSelectionMode(QAbstractItemView::NoSelection);
-  xgeom_tv->setLocale(QLocale::C);
+  m_xgeom_tv->setFocusPolicy(Qt::NoFocus);
+  m_xgeom_tv->setSelectionMode(QAbstractItemView::NoSelection);
+  m_xgeom_tv->setLocale(QLocale::C);
 
-  main_lt->addWidget(xgeom_tv);
-  main_lt->addStretch(1);
+  m_main_lt->addWidget(m_xgeom_tv);
+  m_main_lt->addStretch(1);
 
-  xgeom_tmdl = new xgeom_table_model_t;
-  xgeom_tv->setModel(xgeom_tmdl);
+  m_xgeom_tmdl = new xgeom_table_model_t;
+  m_xgeom_tv->setModel(m_xgeom_tmdl);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this,
           &geom_view_extended_editor_t::selection_changed);
 
-  connect(xgeom_tv->verticalHeader(),
+  connect(m_xgeom_tv->verticalHeader(),
           &QHeaderView::sectionDoubleClicked,
           this,
           &geom_view_extended_editor_t::header_vertical_double_clicked);
 
-  connect(xgeom_tv->horizontalHeader(),
+  connect(m_xgeom_tv->horizontalHeader(),
           &QHeaderView::sectionDoubleClicked,
           this,
           &geom_view_extended_editor_t::header_horizontal_clicked);
@@ -54,29 +54,29 @@ void geom_view_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
 
   if (!_binding_item) {
       m_binded_gv = nullptr;
-      xgeom_tmdl->unbind();
-      xgeom_tv->update();
+      m_xgeom_tmdl->unbind();
+      m_xgeom_tv->update();
       return;
     }
 
   auto gv = _binding_item->cast_as<geom_view_t>();
   if (!gv) {
       m_binded_gv = nullptr;
-      xgeom_tmdl->unbind();
-      xgeom_tv->update();
+      m_xgeom_tmdl->unbind();
+      m_xgeom_tv->update();
       return;
     }
 
   m_binded_gv = gv;
-  xgeom_tmdl->bind(m_binded_gv);
-  xgeom_tv->update();
-  xgeom_tv->resizeColumnsToContents();
+  m_xgeom_tmdl->bind(m_binded_gv);
+  m_xgeom_tv->update();
+  m_xgeom_tv->resizeColumnsToContents();
 
 }
 
 void geom_view_extended_editor_t::update_from_ws_item() {
 
-  xgeom_tv->update();
+  m_xgeom_tv->update();
   ws_item_extended_editor_t::update_from_ws_item();
 
 }
@@ -84,7 +84,7 @@ void geom_view_extended_editor_t::update_from_ws_item() {
 void geom_view_extended_editor_t::unbind_item() {
 
   ws_item_extended_editor_t::unbind_item();
-  xgeom_tmdl->unbind();
+  m_xgeom_tmdl->unbind();
 
 }
 
@@ -101,15 +101,15 @@ QString geom_view_extended_editor_t::header_name_hint() {
 void geom_view_extended_editor_t::selection_changed() {
 
   if (m_binded_gv) {
-      xgeom_tv->update();
+      m_xgeom_tv->update();
     }
 
 }
 
 void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
 
-  if (xgeom_tv) {
-      xgeom_tv->setFixedHeight(event->size().height() * 0.98);
+  if (m_xgeom_tv) {
+      m_xgeom_tv->setFixedHeight(event->size().height() * 0.98);
     }
 
   ws_item_extended_editor_t::resizeEvent(event);
@@ -118,7 +118,7 @@ void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
 
 void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_index) {
 
-  if (xgeom_tv && xgeom_tmdl && m_binded_gv) {
+  if (m_xgeom_tv && m_xgeom_tmdl && m_binded_gv) {
 
       //std::cout << "@int logical_index =" << logical_index << std::endl;
       m_binded_gv->toggle_atom_sel(logical_index);
@@ -133,7 +133,7 @@ void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_ind
 
 void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
 
-  if (!xgeom_tv || !xgeom_tmdl || !m_binded_gv) return;
+  if (!m_xgeom_tv || !m_xgeom_tmdl || !m_binded_gv) return;
   if (m_binded_gv->m_atom_idx_sel.empty()) return;
 
   app_state_t *astate = app_state_t::get_inst();
@@ -143,7 +143,7 @@ void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
   switch (field_type) {
     case basic_types::type_bool : {
         m_binded_gv->xbool_invert_selected(logical_index);
-        xgeom_tv->update();
+        m_xgeom_tv->update();
       }
     case basic_types::type_double : {
         break;

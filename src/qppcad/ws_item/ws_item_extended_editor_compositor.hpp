@@ -20,9 +20,9 @@ namespace qpp {
 
       public:
 
-        QWidget *ext_edt_plch;
-        QPushButton *top_btn_close;
-        QPushButton *top_btn_refresh;
+        QWidget *m_ext_edt_plch;
+        QPushButton *m_top_btn_close;
+        QPushButton *m_top_btn_refresh;
 
         std::shared_ptr<ws_item_extended_editor_t> m_cur_ext_editor_widget{nullptr};
 

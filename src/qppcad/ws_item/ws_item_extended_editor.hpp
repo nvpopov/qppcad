@@ -39,6 +39,9 @@ namespace qpp {
     public:
 
         ws_item_t *m_binded_item{nullptr};
+
+        ws_item_extended_editor_t();
+
         virtual extended_editor_geom_policy_e get_geom_policy();
 
         virtual bool can_be_binded_to(ws_item_t* _item_to_bind);
@@ -48,7 +51,6 @@ namespace qpp {
         virtual void unbind_item();
         virtual void update_from_ws_item();
         virtual QString header_name_hint() = 0;
-        ws_item_extended_editor_t();
 
     };
 
