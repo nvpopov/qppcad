@@ -3,9 +3,9 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-extended_editor_geom_policy_e ws_item_extended_editor_t::get_geom_policy() {
+ext_editor_geom_policy_e ws_item_extended_editor_t::get_geom_policy() {
 
-  return extended_editor_geom_policy_e::always_min;
+  return ext_editor_geom_policy_e::always_min;
 
 }
 

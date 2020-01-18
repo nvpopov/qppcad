@@ -2112,7 +2112,8 @@ void main_window_t::control_bhv_tools_menus_activity() {
 
               if (!it_t->second.m_item_required) elem->setEnabled(true);
               if (cur_it && it_t->second.m_item_required &&
-                  it_t->second.m_accepted_type == cur_it->get_type()) elem->setEnabled(true);
+                  it_t->second.m_accepted_type == cur_it->get_type() &&
+                  it_t->second.m_can_apply(cur_it.get())) elem->setEnabled(true);
             }
 
         }

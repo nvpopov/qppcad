@@ -92,6 +92,7 @@ namespace qpp {
       bool m_show_in_menu{true};
       bool m_item_required{true};
       std::function<std::shared_ptr<ws_item_tool_t>() > m_fabric;
+      std::function<bool(ws_item_t*)> m_can_apply;
 
     };
 
@@ -390,12 +391,14 @@ namespace qpp {
        * @param _fabric
        * @return
        */
-      size_t reg_tool(std::string _full_name,
-                      size_t grgp_hash,
-                      size_t type_hash,
-                      bool _itm_req,
-                      ws_item_tool_type_e tool_type,
-                      std::function<std::shared_ptr<ws_item_tool_t>() > _fabric);
+      size_t reg_tool(
+          std::string _full_name,
+          size_t grgp_hash,
+          size_t type_hash,
+          bool _itm_req,
+          ws_item_tool_type_e tool_type,
+          std::function<std::shared_ptr<ws_item_tool_t>()> f_fabric,
+          std::function<bool(ws_item_t*)> f_can_apply);
 
       size_t reg_sflow_grp(std::string group_name);
       size_t reg_reg_sf_fbr(std::string _full_name,

@@ -23,7 +23,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum extended_editor_geom_policy_e : int {
+    enum ext_editor_geom_policy_e : int {
 
       always_max,
       always_min,
@@ -42,7 +42,7 @@ namespace qpp {
 
         ws_item_extended_editor_t();
 
-        virtual extended_editor_geom_policy_e get_geom_policy();
+        virtual ext_editor_geom_policy_e get_geom_policy();
 
         virtual bool can_be_binded_to(ws_item_t* _item_to_bind);
 

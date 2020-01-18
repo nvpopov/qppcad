@@ -57,19 +57,22 @@ namespace qpp {
         static void reg_toolbar_elements_bhv(ws_item_behaviour_manager_t *bhv_mgr);
 
         template<typename T, typename U>
-        static void reg_ws_item_tool(std::string _full_name,
-                                     size_t _g_hash,
-                                     ws_item_behaviour_manager_t *bhv_mgr,
-                                     bool _item_required = true,
-                                     ws_item_tool_type_e tool_type =
-                                      ws_item_tool_type_e::ws_item_tool_modal) {
+        static void reg_ws_item_tool(
+            std::string _full_name,
+            size_t _g_hash,
+            ws_item_behaviour_manager_t *bhv_mgr,
+            bool _item_required = true,
+            ws_item_tool_type_e tool_type =
+            ws_item_tool_type_e::ws_item_tool_modal,
+            const std::function<bool(ws_item_t*)> cf = [](ws_item_t*){return  true;}) {
 
-          bhv_mgr->reg_tool(_full_name,
-                            _g_hash,
-                            U::get_type_static(),
-                            _item_required,
-                            tool_type,
-                            [](){return std::make_shared<T>();});
+            bhv_mgr->reg_tool(_full_name,
+                              _g_hash,
+                              U::get_type_static(),
+                              _item_required,
+                              tool_type,
+                              [](){return std::make_shared<T>();},
+                              cf);
 
         }
 

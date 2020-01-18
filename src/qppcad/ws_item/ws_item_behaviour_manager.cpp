@@ -238,7 +238,8 @@ size_t ws_item_behaviour_manager_t::reg_tool(
     size_t type_hash,
     bool _itm_req,
     ws_item_tool_type_e tool_type,
-    std::function<std::shared_ptr<ws_item_tool_t>() > _fabric) {
+    std::function<std::shared_ptr<ws_item_tool_t>()> f_fabric,
+    std::function<bool(ws_item_t*)> f_can_apply) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -248,7 +249,8 @@ size_t ws_item_behaviour_manager_t::reg_tool(
   tinfo.m_group_hash = grgp_hash;
   tinfo.m_tool_type = tool_type;
   tinfo.m_item_required = _itm_req;
-  tinfo.m_fabric = _fabric;
+  tinfo.m_fabric = f_fabric;
+  tinfo.m_can_apply = f_can_apply;
 
   size_t tinfo_hash = astate->hash_reg->calc_hash_ub(_full_name);
 
