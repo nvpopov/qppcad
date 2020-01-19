@@ -261,3 +261,12 @@ void super_cell_widget_t::updated_externally(uint32_t update_reason) {
 
 }
 
+
+bool super_cell_can_apply_helper_t::can_apply(ws_item_t *item) {
+
+  if (!item) return false;
+  auto as_gv = item->cast_as<geom_view_t>();
+  if (!as_gv) return false;
+  return as_gv->m_geom->DIM == 3;
+
+}

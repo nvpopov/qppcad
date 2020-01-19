@@ -19,6 +19,12 @@ namespace qpp {
 
   namespace cad {
 
+    struct super_cell_can_apply_helper_t {
+
+      static bool can_apply(ws_item_t *item);
+
+    };
+
     class super_cell_widget_t : public ws_item_inline_tool_widget_t,
                                 public iupdatable_externally_t {
 
