@@ -52,9 +52,10 @@
 #include <qppcad/tools/purify_boundary_atoms/purify_boundary_atoms.hpp>
 #include <qppcad/tools/copy_geom_view_aux/copy_geom_view_aux.hpp>
 #include <qppcad/tools/shift_start_of_cell/shift_start_of_cell.hpp>
-
 #include <qppcad/tools/sel_vis/sel_vis.hpp>
 #include <qppcad/tools/sel_parity/sel_parity.hpp>
+#include <qppcad/tools/geom_view_checkers.hpp>
+
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
 
@@ -363,12 +364,12 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
   registration_helper_t::reg_ws_item_tool<supercell_tool_t, geom_view_t>(
         "Supercell Generator", hash_t_generator, bhv_mgr,
         true, ws_item_tool_type_e::ws_item_tool_inline_vertical,
-        super_cell_can_apply_helper_t::can_apply);
+        gv_accept_dim<false, false, false, true>);
 
   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, geom_view_t>(
         "Axial scale", hash_t_tr, bhv_mgr,
         true, ws_item_tool_type_e::ws_item_tool_modal,
-        axial_scale_can_apply_helper_t::can_apply);
+        gv_accept_dim<false, false, false, true>);
 
   registration_helper_t::reg_ws_item_tool<clamp_atoms_to_cell_tool_t, geom_view_t>(
         "Clamp atoms to cell(3D)", hash_t_tr, bhv_mgr);
