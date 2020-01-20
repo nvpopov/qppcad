@@ -15,6 +15,12 @@ namespace qpp {
 
   namespace cad {
 
+    struct axial_scale_can_apply_helper_t {
+
+      static bool can_apply(ws_item_t *item);
+
+    };
+
     class axial_scale_tool_t : public ws_item_tool_t {
 
       public:

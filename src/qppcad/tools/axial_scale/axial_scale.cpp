@@ -136,3 +136,12 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
   m_dialog_lt->addWidget(m_dialog_bb);
 
 }
+
+bool axial_scale_can_apply_helper_t::can_apply(ws_item_t *item) {
+
+  if (!item) return false;
+  auto as_gv = item->cast_as<geom_view_t>();
+  if (!as_gv) return false;
+  return as_gv->m_geom->DIM == 3;
+
+}

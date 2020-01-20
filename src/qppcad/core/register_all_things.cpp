@@ -366,7 +366,9 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         super_cell_can_apply_helper_t::can_apply);
 
   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, geom_view_t>(
-        "Axial scale", hash_t_tr, bhv_mgr);
+        "Axial scale", hash_t_tr, bhv_mgr,
+        true, ws_item_tool_type_e::ws_item_tool_modal,
+        axial_scale_can_apply_helper_t::can_apply);
 
   registration_helper_t::reg_ws_item_tool<clamp_atoms_to_cell_tool_t, geom_view_t>(
         "Clamp atoms to cell(3D)", hash_t_tr, bhv_mgr);
