@@ -4,6 +4,7 @@
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
 #include <qppcad/ui/qextended_action.hpp>
+#include <qppcad/ui/qt_helpers.hpp>
 #include <QMenu>
 
 using namespace qpp;
@@ -203,15 +204,9 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
           m_ws_item_prop_hdr->setVisible(true);
 
           QString item_name = QString::fromStdString(cur_ws->m_ws_items[*cur_id]->m_name);
-          int item_name_len = item_name.length();
-
-          QString item_name_final = item_name_len > 22 ?
-                                    item_name.leftRef(22) + "..." :
-                                    item_name;
-
           m_ws_item_prop_hdr->m_text->setText(tr("%1 <b>%2</b>")
                                               .arg(tr("Properties of"))
-                                              .arg(item_name_final));
+                                              .arg(qt_hlp::clamp_string(item_name, 28)));
 
           m_ws_items_list->item(*cur_id)->setSelected(true);
           m_ws_items_list->scrollToItem(m_ws_items_list->item(*cur_id));

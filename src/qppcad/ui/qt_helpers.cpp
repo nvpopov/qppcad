@@ -103,3 +103,14 @@ void qt_hlp::form_lt_ctrl_visibility(bool show,
   else form_lt_hide_row(form_lt, field_label, field_widget);
 
 }
+
+QString qt_hlp::clamp_string(const QString &src, int max_width, const QString &suf) {
+
+  if (src.length() + suf.length() < max_width) {
+      return src;
+    } else {
+      QString tmp = src.left(max_width-suf.length());
+      return tmp+suf;
+    }
+
+}

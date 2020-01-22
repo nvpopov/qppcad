@@ -29,20 +29,27 @@ namespace qpp {
         }
 
         static void resize_form_lt_lbl(QLabel *label, int new_size);
+
         static void resize_form_lt_lbls(QFormLayout *form_lt, int new_size);
 
         static void form_lt_hide_row(QFormLayout *form_lt,
                                      QLabel *field_label,
                                      QWidget *field_widget);
+
         static void form_lt_insert_before(QFormLayout *form_lt,
                                           QWidget *target,
                                           QLabel *field_label,
                                           QWidget *field_widget);
+
         static void form_lt_ctrl_visibility(bool show,
                                             QFormLayout *form_lt,
                                             QWidget *target,
                                             QLabel *field_label,
                                             QWidget *field_widget);
+
+        static QString clamp_string(const QString &src,
+                                    int max_width = 22,
+                                    const QString &suf = "...");
 
     };
 
