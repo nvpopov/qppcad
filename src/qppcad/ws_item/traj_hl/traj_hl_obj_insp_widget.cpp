@@ -25,8 +25,8 @@ traj_hl_obj_insp_widget_t::traj_hl_obj_insp_widget_t() {
   m_gb_traj_settings_lt->addRow(tr("Element size"), m_elem_size);
   init_form_lt(m_gb_traj_settings_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(m_gb_traj_settings);
-  tab_general->tab_inner_widget_lt->addStretch(1);
+  m_tab_general->tab_inner_widget_lt->addWidget(m_gb_traj_settings);
+  m_tab_general->tab_inner_widget_lt->addStretch(1);
 
 }
 

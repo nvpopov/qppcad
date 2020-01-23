@@ -81,11 +81,11 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
     }
   init_form_lt(gb_colorize_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_psg_summary);
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_psg_summary);
   tab_display->tab_inner_widget_lt->addWidget(gb_psg_view_settings);
   tab_display->tab_inner_widget_lt->addWidget(gb_colorize);
 
-  tab_general->tab_inner_widget_lt->addStretch();
+  m_tab_general->tab_inner_widget_lt->addStretch();
   tab_display->tab_inner_widget_lt->addStretch();
 
 }

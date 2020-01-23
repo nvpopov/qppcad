@@ -49,8 +49,8 @@ arrow_array_obj_insp_widget_t::arrow_array_obj_insp_widget_t() {
 
   init_form_lt(gb_aa_settings_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_aa_settings);
-  tab_general->tab_inner_widget_lt->addStretch();
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_aa_settings);
+  m_tab_general->tab_inner_widget_lt->addStretch();
 
 }
 

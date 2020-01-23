@@ -16,8 +16,8 @@ compl_list_view_obj_insp_widget_t::compl_list_view_obj_insp_widget_t()
   clv_info_wdgt_lt->addRow(tr("Total entries"), clv_total_recs);
   init_form_lt(clv_info_wdgt_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(clv_info_wdgt);
-  tab_general->tab_inner_widget_lt->addStretch(0);
+  m_tab_general->tab_inner_widget_lt->addWidget(clv_info_wdgt);
+  m_tab_general->tab_inner_widget_lt->addStretch(0);
 
 }
 

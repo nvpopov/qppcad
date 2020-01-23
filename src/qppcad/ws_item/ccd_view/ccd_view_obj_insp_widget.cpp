@@ -167,8 +167,8 @@ ccd_view_obj_insp_widget_t::ccd_view_obj_insp_widget_t() : ws_item_obj_insp_widg
   gb_gen_ccd_info_lt->addRow(tr("Run type"), gen_info_run_type);
   init_form_lt(gb_gen_ccd_info_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);
-  tab_general->tab_inner_widget_lt->addStretch(0);
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_gen_ccd_info);
+  m_tab_general->tab_inner_widget_lt->addStretch(0);
 
   gb_vib_modes = new qspoiler_widget_t(tr("Vibrational Modes"));
  // gb_vib_modes->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));

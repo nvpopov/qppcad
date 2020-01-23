@@ -5,7 +5,7 @@ using namespace qpp::cad;
 
 py_note_book_obj_insp_widget_t::py_note_book_obj_insp_widget_t() {
 
-  tab_general->tab_inner_widget_lt->addStretch();
+  m_tab_general->tab_inner_widget_lt->addStretch();
 
 }
 

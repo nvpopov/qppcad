@@ -23,8 +23,8 @@ pdos_view_obj_insp_widget_t::pdos_view_obj_insp_widget_t() {
           this,
           &pdos_view_obj_insp_widget_t::rebuild_btn_clicked);
 
-  tg_actions_layout->addWidget(tg_actions_add_channel, 1, 0);
-  tg_actions_layout->addWidget(tg_actions_rebuild, 1, 1);
+  m_tg_acts_layout->addWidget(tg_actions_add_channel, 1, 0);
+  m_tg_acts_layout->addWidget(tg_actions_rebuild, 1, 1);
   //tg_actions_layout->setRowMinimumHeight(1, astate->size_guide.obj_insp_button_h()+5);
 
   m_data_target_menu = new QMenu(this);
@@ -61,8 +61,8 @@ pdos_view_obj_insp_widget_t::pdos_view_obj_insp_widget_t() {
 
   init_form_lt(gb_pdos_info_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_pdos_info);
-  tab_general->tab_inner_widget_lt->addStretch(1);
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_pdos_info);
+  m_tab_general->tab_inner_widget_lt->addStretch(1);
 
 }
 

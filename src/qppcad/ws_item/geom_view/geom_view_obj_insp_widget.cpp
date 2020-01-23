@@ -97,11 +97,11 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
           this,
           &geom_view_obj_insp_widget_t::type_summary_clicked);
 
-  tab_general->tab_inner_widget_lt->addWidget(tg_geom_summary_widget);
-  tab_general->tab_inner_widget_lt->addWidget(tg_type_summary_widget);
-  tab_general->tab_inner_widget_lt->addWidget(tg_gb_cell);
+  m_tab_general->tab_inner_widget_lt->addWidget(tg_geom_summary_widget);
+  m_tab_general->tab_inner_widget_lt->addWidget(tg_type_summary_widget);
+  m_tab_general->tab_inner_widget_lt->addWidget(tg_gb_cell);
 
-  tab_general->tab_inner_widget_lt->addStretch();
+  m_tab_general->tab_inner_widget_lt->addStretch();
 
 }
 

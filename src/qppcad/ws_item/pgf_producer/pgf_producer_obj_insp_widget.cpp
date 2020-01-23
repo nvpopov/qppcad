@@ -43,9 +43,9 @@ pgf_producer_obj_insp_widget_t::pgf_producer_obj_insp_widget_t() {
   gb_gen_cell_lt = new QFormLayout;
   gb_gen_cell->add_content_layout(gb_gen_cell_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_pgf_data);
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_pgf_data);
 
-  tab_general->tab_inner_widget_lt->addStretch();
+  m_tab_general->tab_inner_widget_lt->addStretch();
 
   tab_cell_range->tab_inner_widget_lt->addWidget(gb_gen_cell);
   tab_cell_range->tab_inner_widget_lt->addStretch();

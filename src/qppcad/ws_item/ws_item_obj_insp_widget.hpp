@@ -1,4 +1,4 @@
-#ifndef QPPCAD_WS_ITEM_OBJ_INSP_H
+﻿#ifndef QPPCAD_WS_ITEM_OBJ_INSP_H
 #define QPPCAD_WS_ITEM_OBJ_INSP_H
 
 #include <qppcad/core/qppcad.hpp>
@@ -45,27 +45,22 @@ namespace qpp {
 
         ws_item_t *m_binded_item{nullptr};
 
-        ws_item_tab_widget_t *tab_general;
-        qspoiler_widget_t *sp_info_widget;
+        ws_item_tab_widget_t *m_tab_general;
+        qspoiler_widget_t *m_sp_info_wdgt;
 
-        QFormLayout *tg_form_layout;
-        QLabel *ws_item_name;
-        QLabel *ws_item_type;
-        QLabel *ws_item_pos_label;
-        qbinded_float3_input_t *ws_item_pos;
+        QFormLayout *m_tg_form_lt;
+        QLabel *m_ws_item_name;
+        QLabel *m_ws_item_type;
+        QLabel *m_ws_item_pos_label;
+        qbinded_float3_input_t *m_ws_item_pos;
 
-        qspoiler_widget_t *tg_actions;
-        QGridLayout *tg_actions_layout;
-        QPushButton *tg_actions_delete;
-        QPushButton *tg_actions_rename;
-        QPushButton *tg_actions_clone;
+        qspoiler_widget_t *m_tg_acts;
+        QGridLayout *m_tg_acts_layout;
+        QPushButton *m_tg_acts_delete;
+        QPushButton *m_tg_acts_rename;
+        QPushButton *m_tg_acts_clone;
 
-//        QLabel *ws_item_is_visible_label;
-//        qbinded_checkbox_t *ws_item_is_visible;
-//        QLabel *ws_item_bb_visible_label;
-//        qbinded_checkbox_t *ws_item_bb_visible;
-
-        qbinded_bool_named_vector_t *ws_item_show_item_bb;
+        qbinded_bool_named_vector_t *m_ws_item_show_item_bb;
 
         ws_item_tab_widget_t* def_tab(QString tab_name,
                                       QString icon_name_enabled,

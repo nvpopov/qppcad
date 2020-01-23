@@ -5,7 +5,7 @@ using namespace qpp::cad;
 
 ws_vector3_obj_insp_widget_t::ws_vector3_obj_insp_widget_t() {
 
-  tab_general->tab_inner_widget_lt->addStretch(1);
+  m_tab_general->tab_inner_widget_lt->addStretch(1);
 
 }
 

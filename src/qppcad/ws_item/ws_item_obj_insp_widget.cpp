@@ -64,26 +64,14 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
           setCurrentIndex(target_index);
         }
 
-      ws_item_pos->bind_value(&m_binded_item->m_pos, m_binded_item);
-      ws_item_show_item_bb->bind_value({&m_binded_item->m_is_visible, &m_binded_item->m_show_bb});
-
-//      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_rendering,
-//                                      tg_form_layout,
-//                                      ws_item_type,
-//                                      ws_item_is_visible_label,
-//                                      ws_item_is_visible);
-
-//      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_render_bb,
-//                                      tg_form_layout,
-//                                      ws_item_is_visible,
-//                                      ws_item_bb_visible_label,
-//                                      ws_item_bb_visible);
+      m_ws_item_pos->bind_value(&m_binded_item->m_pos, m_binded_item);
+      m_ws_item_show_item_bb->bind_value({&m_binded_item->m_is_visible, &m_binded_item->m_show_bb});
 
       qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
-                                      tg_form_layout,
-                                      ws_item_type,
-                                      ws_item_pos_label,
-                                      ws_item_pos);
+                                      m_tg_form_lt,
+                                      m_ws_item_type,
+                                      m_ws_item_pos_label,
+                                      m_ws_item_pos);
 
     }
 
@@ -98,8 +86,8 @@ void ws_item_obj_insp_widget_t::unbind_item() {
     }
 
   m_binded_item = nullptr;
-  ws_item_show_item_bb->unbind_value();
-  ws_item_pos->unbind_value();
+  m_ws_item_show_item_bb->unbind_value();
+  m_ws_item_pos->unbind_value();
 
 }
 
@@ -113,16 +101,16 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
       std::string name_str = m_binded_item->get_name();
       QString name_truncated = QString::fromStdString(name_str).left(trc_name);
       if (name_str.length() > trc_name) name_truncated += "...";
-      ws_item_name->setText(name_truncated);
-      ws_item_name->setToolTip(QString::fromStdString(name_str));
+      m_ws_item_name->setText(name_truncated);
+      m_ws_item_name->setToolTip(QString::fromStdString(name_str));
 
       std::string type_str = m_binded_item->compose_type_descr();
       QString type_truncated = QString::fromStdString(type_str).left(trc_type);
       if (type_str.length() > trc_type) type_truncated += "...";
-      ws_item_type->setText(type_truncated);
+      m_ws_item_type->setText(type_truncated);
 
-      ws_item_show_item_bb->load_value();
-      ws_item_pos->load_value_ex();
+      m_ws_item_show_item_bb->load_value();
+      m_ws_item_pos->load_value_ex();
 
     }
 
@@ -169,62 +157,62 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setIconSize(QSize(26,26));
-  tab_general = def_tab(tr("General settings of workspace item"),
+  m_tab_general = def_tab(tr("General settings of workspace item"),
                         "://images/settings.svg");
 
   //begin group box Item information
-  sp_info_widget = new qspoiler_widget_t(tr("Item Information"));
-  tg_form_layout = new QFormLayout;
+  m_sp_info_wdgt = new qspoiler_widget_t(tr("Item Information"));
+  m_tg_form_lt = new QFormLayout;
 
   //pre_init_group_box(tg_info_widget, tg_form_layout);
-  sp_info_widget->add_content_layout(tg_form_layout);
+  m_sp_info_wdgt->add_content_layout(m_tg_form_lt);
 
-  ws_item_name = new QLabel;
-  ws_item_type = new QLabel;
+  m_ws_item_name = new QLabel;
+  m_ws_item_type = new QLabel;
 
-  ws_item_show_item_bb = new qbinded_bool_named_vector_t({tr("Item"), tr("BBox")});
+  m_ws_item_show_item_bb = new qbinded_bool_named_vector_t({tr("Item"), tr("BBox")});
 
-  ws_item_pos_label = new QLabel(tr("Position[%1]").arg(astate->m_spatial_suffix));
-  ws_item_pos = new qbinded_float3_input_t;
-  ws_item_pos->m_updated_externally_event = true;
-  ws_item_pos->m_upd_flag = ws_item_updf_pos_changed;
+  m_ws_item_pos_label = new QLabel(tr("Position[%1]").arg(astate->m_spatial_suffix));
+  m_ws_item_pos = new qbinded_float3_input_t;
+  m_ws_item_pos->m_updated_externally_event = true;
+  m_ws_item_pos->m_upd_flag = ws_item_updf_pos_changed;
 
-  ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
+  m_ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
 
-  tg_form_layout->addRow(tr("Name"), ws_item_name);
-  tg_form_layout->addRow(tr("Type"), ws_item_type);
-  tg_form_layout->addRow(ws_item_pos_label, ws_item_pos);
-  tg_form_layout->addRow(tr("Show"), ws_item_show_item_bb);
+  m_tg_form_lt->addRow(tr("Name"), m_ws_item_name);
+  m_tg_form_lt->addRow(tr("Type"), m_ws_item_type);
+  m_tg_form_lt->addRow(m_ws_item_pos_label, m_ws_item_pos);
+  m_tg_form_lt->addRow(tr("Show"), m_ws_item_show_item_bb);
 
-  init_form_lt(tg_form_layout);
+  init_form_lt(m_tg_form_lt);
 
   //end group box Item information
 
   //Begin group box Item actions
-  tg_actions = new qspoiler_widget_t(tr("Item Actions"));
+  m_tg_acts = new qspoiler_widget_t(tr("Item Actions"));
 
-  tg_actions_layout = new QGridLayout;
-  tg_actions_layout->setContentsMargins(5, 0, 5, 0);
-  tg_actions->add_content_layout(tg_actions_layout);
+  m_tg_acts_layout = new QGridLayout;
+  m_tg_acts_layout->setContentsMargins(5, 0, 5, 0);
+  m_tg_acts->add_content_layout(m_tg_acts_layout);
 
-  tg_actions_delete = new QPushButton(tr("Delete"));
-  connect(tg_actions_delete,
+  m_tg_acts_delete = new QPushButton(tr("Delete"));
+  connect(m_tg_acts_delete,
           &QPushButton::pressed,
           this,
           &ws_item_obj_insp_widget_t::delete_current_item);
 
-  tg_actions_rename = new QPushButton(tr("Rename"));
-  connect(tg_actions_rename,
+  m_tg_acts_rename = new QPushButton(tr("Rename"));
+  connect(m_tg_acts_rename,
           &QPushButton::pressed,
           this,
           &ws_item_obj_insp_widget_t::rename_current_item);
 
-  tg_actions_clone = new QPushButton(tr("Clone"));
-  tg_actions_clone->setEnabled(false);
+  m_tg_acts_clone = new QPushButton(tr("Clone"));
+  m_tg_acts_clone->setEnabled(false);
 
-  tg_actions_layout->addWidget(tg_actions_delete, 0, 0);
-  tg_actions_layout->addWidget(tg_actions_rename, 0, 1);
-  tg_actions_layout->addWidget(tg_actions_clone,  0, 2);
+  m_tg_acts_layout->addWidget(m_tg_acts_delete, 0, 0);
+  m_tg_acts_layout->addWidget(m_tg_acts_rename, 0, 1);
+  m_tg_acts_layout->addWidget(m_tg_acts_clone,  0, 2);
 
   //tg_actions->setMaximumHeight(90);
   //end group box Item actions
@@ -234,8 +222,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
           this,
           &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
 
-  tab_general->tab_inner_widget_lt->addWidget(sp_info_widget);
-  tab_general->tab_inner_widget_lt->addWidget(tg_actions);
+  m_tab_general->tab_inner_widget_lt->addWidget(m_sp_info_wdgt);
+  m_tab_general->tab_inner_widget_lt->addWidget(m_tg_acts);
 
   connect(this,
           &ws_item_obj_insp_widget_t::currentChanged,
@@ -248,7 +236,7 @@ void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
 
   if (m_binded_item) {
       if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
-          ws_item_pos->load_value_ex();
+          m_ws_item_pos->load_value_ex();
         }
     }
 

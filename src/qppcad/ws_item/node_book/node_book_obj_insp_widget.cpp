@@ -17,8 +17,8 @@ node_book_obj_insp_widget_t::node_book_obj_insp_widget_t() : ws_item_obj_insp_wi
 
   init_form_lt(gb_nb_settings_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_nb_settings);
-  tab_general->tab_inner_widget_lt->addStretch();
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_nb_settings);
+  m_tab_general->tab_inner_widget_lt->addStretch();
 
 }
 

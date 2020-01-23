@@ -35,9 +35,9 @@ arrow_primitive_obj_insp_widget_t::arrow_primitive_obj_insp_widget_t() {
 
   init_form_lt(gb_arrow_settings_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_arrow_settings);
-  tab_general->tab_inner_widget_lt->addStretch(1);
-  ws_item_pos->m_updated_externally_event = true;
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_arrow_settings);
+  m_tab_general->tab_inner_widget_lt->addStretch(1);
+  m_ws_item_pos->m_updated_externally_event = true;
 
 }
 

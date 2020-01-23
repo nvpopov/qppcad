@@ -43,8 +43,8 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   gb_volume_detail_lt->addRow(tr("Color - density"), vol_color_vol);
   init_form_lt(gb_volume_detail_lt);
 
-  tab_general->tab_inner_widget_lt->addWidget(gb_volume_detail);
-  tab_general->tab_inner_widget_lt->addStretch();
+  m_tab_general->tab_inner_widget_lt->addWidget(gb_volume_detail);
+  m_tab_general->tab_inner_widget_lt->addStretch();
 
   connect(cb_current_volume,
           static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
