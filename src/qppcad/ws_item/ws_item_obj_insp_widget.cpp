@@ -93,21 +93,20 @@ void ws_item_obj_insp_widget_t::unbind_item() {
 
 void ws_item_obj_insp_widget_t::update_from_ws_item() {
 
-  const int trc_name = 19;
-  const int trc_type = 22;
+  const int trc_name = 25;
+  const int trc_type = 25;
 
   if (m_binded_item) {
 
-      std::string name_str = m_binded_item->get_name();
-      QString name_truncated = QString::fromStdString(name_str).left(trc_name);
-      if (name_str.length() > trc_name) name_truncated += "...";
-      m_ws_item_name->setText(name_truncated);
-      m_ws_item_name->setToolTip(QString::fromStdString(name_str));
+      auto name_fstr = QString::fromStdString(m_binded_item->get_name());
+      auto name_qstr = qt_hlp::clamp_string(name_fstr, trc_name);
+      m_ws_item_name->setText(name_fstr);
+      m_ws_item_name->setToolTip(name_qstr);
 
-      std::string type_str = m_binded_item->compose_type_descr();
-      QString type_truncated = QString::fromStdString(type_str).left(trc_type);
-      if (type_str.length() > trc_type) type_truncated += "...";
-      m_ws_item_type->setText(type_truncated);
+      auto name_tstr =
+          qt_hlp::clamp_string(QString::fromStdString(m_binded_item->compose_type_descr()),
+                               trc_type);
+      m_ws_item_type->setText(name_tstr);
 
       m_ws_item_show_item_bb->load_value();
       m_ws_item_pos->load_value_ex();

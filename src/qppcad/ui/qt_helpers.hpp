@@ -18,6 +18,7 @@ namespace qpp {
 
         template<typename T>
         static void vrt_resize_tv_to_cnt(T *table_view) {
+
           int count = table_view->verticalHeader()->count();
           int horizontal_header_height = table_view->horizontalHeader()->height();
           int row_total_height = 0;
@@ -26,6 +27,7 @@ namespace qpp {
             }
           table_view->setMinimumHeight(horizontal_header_height + row_total_height + 2);
           table_view->setMaximumHeight(horizontal_header_height + row_total_height + 2);
+
         }
 
         static void resize_form_lt_lbl(QLabel *label, int new_size);
