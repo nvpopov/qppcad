@@ -29,6 +29,10 @@ namespace qpp {
 
         QPP_OBJECT(workspace_t, qpp_object_t)
 
+      private:
+
+        size_t                                   m_cur_epoch{0};
+
       public:
 
         workspace_manager_t                      *m_owner{nullptr};
@@ -40,6 +44,7 @@ namespace qpp {
         ray_t<float>                             m_ray;
         std::unique_ptr<gizmo_t>                 m_gizmo;
         vector3<float>                           m_bg_color{1, 1, 1};
+
         bool m_need_to_update_overview{false};
         bool m_show_obj_insp{true};
         bool m_is_ws_imported{false};
@@ -55,6 +60,7 @@ namespace qpp {
           m_gizmo = std::make_unique<gizmo_t>();
         }
 
+        //selection routines
         opt<size_t>  get_sel_idx();
         ws_item_t *get_sel();
         std::shared_ptr<ws_item_t> get_sel_sp();
@@ -75,6 +81,7 @@ namespace qpp {
         void toggle_edit_mode();
         void ws_changed();
 
+        //render & ui
         void render();
         void render_overlay(QPainter &painter);
         void mouse_click(const float mouse_x, const float mouse_y);
@@ -82,17 +89,25 @@ namespace qpp {
         void add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add);
         void update_overview(const std::string &overview_text);
 
+        //io
         void clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete);
         void save_ws_to_json(const std::string filename);
         void load_ws_from_json(const std::string filename);
         void update(float delta_time);
         void set_edit_type(const ws_edit_e new_edit_type);
 
+        //camera stuff
         void copy_cam(std::shared_ptr<workspace_t> source);
         void push_cam_state();
         void pop_cam_state();
         void reset_cam();
         void set_best_view();
+
+        //epoch controling
+        void push_epoch();
+        void pop_epoch();
+        void goto_epoch(size_t target_epoch);
+        size_t get_cur_epoch();
 
         void del_item_by_index(size_t idx);
         void make_overview_dirty();

@@ -114,7 +114,8 @@ namespace qpp {
 
       private:
 
-          uint32_t p_flags{0};
+        uint32_t p_flags{0};
+        size_t m_cur_epoch{0};
 
       public:
 
@@ -163,6 +164,12 @@ namespace qpp {
                                  bool &need_to_update_camera);
 
         void apply_target_view(cam_tv_e target_view_src);
+
+        //epoch stuff
+        void push_epoch();
+        void pop_epoch();
+        void goto_epoch(size_t target_epoch);
+        size_t get_cur_epoch();
 
         /**
          * @brief set_parent_workspace

@@ -22,7 +22,7 @@ namespace qpp {
 
     template<typename T>
     struct property_record_t {
-      size_t m_ws_seed;
+      size_t m_epoch;
       T m_value;
     };
 

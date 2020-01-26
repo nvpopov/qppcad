@@ -22,43 +22,43 @@ namespace qpp {
 
         ccd_view_t *b_ccdv{nullptr};
 
-        ws_item_tab_widget_t *tab_geo_opt;
-        ws_item_tab_widget_t *tab_vibs;
-        ws_item_tab_widget_t *tab_tddft;
+        ws_item_tab_widget_t *m_tab_geo_opt;
+        ws_item_tab_widget_t *m_tab_vibs;
+        ws_item_tab_widget_t *m_tab_tddft;
 
-        QLabel *tab_info_program;
-        qspoiler_widget_t *gb_gen_ccd_info;
-        QFormLayout *gb_gen_ccd_info_lt;
-        QLabel *gen_info_prog_name;
-        QLabel *gen_info_run_type;
+        QLabel *m_tab_info_prg;
+        qspoiler_widget_t *m_gb_gen_ccd_info;
+        QFormLayout *m_gb_gen_ccd_info_lt;
+        QLabel *m_gen_info_prg_name;
+        QLabel *m_gen_info_run_type;
 
-        qspoiler_widget_t *tgo_select_step;
-        QFormLayout *tgo_select_step_lt;
+        qspoiler_widget_t *m_tgo_sel_step;
+        QFormLayout *m_tgo_sel_step_lt;
         //QListWidget *tgo_steps_ex;
-        QHBoxLayout *tgo_actions_lt;
-        QLabel *tgo_steps_current;
-        QPushButton *tgo_steps_forward;
-        QPushButton *tgo_steps_backward;
-        QPushButton *tgo_steps_begin;
-        QPushButton *tgo_steps_end;
+        QHBoxLayout *m_tgo_acts_lt;
+        QLabel *m_tgo_steps_current;
+        QPushButton *m_tgo_steps_fwd;
+        QPushButton *m_tgo_steps_bck;
+        QPushButton *m_tgo_steps_begin;
+        QPushButton *m_tgo_steps_end;
 
-        qspoiler_widget_t *tgo_step_info;
-        QFormLayout *tgo_step_info_lt;
-        QLabel *tgo_step_info_etotal;
-        QLabel *tgo_step_info_dipole_moment;
-        QLabel *tgo_step_info_gr_min;
-        QLabel *tgo_step_info_gr_max;
-        QLabel *tgo_step_info_gr_av;
-        QLabel *tgo_step_info_gr_norm;
-        qbinded_combobox_t *tgo_step_copy_charges;
+        qspoiler_widget_t *m_tgo_step_info;
+        QFormLayout *m_tgo_step_info_lt;
+        QLabel *m_tgo_step_info_etotal;
+        QLabel *m_tgo_step_info_dipole_moment;
+        QLabel *m_tgo_step_info_gr_min;
+        QLabel *m_tgo_step_info_gr_max;
+        QLabel *m_tgo_step_info_gr_av;
+        QLabel *m_tgo_step_info_gr_norm;
+        qbinded_combobox_t *m_tgo_step_copy_charges;
 
-        qspoiler_widget_t *ttd_info;
-        QFormLayout *ttd_info_lt;
-        QLabel *ttd_info_total_trans;
+        qspoiler_widget_t *m_ttd_info;
+        QFormLayout *m_ttd_info_lt;
+        QLabel *m_ttd_info_total_trans;
 
-        qspoiler_widget_t *gb_vib_modes;
-        QVBoxLayout *gb_vib_modes_lt;
-        QListWidget *vib_modes_list_wdgt;
+        qspoiler_widget_t *m_gb_vib_modes;
+        QVBoxLayout *m_gb_vib_modes_lt;
+        QListWidget *m_vib_modes_list_wdgt;
 
         void bind_to_item(ws_item_t *_binding_item) override;
         void update_from_ws_item() override;
@@ -77,7 +77,7 @@ namespace qpp {
 
       public slots:
 
-        void ui_cur_selected_step_item_changed();
+        void ui_cur_sel_step_item_changed();
         void ui_step_forward();
         void ui_step_backward();
         void ui_step_to_the_begin();

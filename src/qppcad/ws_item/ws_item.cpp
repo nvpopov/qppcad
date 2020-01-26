@@ -78,7 +78,23 @@ void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
 
 }
 
-void ws_item_t::set_parent_ws(workspace_t *_parent_ws){
+void ws_item_t::push_epoch() {
+
+}
+
+void ws_item_t::goto_epoch(size_t target_epoch) {
+
+}
+
+size_t ws_item_t::get_cur_epoch() {
+  return m_cur_epoch;
+}
+
+void ws_item_t::pop_epoch() {
+
+}
+
+void ws_item_t::set_parent_ws(workspace_t *_parent_ws) {
   m_parent_ws = _parent_ws;
 }
 
