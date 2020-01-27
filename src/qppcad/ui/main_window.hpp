@@ -55,21 +55,13 @@ namespace qpp {
 
       public:
 
-        explicit main_window_t(QWidget *parent = nullptr);
-        ~main_window_t() override;
-
-        void init_base_shortcuts();
-        void init_menus();
-        void init_widgets();
-        void init_layouts();
-
         std::vector<stored_action_hotkeys_t> m_shortcuts;
 
         //Widgets
         QWidget *m_main_wdgt; //main application widget
         QWidget *m_tp_wdgt; //tool panel widget
 
-        QHBoxLayout *m_tp_lt; //tool panel layout
+        QVBoxLayout *m_tp_lt; //tool panel layout
         QLabel *m_tp_overview; //tool panel overbiew information(right text)
         QPushButton *m_tp_modern_menu;
 
@@ -200,6 +192,14 @@ namespace qpp {
         // Toolpanel
         std::vector<std::shared_ptr<toolbar_element_t> > m_toolbar_elements;
         // End of Toolpanel
+
+        explicit main_window_t(QWidget *parent = nullptr);
+        ~main_window_t() override;
+
+        void init_base_shortcuts();
+        void init_menus();
+        void init_widgets();
+        void init_layouts();
 
       protected:
 

@@ -38,6 +38,7 @@ namespace qpp {
          */
         int tool_panel_h();
         int tool_panel_h_exact();
+        int tool_panel_w();
 
         /**
          * @brief tool_panel_ws_selector_w

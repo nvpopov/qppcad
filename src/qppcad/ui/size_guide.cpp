@@ -27,6 +27,10 @@ int size_guide_t::tool_panel_h_exact() {
   return 48;
 }
 
+int size_guide_t::tool_panel_w() {
+  return tool_panel_ctrl_sys_w();
+}
+
 int size_guide_t::tool_panel_ws_selector_w() {
   return 180;
 }

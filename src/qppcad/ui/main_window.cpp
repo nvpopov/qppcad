@@ -453,7 +453,7 @@ void main_window_t::init_widgets() {
 
   m_tp_wdgt = new QWidget(nullptr);
   m_tp_wdgt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  m_tp_wdgt->setFixedHeight(astate->size_guide.tool_panel_h_exact());
+  m_tp_wdgt->setFixedWidth(astate->size_guide.tool_panel_w());
   m_tp_wdgt->setProperty("s_class", "tp_generic");
   m_tp_wdgt->setObjectName("tool_panel_widget_e");
   m_tp_overview = new QLabel(nullptr);
@@ -727,13 +727,14 @@ void main_window_t::init_layouts() {
 
   m_main_wdgt->setLayout(m_main_lt);
   m_main_lt->addWidget(m_ws_tabbar_wdgt);
-  m_main_lt->addWidget(m_tp_wdgt);
+  //m_main_lt->addWidget(m_tp_wdgt);
   m_main_lt->setContentsMargins(0,0,0,0);
   m_main_lt->setSpacing(0);
 
   m_ws_tabbar_wdgt->raise();
 
   m_splitter_ws_viewer_ext_edt = new QSplitter(Qt::Horizontal);
+
   m_splitter_ws_viewer_ext_edt->addWidget(m_ws_viewer_wdgt_frame);
   m_splitter_ws_viewer_ext_edt->addWidget(m_ext_edtr_compositor);
   m_splitter_ws_viewer_ext_edt->setHandleWidth(0);
@@ -766,6 +767,7 @@ void main_window_t::init_layouts() {
   //m_splitter_ws_viewer_py_console_log->setCollapsible(3, false);
 
   m_layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
+  m_layout_ws_viewer_obj_insp->addWidget(m_tp_wdgt);
   m_layout_ws_viewer_obj_insp->addWidget(m_inline_left_tool_plch);
   m_layout_ws_viewer_obj_insp->addWidget(m_splitter_ws_viewer_py_console_log);
   m_layout_ws_viewer_obj_insp->addWidget(m_obj_insp_wdgt);
@@ -774,11 +776,13 @@ void main_window_t::init_layouts() {
   m_layout_ws_viewer_obj_insp->setCollapsible(0, false);
   m_layout_ws_viewer_obj_insp->setCollapsible(1, false);
   m_layout_ws_viewer_obj_insp->setCollapsible(2, false);
+  m_layout_ws_viewer_obj_insp->setCollapsible(3, false);
+  //m_layout_ws_viewer_obj_insp->setCollapsible(4, false);
 
   m_layout_ws_viewer_obj_insp->setHandleWidth(0);
   m_main_lt->addWidget(m_layout_ws_viewer_obj_insp);
 
-  m_tp_lt = new QHBoxLayout;
+  m_tp_lt = new QVBoxLayout;
   m_tp_wdgt->setLayout(m_tp_lt);
   m_tp_lt->setContentsMargins(5,0,0,0);
 
@@ -803,7 +807,7 @@ void main_window_t::init_layouts() {
   m_tp_lt->addWidget(m_tp_add_point_sym_group, 0, Qt::AlignLeft);
 
   m_tp_lt->addStretch(1);
-  m_tp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
+  //m_tp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
   m_tp_lt->addWidget(m_tp_modern_menu, 0, Qt::AlignRight);
   m_tp_lt->addSpacing(10);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
