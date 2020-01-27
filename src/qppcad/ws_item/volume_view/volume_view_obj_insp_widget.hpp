@@ -15,20 +15,20 @@ namespace qpp {
       public:
 
         volume_view_t *b_vol{nullptr};
-        QLabel *general_volume_type;
-        qbinded_float_spinbox_t *vol_isovalue;
+        QLabel *m_general_volume_type;
+        qbinded_float_spinbox_t *m_vol_isovalue;
 
-        qbinded_checkbox_t *vol_render_permanent;
-        qbinded_checkbox_t *vol_transparent;
-        qbinded_float_spinbox_t *vol_alpha;
+        qbinded_checkbox_t *m_vol_render_permanent;
+        qbinded_checkbox_t *m_vol_transparent;
+        qbinded_float_spinbox_t *m_vol_alpha;
 
-        qbinded_color3_input_t *vol_color_pos;
-        qbinded_color3_input_t *vol_color_neg;
-        qbinded_color3_input_t *vol_color_vol;
+        qbinded_color3_input_t *m_vol_color_pos;
+        qbinded_color3_input_t *m_vol_color_neg;
+        qbinded_color3_input_t *m_vol_color_vol;
 
-        qspoiler_widget_t *gb_volume_detail;
-        QFormLayout *gb_volume_detail_lt;
-        QComboBox *cb_current_volume;
+        qspoiler_widget_t *m_gb_volume_detail;
+        QFormLayout *m_gb_volume_detail_lt;
+        QComboBox *m_cb_current_volume;
 
         volume_view_obj_insp_widget_t();
 

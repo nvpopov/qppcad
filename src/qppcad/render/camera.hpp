@@ -16,6 +16,15 @@ namespace qpp {
       proj_persp
     };
 
+    template <typename T>
+    struct stored_type_t {
+      size_t m_cur_epoch;
+      T m_data;
+      bool operator>=(const stored_type_t<T>& rhs) {
+        return this->m_cur_epoch >= rhs.m_cur_epoch;
+      }
+    };
+
     struct camera_state_t {
 
       vector3<float> m_view_point;
@@ -42,6 +51,10 @@ namespace qpp {
     };
 
     class camera_t : public serializable_t {
+
+      private:
+
+        size_t m_cur_epoch{0};
 
       public:
 
@@ -81,6 +94,11 @@ namespace qpp {
 
         void push_cam_state();
         void pop_cam_state();
+
+        void push_epoch(size_t new_epoch);
+        void pop_epoch();
+        void goto_epoch(size_t target_epoch);
+        size_t get_cur_epoch();
 
         void reset_camera();
         void update_camera();

@@ -8,45 +8,45 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  general_volume_type = new QLabel(tr("Molecular orbitals"));
-  vol_isovalue = new qbinded_float_spinbox_t;
-  vol_isovalue->set_min_max_step(-0.8, 0.8, 0.0001, 4);
-  vol_isovalue->m_updated_externally_event = true;
-  vol_isovalue->m_upd_flag = ws_item_updf_regenerate_content;
+  m_general_volume_type = new QLabel(tr("Molecular orbitals"));
+  m_vol_isovalue = new qbinded_float_spinbox_t;
+  m_vol_isovalue->set_min_max_step(-0.8, 0.8, 0.0001, 4);
+  m_vol_isovalue->m_updated_externally_event = true;
+  m_vol_isovalue->m_upd_flag = ws_item_updf_regenerate_content;
 
-  vol_color_pos = new qbinded_color3_input_t;
-  vol_color_neg = new qbinded_color3_input_t;
-  vol_color_vol = new qbinded_color3_input_t;
-  vol_transparent = new qbinded_checkbox_t;
-  vol_alpha = new qbinded_float_spinbox_t;
-  vol_alpha->set_min_max_step(0.1, 1.0, 0.05, 2);
-  vol_render_permanent = new qbinded_checkbox_t;
+  m_vol_color_pos = new qbinded_color3_input_t;
+  m_vol_color_neg = new qbinded_color3_input_t;
+  m_vol_color_vol = new qbinded_color3_input_t;
+  m_vol_transparent = new qbinded_checkbox_t;
+  m_vol_alpha = new qbinded_float_spinbox_t;
+  m_vol_alpha->set_min_max_step(0.1, 1.0, 0.05, 2);
+  m_vol_render_permanent = new qbinded_checkbox_t;
 
-  gb_volume_detail = new qspoiler_widget_t(tr("Volume Details"));
-  gb_volume_detail_lt = new QFormLayout;
-  gb_volume_detail->add_content_layout(gb_volume_detail_lt);
+  m_gb_volume_detail = new qspoiler_widget_t(tr("Volume Details"));
+  m_gb_volume_detail_lt = new QFormLayout;
+  m_gb_volume_detail->add_content_layout(m_gb_volume_detail_lt);
 
-  cb_current_volume = new QComboBox;
-  cb_current_volume->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
-  cb_current_volume->setEditable(false);
+  m_cb_current_volume = new QComboBox;
+  m_cb_current_volume->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
+  m_cb_current_volume->setEditable(false);
 
   //cb_current_volume->setMaximumWidth(def_control_width);
 
-  gb_volume_detail_lt->addRow(tr("Current volume"), cb_current_volume);
-  gb_volume_detail_lt->addRow(tr("Permanent"), vol_render_permanent);
-  gb_volume_detail_lt->addRow(tr("Type"), general_volume_type);
-  gb_volume_detail_lt->addRow(tr("Isolevel"), vol_isovalue);
-  gb_volume_detail_lt->addRow(tr("Transparent"), vol_transparent);
-  gb_volume_detail_lt->addRow(tr("Alpha"), vol_alpha);
-  gb_volume_detail_lt->addRow(tr("Color - positive"), vol_color_pos);
-  gb_volume_detail_lt->addRow(tr("Color - negative"), vol_color_neg);
-  gb_volume_detail_lt->addRow(tr("Color - density"), vol_color_vol);
-  init_form_lt(gb_volume_detail_lt);
+  m_gb_volume_detail_lt->addRow(tr("Current volume"), m_cb_current_volume);
+  m_gb_volume_detail_lt->addRow(tr("Permanent"), m_vol_render_permanent);
+  m_gb_volume_detail_lt->addRow(tr("Type"), m_general_volume_type);
+  m_gb_volume_detail_lt->addRow(tr("Isolevel"), m_vol_isovalue);
+  m_gb_volume_detail_lt->addRow(tr("Transparent"), m_vol_transparent);
+  m_gb_volume_detail_lt->addRow(tr("Alpha"), m_vol_alpha);
+  m_gb_volume_detail_lt->addRow(tr("Color - positive"), m_vol_color_pos);
+  m_gb_volume_detail_lt->addRow(tr("Color - negative"), m_vol_color_neg);
+  m_gb_volume_detail_lt->addRow(tr("Color - density"), m_vol_color_vol);
+  init_form_lt(m_gb_volume_detail_lt);
 
-  m_tab_general->tab_inner_widget_lt->addWidget(gb_volume_detail);
+  m_tab_general->tab_inner_widget_lt->addWidget(m_gb_volume_detail);
   m_tab_general->tab_inner_widget_lt->addStretch();
 
-  connect(cb_current_volume,
+  connect(m_cb_current_volume,
           static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
           this,
           &volume_view_obj_insp_widget_t::cur_volume_index_changed);
@@ -72,11 +72,11 @@ void volume_view_obj_insp_widget_t::update_from_ws_item() {
 
   if (b_vol) {
 
-      cb_current_volume->blockSignals(true);
-      cb_current_volume->clear();
+      m_cb_current_volume->blockSignals(true);
+      m_cb_current_volume->clear();
 
       for (size_t i = 0; i < b_vol->m_volumes.size(); i++) {
-          cb_current_volume->addItem(QString("[%1]%2")
+          m_cb_current_volume->addItem(QString("[%1]%2")
                                      .arg(i)
                                      .arg(QString::fromStdString(
                                             b_vol->m_volumes[i]->m_volume.m_name)
@@ -84,8 +84,8 @@ void volume_view_obj_insp_widget_t::update_from_ws_item() {
                                      );
         }
 
-      cb_current_volume->setCurrentIndex(b_vol->m_current_volume);
-      cb_current_volume->blockSignals(false);
+      m_cb_current_volume->setCurrentIndex(b_vol->m_current_volume);
+      m_cb_current_volume->blockSignals(false);
 
     }
 
@@ -93,13 +93,13 @@ void volume_view_obj_insp_widget_t::update_from_ws_item() {
 
 void volume_view_obj_insp_widget_t::unbind_item() {
 
-  vol_isovalue->unbind_value();
-  vol_color_pos->unbind_value();
-  vol_color_neg->unbind_value();
-  vol_color_vol->unbind_value();
-  vol_alpha->unbind_value();
-  vol_transparent->unbind_value();
-  vol_render_permanent->unbind_value();
+  m_vol_isovalue->unbind_value();
+  m_vol_color_pos->unbind_value();
+  m_vol_color_neg->unbind_value();
+  m_vol_color_vol->unbind_value();
+  m_vol_alpha->unbind_value();
+  m_vol_transparent->unbind_value();
+  m_vol_render_permanent->unbind_value();
 
 }
 
@@ -110,16 +110,16 @@ void volume_view_obj_insp_widget_t::update_binded_volume_controls() {
       auto cvi = b_vol->m_current_volume;
       auto &cv = b_vol->m_volumes[cvi];
 
-      general_volume_type->setText(cv->m_volume_type != def_isovalue_mo ?
+      m_general_volume_type->setText(cv->m_volume_type != def_isovalue_mo ?
                                    tr("Density") :
                                    tr("Molecular orbitals"));
-      vol_isovalue->bind_value(&cv->m_isolevel, b_vol);
-      vol_color_pos->bind_value(&cv->m_color_pos);
-      vol_color_neg->bind_value(&cv->m_color_neg);
-      vol_color_vol->bind_value(&cv->m_color_vol);
-      vol_render_permanent->bind_value(&cv->m_render_permanent);
-      vol_alpha->bind_value(&cv->m_alpha);
-      vol_transparent->bind_value(&cv->m_transparent_volume);
+      m_vol_isovalue->bind_value(&cv->m_isolevel, b_vol);
+      m_vol_color_pos->bind_value(&cv->m_color_pos);
+      m_vol_color_neg->bind_value(&cv->m_color_neg);
+      m_vol_color_vol->bind_value(&cv->m_color_vol);
+      m_vol_render_permanent->bind_value(&cv->m_render_permanent);
+      m_vol_alpha->bind_value(&cv->m_alpha);
+      m_vol_transparent->bind_value(&cv->m_transparent_volume);
 
     }
 

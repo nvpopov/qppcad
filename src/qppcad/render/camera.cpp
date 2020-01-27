@@ -128,6 +128,22 @@ void camera_t::pop_cam_state() {
 
 }
 
+void camera_t::push_epoch(size_t new_epoch) {
+
+}
+
+void camera_t::pop_epoch() {
+
+}
+
+void camera_t::goto_epoch(size_t target_epoch) {
+
+}
+
+size_t camera_t::get_cur_epoch() {
+  return m_cur_epoch;
+}
+
 void camera_t::reset_camera () {
 
   m_cam_state.m_view_point = vector3<float>(0.0, 9.0, 0.0);
