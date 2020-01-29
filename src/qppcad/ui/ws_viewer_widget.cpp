@@ -141,7 +141,7 @@ void ws_viewer_widget_t::paintGL() {
   astate->dp->depth_func(draw_pipeline_depth_func::depth_disabled);
   astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
 
-  if (astate->m_show_debug_frame_stats) {
+  if (astate->m_show_debug_frame_stats && !astate->ws_mgr->m_ws.empty()) {
 
       painter.setFont(QFont(astate->m_font_name, 13));
 
@@ -155,13 +155,13 @@ void ws_viewer_widget_t::paintGL() {
         }
 
       painter.setPen(debug_hud_color);
-      painter.drawText(3, 3, 280, 30, Qt::AlignLeft,
+      painter.drawText(width()-260, height()-30, 280, 30, Qt::AlignLeft,
                        QString::fromStdString(fmt::format("Frame time GPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_gpu)/
                                                           1000000.0))
                        );
 
-      painter.drawText(3, 30, 280, 30, Qt::AlignLeft,
+      painter.drawText(width()-260, height()-60, 280, 30, Qt::AlignLeft,
                        QString::fromStdString(fmt::format("Frame time CPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_cpu)/
                                                           1000000.0))
