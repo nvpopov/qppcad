@@ -99,6 +99,8 @@ namespace qpp {
 
         int node_book_inplace_par_width();
 
+        int ws_tabbar_height();
+
     };
 
   } // namespace qpp::cad

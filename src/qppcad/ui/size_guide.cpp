@@ -174,3 +174,7 @@ int size_guide_t::common_button_fixed_w() {
 int size_guide_t::node_book_inplace_par_width() {
   return 100;
 }
+
+int size_guide_t::ws_tabbar_height() {
+  return 32;
+}

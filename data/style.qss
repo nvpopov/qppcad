@@ -254,6 +254,10 @@ qpp--cad--ws_tabbar_t::tab {
  color: rgb(171, 171, 171);
 }
 
+#m_tp_overview_wrp {
+ background-color: rgb(105, 105, 105);
+}
+
 qpp--cad--ws_tabbar_t::tab::first {
  margin-left: 4px;
 }
@@ -395,6 +399,8 @@ qpp--cad--qembed_window_sub_header_t{
 
 #tool_panel_widget_e QFrame {
  background: rgb(93, 93, 93);
+ border-right: 2px solid black;
+ border-top: 1px solid black;
 }
 
 QPushButton:hover, QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover, QToolButton:hover{
