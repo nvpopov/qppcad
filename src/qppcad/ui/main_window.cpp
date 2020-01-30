@@ -885,8 +885,10 @@ void main_window_t::wss_changed_slot() {
   if (astate->ws_mgr->has_wss()) {
 
       if (!astate->m_immersive_mode) {
-          m_ws_tabbar_wdgt->setVisible(true);
+
+          m_wstabbar_overview_wrp->setVisible(true);
           m_tp_wdgt->setVisible(true);
+
         }
 
       m_file_menu_close_ws->setEnabled(true);
@@ -901,7 +903,8 @@ void main_window_t::wss_changed_slot() {
 
       m_obj_insp_wdgt->setVisible(false);
       m_tp_wdgt->setVisible(false);
-      m_ws_tabbar_wdgt->setVisible(false);
+      //m_ws_tabbar_wdgt->setVisible(false);
+      m_wstabbar_overview_wrp->setVisible(false);
       m_file_menu_close_ws->setEnabled(false);
       m_ws_menu_rename_ws->setEnabled(false);
       m_view_menu_show_gizmo->setEnabled(false);
