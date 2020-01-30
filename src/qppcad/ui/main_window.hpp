@@ -60,8 +60,8 @@ namespace qpp {
         //Widgets
         QWidget *m_main_wdgt; //main application widget
         QWidget *m_tp_wdgt; //tool panel widget
-        QWidget *m_tp_overview_wrp;
-        QHBoxLayout *m_tp_overview_wrp_lt;
+        QWidget *m_wstabbar_overview_wrp;
+        QHBoxLayout *m_wstabbar_overview_wrp_lt;
         QVBoxLayout *m_tp_lt; //tool panel layout
         QLabel *m_tp_overview; //tool panel overbiew information(right text)
         QPushButton *m_tp_modern_menu;

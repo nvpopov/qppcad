@@ -726,13 +726,13 @@ void main_window_t::init_layouts() {
   m_ws_tabbar_wdgt = new ws_tabbar_t(nullptr);
   m_log_wdgt = new log_widget_t(nullptr);
 
-  m_tp_overview_wrp = new QWidget;
-  m_tp_overview_wrp->setFixedHeight(astate->size_guide.ws_tabbar_height());
-  m_tp_overview_wrp_lt = new QHBoxLayout;
-  m_tp_overview_wrp->setLayout(m_tp_overview_wrp_lt);
-  m_tp_overview_wrp_lt->setContentsMargins(0,0,0,0);
-  m_tp_overview_wrp_lt->setSpacing(0);
-  m_tp_overview_wrp->setObjectName("m_tp_overview_wrp");
+  m_wstabbar_overview_wrp = new QWidget;
+  m_wstabbar_overview_wrp->setFixedHeight(astate->size_guide.ws_tabbar_height());
+  m_wstabbar_overview_wrp_lt = new QHBoxLayout;
+  m_wstabbar_overview_wrp->setLayout(m_wstabbar_overview_wrp_lt);
+  m_wstabbar_overview_wrp_lt->setContentsMargins(0,0,0,0);
+  m_wstabbar_overview_wrp_lt->setSpacing(0);
+  m_wstabbar_overview_wrp->setObjectName("m_tp_overview_wrp");
 
   m_tp_overview = new QLabel(nullptr);
   m_tp_overview->setFixedWidth(astate->size_guide.obj_insp_w()-5);
@@ -740,12 +740,12 @@ void main_window_t::init_layouts() {
   m_main_wdgt->setLayout(m_main_lt);
 
   m_main_lt->addWidget(m_tp_wdgt);
-  m_main_lt->addWidget(m_tp_overview_wrp);
+  m_main_lt->addWidget(m_wstabbar_overview_wrp);
   m_main_lt->setContentsMargins(0,0,0,0);
   m_main_lt->setSpacing(0);
 
-  m_tp_overview_wrp_lt->addWidget(m_ws_tabbar_wdgt);
-  m_tp_overview_wrp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
+  m_wstabbar_overview_wrp_lt->addWidget(m_ws_tabbar_wdgt);
+  m_wstabbar_overview_wrp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
 
   m_ws_tabbar_wdgt->raise();
 
