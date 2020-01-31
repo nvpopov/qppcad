@@ -1,6 +1,6 @@
 * {
- font-family : "OpenSans";
- font-size: 12pt;
+ font-family : "Heebo";
+ font-size: 13pt;
  font-weight: normal;
 }
 

@@ -61,5 +61,9 @@
         <file>images/format_list_numbered-24px_d.svg</file>
         <file>images/format_list_numbered-24px.svg</file>
         <file>images/more_vert-24px.svg</file>
+        <file>fonts/Heebo/Heebo-Bold.ttf</file>
+        <file>fonts/Heebo/Heebo-Medium.ttf</file>
+        <file>fonts/Heebo/Heebo-Regular.ttf</file>
+        <file>fonts/Heebo/Heebo-Light.ttf</file>
     </qresource>
 </RCC>

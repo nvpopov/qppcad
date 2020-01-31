@@ -93,9 +93,9 @@ int main (int argc, char **argv) {
   qApp->setPalette(astate->m_app_palette);
 
   std::vector<int> fnt_id = {
-    QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Light.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Regular.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Open_Sans/OpenSans-Bold.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Light.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Regular.ttf"),
+    QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Bold.ttf"),
   };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
