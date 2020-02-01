@@ -140,6 +140,7 @@ void ws_item_obj_insp_widget_t::init_form_lt(QFormLayout *frm_lt) {
 
   app_state_t *astate = app_state_t::get_inst();
   qt_hlp::resize_form_lt_lbls(frm_lt, astate->size_guide.obj_insp_lbl_w());
+  frm_lt->setSpacing(1);
 
 }
 
