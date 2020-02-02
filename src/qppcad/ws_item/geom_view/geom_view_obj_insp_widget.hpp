@@ -148,10 +148,6 @@ namespace qpp {
         QFormLayout *m_tms_common_settings_gb_lt;
         qbinded_bool_named_vector_t *m_tms_render_dist_angle;
         qbinded_bool_named_vector_t *m_tms_render_dist_angle_legend;
-//        qbinded_checkbox_t *tms_render_dist;
-//        qbinded_checkbox_t *tms_render_angle;
-//        qbinded_checkbox_t *tms_render_dist_legend;
-//        qbinded_checkbox_t *tms_render_angle_legend;
 
         //pair dist
         qspoiler_widget_t *m_tms_pair_dist_gb;
@@ -326,6 +322,8 @@ namespace qpp {
         void fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al);
 
         void tab_modify_flip_cell_clicked(size_t flip_dim, float flip_magn = 1);
+
+        void resizeEvent(QResizeEvent *event) override;
 
         geom_view_obj_insp_widget_t();
 

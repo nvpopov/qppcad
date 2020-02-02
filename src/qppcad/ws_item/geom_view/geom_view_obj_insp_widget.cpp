@@ -1023,14 +1023,14 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
   m_txg_info_tmdl = new qxgeom_fields_model_t;
   m_txg_info_tv->setModel(m_txg_info_tmdl);
 
-  m_txg_info_tv->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+  m_txg_gb_info->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   m_txg_info_tv->verticalHeader()->hide();
   m_txg_info_tv->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   m_txg_info_tv->setFocusPolicy(Qt::NoFocus);
   m_txg_info_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-  m_txg_info_tv->setFixedWidth(astate->size_guide.obj_insp_table_w());
+  //m_txg_info_tv->setFixedWidth(astate->size_guide.obj_insp_table_w());
   m_txg_info_tv->setShowGrid(false);
-  m_txg_info_tv->setMinimumHeight(210);
+  m_txg_info_tv->setMinimumHeight(400);
 
   m_txg_gb_comp_prop = new qspoiler_widget_t(tr("Computed Property"));
   m_txg_gb_comp_prop_lt = new QVBoxLayout;
@@ -1848,29 +1848,35 @@ void geom_view_obj_insp_widget_t::tab_modify_flip_cell_clicked(size_t flip_dim, 
 
 }
 
+void geom_view_obj_insp_widget_t::resizeEvent(QResizeEvent *event) {
+
+  ws_item_obj_insp_widget_t::resizeEvent(event);
+
+}
+
 geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_widget_t() {
 
   m_tab_disp = def_tab(tr("Display settings"),
-                     "://images/monitor.svg");
+                       "://images/monitor.svg");
 
   m_tab_anim = def_tab(tr("Animation"),
-                     "://images/film.svg",
-                     "://images/film_d.svg");
+                       "://images/film.svg",
+                       "://images/film_d.svg");
 
   m_tab_modify = def_tab(tr("Modify"),
-                       "://images/outline-build-24px.svg",
-                       "://images/outline-build-24px_d.svg");
+                         "://images/outline-build-24px.svg",
+                         "://images/outline-build-24px_d.svg");
 
   m_tab_measurement = def_tab(tr("Measurement"),
-                            "://images/outline-straighten-24px.svg");
+                              "://images/outline-straighten-24px.svg");
 
   m_tab_select = def_tab(tr("Atom selection groups"),
-                       "://images/outline-select_all-24px.svg",
-                       "://images/outline-select_all-24px_d.svg");
+                         "://images/outline-select_all-24px.svg",
+                         "://images/outline-select_all-24px_d.svg");
 
   m_tab_xgeom = def_tab(tr("XGeometry fields"),
-                      "://images/format_list_numbered-24px.svg",
-                      "://images/format_list_numbered-24px_d.svg");
+                        "://images/format_list_numbered-24px.svg",
+                        "://images/format_list_numbered-24px_d.svg");
 
   construct_general_tab();
   construct_disp_tab();
@@ -1980,6 +1986,7 @@ void geom_view_obj_insp_widget_t::play_anim_button_toggle(bool value) {
 void geom_view_obj_insp_widget_t::anim_updated_external() {
 
   if (b_al) {
+
       int current_frame_truncated = b_al->m_anim->current_frame_truncated();
       // remap frame id from 0..size-1 1..size
       m_anim_cur_frame->setText(tr("%1").arg(current_frame_truncated+1));
@@ -1998,10 +2005,12 @@ void geom_view_obj_insp_widget_t::cur_ws_sel_item_frame_changed() {
 void geom_view_obj_insp_widget_t::anim_timeline_slider_value_changed(int value) {
 
   if (b_al) {
+
       auto cur_anim = b_al->m_anim->get_current_anim();
       if (cur_anim && value < cur_anim->frames.size()) {
           b_al->m_anim->update_and_set_anim(b_al->m_anim->m_cur_anim, value);
         }
+
     }
 
 }

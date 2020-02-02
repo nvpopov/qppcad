@@ -12,7 +12,7 @@ node_book_obj_insp_widget_t::node_book_obj_insp_widget_t() : ws_item_obj_insp_wi
   nb_highlight_dirty_nodes = new qbinded_checkbox_t;
   nb_auto_recompute = new qbinded_checkbox_t;
 
-  gb_nb_settings_lt->addRow(tr("Auto recompute"), nb_auto_recompute);
+  gb_nb_settings_lt->addRow(tr("Auto recalc"), nb_auto_recompute);
   gb_nb_settings_lt->addRow(tr("Highlight dirty"), nb_highlight_dirty_nodes);
 
   init_form_lt(gb_nb_settings_lt);

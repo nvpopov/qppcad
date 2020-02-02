@@ -76,6 +76,8 @@ namespace qpp {
         void init_form_lt(QFormLayout *frm_lt);
         void init_form_lt_lbl(QLabel *_label);
 
+        void resizeEvent(QResizeEvent *event) override;
+
         ws_item_obj_insp_widget_t();
 
       public slots:

@@ -151,6 +151,12 @@ void ws_item_obj_insp_widget_t::init_form_lt_lbl(QLabel *_label) {
 
 }
 
+void ws_item_obj_insp_widget_t::resizeEvent(QResizeEvent *event) {
+
+  QTabWidget::resizeEvent(event);
+
+}
+
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
@@ -158,7 +164,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setIconSize(QSize(26,26));
   m_tab_general = def_tab(tr("General settings of workspace item"),
-                        "://images/settings.svg");
+                          "://images/settings.svg");
 
   //begin group box Item information
   m_sp_info_wdgt = new qspoiler_widget_t(tr("Item Information"));
@@ -238,9 +244,11 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
 
   if (m_binded_item) {
+
       if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
           m_ws_item_pos->load_value_ex();
         }
+
     }
 
 }
