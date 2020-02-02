@@ -179,6 +179,9 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   m_ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
 
+  //auto m_mat_test = new qbinded_matrix3_input_t;
+
+  //m_tg_form_lt->addRow("ds", m_mat_test);
   m_tg_form_lt->addRow(tr("Name"), m_ws_item_name);
   m_tg_form_lt->addRow(tr("Type"), m_ws_item_type);
   m_tg_form_lt->addRow(m_ws_item_pos_label, m_ws_item_pos);

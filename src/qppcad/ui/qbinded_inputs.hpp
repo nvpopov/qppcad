@@ -11,6 +11,7 @@
 #include <QFormLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QGridLayout>
 #include <QLabel>
 #include <QFrame>
 #include <geom/xgeom.hpp>
@@ -231,6 +232,28 @@ namespace qpp {
       private slots:
 
         void spinbox_value_changed(double newval);
+
+    };
+
+    class qbinded_matrix3_input_t :
+        public QWidget,
+        public generic_binded_input_t<matrix3<float> > {
+
+      Q_OBJECT
+
+    public:
+
+      QGridLayout *m_main_lt;
+      std::vector<QDoubleSpinBox*> m_sbx;
+      std::map<QDoubleSpinBox*, std::tuple<size_t, size_t> > m_sbx_lookup;
+
+      void load_value_ex() override;
+      void set_min_max_step(double min, double max, double step);
+      void set_suffix(QString &new_suffix);
+      void set_empty_suffix();
+      void set_default_suffix();
+
+      explicit qbinded_matrix3_input_t(QWidget *parent = nullptr);
 
     };
 

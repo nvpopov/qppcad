@@ -970,3 +970,65 @@ void qbinded_bool_named_vector_t::unbind_value() {
   std::fill(std::begin(m_binded_data), std::end(m_binded_data), nullptr);
 
 }
+
+void qbinded_matrix3_input_t::load_value_ex() {
+
+}
+
+void qbinded_matrix3_input_t::set_min_max_step(double min, double max, double step) {
+
+  for (auto sbx : m_sbx)
+    if (sbx) {
+        sbx->setMinimum(min);
+        sbx->setMaximum(max);
+        sbx->setSingleStep(step);
+      }
+
+}
+
+void qbinded_matrix3_input_t::set_suffix(QString &new_suffix) {
+
+  for (auto sbx : m_sbx)
+    if (sbx) {
+        sbx->setSuffix(new_suffix);
+      }
+
+}
+
+void qbinded_matrix3_input_t::set_empty_suffix() {
+
+  QString empty_suffix{""};
+  set_suffix(empty_suffix);
+
+}
+
+void qbinded_matrix3_input_t::set_default_suffix() {
+
+  set_empty_suffix();
+
+}
+
+qbinded_matrix3_input_t::qbinded_matrix3_input_t(QWidget *parent) : QWidget (parent) {
+
+  m_main_lt = new QGridLayout;
+  setLayout(m_main_lt);
+
+  for (size_t i = 0; i < 3; i++)
+    for (size_t q = 0; q < 3; q++) {
+
+        size_t idx = q + i * 3;
+        QDoubleSpinBox *sb = new QDoubleSpinBox;
+        sb->setFixedWidth(60);
+        sb->setAlignment(Qt::AlignCenter);
+        sb->setButtonSymbols(QAbstractSpinBox::NoButtons);
+        sb->setLocale(QLocale::C);
+        m_main_lt->addWidget(sb, i, q);
+        m_sbx.push_back(sb);
+        m_sbx_lookup.insert({sb, std::tuple{i,q}});
+        sb->setMinimum(-1000);
+        sb->setMaximum(1000);
+        sb->setSingleStep(0.01);
+
+      }
+
+}
