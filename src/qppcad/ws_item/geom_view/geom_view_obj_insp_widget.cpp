@@ -184,7 +184,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   m_gb_disp_s_lt->addRow(tr("Draw img."), m_disp_s_draw_img_atoms_bonds);
   m_gb_disp_s_lt->addRow(tr("Atom scale"), m_disp_s_atom_scale);
   m_gb_disp_s_lt->addRow(tr("Bond scale"), m_disp_s_bond_scale);
-  m_gb_disp_s_lt->addRow(tr("Selective visibility"), m_disp_s_sel_vis_p_affect_bonds);
+  m_gb_disp_s_lt->addRow(tr("Sel. visibility"), m_disp_s_sel_vis_p_affect_bonds);
 
   init_form_lt(m_gb_disp_s_lt);
 
@@ -220,9 +220,9 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   m_gb_disp_labels_lt->addRow(tr("Outline size"), m_disp_labels_outline_size);
   m_gb_disp_labels_lt->addRow(tr("Inplace labels"), m_disp_inplace_labels);
   m_gb_disp_labels_lt->addRow(tr("Inplace offset"), m_disp_inplace_offset);
-  m_gb_disp_labels_lt->addRow(tr("Selective vis."), m_disp_sl_labels);
-  m_gb_disp_labels_lt->addRow(tr("Scr. spc. scale"), m_disp_labels_screen_scale);
-  m_gb_disp_labels_lt->addRow(tr("Draw axis labels"), m_disp_labels_draw_axis_labels);
+  m_gb_disp_labels_lt->addRow(tr("Sel. visibility"), m_disp_sl_labels);
+  m_gb_disp_labels_lt->addRow(tr("Screen scale"), m_disp_labels_screen_scale);
+  m_gb_disp_labels_lt->addRow(tr("Axis labels"), m_disp_labels_draw_axis_labels);
   init_form_lt(m_gb_disp_labels_lt);
 
   //display - shading tab initialization
@@ -233,8 +233,8 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   m_disp_shading_spec = new qbinded_checkbox_t;
   m_disp_shading_spec_value = new qbinded_float_spinbox_t;
   m_disp_shading_spec_value->set_min_max_step(0.25, 50, 0.25);
-  m_gb_disp_shading_lt->addRow(tr("Enable specular"), m_disp_shading_spec);
-  m_gb_disp_shading_lt->addRow(tr("Specular power"), m_disp_shading_spec_value);
+  m_gb_disp_shading_lt->addRow(tr("Draw specular"), m_disp_shading_spec);
+  m_gb_disp_shading_lt->addRow(tr("Spec. power"), m_disp_shading_spec_value);
   init_form_lt(m_gb_disp_shading_lt);
 
   //display - type specific rendering
@@ -565,12 +565,12 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
   m_tms_pair_dist_gb_lt->addRow(tr("Label enabled"), m_tms_pair_label_enabled);
   m_tms_pair_dist_gb_lt->addRow(tr("Label style"), m_tms_pair_label_style);
   m_tms_pair_dist_gb_lt->addRow(tr("Custom label"), m_tms_pair_custom_text_enabled);
-  m_tms_pair_dist_gb_lt->addRow(tr("Custom label text"), m_tms_pair_custom_text_edit);
+  m_tms_pair_dist_gb_lt->addRow(tr("Label text"), m_tms_pair_custom_text_edit);
   m_tms_pair_dist_gb_lt->addRow(tr("Font size(pt)"), m_tms_font_screen_size);
   m_tms_pair_dist_gb_lt->addRow(tr("Delta angle"), m_tms_pair_delta_angle);
   m_tms_pair_dist_gb_lt->addRow(tr("Delta offset"), m_tms_pair_delta_offset);
-  m_tms_pair_dist_gb_lt->addRow(tr("Terminator style"), m_tms_pair_term_style);
-  m_tms_pair_dist_gb_lt->addRow(tr("Terminator size"), m_tms_pair_term_size);
+  m_tms_pair_dist_gb_lt->addRow(tr("Term. style"), m_tms_pair_term_style);
+  m_tms_pair_dist_gb_lt->addRow(tr("Term. size"), m_tms_pair_term_size);
   m_tms_pair_dist_gb_lt->addRow(tr("Actions"), m_tms_pair_action_lt);
   init_form_lt(m_tms_pair_dist_gb_lt);
 
