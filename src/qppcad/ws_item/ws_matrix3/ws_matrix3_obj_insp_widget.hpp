@@ -13,8 +13,10 @@ namespace qpp {
 
       public:
       
+        ws_matrix3_t *p_binded_m3;
+
         qspoiler_widget_t *m_splr_matinfo;
-        QFormLayout *m_splr_matinfo_lt;
+        QVBoxLayout *m_splr_matinfo_lt;
 
         qbinded_matrix3_input_t *m_matinfo;
 

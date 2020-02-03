@@ -1018,16 +1018,17 @@ qbinded_matrix3_input_t::qbinded_matrix3_input_t(QWidget *parent) : QWidget (par
 
         size_t idx = q + i * 3;
         QDoubleSpinBox *sb = new QDoubleSpinBox;
-        sb->setFixedWidth(60);
+        //sb->setFixedWidth(60);
         sb->setAlignment(Qt::AlignCenter);
         sb->setButtonSymbols(QAbstractSpinBox::NoButtons);
         sb->setLocale(QLocale::C);
         m_main_lt->addWidget(sb, i, q);
         m_sbx.push_back(sb);
         m_sbx_lookup.insert({sb, std::tuple{i,q}});
-        sb->setMinimum(-1000);
-        sb->setMaximum(1000);
-        sb->setSingleStep(0.01);
+        sb->setMinimum(-100000000);
+        sb->setMaximum(100000000);
+        sb->setDecimals(6);
+        sb->setSingleStep(0.001);
 
       }
 
