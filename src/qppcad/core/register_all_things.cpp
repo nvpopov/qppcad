@@ -39,6 +39,9 @@
 #include <qppcad/ws_item/ws_vector3/ws_vector3.hpp>
 #include <qppcad/ws_item/ws_vector3/ws_vector3_obj_insp_widget.hpp>
 
+#include <qppcad/ws_item/ws_matrix3/ws_matrix3.hpp>
+#include <qppcad/ws_item/ws_matrix3/ws_matrix3_obj_insp_widget.hpp>
+
 #include <qppcad/tools/supercell/supercell.hpp>
 #include <qppcad/tools/axial_scale/axial_scale.hpp>
 #include <qppcad/tools/clamp_atoms_to_cell/clamp_atoms_to_cell.hpp>
@@ -91,6 +94,7 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr<pdos_view_t>(bhv_mgr);
   reg_ws_item_fbr<compl_list_view_t>(bhv_mgr);
   reg_ws_item_fbr<ws_vector3_t>(bhv_mgr);
+  reg_ws_item_fbr<ws_matrix3_t>(bhv_mgr);
 
 }
 
@@ -110,6 +114,7 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
   reg_ws_item_obj_insp_fbr<pdos_view_t, pdos_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<compl_list_view_t, compl_list_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<ws_vector3_t, ws_vector3_obj_insp_widget_t>(bhv_mgr);
+  reg_ws_item_obj_insp_fbr<ws_matrix3_t, ws_matrix3_obj_insp_widget_t>(bhv_mgr);
 
 }
 
