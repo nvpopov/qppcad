@@ -1023,14 +1023,14 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
   m_txg_info_tmdl = new qxgeom_fields_model_t;
   m_txg_info_tv->setModel(m_txg_info_tmdl);
 
-  m_txg_gb_info->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  //m_txg_gb_info->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   m_txg_info_tv->verticalHeader()->hide();
   m_txg_info_tv->setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
   m_txg_info_tv->setFocusPolicy(Qt::NoFocus);
   m_txg_info_tv->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   //m_txg_info_tv->setFixedWidth(astate->size_guide.obj_insp_table_w());
   m_txg_info_tv->setShowGrid(false);
-  m_txg_info_tv->setMinimumHeight(400);
+  //m_txg_info_tv->setMinimumHeight(400);
 
   m_txg_gb_comp_prop = new qspoiler_widget_t(tr("Computed Property"));
   m_txg_gb_comp_prop_lt = new QVBoxLayout;
@@ -1039,8 +1039,10 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
   m_txg_switch = new QButtonGroup;
   m_txg_switch->setExclusive(true);
 
-  connect(m_txg_switch, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed),
-          this, &geom_view_obj_insp_widget_t::xgeom_switch_current_changed);
+  connect(m_txg_switch,
+          static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed),
+          this,
+          &geom_view_obj_insp_widget_t::xgeom_switch_current_changed);
 
   QHBoxLayout *tmp_lt = new QHBoxLayout;
   tmp_lt->setContentsMargins(4, 0, 4, 5);
@@ -1085,6 +1087,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       //General tab
       m_tg_geom_sum_total_atoms->setText(
             QString::fromStdString(fmt::format("{}", b_al->m_geom->nat())));
+
       m_tg_geom_sum_total_types->setText(
             QString::fromStdString(fmt::format("{}", b_al->m_geom->n_atom_types())));
 
@@ -1190,8 +1193,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
         m_anim_current_anim->addItem(
               QString::fromStdString(fmt::format("[{}] {}",
                                                  i,
-                                                 b_al->m_anim->m_anim_data[i].m_anim_name))
-              );
+                                                 b_al->m_anim->m_anim_data[i].m_anim_name)));
 
       m_anim_current_anim->setCurrentIndex(b_al->m_anim->m_cur_anim);
       m_anim_current_anim->blockSignals(false);
@@ -1215,8 +1217,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       //bind tab measurement common settings
       m_tms_render_dist_angle->bind_value({&b_al->m_measure->m_render_dist,
-                                         &b_al->m_measure->m_render_angle
-                                        });
+                                           &b_al->m_measure->m_render_angle});
       //end of bind tab measurement common settings
 
       m_txg_info_tv->setModel(nullptr);
@@ -1263,7 +1264,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   m_periodic_cell_offset->unbind_value();
   m_periodic_cell_v_ratio->unbind_value();
   m_periodic_cell_vectors_color->unbind_value();
- // periodic_draw_cell->unbind_value();
+
   m_periodic_cell_color->unbind_value();
   m_periodic_draw_subcells->unbind_value();
   m_periodic_subcells_idx->unbind_value();
@@ -1827,6 +1828,9 @@ void geom_view_obj_insp_widget_t::update_sel_tab() {
 void geom_view_obj_insp_widget_t::update_xgeom_tab() {
 
   if (b_al) {
+
+      //tab xgeom
+      qt_hlp::vrt_resize_tv_to_cnt(m_txg_info_tv);
 
     }
 
