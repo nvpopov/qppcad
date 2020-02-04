@@ -154,6 +154,9 @@ namespace qpp {
     const auto JSON_AARRAY_AFFECTED_BY_SV = "affected_by_sv";
     const auto JSON_AARRAY_COLOR = "color";
 
+    const auto JSON_WS_VECTOR3_DATA = "data";
+    const auto JSON_WS_MATRIX3_DATA = "data";
+
     const auto JSON_COMPL_LIST_VIEW_CL = "cl";
 
   } // namespace qpp::cad

@@ -42,11 +42,36 @@ size_t ws_matrix3_t::get_content_count() {
 }
 
 void ws_matrix3_t::save_to_json(json &data) {
+
   ws_item_t::save_to_json(data);
+
+  data[JSON_WS_MATRIX3_DATA] = json::array({});
+
+  for (size_t i = 0; i < 3; i++)
+    for (size_t q = 0; q < 3; q++)
+      data[JSON_WS_MATRIX3_DATA].push_back(m_data(i,q));
+
 }
 
 void ws_matrix3_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
+
   ws_item_t::load_from_json(data, rep_info);
+
+  auto data_it = data.find(JSON_WS_MATRIX3_DATA);
+
+  if (data_it != data.end())
+    for (size_t i = 0; i < 3; i++)
+      for (size_t q = 0; q < 3; q++) {
+
+          size_t idx = i*3 + q;
+          m_data(i,q) = data_it.value()[idx];
+
+        }
+
+}
+
+bool ws_matrix3_t::can_be_written_to_json() {
+  return true;
 }
 
 void ws_matrix3_t::updated_externally(uint32_t update_reason) {
