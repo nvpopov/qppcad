@@ -973,6 +973,13 @@ void qbinded_bool_named_vector_t::unbind_value() {
 
 void qbinded_matrix3_input_t::load_value_ex() {
 
+  for (size_t i = 0; i < 3; i++)
+    for (size_t q = 0; q < 3; q++) {
+
+        size_t idx = q + i * 3;
+        m_sbx[idx]->setValue(m_binded_value ? (*m_binded_value)(i,q) : 0);
+      }
+
 }
 
 void qbinded_matrix3_input_t::set_min_max_step(double min, double max, double step) {
@@ -1016,7 +1023,7 @@ qbinded_matrix3_input_t::qbinded_matrix3_input_t(QWidget *parent) : QWidget (par
   for (size_t i = 0; i < 3; i++)
     for (size_t q = 0; q < 3; q++) {
 
-        size_t idx = q + i * 3;
+
         QDoubleSpinBox *sb = new QDoubleSpinBox;
         //sb->setFixedWidth(60);
         sb->setAlignment(Qt::AlignCenter);
@@ -1029,7 +1036,29 @@ qbinded_matrix3_input_t::qbinded_matrix3_input_t(QWidget *parent) : QWidget (par
         sb->setMaximum(100000000);
         sb->setDecimals(6);
         sb->setSingleStep(0.001);
+        connect(sb,
+                static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+                this,
+                &qbinded_matrix3_input_t::spinbox_value_changed);
 
       }
+
+}
+
+void qbinded_matrix3_input_t::spinbox_value_changed(double newval) {
+
+  if (!m_binded_value) return;
+
+  QObject* obj = sender();
+  if (!obj) return;
+
+  QDoubleSpinBox* sbx = qobject_cast<QDoubleSpinBox*>(obj);
+  if (!sbx) return;
+
+  auto it = m_sbx_lookup.find(sbx);
+  if (it == m_sbx_lookup.end()) return;
+
+  auto mat = *m_binded_value;
+  mat(std::get<0>(it->second),std::get<1>(it->second)) = newval;
 
 }

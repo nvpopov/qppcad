@@ -255,6 +255,10 @@ namespace qpp {
 
       explicit qbinded_matrix3_input_t(QWidget *parent = nullptr);
 
+    private slots:
+
+      void spinbox_value_changed(double newval);
+
     };
 
     class qbinded_color3_input_t : public QWidget,
