@@ -609,16 +609,16 @@ void qbinded_xgeom_color3_input_t::mousePressEvent(QMouseEvent *event) {
         for (const auto &atom_id : m_binded_atom_id)
           if (atom_id < m_binded_xgeom->nat()) {
 
-          float _r = static_cast<float>(color.redF());
-          float _g = static_cast<float>(color.greenF());
-          float _b = static_cast<float>(color.blueF());
+              float _r = static_cast<float>(color.redF());
+              float _g = static_cast<float>(color.greenF());
+              float _b = static_cast<float>(color.blueF());
 
-          m_binded_xgeom->xfield<float>(m_binding_indicies[0], atom_id) = _r;
-          m_binded_xgeom->xfield<float>(m_binding_indicies[1], atom_id) = _g;
-          m_binded_xgeom->xfield<float>(m_binding_indicies[2], atom_id) = _b;
+              m_binded_xgeom->xfield<float>(m_binding_indicies[0], atom_id) = _r;
+              m_binded_xgeom->xfield<float>(m_binding_indicies[1], atom_id) = _g;
+              m_binded_xgeom->xfield<float>(m_binding_indicies[2], atom_id) = _b;
 
-          load_value();
-        }
+              load_value();
+            }
 
     }
 
@@ -704,9 +704,9 @@ void qbinded_xgeom_float_spinbox_t::value_changed(double d) {
 
   for (const auto &atom_id : m_binded_atom_id)
     if (atom_id < m_binded_xgeom->nat()) {
-      m_binded_xgeom->xfield<float>(m_binding_index, atom_id) = float(d);
-      app_state_t::get_inst()->make_viewport_dirty();
-    }
+        m_binded_xgeom->xfield<float>(m_binding_index, atom_id) = float(d);
+        app_state_t::get_inst()->make_viewport_dirty();
+      }
 
 }
 
@@ -916,16 +916,16 @@ qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&
 
       connect(cbx, &QCheckBox::stateChanged, [this, i](int state) {
 
-            if (i < this->m_binded_data.size() && this->m_binded_data[i])
-              *(this->m_binded_data[i]) = state != Qt::CheckState::Unchecked;
+          if (i < this->m_binded_data.size() && this->m_binded_data[i])
+            *(this->m_binded_data[i]) = state != Qt::CheckState::Unchecked;
 
-            app_state_t::get_inst()->make_viewport_dirty();
+          app_state_t::get_inst()->make_viewport_dirty();
 
-          });
+        });
 
     }
 
-   widget_layout->addStretch(1);
+  widget_layout->addStretch(1);
 
 }
 
@@ -957,7 +957,7 @@ void qbinded_bool_named_vector_t::load_value() {
                 i < m_binded_data.size() && m_binded_data[i] && *(m_binded_data[i]) ?
                   Qt::Checked :
                   Qt::Unchecked
-                );
+                  );
           m_boxes[i]->blockSignals(false);
 
         }
@@ -974,11 +974,8 @@ void qbinded_bool_named_vector_t::unbind_value() {
 void qbinded_matrix3_input_t::load_value_ex() {
 
   for (size_t i = 0; i < 3; i++)
-    for (size_t q = 0; q < 3; q++) {
-
-        size_t idx = q + i * 3;
-        m_sbx[idx]->setValue(m_binded_value ? (*m_binded_value)(i,q) : 0);
-      }
+    for (size_t q = 0; q < 3; q++)
+      m_sbx[q + i * 3]->setValue(m_binded_value ? (*m_binded_value)(i,q) : -1);
 
 }
 
@@ -1034,7 +1031,7 @@ qbinded_matrix3_input_t::qbinded_matrix3_input_t(QWidget *parent) : QWidget (par
         m_sbx_lookup.insert({sb, std::tuple{i,q}});
         sb->setMinimum(-100000000);
         sb->setMaximum(100000000);
-        sb->setDecimals(6);
+        sb->setDecimals(4);
         sb->setSingleStep(0.001);
         connect(sb,
                 static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
@@ -1058,7 +1055,6 @@ void qbinded_matrix3_input_t::spinbox_value_changed(double newval) {
   auto it = m_sbx_lookup.find(sbx);
   if (it == m_sbx_lookup.end()) return;
 
-  auto mat = *m_binded_value;
-  mat(std::get<0>(it->second),std::get<1>(it->second)) = newval;
+  (*m_binded_value)(std::get<0>(it->second),std::get<1>(it->second)) = newval;
 
 }

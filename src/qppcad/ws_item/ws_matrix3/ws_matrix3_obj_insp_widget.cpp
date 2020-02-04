@@ -20,8 +20,6 @@ ws_matrix3_obj_insp_widget_t::ws_matrix3_obj_insp_widget_t() {
 
 void ws_matrix3_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
-  ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
-  
   if (!_binding_item) return;
   auto as_m3 = _binding_item->cast_as<ws_matrix3_t>();
 
@@ -31,14 +29,24 @@ void ws_matrix3_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       p_binded_m3 = nullptr;
     }
 
+  ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
+  
 }
 
 void ws_matrix3_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
+  if (p_binded_m3) {
+
+      m_matinfo->bind_value(&p_binded_m3->m_data);
+
+    }
+
 }
 
 void ws_matrix3_obj_insp_widget_t::unbind_item() {
+
+  m_matinfo->unbind_value();
 
 }
