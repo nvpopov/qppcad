@@ -155,13 +155,13 @@ void ws_viewer_widget_t::paintGL() {
         }
 
       painter.setPen(debug_hud_color);
-      painter.drawText(width()-260, height()-30, 280, 30, Qt::AlignLeft,
+      painter.drawText(width()-240, height()-30, 280, 30, Qt::AlignLeft,
                        QString::fromStdString(fmt::format("Frame time GPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_gpu)/
                                                           1000000.0))
                        );
 
-      painter.drawText(width()-260, height()-60, 280, 30, Qt::AlignLeft,
+      painter.drawText(width()-240, height()-60, 280, 30, Qt::AlignLeft,
                        QString::fromStdString(fmt::format("Frame time CPU: {:6.6f} ms.",
                                                           (astate->m_last_frame_time_cpu)/
                                                           1000000.0))

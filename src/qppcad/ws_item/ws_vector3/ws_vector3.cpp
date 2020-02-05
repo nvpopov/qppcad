@@ -50,15 +50,21 @@ size_t ws_vector3_t::get_content_count() {
 }
 
 void ws_vector3_t::save_to_json(json &data) {
+
   ws_item_t::save_to_json(data);
+
 }
 
 void ws_vector3_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
+
   ws_item_t::load_from_json(data, rep_info);
+
 }
 
 bool ws_vector3_t::can_be_written_to_json() {
+
   return true;
+
 }
 
 void ws_vector3_t::updated_externally(uint32_t update_reason) {
