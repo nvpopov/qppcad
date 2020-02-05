@@ -345,7 +345,8 @@ void ws_item_t::save_to_json(json &data) {
   if (get_flags() & ws_item_flags_support_render_bb)
     json_helper::save_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
 
-  json_helper::save_vec3(JSON_POS, m_pos, data);
+  if (get_flags() & ws_item_flags_support_tr)
+    json_helper::save_vec3(JSON_POS, m_pos, data);
 
   if (m_leader)
     json_helper::save_var(JSON_WS_ITEM_LEADER, m_leader->m_name, data);
