@@ -126,7 +126,7 @@ namespace qpp {
 
         qspoiler_widget_t *m_gb_anim_timeline;
         QHBoxLayout *m_anim_timeline_lt;
-        QLabel *m_anim_total_frames_in_anim;
+        //QLabel *m_anim_total_frames_in_anim;
         QLabel *m_anim_cur_frame;
         QSlider *m_anim_timeline_slider;
         qspoiler_widget_t *m_anim_buttons;

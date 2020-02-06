@@ -346,7 +346,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   m_anim_interpolate_anim = new qbinded_checkbox_t;
   m_anim_speed = new qbinded_float_spinbox_t;
   m_anim_speed->set_min_max_step(0.01,10.0,0.01);
-  m_anim_total_frames_in_anim = new QLabel;
+  //m_anim_total_frames_in_anim = new QLabel;
   m_anim_cur_frame = new QLabel;
   m_anim_current_anim = new QComboBox;
   m_anim_current_anim->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
@@ -380,8 +380,8 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   m_gb_anim_summary_lt->addRow(tr("Interpolate"), m_anim_interpolate_anim);
   m_gb_anim_summary_lt->addRow(tr("Current anim."), m_anim_current_anim);
   m_gb_anim_summary_lt->addRow(tr("Frame time "), m_anim_speed);
-  m_gb_anim_summary_lt->addRow(tr("Num frm."), m_anim_total_frames_in_anim);
-  m_gb_anim_summary_lt->addRow(tr("Current frame:"), m_anim_cur_frame);
+  //m_gb_anim_summary_lt->addRow(tr("Num frm."), m_anim_total_frames_in_anim);
+  m_gb_anim_summary_lt->addRow(tr("Frame"), m_anim_cur_frame);
   m_gb_anim_summary_lt->addRow(tr("Actions"), m_anim_act_lt);
   init_form_lt(m_gb_anim_summary_lt);
 
@@ -1963,7 +1963,7 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
 
             }
 
-          m_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frames.size()));
+          //m_anim_total_frames_in_anim->setText(tr("%1").arg(cur_anim->frames.size()));
 
           m_anim_timeline_slider->setMinimum(0);
           m_anim_timeline_slider->setMaximum(cur_anim->frames.size()-1);
@@ -1993,7 +1993,9 @@ void geom_view_obj_insp_widget_t::anim_updated_external() {
 
       int current_frame_truncated = b_al->m_anim->current_frame_truncated();
       // remap frame id from 0..size-1 1..size
-      m_anim_cur_frame->setText(tr("%1").arg(current_frame_truncated+1));
+      m_anim_cur_frame->setText(tr("Current : %1, Total : %2")
+                                .arg(current_frame_truncated+1)
+                                .arg(b_al->m_anim->current_frame_count()));
       m_anim_timeline_slider->blockSignals(true);
       m_anim_timeline_slider->setValue(current_frame_truncated);
       m_anim_timeline_slider->blockSignals(false);
