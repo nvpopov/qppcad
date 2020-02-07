@@ -340,11 +340,12 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   m_gb_anim_sum->add_content_layout(m_gb_anim_summary_lt);
 
   //gb_anim_summary->setMaximumHeight(250);
-  m_anim_total_anims = new QLabel;
-  m_anim_rebuild_bonds = new qbinded_checkbox_t;
-  m_anim_play_cyclic = new qbinded_checkbox_t;
-  m_anim_interpolate_anim = new qbinded_checkbox_t;
+//  m_anim_total_anims = new QLabel;
+//  m_anim_rebuild_bonds = new qbinded_checkbox_t;
+//  m_anim_play_cyclic = new qbinded_checkbox_t;
+//  m_anim_interpolate_anim = new qbinded_checkbox_t;
   m_anim_speed = new qbinded_float_spinbox_t;
+  m_anim_settings = new qbinded_bool_named_vector_t({"Cycl.", "Intr.", "Rbnd."});
   m_anim_speed->set_min_max_step(0.01,10.0,0.01);
   //m_anim_total_frames_in_anim = new QLabel;
   m_anim_cur_frame = new QLabel;
@@ -374,14 +375,13 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   m_anim_act_lt->addWidget(m_anim_act_ren);
   m_anim_act_lt->addWidget(m_anim_act_del);
 
-  m_gb_anim_summary_lt->addRow(tr("Num. of anim."), m_anim_total_anims);
-  m_gb_anim_summary_lt->addRow(tr("Rebuild bonds"), m_anim_rebuild_bonds);
-  m_gb_anim_summary_lt->addRow(tr("Play in cycle"), m_anim_play_cyclic);
-  m_gb_anim_summary_lt->addRow(tr("Interpolate"), m_anim_interpolate_anim);
-  m_gb_anim_summary_lt->addRow(tr("Current anim."), m_anim_current_anim);
-  m_gb_anim_summary_lt->addRow(tr("Frame time "), m_anim_speed);
+//  m_gb_anim_summary_lt->addRow(tr("Num. of Anim."), m_anim_total_anims);
+//  m_gb_anim_summary_lt->addRow(tr("Rebuild Bonds"), m_anim_rebuild_bonds);
+  m_gb_anim_summary_lt->addRow(tr("Play Settings"), m_anim_settings);
+  m_gb_anim_summary_lt->addRow(tr("Current Anim."), m_anim_current_anim);
+  m_gb_anim_summary_lt->addRow(tr("Frame Time "), m_anim_speed);
   //m_gb_anim_summary_lt->addRow(tr("Num frm."), m_anim_total_frames_in_anim);
-  m_gb_anim_summary_lt->addRow(tr("Frame"), m_anim_cur_frame);
+  m_gb_anim_summary_lt->addRow(tr("Info"), m_anim_cur_frame);
   m_gb_anim_summary_lt->addRow(tr("Actions"), m_anim_act_lt);
   init_form_lt(m_gb_anim_summary_lt);
 
@@ -1179,11 +1179,15 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       //anim bindings
       update_anim_section_status();
 
-      m_anim_total_anims->setText(tr("%1").arg(b_al->m_anim->get_total_anims()));
-      m_anim_rebuild_bonds->bind_value(&b_al->m_anim->m_rebuild_bonds_in_anim);
-      m_anim_play_cyclic->bind_value(&b_al->m_anim->m_play_cyclic);
+//      m_anim_total_anims->setText(tr("%1").arg(b_al->m_anim->get_total_anims()));
+//      m_anim_rebuild_bonds->bind_value(&b_al->m_anim->m_rebuild_bonds_in_anim);
+
+//      m_anim_play_cyclic->bind_value(&b_al->m_anim->m_play_cyclic);
+//      m_anim_interpolate_anim->bind_value(&b_al->m_anim->m_interpolate_anim);
+      m_anim_settings->bind_value({&b_al->m_anim->m_play_cyclic,
+                                   &b_al->m_anim->m_interpolate_anim,
+                                   &b_al->m_anim->m_rebuild_bonds_in_anim});
       m_anim_speed->bind_value(&b_al->m_anim->m_anim_frame_time);
-      m_anim_interpolate_anim->bind_value(&b_al->m_anim->m_interpolate_anim);
 
       //binding current anim combobox
       m_anim_current_anim->blockSignals(true);
@@ -1270,10 +1274,12 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   m_periodic_subcells_idx->unbind_value();
   m_periodic_subcells_clr->unbind_value();
 
-  m_anim_rebuild_bonds->unbind_value();
-  m_anim_play_cyclic->unbind_value();
+//  m_anim_rebuild_bonds->unbind_value();
+  m_anim_settings->unbind_value();
+//  m_anim_play_cyclic->unbind_value();
+//  m_anim_interpolate_anim->unbind_value();
+
   m_anim_speed->unbind_value();
-  m_anim_interpolate_anim->unbind_value();
 
   //tab modify spec
   m_tm_override_atom_color->unbind_value();
@@ -1993,9 +1999,10 @@ void geom_view_obj_insp_widget_t::anim_updated_external() {
 
       int current_frame_truncated = b_al->m_anim->current_frame_truncated();
       // remap frame id from 0..size-1 1..size
-      m_anim_cur_frame->setText(tr("Current : %1, Total : %2")
+      m_anim_cur_frame->setText(tr("[Frm:%1/%2][Tot. Anims.:%3]")
                                 .arg(current_frame_truncated+1)
-                                .arg(b_al->m_anim->current_frame_count()));
+                                .arg(b_al->m_anim->current_frame_count())
+                                .arg(b_al->m_anim->m_anim_data.size()));
       m_anim_timeline_slider->blockSignals(true);
       m_anim_timeline_slider->setValue(current_frame_truncated);
       m_anim_timeline_slider->blockSignals(false);

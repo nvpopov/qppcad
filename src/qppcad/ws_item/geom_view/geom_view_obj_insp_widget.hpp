@@ -113,10 +113,11 @@ namespace qpp {
 
         ws_item_tab_widget_t *m_tab_anim;
         qspoiler_widget_t *m_gb_anim_sum;
-        QLabel *m_anim_total_anims;
-        qbinded_checkbox_t *m_anim_rebuild_bonds;
-        qbinded_checkbox_t *m_anim_play_cyclic;
-        qbinded_checkbox_t *m_anim_interpolate_anim;
+//        QLabel *m_anim_total_anims;
+        qbinded_bool_named_vector_t *m_anim_settings;
+//        qbinded_checkbox_t *m_anim_rebuild_bonds;
+//        qbinded_checkbox_t *m_anim_play_cyclic;
+//        qbinded_checkbox_t *m_anim_interpolate_anim;
         qbinded_float_spinbox_t *m_anim_speed;
         QComboBox *m_anim_current_anim;
         QHBoxLayout *m_anim_act_lt;

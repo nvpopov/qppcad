@@ -898,7 +898,7 @@ qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&
   m_binded_data.resize(m_binded_names.size(), nullptr);
 
   widget_layout = new QHBoxLayout;
-  widget_layout->setContentsMargins(0, 2, 0, 0);
+  widget_layout->setContentsMargins(0, 1, 0, 0);
   setLayout(widget_layout);
 
   m_boxes.reserve(m_binded_names.size());
