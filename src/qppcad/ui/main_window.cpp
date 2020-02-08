@@ -15,6 +15,8 @@
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/python/python_simple_query.hpp>
 
+#include <qppcad/core/platform.hpp>
+
 #include <QDateTime>
 #include <QColorDialog>
 
@@ -31,7 +33,6 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   setMinimumHeight(astate->size_guide.main_window_h());
   setMinimumWidth(astate->size_guide.main_window_w());
 
-
   init_menus();
   build_bhv_menus_and_actions();
   build_bhv_tools_menus();
@@ -41,6 +42,15 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   init_layouts();
   build_bhv_tool_panel();
   init_base_shortcuts();
+
+  m_timer_one_sec = new QTimer(this);
+  connect(m_timer_one_sec,
+          &QTimer::timeout,
+          this,
+          QOverload<>::of(&main_window_t::timer_one_sec_shoot));
+  m_timer_one_sec->setInterval(1000);
+  m_timer_one_sec->start();
+  timer_one_sec_shoot();
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::wss_changed_signal,
@@ -444,6 +454,17 @@ void main_window_t::init_menus() {
   m_modern_menu->addMenu(m_ws_menu);
   m_modern_menu->addMenu(m_view_menu);
   m_modern_menu->addMenu(m_help_menu);
+
+  m_menu_wdgt_hldr = new QWidget;
+  m_menu_wdgt_hldr_lt = new QVBoxLayout;
+  m_menu_wdgt_hldr_lt->setContentsMargins(1, 1, 1, 1);
+  m_menu_wdgt_hldr->setLayout(m_menu_wdgt_hldr_lt);
+  m_menu_wdgt_overview = new QLabel;
+
+  m_menu_wdgt_hldr_lt->addWidget(m_menu_wdgt_overview);
+  //m_menu_wdgt->setDefaultWidget(m_menu_wdgt_hldr);
+
+  menuBar()->setCornerWidget(m_menu_wdgt_hldr);
 
 }
 
@@ -872,6 +893,15 @@ void main_window_t::resizeEvent(QResizeEvent *event) {
                                            event->size().height()));
 
   QMainWindow::resizeEvent(event);
+
+}
+
+void main_window_t::timer_one_sec_shoot() {
+
+  if (m_menu_wdgt_overview) {
+      m_menu_wdgt_overview->setText(tr("| Used memory: %1 Mb |   ")
+                                    .arg(platform_helper_t::get_mem_usage_mb()));
+    }
 
 }
 

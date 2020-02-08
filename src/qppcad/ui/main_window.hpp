@@ -33,6 +33,7 @@
 #include <QLineEdit>
 #include <QMimeData>
 #include <QFileDialog>
+#include <QTimer>
 
 namespace qpp {
 
@@ -56,6 +57,13 @@ namespace qpp {
       public:
 
         std::vector<stored_action_hotkeys_t> m_shortcuts;
+
+        QTimer *m_timer_one_sec;
+
+        //Menu area widget
+        QWidget *m_menu_wdgt_hldr;
+        QVBoxLayout *m_menu_wdgt_hldr_lt;
+        QLabel *m_menu_wdgt_overview;
 
         //Widgets
         QWidget *m_main_wdgt; //main application widget
@@ -211,6 +219,8 @@ namespace qpp {
         void resizeEvent(QResizeEvent *event) override;
 
       public slots:
+
+        void timer_one_sec_shoot();
 
         void slot_shortcut_terminate_app();
 
