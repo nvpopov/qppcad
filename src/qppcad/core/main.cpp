@@ -54,7 +54,7 @@ int main (int argc, char **argv) {
 
   if (under_dev_env) {
       astate->ws_mgr->init_default();
-      astate->m_show_debug_frame_stats = true;
+      //astate->m_show_debug_frame_stats = true;
     }
 
   if (!args.empty()) {

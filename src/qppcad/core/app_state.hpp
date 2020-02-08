@@ -170,8 +170,8 @@ namespace qpp {
         vector2<float> viewport_xy;
         vector2<float> viewport_size;
 
-        int64_t m_last_frame_time_cpu{0};
-        int64_t m_last_frame_time_gpu{0};
+        int64_t m_last_frame_time_cpu{2000};
+        int64_t m_last_frame_time_gpu{2000};
 
         int m_num_samples{6};
         int m_console_font_size{16};

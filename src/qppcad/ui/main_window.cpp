@@ -460,7 +460,7 @@ void main_window_t::init_menus() {
   m_menu_wdgt_hldr_lt->setContentsMargins(1, 1, 1, 1);
   m_menu_wdgt_hldr->setLayout(m_menu_wdgt_hldr_lt);
   m_menu_wdgt_overview = new QLabel;
-
+  m_menu_wdgt_overview->setProperty("s_class", "lbl_overview");
   m_menu_wdgt_hldr_lt->addWidget(m_menu_wdgt_overview);
   //m_menu_wdgt->setDefaultWidget(m_menu_wdgt_hldr);
 
@@ -898,9 +898,17 @@ void main_window_t::resizeEvent(QResizeEvent *event) {
 
 void main_window_t::timer_one_sec_shoot() {
 
+  app_state_t *astate = app_state_t::get_inst();
+
   if (m_menu_wdgt_overview) {
-      m_menu_wdgt_overview->setText(tr("| Used memory: %1 Mb |   ")
-                                    .arg(platform_helper_t::get_mem_usage_mb()));
+
+      m_menu_wdgt_overview->setText(
+            tr(" Frame(CPU): %1 ms. | Frame(GPU): %2 ms. | Used memory: %3 Mb ")
+            .arg(astate->m_last_frame_time_cpu / 1000000.0, 6, 'f', 4)
+            .arg(astate->m_last_frame_time_gpu / 1000000.0, 6, 'f', 4)
+            .arg(platform_helper_t::get_mem_usage_mb()));
+      menuBar()->adjustSize();
+
     }
 
 }

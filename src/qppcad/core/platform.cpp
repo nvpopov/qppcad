@@ -23,7 +23,7 @@ size_t platform_helper_t::get_mem_usage_mb() {
   int result = -1;
   char line[128];
 
-  while (fgets(line, 128, file) != NULL){
+  while (fgets(line, 128, file) != nullptr){
             if (strncmp(line, "VmRSS:", 6) == 0){
           result = parse_line(line);
           break;

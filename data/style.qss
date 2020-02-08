@@ -12,6 +12,16 @@ QLabel[s_class="bold_label"] {
  color: rgb(211, 211, 211);
 }
 
+QLabel[s_class="thin_label"] {
+ font-weight: 1;
+}
+
+QLabel[s_class="lbl_overview"] {
+ font-weight: 1;
+ font-size: 11pt;
+ padding-top: 2px;
+}
+
 QCheckBox::indicator {
  width: 21px; height: 21px;
 }
