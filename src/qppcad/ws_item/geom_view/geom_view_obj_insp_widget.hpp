@@ -29,11 +29,11 @@ namespace qpp {
         geom_view_t *b_al{nullptr}; // binded atoms list
 
         // Summary group
-        qspoiler_widget_t *m_tg_geom_sum_wdgt;
-        QFormLayout *m_tg_geom_sum_lt;
+        //qspoiler_widget_t *m_tg_geom_sum_wdgt;
+        //QFormLayout *m_tg_geom_sum_lt;
 
         QLabel *m_tg_geom_sum_total_atoms;
-        QLabel *m_tg_geom_sum_total_types;
+        //QLabel *m_tg_geom_sum_total_types;
 
         qspoiler_widget_t *m_tg_type_sum_wdgt;
         QVBoxLayout *m_tg_type_sum_lt;

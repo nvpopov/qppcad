@@ -23,16 +23,20 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  m_tg_geom_sum_wdgt = new qspoiler_widget_t(tr("Geometry Summary"));
-  m_tg_geom_sum_lt = new QFormLayout;
-  m_tg_geom_sum_wdgt->add_content_layout(m_tg_geom_sum_lt);
+//  m_tg_geom_sum_wdgt = new qspoiler_widget_t(tr("Geometry Summary"));
+//  m_tg_geom_sum_lt = new QFormLayout;
+//  m_tg_geom_sum_wdgt->add_content_layout(m_tg_geom_sum_lt);
 
   m_tg_geom_sum_total_atoms = new QLabel;
-  m_tg_geom_sum_total_types = new QLabel;
+//  m_tg_geom_sum_total_types = new QLabel;
 
-  m_tg_geom_sum_lt->addRow(tr("Total atoms"), m_tg_geom_sum_total_atoms);
-  m_tg_geom_sum_lt->addRow(tr("Total types"), m_tg_geom_sum_total_types);
-  init_form_lt(m_tg_geom_sum_lt);
+  QLabel *tmp_lbl = new QLabel(tr("Total"));
+  m_tg_form_lt->addRow(tmp_lbl, m_tg_geom_sum_total_atoms);
+  qt_hlp::resize_form_lt_lbl(tmp_lbl, astate->size_guide.obj_insp_lbl_w());
+  //qt_hlp::resize_form_lt_lbl(m_tg_form_lt->ro);
+
+//  m_tg_geom_sum_lt->addRow(tr("Total types"), m_tg_geom_sum_total_types);
+//  init_form_lt(m_tg_geom_sum_lt);
 
   m_tg_type_sum_wdgt = new qspoiler_widget_t(tr("Type Summary"), this, true, 0,
                                                  astate->size_guide.obj_insp_splr_w(), false, 0);
@@ -97,7 +101,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
           this,
           &geom_view_obj_insp_widget_t::type_summary_clicked);
 
-  m_tab_general->tab_inner_widget_lt->addWidget(m_tg_geom_sum_wdgt);
+//  m_tab_general->tab_inner_widget_lt->addWidget(m_tg_geom_sum_wdgt);
   m_tab_general->tab_inner_widget_lt->addWidget(m_tg_type_sum_wdgt);
   m_tab_general->tab_inner_widget_lt->addWidget(m_tg_gb_cell);
 
@@ -1086,10 +1090,12 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
 
       //General tab
       m_tg_geom_sum_total_atoms->setText(
-            QString::fromStdString(fmt::format("{}", b_al->m_geom->nat())));
+            QString::fromStdString(fmt::format("[Atoms:{}], [Types:{}]",
+                                               b_al->m_geom->nat(),
+                                               b_al->m_geom->n_types())));
 
-      m_tg_geom_sum_total_types->setText(
-            QString::fromStdString(fmt::format("{}", b_al->m_geom->n_atom_types())));
+//      m_tg_geom_sum_total_types->setText(
+//            QString::fromStdString(fmt::format("{}", b_al->m_geom->n_atom_types())));
 
       //update type table
       m_tg_type_sum_tbl->clearContents();
