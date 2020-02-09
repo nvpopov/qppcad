@@ -28,6 +28,8 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
 //  m_tg_geom_sum_wdgt->add_content_layout(m_tg_geom_sum_lt);
 
   m_tg_geom_sum_total_atoms = new QLabel;
+  m_tg_geom_sum_total_atoms->setProperty("s_class", "thin_label");
+
 //  m_tg_geom_sum_total_types = new QLabel;
 
   QLabel *tmp_lbl = new QLabel(tr("Total"));
@@ -353,6 +355,7 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   m_anim_speed->set_min_max_step(0.01,10.0,0.01);
   //m_anim_total_frames_in_anim = new QLabel;
   m_anim_cur_frame = new QLabel;
+  m_anim_cur_frame->setProperty("s_class", "thin_label");
   m_anim_current_anim = new QComboBox;
   m_anim_current_anim->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
   //gb_current_anim->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -491,9 +494,12 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
           this,
           &geom_view_obj_insp_widget_t::msr_pair_cur_idx_changed);
 
-  m_tms_pair_at1_info = new QLabel();
-  m_tms_pair_at2_info = new QLabel();
-  m_tms_pair_dist = new QLabel();
+  m_tms_pair_at1_info = new QLabel;
+  m_tms_pair_at1_info->setProperty("s_class", "thin_label");
+  m_tms_pair_at2_info = new QLabel;
+  m_tms_pair_at2_info->setProperty("s_class", "thin_label");
+  m_tms_pair_dist = new QLabel;
+  m_tms_pair_dist->setProperty("s_class", "thin_label");
 
   m_tms_pair_dist_color = new qbinded_color3_input_t;
   m_tms_pair_enabled = new qbinded_checkbox_t;
@@ -594,8 +600,12 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
   m_tms_angle_order->set_min_max_step(0, 10, 1);
 
   m_tms_angle_at1_info = new QLabel;
+  m_tms_angle_at1_info->setProperty("s_class", "thin_label");
   m_tms_angle_at2_info = new QLabel;
+  m_tms_angle_at2_info->setProperty("s_class", "thin_label");
   m_tms_angle_at3_info = new QLabel;
+  m_tms_angle_at3_info->setProperty("s_class", "thin_label");
+
   m_tms_angle_gb_lt->addRow(tr("Current"), m_tms_angle_cur_msr);
   m_tms_angle_gb_lt->addRow(tr("Atom №1"), m_tms_angle_at1_info);
   m_tms_angle_gb_lt->addRow(tr("Atom №2"), m_tms_angle_at2_info);
@@ -671,6 +681,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tm_single_atom_v3 = new qbinded_float3_input_t;
   m_tm_single_atom_v3->set_min_max_step(-10000, 10000, 0.01);
   m_tm_single_atom_info = new QLabel;
+  m_tm_single_atom_info->setProperty("s_class", "thin_label");
 
   m_tm_single_atom_commit = new QPushButton(tr("Apply"));
   m_tm_single_atom_commit->setMaximumWidth(astate->size_guide.obj_insp_button_w());
@@ -712,10 +723,16 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tm_gb_pair_dist_lt->setLabelAlignment(Qt::AlignRight);
   m_tm_gb_pair_dist->add_content_layout(m_tm_gb_pair_dist_lt);
   m_tm_pair_dist_atom1 = new QLabel;
+  m_tm_pair_dist_atom1->setProperty("s_class", "thin_label");
+
   m_tm_pair_dist_atom2 = new QLabel;
+  m_tm_pair_dist_atom2->setProperty("s_class", "thin_label");
+
   m_tm_pair_dist_spinbox = new QDoubleSpinBox;
   m_tm_pair_dist_spinbox->setButtonSymbols(QAbstractSpinBox::NoButtons);
   m_tm_pair_dist_note_label = new QLabel;
+  m_tm_pair_dist_note_label->setProperty("s_class", "thin_label");
+
   m_tm_pair_dist_t_mode = new QComboBox;
   m_tm_pair_dist_t_mode->addItem("Transform both");
   m_tm_pair_dist_t_mode->addItem("Fix first");
@@ -992,6 +1009,8 @@ void geom_view_obj_insp_widget_t::construct_sel_tab() {
   m_ts_gb_general->add_content_layout(m_ts_gb_general_lt);
 
   m_ts_total_grps = new QLabel;
+  m_ts_total_grps->setProperty("s_class", "thin_label");
+
   m_ts_auto_apply = new qbinded_checkbox_t;
   m_ts_cur_sel_grp = new QComboBox;
   m_ts_cur_sel_grp->setMaximumWidth(astate->size_guide.obj_insp_combo_max_w());

@@ -12,7 +12,7 @@ QLabel[s_class="bold_label"] {
  color: rgb(211, 211, 211);
 }
 
-QLabel[s_class="thin_label"] {
+QLabel[s_class="thin_label"]{
  font-weight: 1;
 }
 
@@ -426,6 +426,7 @@ QComboBox {
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox, QToolButton{
+ font-weight: 1;
  background : rgb(114, 114, 114);
  border: 1px solid rgb(75, 75, 75);
  border-radius: 4px;

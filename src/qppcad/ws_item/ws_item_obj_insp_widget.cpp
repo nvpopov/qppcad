@@ -174,7 +174,10 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   m_sp_info_wdgt->add_content_layout(m_tg_form_lt);
 
   m_ws_item_name = new QLabel;
+  m_ws_item_name->setProperty("s_class", "thin_label");
+
   m_ws_item_type = new QLabel;
+  m_ws_item_type->setProperty("s_class", "thin_label");
 
   m_ws_item_show_item_bb = new qbinded_bool_named_vector_t({tr("Item"), tr("BBox")});
 

@@ -908,6 +908,7 @@ qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&
 
       QLabel *lbl = new QLabel(nullptr);
       lbl->setText(m_binded_names[i]);
+      lbl->setProperty("s_class", "thin_label");
       QCheckBox *cbx = new QCheckBox(nullptr);
       widget_layout->addWidget(lbl);
       widget_layout->addWidget(cbx);
