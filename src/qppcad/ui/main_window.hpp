@@ -71,7 +71,7 @@ namespace qpp {
         QWidget *m_wstabbar_overview_wrp;
         QHBoxLayout *m_wstabbar_overview_wrp_lt;
         QVBoxLayout *m_tp_lt; //tool panel layout
-        QLabel *m_tp_overview; //tool panel overbiew information(right text)
+        //QLabel *m_tp_overview; //tool panel overbiew information(right text)
         QPushButton *m_tp_modern_menu;
 
         QFrame *m_tp_edit_mode_start;
@@ -295,7 +295,7 @@ namespace qpp {
         void act_bhv_export_sel();
         void control_bhv_menus_activity();
 
-        void overview_changed(const std::string &new_overview_text);
+        //void overview_changed(const std::string &new_overview_text);
 
         void make_screenshot();
 

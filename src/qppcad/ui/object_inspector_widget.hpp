@@ -35,6 +35,8 @@ namespace qpp {
         qembed_window_sub_header_t *m_ws_item_prop_hdr;
         QWidget *m_none_item_placeholder;
 
+        qembed_window_sub_header_t *m_ws_item_overview;
+
         std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
 
       public slots:
@@ -51,6 +53,7 @@ namespace qpp {
         void provide_context_menu_for_ws_items(const QPoint &pos);
 
         void open_tab_requested(int tab_id);
+        void overview_changed(const std::string &new_overview_text);
 
     };
 

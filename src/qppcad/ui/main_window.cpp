@@ -83,11 +83,6 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
           &main_window_t::rebuild_recent_files_menu);
 
   connect(astate->astate_evd,
-          &app_state_event_disp_t::request_update_overview_signal,
-          this,
-          &main_window_t::overview_changed);
-
-  connect(astate->astate_evd,
           &app_state_event_disp_t::set_left_inline_tool_visibility_signal,
           this,
           &main_window_t::inline_tool_left_ctrl_visibility);
@@ -755,8 +750,8 @@ void main_window_t::init_layouts() {
   m_wstabbar_overview_wrp_lt->setSpacing(0);
   m_wstabbar_overview_wrp->setObjectName("m_tp_overview_wrp");
 
-  m_tp_overview = new QLabel(nullptr);
-  m_tp_overview->setFixedWidth(astate->size_guide.obj_insp_w()-5);
+  //m_tp_overview = new QLabel(nullptr);
+  //m_tp_overview->setFixedWidth(astate->size_guide.obj_insp_w()-5);
 
   m_main_wdgt->setLayout(m_main_lt);
 
@@ -766,7 +761,7 @@ void main_window_t::init_layouts() {
   m_main_lt->setSpacing(0);
 
   m_wstabbar_overview_wrp_lt->addWidget(m_ws_tabbar_wdgt);
-  m_wstabbar_overview_wrp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
+  //m_wstabbar_overview_wrp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
 
   m_ws_tabbar_wdgt->raise();
 
@@ -2314,13 +2309,6 @@ void main_window_t::control_bhv_menus_activity() {
       }
 
   } // not ok
-
-}
-
-void main_window_t::overview_changed(const std::string &new_overview_text) {
-
-  if (m_tp_overview)
-    m_tp_overview->setText(QString::fromStdString(new_overview_text));
 
 }
 

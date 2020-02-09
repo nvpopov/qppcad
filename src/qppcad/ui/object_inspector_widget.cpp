@@ -65,11 +65,21 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   m_none_item_placeholder = new QWidget;
   m_none_item_placeholder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+  m_ws_item_overview = new qembed_window_sub_header_t(nullptr);
+  m_ws_item_overview->m_text->setObjectName("obj_insp_ws_item_overview");
+  //m_ws_item_overview->setFixedWidth(astate->size_guide.obj_insp_w()-5);
+
+  connect(astate->astate_evd,
+          &app_state_event_disp_t::request_update_overview_signal,
+          this,
+          &object_inspector_widget_t::overview_changed);
+
   m_main_lt->setSpacing(0);
   m_main_lt->addWidget(m_ws_items_list);
   //main_lt->addWidget(m_sep_ws_items_props);
   m_main_lt->addWidget(m_ws_item_prop_hdr);
   m_main_lt->addWidget(m_none_item_placeholder);
+  m_main_lt->addWidget(m_ws_item_overview);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
@@ -150,7 +160,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
 
       m_none_item_placeholder->hide();
-      m_main_lt->addWidget(obj_insp_w.get());
+      m_main_lt->insertWidget(2, obj_insp_w.get());
       m_cur_obj_insp_widget = obj_insp_w;
       obj_insp_w->show();
       obj_insp_w->bind_to_item(cur_it.get());
@@ -342,5 +352,12 @@ void object_inspector_widget_t::open_tab_requested(int tab_id) {
   m_cur_obj_insp_widget->setCurrentIndex(tab_id);
 
   astate->tlog("@DEBUG: exit object_inspector_widget_t::open_tab_requested(tab_id={})", tab_id);
+
+}
+
+void object_inspector_widget_t::overview_changed(const std::string &new_overview_text) {
+
+  if (m_ws_item_overview)
+    m_ws_item_overview->m_text->setText(QString::fromStdString(new_overview_text));
 
 }

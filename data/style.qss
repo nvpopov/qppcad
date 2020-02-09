@@ -19,7 +19,7 @@ QLabel[s_class="thin_label"]{
 QLabel[s_class="lbl_overview"] {
  font-weight: 1;
  font-size: 11pt;
- padding-top: 2px;
+ padding-top: 3px;
 }
 
 QCheckBox::indicator {
@@ -205,6 +205,7 @@ QHeaderView::section::vertical {
 
 qpp--cad--object_inspector_widget_t QListWidget {
  background-color: rgb(64, 64, 64);
+ border: 0;
 }
 
 qpp--cad--object_inspector_widget_t QListWidget::item {
@@ -310,6 +311,10 @@ qpp--cad--object_inspector_widget_t QTabWidget::pane {
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:first,
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab:only-one {
  margin-left: 4px !important;
+}
+
+#obj_insp_ws_item_overview {
+ padding-top: 3px;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
