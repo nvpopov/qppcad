@@ -1287,20 +1287,13 @@ std::string geom_view_t::compose_overview() {
 
             }
 
-          return fmt::format("[Atoms : {}, Types : {}, Selected : [{}]]",
-                             m_geom->nat(),
-                             m_geom->n_types(),
-                             selection);
+          return fmt::format("[Selected : [{}]]", selection);
 
         }
 
     }
 
-  return fmt::format("[Atoms : {}, Types : {}, Selected : {}]",
-                     m_geom->nat(),
-                     m_geom->n_types(),
-                     m_atom_idx_sel.size()
-                     );
+  return fmt::format("[Selected : {}]", m_atom_idx_sel.size());
 
 }
 
