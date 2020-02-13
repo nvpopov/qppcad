@@ -259,5 +259,9 @@ sflow_context_t::sflow_context_t() {
 
 }
 
+std::vector<std::shared_ptr<sflow_node_t> > &sflow_context_t::get_nodes() {
+  return m_nodes;
+}
+
 
 

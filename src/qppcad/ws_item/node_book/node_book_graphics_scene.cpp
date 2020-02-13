@@ -211,6 +211,7 @@ void node_book_graphics_scene_t::construct_new_node(QPointF pos, size_t sflow_fb
   if (it == astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.end()) return;
 
   auto new_node = it->second.m_fabric();
+  new_node->m_node_type_hash = sflow_fbr_hash;
   auto new_qnode = std::make_shared<qnode_t>();
 
   // set m_scene for connecting qbinded_input_* ws_item_t

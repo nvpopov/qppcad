@@ -33,6 +33,7 @@ namespace qpp {
 
         sflow_context_t();
 
+        std::vector<std::shared_ptr<sflow_node_t> > &get_nodes();
         void add_node(std::shared_ptr<sflow_node_t> node);
         sflow_status_e connect_node(std::shared_ptr<sflow_node_t> out_node,
                                     std::shared_ptr<sflow_node_t> inp_node,

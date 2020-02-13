@@ -15,7 +15,7 @@ namespace qpp {
   namespace cad {
 
     class sflow_node_t;
-    class sflow_connectivity_data_t;
+    struct sflow_connectivity_data_t;
 
     struct sflow_socket_info_t {
 
@@ -48,6 +48,8 @@ namespace qpp {
     class sflow_node_t {
 
       public:
+
+        size_t m_node_type_hash;
 
         /* The name that will be displayed in the node widget */
         std::string m_node_name;

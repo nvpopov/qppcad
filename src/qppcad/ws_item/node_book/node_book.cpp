@@ -66,6 +66,21 @@ size_t node_book_t::get_content_count() {
 void node_book_t::save_to_json(json &data) {
 
   ws_item_t::save_to_json(data);
+  json nodes = json::array({});
+
+  auto bhv_mgr = app_state_t::get_inst()->ws_mgr->m_bhv_mgr;
+
+  for (auto node : m_sflow_context->get_nodes()) {
+      json node_json;
+
+      //get node type name
+      auto it1 = bhv_mgr->m_sflow_node_info.find(node->m_node_type_hash);
+      if (it1 != bhv_mgr->m_sflow_node_info.end()) {
+          node_json[JSON_NODE_BOOK_NODE_TYPE] = it1->second.m_full_name;
+          nodes.push_back(node_json);
+        }
+
+    }
 
 }
 
@@ -73,6 +88,10 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   ws_item_t::load_from_json(data, rep_info);
 
+}
+
+bool node_book_t::can_be_written_to_json() {
+  return true;
 }
 
 void node_book_t::execute() {

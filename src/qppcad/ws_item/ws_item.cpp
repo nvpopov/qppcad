@@ -179,14 +179,17 @@ void ws_item_t::rm_follower(std::shared_ptr<ws_item_t> item_to_remove) {
 void ws_item_t::set_bounded_to_leader(bool bounding) {
 
   if (bounding) {
+
       unset_flag(ws_item_flags_support_tr);
       unset_flag(ws_item_flags_translate_emit_upd_event);
       set_flag(ws_item_flags_fetch_leader_pos);
-    }
-  else {
+
+    } else {
+
       set_flag(ws_item_flags_support_tr);
       set_flag(ws_item_flags_translate_emit_upd_event);
       unset_flag(ws_item_flags_fetch_leader_pos);
+
     }
 
 }
@@ -210,10 +213,10 @@ void ws_item_t::render () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_selected &&
-      (get_flags() & ws_item_flags_support_sel) &&
-      (get_flags() & ws_item_flags_support_render_bb) &&
-      is_bb_visible()
+  if (m_selected
+      && (get_flags() & ws_item_flags_support_sel)
+      && (get_flags() & ws_item_flags_support_render_bb)
+      && is_bb_visible()
       && m_show_bb) {
 
       astate->dp->begin_render_aabb();
@@ -293,9 +296,9 @@ void ws_item_t::updated_externally(uint32_t update_reason) {
         if (follower) follower->updated_externally(ws_item_updf_leader_changed);
     }
 
-  if ((update_reason & ws_item_updf_leader_changed) &&
-      m_leader &&
-      p_flags & ws_item_flags_fetch_leader_pos) {
+  if ((update_reason & ws_item_updf_leader_changed)
+      && m_leader
+      && (p_flags & ws_item_flags_fetch_leader_pos)) {
       //copy pos from leader and apply offset
       m_pos = m_leader->m_pos + m_leader_offset;
     }
