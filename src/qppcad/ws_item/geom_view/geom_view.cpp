@@ -838,11 +838,7 @@ void geom_view_t::xbool_invert_selected(size_t field_id) {
 void geom_view_t::copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
 
   if (!m_geom) return;
-
-  for (int i = 0; i < xgeom_inst.nat(); i++) {
-      m_geom->add(xgeom_inst.atom(i), xgeom_inst.pos(i));
-      m_geom->xfield<float>(xgeom_charge, i) = xgeom_inst.xfield<float>(xgeom_charge, i);
-    }
+  xgeom_inst.clone(*m_geom, true);
 
 }
 
