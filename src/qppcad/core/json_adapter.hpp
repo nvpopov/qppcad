@@ -160,7 +160,9 @@ namespace qpp {
     const auto JSON_COMPL_LIST_VIEW_CL = "cl";
 
     const auto JSON_NODE_BOOK_NODES = "nodes";
-    const auto JSON_NODE_BOOK_NODE_TYPE = "type";
+    const auto JSON_NODE_BOOK_NODE_TYPENAME = "typename";
+    const auto JSON_NODE_BOOK_NODE_TYPEHASH = "typehash";
+    const auto JSON_NODE_BOOK_NODE_COORD = "coord";
 
   } // namespace qpp::cad
 

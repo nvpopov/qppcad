@@ -68,7 +68,7 @@ namespace qpp {
         bool m_pressed;
 
         explicit qnode_t(QGraphicsItem *parent = nullptr);
-        ~qnode_t();
+        ~qnode_t() override;
 
         void updated_externally(uint32_t update_reason) override;
 

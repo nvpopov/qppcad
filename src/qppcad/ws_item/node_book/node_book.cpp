@@ -70,18 +70,27 @@ void node_book_t::save_to_json(json &data) {
 
   auto bhv_mgr = app_state_t::get_inst()->ws_mgr->m_bhv_mgr;
 
-  for (auto node : m_sflow_context->get_nodes()) {
+  for (size_t i = 0; i < m_scene->m_nodes.size(); i++) {
+
+      auto node = m_scene->m_nodes[i]->m_sf_node;
 
       json node_json;
-      node_json["typee"] = node->m_node_type_hash;
+      node_json[JSON_NODE_BOOK_NODE_TYPEHASH] = node->m_node_type_hash;
 
       //get node type name
       auto it1 = bhv_mgr->m_sflow_node_info.find(node->m_node_type_hash);
 
       if (it1 != bhv_mgr->m_sflow_node_info.end()) {
-          node_json[JSON_NODE_BOOK_NODE_TYPE] = it1->second.m_full_name;
-          nodes.push_back(node_json);
+          node_json[JSON_NODE_BOOK_NODE_TYPENAME] = it1->second.m_full_name;
         }
+
+      json coords = json::array({});
+      coords.push_back(m_scene->m_nodes[i]->x());
+      coords.push_back(m_scene->m_nodes[i]->y());
+
+      node_json[JSON_NODE_BOOK_NODE_COORD] = coords;
+
+      nodes.push_back(node_json);
 
     }
 
