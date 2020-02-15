@@ -100,7 +100,27 @@ void node_book_t::save_to_json(json &data) {
 
 void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
+  auto bhv_mgr = app_state_t::get_inst()->ws_mgr->m_bhv_mgr;
+
   ws_item_t::load_from_json(data, rep_info);
+
+  auto nodes_itr = data.find(JSON_NODE_BOOK_NODES);
+  if (nodes_itr != data.end())
+    for (auto &node_ref : nodes_itr.value()) {
+
+        auto nodehash_itr = node_ref.find(JSON_NODE_BOOK_NODE_TYPEHASH);
+        auto pos_itr = node_ref.find(JSON_NODE_BOOK_NODE_COORD);
+        if (pos_itr != node_ref.end() && nodehash_itr != node_ref.end()) {
+
+            qreal node_x = pos_itr.value()[0].get<double>();
+            qreal node_y = pos_itr.value()[1].get<double>();
+
+            m_scene->construct_new_node(QPointF(node_x, node_y),
+                                        nodehash_itr.value().get<size_t>());
+
+          }
+
+      }
 
 }
 

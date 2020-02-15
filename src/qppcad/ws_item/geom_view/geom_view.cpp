@@ -1616,10 +1616,10 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
                         m_labels->m_inplace_offset[0],
-      data);
+                        data);
   json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
                         m_labels->m_inplace_offset[1],
-      data);
+                        data);
 
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
   json_helper::load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
