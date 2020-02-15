@@ -45,7 +45,7 @@ namespace qpp {
         void delete_node(qnode_t *_node);
         void unlink_node(qnode_t *_node);
         void notify_linked_nodes_about_unlinking(qnode_t *_node);
-        void construct_new_node(QPointF pos, size_t sflow_fbr_hash);
+        std::shared_ptr<qnode_t> construct_new_node(QPointF pos, size_t sflow_fbr_hash);
 
       protected:
 

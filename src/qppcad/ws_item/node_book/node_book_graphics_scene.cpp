@@ -203,12 +203,13 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *_n
 
 }
 
-void node_book_graphics_scene_t::construct_new_node(QPointF pos, size_t sflow_fbr_hash) {
+std::shared_ptr<qnode_t> node_book_graphics_scene_t::construct_new_node(QPointF pos,
+                                                                        size_t sflow_fbr_hash) {
 
   app_state_t* astate = app_state_t::get_inst();
 
   auto it = astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.find(sflow_fbr_hash);
-  if (it == astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.end()) return;
+  if (it == astate->ws_mgr->m_bhv_mgr->m_sflow_node_info.end()) return nullptr;
 
   auto new_node = it->second.m_fabric();
   new_node->m_node_type_hash = sflow_fbr_hash;
@@ -223,6 +224,8 @@ void node_book_graphics_scene_t::construct_new_node(QPointF pos, size_t sflow_fb
   // then submit node to qgraphics_scene
   add_node(new_qnode);
   new_qnode->setPos(pos);
+
+  return new_qnode;
 
 }
 

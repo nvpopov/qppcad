@@ -70,7 +70,22 @@ void node_book_t::save_to_json(json &data) {
 
   auto bhv_mgr = app_state_t::get_inst()->ws_mgr->m_bhv_mgr;
 
+  //nodes lookup
+  std::map<qnode_t*, size_t> nds_lkp;
+
+  //socket lookup
+  std::map<qnode_socket_t*, size_t> isck_lkp, osck_lkp;
+
+  //store nodes
   for (size_t i = 0; i < m_scene->m_nodes.size(); i++) {
+
+      nds_lkp.insert({m_scene->m_nodes[i].get(), i});
+
+      for (size_t q = 0; q < m_scene->m_nodes[i]->m_inp_sockets.size(); q++)
+        isck_lkp.insert({m_scene->m_nodes[i]->m_inp_sockets[q].get(), q});
+
+      for (size_t q = 0; q < m_scene->m_nodes[i]->m_out_sockets.size(); q++)
+        osck_lkp.insert({m_scene->m_nodes[i]->m_out_sockets[q].get(), q});
 
       auto node = m_scene->m_nodes[i]->m_sf_node;
 
@@ -96,6 +111,34 @@ void node_book_t::save_to_json(json &data) {
 
   data[JSON_NODE_BOOK_NODES] = nodes;
 
+  //store connections
+  json connections = json::array({});
+
+  for (size_t i = 0; i < m_scene->m_connections.size(); i++) {
+
+      auto connection = m_scene->m_connections[i];
+      auto inode_itr = nds_lkp.find(connection->m_inp_socket->m_node.get());
+      auto onode_itr = nds_lkp.find(connection->m_out_socket->m_node.get());
+      auto isck_itr  = isck_lkp.find(connection->m_inp_socket);
+      auto osck_itr  = osck_lkp.find(connection->m_out_socket);
+
+      if (inode_itr != nds_lkp.end() && onode_itr != nds_lkp.end()
+          && isck_itr != isck_lkp.end() && osck_itr != osck_lkp.end()) {
+
+          json connection_json;
+          connection_json[JSON_NODE_BOOK_CONNECTIONS_INODE] = inode_itr->second;
+          connection_json[JSON_NODE_BOOK_CONNECTIONS_ISCK] = isck_itr->second;
+          connection_json[JSON_NODE_BOOK_CONNECTIONS_ONODE] = onode_itr->second;
+          connection_json[JSON_NODE_BOOK_CONNECTIONS_OSCK] = osck_itr->second;
+
+          connections.push_back(connection_json);
+
+        }
+
+    }
+
+  data[JSON_NODE_BOOK_CONNECTIONS] = connections;
+
 }
 
 void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
@@ -103,6 +146,9 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   auto bhv_mgr = app_state_t::get_inst()->ws_mgr->m_bhv_mgr;
 
   ws_item_t::load_from_json(data, rep_info);
+
+  std::map<qnode_t*, size_t> nds_lkp;
+  size_t nds_idx{0};
 
   auto nodes_itr = data.find(JSON_NODE_BOOK_NODES);
   if (nodes_itr != data.end())
@@ -115,8 +161,11 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
             qreal node_x = pos_itr.value()[0].get<double>();
             qreal node_y = pos_itr.value()[1].get<double>();
 
-            m_scene->construct_new_node(QPointF(node_x, node_y),
-                                        nodehash_itr.value().get<size_t>());
+            auto new_node = m_scene->construct_new_node(QPointF(node_x, node_y),
+                                                        nodehash_itr.value().get<size_t>());
+
+            nds_lkp.insert({new_node.get(), nds_idx});
+            nds_idx++;
 
           }
 

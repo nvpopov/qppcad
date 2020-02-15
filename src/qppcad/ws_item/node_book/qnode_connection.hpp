@@ -33,8 +33,7 @@ namespace qpp {
 
         int type() const override;
 
-        void update_path(QPointF point,
-                         bool finalize = false);
+        void update_path(QPointF point, bool finalize = false);
         void clear_path();
         bool is_connection_valid();
 

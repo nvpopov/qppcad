@@ -121,7 +121,7 @@ namespace qpp {
     const auto JSON_GEOM_VIEW_MSR_ANGLE_SHOW    = "show";
     const auto JSON_GEOM_VIEW_MSR_ANGLE_ORDER   = "order";
 
-    const auto JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE       = "type_color_override";
+    const auto JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE = "type_color_override";
     const auto JSON_GEOM_VIEW_ROLE = "role";
 
     const auto JSON_WS_CUBE_P_COLOR  = "cube_color";
@@ -159,10 +159,15 @@ namespace qpp {
 
     const auto JSON_COMPL_LIST_VIEW_CL = "cl";
 
-    const auto JSON_NODE_BOOK_NODES = "nodes";
-    const auto JSON_NODE_BOOK_NODE_TYPENAME = "typename";
-    const auto JSON_NODE_BOOK_NODE_TYPEHASH = "typehash";
-    const auto JSON_NODE_BOOK_NODE_COORD = "coord";
+    const auto JSON_NODE_BOOK_NODES             = "nodes";
+    const auto JSON_NODE_BOOK_NODE_TYPENAME     = "typename";
+    const auto JSON_NODE_BOOK_NODE_TYPEHASH     = "typehash";
+    const auto JSON_NODE_BOOK_NODE_COORD        = "coord";
+    const auto JSON_NODE_BOOK_CONNECTIONS       = "connections";
+    const auto JSON_NODE_BOOK_CONNECTIONS_ISCK  = "isck";
+    const auto JSON_NODE_BOOK_CONNECTIONS_OSCK  = "osck";
+    const auto JSON_NODE_BOOK_CONNECTIONS_INODE = "inode";
+    const auto JSON_NODE_BOOK_CONNECTIONS_ONODE = "onode";
 
   } // namespace qpp::cad
 

@@ -26,10 +26,10 @@ namespace qpp {
         std::shared_ptr<qnode_t> m_node{nullptr};
         std::shared_ptr<qnode_connection_t> m_connection{nullptr};
 
-        qnode_socket_t(QGraphicsItem *parent = 0,
-                       int _socket_radius = 4,
-                       QColor _socket_color = Qt::red);
-        ~qnode_socket_t();
+        qnode_socket_t(QGraphicsItem *parent = nullptr,
+                       int sck_radius = 4,
+                       QColor sck_color = Qt::red);
+        ~qnode_socket_t() override;
 
         opt<size_t> connections_count();
         int type() const override;

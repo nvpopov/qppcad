@@ -13,11 +13,11 @@ using namespace qpp;
 using namespace qpp::cad;
 
 qnode_socket_t::qnode_socket_t(QGraphicsItem *parent,
-                               int _socket_radius,
-                               QColor _socket_color)
+                               int sck_radius,
+                               QColor sck_color)
   : QGraphicsPathItem(parent),
-    m_socket_radius(_socket_radius),
-    m_socket_color(_socket_color) {
+    m_socket_radius(sck_radius),
+    m_socket_color(sck_color) {
 
   QPainterPath p;
 
@@ -41,11 +41,12 @@ opt<size_t> qnode_socket_t::connections_count() {
   if (!m_node) return std::nullopt;
   if (!m_node->m_sf_node) return std::nullopt;
 
-  size_t ret_con_count = std::count_if(std::begin(m_node->m_scene->m_connections),
-                                       std::end(m_node->m_scene->m_connections),
-                                       [this](std::shared_ptr<qnode_connection_t> con)
-                                       {return con && con->m_inp_socket &&
-                                        con->m_out_socket && con->m_inp_socket == this;});
+  size_t ret_con_count =
+      std::count_if(std::begin(m_node->m_scene->m_connections),
+                    std::end(m_node->m_scene->m_connections),
+                    [this](std::shared_ptr<qnode_connection_t> con)
+                    {return con && con->m_inp_socket &&
+                    con->m_out_socket && con->m_inp_socket == this;});
 
   return opt<size_t>(ret_con_count);
 
