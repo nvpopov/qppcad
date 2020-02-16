@@ -39,12 +39,14 @@ namespace qpp {
         std::vector<std::shared_ptr<qnode_connection_t>> m_connections;
 
         explicit node_book_graphics_scene_t(QObject *parent);
-        void add_connection(std::shared_ptr<qnode_connection_t> _con);
+        void add_connection(std::shared_ptr<qnode_connection_t> con);
+        void add_connection(size_t inode_id, size_t onode_id,
+                            size_t isck_id, size_t osck_id);
         void add_node(std::shared_ptr<qnode_t> _node);
-        void update_connections_with_node(std::shared_ptr<qnode_t> _node);
-        void delete_node(qnode_t *_node);
-        void unlink_node(qnode_t *_node);
-        void notify_linked_nodes_about_unlinking(qnode_t *_node);
+        void update_connections_with_node(std::shared_ptr<qnode_t> node);
+        void delete_node(qnode_t *node);
+        void unlink_node(qnode_t *node);
+        void notify_linked_nodes_about_unlinking(qnode_t *node);
         std::shared_ptr<qnode_t> construct_new_node(QPointF pos, size_t sflow_fbr_hash);
 
       protected:

@@ -150,6 +150,8 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   std::map<qnode_t*, size_t> nds_lkp;
   size_t nds_idx{0};
 
+  //std::vector<std::array<size_t, 4> > con_restore;
+
   auto nodes_itr = data.find(JSON_NODE_BOOK_NODES);
   if (nodes_itr != data.end())
     for (auto &node_ref : nodes_itr.value()) {
@@ -170,6 +172,33 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
           }
 
       }
+
+  auto connection_itr = data.find(JSON_NODE_BOOK_CONNECTIONS);
+  if (connection_itr != data.end()) {
+
+      for (auto &connection : connection_itr.value()) {
+
+          auto inode_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_INODE);
+          auto onode_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_ONODE);
+          auto isck_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_ISCK);
+          auto osck_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_OSCK);
+
+          if (inode_itr != connection.end() && onode_itr != connection.end()
+              && isck_itr != connection.end() && osck_itr != connection.end()) {
+              m_scene->add_connection(inode_itr.value().get<size_t>(),
+                                      onode_itr.value().get<size_t>(),
+                                      isck_itr.value().get<size_t>(),
+                                      osck_itr.value().get<size_t>());
+//                            fmt::print("@@@@@ {} {} {} {}",inode_itr.value().get<size_t>(),
+//                                                    onode_itr.value().get<size_t>(),
+//                                                    isck_itr.value().get<size_t>(),
+//                                                    osck_itr.value().get<size_t>());
+            }
+
+
+        }
+
+    }
 
 }
 

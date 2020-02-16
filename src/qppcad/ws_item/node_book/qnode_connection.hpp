@@ -27,9 +27,8 @@ namespace qpp {
 
         bool m_temporary{false};
 
-
-        qnode_connection_t(QGraphicsItem *parent = 0);
-        ~qnode_connection_t();
+        qnode_connection_t(QGraphicsItem *parent = nullptr);
+        ~qnode_connection_t() override;
 
         int type() const override;
 
