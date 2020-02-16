@@ -79,11 +79,10 @@ void node_book_t::save_to_json(json &data) {
   //store nodes
   for (size_t i = 0; i < m_scene->m_nodes.size(); i++) {
 
+      //build lookup
       nds_lkp.insert({m_scene->m_nodes[i].get(), i});
-
       for (size_t q = 0; q < m_scene->m_nodes[i]->m_inp_sockets.size(); q++)
         isck_lkp.insert({m_scene->m_nodes[i]->m_inp_sockets[q].get(), q});
-
       for (size_t q = 0; q < m_scene->m_nodes[i]->m_out_sockets.size(); q++)
         osck_lkp.insert({m_scene->m_nodes[i]->m_out_sockets[q].get(), q});
 
@@ -99,11 +98,22 @@ void node_book_t::save_to_json(json &data) {
           node_json[JSON_NODE_BOOK_NODE_TYPENAME] = it1->second.m_full_name;
         }
 
+      //store node coords
       json coords = json::array({});
       coords.push_back(m_scene->m_nodes[i]->x());
       coords.push_back(m_scene->m_nodes[i]->y());
 
       node_json[JSON_NODE_BOOK_NODE_COORD] = coords;
+
+      //store inplace parameters
+      if (node->m_ipl.size() == node->m_ipl_schema.size()) {
+          json inplace_parameters;
+//          for (size_t i = 0; i < node->m_ipl.size(); i++) {
+//              switch (node->m_ipl_types[i]) {
+//                case
+//                }
+//            }
+        }
 
       nodes.push_back(node_json);
 
@@ -242,7 +252,7 @@ void node_book_t::update_output_values() {
     for (size_t i = 0; i < elem->m_inplace_wdgts.size(); i++)
       if (elem->m_inplace_wdgts[i]) {
 
-          switch (elem->m_sf_node->m_ipl_types[i].m_type) {
+          switch (elem->m_sf_node->m_ipl_schema[i].m_type) {
 
             case sflow_parameter_e::sfpar_int : {
                 qbinded_int_spinbox_t *c_int_sb =

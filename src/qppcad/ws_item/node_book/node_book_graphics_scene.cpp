@@ -169,9 +169,9 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
   if (!node) return;
 
   for (size_t i = 0; i < node->m_inplace_wdgts.size(); i++)
-    if (node->m_inplace_wdgts[i] && !(node->m_sf_node->m_ipl_types[i].m_editable)) {
+    if (node->m_inplace_wdgts[i] && !(node->m_sf_node->m_ipl_schema[i].m_editable)) {
 
-        switch (node->m_sf_node->m_ipl_types[i].m_type) {
+        switch (node->m_sf_node->m_ipl_schema[i].m_type) {
 
           case sflow_parameter_e::sfpar_int : {
               qbinded_int_spinbox_t *c_int_sb =

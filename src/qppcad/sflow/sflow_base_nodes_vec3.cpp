@@ -7,11 +7,11 @@ sf_v3f_prop_node_t::sf_v3f_prop_node_t() {
 
   m_node_name = "v3f";
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_v3f, 0, ""}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_v3f, "value", true}
   };
 
@@ -38,11 +38,11 @@ sf_v3f_final_node_t::sf_v3f_final_node_t() {
 
   m_node_name = "show v3f";
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_v3f, 0, ""}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_v3f, "vec", false}
   };
 
@@ -72,11 +72,11 @@ sf_v3f_sum_v3f_node_t::sf_v3f_sum_v3f_node_t() {
 
   m_node_name = "v3f + v3f";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_v3f, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_v3f, 0, "src1"},
     {sflow_parameter_e::sfpar_v3f, 0, "src2"}
   };
@@ -105,11 +105,11 @@ sf_v3f_dot_node_t::sf_v3f_dot_node_t() {
 
   m_node_name = "v3f . v3f";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_float, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_v3f, 0, "src1"},
     {sflow_parameter_e::sfpar_v3f, 0, "src2"}
   };
@@ -138,11 +138,11 @@ sf_v3f_normalized_node_t::sf_v3f_normalized_node_t() {
 
   m_node_name = "v3f.normalized()";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_v3f, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_v3f, 0, "src"},
   };
 
@@ -169,11 +169,11 @@ sf_v3f_norm_node_t::sf_v3f_norm_node_t() {
 
   m_node_name = "v3f.norm()";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_float, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_v3f, 0, "src"},
   };
 
@@ -199,11 +199,11 @@ sf_v3f_cross_node_t::sf_v3f_cross_node_t() {
 
   m_node_name = "v3f x v3f";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_v3f, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_v3f, 0, "src1"},
     {sflow_parameter_e::sfpar_v3f, 0, "src2"}
   };

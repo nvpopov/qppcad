@@ -1,4 +1,4 @@
-#ifndef QPPCAD_SFLOW_NODE
+﻿#ifndef QPPCAD_SFLOW_NODE
 #define QPPCAD_SFLOW_NODE
 
 #include <qppcad/core/qppcad.hpp>
@@ -67,13 +67,13 @@ namespace qpp {
 
         sflow_calc_meta_t m_calc_meta;
 
-        std::vector<sflow_socket_info_t> m_inp_types;
+        std::vector<sflow_socket_info_t> m_inp_schema;
         std::vector<std::shared_ptr<sflow_parameter_t>> m_inps;
 
-        std::vector<sflow_socket_info_t> m_out_types;
+        std::vector<sflow_socket_info_t> m_out_schema;
         std::vector<std::shared_ptr<sflow_parameter_t>> m_outs;
 
-        std::vector<sflow_inplace_parameter_t> m_ipl_types;
+        std::vector<sflow_inplace_parameter_t> m_ipl_schema;
         std::vector<std::shared_ptr<sflow_parameter_t>> m_ipl;
 
         template<typename TYPE_CLASS>

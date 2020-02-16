@@ -7,11 +7,11 @@ sf_int_prop_node_t::sf_int_prop_node_t() : sflow_node_t () {
 
   m_node_name = "int";
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_int, 0, ""}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_int, "value", true}
   };
 
@@ -38,11 +38,11 @@ sf_int_final_node_t::sf_int_final_node_t() : sflow_node_t () {
 
   m_node_name = "show int";
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_int, 0, ""}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_int, "value", false}
   };
 
@@ -72,15 +72,15 @@ sf_int_p_const_node_t::sf_int_p_const_node_t() : sflow_node_t () {
 
   m_node_name = "int + const";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_int, 0, "a"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_int, 0, "b"}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_int, "const", true}
   };
 
@@ -106,11 +106,11 @@ sf_int_sum_int_node_t::sf_int_sum_int_node_t() {
 
   m_node_name = "int + int";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_int, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_int, 0, "src1"},
     {sflow_parameter_e::sfpar_int, 0, "src2"}
   };
@@ -139,15 +139,15 @@ sf_int_patb_const_node_t::sf_int_patb_const_node_t() {
 
   m_node_name = "(int + a) * b";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_int, 0, "src"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_int, 0, "dst"}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_int, "a", true},
     {sflow_parameter_e::sfpar_int, "b", true}
   };
@@ -177,11 +177,11 @@ sf_int_mul_int_node_t::sf_int_mul_int_node_t() {
 
   m_node_name = "int * int";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_int, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_int, 0, "src1"},
     {sflow_parameter_e::sfpar_int, 0, "src2"}
   };
@@ -210,11 +210,11 @@ sf_int_div_int_node_t::sf_int_div_int_node_t() {
 
   m_node_name = "int / int";
 
-  m_out_types = {
+  m_out_schema = {
    {sflow_parameter_e::sfpar_int, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_int, 0, "src1"},
     {sflow_parameter_e::sfpar_int, 0, "src2"}
   };

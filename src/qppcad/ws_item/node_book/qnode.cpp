@@ -63,7 +63,7 @@ void qnode_t::construct_inplace_widgets() {
   m_inplace_pars_widget = new QGraphicsProxyWidget(this);
   m_inplace_pars_widget->setWidget(m_inplace_wdgt);
 
-  for (size_t i = 0; i < m_sf_node->m_ipl_types.size(); i++)
+  for (size_t i = 0; i < m_sf_node->m_ipl_schema.size(); i++)
 
     if (m_sf_node->m_ipl.size() > i && m_sf_node->m_ipl[i]) {
 
@@ -72,7 +72,7 @@ void qnode_t::construct_inplace_widgets() {
 
         //if (m_scene && m_scene->m_parent_node_book) master_item = m_scene->m_parent_node_book;
 
-        switch (m_sf_node->m_ipl_types[i].m_type) {
+        switch (m_sf_node->m_ipl_schema[i].m_type) {
 
           case sflow_parameter_e::sfpar_int : {
 
@@ -183,11 +183,11 @@ void qnode_t::construct_inplace_widgets() {
 
           }
 
-        if (!m_sf_node->m_ipl_types[i].m_editable && _inpl_widget)
+        if (!m_sf_node->m_ipl_schema[i].m_editable && _inpl_widget)
           _inpl_widget->setEnabled(false);
 
         if (_inpl_widget) m_inplace_wdgt_lt->addRow(
-              QString::fromStdString(m_sf_node->m_ipl_types[i].m_name),
+              QString::fromStdString(m_sf_node->m_ipl_schema[i].m_name),
               _inpl_widget);
 
       }
@@ -203,14 +203,14 @@ int qnode_t::type() const {
 
 size_t qnode_t::num_inps() {
 
-  if (m_sf_node) return m_sf_node->m_inp_types.size();
+  if (m_sf_node) return m_sf_node->m_inp_schema.size();
   return 0;
 
 }
 
 size_t qnode_t::num_outs() {
 
-  if (m_sf_node) return m_sf_node->m_out_types.size();
+  if (m_sf_node) return m_sf_node->m_out_schema.size();
   return 0;
 
 }
@@ -248,12 +248,12 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
       m_dm_o = m_inplace_wdgt->height() + m_socket_size / 2;
     }
 
-  for (size_t i = 0; i < m_sf_node->m_inp_types.size(); i++) {
+  for (size_t i = 0; i < m_sf_node->m_inp_schema.size(); i++) {
 
       auto inp_sck = std::make_shared<qnode_socket_t>(
                        this,
                        m_socket_size,
-                       sck_colorize_helper::get_color(m_sf_node->m_inp_types[i].m_type));
+                       sck_colorize_helper::get_color(m_sf_node->m_inp_schema[i].m_type));
 
       QPoint inp_sck_pos = {
         m_x_offset,
@@ -268,12 +268,12 @@ void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
 
     }
 
-  for (size_t i = 0; i < m_sf_node->m_out_types.size(); i++) {
+  for (size_t i = 0; i < m_sf_node->m_out_schema.size(); i++) {
 
       auto out_sck = std::make_shared<qnode_socket_t>(
                        this,
                        m_socket_size,
-                       sck_colorize_helper::get_color(m_sf_node->m_out_types[i].m_type));
+                       sck_colorize_helper::get_color(m_sf_node->m_out_schema[i].m_type));
 
       QPoint out_sck_pos = {
         m_width - 2 * m_socket_size - m_x_offset,
@@ -301,7 +301,7 @@ QRectF qnode_t::boundingRect() const {
   if (m_sf_node->is_single_node())
     return QRectF(0, 0, m_width, m_label_height + additional_h_from_inplace + 10);
 
-  int max_c = std::max(m_sf_node->m_inp_types.size(), m_sf_node->m_out_types.size());
+  int max_c = std::max(m_sf_node->m_inp_schema.size(), m_sf_node->m_out_schema.size());
   int new_height = m_label_height
                    + max_c * 4 * m_socket_size + (max_c - 1) * m_socket_spacing
                    + additional_h_from_inplace;
@@ -344,9 +344,9 @@ void qnode_t::paint(QPainter *painter,
   //draw sockets names
   if (is_single_node) return;
 
-  for (size_t i = 0; i < m_sf_node->m_inp_types.size(); i++) {
+  for (size_t i = 0; i < m_sf_node->m_inp_schema.size(); i++) {
 
-      QString _pin_name = QString::fromStdString(m_sf_node->m_inp_types[i].m_sck_name);
+      QString _pin_name = QString::fromStdString(m_sf_node->m_inp_schema[i].m_sck_name);
 
       QPoint inp_sck_pos = {
         5,
@@ -358,9 +358,9 @@ void qnode_t::paint(QPainter *painter,
 
     }
 
-  for (size_t i = 0; i < m_sf_node->m_out_types.size(); i++) {
+  for (size_t i = 0; i < m_sf_node->m_out_schema.size(); i++) {
 
-      QString _pin_name = QString::fromStdString(m_sf_node->m_out_types[i].m_sck_name);
+      QString _pin_name = QString::fromStdString(m_sf_node->m_out_schema[i].m_sck_name);
 
       QPoint out_sck_pos = {
         m_width - 5 - fm.width(_pin_name),

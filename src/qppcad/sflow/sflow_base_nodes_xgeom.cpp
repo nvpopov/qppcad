@@ -8,11 +8,11 @@ sf_xgeom_nat_node_t::sf_xgeom_nat_node_t() {
 
   m_node_name = "number of atoms";
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_xgeom, 0, "xgeom"}
   };
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_int, 0, "nat"}
   };
 
@@ -39,11 +39,11 @@ sf_xgeom_ntypes_node_t::sf_xgeom_ntypes_node_t() {
 
   m_node_name = "number of types";
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_xgeom, 0, "xgeom"}
   };
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_int, 0, "ntypes"}
   };
 

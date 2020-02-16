@@ -11,9 +11,9 @@ void sflow_context_t::add_node(std::shared_ptr<sflow_node_t> node) {
       m_nodes.push_back(node);
 
       //clear pin connections info
-      for (auto &con_type : node->m_inp_types)
+      for (auto &con_type : node->m_inp_schema)
         con_type.m_tot_con = 0;
-      for (auto &con_type : node->m_out_types)
+      for (auto &con_type : node->m_out_schema)
         con_type.m_tot_con = 0;
 
     }
@@ -34,14 +34,14 @@ sflow_status_e sflow_context_t::connect_node(std::shared_ptr<sflow_node_t> out_n
     }
 
   //check output pin
-  bool socket1_valid = out_socket < out_node->m_out_types.size();
+  bool socket1_valid = out_socket < out_node->m_out_schema.size();
   if (!socket1_valid) {
       fmt::print(std::cout,"sflow_status_e::pin1_invalid");
       return sflow_status_e::pin1_invalid;
     }
 
   //check input pin
-  bool socket2_valid = inp_socket < inp_node->m_inp_types.size();
+  bool socket2_valid = inp_socket < inp_node->m_inp_schema.size();
   if (!socket2_valid) {
       fmt::print(std::cout,"sflow_status_e::pin2_invalid");
       return sflow_status_e::pin2_invalid;
@@ -49,21 +49,21 @@ sflow_status_e sflow_context_t::connect_node(std::shared_ptr<sflow_node_t> out_n
 
   //check pin types
   bool socket_types_eq =
-      out_node->m_out_types[out_socket].m_type == inp_node->m_inp_types[inp_socket].m_type;
+      out_node->m_out_schema[out_socket].m_type == inp_node->m_inp_schema[inp_socket].m_type;
   if (!socket_types_eq) {
       fmt::print(std::cout,"sflow_status_e::types_pin1_not_eq_pin2");
       return sflow_status_e::types_pin1_not_eq_pin2;
     }
 
   //check multipin output
-  bool inp_node_is_connected = inp_node->m_inp_types[inp_socket].m_tot_con == 0;
+  bool inp_node_is_connected = inp_node->m_inp_schema[inp_socket].m_tot_con == 0;
   if (!inp_node_is_connected) {
       fmt::print(std::cout,"sflow_status_e::too_many_inputs {} ",
-                 inp_node->m_inp_types[inp_socket].m_tot_con);
+                 inp_node->m_inp_schema[inp_socket].m_tot_con);
       return sflow_status_e::too_many_inputs;
     }
 
-  inp_node->m_inp_types[inp_socket].m_tot_con +=1;
+  inp_node->m_inp_schema[inp_socket].m_tot_con +=1;
   inp_node->m_is_outer = false;
 
   if (socket1_valid && socket2_valid && socket_types_eq) {
@@ -216,13 +216,13 @@ sflow_status_e sflow_context_t::propagate_data(sflow_connectivity_data_t *cd,
                                   copy_par,
                                   *(cd->m_out_sck),
                                   *(cd->m_inp_sck),
-                                  cd->m_out_node->m_out_types[*(cd->m_out_sck)].m_type,
-                                  cd->m_inp_node->m_inp_types[*(cd->m_inp_sck)].m_type
+                                  cd->m_out_node->m_out_schema[*(cd->m_out_sck)].m_type,
+                                  cd->m_inp_node->m_inp_schema[*(cd->m_inp_sck)].m_type
                                  );
 
       //check that inputs have space for fun
-      if (cd->m_inp_node->m_inps.size() != cd->m_inp_node->m_inp_types.size())
-        cd->m_inp_node->m_inps.resize(cd->m_inp_node->m_inp_types.size(), nullptr);
+      if (cd->m_inp_node->m_inps.size() != cd->m_inp_node->m_inp_schema.size())
+        cd->m_inp_node->m_inps.resize(cd->m_inp_node->m_inp_schema.size(), nullptr);
 
       //check that out is valid
       if (*cd->m_out_sck < cd->m_out_node->m_outs.size() &&

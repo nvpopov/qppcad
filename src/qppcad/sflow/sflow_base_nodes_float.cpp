@@ -7,11 +7,11 @@ sf_float_prop_node_t::sf_float_prop_node_t() {
 
   m_node_name = "float";
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_float, 0, "dst"}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_float, "", true}
   };
 
@@ -39,15 +39,15 @@ sf_float_p_const_node_t::sf_float_p_const_node_t() {
 
   m_node_name = "float + const";
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_float, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
    {sflow_parameter_e::sfpar_float, 0, "src"}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_float, "const", true}
   };
 
@@ -75,11 +75,11 @@ sf_float_final_node_t::sf_float_final_node_t() {
 
   m_node_name = "show float";
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_float, 0, ""}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_float, "", false}
   };
 
@@ -109,11 +109,11 @@ sf_float_sum_float_node_t::sf_float_sum_float_node_t() {
 
   m_node_name = "float + float";
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_float, 0, "dst"}
   };
 
-  m_inp_types = {
+  m_inp_schema = {
     {sflow_parameter_e::sfpar_float, 0, "src"},
     {sflow_parameter_e::sfpar_float, 1, "src"}
   };

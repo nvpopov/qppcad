@@ -9,11 +9,11 @@ sf_claim_xgeom_node_t::sf_claim_xgeom_node_t() {
 
   m_node_name = "claim xgeom";
 
-  m_out_types = {
+  m_out_schema = {
     {sflow_parameter_e::sfpar_xgeom, 0, "dst"}
   };
 
-  m_ipl_types = {
+  m_ipl_schema = {
     {sflow_parameter_e::sfpar_ws_item, "", true}
   };
 

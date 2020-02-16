@@ -106,11 +106,11 @@ bool qnode_connection_t::is_connection_valid() {
   auto _inp_sck_id = m_inp_socket->m_socket_id;
   auto _out_sck_id = m_out_socket->m_socket_id;
 
-  if (_inp_sck_id >= m_inp_socket->m_node->m_sf_node->m_inp_types.size()) return false;
-  if (_out_sck_id >= m_out_socket->m_node->m_sf_node->m_out_types.size()) return false;
+  if (_inp_sck_id >= m_inp_socket->m_node->m_sf_node->m_inp_schema.size()) return false;
+  if (_out_sck_id >= m_out_socket->m_node->m_sf_node->m_out_schema.size()) return false;
 
-  if (m_inp_socket->m_node->m_sf_node->m_inp_types[_inp_sck_id].m_type !=
-      m_out_socket->m_node->m_sf_node->m_out_types[_out_sck_id].m_type) return false;
+  if (m_inp_socket->m_node->m_sf_node->m_inp_schema[_inp_sck_id].m_type !=
+      m_out_socket->m_node->m_sf_node->m_out_schema[_out_sck_id].m_type) return false;
 
   auto con_cnt = m_inp_socket->connections_count();
   if (!con_cnt) return false;
