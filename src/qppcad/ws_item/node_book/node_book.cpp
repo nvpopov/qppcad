@@ -108,12 +108,52 @@ void node_book_t::save_to_json(json &data) {
       //store inplace parameters
       if (node->m_ipl.size() == node->m_ipl_schema.size()) {
           json inplace_parameters;
-//          for (size_t i = 0; i < node->m_ipl.size(); i++) {
-//              switch (node->m_ipl_types[i]) {
-//                case
-//                }
-//            }
-        }
+          for (size_t i = 0; i < node->m_ipl.size(); i++)
+            if (node->m_ipl[i]) {
+
+              json inplace_parameter;
+
+              inplace_parameter[JSON_NODE_BOOK_INPLACE_NAME] = node->m_ipl_schema[i].m_name;
+              inplace_parameter[JSON_NODE_BOOK_INPLACE_TYPE] = node->m_ipl[i]->get_param_meta();
+
+              bool value_is_set{false};
+              switch (node->m_ipl_schema[i].m_type) {
+
+                case sflow_parameter_e::sfpar_int: {
+                    value_is_set = true;
+                    auto as_int = node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
+                    inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value;
+                    break;
+                  }
+
+                case sflow_parameter_e::sfpar_float: {
+                    value_is_set = true;
+                    auto as_float = node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
+                    inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value;
+                    break;
+                  }
+
+                case sflow_parameter_e::sfpar_bool: {
+                    value_is_set = true;
+                    auto as_bool = node->m_ipl[i]->cast_as<sflow_parameter_bool_t>();
+                    inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value;
+                    break;
+                  }
+
+                default:{
+                    break;
+                  }
+
+                } // end of switch
+
+              if (value_is_set) inplace_parameters.push_back(inplace_parameter);
+
+              } // end of cycle over nodes
+
+          if (!inplace_parameters.empty())
+            node_json[JSON_NODE_BOOK_INPLACE_PARAMETERS] = inplace_parameters;
+
+        } // end of if
 
       nodes.push_back(node_json);
 

@@ -171,6 +171,7 @@ namespace qpp {
     const auto JSON_NODE_BOOK_INPLACE_PARAMETERS = "inplace";
     const auto JSON_NODE_BOOK_INPLACE_NAME       = "name";
     const auto JSON_NODE_BOOK_INPLACE_VALUE      = "value";
+    const auto JSON_NODE_BOOK_INPLACE_TYPE      = "type";
 
   } // namespace qpp::cad
 
