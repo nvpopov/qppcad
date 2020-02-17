@@ -817,6 +817,7 @@ void main_window_t::init_layouts() {
   m_tp_lt = new QVBoxLayout;
   m_tp_wdgt->setLayout(m_tp_lt);
   m_tp_lt->setContentsMargins(5,0,0,0);
+  m_tp_lt->setSpacing(1);
 
   m_tp_lt->addWidget(m_tp_edit_mode_start, 0, Qt::AlignLeft);
   m_tp_lt->addWidget(m_tp_edit_mode_item, 0, Qt::AlignLeft);
