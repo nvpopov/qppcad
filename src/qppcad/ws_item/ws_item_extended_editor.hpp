@@ -34,23 +34,24 @@ namespace qpp {
 
     class ws_item_extended_editor_t : public QWidget {
 
-        Q_OBJECT
+      Q_OBJECT
 
     public:
 
-        ws_item_t *m_binded_item{nullptr};
+      ws_item_t *m_binded_item{nullptr};
 
-        ws_item_extended_editor_t();
+      ws_item_extended_editor_t();
 
-        virtual ext_editor_geom_policy_e get_geom_policy();
+      virtual ext_editor_geom_policy_e get_geom_policy();
 
-        virtual bool can_be_binded_to(ws_item_t* _item_to_bind);
+      virtual bool can_be_binded_to(ws_item_t* _item_to_bind);
 
-        virtual int get_minimum_width();
-        virtual void bind_to_item(ws_item_t *_binding_item);
-        virtual void unbind_item();
-        virtual void update_from_ws_item();
-        virtual QString header_name_hint() = 0;
+      virtual int get_minimum_width();
+      virtual void bind_to_item(ws_item_t *_binding_item);
+      virtual void unbind_item();
+      virtual void update_from_ws_item();
+      virtual int first_time_width_percentage();
+      virtual QString header_name_hint() = 0;
 
     };
 

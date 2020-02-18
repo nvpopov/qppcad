@@ -38,6 +38,10 @@ void ws_item_extended_editor_t::update_from_ws_item() {
 
 }
 
+int ws_item_extended_editor_t::first_time_width_percentage() {
+  return 50;
+}
+
 ws_item_extended_editor_t::ws_item_extended_editor_t() : QWidget() {
 
 }

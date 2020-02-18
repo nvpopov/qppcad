@@ -873,7 +873,7 @@ void main_window_t::dropEvent(QDropEvent *event) {
 
           QString native_path = urlList.at(i).toLocalFile();
           std::string native_path_str = native_path.toStdString();
-          astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
+          //astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
           astate->ws_mgr->load_from_file_autodeduce(native_path_str);
 
         }

@@ -325,7 +325,7 @@ qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
  padding-bottom: 2px;
  padding-right: 6px;
  margin-left: 3px;
- border: 1px solid rgb(80, 80, 80);
+ border: 2px solid rgb(80, 80, 80);
  background: rgb(114, 114, 114);
  border-radius: 3px;
  margin-bottom: 2px;
