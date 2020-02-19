@@ -8,11 +8,11 @@ sf_int_prop_node_t::sf_int_prop_node_t() : sflow_node_t () {
   m_node_name = "int";
 
   m_out_schema = {
-    {sflow_parameter_e::sfpar_int, 0, ""}
+    make_outs(sflow_parameter_e::sfpar_int, "")
   };
 
   m_ipl_schema = {
-    {sflow_parameter_e::sfpar_int, "value", true}
+    make_ipls(sflow_parameter_e::sfpar_int, "value")
   };
 
   m_front_end_width = opt<int>(130);
@@ -39,11 +39,11 @@ sf_int_final_node_t::sf_int_final_node_t() : sflow_node_t () {
   m_node_name = "show int";
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_int, 0, ""}
+    make_inps(sflow_parameter_e::sfpar_int, "")
   };
 
   m_ipl_schema = {
-    {sflow_parameter_e::sfpar_int, "value", false}
+    make_ipls(sflow_parameter_e::sfpar_int, "value")
   };
 
   m_front_end_width = opt<int>(130);
@@ -73,15 +73,15 @@ sf_int_p_const_node_t::sf_int_p_const_node_t() : sflow_node_t () {
   m_node_name = "int + const";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_int, 0, "a"}
+    make_outs(sflow_parameter_e::sfpar_int, "a")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_int, 0, "b"}
+    make_inps(sflow_parameter_e::sfpar_int, "b")
   };
 
   m_ipl_schema = {
-    {sflow_parameter_e::sfpar_int, "const", true}
+    make_ipls(sflow_parameter_e::sfpar_int, "const")
   };
 
 }
@@ -107,12 +107,12 @@ sf_int_sum_int_node_t::sf_int_sum_int_node_t() {
   m_node_name = "int + int";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_int, 0, "dst"}
+    make_outs(sflow_parameter_e::sfpar_int, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_int, 0, "src1"},
-    {sflow_parameter_e::sfpar_int, 0, "src2"}
+    make_inps(sflow_parameter_e::sfpar_int, "src1"),
+    make_inps(sflow_parameter_e::sfpar_int, "src2")
   };
 
   m_front_end_width = opt<int>(130);
@@ -140,16 +140,16 @@ sf_int_patb_const_node_t::sf_int_patb_const_node_t() {
   m_node_name = "(int + a) * b";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_int, 0, "src"}
+   make_outs(sflow_parameter_e::sfpar_int, "src")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_int, 0, "dst"}
+    make_inps(sflow_parameter_e::sfpar_int, "dst")
   };
 
   m_ipl_schema = {
-    {sflow_parameter_e::sfpar_int, "a", true},
-    {sflow_parameter_e::sfpar_int, "b", true}
+    make_ipls(sflow_parameter_e::sfpar_int, "a"),
+    make_ipls(sflow_parameter_e::sfpar_int, "b")
   };
 
   m_front_end_width = opt<int>(130);
@@ -178,12 +178,12 @@ sf_int_mul_int_node_t::sf_int_mul_int_node_t() {
   m_node_name = "int * int";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_int, 0, "dst"}
+    make_outs(sflow_parameter_e::sfpar_int, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_int, 0, "src1"},
-    {sflow_parameter_e::sfpar_int, 0, "src2"}
+    make_inps(sflow_parameter_e::sfpar_int, "src1"),
+    make_inps(sflow_parameter_e::sfpar_int, "src2")
   };
 
   m_front_end_width = opt<int>(130);
@@ -211,12 +211,12 @@ sf_int_div_int_node_t::sf_int_div_int_node_t() {
   m_node_name = "int / int";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_int, 0, "dst"}
+   make_outs(sflow_parameter_e::sfpar_int, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_int, 0, "src1"},
-    {sflow_parameter_e::sfpar_int, 0, "src2"}
+    make_inps(sflow_parameter_e::sfpar_int, "src1"),
+    make_inps(sflow_parameter_e::sfpar_int, "src2")
   };
 
 }
@@ -228,9 +228,7 @@ bool sf_int_div_int_node_t::execute_ex() {
   auto inp1 = get_pars_as<sflow_parameter_int_t>(1, m_inps);
 
   if (out0 && inp0 && inp1) {
-      out0->m_value = inp1->m_value == 0 ?
-                        0 :
-                        inp0->m_value / inp1->m_value;
+      out0->m_value = inp1->m_value == 0 ? 0 : inp0->m_value / inp1->m_value;
     } else {
       return false;
     }

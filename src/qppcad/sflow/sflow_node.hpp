@@ -17,21 +17,33 @@ namespace qpp {
     class sflow_node_t;
     struct sflow_connectivity_data_t;
 
+    enum sflow_data_group_e {
+
+      ipl_d,
+      inp_d,
+      out_d
+
+    };
+
     struct sflow_socket_info_t {
 
+        sflow_data_group_e m_data_group{sflow_data_group_e::inp_d};
         sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
         size_t m_tot_con{0}; // total connections
         std::string m_sck_name{"Unknown"};
+        bool m_is_inplace{false};
+        bool m_editable{true};
+        bool m_is_serializable{true};
 
     };
 
-    struct sflow_inplace_parameter_t {
+    sflow_socket_info_t make_default_sck(sflow_data_group_e dg,
+                                           sflow_parameter_e type,
+                                           const std::string &sck_name);
 
-        sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
-        std::string m_name{"Unknown"};
-        bool m_editable{false};
-
-    };
+    sflow_socket_info_t make_inps(sflow_parameter_e type, const std::string &sck_name);
+    sflow_socket_info_t make_outs(sflow_parameter_e type, const std::string &sck_name);
+    sflow_socket_info_t make_ipls(sflow_parameter_e type, const std::string &sck_name);
 
     struct sflow_connectivity_data_t {
 
@@ -41,6 +53,9 @@ namespace qpp {
         std::optional<size_t> m_out_sck;
 
     };
+
+    using sflow_data_group_t = std::vector<std::shared_ptr<sflow_parameter_t>>;
+    using sflow_sck_info_group_t = std::vector<sflow_socket_info_t>;
 
     /**
      * @brief The sflow_node_t class
@@ -67,18 +82,17 @@ namespace qpp {
 
         sflow_calc_meta_t m_calc_meta;
 
-        std::vector<sflow_socket_info_t> m_inp_schema;
-        std::vector<std::shared_ptr<sflow_parameter_t>> m_inps;
+        sflow_sck_info_group_t m_inp_schema;
+        sflow_data_group_t m_inps;
 
-        std::vector<sflow_socket_info_t> m_out_schema;
-        std::vector<std::shared_ptr<sflow_parameter_t>> m_outs;
+        sflow_sck_info_group_t m_out_schema;
+        sflow_data_group_t m_outs;
 
-        std::vector<sflow_inplace_parameter_t> m_ipl_schema;
-        std::vector<std::shared_ptr<sflow_parameter_t>> m_ipl;
+        sflow_sck_info_group_t m_ipl_schema;
+        sflow_data_group_t m_ipl;
 
         template<typename TYPE_CLASS>
-        bool validate_data_vec(std::vector<TYPE_CLASS> &data_types,
-                               std::vector<std::shared_ptr<sflow_parameter_t> > &data) {
+        bool validate_data_vec(std::vector<TYPE_CLASS> &data_types, sflow_data_group_t &data) {
 
           if (data_types.size() != data.size()) return false;
           for (size_t i = 0; i < data_types.size(); i++)
@@ -90,8 +104,7 @@ namespace qpp {
         }
 
         template<typename TYPE_CLASS>
-        void fill_data_vec(std::vector<TYPE_CLASS> &data_types,
-                           std::vector<std::shared_ptr<sflow_parameter_t> > &data) {
+        void fill_data_vec(std::vector<TYPE_CLASS> &data_types, sflow_data_group_t &data) {
 
           if (data_types.size() != data.size()) data.resize(data_types.size(), nullptr);
 
@@ -154,13 +167,16 @@ namespace qpp {
         void explicit_create_ipl();
 
         template<typename T>
-        T* get_pars_as(size_t inp_idx, std::vector<std::shared_ptr<sflow_parameter_t>> &data_vec) {
+        T* get_pars_as(size_t inp_idx, sflow_data_group_t &data_vec) {
 
           if (inp_idx >= data_vec.size()) return nullptr;
           if (!data_vec[inp_idx]) return nullptr;
           return data_vec[inp_idx]->cast_as<T>();
 
         }
+
+        opt<size_t> get_data_by_name(sflow_data_group_e group, const std::string &iplname);
+        opt<size_t> get_data_by_name(sflow_sck_info_group_t &sckinf, const std::string &iplname);
 
         //if false flow stops
         bool execute();

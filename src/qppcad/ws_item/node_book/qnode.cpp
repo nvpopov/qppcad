@@ -187,7 +187,7 @@ void qnode_t::construct_inplace_widgets() {
           _inpl_widget->setEnabled(false);
 
         if (_inpl_widget) m_inplace_wdgt_lt->addRow(
-              QString::fromStdString(m_sf_node->m_ipl_schema[i].m_name),
+              QString::fromStdString(m_sf_node->m_ipl_schema[i].m_sck_name),
               _inpl_widget);
 
       }

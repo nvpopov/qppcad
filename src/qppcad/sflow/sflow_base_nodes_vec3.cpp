@@ -8,11 +8,11 @@ sf_v3f_prop_node_t::sf_v3f_prop_node_t() {
   m_node_name = "v3f";
 
   m_out_schema = {
-    {sflow_parameter_e::sfpar_v3f, 0, ""}
+    make_outs(sflow_parameter_e::sfpar_v3f, "")
   };
 
   m_ipl_schema = {
-    {sflow_parameter_e::sfpar_v3f, "value", true}
+    make_ipls(sflow_parameter_e::sfpar_v3f, "value")
   };
 
   m_front_end_width = opt<int>(250);
@@ -39,11 +39,11 @@ sf_v3f_final_node_t::sf_v3f_final_node_t() {
   m_node_name = "show v3f";
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_v3f, 0, ""}
+    make_inps(sflow_parameter_e::sfpar_v3f, "")
   };
 
   m_ipl_schema = {
-    {sflow_parameter_e::sfpar_v3f, "vec", false}
+    make_ipls(sflow_parameter_e::sfpar_v3f, "vec")
   };
 
   m_front_end_width = opt<int>(250);
@@ -73,12 +73,12 @@ sf_v3f_sum_v3f_node_t::sf_v3f_sum_v3f_node_t() {
   m_node_name = "v3f + v3f";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_v3f, 0, "dst"}
+    make_outs(sflow_parameter_e::sfpar_v3f, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_v3f, 0, "src1"},
-    {sflow_parameter_e::sfpar_v3f, 0, "src2"}
+    make_inps(sflow_parameter_e::sfpar_v3f, "src1"),
+    make_inps(sflow_parameter_e::sfpar_v3f, "src2")
   };
 
   m_front_end_width = opt<int>(120);
@@ -106,12 +106,12 @@ sf_v3f_dot_node_t::sf_v3f_dot_node_t() {
   m_node_name = "v3f . v3f";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_float, 0, "dst"}
+   make_outs(sflow_parameter_e::sfpar_float, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_v3f, 0, "src1"},
-    {sflow_parameter_e::sfpar_v3f, 0, "src2"}
+    make_inps(sflow_parameter_e::sfpar_v3f, "src1"),
+    make_inps(sflow_parameter_e::sfpar_v3f, "src2")
   };
 
   m_front_end_width = opt<int>(120);
@@ -139,11 +139,11 @@ sf_v3f_normalized_node_t::sf_v3f_normalized_node_t() {
   m_node_name = "v3f.normalized()";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_v3f, 0, "dst"}
+   make_outs(sflow_parameter_e::sfpar_v3f, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_v3f, 0, "src"},
+    make_inps(sflow_parameter_e::sfpar_v3f, "src"),
   };
 
   m_front_end_width = opt<int>(120);
@@ -170,11 +170,11 @@ sf_v3f_norm_node_t::sf_v3f_norm_node_t() {
   m_node_name = "v3f.norm()";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_float, 0, "dst"}
+   make_outs(sflow_parameter_e::sfpar_float, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_v3f, 0, "src"},
+    make_inps(sflow_parameter_e::sfpar_v3f, "src"),
   };
 
   m_front_end_width = opt<int>(120);
@@ -200,12 +200,12 @@ sf_v3f_cross_node_t::sf_v3f_cross_node_t() {
   m_node_name = "v3f x v3f";
 
   m_out_schema = {
-   {sflow_parameter_e::sfpar_v3f, 0, "dst"}
+   make_outs(sflow_parameter_e::sfpar_v3f, "dst")
   };
 
   m_inp_schema = {
-    {sflow_parameter_e::sfpar_v3f, 0, "src1"},
-    {sflow_parameter_e::sfpar_v3f, 0, "src2"}
+   make_inps(sflow_parameter_e::sfpar_v3f, "src1"),
+   make_inps(sflow_parameter_e::sfpar_v3f, "src2")
   };
 
   m_front_end_width = opt<int>(120);

@@ -111,42 +111,42 @@ void node_book_t::save_to_json(json &data) {
           for (size_t i = 0; i < node->m_ipl.size(); i++)
             if (node->m_ipl[i]) {
 
-              json inplace_parameter;
+                json inplace_parameter;
 
-              inplace_parameter[JSON_NODE_BOOK_INPLACE_NAME] = node->m_ipl_schema[i].m_name;
-              inplace_parameter[JSON_NODE_BOOK_INPLACE_TYPE] = node->m_ipl[i]->get_param_meta();
+                inplace_parameter[JSON_NODE_BOOK_INPLACE_NAME] = node->m_ipl_schema[i].m_sck_name;
+                inplace_parameter[JSON_NODE_BOOK_INPLACE_TYPE] = node->m_ipl[i]->get_param_meta();
 
-              bool value_is_set{false};
-              switch (node->m_ipl_schema[i].m_type) {
+                bool value_is_set{false};
+                switch (node->m_ipl_schema[i].m_type) {
 
-                case sflow_parameter_e::sfpar_int: {
-                    value_is_set = true;
-                    auto as_int = node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
-                    inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value;
-                    break;
-                  }
+                  case sflow_parameter_e::sfpar_int: {
+                      value_is_set = true;
+                      auto as_int = node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
+                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value;
+                      break;
+                    }
 
-                case sflow_parameter_e::sfpar_float: {
-                    value_is_set = true;
-                    auto as_float = node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
-                    inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value;
-                    break;
-                  }
+                  case sflow_parameter_e::sfpar_float: {
+                      value_is_set = true;
+                      auto as_float = node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
+                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value;
+                      break;
+                    }
 
-                case sflow_parameter_e::sfpar_bool: {
-                    value_is_set = true;
-                    auto as_bool = node->m_ipl[i]->cast_as<sflow_parameter_bool_t>();
-                    inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value;
-                    break;
-                  }
+                  case sflow_parameter_e::sfpar_bool: {
+                      value_is_set = true;
+                      auto as_bool = node->m_ipl[i]->cast_as<sflow_parameter_bool_t>();
+                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value;
+                      break;
+                    }
 
-                default:{
-                    break;
-                  }
+                  default:{
+                      break;
+                    }
 
-                } // end of switch
+                  } // end of switch
 
-              if (value_is_set) inplace_parameters.push_back(inplace_parameter);
+                if (value_is_set) inplace_parameters.push_back(inplace_parameter);
 
               } // end of cycle over nodes
 
@@ -216,6 +216,48 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
             auto new_node = m_scene->construct_new_node(QPointF(node_x, node_y),
                                                         nodehash_itr.value().get<size_t>());
 
+            //load inplace parameters
+
+            auto ipls_itr = node_ref.find(JSON_NODE_BOOK_INPLACE_PARAMETERS);
+            new_node->m_sf_node->explicit_create_ipl();
+
+            if (ipls_itr != node_ref.end()) {
+
+                auto &json_ipls = ipls_itr.value();
+
+                for (auto &json_ipl : json_ipls) {
+
+                    auto iplname_itr = json_ipl.find(JSON_NODE_BOOK_INPLACE_NAME);
+                    if (iplname_itr != json_ipl.end()) {
+
+                        std::string iplname = ipls_itr.value();
+
+//                        auto find_fn =
+//                            [&iplname](auto ipl_schema){return ipl_schema.m_sck == iplname;};
+
+//                        auto find_itr = std::find_if(std::begin(new_node->m_sf_node->m_ipl_schema),
+//                                                     std::end(new_node->m_sf_node->m_ipl_schema),
+//                                                     find_fn);
+
+//                        if (find_itr != new_node->m_sf_node->m_ipl_schema.end()) {
+
+//                            auto ipl_idx = std::distance(new_node->m_sf_node->m_ipl_schema.begin(),
+//                                                         find_itr);
+
+//                            if (ipl_idx < new_node->m_sf_node->m_ipl.size()
+//                                && new_node->m_sf_node->m_ipl[ipl_idx]) {
+
+//                              }
+
+//                          }
+
+                      }
+
+                  }
+
+              }
+
+
             nds_lkp.insert({new_node.get(), nds_idx});
             nds_idx++;
 
@@ -239,10 +281,10 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
                                       onode_itr.value().get<size_t>(),
                                       isck_itr.value().get<size_t>(),
                                       osck_itr.value().get<size_t>());
-//                            fmt::print("@@@@@ {} {} {} {}",inode_itr.value().get<size_t>(),
-//                                                    onode_itr.value().get<size_t>(),
-//                                                    isck_itr.value().get<size_t>(),
-//                                                    osck_itr.value().get<size_t>());
+              //                            fmt::print("@@@@@ {} {} {} {}",inode_itr.value().get<size_t>(),
+              //                                                    onode_itr.value().get<size_t>(),
+              //                                                    isck_itr.value().get<size_t>(),
+              //                                                    osck_itr.value().get<size_t>());
             }
 
 

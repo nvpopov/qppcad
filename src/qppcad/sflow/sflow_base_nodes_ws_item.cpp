@@ -10,11 +10,11 @@ sf_claim_xgeom_node_t::sf_claim_xgeom_node_t() {
   m_node_name = "claim xgeom";
 
   m_out_schema = {
-    {sflow_parameter_e::sfpar_xgeom, 0, "dst"}
+     make_outs(sflow_parameter_e::sfpar_xgeom, "dst")
   };
 
   m_ipl_schema = {
-    {sflow_parameter_e::sfpar_ws_item, "", true}
+    make_ipls(sflow_parameter_e::sfpar_ws_item, "value")
   };
 
 }
