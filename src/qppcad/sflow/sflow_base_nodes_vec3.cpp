@@ -43,7 +43,7 @@ sf_v3f_final_node_t::sf_v3f_final_node_t() {
   };
 
   m_ipl_schema = {
-    make_ipls(sflow_parameter_e::sfpar_v3f, "vec")
+    make_ipls(sflow_parameter_e::sfpar_v3f, "vec").set_editable(false)
   };
 
   m_front_end_width = opt<int>(250);

@@ -69,8 +69,6 @@ bool sf_float_p_const_node_t::execute_ex() {
 
 }
 
-
-
 sf_float_final_node_t::sf_float_final_node_t() {
 
   m_node_name = "show float";
@@ -80,7 +78,7 @@ sf_float_final_node_t::sf_float_final_node_t() {
   };
 
   m_ipl_schema = {
-    make_ipls(sflow_parameter_e::sfpar_float, "")
+    make_ipls(sflow_parameter_e::sfpar_float, "").set_editable(false)
   };
 
   m_front_end_width = opt<int>(130);

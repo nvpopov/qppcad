@@ -115,3 +115,10 @@ sflow_socket_info_t qpp::cad::make_ipls(sflow_parameter_e type, const std::strin
   return tmp_sck_info;
 
 }
+
+sflow_socket_info_t &sflow_socket_info_t::set_editable(const bool value) {
+
+  m_editable = value;
+  return *this;
+
+}

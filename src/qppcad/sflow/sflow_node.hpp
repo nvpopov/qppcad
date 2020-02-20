@@ -35,6 +35,8 @@ namespace qpp {
         bool m_editable{true};
         bool m_is_serializable{true};
 
+        sflow_socket_info_t &set_editable(const bool value);
+
     };
 
     sflow_socket_info_t make_default_sck(sflow_data_group_e dg,

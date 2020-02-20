@@ -769,6 +769,7 @@ void main_window_t::init_layouts() {
 
   m_splitter_ws_viewer_ext_edt->addWidget(m_ws_viewer_wdgt_frame);
   m_splitter_ws_viewer_ext_edt->addWidget(m_ext_edtr_compositor);
+  m_splitter_ws_viewer_ext_edt->setSizes(QList<int>({2, 1}));
   m_splitter_ws_viewer_ext_edt->setHandleWidth(0);
 
   m_splitter_ws_viewer_ext_edt->setContentsMargins(0,0,0,0);
@@ -789,7 +790,7 @@ void main_window_t::init_layouts() {
   m_splitter_ws_viewer_py_console_log->addWidget(m_inline_bottom_tool_plch);
   m_splitter_ws_viewer_py_console_log->addWidget(m_splitter_py_console_log_wdgt);
   m_splitter_ws_viewer_py_console_log->setHandleWidth(0);
-  m_splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 1, 3}));
+  m_splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 2, 3}));
   m_splitter_ws_viewer_py_console_log->setContentsMargins(0,0,0,0);
   m_py_console_wdgt->hide();
   m_log_wdgt->hide();

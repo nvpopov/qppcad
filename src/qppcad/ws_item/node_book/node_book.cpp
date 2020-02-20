@@ -109,7 +109,7 @@ void node_book_t::save_to_json(json &data) {
       if (node->m_ipl.size() == node->m_ipl_schema.size()) {
           json inplace_parameters;
           for (size_t i = 0; i < node->m_ipl.size(); i++)
-            if (node->m_ipl[i]) {
+            if (node->m_ipl[i] && node->m_ipl_schema[i].m_editable) {
 
                 json inplace_parameter;
 
