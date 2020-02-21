@@ -12,7 +12,7 @@ sf_int_prop_node_t::sf_int_prop_node_t() : sflow_node_t () {
   };
 
   m_ipl_schema = {
-    make_ipls(sflow_parameter_e::sfpar_int, "value")
+    make_ipls(sflow_parameter_e::sfpar_int, "value").hide_label(false)
   };
 
   m_front_end_width = opt<int>(130);
@@ -43,7 +43,7 @@ sf_int_final_node_t::sf_int_final_node_t() : sflow_node_t () {
   };
 
   m_ipl_schema = {
-    make_ipls(sflow_parameter_e::sfpar_int, "value").set_editable(false)
+    make_ipls(sflow_parameter_e::sfpar_int, "value").editable(false)
   };
 
   m_front_end_width = opt<int>(130);

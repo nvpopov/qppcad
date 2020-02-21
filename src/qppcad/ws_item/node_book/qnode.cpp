@@ -67,12 +67,14 @@ void qnode_t::construct_inplace_widgets() {
 
     if (m_sf_node->m_ipl.size() > i && m_sf_node->m_ipl[i]) {
 
-        QWidget *_inpl_widget{nullptr};
+        auto &cur_scheme = m_sf_node->m_ipl_schema[i];
+
+        QWidget *inpl_widget{nullptr};
         //iupdatable_t *master_item{nullptr};
 
         //if (m_scene && m_scene->m_parent_node_book) master_item = m_scene->m_parent_node_book;
 
-        switch (m_sf_node->m_ipl_schema[i].m_type) {
+        switch (cur_scheme.m_type) {
 
           case sflow_parameter_e::sfpar_int : {
 
@@ -88,7 +90,7 @@ void qnode_t::construct_inplace_widgets() {
                   b_sb->m_upd_flag = ws_item_updf_regenerate_content;
 
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
-                  _inpl_widget = b_sb;
+                  inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
 
                 }
@@ -113,7 +115,7 @@ void qnode_t::construct_inplace_widgets() {
                   b_sb->m_upd_flag = ws_item_updf_regenerate_content;
 
                   b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
-                  _inpl_widget = b_sb;
+                  inpl_widget = b_sb;
                   m_inplace_wdgts.push_back(b_sb);
 
                 }
@@ -137,7 +139,7 @@ void qnode_t::construct_inplace_widgets() {
                   b_v3f->m_upd_flag = ws_item_updf_regenerate_content;
 
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
-                  _inpl_widget = b_v3f;
+                  inpl_widget = b_v3f;
                   m_inplace_wdgts.push_back(b_v3f);
 
                 }
@@ -164,7 +166,7 @@ void qnode_t::construct_inplace_widgets() {
                   b_wsc->m_upd_flag = ws_item_updf_regenerate_content;
 
                   //b_sb->setFixedWidth(astate->size_guide.node_book_inplace_par_width());
-                  _inpl_widget = b_wsc;
+                  inpl_widget = b_wsc;
                   m_inplace_wdgts.push_back(b_wsc);
 
                 }
@@ -183,12 +185,16 @@ void qnode_t::construct_inplace_widgets() {
 
           }
 
-        if (!m_sf_node->m_ipl_schema[i].m_editable && _inpl_widget)
-          _inpl_widget->setEnabled(false);
+        if (!cur_scheme.m_editable && inpl_widget) inpl_widget->setEnabled(false);
 
-        if (_inpl_widget) m_inplace_wdgt_lt->addRow(
-              QString::fromStdString(m_sf_node->m_ipl_schema[i].m_sck_name),
-              _inpl_widget);
+        if (inpl_widget) {
+
+            QString inplace_lbl =
+                cur_scheme.m_hide_label ? "" : QString::fromStdString(cur_scheme.m_sck_name);
+
+            m_inplace_wdgt_lt->addRow(inplace_lbl, inpl_widget);
+
+          }
 
       }
 

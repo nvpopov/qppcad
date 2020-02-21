@@ -19,16 +19,42 @@ void sflow_node_t::explicit_create_ipl() {
 
 }
 
-opt<size_t> sflow_node_t::get_data_by_name(sflow_data_group_e group, const std::string &iplname) {
+opt<size_t> sflow_node_t::get_data_by_name(sflow_data_group_e group, const std::string &parname) {
+
+  switch (group) {
+
+    case sflow_data_group_e::inp_d : {
+        return get_data_by_name(m_inp_schema, parname);
+        break;
+      }
+
+    case sflow_data_group_e::out_d : {
+        return get_data_by_name(m_out_schema, parname);
+        break;
+      }
+
+    case sflow_data_group_e::ipl_d : {
+        return get_data_by_name(m_ipl_schema, parname);
+        break;
+      }
+
+    }
+
+  return std::nullopt;
 
 }
 
 opt<size_t> sflow_node_t::get_data_by_name(sflow_sck_info_group_t &sckinf,
-                                           const std::string &iplname) {
+                                           const std::string &parname) {
 
-  //  auto find_fn = [&iplname](sflow_data_group_t::value_type data_scheme) {
-  //        return data_scheme->m_name == iplname;
-  //  };
+  auto find_fn = [&parname] (sflow_sck_info_group_t::value_type data_scheme) {
+    return data_scheme.m_sck_name == parname;
+  };
+
+  auto find_itr = std::find_if(std::begin(sckinf), std::end(sckinf), find_fn);
+
+  return find_itr != sckinf.end() ?
+        opt<size_t>{std::distance(std::begin(sckinf), find_itr)} : std::nullopt;
 
 }
 
@@ -116,9 +142,17 @@ sflow_socket_info_t qpp::cad::make_ipls(sflow_parameter_e type, const std::strin
 
 }
 
-sflow_socket_info_t &sflow_socket_info_t::set_editable(const bool value) {
-
+sflow_socket_info_t &sflow_socket_info_t::editable(const bool value) {
   m_editable = value;
   return *this;
+}
 
+sflow_socket_info_t &sflow_socket_info_t::serializable(const bool value) {
+  m_is_serializable = value;
+  return *this;
+}
+
+sflow_socket_info_t &sflow_socket_info_t::hide_label(const bool value) {
+  m_hide_label = value;
+  return *this;
 }

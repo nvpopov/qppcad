@@ -27,21 +27,24 @@ namespace qpp {
 
     struct sflow_socket_info_t {
 
-        sflow_data_group_e m_data_group{sflow_data_group_e::inp_d};
-        sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
-        size_t m_tot_con{0}; // total connections
-        std::string m_sck_name{"Unknown"};
-        bool m_is_inplace{false};
-        bool m_editable{true};
-        bool m_is_serializable{true};
+      sflow_data_group_e m_data_group{sflow_data_group_e::inp_d};
+      sflow_parameter_e m_type{sflow_parameter_e::sfpar_none};
+      size_t m_tot_con{0}; // total connections
+      std::string m_sck_name{"Unknown"};
+      bool m_is_inplace{false};
+      bool m_editable{true};
+      bool m_is_serializable{true};
+      bool m_hide_label{false};
 
-        sflow_socket_info_t &set_editable(const bool value);
+      sflow_socket_info_t &editable(const bool value);
+      sflow_socket_info_t &serializable(const bool value);
+      sflow_socket_info_t &hide_label(const bool value);
 
     };
 
     sflow_socket_info_t make_default_sck(sflow_data_group_e dg,
-                                           sflow_parameter_e type,
-                                           const std::string &sck_name);
+                                         sflow_parameter_e type,
+                                         const std::string &sck_name);
 
     sflow_socket_info_t make_inps(sflow_parameter_e type, const std::string &sck_name);
     sflow_socket_info_t make_outs(sflow_parameter_e type, const std::string &sck_name);
@@ -49,10 +52,10 @@ namespace qpp {
 
     struct sflow_connectivity_data_t {
 
-        std::shared_ptr<sflow_node_t> m_inp_node{nullptr};
-        std::shared_ptr<sflow_node_t> m_out_node{nullptr};
-        std::optional<size_t> m_inp_sck;
-        std::optional<size_t> m_out_sck;
+      std::shared_ptr<sflow_node_t> m_inp_node{nullptr};
+      std::shared_ptr<sflow_node_t> m_out_node{nullptr};
+      std::optional<size_t> m_inp_sck;
+      std::optional<size_t> m_out_sck;
 
     };
 
@@ -64,133 +67,133 @@ namespace qpp {
      */
     class sflow_node_t {
 
-      public:
+    public:
 
-        size_t m_node_type_hash;
+      size_t m_node_type_hash;
 
-        /* The name that will be displayed in the node widget */
-        std::string m_node_name;
+      /* The name that will be displayed in the node widget */
+      std::string m_node_name;
 
-        /* Means that this node has no input links and is external to the calculation flow. */
-        bool m_is_outer{true};
+      /* Means that this node has no input links and is external to the calculation flow. */
+      bool m_is_outer{true};
 
-        /* This value is interpreted as the number of transitions to this node from other nodes
+      /* This value is interpreted as the number of transitions to this node from other nodes
          * during the execution of the calculation flow */
-        size_t m_total_gain{0};
+      size_t m_total_gain{0};
 
-        size_t m_idx_lookup{0};
+      size_t m_idx_lookup{0};
 
-        opt<int> m_front_end_width{std::nullopt};
+      opt<int> m_front_end_width{std::nullopt};
 
-        sflow_calc_meta_t m_calc_meta;
+      sflow_calc_meta_t m_calc_meta;
 
-        sflow_sck_info_group_t m_inp_schema;
-        sflow_data_group_t m_inps;
+      sflow_sck_info_group_t m_inp_schema;
+      sflow_data_group_t m_inps;
 
-        sflow_sck_info_group_t m_out_schema;
-        sflow_data_group_t m_outs;
+      sflow_sck_info_group_t m_out_schema;
+      sflow_data_group_t m_outs;
 
-        sflow_sck_info_group_t m_ipl_schema;
-        sflow_data_group_t m_ipl;
+      sflow_sck_info_group_t m_ipl_schema;
+      sflow_data_group_t m_ipl;
 
-        template<typename TYPE_CLASS>
-        bool validate_data_vec(std::vector<TYPE_CLASS> &data_types, sflow_data_group_t &data) {
+      template<typename TYPE_CLASS>
+      bool validate_data_vec(std::vector<TYPE_CLASS> &data_types, sflow_data_group_t &data) {
 
-          if (data_types.size() != data.size()) return false;
-          for (size_t i = 0; i < data_types.size(); i++)
-            if (data[i] && data[i]->get_param_meta() != data_types[i].m_type)
-              return false;
+        if (data_types.size() != data.size()) return false;
+        for (size_t i = 0; i < data_types.size(); i++)
+          if (data[i] && data[i]->get_param_meta() != data_types[i].m_type)
+            return false;
 
-          return true;
+        return true;
 
-        }
+      }
 
-        template<typename TYPE_CLASS>
-        void fill_data_vec(std::vector<TYPE_CLASS> &data_types, sflow_data_group_t &data) {
+      template<typename TYPE_CLASS>
+      void fill_data_vec(std::vector<TYPE_CLASS> &data_types, sflow_data_group_t &data) {
 
-          if (data_types.size() != data.size()) data.resize(data_types.size(), nullptr);
+        if (data_types.size() != data.size()) data.resize(data_types.size(), nullptr);
 
-          for (size_t i = 0; i < data_types.size(); i++)
-            if (!data[i]) {
+        for (size_t i = 0; i < data_types.size(); i++)
+          if (!data[i]) {
 
-                switch (data_types[i].m_type) {
+              switch (data_types[i].m_type) {
 
-                  case sflow_parameter_e::sfpar_int : {
-                      data[i] = std::make_shared<sflow_parameter_int_t>();
-                      break;
-                    }
-
-                  case sflow_parameter_e::sfpar_float : {
-                      data[i] = std::make_shared<sflow_parameter_float_t>();
-                      break;
-                    }
-
-                  case sflow_parameter_e::sfpar_v3f : {
-                      data[i] = std::make_shared<sflow_parameter_v3f_t>();
-                      break;
-                    }
-
-                  #ifdef EXTENDED_SFLOW
-                  case sflow_parameter_e::sfpar_ws_item : {
-                      data[i] = std::make_shared<sflow_parameter_ws_item_t>();
-                      break;
-                    }
-                  #endif
-
-                  case sflow_parameter_e::sfpar_xgeom : {
-                      data[i] = std::make_shared<sflow_parameter_xgeom_t>();
-                      break;
-                    }
-
-                  case sflow_parameter_e::sfpar_bool : {
-                      data[i] = std::make_shared<sflow_parameter_bool_t>();
-                      break;
-                    }
-
-                  default :  {
-                      break;
-                    }
-
+                case sflow_parameter_e::sfpar_int : {
+                    data[i] = std::make_shared<sflow_parameter_int_t>();
+                    break;
                   }
 
-              } // end for
+                case sflow_parameter_e::sfpar_float : {
+                    data[i] = std::make_shared<sflow_parameter_float_t>();
+                    break;
+                  }
 
-        }
+                case sflow_parameter_e::sfpar_v3f : {
+                    data[i] = std::make_shared<sflow_parameter_v3f_t>();
+                    break;
+                  }
 
-        /**
+#ifdef EXTENDED_SFLOW
+                case sflow_parameter_e::sfpar_ws_item : {
+                    data[i] = std::make_shared<sflow_parameter_ws_item_t>();
+                    break;
+                  }
+#endif
+
+                case sflow_parameter_e::sfpar_xgeom : {
+                    data[i] = std::make_shared<sflow_parameter_xgeom_t>();
+                    break;
+                  }
+
+                case sflow_parameter_e::sfpar_bool : {
+                    data[i] = std::make_shared<sflow_parameter_bool_t>();
+                    break;
+                  }
+
+                default :  {
+                    break;
+                  }
+
+                }
+
+            } // end for
+
+      }
+
+      /**
          * @brief has_ipls
          * @return Returns true, if there are inplace parameters. Helper for frontend calls
          */
-        bool has_ipls();
+      bool has_ipls();
 
-        /**
+      /**
          * @brief Explicitly creates a vector of inplace parameters. Helper for frontend calls
          */
-        void explicit_create_ipl();
+      void explicit_create_ipl();
 
-        template<typename T>
-        T* get_pars_as(size_t inp_idx, sflow_data_group_t &data_vec) {
+      template<typename T>
+      T* get_pars_as(size_t inp_idx, sflow_data_group_t &data_vec) {
 
-          if (inp_idx >= data_vec.size()) return nullptr;
-          if (!data_vec[inp_idx]) return nullptr;
-          return data_vec[inp_idx]->cast_as<T>();
+        if (inp_idx >= data_vec.size()) return nullptr;
+        if (!data_vec[inp_idx]) return nullptr;
+        return data_vec[inp_idx]->cast_as<T>();
 
-        }
+      }
 
-        opt<size_t> get_data_by_name(sflow_data_group_e group, const std::string &iplname);
-        opt<size_t> get_data_by_name(sflow_sck_info_group_t &sckinf, const std::string &iplname);
+      opt<size_t> get_data_by_name(sflow_data_group_e group, const std::string &parname);
+      opt<size_t> get_data_by_name(sflow_sck_info_group_t &sckinf, const std::string &parname);
 
-        //if false flow stops
-        bool execute();
-        virtual bool execute_ex();
+      //if false flow stops
+      bool execute();
+      virtual bool execute_ex();
 
-        /**
-         * @brief A single node is such a node with one parameter that does not have a name,
-         * but has the ability to edit the value of the parameter visually
-         */
-        virtual bool is_single_node();
+      /**
+      * @brief A single node is such a node with one parameter that does not have a name,
+      * but has the ability to edit the value of the parameter visually
+      */
+      virtual bool is_single_node();
 
-        sflow_node_t();
+      sflow_node_t();
 
     };
 
@@ -228,19 +231,19 @@ namespace qpp {
     template<auto FUNC, typename ... args>
     class sf_func_node_t final : public sflow_node_t {
 
-      public:
+    public:
 
-        sf_func_node_t() {
+      sf_func_node_t() {
 
-        };
+      };
 
-        bool execute_ex() override {
-          return true;
-        };
+      bool execute_ex() override {
+        return true;
+      };
 
-        bool is_single_node() override {
-          return true;
-        };
+      bool is_single_node() override {
+        return true;
+      };
 
     };
 

@@ -78,7 +78,7 @@ sf_float_final_node_t::sf_float_final_node_t() {
   };
 
   m_ipl_schema = {
-    make_ipls(sflow_parameter_e::sfpar_float, "").set_editable(false)
+    make_ipls(sflow_parameter_e::sfpar_float, "").editable(false)
   };
 
   m_front_end_width = opt<int>(130);
