@@ -403,7 +403,7 @@ namespace qpp {
       size_t reg_sflow_grp(std::string group_name);
       size_t reg_reg_sf_fbr(std::string _full_name,
                             size_t _g_hash,
-                            std::function<std::shared_ptr<sflow_node_t>() > _fabric);
+                            std::function<std::shared_ptr<sf_node_t>() > _fabric);
       /**
        * @brief exec_tool
        * @param item

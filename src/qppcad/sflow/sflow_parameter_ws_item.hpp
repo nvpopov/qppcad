@@ -13,15 +13,15 @@ namespace qpp {
      This type of parameter is separated from the main parameters(sflow_parameter.hpp)
      for a simpler compilation of the test program and the main program
      */
-    class sflow_parameter_ws_item_t : public sflow_parameter_t {
+    class sf_parameter_ws_item_t : public sf_parameter_t {
 
-        QPP_OBJECT(sflow_parameter_ws_item_t, sflow_parameter_t)
+        QPP_OBJECT(sf_parameter_ws_item_t, sf_parameter_t)
 
       public:
 
         std::shared_ptr<ws_item_t> m_value{nullptr};
-        sflow_parameter_e get_param_meta() override ;
-        std::shared_ptr<sflow_parameter_t> clone() override;
+        sf_parameter_e get_param_meta() override ;
+        std::shared_ptr<sf_parameter_t> clone() override;
 
     };
 

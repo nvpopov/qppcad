@@ -17,7 +17,7 @@ namespace qpp {
     struct sflow_node_info_t {
         std::string m_full_name;
         size_t m_group_hash;
-        std::function<std::shared_ptr<sflow_node_t>() > m_fabric;
+        std::function<std::shared_ptr<sf_node_t>() > m_fabric;
     };
 
   } // namespace qpp::cad

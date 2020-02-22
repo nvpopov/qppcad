@@ -3,39 +3,39 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-QColor sck_colorize_helper::get_color(sflow_parameter_e par_type) {
+QColor sck_colorize_helper::get_color(sf_parameter_e par_type) {
 
   switch (par_type) {
 
-    case sflow_parameter_e::sfpar_none :
+    case sf_parameter_e::sfpar_none :
       return Qt::gray;
       break;
 
-    case sflow_parameter_e::sfpar_int :
+    case sf_parameter_e::sfpar_int :
       return Qt::blue;
       break;
 
-    case sflow_parameter_e::sfpar_bool :
+    case sf_parameter_e::sfpar_bool :
       return Qt::green;
       break;
 
-    case sflow_parameter_e::sfpar_float :
+    case sf_parameter_e::sfpar_float :
       return Qt::red;
       break;
 
-    case sflow_parameter_e::sfpar_string :
+    case sf_parameter_e::sfpar_string :
       return Qt::white;
       break;
 
-    case sflow_parameter_e::sfpar_v3f :
+    case sf_parameter_e::sfpar_v3f :
       return Qt::yellow;
       break;
 
-    case sflow_parameter_e::sfpar_xgeom :
+    case sf_parameter_e::sfpar_xgeom :
       return Qt::darkMagenta;
       break;
 
-    case sflow_parameter_e::sfpar_ws_item :
+    case sf_parameter_e::sfpar_ws_item :
       return Qt::black;
       break;
     }

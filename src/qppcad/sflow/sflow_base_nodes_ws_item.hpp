@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    class sf_claim_xgeom_node_t final : public sflow_node_t {
+    class sf_claim_xgeom_node_t final : public sf_node_t {
 
       public:
 

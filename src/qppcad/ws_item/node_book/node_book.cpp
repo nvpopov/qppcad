@@ -18,7 +18,7 @@ node_book_t::node_book_t() {
   m_scene = new node_book_graphics_scene_t(nullptr);
   m_scene->m_parent_node_book = this;
 
-  m_sflow_context = std::make_shared<sflow_context_t>();
+  m_sflow_context = std::make_shared<sf_context_t>();
 
 }
 
@@ -119,23 +119,23 @@ void node_book_t::save_to_json(json &data) {
                 bool value_is_set{false};
                 switch (node->m_ipl_schema[i].m_type) {
 
-                  case sflow_parameter_e::sfpar_int: {
+                  case sf_parameter_e::sfpar_int: {
                       value_is_set = true;
-                      auto as_int = node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
+                      auto as_int = node->m_ipl[i]->cast_as<sf_parameter_int_t>();
                       inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value;
                       break;
                     }
 
-                  case sflow_parameter_e::sfpar_float: {
+                  case sf_parameter_e::sfpar_float: {
                       value_is_set = true;
-                      auto as_float = node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
+                      auto as_float = node->m_ipl[i]->cast_as<sf_parameter_float_t>();
                       inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value;
                       break;
                     }
 
-                  case sflow_parameter_e::sfpar_bool: {
+                  case sf_parameter_e::sfpar_bool: {
                       value_is_set = true;
-                      auto as_bool = node->m_ipl[i]->cast_as<sflow_parameter_bool_t>();
+                      auto as_bool = node->m_ipl[i]->cast_as<sf_parameter_bool_t>();
                       inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value;
                       break;
                     }
@@ -336,21 +336,21 @@ void node_book_t::update_output_values() {
 
           switch (elem->m_sf_node->m_ipl_schema[i].m_type) {
 
-            case sflow_parameter_e::sfpar_int : {
+            case sf_parameter_e::sfpar_int : {
                 qbinded_int_spinbox_t *c_int_sb =
                     qobject_cast<qbinded_int_spinbox_t*>(elem->m_inplace_wdgts[i]);
                 if (c_int_sb) c_int_sb->load_value_ex();
                 break;
               }
 
-            case sflow_parameter_e::sfpar_float : {
+            case sf_parameter_e::sfpar_float : {
                 qbinded_float_spinbox_t *c_f_sb =
                     qobject_cast<qbinded_float_spinbox_t*>(elem->m_inplace_wdgts[i]);
                 if (c_f_sb) c_f_sb->load_value_ex();
                 break;
               }
 
-            case sflow_parameter_e::sfpar_v3f : {
+            case sf_parameter_e::sfpar_v3f : {
                 qbinded_float3_input_t *c_v3f =
                     qobject_cast<qbinded_float3_input_t*>(elem->m_inplace_wdgts[i]);
                 if (c_v3f) c_v3f->load_value_ex();
@@ -364,7 +364,7 @@ void node_book_t::update_output_values() {
               //                  break;
               //                }
 
-            case sflow_parameter_e::sfpar_bool : {
+            case sf_parameter_e::sfpar_bool : {
                 break;
               }
 

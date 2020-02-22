@@ -76,12 +76,12 @@ void qnode_t::construct_inplace_widgets() {
 
         switch (cur_scheme.m_type) {
 
-          case sflow_parameter_e::sfpar_int : {
+          case sf_parameter_e::sfpar_int : {
 
               qbinded_int_spinbox_t *b_sb = new qbinded_int_spinbox_t;
               b_sb->set_min_max_step(-100000, 100000, 1);
-              sflow_parameter_int_t *sf_par_int =
-                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_int_t>();
+              sf_parameter_int_t *sf_par_int =
+                  m_sf_node->m_ipl[i]->cast_as<sf_parameter_int_t>();
 
               if (sf_par_int) {
 
@@ -99,14 +99,14 @@ void qnode_t::construct_inplace_widgets() {
 
             }
 
-          case sflow_parameter_e::sfpar_float : {
+          case sf_parameter_e::sfpar_float : {
 
               qbinded_float_spinbox_t *b_sb = new qbinded_float_spinbox_t;
               b_sb->set_min_max_step(-100000, 100000, 0.001, 3);
               //b_sb->setFixedWidth(170);
 
-              sflow_parameter_float_t *sf_par_float =
-                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_float_t>();
+              sf_parameter_float_t *sf_par_float =
+                  m_sf_node->m_ipl[i]->cast_as<sf_parameter_float_t>();
 
               if (sf_par_float) {
 
@@ -124,13 +124,13 @@ void qnode_t::construct_inplace_widgets() {
 
             }
 
-          case sflow_parameter_e::sfpar_v3f : {
+          case sf_parameter_e::sfpar_v3f : {
 
               qbinded_float3_input_t *b_v3f = new qbinded_float3_input_t;
               b_v3f->set_min_max_step(-10000, 10000, 0.01);
 
-              sflow_parameter_v3f_t *sf_par_v3f =
-                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_v3f_t>();
+              sf_parameter_v3f_t *sf_par_v3f =
+                  m_sf_node->m_ipl[i]->cast_as<sf_parameter_v3f_t>();
 
               if (sf_par_v3f) {
 
@@ -148,13 +148,13 @@ void qnode_t::construct_inplace_widgets() {
 
             }
 
-          case sflow_parameter_e::sfpar_ws_item : {
+          case sf_parameter_e::sfpar_ws_item : {
 
               qbinded_ws_item_combobox_t *b_wsc = new qbinded_ws_item_combobox_t;
               b_wsc->m_type_id = geom_view_t::get_type_static();
 
-              sflow_parameter_ws_item_t *sf_par_wsi =
-                  m_sf_node->m_ipl[i]->cast_as<sflow_parameter_ws_item_t>();
+              sf_parameter_ws_item_t *sf_par_wsi =
+                  m_sf_node->m_ipl[i]->cast_as<sf_parameter_ws_item_t>();
 
               if (sf_par_wsi) {
 
@@ -175,7 +175,7 @@ void qnode_t::construct_inplace_widgets() {
 
             }
 
-          case sflow_parameter_e::sfpar_bool : {
+          case sf_parameter_e::sfpar_bool : {
               break;
             }
 
@@ -221,7 +221,7 @@ size_t qnode_t::num_outs() {
 
 }
 
-void qnode_t::set_sflow_node(std::shared_ptr<sflow_node_t> node) {
+void qnode_t::set_sflow_node(std::shared_ptr<sf_node_t> node) {
 
   m_sf_node = node;
   m_inp_sockets.clear();

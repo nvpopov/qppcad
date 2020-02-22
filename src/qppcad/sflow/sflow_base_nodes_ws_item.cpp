@@ -10,19 +10,19 @@ sf_claim_xgeom_node_t::sf_claim_xgeom_node_t() {
   m_node_name = "claim xgeom";
 
   m_out_schema = {
-     make_outs(sflow_parameter_e::sfpar_xgeom, "dst")
+     make_outs(sf_parameter_e::sfpar_xgeom, "dst")
   };
 
   m_ipl_schema = {
-    make_ipls(sflow_parameter_e::sfpar_ws_item, "value")
+    make_ipls(sf_parameter_e::sfpar_ws_item, "value")
   };
 
 }
 
 bool sf_claim_xgeom_node_t::execute_ex() {
 
-  auto out0 = get_pars_as<sflow_parameter_xgeom_t>(0, m_outs);
-  auto ipl0 = get_pars_as<sflow_parameter_ws_item_t>(0, m_ipl);
+  auto out0 = get_pars_as<sf_parameter_xgeom_t>(0, m_outs);
+  auto ipl0 = get_pars_as<sf_parameter_ws_item_t>(0, m_ipl);
 
   geom_view_t *casted{nullptr};
 

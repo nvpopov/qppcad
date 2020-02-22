@@ -10,7 +10,7 @@ namespace qpp {
   namespace cad {
 
     struct sck_colorize_helper {
-        static QColor get_color(sflow_parameter_e par_type);
+        static QColor get_color(sf_parameter_e par_type);
     };
 
   }

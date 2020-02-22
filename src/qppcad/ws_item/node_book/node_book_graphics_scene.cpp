@@ -173,7 +173,7 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
 
         switch (node->m_sf_node->m_ipl_schema[i].m_type) {
 
-          case sflow_parameter_e::sfpar_int : {
+          case sf_parameter_e::sfpar_int : {
               qbinded_int_spinbox_t *c_int_sb =
                   qobject_cast<qbinded_int_spinbox_t*>(node->m_inplace_wdgts[i]);
               if (c_int_sb) {
@@ -183,7 +183,7 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
               break;
             }
 
-          case sflow_parameter_e::sfpar_float : {
+          case sf_parameter_e::sfpar_float : {
               qbinded_float_spinbox_t *c_f_sb =
                   qobject_cast<qbinded_float_spinbox_t*>(node->m_inplace_wdgts[i]);
               if (c_f_sb) {
@@ -193,7 +193,7 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
               break;
             }
 
-          case sflow_parameter_e::sfpar_v3f : {
+          case sf_parameter_e::sfpar_v3f : {
               qbinded_float3_input_t *c_v3f =
                   qobject_cast<qbinded_float3_input_t*>(node->m_inplace_wdgts[i]);
               if (c_v3f) {
@@ -210,7 +210,7 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
             //                  break;
             //                }
 
-          case sflow_parameter_e::sfpar_bool : {
+          case sf_parameter_e::sfpar_bool : {
               break;
             }
 
