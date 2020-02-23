@@ -427,7 +427,7 @@ QComboBox:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled {
 }
 
 QComboBox {
- padding: 3px 4px 3px 4px;
+ padding: 3px 6px 3px 6px;
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox, QToolButton{
@@ -441,7 +441,7 @@ QPushButton:checked {
 }
 
 QPushButton, QSpinBox, QDoubleSpinBox{
- padding: 1px;
+ padding: 2px 12px 2px 12px;
 }
 
 QToolButton {
