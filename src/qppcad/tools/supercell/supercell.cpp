@@ -211,6 +211,18 @@ void super_cell_widget_t::make_super_cell(const int a_max, const int b_max, cons
   geom_view_tools_t::generate_supercell(m_src_gv->m_geom.get(), m_dst->m_geom.get(),
                                         index{a_max -1 , b_max - 1 , c_max - 1});
   m_dst->m_pos = m_src->m_pos + m_src_gv->m_geom->cell.v[0] * 1.4f;
+
+  //apply naive heuristics depends on number of atoms
+  if (m_dst->m_geom->nat() < 800) {
+      m_dst->m_draw_img_atoms = true;
+      m_dst->m_draw_img_bonds = true;
+      m_dst->m_render_style = geom_view_render_style_e::ball_and_stick;
+    } else {
+      m_dst->m_draw_img_atoms = false;
+      m_dst->m_draw_img_bonds = false;
+      m_dst->m_render_style = geom_view_render_style_e::billboards;
+    }
+
   if (target_cam) m_dst->apply_target_view(cam_tv_e::tv_b);
   m_dst->end_structure_change();
 
