@@ -251,6 +251,14 @@ void super_cell_widget_t::bind_item(ws_item_t *item) {
 
     }
 
+  //setup default cell dim
+  m_sc_dim[0] = 1;
+  m_sc_dim[1] = 1;
+  m_sc_dim[2] = 1;
+
+  m_sp_rep->unbind_value();
+  m_sp_rep->bind_value(&m_sc_dim, this);
+
   make_super_cell(m_sc_dim[0], m_sc_dim[1], m_sc_dim[2]);
 
 }

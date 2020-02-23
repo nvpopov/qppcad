@@ -225,7 +225,7 @@ QSplitter {
 }
 
 qpp--cad--qgeom_view_selector_widget_t QListWidget:item {
- padding : 6px;
+ padding : 6px 12px 6px 12px;
 }
 
 qpp--cad--qgeom_view_selector_entry_t {
