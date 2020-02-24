@@ -6,11 +6,9 @@ using namespace qpp::cad;
 psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
 
   tg_info_sym_gr = new QLabel;
-  tg_info_total_sym_op = new QLabel;
-  tg_num_axes = new QLabel;
-  tg_num_planes = new QLabel;
-  tg_bounded_info = new QLabel;
-  tg_has_inverse = new QLabel;
+  tg_info_numbers = new QLabel;
+  tg_info_general = new QLabel;
+
   disp_vs_plane_alpha_enabled = new qbinded_checkbox_t;
   disp_vs_show_axes = new qbinded_checkbox_t;
   disp_vs_show_planes = new qbinded_checkbox_t;
@@ -46,11 +44,8 @@ psg_view_obj_insp_widget_t::psg_view_obj_insp_widget_t() {
   gb_psg_summary_lt = new QFormLayout;
   gb_psg_summary->add_content_layout(gb_psg_summary_lt);
   gb_psg_summary_lt->addRow(tr("Sym. gr. name"), tg_info_sym_gr);
-  gb_psg_summary_lt->addRow(tr("Num. of op."), tg_info_total_sym_op);
-  gb_psg_summary_lt->addRow(tr("Num. of axes"), tg_num_axes);
-  gb_psg_summary_lt->addRow(tr("Num. of planes"), tg_num_planes);
-  gb_psg_summary_lt->addRow(tr("Has inverse?"), tg_has_inverse);
-  gb_psg_summary_lt->addRow(tr("Bounded ?"), tg_bounded_info);
+  gb_psg_summary_lt->addRow(tr("Number of"), tg_info_numbers);
+  gb_psg_summary_lt->addRow(tr("Info"), tg_info_general);
   init_form_lt(gb_psg_summary_lt);
 
   gb_psg_view_settings = new qspoiler_widget_t(tr("View Settings"));
@@ -97,10 +92,10 @@ void psg_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
   if (_binding_item && _binding_item->get_type() == psg_view_t::get_type_static()) {
       b_pg = _binding_item->cast_as<psg_view_t>();
 
-      if (b_pg && b_pg->m_ag) {
-          tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag->name));
-          tg_info_total_sym_op->setText(tr("%1").arg(b_pg->m_ag->size()));
-        }
+//      if (b_pg && b_pg->m_ag) {
+//          tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag->name));
+//          tg_info_total_sym_op->setText(tr("%1").arg(b_pg->m_ag->size()));
+//        }
 
       disp_vs_plane_alpha_enabled->bind_value(&b_pg->m_plane_alpha_enabled, b_pg);
       disp_vs_plane_scale->bind_value(&b_pg->m_plane_scale, b_pg);
@@ -130,12 +125,21 @@ void psg_view_obj_insp_widget_t::update_from_ws_item() {
 
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
-  if (b_pg) {
+  if (b_pg && b_pg->m_ag) {
+
       for (size_t i = 0; i < AXIS_COLORIZE_SIZE; i++) gb_colorize_ctrls[i]->load_value_ex();
-      tg_bounded_info->setText(b_pg->is_bounded() ? tr("Yes") : tr("No"));
-      tg_has_inverse->setText(b_pg->m_pg_axes.inversion ? tr("Yes") : tr("No"));
-      tg_num_axes->setText(QString("%1").arg(b_pg->m_pg_axes.axes.size()));
-      tg_num_planes->setText(QString("%1").arg(b_pg->m_pg_axes.planes.size()));
+
+      tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag->name));
+
+      tg_info_general->setText(tr("Inverted? : %1, Bounded? : %2")
+                               .arg(b_pg->m_pg_axes.inversion ? tr("Yes") : tr("No"))
+                               .arg(b_pg->is_bounded() ? tr("Yes") : tr("No")));
+
+      tg_info_numbers->setText(tr("Ops.: %1, Axes: %2, Planes.: %3")
+                                    .arg(b_pg->m_ag->size())
+                                    .arg(b_pg->m_pg_axes.axes.size())
+                                    .arg(b_pg->m_pg_axes.planes.size()));
+
     }
 
 }

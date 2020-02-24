@@ -24,11 +24,8 @@ namespace qpp {
         QFormLayout *gb_psg_view_settings_lt;
 
         QLabel *tg_info_sym_gr;
-        QLabel *tg_info_total_sym_op;
-        QLabel *tg_num_axes;
-        QLabel *tg_num_planes;
-        QLabel *tg_bounded_info;
-        QLabel *tg_has_inverse;
+        QLabel *tg_info_numbers;
+        QLabel *tg_info_general;
 
         qbinded_checkbox_t *disp_vs_plane_alpha_enabled;
         qbinded_checkbox_t *disp_vs_show_axes;
