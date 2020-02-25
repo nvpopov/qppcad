@@ -186,13 +186,13 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
       bhv_mgr->reg_ff("Molcas ASCII Grid", "gv", generic_ff_g_hash, {".grid", ".GRID"} );
 
   size_t generic_raw_coord_ff_hash =
-      bhv_mgr->reg_ff("Simple Crd.", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple[crd.]", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t generic_atoms_coord_ff_hash =
-      bhv_mgr->reg_ff("Simple Crd.[name]", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple[name, crd.]", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t generic_atoms_coord_chg_ff_hash =
-      bhv_mgr->reg_ff("Simple Crd.[name, chg.]", "coord", generic_ff_g_hash, {"coord", "coord"} );
+      bhv_mgr->reg_ff("Simple[name, crd., chg.]", "coord", generic_ff_g_hash, {"coord", "coord"} );
 
   size_t molden_ff_hash =
       bhv_mgr->reg_ff("Molden", "molden", generic_ff_g_hash, {"mol", "molden"} );
