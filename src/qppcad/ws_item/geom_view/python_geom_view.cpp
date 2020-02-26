@@ -293,7 +293,7 @@ void py_geom_view_reg_helper_t::reg(
 
       .def("tr_align_geoms", &geom_view_tools_t::tr_align_geoms,
            py::arg("what_gv"), py::arg("to_gv"), py::arg("start_offset"),
-           py::arg("axis_steps") = vector3<float>{0.1}, py::arg("total_steps") = 200)
+           py::arg("axis_steps") = vector3<float>{0.1f}, py::arg("total_steps") = 200)
 
       .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms,
            py::arg("gv"), py::arg("new_a"), py::arg("new_b"), py::arg("new_c"))
@@ -335,6 +335,8 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("src"), py::arg("dst"), py::arg("gv") = nullptr)
       .def("merge", &geom_view_tools_t::merge_gv,
            py::arg("gv_src1"), py::arg("gv_src2"), py::arg("gv_dist") = nullptr)
+      .def("sort_by_point", &geom_view_tools_t::sort_gv_by_point,
+           py::arg("gv"), py::arg("point") = vector3<float>{0,0,0})
       ;
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");

@@ -1094,6 +1094,22 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
 
 }
 
+void geom_view_tools_t::sort_gv_by_point(geom_view_t *gv, vector3<float> point) {
+
+  if (!gv) return;
+
+  using geom_def = geometry<float, periodic_cell<float>>;
+
+  auto sort_func = [&point](const geom_def &geom, int idx) -> float {
+      return (point-geom.pos(idx)).norm();
+    };
+
+  gv->begin_structure_change();
+  gv->m_geom->sort(sort_func);
+  gv->end_structure_change();
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,

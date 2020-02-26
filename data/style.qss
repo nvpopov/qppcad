@@ -2,6 +2,7 @@
  font-family : "Heebo";
  font-size: 13pt;
  font-weight: normal;
+ color: rgb(239, 239, 239);
 }
 
 QWidget[s_class="tp_generic"] QLabel {

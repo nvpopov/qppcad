@@ -145,6 +145,8 @@ namespace qpp {
                              geom_view_t *gv_src2,
                              geom_view_t *gv_dist);
 
+        static void sort_gv_by_point(geom_view_t *gv, vector3<float> point);
+
     };
 
   } // namespace cad
