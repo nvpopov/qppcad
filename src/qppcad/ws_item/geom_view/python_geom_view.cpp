@@ -337,6 +337,8 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("gv_src1"), py::arg("gv_src2"), py::arg("gv_dist") = nullptr)
       .def("sort_by_point", &geom_view_tools_t::sort_gv_by_point,
            py::arg("gv"), py::arg("point") = vector3<float>{0,0,0})
+      .def("sort", &geom_view_tools_t::sort_gv_by_point,
+           py::arg("gv"), py::arg("key"))
       ;
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");

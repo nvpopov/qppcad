@@ -1098,15 +1098,24 @@ void geom_view_tools_t::sort_gv_by_point(geom_view_t *gv, vector3<float> point) 
 
   if (!gv) return;
 
-  using geom_def = geometry<float, periodic_cell<float>>;
-
-  auto sort_func = [&point](const geom_def &geom, int idx) -> float {
+  auto sort_func = [&point](const geometry<float, periodic_cell<float>> &geom, int idx) -> float {
       return (point-geom.pos(idx)).norm();
     };
 
   gv->begin_structure_change();
   gv->m_geom->sort(sort_func);
   gv->end_structure_change();
+
+}
+
+void geom_view_tools_t::sort_gv(
+      geom_view_t *gv,
+      const std::function<float (const geom_view_tools_t::geometry_t &, int)> &key) {
+
+   if (!gv) return;
+   gv->begin_structure_change();
+   gv->m_geom->sort(key);
+   gv->end_structure_change();
 
 }
 

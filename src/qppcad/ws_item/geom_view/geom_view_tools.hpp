@@ -147,6 +147,11 @@ namespace qpp {
 
         static void sort_gv_by_point(geom_view_t *gv, vector3<float> point);
 
+        using geometry_t = geometry<float, periodic_cell<float>>;
+
+        static void sort_gv(geom_view_t *gv,
+                            const std::function<float(const geometry_t &, int)> & key);
+
     };
 
   } // namespace cad
