@@ -23,8 +23,8 @@ void geom_view_tools_t::shake_atoms(geom_view_t *gv,
     if (atom < gv->m_geom->nat()) {
 
         vector3<float> new_pos = gv->m_geom->coord(atom) +
-                                 vector3<float>(magn / 2) -
-                                 vector3<float>(dis(e), dis(e), dis(e));
+            vector3<float>(magn / 2) -
+            vector3<float>(dis(e), dis(e), dis(e));
 
         gv->m_geom->coord(atom) = new_pos;
 
@@ -180,16 +180,16 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
 
       geom_labels_style_e cur_style =
           gv->m_labels->m_style == geom_labels_style_e::show_none ?
-                                   geom_labels_style_e::show_id_type :
-                                   gv->m_labels->m_style;
+            geom_labels_style_e::show_id_type :
+            gv->m_labels->m_style;
 
       ret +=
           fmt::format(first ? "{} {:8.8f} {:8.8f} {:8.8f}" : "\n{} {:8.8f} {:8.8f} {:8.8f}",
                       geom_view_labels_subsys_t::label_gen_fn(gv, cur_style, rec.m_atm),
                       pos_i[0],
-                      pos_i[1],
-                      pos_i[2]
-                     );
+          pos_i[1],
+          pos_i[2]
+          );
 
       first = false;
 
@@ -237,7 +237,7 @@ void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3
   std::sort(std::begin(tmp_dists),
             std::end(tmp_dists),
             [](const auto & a, const auto & b) -> bool
-            {return std::get<1>(a) < std::get<1>(b);});
+  {return std::get<1>(a) < std::get<1>(b);});
 
   for (size_t i = 0; i < std::size(tmp_dists); i++) {
 
@@ -449,20 +449,20 @@ void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv,
 void geom_view_tools_t::translate_atoms_in_cell(geom_view_t *gv, vector3<float> tr_vec,
                                                 bool clamp_atoms, bool affect_anim) {
 
- if (!gv) return;
+  if (!gv) return;
 
- app_state_t *astate = app_state_t::get_inst();
+  app_state_t *astate = app_state_t::get_inst();
 
- for (size_t i = 0; i < gv->m_geom->nat(); i++) gv->m_geom->coord(i) += tr_vec;
- if (affect_anim)
-   for (auto &anim_rec : gv->m_anim->m_anim_data)
-     for (auto &frame : anim_rec.frames)
-       for (auto &atom_pos : frame.atom_pos)
-         atom_pos += tr_vec;
+  for (size_t i = 0; i < gv->m_geom->nat(); i++) gv->m_geom->coord(i) += tr_vec;
+  if (affect_anim)
+    for (auto &anim_rec : gv->m_anim->m_anim_data)
+      for (auto &frame : anim_rec.frames)
+        for (auto &atom_pos : frame.atom_pos)
+          atom_pos += tr_vec;
 
- if (clamp_atoms) geom_view_tools_t::clamp_atoms_to_cell(gv, true, affect_anim);
+  if (clamp_atoms) geom_view_tools_t::clamp_atoms_to_cell(gv, true, affect_anim);
 
- astate->make_viewport_dirty();
+  astate->make_viewport_dirty();
 
 }
 
@@ -646,8 +646,8 @@ void geom_view_tools_t::generate_supercell(geometry<float, periodic_cell<float> 
   for (auto i = 0; i < src->nat(); i++)
     for (iterator idx_it(index::D(src->DIM).all(0), sc_dim); !idx_it.end(); idx_it++ ) {
         vector3<float> new_atom_pos = src->pos(i, idx_it);
-//        app_state_t::get_inst()->tlog("@SUPERCELL {} {} {} {}",
-//                                      i, new_atom_pos[0], new_atom_pos[1], new_atom_pos[2]);
+        //        app_state_t::get_inst()->tlog("@SUPERCELL {} {} {} {}",
+        //                                      i, new_atom_pos[0], new_atom_pos[1], new_atom_pos[2]);
         dst->add(src->atom(i), new_atom_pos);
 
         if (xsrc && xdst && role && *role == geom_view_role_e::r_uc)
@@ -663,46 +663,46 @@ void geom_view_tools_t::gen_pair_dist_anim(geom_view_t *gv,
                                            float start_r,
                                            float end_r) {
 
-    app_state_t* astate = app_state_t::get_inst();
+  app_state_t* astate = app_state_t::get_inst();
 
-    if (!gv) return;
-    if (at1 >= gv->m_geom->nat() || at2 >= gv->m_geom->nat() || at1 == at2) return;
-    if (start_r > end_r || start_r < 0 || end_r < 0) return;
+  if (!gv) return;
+  if (at1 >= gv->m_geom->nat() || at2 >= gv->m_geom->nat() || at1 == at2) return;
+  if (start_r > end_r || start_r < 0 || end_r < 0) return;
 
-    //compose transformation data
-    auto cnt = (gv->m_geom->pos(at1) + gv->m_geom->pos(at2)) * 0.5f;
-    auto dir1 = (cnt - gv->m_geom->pos(at1)).normalized();
-    auto dir2 = (cnt - gv->m_geom->pos(at2)).normalized();
-    auto dr = 0.5f * (end_r - start_r)/(num_frames-1);
+  //compose transformation data
+  auto cnt = (gv->m_geom->pos(at1) + gv->m_geom->pos(at2)) * 0.5f;
+  auto dir1 = (cnt - gv->m_geom->pos(at1)).normalized();
+  auto dir2 = (cnt - gv->m_geom->pos(at2)).normalized();
+  auto dr = 0.5f * (end_r - start_r)/(num_frames-1);
 
-    //create static anim for current state
-    gv->m_anim->make_static_anim();
+  //create static anim for current state
+  gv->m_anim->make_static_anim();
 
-    //compose new anim
-    geom_anim_record_t<float> new_anim;
-    new_anim.m_anim_name = fmt::format("pair_dist{}", gv->m_anim->get_total_anims());
-    new_anim.m_anim_type = geom_anim_t::anim_generic;
+  //compose new anim
+  geom_anim_record_t<float> new_anim;
+  new_anim.m_anim_name = fmt::format("pair_dist{}", gv->m_anim->get_total_anims());
+  new_anim.m_anim_type = geom_anim_t::anim_generic;
 
-    new_anim.frames.resize(num_frames);
+  new_anim.frames.resize(num_frames);
 
-    size_t tot_at = gv->m_geom->nat();
+  size_t tot_at = gv->m_geom->nat();
 
-    for (size_t i = 0; i < num_frames; i++) {
+  for (size_t i = 0; i < num_frames; i++) {
 
-        new_anim.frames[i].atom_pos.resize(tot_at);
+      new_anim.frames[i].atom_pos.resize(tot_at);
 
-        for (size_t q = 0; q < tot_at; q++)
-          new_anim.frames[i].atom_pos[q] = gv->m_geom->pos(q);
+      for (size_t q = 0; q < tot_at; q++)
+        new_anim.frames[i].atom_pos[q] = gv->m_geom->pos(q);
 
-        new_anim.frames[i].atom_pos[at1] = cnt - dir1 * (start_r * 0.5f + dr * i);
-        new_anim.frames[i].atom_pos[at2] = cnt - dir2 * (start_r * 0.5f + dr * i);
+      new_anim.frames[i].atom_pos[at1] = cnt - dir1 * (start_r * 0.5f + dr * i);
+      new_anim.frames[i].atom_pos[at2] = cnt - dir2 * (start_r * 0.5f + dr * i);
 
-      }
+    }
 
-    gv->m_anim->m_anim_data.emplace_back(std::move(new_anim));
+  gv->m_anim->m_anim_data.emplace_back(std::move(new_anim));
 
-    if (gv->is_selected())
-      astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+  if (gv->is_selected())
+    astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
 
 }
 
@@ -716,8 +716,8 @@ void geom_view_tools_t::set_charge_for_type(geom_view_t *gv,
   if (!gv) return;
 
   for (size_t i = 0; i < gv->m_geom->nat(); i++)
-      if (auto chg_rec_ex = map_t_chg.find(gv->m_geom->atom_name(i));
-          chg_rec_ex != map_t_chg.end()) gv->m_geom->charge(i) = chg_rec_ex->second;
+    if (auto chg_rec_ex = map_t_chg.find(gv->m_geom->atom_name(i));
+        chg_rec_ex != map_t_chg.end()) gv->m_geom->charge(i) = chg_rec_ex->second;
 
 }
 
@@ -975,173 +975,173 @@ void geom_view_tools_t::change_atom_type(const std::string &src,
 
   if (!tmp_gv) {
       auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-      if (al) tmp_gv = al;
+          if (al) tmp_gv = al;
     }
 
-  int src_id = tmp_gv->m_geom->type_of_atom(src);
-  //int dst_id = gv->m_geom->type_of_atom(dst);
+          int src_id = tmp_gv->m_geom->type_of_atom(src);
+          //int dst_id = gv->m_geom->type_of_atom(dst);
 
-  if (src_id == -1) {
-      return;
-    }
-
-  tmp_gv->begin_structure_change();
-
-  for (size_t i = 0; i < tmp_gv->m_geom->nat(); i++)
-    if (tmp_gv->m_geom->type_table(i) == src_id)
-      tmp_gv->m_geom->change(i, dst, tmp_gv->m_geom->pos(i));
-
-  tmp_gv->end_structure_change();
-
-    }
-
-void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
-                                 geom_view_t *gv_src2,
-                                 geom_view_t *gv_dst) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  auto cur_ws = astate->ws_mgr->get_cur_ws();
-  if (!cur_ws) return;
-
-  if (!gv_src1 || !gv_src2) {
-      return;
-    }
-
-  geom_view_t *tmp_dst = gv_dst;
-
-  if (!tmp_dst) {
-
-      std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
-      
-      gv_src1->m_parent_ws->add_item_to_ws(sc_al);
-      tmp_dst = sc_al.get();
-
-    }
-
-  if (!tmp_dst) {
-      return;
-    }
-
-  tmp_dst->begin_structure_change();
-
-  //make decision about cell
-  if (gv_src1->m_geom->DIM == gv_src2->m_geom->DIM) {
-
-      int DIM = gv_src1->m_geom->DIM;
-      tmp_dst->m_geom->DIM = DIM;
-      tmp_dst->m_geom->cell.DIM = DIM;
-
-      if (DIM == 1) {
-          if (gv_src1->m_geom->cell.v[0].norm() > gv_src2->m_geom->cell.v[0].norm())
-            tmp_dst->copy_cell(*gv_src1, false);
-          else
-            tmp_dst->copy_cell(*gv_src2, false);
+          if (src_id == -1) {
+          return;
         }
 
-      if (DIM == 2) {
+      tmp_gv->begin_structure_change();
 
-          float sq1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).norm();
-          float sq2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).norm();
+      for (size_t i = 0; i < tmp_gv->m_geom->nat(); i++)
+        if (tmp_gv->m_geom->type_table(i) == src_id)
+          tmp_gv->m_geom->change(i, dst, tmp_gv->m_geom->pos(i));
 
-          if (sq1 > sq2) tmp_dst->copy_cell(*gv_src1, false);
-          else tmp_dst->copy_cell(*gv_src2, false);
-
-        }
-
-      if (DIM == 3) {
-
-          float vol1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).dot(
-                gv_src1->m_geom->cell.v[2]);
-          float vol2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).dot(
-                gv_src2->m_geom->cell.v[2]);
-
-          if (vol1 > vol2) tmp_dst->copy_cell(*gv_src1, false);
-          else tmp_dst->copy_cell(*gv_src2, false);
-
-        }
-
-    } else if (gv_src1->m_geom->DIM > gv_src2->m_geom->DIM) {
-
-      tmp_dst->copy_cell(*gv_src1, false);
-
-    } else if (gv_src1->m_geom->DIM < gv_src2->m_geom->DIM) {
-
-      tmp_dst->copy_cell(*gv_src2, false);
+      tmp_gv->end_structure_change();
 
     }
 
-  astate->tlog("MERGE DIM {}", tmp_dst->m_geom->DIM);
-  astate->tlog("MERGE CELL DIM {}", tmp_dst->m_geom->cell.DIM);
+  void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
+                                   geom_view_t *gv_src2,
+                                   geom_view_t *gv_dst) {
 
-  for (size_t i = 0 ; i < tmp_dst->m_geom->DIM; i++)
-    astate->tlog("MERGE VEC {} {}", i, tmp_dst->m_geom->cell.v[i]);
+    app_state_t *astate = app_state_t::get_inst();
 
-  for (auto elem : {gv_src1, gv_src2})
-    if (elem != tmp_dst)
-      for (size_t i = 0; i < elem->m_geom->nat(); i++) {
-          tmp_dst->m_geom->add(elem->m_geom->atom(i), elem->m_geom->pos(i));
-          tmp_dst->m_geom->xfield<float>(xgeom_charge, tmp_dst->m_geom->nat()-1) =
-              elem->m_geom->xfield<float>(xgeom_charge, i);
-        }
+    auto cur_ws = astate->ws_mgr->get_cur_ws();
+    if (!cur_ws) return;
 
-  tmp_dst->end_structure_change();
+    if (!gv_src1 || !gv_src2) {
+        return;
+      }
 
-  if (tmp_dst->m_name.empty())
-    tmp_dst->set_name(fmt::format("merged_{}", gv_src1->m_parent_ws->m_ws_items.size()));
+    geom_view_t *tmp_dst = gv_dst;
 
-  astate->astate_evd->cur_ws_changed();
+    if (!tmp_dst) {
 
-}
+        std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
 
-void geom_view_tools_t::sort_gv_by_point(geom_view_t *gv, vector3<float> point) {
+        gv_src1->m_parent_ws->add_item_to_ws(sc_al);
+        tmp_dst = sc_al.get();
 
-  if (!gv) return;
+      }
 
-  auto sort_func = [&point](const geometry<float, periodic_cell<float>> &geom, int idx) -> float {
-      return (point-geom.pos(idx)).norm();
-    };
+    if (!tmp_dst) {
+        return;
+      }
 
-  gv->begin_structure_change();
-  gv->m_geom->sort(sort_func);
-  gv->end_structure_change();
+    tmp_dst->begin_structure_change();
 
-}
+    //make decision about cell
+    if (gv_src1->m_geom->DIM == gv_src2->m_geom->DIM) {
 
-void geom_view_tools_t::sort_gv(
-      geom_view_t *gv,
-      const std::function<float (const geom_view_tools_t::geometry_t &, int)> &key) {
+        int DIM = gv_src1->m_geom->DIM;
+        tmp_dst->m_geom->DIM = DIM;
+        tmp_dst->m_geom->cell.DIM = DIM;
 
-   if (!gv) return;
-   gv->begin_structure_change();
-   gv->m_geom->sort(key);
-   gv->end_structure_change();
+        if (DIM == 1) {
+            if (gv_src1->m_geom->cell.v[0].norm() > gv_src2->m_geom->cell.v[0].norm())
+              tmp_dst->copy_cell(*gv_src1, false);
+            else
+              tmp_dst->copy_cell(*gv_src2, false);
+          }
 
-}
+        if (DIM == 2) {
 
-void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
-                                               vector3<float> new_a,
-                                               vector3<float> new_b,
-                                               vector3<float> new_c) {
+            float sq1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).norm();
+            float sq2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).norm();
 
-  if (!gv) return;
+            if (sq1 > sq2) tmp_dst->copy_cell(*gv_src1, false);
+            else tmp_dst->copy_cell(*gv_src2, false);
 
-  gv->begin_structure_change();
+          }
 
-  periodic_cell<float> new_cell(3);
-  new_cell.v[0] = new_a;
-  new_cell.v[1] = new_b;
-  new_cell.v[2] = new_c;
+        if (DIM == 3) {
 
-  for (auto i = 0; i < gv->m_geom->nat(); i++) {
-      vector3<float> frac_in_old_cell = gv->m_geom->cell.cart2frac(gv->m_geom->pos(i));
-      gv->m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
-    }
+            float vol1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).dot(
+                  gv_src1->m_geom->cell.v[2]);
+            float vol2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).dot(
+                  gv_src2->m_geom->cell.v[2]);
 
-  gv->m_geom->cell.v[0] = new_cell.v[0];
-  gv->m_geom->cell.v[1] = new_cell.v[1];
-  gv->m_geom->cell.v[2] = new_cell.v[2];
+            if (vol1 > vol2) tmp_dst->copy_cell(*gv_src1, false);
+            else tmp_dst->copy_cell(*gv_src2, false);
 
-  gv->end_structure_change();
+          }
 
-}
+      } else if (gv_src1->m_geom->DIM > gv_src2->m_geom->DIM) {
+
+        tmp_dst->copy_cell(*gv_src1, false);
+
+      } else if (gv_src1->m_geom->DIM < gv_src2->m_geom->DIM) {
+
+        tmp_dst->copy_cell(*gv_src2, false);
+
+      }
+
+    astate->tlog("MERGE DIM {}", tmp_dst->m_geom->DIM);
+    astate->tlog("MERGE CELL DIM {}", tmp_dst->m_geom->cell.DIM);
+
+    for (size_t i = 0 ; i < tmp_dst->m_geom->DIM; i++)
+      astate->tlog("MERGE VEC {} {}", i, tmp_dst->m_geom->cell.v[i]);
+
+    for (auto elem : {gv_src1, gv_src2})
+      if (elem != tmp_dst)
+        for (size_t i = 0; i < elem->m_geom->nat(); i++) {
+            tmp_dst->m_geom->add(elem->m_geom->atom(i), elem->m_geom->pos(i));
+            tmp_dst->m_geom->xfield<float>(xgeom_charge, tmp_dst->m_geom->nat()-1) =
+                elem->m_geom->xfield<float>(xgeom_charge, i);
+          }
+
+    tmp_dst->end_structure_change();
+
+    if (tmp_dst->m_name.empty())
+      tmp_dst->set_name(fmt::format("merged_{}", gv_src1->m_parent_ws->m_ws_items.size()));
+
+    astate->astate_evd->cur_ws_changed();
+
+  }
+
+  void geom_view_tools_t::sort_gv_by_point(geom_view_t *gv, vector3<float> point) {
+
+    if (!gv) return;
+
+    auto sort_func = [&point](const geometry<float, periodic_cell<float>> &geom, int idx) -> float {
+        return (point-geom.pos(idx)).norm();
+      };
+
+    gv->begin_structure_change();
+    gv->m_geom->sort(sort_func);
+    gv->end_structure_change();
+
+  }
+
+  void geom_view_tools_t::sort_gv(
+        geom_view_t *gv,
+        const std::function<float (const geom_view_tools_t::geometry_t &, int)> &key) {
+
+    if (!gv) return;
+    gv->begin_structure_change();
+    gv->m_geom->sort(key);
+    gv->end_structure_change();
+
+  }
+
+  void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
+                                                 vector3<float> new_a,
+                                                 vector3<float> new_b,
+                                                 vector3<float> new_c) {
+
+    if (!gv) return;
+
+    gv->begin_structure_change();
+
+    periodic_cell<float> new_cell(3);
+    new_cell.v[0] = new_a;
+    new_cell.v[1] = new_b;
+    new_cell.v[2] = new_c;
+
+    for (auto i = 0; i < gv->m_geom->nat(); i++) {
+        vector3<float> frac_in_old_cell = gv->m_geom->cell.cart2frac(gv->m_geom->pos(i));
+        gv->m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
+      }
+
+    gv->m_geom->cell.v[0] = new_cell.v[0];
+    gv->m_geom->cell.v[1] = new_cell.v[1];
+    gv->m_geom->cell.v[2] = new_cell.v[2];
+
+    gv->end_structure_change();
+
+  }
