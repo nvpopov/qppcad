@@ -452,6 +452,7 @@ QToolButton {
 QPushButton:pressed, QToolButton:pressed {
  background : rgb(144, 144, 144);
  border-style: inset;
+ border: 1px solid rgb(75, 75, 75);
 }
 
 QComboBox::drop-down  {

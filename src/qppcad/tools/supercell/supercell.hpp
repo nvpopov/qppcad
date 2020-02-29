@@ -25,6 +25,13 @@ namespace qpp {
 
     };
 
+    enum supercell_tool_mode_e {
+
+      sc_tool_mode_default,
+      sc_tool_mode_by_idx
+
+    };
+
     class super_cell_widget_t : public ws_item_inline_tool_widget_t,
                                 public iupdatable_externally_t {
 
@@ -35,6 +42,12 @@ namespace qpp {
       public:
 
         qbinded_int3_input_t *m_sp_rep;
+        QLabel *m_sp_rep_label;
+
+        qbinded_combobox_t *m_tmode_inp;
+
+        std::array<QLabel*, 3> m_boundaries_label;
+        std::array<qbinded_int2b_input_t*,3> m_boundaries;
 
         qspoiler_widget_t *m_gb_rep_par;
         QFormLayout *m_gb_rep_par_lt;
@@ -44,18 +57,19 @@ namespace qpp {
         std::shared_ptr<geom_view_t> m_dst{nullptr};
         geom_view_t *m_src_gv{nullptr};
         vector3<int> m_sc_dim{1,1,1};
+        supercell_tool_mode_e m_sc_tool_mode{supercell_tool_mode_e::sc_tool_mode_default};
 
         int get_replication_coeff(int dim_num);
         super_cell_widget_t(QWidget *parent = nullptr);
 
-        void make_super_cell(const int a_max, const int b_max, const int c_max,
-                             bool target_cam = true);
+        void make_super_cell(bool target_cam = true);
 
         bool restore_cam_on_cancel() override;
         void on_apply() override;
         void on_cancel() override;
         void bind_item(ws_item_t *item) override;
         void updated_externally(uint32_t update_reason) override;
+        void mode_changed();
 
     };
 

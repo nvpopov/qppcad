@@ -177,17 +177,33 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
   m_sp_rep->set_min_max_step(1, 20, 1);
   m_sp_rep->bind_value(&m_sc_dim, this);
   m_sp_rep->m_updated_externally_event = true;
+  m_sp_rep_label = new QLabel;
+  m_sp_rep_label->setText(tr("Cell ratio"));
 
-  m_gb_rep_par_lt->addRow(tr("Cell ratio"), m_sp_rep);
+  m_tmode_inp = new qbinded_combobox_t;
+  m_tmode_inp->addItem(tr("Supercell"));
+  m_tmode_inp->addItem(tr("By indices"));
+  m_tmode_inp->bind_value(reinterpret_cast<int*>(&m_sc_tool_mode), this);
+  m_tmode_inp->m_updated_externally_event = true;
+
+  m_gb_rep_par_lt->addRow(tr("Mode"), m_tmode_inp);
+  m_gb_rep_par_lt->addRow(m_sp_rep_label, m_sp_rep);
+
+  for (size_t i = 0; i < 3; i++) {
+      m_boundaries[i] = new qbinded_int2b_input_t;
+      m_boundaries_label[i] = new QLabel;
+      m_boundaries_label[i]->setText(tr("Dim %1").arg(i));
+      m_gb_rep_par_lt->addRow(m_boundaries_label[i], m_boundaries[i]);
+    }
 
   qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, astate->size_guide.obj_insp_lbl_w());
 
   m_dialog_lt->addWidget(m_gb_rep_par);
+  mode_changed();
 
 }
 
-void super_cell_widget_t::make_super_cell(const int a_max, const int b_max, const int c_max,
-                                          bool target_cam) {
+void super_cell_widget_t::make_super_cell(bool target_cam) {
 
   if (!m_src_gv) {
       return;
@@ -199,28 +215,45 @@ void super_cell_widget_t::make_super_cell(const int a_max, const int b_max, cons
 
   if (!m_dst) {
       m_dst = std::make_shared<geom_view_t>();
-      m_dst->m_name = m_src->m_name + fmt::format("_sc_{}_{}_{}", a_max, b_max, c_max);
+      m_dst->m_name = m_src->m_name + fmt::format("_sc_{}_{}_{}",
+                                                  m_sc_dim[0], m_sc_dim[1], m_sc_dim[2]);
       m_src->m_parent_ws->add_item_to_ws(m_dst);
     }
 
-  m_dst->m_geom->DIM = 3;
-  m_dst->m_geom->cell.DIM = 3;
+
+  m_dst->m_geom->DIM = m_sc_tool_mode == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
+  m_dst->m_geom->cell.DIM = m_sc_tool_mode == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
 
   m_dst->begin_structure_change();
   m_dst->m_geom->clear();
-  geom_view_tools_t::generate_supercell(m_src_gv->m_geom.get(), m_dst->m_geom.get(),
-                                        index{a_max -1 , b_max - 1 , c_max - 1});
-  m_dst->m_pos = m_src->m_pos + m_src_gv->m_geom->cell.v[0] * 1.4f;
 
-  //apply naive heuristics depends on number of atoms
-  if (m_dst->m_geom->nat() < 800) {
-      m_dst->m_draw_img_atoms = true;
-      m_dst->m_draw_img_bonds = true;
-      m_dst->m_render_style = geom_view_render_style_e::ball_and_stick;
-    } else {
-      m_dst->m_draw_img_atoms = false;
-      m_dst->m_draw_img_bonds = false;
-      m_dst->m_render_style = geom_view_render_style_e::billboards;
+  switch (m_sc_tool_mode) {
+
+    case supercell_tool_mode_e::sc_tool_mode_default : {
+
+        index sc_idx{m_sc_dim[0] - 1, m_sc_dim[1] - 1, m_sc_dim[2] - 1};
+        geom_view_tools_t::generate_supercell(m_src_gv->m_geom.get(), m_dst->m_geom.get(), sc_idx);
+        m_dst->m_pos = m_src->m_pos + m_src_gv->m_geom->cell.v[0] * 1.4f;
+
+        //apply naive heuristics depends on number of atoms
+        if (m_dst->m_geom->nat() < 800) {
+            m_dst->m_draw_img_atoms = true;
+            m_dst->m_draw_img_bonds = true;
+            m_dst->m_render_style = geom_view_render_style_e::ball_and_stick;
+          } else {
+            m_dst->m_draw_img_atoms = false;
+            m_dst->m_draw_img_bonds = false;
+            m_dst->m_render_style = geom_view_render_style_e::billboards;
+          }
+
+        break;
+
+      }
+
+    case supercell_tool_mode_e::sc_tool_mode_by_idx : {
+        break;
+      }
+
     }
 
   if (target_cam) m_dst->apply_target_view(cam_tv_e::tv_b);
@@ -271,13 +304,26 @@ void super_cell_widget_t::bind_item(ws_item_t *item) {
   m_sp_rep->unbind_value();
   m_sp_rep->bind_value(&m_sc_dim, this);
 
-  make_super_cell(m_sc_dim[0], m_sc_dim[1], m_sc_dim[2]);
+  make_super_cell();
 
 }
 
 void super_cell_widget_t::updated_externally(uint32_t update_reason) {
 
-  make_super_cell(m_sc_dim[0], m_sc_dim[1], m_sc_dim[2], false);
+  mode_changed();
+  make_super_cell(false);
+
+}
+
+void super_cell_widget_t::mode_changed() {
+
+  qt_hlp::form_lt_ctrl_visibility(m_sc_tool_mode == supercell_tool_mode_e::sc_tool_mode_default,
+                                  m_gb_rep_par_lt, m_tmode_inp, m_sp_rep_label, m_sp_rep);
+
+  for (size_t i = 0; i < 3; i++)
+    qt_hlp::form_lt_ctrl_visibility(m_sc_tool_mode == supercell_tool_mode_e::sc_tool_mode_by_idx,
+                                    m_gb_rep_par_lt, m_tmode_inp,
+                                    m_boundaries_label[i], m_boundaries[i]);
 
 }
 
