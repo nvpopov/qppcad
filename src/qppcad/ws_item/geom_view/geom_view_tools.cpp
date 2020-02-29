@@ -588,10 +588,10 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
 
 }
 
-std::shared_ptr<geom_view_t> geom_view_tools_t::generate_ncells(geom_view_t *gv,
-                                                                int s_a, int e_a,
-                                                                int s_b, int e_b,
-                                                                int s_c, int e_c) {
+std::shared_ptr<geom_view_t> geom_view_tools_t::gen_ncells(geom_view_t *gv,
+                                                           int s_a, int e_a,
+                                                           int s_b, int e_b,
+                                                           int s_c, int e_c) {
 
   if (!gv) return nullptr;
   if (gv->m_geom->DIM != 3) return nullptr;
@@ -619,10 +619,31 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::generate_ncells(geom_view_t *gv,
 
 }
 
-void geom_view_tools_t::generate_supercell(geometry<float, periodic_cell<float> > *src,
-                                           geometry<float, periodic_cell<float> > *dst,
-                                           index sc_dim,
-                                           std::optional<geom_view_role_e> role) {
+void geom_view_tools_t::gen_ncells_ex(xgeometry<float, periodic_cell<float> > *src,
+                                      xgeometry<float, periodic_cell<float> > *dst,
+                                      int s_a, int e_a, int s_b, int e_b, int s_c, int e_c) {
+
+  if (!src || !dst /*|| sc_dim != src->m_geom->DIM*/) {
+      return;
+    }
+
+  if (src->DIM == 0) {
+      return;
+    }
+
+  for (auto i = 0; i < src->nat(); i++)
+    for (iterator i_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c})); !i_it.end(); i_it++ ) {
+        vector3<float> new_atom_pos = src->pos(i, i_it);
+        dst->add(src->atom(i), new_atom_pos);
+        dst->xfield<float>(xgeom_charge, dst->nat()-1) = src->xfield<float>(xgeom_charge, i);
+      }
+
+}
+
+void geom_view_tools_t::gen_supercell(geometry<float, periodic_cell<float> > *src,
+                                      geometry<float, periodic_cell<float> > *dst,
+                                      index sc_dim,
+                                      std::optional<geom_view_role_e> role) {
 
   //app_state_t::get_inst()->tlog("@SUPERCELL IDX {}", sc_dim);
 
@@ -645,13 +666,12 @@ void geom_view_tools_t::generate_supercell(geometry<float, periodic_cell<float> 
 
   for (auto i = 0; i < src->nat(); i++)
     for (iterator idx_it(index::D(src->DIM).all(0), sc_dim); !idx_it.end(); idx_it++ ) {
-        vector3<float> new_atom_pos = src->pos(i, idx_it);
-        //        app_state_t::get_inst()->tlog("@SUPERCELL {} {} {} {}",
-        //                                      i, new_atom_pos[0], new_atom_pos[1], new_atom_pos[2]);
-        dst->add(src->atom(i), new_atom_pos);
 
+        vector3<float> new_atom_pos = src->pos(i, idx_it);
+        dst->add(src->atom(i), new_atom_pos);
         if (xsrc && xdst && role && *role == geom_view_role_e::r_uc)
           xdst->xfield<float>(xgeom_charge, src->nat()-1) = xsrc->xfield<float>(xgeom_charge, i);
+
       }
 
 }

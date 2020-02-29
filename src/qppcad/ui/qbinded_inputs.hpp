@@ -178,6 +178,7 @@ namespace qpp {
       QSpinBox *sb_x;
       QSpinBox *sb_y;
 
+      void set_min_max_step(int min, int max, int step);
       void load_value_ex() override;
       explicit qbinded_int2b_input_t(QWidget *parent = nullptr);
 

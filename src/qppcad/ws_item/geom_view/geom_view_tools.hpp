@@ -76,14 +76,21 @@ namespace qpp {
         static void compose_gv_from_images(py::list gvs);
 
         /* generators */
-        static std::shared_ptr<geom_view_t> generate_ncells(geom_view_t *gv,
-                                                            int s_a, int e_a,
-                                                            int s_b, int e_b,
-                                                            int s_c, int e_c);
-        static void generate_supercell(geometry<float, periodic_cell<float> > *src,
-                                       geometry<float, periodic_cell<float> > *dst,
-                                       index sc_dim,
-                                       std::optional<geom_view_role_e> role = std::nullopt);
+        static std::shared_ptr<geom_view_t> gen_ncells(geom_view_t *gv,
+                                                       int s_a, int e_a,
+                                                       int s_b, int e_b,
+                                                       int s_c, int e_c);
+
+        static void gen_ncells_ex(xgeometry<float, periodic_cell<float> > *src,
+                                  xgeometry<float, periodic_cell<float> > *dst,
+                                  int s_a, int e_a,
+                                  int s_b, int e_b,
+                                  int s_c, int e_c);
+
+        static void gen_supercell(geometry<float, periodic_cell<float> > *src,
+                                  geometry<float, periodic_cell<float> > *dst,
+                                  index sc_dim,
+                                  std::optional<geom_view_role_e> role = std::nullopt);
 
         static void gen_pair_dist_anim(geom_view_t *gv,
                                        size_t at1,

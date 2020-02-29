@@ -299,9 +299,9 @@ void py_geom_view_reg_helper_t::reg(
            py::arg("gv"), py::arg("new_a"), py::arg("new_b"), py::arg("new_c"))
       .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images, py::arg("gvs"))
 
-      .def("generate_scell", &geom_view_tools_t::generate_supercell,
+      .def("generate_scell", &geom_view_tools_t::gen_supercell,
            py::arg("src"), py::arg("dst"), py::arg("index"), py::arg("role") = std::nullopt)
-      .def("generate_ncells", &geom_view_tools_t::generate_ncells, py::arg("gv"),
+      .def("generate_ncells", &geom_view_tools_t::gen_ncells, py::arg("gv"),
            py::arg("s_a"), py::arg("e_a"),
            py::arg("s_b"), py::arg("e_b"),
            py::arg("s_c"), py::arg("e_c"))

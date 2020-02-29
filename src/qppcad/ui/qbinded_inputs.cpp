@@ -742,6 +742,15 @@ void qbinded_line_edit_t::editing_finished() {
 
 }
 
+void qbinded_int2b_input_t::set_min_max_step(int min, int max, int step) {
+
+  sb_x->setRange(min, max);
+  sb_x->setSingleStep(step);
+  sb_y->setRange(min, max);
+  sb_y->setSingleStep(step);
+
+}
+
 void qbinded_int2b_input_t::load_value_ex() {
 
   if (m_binded_value) {
@@ -752,9 +761,6 @@ void qbinded_int2b_input_t::load_value_ex() {
       if ((*m_binded_value)[2] > 0) {
           sb_x->setRange(0, (*m_binded_value)[2]);
           sb_y->setRange(0, (*m_binded_value)[2]);
-        } else {
-          sb_x->setRange(-2000, 2000);
-          sb_y->setRange(-2000, 2000);
         }
 
     }
