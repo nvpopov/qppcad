@@ -255,91 +255,99 @@ void py_geom_view_reg_helper_t::reg(
   py_displ_proj_reg_helper_t::reg(module);
 
   auto gvt = module.def_submodule("gvt", "geom_view_t tools");
-  gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms,
-          py::arg("gv"), py::arg("atoms_to_shake"), py::arg("magn"))
-     .def("purify_boundary_atoms", &geom_view_tools_t::purify_boundary_atoms,
-          py::arg("dst"), py::arg("src"))
+  gvt.def("shake_atoms", &geom_view_tools_t::py_shake_atoms, py::arg("gv"),
+          py::arg("atoms_to_shake"), py::arg("magn"))
+      .def("purify_boundary_atoms", &geom_view_tools_t::purify_boundary_atoms,
+           py::arg("dst"), py::arg("src"))
 
-     .def("dipole_moment", &geom_view_tools_t::dipole_moment, py::arg("gv"))
-     .def("total_charge", &geom_view_tools_t::total_charge, py::arg("gv"))
-     .def("get_charge_partition", &geom_view_tools_t::py_get_charge_partition, py::arg("gv"))
+      .def("dipole_moment", &geom_view_tools_t::dipole_moment, py::arg("gv"))
+      .def("total_charge", &geom_view_tools_t::total_charge, py::arg("gv"))
+      .def("get_charge_partition", &geom_view_tools_t::py_get_charge_partition,
+           py::arg("gv"))
 
-     .def("pertrub_via_normal_mode", &geom_view_tools_t::pertrub_via_normal_mode,
-          py::arg("gv"), py::arg("disp"))
-     .def("pretty_print_selected_atoms", &geom_view_tools_t::pretty_print_selected_atoms,
-          py::arg("gv"), py::arg("new_frame") = vector3<float>{0})
-     .def("flip_atom_in_cell", &geom_view_tools_t::flip_atom_in_cell,
-                      py::arg("gv"), py::arg("at_id"), py::arg("dim_id"),
-                      py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false)
-     .def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell,
-          py::arg("gv"), py::arg("dim_id"), py::arg("flip_magn") = 1)
-     .def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point,
-          py::arg("gv"), py::arg("fpoint"))
+      .def("pertrub_via_normal_mode",
+           &geom_view_tools_t::pertrub_via_normal_mode, py::arg("gv"),
+           py::arg("disp"))
+      .def("pretty_print_selected_atoms",
+           &geom_view_tools_t::pretty_print_selected_atoms, py::arg("gv"),
+           py::arg("new_frame") = vector3<float>{0})
+      .def("flip_atom_in_cell", &geom_view_tools_t::flip_atom_in_cell,
+           py::arg("gv"), py::arg("at_id"), py::arg("dim_id"),
+           py::arg("flip_magn") = 1.0f, py::arg("rebuild_tree") = false)
+      .def("flip_sel_atoms_in_cell", &geom_view_tools_t::flip_sel_atoms_in_cell,
+           py::arg("gv"), py::arg("dim_id"), py::arg("flip_magn") = 1)
+      .def("align_atoms_to_point", &geom_view_tools_t::align_atoms_to_point,
+           py::arg("gv"), py::arg("fpoint"))
 
-     .def("name_sel_atoms_by_order", &geom_view_tools_t::name_sel_atoms_by_order,
-          py::arg("gv"))
-      .def("name_sel_atoms_by_dist_to_point", &geom_view_tools_t::name_sel_atoms_by_dist_to_point,
-           py::arg("gv"), py::arg("point") = vector3<float>{0})
+      .def("name_sel_atoms_by_order",
+           &geom_view_tools_t::name_sel_atoms_by_order, py::arg("gv"))
+      .def("name_sel_atoms_by_dist_to_point",
+           &geom_view_tools_t::name_sel_atoms_by_dist_to_point, py::arg("gv"),
+           py::arg("point") = vector3<float>{0})
 
-     .def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn, py::arg("gv"))
-     .def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
-                      py::arg("gv"), py::arg("score_eps") = 0.1f)
-     .def("clamp_atoms_to_cell", &geom_view_tools_t::clamp_atoms_to_cell,
-                      py::arg("gv"), py::arg("ignore_selection") = true,
-          py::arg("affect_anim") = true)
-     .def("center_cell_on", &geom_view_tools_t::center_cell_on,
-                      py::arg("gv"), py::arg("new_cnt"),
-                      py::arg("clamp_atoms") = true, py::arg("affect_anim") = true)
+      .def("get_atoms_cn", &geom_view_tools_t::get_atoms_cn, py::arg("gv"))
+      .def("get_atoms_sublattices", &geom_view_tools_t::get_atoms_sublattices,
+           py::arg("gv"), py::arg("score_eps") = 0.1f)
+      .def("clamp_atoms_to_cell", &geom_view_tools_t::clamp_atoms_to_cell,
+           py::arg("gv"), py::arg("ignore_selection") = true,
+           py::arg("affect_anim") = true)
+      .def("center_cell_on", &geom_view_tools_t::center_cell_on, py::arg("gv"),
+           py::arg("new_cnt"), py::arg("clamp_atoms") = true,
+           py::arg("affect_anim") = true)
 
       .def("tr_align_geoms", &geom_view_tools_t::tr_align_geoms,
            py::arg("what_gv"), py::arg("to_gv"), py::arg("start_offset"),
-           py::arg("axis_steps") = vector3<float>{0.1f}, py::arg("total_steps") = 200)
+           py::arg("axis_steps") = vector3<float>{0.1f},
+           py::arg("total_steps") = 200)
 
       .def("change_cell_keep_atoms", &geom_view_tools_t::change_cell_keep_atoms,
            py::arg("gv"), py::arg("new_a"), py::arg("new_b"), py::arg("new_c"))
-      .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images, py::arg("gvs"))
+      .def("compose_gv_from_images", &geom_view_tools_t::compose_gv_from_images,
+           py::arg("gvs"))
 
-      .def("generate_scell", &geom_view_tools_t::gen_supercell,
-           py::arg("src"), py::arg("dst"), py::arg("index"), py::arg("role") = std::nullopt)
+      .def("generate_scell", &geom_view_tools_t::gen_supercell, py::arg("src"),
+           py::arg("dst"), py::arg("index"), py::arg("role") = std::nullopt)
       .def("generate_ncells", &geom_view_tools_t::gen_ncells, py::arg("gv"),
-           py::arg("s_a"), py::arg("e_a"),
-           py::arg("s_b"), py::arg("e_b"),
+           py::arg("s_a"), py::arg("e_a"), py::arg("s_b"), py::arg("e_b"),
            py::arg("s_c"), py::arg("e_c"))
       .def("gen_pair_dist_calc_data", &geom_view_tools_t::gen_pair_dist_anim,
-           py::arg("gv"), py::arg("at1"), py::arg("at2"),
-           py::arg("num_frames"), py::arg("start_r"), py::arg("end_r"))
+           py::arg("gv"), py::arg("at1"), py::arg("at2"), py::arg("num_frames"),
+           py::arg("start_r"), py::arg("end_r"))
 
       .def("set_charge_for_type", &geom_view_tools_t::set_charge_for_type,
            py::arg("gv"), py::arg("map_t_chg"))
-      .def("purify_atom_names_from_numbers", &geom_view_tools_t::purify_atom_names_from_numbers)
+      .def("purify_atom_names_from_numbers",
+           &geom_view_tools_t::purify_atom_names_from_numbers)
       .def("cut_selected_as_new_gv", &geom_view_tools_t::cut_selected_as_new_gv,
            py::arg("gv"), py::arg("cut_selected") = true)
 
       .def("get_sel_types", &geom_view_tools_t::get_sel_types, py::arg("gv"))
       .def("naive_proj_displ", &geom_view_tools_t::naive_project_displ,
-           py::arg("src"), py::arg("dst"),
-           py::arg("eps_dist") = 0.01f, py::arg("check_run") = true)
-      .def("naive_fit_str", &geom_view_tools_t::naive_fit_str,
-           py::arg("model"), py::arg("target"), py::arg("model_idx"), py::arg("target_idx"))
-      .def("gen_geoms_compliance_list", &geom_view_tools_t::gen_geoms_compl_list,
-           py::arg("model"), py::arg("target"),
-           py::arg("compl_eps"), py::arg("only_affect_visible_atoms") = true)
-      .def("construct_compl_list_view", &geom_view_tools_t::construct_compl_list_view,
-           py::arg("model"), py::arg("target"),
-           py::arg("compl_eps"), py::arg("only_affect_visible_atoms") = true)
-      .def("displ_geom_by_compliance_list", &geom_view_tools_t::displ_geom_by_comp_list,
-           py::arg("target"), py::arg("d_start"), py::arg("d_end"), py::arg("comp_l"),
+           py::arg("src"), py::arg("dst"), py::arg("eps_dist") = 0.01f,
+           py::arg("check_run") = true)
+      .def("naive_fit_str", &geom_view_tools_t::naive_fit_str, py::arg("model"),
+           py::arg("target"), py::arg("model_idx"), py::arg("target_idx"))
+      .def("gen_geoms_compliance_list",
+           &geom_view_tools_t::gen_geoms_compl_list, py::arg("model"),
+           py::arg("target"), py::arg("compl_eps"),
+           py::arg("only_affect_visible_atoms") = true)
+      .def("construct_compl_list_view",
+           &geom_view_tools_t::construct_compl_list_view, py::arg("model"),
+           py::arg("target"), py::arg("compl_eps"),
+           py::arg("only_affect_visible_atoms") = true)
+      .def("displ_geom_by_compliance_list",
+           &geom_view_tools_t::displ_geom_by_comp_list, py::arg("target"),
+           py::arg("d_start"), py::arg("d_end"), py::arg("comp_l"),
            py::arg("d_start_anim") = -1, py::arg("d_end_anim") = -1,
            py::arg("d_start_frame") = -1, py::arg("d_end_frame") = -1)
-      .def("rename_atoms", &geom_view_tools_t::change_atom_type,
-           py::arg("src"), py::arg("dst"), py::arg("gv") = nullptr)
-      .def("merge", &geom_view_tools_t::merge_gv,
-           py::arg("gv_src1"), py::arg("gv_src2"), py::arg("gv_dist") = nullptr)
-      .def("sort_by_point", &geom_view_tools_t::sort_gv_by_point,
-           py::arg("gv"), py::arg("point") = vector3<float>{0,0,0})
-      .def("sort", &geom_view_tools_t::sort_gv_by_point,
-           py::arg("gv"), py::arg("key"))
-      ;
+      .def("rename_atoms", &geom_view_tools_t::change_atom_type, py::arg("src"),
+           py::arg("dst"), py::arg("gv") = nullptr)
+      .def("merge", &geom_view_tools_t::merge_gv, py::arg("gv_src1"),
+           py::arg("gv_src2"), py::arg("gv_dist") = nullptr)
+      .def("sort_by_point", &geom_view_tools_t::sort_gv_by_point, py::arg("gv"),
+           py::arg("point") = vector3<float>{0, 0, 0})
+      .def("sort", &geom_view_tools_t::sort_gv_by_point, py::arg("gv"),
+           py::arg("key"));
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,

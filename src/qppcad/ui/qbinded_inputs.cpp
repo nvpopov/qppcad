@@ -748,7 +748,6 @@ void qbinded_int2b_input_t::set_min_max_step(int min, int max, int step) {
   sb_x->setSingleStep(step);
   sb_y->setRange(min, max);
   sb_y->setSingleStep(step);
-
 }
 
 void qbinded_int2b_input_t::load_value_ex() {

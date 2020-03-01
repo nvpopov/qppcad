@@ -616,34 +616,35 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::gen_ncells(geom_view_t *gv,
   gv->m_parent_ws->add_item_to_ws(sc_al);
 
   return sc_al;
-
 }
 
-void geom_view_tools_t::gen_ncells_ex(xgeometry<float, periodic_cell<float> > *src,
-                                      xgeometry<float, periodic_cell<float> > *dst,
-                                      int s_a, int e_a, int s_b, int e_b, int s_c, int e_c) {
+void geom_view_tools_t::gen_ncells_ex(
+    xgeometry<float, periodic_cell<float>> *src,
+    xgeometry<float, periodic_cell<float>> *dst, int s_a, int e_a, int s_b,
+    int e_b, int s_c, int e_c) {
 
   if (!src || !dst /*|| sc_dim != src->m_geom->DIM*/) {
-      return;
-    }
+    return;
+  }
 
   if (src->DIM == 0) {
-      return;
-    }
+    return;
+  }
 
   for (auto i = 0; i < src->nat(); i++)
-    for (iterator i_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c})); !i_it.end(); i_it++ ) {
-        vector3<float> new_atom_pos = src->pos(i, i_it);
-        dst->add(src->atom(i), new_atom_pos);
-        dst->xfield<float>(xgeom_charge, dst->nat()-1) = src->xfield<float>(xgeom_charge, i);
-      }
-
+    for (iterator i_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c}));
+         !i_it.end(); i_it++) {
+      vector3<float> new_atom_pos = src->pos(i, i_it);
+      dst->add(src->atom(i), new_atom_pos);
+      dst->xfield<float>(xgeom_charge, dst->nat() - 1) =
+          src->xfield<float>(xgeom_charge, i);
+    }
 }
 
-void geom_view_tools_t::gen_supercell(geometry<float, periodic_cell<float> > *src,
-                                      geometry<float, periodic_cell<float> > *dst,
-                                      index sc_dim,
-                                      std::optional<geom_view_role_e> role) {
+void geom_view_tools_t::gen_supercell(
+    geometry<float, periodic_cell<float>> *src,
+    geometry<float, periodic_cell<float>> *dst, index sc_dim,
+    std::optional<geom_view_role_e> role) {
 
   //app_state_t::get_inst()->tlog("@SUPERCELL IDX {}", sc_dim);
 
@@ -671,9 +672,7 @@ void geom_view_tools_t::gen_supercell(geometry<float, periodic_cell<float> > *sr
         dst->add(src->atom(i), new_atom_pos);
         if (xsrc && xdst && role && *role == geom_view_role_e::r_uc)
           xdst->xfield<float>(xgeom_charge, src->nat()-1) = xsrc->xfield<float>(xgeom_charge, i);
-
       }
-
 }
 
 void geom_view_tools_t::gen_pair_dist_anim(geom_view_t *gv,

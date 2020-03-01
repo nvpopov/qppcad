@@ -445,6 +445,10 @@ QPushButton, QSpinBox, QDoubleSpinBox{
  padding: 2px 12px 2px 12px;
 }
 
+QSpinBox, QDoubleSpinBox{
+ font-size: 12pt;
+}
+
 QToolButton {
  padding: 2px;
 }
