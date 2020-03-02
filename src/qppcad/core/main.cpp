@@ -1,4 +1,5 @@
 #include <iostream>
+#include <csignal>
 #include <QApplication>
 #include <QStyleFactory>
 #include <QFontDatabase>
@@ -11,6 +12,14 @@
 
 using namespace qpp;
 using namespace qpp::cad;
+
+void signal_handler(int signal) {
+
+  std::cout << "SIGNAL RECEIVED " << signal << std::endl;
+  app_state_t::get_inst()->save_settings();
+
+}
+
 
 int main (int argc, char **argv) {
 
@@ -50,6 +59,9 @@ int main (int argc, char **argv) {
   astate->init_managers();
   astate->ws_mgr->init_ws_item_bhv_mgr();
   astate->load_settings();
+
+  std::signal(SIGSEGV, signal_handler);
+
   astate->init_fixtures();
 
   if (under_dev_env) {
