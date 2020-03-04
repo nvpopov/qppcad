@@ -16,10 +16,10 @@ namespace qpp {
 
         node_book_t *b_nb{nullptr};
 
-        qspoiler_widget_t *gb_nb_settings;
-        QFormLayout *gb_nb_settings_lt;
-        qbinded_checkbox_t *nb_highlight_dirty_nodes;
-        qbinded_checkbox_t *nb_auto_recompute;
+        qspoiler_widget_t *m_gb_nb_settings;
+        QFormLayout *m_gb_nb_settings_lt;
+        qbinded_checkbox_t *m_nb_highlight_dirty_nodes;
+        qbinded_checkbox_t *m_nb_auto_recompute;
 
         node_book_obj_insp_widget_t();
 
