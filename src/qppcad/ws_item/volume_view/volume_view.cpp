@@ -31,7 +31,7 @@ void volume_view_t::render() {
   for (size_t i = 0; i < m_volumes.size(); i++) {
 
       if (m_volumes[i]->m_ready_to_render && m_is_visible &&
-          (i == m_current_volume || m_volumes[i]->m_render_permanent)) {
+          (i == m_current_vol || m_volumes[i]->m_render_permanent)) {
 
           shader_program_t *custom_sp =
               m_volumes[i]->m_transparent_volume ? astate->sp_mvap_ssl : nullptr;

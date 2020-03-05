@@ -7,10 +7,15 @@ using namespace qpp::cad;
 
 void qt_hlp::resize_form_lt_lbl(QLabel *label, int new_size) {
 
-  label->setMaximumWidth(new_size);
-  label->setMinimumWidth(new_size);
   label->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-  label->setText(label->text() + " : ");
+
+  if (label->text().size() != 0) {
+
+      label->setText(label->text() + " : ");
+      label->setMaximumWidth(new_size);
+      label->setMinimumWidth(new_size);
+
+    }
 
 }
 

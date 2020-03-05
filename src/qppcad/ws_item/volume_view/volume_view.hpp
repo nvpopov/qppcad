@@ -55,7 +55,7 @@ namespace qpp {
       public:
 
         std::vector<std::shared_ptr<ws_volume_record_t> > m_volumes;
-        int m_current_volume{0};
+        int m_current_vol{0};
 
         void mc_polygonise(float _isolevel);
 
