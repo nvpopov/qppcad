@@ -18,20 +18,20 @@ namespace qpp {
         QLabel *m_general_vol_type;
         qbinded_float_spinbox_t *m_vol_isovalue;
 
-//      deprecated
-//      qbinded_checkbox_t *m_vol_render_permanent;
-//      qbinded_checkbox_t *m_vol_transparent;
         qbinded_float_spinbox_t *m_vol_alpha;
-
-        qbinded_color3_input_t *m_vol_color_pos;
-        qbinded_color3_input_t *m_vol_color_neg;
-        qbinded_color3_input_t *m_vol_color_vol;
 
         qbinded_bool_named_vector_t *m_vol_gen_settings;
 
         qspoiler_widget_t *m_gb_volume_detail;
         QFormLayout *m_gb_volume_detail_lt;
         QComboBox *m_cb_current_vol;
+
+        qspoiler_widget_t *m_gb_volume_clr;
+        QFormLayout *m_gb_volume_clr_lt;
+        qbinded_color3_input_t *m_vol_color_pos;
+        qbinded_color3_input_t *m_vol_color_neg;
+        qbinded_color3_input_t *m_vol_color_vol;
+
 
         volume_view_obj_insp_widget_t();
 

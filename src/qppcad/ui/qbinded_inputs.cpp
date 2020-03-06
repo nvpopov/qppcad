@@ -956,7 +956,7 @@ void qbinded_bool_named_vector_t::load_value() {
 
   if (m_binded_data.size() == m_binded_names.size())
     for (size_t i = 0; i < m_boxes.size(); i++)
-      if (i < m_boxes.size() && m_boxes[i]) {
+      if (i < m_boxes.size() && m_boxes[i] && m_binded_data[i]) {
 
           m_boxes[i]->blockSignals(true);
           m_boxes[i]->setCheckState(
@@ -967,7 +967,6 @@ void qbinded_bool_named_vector_t::load_value() {
           m_boxes[i]->blockSignals(false);
 
         }
-
 
 }
 
@@ -1062,5 +1061,96 @@ void qbinded_matrix3_input_t::spinbox_value_changed(double newval) {
   if (it == m_sbx_lookup.end()) return;
 
   (*m_binded_value)(std::get<0>(it->second),std::get<1>(it->second)) = newval;
+
+}
+
+qbinded_float_named_vector_t::qbinded_float_named_vector_t(std::vector<QString> &&names,
+                                                           QWidget *parent) {
+
+  m_binded_names = names;
+  m_binded_data.resize(m_binded_names.size(), nullptr);
+
+  widget_layout = new QHBoxLayout;
+  widget_layout->setContentsMargins(0, 1, 6, 0);
+  setLayout(widget_layout);
+
+  m_boxes.reserve(m_binded_names.size());
+  m_labels.reserve(m_binded_names.size());
+
+  for (size_t i = 0; i < m_binded_names.size(); i++) {
+
+      QLabel *lbl = new QLabel(nullptr);
+      lbl->setText(m_binded_names[i]);
+      lbl->setProperty("s_class", "thin_label");
+      QDoubleSpinBox *sbx = new QDoubleSpinBox(nullptr);
+      sbx->setAlignment(Qt::AlignCenter);
+      sbx->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      sbx->setLocale(QLocale::C);
+      widget_layout->addWidget(lbl);
+      widget_layout->addWidget(sbx);
+      m_boxes.push_back(sbx);
+      m_labels.push_back(lbl);
+
+      connect(sbx,
+              static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+              [this, i](double value) {
+
+                if (i < this->m_binded_data.size() && this->m_binded_data[i])
+                  *(this->m_binded_data[i]) = value;
+
+                app_state_t::get_inst()->make_viewport_dirty();
+
+              });
+
+    }
+
+  widget_layout->addStretch(1);
+
+}
+
+void qbinded_float_named_vector_t::set_min_max_step(float vmin, float vmax, float vstep) {
+
+  for (int i = 0; i < m_boxes.size(); i++)
+    if (m_boxes[i]) {
+        m_boxes[i]->setRange(vmin, vmax);
+        m_boxes[i]->setSingleStep(vstep);
+      }
+
+}
+
+void qbinded_float_named_vector_t::bind_value(std::vector<float *> &&binded_data) {
+
+  if (m_binded_data.size() == m_binded_names.size() &&
+      binded_data.size() == m_binded_names.size()) {
+
+      m_binded_data = binded_data;
+
+    } else {
+
+      //raise error
+
+    }
+
+  load_value();
+
+}
+
+void qbinded_float_named_vector_t::load_value() {
+
+  if (m_binded_data.size() == m_binded_names.size())
+    for (size_t i = 0; i < m_boxes.size(); i++)
+      if (i < m_boxes.size() && m_boxes[i] && m_binded_data[i]) {
+
+          m_boxes[i]->blockSignals(true);
+          m_boxes[i]->setValue(*m_binded_data[i]);
+          m_boxes[i]->blockSignals(false);
+
+        }
+
+}
+
+void qbinded_float_named_vector_t::unbind_value() {
+
+  std::fill(std::begin(m_binded_data), std::end(m_binded_data), nullptr);
 
 }

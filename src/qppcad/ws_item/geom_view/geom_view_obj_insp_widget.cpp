@@ -119,10 +119,13 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   m_gb_disp_s_lt = new QFormLayout;
   m_gb_disp_s->add_content_layout(m_gb_disp_s_lt);
 
-  m_disp_s_atom_scale = new qbinded_float_spinbox_t;
-  m_disp_s_atom_scale->set_min_max_step(0.01, 3.0, 0.01);
-  m_disp_s_bond_scale = new qbinded_float_spinbox_t;
-  m_disp_s_bond_scale->set_min_max_step(0.01, 3.0, 0.01);
+//  m_disp_s_atom_scale = new qbinded_float_spinbox_t;
+//  m_disp_s_atom_scale->set_min_max_step(0.01, 3.0, 0.01);
+//  m_disp_s_bond_scale = new qbinded_float_spinbox_t;
+//  m_disp_s_bond_scale->set_min_max_step(0.01, 3.0, 0.01);
+
+  m_disp_s_scale = new qbinded_float_named_vector_t({"Atom", "Bond"});
+  m_disp_s_scale->set_min_max_step(0.01, 3.0, 0.01);
 
   m_disp_s_render_style = new qbinded_combobox_t;
   m_disp_s_render_style->addItem("Balls and sticks");
@@ -136,8 +139,8 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   m_disp_s_color_mode->addItem(tr("Color from ptable"));
   m_disp_s_color_mode->addItem(tr("Color from xgeom"));
 
-  m_disp_s_draw_atoms_bonds = new qbinded_bool_named_vector_t({"Atoms", "Bonds"});
-  m_disp_s_draw_img_atoms_bonds = new qbinded_bool_named_vector_t({"Atoms", "Bonds"});
+  m_disp_s_draw_atoms_bonds = new qbinded_bool_named_vector_t({"Atom", "Bond"});
+  m_disp_s_draw_img_atoms_bonds = new qbinded_bool_named_vector_t({"Atom", "Bond"});
 
   // periodic related render
   m_gb_periodic_related_render = new qspoiler_widget_t(tr("Periodic Related Settings"));
@@ -165,7 +168,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
           this,
           &geom_view_obj_insp_widget_t::draw_subcells_changed);
 
-  m_disp_s_sel_vis_p_affect_bonds = new qbinded_bool_named_vector_t({"Atoms", "Bonds"});
+  m_disp_s_sel_vis_p_affect_bonds = new qbinded_bool_named_vector_t({"Atom", "Bond"});
 
   //periodic_draw_cell = new qbinded_checkbox_t;
   m_periodic_cell_offset = new qbinded_float3_input_t;
@@ -188,9 +191,8 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   m_gb_disp_s_lt->addRow(tr("Color style"), m_disp_s_color_mode);
   m_gb_disp_s_lt->addRow(tr("Draw real"), m_disp_s_draw_atoms_bonds);
   m_gb_disp_s_lt->addRow(tr("Draw img."), m_disp_s_draw_img_atoms_bonds);
-  m_gb_disp_s_lt->addRow(tr("Atom scale"), m_disp_s_atom_scale);
-  m_gb_disp_s_lt->addRow(tr("Bond scale"), m_disp_s_bond_scale);
   m_gb_disp_s_lt->addRow(tr("Sel. visibility"), m_disp_s_sel_vis_p_affect_bonds);
+  m_gb_disp_s_lt->addRow(tr("Scale"), m_disp_s_scale);
 
   init_form_lt(m_gb_disp_s_lt);
 
@@ -345,20 +347,14 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   m_gb_anim_summary_lt = new QFormLayout;
   m_gb_anim_sum->add_content_layout(m_gb_anim_summary_lt);
 
-  //gb_anim_summary->setMaximumHeight(250);
-//  m_anim_total_anims = new QLabel;
-//  m_anim_rebuild_bonds = new qbinded_checkbox_t;
-//  m_anim_play_cyclic = new qbinded_checkbox_t;
-//  m_anim_interpolate_anim = new qbinded_checkbox_t;
   m_anim_speed = new qbinded_float_spinbox_t;
   m_anim_settings = new qbinded_bool_named_vector_t({"Cycl.", "Intr.", "Rbnd."});
   m_anim_speed->set_min_max_step(0.01,10.0,0.01);
-  //m_anim_total_frames_in_anim = new QLabel;
+
   m_anim_cur_frame = new QLabel;
   m_anim_cur_frame->setProperty("s_class", "thin_label");
   m_anim_current_anim = new QComboBox;
   m_anim_current_anim->setFixedWidth(astate->size_guide.obj_insp_combo_max_w_v2());
-  //gb_current_anim->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
   connect(m_anim_current_anim,
           static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -382,12 +378,9 @@ void geom_view_obj_insp_widget_t::construct_anim_tab() {
   m_anim_act_lt->addWidget(m_anim_act_ren);
   m_anim_act_lt->addWidget(m_anim_act_del);
 
-//  m_gb_anim_summary_lt->addRow(tr("Num. of Anim."), m_anim_total_anims);
-//  m_gb_anim_summary_lt->addRow(tr("Rebuild Bonds"), m_anim_rebuild_bonds);
   m_gb_anim_summary_lt->addRow(tr("Play Settings"), m_anim_settings);
   m_gb_anim_summary_lt->addRow(tr("Current Anim."), m_anim_current_anim);
   m_gb_anim_summary_lt->addRow(tr("Frame Time "), m_anim_speed);
-  //m_gb_anim_summary_lt->addRow(tr("Num frm."), m_anim_total_frames_in_anim);
   m_gb_anim_summary_lt->addRow(tr("Info"), m_anim_cur_frame);
   m_gb_anim_summary_lt->addRow(tr("Actions"), m_anim_act_lt);
   init_form_lt(m_gb_anim_summary_lt);
@@ -1163,8 +1156,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       m_disp_s_draw_atoms_bonds->bind_value({&b_al->m_draw_atoms, &b_al->m_draw_bonds});
       m_disp_s_draw_img_atoms_bonds->bind_value({&b_al->m_draw_img_atoms, &b_al->m_draw_img_bonds});
 
-      m_disp_s_atom_scale->bind_value(&b_al->m_atom_scale_factor);
-      m_disp_s_bond_scale->bind_value(&b_al->m_bond_scale_factor);
+      m_disp_s_scale->bind_value({&b_al->m_atom_scale_factor, &b_al->m_bond_scale_factor});
       m_disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_render_style));
       m_disp_s_color_mode->bind_value(reinterpret_cast<int*>(&b_al->m_color_mode));
 
@@ -1271,8 +1263,7 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   m_disp_s_draw_atoms_bonds->unbind_value();
   m_disp_s_draw_img_atoms_bonds->unbind_value();
 
-  m_disp_s_atom_scale->unbind_value();
-  m_disp_s_bond_scale->unbind_value();
+  m_disp_s_scale->unbind_value();
   m_disp_s_render_style->unbind_value();
   m_disp_s_color_mode->unbind_value();
 

@@ -76,7 +76,7 @@ int size_guide_t::inline_tool_horizontal_min_height() {
 }
 
 int size_guide_t::obj_insp_w() {
-  return 376;
+  return 386;
 }
 
 int size_guide_t::obj_insp_splr_w() {

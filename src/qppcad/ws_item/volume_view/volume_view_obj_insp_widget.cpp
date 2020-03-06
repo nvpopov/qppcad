@@ -29,23 +29,28 @@ volume_view_obj_insp_widget_t::volume_view_obj_insp_widget_t() {
   m_gb_volume_detail_lt = new QFormLayout;
   m_gb_volume_detail->add_content_layout(m_gb_volume_detail_lt);
 
+  m_gb_volume_clr = new qspoiler_widget_t(tr("Volume colors"));
+  m_gb_volume_clr_lt = new QFormLayout;
+  m_gb_volume_clr->add_content_layout(m_gb_volume_clr_lt);
+
   m_cb_current_vol = new QComboBox;
   m_cb_current_vol->setFixedWidth(astate->size_guide.obj_insp_combo_max_w());
   m_cb_current_vol->setEditable(false);
-
-  //cb_current_volume->setMaximumWidth(def_control_width);
 
   m_gb_volume_detail_lt->addRow(tr("Current"), m_cb_current_vol);
   m_gb_volume_detail_lt->addRow(tr("Appearance"), m_vol_gen_settings);
   m_gb_volume_detail_lt->addRow(tr("Type"), m_general_vol_type);
   m_gb_volume_detail_lt->addRow(tr("Isolevel"), m_vol_isovalue);
   m_gb_volume_detail_lt->addRow(tr("Alpha"), m_vol_alpha);
-  m_gb_volume_detail_lt->addRow(tr("Positive"), m_vol_color_pos);
-  m_gb_volume_detail_lt->addRow(tr("Negative"), m_vol_color_neg);
-  m_gb_volume_detail_lt->addRow(tr("Density"), m_vol_color_vol);
   init_form_lt(m_gb_volume_detail_lt);
 
+  m_gb_volume_clr_lt->addRow(tr("Positive"), m_vol_color_pos);
+  m_gb_volume_clr_lt->addRow(tr("Negative"), m_vol_color_neg);
+  m_gb_volume_clr_lt->addRow(tr("Density"), m_vol_color_vol);
+  init_form_lt(m_gb_volume_clr_lt);
+
   m_tab_general->tab_inner_widget_lt->addWidget(m_gb_volume_detail);
+  m_tab_general->tab_inner_widget_lt->addWidget(m_gb_volume_clr);
   m_tab_general->tab_inner_widget_lt->addStretch();
 
   connect(m_cb_current_vol,

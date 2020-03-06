@@ -384,6 +384,27 @@ namespace qpp {
 
     };
 
+    class qbinded_float_named_vector_t : public QFrame {
+
+      Q_OBJECT
+
+    public:
+
+      std::vector<float*> m_binded_data;
+      std::vector<QString> m_binded_names;
+      QHBoxLayout *widget_layout;
+      std::vector<QDoubleSpinBox*> m_boxes;
+      std::vector<QLabel*> m_labels;
+
+      explicit qbinded_float_named_vector_t(std::vector<QString> &&names,
+                                            QWidget *parent = nullptr);
+      void set_min_max_step(float vmin, float vmax, float vstep);
+      void bind_value(std::vector<float*> &&binded_data);
+      void load_value();
+      void unbind_value();
+
+    };
+
   } // namespace qpp::cad
 
 } // namespace qpp

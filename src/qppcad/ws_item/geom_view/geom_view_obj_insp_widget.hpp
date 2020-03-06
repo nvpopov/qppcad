@@ -53,8 +53,9 @@ namespace qpp {
         QFormLayout *m_gb_disp_s_lt;
         qbinded_bool_named_vector_t *m_disp_s_draw_atoms_bonds;
         qbinded_bool_named_vector_t *m_disp_s_draw_img_atoms_bonds;
-        qbinded_float_spinbox_t *m_disp_s_atom_scale;
-        qbinded_float_spinbox_t *m_disp_s_bond_scale;
+//        qbinded_float_spinbox_t *m_disp_s_atom_scale;
+//        qbinded_float_spinbox_t *m_disp_s_bond_scale;
+        qbinded_float_named_vector_t *m_disp_s_scale;
         qbinded_combobox_t *m_disp_s_render_style;
         qbinded_combobox_t *m_disp_s_color_mode;
 
