@@ -133,6 +133,13 @@ add_executable(
     src/qppcad/core/qpp_object.cpp
     )
 
+add_executable(
+    qppcad-tests
+
+    src/qppcad/core/qppcad_tests.cpp
+
+  )
+
 target_link_libraries(sflow-tests qpp )
 qt5_use_modules(sflow-tests Core Gui Widgets)
 
