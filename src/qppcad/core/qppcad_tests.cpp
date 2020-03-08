@@ -11,9 +11,9 @@ TEST_CASE("history stream test") {
   SECTION ("basic features") {
 
     history_stream_t<int> hints;
-    hints.push_epoch(2);
-    hints.push_epoch(3);
-    hints.push_epoch(5);
+    hints.push_epoch_with_data(2);
+    hints.push_epoch_with_data(3);
+    hints.push_epoch_with_data(5);
 
     REQUIRE(hints.get_cur_epoch() == 3);
     REQUIRE(hints.epoch_exists_in_current_history(0));
@@ -24,20 +24,20 @@ TEST_CASE("history stream test") {
     hints.print_debug();
 
     hints.set_cur_epoch(2);
-    hints.push_epoch(34);
+    hints.push_epoch_with_data(34);
     hints.print_debug();
     REQUIRE(hints.get_cur_epoch() == 4);
-    REQUIRE(hints.get_cur_history_line_size() == 4);
+    REQUIRE(hints.get_hist_size() == 4);
 
   }
 
   SECTION ("basic features + gen epoch") {
 
     history_stream_t<int> hints;
-    hints.push_epoch(2);
-    hints.push_epoch(3);
-    hints.push_epoch(5);
-    hints.push_epoch(6, 10);
+    hints.push_epoch_with_data(2);
+    hints.push_epoch_with_data(3);
+    hints.push_epoch_with_data(5);
+    hints.push_epoch_with_data(6, 10);
 
     REQUIRE(hints.get_cur_epoch() == 10);
     REQUIRE(!hints.epoch_exists_in_current_history(5));
@@ -48,12 +48,29 @@ TEST_CASE("history stream test") {
   SECTION ("basic features + gen epoch") {
 
     history_stream_t<int> hints;
-    hints.push_epoch(2);
-    hints.push_epoch(3);
-    hints.push_epoch(5);
-    hints.push_epoch(6, 2);
+    hints.push_epoch_with_data(2);
+    hints.push_epoch_with_data(3);
+    hints.push_epoch_with_data(5);
+    hints.push_epoch_with_data(6, 2);
 
     REQUIRE(hints.get_cur_epoch() == 4);
+
+  }
+
+  SECTION ("test aggregator") {
+
+    history_stream_t<int> hints;
+    hints.push_epoch_with_data(2);
+    hints.push_epoch_with_data(3);
+    hints.push_epoch_with_data(5);
+    hints.push_epoch_with_data(6, 2);
+
+    history_stream_t<double> hdbls;
+    hdbls.push_epoch_with_data(2);
+    hdbls.push_epoch_with_data(3);
+    hdbls.push_epoch_with_data(5);
+    hdbls.push_epoch_with_data(6, 2);
+
 
   }
 
