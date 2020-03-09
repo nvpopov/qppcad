@@ -16,7 +16,6 @@
 #include <tuple>
 #include <array>
 #include <unordered_set>
-#include <queue>
 #include <io/strfun.hpp>
 #include <qppcad/core/gitversion.h>
 #include <queue>

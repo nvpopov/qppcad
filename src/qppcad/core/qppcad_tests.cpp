@@ -57,20 +57,40 @@ TEST_CASE("history stream test") {
 
   }
 
+
+  SECTION ("test get_root") {
+
+    history_stream_t<int> hints1, hints2, hints3;
+    hints3.set_parent(&hints2);
+    hints2.set_parent(&hints1);
+    REQUIRE(hints3.get_root() == &hints1);
+    REQUIRE(hints2.get_root() == &hints1);
+    REQUIRE(hints1.get_root() == &hints1);
+
+  }
+
   SECTION ("test aggregator") {
 
-    history_stream_t<int> hints;
-    hints.push_epoch_with_data(2);
-    hints.push_epoch_with_data(3);
-    hints.push_epoch_with_data(5);
-    hints.push_epoch_with_data(6, 2);
+    history_stream_t<int> hroot;
 
-    history_stream_t<double> hdbls;
-    hdbls.push_epoch_with_data(2);
-    hdbls.push_epoch_with_data(3);
-    hdbls.push_epoch_with_data(5);
-    hdbls.push_epoch_with_data(6, 2);
+    history_stream_t<int> hints1;
+    hints1.push_epoch_with_data(0);
+    hints1.push_epoch_with_data(3);
+    hints1.push_epoch_with_data(5);
+    hints1.push_epoch_with_data(6, 6);
 
+    history_stream_t<int> hints2;
+    hints2.push_epoch_with_data(0);
+    hints2.push_epoch_with_data(1);
+    hints2.push_epoch_with_data(2);
+    hints2.push_epoch_with_data(3);
+
+    hints1.set_parent(&hroot);
+    hints2.set_parent(&hroot);
+
+    REQUIRE(hints1.get_max_epoch() == 6);
+    REQUIRE(hints2.get_max_epoch() == 4);
+    REQUIRE(hroot.get_max_epoch() == 6);
 
   }
 
