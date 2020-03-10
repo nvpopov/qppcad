@@ -2,7 +2,8 @@
  font-family : "Heebo";
  font-size: 13pt;
  font-weight: normal;
- color: rgb(239, 239, 239);
+ color: rgb(229, 229, 229);
+ background: rgb(73, 73, 73);
 }
 
 QWidget[s_class="tp_generic"] QLabel {
@@ -326,8 +327,8 @@ qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
  padding-bottom: 2px;
  padding-right: 6px;
  margin-left: 3px;
- border: 2px solid rgb(80, 80, 80);
- background: rgb(114, 114, 114);
+ background : rgb(95, 95, 95);
+ border: 1px solid rgb(51, 51, 51);
  border-radius: 3px;
  margin-bottom: 2px;
  margin-top: 2px;
@@ -347,7 +348,7 @@ qpp--cad--object_inspector_widget_t QTabBar[s_class="big_tab"]::tab {
  padding-left: 4px;
  padding-bottom: 2px;
  padding-right: 4px;
- border: 1px solid rgb(70, 70, 70);
+ border: 1px solid rgb(61, 61, 61);
  border-radius: 3px;
 }
 
@@ -362,8 +363,6 @@ qpp--cad--object_inspector_widget_t QTabBar QToolButton {
 
 qpp--cad--qspoiler_widget_t {
  margin-bottom: 2px;
- margin-left: 2px;
- background: rgb(82, 82, 82);
 }
 
 qpp--cad--object_inspector_widget_t QPushButton {
@@ -402,19 +401,16 @@ qpp--cad--qembed_window_t {
 }
 
 qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] {
- background: rgb(113, 113, 113);
- border-bottom: 1px solid rgb(75, 75, 75);
  margin-top: 1px;
 }
 
 qpp--cad--qembed_window_sub_header_t{
- background: rgb(113, 113, 113);
  border-bottom: 1px solid rgb(75, 75, 75);
  padding-bottom: 2px;
 }
 
 #tool_panel_widget_e QFrame {
- background: rgb(93, 93, 93);
+ background-color: rgb(64, 64, 64);
  border-right: 2px solid black;
  border-top: 1px solid black;
 }
@@ -432,8 +428,8 @@ QComboBox {
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox, QToolButton{
- background : rgb(114, 114, 114);
- border: 2px solid rgb(75, 75, 75);
+ background : rgb(85, 85, 85);
+ border: 1px solid rgb(61, 61, 61);
  border-radius: 3px;
 }
 
@@ -483,8 +479,15 @@ QPushButton::flat:pressed {
 }
 
 qpp--cad--qspoiler_widget_t QFrame[s_class="qsplrhdr"] {
-  background: rgb(113, 113, 113);
-  border: 1px solid rgb(75, 75, 75);
+ border: 0;
+}
+
+qpp--cad--qembed_window_sub_header_t,
+qpp--cad--qembed_window_sub_header_t QLabel,
+qpp--cad--qspoiler_widget_t QFrame[s_class="qsplrhdr"],
+qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"],
+qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] QLabel{
+ background-color: rgb(94, 94, 94);
 }
 
 QRadioButton:disabled {
@@ -507,7 +510,7 @@ qpp--cad--ptable_rich_widget_t QPushButton {
 
 qpp--cad--ptable_rich_widget_t QPushButton:hover {
  background-color: rgb(33, 33, 33);
- border:3px solid black;
+ border:2px solid black;
 }
 
 qpp--cad--ptable_rich_widget_t QPushButton:pressed {

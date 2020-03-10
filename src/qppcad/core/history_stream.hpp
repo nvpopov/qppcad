@@ -59,7 +59,7 @@ namespace qpp {
       void on_new_child_added(history_stream_base_t<EPOCH_TYPE> *new_child) {
         if (new_child) {
             p_childs.push_back(new_child);
-            p_max_history_epoch = std::max(p_max_history_epoch, get_max_epoch_recursive());
+            p_max_history_epoch = get_max_epoch_recursive();
           }
       }
 

@@ -14,9 +14,6 @@ qembed_window_t::qembed_window_t(QWidget *parent) : QFrame(parent) {
   m_main_lt->setContentsMargins(0,0,0,0);
   setLayout(m_main_lt_zero_lvl);
 
-  setFrameStyle(QFrame::Panel);
-  setPalette(astate->m_bg_embwnd_pal);
-
   m_header_frm = new QFrame;
   m_header_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   m_header_frm->setProperty("s_class", "qembedwndhdr");

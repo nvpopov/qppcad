@@ -26,7 +26,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   top_frm = new QFrame;
   top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   top_frm->setProperty("s_class", "qsplrhdr");
-  top_frm->setFrameStyle(QFrame::StyledPanel);
+  //top_frm->setFrameStyle(QFrame::StyledPanel);
 
   hbox_frm = new QHBoxLayout;
   hbox_frm->setContentsMargins(2, 2, 0, 2);
@@ -34,6 +34,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   lbl_frm = new QLabel(title);
   lbl_frm->setAlignment(Qt::AlignHCenter);
+  lbl_frm->setProperty("s_class", "qsplrhdr");
 
   action_btn = new QPushButton;
   action_btn->setFlat(true);
