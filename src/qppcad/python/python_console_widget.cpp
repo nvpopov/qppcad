@@ -23,7 +23,7 @@ python_console_widget_t::python_console_widget_t(QWidget *parent) : QFrame (pare
   m_console_lt->addWidget(m_py_tedit);
 
   setMinimumHeight(200);
-  setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
+  //setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::python_console_font_size_updated_signal,

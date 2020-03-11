@@ -259,6 +259,7 @@ namespace qpp {
         QPushButton *m_tm_grp_op_flip_a_n;
         QPushButton *m_tm_grp_op_flip_b_n;
         QPushButton *m_tm_grp_op_flip_c_n;
+        QPushButton *m_tm_grp_op_rebond_all;
 
         qspoiler_widget_t *m_tm_gb_override_atom;
         QFormLayout *m_tm_gb_override_atom_lt;
@@ -368,6 +369,7 @@ namespace qpp {
         void mod_group_op_sel_ngbs();
         void mod_group_op_del_sel();
         void mod_group_op_make_static_anim();
+        void mod_group_op_rebond_all();
 
         void msr_switch_current_changed(int index);
         void msr_pair_cur_idx_changed(int index);

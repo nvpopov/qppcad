@@ -945,6 +945,12 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
           &QPushButton::pressed,
           [this](){this->tab_modify_flip_cell_clicked(2, -1);});
 
+  m_tm_grp_op_rebond_all = new QPushButton(tr("REBOND"));
+  connect(m_tm_grp_op_rebond_all,
+          &QPushButton::pressed,
+          this,
+          &geom_view_obj_insp_widget_t::mod_group_op_rebond_all);
+
   m_tm_grp_op_sel_ngbs = new QPushButton(tr("SEL:NGB"));
 
   connect(m_tm_grp_op_sel_ngbs,
@@ -977,6 +983,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tm_grp_op_lt->addWidget(m_tm_grp_op_flip_a_n,       3, 0, 1, 1);
   m_tm_grp_op_lt->addWidget(m_tm_grp_op_flip_b_n,       3, 1, 1, 1);
   m_tm_grp_op_lt->addWidget(m_tm_grp_op_flip_c_n,       3, 2, 1, 1);
+  m_tm_grp_op_lt->addWidget(m_tm_grp_op_rebond_all,     4, 0, 1, 1);
 
   m_tab_modify->tab_inner_widget_lt->addWidget(m_tm_gb_add_atom);
   m_tab_modify->tab_inner_widget_lt->addWidget(m_tm_gb_override_atom);
@@ -2473,6 +2480,13 @@ void geom_view_obj_insp_widget_t::mod_group_op_make_static_anim() {
 
   std::string _anim_name = fmt::format("static_{}", b_al->m_anim->get_total_anims());
   b_al->m_anim->make_anim(_anim_name, geom_anim_t::anim_static, 1);
+
+}
+
+void geom_view_obj_insp_widget_t::mod_group_op_rebond_all() {
+
+  if (!b_al) return;
+  b_al->rebond();
 
 }
 

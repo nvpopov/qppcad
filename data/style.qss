@@ -3,7 +3,7 @@
  font-size: 13pt;
  font-weight: normal;
  color: rgb(229, 229, 229);
- background: rgb(73, 73, 73);
+ background: rgb(79, 79, 79);
 }
 
 QWidget[s_class="tp_generic"] QLabel {
@@ -328,9 +328,9 @@ qpp--cad--object_inspector_widget_t QTabWidget QTabBar::tab {
  padding-right: 6px;
  margin-left: 3px;
  background : rgb(95, 95, 95);
- border: 1px solid rgb(51, 51, 51);
+ border: 1px solid rgb(65, 65, 65);
  border-radius: 3px;
- margin-bottom: 2px;
+ margin-bottom: 3px;
  margin-top: 2px;
 }
 
@@ -396,8 +396,8 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 }
 
 qpp--cad--qembed_window_t {
- border-top: 1px inset rgb(65, 65, 65);
- border-left: 1px inset rgb(65, 65, 65);
+ border: 1px solid rgb(65, 65, 65);
+ border-top: 0;
 }
 
 qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] {
@@ -428,8 +428,8 @@ QComboBox {
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox, QToolButton{
- background : rgb(85, 85, 85);
- border: 1px solid rgb(61, 61, 61);
+ background : rgb(95, 95, 95);
+ border: 1px solid rgb(65, 65, 65);
  border-radius: 3px;
 }
 
