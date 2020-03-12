@@ -6,6 +6,10 @@
  background: rgb(79, 79, 79);
 }
 
+QMenu::item:disabled {
+ color: rgb(129, 129, 129);
+}
+
 QWidget[s_class="tp_generic"] QLabel {
  color:white;
 }

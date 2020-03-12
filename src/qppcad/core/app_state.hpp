@@ -157,11 +157,6 @@ namespace qpp {
         QString m_screen_shots_dir{"."};
         QString m_spatial_suffix{"Å"};
         QString m_degree_suffix{"°"};
-        QPalette m_app_palette;
-        QPalette m_bgfg_light_pal;
-        QPalette m_bg_light_pal;
-        QPalette m_bg_embwnd_pal;
-        QPalette m_bgfg_embwnd_pal;
 
         int m_spatial_measurements_digits_count{2};
 

@@ -101,7 +101,7 @@ int main (int argc, char **argv) {
 
   qApp->setStyle(QStyleFactory::create("Fusion"));
   astate->init_styles();
-  qApp->setPalette(astate->m_app_palette);
+  //qApp->setPalette(astate->m_app_palette);
 
   std::vector<int> fnt_id = {
     QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Light.ttf"),

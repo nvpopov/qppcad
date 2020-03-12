@@ -57,7 +57,7 @@ void ws_viewer_widget_t::draw_scanline(QPainter &painter) {
 
   app_state_t* astate = app_state_t::get_inst();
   painter.resetTransform();
-  painter.setPen(QPen(astate->m_app_palette.color(QPalette::Window), 3));
+  //painter.setPen(QPen(astate->m_app_palette.color(QPalette::Window), 3));
   painter.drawLine(0, 0, painter.window().width(), 0);
 
 }
