@@ -174,9 +174,7 @@ namespace qpp {
         QAction *m_view_menu_settings;
         QAction *m_view_menu_ws_settings;
         QMenu *m_view_menu_debug;
-        QAction *m_view_menu_toggle_debug_info;
         QAction *m_view_menu_toggle_debug_tws_tree;
-        QAction *m_view_menu_toggle_sel_deque;
 
         QMenu *m_help_menu;
         QAction *m_help_menu_about;

@@ -377,18 +377,6 @@ void main_window_t::init_menus() {
 
   m_view_menu_debug = m_view_menu->addMenu(tr("Debug"));
 
-  m_view_menu_toggle_debug_info = new QAction(nullptr);
-  m_view_menu_toggle_debug_info->setText(tr("Show frame info"));
-  m_view_menu_toggle_debug_info->setCheckable(true);
-  m_view_menu_debug->addAction(m_view_menu_toggle_debug_info);
-  connect(m_view_menu_toggle_debug_info,
-          &QAction::toggled,
-          [](bool checked) {
-            app_state_t* astate = app_state_t::get_inst();
-            astate->m_show_debug_frame_stats = checked;
-            astate->make_viewport_dirty();
-          });
-
   m_view_menu_toggle_debug_tws_tree = new QAction(nullptr);
   m_view_menu_toggle_debug_tws_tree->setText(tr("Render tws-tree"));
   m_view_menu_toggle_debug_tws_tree->setCheckable(true);
@@ -398,18 +386,6 @@ void main_window_t::init_menus() {
           [](bool checked) {
             app_state_t* astate = app_state_t::get_inst();
             astate->m_debug_show_tws_tree = checked;
-            astate->make_viewport_dirty();
-          });
-
-  m_view_menu_toggle_sel_deque = new QAction(nullptr);
-  m_view_menu_toggle_sel_deque->setText(tr("Show selection deque"));
-  m_view_menu_toggle_sel_deque->setCheckable(true);
-  m_view_menu_debug->addAction(m_view_menu_toggle_sel_deque);
-  connect(m_view_menu_toggle_debug_tws_tree,
-          &QAction::toggled,
-          [](bool checked) {
-            app_state_t* astate = app_state_t::get_inst();
-            astate->m_debug_show_sel_deque = checked;
             astate->make_viewport_dirty();
           });
 
