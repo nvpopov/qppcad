@@ -17,10 +17,6 @@ QMenu::item:disabled {
  color: rgb(129, 129, 129);
 }
 
-QWidget[s_class="tp_generic"] QLabel {
- color:white;
-}
-
 QLabel[s_class="bold_label"] {
  color: rgb(211, 211, 211);
 }
@@ -403,12 +399,31 @@ qpp--cad--object_inspector_widget_t QTabBar::tab:hover {
 }
 
 qpp--cad--qembed_window_t {
- border: 1px solid rgb(65, 65, 65);
  border-top: 0;
+}
+
+qpp--cad--qembed_window_t[border_class="border_both"] {
+ border-left: 1px solid rgb(65, 65, 65);
+ border-right: 1px solid rgb(65, 65, 65);
+}
+
+qpp--cad--qembed_window_t[border_class="border_left"], QFrame[border_class="border_left"] {
+ border-left: 1px solid rgb(65, 65, 65);
+}
+
+qpp--cad--qembed_window_t[border_class="border_right"], QFrame[border_class="border_right"]  {
+ border-right: 1px solid rgb(65, 65, 65);
 }
 
 qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] {
  margin-top: 1px;
+ border:0;
+}
+
+qpp--cad--python_text_editor_t {
+ border-left: 0;
+ border-right: 0;
+ border-top: 1px solid rgb(65, 65, 65);
 }
 
 qpp--cad--qembed_window_sub_header_t{
@@ -416,10 +431,8 @@ qpp--cad--qembed_window_sub_header_t{
  padding-bottom: 2px;
 }
 
-#tool_panel_widget_e QFrame {
- background-color: rgb(64, 64, 64);
- border-right: 2px solid black;
- border-top: 1px solid black;
+QFrame#tool_panel_widget_e{
+ border-left: 1px solid rgb(65, 65, 65);
 }
 
 QPushButton:hover, QComboBox:hover, QSpinBox:hover, QDoubleSpinBox:hover, QToolButton:hover{

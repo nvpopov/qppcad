@@ -4,7 +4,11 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-qinline_tool_window_t::qinline_tool_window_t(QWidget *parent) : qembed_window_t(parent) {
+qinline_tool_window_t::qinline_tool_window_t(qinline_tool_type_e inline_tool_type,
+                                             QWidget *parent) : qembed_window_t(parent) {
+
+  m_inline_tool_type = inline_tool_type;
+  setProperty("border_class", "border_right");
 
   m_btn_apply_tool = new QPushButton(tr("Apply"));
   m_btn_cancel_tool = new QPushButton(tr("Cancel"));
@@ -25,6 +29,9 @@ qinline_tool_window_t::qinline_tool_window_t(QWidget *parent) : qembed_window_t(
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
+  if (m_inline_tool_type == qinline_tool_type_e::tool_vertical) mark_as_vertical();
+  else mark_as_horizontal();
+
 }
 
 void qinline_tool_window_t::mark_as_horizontal() {
@@ -32,7 +39,7 @@ void qinline_tool_window_t::mark_as_horizontal() {
   app_state_t *astate = app_state_t::get_inst();
   setMaximumHeight(astate->size_guide.inline_tool_horizontal_max_height());
   setMinimumHeight(astate->size_guide.inline_tool_horizontal_min_height());
-  m_is_horizontal = true;
+  m_inline_tool_type = qinline_tool_type_e::tool_horizontal;
 
 }
 
@@ -40,7 +47,7 @@ void qinline_tool_window_t::mark_as_vertical() {
 
   app_state_t *astate = app_state_t::get_inst();
   setFixedWidth(astate->size_guide.inline_tool_vertical_max_width());
-  m_is_vertical = true;
+  m_inline_tool_type = qinline_tool_type_e::tool_vertical;
 
 }
 
@@ -57,8 +64,12 @@ void qinline_tool_window_t::apply_triggered() {
     }
 
   app_state_t *astate = app_state_t::get_inst();
-  if (m_is_vertical) astate->astate_evd->set_left_inline_tool_visibility(false);
-  if (m_is_horizontal) astate->astate_evd->set_bottom_inline_tool_visibility(false);
+
+  if (m_inline_tool_type == qinline_tool_type_e::tool_vertical) {
+      astate->astate_evd->set_left_inline_tool_visibility(false);
+    } else {
+      astate->astate_evd->set_bottom_inline_tool_visibility(false);
+    }
 
 }
 
@@ -69,7 +80,11 @@ void qinline_tool_window_t::close_triggered() {
     }
 
   app_state_t *astate = app_state_t::get_inst();
-  if (m_is_vertical) astate->astate_evd->set_left_inline_tool_visibility(false);
-  if (m_is_horizontal) astate->astate_evd->set_bottom_inline_tool_visibility(false);
+
+  if (m_inline_tool_type == qinline_tool_type_e::tool_vertical) {
+      astate->astate_evd->set_left_inline_tool_visibility(false);
+    } else {
+      astate->astate_evd->set_bottom_inline_tool_visibility(false);
+    }
 
 }

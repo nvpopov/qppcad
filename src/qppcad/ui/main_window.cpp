@@ -443,11 +443,10 @@ void main_window_t::init_widgets() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  m_tp_wdgt = new QWidget(nullptr);
+  m_tp_wdgt = new QFrame(nullptr);
   m_tp_wdgt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   m_tp_wdgt->setFixedWidth(astate->size_guide.tool_panel_w());
-  m_tp_wdgt->setProperty("s_class", "tp_generic");
-  m_tp_wdgt->setObjectName("tool_panel_widget_e");
+  m_tp_wdgt->setProperty("border_class", "border_right");
 
   m_tp_modern_menu = new QPushButton(nullptr);
   m_tp_modern_menu->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
@@ -700,13 +699,13 @@ void main_window_t::init_widgets() {
   m_py_console_wdgt = new python_console_widget_t(nullptr);
 
   m_ext_edtr_compositor = new ws_item_extended_editor_compositor_t(nullptr);
-  m_inline_left_tool_plch = new qinline_tool_window_t(nullptr);
+  m_inline_left_tool_plch =
+      new qinline_tool_window_t(qinline_tool_type_e::tool_vertical, nullptr);
   m_inline_left_tool_plch->setVisible(false);
-  m_inline_left_tool_plch->mark_as_vertical();
 
-  m_inline_bottom_tool_plch = new qinline_tool_window_t(nullptr);
+  m_inline_bottom_tool_plch =
+      new qinline_tool_window_t(qinline_tool_type_e::tool_horizontal, nullptr);
   m_inline_bottom_tool_plch->setVisible(false);
-  m_inline_bottom_tool_plch->mark_as_horizontal();
 
 }
 

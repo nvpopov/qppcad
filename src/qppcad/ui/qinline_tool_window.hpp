@@ -10,6 +10,11 @@ namespace qpp {
 
   namespace cad {
 
+    enum qinline_tool_type_e {
+      tool_vertical,
+      tool_horizontal
+    };
+
     class qinline_tool_window_t : public qembed_window_t {
 
       Q_OBJECT
@@ -19,10 +24,10 @@ namespace qpp {
       QPushButton *m_btn_apply_tool;
       QPushButton *m_btn_cancel_tool;
       ws_item_inline_tool_widget_t *m_cur_wdgt{nullptr};
-      bool m_is_vertical{false};
-      bool m_is_horizontal{false};
+      qinline_tool_type_e m_inline_tool_type;
 
-      explicit qinline_tool_window_t(QWidget *parent = nullptr);
+      explicit qinline_tool_window_t(qinline_tool_type_e inline_tool_type,
+                                     QWidget *parent = nullptr);
 
       void mark_as_horizontal();
       void mark_as_vertical();

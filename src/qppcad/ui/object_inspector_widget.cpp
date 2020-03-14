@@ -14,6 +14,8 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 
   app_state_t* astate = app_state_t::get_inst();
 
+  setProperty("border_class", "border_both");
+
   m_ew_header->setText(tr("Workspace's items"));
   m_header_frm->setObjectName("obj_insp_header_frame");
 

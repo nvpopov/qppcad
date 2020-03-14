@@ -11,6 +11,8 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
 
   setMinimumWidth(300);
   setObjectName("ext_editor_compositor");
+  setProperty("border_class", "border_left");
+
   m_ew_header->setText(tr("EXTENDED EDITOR"));
 
   m_ext_edt_plch = new QWidget;
