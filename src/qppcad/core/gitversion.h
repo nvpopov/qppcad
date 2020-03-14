@@ -7,7 +7,7 @@ namespace qpp {
 
   namespace cad {
 
-    class build_info_helper {
+    class build_info_t {
 
       public:
 

@@ -50,7 +50,7 @@ int main (int argc, char **argv) {
   app_state_t *astate = app_state_t::get_inst();
 
   astate->tlog("@GIT_REVISION={}, @BUILD_DATE={}",
-               build_info_helper::get_git_version(), build_info_helper::get_git_version());
+               build_info_t::get_git_version(), build_info_t::get_git_version());
 
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   bool under_dev_env = test_in_dev_env.good();

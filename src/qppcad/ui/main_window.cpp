@@ -408,10 +408,10 @@ void main_window_t::init_menus() {
                                  "Build time : %2<br>"
                                  "Qt version : %3<br>"
                                  "Python : %4")
-                               .arg(QString::fromStdString(build_info_helper::get_git_version()))
-                               .arg(QString::fromStdString(build_info_helper::get_build_date()))
-                               .arg(QString::fromStdString(build_info_helper::get_qt_version()))
-                               .arg(QString::fromStdString(build_info_helper::get_python_version()))
+                               .arg(QString::fromStdString(build_info_t::get_git_version()))
+                               .arg(QString::fromStdString(build_info_t::get_build_date()))
+                               .arg(QString::fromStdString(build_info_t::get_qt_version()))
+                               .arg(QString::fromStdString(build_info_t::get_python_version()))
                                );
           });
 
