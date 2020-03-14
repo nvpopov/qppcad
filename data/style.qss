@@ -6,6 +6,13 @@
  background: rgb(79, 79, 79);
 }
 
+QToolTip {
+ color: rgb(29, 29, 29);
+ background: white;
+ border: 3px solid rgb(45, 45, 45);
+ padding: 2px;
+}
+
 QMenu::item:disabled {
  color: rgb(129, 129, 129);
 }
@@ -216,10 +223,6 @@ qpp--cad--object_inspector_widget_t QListWidget {
 
 qpp--cad--object_inspector_widget_t QListWidget::item {
   margin: 5px;
-}
-
-QToolTip {
- color: black;
 }
 
 QSplitter {
