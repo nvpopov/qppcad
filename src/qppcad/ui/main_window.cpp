@@ -725,9 +725,6 @@ void main_window_t::init_layouts() {
   m_wstabbar_overview_wrp_lt->setSpacing(0);
   m_wstabbar_overview_wrp->setObjectName("m_tp_overview_wrp");
 
-  //m_tp_overview = new QLabel(nullptr);
-  //m_tp_overview->setFixedWidth(astate->size_guide.obj_insp_w()-5);
-
   m_main_wdgt->setLayout(m_main_lt);
 
   m_main_lt->addWidget(m_tp_wdgt);
@@ -736,8 +733,6 @@ void main_window_t::init_layouts() {
   m_main_lt->setSpacing(0);
 
   m_wstabbar_overview_wrp_lt->addWidget(m_ws_tabbar_wdgt);
-  //m_wstabbar_overview_wrp_lt->addWidget(m_tp_overview, 0, Qt::AlignRight);
-
   m_ws_tabbar_wdgt->raise();
 
   m_splitter_ws_viewer_ext_edt = new QSplitter(Qt::Horizontal);
@@ -792,7 +787,7 @@ void main_window_t::init_layouts() {
 
   m_tp_lt = new QVBoxLayout;
   m_tp_wdgt->setLayout(m_tp_lt);
-  m_tp_lt->setContentsMargins(5,0,0,0);
+  m_tp_lt->setContentsMargins(5, 4, 0, 0);
   m_tp_lt->setSpacing(1);
 
   m_tp_lt->addWidget(m_tp_edit_mode_start, 0, Qt::AlignLeft);

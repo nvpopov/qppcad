@@ -415,7 +415,7 @@ python_text_editor_syntax_highilighter_t::python_text_editor_syntax_highilighter
       hl_rules.append(rule);
     }
 
-  keyword_fmt.setForeground(Qt::lightGray);
+  keyword_fmt.setForeground(Qt::white);
   //keyword_fmt.setFontWeight(QFont::Bold);
   QStringList keywordPatterns;
 

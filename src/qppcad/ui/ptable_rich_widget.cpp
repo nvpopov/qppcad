@@ -116,21 +116,24 @@ void ptable_rich_widget_t::btn_grp_clicked(int id) {
 
 ptable_element_editor_t::ptable_element_editor_t(int elem_id, QWidget *parent) : QDialog (parent) {
 
+  const auto widget_width = 280;
+
   app_state_t *astate = app_state_t::get_inst();
   ptable *pt_inst = ptable::get_inst();
 
   m_elem_id = elem_id;
 
-  setFixedWidth(340);
+  setFixedWidth(widget_width+8);
 
   setWindowTitle(
         QString("Edit element - %1").arg(QString::fromStdString(pt_inst->arecs[elem_id].m_symbol))
         );
 
   m_main_lt = new QVBoxLayout;
+  m_main_lt->setContentsMargins(4, 2, 4, 5);
   setLayout(m_main_lt);
 
-  m_main_splr = new qspoiler_widget_t(tr("Element properties"), nullptr, false);
+  m_main_splr = new qspoiler_widget_t(tr("Element properties"), nullptr, false, 6, widget_width);
   m_splr_lt = new QFormLayout;
   m_main_splr->add_content_layout(m_splr_lt);
 
@@ -153,9 +156,6 @@ ptable_element_editor_t::ptable_element_editor_t(int elem_id, QWidget *parent) :
   qt_hlp::resize_form_lt_lbls(m_splr_lt, astate->size_guide.obj_insp_lbl_w());
 
   m_dialog_bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-
-  for (auto btn : m_dialog_bb->buttons())
-    btn->setFixedWidth(astate->size_guide.common_button_fixed_w());
 
   connect(m_dialog_bb,
           &QDialogButtonBox::accepted,
