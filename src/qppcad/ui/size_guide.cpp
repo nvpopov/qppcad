@@ -168,7 +168,7 @@ int size_guide_t::script_edtior_button_icon_w() {
 }
 
 int size_guide_t::common_button_fixed_w() {
-  return 80;
+  return 100;
 }
 
 int size_guide_t::node_book_inplace_par_width() {

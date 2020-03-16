@@ -78,15 +78,20 @@ TEST_CASE("history stream test") {
     hints1.push_epoch_with_data(3);
     hints1.push_epoch_with_data(5);
     hints1.push_epoch_with_data(6, 6);
+    REQUIRE(hints1.get_max_epoch() == 4);
 
     history_stream_t<int> hints2;
     hints2.push_epoch_with_data(0);
     hints2.push_epoch_with_data(1);
     hints2.push_epoch_with_data(2);
     hints2.push_epoch_with_data(3);
+    REQUIRE(hints2.get_max_epoch() == 4);
 
     hints1.set_parent(&hroot);
     hints2.set_parent(&hroot);
+
+    hints1.print_debug();
+    hints2.print_debug();
 
     REQUIRE(hints1.get_max_epoch() == 6);
     REQUIRE(hints2.get_max_epoch() == 4);

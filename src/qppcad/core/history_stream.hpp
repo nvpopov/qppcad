@@ -27,23 +27,22 @@ namespace qpp {
       history_line_t p_history_line{0};
       EPOCH_TYPE p_cur_history_epoch{0};
       EPOCH_TYPE p_max_history_epoch{0};
+      bool p_is_dirty{false};
 
     public:
 
       virtual ~history_stream_base_t() = default;
 
-      EPOCH_TYPE get_cur_epoch() {
-        return p_cur_history_epoch;
-      }
+      EPOCH_TYPE get_cur_epoch() { return p_cur_history_epoch; }
 
       void set_parent(history_stream_base_t<EPOCH_TYPE> *parent){
         p_parent = parent;
         if (p_parent) p_parent->on_new_child_added(this);
       }
 
-      history_stream_base_t<EPOCH_TYPE> *get_parent() {
-        return p_parent;
-      }
+      history_stream_base_t<EPOCH_TYPE> *get_parent() { return p_parent; }
+
+      auto get_child_count() { return p_childs.size(); }
 
       history_stream_base_t<EPOCH_TYPE>* get_root() {
 
@@ -58,48 +57,53 @@ namespace qpp {
 
       void on_new_child_added(history_stream_base_t<EPOCH_TYPE> *new_child) {
         if (new_child) {
+            p_max_history_epoch = std::max(p_max_history_epoch, get_max_epoch());
             p_childs.push_back(new_child);
-            p_max_history_epoch = get_max_epoch_recursive();
           }
       }
 
+      void set_is_dirty(bool is_ditry) { p_is_dirty = is_ditry; }
+      bool get_is_dirty() { return p_is_dirty; }
+
       EPOCH_TYPE get_max_epoch() {
-        return p_max_history_epoch;
-      }
 
-      void set_max_epoch(EPOCH_TYPE new_epoch) {
-        p_max_history_epoch = new_epoch;
-      }
-
-      EPOCH_TYPE get_max_epoch_recursive() {
+        auto root = get_root();
 
         std::set<EPOCH_TYPE> max_epochs;
+        root->get_max_epoch_recursive(max_epochs);
+
+        for (auto elem : max_epochs) std::cout << elem << " ";
+        std::cout << std::endl;
+
+        if (max_epochs.empty()) return p_max_history_epoch;
+        else return *(max_epochs.end());
+
+      }
+
+      void set_max_epoch(EPOCH_TYPE new_epoch) { p_max_history_epoch = new_epoch; }
+
+      void get_max_epoch_recursive(std::set<EPOCH_TYPE> &max_epochs) {
+
         max_epochs.insert(p_max_history_epoch);
 
         for (auto child : p_childs)
-          if (child) max_epochs.insert(child->get_max_epoch_recursive());
-
-        return max_epochs.empty() ? 0 : *max_epochs.end();
+          if (child) child->get_max_epoch_recursive(max_epochs);
 
       }
 
       void checkout_to_epoch(EPOCH_TYPE epoch_id) {
-
         auto cur_root = get_root();
         if (!cur_root) {
             //TODO: error
             return;
           }
         cur_root->checkout_to_epoch_propagate(epoch_id);
-
       }
 
       void checkout_to_epoch_propagate(EPOCH_TYPE epoch_id) {
-
         set_cur_epoch_failsafe(epoch_id);
         for (auto child : p_childs)
           if (child) checkout_to_epoch_propagate(epoch_id);
-
       }
 
       void set_cur_epoch(EPOCH_TYPE new_epoch) {
@@ -133,13 +137,8 @@ namespace qpp {
         return it1 != p_history_line.end();
       }
 
-      size_t get_hist_size() {
-        return p_history_line.size();
-      }
-
-      EPOCH_TYPE get_hist_at(size_t at_step) {
-        return p_history_line.at(at_step);
-      }
+      size_t get_hist_size() { return p_history_line.size(); }
+      EPOCH_TYPE get_hist_at(size_t at_step) { return p_history_line.at(at_step); }
 
       void propagate_max_epoch(EPOCH_TYPE new_max_epoch, bool first = true) {
         if (!first) p_max_history_epoch = new_max_epoch;
@@ -152,17 +151,16 @@ namespace qpp {
           std::optional<ref_history_line_t> epoch_to_delete = std::nullopt) {
 
         if (p_cur_history_epoch != p_max_history_epoch) {
-            auto it_cur = std::find(std::begin(p_history_line),
-                                    std::end(p_history_line),
-                                    p_cur_history_epoch);
+            auto it_cur =
+                std::find(p_history_line.begin(), p_history_line.end(), p_cur_history_epoch);
 
             std::advance(it_cur, 1); //advance to next element
 
             if (it_cur != p_history_line.end()) {
                 if (epoch_to_delete)
-                  for (auto it_i = it_cur; it_i != std::end(p_history_line); it_i++)
+                  for (auto it_i = it_cur; it_i != p_history_line.end(); it_i++)
                     (*epoch_to_delete).get().push_back(*it_i);
-                p_history_line.erase(it_cur, std::end(p_history_line));
+                p_history_line.erase(it_cur, p_history_line.end());
               }
 
           }
@@ -222,6 +220,15 @@ namespace qpp {
         return it1 != p_value_stream.end() ?
               std::optional<STORED_TYPE>(it1.second) : std::nullopt;
       }
+
+      void set_value(STORED_TYPE&& value) {
+        if (p_cur_value != value) {
+            p_cur_value = std::forward<STORED_TYPE>(value);
+            history_stream_base_t<EPOCH_TYPE>::set_is_dirty(true);
+          }
+      }
+
+      STORED_TYPE get_value() { return p_cur_value; }
 
       void print_debug() {
 
