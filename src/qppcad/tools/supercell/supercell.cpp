@@ -2,6 +2,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
+#include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -192,16 +193,17 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
 
   for (size_t i = 0; i < 3; i++) {
 
-    m_boundaries_values[i][0] = -1;
-    m_boundaries_values[i][1] = 0;
-    m_boundaries_values[i][2] = -1;
-    m_boundaries[i] = new qbinded_int2b_input_t;
-    m_boundaries[i]->set_min_max_step(-10, 10, 1);
-    m_boundaries[i]->bind_value(&m_boundaries_values[i], this);
-    m_boundaries[i]->m_updated_externally_event = true;
-    m_boundaries_label[i] = new QLabel;
-    m_boundaries_label[i]->setText(tr("Dim %1").arg(i));
-    m_gb_rep_par_lt->addRow(m_boundaries_label[i], m_boundaries[i]);
+      m_boundaries_values[i][0] = -1;
+      m_boundaries_values[i][1] = 0;
+      m_boundaries_values[i][2] = -1;
+      m_boundaries[i] = new qbinded_int2b_input_t;
+      m_boundaries[i]->set_min_max_step(-10, 10, 1);
+      m_boundaries[i]->bind_value(&m_boundaries_values[i], this);
+      m_boundaries[i]->m_updated_externally_event = true;
+      m_boundaries_label[i] = new QLabel;
+      m_boundaries_label[i]->setText(tr("Dim %1").arg(i));
+      m_gb_rep_par_lt->addRow(m_boundaries_label[i], m_boundaries[i]);
+
     }
 
   qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, astate->size_guide.obj_insp_lbl_w());
@@ -313,7 +315,7 @@ void super_cell_widget_t::bind_item(ws_item_t *item) {
     } else {
 
       m_src_gv = nullptr;
-      m_src_gv = nullptr;
+      m_dst_gv = nullptr;
 
     }
 

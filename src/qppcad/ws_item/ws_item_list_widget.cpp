@@ -28,6 +28,8 @@ void ws_item_list_widget_t::rebuild_sub_gvs(
 
         itm_id++;
 
+        //fmt::print(std::cout, "@@@ {} {}\n", ws_id, itm_id);
+
         if (ws_item && ws_item->get_type() == m_ws_item_class
             && comparator(m_master_item, ws_item.get())) {
 

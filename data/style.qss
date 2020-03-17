@@ -212,12 +212,12 @@ QHeaderView::section::vertical {
  min-width:30px;
 }
 
-qpp--cad--object_inspector_widget_t QListWidget {
+QListWidget {
  background-color: rgb(64, 64, 64);
  border: 0;
 }
 
-qpp--cad--object_inspector_widget_t QListWidget::item {
+QListWidget::item {
   margin: 5px;
 }
 

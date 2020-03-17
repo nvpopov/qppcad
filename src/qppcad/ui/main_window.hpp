@@ -103,8 +103,8 @@ namespace qpp {
 
         QWidget *m_ws_viewer_plch;
         QWidget *m_obj_inst_plch;
-        qinline_tool_window_t *m_inline_left_tool_plch;
-        qinline_tool_window_t *m_inline_bottom_tool_plch;
+        qinline_tool_window_t *m_inline_left_tool;
+        qinline_tool_window_t *m_inline_btm_tool;
         std::map<size_t, std::shared_ptr<ws_item_inline_tool_widget_t> > m_inline_tools;
         ws_item_extended_editor_compositor_t *m_ext_edtr_compositor;
 

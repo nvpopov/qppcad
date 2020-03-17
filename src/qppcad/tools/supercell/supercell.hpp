@@ -1,10 +1,12 @@
 #ifndef QPPCAD_TOOL_SUPERCELL
 #define QPPCAD_TOOL_SUPERCELL
+
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
-#include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ui/qspoiler_widget.hpp>
 #include <qppcad/ui/ws_item_inline_tool_widget.hpp>
+#include <qppcad/core/iupdatable.hpp>
+
 #include <QWidget>
 #include <QDialog>
 #include <QSpinBox>
@@ -13,23 +15,20 @@
 #include <QFormLayout>
 #include <QDialogButtonBox>
 #include <QApplication>
-#include <qppcad/core/iupdatable.hpp>
 
 namespace qpp {
 
   namespace cad {
 
+    class geom_view_t;
+
     struct super_cell_can_apply_helper_t {
-
       static bool can_apply(ws_item_t *item);
-
     };
 
     enum supercell_tool_mode_e {
-
       sc_tool_mode_default,
       sc_tool_mode_by_idx
-
     };
 
     class super_cell_widget_t : public ws_item_inline_tool_widget_t,

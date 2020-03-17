@@ -4,6 +4,8 @@
 #include <qppcad/core/qppcad.hpp>
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/ws_item_list_widget.hpp>
+#include <qppcad/ui/ws_item_inline_tool_widget.hpp>
+#include <qppcad/core/iupdatable.hpp>
 
 #include <QWidget>
 #include <QDialog>
@@ -20,7 +22,8 @@ namespace qpp {
 
     class geom_view_t;
 
-    class copy_geom_view_aux_widget_t : public QDialog {
+    class copy_geom_view_aux_widget_t : public ws_item_inline_tool_widget_t,
+                                        public iupdatable_externally_t  {
 
       Q_OBJECT
 
@@ -29,7 +32,6 @@ namespace qpp {
     public:
 
       QVBoxLayout *main_lt;
-      QDialogButtonBox *dialog_bb;
       QHBoxLayout *actions_lt;
       QPushButton *action_select_all;
 
@@ -38,8 +40,14 @@ namespace qpp {
       QCheckBox *cb_copy_msr;
 
       ws_item_list_widget_t *sub_gv;
+      geom_view_t *m_src_gv{nullptr};
 
-      copy_geom_view_aux_widget_t();
+      explicit copy_geom_view_aux_widget_t(QWidget *parent = nullptr);
+
+      void on_apply() override;
+      void on_cancel() override;
+      void bind_item(ws_item_t *item) override;
+      void updated_externally(uint32_t update_reason) override;
 
     };
 
@@ -48,6 +56,8 @@ namespace qpp {
       public:
 
         void exec(ws_item_t *item, uint32_t _error_ctx) override;
+
+        ws_item_inline_tool_widget_t *construct_inline_tool() override;
 
     };
 

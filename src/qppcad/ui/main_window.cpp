@@ -699,13 +699,13 @@ void main_window_t::init_widgets() {
   m_py_console_wdgt = new python_console_widget_t(nullptr);
 
   m_ext_edtr_compositor = new ws_item_extended_editor_compositor_t(nullptr);
-  m_inline_left_tool_plch =
+  m_inline_left_tool =
       new qinline_tool_window_t(qinline_tool_type_e::tool_vertical, nullptr);
-  m_inline_left_tool_plch->setVisible(false);
+  m_inline_left_tool->setVisible(false);
 
-  m_inline_bottom_tool_plch =
+  m_inline_btm_tool =
       new qinline_tool_window_t(qinline_tool_type_e::tool_horizontal, nullptr);
-  m_inline_bottom_tool_plch->setVisible(false);
+  m_inline_btm_tool->setVisible(false);
 
 }
 
@@ -757,7 +757,7 @@ void main_window_t::init_layouts() {
 
   m_splitter_ws_viewer_py_console_log = new QSplitter(Qt::Vertical);
   m_splitter_ws_viewer_py_console_log->addWidget(m_splitter_ws_viewer_ext_edt);
-  m_splitter_ws_viewer_py_console_log->addWidget(m_inline_bottom_tool_plch);
+  m_splitter_ws_viewer_py_console_log->addWidget(m_inline_btm_tool);
   m_splitter_ws_viewer_py_console_log->addWidget(m_splitter_py_console_log_wdgt);
   m_splitter_ws_viewer_py_console_log->setHandleWidth(0);
   m_splitter_ws_viewer_py_console_log->setSizes(QList<int>({1, 2, 3}));
@@ -771,7 +771,7 @@ void main_window_t::init_layouts() {
 
   m_layout_ws_viewer_obj_insp = new QSplitter(Qt::Horizontal);
   m_layout_ws_viewer_obj_insp->addWidget(m_tp_wdgt);
-  m_layout_ws_viewer_obj_insp->addWidget(m_inline_left_tool_plch);
+  m_layout_ws_viewer_obj_insp->addWidget(m_inline_left_tool);
   m_layout_ws_viewer_obj_insp->addWidget(m_splitter_ws_viewer_py_console_log);
   m_layout_ws_viewer_obj_insp->addWidget(m_obj_insp_wdgt);
   m_layout_ws_viewer_obj_insp->setContentsMargins(0,0,0,0);
@@ -1201,7 +1201,7 @@ void main_window_t::cur_ws_changed() {
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
-  for (auto elem : {m_inline_left_tool_plch, m_inline_bottom_tool_plch})
+  for (auto elem : {m_inline_left_tool, m_inline_btm_tool})
     if (elem && elem->is_active())
       elem->close_triggered();
 
@@ -1807,13 +1807,13 @@ void main_window_t::recent_files_clicked() {
 
 void main_window_t::inline_tool_left_ctrl_visibility(bool visible) {
 
-  m_inline_left_tool_plch->setVisible(visible);
+  m_inline_left_tool->setVisible(visible);
 
 }
 
 void main_window_t::inline_tool_bottom_ctrl_visibility(bool visible) {
 
-  m_inline_bottom_tool_plch->setVisible(visible);
+  m_inline_btm_tool->setVisible(visible);
 
 }
 
@@ -2086,33 +2086,33 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
 
   if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_vertical) {
 
-      if (m_inline_left_tool_plch->m_cur_wdgt) {
-          m_inline_left_tool_plch->m_cur_wdgt->setVisible(false);
-          m_inline_left_tool_plch->m_main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
+      if (m_inline_left_tool->m_cur_wdgt) {
+          m_inline_left_tool->m_cur_wdgt->cancel();
+          m_inline_left_tool->m_cur_wdgt->setVisible(false);
+          m_inline_left_tool->m_main_lt->removeWidget(m_inline_left_tool->m_cur_wdgt);
         }
 
-      m_inline_left_tool_plch->m_cur_wdgt = target.get();
-      m_inline_left_tool_plch->m_main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
-      m_inline_left_tool_plch->m_cur_wdgt->setVisible(true);
-      m_inline_left_tool_plch->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
-      m_inline_left_tool_plch->m_cur_wdgt->bind_item(sel_item);
+      m_inline_left_tool->m_cur_wdgt = target.get();
+      m_inline_left_tool->m_main_lt->insertWidget(0, m_inline_left_tool->m_cur_wdgt);
+      m_inline_left_tool->m_cur_wdgt->setVisible(true);
+      m_inline_left_tool->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
+      m_inline_left_tool->m_cur_wdgt->bind_item(sel_item);
       inline_tool_left_ctrl_visibility(true);
       inline_tool_bottom_ctrl_visibility(false);
-      //if (it->second.m_item_required)
-
 
     } else if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_horizontal) {
 
-      if (m_inline_bottom_tool_plch->m_cur_wdgt) {
-          m_inline_bottom_tool_plch->m_cur_wdgt->setVisible(false);
-          m_inline_left_tool_plch->m_main_lt->removeWidget(m_inline_left_tool_plch->m_cur_wdgt);
+      if (m_inline_btm_tool->m_cur_wdgt) {
+          m_inline_btm_tool->m_cur_wdgt->cancel();
+          m_inline_btm_tool->m_cur_wdgt->setVisible(false);
+          m_inline_btm_tool->m_main_lt->removeWidget(m_inline_left_tool->m_cur_wdgt);
         }
 
-      m_inline_bottom_tool_plch->m_cur_wdgt = target.get();
-      m_inline_bottom_tool_plch->m_main_lt->insertWidget(0, m_inline_left_tool_plch->m_cur_wdgt);
-      m_inline_bottom_tool_plch->m_cur_wdgt->setVisible(true);
-      m_inline_bottom_tool_plch->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
-      m_inline_bottom_tool_plch->m_cur_wdgt->bind_item(sel_item);
+      m_inline_btm_tool->m_cur_wdgt = target.get();
+      m_inline_btm_tool->m_main_lt->insertWidget(0, m_inline_btm_tool->m_cur_wdgt);
+      m_inline_btm_tool->m_cur_wdgt->setVisible(true);
+      m_inline_btm_tool->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
+      m_inline_btm_tool->m_cur_wdgt->bind_item(sel_item);
       inline_tool_left_ctrl_visibility(false);
       inline_tool_bottom_ctrl_visibility(true);
 
