@@ -1991,11 +1991,11 @@ void main_window_t::build_bhv_tool_panel() {
 void main_window_t::act_bhv_tools_menus_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
-  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_throw);
+  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
 
-  if (!ok) {
-   return;
-  }
+//  if (!ok) {
+//   return;
+//  }
 
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -2006,6 +2006,10 @@ void main_window_t::act_bhv_tools_menus_clicked() {
 
   auto it_t = bhv_mgr->m_tools_info.find(t_hash);
   if (it_t != bhv_mgr->m_tools_info.end()) {
+
+      if (it_t->second.m_item_required && !cur_it) {
+          return;
+        }
 
       switch (it_t->second.m_tool_type) {
 
