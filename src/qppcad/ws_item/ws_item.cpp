@@ -222,8 +222,8 @@ void ws_item_t::render () {
       astate->dp->begin_render_aabb();
 
       (m_parent_ws->m_edit_type == ws_edit_e::edit_item) ?
-            astate->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min, m_pos + m_aabb.max  )
-          : astate->dp->render_aabb_segmented(clr_olive, m_pos + m_aabb.min, m_pos + m_aabb.max);
+           astate->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min, m_pos + m_aabb.max) :
+           astate->dp->render_aabb(clr_olive, m_pos + m_aabb.min, m_pos + m_aabb.max);
 
       astate->dp->end_render_aabb();
 
