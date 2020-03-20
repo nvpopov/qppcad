@@ -5,12 +5,12 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-cube_primitive_t::cube_primitive_t() {
+cube_primitive_t::cube_primitive_t() : ws_item_t() {
 
-  set_default_flags(ws_item_flags_default |
-                    ws_item_flags_support_rendering |
-                    ws_item_flags_support_moveto |
-                    ws_item_flags_support_tr);
+  set_default_flags(ws_item_flags_default
+                    | ws_item_flags_support_rendering
+                    | ws_item_flags_support_moveto
+                    | ws_item_flags_support_tr);
 
 }
 

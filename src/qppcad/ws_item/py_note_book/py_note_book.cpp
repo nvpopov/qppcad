@@ -4,7 +4,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-py_note_book_t::py_note_book_t() {
+py_note_book_t::py_note_book_t() : ws_item_t() {
   set_default_flags(ws_item_flags_default);
 }
 

@@ -5,17 +5,17 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-void volume_view_t::mc_polygonise(float _isolevel) {
-  //volume_helper::polygonise_volume_mc_naive(*(m_first_mesh), m_volume, _isolevel, 100);
-}
-
 volume_view_t::volume_view_t() : ws_item_t () {
 
-  set_default_flags(ws_item_flags_default |
-                    ws_item_flags_support_tr |
-                    ws_item_flags_support_moveto |
-                    ws_item_flags_support_rendering );
+  set_default_flags(ws_item_flags_default
+                    | ws_item_flags_support_tr
+                    | ws_item_flags_support_moveto
+                    | ws_item_flags_support_rendering);
 
+}
+
+void volume_view_t::mc_polygonise(float _isolevel) {
+  //volume_helper::polygonise_volume_mc_naive(*(m_first_mesh), m_volume, _isolevel, 100);
 }
 
 void volume_view_t::vote_for_view_vectors(vector3<float> &v_out_look_pos,

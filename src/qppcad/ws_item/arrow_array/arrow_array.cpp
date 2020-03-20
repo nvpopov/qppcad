@@ -7,7 +7,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-arrow_array_t::arrow_array_t() {
+arrow_array_t::arrow_array_t() : ws_item_t() {
   set_default_flags(ws_item_flags_default | ws_item_flags_support_rendering);
 }
 

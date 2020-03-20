@@ -6,12 +6,12 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-traj_hl_t::traj_hl_t() {
+traj_hl_t::traj_hl_t() : ws_item_t() {
   set_default_flags(ws_item_flags_default);
 }
 
 void traj_hl_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                                vector3<float> &out_look_at) {
+                                      vector3<float> &out_look_at) {
   //do nothing
 }
 

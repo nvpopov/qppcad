@@ -6,7 +6,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-ccd_view_t::ccd_view_t() {
+ccd_view_t::ccd_view_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
 

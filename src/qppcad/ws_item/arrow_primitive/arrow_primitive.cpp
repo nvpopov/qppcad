@@ -5,13 +5,13 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-arrow_primitive_t::arrow_primitive_t() {
+arrow_primitive_t::arrow_primitive_t() : ws_item_t() {
 
-  set_default_flags(ws_item_flags_default |
-                    ws_item_flags_support_rendering |
-                    ws_item_flags_support_moveto |
-                    ws_item_flags_support_tr |
-                    ws_item_flags_translate_emit_upd_event);
+  set_default_flags(ws_item_flags_default
+                    | ws_item_flags_support_rendering
+                    | ws_item_flags_support_moveto
+                    | ws_item_flags_support_tr
+                    | ws_item_flags_translate_emit_upd_event);
 
 }
 

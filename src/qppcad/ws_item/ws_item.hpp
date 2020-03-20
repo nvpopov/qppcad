@@ -146,6 +146,9 @@ namespace qpp {
         size_t m_ext_editor_id{0};
         size_t m_ext_editor_width{300};
 
+        ws_item_t() = default;
+        virtual ~ws_item_t() = default;
+
         vector3<float> get_pos();
         void set_pos(vector3<float> new_pos);
         virtual void vote_for_view_vectors(vector3<float> &out_look_pos,

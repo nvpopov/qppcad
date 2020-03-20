@@ -7,7 +7,7 @@ namespace qpp {
   
   namespace cad {
 
-    class ws_vector3_t : public ws_item_t {
+    class ws_vector3_t final : public ws_item_t {
 
        QPP_OBJECT(ws_vector3_t, ws_item_t)
 

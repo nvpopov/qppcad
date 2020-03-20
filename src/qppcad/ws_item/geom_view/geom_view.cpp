@@ -20,19 +20,19 @@ using namespace qpp::cad;
 
 geom_view_t::geom_view_t(): ws_item_t() {
 
-  set_default_flags(ws_item_flags_default |
-                    ws_item_flags_support_tr |
-                    ws_item_flags_support_sel |
-                    ws_item_flags_support_cnt_edit |
-                    ws_item_flags_support_render_bb |
-                    ws_item_flags_toolbar_extension |
-                    ws_item_flags_support_actions |
-                    ws_item_flags_support_delete |
-                    ws_item_flags_support_clone |
-                    ws_item_flags_support_moveto |
-                    ws_item_flags_support_rendering |
-                    ws_item_flags_support_view_voting |
-                    ws_item_flags_cam_target_view);
+  set_default_flags(ws_item_flags_default
+                    | ws_item_flags_support_tr
+                    | ws_item_flags_support_sel
+                    | ws_item_flags_support_cnt_edit
+                    | ws_item_flags_support_render_bb
+                    | ws_item_flags_toolbar_extension
+                    | ws_item_flags_support_actions
+                    | ws_item_flags_support_delete
+                    | ws_item_flags_support_clone
+                    | ws_item_flags_support_moveto
+                    | ws_item_flags_support_rendering
+                    | ws_item_flags_support_view_voting
+                    | ws_item_flags_cam_target_view);
 
   m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3,"rg1");
 

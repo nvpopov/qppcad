@@ -11,7 +11,7 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-node_book_t::node_book_t() {
+node_book_t::node_book_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
 

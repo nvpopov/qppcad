@@ -4,12 +4,12 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-psg_view_t::psg_view_t() {
+psg_view_t::psg_view_t() : ws_item_t() {
 
-  set_default_flags(ws_item_flags_default |
-                    ws_item_flags_support_tr |
-                    ws_item_flags_translate_emit_upd_event |
-                    ws_item_flags_support_rendering);
+  set_default_flags(ws_item_flags_default
+                    | ws_item_flags_support_tr
+                    | ws_item_flags_translate_emit_upd_event
+                    | ws_item_flags_support_rendering);
 
   //set default axes colors by order
 
