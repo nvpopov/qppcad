@@ -16,9 +16,10 @@ namespace qpp {
 
         volume_view_t *b_vol{nullptr};
         QLabel *m_general_vol_type;
-        qbinded_float_spinbox_t *m_vol_isovalue;
 
-        qbinded_float_spinbox_t *m_vol_alpha;
+//        qbinded_float_spinbox_t *m_vol_isovalue;
+//        qbinded_float_spinbox_t *m_vol_alpha;
+        qbinded_float_named_vector_t *m_vol_isoval_alpha;
 
         qbinded_bool_named_vector_t *m_vol_gen_settings;
 

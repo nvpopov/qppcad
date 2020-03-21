@@ -388,7 +388,13 @@ namespace qpp {
 
       Q_OBJECT
 
+
     public:
+      iupdatable_externally_t *m_binded_item{nullptr};
+      std::vector<uint32_t> m_upd_flag{ws_item_updf_generic};
+
+      bool m_ignore_state_change{false};
+      std::vector<bool> m_updated_externally_event{false};
 
       std::vector<float*> m_binded_data;
       std::vector<QString> m_binded_names;
@@ -398,8 +404,14 @@ namespace qpp {
 
       explicit qbinded_float_named_vector_t(std::vector<QString> &&names,
                                             QWidget *parent = nullptr);
-      void set_min_max_step(float vmin, float vmax, float vstep);
-      void bind_value(std::vector<float*> &&binded_data);
+      void set_min_max_step(float vmin, float vmax, float vstep,
+                            std::optional<int> decs = std::nullopt);
+      void set_min_max_step_ex(std::vector<float> &&vmin,
+                               std::vector<float> &&vmax,
+                               std::vector<float> &&vstep,
+                               std::vector<std::optional<int>> &&decs);
+      void bind_value(std::vector<float*> &&binded_data,
+                      iupdatable_externally_t *item_to_bind = nullptr);
       void load_value();
       void unbind_value();
 

@@ -459,7 +459,7 @@ QPushButton:checked {
 }
 
 QPushButton, QSpinBox, QDoubleSpinBox{
- padding: 2px 12px 2px 12px;
+ padding: 1px 12px 1px 12px;
 }
 
 QSpinBox, QDoubleSpinBox{

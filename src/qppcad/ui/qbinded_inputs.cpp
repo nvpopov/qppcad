@@ -1095,8 +1095,14 @@ qbinded_float_named_vector_t::qbinded_float_named_vector_t(std::vector<QString> 
               static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
               [this, i](double value) {
 
-                if (i < this->m_binded_data.size() && this->m_binded_data[i])
-                  *(this->m_binded_data[i]) = value;
+                if (i < this->m_binded_data.size() && this->m_binded_data[i]) {
+                    *(this->m_binded_data[i]) = value;
+                    if (m_binded_item
+                        && i < this->m_updated_externally_event.size()
+                        && this->m_updated_externally_event[i]
+                        && i < this->m_upd_flag.size())
+                      m_binded_item->updated_externally(this->m_upd_flag[i]);
+                  }
 
                 app_state_t::get_inst()->make_viewport_dirty();
 
@@ -1108,22 +1114,50 @@ qbinded_float_named_vector_t::qbinded_float_named_vector_t(std::vector<QString> 
 
 }
 
-void qbinded_float_named_vector_t::set_min_max_step(float vmin, float vmax, float vstep) {
+void qbinded_float_named_vector_t::set_min_max_step(float vmin, float vmax,
+                                                    float vstep, std::optional<int> decs) {
 
   for (int i = 0; i < m_boxes.size(); i++)
     if (m_boxes[i]) {
         m_boxes[i]->setRange(vmin, vmax);
         m_boxes[i]->setSingleStep(vstep);
+        if (decs) m_boxes[i]->setDecimals(*decs);
       }
 
 }
 
-void qbinded_float_named_vector_t::bind_value(std::vector<float *> &&binded_data) {
+void qbinded_float_named_vector_t::set_min_max_step_ex(std::vector<float> &&vmin,
+                                                       std::vector<float> &&vmax,
+                                                       std::vector<float> &&vstep,
+                                                       std::vector<std::optional<int>> &&dec) {
+
+  if (m_binded_data.size() == vmin.size()
+      && m_binded_data.size() == vmax.size()
+      && m_binded_data.size() == vstep.size()
+      && m_binded_data.size() == dec.size()) {
+
+      for (int i = 0; i < m_boxes.size(); i++)
+        if (m_boxes[i]) {
+            m_boxes[i]->setRange(vmin[i], vmax[i]);
+            m_boxes[i]->setSingleStep(vstep[i]);
+            if (dec[i]) m_boxes[i]->setDecimals(*dec[i]);
+          }
+
+    }
+
+}
+
+void qbinded_float_named_vector_t::bind_value(std::vector<float *> &&binded_data,
+                                              iupdatable_externally_t *item_to_bind) {
 
   if (m_binded_data.size() == m_binded_names.size() &&
       binded_data.size() == m_binded_names.size()) {
 
       m_binded_data = binded_data;
+      m_binded_item = item_to_bind;
+      m_ignore_state_change = true;
+      load_value();
+      m_ignore_state_change = false;
 
     } else {
 
