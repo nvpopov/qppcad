@@ -225,7 +225,8 @@ namespace qpp {
       QDoubleSpinBox *sb_z;
 
       void load_value_ex() override;
-      void set_min_max_step(double min, double max, double step);
+      void set_min_max_step_dec(double min, double max, double step,
+                                std::optional<int> dec = std::nullopt);
       void set_suffix(QString &new_suffix);
       void set_empty_suffix();
       void set_default_suffix();

@@ -17,7 +17,7 @@ cube_primitive_obj_insp_widget_t::cube_primitive_obj_insp_widget_t() {
   cube_param_color = new qbinded_color3_input_t;
 
   cube_param_scale = new qbinded_float3_input_t;
-  cube_param_scale->set_min_max_step(0.05f, 20.0f, 0.05f);
+  cube_param_scale->set_min_max_step_dec(0.05f, 20.0f, 0.05f);
 
   cube_render_mode = new qbinded_combobox_t;
   cube_render_mode->addItem(tr("Solid"));

@@ -186,7 +186,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   m_ws_item_pos->m_updated_externally_event = true;
   m_ws_item_pos->m_upd_flag = ws_item_updf_pos_changed;
 
-  m_ws_item_pos->set_min_max_step(-10000, 10000, 0.01);
+  m_ws_item_pos->set_min_max_step_dec(-10000, 10000, 0.001, 3);
 
   //auto m_mat_test = new qbinded_matrix3_input_t;
 

@@ -127,7 +127,7 @@ void qnode_t::construct_inplace_widgets() {
           case sf_parameter_e::sfpar_v3f : {
 
               qbinded_float3_input_t *b_v3f = new qbinded_float3_input_t;
-              b_v3f->set_min_max_step(-10000, 10000, 0.01);
+              b_v3f->set_min_max_step_dec(-10000, 10000, 0.01);
 
               sf_parameter_v3f_t *sf_par_v3f =
                   m_sf_node->m_ipl[i]->cast_as<sf_parameter_v3f_t>();

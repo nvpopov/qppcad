@@ -201,7 +201,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   label_setup(type_cell_ctor_cubic_size_lbl);
 
   type_cell_ctor_ortho = new qbinded_float3_input_t(this);
-  type_cell_ctor_ortho->set_min_max_step(0.000, 50.0, 0.01);
+  type_cell_ctor_ortho->set_min_max_step_dec(0.000, 50.0, 0.01);
   type_cell_ctor_ortho->set_default_suffix();
   type_cell_ctor_ortho->bind_value(&m_ortho_g3d_cell);
   type_cell_ctor_ortho->setVisible(false);
@@ -209,7 +209,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   label_setup(type_cell_ctor_ortho_lbl);
 
   type_cell_ctor_a3 = new qbinded_float3_input_t(this);
-  type_cell_ctor_a3->set_min_max_step(0.000, 180.0, 0.01);
+  type_cell_ctor_a3->set_min_max_step_dec(0.000, 180.0, 0.01);
   type_cell_ctor_a3->set_suffix(astate->m_degree_suffix);
   type_cell_ctor_a3->bind_value(&m_a3_g3d_cell);
   type_cell_ctor_a3->setVisible(false);
@@ -217,7 +217,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   label_setup(type_cell_ctor_a3_lbl);
 
   type_cell_ctor_l3 = new qbinded_float3_input_t(this);
-  type_cell_ctor_l3->set_min_max_step(0.000, 180.0, 0.01);
+  type_cell_ctor_l3->set_min_max_step_dec(0.000, 180.0, 0.01);
   type_cell_ctor_l3->set_default_suffix();
   type_cell_ctor_l3->bind_value(&m_l3_g3d_cell);
   type_cell_ctor_l3->setVisible(false);
@@ -226,7 +226,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   label_setup(type_cell_ctor_l3_lbl);
 
   type_cell_ctor_a = new qbinded_float3_input_t(this);
-  type_cell_ctor_a->set_min_max_step(-50.00, 50.0, 0.01);
+  type_cell_ctor_a->set_min_max_step_dec(-50.00, 50.0, 0.01);
   type_cell_ctor_a->set_default_suffix();
   type_cell_ctor_a->bind_value(&m_a_g3d_cell);
   type_cell_ctor_a->setVisible(false);
@@ -234,7 +234,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   label_setup(type_cell_ctor_a_lbl);
 
   type_cell_ctor_b = new qbinded_float3_input_t(this);
-  type_cell_ctor_b->set_min_max_step(-50.00, 50.0, 0.01);
+  type_cell_ctor_b->set_min_max_step_dec(-50.00, 50.0, 0.01);
   type_cell_ctor_b->set_default_suffix();
   type_cell_ctor_b->bind_value(&m_b_g3d_cell);
   type_cell_ctor_b->setVisible(false);
@@ -242,7 +242,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   label_setup(type_cell_ctor_b_lbl);
 
   type_cell_ctor_c = new qbinded_float3_input_t(this);
-  type_cell_ctor_c->set_min_max_step(-50.00, 50.0, 0.01);
+  type_cell_ctor_c->set_min_max_step_dec(-50.00, 50.0, 0.01);
   type_cell_ctor_c->set_default_suffix();
   type_cell_ctor_c->bind_value(&m_c_g3d_cell);
   type_cell_ctor_c->setVisible(false);

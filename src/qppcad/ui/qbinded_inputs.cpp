@@ -238,19 +238,18 @@ void qbinded_float3_input_t::load_value_ex() {
 
 }
 
-void qbinded_float3_input_t::set_min_max_step(double min, double max, double step) {
+void qbinded_float3_input_t::set_min_max_step_dec(double min, double max, double step,
+                                                  std::optional<int> dec) {
 
-  sb_x->setMinimum(min);
-  sb_x->setMaximum(max);
-  sb_x->setSingleStep(step);
+  for (auto elem : {sb_x, sb_y, sb_z}) {
 
-  sb_y->setMinimum(min);
-  sb_y->setMaximum(max);
-  sb_y->setSingleStep(step);
+      elem->setMinimum(min);
+      elem->setMaximum(max);
+      elem->setSingleStep(step);
+      if (dec) elem->setDecimals(*dec);
 
-  sb_z->setMinimum(min);
-  sb_z->setMaximum(max);
-  sb_z->setSingleStep(step);
+    }
+
 
 }
 

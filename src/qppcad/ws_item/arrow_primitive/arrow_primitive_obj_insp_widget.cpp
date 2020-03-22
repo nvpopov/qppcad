@@ -10,7 +10,7 @@ arrow_primitive_obj_insp_widget_t::arrow_primitive_obj_insp_widget_t() {
   gb_arrow_settings->add_content_layout(gb_arrow_settings_lt);
 
   ap_target = new qbinded_float3_input_t;
-  ap_target->set_min_max_step(-10000, 10000, 0.01);
+  ap_target->set_min_max_step_dec(-10000, 10000, 0.01);
   ap_target->m_updated_externally_event = true;
 
   ap_unf_arrow_scale = new qbinded_float_spinbox_t;

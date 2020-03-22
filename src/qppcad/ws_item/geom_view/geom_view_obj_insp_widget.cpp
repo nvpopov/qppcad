@@ -172,7 +172,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
 
   //periodic_draw_cell = new qbinded_checkbox_t;
   m_periodic_cell_offset = new qbinded_float3_input_t;
-  m_periodic_cell_offset->set_min_max_step(-1000, 1000, 0.01);
+  m_periodic_cell_offset->set_min_max_step_dec(-1000, 1000, 0.01);
   m_periodic_cell_color = new qbinded_color3_input_t();
   m_periodic_cell_vectors_color = new qbinded_color3_input_t;
 
@@ -650,7 +650,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tm_add_atom_combo->setEditable(true);
   m_tm_add_atom_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   m_tm_add_atom_vec3 = new qbinded_float3_input_t;
-  m_tm_add_atom_vec3->set_min_max_step(-1000, 1000, 0.01);
+  m_tm_add_atom_vec3->set_min_max_step_dec(-1000, 1000, 0.01);
 
   m_tm_add_atom_button = new QPushButton(tr("Add"));
   m_tm_add_atom_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
@@ -672,7 +672,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tm_single_atom_combo->setMaximumWidth(astate->size_guide.obj_insp_ctrl_max_w());
   m_tm_single_atom_combo->setEditable(true);
   m_tm_single_atom_v3 = new qbinded_float3_input_t;
-  m_tm_single_atom_v3->set_min_max_step(-10000, 10000, 0.01);
+  m_tm_single_atom_v3->set_min_max_step_dec(-10000, 10000, 0.01);
   m_tm_single_atom_info = new QLabel;
   m_tm_single_atom_info->setProperty("s_class", "thin_label");
 
@@ -794,7 +794,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tm_gb_u_scale->add_content_layout(m_tm_gb_u_scale_lt);
 
   m_tm_u_scale_v3 = new qbinded_float3_input_t;
-  m_tm_u_scale_v3->set_min_max_step(0.01, 10, 0.01);
+  m_tm_u_scale_v3->set_min_max_step_dec(0.01, 10, 0.01);
   m_tm_u_scale_v3->bind_value(&m_tm_u_scale_v3_val);
 
   m_tm_u_apply_scale_button = new QPushButton(tr("Apply"));
@@ -814,7 +814,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tm_gb_translate_lt->setLabelAlignment(Qt::AlignRight);
   m_tm_gb_translate->add_content_layout(m_tm_gb_translate_lt);
   m_tm_translate_v3 = new qbinded_float3_input_t;
-  m_tm_translate_v3->set_min_max_step(-10000, 10000, 0.01);
+  m_tm_translate_v3->set_min_max_step_dec(-10000, 10000, 0.01);
 
   m_tm_translate_apply_button = new QPushButton(tr("Apply"));
   m_tm_translate_apply_button->setMaximumWidth(astate->size_guide.obj_insp_button_w());
@@ -2370,8 +2370,8 @@ void geom_view_obj_insp_widget_t::mod_translate_selected_atoms_clicked() {
 
 void geom_view_obj_insp_widget_t::mod_translate_coord_type_changed(int coord_type) {
 
-  if (coord_type == 0) m_tm_translate_v3->set_min_max_step(-100, 100, 0.01);
-  else m_tm_translate_v3->set_min_max_step(-1.0, 1.0, 0.01);
+  if (coord_type == 0) m_tm_translate_v3->set_min_max_step_dec(-100, 100, 0.01);
+  else m_tm_translate_v3->set_min_max_step_dec(-1.0, 1.0, 0.01);
 
 }
 
