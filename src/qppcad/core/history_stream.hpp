@@ -72,11 +72,40 @@ namespace qpp {
 
       auto get_history_size() {return p_history_line.size();}
 
-      void augment_epoch(self_t* child, epoch_t epoch) {
+      void augment_epoch(self_t* child, epoch_t child_epoch, epoch_t target_epoch) {
+
+        auto &aug_elist = p_childs_states[target_epoch];
+        auto find_fnc = [child](std::tuple<self_t*, epoch_t> &elem) {
+          return std::get<0>(elem) == child;
+        };
+        auto it1 = std::find_if(std::begin(aug_elist), std::end(aug_elist), find_fnc);
+        if (it1 != std::end(aug_elist)) {
+            aug_elist[std::distance(std::begin(aug_elist), it1)] = {child, child_epoch};
+          } else {
+            aug_elist.push_back({child, child_epoch});
+          }
 
       }
 
-      void remove_augment_from_epoch(self_t* child, epoch_t epoch) {
+      size_t get_augmented_count(epoch_t target_epoch) {
+        auto &aug_elist = p_childs_states[target_epoch];
+        return aug_elist.size();
+      }
+
+      history_result_e remove_augment_from_epoch(self_t* child, epoch_t child_epoch,
+                                                 epoch_t target_epoch) {
+
+        auto epoch_it = p_childs_states.find(target_epoch);
+        if (epoch_it == std::end(p_childs_states)) return history_result_e::hr_invalid_epoch;
+        auto find_fnc = [child, child_epoch](std::tuple<self_t*, epoch_t> &elem) {
+          return std::get<0>(elem) == child && std::get<1>(elem) == child_epoch;
+        };
+        auto ch_epoch_it = std::find_if(std::begin(epoch_it->second),
+                                        std::end(epoch_it->second),
+                                        find_fnc);
+        if (ch_epoch_it == std::end(epoch_it->second)) return history_result_e::hr_invalid_epoch;
+        epoch_it->second.erase(ch_epoch_it);
+        return history_result_e::hr_success;
 
       }
 

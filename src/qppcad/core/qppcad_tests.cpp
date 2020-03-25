@@ -24,6 +24,9 @@ TEST_CASE("history stream test") {
     history_document_base_t *hs_c3 = new history_document_base_t;
     history_document_base_t *hs_nc = new history_document_base_t;
 
+    hs_c1->push_epoch(1);
+    hs_c2->push_epoch(1);
+
     hs->add_child(hs_c1);
     hs->add_child(hs_c2);
 
@@ -36,6 +39,12 @@ TEST_CASE("history stream test") {
     REQUIRE(hs->get_children_count() == 3);
     hs->remove_child(hs_c3);
     REQUIRE(hs->get_children_count() == 2);
+
+    hs->augment_epoch(hs_c1, 1, 1);
+    REQUIRE(hs->get_augmented_count(1) == 1);
+
+    hs->remove_augment_from_epoch(hs_c1, 1, 1);
+    REQUIRE(hs->get_augmented_count(1) == 0);
 
   }
 
