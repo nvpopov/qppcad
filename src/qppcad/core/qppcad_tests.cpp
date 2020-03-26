@@ -10,19 +10,19 @@ TEST_CASE("history stream test") {
 
   SECTION ("basic features") {
 
-    history_document_base_t *hs = new history_document_base_t;
+    hist_doc_base_t *hs = new hist_doc_base_t;
     REQUIRE(hs->get_cur_epoch() == 0);
-    REQUIRE(hs->set_cur_epoch(2) == history_result_e::hr_invalid_epoch);
+    REQUIRE(hs->set_cur_epoch(2) == hr_result_e::hr_invalid_epoch);
 
-    REQUIRE(hs->push_epoch(1) == history_result_e::hr_success);
-    REQUIRE(hs->push_epoch(2) == history_result_e::hr_success);
+    REQUIRE(hs->push_epoch(1) == hr_result_e::hr_success);
+    REQUIRE(hs->push_epoch(2) == hr_result_e::hr_success);
 
     REQUIRE(hs->get_history_size() == 3);
 
-    history_document_base_t *hs_c1 = new history_document_base_t;
-    history_document_base_t *hs_c2 = new history_document_base_t;
-    history_document_base_t *hs_c3 = new history_document_base_t;
-    history_document_base_t *hs_nc = new history_document_base_t;
+    hist_doc_base_t *hs_c1 = new hist_doc_base_t;
+    hist_doc_base_t *hs_c2 = new hist_doc_base_t;
+    hist_doc_base_t *hs_c3 = new hist_doc_base_t;
+    hist_doc_base_t *hs_nc = new hist_doc_base_t;
 
     hs_c1->push_epoch(1);
     hs_c2->push_epoch(1);
@@ -45,6 +45,19 @@ TEST_CASE("history stream test") {
 
     hs->remove_augment_from_epoch(hs_c1, 1, 1);
     REQUIRE(hs->get_augmented_count(1) == 0);
+
+    //manual epoch constructing
+    hs->augment_epoch(hs_c1, 0, 0);
+    hs->augment_epoch(hs_c2, 0, 0);
+    hs->augment_epoch(hs_c1, 1, 1);
+    hs->augment_epoch(hs_c2, 1, 1);
+
+    REQUIRE(hs->checkout_to_epoch(1) == hr_result_e::hr_success);
+    REQUIRE(hs_c1->get_cur_epoch() == 1);
+    REQUIRE(hs_c2->get_cur_epoch() == 1);
+    REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
+    REQUIRE(hs_c1->get_cur_epoch() == 0);
+    REQUIRE(hs_c2->get_cur_epoch() == 0);
 
   }
 

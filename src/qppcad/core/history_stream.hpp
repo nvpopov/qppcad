@@ -7,26 +7,29 @@ namespace qpp {
 
   namespace cad {
 
-    class history_document_base_t;
+    class hist_doc_base_t;
     using epoch_t = std::size_t;
 
-    enum history_document_delta_state_e {
+    enum hist_doc_delta_state_e {
       delta_instant,
       delta_incremental
     };
 
-    enum history_result_e {
+    enum hr_result_e {
       hr_error = 0,
       hr_success = 1,
       hr_invalid_epoch = 2,
     };
 
-    class history_document_base_t {
+    /**
+     * @brief The hist_doc_base_t class
+     */
+    class hist_doc_base_t {
 
     public:
 
       using epoch_t = std::size_t;
-      using self_t = history_document_base_t;
+      using self_t = hist_doc_base_t;
 
     private:
 
@@ -36,36 +39,40 @@ namespace qpp {
       std::set<epoch_t> p_history_line{0};
       bool p_is_bad{false};
       bool p_is_dirty{false};
+      hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
     public:
 
       epoch_t get_cur_epoch() { return p_cur_epoch; }
-      history_result_e set_cur_epoch(epoch_t cur_epoch) {
+      hr_result_e set_cur_epoch(epoch_t cur_epoch) {
 
         auto it_ce = std::find(std::begin(p_history_line), std::end(p_history_line), cur_epoch);
         if (it_ce != std::end(p_history_line)) {
             p_cur_epoch = cur_epoch;
-            return history_result_e::hr_success;
+            return hr_result_e::hr_success;
           }
 
-        return history_result_e::hr_invalid_epoch;
+        return hr_result_e::hr_invalid_epoch;
 
       }
 
-      history_result_e push_epoch(epoch_t new_epoch) {
+      hist_doc_delta_state_e get_delta_state_type() { return p_dstate; }
+      void set_delta_state_type(hist_doc_delta_state_e new_dstate) { p_dstate = new_dstate;}
+
+      hr_result_e push_epoch(epoch_t new_epoch) {
 
         if (p_history_line.empty()) {
             p_history_line.insert(new_epoch);
-            return history_result_e::hr_success;
+            return hr_result_e::hr_success;
           }
 
         auto last = p_history_line.end();
         if (new_epoch > *last) {
             p_is_bad = true;
-            return history_result_e::hr_invalid_epoch;
+            return hr_result_e::hr_invalid_epoch;
           } else {
             p_history_line.insert(new_epoch);
-            return history_result_e::hr_success;
+            return hr_result_e::hr_success;
           }
 
       }
@@ -92,24 +99,46 @@ namespace qpp {
         return aug_elist.size();
       }
 
-      history_result_e remove_augment_from_epoch(self_t* child, epoch_t child_epoch,
+      hr_result_e remove_augment_from_epoch(self_t* child, epoch_t child_epoch,
                                                  epoch_t target_epoch) {
 
         auto epoch_it = p_childs_states.find(target_epoch);
-        if (epoch_it == std::end(p_childs_states)) return history_result_e::hr_invalid_epoch;
+        if (epoch_it == std::end(p_childs_states)) return hr_result_e::hr_invalid_epoch;
         auto find_fnc = [child, child_epoch](std::tuple<self_t*, epoch_t> &elem) {
           return std::get<0>(elem) == child && std::get<1>(elem) == child_epoch;
         };
         auto ch_epoch_it = std::find_if(std::begin(epoch_it->second),
                                         std::end(epoch_it->second),
                                         find_fnc);
-        if (ch_epoch_it == std::end(epoch_it->second)) return history_result_e::hr_invalid_epoch;
+        if (ch_epoch_it == std::end(epoch_it->second)) return hr_result_e::hr_invalid_epoch;
         epoch_it->second.erase(ch_epoch_it);
-        return history_result_e::hr_success;
+        return hr_result_e::hr_success;
 
       }
 
-      void checkout_to_epoch(epoch_t target_epoch) {
+      hr_result_e checkout_to_epoch(epoch_t target_epoch) {
+
+        if (p_cur_epoch == target_epoch) {
+            return hr_result_e::hr_success;
+          }
+
+        hr_result_e cur_res = set_cur_epoch(target_epoch);
+        if (cur_res != hr_result_e::hr_success) {
+            return hr_result_e::hr_invalid_epoch;
+          }
+
+        epoch_t cur_epoch = get_cur_epoch();
+        auto epoch_it = p_childs_states.find(cur_epoch);
+        if (epoch_it != std::end(p_childs_states)) {
+            auto &epoch_aug_vec = epoch_it->second;
+            for (auto &elem : epoch_aug_vec) {
+                auto child = std::get<0>(elem);
+                auto child_epoch = std::get<1>(elem);
+                child->checkout_to_epoch(child_epoch);
+              }
+          }
+
+        return hr_result_e::hr_success;
 
       }
 
