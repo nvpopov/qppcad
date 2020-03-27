@@ -19,6 +19,7 @@ namespace qpp {
       hr_error = 0,
       hr_success = 1,
       hr_invalid_epoch = 2,
+      hr_epoch_ill_defined = 3,
     };
 
     /**
@@ -34,6 +35,7 @@ namespace qpp {
     private:
 
       epoch_t p_cur_epoch{0};
+      self_t *p_parent{nullptr};
       std::vector<self_t*> p_childs;
       std::map<epoch_t, std::vector<std::tuple<self_t*, epoch_t>>> p_childs_states;
       std::set<epoch_t> p_history_line{0};
@@ -99,8 +101,12 @@ namespace qpp {
         return aug_elist.size();
       }
 
+      bool has_epoch(epoch_t target_epoch) {
+        return p_history_line.find(target_epoch) != std::end(p_history_line);
+      }
+
       hr_result_e remove_augment_from_epoch(self_t* child, epoch_t child_epoch,
-                                                 epoch_t target_epoch) {
+                                            epoch_t target_epoch) {
 
         auto epoch_it = p_childs_states.find(target_epoch);
         if (epoch_it == std::end(p_childs_states)) return hr_result_e::hr_invalid_epoch;
@@ -130,12 +136,34 @@ namespace qpp {
         epoch_t cur_epoch = get_cur_epoch();
         auto epoch_it = p_childs_states.find(cur_epoch);
         if (epoch_it != std::end(p_childs_states)) {
+
             auto &epoch_aug_vec = epoch_it->second;
+
+            //check that augmented data is valid
+            size_t valid_childs{0};
+            for (auto &elem : epoch_aug_vec) {
+
+                auto child = std::get<0>(elem);
+                auto child_epoch = std::get<1>(elem);
+
+                if (child && child->has_epoch(child_epoch)) {
+                    valid_childs++;
+                  } else {
+                    return hr_result_e::hr_invalid_epoch;
+                  }
+
+              }
+
+            if (valid_childs != epoch_aug_vec.size()) {
+                return hr_result_e::hr_invalid_epoch;
+              }
+
             for (auto &elem : epoch_aug_vec) {
                 auto child = std::get<0>(elem);
                 auto child_epoch = std::get<1>(elem);
                 child->checkout_to_epoch(child_epoch);
               }
+
           }
 
         return hr_result_e::hr_success;
