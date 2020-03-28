@@ -61,6 +61,9 @@ namespace qpp {
       hist_doc_delta_state_e get_delta_state_type() { return p_dstate; }
       void set_delta_state_type(hist_doc_delta_state_e new_dstate) { p_dstate = new_dstate;}
 
+      bool is_dirty() { return p_is_dirty; }
+      void mark_as_dirty() { p_is_dirty = true; }
+
       hr_result_e push_epoch(epoch_t new_epoch) {
 
         if (p_history_line.empty()) {
@@ -172,7 +175,16 @@ namespace qpp {
 
       //children stuff
       void add_child(self_t *child) {
-        if (child) p_childs.push_back(child);
+        if (child) {
+            child->p_parent = this;
+            p_childs.push_back(child);
+          }
+      }
+
+      self_t *get_root() {
+        if (p_parent)
+          return p_parent->get_root();
+        return this;
       }
 
       self_t *get_children(size_t idx) {
