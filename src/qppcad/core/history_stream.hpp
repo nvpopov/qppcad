@@ -20,6 +20,8 @@ namespace qpp {
       hr_success = 1,
       hr_invalid_epoch = 2,
       hr_epoch_ill_defined = 3,
+      hr_invalid_child = 4,
+      hr_invalid_child_epoch = 5
     };
 
     /**
@@ -45,7 +47,17 @@ namespace qpp {
 
     public:
 
+      /**
+       * @brief get_cur_epoch
+       * @return
+       */
       epoch_t get_cur_epoch() { return p_cur_epoch; }
+
+      /**
+       * @brief set_cur_epoch
+       * @param cur_epoch
+       * @return
+       */
       hr_result_e set_cur_epoch(epoch_t cur_epoch) {
 
         auto it_ce = std::find(std::begin(p_history_line), std::end(p_history_line), cur_epoch);
@@ -58,12 +70,34 @@ namespace qpp {
 
       }
 
+      /**
+       * @brief get_delta_state_type - not implemented yet
+       * @return
+       */
       hist_doc_delta_state_e get_delta_state_type() { return p_dstate; }
+
+      /**
+       * @brief set_delta_state_type - not implemented yet
+       * @param new_dstate
+       */
       void set_delta_state_type(hist_doc_delta_state_e new_dstate) { p_dstate = new_dstate;}
 
+      /**
+       * @brief is_dirty - not implemented yet
+       * @return
+       */
       bool is_dirty() { return p_is_dirty; }
+
+      /**
+       * @brief mark_as_dirty - not implemented yet
+       */
       void mark_as_dirty() { p_is_dirty = true; }
 
+      /**
+       * @brief push_epoch
+       * @param new_epoch
+       * @return
+       */
       hr_result_e push_epoch(epoch_t new_epoch) {
 
         if (p_history_line.empty()) {
@@ -82,14 +116,36 @@ namespace qpp {
 
       }
 
+      /**
+       * @brief get_history_size
+       */
       auto get_history_size() {return p_history_line.size();}
 
-      void augment_epoch(self_t* child, epoch_t child_epoch, epoch_t target_epoch) {
+      /**
+       * @brief augment_epoch
+       * @param child pointer to child
+       * @param child_epoch
+       * @param target_epoch
+       */
+      hr_result_e augment_epoch(epoch_t target_epoch, self_t* child, epoch_t child_epoch) {
+
+        if (!child) {
+            return hr_result_e::hr_invalid_child;
+        }
+
+        if (p_history_line.find(target_epoch) == std::end(p_history_line)) {
+            return hr_result_e::hr_invalid_epoch;
+          }
+
+        if (child->p_history_line.find(child_epoch) == std::end(child->p_history_line)) {
+            return hr_result_e::hr_invalid_child_epoch;
+          }
 
         auto &aug_elist = p_childs_states[target_epoch];
         auto find_fnc = [child](std::tuple<self_t*, epoch_t> &elem) {
           return std::get<0>(elem) == child;
         };
+
         auto it1 = std::find_if(std::begin(aug_elist), std::end(aug_elist), find_fnc);
         if (it1 != std::end(aug_elist)) {
             aug_elist[std::distance(std::begin(aug_elist), it1)] = {child, child_epoch};
@@ -97,17 +153,36 @@ namespace qpp {
             aug_elist.push_back({child, child_epoch});
           }
 
+        return hr_result_e::hr_success;
+
       }
 
+      /**
+       * @brief get_augmented_count
+       * @param target_epoch
+       * @return
+       */
       size_t get_augmented_count(epoch_t target_epoch) {
         auto &aug_elist = p_childs_states[target_epoch];
         return aug_elist.size();
       }
 
+      /**
+       * @brief has_epoch
+       * @param target_epoch
+       * @return
+       */
       bool has_epoch(epoch_t target_epoch) {
         return p_history_line.find(target_epoch) != std::end(p_history_line);
       }
 
+      /**
+       * @brief remove_augment_from_epoch
+       * @param child
+       * @param child_epoch
+       * @param target_epoch
+       * @return
+       */
       hr_result_e remove_augment_from_epoch(self_t* child, epoch_t child_epoch,
                                             epoch_t target_epoch) {
 
@@ -125,6 +200,11 @@ namespace qpp {
 
       }
 
+      /**
+       * @brief checkout_to_epoch
+       * @param target_epoch
+       * @return
+       */
       hr_result_e checkout_to_epoch(epoch_t target_epoch) {
 
         if (p_cur_epoch == target_epoch) {
@@ -173,26 +253,44 @@ namespace qpp {
 
       }
 
-      //children stuff
+      /**
+       * @brief add_child
+       * @param child
+       */
       void add_child(self_t *child) {
         if (child) {
             child->p_parent = this;
             p_childs.push_back(child);
+            augment_epoch(get_cur_epoch(), child, child->get_cur_epoch());
           }
       }
 
+      /**
+       * @brief get_root
+       * @return
+       */
       self_t *get_root() {
         if (p_parent)
           return p_parent->get_root();
         return this;
       }
 
+      /**
+       * @brief get_children
+       * @param idx
+       * @return
+       */
       self_t *get_children(size_t idx) {
         if (idx < p_childs.size())
           return p_childs[idx];
         return nullptr;
       }
 
+      /**
+       * @brief is_children
+       * @param child
+       * @return
+       */
       std::optional<size_t> is_children(self_t *child) {
         if (!child) return std::nullopt;
         auto it1 = std::find(std::begin(p_childs), std::end(p_childs), child);
@@ -200,16 +298,27 @@ namespace qpp {
                 ? std::optional<size_t>{std::distance(std::begin(p_childs), it1)} : std::nullopt);
       }
 
+      /**
+       * @brief remove_child
+       * @param child_id
+       */
       void remove_child(size_t child_id) {
         if (child_id < p_childs.size())
           p_childs.erase(std::begin(p_childs) + child_id);
       }
 
+      /**
+       * @brief remove_child
+       * @param child
+       */
       void remove_child(self_t *child) {
         auto it1 = std::find(std::begin(p_childs), std::end(p_childs), child);
         if (it1 != std::end(p_childs)) p_childs.erase(it1);
       }
 
+      /**
+       * @brief get_children_count
+       */
       auto get_children_count() { return p_childs.size(); }
       //end of children stuff
 
