@@ -40,7 +40,7 @@ namespace qpp {
       self_t *p_parent{nullptr};
       std::vector<self_t*> p_childs;
       std::map<epoch_t, std::vector<std::tuple<self_t*, epoch_t>>> p_childs_states;
-      std::set<epoch_t> p_history_line{0};
+      std::set<epoch_t> p_hist_line{0};
       bool p_is_bad{false};
       bool p_is_dirty{false};
       hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
@@ -60,14 +60,19 @@ namespace qpp {
        */
       hr_result_e set_cur_epoch(epoch_t cur_epoch) {
 
-        auto it_ce = std::find(std::begin(p_history_line), std::end(p_history_line), cur_epoch);
-        if (it_ce != std::end(p_history_line)) {
+        auto it_ce = std::find(std::begin(p_hist_line), std::end(p_hist_line), cur_epoch);
+        if (it_ce != std::end(p_hist_line)) {
+            epoch_t prev_epoch = p_cur_epoch;
             p_cur_epoch = cur_epoch;
-            return hr_result_e::hr_success;
+            return on_epoch_changed(prev_epoch);
           }
 
         return hr_result_e::hr_invalid_epoch;
 
+      }
+
+      virtual hr_result_e on_epoch_changed(epoch_t prev_epoch) {
+        return hr_result_e::hr_success;
       }
 
       /**
@@ -98,19 +103,23 @@ namespace qpp {
        * @param new_epoch
        * @return
        */
-      hr_result_e push_epoch(epoch_t new_epoch) {
+      hr_result_e push_epoch(std::optional<epoch_t> new_epoch_ex = std::nullopt) {
 
-        if (p_history_line.empty()) {
-            p_history_line.insert(new_epoch);
+        epoch_t new_epoch = (new_epoch_ex) ?
+                            *new_epoch_ex :
+                            *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
+
+        if (p_hist_line.empty()) {
+            p_hist_line.insert(new_epoch);
             return hr_result_e::hr_success;
           }
 
-        auto last = p_history_line.end();
+        auto last = p_hist_line.end();
         if (new_epoch > *last) {
             p_is_bad = true;
             return hr_result_e::hr_invalid_epoch;
           } else {
-            p_history_line.insert(new_epoch);
+            p_hist_line.insert(new_epoch);
             return hr_result_e::hr_success;
           }
 
@@ -119,7 +128,7 @@ namespace qpp {
       /**
        * @brief get_history_size
        */
-      auto get_history_size() {return p_history_line.size();}
+      auto get_history_size() {return p_hist_line.size();}
 
       /**
        * @brief augment_epoch
@@ -133,11 +142,11 @@ namespace qpp {
             return hr_result_e::hr_invalid_child;
         }
 
-        if (p_history_line.find(target_epoch) == std::end(p_history_line)) {
+        if (p_hist_line.find(target_epoch) == std::end(p_hist_line)) {
             return hr_result_e::hr_invalid_epoch;
           }
 
-        if (child->p_history_line.find(child_epoch) == std::end(child->p_history_line)) {
+        if (child->p_hist_line.find(child_epoch) == std::end(child->p_hist_line)) {
             return hr_result_e::hr_invalid_child_epoch;
           }
 
@@ -173,7 +182,7 @@ namespace qpp {
        * @return
        */
       bool has_epoch(epoch_t target_epoch) {
-        return p_history_line.find(target_epoch) != std::end(p_history_line);
+        return p_hist_line.find(target_epoch) != std::end(p_hist_line);
       }
 
       /**
@@ -321,6 +330,22 @@ namespace qpp {
        */
       auto get_children_count() { return p_childs.size(); }
       //end of children stuff
+
+    };
+
+    template<typename STORED_TYPE>
+    class hist_doc_t : public hist_doc_base_t {
+
+    private:
+
+      STORED_TYPE p_cur_value;
+      std::map<epoch_t, STORED_TYPE> p_stored_values;
+
+    public:
+
+      void push_epoch_ex(STORED_TYPE &&new_val, std::optional<epoch_t> new_epoch = std::nullopt) {
+
+      }
 
     };
 

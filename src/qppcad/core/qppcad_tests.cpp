@@ -118,4 +118,41 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("testing history cleanup") {
+
+    hist_doc_base_t *hs = new hist_doc_base_t;
+
+    REQUIRE(hs->get_cur_epoch() == 0);
+
+    hs->push_epoch(1);
+    REQUIRE(hs->checkout_to_epoch(1) == hr_result_e::hr_success);
+    REQUIRE(hs->get_cur_epoch() == 1);
+
+    hs->push_epoch(2);
+    REQUIRE(hs->checkout_to_epoch(2) == hr_result_e::hr_success);
+    REQUIRE(hs->get_cur_epoch() == 2);
+
+    hs->push_epoch(3);
+    REQUIRE(hs->checkout_to_epoch(3) == hr_result_e::hr_success);
+    REQUIRE(hs->get_cur_epoch() == 3);
+
+    hist_doc_base_t *hs1 = new hist_doc_base_t;
+
+    REQUIRE(hs1->get_cur_epoch() == 0);
+
+    hs1->push_epoch();
+    REQUIRE(hs1->checkout_to_epoch(1) == hr_result_e::hr_success);
+    REQUIRE(hs1->get_cur_epoch() == 1);
+
+    hs1->push_epoch();
+    REQUIRE(hs1->checkout_to_epoch(2) == hr_result_e::hr_success);
+    REQUIRE(hs1->get_cur_epoch() == 2);
+
+    hs1->push_epoch();
+    REQUIRE(hs1->checkout_to_epoch(3) == hr_result_e::hr_success);
+    REQUIRE(hs1->get_cur_epoch() == 3);
+
+
+  }
+
 }
