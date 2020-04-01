@@ -103,7 +103,8 @@ namespace qpp {
        * @param new_epoch
        * @return
        */
-      hr_result_e push_epoch(std::optional<epoch_t> new_epoch_ex = std::nullopt) {
+      std::tuple<hr_result_e, std::optional<epoch_t>> push_epoch(
+          std::optional<epoch_t> new_epoch_ex = std::nullopt) {
 
         epoch_t new_epoch = (new_epoch_ex) ?
                             *new_epoch_ex :
@@ -111,16 +112,16 @@ namespace qpp {
 
         if (p_hist_line.empty()) {
             p_hist_line.insert(new_epoch);
-            return hr_result_e::hr_success;
+            return {hr_result_e::hr_success, new_epoch};
           }
 
         auto last = p_hist_line.end();
         if (new_epoch > *last) {
             p_is_bad = true;
-            return hr_result_e::hr_invalid_epoch;
+            return {hr_result_e::hr_invalid_epoch, std::nullopt};
           } else {
             p_hist_line.insert(new_epoch);
-            return hr_result_e::hr_success;
+            return {hr_result_e::hr_success, new_epoch};
           }
 
       }
@@ -343,7 +344,14 @@ namespace qpp {
 
     public:
 
-      void push_epoch_ex(STORED_TYPE &&new_val, std::optional<epoch_t> new_epoch = std::nullopt) {
+      hr_result_e push_epoch_ex(STORED_TYPE &&new_val, std::optional<epoch_t> new_epoch = std::nullopt) {
+
+        hr_result_e push_res = push_epoch(new_epoch);
+        if (push_res != hr_result_e::hr_success) {
+            return hr_result_e::hr_error;
+          }
+
+        //p_stored_values.insert({})
 
       }
 
