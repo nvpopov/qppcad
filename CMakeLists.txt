@@ -135,7 +135,7 @@ add_executable(
 
 add_executable(
     qppcad-tests
-
+    src/qppcad/core/history_stream.cpp
     src/qppcad/core/qppcad_tests.cpp
 
   )
