@@ -52,6 +52,8 @@ namespace qpp {
     std::tuple<hr_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_t::push_epoch(
         std::optional<hist_doc_base_t::epoch_t> new_epoch_ex) {
 
+      epoch_t cur_epoch = get_cur_epoch();
+
       epoch_t new_epoch = (new_epoch_ex) ?
             *new_epoch_ex :
             *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
@@ -99,7 +101,8 @@ namespace qpp {
 
       auto it1 = std::find_if(std::begin(aug_elist), std::end(aug_elist), find_fnc);
       if (it1 != std::end(aug_elist)) {
-          aug_elist[std::distance(std::begin(aug_elist), it1)] = {child, child_epoch};
+          size_t aug_idx = static_cast<size_t>(std::distance(std::begin(aug_elist), it1));
+          aug_elist[aug_idx] = {child, child_epoch};
         } else {
           aug_elist.push_back({child, child_epoch});
         }
@@ -212,7 +215,7 @@ namespace qpp {
 
     void hist_doc_base_t::remove_child(size_t child_id) {
       if (child_id < p_childs.size())
-        p_childs.erase(std::begin(p_childs) + child_id);
+        p_childs.erase(std::begin(p_childs) + static_cast<int>(child_id));
     }
 
     void hist_doc_base_t::remove_child(hist_doc_base_t::self_t *child) {

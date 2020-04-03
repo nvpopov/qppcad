@@ -13,6 +13,7 @@ TEST_CASE("history stream test") {
     hist_doc_base_t *hs = new hist_doc_base_t;
     REQUIRE(hs->get_cur_epoch() == 0);
     REQUIRE(hs->set_cur_epoch(2) == hr_result_e::hr_invalid_epoch);
+    REQUIRE(hs->get_cur_epoch() == 0);
 
     REQUIRE(std::get<0>(hs->push_epoch(1)) == hr_result_e::hr_success);
     REQUIRE(std::get<0>(hs->push_epoch(2)) == hr_result_e::hr_success);
@@ -152,6 +153,17 @@ TEST_CASE("history stream test") {
     REQUIRE(hs1->checkout_to_epoch(3) == hr_result_e::hr_success);
     REQUIRE(hs1->get_cur_epoch() == 3);
 
+
+  }
+
+  SECTION ("hist doc test") {
+
+    hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
+    hsi1->push_epoch_s(2);
+    hsi1->push_epoch_s(3);
+    hsi1->push_epoch_s(4);
+
+    REQUIRE(hsi1->get_history_size() == 4);
 
   }
 

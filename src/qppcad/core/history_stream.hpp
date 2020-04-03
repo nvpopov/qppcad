@@ -31,7 +31,7 @@ namespace qpp {
 
     public:
 
-      using epoch_t = std::size_t;
+      using epoch_t = size_t;
       using self_t = hist_doc_base_t;
 
     private:
@@ -186,18 +186,27 @@ namespace qpp {
 
     };
 
-    template<typename STORED_TYPE>
+    template<typename STYPE>
     class hist_doc_t : public hist_doc_base_t {
 
     private:
 
-      STORED_TYPE p_cur_value;
-      std::map<epoch_t, STORED_TYPE> p_stored_values;
+      STYPE p_cur_value;
+      std::map<epoch_t, STYPE> p_stored_values;
 
     public:
 
-      hr_result_e push_epoch_ex(STORED_TYPE &&new_val,
-                                std::optional<epoch_t> new_epoch = std::nullopt);
+      hr_result_e push_epoch_s(STYPE &&new_val, std::optional<epoch_t> new_epoch = std::nullopt) {
+
+        auto push_epoch_res = push_epoch(new_epoch);
+        if (std::get<0>(push_epoch_res) == hr_result_e::hr_success) {
+            p_stored_values[*std::get<1>(push_epoch_res)] = new_val;
+            return hr_result_e::hr_success;
+          } else {
+            return hr_result_e::hr_error;
+          }
+
+      }
 
     };
 
