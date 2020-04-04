@@ -191,7 +191,7 @@ namespace qpp {
 
     private:
 
-      STYPE p_cur_value;
+      STYPE p_cur_value{};
       std::map<epoch_t, STYPE> p_stored_values;
 
     public:
@@ -207,6 +207,29 @@ namespace qpp {
           }
 
       }
+
+      hr_result_e on_epoch_changed(epoch_t prev_epoch) override {
+
+        auto cur_epoch = get_cur_epoch();
+        auto val_it = p_stored_values.find(cur_epoch);
+        if (val_it != p_stored_values.end()) {
+            p_cur_value = val_it->second;
+            return hr_result_e::hr_success;
+          } else {
+            return hr_result_e::hr_error;
+          }
+
+      }
+
+      STYPE get_cur_value() {
+        return p_cur_value;
+      }
+
+      void set_cur_value(STYPE &&new_val) {
+        mark_as_dirty();
+        p_cur_value = new_val;
+      }
+
 
     };
 

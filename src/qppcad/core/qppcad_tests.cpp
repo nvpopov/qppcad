@@ -164,6 +164,31 @@ TEST_CASE("history stream test") {
     hsi1->push_epoch_s(4);
 
     REQUIRE(hsi1->get_history_size() == 4);
+    REQUIRE(hsi1->get_cur_epoch() == 0);
+
+    REQUIRE(hsi1->checkout_to_epoch(1));
+    REQUIRE(hsi1->get_cur_epoch() == 1);
+    REQUIRE(hsi1->get_cur_value() == 2);
+
+    REQUIRE(hsi1->checkout_to_epoch(2));
+    REQUIRE(hsi1->get_cur_epoch() == 2);
+    REQUIRE(hsi1->get_cur_value() == 3);
+
+    REQUIRE(hsi1->checkout_to_epoch(3));
+    REQUIRE(hsi1->get_cur_epoch() == 3);
+    REQUIRE(hsi1->get_cur_value() == 4);
+
+    hist_doc_t<vector3<float>> *hsv1 = new hist_doc_t<vector3<float>>();
+    hsv1->push_epoch_s({0, 1, 0});
+    hsv1->push_epoch_s({0, 2, 0});
+
+    REQUIRE(hsv1->checkout_to_epoch(1));
+    REQUIRE(hsv1->get_cur_epoch() == 1);
+    REQUIRE(hsv1->get_cur_value() == vector3<float>{0, 1, 0});
+
+    REQUIRE(hsv1->checkout_to_epoch(2));
+    REQUIRE(hsv1->get_cur_epoch() == 2);
+    REQUIRE(hsv1->get_cur_value() ==  vector3<float>{0, 2, 0});
 
   }
 
