@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools_colorize.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/core/app_state.hpp>
 
 using namespace qpp;
@@ -161,5 +162,68 @@ void geom_view_colorizer_helper::py_colorize_by_distance_with_pairs(
         }
 
     }
+
+}
+
+void geom_view_colorizer_helper::colorize_by_xfield(geom_view_t *gv,
+                                                    const vector3<float> color_low,
+                                                    const vector3<float> color_high,
+                                                    const size_t xfield_id) {
+
+  if (!gv) return;
+
+  auto field_min_max = gv->get_min_max_xfield(xfield_id);
+
+  //  bool has_static_anim{false};
+  opt<size_t> static_anim_id;
+
+  for (size_t i = 0; i < gv->m_geom->nat(); i++) {
+
+    float el_val = std::get<1>(field_min_max) - gv->m_geom->xfield<float>(xfield_id, i);
+    float len = std::get<1>(field_min_max) - std::get<0>(field_min_max);
+    vector3<float> color_interp = color_low + (color_high - color_low) * (1 - el_val / len);
+
+    gv->m_geom->xfield<float>(xgeom_ccr, i) = color_interp[0];
+    gv->m_geom->xfield<float>(xgeom_ccg, i) = color_interp[1];
+    gv->m_geom->xfield<float>(xgeom_ccb, i) = color_interp[2];
+
+    //TODO: propagate colors to first static anim
+
+  }
+
+}
+
+void geom_view_colorizer_helper::colorize_by_category(geom_view_t *gv,
+                                                      std::vector<size_t> &cat_data,
+                                                      std::vector<vector3<float> > &clr) {
+  if (!gv) return;
+
+  for (size_t i = 0; i < gv->m_geom->nat(); i++)
+    if (cat_data[i] >= 0 && cat_data[i] < clr.size())
+      gv->set_xcolorv(i, clr[cat_data[i]]);
+
+  gv->m_color_mode = geom_view_color_e::color_from_xgeom;
+
+}
+
+void geom_view_colorizer_helper::colorize_by_sublattices(geom_view_t *gv, float eps) {
+
+  if (!gv) return;
+  auto sl1 = geom_view_tools_t::get_atoms_sublattices(gv, eps);
+
+  std::vector<vector3<float>> colors;
+  colors.resize(10);
+  colors[0]  = {  32.0 / 255.0,  32.0 / 255.0,  32.0 / 255.0 };
+  colors[1]  = {  62.0 / 255.0,   6.0 / 255.0,   7.0 / 255.0 };
+  colors[2]  = {  55.0 / 255.0, 126.0 / 255.0, 184.0 / 255.0 };
+  colors[3]  = {  77.0 / 255.0, 175.0 / 255.0,  74.0 / 255.0 };
+  colors[4]  = { 152.0 / 255.0,  78.0 / 255.0, 163.0 / 255.0 };
+  colors[5]  = { 255.0 / 255.0, 127.0 / 255.0,   0.0 / 255.0 };
+  colors[6]  = { 255.0 / 255.0, 255.0 / 255.0,  51.0 / 255.0 };
+  colors[7]  = { 166.0 / 255.0,  86.0 / 255.0,  40.0 / 255.0 };
+  colors[8]  = { 247.0 / 255.0, 129.0 / 255.0, 191.0 / 255.0 };
+  colors[9]  = { 166.0 / 255.0, 206.0 / 255.0, 227.0 / 255.0 };
+
+  geom_view_colorizer_helper::colorize_by_category(gv, sl1, colors);
 
 }

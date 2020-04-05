@@ -38,28 +38,19 @@ namespace qpp {
                                       size_t dim_id,
                                       float flip_magn = 1,
                                       bool rebuild_tree = false);
-        static void flip_sel_atoms_in_cell(geom_view_t *gv,
-                                           size_t dim_id,
-                                           float flip_magn = 1);
-        static void align_atoms_to_point(geom_view_t *gv,
-                                         vector3<float> fpoint);
+        static void flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, float flip_magn = 1);
+        static void align_atoms_to_point(geom_view_t *gv, vector3<float> fpoint);
         static void change_cell_keep_atoms(geom_view_t *gv,
                                            vector3<float> new_a,
                                            vector3<float> new_b,
                                            vector3<float> new_c);
-        static void purify_boundary_atoms(geom_view_t *dst,
-                                          geom_view_t *src);
-        static void clamp_atoms_to_cell(geom_view_t *gv,
-                                        bool ignore_selection = true,
+        static void purify_boundary_atoms(geom_view_t *dst, geom_view_t *src);
+        static void clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection = true,
                                         bool affect_anim = true);
-        static void translate_atoms_in_cell(geom_view_t *gv,
-                                            vector3<float> tr_vec,
-                                            bool clamp_atoms = true,
-                                            bool affect_anim = true);
-        static vector3<float> center_cell_on(geom_view_t *gv,
-                                             vector3<float> new_cnt,
-                                             bool clamp_atoms = true,
-                                             bool affect_anim = true);
+        static void translate_atoms_in_cell(geom_view_t *gv, vector3<float> tr_vec,
+                                            bool clamp_atoms = true, bool affect_anim = true);
+        static vector3<float> center_cell_on(geom_view_t *gv, vector3<float> new_cnt,
+                                             bool clamp_atoms = true, bool affect_anim = true);
 
         /* sublattices, atoms clustering */
         static std::vector<size_t> get_atoms_cn(geom_view_t *gv);

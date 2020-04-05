@@ -1,4 +1,5 @@
 #include <qppcad/tools/colorize_by_xfield/colorize_by_xfield.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_tools_colorize.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
 
@@ -32,7 +33,8 @@ void colorize_by_xfield_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
       if (xfield_idx >=0 && xfield_idx < cw.b_fn.size()) {
           //std::cout << "COLORIZE_BY_XFIELD " << xfield_idx << std::endl;
-          gv_ptr->colorize_by_xfield(cw.m_clr_low, cw.m_clr_high, xfield_idx);
+          geom_view_colorizer_helper::colorize_by_xfield(gv_ptr, cw.m_clr_low, cw.m_clr_high,
+                                                         xfield_idx);
           gv_ptr->m_color_mode = geom_view_color_e::color_from_xgeom;
           astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
           astate->make_viewport_dirty();

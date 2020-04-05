@@ -342,8 +342,7 @@ std::vector<size_t> geom_view_tools_t::get_atoms_cn(geom_view_t *gv) {
 
 }
 
-std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv,
-                                                             float score_eps) {
+std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv, float score_eps) {
 
   std::vector<size_t> retv, sfv;
 
@@ -419,8 +418,7 @@ std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv,
 
 }
 
-void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv,
-                                            bool ignore_selection,
+void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection,
                                             bool affect_anim) {
 
   if (!gv) return;
@@ -466,10 +464,8 @@ void geom_view_tools_t::translate_atoms_in_cell(geom_view_t *gv, vector3<float> 
 
 }
 
-vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv,
-                                                 vector3<float> new_cnt,
-                                                 bool clamp_atoms,
-                                                 bool affect_anim) {
+vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv, vector3<float> new_cnt,
+                                                 bool clamp_atoms, bool affect_anim) {
 
   //compute cell center
   vector3<float> cell_cnt{0};
@@ -484,10 +480,8 @@ vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv,
 
 }
 
-void geom_view_tools_t::tr_align_geoms(geom_view_t *what_gv,
-                                       geom_view_t *to_gv,
-                                       vector3<float> start_offset,
-                                       vector3<float> axis_steps,
+void geom_view_tools_t::tr_align_geoms(geom_view_t *what_gv, geom_view_t *to_gv,
+                                       vector3<float> start_offset, vector3<float> axis_steps,
                                        size_t total_steps) {
 
   if (!what_gv || !to_gv) return;

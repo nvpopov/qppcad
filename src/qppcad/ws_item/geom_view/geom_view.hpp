@@ -276,7 +276,7 @@ namespace qpp {
         void copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst);
         void copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst,
                            bool copy_selected = false, bool copy_cell = true);
-        void copy_cell(geom_view_t &src, bool rebuild_tws_tree = true);
+        void copy_cell(geom_view_t &src, bool rebuild_tree = true);
         std::shared_ptr<ws_item_t> clone_on_the_spot();
 
         void load_color_from_static_anim();
@@ -284,11 +284,7 @@ namespace qpp {
         vector3<float> get_xcolor(const size_t atm);
         void set_xcolorv(const size_t atm, const vector3<float> color);
         void set_xcolorf(const size_t atm, const float _r, const float _g, const float _b);
-        void colorize_by_xfield(const vector3<float> color_low,
-                                const vector3<float> color_high,
-                                const size_t xfield_id);
-        void colorize_by_category(std::vector<size_t> &cat_data,
-                                  std::vector<vector3<float> > &clr);
+
         std::tuple<float, float> get_min_max_xfield(const size_t xfield_id);
 
         void sel_atom_ngbs(const int at_id);

@@ -872,11 +872,11 @@ void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_i
 
 }
 
-void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tws_tree) {
+void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tree) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (rebuild_tws_tree) {
+  if (rebuild_tree) {
       m_tws_tr->do_action(act_lock | act_clear_all);
       m_ext_obs->first_data = true;
     }
@@ -887,7 +887,7 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tws_tree) {
   for (int i = 0; i < 3; i++)
     if (m_geom->DIM > i) m_geom->cell.v[i] = src.m_geom->cell.v[i];
 
-  if (rebuild_tws_tree) {
+  if (rebuild_tree) {
       m_tws_tr->do_action(act_unlock | act_rebuild_tree);
       m_tws_tr->do_action(act_rebuild_ntable);
     }
@@ -983,45 +983,6 @@ void geom_view_t::set_xcolorf(const size_t atm,
 
   vector3<float> packed_color{_r, _g, _b};
   set_xcolorv(atm, packed_color);
-
-}
-
-void geom_view_t::colorize_by_xfield(const vector3<float> color_low,
-                                     const vector3<float> color_high,
-                                     const size_t xfield_id) {
-
-  auto field_min_max = get_min_max_xfield(xfield_id);
-
-  //  bool has_static_anim{false};
-  opt<size_t> static_anim_id;
-
-  for (size_t i = 0; i < m_geom->nat(); i++) {
-
-      float el_val = std::get<1>(field_min_max) - m_geom->xfield<float>(xfield_id, i);
-      float len = std::get<1>(field_min_max) - std::get<0>(field_min_max);
-      vector3<float> color_interp = color_low + (color_high - color_low) * (1 - el_val / len);
-
-      m_geom->xfield<float>(xgeom_ccr, i) = color_interp[0];
-      m_geom->xfield<float>(xgeom_ccg, i) = color_interp[1];
-      m_geom->xfield<float>(xgeom_ccb, i) = color_interp[2];
-
-      //TODO: propagate colors to first static anim
-
-    }
-
-}
-
-void geom_view_t::colorize_by_category(std::vector<size_t> &cat_data,
-                                       std::vector<vector3<float> > &clr) {
-
-  if (cat_data.size() != m_geom->nat()) return;
-
-  std::set<size_t> uniq{cat_data.begin(), cat_data.end()};
-  if (clr.size() < uniq.size()) return;
-
-  for (size_t i = 0; i < m_geom->nat(); i++) set_xcolorv(i, clr[cat_data[i]]);
-
-  m_color_mode = geom_view_color_e::color_from_xgeom;
 
 }
 

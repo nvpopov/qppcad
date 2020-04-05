@@ -152,83 +152,94 @@ void py_geom_view_reg_helper_t::reg(
   py::class_<geom_view_t, std::shared_ptr<geom_view_t> >
   py_gv_t(module, "geom_view_t", ws_item_base);
   py_gv_t.def_readwrite("geom", &geom_view_t::m_geom)
+
          .def_property("atom_scale",
                        [](geom_view_t &src)
                        {return src.m_atom_scale_factor;},
                        [](geom_view_t &src, const float value)
                        {src.m_atom_scale_factor = value; src.update_oi();})
+
          .def_property("bond_scale",
                        [](geom_view_t &src)
                        {return src.m_bond_scale_factor;},
                        [](geom_view_t &src, const float value)
                        {src.m_bond_scale_factor = value; src.update_oi();})
+
          .def_property("draw_atoms",
                        [](geom_view_t &src)
                        {return src.m_draw_atoms;},
                        [](geom_view_t &src, const bool value)
                        {src.m_draw_atoms = value; src.update_oi();})
+
          .def_property("draw_img_atoms",
                        [](geom_view_t &src)
                        {return src.m_draw_img_atoms;},
                        [](geom_view_t &src, const bool value)
                        {src.m_draw_img_atoms = value; src.update_oi();})
+
          .def_property("draw_bonds",
                        [](geom_view_t &src)
                        {return src.m_draw_bonds;},
                        [](geom_view_t &src, const bool value)
                        {src.m_draw_bonds = value; src.update_oi();})
+
          .def_property("draw_img_bonds",
                        [](geom_view_t &src)
                        {return src.m_draw_img_bonds;},
                        [](geom_view_t &src, const bool value)
                        {src.m_draw_img_bonds = value; src.update_oi();})
+
          .def_property("render_style",
                        [](geom_view_t &src)
                        {return src.m_render_style;},
                        [](geom_view_t &src, const geom_view_render_style_e value)
                        {src.m_render_style = value; src.update_oi();})
+
          .def_property("sel_vis",
                        [](geom_view_t &src)
                        {return src.m_sel_vis;},
                        [](geom_view_t &src, const bool value)
                        {src.m_sel_vis = value; src.update_oi();})
+
          .def_property("sel_vis_affect_bonds",
                        [](geom_view_t &src)
                        {return src.m_sel_vis_affect_bonds;},
                        [](geom_view_t &src, const bool value)
                        {src.m_sel_vis_affect_bonds = value; src.update_oi();})
+
          .def_property("draw_cell",
                        [](geom_view_t &src)
                        {return src.m_draw_cell;},
                        [](geom_view_t &src, const bool value)
                        {src.m_draw_cell = value; src.update_oi();})
+
          .def_property("cell_color",
                        [](geom_view_t &src)
                        {return src.m_cell_color;},
                        [](geom_view_t &src, const vector3<float> value)
                        {src.m_cell_color = value; src.update_oi();})
+
          .def_property("draw_subcells",
                        [](geom_view_t &src)
                        {return src.m_draw_subcells;},
                        [](geom_view_t &src, const bool value)
                        {src.m_draw_subcells = value; src.update_oi();})
+
          .def_property("subcells_range",
                        [](geom_view_t &src)
                        {return src.m_subcells_range;},
                        [](geom_view_t &src, const vector3<int> value)
                        {src.m_subcells_range = value; src.update_oi();})
+
          .def("ts", &geom_view_t::translate_selected)
          .def("get_xcolor", &geom_view_t::get_xcolor)
          .def("set_xcolor", &geom_view_t::set_xcolorv)
          .def("set_xcolor", &geom_view_t::set_xcolorf)
          .def("min_max_xfield", &geom_view_t::get_min_max_xfield)
-         .def("colorize_by_xfield", &geom_view_t::colorize_by_xfield)
-         .def("colorize_by_category", &geom_view_t::colorize_by_category)
-         .def("copy_cell", &geom_view_t::copy_cell, py::arg("src"),
-              py::arg("rebuild_tws_tree") = true)
-         .def("copy_settings", &geom_view_t::copy_settings)
-         .def("copy_xgeom_aux", &geom_view_t::copy_xgeom_aux)
-         .def("copy_msr", &geom_view_t::copy_measurements)
+         .def("cp_cell", &geom_view_t::copy_cell, py::arg("src"),py::arg("rebuild_tree") = true)
+         .def("cp_settings", &geom_view_t::copy_settings)
+         .def("cp_xgeom_aux", &geom_view_t::copy_xgeom_aux)
+         .def("cp_msr", &geom_view_t::copy_measurements)
          .def("get_sel_atoms", &geom_view_t::get_sel_atoms, py::arg("index_offset") = 0)
          .def("get_unsel_atoms", &geom_view_t::get_unsel_atoms, py::arg("index_offset") = 0)
          .def("sel_by_box", &geom_view_t::sel_by_box)
@@ -355,6 +366,8 @@ void py_geom_view_reg_helper_t::reg(
           py::arg("over_dist_color"))
      .def("color_by_dist_pairs", &geom_view_colorizer_helper::py_colorize_by_distance_with_pairs,
           py::arg("min_dist"), py::arg("min_dist_color"), py::arg("over_dist_color"),
-          py::arg("atom_type1"), py::arg("atom_type2"));
+          py::arg("atom_type1"), py::arg("atom_type2"))
+     .def("color_by_sublat", &geom_view_colorizer_helper::colorize_by_sublattices)
+     .def("colorize_by_xfield", &geom_view_colorizer_helper::colorize_by_xfield);
 
 }
