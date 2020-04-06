@@ -34,7 +34,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   lbl_frm = new QLabel(title);
   lbl_frm->setAlignment(Qt::AlignHCenter);
-  lbl_frm->setProperty("s_class", "qsplrhdr");
+  //lbl_frm->setProperty("s_class", "qsplrhdr");
 
   action_btn = new QPushButton;
   action_btn->setFlat(true);

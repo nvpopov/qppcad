@@ -167,7 +167,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
                           "://images/settings.svg");
 
   //begin group box Item information
-  m_sp_info_wdgt = new qspoiler_widget_t(tr("Item Information"));
+  m_sp_info_wdgt = new qspoiler_widget_t(tr("Information"));
   m_tg_form_lt = new QFormLayout;
 
   //pre_init_group_box(tg_info_widget, tg_form_layout);
@@ -201,7 +201,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   //end group box Item information
 
   //Begin group box Item actions
-  m_tg_acts = new qspoiler_widget_t(tr("Item Actions"));
+  m_tg_acts = new qspoiler_widget_t(tr("Actions"));
 
   m_tg_acts_layout = new QGridLayout;
   m_tg_acts_layout->setContentsMargins(5, 0, 5, 0);

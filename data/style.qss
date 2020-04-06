@@ -306,7 +306,7 @@ qpp--cad--object_inspector_widget_t QButtonGroup {
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget {
- border: 0;
+  border: 0;
 }
 
 qpp--cad--object_inspector_widget_t QTabWidget::pane {
@@ -501,11 +501,11 @@ QPushButton::flat:pressed {
 
 qpp--cad--qspoiler_widget_t QFrame[s_class="qsplrhdr"] {
  border: 0;
+ border-top: 3px solid rgb(98, 98, 98);
 }
 
 qpp--cad--qembed_window_sub_header_t,
 qpp--cad--qembed_window_sub_header_t QLabel,
-qpp--cad--qspoiler_widget_t QFrame[s_class="qsplrhdr"],
 qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"],
 qpp--cad--qembed_window_t QFrame[s_class="qembedwndhdr"] QLabel{
  background-color: rgb(94, 94, 94);
