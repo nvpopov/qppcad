@@ -78,10 +78,10 @@ PYBIND11_EMBEDDED_MODULE(sq, m) {
   //****************************** tools module begin ******************************
   py::module tools = m.def_submodule("tools", "Generic tools");
 
-  py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools, "color_map_t");
-  py_color_map_t.def(py::init<>())
-                .def("get_color", &color_map_t::get_color)
-                .def("push_color", &color_map_t::push_color);
+//  py::class_<color_map_t, std::shared_ptr<color_map_t>> py_color_map_t(tools, "color_map_t");
+//  py_color_map_t.def(py::init<>())
+//                .def("get_color", &color_map_t::get_color)
+//                .def("push_color", &color_map_t::push_color);
 
   tools.def("to_clipboard", &simple_query::to_clipboard)
        .def("set_msr_digits", &simple_query::set_msr_digits)
