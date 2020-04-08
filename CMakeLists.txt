@@ -137,7 +137,12 @@ add_executable(
     qppcad-tests
     src/qppcad/core/history_stream.cpp
     src/qppcad/core/qppcad_tests.cpp
+  )
 
+add_executable(
+    qppcad-misc-tests
+    src/qppcad/ui/color_map.cpp
+    src/qppcad/core/qppcad_misc_tests.cpp
   )
 
 target_link_libraries(sflow-tests qpp )
