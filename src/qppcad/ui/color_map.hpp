@@ -3,7 +3,7 @@
 
 #include <data/color.hpp>
 #include <qppcad/core/qppcad.hpp>
-#include <qppcad/ui/color_map_rainbow.hpp>
+#include <qppcad/ui/color_map_collection.hpp>
 
 namespace qpp {
 
