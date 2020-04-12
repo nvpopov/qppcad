@@ -301,6 +301,7 @@ void super_cell_widget_t::on_cancel() {
 
     m_dst_gv->m_marked_for_deletion = true;
   }
+
 }
 
 void super_cell_widget_t::bind_item(ws_item_t *item) {
