@@ -58,6 +58,7 @@
 #include <qppcad/tools/sel_vis/sel_vis.hpp>
 #include <qppcad/tools/sel_parity/sel_parity.hpp>
 #include <qppcad/tools/geom_view_checkers.hpp>
+#include <qppcad/tools/gv_colorizer/gv_colorizer.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -375,6 +376,11 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         "Axial scale", hash_t_tr, bhv_mgr,
         true, ws_item_tool_type_e::ws_item_tool_modal,
         gv_accept_dim<false, false, false, true>);
+
+  registration_helper_t::reg_ws_item_tool<gv_colorizer_tool_t, geom_view_t>(
+      "Geometry View Colorizer", hash_t_tr, bhv_mgr,
+      true, ws_item_tool_type_e::ws_item_tool_inline_vertical,
+      gv_accept_dim<true, true, true, true>);
 
   registration_helper_t::reg_ws_item_tool<clamp_atoms_to_cell_tool_t, geom_view_t>(
         "Clamp atoms to cell(3D)", hash_t_tr, bhv_mgr);
