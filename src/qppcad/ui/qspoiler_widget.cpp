@@ -25,7 +25,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   top_frm = new QFrame;
   top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  top_frm->setProperty("s_class", "qsplrhdr");
+  set_top_border(true);
   //top_frm->setFrameStyle(QFrame::StyledPanel);
 
   hbox_frm = new QHBoxLayout;
@@ -69,6 +69,10 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   process_state();
 
+}
+
+void qspoiler_widget_t::set_top_border(bool border_enabled) {
+  if (top_frm) top_frm->setProperty("s_class", border_enabled ? "qsplrhdr" : "none");
 }
 
 void qspoiler_widget_t::add_content_layout(QLayout *new_lt) {

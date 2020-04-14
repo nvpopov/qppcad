@@ -37,7 +37,7 @@ namespace qpp {
                                    int _max_width = -1,
                                    bool header_add_spacing_at_the_end = true,
                                    int main_lt_spacing_at_the_end = 5);
-
+        void set_top_border(bool border_enabled);
         void add_content_layout(QLayout *new_lt);
         void process_state();
 

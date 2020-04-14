@@ -158,8 +158,7 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
 
 }
 
-super_cell_widget_t::super_cell_widget_t (QWidget *parent)
-  : ws_item_inline_tool_widget_t(parent) {
+super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool_widget_t(parent) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -167,11 +166,12 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent)
   setWindowTitle(tr("Supercell generation"));
 
   m_dialog_lt = new QVBoxLayout;
-  m_dialog_lt->setContentsMargins(1, 1, 1, 1);
+  m_dialog_lt->setContentsMargins(0, 1, 0, 1);
   setLayout(m_dialog_lt);
 
   m_gb_rep_par = new qspoiler_widget_t(tr("Parameters"), nullptr, false, 6,
-                                       astate->size_guide.obj_insp_table_w());
+                                       astate->size_guide.obj_insp_table_w() + 2);
+  m_gb_rep_par->set_top_border(false);
   m_gb_rep_par_lt = new QFormLayout;
   m_gb_rep_par->add_content_layout(m_gb_rep_par_lt);
 

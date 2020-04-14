@@ -13,18 +13,22 @@ qinline_tool_window_t::qinline_tool_window_t(qinline_tool_type_e inline_tool_typ
   m_btn_apply_tool = new QPushButton(tr("Apply"));
   m_btn_cancel_tool = new QPushButton(tr("Cancel"));
 
-  connect(m_btn_apply_tool, &QPushButton::clicked,
-          this, &qinline_tool_window_t::apply_triggered);
+  connect(m_btn_apply_tool,
+          &QPushButton::clicked,
+          this,
+          &qinline_tool_window_t::apply_triggered);
 
-  connect(m_btn_cancel_tool, &QPushButton::clicked,
-          this, &qinline_tool_window_t::close_triggered);
+  connect(m_btn_cancel_tool,
+          &QPushButton::clicked,
+          this,
+          &qinline_tool_window_t::close_triggered);
 
   m_header_lt->addWidget(m_btn_apply_tool);
   m_header_lt->addWidget(m_btn_cancel_tool);
   m_header_lt->addStretch(1);
   m_header_lt->setContentsMargins(9, 6, 4, 6);
 
-  m_main_lt->setContentsMargins(2, 1, 4, 1);
+  m_main_lt->setContentsMargins(0, 1, 0, 1);
   m_main_lt->addStretch(1);
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
