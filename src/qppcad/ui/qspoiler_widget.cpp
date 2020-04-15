@@ -19,50 +19,50 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   if (_max_width == -1 ) setFixedWidth(astate->size_guide.obj_insp_splr_w());
   else setFixedWidth(_max_width);
 
-  main_lt = new QVBoxLayout;
-  main_lt->setContentsMargins(0, 0, 0, 0);
-  setLayout(main_lt);
+  m_main_lt = new QVBoxLayout;
+  m_main_lt->setContentsMargins(0, 0, 0, 0);
+  setLayout(m_main_lt);
 
-  top_frm = new QFrame;
-  top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  m_top_frm = new QFrame;
+  m_top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   set_top_border(true);
   //top_frm->setFrameStyle(QFrame::StyledPanel);
 
-  hbox_frm = new QHBoxLayout;
-  hbox_frm->setContentsMargins(2, 2, 0, 2);
-  top_frm->setLayout(hbox_frm);
+  m_hbox_frm = new QHBoxLayout;
+  m_hbox_frm->setContentsMargins(2, 2, 0, 2);
+  m_top_frm->setLayout(m_hbox_frm);
 
-  lbl_frm = new QLabel(title);
-  lbl_frm->setAlignment(Qt::AlignHCenter);
+  m_lbl_frm = new QLabel(title);
+  m_lbl_frm->setAlignment(Qt::AlignHCenter);
   //lbl_frm->setProperty("s_class", "qsplrhdr");
 
-  action_btn = new QPushButton;
-  action_btn->setFlat(true);
-  action_btn->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
+  m_action_btn = new QPushButton;
+  m_action_btn->setFlat(true);
+  m_action_btn->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
                                  astate->size_guide.spoiler_button_h()));
-  action_btn->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
+  m_action_btn->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
                                 astate->size_guide.spoiler_button_icon_h()));
-  action_btn->setVisible(m_collapsable);
+  m_action_btn->setVisible(m_collapsable);
 
-  if (!m_collapsable) hbox_frm->addSpacing(astate->size_guide.spoiler_button_h());
+  if (!m_collapsable) m_hbox_frm->addSpacing(astate->size_guide.spoiler_button_h());
 
-  widget_list = new QWidget;
-  widget_list->setContentsMargins(0, 0, 0, 0);
+  m_widget_list = new QWidget;
+  m_widget_list->setContentsMargins(0, 0, 0, 0);
 
-  widget_list_lt = new QVBoxLayout;
-  widget_list_lt->setContentsMargins(0, 0, 0, 0);
-  widget_list->setLayout(widget_list_lt);
+  m_widget_list_lt = new QVBoxLayout;
+  m_widget_list_lt->setContentsMargins(0, 0, 0, 0);
+  m_widget_list->setLayout(m_widget_list_lt);
 
-  hbox_frm->addWidget(action_btn);
-  hbox_frm->addWidget(lbl_frm);
-  if (header_add_spacing_at_the_end) hbox_frm->addSpacing(24);
+  m_hbox_frm->addWidget(m_action_btn);
+  m_hbox_frm->addWidget(m_lbl_frm);
+  if (header_add_spacing_at_the_end) m_hbox_frm->addSpacing(24);
 
-  main_lt->addWidget(top_frm);
-  main_lt->addWidget(widget_list);
-  main_lt->setSpacing(_spacing);
-  main_lt->addSpacing(main_lt_spacing_at_the_end);
+  m_main_lt->addWidget(m_top_frm);
+  m_main_lt->addWidget(m_widget_list);
+  m_main_lt->setSpacing(_spacing);
+  m_main_lt->addSpacing(main_lt_spacing_at_the_end);
 
-  connect(action_btn,
+  connect(m_action_btn,
           &QPushButton::clicked,
           this,
           &qspoiler_widget_t::collapse_button_pressed);
@@ -72,12 +72,12 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 }
 
 void qspoiler_widget_t::set_top_border(bool border_enabled) {
-  if (top_frm) top_frm->setProperty("s_class", border_enabled ? "qsplrhdr" : "none");
+  if (m_top_frm) m_top_frm->setProperty("s_class", border_enabled ? "qsplrhdr" : "none");
 }
 
 void qspoiler_widget_t::add_content_layout(QLayout *new_lt) {
 
-  widget_list_lt->addLayout(new_lt);
+  m_widget_list_lt->addLayout(new_lt);
 
 }
 
@@ -86,11 +86,11 @@ void qspoiler_widget_t::process_state() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (m_state) {
-      widget_list->show();
-      action_btn->setIcon(*astate->icons.icon_arrow_up);
+      m_widget_list->show();
+      m_action_btn->setIcon(*astate->icons.icon_arrow_up);
     } else {
-      widget_list->hide();
-      action_btn->setIcon(*astate->icons.icon_arrow_down);
+      m_widget_list->hide();
+      m_action_btn->setIcon(*astate->icons.icon_arrow_down);
     }
 
 }

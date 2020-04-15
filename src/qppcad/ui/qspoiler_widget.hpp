@@ -19,13 +19,13 @@ namespace qpp {
 
       public:
 
-        QVBoxLayout *main_lt;
-        QFrame *top_frm;
-        QHBoxLayout *hbox_frm;
-        QLabel *lbl_frm;
-        QPushButton *action_btn;
-        QWidget *widget_list;
-        QVBoxLayout *widget_list_lt;
+        QVBoxLayout *m_main_lt;
+        QFrame      *m_top_frm;
+        QHBoxLayout *m_hbox_frm;
+        QLabel      *m_lbl_frm;
+        QPushButton *m_action_btn;
+        QWidget     *m_widget_list;
+        QVBoxLayout *m_widget_list_lt;
 
         bool m_state{true};
         bool m_collapsable{false};

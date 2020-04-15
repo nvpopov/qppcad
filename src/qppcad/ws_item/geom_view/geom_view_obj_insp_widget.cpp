@@ -60,7 +60,7 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
           this,
           &geom_view_obj_insp_widget_t::clear_color_override_button_clicked);
 
-  m_tg_type_sum_wdgt->hbox_frm->insertWidget(3, m_type_sum_clear_tclr_override);
+  m_tg_type_sum_wdgt->m_hbox_frm->insertWidget(3, m_type_sum_clear_tclr_override);
 
   QStringList table_hdr_cell;
   table_hdr_cell.push_back("X");
@@ -284,7 +284,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
           this,
           &geom_view_obj_insp_widget_t::rebond_button_clicked);
 
-  m_gb_disp_bt->hbox_frm->insertWidget(3, m_disp_bt_rebond_btn);
+  m_gb_disp_bt->m_hbox_frm->insertWidget(3, m_disp_bt_rebond_btn);
 
   m_bt_mdl = new qbonding_table_model_t;
   m_disp_bt = new QTableView;
