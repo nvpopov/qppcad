@@ -6,18 +6,18 @@ using namespace qpp::cad;
 
 qspoiler_widget_t::qspoiler_widget_t(const QString & title,
                                      QWidget *parent,
-                                     bool _collapsable,
-                                     int _spacing,
-                                     int _max_width,
+                                     bool collapsable,
+                                     int spacing,
+                                     int max_width,
                                      bool header_add_spacing_at_the_end,
                                      int main_lt_spacing_at_the_end) : QFrame(parent) {
 
-  m_collapsable = _collapsable;
+  m_collapsable = collapsable;
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (_max_width == -1 ) setFixedWidth(astate->size_guide.obj_insp_splr_w());
-  else setFixedWidth(_max_width);
+  if (max_width == -1 ) setFixedWidth(astate->size_guide.obj_insp_splr_w());
+  else setFixedWidth(max_width);
 
   m_main_lt = new QVBoxLayout;
   m_main_lt->setContentsMargins(0, 0, 0, 0);
@@ -59,7 +59,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   m_main_lt->addWidget(m_top_frm);
   m_main_lt->addWidget(m_widget_list);
-  m_main_lt->setSpacing(_spacing);
+  m_main_lt->setSpacing(spacing);
   m_main_lt->addSpacing(main_lt_spacing_at_the_end);
 
   connect(m_action_btn,

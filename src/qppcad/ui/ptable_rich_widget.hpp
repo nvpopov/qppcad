@@ -24,8 +24,8 @@ namespace qpp {
 
       public:
 
-        QHBoxLayout *m_main_lt;
-        QGridLayout *m_elem_lt;
+        QHBoxLayout  *m_main_lt;
+        QGridLayout  *m_elem_lt;
         QButtonGroup *m_btn_grp;
 
         explicit ptable_rich_widget_t(QWidget *parent = nullptr);
@@ -47,15 +47,15 @@ namespace qpp {
 
       public:
 
-        QVBoxLayout *m_main_lt;
-        qspoiler_widget_t *m_main_splr;
-        QDialogButtonBox *m_dialog_bb;
+        QVBoxLayout             *m_main_lt;
+        qspoiler_widget_t       *m_main_splr;
+        QDialogButtonBox        *m_dialog_bb;
 
-        QFormLayout *m_splr_lt;
+        QFormLayout             *m_splr_lt;
         qbinded_float_spinbox_t *m_radius;
         qbinded_float_spinbox_t *m_cov_rad;
         qbinded_float_spinbox_t *m_ionic_rad;
-        qbinded_color3_input_t *m_color;
+        qbinded_color3_input_t  *m_color;
 
         float m_binded_radius;
         float m_binded_cov_rad;

@@ -45,60 +45,60 @@ namespace qpp {
         vector3<float> m_b_g3d_cell{0, 5, 0};
         vector3<float> m_c_g3d_cell{0, 0, 5};
 
-        QVBoxLayout *main_lt;
-        QHBoxLayout *data_lt;
-        QVBoxLayout *sub_data_lt;
-        QHBoxLayout *button_lt;
-        QPushButton *ok_button;
-        QPushButton *cancel_button;
+        QVBoxLayout *m_main_lt;
+        QHBoxLayout *m_data_lt;
+        QVBoxLayout *m_sub_data_lt;
+        QHBoxLayout *m_btn_lt;
+        QPushButton *m_ok_btn;
+        QPushButton *m_cancel_btn;
+        qspoiler_widget_t *m_gb_ctor{};
 
-        qspoiler_widget_t *gb_ctor{};
-        QVBoxLayout *gb_ctor_lt{};
-        QRadioButton *rb_ctor_geom0d{};
-        QRadioButton *rb_ctor_geom1d{};
-        QRadioButton *rb_ctor_geom2d{};
-        QRadioButton *rb_ctor_geom3d{};
-        QRadioButton *rb_ctor_psg{};
-        QRadioButton *rb_ctor_pgf_prod{};
-        QRadioButton *rb_ctor_cube{};
-        QRadioButton *rb_ctor_arrow{};
-        QRadioButton *rb_ctor_node_book{};
-        QRadioButton *rb_ctor_arrow_array{};
-        QRadioButton *rb_ctor_py_note_book{};
-        QRadioButton *rb_ctor_traj_hl{};
+        QVBoxLayout  *m_gb_ctor_lt{};
+        QRadioButton *m_rb_ctor_geom0d{};
+        QRadioButton *m_rb_ctor_geom1d{};
+        QRadioButton *m_rb_ctor_geom2d{};
+        QRadioButton *m_rb_ctor_geom3d{};
+        QRadioButton *m_rb_ctor_psg{};
+        QRadioButton *m_rb_ctor_pgf_prod{};
+        QRadioButton *m_rb_ctor_cube{};
+        QRadioButton *m_rb_ctor_arrow{};
+        QRadioButton *m_rb_ctor_node_book{};
+        QRadioButton *m_rb_ctor_arrow_array{};
+        QRadioButton *m_rb_ctor_py_note_book{};
+        QRadioButton *m_rb_ctor_traj_hl{};
 
-        qspoiler_widget_t *gb_type_descr{};
-        QVBoxLayout *gb_type_descr_lt{};
-        QLabel *type_descr_lbl{};
+        qspoiler_widget_t *m_gb_type_descr{};
+        QVBoxLayout *m_gb_type_descr_lt{};
+        QLabel *m_type_descr_lbl{};
 
-        QComboBox *type_cell_ctor_mode{};
-        QLabel *type_cell_ctor_mode_lbl{};
+        QComboBox *m_type_cell_ctor_mode{};
+        QLabel *m_type_cell_ctor_mode_lbl{};
 
-        QDoubleSpinBox *type_cell_ctor_cubic_size{};
-        QLabel *type_cell_ctor_cubic_size_lbl{};
+        QDoubleSpinBox *m_type_cell_ctor_cubic_size{};
+        QLabel *m_type_cell_ctor_cubic_size_lbl{};
 
-        qbinded_float3_input_t *type_cell_ctor_ortho{};
-        QLabel *type_cell_ctor_ortho_lbl{};
+        qbinded_float3_input_t *m_type_cell_ctor_ortho{};
+        QLabel *m_type_cell_ctor_ortho_lbl{};
 
-        qbinded_float3_input_t *type_cell_ctor_a3{};
-        QLabel *type_cell_ctor_a3_lbl{};
-        qbinded_float3_input_t *type_cell_ctor_l3{};
-        QLabel *type_cell_ctor_l3_lbl{};
+        qbinded_float3_input_t *m_type_cell_ctor_a3{};
+        QLabel *m_type_cell_ctor_a3_lbl{};
+        qbinded_float3_input_t *m_type_cell_ctor_l3{};
+        QLabel *m_type_cell_ctor_l3_lbl{};
 
-        qbinded_float3_input_t *type_cell_ctor_a{};
-        QLabel *type_cell_ctor_a_lbl{};
-        qbinded_float3_input_t *type_cell_ctor_b{};
-        QLabel *type_cell_ctor_b_lbl{};
-        qbinded_float3_input_t *type_cell_ctor_c{};
-        QLabel *type_cell_ctor_c_lbl{};
+        qbinded_float3_input_t *m_type_cell_ctor_a{};
+        QLabel *m_type_cell_ctor_a_lbl{};
+        qbinded_float3_input_t *m_type_cell_ctor_b{};
+        QLabel *m_type_cell_ctor_b_lbl{};
+        qbinded_float3_input_t *m_type_cell_ctor_c{};
+        QLabel *m_type_cell_ctor_c_lbl{};
 
-        qspoiler_widget_t *gb_type_param{};
-        QFormLayout *gb_type_param_lt{};
+        qspoiler_widget_t *m_gb_type_param{};
+        QFormLayout *m_gb_type_param_lt{};
 
-        QLabel *type_param_name_lbl{};
-        QLineEdit *type_param_name{};
-        QLabel *type_param_ag_lbl{};
-        QComboBox *type_param_ag{};
+        QLabel *m_type_param_name_lbl{};
+        QLineEdit *m_type_param_name{};
+        QLabel *m_type_param_ag_lbl{};
+        QComboBox *m_type_param_ag{};
 
         QStringList descr_list;
 

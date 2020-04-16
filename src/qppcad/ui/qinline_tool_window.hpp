@@ -21,10 +21,10 @@ namespace qpp {
 
     public:
 
-      QPushButton *m_btn_apply_tool;
-      QPushButton *m_btn_cancel_tool;
+      QPushButton                  *m_btn_apply_tool;
+      QPushButton                  *m_btn_cancel_tool;
       ws_item_inline_tool_widget_t *m_cur_wdgt{nullptr};
-      qinline_tool_type_e m_inline_tool_type;
+      qinline_tool_type_e           m_inline_tool_type;
 
       explicit qinline_tool_window_t(qinline_tool_type_e inline_tool_type,
                                      QWidget *parent = nullptr);
