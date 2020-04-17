@@ -63,9 +63,10 @@ colorize_by_xfield_widget_t::colorize_by_xfield_widget_t() {
 
   m_main_lt = new QVBoxLayout;
   setLayout(m_main_lt);
-  setFixedWidth(300);
+  setFixedWidth(astate->size_guide.ws_item_modal_tool_small_width());
 
-  m_main_gb = new qspoiler_widget_t(tr("Colorize parameters"), nullptr, false, 6, 300);
+  m_main_gb = new qspoiler_widget_t(tr("Colorize by xfield : parameters"), nullptr, false, 6,
+                                    astate->size_guide.ws_item_modal_tool_small_gb_width());
   m_main_gb_lt = new QFormLayout;
   m_main_gb->add_content_layout(m_main_gb_lt);
 
@@ -80,7 +81,8 @@ colorize_by_xfield_widget_t::colorize_by_xfield_widget_t() {
   m_main_gb_lt->addRow(tr("XField name"), m_cmb_xfield_name);
   m_main_gb_lt->addRow(tr("Color at min"), m_clr_low_input);
   m_main_gb_lt->addRow(tr("Color at max"), m_clr_high_input);
-  qt_hlp::resize_form_lt_lbls(m_main_gb_lt, 170);
+  qt_hlp::resize_form_lt_lbls(m_main_gb_lt,
+                              astate->size_guide.ws_item_modal_tool_small_form_label_width());
 
   m_buttons_lt = new QHBoxLayout;
   m_button_apply = new QPushButton(tr("Apply"));

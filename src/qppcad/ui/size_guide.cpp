@@ -178,3 +178,15 @@ int size_guide_t::node_book_inplace_par_width() {
 int size_guide_t::ws_tabbar_height() {
   return 32;
 }
+
+int size_guide_t::ws_item_modal_tool_small_width() {
+  return 320;
+}
+
+int size_guide_t::ws_item_modal_tool_small_gb_width() {
+  return 300;
+}
+
+int size_guide_t::ws_item_modal_tool_small_form_label_width() {
+  return 170;
+}

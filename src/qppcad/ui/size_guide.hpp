@@ -100,6 +100,9 @@ namespace qpp {
         int node_book_inplace_par_width();
 
         int ws_tabbar_height();
+        int ws_item_modal_tool_small_width();
+        int ws_item_modal_tool_small_gb_width();
+        int ws_item_modal_tool_small_form_label_width();
 
     };
 
