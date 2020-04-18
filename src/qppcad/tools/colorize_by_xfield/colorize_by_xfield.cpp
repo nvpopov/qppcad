@@ -38,6 +38,7 @@ void colorize_by_xfield_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
           gv_ptr->m_color_mode = geom_view_color_e::color_from_xgeom;
           astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
           astate->make_viewport_dirty();
+
         }
 
     }
@@ -67,6 +68,7 @@ colorize_by_xfield_widget_t::colorize_by_xfield_widget_t() {
 
   m_main_gb = new qspoiler_widget_t(tr("Colorize by xfield : parameters"), nullptr, false, 6,
                                     astate->size_guide.ws_item_modal_tool_small_gb_width());
+  m_main_gb->set_top_border(false);
   m_main_gb_lt = new QFormLayout;
   m_main_gb->add_content_layout(m_main_gb_lt);
 

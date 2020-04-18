@@ -134,6 +134,7 @@ ptable_element_editor_t::ptable_element_editor_t(int elem_id, QWidget *parent) :
   setLayout(m_main_lt);
 
   m_main_splr = new qspoiler_widget_t(tr("Element properties"), nullptr, false, 6, widget_width);
+  m_main_splr->set_top_border(false);
   m_splr_lt = new QFormLayout;
   m_main_splr->add_content_layout(m_splr_lt);
 

@@ -98,6 +98,7 @@ colorize_by_dist_widget_t::colorize_by_dist_widget_t() {
 
   m_main_gb = new qspoiler_widget_t(tr("Colorize by distance : parameters"), nullptr, false, 6,
                                     astate->size_guide.ws_item_modal_tool_small_gb_width());
+  m_main_gb->set_top_border(false);
   m_main_gb_lt = new QFormLayout;
   m_main_gb->add_content_layout(m_main_gb_lt);
 
