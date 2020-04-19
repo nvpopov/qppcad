@@ -59,6 +59,7 @@
 #include <qppcad/tools/sel_parity/sel_parity.hpp>
 #include <qppcad/tools/geom_view_checkers.hpp>
 #include <qppcad/tools/gv_colorizer/gv_colorizer.hpp>
+#include <qppcad/tools/nanostructures/nanostructures.hpp>
 
 #include <qppcad/ws_item/pgf_producer/pgf_producer.hpp>
 #include <qppcad/ws_item/pgf_producer/pgf_producer_obj_insp_widget.hpp>
@@ -371,6 +372,11 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
         "Supercell Generator", hash_t_generator, bhv_mgr,
         true, ws_item_tool_type_e::ws_item_tool_inline_vertical,
         gv_accept_dim<false, false, false, true>);
+
+  registration_helper_t::reg_ws_item_tool<nanostructures_tool_t, geom_view_t>(
+      "Nanostructures Generator", hash_t_generator, bhv_mgr,
+      false, ws_item_tool_type_e::ws_item_tool_inline_vertical,
+      gv_accept_dim<true, true, true, true>);
 
   registration_helper_t::reg_ws_item_tool<axial_scale_tool_t, geom_view_t>(
         "Axial scale", hash_t_tr, bhv_mgr,
