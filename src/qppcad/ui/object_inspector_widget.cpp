@@ -164,8 +164,8 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       m_none_item_placeholder->hide();
       m_main_lt->insertWidget(2, obj_insp_w.get());
       m_cur_obj_insp_widget = obj_insp_w;
-      obj_insp_w->show();
       obj_insp_w->bind_to_item(cur_it.get());
+      obj_insp_w->show();
 
     }
 
