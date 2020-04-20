@@ -20,6 +20,15 @@ void signal_handler(int signal) {
 
 }
 
+void on_app_exit(int signal) {
+
+  std::cout << std::endl <<"SIGNAL RECEIVED " << signal << std::endl
+	    << "qppcad has been terminated." << std::endl;
+  app_state_t::get_inst()->save_settings();
+  QCoreApplication::exit(0);
+
+}
+
 int main (int argc, char **argv) {
 
   std::ios_base::sync_with_stdio(false);
@@ -60,6 +69,8 @@ int main (int argc, char **argv) {
   astate->load_settings();
 
   std::signal(SIGSEGV, signal_handler);
+  std::signal(SIGINT, on_app_exit);
+  std::signal(SIGTERM, on_app_exit);
 
   astate->init_fixtures();
 
