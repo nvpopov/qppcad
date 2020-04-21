@@ -40,7 +40,7 @@ namespace qpp {
       self_t *p_parent{nullptr};
       std::vector<self_t*> p_childs;
       std::map<epoch_t, std::vector<std::tuple<self_t*, epoch_t>>> p_childs_states;
-      std::set<epoch_t> p_hist_line{0};
+      std::vector<epoch_t> p_hist_line{0};
       bool p_is_bad{false};
       bool p_is_dirty{false};
       hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
@@ -96,6 +96,10 @@ namespace qpp {
       std::tuple<hr_result_e, std::optional<epoch_t>> push_epoch(
           std::optional<epoch_t> new_epoch_ex = std::nullopt);
 
+
+      auto find_hl(epoch_t target) {
+        return std::find(begin(p_hist_line), end(p_hist_line), target);
+      }
       /**
        * @brief get_history_size
        */

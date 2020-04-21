@@ -59,16 +59,16 @@ namespace qpp {
             *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
 
       if (p_hist_line.empty()) {
-          p_hist_line.insert(new_epoch);
+          p_hist_line.push_back(new_epoch);
           return {hr_result_e::hr_success, new_epoch};
         }
 
-      auto last = p_hist_line.end();
-      if (new_epoch > *last) {
+      auto last = p_hist_line.rbegin();
+      if (new_epoch < *last) {
           p_is_bad = true;
           return {hr_result_e::hr_invalid_epoch, std::nullopt};
         } else {
-          p_hist_line.insert(new_epoch);
+          p_hist_line.push_back(new_epoch);
           return {hr_result_e::hr_success, new_epoch};
         }
 
@@ -83,25 +83,25 @@ namespace qpp {
                                                hist_doc_base_t::epoch_t child_epoch) {
 
       if (!child) {
-          return hr_result_e::hr_invalid_child;
-        }
+        return hr_result_e::hr_invalid_child;
+      }
 
-      if (p_hist_line.find(target_epoch) == std::end(p_hist_line)) {
-          return hr_result_e::hr_invalid_epoch;
-        }
+      if (find_hl(target_epoch) == std::end(p_hist_line)) {
+        return hr_result_e::hr_invalid_epoch;
+      }
 
-      if (child->p_hist_line.find(child_epoch) == std::end(child->p_hist_line)) {
-          return hr_result_e::hr_invalid_child_epoch;
-        }
+      if (child->find_hl(child_epoch) == end(child->p_hist_line)) {
+        return hr_result_e::hr_invalid_child_epoch;
+      }
 
       auto &aug_elist = p_childs_states[target_epoch];
       auto find_fnc = [child](std::tuple<self_t*, epoch_t> &elem) {
         return std::get<0>(elem) == child;
       };
 
-      auto it1 = std::find_if(std::begin(aug_elist), std::end(aug_elist), find_fnc);
+      auto it1 = std::find_if(begin(aug_elist), end(aug_elist), find_fnc);
       if (it1 != std::end(aug_elist)) {
-          size_t aug_idx = static_cast<size_t>(std::distance(std::begin(aug_elist), it1));
+          size_t aug_idx = static_cast<size_t>(std::distance(begin(aug_elist), it1));
           aug_elist[aug_idx] = {child, child_epoch};
         } else {
           aug_elist.push_back({child, child_epoch});
@@ -117,7 +117,7 @@ namespace qpp {
     }
 
     bool hist_doc_base_t::has_epoch(hist_doc_base_t::epoch_t target_epoch) {
-      return p_hist_line.find(target_epoch) != std::end(p_hist_line);
+      return find_hl(target_epoch) != end(p_hist_line);
     }
 
     hr_result_e hist_doc_base_t::remove_augment_from_epoch(hist_doc_base_t::self_t *child,
@@ -125,14 +125,13 @@ namespace qpp {
                                                            hist_doc_base_t::epoch_t target_epoch) {
 
       auto epoch_it = p_childs_states.find(target_epoch);
-      if (epoch_it == std::end(p_childs_states)) return hr_result_e::hr_invalid_epoch;
+      if (epoch_it == end(p_childs_states)) return hr_result_e::hr_invalid_epoch;
       auto find_fnc = [child, child_epoch](std::tuple<self_t*, epoch_t> &elem) {
           return std::get<0>(elem) == child && std::get<1>(elem) == child_epoch;
         };
-      auto ch_epoch_it = std::find_if(std::begin(epoch_it->second),
-                                      std::end(epoch_it->second),
-                                      find_fnc);
-      if (ch_epoch_it == std::end(epoch_it->second)) return hr_result_e::hr_invalid_epoch;
+      auto ch_epoch_it =
+          std::find_if(begin(epoch_it->second), end(epoch_it->second), find_fnc);
+      if (ch_epoch_it == end(epoch_it->second)) return hr_result_e::hr_invalid_epoch;
       epoch_it->second.erase(ch_epoch_it);
       return hr_result_e::hr_success;
 
@@ -151,7 +150,7 @@ namespace qpp {
 
       epoch_t cur_epoch = get_cur_epoch();
       auto epoch_it = p_childs_states.find(cur_epoch);
-      if (epoch_it != std::end(p_childs_states)) {
+      if (epoch_it != end(p_childs_states)) {
 
           auto &epoch_aug_vec = epoch_it->second;
 
@@ -208,18 +207,18 @@ namespace qpp {
 
     std::optional<size_t> hist_doc_base_t::is_children(hist_doc_base_t::self_t *child) {
       if (!child) return std::nullopt;
-      auto it1 = std::find(std::begin(p_childs), std::end(p_childs), child);
-      return (it1 != std::end(p_childs)
-          ? std::optional<size_t>{std::distance(std::begin(p_childs), it1)} : std::nullopt);
+      auto it1 = std::find(begin(p_childs), end(p_childs), child);
+      return (it1 != end(p_childs) ? std::optional<size_t>{std::distance(begin(p_childs), it1)} :
+                                     std::nullopt);
     }
 
     void hist_doc_base_t::remove_child(size_t child_id) {
       if (child_id < p_childs.size())
-        p_childs.erase(std::begin(p_childs) + static_cast<int>(child_id));
+        p_childs.erase(begin(p_childs) + static_cast<int>(child_id));
     }
 
     void hist_doc_base_t::remove_child(hist_doc_base_t::self_t *child) {
-      auto it1 = std::find(std::begin(p_childs), std::end(p_childs), child);
+      auto it1 = std::find(begin(p_childs), end(p_childs), child);
       if (it1 != std::end(p_childs)) p_childs.erase(it1);
     }
 

@@ -192,4 +192,16 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("testing epoch cursor") {
+
+    hist_doc_base_t *hs = new hist_doc_base_t;
+    REQUIRE(hs->get_cur_epoch() == 0);
+
+    REQUIRE(std::get<0>(hs->push_epoch(1)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(2)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(5)) == hr_result_e::hr_success);
+    //REQUIRE(std::get<0>(hs->push_epoch(3)) == hr_result_e::hr_error);
+
+  }
+
 }
