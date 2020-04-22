@@ -55,8 +55,8 @@ namespace qpp {
       epoch_t cur_epoch = get_cur_epoch();
 
       epoch_t new_epoch = (new_epoch_ex) ?
-            *new_epoch_ex :
-            *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
+                          *new_epoch_ex :
+                          *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
 
       if (p_hist_line.empty()) {
           p_hist_line.push_back(new_epoch);
@@ -68,7 +68,8 @@ namespace qpp {
           p_is_bad = true;
           return {hr_result_e::hr_invalid_epoch, std::nullopt};
         } else {
-          p_hist_line.push_back(new_epoch);
+          p_hist_line.insert(begin(p_hist_line) + cur_epoch + 1, new_epoch);
+          p_hist_line.erase(begin(p_hist_line) + cur_epoch + 2, end(p_hist_line));
           return {hr_result_e::hr_success, new_epoch};
         }
 
@@ -76,6 +77,10 @@ namespace qpp {
 
     size_t hist_doc_base_t::get_history_size() {
       return p_hist_line.size();
+    }
+
+    std::vector<hist_doc_base_t::epoch_t> hist_doc_base_t::get_history() {
+      return p_hist_line;
     }
 
     hr_result_e hist_doc_base_t::augment_epoch(hist_doc_base_t::epoch_t target_epoch,

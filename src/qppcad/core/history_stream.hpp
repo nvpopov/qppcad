@@ -89,7 +89,7 @@ namespace qpp {
       void mark_as_dirty();
 
       /**
-       * @brief push_epoch
+       * @brief push_epoch insert new epoch at cursor
        * @param new_epoch
        * @return
        */
@@ -104,6 +104,7 @@ namespace qpp {
        * @brief get_history_size
        */
       size_t get_history_size();
+      std::vector<epoch_t> get_history();
 
       /**
        * @brief augment_epoch
@@ -200,7 +201,8 @@ namespace qpp {
 
     public:
 
-      hr_result_e push_epoch_s(STYPE &&new_val, std::optional<epoch_t> new_epoch = std::nullopt) {
+      hr_result_e push_epoch_with_value(STYPE &&new_val,
+                                        std::optional<epoch_t> new_epoch = std::nullopt) {
 
         auto push_epoch_res = push_epoch(new_epoch);
         if (std::get<0>(push_epoch_res) == hr_result_e::hr_success) {
