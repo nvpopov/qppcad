@@ -28,9 +28,12 @@ TEST_CASE("history stream test") {
     hist_doc_base_t *hs_nc = new hist_doc_base_t;
 
     REQUIRE(std::get<0>(hs_c1->push_epoch(1)) == hr_result_e::hr_success);
-   // REQUIRE(hs_c1->checkout_to_epoch(1) == hr_result_e::hr_success);
-    REQUIRE(std::get<0>(hs_c2->push_epoch(1)) == hr_result_e::hr_success);
+    REQUIRE(hs_c1->checkout_to_epoch(0) == hr_result_e::hr_success);
 
+    REQUIRE(std::get<0>(hs_c2->push_epoch(1)) == hr_result_e::hr_success);
+    REQUIRE(hs_c2->checkout_to_epoch(0) == hr_result_e::hr_success);
+
+    REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
     hs->add_child(hs_c1);
     hs->add_child(hs_c2);
 
@@ -39,16 +42,17 @@ TEST_CASE("history stream test") {
     REQUIRE(*(hs->is_children(hs_c2)) == 1);
     REQUIRE(hs->is_children(hs_nc) == std::nullopt);
 
+    REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
     hs->add_child(hs_c3);
     REQUIRE(hs->get_children_count() == 3);
     hs->remove_child(hs_c3);
     REQUIRE(hs->get_children_count() == 2);
 
     hs->augment_epoch(1, hs_c1, 1);
-    REQUIRE(hs->get_augmented_count(1) == 3); // added augments when we add as child
+    REQUIRE(hs->get_augmented_count(1) == 1); // added augments when we add as child
 
     hs->remove_augment_from_epoch(hs_c1, 1, 1);
-    REQUIRE(hs->get_augmented_count(1) == 2);
+    REQUIRE(hs->get_augmented_count(1) == 0);
 
     REQUIRE(hs->augment_epoch(1, hs_c1, 2) == hr_result_e::hr_invalid_child_epoch);
 
@@ -57,13 +61,15 @@ TEST_CASE("history stream test") {
     //hs->augment_epoch(hs_c2, 0, 0); already
     hs->augment_epoch(1, hs_c1, 1);
     hs->augment_epoch(1, hs_c2, 1);
+    REQUIRE(hs->get_augmented_count(1) == 2);
+    REQUIRE(hs->get_augmented_count(0) == 3);
 
     REQUIRE(hs->checkout_to_epoch(1) == hr_result_e::hr_success);
 
-    REQUIRE(hs_c1->checkout_to_epoch(1) == hr_result_e::hr_success);
+    //REQUIRE(hs_c1->checkout_to_epoch(1) == hr_result_e::hr_success);
     REQUIRE(hs_c1->get_cur_epoch() == 1);
 
-    REQUIRE(hs_c2->checkout_to_epoch(1) == hr_result_e::hr_success);
+    //REQUIRE(hs_c2->checkout_to_epoch(1) == hr_result_e::hr_success);
     REQUIRE(hs_c2->get_cur_epoch() == 1);
 
     REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
