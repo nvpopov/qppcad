@@ -148,8 +148,9 @@ namespace qpp {
       /**
        * @brief add_child
        * @param child
+       * @return
        */
-      void add_child(self_t *child);
+      hr_result_e add_child(self_t *child);
 
       /**
        * @brief get_root

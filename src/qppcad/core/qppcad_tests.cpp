@@ -81,6 +81,36 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("basic features 2") {
+
+    hist_doc_base_t *hs = new hist_doc_base_t;
+
+    REQUIRE(std::get<0>(hs->push_epoch(1)) == hr_result_e::hr_success);
+    REQUIRE(hs->checkout_to_epoch(1) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(2)) == hr_result_e::hr_success);
+    REQUIRE(hs->checkout_to_epoch(2) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(3)) == hr_result_e::hr_success);
+    REQUIRE(hs->checkout_to_epoch(3) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(4)) == hr_result_e::hr_success);
+    REQUIRE(hs->checkout_to_epoch(4) == hr_result_e::hr_success);
+
+    hist_doc_base_t *hs_c1 = new hist_doc_base_t;
+    hist_doc_base_t *hs_c2 = new hist_doc_base_t;
+
+    REQUIRE(std::get<0>(hs_c1->push_epoch(1)) == hr_result_e::hr_success);
+    REQUIRE(hs_c1->checkout_to_epoch(0) == hr_result_e::hr_success);
+
+    REQUIRE(std::get<0>(hs_c2->push_epoch(1)) == hr_result_e::hr_success);
+    REQUIRE(hs_c2->checkout_to_epoch(0) == hr_result_e::hr_success);
+
+    REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
+
+    REQUIRE(hs->add_child(hs_c1) == hr_result_e::hr_success);
+    REQUIRE(hs->add_child(hs_c2) == hr_result_e::hr_success);
+    REQUIRE(hs->add_child(nullptr) == hr_result_e::hr_invalid_child);
+
+  }
+
   SECTION("Deep nested structure") {
 
     hist_doc_base_t *hs = new hist_doc_base_t;

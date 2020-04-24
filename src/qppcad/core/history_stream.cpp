@@ -190,12 +190,20 @@ namespace qpp {
 
     }
 
-    void hist_doc_base_t::add_child(hist_doc_base_t::self_t *child) {
-      if (child) {
-          child->p_parent = this;
-          p_childs.push_back(child);
-          augment_epoch(get_cur_epoch(), child, child->get_cur_epoch());
-        }
+    hr_result_e hist_doc_base_t::add_child(hist_doc_base_t::self_t *child) {
+
+      if (!child) return hr_result_e::hr_invalid_child;
+
+      child->p_parent = this;
+      p_childs.push_back(child);
+      epoch_t cur_epoch = get_cur_epoch();
+      auto epoch_it = find_hl(cur_epoch);
+      auto epoch_dist = static_cast<size_t>(std::distance(begin(p_hist_line), epoch_it));
+      for (size_t i = 0; i <= epoch_dist; i++)
+        augment_epoch(i, child, child->get_cur_epoch());
+
+      return hr_result_e::hr_success;
+
     }
 
     hist_doc_base_t::self_t *hist_doc_base_t::get_root() {
