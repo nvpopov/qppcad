@@ -176,13 +176,13 @@ namespace qpp {
        * @brief remove_child
        * @param child_id
        */
-      void remove_child(size_t child_id);
+      hr_result_e remove_child(size_t child_id);
 
       /**
        * @brief remove_child
        * @param child
        */
-      void remove_child(self_t *child);
+      hr_result_e remove_child(self_t *child);
 
       /**
        * @brief get_children_count

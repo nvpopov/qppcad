@@ -18,7 +18,7 @@ void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   if (al->m_geom->DIM != 3) {
       QMessageBox::warning(nullptr,
                            QObject::tr("Supercell generation"),
-                           QObject::tr("Structure`s dimension is not equal to 3")
+                           QObject::tr("Structure's dimension is not equals to 3  ")
                            );
       return;
     }

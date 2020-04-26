@@ -225,14 +225,34 @@ namespace qpp {
                                      std::nullopt);
     }
 
-    void hist_doc_base_t::remove_child(size_t child_id) {
+    hr_result_e hist_doc_base_t::remove_child(size_t child_id) {
       if (child_id < p_childs.size())
-        p_childs.erase(begin(p_childs) + static_cast<int>(child_id));
+        return remove_child(p_childs[child_id]);
+      return hr_result_e::hr_error;
     }
 
-    void hist_doc_base_t::remove_child(hist_doc_base_t::self_t *child) {
+    hr_result_e hist_doc_base_t::remove_child(self_t *child) {
+
       auto it1 = std::find(begin(p_childs), end(p_childs), child);
-      if (it1 != std::end(p_childs)) p_childs.erase(it1);
+      if (it1 != std::end(p_childs)) {
+
+        for (auto &[k, v] : p_childs_states) {
+          //std::cout << "@@@a " << k << " " << v.size() << std::endl;
+          auto new_end_v =
+              std::remove_if(begin(v), end(v), [child](std::tuple<self_t*, epoch_t> &elem) {
+            return std::get<0>(elem) == child;
+          });
+          v.erase(new_end_v, v.end());
+          //std::cout << "@@@b " << k << " " << v.size() << std::endl;
+        }
+
+        p_childs.erase(it1);
+        return hr_result_e::hr_success;
+
+      } else {
+        return hr_result_e::hr_error;
+      }
+
     }
 
     size_t hist_doc_base_t::get_children_count() { return p_childs.size(); }
