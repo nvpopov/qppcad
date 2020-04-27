@@ -325,4 +325,15 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("nested elem deletions") {
+
+    hist_doc_base_t *hs = new hist_doc_base_t;
+    REQUIRE(std::get<0>(hs->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+    REQUIRE(hs->get_history() == std::vector<epoch_t>{0, 1, 2, 3, 4});
+
+  }
+
 }

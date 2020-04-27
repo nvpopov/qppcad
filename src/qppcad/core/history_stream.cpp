@@ -50,7 +50,8 @@ namespace qpp {
     }
 
     std::tuple<hr_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_t::push_epoch(
-        std::optional<hist_doc_base_t::epoch_t> new_epoch_ex) {
+        std::optional<hist_doc_base_t::epoch_t> new_epoch_ex,
+        bool checkout_to_new_epoch) {
 
       epoch_t cur_epoch = get_cur_epoch();
 
@@ -60,6 +61,7 @@ namespace qpp {
 
       if (p_hist_line.empty()) {
           p_hist_line.push_back(new_epoch);
+          checkout_to_epoch(new_epoch);
           return {hr_result_e::hr_success, new_epoch};
         }
 
@@ -70,6 +72,7 @@ namespace qpp {
         } else {
           p_hist_line.insert(begin(p_hist_line) + cur_epoch + 1, new_epoch);
           p_hist_line.erase(begin(p_hist_line) + cur_epoch + 2, end(p_hist_line));
+          checkout_to_epoch(new_epoch);
           return {hr_result_e::hr_success, new_epoch};
         }
 

@@ -94,8 +94,8 @@ namespace qpp {
        * @return
        */
       std::tuple<hr_result_e, std::optional<epoch_t>> push_epoch(
-          std::optional<epoch_t> new_epoch_ex = std::nullopt);
-
+          std::optional<epoch_t> new_epoch_ex = std::nullopt,
+          bool checkout_to_new_epoch = false);
 
       auto find_hl(epoch_t target) {
         return std::find(begin(p_hist_line), end(p_hist_line), target);
@@ -203,9 +203,10 @@ namespace qpp {
     public:
 
       hr_result_e push_epoch_with_value(STYPE &&new_val,
-                                        std::optional<epoch_t> new_epoch = std::nullopt) {
+                                        std::optional<epoch_t> new_epoch = std::nullopt,
+                                        bool checkout_to_new_epoch = false) {
 
-        auto push_epoch_res = push_epoch(new_epoch);
+        auto push_epoch_res = push_epoch(new_epoch, checkout_to_new_epoch);
         if (std::get<0>(push_epoch_res) == hr_result_e::hr_success) {
             p_stored_values[*std::get<1>(push_epoch_res)] = new_val;
             return hr_result_e::hr_success;
