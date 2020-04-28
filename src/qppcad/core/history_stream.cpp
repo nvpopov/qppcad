@@ -33,6 +33,10 @@ namespace qpp {
       return hr_result_e::hr_success;
     }
 
+    hr_result_e hist_doc_base_t::on_epoch_removed(hist_doc_base_t::epoch_t target_epoch){
+      return hr_result_e::hr_success;
+    }
+
     hist_doc_delta_state_e hist_doc_base_t::get_delta_state_type() {
       return p_dstate;
     }
@@ -70,10 +74,20 @@ namespace qpp {
           p_is_bad = true;
           return {hr_result_e::hr_invalid_epoch, std::nullopt};
         } else {
+
           p_hist_line.insert(begin(p_hist_line) + cur_epoch + 1, new_epoch);
-          p_hist_line.erase(begin(p_hist_line) + cur_epoch + 2, end(p_hist_line));
+          auto er_start = begin(p_hist_line) + cur_epoch + 2;
+          auto er_end = end(p_hist_line);
+
+          std::vector<epoch_t> epochs_to_delete{er_start, er_end};
+          for (auto epoch_to_delete : epochs_to_delete)
+            on_epoch_removed(epoch_to_delete);
+
+          p_hist_line.erase(er_start, er_end);
           checkout_to_epoch(new_epoch);
+
           return {hr_result_e::hr_success, new_epoch};
+
         }
 
     }

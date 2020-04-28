@@ -64,6 +64,7 @@ namespace qpp {
       hr_result_e set_cur_epoch(epoch_t cur_epoch);
 
       virtual hr_result_e on_epoch_changed(epoch_t prev_epoch);
+      virtual hr_result_e on_epoch_removed(epoch_t target_epoch);
 
       /**
        * @brief get_delta_state_type - not implemented yet
@@ -226,6 +227,18 @@ namespace qpp {
           } else {
             return hr_result_e::hr_error;
           }
+
+      }
+
+      hr_result_e on_epoch_removed(epoch_t epoch_to_remove) override {
+
+        auto it = p_stored_values.find(epoch_to_remove);
+        if (it != p_stored_values.end()) {
+          p_stored_values.erase(it);
+          return hr_result_e::hr_success;
+        } else {
+          return hr_result_e::hr_error;
+        }
 
       }
 
