@@ -37,6 +37,23 @@ namespace qpp {
       return hr_result_e::hr_success;
     }
 
+    hr_result_e hist_doc_base_t::commit_exclusive(hist_doc_base_t *child,
+                                                  std::optional<epoch_t> child_epoch) {
+
+      auto [push_result, new_epoch] = push_epoch(std::nullopt, true);
+      if (!push_result || new_epoch) return hr_result_e::hr_error;
+
+      if (child && child_epoch)
+        this->augment_epoch(*new_epoch, child, *child_epoch);
+
+      if (p_parent) {
+        return p_parent->commit_exclusive(this, *new_epoch);
+      } else {
+        return hr_result_e::hr_success;
+      }
+
+    }
+
     hist_doc_delta_state_e hist_doc_base_t::get_delta_state_type() {
       return p_dstate;
     }

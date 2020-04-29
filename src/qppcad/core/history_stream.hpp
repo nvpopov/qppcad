@@ -66,6 +66,8 @@ namespace qpp {
       virtual hr_result_e on_epoch_changed(epoch_t prev_epoch);
       virtual hr_result_e on_epoch_removed(epoch_t target_epoch);
 
+      hr_result_e commit_exclusive(hist_doc_base_t *child = nullptr,
+                                   std::optional<epoch_t> child_epoch = std::nullopt);
       /**
        * @brief get_delta_state_type - not implemented yet
        * @return
