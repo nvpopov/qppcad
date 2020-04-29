@@ -82,7 +82,7 @@ namespace qpp {
 
       if (p_hist_line.empty()) {
           p_hist_line.push_back(new_epoch);
-          checkout_to_epoch(new_epoch);
+          if (checkout_to_new_epoch) checkout_to_epoch(new_epoch);
           return {hr_result_e::hr_success, new_epoch};
         }
 
@@ -101,7 +101,7 @@ namespace qpp {
             on_epoch_removed(epoch_to_delete);
 
           p_hist_line.erase(er_start, er_end);
-          checkout_to_epoch(new_epoch);
+          if (checkout_to_new_epoch) checkout_to_epoch(new_epoch);
 
           return {hr_result_e::hr_success, new_epoch};
 
