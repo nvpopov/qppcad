@@ -336,4 +336,22 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("nested elem deletions") {
+
+    hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
+
+    hsi1->set_cur_value(10);
+    REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
+
+    hsi1->set_cur_value(20);
+    REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
+
+    hsi1->checkout_to_epoch(1);
+    REQUIRE(hsi1->get_cur_value() == 10);
+
+    hsi1->checkout_to_epoch(2);
+    REQUIRE(hsi1->get_cur_value() == 20);
+
+  }
+
 }

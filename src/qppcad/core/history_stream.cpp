@@ -41,7 +41,8 @@ namespace qpp {
                                                   std::optional<epoch_t> child_epoch) {
 
       auto [push_result, new_epoch] = push_epoch(std::nullopt, true);
-      if (!push_result || new_epoch) return hr_result_e::hr_error;
+      if (!push_result || !new_epoch) return hr_result_e::hr_error;
+      on_commit_exclusive();
 
       if (child && child_epoch)
         this->augment_epoch(*new_epoch, child, *child_epoch);
@@ -51,6 +52,10 @@ namespace qpp {
       } else {
         return hr_result_e::hr_success;
       }
+
+    }
+
+    void hist_doc_base_t::on_commit_exclusive() {
 
     }
 
@@ -165,12 +170,16 @@ namespace qpp {
 
       auto epoch_it = p_childs_states.find(target_epoch);
       if (epoch_it == end(p_childs_states)) return hr_result_e::hr_invalid_epoch;
+
       auto find_fnc = [child, child_epoch](std::tuple<self_t*, epoch_t> &elem) {
           return std::get<0>(elem) == child && std::get<1>(elem) == child_epoch;
         };
+
       auto ch_epoch_it =
           std::find_if(begin(epoch_it->second), end(epoch_it->second), find_fnc);
+
       if (ch_epoch_it == end(epoch_it->second)) return hr_result_e::hr_invalid_epoch;
+
       epoch_it->second.erase(ch_epoch_it);
       return hr_result_e::hr_success;
 

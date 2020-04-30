@@ -68,6 +68,8 @@ namespace qpp {
 
       hr_result_e commit_exclusive(hist_doc_base_t *child = nullptr,
                                    std::optional<epoch_t> child_epoch = std::nullopt);
+      virtual void on_commit_exclusive();
+
       /**
        * @brief get_delta_state_type - not implemented yet
        * @return
@@ -217,6 +219,10 @@ namespace qpp {
             return hr_result_e::hr_error;
           }
 
+      }
+
+      void on_commit_exclusive() override {
+        p_stored_values[get_cur_epoch()] = p_cur_value;
       }
 
       hr_result_e on_epoch_changed(epoch_t prev_epoch) override {
