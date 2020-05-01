@@ -354,4 +354,47 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("nested elem exclusive commit") {
+
+    hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
+
+    hsi1->set_cur_value(10);
+    REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
+
+    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hist_doc_base_t *hs_el1 = new hist_doc_base_t;
+    hist_doc_base_t *hs_el2 = new hist_doc_base_t;
+
+    REQUIRE(hs_root->add_child(hs_el1) == hr_result_e::hr_success);
+    REQUIRE(hs_el1->add_child(hs_el2) == hr_result_e::hr_success);
+    REQUIRE(hs_el2->add_child(hsi1) == hr_result_e::hr_success);
+
+    hsi1->set_cur_value(20);
+    REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
+    REQUIRE(hsi1->get_cur_epoch() == 2);
+    REQUIRE(hs_root->get_cur_epoch() == 1);
+    REQUIRE(hs_el1->get_cur_epoch() == 1);
+    REQUIRE(hs_el2->get_cur_epoch() == 1);
+
+    hsi1->set_cur_value(30);
+    REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
+    REQUIRE(hsi1->get_cur_epoch() == 3);
+    REQUIRE(hs_root->get_cur_epoch() == 2);
+    REQUIRE(hs_el1->get_cur_epoch() == 2);
+    REQUIRE(hs_el2->get_cur_epoch() == 2);
+
+    REQUIRE(hs_root->checkout_to_epoch(1) == hr_result_e::hr_success);
+    REQUIRE(hs_el1->get_cur_epoch() == 1);
+    REQUIRE(hs_el2->get_cur_epoch() == 1);
+    REQUIRE(hsi1->get_cur_epoch() == 2);
+    REQUIRE(hsi1->get_cur_value() == 20);
+
+    REQUIRE(hs_root->checkout_to_epoch(2) == hr_result_e::hr_success);
+    REQUIRE(hs_el1->get_cur_epoch() == 2);
+    REQUIRE(hs_el2->get_cur_epoch() == 2);
+    REQUIRE(hsi1->get_cur_epoch() == 3);
+    REQUIRE(hsi1->get_cur_value() == 30);
+
+  }
+
 }
