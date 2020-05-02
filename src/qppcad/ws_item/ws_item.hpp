@@ -10,9 +10,7 @@
 #include <qppcad/core/qpp_object.hpp>
 #include <qppcad/core/iupdatable.hpp>
 #include <qppcad/ws_item/ws_item_subsystem.hpp>
-#include <qppcad/core/property.hpp>
-#include <variant>
-#include <stack>
+#include <qppcad/core/history_stream.hpp>
 
 #include <QPainter>
 
@@ -92,23 +90,11 @@ namespace qpp {
     const uint8_t ws_item_render_order_5   = 5;
     const uint8_t ws_item_render_order_max = 6;
 
-    using ws_item_state_record_t = std::variant<
-                                    vector3<float>,
-                                    float,
-                                    bool,
-                                    int,
-                                    xgeometry<float, periodic_cell<float> >*,
-                                    ws_item_subsystem_t*
-                                   >;
-
-    struct ws_item_state_t {
-      std::map<std::string, ws_item_state_record_t> m_data;
-    };
-
     class ws_item_t :
         public std::enable_shared_from_this<ws_item_t>,
         public qpp_object_t,
-        public iupdatable_externally_t {
+        public iupdatable_externally_t,
+        public hist_doc_base_t {
 
         QPP_OBJECT(ws_item_t, qpp_object_t)
 
@@ -125,7 +111,6 @@ namespace qpp {
         std::vector<std::shared_ptr<ws_item_t> > m_connected_items;
         std::vector<std::shared_ptr<ws_item_t> > m_followers;
         std::shared_ptr<ws_item_t> m_leader{nullptr};
-        std::stack<ws_item_state_t> m_ws_item_state;
 
         std::string      m_name;
         std::string      m_genesis_file_name;
@@ -155,10 +140,6 @@ namespace qpp {
                                            vector3<float> &out_look_at) = 0;
 
         void set_selected();
-
-        void push_state();
-        virtual void apply_state(ws_item_state_t &state);
-        void pop_state();
 
         virtual void target_view(cam_tv_e target_view_src,
                                  vector3<float> &look_from,

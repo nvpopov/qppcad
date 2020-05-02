@@ -33,18 +33,6 @@ void ws_item_t::set_selected() {
 
 }
 
-void ws_item_t::push_state() {
-
-}
-
-void ws_item_t::apply_state(ws_item_state_t &state) {
-
-}
-
-void ws_item_t::pop_state() {
-
-}
-
 void ws_item_t::target_view(cam_tv_e target_view,
                             vector3<float> &look_from,
                             vector3<float> &look_to,

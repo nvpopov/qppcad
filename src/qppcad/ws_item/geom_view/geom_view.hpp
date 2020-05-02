@@ -32,6 +32,7 @@ namespace qpp {
     class geom_view_labels_subsys_t;
     class geom_view_lat_planes_subsys_t;
     class geom_view_sel_groups_subsys_t;
+    class ws_item_t;
 
     template<typename REAL = float>
     struct scalar_partition_per_type_t {
