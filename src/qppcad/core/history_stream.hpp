@@ -225,6 +225,19 @@ namespace qpp {
         p_stored_values[get_cur_epoch()] = p_cur_value;
       }
 
+      hr_result_e commit_value_exclusive(STYPE &&new_val,
+                                         std::optional<epoch_t> new_epoch = std::nullopt) {
+
+        STYPE loc_var(new_val);
+        auto push_epoch_with_value_res =
+            push_epoch_with_value(std::move(loc_var), new_epoch, true);
+        if (push_epoch_with_value_res != hr_result_e::hr_success) return hr_result_e::hr_error;
+        commit_exclusive();
+
+        return hr_result_e::hr_success;
+
+      }
+
       hr_result_e on_epoch_changed(epoch_t prev_epoch) override {
 
         auto cur_epoch = get_cur_epoch();

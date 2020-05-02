@@ -395,6 +395,11 @@ TEST_CASE("history stream test") {
     REQUIRE(hsi1->get_cur_epoch() == 3);
     REQUIRE(hsi1->get_cur_value() == 30);
 
+    REQUIRE(hsi1->commit_value_exclusive(44) == hr_result_e::hr_success);
+    REQUIRE(hs_root->get_cur_epoch() == 3);
+    REQUIRE(hsi1->commit_value_exclusive(45) == hr_result_e::hr_success);
+    REQUIRE(hs_root->get_cur_epoch() == 4);
+
   }
 
 }
