@@ -11,6 +11,7 @@
 #include <qppcad/ws_item/py_note_book/py_note_book.hpp>
 #include <qppcad/ws_item/traj_hl/traj_hl.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 #include <symm/shoenflis.hpp>
 

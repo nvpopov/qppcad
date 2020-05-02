@@ -5,6 +5,7 @@
 #include <data/ptable.hpp>
 #include <thread>
 #include <qppcad/core/hotkey_manager.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 namespace qpp {
 
@@ -310,7 +311,7 @@ namespace qpp {
       settings.endArray();
 
       settings.beginWriteArray("recent_files");
-      for (int q = 0; q < m_recent_files.size(); q++) {
+      for (int q = 0; q < static_cast<int>(m_recent_files.size()); q++) {
 
           settings.setArrayIndex(q);
           settings.setValue("filename", QString::fromStdString(m_recent_files[q].m_file_name));
@@ -391,16 +392,12 @@ namespace qpp {
                              (m_recent_files.size() - max_recent_files));
 
       for (auto it = m_recent_files.begin(); it != m_recent_files.end(); ++it) {
-
           if ((*it).m_file_name.find(file_name) != std::string::npos) {
-
               auto x = std::move(*it);
               m_recent_files.erase(it);
               m_recent_files.insert(m_recent_files.end(), std::move(x));
               return;
-
             }
-
         }
 
       //log(fmt::format("RECENT FILES ADD: {} {} {}", file_name, bhv_id, is_native));

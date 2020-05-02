@@ -5,7 +5,7 @@
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/sflow/sflow_base_nodes_int.hpp>
 #include <qppcad/sflow/sflow_base_nodes_float.hpp>
-
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/node_book/node_book_graphics_view.hpp>
 
 using namespace qpp;

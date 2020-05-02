@@ -6,6 +6,7 @@
 #include <qppcad/ui/main_window.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/core/hotkey_manager.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <QMainWindow>
 #include <QTextStream>
 #include <QCommandLineParser>

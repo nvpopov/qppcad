@@ -1,6 +1,9 @@
 #include <qppcad/ui/ws_tabbar.hpp>
 #include <qppcad/core/app_state.hpp>
 
+#include <QInputDialog>
+#include <QLineEdit>
+
 using namespace qpp;
 using namespace qpp::cad;
 

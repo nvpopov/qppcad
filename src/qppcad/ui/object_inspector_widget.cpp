@@ -5,6 +5,8 @@
 #include <qppcad/ui/add_new_ws_item_widget.hpp>
 #include <qppcad/ui/qextended_action.hpp>
 #include <qppcad/ui/qt_helpers.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
+
 #include <QMenu>
 
 using namespace qpp;

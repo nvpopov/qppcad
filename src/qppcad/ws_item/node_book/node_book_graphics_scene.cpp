@@ -4,10 +4,10 @@
 #include <qppcad/ws_item/node_book/node_book.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/ui/qextended_action.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
-
 
 node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
   : QGraphicsScene(parent) ,
@@ -39,18 +39,13 @@ node_book_graphics_scene_t::node_book_graphics_scene_t(QObject *parent)
     }
 
   for (auto &rec : astate->ws_mgr->m_bhv_mgr->m_sflow_node_info) {
-
       auto it = _sflow_grp_lookup.find(rec.second.m_group_hash);
-
       if (it != _sflow_grp_lookup.end()) {
-
           qextended_action *_temp_act = new qextended_action();
           _temp_act->setText(QString::fromStdString(rec.second.m_full_name));
           _temp_act->m_joined_data[0] = rec.first;
           if (it->second) it->second->addAction(_temp_act);
-
         }
-
     }
 
   setSceneRect(-5000, -5000, 2*5000, 2*5000);
@@ -90,13 +85,11 @@ void node_book_graphics_scene_t::add_connection(size_t inode_id, size_t onode_id
 void node_book_graphics_scene_t::add_node(std::shared_ptr<qnode_t> node) {
 
   if (node) {
-
       addItem(node.get());
       node->m_scene = this;
       m_nodes.push_back(node);
       for (auto elem : node->m_inp_sockets) m_sockets.push_back(elem);
       for (auto elem : node->m_out_sockets) m_sockets.push_back(elem);
-
     }
 
 }

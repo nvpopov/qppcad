@@ -18,6 +18,7 @@
 #include <qppcad/ws_item/volume_view/python_volume_view.hpp>
 #include <qppcad/ws_item/compl_list_view/python_compl_list_view.hpp>
 #include <qppcad/ws_item/ws_vector3/python_ws_vector3.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 #include <qppcad/core/app_state.hpp>
 

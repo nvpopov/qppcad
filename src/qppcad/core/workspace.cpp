@@ -1,4 +1,6 @@
 #include <qppcad/core/workspace.hpp>
+#include <qppcad/ws_item/ws_item.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <data/ptable.hpp>
 #include <mathf/math.hpp>
@@ -17,6 +19,13 @@
 
 using namespace qpp;
 using namespace qpp::cad;
+
+workspace_t::workspace_t(std::string _ws_name) {
+  m_ws_name = _ws_name;
+  m_camera = std::make_unique<camera_t>();
+  m_camera->reset_camera();
+  m_gizmo = std::make_unique<gizmo_t>();
+}
 
 opt<size_t> workspace_t::get_sel_idx() {
 

@@ -1,6 +1,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/compl_list_view/compl_list_view.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <random>
@@ -21,13 +22,11 @@ void geom_view_tools_t::shake_atoms(geom_view_t *gv,
 
   for (auto &atom : atoms_to_shake)
     if (atom < gv->m_geom->nat()) {
-
         vector3<float> new_pos = gv->m_geom->coord(atom) +
             vector3<float>(magn / 2) -
             vector3<float>(dis(e), dis(e), dis(e));
 
         gv->m_geom->coord(atom) = new_pos;
-
       }
 
   astate->make_viewport_dirty();

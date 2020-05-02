@@ -231,7 +231,10 @@ namespace qpp {
         STYPE loc_var(new_val);
         auto push_epoch_with_value_res =
             push_epoch_with_value(std::move(loc_var), new_epoch, true);
-        if (push_epoch_with_value_res != hr_result_e::hr_success) return hr_result_e::hr_error;
+
+        if (push_epoch_with_value_res != hr_result_e::hr_success)
+          return hr_result_e::hr_error;
+
         commit_exclusive();
 
         return hr_result_e::hr_success;

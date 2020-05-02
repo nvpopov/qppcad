@@ -168,6 +168,7 @@ add_executable(
     src/qppcad/core/embedded_cluster_tools.cpp
     src/qppcad/core/fixture.cpp
     src/qppcad/core/platform.cpp
+    src/qppcad/core/history_stream.cpp
 
     src/qppcad/sflow/sflow.cpp
     src/qppcad/sflow/sflow_node.cpp

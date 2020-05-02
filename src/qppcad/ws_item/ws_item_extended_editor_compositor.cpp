@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/ws_item_extended_editor_compositor.hpp>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/core/app_state.hpp>
 
 using namespace qpp;

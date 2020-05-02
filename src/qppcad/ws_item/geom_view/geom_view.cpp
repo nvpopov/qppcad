@@ -1,3 +1,4 @@
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_render_bs.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_render_dlines.hpp>
@@ -222,18 +223,13 @@ void geom_view_t::render() {
   if (astate->dp) {
 
       if (astate->m_debug_show_tws_tree) {
-
           astate->dp->begin_render_aabb();
-
-          m_tws_tr->apply_visitor(
-                [astate, _pos](tws_node_t<float> *in_node, int deep_level) {
-              astate->dp->render_aabb(clr_maroon,
-                                      in_node->m_bb.min+_pos,
-                                      in_node->m_bb.max+_pos);
+          m_tws_tr->apply_visitor([astate, _pos](tws_node_t<float> *in_node, int deep_level) {
+                                  astate->dp->render_aabb(clr_maroon,
+                                  in_node->m_bb.min+_pos,
+                                  in_node->m_bb.max+_pos);
             });
-
           astate->dp->end_render_aabb();
-
         }
 
       if (!m_is_visible) return;
@@ -250,10 +246,8 @@ void geom_view_t::render() {
               for (int i_a = 0; i_a < m_subcells_range[0]; i_a++)
                 for (int i_b = 0; i_b < m_subcells_range[1]; i_b++)
                   for (int i_c = 0; i_c < m_subcells_range[2]; i_c++) {
-
                       vector3<float> new_pos = m_pos + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
                       astate->dp->render_cell_3d(m_subcell_color, sc_a, sc_b, sc_c, new_pos);
-
                     }
 
             }
@@ -261,16 +255,15 @@ void geom_view_t::render() {
           vector3<float> cell_clr = m_cell_color;
 
           if (m_selected) {
-
               if(m_parent_ws->m_edit_type == ws_edit_e::edit_item) cell_clr = clr_red;
               if(m_parent_ws->m_edit_type == ws_edit_e::edit_content) cell_clr = clr_maroon;
-
             }
 
-          astate->dp->render_cell_3d(
-                cell_clr, m_geom->cell.v[0], m_geom->cell.v[1], m_geom->cell.v[2], m_pos);
+          astate->dp->render_cell_3d(cell_clr, m_geom->cell.v[0], m_geom->cell.v[1],
+                                     m_geom->cell.v[2], m_pos);
 
           astate->dp->end_render_line();
+
         }
 
       if (m_geom->DIM == 3 && m_draw_cell_vectors) {
@@ -278,13 +271,11 @@ void geom_view_t::render() {
           astate->dp->begin_render_general_mesh();
 
           for (size_t i = 0; i < m_geom->DIM; i++) {
-
               vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio;
               astate->dp->render_arrow(m_pos + m_cell_vector_offset,
                                        m_pos + m_cell_vector_offset + cell_v,
                                        m_cell_vector_color,
                                        0.1f, 0.17f, 0.25f, false);
-
             }
 
           astate->dp->end_render_general_mesh();

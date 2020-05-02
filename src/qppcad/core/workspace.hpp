@@ -6,9 +6,10 @@
 #include <geom/geom.hpp>
 #include <geom/xgeom.hpp>
 #include <qppcad/render/camera.hpp>
-#include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/core/gizmo.hpp>
-#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
+#include <qppcad/core/history_stream.hpp>
+
+#include <QMessageBox>
 
 namespace qpp {
 
@@ -17,6 +18,7 @@ namespace qpp {
     class workspace_t;
     class workspace_manager_t;
     class ws_item_t;
+    class ws_item_behaviour_manager_t;
 
     class app_state_t;
 
@@ -25,7 +27,8 @@ namespace qpp {
      */
     class workspace_t :
         public qpp_object_t,
-        public std::enable_shared_from_this<workspace_t> {
+        public std::enable_shared_from_this<workspace_t>,
+        public hist_doc_base_t {
 
         QPP_OBJECT(workspace_t, qpp_object_t)
 
@@ -53,12 +56,7 @@ namespace qpp {
         bool m_scenic_rotation{false};
         vector3<float> m_scenic_rotation_speed{0.0f, 0.0f, 0.1f};
 
-        workspace_t(std::string _ws_name = "default") {
-          m_ws_name = _ws_name;
-          m_camera = std::make_unique<camera_t>();
-          m_camera->reset_camera();
-          m_gizmo = std::make_unique<gizmo_t>();
-        }
+        workspace_t(std::string _ws_name = "default");
 
         //selection routines
         opt<size_t>  get_sel_idx();

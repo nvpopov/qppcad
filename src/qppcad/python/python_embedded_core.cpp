@@ -9,6 +9,7 @@
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/core/hotkey_manager.hpp>
 #include <pybind11/functional.h>
+#include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
