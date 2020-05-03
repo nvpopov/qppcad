@@ -397,6 +397,7 @@ void workspace_t::add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add) {
 
   item_to_add->set_parent_ws(this);
   m_ws_items.push_back(item_to_add);
+  add_hs_child(item_to_add.get());
   app_state_t::get_inst()->astate_evd->cur_ws_changed();
 
 }

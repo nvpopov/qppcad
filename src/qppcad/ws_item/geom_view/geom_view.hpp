@@ -58,48 +58,40 @@ namespace qpp {
      * @brief The geom_view_render_style_e enum
      */
     enum geom_view_render_style_e : int {
-
       ball_and_stick,
       suprematic_atoms,
       dynamic_lines,
       xatom_lines,
       billboards,
       buffered_billboards
-
     };
 
     /**
      * @brief The geom_view_role_e enum
      */
     enum geom_view_role_e : int {
-
       r_generic,
       r_uc,
       r_embc_qm,
       r_embc_cls,
       r_embc_chg
-
     };
 
     /**
      * @brief The geom_view_color_e enum
      */
     enum geom_view_color_e : int {
-
       color_from_ptable,
       color_from_xgeom
-
     };
 
     /**
      * @brief The pair_dist_mode_e enum
      */
     enum pair_dist_mode_e : int {
-
       transform_both,
       fix_first,
       fix_second
-
     };
 
     const int xgeom_charge       = 4;

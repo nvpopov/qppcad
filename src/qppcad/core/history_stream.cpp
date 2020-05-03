@@ -233,7 +233,7 @@ namespace qpp {
 
     }
 
-    hr_result_e hist_doc_base_t::add_child(hist_doc_base_t::self_t *child) {
+    hr_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
 
       if (!child) return hr_result_e::hr_invalid_child;
 

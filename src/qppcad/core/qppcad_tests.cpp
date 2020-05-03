@@ -34,8 +34,8 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_c2->checkout_to_epoch(0) == hr_result_e::hr_success);
 
     REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
-    hs->add_child(hs_c1);
-    hs->add_child(hs_c2);
+    hs->add_hs_child(hs_c1);
+    hs->add_hs_child(hs_c2);
 
     REQUIRE(hs->get_children_count() == 2);
     REQUIRE(*(hs->is_children(hs_c1)) == 0);
@@ -43,7 +43,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hs->is_children(hs_nc) == std::nullopt);
 
     REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
-    hs->add_child(hs_c3);
+    hs->add_hs_child(hs_c3);
     REQUIRE(hs->get_children_count() == 3);
     hs->remove_child(hs_c3);
     REQUIRE(hs->get_children_count() == 2);
@@ -106,9 +106,9 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
 
-    REQUIRE(hs->add_child(hs_c1) == hr_result_e::hr_success);
-    REQUIRE(hs->add_child(hs_c2) == hr_result_e::hr_success);
-    REQUIRE(hs->add_child(nullptr) == hr_result_e::hr_invalid_child);
+    REQUIRE(hs->add_hs_child(hs_c1) == hr_result_e::hr_success);
+    REQUIRE(hs->add_hs_child(hs_c2) == hr_result_e::hr_success);
+    REQUIRE(hs->add_hs_child(nullptr) == hr_result_e::hr_invalid_child);
 
   }
 
@@ -121,12 +121,12 @@ TEST_CASE("history stream test") {
     hist_doc_base_t *hs_c2 = new hist_doc_base_t;
     hist_doc_base_t *hs_c3 = new hist_doc_base_t;
 
-    hs->add_child(hs_c1);
-    hs->add_child(hs_c2);
-    hs->add_child(hs_c3);
+    hs->add_hs_child(hs_c1);
+    hs->add_hs_child(hs_c2);
+    hs->add_hs_child(hs_c3);
 
-    hs_c1->add_child(hs_c1_c1);
-    hs_c1->add_child(hs_c1_c2);
+    hs_c1->add_hs_child(hs_c1_c1);
+    hs_c1->add_hs_child(hs_c1_c2);
 
     REQUIRE(std::get<0>(hs->push_epoch(1)) == hr_result_e::hr_success);
     REQUIRE(std::get<0>(hs_c1->push_epoch(1)) == hr_result_e::hr_success);
@@ -302,8 +302,8 @@ TEST_CASE("history stream test") {
     REQUIRE(std::get<0>(hs_c2->push_epoch(1)) == hr_result_e::hr_success);
     REQUIRE(std::get<0>(hs_c2->push_epoch(2)) == hr_result_e::hr_success);
 
-    hs->add_child(hs_c1);
-    hs->add_child(hs_c2);
+    hs->add_hs_child(hs_c1);
+    hs->add_hs_child(hs_c2);
 
     hs->augment_epoch(2, hs_c1, 1);
     hs->augment_epoch(2, hs_c2, 1);
@@ -365,9 +365,9 @@ TEST_CASE("history stream test") {
     hist_doc_base_t *hs_el1 = new hist_doc_base_t;
     hist_doc_base_t *hs_el2 = new hist_doc_base_t;
 
-    REQUIRE(hs_root->add_child(hs_el1) == hr_result_e::hr_success);
-    REQUIRE(hs_el1->add_child(hs_el2) == hr_result_e::hr_success);
-    REQUIRE(hs_el2->add_child(hsi1) == hr_result_e::hr_success);
+    REQUIRE(hs_root->add_hs_child(hs_el1) == hr_result_e::hr_success);
+    REQUIRE(hs_el1->add_hs_child(hs_el2) == hr_result_e::hr_success);
+    REQUIRE(hs_el2->add_hs_child(hsi1) == hr_result_e::hr_success);
 
     hsi1->set_cur_value(20);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);

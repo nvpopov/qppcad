@@ -155,7 +155,7 @@ namespace qpp {
        * @param child
        * @return
        */
-      hr_result_e add_child(self_t *child);
+      hr_result_e add_hs_child(self_t *child);
 
       /**
        * @brief get_root
@@ -277,6 +277,21 @@ namespace qpp {
 
 
     };
+
+    template<typename STYPE>
+    class hist_property_t : public hist_doc_t<STYPE> {
+
+    };
+
+    using hs_prop_int_t     = hist_property_t<int>;
+    using hs_prop_bool_t    = hist_property_t<bool>;
+    using hs_prop_float_t   = hist_property_t<float>;
+    using hs_prop_double_t  = hist_property_t<double>;
+    using hs_prop_str_t     = hist_property_t<std::string>;
+    using hs_prop_v3f_t     = hist_property_t<vector3<float>>;
+    using hs_prop_v3d_t     = hist_property_t<vector3<double>>;
+    using hs_prop_v2f_t     = hist_property_t<vector2<float>>;
+    using hs_prop_v2d_t     = hist_property_t<vector2<double>>;
 
   } // namespace qpp::cad
 

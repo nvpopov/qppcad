@@ -41,6 +41,19 @@ namespace qpp {
         m_ignore_state_change = false;
       }
 
+      void set_value(T&& new_value) {
+        if (!is_binded()) return;
+        *m_binded_value = new_value;
+      }
+
+      std::optional<T> get_value() {
+        if (!is_binded()) return std::nullopt;
+        return *m_binded_value;
+      }
+
+      bool is_binded() { return m_binded_value;}
+      bool is_item_binded() { return m_binded_item;}
+
       void unbind_value() {
         m_binded_value = nullptr;
         m_binded_item = nullptr;

@@ -141,6 +141,7 @@ namespace qpp {
 
         void set_selected();
 
+
         virtual void target_view(cam_tv_e target_view_src,
                                  vector3<float> &look_from,
                                  vector3<float> &look_to,
