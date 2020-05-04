@@ -495,7 +495,7 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
   m_tms_pair_dist->setProperty("s_class", "thin_label");
 
   m_tms_pair_dist_color = new qbinded_color3_input_t;
-  m_tms_pair_enabled = new qbinded_checkbox_t;
+  m_tms_pair_show = new qbinded_checkbox_t;
   m_tms_pair_label_enabled = new qbinded_checkbox_t;
 
   m_tms_pair_line_size = new qbinded_int_spinbox_t;
@@ -564,7 +564,7 @@ void geom_view_obj_insp_widget_t::construct_msr_tab() {
   m_tms_pair_dist_gb_lt->addRow(tr("Line style"), m_tms_pair_line_style);
   m_tms_pair_dist_gb_lt->addRow(tr("Line size"), m_tms_pair_line_size);
   m_tms_pair_dist_gb_lt->addRow(tr("Color"), m_tms_pair_dist_color);
-  m_tms_pair_dist_gb_lt->addRow(tr("Enabled"), m_tms_pair_enabled);
+  m_tms_pair_dist_gb_lt->addRow(tr("Enabled"), m_tms_pair_show);
   m_tms_pair_dist_gb_lt->addRow(tr("Label enabled"), m_tms_pair_label_enabled);
   m_tms_pair_dist_gb_lt->addRow(tr("Label style"), m_tms_pair_label_style);
   m_tms_pair_dist_gb_lt->addRow(tr("Custom label"), m_tms_pair_custom_text_enabled);
@@ -795,6 +795,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
 
   m_tm_u_scale_v3 = new qbinded_float3_input_t;
   m_tm_u_scale_v3->set_min_max_step_dec(0.01, 10, 0.01);
+  m_tm_u_scale_v3_val.set_value(vector3<float>{1, 1, 1});
   m_tm_u_scale_v3->bind_value(&m_tm_u_scale_v3_val);
 
   m_tm_u_apply_scale_button = new QPushButton(tr("Apply"));
@@ -1164,10 +1165,10 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       m_disp_s_draw_img_atoms_bonds->bind_value({&b_al->m_draw_img_atoms, &b_al->m_draw_img_bonds});
 
       m_disp_s_scale->bind_value({&b_al->m_atom_scale_factor, &b_al->m_bond_scale_factor});
-      m_disp_s_render_style->bind_value(reinterpret_cast<int*>(&b_al->m_render_style));
-      m_disp_s_color_mode->bind_value(reinterpret_cast<int*>(&b_al->m_color_mode));
+      m_disp_s_render_style->bind_value(&b_al->m_render_style);
+      m_disp_s_color_mode->bind_value(&b_al->m_color_mode);
 
-      m_disp_labels_style->bind_value(reinterpret_cast<int*>(&b_al->m_labels->m_style));
+      m_disp_labels_style->bind_value(&b_al->m_labels->m_style);
       m_disp_labels_size->bind_value(&b_al->m_labels->m_lbl_font_size);
       m_disp_inplace_labels->bind_value(&b_al->m_labels->m_render_inplace_hud);
       m_disp_inplace_offset->bind_value(&b_al->m_labels->m_inplace_offset);
@@ -1228,7 +1229,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
       update_anim_tab();
 
       m_anim_play->blockSignals(true);
-      m_anim_play->setChecked(b_al->m_anim->m_play_anim);
+      m_anim_play->setChecked(b_al->m_anim->m_play_anim.get_value());
       m_anim_play->blockSignals(false);
 
       m_disp_type_spec_tv->setModel(nullptr);
@@ -1331,14 +1332,14 @@ void geom_view_obj_insp_widget_t::bind_dist_msr_tab() {
 
           auto &rec = b_al->m_measure->m_dist_recs[cur_msr];
           m_tms_pair_dist_color->bind_value(&rec.m_bond_color);
-          m_tms_pair_enabled->bind_value(&rec.m_show);
+          m_tms_pair_show->bind_value(&rec.m_show);
           m_tms_pair_label_enabled->bind_value(&rec.m_show_label);
           m_tms_pair_line_size->bind_value(&rec.m_line_size);
           m_tms_font_screen_size->bind_value(&rec.m_font_size);
-          m_tms_pair_line_style->bind_value(reinterpret_cast<int*>(&rec.m_line_render_style));
-          m_tms_pair_label_style->bind_value(reinterpret_cast<int*>(&rec.m_label_render_style));
+          m_tms_pair_line_style->bind_value(&rec.m_line_render_style);
+          m_tms_pair_label_style->bind_value(&rec.m_label_render_style);
           m_tms_pair_term_size->bind_value(&rec.m_pair_term_width);
-          m_tms_pair_term_style->bind_value(reinterpret_cast<int*>(&rec.m_pair_term_style));
+          m_tms_pair_term_style->bind_value(&rec.m_pair_term_style);
 
           m_tms_pair_custom_text_edit->bind_value(&rec.m_custom_label_text);
           m_tms_pair_custom_text_enabled->bind_value(&rec.m_show_custom_label);
@@ -1346,7 +1347,7 @@ void geom_view_obj_insp_widget_t::bind_dist_msr_tab() {
           m_tms_pair_delta_angle->bind_value(&rec.m_delta_angle);
           m_tms_pair_delta_offset->bind_value(&rec.m_delta_offset);
 
-          m_tms_pair_enabled->setEnabled(true);
+          m_tms_pair_show->setEnabled(true);
           m_tms_pair_dist_color->setEnabled(true);
           m_tms_pair_line_style->setEnabled(true);
           m_tms_pair_line_size->setEnabled(true);
@@ -1377,7 +1378,7 @@ void geom_view_obj_insp_widget_t::bind_dist_msr_tab() {
 void geom_view_obj_insp_widget_t::unbind_dist_msr_tab() {
 
   m_tms_pair_dist_color->unbind_value();
-  m_tms_pair_enabled->unbind_value();
+  m_tms_pair_show->unbind_value();
   m_tms_pair_line_style->unbind_value();
   m_tms_pair_line_size->unbind_value();
   m_tms_font_screen_size->unbind_value();
@@ -1395,8 +1396,8 @@ void geom_view_obj_insp_widget_t::unbind_dist_msr_tab() {
   m_tms_pair_line_style->setEnabled(false);
   m_tms_pair_dist_color->setEnabled(false);
   m_tms_pair_line_size->setEnabled(false);
-  m_tms_pair_enabled->setEnabled(false);
-  m_tms_pair_enabled->setChecked(false);
+  m_tms_pair_show->setEnabled(false);
+  m_tms_pair_show->setChecked(false);
   m_tms_font_screen_size->setEnabled(false);
   m_tms_pair_label_style->setEnabled(false);
   m_tms_pair_label_enabled->setEnabled(false);
@@ -1981,7 +1982,7 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
           if (cur_anim && cur_anim->m_anim_type != geom_anim_t::anim_static) {
 
               m_anim_play->blockSignals(true);
-              m_anim_play->setChecked(b_al->m_anim->m_play_anim);
+              m_anim_play->setChecked(b_al->m_anim->m_play_anim.get_value());
               m_anim_play->blockSignals(false);
 
             } else {
@@ -2010,9 +2011,9 @@ void geom_view_obj_insp_widget_t::play_anim_button_toggle(bool value) {
 
   if (b_al) {
 
-      b_al->m_anim->m_play_anim = value;
+    b_al->m_anim->m_play_anim.set_value(std::move(value));
 
-    }
+  }
 
 }
 
@@ -2329,10 +2330,10 @@ void geom_view_obj_insp_widget_t::mod_barycentric_scale_button_clicked() {
 
           vector3<float> new_pos_dist = center - b_al->m_geom->pos(rec.m_atm);
           vector3<float> new_pos = b_al->m_geom->pos(rec.m_atm);
-
-          new_pos[0] +=  (1-m_tm_u_scale_v3_val[0]) * new_pos_dist[0];
-          new_pos[1] +=  (1-m_tm_u_scale_v3_val[1]) * new_pos_dist[1];
-          new_pos[2] +=  (1-m_tm_u_scale_v3_val[2]) * new_pos_dist[2] ;
+          auto scaleval = m_tm_u_scale_v3_val.get_value();
+          new_pos[0] +=  (1 - scaleval[0]) * new_pos_dist[0];
+          new_pos[1] +=  (1 - scaleval[1]) * new_pos_dist[1];
+          new_pos[2] +=  (1 - scaleval[2]) * new_pos_dist[2] ;
 
           b_al->upd_atom(rec.m_atm, new_pos);
 

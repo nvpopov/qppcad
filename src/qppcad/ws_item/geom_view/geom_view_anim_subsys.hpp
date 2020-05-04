@@ -26,13 +26,14 @@ namespace qpp {
 
         std::vector<geom_anim_record_t<float> >  m_anim_data;
         float m_cur_anim_time{0.0f};
-        float m_anim_frame_time{0.25f};
         int m_cur_anim{0};
-        bool m_rebuild_bonds_in_anim{true};
-        bool m_play_cyclic{true};
-        bool m_play_anim{false};
-        bool m_force_non_animable{false};
-        bool m_interpolate_anim{true};
+        bool m_force_non_animable;
+
+        hs_prop_float_t m_anim_frame_time;
+        hs_prop_bool_t m_rebuild_bonds_in_anim;
+        hs_prop_bool_t m_play_cyclic;
+        hs_prop_bool_t m_play_anim;
+        hs_prop_bool_t m_interpolate_anim;
 
         explicit geom_view_anim_subsys_t (geom_view_t &_p_owner);
 

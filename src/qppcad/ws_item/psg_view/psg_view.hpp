@@ -35,22 +35,24 @@ namespace qpp {
         std::shared_ptr<array_group<matrix3<float> > > m_ag{nullptr};
         point_group_axes<float> m_pg_axes;
         std::vector<transform_record_t> m_atf;
-
-        float m_plane_alpha{0.64f};
-        bool m_plane_alpha_enabled{false};
-        float m_plane_scale{6.0f};
-        vector3<float> m_plane_color{0, 0.9f, 0};
-
-        float m_arrow_len{9.0f};
-        float m_arrow_cap_len{0.51f};
-        float m_arrow_scale{0.15f};
-        float m_arrow_cap_scale{0.26f};
-
-        std::array<vector3<float>, AXIS_COLORIZE_SIZE> m_axes_color_by_order;
-
         int m_current_repr;
-        bool m_show_planes{true};
-        bool m_show_axes{true};
+
+        hs_prop_float_t m_plane_alpha;
+        hs_prop_bool_t m_plane_alpha_enabled;
+        hs_prop_float_t m_plane_scale;
+        hs_prop_v3f_t m_plane_color;
+
+        hs_prop_float_t m_arrow_len;
+        hs_prop_float_t m_arrow_cap_len;
+        hs_prop_float_t m_arrow_scale;
+        hs_prop_float_t m_arrow_cap_scale;
+
+        std::array<hs_prop_v3f_t, AXIS_COLORIZE_SIZE> m_axes_color_by_order;
+
+        hs_prop_bool_t m_show_planes;
+        hs_prop_bool_t m_show_axes;
+
+
 
         psg_view_t();
 

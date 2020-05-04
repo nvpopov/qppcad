@@ -23,9 +23,9 @@ namespace qpp {
 
           app_state_t* astate = app_state_t::get_inst();
           astate->dp->render_line(bcolor,
-                                  al.m_pos + al.m_geom->pos(at_num1, at_index1),
-                                  al.m_pos + (al.m_geom->pos(at_num2, at_index2) +
-                                              al.m_geom->pos(at_num1, at_index1)) * 0.5f);
+                                  al.m_pos.get_value() + al.m_geom->pos(at_num1, at_index1),
+                                  al.m_pos.get_value() + (al.m_geom->pos(at_num2, at_index2)
+                                  + al.m_geom->pos(at_num1, at_index1)) * 0.5f);
         }
     };
 

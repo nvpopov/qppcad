@@ -266,11 +266,16 @@ namespace qpp {
 
       }
 
-      STYPE get_cur_value() {
+      STYPE get_value() const {
         return p_cur_value;
       }
 
-      void set_cur_value(STYPE &&new_val) {
+      void set_value(STYPE &&new_val) {
+        mark_as_dirty();
+        p_cur_value = new_val;
+      }
+
+      void set_cvalue(STYPE new_val) {
         mark_as_dirty();
         p_cur_value = new_val;
       }
@@ -290,8 +295,12 @@ namespace qpp {
     using hs_prop_str_t     = hist_property_t<std::string>;
     using hs_prop_v3f_t     = hist_property_t<vector3<float>>;
     using hs_prop_v3d_t     = hist_property_t<vector3<double>>;
+    using hs_prop_v3i_t     = hist_property_t<vector3<int>>;
     using hs_prop_v2f_t     = hist_property_t<vector2<float>>;
     using hs_prop_v2d_t     = hist_property_t<vector2<double>>;
+    using hs_prop_v2i_t     = hist_property_t<vector3<int>>;
+    using hs_prop_m3f_t     = hist_property_t<matrix3<float>>;
+    using hs_prop_m3d_t     = hist_property_t<matrix3<double>>;
 
   } // namespace qpp::cad
 

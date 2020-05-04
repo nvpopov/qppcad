@@ -15,6 +15,9 @@ node_book_t::node_book_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
 
+  m_highlight_dirty_nodes.set_value(false); add_hs_child(&m_highlight_dirty_nodes);
+  m_auto_recompute.set_value(true); add_hs_child(&m_auto_recompute);
+
   m_scene = new node_book_graphics_scene_t(nullptr);
   m_scene->m_parent_node_book = this;
 
@@ -122,21 +125,21 @@ void node_book_t::save_to_json(json &data) {
                   case sf_parameter_e::sfpar_int: {
                       value_is_set = true;
                       auto as_int = node->m_ipl[i]->cast_as<sf_parameter_int_t>();
-                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value;
+                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value.get_value();
                       break;
                     }
 
                   case sf_parameter_e::sfpar_float: {
                       value_is_set = true;
                       auto as_float = node->m_ipl[i]->cast_as<sf_parameter_float_t>();
-                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value;
+                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value.get_value();
                       break;
                     }
 
                   case sf_parameter_e::sfpar_bool: {
                       value_is_set = true;
                       auto as_bool = node->m_ipl[i]->cast_as<sf_parameter_bool_t>();
-                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value;
+                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value.get_value();
                       break;
                     }
 
@@ -382,7 +385,8 @@ void node_book_t::updated_externally(uint32_t update_reason) {
 
   ws_item_t::updated_externally(update_reason);
 
-  if (m_auto_recompute && (update_reason & ws_item_updf_regenerate_content)) execute();
+  if (m_auto_recompute.get_value()
+      && (update_reason & ws_item_updf_regenerate_content)) execute();
 
 }
 

@@ -134,7 +134,10 @@ void pgf_producer_obj_insp_widget_t::update_cell_indexes_ranges() {
       astate->tlog("pgf_prod..::update_cell_indexes_ranges() -> bind values[size={}]",
                    m_ci_ranges.size());
       for (size_t i = 0; i < b_pr->m_orders_range.size(); i++)
-        if (!m_ci_ranges[i]) m_ci_ranges[i]->bind_value(&b_pr->m_orders_range[i], b_pr);
+        if (!m_ci_ranges[i]) {
+         //TODO: fix
+          m_ci_ranges[i]->bind_value(&b_pr->m_orders_range[i], b_pr);
+        }
     }
   else {
 

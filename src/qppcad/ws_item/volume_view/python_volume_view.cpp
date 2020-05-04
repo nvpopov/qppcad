@@ -13,41 +13,50 @@ void py_volume_view_reg_helper_t::reg(
   py_ws_volume_record_t
       .def_readonly("state_id", &ws_volume_record_t::m_state_id)
       .def_readonly("spin_subspace", &ws_volume_record_t::m_spin_subspace)
+
       .def_property("ready_to_render",
                     [](ws_volume_record_t &src)
                     {return src.m_ready_to_render;},
                     [](ws_volume_record_t &src, const bool value)
                     {src.m_ready_to_render = value; if(src.m_owner) src.m_owner->update_oi();})
+
       .def_property("need_to_regenerate",
                     [](ws_volume_record_t &src)
                     {return src.m_need_to_regenerate;},
                     [](ws_volume_record_t &src, const bool value)
                     {src.m_need_to_regenerate = value; if(src.m_owner) src.m_owner->update_oi();})
+
       .def_property("transparent_volume",
                     [](ws_volume_record_t &src)
-                    {return src.m_transparent_volume;},
+                    {return src.m_transparent_volume.get_value();},
                     [](ws_volume_record_t &src, const bool value)
-                    {src.m_transparent_volume = value; if(src.m_owner) src.m_owner->update_oi();})
+                    {src.m_transparent_volume.set_cvalue(value);
+                    if(src.m_owner) src.m_owner->update_oi();})
+
       .def_property("render_permanent",
                     [](ws_volume_record_t &src)
-                    {return src.m_render_permanent;},
+                    {return src.m_render_permanent.get_value();},
                     [](ws_volume_record_t &src, const bool value)
-                    {src.m_render_permanent = value; if(src.m_owner) src.m_owner->update_oi();})
+                    {src.m_render_permanent.set_cvalue(value);
+                    if(src.m_owner) src.m_owner->update_oi();})
+
       .def_property("color_pos",
                     [](ws_volume_record_t &src)
-                    {return src.m_color_pos;},
+                    {return src.m_color_pos.get_value();},
                     [](ws_volume_record_t &src, const vector3<float> value)
-                    {src.m_color_pos = value; if(src.m_owner) src.m_owner->update_oi();})
+                    {src.m_color_pos.set_cvalue(value); if(src.m_owner) src.m_owner->update_oi();})
+
       .def_property("color_neg",
                     [](ws_volume_record_t &src)
-                    {return src.m_color_neg;},
+                    {return src.m_color_neg.get_value();},
                     [](ws_volume_record_t &src, const vector3<float> value)
-                    {src.m_color_neg = value; if(src.m_owner) src.m_owner->update_oi();})
+                    {src.m_color_neg.set_cvalue(value); if(src.m_owner) src.m_owner->update_oi();})
+
       .def_property("color_vol",
                     [](ws_volume_record_t &src)
-                    {return src.m_color_vol;},
+                    {return src.m_color_vol.get_value();},
                     [](ws_volume_record_t &src, const vector3<float> value)
-                    {src.m_color_vol = value; if(src.m_owner) src.m_owner->update_oi();});
+                    {src.m_color_vol.set_cvalue(value); if(src.m_owner) src.m_owner->update_oi();});
 
 
   py::class_<volume_view_t, std::shared_ptr<volume_view_t> >

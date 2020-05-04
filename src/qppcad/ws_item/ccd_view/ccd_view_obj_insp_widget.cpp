@@ -53,8 +53,7 @@ void ccd_view_obj_insp_widget_t::update_from_ws_item() {
         case comp_chem_program_run_e::rt_geo_opt :
           set_tab_enabled(m_tab_vibs, false);
           set_tab_enabled(m_tab_geo_opt, true);
-          m_tgo_step_copy_charges->bind_value(reinterpret_cast<int*>(&b_ccdv->m_copy_charges),
-                                            b_ccdv);
+          m_tgo_step_copy_charges->bind_value(&b_ccdv->m_copy_charges, b_ccdv);
           update_geo_opt();
           break;
 

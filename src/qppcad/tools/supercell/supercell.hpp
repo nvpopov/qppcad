@@ -47,17 +47,17 @@ namespace qpp {
 
         std::array<QLabel*, 3> m_boundaries_label;
         std::array<qbinded_int2b_input_t*,3> m_boundaries;
-        std::array<vector3<int>, 3> m_boundaries_values;
 
         qspoiler_widget_t *m_gb_rep_par;
         QFormLayout *m_gb_rep_par_lt;
-
         QVBoxLayout *m_dialog_lt;
 
         std::shared_ptr<geom_view_t> m_dst_gv{nullptr};
         geom_view_t *m_src_gv{nullptr};
-        vector3<int> m_sc_dim{1,1,1};
-        supercell_tool_mode_e m_sc_tool_mode{supercell_tool_mode_e::sc_tool_mode_default};
+
+        hs_prop_v3i_t m_sc_dim;
+        hs_prop_int_t m_sc_tool_mode;
+        std::array<hs_prop_v3i_t, 3> m_boundaries_values;
 
         int get_replication_coeff(int dim_num);
         super_cell_widget_t(QWidget *parent = nullptr);

@@ -35,7 +35,7 @@ void qbinded_float_spinbox_t::load_value_ex() {
 
   if (!is_binded()) return;
   blockSignals(true);
-  setValue(*m_binded_value);
+  setValue(m_binded_value->get_value());
   blockSignals(false);
 
 }
@@ -429,7 +429,7 @@ void qbinded_ws_item_combobox_t::load_value() {
       QString name_in_checkbox = itemText(i);
       std::string name_in_cb = name_in_checkbox.toStdString();
 
-      if (m_binded_ws_item_p->get()->m_name == name_in_cb
+      if (m_binded_ws_item_p->get()->m_name.get_value() == name_in_cb
           && m_binded_ws_item_p->get()->get_type() == m_type_id) {
           setCurrentIndex(i); // 0 == None
           return;
@@ -458,7 +458,7 @@ void qbinded_ws_item_combobox_t::rebuild_variants() {
   if (m_binded_ws) {
       for (auto &item : m_binded_ws->m_ws_items)
         if (item->get_type() == m_type_id)
-          addItem(QString::fromStdString(item->m_name));
+          addItem(QString::fromStdString(item->m_name.get_value()));
 
     }
 
@@ -694,15 +694,17 @@ void qbinded_int2b_input_t::load_value_ex() {
 
   if (is_binded()) {
 
-      sb_x->setValue((*m_binded_value)[0]);
-      sb_y->setValue((*m_binded_value)[1]);
+    auto val = m_binded_value->get_value();
 
-      if ((*m_binded_value)[2] > 0) {
-          sb_x->setRange(0, (*m_binded_value)[2]);
-          sb_y->setRange(0, (*m_binded_value)[2]);
-        }
+    sb_x->setValue(val[0]);
+    sb_y->setValue(val[1]);
 
+    if (val[2] > 0) {
+      sb_x->setRange(0, val[2]);
+      sb_y->setRange(0, val[2]);
     }
+
+  }
 
 }
 
@@ -848,7 +850,7 @@ qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&
       connect(cbx, &QCheckBox::stateChanged, [this, i](int state) {
 
           if (i < this->m_binded_data.size() && this->m_binded_data[i])
-            *(this->m_binded_data[i]) = state != Qt::CheckState::Unchecked;
+            m_binded_data[i]->set_value(state != Qt::CheckState::Unchecked);
 
           app_state_t::get_inst()->make_viewport_dirty();
 
@@ -860,7 +862,7 @@ qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&
 
 }
 
-void qbinded_bool_named_vector_t::bind_value(std::vector<bool *> &&binded_data) {
+void qbinded_bool_named_vector_t::bind_value(std::vector<hs_prop_bool_t*> &&binded_data) {
 
   if (m_binded_data.size() == m_binded_names.size()
       && binded_data.size() == m_binded_names.size()) {
@@ -885,7 +887,7 @@ void qbinded_bool_named_vector_t::load_value() {
 
           m_boxes[i]->blockSignals(true);
           m_boxes[i]->setCheckState(
-                i < m_binded_data.size() && m_binded_data[i] && *(m_binded_data[i]) ?
+                i < m_binded_data.size() && m_binded_data[i] && m_binded_data[i]->get_value() ?
                   Qt::Checked :
                   Qt::Unchecked
                   );
@@ -903,9 +905,11 @@ void qbinded_bool_named_vector_t::unbind_value() {
 
 void qbinded_matrix3_input_t::load_value_ex() {
 
+  matrix3<float> mat = m_binded_value ? m_binded_value->get_value() : matrix3<float>{-1};
+
   for (size_t i = 0; i < 3; i++)
     for (size_t q = 0; q < 3; q++)
-      m_sbx[q + i * 3]->setValue(m_binded_value ? (*m_binded_value)(i,q) : -1);
+      m_sbx[q + i * 3]->setValue(mat(i,q));
 
 }
 
@@ -985,7 +989,9 @@ void qbinded_matrix3_input_t::spinbox_value_changed(double newval) {
   auto it = m_sbx_lookup.find(sbx);
   if (it == m_sbx_lookup.end()) return;
 
-  (*m_binded_value)(std::get<0>(it->second),std::get<1>(it->second)) = newval;
+  matrix3<float> mat = m_binded_value ? m_binded_value->get_value() : matrix3<float>{-1};
+  mat(std::get<0>(it->second),std::get<1>(it->second)) = newval;
+  m_binded_value->set_value(std::move(mat));
 
 }
 
@@ -1021,7 +1027,7 @@ qbinded_float_named_vector_t::qbinded_float_named_vector_t(std::vector<QString> 
               [this, i](double value) {
 
                 if (i < this->m_binded_data.size() && this->m_binded_data[i]) {
-                    *(this->m_binded_data[i]) = value;
+                    m_binded_data[i]->set_value(value);
                     if (m_binded_item
                         && i < this->m_updated_externally_event.size()
                         && this->m_updated_externally_event[i]
@@ -1072,7 +1078,7 @@ void qbinded_float_named_vector_t::set_min_max_step_ex(std::vector<float> &&vmin
 
 }
 
-void qbinded_float_named_vector_t::bind_value(std::vector<float *> &&binded_data,
+void qbinded_float_named_vector_t::bind_value(std::vector<hs_prop_float_t *> &&binded_data,
                                               iupdatable_externally_t *item_to_bind) {
 
   if (m_binded_data.size() == m_binded_names.size() &&
@@ -1101,7 +1107,7 @@ void qbinded_float_named_vector_t::load_value() {
       if (i < m_boxes.size() && m_boxes[i] && m_binded_data[i]) {
 
           m_boxes[i]->blockSignals(true);
-          m_boxes[i]->setValue(*m_binded_data[i]);
+          m_boxes[i]->setValue(m_binded_data[i]->get_value());
           m_boxes[i]->blockSignals(false);
 
         }

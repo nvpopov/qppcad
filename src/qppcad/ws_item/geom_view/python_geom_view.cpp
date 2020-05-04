@@ -72,47 +72,53 @@ void py_geom_view_reg_helper_t::reg(
   py_gv_lbl_t(module, "geom_view_labels_subsys_t");
   py_gv_lbl_t.def_property("inplace_hud",
                            [](geom_view_labels_subsys_t &src)
-                           {return src.m_render_inplace_hud;},
+                           {return src.m_render_inplace_hud.get_value();},
                            [](geom_view_labels_subsys_t &src, const bool value)
-                           {src.m_render_inplace_hud = value;
+                           {src.m_render_inplace_hud.set_cvalue(value);
                             src.p_owner->update_oi();
                             app_state_t::get_inst()->make_viewport_dirty();})
+
              .def_property("sel_vis",
                            [](geom_view_labels_subsys_t &src)
-                           {return src.m_selective_lbl;},
+                           {return src.m_selective_lbl.get_value();},
                            [](geom_view_labels_subsys_t &src, const bool value)
-                           {src.m_selective_lbl = value;
+                           {src.m_selective_lbl.set_cvalue(value);
                             src.p_owner->update_oi();
                             app_state_t::get_inst()->make_viewport_dirty();})
+
              .def_property("screen_scale",
                            [](geom_view_labels_subsys_t &src)
-                           {return src.m_screen_scale;},
+                           {return src.m_screen_scale.get_value();},
                            [](geom_view_labels_subsys_t &src, const bool value)
-                           {src.m_screen_scale = value;
+                           {src.m_screen_scale.set_cvalue(value);
                             src.p_owner->update_oi();
                             app_state_t::get_inst()->make_viewport_dirty();})
+
              .def_property("render_outlines",
                            [](geom_view_labels_subsys_t &src)
-                           {return src.m_render_outlines;},
+                           {return src.m_render_outlines.get_value();},
                            [](geom_view_labels_subsys_t &src, const bool value)
-                           {src.m_render_outlines = value;
+                           {src.m_render_outlines.set_cvalue(value);
                             src.p_owner->update_oi();
                             app_state_t::get_inst()->make_viewport_dirty();})
+
              .def_property("style",
                            [](geom_view_labels_subsys_t &src)
-                           {return src.m_style;},
-                           [](geom_view_labels_subsys_t &src,
-                           const geom_labels_style_e value)
-                           {src.m_style = value;
-                            src.p_owner->update_oi();
-                            app_state_t::get_inst()->make_viewport_dirty();})
-             .def_property("font_size",
-                           [](geom_view_labels_subsys_t &src)
-                           {return src.m_lbl_font_size;},
+                           {return src.m_style.get_value();},
                            [](geom_view_labels_subsys_t &src,
                            const int value)
-                           {src.m_lbl_font_size = value; src.p_owner->update_oi();
+                           {src.m_style.set_cvalue(value);
+                            src.p_owner->update_oi();
                             app_state_t::get_inst()->make_viewport_dirty();})
+
+             .def_property("font_size",
+                           [](geom_view_labels_subsys_t &src)
+                           {return src.m_lbl_font_size.get_value();},
+                           [](geom_view_labels_subsys_t &src,
+                           const int value)
+                           {src.m_lbl_font_size.set_cvalue(value); src.p_owner->update_oi();
+                            app_state_t::get_inst()->make_viewport_dirty();})
+
              .def("lbl_by_ngb_cnt", &geom_view_labels_subsys_t::labelize_sel_by_neighbours_count)
              .def("lbl_by_geom_fctr", &geom_view_labels_subsys_t::labelize_sel_by_dist_factor);
 
@@ -155,81 +161,81 @@ void py_geom_view_reg_helper_t::reg(
 
          .def_property("atom_scale",
                        [](geom_view_t &src)
-                       {return src.m_atom_scale_factor;},
+                       {return src.m_atom_scale_factor.get_value();},
                        [](geom_view_t &src, const float value)
-                       {src.m_atom_scale_factor = value; src.update_oi();})
+                       {src.m_atom_scale_factor.set_cvalue(value); src.update_oi();})
 
          .def_property("bond_scale",
                        [](geom_view_t &src)
-                       {return src.m_bond_scale_factor;},
+                       {return src.m_bond_scale_factor.get_value();},
                        [](geom_view_t &src, const float value)
-                       {src.m_bond_scale_factor = value; src.update_oi();})
+                       {src.m_bond_scale_factor.set_cvalue(value); src.update_oi();})
 
          .def_property("draw_atoms",
                        [](geom_view_t &src)
-                       {return src.m_draw_atoms;},
+                       {return src.m_draw_atoms.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_draw_atoms = value; src.update_oi();})
+                       {src.m_draw_atoms.set_cvalue(value); src.update_oi();})
 
          .def_property("draw_img_atoms",
                        [](geom_view_t &src)
-                       {return src.m_draw_img_atoms;},
+                       {return src.m_draw_img_atoms.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_draw_img_atoms = value; src.update_oi();})
+                       {src.m_draw_img_atoms.set_cvalue(value); src.update_oi();})
 
          .def_property("draw_bonds",
                        [](geom_view_t &src)
-                       {return src.m_draw_bonds;},
+                       {return src.m_draw_bonds.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_draw_bonds = value; src.update_oi();})
+                       {src.m_draw_bonds.set_cvalue(value); src.update_oi();})
 
          .def_property("draw_img_bonds",
                        [](geom_view_t &src)
-                       {return src.m_draw_img_bonds;},
+                       {return src.m_draw_img_bonds.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_draw_img_bonds = value; src.update_oi();})
+                       {src.m_draw_img_bonds.set_cvalue(value); src.update_oi();})
 
          .def_property("render_style",
                        [](geom_view_t &src)
-                       {return src.m_render_style;},
-                       [](geom_view_t &src, const geom_view_render_style_e value)
-                       {src.m_render_style = value; src.update_oi();})
+                       {return src.m_render_style.get_value();},
+                       [](geom_view_t &src, const int value)
+                       {src.m_render_style.set_cvalue(value); src.update_oi();})
 
          .def_property("sel_vis",
                        [](geom_view_t &src)
-                       {return src.m_sel_vis;},
+                       {return src.m_sel_vis.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_sel_vis = value; src.update_oi();})
+                       {src.m_sel_vis.set_cvalue(value); src.update_oi();})
 
          .def_property("sel_vis_affect_bonds",
                        [](geom_view_t &src)
-                       {return src.m_sel_vis_affect_bonds;},
+                       {return src.m_sel_vis_affect_bonds.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_sel_vis_affect_bonds = value; src.update_oi();})
+                       {src.m_sel_vis_affect_bonds.set_cvalue(value); src.update_oi();})
 
          .def_property("draw_cell",
                        [](geom_view_t &src)
-                       {return src.m_draw_cell;},
+                       {return src.m_draw_cell.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_draw_cell = value; src.update_oi();})
+                       {src.m_draw_cell.set_cvalue(value); src.update_oi();})
 
          .def_property("cell_color",
                        [](geom_view_t &src)
-                       {return src.m_cell_color;},
+                       {return src.m_cell_color.get_value();},
                        [](geom_view_t &src, const vector3<float> value)
-                       {src.m_cell_color = value; src.update_oi();})
+                       {src.m_cell_color.set_cvalue(value); src.update_oi();})
 
          .def_property("draw_subcells",
                        [](geom_view_t &src)
-                       {return src.m_draw_subcells;},
+                       {return src.m_draw_subcells.get_value();},
                        [](geom_view_t &src, const bool value)
-                       {src.m_draw_subcells = value; src.update_oi();})
+                       {src.m_draw_subcells.set_cvalue(value); src.update_oi();})
 
          .def_property("subcells_range",
                        [](geom_view_t &src)
-                       {return src.m_subcells_range;},
+                       {return src.m_subcells_range.get_value();},
                        [](geom_view_t &src, const vector3<int> value)
-                       {src.m_subcells_range = value; src.update_oi();})
+                       {src.m_subcells_range.set_cvalue(value); src.update_oi();})
 
          .def("ts", &geom_view_t::translate_selected)
          .def("get_xcolor", &geom_view_t::get_xcolor)

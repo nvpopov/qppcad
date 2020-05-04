@@ -13,7 +13,7 @@ namespace qpp {
 
       public:
 
-        matrix3<float> m_data{0};
+        hs_prop_m3f_t m_data;
 
         ws_matrix3_t();
 

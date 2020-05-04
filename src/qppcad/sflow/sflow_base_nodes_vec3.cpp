@@ -92,10 +92,10 @@ bool sf_v3f_sum_v3f_node_t::execute_ex() {
   auto inp1 = get_pars_as<sf_parameter_v3f_t>(1, m_inps);
 
   if (out0 && inp0 && inp1) {
-      out0->m_value = inp0->m_value + inp1->m_value;
-    } else {
-      return false;
-    }
+    out0->m_value.set_value(inp0->m_value.get_value() + inp1->m_value.get_value());
+  } else {
+    return false;
+  }
 
   return true;
 
@@ -125,10 +125,10 @@ bool sf_v3f_dot_node_t::execute_ex() {
   auto inp1 = get_pars_as<sf_parameter_v3f_t>(1, m_inps);
 
   if (out0 && inp0 && inp1) {
-      out0->m_value = inp0->m_value.dot(inp1->m_value);
-    } else {
-      return false;
-    }
+    out0->m_value.set_value(inp0->m_value.get_value().dot(inp1->m_value.get_value()));
+  } else {
+    return false;
+  }
 
   return true;
 
@@ -156,10 +156,10 @@ bool sf_v3f_normalized_node_t::execute_ex() {
   auto inp0 = get_pars_as<sf_parameter_v3f_t>(0, m_inps);
 
   if (out0 && inp0) {
-      out0->m_value = inp0->m_value.normalized();
-    } else {
-      return false;
-    }
+    out0->m_value.set_value(inp0->m_value.get_value().normalized());
+  } else {
+    return false;
+  }
 
   return true;
 
@@ -186,10 +186,10 @@ bool sf_v3f_norm_node_t::execute_ex() {
   auto inp0 = get_pars_as<sf_parameter_v3f_t>(0, m_inps);
 
   if (out0 && inp0) {
-      out0->m_value = inp0->m_value.norm();
-    } else {
-      return false;
-    }
+    out0->m_value.set_value(inp0->m_value.get_value().norm());
+  } else {
+    return false;
+  }
 
   return true;
 
@@ -219,10 +219,10 @@ bool sf_v3f_cross_node_t::execute_ex() {
   auto inp1 = get_pars_as<sf_parameter_v3f_t>(1, m_inps);
 
   if (out0 && inp0) {
-      out0->m_value = inp0->m_value.cross(inp1->m_value);
-    } else {
-      return false;
-    }
+    out0->m_value.set_value(inp0->m_value.get_value().cross(inp1->m_value.get_value()));
+  } else {
+    return false;
+  }
 
   return true;
 

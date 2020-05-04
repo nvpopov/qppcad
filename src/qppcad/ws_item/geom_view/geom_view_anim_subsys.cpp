@@ -8,6 +8,11 @@ using namespace qpp::cad;
 geom_view_anim_subsys_t::geom_view_anim_subsys_t(geom_view_t &_p_owner) {
 
   p_owner = &_p_owner;
+  m_anim_frame_time.set_value(0.25f); add_hs_child(&m_anim_frame_time);
+  m_rebuild_bonds_in_anim.set_value(true); add_hs_child(&m_rebuild_bonds_in_anim);
+  m_play_cyclic.set_value(true); add_hs_child(&m_play_cyclic);
+  m_play_anim.set_value(false); add_hs_child(&m_play_anim);
+  m_interpolate_anim.set_value(true); add_hs_child(&m_interpolate_anim);
 
 }
 
@@ -36,28 +41,28 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
             m_anim_data[anim_id].frames[start_frame_n].m_cell[vc_i] * (frame_delta) +
             m_anim_data[anim_id].frames[end_frame_n].m_cell[vc_i]  * (1-frame_delta);
     } else {
-      if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_lock);
+      if (!m_rebuild_bonds_in_anim.get_value()) p_owner->m_tws_tr->do_action(act_lock);
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_lock_img);
     }
 
   size_t nat = p_owner->m_geom->nat();
-  if (m_anim_data[anim_id].frames[start_frame_n].atom_pos.size() != nat ||
-      m_anim_data[anim_id].frames[end_frame_n].atom_pos.size() != nat) {
-      m_force_non_animable = true;
-      return;
+  if (m_anim_data[anim_id].frames[start_frame_n].atom_pos.size() != nat
+      || m_anim_data[anim_id].frames[end_frame_n].atom_pos.size() != nat) {
+       m_force_non_animable = true;
+       return;
     }
 
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) { // update atom data
 
       vector3<float> new_pos =
-          m_interpolate_anim ?
+          m_interpolate_anim.get_value() ?
             m_anim_data[anim_id].frames[start_frame_n].atom_pos[i] * (frame_delta) +
             m_anim_data[anim_id].frames[end_frame_n].atom_pos[i] * (1-frame_delta) :
             m_anim_data[anim_id].frames[start_frame_n].atom_pos[i];
 
       p_owner->m_geom->change_pos(i, new_pos);
 
-      if (p_owner->m_color_mode == geom_view_color_e::color_from_xgeom) {
+      if (p_owner->m_color_mode.get_value() == geom_view_color_e::color_from_xgeom) {
 
           // check that colors in frame_data are avaiable
           if (m_anim_data[anim_id].frames[start_frame_n].atom_color.size() == nat &&
@@ -84,7 +89,7 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
       p_owner->m_tws_tr->do_action(act_unlock | act_rebuild_tree | act_unlock_img);
       p_owner->m_tws_tr->do_action(act_rebuild_all);
     } else {
-      if (!m_rebuild_bonds_in_anim) p_owner->m_tws_tr->do_action(act_unlock);
+      if (!m_rebuild_bonds_in_anim.get_value()) p_owner->m_tws_tr->do_action(act_unlock);
       else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_unlock_img);
     }
 
@@ -141,13 +146,13 @@ void geom_view_anim_subsys_t::update(const float delta_time) {
   if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
   if (m_anim_data[m_cur_anim].frames.empty()) return;
   if (!animable()) return;
-  if (!m_play_anim) return;
+  if (!m_play_anim.get_value()) return;
 
-  m_cur_anim_time += 1 / (m_anim_frame_time * 60);
+  m_cur_anim_time += 1 / (m_anim_frame_time.get_value() * 60);
   if (m_cur_anim_time > m_anim_data[m_cur_anim].frames.size() - 1) {
-      if (m_play_cyclic) m_cur_anim_time = 0.0f;
+      if (m_play_cyclic.get_value()) m_cur_anim_time = 0.0f;
       else {
-          m_play_anim = false;
+        m_play_anim.set_value(false);
           m_cur_anim_time = m_anim_data[m_cur_anim].frames.size() - 1;
         }
     } else {
@@ -157,7 +162,7 @@ void geom_view_anim_subsys_t::update(const float delta_time) {
   //if current anim type equals static -> update to static and switch m_cur_anim_time = 0
   if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_t::anim_static) {
       m_cur_anim_time = 0.0f;
-      m_play_anim = false;
+      m_play_anim.set_value(false);
       //m_play_cyclic = false;
     }
   //astate->make_viewport_dirty();

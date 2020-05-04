@@ -9,6 +9,8 @@ using namespace qpp::cad;
 ccd_view_t::ccd_view_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
+  m_copy_charges.set_value(ccd_copy_charges_mode::do_not_copy_charges);
+  add_hs_child(&m_copy_charges);
 
 }
 
@@ -28,9 +30,10 @@ void ccd_view_t::manual_update_vib() {
       if (al && al->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1)  {
           al->m_anim->m_cur_anim = m_cur_vib + 1;
           al->m_anim->m_cur_anim_time = 0.0f;
-          al->m_anim->m_play_anim = true;
-          al->m_anim->m_play_cyclic = true;
-          al->m_anim->m_anim_frame_time = 0.1f;
+          //TODO batch changes
+          al->m_anim->m_play_anim.set_value(true);
+          al->m_anim->m_play_cyclic.set_value(true);
+          al->m_anim->m_anim_frame_time.set_value(0.1f);
         }
     }
 
@@ -61,11 +64,11 @@ void ccd_view_t::update_connected_items() {
               for (size_t i = 0; i < as_gv->m_anim->get_total_anims(); i++)
                 if (as_gv->m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_geo_opt) {
                     as_gv->m_anim->update_and_set_anim(i, m_cur_step);
-                    as_gv->m_anim->m_play_anim = false;
+                    as_gv->m_anim->m_play_anim.set_value(false);
 
                     //copy charges
-                    if (m_copy_charges != ccd_copy_charges_mode::do_not_copy_charges &&
-                        m_cur_step < m_ccd->m_steps.size() && m_connected_items.size() == 1)
+                    if (m_copy_charges.get_value() != ccd_copy_charges_mode::do_not_copy_charges
+                        && m_cur_step < m_ccd->m_steps.size() && m_connected_items.size() == 1)
                       update_charges(as_gv, 0, as_gv->m_geom->nat());
                     //end copy charges
                     break;
@@ -84,7 +87,7 @@ void ccd_view_t::update_connected_items() {
               as_gv->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1 &&
               as_gv->m_anim->m_anim_data[m_cur_vib+1].m_anim_type == geom_anim_t::anim_vib) {
               as_gv->m_anim->update_and_set_anim(m_cur_vib+1, 0);
-              as_gv->m_anim->m_play_anim = true;
+              as_gv->m_anim->m_play_anim.set_value(true);
             }
         break;
       }
@@ -103,7 +106,7 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
 
       bool succes{false};
 
-      switch (m_copy_charges) {
+      switch (m_copy_charges.get_value()) {
 
         case ccd_copy_charges_mode::copy_mulliken : {
 

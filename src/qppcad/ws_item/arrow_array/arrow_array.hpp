@@ -19,15 +19,13 @@ namespace qpp {
         geom_view_t *m_binded_gv{nullptr};
         std::shared_ptr<ws_item_t> m_src{nullptr};
 
-        float m_unf_arrow_len{1.0f};
-        float m_unf_arrow_cap_len{0.15f};
-        float m_unf_arrow_scale{0.05f};
-        float m_unf_arrow_cap_scale{0.12f};
-
-        float m_displ_eps{0.0005f};
-
-        bool m_affected_by_sv{false};
-        vector3<float> m_color{clr_red};
+        hs_prop_float_t m_unf_arrow_len{};
+        hs_prop_float_t m_unf_arrow_cap_len;
+        hs_prop_float_t m_unf_arrow_scale;
+        hs_prop_float_t m_unf_arrow_cap_scale;
+        hs_prop_float_t m_displ_eps;
+        hs_prop_bool_t m_affected_by_sv;
+        hs_prop_v3f_t m_color;
 
         arrow_array_t();
 

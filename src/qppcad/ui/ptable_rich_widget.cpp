@@ -172,10 +172,10 @@ ptable_element_editor_t::ptable_element_editor_t(int elem_id, QWidget *parent) :
   m_main_lt->addWidget(m_dialog_bb);
 
   /* load data from ptable and then bind inputs*/
-  m_binded_radius = pt_inst->arecs[m_elem_id].m_radius;
-  m_binded_ionic_rad = pt_inst->arecs[m_elem_id].m_ionic_radius;
-  m_binded_cov_rad = pt_inst->arecs[m_elem_id].m_covrad_slater;
-  m_binded_color = pt_inst->arecs[m_elem_id].m_color_jmol;
+  m_binded_radius.set_cvalue(pt_inst->arecs[m_elem_id].m_radius);
+  m_binded_ionic_rad.set_cvalue(pt_inst->arecs[m_elem_id].m_ionic_radius);
+  m_binded_cov_rad.set_cvalue(pt_inst->arecs[m_elem_id].m_covrad_slater);
+  m_binded_color.set_cvalue(pt_inst->arecs[m_elem_id].m_color_jmol);
 
   m_radius->bind_value(&m_binded_radius);
   m_ionic_rad->bind_value(&m_binded_ionic_rad);
@@ -190,10 +190,10 @@ void ptable_element_editor_t::update_element_data() {
 
   ptable *pt_inst = ptable::get_inst();
 
-  pt_inst->arecs[m_elem_id].m_radius = m_binded_radius;
-  pt_inst->arecs[m_elem_id].m_ionic_radius = m_binded_ionic_rad;
-  pt_inst->arecs[m_elem_id].m_covrad_slater = m_binded_cov_rad;
-  pt_inst->arecs[m_elem_id].m_color_jmol = m_binded_color;
+  pt_inst->arecs[m_elem_id].m_radius = m_binded_radius.get_value();
+  pt_inst->arecs[m_elem_id].m_ionic_radius = m_binded_ionic_rad.get_value();
+  pt_inst->arecs[m_elem_id].m_covrad_slater = m_binded_cov_rad.get_value();
+  pt_inst->arecs[m_elem_id].m_color_jmol = m_binded_color.get_value();
   pt_inst->arecs[m_elem_id].m_redefined = true;
 
 }

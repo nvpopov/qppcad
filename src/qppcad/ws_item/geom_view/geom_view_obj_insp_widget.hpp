@@ -160,7 +160,7 @@ namespace qpp {
         QLabel *m_tms_pair_dist;
 
         qbinded_color3_input_t *m_tms_pair_dist_color;
-        qbinded_checkbox_t *m_tms_pair_enabled;
+        qbinded_checkbox_t *m_tms_pair_show;
         qbinded_checkbox_t *m_tms_pair_label_enabled;
         qbinded_combobox_t *m_tms_pair_line_style;
         qbinded_int_spinbox_t *m_tms_pair_line_size;
@@ -226,7 +226,7 @@ namespace qpp {
         qspoiler_widget_t *m_tm_gb_u_scale;
         QFormLayout *m_tm_gb_u_scale_lt;
         qbinded_float3_input_t *m_tm_u_scale_v3;
-        vector3<float> m_tm_u_scale_v3_val{1};
+        hs_prop_v3f_t m_tm_u_scale_v3_val;
         QPushButton *m_tm_u_apply_scale_button;
 
         qspoiler_widget_t *m_tm_gb_translate;

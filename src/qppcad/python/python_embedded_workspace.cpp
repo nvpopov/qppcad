@@ -38,7 +38,7 @@ std::shared_ptr<ws_item_t> construct_from_vector3f(
     auto as_wsv3 = new_item->cast_as<ws_vector3_t>();
     if(!as_wsv3) return nullptr;
     as_wsv3->set_pos(vec);
-    as_wsv3->m_name = name;
+    as_wsv3->m_name.set_cvalue(name);
     ws.add_item_to_ws(new_item);
 
     return new_item;
@@ -70,7 +70,7 @@ std::shared_ptr<ws_item_t> construct_from_geom(
     as_gv->m_geom->add_observer(*as_gv->m_tws_tr);
     as_gv->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
     as_gv->m_tws_tr->do_action(act_rebuild_ntable);
-    as_gv->m_name = name;
+    as_gv->m_name.set_cvalue(name);
     ws.add_item_to_ws(new_item);
 
     return new_item;
@@ -89,7 +89,7 @@ std::shared_ptr<ws_item_t> construct_from_array_group(
     if(!as_psg) return nullptr;
 
     as_psg->m_ag = ag;
-    as_psg->m_name = name;
+    as_psg->m_name.set_cvalue(name);
     ws.add_item_to_ws(new_item);
     as_psg->update_view();
 
@@ -213,21 +213,25 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
               .def("get_parent_ws", [](ws_item_t &wsi){return wsi.m_parent_ws;})
              // .def_readwrite("m_pos", &ws_item_t::get_pos, &ws_item_t::set_pos)
               .def_readonly("genesis_file_name", &ws_item_t::m_genesis_file_name)
+
               .def_property("is_visible",
                             [](ws_item_t &src)
-                            {return src.m_is_visible;},
+                            {return src.m_is_visible.get_value();},
                             [](ws_item_t &src, const bool value)
-                            {src.m_is_visible = value; src.update_oi();})
+                            {src.m_is_visible.set_cvalue(value); src.update_oi();})
+
               .def_property("show_bb",
                             [](ws_item_t &src)
-                            {return src.m_show_bb;},
+                            {return src.m_show_bb.get_value();},
                             [](ws_item_t &src, const bool value)
-                            {src.m_show_bb = value; src.update_oi();})
+                            {src.m_show_bb.set_cvalue(value); src.update_oi();})
+
               .def_property("pos",
                             [](ws_item_t &src)
-                            {return src.m_pos;},
+                            {return src.m_pos.get_value();},
                             [](ws_item_t &src, const vector3<float> value)
-                            {src.m_pos = value; src.update_oi();})
+                            {src.m_pos.set_cvalue(value); src.update_oi();})
+
               .def("__repr__", &ws_item_t::py_get_repr)
               .def("__str__", &ws_item_t::py_get_repr)
               .def("set_selected", &ws_item_t::set_selected)

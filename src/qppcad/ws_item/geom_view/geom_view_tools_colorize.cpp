@@ -202,7 +202,7 @@ void geom_view_colorizer_helper::colorize_by_category(geom_view_t *gv,
     if (cat_data[i] >= 0 && cat_data[i] < clr.size())
       gv->set_xcolorv(i, clr[cat_data[i]]);
 
-  gv->m_color_mode = geom_view_color_e::color_from_xgeom;
+  gv->m_color_mode.set_value(geom_view_color_e::color_from_xgeom);
 
 }
 

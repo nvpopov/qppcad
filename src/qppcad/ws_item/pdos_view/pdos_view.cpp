@@ -10,6 +10,13 @@ using namespace qpp::cad;
 pdos_view_t::pdos_view_t() {
 
   set_default_flags(ws_item_flags_default);
+
+  m_pdos_sigma.set_value(0.05f); add_hs_child(&m_pdos_sigma);
+  m_smearing_steps.set_value(1000); add_hs_child(&m_smearing_steps);
+  m_pdos_ewindow_low.set_value(0); add_hs_child(&m_pdos_ewindow_low);
+  m_pdos_ewindow_high.set_value(1); add_hs_child(&m_pdos_ewindow_high);
+  m_pdos_fwhm.set_value(1); add_hs_child(&m_pdos_fwhm);
+
   m_pdos_gen_chart = new QChart();
   m_pdos_chart_view = new QChartView();
   m_pdos_chart_view->setRubberBand(QChartView::HorizontalRubberBand);
@@ -79,10 +86,12 @@ void pdos_view_t::add_data_from_file(const std::string &file_name, comp_chem_pro
 
   //update energy window
   //low energy
-  m_pdos_ewindow_low = std::min(m_pdos_ewindow_low, pdos_rec.m_data.front()(0,0));
+  m_pdos_ewindow_low.set_cvalue(std::min(m_pdos_ewindow_low.get_value(),
+                                          pdos_rec.m_data.front()(0,0)));
 
   //high energy
-  m_pdos_ewindow_high = std::max(m_pdos_ewindow_high, pdos_rec.m_data.back()(0,0));
+  m_pdos_ewindow_high.set_cvalue(std::max(m_pdos_ewindow_high.get_value(),
+                                          pdos_rec.m_data.back()(0,0)));
 
   if (succes) m_pdos_recs.push_back(std::move(pdos_rec));
 
@@ -99,16 +108,16 @@ void pdos_view_t::rebuild_plots() {
 
       bool _rec_is_spin_polarized = rec.m_is_alpha != rec.m_is_beta;
 
-      float e_min = std::max(rec.m_data.front()(0,0), m_pdos_ewindow_low);
-      float e_max = std::min(rec.m_data.back()(0,0), m_pdos_ewindow_high);
+      float e_min = std::max(rec.m_data.front()(0,0), m_pdos_ewindow_low.get_value());
+      float e_max = std::min(rec.m_data.back()(0,0), m_pdos_ewindow_high.get_value());
 
-      float e_step = (e_max - e_min) / float(m_smearing_steps);
+      float e_step = (e_max - e_min) / float(m_smearing_steps.get_value());
       int e_cnt = rec.m_data.size();
 
       using pda_t = Eigen::Array<float, 1, Eigen::Dynamic>;
 
       pda_t _per_data;
-      _per_data.resize(Eigen::NoChange, m_smearing_steps);
+      _per_data.resize(Eigen::NoChange, m_smearing_steps.get_value());
       _per_data = 0;
 
       std::vector<pda_t> _per_e;
@@ -121,7 +130,7 @@ void pdos_view_t::rebuild_plots() {
 
       for (size_t i = 0; i < e_cnt; i++) {
 
-          _per_e[i].resize(Eigen::NoChange, m_smearing_steps);
+          _per_e[i].resize(Eigen::NoChange, m_smearing_steps.get_value());
           _per_e[i] = 0;
           float e_0 = rec.m_data[i](0,0);
 
@@ -131,11 +140,12 @@ void pdos_view_t::rebuild_plots() {
             occ += rec.m_data[i](0, occ_i);
 
           //generate gaussian
-          for (size_t q = 0; q < m_smearing_steps; q++) {
+          for (size_t q = 0; q < m_smearing_steps.get_value(); q++) {
               float e_q = e_min + e_step * q;
               _per_e[i](0, q) =
-                  (1 / (m_pdos_sigma * (std::sqrt(2*qpp::pi)))) * rec.m_scale * occ * std::exp(
-                    -0.5f * std::pow((e_q - e_0)/m_pdos_sigma, 2)
+                  (1 / (m_pdos_sigma.get_value() * (std::sqrt(2*qpp::pi))))
+                  * rec.m_scale * occ
+                  * std::exp(-0.5f * std::pow((e_q - e_0)/m_pdos_sigma.get_value(), 2)
                     );
             } // end inner for
 
@@ -148,7 +158,7 @@ void pdos_view_t::rebuild_plots() {
 
       // compose QLineSeries from "composed" array
       QLineSeries* series = new QLineSeries();
-      for (size_t i = 1; i < m_smearing_steps - 1; i++)
+      for (size_t i = 1; i < m_smearing_steps.get_value() - 1; i++)
         series->append(e_min + e_step * i, _per_data(0, i));
 
       series->setName(QString("%1 %2")

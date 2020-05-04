@@ -1,4 +1,4 @@
-#include <qppcad/ws_item/ws_item.hpp>
+﻿#include <qppcad/ws_item/ws_item.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <data/color.hpp>
 #include <qppcad/core/workspace.hpp>
@@ -7,14 +7,30 @@
 using namespace qpp;
 using namespace qpp::cad;
 
+ws_item_t::ws_item_t() {
+
+  m_show_bb.set_value(true);
+  m_is_visible.set_value(true);
+  m_pos.set_value(vector3<float>{0});
+  m_rotation.set_value(vector3<float>{0});
+  m_scale.set_value(vector3<float>{1, 1, 1});
+
+  add_hs_child(&m_show_bb);
+  add_hs_child(&m_is_visible);
+  add_hs_child(&m_pos);
+  add_hs_child(&m_rotation);
+  add_hs_child(&m_scale);
+
+}
+
 vector3<float> ws_item_t::get_pos() {
-  return m_pos;
+  return m_pos.get_value();
 }
 
 void ws_item_t::set_pos(vector3<float> new_pos) {
 
   app_state_t* astate = app_state_t::get_inst();
-  m_pos = new_pos;
+  m_pos.set_value(std::move(new_pos));
 
   //notify followers about changes
   updated_externally(ws_item_updf_pos_changed);
@@ -66,34 +82,20 @@ void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
 
 }
 
-void ws_item_t::push_epoch() {
-
-}
-
-void ws_item_t::goto_epoch(size_t target_epoch) {
-
-}
-
-size_t ws_item_t::get_cur_epoch() {
-  return m_cur_epoch;
-}
-
-void ws_item_t::pop_epoch() {
-
-}
-
 void ws_item_t::set_parent_ws(workspace_t *_parent_ws) {
   m_parent_ws = _parent_ws;
+  m_parent_ws->add_hs_child(this);
 }
 
 const std::string ws_item_t::get_name() {
-  return m_name;
+  return m_name.get_value();
 }
 
 void ws_item_t::set_name(const std::string &_name) {
 
-  if (m_name != _name){
-      m_name = _name;
+  if (m_name.get_value() != _name) {
+      auto name(_name);
+      m_name.set_value(std::move(name));
       m_parent_ws->ws_changed();
     }
 
@@ -101,8 +103,8 @@ void ws_item_t::set_name(const std::string &_name) {
 
 void ws_item_t::set_name(const char *_name) {
 
-  if (m_name != _name){
-      m_name = std::string(_name);
+  if (m_name.get_value() != _name){
+      m_name.set_value(std::string(_name));
       m_parent_ws->ws_changed();
     }
 
@@ -205,13 +207,14 @@ void ws_item_t::render () {
       && (get_flags() & ws_item_flags_support_sel)
       && (get_flags() & ws_item_flags_support_render_bb)
       && is_bb_visible()
-      && m_show_bb) {
+      && m_show_bb.get_value()) {
 
       astate->dp->begin_render_aabb();
+      auto pos = m_pos.get_value();
 
       (m_parent_ws->m_edit_type == ws_edit_e::edit_item) ?
-           astate->dp->render_aabb(clr_fuchsia, m_pos + m_aabb.min, m_pos + m_aabb.max) :
-           astate->dp->render_aabb(clr_olive, m_pos + m_aabb.min, m_pos + m_aabb.max);
+           astate->dp->render_aabb(clr_fuchsia, pos + m_aabb.min, pos + m_aabb.max) :
+           astate->dp->render_aabb(clr_olive, pos + m_aabb.min, pos + m_aabb.max);
 
       astate->dp->end_render_aabb();
 
@@ -226,7 +229,7 @@ void ws_item_t::render_overlay(QPainter &painter) {
 void ws_item_t::mouse_double_click(ray_t<float> *ray) {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->tlog("ws_item_t::mouse_double_click, name = {}", m_name);
+  astate->tlog("ws_item_t::mouse_double_click, name = {}", m_name.get_value());
 
 }
 
@@ -288,13 +291,13 @@ void ws_item_t::updated_externally(uint32_t update_reason) {
       && m_leader
       && (p_flags & ws_item_flags_fetch_leader_pos)) {
       //copy pos from leader and apply offset
-      m_pos = m_leader->m_pos + m_leader_offset;
+      m_pos.set_value(m_leader->m_pos.get_value() + m_leader_offset);
     }
 
 }
 
 void ws_item_t::on_begin_node_gizmo_translate() {
-  m_pos_old = m_pos;
+  m_pos_old = m_pos.get_value();
 }
 
 void ws_item_t::on_end_node_gizmo_translate() {
@@ -316,7 +319,7 @@ void ws_item_t::on_end_content_gizmo_translate() {
 void ws_item_t::translate(const vector3<float> &tr_vec) {
 
   app_state_t* astate = app_state_t::get_inst();
-  if (get_flags() & ws_item_flags_support_tr) m_pos += tr_vec;
+  if (get_flags() & ws_item_flags_support_tr) m_pos.set_value(m_pos.get_value() + tr_vec);
   if (get_flags() & ws_item_flags_translate_emit_upd_event) updated_externally();
   if (is_selected()) astate->astate_evd->cur_ws_selected_item_position_changed();
 
@@ -329,28 +332,33 @@ void ws_item_t::translate(const vector3<float> &tr_vec) {
 
 void ws_item_t::save_to_json(json &data) {
 
-  json_helper::save_var(JSON_WS_ITEM_NAME, m_name, data);
+  json_helper::hs_save_var(JSON_WS_ITEM_NAME, m_name, data);
   json_helper::save_var(JSON_WS_ITEM_TYPE, get_type_name(), data);
-  json_helper::save_var(JSON_IS_VISIBLE, m_is_visible, data);
+  json_helper::hs_save_var(JSON_IS_VISIBLE, m_is_visible, data);
 
   if (get_flags() & ws_item_flags_support_render_bb)
-    json_helper::save_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
+    json_helper::hs_save_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
 
-  if (get_flags() & ws_item_flags_support_tr)
-    json_helper::save_vec3(JSON_POS, m_pos, data);
+  if (get_flags() & ws_item_flags_support_tr) {
+    auto pos = m_pos.get_value();
+    json_helper::save_vec3(JSON_POS, pos, data);
+  }
 
-  if (m_leader)
-    json_helper::save_var(JSON_WS_ITEM_LEADER, m_leader->m_name, data);
+  if (m_leader) {
+    auto leader_name = m_leader->m_name.get_value();
+    json_helper::save_var(JSON_WS_ITEM_LEADER, leader_name, data);
+  }
 
   if (!m_connected_items.empty()) {
       json _con_items = json::array({});
-      for (auto &elem : m_connected_items) if(elem) _con_items.push_back(elem->m_name);
+      for (auto &elem : m_connected_items)
+        if(elem) _con_items.push_back(elem->m_name.get_value());
       data[JSON_WS_ITEM_CONNECTED_ITEMS] = _con_items;
     }
 
   if (!m_followers.empty()) {
       json _flw_items = json::array({});
-      for (auto &elem : m_followers) if(elem) _flw_items.push_back(elem->m_name);
+      for (auto &elem : m_followers) if(elem) _flw_items.push_back(elem->m_name.get_value());
       data[JSON_WS_ITEM_CONNECTED_ITEMS] = _flw_items;
     }
 
@@ -358,14 +366,17 @@ void ws_item_t::save_to_json(json &data) {
 
 void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
-  json_helper::load_var(JSON_WS_ITEM_NAME, m_name, data);
-  json_helper::load_var(JSON_IS_VISIBLE, m_is_visible, data);
+  json_helper::hs_load_var(JSON_WS_ITEM_NAME, m_name, data);
+  json_helper::hs_load_var(JSON_IS_VISIBLE, m_is_visible, data);
 
   if (get_flags() & ws_item_flags_support_render_bb)
-    json_helper::load_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
+    json_helper::hs_load_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
 
-  if (get_flags() | ws_item_flags_support_tr)
-    json_helper::load_vec3(JSON_POS, m_pos, data);
+  if (get_flags() | ws_item_flags_support_tr) {
+    vector3<float> pos;
+    json_helper::load_vec3(JSON_POS, pos, data);
+    m_pos.set_value(std::move(pos));
+  }
 
   auto _con_items = data.find(JSON_WS_ITEM_CONNECTED_ITEMS);
   if (_con_items != data.end()) {
@@ -373,7 +384,7 @@ void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
       auto &val = _con_items.value();
       std::transform(val.begin(), val.end(), std::back_inserter(rc_ci),
                      [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
-      rep_info.m_connected_items[m_name] = rc_ci;
+      rep_info.m_connected_items[m_name.get_value()] = rc_ci;
     }
 
 }
@@ -410,7 +421,7 @@ void ws_item_t::save_ws_item_field(const std::string &field_name,
                                    std::shared_ptr<ws_item_t> field_ws_item,
                                    json &data) {
 
-  if (field_ws_item) data[field_name] = field_ws_item->m_name;
+  if (field_ws_item) data[field_name] = field_ws_item->m_name.get_value();
 
 }
 
@@ -430,5 +441,5 @@ void ws_item_t::load_ws_item_field(const std::string &field_name,
 }
 
 std::string ws_item_t::py_get_repr() {
-  return fmt::format("[ws_item, type=\"{}\", name=\"{}\"]", get_type_name(), m_name);
+  return fmt::format("[ws_item, type=\"{}\", name=\"{}\"]", get_type_name(), m_name.get_value());
 }

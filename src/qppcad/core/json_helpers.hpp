@@ -2,6 +2,7 @@
 #define QPPCAD_JSON_HELPERS
 
 #include <qppcad/core/json_adapter.hpp>
+#include <qppcad/core/history_stream.hpp>
 #include <symm/index.hpp>
 
 namespace qpp {
@@ -14,6 +15,33 @@ namespace qpp {
 
       static bool exists(const std::string &secname, json &data) {
         return data.find(secname) != data.end();
+      }
+
+      template<typename T>
+      static void hs_save_var(const std::string &varname, hist_doc_t<T> &var, json &data) {
+        data[varname] = var.get_value();
+      }
+
+      template<typename T>
+      static void hs_load_var(const std::string &varname, hist_doc_t<T> &var, json &data) {
+        auto it = data.find(varname);
+        if (it != data.end()) var.set_value(it.value().get<T>());
+      }
+
+      template<typename T>
+      static void hs_save_vec3(const std::string &varname, hist_doc_t<vector3<T>> &var, json &data) {
+        vector3<T> vec = var.get_value();
+        json var_vec = json::array({vec[0], vec[1], vec[2]});
+        data[varname] = var_vec;
+      }
+
+      template<typename T>
+      static void hs_load_vec3(const std::string &varname, hist_doc_t<vector3<T>> &var, json &data) {
+        auto it = data.find(varname);
+        vector3<T> vec;
+        if (it != data.end())
+          for(auto i = 0; i < 3; i++) vec[i] = it.value()[i].get<T>();
+        var.set_value(std::move(vec));
       }
 
       template<typename T>

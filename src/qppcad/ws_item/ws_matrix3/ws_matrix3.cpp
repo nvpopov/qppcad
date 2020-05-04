@@ -5,7 +5,10 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_matrix3_t::ws_matrix3_t() : ws_item_t() {
+
   set_default_flags(ws_item_flags_default);
+  add_hs_child(&m_data);
+
 }
 
 void ws_matrix3_t::vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -47,9 +50,11 @@ void ws_matrix3_t::save_to_json(json &data) {
 
   data[JSON_WS_MATRIX3_DATA] = json::array({});
 
+  auto mdata = m_data.get_value();
+
   for (size_t i = 0; i < 3; i++)
     for (size_t q = 0; q < 3; q++)
-      data[JSON_WS_MATRIX3_DATA].push_back(m_data(i,q));
+      data[JSON_WS_MATRIX3_DATA].push_back(mdata(i,q));
 
 }
 
@@ -59,14 +64,16 @@ void ws_matrix3_t::load_from_json(json &data, repair_connection_info_t &rep_info
 
   auto data_it = data.find(JSON_WS_MATRIX3_DATA);
 
+  matrix3<float> mdata{0};
+
   if (data_it != data.end())
     for (size_t i = 0; i < 3; i++)
       for (size_t q = 0; q < 3; q++) {
-
           size_t idx = i*3 + q;
-          m_data(i,q) = data_it.value()[idx];
-
+          mdata(i,q) = data_it.value()[idx];
         }
+
+  m_data.set_value(std::move(mdata));
 
 }
 

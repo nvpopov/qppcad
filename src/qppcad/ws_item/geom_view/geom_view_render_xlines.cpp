@@ -12,6 +12,13 @@ namespace qpp {
       astate->sp_line_mesh->begin_shader_program();
       astate->mesh_xline_mesh->begin_render_batch();
 
+      auto draw_atoms = al.m_draw_atoms.get_value();
+      auto draw_img_atoms = al.m_draw_img_atoms.get_value();
+      auto draw_bonds = al.m_draw_bonds.get_value();
+      auto draw_img_bonds = al.m_draw_img_bonds.get_value();
+      auto atom_scale_factor = al.m_atom_scale_factor.get_value();
+      auto pos = al.m_pos.get_value();
+
       /*
         sp->u_on(sp_u_name::m_model_view_proj);
         sp->u_on(sp_u_name::v_translate);
@@ -22,7 +29,7 @@ namespace qpp {
       //glLineWidth(al.m_atom_scale_factor*3);
 
       for (uint32_t i = 0; i < al.m_geom->nat(); i++)
-        if (al.m_draw_atoms &&
+        if (draw_atoms &&
             al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
             al.m_atom_type_to_hide.end()) {
 
@@ -31,12 +38,11 @@ namespace qpp {
             float dr_rad = 0.4f;
 
             if (ap_idx) {
-                dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius *
-                         al.m_atom_scale_factor;
+                dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius * atom_scale_factor;
                 color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
               }
 
-            vector3<float> xpos = al.m_geom->pos(i) + al.m_pos;
+            vector3<float> xpos = al.m_geom->pos(i) + pos;
             astate->sp_line_mesh->set_u(sp_u_name::v_translate, xpos.data());
             astate->sp_line_mesh->set_u(sp_u_name::v_color, color.data());
             astate->mesh_xline_mesh->render_batch();

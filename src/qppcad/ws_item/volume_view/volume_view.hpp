@@ -18,7 +18,7 @@ namespace qpp {
 
     class volume_view_t;
 
-    class ws_volume_record_t {
+    class ws_volume_record_t : public hist_doc_base_t {
 
       public:
 
@@ -30,14 +30,14 @@ namespace qpp {
 
         bool m_ready_to_render{false};
         bool m_need_to_regenerate{false};
-        bool m_transparent_volume{false};
-        bool m_render_permanent{false};
-        float m_alpha{0.75f};
-        float m_isolevel{qpp::def_isovalue_dens};
+        hs_prop_bool_t m_transparent_volume;
+        hs_prop_bool_t m_render_permanent;
+        hs_prop_float_t m_alpha;
+        hs_prop_float_t m_isolevel;
 
-        vector3<float> m_color_pos{clr_red};
-        vector3<float> m_color_neg{clr_navy};
-        vector3<float> m_color_vol{clr_yellow};
+        hs_prop_v3f_t m_color_pos;
+        hs_prop_v3f_t m_color_neg;
+        hs_prop_v3f_t m_color_vol;
 
         ws_volume_t m_volume_type;
 
@@ -45,6 +45,8 @@ namespace qpp {
         size_t m_spin_subspace{0};
 
         void copy_from(ws_volume_record_t &other, bool clear_volume = false);
+
+        ws_volume_record_t();
 
     };
 

@@ -52,7 +52,7 @@ void cube_primitive_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
       cube_param_color->bind_value(&b_cp->m_color);
       cube_render_alpha_enabled->bind_value(&b_cp->m_alpha_enabled);
       cube_render_alpha->bind_value(&b_cp->m_alpha);
-      cube_render_mode->bind_value(reinterpret_cast<int*>(&b_cp->m_render_mode));
+      cube_render_mode->bind_value(&b_cp->m_render_mode);
 
     } else {
 

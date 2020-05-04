@@ -31,18 +31,18 @@ void colorize_by_dist_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       geom_view_colorizer_helper::colorize_by_distance(
                       cw.b_gv,
                       cw.m_atom_dist_max->value(),
-                      cw.clr_low,
-                      cw.clr_low,
+                      cw.clr_low.get_value(),
+                      cw.clr_low.get_value(),
                       true, true,
                       cw.m_atom1_type->currentText().toStdString(),
                       cw.m_atom2_type->currentText().toStdString());
-      cw.b_gv->m_color_mode = geom_view_color_e::color_from_xgeom;
+      cw.b_gv->m_color_mode.set_value(geom_view_color_e::color_from_xgeom);
 
       //cache tool data
       astate->m_env_float["T_CLRD_DIST"] = cw.m_atom_dist_max->value();
       astate->m_env_str["T_CLRD_T1"] = cw.m_atom1_type->currentText().toStdString();
       astate->m_env_str["T_CLRD_T2"] = cw.m_atom2_type->currentText().toStdString();
-      astate->m_env_vec3["T_CLRD_CLR"] = cw.clr_low;
+      astate->m_env_vec3["T_CLRD_CLR"] = cw.clr_low.get_value();
 
       astate->make_viewport_dirty();
 
@@ -57,34 +57,34 @@ void colorize_by_dist_widget_t::init_data() {
   if (!b_gv) return;
 
   for (size_t i = 0; i < b_gv->m_geom->n_atom_types(); i++) {
-      QString atom_type = QString::fromStdString(b_gv->m_geom->atom_of_type(i));
-      m_atom1_type->addItem(atom_type);
-      m_atom2_type->addItem(atom_type);
-    }
+    QString atom_type = QString::fromStdString(b_gv->m_geom->atom_of_type(i));
+    m_atom1_type->addItem(atom_type);
+    m_atom2_type->addItem(atom_type);
+  }
 
   auto it_d = astate->m_env_float.find("T_CLRD_DIST");
   if (it_d != astate->m_env_float.end()) m_atom_dist_max->setValue(it_d->second);
 
   auto it_clr = astate->m_env_vec3.find("T_CLRD_CLR");
   if (it_clr != astate->m_env_vec3.end()) {
-      clr_low = it_clr->second;
-      m_clr_input->load_value_ex();
-    }
+    clr_low.set_cvalue(it_clr->second);
+    m_clr_input->load_value_ex();
+  }
 
   auto it_t1 = astate->m_env_str.find("T_CLRD_T1");
   auto it_t2 = astate->m_env_str.find("T_CLRD_T2");
 
   if (it_t1 != astate->m_env_str.end()) {
-      QString type1 = QString::fromStdString(it_t1->second);
-      int type1_idx = m_atom1_type->findText(type1);
-      if (type1_idx >= 0) m_atom1_type->setCurrentIndex(type1_idx);
-    }
+    QString type1 = QString::fromStdString(it_t1->second);
+    int type1_idx = m_atom1_type->findText(type1);
+    if (type1_idx >= 0) m_atom1_type->setCurrentIndex(type1_idx);
+  }
 
   if (it_t2 != astate->m_env_str.end()) {
-      QString type2 = QString::fromStdString(it_t2->second);
-      int type2_idx = m_atom1_type->findText(type2);
-      if (type2_idx >= 0) m_atom2_type->setCurrentIndex(type2_idx);
-    }
+    QString type2 = QString::fromStdString(it_t2->second);
+    int type2_idx = m_atom1_type->findText(type2);
+    if (type2_idx >= 0) m_atom2_type->setCurrentIndex(type2_idx);
+  }
 
 }
 

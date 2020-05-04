@@ -133,38 +133,39 @@ namespace qpp {
         std::unordered_set<size_t> m_atom_type_to_hide_bond;
         std::unordered_map<size_t, vector3<float> > m_type_color_override;
 
-        float m_shading_specular_power{12.0f};
-        float m_atom_scale_factor{0.3f};
-        float m_bond_scale_factor{0.09f};
-        vector3<float> m_cell_color{0.1f, 0.1f, 0.1f};
-        vector3<float> m_gizmo_barycenter;
-        vector3<float> m_new_atom_pos;
-
-        geom_view_render_style_e m_render_style{geom_view_render_style_e::ball_and_stick};
-        vector3<int> m_subcells_range{1,1,1};
-
-        geom_view_color_e m_color_mode{geom_view_color_e::color_from_ptable};
-        geom_view_role_e m_role{geom_view_role_e::r_generic};
-
-        bool m_draw_img_atoms{true};
-        bool m_draw_img_bonds{true};
-        bool m_draw_specular{true};
-        bool m_draw_bonds{true};
-        bool m_draw_atoms{true};
-        bool m_draw_line_in_dist_measurement{false};
-        bool m_bt_show_disabled_record{true};
-        bool m_draw_cell{true}; ///
-        bool m_draw_subcells{false};
         bool m_need_to_update_overview{false};
+        vector3<float>   m_gizmo_barycenter;
 
-        bool m_draw_cell_vectors{false};
-        float m_cell_vectors_ratio{0.35f};
-        vector3<float> m_cell_vector_offset{0, 0, 0};
-        vector3<float> m_cell_vector_color{1.0f, 1.0f, 0.0f};
+        hs_prop_float_t m_shading_specular_power;
+        hs_prop_float_t m_atom_scale_factor;
+        hs_prop_float_t m_bond_scale_factor;
+        hs_prop_v3f_t   m_cell_color;
+        hs_prop_v3f_t   m_new_atom_pos;
 
-        vector3<float> m_subcell_color{0.1f, 0.1f, 0.1f};
-        bool m_sel_vis{false};
-        bool m_sel_vis_affect_bonds{false};
+        hs_prop_int_t m_render_style;
+        hs_prop_v3i_t m_subcells_range;
+
+        hs_prop_int_t m_color_mode;
+        hs_prop_int_t m_role;
+
+        hs_prop_bool_t m_draw_img_atoms;
+        hs_prop_bool_t m_draw_img_bonds;
+        hs_prop_bool_t m_draw_specular;
+        hs_prop_bool_t m_draw_bonds;
+        hs_prop_bool_t m_draw_atoms;
+
+        hs_prop_bool_t m_bt_show_disabled_record;
+        hs_prop_bool_t m_draw_cell; ///
+        hs_prop_bool_t m_draw_subcells;
+        hs_prop_bool_t m_draw_cell_vectors;
+
+        hs_prop_float_t m_cell_vectors_ratio;
+        hs_prop_v3f_t m_cell_vector_offset;
+        hs_prop_v3f_t m_cell_vector_color;
+
+        hs_prop_v3f_t m_subcell_color;
+        hs_prop_bool_t m_sel_vis;
+        hs_prop_bool_t m_sel_vis_affect_bonds;
 
         geom_view_t();
 

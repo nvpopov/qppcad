@@ -39,7 +39,7 @@ namespace qpp {
 
       public:
 
-        int m_value;
+        hs_prop_int_t m_value;
         sf_parameter_e get_param_meta() override ;
         std::shared_ptr<sf_parameter_t> clone() override;
 
@@ -51,7 +51,7 @@ namespace qpp {
 
       public:
 
-        vector3<float> m_value;
+        hs_prop_v3f_t m_value;
         sf_parameter_e get_param_meta() override ;
         std::shared_ptr<sf_parameter_t> clone() override;
 
@@ -63,7 +63,7 @@ namespace qpp {
 
       public:
 
-        bool m_value;
+        hs_prop_bool_t m_value;
         sf_parameter_e get_param_meta() override ;
         std::shared_ptr<sf_parameter_t> clone() override;
 
@@ -75,7 +75,7 @@ namespace qpp {
 
       public:
 
-        float m_value;
+        hs_prop_float_t m_value;
         sf_parameter_e get_param_meta() override ;
         std::shared_ptr<sf_parameter_t> clone() override;
 

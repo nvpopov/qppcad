@@ -24,7 +24,7 @@ bool sf_float_prop_node_t::execute_ex() {
   auto out0 = get_pars_as<sf_parameter_float_t>(0, m_outs);
   auto ipl0 = get_pars_as<sf_parameter_float_t>(0, m_ipl);
 
-  if (out0 && ipl0) out0->m_value = ipl0->m_value;
+  if (out0 && ipl0) out0->m_value.set_value(ipl0->m_value.get_value());
   else return false;
 
   return true;
@@ -60,10 +60,10 @@ bool sf_float_p_const_node_t::execute_ex() {
   auto ipl0 = get_pars_as<sf_parameter_float_t>(0, m_ipl);
 
   if (out0 && inp0 && ipl0) {
-      out0->m_value = inp0->m_value + ipl0->m_value;
-    } else {
-      return false;
-    }
+    out0->m_value.set_value(inp0->m_value.get_value() + ipl0->m_value.get_value());
+  } else {
+    return false;
+  }
 
   return true;
 
@@ -91,11 +91,11 @@ bool sf_float_final_node_t::execute_ex() {
   auto inp_p0 = get_pars_as<sf_parameter_float_t>(0, m_ipl);
 
   if (inp0 && inp_p0) {
-      inp_p0->m_value = inp0->m_value;
-      return true;
-    } else {
-      return false;
-    }
+    inp_p0->m_value.set_value(inp0->m_value.get_value());
+    return true;
+  } else {
+    return false;
+  }
 
 }
 
@@ -127,10 +127,10 @@ bool sf_float_sum_float_node_t::execute_ex() {
   auto inp1 = get_pars_as<sf_parameter_float_t>(1, m_inps);
 
   if (out0 && inp0 && inp1) {
-      out0->m_value = inp0->m_value + inp1->m_value;
-    } else {
-      return false;
-    }
+    out0->m_value.set_value(inp0->m_value.get_value() + inp1->m_value.get_value());
+  } else {
+    return false;
+  }
 
   return true;
 

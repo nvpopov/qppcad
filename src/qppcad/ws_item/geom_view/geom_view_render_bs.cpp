@@ -9,19 +9,22 @@ void geom_view_render_bs::render(geom_view_t &al) {
   app_state_t* astate = app_state_t::get_inst();
   index all_null = index::D(al.m_geom->DIM).all(0);
 
-  float spec = al.m_draw_specular ? 1.0f : 0.0f;
-
-  astate->dp->begin_atom_render(al.m_shading_specular_power, spec);
+  float spec = al.m_draw_specular.get_value() ? 1.0f : 0.0f;
+  auto draw_atoms = al.m_draw_atoms.get_value();
+  auto draw_img_atoms = al.m_draw_img_atoms.get_value();
+  auto draw_bonds = al.m_draw_bonds.get_value();
+  auto draw_img_bonds = al.m_draw_img_bonds.get_value();
+  auto shading_specular_power = al.m_shading_specular_power.get_value();
+  astate->dp->begin_atom_render(shading_specular_power, spec);
 
   // draw {0,..} atoms
   for (uint32_t i = 0; i < al.m_geom->nat(); i++)
-    if (al.m_draw_atoms &&
-        al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
-        al.m_atom_type_to_hide.end())
+    if (draw_atoms
+        && al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) == al.m_atom_type_to_hide.end())
       render_atom(al, i, all_null);
 
   // draw imaginary atoms
-  if (al.m_geom->DIM > 0 && al.m_draw_atoms && al.m_draw_img_atoms)
+  if (al.m_geom->DIM > 0 && draw_atoms && draw_img_atoms)
     for (const auto &at_img : al.m_tws_tr->m_img_atoms)
       if (al.m_atom_type_to_hide.find(al.m_geom->type_table(at_img.m_atm)) ==
           al.m_atom_type_to_hide.end())
@@ -31,9 +34,9 @@ void geom_view_render_bs::render(geom_view_t &al) {
   // atom render end
 
   // bond render
-  astate->dp->begin_render_2c_bond(al.m_shading_specular_power, spec);
+  astate->dp->begin_render_2c_bond(shading_specular_power, spec);
 
-  if (al.m_draw_bonds)
+  if (draw_bonds)
     for (uint32_t i = 0; i < al.m_geom->nat(); i++)
       for (uint32_t j = 0; j < al.m_tws_tr->n(i); j++) {
           uint32_t id1 = i;
@@ -45,12 +48,12 @@ void geom_view_render_bs::render(geom_view_t &al) {
             render_bond(al, id1, all_null, id2, idx2);
 
           //bond is mixed
-          if (idx2 != all_null && al.m_draw_img_bonds)
+          if (idx2 != all_null && draw_img_bonds)
             render_bond(al, id2, idx2, id1, all_null);
         }
 
   //pure imaginary bond
-  if (al.m_geom->DIM > 0 && al.m_draw_img_bonds && al.m_draw_bonds)
+  if (al.m_geom->DIM > 0 && draw_img_bonds && draw_bonds)
     for (const auto &img_atom : al.m_tws_tr->m_img_atoms)
       for (const auto &img_bond : img_atom.m_img_bonds) {
           uint32_t id1 = img_atom.m_atm;
@@ -73,7 +76,11 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
   app_state_t* astate = app_state_t::get_inst();
   index all_null = index::D(al.m_geom->DIM).all(0);
 
-  float spec = al.m_draw_specular ? 1.0f : 0.0f;
+  float spec = al.m_draw_specular.get_value() ? 1.0f : 0.0f;
+  auto draw_atoms = al.m_draw_atoms.get_value();
+  auto draw_img_atoms = al.m_draw_img_atoms.get_value();
+  auto draw_bonds = al.m_draw_bonds.get_value();
+  auto draw_img_bonds = al.m_draw_img_bonds.get_value();
 
   astate->dp->depth_func(draw_pipeline_depth_func::depth_lequal);
   for (auto is_backpass : {true, false}) {
@@ -88,13 +95,13 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
 
       // draw {0,..} atoms
       for (uint32_t i = 0; i < al.m_geom->nat(); i++)
-        if (al.m_draw_atoms &&
+        if (draw_atoms &&
             al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
             al.m_atom_type_to_hide.end())
           render_atom_suprematic(al, i, all_null, is_backpass);
 
       // draw imaginary atoms
-      if (al.m_geom->DIM > 0 && al.m_draw_atoms && al.m_draw_img_atoms)
+      if (al.m_geom->DIM > 0 && draw_atoms && draw_img_atoms)
         for (const auto &at_img : al.m_tws_tr->m_img_atoms)
           if (al.m_atom_type_to_hide.find(al.m_geom->type_table(at_img.m_atm)) ==
               al.m_atom_type_to_hide.end())
@@ -117,7 +124,7 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
       // bond render
       astate->dp->begin_render_2c_bond_suprematic();
 
-      if (al.m_draw_bonds)
+      if (draw_bonds)
         for (uint32_t i = 0; i < al.m_geom->nat(); i++)
           for (uint32_t j = 0; j < al.m_tws_tr->n(i); j++) {
               uint32_t id1 = i;
@@ -129,12 +136,12 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
                 render_bond_suprematic(al, id1, all_null, id2, idx2, is_backpass);
 
               //bond is mixed
-              if (idx2 != all_null && al.m_draw_img_bonds)
+              if (idx2 != all_null && draw_img_bonds)
                 render_bond_suprematic(al, id2, idx2, id1, all_null, is_backpass);
             }
 
       //pure imaginary bond
-      if (al.m_geom->DIM > 0 && al.m_draw_img_bonds && al.m_draw_bonds)
+      if (al.m_geom->DIM > 0 && draw_img_bonds && draw_bonds)
         for (const auto &img_atom : al.m_tws_tr->m_img_atoms)
           for (const auto &img_bond : img_atom.m_img_bonds) {
               uint32_t id1 = img_atom.m_atm;
@@ -160,7 +167,7 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
                                        const uint32_t at_num,
                                        const index &at_index) {
 
-  if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
+  if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -183,9 +190,9 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
       if (it != al.m_type_color_override.end()) color = it->second;
     }
 
-  dr_rad = pre_rad * al.m_atom_scale_factor;
+  dr_rad = pre_rad * al.m_atom_scale_factor.get_value();
 
-  if (al.m_color_mode == geom_view_color_e::color_from_xgeom ||
+  if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom ||
       al.m_geom->xfield<bool>(xgeom_override, at_num)) {
       color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
       color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
@@ -198,7 +205,7 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
         color = vector3<float>(0.43f, 0.55f, 0.12f);
     }
 
-  astate->dp->render_atom(color, al.m_geom->pos(at_num, at_index) + al.m_pos, dr_rad);
+  astate->dp->render_atom(color, al.m_geom->pos(at_num, at_index) + al.m_pos.get_value(), dr_rad);
 
 }
 
@@ -207,7 +214,7 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
                                                  const index &at_index,
                                                  bool backpass) {
 
-  if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
+  if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -231,9 +238,9 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
         color = it->second;
     }
 
-  dr_rad = pre_rad * al.m_atom_scale_factor;
+  dr_rad = pre_rad * al.m_atom_scale_factor.get_value();
 
-  if (al.m_color_mode == geom_view_color_e::color_from_xgeom ||
+  if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom ||
       al.m_geom->xfield<bool>(xgeom_override, at_num)) {
       color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
       color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
@@ -247,7 +254,7 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
     }
 
   astate->dp->render_atom_suprematic(backpass ? vector3<float>(0,0,0) : color,
-                                     al.m_geom->pos(at_num, at_index) + al.m_pos,
+                                     al.m_geom->pos(at_num, at_index) + al.m_pos.get_value(),
                                      backpass ? dr_rad * 1.1f : dr_rad);
 
 }
@@ -260,7 +267,7 @@ void geom_view_render_bs::render_bond (geom_view_t &al,
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (al.m_sel_vis && al.m_sel_vis_affect_bonds &&
+  if (al.m_sel_vis.get_value() && al.m_sel_vis_affect_bonds.get_value() &&
       (al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num1) ||
        al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num2) )) return;
 
@@ -290,7 +297,7 @@ void geom_view_render_bs::render_bond (geom_view_t &al,
         bcolor2 = it2->second;
     }
 
-  if (al.m_color_mode == geom_view_color_e::color_from_xgeom) {
+  if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom) {
       bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
       bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
       bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
@@ -313,9 +320,9 @@ void geom_view_render_bs::render_bond (geom_view_t &al,
     }
 
   astate->dp->render_2c_bond(bcolor1, bcolor2,
-                             al.m_geom->pos(at_num1, at_index1) + al.m_pos,
-                             al.m_geom->pos(at_num2, at_index2) + al.m_pos,
-                             al.m_bond_scale_factor);
+                             al.m_geom->pos(at_num1, at_index1) + al.m_pos.get_value(),
+                             al.m_geom->pos(at_num2, at_index2) + al.m_pos.get_value(),
+                             al.m_bond_scale_factor.get_value());
 }
 
 void geom_view_render_bs::render_bond_suprematic(geom_view_t &al,
@@ -327,7 +334,7 @@ void geom_view_render_bs::render_bond_suprematic(geom_view_t &al,
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (al.m_sel_vis && al.m_sel_vis_affect_bonds &&
+  if (al.m_sel_vis.get_value() && al.m_sel_vis_affect_bonds.get_value() &&
       (al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num1) ||
        al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num2) )) return;
 
@@ -358,7 +365,7 @@ void geom_view_render_bs::render_bond_suprematic(geom_view_t &al,
         bcolor2 = it2->second;
     }
 
-  if (al.m_color_mode == geom_view_color_e::color_from_xgeom) {
+  if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom) {
       bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
       bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
       bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
@@ -383,9 +390,9 @@ void geom_view_render_bs::render_bond_suprematic(geom_view_t &al,
   astate->dp->render_2c_bond_suprematic(
         backpass ? vector3<float>(0,0,0) : bcolor1,
         backpass ? vector3<float>(0,0,0) : bcolor2,
-        al.m_geom->pos(at_num1, at_index1) + al.m_pos,
-        al.m_geom->pos(at_num2, at_index2) + al.m_pos,
-        backpass ? al.m_bond_scale_factor * 1.2 : al.m_bond_scale_factor);
+        al.m_geom->pos(at_num1, at_index1) + al.m_pos.get_value(),
+        al.m_geom->pos(at_num2, at_index2) + al.m_pos.get_value(),
+        backpass ? al.m_bond_scale_factor.get_value() * 1.2 : al.m_bond_scale_factor.get_value());
 
 }
 

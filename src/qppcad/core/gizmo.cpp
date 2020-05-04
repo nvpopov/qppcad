@@ -217,7 +217,7 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
   // update gizmo position according to the current workspace`s edit type value
   // if we are in node edit mode - snap to aabb min
   if (attached_item && cur_edit_type == ws_edit_e::edit_item) {
-      m_pos = attached_item->m_pos;
+      m_pos = attached_item->m_pos.get_value();
       //m_is_visible = true;
       m_is_active = true;
       if (force_repaint) astate->make_viewport_dirty();
@@ -225,7 +225,7 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
 
   // if we are in the content edit mode - snap to calculated barycenter, provided by node
   if (attached_item && cur_edit_type == ws_edit_e::edit_content) {
-      m_pos = attached_item->m_pos + attached_item->get_gizmo_content_barycenter();
+      m_pos = attached_item->m_pos.get_value() + attached_item->get_gizmo_content_barycenter();
       //m_is_visible = true;
       m_is_active = true;
       if (force_repaint) astate->make_viewport_dirty();

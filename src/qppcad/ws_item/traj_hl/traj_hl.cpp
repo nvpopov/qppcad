@@ -7,7 +7,13 @@ using namespace qpp;
 using namespace qpp::cad;
 
 traj_hl_t::traj_hl_t() : ws_item_t() {
+
   set_default_flags(ws_item_flags_default);
+
+  m_traj_style.set_value(traj_hl_style_points); add_hs_child(&m_traj_style);
+  m_elem_size.set_value(0.5f); add_hs_child(&m_elem_size);
+  m_traj_color.set_value({1, 0, 0}); add_hs_child(&m_traj_color);
+
 }
 
 void traj_hl_t::vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -29,30 +35,35 @@ void traj_hl_t::render() {
       m_need_to_rebuild = false;
     }
 
-  //render mesh
-  if (m_is_visible && !m_need_to_rebuild && m_leader) {
+  auto leader_pos = m_leader->m_pos.get_value();
+  auto traj_style = m_traj_style.get_value();
+  auto traj_color = m_traj_color.get_value();
+  auto elem_size  = m_elem_size.get_value();
 
-      if (m_traj_style == traj_hl_style_points ||
-          m_traj_style == traj_hl_style_lines ||
-          m_traj_style == traj_hl_style_lines_loop) {
+  //render mesh
+  if (m_is_visible.get_value() && !m_need_to_rebuild && m_leader) {
+
+      if (traj_style == traj_hl_style_points
+          || traj_style == traj_hl_style_lines
+          || traj_style == traj_hl_style_lines_loop) {
 
           astate->dp->begin_render_line_mesh();
-          astate->sp_line_mesh->set_u(sp_u_name::v_translate, (GLfloat*)m_leader->m_pos.data());
-          astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)m_traj_color.data());
-          m_line_mesh->render_ex(GL_POINTS + m_traj_style);
+          astate->sp_line_mesh->set_u(sp_u_name::v_translate, (GLfloat*)leader_pos.data());
+          astate->sp_line_mesh->set_u(sp_u_name::v_color, (GLfloat*)traj_color.data());
+          m_line_mesh->render_ex(GL_POINTS + traj_style);
           astate->dp->end_render_line_mesh();
         } else {
 
-          if (m_traj_style == traj_hl_style_spheres && m_binded_gv &&
+          if (traj_style == traj_hl_style_spheres && m_binded_gv &&
               m_anim_id < m_binded_gv->m_anim->get_total_anims()  &&
               m_atom_id < m_binded_gv->m_geom->nat()) {
 
               astate->dp->begin_atom_render(12, 1.0f);
               for (size_t i = 0; i < m_binded_gv->m_anim->m_anim_data[m_anim_id].frames.size(); i++)
                 astate->dp->render_atom(
-                      m_traj_color,
+                      traj_color,
                       m_binded_gv->m_anim->m_anim_data[m_anim_id].frames[i].atom_pos[m_atom_id],
-                      m_elem_size);
+                      elem_size);
               astate->dp->end_atom_render();
 
             }

@@ -49,7 +49,7 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
                                                    float qm_r,
                                                    bool do_legacy) {
 
-  if (!uc || uc->m_role != geom_view_role_e::r_uc) {
+  if (!uc || uc->m_role.get_value() != geom_view_role_e::r_uc) {
       //throw py::error_already_set();
       throw std::runtime_error("uc || uc->m_role != geom_view_role_t::role_uc");
     }
@@ -68,13 +68,13 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   for (auto elem : uc->m_connected_items) {
       std::shared_ptr<geom_view_t> as_al = std::dynamic_pointer_cast<geom_view_t>(elem);
       if (as_al) {
-          if (as_al->m_role == geom_view_role_e::r_embc_chg) ws_chg = as_al;
-          if (as_al->m_role == geom_view_role_e::r_embc_cls) ws_cls = as_al;
-          if (as_al->m_role == geom_view_role_e::r_embc_qm)  ws_qm  = as_al;
+          if (as_al->m_role.get_value() == geom_view_role_e::r_embc_chg) ws_chg = as_al;
+          if (as_al->m_role.get_value() == geom_view_role_e::r_embc_cls) ws_cls = as_al;
+          if (as_al->m_role.get_value() == geom_view_role_e::r_embc_qm)  ws_qm  = as_al;
         }
     }
 
-  uc->m_is_visible = false;
+  uc->m_is_visible.set_value(false);
 
   if (ws_chg == nullptr) {
       ws_chg = std::make_shared<geom_view_t>();
@@ -86,9 +86,9 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
     }
 
   ws_chg->m_tws_tr->do_action(act_lock);
-  ws_chg->m_role = geom_view_role_e::r_embc_chg;
-  ws_chg->m_name = fmt::format("{}_chg", uc->m_name);
-  ws_chg->m_draw_bonds = false;
+  ws_chg->m_role.set_value(geom_view_role_e::r_embc_chg);
+  ws_chg->m_name.set_value(fmt::format("{}_chg", uc->m_name.get_value()));
+  ws_chg->m_draw_bonds.set_value(false);
 
   if (ws_cls == nullptr) {
       ws_cls = std::make_shared<geom_view_t>();
@@ -100,8 +100,8 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
     }
 
   ws_cls->m_tws_tr->do_action(act_lock);
-  ws_cls->m_role = geom_view_role_e::r_embc_cls;
-  ws_cls->m_name = fmt::format("{}_cls", uc->m_name);
+  ws_cls->m_role.set_value(geom_view_role_e::r_embc_cls);
+  ws_cls->m_name.set_value(fmt::format("{}_cls", uc->m_name.get_value()));
 
   if (ws_qm == nullptr) {
       ws_qm = std::make_shared<geom_view_t>();
@@ -113,8 +113,8 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
     }
 
   ws_qm->m_tws_tr->do_action(act_lock);
-  ws_qm->m_name = fmt::format("{}_qm", uc->m_name);
-  ws_qm->m_role = geom_view_role_e::r_embc_qm;
+  ws_qm->m_name.set_value(fmt::format("{}_qm", uc->m_name.get_value()));
+  ws_qm->m_role.set_value(geom_view_role_e::r_embc_qm);
 
   shape_sphere<float> sp(cluster_r, displ);
 
@@ -214,7 +214,7 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   //if (generate_qm && )
 
   if (ws_chg->m_geom->nat() > 1800)
-    ws_chg->m_render_style = geom_view_render_style_e::xatom_lines;
+    ws_chg->m_render_style.set_value(geom_view_render_style_e::xatom_lines);
   //qm->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   //add connection info
@@ -283,20 +283,20 @@ void embedded_cluster_tools::gen_spherical_cluster_cur_qm(vector3<float> displ,
 
   bool succes{false};
 
-  if (as_al && as_al->m_role == geom_view_role_e::r_uc) {
+  if (as_al && as_al->m_role.get_value() == geom_view_role_e::r_uc) {
       succes = true;
       gen_spherical_cluster(as_al, displ, cluster_r, cls_r, true, qm_r, do_legacy);
       return;
     }
 
   //try to deduce uc from connected items
-  if (as_al && (as_al->m_role == geom_view_role_e::r_embc_qm ||
-                as_al->m_role == geom_view_role_e::r_embc_chg ||
-                as_al->m_role == geom_view_role_e::r_embc_cls ))
+  if (as_al && (as_al->m_role.get_value() == geom_view_role_e::r_embc_qm ||
+                as_al->m_role.get_value() == geom_view_role_e::r_embc_chg ||
+                as_al->m_role.get_value() == geom_view_role_e::r_embc_cls ))
 
     for (auto elem : as_al->m_connected_items) {
         auto con_al = elem->cast_as<geom_view_t>();
-        if (con_al && con_al->m_role == geom_view_role_e::r_uc) {
+        if (con_al && con_al->m_role.get_value() == geom_view_role_e::r_uc) {
             succes = true;
             gen_spherical_cluster(con_al, displ, cluster_r, cls_r,
                                   true, qm_r, do_legacy);
@@ -438,20 +438,20 @@ void embedded_cluster_tools::deduce_embedding_context(std::shared_ptr<geom_view_
 
           if (cur_it_al) {
 
-              if (cur_it_al->m_role == geom_view_role_e::r_embc_qm) qm = cur_it_al;
-              if (cur_it_al->m_role == geom_view_role_e::r_embc_chg) chg = cur_it_al;
-              if (cur_it_al->m_role == geom_view_role_e::r_embc_cls) cls = cur_it_al;
-              if (cur_it_al->m_role == geom_view_role_e::r_uc) uc = cur_it_al;
+              if (cur_it_al->m_role.get_value() == geom_view_role_e::r_embc_qm) qm = cur_it_al;
+              if (cur_it_al->m_role.get_value() == geom_view_role_e::r_embc_chg) chg = cur_it_al;
+              if (cur_it_al->m_role.get_value() == geom_view_role_e::r_embc_cls) cls = cur_it_al;
+              if (cur_it_al->m_role.get_value() == geom_view_role_e::r_uc) uc = cur_it_al;
 
               for (auto elem : cur_it_al->m_connected_items) {
                   auto elem_al = std::static_pointer_cast<geom_view_t>(elem);
-                  if (elem_al && elem_al->m_role == geom_view_role_e::r_embc_qm)
+                  if (elem_al && elem_al->m_role.get_value() == geom_view_role_e::r_embc_qm)
                     qm = elem_al;
-                  if (elem_al && elem_al->m_role == geom_view_role_e::r_embc_chg)
+                  if (elem_al && elem_al->m_role.get_value() == geom_view_role_e::r_embc_chg)
                     chg = elem_al;
-                  if (elem_al && elem_al->m_role == geom_view_role_e::r_embc_cls)
+                  if (elem_al && elem_al->m_role.get_value() == geom_view_role_e::r_embc_cls)
                     cls = elem_al;
-                  if (elem_al && elem_al->m_role == geom_view_role_e::r_uc) uc = elem_al;
+                  if (elem_al && elem_al->m_role.get_value() == geom_view_role_e::r_uc) uc = elem_al;
                 }
 
             }

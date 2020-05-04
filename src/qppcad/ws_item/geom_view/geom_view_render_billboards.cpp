@@ -25,15 +25,20 @@ namespace qpp {
       Eigen::Transform<float, 3, Eigen::Affine> t;
       matrix4<float> mat_model_view;
 
-      astate->sp_default->set_u(sp_u_name::f_specular_intensity, &al.m_shading_specular_power);
+      auto shading_specular_power = al.m_shading_specular_power.get_value();
+      auto atom_scale_factor = al.m_atom_scale_factor.get_value();
+      auto color_mode = al.m_color_mode.get_value();
+      auto pos = al.m_pos.get_value();
+
+      astate->sp_default->set_u(sp_u_name::f_specular_intensity, &shading_specular_power);
       index null_idx = index::D(al.m_geom->DIM).all(0);
 
-      float draw_specular = al.m_draw_specular;
+      float draw_specular = al.m_draw_specular.get_value() ? 1 : 0;
       astate->sp_default->set_u(sp_u_name::f_specular_alpha, &draw_specular);
 
       for (uint32_t i = 0; i < al.m_geom->nat(); i++) {
 
-          if (al.m_sel_vis && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) return;
+          if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) return;
 
           auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
           if (ap_idx) {
@@ -50,10 +55,9 @@ namespace qpp {
               if (it != al.m_type_color_override.end()) color = it->second;
             }
 
-          dr_rad = dr_rad * al.m_atom_scale_factor;
+          dr_rad = dr_rad * atom_scale_factor;
 
-          if (al.m_color_mode == geom_view_color_e::color_from_xgeom ||
-              al.m_geom->xfield<bool>(xgeom_override, i)) {
+          if (color_mode == color_from_xgeom || al.m_geom->xfield<bool>(xgeom_override, i)) {
               color[0] = al.m_geom->xfield<float>(xgeom_ccr, i);
               color[1] = al.m_geom->xfield<float>(xgeom_ccg, i);
               color[2] = al.m_geom->xfield<float>(xgeom_ccb, i);
@@ -71,7 +75,7 @@ namespace qpp {
           t = Eigen::Transform<float, 3, Eigen::Affine>::Identity();
           //          t.prerotate(matrix3<float>::Identity());
           //          t.prescale(vector3<float>(dr_rad, dr_rad, dr_rad));
-          t.pretranslate(al.m_geom->pos(i)+al.m_pos);
+          t.pretranslate(al.m_geom->pos(i) + pos);
           mat_model_view = astate->camera->m_cam_state.m_mat_view * t.matrix();
 
           astate->sp_bs_sphere->set_u(sp_u_name::m_model_view, mat_model_view.data());

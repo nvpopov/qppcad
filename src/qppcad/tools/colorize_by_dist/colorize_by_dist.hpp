@@ -46,7 +46,7 @@ namespace qpp {
         QDoubleSpinBox *m_atom_dist_max;
         qbinded_color3_input_t *m_clr_input;
 
-        vector3<float> clr_low{0};
+        hs_prop_v3f_t clr_low;
 
         geom_view_t *b_gv{nullptr};
 

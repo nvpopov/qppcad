@@ -39,7 +39,7 @@ void ws_item_list_widget_t::rebuild_sub_gvs(
                                                      ws_id,
                                                      ws_item->m_parent_ws->m_ws_name,
                                                      itm_id,
-                                                     ws_item->m_name);
+                                                     ws_item->m_name.get_value());
 
             list_item->setText(QString::fromStdString(list_item_name));
             list_item->setCheckState(Qt::Unchecked);

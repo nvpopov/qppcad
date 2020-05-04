@@ -57,10 +57,10 @@ namespace qpp {
         qbinded_float_spinbox_t *m_ionic_rad;
         qbinded_color3_input_t  *m_color;
 
-        float m_binded_radius;
-        float m_binded_cov_rad;
-        float m_binded_ionic_rad;
-        vector3<float> m_binded_color;
+        hs_prop_float_t m_binded_radius;
+        hs_prop_float_t m_binded_cov_rad;
+        hs_prop_float_t m_binded_ionic_rad;
+        hs_prop_v3f_t m_binded_color;
         int m_elem_id{-1};
 
         explicit ptable_element_editor_t(int elem_id, QWidget *parent = nullptr);

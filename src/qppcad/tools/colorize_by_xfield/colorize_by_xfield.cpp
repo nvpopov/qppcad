@@ -33,9 +33,11 @@ void colorize_by_xfield_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
       if (xfield_idx >=0 && xfield_idx < cw.b_fn.size()) {
           //std::cout << "COLORIZE_BY_XFIELD " << xfield_idx << std::endl;
-          geom_view_colorizer_helper::colorize_by_xfield(gv_ptr, cw.m_clr_low, cw.m_clr_high,
+          geom_view_colorizer_helper::colorize_by_xfield(gv_ptr,
+                                                         cw.m_clr_low.get_value(),
+                                                         cw.m_clr_high.get_value(),
                                                          xfield_idx);
-          gv_ptr->m_color_mode = geom_view_color_e::color_from_xgeom;
+          gv_ptr->m_color_mode.set_value(geom_view_color_e::color_from_xgeom);
           astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
           astate->make_viewport_dirty();
 

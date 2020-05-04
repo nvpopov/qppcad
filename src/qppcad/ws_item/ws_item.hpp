@@ -112,26 +112,27 @@ namespace qpp {
         std::vector<std::shared_ptr<ws_item_t> > m_followers;
         std::shared_ptr<ws_item_t> m_leader{nullptr};
 
-        std::string      m_name;
-        std::string      m_genesis_file_name;
+        hs_prop_str_t      m_name;
+        hs_prop_str_t      m_genesis_file_name;
+        hs_prop_bool_t     m_show_bb;
+        hs_prop_bool_t     m_is_visible;
+        hs_prop_v3f_t      m_pos;
+        hs_prop_v3f_t      m_scale;
+        hs_prop_v3f_t      m_rotation;
+
         aabb_3d_t<float> m_aabb;
         vector3<float>   m_leader_offset{0, 0, 0};
         vector3<float>   m_pos_old;
-        vector3<float>   m_pos{0.0f, 0.0f, 0.0f};
-        vector3<float>   m_scale{1.0f, 1.0f, 1.0f};
-        vector3<float>   m_rotation{1.0f, 1.0f, 1.0f};
         vector3<float>   explicit_translation;
-
         int m_last_tab{-1};
-        bool m_is_visible{true};
-        bool m_show_bb{true}; // whether to show object`s bounding box
         bool m_selected{false};
         bool m_marked_for_deletion{false};
         bool m_ext_editor_opened{false};
+
         size_t m_ext_editor_id{0};
         size_t m_ext_editor_width{300};
 
-        ws_item_t() = default;
+        ws_item_t();
         virtual ~ws_item_t() = default;
 
         vector3<float> get_pos();
@@ -149,12 +150,6 @@ namespace qpp {
                                  bool &need_to_update_camera);
 
         void apply_target_view(cam_tv_e target_view_src);
-
-        //epoch stuff
-        void push_epoch();
-        void pop_epoch();
-        void goto_epoch(size_t target_epoch);
-        size_t get_cur_epoch();
 
         /**
          * @brief set_parent_workspace

@@ -19,11 +19,11 @@ namespace qpp {
 
       public:
 
-        ws_cube_rendering_mode m_render_mode{render_solid};
-        vector3<float> m_scale{1, 1, 1};
-        vector3<float> m_color{1, 0, 0};
-        float m_alpha{0.9f};
-        bool m_alpha_enabled{false};
+        hs_prop_int_t m_render_mode;
+        hs_prop_v3f_t m_scale;
+        hs_prop_v3f_t m_color;
+        hs_prop_float_t m_alpha{};
+        hs_prop_bool_t m_alpha_enabled{};
 
         cube_primitive_t();
 

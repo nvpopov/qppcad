@@ -23,19 +23,20 @@ void geom_view_io_cube_t::load_from_stream_ex(std::basic_istream<char, TRAITS> &
   new_vol_rec.m_need_to_regenerate = true;
   new_vol_rec.m_ready_to_render = false;
 
-  vold->m_name = fmt::format("v_{}", _item->m_name);
+  vold->m_name.set_value(fmt::format("v_{}", _item->m_name.get_value()));
   vold->m_genesis_file_name = _item->m_genesis_file_name;
 
   if (new_vol_rec.m_volume.m_has_negative_values) {
       new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
-      new_vol_rec.m_isolevel = qpp::def_isovalue_mo;
+      new_vol_rec.m_isolevel.set_value(qpp::def_isovalue_mo);
     } else {
       new_vol_rec.m_volume_type = ws_volume_t::volume_density;
-      new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
+      new_vol_rec.m_isolevel.set_value(qpp::def_isovalue_dens);
     }
 
-  auto state_spin_ssp =
-      geom_view_io_helpers_t::extract_state_spin_subspace_from_name(vold->m_genesis_file_name);
+  auto state_spin_ssp = geom_view_io_helpers_t::extract_state_spin_subspace_from_name(
+                                                            vold->m_genesis_file_name.get_value());
+
   if (state_spin_ssp) {
       new_vol_rec.m_state_id = std::get<0>(*state_spin_ssp);
       new_vol_rec.m_spin_subspace = std::get<1>(*state_spin_ssp);
@@ -61,7 +62,7 @@ void geom_view_molcas_grid_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   std::vector<scalar_volume_t<float> > tmp_volumes;
   load_grid_ascii(stream, *(_item->m_geom.get()), tmp_volumes);
   _item->m_parent_ws->add_item_to_ws(vold);
-  vold->m_name = fmt::format("{}.volume", _item->m_name);
+  vold->m_name.set_value(fmt::format("{}.volume", _item->m_name.get_value()));
   vold->m_genesis_file_name = _item->m_genesis_file_name;
 
   //process volumes
@@ -79,10 +80,10 @@ void geom_view_molcas_grid_t::load_from_stream_ex(std::basic_istream<char, TRAIT
 
       if (new_vol_rec.m_volume.m_has_negative_values) {
           new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
-          new_vol_rec.m_isolevel = qpp::def_isovalue_mo;
+          new_vol_rec.m_isolevel.set_value(qpp::def_isovalue_mo);
         } else {
           new_vol_rec.m_volume_type = ws_volume_t::volume_density;
-          new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
+          new_vol_rec.m_isolevel.set_value(qpp::def_isovalue_dens);
         }
 
       auto new_vol_rec_ptr = std::make_shared<ws_volume_record_t>(std::move(new_vol_rec));
@@ -104,7 +105,7 @@ void geom_view_vasp_chgcar_t::load_from_stream_ex(std::basic_istream<char, TRAIT
   std::vector<scalar_volume_t<float> > tmp_volumes;
   read_vasp_chgcar(stream, *(_item->m_geom.get()), tmp_volumes);
   _item->m_parent_ws->add_item_to_ws(vold);
-  vold->m_name = fmt::format("{}.volume", _item->m_name);
+  vold->m_name.set_value(fmt::format("{}.volume", _item->m_name.get_value()));
   vold->m_genesis_file_name = _item->m_genesis_file_name;
 
   vold->m_volumes.reserve(tmp_volumes.size());
@@ -121,10 +122,10 @@ void geom_view_vasp_chgcar_t::load_from_stream_ex(std::basic_istream<char, TRAIT
 
       if (new_vol_rec.m_volume.m_has_negative_values) {
           new_vol_rec.m_volume_type = ws_volume_t::volume_mo;
-          new_vol_rec.m_isolevel = qpp::def_isovalue_mo;
+          new_vol_rec.m_isolevel.set_value(qpp::def_isovalue_mo);
         } else {
           new_vol_rec.m_volume_type = ws_volume_t::volume_density;
-          new_vol_rec.m_isolevel = qpp::def_isovalue_dens;
+          new_vol_rec.m_isolevel.set_value(qpp::def_isovalue_dens);
         }
 
       auto new_vol_rec_ptr = std::make_shared<ws_volume_record_t>(std::move(new_vol_rec));

@@ -188,8 +188,10 @@ void object_inspector_widget_t::cur_ws_changed() {
 
   if (cur_ws)
     for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++)
-      m_ws_items_list->addItem(QString::fromStdString(fmt::format("[{}] {} ",
-                             i, cur_ws->m_ws_items[i]->m_name)));
+      m_ws_items_list->addItem(
+          QString::fromStdString(fmt::format("[{}] {} ", i,
+                                             cur_ws->m_ws_items[i]->m_name.get_value()))
+          );
 
   cur_ws_selected_item_changed();
   m_ws_items_list->blockSignals(false);
@@ -217,7 +219,8 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
 
           m_ws_item_prop_hdr->setVisible(true);
 
-          QString item_name = QString::fromStdString(cur_ws->m_ws_items[*cur_id]->m_name);
+          QString item_name =
+              QString::fromStdString(cur_ws->m_ws_items[*cur_id]->m_name.get_value());
           m_ws_item_prop_hdr->m_text->setText(tr("%1 <b>%2</b>")
                                               .arg(tr("Properties of"))
                                               .arg(qt_hlp::clamp_string(item_name, 28)));

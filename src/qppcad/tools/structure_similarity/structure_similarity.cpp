@@ -457,7 +457,7 @@ void str_sim_ws_item_rec_t::cmb_ws_changed(int index) {
           m_cmb_it->addItem(tr("[%1]%2")
                         .arg(i)
                         .arg(QString::fromStdString(
-                               astate->ws_mgr->m_ws[index]->m_ws_items[i]->m_name))
+                                  astate->ws_mgr->m_ws[index]->m_ws_items[i]->m_name.get_value()))
                           );
         }
 

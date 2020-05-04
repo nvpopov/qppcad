@@ -69,14 +69,12 @@ void pgf_producer_t::compose_from_array_group() {
 
   astate->tlog("pgf_producer_t::compose_from_array_group() ->");
   for (size_t i = 0; i < m_orders_range.size(); i++) {
-      m_orders_range[i][0] = 0;
-      m_orders_range[i][1] = 0;
-      m_orders_range[i][2] = m_imd.cell.end()(i);
-      astate->tlog(" m_orders_range[{}] = [0] = {}, [1] = {}, [2] = {}",
-                   i,
-                   m_orders_range[i][0],
-                   m_orders_range[i][1],
-                   m_orders_range[i][2]);
+    m_orders_range[i].set_value({0,  0, m_imd.cell.end()(i)});
+//      astate->tlog(" m_orders_range[{}] = [0] = {}, [1] = {}, [2] = {}",
+//                   i,
+//                   m_orders_range[i][0],
+//                   m_orders_range[i][1],
+//                   m_orders_range[i][2]);
     }
 
 }
@@ -142,9 +140,10 @@ void pgf_producer_t::generate_geom() {
       index gen_end = index::D(DIM);
 
       for (size_t i = 0; i < DIM; i++) {
-          gen_begin(i) = m_orders_range[i][0];
-          gen_end(i) = m_orders_range[i][1];
-        }
+        auto orders_range = m_orders_range[i].get_value();
+        gen_begin(i) = orders_range[0];
+        gen_end(i) = orders_range[1];
+      }
 
       astate->tlog("pgf_producer_t::generate_geom() copying atoms to intermediate");
       for (size_t i = 0; i < m_src_gv->m_geom->nat(); i++)

@@ -23,15 +23,16 @@ namespace qpp {
         geom_view_t* p_owner;
         std::map<std::tuple<std::string, size_t>, QPainterPath> m_pp_cache;
 
-        int m_lbl_font_size{17};
-        geom_labels_style_e m_style{geom_labels_style_e::show_none};
-        bool m_render_inplace_hud{false};
-        vector2<float> m_inplace_offset{0.5f,1};
-        bool m_selective_lbl{false};
-        bool m_screen_scale{false};
-        bool m_render_outlines{true};
-        bool m_render_axis_labels{true};
-        float m_outline_size{1};
+        hs_prop_int_t m_lbl_font_size;
+        hs_prop_int_t m_style;
+        hs_prop_bool_t m_render_inplace_hud;
+        hs_prop_v2f_t m_inplace_offset;
+        hs_prop_bool_t m_selective_lbl;
+        hs_prop_bool_t m_screen_scale;
+        hs_prop_bool_t m_render_outlines;
+        hs_prop_bool_t m_render_axis_labels;
+        hs_prop_float_t m_outline_size;
+
         explicit geom_view_labels_subsys_t (geom_view_t &_p_owner);
 
         void render_overlay(QPainter &painter);

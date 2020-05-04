@@ -170,7 +170,7 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
               qbinded_int_spinbox_t *c_int_sb =
                   qobject_cast<qbinded_int_spinbox_t*>(node->m_inplace_wdgts[i]);
               if (c_int_sb) {
-                  *(c_int_sb->m_binded_value) = 0;
+                  c_int_sb->m_binded_value->set_value(0);
                   c_int_sb->load_value_ex();
                 }
               break;
@@ -180,7 +180,7 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
               qbinded_float_spinbox_t *c_f_sb =
                   qobject_cast<qbinded_float_spinbox_t*>(node->m_inplace_wdgts[i]);
               if (c_f_sb) {
-                  *(c_f_sb->m_binded_value) = 0;
+                  c_f_sb->m_binded_value->set_value(0);
                   c_f_sb->load_value_ex();
                 }
               break;
@@ -190,7 +190,7 @@ void node_book_graphics_scene_t::notify_linked_nodes_about_unlinking(qnode_t *no
               qbinded_float3_input_t *c_v3f =
                   qobject_cast<qbinded_float3_input_t*>(node->m_inplace_wdgts[i]);
               if (c_v3f) {
-                  *(c_v3f->m_binded_value) = vector3<float>{0};
+                  c_v3f->m_binded_value->set_value(vector3<float>{0});
                   c_v3f->load_value_ex();
                 }
               break;

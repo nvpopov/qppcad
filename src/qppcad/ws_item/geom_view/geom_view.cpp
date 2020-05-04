@@ -21,6 +21,35 @@ using namespace qpp::cad;
 
 geom_view_t::geom_view_t(): ws_item_t() {
 
+  m_shading_specular_power.set_value(12.0f); add_hs_child(&m_shading_specular_power);
+  m_atom_scale_factor.set_value(0.3f); add_hs_child(&m_atom_scale_factor);
+  m_bond_scale_factor.set_value(0.09f); add_hs_child(&m_bond_scale_factor);
+  m_cell_color.set_value({0.1f, 0.1f, 0.1f}); add_hs_child(&m_cell_color);
+
+  m_render_style.set_value(geom_view_render_style_e::ball_and_stick);
+  add_hs_child(&m_render_style);
+
+  m_subcells_range.set_value({1,1,1}); add_hs_child(&m_subcells_range);
+  m_color_mode.set_value(geom_view_color_e::color_from_ptable); add_hs_child(&m_color_mode);
+  m_role.set_value(geom_view_role_e::r_generic); add_hs_child(&m_role);
+  m_draw_img_atoms.set_value(true); add_hs_child(&m_draw_img_atoms);
+  m_draw_img_bonds.set_value(true); add_hs_child(&m_draw_img_bonds);
+  m_draw_specular.set_value(true); add_hs_child(&m_draw_specular);
+  m_draw_bonds.set_value(true); add_hs_child(&m_draw_bonds);
+  m_draw_atoms.set_value(true); add_hs_child(&m_draw_atoms);
+  m_bt_show_disabled_record.set_value(true); add_hs_child(&m_bt_show_disabled_record);
+  m_draw_cell.set_value(true); add_hs_child(&m_draw_cell);
+  m_draw_subcells.set_value(false); add_hs_child(&m_draw_subcells);
+  m_draw_subcells.set_value(false); add_hs_child(&m_draw_subcells);
+
+  m_cell_vectors_ratio.set_value(0.35f); add_hs_child(&m_cell_vectors_ratio);
+  m_cell_vector_offset.set_value({0, 0, 0}); add_hs_child(&m_cell_vector_offset);
+  m_cell_vector_color.set_value({1.0f, 1.0f, 0.0f}); add_hs_child(&m_cell_vector_color);
+
+  m_subcell_color.set_value({0.1f, 0.1f, 0.1f}); add_hs_child(&m_subcell_color);
+  m_sel_vis.set_value(false); add_hs_child(&m_sel_vis);
+  m_sel_vis_affect_bonds.set_value(false); add_hs_child(&m_sel_vis_affect_bonds);
+
   set_default_flags(ws_item_flags_default
                     | ws_item_flags_support_tr
                     | ws_item_flags_support_sel
@@ -101,6 +130,12 @@ geom_view_t::geom_view_t(): ws_item_t() {
   m_lat_planes = std::make_shared<geom_view_lat_planes_subsys_t>(*this);
   m_selg = std::make_shared<geom_view_sel_groups_subsys_t>(*this);
 
+  add_hs_child(m_anim.get());
+  add_hs_child(m_measure.get());
+  add_hs_child(m_labels.get());
+  add_hs_child(m_lat_planes.get());
+  add_hs_child(m_selg.get());
+
 }
 
 void geom_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
@@ -136,8 +171,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_x : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
-        look_to = m_pos;
+        look_from = m_pos.get_value() - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+        look_to = m_pos.get_value();
         look_up = {0.0 , 0.0 , 1.0};
         need_to_update_camera = true;
         break;
@@ -145,8 +180,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_y : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
-        look_from = m_pos - 2.0f*vector3<float>(0.0, axis_size, 0.0);
-        look_to = m_pos;
+        look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, axis_size, 0.0);
+        look_to = m_pos.get_value();
         look_up = {0.0, 0.0, 1.0};
         need_to_update_camera = true;
         break;
@@ -154,8 +189,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_z : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
-        look_from = m_pos - 2.0f*vector3<float>(0.0, 0.0, axis_size);
-        look_to = m_pos;
+        look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, 0.0, axis_size);
+        look_to = m_pos.get_value();
         look_up = {0.0, 1.0, 0.0};
         need_to_update_camera = true;
         break;
@@ -163,8 +198,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_a : {
         vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-        look_from = m_pos + center - 2.0f * m_geom->cell.v[0];
-        look_to = m_pos  + center;
+        look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[0];
+        look_to = m_pos.get_value()  + center;
         look_up = {0.0 , 0.0 , 1.0};
         need_to_update_camera = true;
         break;
@@ -172,8 +207,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_b : {
         vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-        look_from = m_pos + center - 2.0f * m_geom->cell.v[1];
-        look_to = m_pos  + center;
+        look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[1];
+        look_to = m_pos.get_value()  + center;
         look_up = {0.0, 0.0, 1.0};
         need_to_update_camera = true;
         break;
@@ -181,8 +216,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_c : {
         vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-        look_from = m_pos + center - 2.0f * m_geom->cell.v[2];
-        look_to = m_pos  + center;
+        look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[2];
+        look_to = m_pos.get_value()  + center;
         look_up = {0.0, 1.0, 0.0};
         need_to_update_camera = true;
         break;
@@ -190,8 +225,9 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
     case cam_tv_e::tv_cc : {
         float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
-        look_to = m_pos + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
+        look_from = m_pos.get_value()
+                    + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
+        look_to = m_pos.get_value() + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
         look_up = {0.0 , 0.0 , 1.0};
         need_to_update_camera = true;
         break;
@@ -217,7 +253,7 @@ void geom_view_t::render() {
   if (!m_geom) return;
 
   app_state_t* astate = app_state_t::get_inst();
-  vector3<float> _pos = m_pos;
+  vector3<float> _pos = m_pos.get_value();
   index all_null = index::D(m_geom->DIM).all(0);
 
   if (astate->dp) {
@@ -232,27 +268,29 @@ void geom_view_t::render() {
           astate->dp->end_render_aabb();
         }
 
-      if (!m_is_visible) return;
+      if (!m_is_visible.get_value()) return;
 
-      if (m_geom->DIM == 3 && m_is_visible && m_draw_cell) {
+      if (m_geom->DIM == 3 && m_is_visible.get_value() && m_draw_cell.get_value()) {
           astate->dp->begin_render_line();
 
-          if (m_draw_subcells) {
+          if (m_draw_subcells.get_value()) {
+              auto subcells_range = m_subcells_range.get_value();
+              vector3<float> sc_a = m_geom->cell.v[0] / subcells_range[0];
+              vector3<float> sc_b = m_geom->cell.v[1] / subcells_range[1];
+              vector3<float> sc_c = m_geom->cell.v[2] / subcells_range[2];
 
-              vector3<float> sc_a = m_geom->cell.v[0] / m_subcells_range[0];
-              vector3<float> sc_b = m_geom->cell.v[1] / m_subcells_range[1];
-              vector3<float> sc_c = m_geom->cell.v[2] / m_subcells_range[2];
-
-              for (int i_a = 0; i_a < m_subcells_range[0]; i_a++)
-                for (int i_b = 0; i_b < m_subcells_range[1]; i_b++)
-                  for (int i_c = 0; i_c < m_subcells_range[2]; i_c++) {
-                      vector3<float> new_pos = m_pos + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
-                      astate->dp->render_cell_3d(m_subcell_color, sc_a, sc_b, sc_c, new_pos);
+              for (int i_a = 0; i_a < subcells_range[0]; i_a++)
+                for (int i_b = 0; i_b < subcells_range[1]; i_b++)
+                  for (int i_c = 0; i_c < subcells_range[2]; i_c++) {
+                      vector3<float> new_pos = m_pos.get_value()
+                                             + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
+                      astate->dp->render_cell_3d(m_subcell_color.get_value(),
+                                                 sc_a, sc_b, sc_c, new_pos);
                     }
 
             }
 
-          vector3<float> cell_clr = m_cell_color;
+          vector3<float> cell_clr = m_cell_color.get_value();
 
           if (m_selected) {
               if(m_parent_ws->m_edit_type == ws_edit_e::edit_item) cell_clr = clr_red;
@@ -260,29 +298,30 @@ void geom_view_t::render() {
             }
 
           astate->dp->render_cell_3d(cell_clr, m_geom->cell.v[0], m_geom->cell.v[1],
-                                     m_geom->cell.v[2], m_pos);
+                                     m_geom->cell.v[2], m_pos.get_value());
 
           astate->dp->end_render_line();
 
         }
 
-      if (m_geom->DIM == 3 && m_draw_cell_vectors) {
+      if (m_geom->DIM == 3 && m_draw_cell_vectors.get_value()) {
 
           astate->dp->begin_render_general_mesh();
 
           for (size_t i = 0; i < m_geom->DIM; i++) {
-              vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio;
-              astate->dp->render_arrow(m_pos + m_cell_vector_offset,
-                                       m_pos + m_cell_vector_offset + cell_v,
-                                       m_cell_vector_color,
-                                       0.1f, 0.17f, 0.25f, false);
+              vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio.get_value();
+              astate->dp->render_arrow(
+                  m_pos.get_value() + m_cell_vector_offset.get_value(),
+                  m_pos.get_value() + m_cell_vector_offset.get_value() + cell_v,
+                  m_cell_vector_color.get_value(),
+                  0.1f, 0.17f, 0.25f, false);
             }
 
           astate->dp->end_render_general_mesh();
 
         }
 
-      switch (m_render_style) {
+      switch (m_render_style.get_value()) {
 
         case geom_view_render_style_e::ball_and_stick :
           geom_view_render_bs::render(*this);
@@ -365,22 +404,22 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
       std::vector<tws_query_data_t<float, size_t> > res;
 
       ray_t<float> local_geom_ray;
-      local_geom_ray.start = click_ray->start - m_pos;
+      local_geom_ray.start = click_ray->start - m_pos.get_value();
       local_geom_ray.dir = click_ray->dir;
 
-      if (m_draw_img_atoms)
+      if (m_draw_img_atoms.get_value())
         m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray,
                                                        res,
                                                        m_atom_type_to_hide,
-                                                       m_atom_scale_factor,
-                                                       m_sel_vis,
+                                                       m_atom_scale_factor.get_value(),
+                                                       m_sel_vis.get_value(),
                                                        xgeom_sel_vis_hide);
       else
         m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray,
                                                               res,
                                                               m_atom_type_to_hide,
-                                                              m_atom_scale_factor,
-                                                              m_sel_vis,
+                                                              m_atom_scale_factor.get_value(),
+                                                              m_sel_vis.get_value(),
                                                               xgeom_sel_vis_hide);
       recalc_gizmo_barycenter();
 
@@ -787,9 +826,9 @@ void geom_view_t::sv_modify_selected(bool state) {
     if (rec.m_idx == index::D(m_geom->DIM).all(0))
       m_geom->xfield<bool>(xgeom_sel_vis_hide, rec.m_atm) = state;
 
-  if (!m_sel_vis) {
-      m_sel_vis = true;
-      m_sel_vis_affect_bonds = true;
+  if (!m_sel_vis.get_value()) {
+      m_sel_vis.set_value(true);
+      m_sel_vis_affect_bonds.set_value(true);
     }
 
   astate->make_viewport_dirty();
@@ -808,10 +847,10 @@ void geom_view_t::sv_hide_invert_selected() {
     if (cap_idx.find(i) == cap_idx.end())
       m_geom->xfield<bool>(xgeom_sel_vis_hide, i) = true;
 
-  if (!m_sel_vis) {
-      m_sel_vis = true;
-      m_sel_vis_affect_bonds = true;
-    }
+  if (!m_sel_vis.get_value()) {
+    m_sel_vis.set_value(true);
+    m_sel_vis_affect_bonds.set_value(true);
+  }
 
   astate->make_viewport_dirty();
 
@@ -893,7 +932,7 @@ std::shared_ptr<ws_item_t> geom_view_t::clone_on_the_spot() {
 
   auto cloned = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
   if (!cloned) return nullptr;
-  cloned->m_name = fmt::format("{}_clone", m_name);
+  cloned->m_name.set_value(fmt::format("{}_clone", m_name.get_value()));
 
   auto c_gv = cloned->cast_as<geom_view_t>();
   if (!c_gv) return nullptr;
@@ -1363,47 +1402,46 @@ void geom_view_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 
   data[JSON_GEOM_VIEW_DIM] = m_geom->DIM;
-  data[JSON_GEOM_VIEW_SHOW_IMG_ATOMS] = m_draw_img_atoms;
-  data[JSON_GEOM_VIEW_SHOW_IMG_BONDS] = m_draw_img_bonds;
-  data[JSON_GEOM_VIEW_SHOW_BONDS] = m_draw_bonds;
-  data[JSON_GEOM_VIEW_SHOW_ATOMS] = m_draw_atoms;
-  data[JSON_GEOM_VIEW_BT_SHOW_DSBL] = m_bt_show_disabled_record;
-  data[JSON_GEOM_VIEW_ATOM_SCALE] = m_atom_scale_factor;
-  data[JSON_GEOM_VIEW_BOND_SCALE] = m_bond_scale_factor;
-  data[JSON_GEOM_VIEW_RENDER_TYPE] = m_render_style;
-  data[JSON_GEOM_VIEW_DRAW_SPECULAR] = m_draw_specular;
-  data[JSON_GEOM_VIEW_SPECULAR] = m_shading_specular_power;
+  data[JSON_GEOM_VIEW_SHOW_IMG_ATOMS] = m_draw_img_atoms.get_value();
+  data[JSON_GEOM_VIEW_SHOW_IMG_BONDS] = m_draw_img_bonds.get_value();
+  data[JSON_GEOM_VIEW_SHOW_BONDS] = m_draw_bonds.get_value();
+  data[JSON_GEOM_VIEW_SHOW_ATOMS] = m_draw_atoms.get_value();
+  data[JSON_GEOM_VIEW_BT_SHOW_DSBL] = m_bt_show_disabled_record.get_value();
+  data[JSON_GEOM_VIEW_ATOM_SCALE] = m_atom_scale_factor.get_value();
+  data[JSON_GEOM_VIEW_BOND_SCALE] = m_bond_scale_factor.get_value();
+  data[JSON_GEOM_VIEW_RENDER_TYPE] = m_render_style.get_value();
+  data[JSON_GEOM_VIEW_DRAW_SPECULAR] = m_draw_specular.get_value();
+  data[JSON_GEOM_VIEW_SPECULAR] = m_shading_specular_power.get_value();
 
-  data[JSON_GEOM_VIEW_LABELS_TYPE] = m_labels->m_style;
-  data[JSON_GEOM_VIEW_LABELS_SIZE] = m_labels->m_lbl_font_size;
-  data[JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines;
-  data[JSON_GEOM_VIEW_LABELS_INPLACE] = m_labels->m_render_inplace_hud;
-  data[JSON_GEOM_VIEW_LABELS_SEL_VIS] = m_labels->m_selective_lbl;
-  data[JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale;
-  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X] = m_labels->m_inplace_offset[0];
-  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y] = m_labels->m_inplace_offset[1];
-  data[JSON_GEOM_VIEW_LABELS_OUTLINE_SZ] = m_labels->m_outline_size;
-  data[JSON_GEOM_VIEW_ROLE] = m_role;
+  data[JSON_GEOM_VIEW_LABELS_TYPE] = m_labels->m_style.get_value();
+  data[JSON_GEOM_VIEW_LABELS_SIZE] = m_labels->m_lbl_font_size.get_value();
+  data[JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines.get_value();
+  data[JSON_GEOM_VIEW_LABELS_INPLACE] = m_labels->m_render_inplace_hud.get_value();
+  data[JSON_GEOM_VIEW_LABELS_SEL_VIS] = m_labels->m_selective_lbl.get_value();
+  data[JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale.get_value();
+  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X] = m_labels->m_inplace_offset.get_value()[0];
+  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y] = m_labels->m_inplace_offset.get_value()[1];
+  data[JSON_GEOM_VIEW_LABELS_OUTLINE_SZ] = m_labels->m_outline_size.get_value();
+  data[JSON_GEOM_VIEW_ROLE] = m_role.get_value();
 
   //cell
-  data[JSON_GEOM_VIEW_PERIODIC_DRAW_CELL] = m_draw_cell;
-  json_helper::save_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
+  data[JSON_GEOM_VIEW_PERIODIC_DRAW_CELL] = m_draw_cell.get_value();
+  json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
 
   //cell vectors
-  data[JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS] = m_draw_cell_vectors;
-  data[JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO] = m_cell_vectors_ratio;
-  json_helper::save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
-  json_helper::save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
+  data[JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS] = m_draw_cell_vectors.get_value();
+  data[JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO] = m_cell_vectors_ratio.get_value();
+  json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
+  json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
 
   data[JSON_GEOM_VIEW_BONDING_TABLE] = json::array({});
 
-  data[JSON_GEOM_VIEW_SEL_VIS] = m_sel_vis;
-  data[JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds;
+  data[JSON_GEOM_VIEW_SEL_VIS] = m_sel_vis.get_value();
+  data[JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds.get_value();
 
   if (m_geom->DIM == 3) {
-      data[JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS] = m_draw_subcells;
-      data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE] =
-          json::array({m_subcells_range[0], m_subcells_range[1], m_subcells_range[2]});
+      data[JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS] = m_draw_subcells.get_value();
+      json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE, m_subcells_range, data);
     }
 
   for (auto &record: m_tws_tr->m_bonding_table.m_dist) {
@@ -1552,54 +1590,52 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
       m_geom->cell.DIM = m_geom->DIM;
     }
 
-  json_helper::load_var(JSON_GEOM_VIEW_ATOM_SCALE, m_atom_scale_factor, data);
-  json_helper::load_var(JSON_GEOM_VIEW_BOND_SCALE, m_bond_scale_factor, data);
-  json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
-  json_helper::load_var(JSON_GEOM_VIEW_RENDER_TYPE, m_render_style, data);
-  json_helper::load_var(JSON_GEOM_VIEW_DRAW_SPECULAR, m_draw_specular, data);
-  json_helper::load_var(JSON_GEOM_VIEW_SPECULAR, m_shading_specular_power, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_TYPE, m_labels->m_style, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SIZE, m_labels->m_lbl_font_size, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE, m_labels->m_render_outlines, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SEL_VIS, m_labels->m_selective_lbl, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_OUTLINE_SZ, m_labels->m_outline_size, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_ATOM_SCALE, m_atom_scale_factor, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_BOND_SCALE, m_bond_scale_factor, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_RENDER_TYPE, m_render_style, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_DRAW_SPECULAR, m_draw_specular, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SPECULAR, m_shading_specular_power, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_TYPE, m_labels->m_style, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_SIZE, m_labels->m_lbl_font_size, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE, m_labels->m_render_outlines, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_SEL_VIS, m_labels->m_selective_lbl, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_OUTLINE_SZ, m_labels->m_outline_size, data);
 
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
-                        m_labels->m_inplace_offset[0],
-                        data);
-  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
-                        m_labels->m_inplace_offset[1],
-                        data);
+//  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
+//                        m_labels->m_inplace_offset[0],
+//                        data);
+//  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
+//                        m_labels->m_inplace_offset[1],
+//                        data);
 
-  json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
-  json_helper::load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
-  json_helper::load_var(JSON_GEOM_VIEW_SHOW_ATOMS, m_draw_atoms, data);
-  json_helper::load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
-  json_helper::load_var(JSON_GEOM_VIEW_BT_SHOW_DSBL, m_bt_show_disabled_record, data);
-  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS, m_draw_subcells, data);
-  json_helper::load_var(JSON_GEOM_VIEW_SEL_VIS, m_sel_vis, data);
-  json_helper::load_var(JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
-  json_helper::load_var(JSON_GEOM_VIEW_ROLE, m_role, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_ATOMS, m_draw_atoms, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_BT_SHOW_DSBL, m_bt_show_disabled_record, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS, m_draw_subcells, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SEL_VIS, m_sel_vis, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_ROLE, m_role, data);
 
   //cell
-  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_CELL, m_draw_cell, data);
-  json_helper::load_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_CELL, m_draw_cell, data);
+  json_helper::hs_load_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
 
   //cell vectors
-  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS, m_draw_cell_vectors, data);
-  json_helper::load_var(JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO, m_cell_vectors_ratio, data);
-  json_helper::load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
-  json_helper::load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS, m_draw_cell_vectors, data);
+  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO, m_cell_vectors_ratio, data);
+  json_helper::hs_load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
+  json_helper::hs_load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
 
   if (data.find(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE) != data.end()) {
-
       int sc_a = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][0].get<int>();
       int sc_b = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][1].get<int>();
       int sc_c = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][2].get<int>();
-      m_subcells_range = vector3<int>(sc_a, sc_b, sc_c);
-
+      m_subcells_range.set_value(vector3<int>(sc_a, sc_b, sc_c));
     }
 
   if (auto val_itr = data.find(JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE); val_itr != data.end()) {

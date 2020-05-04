@@ -23,6 +23,14 @@ const int label_width = 90;
 add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
 
   app_state_t *astate = app_state_t::get_inst();
+  m_ortho_g3d_cell.set_value({5, 5, 5});
+  m_a3_g3d_cell.set_value({90, 90, 90});
+  m_l3_g3d_cell.set_value({5, 5, 5});
+
+  m_a_g3d_cell.set_value({5, 0, 0});
+  m_b_g3d_cell.set_value({0, 5, 0});
+  m_c_g3d_cell.set_value({0, 0, 5});
+
 
   setWindowTitle(tr("Add new item to workspace"));
   setFixedWidth(670);
@@ -367,7 +375,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
           auto nt_gv = nt->cast_as<geom_view_t>();
           if (!nt_gv) return;
-          nt_gv->m_name = m_type_param_name->text().toStdString();
+          nt_gv->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
         }
 
@@ -399,38 +407,48 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               }
 
             case cell_construct_mode::construct_ortho : {
-                vector3<float> ortho_a{m_ortho_g3d_cell[0], 0, 0};
-                vector3<float> ortho_b{0, m_ortho_g3d_cell[1], 0};
-                vector3<float> ortho_c{0, 0, m_ortho_g3d_cell[2]};
 
-                nt_gv->m_geom->cell = periodic_cell<float>(ortho_a,
-                                                           ortho_b,
-                                                           ortho_c);
+                auto ortho_g3d_cell = m_ortho_g3d_cell.get_value();
+
+                vector3<float> ortho_a{ortho_g3d_cell[0], 0, 0};
+                vector3<float> ortho_b{0, ortho_g3d_cell[1], 0};
+                vector3<float> ortho_c{0, 0, ortho_g3d_cell[2]};
+
+                nt_gv->m_geom->cell = periodic_cell<float>(ortho_a, ortho_b,ortho_c);
                 break;
+
               }
 
             case cell_construct_mode::construct_3angles_3len : {
-                nt_gv->m_geom->cell = periodic_cell<float>(m_l3_g3d_cell[0],
-                                                           m_l3_g3d_cell[1],
-                                                           m_l3_g3d_cell[2],
-                                                           m_a3_g3d_cell[0],
-                                                           m_a3_g3d_cell[1],
-                                                           m_a3_g3d_cell[2]);
+
+                auto l3_g3d_cell = m_l3_g3d_cell.get_value();
+                auto a3_g3d_cell = m_a3_g3d_cell.get_value();
+
+                nt_gv->m_geom->cell = periodic_cell<float>(l3_g3d_cell[0],
+                                                           l3_g3d_cell[1],
+                                                           l3_g3d_cell[2],
+                                                           a3_g3d_cell[0],
+                                                           a3_g3d_cell[1],
+                                                           a3_g3d_cell[2]);
                 break;
               }
 
             case cell_construct_mode::construct_9el : {
-                nt_gv->m_geom->cell = periodic_cell<float>(m_a_g3d_cell,
-                                                           m_b_g3d_cell,
-                                                           m_c_g3d_cell);
+
+               auto a_g3d_cell = m_a_g3d_cell.get_value();
+               auto b_g3d_cell = m_b_g3d_cell.get_value();
+               auto c_g3d_cell = m_c_g3d_cell.get_value();
+
+                nt_gv->m_geom->cell = periodic_cell<float>(a_g3d_cell, b_g3d_cell, c_g3d_cell);
                 break;
+
               }
 
             }
 
           nt_gv->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
           nt_gv->m_tws_tr->do_action(act_rebuild_ntable);
-          nt_gv->m_name = m_type_param_name->text().toStdString();
+          nt_gv->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
 
         }
@@ -445,7 +463,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           auto ag = shnfl<float>::group(m_type_param_ag->currentText().toStdString());
           nt_psg->m_ag =
               std::make_shared<array_group<matrix3<float>>>(ag);
-          nt_psg->m_name = m_type_param_name->text().toStdString();
+          nt_psg->m_name.set_value(m_type_param_name->text().toStdString());
           nt_psg->update_view();
           cur_ws->add_item_to_ws(nt);
         }
@@ -457,7 +475,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(pgf_producer_t::get_type_static());
           auto nt_pgfp = nt->cast_as<pgf_producer_t>();
           if (!nt_pgfp) return;
-          nt_pgfp->m_name = m_type_param_name->text().toStdString();
+          nt_pgfp->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
         }
 
@@ -468,7 +486,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(cube_primitive_t::get_type_static());
           auto nt_cp = nt->cast_as<cube_primitive_t>();
           if (!nt_cp) return;
-          nt_cp->m_name = m_type_param_name->text().toStdString();
+          nt_cp->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
         }
 
@@ -479,7 +497,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(arrow_primitive_t::get_type_static());
           auto nt_ap = nt->cast_as<arrow_primitive_t>();
           if (!nt_ap) return;
-          nt_ap->m_name = m_type_param_name->text().toStdString();
+          nt_ap->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
         }
 
@@ -490,7 +508,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(node_book_t::get_type_static());
           auto nb_ap = nt->cast_as<node_book_t>();
           if (!nb_ap) return;
-          nb_ap->m_name = m_type_param_name->text().toStdString();
+          nb_ap->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
         }
 
@@ -501,7 +519,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(arrow_array_t::get_type_static());
           auto aa_ap = nt->cast_as<arrow_array_t>();
           if (!aa_ap) return;
-          aa_ap->m_name = m_type_param_name->text().toStdString();
+          aa_ap->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
 
           auto cur_it = cur_ws->get_sel_sp();
@@ -518,7 +536,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(py_note_book_t::get_type_static());
           auto aa_ap = nt->cast_as<py_note_book_t>();
           if (!aa_ap) return;
-          aa_ap->m_name = m_type_param_name->text().toStdString();
+          aa_ap->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(nt);
 
         }
@@ -530,7 +548,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(traj_hl_t::get_type_static());
           auto aa_ap = th->cast_as<traj_hl_t>();
           if (!aa_ap) return;
-          aa_ap->m_name = m_type_param_name->text().toStdString();
+          aa_ap->m_name.set_value(m_type_param_name->text().toStdString());
           cur_ws->add_item_to_ws(th);
 
         }

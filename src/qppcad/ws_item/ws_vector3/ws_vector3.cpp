@@ -11,9 +11,7 @@ ws_vector3_t::ws_vector3_t() : ws_item_t() {
 }
 
 ws_vector3_t::operator vector3<float>() const {
-
-  return m_pos;
-
+  return m_pos.get_value();
 }
 
 void ws_vector3_t::vote_for_view_vectors(vector3<float> &out_look_pos,

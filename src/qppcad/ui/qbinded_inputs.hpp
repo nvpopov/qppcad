@@ -26,29 +26,33 @@ namespace qpp {
 
     public:
 
-      T *m_binded_value{nullptr};
+      hist_doc_t<T> *m_binded_value{nullptr};
       iupdatable_externally_t *m_binded_item{nullptr};
       uint32_t m_upd_flag{ws_item_updf_generic};
 
       bool m_ignore_state_change{false};
       bool m_updated_externally_event{false};
 
-      void bind_value(T *binded_value, iupdatable_externally_t *item_to_bind = nullptr) {
+      void bind_value(hist_doc_t<T> *binded_value,
+                      iupdatable_externally_t *item_to_bind = nullptr) {
+
         m_binded_value = binded_value;
         m_binded_item = item_to_bind;
         m_ignore_state_change = true;
         if (m_binded_value) load_value_ex();
         m_ignore_state_change = false;
+
       }
 
       void set_value(T&& new_value) {
         if (!is_binded()) return;
-        *m_binded_value = new_value;
+        auto val(new_value);
+        m_binded_value->set_value(std::move(new_value));
       }
 
       std::optional<T> get_value() {
         if (!is_binded()) return std::nullopt;
-        return *m_binded_value;
+        return m_binded_value->get_value();
       }
 
       bool is_binded() { return m_binded_value;}
@@ -384,15 +388,14 @@ namespace qpp {
 
     public:
 
-      std::vector<bool*> m_binded_data;
+      std::vector<hs_prop_bool_t*> m_binded_data;
       std::vector<QString> m_binded_names;
       QHBoxLayout *widget_layout;
       std::vector<QCheckBox*> m_boxes;
       std::vector<QLabel*> m_labels;
 
-      explicit qbinded_bool_named_vector_t(std::vector<QString> &&names,
-                                           QWidget *parent = nullptr);
-      void bind_value(std::vector<bool*> &&binded_data);
+      explicit qbinded_bool_named_vector_t(std::vector<QString> &&names, QWidget *parent = nullptr);
+      void bind_value(std::vector<hs_prop_bool_t*> &&binded_data);
       void load_value();
       void unbind_value();
 
@@ -410,7 +413,7 @@ namespace qpp {
       bool m_ignore_state_change{false};
       std::vector<bool> m_updated_externally_event{false};
 
-      std::vector<float*> m_binded_data;
+      std::vector<hs_prop_float_t*> m_binded_data;
       std::vector<QString> m_binded_names;
       QHBoxLayout *widget_layout;
       std::vector<QDoubleSpinBox*> m_boxes;
@@ -424,7 +427,7 @@ namespace qpp {
                                std::vector<float> &&vmax,
                                std::vector<float> &&vstep,
                                std::vector<std::optional<int>> &&decs);
-      void bind_value(std::vector<float*> &&binded_data,
+      void bind_value(std::vector<hs_prop_float_t*> &&binded_data,
                       iupdatable_externally_t *item_to_bind = nullptr);
       void load_value();
       void unbind_value();

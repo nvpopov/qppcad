@@ -7,6 +7,7 @@ using namespace qpp::cad;
 geom_view_sel_groups_subsys_t::geom_view_sel_groups_subsys_t(geom_view_t &_p_owner) {
 
   p_owner = &_p_owner;
+  m_auto_apply.set_value(false); add_hs_child(&m_auto_apply);
 
 }
 

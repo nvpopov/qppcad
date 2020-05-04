@@ -4,6 +4,7 @@
 #include <geom/geom.hpp>
 #include <vector>
 #include <algorithm>
+#include <qppcad/ws_item/ws_item_subsystem.hpp>
 
 namespace qpp {
 
@@ -63,15 +64,22 @@ namespace qpp {
 
     class geom_view_t;
 
-    class geom_view_lat_planes_subsys_t {
+    class geom_view_lat_planes_subsys_t :  public ws_item_subsystem_t{
+
+      QPP_OBJECT(geom_view_lat_planes_subsys_t, ws_item_subsystem_t)
+
       private:
+
         geom_view_t* p_owner;
         std::vector<lattice_plane_record_t<float> > m_planes;
+
       public:
+
         geom_view_lat_planes_subsys_t (geom_view_t &_p_owner);
         void add_plane (int _h = 1, int _k = -1, int _l = -1);
         void render ();
         //void render_ui_obj_insp ();
+
     };
 
   } // namespace qpp::cad

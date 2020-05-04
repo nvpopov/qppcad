@@ -27,8 +27,8 @@ namespace qpp {
         node_book_graphics_scene_t *m_scene;
         std::shared_ptr<sf_context_t> m_sflow_context;
 
-        bool m_highlight_dirty_nodes{false};
-        bool m_auto_recompute{true};
+        hs_prop_bool_t m_highlight_dirty_nodes;
+        hs_prop_bool_t m_auto_recompute;
 
         node_book_t();
 

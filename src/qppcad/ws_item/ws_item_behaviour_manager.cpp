@@ -69,13 +69,13 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
   astate->tlog("Loading ws_item from file {}", file_name);
 
   auto new_ws_item = fbr_ws_item_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
-  new_ws_item->m_genesis_file_name = file_name;
+  new_ws_item->m_genesis_file_name.set_cvalue(file_name);
   ws->add_item_to_ws(new_ws_item);
 
   if (new_ws_item) {
 
       std::ifstream input(file_name);
-      new_ws_item->m_name = extract_base_name(file_name);
+      new_ws_item->m_name.set_value(extract_base_name(file_name));
       m_ws_item_io[io_bhv_idx]->load_from_stream(input, new_ws_item.get(), ws);
       return new_ws_item;
 
@@ -122,7 +122,7 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
   if (bhv_id < m_ws_item_io.size() && m_ws_item_io[bhv_id]->can_save() &&
       m_ws_item_io[bhv_id]->m_accepted_type == ws_item->get_type()) {
       astate->tlog("Saving ws_item[{}] to file {} from workspace {}",
-                   ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name);
+                   ws_item->m_name.get_value(), file_name, ws_item->m_parent_ws->m_ws_name);
 
       bool check = m_ws_item_io[bhv_id]->check_before_save(ws_item.get(), message);
       if (check) {
@@ -134,7 +134,7 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
         } else {
 
           astate->tlog("Checking failed for ws_item={}, file={}, workspace={}",
-                       ws_item->m_name, file_name, ws_item->m_parent_ws->m_ws_name);
+                       ws_item->m_name.get_value(), file_name, ws_item->m_parent_ws->m_ws_name);
           return false;
 
         }

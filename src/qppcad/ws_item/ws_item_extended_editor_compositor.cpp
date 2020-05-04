@@ -119,7 +119,7 @@ void ws_item_extended_editor_compositor_t::open_extended_editor(size_t editor_id
                   m_ew_header->setText(tr("%1 [%2/%3]")
                                      .arg(ext_editor_w->header_name_hint())
                                      .arg(QString::fromStdString(cur_ws->m_ws_name))
-                                     .arg(QString::fromStdString(cur_it->m_name)));
+                                     .arg(QString::fromStdString(cur_it->m_name.get_value())));
                   show();
                   cur_it->m_ext_editor_opened = true;
                 }

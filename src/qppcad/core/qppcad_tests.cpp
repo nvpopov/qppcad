@@ -217,15 +217,15 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hsi1->checkout_to_epoch(1));
     REQUIRE(hsi1->get_cur_epoch() == 1);
-    REQUIRE(hsi1->get_cur_value() == 2);
+    REQUIRE(hsi1->get_value() == 2);
 
     REQUIRE(hsi1->checkout_to_epoch(2));
     REQUIRE(hsi1->get_cur_epoch() == 2);
-    REQUIRE(hsi1->get_cur_value() == 3);
+    REQUIRE(hsi1->get_value() == 3);
 
     REQUIRE(hsi1->checkout_to_epoch(3));
     REQUIRE(hsi1->get_cur_epoch() == 3);
-    REQUIRE(hsi1->get_cur_value() == 4);
+    REQUIRE(hsi1->get_value() == 4);
 
     hist_doc_t<vector3<float>> *hsv1 = new hist_doc_t<vector3<float>>();
     hsv1->push_epoch_with_value({0, 1, 0});
@@ -234,11 +234,11 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hsv1->checkout_to_epoch(1));
     REQUIRE(hsv1->get_cur_epoch() == 1);
-    REQUIRE(hsv1->get_cur_value() == vector3<float>{0, 1, 0});
+    REQUIRE(hsv1->get_value() == vector3<float>{0, 1, 0});
 
     REQUIRE(hsv1->checkout_to_epoch(2));
     REQUIRE(hsv1->get_cur_epoch() == 2);
-    REQUIRE(hsv1->get_cur_value() ==  vector3<float>{0, 2, 0});
+    REQUIRE(hsv1->get_value() ==  vector3<float>{0, 2, 0});
 
   }
 
@@ -340,17 +340,17 @@ TEST_CASE("history stream test") {
 
     hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
 
-    hsi1->set_cur_value(10);
+    hsi1->set_value(10);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
 
-    hsi1->set_cur_value(20);
+    hsi1->set_value(20);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
 
     hsi1->checkout_to_epoch(1);
-    REQUIRE(hsi1->get_cur_value() == 10);
+    REQUIRE(hsi1->get_value() == 10);
 
     hsi1->checkout_to_epoch(2);
-    REQUIRE(hsi1->get_cur_value() == 20);
+    REQUIRE(hsi1->get_value() == 20);
 
   }
 
@@ -358,7 +358,7 @@ TEST_CASE("history stream test") {
 
     hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
 
-    hsi1->set_cur_value(10);
+    hsi1->set_value(10);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
 
     hist_doc_base_t *hs_root = new hist_doc_base_t;
@@ -369,14 +369,14 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_el1->add_hs_child(hs_el2) == hr_result_e::hr_success);
     REQUIRE(hs_el2->add_hs_child(hsi1) == hr_result_e::hr_success);
 
-    hsi1->set_cur_value(20);
+    hsi1->set_value(20);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
     REQUIRE(hsi1->get_cur_epoch() == 2);
     REQUIRE(hs_root->get_cur_epoch() == 1);
     REQUIRE(hs_el1->get_cur_epoch() == 1);
     REQUIRE(hs_el2->get_cur_epoch() == 1);
 
-    hsi1->set_cur_value(30);
+    hsi1->set_value(30);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
     REQUIRE(hsi1->get_cur_epoch() == 3);
     REQUIRE(hs_root->get_cur_epoch() == 2);
@@ -387,13 +387,13 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_el1->get_cur_epoch() == 1);
     REQUIRE(hs_el2->get_cur_epoch() == 1);
     REQUIRE(hsi1->get_cur_epoch() == 2);
-    REQUIRE(hsi1->get_cur_value() == 20);
+    REQUIRE(hsi1->get_value() == 20);
 
     REQUIRE(hs_root->checkout_to_epoch(2) == hr_result_e::hr_success);
     REQUIRE(hs_el1->get_cur_epoch() == 2);
     REQUIRE(hs_el2->get_cur_epoch() == 2);
     REQUIRE(hsi1->get_cur_epoch() == 3);
-    REQUIRE(hsi1->get_cur_value() == 30);
+    REQUIRE(hsi1->get_value() == 30);
 
     REQUIRE(hsi1->commit_value_exclusive(44) == hr_result_e::hr_success);
     REQUIRE(hs_root->get_cur_epoch() == 3);

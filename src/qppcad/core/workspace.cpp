@@ -53,10 +53,10 @@ std::shared_ptr<ws_item_t> workspace_t::get_sel_sp() {
 
 std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
 
-  auto result = std::find_if(
-                  m_ws_items.begin(), m_ws_items.end(),
-                  [&_name](std::shared_ptr<ws_item_t> src){return src->m_name == _name;}
-                );
+  auto result = std::find_if(m_ws_items.begin(), m_ws_items.end(),
+                             [&_name](std::shared_ptr<ws_item_t> src){
+                               return src->m_name.get_value() == _name;}
+                             );
   return *result;
 
 }
@@ -235,11 +235,6 @@ void workspace_t::set_best_view() {
 
 void workspace_t::push_epoch() {
 
-  m_cur_epoch++;
-  for (auto item : m_ws_items) {
-      item->push_epoch();
-    }
-
 }
 
 void workspace_t::goto_epoch(size_t target_epoch) {
@@ -247,15 +242,10 @@ void workspace_t::goto_epoch(size_t target_epoch) {
 }
 
 size_t workspace_t::get_cur_epoch() {
-  return m_cur_epoch;
+
 }
 
 void workspace_t::pop_epoch() {
-
-  if (m_cur_epoch == 0) return;
-  for (auto item : m_ws_items) {
-      item->pop_epoch();
-    }
 
 }
 
@@ -311,7 +301,7 @@ void workspace_t::render() {
 void workspace_t::render_overlay(QPainter &painter) {
 
   for (auto &ws_item : m_ws_items)
-    if (ws_item->m_is_visible) ws_item->render_overlay(painter);
+    if (ws_item->m_is_visible.get_value()) ws_item->render_overlay(painter);
 
 }
 
@@ -352,8 +342,9 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
       bool is_hit = ws_item->mouse_click(&m_ray);
       hit_any = hit_any || is_hit;
 
-      if (is_hit && m_edit_type == ws_edit_e::edit_item && ws_item->m_is_visible &&
-          (ws_item->get_flags() & ws_item_flags_support_sel)) {
+      if (is_hit && m_edit_type == ws_edit_e::edit_item
+          && ws_item->m_is_visible.get_value()
+          && (ws_item->get_flags() & ws_item_flags_support_sel)) {
 
           m_gizmo->attached_item = ws_item.get();
           auto it = std::find(m_ws_items.begin(), m_ws_items.end(), ws_item);
@@ -659,7 +650,7 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
       return nullptr;
     }
 
-  new_item->m_name = item_name;
+  new_item->m_name.set_value(std::move(item_name));
   add_item_to_ws(new_item);
 
   return new_item;
@@ -787,12 +778,12 @@ void workspace_manager_t::init_default () {
   auto g1_gv = g1->cast_as<geom_view_t>();
   g1_gv->ins_atom("Si", vector3<float>(0,-2,0));
   g1_gv->ins_atom("Si", vector3<float>(0,2,0));
-  g1->m_name = "g1_src";
+  g1->m_name.set_value("g1_src");
   m_ws.back()->add_item_to_ws(g1);
 
   auto nb1 = m_bhv_mgr->fbr_ws_item_by_name("node_book_t");
   auto nb1_c = nb1->cast_as<node_book_t>();
-  nb1_c->m_name = "nodebook1";
+  nb1_c->m_name.set_value("nodebook1");
   m_ws.back()->add_item_to_ws(nb1);
 
   //  auto g2 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
@@ -1036,7 +1027,7 @@ void workspace_manager_t::import_from_file(const std::string &fname,
       if (loading_is_succesfull) {
 
           if (need_to_create_new_ws && p_new_item) {
-              exec_ws->m_ws_name = p_new_item->m_name;
+              exec_ws->m_ws_name = p_new_item->m_name.get_value();
               if (!exec_ws->m_camera->m_already_loaded) exec_ws->set_best_view();
             }
 

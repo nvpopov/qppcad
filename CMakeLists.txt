@@ -131,6 +131,7 @@ add_executable(
     src/qppcad/core/type_info.cpp
     src/qppcad/core/string_hash_register.cpp
     src/qppcad/core/qpp_object.cpp
+    src/qppcad/core/history_stream.cpp
     )
 
 add_executable(

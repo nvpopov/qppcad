@@ -11,18 +11,33 @@ psg_view_t::psg_view_t() : ws_item_t() {
                     | ws_item_flags_translate_emit_upd_event
                     | ws_item_flags_support_rendering);
 
-  //set default axes colors by order
+  m_plane_alpha.set_value(0.64f); add_hs_child(&m_plane_alpha);
+  m_plane_alpha_enabled.set_value(false); add_hs_child(&m_plane_alpha_enabled);
+  m_plane_scale.set_value({6.0f}); add_hs_child(&m_plane_scale);
+  m_plane_color.set_value({0, 0.9f, 0}); add_hs_child(&m_plane_color);
 
-  m_axes_color_by_order[0]  = {  32.0 / 255.0,  32.0 / 255.0,  32.0 / 255.0 };
-  m_axes_color_by_order[1]  = {  62.0 / 255.0,   6.0 / 255.0,   7.0 / 255.0 };
-  m_axes_color_by_order[2]  = {  55.0 / 255.0, 126.0 / 255.0, 184.0 / 255.0 };
-  m_axes_color_by_order[3]  = {  77.0 / 255.0, 175.0 / 255.0,  74.0 / 255.0 };
-  m_axes_color_by_order[4]  = { 152.0 / 255.0,  78.0 / 255.0, 163.0 / 255.0 };
-  m_axes_color_by_order[5]  = { 255.0 / 255.0, 127.0 / 255.0,   0.0 / 255.0 };
-  m_axes_color_by_order[6]  = { 255.0 / 255.0, 255.0 / 255.0,  51.0 / 255.0 };
-  m_axes_color_by_order[7]  = { 166.0 / 255.0,  86.0 / 255.0,  40.0 / 255.0 };
-  m_axes_color_by_order[8]  = { 247.0 / 255.0, 129.0 / 255.0, 191.0 / 255.0 };
-  m_axes_color_by_order[9]  = { 166.0 / 255.0, 206.0 / 255.0, 227.0 / 255.0 };
+  m_arrow_len.set_value(9.0f); add_hs_child(&m_arrow_len);
+  m_arrow_cap_len.set_value(0.51f); add_hs_child(&m_arrow_cap_len);
+  m_arrow_scale.set_value(0.15f); add_hs_child(&m_arrow_scale);
+  m_arrow_cap_scale.set_value(0.26f); add_hs_child(&m_arrow_cap_scale);
+
+  m_show_planes.set_value(true); add_hs_child(&m_show_planes);
+  m_show_axes.set_value(true); add_hs_child(&m_show_axes);
+
+  //set default axes colors by order
+  m_axes_color_by_order[0].set_value({  32.0 / 255.0,  32.0 / 255.0,  32.0 / 255.0 });
+  m_axes_color_by_order[1].set_value({  62.0 / 255.0,   6.0 / 255.0,   7.0 / 255.0 });
+  m_axes_color_by_order[2].set_value({  55.0 / 255.0, 126.0 / 255.0, 184.0 / 255.0 });
+  m_axes_color_by_order[3].set_value({  77.0 / 255.0, 175.0 / 255.0,  74.0 / 255.0 });
+  m_axes_color_by_order[4].set_value({ 152.0 / 255.0,  78.0 / 255.0, 163.0 / 255.0 });
+  m_axes_color_by_order[5].set_value({ 255.0 / 255.0, 127.0 / 255.0,   0.0 / 255.0 });
+  m_axes_color_by_order[6].set_value({ 255.0 / 255.0, 255.0 / 255.0,  51.0 / 255.0 });
+  m_axes_color_by_order[7].set_value({ 166.0 / 255.0,  86.0 / 255.0,  40.0 / 255.0 });
+  m_axes_color_by_order[8].set_value({ 247.0 / 255.0, 129.0 / 255.0, 191.0 / 255.0 });
+  m_axes_color_by_order[9].set_value({ 166.0 / 255.0, 206.0 / 255.0, 227.0 / 255.0 });
+
+  for (auto &elem : m_axes_color_by_order) add_hs_child(&elem);
+
   //m_axes_color_by_order[10] = {  31.0 / 255.0, 120.0 / 255.0, 180.0 / 255.0 };
 
 }
@@ -42,6 +57,8 @@ void psg_view_t::gen_from_geom(xgeometry<float, periodic_cell<float> > &geom,
 
 void psg_view_t::recalc_render_data() {
 
+  auto pos = m_pos.get_value();
+
   for (auto &elem : m_atf) {
 
       vector3<float> aliasing {
@@ -57,8 +74,8 @@ void psg_view_t::recalc_render_data() {
           float rot_angle = std::acos(plane_normal_ut.dot(elem.m_axis) / len_mod);
           Eigen::Affine3f t;
           t = Eigen::AngleAxisf(rot_angle, plane_rot_axis);
-          t.prescale(vector3<float>(m_plane_scale));
-          t.pretranslate(m_pos);
+          t.prescale(vector3<float>(m_plane_scale.get_value()));
+          t.pretranslate(pos);
           mat_model = t.matrix();
           elem.m_arrow_body_mat = mat_model;
 
@@ -66,8 +83,8 @@ void psg_view_t::recalc_render_data() {
 
           vector3<float> dir = elem.m_axis.normalized();
 
-          vector3<float> start = dir * (-0.5f * m_arrow_len) + m_pos;
-          vector3<float> end   = dir * ( 0.5f * m_arrow_len) + m_pos;
+          vector3<float> start = dir * (-0.5f * m_arrow_len.get_value()) + pos;
+          vector3<float> end   = dir * ( 0.5f * m_arrow_len.get_value()) + pos;
 
           if (elem.m_roto_inv) elem.m_ri_cube_center = start;
 
@@ -78,7 +95,7 @@ void psg_view_t::recalc_render_data() {
 
           vector3<float> vec_axis_norm = mat_model.block<3,1>(0,2).normalized();
 
-          mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * m_arrow_scale;
+          mat_model.block<3,1>(0,0) = vec_axis_norm.unitOrthogonal() * m_arrow_scale.get_value();
           mat_model.block<3,1>(0,1) = vec_axis_norm.cross(mat_model.block<3,1>(0,0));
           mat_model.block<3,1>(0,3) = start ;
 
@@ -86,7 +103,7 @@ void psg_view_t::recalc_render_data() {
 
           //aux
           vector3<float> start_aux = end;
-          vector3<float> end_aux = end + dir * m_arrow_cap_len;
+          vector3<float> end_aux = end + dir * m_arrow_cap_len.get_value();
 
           matrix4<float> mat_model_aux = matrix4<float>::Identity();
           mat_model_aux.block<3,1>(0,3) = start_aux;
@@ -94,7 +111,7 @@ void psg_view_t::recalc_render_data() {
 
           vector3<float> vec_axis_norm_aux = mat_model_aux.block<3,1>(0,2).normalized();
           mat_model_aux.block<3,1>(0,0) = vec_axis_norm_aux.unitOrthogonal() *
-                                          m_arrow_cap_scale;
+                                          m_arrow_cap_scale.get_value();
           mat_model_aux.block<3,1>(0,1) = vec_axis_norm_aux.cross(mat_model_aux.block<3,1>(0,0));
           mat_model_aux.block<3,1>(0,3) = start_aux;
 
@@ -115,14 +132,14 @@ void psg_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
 
 void psg_view_t::render() {
 
-  if (!m_is_visible) return;
+  if (!m_is_visible.get_value()) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
   //draw axes
   astate->dp->begin_render_general_mesh();
 
-  if (m_show_axes)
+  if (m_show_axes.get_value())
     for (auto &elem : m_atf)
       if (!elem.m_is_plane && elem.m_is_visible) {
           astate->dp->render_general_mesh(elem.m_arrow_body_mat,
@@ -133,7 +150,7 @@ void psg_view_t::render() {
                                           astate->mesh_unit_cone);
           if (elem.m_roto_inv)
             astate->dp->render_general_mesh(elem.m_ri_cube_center,
-                                            vector3<float>{m_arrow_scale * 1.2f},
+                                            vector3<float>{m_arrow_scale.get_value() * 1.2f},
                                             vector3<float>{0},
                                             elem.m_color,
                                             astate->mesh_unit_cube);
@@ -141,9 +158,9 @@ void psg_view_t::render() {
 
   astate->dp->end_render_general_mesh();
 
-  if (m_show_planes) {
+  if (m_show_planes.get_value()) {
 
-      if (m_plane_alpha_enabled) {
+      if (m_plane_alpha_enabled.get_value()) {
 
           astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
           astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
@@ -152,7 +169,7 @@ void psg_view_t::render() {
                 astate->dp->render_general_mesh(elem.m_arrow_body_mat,
                                                 elem.m_color,
                                                 astate->mesh_zl_plane,
-                                                m_plane_alpha,
+                                                m_plane_alpha.get_value(),
                                                 astate->sp_mvap_ssl);
               }
           astate->dp->cull_func(draw_pipeline_cull_func::cull_enable);
@@ -279,9 +296,9 @@ void psg_view_t::update_axes_color() {
   for (size_t i = 0; i < m_atf.size(); i++)
     if (!m_atf[i].m_is_plane) {
         size_t clr_lk = std::clamp<size_t>(m_atf[i].m_order - 1, 0, AXIS_COLORIZE_SIZE);
-        m_atf[i].m_color =  m_axes_color_by_order[clr_lk];
+        m_atf[i].m_color =  m_axes_color_by_order[clr_lk].get_value();
       } else {
-        m_atf[i].m_color = m_plane_color;
+        m_atf[i].m_color = m_plane_color.get_value();
       }
 
 }

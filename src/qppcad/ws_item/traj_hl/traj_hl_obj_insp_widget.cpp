@@ -38,7 +38,7 @@ void traj_hl_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
       b_th = _binding_item->cast_as<traj_hl_t>();
       m_disp_traj_color->bind_value(&b_th->m_traj_color, b_th);
-      m_combo_traj_style->bind_value(reinterpret_cast<int*>(&b_th->m_traj_style));
+      m_combo_traj_style->bind_value(&b_th->m_traj_style);
       m_elem_size->bind_value(&b_th->m_elem_size);
 
     }

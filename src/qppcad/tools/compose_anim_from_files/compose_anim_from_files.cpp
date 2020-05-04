@@ -38,7 +38,7 @@ void compose_anim_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       //fine, do the job
       auto new_it = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
       auto new_gv = new_it->cast_as<geom_view_t>();
-      new_gv->m_name = fmt::format("composed_gv{}", cur_ws->m_ws_items.size());
+      new_gv->m_name.set_value(fmt::format("composed_gv{}", cur_ws->m_ws_items.size()));
       cur_ws->add_item_to_ws(new_it);
 
       geom_anim_record_t<float> new_anim;

@@ -3,6 +3,7 @@
 
 #include <qppcad/core/qppcad.hpp>
 #include <symm/index_set.hpp>
+#include <qppcad/ws_item/ws_item_subsystem.hpp>
 
 namespace qpp {
 
@@ -24,7 +25,9 @@ namespace qpp {
 
     };
 
-    class geom_view_sel_groups_subsys_t {
+    class geom_view_sel_groups_subsys_t : public ws_item_subsystem_t{
+
+      QPP_OBJECT(geom_view_sel_groups_subsys_t, ws_item_subsystem_t)
 
       private:
 
@@ -34,7 +37,7 @@ namespace qpp {
 
         std::vector<geom_view_sel_group_t> m_sel_grps;
         int m_cur_sel_grp_ui{0}; // 0 - none, real = +1
-        bool m_auto_apply{false};
+        hs_prop_bool_t m_auto_apply;
 
         geom_view_sel_groups_subsys_t (geom_view_t &_p_owner);
         void make_from_selected();

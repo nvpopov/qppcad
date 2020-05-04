@@ -1521,13 +1521,13 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
       as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = checked;
 
   // if selective labels rendering unchecked - force it and select some random style
-  if (!as_al->m_atom_idx_sel.empty() && !as_al->m_labels->m_selective_lbl) {
+  if (!as_al->m_atom_idx_sel.empty() && !as_al->m_labels->m_selective_lbl.get_value()) {
 
-        as_al->m_labels->m_selective_lbl = true;
-        as_al->m_labels->m_style = geom_labels_style_e::show_id_type;
-        astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+    as_al->m_labels->m_selective_lbl.set_value(true);
+    as_al->m_labels->m_style.set_value(geom_labels_style_e::show_id_type);
+    astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
 
-    }
+  }
 
   astate->make_viewport_dirty();
 

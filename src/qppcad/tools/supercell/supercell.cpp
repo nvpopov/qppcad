@@ -64,30 +64,31 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   //sc_al->set_parent_workspace(parent_ws);
   sc_al->begin_structure_change();
 
-  if (al->m_role == geom_view_role_e::r_uc) {
-      sc_al->m_draw_img_atoms = false;
-      sc_al->m_draw_img_bonds = false;
+  if (al->m_role.get_value() == geom_view_role_e::r_uc) {
+      sc_al->m_draw_img_atoms.set_value(false);
+      sc_al->m_draw_img_bonds.set_value(false);
     }
 
   index sc_dim{a_steps - 1 , b_steps - 1 , c_steps - 1};
 
   geom_view_tools_t::gen_supercell(al->m_geom.get(), sc_al->m_geom.get(),
-                                   sc_dim, al->m_role);
+                                   sc_dim, geom_view_role_e(al->m_role.get_value()));
 
-  sc_al->m_pos = al->m_pos + al->m_geom->cell.v[0] * 1.4f;
-  sc_al->m_name = al->m_name + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps);
+  sc_al->m_pos.set_value(al->m_pos.get_value() + al->m_geom->cell.v[0] * 1.4f);
+  sc_al->m_name.set_value(al->m_name.get_value()
+                          + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps));
 
   al->m_parent_ws->add_item_to_ws(sc_al);
 
   if (sc_al->m_geom->nat() > 200) {
-      sc_al->m_draw_img_atoms = false;
-      sc_al->m_draw_img_bonds = false;
+      sc_al->m_draw_img_atoms.set_value(false);
+      sc_al->m_draw_img_bonds.set_value(false);
     }
 
   sc_al->end_structure_change();
 
   //perform purification
-  if (al->m_role == geom_view_role_e::r_uc) {
+  if (al->m_role.get_value() == geom_view_role_e::r_uc) {
 
       sc_al->m_tws_tr->do_action(act_lock);
       xgeometry<float, periodic_cell<float> > g(3); //intermediate xgeom
@@ -161,6 +162,8 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
 super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool_widget_t(parent) {
 
   app_state_t *astate = app_state_t::get_inst();
+  m_sc_dim.set_value({1,1,1});
+  m_sc_tool_mode.set_value(sc_tool_mode_default);
 
   //setFixedWidth(250);
   setWindowTitle(tr("Supercell generation"));
@@ -185,7 +188,7 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool
   m_tmode_inp = new qbinded_combobox_t;
   m_tmode_inp->addItem(tr("Supercell"));
   m_tmode_inp->addItem(tr("By Indices"));
-  m_tmode_inp->bind_value(reinterpret_cast<int*>(&m_sc_tool_mode), this);
+  m_tmode_inp->bind_value(&m_sc_tool_mode, this);
   m_tmode_inp->m_updated_externally_event = true;
 
   m_gb_rep_par_lt->addRow(tr("Mode"), m_tmode_inp);
@@ -193,9 +196,7 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool
 
   for (size_t i = 0; i < 3; i++) {
 
-      m_boundaries_values[i][0] = -1;
-      m_boundaries_values[i][1] = 0;
-      m_boundaries_values[i][2] = -1;
+      m_boundaries_values[i].set_value({-1, 0, -1});
       m_boundaries[i] = new qbinded_int2b_input_t;
       m_boundaries[i]->set_min_max_step(-10, 10, 1);
       m_boundaries[i]->bind_value(&m_boundaries_values[i], this);
@@ -216,75 +217,79 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool
 void super_cell_widget_t::make_super_cell(bool target_cam) {
 
   if (!m_src_gv) {
-      return;
-    }
+    return;
+  }
 
   if (m_src_gv->m_geom->DIM != 3) {
-      return;
+    return;
+  }
+
+  auto sc_dim = m_sc_dim.get_value();
+
+  if (!m_dst_gv) {
+    m_dst_gv = std::make_shared<geom_view_t>();
+    m_dst_gv->m_name.set_value(m_src_gv->m_name.get_value() +
+                               fmt::format("_sc_{}_{}_{}", sc_dim[0], sc_dim[1], sc_dim[2]));
+    m_src_gv->m_parent_ws->add_item_to_ws(m_dst_gv);
+  }
+
+  auto diml = m_sc_tool_mode.get_value() ==  supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
+  m_dst_gv->m_geom->DIM = diml;
+  m_dst_gv->m_geom->cell.DIM = diml;
+  m_dst_gv->begin_structure_change();
+  m_dst_gv->m_geom->clear();
+
+  switch (m_sc_tool_mode.get_value()) {
+
+  case supercell_tool_mode_e::sc_tool_mode_default : {
+
+    index sc_idx{sc_dim[0] - 1, sc_dim[1] - 1, sc_dim[2] - 1};
+    geom_view_tools_t::gen_supercell(m_src_gv->m_geom.get(),
+                                     m_dst_gv->m_geom.get(), sc_idx);
+    m_dst_gv->m_pos.set_value(m_src_gv->m_pos.get_value() + m_src_gv->m_geom->cell.v[0] * 1.4f);
+
+    break;
+
+  }
+
+  case supercell_tool_mode_e::sc_tool_mode_by_idx : {
+
+    bool can_apply{true};
+
+    for (auto &elem : m_boundaries_values) {
+      auto elem_val = elem.get_value();
+      if (elem_val[0] > elem_val[1])
+        can_apply = true;
     }
 
-    if (!m_dst_gv) {
-      m_dst_gv = std::make_shared<geom_view_t>();
-      m_dst_gv->m_name =
-          m_src_gv->m_name +
-          fmt::format("_sc_{}_{}_{}", m_sc_dim[0], m_sc_dim[1], m_sc_dim[2]);
-      m_src_gv->m_parent_ws->add_item_to_ws(m_dst_gv);
-    }
+    auto b0 = m_boundaries_values[0].get_value();
+    auto b1 = m_boundaries_values[0].get_value();
+    auto b2 = m_boundaries_values[0].get_value();
 
-    auto diml =
-        m_sc_tool_mode == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
-    m_dst_gv->m_geom->DIM = diml;
-    m_dst_gv->m_geom->cell.DIM = diml;
-    m_dst_gv->begin_structure_change();
-    m_dst_gv->m_geom->clear();
+    if (can_apply)
+      geom_view_tools_t::gen_ncells_ex(m_src_gv->m_geom.get(), m_dst_gv->m_geom.get(),
+                                       b0[0], b0[1], b1[0], b1[1], b2[0], b1[1]);
+    break;
 
-    switch (m_sc_tool_mode) {
+  }
 
-    case supercell_tool_mode_e::sc_tool_mode_default : {
+  }
 
-        index sc_idx{m_sc_dim[0] - 1, m_sc_dim[1] - 1, m_sc_dim[2] - 1};
-        geom_view_tools_t::gen_supercell(m_src_gv->m_geom.get(),
-                                         m_dst_gv->m_geom.get(), sc_idx);
-        m_dst_gv->m_pos = m_src_gv->m_pos + m_src_gv->m_geom->cell.v[0] * 1.4f;
+  // apply naive heuristics depending on number of atoms
+  if (m_dst_gv->m_geom->nat() < 800) {
+    m_dst_gv->m_draw_img_atoms.set_value(true);
+    m_dst_gv->m_draw_img_bonds.set_value(true);
+    m_dst_gv->m_render_style.set_value(geom_view_render_style_e::ball_and_stick);
+  } else {
+    m_dst_gv->m_draw_img_atoms.set_value(false);
+    m_dst_gv->m_draw_img_bonds.set_value(false);
+    m_dst_gv->m_render_style.set_value(geom_view_render_style_e::billboards);
+  }
 
-        break;
+  if (target_cam)
+    m_dst_gv->apply_target_view(cam_tv_e::tv_b);
+  m_dst_gv->end_structure_change();
 
-      }
-
-    case supercell_tool_mode_e::sc_tool_mode_by_idx : {
-
-      bool can_apply{true};
-
-      for (auto &elem : m_boundaries_values)
-        if (elem[0] > elem[1])
-          can_apply = true;
-
-      if (can_apply)
-        geom_view_tools_t::gen_ncells_ex(
-            m_src_gv->m_geom.get(), m_dst_gv->m_geom.get(),
-            m_boundaries_values[0][0], m_boundaries_values[0][1],
-            m_boundaries_values[1][0], m_boundaries_values[1][1],
-            m_boundaries_values[2][0], m_boundaries_values[2][1]);
-
-      break;
-      }
-
-    }
-
-    // apply naive heuristics depending on number of atoms
-    if (m_dst_gv->m_geom->nat() < 800) {
-      m_dst_gv->m_draw_img_atoms = true;
-      m_dst_gv->m_draw_img_bonds = true;
-      m_dst_gv->m_render_style = geom_view_render_style_e::ball_and_stick;
-    } else {
-      m_dst_gv->m_draw_img_atoms = false;
-      m_dst_gv->m_draw_img_bonds = false;
-      m_dst_gv->m_render_style = geom_view_render_style_e::billboards;
-    }
-
-    if (target_cam)
-      m_dst_gv->apply_target_view(cam_tv_e::tv_b);
-    m_dst_gv->end_structure_change();
 }
 
 bool super_cell_widget_t::restore_cam_on_cancel() {
@@ -310,23 +315,23 @@ void super_cell_widget_t::bind_item(ws_item_t *item) {
 
   if (m_src->get_type() == geom_view_t::get_type_static()) {
 
-      m_src_gv = m_src->cast_as<geom_view_t>();
-      m_dst_gv = nullptr;
+    m_src_gv = m_src->cast_as<geom_view_t>();
+    m_dst_gv = nullptr;
 
-    } else {
+  } else {
 
-      m_src_gv = nullptr;
-      m_dst_gv = nullptr;
+    m_src_gv = nullptr;
+    m_dst_gv = nullptr;
 
-    }
+  }
 
   //setup default cell dim
-    for (int i = 0; i < 3; i++) {
+  m_sc_dim.set_value({1, 1, 1});
 
-      m_sc_dim[i] = 1;
-      m_boundaries_values[i][0] = -1;
-      m_boundaries_values[i][1] = 0;
-    }
+  for (int i = 0; i < 3; i++) {
+    //  m_sc_dim[i] = 1;
+    m_boundaries_values[i].set_value({-1, 0, 0});
+  }
 
   m_sp_rep->unbind_value();
   m_sp_rep->bind_value(&m_sc_dim, this);
@@ -336,19 +341,17 @@ void super_cell_widget_t::bind_item(ws_item_t *item) {
 }
 
 void super_cell_widget_t::updated_externally(uint32_t update_reason) {
-
   mode_changed();
   make_super_cell(false);
-
 }
 
 void super_cell_widget_t::mode_changed() {
 
-  qt_hlp::form_lt_ctrl_visibility(m_sc_tool_mode == supercell_tool_mode_e::sc_tool_mode_default,
+  qt_hlp::form_lt_ctrl_visibility(m_sc_tool_mode.get_value() == sc_tool_mode_default,
                                   m_gb_rep_par_lt, m_tmode_inp, m_sp_rep_label, m_sp_rep);
 
   for (size_t i = 0; i < 3; i++)
-    qt_hlp::form_lt_ctrl_visibility(m_sc_tool_mode == supercell_tool_mode_e::sc_tool_mode_by_idx,
+    qt_hlp::form_lt_ctrl_visibility(m_sc_tool_mode.get_value() == sc_tool_mode_by_idx,
                                     m_gb_rep_par_lt, m_tmode_inp,
                                     m_boundaries_label[i], m_boundaries[i]);
 

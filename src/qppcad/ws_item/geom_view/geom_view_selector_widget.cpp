@@ -24,7 +24,7 @@ void qgeom_view_selector_widget_t::generate_list_gv_items() {
                                                      i,
                                                      as_gv->m_parent_ws->m_ws_name,
                                                      q,
-                                                     as_gv->m_name);
+                                                     as_gv->m_name.get_value());
 
             list_item->setText(QString::fromStdString(list_item_name));
 

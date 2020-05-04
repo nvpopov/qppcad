@@ -178,17 +178,17 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
       vector3<float> pos_i = gv->m_geom->pos(rec.m_atm) - new_frame;
 
       geom_labels_style_e cur_style =
-          gv->m_labels->m_style == geom_labels_style_e::show_none ?
+            gv->m_labels->m_style.get_value() == geom_labels_style_e::show_none ?
             geom_labels_style_e::show_id_type :
-            gv->m_labels->m_style;
+            geom_labels_style_e(gv->m_labels->m_style.get_value());
 
       ret +=
           fmt::format(first ? "{} {:8.8f} {:8.8f} {:8.8f}" : "\n{} {:8.8f} {:8.8f} {:8.8f}",
                       geom_view_labels_subsys_t::label_gen_fn(gv, cur_style, rec.m_atm),
                       pos_i[0],
-          pos_i[1],
-          pos_i[2]
-          );
+                      pos_i[1],
+                      pos_i[2]
+                     );
 
       first = false;
 
@@ -202,7 +202,7 @@ void geom_view_tools_t::name_sel_atoms_by_order(geom_view_t *gv) {
 
   if (!gv) return;
 
-  gv->m_labels->m_style = geom_labels_style_e::show_custom;
+  gv->m_labels->m_style.set_value(geom_labels_style_e::show_custom);
 
   size_t atom_ord_c{0};
 
@@ -221,7 +221,7 @@ void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3
 
   if (!gv) return;
 
-  gv->m_labels->m_style = geom_labels_style_e::show_custom;
+  gv->m_labels->m_style.set_value(geom_labels_style_e::show_custom);
 
   std::vector<std::tuple<size_t, float> > tmp_dists;
 
@@ -540,7 +540,7 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
       //bool succes{false};
 
       auto new_gv = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
-      new_gv->m_name = fmt::format("composed_{}", cur_ws->m_ws_items.size());
+      new_gv->m_name.set_value(fmt::format("composed_{}", cur_ws->m_ws_items.size()));
       cur_ws->add_item_to_ws(new_gv);
 
       auto new_as_gv = new_gv->cast_as<geom_view_t>();
@@ -569,7 +569,7 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
 
       img_idx++;
 
-      gv_src.m_is_visible = false;
+      gv_src.m_is_visible.set_value(false);
 
     }
 
@@ -592,7 +592,7 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::gen_ncells(geom_view_t *gv,
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
   sc_al->m_geom->DIM = 0;
   sc_al->m_geom->cell.DIM = 0;
-  sc_al->m_name = fmt::format("composed_{}", gv->m_parent_ws->m_ws_items.size());
+  sc_al->m_name.set_value(fmt::format("composed_{}", gv->m_parent_ws->m_ws_items.size()));
 
   sc_al->begin_structure_change();
 
@@ -745,7 +745,7 @@ void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
       atom_name.erase(remove_if(atom_name.begin(),
                                 atom_name.end(),
                                 [](char c) {return !isalpha(c);} ),
-                      atom_name.end());
+                                atom_name.end());
 
     }
 
@@ -779,7 +779,8 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
   if (cut_selected) gv->delete_selected_atoms();
 
-  ret_gv->m_name = fmt::format("{}{}", gv->m_name, gv->m_parent_ws->m_ws_items.size());
+  ret_gv->m_name.set_value(
+      fmt::format("{}{}", gv->m_name.get_value(), gv->m_parent_ws->m_ws_items.size()));
   gv->m_parent_ws->add_item_to_ws(ret_gv);
 
 }
@@ -869,7 +870,7 @@ void geom_view_tools_t::naive_fit_str(geom_view_t *model,
   vector3<float> aver_pos =
       std::accumulate(diff_pos.begin(), diff_pos.end(), vector3<float>{0}) / diff_pos.size();
 
-  model->m_pos = aver_pos;
+  model->m_pos.set_value(std::move(aver_pos));
 
 }
 
@@ -890,10 +891,10 @@ std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compl_list
         auto atom_pos = target->m_geom->pos(i);
 
         // transform to world frame
-        atom_pos += target->m_pos;
+        atom_pos += target->m_pos.get_value();
 
         // transform from world to model frame
-        atom_pos -= model->m_pos;
+        atom_pos -= model->m_pos.get_value();
 
         std::vector<tws_node_content_t<float> > qs_res;
         model->m_tws_tr->query_sphere(compl_eps, atom_pos, qs_res);
@@ -917,7 +918,7 @@ void geom_view_tools_t::construct_compl_list_view(geom_view_t *model,
       geom_view_tools_t::gen_geoms_compl_list(model, target, compl_eps, only_affect_visible_atoms);
 
   std::shared_ptr<compl_list_view_t> clv = std::make_shared<compl_list_view_t>();
-  clv->m_name = fmt::format("clv_{}", model->m_name);
+  clv->m_name.set_value(fmt::format("clv_{}", model->m_name.get_value()));
 
   clv->m_compl_list = std::move(res);
 
@@ -1099,7 +1100,7 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
 
   tmp_dst->end_structure_change();
 
-  if (tmp_dst->m_name.empty())
+  if (tmp_dst->m_name.get_value().empty())
     tmp_dst->set_name(fmt::format("merged_{}", gv_src1->m_parent_ws->m_ws_items.size()));
 
   astate->astate_evd->cur_ws_changed();

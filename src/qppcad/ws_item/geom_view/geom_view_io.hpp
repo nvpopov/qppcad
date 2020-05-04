@@ -48,11 +48,11 @@ namespace qpp {
          void post_load_hook(geom_view_t *_item, workspace_t *ws) override {
 
           if (_item->m_geom->nat() > 20000) {
-              _item->m_render_style = geom_view_render_style_e::billboards;
+            _item->m_render_style.set_value(geom_view_render_style_e::billboards);
             }
           else if (_item->m_geom->nat() > 7000) {
-              _item->m_draw_bonds = false;
-              _item->m_draw_img_bonds = false;
+              _item->m_draw_bonds.set_value(false);
+              _item->m_draw_img_bonds.set_value(false);
             }
 
           _item->end_structure_change() ;
@@ -118,8 +118,7 @@ namespace qpp {
             }
 
           GEN_FUNC_GEOM(stream, *(_item->m_geom.get()));
-
-          _item->m_role = ROLE;
+          _item->m_role.set_value(ROLE);
 
         }
 
@@ -216,7 +215,7 @@ namespace qpp {
 
               std::shared_ptr<ccd_view_t> extracted_ccd =
                   std::make_shared<ccd_view_t>();
-              extracted_ccd->m_name = _item->m_name+"_ccd";
+              extracted_ccd->m_name.set_value(_item->m_name.get_value() + "_ccd");
               extracted_ccd->m_ccd =
                   std::make_shared<comp_chem_program_data_t<float> >(std::move(cc_inst));
               extracted_ccd->m_connected_items.push_back(_item->shared_from_this());

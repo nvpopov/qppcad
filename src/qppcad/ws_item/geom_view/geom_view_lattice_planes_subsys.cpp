@@ -27,7 +27,7 @@ void geom_view_lat_planes_subsys_t::render() {
 
   for (auto &plane : m_planes) {
       scale = vector3<float>(plane.m_size, plane.m_size, plane.m_size);
-      astate->dp->render_general_mesh(p_owner->m_pos + plane.m_center,
+      astate->dp->render_general_mesh(p_owner->m_pos.get_value() + plane.m_center,
                                       scale, plane.m_rotation,
                                       clr_green, astate->mesh_zup_quad);
     }

@@ -36,38 +36,54 @@ namespace qpp {
     };
 
     template<typename AINT = uint32_t>
-    struct msr_bond_rec_t {
+    struct msr_bond_rec_t : public hist_doc_base_t {
 
       AINT m_at1;
       AINT m_at2;
       index m_idx1;
       index m_idx2;
-      bool m_show{true};
-      bool m_show_label{true};
-      bool m_show_custom_label{false};
-      std::string m_custom_label_text;
-      vector3<float> m_bond_color{0};
 
-      int m_line_size{2};
-      int m_font_size{13};
+      hs_prop_bool_t m_show;
+      hs_prop_bool_t m_show_label;
+      hs_prop_bool_t m_show_custom_label;
+      hs_prop_str_t m_custom_label_text;
+      hs_prop_v3f_t m_bond_color;
 
-      int m_pair_term_width{8};
-      msr_pair_term_style m_pair_term_style{msr_pair_term_style::msr_pair_term_style_both};
+      hs_prop_int_t m_line_size;
+      hs_prop_int_t m_font_size;
 
-      float m_delta_angle{0};
-      vector3<int> m_delta_offset{0, 0, -1};
+      hs_prop_int_t m_pair_term_width;
+      hs_prop_int_t m_pair_term_style;
 
-      msr_line_style_e m_line_render_style{msr_line_style_e::msr_line_dashed};
-      msr_label_style_e m_label_render_style{msr_label_style_e::msr_label_border};
+      hs_prop_float_t m_delta_angle;
+      hs_prop_v3i_t m_delta_offset;
 
-      msr_bond_rec_t (const AINT _atm1, const AINT _atm2,
-                      const index _idx1, const index _idx2) :
-        m_at1(_atm1), m_at2(_atm2), m_idx1(_idx1), m_idx2(_idx2) {}
+      hs_prop_int_t m_line_render_style;
+      hs_prop_int_t m_label_render_style;
+
+      msr_bond_rec_t (const AINT atm1, const AINT atm2, const index idx1, const index idx2)
+          : m_at1(atm1), m_at2(atm2), m_idx1(idx1), m_idx2(idx2) {
+
+        m_show.set_value(true); add_hs_child(&m_show);
+        m_show_label.set_value(true); add_hs_child(&m_show_label);
+        m_show_custom_label.set_value(false); add_hs_child(&m_show_custom_label);
+        m_custom_label_text.set_value(""); add_hs_child(&m_custom_label_text);
+        m_bond_color.set_value({0}); add_hs_child(&m_bond_color);
+        m_line_size.set_value(2); add_hs_child(&m_line_size);
+        m_font_size.set_value(13); add_hs_child(&m_font_size);
+        m_pair_term_width.set_value(8); add_hs_child(&m_pair_term_width);
+        m_pair_term_style.set_value(msr_pair_term_style_both); add_hs_child(&m_pair_term_style);
+        m_delta_angle.set_value(0); add_hs_child(&m_delta_angle);
+        m_delta_offset.set_value({0, 0, -1}); add_hs_child(&m_delta_offset);
+        m_line_render_style.set_value(msr_line_dashed); add_hs_child(&m_line_render_style);
+        m_label_render_style.set_value(msr_label_border); add_hs_child(&m_label_render_style);
+
+      }
 
     };
 
     template<typename AINT = uint32_t>
-    struct msr_angle_rec_t {
+    struct msr_angle_rec_t : public hist_doc_base_t {
 
       AINT m_at1;
       AINT m_at2;
@@ -76,15 +92,22 @@ namespace qpp {
       index m_idx2;
       index m_idx3;
 
-      int m_order{1};
+      hs_prop_int_t m_order;
 
-      bool m_show{true};
-      bool m_show_label{true};
-      vector3<float> m_angle_color{0};
+      hs_prop_bool_t m_show;
+      hs_prop_bool_t m_show_label;
+      hs_prop_v3f_t m_angle_color;
 
-      msr_angle_rec_t(const AINT _at1, const AINT _at2, const AINT _at3,
-                      const index _idx1, const index _idx2, const index _idx3) :
-        m_at1(_at1), m_at2(_at2), m_at3(_at3), m_idx1(_idx1), m_idx2(_idx2), m_idx3(_idx3) {}
+      msr_angle_rec_t(const AINT at1, const AINT at2, const AINT at3,
+                      const index idx1, const index idx2, const index idx3) :
+        m_at1(at1), m_at2(at2), m_at3(at3), m_idx1(idx1), m_idx2(idx2), m_idx3(idx3) {
+
+        m_order.set_value(1); add_hs_child(&m_order);
+        m_show.set_value(true); add_hs_child(&m_show);
+        m_show_label.set_value(true); add_hs_child(&m_show_label);
+        m_angle_color.set_value({0}); add_hs_child(&m_angle_color);
+
+      }
 
     };
 
@@ -102,10 +125,10 @@ namespace qpp {
       std::vector<msr_bond_rec_t<uint32_t> > m_dist_recs;
       std::vector<msr_angle_rec_t<uint32_t> > m_angle_recs;
 
-      bool m_render_dist{true};
-      bool m_render_angle{true};
-      bool m_render_dist_legend{false};
-      bool m_render_angle_legend{false};
+      hs_prop_bool_t m_render_dist;
+      hs_prop_bool_t m_render_angle;
+      hs_prop_bool_t m_render_dist_legend;
+      hs_prop_bool_t m_render_angle_legend;
 
       int m_cur_dist_rec_ui{0}; // 0 - none, real = +1
       int m_cur_angle_rec_ui{0}; // 0 - none, real = +1

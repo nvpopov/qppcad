@@ -46,8 +46,8 @@ namespace qpp {
         qbinded_color3_input_t *m_clr_low_input;
         qbinded_color3_input_t *m_clr_high_input;
 
-        vector3<float> m_clr_low{0};
-        vector3<float> m_clr_high{1};
+        hs_prop_v3f_t m_clr_low;
+        hs_prop_v3f_t m_clr_high;
 
         geom_view_t *b_gv{nullptr};
         std::vector<STRING_EX> b_fn;

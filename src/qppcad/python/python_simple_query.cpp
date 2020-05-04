@@ -366,7 +366,7 @@ void simple_query::py_labels(geom_labels_style_e lstyle){
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   if (!al) return;
 
-  al->m_labels->m_style = lstyle;
+  al->m_labels->m_style.set_value(lstyle);
 
 }
 
@@ -458,7 +458,7 @@ py::list simple_query::get_followers(std::shared_ptr<ws_item_t> ws_item) {
 
 py::str simple_query::get_leader(std::shared_ptr<ws_item_t> ws_item) {
 
-  if (ws_item->m_leader) return ws_item->m_leader->m_name;
+  if (ws_item->m_leader) return ws_item->m_leader->m_name.get_value();
   else return py::none();
 
 }
@@ -562,8 +562,8 @@ void simple_query::embed_cube() {
   auto it1 = al->m_atom_idx_sel.begin();
   auto it2 = ++(al->m_atom_idx_sel.begin());
 
-  vector3<float> p1 = al->m_geom->pos(it1->m_atm, it1->m_idx) + al->m_pos;
-  vector3<float> p2 = al->m_geom->pos(it2->m_atm, it2->m_idx) + al->m_pos;
+  vector3<float> p1 = al->m_geom->pos(it1->m_atm, it1->m_idx) + al->m_pos.get_value();
+  vector3<float> p2 = al->m_geom->pos(it2->m_atm, it2->m_idx) + al->m_pos.get_value();
 
   vector3<float> center = (p1 + p2) * 0.5f;
   vector3<float> len{0};
@@ -572,9 +572,9 @@ void simple_query::embed_cube() {
     len[i] = std::max(std::max(p1[i], p2[i]) - std::min(p1[i], p2[i]), 0.1f);
 
   auto new_cube = std::make_shared<cube_primitive_t>();
-  new_cube->m_name = fmt::format("cube{}", cur_ws->m_ws_items.size());
-  new_cube->m_pos = center;
-  new_cube->m_scale = len;
+  new_cube->m_name.set_value(fmt::format("cube{}", cur_ws->m_ws_items.size()));
+  new_cube->m_pos.set_cvalue(center);
+  new_cube->m_scale.set_cvalue(len);
   cur_ws->add_item_to_ws(new_cube);
 
 }
@@ -589,7 +589,7 @@ void simple_query::embed_arrow() {
   if (al->m_atom_ord_sel.size() != 2) return;
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
-  new_arr->m_name = fmt::format("arrow_{}", cur_ws->m_ws_items.size());
+  new_arr->m_name.set_value(fmt::format("arrow_{}", cur_ws->m_ws_items.size()));
   auto sel_first = al->m_atom_ord_sel.begin();
   auto sel_second = ++(al->m_atom_ord_sel.begin());
 
@@ -602,11 +602,11 @@ void simple_query::embed_arrow() {
   float dr_rad = 0.4f;
   float pre_rad = 0.4f;
   if (ap_idx) pre_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
-  dr_rad = pre_rad * al->m_atom_scale_factor;
+  dr_rad = pre_rad * al->m_atom_scale_factor.get_value();
 
   auto pos_end = pos_second - dir * dr_rad * 1.8;
-  new_arr->m_pos = pos_first;
-  new_arr->m_arrow_to = pos_end;
+  new_arr->m_pos.set_cvalue(pos_first);
+  new_arr->m_arrow_to.set_cvalue(pos_end);
   cur_ws->add_item_to_ws(new_arr);
 
 }
@@ -643,8 +643,8 @@ void simple_query::make_psg_view(float tolerance) {
               ws_pg_c->set_bounded_to_leader(true);
               ws_pg_c->gen_from_geom(*al->m_geom, tolerance, true);
               al->m_parent_ws->add_item_to_ws(ws_pg);
-              ws_pg_c->m_name =
-                  fmt::format("point_sym_grp{}", al->m_parent_ws->m_ws_items.size());
+              ws_pg_c->m_name.set_value(
+                  fmt::format("point_sym_grp{}", al->m_parent_ws->m_ws_items.size()));
             }
 
         } else if (cur_ws->m_edit_type == ws_edit_e::edit_content &&
@@ -659,8 +659,8 @@ void simple_query::make_psg_view(float tolerance) {
               al->copy_to_xgeom(buffer, true, false);
               ws_pg_partial_c->gen_from_geom(buffer, tolerance, true);
               al->m_parent_ws->add_item_to_ws(ws_pg_partial);
-              ws_pg_partial_c->m_name =
-                  fmt::format("point_sym_grp_part{}", al->m_parent_ws->m_ws_items.size());
+              ws_pg_partial_c->m_name.set_value(
+                  fmt::format("point_sym_grp_part{}", al->m_parent_ws->m_ws_items.size()));
             }
 
         }
@@ -680,7 +680,7 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   auto traj_hl = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(traj_hl_t::get_type_static());
   if (!traj_hl) return;
 
-  traj_hl->m_name = fmt::format("traj_highlighter_{}", cur_ws->m_ws_items.size());
+  traj_hl->m_name.set_value(fmt::format("traj_highlighter_{}", cur_ws->m_ws_items.size()));
 
   auto traj_hl_casted = traj_hl->cast_as<traj_hl_t>();
   if (!traj_hl_casted) return;
@@ -821,9 +821,9 @@ void simple_query::make_cube_p(std::string name,
   if (!cur_ws) return;
 
   auto new_cube = std::make_shared<cube_primitive_t>();
-  new_cube->m_name = name;
-  new_cube->m_pos = pos;
-  new_cube->m_scale = {size_a, size_b, size_c};
+  new_cube->m_name.set_cvalue(name);
+  new_cube->m_pos.set_cvalue(pos);
+  new_cube->m_scale.set_value({size_a, size_b, size_c});
   cur_ws->add_item_to_ws(new_cube);
 
 }
@@ -840,11 +840,11 @@ void simple_query::make_arrow_p(vector3<float> from,
   if (!cur_ws) return;
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
-  new_arr->m_name = name.empty() ?
-        fmt::format("arrow_{}", cur_ws->m_ws_items.size()) :
-        name;
-  new_arr->m_pos = from;
-  new_arr->m_arrow_to = to;
+  new_arr->m_name.set_value(name.empty() ?
+                            fmt::format("arrow_{}", cur_ws->m_ws_items.size()) :
+                            name);
+  new_arr->m_pos.set_cvalue(from);
+  new_arr->m_arrow_to.set_cvalue(to);
   cur_ws->add_item_to_ws(new_arr);
 
 }

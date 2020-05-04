@@ -40,7 +40,7 @@ namespace qpp {
 
         int m_cur_step{0};
         int m_cur_vib{-1};
-        ccd_copy_charges_mode m_copy_charges{ccd_copy_charges_mode::do_not_copy_charges};
+        hs_prop_int_t m_copy_charges;
         ccd_view_t();
 
         void manual_step_update(const int dir);

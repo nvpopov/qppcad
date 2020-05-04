@@ -37,13 +37,13 @@ namespace qpp {
 
       public:
 
-        vector3<float> m_ortho_g3d_cell{5, 5, 5};
-        vector3<float> m_a3_g3d_cell{90, 90, 90};
-        vector3<float> m_l3_g3d_cell{5, 5, 5};
+        hs_prop_v3f_t m_ortho_g3d_cell;
+        hs_prop_v3f_t m_a3_g3d_cell;
+        hs_prop_v3f_t m_l3_g3d_cell;
 
-        vector3<float> m_a_g3d_cell{5, 0, 0};
-        vector3<float> m_b_g3d_cell{0, 5, 0};
-        vector3<float> m_c_g3d_cell{0, 0, 5};
+        hs_prop_v3f_t m_a_g3d_cell;
+        hs_prop_v3f_t m_b_g3d_cell;
+        hs_prop_v3f_t m_c_g3d_cell;
 
         QVBoxLayout *m_main_lt;
         QHBoxLayout *m_data_lt;

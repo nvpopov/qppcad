@@ -16,12 +16,13 @@ namespace qpp {
 
         matrix4<float> m_model_body;
         matrix4<float> m_model_arrow;
-        vector3<float> m_arrow_to{1, 1, 1};
-        vector3<float> m_color{1, 0, 0};
 
-        float m_arrow_cap_len{0.15f};
-        float m_arrow_scale{0.05f};
-        float m_arrow_cap_scale{0.12f};
+        hs_prop_v3f_t m_arrow_to;
+        hs_prop_v3f_t m_color;
+
+        hs_prop_float_t m_arrow_cap_len;
+        hs_prop_float_t m_arrow_scale;
+        hs_prop_float_t m_arrow_cap_scale;
 
         bool m_need_to_recalc_render_data{true};
 
