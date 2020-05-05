@@ -118,7 +118,7 @@ void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-  for (size_t i = 0; i < al->m_geom->nat(); i++)
+  for (auto i = 0; i < al->m_geom->nat(); i++)
     if (cfn(al->m_geom->pos(i)[0], al->m_geom->pos(i)[1], al->m_geom->pos(i)[2]))
       al->sel_atom(i);
 

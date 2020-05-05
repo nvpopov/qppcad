@@ -2,6 +2,7 @@
 #include <qppcad/core/history_stream.hpp>
 #include <qppcad/core/qppcad.hpp>
 #include <catch.hpp>
+#include <qppcad/core/history_stream_array.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -135,10 +136,10 @@ TEST_CASE("history stream test") {
     REQUIRE(std::get<0>(hs_c2->push_epoch(1)) == hr_result_e::hr_success);
     REQUIRE(std::get<0>(hs_c3->push_epoch(1)) == hr_result_e::hr_success);
 
-//  current epoch augmented on add child
-//    hs->augment_epoch(hs_c1, 0, 0);
-//    hs->augment_epoch(hs_c2, 0, 0);
-//    hs->augment_epoch(hs_c3, 0, 0);
+    //  current epoch augmented on add child
+    //    hs->augment_epoch(hs_c1, 0, 0);
+    //    hs->augment_epoch(hs_c2, 0, 0);
+    //    hs->augment_epoch(hs_c3, 0, 0);
     hs->augment_epoch(1, hs_c1, 1);
     hs->augment_epoch(1, hs_c2, 1);
     hs->augment_epoch(1, hs_c3, 1);

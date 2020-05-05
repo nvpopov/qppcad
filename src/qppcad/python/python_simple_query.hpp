@@ -101,15 +101,8 @@ public:
   static void set_ws_bg(vector3<float> bg);
   static std::shared_ptr<workspace_t> cur_ws();
 
-  static void make_cube_p(std::string name,
-                          vector3<float> pos,
-                          float size_a,
-                          float size_b,
-                          float size_c);
-
-  static void make_arrow_p(vector3<float> from,
-                           vector3<float> to,
-                           std::string name="");
+  static void make_cube_p(std::string name, vector3<float>, float size_a, float size_b,float size_c);
+  static void make_arrow_p(vector3<float> from, vector3<float> to, std::string name="");
 
   static void convert_selected_units(spatial_units_e new_unit);
 
