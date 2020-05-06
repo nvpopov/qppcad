@@ -2,7 +2,6 @@
 #include <qppcad/core/history_stream.hpp>
 #include <qppcad/core/qppcad.hpp>
 #include <catch.hpp>
-#include <qppcad/core/history_stream_array.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
