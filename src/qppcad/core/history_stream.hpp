@@ -149,6 +149,10 @@ public:
        * @return
        */
   hr_result_e checkout_to_epoch(epoch_t target_epoch);
+  hr_result_e checkout_forward();
+  hr_result_e checkout_backward();
+  bool can_checkout_forward();
+  bool can_checkout_backward();
 
   /**
        * @brief add_child
