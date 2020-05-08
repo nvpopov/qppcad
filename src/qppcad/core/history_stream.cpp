@@ -259,14 +259,14 @@ bool hist_doc_base_t::can_checkout_forward() {
   auto cur_it = find_hl(get_cur_epoch());
   if (cur_it == end(p_hist_line)) return false;
   auto cur_idx = std::distance(begin(p_hist_line), cur_it);
-  return static_cast<size_t>(cur_idx + 1) < p_hist_line.size();
+  return cur_idx + 1 < p_hist_line.size();
 }
 
 bool hist_doc_base_t::can_checkout_backward() {
   auto cur_it = find_hl(get_cur_epoch());
   if (cur_it == end(p_hist_line)) return false;
   auto cur_idx = std::distance(begin(p_hist_line), cur_it);
-  return static_cast<size_t>(cur_idx - 1) >= 0;
+  return cur_idx - 1 >= 0;
 }
 
 hr_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {

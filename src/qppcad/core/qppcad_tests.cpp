@@ -352,6 +352,25 @@ TEST_CASE("history stream test") {
     hsi1->checkout_to_epoch(2);
     REQUIRE(hsi1->get_value() == 20);
 
+    REQUIRE(hsi1->can_checkout_forward() == false);
+    REQUIRE(hsi1->can_checkout_backward() == true);
+
+    hsi1->checkout_to_epoch(1);
+    REQUIRE(hsi1->can_checkout_forward() == true);
+    REQUIRE(hsi1->can_checkout_backward() == true);
+
+    hsi1->checkout_to_epoch(0);
+    REQUIRE(hsi1->can_checkout_forward() == true);
+    REQUIRE(hsi1->can_checkout_backward() == false);
+
+    REQUIRE(hsi1->checkout_backward() == hr_result_e::hr_error);
+    REQUIRE(hsi1->checkout_forward() == hr_result_e::hr_success);
+    REQUIRE(hsi1->get_cur_epoch() == 1);
+    REQUIRE(hsi1->checkout_forward() == hr_result_e::hr_success);
+    REQUIRE(hsi1->get_cur_epoch() == 2);
+    REQUIRE(hsi1->checkout_forward() == hr_result_e::hr_error);
+    REQUIRE(hsi1->get_cur_epoch() == 2);
+
   }
 
   SECTION ("nested elem exclusive commit") {
