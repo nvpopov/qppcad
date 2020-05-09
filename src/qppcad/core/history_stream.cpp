@@ -233,40 +233,39 @@ hr_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_e
 
 }
 
-hr_result_e hist_doc_base_t::checkout_forward() {
-  if (can_checkout_forward()) {
+hr_result_e hist_doc_base_t::checkout_by_dist(int dist) {
+  if (can_checkout_by_dist(dist)) {
     auto cur_it = find_hl(get_cur_epoch());
-    std::advance(cur_it, 1);
+    std::advance(cur_it, dist);
     checkout_to_epoch(*cur_it);
     return hr_result_e::hr_success;
   } else {
     return hr_result_e::hr_error;
   }
+}
+
+hr_result_e hist_doc_base_t::checkout_forward() {
+ return checkout_by_dist(1);
 }
 
 hr_result_e hist_doc_base_t::checkout_backward() {
-  if (can_checkout_backward()) {
-    auto cur_it = find_hl(get_cur_epoch());
-    std::advance(cur_it, -1);
-    checkout_to_epoch(*cur_it);
-    return hr_result_e::hr_success;
-  } else {
-    return hr_result_e::hr_error;
-  }
+  return checkout_by_dist(-1);
+}
+
+bool hist_doc_base_t::can_checkout_by_dist(int dist) {
+  auto cur_it = find_hl(get_cur_epoch());
+  if (cur_it == end(p_hist_line)) return false;
+  int cur_idx = std::distance(begin(p_hist_line), cur_it);
+  cur_idx += dist;
+  return cur_idx >= 0 && cur_idx < static_cast<int>(p_hist_line.size());
 }
 
 bool hist_doc_base_t::can_checkout_forward() {
-  auto cur_it = find_hl(get_cur_epoch());
-  if (cur_it == end(p_hist_line)) return false;
-  auto cur_idx = std::distance(begin(p_hist_line), cur_it);
-  return cur_idx + 1 < p_hist_line.size();
+  return can_checkout_by_dist(1);
 }
 
 bool hist_doc_base_t::can_checkout_backward() {
-  auto cur_it = find_hl(get_cur_epoch());
-  if (cur_it == end(p_hist_line)) return false;
-  auto cur_idx = std::distance(begin(p_hist_line), cur_it);
-  return cur_idx - 1 >= 0;
+  return can_checkout_by_dist(-1);
 }
 
 hr_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
