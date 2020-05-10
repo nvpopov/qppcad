@@ -138,18 +138,20 @@ hr_result_e hist_doc_base_t::augment_epoch(hist_doc_base_t::epoch_t target_epoch
     return hr_result_e::hr_invalid_child_epoch;
   }
 
-  auto &aug_elist = p_childs_states[target_epoch];
-  auto find_fnc = [child](std::tuple<self_t*, epoch_t> &elem) {
-    return std::get<0>(elem) == child;
-  };
+  p_childs_states[target_epoch][child] = child_epoch;
 
-  auto it1 = std::find_if(begin(aug_elist), end(aug_elist), find_fnc);
-  if (it1 != std::end(aug_elist)) {
-    size_t aug_idx = static_cast<size_t>(std::distance(begin(aug_elist), it1));
-    aug_elist[aug_idx] = {child, child_epoch};
-  } else {
-    aug_elist.push_back({child, child_epoch});
-  }
+//  auto &aug_elist = p_childs_states[target_epoch];
+//  auto find_fnc = [child](std::tuple<self_t*, epoch_t> &elem) {
+//    return std::get<0>(elem) == child;
+//  };
+
+//  auto it1 = std::find_if(begin(aug_elist), end(aug_elist), find_fnc);
+//  if (it1 != std::end(aug_elist)) {
+//    size_t aug_idx = static_cast<size_t>(std::distance(begin(aug_elist), it1));
+//    aug_elist[aug_idx][child] = child_epoch;
+//  } else {
+//    aug_elist.push_back({child, child_epoch});
+//  }
 
   return hr_result_e::hr_success;
 
@@ -171,13 +173,7 @@ hr_result_e hist_doc_base_t::remove_augment_from_epoch(hist_doc_base_t::self_t *
   auto epoch_it = p_childs_states.find(target_epoch);
   if (epoch_it == end(p_childs_states)) return hr_result_e::hr_invalid_epoch;
 
-  auto find_fnc = [child, child_epoch](std::tuple<self_t*, epoch_t> &elem) {
-    return std::get<0>(elem) == child && std::get<1>(elem) == child_epoch;
-  };
-
-  auto ch_epoch_it =
-      std::find_if(begin(epoch_it->second), end(epoch_it->second), find_fnc);
-
+  auto ch_epoch_it = epoch_it->second.find(child);
   if (ch_epoch_it == end(epoch_it->second)) return hr_result_e::hr_invalid_epoch;
 
   epoch_it->second.erase(ch_epoch_it);
@@ -316,11 +312,8 @@ hr_result_e hist_doc_base_t::remove_child(self_t *child) {
 
     for (auto &[k, v] : p_childs_states) {
       //std::cout << "@@@a " << k << " " << v.size() << std::endl;
-      auto new_end_v =
-          std::remove_if(begin(v), end(v), [child](std::tuple<self_t*, epoch_t> &elem) {
-            return std::get<0>(elem) == child;
-          });
-      v.erase(new_end_v, v.end());
+      auto chld_epoch_it = v.find(child);
+      if (chld_epoch_it != end(v)) v.erase(chld_epoch_it);
       //std::cout << "@@@b " << k << " " << v.size() << std::endl;
     }
 

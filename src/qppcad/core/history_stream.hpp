@@ -39,7 +39,7 @@ private:
   epoch_t p_cur_epoch{0};
   self_t *p_parent{nullptr};
   std::vector<self_t*> p_childs;
-  std::map<epoch_t, std::vector<std::tuple<self_t*, epoch_t>>> p_childs_states;
+  std::map<epoch_t, std::map<self_t*, epoch_t>> p_childs_states;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
   bool p_is_dirty{false};
