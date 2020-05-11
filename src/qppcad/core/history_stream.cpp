@@ -167,7 +167,6 @@ bool hist_doc_base_t::has_epoch(hist_doc_base_t::epoch_t target_epoch) {
 }
 
 hr_result_e hist_doc_base_t::remove_augment_from_epoch(hist_doc_base_t::self_t *child,
-                                                       hist_doc_base_t::epoch_t child_epoch,
                                                        hist_doc_base_t::epoch_t target_epoch) {
 
   auto epoch_it = p_childs_states.find(target_epoch);

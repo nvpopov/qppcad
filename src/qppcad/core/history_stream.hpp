@@ -140,8 +140,7 @@ public:
        * @param target_epoch
        * @return
        */
-  hr_result_e remove_augment_from_epoch(self_t* child, epoch_t child_epoch,
-                                        epoch_t target_epoch);
+  hr_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
 
   /**
        * @brief checkout_to_epoch

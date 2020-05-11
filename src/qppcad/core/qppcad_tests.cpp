@@ -51,7 +51,7 @@ TEST_CASE("history stream test") {
     hs->augment_epoch(1, hs_c1, 1);
     REQUIRE(hs->get_augmented_count(1) == 1); // added augments when we add as child
 
-    hs->remove_augment_from_epoch(hs_c1, 1, 1);
+    hs->remove_augment_from_epoch(hs_c1, 1);
     REQUIRE(hs->get_augmented_count(1) == 0);
 
     REQUIRE(hs->augment_epoch(1, hs_c1, 2) == hr_result_e::hr_invalid_child_epoch);
