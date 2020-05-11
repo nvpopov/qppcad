@@ -25,8 +25,8 @@ enum hr_result_e {
 };
 
 /**
-     * @brief The hist_doc_base_t class
-     */
+* @brief The hist_doc_base_t class
+*/
 class hist_doc_base_t {
 
 public:
@@ -51,16 +51,16 @@ public:
   virtual ~hist_doc_base_t();
 
   /**
-       * @brief get_cur_epoch
-       * @return
-       */
+  * @brief get_cur_epoch
+  * @return
+  */
   epoch_t get_cur_epoch();
 
   /**
-       * @brief set_cur_epoch
-       * @param cur_epoch
-       * @return
-       */
+  * @brief set_cur_epoch
+  * @param cur_epoch
+  * @return
+  */
   hr_result_e set_cur_epoch(epoch_t cur_epoch);
 
   virtual hr_result_e on_epoch_changed(epoch_t prev_epoch);
@@ -71,33 +71,33 @@ public:
   virtual void on_commit_exclusive();
 
   /**
-       * @brief get_delta_state_type - not implemented yet
-       * @return
-       */
+  * @brief get_delta_state_type - not implemented yet
+  * @return
+  */
   hist_doc_delta_state_e get_delta_state_type();
 
   /**
-       * @brief set_delta_state_type - not implemented yet
-       * @param new_dstate
-       */
+  * @brief set_delta_state_type - not implemented yet
+  * @param new_dstate
+  */
   void set_delta_state_type(hist_doc_delta_state_e new_dstate);
 
   /**
-       * @brief is_dirty - not implemented yet
-       * @return
-       */
+  * @brief is_dirty - not implemented yet
+  * @return
+  */
   bool is_dirty();
 
   /**
-       * @brief mark_as_dirty - not implemented yet
-       */
+  * @brief mark_as_dirty - not implemented yet
+  */
   void mark_as_dirty();
 
   /**
-       * @brief push_epoch insert new epoch at cursor
-       * @param new_epoch
-       * @return
-       */
+  * @brief push_epoch insert new epoch at cursor
+  * @param new_epoch
+  * @return
+  */
   std::tuple<hr_result_e, std::optional<epoch_t>> push_epoch(
       std::optional<epoch_t> new_epoch_ex = std::nullopt,
       bool checkout_to_new_epoch = false);
@@ -105,48 +105,49 @@ public:
   auto find_hl(epoch_t target) {
     return std::find(begin(p_hist_line), end(p_hist_line), target);
   }
+
   /**
-       * @brief get_history_size
-       */
+  * @brief get_history_size
+  */
   size_t get_history_size();
   std::vector<epoch_t> get_history();
 
   /**
-       * @brief augment_epoch
-       * @param child pointer to child
-       * @param child_epoch
-       * @param target_epoch
-       */
+  * @brief augment_epoch
+  * @param child pointer to child
+  * @param child_epoch
+  * @param target_epoch
+  */
   hr_result_e augment_epoch(epoch_t target_epoch, self_t* child, epoch_t child_epoch);
 
   /**
-       * @brief get_augmented_count
-       * @param target_epoch
-       * @return
-       */
+  * @brief get_augmented_count
+  * @param target_epoch
+  * @return
+  */
   size_t get_augmented_count(epoch_t target_epoch);
 
   /**
-       * @brief has_epoch
-       * @param target_epoch
-       * @return
-       */
+  * @brief has_epoch
+  * @param target_epoch
+  * @return
+  */
   bool has_epoch(epoch_t target_epoch);
 
   /**
-       * @brief remove_augment_from_epoch
-       * @param child
-       * @param child_epoch
-       * @param target_epoch
-       * @return
-       */
+  * @brief remove_augment_from_epoch
+  * @param child
+  * @param child_epoch
+  * @param target_epoch
+  * @return
+  */
   hr_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
 
   /**
-       * @brief checkout_to_epoch
-       * @param target_epoch
-       * @return
-       */
+  * @brief checkout_to_epoch
+  * @param target_epoch
+  * @return
+  */
   hr_result_e checkout_to_epoch(epoch_t target_epoch);
   hr_result_e checkout_by_dist(int dist);
   hr_result_e checkout_forward();
@@ -156,47 +157,47 @@ public:
   bool can_checkout_backward();
 
   /**
-       * @brief add_child
-       * @param child
-       * @return
-       */
+  * @brief add_child
+  * @param child
+  * @return
+  */
   hr_result_e add_hs_child(self_t *child);
 
   /**
-       * @brief get_root
-       * @return
-       */
+  * @brief get_root
+  * @return
+  */
   self_t *get_root();
 
   /**
-       * @brief get_children
-       * @param idx
-       * @return
-       */
+  * @brief get_children
+  * @param idx
+  * @return
+  */
   self_t *get_children(size_t idx);
 
   /**
-       * @brief is_children
-       * @param child
-       * @return
-       */
+  * @brief is_children
+  * @param child
+  * @return
+  */
   std::optional<size_t> is_children(self_t *child);
 
   /**
-       * @brief remove_child
-       * @param child_id
-       */
+  * @brief remove_child
+  * @param child_id
+  */
   hr_result_e remove_child(size_t child_id);
 
   /**
-       * @brief remove_child
-       * @param child
-       */
+  * @brief remove_child
+  * @param child
+  */
   hr_result_e remove_child(self_t *child);
 
   /**
-       * @brief get_children_count
-       */
+  * @brief get_children_count
+  */
   size_t get_children_count();
   //end of children stuff
 
