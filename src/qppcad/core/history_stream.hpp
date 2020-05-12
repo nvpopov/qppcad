@@ -21,7 +21,15 @@ enum hr_result_e {
   hr_invalid_epoch = 2,
   hr_epoch_ill_defined = 3,
   hr_invalid_child = 4,
-  hr_invalid_child_epoch = 5
+  hr_invalid_child_epoch = 5,
+  hr_true = 6,
+  hr_false = 7
+};
+
+//Stores augment meta info for each child in each parent's epoch
+struct hs_child_state_meta_t {
+  epoch_t m_child_epoch{0};
+  bool m_is_alive{false};
 };
 
 /**
@@ -39,7 +47,7 @@ private:
   epoch_t p_cur_epoch{0};
   self_t *p_parent{nullptr};
   std::vector<self_t*> p_childs;
-  std::map<epoch_t, std::map<self_t*, epoch_t>> p_childs_states;
+  std::map<epoch_t, std::map<self_t*, hs_child_state_meta_t>> p_childs_states;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
   bool p_is_dirty{false};
@@ -118,7 +126,8 @@ public:
   * @param child_epoch
   * @param target_epoch
   */
-  hr_result_e augment_epoch(epoch_t target_epoch, self_t* child, epoch_t child_epoch);
+  hr_result_e augment_epoch(epoch_t target_epoch, self_t* child, epoch_t child_epoch,
+                            bool alive = true);
 
   /**
   * @brief get_augmented_count
@@ -128,13 +137,6 @@ public:
   size_t get_augmented_count(epoch_t target_epoch);
 
   /**
-  * @brief has_epoch
-  * @param target_epoch
-  * @return
-  */
-  bool has_epoch(epoch_t target_epoch);
-
-  /**
   * @brief remove_augment_from_epoch
   * @param child
   * @param child_epoch
@@ -142,6 +144,14 @@ public:
   * @return
   */
   hr_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
+  hr_result_e is_child_alive(epoch_t target_epoch, self_t* child);
+
+  /**
+  * @brief has_epoch
+  * @param target_epoch
+  * @return
+  */
+  bool has_epoch(epoch_t target_epoch);
 
   /**
   * @brief checkout_to_epoch

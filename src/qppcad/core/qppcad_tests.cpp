@@ -421,4 +421,47 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("nested elem addition vol2") {
+
+    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hist_doc_base_t *hs_el1 = new hist_doc_base_t;
+    hist_doc_base_t *hs_el2 = new hist_doc_base_t;
+
+    REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+
+    REQUIRE(hs_root->add_hs_child(hs_el1) == hr_result_e::hr_success);
+    REQUIRE(hs_root->add_hs_child(hs_el2) == hr_result_e::hr_success);
+
+    REQUIRE(hs_root->is_child_alive(0, hs_el1) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(1, hs_el1) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(2, hs_el1) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hr_result_e::hr_true);
+
+    REQUIRE(hs_root->is_child_alive(0, hs_el2) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(1, hs_el2) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(2, hs_el2) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hr_result_e::hr_true);
+
+    REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+    REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
+
+    REQUIRE(hs_root->is_child_alive(0, hs_el1) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(1, hs_el1) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(2, hs_el1) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hr_result_e::hr_true);
+    REQUIRE(hs_root->is_child_alive(4, hs_el1) == hr_result_e::hr_true);
+    REQUIRE(hs_root->is_child_alive(5, hs_el1) == hr_result_e::hr_true);
+
+    REQUIRE(hs_root->is_child_alive(0, hs_el2) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(1, hs_el2) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(2, hs_el2) == hr_result_e::hr_false);
+    REQUIRE(hs_root->is_child_alive(3, hs_el2) == hr_result_e::hr_true);
+    REQUIRE(hs_root->is_child_alive(4, hs_el2) == hr_result_e::hr_true);
+    REQUIRE(hs_root->is_child_alive(5, hs_el2) == hr_result_e::hr_true);
+
+  }
+
+
 }
