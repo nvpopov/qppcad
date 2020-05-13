@@ -67,12 +67,23 @@ void hist_doc_base_t::set_delta_state_type(hist_doc_delta_state_e new_dstate) {
   p_dstate = new_dstate;
 }
 
-bool hist_doc_base_t::is_dirty() {
-  return p_is_dirty;
+bool hist_doc_base_t::is_unmodified() {
+
+  std::vector<bool> childs_are_modified;
+  for (auto child : p_childs)
+    if (child) childs_are_modified.push_back(child->is_unmodified());
+
+  bool all_childs_are_unmodified =
+      p_childs.empty() ? true : std::all_of(begin(childs_are_modified),
+                                            end(childs_are_modified),
+                                            [](bool value) {return value;});
+
+  return all_childs_are_unmodified && is_unmodified_impl();
+
 }
 
-void hist_doc_base_t::mark_as_dirty() {
-  p_is_dirty = true;
+bool hist_doc_base_t::is_unmodified_impl() {
+  return true;
 }
 
 std::tuple<hr_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_t::push_epoch(

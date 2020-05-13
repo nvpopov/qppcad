@@ -202,7 +202,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("hist doc test") {
 
-    hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
+    hist_doc_t<int> *hsi1 = new hist_doc_t<int>(0);
     hsi1->push_epoch_with_value(2);
     REQUIRE(hsi1->checkout_to_epoch(1) == hr_result_e::hr_success);
     REQUIRE(hsi1->push_epoch_with_value(3) == hr_result_e::hr_success);
@@ -227,7 +227,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hsi1->get_cur_epoch() == 3);
     REQUIRE(hsi1->get_value() == 4);
 
-    hist_doc_t<vector3<float>> *hsv1 = new hist_doc_t<vector3<float>>();
+    hist_doc_t<vector3<float>> *hsv1 = new hist_doc_t<vector3<float>>(vector3<float>(0));
     hsv1->push_epoch_with_value({0, 1, 0});
     REQUIRE(hsv1->checkout_to_epoch(1) == hr_result_e::hr_success);
     hsv1->push_epoch_with_value({0, 2, 0});
@@ -338,7 +338,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("nested elem deletions") {
 
-    hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
+    hist_doc_t<int> *hsi1 = new hist_doc_t<int>(0);
 
     hsi1->set_value(10);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
@@ -375,7 +375,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("nested elem exclusive commit") {
 
-    hist_doc_t<int> *hsi1 = new hist_doc_t<int>();
+    hist_doc_t<int> *hsi1 = new hist_doc_t<int>(0);
 
     hsi1->set_value(10);
     REQUIRE(hsi1->commit_exclusive() == hr_result_e::hr_success);
@@ -424,8 +424,8 @@ TEST_CASE("history stream test") {
   SECTION ("nested elem addition vol2") {
 
     hist_doc_base_t *hs_root = new hist_doc_base_t;
-    hist_doc_base_t *hs_el1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_el2 = new hist_doc_base_t;
+    hist_doc_t<int> *hs_el1 = new hist_doc_t<int>(0);
+    hist_doc_t<int> *hs_el2 = new hist_doc_t<int>(0);
 
     REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
     REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hr_result_e::hr_success);
@@ -460,6 +460,15 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_root->is_child_alive(3, hs_el2) == hr_result_e::hr_true);
     REQUIRE(hs_root->is_child_alive(4, hs_el2) == hr_result_e::hr_true);
     REQUIRE(hs_root->is_child_alive(5, hs_el2) == hr_result_e::hr_true);
+
+    REQUIRE(hs_el1->is_unmodified() == true);
+    REQUIRE(hs_el2->is_unmodified() == true);
+    REQUIRE(hs_root->is_unmodified() == true);
+
+    hs_el1->set_value(10);
+    REQUIRE(hs_el1->is_unmodified() == false);
+    REQUIRE(hs_el2->is_unmodified() == true);
+    REQUIRE(hs_root->is_unmodified() == false);
 
   }
 

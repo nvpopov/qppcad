@@ -48,9 +48,10 @@ private:
   self_t *p_parent{nullptr};
   std::vector<self_t*> p_childs;
   std::map<epoch_t, std::map<self_t*, hs_child_state_meta_t>> p_childs_states;
+  std::map<self_t*, hs_child_state_meta_t> p_current_child_state;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
-  bool p_is_dirty{false};
+
   hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
 public:
@@ -94,12 +95,8 @@ public:
   * @brief is_dirty - not implemented yet
   * @return
   */
-  bool is_dirty();
-
-  /**
-  * @brief mark_as_dirty - not implemented yet
-  */
-  void mark_as_dirty();
+  bool is_unmodified();
+  virtual bool is_unmodified_impl();
 
   /**
   * @brief push_epoch insert new epoch at cursor
@@ -223,6 +220,10 @@ private:
 
 public:
 
+  hist_doc_t(STYPE &&new_val) {
+    p_stored_values[get_cur_epoch()] = p_cur_value;
+  }
+
   hr_result_e push_epoch_with_value(STYPE &&new_val,
                                     std::optional<epoch_t> new_epoch = std::nullopt,
                                     bool checkout_to_new_epoch = false) {
@@ -282,17 +283,22 @@ public:
 
   }
 
+  bool is_unmodified_impl() override {
+    if (p_stored_values.empty()) return false;
+    auto stored_val_it = p_stored_values.find(get_cur_epoch());
+    if (stored_val_it == end(p_stored_values)) return false;
+    return p_cur_value == stored_val_it->second;
+  }
+
   STYPE get_value() const {
     return p_cur_value;
   }
 
   void set_value(STYPE &&new_val) {
-    mark_as_dirty();
     p_cur_value = new_val;
   }
 
   void set_cvalue(STYPE new_val) {
-    mark_as_dirty();
     p_cur_value = new_val;
   }
 
