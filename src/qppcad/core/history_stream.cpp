@@ -86,6 +86,27 @@ bool hist_doc_base_t::is_unmodified_impl() {
   return true;
 }
 
+hr_result_e hist_doc_base_t::reset() {
+
+  std::vector<bool> child_reseted;
+  for (auto child: p_childs)
+    if (child) child_reseted.push_back(child->reset());
+
+  hr_result_e self_reset = reset_impl();
+  bool all_child_succeded =
+      p_childs.empty() ? true : std::all_of(begin(child_reseted),
+                                            end(child_reseted),
+                                            [](bool value) {return value;});
+
+  return self_reset ==
+                     hr_result_e::hr_success && all_child_succeded ? hr_result_e::hr_success :
+                                                                     hr_result_e::hr_error;
+}
+
+hr_result_e hist_doc_base_t::reset_impl() {
+  return hr_result_e::hr_success;
+}
+
 std::tuple<hr_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_t::push_epoch(
     std::optional<hist_doc_base_t::epoch_t> new_epoch_ex,
     bool checkout_to_new_epoch) {
@@ -254,14 +275,6 @@ hr_result_e hist_doc_base_t::checkout_by_dist(int dist) {
 
 }
 
-hr_result_e hist_doc_base_t::checkout_forward() {
- return checkout_by_dist(1);
-}
-
-hr_result_e hist_doc_base_t::checkout_backward() {
-  return checkout_by_dist(-1);
-}
-
 bool hist_doc_base_t::can_checkout_by_dist(int dist) {
 
   auto cur_it = find_hl(get_cur_epoch());
@@ -270,14 +283,6 @@ bool hist_doc_base_t::can_checkout_by_dist(int dist) {
   cur_idx += dist;
   return cur_idx >= 0 && cur_idx < static_cast<int>(p_hist_line.size());
 
-}
-
-bool hist_doc_base_t::can_checkout_forward() {
-  return can_checkout_by_dist(1);
-}
-
-bool hist_doc_base_t::can_checkout_backward() {
-  return can_checkout_by_dist(-1);
 }
 
 hr_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {

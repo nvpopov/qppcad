@@ -54,6 +54,11 @@ private:
 
   hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
+protected:
+
+  virtual hr_result_e reset_impl();
+  virtual bool is_unmodified_impl();
+
 public:
 
   hist_doc_base_t ();
@@ -96,7 +101,8 @@ public:
   * @return
   */
   bool is_unmodified();
-  virtual bool is_unmodified_impl();
+
+  hr_result_e reset();
 
   /**
   * @brief push_epoch insert new epoch at cursor
@@ -157,11 +163,7 @@ public:
   */
   hr_result_e checkout_to_epoch(epoch_t target_epoch);
   hr_result_e checkout_by_dist(int dist);
-  hr_result_e checkout_forward();
-  hr_result_e checkout_backward();
   bool can_checkout_by_dist(int dist);
-  bool can_checkout_forward();
-  bool can_checkout_backward();
 
   /**
   * @brief add_child
@@ -218,9 +220,24 @@ private:
   STYPE p_cur_value{};
   std::map<epoch_t, STYPE> p_stored_values;
 
+protected:
+
+  hr_result_e reset_impl() override {
+    if (p_stored_values.empty()) return hr_result_e::hr_invalid_epoch;
+    auto stored_val_it = p_stored_values.find(get_cur_epoch());
+    if (stored_val_it == end(p_stored_values)) return hr_result_e::hr_invalid_epoch;
+    p_cur_value = stored_val_it->second;
+    return hr_result_e::hr_success;
+  }
+
 public:
 
   hist_doc_t(STYPE &&new_val) {
+    p_stored_values[get_cur_epoch()] = new_val;
+    p_cur_value = p_stored_values[get_cur_epoch()];
+  }
+
+  hist_doc_t() {
     p_stored_values[get_cur_epoch()] = p_cur_value;
   }
 
@@ -301,7 +318,6 @@ public:
   void set_cvalue(STYPE new_val) {
     p_cur_value = new_val;
   }
-
 
 };
 
