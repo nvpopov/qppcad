@@ -141,7 +141,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .export_values();
 
   /* workspace_manager_t pybindings */
-  py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t> >
+  py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t>>
       py_workspace_manager_t(m, "workspace_manager_t");
   py_workspace_manager_t.def("__len__",
                              [](const workspace_manager_t &wsm){ return wsm.m_ws.size();})
@@ -200,9 +200,10 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
           {src.m_bg_color = value; mvd();})
       .def("delete_item", &workspace_t::del_item_by_index)
       .def("gp", [](workspace_t &src){return src.m_gizmo->m_pos;})
-      .def("get_cur_epoch", &workspace_t::get_cur_epoch)
       .def("__repr__", &workspace_t::py_get_repr)
-      .def("__str__", &workspace_t::py_get_repr);
+      .def("__str__", &workspace_t::py_get_repr)
+      .def("get_cur_epoch", &workspace_t::get_cur_epoch)
+      .def("get_children_count", &workspace_t::get_children_count);
 
   /* aabb_3d_t pybindings */
   py::class_<aabb_3d_t<float>, std::shared_ptr<aabb_3d_t<float>>> py_aabb_3d_t(m, "aabb_3d_t");
@@ -218,7 +219,6 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py_ws_item_t.def_readwrite("name", &ws_item_t::m_name)
       .def("get_cnt_count", &ws_item_t::get_content_count)
       .def("get_parent_ws", [](ws_item_t &wsi){return wsi.m_parent_ws;})
-      .def("get_cur_epoch", &ws_item_t::get_cur_epoch)
       // .def_readwrite("m_pos", &ws_item_t::get_pos, &ws_item_t::set_pos)
       .def_readonly("genesis_file_name", &ws_item_t::m_genesis_file_name)
 
@@ -245,7 +245,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("set_selected", &ws_item_t::set_selected)
       .def("apply_tv", &ws_item_t::apply_target_view)
       .def_readwrite("offset", &ws_item_t::m_leader_offset)
-      .def("bb", [](ws_item_t &src){return src.m_aabb;});
+      .def("bb", [](ws_item_t &src){return src.m_aabb;})
+      .def("get_cur_epoch", &ws_item_t::get_cur_epoch)
+      .def("get_children_count", &ws_item_t::get_children_count);
 
   /* per ws_item_t types pybindings */
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);
