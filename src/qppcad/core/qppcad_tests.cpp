@@ -363,14 +363,6 @@ TEST_CASE("history stream test") {
     REQUIRE(hsi1->can_checkout_by_dist(1) == true);
     REQUIRE(hsi1->can_checkout_by_dist(-1) == false);
 
-    REQUIRE(hsi1->can_checkout_by_dist(-1)== hr_result_e::hr_error);
-    REQUIRE(hsi1->can_checkout_by_dist(1) == hr_result_e::hr_success);
-    REQUIRE(hsi1->get_cur_epoch() == 1);
-    REQUIRE(hsi1->can_checkout_by_dist(1) == hr_result_e::hr_success);
-    REQUIRE(hsi1->get_cur_epoch() == 2);
-    REQUIRE(hsi1->can_checkout_by_dist(1) == hr_result_e::hr_error);
-    REQUIRE(hsi1->get_cur_epoch() == 2);
-
   }
 
   SECTION ("nested elem exclusive commit") {

@@ -51,6 +51,7 @@ private:
   std::map<self_t*, hs_child_state_meta_t> p_current_child_state;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
+  bool p_commit_exclusive_on_change{false};
 
   hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
@@ -63,6 +64,9 @@ public:
 
   hist_doc_base_t ();
   virtual ~hist_doc_base_t();
+
+  void begin_recoring(bool init_as_base_commit = false);
+  void end_recording();
 
   /**
   * @brief get_cur_epoch
@@ -83,12 +87,9 @@ public:
   hr_result_e commit_exclusive(hist_doc_base_t *child = nullptr,
                                std::optional<epoch_t> child_epoch = std::nullopt);
   virtual void on_commit_exclusive();
-
-  /**
-  * @brief get_delta_state_type - not implemented yet
-  * @return
-  */
-  hist_doc_delta_state_e get_delta_state_type();
+  hr_result_e record_current_state(bool init_as_base_commit = false);
+  bool get_commit_exclusive_on_change();
+  void set_commit_exclusive_on_change(bool value);
 
   /**
   * @brief set_delta_state_type - not implemented yet
@@ -120,8 +121,8 @@ public:
   /**
   * @brief get_history_size
   */
-  size_t get_history_size();
-  std::vector<epoch_t> get_history();
+  size_t get_history_size() const;
+  std::vector<epoch_t> get_history() const;
 
   /**
   * @brief augment_epoch
@@ -137,7 +138,7 @@ public:
   * @param target_epoch
   * @return
   */
-  size_t get_augmented_count(epoch_t target_epoch);
+  size_t get_augmented_count(epoch_t target_epoch) const;
 
   /**
   * @brief remove_augment_from_epoch
@@ -147,7 +148,7 @@ public:
   * @return
   */
   hr_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
-  hr_result_e is_child_alive(epoch_t target_epoch, self_t* child);
+  hr_result_e is_child_alive(epoch_t target_epoch, self_t* child) const;
 
   /**
   * @brief has_epoch
@@ -183,14 +184,14 @@ public:
   * @param idx
   * @return
   */
-  self_t *get_children(size_t idx);
+  self_t *get_children(size_t idx) const;
 
   /**
   * @brief is_children
   * @param child
   * @return
   */
-  std::optional<size_t> is_children(self_t *child);
+  std::optional<size_t> is_children(self_t *child) const;
 
   /**
   * @brief remove_child
@@ -207,7 +208,7 @@ public:
   /**
   * @brief get_children_count
   */
-  size_t get_children_count();
+  size_t get_children_count() const;
   //end of children stuff
 
 };
@@ -313,6 +314,7 @@ public:
 
   void set_value(STYPE &&new_val) {
     p_cur_value = new_val;
+    if (get_root()->get_commit_exclusive_on_change()) commit_value_exclusive(STYPE(p_cur_value));
   }
 
   void set_cvalue(STYPE new_val) {

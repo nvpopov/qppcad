@@ -101,12 +101,6 @@ namespace qpp {
         void reset_cam();
         void set_best_view();
 
-        //epoch controling
-        void push_epoch();
-        void pop_epoch();
-        void goto_epoch(size_t target_epoch);
-        size_t get_cur_epoch();
-
         void del_item_by_index(size_t idx);
         void make_overview_dirty();
         std::string py_get_repr();

@@ -233,22 +233,6 @@ void workspace_t::set_best_view() {
 
 }
 
-void workspace_t::push_epoch() {
-
-}
-
-void workspace_t::goto_epoch(size_t target_epoch) {
-
-}
-
-size_t workspace_t::get_cur_epoch() {
-
-}
-
-void workspace_t::pop_epoch() {
-
-}
-
 void workspace_t::render() {
 
   app_state_t* astate = app_state_t::get_inst();
