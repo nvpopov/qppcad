@@ -105,18 +105,14 @@ std::shared_ptr<ws_item_t> construct_from_array_group(
 //}
 
 void mvd() {
-
   app_state_t *astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
-
 }
 
 
 void cws_changed() {
-
   app_state_t *astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_changed();
-
 }
 
 PYBIND11_EMBEDDED_MODULE(cad, m) {

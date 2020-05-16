@@ -46,6 +46,7 @@ private:
 
   epoch_t p_cur_epoch{0};
   self_t *p_parent{nullptr};
+  self_t *p_super_parent{nullptr};
   std::vector<self_t*> p_childs;
   std::map<epoch_t, std::map<self_t*, hs_child_state_meta_t>> p_childs_states;
   std::map<self_t*, hs_child_state_meta_t> p_current_child_state;
@@ -59,14 +60,31 @@ protected:
 
   virtual hr_result_e reset_impl();
   virtual bool is_unmodified_impl();
+  virtual hr_result_e record_current_state_impl(bool init_as_base_commit);
+  void update_super_root(self_t *new_super_root);
 
 public:
 
   hist_doc_base_t ();
   virtual ~hist_doc_base_t();
 
+  /**
+   * @brief begin_recoring
+   * @param init_as_base_commit
+   */
   void begin_recoring(bool init_as_base_commit = false);
+
+  /**
+   * @brief end_recording
+   */
   void end_recording();
+
+  /**
+   * @brief record_current_state
+   * @param init_as_base_commit
+   * @return
+   */
+  hr_result_e record_current_state(bool init_as_base_commit = false);
 
   /**
   * @brief get_cur_epoch
@@ -81,14 +99,44 @@ public:
   */
   hr_result_e set_cur_epoch(epoch_t cur_epoch);
 
+  /**
+   * @brief on_epoch_changed
+   * @param prev_epoch
+   * @return
+   */
   virtual hr_result_e on_epoch_changed(epoch_t prev_epoch);
+
+  /**
+   * @brief on_epoch_removed
+   * @param target_epoch
+   * @return
+   */
   virtual hr_result_e on_epoch_removed(epoch_t target_epoch);
 
+  /**
+   * @brief commit_exclusive
+   * @param child
+   * @param child_epoch
+   * @return
+   */
   hr_result_e commit_exclusive(hist_doc_base_t *child = nullptr,
                                std::optional<epoch_t> child_epoch = std::nullopt);
+
+  /**
+   * @brief on_commit_exclusive
+   */
   virtual void on_commit_exclusive();
-  hr_result_e record_current_state(bool init_as_base_commit = false);
+
+  /**
+   * @brief get_commit_exclusive_on_change
+   * @return
+   */
   bool get_commit_exclusive_on_change();
+
+  /**
+   * @brief set_commit_exclusive_on_change
+   * @param value
+   */
   void set_commit_exclusive_on_change(bool value);
 
   /**
@@ -103,6 +151,10 @@ public:
   */
   bool is_unmodified();
 
+  /**
+   * @brief reset
+   * @return
+   */
   hr_result_e reset();
 
   /**
@@ -114,6 +166,10 @@ public:
       std::optional<epoch_t> new_epoch_ex = std::nullopt,
       bool checkout_to_new_epoch = false);
 
+  /**
+   * @brief find_hl
+   * @param target
+   */
   auto find_hl(epoch_t target) {
     return std::find(begin(p_hist_line), end(p_hist_line), target);
   }
@@ -122,6 +178,11 @@ public:
   * @brief get_history_size
   */
   size_t get_history_size() const;
+
+  /**
+   * @brief get_history
+   * @return
+   */
   std::vector<epoch_t> get_history() const;
 
   /**
@@ -148,6 +209,13 @@ public:
   * @return
   */
   hr_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
+
+  /**
+   * @brief is_child_alive
+   * @param target_epoch
+   * @param child
+   * @return
+   */
   hr_result_e is_child_alive(epoch_t target_epoch, self_t* child) const;
 
   /**
@@ -163,7 +231,19 @@ public:
   * @return
   */
   hr_result_e checkout_to_epoch(epoch_t target_epoch);
+
+  /**
+   * @brief checkout_by_dist
+   * @param dist
+   * @return
+   */
   hr_result_e checkout_by_dist(int dist);
+
+  /**
+   * @brief can_checkout_by_dist
+   * @param dist
+   * @return
+   */
   bool can_checkout_by_dist(int dist);
 
   /**
@@ -184,14 +264,14 @@ public:
   * @param idx
   * @return
   */
-  self_t *get_children(size_t idx) const;
+  self_t *get_child(size_t idx) const;
 
   /**
   * @brief is_children
   * @param child
   * @return
   */
-  std::optional<size_t> is_children(self_t *child) const;
+  std::optional<size_t> is_child(self_t *child) const;
 
   /**
   * @brief remove_child
@@ -228,6 +308,11 @@ protected:
     auto stored_val_it = p_stored_values.find(get_cur_epoch());
     if (stored_val_it == end(p_stored_values)) return hr_result_e::hr_invalid_epoch;
     p_cur_value = stored_val_it->second;
+    return hr_result_e::hr_success;
+  }
+
+  hr_result_e record_current_state_impl(bool init_as_base_commit) override {
+    p_stored_values[get_cur_epoch()] = p_cur_value;
     return hr_result_e::hr_success;
   }
 

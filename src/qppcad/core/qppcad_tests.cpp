@@ -38,9 +38,9 @@ TEST_CASE("history stream test") {
     hs->add_hs_child(hs_c2);
 
     REQUIRE(hs->get_children_count() == 2);
-    REQUIRE(*(hs->is_children(hs_c1)) == 0);
-    REQUIRE(*(hs->is_children(hs_c2)) == 1);
-    REQUIRE(hs->is_children(hs_nc) == std::nullopt);
+    REQUIRE(*(hs->is_child(hs_c1)) == 0);
+    REQUIRE(*(hs->is_child(hs_c2)) == 1);
+    REQUIRE(hs->is_child(hs_nc) == std::nullopt);
 
     REQUIRE(hs->checkout_to_epoch(0) == hr_result_e::hr_success);
     hs->add_hs_child(hs_c3);

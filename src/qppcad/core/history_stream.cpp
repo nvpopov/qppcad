@@ -69,6 +69,18 @@ void hist_doc_base_t::on_commit_exclusive() {
 
 hr_result_e hist_doc_base_t::record_current_state(bool init_as_base_commit) {
 
+  std::vector<hr_result_e> children_are_recorded;
+  for (auto child : p_childs)
+    if (child) children_are_recorded.push_back(child->record_current_state(init_as_base_commit));
+
+  bool all_children_are_recorded =
+      p_childs.empty() ? true : std::all_of(begin(children_are_recorded),
+                                            end(children_are_recorded),
+                                            [](hr_result_e value) {return value == hr_success;});
+
+  return all_children_are_recorded
+         && record_current_state_impl(init_as_base_commit)  == hr_success ? hr_success : hr_error;
+
 }
 
 bool hist_doc_base_t::get_commit_exclusive_on_change() {
@@ -85,9 +97,29 @@ void hist_doc_base_t::set_delta_state_type(hist_doc_delta_state_e new_dstate) {
 
 bool hist_doc_base_t::is_unmodified() {
 
+  epoch_t cur_epoch = get_cur_epoch();
+
   std::vector<bool> childs_are_modified;
+
   for (auto child : p_childs)
-    if (child) childs_are_modified.push_back(child->is_unmodified());
+    if (child) {
+
+      auto epoch_it = p_childs_states.find(cur_epoch);
+      if (epoch_it == end(p_childs_states)) {
+        childs_are_modified.push_back(false);
+        continue;
+      }
+
+      auto child_it = epoch_it->second.find(child);
+      if (child_it == end(epoch_it->second)) {
+        childs_are_modified.push_back(false);
+        continue;
+      }
+
+      childs_are_modified.push_back(child->is_unmodified()
+                                    && child->get_cur_epoch() == child_it->second.m_child_epoch);
+
+    }
 
   bool all_childs_are_unmodified =
       p_childs.empty() ? true : std::all_of(begin(childs_are_modified),
@@ -102,21 +134,30 @@ bool hist_doc_base_t::is_unmodified_impl() {
   return true;
 }
 
+hr_result_e hist_doc_base_t::record_current_state_impl(bool init_as_base_commit) {
+  return hr_result_e::hr_success;
+}
+
+void hist_doc_base_t::update_super_root(hist_doc_base_t::self_t *new_super_root) {
+  p_super_parent = new_super_root;
+  for (auto child : p_childs)
+    if (child) child->update_super_root(new_super_root);
+}
+
 hr_result_e hist_doc_base_t::reset() {
 
   std::vector<bool> child_reseted;
   for (auto child: p_childs)
     if (child) child_reseted.push_back(child->reset());
 
-  hr_result_e self_reset = reset_impl();
+  hr_result_e self_rt = reset_impl();
   bool all_child_succeded =
       p_childs.empty() ? true : std::all_of(begin(child_reseted),
                                             end(child_reseted),
                                             [](bool value) {return value;});
 
-  return self_reset ==
-                     hr_result_e::hr_success && all_child_succeded ? hr_result_e::hr_success :
-                                                                     hr_result_e::hr_error;
+  return self_rt == hr_result_e::hr_success && all_child_succeded ? hr_result_e::hr_success :
+                                                                    hr_result_e::hr_error;
 }
 
 hr_result_e hist_doc_base_t::reset_impl() {
@@ -308,6 +349,8 @@ hr_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
 
   child->p_parent = this;
   p_childs.push_back(child);
+  update_super_root(child);
+
   epoch_t cur_epoch = get_cur_epoch();
   auto epoch_it = find_hl(cur_epoch);
   auto epoch_dist = static_cast<size_t>(std::distance(begin(p_hist_line), epoch_it));
@@ -328,17 +371,17 @@ hist_doc_base_t::self_t *hist_doc_base_t::get_root() {
   return this;
 }
 
-hist_doc_base_t::self_t *hist_doc_base_t::get_children(size_t idx) const {
+hist_doc_base_t::self_t *hist_doc_base_t::get_child(size_t idx) const {
   if (idx < p_childs.size())
     return p_childs[idx];
   return nullptr;
 }
 
-std::optional<size_t> hist_doc_base_t::is_children(hist_doc_base_t::self_t *child) const {
+std::optional<size_t> hist_doc_base_t::is_child(hist_doc_base_t::self_t *child) const {
   if (!child) return std::nullopt;
   auto it1 = std::find(begin(p_childs), end(p_childs), child);
   return (it1 != end(p_childs) ? std::optional<size_t>{std::distance(begin(p_childs), it1)} :
-                               std::nullopt);
+                                 std::nullopt);
 }
 
 hr_result_e hist_doc_base_t::remove_child(size_t child_id) {
