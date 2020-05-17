@@ -77,8 +77,8 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_c1->get_cur_epoch() == 0);
     REQUIRE(hs_c2->get_cur_epoch() == 0);
 
-    REQUIRE(hs_c1->get_root() == hs);
-    REQUIRE(hs->get_root() == hs);
+    REQUIRE(hs_c1->get_parent() == hs);
+    REQUIRE(hs->get_parent() == hs);
 
   }
 

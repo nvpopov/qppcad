@@ -53,7 +53,9 @@ private:
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
   bool p_commit_exclusive_on_change{false};
-
+  bool p_commit_exclusive_on_change_old{false};
+  bool p_is_recording{false};
+  bool p_init_as_base_commit{false};
   hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
 protected:
@@ -257,7 +259,13 @@ public:
   * @brief get_root
   * @return
   */
-  self_t *get_root();
+  self_t *get_parent();
+
+  /**
+   * @brief get_super_root
+   * @return
+   */
+  self_t *get_super_parent();
 
   /**
   * @brief get_children
@@ -399,7 +407,7 @@ public:
 
   void set_value(STYPE &&new_val) {
     p_cur_value = new_val;
-    if (get_root()->get_commit_exclusive_on_change()) commit_value_exclusive(STYPE(p_cur_value));
+    if (get_parent()->get_commit_exclusive_on_change()) commit_value_exclusive(STYPE(p_cur_value));
   }
 
   void set_cvalue(STYPE new_val) {

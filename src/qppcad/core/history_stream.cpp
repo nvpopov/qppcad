@@ -1,4 +1,5 @@
 #include <qppcad/core/history_stream.hpp>
+#include <cassert>
 
 namespace qpp {
 
@@ -14,9 +15,24 @@ hist_doc_base_t::~hist_doc_base_t() {
 
 void hist_doc_base_t::begin_recoring(bool init_as_base_commit) {
 
+  hist_doc_base_t *parent = p_super_parent ? p_super_parent : this;
+  //must be false when we start recording
+  assert(!parent->p_is_recording);
+  parent->p_is_recording = true;
+  parent->p_init_as_base_commit = init_as_base_commit;
+  parent->p_commit_exclusive_on_change_old = parent->p_commit_exclusive_on_change;
+  parent->p_commit_exclusive_on_change = false;
+
 }
 
 void hist_doc_base_t::end_recording() {
+
+  hist_doc_base_t *parent = p_super_parent ? p_super_parent : this;
+  //must be true when we stop recording
+  assert(parent->p_is_recording);
+  parent->p_is_recording = false;
+  parent->p_init_as_base_commit = true;
+  parent->p_commit_exclusive_on_change = parent->p_commit_exclusive_on_change_old;
 
 }
 
@@ -365,10 +381,14 @@ hr_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
 
 }
 
-hist_doc_base_t::self_t *hist_doc_base_t::get_root() {
+hist_doc_base_t::self_t *hist_doc_base_t::get_parent() {
   if (p_parent)
-    return p_parent->get_root();
+    return p_parent->get_parent();
   return this;
+}
+
+hist_doc_base_t::self_t *hist_doc_base_t::get_super_parent() {
+  return p_super_parent;
 }
 
 hist_doc_base_t::self_t *hist_doc_base_t::get_child(size_t idx) const {
