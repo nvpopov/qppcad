@@ -13,7 +13,7 @@ hist_doc_base_t::~hist_doc_base_t() {
 
 }
 
-void hist_doc_base_t::begin_recoring(bool init_as_base_commit) {
+void hist_doc_base_t::begin_recording(bool init_as_base_commit) {
 
   hist_doc_base_t *parent = p_super_parent ? p_super_parent : this;
   //must be false when we start recording
@@ -31,7 +31,7 @@ void hist_doc_base_t::end_recording() {
   //must be true when we stop recording
   assert(parent->p_is_recording);
   parent->p_is_recording = false;
-  parent->p_init_as_base_commit = true;
+  parent->p_init_as_base_commit = false;
   parent->p_commit_exclusive_on_change = parent->p_commit_exclusive_on_change_old;
 
 }

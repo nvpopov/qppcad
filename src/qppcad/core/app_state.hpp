@@ -20,203 +20,201 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class app_state_t;
-    class hotkey_manager_t;
+class app_state_t;
+class hotkey_manager_t;
 
-    class recent_file_record_t {
+class recent_file_record_t {
 
-      public:
+public:
 
-        std::string m_file_name;
-        size_t m_ff_id;
-        bool m_native;
-        recent_file_record_t(){}
-        recent_file_record_t(const std::string &_file_name,
-                             const size_t _ff,
-                             const bool _native) :
-          m_file_name(_file_name), m_ff_id(_ff), m_native(_native){}
+  std::string m_file_name;
+  size_t m_ff_id;
+  bool m_native;
+  recent_file_record_t(){}
+  recent_file_record_t(const std::string &_file_name, const size_t _ff, const bool _native) :
+                       m_file_name(_file_name), m_ff_id(_ff), m_native(_native){}
 
-    };
+};
 
-    class icon_repository_t {
-      public:
-        QIcon *icon_arrow_down;
-        QIcon *icon_arrow_up;
-    };
+class icon_repository_t {
+public:
+  QIcon *icon_arrow_down;
+  QIcon *icon_arrow_up;
+};
 
-    class app_state_t {
+class app_state_t {
 
-      private:
+private:
 
-        static app_state_t *g_inst;
+  static app_state_t *g_inst;
 
-      public:
+public:
 
-        static void init_inst();
-        static app_state_t* get_inst();
+  static void init_inst();
+  static app_state_t* get_inst();
 
-        app_state_t();
-        void init_glapi();
-        void init_shaders();
-        void init_meshes();
-        void init_managers();
-        void init_styles();
-        void make_viewport_dirty();
-        void disable_app();
-        void enable_app();
-        bool is_viewport_dirty();
-        void cleanup_viewport();
+  app_state_t();
+  void init_glapi();
+  void init_shaders();
+  void init_meshes();
+  void init_managers();
+  void init_styles();
+  void make_viewport_dirty();
+  void disable_app();
+  void enable_app();
+  bool is_viewport_dirty();
+  void cleanup_viewport();
 
-        void load_settings();
-        void save_settings();
+  void load_settings();
+  void save_settings();
 
-        void log(std::string logstr,
-                 bool flush = true);
+  void log(std::string logstr,
+           bool flush = true);
 
-        void pylog(std::string logstr);
+  void pylog(std::string logstr);
 
-        template <typename... Args>
-        void tlog(const char *format, const Args & ... args) {
+  template <typename... Args>
+  void tlog(const char *format, const Args & ... args) {
 
-          std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-          std::string ts( ctime( &t) );
-          std::string pf = fmt::format("[{}] ", ts.substr( 0, ts.length() - 1));
-          std::string body = fmt::vformat(format, fmt::make_format_args(args...));
-          std::string message = pf + body ;
-          std::cout << message << "\n" << std::flush;
+    std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::string ts( ctime( &t) );
+    std::string pf = fmt::format("[{}] ", ts.substr( 0, ts.length() - 1));
+    std::string body = fmt::vformat(format, fmt::make_format_args(args...));
+    std::string message = pf + body ;
+    std::cout << message << "\n" << std::flush;
 
-        }
+  }
 
-        template <typename... Args>
-        void wlog(const char *format, const Args & ... args) {
+  template <typename... Args>
+  void wlog(const char *format, const Args & ... args) {
 
-          std::string body = fmt::vformat(format, fmt::make_format_args(args...));
-          astate_evd->log_widget_query(body);
+    std::string body = fmt::vformat(format, fmt::make_format_args(args...));
+    astate_evd->log_widget_query(body);
 
-        }
+  }
 
-        void add_recent_file(const std::string &file_name,
-                             const bool is_native,
-                             const size_t bhv_id);
+  void add_recent_file(const std::string &file_name,
+                       const bool is_native,
+                       const size_t bhv_id);
 
-        void init_fixtures();
+  void init_fixtures();
 
-        size_t m_utility_thread_count;
+  size_t m_utility_thread_count;
 
-        app_state_event_disp_t *astate_evd;
-        glapi_t *glapi;
-        camera_t *camera{nullptr};
-        draw_pipeline_t *dp;
-        size_guide_t size_guide;
+  app_state_event_disp_t *astate_evd;
+  glapi_t *glapi;
+  camera_t *camera{nullptr};
+  draw_pipeline_t *dp;
+  size_guide_t size_guide;
 
-        std::unordered_map<std::string, float> m_env_float;
-        std::unordered_map<std::string, int> m_env_int;
-        std::unordered_map<std::string, bool> m_env_bool;
-        std::unordered_map<std::string, std::string> m_env_str;
-        std::unordered_map<std::string, vector3<float> > m_env_vec3;
+  std::unordered_map<std::string, float> m_env_float;
+  std::unordered_map<std::string, int> m_env_int;
+  std::unordered_map<std::string, bool> m_env_bool;
+  std::unordered_map<std::string, std::string> m_env_str;
+  std::unordered_map<std::string, vector3<float> > m_env_vec3;
 
-        shader_program_t *sp_default;
-        shader_program_t *sp_default_suprematic;
-        shader_program_t *sp_unit_line;
-        shader_program_t *sp_unit_line_styled;
-        shader_program_t *sp_line_mesh;
-        shader_program_t *sp_mvp_ssl;
-        shader_program_t *sp_mvap_ssl;
-        shader_program_t *sp_fbo_quad;
-        shader_program_t *sp_bs_sphere;
-        shader_program_t *sp_buf_bs;
-        shader_program_t *sp_2c_cylinder;
-        shader_program_t *sp_2c_cylinder_suprematic;
+  shader_program_t *sp_default;
+  shader_program_t *sp_default_suprematic;
+  shader_program_t *sp_unit_line;
+  shader_program_t *sp_unit_line_styled;
+  shader_program_t *sp_line_mesh;
+  shader_program_t *sp_mvp_ssl;
+  shader_program_t *sp_mvap_ssl;
+  shader_program_t *sp_fbo_quad;
+  shader_program_t *sp_bs_sphere;
+  shader_program_t *sp_buf_bs;
+  shader_program_t *sp_2c_cylinder;
+  shader_program_t *sp_2c_cylinder_suprematic;
 
-        std::vector<mesh_t*> mesh_spheres;
-        mesh_t *mesh_cylinder;
-        mesh_t *mesh_unit_line;
-        mesh_t *mesh_grid_xz;
-        mesh_t *mesh_unit_cube;
-        mesh_t *mesh_unit_cone;
-        mesh_t *mesh_fbo_quad;
-        mesh_t *mesh_zup_quad;
-        mesh_t *mesh_zl_plane;
-        mesh_t *mesh_xline_mesh;
+  std::vector<mesh_t*> mesh_spheres;
+  mesh_t *mesh_cylinder;
+  mesh_t *mesh_unit_line;
+  mesh_t *mesh_grid_xz;
+  mesh_t *mesh_unit_cube;
+  mesh_t *mesh_unit_cone;
+  mesh_t *mesh_fbo_quad;
+  mesh_t *mesh_zup_quad;
+  mesh_t *mesh_zl_plane;
+  mesh_t *mesh_xline_mesh;
 
-        std::shared_ptr<workspace_manager_t> ws_mgr;
-        std::unique_ptr<python_manager_t> py_mgr;
-        std::unique_ptr<string_hash_register_t> hash_reg;
-        std::shared_ptr<hotkey_manager_t> hotkey_mgr;
+  std::shared_ptr<workspace_manager_t> ws_mgr;
+  std::unique_ptr<python_manager_t> py_mgr;
+  std::unique_ptr<string_hash_register_t> hash_reg;
+  std::shared_ptr<hotkey_manager_t> hotkey_mgr;
 
-        std::vector<recent_file_record_t> m_recent_files;
-        // //       std::map<std::string, color_map_t> m_color_maps;
+  std::vector<recent_file_record_t> m_recent_files;
+  // //       std::map<std::string, color_map_t> m_color_maps;
 
-        std::vector<std::string> m_fixtures_dirs;
-        bool m_fixtures_dir_is_set{false};
+  std::vector<std::string> m_fixtures_dirs;
+  bool m_fixtures_dir_is_set{false};
 
-        QString m_last_dir;
-        QString m_font_name;
-        QString m_screen_shots_dir{"."};
-        QString m_spatial_suffix{"Å"};
-        QString m_degree_suffix{"°"};
+  QString m_last_dir;
+  QString m_font_name;
+  QString m_screen_shots_dir{"."};
+  QString m_spatial_suffix{"Å"};
+  QString m_degree_suffix{"°"};
 
-        int m_spatial_measurements_digits_count{2};
+  int m_spatial_measurements_digits_count{2};
 
-        icon_repository_t icons;
+  icon_repository_t icons;
 
-        vector2<float> viewport_xy;
-        vector2<float> viewport_size;
+  vector2<float> viewport_xy;
+  vector2<float> viewport_size;
 
-        int64_t m_last_frame_time_cpu{2000};
-        int64_t m_last_frame_time_gpu{2000};
+  int64_t m_last_frame_time_cpu{2000};
+  int64_t m_last_frame_time_gpu{2000};
 
-        int m_num_samples{6};
-        int m_console_font_size{16};
+  int m_num_samples{6};
+  int m_console_font_size{16};
 
-        bool m_show_debug_frame_stats{false};
-        bool m_ignore_scanline{false};
-        bool m_show_modern_menu{false};
+  bool m_show_debug_frame_stats{false};
+  bool m_ignore_scanline{false};
+  bool m_show_modern_menu{false};
 
-        //Settings begin
-        int m_sphere_quality{18};
-        int m_cylinder_quality{16};
-        cam_proj_t m_default_cam_proj{cam_proj_t::proj_ortho};
-        //Settings end
+  //Settings begin
+  int m_sphere_quality{18};
+  int m_cylinder_quality{16};
+  cam_proj_t m_default_cam_proj{cam_proj_t::proj_ortho};
+  //Settings end
 
-        float m_middle_mb_translate_mode{1.25f};
-        float mouse_x_dc;
-        float mouse_y_dc;
-        float mouse_x_dc_old;
-        float mouse_y_dc_old;
-        float mouse_x;
-        float mouse_y;
-        float mouse_x_old;
-        float mouse_y_old;
-        float mouse_distance_pp{0.0f};
-        bool mouse_lb_pressed{false};
-        bool mouse_rb_pressed{false};
-        bool mouse_md_pressed{false};
-        bool is_mouse_moving{false};
+  float m_middle_mb_translate_mode{1.25f};
+  float mouse_x_dc;
+  float mouse_y_dc;
+  float mouse_x_dc_old;
+  float mouse_y_dc_old;
+  float mouse_x;
+  float mouse_y;
+  float mouse_x_old;
+  float mouse_y_old;
+  float mouse_distance_pp{0.0f};
+  bool mouse_lb_pressed{false};
+  bool mouse_rb_pressed{false};
+  bool mouse_md_pressed{false};
+  bool is_mouse_moving{false};
 
-        bool m_show_axis{true};
-        bool m_show_grid{false};
-        bool m_debug_show_tws_tree{false};
-        bool m_debug_show_sel_deque{false};
-        bool m_debug_show_selection_ray{false};
-        bool m_show_object_inspector{true};
-        bool m_show_console{false};
-        bool m_mouse_in_3d_area{false};
-        bool m_viewport_changed{false};
-        bool m_transform_pdb_atom_names{true};
+  bool m_show_axis{true};
+  bool m_show_grid{false};
+  bool m_debug_show_tws_tree{false};
+  bool m_debug_show_sel_deque{false};
+  bool m_debug_show_selection_ray{false};
+  bool m_show_object_inspector{true};
+  bool m_show_console{false};
+  bool m_mouse_in_3d_area{false};
+  bool m_viewport_changed{false};
+  bool m_transform_pdb_atom_names{true};
 
-        bool m_disable_app{false};
-        bool m_viewport_dirty{true};
-        bool m_immersive_mode{false};
+  bool m_disable_app{false};
+  bool m_viewport_dirty{true};
+  bool m_immersive_mode{false};
 
-        size_t m_gv_overview_max_atoms{15000};
-        size_t m_gv_overview_max_sel_types{6};
+  size_t m_gv_overview_max_atoms{15000};
+  size_t m_gv_overview_max_sel_types{6};
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

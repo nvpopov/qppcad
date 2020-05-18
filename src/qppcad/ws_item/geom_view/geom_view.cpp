@@ -81,40 +81,39 @@ geom_view_t::geom_view_t(): ws_item_t() {
 
   m_geom->set_format(
 
-  {"atom", //0
-   "x",//1
-   "y",//2
-   "z",//3
-   "charge",//4
-   "number", //5
-   "hide",//6
-   "lshow",//7
-   "r",//8
-   "g",//9
-   "b",//10
-   "ltext",//11
-   "ov",//12
-   "atom_r", // 13
-   "tag" //14
-        },
+      {"atom", //0
+          "x",//1
+          "y",//2
+          "z",//3
+          "charge",//4
+          "number", //5
+          "hide",//6
+          "lshow",//7
+          "r",//8
+          "g",//9
+          "b",//10
+          "ltext",//11
+          "ov",//12
+          "atom_r", // 13
+          "tag" //14
+      },
 
-  {type_string, //0
-   type_real, //1
-   type_real, //2
-   type_real, //3
-   type_real, //4
-   type_int, //5
-   type_bool, //6
-   type_bool, //7
-   type_real, //8
-   type_real, //9
-   type_real, //10
-   type_string, //11
-   type_bool, // 12
-   type_real, // 13
-   type_string //14
-        }
-        );
+      {type_string, //0
+          type_real, //1
+          type_real, //2
+          type_real, //3
+          type_real, //4
+          type_int, //5
+          type_bool, //6
+          type_bool, //7
+          type_real, //8
+          type_real, //9
+          type_real, //10
+          type_string, //11
+          type_bool, // 12
+          type_real, // 13
+          type_string //14
+      } );
 
   m_geom->DIM = 0;
   m_geom->cell.DIM = 0;
@@ -141,13 +140,13 @@ geom_view_t::geom_view_t(): ws_item_t() {
 void geom_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
                                         vector3<float> &out_look_at) {
   if (m_geom->nat() > 1) {
-      out_look_at += (m_ext_obs->aabb.max + m_ext_obs->aabb.min) / 2.0;
-      vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
-      float size = bb_size.norm();
-      float g_sz_mod = 2.0f;
-      out_look_pos +=
-          g_sz_mod * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 60.0);
-    } else out_look_pos += vector3<float>(0.0, 0.0, -5.0);
+    out_look_at += (m_ext_obs->aabb.max + m_ext_obs->aabb.min) / 2.0;
+    vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
+    float size = bb_size.norm();
+    float g_sz_mod = 2.0f;
+    out_look_pos +=
+        g_sz_mod * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 60.0);
+  } else out_look_pos += vector3<float>(0.0, 0.0, -5.0);
 
 }
 
@@ -160,84 +159,84 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   auto new_target_view = target_view_src;
 
   if (new_target_view == cam_tv_e::tv_auto) {
-      if (m_geom->DIM != 0) new_target_view = cam_tv_e::tv_a;
-      else if (m_ext_obs->aabb.center().isApprox(vector3<float>{0}, 0.001f))
-        new_target_view = cam_tv_e::tv_x;
-      else
-        new_target_view = cam_tv_e::tv_cc;
-    }
+    if (m_geom->DIM != 0) new_target_view = cam_tv_e::tv_a;
+    else if (m_ext_obs->aabb.center().isApprox(vector3<float>{0}, 0.001f))
+      new_target_view = cam_tv_e::tv_x;
+    else
+      new_target_view = cam_tv_e::tv_cc;
+  }
 
   switch (new_target_view) {
 
-    case cam_tv_e::tv_x : {
-        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos.get_value() - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
-        look_to = m_pos.get_value();
-        look_up = {0.0 , 0.0 , 1.0};
-        need_to_update_camera = true;
-        break;
-      }
+  case cam_tv_e::tv_x : {
+    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
+    look_from = m_pos.get_value() - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
+    look_to = m_pos.get_value();
+    look_up = {0.0 , 0.0 , 1.0};
+    need_to_update_camera = true;
+    break;
+  }
 
-    case cam_tv_e::tv_y : {
-        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
-        look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, axis_size, 0.0);
-        look_to = m_pos.get_value();
-        look_up = {0.0, 0.0, 1.0};
-        need_to_update_camera = true;
-        break;
-      }
+  case cam_tv_e::tv_y : {
+    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
+    look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, axis_size, 0.0);
+    look_to = m_pos.get_value();
+    look_up = {0.0, 0.0, 1.0};
+    need_to_update_camera = true;
+    break;
+  }
 
-    case cam_tv_e::tv_z : {
-        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
-        look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, 0.0, axis_size);
-        look_to = m_pos.get_value();
-        look_up = {0.0, 1.0, 0.0};
-        need_to_update_camera = true;
-        break;
-      }
+  case cam_tv_e::tv_z : {
+    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
+    look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, 0.0, axis_size);
+    look_to = m_pos.get_value();
+    look_up = {0.0, 1.0, 0.0};
+    need_to_update_camera = true;
+    break;
+  }
 
-    case cam_tv_e::tv_a : {
-        vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-        look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[0];
-        look_to = m_pos.get_value()  + center;
-        look_up = {0.0 , 0.0 , 1.0};
-        need_to_update_camera = true;
-        break;
-      }
+  case cam_tv_e::tv_a : {
+    vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[0];
+    look_to = m_pos.get_value()  + center;
+    look_up = {0.0 , 0.0 , 1.0};
+    need_to_update_camera = true;
+    break;
+  }
 
-    case cam_tv_e::tv_b : {
-        vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-        look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[1];
-        look_to = m_pos.get_value()  + center;
-        look_up = {0.0, 0.0, 1.0};
-        need_to_update_camera = true;
-        break;
-      }
+  case cam_tv_e::tv_b : {
+    vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[1];
+    look_to = m_pos.get_value()  + center;
+    look_up = {0.0, 0.0, 1.0};
+    need_to_update_camera = true;
+    break;
+  }
 
-    case cam_tv_e::tv_c : {
-        vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-        look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[2];
-        look_to = m_pos.get_value()  + center;
-        look_up = {0.0, 1.0, 0.0};
-        need_to_update_camera = true;
-        break;
-      }
+  case cam_tv_e::tv_c : {
+    vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[2];
+    look_to = m_pos.get_value()  + center;
+    look_up = {0.0, 1.0, 0.0};
+    need_to_update_camera = true;
+    break;
+  }
 
-    case cam_tv_e::tv_cc : {
-        float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-        look_from = m_pos.get_value()
-                    + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
-        look_to = m_pos.get_value() + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
-        look_up = {0.0 , 0.0 , 1.0};
-        need_to_update_camera = true;
-        break;
-      }
+  case cam_tv_e::tv_cc : {
+    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
+    look_from = m_pos.get_value()
+                + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
+    look_to = m_pos.get_value() + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
+    look_up = {0.0 , 0.0 , 1.0};
+    need_to_update_camera = true;
+    break;
+  }
 
-    default : {
-        break;
-      }
+  default : {
+    break;
+  }
 
-    }
+  }
 
 }
 
@@ -258,109 +257,109 @@ void geom_view_t::render() {
 
   if (astate->dp) {
 
-      if (astate->m_debug_show_tws_tree) {
-          astate->dp->begin_render_aabb();
-          m_tws_tr->apply_visitor([astate, _pos](tws_node_t<float> *in_node, int deep_level) {
-                                  astate->dp->render_aabb(clr_maroon,
-                                  in_node->m_bb.min+_pos,
-                                  in_node->m_bb.max+_pos);
-            });
-          astate->dp->end_render_aabb();
-        }
+    if (astate->m_debug_show_tws_tree) {
+      astate->dp->begin_render_aabb();
+      m_tws_tr->apply_visitor([astate, _pos](tws_node_t<float> *in_node, int deep_level) {
+        astate->dp->render_aabb(clr_maroon,
+                                in_node->m_bb.min+_pos,
+                                in_node->m_bb.max+_pos);
+      });
+      astate->dp->end_render_aabb();
+    }
 
-      if (!m_is_visible.get_value()) return;
+    if (!m_is_visible.get_value()) return;
 
-      if (m_geom->DIM == 3 && m_is_visible.get_value() && m_draw_cell.get_value()) {
-          astate->dp->begin_render_line();
+    if (m_geom->DIM == 3 && m_is_visible.get_value() && m_draw_cell.get_value()) {
+      astate->dp->begin_render_line();
 
-          if (m_draw_subcells.get_value()) {
-              auto subcells_range = m_subcells_range.get_value();
-              vector3<float> sc_a = m_geom->cell.v[0] / subcells_range[0];
-              vector3<float> sc_b = m_geom->cell.v[1] / subcells_range[1];
-              vector3<float> sc_c = m_geom->cell.v[2] / subcells_range[2];
+      if (m_draw_subcells.get_value()) {
+        auto subcells_range = m_subcells_range.get_value();
+        vector3<float> sc_a = m_geom->cell.v[0] / subcells_range[0];
+        vector3<float> sc_b = m_geom->cell.v[1] / subcells_range[1];
+        vector3<float> sc_c = m_geom->cell.v[2] / subcells_range[2];
 
-              for (int i_a = 0; i_a < subcells_range[0]; i_a++)
-                for (int i_b = 0; i_b < subcells_range[1]; i_b++)
-                  for (int i_c = 0; i_c < subcells_range[2]; i_c++) {
-                      vector3<float> new_pos = m_pos.get_value()
-                                             + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
-                      astate->dp->render_cell_3d(m_subcell_color.get_value(),
-                                                 sc_a, sc_b, sc_c, new_pos);
-                    }
-
+        for (int i_a = 0; i_a < subcells_range[0]; i_a++)
+          for (int i_b = 0; i_b < subcells_range[1]; i_b++)
+            for (int i_c = 0; i_c < subcells_range[2]; i_c++) {
+              vector3<float> new_pos = m_pos.get_value()
+                                       + sc_a * i_a + sc_b * i_b + sc_c * i_c ;
+              astate->dp->render_cell_3d(m_subcell_color.get_value(),
+                                         sc_a, sc_b, sc_c, new_pos);
             }
 
-          vector3<float> cell_clr = m_cell_color.get_value();
+      }
 
-          if (m_selected) {
-              if(m_parent_ws->m_edit_type == ws_edit_e::edit_item) cell_clr = clr_red;
-              if(m_parent_ws->m_edit_type == ws_edit_e::edit_content) cell_clr = clr_maroon;
-            }
+      vector3<float> cell_clr = m_cell_color.get_value();
 
-          astate->dp->render_cell_3d(cell_clr, m_geom->cell.v[0], m_geom->cell.v[1],
-                                     m_geom->cell.v[2], m_pos.get_value());
+      if (m_selected) {
+        if(m_parent_ws->m_edit_type == ws_edit_e::edit_item) cell_clr = clr_red;
+        if(m_parent_ws->m_edit_type == ws_edit_e::edit_content) cell_clr = clr_maroon;
+      }
 
-          astate->dp->end_render_line();
+      astate->dp->render_cell_3d(cell_clr, m_geom->cell.v[0], m_geom->cell.v[1],
+                                 m_geom->cell.v[2], m_pos.get_value());
 
-        }
-
-      if (m_geom->DIM == 3 && m_draw_cell_vectors.get_value()) {
-
-          astate->dp->begin_render_general_mesh();
-
-          for (size_t i = 0; i < m_geom->DIM; i++) {
-              vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio.get_value();
-              astate->dp->render_arrow(
-                  m_pos.get_value() + m_cell_vector_offset.get_value(),
-                  m_pos.get_value() + m_cell_vector_offset.get_value() + cell_v,
-                  m_cell_vector_color.get_value(),
-                  0.1f, 0.17f, 0.25f, false);
-            }
-
-          astate->dp->end_render_general_mesh();
-
-        }
-
-      switch (m_render_style.get_value()) {
-
-        case geom_view_render_style_e::ball_and_stick :
-          geom_view_render_bs::render(*this);
-          break;
-
-        case geom_view_render_style_e::suprematic_atoms :
-          geom_view_render_bs::render_suprematic(*this);
-          break;
-
-        case geom_view_render_style_e::dynamic_lines:
-          geom_view_render_dlines::render(*this);
-          break;
-
-        case geom_view_render_style_e::xatom_lines:
-          geom_view_render_xlines::render(*this);
-          break;
-
-        case geom_view_render_style_e::billboards:
-          geom_view_render_billboards::render(*this);
-          break;
-
-        case geom_view_render_style_e::buffered_billboards: {
-            if (!m_bs) {
-                m_bs = std::make_unique<geom_view_render_buffered_billboards_t>(*this);
-                m_bs->init();
-              } else {
-                m_bs->render();
-              }
-            //geom_view_render_billboards::render(*this);
-            break;
-          }
-
-          //        default:
-          //          break;
-
-        }
-      // atom render start
+      astate->dp->end_render_line();
 
     }
+
+    if (m_geom->DIM == 3 && m_draw_cell_vectors.get_value()) {
+
+      astate->dp->begin_render_general_mesh();
+
+      for (size_t i = 0; i < m_geom->DIM; i++) {
+        vector3<float> cell_v = m_geom->cell.v[i] * m_cell_vectors_ratio.get_value();
+        astate->dp->render_arrow(
+            m_pos.get_value() + m_cell_vector_offset.get_value(),
+            m_pos.get_value() + m_cell_vector_offset.get_value() + cell_v,
+            m_cell_vector_color.get_value(),
+            0.1f, 0.17f, 0.25f, false);
+      }
+
+      astate->dp->end_render_general_mesh();
+
+    }
+
+    switch (m_render_style.get_value()) {
+
+    case geom_view_render_style_e::ball_and_stick :
+      geom_view_render_bs::render(*this);
+      break;
+
+    case geom_view_render_style_e::suprematic_atoms :
+      geom_view_render_bs::render_suprematic(*this);
+      break;
+
+    case geom_view_render_style_e::dynamic_lines:
+      geom_view_render_dlines::render(*this);
+      break;
+
+    case geom_view_render_style_e::xatom_lines:
+      geom_view_render_xlines::render(*this);
+      break;
+
+    case geom_view_render_style_e::billboards:
+      geom_view_render_billboards::render(*this);
+      break;
+
+    case geom_view_render_style_e::buffered_billboards: {
+      if (!m_bs) {
+        m_bs = std::make_unique<geom_view_render_buffered_billboards_t>(*this);
+        m_bs->init();
+      } else {
+        m_bs->render();
+      }
+      //geom_view_render_billboards::render(*this);
+      break;
+    }
+
+      //        default:
+      //          break;
+
+    }
+    // atom render start
+
+  }
 
   //render measurement
 
@@ -401,57 +400,57 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
 
   if (click_ray && m_geom && m_parent_ws) {
 
-      std::vector<tws_query_data_t<float, size_t> > res;
+    std::vector<tws_query_data_t<float, size_t> > res;
 
-      ray_t<float> local_geom_ray;
-      local_geom_ray.start = click_ray->start - m_pos.get_value();
-      local_geom_ray.dir = click_ray->dir;
+    ray_t<float> local_geom_ray;
+    local_geom_ray.start = click_ray->start - m_pos.get_value();
+    local_geom_ray.dir = click_ray->dir;
 
-      if (m_draw_img_atoms.get_value())
-        m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray,
-                                                       res,
-                                                       m_atom_type_to_hide,
-                                                       m_atom_scale_factor.get_value(),
-                                                       m_sel_vis.get_value(),
-                                                       xgeom_sel_vis_hide);
-      else
-        m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray,
-                                                              res,
-                                                              m_atom_type_to_hide,
-                                                              m_atom_scale_factor.get_value(),
-                                                              m_sel_vis.get_value(),
-                                                              xgeom_sel_vis_hide);
+    if (m_draw_img_atoms.get_value())
+      m_tws_tr->query_ray<query_ray_add_all<float> >(local_geom_ray,
+                                                    res,
+                                                    m_atom_type_to_hide,
+                                                    m_atom_scale_factor.get_value(),
+                                                    m_sel_vis.get_value(),
+                                                    xgeom_sel_vis_hide);
+    else
+      m_tws_tr->query_ray<query_ray_add_ignore_img<float> >(local_geom_ray,
+                                                           res,
+                                                           m_atom_type_to_hide,
+                                                           m_atom_scale_factor.get_value(),
+                                                           m_sel_vis.get_value(),
+                                                           xgeom_sel_vis_hide);
+    recalc_gizmo_barycenter();
+
+    if (!res.empty()) {
+
+      std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
+
+      if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
+
+        atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
+        auto atom_sel_it = m_atom_idx_sel.find(iskey);
+        if (atom_sel_it == m_atom_idx_sel.end())
+          sel_atom(res[0].m_atm, res[0].m_idx);
+        else
+          unsel_atom(res[0].m_atm, res[0].m_idx);
+
+      }
+
       recalc_gizmo_barycenter();
+      m_parent_ws->m_gizmo->update_gizmo(0.01f);
+      astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+      return true;
 
-      if (!res.empty()) {
+    } else {
 
-          std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
-
-          if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
-
-              atom_index_set_key iskey(int(res[0].m_atm), res[0].m_idx);
-              auto atom_sel_it = m_atom_idx_sel.find(iskey);
-              if (atom_sel_it == m_atom_idx_sel.end())
-                sel_atom(res[0].m_atm, res[0].m_idx);
-              else
-                unsel_atom(res[0].m_atm, res[0].m_idx);
-
-            }
-
-          recalc_gizmo_barycenter();
-          m_parent_ws->m_gizmo->update_gizmo(0.01f);
-          astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
-          return true;
-
-        } else {
-
-          if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
-              sel_atoms(false);
-            }
-
-        }
+      if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
+        sel_atoms(false);
+      }
 
     }
+
+  }
 
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   return false;
@@ -463,9 +462,9 @@ void geom_view_t::mouse_double_click(ray_t<float> *ray) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (is_selected() && m_parent_ws && m_parent_ws->m_edit_type == ws_edit_e::edit_item) {
-      m_parent_ws->set_edit_type(ws_edit_e::edit_content);
-      astate->astate_evd->obj_insp_tab_open_requested(3);
-    }
+    m_parent_ws->set_edit_type(ws_edit_e::edit_content);
+    astate->astate_evd->obj_insp_tab_open_requested(3);
+  }
 
 }
 
@@ -476,12 +475,12 @@ void geom_view_t::sel_atoms(bool all) {
   if (!m_geom) return;
 
   if (all) {
-      m_atom_idx_sel.clear();
-      for (auto i = 0; i < m_geom->nat(); i++) sel_atom(i);
-    } else {
-      m_atom_idx_sel.clear();
-      m_atom_ord_sel.clear();
-    }
+    m_atom_idx_sel.clear();
+    for (auto i = 0; i < m_geom->nat(); i++) sel_atom(i);
+  } else {
+    m_atom_idx_sel.clear();
+    m_atom_ord_sel.clear();
+  }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -502,10 +501,10 @@ void geom_view_t::toggle_atom_sel(int atom_id) {
   auto it_0 = m_atom_idx_sel.find({atom_id, index::D(m_geom->DIM).all(0)});
 
   if (it_0 != m_atom_idx_sel.end()) {
-      unsel_atom(atom_id);
-    } else {
-      sel_atom(atom_id);
-    }
+    unsel_atom(atom_id);
+  } else {
+    sel_atom(atom_id);
+  }
 
 }
 
@@ -519,31 +518,31 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
 
-      m_atom_idx_sel.insert(atom_index_set_key(atom_id, atom_idx));
+    m_atom_idx_sel.insert(atom_index_set_key(atom_id, atom_idx));
 
-      if (m_atom_ord_sel.size() >= max_sel_in_deque) {
-          m_atom_ord_sel.resize(max_sel_in_deque);
-          m_atom_ord_sel.pop_front();
-        }
-
-      m_atom_ord_sel.push_back(atom_index_set_key(atom_id, atom_idx));
-
-      recalc_gizmo_barycenter();
-      m_parent_ws->m_gizmo->update_gizmo(0.01f);
-
-      if (m_geom->nat() < 1000) {
-          astate->wlog(">> SEL: {}{:<8} {:>16.5f} {:>16.5f} {:>16.5f} {}",
-                       m_geom->atom_name(atom_id),
-                       atom_id,
-                       m_geom->pos(atom_id)[0],
-              m_geom->pos(atom_id)[1],
-              m_geom->pos(atom_id)[2],
-              atom_idx == index::D(m_geom->DIM).all(0) ? "" : "*");
-        }
-      astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
-      return;
-
+    if (m_atom_ord_sel.size() >= max_sel_in_deque) {
+      m_atom_ord_sel.resize(max_sel_in_deque);
+      m_atom_ord_sel.pop_front();
     }
+
+    m_atom_ord_sel.push_back(atom_index_set_key(atom_id, atom_idx));
+
+    recalc_gizmo_barycenter();
+    m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+    if (m_geom->nat() < 1000) {
+      astate->wlog(">> SEL: {}{:<8} {:>16.5f} {:>16.5f} {:>16.5f} {}",
+                   m_geom->atom_name(atom_id),
+                   atom_id,
+                   m_geom->pos(atom_id)[0],
+                   m_geom->pos(atom_id)[1],
+                   m_geom->pos(atom_id)[2],
+                   atom_idx == index::D(m_geom->DIM).all(0) ? "" : "*");
+    }
+    astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+    return;
+
+  }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -571,23 +570,23 @@ void geom_view_t::unsel_atom(int atom_id) {
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
 
-      for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
-           !idx.end(); idx++ ) {
-          auto key = atom_index_set_key(atom_id, idx);
+    for (iterator idx(index::D(m_geom->DIM).all(-1), index::D(m_geom->DIM).all(1));
+         !idx.end(); idx++ ) {
+      auto key = atom_index_set_key(atom_id, idx);
 
-          auto i2 = std::find(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), key);
-          if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
+      auto i2 = std::find(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), key);
+      if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
 
-          auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
-          if (it_ordered != m_atom_ord_sel.end()) m_atom_ord_sel.erase(it_ordered);
-        }
-
-      recalc_gizmo_barycenter();
-      m_parent_ws->m_gizmo->update_gizmo(0.01f);
-
-      astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
-      return;
+      auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
+      if (it_ordered != m_atom_ord_sel.end()) m_atom_ord_sel.erase(it_ordered);
     }
+
+    recalc_gizmo_barycenter();
+    m_parent_ws->m_gizmo->update_gizmo(0.01f);
+
+    astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+    return;
+  }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -608,22 +607,22 @@ void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
 
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
 
-      auto key = atom_index_set_key(atom_id, atom_idx);
-      auto i2 = std::find(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), key);
-      if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
+    auto key = atom_index_set_key(atom_id, atom_idx);
+    auto i2 = std::find(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), key);
+    if (i2 != m_atom_idx_sel.end()) m_atom_idx_sel.erase(i2);
 
-      auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
-      if (it_ordered != m_atom_ord_sel.end()) m_atom_ord_sel.erase(it_ordered);
+    auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
+    if (it_ordered != m_atom_ord_sel.end()) m_atom_ord_sel.erase(it_ordered);
 
-      recalc_gizmo_barycenter();
-      m_parent_ws->m_gizmo->update_gizmo(0.01f);
+    recalc_gizmo_barycenter();
+    m_parent_ws->m_gizmo->update_gizmo(0.01f);
 
-      //      for (int i = 0; i < m_atom_ord_sel.size(); i++)
-      //        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
+    //      for (int i = 0; i < m_atom_ord_sel.size(); i++)
+    //        astate->log(fmt::format("{} {} {}", i, m_atom_ord_sel[i].m_atm, m_atom_ord_sel[i].m_idx));
 
-      return;
+    return;
 
-    }
+  }
 
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -698,13 +697,13 @@ void geom_view_t::sel_by_box(vector3<float> start_pos, vector3<float> end_pos) {
   */
   for (size_t i = 0; i < m_geom->nat(); i++) {
 
-      aabb_3d_t<float> aabb{start_pos, end_pos};
-      auto is_inside_aabb = aabb.test_point(m_geom->pos(i));
-      //     app_state_t::get_inst()->tlog("@DEBUG gv::sel_by_box ap={} sp={}, ep={}, is_inside={}",
-      //                                   m_geom->pos(i), start_pos, end_pos, is_inside_aabb);
-      if (is_inside_aabb) sel_atom(i);
+    aabb_3d_t<float> aabb{start_pos, end_pos};
+    auto is_inside_aabb = aabb.test_point(m_geom->pos(i));
+    //     app_state_t::get_inst()->tlog("@DEBUG gv::sel_by_box ap={} sp={}, ep={}, is_inside={}",
+    //                                   m_geom->pos(i), start_pos, end_pos, is_inside_aabb);
+    if (is_inside_aabb) sel_atom(i);
 
-    }
+  }
 
 }
 
@@ -827,9 +826,9 @@ void geom_view_t::sv_modify_selected(bool state) {
       m_geom->xfield<bool>(xgeom_sel_vis_hide, rec.m_atm) = state;
 
   if (!m_sel_vis.get_value()) {
-      m_sel_vis.set_value(true);
-      m_sel_vis_affect_bonds.set_value(true);
-    }
+    m_sel_vis.set_value(true);
+    m_sel_vis_affect_bonds.set_value(true);
+  }
 
   astate->make_viewport_dirty();
 
@@ -881,24 +880,24 @@ void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_i
 
   if (copy_cell) {
 
-      xgeom_inst.DIM = m_geom->DIM;
-      xgeom_inst.cell.DIM = m_geom->cell.DIM;
+    xgeom_inst.DIM = m_geom->DIM;
+    xgeom_inst.cell.DIM = m_geom->cell.DIM;
 
-      for (int i = 0; i < 3; i++)
-        if (m_geom->DIM > i) xgeom_inst.cell.v[i] = m_geom->cell.v[i];
+    for (int i = 0; i < 3; i++)
+      if (m_geom->DIM > i) xgeom_inst.cell.v[i] = m_geom->cell.v[i];
 
-    }
+  }
 
   if (copy_selected) {
 
-      for (auto &sel : m_atom_idx_sel)
-        xgeom_inst.add(m_geom->atom(sel.m_atm), m_geom->pos(sel.m_atm, sel.m_idx));
+    for (auto &sel : m_atom_idx_sel)
+      xgeom_inst.add(m_geom->atom(sel.m_atm), m_geom->pos(sel.m_atm, sel.m_idx));
 
-    } else {
+  } else {
 
-      for (int i = 0; i < m_geom->nat(); i++)
-        xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
-    }
+    for (int i = 0; i < m_geom->nat(); i++)
+      xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
+  }
 
 }
 
@@ -907,9 +906,9 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tree) {
   app_state_t *astate = app_state_t::get_inst();
 
   if (rebuild_tree) {
-      m_tws_tr->do_action(act_lock | act_clear_all);
-      m_ext_obs->first_data = true;
-    }
+    m_tws_tr->do_action(act_lock | act_clear_all);
+    m_ext_obs->first_data = true;
+  }
 
   m_geom->DIM = src.m_geom->DIM;
   m_geom->cell.DIM = src.m_geom->cell.DIM;
@@ -918,9 +917,9 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tree) {
     if (m_geom->DIM > i) m_geom->cell.v[i] = src.m_geom->cell.v[i];
 
   if (rebuild_tree) {
-      m_tws_tr->do_action(act_unlock | act_rebuild_tree);
-      m_tws_tr->do_action(act_rebuild_ntable);
-    }
+    m_tws_tr->do_action(act_unlock | act_rebuild_tree);
+    m_tws_tr->do_action(act_rebuild_ntable);
+  }
 
   if (is_selected() && m_parent_ws) astate->astate_evd->cur_ws_selected_item_changed();
 
@@ -945,8 +944,8 @@ std::shared_ptr<ws_item_t> geom_view_t::clone_on_the_spot() {
   c_gv->m_tws_tr->do_action(act_rebuild_ntable);
 
   if (m_parent_ws) {
-      m_parent_ws->add_item_to_ws(cloned);
-    }
+    m_parent_ws->add_item_to_ws(cloned);
+  }
 
   return cloned;
 
@@ -958,47 +957,47 @@ void geom_view_t::load_color_from_static_anim() {
 
   if (m_anim->m_anim_data.size() > 0) {
 
-      int static_anim = -1;
-      for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
-        if (m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_static) static_anim = i;
+    int static_anim = -1;
+    for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
+      if (m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_static) static_anim = i;
 
-      if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
-          m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
+    if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
+        m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
 
-          for (int i = 0; i < m_geom->nat(); i++) {
+      for (int i = 0; i < m_geom->nat(); i++) {
 
-              m_geom->xfield<float>(xgeom_ccr, i) =
-                  m_anim->m_anim_data[static_anim].frames[0].atom_color[i][0];
-              m_geom->xfield<float>(xgeom_ccg, i) =
-                  m_anim->m_anim_data[static_anim].frames[0].atom_color[i][1];
-              m_geom->xfield<float>(xgeom_ccb, i) =
-                  m_anim->m_anim_data[static_anim].frames[0].atom_color[i][2];
+        m_geom->xfield<float>(xgeom_ccr, i) =
+            m_anim->m_anim_data[static_anim].frames[0].atom_color[i][0];
+        m_geom->xfield<float>(xgeom_ccg, i) =
+            m_anim->m_anim_data[static_anim].frames[0].atom_color[i][1];
+        m_geom->xfield<float>(xgeom_ccb, i) =
+            m_anim->m_anim_data[static_anim].frames[0].atom_color[i][2];
 
-            }
-
-        }
+      }
 
     }
+
+  }
 
 }
 
 vector3<float> geom_view_t::get_xcolor(const size_t atm) {
 
   if (atm >= m_geom->nat()) {
-      throw std::out_of_range("invalid atom id");
-    }
+    throw std::out_of_range("invalid atom id");
+  }
 
   return vector3<float>{m_geom->xfield<float>(xgeom_ccr, atm),
-          m_geom->xfield<float>(xgeom_ccg, atm),
-          m_geom->xfield<float>(xgeom_ccb, atm)};
+                        m_geom->xfield<float>(xgeom_ccg, atm),
+                        m_geom->xfield<float>(xgeom_ccb, atm)};
 
 }
 
 void geom_view_t::set_xcolorv(const size_t atm, const vector3<float> color) {
 
   if (atm >= m_geom->nat()) {
-      throw std::out_of_range("invalid atom id");
-    }
+    throw std::out_of_range("invalid atom id");
+  }
 
   m_geom->xfield<float>(xgeom_ccr, atm) = color[0];
   m_geom->xfield<float>(xgeom_ccg, atm) = color[1];
@@ -1019,21 +1018,21 @@ void geom_view_t::set_xcolorf(const size_t atm,
 std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id) {
 
   if (m_geom->field_type(xfield_id) != type_real) {
-      throw std::invalid_argument(fmt::format("wrong xfield type with id {} ", xfield_id));
-    }
+    throw std::invalid_argument(fmt::format("wrong xfield type with id {} ", xfield_id));
+  }
 
   if (m_geom->nat() == 0) {
-      throw std::invalid_argument("m_geom->nat() == 0");
-    }
+    throw std::invalid_argument("m_geom->nat() == 0");
+  }
 
   float min_v = m_geom->xfield<float>(xfield_id, 0);
   float max_v = m_geom->xfield<float>(xfield_id, 0);
 
   for (size_t i = 0; i < m_geom->nat(); i++) {
-      float val = m_geom->xfield<float>(xfield_id, i);
-      if (min_v > val) min_v = val;
-      if (max_v < val) max_v = val;
-    }
+    float val = m_geom->xfield<float>(xfield_id, i);
+    if (min_v > val) min_v = val;
+    if (max_v < val) max_v = val;
+  }
 
   return {min_v, max_v};
 
@@ -1079,23 +1078,23 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 
   switch (mode) {
 
-    case pair_dist_mode_e::transform_both : {
-        m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
-        m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
-        break;
-      }
+  case pair_dist_mode_e::transform_both : {
+    m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
+    m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
+    break;
+  }
 
-    case pair_dist_mode_e::fix_first : {
-        m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f );
-        break;
-      }
+  case pair_dist_mode_e::fix_first : {
+    m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f );
+    break;
+  }
 
-    case pair_dist_mode_e::fix_second : {
-        m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
-        break;
-      }
+  case pair_dist_mode_e::fix_second : {
+    m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
+    break;
+  }
 
-    }
+  }
 
   astate->make_viewport_dirty();
 
@@ -1139,9 +1138,9 @@ void geom_view_t::delete_selected_atoms() {
 
   //get unique selected atoms
   for(auto &elem : m_atom_idx_sel) {
-      all_atom_num.push_back(elem.m_atm);
-      m_measure->notify_atom_has_been_deleted(elem.m_atm);
-    }
+    all_atom_num.push_back(elem.m_atm);
+    m_measure->notify_atom_has_been_deleted(elem.m_atm);
+  }
 
   auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
   all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
@@ -1175,9 +1174,9 @@ void geom_view_t::delete_atoms(std::set<int> &to_delete) {
 
   //get unique selected atoms
   for(auto &elem : to_delete) {
-      all_atom_num.push_back(elem);
-      m_measure->notify_atom_has_been_deleted(elem);
-    }
+    all_atom_num.push_back(elem);
+    m_measure->notify_atom_has_been_deleted(elem);
+  }
 
   auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
   all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
@@ -1236,49 +1235,49 @@ std::string geom_view_t::compose_overview() {
 
   if (m_atom_idx_sel.size() < astate->m_gv_overview_max_atoms && !m_atom_idx_sel.empty()) {
 
-      std::map<size_t, size_t> lkp_sel_types;
-      bool succes{true};
-      size_t tot_sel_types{0};
+    std::map<size_t, size_t> lkp_sel_types;
+    bool succes{true};
+    size_t tot_sel_types{0};
 
-      for (auto const &i : m_atom_idx_sel) {
+    for (auto const &i : m_atom_idx_sel) {
 
-          auto it = lkp_sel_types.find(m_geom->type_of_atom(i.m_atm));
-          if (it == lkp_sel_types.end()) {
+      auto it = lkp_sel_types.find(m_geom->type_of_atom(i.m_atm));
+      if (it == lkp_sel_types.end()) {
 
-              tot_sel_types++;
-              if (tot_sel_types > astate->m_gv_overview_max_sel_types) {
-                  succes = false;
-                  break;
-                }
-              lkp_sel_types[m_geom->type_of_atom(i.m_atm)]++;
-
-            } else {
-              it->second++;
-            }
-
+        tot_sel_types++;
+        if (tot_sel_types > astate->m_gv_overview_max_sel_types) {
+          succes = false;
+          break;
         }
+        lkp_sel_types[m_geom->type_of_atom(i.m_atm)]++;
 
-      if (succes) {
-
-          std::string selection;
-          size_t elemc{0};
-
-          for (auto const &elem : lkp_sel_types) {
-
-              elemc++;
-
-              selection += fmt::format("{}:{}{}",
-                                       m_geom->atom_of_type(elem.first),
-                                       elem.second,
-                                       elemc == lkp_sel_types.size() ? "" : ", ");
-
-            }
-
-          return fmt::format("[Selected : [{}]]", selection);
-
-        }
+      } else {
+        it->second++;
+      }
 
     }
+
+    if (succes) {
+
+      std::string selection;
+      size_t elemc{0};
+
+      for (auto const &elem : lkp_sel_types) {
+
+        elemc++;
+
+        selection += fmt::format("{}:{}{}",
+                                 m_geom->atom_of_type(elem.first),
+                                 elem.second,
+                                 elemc == lkp_sel_types.size() ? "" : ", ");
+
+      }
+
+      return fmt::format("[Selected : [{}]]", selection);
+
+    }
+
+  }
 
   return fmt::format("[Selected : {}]", m_atom_idx_sel.size());
 
@@ -1292,18 +1291,18 @@ void geom_view_t::update (float delta_time) {
   m_anim->update(delta_time);
 
   if (m_tws_tr->m_tree_is_dirty) {
-      m_tws_tr->m_tree_is_dirty = false;
-    }
+    m_tws_tr->m_tree_is_dirty = false;
+  }
 
   if (m_tws_tr->m_atoms_existence_is_broken) {
-      m_tws_tr->m_atoms_existence_is_broken = false;
-      if (m_selected) astate->astate_evd->cur_ws_selected_item_changed();
-    }
+    m_tws_tr->m_atoms_existence_is_broken = false;
+    if (m_selected) astate->astate_evd->cur_ws_selected_item_changed();
+  }
 
   if (m_need_to_update_overview && m_selected && m_parent_ws) {
-      m_parent_ws->update_overview(compose_overview());
-      m_need_to_update_overview = false;
-    }
+    m_parent_ws->update_overview(compose_overview());
+    m_need_to_update_overview = false;
+  }
 
 }
 
@@ -1337,15 +1336,15 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
   bool someone_from_atoms_were_translated = false;
 
   for (auto &it : m_atom_idx_sel) {
-      vector3<float> acc_pos = m_geom->coord(it.m_atm) + pos;
-      m_geom->change_pos(it.m_atm, acc_pos);
-      someone_from_atoms_were_translated = true;
-    }
+    vector3<float> acc_pos = m_geom->coord(it.m_atm) + pos;
+    m_geom->change_pos(it.m_atm, acc_pos);
+    someone_from_atoms_were_translated = true;
+  }
 
   if (someone_from_atoms_were_translated) {
-      recalc_gizmo_barycenter();
-      astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
-    }
+    recalc_gizmo_barycenter();
+    astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
+  }
 
 }
 
@@ -1360,11 +1359,11 @@ void geom_view_t::recalc_gizmo_barycenter() {
 
   if (!m_atom_idx_sel.empty() || m_geom->nat() == 0) {
 
-      for (const auto& atm_idx : m_atom_idx_sel)
-        m_gizmo_barycenter += m_geom->pos(atm_idx.m_atm, atm_idx.m_idx);
-      m_gizmo_barycenter /= m_atom_idx_sel.size();
+    for (const auto& atm_idx : m_atom_idx_sel)
+      m_gizmo_barycenter += m_geom->pos(atm_idx.m_atm, atm_idx.m_idx);
+    m_gizmo_barycenter /= m_atom_idx_sel.size();
 
-    }
+  }
   else m_gizmo_barycenter = m_aabb.min;
 
 }
@@ -1440,28 +1439,28 @@ void geom_view_t::save_to_json(json &data) {
   data[JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds.get_value();
 
   if (m_geom->DIM == 3) {
-      data[JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS] = m_draw_subcells.get_value();
-      json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE, m_subcells_range, data);
-    }
+    data[JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS] = m_draw_subcells.get_value();
+    json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE, m_subcells_range, data);
+  }
 
   for (auto &record: m_tws_tr->m_bonding_table.m_dist) {
-      json bt_rec = json::array({});
-      bt_rec.push_back(m_geom->atom_of_type(record.first.m_a));
-      bt_rec.push_back(m_geom->atom_of_type(record.first.m_b));
-      bt_rec.push_back(record.second.m_bonding_dist);
-      bt_rec.push_back(record.second.m_enabled);
-      data[JSON_GEOM_VIEW_BONDING_TABLE].push_back(bt_rec);
-    }
+    json bt_rec = json::array({});
+    bt_rec.push_back(m_geom->atom_of_type(record.first.m_a));
+    bt_rec.push_back(m_geom->atom_of_type(record.first.m_b));
+    bt_rec.push_back(record.second.m_bonding_dist);
+    bt_rec.push_back(record.second.m_enabled);
+    data[JSON_GEOM_VIEW_BONDING_TABLE].push_back(bt_rec);
+  }
 
   if (m_geom->DIM > 0) {
-      json cell = json::array({});
-      for (uint8_t i = 0; i < m_geom->DIM; i++) {
-          json cell_data = json::array({});
-          for (uint8_t q = 0; q < 3; q++) cell_data.push_back(m_geom->cell.v[i][q]);
-          cell.push_back(cell_data);
-        }
-      data[JSON_GEOM_VIEW_CELL] = cell;
+    json cell = json::array({});
+    for (uint8_t i = 0; i < m_geom->DIM; i++) {
+      json cell_data = json::array({});
+      for (uint8_t q = 0; q < 3; q++) cell_data.push_back(m_geom->cell.v[i][q]);
+      cell.push_back(cell_data);
     }
+    data[JSON_GEOM_VIEW_CELL] = cell;
+  }
 
   json xfield_names = json::array({});
   for (size_t i = 0; i < m_geom->nfields(); i++)
@@ -1470,112 +1469,112 @@ void geom_view_t::save_to_json(json &data) {
   json xfield_types = json::array({});
   for (size_t i = 0; i < m_geom->nfields(); i++)
     switch (m_geom->field_type(i)) {
-      case basic_types::type_bool : {
-          xfield_types.push_back("b");
-          break;
-        }
-      case basic_types::type_int : {
-          xfield_types.push_back("i");
-          break;
-        }
-      case basic_types::type_real : {
-          xfield_types.push_back("r");
-          break;
-        }
-      case basic_types::type_double : {
-          xfield_types.push_back("d");
-          break;
-        }
-      case basic_types::type_float : {
-          xfield_types.push_back("f");
-          break;
-        }
-      case basic_types::type_string : {
-          xfield_types.push_back("s");
-          break;
-        }
-      }
+    case basic_types::type_bool : {
+      xfield_types.push_back("b");
+      break;
+    }
+    case basic_types::type_int : {
+      xfield_types.push_back("i");
+      break;
+    }
+    case basic_types::type_real : {
+      xfield_types.push_back("r");
+      break;
+    }
+    case basic_types::type_double : {
+      xfield_types.push_back("d");
+      break;
+    }
+    case basic_types::type_float : {
+      xfield_types.push_back("f");
+      break;
+    }
+    case basic_types::type_string : {
+      xfield_types.push_back("s");
+      break;
+    }
+    }
 
   data[JSON_GEOM_VIEW_XFIELD_NAMES] = xfield_names;
   data[JSON_GEOM_VIEW_XFIELD_TYPES] = xfield_types;
 
   data[JSON_GEOM_VIEW_ATOMS] = json::array({});
   for (auto q = 0; q < m_geom->nat(); q++) {
-      json atom = json::array({});
-      for (int i = 0; i < m_geom->nfields(); i++)
-        switch (m_geom->field_type(i)) {
-          case basic_types::type_bool : {
-              atom.push_back(m_geom->xfield<bool>(i, q));
-              break;
-            }
-          case basic_types::type_int : {
-              atom.push_back(m_geom->xfield<int>(i, q));
-              break;
-            }
-          case basic_types::type_real : {
-              atom.push_back(m_geom->xfield<float>(i, q));
-              break;
-            }
-          case basic_types::type_double : {
-              atom.push_back(m_geom->xfield<double>(i, q));
-              break;
-            }
-          case basic_types::type_float : {
-              atom.push_back(m_geom->xfield<bool>(i, q));
-              break;
-            }
-          case basic_types::type_string : {
-              atom.push_back(m_geom->xfield<std::string>(i, q));
-              break;
-            }
-          }
-      data[JSON_GEOM_VIEW_ATOMS].push_back(atom);
-    }
+    json atom = json::array({});
+    for (int i = 0; i < m_geom->nfields(); i++)
+      switch (m_geom->field_type(i)) {
+      case basic_types::type_bool : {
+        atom.push_back(m_geom->xfield<bool>(i, q));
+        break;
+      }
+      case basic_types::type_int : {
+        atom.push_back(m_geom->xfield<int>(i, q));
+        break;
+      }
+      case basic_types::type_real : {
+        atom.push_back(m_geom->xfield<float>(i, q));
+        break;
+      }
+      case basic_types::type_double : {
+        atom.push_back(m_geom->xfield<double>(i, q));
+        break;
+      }
+      case basic_types::type_float : {
+        atom.push_back(m_geom->xfield<bool>(i, q));
+        break;
+      }
+      case basic_types::type_string : {
+        atom.push_back(m_geom->xfield<std::string>(i, q));
+        break;
+      }
+      }
+    data[JSON_GEOM_VIEW_ATOMS].push_back(atom);
+  }
 
   if (!m_type_color_override.empty()) {
 
-      data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE] = json::array({});
+    data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE] = json::array({});
 
-      for (auto &elem : m_type_color_override) {
-          json color_override_rec = json::array({});
-          color_override_rec.push_back(elem.first);
-          color_override_rec.push_back(elem.second[0]);
-          color_override_rec.push_back(elem.second[1]);
-          color_override_rec.push_back(elem.second[2]);
-          data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE].push_back(color_override_rec);
-        }
+    for (auto &elem : m_type_color_override) {
+      json color_override_rec = json::array({});
+      color_override_rec.push_back(elem.first);
+      color_override_rec.push_back(elem.second[0]);
+      color_override_rec.push_back(elem.second[1]);
+      color_override_rec.push_back(elem.second[2]);
+      data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE].push_back(color_override_rec);
     }
+  }
 
   if (m_anim->animable()) {
 
-      json animations = json::array({});
+    json animations = json::array({});
 
-      for (auto &anim : m_anim->m_anim_data) {
+    for (auto &anim : m_anim->m_anim_data) {
 
-          json animation = json::object();
-          animation[JSON_GEOM_VIEW_ANIMATION_NAME] = anim.m_anim_name;
-          animation[JSON_GEOM_VIEW_ANIMATION_TYPE] = anim.m_anim_type;
-          json frames = json::array();
+      json animation = json::object();
+      animation[JSON_GEOM_VIEW_ANIMATION_NAME] = anim.m_anim_name;
+      animation[JSON_GEOM_VIEW_ANIMATION_TYPE] = anim.m_anim_type;
+      json frames = json::array();
 
-          for (auto &frame : anim.frames) {
+      for (auto &frame : anim.frames) {
 
-              json frame_chunk = json::array({});
-              for (auto &frame_coord : frame.atom_pos) {
-                  json frame_chunk_coord = json::array({});
-                  frame_chunk_coord.push_back(frame_coord[0]);
-                  frame_chunk_coord.push_back(frame_coord[1]);
-                  frame_chunk_coord.push_back(frame_coord[2]);
-                  frame_chunk.push_back(frame_chunk_coord);
-                }
-              frames.push_back(frame_chunk);
-            }
-
-          animation[JSON_GEOM_VIEW_ANIMATION_FRAMES] = frames;
-          animations.push_back(animation);
+        json frame_chunk = json::array({});
+        for (auto &frame_coord : frame.atom_pos) {
+          json frame_chunk_coord = json::array({});
+          frame_chunk_coord.push_back(frame_coord[0]);
+          frame_chunk_coord.push_back(frame_coord[1]);
+          frame_chunk_coord.push_back(frame_coord[2]);
+          frame_chunk.push_back(frame_chunk_coord);
         }
+        frames.push_back(frame_chunk);
+      }
 
-      data[JSON_GEOM_VIEW_ANIMATIONS] = animations;
+      animation[JSON_GEOM_VIEW_ANIMATION_FRAMES] = frames;
+      animations.push_back(animation);
     }
+
+    data[JSON_GEOM_VIEW_ANIMATIONS] = animations;
+  }
 
   m_measure->save_to_json(data);
 
@@ -1586,9 +1585,9 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   ws_item_t::load_from_json(data, rep_info);
 
   if (auto val_itr = data.find(JSON_GEOM_VIEW_DIM); val_itr != data.end()) {
-      m_geom->DIM = val_itr.value();
-      m_geom->cell.DIM = m_geom->DIM;
-    }
+    m_geom->DIM = val_itr.value();
+    m_geom->cell.DIM = m_geom->DIM;
+  }
 
   json_helper::hs_load_var(JSON_GEOM_VIEW_ATOM_SCALE, m_atom_scale_factor, data);
   json_helper::hs_load_var(JSON_GEOM_VIEW_BOND_SCALE, m_bond_scale_factor, data);
@@ -1604,12 +1603,12 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
   json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_OUTLINE_SZ, m_labels->m_outline_size, data);
 
-//  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
-//                        m_labels->m_inplace_offset[0],
-//                        data);
-//  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
-//                        m_labels->m_inplace_offset[1],
-//                        data);
+  //  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
+  //                        m_labels->m_inplace_offset[0],
+  //                        data);
+  //  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
+  //                        m_labels->m_inplace_offset[1],
+  //                        data);
 
   json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
   json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
@@ -1632,27 +1631,27 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   json_helper::hs_load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
 
   if (data.find(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE) != data.end()) {
-      int sc_a = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][0].get<int>();
-      int sc_b = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][1].get<int>();
-      int sc_c = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][2].get<int>();
-      m_subcells_range.set_value(vector3<int>(sc_a, sc_b, sc_c));
-    }
+    int sc_a = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][0].get<int>();
+    int sc_b = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][1].get<int>();
+    int sc_c = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][2].get<int>();
+    m_subcells_range.set_value(vector3<int>(sc_a, sc_b, sc_c));
+  }
 
   if (auto val_itr = data.find(JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE); val_itr != data.end()) {
 
-      m_type_color_override.clear();
+    m_type_color_override.clear();
 
-      for (const auto &rec : val_itr.value()) {
+    for (const auto &rec : val_itr.value()) {
 
-          size_t type_idx = rec[0].get<size_t>();
-          float tco_r = rec[1].get<float>();
-          float tco_g = rec[2].get<float>();
-          float tco_b = rec[3].get<float>();
-          m_type_color_override.insert({type_idx, vector3<float>{tco_r, tco_g, tco_b}});
-
-        }
+      size_t type_idx = rec[0].get<size_t>();
+      float tco_r = rec[1].get<float>();
+      float tco_g = rec[2].get<float>();
+      float tco_b = rec[3].get<float>();
+      m_type_color_override.insert({type_idx, vector3<float>{tco_r, tco_g, tco_b}});
 
     }
+
+  }
 
   m_tws_tr->do_action(act_lock | act_clear_all);
 
@@ -1660,164 +1659,164 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   if (m_geom->DIM>0) {
 
-      if (auto val_itr = data.find(JSON_GEOM_VIEW_CELL); val_itr != data.end()) {
+    if (auto val_itr = data.find(JSON_GEOM_VIEW_CELL); val_itr != data.end()) {
 
-          for (uint8_t i = 0; i < m_geom->DIM; i++) {
-              vector3<float> cellv(val_itr.value()[i][0].get<float>(),
-                  val_itr.value()[i][1].get<float>(),
-                  val_itr.value()[i][2].get<float>());
-              m_geom->cell.v[i] = cellv;
-            }
-        } else {
-          m_geom->DIM = 0;
-          //("Cannot load cell data for geom with DIM>0");
-        }
-
+      for (uint8_t i = 0; i < m_geom->DIM; i++) {
+        vector3<float> cellv(val_itr.value()[i][0].get<float>(),
+                             val_itr.value()[i][1].get<float>(),
+                             val_itr.value()[i][2].get<float>());
+        m_geom->cell.v[i] = cellv;
+      }
+    } else {
+      m_geom->DIM = 0;
+      //("Cannot load cell data for geom with DIM>0");
     }
+
+  }
 
   if (auto val_itr = data.find(JSON_GEOM_VIEW_XFIELD_NAMES); val_itr != data.end()) {
 
-      std::vector<STRING_EX> fn;
-      std::vector<basic_types> ft;
+    std::vector<STRING_EX> fn;
+    std::vector<basic_types> ft;
 
-      auto &data_xf_names = val_itr.value();
-      std::transform(data_xf_names.begin(), data_xf_names.end(), std::back_inserter(fn),
-                     [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
+    auto &data_xf_names = val_itr.value();
+    std::transform(data_xf_names.begin(), data_xf_names.end(), std::back_inserter(fn),
+                   [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
 
-      if (auto val_itr2 = data.find(JSON_GEOM_VIEW_XFIELD_TYPES); val_itr2 != data.end())
-        for (auto &elem : val_itr2.value()) {
-            STRING_EX fv = elem.get<STRING_EX>();
-            if (fv == "b") ft.push_back(type_bool);
-            if (fv == "i") ft.push_back(type_int);
-            if (fv == "r") ft.push_back(type_real);
-            if (fv == "d") ft.push_back(type_double);
-            if (fv == "f") ft.push_back(type_float);
-            if (fv == "s") ft.push_back(type_string);
+    if (auto val_itr2 = data.find(JSON_GEOM_VIEW_XFIELD_TYPES); val_itr2 != data.end())
+      for (auto &elem : val_itr2.value()) {
+        STRING_EX fv = elem.get<STRING_EX>();
+        if (fv == "b") ft.push_back(type_bool);
+        if (fv == "i") ft.push_back(type_int);
+        if (fv == "r") ft.push_back(type_real);
+        if (fv == "d") ft.push_back(type_double);
+        if (fv == "f") ft.push_back(type_float);
+        if (fv == "s") ft.push_back(type_string);
 
-          } else throw std::runtime_error("Invalid xfield types");
+      } else throw std::runtime_error("Invalid xfield types");
 
-      m_geom->set_format(fn, ft);
+    m_geom->set_format(fn, ft);
 
-    }
+  }
 
   if (auto val_itr = data.find(JSON_GEOM_VIEW_ATOMS); val_itr != data.end())
     for (const auto &atom : val_itr.value()) {
 
-        m_geom->add(atom[0].get<std::string>(),
-            vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
+      m_geom->add(atom[0].get<std::string>(),
+                  vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
 
-        size_t atom_id = m_geom->nat() - 1;
+      size_t atom_id = m_geom->nat() - 1;
 
-        for (size_t i = 4; i < atom.size(); i++) {
+      for (size_t i = 4; i < atom.size(); i++) {
 
-            switch (m_geom->field_type(i)) {
+        switch (m_geom->field_type(i)) {
 
-              case basic_types::type_bool : {
-                  m_geom->xfield<bool>(i, atom_id) = atom[i].get<bool>();
-                  break;
-                }
-              case basic_types::type_int : {
-                  m_geom->xfield<int>(i, atom_id) = atom[i].get<int>();
-                  break;
-                }
-              case basic_types::type_real : {
-                  m_geom->xfield<float>(i, atom_id) = atom[i].get<float>();
-                  break;
-                }
-              case basic_types::type_double : {
-                  m_geom->xfield<double>(i, atom_id) = atom[i].get<double>();
-                  break;
-                }
-              case basic_types::type_float : {
-                  m_geom->xfield<float>(i, atom_id) = atom[i].get<float>();
-                  break;
-                }
-              case basic_types::type_string : {
-                  m_geom->xfield<std::string>(i, atom_id) = atom[i].get<std::string>();
-                  break;
-                }
+        case basic_types::type_bool : {
+          m_geom->xfield<bool>(i, atom_id) = atom[i].get<bool>();
+          break;
+        }
+        case basic_types::type_int : {
+          m_geom->xfield<int>(i, atom_id) = atom[i].get<int>();
+          break;
+        }
+        case basic_types::type_real : {
+          m_geom->xfield<float>(i, atom_id) = atom[i].get<float>();
+          break;
+        }
+        case basic_types::type_double : {
+          m_geom->xfield<double>(i, atom_id) = atom[i].get<double>();
+          break;
+        }
+        case basic_types::type_float : {
+          m_geom->xfield<float>(i, atom_id) = atom[i].get<float>();
+          break;
+        }
+        case basic_types::type_string : {
+          m_geom->xfield<std::string>(i, atom_id) = atom[i].get<std::string>();
+          break;
+        }
 
-              }
-
-          }
+        }
 
       }
 
+    }
+
   if (auto val_itr = data.find(JSON_GEOM_VIEW_BONDING_TABLE); val_itr != data.end()) {
 
-      for (auto &elem : val_itr.value()) {
+    for (auto &elem : val_itr.value()) {
 
-          int type1 = m_geom->type_of_atom(elem[0].get<std::string>());
-          int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
-          float dist = elem[2].get<float>();
-          bool br_enabled = elem[3].get<bool>();
-          m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_bonding_dist = dist;
-          m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_enabled = br_enabled;
-
-        }
-
-      m_tws_tr->m_bonding_table.update_pair_max_dist_all();
+      int type1 = m_geom->type_of_atom(elem[0].get<std::string>());
+      int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
+      float dist = elem[2].get<float>();
+      bool br_enabled = elem[3].get<bool>();
+      m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_bonding_dist = dist;
+      m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_enabled = br_enabled;
 
     }
+
+    m_tws_tr->m_bonding_table.update_pair_max_dist_all();
+
+  }
 
   if (auto val_itr = data.find(JSON_GEOM_VIEW_ANIMATIONS); val_itr != data.end()) {
 
-      bool static_anim_found{false};
+    bool static_anim_found{false};
 
-      for (auto &anim : val_itr.value()) {
+    for (auto &anim : val_itr.value()) {
 
-          geom_anim_record_t<float> tmp_anim_rec;
+      geom_anim_record_t<float> tmp_anim_rec;
 
-          if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_NAME); val_itr2 != anim.end())
-            tmp_anim_rec.m_anim_name = val_itr2.value();
-          else
-            tmp_anim_rec.m_anim_name = "generic1";
+      if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_NAME); val_itr2 != anim.end())
+        tmp_anim_rec.m_anim_name = val_itr2.value();
+      else
+        tmp_anim_rec.m_anim_name = "generic1";
 
-          if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_TYPE); val_itr2 != anim.end())
-            tmp_anim_rec.m_anim_type = val_itr2.value();
+      if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_TYPE); val_itr2 != anim.end())
+        tmp_anim_rec.m_anim_type = val_itr2.value();
 
-          if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_FRAMES); val_itr2 != anim.end()) {
-              tmp_anim_rec.frames.reserve(val_itr2.value().size());
+      if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_FRAMES); val_itr2 != anim.end()) {
+        tmp_anim_rec.frames.reserve(val_itr2.value().size());
 
-              for (auto &frame : val_itr2.value()) {
+        for (auto &frame : val_itr2.value()) {
 
-                  tmp_anim_rec.frames.resize(tmp_anim_rec.frames.size() + 1);
-                  size_t nf_id = tmp_anim_rec.frames.size() - 1;
+          tmp_anim_rec.frames.resize(tmp_anim_rec.frames.size() + 1);
+          size_t nf_id = tmp_anim_rec.frames.size() - 1;
 
-                  tmp_anim_rec.frames[nf_id].atom_pos.reserve(frame.size());
+          tmp_anim_rec.frames[nf_id].atom_pos.reserve(frame.size());
 
-                  for (auto &frame_data : frame) {
+          for (auto &frame_data : frame) {
 
-                      vector3<float> frame_coord;
-                      frame_coord[0] = frame_data[0].get<float>();
-                      frame_coord[1] = frame_data[1].get<float>();
-                      frame_coord[2] = frame_data[2].get<float>();
-                      //std::cout << frame_coord.to_string_vec() << std::endl;
-                      tmp_anim_rec.frames[nf_id].atom_pos.push_back(frame_coord);
-                    }
-
-                }
-
-            }
-
-          if (tmp_anim_rec.m_anim_type == geom_anim_t::anim_static) static_anim_found = true;
-          m_anim->m_anim_data.push_back(std::move(tmp_anim_rec));
+            vector3<float> frame_coord;
+            frame_coord[0] = frame_data[0].get<float>();
+            frame_coord[1] = frame_data[1].get<float>();
+            frame_coord[2] = frame_data[2].get<float>();
+            //std::cout << frame_coord.to_string_vec() << std::endl;
+            tmp_anim_rec.frames[nf_id].atom_pos.push_back(frame_coord);
+          }
 
         }
 
-      if (!static_anim_found) {
+      }
 
-          geom_anim_record_t<float> tmp_anim_static;
-          tmp_anim_static.m_anim_name = "static";
-          tmp_anim_static.m_anim_type = geom_anim_t::anim_static;
-          tmp_anim_static.frames.resize(1);
-          for (auto i = 0; i < m_geom->nat(); i++)
-            tmp_anim_static.frames[0].atom_pos.push_back(m_geom->pos(i));
-          m_anim->m_anim_data.insert(m_anim->m_anim_data.begin(), std::move(tmp_anim_static));
-
-        }
+      if (tmp_anim_rec.m_anim_type == geom_anim_t::anim_static) static_anim_found = true;
+      m_anim->m_anim_data.push_back(std::move(tmp_anim_rec));
 
     }
+
+    if (!static_anim_found) {
+
+      geom_anim_record_t<float> tmp_anim_static;
+      tmp_anim_static.m_anim_name = "static";
+      tmp_anim_static.m_anim_type = geom_anim_t::anim_static;
+      tmp_anim_static.frames.resize(1);
+      for (auto i = 0; i < m_geom->nat(); i++)
+        tmp_anim_static.frames[0].atom_pos.push_back(m_geom->pos(i));
+      m_anim->m_anim_data.insert(m_anim->m_anim_data.begin(), std::move(tmp_anim_static));
+
+    }
+
+  }
 
   //reading measurement subsystem
   m_measure->load_from_json(data);
@@ -1897,18 +1896,18 @@ void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
 
   for (size_t i = 0; i < m_geom->nat(); i++) {
 
-      m_geom->xfield<bool>(xgeom_sel_vis_hide,i) = src->m_geom->xfield<bool>(xgeom_sel_vis_hide,i);
-      m_geom->xfield<bool>(xgeom_override,i) = src->m_geom->xfield<bool>(xgeom_override,i);
-      m_geom->xfield<bool>(xgeom_label_show,i) = src->m_geom->xfield<bool>(xgeom_label_show,i);
-      m_geom->xfield<float>(xgeom_atom_r, i) = src->m_geom->xfield<float>(xgeom_atom_r, i);
-      m_geom->xfield<float>(xgeom_ccr, i) = src->m_geom->xfield<float>(xgeom_ccr, i);
-      m_geom->xfield<float>(xgeom_ccg, i) = src->m_geom->xfield<float>(xgeom_ccg, i);
-      m_geom->xfield<float>(xgeom_ccb, i) = src->m_geom->xfield<float>(xgeom_ccb, i);
+    m_geom->xfield<bool>(xgeom_sel_vis_hide,i) = src->m_geom->xfield<bool>(xgeom_sel_vis_hide,i);
+    m_geom->xfield<bool>(xgeom_override,i) = src->m_geom->xfield<bool>(xgeom_override,i);
+    m_geom->xfield<bool>(xgeom_label_show,i) = src->m_geom->xfield<bool>(xgeom_label_show,i);
+    m_geom->xfield<float>(xgeom_atom_r, i) = src->m_geom->xfield<float>(xgeom_atom_r, i);
+    m_geom->xfield<float>(xgeom_ccr, i) = src->m_geom->xfield<float>(xgeom_ccr, i);
+    m_geom->xfield<float>(xgeom_ccg, i) = src->m_geom->xfield<float>(xgeom_ccg, i);
+    m_geom->xfield<float>(xgeom_ccb, i) = src->m_geom->xfield<float>(xgeom_ccb, i);
 
-      m_geom->xfield<std::string>(xgeom_label_text, i) =
-          src->m_geom->xfield<std::string>(xgeom_label_text, i);
+    m_geom->xfield<std::string>(xgeom_label_text, i) =
+        src->m_geom->xfield<std::string>(xgeom_label_text, i);
 
-    }
+  }
 
 }
 

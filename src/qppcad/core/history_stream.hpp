@@ -74,7 +74,7 @@ public:
    * @brief begin_recoring
    * @param init_as_base_commit
    */
-  void begin_recoring(bool init_as_base_commit = false);
+  void begin_recording(bool init_as_base_commit = false);
 
   /**
    * @brief end_recording
