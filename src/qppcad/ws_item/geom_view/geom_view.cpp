@@ -925,6 +925,36 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tree) {
 
 }
 
+void geom_view_t::set_cell(std::optional<vector3<float> > a,
+                           std::optional<vector3<float> > b,
+                           std::optional<vector3<float> > c) {
+
+  if (m_geom->DIM == 1 && a) {
+    begin_structure_change();
+    m_geom->cell.v[0] = *a;
+    end_structure_change();
+    return;
+  }
+
+  if (m_geom->DIM == 2 && a && b) {
+    begin_structure_change();
+    m_geom->cell.v[0] = *a;
+    m_geom->cell.v[1] = *b;
+    end_structure_change();
+    return;
+  }
+
+  if (m_geom->DIM == 3 && a && b && c ) {
+    begin_structure_change();
+    m_geom->cell.v[0] = *a;
+    m_geom->cell.v[1] = *b;
+    m_geom->cell.v[2] = *c;
+    end_structure_change();
+    return;
+  }
+
+}
+
 std::shared_ptr<ws_item_t> geom_view_t::clone_on_the_spot() {
 
   app_state_t *astate = app_state_t::get_inst();

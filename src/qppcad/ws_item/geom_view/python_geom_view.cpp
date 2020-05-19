@@ -242,6 +242,8 @@ void py_geom_view_reg_helper_t::reg(
          .def("set_xcolor", &geom_view_t::set_xcolorv)
          .def("set_xcolor", &geom_view_t::set_xcolorf)
          .def("min_max_xfield", &geom_view_t::get_min_max_xfield)
+         .def("set_cell", &geom_view_t::set_cell, py::arg("a"), py::arg("b") = std::nullopt,
+               py::arg("c") = std::nullopt)
          .def("cp_cell", &geom_view_t::copy_cell, py::arg("src"),py::arg("rebuild_tree") = true)
          .def("cp_settings", &geom_view_t::copy_settings)
          .def("cp_xgeom_aux", &geom_view_t::copy_xgeom_aux)

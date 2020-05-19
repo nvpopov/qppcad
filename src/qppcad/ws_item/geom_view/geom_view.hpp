@@ -173,13 +173,13 @@ public:
                              vector3<float> &out_look_at) override ;
 
   /**
-         * @brief target_view
-         * @param _target_view
-         * @param look_from
-         * @param look_to
-         * @param look_up
-         * @param need_to_update_camera
-         */
+   * @brief target_view
+   * @param _target_view
+   * @param look_from
+   * @param look_to
+   * @param look_up
+   * @param need_to_update_camera
+   */
   void target_view(cam_tv_e target_view_src,
                    vector3<float> &look_from,
                    vector3<float> &look_to,
@@ -195,24 +195,25 @@ public:
 
   bool mouse_click(ray_t<float> *click_ray) override;
   void mouse_double_click(ray_t<float> *ray) override;
+
   /**
-         * @brief sel_atoms
-         * @param all
-         */
+   * @brief sel_atoms
+   * @param all
+   */
   void sel_atoms(bool all);
 
   /**
-         * @brief sel_atom
-         * @param atom_id
-         */
+   * @brief sel_atom
+   * @param atom_id
+   */
   void sel_atom(int atom_id);
   void toggle_atom_sel(int atom_id);
 
   /**
-         * @brief sel_atom
-         * @param atom_id
-         * @param atom_idx
-         */
+   * @brief sel_atom
+   * @param atom_id
+   * @param atom_idx
+   */
   void sel_atom(int atom_id, index atom_idx);
   void sel_visible();
 
@@ -271,6 +272,10 @@ public:
   void copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst,
                      bool copy_selected = false, bool copy_cell = true);
   void copy_cell(geom_view_t &src, bool rebuild_tree = true);
+  void set_cell(std::optional<vector3<float>> a,
+                std::optional<vector3<float>> b = std::nullopt,
+                std::optional<vector3<float>> c = std::nullopt);
+
   std::shared_ptr<ws_item_t> clone_on_the_spot();
 
   void load_color_from_static_anim();
