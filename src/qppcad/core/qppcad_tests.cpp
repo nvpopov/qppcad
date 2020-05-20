@@ -476,13 +476,22 @@ TEST_CASE("history stream test") {
     hist_doc_t<int> *hs_el1 = new hist_doc_t<int>(0);
     hist_doc_t<int> *hs_el2 = new hist_doc_t<int>(0);
 
-    hs_it1->begin_recording();
+    hs_it1->begin_recording(true);
 
     REQUIRE(hs_it1->add_hs_child(hs_el1) == hr_result_e::hr_success);
     REQUIRE(hs_it1->add_hs_child(hs_el2) == hr_result_e::hr_success);
 
+    hs_el1->set_value(25);
+    hs_el2->set_value(42);
+
     hs_it1->end_recording();
 
+    REQUIRE(hs_el1->get_cur_epoch() == 0);
+    REQUIRE(hs_el2->get_cur_epoch() == 0);
+    REQUIRE(hs_el1->is_unmodified());
+    REQUIRE(hs_el2->is_unmodified());
+    REQUIRE(hs_el1->get_value() == 25);
+    REQUIRE(hs_el2->get_value() == 42);
     REQUIRE(hs_root->add_hs_child(hs_it1) == hr_result_e::hr_success);
 
   }

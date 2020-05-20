@@ -30,6 +30,9 @@ void hist_doc_base_t::end_recording() {
   hist_doc_base_t *parent = p_super_parent ? p_super_parent : this;
   //must be true when we stop recording
   assert(parent->p_is_recording);
+
+  parent->record_impl(parent->p_init_as_base_commit);
+
   parent->p_is_recording = false;
   parent->p_init_as_base_commit = false;
   parent->p_commit_exclusive_on_change = parent->p_commit_exclusive_on_change_old;
@@ -80,22 +83,6 @@ hr_result_e hist_doc_base_t::commit_exclusive(hist_doc_base_t *child,
 }
 
 void hist_doc_base_t::on_commit_exclusive() {
-
-}
-
-hr_result_e hist_doc_base_t::record_current_state(bool init_as_base_commit) {
-
-  std::vector<hr_result_e> children_are_recorded;
-  for (auto child : p_childs)
-    if (child) children_are_recorded.push_back(child->record_current_state(init_as_base_commit));
-
-  bool all_children_are_recorded =
-      p_childs.empty() ? true : std::all_of(begin(children_are_recorded),
-                                            end(children_are_recorded),
-                                            [](hr_result_e value) {return value == hr_success;});
-
-  return all_children_are_recorded
-         && record_current_state_impl(init_as_base_commit)  == hr_success ? hr_success : hr_error;
 
 }
 
@@ -150,10 +137,6 @@ bool hist_doc_base_t::is_unmodified_impl() {
   return true;
 }
 
-hr_result_e hist_doc_base_t::record_current_state_impl(bool init_as_base_commit) {
-  return hr_result_e::hr_success;
-}
-
 void hist_doc_base_t::update_super_root(hist_doc_base_t::self_t *new_super_root) {
   p_super_parent = new_super_root;
   for (auto child : p_childs)
@@ -174,6 +157,11 @@ hr_result_e hist_doc_base_t::reset() {
 
   return self_rt == hr_result_e::hr_success && all_child_succeded ? hr_result_e::hr_success :
                                                                     hr_result_e::hr_error;
+}
+
+void hist_doc_base_t::record_impl(bool init_as_base_commit) {
+  for (auto child : p_childs)
+    if (child) child->record_impl(init_as_base_commit);
 }
 
 hr_result_e hist_doc_base_t::reset_impl() {
@@ -365,7 +353,7 @@ hr_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
 
   child->p_parent = this;
   p_childs.push_back(child);
-  update_super_root(child);
+  child->update_super_root(this);
 
   epoch_t cur_epoch = get_cur_epoch();
   auto epoch_it = find_hl(cur_epoch);

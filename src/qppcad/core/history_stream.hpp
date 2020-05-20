@@ -60,9 +60,9 @@ private:
 
 protected:
 
+  virtual void record_impl(bool init_as_base_commit);
   virtual hr_result_e reset_impl();
   virtual bool is_unmodified_impl();
-  virtual hr_result_e record_current_state_impl(bool init_as_base_commit);
   void update_super_root(self_t *new_super_root);
 
 public:
@@ -80,13 +80,6 @@ public:
    * @brief end_recording
    */
   void end_recording();
-
-  /**
-   * @brief record_current_state
-   * @param init_as_base_commit
-   * @return
-   */
-  hr_result_e record_current_state(bool init_as_base_commit = false);
 
   /**
   * @brief get_cur_epoch
@@ -319,9 +312,9 @@ protected:
     return hr_result_e::hr_success;
   }
 
-  hr_result_e record_current_state_impl(bool init_as_base_commit) override {
-    p_stored_values[get_cur_epoch()] = p_cur_value;
-    return hr_result_e::hr_success;
+  void record_impl(bool init_as_base_commit) override {
+    if (init_as_base_commit) p_stored_values[get_cur_epoch()] = p_cur_value;
+    hist_doc_base_t::record_impl(init_as_base_commit);
   }
 
 public:
