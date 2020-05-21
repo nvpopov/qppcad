@@ -476,7 +476,7 @@ TEST_CASE("history stream test") {
     hist_doc_t<int> *hs_el1 = new hist_doc_t<int>(0);
     hist_doc_t<int> *hs_el2 = new hist_doc_t<int>(0);
 
-    hs_it1->begin_recording(true);
+    hs_it1->begin_recording(true); // init as base epoch
 
     REQUIRE(hs_it1->add_hs_child(hs_el1) == hr_result_e::hr_success);
     REQUIRE(hs_it1->add_hs_child(hs_el2) == hr_result_e::hr_success);

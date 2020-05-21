@@ -166,7 +166,11 @@ namespace qpp {
 
         if (_item && _item->get_type() == T::get_type_static()) {
             T* casted_item = _item->cast_as<T>();
-            if (casted_item) load_from_stream_ex(stream, casted_item, ws);
+            if (casted_item) {
+              casted_item->begin_recording();
+              load_from_stream_ex(stream, casted_item, ws);
+              casted_item->end_recording();
+            }
           }
 
       }

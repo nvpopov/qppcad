@@ -446,7 +446,7 @@ void workspace_t::load_ws_from_json(const std::string filename) {
     json_helper::load_vec3(JSON_BG_CLR, m_bg_color, data);
 
     auto data_camera = data.find(JSON_WS_CAMERA);
-    if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());
+//    if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());
 
     if (data.find(JSON_OBJECTS) != data.end()) {
 
@@ -460,7 +460,9 @@ void workspace_t::load_ws_from_json(const std::string filename) {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
 
           if (obj) {
+            obj->begin_recording();
             obj->load_from_json(object, rep_info);
+            obj->end_recording();
             add_item_to_ws(obj);
           }
 

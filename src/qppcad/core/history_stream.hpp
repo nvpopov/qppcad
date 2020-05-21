@@ -92,7 +92,7 @@ public:
   * @param cur_epoch
   * @return
   */
-  hr_result_e set_cur_epoch(epoch_t cur_epoch);
+  hr_result_e set_cur_epoch(epoch_t cur_epoch, bool emit_event = true);
 
   /**
    * @brief on_epoch_changed
@@ -313,8 +313,14 @@ protected:
   }
 
   void record_impl(bool init_as_base_commit) override {
-    if (init_as_base_commit) p_stored_values[get_cur_epoch()] = p_cur_value;
+
+    if (init_as_base_commit) {
+      p_stored_values.clear();
+      p_stored_values[get_cur_epoch()] = p_cur_value;
+    }
+
     hist_doc_base_t::record_impl(init_as_base_commit);
+
   }
 
 public:

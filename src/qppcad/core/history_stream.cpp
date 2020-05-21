@@ -43,13 +43,13 @@ hist_doc_base_t::epoch_t hist_doc_base_t::get_cur_epoch() {
   return p_cur_epoch;
 }
 
-hr_result_e hist_doc_base_t::set_cur_epoch(hist_doc_base_t::epoch_t cur_epoch) {
+hr_result_e hist_doc_base_t::set_cur_epoch(hist_doc_base_t::epoch_t cur_epoch, bool emit_event) {
 
   auto it_ce = std::find(std::begin(p_hist_line), std::end(p_hist_line), cur_epoch);
   if (it_ce != std::end(p_hist_line)) {
     epoch_t prev_epoch = p_cur_epoch;
     p_cur_epoch = cur_epoch;
-    return on_epoch_changed(prev_epoch);
+    return emit_event ? on_epoch_changed(prev_epoch) : hr_result_e::hr_success;
   }
 
   return hr_result_e::hr_invalid_epoch;
@@ -160,8 +160,15 @@ hr_result_e hist_doc_base_t::reset() {
 }
 
 void hist_doc_base_t::record_impl(bool init_as_base_commit) {
+
+  if (init_as_base_commit) {
+    p_hist_line = {0};
+    p_cur_epoch = 0;
+  }
+
   for (auto child : p_childs)
     if (child) child->record_impl(init_as_base_commit);
+
 }
 
 hr_result_e hist_doc_base_t::reset_impl() {
