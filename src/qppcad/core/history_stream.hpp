@@ -15,7 +15,7 @@ enum hist_doc_delta_state_e {
   delta_incremental
 };
 
-enum hr_result_e {
+enum hs_result_e {
   hr_error = 0,
   hr_success = 1,
   hr_invalid_epoch = 2,
@@ -61,7 +61,7 @@ private:
 protected:
 
   virtual void record_impl(bool init_as_base_commit);
-  virtual hr_result_e reset_impl();
+  virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
   void update_super_root(self_t *new_super_root);
 
@@ -92,21 +92,21 @@ public:
   * @param cur_epoch
   * @return
   */
-  hr_result_e set_cur_epoch(epoch_t cur_epoch, bool emit_event = true);
+  hs_result_e set_cur_epoch(epoch_t cur_epoch, bool emit_event = true);
 
   /**
    * @brief on_epoch_changed
    * @param prev_epoch
    * @return
    */
-  virtual hr_result_e on_epoch_changed(epoch_t prev_epoch);
+  virtual hs_result_e on_epoch_changed(epoch_t prev_epoch);
 
   /**
    * @brief on_epoch_removed
    * @param target_epoch
    * @return
    */
-  virtual hr_result_e on_epoch_removed(epoch_t target_epoch);
+  virtual hs_result_e on_epoch_removed(epoch_t target_epoch);
 
   /**
    * @brief commit_exclusive
@@ -114,7 +114,7 @@ public:
    * @param child_epoch
    * @return
    */
-  hr_result_e commit_exclusive(hist_doc_base_t *child = nullptr,
+  hs_result_e commit_exclusive(hist_doc_base_t *child = nullptr,
                                std::optional<epoch_t> child_epoch = std::nullopt);
 
   /**
@@ -150,14 +150,14 @@ public:
    * @brief reset
    * @return
    */
-  hr_result_e reset();
+  hs_result_e reset();
 
   /**
   * @brief push_epoch insert new epoch at cursor
   * @param new_epoch
   * @return
   */
-  std::tuple<hr_result_e, std::optional<epoch_t>> push_epoch(
+  std::tuple<hs_result_e, std::optional<epoch_t>> push_epoch(
       std::optional<epoch_t> new_epoch_ex = std::nullopt,
       bool checkout_to_new_epoch = false);
 
@@ -186,7 +186,7 @@ public:
   * @param child_epoch
   * @param target_epoch
   */
-  hr_result_e augment_epoch(epoch_t target_epoch, self_t* child, epoch_t child_epoch,
+  hs_result_e augment_epoch(epoch_t target_epoch, self_t* child, epoch_t child_epoch,
                             bool alive = true);
 
   /**
@@ -203,7 +203,7 @@ public:
   * @param target_epoch
   * @return
   */
-  hr_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
+  hs_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
 
   /**
    * @brief is_child_alive
@@ -211,7 +211,7 @@ public:
    * @param child
    * @return
    */
-  hr_result_e is_child_alive(epoch_t target_epoch, self_t* child) const;
+  hs_result_e is_child_alive(epoch_t target_epoch, self_t* child) const;
 
   /**
   * @brief has_epoch
@@ -225,14 +225,14 @@ public:
   * @param target_epoch
   * @return
   */
-  hr_result_e checkout_to_epoch(epoch_t target_epoch);
+  hs_result_e checkout_to_epoch(epoch_t target_epoch);
 
   /**
    * @brief checkout_by_dist
    * @param dist
    * @return
    */
-  hr_result_e checkout_by_dist(int dist);
+  hs_result_e checkout_by_dist(int dist);
 
   /**
    * @brief can_checkout_by_dist
@@ -246,7 +246,7 @@ public:
   * @param child
   * @return
   */
-  hr_result_e add_hs_child(self_t *child);
+  hs_result_e add_hs_child(self_t *child);
 
   /**
   * @brief get_root
@@ -278,13 +278,13 @@ public:
   * @brief remove_child
   * @param child_id
   */
-  hr_result_e remove_child(size_t child_id);
+  hs_result_e remove_child(size_t child_id);
 
   /**
   * @brief remove_child
   * @param child
   */
-  hr_result_e remove_child(self_t *child);
+  hs_result_e remove_child(self_t *child);
 
   /**
   * @brief get_children_count
@@ -304,12 +304,12 @@ private:
 
 protected:
 
-  hr_result_e reset_impl() override {
-    if (p_stored_values.empty()) return hr_result_e::hr_invalid_epoch;
+  hs_result_e reset_impl() override {
+    if (p_stored_values.empty()) return hs_result_e::hr_invalid_epoch;
     auto stored_val_it = p_stored_values.find(get_cur_epoch());
-    if (stored_val_it == end(p_stored_values)) return hr_result_e::hr_invalid_epoch;
+    if (stored_val_it == end(p_stored_values)) return hs_result_e::hr_invalid_epoch;
     p_cur_value = stored_val_it->second;
-    return hr_result_e::hr_success;
+    return hs_result_e::hr_success;
   }
 
   void record_impl(bool init_as_base_commit) override {
@@ -334,16 +334,16 @@ public:
     p_stored_values[get_cur_epoch()] = p_cur_value;
   }
 
-  hr_result_e push_epoch_with_value(STYPE &&new_val,
+  hs_result_e push_epoch_with_value(STYPE &&new_val,
                                     std::optional<epoch_t> new_epoch = std::nullopt,
                                     bool checkout_to_new_epoch = false) {
 
     auto push_epoch_res = push_epoch(new_epoch, checkout_to_new_epoch);
-    if (std::get<0>(push_epoch_res) == hr_result_e::hr_success) {
+    if (std::get<0>(push_epoch_res) == hs_result_e::hr_success) {
       p_stored_values[*std::get<1>(push_epoch_res)] = new_val;
-      return hr_result_e::hr_success;
+      return hs_result_e::hr_success;
     } else {
-      return hr_result_e::hr_error;
+      return hs_result_e::hr_error;
     }
 
   }
@@ -352,43 +352,43 @@ public:
     p_stored_values[get_cur_epoch()] = p_cur_value;
   }
 
-  hr_result_e commit_value_exclusive(STYPE &&new_val,
+  hs_result_e commit_value_exclusive(STYPE &&new_val,
                                      std::optional<epoch_t> new_epoch = std::nullopt) {
 
     STYPE loc_var(new_val);
     auto push_epoch_with_value_res =
         push_epoch_with_value(std::move(loc_var), new_epoch, true);
 
-    if (push_epoch_with_value_res != hr_result_e::hr_success)
-      return hr_result_e::hr_error;
+    if (push_epoch_with_value_res != hs_result_e::hr_success)
+      return hs_result_e::hr_error;
 
     commit_exclusive();
 
-    return hr_result_e::hr_success;
+    return hs_result_e::hr_success;
 
   }
 
-  hr_result_e on_epoch_changed(epoch_t prev_epoch) override {
+  hs_result_e on_epoch_changed(epoch_t prev_epoch) override {
 
     auto cur_epoch = get_cur_epoch();
     auto val_it = p_stored_values.find(cur_epoch);
     if (val_it != p_stored_values.end()) {
       p_cur_value = val_it->second;
-      return hr_result_e::hr_success;
+      return hs_result_e::hr_success;
     } else {
-      return hr_result_e::hr_error;
+      return hs_result_e::hr_error;
     }
 
   }
 
-  hr_result_e on_epoch_removed(epoch_t epoch_to_remove) override {
+  hs_result_e on_epoch_removed(epoch_t epoch_to_remove) override {
 
     auto it = p_stored_values.find(epoch_to_remove);
     if (it != p_stored_values.end()) {
       p_stored_values.erase(it);
-      return hr_result_e::hr_success;
+      return hs_result_e::hr_success;
     } else {
-      return hr_result_e::hr_error;
+      return hs_result_e::hr_error;
     }
 
   }
@@ -405,8 +405,15 @@ public:
   }
 
   void set_value(STYPE &&new_val) {
+
+    if (p_cur_value == new_val) return;
+
     p_cur_value = new_val;
-    if (get_parent()->get_commit_exclusive_on_change()) commit_value_exclusive(STYPE(p_cur_value));
+
+    if (hist_doc_base_t *super_root = get_super_parent();
+        super_root && super_root->get_commit_exclusive_on_change())
+      commit_value_exclusive(STYPE(p_cur_value));
+
   }
 
   void set_cvalue(STYPE new_val) {

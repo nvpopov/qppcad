@@ -233,6 +233,12 @@ void workspace_t::set_best_view() {
 
 }
 
+hs_result_e workspace_t::on_epoch_changed(hist_doc_base_t::epoch_t prev_epoch) {
+  app_state_t* astate = app_state_t::get_inst();
+  astate->make_viewport_dirty();
+  return hs_result_e::hr_success;
+}
+
 void workspace_t::render() {
 
   app_state_t* astate = app_state_t::get_inst();

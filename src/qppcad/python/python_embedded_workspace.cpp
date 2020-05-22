@@ -136,6 +136,18 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .value("tv_auto", tv_auto, "tv_auto")
       .export_values();
 
+  /*hr result*/
+  py::enum_<hs_result_e>(m, "hs_result_e", py::arithmetic(), "")
+      .value("hr_error", hr_error, "hr_error")
+      .value("hr_success", hr_success, "hr_success")
+      .value("hr_invalid_epoch", hr_invalid_epoch, "hr_invalid_epoch")
+      .value("hr_epoch_ill_defined", hr_epoch_ill_defined, "hr_epoch_ill_defined")
+      .value("hr_invalid_child", hr_invalid_child, "hr_invalid_child")
+      .value("hr_invalid_child_epoch", hr_invalid_child_epoch, "hr_invalid_child_epoch")
+      .value("hr_true", hr_true, "hr_true")
+      .value("hr_false", hr_false, "hr_false")
+      .export_values();
+
   /* workspace_manager_t pybindings */
   py::class_<workspace_manager_t,  std::shared_ptr<workspace_manager_t>>
       py_workspace_manager_t(m, "workspace_manager_t");
@@ -199,7 +211,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr)
       .def("get_cur_epoch", &workspace_t::get_cur_epoch)
-      .def("get_children_count", &workspace_t::get_children_count);
+      .def("get_children_count", &workspace_t::get_children_count)
+      .def("set_commit_exclusive_on_change", &workspace_t::set_commit_exclusive_on_change)
+      .def("checkout_by_dist", &workspace_t::checkout_by_dist);
 
   /* aabb_3d_t pybindings */
   py::class_<aabb_3d_t<float>, std::shared_ptr<aabb_3d_t<float>>> py_aabb_3d_t(m, "aabb_3d_t");
@@ -243,7 +257,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def_readwrite("offset", &ws_item_t::m_leader_offset)
       .def("bb", [](ws_item_t &src){return src.m_aabb;})
       .def("get_cur_epoch", &ws_item_t::get_cur_epoch)
-      .def("get_children_count", &ws_item_t::get_children_count);
+      .def("get_children_count", &ws_item_t::get_children_count)
+      .def("checkout_dy_dist", &ws_item_t::checkout_by_dist)
+      .def("set_commit_exclusive_on_change", &ws_item_t::set_commit_exclusive_on_change);
 
   /* per ws_item_t types pybindings */
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);

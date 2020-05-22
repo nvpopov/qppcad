@@ -101,6 +101,8 @@ public:
   void reset_cam();
   void set_best_view();
 
+  hs_result_e on_epoch_changed(epoch_t prev_epoch) override;
+
   void del_item_by_index(size_t idx);
   void make_overview_dirty();
   std::string py_get_repr();
