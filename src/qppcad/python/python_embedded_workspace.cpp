@@ -138,14 +138,14 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   /*hr result*/
   py::enum_<hs_result_e>(m, "hs_result_e", py::arithmetic(), "")
-      .value("hr_error", hr_error, "hr_error")
-      .value("hr_success", hr_success, "hr_success")
-      .value("hr_invalid_epoch", hr_invalid_epoch, "hr_invalid_epoch")
-      .value("hr_epoch_ill_defined", hr_epoch_ill_defined, "hr_epoch_ill_defined")
-      .value("hr_invalid_child", hr_invalid_child, "hr_invalid_child")
-      .value("hr_invalid_child_epoch", hr_invalid_child_epoch, "hr_invalid_child_epoch")
-      .value("hr_true", hr_true, "hr_true")
-      .value("hr_false", hr_false, "hr_false")
+      .value("hr_error", hs_error, "hr_error")
+      .value("hr_success", hs_success, "hr_success")
+      .value("hr_invalid_epoch", hs_invalid_epoch, "hr_invalid_epoch")
+      .value("hr_epoch_ill_defined", hs_epoch_ill_defined, "hr_epoch_ill_defined")
+      .value("hr_invalid_child", hs_invalid_child, "hr_invalid_child")
+      .value("hr_invalid_child_epoch", hs_invalid_child_epoch, "hr_invalid_child_epoch")
+      .value("hr_true", hs_true, "hr_true")
+      .value("hr_false", hs_false, "hr_false")
       .export_values();
 
   /* workspace_manager_t pybindings */
@@ -213,7 +213,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("get_cur_epoch", &workspace_t::get_cur_epoch)
       .def("get_children_count", &workspace_t::get_children_count)
       .def("set_commit_exclusive_on_change", &workspace_t::set_commit_exclusive_on_change)
-      .def("checkout_by_dist", &workspace_t::checkout_by_dist);
+      .def("checkout_by_dist", &workspace_t::checkout_by_dist)
+      .def("undo", [](workspace_t &ws){ws.checkout_by_dist(-1);})
+      .def("redo", [](workspace_t &ws){ws.checkout_by_dist(1);});
 
   /* aabb_3d_t pybindings */
   py::class_<aabb_3d_t<float>, std::shared_ptr<aabb_3d_t<float>>> py_aabb_3d_t(m, "aabb_3d_t");

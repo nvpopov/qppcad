@@ -16,14 +16,14 @@ enum hist_doc_delta_state_e {
 };
 
 enum hs_result_e {
-  hr_error = 0,
-  hr_success = 1,
-  hr_invalid_epoch = 2,
-  hr_epoch_ill_defined = 3,
-  hr_invalid_child = 4,
-  hr_invalid_child_epoch = 5,
-  hr_true = 6,
-  hr_false = 7
+  hs_error = 0,
+  hs_success = 1,
+  hs_invalid_epoch = 2,
+  hs_epoch_ill_defined = 3,
+  hs_invalid_child = 4,
+  hs_invalid_child_epoch = 5,
+  hs_true = 6,
+  hs_false = 7
 };
 
 //Stores augment meta info for each child in each parent's epoch
@@ -197,6 +197,14 @@ public:
   size_t get_augmented_count(epoch_t target_epoch) const;
 
   /**
+   * @brief is_augmented_by
+   * @param target_epoch
+   * @param child
+   * @return
+   */
+  bool is_augmented_by(epoch_t target_epoch, self_t *child);
+
+  /**
   * @brief remove_augment_from_epoch
   * @param child
   * @param child_epoch
@@ -305,11 +313,11 @@ private:
 protected:
 
   hs_result_e reset_impl() override {
-    if (p_stored_values.empty()) return hs_result_e::hr_invalid_epoch;
+    if (p_stored_values.empty()) return hs_result_e::hs_invalid_epoch;
     auto stored_val_it = p_stored_values.find(get_cur_epoch());
-    if (stored_val_it == end(p_stored_values)) return hs_result_e::hr_invalid_epoch;
+    if (stored_val_it == end(p_stored_values)) return hs_result_e::hs_invalid_epoch;
     p_cur_value = stored_val_it->second;
-    return hs_result_e::hr_success;
+    return hs_result_e::hs_success;
   }
 
   void record_impl(bool init_as_base_commit) override {
@@ -339,11 +347,11 @@ public:
                                     bool checkout_to_new_epoch = false) {
 
     auto push_epoch_res = push_epoch(new_epoch, checkout_to_new_epoch);
-    if (std::get<0>(push_epoch_res) == hs_result_e::hr_success) {
+    if (std::get<0>(push_epoch_res) == hs_result_e::hs_success) {
       p_stored_values[*std::get<1>(push_epoch_res)] = new_val;
-      return hs_result_e::hr_success;
+      return hs_result_e::hs_success;
     } else {
-      return hs_result_e::hr_error;
+      return hs_result_e::hs_error;
     }
 
   }
@@ -359,12 +367,12 @@ public:
     auto push_epoch_with_value_res =
         push_epoch_with_value(std::move(loc_var), new_epoch, true);
 
-    if (push_epoch_with_value_res != hs_result_e::hr_success)
-      return hs_result_e::hr_error;
+    if (push_epoch_with_value_res != hs_result_e::hs_success)
+      return hs_result_e::hs_error;
 
     commit_exclusive();
 
-    return hs_result_e::hr_success;
+    return hs_result_e::hs_success;
 
   }
 
@@ -374,9 +382,9 @@ public:
     auto val_it = p_stored_values.find(cur_epoch);
     if (val_it != p_stored_values.end()) {
       p_cur_value = val_it->second;
-      return hs_result_e::hr_success;
+      return hs_result_e::hs_success;
     } else {
-      return hs_result_e::hr_error;
+      return hs_result_e::hs_error;
     }
 
   }
@@ -386,9 +394,9 @@ public:
     auto it = p_stored_values.find(epoch_to_remove);
     if (it != p_stored_values.end()) {
       p_stored_values.erase(it);
-      return hs_result_e::hr_success;
+      return hs_result_e::hs_success;
     } else {
-      return hs_result_e::hr_error;
+      return hs_result_e::hs_error;
     }
 
   }
@@ -406,7 +414,13 @@ public:
 
   void set_value(STYPE &&new_val) {
 
-    if (p_cur_value == new_val) return;
+    if constexpr (std::is_floating_point<STYPE>::value) {
+      if (std::fabs(p_cur_value - new_val) < std::numeric_limits<STYPE>::epsilon())
+        return;
+    } else {
+      if (p_cur_value == new_val)
+        return;
+    }
 
     p_cur_value = new_val;
 

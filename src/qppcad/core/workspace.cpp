@@ -234,9 +234,27 @@ void workspace_t::set_best_view() {
 }
 
 hs_result_e workspace_t::on_epoch_changed(hist_doc_base_t::epoch_t prev_epoch) {
+
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
-  return hs_result_e::hr_success;
+
+  //
+  epoch_t cur_epoch = get_cur_epoch();
+  bool affected{false};
+
+  for (size_t i = 0; i < get_children_count(); i++)
+    if (is_child_alive(cur_epoch, get_child(i))) {
+      ws_item_t *itm = dynamic_cast<ws_item_t *>(get_child(i));
+      if (itm) {
+        opt<size_t> chd_idx = get_item_idx(itm);
+        if (chd_idx && itm->is_selected()) affected = true;
+      }
+    }
+
+  astate->astate_evd->cur_ws_selected_item_changed();
+
+  return hs_result_e::hs_success;
+
 }
 
 void workspace_t::render() {
