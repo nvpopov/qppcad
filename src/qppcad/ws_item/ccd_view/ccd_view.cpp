@@ -9,8 +9,11 @@ using namespace qpp::cad;
 ccd_view_t::ccd_view_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
-  m_copy_charges.set_value(ccd_copy_charges_mode::do_not_copy_charges);
+
+  begin_recording(true);
   add_hs_child(&m_copy_charges);
+  m_copy_charges.set_value(ccd_copy_charges_mode::do_not_copy_charges);
+  end_recording();
 
 }
 

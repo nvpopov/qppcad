@@ -204,14 +204,10 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
 
     p_hist_line.insert(cur_epoch_iter + 1, new_epoch);
 
-    auto er_start = cur_epoch_iter + 2;
-    auto er_end = end(p_hist_line);
-
-    std::vector<epoch_t> epochs_to_delete{er_start, er_end};
-    for (auto epoch_to_delete : epochs_to_delete)
-      on_epoch_removed(epoch_to_delete);
-
     cur_epoch_idx++;
+    for (size_t i = cur_epoch_idx; i < p_hist_line.size(); i++)
+      on_epoch_removed(p_hist_line[i]);
+
     p_hist_line.resize(cur_epoch_idx + 1);
 
     if (checkout_to_new_epoch) checkout_to_epoch(new_epoch);

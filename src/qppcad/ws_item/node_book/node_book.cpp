@@ -15,8 +15,15 @@ node_book_t::node_book_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
 
-  m_highlight_dirty_nodes.set_value(false); add_hs_child(&m_highlight_dirty_nodes);
-  m_auto_recompute.set_value(true); add_hs_child(&m_auto_recompute);
+  begin_recording(true);
+
+  add_hs_child(&m_highlight_dirty_nodes);
+  add_hs_child(&m_auto_recompute);
+
+  m_highlight_dirty_nodes.set_value(false);
+  m_auto_recompute.set_value(true);
+
+  end_recording();
 
   m_scene = new node_book_graphics_scene_t(nullptr);
   m_scene->m_parent_node_book = this;
@@ -48,9 +55,9 @@ void node_book_t::update(float delta_time) {
   ws_item_t::update(delta_time);
 
   if (m_sflow_context->is_finished()) {
-      update_output_values();
-      if (m_sflow_context->is_force_execute()) execute();
-    }
+    update_output_values();
+    if (m_sflow_context->is_force_execute()) execute();
+  }
 
 }
 
@@ -82,85 +89,85 @@ void node_book_t::save_to_json(json &data) {
   //store nodes
   for (size_t i = 0; i < m_scene->m_nodes.size(); i++) {
 
-      //build lookup
-      nds_lkp.insert({m_scene->m_nodes[i].get(), i});
-      for (size_t q = 0; q < m_scene->m_nodes[i]->m_inp_sockets.size(); q++)
-        isck_lkp.insert({m_scene->m_nodes[i]->m_inp_sockets[q].get(), q});
-      for (size_t q = 0; q < m_scene->m_nodes[i]->m_out_sockets.size(); q++)
-        osck_lkp.insert({m_scene->m_nodes[i]->m_out_sockets[q].get(), q});
+    //build lookup
+    nds_lkp.insert({m_scene->m_nodes[i].get(), i});
+    for (size_t q = 0; q < m_scene->m_nodes[i]->m_inp_sockets.size(); q++)
+      isck_lkp.insert({m_scene->m_nodes[i]->m_inp_sockets[q].get(), q});
+    for (size_t q = 0; q < m_scene->m_nodes[i]->m_out_sockets.size(); q++)
+      osck_lkp.insert({m_scene->m_nodes[i]->m_out_sockets[q].get(), q});
 
-      auto node = m_scene->m_nodes[i]->m_sf_node;
+    auto node = m_scene->m_nodes[i]->m_sf_node;
 
-      json node_json;
-      node_json[JSON_NODE_BOOK_NODE_TYPEHASH] = node->m_node_type_hash;
+    json node_json;
+    node_json[JSON_NODE_BOOK_NODE_TYPEHASH] = node->m_node_type_hash;
 
-      //get node type name
-      auto it1 = bhv_mgr->m_sflow_node_info.find(node->m_node_type_hash);
+    //get node type name
+    auto it1 = bhv_mgr->m_sflow_node_info.find(node->m_node_type_hash);
 
-      if (it1 != bhv_mgr->m_sflow_node_info.end()) {
-          node_json[JSON_NODE_BOOK_NODE_TYPENAME] = it1->second.m_full_name;
-        }
-
-      //store node coords
-      json coords = json::array({});
-      coords.push_back(m_scene->m_nodes[i]->x());
-      coords.push_back(m_scene->m_nodes[i]->y());
-
-      node_json[JSON_NODE_BOOK_NODE_COORD] = coords;
-
-      //store inplace parameters
-      if (node->m_ipl.size() == node->m_ipl_schema.size()) {
-          json inplace_parameters;
-          for (size_t i = 0; i < node->m_ipl.size(); i++)
-            if (node->m_ipl[i] && node->m_ipl_schema[i].m_editable) {
-
-                json inplace_parameter;
-
-                inplace_parameter[JSON_NODE_BOOK_INPLACE_NAME] = node->m_ipl_schema[i].m_sck_name;
-                inplace_parameter[JSON_NODE_BOOK_INPLACE_TYPE] = node->m_ipl[i]->get_param_meta();
-
-                bool value_is_set{false};
-                switch (node->m_ipl_schema[i].m_type) {
-
-                  case sf_parameter_e::sfpar_int: {
-                      value_is_set = true;
-                      auto as_int = node->m_ipl[i]->cast_as<sf_parameter_int_t>();
-                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value.get_value();
-                      break;
-                    }
-
-                  case sf_parameter_e::sfpar_float: {
-                      value_is_set = true;
-                      auto as_float = node->m_ipl[i]->cast_as<sf_parameter_float_t>();
-                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value.get_value();
-                      break;
-                    }
-
-                  case sf_parameter_e::sfpar_bool: {
-                      value_is_set = true;
-                      auto as_bool = node->m_ipl[i]->cast_as<sf_parameter_bool_t>();
-                      inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value.get_value();
-                      break;
-                    }
-
-                  default:{
-                      break;
-                    }
-
-                  } // end of switch
-
-                if (value_is_set) inplace_parameters.push_back(inplace_parameter);
-
-              } // end of cycle over nodes
-
-          if (!inplace_parameters.empty())
-            node_json[JSON_NODE_BOOK_INPLACE_PARAMETERS] = inplace_parameters;
-
-        } // end of if
-
-      nodes.push_back(node_json);
-
+    if (it1 != bhv_mgr->m_sflow_node_info.end()) {
+      node_json[JSON_NODE_BOOK_NODE_TYPENAME] = it1->second.m_full_name;
     }
+
+    //store node coords
+    json coords = json::array({});
+    coords.push_back(m_scene->m_nodes[i]->x());
+    coords.push_back(m_scene->m_nodes[i]->y());
+
+    node_json[JSON_NODE_BOOK_NODE_COORD] = coords;
+
+    //store inplace parameters
+    if (node->m_ipl.size() == node->m_ipl_schema.size()) {
+      json inplace_parameters;
+      for (size_t i = 0; i < node->m_ipl.size(); i++)
+        if (node->m_ipl[i] && node->m_ipl_schema[i].m_editable) {
+
+          json inplace_parameter;
+
+          inplace_parameter[JSON_NODE_BOOK_INPLACE_NAME] = node->m_ipl_schema[i].m_sck_name;
+          inplace_parameter[JSON_NODE_BOOK_INPLACE_TYPE] = node->m_ipl[i]->get_param_meta();
+
+          bool value_is_set{false};
+          switch (node->m_ipl_schema[i].m_type) {
+
+          case sf_parameter_e::sfpar_int: {
+            value_is_set = true;
+            auto as_int = node->m_ipl[i]->cast_as<sf_parameter_int_t>();
+            inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_int->m_value.get_value();
+            break;
+          }
+
+          case sf_parameter_e::sfpar_float: {
+            value_is_set = true;
+            auto as_float = node->m_ipl[i]->cast_as<sf_parameter_float_t>();
+            inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_float->m_value.get_value();
+            break;
+          }
+
+          case sf_parameter_e::sfpar_bool: {
+            value_is_set = true;
+            auto as_bool = node->m_ipl[i]->cast_as<sf_parameter_bool_t>();
+            inplace_parameter[JSON_NODE_BOOK_INPLACE_VALUE] = as_bool->m_value.get_value();
+            break;
+          }
+
+          default:{
+            break;
+          }
+
+          } // end of switch
+
+          if (value_is_set) inplace_parameters.push_back(inplace_parameter);
+
+        } // end of cycle over nodes
+
+      if (!inplace_parameters.empty())
+        node_json[JSON_NODE_BOOK_INPLACE_PARAMETERS] = inplace_parameters;
+
+    } // end of if
+
+    nodes.push_back(node_json);
+
+  }
 
   data[JSON_NODE_BOOK_NODES] = nodes;
 
@@ -169,26 +176,26 @@ void node_book_t::save_to_json(json &data) {
 
   for (size_t i = 0; i < m_scene->m_connections.size(); i++) {
 
-      auto connection = m_scene->m_connections[i];
-      auto inode_itr = nds_lkp.find(connection->m_inp_socket->m_node.get());
-      auto onode_itr = nds_lkp.find(connection->m_out_socket->m_node.get());
-      auto isck_itr  = isck_lkp.find(connection->m_inp_socket);
-      auto osck_itr  = osck_lkp.find(connection->m_out_socket);
+    auto connection = m_scene->m_connections[i];
+    auto inode_itr = nds_lkp.find(connection->m_inp_socket->m_node.get());
+    auto onode_itr = nds_lkp.find(connection->m_out_socket->m_node.get());
+    auto isck_itr  = isck_lkp.find(connection->m_inp_socket);
+    auto osck_itr  = osck_lkp.find(connection->m_out_socket);
 
-      if (inode_itr != nds_lkp.end() && onode_itr != nds_lkp.end()
-          && isck_itr != isck_lkp.end() && osck_itr != osck_lkp.end()) {
+    if (inode_itr != nds_lkp.end() && onode_itr != nds_lkp.end()
+        && isck_itr != isck_lkp.end() && osck_itr != osck_lkp.end()) {
 
-          json connection_json;
-          connection_json[JSON_NODE_BOOK_CONNECTIONS_INODE] = inode_itr->second;
-          connection_json[JSON_NODE_BOOK_CONNECTIONS_ISCK] = isck_itr->second;
-          connection_json[JSON_NODE_BOOK_CONNECTIONS_ONODE] = onode_itr->second;
-          connection_json[JSON_NODE_BOOK_CONNECTIONS_OSCK] = osck_itr->second;
+      json connection_json;
+      connection_json[JSON_NODE_BOOK_CONNECTIONS_INODE] = inode_itr->second;
+      connection_json[JSON_NODE_BOOK_CONNECTIONS_ISCK] = isck_itr->second;
+      connection_json[JSON_NODE_BOOK_CONNECTIONS_ONODE] = onode_itr->second;
+      connection_json[JSON_NODE_BOOK_CONNECTIONS_OSCK] = osck_itr->second;
 
-          connections.push_back(connection_json);
-
-        }
+      connections.push_back(connection_json);
 
     }
+
+  }
 
   data[JSON_NODE_BOOK_CONNECTIONS] = connections;
 
@@ -209,91 +216,91 @@ void node_book_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   if (nodes_itr != data.end())
     for (auto &node_ref : nodes_itr.value()) {
 
-        auto nodehash_itr = node_ref.find(JSON_NODE_BOOK_NODE_TYPEHASH);
-        auto pos_itr = node_ref.find(JSON_NODE_BOOK_NODE_COORD);
-        if (pos_itr != node_ref.end() && nodehash_itr != node_ref.end()) {
+      auto nodehash_itr = node_ref.find(JSON_NODE_BOOK_NODE_TYPEHASH);
+      auto pos_itr = node_ref.find(JSON_NODE_BOOK_NODE_COORD);
+      if (pos_itr != node_ref.end() && nodehash_itr != node_ref.end()) {
 
-            qreal node_x = pos_itr.value()[0].get<double>();
-            qreal node_y = pos_itr.value()[1].get<double>();
+        qreal node_x = pos_itr.value()[0].get<double>();
+        qreal node_y = pos_itr.value()[1].get<double>();
 
-            auto new_node = m_scene->construct_new_node(QPointF(node_x, node_y),
-                                                        nodehash_itr.value().get<size_t>());
+        auto new_node = m_scene->construct_new_node(QPointF(node_x, node_y),
+                                                    nodehash_itr.value().get<size_t>());
 
-            //load inplace parameters
+        //load inplace parameters
 
-            auto ipls_itr = node_ref.find(JSON_NODE_BOOK_INPLACE_PARAMETERS);
-            new_node->m_sf_node->explicit_create_ipl();
+        auto ipls_itr = node_ref.find(JSON_NODE_BOOK_INPLACE_PARAMETERS);
+        new_node->m_sf_node->explicit_create_ipl();
 
-            if (ipls_itr != node_ref.end()) {
+        if (ipls_itr != node_ref.end()) {
 
-                auto &json_ipls = ipls_itr.value();
+          auto &json_ipls = ipls_itr.value();
 
-                for (auto &json_ipl : json_ipls) {
+          for (auto &json_ipl : json_ipls) {
 
-                    auto iplname_itr = json_ipl.find(JSON_NODE_BOOK_INPLACE_NAME);
-                    if (iplname_itr != json_ipl.end()) {
+            auto iplname_itr = json_ipl.find(JSON_NODE_BOOK_INPLACE_NAME);
+            if (iplname_itr != json_ipl.end()) {
 
-                        std::string iplname = ipls_itr.value();
+              std::string iplname = ipls_itr.value();
 
-//                        auto find_fn =
-//                            [&iplname](auto ipl_schema){return ipl_schema.m_sck == iplname;};
+              //                        auto find_fn =
+              //                            [&iplname](auto ipl_schema){return ipl_schema.m_sck == iplname;};
 
-//                        auto find_itr = std::find_if(std::begin(new_node->m_sf_node->m_ipl_schema),
-//                                                     std::end(new_node->m_sf_node->m_ipl_schema),
-//                                                     find_fn);
+              //                        auto find_itr = std::find_if(std::begin(new_node->m_sf_node->m_ipl_schema),
+              //                                                     std::end(new_node->m_sf_node->m_ipl_schema),
+              //                                                     find_fn);
 
-//                        if (find_itr != new_node->m_sf_node->m_ipl_schema.end()) {
+              //                        if (find_itr != new_node->m_sf_node->m_ipl_schema.end()) {
 
-//                            auto ipl_idx = std::distance(new_node->m_sf_node->m_ipl_schema.begin(),
-//                                                         find_itr);
+              //                            auto ipl_idx = std::distance(new_node->m_sf_node->m_ipl_schema.begin(),
+              //                                                         find_itr);
 
-//                            if (ipl_idx < new_node->m_sf_node->m_ipl.size()
-//                                && new_node->m_sf_node->m_ipl[ipl_idx]) {
+              //                            if (ipl_idx < new_node->m_sf_node->m_ipl.size()
+              //                                && new_node->m_sf_node->m_ipl[ipl_idx]) {
 
-//                              }
+              //                              }
 
-//                          }
+              //                          }
 
-                      }
-
-                  }
-
-              }
-
-
-            nds_lkp.insert({new_node.get(), nds_idx});
-            nds_idx++;
+            }
 
           }
 
+        }
+
+
+        nds_lkp.insert({new_node.get(), nds_idx});
+        nds_idx++;
+
       }
+
+    }
 
   auto connection_itr = data.find(JSON_NODE_BOOK_CONNECTIONS);
   if (connection_itr != data.end()) {
 
-      for (auto &connection : connection_itr.value()) {
+    for (auto &connection : connection_itr.value()) {
 
-          auto inode_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_INODE);
-          auto onode_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_ONODE);
-          auto isck_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_ISCK);
-          auto osck_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_OSCK);
+      auto inode_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_INODE);
+      auto onode_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_ONODE);
+      auto isck_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_ISCK);
+      auto osck_itr = connection.find(JSON_NODE_BOOK_CONNECTIONS_OSCK);
 
-          if (inode_itr != connection.end() && onode_itr != connection.end()
-              && isck_itr != connection.end() && osck_itr != connection.end()) {
-              m_scene->add_connection(inode_itr.value().get<size_t>(),
-                                      onode_itr.value().get<size_t>(),
-                                      isck_itr.value().get<size_t>(),
-                                      osck_itr.value().get<size_t>());
-              //                            fmt::print("@@@@@ {} {} {} {}",inode_itr.value().get<size_t>(),
-              //                                                    onode_itr.value().get<size_t>(),
-              //                                                    isck_itr.value().get<size_t>(),
-              //                                                    osck_itr.value().get<size_t>());
-            }
+      if (inode_itr != connection.end() && onode_itr != connection.end()
+          && isck_itr != connection.end() && osck_itr != connection.end()) {
+        m_scene->add_connection(inode_itr.value().get<size_t>(),
+                                onode_itr.value().get<size_t>(),
+                                isck_itr.value().get<size_t>(),
+                                osck_itr.value().get<size_t>());
+        //                            fmt::print("@@@@@ {} {} {} {}",inode_itr.value().get<size_t>(),
+        //                                                    onode_itr.value().get<size_t>(),
+        //                                                    isck_itr.value().get<size_t>(),
+        //                                                    osck_itr.value().get<size_t>());
+      }
 
-
-        }
 
     }
+
+  }
 
 }
 
@@ -306,9 +313,9 @@ void node_book_t::execute() {
   if (!m_sflow_context) return;
 
   if (m_sflow_context->is_running()) {
-      m_sflow_context->force_execute();
-      return;
-    }
+    m_sflow_context->force_execute();
+    return;
+  }
 
   m_sflow_context->clear_context();
 
@@ -337,47 +344,47 @@ void node_book_t::update_output_values() {
     for (size_t i = 0; i < elem->m_inplace_wdgts.size(); i++)
       if (elem->m_inplace_wdgts[i]) {
 
-          switch (elem->m_sf_node->m_ipl_schema[i].m_type) {
+        switch (elem->m_sf_node->m_ipl_schema[i].m_type) {
 
-            case sf_parameter_e::sfpar_int : {
-                qbinded_int_spinbox_t *c_int_sb =
-                    qobject_cast<qbinded_int_spinbox_t*>(elem->m_inplace_wdgts[i]);
-                if (c_int_sb) c_int_sb->load_value_ex();
-                break;
-              }
+        case sf_parameter_e::sfpar_int : {
+          qbinded_int_spinbox_t *c_int_sb =
+              qobject_cast<qbinded_int_spinbox_t*>(elem->m_inplace_wdgts[i]);
+          if (c_int_sb) c_int_sb->load_value_ex();
+          break;
+        }
 
-            case sf_parameter_e::sfpar_float : {
-                qbinded_float_spinbox_t *c_f_sb =
-                    qobject_cast<qbinded_float_spinbox_t*>(elem->m_inplace_wdgts[i]);
-                if (c_f_sb) c_f_sb->load_value_ex();
-                break;
-              }
+        case sf_parameter_e::sfpar_float : {
+          qbinded_float_spinbox_t *c_f_sb =
+              qobject_cast<qbinded_float_spinbox_t*>(elem->m_inplace_wdgts[i]);
+          if (c_f_sb) c_f_sb->load_value_ex();
+          break;
+        }
 
-            case sf_parameter_e::sfpar_v3f : {
-                qbinded_float3_input_t *c_v3f =
-                    qobject_cast<qbinded_float3_input_t*>(elem->m_inplace_wdgts[i]);
-                if (c_v3f) c_v3f->load_value_ex();
-                break;
-              }
+        case sf_parameter_e::sfpar_v3f : {
+          qbinded_float3_input_t *c_v3f =
+              qobject_cast<qbinded_float3_input_t*>(elem->m_inplace_wdgts[i]);
+          if (c_v3f) c_v3f->load_value_ex();
+          break;
+        }
 
-              //              case sflow_parameter_e::sfpar_ws_item : {
-              //                  qbinded_ws_item_combobox_t *c_wsi =
-              //                      qobject_cast<qbinded_ws_item_combobox_t*>(wdgt);
-              //                  if (c_wsi) c_wsi->load_value();
-              //                  break;
-              //                }
+          //              case sflow_parameter_e::sfpar_ws_item : {
+          //                  qbinded_ws_item_combobox_t *c_wsi =
+          //                      qobject_cast<qbinded_ws_item_combobox_t*>(wdgt);
+          //                  if (c_wsi) c_wsi->load_value();
+          //                  break;
+          //                }
 
-            case sf_parameter_e::sfpar_bool : {
-                break;
-              }
+        case sf_parameter_e::sfpar_bool : {
+          break;
+        }
 
-            default : {
-                break;
-              }
-
-            }
+        default : {
+          break;
+        }
 
         }
+
+      }
 
 }
 

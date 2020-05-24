@@ -9,12 +9,12 @@ py_note_book_t::py_note_book_t() : ws_item_t() {
 }
 
 void py_note_book_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                          vector3<float> &out_look_at) {
+                                           vector3<float> &out_look_at) {
   //do nothing
 }
 
 void py_note_book_t::render() {
- //do nothing
+  //do nothing
 }
 
 bool py_note_book_t::mouse_click(ray_t<float> *click_ray) {

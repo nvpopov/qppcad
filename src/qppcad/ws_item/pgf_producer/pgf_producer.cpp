@@ -15,12 +15,12 @@ pgf_producer_t::pgf_producer_t() {
 }
 
 void pgf_producer_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                          vector3<float> &out_look_at) {
+                                           vector3<float> &out_look_at) {
   //do nothing
 }
 
 void pgf_producer_t::render() {
- //do nothing
+  //do nothing
 }
 
 bool pgf_producer_t::mouse_click(ray_t<float> *click_ray) {
@@ -70,12 +70,12 @@ void pgf_producer_t::compose_from_array_group() {
   astate->tlog("pgf_producer_t::compose_from_array_group() ->");
   for (size_t i = 0; i < m_orders_range.size(); i++) {
     m_orders_range[i].set_value({0,  0, m_imd.cell.end()(i)});
-//      astate->tlog(" m_orders_range[{}] = [0] = {}, [1] = {}, [2] = {}",
-//                   i,
-//                   m_orders_range[i][0],
-//                   m_orders_range[i][1],
-//                   m_orders_range[i][2]);
-    }
+    //      astate->tlog(" m_orders_range[{}] = [0] = {}, [1] = {}, [2] = {}",
+    //                   i,
+    //                   m_orders_range[i][0],
+    //                   m_orders_range[i][1],
+    //                   m_orders_range[i][2]);
+  }
 
 }
 
@@ -132,33 +132,33 @@ void pgf_producer_t::generate_geom() {
   //generate geom
   if (m_orders_range.size() == m_imd.DIM) {
 
-      astate->tlog("pgf_producer_t::generate_geom() entering in generation process");
+    astate->tlog("pgf_producer_t::generate_geom() entering in generation process");
 
-      size_t DIM = m_imd.DIM;
+    size_t DIM = m_imd.DIM;
 
-      index gen_begin = index::D(DIM);
-      index gen_end = index::D(DIM);
+    index gen_begin = index::D(DIM);
+    index gen_end = index::D(DIM);
 
-      for (size_t i = 0; i < DIM; i++) {
-        auto orders_range = m_orders_range[i].get_value();
-        gen_begin(i) = orders_range[0];
-        gen_end(i) = orders_range[1];
-      }
-
-      astate->tlog("pgf_producer_t::generate_geom() copying atoms to intermediate");
-      for (size_t i = 0; i < m_src_gv->m_geom->nat(); i++)
-        m_imd.add(m_src_gv->m_geom->atom_name(i), m_src_gv->m_geom->pos(i));
-
-      astate->tlog("pgf_producer_t::generate_geom() replicate");
-      replicate(*(m_dst_gv->m_geom.get()),
-                m_imd,
-                m_imd.cell,
-                m_imd.cell._begin,
-                m_imd.cell._end);
-
-      astate->tlog("pgf_producer_t::generate_geom() exiting in generation process");
-
+    for (size_t i = 0; i < DIM; i++) {
+      auto orders_range = m_orders_range[i].get_value();
+      gen_begin(i) = orders_range[0];
+      gen_end(i) = orders_range[1];
     }
+
+    astate->tlog("pgf_producer_t::generate_geom() copying atoms to intermediate");
+    for (size_t i = 0; i < m_src_gv->m_geom->nat(); i++)
+      m_imd.add(m_src_gv->m_geom->atom_name(i), m_src_gv->m_geom->pos(i));
+
+    astate->tlog("pgf_producer_t::generate_geom() replicate");
+    replicate(*(m_dst_gv->m_geom.get()),
+              m_imd,
+              m_imd.cell,
+              m_imd.cell._begin,
+              m_imd.cell._end);
+
+    astate->tlog("pgf_producer_t::generate_geom() exiting in generation process");
+
+  }
 
   m_dst_gv->m_tws_tr->do_action(act_rebuild_all);
 
@@ -174,70 +174,70 @@ void pgf_producer_t::updated_externally(uint32_t update_reason) {
 
   if (update_reason & ws_item_updf_generic) {
 
-      auto clean_intermediates = [this]() {
-          this->m_src_gv = nullptr;
-          this->m_dst_gv = nullptr;
-          this->m_sg_psg = nullptr;
-        };
+    auto clean_intermediates = [this]() {
+      this->m_src_gv = nullptr;
+      this->m_dst_gv = nullptr;
+      this->m_sg_psg = nullptr;
+    };
 
-      //check src
-      if (!m_src) {
-          clean_intermediates();
-          astate->log("pgf_producer_t::updated_internally() !m_src");
-          return;
-        }
-
-      auto _src_as_gv = m_src->cast_as<geom_view_t>();
-      if (!_src_as_gv) {
-          astate->log("pgf_producer_t::updated_internally() !_src_as_gv");
-          clean_intermediates();
-          return;
-        }
-
-      m_src_gv = _src_as_gv;
-
-      if (m_src == m_dst) {
-          astate->log("pgf_producer_t::updated_internally() m_src == m_dst");
-          clean_intermediates();
-          return;
-        }
-
-      //check dst
-      if (!m_dst) {
-          astate->log("pgf_producer_t::updated_internally() !m_dst");
-          clean_intermediates();
-          return;
-        }
-
-      auto _dst_as_gv = m_dst->cast_as<geom_view_t>();
-      if (!_dst_as_gv) {
-          astate->log("pgf_producer_t::updated_internally() _dst_as_gv");
-          clean_intermediates();
-          return;
-        }
-
-      m_dst_gv = _dst_as_gv;
-
-      //check psg
-      if (!m_psg) {
-          astate->log("pgf_producer_t::updated_internally() !m_ag");
-          clean_intermediates();
-          return;
-        }
-
-      auto _ag_as_psg = m_psg->cast_as<psg_view_t>();
-      if (!_ag_as_psg) {
-          astate->log("pgf_producer_t::updated_internally() !_ag_as_psg");
-          clean_intermediates();
-          return;
-        }
-
-      m_sg_psg = _ag_as_psg;
-      compose_from_array_group();
-
-      if (is_selected()) astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-
+    //check src
+    if (!m_src) {
+      clean_intermediates();
+      astate->log("pgf_producer_t::updated_internally() !m_src");
+      return;
     }
+
+    auto _src_as_gv = m_src->cast_as<geom_view_t>();
+    if (!_src_as_gv) {
+      astate->log("pgf_producer_t::updated_internally() !_src_as_gv");
+      clean_intermediates();
+      return;
+    }
+
+    m_src_gv = _src_as_gv;
+
+    if (m_src == m_dst) {
+      astate->log("pgf_producer_t::updated_internally() m_src == m_dst");
+      clean_intermediates();
+      return;
+    }
+
+    //check dst
+    if (!m_dst) {
+      astate->log("pgf_producer_t::updated_internally() !m_dst");
+      clean_intermediates();
+      return;
+    }
+
+    auto _dst_as_gv = m_dst->cast_as<geom_view_t>();
+    if (!_dst_as_gv) {
+      astate->log("pgf_producer_t::updated_internally() _dst_as_gv");
+      clean_intermediates();
+      return;
+    }
+
+    m_dst_gv = _dst_as_gv;
+
+    //check psg
+    if (!m_psg) {
+      astate->log("pgf_producer_t::updated_internally() !m_ag");
+      clean_intermediates();
+      return;
+    }
+
+    auto _ag_as_psg = m_psg->cast_as<psg_view_t>();
+    if (!_ag_as_psg) {
+      astate->log("pgf_producer_t::updated_internally() !_ag_as_psg");
+      clean_intermediates();
+      return;
+    }
+
+    m_sg_psg = _ag_as_psg;
+    compose_from_array_group();
+
+    if (is_selected()) astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+
+  }
 
   generate_geom();
 

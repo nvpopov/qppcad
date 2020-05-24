@@ -34,82 +34,82 @@ void volume_view_t::render() {
 
 
 
-      if (m_volumes[i]->m_ready_to_render && m_is_visible.get_value()
-          && (i == m_current_vol || m_volumes[i]->m_render_permanent.get_value())) {
+    if (m_volumes[i]->m_ready_to_render && m_is_visible.get_value()
+        && (i == m_current_vol || m_volumes[i]->m_render_permanent.get_value())) {
 
-          shader_program_t *custom_sp =
-              m_volumes[i]->m_transparent_volume.get_value() ? astate->sp_mvap_ssl : nullptr;
-          astate->dp->begin_render_general_mesh(custom_sp);
-          vector3<float> scale{1,1,1};
-          vector3<float> rot{0};
-          vector3<float> color{0.5f};
+      shader_program_t *custom_sp =
+          m_volumes[i]->m_transparent_volume.get_value() ? astate->sp_mvap_ssl : nullptr;
+      astate->dp->begin_render_general_mesh(custom_sp);
+      vector3<float> scale{1,1,1};
+      vector3<float> rot{0};
+      vector3<float> color{0.5f};
 
-          //astate->glapi->glDisable(GL_CULL_FACE);
-          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_mo) {
-              astate->dp->render_general_mesh(pos,
-                                              scale,
-                                              rot,
-                                              m_volumes[i]->m_color_pos.get_value(),
-                                              m_volumes[i]->m_first_mesh,
-                                              m_volumes[i]->m_alpha.get_value(),
-                                              custom_sp);
+      //astate->glapi->glDisable(GL_CULL_FACE);
+      if (m_volumes[i]->m_volume_type == ws_volume_t::volume_mo) {
+        astate->dp->render_general_mesh(pos,
+                                        scale,
+                                        rot,
+                                        m_volumes[i]->m_color_pos.get_value(),
+                                        m_volumes[i]->m_first_mesh,
+                                        m_volumes[i]->m_alpha.get_value(),
+                                        custom_sp);
 
-              astate->dp->render_general_mesh(pos,
-                                              scale,
-                                              rot,
-                                              m_volumes[i]->m_color_neg.get_value(),
-                                              m_volumes[i]->m_second_mesh,
-                                              m_volumes[i]->m_alpha.get_value(),
-                                              custom_sp);
-            }
+        astate->dp->render_general_mesh(pos,
+                                        scale,
+                                        rot,
+                                        m_volumes[i]->m_color_neg.get_value(),
+                                        m_volumes[i]->m_second_mesh,
+                                        m_volumes[i]->m_alpha.get_value(),
+                                        custom_sp);
+      }
 
-          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_density) {
-              astate->dp->render_general_mesh(pos,
-                                              scale,
-                                              rot,
-                                              m_volumes[i]->m_color_vol.get_value(),
-                                              m_volumes[i]->m_first_mesh,
-                                              m_volumes[i]->m_alpha.get_value(),
-                                              custom_sp);
-            }
-          //astate->glapi->glEnable(GL_CULL_FACE);
-          astate->dp->end_render_general_mesh(custom_sp);
-
-        }
-
-      if (m_volumes[i]->m_need_to_regenerate) {
-
-          if (!m_volumes[i]->m_first_mesh) m_volumes[i]->m_first_mesh = new mesh_t();
-          if (!m_volumes[i]->m_second_mesh) m_volumes[i]->m_second_mesh = new mesh_t();
-
-          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_mo) {
-              volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_first_mesh),
-                                               m_volumes[i]->m_volume,
-                                               m_volumes[i]->m_isolevel.get_value(),
-                                               100,
-                                               m_volumes[i]->m_volume.m_addr_mode);
-              volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_second_mesh),
-                                               m_volumes[i]->m_volume,
-                                               -m_volumes[i]->m_isolevel.get_value(),
-                                               100,
-                                               m_volumes[i]->m_volume.m_addr_mode);
-            }
-
-          if (m_volumes[i]->m_volume_type == ws_volume_t::volume_density) {
-              volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_first_mesh),
-                                               m_volumes[i]->m_volume,
-                                               m_volumes[i]->m_isolevel.get_value(),
-                                               100,
-                                               m_volumes[i]->m_volume.m_addr_mode);
-            }
-
-          m_volumes[i]->m_ready_to_render = true;
-          m_volumes[i]->m_need_to_regenerate = false;
-          astate->make_viewport_dirty();
-
-        }
+      if (m_volumes[i]->m_volume_type == ws_volume_t::volume_density) {
+        astate->dp->render_general_mesh(pos,
+                                        scale,
+                                        rot,
+                                        m_volumes[i]->m_color_vol.get_value(),
+                                        m_volumes[i]->m_first_mesh,
+                                        m_volumes[i]->m_alpha.get_value(),
+                                        custom_sp);
+      }
+      //astate->glapi->glEnable(GL_CULL_FACE);
+      astate->dp->end_render_general_mesh(custom_sp);
 
     }
+
+    if (m_volumes[i]->m_need_to_regenerate) {
+
+      if (!m_volumes[i]->m_first_mesh) m_volumes[i]->m_first_mesh = new mesh_t();
+      if (!m_volumes[i]->m_second_mesh) m_volumes[i]->m_second_mesh = new mesh_t();
+
+      if (m_volumes[i]->m_volume_type == ws_volume_t::volume_mo) {
+        volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_first_mesh),
+                                         m_volumes[i]->m_volume,
+                                         m_volumes[i]->m_isolevel.get_value(),
+                                         100,
+                                         m_volumes[i]->m_volume.m_addr_mode);
+        volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_second_mesh),
+                                         m_volumes[i]->m_volume,
+                                         -m_volumes[i]->m_isolevel.get_value(),
+                                         100,
+                                         m_volumes[i]->m_volume.m_addr_mode);
+      }
+
+      if (m_volumes[i]->m_volume_type == ws_volume_t::volume_density) {
+        volume_helper::polygonise_vol_mc(*(m_volumes[i]->m_first_mesh),
+                                         m_volumes[i]->m_volume,
+                                         m_volumes[i]->m_isolevel.get_value(),
+                                         100,
+                                         m_volumes[i]->m_volume.m_addr_mode);
+      }
+
+      m_volumes[i]->m_ready_to_render = true;
+      m_volumes[i]->m_need_to_regenerate = false;
+      astate->make_viewport_dirty();
+
+    }
+
+  }
 
 }
 
@@ -143,11 +143,11 @@ void volume_view_t::updated_externally(uint32_t update_reason) {
 
   //regenerate meshes
   if (update_reason & ws_item_updf_regenerate_content) {
-      for (auto &vol : m_volumes) {
-          vol->m_need_to_regenerate = true;
-          vol->m_ready_to_render = false;
-        }
+    for (auto &vol : m_volumes) {
+      vol->m_need_to_regenerate = true;
+      vol->m_ready_to_render = false;
     }
+  }
 
 }
 
@@ -184,18 +184,18 @@ void ws_volume_record_t::copy_from(ws_volume_record_t &other, bool clear_volume)
 
   if (clear_volume) {
 
-      m_volume.m_axis = other.m_volume.m_axis;
-      m_volume.m_steps = other.m_volume.m_steps;
-      m_volume.m_offset = other.m_volume.m_offset;
-      m_volume.m_addr_mode = other.m_volume.m_addr_mode;
-      m_volume.m_tot_atoms = other.m_volume.m_tot_atoms;
-      m_volume.m_name = other.m_volume.m_name;
-      m_volume.m_has_negative_values = other.m_volume.m_has_negative_values;
-      m_volume.m_field.resize(other.m_volume.m_field.size(), 0);
+    m_volume.m_axis = other.m_volume.m_axis;
+    m_volume.m_steps = other.m_volume.m_steps;
+    m_volume.m_offset = other.m_volume.m_offset;
+    m_volume.m_addr_mode = other.m_volume.m_addr_mode;
+    m_volume.m_tot_atoms = other.m_volume.m_tot_atoms;
+    m_volume.m_name = other.m_volume.m_name;
+    m_volume.m_has_negative_values = other.m_volume.m_has_negative_values;
+    m_volume.m_field.resize(other.m_volume.m_field.size(), 0);
 
-    } else {
-      m_volume             = other.m_volume;
-    }
+  } else {
+    m_volume             = other.m_volume;
+  }
 
   m_alpha              = other.m_alpha;
   m_isolevel           = other.m_isolevel;

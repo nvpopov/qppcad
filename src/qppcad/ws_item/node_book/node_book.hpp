@@ -16,47 +16,47 @@ namespace py = pybind11;
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class node_book_t final: public ws_item_t {
+class node_book_t final: public ws_item_t {
 
-        QPP_OBJECT(node_book_t, ws_item_t)
+  QPP_OBJECT(node_book_t, ws_item_t)
 
-      public:
+public:
 
-        node_book_graphics_scene_t *m_scene;
-        std::shared_ptr<sf_context_t> m_sflow_context;
+  node_book_graphics_scene_t *m_scene;
+  std::shared_ptr<sf_context_t> m_sflow_context;
 
-        hs_prop_bool_t m_highlight_dirty_nodes;
-        hs_prop_bool_t m_auto_recompute;
+  hs_prop_bool_t m_highlight_dirty_nodes;
+  hs_prop_bool_t m_auto_recompute;
 
-        node_book_t();
+  node_book_t();
 
-        void vote_for_view_vectors(vector3<float> &out_look_pos,
-                                   vector3<float> &out_look_at) override ;
-        void render() override;
-        bool mouse_click(ray_t<float> *click_ray) override;
+  void vote_for_view_vectors(vector3<float> &out_look_pos,
+                             vector3<float> &out_look_at) override ;
+  void render() override;
+  bool mouse_click(ray_t<float> *click_ray) override;
 
-        std::string compose_type_descr() override;
-        void update(float delta_time) override;
-        float get_bb_prescaller() override;
-        void updated_externally(uint32_t update_reason) override;
-        uint32_t get_num_cnt_selected() override;
-        size_t get_content_count() override;
+  std::string compose_type_descr() override;
+  void update(float delta_time) override;
+  float get_bb_prescaller() override;
+  void updated_externally(uint32_t update_reason) override;
+  uint32_t get_num_cnt_selected() override;
+  size_t get_content_count() override;
 
-        void save_to_json(json &data) override;
-        void load_from_json(json &data, repair_connection_info_t &rep_info) override;
-        bool can_be_written_to_json() override;
+  void save_to_json(json &data) override;
+  void load_from_json(json &data, repair_connection_info_t &rep_info) override;
+  bool can_be_written_to_json() override;
 
-        void execute();
-        void post_execute();
-        void update_output_values();
+  void execute();
+  void post_execute();
+  void update_output_values();
 
-        py::list py_get_visible_rect();
+  py::list py_get_visible_rect();
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

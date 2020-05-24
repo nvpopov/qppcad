@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <qppcad/core/history_stream.hpp>
+#include <qppcad/core/history_stream_array_proxy.hpp>
 #include <qppcad/core/qppcad.hpp>
 #include <catch.hpp>
 
@@ -504,6 +505,37 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hs_root->checkout_by_dist(-1) == hs_result_e::hs_success);
     hs_el1->set_value(322);
+
+  }
+
+  SECTION ("init as base commit") {
+
+    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hist_doc_base_t *hs_it1 = new hist_doc_base_t;
+    hist_doc_t<int> *hs_el1 = new hist_doc_t<int>(0);
+    hist_doc_t<int> *hs_el2 = new hist_doc_t<int>(0);
+
+    hs_it1->begin_recording(true); // init as base epoch
+
+    REQUIRE(hs_it1->add_hs_child(hs_el1) == hs_result_e::hs_success);
+    REQUIRE(hs_it1->add_hs_child(hs_el2) == hs_result_e::hs_success);
+
+    hs_el1->set_value(25);
+    hs_el2->set_value(42);
+
+    hs_it1->end_recording();
+
+    REQUIRE(hs_root->add_hs_child(hs_it1) == hs_result_e::hs_success);
+    hs_root->set_commit_exclusive_on_change(true);
+
+    hs_el1->set_value(23);
+    hs_el2->set_value(26);
+
+    REQUIRE(hs_root->checkout_by_dist(-1) == hs_result_e::hs_success);
+    REQUIRE(hs_root->checkout_by_dist(-1) == hs_result_e::hs_success);
+
+    REQUIRE(hs_el1->get_value() == 25);
+    REQUIRE(hs_el1->get_cur_epoch() == 0);
 
   }
 

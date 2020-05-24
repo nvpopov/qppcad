@@ -7,17 +7,18 @@ using namespace qpp::cad;
 ws_matrix3_t::ws_matrix3_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
+
   add_hs_child(&m_data);
 
 }
 
 void ws_matrix3_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                          vector3<float> &out_look_at) {
+                                         vector3<float> &out_look_at) {
   //do nothing
 }
 
 void ws_matrix3_t::render() {
- //do nothing
+  //do nothing
 }
 
 bool ws_matrix3_t::mouse_click(ray_t<float> *click_ray) {
@@ -69,9 +70,9 @@ void ws_matrix3_t::load_from_json(json &data, repair_connection_info_t &rep_info
   if (data_it != data.end())
     for (size_t i = 0; i < 3; i++)
       for (size_t q = 0; q < 3; q++) {
-          size_t idx = i*3 + q;
-          mdata(i,q) = data_it.value()[idx];
-        }
+        size_t idx = i*3 + q;
+        mdata(i,q) = data_it.value()[idx];
+      }
 
   m_data.set_value(std::move(mdata));
 

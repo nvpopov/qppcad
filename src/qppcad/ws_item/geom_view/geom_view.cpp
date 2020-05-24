@@ -21,34 +21,63 @@ using namespace qpp::cad;
 
 geom_view_t::geom_view_t(): ws_item_t() {
 
-  m_shading_specular_power.set_value(12.0f); add_hs_child(&m_shading_specular_power);
-  m_atom_scale_factor.set_value(0.3f); add_hs_child(&m_atom_scale_factor);
-  m_bond_scale_factor.set_value(0.09f); add_hs_child(&m_bond_scale_factor);
-  m_cell_color.set_value({0.1f, 0.1f, 0.1f}); add_hs_child(&m_cell_color);
+  /*hs begin*/
+  begin_recording(true);
+
+  add_hs_child(&m_shading_specular_power);
+  add_hs_child(&m_atom_scale_factor);
+  add_hs_child(&m_bond_scale_factor);
+  add_hs_child(&m_cell_color);
+  add_hs_child(&m_render_style);
+  add_hs_child(&m_subcells_range);
+  add_hs_child(&m_color_mode);
+  add_hs_child(&m_role);
+  add_hs_child(&m_draw_img_atoms);
+  add_hs_child(&m_draw_img_bonds);
+  add_hs_child(&m_draw_specular);
+  add_hs_child(&m_draw_bonds);
+  add_hs_child(&m_draw_atoms);
+  add_hs_child(&m_bt_show_disabled_record);
+  add_hs_child(&m_draw_cell);
+  add_hs_child(&m_draw_subcells);
+  add_hs_child(&m_draw_subcells);
+  add_hs_child(&m_cell_vectors_ratio);
+  add_hs_child(&m_cell_vector_offset);
+  add_hs_child(&m_cell_vector_color);
+  add_hs_child(&m_subcell_color);
+  add_hs_child(&m_sel_vis);
+  add_hs_child(&m_sel_vis_affect_bonds);
+
+  m_shading_specular_power.set_value(12.0f);
+  m_atom_scale_factor.set_value(0.3f);
+  m_bond_scale_factor.set_value(0.09f);
+  m_cell_color.set_value({0.1f, 0.1f, 0.1f});
 
   m_render_style.set_value(geom_view_render_style_e::ball_and_stick);
-  add_hs_child(&m_render_style);
 
-  m_subcells_range.set_value({1,1,1}); add_hs_child(&m_subcells_range);
-  m_color_mode.set_value(geom_view_color_e::color_from_ptable); add_hs_child(&m_color_mode);
-  m_role.set_value(geom_view_role_e::r_generic); add_hs_child(&m_role);
-  m_draw_img_atoms.set_value(true); add_hs_child(&m_draw_img_atoms);
-  m_draw_img_bonds.set_value(true); add_hs_child(&m_draw_img_bonds);
-  m_draw_specular.set_value(true); add_hs_child(&m_draw_specular);
-  m_draw_bonds.set_value(true); add_hs_child(&m_draw_bonds);
-  m_draw_atoms.set_value(true); add_hs_child(&m_draw_atoms);
-  m_bt_show_disabled_record.set_value(true); add_hs_child(&m_bt_show_disabled_record);
-  m_draw_cell.set_value(true); add_hs_child(&m_draw_cell);
-  m_draw_subcells.set_value(false); add_hs_child(&m_draw_subcells);
-  m_draw_subcells.set_value(false); add_hs_child(&m_draw_subcells);
+  m_subcells_range.set_value({1,1,1});
+  m_color_mode.set_value(geom_view_color_e::color_from_ptable);
+  m_role.set_value(geom_view_role_e::r_generic);
+  m_draw_img_atoms.set_value(true);
+  m_draw_img_bonds.set_value(true);
+  m_draw_specular.set_value(true);
+  m_draw_bonds.set_value(true);
+  m_draw_atoms.set_value(true);
+  m_bt_show_disabled_record.set_value(true);
+  m_draw_cell.set_value(true);
+  m_draw_subcells.set_value(false);
+  m_draw_subcells.set_value(false);
 
-  m_cell_vectors_ratio.set_value(0.35f); add_hs_child(&m_cell_vectors_ratio);
-  m_cell_vector_offset.set_value({0, 0, 0}); add_hs_child(&m_cell_vector_offset);
-  m_cell_vector_color.set_value({1.0f, 1.0f, 0.0f}); add_hs_child(&m_cell_vector_color);
+  m_cell_vectors_ratio.set_value(0.35f);
+  m_cell_vector_offset.set_value({0, 0, 0});
+  m_cell_vector_color.set_value({1.0f, 1.0f, 0.0f});
 
-  m_subcell_color.set_value({0.1f, 0.1f, 0.1f}); add_hs_child(&m_subcell_color);
-  m_sel_vis.set_value(false); add_hs_child(&m_sel_vis);
-  m_sel_vis_affect_bonds.set_value(false); add_hs_child(&m_sel_vis_affect_bonds);
+  m_subcell_color.set_value({0.1f, 0.1f, 0.1f});
+  m_sel_vis.set_value(false);
+  m_sel_vis_affect_bonds.set_value(false);
+
+  end_recording();
+  /*hs end*/
 
   set_default_flags(ws_item_flags_default
                     | ws_item_flags_support_tr

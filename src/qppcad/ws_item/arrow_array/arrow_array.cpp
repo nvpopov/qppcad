@@ -11,13 +11,25 @@ arrow_array_t::arrow_array_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default | ws_item_flags_support_rendering);
 
-  m_unf_arrow_len.set_value(1.0f); add_hs_child(&m_unf_arrow_len);
-  m_unf_arrow_cap_len.set_value(0.15f); add_hs_child(&m_unf_arrow_cap_len);
-  m_unf_arrow_scale.set_value(0.05f); add_hs_child(&m_unf_arrow_scale);
-  m_unf_arrow_cap_scale.set_value(0.12f); add_hs_child(&m_unf_arrow_cap_scale);
-  m_displ_eps.set_value(0.0005f); add_hs_child(&m_displ_eps);
-  m_affected_by_sv.set_value(false); add_hs_child(&m_affected_by_sv);
-  m_color.set_value(vector3<float>{clr_red}); add_hs_child(&m_color);
+  begin_recording(true);
+
+  add_hs_child(&m_unf_arrow_len);
+  add_hs_child(&m_unf_arrow_cap_len);
+  add_hs_child(&m_unf_arrow_scale);
+  add_hs_child(&m_unf_arrow_cap_scale);
+  add_hs_child(&m_displ_eps);
+  add_hs_child(&m_affected_by_sv);
+  add_hs_child(&m_color);
+
+  m_unf_arrow_len.set_value(1.0f);
+  m_unf_arrow_cap_len.set_value(0.15f);
+  m_unf_arrow_scale.set_value(0.05f);
+  m_unf_arrow_cap_scale.set_value(0.12f);
+  m_displ_eps.set_value(0.0005f);
+  m_affected_by_sv.set_value(false);
+  m_color.set_value(vector3<float>{clr_red});
+
+  end_recording();
 
 }
 

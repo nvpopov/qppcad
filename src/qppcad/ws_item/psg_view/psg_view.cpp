@@ -11,18 +11,32 @@ psg_view_t::psg_view_t() : ws_item_t() {
                     | ws_item_flags_translate_emit_upd_event
                     | ws_item_flags_support_rendering);
 
-  m_plane_alpha.set_value(0.64f); add_hs_child(&m_plane_alpha);
-  m_plane_alpha_enabled.set_value(false); add_hs_child(&m_plane_alpha_enabled);
-  m_plane_scale.set_value({6.0f}); add_hs_child(&m_plane_scale);
-  m_plane_color.set_value({0, 0.9f, 0}); add_hs_child(&m_plane_color);
+  begin_recording(true);
 
-  m_arrow_len.set_value(9.0f); add_hs_child(&m_arrow_len);
-  m_arrow_cap_len.set_value(0.51f); add_hs_child(&m_arrow_cap_len);
-  m_arrow_scale.set_value(0.15f); add_hs_child(&m_arrow_scale);
-  m_arrow_cap_scale.set_value(0.26f); add_hs_child(&m_arrow_cap_scale);
+  add_hs_child(&m_plane_alpha);
+  add_hs_child(&m_plane_alpha_enabled);
+  add_hs_child(&m_plane_scale);
+  add_hs_child(&m_plane_color);
+  add_hs_child(&m_arrow_len);
+  add_hs_child(&m_arrow_cap_len);
+  add_hs_child(&m_arrow_scale);
+  add_hs_child(&m_arrow_cap_scale);
+  add_hs_child(&m_show_planes);
+  add_hs_child(&m_show_axes);
 
-  m_show_planes.set_value(true); add_hs_child(&m_show_planes);
-  m_show_axes.set_value(true); add_hs_child(&m_show_axes);
+  for (auto &elem : m_axes_color_by_order) add_hs_child(&elem);
+
+  m_plane_alpha.set_value(0.64f);
+  m_plane_alpha_enabled.set_value(false);
+  m_plane_scale.set_value({6.0f});
+  m_plane_color.set_value({0, 0.9f, 0});
+
+  m_arrow_len.set_value(9.0f);
+  m_arrow_cap_len.set_value(0.51f);
+  m_arrow_scale.set_value(0.15f);
+  m_arrow_cap_scale.set_value(0.26f);
+  m_show_planes.set_value(true);
+  m_show_axes.set_value(true);
 
   //set default axes colors by order
   m_axes_color_by_order[0].set_value({  32.0 / 255.0,  32.0 / 255.0,  32.0 / 255.0 });
@@ -36,8 +50,7 @@ psg_view_t::psg_view_t() : ws_item_t() {
   m_axes_color_by_order[8].set_value({ 247.0 / 255.0, 129.0 / 255.0, 191.0 / 255.0 });
   m_axes_color_by_order[9].set_value({ 166.0 / 255.0, 206.0 / 255.0, 227.0 / 255.0 });
 
-  for (auto &elem : m_axes_color_by_order) add_hs_child(&elem);
-
+  end_recording();
   //m_axes_color_by_order[10] = {  31.0 / 255.0, 120.0 / 255.0, 180.0 / 255.0 };
 
 }

@@ -5,9 +5,11 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_vector3_t::ws_vector3_t() : ws_item_t() {
+
   set_default_flags(ws_item_flags_default
                     | ws_item_flags_support_tr
                     | ws_item_flags_support_sel);
+
 }
 
 ws_vector3_t::operator vector3<float>() const {
@@ -15,12 +17,12 @@ ws_vector3_t::operator vector3<float>() const {
 }
 
 void ws_vector3_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                          vector3<float> &out_look_at) {
+                                         vector3<float> &out_look_at) {
   //do nothing
 }
 
 void ws_vector3_t::render() {
- //do nothing
+  //do nothing
 }
 
 bool ws_vector3_t::mouse_click(ray_t<float> *click_ray) {

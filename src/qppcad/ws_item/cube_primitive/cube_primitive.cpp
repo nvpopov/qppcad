@@ -12,11 +12,21 @@ cube_primitive_t::cube_primitive_t() : ws_item_t() {
                     | ws_item_flags_support_moveto
                     | ws_item_flags_support_tr);
 
-  m_render_mode.set_value(render_solid); add_hs_child(&m_render_mode);
-  m_scale.set_value({1, 1, 1}); add_hs_child(&m_scale);
-  m_color.set_value({1, 0, 0}); add_hs_child(&m_color);
-  m_alpha.set_value(0.9f); add_hs_child(&m_alpha);
-  m_alpha_enabled.set_value(false); add_hs_child(&m_alpha_enabled);
+  begin_recording(true);
+
+  add_hs_child(&m_render_mode);
+  add_hs_child(&m_scale);
+  add_hs_child(&m_color);
+  add_hs_child(&m_alpha);
+  add_hs_child(&m_alpha_enabled);
+
+  m_render_mode.set_value(render_solid);
+  m_scale.set_value({1, 1, 1});
+  m_color.set_value({1, 0, 0});
+  m_alpha.set_value(0.9f);
+  m_alpha_enabled.set_value(false);
+
+  end_recording();
 
 }
 
@@ -34,33 +44,7 @@ void cube_primitive_t::render() {
 
   if (m_render_mode.get_value() == ws_cube_rendering_mode::render_solid) {
 
-      if (m_alpha_enabled.get_value()) {
-
-          astate->dp->begin_render_line();
-          vector3<float> sc_a {scale[0], 0, 0};
-          vector3<float> sc_b {0, scale[1], 0};
-          vector3<float> sc_c {0, 0, scale[2]};
-          vector3<float> pos = m_pos.get_value() - scale * 0.5f;
-          astate->dp->render_cell_3d(m_color.get_value(), sc_a, sc_b, sc_c, pos);
-          astate->dp->end_render_line();
-
-          astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
-          vector3<float> scalev = scale * 0.5f;
-          astate->dp->render_general_mesh(m_pos.get_value(), scalev, vector3<float>{0},
-                                          m_color.get_value(), astate->mesh_unit_cube,
-                                          m_alpha.get_value(), astate->sp_mvap_ssl);
-          astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
-
-        }
-      else {
-          astate->dp->begin_render_general_mesh();
-          vector3<float> vscale = scale * 0.5f;
-          astate->dp->render_general_mesh(m_pos.get_value(), vscale, vector3<float>{0},
-                                          m_color.get_value(), astate->mesh_unit_cube);
-          astate->dp->end_render_general_mesh();
-        }
-
-    } else {
+    if (m_alpha_enabled.get_value()) {
 
       astate->dp->begin_render_line();
       vector3<float> sc_a {scale[0], 0, 0};
@@ -70,7 +54,33 @@ void cube_primitive_t::render() {
       astate->dp->render_cell_3d(m_color.get_value(), sc_a, sc_b, sc_c, pos);
       astate->dp->end_render_line();
 
+      astate->dp->begin_render_general_mesh(astate->sp_mvap_ssl);
+      vector3<float> scalev = scale * 0.5f;
+      astate->dp->render_general_mesh(m_pos.get_value(), scalev, vector3<float>{0},
+                                      m_color.get_value(), astate->mesh_unit_cube,
+                                      m_alpha.get_value(), astate->sp_mvap_ssl);
+      astate->dp->end_render_general_mesh(astate->sp_mvap_ssl);
+
     }
+    else {
+      astate->dp->begin_render_general_mesh();
+      vector3<float> vscale = scale * 0.5f;
+      astate->dp->render_general_mesh(m_pos.get_value(), vscale, vector3<float>{0},
+                                      m_color.get_value(), astate->mesh_unit_cube);
+      astate->dp->end_render_general_mesh();
+    }
+
+  } else {
+
+    astate->dp->begin_render_line();
+    vector3<float> sc_a {scale[0], 0, 0};
+    vector3<float> sc_b {0, scale[1], 0};
+    vector3<float> sc_c {0, 0, scale[2]};
+    vector3<float> pos = m_pos.get_value() - scale * 0.5f;
+    astate->dp->render_cell_3d(m_color.get_value(), sc_a, sc_b, sc_c, pos);
+    astate->dp->end_render_line();
+
+  }
 
 }
 
