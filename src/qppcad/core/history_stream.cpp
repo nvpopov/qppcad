@@ -137,7 +137,7 @@ bool hist_doc_base_t::is_unmodified_impl() {
   return true;
 }
 
-void hist_doc_base_t::update_super_root(hist_doc_base_t::self_t *new_super_root) {
+void hist_doc_base_t::update_super_root(hist_doc_base_t *new_super_root) {
   p_super_parent = new_super_root;
   for (auto child : p_childs)
     if (child) child->update_super_root(new_super_root);
@@ -229,7 +229,7 @@ std::vector<hist_doc_base_t::epoch_t> hist_doc_base_t::get_history() const {
 }
 
 hs_result_e hist_doc_base_t::augment_epoch(hist_doc_base_t::epoch_t target_epoch,
-                                           hist_doc_base_t::self_t *child,
+                                           hist_doc_base_t *child,
                                            hist_doc_base_t::epoch_t child_epoch,
                                            bool alive) {
 
@@ -274,7 +274,7 @@ bool hist_doc_base_t::has_epoch(hist_doc_base_t::epoch_t target_epoch) {
   return find_hl(target_epoch) != end(p_hist_line);
 }
 
-hs_result_e hist_doc_base_t::remove_augment_from_epoch(hist_doc_base_t::self_t *child,
+hs_result_e hist_doc_base_t::remove_augment_from_epoch(hist_doc_base_t *child,
                                                        hist_doc_base_t::epoch_t target_epoch) {
 
   auto epoch_it = p_childs_states.find(target_epoch);
@@ -288,7 +288,7 @@ hs_result_e hist_doc_base_t::remove_augment_from_epoch(hist_doc_base_t::self_t *
 
 }
 
-hs_result_e hist_doc_base_t::is_child_alive(epoch_t target_epoch, self_t* child) const {
+hs_result_e hist_doc_base_t::is_child_alive(epoch_t target_epoch, hist_doc_base_t* child) const {
 
   auto epoch_it = p_childs_states.find(target_epoch);
   if (epoch_it == end(p_childs_states)) return hs_result_e::hs_invalid_epoch;
@@ -296,7 +296,7 @@ hs_result_e hist_doc_base_t::is_child_alive(epoch_t target_epoch, self_t* child)
   auto child_it = epoch_it->second.find(child);
   if (child_it == end(epoch_it->second)) return hs_result_e::hs_invalid_child;
 
-  return child_it->second.m_is_alive ? hs_result_e::hs_true : hs_result_e::hs_false;
+  return child_it->second.m_is_alive ? hs_result_e::hs_alive : hs_result_e::hs_dead;
 
 }
 
@@ -375,7 +375,7 @@ bool hist_doc_base_t::can_checkout_by_dist(int dist) {
 
 }
 
-hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
+hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t *child, bool add_new_epoch) {
 
   if (!child) return hs_result_e::hs_invalid_child;
 
@@ -383,6 +383,7 @@ hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
   p_childs.push_back(child);
   child->update_super_root(this);
 
+  if (add_new_epoch) commit_exclusive(child);
   epoch_t cur_epoch = get_cur_epoch();
   auto epoch_it = find_hl(cur_epoch);
   auto epoch_dist = static_cast<size_t>(std::distance(begin(p_hist_line), epoch_it));
@@ -397,23 +398,44 @@ hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t::self_t *child) {
 
 }
 
-hist_doc_base_t::self_t *hist_doc_base_t::get_parent() {
+hs_result_e hist_doc_base_t::delete_hs_child(hist_doc_base_t *child) {
+
+  auto child_it  = std::find(begin(p_childs), end(p_childs), child);
+  if (child_it == end(p_childs)) return hs_result_e::hs_invalid_child;
+
+  //auto child_idx = std::distance(begin(p_childs), child_it);
+  auto com_exclusive_res = commit_exclusive(child, child->get_cur_epoch());
+  if (com_exclusive_res != hs_result_e::hs_success) return hs_result_e::hs_error;
+
+  return augment_epoch(get_cur_epoch(), child, child->get_cur_epoch(), false);
+
+}
+
+size_t hist_doc_base_t::get_hs_children_count() {
+
+}
+
+hist_doc_base_t *hist_doc_base_t::get_hs_child(size_t child_idx) {
+
+}
+
+hist_doc_base_t *hist_doc_base_t::get_parent() {
   if (p_parent)
     return p_parent->get_parent();
   return this;
 }
 
-hist_doc_base_t::self_t *hist_doc_base_t::get_super_parent() {
+hist_doc_base_t *hist_doc_base_t::get_super_parent() {
   return p_super_parent;
 }
 
-hist_doc_base_t::self_t *hist_doc_base_t::get_child(size_t idx) const {
+hist_doc_base_t *hist_doc_base_t::get_child(size_t idx) const {
   if (idx < p_childs.size())
     return p_childs[idx];
   return nullptr;
 }
 
-std::optional<size_t> hist_doc_base_t::is_child(hist_doc_base_t::self_t *child) const {
+std::optional<size_t> hist_doc_base_t::is_child(hist_doc_base_t *child) const {
   if (!child) return std::nullopt;
   auto it1 = std::find(begin(p_childs), end(p_childs), child);
   return (it1 != end(p_childs) ? std::optional<size_t>{std::distance(begin(p_childs), it1)} :
@@ -426,7 +448,7 @@ hs_result_e hist_doc_base_t::remove_child(size_t child_id) {
   return hs_result_e::hs_error;
 }
 
-hs_result_e hist_doc_base_t::remove_child(self_t *child) {
+hs_result_e hist_doc_base_t::remove_child(hist_doc_base_t *child) {
 
   auto it1 = std::find(begin(p_childs), end(p_childs), child);
   if (it1 != std::end(p_childs)) {

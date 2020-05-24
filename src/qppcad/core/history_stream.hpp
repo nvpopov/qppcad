@@ -23,7 +23,9 @@ enum hs_result_e {
   hs_invalid_child = 4,
   hs_invalid_child_epoch = 5,
   hs_true = 6,
-  hs_false = 7
+  hs_false = 7,
+  hs_alive = 8,
+  hs_dead = 9
 };
 
 //Stores augment meta info for each child in each parent's epoch
@@ -40,16 +42,15 @@ class hist_doc_base_t {
 public:
 
   using epoch_t = size_t;
-  using self_t = hist_doc_base_t;
 
 private:
 
   epoch_t p_cur_epoch{0};
-  self_t *p_parent{nullptr};
-  self_t *p_super_parent{nullptr};
-  std::vector<self_t*> p_childs;
-  std::map<epoch_t, std::map<self_t*, hs_child_state_meta_t>> p_childs_states;
-  std::map<self_t*, hs_child_state_meta_t> p_current_child_state;
+  hist_doc_base_t *p_parent{nullptr};
+  hist_doc_base_t *p_super_parent{nullptr};
+  std::vector<hist_doc_base_t*> p_childs;
+  std::map<epoch_t, std::map<hist_doc_base_t*, hs_child_state_meta_t>> p_childs_states;
+  std::map<hist_doc_base_t*, hs_child_state_meta_t> p_current_child_state;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
   bool p_commit_exclusive_on_change{false};
@@ -58,12 +59,43 @@ private:
   bool p_init_as_base_commit{false};
   hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
+  /**
+  * @brief get_children
+  * @param idx
+  * @return
+  */
+  hist_doc_base_t *get_child(size_t idx) const;
+
+  /**
+  * @brief is_children
+  * @param child
+  * @return
+  */
+  std::optional<size_t> is_child(hist_doc_base_t *child) const;
+
+  /**
+  * @brief remove_child removes child completely by id
+  * @param child_id
+  */
+  hs_result_e remove_child(size_t child_id);
+
+  /**
+  * @brief remove_child removes child completely by pointer
+  * @param child
+  */
+  hs_result_e remove_child(hist_doc_base_t *child);
+
+  /**
+  * @brief get_children_count
+  */
+  size_t get_children_count() const;
+
 protected:
 
   virtual void record_impl(bool init_as_base_commit);
   virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
-  void update_super_root(self_t *new_super_root);
+  void update_super_root(hist_doc_base_t *new_super_root);
 
 public:
 
@@ -141,14 +173,14 @@ public:
   void set_delta_state_type(hist_doc_delta_state_e new_dstate);
 
   /**
-  * @brief is_dirty - not implemented yet
-  * @return
-  */
+   * @brief is_unmodified
+   * @return
+   */
   bool is_unmodified();
 
   /**
-   * @brief reset
-   * @return
+   * @brief reset current history document and all it's children
+   * @return execution status
    */
   hs_result_e reset();
 
@@ -176,7 +208,7 @@ public:
 
   /**
    * @brief get_history
-   * @return
+   * @return vector of epochs
    */
   std::vector<epoch_t> get_history() const;
 
@@ -186,7 +218,7 @@ public:
   * @param child_epoch
   * @param target_epoch
   */
-  hs_result_e augment_epoch(epoch_t target_epoch, self_t* child, epoch_t child_epoch,
+  hs_result_e augment_epoch(epoch_t target_epoch, hist_doc_base_t* child, epoch_t child_epoch,
                             bool alive = true);
 
   /**
@@ -202,7 +234,7 @@ public:
    * @param child
    * @return
    */
-  bool is_augmented_by(epoch_t target_epoch, self_t *child);
+  bool is_augmented_by(epoch_t target_epoch, hist_doc_base_t *child);
 
   /**
   * @brief remove_augment_from_epoch
@@ -211,7 +243,7 @@ public:
   * @param target_epoch
   * @return
   */
-  hs_result_e remove_augment_from_epoch(self_t* child, epoch_t target_epoch);
+  hs_result_e remove_augment_from_epoch(hist_doc_base_t* child, epoch_t target_epoch);
 
   /**
    * @brief is_child_alive
@@ -219,7 +251,7 @@ public:
    * @param child
    * @return
    */
-  hs_result_e is_child_alive(epoch_t target_epoch, self_t* child) const;
+  hs_result_e is_child_alive(epoch_t target_epoch, hist_doc_base_t* child) const;
 
   /**
   * @brief has_epoch
@@ -254,51 +286,39 @@ public:
   * @param child
   * @return
   */
-  hs_result_e add_hs_child(self_t *child);
+  hs_result_e add_hs_child(hist_doc_base_t *child, bool add_new_epoch = false);
+
+  /**
+   * @brief delete_hs_child
+   * @param child
+   * @return
+   */
+  hs_result_e delete_hs_child(hist_doc_base_t *child);
+
+  /**
+   * @brief get_hs_children_count
+   * @return
+   */
+  size_t get_hs_children_count();
+
+  /**
+   * @brief get_hs_child
+   * @param child_idx
+   * @return
+   */
+  hist_doc_base_t *get_hs_child(size_t child_idx);
 
   /**
   * @brief get_root
   * @return
   */
-  self_t *get_parent();
+  hist_doc_base_t *get_parent();
 
   /**
    * @brief get_super_root
    * @return
    */
-  self_t *get_super_parent();
-
-  /**
-  * @brief get_children
-  * @param idx
-  * @return
-  */
-  self_t *get_child(size_t idx) const;
-
-  /**
-  * @brief is_children
-  * @param child
-  * @return
-  */
-  std::optional<size_t> is_child(self_t *child) const;
-
-  /**
-  * @brief remove_child
-  * @param child_id
-  */
-  hs_result_e remove_child(size_t child_id);
-
-  /**
-  * @brief remove_child
-  * @param child
-  */
-  hs_result_e remove_child(self_t *child);
-
-  /**
-  * @brief get_children_count
-  */
-  size_t get_children_count() const;
-  //end of children stuff
+  hist_doc_base_t *get_super_parent();
 
 };
 

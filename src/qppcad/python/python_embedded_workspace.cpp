@@ -119,7 +119,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   py::class_<hist_doc_base_t> py_hist_doc_base_t(m, "hist_doc_base_t");
   py_hist_doc_base_t.def("get_cur_epoch", &hist_doc_base_t::get_cur_epoch);
-  py_hist_doc_base_t.def("get_children_count", &hist_doc_base_t::get_children_count);
+  //py_hist_doc_base_t.def("get_children_count", &hist_doc_base_t::get_children_count);
 
   /* cam_target_view pybindings */
   py::enum_<cam_tv_e>(m, "cam_tv_e", py::arithmetic(), "")
@@ -211,7 +211,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr)
       .def("get_cur_epoch", &workspace_t::get_cur_epoch)
-      .def("get_children_count", &workspace_t::get_children_count)
+//      .def("get_children_count", &workspace_t::get_children_count)
       .def("set_commit_exclusive_on_change", &workspace_t::set_commit_exclusive_on_change)
       .def("checkout_by_dist", &workspace_t::checkout_by_dist)
       .def("undo", [](workspace_t &ws){ws.checkout_by_dist(-1);})
@@ -259,7 +259,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def_readwrite("offset", &ws_item_t::m_leader_offset)
       .def("bb", [](ws_item_t &src){return src.m_aabb;})
       .def("get_cur_epoch", &ws_item_t::get_cur_epoch)
-      .def("get_children_count", &ws_item_t::get_children_count)
+//      .def("get_children_count", &ws_item_t::get_children_count)
       .def("checkout_dy_dist", &ws_item_t::checkout_by_dist)
       .def("set_commit_exclusive_on_change", &ws_item_t::set_commit_exclusive_on_change);
 
