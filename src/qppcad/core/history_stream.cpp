@@ -1,5 +1,6 @@
 #include <qppcad/core/history_stream.hpp>
 #include <cassert>
+#include <numeric>
 
 namespace qpp {
 
@@ -413,10 +414,22 @@ hs_result_e hist_doc_base_t::delete_hs_child(hist_doc_base_t *child) {
 
 size_t hist_doc_base_t::get_hs_children_count() {
 
+  auto cur_epoch = get_cur_epoch();
+  auto ch_state_it = p_childs_states.find(cur_epoch);
+  if (ch_state_it == end(p_childs_states)) return 0;
+
+  return  std::count_if(begin(ch_state_it->second),
+                        end(ch_state_it->second),
+                        [](auto kv) -> bool {return kv.second.m_is_alive;});
+
 }
 
 hist_doc_base_t *hist_doc_base_t::get_hs_child(size_t child_idx) {
-
+  auto cur_epoch = get_cur_epoch();
+  auto ch_state_it = p_childs_states.find(cur_epoch);
+  if (ch_state_it == end(p_childs_states)) return nullptr;
+  auto ch_state_ch_it = std::next(ch_state_it->second.begin(), child_idx);
+  return ch_state_ch_it->first;
 }
 
 hist_doc_base_t *hist_doc_base_t::get_parent() {

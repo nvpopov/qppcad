@@ -388,32 +388,32 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_root->add_hs_child(hs_el1) == hs_result_e::hs_success);
     REQUIRE(hs_root->add_hs_child(hs_el2) == hs_result_e::hs_success);
 
-    REQUIRE(hs_root->is_child_alive(0, hs_el1) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(1, hs_el1) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(2, hs_el1) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hs_result_e::hs_true);
+    REQUIRE(hs_root->is_child_alive(0, hs_el1) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(1, hs_el1) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(2, hs_el1) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hs_result_e::hs_alive);
 
-    REQUIRE(hs_root->is_child_alive(0, hs_el2) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(1, hs_el2) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(2, hs_el2) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hs_result_e::hs_true);
+    REQUIRE(hs_root->is_child_alive(0, hs_el2) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(1, hs_el2) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(2, hs_el2) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hs_result_e::hs_alive);
 
     REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
     REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
 
-    REQUIRE(hs_root->is_child_alive(0, hs_el1) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(1, hs_el1) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(2, hs_el1) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hs_result_e::hs_true);
-    REQUIRE(hs_root->is_child_alive(4, hs_el1) == hs_result_e::hs_true);
-    REQUIRE(hs_root->is_child_alive(5, hs_el1) == hs_result_e::hs_true);
+    REQUIRE(hs_root->is_child_alive(0, hs_el1) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(1, hs_el1) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(2, hs_el1) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(3, hs_el1) == hs_result_e::hs_alive);
+    REQUIRE(hs_root->is_child_alive(4, hs_el1) == hs_result_e::hs_alive);
+    REQUIRE(hs_root->is_child_alive(5, hs_el1) == hs_result_e::hs_alive);
 
-    REQUIRE(hs_root->is_child_alive(0, hs_el2) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(1, hs_el2) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(2, hs_el2) == hs_result_e::hs_false);
-    REQUIRE(hs_root->is_child_alive(3, hs_el2) == hs_result_e::hs_true);
-    REQUIRE(hs_root->is_child_alive(4, hs_el2) == hs_result_e::hs_true);
-    REQUIRE(hs_root->is_child_alive(5, hs_el2) == hs_result_e::hs_true);
+    REQUIRE(hs_root->is_child_alive(0, hs_el2) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(1, hs_el2) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(2, hs_el2) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(3, hs_el2) == hs_result_e::hs_alive);
+    REQUIRE(hs_root->is_child_alive(4, hs_el2) == hs_result_e::hs_alive);
+    REQUIRE(hs_root->is_child_alive(5, hs_el2) == hs_result_e::hs_alive);
 
     REQUIRE(hs_el1->is_unmodified() == true);
     REQUIRE(hs_el2->is_unmodified() == true);
@@ -513,10 +513,16 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_el1->commit_exclusive() == hs_result_e::hs_success);
     REQUIRE(hs_el1->commit_exclusive() == hs_result_e::hs_success);
     REQUIRE(hs_el1->commit_exclusive() == hs_result_e::hs_success);
+    REQUIRE(hs_root->get_hs_children_count() == 2);
 
     REQUIRE(hs_root->delete_hs_child(hs_el1));
+    REQUIRE(hs_root->get_hs_children_count() == 1);
     REQUIRE(hs_root->get_cur_epoch() == 6);
     REQUIRE(hs_root->is_child_alive(hs_root->get_cur_epoch(), hs_el1) == hs_result_e::hs_dead);
+
+    REQUIRE(hs_root->checkout_by_dist(-1) == hs_result_e::hs_success);
+    REQUIRE(hs_root->is_child_alive(hs_root->get_cur_epoch(), hs_el1) == hs_result_e::hs_alive);
+
   }
 
 
