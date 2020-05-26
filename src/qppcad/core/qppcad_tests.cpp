@@ -514,9 +514,12 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_el1->commit_exclusive() == hs_result_e::hs_success);
     REQUIRE(hs_el1->commit_exclusive() == hs_result_e::hs_success);
     REQUIRE(hs_root->get_hs_children_count() == 2);
+    REQUIRE(hs_root->get_hs_child(0) == hs_el1);
+    REQUIRE(hs_root->get_hs_child(1) == hs_el2);
 
-    REQUIRE(hs_root->delete_hs_child(hs_el1));
+    REQUIRE(hs_root->set_alive_hs_child(hs_el1, false));
     REQUIRE(hs_root->get_hs_children_count() == 1);
+    REQUIRE(hs_root->get_hs_child(0) == hs_el2);
     REQUIRE(hs_root->get_cur_epoch() == 6);
     REQUIRE(hs_root->is_child_alive(hs_root->get_cur_epoch(), hs_el1) == hs_result_e::hs_dead);
 
@@ -525,5 +528,58 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("add hs new epoch multi elem delete") {
+
+    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hist_doc_base_t *hs_el1 = new hist_doc_base_t;
+    hist_doc_base_t *hs_el2 = new hist_doc_base_t;
+    hist_doc_base_t *hs_el3 = new hist_doc_base_t;
+    hist_doc_base_t *hs_el4 = new hist_doc_base_t;
+
+    hs_root->add_hs_child(hs_el1, true);
+    REQUIRE(hs_root->get_cur_epoch() == 1);
+
+    hs_root->add_hs_child(hs_el2, true);
+    REQUIRE(hs_root->get_cur_epoch() == 2);
+
+    hs_root->add_hs_child(hs_el3, true);
+    REQUIRE(hs_root->get_cur_epoch() == 3);
+
+    hs_root->add_hs_child(hs_el4, true);
+    REQUIRE(hs_root->get_cur_epoch() == 4);
+
+    REQUIRE(hs_root->set_alive_hs_child(hs_el1, false));
+    REQUIRE(hs_root->set_alive_hs_child(hs_el3, false));
+    REQUIRE(hs_root->get_hs_children_count() == 2);
+    REQUIRE(hs_root->is_child_alive(hs_root->get_cur_epoch(), hs_el1) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->is_child_alive(hs_root->get_cur_epoch(), hs_el3) == hs_result_e::hs_dead);
+    REQUIRE(hs_root->get_hs_child(0) == hs_el2);
+    REQUIRE(hs_root->get_hs_child(1) == hs_el4);
+
+  }
+
+  SECTION ("array_proxy test") {
+
+    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hist_doc_array_proxy_t<hs_prop_int_t> *hs_iarray = new hist_doc_array_proxy_t<hs_prop_int_t>;
+
+    REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success);
+
+    hs_prop_int_t *hs_int0 = new hs_prop_int_t;
+    hs_prop_int_t *hs_int1 = new hs_prop_int_t;
+    hs_prop_int_t *hs_int2 = new hs_prop_int_t;
+    hs_prop_int_t *hs_int3 = new hs_prop_int_t;
+
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int0) == hs_result_e::hs_success);
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int1) == hs_result_e::hs_success);
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int2) == hs_result_e::hs_success);
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int3) == hs_result_e::hs_success);
+
+    REQUIRE(hs_iarray->get_hs_child_as_array(0) == hs_int0);
+    REQUIRE(hs_iarray->get_hs_child_as_array(1) == hs_int1);
+    REQUIRE(hs_iarray->get_hs_child_as_array(2) == hs_int2);
+    REQUIRE(hs_iarray->get_hs_child_as_array(3) == hs_int3);
+
+  }
 
 }

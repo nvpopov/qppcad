@@ -293,7 +293,7 @@ public:
    * @param child
    * @return
    */
-  hs_result_e delete_hs_child(hist_doc_base_t *child);
+  hs_result_e set_alive_hs_child(hist_doc_base_t *child, bool alive = true);
 
   /**
    * @brief get_hs_children_count
