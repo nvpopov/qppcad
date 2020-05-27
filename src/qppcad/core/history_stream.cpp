@@ -491,6 +491,17 @@ hs_result_e hist_doc_base_t::remove_child(hist_doc_base_t *child) {
 
 size_t hist_doc_base_t::get_children_count() const { return p_childs.size(); }
 
+bool hist_doc_base_t::is_child_unused(hist_doc_base_t *child) {
+
+  //epoch_t cur_epoch = get_cur_epoch();
+  for (auto &[key, value] : p_childs_states) {
+    auto child_it = value.find(child);
+    if (child_it != end(value) && child_it->second.m_is_alive) return false;
+  }
+  return true;
+
+}
+
 } // namespace qpp::cad
 
 } // namespace qpp

@@ -90,6 +90,13 @@ private:
   */
   size_t get_children_count() const;
 
+  /**
+   * @brief is_child_unused
+   * @param child
+   * @return
+   */
+  bool is_child_unused(hist_doc_base_t *child);
+
 protected:
 
   virtual void record_impl(bool init_as_base_commit);

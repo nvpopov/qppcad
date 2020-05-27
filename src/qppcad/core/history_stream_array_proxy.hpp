@@ -18,8 +18,10 @@ private:
 
 public:
 
+  static_assert(std::is_base_of<hist_doc_base_t, STYPE>::value);
+
   hs_result_e add_hs_child_as_array(STYPE *new_arr_element) {
-    hist_doc_base_t *as_hsd = dynamic_cast<hist_doc_base_t*>(new_arr_element);
+    hist_doc_base_t *as_hsd = reinterpret_cast<hist_doc_base_t*>(new_arr_element);
     if (!as_hsd) return hs_result_e::hs_error;
     p_map_hs_to_array[as_hsd] = new_arr_element;
     return add_hs_child(as_hsd, true);
@@ -37,6 +39,5 @@ public:
 }
 
 }
-
 
 #endif
