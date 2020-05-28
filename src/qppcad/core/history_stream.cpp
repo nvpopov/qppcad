@@ -16,7 +16,7 @@ hist_doc_base_t::~hist_doc_base_t() {
 
 void hist_doc_base_t::begin_recording(bool init_as_base_commit) {
 
-  hist_doc_base_t *parent = p_super_parent ? p_super_parent : this;
+  hist_doc_base_t *parent = get_super_parent();
   //must be false when we start recording
   assert(!parent->p_is_recording);
   parent->p_is_recording = true;
@@ -28,7 +28,7 @@ void hist_doc_base_t::begin_recording(bool init_as_base_commit) {
 
 void hist_doc_base_t::end_recording() {
 
-  hist_doc_base_t *parent = p_super_parent ? p_super_parent : this;
+  hist_doc_base_t *parent = get_super_parent();
   //must be true when we stop recording
   assert(parent->p_is_recording);
 
@@ -138,11 +138,11 @@ bool hist_doc_base_t::is_unmodified_impl() {
   return true;
 }
 
-void hist_doc_base_t::update_super_root(hist_doc_base_t *new_super_root) {
-  p_super_parent = new_super_root;
-  for (auto child : p_childs)
-    if (child) child->update_super_root(new_super_root);
-}
+//void hist_doc_base_t::update_super_root(hist_doc_base_t *new_super_root) {
+//  p_super_parent = new_super_root;
+//  for (auto child : p_childs)
+//    if (child) child->update_super_root(new_super_root);
+//}
 
 hs_result_e hist_doc_base_t::reset() {
 
@@ -382,7 +382,7 @@ hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t *child, bool add_new_e
 
   child->p_parent = this;
   p_childs.push_back(child);
-  child->update_super_root(this);
+  //child->update_super_root(get_parent());
 
   if (add_new_epoch) commit_exclusive(child);
   epoch_t cur_epoch = get_cur_epoch();
@@ -442,13 +442,13 @@ hist_doc_base_t *hist_doc_base_t::get_hs_child(size_t child_idx) {
 }
 
 hist_doc_base_t *hist_doc_base_t::get_parent() {
-  if (p_parent)
-    return p_parent->get_parent();
-  return this;
+  return p_parent ? p_parent : this;
 }
 
 hist_doc_base_t *hist_doc_base_t::get_super_parent() {
-  return p_super_parent;
+  if (p_parent)
+    return p_parent->get_parent();
+  return this;
 }
 
 hist_doc_base_t *hist_doc_base_t::get_child(size_t idx) const {

@@ -47,7 +47,7 @@ private:
 
   epoch_t p_cur_epoch{0};
   hist_doc_base_t *p_parent{nullptr};
-  hist_doc_base_t *p_super_parent{nullptr};
+  //hist_doc_base_t *p_super_parent{nullptr};
   std::vector<hist_doc_base_t*> p_childs;
   std::map<epoch_t, std::map<hist_doc_base_t*, hs_child_state_meta_t>> p_childs_states;
   std::map<hist_doc_base_t*, hs_child_state_meta_t> p_current_child_state;
@@ -102,7 +102,7 @@ protected:
   virtual void record_impl(bool init_as_base_commit);
   virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
-  void update_super_root(hist_doc_base_t *new_super_root);
+  //void update_super_root(hist_doc_base_t *new_super_root);
 
 public:
 
@@ -451,8 +451,8 @@ public:
 
     p_cur_value = new_val;
 
-    if (hist_doc_base_t *super_root = get_super_parent();
-        super_root && super_root->get_commit_exclusive_on_change())
+    if (hist_doc_base_t *super_parent = get_super_parent();
+        super_parent && super_parent->get_commit_exclusive_on_change())
       commit_value_exclusive(STYPE(p_cur_value));
 
   }

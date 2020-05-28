@@ -588,20 +588,27 @@ TEST_CASE("history stream test") {
     hist_doc_array_proxy_t<hs_prop_int_t> *hs_iarray = new hist_doc_array_proxy_t<hs_prop_int_t>;
 
     REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success); // 1
+    hs_root->set_commit_exclusive_on_change(true);
 
     hs_prop_int_t *hs_int0 = new hs_prop_int_t;
     hs_prop_int_t *hs_int1 = new hs_prop_int_t;
 
     REQUIRE(hs_iarray->add_hs_child_as_array(hs_int0) == hs_result_e::hs_success); // 2
+
+    REQUIRE(hs_iarray->get_super_parent() == hs_root);
+
+    REQUIRE(hs_int0->get_super_parent() == hs_root);
     //REQUIRE(std::get<0>(hs_iarray->push_epoch()) == hs_result_e::hs_success); // 3
+    REQUIRE(hs_root->get_cur_epoch() == 1);
     hs_int0->set_value(3);
+    REQUIRE(hs_root->get_cur_epoch() == 2);
 
     REQUIRE(hs_iarray->add_hs_child_as_array(hs_int1) == hs_result_e::hs_success); // 4
-    REQUIRE(hs_root->get_history_size() == 3);
+    REQUIRE(hs_root->get_history_size() == 4);
 
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int0)
             == hs_result_e::hs_alive);
-    REQUIRE(hs_root->get_cur_epoch() == 2);
+    REQUIRE(hs_root->get_cur_epoch() == 3);
 
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int1)
             == hs_result_e::hs_alive);
@@ -622,7 +629,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int1)
             == hs_result_e::hs_dead);
 
-    REQUIRE(hs_iarray->get_cur_epoch() == 4);
+    REQUIRE(hs_iarray->get_cur_epoch() == 5);
     REQUIRE(hs_root->checkout_to_epoch(1) == hs_result_e::hs_success); // 3
     REQUIRE(hs_iarray->get_cur_epoch() == 1);
 
