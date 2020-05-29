@@ -639,6 +639,10 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int1)
             == hs_result_e::hs_dead);
 
+    REQUIRE(!hs_iarray->is_child_unused(hs_int1));
+    hs_int0->set_value(4);
+    REQUIRE(hs_iarray->is_child_unused(hs_int1));
+
 //    hs_root->set_commit_exclusive_on_change(true);
 //    hs_int0->set_value(42);
 //    REQUIRE(hs_iarray->get_cur_epoch() == 5);

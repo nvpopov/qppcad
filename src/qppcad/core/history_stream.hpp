@@ -57,6 +57,7 @@ private:
   bool p_commit_exclusive_on_change_old{false};
   bool p_is_recording{false};
   bool p_init_as_base_commit{false};
+  bool p_auto_disposable{false};
   hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
   /**
@@ -95,7 +96,6 @@ private:
    * @param child
    * @return
    */
-  bool is_child_unused(hist_doc_base_t *child);
 
 protected:
 
@@ -326,6 +326,10 @@ public:
    * @return
    */
   hist_doc_base_t *get_super_parent();
+
+  bool get_auto_disposable() const ;
+  void set_auto_disposable(bool value);
+  bool is_child_unused(hist_doc_base_t *child);
 
 };
 

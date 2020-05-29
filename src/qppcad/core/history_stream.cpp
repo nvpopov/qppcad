@@ -206,8 +206,10 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
     p_hist_line.insert(cur_epoch_iter + 1, new_epoch);
 
     cur_epoch_idx++;
-    for (size_t i = cur_epoch_idx; i < p_hist_line.size(); i++)
+    for (size_t i = cur_epoch_idx; i < p_hist_line.size(); i++) {
+      p_childs_states.erase(p_hist_line[i]);
       on_epoch_removed(p_hist_line[i]);
+    }
 
     p_hist_line.resize(cur_epoch_idx + 1);
 
@@ -449,6 +451,14 @@ hist_doc_base_t *hist_doc_base_t::get_super_parent() {
   if (p_parent)
     return p_parent->get_parent();
   return this;
+}
+
+void hist_doc_base_t::set_auto_disposable(bool value) {
+  p_auto_disposable = value;
+}
+
+bool hist_doc_base_t::get_auto_disposable() const {
+  return p_auto_disposable;
 }
 
 hist_doc_base_t *hist_doc_base_t::get_child(size_t idx) const {
