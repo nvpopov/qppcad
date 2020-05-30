@@ -57,7 +57,8 @@ private:
   bool p_commit_exclusive_on_change_old{false};
   bool p_is_recording{false};
   bool p_init_as_base_commit{false};
-  bool p_auto_disposable{false};
+  bool p_auto_delete{false};
+  bool p_auto_delete_children{false};
   hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
 
   /**
@@ -327,9 +328,14 @@ public:
    */
   hist_doc_base_t *get_super_parent();
 
-  bool get_auto_disposable() const ;
-  void set_auto_disposable(bool value);
+  bool get_auto_delete() const ;
+  void set_auto_delete(bool value);
+
+  bool get_auto_delete_children() const ;
+  void set_auto_delete_children(bool value);
+
   bool is_child_unused(hist_doc_base_t *child);
+  virtual void request_child_deletion(hist_doc_base_t *child);
 
 };
 

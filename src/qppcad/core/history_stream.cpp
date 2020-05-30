@@ -211,6 +211,29 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
       on_epoch_removed(p_hist_line[i]);
     }
 
+    if (get_auto_delete_children()) {
+
+      std::vector<hist_doc_base_t*> children_to_delete;
+      std::copy_if(begin(p_childs), end(p_childs), std::back_inserter(children_to_delete),
+                   [this](hist_doc_base_t *lchld){ return lchld && this->is_child_unused(lchld);});
+
+      for (auto child_to_delete : children_to_delete)
+        if (child_to_delete && child_to_delete->get_auto_delete()) {
+
+          for (auto &[epoch, child_states] : p_childs_states) {
+            auto child_states_it = child_states.find(child_to_delete);
+            if (child_states_it != end(child_states)) child_states.erase(child_states_it);
+          }
+
+          auto child_it = std::find(begin(p_childs), end(p_childs), child_to_delete);
+          if (child_it != end(p_childs)) p_childs.erase(child_it);
+
+          request_child_deletion(child_to_delete);
+
+        }
+
+    }
+
     p_hist_line.resize(cur_epoch_idx + 1);
 
     if (checkout_to_new_epoch) checkout_to_epoch(new_epoch);
@@ -453,12 +476,20 @@ hist_doc_base_t *hist_doc_base_t::get_super_parent() {
   return this;
 }
 
-void hist_doc_base_t::set_auto_disposable(bool value) {
-  p_auto_disposable = value;
+void hist_doc_base_t::set_auto_delete(bool value) {
+  p_auto_delete = value;
 }
 
-bool hist_doc_base_t::get_auto_disposable() const {
-  return p_auto_disposable;
+bool hist_doc_base_t::get_auto_delete_children() const {
+  return p_auto_delete_children;
+}
+
+void hist_doc_base_t::set_auto_delete_children(bool value) {
+  p_auto_delete_children = value;
+}
+
+bool hist_doc_base_t::get_auto_delete() const {
+  return p_auto_delete;
 }
 
 hist_doc_base_t *hist_doc_base_t::get_child(size_t idx) const {
@@ -509,6 +540,10 @@ bool hist_doc_base_t::is_child_unused(hist_doc_base_t *child) {
     if (child_it != end(value) && child_it->second.m_is_alive) return false;
   }
   return true;
+
+}
+
+void hist_doc_base_t::request_child_deletion(hist_doc_base_t *child) {
 
 }
 
