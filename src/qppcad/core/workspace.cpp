@@ -29,7 +29,7 @@ workspace_t::workspace_t(std::string _ws_name) {
 
 opt<size_t> workspace_t::get_sel_idx() {
 
-  for (size_t i = 0; i < m_ws_items.size(); i++)
+  for (size_t i = 0; i < num_items(); i++)
     if (m_ws_items[i]->m_selected) return opt<size_t>(i);
   return std::nullopt;
 
@@ -80,7 +80,7 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
   astate->log(fmt::format("workspace_t::set_selected_item ({} {})", sel_idx, emit_signal));
 
-  if (sel_idx < m_ws_items.size() && !m_ws_items.empty()) {
+  if (sel_idx < num_items() && num_items() != 0) {
 
     m_ws_items[sel_idx]->m_selected = true;
 
@@ -121,7 +121,7 @@ bool workspace_t::set_sel_item(ws_item_t *item, bool emit_signal) {
 void workspace_t::next_item() {
 
   size_t target_id = get_sel_idx().value_or(0) + 1;
-  if (target_id >= m_ws_items.size()) target_id = 0;
+  if (target_id >= num_items()) target_id = 0;
   set_sel_item(target_id);
 
 }
@@ -129,7 +129,7 @@ void workspace_t::next_item() {
 void workspace_t::prev_item() {
 
   int target_id = get_sel_idx().value_or(0) - 1;
-  if (target_id < 0) target_id = m_ws_items.size() - 1;
+  if (target_id < 0) target_id = num_items() - 1;
   set_sel_item(target_id);
 
 }
@@ -158,6 +158,10 @@ void workspace_t::ws_changed() {
 
 }
 
+size_t workspace_t::num_items() {
+  return m_ws_items.size();
+}
+
 void workspace_t::reset_cam() {
 
   m_camera->reset_camera();
@@ -167,7 +171,7 @@ void workspace_t::reset_cam() {
 
 void workspace_t::set_best_view() {
 
-  if (m_ws_items.size() == 0) {
+  if (num_items() == 0) {
 
     m_camera->reset_camera();
     m_camera->update_camera();
@@ -621,7 +625,7 @@ void workspace_t::pop_cam_state() {
 
 void workspace_t::del_item_by_index(size_t idx) {
 
-  if (idx < m_ws_items.size()) m_ws_items[idx]->m_marked_for_deletion = true;
+  if (idx < num_items()) m_ws_items[idx]->m_marked_for_deletion = true;
 
 }
 

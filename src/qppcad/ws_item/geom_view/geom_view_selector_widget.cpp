@@ -14,7 +14,7 @@ void qgeom_view_selector_widget_t::generate_list_gv_items() {
   list_gv->clear();
 
   for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
-    for (size_t q = 0; q < astate->ws_mgr->m_ws[i]->m_ws_items.size(); q++)
+    for (size_t q = 0; q < astate->ws_mgr->m_ws[i]->num_items(); q++)
       if (astate->ws_mgr->m_ws[i]->m_ws_items[q]->get_type() == geom_view_t::get_type_static())
         if (auto as_gv = astate->ws_mgr->m_ws[i]->m_ws_items[q]->cast_as<geom_view_t>(); as_gv) {
 

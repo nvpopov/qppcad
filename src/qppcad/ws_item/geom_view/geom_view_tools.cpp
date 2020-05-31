@@ -540,7 +540,7 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
       //bool succes{false};
 
       auto new_gv = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
-      new_gv->m_name.set_value(fmt::format("composed_{}", cur_ws->m_ws_items.size()));
+      new_gv->m_name.set_value(fmt::format("composed_{}", cur_ws->num_items()));
       cur_ws->add_item_to_ws(new_gv);
 
       auto new_as_gv = new_gv->cast_as<geom_view_t>();
@@ -592,7 +592,7 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::gen_ncells(geom_view_t *gv,
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
   sc_al->m_geom->DIM = 0;
   sc_al->m_geom->cell.DIM = 0;
-  sc_al->m_name.set_value(fmt::format("composed_{}", gv->m_parent_ws->m_ws_items.size()));
+  sc_al->m_name.set_value(fmt::format("composed_{}", gv->m_parent_ws->num_items()));
 
   sc_al->begin_structure_change();
 
@@ -780,7 +780,7 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
   if (cut_selected) gv->delete_selected_atoms();
 
   ret_gv->m_name.set_value(
-      fmt::format("{}{}", gv->m_name.get_value(), gv->m_parent_ws->m_ws_items.size()));
+      fmt::format("{}{}", gv->m_name.get_value(), gv->m_parent_ws->num_items()));
   gv->m_parent_ws->add_item_to_ws(ret_gv);
 
 }
@@ -1101,7 +1101,7 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
   tmp_dst->end_structure_change();
 
   if (tmp_dst->m_name.get_value().empty())
-    tmp_dst->set_name(fmt::format("merged_{}", gv_src1->m_parent_ws->m_ws_items.size()));
+    tmp_dst->set_name(fmt::format("merged_{}", gv_src1->m_parent_ws->num_items()));
 
   astate->astate_evd->cur_ws_changed();
 

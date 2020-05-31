@@ -446,14 +446,15 @@ void str_sim_ws_item_rec_t::cmb_ws_changed(int index) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (index >=0 && index < astate->ws_mgr->m_ws.size() &&
-      !astate->ws_mgr->m_ws[index]->m_ws_items.empty()) {
+  if (index >=0
+      && index < astate->ws_mgr->m_ws.size()
+      && astate->ws_mgr->m_ws[index]->num_items() != 0) {
 
       m_cmb_it->clear();
       m_cmb_it->setEnabled(true);
       m_cmb_it->blockSignals(true);
 
-      for (size_t i = 0; i < astate->ws_mgr->m_ws[index]->m_ws_items.size(); i++) {
+      for (size_t i = 0; i < astate->ws_mgr->m_ws[index]->num_items(); i++) {
           m_cmb_it->addItem(tr("[%1]%2")
                         .arg(i)
                         .arg(QString::fromStdString(
@@ -482,13 +483,13 @@ void str_sim_ws_item_rec_t::cmb_it_changed(int idx) {
 
   auto ws_idx = m_cmb_ws->currentIndex();
 
-  if (ws_idx >= 0 &&
-      ws_idx < astate->ws_mgr->m_ws.size() &&
-      !wsm->m_ws[ws_idx]->m_ws_items.empty() &&
-      idx >= 0 &&
-      idx < wsm->m_ws[ws_idx]->m_ws_items.size() &&
-      wsm->m_ws[ws_idx]->m_ws_items[idx] &&
-      wsm->m_ws[ws_idx]->m_ws_items[idx]->get_type() == geom_view_t::get_type_static()) {
+  if (ws_idx >= 0
+      && ws_idx < static_cast<int>(astate->ws_mgr->m_ws.size())
+      && wsm->m_ws[ws_idx]->num_items() !=0
+      && idx >= 0
+      && idx < static_cast<int>(wsm->m_ws[ws_idx]->num_items())
+      && wsm->m_ws[ws_idx]->m_ws_items[idx]
+      && wsm->m_ws[ws_idx]->m_ws_items[idx]->get_type() == geom_view_t::get_type_static()) {
 
       auto as_gv = wsm->m_ws[ws_idx]->m_ws_items[idx]->cast_as<geom_view_t>();
       m_binded_gv = as_gv;

@@ -285,7 +285,7 @@ add_new_ws_item_widget_t::add_new_ws_item_widget_t() {
   m_gb_type_param_lt->addRow(m_type_param_name_lbl, m_type_param_name);
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
-  if (cur_ws) m_type_param_name->setText(tr("new_item_%1").arg(cur_ws->m_ws_items.size()));
+  if (cur_ws) m_type_param_name->setText(tr("new_item_%1").arg(cur_ws->num_items()));
 
   m_main_lt->addLayout(m_data_lt);
   m_data_lt->addWidget(m_gb_ctor);

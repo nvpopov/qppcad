@@ -187,7 +187,7 @@ void object_inspector_widget_t::cur_ws_changed() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (cur_ws)
-    for (size_t i = 0; i < cur_ws->m_ws_items.size(); i++)
+    for (size_t i = 0; i < cur_ws->num_items(); i++)
       m_ws_items_list->addItem(
           QString::fromStdString(fmt::format("[{}] {} ", i,
                                              cur_ws->m_ws_items[i]->m_name.get_value()))
@@ -211,7 +211,7 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
   if (cur_ws) {
 
       astate->log(fmt::format("DEBUG ::cur_ws_selected_item_changed(), "
-                              "[num_wsi = {}]", cur_ws->m_ws_items.size()));
+                              "[num_wsi = {}]", cur_ws->num_items()));
 
       auto cur_id = cur_ws->get_sel_idx();
 

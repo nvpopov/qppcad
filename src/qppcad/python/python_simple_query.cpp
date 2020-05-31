@@ -66,7 +66,7 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
 
   supercell_tool_t sct;
   sct.make_super_cell(al, sc_a, sc_b, sc_c);
-  cur_ws->set_sel_item(cur_ws->m_ws_items.size()-1);
+  cur_ws->set_sel_item(cur_ws->num_items() - 1);
   astate->astate_evd->python_console_focus_requested();
   astate->make_viewport_dirty();
 
@@ -494,7 +494,7 @@ void simple_query::embed_cube() {
     len[i] = std::max(std::max(p1[i], p2[i]) - std::min(p1[i], p2[i]), 0.1f);
 
   auto new_cube = std::make_shared<cube_primitive_t>();
-  new_cube->m_name.set_value(fmt::format("cube{}", cur_ws->m_ws_items.size()));
+  new_cube->m_name.set_value(fmt::format("cube{}", cur_ws->num_items()));
   new_cube->m_pos.set_cvalue(center);
   new_cube->m_scale.set_cvalue(len);
   cur_ws->add_item_to_ws(new_cube);
@@ -511,7 +511,7 @@ void simple_query::embed_arrow() {
   if (al->m_atom_ord_sel.size() != 2) return;
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
-  new_arr->m_name.set_value(fmt::format("arrow_{}", cur_ws->m_ws_items.size()));
+  new_arr->m_name.set_value(fmt::format("arrow_{}", cur_ws->num_items()));
   auto sel_first = al->m_atom_ord_sel.begin();
   auto sel_second = ++(al->m_atom_ord_sel.begin());
 
@@ -566,7 +566,7 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_c->gen_from_geom(*al->m_geom, tolerance, true);
         al->m_parent_ws->add_item_to_ws(ws_pg);
         ws_pg_c->m_name.set_value(
-            fmt::format("point_sym_grp{}", al->m_parent_ws->m_ws_items.size()));
+            fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
       }
 
     } else if (cur_ws->m_edit_type == ws_edit_e::edit_content &&
@@ -582,7 +582,7 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_partial_c->gen_from_geom(buffer, tolerance, true);
         al->m_parent_ws->add_item_to_ws(ws_pg_partial);
         ws_pg_partial_c->m_name.set_value(
-            fmt::format("point_sym_grp_part{}", al->m_parent_ws->m_ws_items.size()));
+            fmt::format("point_sym_grp_part{}", al->m_parent_ws->num_items()));
       }
 
     }
@@ -602,7 +602,7 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   auto traj_hl = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(traj_hl_t::get_type_static());
   if (!traj_hl) return;
 
-  traj_hl->m_name.set_value(fmt::format("traj_highlighter_{}", cur_ws->m_ws_items.size()));
+  traj_hl->m_name.set_value(fmt::format("traj_highlighter_{}", cur_ws->num_items()));
 
   auto traj_hl_casted = traj_hl->cast_as<traj_hl_t>();
   if (!traj_hl_casted) return;
@@ -753,7 +753,7 @@ void simple_query::make_arrow_p(vector3<float> from,
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
   new_arr->m_name.set_value(name.empty() ?
-                                         fmt::format("arrow_{}", cur_ws->m_ws_items.size()) :
+                                         fmt::format("arrow_{}", cur_ws->num_items()) :
                                          name);
   new_arr->m_pos.set_cvalue(from);
   new_arr->m_arrow_to.set_cvalue(to);
