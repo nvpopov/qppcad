@@ -586,16 +586,20 @@ TEST_CASE("history stream test") {
 
     hist_doc_base_t *hs_root = new hist_doc_base_t;
     hist_doc_array_proxy_t<hs_prop_int_t> *hs_iarray = new hist_doc_array_proxy_t<hs_prop_int_t>;
+    hs_iarray->set_auto_delete_children(true);
 
     REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success); // 1
     hs_root->set_commit_exclusive_on_change(true);
 
     hs_prop_int_t *hs_int0 = new hs_prop_int_t;
+    hs_int0->set_auto_delete(true);
+
     hs_prop_int_t *hs_int1 = new hs_prop_int_t;
+    hs_int1->set_auto_delete(true);
 
     REQUIRE(hs_iarray->add_hs_child_as_array(hs_int0) == hs_result_e::hs_success); // 2
-
     REQUIRE(hs_iarray->get_super_parent() == hs_root);
+    REQUIRE(hs_iarray->is_child_unused(hs_int0) == false);
 
     REQUIRE(hs_int0->get_super_parent() == hs_root);
     //REQUIRE(std::get<0>(hs_iarray->push_epoch()) == hs_result_e::hs_success); // 3
@@ -612,14 +616,24 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int1)
             == hs_result_e::hs_alive);
-
+    //Push epoch and cleanup case -> current issue
+    REQUIRE(hs_iarray->get_hs_children_count() == 2);
+    REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int0)
+            == hs_result_e::hs_alive);
+    REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int1)
+            == hs_result_e::hs_alive);
+    REQUIRE(hs_iarray->is_child_unused(hs_int0) == false);
+    REQUIRE(hs_iarray->is_child_unused(hs_int1) == false);
     REQUIRE(std::get<0>(hs_iarray->push_epoch()) == hs_result_e::hs_success); // 3
+    REQUIRE(hs_iarray->is_child_unused(hs_int0) == false);
+    REQUIRE(hs_iarray->is_child_unused(hs_int1) == false);
+    REQUIRE(hs_iarray->get_hs_children_count() == 2);
 
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int0)
             == hs_result_e::hs_alive);
-
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int1)
             == hs_result_e::hs_alive);
+    //end of push epoch issue
 
     REQUIRE(hs_iarray->set_alive_hs_child(hs_int1, false) == hs_result_e::hs_success);
 
@@ -639,10 +653,12 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_iarray->is_child_alive(hs_iarray->get_cur_epoch(), hs_int1)
             == hs_result_e::hs_dead);
 
-    REQUIRE(!hs_iarray->is_child_unused(hs_int1));
+    //REQUIRE(!hs_iarray->is_child_unused(hs_int1));
     hs_int0->set_value(4);
-    REQUIRE(hs_iarray->is_child_unused(hs_int1));
-
+    //REQUIRE(hs_iarray->is_child_unused(hs_int1));
+    REQUIRE(hs_iarray->get_hs_children_count() == 1);
+    //REQUIRE(hs_int1 == nullptr);
+    //hs_int1->set_value(55);
 //    hs_root->set_commit_exclusive_on_change(true);
 //    hs_int0->set_value(42);
 //    REQUIRE(hs_iarray->get_cur_epoch() == 5);

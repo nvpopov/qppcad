@@ -48,7 +48,8 @@ private:
   epoch_t p_cur_epoch{0};
   hist_doc_base_t *p_parent{nullptr};
   //hist_doc_base_t *p_super_parent{nullptr};
-  std::vector<hist_doc_base_t*> p_childs;
+  std::vector<hist_doc_base_t*> p_children;
+  std::vector<hist_doc_base_t*> p_just_added_children;
   std::map<epoch_t, std::map<hist_doc_base_t*, hs_child_state_meta_t>> p_childs_states;
   std::map<hist_doc_base_t*, hs_child_state_meta_t> p_current_child_state;
   std::vector<epoch_t> p_hist_line{0};

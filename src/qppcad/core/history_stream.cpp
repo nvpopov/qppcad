@@ -105,7 +105,7 @@ bool hist_doc_base_t::is_unmodified() {
 
   std::vector<bool> childs_are_modified;
 
-  for (auto child : p_childs)
+  for (auto child : p_children)
     if (child) {
 
       auto epoch_it = p_childs_states.find(cur_epoch);
@@ -126,9 +126,9 @@ bool hist_doc_base_t::is_unmodified() {
     }
 
   bool all_childs_are_unmodified =
-      p_childs.empty() ? true : std::all_of(begin(childs_are_modified),
-                                            end(childs_are_modified),
-                                            [](bool value) {return value;});
+      p_children.empty() ? true : std::all_of(begin(childs_are_modified),
+                                              end(childs_are_modified),
+                                              [](bool value) {return value;});
 
   return all_childs_are_unmodified && is_unmodified_impl();
 
@@ -147,17 +147,17 @@ bool hist_doc_base_t::is_unmodified_impl() {
 hs_result_e hist_doc_base_t::reset() {
 
   std::vector<bool> child_reseted;
-  for (auto child: p_childs)
+  for (auto child: p_children)
     if (child) child_reseted.push_back(child->reset());
 
   hs_result_e self_rt = reset_impl();
   bool all_child_succeded =
-      p_childs.empty() ? true : std::all_of(begin(child_reseted),
-                                            end(child_reseted),
-                                            [](bool value) {return value;});
+      p_children.empty() ? true : std::all_of(begin(child_reseted),
+                                              end(child_reseted),
+                                              [](bool value) {return value;});
 
   return self_rt == hs_result_e::hs_success && all_child_succeded ? hs_result_e::hs_success :
-                                                                    hs_result_e::hs_error;
+                                                                  hs_result_e::hs_error;
 }
 
 void hist_doc_base_t::record_impl(bool init_as_base_commit) {
@@ -167,7 +167,7 @@ void hist_doc_base_t::record_impl(bool init_as_base_commit) {
     p_cur_epoch = 0;
   }
 
-  for (auto child : p_childs)
+  for (auto child : p_children)
     if (child) child->record_impl(init_as_base_commit);
 
 }
@@ -211,35 +211,57 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
       on_epoch_removed(p_hist_line[i]);
     }
 
-    if (get_auto_delete_children()) {
-
-      std::vector<hist_doc_base_t*> children_to_delete;
-      std::copy_if(begin(p_childs), end(p_childs), std::back_inserter(children_to_delete),
-                   [this](hist_doc_base_t *lchld){ return lchld && this->is_child_unused(lchld);});
-
-      for (auto child_to_delete : children_to_delete)
-        if (child_to_delete && child_to_delete->get_auto_delete()) {
-
-          for (auto &[epoch, child_states] : p_childs_states) {
-            auto child_states_it = child_states.find(child_to_delete);
-            if (child_states_it != end(child_states)) child_states.erase(child_states_it);
-          }
-
-          auto child_it = std::find(begin(p_childs), end(p_childs), child_to_delete);
-          if (child_it != end(p_childs)) p_childs.erase(child_it);
-
-          request_child_deletion(child_to_delete);
-
-        }
-
-    }
-
     p_hist_line.resize(cur_epoch_idx + 1);
 
     if (checkout_to_new_epoch) checkout_to_epoch(new_epoch);
 
     //copy child augmetns from previous epoch
     p_childs_states[new_epoch] = p_childs_states[cur_epoch];
+
+    if (get_auto_delete_children()) {
+
+      std::vector<hist_doc_base_t*> children_to_delete;
+
+//      for (auto child : p_children)
+//        if (child)
+//          fmt::print(std::cout, "foreach p_child : is_unused = {}\n", is_child_unused(child));
+
+      auto cpy_ifl = [this](hist_doc_base_t *lchld) -> bool {
+        return lchld
+               && lchld->get_auto_delete()
+               && this->is_child_unused(lchld)
+               && std::find(begin(this->p_just_added_children),
+                            end(this->p_just_added_children),
+                            lchld) == end(this->p_just_added_children);
+      };
+
+      std::copy_if(begin(p_children),
+                   end(p_children),
+                   std::back_inserter(children_to_delete),
+                   cpy_ifl);
+
+//      fmt::print(std::cout, "INSIDE GET_AUTO_DELETE: sz(cld) = {}, sz(ctd) = {}, cur_epoch = {}\n",
+//                 size(p_children), size(children_to_delete), cur_epoch);
+
+      for (auto child_to_delete : children_to_delete)
+        if (child_to_delete) {
+
+          for (auto &&[epoch, child_states] : p_childs_states) {
+            auto child_states_it = child_states.find(child_to_delete);
+            if (child_states_it != end(child_states)) child_states.erase(child_states_it);
+          }
+
+          auto child_it = std::find(begin(p_children), end(p_children), child_to_delete);
+          if (child_it != end(p_children)) p_children.erase(child_it);
+
+          request_child_deletion(child_to_delete);
+
+        }
+
+      p_just_added_children.clear();
+
+    }
+
     return {hs_result_e::hs_success, new_epoch};
 
   }
@@ -406,8 +428,8 @@ hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t *child, bool add_new_e
   if (!child) return hs_result_e::hs_invalid_child;
 
   child->p_parent = this;
-  p_childs.push_back(child);
-  //child->update_super_root(get_parent());
+  p_children.push_back(child);
+  p_just_added_children.push_back(child);
 
   if (add_new_epoch) commit_exclusive(child);
   epoch_t cur_epoch = get_cur_epoch();
@@ -426,8 +448,8 @@ hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t *child, bool add_new_e
 
 hs_result_e hist_doc_base_t::set_alive_hs_child(hist_doc_base_t *child, bool alive) {
 
-  auto child_it  = std::find(begin(p_childs), end(p_childs), child);
-  if (child_it == end(p_childs)) return hs_result_e::hs_invalid_child;
+  auto child_it  = std::find(begin(p_children), end(p_children), child);
+  if (child_it == end(p_children)) return hs_result_e::hs_invalid_child;
 
   //auto child_idx = std::distance(begin(p_childs), child_it);
   auto com_exclusive_res = commit_exclusive(child, child->get_cur_epoch());
@@ -444,8 +466,8 @@ size_t hist_doc_base_t::get_hs_children_count() {
   if (ch_state_it == end(p_childs_states)) return 0;
 
   return  std::count_if(begin(ch_state_it->second),
-                        end(ch_state_it->second),
-                        [](auto &kv) -> bool {return kv.second.m_is_alive;});
+                       end(ch_state_it->second),
+                       [](auto &kv) -> bool {return kv.second.m_is_alive;});
 
 }
 
@@ -457,7 +479,8 @@ hist_doc_base_t *hist_doc_base_t::get_hs_child(size_t child_idx) {
 
   int casted_child_idx = static_cast<int>(child_idx);
   int cur_child_idx{-1};
-  for (const auto& [key, value] : ch_state_it->second) {
+
+  for (const auto &[key, value] : ch_state_it->second) {
     if (value.m_is_alive) cur_child_idx++;
     if (casted_child_idx == cur_child_idx) return key;
   }
@@ -493,35 +516,42 @@ bool hist_doc_base_t::get_auto_delete() const {
 }
 
 hist_doc_base_t *hist_doc_base_t::get_child(size_t idx) const {
-  if (idx < p_childs.size())
-    return p_childs[idx];
+  if (idx < p_children.size())
+    return p_children[idx];
   return nullptr;
 }
 
 std::optional<size_t> hist_doc_base_t::is_child(hist_doc_base_t *child) const {
+
   if (!child) return std::nullopt;
-  auto it1 = std::find(begin(p_childs), end(p_childs), child);
-  return (it1 != end(p_childs) ? std::optional<size_t>{std::distance(begin(p_childs), it1)} :
+
+  auto it1 = std::find(begin(p_children), end(p_children), child);
+  return (it1 != end(p_children) ?
+                                 std::optional<size_t>{std::distance(begin(p_children), it1)} :
                                  std::nullopt);
+
 }
 
 hs_result_e hist_doc_base_t::remove_child(size_t child_id) {
-  if (child_id < p_childs.size())
-    return remove_child(p_childs[child_id]);
+
+  if (child_id < p_children.size())
+    return remove_child(p_children[child_id]);
+
   return hs_result_e::hs_error;
+
 }
 
 hs_result_e hist_doc_base_t::remove_child(hist_doc_base_t *child) {
 
-  auto it1 = std::find(begin(p_childs), end(p_childs), child);
-  if (it1 != std::end(p_childs)) {
+  auto it1 = std::find(begin(p_children), end(p_children), child);
+  if (it1 != std::end(p_children)) {
 
-    for (auto &[k, v] : p_childs_states) {
+    for (auto &&[k, v] : p_childs_states) {
       auto chld_epoch_it = v.find(child);
       if (chld_epoch_it != end(v)) v.erase(chld_epoch_it);
     }
 
-    p_childs.erase(it1);
+    p_children.erase(it1);
     return hs_result_e::hs_success;
 
   } else {
@@ -530,15 +560,16 @@ hs_result_e hist_doc_base_t::remove_child(hist_doc_base_t *child) {
 
 }
 
-size_t hist_doc_base_t::get_children_count() const { return p_childs.size(); }
+size_t hist_doc_base_t::get_children_count() const { return p_children.size(); }
 
 bool hist_doc_base_t::is_child_unused(hist_doc_base_t *child) {
 
   //epoch_t cur_epoch = get_cur_epoch();
-  for (auto &[key, value] : p_childs_states) {
+  for (auto &&[key, value] : p_childs_states) {
     auto child_it = value.find(child);
     if (child_it != end(value) && child_it->second.m_is_alive) return false;
   }
+
   return true;
 
 }

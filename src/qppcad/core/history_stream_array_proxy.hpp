@@ -21,6 +21,7 @@ struct hs_doc_array_proxy_raw_pointer_policy {
       typename std::add_pointer<typename promote_to_value_type<STYPE>::type>::type;
   static void delete_holder(holder_type_t &elem) {
     delete elem;
+    elem = nullptr;
   }
 
 };
