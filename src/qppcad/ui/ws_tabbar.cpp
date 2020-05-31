@@ -116,7 +116,7 @@ void ws_tabbar_t::current_changed(int current) {
   app_state_t *astate = app_state_t::get_inst();
 
   if (current >= 0 && current < astate->ws_mgr->m_ws.size())
-    astate->ws_mgr->set_cur_id(opt<size_t>(current));
+    astate->ws_mgr->set_cur_id(std::optional<size_t>(current));
 
 }
 

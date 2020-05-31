@@ -934,7 +934,7 @@ void main_window_t::ws_selector_selection_changed(int index) {
       astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
                               index, *current));
       if (current) {
-          astate->ws_mgr->set_cur_id(opt<size_t>(index));
+          astate->ws_mgr->set_cur_id(std::optional<size_t>(index));
           astate->make_viewport_dirty();
         }
 

@@ -88,7 +88,7 @@ void simple_query::sel_ws(int ws_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
   if (!astate->ws_mgr->has_wss()) return;
-  astate->ws_mgr->set_cur_id(opt<size_t>(ws_idx));
+  astate->ws_mgr->set_cur_id(std::optional<size_t>(ws_idx));
   astate->astate_evd->cur_ws_changed();
   astate->make_viewport_dirty();
 

@@ -146,10 +146,10 @@ namespace qpp {
       void rm_bond_msr(const size_t measure_idx);
       void rm_angle_msr(const size_t measure_idx);
 
-      opt<size_t> is_bond_msr_exists(const uint32_t atm1, const uint32_t atm2,
+      std::optional<size_t> is_bond_msr_exists(const uint32_t atm1, const uint32_t atm2,
                                      const index idx1, const index idx2);
 
-      opt<size_t> is_angle_msr_exists(const uint32_t atm1, const uint32_t atm2, const uint32_t atm3,
+      std::optional<size_t> is_angle_msr_exists(const uint32_t atm1, const uint32_t atm2, const uint32_t atm3,
                                       const index idx1, const index idx2, const index idx3);
       void render ();
       void render_overlay(QPainter &painter);

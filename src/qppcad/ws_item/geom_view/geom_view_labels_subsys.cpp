@@ -54,7 +54,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   painter.setPen(rectpen);
   painter.setFont(text_font_lb);
 
-  opt<vector2<float> > proj_pos;
+  std::optional<vector2<float> > proj_pos;
   std::string label;
   QString label_qs;
   QPainterPath *text_path{nullptr};

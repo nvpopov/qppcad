@@ -15,7 +15,7 @@ sf_float_prop_node_t::sf_float_prop_node_t() {
     make_ipls(sf_parameter_e::sfpar_float, "value")
   };
 
-  m_front_end_width = opt<int>(130);
+  m_front_end_width = std::optional<int>(130);
 
 }
 
@@ -81,7 +81,7 @@ sf_float_final_node_t::sf_float_final_node_t() {
     make_ipls(sf_parameter_e::sfpar_float, "").editable(false)
   };
 
-  m_front_end_width = opt<int>(130);
+  m_front_end_width = std::optional<int>(130);
 
 }
 
@@ -116,7 +116,7 @@ sf_float_sum_float_node_t::sf_float_sum_float_node_t() {
     make_inps(sf_parameter_e::sfpar_float, "src2")
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = std::optional<int>(120);
 
 }
 

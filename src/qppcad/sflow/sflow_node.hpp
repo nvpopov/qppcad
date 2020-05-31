@@ -83,7 +83,7 @@ namespace qpp {
 
       size_t m_idx_lookup{0};
 
-      opt<int> m_front_end_width{std::nullopt};
+      std::optional<int> m_front_end_width{std::nullopt};
 
       sflow_calc_meta_t m_calc_meta;
 
@@ -180,8 +180,8 @@ namespace qpp {
 
       }
 
-      opt<size_t> get_data_by_name(sf_data_group_e group, const std::string &parname);
-      opt<size_t> get_data_by_name(sf_sck_info_group_t &sckinf, const std::string &parname);
+      std::optional<size_t> get_data_by_name(sf_data_group_e group, const std::string &parname);
+      std::optional<size_t> get_data_by_name(sf_sck_info_group_t &sckinf, const std::string &parname);
 
       //if false flow stops
       bool execute();

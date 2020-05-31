@@ -35,10 +35,6 @@ namespace qpp {
     using int32_t  = std::int32_t;
     using int64_t  = std::int64_t;
 
-    /* alias for std::optional*/
-    template<typename T>
-    using opt = std::optional<T>;
-
     /**
      * @brief The spatial_units_e enum
      */

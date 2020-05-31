@@ -16,7 +16,7 @@ sf_xgeom_nat_node_t::sf_xgeom_nat_node_t() {
     make_outs(sf_parameter_e::sfpar_int, "nat")
   };
 
-  m_front_end_width = opt<int>(140);
+  m_front_end_width = std::optional<int>(140);
 
 }
 
@@ -47,7 +47,7 @@ sf_xgeom_ntypes_node_t::sf_xgeom_ntypes_node_t() {
     make_outs(sf_parameter_e::sfpar_int, "ntypes")
   };
 
-  m_front_end_width = opt<int>(140);
+  m_front_end_width = std::optional<int>(140);
 
 }
 

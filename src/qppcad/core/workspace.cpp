@@ -27,10 +27,10 @@ workspace_t::workspace_t(std::string _ws_name) {
   m_gizmo = std::make_unique<gizmo_t>();
 }
 
-opt<size_t> workspace_t::get_sel_idx() {
+std::optional<size_t> workspace_t::get_sel_idx() {
 
   for (size_t i = 0; i < num_items(); i++)
-    if (m_ws_items[i]->m_selected) return opt<size_t>(i);
+    if (m_ws_items[i]->m_selected) return std::optional<size_t>(i);
   return std::nullopt;
 
 }
@@ -61,14 +61,14 @@ std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
 
 }
 
-opt<size_t> workspace_t::get_item_idx(ws_item_t *item) {
+std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
 
   auto fidx = std::find_if(m_ws_items.begin(), m_ws_items.end(),
                            [item](std::shared_ptr<ws_item_t> itemc){ return itemc.get() == item;});
 
   if (fidx == m_ws_items.end()) return std::nullopt;
 
-  return opt<size_t>{std::distance(m_ws_items.begin(), fidx)};
+  return std::optional<size_t>{std::distance(m_ws_items.begin(), fidx)};
 
 }
 
@@ -250,7 +250,7 @@ hs_result_e workspace_t::on_epoch_changed(hist_doc_base_t::epoch_t prev_epoch) {
 //    if (is_child_alive(cur_epoch, get_child(i))) {
 //      ws_item_t *itm = dynamic_cast<ws_item_t *>(get_child(i));
 //      if (itm) {
-//        opt<size_t> chd_idx = get_item_idx(itm);
+//        std::optional<size_t> chd_idx = get_item_idx(itm);
 //        if (chd_idx && itm->is_selected()) affected = true;
 //      }
 //    }
@@ -695,14 +695,14 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target
 
 }
 
-opt<size_t> workspace_manager_t::get_cur_id() {
+std::optional<size_t> workspace_manager_t::get_cur_id() {
 
   if (!m_ws.empty()) return m_cur_ws_id;
   return std::nullopt;
 
 }
 
-bool workspace_manager_t::set_cur_id(const opt<size_t> ws_index) {
+bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
 
   //c_app::log("set current called");
   app_state_t* astate = app_state_t::get_inst();
@@ -712,7 +712,7 @@ bool workspace_manager_t::set_cur_id(const opt<size_t> ws_index) {
   if (has_wss()) {
 
     if (ws_index && *ws_index < m_ws.size()) {
-      m_cur_ws_id = opt<size_t>(ws_index);
+      m_cur_ws_id = std::optional<size_t>(ws_index);
       //update_window_title();
       astate->camera = m_ws[*ws_index]->m_camera.get();
       astate->camera->update_camera();
@@ -748,7 +748,7 @@ void workspace_manager_t::next_ws() {
 
   size_t target_id = get_cur_id().value_or(0) + 1;
   if (target_id >= m_ws.size()) target_id = 0;
-  set_cur_id(opt<size_t>(target_id));
+  set_cur_id(std::optional<size_t>(target_id));
 
 }
 
@@ -756,7 +756,7 @@ void workspace_manager_t::prev_ws() {
 
   int target_id = get_cur_id().value_or(0) - 1;
   if (target_id < 0) target_id = m_ws.size() - 1;
-  set_cur_id(opt<size_t>(target_id));
+  set_cur_id(std::optional<size_t>(target_id));
 
 }
 
@@ -940,7 +940,7 @@ void workspace_manager_t::move_ws(size_t from, size_t to) {
 
   if (from == to || from >= m_ws.size() || to >= m_ws.size()) return;
   std::swap(m_ws[from], m_ws[to]);
-  set_cur_id(opt<size_t>(to));
+  set_cur_id(std::optional<size_t>(to));
 
   astate->astate_evd->wss_changed();
 
@@ -1153,8 +1153,8 @@ void workspace_manager_t::utility_event_loop() {
       if (cur_ws_idx) {
         //last?
         if (m_ws.size() == 1) m_cur_ws_id = std::nullopt;
-        else if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = opt<size_t>(0);
-        else m_cur_ws_id = opt<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
+        else if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = std::optional<size_t>(0);
+        else m_cur_ws_id = std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
       }
 
       it = m_ws.erase(it);

@@ -15,7 +15,7 @@ sf_v3f_prop_node_t::sf_v3f_prop_node_t() {
     make_ipls(sf_parameter_e::sfpar_v3f, "value").hide_label(true)
   };
 
-  m_front_end_width = opt<int>(250);
+  m_front_end_width = std::optional<int>(250);
 
 }
 
@@ -46,7 +46,7 @@ sf_v3f_final_node_t::sf_v3f_final_node_t() {
     make_ipls(sf_parameter_e::sfpar_v3f, "vec").editable(false).hide_label(true)
   };
 
-  m_front_end_width = opt<int>(250);
+  m_front_end_width = std::optional<int>(250);
 
 }
 
@@ -81,7 +81,7 @@ sf_v3f_sum_v3f_node_t::sf_v3f_sum_v3f_node_t() {
     make_inps(sf_parameter_e::sfpar_v3f, "src2")
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = std::optional<int>(120);
 
 }
 
@@ -114,7 +114,7 @@ sf_v3f_dot_node_t::sf_v3f_dot_node_t() {
     make_inps(sf_parameter_e::sfpar_v3f, "src2")
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = std::optional<int>(120);
 
 }
 
@@ -146,7 +146,7 @@ sf_v3f_normalized_node_t::sf_v3f_normalized_node_t() {
     make_inps(sf_parameter_e::sfpar_v3f, "src"),
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = std::optional<int>(120);
 
 }
 
@@ -177,7 +177,7 @@ sf_v3f_norm_node_t::sf_v3f_norm_node_t() {
     make_inps(sf_parameter_e::sfpar_v3f, "src"),
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = std::optional<int>(120);
 }
 
 bool sf_v3f_norm_node_t::execute_ex() {
@@ -208,7 +208,7 @@ sf_v3f_cross_node_t::sf_v3f_cross_node_t() {
    make_inps(sf_parameter_e::sfpar_v3f, "src2")
   };
 
-  m_front_end_width = opt<int>(120);
+  m_front_end_width = std::optional<int>(120);
 
 }
 

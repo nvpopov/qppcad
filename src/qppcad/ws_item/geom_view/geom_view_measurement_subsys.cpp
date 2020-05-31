@@ -76,7 +76,7 @@ void geom_view_msr_subsys_t::rm_angle_msr(const size_t measure_idx) {
 }
 
 
-opt<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (const uint32_t atm1, const uint32_t atm2,
+std::optional<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (const uint32_t atm1, const uint32_t atm2,
                                                         const index idx1, const index idx2) {
 
   for (auto i = 0; i < m_dist_recs.size(); i++)
@@ -84,13 +84,13 @@ opt<size_t> geom_view_msr_subsys_t::is_bond_msr_exists (const uint32_t atm1, con
         && m_dist_recs[i].m_idx1 == idx1 && m_dist_recs[i].m_idx2 == idx2)
         || (m_dist_recs[i].m_at1 == atm2 && m_dist_recs[i].m_at2 == atm1
         && m_dist_recs[i].m_idx1 == idx2 && m_dist_recs[i].m_idx2 == idx1))
-      return opt<size_t>(i);
+      return std::optional<size_t>(i);
 
   return std::nullopt;
 
 }
 
-opt<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(
+std::optional<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(
     const uint32_t atm1, const uint32_t atm2, const uint32_t atm3,
     const index idx1, const index idx2, const index idx3) {
 
@@ -101,7 +101,7 @@ opt<size_t> geom_view_msr_subsys_t::is_angle_msr_exists(
         && m_angle_recs[i].m_idx1 == idx1
         && m_angle_recs[i].m_idx2 == idx2
         && m_angle_recs[i].m_idx3 == idx3)
-      return opt<size_t>(i);
+      return std::optional<size_t>(i);
 
   return std::nullopt;
 

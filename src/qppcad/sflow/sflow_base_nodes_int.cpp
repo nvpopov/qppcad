@@ -15,7 +15,7 @@ sf_int_prop_node_t::sf_int_prop_node_t() : sf_node_t () {
     make_ipls(sf_parameter_e::sfpar_int, "value").hide_label(false)
   };
 
-  m_front_end_width = opt<int>(130);
+  m_front_end_width = std::optional<int>(130);
 
 }
 
@@ -46,7 +46,7 @@ sf_int_final_node_t::sf_int_final_node_t() : sf_node_t () {
     make_ipls(sf_parameter_e::sfpar_int, "value").editable(false)
   };
 
-  m_front_end_width = opt<int>(130);
+  m_front_end_width = std::optional<int>(130);
 
 }
 
@@ -115,7 +115,7 @@ sf_int_sum_int_node_t::sf_int_sum_int_node_t() {
     make_inps(sf_parameter_e::sfpar_int, "src2")
   };
 
-  m_front_end_width = opt<int>(130);
+  m_front_end_width = std::optional<int>(130);
 
 }
 
@@ -152,7 +152,7 @@ sf_int_patb_const_node_t::sf_int_patb_const_node_t() {
     make_ipls(sf_parameter_e::sfpar_int, "b")
   };
 
-  m_front_end_width = opt<int>(130);
+  m_front_end_width = std::optional<int>(130);
 
 }
 
@@ -187,7 +187,7 @@ sf_int_mul_int_node_t::sf_int_mul_int_node_t() {
     make_inps(sf_parameter_e::sfpar_int, "src2")
   };
 
-  m_front_end_width = opt<int>(130);
+  m_front_end_width = std::optional<int>(130);
 
 }
 

@@ -175,7 +175,7 @@ void geom_view_colorizer_helper::colorize_by_xfield(geom_view_t *gv,
   auto field_min_max = gv->get_min_max_xfield(xfield_id);
 
   //  bool has_static_anim{false};
-  opt<size_t> static_anim_id;
+  std::optional<size_t> static_anim_id;
 
   for (size_t i = 0; i < gv->m_geom->nat(); i++) {
 

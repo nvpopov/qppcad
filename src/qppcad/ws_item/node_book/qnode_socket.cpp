@@ -36,7 +36,7 @@ qnode_socket_t::~qnode_socket_t() {
 
 }
 
-opt<size_t> qnode_socket_t::connections_count() {
+std::optional<size_t> qnode_socket_t::connections_count() {
 
   if (!m_node) return std::nullopt;
   if (!m_node->m_sf_node) return std::nullopt;
@@ -48,7 +48,7 @@ opt<size_t> qnode_socket_t::connections_count() {
                     {return con && con->m_inp_socket &&
                     con->m_out_socket && con->m_inp_socket == this;});
 
-  return opt<size_t>(ret_con_count);
+  return std::optional<size_t>(ret_con_count);
 
 }
 

@@ -19,7 +19,7 @@ void sf_node_t::explicit_create_ipl() {
 
 }
 
-opt<size_t> sf_node_t::get_data_by_name(sf_data_group_e group, const std::string &parname) {
+std::optional<size_t> sf_node_t::get_data_by_name(sf_data_group_e group, const std::string &parname) {
 
   switch (group) {
 
@@ -44,8 +44,8 @@ opt<size_t> sf_node_t::get_data_by_name(sf_data_group_e group, const std::string
 
 }
 
-opt<size_t> sf_node_t::get_data_by_name(sf_sck_info_group_t &sckinf,
-                                           const std::string &parname) {
+std::optional<size_t> sf_node_t::get_data_by_name(sf_sck_info_group_t &sckinf,
+                                                  const std::string &parname) {
 
   auto find_fn = [&parname] (sf_sck_info_group_t::value_type data_scheme) {
     return data_scheme.m_sck_name == parname;
@@ -54,7 +54,7 @@ opt<size_t> sf_node_t::get_data_by_name(sf_sck_info_group_t &sckinf,
   auto find_itr = std::find_if(std::begin(sckinf), std::end(sckinf), find_fn);
 
   return find_itr != sckinf.end() ?
-        opt<size_t>{std::distance(std::begin(sckinf), find_itr)} : std::nullopt;
+        std::optional<size_t>{std::distance(std::begin(sckinf), find_itr)} : std::nullopt;
 
 }
 

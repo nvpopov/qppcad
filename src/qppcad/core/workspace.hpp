@@ -59,7 +59,7 @@ public:
   workspace_t(std::string _ws_name = "default");
 
   //selection routines
-  opt<size_t>  get_sel_idx();
+  std::optional<size_t>  get_sel_idx();
   ws_item_t *get_sel();
   std::shared_ptr<ws_item_t> get_sel_sp();
   std::shared_ptr<ws_item_t> get_by_name(std::string _name);
@@ -70,7 +70,7 @@ public:
     return  cur_it->cast_as<T>();
   }
 
-  opt<size_t> get_item_idx(ws_item_t *item);
+  std::optional<size_t> get_item_idx(ws_item_t *item);
   bool set_sel_item(const size_t sel_idx, bool emit_signal = true);
   bool set_sel_item(ws_item_t *item, bool emit_signal = true);
   void next_item();
@@ -118,7 +118,7 @@ class workspace_manager_t : public std::enable_shared_from_this<workspace_manage
 private:
 
   app_state_t *cached_astate;
-  opt<size_t> m_cur_ws_id{};
+  std::optional<size_t> m_cur_ws_id{};
 
 public:
 
@@ -128,12 +128,12 @@ public:
 
   std::shared_ptr<workspace_t> get_cur_ws();
   std::shared_ptr<workspace_t> get_by_name(std::string target_name);
-  opt<size_t> get_cur_id();
+  std::optional<size_t> get_cur_id();
 
-  bool set_cur_id(const opt<size_t> ws_index);
+  bool set_cur_id(const std::optional<size_t> ws_index);
 
   template<int I>
-  void force_set_cur_ws(){set_cur_id(opt<size_t>(I));}
+  void force_set_cur_ws(){set_cur_id(std::optional<size_t>(I));}
 
   std::shared_ptr<workspace_t> get_ws(int id);
   void next_ws();

@@ -31,7 +31,7 @@ namespace qpp {
                        QColor sck_color = Qt::red);
         ~qnode_socket_t() override;
 
-        opt<size_t> connections_count();
+        std::optional<size_t> connections_count();
         int type() const override;
 
       protected:
