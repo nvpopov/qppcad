@@ -147,98 +147,95 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
 
 }
 
-std::string ws_item_behaviour_manager_t::get_ff_full_name(size_t _file_format_hash) {
+std::string ws_item_behaviour_manager_t::get_ff_full_name(size_t file_format_hash) {
 
-  auto it = m_file_formats.find(_file_format_hash);
+  auto it = m_file_formats.find(file_format_hash);
   if (it != m_file_formats.end()) return it->second.m_shortname;
   else return "NOT_FOUND";
 
 }
 
-std::string ws_item_behaviour_manager_t::get_ff_short_name(size_t _file_format_hash) {
+std::string ws_item_behaviour_manager_t::get_ff_short_name(size_t file_format_hash) {
 
-  auto it = m_file_formats.find(_file_format_hash);
+  auto it = m_file_formats.find(file_format_hash);
   if (it != m_file_formats.end()) return it->second.m_shortname;
   else return "NOT_FOUND";
 
 }
 
-size_t ws_item_behaviour_manager_t::reg_ff(std::string _full_name,
-                                           std::string _short_name,
-                                           size_t _file_format_group_hash,
-                                           std::vector<std::string> _finger_prints) {
+size_t ws_item_behaviour_manager_t::reg_ff(std::string full_name,
+                                           std::string short_name,
+                                           size_t file_format_group_hash,
+                                           std::vector<std::string> finger_prints) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  size_t _ff_hash = astate->hash_reg->calc_hash_ub(_full_name);
+  size_t ff_hash = astate->hash_reg->calc_hash_ub(full_name);
 
-  auto it = m_file_formats.find(_ff_hash);
+  auto it = m_file_formats.find(ff_hash);
 
   if (it == m_file_formats.end()) {
 
     ws_item_io_file_format_t new_file_format;
-    new_file_format.m_full_name = _full_name;
-    new_file_format.m_shortname = _short_name;
-    new_file_format.m_finger_prints = _finger_prints;
-    new_file_format.m_group_hash = _file_format_group_hash;
+    new_file_format.m_full_name = full_name;
+    new_file_format.m_shortname = short_name;
+    new_file_format.m_finger_prints = finger_prints;
+    new_file_format.m_group_hash = file_format_group_hash;
 
-    auto it_ffg = m_file_format_groups.find(_file_format_group_hash);
+    auto it_ffg = m_file_format_groups.find(file_format_group_hash);
     if (it_ffg != m_file_format_groups.end())
-      m_file_format_groups[_file_format_group_hash].m_ffs_lookup.insert(_ff_hash);
+      m_file_format_groups[file_format_group_hash].m_ffs_lookup.insert(ff_hash);
 
-    m_file_formats.emplace(_ff_hash, std::move(new_file_format));
+    m_file_formats.emplace(ff_hash, std::move(new_file_format));
 
   }
 
   astate->tlog("Registering file format {}[{}] - hash {}, ghash {}",
-               _full_name, _short_name, _ff_hash, _file_format_group_hash);
+               full_name, short_name, ff_hash, file_format_group_hash);
 
-  return _ff_hash;
+  return ff_hash;
 
 }
 
-size_t ws_item_behaviour_manager_t::reg_ffg(std::string _full_name, std::string _short_name) {
+size_t ws_item_behaviour_manager_t::reg_ffg(std::string full_name, std::string short_name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  size_t _file_format_group_hash = astate->hash_reg->calc_hash_ub(_full_name);
+  size_t file_format_group_hash = astate->hash_reg->calc_hash_ub(full_name);
 
-  auto it = m_file_format_groups.find(_file_format_group_hash);
-
+  auto it = m_file_format_groups.find(file_format_group_hash);
   if (it == m_file_format_groups.end()) {
-
     ws_item_io_file_format_group_t new_file_format_group;
-    new_file_format_group.m_full_name = _full_name;
-    new_file_format_group.m_short_name = _short_name;
-    m_file_format_groups.emplace(_file_format_group_hash, std::move(new_file_format_group));
-
+    new_file_format_group.m_full_name = full_name;
+    new_file_format_group.m_short_name = short_name;
+    m_file_format_groups.emplace(file_format_group_hash, std::move(new_file_format_group));
   }
 
   astate->tlog("Registering file format group {}[{}] - hash {}",
-               _full_name, _short_name, _file_format_group_hash);
+               full_name, short_name, file_format_group_hash);
 
-  return _file_format_group_hash;
+  return file_format_group_hash;
 
 }
 
-size_t ws_item_behaviour_manager_t::reg_tool_grp(std::string _full_name) {
+size_t ws_item_behaviour_manager_t::reg_tool_grp(std::string full_name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
   ws_item_tool_group_t tool_grp;
-  tool_grp.m_full_name = _full_name;
-  size_t _g_hash = astate->hash_reg->calc_hash_ub(_full_name);
-  m_tools_groups.emplace(_g_hash, std::move(tool_grp));
+  tool_grp.m_full_name = full_name;
+  size_t g_hash = astate->hash_reg->calc_hash_ub(full_name);
+  m_tools_groups.emplace(g_hash, std::move(tool_grp));
 
-  return _g_hash;
+  return g_hash;
 
 }
 
 size_t ws_item_behaviour_manager_t::reg_tool(
-    std::string _full_name,
+    std::string full_name,
     size_t grgp_hash,
     size_t type_hash,
-    bool _itm_req,
+    bool itm_req,
     ws_item_tool_type_e tool_type,
     std::function<std::shared_ptr<ws_item_tool_t>()> f_fabric,
     std::function<bool(ws_item_t*)> f_can_apply) {
@@ -246,15 +243,15 @@ size_t ws_item_behaviour_manager_t::reg_tool(
   app_state_t *astate = app_state_t::get_inst();
 
   ws_item_tool_info_t tinfo;
-  tinfo.m_full_name = _full_name;
+  tinfo.m_full_name = full_name;
   tinfo.m_accepted_type = type_hash;
   tinfo.m_group_hash = grgp_hash;
   tinfo.m_tool_type = tool_type;
-  tinfo.m_item_required = _itm_req;
+  tinfo.m_item_required = itm_req;
   tinfo.m_fabric = f_fabric;
   tinfo.m_can_apply = f_can_apply;
 
-  size_t tinfo_hash = astate->hash_reg->calc_hash_ub(_full_name);
+  size_t tinfo_hash = astate->hash_reg->calc_hash_ub(full_name);
 
   m_tools_info.emplace(tinfo_hash, std::move(tinfo));
   return tinfo_hash;
@@ -265,31 +262,31 @@ size_t ws_item_behaviour_manager_t::reg_sflow_grp(std::string group_name) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  size_t _g_hash = astate->hash_reg->calc_hash_ub(group_name);
+  size_t g_hash = astate->hash_reg->calc_hash_ub(group_name);
 
   sflow_node_group_info_t sflow_grp;
   sflow_grp.m_group_name = group_name;
-  sflow_grp.m_group_hash = _g_hash;
+  sflow_grp.m_group_hash = g_hash;
 
-  m_sflow_node_group_info.emplace(_g_hash, std::move(sflow_grp));
+  m_sflow_node_group_info.emplace(g_hash, std::move(sflow_grp));
 
-  return _g_hash;
+  return g_hash;
 
 }
 
 size_t ws_item_behaviour_manager_t::reg_reg_sf_fbr(
-    std::string _full_name,
-    size_t _g_hash,
-    std::function<std::shared_ptr<sf_node_t> ()> _fabric) {
+    std::string full_name,
+    size_t g_hash,
+    std::function<std::shared_ptr<sf_node_t> ()> fabric) {
 
   app_state_t *astate = app_state_t::get_inst();
 
   sflow_node_info_t sinfo;
-  sinfo.m_full_name = _full_name;
-  sinfo.m_group_hash = _g_hash;
-  sinfo.m_fabric = _fabric;
+  sinfo.m_full_name = full_name;
+  sinfo.m_group_hash = g_hash;
+  sinfo.m_fabric = fabric;
 
-  size_t sinfo_hash = astate->hash_reg->calc_hash_ub(_full_name);
+  size_t sinfo_hash = astate->hash_reg->calc_hash_ub(full_name);
 
   m_sflow_node_info.emplace(sinfo_hash, std::move(sinfo));
   return sinfo_hash;
@@ -298,7 +295,7 @@ size_t ws_item_behaviour_manager_t::reg_reg_sf_fbr(
 
 void ws_item_behaviour_manager_t::exec_tool(ws_item_t* item,
                                             size_t tool_hash,
-                                            uint32_t _error_ctx) {
+                                            uint32_t error_ctx) {
 
   auto tinfo = m_tools_info.find(tool_hash);
 
@@ -315,7 +312,7 @@ void ws_item_behaviour_manager_t::exec_tool(ws_item_t* item,
   auto tool_inst = tinfo->second.m_fabric();
 
   //bypass item
-  tool_inst->exec(item, _error_ctx);
+  tool_inst->exec(item, error_ctx);
 
 }
 
@@ -329,13 +326,13 @@ ws_item_tool_type_e ws_item_behaviour_manager_t::get_tool_type(size_t tool_hash)
 
 void ws_item_behaviour_manager_t::exec_tool_by_name(std::string tool_name,
                                                     ws_item_t *item,
-                                                    uint32_t _error_ctx) {
+                                                    uint32_t error_ctx) {
 
   auto it = std::find_if(m_tools_info.begin(),
                          m_tools_info.end(),
                          [&tool_name](const auto &e){return e.second.m_full_name == tool_name;});
 
-  if (it != m_tools_info.end()) exec_tool(item, it->first, _error_ctx);
+  if (it != m_tools_info.end()) exec_tool(item, it->first, error_ctx);
 
 }
 
@@ -362,7 +359,8 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_ff_by_short_name(
 
   auto find_iter = std::find_if(std::begin(m_file_formats), std::end(m_file_formats),
                                 [&ffmt_short_name](const auto &rec){
-                                  return rec.second.m_shortname == ffmt_short_name;});
+                                  return rec.second.m_shortname == ffmt_short_name;
+                                });
 
   if (find_iter != m_file_formats.cend()) return std::optional<size_t>(find_iter->first);
 
@@ -396,10 +394,9 @@ std::optional<size_t> ws_item_behaviour_manager_t::get_io_bhv_by_file_format_ex(
 
 }
 
-void ws_item_behaviour_manager_t::reg_io_bhv(
-    std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
-    size_t accepted_file_format,
-    size_t accepted_type) {
+void ws_item_behaviour_manager_t::reg_io_bhv(std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
+                                             size_t accepted_file_format,
+                                             size_t accepted_type) {
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -416,8 +413,8 @@ void ws_item_behaviour_manager_t::reg_io_bhv(
 
 }
 
-void ws_item_behaviour_manager_t::unreg_ff(size_t _file_format_hash) {
-  auto it = m_file_formats.find(_file_format_hash);
+void ws_item_behaviour_manager_t::unreg_ff(size_t file_format_hash) {
+  auto it = m_file_formats.find(file_format_hash);
   if (it != m_file_formats.end()) m_file_formats.erase(it);
 }
 
@@ -558,7 +555,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::fbr_ws_item_by_name(
 
 }
 
-bool ws_item_io_behaviour_t::is_type_accepted(size_t _type) {
-  return m_accepted_type == _type;
+bool ws_item_io_behaviour_t::is_type_accepted(size_t input_type) {
+  return m_accepted_type == input_type;
 }
 

@@ -68,7 +68,7 @@ namespace qpp {
      */
     struct ws_item_tool_t {
 
-      virtual void exec(ws_item_t *item, uint32_t _error_ctx) = 0;
+      virtual void exec(ws_item_t *item, uint32_t error_ctx) = 0;
       virtual ws_item_inline_tool_widget_t* construct_inline_tool() {return nullptr;}
 
     };
@@ -132,10 +132,9 @@ namespace qpp {
                                     ws_item_t *_item,
                                     workspace_t *ws) = 0;
 
-      virtual void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                                  ws_item_t *_item) = 0;
+      virtual void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream, ws_item_t *_item) = 0;
 
-      bool is_type_accepted(size_t _type);
+      bool is_type_accepted(size_t accepted_type);
 
     };
 
@@ -144,53 +143,43 @@ namespace qpp {
 
     public:
 
-      bool check_before_save(ws_item_t *_item, std::string &message) override {
-
-        if (_item && _item->get_type() == T::get_type_static()) {
-
-            T* casted_item = _item->cast_as<T>();
+      bool check_before_save(ws_item_t *item, std::string &message) override {
+        if (item && item->get_type() == T::get_type_static()) {
+            T* casted_item = item->cast_as<T>();
             return check_before_save_ex(casted_item, message);
           }
-
         return true;
-
       }
 
-      virtual bool check_before_save_ex(T *_item, std::string &message) {
+      virtual bool check_before_save_ex(T *item, std::string &message) {
         return true;
       }
 
       void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                            ws_item_t *_item,
+                            ws_item_t *item,
                             workspace_t *ws) override {
-
-        if (_item && _item->get_type() == T::get_type_static()) {
-            T* casted_item = _item->cast_as<T>();
+        if (item && item->get_type() == T::get_type_static()) {
+            T* casted_item = item->cast_as<T>();
             if (casted_item) {
               casted_item->begin_recording();
               load_from_stream_ex(stream, casted_item, ws);
               casted_item->end_recording();
             }
           }
-
       }
 
       virtual void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                        T *_item,
                                        workspace_t *ws) = 0;
 
-      void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                          ws_item_t *_item) override {
-
-        if (_item && _item->get_type() == T::get_type_static()) {
-            T* casted_item = _item->cast_as<T>();
+      void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream, ws_item_t *item) override {
+        if (item && item->get_type() == T::get_type_static()) {
+            T* casted_item = item->cast_as<T>();
             if (casted_item) save_to_stream_ex(stream, casted_item);
           }
-
       }
 
-      virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                                     T *_item) = 0;
+      virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream, T *item) = 0;
 
     };
 
@@ -199,18 +188,15 @@ namespace qpp {
 
     public:
 
-      bool check_before_save(ws_item_t *_item, std::string &message) override {
-
-        if (_item && _item->get_type() == T::get_type_static()) {
-            T* casted_item = _item->cast_as<T>();
+      bool check_before_save(ws_item_t *item, std::string &message) override {
+        if (item && item->get_type() == T::get_type_static()) {
+            T* casted_item = item->cast_as<T>();
             return check_before_save_ex(casted_item, message);
           }
-
         return true;
-
       }
 
-      virtual bool check_before_save_ex(T *_item, std::string &message) {
+      virtual bool check_before_save_ex(T *item, std::string &message) {
         return true;
       }
 
@@ -220,49 +206,34 @@ namespace qpp {
       virtual void post_save_hook(T *_item)  = 0;
 
       void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                            ws_item_t *_item,
+                            ws_item_t *item,
                             workspace_t *ws) override {
-
-        if (_item && _item->get_type() == T::get_type_static()) {
-
-            T* casted_item = _item->cast_as<T>();
-
+        if (item && item->get_type() == T::get_type_static()) {
+            T* casted_item = item->cast_as<T>();
             if (casted_item) {
-
                 pre_load_hook(casted_item, ws);
                 load_from_stream_ex(stream, casted_item, ws);
                 post_load_hook(casted_item, ws);
-
               }
-
           }
-
       }
 
       virtual void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
                                        T *_item,
                                        workspace_t *ws) = 0;
 
-      void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                          ws_item_t *_item) override {
-
-        if (_item && _item->get_type() == T::get_type_static()) {
-
-            T* casted_item = _item->cast_as<T>();
-
+      void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream, ws_item_t *item) override {
+        if (item && item->get_type() == T::get_type_static()) {
+            T* casted_item = item->cast_as<T>();
             if (casted_item) {
-
                 pre_save_hook(casted_item);
                 save_to_stream_ex(stream, casted_item);
                 post_save_hook(casted_item);
-
               }
           }
-
       }
 
-      virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                                     T *_item) = 0;
+      virtual void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream, T *item) = 0;
 
     };
 
@@ -329,15 +300,15 @@ namespace qpp {
                                size_t bhv_id,
                                std::string &message);
 
-      std::string get_ff_full_name(size_t _file_format_hash);
-      std::string get_ff_short_name(size_t _file_format_hash);
+      std::string get_ff_full_name(size_t file_format_hash);
+      std::string get_ff_short_name(size_t file_format_hash);
 
 
-      size_t reg_ff(std::string _full_name, std::string _short_name,
-                    size_t _file_format_group_hash, std::vector<std::string> _finger_prints);
-      void unreg_ff(size_t _file_format_hash);
+      size_t reg_ff(std::string full_name, std::string short_name,
+                    size_t file_format_group_hash, std::vector<std::string> finger_prints);
+      void unreg_ff(size_t file_format_hash);
 
-      size_t reg_ffg(std::string _full_name, std::string _short_name);
+      size_t reg_ffg(std::string full_name, std::string short_name);
 
       std::optional<size_t> get_ff_by_finger_print(const std::string &file_name);
       std::optional<size_t> get_ff_by_short_name(const std::string &ffmt_short_name);
@@ -381,51 +352,51 @@ namespace qpp {
 
       /**
        * @brief reg_tool_grp
-       * @param _full_name
+       * @param full_name
        * @return
        */
-      size_t reg_tool_grp(std::string _full_name);
+      size_t reg_tool_grp(std::string full_name);
 
       /**
        * @brief reg_tool
-       * @param _full_name
-       * @param _g_hash
-       * @param _t_hash
-       * @param _itm_req
-       * @param _fabric
+       * @param full_name
+       * @param g_hash
+       * @param t_hash
+       * @param itm_req
+       * @param fabric
        * @return
        */
       size_t reg_tool(
-          std::string _full_name,
+          std::string full_name,
           size_t grgp_hash,
           size_t type_hash,
-          bool _itm_req,
+          bool itm_req,
           ws_item_tool_type_e tool_type,
           std::function<std::shared_ptr<ws_item_tool_t>()> f_fabric,
           std::function<bool(ws_item_t*)> f_can_apply);
 
       size_t reg_sflow_grp(std::string group_name);
-      size_t reg_reg_sf_fbr(std::string _full_name,
-                            size_t _g_hash,
-                            std::function<std::shared_ptr<sf_node_t>() > _fabric);
+      size_t reg_reg_sf_fbr(std::string full_name,
+                            size_t g_hash,
+                            std::function<std::shared_ptr<sf_node_t>() > fabric);
       /**
        * @brief exec_tool
        * @param item
        * @param tool_hash
-       * @param _error_ctx
+       * @param error_ctx
        */
-      void exec_tool(ws_item_t* item, size_t tool_hash, uint32_t _error_ctx = error_ctx_mbox);
+      void exec_tool(ws_item_t* item, size_t tool_hash, uint32_t error_ctx = error_ctx_mbox);
       ws_item_tool_type_e get_tool_type(size_t tool_hash);
 
       /**
        * @brief exec_tool_by_name
        * @param tool_name
        * @param item
-       * @param _error_ctx
+       * @param error_ctx
        */
       void exec_tool_by_name(std::string tool_name,
                              ws_item_t *item = nullptr,
-                             uint32_t _error_ctx = error_ctx_mbox);
+                             uint32_t error_ctx = error_ctx_mbox);
 
     };
 
