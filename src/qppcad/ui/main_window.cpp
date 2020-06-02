@@ -845,7 +845,7 @@ void main_window_t::dropEvent(QDropEvent *event) {
       QString native_path = urlList.at(i).toLocalFile();
       std::string native_path_str = native_path.toStdString();
       //astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
-      astate->ws_mgr->load_from_file_autodeduce(native_path_str);
+      astate->ws_mgr->load_from_file_autodeduce(native_path_str, "", true, true);
 
     }
 
@@ -1796,8 +1796,10 @@ void main_window_t::recent_files_clicked() {
     else {
 
       auto bhv_id = astate->ws_mgr->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
-      if (bhv_id) astate->ws_mgr->import_from_file(rec_idx.m_file_name, *bhv_id, true);
-      else astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name);
+      if (bhv_id)
+        astate->ws_mgr->import_from_file(rec_idx.m_file_name, *bhv_id, true, true);
+      else
+        astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name, "", true, true);
 
     }
 
@@ -2076,8 +2078,7 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
     if (it_fit != bhv_mgr.m_tools_info.end()) {
 
       auto ws_item_tool = it_fit->second.m_fabric();
-      target =
-          std::shared_ptr<ws_item_inline_tool_widget_t>{ws_item_tool->construct_inline_tool()};
+      target = std::shared_ptr<ws_item_inline_tool_widget_t>{ws_item_tool->construct_inline_tool()};
       m_inline_tools.insert({tool_id, target});
 
     }
@@ -2143,9 +2144,10 @@ void main_window_t::control_bhv_tools_menus_activity() {
       if (it_t != bhv_mgr->m_tools_info.end()) {
 
         if (!it_t->second.m_item_required) elem->setEnabled(true);
-        if (cur_it && it_t->second.m_item_required &&
-            it_t->second.m_accepted_type == cur_it->get_type() &&
-            it_t->second.m_can_apply(cur_it.get())) elem->setEnabled(true);
+        if (cur_it
+            && it_t->second.m_item_required
+            && it_t->second.m_accepted_type == cur_it->get_type()
+            && it_t->second.m_can_apply(cur_it.get())) elem->setEnabled(true);
       }
 
     }
@@ -2175,7 +2177,7 @@ void main_window_t::act_bhv_import_to_cur_ws() {
                                      astate->m_last_dir,
                                      "*").toStdString();
     if (!file_name.empty())
-      astate->ws_mgr->import_from_file(file_name, b_id, false);
+      astate->ws_mgr->import_from_file(file_name, b_id, false, false);
 
   }
 
@@ -2192,9 +2194,9 @@ void main_window_t::act_bhv_import_as_new_ws() {
   size_t b_id = ext_act->m_joined_data[0];
 
   //check that bhv is valid
-  if (b_id < bhv_mgr->m_ws_item_io.size() &&
-      bhv_mgr->m_ws_item_io[b_id]->can_load() &&
-      bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_as_new_ws) {
+  if (b_id < bhv_mgr->m_ws_item_io.size()
+      && bhv_mgr->m_ws_item_io[b_id]->can_load()
+      && bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_as_new_ws) {
 
     // astate->log(fmt::format("{}", b_id));
     std::string file_name = QFileDialog::getOpenFileName(this,
@@ -2202,7 +2204,7 @@ void main_window_t::act_bhv_import_as_new_ws() {
                                                          astate->m_last_dir,
                                                          "*").toStdString();
     if (!file_name.empty())
-      astate->ws_mgr->import_from_file(file_name, b_id);
+      astate->ws_mgr->import_from_file(file_name, b_id, true, true);
 
   }
 

@@ -153,14 +153,16 @@ public:
   void init_ws_item_bhv_mgr();
   void move_ws(size_t from, size_t to);
   void load_from_file_autodeduce(const std::string &file_name,
-                                 const std::string &file_format = "",
-                                 bool create_new_ws = true);
+                                 const std::string &file_format,
+                                 bool create_new_ws ,
+                                 bool need_to_squash_hs);
 
   void load_from_file(const std::string &fname, bool override = true);
 
   void import_from_file(const std::string &fname,
                         size_t bhv_id,
-                        bool need_to_create_new_ws = true);
+                        bool need_to_create_new_ws,
+                        bool need_to_squash_hs);
 
   void save_ws_item_to_file(std::string &file_name,
                             std::shared_ptr<ws_item_t> ws_item,

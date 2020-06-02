@@ -42,14 +42,14 @@ void simple_query::quit() {
 
 void simple_query::open_file(std::string file_name, bool to_current) {
   app_state_t *astate = app_state_t::get_inst();
-  astate->ws_mgr->load_from_file_autodeduce(file_name, "", !to_current);
+  astate->ws_mgr->load_from_file_autodeduce(file_name, "", !to_current, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 }
 
 void simple_query::open_file_query(std::string f_name,  std::string f_format, bool to_current) {
   app_state_t *astate = app_state_t::get_inst();
-  astate->ws_mgr->load_from_file_autodeduce(f_name, f_format, !to_current);
+  astate->ws_mgr->load_from_file_autodeduce(f_name, f_format, !to_current, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
 }

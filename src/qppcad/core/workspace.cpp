@@ -872,7 +872,11 @@ void workspace_manager_t::init_default () {
   };
 
   for (auto &file : files)
-    load_from_file_autodeduce(QDir::toNativeSeparators(file).toStdString());
+    load_from_file_autodeduce(QDir::toNativeSeparators(file).toStdString(),
+                              "", /*for autodeduce*/
+                              true, /*create new ws*/
+                              true /*squash hs*/
+                              );
 
   create_new_ws();
 
@@ -1036,13 +1040,12 @@ void workspace_manager_t::move_ws(size_t from, size_t to) {
 }
 
 
-void workspace_manager_t::load_from_file(const std::string &fname,
-                                         bool override) {
+void workspace_manager_t::load_from_file(const std::string &fname, bool override) {
 
   app_state_t* astate = app_state_t::get_inst();
 
   if (!override)
-    for (int i = 0; i < m_ws.size(); i++)
+    for (size_t i = 0; i < m_ws.size(); i++)
       if (m_ws[i]->m_fs_path.find(fname) != std::string::npos) {
         set_cur_id(i);
         astate->astate_evd->cur_ws_changed();
@@ -1065,7 +1068,8 @@ void workspace_manager_t::load_from_file(const std::string &fname,
 
 void workspace_manager_t::import_from_file(const std::string &fname,
                                            size_t bhv_id,
-                                           bool need_to_create_new_ws) {
+                                           bool need_to_create_new_ws,
+                                           bool need_to_squash_hs) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1084,10 +1088,10 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
   if (exec_ws) {
 
-    std::shared_ptr<ws_item_t> p_new_item{nullptr};
+    std::shared_ptr<ws_item_t> p_new_itm{nullptr};
 
     try {
-      p_new_item = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
+      p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get(), need_to_squash_hs);
     } catch (const qpp::parsing_error_t &exc) {
       loading_is_succesfull = false;
 
@@ -1111,13 +1115,10 @@ void workspace_manager_t::import_from_file(const std::string &fname,
               .arg(QString::fromStdString(exc.m_exception_src))
               .arg(QString::fromStdString(exc.m_exception_msg));
 
-      qrich_error_message_box_t err_msg(msg_box_title,
-                                        error_message,
-                                        error_detail);
+      qrich_error_message_box_t err_msg(msg_box_title, error_message, error_detail);
       err_msg.exec();
 
-    }
-    catch (...) {
+    } catch (...) {
       loading_is_succesfull = false;
       QString error_message =
           QObject::tr("An error has occured while parsing the file\n");
@@ -1128,8 +1129,8 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
     if (loading_is_succesfull) {
 
-      if (need_to_create_new_ws && p_new_item) {
-        exec_ws->m_ws_name = p_new_item->m_name.get_value();
+      if (need_to_create_new_ws && p_new_itm) {
+        exec_ws->m_ws_name = p_new_itm->m_name.get_value();
         if (!exec_ws->m_camera->m_already_loaded) exec_ws->set_best_view();
       }
 
@@ -1163,7 +1164,8 @@ void workspace_manager_t::save_ws_item_to_file(std::string &file_name,
 
 void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name,
                                                     const std::string &file_format,
-                                                    bool create_new_ws) {
+                                                    bool new_ws,
+                                                    bool squash_hs) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1180,23 +1182,29 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name
     return;
   }
 
-  if (file_name.find("json") != std::string::npos ||
-      file_format.find("json") != std::string::npos) {
+  if (file_name.find("json") != std::string::npos
+      ||file_format.find("json") != std::string::npos) {
     load_from_file(absolute_file_name_native, false);
   } else {
     //do autodeduce magic
     if (!file_format.empty()) {
+
       auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
       if (ff) {
         auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-        if (bhv_id) import_from_file(absolute_file_name_native, *bhv_id, create_new_ws);
+        if (bhv_id)
+          import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
       }
+
     } else {
+
       auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
       if (ff) {
         auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-        if (bhv_id) import_from_file(absolute_file_name_native, *bhv_id, create_new_ws);
+        if (bhv_id)
+          import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
       }
+
     }
   }
 
