@@ -41,7 +41,7 @@ struct hs_arr_shrd_ptr_policy {
   }
 
   static hist_doc_base_t *cast_from_holder(holder_type_t holder) {
-    return reinterpret_cast<hist_doc_base_t*>(holder.get());
+    return static_cast<hist_doc_base_t*>(holder.get());
   }
 
 };
@@ -63,14 +63,14 @@ public:
 
   static_assert(std::is_base_of<hist_doc_base_t, STYPE>::value);
 
-  hs_result_e add_hs_child_as_array(holder_type_t new_arr_element) {
+  hs_result_e add_hs_child_as_array(holder_type_t new_arr_element, bool add_new_epoch = true) {
 
     hist_doc_base_t *as_hsd = STYPE_STRG_POL::cast_from_holder(new_arr_element);
     if (!as_hsd) return hs_result_e::hs_error;
 
     p_array_data.push_back(new_arr_element);
     p_map_hs_to_array[as_hsd] = new_arr_element;
-    return add_hs_child(as_hsd, true);
+    return add_hs_child(as_hsd, add_new_epoch);
 
   }
 

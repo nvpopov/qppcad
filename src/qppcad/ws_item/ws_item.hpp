@@ -151,16 +151,12 @@ public:
 
   void apply_target_view(cam_tv_e target_view_src);
 
-  /**
-         * @brief set_parent_workspace
-         * @param parent_ws
-         */
-  void set_parent_ws(workspace_t *parent_ws);
+
 
   /**
-         * @brief get_name
-         * @return
-         */
+  * @brief get_name
+  * @return
+  */
   const std::string get_name();
 
   /**

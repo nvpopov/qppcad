@@ -455,10 +455,13 @@ void qbinded_ws_item_combobox_t::rebuild_variants() {
   clear();
   addItem(tr("None"));
 
-  if (m_binded_ws) {
-      for (auto &item : m_binded_ws->m_ws_items)
-        if (item->get_type() == m_type_id)
-          addItem(QString::fromStdString(item->m_name.get_value()));
+  if (m_binded_ws)
+    for (size_t i = 0; i < m_binded_ws->num_items(); i++) {
+
+      auto ws_item = m_binded_ws->m_ws_items.get_hs_child_as_array(i);
+
+      if (ws_item && ws_item->get_type() == m_type_id)
+        addItem(QString::fromStdString(ws_item->m_name.get_value()));
 
     }
 

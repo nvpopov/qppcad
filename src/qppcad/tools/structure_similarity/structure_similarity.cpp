@@ -14,10 +14,10 @@ void structure_similarity_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   if (astate->ws_mgr->has_wss()) {
 
-      structure_similarity_widget_t scw;
-      scw.exec();
+    structure_similarity_widget_t scw;
+    scw.exec();
 
-    }
+  }
 
 }
 
@@ -37,7 +37,7 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   m_wdgt_top_lt->addLayout(m_wdgt_lt);
 
   m_gb_str_sim_main = new qspoiler_widget_t(tr("Actions"), nullptr, false, 6,
-                                          astate->size_guide.tool_left_part_w());
+                                            astate->size_guide.tool_left_part_w());
   m_gb_str_sim_main_lt = new QFormLayout;
   m_gb_str_sim_main->add_content_layout(m_gb_str_sim_main_lt);
 
@@ -73,9 +73,9 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
   m_wdgt_lt->addWidget(m_gb_str_sim_main);
 
   for (size_t i = 0; i < 2; i++) {
-      m_anim_info[i] = new str_sim_ws_item_rec_t(i + 1, nullptr);
-      m_wdgt_lt->addWidget(m_anim_info[i]);
-    }
+    m_anim_info[i] = new str_sim_ws_item_rec_t(i + 1, nullptr);
+    m_wdgt_lt->addWidget(m_anim_info[i]);
+  }
 
   m_gb_str_sim_out = new qspoiler_widget_t(tr("Results"));
   m_gb_str_sim_out->setFixedWidth(QWIDGETSIZE_MAX);
@@ -127,14 +127,14 @@ void structure_similarity_widget_t::compute_structure_similarity(ws_item_t *g1, 
   m_str_sim_out->insertPlainText("Computing structure similarity...\n");
 
   if (!g1) {
-      m_str_sim_out->insertPlainText("Item №1 is invalid\n");
-      return;
-    }
+    m_str_sim_out->insertPlainText("Item №1 is invalid\n");
+    return;
+  }
 
   if (!g2) {
-      m_str_sim_out->insertPlainText("Item №2 is invalid\n");
-      return;
-    }
+    m_str_sim_out->insertPlainText("Item №2 is invalid\n");
+    return;
+  }
 
   m_str_sim_out->insertPlainText("Is Item №1 has type of geom_view_t ?");
   auto gv1 = g1->cast_as<geom_view_t>();
@@ -149,12 +149,12 @@ void structure_similarity_widget_t::compute_structure_similarity(ws_item_t *g1, 
   size_t compare_method = m_cmb_method->currentIndex();
 
   if (compare_method == 0) {
-      compute_structure_similarity_naive(gv1, gv2);
-    }
+    compute_structure_similarity_naive(gv1, gv2);
+  }
 
   if (compare_method == 1) {
-      m_str_sim_out->insertPlainText("Compare method = unimplemented\n");
-    }
+    m_str_sim_out->insertPlainText("Compare method = unimplemented\n");
+  }
 
 }
 
@@ -163,26 +163,26 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
 
   //Checking dimensions
   if (g1->m_geom->DIM != g2->m_geom->DIM) {
-      m_str_sim_out->insertPlainText(tr("Dim1(%1) != Dim2(%2). Aborting\n")
-                                      .arg(g1->m_geom->DIM)
-                                      .arg(g2->m_geom->DIM));
-      return;
-    }
+    m_str_sim_out->insertPlainText(tr("Dim1(%1) != Dim2(%2). Aborting\n")
+                                       .arg(g1->m_geom->DIM)
+                                       .arg(g2->m_geom->DIM));
+    return;
+  }
 
   //Checking nat()
   if (g1->m_geom->nat() != g2->m_geom->nat()) {
-      m_str_sim_out->insertPlainText(tr("nat1(%1) != nat2(%2). Aborting\n")
-                                      .arg(g1->m_geom->nat())
-                                      .arg(g2->m_geom->nat()));
-      return;
-    }
+    m_str_sim_out->insertPlainText(tr("nat1(%1) != nat2(%2). Aborting\n")
+                                       .arg(g1->m_geom->nat())
+                                       .arg(g2->m_geom->nat()));
+    return;
+  }
 
   //Checking n_types
   if (g1->m_geom->n_types() != g2->m_geom->n_types()) {
-      m_str_sim_out->insertPlainText(tr("Warning! ntypes1(%1) != ntypes2(%2).\n")
-                                      .arg(g1->m_geom->n_types())
-                                      .arg(g2->m_geom->n_types()));
-    }
+    m_str_sim_out->insertPlainText(tr("Warning! ntypes1(%1) != ntypes2(%2).\n")
+                                       .arg(g1->m_geom->n_types())
+                                       .arg(g2->m_geom->n_types()));
+  }
 
   //All checks passed
   m_str_sim_out->insertPlainText("\nAll checks passed!\n");
@@ -204,16 +204,16 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
       vector3<float> p2 = g2->m_geom->pos(i);
 
       if (m_anim_info[0]->m_cmb_anim_name->isVisible()) {
-          size_t anim_id = m_anim_info[0]->m_cmb_anim_name->currentIndex();
-          size_t frame_id = m_anim_info[0]->m_cmb_anim_frame->currentIndex();
-          p1 = g1->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
-        }
+        size_t anim_id = m_anim_info[0]->m_cmb_anim_name->currentIndex();
+        size_t frame_id = m_anim_info[0]->m_cmb_anim_frame->currentIndex();
+        p1 = g1->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+      }
 
       if (m_anim_info[1]->m_cmb_anim_name->isVisible()) {
-          size_t anim_id = m_anim_info[1]->m_cmb_anim_name->currentIndex();
-          size_t frame_id = m_anim_info[1]->m_cmb_anim_frame->currentIndex();
-          p2 = g2->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
-        }
+        size_t anim_id = m_anim_info[1]->m_cmb_anim_name->currentIndex();
+        size_t frame_id = m_anim_info[1]->m_cmb_anim_frame->currentIndex();
+        p2 = g2->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+      }
 
       vector3<float> dp = p2 - p1;
       set_out_table_data(g1, g2, table_data_idx, i, dp);
@@ -307,22 +307,22 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
 
       if (m_anim_info[0]->m_cmb_anim_name->isVisible()) {
 
-          size_t anim_id = m_anim_info[0]->m_cmb_anim_name->currentIndex();
-          size_t frame_id = m_anim_info[0]->m_cmb_anim_frame->currentIndex();
-          p1 = g1->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+        size_t anim_id = m_anim_info[0]->m_cmb_anim_name->currentIndex();
+        size_t frame_id = m_anim_info[0]->m_cmb_anim_frame->currentIndex();
+        p1 = g1->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
 
-        }
+      }
 
       if (m_anim_info[1]->m_cmb_anim_name->isVisible()) {
 
-          size_t anim_id = m_anim_info[1]->m_cmb_anim_name->currentIndex();
-          size_t frame_id = m_anim_info[1]->m_cmb_anim_frame->currentIndex();
-          p2 = g2->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
+        size_t anim_id = m_anim_info[1]->m_cmb_anim_name->currentIndex();
+        size_t frame_id = m_anim_info[1]->m_cmb_anim_frame->currentIndex();
+        p2 = g2->m_anim->m_anim_data[anim_id].frames[frame_id].atom_pos[i];
 
-        }
+      }
 
       vector3<float> dp = p2 - p1;
-       //                     0   1   2   3   4   5   6   7   8   9   10  11  12
+      //                     0   1   2   3   4   5   6   7   8   9   10  11  12
       out_str += fmt::format("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n",
                              g1->m_geom->atom_name(i),
                              g2->m_geom->atom_name(i),
@@ -331,7 +331,7 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
                              p2[0], p2[1], p2[2],
                              dp.norm(), dp[0], dp[1], dp[2],
                              g1->m_geom->xfield<std::string>(xgeom_label_text,i)
-                            );
+                             );
 
     }
 
@@ -349,8 +349,8 @@ str_sim_ws_item_rec_t::str_sim_ws_item_rec_t(int index, QWidget *parent) : QWidg
   m_main_lt->setContentsMargins(0, 0, 0, 0);
 
   m_gb_ws_ws_item = new qspoiler_widget_t(tr("Workspace item №%1:").arg(index),
-                                        nullptr, false, 6,
-                                        astate->size_guide.tool_left_part_w());
+                                          nullptr, false, 6,
+                                          astate->size_guide.tool_left_part_w());
   m_gb_ws_ws_item_lt = new QFormLayout;
   m_gb_ws_ws_item->add_content_layout(m_gb_ws_ws_item_lt);
   //gb_ws_ws_item->setFixedWidth(astate->size_guide.common_tools_panel_w());
@@ -365,8 +365,8 @@ str_sim_ws_item_rec_t::str_sim_ws_item_rec_t(int index, QWidget *parent) : QWidg
                               astate->size_guide.common_tools_panel_label_w_big());
 
   m_gb_gv_item = new qspoiler_widget_t(tr("Anim info for item №%1:").arg(index),
-                                     nullptr, false, 6,
-                                     astate->size_guide.tool_left_part_w());
+                                       nullptr, false, 6,
+                                       astate->size_guide.tool_left_part_w());
   m_gb_gv_item_lt = new QFormLayout;
   m_gb_gv_item->add_content_layout(m_gb_gv_item_lt);
 
@@ -409,20 +409,20 @@ void str_sim_ws_item_rec_t::rebuild_wss_list() {
 
   if (astate->ws_mgr->has_wss()) {
 
-      m_cmb_ws->clear();
-      m_cmb_ws->setEnabled(true);
-      m_cmb_ws->blockSignals(true);
-      for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
-        m_cmb_ws->addItem(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name));
-      m_cmb_ws->blockSignals(false);
-      cmb_ws_changed(0);
+    m_cmb_ws->clear();
+    m_cmb_ws->setEnabled(true);
+    m_cmb_ws->blockSignals(true);
+    for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
+      m_cmb_ws->addItem(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name));
+    m_cmb_ws->blockSignals(false);
+    cmb_ws_changed(0);
 
-    } else {
+  } else {
 
-      m_cmb_ws->clear();
-      m_cmb_ws->setEnabled(false);
+    m_cmb_ws->clear();
+    m_cmb_ws->setEnabled(false);
 
-    }
+  }
 
 }
 
@@ -432,11 +432,11 @@ void str_sim_ws_item_rec_t::rebuild_anim_list() {
   m_cmb_anim_name->clear();
 
   if (m_binded_gv && m_binded_gv->m_anim->animable()) {
-      for (size_t i = 0 ; i < m_binded_gv->m_anim->m_anim_data.size(); i++)
-         m_cmb_anim_name->addItem(
-               QString::fromStdString(m_binded_gv->m_anim->m_anim_data[i].m_anim_name)
-               );
-    }
+    for (size_t i = 0 ; i < m_binded_gv->m_anim->m_anim_data.size(); i++)
+      m_cmb_anim_name->addItem(
+          QString::fromStdString(m_binded_gv->m_anim->m_anim_data[i].m_anim_name)
+          );
+  }
 
   m_cmb_anim_frame->blockSignals(false);
 
@@ -447,32 +447,35 @@ void str_sim_ws_item_rec_t::cmb_ws_changed(int index) {
   app_state_t *astate = app_state_t::get_inst();
 
   if (index >=0
-      && index < astate->ws_mgr->m_ws.size()
+      && index < static_cast<int>(astate->ws_mgr->m_ws.size())
       && astate->ws_mgr->m_ws[index]->num_items() != 0) {
 
-      m_cmb_it->clear();
-      m_cmb_it->setEnabled(true);
-      m_cmb_it->blockSignals(true);
+    m_cmb_it->clear();
+    m_cmb_it->setEnabled(true);
+    m_cmb_it->blockSignals(true);
 
-      for (size_t i = 0; i < astate->ws_mgr->m_ws[index]->num_items(); i++) {
-          m_cmb_it->addItem(tr("[%1]%2")
-                        .arg(i)
-                        .arg(QString::fromStdString(
-                                  astate->ws_mgr->m_ws[index]->m_ws_items[i]->m_name.get_value()))
-                          );
-        }
+    for (size_t i = 0; i < astate->ws_mgr->m_ws[index]->num_items(); i++) {
 
-      m_cmb_it->blockSignals(false);
-      m_cmb_it->setCurrentIndex(0);
-      cmb_it_changed(0);
+      auto ws_item = astate->ws_mgr->m_ws[index]->m_ws_items.get_hs_child_as_array(i);
+      if (!ws_item) continue;
 
-    } else {
-
-      m_cmb_it->clear();
-      m_cmb_it->setEnabled(false);
-      m_gb_gv_item->hide();
-
+      m_cmb_it->addItem(tr("[%1]%2")
+                            .arg(i)
+                            .arg(QString::fromStdString(ws_item->m_name.get_value()))
+                        );
     }
+
+    m_cmb_it->blockSignals(false);
+    m_cmb_it->setCurrentIndex(0);
+    cmb_it_changed(0);
+
+  } else {
+
+    m_cmb_it->clear();
+    m_cmb_it->setEnabled(false);
+    m_gb_gv_item->hide();
+
+  }
 
 }
 
@@ -488,25 +491,30 @@ void str_sim_ws_item_rec_t::cmb_it_changed(int idx) {
       && wsm->m_ws[ws_idx]->num_items() !=0
       && idx >= 0
       && idx < static_cast<int>(wsm->m_ws[ws_idx]->num_items())
-      && wsm->m_ws[ws_idx]->m_ws_items[idx]
-      && wsm->m_ws[ws_idx]->m_ws_items[idx]->get_type() == geom_view_t::get_type_static()) {
+      /*      && wsm->m_ws[ws_idx]->m_ws_items[idx]
+      && wsm->m_ws[ws_idx]->m_ws_items[idx]->get_type() == geom_view_t::get_type_static()*/) {
 
-      auto as_gv = wsm->m_ws[ws_idx]->m_ws_items[idx]->cast_as<geom_view_t>();
+    auto ws_item = wsm->m_ws[ws_idx]->m_ws_items.get_hs_child_as_array(ws_idx);
+    if (ws_item) {
+
+      auto as_gv = ws_item->cast_as<geom_view_t>();
       m_binded_gv = as_gv;
 
       if (as_gv->m_anim->animable()) {
-          m_gb_gv_item->show();
-          rebuild_anim_list();
-        } else {
-          m_gb_gv_item->hide();
-        }
+        m_gb_gv_item->show();
+        rebuild_anim_list();
+      } else {
+        m_gb_gv_item->hide();
+      }
 
-    } else {
-
-      m_binded_gv = nullptr;
-      m_gb_gv_item->hide();
+      return;
 
     }
+
+  }
+
+  m_binded_gv = nullptr;
+  m_gb_gv_item->hide();
 
 }
 
@@ -518,13 +526,13 @@ void str_sim_ws_item_rec_t::cmb_anim_changed(int idx) {
 
   if (m_binded_gv && m_binded_gv->m_anim->animable()) {
 
-      size_t anim_id = m_cmb_anim_name->currentIndex();
+    size_t anim_id = m_cmb_anim_name->currentIndex();
 
-      if (anim_id < m_binded_gv->m_anim->get_total_anims())
-        for (size_t i = 0 ; i < m_binded_gv->m_anim->m_anim_data[anim_id].frames.size(); i++)
-          m_cmb_anim_frame->addItem(QString("%1").arg(i));
+    if (anim_id < m_binded_gv->m_anim->get_total_anims())
+      for (size_t i = 0 ; i < m_binded_gv->m_anim->m_anim_data[anim_id].frames.size(); i++)
+        m_cmb_anim_frame->addItem(QString("%1").arg(i));
 
-    }
+  }
 
   m_cmb_anim_frame->blockSignals(false);
 

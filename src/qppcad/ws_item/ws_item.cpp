@@ -86,11 +86,6 @@ void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
 
 }
 
-void ws_item_t::set_parent_ws(workspace_t *parent_ws) {
-  m_parent_ws = parent_ws;
-  m_parent_ws->add_hs_child(this);
-}
-
 const std::string ws_item_t::get_name() {
   return m_name.get_value();
 }

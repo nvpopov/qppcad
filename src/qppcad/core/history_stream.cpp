@@ -41,14 +41,19 @@ void hist_doc_base_t::end_recording() {
 }
 
 hist_doc_base_t::epoch_t hist_doc_base_t::get_cur_epoch() {
+  //std::cout << "GETTING CUR_EPOCH = " << p_cur_epoch << std::endl;
   return p_cur_epoch;
 }
 
 hs_result_e hist_doc_base_t::set_cur_epoch(hist_doc_base_t::epoch_t cur_epoch, bool emit_event) {
 
-  auto it_ce = std::find(std::begin(p_hist_line), std::end(p_hist_line), cur_epoch);
-  if (it_ce != std::end(p_hist_line)) {
-    epoch_t prev_epoch = p_cur_epoch;
+  auto it_ce = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
+
+//  if (cur_epoch > 10)
+//  std::cout << "SETTING CUR_EPOCH = " << cur_epoch << std::endl;
+
+  if (it_ce != end(p_hist_line)) {
+    epoch_t prev_epoch = get_cur_epoch();
     p_cur_epoch = cur_epoch;
     return emit_event ? on_epoch_changed(prev_epoch) : hs_result_e::hs_success;
   }
@@ -69,7 +74,10 @@ hs_result_e hist_doc_base_t::commit_exclusive(hist_doc_base_t *child,
                                               std::optional<epoch_t> child_epoch) {
 
   auto [push_result, new_epoch] = push_epoch(std::nullopt, true);
-  if (!push_result || !new_epoch) return hs_result_e::hs_error;
+
+  if ((push_result != hs_result_e::hs_success) || !new_epoch)
+    return hs_result_e::hs_error;
+
   on_commit_exclusive();
 
   if (child && child_epoch)
@@ -285,11 +293,12 @@ hs_result_e hist_doc_base_t::augment_epoch(hist_doc_base_t::epoch_t target_epoch
     return hs_result_e::hs_invalid_child;
   }
 
-  if (find_hl(target_epoch) == std::end(p_hist_line)) {
+  if (std::find(begin(p_hist_line), end(p_hist_line), target_epoch) == std::end(p_hist_line)) {
     return hs_result_e::hs_invalid_epoch;
   }
 
-  if (child->find_hl(child_epoch) == end(child->p_hist_line)) {
+  if (std::find(begin(child->p_hist_line), end(child->p_hist_line), child_epoch)
+      == end(child->p_hist_line)) {
     return hs_result_e::hs_invalid_child_epoch;
   }
 
@@ -319,7 +328,7 @@ bool hist_doc_base_t::is_augmented_by(hist_doc_base_t::epoch_t target_epoch,
 }
 
 bool hist_doc_base_t::has_epoch(hist_doc_base_t::epoch_t target_epoch) {
-  return find_hl(target_epoch) != end(p_hist_line);
+  return std::find(begin(p_hist_line), end(p_hist_line), target_epoch) != end(p_hist_line);
 }
 
 hs_result_e hist_doc_base_t::remove_augment_from_epoch(hist_doc_base_t *child,
@@ -350,11 +359,12 @@ hs_result_e hist_doc_base_t::is_child_alive(epoch_t target_epoch, hist_doc_base_
 
 hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_epoch) {
 
-  if (p_cur_epoch == target_epoch) {
+  epoch_t prev_epoch = get_cur_epoch();
+
+  if (prev_epoch == target_epoch) {
     return hs_result_e::hs_success;
   }
 
-  epoch_t prev_epoch = get_cur_epoch();
   hs_result_e cur_res = set_cur_epoch(target_epoch, false);
 
   if (cur_res != hs_result_e::hs_success) {
@@ -403,7 +413,7 @@ hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_e
 hs_result_e hist_doc_base_t::checkout_by_dist(int dist) {
 
   if (can_checkout_by_dist(dist)) {
-    auto cur_it = find_hl(get_cur_epoch());
+    auto cur_it = std::find(begin(p_hist_line), end(p_hist_line), get_cur_epoch());
     std::advance(cur_it, dist);
     checkout_to_epoch(*cur_it);
     return hs_result_e::hs_success;
@@ -415,7 +425,7 @@ hs_result_e hist_doc_base_t::checkout_by_dist(int dist) {
 
 bool hist_doc_base_t::can_checkout_by_dist(int dist) {
 
-  auto cur_it = find_hl(get_cur_epoch());
+  auto cur_it = std::find(begin(p_hist_line), end(p_hist_line), get_cur_epoch());
   if (cur_it == end(p_hist_line)) return false;
   int cur_idx = std::distance(begin(p_hist_line), cur_it);
   cur_idx += dist;
@@ -431,14 +441,18 @@ hs_result_e hist_doc_base_t::add_hs_child(hist_doc_base_t *child, bool add_new_e
   p_children.push_back(child);
   p_just_added_children.push_back(child);
 
+  //std::cout << "@@@ DEBUGB child cur epoch = " << child->get_cur_epoch() << std::endl;
   if (add_new_epoch) commit_exclusive(child);
+  //std::cout << "@@@ DEBUGA child cur epoch = " << child->get_cur_epoch() << std::endl;
+
   epoch_t cur_epoch = get_cur_epoch();
-  auto epoch_it = find_hl(cur_epoch);
+  auto epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
   auto epoch_dist = static_cast<size_t>(std::distance(begin(p_hist_line), epoch_it));
 
   // instead of adding augment to 0..cur_epoch mark 0..cur_epoch - 1 alive status
   // opposite to cur_epoch
   //augment_epoch(cur_epoch, child, get_cur_epoch());
+
   for (size_t i = 0; i <= epoch_dist; i++)
     augment_epoch(i, child, child->get_cur_epoch(), i == epoch_dist ? true : false);
 

@@ -178,9 +178,11 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   py_workspace_t.def_readwrite("name", &workspace_t::m_ws_name)
       .def("__len__", [](workspace_t &ws) {return ws.num_items();})
-      .def("__getitem__", [](workspace_t &ws, size_t i) {
+      .def("__getitem__", [](workspace_t &ws, size_t i) -> std::shared_ptr<ws_item_t> {
             if (i >= ws.num_items()) throw py::index_error();
-            return ws.m_ws_items[i];
+            auto ws_item = ws.m_ws_items.get_hs_child_as_array(i);
+            if (!ws_item) return nullptr;
+            return ws_item;
           }, py::return_value_policy::reference_internal, py::keep_alive<0,2>())
       .def("__getitem__", [](workspace_t &ws, std::string item_name) {
             auto retv = ws.get_by_name(item_name);

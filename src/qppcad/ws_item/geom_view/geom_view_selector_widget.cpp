@@ -14,23 +14,28 @@ void qgeom_view_selector_widget_t::generate_list_gv_items() {
   list_gv->clear();
 
   for (size_t i = 0; i < astate->ws_mgr->m_ws.size(); i++)
-    for (size_t q = 0; q < astate->ws_mgr->m_ws[i]->num_items(); q++)
-      if (astate->ws_mgr->m_ws[i]->m_ws_items[q]->get_type() == geom_view_t::get_type_static())
-        if (auto as_gv = astate->ws_mgr->m_ws[i]->m_ws_items[q]->cast_as<geom_view_t>(); as_gv) {
+    for (size_t q = 0; q < astate->ws_mgr->m_ws[i]->num_items(); q++) {
 
-            QListWidgetItem *list_item = new QListWidgetItem(list_gv);
+      auto ws_item = astate->ws_mgr->m_ws[i]->m_ws_items.get_hs_child_as_array(i);
+      if (!ws_item || ws_item->get_type() != geom_view_t::get_type_static()) continue;
 
-            std::string list_item_name = fmt::format("[{}]{}/[{}]{}",
-                                                     i,
-                                                     as_gv->m_parent_ws->m_ws_name,
-                                                     q,
-                                                     as_gv->m_name.get_value());
+        if (auto as_gv = ws_item->cast_as<geom_view_t>(); as_gv) {
 
-            list_item->setText(QString::fromStdString(list_item_name));
+          QListWidgetItem *list_item = new QListWidgetItem(list_gv);
 
-            m_sub_gvs.push_back(as_gv);
+          std::string list_item_name = fmt::format("[{}]{}/[{}]{}",
+                                                   i,
+                                                   as_gv->m_parent_ws->m_ws_name,
+                                                   q,
+                                                   as_gv->m_name.get_value());
 
-          }
+          list_item->setText(QString::fromStdString(list_item_name));
+
+          m_sub_gvs.push_back(as_gv);
+
+        }
+
+    }
 
 }
 
@@ -41,18 +46,18 @@ void qgeom_view_selector_widget_t::compose_selection_query(
 
   for (auto &list_rec : list_wdgt) {
 
-      geom_view_selection_query_t sel_rec;
-      sel_rec.gv = list_rec->binded_gv;
+    geom_view_selection_query_t sel_rec;
+    sel_rec.gv = list_rec->binded_gv;
 
-      if (list_rec->gv_anim_name->isEnabled())
-        sel_rec.anim_id = list_rec->gv_anim_name->currentIndex();
+    if (list_rec->gv_anim_name->isEnabled())
+      sel_rec.anim_id = list_rec->gv_anim_name->currentIndex();
 
-      if (list_rec->gv_frame_id->isEnabled())
-        sel_rec.frame_id = list_rec->gv_frame_id->currentIndex();
+    if (list_rec->gv_frame_id->isEnabled())
+      sel_rec.frame_id = list_rec->gv_frame_id->currentIndex();
 
-      sel_query.push_back(std::move(sel_rec));
+    sel_query.push_back(std::move(sel_rec));
 
-    }
+  }
 
 }
 
@@ -180,31 +185,31 @@ void qgeom_view_selector_entry_t::rebuild() {
 
   if (!binded_gv) return;
 
-//  std::string list_item_name = fmt::format("{}/{}",
-//                                           binded_gv->m_parent_ws->m_ws_name,
-//                                           binded_gv->m_name);
+  //  std::string list_item_name = fmt::format("{}/{}",
+  //                                           binded_gv->m_parent_ws->m_ws_name,
+  //                                           binded_gv->m_name);
 
-//  gv_name->setText(QString::fromStdString(list_item_name));
+  //  gv_name->setText(QString::fromStdString(list_item_name));
 
   if (binded_gv->m_anim->animable()) {
 
-      gv_anim_name->setEnabled(true);
-      gv_frame_id->setEnabled(true);
-      gv_anim_name->blockSignals(true);
-      gv_frame_id->blockSignals(true);
+    gv_anim_name->setEnabled(true);
+    gv_frame_id->setEnabled(true);
+    gv_anim_name->blockSignals(true);
+    gv_frame_id->blockSignals(true);
 
-      gv_anim_name->clear();
-      for (size_t i = 0; i < binded_gv->m_anim->get_total_anims(); i++)
-        gv_anim_name->addItem(
-              QString::fromStdString(binded_gv->m_anim->m_anim_data[i].m_anim_name));
+    gv_anim_name->clear();
+    for (size_t i = 0; i < binded_gv->m_anim->get_total_anims(); i++)
+      gv_anim_name->addItem(
+          QString::fromStdString(binded_gv->m_anim->m_anim_data[i].m_anim_name));
 
-      gv_anim_name->blockSignals(false);
-      gv_frame_id->blockSignals(false);
+    gv_anim_name->blockSignals(false);
+    gv_frame_id->blockSignals(false);
 
-    } else {
-      gv_anim_name->setEnabled(false);
-      gv_frame_id->setEnabled(false);
-    }
+  } else {
+    gv_anim_name->setEnabled(false);
+    gv_frame_id->setEnabled(false);
+  }
 
 }
 

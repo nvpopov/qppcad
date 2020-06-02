@@ -197,36 +197,36 @@ namespace qpp {
 
     };
 
-    template<class T>
-    constexpr sf_parameter_e type_to_sf_parameter{sf_parameter_e::sfpar_none};
+//    template<class T>
+//    static constexpr sf_parameter_e type_to_sf_parameter{sf_parameter_e::sfpar_none};
 
-    template<>
-    constexpr sf_parameter_e type_to_sf_parameter<float>{sf_parameter_e::sfpar_float};
+//    template<>
+//    static constexpr sf_parameter_e type_to_sf_parameter<float>{sf_parameter_e::sfpar_float};
 
-    template<>
-    constexpr sf_parameter_e type_to_sf_parameter<double>{sf_parameter_e::sfpar_float};
+//    template<>
+//    static constexpr sf_parameter_e type_to_sf_parameter<double>{sf_parameter_e::sfpar_float};
 
-    template<>
-    constexpr sf_parameter_e type_to_sf_parameter<int>{sf_parameter_e::sfpar_int};
+//    template<>
+//    static constexpr sf_parameter_e type_to_sf_parameter<int>{sf_parameter_e::sfpar_int};
 
-    template<>
-    constexpr sf_parameter_e type_to_sf_parameter<bool>{sf_parameter_e::sfpar_bool};
+//    template<>
+//    static constexpr sf_parameter_e type_to_sf_parameter<bool>{sf_parameter_e::sfpar_bool};
 
-#ifdef EXTENDED_SFLOW
+//#ifdef EXTENDED_SFLOW
 
-    template<>
-    constexpr sf_parameter_e
-    type_to_sf_parameter<ws_item_t> {
-      sf_parameter_e::sfpar_ws_item
-    };
+//    template<>
+//    constexpr sf_parameter_e
+//    type_to_sf_parameter<ws_item_t> {
+//      sf_parameter_e::sfpar_ws_item
+//    };
 
-    template<>
-    constexpr sf_parameter_e
-    type_to_sf_parameter<xgeometry<float, periodic_cell<float> > > {
-      sf_parameter_e::sfpar_xgeom
-    };
+//    template<>
+//    constexpr sf_parameter_e
+//    type_to_sf_parameter<xgeometry<float, periodic_cell<float> > > {
+//      sf_parameter_e::sfpar_xgeom
+//    };
 
-#endif
+//#endif
 
     template<auto FUNC, typename ... args>
     class sf_func_node_t final : public sf_node_t {

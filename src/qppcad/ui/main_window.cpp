@@ -188,15 +188,15 @@ void main_window_t::init_menus() {
   m_file_menu_recent_files = m_file_menu->addMenu(tr("Recent files"));
   for (int i = 0; i < qpp::cad::max_recent_files; i++) {
 
-      QAction *recent_act = new QAction(m_file_menu_recent_files);
-      m_file_menu_recent_entries[i] = recent_act;
-      m_file_menu_recent_files->addAction(recent_act);
-      connect(recent_act,
-              &QAction::triggered,
-              this,
-              &main_window_t::recent_files_clicked);
+    QAction *recent_act = new QAction(m_file_menu_recent_files);
+    m_file_menu_recent_entries[i] = recent_act;
+    m_file_menu_recent_files->addAction(recent_act);
+    connect(recent_act,
+            &QAction::triggered,
+            this,
+            &main_window_t::recent_files_clicked);
 
-    }
+  }
 
   m_file_menu_close_app = new QAction(nullptr);
   m_file_menu_close_app->setText(tr("Close"));
@@ -226,8 +226,8 @@ void main_window_t::init_menus() {
   connect(m_edit_menu_ptable_wdgt,
           &QAction::triggered,
           []() {
-                ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec();
-                app_state_t::get_inst()->make_viewport_dirty();
+            ptable_rich_widget_t ptable_rich_wdgt; ptable_rich_wdgt.exec();
+            app_state_t::get_inst()->make_viewport_dirty();
           });
 
   m_edit_menu->addSeparator();
@@ -401,17 +401,17 @@ void main_window_t::init_menus() {
           []() {
             QMessageBox::about(nullptr, "qpp::cad",
                                QObject::tr(
-                                 "Site : <a href='https://github.com/nvpopov/qppcad'>"
-                                 "https://github.com/nvpopov/qppcad"
-                                 "</a><br>"
-                                 "Git rev : %1<br>"
-                                 "Build time : %2<br>"
-                                 "Qt version : %3<br>"
-                                 "Python : %4")
-                               .arg(QString::fromStdString(build_info_t::get_git_version()))
-                               .arg(QString::fromStdString(build_info_t::get_build_date()))
-                               .arg(QString::fromStdString(build_info_t::get_qt_version()))
-                               .arg(QString::fromStdString(build_info_t::get_python_version()))
+                                   "Site : <a href='https://github.com/nvpopov/qppcad'>"
+                                   "https://github.com/nvpopov/qppcad"
+                                   "</a><br>"
+                                   "Git rev : %1<br>"
+                                   "Build time : %2<br>"
+                                   "Qt version : %3<br>"
+                                   "Python : %4")
+                                   .arg(QString::fromStdString(build_info_t::get_git_version()))
+                                   .arg(QString::fromStdString(build_info_t::get_build_date()))
+                                   .arg(QString::fromStdString(build_info_t::get_qt_version()))
+                                   .arg(QString::fromStdString(build_info_t::get_python_version()))
                                );
           });
 
@@ -452,7 +452,7 @@ void main_window_t::init_widgets() {
   m_tp_modern_menu->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   m_tp_modern_menu->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_modern_menu->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                     astate->size_guide.tool_panel_icon_size()));
+                                      astate->size_guide.tool_panel_icon_size()));
   m_tp_modern_menu->setToolTip(tr("Show modern menu"));
   m_tp_modern_menu->setIcon(QIcon("://images/more_vert-24px.svg"));
   connect(m_tp_modern_menu,
@@ -466,7 +466,7 @@ void main_window_t::init_widgets() {
   m_tp_print_screen->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   m_tp_print_screen->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_print_screen->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                     astate->size_guide.tool_panel_icon_size()));
+                                       astate->size_guide.tool_panel_icon_size()));
   m_tp_print_screen->setToolTip(tr("Save screenshot to current work dir"));
   m_tp_print_screen->setIcon(QIcon("://images/outline-camera_enhance-24px.svg"));
   connect(m_tp_print_screen,
@@ -485,7 +485,7 @@ void main_window_t::init_widgets() {
   m_tp_edit_mode_item->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   m_tp_edit_mode_item->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_edit_mode_item->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                       astate->size_guide.tool_panel_icon_size()));
+                                         astate->size_guide.tool_panel_icon_size()));
   m_tp_edit_mode_item->setToolTip(tr("Set current workspace's edit mode to <edit item>"));
   m_tp_edit_mode_item->setIcon(QIcon("://images/edit0.svg"));
   m_tp_edit_mode_item->setCheckable(true);
@@ -494,7 +494,7 @@ void main_window_t::init_widgets() {
   m_tp_edit_mode_cnt->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   m_tp_edit_mode_cnt->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_edit_mode_cnt->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                          astate->size_guide.tool_panel_icon_size()));
+                                        astate->size_guide.tool_panel_icon_size()));
   m_tp_edit_mode_cnt->setToolTip(tr("Set current workspace's edit mode to <edit content>"));
   m_tp_edit_mode_cnt->setIcon(QIcon("://images/edit1.svg"));
   m_tp_edit_mode_cnt->setCheckable(true);
@@ -521,7 +521,7 @@ void main_window_t::init_widgets() {
   m_tp_cam_tool = new QToolButton(nullptr);
   m_tp_cam_tool->setIcon(QIcon("://images/outline-videocam-24px.svg"));
   m_tp_cam_tool->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                    astate->size_guide.tool_panel_icon_size()));
+                                   astate->size_guide.tool_panel_icon_size()));
 
   m_tp_cam_tool->setPopupMode(QToolButton::InstantPopup);
   m_tp_cam_tool->setArrowType(Qt::NoArrow);
@@ -538,7 +538,7 @@ void main_window_t::init_widgets() {
   m_tp_scenic_rot_cam->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   m_tp_scenic_rot_cam->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_scenic_rot_cam->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                       astate->size_guide.tool_panel_icon_size()));
+                                         astate->size_guide.tool_panel_icon_size()));
   m_tp_scenic_rot_cam->setCheckable(true);
   connect(m_tp_scenic_rot_cam,
           &QPushButton::toggled,
@@ -589,7 +589,7 @@ void main_window_t::init_widgets() {
   m_tp_anim_fast_forward->setFixedWidth(astate->size_guide.tool_panel_ctrl_w());
   m_tp_anim_fast_forward->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_anim_fast_forward->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                          astate->size_guide.tool_panel_icon_size()));
+                                            astate->size_guide.tool_panel_icon_size()));
   m_tp_anim_fast_forward->setToolTip(tr("Fast-forward to last frame of animated geometry"));
   m_tp_anim_fast_forward->setIcon(QIcon("://images/outline-fast_forward-24px.svg"));
   connect(m_tp_anim_fast_forward,
@@ -602,7 +602,7 @@ void main_window_t::init_widgets() {
   m_tp_msr_dist->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_msr_dist->setCheckable(true);
   m_tp_msr_dist->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                     astate->size_guide.tool_panel_icon_size()));
+                                   astate->size_guide.tool_panel_icon_size()));
   m_tp_msr_dist->setToolTip(tr("Measure distance between pair of atoms"));
   m_tp_msr_dist->setIcon(QIcon("://images/dist.svg"));
   connect(m_tp_msr_dist,
@@ -615,7 +615,7 @@ void main_window_t::init_widgets() {
   m_tp_toggle_atom_override->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_toggle_atom_override->setCheckable(true);
   m_tp_toggle_atom_override->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                             astate->size_guide.tool_panel_icon_size()));
+                                               astate->size_guide.tool_panel_icon_size()));
   m_tp_toggle_atom_override->setToolTip(tr("Toggle atom override"));
   m_tp_toggle_atom_override->setIcon(QIcon("://images/outline-my_location-24px.svg"));
   connect(m_tp_toggle_atom_override,
@@ -628,7 +628,7 @@ void main_window_t::init_widgets() {
   m_tp_force_sel_lbl_vis->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_force_sel_lbl_vis->setCheckable(true);
   m_tp_force_sel_lbl_vis->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                          astate->size_guide.tool_panel_icon_size()));
+                                            astate->size_guide.tool_panel_icon_size()));
   m_tp_force_sel_lbl_vis->setToolTip(tr("Force labels selective visibility"));
   m_tp_force_sel_lbl_vis->setIcon(QIcon("://images/outline-font_download-24px.svg"));
   connect(m_tp_force_sel_lbl_vis,
@@ -641,7 +641,7 @@ void main_window_t::init_widgets() {
   m_tp_msr_angle->setFixedHeight(astate->size_guide.tool_panel_ctrl_h());
   m_tp_msr_angle->setCheckable(true);
   m_tp_msr_angle->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                      astate->size_guide.tool_panel_icon_size()));
+                                    astate->size_guide.tool_panel_icon_size()));
   m_tp_msr_angle->setToolTip(tr("Measure angle between atoms triple"));
   m_tp_msr_angle->setIcon(QIcon("://images/angle.svg"));
   connect(m_tp_msr_angle,
@@ -655,7 +655,7 @@ void main_window_t::init_widgets() {
   m_tp_add_cube->setToolTip(tr("Embed cube between two atoms"));
   m_tp_add_cube->setIcon(QIcon("://images/add_cube.svg"));
   m_tp_add_cube->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                 astate->size_guide.tool_panel_icon_size()));
+                                   astate->size_guide.tool_panel_icon_size()));
   connect(m_tp_add_cube,
           &QPushButton::clicked,
           this,
@@ -667,7 +667,7 @@ void main_window_t::init_widgets() {
   m_tp_add_arrow->setToolTip(tr("Embed arrow between two atoms"));
   m_tp_add_arrow->setIcon(QIcon("://images/add_arrow.svg"));
   m_tp_add_arrow->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                  astate->size_guide.tool_panel_icon_size()));
+                                    astate->size_guide.tool_panel_icon_size()));
   connect(m_tp_add_arrow,
           &QPushButton::clicked,
           this,
@@ -679,7 +679,7 @@ void main_window_t::init_widgets() {
   m_tp_add_point_sym_group->setToolTip(tr("Construct point symmetry group"));
   m_tp_add_point_sym_group->setIcon(QIcon("://images/add_psg.svg"));
   m_tp_add_point_sym_group->setIconSize(QSize(astate->size_guide.tool_panel_icon_size(),
-                                            astate->size_guide.tool_panel_icon_size()));
+                                              astate->size_guide.tool_panel_icon_size()));
   connect(m_tp_add_point_sym_group,
           &QPushButton::clicked,
           this,
@@ -837,19 +837,19 @@ void main_window_t::dropEvent(QDropEvent *event) {
 
   if (mimeData && mimeData->hasUrls()) {
 
-      app_state_t* astate = app_state_t::get_inst();
-      QList<QUrl> urlList = mimeData->urls();
+    app_state_t* astate = app_state_t::get_inst();
+    QList<QUrl> urlList = mimeData->urls();
 
-      for (int i = 0; i < urlList.size(); i++) {
+    for (int i = 0; i < urlList.size(); i++) {
 
-          QString native_path = urlList.at(i).toLocalFile();
-          std::string native_path_str = native_path.toStdString();
-          //astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
-          astate->ws_mgr->load_from_file_autodeduce(native_path_str);
-
-        }
+      QString native_path = urlList.at(i).toLocalFile();
+      std::string native_path_str = native_path.toStdString();
+      //astate->get_inst()->log(fmt::format("DRAG EN DROP EVENT {} {}", i, native_path_str));
+      astate->ws_mgr->load_from_file_autodeduce(native_path_str);
 
     }
+
+  }
 
 }
 
@@ -869,14 +869,14 @@ void main_window_t::timer_one_sec_shoot() {
 
   if (m_menu_wdgt_overview) {
 
-      m_menu_wdgt_overview->setText(
-            tr(" Frame(CPU): %1 ms. | Frame(GPU): %2 ms. | Used memory: %3 Mb ")
+    m_menu_wdgt_overview->setText(
+        tr(" Frame(CPU): %1 ms. | Frame(GPU): %2 ms. | Used memory: %3 Mb ")
             .arg(astate->m_last_frame_time_cpu / 1000000.0, 6, 'f', 4)
             .arg(astate->m_last_frame_time_gpu / 1000000.0, 6, 'f', 4)
             .arg(platform_helper_t::get_mem_usage_mb()));
-      menuBar()->adjustSize();
+    menuBar()->adjustSize();
 
-    }
+  }
 
 }
 
@@ -889,35 +889,35 @@ void main_window_t::wss_changed_slot() {
 
   if (astate->ws_mgr->has_wss()) {
 
-      if (!astate->m_immersive_mode) {
+    if (!astate->m_immersive_mode) {
 
-          m_wstabbar_overview_wrp->setVisible(true);
-          m_tp_wdgt->setVisible(true);
-
-        }
-
-      m_file_menu_close_ws->setEnabled(true);
-      m_ws_menu_rename_ws->setEnabled(true);
-      m_view_menu_show_gizmo->setEnabled(true);
-      m_view_menu_show_gizmo->setVisible(true);
-      m_ws_copy_cam->setEnabled(true);
-      m_ws_menu_bg_color->setEnabled(true);
-      //obj_insp_widget->setVisible()
-
-    } else {
-
-      m_obj_insp_wdgt->setVisible(false);
-      m_tp_wdgt->setVisible(false);
-      //m_ws_tabbar_wdgt->setVisible(false);
-      m_wstabbar_overview_wrp->setVisible(false);
-      m_file_menu_close_ws->setEnabled(false);
-      m_ws_menu_rename_ws->setEnabled(false);
-      m_view_menu_show_gizmo->setEnabled(false);
-      m_view_menu_show_gizmo->setVisible(false);
-      m_ws_copy_cam->setEnabled(false);
-      m_ws_menu_bg_color->setEnabled(false);
+      m_wstabbar_overview_wrp->setVisible(true);
+      m_tp_wdgt->setVisible(true);
 
     }
+
+    m_file_menu_close_ws->setEnabled(true);
+    m_ws_menu_rename_ws->setEnabled(true);
+    m_view_menu_show_gizmo->setEnabled(true);
+    m_view_menu_show_gizmo->setVisible(true);
+    m_ws_copy_cam->setEnabled(true);
+    m_ws_menu_bg_color->setEnabled(true);
+    //obj_insp_widget->setVisible()
+
+  } else {
+
+    m_obj_insp_wdgt->setVisible(false);
+    m_tp_wdgt->setVisible(false);
+    //m_ws_tabbar_wdgt->setVisible(false);
+    m_wstabbar_overview_wrp->setVisible(false);
+    m_file_menu_close_ws->setEnabled(false);
+    m_ws_menu_rename_ws->setEnabled(false);
+    m_view_menu_show_gizmo->setEnabled(false);
+    m_view_menu_show_gizmo->setVisible(false);
+    m_ws_copy_cam->setEnabled(false);
+    m_ws_menu_bg_color->setEnabled(false);
+
+  }
 
   astate->log(fmt::format("main_window::workspaces_changed_slot(), total ws = {}",
                           astate->ws_mgr->m_ws.size()));
@@ -930,15 +930,15 @@ void main_window_t::ws_selector_selection_changed(int index) {
 
   if (astate->ws_mgr->has_wss()) {
 
-      auto current = astate->ws_mgr->get_cur_id();
-      astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
-                              index, *current));
-      if (current) {
-          astate->ws_mgr->set_cur_id(std::optional<size_t>(index));
-          astate->make_viewport_dirty();
-        }
-
+    auto current = astate->ws_mgr->get_cur_id();
+    astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
+                            index, *current));
+    if (current) {
+      astate->ws_mgr->set_cur_id(std::optional<size_t>(index));
+      astate->make_viewport_dirty();
     }
+
+  }
 
 }
 
@@ -949,17 +949,17 @@ void main_window_t::show_obj_insp_state_changed(bool checked) {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (!ok) {
-      m_obj_insp_wdgt->hide();
-      return;
-    }
+    m_obj_insp_wdgt->hide();
+    return;
+  }
 
   if (checked) {
-      m_obj_insp_wdgt->show();
-      cur_ws->m_show_obj_insp = true;
-    } else {
-      m_obj_insp_wdgt->hide();
-      cur_ws->m_show_obj_insp = false;
-    }
+    m_obj_insp_wdgt->show();
+    cur_ws->m_show_obj_insp = true;
+  } else {
+    m_obj_insp_wdgt->hide();
+    cur_ws->m_show_obj_insp = false;
+  }
 
 }
 
@@ -970,9 +970,9 @@ void main_window_t::show_gizmo_state_changed(bool checked) {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (ok) {
-      cur_ws->m_gizmo->m_is_visible = checked;
-      astate->make_viewport_dirty();
-    }
+    cur_ws->m_gizmo->m_is_visible = checked;
+    astate->make_viewport_dirty();
+  }
 
 }
 
@@ -988,12 +988,12 @@ void main_window_t::show_modern_menu_state_changed(bool checked) {
   astate->m_show_modern_menu = checked;
 
   if (checked) {
-      menuBar()->hide();
-      m_tp_modern_menu->show();
-    } else {
-      menuBar()->show();
-      m_tp_modern_menu->hide();
-    }
+    menuBar()->hide();
+    m_tp_modern_menu->show();
+  } else {
+    menuBar()->show();
+    m_tp_modern_menu->hide();
+  }
 
 }
 
@@ -1016,10 +1016,10 @@ void main_window_t::open_ws() {
 
   if (file_name != "") {
 
-      astate->ws_mgr->load_from_file(file_name.toStdString(), true);
-      wss_changed_slot();
+    astate->ws_mgr->load_from_file(file_name.toStdString(), true);
+    wss_changed_slot();
 
-    }
+  }
 
 }
 
@@ -1033,32 +1033,32 @@ void main_window_t::save_ws() {
 
   if (ok) {
 
-      QFileInfo check_file(QString::fromStdString(cur_ws->m_fs_path));
+    QFileInfo check_file(QString::fromStdString(cur_ws->m_fs_path));
 
-      if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "" &&
-          !cur_ws->m_is_ws_imported) {
+    if (check_file.exists() && check_file.isFile() && cur_ws->m_fs_path != "" &&
+        !cur_ws->m_is_ws_imported) {
 
-          cur_ws->m_is_ws_imported = false;
-          cur_ws->save_ws_to_json(cur_ws->m_fs_path);
+      cur_ws->m_is_ws_imported = false;
+      cur_ws->save_ws_to_json(cur_ws->m_fs_path);
 
-        } else {
+    } else {
 
-          QString file_name = QFileDialog::getSaveFileName(this,
-                                                           "Save qpp::cad workspace",
-                                                           astate->m_last_dir,
-                                                           "*.json");
+      QString file_name = QFileDialog::getSaveFileName(this,
+                                                       "Save qpp::cad workspace",
+                                                       astate->m_last_dir,
+                                                       "*.json");
 
-          if (file_name != "") {
+      if (file_name != "") {
 
-              if (!file_name.endsWith(".json")) file_name += ".json";
-              cur_ws->save_ws_to_json(file_name.toStdString());
-              cur_ws->m_is_ws_imported = false;
-              cur_ws->m_fs_path = file_name.toStdString();
+        if (!file_name.endsWith(".json")) file_name += ".json";
+        cur_ws->save_ws_to_json(file_name.toStdString());
+        cur_ws->m_is_ws_imported = false;
+        cur_ws->m_fs_path = file_name.toStdString();
 
-            }
+      }
 
-        }
     }
+  }
 
   start_update_cycle();
 
@@ -1076,20 +1076,20 @@ void main_window_t::save_ws_as() {
 
   if (ok) {
 
-      QString file_name = QFileDialog::getSaveFileName(this,
-                                                       "Save qpp::cad workspace",
-                                                       astate->m_last_dir,
-                                                       "*.json");
+    QString file_name = QFileDialog::getSaveFileName(this,
+                                                     "Save qpp::cad workspace",
+                                                     astate->m_last_dir,
+                                                     "*.json");
 
-      if (file_name != "") {
+    if (file_name != "") {
 
-          cur_ws->save_ws_to_json(file_name.toStdString());
-          cur_ws->m_is_ws_imported = false;
-          cur_ws->m_fs_path = file_name.toStdString();
-
-        }
+      cur_ws->save_ws_to_json(file_name.toStdString());
+      cur_ws->m_is_ws_imported = false;
+      cur_ws->m_fs_path = file_name.toStdString();
 
     }
+
+  }
 
   cur_ws_changed();
 
@@ -1104,16 +1104,16 @@ void main_window_t::close_cur_ws() {
 
   if (ok) {
 
-      QMessageBox::StandardButton reply;
-      reply = QMessageBox::question(this, tr("Workspace -> Close"),
-                                    tr("Do you really want to close the workspace?"),
-                                    QMessageBox::Yes | QMessageBox::No);
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr("Workspace -> Close"),
+                                  tr("Do you really want to close the workspace?"),
+                                  QMessageBox::Yes | QMessageBox::No);
 
-      if (reply == QMessageBox::Yes) {
-          cur_ws->m_marked_for_deletion = true;
-        }
-
+    if (reply == QMessageBox::Yes) {
+      cur_ws->m_marked_for_deletion = true;
     }
+
+  }
 
 }
 
@@ -1138,16 +1138,16 @@ void main_window_t::rename_cur_ws() {
 
   if (ok) {
 
-      bool ok_q;
-      QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
-                                           tr("User name:"), QLineEdit::Normal,
-                                           QString::fromStdString(cur_ws->m_ws_name), &ok_q);
-      if (ok_q && text != "") {
-          cur_ws->m_ws_name = text.toStdString();
-          astate->astate_evd->wss_changed();
-        }
-
+    bool ok_q;
+    QString text = QInputDialog::getText(this, tr("Workspace -> Rename"),
+                                         tr("User name:"), QLineEdit::Normal,
+                                         QString::fromStdString(cur_ws->m_ws_name), &ok_q);
+    if (ok_q && text != "") {
+      cur_ws->m_ws_name = text.toStdString();
+      astate->astate_evd->wss_changed();
     }
+
+  }
 
 }
 
@@ -1159,27 +1159,27 @@ void main_window_t::change_cur_ws_bg() {
 
   if (ok) {
 
-      QColor _stored_color = QColor::fromRgbF(
-                               cur_ws->m_bg_color[0],
-                               cur_ws->m_bg_color[1],
-                               cur_ws->m_bg_color[2]
-                             );
+    QColor _stored_color = QColor::fromRgbF(
+        cur_ws->m_bg_color[0],
+        cur_ws->m_bg_color[1],
+        cur_ws->m_bg_color[2]
+        );
 
-      const QColor clr = QColorDialog::getColor(_stored_color, this,
-                                                "Select workspace`s background color");
-      if (clr.isValid()) {
+    const QColor clr = QColorDialog::getColor(_stored_color, this,
+                                              "Select workspace`s background color");
+    if (clr.isValid()) {
 
-          cur_ws->m_bg_color = vector3<float> {
-              static_cast<float>(clr.redF()),
-              static_cast<float>(clr.greenF()),
-              static_cast<float>(clr.blueF())
-          };
+      cur_ws->m_bg_color = vector3<float> {
+          static_cast<float>(clr.redF()),
+          static_cast<float>(clr.greenF()),
+          static_cast<float>(clr.blueF())
+      };
 
-          astate->make_viewport_dirty();
-
-        }
+      astate->make_viewport_dirty();
 
     }
+
+  }
 
 }
 
@@ -1207,17 +1207,17 @@ void main_window_t::cur_ws_changed() {
 
   if (ok) {
 
-      m_tp_scenic_rot_cam->blockSignals(true);
-      m_tp_scenic_rot_cam->setChecked(cur_ws->m_scenic_rotation);
-      m_tp_scenic_rot_cam->blockSignals(false);
+    m_tp_scenic_rot_cam->blockSignals(true);
+    m_tp_scenic_rot_cam->setChecked(cur_ws->m_scenic_rotation);
+    m_tp_scenic_rot_cam->blockSignals(false);
 
-      m_view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
-      m_view_menu_show_oi->setVisible(true);
-      m_view_menu_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
+    m_view_menu_show_oi->setChecked(cur_ws->m_show_obj_insp);
+    m_view_menu_show_oi->setVisible(true);
+    m_view_menu_show_gizmo->setChecked(cur_ws->m_gizmo->m_is_visible);
 
-      std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
-                                           cur_ws->m_ws_name, cur_ws->m_fs_path);
-      this->setWindowTitle(QString::fromStdString(title_text));
+    std::string title_text = fmt::format("qpp::cad [ws_name: {}] - [path: {}]",
+                                         cur_ws->m_ws_name, cur_ws->m_fs_path);
+    this->setWindowTitle(QString::fromStdString(title_text));
 
   } else {
 
@@ -1249,19 +1249,19 @@ void main_window_t::cur_ws_sel_item_changed() {
 
     if (as_al) {
 
-        bool al_is_3d = as_al->m_geom->DIM == 3;
-        //tp_camera_tool_act_a->setVisible(al_is_3d)
-        m_tp_cam_tool_act_a->setVisible(al_is_3d);
-        m_tp_cam_tool_act_b->setVisible(al_is_3d);
-        m_tp_cam_tool_act_c->setVisible(al_is_3d);
-        m_tp_cam_tool_act_x->setVisible(!al_is_3d);
-        m_tp_cam_tool_act_y->setVisible(!al_is_3d);
-        m_tp_cam_tool_act_z->setVisible(!al_is_3d);
-        m_tp_cam_tool_act_cc->setVisible(!al_is_3d);
+      bool al_is_3d = as_al->m_geom->DIM == 3;
+      //tp_camera_tool_act_a->setVisible(al_is_3d)
+      m_tp_cam_tool_act_a->setVisible(al_is_3d);
+      m_tp_cam_tool_act_b->setVisible(al_is_3d);
+      m_tp_cam_tool_act_c->setVisible(al_is_3d);
+      m_tp_cam_tool_act_x->setVisible(!al_is_3d);
+      m_tp_cam_tool_act_y->setVisible(!al_is_3d);
+      m_tp_cam_tool_act_z->setVisible(!al_is_3d);
+      m_tp_cam_tool_act_cc->setVisible(!al_is_3d);
 
-        show_fast_forward_button = as_al->m_anim->animable();
+      show_fast_forward_button = as_al->m_anim->animable();
 
-      }
+    }
 
   }
 
@@ -1322,16 +1322,16 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
 
     if (!need_to_hide_force_sel_lbl_vis) {
 
-        m_tp_force_sel_lbl_vis->show();
+      m_tp_force_sel_lbl_vis->show();
 
-        m_tp_force_sel_lbl_vis->blockSignals(true);
-        m_tp_force_sel_lbl_vis->setChecked(
-              !as_al->any_of_sel_xfield_equal<bool>(xgeom_label_show, false)
-              );
-        m_tp_force_sel_lbl_vis->blockSignals(false);
-        /* end of detect selective labels */
+      m_tp_force_sel_lbl_vis->blockSignals(true);
+      m_tp_force_sel_lbl_vis->setChecked(
+          !as_al->any_of_sel_xfield_equal<bool>(xgeom_label_show, false)
+          );
+      m_tp_force_sel_lbl_vis->blockSignals(false);
+      /* end of detect selective labels */
 
-      }
+    }
 
     need_to_hide_make_psg = need_to_hide_force_sel_lbl_vis;
     m_tp_add_point_sym_group->show();
@@ -1339,18 +1339,18 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
     /* detect atom override */
     if (!(as_al->m_atom_idx_sel.empty() || cur_ws->m_edit_type == ws_edit_e::edit_item)) {
 
-        need_to_hide_atom_override = false;
+      need_to_hide_atom_override = false;
 
-        m_tp_toggle_atom_override->show();
-        m_tp_toggle_atom_override->blockSignals(true);
+      m_tp_toggle_atom_override->show();
+      m_tp_toggle_atom_override->blockSignals(true);
 
-        m_tp_toggle_atom_override->setChecked(
-                !as_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)
-              );
+      m_tp_toggle_atom_override->setChecked(
+          !as_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)
+          );
 
-        m_tp_toggle_atom_override->blockSignals(false);
+      m_tp_toggle_atom_override->blockSignals(false);
 
-      }
+    }
     /* end of detect atom override */
 
     /* add cube or arrow between 2 atoms */
@@ -1403,10 +1403,10 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
 
   if (need_to_hide_add_primitives) {
 
-      m_tp_add_arrow->hide();
-      m_tp_add_cube->hide();
+    m_tp_add_arrow->hide();
+    m_tp_add_cube->hide();
 
-    }
+  }
 
   if (need_to_hide_al_cntls) {
 
@@ -1426,8 +1426,8 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
   }
 
   if (need_to_hide_make_psg) {
-      m_tp_add_point_sym_group->hide();
-    }
+    m_tp_add_point_sym_group->hide();
+  }
 
 }
 
@@ -1450,9 +1450,9 @@ void main_window_t::tp_dist_button_clicked(bool checked) {
                                                         it2->m_idx);
 
     if (checked) as_al->m_measure->add_bond_msr(it1->m_atm,
-                                                it2->m_atm,
-                                                it1->m_idx,
-                                                it2->m_idx);
+                                     it2->m_atm,
+                                     it1->m_idx,
+                                     it2->m_idx);
 
     else as_al->m_measure->rm_bond_msr(*cur_sel);
 
@@ -1481,11 +1481,11 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
                                                          as_al->m_atom_ord_sel[2].m_idx);
 
     if (checked) as_al->m_measure->add_angle_msr(as_al->m_atom_ord_sel[0].m_atm,
-                                                 as_al->m_atom_ord_sel[1].m_atm,
-                                                 as_al->m_atom_ord_sel[2].m_atm,
-                                                 as_al->m_atom_ord_sel[0].m_idx,
-                                                 as_al->m_atom_ord_sel[1].m_idx,
-                                                 as_al->m_atom_ord_sel[2].m_idx);
+                                      as_al->m_atom_ord_sel[1].m_atm,
+                                      as_al->m_atom_ord_sel[2].m_atm,
+                                      as_al->m_atom_ord_sel[0].m_idx,
+                                      as_al->m_atom_ord_sel[1].m_idx,
+                                      as_al->m_atom_ord_sel[2].m_idx);
 
     else as_al->m_measure->rm_angle_msr(*cur_sel);
 
@@ -1501,9 +1501,9 @@ void main_window_t::ws_edit_mode_selector_button_clicked(int id) {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
   if (ok) {
-      if (id == 0) cur_ws->m_edit_type = ws_edit_e::edit_item;
-      else cur_ws->m_edit_type = ws_edit_e::edit_content;
-    }
+    if (id == 0) cur_ws->m_edit_type = ws_edit_e::edit_item;
+    else cur_ws->m_edit_type = ws_edit_e::edit_content;
+  }
 
   astate->astate_evd->cur_ws_edit_type_changed();
   cur_ws_props_changed();
@@ -1547,12 +1547,12 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
 
       if (as_al->m_geom->xfield<float>(xgeom_atom_r, rec.m_atm) < 0.01f) {
 
-          auto ap_idx = ptable::number_by_symbol(as_al->m_geom->atom(rec.m_atm));
-          float _rad = 1.0f;
-          if (ap_idx) _rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
-          as_al->m_geom->xfield<float>(xgeom_atom_r, rec.m_atm) = _rad;
+        auto ap_idx = ptable::number_by_symbol(as_al->m_geom->atom(rec.m_atm));
+        float _rad = 1.0f;
+        if (ap_idx) _rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
+        as_al->m_geom->xfield<float>(xgeom_atom_r, rec.m_atm) = _rad;
 
-        }
+      }
 
     }
 
@@ -1598,13 +1598,13 @@ void main_window_t::tp_fast_forward_anim_clicked() {
 
 void main_window_t::tp_add_arrow_clicked() {
 
- simple_query::embed_arrow();
+  simple_query::embed_arrow();
 
 }
 
 void main_window_t::tp_add_cube_clicked() {
 
- simple_query::embed_cube();
+  simple_query::embed_cube();
 
 }
 
@@ -1633,9 +1633,9 @@ void main_window_t::toggle_ws_edit_mode() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
 
   if (ok) {
-      cur_ws->toggle_edit_mode();
-      cur_ws_changed();
-    }
+    cur_ws->toggle_edit_mode();
+    cur_ws_changed();
+  }
 
 }
 
@@ -1643,18 +1643,18 @@ void main_window_t::toggle_fullscreen(bool checked) {
 
   if (checked) {
 
-      setWindowState(windowState() | Qt::WindowFullScreen);
+    setWindowState(windowState() | Qt::WindowFullScreen);
 
-    } else {
+  } else {
 
-      setWindowFlags(Qt::CustomizeWindowHint |
-                     Qt::WindowStaysOnTopHint |
-                     Qt::WindowMinimizeButtonHint |
-                     Qt::WindowMaximizeButtonHint |
-                     Qt::WindowCloseButtonHint);
-      show();
+    setWindowFlags(Qt::CustomizeWindowHint |
+                   Qt::WindowStaysOnTopHint |
+                   Qt::WindowMinimizeButtonHint |
+                   Qt::WindowMaximizeButtonHint |
+                   Qt::WindowCloseButtonHint);
+    show();
 
-    }
+  }
 
 }
 
@@ -1662,35 +1662,35 @@ void main_window_t::toggle_immersive_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-//  if (!astate->ws_mgr->has_wss()) return;
+  //  if (!astate->ws_mgr->has_wss()) return;
 
   astate->m_immersive_mode = !astate->m_immersive_mode;
 
   if (astate->m_immersive_mode) {
 
-      menuBar()->hide();
-      m_tp_wdgt->hide();
-      m_ws_tabbar_wdgt->hide();
-      m_obj_insp_wdgt->hide();
-      m_view_menu_toggle_fullscreen->setChecked(true);
+    menuBar()->hide();
+    m_tp_wdgt->hide();
+    m_ws_tabbar_wdgt->hide();
+    m_obj_insp_wdgt->hide();
+    m_view_menu_toggle_fullscreen->setChecked(true);
 
-    } else {
+  } else {
 
-      m_tp_wdgt->show();
-      m_ws_tabbar_wdgt->show();
-      m_obj_insp_wdgt->show();
-      menuBar()->show();
-      m_view_menu_toggle_fullscreen->setChecked(false);
+    m_tp_wdgt->show();
+    m_ws_tabbar_wdgt->show();
+    m_obj_insp_wdgt->show();
+    menuBar()->show();
+    m_view_menu_toggle_fullscreen->setChecked(false);
 
-    }
+  }
 
 }
 
 void main_window_t::start_update_cycle() {
 
   if (m_ws_viewer_wdgt && m_ws_viewer_wdgt->m_update_timer) {
-      m_ws_viewer_wdgt->m_update_timer->start();
-    }
+    m_ws_viewer_wdgt->m_update_timer->start();
+  }
 
 }
 
@@ -1698,11 +1698,11 @@ void main_window_t::stop_update_cycle() {
 
   if (m_ws_viewer_wdgt && m_ws_viewer_wdgt->m_update_timer) {
 
-      p_elapsed_time_in_event_loop =  m_ws_viewer_wdgt->m_update_timer->remainingTime();
-      m_ws_viewer_wdgt->m_update_timer->stop();
-      m_ws_viewer_wdgt->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
+    p_elapsed_time_in_event_loop =  m_ws_viewer_wdgt->m_update_timer->remainingTime();
+    m_ws_viewer_wdgt->m_update_timer->stop();
+    m_ws_viewer_wdgt->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
 
-    }
+  }
 
 }
 
@@ -1735,13 +1735,13 @@ void main_window_t::act_toggle_console() {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_py_console_wdgt->isVisible()) {
-      m_py_console_wdgt->hide();
-      astate->m_show_console = true;
-    } else {
-      m_py_console_wdgt->show();
-      m_py_console_wdgt->m_py_tedit->setFocus();
-      astate->m_show_console = false;
-    }
+    m_py_console_wdgt->hide();
+    astate->m_show_console = true;
+  } else {
+    m_py_console_wdgt->show();
+    m_py_console_wdgt->m_py_tedit->setFocus();
+    astate->m_show_console = false;
+  }
 
 }
 
@@ -1756,24 +1756,24 @@ void main_window_t::rebuild_recent_files_menu() {
 
   for (int i = 0; i < astate->m_recent_files.size(); i++) {
 
-      m_file_menu_recent_entries[i]->setVisible(true);
-      std::string ff_name = astate->ws_mgr->m_bhv_mgr->get_ff_full_name(
-                              astate->m_recent_files[i].m_ff_id);
+    m_file_menu_recent_entries[i]->setVisible(true);
+    std::string ff_name = astate->ws_mgr->m_bhv_mgr->get_ff_full_name(
+        astate->m_recent_files[i].m_ff_id);
 
-      std::string rec_menu_entry;
-      if (!astate->m_recent_files[i].m_native)
-        rec_menu_entry = fmt::format("{}) {} ({})",
-                                     i,
-                                     astate->m_recent_files[i].m_file_name,
-                                     ff_name);
-      else
-        rec_menu_entry = fmt::format("{}) {} (qpp::cad workspace)",
-                                     i,
-                                     astate->m_recent_files[i].m_file_name);
+    std::string rec_menu_entry;
+    if (!astate->m_recent_files[i].m_native)
+      rec_menu_entry = fmt::format("{}) {} ({})",
+                                   i,
+                                   astate->m_recent_files[i].m_file_name,
+                                   ff_name);
+    else
+      rec_menu_entry = fmt::format("{}) {} (qpp::cad workspace)",
+                                   i,
+                                   astate->m_recent_files[i].m_file_name);
 
-      m_file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
+    m_file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
 
-    }
+  }
 
 }
 
@@ -1785,23 +1785,23 @@ void main_window_t::recent_files_clicked() {
   QObject* obj = sender();
   for (int i = 0 ; i < m_file_menu_recent_entries.size(); i++)
     if (m_file_menu_recent_entries[i]->isVisible() && m_file_menu_recent_entries[i] == obj) {
-        idx = i;
-      }
+      idx = i;
+    }
 
   if (idx != -1 && idx < astate->m_recent_files.size()) {
 
-      auto &rec_idx = astate->m_recent_files[idx];
+    auto &rec_idx = astate->m_recent_files[idx];
 
-      if (rec_idx.m_native) astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
-      else {
+    if (rec_idx.m_native) astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
+    else {
 
-          auto bhv_id = astate->ws_mgr->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
-          if (bhv_id) astate->ws_mgr->import_from_file(rec_idx.m_file_name, *bhv_id, true);
-          else astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name);
-
-        }
+      auto bhv_id = astate->ws_mgr->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
+      if (bhv_id) astate->ws_mgr->import_from_file(rec_idx.m_file_name, *bhv_id, true);
+      else astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name);
 
     }
+
+  }
 
 }
 
@@ -1833,76 +1833,76 @@ void main_window_t::build_bhv_menus_and_actions() {
   //init groups for IMPORTED TO WS
   for (auto &ff_grp : bhv_mgr->m_file_format_groups) {
 
-      //spawn top-level menus
-      QMenu *new_menu_as_new_ws =
-          m_file_menu_import_as_new_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+    //spawn top-level menus
+    QMenu *new_menu_as_new_ws =
+        m_file_menu_import_as_new_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
-      QMenu *new_menu_to_cur_ws =
-          m_file_menu_import_to_cur_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+    QMenu *new_menu_to_cur_ws =
+        m_file_menu_import_to_cur_ws->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
-      QMenu *new_menu_export_selected =
-          m_file_menu_export_sel_as->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
+    QMenu *new_menu_export_selected =
+        m_file_menu_export_sel_as->addMenu(QString::fromStdString(ff_grp.second.m_full_name));
 
-      m_file_menu_import_as_new_ws_menus.emplace(ff_grp.first, new_menu_as_new_ws);
-      m_file_menu_import_to_cur_ws_menus.emplace(ff_grp.first, new_menu_to_cur_ws);
-      m_file_menu_export_sel_as_menus.emplace(ff_grp.first, new_menu_export_selected);
+    m_file_menu_import_as_new_ws_menus.emplace(ff_grp.first, new_menu_as_new_ws);
+    m_file_menu_import_to_cur_ws_menus.emplace(ff_grp.first, new_menu_to_cur_ws);
+    m_file_menu_export_sel_as_menus.emplace(ff_grp.first, new_menu_export_selected);
 
-      //iterate over file formats from group
-      for (auto &ff : ff_grp.second.m_ffs_lookup)
+    //iterate over file formats from group
+    for (auto &ff : ff_grp.second.m_ffs_lookup)
 
-        for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++) {
+      for (size_t i = 0; i < bhv_mgr->m_ws_item_io.size(); i++) {
 
-            //deduce import to current ws
-            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
-                bhv_mgr->m_ws_item_io[i]->can_load() &&
-                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
-                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
+        //deduce import to current ws
+        if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+            bhv_mgr->m_ws_item_io[i]->can_load() &&
+            bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+            bhv_mgr->m_ws_item_io[i]->m_can_be_imported_to_ws) {
 
-                qextended_action *new_act = new qextended_action((nullptr));
-                new_act->m_joined_data[0] = i;
-                connect(new_act, &QAction::triggered,
-                        this, &main_window_t::act_bhv_import_to_cur_ws);
-                new_act->setText(
-                      QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                new_menu_to_cur_ws->addAction(new_act);
+          qextended_action *new_act = new qextended_action((nullptr));
+          new_act->m_joined_data[0] = i;
+          connect(new_act, &QAction::triggered,
+                  this, &main_window_t::act_bhv_import_to_cur_ws);
+          new_act->setText(
+              QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+          new_menu_to_cur_ws->addAction(new_act);
 
-              }
+        }
 
-            //deduce import as new ws
-            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
-                bhv_mgr->m_ws_item_io[i]->can_load() &&
-                bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
-                bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
+        //deduce import as new ws
+        if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+            bhv_mgr->m_ws_item_io[i]->can_load() &&
+            bhv_mgr->m_ws_item_io[i]->m_menu_occupier &&
+            bhv_mgr->m_ws_item_io[i]->m_can_be_imported_as_new_ws) {
 
-                qextended_action *new_act = new qextended_action((nullptr));
-                new_act->m_joined_data[0] = i;
-                connect(new_act, &QAction::triggered,
-                        this, &main_window_t::act_bhv_import_as_new_ws);
-                new_act->setText(
-                      QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                new_menu_as_new_ws->addAction(new_act);
+          qextended_action *new_act = new qextended_action((nullptr));
+          new_act->m_joined_data[0] = i;
+          connect(new_act, &QAction::triggered,
+                  this, &main_window_t::act_bhv_import_as_new_ws);
+          new_act->setText(
+              QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+          new_menu_as_new_ws->addAction(new_act);
 
-              }
+        }
 
-            //deduce save selected item
-            if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
-                bhv_mgr->m_ws_item_io[i]->can_save() &&
-                bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
+        //deduce save selected item
+        if (bhv_mgr->m_ws_item_io[i]->m_accepted_file_format == ff &&
+            bhv_mgr->m_ws_item_io[i]->can_save() &&
+            bhv_mgr->m_ws_item_io[i]->m_menu_occupier) {
 
-                qextended_action *new_act = new qextended_action((nullptr));
-                new_act->m_joined_data[0] = i;
-                connect(new_act, &QAction::triggered,
-                        this, &main_window_t::act_bhv_export_sel);
-                new_act->setText(
-                      QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
-                new_menu_export_selected->addAction(new_act);
-                m_file_menu_export_sel_as_acts.push_back(new_act);
+          qextended_action *new_act = new qextended_action((nullptr));
+          new_act->m_joined_data[0] = i;
+          connect(new_act, &QAction::triggered,
+                  this, &main_window_t::act_bhv_export_sel);
+          new_act->setText(
+              QString::fromStdString(bhv_mgr->m_file_formats[ff].m_full_name));
+          new_menu_export_selected->addAction(new_act);
+          m_file_menu_export_sel_as_acts.push_back(new_act);
 
-              }
+        }
 
-          }
+      }
 
-    }
+  }
 
   //TODO: make lookup for bhv
 
@@ -1924,13 +1924,13 @@ void main_window_t::build_bhv_tools_menus() {
 
   //construct tools groups
   for (auto &ffg : tool_grp_sort) {
-      //astate->ws_mgr->m_bhv_mgr->m_tools_groups
-      QMenu *new_menu = m_tools_menu->addMenu(
-            QString::fromStdString(
-              astate->ws_mgr->m_bhv_mgr->m_tools_groups[std::get<0>(ffg)].m_full_name)
-            );
-      m_tools_menu_grps.emplace(std::get<0>(ffg), new_menu);
-    }
+    //astate->ws_mgr->m_bhv_mgr->m_tools_groups
+    QMenu *new_menu = m_tools_menu->addMenu(
+        QString::fromStdString(
+            astate->ws_mgr->m_bhv_mgr->m_tools_groups[std::get<0>(ffg)].m_full_name)
+        );
+    m_tools_menu_grps.emplace(std::get<0>(ffg), new_menu);
+  }
 
 
   for (auto &ff : astate->ws_mgr->m_bhv_mgr->m_tools_info)
@@ -1943,31 +1943,31 @@ void main_window_t::build_bhv_tools_menus() {
   //construct tools actions
   for (auto &ff : tool_sort) {
 
-      //construct tool's action
-      qextended_action *new_act = new qextended_action((nullptr));
-      size_t tool_hash = std::get<0>(ff);
+    //construct tool's action
+    qextended_action *new_act = new qextended_action((nullptr));
+    size_t tool_hash = std::get<0>(ff);
 
-      new_act->m_joined_data[0] = tool_hash;
+    new_act->m_joined_data[0] = tool_hash;
 
-      connect(new_act, &QAction::triggered,
-              this, &main_window_t::act_bhv_tools_menus_clicked);
+    connect(new_act, &QAction::triggered,
+            this, &main_window_t::act_bhv_tools_menus_clicked);
 
-      new_act->setText(
-            QString::fromStdString(
-              astate->ws_mgr->m_bhv_mgr->m_tools_info[tool_hash].m_full_name)
-            );
+    new_act->setText(
+        QString::fromStdString(
+            astate->ws_mgr->m_bhv_mgr->m_tools_info[tool_hash].m_full_name)
+        );
 
-      //locate menu for group
-      auto it_g = m_tools_menu_grps.find(
-            astate->ws_mgr->m_bhv_mgr->m_tools_info[tool_hash].m_group_hash
-            );
+    //locate menu for group
+    auto it_g = m_tools_menu_grps.find(
+        astate->ws_mgr->m_bhv_mgr->m_tools_info[tool_hash].m_group_hash
+        );
 
-      if (it_g != m_tools_menu_grps.end()) it_g->second->addAction(new_act);
-      else m_tools_menu->addAction(new_act);
+    if (it_g != m_tools_menu_grps.end()) it_g->second->addAction(new_act);
+    else m_tools_menu->addAction(new_act);
 
-      m_tools_menu_acts.push_back(new_act);
+    m_tools_menu_acts.push_back(new_act);
 
-    }
+  }
 
 }
 
@@ -1980,11 +1980,11 @@ void main_window_t::build_bhv_tool_panel() {
 
   for (auto &tb_info : bhv_mgr->m_toolbar_elements_info) {
 
-      auto new_tb = tb_info.second.m_fabric();
-      new_tb->init_element(m_tp_wdgt);
-      m_toolbar_elements.push_back(new_tb);
+    auto new_tb = tb_info.second.m_fabric();
+    new_tb->init_element(m_tp_wdgt);
+    m_toolbar_elements.push_back(new_tb);
 
-    }
+  }
 
 }
 
@@ -1993,9 +1993,9 @@ void main_window_t::act_bhv_tools_menus_clicked() {
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
 
-//  if (!ok) {
-//   return;
-//  }
+  //  if (!ok) {
+  //   return;
+  //  }
 
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -2007,33 +2007,33 @@ void main_window_t::act_bhv_tools_menus_clicked() {
   auto it_t = bhv_mgr->m_tools_info.find(t_hash);
   if (it_t != bhv_mgr->m_tools_info.end()) {
 
-      if (it_t->second.m_item_required && !cur_it) {
-          return;
-        }
+    if (it_t->second.m_item_required && !cur_it) {
+      return;
+    }
 
-      switch (it_t->second.m_tool_type) {
+    switch (it_t->second.m_tool_type) {
 
-        case ws_item_tool_invalid:
-          break;
+    case ws_item_tool_invalid:
+      break;
 
-        case ws_item_tool_modal:
-          bhv_mgr->exec_tool(cur_it.get(), t_hash);
-          break;
+    case ws_item_tool_modal:
+      bhv_mgr->exec_tool(cur_it.get(), t_hash);
+      break;
 
-        case ws_item_tool_inline_vertical:
-          process_bhv_tool(it_t->first, cur_it.get());
-          break;
+    case ws_item_tool_inline_vertical:
+      process_bhv_tool(it_t->first, cur_it.get());
+      break;
 
-        case ws_item_tool_popup:
-          break;
+    case ws_item_tool_popup:
+      break;
 
-        case ws_item_tool_inline_horizontal:
-          process_bhv_tool(it_t->first, cur_it.get());
-          break;
-
-        }
+    case ws_item_tool_inline_horizontal:
+      process_bhv_tool(it_t->first, cur_it.get());
+      break;
 
     }
+
+  }
 
 }
 
@@ -2045,29 +2045,29 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
   //locate tool info
   auto it = bhv_mgr.m_tools_info.find(tool_id);
   if (it == bhv_mgr.m_tools_info.end()) {
-      //invalid tool
-      return;
-    }
+    //invalid tool
+    return;
+  }
 
   if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_invalid ||
       it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_modal ||
       it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_popup) {
-      //we can process only inline tools here
-      return;
+    //we can process only inline tools here
+    return;
 
-    }
+  }
 
   if (it->second.m_item_required) {
-     if (!sel_item || it->second.m_accepted_type != sel_item->get_type())
-       return;
-    }
+    if (!sel_item || it->second.m_accepted_type != sel_item->get_type())
+      return;
+  }
 
   std::shared_ptr<ws_item_inline_tool_widget_t> target{nullptr};
   //locate tool if exist
   auto it_trq = m_inline_tools.find(tool_id);
   if (it_trq != m_inline_tools.end() && it_trq->second != nullptr) {
-      target = it_trq->second;
-    }
+    target = it_trq->second;
+  }
 
   //try to construct
   if (!target) {
@@ -2075,52 +2075,52 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
     auto it_fit = bhv_mgr.m_tools_info.find(tool_id);
     if (it_fit != bhv_mgr.m_tools_info.end()) {
 
-        auto ws_item_tool = it_fit->second.m_fabric();
-        target =
-            std::shared_ptr<ws_item_inline_tool_widget_t>{ws_item_tool->construct_inline_tool()};
-        m_inline_tools.insert({tool_id, target});
+      auto ws_item_tool = it_fit->second.m_fabric();
+      target =
+          std::shared_ptr<ws_item_inline_tool_widget_t>{ws_item_tool->construct_inline_tool()};
+      m_inline_tools.insert({tool_id, target});
 
-      }
+    }
 
   }
 
   if (!target) {
-      return;
-    }
+    return;
+  }
 
   if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_vertical) {
 
-      if (m_inline_left_tool->m_cur_wdgt) {
-          m_inline_left_tool->m_cur_wdgt->cancel();
-          m_inline_left_tool->m_cur_wdgt->setVisible(false);
-          m_inline_left_tool->m_main_lt->removeWidget(m_inline_left_tool->m_cur_wdgt);
-        }
-
-      m_inline_left_tool->m_cur_wdgt = target.get();
-      m_inline_left_tool->m_main_lt->insertWidget(0, m_inline_left_tool->m_cur_wdgt);
-      m_inline_left_tool->m_cur_wdgt->setVisible(true);
-      m_inline_left_tool->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
-      m_inline_left_tool->m_cur_wdgt->bind_item(sel_item);
-      inline_tool_left_ctrl_visibility(true);
-      inline_tool_bottom_ctrl_visibility(false);
-
-    } else if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_horizontal) {
-
-      if (m_inline_btm_tool->m_cur_wdgt) {
-          m_inline_btm_tool->m_cur_wdgt->cancel();
-          m_inline_btm_tool->m_cur_wdgt->setVisible(false);
-          m_inline_btm_tool->m_main_lt->removeWidget(m_inline_left_tool->m_cur_wdgt);
-        }
-
-      m_inline_btm_tool->m_cur_wdgt = target.get();
-      m_inline_btm_tool->m_main_lt->insertWidget(0, m_inline_btm_tool->m_cur_wdgt);
-      m_inline_btm_tool->m_cur_wdgt->setVisible(true);
-      m_inline_btm_tool->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
-      m_inline_btm_tool->m_cur_wdgt->bind_item(sel_item);
-      inline_tool_left_ctrl_visibility(false);
-      inline_tool_bottom_ctrl_visibility(true);
-
+    if (m_inline_left_tool->m_cur_wdgt) {
+      m_inline_left_tool->m_cur_wdgt->cancel();
+      m_inline_left_tool->m_cur_wdgt->setVisible(false);
+      m_inline_left_tool->m_main_lt->removeWidget(m_inline_left_tool->m_cur_wdgt);
     }
+
+    m_inline_left_tool->m_cur_wdgt = target.get();
+    m_inline_left_tool->m_main_lt->insertWidget(0, m_inline_left_tool->m_cur_wdgt);
+    m_inline_left_tool->m_cur_wdgt->setVisible(true);
+    m_inline_left_tool->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
+    m_inline_left_tool->m_cur_wdgt->bind_item(sel_item);
+    inline_tool_left_ctrl_visibility(true);
+    inline_tool_bottom_ctrl_visibility(false);
+
+  } else if (it->second.m_tool_type == ws_item_tool_type_e::ws_item_tool_inline_horizontal) {
+
+    if (m_inline_btm_tool->m_cur_wdgt) {
+      m_inline_btm_tool->m_cur_wdgt->cancel();
+      m_inline_btm_tool->m_cur_wdgt->setVisible(false);
+      m_inline_btm_tool->m_main_lt->removeWidget(m_inline_left_tool->m_cur_wdgt);
+    }
+
+    m_inline_btm_tool->m_cur_wdgt = target.get();
+    m_inline_btm_tool->m_main_lt->insertWidget(0, m_inline_btm_tool->m_cur_wdgt);
+    m_inline_btm_tool->m_cur_wdgt->setVisible(true);
+    m_inline_btm_tool->m_ew_header->setText(QString::fromStdString(it->second.m_full_name));
+    m_inline_btm_tool->m_cur_wdgt->bind_item(sel_item);
+    inline_tool_left_ctrl_visibility(false);
+    inline_tool_bottom_ctrl_visibility(true);
+
+  }
 
 }
 
@@ -2135,22 +2135,22 @@ void main_window_t::control_bhv_tools_menus_activity() {
 
   for (auto elem : m_tools_menu_acts) {
 
-      elem->setEnabled(false);
+    elem->setEnabled(false);
 
-      if (cur_ws) {
+    if (cur_ws) {
 
-          auto it_t = bhv_mgr->m_tools_info.find(elem->m_joined_data[0]);
-          if (it_t != bhv_mgr->m_tools_info.end()) {
+      auto it_t = bhv_mgr->m_tools_info.find(elem->m_joined_data[0]);
+      if (it_t != bhv_mgr->m_tools_info.end()) {
 
-              if (!it_t->second.m_item_required) elem->setEnabled(true);
-              if (cur_it && it_t->second.m_item_required &&
-                  it_t->second.m_accepted_type == cur_it->get_type() &&
-                  it_t->second.m_can_apply(cur_it.get())) elem->setEnabled(true);
-            }
-
-        }
+        if (!it_t->second.m_item_required) elem->setEnabled(true);
+        if (cur_it && it_t->second.m_item_required &&
+            it_t->second.m_accepted_type == cur_it->get_type() &&
+            it_t->second.m_can_apply(cur_it.get())) elem->setEnabled(true);
+      }
 
     }
+
+  }
 
 }
 
@@ -2169,15 +2169,15 @@ void main_window_t::act_bhv_import_to_cur_ws() {
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
 
-      std::string file_name =
-          QFileDialog::getOpenFileName(this,
-                                       "Import to current workspace",
-                                       astate->m_last_dir,
-                                       "*").toStdString();
-      if (!file_name.empty())
-        astate->ws_mgr->import_from_file(file_name, b_id, false);
+    std::string file_name =
+        QFileDialog::getOpenFileName(this,
+                                     "Import to current workspace",
+                                     astate->m_last_dir,
+                                     "*").toStdString();
+    if (!file_name.empty())
+      astate->ws_mgr->import_from_file(file_name, b_id, false);
 
-    }
+  }
 
 }
 
@@ -2196,15 +2196,15 @@ void main_window_t::act_bhv_import_as_new_ws() {
       bhv_mgr->m_ws_item_io[b_id]->can_load() &&
       bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_as_new_ws) {
 
-      // astate->log(fmt::format("{}", b_id));
-      std::string file_name = QFileDialog::getOpenFileName(this,
-                                                           "Import as new workspace",
-                                                           astate->m_last_dir,
-                                                           "*").toStdString();
-      if (!file_name.empty())
-        astate->ws_mgr->import_from_file(file_name, b_id);
+    // astate->log(fmt::format("{}", b_id));
+    std::string file_name = QFileDialog::getOpenFileName(this,
+                                                         "Import as new workspace",
+                                                         astate->m_last_dir,
+                                                         "*").toStdString();
+    if (!file_name.empty())
+      astate->ws_mgr->import_from_file(file_name, b_id);
 
-    }
+  }
 
 }
 
@@ -2227,21 +2227,21 @@ void main_window_t::act_bhv_export_sel() {
       bhv_mgr->m_ws_item_io[b_id]->can_save() &&
       bhv_mgr->m_ws_item_io[b_id]->m_accepted_type == cur_it->get_type()) {
 
-      QString qfile_name = QFileDialog::getSaveFileName(this,
-                                                        "Export selected",
-                                                        astate->m_last_dir
-                                                        );
+    QString qfile_name = QFileDialog::getSaveFileName(this,
+                                                      "Export selected",
+                                                      astate->m_last_dir
+                                                      );
 
-      if (qfile_name.size() != 0) {
+    if (qfile_name.size() != 0) {
 
-          QFileInfo file_nfo(qfile_name);
-          astate->m_last_dir = file_nfo.absoluteDir().canonicalPath();
-          std::string file_name = qfile_name.toStdString();
-          astate->ws_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
-
-        }
+      QFileInfo file_nfo(qfile_name);
+      astate->m_last_dir = file_nfo.absoluteDir().canonicalPath();
+      std::string file_name = qfile_name.toStdString();
+      astate->ws_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
 
     }
+
+  }
 
 }
 
@@ -2265,24 +2265,24 @@ void main_window_t::control_bhv_menus_activity() {
 
     if (cur_it) {
 
-        m_file_menu_export_sel_as->setEnabled(true);
+      m_file_menu_export_sel_as->setEnabled(true);
 
-        for (auto &exp_act : m_file_menu_export_sel_as_acts) {
+      for (auto &exp_act : m_file_menu_export_sel_as_acts) {
 
-            size_t bhv_id = exp_act->m_joined_data[0];
+        size_t bhv_id = exp_act->m_joined_data[0];
 
-            if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
-                bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
-                //need_to_enable_export_menu = true;
-                exp_act->setEnabled(true);
-                //save item dialog
-              } else {
-                exp_act->setEnabled(false);
-              }
-
-          }
+        if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
+            bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
+          //need_to_enable_export_menu = true;
+          exp_act->setEnabled(true);
+          //save item dialog
+        } else {
+          exp_act->setEnabled(false);
+        }
 
       }
+
+    }
 
   } // not ok
 

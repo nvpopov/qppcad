@@ -46,6 +46,7 @@ public:
 private:
 
   epoch_t p_cur_epoch{0};
+
   hist_doc_base_t *p_parent{nullptr};
   //hist_doc_base_t *p_super_parent{nullptr};
   std::vector<hist_doc_base_t*> p_children;
@@ -201,14 +202,6 @@ public:
   std::tuple<hs_result_e, std::optional<epoch_t>> push_epoch(
       std::optional<epoch_t> new_epoch_ex = std::nullopt,
       bool checkout_to_new_epoch = false);
-
-  /**
-   * @brief find_hl
-   * @param target
-   */
-  auto find_hl(epoch_t target) {
-    return std::find(begin(p_hist_line), end(p_hist_line), target);
-  }
 
   /**
   * @brief get_history_size

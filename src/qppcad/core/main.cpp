@@ -24,7 +24,7 @@ void signal_handler(int signal) {
 void on_app_exit(int signal) {
 
   std::cout << std::endl <<"SIGNAL RECEIVED " << signal << std::endl
-	    << "qppcad has been terminated." << std::endl;
+            << "qppcad has been terminated." << std::endl;
   app_state_t::get_inst()->save_settings();
   QCoreApplication::exit(0);
 
@@ -69,57 +69,59 @@ int main (int argc, char **argv) {
   astate->ws_mgr->init_ws_item_bhv_mgr();
   astate->load_settings();
 
+#ifdef QPPCAD_RELEASE
   std::signal(SIGSEGV, signal_handler);
   std::signal(SIGINT, on_app_exit);
   std::signal(SIGTERM, on_app_exit);
+#endif
 
   astate->init_fixtures();
 
   if (under_dev_env) {
-      astate->ws_mgr->init_default();
-      //astate->m_show_debug_frame_stats = true;
-    }
+    astate->ws_mgr->init_default();
+    //astate->m_show_debug_frame_stats = true;
+  }
 
   if (!args.empty()) {
 
-      std::string file_format = "";
+    std::string file_format = "";
 
-      if (parser.isSet(target_fmt_option))
-        file_format = parser.value(target_fmt_option).toStdString();
+    if (parser.isSet(target_fmt_option))
+      file_format = parser.value(target_fmt_option).toStdString();
 
-      for (auto &rec : args) {
-          astate->tlog("@DEBUG: passed to load_from_file_autodeduce, path={}, ff={}",
-                       rec.toStdString(), file_format.empty() ? "NONE" : file_format);
-          astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format);
-        }
-
-    } else {
-
-      if (parser.isSet(target_fmt_option)) {
-          astate->tlog("ERROR: Invalid input");
-          return 0;
-        }
-
+    for (auto &rec : args) {
+      astate->tlog("@DEBUG: passed to load_from_file_autodeduce, path={}, ff={}",
+                   rec.toStdString(), file_format.empty() ? "NONE" : file_format);
+      astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format);
     }
 
-  QSurfaceFormat format;
+  } else {
+
+    if (parser.isSet(target_fmt_option)) {
+      astate->tlog("ERROR: Invalid input");
+      return 0;
+    }
+
+  }
+
+      QSurfaceFormat format;
   format.setDepthBufferSize(24);
 
-  //format.setStencilBufferSize(8);
-  format.setSamples(astate->m_num_samples);
+      //format.setStencilBufferSize(8);
+      format.setSamples(astate->m_num_samples);
   format.setVersion(3, 3);
   format.setProfile(QSurfaceFormat::CoreProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-  qApp->setStyle(QStyleFactory::create("Fusion"));
+      qApp->setStyle(QStyleFactory::create("Fusion"));
   astate->init_styles();
   //qApp->setPalette(astate->m_app_palette);
 
-  std::vector<int> fnt_id = {
-    QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Light.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Regular.ttf"),
-    QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Bold.ttf"),
-  };
+      std::vector<int> fnt_id = {
+          QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Light.ttf"),
+          QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Regular.ttf"),
+          QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Bold.ttf"),
+          };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
   astate->m_font_name = family;

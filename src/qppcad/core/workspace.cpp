@@ -21,16 +21,26 @@ using namespace qpp;
 using namespace qpp::cad;
 
 workspace_t::workspace_t(std::string _ws_name) {
+
   m_ws_name = _ws_name;
   m_camera = std::make_unique<camera_t>();
   m_camera->reset_camera();
   m_gizmo = std::make_unique<gizmo_t>();
+
+  begin_recording(true);
+  add_hs_child(&m_ws_items);
+  end_recording();
+
 }
 
 std::optional<size_t> workspace_t::get_sel_idx() {
 
-  for (size_t i = 0; i < num_items(); i++)
-    if (m_ws_items[i]->m_selected) return std::optional<size_t>(i);
+  for (size_t i = 0; i < num_items(); i++) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
+    if (!ws_item) continue;
+    if (ws_item->m_selected) return std::optional<size_t>(i);
+  }
+
   return std::nullopt;
 
 }
@@ -38,7 +48,7 @@ std::optional<size_t> workspace_t::get_sel_idx() {
 ws_item_t *workspace_t::get_sel() {
 
   std::optional<size_t> sel_idx = get_sel_idx();
-  if (sel_idx) return m_ws_items[*sel_idx].get();
+  if (sel_idx) return m_ws_items.get_hs_child_as_array(*sel_idx).get();
   else return nullptr;
 
 }
@@ -46,29 +56,32 @@ ws_item_t *workspace_t::get_sel() {
 std::shared_ptr<ws_item_t> workspace_t::get_sel_sp() {
 
   std::optional<size_t> sel_idx = get_sel_idx();
-  if (sel_idx) return m_ws_items[*sel_idx];
+  if (sel_idx) return m_ws_items.get_hs_child_as_array(*sel_idx);
   else return nullptr;
 
 }
 
-std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string _name) {
+std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string name) {
 
-  auto result = std::find_if(m_ws_items.begin(), m_ws_items.end(),
-                             [&_name](std::shared_ptr<ws_item_t> src){
-                               return src->m_name.get_value() == _name;}
-                             );
-  return *result;
+  for (size_t i = 0; i < num_items(); i++) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
+    if (ws_item->m_name.get_value() == name) return ws_item;
+  }
+
+  return nullptr;
 
 }
 
 std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
 
-  auto fidx = std::find_if(m_ws_items.begin(), m_ws_items.end(),
-                           [item](std::shared_ptr<ws_item_t> itemc){ return itemc.get() == item;});
+  for (size_t i = 0; i < num_items(); i++) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
+    if (!ws_item) continue;
+    if (ws_item == item) return std::optional{i};
+  }
 
-  if (fidx == m_ws_items.end()) return std::nullopt;
-
-  return std::optional<size_t>{std::distance(m_ws_items.begin(), fidx)};
+  return std::nullopt;
 
 }
 
@@ -82,11 +95,14 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
   if (sel_idx < num_items() && num_items() != 0) {
 
-    m_ws_items[sel_idx]->m_selected = true;
+    auto ws_item = m_ws_items.get_hs_child_as_array(sel_idx).get();
+    if (!ws_item) return false;
 
-    if (m_ws_items[sel_idx]->get_flags() & ws_item_flags_support_tr) {
+    ws_item->m_selected = true;
 
-      m_gizmo->attached_item = m_ws_items[sel_idx].get();
+    if (ws_item->get_flags() & ws_item_flags_support_tr) {
+
+      m_gizmo->attached_item = ws_item;
       m_gizmo->update_gizmo(0.1f, true);
       astate->make_viewport_dirty();
 
@@ -97,7 +113,7 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
     //astate->make_viewport_dirty();
     if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
-    update_overview(m_ws_items[sel_idx]->compose_overview());
+    update_overview(ws_item->compose_overview());
     return true;
 
   }
@@ -136,7 +152,12 @@ void workspace_t::prev_item() {
 
 void workspace_t::unsel_all(bool emit_signal) {
 
-  for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
+  for (size_t i = 0; i < num_items(); i++) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
+    if (!ws_item) continue;
+    ws_item->m_selected = false;
+  }
+
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->request_update_overview("");
   if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
@@ -159,7 +180,7 @@ void workspace_t::ws_changed() {
 }
 
 size_t workspace_t::num_items() {
-  return m_ws_items.size();
+  return m_ws_items.get_hs_children_count();
 }
 
 void workspace_t::reset_cam() {
@@ -190,11 +211,15 @@ void workspace_t::set_best_view() {
   bool cam_staged{false};
 
   std::shared_ptr<ws_item_t> acc_item{nullptr};
-  for (auto item : m_ws_items)
-    if (item->get_flags() & ws_item_flags_cam_target_view) {
+
+  for (size_t i = 0; i < num_items(); i++) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
+    if (ws_item->get_flags() & ws_item_flags_cam_target_view) {
       num_items_tv++;
-      acc_item = item;
+      acc_item = ws_item;
     }
+  }
 
   if (num_items_tv == 1 && acc_item) {
 
@@ -212,11 +237,21 @@ void workspace_t::set_best_view() {
   if (!cam_staged) {
 
     size_t total_voters = 0;
-    for (auto &ws_item : m_ws_items)
+
+    //    for (auto &ws_item : m_ws_items)
+    //      if (ws_item->get_flags() & ws_item_flags_support_view_voting) {
+    //        total_voters+=1;
+    //        ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
+    //      }
+
+    for (size_t i = 0; i < num_items(); i++) {
+      auto ws_item = m_ws_items.get_hs_child_as_array(i);
+      if (!ws_item) continue;
       if (ws_item->get_flags() & ws_item_flags_support_view_voting) {
         total_voters+=1;
         ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
       }
+    }
 
     total_voters = std::clamp<size_t>(total_voters, 1, 20);
 
@@ -246,14 +281,14 @@ hs_result_e workspace_t::on_epoch_changed(hist_doc_base_t::epoch_t prev_epoch) {
   epoch_t cur_epoch = get_cur_epoch();
   bool affected{false};
 
-//  for (size_t i = 0; i < get_children_count(); i++)
-//    if (is_child_alive(cur_epoch, get_child(i))) {
-//      ws_item_t *itm = dynamic_cast<ws_item_t *>(get_child(i));
-//      if (itm) {
-//        std::optional<size_t> chd_idx = get_item_idx(itm);
-//        if (chd_idx && itm->is_selected()) affected = true;
-//      }
-//    }
+  //  for (size_t i = 0; i < get_children_count(); i++)
+  //    if (is_child_alive(cur_epoch, get_child(i))) {
+  //      ws_item_t *itm = dynamic_cast<ws_item_t *>(get_child(i));
+  //      if (itm) {
+  //        std::optional<size_t> chd_idx = get_item_idx(itm);
+  //        if (chd_idx && itm->is_selected()) affected = true;
+  //      }
+  //    }
 
   if (affected) astate->astate_evd->cur_ws_selected_item_changed();
 
@@ -306,14 +341,27 @@ void workspace_t::render() {
 
   }
 
-  for (auto &ws_item : m_ws_items) ws_item->render();
+  //  for (auto &ws_item : m_ws_items) ws_item->render();
+
+  for (size_t i = 0; i < num_items(); i++) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
+    ws_item->render();
+  }
 
 }
 
 void workspace_t::render_overlay(QPainter &painter) {
 
-  for (auto &ws_item : m_ws_items)
+  //  for (auto &ws_item : m_ws_items)
+  //    if (ws_item->m_is_visible.get_value()) ws_item->render_overlay(painter);
+
+  for (size_t i = 0; i < num_items(); i++) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
     if (ws_item->m_is_visible.get_value()) ws_item->render_overlay(painter);
+  }
+
 
 }
 
@@ -345,11 +393,22 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   bool hit_any = false;
 
   if (m_edit_type != ws_edit_e::edit_content) {
-    for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
+
+    //for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
+    for (size_t i = 0; i < num_items(); i++) {
+      auto ws_item = m_ws_items.get_hs_child_as_array(i);
+      if (!ws_item) continue;
+      ws_item->m_selected = false;
+    }
+
     m_gizmo->attached_item = nullptr;
+
   }
 
-  for (auto &ws_item : m_ws_items) {
+  for (size_t i = 0; i < num_items(); i++) {
+
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
 
     bool is_hit = ws_item->mouse_click(&m_ray);
     hit_any = hit_any || is_hit;
@@ -359,12 +418,8 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
         && (ws_item->get_flags() & ws_item_flags_support_sel)) {
 
       m_gizmo->attached_item = ws_item.get();
-      auto it = std::find(m_ws_items.begin(), m_ws_items.end(), ws_item);
-      if (it != m_ws_items.end()) {
-        auto index = std::distance(m_ws_items.begin(), it);
-        set_sel_item(index);
-        break;
-      }
+      set_sel_item(i);
+      break;
 
     }
 
@@ -396,10 +451,10 @@ void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
 }
 
-void workspace_t::add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add) {
+void workspace_t::add_item_to_ws(std::shared_ptr<ws_item_t> item_to_add, bool add_new_epoch) {
 
-  item_to_add->set_parent_ws(this);
-  m_ws_items.push_back(item_to_add);
+  item_to_add->m_parent_ws = this;
+  m_ws_items.add_hs_child_as_array(item_to_add, add_new_epoch);
   app_state_t::get_inst()->astate_evd->cur_ws_changed();
 
 }
@@ -413,11 +468,23 @@ void workspace_t::update_overview(const std::string &overview_text) {
 
 void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete) {
 
-  for (auto elem : m_ws_items) {
-    auto it = std::find(elem->m_connected_items.begin(),
-                        elem->m_connected_items.end(),
+  //  for (auto elem : m_ws_items) {
+  //    auto it = std::find(elem->m_connected_items.begin(),
+  //                        elem->m_connected_items.end(),
+  //                        item_to_delete);
+  //    if (it != elem->m_connected_items.end()) elem->m_connected_items.erase(it);
+  //  }
+
+  for (size_t i = 0; i < num_items(); i++) {
+
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
+
+    auto it = std::find(begin(ws_item->m_connected_items),
+                        end(ws_item->m_connected_items),
                         item_to_delete);
-    if (it != elem->m_connected_items.end()) elem->m_connected_items.erase(it);
+    if (it != end(ws_item->m_connected_items)) ws_item->m_connected_items.erase(it);
+
   }
 
 }
@@ -440,14 +507,16 @@ void workspace_t::save_ws_to_json(const std::string filename) {
 
   json ws_objects = json::array({});
 
-  for (const auto &ws_item : m_ws_items)
-    if (ws_item->can_be_written_to_json()) {
+  for (size_t i = 0; i < num_items(); i++) {
 
-      json ws_object;
-      ws_item->save_to_json(ws_object);
-      ws_objects.push_back(ws_object);
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
 
-    }
+    json ws_object;
+    ws_item->save_to_json(ws_object);
+    ws_objects.push_back(ws_object);
+
+  }
 
   data[JSON_OBJECTS] = ws_objects;
 
@@ -474,7 +543,7 @@ void workspace_t::load_ws_from_json(const std::string filename) {
     json_helper::load_vec3(JSON_BG_CLR, m_bg_color, data);
 
     auto data_camera = data.find(JSON_WS_CAMERA);
-//    if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());
+    //    if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());
 
     if (data.find(JSON_OBJECTS) != data.end()) {
 
@@ -527,7 +596,15 @@ void workspace_t::load_ws_from_json(const std::string filename) {
 
     //end of revive ws_item_t class fields
 
-    for (auto &item : m_ws_items) if (item) item->updated_externally();
+    //for (auto &item : m_ws_items) if (item) item->updated_externally();
+
+    for (size_t i = 0; i < num_items(); i++) {
+
+      auto ws_item = m_ws_items.get_hs_child_as_array(i);
+      if (!ws_item) continue;
+      ws_item->updated_externally();
+
+    }
 
     m_fs_path = filename;
 
@@ -562,30 +639,38 @@ void workspace_t::update(float delta_time) {
 
   //handle deletion
 
-  for (auto it = m_ws_items.begin(); it != m_ws_items.end(); )
-    if ((*it)->m_marked_for_deletion) {
+  //  for (auto it = m_ws_items.begin(); it != m_ws_items.end(); )
+  //    if ((*it)->m_marked_for_deletion) {
 
-      if (it->get() == m_gizmo->attached_item)
-        m_gizmo->attached_item = nullptr;
+  //      if (it->get() == m_gizmo->attached_item)
+  //        m_gizmo->attached_item = nullptr;
 
-      if (it->get()->m_selected) unsel_all(true);
+  //      if (it->get()->m_selected) unsel_all(true);
 
-      clear_connected_items(*it);
-      it->get()->m_parent_ws = nullptr;
-      it->get()->m_connected_items.clear();
-      it = m_ws_items.erase(it);
-      //it->reset();
-      astate->astate_evd->cur_ws_changed();
+  //      clear_connected_items(*it);
+  //      it->get()->m_parent_ws = nullptr;
+  //      it->get()->m_connected_items.clear();
+  //      it = m_ws_items.erase(it);
+  //      //it->reset();
+  //      astate->astate_evd->cur_ws_changed();
 
-    }
-    else {
-      ++it;
-    }
+  //    }
+  //    else {
+  //      ++it;
+  //    }
 
   ws_changed();
 
   //update cycle
-  for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
+  //for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
+
+  for (size_t i = 0; i < num_items(); i++) {
+
+    auto ws_item = m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item) continue;
+    ws_item->update(delta_time);
+
+  }
 
 }
 
@@ -625,7 +710,11 @@ void workspace_t::pop_cam_state() {
 
 void workspace_t::del_item_by_index(size_t idx) {
 
-  if (idx < num_items()) m_ws_items[idx]->m_marked_for_deletion = true;
+  if (idx < num_items()) {
+    auto ws_item = m_ws_items.get_hs_child_as_array(idx);
+    if (!ws_item) return;
+    ws_item->m_marked_for_deletion = true;
+  }
 
 }
 

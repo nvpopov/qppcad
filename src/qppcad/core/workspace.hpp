@@ -8,6 +8,7 @@
 #include <qppcad/render/camera.hpp>
 #include <qppcad/core/gizmo.hpp>
 #include <qppcad/core/history_stream.hpp>
+#include <qppcad/core/history_stream_array_proxy.hpp>
 
 #include <QMessageBox>
 
@@ -41,12 +42,13 @@ public:
   workspace_manager_t                      *m_owner{nullptr};
   std::string                              m_fs_path{""};
   ws_edit_e                                m_edit_type{ws_edit_e::edit_item};
-  std::vector<std::shared_ptr<ws_item_t> > m_ws_items;
   std::string                              m_ws_name;
   std::unique_ptr<camera_t>                m_camera;
   ray_t<float>                             m_ray;
   std::unique_ptr<gizmo_t>                 m_gizmo;
   vector3<float>                           m_bg_color{0.5f, 0.5f, 0.5f};
+
+  hist_doc_array_proxy_t<ws_item_t, hs_arr_shrd_ptr_policy<ws_item_t>> m_ws_items;
 
   bool m_need_to_update_overview{false};
   bool m_show_obj_insp{true};
@@ -85,7 +87,7 @@ public:
   void render_overlay(QPainter &painter);
   void mouse_click(const float mouse_x, const float mouse_y);
   void mouse_double_click(const float mouse_x, const float mouse_y);
-  void add_item_to_ws(const std::shared_ptr<ws_item_t> item_to_add);
+  void add_item_to_ws(std::shared_ptr<ws_item_t> item_to_add, bool add_new_epoch = true);
   void update_overview(const std::string &overview_text);
 
   //io
