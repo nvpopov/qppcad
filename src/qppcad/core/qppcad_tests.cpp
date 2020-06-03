@@ -744,11 +744,6 @@ TEST_CASE("history stream test") {
     //REQUIRE(hs_iarray->is_child_unused(hs_int1));
     REQUIRE(hs_iarray->get_hs_children_count() == 1);
     REQUIRE(hs_int1.use_count() == 1);
-    //REQUIRE(hs_int1 == nullptr);
-    //hs_int1->set_value(55);
-    //    hs_root->set_commit_exclusive_on_change(true);
-    //    hs_int0->set_value(42);
-    //    REQUIRE(hs_iarray->get_cur_epoch() == 5);
 
   }
 

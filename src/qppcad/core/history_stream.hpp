@@ -51,7 +51,7 @@ private:
   //hist_doc_base_t *p_super_parent{nullptr};
   std::vector<hist_doc_base_t*> p_children;
   std::vector<hist_doc_base_t*> p_just_added_children;
-  std::map<epoch_t, std::map<hist_doc_base_t*, hs_child_state_meta_t>> p_childs_states;
+  std::map<epoch_t, std::map<hist_doc_base_t*, hs_child_state_meta_t>> p_children_states;
   std::map<hist_doc_base_t*, hs_child_state_meta_t> p_current_child_state;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
@@ -105,6 +105,7 @@ protected:
   virtual void record_impl(bool init_as_base_commit);
   virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
+  virtual hs_result_e squash_impl();
   //void update_super_root(hist_doc_base_t *new_super_root);
 
 public:
@@ -193,6 +194,13 @@ public:
    * @return execution status
    */
   hs_result_e reset();
+
+  /**
+   * @brief squash
+   * @param squashed_epochs
+   * @return
+   */
+  hs_result_e squash();
 
   /**
   * @brief push_epoch insert new epoch at cursor
@@ -344,11 +352,17 @@ private:
 protected:
 
   hs_result_e reset_impl() override {
-    if (p_stored_values.empty()) return hs_result_e::hs_invalid_epoch;
+
+    if (p_stored_values.empty())
+      return hs_result_e::hs_invalid_epoch;
+
     auto stored_val_it = p_stored_values.find(get_cur_epoch());
-    if (stored_val_it == end(p_stored_values)) return hs_result_e::hs_invalid_epoch;
+    if (stored_val_it == end(p_stored_values))
+      return hs_result_e::hs_invalid_epoch;
+
     p_cur_value = stored_val_it->second;
     return hs_result_e::hs_success;
+
   }
 
   void record_impl(bool init_as_base_commit) override {
@@ -360,6 +374,12 @@ protected:
 
     hist_doc_base_t::record_impl(init_as_base_commit);
 
+  }
+
+  hs_result_e squash_impl() override {
+    p_stored_values.clear();
+    p_stored_values[0] = p_cur_value;
+    return hs_result_e::hs_success;
   }
 
 public:
