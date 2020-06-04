@@ -111,34 +111,34 @@ bool hist_doc_base_t::is_unmodified() {
 
   epoch_t cur_epoch = get_cur_epoch();
 
-  std::vector<bool> childs_are_modified;
+  std::vector<bool> child_are_modified;
 
   for (auto child : p_children)
     if (child) {
 
       auto epoch_it = p_children_states.find(cur_epoch);
       if (epoch_it == end(p_children_states)) {
-        childs_are_modified.push_back(false);
+        child_are_modified.push_back(false);
         continue;
       }
 
       auto child_it = epoch_it->second.find(child);
       if (child_it == end(epoch_it->second)) {
-        childs_are_modified.push_back(false);
+        child_are_modified.push_back(false);
         continue;
       }
 
-      childs_are_modified.push_back(child->is_unmodified()
+      child_are_modified.push_back(child->is_unmodified()
                                     && child->get_cur_epoch() == child_it->second.m_child_epoch);
 
     }
 
-  bool all_childs_are_unmodified =
-      p_children.empty() ? true : std::all_of(begin(childs_are_modified),
-                                              end(childs_are_modified),
+  bool all_child_are_unmodified =
+      p_children.empty() ? true : std::all_of(begin(child_are_modified),
+                                              end(child_are_modified),
                                               [](bool value) {return value;});
 
-  return all_childs_are_unmodified && is_unmodified_impl();
+  return all_child_are_unmodified && is_unmodified_impl();
 
 }
 
@@ -149,12 +149,6 @@ bool hist_doc_base_t::is_unmodified_impl() {
 hs_result_e hist_doc_base_t::squash_impl() {
   return hs_result_e::hs_success;
 }
-
-//void hist_doc_base_t::update_super_root(hist_doc_base_t *new_super_root) {
-//  p_super_parent = new_super_root;
-//  for (auto child : p_childs)
-//    if (child) child->update_super_root(new_super_root);
-//}
 
 hs_result_e hist_doc_base_t::reset() {
 
@@ -415,21 +409,21 @@ hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_e
     auto &epoch_aug_vec = epoch_it->second;
 
     //check that augmented data is valid
-    size_t valid_childs{0};
+    size_t valid_children{0};
     for (auto &elem : epoch_aug_vec) {
 
       auto child = std::get<0>(elem);
       auto child_epoch_meta = std::get<1>(elem);
 
       if (child && child->has_epoch(child_epoch_meta.m_child_epoch)) {
-        valid_childs++;
+        valid_children++;
       } else {
         return hs_result_e::hs_invalid_epoch;
       }
 
     }
 
-    if (valid_childs != epoch_aug_vec.size()) {
+    if (valid_children != epoch_aug_vec.size()) {
       return hs_result_e::hs_invalid_epoch;
     }
 
@@ -501,7 +495,6 @@ hs_result_e hist_doc_base_t::set_alive_hs_child(hist_doc_base_t *child, bool ali
   auto child_it  = std::find(begin(p_children), end(p_children), child);
   if (child_it == end(p_children)) return hs_result_e::hs_invalid_child;
 
-  //auto child_idx = std::distance(begin(p_childs), child_it);
   auto com_exclusive_res = commit_exclusive(child, child->get_cur_epoch());
   if (com_exclusive_res != hs_result_e::hs_success) return hs_result_e::hs_error;
 

@@ -769,5 +769,46 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("is child unused tests - shared ptr storage") {
+
+    hist_doc_base_t *hs_root = new hist_doc_base_t;
+
+    auto *hs_iarray =
+        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_shrd_ptr_policy<hs_prop_int_t>>();
+    //hs_iarray->set_auto_delete_children(true);
+
+    REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success); // 1
+    //hs_root->set_commit_exclusive_on_change(false);
+
+    auto hs_int0 = std::make_shared<hs_prop_int_t>();
+    //hs_int0->set_auto_delete(true);
+
+    auto hs_int1 = std::make_shared<hs_prop_int_t>();
+    //hs_int1->set_auto_delete(true);
+
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int0) == hs_result_e::hs_success);
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int1) == hs_result_e::hs_success);
+
+    hs_int0->set_value(5);
+    hs_int0->set_value(6);
+    hs_int0->set_value(7);
+
+    REQUIRE(hs_root->squash() == hs_result_e::hs_success);
+    REQUIRE(hs_root->get_cur_epoch() == 0);
+    REQUIRE(hs_root->get_history_size() == 1);
+
+    REQUIRE(hs_iarray->get_cur_epoch() == 0);
+    REQUIRE(hs_iarray->get_history_size() == 1);
+
+    REQUIRE(hs_int0->get_cur_epoch() == 0);
+    REQUIRE(hs_int0->get_history_size() == 1);
+
+    REQUIRE(hs_int1->get_cur_epoch() == 0);
+    REQUIRE(hs_int1->get_history_size() == 1);
+
+    REQUIRE(hs_int0->get_value() == 7);
+
+  }
+
 
 }
