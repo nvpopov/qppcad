@@ -2167,9 +2167,9 @@ void main_window_t::act_bhv_import_to_cur_ws() {
   size_t b_id = ext_act->m_joined_data[0];
 
   //check that bhv is valid
-  if (b_id < bhv_mgr->m_ws_item_io.size() &&
-      bhv_mgr->m_ws_item_io[b_id]->can_load() &&
-      bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
+  if (b_id < bhv_mgr->m_ws_item_io.size()
+      && bhv_mgr->m_ws_item_io[b_id]->can_load()
+      && bhv_mgr->m_ws_item_io[b_id]->m_can_be_imported_to_ws) {
 
     std::string file_name =
         QFileDialog::getOpenFileName(this,

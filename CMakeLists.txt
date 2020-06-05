@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.2)
 project(qppcad CXX C)
 
-set(CMAKE_BUILD_TYPE "Debug")
-#set(CMAKE_BUILD_TYPE "Release")
+#set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 
 add_definitions(-DFMT_HEADER_ONLY)
 if(NOT MSVC)
@@ -45,6 +45,7 @@ include_directories(deps/qpp/deps/fmtlib/include)
 include_directories(deps/qpp/deps/pugixml/src)
 include_directories(deps/qpp/deps/CppNumericalSolvers/include)
 include_directories(deps/qpp/deps/eigen3)
+include_directories(deps/qpp/deps)
 include_directories(deps/fifo_map)
 include_directories(deps)
 include_directories(${PYTHON_INCLUDE_DIRS})

@@ -60,8 +60,7 @@ void ws_item_behaviour_manager_t::load_fixtures_from_path(
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     const std::string &file_name,
     size_t io_bhv_idx,
-    workspace_t *ws,
-    bool need_to_squash_hs) {
+    workspace_t *ws) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -71,7 +70,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 
   auto new_ws_item = fbr_ws_item_by_type(m_ws_item_io[io_bhv_idx]->m_accepted_type);
   new_ws_item->m_genesis_file_name.set_cvalue(file_name);
-  ws->add_item_to_ws(new_ws_item, !need_to_squash_hs);
+  ws->add_item_to_ws(new_ws_item, false);
 
   if (new_ws_item) {
 
@@ -90,8 +89,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     const std::string &file_name,
-    workspace_t *ws,
-    bool squash_hs) {
+    workspace_t *ws) {
 
   QFileInfo check_file(QString::fromStdString(file_name));
 
@@ -104,7 +102,7 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
 
     if (io_bhv_id) {
-      auto ret_sp = load_ws_itm_from_file(file_name, *io_bhv_id, ws, squash_hs);
+      auto ret_sp = load_ws_itm_from_file(file_name, *io_bhv_id, ws);
       return ret_sp;
     }
 

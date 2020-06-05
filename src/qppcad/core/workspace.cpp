@@ -435,18 +435,15 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
   auto cur_it = get_sel();
+  if (!cur_it) return;
 
-  if (cur_it) {
+  if (m_edit_type == ws_edit_e::edit_item) {
+    cur_it->mouse_double_click(nullptr);
+    return;
+  }
 
-    if (m_edit_type == ws_edit_e::edit_item) {
-      cur_it->mouse_double_click(nullptr);
-      return;
-    }
-
-    if (cur_it->get_num_cnt_selected() == 0 && m_edit_type == ws_edit_e::edit_content) {
-      set_edit_type(ws_edit_e::edit_item);
-    }
-
+  if (cur_it->get_num_cnt_selected() == 0 && m_edit_type == ws_edit_e::edit_content) {
+    set_edit_type(ws_edit_e::edit_item);
   }
 
 }
@@ -467,13 +464,6 @@ void workspace_t::update_overview(const std::string &overview_text) {
 }
 
 void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete) {
-
-  //  for (auto elem : m_ws_items) {
-  //    auto it = std::find(elem->m_connected_items.begin(),
-  //                        elem->m_connected_items.end(),
-  //                        item_to_delete);
-  //    if (it != elem->m_connected_items.end()) elem->m_connected_items.erase(it);
-  //  }
 
   for (size_t i = 0; i < num_items(); i++) {
 
@@ -695,17 +685,13 @@ void workspace_t::copy_cam(std::shared_ptr<workspace_t> source) {
 }
 
 void workspace_t::push_cam_state() {
-
   if (m_camera)
     m_camera->push_cam_state();
-
 }
 
 void workspace_t::pop_cam_state() {
-
   if (m_camera)
     m_camera->pop_cam_state();
-
 }
 
 void workspace_t::del_item_by_index(size_t idx) {
@@ -723,9 +709,7 @@ void workspace_t::make_overview_dirty() {
 }
 
 std::string workspace_t::py_get_repr() {
-
   return fmt::format("[workspace, name=\"{}\"]", m_ws_name);
-
 }
 
 std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name,
@@ -1091,7 +1075,8 @@ void workspace_manager_t::import_from_file(const std::string &fname,
     std::shared_ptr<ws_item_t> p_new_itm{nullptr};
 
     try {
-      p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get(), need_to_squash_hs);
+      p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
+      if (need_to_squash_hs) exec_ws.get()->squash();
     } catch (const qpp::parsing_error_t &exc) {
       loading_is_succesfull = false;
 

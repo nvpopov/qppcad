@@ -290,12 +290,10 @@ public:
 
   std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                    size_t io_bhv_idx,
-                                                   workspace_t *ws,
-                                                   bool squash_hs);
+                                                   workspace_t *ws);
 
   std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
-                                                   workspace_t *ws,
-                                                   bool squash_hs);
+                                                   workspace_t *ws);
 
   bool save_ws_itm_to_file(std::string &file_name,
                            std::shared_ptr<ws_item_t> ws_item,
