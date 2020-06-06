@@ -104,24 +104,24 @@ int main (int argc, char **argv) {
 
   }
 
-      QSurfaceFormat format;
+  QSurfaceFormat format;
   format.setDepthBufferSize(24);
 
       //format.setStencilBufferSize(8);
-      format.setSamples(astate->m_num_samples);
+  format.setSamples(astate->m_num_samples);
   format.setVersion(3, 3);
   format.setProfile(QSurfaceFormat::CoreProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-      qApp->setStyle(QStyleFactory::create("Fusion"));
+  qApp->setStyle(QStyleFactory::create("Fusion"));
   astate->init_styles();
   //qApp->setPalette(astate->m_app_palette);
 
-      std::vector<int> fnt_id = {
-          QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Light.ttf"),
-          QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Regular.ttf"),
-          QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Bold.ttf"),
-          };
+  std::vector<int> fnt_id = {
+      QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Light.ttf"),
+      QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Regular.ttf"),
+      QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Bold.ttf"),
+      };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
   astate->m_font_name = family;

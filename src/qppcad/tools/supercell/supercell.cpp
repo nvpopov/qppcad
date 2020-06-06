@@ -304,7 +304,8 @@ void super_cell_widget_t::on_cancel() {
 
   if (m_dst_gv) {
 
-    m_dst_gv->m_marked_for_deletion = true;
+    m_dst_gv->hs_delete();
+
   }
 
 }

@@ -53,27 +53,27 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 
   if (m_binded_item) {
 
-      int target_index = -1;
-      if (m_binded_item->m_last_tab >= 0) target_index = m_binded_item->m_last_tab;
-      else target_index = 0;
+    int target_index = -1;
+    if (m_binded_item->m_last_tab >= 0) target_index = m_binded_item->m_last_tab;
+    else target_index = 0;
 
-      auto *widget_to_focus = widget(target_index);
+    auto *widget_to_focus = widget(target_index);
 
-      if (widget_to_focus) {
-          widget_to_focus->setFocus();
-          setCurrentIndex(target_index);
-        }
-
-      m_ws_item_pos->bind_value(&m_binded_item->m_pos, m_binded_item);
-      m_ws_item_show_item_bb->bind_value({&m_binded_item->m_is_visible, &m_binded_item->m_show_bb});
-
-      qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
-                                      m_tg_form_lt,
-                                      m_ws_item_type,
-                                      m_ws_item_pos_label,
-                                      m_ws_item_pos);
-
+    if (widget_to_focus) {
+      widget_to_focus->setFocus();
+      setCurrentIndex(target_index);
     }
+
+    m_ws_item_pos->bind_value(&m_binded_item->m_pos, m_binded_item);
+    m_ws_item_show_item_bb->bind_value({&m_binded_item->m_is_visible, &m_binded_item->m_show_bb});
+
+    qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
+                                    m_tg_form_lt,
+                                    m_ws_item_type,
+                                    m_ws_item_pos_label,
+                                    m_ws_item_pos);
+
+  }
 
   update_from_ws_item();
 
@@ -82,8 +82,8 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 void ws_item_obj_insp_widget_t::unbind_item() {
 
   if (m_binded_item) {
-      m_binded_item->m_last_tab = currentIndex();
-    }
+    m_binded_item->m_last_tab = currentIndex();
+  }
 
   m_binded_item = nullptr;
   m_ws_item_show_item_bb->unbind_value();
@@ -98,20 +98,20 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
 
   if (m_binded_item) {
 
-      auto name_fstr = QString::fromStdString(m_binded_item->get_name());
-      auto name_qstr = qt_hlp::clamp_string(name_fstr, trc_name);
-      m_ws_item_name->setText(name_fstr);
-      m_ws_item_name->setToolTip(name_qstr);
+    auto name_fstr = QString::fromStdString(m_binded_item->get_name());
+    auto name_qstr = qt_hlp::clamp_string(name_fstr, trc_name);
+    m_ws_item_name->setText(name_fstr);
+    m_ws_item_name->setToolTip(name_qstr);
 
-      auto name_tstr =
-          qt_hlp::clamp_string(QString::fromStdString(m_binded_item->compose_type_descr()),
-                               trc_type);
-      m_ws_item_type->setText(name_tstr);
+    auto name_tstr =
+        qt_hlp::clamp_string(QString::fromStdString(m_binded_item->compose_type_descr()),
+                             trc_type);
+    m_ws_item_type->setText(name_tstr);
 
-      m_ws_item_show_item_bb->load_value();
-      m_ws_item_pos->load_value_ex();
+    m_ws_item_show_item_bb->load_value();
+    m_ws_item_pos->load_value_ex();
 
-    }
+  }
 
 }
 
@@ -248,11 +248,11 @@ void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
 
   if (m_binded_item) {
 
-      if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
-          m_ws_item_pos->load_value_ex();
-        }
-
+    if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
+      m_ws_item_pos->load_value_ex();
     }
+
+  }
 
 }
 
@@ -286,37 +286,37 @@ void ws_item_obj_insp_widget_t::delete_current_item() {
 
   if (m_binded_item) {
 
-      int ret = QMessageBox::warning(this,
-                                     tr("Confirm the deletion"),
-                                     tr("Are you sure?"),
-                                     QMessageBox::Ok | QMessageBox::Cancel);
+    int ret = QMessageBox::warning(this,
+                                   tr("Confirm the deletion"),
+                                   tr("Are you sure?"),
+                                   QMessageBox::Ok | QMessageBox::Cancel);
 
-      if (ret == QMessageBox::Cancel) return;
+    if (ret == QMessageBox::Cancel) return;
 
-      ws_item_t *_binded_item = m_binded_item;
-      unbind_item();
+    ws_item_t *binded_item = m_binded_item;
+    unbind_item();
 
-      astate->ws_mgr->get_cur_ws()->unsel_all();
-      _binded_item->m_marked_for_deletion = true;
+    astate->ws_mgr->get_cur_ws()->unsel_all();
+    binded_item->hs_delete();
 
-      astate->astate_evd->cur_ws_changed();
-      astate->astate_evd->wss_changed();
+    astate->astate_evd->cur_ws_changed();
+    astate->astate_evd->wss_changed();
 
-    } else {
+  } else {
 
-      astate->ws_mgr->get_cur_ws()->unsel_all();
-      astate->astate_evd->cur_ws_changed();
-      astate->astate_evd->wss_changed();
+    astate->ws_mgr->get_cur_ws()->unsel_all();
+    astate->astate_evd->cur_ws_changed();
+    astate->astate_evd->wss_changed();
 
-    }
+  }
 
 }
 
 void ws_item_obj_insp_widget_t::cur_tab_changed(int index) {
 
   if (m_binded_item) {
-      m_binded_item->m_last_tab = index;
-    }
+    m_binded_item->m_last_tab = index;
+  }
 
 }
 

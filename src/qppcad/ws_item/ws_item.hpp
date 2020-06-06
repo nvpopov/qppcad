@@ -126,7 +126,7 @@ public:
   vector3<float>   explicit_translation;
   int m_last_tab{-1};
   bool m_selected{false};
-  bool m_marked_for_deletion{false};
+  //bool m_marked_for_deletion{false};
   bool m_ext_editor_opened{false};
 
   size_t m_ext_editor_id{0};
@@ -151,24 +151,22 @@ public:
 
   void apply_target_view(cam_tv_e target_view_src);
 
-
-
   /**
-  * @brief get_name
-  * @return
-  */
+   * @brief get_name
+   * @return
+   */
   const std::string get_name();
 
   /**
-         * @brief set_name
-         * @param name
-         */
+   * @brief set_name
+   * @param name
+   */
   void set_name(const std::string &name);
 
   /**
-         * @brief set_name
-         * @param name
-         */
+   * @brief set_name
+   * @param name
+   */
   void set_name(const char *name);
 
   // "many-to-many" data relationship
@@ -187,6 +185,8 @@ public:
   bool is_bounded();
 
   bool is_selected(); // selected in workspaces
+
+  void hs_delete();
 
   virtual void render();
   virtual void render_overlay(QPainter &painter);
@@ -209,22 +209,22 @@ public:
   void call_followers();
 
   /**
-         * @brief update
-         * @param delta_time
-         */
+   * @brief update
+   * @param delta_time
+   */
   virtual void update(float delta_time);
 
   /**
-         * @brief get_bb_prescaller
-         * @return
-         */
+   * @brief get_bb_prescaller
+   * @return
+   */
   virtual float get_bb_prescaller();
   virtual bool is_bb_visible();
 
   /**
-         * @brief get_gizmo_content_barycenter
-         * @return
-         */
+   * @brief get_gizmo_content_barycenter
+   * @return
+   */
   virtual const vector3<float> get_gizmo_content_barycenter();
 
   void updated_externally(uint32_t update_reason = ws_item_updf_generic) override;

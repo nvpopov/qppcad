@@ -63,6 +63,11 @@ public:
 
   static_assert(std::is_base_of<hist_doc_base_t, STYPE>::value);
 
+  holder_type_t holder_lookup(hist_doc_base_t *rawh) {
+    auto reti = p_map_hs_to_array.find(rawh);
+    return reti != end(p_map_hs_to_array) ? p_map_hs_to_array[rawh] : nullptr;
+  }
+
   hs_result_e add_hs_child_as_array(holder_type_t new_arr_element, bool add_new_epoch = true) {
 
     hist_doc_base_t *as_hsd = STYPE_STRG_POL::cast_from_holder(new_arr_element);

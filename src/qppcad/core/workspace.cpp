@@ -699,7 +699,7 @@ void workspace_t::del_item_by_index(size_t idx) {
   if (idx < num_items()) {
     auto ws_item = m_ws_items.get_hs_child_as_array(idx);
     if (!ws_item) return;
-    ws_item->m_marked_for_deletion = true;
+    ws_item->hs_delete();
   }
 
 }
@@ -875,6 +875,7 @@ void workspace_manager_t::init_default () {
   auto nb1_c = nb1->cast_as<node_book_t>();
   nb1_c->m_name.set_value("nodebook1");
   m_ws.back()->add_item_to_ws(nb1);
+  m_ws.back()->squash();
 
   //  auto g2 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
   //  auto ag = shnfl<float>::group("C4v");
