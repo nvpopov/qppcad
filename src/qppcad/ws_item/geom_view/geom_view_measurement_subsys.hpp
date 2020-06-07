@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <qppcad/ws_item/ws_item_subsystem.hpp>
+#include <qppcad/core/history_stream_array_proxy.hpp>
 
 namespace qpp {
 
@@ -122,8 +123,14 @@ namespace qpp {
 
     public:
 
-      std::vector<msr_bond_rec_t<uint32_t> > m_dist_recs;
-      std::vector<msr_angle_rec_t<uint32_t> > m_angle_recs;
+      //std::vector<msr_bond_rec_t<uint32_t> > m_dist_recs;
+      //std::vector<msr_angle_rec_t<uint32_t> > m_angle_recs;
+
+      hist_doc_array_proxy_t<msr_bond_rec_t<uint32_t>,
+                             hs_arr_sptr_policy<msr_bond_rec_t<uint32_t>>> m_dist_recs;
+
+      hist_doc_array_proxy_t<msr_angle_rec_t<uint32_t>,
+                             hs_arr_sptr_policy<msr_angle_rec_t<uint32_t>>> m_angle_recs;
 
       hs_prop_bool_t m_render_dist;
       hs_prop_bool_t m_render_angle;

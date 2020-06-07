@@ -26,16 +26,15 @@ class app_state_t;
 /**
  * @brief The workspace_t class
  */
-class workspace_t :
-    public qpp_object_t,
-    public std::enable_shared_from_this<workspace_t>,
-    public hist_doc_base_t {
+class workspace_t : public qpp_object_t,
+                    public std::enable_shared_from_this<workspace_t>,
+                    public hist_doc_base_t {
 
   QPP_OBJECT(workspace_t, qpp_object_t)
 
 private:
 
-  size_t                                   m_cur_epoch{0};
+//private data
 
 public:
 
@@ -48,7 +47,7 @@ public:
   std::unique_ptr<gizmo_t>                 m_gizmo;
   vector3<float>                           m_bg_color{0.5f, 0.5f, 0.5f};
 
-  hist_doc_array_proxy_t<ws_item_t, hs_arr_shrd_ptr_policy<ws_item_t>> m_ws_items;
+  hist_doc_array_proxy_t<ws_item_t, hs_arr_sptr_policy<ws_item_t>> m_ws_items;
 
   bool m_need_to_update_overview{false};
   bool m_show_obj_insp{true};

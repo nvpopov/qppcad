@@ -9,26 +9,26 @@ namespace qpp {
 
   namespace cad {
 
-    class qatomic_dist_table_model_t : public QAbstractTableModel {
+//    class qatomic_dist_table_model_t : public QAbstractTableModel {
 
-        Q_OBJECT
+//        Q_OBJECT
 
-      private:
+//      private:
 
-        geom_view_t *m_al{nullptr};
-        int rowCount(const QModelIndex &parent) const;
-        int columnCount(const QModelIndex &parent) const;
-        QVariant data(const QModelIndex &index, int role) const;
-        QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-        Qt::ItemFlags flags(const QModelIndex &index) const;
-        bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+//        geom_view_t *m_al{nullptr};
+//        int rowCount(const QModelIndex &parent) const;
+//        int columnCount(const QModelIndex &parent) const;
+//        QVariant data(const QModelIndex &index, int role) const;
+//        QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+//        Qt::ItemFlags flags(const QModelIndex &index) const;
+//        bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 
-      public:
+//      public:
 
-        void bind(geom_view_t *_al);
-        void unbind();
+//        void bind(geom_view_t *_al);
+//        void unbind();
 
-    };
+//    };
 
   } // namespace qpp::cad
 

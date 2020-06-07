@@ -670,7 +670,7 @@ TEST_CASE("history stream test") {
     hist_doc_base_t *hs_root = new hist_doc_base_t;
 
     auto *hs_iarray =
-        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_shrd_ptr_policy<hs_prop_int_t>>();
+        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_sptr_policy<hs_prop_int_t>>();
     hs_iarray->set_auto_delete_children(true);
 
     REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success); // 1
@@ -752,7 +752,7 @@ TEST_CASE("history stream test") {
     hist_doc_base_t *hs_root = new hist_doc_base_t;
 
     auto *hs_iarray =
-        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_shrd_ptr_policy<hs_prop_int_t>>();
+        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_sptr_policy<hs_prop_int_t>>();
     //hs_iarray->set_auto_delete_children(true);
 
     REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success); // 1
@@ -774,7 +774,7 @@ TEST_CASE("history stream test") {
     hist_doc_base_t *hs_root = new hist_doc_base_t;
 
     auto *hs_iarray =
-        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_shrd_ptr_policy<hs_prop_int_t>>();
+        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_sptr_policy<hs_prop_int_t>>();
     //hs_iarray->set_auto_delete_children(true);
 
     REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success); // 1

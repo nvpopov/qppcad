@@ -1974,10 +1974,26 @@ void geom_view_t::copy_measurements(geom_view_t *src) {
 
   if (!src || src->m_geom->nat() != m_geom->nat()) return;
 
-  m_measure->m_dist_recs.clear();
-  m_measure->m_angle_recs.clear();
+  for (size_t i = 0; i < src->m_measure->m_dist_recs.get_hs_children_count(); i++) {
+    auto msr = src->m_measure->m_dist_recs.get_hs_child_as_array(i);
+    auto copy_dist = std::make_shared<msr_bond_rec_t<uint32_t>>(
+      msr->m_at1, msr->m_at2, msr->m_idx1, msr->m_idx2
+    );
+    m_measure->m_dist_recs.add_hs_child_as_array(msr);
+  }
 
-  m_measure->m_dist_recs = src->m_measure->m_dist_recs;
-  m_measure->m_angle_recs = src->m_measure->m_angle_recs;
+  for (size_t i = 0; i < src->m_measure->m_angle_recs.get_hs_children_count(); i++) {
+    auto msr = src->m_measure->m_angle_recs.get_hs_child_as_array(i);
+    auto copy_dist = std::make_shared<msr_angle_rec_t<uint32_t>>(
+        msr->m_at1, msr->m_at2, msr->m_at3, msr->m_idx1, msr->m_idx2, msr->m_idx3
+        );
+    m_measure->m_angle_recs.add_hs_child_as_array(msr);
+  }
+
+//  m_measure->m_dist_recs.clear();
+//  m_measure->m_angle_recs.clear();
+
+//  m_measure->m_dist_recs = src->m_measure->m_dist_recs;
+//  m_measure->m_angle_recs = src->m_measure->m_angle_recs;
 
 }

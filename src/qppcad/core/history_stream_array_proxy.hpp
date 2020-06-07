@@ -15,7 +15,7 @@ struct promote_to_value_type {
 };
 
 template<typename STYPE>
-struct hs_arr_raw_ptr_policy {
+struct hs_arr_rptr_policy {
 
   using holder_type_t =
       typename std::add_pointer<typename promote_to_value_type<STYPE>::type>::type;
@@ -32,7 +32,7 @@ struct hs_arr_raw_ptr_policy {
 };
 
 template<typename STYPE>
-struct hs_arr_shrd_ptr_policy {
+struct hs_arr_sptr_policy {
 
   using holder_type_t = std::shared_ptr<typename promote_to_value_type<STYPE>::type>;
 
@@ -46,8 +46,7 @@ struct hs_arr_shrd_ptr_policy {
 
 };
 
-template<typename STYPE,
-         typename STYPE_STRG_POL = hs_arr_raw_ptr_policy<STYPE>>
+template<typename STYPE, typename STYPE_STRG_POL = hs_arr_rptr_policy<STYPE>>
 class hist_doc_array_proxy_t : public hist_doc_base_t {
 
 public:
