@@ -49,6 +49,9 @@ geom_view_msr_subsys_t::geom_view_msr_subsys_t(geom_view_t &_p_owner) {
 
   p_owner = &_p_owner;
 
+  add_hs_child(&m_dist_recs);
+  add_hs_child(&m_angle_recs);
+
   m_render_dist.set_value(true); add_hs_child(&m_render_dist);
   m_render_angle.set_value(true); add_hs_child(&m_render_angle);
   m_render_dist_legend.set_value(false); add_hs_child(&m_render_dist_legend);
@@ -668,4 +671,8 @@ void geom_view_msr_subsys_t::load_from_json(json &data) {
       }
     }
 
+}
+
+hs_result_e geom_view_msr_subsys_t::on_epoch_changed(hist_doc_base_t::epoch_t prev_epoch) {
+  return hs_result_e::hs_success;
 }

@@ -27,10 +27,9 @@ using namespace qpp::cad;
 
 namespace py = pybind11;
 
-std::shared_ptr<ws_item_t> construct_from_vector3f(
-    workspace_t &ws,
-    vector3<float> vec,
-    const std::string &name) {
+std::shared_ptr<ws_item_t> construct_from_vector3f(workspace_t &ws,
+                                                   vector3<float> vec,
+                                                   const std::string &name) {
 
   auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(ws_vector3_t::get_type_static());
   if (!new_item) return nullptr;
@@ -79,7 +78,7 @@ std::shared_ptr<ws_item_t> construct_from_geom(
 
 std::shared_ptr<ws_item_t> construct_from_array_group(
     workspace_t &ws,
-    std::shared_ptr<array_group<matrix3<float> > > ag,
+    std::shared_ptr<array_group<matrix3<float>>> ag,
     const std::string &name) {
 
   auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
@@ -213,6 +212,8 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("__repr__", &workspace_t::py_get_repr)
       .def("__str__", &workspace_t::py_get_repr)
       .def("get_cur_epoch", &workspace_t::get_cur_epoch)
+      .def("get_children_count", &workspace_t::get_hs_children_count)
+      .def("get_hsize", &workspace_t::get_history_size)
 //      .def("get_children_count", &workspace_t::get_children_count)
       .def("set_commit_exclusive_on_change", &workspace_t::set_commit_exclusive_on_change)
       .def("checkout_by_dist", &workspace_t::checkout_by_dist)
@@ -263,7 +264,9 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("get_cur_epoch", &ws_item_t::get_cur_epoch)
 //      .def("get_children_count", &ws_item_t::get_children_count)
       .def("checkout_dy_dist", &ws_item_t::checkout_by_dist)
-      .def("set_commit_exclusive_on_change", &ws_item_t::set_commit_exclusive_on_change);
+      .def("set_commit_exclusive_on_change", &ws_item_t::set_commit_exclusive_on_change)
+      .def("get_children_count", &ws_item_t::get_hs_children_count)
+      .def("get_hsize", &ws_item_t::get_history_size);
 
   /* per ws_item_t types pybindings */
   py_geom_view_reg_helper_t::reg(m, py_ws_item_t);

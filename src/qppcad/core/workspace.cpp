@@ -277,18 +277,13 @@ hs_result_e workspace_t::on_epoch_changed(hist_doc_base_t::epoch_t prev_epoch) {
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
 
-  //
-  epoch_t cur_epoch = get_cur_epoch();
   bool affected{false};
 
-  //  for (size_t i = 0; i < get_children_count(); i++)
-  //    if (is_child_alive(cur_epoch, get_child(i))) {
-  //      ws_item_t *itm = dynamic_cast<ws_item_t *>(get_child(i));
-  //      if (itm) {
-  //        std::optional<size_t> chd_idx = get_item_idx(itm);
-  //        if (chd_idx && itm->is_selected()) affected = true;
-  //      }
-  //    }
+  for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
+    auto itm = m_ws_items.get_hs_child_as_array(i);
+    if (!itm) continue;
+    if (itm->is_selected()) affected = true;
+  }
 
   if (affected) astate->astate_evd->cur_ws_selected_item_changed();
 
