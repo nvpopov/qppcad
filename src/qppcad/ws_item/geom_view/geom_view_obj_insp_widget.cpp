@@ -147,8 +147,7 @@ void geom_view_obj_insp_widget_t::construct_disp_tab() {
   m_gb_periodic_related_render_lt = new QFormLayout;
   m_gb_periodic_related_render->add_content_layout(m_gb_periodic_related_render_lt);
 
-  m_periodic_draw_settings =
-      new qbinded_bool_named_vector_t({tr("Cell"), tr("Vectors")});
+  m_periodic_draw_settings = new qbinded_bool_named_vector_t({tr("Cell"), tr("Vectors")});
   m_periodic_draw_subcells = new qbinded_checkbox_t;
 
   m_periodic_cell_v_ratio = new qbinded_float_spinbox_t;

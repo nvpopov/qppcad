@@ -137,14 +137,14 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   /*hr result*/
   py::enum_<hs_result_e>(m, "hs_result_e", py::arithmetic(), "")
-      .value("hr_error", hs_error, "hr_error")
-      .value("hr_success", hs_success, "hr_success")
-      .value("hr_invalid_epoch", hs_invalid_epoch, "hr_invalid_epoch")
-      .value("hr_epoch_ill_defined", hs_epoch_ill_defined, "hr_epoch_ill_defined")
-      .value("hr_invalid_child", hs_invalid_child, "hr_invalid_child")
-      .value("hr_invalid_child_epoch", hs_invalid_child_epoch, "hr_invalid_child_epoch")
-      .value("hr_true", hs_true, "hr_true")
-      .value("hr_false", hs_false, "hr_false")
+      .value("hs_error", hs_error, "hs_error")
+      .value("hs_success", hs_success, "hs_success")
+      .value("hs_invalid_epoch", hs_invalid_epoch, "hs_invalid_epoch")
+      .value("hs_epoch_ill_defined", hs_epoch_ill_defined, "hs_epoch_ill_defined")
+      .value("hs_invalid_child", hs_invalid_child, "hs_invalid_child")
+      .value("hs_invalid_child_epoch", hs_invalid_child_epoch, "hs_invalid_child_epoch")
+      .value("hs_true", hs_true, "hs_true")
+      .value("hs_false", hs_false, "hs_false")
       .export_values();
 
   /* workspace_manager_t pybindings */
@@ -215,7 +215,16 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("get_children_count", &workspace_t::get_hs_children_count)
       .def("get_hsize", &workspace_t::get_history_size)
 //      .def("get_children_count", &workspace_t::get_children_count)
-      .def("set_commit_exclusive_on_change", &workspace_t::set_commit_exclusive_on_change)
+      .def_property("is_commit_exclusive",
+                    &workspace_t::get_commit_exclusive_on_change,
+                    &workspace_t::set_commit_exclusive_on_change)
+      .def_property("auto_delete",
+                    &workspace_t::get_auto_delete,
+                    &workspace_t::set_auto_delete)
+      .def_property("auto_delete_children",
+                    &workspace_t::get_auto_delete_children,
+                    &workspace_t::set_auto_delete_children)
+      .def("squash", &workspace_t::squash)
       .def("checkout_by_dist", &workspace_t::checkout_by_dist)
       .def("undo", [](workspace_t &ws){ws.checkout_by_dist(-1);})
       .def("redo", [](workspace_t &ws){ws.checkout_by_dist(1);});
@@ -264,7 +273,16 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
       .def("get_cur_epoch", &ws_item_t::get_cur_epoch)
 //      .def("get_children_count", &ws_item_t::get_children_count)
       .def("checkout_dy_dist", &ws_item_t::checkout_by_dist)
-      .def("set_commit_exclusive_on_change", &ws_item_t::set_commit_exclusive_on_change)
+      .def_property("is_commit_exclusive",
+                    &ws_item_t::get_commit_exclusive_on_change,
+                    &ws_item_t::set_commit_exclusive_on_change)
+      .def_property("auto_delete",
+                    &workspace_t::get_auto_delete,
+                    &workspace_t::set_auto_delete)
+      .def_property("auto_delete_children",
+                    &workspace_t::get_auto_delete_children,
+                    &workspace_t::set_auto_delete_children)
+      .def("squash", &ws_item_t::squash)
       .def("get_children_count", &ws_item_t::get_hs_children_count)
       .def("get_hsize", &ws_item_t::get_history_size);
 
