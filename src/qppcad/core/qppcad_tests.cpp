@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <qppcad/core/history_stream.hpp>
 #include <qppcad/core/history_stream_array_proxy.hpp>
+#include <qppcad/core/history_stream_geom_adapter.hpp>
 #include <qppcad/core/qppcad.hpp>
 #include <catch.hpp>
 
