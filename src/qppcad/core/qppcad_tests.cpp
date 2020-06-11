@@ -811,5 +811,11 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("xgeom proxxy") {
+
+    using hs_xg_t = hist_doc_xgeom_proxy_t<double, qpp::periodic_cell<double>>;
+    hs_xg_t *hs_xg = new hs_xg_t;
+
+  }
 
 }
