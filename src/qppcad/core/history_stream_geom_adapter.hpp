@@ -18,8 +18,20 @@ struct insert_atom_event_t {
 };
 
 template<typename REAL>
+struct change_cell_event_t {
+  std::vector<vector3<REAL>> new_cell;
+  std::vector<vector3<REAL>> old_cell;
+};
+
+struct select_atoms_event_t {
+  std::vector<std::tuple<size_t, index>> sel_atoms;
+};
+
+template<typename REAL>
 struct xgeom_acts_vt {
-  using type = std::variant<insert_atom_event_t<REAL>>;
+  using type = std::variant<insert_atom_event_t<REAL>,
+                            change_cell_event_t<REAL>,
+                            select_atoms_event_t>;
 };
 
 template<typename REAL, typename CELL>
@@ -28,8 +40,9 @@ class hist_doc_xgeom_proxy_t : public hist_doc_base_t,
 
 private:
 
-  xgeometry<REAL, CELL> *p_xgeom;
-  std::map<epoch_t, typename xgeom_acts_vt<REAL>::type> p_epoch_data;
+  using acts_t = typename xgeom_acts_vt<REAL>::type;
+  xgeometry<REAL, CELL> *p_xgeom{};
+  std::map<epoch_t, std::vector<acts_t>> p_epoch_data;
 
 public:
 
@@ -59,6 +72,21 @@ public:
 
   void geometry_destroyed () override {
 
+  }
+
+  void set_xgeom(xgeometry<REAL, CELL> *xgeom) {
+    if (xgeom) {
+      p_xgeom = xgeom;
+      p_xgeom->add_observer(*this);
+    }
+  }
+
+  xgeometry<REAL, CELL> *get_xgeom() {
+    return p_xgeom;
+  }
+
+  hist_doc_xgeom_proxy_t() {
+    set_delta_state_type(delta_incremental);
   }
 
 };

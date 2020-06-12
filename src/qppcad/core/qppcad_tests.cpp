@@ -815,6 +815,10 @@ TEST_CASE("history stream test") {
 
     using hs_xg_t = hist_doc_xgeom_proxy_t<double, qpp::periodic_cell<double>>;
     hs_xg_t *hs_xg = new hs_xg_t;
+    xgeometry<double, periodic_cell<double>> xg1(0);
+    hs_xg->set_xgeom(&xg1);
+
+    REQUIRE(hs_xg->get_delta_state_type() == hs_delta_state_e::delta_incremental);
 
   }
 

@@ -149,7 +149,9 @@ add_executable(
     src/qppcad/core/qppcad_misc_tests.cpp
   )
 
-target_link_libraries(sflow-tests qpp )
+target_link_libraries(qppcad-tests qpp)
+target_link_libraries(sflow-tests qpp)
+
 qt5_use_modules(sflow-tests Core Gui Widgets)
 
 #build qppcad application

@@ -103,8 +103,12 @@ void hist_doc_base_t::set_commit_exclusive_on_change(bool value) {
   p_commit_exclusive_on_change = value;
 }
 
-void hist_doc_base_t::set_delta_state_type(hist_doc_delta_state_e new_dstate) {
+void hist_doc_base_t::set_delta_state_type(hs_delta_state_e new_dstate) {
   p_dstate = new_dstate;
+}
+
+hs_delta_state_e hist_doc_base_t::get_delta_state_type() {
+  return p_dstate;
 }
 
 bool hist_doc_base_t::is_unmodified() {

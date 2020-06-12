@@ -10,7 +10,7 @@ namespace cad {
 class hist_doc_base_t;
 using epoch_t = std::size_t;
 
-enum hist_doc_delta_state_e {
+enum hs_delta_state_e {
   delta_instant,
   delta_incremental
 };
@@ -61,7 +61,7 @@ private:
   bool p_init_as_base_commit{false};
   bool p_auto_delete{false};
   bool p_auto_delete_children{false};
-  hist_doc_delta_state_e p_dstate{hist_doc_delta_state_e::delta_instant};
+  hs_delta_state_e p_dstate{hs_delta_state_e::delta_instant};
 
   /**
   * @brief get_children
@@ -181,7 +181,13 @@ public:
   * @brief set_delta_state_type - not implemented yet
   * @param new_dstate
   */
-  void set_delta_state_type(hist_doc_delta_state_e new_dstate);
+  void set_delta_state_type(hs_delta_state_e new_dstate);
+
+  /**
+   * @brief get_delta_state_type
+   * @return
+   */
+  hs_delta_state_e get_delta_state_type();
 
   /**
    * @brief is_unmodified
