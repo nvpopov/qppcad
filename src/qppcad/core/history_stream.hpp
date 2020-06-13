@@ -28,6 +28,11 @@ enum hs_result_e {
   hs_dead = 9
 };
 
+enum hs_delta_state_direction_e {
+  hs_ds_dir_forward,
+  hs_ds_dir_backward
+};
+
 //Stores augment meta info for each child in each parent's epoch
 struct hs_child_state_meta_t {
   epoch_t m_child_epoch{0};
@@ -106,6 +111,7 @@ protected:
   virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
   virtual hs_result_e squash_impl();
+  virtual hs_result_e delta_state_change(hs_delta_state_direction_e ds_dir);
   //void update_super_root(hist_doc_base_t *new_super_root);
 
 public:
@@ -281,7 +287,7 @@ public:
   * @param target_epoch
   * @return
   */
-  hs_result_e checkout_to_epoch(epoch_t target_epoch);
+  hs_result_e checkout_to_epoch(epoch_t target_epoch, bool process_delta_states = true);
 
   /**
    * @brief checkout_by_dist

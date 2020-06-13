@@ -811,7 +811,19 @@ TEST_CASE("history stream test") {
 
   }
 
-  SECTION ("xgeom proxxy") {
+  SECTION ("delta state tests") {
+
+    hist_doc_base_t *hs1 = new hist_doc_base_t;
+    hs1->set_delta_state_type(hs_delta_state_e::delta_incremental);
+
+    REQUIRE(hs1->get_delta_state_type() == hs_delta_state_e::delta_incremental);
+    REQUIRE(std::get<0>(hs1->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
+    REQUIRE(std::get<0>(hs1->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
+    REQUIRE(std::get<0>(hs1->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
+
+  }
+
+  SECTION ("xgeom proxy") {
 
     using hs_xg_t = hist_doc_xgeom_proxy_t<double, qpp::periodic_cell<double>>;
     hs_xg_t *hs_xg = new hs_xg_t;

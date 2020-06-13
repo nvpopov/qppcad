@@ -154,6 +154,10 @@ hs_result_e hist_doc_base_t::squash_impl() {
   return hs_result_e::hs_success;
 }
 
+hs_result_e hist_doc_base_t::delta_state_change(hs_delta_state_direction_e ds_dir) {
+  return hs_result_e::hs_success;
+}
+
 hs_result_e hist_doc_base_t::reset() {
 
   std::vector<bool> child_reseted;
@@ -230,7 +234,7 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
 
   if (p_hist_line.empty()) {
     p_hist_line.push_back(new_epoch);
-    if (checkout_to_new_epoch) checkout_to_epoch(new_epoch);
+    if (checkout_to_new_epoch) checkout_to_epoch(new_epoch, false);
     return {hs_result_e::hs_success, new_epoch};
   }
 
@@ -238,8 +242,10 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
   auto last_epoch = *last_it;
 
   if (new_epoch < last_epoch) {
+
     p_is_bad = true;
     return {hs_result_e::hs_invalid_epoch, std::nullopt};
+
   } else {
 
     auto cur_epoch_iter = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
@@ -255,7 +261,7 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
 
     p_hist_line.resize(cur_epoch_idx + 1);
 
-    if (checkout_to_new_epoch) checkout_to_epoch(new_epoch);
+    if (checkout_to_new_epoch) checkout_to_epoch(new_epoch, false);
 
     //copy child augmetns from previous epoch
     p_children_states[new_epoch] = p_children_states[cur_epoch];
@@ -391,7 +397,8 @@ hs_result_e hist_doc_base_t::is_child_alive(epoch_t target_epoch, hist_doc_base_
 
 }
 
-hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_epoch) {
+hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_epoch,
+                                               bool process_delta_states) {
 
   epoch_t prev_epoch = get_cur_epoch();
 
@@ -406,6 +413,25 @@ hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_e
   }
 
   epoch_t cur_epoch = get_cur_epoch();
+
+  if (get_delta_state_type() == hs_delta_state_e::delta_incremental
+      && process_delta_states) {
+
+    epoch_t start_epoch = std::min(prev_epoch, cur_epoch);
+    epoch_t end_epoch = std::max(prev_epoch, cur_epoch);
+
+    hs_delta_state_direction_e ds_dir =
+        cur_epoch > prev_epoch ? hs_ds_dir_forward : hs_ds_dir_backward;
+
+    auto cur_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
+    auto prev_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), prev_epoch);
+
+    decltype (p_hist_line) ds_hl;
+    std::copy(ds_dir == hs_ds_dir_forward ? cur_epoch_it : prev_epoch_it,
+              ds_dir == hs_ds_dir_forward ? prev_epoch_it : cur_epoch_it,
+              std::back_inserter(ds_hl));
+
+  }
 
   auto epoch_it = p_children_states.find(cur_epoch);
   if (epoch_it != end(p_children_states)) {
