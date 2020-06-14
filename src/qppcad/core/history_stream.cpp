@@ -103,11 +103,11 @@ void hist_doc_base_t::set_commit_exclusive_on_change(bool value) {
   p_commit_exclusive_on_change = value;
 }
 
-void hist_doc_base_t::set_delta_state_type(hs_delta_state_e new_dstate) {
+void hist_doc_base_t::set_dstate_type(hs_dstate_e new_dstate) {
   p_dstate = new_dstate;
 }
 
-hs_delta_state_e hist_doc_base_t::get_delta_state_type() {
+hs_dstate_e hist_doc_base_t::get_dstate_type() {
   return p_dstate;
 }
 
@@ -154,7 +154,7 @@ hs_result_e hist_doc_base_t::squash_impl() {
   return hs_result_e::hs_success;
 }
 
-hs_result_e hist_doc_base_t::delta_state_change(hs_delta_state_direction_e ds_dir) {
+hs_result_e hist_doc_base_t::dstate_change(hs_dstate_dir_e ds_dir) {
   return hs_result_e::hs_success;
 }
 
@@ -228,9 +228,9 @@ std::tuple<hs_result_e, std::optional<hist_doc_base_t::epoch_t> > hist_doc_base_
 
   epoch_t cur_epoch = get_cur_epoch();
 
-  epoch_t new_epoch = (new_epoch_ex) ?
-                                     *new_epoch_ex :
-                                     *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
+  epoch_t new_epoch =
+      (new_epoch_ex) ? *new_epoch_ex :
+                       *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
 
   if (p_hist_line.empty()) {
     p_hist_line.push_back(new_epoch);
@@ -398,7 +398,7 @@ hs_result_e hist_doc_base_t::is_child_alive(epoch_t target_epoch, hist_doc_base_
 }
 
 hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_epoch,
-                                               bool process_delta_states) {
+                                               bool process_dstates) {
 
   epoch_t prev_epoch = get_cur_epoch();
 
@@ -414,14 +414,20 @@ hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_e
 
   epoch_t cur_epoch = get_cur_epoch();
 
-  if (get_delta_state_type() == hs_delta_state_e::delta_incremental
-      && process_delta_states) {
+  /*************************************************************************************************
+   * begin delta state stuff
+   ************************************************************************************************/
+  if (get_dstate_type() == hs_dstate_e::hs_dstate_incr && process_dstates) {
 
-    epoch_t start_epoch = std::min(prev_epoch, cur_epoch);
-    epoch_t end_epoch = std::max(prev_epoch, cur_epoch);
+//    epoch_t start_epoch = std::min(prev_epoch, cur_epoch);
+//    epoch_t end_epoch = std::max(prev_epoch, cur_epoch);
 
-    hs_delta_state_direction_e ds_dir =
-        cur_epoch > prev_epoch ? hs_ds_dir_forward : hs_ds_dir_backward;
+    /*
+     * hl = 0 1 2 3 4 5 6 , ce = 4, pe = 6, seq = 6u->5a, 5u->4a                 | backward
+     * hl = 0 1 2 3 4 5 6 , ce = 6, pe = 2, seq = 2u->3a, 3u->4a, 4u->5a, 5u->6a | upward
+     * a - apply, u - unapply
+     */
+    hs_dstate_dir_e ds_dir = cur_epoch > prev_epoch ? hs_ds_dir_backward : hs_ds_dir_forward;
 
     auto cur_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
     auto prev_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), prev_epoch);
@@ -432,6 +438,9 @@ hs_result_e hist_doc_base_t::checkout_to_epoch(hist_doc_base_t::epoch_t target_e
               std::back_inserter(ds_hl));
 
   }
+  /*************************************************************************************************
+   * end delta state stuff
+   ************************************************************************************************/
 
   auto epoch_it = p_children_states.find(cur_epoch);
   if (epoch_it != end(p_children_states)) {
@@ -599,9 +608,8 @@ std::optional<size_t> hist_doc_base_t::is_child(hist_doc_base_t *child) const {
   if (!child) return std::nullopt;
 
   auto it1 = std::find(begin(p_children), end(p_children), child);
-  return (it1 != end(p_children) ?
-                                 std::optional<size_t>{std::distance(begin(p_children), it1)} :
-                                 std::nullopt);
+  return it1 != end(p_children) ? std::optional<size_t>{std::distance(begin(p_children), it1)} :
+                                  std::nullopt;
 
 }
 

@@ -86,7 +86,7 @@ public:
   }
 
   hist_doc_xgeom_proxy_t() {
-    set_delta_state_type(delta_incremental);
+    set_dstate_type(hs_dstate_incr);
   }
 
 };

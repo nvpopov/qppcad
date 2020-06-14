@@ -10,9 +10,9 @@ namespace cad {
 class hist_doc_base_t;
 using epoch_t = std::size_t;
 
-enum hs_delta_state_e {
-  delta_instant,
-  delta_incremental
+enum hs_dstate_e {
+  hs_dstate_inst, /* instant */
+  hs_dstate_incr  /* incremental */
 };
 
 enum hs_result_e {
@@ -28,7 +28,7 @@ enum hs_result_e {
   hs_dead = 9
 };
 
-enum hs_delta_state_direction_e {
+enum hs_dstate_dir_e {
   hs_ds_dir_forward,
   hs_ds_dir_backward
 };
@@ -66,7 +66,7 @@ private:
   bool p_init_as_base_commit{false};
   bool p_auto_delete{false};
   bool p_auto_delete_children{false};
-  hs_delta_state_e p_dstate{hs_delta_state_e::delta_instant};
+  hs_dstate_e p_dstate{hs_dstate_e::hs_dstate_inst};
 
   /**
   * @brief get_children
@@ -111,7 +111,7 @@ protected:
   virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
   virtual hs_result_e squash_impl();
-  virtual hs_result_e delta_state_change(hs_delta_state_direction_e ds_dir);
+  virtual hs_result_e dstate_change(hs_dstate_dir_e ds_dir);
   //void update_super_root(hist_doc_base_t *new_super_root);
 
 public:
@@ -187,13 +187,13 @@ public:
   * @brief set_delta_state_type - not implemented yet
   * @param new_dstate
   */
-  void set_delta_state_type(hs_delta_state_e new_dstate);
+  void set_dstate_type(hs_dstate_e new_dstate);
 
   /**
    * @brief get_delta_state_type
    * @return
    */
-  hs_delta_state_e get_delta_state_type();
+  hs_dstate_e get_dstate_type();
 
   /**
    * @brief is_unmodified
@@ -287,7 +287,7 @@ public:
   * @param target_epoch
   * @return
   */
-  hs_result_e checkout_to_epoch(epoch_t target_epoch, bool process_delta_states = true);
+  hs_result_e checkout_to_epoch(epoch_t target_epoch, bool process_dstates = true);
 
   /**
    * @brief checkout_by_dist
