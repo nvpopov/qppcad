@@ -814,9 +814,9 @@ TEST_CASE("history stream test") {
   SECTION ("delta state tests") {
 
     hist_doc_base_t *hs1 = new hist_doc_base_t;
-    hs1->set_delta_state_type(hs_dstate_e::hs_dstate_incr);
+    hs1->set_dstate_type(hs_dstate_e::hs_dstate_incr);
 
-    REQUIRE(hs1->get_delta_state_type() == hs_dstate_e::hs_dstate_incr);
+    REQUIRE(hs1->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
     REQUIRE(std::get<0>(hs1->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
     REQUIRE(std::get<0>(hs1->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
     REQUIRE(std::get<0>(hs1->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
@@ -830,7 +830,7 @@ TEST_CASE("history stream test") {
     xgeometry<double, periodic_cell<double>> xg1(0);
     hs_xg->set_xgeom(&xg1);
 
-    REQUIRE(hs_xg->get_delta_state_type() == hs_dstate_e::hs_dstate_incr);
+    REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
 
   }
 

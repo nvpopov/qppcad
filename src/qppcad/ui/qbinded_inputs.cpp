@@ -40,9 +40,7 @@ void qbinded_float_spinbox_t::load_value_ex() {
 
 }
 
-void qbinded_float_spinbox_t::set_min_max_step(double new_min,
-                                               double new_max,
-                                               double new_step,
+void qbinded_float_spinbox_t::set_min_max_step(double new_min, double new_max, double new_step,
                                                int decimals) {
   setRange(new_min, new_max);
   setSingleStep(new_step);
@@ -62,7 +60,7 @@ qbinded_float_spinbox_t::qbinded_float_spinbox_t(QWidget *parent) : QDoubleSpinB
 
   connect(this,
           static_cast<void(qbinded_float_spinbox_t::*)(double)>(
-          &qbinded_float_spinbox_t::valueChanged),
+              &qbinded_float_spinbox_t::valueChanged),
           this,
           &qbinded_float_spinbox_t::value_changed
           );
@@ -162,11 +160,11 @@ qbinded_int3_input_t::qbinded_int3_input_t(QWidget *parent) : QWidget (parent) {
   widget_layout->setContentsMargins(2, 2, 8, 2);
 
   auto make_spinbox = [](){
-      auto ret = new QSpinBox;
-      ret->setAlignment(Qt::AlignCenter);
-      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
-      return ret;
-    };
+    auto ret = new QSpinBox;
+    ret->setAlignment(Qt::AlignCenter);
+    ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    return ret;
+  };
 
   sb_x = make_spinbox();
   sb_y = make_spinbox();
@@ -218,11 +216,11 @@ void qbinded_float3_input_t::load_value_ex() {
 void qbinded_float3_input_t::set_min_max_step_dec(double min, double max, double step,
                                                   std::optional<int> dec) {
   for (auto elem : {sb_x, sb_y, sb_z}) {
-      elem->setMinimum(min);
-      elem->setMaximum(max);
-      elem->setSingleStep(step);
-      if (dec) elem->setDecimals(*dec);
-    }
+    elem->setMinimum(min);
+    elem->setMaximum(max);
+    elem->setSingleStep(step);
+    if (dec) elem->setDecimals(*dec);
+  }
 }
 
 void qbinded_float3_input_t::set_suffix(QString &new_suffix) {
@@ -255,13 +253,13 @@ qbinded_float3_input_t::qbinded_float3_input_t(QWidget *parent) : QWidget(parent
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
 
   auto make_dspinbox = [](){
-      auto ret = new QDoubleSpinBox;
-      ret->setMaximumWidth(100);
-      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
-      ret->setAlignment(Qt::AlignCenter);
-      ret->setLocale(QLocale::C);
-      return ret;
-    };
+    auto ret = new QDoubleSpinBox;
+    ret->setMaximumWidth(100);
+    ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    ret->setAlignment(Qt::AlignCenter);
+    ret->setLocale(QLocale::C);
+    return ret;
+  };
 
   sb_x = make_dspinbox();
   sb_y = make_dspinbox();
@@ -312,15 +310,15 @@ void qbinded_color3_input_t::load_value_ex() {
 void qbinded_color3_input_t::mousePressEvent(QMouseEvent *event) {
 
   if (event->button() == Qt::LeftButton) {
-      const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
-      if (color.isValid() && is_binded()) {
-          set_value(vector3<float>{color.redF(), color.greenF(), color.blueF()});
-          load_value_ex();
-          on_value_changed();
-          app_state_t::get_inst()->make_viewport_dirty();
-          update();
-        }
+    const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
+    if (color.isValid() && is_binded()) {
+      set_value(vector3<float>{color.redF(), color.greenF(), color.blueF()});
+      load_value_ex();
+      on_value_changed();
+      app_state_t::get_inst()->make_viewport_dirty();
+      update();
     }
+  }
 
 }
 
@@ -380,10 +378,10 @@ void qbinded_int_spinbox_t::set_default_suffix() {
 
 void qbinded_int_spinbox_t::value_changed(int value) {
 
-   if (!(is_binded() && !m_ignore_state_change)) return;
-   set_value(std::move(value));
-   on_value_changed();
-   app_state_t::get_inst()->make_viewport_dirty();
+  if (!(is_binded() && !m_ignore_state_change)) return;
+  set_value(std::move(value));
+  on_value_changed();
+  app_state_t::get_inst()->make_viewport_dirty();
 
 }
 
@@ -415,27 +413,27 @@ void qbinded_ws_item_combobox_t::load_value() {
   rebuild_variants();
 
   if (!m_binded_ws_item_p->get()) {
-      setCurrentIndex(0);
-      return;
-    }
+    setCurrentIndex(0);
+    return;
+  }
 
   if (!m_binded_ws) {
-      setCurrentIndex(0);
-      return;
-    }
+    setCurrentIndex(0);
+    return;
+  }
 
   for (size_t i = 0; i < count(); i++) {
 
-      QString name_in_checkbox = itemText(i);
-      std::string name_in_cb = name_in_checkbox.toStdString();
+    QString name_in_checkbox = itemText(i);
+    std::string name_in_cb = name_in_checkbox.toStdString();
 
-      if (m_binded_ws_item_p->get()->m_name.get_value() == name_in_cb
-          && m_binded_ws_item_p->get()->get_type() == m_type_id) {
-          setCurrentIndex(i); // 0 == None
-          return;
-        }
-
+    if (m_binded_ws_item_p->get()->m_name.get_value() == name_in_cb
+        && m_binded_ws_item_p->get()->get_type() == m_type_id) {
+      setCurrentIndex(i); // 0 == None
+      return;
     }
+
+  }
 
 }
 
@@ -472,23 +470,23 @@ void qbinded_ws_item_combobox_t::rebuild_variants() {
 void qbinded_ws_item_combobox_t::value_changed(int i) {
 
   if (!m_binded_ws) {
-      setCurrentIndex(0);
-      return;
-    }
+    setCurrentIndex(0);
+    return;
+  }
 
   if (i == 0) {
-      *m_binded_ws_item_p = nullptr;
-      if (m_binded_item && m_updated_externally_event)
-        m_binded_item->updated_externally(m_upd_flag);
-      return;
-    }
+    *m_binded_ws_item_p = nullptr;
+    if (m_binded_item && m_updated_externally_event)
+      m_binded_item->updated_externally(m_upd_flag);
+    return;
+  }
 
   std::string name_to_find = currentText().toStdString();
   auto itm = m_binded_ws->get_by_name(name_to_find);
 
   if (itm && itm->get_type() == m_type_id) {
-      *m_binded_ws_item_p = itm;
-    }
+    *m_binded_ws_item_p = itm;
+  }
 
   if (m_binded_item && m_updated_externally_event)
     m_binded_item->updated_externally(m_upd_flag);
@@ -524,20 +522,20 @@ void qbinded_xgeom_color3_input_t::load_value() {
       && !m_binded_atom_id.empty()
       && *m_binded_atom_id.begin() < m_binded_xgeom->nat()) {
 
-      size_t first_atom_id = *m_binded_atom_id.begin();
+    size_t first_atom_id = *m_binded_atom_id.begin();
 
-      float _r = m_binded_xgeom->xfield<float>(m_binding_indicies[0], first_atom_id);
-      float _g = m_binded_xgeom->xfield<float>(m_binding_indicies[1], first_atom_id);
-      float _b = m_binded_xgeom->xfield<float>(m_binding_indicies[2], first_atom_id);
+    float _r = m_binded_xgeom->xfield<float>(m_binding_indicies[0], first_atom_id);
+    float _g = m_binded_xgeom->xfield<float>(m_binding_indicies[1], first_atom_id);
+    float _b = m_binded_xgeom->xfield<float>(m_binding_indicies[2], first_atom_id);
 
-      m_stored_color.setRgbF(_r, _g, _b);
-      QPalette pal = palette();
-      pal.setColor(QPalette::Background, m_stored_color);
-      pal.setColor(QPalette::Foreground, Qt::white);
-      setAutoFillBackground(true);
-      setPalette(pal);
+    m_stored_color.setRgbF(_r, _g, _b);
+    QPalette pal = palette();
+    pal.setColor(QPalette::Background, m_stored_color);
+    pal.setColor(QPalette::Foreground, Qt::white);
+    setAutoFillBackground(true);
+    setPalette(pal);
 
-    }
+  }
 
 }
 
@@ -551,24 +549,24 @@ void qbinded_xgeom_color3_input_t::mousePressEvent(QMouseEvent *event) {
 
   if (event->button() == Qt::LeftButton) {
 
-      const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
+    const QColor color = QColorDialog::getColor(m_stored_color, this, "Select Color");
 
-      if (color.isValid() && m_binded_xgeom && !m_binded_atom_id.empty())
-        for (const auto &atom_id : m_binded_atom_id)
-          if (atom_id < m_binded_xgeom->nat()) {
+    if (color.isValid() && m_binded_xgeom && !m_binded_atom_id.empty())
+      for (const auto &atom_id : m_binded_atom_id)
+        if (atom_id < m_binded_xgeom->nat()) {
 
-              float _r = static_cast<float>(color.redF());
-              float _g = static_cast<float>(color.greenF());
-              float _b = static_cast<float>(color.blueF());
+          float _r = static_cast<float>(color.redF());
+          float _g = static_cast<float>(color.greenF());
+          float _b = static_cast<float>(color.blueF());
 
-              m_binded_xgeom->xfield<float>(m_binding_indicies[0], atom_id) = _r;
-              m_binded_xgeom->xfield<float>(m_binding_indicies[1], atom_id) = _g;
-              m_binded_xgeom->xfield<float>(m_binding_indicies[2], atom_id) = _b;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[0], atom_id) = _r;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[1], atom_id) = _g;
+          m_binded_xgeom->xfield<float>(m_binding_indicies[2], atom_id) = _b;
 
-              load_value();
-            }
+          load_value();
+        }
 
-    }
+  }
 
   app_state_t::get_inst()->make_viewport_dirty();
 
@@ -592,11 +590,11 @@ void qbinded_xgeom_float_spinbox_t::load_value() {
   if (m_binded_xgeom && !m_binded_atom_id.empty() &&
       *m_binded_atom_id.begin() < m_binded_xgeom->nat()) {
 
-      blockSignals(true);
-      setValue(m_binded_xgeom->xfield<float>(m_binding_index, *m_binded_atom_id.begin()));
-      blockSignals(false);
+    blockSignals(true);
+    setValue(m_binded_xgeom->xfield<float>(m_binding_index, *m_binded_atom_id.begin()));
+    blockSignals(false);
 
-    }
+  }
 
 }
 
@@ -651,10 +649,10 @@ void qbinded_xgeom_float_spinbox_t::value_changed(double d) {
   if (!m_binded_xgeom) return;
 
   for (const auto &atom_id : m_binded_atom_id)
-    if (atom_id < m_binded_xgeom->nat()) {
-        m_binded_xgeom->xfield<float>(m_binding_index, atom_id) = float(d);
-        app_state_t::get_inst()->make_viewport_dirty();
-      }
+    if (static_cast<int>(atom_id) < m_binded_xgeom->nat()) {
+      m_binded_xgeom->xfield<float>(m_binding_index, atom_id) = float(d);
+      app_state_t::get_inst()->make_viewport_dirty();
+    }
 
 }
 
@@ -718,12 +716,12 @@ qbinded_int2b_input_t::qbinded_int2b_input_t(QWidget *parent) {
   widget_layout->setContentsMargins(2, 2, 8, 2);
 
   auto make_spinbox = [](){
-      auto ret = new QSpinBox;
-      ret->setFixedWidth(70);
-      ret->setAlignment(Qt::AlignCenter);
-      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
-      return ret;
-    };
+    auto ret = new QSpinBox;
+    ret->setFixedWidth(70);
+    ret->setAlignment(Qt::AlignCenter);
+    ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    return ret;
+  };
 
   sb_x = make_spinbox();
   sb_y = make_spinbox();
@@ -790,13 +788,13 @@ qbinded_float2_input_t::qbinded_float2_input_t(QWidget *parent) {
   widget_layout->setContentsMargins(2, 2, 8, 2);
 
   auto make_spinbox = [](){
-      auto ret = new QDoubleSpinBox;
-      ret->setFixedWidth(70);
-      ret->setAlignment(Qt::AlignCenter);
-      ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
-      ret->setLocale(QLocale::C);
-      return ret;
-    };
+    auto ret = new QDoubleSpinBox;
+    ret->setFixedWidth(70);
+    ret->setAlignment(Qt::AlignCenter);
+    ret->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    ret->setLocale(QLocale::C);
+    return ret;
+  };
 
   sb_x = make_spinbox();
   sb_y = make_spinbox();
@@ -841,25 +839,25 @@ qbinded_bool_named_vector_t::qbinded_bool_named_vector_t(std::vector<QString> &&
 
   for (size_t i = 0; i < m_binded_names.size(); i++) {
 
-      QLabel *lbl = new QLabel(nullptr);
-      lbl->setText(m_binded_names[i]);
-      lbl->setProperty("s_class", "thin_label");
-      QCheckBox *cbx = new QCheckBox(nullptr);
-      widget_layout->addWidget(lbl);
-      widget_layout->addWidget(cbx);
-      m_boxes.push_back(cbx);
-      m_labels.push_back(lbl);
+    QLabel *lbl = new QLabel(nullptr);
+    lbl->setText(m_binded_names[i]);
+    lbl->setProperty("s_class", "thin_label");
+    QCheckBox *cbx = new QCheckBox(nullptr);
+    widget_layout->addWidget(lbl);
+    widget_layout->addWidget(cbx);
+    m_boxes.push_back(cbx);
+    m_labels.push_back(lbl);
 
-      connect(cbx, &QCheckBox::stateChanged, [this, i](int state) {
+    connect(cbx, &QCheckBox::stateChanged, [this, i](int state) {
 
-          if (i < this->m_binded_data.size() && this->m_binded_data[i])
-            m_binded_data[i]->set_value(state != Qt::CheckState::Unchecked);
+      if (i < this->m_binded_data.size() && this->m_binded_data[i])
+        m_binded_data[i]->set_value(state != Qt::CheckState::Unchecked);
 
-          app_state_t::get_inst()->make_viewport_dirty();
+      app_state_t::get_inst()->make_viewport_dirty();
 
-        });
+    });
 
-    }
+  }
 
   widget_layout->addStretch(1);
 
@@ -870,13 +868,13 @@ void qbinded_bool_named_vector_t::bind_value(std::vector<hs_prop_bool_t*> &&bind
   if (m_binded_data.size() == m_binded_names.size()
       && binded_data.size() == m_binded_names.size()) {
 
-      m_binded_data = binded_data;
+    m_binded_data = binded_data;
 
-    } else {
+  } else {
 
-      //raise error
+    //raise error
 
-    }
+  }
 
   load_value();
 
@@ -888,15 +886,15 @@ void qbinded_bool_named_vector_t::load_value() {
     for (size_t i = 0; i < m_boxes.size(); i++)
       if (i < m_boxes.size() && m_boxes[i] && m_binded_data[i]) {
 
-          m_boxes[i]->blockSignals(true);
-          m_boxes[i]->setCheckState(
-                i < m_binded_data.size() && m_binded_data[i] && m_binded_data[i]->get_value() ?
-                  Qt::Checked :
-                  Qt::Unchecked
-                  );
-          m_boxes[i]->blockSignals(false);
+        m_boxes[i]->blockSignals(true);
+        m_boxes[i]->setCheckState(
+            i < m_binded_data.size() && m_binded_data[i] && m_binded_data[i]->get_value() ?
+                                                                                          Qt::Checked :
+                                                                                          Qt::Unchecked
+            );
+        m_boxes[i]->blockSignals(false);
 
-        }
+      }
 
 }
 
@@ -920,10 +918,10 @@ void qbinded_matrix3_input_t::set_min_max_step(double min, double max, double st
 
   for (auto sbx : m_sbx)
     if (sbx) {
-        sbx->setMinimum(min);
-        sbx->setMaximum(max);
-        sbx->setSingleStep(step);
-      }
+      sbx->setMinimum(min);
+      sbx->setMaximum(max);
+      sbx->setSingleStep(step);
+    }
 
 }
 
@@ -931,8 +929,8 @@ void qbinded_matrix3_input_t::set_suffix(QString &new_suffix) {
 
   for (auto sbx : m_sbx)
     if (sbx) {
-        sbx->setSuffix(new_suffix);
-      }
+      sbx->setSuffix(new_suffix);
+    }
 
 }
 
@@ -958,24 +956,24 @@ qbinded_matrix3_input_t::qbinded_matrix3_input_t(QWidget *parent) : QWidget (par
     for (size_t q = 0; q < 3; q++) {
 
 
-        QDoubleSpinBox *sb = new QDoubleSpinBox;
-        //sb->setFixedWidth(60);
-        sb->setAlignment(Qt::AlignCenter);
-        sb->setButtonSymbols(QAbstractSpinBox::NoButtons);
-        sb->setLocale(QLocale::C);
-        m_main_lt->addWidget(sb, i, q);
-        m_sbx.push_back(sb);
-        m_sbx_lookup.insert({sb, std::tuple{i,q}});
-        sb->setMinimum(-100000000);
-        sb->setMaximum(100000000);
-        sb->setDecimals(4);
-        sb->setSingleStep(0.001);
-        connect(sb,
-                static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-                this,
-                &qbinded_matrix3_input_t::spinbox_value_changed);
+      QDoubleSpinBox *sb = new QDoubleSpinBox;
+      //sb->setFixedWidth(60);
+      sb->setAlignment(Qt::AlignCenter);
+      sb->setButtonSymbols(QAbstractSpinBox::NoButtons);
+      sb->setLocale(QLocale::C);
+      m_main_lt->addWidget(sb, i, q);
+      m_sbx.push_back(sb);
+      m_sbx_lookup.insert({sb, std::tuple{i,q}});
+      sb->setMinimum(-100000000);
+      sb->setMaximum(100000000);
+      sb->setDecimals(4);
+      sb->setSingleStep(0.001);
+      connect(sb,
+              static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+              this,
+              &qbinded_matrix3_input_t::spinbox_value_changed);
 
-      }
+    }
 
 }
 
@@ -1013,36 +1011,36 @@ qbinded_float_named_vector_t::qbinded_float_named_vector_t(std::vector<QString> 
 
   for (size_t i = 0; i < m_binded_names.size(); i++) {
 
-      QLabel *lbl = new QLabel(nullptr);
-      lbl->setText(m_binded_names[i]);
-      lbl->setProperty("s_class", "thin_label");
-      QDoubleSpinBox *sbx = new QDoubleSpinBox(nullptr);
-      sbx->setAlignment(Qt::AlignCenter);
-      sbx->setButtonSymbols(QAbstractSpinBox::NoButtons);
-      sbx->setLocale(QLocale::C);
-      widget_layout->addWidget(lbl);
-      widget_layout->addWidget(sbx);
-      m_boxes.push_back(sbx);
-      m_labels.push_back(lbl);
+    QLabel *lbl = new QLabel(nullptr);
+    lbl->setText(m_binded_names[i]);
+    lbl->setProperty("s_class", "thin_label");
+    QDoubleSpinBox *sbx = new QDoubleSpinBox(nullptr);
+    sbx->setAlignment(Qt::AlignCenter);
+    sbx->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    sbx->setLocale(QLocale::C);
+    widget_layout->addWidget(lbl);
+    widget_layout->addWidget(sbx);
+    m_boxes.push_back(sbx);
+    m_labels.push_back(lbl);
 
-      connect(sbx,
-              static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-              [this, i](double value) {
+    connect(sbx,
+            static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            [this, i](double value) {
 
-                if (i < this->m_binded_data.size() && this->m_binded_data[i]) {
-                    m_binded_data[i]->set_value(value);
-                    if (m_binded_item
-                        && i < this->m_updated_externally_event.size()
-                        && this->m_updated_externally_event[i]
-                        && i < this->m_upd_flag.size())
-                      m_binded_item->updated_externally(this->m_upd_flag[i]);
-                  }
+              if (i < this->m_binded_data.size() && this->m_binded_data[i]) {
+                m_binded_data[i]->set_value(value);
+                if (m_binded_item
+                    && i < this->m_updated_externally_event.size()
+                    && this->m_updated_externally_event[i]
+                    && i < this->m_upd_flag.size())
+                  m_binded_item->updated_externally(this->m_upd_flag[i]);
+              }
 
-                app_state_t::get_inst()->make_viewport_dirty();
+              app_state_t::get_inst()->make_viewport_dirty();
 
-              });
+            });
 
-    }
+  }
 
   widget_layout->addStretch(1);
 
@@ -1053,10 +1051,10 @@ void qbinded_float_named_vector_t::set_min_max_step(float vmin, float vmax,
 
   for (int i = 0; i < m_boxes.size(); i++)
     if (m_boxes[i]) {
-        m_boxes[i]->setRange(vmin, vmax);
-        m_boxes[i]->setSingleStep(vstep);
-        if (decs) m_boxes[i]->setDecimals(*decs);
-      }
+      m_boxes[i]->setRange(vmin, vmax);
+      m_boxes[i]->setSingleStep(vstep);
+      if (decs) m_boxes[i]->setDecimals(*decs);
+    }
 
 }
 
@@ -1070,14 +1068,14 @@ void qbinded_float_named_vector_t::set_min_max_step_ex(std::vector<float> &&vmin
       && m_binded_data.size() == vstep.size()
       && m_binded_data.size() == dec.size()) {
 
-      for (int i = 0; i < m_boxes.size(); i++)
-        if (m_boxes[i]) {
-            m_boxes[i]->setRange(vmin[i], vmax[i]);
-            m_boxes[i]->setSingleStep(vstep[i]);
-            if (dec[i]) m_boxes[i]->setDecimals(*dec[i]);
-          }
+    for (int i = 0; i < m_boxes.size(); i++)
+      if (m_boxes[i]) {
+        m_boxes[i]->setRange(vmin[i], vmax[i]);
+        m_boxes[i]->setSingleStep(vstep[i]);
+        if (dec[i]) m_boxes[i]->setDecimals(*dec[i]);
+      }
 
-    }
+  }
 
 }
 
@@ -1087,17 +1085,17 @@ void qbinded_float_named_vector_t::bind_value(std::vector<hs_prop_float_t *> &&b
   if (m_binded_data.size() == m_binded_names.size() &&
       binded_data.size() == m_binded_names.size()) {
 
-      m_binded_data = binded_data;
-      m_binded_item = item_to_bind;
-      m_ignore_state_change = true;
-      load_value();
-      m_ignore_state_change = false;
+    m_binded_data = binded_data;
+    m_binded_item = item_to_bind;
+    m_ignore_state_change = true;
+    load_value();
+    m_ignore_state_change = false;
 
-    } else {
+  } else {
 
-      //raise error
+    //raise error
 
-    }
+  }
 
   load_value();
 
@@ -1109,11 +1107,11 @@ void qbinded_float_named_vector_t::load_value() {
     for (size_t i = 0; i < m_boxes.size(); i++)
       if (i < m_boxes.size() && m_boxes[i] && m_binded_data[i]) {
 
-          m_boxes[i]->blockSignals(true);
-          m_boxes[i]->setValue(m_binded_data[i]->get_value());
-          m_boxes[i]->blockSignals(false);
+        m_boxes[i]->blockSignals(true);
+        m_boxes[i]->setValue(m_binded_data[i]->get_value());
+        m_boxes[i]->blockSignals(false);
 
-        }
+      }
 
 }
 
