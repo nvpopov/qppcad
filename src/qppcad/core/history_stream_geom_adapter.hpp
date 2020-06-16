@@ -35,7 +35,7 @@ struct xgeom_acts_vt {
 };
 
 template<typename REAL, typename CELL>
-class hist_doc_xgeom_proxy_t : public hist_doc_base_t,
+class hist_doc_xgeom_proxy_t : public hs_doc_base_t,
                                public geometry_observer<REAL> {
 
 private:

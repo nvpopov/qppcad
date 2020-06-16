@@ -7,7 +7,7 @@ namespace qpp {
 
 namespace cad {
 
-class hist_doc_base_t;
+class hs_doc_base_t;
 using epoch_t = std::size_t;
 
 enum hs_dstate_e {
@@ -42,7 +42,7 @@ struct hs_child_state_meta_t {
 /**
 * @brief The hist_doc_base_t class
 */
-class hist_doc_base_t {
+class hs_doc_base_t {
 
 public:
 
@@ -52,12 +52,12 @@ private:
 
   epoch_t p_cur_epoch{0};
 
-  hist_doc_base_t *p_parent{nullptr};
+  hs_doc_base_t *p_parent{nullptr};
   //hist_doc_base_t *p_super_parent{nullptr};
-  std::vector<hist_doc_base_t*> p_children;
-  std::vector<hist_doc_base_t*> p_just_added_children;
-  std::map<epoch_t, std::map<hist_doc_base_t*, hs_child_state_meta_t>> p_children_states;
-  std::map<hist_doc_base_t*, hs_child_state_meta_t> p_current_child_state;
+  std::vector<hs_doc_base_t*> p_children;
+  std::vector<hs_doc_base_t*> p_just_added_children;
+  std::map<epoch_t, std::map<hs_doc_base_t*, hs_child_state_meta_t>> p_children_states;
+  std::map<hs_doc_base_t*, hs_child_state_meta_t> p_current_child_state;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
   bool p_commit_exclusive_on_change{false};
@@ -73,14 +73,14 @@ private:
   * @param idx
   * @return
   */
-  hist_doc_base_t *get_child(size_t idx) const;
+  hs_doc_base_t *get_child(size_t idx) const;
 
   /**
   * @brief is_children
   * @param child
   * @return
   */
-  std::optional<size_t> is_child(hist_doc_base_t *child) const;
+  std::optional<size_t> is_child(hs_doc_base_t *child) const;
 
   /**
   * @brief remove_child removes child completely by id
@@ -92,7 +92,7 @@ private:
   * @brief remove_child removes child completely by pointer
   * @param child
   */
-  hs_result_e remove_child(hist_doc_base_t *child);
+  hs_result_e remove_child(hs_doc_base_t *child);
 
   /**
   * @brief get_children_count
@@ -116,8 +116,8 @@ protected:
 
 public:
 
-  hist_doc_base_t ();
-  virtual ~hist_doc_base_t();
+  hs_doc_base_t ();
+  virtual ~hs_doc_base_t();
 
   /**
    * @brief begin_recoring
@@ -163,7 +163,7 @@ public:
    * @param child_epoch
    * @return
    */
-  hs_result_e commit_exclusive(hist_doc_base_t *child = nullptr,
+  hs_result_e commit_exclusive(hs_doc_base_t *child = nullptr,
                                std::optional<epoch_t> child_epoch = std::nullopt);
 
   /**
@@ -240,7 +240,7 @@ public:
   * @param child_epoch
   * @param target_epoch
   */
-  hs_result_e augment_epoch(epoch_t target_epoch, hist_doc_base_t* child, epoch_t child_epoch,
+  hs_result_e augment_epoch(epoch_t target_epoch, hs_doc_base_t* child, epoch_t child_epoch,
                             bool alive = true);
 
   /**
@@ -256,7 +256,7 @@ public:
    * @param child
    * @return
    */
-  bool is_augmented_by(epoch_t target_epoch, hist_doc_base_t *child);
+  bool is_augmented_by(epoch_t target_epoch, hs_doc_base_t *child);
 
   /**
   * @brief remove_augment_from_epoch
@@ -265,7 +265,7 @@ public:
   * @param target_epoch
   * @return
   */
-  hs_result_e remove_augment_from_epoch(hist_doc_base_t* child, epoch_t target_epoch);
+  hs_result_e remove_augment_from_epoch(hs_doc_base_t* child, epoch_t target_epoch);
 
   /**
    * @brief is_child_alive
@@ -273,7 +273,7 @@ public:
    * @param child
    * @return
    */
-  hs_result_e is_child_alive(epoch_t target_epoch, hist_doc_base_t* child) const;
+  hs_result_e is_child_alive(epoch_t target_epoch, hs_doc_base_t* child) const;
 
   /**
   * @brief has_epoch
@@ -308,14 +308,14 @@ public:
   * @param child
   * @return
   */
-  hs_result_e add_hs_child(hist_doc_base_t *child, bool add_new_epoch = false);
+  hs_result_e add_hs_child(hs_doc_base_t *child, bool add_new_epoch = false);
 
   /**
    * @brief delete_hs_child
    * @param child
    * @return
    */
-  hs_result_e set_alive_hs_child(hist_doc_base_t *child, bool alive = true);
+  hs_result_e set_alive_hs_child(hs_doc_base_t *child, bool alive = true);
 
   /**
    * @brief get_hs_children_count
@@ -328,19 +328,19 @@ public:
    * @param child_idx
    * @return
    */
-  hist_doc_base_t *get_hs_child(size_t child_idx);
+  hs_doc_base_t *get_hs_child(size_t child_idx);
 
   /**
   * @brief get_root
   * @return
   */
-  hist_doc_base_t *get_parent();
+  hs_doc_base_t *get_parent();
 
   /**
    * @brief get_super_root
    * @return
    */
-  hist_doc_base_t *get_super_parent();
+  hs_doc_base_t *get_super_parent();
 
   bool get_auto_delete() const ;
   void set_auto_delete(bool value);
@@ -348,13 +348,13 @@ public:
   bool get_auto_delete_children() const ;
   void set_auto_delete_children(bool value);
 
-  bool is_child_unused(hist_doc_base_t *child);
-  virtual void request_child_deletion(hist_doc_base_t *child);
+  bool is_child_unused(hs_doc_base_t *child);
+  virtual void request_child_deletion(hs_doc_base_t *child);
 
 };
 
 template<typename STYPE>
-class hist_doc_t : public hist_doc_base_t {
+class hs_doc_t : public hs_doc_base_t {
 
 private:
 
@@ -384,7 +384,7 @@ protected:
       p_stored_values[get_cur_epoch()] = p_cur_value;
     }
 
-    hist_doc_base_t::record_impl(init_as_base_commit);
+    hs_doc_base_t::record_impl(init_as_base_commit);
 
   }
 
@@ -396,12 +396,12 @@ protected:
 
 public:
 
-  hist_doc_t(STYPE &&new_val) {
+  hs_doc_t(STYPE &&new_val) {
     p_stored_values[get_cur_epoch()] = new_val;
     p_cur_value = p_stored_values[get_cur_epoch()];
   }
 
-  hist_doc_t() {
+  hs_doc_t() {
     p_stored_values[get_cur_epoch()] = p_cur_value;
   }
 
@@ -487,7 +487,7 @@ public:
 
     p_cur_value = new_val;
 
-    if (hist_doc_base_t *super_parent = get_super_parent();
+    if (hs_doc_base_t *super_parent = get_super_parent();
         super_parent && super_parent->get_commit_exclusive_on_change())
       commit_value_exclusive(STYPE(p_cur_value));
 
@@ -500,7 +500,7 @@ public:
 };
 
 template<typename STYPE>
-class hist_property_t : public hist_doc_t<STYPE> {
+class hist_property_t : public hs_doc_t<STYPE> {
 
 };
 

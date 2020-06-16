@@ -12,7 +12,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("basic features") {
 
-    hist_doc_base_t *hs = new hist_doc_base_t;
+    hs_doc_base_t *hs = new hs_doc_base_t;
     REQUIRE(hs->get_cur_epoch() == 0);
     REQUIRE(hs->set_cur_epoch(2) == hs_result_e::hs_invalid_epoch);
     REQUIRE(hs->get_cur_epoch() == 0);
@@ -26,9 +26,9 @@ TEST_CASE("history stream test") {
     REQUIRE(hs->get_history_size() == 3);
     REQUIRE(hs->get_history() == std::vector<epoch_t>{0, 1, 2});
 
-    hist_doc_base_t *hs_c1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_c2 = new hist_doc_base_t;
-    hist_doc_base_t *hs_c3 = new hist_doc_base_t;
+    hs_doc_base_t *hs_c1 = new hs_doc_base_t;
+    hs_doc_base_t *hs_c2 = new hs_doc_base_t;
+    hs_doc_base_t *hs_c3 = new hs_doc_base_t;
 
     REQUIRE(std::get<0>(hs_c1->push_epoch(1)) == hs_result_e::hs_success);
     REQUIRE(hs_c1->checkout_to_epoch(0) == hs_result_e::hs_success);
@@ -47,7 +47,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("basic features 2") {
 
-    hist_doc_base_t *hs = new hist_doc_base_t;
+    hs_doc_base_t *hs = new hs_doc_base_t;
 
     REQUIRE(std::get<0>(hs->push_epoch(1)) == hs_result_e::hs_success);
     REQUIRE(hs->checkout_to_epoch(1) == hs_result_e::hs_success);
@@ -58,8 +58,8 @@ TEST_CASE("history stream test") {
     REQUIRE(std::get<0>(hs->push_epoch(4)) == hs_result_e::hs_success);
     REQUIRE(hs->checkout_to_epoch(4) == hs_result_e::hs_success);
 
-    hist_doc_base_t *hs_c1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_c2 = new hist_doc_base_t;
+    hs_doc_base_t *hs_c1 = new hs_doc_base_t;
+    hs_doc_base_t *hs_c2 = new hs_doc_base_t;
 
     REQUIRE(std::get<0>(hs_c1->push_epoch(1)) == hs_result_e::hs_success);
     REQUIRE(hs_c1->checkout_to_epoch(0) == hs_result_e::hs_success);
@@ -77,12 +77,12 @@ TEST_CASE("history stream test") {
 
   SECTION("Deep nested structure") {
 
-    hist_doc_base_t *hs = new hist_doc_base_t;
-    hist_doc_base_t *hs_c1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_c1_c1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_c1_c2 = new hist_doc_base_t;
-    hist_doc_base_t *hs_c2 = new hist_doc_base_t;
-    hist_doc_base_t *hs_c3 = new hist_doc_base_t;
+    hs_doc_base_t *hs       = new hs_doc_base_t;
+    hs_doc_base_t *hs_c1    = new hs_doc_base_t;
+    hs_doc_base_t *hs_c1_c1 = new hs_doc_base_t;
+    hs_doc_base_t *hs_c1_c2 = new hs_doc_base_t;
+    hs_doc_base_t *hs_c2    = new hs_doc_base_t;
+    hs_doc_base_t *hs_c3    = new hs_doc_base_t;
 
     hs->add_hs_child(hs_c1);
     hs->add_hs_child(hs_c2);
@@ -129,7 +129,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("testing history cleanup") {
 
-    hist_doc_base_t *hs = new hist_doc_base_t;
+    hs_doc_base_t *hs = new hs_doc_base_t;
 
     REQUIRE(hs->get_cur_epoch() == 0);
 
@@ -145,7 +145,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hs->checkout_to_epoch(3) == hs_result_e::hs_success);
     REQUIRE(hs->get_cur_epoch() == 3);
 
-    hist_doc_base_t *hs1 = new hist_doc_base_t;
+    hs_doc_base_t *hs1 = new hs_doc_base_t;
 
     REQUIRE(hs1->get_cur_epoch() == 0);
 
@@ -165,7 +165,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("hist doc test") {
 
-    hist_doc_t<int> *hsi1 = new hist_doc_t<int>(0);
+    hs_doc_t<int> *hsi1 = new hs_doc_t<int>(0);
     hsi1->push_epoch_with_value(2);
     REQUIRE(hsi1->checkout_to_epoch(1) == hs_result_e::hs_success);
     REQUIRE(hsi1->push_epoch_with_value(3) == hs_result_e::hs_success);
@@ -190,7 +190,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hsi1->get_cur_epoch() == 3);
     REQUIRE(hsi1->get_value() == 4);
 
-    hist_doc_t<vector3<float>> *hsv1 = new hist_doc_t<vector3<float>>(vector3<float>(0));
+    hs_doc_t<vector3<float>> *hsv1 = new hs_doc_t<vector3<float>>(vector3<float>(0));
     hsv1->push_epoch_with_value({0, 1, 0});
     REQUIRE(hsv1->checkout_to_epoch(1) == hs_result_e::hs_success);
     hsv1->push_epoch_with_value({0, 2, 0});
@@ -207,7 +207,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("testing epoch cursor") {
 
-    hist_doc_base_t *hs = new hist_doc_base_t;
+    hs_doc_base_t *hs = new hs_doc_base_t;
     REQUIRE(hs->get_cur_epoch() == 0);
 
     REQUIRE(std::get<0>(hs->push_epoch(1)) == hs_result_e::hs_success);
@@ -231,7 +231,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("nested elem deletions") {
 
-    hist_doc_base_t *hs = new hist_doc_base_t;
+    hs_doc_base_t *hs = new hs_doc_base_t;
     REQUIRE(hs->get_cur_epoch() == 0);
 
     REQUIRE(std::get<0>(hs->push_epoch(1)) == hs_result_e::hs_success);
@@ -251,7 +251,7 @@ TEST_CASE("history stream test") {
     REQUIRE(std::get<0>(hs->push_epoch(6)) == hs_result_e::hs_success);
     REQUIRE(hs->get_history() == std::vector<epoch_t>{0, 1, 2, 6});
 
-    hist_doc_base_t *hs_c1 = new hist_doc_base_t;
+    hs_doc_base_t *hs_c1 = new hs_doc_base_t;
 
     REQUIRE(std::get<0>(hs_c1->push_epoch(1)) == hs_result_e::hs_success);
     REQUIRE(hs_c1->checkout_to_epoch(1) == hs_result_e::hs_success);
@@ -261,7 +261,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_c1->checkout_to_epoch(2) == hs_result_e::hs_success);
     REQUIRE(hs_c1->get_cur_epoch() == 2);
 
-    hist_doc_base_t *hs_c2 = new hist_doc_base_t;
+    hs_doc_base_t *hs_c2 = new hs_doc_base_t;
     REQUIRE(std::get<0>(hs_c2->push_epoch(1)) == hs_result_e::hs_success);
     REQUIRE(std::get<0>(hs_c2->push_epoch(2)) == hs_result_e::hs_success);
 
@@ -290,7 +290,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("nested elem deletions") {
 
-    hist_doc_base_t *hs = new hist_doc_base_t;
+    hs_doc_base_t *hs = new hs_doc_base_t;
     REQUIRE(std::get<0>(hs->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
     REQUIRE(std::get<0>(hs->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
     REQUIRE(std::get<0>(hs->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
@@ -301,7 +301,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("nested elem deletions") {
 
-    hist_doc_t<int> *hsi1 = new hist_doc_t<int>(0);
+    hs_doc_t<int> *hsi1 = new hs_doc_t<int>(0);
 
     hsi1->set_value(10);
     REQUIRE(hsi1->commit_exclusive() == hs_result_e::hs_success);
@@ -330,14 +330,14 @@ TEST_CASE("history stream test") {
 
   SECTION ("nested elem exclusive commit") {
 
-    hist_doc_t<int> *hsi1 = new hist_doc_t<int>(0);
+    hs_doc_t<int> *hsi1 = new hs_doc_t<int>(0);
 
     hsi1->set_value(10);
     REQUIRE(hsi1->commit_exclusive() == hs_result_e::hs_success);
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
-    hist_doc_base_t *hs_el1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_el2 = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
+    hs_doc_base_t *hs_el1 = new hs_doc_base_t;
+    hs_doc_base_t *hs_el2 = new hs_doc_base_t;
 
     REQUIRE(hs_root->add_hs_child(hs_el1) == hs_result_e::hs_success);
     REQUIRE(hs_el1->add_hs_child(hs_el2) == hs_result_e::hs_success);
@@ -378,9 +378,9 @@ TEST_CASE("history stream test") {
 
   SECTION ("nested elem addition vol2") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
-    hist_doc_t<int> *hs_el1 = new hist_doc_t<int>(0);
-    hist_doc_t<int> *hs_el2 = new hist_doc_t<int>(0);
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
+    hs_doc_t<int> *hs_el1 = new hs_doc_t<int>(0);
+    hs_doc_t<int> *hs_el2 = new hs_doc_t<int>(0);
 
     REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
     REQUIRE(std::get<0>(hs_root->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
@@ -434,10 +434,10 @@ TEST_CASE("history stream test") {
 
   SECTION ("record test") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
-    hist_doc_base_t *hs_it1 = new hist_doc_base_t;
-    hist_doc_t<int> *hs_el1 = new hist_doc_t<int>(0);
-    hist_doc_t<int> *hs_el2 = new hist_doc_t<int>(0);
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
+    hs_doc_base_t *hs_it1 = new hs_doc_base_t;
+    hs_doc_t<int> *hs_el1 = new hs_doc_t<int>(0);
+    hs_doc_t<int> *hs_el2 = new hs_doc_t<int>(0);
 
     hs_it1->begin_recording(true); // init as base epoch
 
@@ -470,10 +470,10 @@ TEST_CASE("history stream test") {
 
   SECTION ("init as base commit") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
-    hist_doc_base_t *hs_it1 = new hist_doc_base_t;
-    hist_doc_t<int> *hs_el1 = new hist_doc_t<int>(0);
-    hist_doc_t<int> *hs_el2 = new hist_doc_t<int>(0);
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
+    hs_doc_base_t *hs_it1 = new hs_doc_base_t;
+    hs_doc_t<int> *hs_el1 = new hs_doc_t<int>(0);
+    hs_doc_t<int> *hs_el2 = new hs_doc_t<int>(0);
 
     hs_it1->begin_recording(true); // init as base epoch
 
@@ -501,9 +501,9 @@ TEST_CASE("history stream test") {
 
   SECTION ("add hs new epoch") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
-    hist_doc_base_t *hs_el1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_el2 = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
+    hs_doc_base_t *hs_el1 = new hs_doc_base_t;
+    hs_doc_base_t *hs_el2 = new hs_doc_base_t;
 
     hs_root->add_hs_child(hs_el1, true);
     REQUIRE(hs_root->get_cur_epoch() == 1);
@@ -531,11 +531,11 @@ TEST_CASE("history stream test") {
 
   SECTION ("add hs new epoch multi elem delete") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
-    hist_doc_base_t *hs_el1 = new hist_doc_base_t;
-    hist_doc_base_t *hs_el2 = new hist_doc_base_t;
-    hist_doc_base_t *hs_el3 = new hist_doc_base_t;
-    hist_doc_base_t *hs_el4 = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
+    hs_doc_base_t *hs_el1 = new hs_doc_base_t;
+    hs_doc_base_t *hs_el2 = new hs_doc_base_t;
+    hs_doc_base_t *hs_el3 = new hs_doc_base_t;
+    hs_doc_base_t *hs_el4 = new hs_doc_base_t;
 
     hs_root->add_hs_child(hs_el1, true);
     REQUIRE(hs_root->get_cur_epoch() == 1);
@@ -561,7 +561,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("array_proxy test") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
     hist_doc_array_proxy_t<hs_prop_int_t> *hs_iarray = new hist_doc_array_proxy_t<hs_prop_int_t>;
 
     REQUIRE(hs_root->add_hs_child(hs_iarray) == hs_result_e::hs_success);
@@ -585,7 +585,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("is child unused tests") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
     hist_doc_array_proxy_t<hs_prop_int_t> *hs_iarray = new hist_doc_array_proxy_t<hs_prop_int_t>;
     hs_iarray->set_auto_delete_children(true);
 
@@ -668,7 +668,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("is child unused tests - shared ptr storage") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
 
     auto *hs_iarray =
         new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_sptr_policy<hs_prop_int_t>>();
@@ -750,7 +750,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("is child unused tests - shared ptr storage") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
 
     auto *hs_iarray =
         new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_sptr_policy<hs_prop_int_t>>();
@@ -772,7 +772,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("is child unused tests - shared ptr storage") {
 
-    hist_doc_base_t *hs_root = new hist_doc_base_t;
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
 
     auto *hs_iarray =
         new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_sptr_policy<hs_prop_int_t>>();
@@ -813,7 +813,7 @@ TEST_CASE("history stream test") {
 
   SECTION ("delta state tests") {
 
-    hist_doc_base_t *hs1 = new hist_doc_base_t;
+    hs_doc_base_t *hs1 = new hs_doc_base_t;
     hs1->set_dstate_type(hs_dstate_e::hs_dstate_incr);
 
     REQUIRE(hs1->get_dstate_type() == hs_dstate_e::hs_dstate_incr);

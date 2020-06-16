@@ -94,7 +94,7 @@ class ws_item_t :
     public std::enable_shared_from_this<ws_item_t>,
     public qpp_object_t,
     public iupdatable_externally_t,
-    public hist_doc_base_t {
+    public hs_doc_base_t {
 
   QPP_OBJECT(ws_item_t, qpp_object_t)
 

@@ -26,15 +26,14 @@ class generic_binded_input_t {
 
 public:
 
-  hist_doc_t<T> *m_binded_value{nullptr};
+  hs_doc_t<T> *m_binded_value{nullptr};
   iupdatable_externally_t *m_binded_item{nullptr};
   uint32_t m_upd_flag{ws_item_updf_generic};
 
   bool m_ignore_state_change{false};
   bool m_updated_externally_event{false};
 
-  void bind_value(hist_doc_t<T> *binded_value,
-                  iupdatable_externally_t *item_to_bind = nullptr) {
+  void bind_value(hs_doc_t<T> *binded_value, iupdatable_externally_t *item_to_bind = nullptr) {
 
     m_binded_value = binded_value;
     m_binded_item = item_to_bind;
@@ -64,15 +63,18 @@ public:
   }
 
   void on_value_changed() {
-    if (m_binded_item && m_updated_externally_event)
-      m_binded_item->updated_externally(m_upd_flag);
+    if (m_binded_item && m_updated_externally_event) m_binded_item->updated_externally(m_upd_flag);
   }
 
   virtual void load_value_ex() = 0;
 
 };
 
-class qbinded_checkbox_t : public QCheckBox, public generic_binded_input_t<bool> {
+/**
+ * @brief The qbinded_checkbox_t class
+ */
+class qbinded_checkbox_t : public QCheckBox,
+                           public generic_binded_input_t<bool> {
 
   Q_OBJECT
 
@@ -87,8 +89,11 @@ public slots:
 
 };
 
-
-class qbinded_line_edit_t : public QLineEdit, public generic_binded_input_t<std::string> {
+/**
+ * @brief The qbinded_line_edit_t class
+ */
+class qbinded_line_edit_t : public QLineEdit,
+                            public generic_binded_input_t<std::string> {
 
   Q_OBJECT
 
@@ -103,7 +108,11 @@ public slots:
 
 };
 
-class qbinded_float_spinbox_t : public QDoubleSpinBox, public generic_binded_input_t<float> {
+/**
+ * @brief The qbinded_float_spinbox_t class
+ */
+class qbinded_float_spinbox_t : public QDoubleSpinBox,
+                                public generic_binded_input_t<float> {
 
   Q_OBJECT
 
@@ -121,16 +130,18 @@ public slots:
 
 };
 
-class qbinded_int_spinbox_t : public QSpinBox, public generic_binded_input_t<int> {
+/**
+ * @brief The qbinded_int_spinbox_t class
+ */
+class qbinded_int_spinbox_t : public QSpinBox,
+                              public generic_binded_input_t<int> {
 
   Q_OBJECT
 
 public:
 
   void load_value_ex() override;
-  void set_min_max_step(int new_min,
-                        int new_max,
-                        int new_step);
+  void set_min_max_step(int new_min, int new_max, int new_step);
   explicit qbinded_int_spinbox_t(QWidget *parent = nullptr);
   void set_suffix(QString &new_suffix);
   void set_default_suffix();
@@ -141,7 +152,11 @@ public slots:
 
 };
 
-class qbinded_combobox_t : public QComboBox, public generic_binded_input_t<int> {
+/**
+ * @brief The qbinded_combobox_t class
+ */
+class qbinded_combobox_t : public QComboBox,
+                           public generic_binded_input_t<int> {
 
   Q_OBJECT
 
@@ -157,7 +172,11 @@ public slots:
 
 };
 
-class qbinded_int3_input_t : public QWidget, public generic_binded_input_t<vector3<int> > {
+/**
+ * @brief The qbinded_int3_input_t class
+ */
+class qbinded_int3_input_t : public QWidget,
+                             public generic_binded_input_t<vector3<int> > {
 
   Q_OBJECT
 
@@ -181,7 +200,11 @@ private slots:
 
 };
 
-class qbinded_int2b_input_t : public QWidget, public generic_binded_input_t<vector3<int> > {
+/**
+ * @brief The qbinded_int2b_input_t class
+ */
+class qbinded_int2b_input_t : public QWidget,
+                              public generic_binded_input_t<vector3<int> > {
 
   Q_OBJECT
 
@@ -202,7 +225,11 @@ private slots:
 
 };
 
-class qbinded_float2_input_t : public QWidget, public generic_binded_input_t<vector2<float> > {
+/**
+ * @brief The qbinded_float2_input_t class
+ */
+class qbinded_float2_input_t : public QWidget,
+                               public generic_binded_input_t<vector2<float> > {
 
   Q_OBJECT
 
@@ -226,7 +253,11 @@ private slots:
 
 };
 
-class qbinded_float3_input_t : public QWidget, public generic_binded_input_t<vector3<float> > {
+/**
+ * @brief The qbinded_float3_input_t class
+ */
+class qbinded_float3_input_t : public QWidget,
+                               public generic_binded_input_t<vector3<float> > {
 
   Q_OBJECT
 
@@ -253,9 +284,11 @@ private slots:
 
 };
 
-class qbinded_matrix3_input_t :
-    public QWidget,
-    public generic_binded_input_t<matrix3<float> > {
+/**
+ * @brief The qbinded_matrix3_input_t class
+ */
+class qbinded_matrix3_input_t : public QWidget,
+                                public generic_binded_input_t<matrix3<float> > {
 
   Q_OBJECT
 
@@ -279,6 +312,9 @@ private slots:
 
 };
 
+/**
+ * @brief The qbinded_color3_input_t class
+ */
 class qbinded_color3_input_t : public QWidget,
                                public generic_binded_input_t<vector3<float> > {
 
@@ -298,7 +334,9 @@ protected:
 
 };
 
-
+/**
+ * @brief The qbinded_xgeom_color3_input_t class
+ */
 class qbinded_xgeom_color3_input_t : public QFrame {
 
   Q_OBJECT
@@ -321,6 +359,9 @@ public:
 
 };
 
+/**
+ * @brief The qbinded_xgeom_float_spinbox_t class
+ */
 class qbinded_xgeom_float_spinbox_t : public QDoubleSpinBox {
 
   Q_OBJECT
@@ -349,6 +390,9 @@ public slots:
 
 };
 
+/**
+ * @brief The qbinded_ws_item_combobox_t class
+ */
 class qbinded_ws_item_combobox_t : public QComboBox {
 
   Q_OBJECT
@@ -378,6 +422,9 @@ public slots:
 
 };
 
+/**
+ * @brief The qbinded_bool_named_vector_t class
+ */
 class qbinded_bool_named_vector_t : public QFrame {
 
   Q_OBJECT
@@ -397,12 +444,15 @@ public:
 
 };
 
+/**
+ * @brief The qbinded_float_named_vector_t class
+ */
 class qbinded_float_named_vector_t : public QFrame {
 
   Q_OBJECT
 
-
 public:
+
   iupdatable_externally_t *m_binded_item{nullptr};
   std::vector<uint32_t> m_upd_flag{ws_item_updf_generic};
 
@@ -416,14 +466,16 @@ public:
   std::vector<QLabel*> m_labels;
 
   explicit qbinded_float_named_vector_t(std::vector<QString> &&names, QWidget *parent = nullptr);
+
   void set_min_max_step(float vmin, float vmax, float vstep,
                         std::optional<int> decs = std::nullopt);
-  void set_min_max_step_ex(std::vector<float> &&vmin,
-                           std::vector<float> &&vmax,
-                           std::vector<float> &&vstep,
-                           std::vector<std::optional<int>> &&decs);
+
+  void set_min_max_step_ex(std::vector<float> &&vmin, std::vector<float> &&vmax,
+                           std::vector<float> &&vstep, std::vector<std::optional<int>> &&decs);
+
   void bind_value(std::vector<hs_prop_float_t*> &&binded_data,
                   iupdatable_externally_t *item_to_bind = nullptr);
+
   void load_value();
   void unbind_value();
 

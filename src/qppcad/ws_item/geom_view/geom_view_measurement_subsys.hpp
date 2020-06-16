@@ -37,7 +37,7 @@ enum msr_pair_term_style : int {
 };
 
 template<typename AINT = uint32_t>
-struct msr_bond_rec_t : public hist_doc_base_t {
+struct msr_bond_rec_t : public hs_doc_base_t {
 
   AINT m_at1;
   AINT m_at2;
@@ -84,7 +84,7 @@ struct msr_bond_rec_t : public hist_doc_base_t {
 };
 
 template<typename AINT = uint32_t>
-struct msr_angle_rec_t : public hist_doc_base_t {
+struct msr_angle_rec_t : public hs_doc_base_t {
 
   AINT m_at1;
   AINT m_at2;

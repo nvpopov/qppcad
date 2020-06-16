@@ -116,8 +116,8 @@ void cws_changed() {
 
 PYBIND11_EMBEDDED_MODULE(cad, m) {
 
-  py::class_<hist_doc_base_t> py_hist_doc_base_t(m, "hist_doc_base_t");
-  py_hist_doc_base_t.def("get_cur_epoch", &hist_doc_base_t::get_cur_epoch);
+  py::class_<hs_doc_base_t> py_hist_doc_base_t(m, "hist_doc_base_t");
+  py_hist_doc_base_t.def("get_cur_epoch", &hs_doc_base_t::get_cur_epoch);
   //py_hist_doc_base_t.def("get_children_count", &hist_doc_base_t::get_children_count);
 
   /* cam_target_view pybindings */

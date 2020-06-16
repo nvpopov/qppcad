@@ -25,8 +25,8 @@ struct hs_arr_rptr_policy {
     elem = nullptr;
   }
 
-  static hist_doc_base_t *cast_from_holder(holder_type_t holder) {
-    return reinterpret_cast<hist_doc_base_t*>(holder);
+  static hs_doc_base_t *cast_from_holder(holder_type_t holder) {
+    return reinterpret_cast<hs_doc_base_t*>(holder);
   }
 
 };
@@ -40,14 +40,14 @@ struct hs_arr_sptr_policy {
 
   }
 
-  static hist_doc_base_t *cast_from_holder(holder_type_t holder) {
-    return static_cast<hist_doc_base_t*>(holder.get());
+  static hs_doc_base_t *cast_from_holder(holder_type_t holder) {
+    return static_cast<hs_doc_base_t*>(holder.get());
   }
 
 };
 
 template<typename STYPE, typename STYPE_STRG_POL = hs_arr_rptr_policy<STYPE>>
-class hist_doc_array_proxy_t : public hist_doc_base_t {
+class hist_doc_array_proxy_t : public hs_doc_base_t {
 
 public:
 
@@ -56,20 +56,20 @@ public:
 private:
 
   std::vector<holder_type_t> p_array_data;
-  std::map<hist_doc_base_t*, holder_type_t> p_map_hs_to_array;
+  std::map<hs_doc_base_t*, holder_type_t> p_map_hs_to_array;
 
 public:
 
-  static_assert(std::is_base_of<hist_doc_base_t, STYPE>::value);
+  static_assert(std::is_base_of<hs_doc_base_t, STYPE>::value);
 
-  holder_type_t holder_lookup(hist_doc_base_t *rawh) {
+  holder_type_t holder_lookup(hs_doc_base_t *rawh) {
     auto reti = p_map_hs_to_array.find(rawh);
     return reti != end(p_map_hs_to_array) ? p_map_hs_to_array[rawh] : nullptr;
   }
 
   hs_result_e add_hs_child_as_array(holder_type_t new_arr_element, bool add_new_epoch = true) {
 
-    hist_doc_base_t *as_hsd = STYPE_STRG_POL::cast_from_holder(new_arr_element);
+    hs_doc_base_t *as_hsd = STYPE_STRG_POL::cast_from_holder(new_arr_element);
     if (!as_hsd) return hs_result_e::hs_error;
 
     p_array_data.push_back(new_arr_element);
@@ -80,7 +80,7 @@ public:
 
   holder_type_t get_hs_child_as_array(size_t chl_idx) {
 
-    hist_doc_base_t *elem = get_hs_child(chl_idx);
+    hs_doc_base_t *elem = get_hs_child(chl_idx);
     if (!elem) return nullptr;
 
     auto map_itr = p_map_hs_to_array.find(elem);
@@ -88,7 +88,7 @@ public:
 
   }
 
-  void request_child_deletion(hist_doc_base_t *child) override {
+  void request_child_deletion(hs_doc_base_t *child) override {
 
     auto map_itr = p_map_hs_to_array.find(child);
     if (map_itr == end(p_map_hs_to_array)) return;
@@ -105,17 +105,17 @@ public:
 
   typename std::enable_if<!std::is_same<holder_type_t, STYPE>::value, bool>::type
   is_child_unused(holder_type_t child) {
-    return hist_doc_base_t::is_child_unused(STYPE_STRG_POL::cast_from_holder(child));
+    return hs_doc_base_t::is_child_unused(STYPE_STRG_POL::cast_from_holder(child));
   }
 
   typename std::enable_if<!std::is_same<holder_type_t, STYPE>::value, hs_result_e>::type
   is_child_alive(epoch_t target_epoch, holder_type_t child) const {
-    return hist_doc_base_t::is_child_alive(target_epoch, STYPE_STRG_POL::cast_from_holder(child));
+    return hs_doc_base_t::is_child_alive(target_epoch, STYPE_STRG_POL::cast_from_holder(child));
   }
 
   typename std::enable_if<!std::is_same<holder_type_t, STYPE>::value, hs_result_e>::type
   set_alive_hs_child(holder_type_t child, bool alive) {
-    return hist_doc_base_t::set_alive_hs_child(STYPE_STRG_POL::cast_from_holder(child), alive);
+    return hs_doc_base_t::set_alive_hs_child(STYPE_STRG_POL::cast_from_holder(child), alive);
   }
 
 };

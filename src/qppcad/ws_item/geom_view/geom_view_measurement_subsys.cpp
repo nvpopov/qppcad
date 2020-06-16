@@ -673,6 +673,6 @@ void geom_view_msr_subsys_t::load_from_json(json &data) {
 
 }
 
-hs_result_e geom_view_msr_subsys_t::on_epoch_changed(hist_doc_base_t::epoch_t prev_epoch) {
+hs_result_e geom_view_msr_subsys_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
   return hs_result_e::hs_success;
 }

@@ -28,7 +28,7 @@ class app_state_t;
  */
 class workspace_t : public qpp_object_t,
                     public std::enable_shared_from_this<workspace_t>,
-                    public hist_doc_base_t {
+                    public hs_doc_base_t {
 
   QPP_OBJECT(workspace_t, qpp_object_t)
 

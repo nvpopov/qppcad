@@ -18,7 +18,7 @@ enum ws_volume_t  : int {
 
 class volume_view_t;
 
-class ws_volume_record_t : public hist_doc_base_t {
+class ws_volume_record_t : public hs_doc_base_t {
 
 public:
 
