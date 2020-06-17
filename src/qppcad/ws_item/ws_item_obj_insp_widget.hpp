@@ -69,8 +69,8 @@ public:
   virtual void bind_to_item(ws_item_t *_binding_item);
   virtual void unbind_item();
   virtual void update_from_ws_item();
-  void set_tab_enabled(ws_item_tab_widget_t *tab,
-                       bool v_enabled);
+
+  void set_tab_enabled(ws_item_tab_widget_t *tab, bool v_enabled);
   void pre_init_gb(QGroupBox *gb, QFormLayout *gb_lt);
   void post_init_gb(QGroupBox *gb, QFormLayout *gb_lt);
   void init_form_lt(QFormLayout *frm_lt);

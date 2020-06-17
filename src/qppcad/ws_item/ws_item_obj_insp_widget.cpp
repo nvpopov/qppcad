@@ -141,6 +141,7 @@ void ws_item_obj_insp_widget_t::init_form_lt(QFormLayout *frm_lt) {
   app_state_t *astate = app_state_t::get_inst();
   qt_hlp::resize_form_lt_lbls(frm_lt, astate->size_guide.obj_insp_lbl_w());
   frm_lt->setSpacing(1);
+  //frm_lt->setLabelAlignment(Qt::AlignCenter);
 
 }
 
@@ -163,8 +164,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setIconSize(QSize(26,26));
-  m_tab_general = def_tab(tr("General settings of workspace item"),
-                          "://images/settings.svg");
+  m_tab_general = def_tab(tr("General settings of workspace item"), "://images/settings.svg");
 
   //begin group box Item information
   m_sp_info_wdgt = new qspoiler_widget_t(tr("Information"));
