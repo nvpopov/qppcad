@@ -246,10 +246,10 @@ void qbinded_float3_input_t::set_size(int new_size) {
 
 qbinded_float3_input_t::qbinded_float3_input_t(QWidget *parent) : QWidget(parent) {
 
-  widget_lt_vertical = new QVBoxLayout;
-  widget_lt_vertical->setContentsMargins(2, 0, 8, 2);
-  widget_lt_vertical->setSpacing(4);
-  setLayout(widget_lt_vertical);
+  widget_lt = new QHBoxLayout;
+  widget_lt->setContentsMargins(0, 0, 8, 2);
+  //widget_lt_vertical->setSpacing(5);
+  setLayout(widget_lt);
 
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Minimum);
 
@@ -266,24 +266,9 @@ qbinded_float3_input_t::qbinded_float3_input_t(QWidget *parent) : QWidget(parent
   sb_y = make_dspinbox();
   sb_z = make_dspinbox();
 
-  std::array<std::string, 3> lbs = {"x", "y", "z"};
-  for (auto i = 0; i < 3; i++) {
-    widget_per_lt[i] = new QHBoxLayout;
-    widget_per_lt[i]->setContentsMargins(0, 0, 0, 0);
-    widget_per_lt[i]->setSpacing(1);
-    widget_per_lt_lbl[i] = new QLabel;
-    widget_per_lt_lbl[i]->setText(QString::fromStdString(lbs[i]));
-    widget_lt_vertical->addLayout(widget_per_lt[i]);
-    widget_per_lt[i]->addWidget(widget_per_lt_lbl[i]);
-  }
-
-  widget_per_lt[0]->addWidget(sb_x);
-  widget_per_lt[1]->addWidget(sb_y);
-  widget_per_lt[2]->addWidget(sb_z);
-
-  for (auto i = 0; i < 3; i++) {
-    widget_per_lt[i]->addStretch(1);
-  }
+  widget_lt->addWidget(sb_x);
+  widget_lt->addWidget(sb_y);
+  widget_lt->addWidget(sb_z);
 
   //widget_layout->addStretch(1);
 

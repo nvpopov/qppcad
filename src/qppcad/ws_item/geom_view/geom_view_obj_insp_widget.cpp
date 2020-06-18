@@ -894,7 +894,7 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
 
   m_tm_gb_grp_op = new qspoiler_widget_t(tr("Group Operations"));
   m_tm_grp_op_lt = new QGridLayout;
-  m_tm_grp_op_lt->setContentsMargins(8, 0, 8, 0);
+  m_tm_grp_op_lt->setContentsMargins(15, 0, 15, 0);
   m_tm_gb_grp_op->add_content_layout(m_tm_grp_op_lt);
 
   m_tm_grp_op_sv_show = new QPushButton(tr("SV:SHOW"));

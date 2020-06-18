@@ -263,9 +263,7 @@ class qbinded_float3_input_t : public QWidget,
 
 public:
 
-  QVBoxLayout *widget_lt_vertical;
-  std::array<QHBoxLayout*, 3> widget_per_lt;
-  std::array<QLabel*, 3> widget_per_lt_lbl;
+  QHBoxLayout *widget_lt;
 
   QDoubleSpinBox *sb_x;
   QDoubleSpinBox *sb_y;

@@ -204,7 +204,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   m_tg_acts = new qspoiler_widget_t(tr("Actions"));
 
   m_tg_acts_layout = new QGridLayout;
-  m_tg_acts_layout->setContentsMargins(5, 0, 5, 0);
+  m_tg_acts_layout->setContentsMargins(15, 0, 15, 0);
   m_tg_acts->add_content_layout(m_tg_acts_layout);
 
   m_tg_acts_delete = new QPushButton(tr("Delete"));
