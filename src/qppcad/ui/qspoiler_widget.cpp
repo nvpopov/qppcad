@@ -16,7 +16,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (max_width == -1 ) setFixedWidth(astate->size_guide.obj_insp_splr_w());
+  if (max_width == -1) setFixedWidth(astate->size_guide.obj_insp_splr_w());
   else setFixedWidth(max_width);
 
   m_main_lt = new QVBoxLayout;
@@ -25,7 +25,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   m_top_frm = new QFrame;
   m_top_frm->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  set_top_border(true);
+  m_top_frm->setProperty("s_class", "qsplrhdr");
   //top_frm->setFrameStyle(QFrame::StyledPanel);
 
   m_hbox_frm = new QHBoxLayout;
@@ -34,14 +34,14 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
 
   m_lbl_frm = new QLabel(title);
   m_lbl_frm->setAlignment(Qt::AlignHCenter);
-  //lbl_frm->setProperty("s_class", "qsplrhdr");
+  m_lbl_frm->setProperty("s_class", "qsplrhdr");
 
   m_action_btn = new QPushButton;
   m_action_btn->setFlat(true);
   m_action_btn->setFixedSize(QSize(astate->size_guide.spoiler_button_h(),
-                                 astate->size_guide.spoiler_button_h()));
+                                   astate->size_guide.spoiler_button_h()));
   m_action_btn->setIconSize(QSize(astate->size_guide.spoiler_button_icon_h(),
-                                astate->size_guide.spoiler_button_icon_h()));
+                                  astate->size_guide.spoiler_button_icon_h()));
   m_action_btn->setVisible(m_collapsable);
 
   if (!m_collapsable) m_hbox_frm->addSpacing(astate->size_guide.spoiler_button_h());

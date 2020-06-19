@@ -200,6 +200,7 @@ QTableView {
  border-style: none;
  border: 0px;
  background-color: rgb(100, 100, 100);
+ padding-top: 4px;
 }
 
 QHeaderView::section {
@@ -386,6 +387,11 @@ qpp--cad--qspoiler_widget_t QLabel#add_new_ws_item_type_desc {
  margin: 3px;
 }
 
+qpp--cad--qspoiler_widget_t QFrame[s_class="qsplrhdr"],
+qpp--cad--qspoiler_widget_t QLabel[s_class="qsplrhdr"]{
+ background-color: rgb(110, 110, 110);
+}
+
 qpp--cad--object_inspector_widget_t QTabWidget {
  margin-left: 4px;
 }
@@ -501,7 +507,6 @@ QPushButton::flat:pressed {
 
 qpp--cad--qspoiler_widget_t QFrame[s_class="qsplrhdr"] {
  border: 0;
- border-top: 3px solid rgb(98, 98, 98);
 }
 
 qpp--cad--qembed_window_sub_header_t,

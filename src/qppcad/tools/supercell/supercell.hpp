@@ -18,76 +18,76 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class geom_view_t;
+class geom_view_t;
 
-    struct super_cell_can_apply_helper_t {
-      static bool can_apply(ws_item_t *item);
-    };
+struct super_cell_can_apply_helper_t {
+  static bool can_apply(ws_item_t *item);
+};
 
-    enum supercell_tool_mode_e {
-      sc_tool_mode_default,
-      sc_tool_mode_by_idx
-    };
+enum supercell_tool_mode_e {
+  sc_tool_mode_default,
+  sc_tool_mode_by_idx
+};
 
-    class super_cell_widget_t : public ws_item_inline_tool_widget_t,
-                                public iupdatable_externally_t {
+class super_cell_widget_t : public ws_item_inline_tool_widget_t,
+                            public iupdatable_externally_t {
 
-        Q_OBJECT
+  Q_OBJECT
 
-      private:
+private:
 
-      public:
+public:
 
-        qbinded_int3_input_t *m_sp_rep;
-        QLabel *m_sp_rep_label;
+  qbinded_int3_input_t *m_sp_rep;
+  QLabel *m_sp_rep_label;
 
-        qbinded_combobox_t *m_tmode_inp;
+  qbinded_combobox_t *m_tmode_inp;
 
-        std::array<QLabel*, 3> m_boundaries_label;
-        std::array<qbinded_int2b_input_t*,3> m_boundaries;
+  std::array<QLabel*, 3> m_boundaries_label;
+  std::array<qbinded_int2b_input_t*,3> m_boundaries;
 
-        qspoiler_widget_t *m_gb_rep_par;
-        QFormLayout *m_gb_rep_par_lt;
-        QVBoxLayout *m_dialog_lt;
+  qspoiler_widget_t *m_gb_rep_par;
+  QFormLayout *m_gb_rep_par_lt;
+  QVBoxLayout *m_dialog_lt;
 
-        std::shared_ptr<geom_view_t> m_dst_gv{nullptr};
-        geom_view_t *m_src_gv{nullptr};
+  std::shared_ptr<geom_view_t> m_dst_gv{nullptr};
+  geom_view_t *m_src_gv{nullptr};
 
-        hs_prop_v3i_t m_sc_dim;
-        hs_prop_int_t m_sc_tool_mode;
-        std::array<hs_prop_v3i_t, 3> m_boundaries_values;
+  hs_prop_v3i_t m_sc_dim;
+  hs_prop_int_t m_sc_tool_mode;
+  std::array<hs_prop_v3i_t, 3> m_boundaries_values;
 
-        int get_replication_coeff(int dim_num);
-        super_cell_widget_t(QWidget *parent = nullptr);
+  int get_replication_coeff(int dim_num);
+  super_cell_widget_t(QWidget *parent = nullptr);
 
-        void make_super_cell(bool target_cam = true);
+  void make_super_cell(bool target_cam = true);
 
-        bool restore_cam_on_cancel() override;
-        void on_apply() override;
-        void on_cancel() override;
-        void bind_item(ws_item_t *item) override;
-        void updated_externally(uint32_t update_reason) override;
-        void mode_changed();
+  bool restore_cam_on_cancel() override;
+  void on_apply() override;
+  void on_cancel() override;
+  void bind_item(ws_item_t *item) override;
+  void updated_externally(uint32_t update_reason) override;
+  void mode_changed();
 
-    };
+};
 
-    class supercell_tool_t : public ws_item_tool_t {
+class supercell_tool_t : public ws_item_tool_t {
 
-      public:
+public:
 
-        void exec(ws_item_t *item, uint32_t _error_ctx) override;
-        void make_super_cell(geom_view_t *al,
-                             const int a_steps,
-                             const int b_steps,
-                             const int c_steps);
+  void exec(ws_item_t *item, uint32_t _error_ctx) override;
+  void make_super_cell(geom_view_t *al,
+                       const int a_steps,
+                       const int b_steps,
+                       const int c_steps);
 
-        ws_item_inline_tool_widget_t *construct_inline_tool() override;
+  ws_item_inline_tool_widget_t *construct_inline_tool() override;
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

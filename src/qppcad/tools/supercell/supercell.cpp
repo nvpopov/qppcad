@@ -14,48 +14,46 @@ void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   astate->log("Supercell tools::exec()");
 
   if (!item) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                           QObject::tr("ws_item == nullptr"));
-      return;
-    }
+    QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                         QObject::tr("ws_item == nullptr"));
+    return;
+  }
 
   auto al = item->cast_as<geom_view_t>();
   if (!al) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                           QObject::tr("ws_item.cast<geom_view_t>() == nullptr"));
-      return;
-    }
+    QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                         QObject::tr("ws_item.cast<geom_view_t>() == nullptr"));
+    return;
+  }
 
   if (al->m_geom->DIM != 3) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                           QObject::tr("al->m_geom->DIM != 3"));
-      return;
-    }
+    QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                         QObject::tr("al->m_geom->DIM != 3"));
+    return;
+  }
 
   if (!al->m_parent_ws) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                           QObject::tr("!al->m_parent_ws!al->m_parent_ws"));
-      return;
-    }
+    QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                         QObject::tr("!al->m_parent_ws!al->m_parent_ws"));
+    return;
+  }
 
 }
 
 void supercell_tool_t::make_super_cell(geom_view_t *al,
-                                       const int a_steps,
-                                       const int b_steps,
-                                       const int c_steps) {
+                                       const int a_n, const int b_n, const int c_n) {
 
   if (al->m_geom->DIM != 3) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                           QObject::tr("al->m_geom->DIM != 3"));
-      return;
-    }
+    QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                         QObject::tr("al->m_geom->DIM != 3"));
+    return;
+  }
 
   if (!al->m_parent_ws) {
-      QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
-                           QObject::tr("!al->m_parent_ws!al->m_parent_ws"));
-      return;
-    }
+    QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
+                         QObject::tr("!al->m_parent_ws!al->m_parent_ws"));
+    return;
+  }
 
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
   sc_al->m_geom->DIM = 3;
@@ -65,67 +63,66 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   sc_al->begin_structure_change();
 
   if (al->m_role.get_value() == geom_view_role_e::r_uc) {
-      sc_al->m_draw_img_atoms.set_value(false);
-      sc_al->m_draw_img_bonds.set_value(false);
-    }
+    sc_al->m_draw_img_atoms.set_value(false);
+    sc_al->m_draw_img_bonds.set_value(false);
+  }
 
-  index sc_dim{a_steps - 1 , b_steps - 1 , c_steps - 1};
+  index sc_dim{a_n - 1 , b_n - 1 , c_n - 1};
 
   geom_view_tools_t::gen_supercell(al->m_geom.get(), sc_al->m_geom.get(),
                                    sc_dim, geom_view_role_e(al->m_role.get_value()));
 
   sc_al->m_pos.set_value(al->m_pos.get_value() + al->m_geom->cell.v[0] * 1.4f);
-  sc_al->m_name.set_value(al->m_name.get_value()
-                          + fmt::format("_sc_{}_{}_{}", a_steps, b_steps, c_steps));
+  sc_al->m_name.set_value(fmt::format("{}_sc_{}_{}_{}", al->m_name.get_value(), a_n, b_n, c_n));
 
   al->m_parent_ws->add_item_to_ws(sc_al);
 
   if (sc_al->m_geom->nat() > 200) {
-      sc_al->m_draw_img_atoms.set_value(false);
-      sc_al->m_draw_img_bonds.set_value(false);
-    }
+    sc_al->m_draw_img_atoms.set_value(false);
+    sc_al->m_draw_img_bonds.set_value(false);
+  }
 
   sc_al->end_structure_change();
 
   //perform purification
   if (al->m_role.get_value() == geom_view_role_e::r_uc) {
 
-      sc_al->m_tws_tr->do_action(act_lock);
-      xgeometry<float, periodic_cell<float> > g(3); //intermediate xgeom
-      g.set_format({"charge"},{type_real});
-      g.DIM = 3;
-      g.cell.DIM = 3;
-      g.cell.v[0] = sc_al->m_geom->cell.v[0];
-      g.cell.v[1] = sc_al->m_geom->cell.v[1];
-      g.cell.v[2] = sc_al->m_geom->cell.v[2];
+    sc_al->m_tws_tr->do_action(act_lock);
+    xgeometry<float, periodic_cell<float> > g(3); //intermediate xgeom
+    g.set_format({"charge"},{type_real});
+    g.DIM = 3;
+    g.cell.DIM = 3;
+    g.cell.v[0] = sc_al->m_geom->cell.v[0];
+    g.cell.v[1] = sc_al->m_geom->cell.v[1];
+    g.cell.v[2] = sc_al->m_geom->cell.v[2];
 
-      const float equality_dist = 0.01f;
+    const float equality_dist = 0.01f;
 
-      for (int i = 0; i < sc_al->m_geom->nat(); i++) {
+    for (int i = 0; i < sc_al->m_geom->nat(); i++) {
 
-          std::vector<tws_node_content_t<float> > res;
-          sc_al->m_tws_tr->query_sphere(equality_dist, sc_al->m_geom->pos(i), res);
-          float accum_chg = 0;
+      std::vector<tws_node_content_t<float> > res;
+      sc_al->m_tws_tr->query_sphere(equality_dist, sc_al->m_geom->pos(i), res);
+      float accum_chg = 0;
 
-          bool need_to_add{true};
-          for (auto &elem : res)
-            if (elem.m_idx == index::D(sc_al->m_geom->DIM).all(0)) {
-                accum_chg += sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
-                if (i > elem.m_atm) need_to_add = false;
-              }
-
-          if (need_to_add) {
-              g.add(sc_al->m_geom->atom(i), sc_al->m_geom->pos(i));
-              g.xfield<float>(xgeom_charge, g.nat()-1) = accum_chg;
-            }
-
+      bool need_to_add{true};
+      for (auto &elem : res)
+        if (elem.m_idx == index::D(sc_al->m_geom->DIM).all(0)) {
+          accum_chg += sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
+          if (i > elem.m_atm) need_to_add = false;
         }
 
-      sc_al->m_geom->clear();
-      sc_al->copy_from_xgeom(g);
-      sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+      if (need_to_add) {
+        g.add(sc_al->m_geom->atom(i), sc_al->m_geom->pos(i));
+        g.xfield<float>(xgeom_charge, g.nat()-1) = accum_chg;
+      }
 
     }
+
+    sc_al->m_geom->clear();
+    sc_al->copy_from_xgeom(g);
+    sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
+
+  }
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_changed();
@@ -143,19 +140,19 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
 
   switch (dim_num) {
 
-    case 0:
-      return m_sp_rep->sb_x->value();
+  case 0:
+    return m_sp_rep->sb_x->value();
 
-    case 1:
-      return m_sp_rep->sb_y->value();
+  case 1:
+    return m_sp_rep->sb_y->value();
 
-    case 2:
-      return m_sp_rep->sb_z->value();
+  case 2:
+    return m_sp_rep->sb_z->value();
 
-    default:
-      return 0;
+  default:
+    return 0;
 
-    }
+  }
 
 }
 
@@ -196,16 +193,16 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool
 
   for (size_t i = 0; i < 3; i++) {
 
-      m_boundaries_values[i].set_value({-1, 0, -1});
-      m_boundaries[i] = new qbinded_int2b_input_t;
-      m_boundaries[i]->set_min_max_step(-10, 10, 1);
-      m_boundaries[i]->bind_value(&m_boundaries_values[i], this);
-      m_boundaries[i]->m_updated_externally_event = true;
-      m_boundaries_label[i] = new QLabel;
-      m_boundaries_label[i]->setText(tr("Dim %1").arg(i));
-      m_gb_rep_par_lt->addRow(m_boundaries_label[i], m_boundaries[i]);
+    m_boundaries_values[i].set_value({-1, 0, -1});
+    m_boundaries[i] = new qbinded_int2b_input_t;
+    m_boundaries[i]->set_min_max_step(-10, 10, 1);
+    m_boundaries[i]->bind_value(&m_boundaries_values[i], this);
+    m_boundaries[i]->m_updated_externally_event = true;
+    m_boundaries_label[i] = new QLabel;
+    m_boundaries_label[i]->setText(tr("Dim %1").arg(i));
+    m_gb_rep_par_lt->addRow(m_boundaries_label[i], m_boundaries[i]);
 
-    }
+  }
 
   qt_hlp::resize_form_lt_lbls(m_gb_rep_par_lt, astate->size_guide.obj_insp_lbl_w());
 
