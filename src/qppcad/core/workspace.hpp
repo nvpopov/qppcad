@@ -108,8 +108,7 @@ public:
   void del_item_by_index(size_t idx);
   void make_overview_dirty();
   std::string py_get_repr();
-  std::shared_ptr<ws_item_t> py_construct_item(std::string class_name,
-                                               std::string item_name);
+  std::shared_ptr<ws_item_t> py_construct_item(std::string class_name, std::string item_name);
 
 };
 

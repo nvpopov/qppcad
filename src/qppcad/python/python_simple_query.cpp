@@ -41,17 +41,21 @@ void simple_query::quit() {
 }
 
 void simple_query::open_file(std::string file_name, bool to_current) {
+
   app_state_t *astate = app_state_t::get_inst();
   astate->ws_mgr->load_from_file_autodeduce(file_name, "", !to_current, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
+
 }
 
 void simple_query::open_file_query(std::string f_name,  std::string f_format, bool to_current) {
+
   app_state_t *astate = app_state_t::get_inst();
   astate->ws_mgr->load_from_file_autodeduce(f_name, f_format, !to_current, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
+
 }
 
 void simple_query::to_clipboard(std::string data) {
@@ -107,10 +111,12 @@ void simple_query::sel_itm(int itm_idx) {
 }
 
 void simple_query::sel_cnt(int cnt_idx) {
+
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->sel_atom(cnt_idx);
   astate->make_viewport_dirty();
+
 }
 
 void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
@@ -156,17 +162,21 @@ void simple_query::sel_cnt_parity() {
 }
 
 void simple_query::sel_invert() {
+
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->inv_sel_atoms();
   astate->make_viewport_dirty();
+
 }
 
 void simple_query::sel_cnt_all() {
+
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->sel_atoms(true);
   astate->make_viewport_dirty();
+
 }
 
 void simple_query::sel_cnt_list(pybind11::list sel_list) {
@@ -212,10 +222,12 @@ void simple_query::sel_cnt_sphere(vector3<float> sph_center, float sph_rad) {
 }
 
 void simple_query::sel_cnt_gsph(float sph_rad) {
+
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   if (!al) return;
   simple_query::sel_cnt_sphere(cur_ws->m_gizmo->m_pos, sph_rad);
+
 }
 
 void simple_query::sel_hemisphere(int coord_idx, bool positive) {
@@ -235,10 +247,12 @@ void simple_query::sel_hemisphere(int coord_idx, bool positive) {
 }
 
 void simple_query::sel_vis() {
+
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   if (!al) return;
   al->sel_visible();
+
 }
 
 void simple_query::edit_mode(int mode) {
@@ -258,18 +272,22 @@ void simple_query::edit_mode(int mode) {
 }
 
 void simple_query::unsel_cnt_all() {
+
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->sel_atoms(true);
   al->inv_sel_atoms();
   astate->make_viewport_dirty();
+
 }
 
 void simple_query::unsel_cnt(int cnt_idx) {
+
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->unsel_atom(cnt_idx);
   astate->make_viewport_dirty();
+
 }
 
 void simple_query::unsel_cnt_list(pybind11::list sel_list) {
@@ -565,8 +583,7 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_c->set_bounded_to_leader(true);
         ws_pg_c->gen_from_geom(*al->m_geom, tolerance, true);
         al->m_parent_ws->add_item_to_ws(ws_pg);
-        ws_pg_c->m_name.set_value(
-            fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
+        ws_pg_c->m_name.set_value(fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
       }
 
     } else if (cur_ws->m_edit_type == ws_edit_e::edit_content &&

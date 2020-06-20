@@ -102,7 +102,7 @@ void ws_item_t::set_name(const std::string &name) {
 
 void ws_item_t::set_name(const char *name) {
 
-  if (m_name.get_value() != name){
+  if (m_name.get_value() != name) {
     m_name.set_value(std::string(name));
     m_parent_ws->ws_changed();
   }

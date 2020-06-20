@@ -168,8 +168,11 @@ void workspace_t::toggle_edit_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_edit_type == ws_edit_e::edit_item) m_edit_type = ws_edit_e::edit_content;
-  else m_edit_type = ws_edit_e::edit_item;
+  if (m_edit_type == ws_edit_e::edit_item) {
+    m_edit_type = ws_edit_e::edit_content;
+  } else {
+    m_edit_type = ws_edit_e::edit_item;
+  }
 
   astate->astate_evd->cur_ws_edit_type_changed();
 
@@ -279,13 +282,31 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   bool affected{false};
 
+  size_t alive_cnt_before{0};
+  size_t alive_cnt_after{0};
+
+  epoch_t cur_epoch = get_cur_epoch();
+
+  auto cur_ws = astate->ws_mgr->get_cur_ws();
+
   for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
+
     auto itm = m_ws_items.get_hs_child_as_array(i);
     if (!itm) continue;
     if (itm->is_selected()) affected = true;
+
+    if (m_ws_items.is_child_alive(prev_epoch, itm) == hs_result_e::hs_alive) alive_cnt_before++;
+    if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive) alive_cnt_after++;
+
   }
 
-  if (affected) astate->astate_evd->cur_ws_selected_item_changed();
+  astate->tlog("@@@ ws_on_epoch_changed -> b = {}, a = {}, pe = {}, ce = {}",
+               alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
+
+  if (cur_ws && cur_ws.get() == this) {
+    if (alive_cnt_after != alive_cnt_before) astate->astate_evd->cur_ws_changed();
+    if (affected) astate->astate_evd->cur_ws_selected_item_changed();
+  }
 
   return hs_result_e::hs_success;
 
@@ -311,25 +332,25 @@ void workspace_t::render() {
     if (astate->m_show_axis) { // Draw axis
 
       vector3<float> vScrTW = astate->camera->unproject(-0.92f, -0.90f);
-      float axis_magn = astate->camera->m_cur_proj == cam_proj_t::proj_persp ?
-                                                                             0.07f *astate->camera->m_cam_state.m_stored_dist :
-                                                                             m_camera->m_cam_state.m_ortho_scale * 0.1f;
+      float axis_magn =
+          astate->camera->m_cur_proj == cam_proj_t::proj_persp ?
+                                   0.07f *astate->camera->m_cam_state.m_stored_dist :
+                                   m_camera->m_cam_state.m_ortho_scale * 0.1f;
 
       astate->dp->begin_render_line();
-      astate->dp->
-          render_line(vector3<float>(1.0, 0.0, 0.0),
-                      vector3<float>(0.0, 0.0, 0.0) + vScrTW,
-                      vector3<float>(axis_magn, 0.0, 0.0) + vScrTW);
 
-      astate->dp->
-          render_line(vector3<float>(0.0, 1.0, 0.0),
-                      vector3<float>(0.0, 0.0, 0.0) + vScrTW,
-                      vector3<float>(0.0, axis_magn, 0.0) + vScrTW);
+      astate->dp->render_line(vector3<float>(1.0, 0.0, 0.0),
+                              vector3<float>(0.0, 0.0, 0.0) + vScrTW,
+                              vector3<float>(axis_magn, 0.0, 0.0) + vScrTW);
 
-      astate->dp->
-          render_line(vector3<float>(0.0, 0.0, 1.0),
+      astate->dp->render_line(vector3<float>(0.0, 1.0, 0.0),
+                              vector3<float>(0.0, 0.0, 0.0) + vScrTW,
+                              vector3<float>(0.0, axis_magn, 0.0) + vScrTW);
+
+      astate->dp->render_line(vector3<float>(0.0, 0.0, 1.0),
                       vector3<float>(0.0, 0.0, 0.0) + vScrTW,
                       vector3<float>(0.0, 0.0, axis_magn) + vScrTW);
+
       astate->dp->end_render_line();
 
     } // Draw axis end
@@ -622,7 +643,7 @@ void workspace_t::update(float delta_time) {
 
   }
 
-  //handle deletion
+  //handle deletion before hs
 
   //  for (auto it = m_ws_items.begin(); it != m_ws_items.end(); )
   //    if ((*it)->m_marked_for_deletion) {
