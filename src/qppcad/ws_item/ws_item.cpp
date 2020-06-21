@@ -221,9 +221,11 @@ void ws_item_t::render () {
     astate->dp->begin_render_aabb();
     auto pos = m_pos.get_value();
 
-    if (m_parent_ws->m_edit_type == ws_edit_e::edit_item)
+    if (m_parent_ws->m_edit_type == ws_edit_e::edit_item) {
       astate->dp->render_aabb(clr_fuchsia, pos + m_aabb.min, pos + m_aabb.max);
-    else astate->dp->render_aabb(clr_olive, pos + m_aabb.min, pos + m_aabb.max);
+    } else {
+      astate->dp->render_aabb(clr_olive, pos + m_aabb.min, pos + m_aabb.max);
+    }
 
     astate->dp->end_render_aabb();
 

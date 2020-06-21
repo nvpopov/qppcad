@@ -622,7 +622,7 @@ hs_result_e hs_doc_base_t::remove_child(size_t child_id) {
 
 }
 
-hs_result_e hs_doc_base_t::remove_child(hs_doc_base_t *child) {
+hs_result_e hs_doc_base_t::remove_child(hs_doc_base_t *child, bool is_child_deletion_requested) {
 
   auto it1 = std::find(begin(p_children), end(p_children), child);
   if (it1 != std::end(p_children)) {
@@ -630,6 +630,10 @@ hs_result_e hs_doc_base_t::remove_child(hs_doc_base_t *child) {
     for (auto &&[k, v] : p_children_states) {
       auto chld_epoch_it = v.find(child);
       if (chld_epoch_it != end(v)) v.erase(chld_epoch_it);
+    }
+
+    if (is_child_deletion_requested) {
+      request_child_deletion(*it1);
     }
 
     p_children.erase(it1);

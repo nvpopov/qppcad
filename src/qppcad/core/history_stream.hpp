@@ -92,7 +92,7 @@ private:
   * @brief remove_child removes child completely by pointer
   * @param child
   */
-  hs_result_e remove_child(hs_doc_base_t *child);
+  hs_result_e remove_child(hs_doc_base_t *child, bool is_child_deletion_requested = false);
 
   /**
   * @brief get_children_count

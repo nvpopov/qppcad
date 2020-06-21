@@ -321,8 +321,7 @@ void workspace_t::render() {
   if (astate->m_debug_show_selection_ray) {
 
     astate->dp->begin_render_line();
-    astate->dp->render_line(vector3<float>(1.0, 1.0, 0.0), m_ray.start,
-                            m_ray.start + m_ray.dir * 155.0);
+    astate->dp->render_line({1.0, 1.0, 0.0}, m_ray.start, m_ray.start + m_ray.dir * 155.0);
     astate->dp->end_render_line();
 
   }
@@ -334,8 +333,8 @@ void workspace_t::render() {
       vector3<float> vScrTW = astate->camera->unproject(-0.92f, -0.90f);
       float axis_magn =
           astate->camera->m_cur_proj == cam_proj_t::proj_persp ?
-                                   0.07f *astate->camera->m_cam_state.m_stored_dist :
-                                   m_camera->m_cam_state.m_ortho_scale * 0.1f;
+                                                               0.07f *astate->camera->m_cam_state.m_stored_dist :
+                                                               m_camera->m_cam_state.m_ortho_scale * 0.1f;
 
       astate->dp->begin_render_line();
 
@@ -348,8 +347,8 @@ void workspace_t::render() {
                               vector3<float>(0.0, axis_magn, 0.0) + vScrTW);
 
       astate->dp->render_line(vector3<float>(0.0, 0.0, 1.0),
-                      vector3<float>(0.0, 0.0, 0.0) + vScrTW,
-                      vector3<float>(0.0, 0.0, axis_magn) + vScrTW);
+                              vector3<float>(0.0, 0.0, 0.0) + vScrTW,
+                              vector3<float>(0.0, 0.0, axis_magn) + vScrTW);
 
       astate->dp->end_render_line();
 
@@ -392,12 +391,11 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
         (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_cam_state.m_view_point).normalized();
   } else {
 
-    float z_p =  (m_camera->m_cam_state.m_znear_ortho + m_camera->m_cam_state.m_zfar_ortho) /
-                (m_camera->m_cam_state.m_znear_ortho - m_camera->m_cam_state.m_zfar_ortho);
+    float z_p =  (m_camera->m_cam_state.m_znear_ortho + m_camera->m_cam_state.m_zfar_ortho)
+                / (m_camera->m_cam_state.m_znear_ortho - m_camera->m_cam_state.m_zfar_ortho);
 
     m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
-    m_ray.dir =
-        (m_camera->m_cam_state.m_look_at - m_camera->m_cam_state.m_view_point).normalized();
+    m_ray.dir = (m_camera->m_cam_state.m_look_at - m_camera->m_cam_state.m_view_point).normalized();
 
   }
 
