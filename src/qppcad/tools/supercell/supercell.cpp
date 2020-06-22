@@ -300,9 +300,9 @@ void super_cell_widget_t::on_apply() {
 void super_cell_widget_t::on_cancel() {
 
   if (m_dst_gv) {
-
-    m_dst_gv->hs_delete();
-
+    m_dst_gv->hs_delete(true, false);
+    m_dst_gv = nullptr;
+    m_src_gv = nullptr;
   }
 
 }

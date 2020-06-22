@@ -83,18 +83,6 @@ private:
   std::optional<size_t> is_child(hs_doc_base_t *child) const;
 
   /**
-  * @brief remove_child removes child completely by id
-  * @param child_id
-  */
-  hs_result_e remove_child(size_t child_id);
-
-  /**
-  * @brief remove_child removes child completely by pointer
-  * @param child
-  */
-  hs_result_e remove_child(hs_doc_base_t *child, bool is_child_deletion_requested = false);
-
-  /**
   * @brief get_children_count
   */
   size_t get_children_count() const;
@@ -349,7 +337,21 @@ public:
   void set_auto_delete_children(bool value);
 
   bool is_child_unused(hs_doc_base_t *child);
+
+  /**
+  * @brief remove_child removes child completely by id
+  * @param child_id
+  */
+  hs_result_e remove_child(size_t child_id);
+
+  /**
+  * @brief remove_child removes child completely by pointer
+  * @param child
+  */
+  hs_result_e remove_child(hs_doc_base_t *child, bool is_child_deletion_requested = false);
+
   virtual void request_child_deletion(hs_doc_base_t *child);
+
 
 };
 

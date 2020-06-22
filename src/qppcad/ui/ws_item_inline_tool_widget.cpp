@@ -18,9 +18,7 @@ void ws_item_inline_tool_widget_t::apply() {
 void ws_item_inline_tool_widget_t::cancel() {
 
   if (m_src && m_src->m_parent_ws && restore_cam_on_cancel()) {
-
       m_src->m_parent_ws->m_camera->pop_cam_state();
-
     }
 
   on_cancel();
@@ -36,8 +34,6 @@ void ws_item_inline_tool_widget_t::on_apply() {
 }
 
 void ws_item_inline_tool_widget_t::on_cancel() {
-
-
 
 }
 

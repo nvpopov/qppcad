@@ -184,9 +184,9 @@ public:
   void set_bounded_to_leader(bool bounding);
   bool is_bounded();
 
-  bool is_selected(); // selected in workspaces
+  bool is_selected(); // selected in workspace
 
-  void hs_delete();
+  void hs_delete(bool force_delete = false, bool emit_ws_changed = true);
 
   virtual void render();
   virtual void render_overlay(QPainter &painter);

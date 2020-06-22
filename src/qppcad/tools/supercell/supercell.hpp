@@ -78,11 +78,7 @@ class supercell_tool_t : public ws_item_tool_t {
 public:
 
   void exec(ws_item_t *item, uint32_t _error_ctx) override;
-  void make_super_cell(geom_view_t *al,
-                       const int a_steps,
-                       const int b_steps,
-                       const int c_steps);
-
+  void make_super_cell(geom_view_t *al, const int a_steps, const int b_steps, const int c_steps);
   ws_item_inline_tool_widget_t *construct_inline_tool() override;
 
 };
