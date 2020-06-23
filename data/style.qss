@@ -200,7 +200,6 @@ QTableView {
  border-style: none;
  border: 0px;
  background-color: rgb(100, 100, 100);
- padding-top: 4px;
 }
 
 QHeaderView::section {
