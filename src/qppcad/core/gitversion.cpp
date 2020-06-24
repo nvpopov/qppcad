@@ -19,3 +19,11 @@ std::string build_info_t::get_qt_version() {
 std::string build_info_t::get_python_version() {
   return QPPCAD_PYTHON_VERSION;
 }
+
+bool build_info_t::get_is_debug() {
+#ifdef QPPCAD_DEBUG
+  return true;
+#else
+  return false;
+#endif
+}

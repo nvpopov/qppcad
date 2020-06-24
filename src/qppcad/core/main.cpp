@@ -16,6 +16,7 @@ using namespace qpp::cad;
 
 void signal_handler(int signal) {
 
+  std::signal(signal, SIG_IGN);
   std::cout << "SIGNAL RECEIVED " << signal << std::endl;
   app_state_t::get_inst()->save_settings();
 
@@ -47,13 +48,26 @@ int main (int argc, char **argv) {
   parser.addVersionOption();
   parser.addPositionalArgument("file", "The file to open.");
 
-  QCommandLineOption target_fmt_option(QStringList() << "f" << "format",
-                                       QCoreApplication::translate("main", "Force file format"),
-                                       QCoreApplication::translate("main", "file_format"));
+  QCommandLineOption debug_nosighandlers(
+      QStringList() << "n" << "nosigs",
+      QCoreApplication::translate("main", "Don't install signal handlers"));
+
+  QCommandLineOption target_fmt_option(
+      QStringList() << "f" << "format",
+      QCoreApplication::translate("main", "Force file format"),
+      QCoreApplication::translate("main", "file_format"));
+
+  parser.addOption(debug_nosighandlers);
   parser.addOption(target_fmt_option);
 
   parser.process(QCoreApplication::arguments());
   const QStringList args = parser.positionalArguments();
+
+  if (!parser.isSet(debug_nosighandlers) || !build_info_t::get_is_debug()) {
+    std::signal(SIGSEGV, signal_handler);
+    std::signal(SIGINT, on_app_exit);
+    std::signal(SIGTERM, on_app_exit);
+  }
 
   app_state_t::init_inst();
 
@@ -68,12 +82,6 @@ int main (int argc, char **argv) {
   astate->init_managers();
   astate->ws_mgr->init_ws_item_bhv_mgr();
   astate->load_settings();
-
-#ifdef QPPCAD_RELEASE
-  std::signal(SIGSEGV, signal_handler);
-  std::signal(SIGINT, on_app_exit);
-  std::signal(SIGTERM, on_app_exit);
-#endif
 
   astate->init_fixtures();
 

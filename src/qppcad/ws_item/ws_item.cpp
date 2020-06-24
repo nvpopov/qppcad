@@ -208,7 +208,7 @@ void ws_item_t::hs_delete(bool force_delete, bool emit_ws_changed) {
   if (!force_delete) {
     m_parent_ws->m_ws_items.set_alive_hs_child(holderv, false);
   } else {
-    m_parent_ws->remove_child(this, true);
+    m_parent_ws->m_ws_items.remove_child(this, true);
   }
 
   if (emit_ws_changed) app_state_t::get_inst()->astate_evd->cur_ws_changed();
