@@ -16,6 +16,8 @@ namespace qpp {
     public:
 
       ws_item_t *m_src{nullptr};
+      std::optional<epoch_t> m_epoch_before;
+      bool m_restore_epoch_on_cancel{false};
 
       ws_item_inline_tool_widget_t(QWidget *parent = nullptr);
 
