@@ -23,22 +23,22 @@ std::optional<size_t> sf_node_t::get_data_by_name(sf_data_group_e group, const s
 
   switch (group) {
 
-    case sf_data_group_e::inp_d : {
-        return get_data_by_name(m_inp_schema, parname);
-        break;
-      }
+  case sf_data_group_e::inp_d : {
+    return get_data_by_name(m_inp_schema, parname);
+    break;
+  }
 
-    case sf_data_group_e::out_d : {
-        return get_data_by_name(m_out_schema, parname);
-        break;
-      }
+  case sf_data_group_e::out_d : {
+    return get_data_by_name(m_out_schema, parname);
+    break;
+  }
 
-    case sf_data_group_e::ipl_d : {
-        return get_data_by_name(m_ipl_schema, parname);
-        break;
-      }
+  case sf_data_group_e::ipl_d : {
+    return get_data_by_name(m_ipl_schema, parname);
+    break;
+  }
 
-    }
+  }
 
   return std::nullopt;
 
@@ -53,8 +53,10 @@ std::optional<size_t> sf_node_t::get_data_by_name(sf_sck_info_group_t &sckinf,
 
   auto find_itr = std::find_if(std::begin(sckinf), std::end(sckinf), find_fn);
 
-  return find_itr != sckinf.end() ?
-        std::optional<size_t>{std::distance(std::begin(sckinf), find_itr)} : std::nullopt;
+  return
+      find_itr != sckinf.end() ?
+                               std::optional<size_t>{std::distance(std::begin(sckinf), find_itr)} :
+                               std::nullopt;
 
 }
 
@@ -86,8 +88,8 @@ bool sf_node_t::is_single_node() {
 }
 
 sf_socket_info_t qpp::cad::make_default_sck(sf_data_group_e dg,
-                                               sf_parameter_e type,
-                                               const std::string &sck_name) {
+                                            sf_parameter_e type,
+                                            const std::string &sck_name) {
 
   sf_socket_info_t tmp_sck_info;
   tmp_sck_info.m_data_group = dg;

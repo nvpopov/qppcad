@@ -5,27 +5,27 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class sf_xgeom_nat_node_t final : public sf_node_t {
+class sf_xgeom_nat_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_xgeom_nat_node_t();
-        bool execute_ex() override;
+  sf_xgeom_nat_node_t();
+  bool execute_ex() override;
 
-    };
+};
 
-    class sf_xgeom_ntypes_node_t final : public sf_node_t {
+class sf_xgeom_ntypes_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_xgeom_ntypes_node_t();
-        bool execute_ex() override;
+  sf_xgeom_ntypes_node_t();
+  bool execute_ex() override;
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

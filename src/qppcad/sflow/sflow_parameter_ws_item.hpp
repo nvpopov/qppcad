@@ -7,25 +7,21 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    /*
-     This type of parameter is separated from the main parameters(sflow_parameter.hpp)
-     for a simpler compilation of the test program and the main program
-     */
-    class sf_parameter_ws_item_t : public sf_parameter_t {
+class sf_parameter_ws_item_t : public sf_parameter_t {
 
-        QPP_OBJECT(sf_parameter_ws_item_t, sf_parameter_t)
+  QPP_OBJECT(sf_parameter_ws_item_t, sf_parameter_t)
 
-      public:
+public:
 
-        std::shared_ptr<ws_item_t> m_value{nullptr};
-        sf_parameter_e get_param_meta() override ;
-        std::shared_ptr<sf_parameter_t> clone() override;
+  std::shared_ptr<ws_item_t> m_value{nullptr};
+  sf_parameter_e get_param_meta() override ;
+  std::shared_ptr<sf_parameter_t> clone() override;
 
-    };
+};
 
-  } // namespace cad
+} // namespace cad
 
 } // namespace qpp
 

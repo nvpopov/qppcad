@@ -8,11 +8,11 @@ sf_float_prop_node_t::sf_float_prop_node_t() {
   m_node_name = "float";
 
   m_out_schema = {
-    make_outs(sf_parameter_e::sfpar_float, "dst")
+      make_outs(sf_parameter_e::sfpar_float, "dst")
   };
 
   m_ipl_schema = {
-    make_ipls(sf_parameter_e::sfpar_float, "value")
+      make_ipls(sf_parameter_e::sfpar_float, "value")
   };
 
   m_front_end_width = std::optional<int>(130);
@@ -40,15 +40,15 @@ sf_float_p_const_node_t::sf_float_p_const_node_t() {
   m_node_name = "float + const";
 
   m_out_schema = {
-    make_outs(sf_parameter_e::sfpar_float, "dst")
+      make_outs(sf_parameter_e::sfpar_float, "dst")
   };
 
   m_inp_schema = {
-   make_inps(sf_parameter_e::sfpar_float, "src")
+      make_inps(sf_parameter_e::sfpar_float, "src")
   };
 
   m_ipl_schema = {
-    make_ipls(sf_parameter_e::sfpar_float, "const")
+      make_ipls(sf_parameter_e::sfpar_float, "const")
   };
 
 }
@@ -74,11 +74,11 @@ sf_float_final_node_t::sf_float_final_node_t() {
   m_node_name = "show float";
 
   m_inp_schema = {
-    make_inps(sf_parameter_e::sfpar_float, "")
+      make_inps(sf_parameter_e::sfpar_float, "")
   };
 
   m_ipl_schema = {
-    make_ipls(sf_parameter_e::sfpar_float, "").editable(false)
+      make_ipls(sf_parameter_e::sfpar_float, "").editable(false)
   };
 
   m_front_end_width = std::optional<int>(130);
@@ -108,12 +108,12 @@ sf_float_sum_float_node_t::sf_float_sum_float_node_t() {
   m_node_name = "float + float";
 
   m_out_schema = {
-    make_outs(sf_parameter_e::sfpar_float, "dst")
+      make_outs(sf_parameter_e::sfpar_float, "dst")
   };
 
   m_inp_schema = {
-    make_inps(sf_parameter_e::sfpar_float, "src1"),
-    make_inps(sf_parameter_e::sfpar_float, "src2")
+      make_inps(sf_parameter_e::sfpar_float, "src1"),
+      make_inps(sf_parameter_e::sfpar_float, "src2")
   };
 
   m_front_end_width = std::optional<int>(120);

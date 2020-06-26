@@ -9,11 +9,11 @@ sf_xgeom_nat_node_t::sf_xgeom_nat_node_t() {
   m_node_name = "number of atoms";
 
   m_inp_schema = {
-    make_inps(sf_parameter_e::sfpar_xgeom, "xgeom")
+      make_inps(sf_parameter_e::sfpar_xgeom, "xgeom")
   };
 
   m_out_schema = {
-    make_outs(sf_parameter_e::sfpar_int, "nat")
+      make_outs(sf_parameter_e::sfpar_int, "nat")
   };
 
   m_front_end_width = std::optional<int>(140);
@@ -40,11 +40,11 @@ sf_xgeom_ntypes_node_t::sf_xgeom_ntypes_node_t() {
   m_node_name = "number of types";
 
   m_inp_schema = {
-    make_inps(sf_parameter_e::sfpar_xgeom, "xgeom")
+      make_inps(sf_parameter_e::sfpar_xgeom, "xgeom")
   };
 
   m_out_schema = {
-    make_outs(sf_parameter_e::sfpar_int, "ntypes")
+      make_outs(sf_parameter_e::sfpar_int, "ntypes")
   };
 
   m_front_end_width = std::optional<int>(140);

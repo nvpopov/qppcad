@@ -5,19 +5,19 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class sf_claim_xgeom_node_t final : public sf_node_t {
+class sf_claim_xgeom_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_claim_xgeom_node_t();
-        bool execute_ex() override;
-        bool is_single_node() override;
+  sf_claim_xgeom_node_t();
+  bool execute_ex() override;
+  bool is_single_node() override;
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

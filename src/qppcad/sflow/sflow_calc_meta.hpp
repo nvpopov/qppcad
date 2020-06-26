@@ -8,30 +8,30 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    struct sflow_calc_meta_t {
-        std::set<size_t> m_involved_nodes;
-        void clear() {
-          m_involved_nodes.clear();
-        }
-    };
+struct sflow_calc_meta_t {
+  std::set<size_t> m_involved_nodes;
+  void clear() {
+    m_involved_nodes.clear();
+  }
+};
 
-    struct sflow_calc_meta_global_t {
+struct sflow_calc_meta_global_t {
 
-    #ifdef EXTENDED_SFLOW
-      std::vector<std::shared_ptr<ws_item_t>> m_involved_ws_items;
-    #endif
+#ifdef EXTENDED_SFLOW
+  std::vector<std::shared_ptr<ws_item_t>> m_involved_ws_items;
+#endif
 
-      void clear() {
-         #ifdef EXTENDED_SFLOW
-          m_involved_ws_items.clear();
-         #endif
-      }
+  void clear() {
+#ifdef EXTENDED_SFLOW
+    m_involved_ws_items.clear();
+#endif
+  }
 
-    };
+};
 
-  } // namespace cad
+} // namespace cad
 
 } // namespace qpp
 

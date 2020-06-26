@@ -5,89 +5,86 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    /**
-     * @brief The sflow_soi_node_t class
-     */
-    class sf_int_prop_node_t final : public sf_node_t {
+/**
+ * @brief The sflow_soi_node_t class
+ */
+class sf_int_prop_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_int_prop_node_t();
-        bool execute_ex() override;
-        bool is_single_node() override;
+  sf_int_prop_node_t();
+  bool execute_ex() override;
+  bool is_single_node() override;
 
-    };
+};
 
-    /**
-     * @brief The sflow_sgi_node_t class
-     */
-    class sf_int_final_node_t final : public sf_node_t {
+/**
+ * @brief The sflow_sgi_node_t class
+ */
+class sf_int_final_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_int_final_node_t();
-        bool execute_ex() override;
-        bool is_single_node() override;
+  sf_int_final_node_t();
+  bool execute_ex() override;
+  bool is_single_node() override;
 
-    };
+};
 
-    /**
-     * @brief The sflow_sii_node_t class
-     */
-    class sf_int_p_const_node_t final : public sf_node_t {
+/**
+ * @brief The sflow_sii_node_t class
+ */
+class sf_int_p_const_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_int_p_const_node_t();
-        bool execute_ex() override;
+  sf_int_p_const_node_t();
+  bool execute_ex() override;
 
-    };
+};
 
-    class sf_int_patb_const_node_t final : public sf_node_t {
+class sf_int_patb_const_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_int_patb_const_node_t();
-        bool execute_ex() override;
+  sf_int_patb_const_node_t();
+  bool execute_ex() override;
 
-    };
+};
 
-    /**
-     * @brief The sflow_sum_i_node_t class
-     */
-    class sf_int_sum_int_node_t final : public sf_node_t {
+/**
+ * @brief The sflow_sum_i_node_t class
+ */
+class sf_int_sum_int_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_int_sum_int_node_t();
-        bool execute_ex() override;
+  sf_int_sum_int_node_t();
+  bool execute_ex() override;
 
-    };
+};
 
-    /**
-     * @brief
-     */
-    class sf_int_mul_int_node_t final : public sf_node_t {
+class sf_int_mul_int_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_int_mul_int_node_t();
-        bool execute_ex() override;
+  sf_int_mul_int_node_t();
+  bool execute_ex() override;
 
-    };
+};
 
-    class sf_int_div_int_node_t final : public sf_node_t {
+class sf_int_div_int_node_t final : public sf_node_t {
 
-      public:
+public:
 
-        sf_int_div_int_node_t();
-        bool execute_ex() override;
+  sf_int_div_int_node_t();
+  bool execute_ex() override;
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

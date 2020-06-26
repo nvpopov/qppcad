@@ -35,7 +35,6 @@ public:
   recent_file_record_t(){}
   recent_file_record_t(const std::string &_file_name, const size_t _ff, const bool _native) :
                        m_file_name(_file_name), m_ff_id(_ff), m_native(_native){}
-
 };
 
 class icon_repository_t {

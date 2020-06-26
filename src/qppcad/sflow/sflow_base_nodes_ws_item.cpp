@@ -10,11 +10,11 @@ sf_claim_xgeom_node_t::sf_claim_xgeom_node_t() {
   m_node_name = "claim xgeom";
 
   m_out_schema = {
-     make_outs(sf_parameter_e::sfpar_xgeom, "dst")
+      make_outs(sf_parameter_e::sfpar_xgeom, "dst")
   };
 
   m_ipl_schema = {
-    make_ipls(sf_parameter_e::sfpar_ws_item, "value")
+      make_ipls(sf_parameter_e::sfpar_ws_item, "value")
   };
 
 }
@@ -29,10 +29,10 @@ bool sf_claim_xgeom_node_t::execute_ex() {
   if (ipl0 && ipl0->m_value) casted = ipl0->m_value->cast_as<geom_view_t>();
 
   if (out0 && casted) {
-      casted->m_geom->clone(out0->m_value);
-    } else {
-      return false;
-    }
+    casted->m_geom->clone(out0->m_value);
+  } else {
+    return false;
+  }
 
   return true;
 

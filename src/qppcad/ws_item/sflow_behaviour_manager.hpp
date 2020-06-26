@@ -6,21 +6,21 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    struct sflow_node_group_info_t {
-        std::string m_group_name;
-        size_t m_group_hash;
-    };
+struct sflow_node_group_info_t {
+  std::string m_group_name;
+  size_t m_group_hash;
+};
 
 
-    struct sflow_node_info_t {
-        std::string m_full_name;
-        size_t m_group_hash;
-        std::function<std::shared_ptr<sf_node_t>() > m_fabric;
-    };
+struct sflow_node_info_t {
+  std::string m_full_name;
+  size_t m_group_hash;
+  std::function<std::shared_ptr<sf_node_t>() > m_fabric;
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

@@ -7,31 +7,31 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class ws_item_inline_tool_widget_t : public QWidget {
+class ws_item_inline_tool_widget_t : public QWidget {
 
-      Q_OBJECT
+  Q_OBJECT
 
-    public:
+public:
 
-      ws_item_t *m_src{nullptr};
-      std::optional<epoch_t> m_epoch_before;
-      bool m_restore_epoch_on_cancel{false};
+  ws_item_t *m_src{nullptr};
+  std::optional<epoch_t> m_epoch_before;
+  bool m_restore_epoch_on_cancel{false};
 
-      ws_item_inline_tool_widget_t(QWidget *parent = nullptr);
+  ws_item_inline_tool_widget_t(QWidget *parent = nullptr);
 
-      void apply();
-      void cancel();
+  void apply();
+  void cancel();
 
-      virtual bool restore_cam_on_cancel();
-      virtual void on_apply();
-      virtual void on_cancel();
-      virtual void bind_item(ws_item_t *item);
+  virtual bool restore_cam_on_cancel();
+  virtual void on_apply();
+  virtual void on_cancel();
+  virtual void bind_item(ws_item_t *item);
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 
