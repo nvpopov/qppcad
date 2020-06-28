@@ -137,11 +137,9 @@ public:
 
   vector3<float> get_pos();
   void set_pos(vector3<float> new_pos);
-  virtual void vote_for_view_vectors(vector3<float> &out_look_pos,
-                                     vector3<float> &out_look_at) = 0;
+  virtual void vote_for_view_vectors(vector3<float> &out_look_pos, vector3<float> &out_look_at) = 0;
 
   void set_selected();
-
 
   virtual void target_view(cam_tv_e target_view_src,
                            vector3<float> &look_from,
@@ -186,7 +184,7 @@ public:
 
   bool is_selected(); // selected in workspace
 
-  void hs_delete(bool force_delete = false, bool emit_ws_changed = true);
+  void hs_delete(bool emit_ws_changed = true);
 
   virtual void render();
   virtual void render_overlay(QPainter &painter);

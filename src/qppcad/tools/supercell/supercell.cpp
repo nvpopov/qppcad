@@ -230,7 +230,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
     m_src_gv->m_parent_ws->add_item_to_ws(m_dst_gv);
   }
 
-  auto diml = m_sc_tool_mode.get_value() ==  supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
+  auto diml = m_sc_tool_mode.get_value() == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
   m_dst_gv->m_geom->DIM = diml;
   m_dst_gv->m_geom->cell.DIM = diml;
   m_dst_gv->begin_structure_change();
@@ -272,7 +272,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
 
   }
 
-  // apply naive heuristics depending on number of atoms
+  // apply naive heuristics that depends on number of atoms
   if (m_dst_gv->m_geom->nat() < 800) {
     m_dst_gv->m_draw_img_atoms.set_value(true);
     m_dst_gv->m_draw_img_bonds.set_value(true);
@@ -285,6 +285,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
 
   if (target_cam)
     m_dst_gv->apply_target_view(cam_tv_e::tv_b);
+
   m_dst_gv->end_structure_change();
 
 }
@@ -300,9 +301,16 @@ void super_cell_widget_t::on_apply() {
 void super_cell_widget_t::on_cancel() {
 
   if (m_dst_gv) {
-    m_dst_gv->hs_delete(true, false);
+    //m_dst_gv->hs_delete(true, false);
+
+    auto dst_ws = m_dst_gv->m_parent_ws;
+    if (dst_ws) {
+      dst_ws->m_ws_items.hs_remove_child_force_rawptr(m_dst_gv.get());
+    }
+
     m_dst_gv = nullptr;
     m_src_gv = nullptr;
+
   }
 
 }

@@ -103,6 +103,23 @@ public:
 
   }
 
+  hs_result_e hs_remove_child_force(holder_type_t child) {
+    return child ? hs_remove_child_force_rawptr(child.get()) : hs_result_e::hs_invalid_epoch;
+  }
+
+  hs_result_e hs_remove_child_force_rawptr(STYPE *child) {
+
+    if (!child) return hs_result_e::hs_invalid_child;
+
+    hs_result_e rem_res = remove_child(child, false);
+    if (rem_res != hs_result_e::hs_success) return hs_result_e::hs_error;
+
+    request_child_deletion(child);
+
+    return hs_result_e::hs_success;
+
+  }
+
   typename std::enable_if<!std::is_same<holder_type_t, STYPE>::value, bool>::type
   is_child_unused(holder_type_t child) {
     return hs_doc_base_t::is_child_unused(STYPE_STRG_POL::cast_from_holder(child));
