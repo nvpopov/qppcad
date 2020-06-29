@@ -111,6 +111,14 @@ hs_dstate_e hs_doc_base_t::get_dstate_type() {
   return p_dstate;
 }
 
+void hs_doc_base_t::set_doctype(hs_doc_type_e new_doctype) {
+  p_doctype = new_doctype;
+}
+
+hs_doc_type_e hs_doc_base_t::get_doctype() {
+  return p_doctype;
+}
+
 bool hs_doc_base_t::is_unmodified() {
 
   epoch_t cur_epoch = get_cur_epoch();

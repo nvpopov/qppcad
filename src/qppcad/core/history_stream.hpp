@@ -33,6 +33,11 @@ enum hs_dstate_dir_e {
   hs_ds_dir_backward
 };
 
+enum hs_doc_type_e {
+  hs_doc_persistent,
+  hs_doc_temporary
+};
+
 //Stores augment meta info for each child in each parent's epoch
 struct hs_child_state_meta_t {
   epoch_t m_child_epoch{0};
@@ -67,6 +72,7 @@ private:
   bool p_auto_delete{false};
   bool p_auto_delete_children{false};
   hs_dstate_e p_dstate{hs_dstate_e::hs_dstate_inst};
+  hs_doc_type_e p_doctype{hs_doc_type_e::hs_doc_persistent};
 
   /**
   * @brief get_children
@@ -182,6 +188,18 @@ public:
    * @return
    */
   hs_dstate_e get_dstate_type();
+
+  /**
+   * @brief set_doctype
+   * @param new_doctype
+   */
+  void set_doctype(hs_doc_type_e new_doctype);
+
+  /**
+   * @brief get_doctype
+   * @return
+   */
+  hs_doc_type_e get_doctype();
 
   /**
    * @brief is_unmodified
