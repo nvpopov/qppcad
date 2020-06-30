@@ -834,4 +834,32 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("testing temporary objects") {
+
+    hs_doc_base_t *hs_root = new hs_doc_base_t;
+
+    auto *hs_iarray =
+        new hist_doc_array_proxy_t<hs_prop_int_t, hs_arr_sptr_policy<hs_prop_int_t>>();
+    //hs_iarray->set_auto_delete_children(true);
+
+    REQUIRE(hs_root->add_hs_child(hs_iarray, true) == hs_result_e::hs_success); // 1
+    //hs_root->set_commit_exclusive_on_change(false);
+
+    auto hs_int0 = std::make_shared<hs_prop_int_t>();
+    //hs_int0->set_auto_delete(true);
+
+    auto hs_int1 = std::make_shared<hs_prop_int_t>();
+    hs_int1->set_doctype(hs_doc_type_e::hs_doc_temporary);
+    //hs_int1->set_auto_delete(true);
+
+    REQUIRE(hs_root->get_cur_epoch() == 1);
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int0) == hs_result_e::hs_success);
+    REQUIRE(hs_iarray->get_hs_children_count() == 1);
+    REQUIRE(hs_root->get_cur_epoch() == 2);
+    REQUIRE(hs_iarray->add_hs_child_as_array(hs_int1) == hs_result_e::hs_success);
+    REQUIRE(hs_iarray->get_hs_children_count() == 2);
+    REQUIRE(hs_root->get_cur_epoch() == 2);
+
+  }
+
 }

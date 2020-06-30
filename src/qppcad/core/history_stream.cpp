@@ -518,20 +518,18 @@ hs_result_e hs_doc_base_t::add_hs_child(hs_doc_base_t *child, bool add_new_epoch
   p_children.push_back(child);
   p_just_added_children.push_back(child);
 
-  //std::cout << "@@@ DEBUGB child cur epoch = " << child->get_cur_epoch() << std::endl;
-  if (add_new_epoch) commit_exclusive(child);
-  //std::cout << "@@@ DEBUGA child cur epoch = " << child->get_cur_epoch() << std::endl;
+  if (child->get_doctype() == hs_doc_type_e::hs_doc_persistent) {
 
-  epoch_t cur_epoch = get_cur_epoch();
-  auto epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
-  auto epoch_dist = static_cast<size_t>(std::distance(begin(p_hist_line), epoch_it));
+    if (add_new_epoch) commit_exclusive(child);
 
-  // instead of adding augment to 0..cur_epoch mark 0..cur_epoch - 1 alive status
-  // opposite to cur_epoch
-  //augment_epoch(cur_epoch, child, get_cur_epoch());
+    epoch_t cur_epoch = get_cur_epoch();
+    auto epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
+    auto epoch_dist = static_cast<size_t>(std::distance(begin(p_hist_line), epoch_it));
 
-  for (size_t i = 0; i <= epoch_dist; i++)
-    augment_epoch(i, child, child->get_cur_epoch(), i == epoch_dist ? true : false);
+    for (size_t i = 0; i <= epoch_dist; i++)
+      augment_epoch(i, child, child->get_cur_epoch(), i == epoch_dist ? true : false);
+
+  }
 
   return hs_result_e::hs_success;
 
@@ -542,10 +540,14 @@ hs_result_e hs_doc_base_t::set_alive_hs_child(hs_doc_base_t *child, bool alive) 
   auto child_it  = std::find(begin(p_children), end(p_children), child);
   if (child_it == end(p_children)) return hs_result_e::hs_invalid_child;
 
-  auto com_exclusive_res = commit_exclusive(child, child->get_cur_epoch());
-  if (com_exclusive_res != hs_result_e::hs_success) return hs_result_e::hs_error;
-
-  return augment_epoch(get_cur_epoch(), child, child->get_cur_epoch(), alive);
+  if (child->get_doctype() == hs_doc_type_e::hs_doc_persistent) {
+    auto com_exclusive_res = commit_exclusive(child, child->get_cur_epoch());
+    if (com_exclusive_res != hs_result_e::hs_success) return hs_result_e::hs_error;
+    return augment_epoch(get_cur_epoch(), child, child->get_cur_epoch(), alive);
+  } else {
+    if (!alive) return remove_child(child, true);
+    return hs_result_e::hs_success;
+  }
 
 }
 
@@ -555,9 +557,17 @@ size_t hs_doc_base_t::get_hs_children_count() {
   auto ch_state_it = p_children_states.find(cur_epoch);
   if (ch_state_it == end(p_children_states)) return 0;
 
-  return  std::count_if(begin(ch_state_it->second),
-                       end(ch_state_it->second),
-                       [](auto &kv) -> bool {return kv.second.m_is_alive;});
+  auto count_if_lambda = [](auto &kv) -> bool {return kv.second.m_is_alive;};
+  auto count_if_lambda_tr = [](auto elem) -> bool {
+    return elem && elem->get_doctype() == hs_doc_type_e::hs_doc_temporary;};
+
+  size_t persistent_count =
+      std::count_if(begin(ch_state_it->second), end(ch_state_it->second), count_if_lambda);
+
+  size_t transient_count =
+      std::count_if(begin(p_children), end(p_children), count_if_lambda_tr);
+
+  return persistent_count + transient_count;
 
 }
 
@@ -574,6 +584,12 @@ hs_doc_base_t *hs_doc_base_t::get_hs_child(size_t child_idx) {
     if (value.m_is_alive) cur_child_idx++;
     if (casted_child_idx == cur_child_idx) return key;
   }
+
+  for (auto elem : p_children)
+    if (elem) {
+      if (elem->get_doctype() == hs_doc_type_e::hs_doc_temporary) cur_child_idx++;
+      if (casted_child_idx == cur_child_idx) return elem;
+    }
 
   return nullptr;
 

@@ -508,7 +508,9 @@ public:
     p_cur_value = new_val;
 
     if (hs_doc_base_t *super_parent = get_super_parent();
-        super_parent && super_parent->get_commit_exclusive_on_change())
+        get_doctype() == hs_doc_persistent
+        && super_parent
+        && super_parent->get_commit_exclusive_on_change())
       commit_value_exclusive(STYPE(p_cur_value));
 
   }
