@@ -360,13 +360,13 @@ public:
   * @brief remove_child removes child completely by id
   * @param child_id
   */
-  hs_result_e remove_child(size_t child_id);
+  hs_result_e hs_remove_child(size_t child_id);
 
   /**
   * @brief remove_child removes child completely by pointer
   * @param child
   */
-  hs_result_e remove_child(hs_doc_base_t *child, bool is_child_deletion_requested = false);
+  hs_result_e hs_remove_child(hs_doc_base_t *child, bool is_child_deletion_requested = false);
 
   virtual void request_child_deletion(hs_doc_base_t *child);
 

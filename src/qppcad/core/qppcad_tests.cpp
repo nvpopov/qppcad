@@ -859,6 +859,9 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_iarray->add_hs_child_as_array(hs_int1) == hs_result_e::hs_success);
     REQUIRE(hs_iarray->get_hs_children_count() == 2);
     REQUIRE(hs_root->get_cur_epoch() == 2);
+    REQUIRE(hs_iarray->hs_remove_child_force(hs_int1) == hs_result_e::hs_success);
+    REQUIRE(hs_root->get_cur_epoch() == 2);
+    REQUIRE(hs_int1.use_count() == 1);
 
   }
 

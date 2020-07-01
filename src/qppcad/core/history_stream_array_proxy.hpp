@@ -111,7 +111,7 @@ public:
 
     if (!child) return hs_result_e::hs_invalid_child;
 
-    hs_result_e rem_res = remove_child(child, false);
+    hs_result_e rem_res = hs_remove_child(child, false);
     if (rem_res != hs_result_e::hs_success) return hs_result_e::hs_error;
 
     request_child_deletion(child);

@@ -545,7 +545,7 @@ hs_result_e hs_doc_base_t::set_alive_hs_child(hs_doc_base_t *child, bool alive) 
     if (com_exclusive_res != hs_result_e::hs_success) return hs_result_e::hs_error;
     return augment_epoch(get_cur_epoch(), child, child->get_cur_epoch(), alive);
   } else {
-    if (!alive) return remove_child(child, true);
+    if (!alive) return hs_remove_child(child, true);
     return hs_result_e::hs_success;
   }
 
@@ -557,17 +557,17 @@ size_t hs_doc_base_t::get_hs_children_count() {
   auto ch_state_it = p_children_states.find(cur_epoch);
   if (ch_state_it == end(p_children_states)) return 0;
 
-  auto count_if_lambda = [](auto &kv) -> bool {return kv.second.m_is_alive;};
+  auto count_if_lambda_pr = [](auto &kv) -> bool {return kv.second.m_is_alive;};
   auto count_if_lambda_tr = [](auto elem) -> bool {
     return elem && elem->get_doctype() == hs_doc_type_e::hs_doc_temporary;};
 
-  size_t persistent_count =
-      std::count_if(begin(ch_state_it->second), end(ch_state_it->second), count_if_lambda);
+  size_t persistent_cnt =
+      std::count_if(begin(ch_state_it->second), end(ch_state_it->second), count_if_lambda_pr);
 
-  size_t transient_count =
+  size_t transient_cnt =
       std::count_if(begin(p_children), end(p_children), count_if_lambda_tr);
 
-  return persistent_count + transient_count;
+  return persistent_cnt + transient_cnt;
 
 }
 
@@ -637,16 +637,16 @@ std::optional<size_t> hs_doc_base_t::is_child(hs_doc_base_t *child) const {
 
 }
 
-hs_result_e hs_doc_base_t::remove_child(size_t child_id) {
+hs_result_e hs_doc_base_t::hs_remove_child(size_t child_id) {
 
   if (child_id < p_children.size())
-    return remove_child(p_children[child_id]);
+    return hs_remove_child(p_children[child_id]);
 
   return hs_result_e::hs_error;
 
 }
 
-hs_result_e hs_doc_base_t::remove_child(hs_doc_base_t *child, bool is_child_deletion_requested) {
+hs_result_e hs_doc_base_t::hs_remove_child(hs_doc_base_t *child, bool is_child_deletion_requested) {
 
   auto it1 = std::find(begin(p_children), end(p_children), child);
   if (it1 != std::end(p_children)) {
