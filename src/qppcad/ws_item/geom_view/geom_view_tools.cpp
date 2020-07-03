@@ -1127,6 +1127,28 @@ void geom_view_tools_t::sort_gv(
 
 }
 
+void geom_view_tools_t::transform_gv(geom_view_t *gv, matrix3<float> trmat) {
+
+  if (!gv) return;
+
+  periodic_cell<float> newcell(gv->m_geom->cell.DIM);
+  for (int i = 0; i < newcell.DIM; i++)
+    newcell.v[i] = trmat * gv->m_geom->cell.v[i];
+
+  gv->begin_structure_change();
+
+  for (int i = 0; i < gv->m_geom->nat(); i++) {
+    vector3<float> pos_frac = gv->m_geom->cell.cart2frac(gv->m_geom->pos(i));
+    gv->m_geom->coord(i) = newcell.frac2cart(pos_frac);
+  }
+
+  for (int i = 0; i < newcell.DIM; i++)
+    gv->m_geom->cell.v[i] = newcell.v[i];
+
+  gv->end_structure_change();
+
+}
+
 void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_a,
                                                vector3<float> new_b,

@@ -366,7 +366,9 @@ void py_geom_view_reg_helper_t::reg(
       .def("sort_by_point", &geom_view_tools_t::sort_gv_by_point, py::arg("gv"),
            py::arg("point") = vector3<float>{0, 0, 0})
       .def("sort", &geom_view_tools_t::sort_gv_by_point, py::arg("gv"),
-           py::arg("key"));
+           py::arg("key"))
+      .def("transform_gv", &geom_view_tools_t::transform_gv,
+           py::arg("gv"), py::arg("trmat"));
 
   auto clr = gvt.def_submodule("clr", "geom_view_t tools - colorize");
   clr.def("color_by_dist", &geom_view_colorizer_helper::py_colorize_by_distance,

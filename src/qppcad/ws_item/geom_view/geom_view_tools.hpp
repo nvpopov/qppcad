@@ -149,6 +149,8 @@ struct geom_view_tools_t {
   static void sort_gv(geom_view_t *gv,
                       const std::function<float(const geometry_t &, int)> & key);
 
+  static void transform_gv(geom_view_t *gv, matrix3<float> trmat);
+
 };
 
 } // namespace cad
