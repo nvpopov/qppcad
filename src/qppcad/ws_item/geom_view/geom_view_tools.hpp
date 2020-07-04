@@ -102,15 +102,11 @@ struct geom_view_tools_t {
 
   static void align_gvs_2atoms();
 
-  static void naive_project_displ(geom_view_t *src,
-                                  geom_view_t *dst,
-                                  float eps_dist,
-                                  bool check_run = true);
+  static void naive_project_displ(geom_view_t *src, geom_view_t *dst,
+                                  float eps_dist, bool check_run = true);
 
-  static void naive_fit_str(geom_view_t *model,
-                            geom_view_t *target,
-                            std::vector<size_t> &model_idx,
-                            std::vector<size_t> &target_idx);
+  static void naive_fit_str(geom_view_t *model, geom_view_t *target,
+                            std::vector<size_t> &model_idx, std::vector<size_t> &target_idx);
 
   static std::vector<std::tuple<size_t, size_t> > gen_geoms_compl_list(
       geom_view_t *model,
@@ -150,6 +146,7 @@ struct geom_view_tools_t {
                       const std::function<float(const geometry_t &, int)> & key);
 
   static void transform_gv(geom_view_t *gv, matrix3<float> trmat);
+  static vector3<float> vec_from_miller_indicies(geom_view_t *gv, int i0, int i1, int i2);
 
 };
 
