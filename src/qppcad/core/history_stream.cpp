@@ -49,8 +49,8 @@ hs_result_e hs_doc_base_t::set_cur_epoch(hs_doc_base_t::epoch_t cur_epoch, bool 
 
   auto it_ce = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
 
-//  if (cur_epoch > 10)
-//  std::cout << "SETTING CUR_EPOCH = " << cur_epoch << std::endl;
+  //  if (cur_epoch > 10)
+  //  std::cout << "SETTING CUR_EPOCH = " << cur_epoch << std::endl;
 
   if (it_ce != end(p_hist_line)) {
     epoch_t prev_epoch = get_cur_epoch();
@@ -71,7 +71,7 @@ hs_result_e hs_doc_base_t::on_epoch_removed(hs_doc_base_t::epoch_t target_epoch)
 }
 
 hs_result_e hs_doc_base_t::commit_exclusive(hs_doc_base_t *child,
-                                              std::optional<epoch_t> child_epoch) {
+                                            std::optional<epoch_t> child_epoch) {
 
   auto [push_result, new_epoch] = push_epoch(std::nullopt, true);
 
@@ -141,7 +141,7 @@ bool hs_doc_base_t::is_unmodified() {
       }
 
       child_are_modified.push_back(child->is_unmodified()
-                                    && child->get_cur_epoch() == child_it->second.m_child_epoch);
+                                   && child->get_cur_epoch() == child_it->second.m_child_epoch);
 
     }
 
@@ -162,7 +162,7 @@ hs_result_e hs_doc_base_t::squash_impl() {
   return hs_result_e::hs_success;
 }
 
-hs_result_e hs_doc_base_t::dstate_change(hs_dstate_dir_e ds_dir) {
+hs_result_e hs_doc_base_t::dstate_change(hs_dstate_apply_e ds_dir, epoch_t target) {
   return hs_result_e::hs_success;
 }
 
@@ -178,8 +178,10 @@ hs_result_e hs_doc_base_t::reset() {
                                               end(child_reseted),
                                               [](bool value) {return value;});
 
-  return self_rt == hs_result_e::hs_success && all_child_succeded ? hs_result_e::hs_success :
-                                                                    hs_result_e::hs_error;
+  return self_rt == hs_result_e::hs_success && all_child_succeded ?
+                                          hs_result_e::hs_success :
+                                          hs_result_e::hs_error;
+
 }
 
 hs_result_e hs_doc_base_t::squash() {
@@ -210,7 +212,7 @@ hs_result_e hs_doc_base_t::squash() {
                                               lambda_all_squashed_pred);
 
   return (self_squash_res == hs_result_e::hs_success && all_squashed) ? hs_result_e::hs_success:
-                                                                        hs_result_e::hs_error;
+                                                                      hs_result_e::hs_error;
 
 }
 
@@ -238,7 +240,7 @@ std::tuple<hs_result_e, std::optional<hs_doc_base_t::epoch_t> > hs_doc_base_t::p
 
   epoch_t new_epoch =
       (new_epoch_ex) ? *new_epoch_ex :
-                       *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
+                     *std::max_element(p_hist_line.begin(), p_hist_line.end()) + 1;
 
   if (p_hist_line.empty()) {
     p_hist_line.push_back(new_epoch);
@@ -278,9 +280,9 @@ std::tuple<hs_result_e, std::optional<hs_doc_base_t::epoch_t> > hs_doc_base_t::p
 
       std::vector<hs_doc_base_t*> children_to_delete;
 
-//      for (auto child : p_children)
-//        if (child)
-//          fmt::print(std::cout, "foreach p_child : is_unused = {}\n", is_child_unused(child));
+      //      for (auto child : p_children)
+      //        if (child)
+      //          fmt::print(std::cout, "foreach p_child : is_unused = {}\n", is_child_unused(child));
 
       auto cpy_ifl = [this](hs_doc_base_t *lchld) -> bool {
         return lchld
@@ -296,8 +298,8 @@ std::tuple<hs_result_e, std::optional<hs_doc_base_t::epoch_t> > hs_doc_base_t::p
                    std::back_inserter(children_to_delete),
                    cpy_ifl);
 
-//      fmt::print(std::cout, "INSIDE GET_AUTO_DELETE: sz(cld) = {}, sz(ctd) = {}, cur_epoch = {}\n",
-//                 size(p_children), size(children_to_delete), cur_epoch);
+      //      fmt::print(std::cout, "INSIDE GET_AUTO_DELETE: sz(cld) = {}, sz(ctd) = {}, cur_epoch = {}\n",
+      //                 size(p_children), size(children_to_delete), cur_epoch);
 
       for (auto child_to_delete : children_to_delete)
         if (child_to_delete) {
@@ -333,9 +335,9 @@ std::vector<hs_doc_base_t::epoch_t> hs_doc_base_t::get_history() const {
 }
 
 hs_result_e hs_doc_base_t::augment_epoch(hs_doc_base_t::epoch_t target_epoch,
-                                           hs_doc_base_t *child,
-                                           hs_doc_base_t::epoch_t child_epoch,
-                                           bool alive) {
+                                         hs_doc_base_t *child,
+                                         hs_doc_base_t::epoch_t child_epoch,
+                                         bool alive) {
 
   if (!child) {
     return hs_result_e::hs_invalid_child;
@@ -363,7 +365,7 @@ size_t hs_doc_base_t::get_augmented_count(hs_doc_base_t::epoch_t target_epoch) c
 }
 
 bool hs_doc_base_t::is_augmented_by(hs_doc_base_t::epoch_t target_epoch,
-                                      hs_doc_base_t *child) {
+                                    hs_doc_base_t *child) {
 
   auto aug_elist_it = p_children_states.find(target_epoch);
   if (aug_elist_it == end(p_children_states)) return false;
@@ -380,7 +382,7 @@ bool hs_doc_base_t::has_epoch(hs_doc_base_t::epoch_t target_epoch) {
 }
 
 hs_result_e hs_doc_base_t::remove_augment_from_epoch(hs_doc_base_t *child,
-                                                       hs_doc_base_t::epoch_t target_epoch) {
+                                                     hs_doc_base_t::epoch_t target_epoch) {
 
   auto epoch_it = p_children_states.find(target_epoch);
   if (epoch_it == end(p_children_states)) return hs_result_e::hs_invalid_epoch;
@@ -406,7 +408,7 @@ hs_result_e hs_doc_base_t::is_child_alive(epoch_t target_epoch, hs_doc_base_t* c
 }
 
 hs_result_e hs_doc_base_t::checkout_to_epoch(hs_doc_base_t::epoch_t target_epoch,
-                                               bool process_dstates) {
+                                             bool process_dstates) {
 
   epoch_t prev_epoch = get_cur_epoch();
 
@@ -427,8 +429,8 @@ hs_result_e hs_doc_base_t::checkout_to_epoch(hs_doc_base_t::epoch_t target_epoch
    ************************************************************************************************/
   if (get_dstate_type() == hs_dstate_e::hs_dstate_incr && process_dstates) {
 
-//    epoch_t start_epoch = std::min(prev_epoch, cur_epoch);
-//    epoch_t end_epoch = std::max(prev_epoch, cur_epoch);
+    //    epoch_t start_epoch = std::min(prev_epoch, cur_epoch);
+    //    epoch_t end_epoch = std::max(prev_epoch, cur_epoch);
 
     /*
      * hl = 0 1 2 3 4 5 6 , ce = 4, pe = 6, seq = 6u->5a, 5u->4a                 | backward
@@ -437,13 +439,53 @@ hs_result_e hs_doc_base_t::checkout_to_epoch(hs_doc_base_t::epoch_t target_epoch
      */
     hs_dstate_dir_e ds_dir = cur_epoch > prev_epoch ? hs_ds_dir_backward : hs_ds_dir_forward;
 
+#ifdef QPPCAD_DEBUG
+    std::cout << "@@@DEBUG_DSTATE ds_dir = "
+              << (ds_dir == hs_ds_dir_forward ? "fwd" : "bwd") << std::endl;
+#endif
+
     auto cur_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
     auto prev_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), prev_epoch);
 
-    decltype (p_hist_line) ds_hl;
-    std::copy(ds_dir == hs_ds_dir_forward ? cur_epoch_it : prev_epoch_it,
-              ds_dir == hs_ds_dir_forward ? prev_epoch_it : cur_epoch_it,
+#ifdef QPPCAD_DEBUG
+    std::cout << "@@@DEBUG_DSTATE ce = " << cur_epoch << ", pe = "
+              << prev_epoch << std::endl;
+#endif
+
+    std::vector<epoch_t> ds_hl;
+    std::copy(ds_dir == hs_ds_dir_forward ? cur_epoch_it : prev_epoch_it ,
+              ds_dir == hs_ds_dir_forward ? prev_epoch_it + 1 : cur_epoch_it + 1,
               std::back_inserter(ds_hl));
+
+#ifdef QPPCAD_DEBUG
+    std::cout << "@@@DEBUG_DSTATE BEFORE ROTATION ";
+    for (auto elem : ds_hl) std::cout << elem << " ";
+    std::cout << std::endl;
+#endif
+
+    if (ds_dir == hs_ds_dir_forward) std::reverse(begin(ds_hl), end(ds_hl));
+
+#ifdef QPPCAD_DEBUG
+    std::cout << "@@@DEBUG_DSTATE AFTER ROTATION ";
+    for (auto elem : ds_hl) std::cout << elem << " ";
+    std::cout << std::endl;
+#endif
+
+    if (ds_dir == hs_dstate_dir_e::hs_ds_dir_forward) {
+      for (size_t i = 0; i < size(ds_hl)-1; i++) {
+#ifdef QPPCAD_DEBUG
+        std::cout << "@@@DEBUG_DSTATE uapplying state " << ds_hl[i] << std::endl;
+#endif
+        dstate_change(hs_dstate_apply_e::hs_ds_unapply, ds_hl[i]);
+      }
+    } else {
+      for (size_t i = 1; i < size(ds_hl); i++) {
+#ifdef QPPCAD_DEBUG
+        std::cout << "@@@DEBUG_DSTATE applying state " << ds_hl[i] << std::endl;
+#endif
+        dstate_change(hs_dstate_apply_e::hs_ds_apply, ds_hl[i]);
+      }
+    }
 
   }
   /*************************************************************************************************
@@ -633,7 +675,7 @@ std::optional<size_t> hs_doc_base_t::is_child(hs_doc_base_t *child) const {
 
   auto it1 = std::find(begin(p_children), end(p_children), child);
   return it1 != end(p_children) ? std::optional<size_t>{std::distance(begin(p_children), it1)} :
-                                  std::nullopt;
+                                std::nullopt;
 
 }
 

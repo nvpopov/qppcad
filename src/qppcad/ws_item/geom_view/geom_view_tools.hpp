@@ -12,12 +12,16 @@ struct geom_view_tools_t {
 
   /* shake tools */
   static void shake_atoms(geom_view_t *gv, std::set<size_t> atoms_to_shake, float magn);
+
   static void py_shake_atoms(geom_view_t *gv, py::list atoms_to_shake, float magn);
 
   /* charge, multipole moment tools */
   static vector3<float> dipole_moment(geom_view_t *gv);
+
   static float total_charge(geom_view_t *gv);
-  static std::vector<scalar_partition_per_type_t<> > get_charge_partition(geom_view_t *gv);
+
+  static std::vector<scalar_partition_per_type_t<>> get_charge_partition(geom_view_t *gv);
+
   static py::list py_get_charge_partition(geom_view_t *gv);
 
   /* vibrational related tools */
@@ -25,11 +29,11 @@ struct geom_view_tools_t {
                                       generic_array_t<vector3<float>, float> &disp);
 
   /* printing tools */
-  static std::string pretty_print_selected_atoms(geom_view_t *gv,
-                                                 vector3<float> new_frame);
+  static std::string pretty_print_selected_atoms(geom_view_t *gv, vector3<float> new_frame);
 
   /* naming tools */
   static void name_sel_atoms_by_order(geom_view_t *gv);
+
   static void name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3<float> point);
 
   /* periodic cell related tools */
@@ -38,22 +42,30 @@ struct geom_view_tools_t {
                                 size_t dim_id,
                                 float flip_magn = 1,
                                 bool rebuild_tree = false);
+
   static void flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, float flip_magn = 1);
+
   static void align_atoms_to_point(geom_view_t *gv, vector3<float> fpoint);
+
   static void change_cell_keep_atoms(geom_view_t *gv,
                                      vector3<float> new_a,
                                      vector3<float> new_b,
                                      vector3<float> new_c);
+
   static void purify_boundary_atoms(geom_view_t *dst, geom_view_t *src);
+
   static void clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection = true,
                                   bool affect_anim = true);
+
   static void translate_atoms_in_cell(geom_view_t *gv, vector3<float> tr_vec,
                                       bool clamp_atoms = true, bool affect_anim = true);
+
   static vector3<float> center_cell_on(geom_view_t *gv, vector3<float> new_cnt,
                                        bool clamp_atoms = true, bool affect_anim = true);
 
   /* sublattices, atoms clustering */
   static std::vector<size_t> get_atoms_cn(geom_view_t *gv);
+
   static std::vector<size_t> get_atoms_sublattices(geom_view_t *gv, float score_eps = 0.1f);
 
   /* structure aligning */
@@ -130,12 +142,10 @@ struct geom_view_tools_t {
       int displ_start_frame = 0,
       int displ_end_frame = 0);
 
-  static void change_atom_type(const std::string &src,
-                               const std::string &dst,
+  static void change_atom_type(const std::string &src, const std::string &dst,
                                geom_view_t *gv);
 
-  static void merge_gv(geom_view_t *gv_src1,
-                       geom_view_t *gv_src2,
+  static void merge_gv(geom_view_t *gv_src1, geom_view_t *gv_src2,
                        geom_view_t *gv_dist);
 
   static void sort_gv_by_point(geom_view_t *gv, vector3<float> point);
@@ -146,6 +156,7 @@ struct geom_view_tools_t {
                       const std::function<float(const geometry_t &, int)> & key);
 
   static void transform_gv(geom_view_t *gv, matrix3<float> trmat);
+
   static vector3<float> vec_from_miller_indicies(geom_view_t *gv, int i0, int i1, int i2);
 
 };

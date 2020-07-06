@@ -1152,12 +1152,9 @@ void geom_view_tools_t::transform_gv(geom_view_t *gv, matrix3<float> trmat) {
 vector3<float> geom_view_tools_t::vec_from_miller_indicies(geom_view_t *gv, int i0, int i1, int i2) {
 
   if (!gv || gv->m_geom->cell.DIM !=3) return vector3<float>{0};
-
   vector3<float> retvec;
-  retvec = (gv->m_geom->cell.v[0] / i0)
-           + (gv->m_geom->cell.v[1] / i1)
-           + (gv->m_geom->cell.v[2] / i2);
-
+  retvec =
+      (gv->m_geom->cell.v[0] / i0) + (gv->m_geom->cell.v[1] / i1)+ (gv->m_geom->cell.v[2] / i2);
   return retvec;
 
 }

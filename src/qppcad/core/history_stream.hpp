@@ -33,6 +33,11 @@ enum hs_dstate_dir_e {
   hs_ds_dir_backward
 };
 
+enum hs_dstate_apply_e {
+  hs_ds_apply,
+  hs_ds_unapply
+};
+
 enum hs_doc_type_e {
   hs_doc_persistent,
   hs_doc_temporary
@@ -105,7 +110,7 @@ protected:
   virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
   virtual hs_result_e squash_impl();
-  virtual hs_result_e dstate_change(hs_dstate_dir_e ds_dir);
+  virtual hs_result_e dstate_change(hs_dstate_apply_e ds_dir, epoch_t target);
   //void update_super_root(hist_doc_base_t *new_super_root);
 
 public:
