@@ -163,7 +163,8 @@ public:
    * @return
    */
   hs_result_e commit_exclusive(hs_doc_base_t *child = nullptr,
-                               std::optional<epoch_t> child_epoch = std::nullopt);
+                               std::optional<epoch_t> child_epoch = std::nullopt,
+                               bool triggers_dstate = true);
 
   /**
    * @brief on_commit_exclusive
@@ -232,7 +233,8 @@ public:
   */
   std::tuple<hs_result_e, std::optional<epoch_t>> push_epoch(
       std::optional<epoch_t> new_epoch_ex = std::nullopt,
-      bool checkout_to_new_epoch = false);
+      bool checkout_to_new_epoch = false,
+      bool triggers_dstate = false);
 
   /**
   * @brief get_history_size
@@ -298,7 +300,8 @@ public:
   * @param target_epoch
   * @return
   */
-  hs_result_e checkout_to_epoch(epoch_t target_epoch, bool process_dstates = true);
+  hs_result_e checkout_to_epoch(epoch_t target_epoch,
+                                bool process_dstates = true);
 
   /**
    * @brief checkout_by_dist
