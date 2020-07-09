@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #download appimage tools
-wget -c https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+wget -c https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage 
 chmod +x ./appimagetool-x86_64.AppImage
 
 wget -c https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage

@@ -26,6 +26,13 @@ struct change_cell_event_t {
   std::vector<vector3<REAL>> old_cell;
 };
 
+template<typename REAL>
+struct erase_atom_event_t {
+  size_t m_atom_idx;
+  std::string m_atom_name;
+  vector3<REAL> m_atom_pos;
+};
+
 struct select_atoms_event_t {
   std::vector<std::tuple<size_t, index>> sel_atoms;
 };
@@ -34,6 +41,7 @@ template<typename REAL>
 struct xgeom_acts_vt {
   using type = std::variant<insert_atom_event_t<REAL>,
                             change_cell_event_t<REAL>,
+                            erase_atom_event_t<REAL>,
                             select_atoms_event_t>;
 };
 
@@ -56,6 +64,12 @@ protected:
 
     p_currently_applying_dstate = true;
 
+    xgeometry<REAL, CELL> *geom_wrp = p_xgeom;
+    if (!geom_wrp) {
+      p_currently_applying_dstate = false;
+      return hs_result_e::hs_error;
+    }
+
     auto epoch_it = p_epoch_data.find(target);
     if (epoch_it == end(p_epoch_data)) {
       p_currently_applying_dstate = false;
@@ -63,7 +77,6 @@ protected:
     }
 
     auto &acts = p_epoch_data[target];
-    xgeometry<REAL, CELL> *geom_wrp = p_xgeom;
 
     if (ds_dir == hs_ds_unapply) {
 
@@ -76,7 +89,9 @@ protected:
                            [geom_wrp](insert_atom_event_t<REAL> &ev) {
                              geom_wrp->erase(ev.m_atom_idx.value_or(geom_wrp->nat()-1));
                              },
-                           [geom_wrp](change_cell_event_t<REAL> &event) {},
+                           [geom_wrp](change_cell_event_t<REAL> &event) {
+
+                           },
                            [geom_wrp](select_atoms_event_t &event) {},
                            }, val);
 
@@ -134,9 +149,13 @@ public:
 
   }
 
-  void erased(int at, before_after) override {
+  void erased(int at, before_after order) override {
 
     if (p_currently_applying_dstate) return;
+    if (order == before_after::before) return;
+    erase_atom_event_t<REAL> erase_atom_event;
+    erase_atom_event.m_atom_idx = at;
+    p_tmp_acts.push_back(std::move(erase_atom_event));
 
   }
 
