@@ -868,6 +868,8 @@ TEST_CASE("history stream test") {
     xgeometry<double, periodic_cell<double>> xg1(0);
     hs_xg->set_xgeom(&xg1);
 
+    REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
+
     hs_xg->begin_editing();
     xg1.add("C", vector3<double>{0});
     hs_xg->end_editing();
@@ -900,7 +902,23 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.pos(3) == vector3<double>{3});
     REQUIRE(xg1.atom_of_type(xg1.type(3)) == "F");
 
-    REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
+    //testing erase
+    hs_xg->begin_editing();
+    xg1.erase(0);
+    hs_xg->end_editing();
+    REQUIRE(xg1.nat() == 3);
+    REQUIRE(hs_xg->get_cur_epoch() == 3);
+    REQUIRE(xg1.atom_of_type(xg1.type(0)) == "S");
+    REQUIRE(xg1.atom_of_type(xg1.type(1)) == "Ca");
+    REQUIRE(xg1.atom_of_type(xg1.type(2)) == "F");
+
+    REQUIRE(hs_xg->checkout_to_epoch(2));
+    REQUIRE(xg1.nat() == 4);
+    REQUIRE(xg1.atom_of_type(xg1.type(0)) == "C");
+    REQUIRE(xg1.atom_of_type(xg1.type(1)) == "S");
+    REQUIRE(xg1.atom_of_type(xg1.type(2)) == "Ca");
+    REQUIRE(xg1.atom_of_type(xg1.type(3)) == "F");
+    REQUIRE(hs_xg->checkout_to_epoch(3));
 
   }
 

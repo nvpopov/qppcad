@@ -22,8 +22,8 @@ struct insert_atom_event_t {
 
 template<typename REAL>
 struct change_cell_event_t {
-  std::vector<vector3<REAL>> new_cell;
-  std::vector<vector3<REAL>> old_cell;
+  std::array<std::optional<vector3<REAL>>, 3> new_cell;
+  std::array<std::optional<vector3<REAL>>, 3> old_cell;
 };
 
 template<typename REAL>
@@ -37,12 +37,24 @@ struct select_atoms_event_t {
   std::vector<std::tuple<size_t, index>> sel_atoms;
 };
 
+struct change_dim_event_t {
+  int new_dim{0};
+  int old_dim{0};
+};
+
 template<typename REAL>
 struct xgeom_acts_vt {
   using type = std::variant<insert_atom_event_t<REAL>,
                             change_cell_event_t<REAL>,
+                            change_dim_event_t,
                             erase_atom_event_t<REAL>,
                             select_atoms_event_t>;
+};
+
+enum xgeom_proxy_hs_act_type_e {
+  hs_act_emit_hs_event,
+  hs_act_emit_geom_change,
+  hs_act_emit_both
 };
 
 template<typename REAL, typename CELL>
@@ -89,10 +101,18 @@ protected:
                            [geom_wrp](insert_atom_event_t<REAL> &ev) {
                              geom_wrp->erase(ev.m_atom_idx.value_or(geom_wrp->nat()-1));
                              },
-                           [geom_wrp](change_cell_event_t<REAL> &event) {
-
+                           [geom_wrp](erase_atom_event_t<REAL> &ev) {
+                             geom_wrp->insert(ev.m_atom_idx, ev.m_atom_name, ev.m_atom_pos);
                            },
-                           [geom_wrp](select_atoms_event_t &event) {},
+                           [geom_wrp](change_dim_event_t &ev) {
+                             geom_wrp->DIM = ev.old_dim;
+                           },
+                           [geom_wrp](change_cell_event_t<REAL> &ev) {
+                             for (size_t i = 0; i < 3; i++)
+                               if (geom_wrp->DIM > i && ev.old_cell[i])
+                                 geom_wrp->cell.v[i] = *(ev.old_cell[i]);
+                           },
+                           [geom_wrp](select_atoms_event_t &ev) {},
                            }, val);
 
       }
@@ -112,7 +132,17 @@ protected:
                            geom_wrp->add(ev.m_atom_name, ev.m_atom_pos);
                          }
                          },
-                       [geom_wrp](change_cell_event_t<REAL> &ev) {},
+                       [geom_wrp](erase_atom_event_t<REAL> &ev) {
+                         geom_wrp->erase(ev.m_atom_idx);
+                       },
+                       [geom_wrp](change_dim_event_t &ev) {
+                         geom_wrp->DIM = ev.new_dim;
+                       },
+                       [geom_wrp](change_cell_event_t<REAL> &ev) {
+                         for (size_t i = 0; i < 3; i++)
+                           if (geom_wrp->DIM > i && ev.new_cell[i])
+                             geom_wrp->cell.v[i] = *(ev.new_cell[i]);
+                       },
                        [geom_wrp](select_atoms_event_t &ev) {},
                        }, val);
       }
@@ -125,6 +155,10 @@ protected:
   }
 
 public:
+
+  void commit_if_not_editing(bool force) {
+
+  }
 
   void added(before_after order, const STRING_EX &aname, const vector3<REAL> &apos) override {
 
@@ -152,9 +186,11 @@ public:
   void erased(int at, before_after order) override {
 
     if (p_currently_applying_dstate) return;
-    if (order == before_after::before) return;
+    if (order == before_after::after) return;
     erase_atom_event_t<REAL> erase_atom_event;
     erase_atom_event.m_atom_idx = at;
+    erase_atom_event.m_atom_pos = p_xgeom->pos(at);
+    erase_atom_event.m_atom_name = p_xgeom->atom(at);
     p_tmp_acts.push_back(std::move(erase_atom_event));
 
   }
@@ -203,6 +239,54 @@ public:
     epoch_t cur_epoch = get_cur_epoch();
     p_epoch_data[cur_epoch] = p_tmp_acts;
     p_tmp_acts.clear();
+
+  }
+
+  //explicit editing methods
+
+  void hs_change_DIM(xgeom_proxy_hs_act_type_e evtype, int newdim) {
+
+    if (!p_xgeom) return;
+
+    if (evtype == hs_act_emit_hs_event || evtype == hs_act_emit_both) {
+      change_dim_event_t change_dim_event;
+      change_dim_event.old_dim = p_xgeom->DIM;
+      change_dim_event.new_dim = newdim;
+      p_tmp_acts.push_back(std::move(change_dim_event));
+    }
+
+    if (evtype == hs_act_emit_geom_change || evtype == hs_act_emit_both) {
+      p_xgeom->DIM = newdim;
+      p_xgeom->cell.DIM = newdim;
+    }
+
+  }
+
+  void hs_change_cell(xgeom_proxy_hs_act_type_e evtype,
+                      std::optional<vector3<REAL>> a,
+                      std::optional<vector3<REAL>> b = std::nullopt,
+                      std::optional<vector3<REAL>> c = std::nullopt) {
+
+    if (!p_xgeom) return;
+
+    if (evtype == hs_act_emit_hs_event || evtype == hs_act_emit_both) {
+      change_cell_event_t<REAL> change_cell_event;
+      //old cell
+      if (p_xgeom->DIM > 0) change_cell_event.old_cell[0] = p_xgeom->cell.v[0];
+      if (p_xgeom->DIM > 1) change_cell_event.old_cell[1] = p_xgeom->cell.v[1];
+      if (p_xgeom->DIM > 2) change_cell_event.old_cell[2] = p_xgeom->cell.v[2];
+      //new cell
+      if (a && p_xgeom->DIM > 0) change_cell_event.old_cell[0] = *a;
+      if (b && p_xgeom->DIM > 0) change_cell_event.old_cell[0] = *b;
+      if (c && p_xgeom->DIM > 0) change_cell_event.old_cell[0] = *c;
+      p_tmp_acts.push_back(std::move(change_cell_event));
+    }
+
+    if (evtype == hs_act_emit_geom_change || evtype == hs_act_emit_both) {
+      if (a && p_xgeom->DIM > 0) p_xgeom->cell.v[0] = *a;
+      if (b && p_xgeom->DIM > 1) p_xgeom->cell.v[1] = *b;
+      if (c && p_xgeom->DIM > 2) p_xgeom->cell.v[2] = *c;
+    }
 
   }
 
