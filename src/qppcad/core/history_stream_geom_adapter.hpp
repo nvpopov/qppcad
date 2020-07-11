@@ -166,7 +166,12 @@ public:
     }
 
     epoch_t cur_epoch = get_cur_epoch();
-    p_epoch_data[cur_epoch] = p_tmp_acts;
+    auto ep_it = p_epoch_data.find(cur_epoch);
+    if (ep_it == end(p_epoch_data)) {
+      p_epoch_data[cur_epoch] = p_tmp_acts;
+    } else {
+      std::copy(begin(p_tmp_acts), end(p_tmp_acts), std::back_inserter(ep_it->second));
+    }
     p_tmp_acts.clear();
 
   }
@@ -184,13 +189,23 @@ public:
 
   }
 
-  void inserted(int at, before_after, const STRING_EX &, const vector3<REAL> &) override {
+  void inserted(int at, before_after order,
+                const STRING_EX &aname, const vector3<REAL> &apos) override {
 
     if (p_currently_applying_dstate) return;
+    if (order == before_after::before) return;
+    insert_atom_event_t<REAL> insert_atom_event;
+    insert_atom_event.m_atom_name = aname;
+    insert_atom_event.m_atom_pos = apos;
+    insert_atom_event.m_atom_idx = std::optional<size_t>(at);
+    p_tmp_acts.push_back(std::move(insert_atom_event));
+
+    if (!p_currently_editing) commit_changes(true);
 
   }
 
-  void changed(int at, before_after, const STRING_EX &, const vector3<REAL> &) override {
+  void changed(int at, before_after order,
+               const STRING_EX &aname, const vector3<REAL> &apos) override {
 
     if (p_currently_applying_dstate) return;
 
@@ -201,6 +216,7 @@ public:
     if (p_currently_applying_dstate) return;
     if (order == before_after::after) return;
     erase_atom_event_t<REAL> erase_atom_event;
+    //std::cout << "@@@ " << at << std::endl;
     erase_atom_event.m_atom_idx = at;
     erase_atom_event.m_atom_pos = p_xgeom->pos(at);
     erase_atom_event.m_atom_name = p_xgeom->atom(at);

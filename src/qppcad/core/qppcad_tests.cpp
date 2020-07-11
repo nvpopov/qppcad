@@ -918,10 +918,26 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.atom_of_type(xg1.type(1)) == "S");
     REQUIRE(xg1.atom_of_type(xg1.type(2)) == "Ca");
     REQUIRE(xg1.atom_of_type(xg1.type(3)) == "F");
-    REQUIRE(hs_xg->checkout_to_epoch(3));
+    REQUIRE(hs_xg->checkout_to_epoch(2));
 
+    hs_xg->begin_editing();
     xg1.erase(0);
+    hs_xg->end_editing();
     REQUIRE(hs_xg->get_cur_epoch() == 4);
+    REQUIRE(xg1.nat() == 3);
+    REQUIRE(hs_xg->checkout_to_epoch(2));
+    REQUIRE(xg1.nat() == 4);
+
+    hs_xg->begin_editing();
+    xg1.insert(1, "He", vector3<double>{0, 10, 10});
+    hs_xg->end_editing();
+
+    REQUIRE(hs_xg->get_cur_epoch() == 5);
+    REQUIRE(xg1.atom_of_type(xg1.type(0)) == "C");
+    REQUIRE(xg1.atom_of_type(xg1.type(1)) == "He");
+    REQUIRE(xg1.atom_of_type(xg1.type(2)) == "S");
+    REQUIRE(xg1.atom_of_type(xg1.type(3)) == "Ca");
+    REQUIRE(xg1.atom_of_type(xg1.type(4)) == "F");
 
   }
 
