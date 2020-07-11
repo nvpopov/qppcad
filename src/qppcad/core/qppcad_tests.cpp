@@ -920,6 +920,9 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.atom_of_type(xg1.type(3)) == "F");
     REQUIRE(hs_xg->checkout_to_epoch(3));
 
+    xg1.erase(0);
+    REQUIRE(hs_xg->get_cur_epoch() == 4);
+
   }
 
 }

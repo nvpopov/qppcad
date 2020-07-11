@@ -156,7 +156,18 @@ protected:
 
 public:
 
-  void commit_if_not_editing(bool force) {
+  void commit_changes(bool new_epoch) {
+
+    if (p_tmp_acts.empty()) return;
+
+    if (new_epoch) {
+      auto res = commit_exclusive(nullptr, std::nullopt, false);
+      if (res != hs_result_e::hs_success) return;
+    }
+
+    epoch_t cur_epoch = get_cur_epoch();
+    p_epoch_data[cur_epoch] = p_tmp_acts;
+    p_tmp_acts.clear();
 
   }
 
@@ -168,6 +179,8 @@ public:
     insert_atom_event.m_atom_name = aname;
     insert_atom_event.m_atom_pos = apos;
     p_tmp_acts.push_back(std::move(insert_atom_event));
+
+    if (!p_currently_editing) commit_changes(true);
 
   }
 
@@ -192,6 +205,8 @@ public:
     erase_atom_event.m_atom_pos = p_xgeom->pos(at);
     erase_atom_event.m_atom_name = p_xgeom->atom(at);
     p_tmp_acts.push_back(std::move(erase_atom_event));
+
+    if (!p_currently_editing) commit_changes(true);
 
   }
 
@@ -230,15 +245,11 @@ public:
     p_currently_editing = true;
   }
 
-  void end_editing() {
+  void end_editing(bool new_epoch = true) {
 
     assert(p_currently_editing);
-
-    auto res = commit_exclusive(nullptr, std::nullopt, false);
-    if (!res) return;
-    epoch_t cur_epoch = get_cur_epoch();
-    p_epoch_data[cur_epoch] = p_tmp_acts;
-    p_tmp_acts.clear();
+    commit_changes(new_epoch);
+    p_currently_editing = false;
 
   }
 
@@ -259,6 +270,8 @@ public:
       p_xgeom->DIM = newdim;
       p_xgeom->cell.DIM = newdim;
     }
+
+    if (!p_currently_editing) commit_changes(true);
 
   }
 
@@ -287,6 +300,8 @@ public:
       if (b && p_xgeom->DIM > 1) p_xgeom->cell.v[1] = *b;
       if (c && p_xgeom->DIM > 2) p_xgeom->cell.v[2] = *c;
     }
+
+    if (!p_currently_editing) commit_changes(true);
 
   }
 
