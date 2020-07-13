@@ -305,9 +305,9 @@ public:
       if (p_xgeom->DIM > 1) change_cell_event.old_cell[1] = p_xgeom->cell.v[1];
       if (p_xgeom->DIM > 2) change_cell_event.old_cell[2] = p_xgeom->cell.v[2];
       //new cell
-      if (a && p_xgeom->DIM > 0) change_cell_event.old_cell[0] = *a;
-      if (b && p_xgeom->DIM > 0) change_cell_event.old_cell[0] = *b;
-      if (c && p_xgeom->DIM > 0) change_cell_event.old_cell[0] = *c;
+      if (a && p_xgeom->DIM > 0) change_cell_event.new_cell[0] = *a;
+      if (b && p_xgeom->DIM > 0) change_cell_event.new_cell[1] = *b;
+      if (c && p_xgeom->DIM > 0) change_cell_event.new_cell[2] = *c;
       p_tmp_acts.push_back(std::move(change_cell_event));
     }
 

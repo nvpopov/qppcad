@@ -941,4 +941,50 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("xgeom proxy - change cell/dim") {
+
+    using hs_xg_t = hist_doc_xgeom_proxy_t<double, qpp::periodic_cell<double>>;
+    hs_xg_t *hs_xg = new hs_xg_t;
+    xgeometry<double, periodic_cell<double>> xg1(3);
+    xg1.cell.v[0] = vector3<double>(5, 0, 0);
+    xg1.cell.v[1] = vector3<double>(0, 5, 0);
+    xg1.cell.v[2] = vector3<double>(0, 0, 5);
+
+    hs_xg->set_xgeom(&xg1);
+
+    REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
+    REQUIRE(hs_xg->get_cur_epoch() == 0);
+    hs_xg->hs_change_DIM(xgeom_proxy_hs_act_type_e::hs_act_emit_both, 0);
+    REQUIRE(hs_xg->get_cur_epoch() == 1);
+    REQUIRE(xg1.DIM == 0);
+
+    hs_xg->hs_change_DIM(xgeom_proxy_hs_act_type_e::hs_act_emit_both, 3);
+    REQUIRE(hs_xg->get_cur_epoch() == 2);
+    REQUIRE(xg1.DIM == 3);
+
+    REQUIRE(xg1.cell.v[0] == vector3<double>(5, 0, 0));
+    REQUIRE(xg1.cell.v[1] == vector3<double>(0, 5, 0));
+    REQUIRE(xg1.cell.v[2] == vector3<double>(0, 0, 5));
+
+    hs_xg->checkout_to_epoch(1);
+    REQUIRE(xg1.DIM == 0);
+    hs_xg->checkout_to_epoch(2);
+    REQUIRE(xg1.DIM == 3);
+
+    hs_xg->hs_change_cell(xgeom_proxy_hs_act_type_e::hs_act_emit_both,
+                          vector3<double>(15,  0,  0),
+                          vector3<double>( 0, 15,  0),
+                          vector3<double>( 0,  0, 15));
+    REQUIRE(hs_xg->get_cur_epoch() == 3);
+    REQUIRE(xg1.cell.v[0] == vector3<double>(15,  0,  0));
+    REQUIRE(xg1.cell.v[1] == vector3<double>( 0, 15,  0));
+    REQUIRE(xg1.cell.v[2] == vector3<double>( 0,  0, 15));
+
+    hs_xg->checkout_to_epoch(2);
+    REQUIRE(xg1.cell.v[0] == vector3<double>(5, 0, 0));
+    REQUIRE(xg1.cell.v[1] == vector3<double>(0, 5, 0));
+    REQUIRE(xg1.cell.v[2] == vector3<double>(0, 0, 5));
+
+  }
+
 }
