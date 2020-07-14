@@ -21,6 +21,15 @@ struct insert_atom_event_t {
 };
 
 template<typename REAL>
+struct change_atom_event_t {
+  size_t m_atom_idx;
+  std::string m_before_aname;
+  vector3<REAL> m_before_apos;
+  std::string m_after_aname;
+  vector3<REAL> m_after_apos;
+};
+
+template<typename REAL>
 struct change_cell_event_t {
   std::array<std::optional<vector3<REAL>>, 3> new_cell;
   std::array<std::optional<vector3<REAL>>, 3> old_cell;
@@ -45,6 +54,7 @@ struct change_dim_event_t {
 template<typename REAL>
 struct xgeom_acts_vt {
   using type = std::variant<insert_atom_event_t<REAL>,
+                            change_atom_event_t<REAL>,
                             change_cell_event_t<REAL>,
                             change_dim_event_t,
                             erase_atom_event_t<REAL>,
@@ -69,6 +79,8 @@ private:
   std::vector<acts_t> p_tmp_acts;
   bool p_currently_editing;
   bool p_currently_applying_dstate{false};
+  std::optional<STRING_EX> p_stored_aname;
+  std::optional<vector3<REAL>> p_stored_apos;
 
 protected:
 
@@ -101,6 +113,9 @@ protected:
                            [geom_wrp](insert_atom_event_t<REAL> &ev) {
                              geom_wrp->erase(ev.m_atom_idx.value_or(geom_wrp->nat()-1));
                              },
+                           [geom_wrp](change_atom_event_t<REAL> &ev) {
+                             geom_wrp->change(ev.m_atom_idx, ev.m_before_aname, ev.m_before_apos);
+                           },
                            [geom_wrp](erase_atom_event_t<REAL> &ev) {
                              geom_wrp->insert(ev.m_atom_idx, ev.m_atom_name, ev.m_atom_pos);
                            },
@@ -132,6 +147,9 @@ protected:
                            geom_wrp->add(ev.m_atom_name, ev.m_atom_pos);
                          }
                          },
+                       [geom_wrp](change_atom_event_t<REAL> &ev) {
+                         geom_wrp->change(ev.m_atom_idx, ev.m_after_aname, ev.m_after_apos);
+                       },
                        [geom_wrp](erase_atom_event_t<REAL> &ev) {
                          geom_wrp->erase(ev.m_atom_idx);
                        },
@@ -193,7 +211,9 @@ public:
                 const STRING_EX &aname, const vector3<REAL> &apos) override {
 
     if (p_currently_applying_dstate) return;
+
     if (order == before_after::before) return;
+
     insert_atom_event_t<REAL> insert_atom_event;
     insert_atom_event.m_atom_name = aname;
     insert_atom_event.m_atom_pos = apos;
@@ -209,12 +229,38 @@ public:
 
     if (p_currently_applying_dstate) return;
 
+    if (order == before_after::before) {
+      p_stored_aname = aname;
+      p_stored_apos = apos;
+    } else {
+
+      if (p_stored_apos && p_stored_aname) {
+
+        change_atom_event_t<REAL> change_atom_event;
+        change_atom_event.m_atom_idx = at;
+        change_atom_event.m_before_aname = *p_stored_aname;
+        change_atom_event.m_before_apos = *p_stored_apos;
+        change_atom_event.m_after_aname = aname;
+        change_atom_event.m_after_apos = apos;
+        p_tmp_acts.push_back(std::move(change_atom_event));
+
+        if (!p_currently_editing) commit_changes(true);
+
+      }
+
+      p_stored_apos = std::nullopt;
+      p_stored_aname = std::nullopt;
+
+    }
+
   }
 
   void erased(int at, before_after order) override {
 
     if (p_currently_applying_dstate) return;
+
     if (order == before_after::after) return;
+
     erase_atom_event_t<REAL> erase_atom_event;
     //std::cout << "@@@ " << at << std::endl;
     erase_atom_event.m_atom_idx = at;
@@ -243,10 +289,12 @@ public:
   }
 
   void set_xgeom(xgeometry<REAL, CELL> *xgeom) {
+
     if (xgeom) {
       p_xgeom = xgeom;
       p_xgeom->add_observer(*this);
     }
+
   }
 
   xgeometry<REAL, CELL> *get_xgeom() {
