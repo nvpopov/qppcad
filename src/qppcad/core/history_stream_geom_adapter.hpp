@@ -230,11 +230,13 @@ public:
     if (p_currently_applying_dstate) return;
 
     if (order == before_after::before) {
-      p_stored_aname = aname;
-      p_stored_apos = apos;
+      p_stored_aname = p_xgeom->atom_name(at);
+      p_stored_apos = p_xgeom->pos(at);
     } else {
 
       if (p_stored_apos && p_stored_aname) {
+
+        //std::cout << "CHANGED " << aname << " " << apos << std::endl;
 
         change_atom_event_t<REAL> change_atom_event;
         change_atom_event.m_atom_idx = at;

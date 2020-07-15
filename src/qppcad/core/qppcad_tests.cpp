@@ -987,4 +987,37 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("xgeom proxy - change atom") {
+
+    using hs_xg_t = hist_doc_xgeom_proxy_t<double, qpp::periodic_cell<double>>;
+    hs_xg_t *hs_xg = new hs_xg_t;
+    xgeometry<double, periodic_cell<double>> xg1(0);
+    hs_xg->set_xgeom(&xg1);
+
+    REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
+
+    hs_xg->begin_editing();
+    xg1.add("C", vector3<double>{2, 3, 4});
+    hs_xg->end_editing();
+
+    REQUIRE(xg1.nat() == 1);
+    REQUIRE(hs_xg->get_cur_epoch() == 1);
+
+    hs_xg->begin_editing();
+    xg1.add("S", vector3<double>{1});
+    xg1.add("Ca", vector3<double>{2});
+    xg1.add("F", vector3<double>{3});
+    hs_xg->end_editing();
+
+    xg1.change_pos(0, vector3<double>{12});
+
+    REQUIRE(hs_xg->get_cur_epoch() == 3);
+    REQUIRE(xg1.pos(0) == vector3<double>{12});
+
+    hs_xg->checkout_to_epoch(2);
+    REQUIRE(hs_xg->get_cur_epoch() == 2);
+    REQUIRE(xg1.pos(0) == vector3<double>{2, 3, 4});
+
+  }
+
 }
