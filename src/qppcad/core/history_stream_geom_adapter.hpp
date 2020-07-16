@@ -51,11 +51,16 @@ struct change_dim_event_t {
   int old_dim{0};
 };
 
+struct reorder_atoms_event_t {
+  std::vector<int> m_atoms_order;
+};
+
 template<typename REAL>
 struct xgeom_acts_vt {
   using type = std::variant<insert_atom_event_t<REAL>,
                             change_atom_event_t<REAL>,
                             change_cell_event_t<REAL>,
+                            reorder_atoms_event_t,
                             change_dim_event_t,
                             erase_atom_event_t<REAL>,
                             select_atoms_event_t>;
@@ -119,6 +124,9 @@ protected:
                            [geom_wrp](erase_atom_event_t<REAL> &ev) {
                              geom_wrp->insert(ev.m_atom_idx, ev.m_atom_name, ev.m_atom_pos);
                            },
+                           [geom_wrp](reorder_atoms_event_t &ev) {
+                             geom_wrp->reorder(ev.m_atoms_order);
+                           },
                            [geom_wrp](change_dim_event_t &ev) {
                              geom_wrp->DIM = ev.old_dim;
                            },
@@ -152,6 +160,9 @@ protected:
                        },
                        [geom_wrp](erase_atom_event_t<REAL> &ev) {
                          geom_wrp->erase(ev.m_atom_idx);
+                       },
+                       [geom_wrp](reorder_atoms_event_t &ev) {
+                         geom_wrp->reorder(ev.m_atoms_order);
                        },
                        [geom_wrp](change_dim_event_t &ev) {
                          geom_wrp->DIM = ev.new_dim;
@@ -190,11 +201,14 @@ public:
     } else {
       std::copy(begin(p_tmp_acts), end(p_tmp_acts), std::back_inserter(ep_it->second));
     }
+
     p_tmp_acts.clear();
 
   }
 
-  void added(before_after order, const STRING_EX &aname, const vector3<REAL> &apos) override {
+  void added(before_after order,
+             const STRING_EX &aname,
+             const vector3<REAL> &apos) override {
 
     if (p_currently_applying_dstate) return;
     if (order == before_after::before) return;
@@ -208,7 +222,8 @@ public:
   }
 
   void inserted(int at, before_after order,
-                const STRING_EX &aname, const vector3<REAL> &apos) override {
+                const STRING_EX &aname,
+                const vector3<REAL> &apos) override {
 
     if (p_currently_applying_dstate) return;
 
@@ -225,7 +240,8 @@ public:
   }
 
   void changed(int at, before_after order,
-               const STRING_EX &aname, const vector3<REAL> &apos) override {
+               const STRING_EX &aname,
+               const vector3<REAL> &apos) override {
 
     if (p_currently_applying_dstate) return;
 
@@ -280,9 +296,16 @@ public:
 
   }
 
-  void reordered (const std::vector<int> &, before_after) override {
+  void reordered (const std::vector<int> &ord, before_after order) override {
 
     if (p_currently_applying_dstate) return;
+    if (order == before_after::after) return;
+
+    reorder_atoms_event_t reorder_atoms_event;
+    reorder_atoms_event.m_atoms_order = ord;
+    p_tmp_acts.push_back(std::move(reorder_atoms_event));
+
+    if (!p_currently_editing) commit_changes(true);
 
   }
 
