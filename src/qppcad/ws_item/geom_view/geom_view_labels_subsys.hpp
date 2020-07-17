@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <QPainter>
+#include <QPainterPath>
 #include <qppcad/ws_item/geom_view/geom_view_labels_style.hpp>
 #include <qppcad/ws_item/ws_item_subsystem.hpp>
 

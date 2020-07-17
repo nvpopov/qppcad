@@ -114,27 +114,35 @@ protected:
             auto val = *i;
 
             std::visit(overloaded {
+
                            [geom_wrp](auto arg) {},
+
                            [geom_wrp](insert_atom_event_t<REAL> &ev) {
                              geom_wrp->erase(ev.m_atom_idx.value_or(geom_wrp->nat()-1));
-                             },
+                           },
+
                            [geom_wrp](change_atom_event_t<REAL> &ev) {
                              geom_wrp->change(ev.m_atom_idx, ev.m_before_aname, ev.m_before_apos);
                            },
+
                            [geom_wrp](erase_atom_event_t<REAL> &ev) {
                              geom_wrp->insert(ev.m_atom_idx, ev.m_atom_name, ev.m_atom_pos);
                            },
+
                            [geom_wrp](reorder_atoms_event_t &ev) {
                              geom_wrp->reorder(ev.m_atoms_order);
                            },
+
                            [geom_wrp](change_dim_event_t &ev) {
                              geom_wrp->DIM = ev.old_dim;
                            },
+
                            [geom_wrp](change_cell_event_t<REAL> &ev) {
                              for (size_t i = 0; i < 3; i++)
                                if (geom_wrp->DIM > i && ev.old_cell[i])
                                  geom_wrp->cell.v[i] = *(ev.old_cell[i]);
                            },
+
                            [geom_wrp](select_atoms_event_t &ev) {},
                            }, val);
 
@@ -147,33 +155,42 @@ protected:
         auto val = *i;
 
         std::visit(overloaded {
+
                        [geom_wrp](auto arg) {},
+
                        [geom_wrp](insert_atom_event_t<REAL> &ev) {
                          if (ev.m_atom_idx) {
                            geom_wrp->insert(*(ev.m_atom_idx), ev.m_atom_name, ev.m_atom_pos);
                          } else {
                            geom_wrp->add(ev.m_atom_name, ev.m_atom_pos);
                          }
-                         },
+                       },
+
                        [geom_wrp](change_atom_event_t<REAL> &ev) {
                          geom_wrp->change(ev.m_atom_idx, ev.m_after_aname, ev.m_after_apos);
                        },
+
                        [geom_wrp](erase_atom_event_t<REAL> &ev) {
                          geom_wrp->erase(ev.m_atom_idx);
                        },
+
                        [geom_wrp](reorder_atoms_event_t &ev) {
                          geom_wrp->reorder(ev.m_atoms_order);
                        },
+
                        [geom_wrp](change_dim_event_t &ev) {
                          geom_wrp->DIM = ev.new_dim;
                        },
+
                        [geom_wrp](change_cell_event_t<REAL> &ev) {
                          for (size_t i = 0; i < 3; i++)
                            if (geom_wrp->DIM > i && ev.new_cell[i])
                              geom_wrp->cell.v[i] = *(ev.new_cell[i]);
                        },
+
                        [geom_wrp](select_atoms_event_t &ev) {},
                        }, val);
+
       }
 
     }

@@ -4,6 +4,7 @@
 #include <geom/geom.hpp>
 #include <qppcad/core/qppcad.hpp>
 #include <QPainter>
+#include <QPainterPath>
 #include <vector>
 #include <algorithm>
 #include <qppcad/ws_item/ws_item_subsystem.hpp>

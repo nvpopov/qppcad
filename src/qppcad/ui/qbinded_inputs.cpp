@@ -2,6 +2,7 @@
 #include <qppcad/core/app_state.hpp>
 #include <QMouseEvent>
 #include <QColorDialog>
+#include <QPainterPath>
 
 using namespace qpp;
 using namespace qpp::cad;
