@@ -26,7 +26,7 @@ void shift_start_of_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  if (al->m_geom->DIM == 0) {
+  if (al->m_geom->get_DIM() == 0) {
       QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
                            QObject::tr("The structure must be 3d."));
       return;

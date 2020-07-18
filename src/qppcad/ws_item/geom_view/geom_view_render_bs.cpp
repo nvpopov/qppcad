@@ -7,7 +7,7 @@ using namespace qpp::cad;
 void geom_view_render_bs::render(geom_view_t &al) {
 
   app_state_t* astate = app_state_t::get_inst();
-  index all_null = index::D(al.m_geom->DIM).all(0);
+  index all_null = index::D(al.m_geom->get_DIM()).all(0);
 
   float spec = al.m_draw_specular.get_value() ? 1.0f : 0.0f;
   auto draw_atoms = al.m_draw_atoms.get_value();
@@ -24,7 +24,7 @@ void geom_view_render_bs::render(geom_view_t &al) {
       render_atom(al, i, all_null);
 
   // draw imaginary atoms
-  if (al.m_geom->DIM > 0 && draw_atoms && draw_img_atoms)
+  if (al.m_geom->get_DIM() > 0 && draw_atoms && draw_img_atoms)
     for (const auto &at_img : al.m_tws_tr->m_img_atoms)
       if (al.m_atom_type_to_hide.find(al.m_geom->type_table(at_img.m_atm)) ==
           al.m_atom_type_to_hide.end())
@@ -53,7 +53,7 @@ void geom_view_render_bs::render(geom_view_t &al) {
         }
 
   //pure imaginary bond
-  if (al.m_geom->DIM > 0 && draw_img_bonds && draw_bonds)
+  if (al.m_geom->get_DIM() > 0 && draw_img_bonds && draw_bonds)
     for (const auto &img_atom : al.m_tws_tr->m_img_atoms)
       for (const auto &img_bond : img_atom.m_img_bonds) {
           uint32_t id1 = img_atom.m_atm;
@@ -74,7 +74,7 @@ void geom_view_render_bs::render(geom_view_t &al) {
 void geom_view_render_bs::render_suprematic(geom_view_t &al) {
 
   app_state_t* astate = app_state_t::get_inst();
-  index all_null = index::D(al.m_geom->DIM).all(0);
+  index all_null = index::D(al.m_geom->get_DIM()).all(0);
 
   float spec = al.m_draw_specular.get_value() ? 1.0f : 0.0f;
   auto draw_atoms = al.m_draw_atoms.get_value();
@@ -101,7 +101,7 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
           render_atom_suprematic(al, i, all_null, is_backpass);
 
       // draw imaginary atoms
-      if (al.m_geom->DIM > 0 && draw_atoms && draw_img_atoms)
+      if (al.m_geom->get_DIM() > 0 && draw_atoms && draw_img_atoms)
         for (const auto &at_img : al.m_tws_tr->m_img_atoms)
           if (al.m_atom_type_to_hide.find(al.m_geom->type_table(at_img.m_atm)) ==
               al.m_atom_type_to_hide.end())
@@ -141,7 +141,7 @@ void geom_view_render_bs::render_suprematic(geom_view_t &al) {
             }
 
       //pure imaginary bond
-      if (al.m_geom->DIM > 0 && draw_img_bonds && draw_bonds)
+      if (al.m_geom->get_DIM() > 0 && draw_img_bonds && draw_bonds)
         for (const auto &img_atom : al.m_tws_tr->m_img_atoms)
           for (const auto &img_bond : img_atom.m_img_bonds) {
               uint32_t id1 = img_atom.m_atm;

@@ -191,8 +191,7 @@ bool ws_item_t::is_selected() {
 
   if (m_parent_ws) {
     return m_parent_ws->get_sel() == this;
-  }
-  else {
+  } else {
     return false;
   }
 

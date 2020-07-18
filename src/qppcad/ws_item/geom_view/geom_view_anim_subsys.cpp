@@ -30,19 +30,19 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
   if (anim_id > m_anim_data.size()) return;
 
   bool is_variable_cell_anim =
-      m_anim_data[anim_id].m_variable_cell_anim && p_owner->m_geom->DIM > 0;
+      m_anim_data[anim_id].m_variable_cell_anim && p_owner->m_geom->get_DIM() > 0;
 
   // tws_tree setup before modification the geometry
   if (is_variable_cell_anim) {
       p_owner->m_tws_tr->do_action(act_lock | act_clear_all | act_clear_img);
       // update cell
-      for (size_t vc_i = 0; vc_i < p_owner->m_geom->DIM; vc_i++)
+      for (size_t vc_i = 0; vc_i < p_owner->m_geom->get_DIM(); vc_i++)
         p_owner->m_geom->cell.v[vc_i] =
             m_anim_data[anim_id].frames[start_frame_n].m_cell[vc_i] * (frame_delta) +
             m_anim_data[anim_id].frames[end_frame_n].m_cell[vc_i]  * (1-frame_delta);
     } else {
       if (!m_rebuild_bonds_in_anim.get_value()) p_owner->m_tws_tr->do_action(act_lock);
-      else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_lock_img);
+      else if (p_owner->m_geom->get_DIM() > 0) p_owner->m_tws_tr->do_action(act_lock_img);
     }
 
   size_t nat = p_owner->m_geom->nat();
@@ -90,7 +90,7 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
       p_owner->m_tws_tr->do_action(act_rebuild_all);
     } else {
       if (!m_rebuild_bonds_in_anim.get_value()) p_owner->m_tws_tr->do_action(act_unlock);
-      else if (p_owner->m_geom->DIM > 0) p_owner->m_tws_tr->do_action(act_unlock_img);
+      else if (p_owner->m_geom->get_DIM() > 0) p_owner->m_tws_tr->do_action(act_unlock_img);
     }
 
   p_owner->call_followers();
@@ -510,7 +510,7 @@ vector3<float> geom_view_anim_subsys_t::get_cell_vectors(size_t anim_id,
   if (is_cell_animable(anim_id, frame_id))
     return m_anim_data[anim_id].frames[frame_id].m_cell[cell_id];
 
-  if (p_owner->m_geom->DIM >= cell_id)
+  if (p_owner->m_geom->get_DIM() >= cell_id)
     return p_owner->m_geom->cell.v[cell_id];
 
   return vector3<float>{0};

@@ -130,11 +130,11 @@ void pgf_producer_t::generate_geom() {
   astate->tlog("m_imd.cell._end = {}", m_imd.cell._end);
 
   //generate geom
-  if (m_orders_range.size() == m_imd.DIM) {
+  if (m_orders_range.size() == m_imd.get_DIM()) {
 
     astate->tlog("pgf_producer_t::generate_geom() entering in generation process");
 
-    size_t DIM = m_imd.DIM;
+    size_t DIM = m_imd.get_DIM();
 
     index gen_begin = index::D(DIM);
     index gen_end = index::D(DIM);

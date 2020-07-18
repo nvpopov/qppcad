@@ -244,13 +244,13 @@ public:
   template <typename TRANSFORM_CLASS>
   void transform_sel(const TRANSFORM_CLASS &tm) {
     for (auto &elem : m_atom_idx_sel)
-      if (elem.m_idx == index::D(m_geom->DIM).all(0)) transform_atom(elem.m_atm, tm);
+      if (elem.m_idx == index::D(m_geom->get_DIM()).all(0)) transform_atom(elem.m_atm, tm);
     recalc_gizmo_barycenter();
   }
 
   template <typename XFIELD>
   void xfill(size_t field_id, XFIELD value) {
-    index zero = index::D(m_geom->DIM).all(0);
+    index zero = index::D(m_geom->get_DIM()).all(0);
     for (auto &elem : m_atom_idx_sel)
       if (elem.m_idx == zero) m_geom->xfield<XFIELD>(field_id, elem.m_atm) = value;
   }

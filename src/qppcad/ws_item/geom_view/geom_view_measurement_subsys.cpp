@@ -547,7 +547,7 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
 
     json_helper::hs_save_vec3(JSON_GEOM_VIEW_MSR_DIST_DOFFSET, rec->m_delta_offset, msr_dist_inst);
 
-    if (p_owner->m_geom->DIM != 0) {
+    if (p_owner->m_geom->get_DIM() != 0) {
       json_helper::save_index(JSON_GEOM_VIEW_MSR_DIST_IDX1, rec->m_idx1, msr_dist_inst);
       json_helper::save_index(JSON_GEOM_VIEW_MSR_DIST_IDX2, rec->m_idx2, msr_dist_inst);
     }
@@ -570,7 +570,7 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
     msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_SHOW] = rec->m_show.get_value();
     msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_ORDER] = rec->m_order.get_value();
 
-    if (p_owner->m_geom->DIM != 0) {
+    if (p_owner->m_geom->get_DIM() != 0) {
       json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX1, rec->m_idx1, msr_angle_inst);
       json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX2, rec->m_idx2, msr_angle_inst);
       json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX3, rec->m_idx3, msr_angle_inst);
@@ -607,10 +607,10 @@ void geom_view_msr_subsys_t::load_from_json(json &data) {
 
       size_t at1 = msr_record[JSON_GEOM_VIEW_MSR_DIST_AT1];
       size_t at2 = msr_record[JSON_GEOM_VIEW_MSR_DIST_AT2];
-      index idx1 = index::D(p_owner->m_geom->DIM).all(0);
-      index idx2 = index::D(p_owner->m_geom->DIM).all(0);
+      index idx1 = index::D(p_owner->m_geom->get_DIM()).all(0);
+      index idx2 = index::D(p_owner->m_geom->get_DIM()).all(0);
 
-      if (p_owner->m_geom->DIM != 0) {
+      if (p_owner->m_geom->get_DIM() != 0) {
         idx1 = json_helper::load_index(JSON_GEOM_VIEW_MSR_DIST_IDX1, msr_record);
         idx2 = json_helper::load_index(JSON_GEOM_VIEW_MSR_DIST_IDX2, msr_record);
       }
@@ -652,11 +652,11 @@ void geom_view_msr_subsys_t::load_from_json(json &data) {
       size_t at1 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT1];
       size_t at2 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT2];
       size_t at3 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT3];
-      index idx1 = index::D(p_owner->m_geom->DIM).all(0);
-      index idx2 = index::D(p_owner->m_geom->DIM).all(0);
-      index idx3 = index::D(p_owner->m_geom->DIM).all(0);
+      index idx1 = index::D(p_owner->m_geom->get_DIM()).all(0);
+      index idx2 = index::D(p_owner->m_geom->get_DIM()).all(0);
+      index idx3 = index::D(p_owner->m_geom->get_DIM()).all(0);
 
-      if (p_owner->m_geom->DIM != 0) {
+      if (p_owner->m_geom->get_DIM() != 0) {
         idx1 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX1, msr_record);
         idx2 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX2, msr_record);
         idx3 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX3, msr_record);

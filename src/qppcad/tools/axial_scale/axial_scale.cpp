@@ -15,7 +15,7 @@ void axial_scale_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   if (!ok) return;
 
-  if (al->m_geom->DIM != 3) {
+  if (al->m_geom->get_DIM() != 3) {
       QMessageBox::warning(nullptr,
                            QObject::tr("Axial scale"),
                            QObject::tr("Structure's dimension is not equals to 3")
@@ -40,7 +40,7 @@ void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,
                                            const float scale_a,
                                            const float scale_b,
                                            const float scale_c) {
-  if (al->m_geom->DIM != 3) return;
+  if (al->m_geom->get_DIM() != 3) return;
 
   std::array<vector3<float>, 3> new_cell;
   new_cell[0] = al->m_geom->cell.v[0] * scale_a;
@@ -142,6 +142,6 @@ bool axial_scale_can_apply_helper_t::can_apply(ws_item_t *item) {
   if (!item) return false;
   auto as_gv = item->cast_as<geom_view_t>();
   if (!as_gv) return false;
-  return as_gv->m_geom->DIM == 3;
+  return as_gv->m_geom->get_DIM() == 3;
 
 }

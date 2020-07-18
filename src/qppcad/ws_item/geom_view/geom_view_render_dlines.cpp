@@ -7,7 +7,7 @@ namespace qpp {
     void geom_view_render_dlines::render (geom_view_t &al) {
 
       app_state_t* astate = app_state_t::get_inst();
-      index all_null = index::D(al.m_geom->DIM).all(0);
+      index all_null = index::D(al.m_geom->get_DIM()).all(0);
 
       //auto draw_atoms = al.m_draw_atoms.get_value();
       //auto draw_img_atoms = al.m_draw_img_atoms.get_value();

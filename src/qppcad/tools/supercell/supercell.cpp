@@ -26,7 +26,7 @@ void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
     return;
   }
 
-  if (al->m_geom->DIM != 3) {
+  if (al->m_geom->get_DIM() != 3) {
     QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
                          QObject::tr("al->m_geom->DIM != 3"));
     return;
@@ -43,7 +43,7 @@ void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 void supercell_tool_t::make_super_cell(geom_view_t *al,
                                        const int a_n, const int b_n, const int c_n) {
 
-  if (al->m_geom->DIM != 3) {
+  if (al->m_geom->get_DIM() != 3) {
     QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
                          QObject::tr("al->m_geom->DIM != 3"));
     return;
@@ -56,8 +56,8 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   }
 
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
-  sc_al->m_geom->DIM = 3;
-  sc_al->m_geom->cell.DIM = 3;
+  sc_al->m_geom->set_DIM(3);
+  //sc_al->m_geom->cell.DIM = 3;
 
   //sc_al->set_parent_workspace(parent_ws);
   sc_al->begin_structure_change();
@@ -90,8 +90,8 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
     sc_al->m_tws_tr->do_action(act_lock);
     xgeometry<float, periodic_cell<float> > g(3); //intermediate xgeom
     g.set_format({"charge"},{type_real});
-    g.DIM = 3;
-    g.cell.DIM = 3;
+    g.set_DIM(3);
+    //g.cell.DIM = 3;
     g.cell.v[0] = sc_al->m_geom->cell.v[0];
     g.cell.v[1] = sc_al->m_geom->cell.v[1];
     g.cell.v[2] = sc_al->m_geom->cell.v[2];
@@ -100,13 +100,13 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
     for (int i = 0; i < sc_al->m_geom->nat(); i++) {
 
-      std::vector<tws_node_content_t<float> > res;
+      std::vector<tws_node_content_t<float>> res;
       sc_al->m_tws_tr->query_sphere(equality_dist, sc_al->m_geom->pos(i), res);
       float accum_chg = 0;
 
       bool need_to_add{true};
       for (auto &elem : res)
-        if (elem.m_idx == index::D(sc_al->m_geom->DIM).all(0)) {
+        if (elem.m_idx == index::D(sc_al->m_geom->get_DIM()).all(0)) {
           accum_chg += sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
           if (i > elem.m_atm) need_to_add = false;
         }
@@ -217,7 +217,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
     return;
   }
 
-  if (m_src_gv->m_geom->DIM != 3) {
+  if (m_src_gv->m_geom->get_DIM() != 3) {
     return;
   }
 
@@ -231,8 +231,8 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
   }
 
   auto diml = m_sc_tool_mode.get_value() == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
-  m_dst_gv->m_geom->DIM = diml;
-  m_dst_gv->m_geom->cell.DIM = diml;
+  m_dst_gv->m_geom->set_DIM(diml);
+  //m_dst_gv->m_geom->cell.DIM = diml;
   m_dst_gv->begin_structure_change();
   m_dst_gv->m_geom->clear();
 
@@ -369,6 +369,6 @@ bool super_cell_can_apply_helper_t::can_apply(ws_item_t *item) {
   if (!item) return false;
   auto as_gv = item->cast_as<geom_view_t>();
   if (!as_gv) return false;
-  return as_gv->m_geom->DIM == 3;
+  return as_gv->m_geom->get_DIM() == 3;
 
 }

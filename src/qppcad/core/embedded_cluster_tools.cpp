@@ -121,8 +121,9 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   //copy uc to intermediate
   xgeometry<float, periodic_cell<float> > gd_uc(3);
   gd_uc.set_format({"charge"},{type_real});
-  gd_uc.DIM = 3;
-  gd_uc.cell.DIM = 3;
+  gd_uc.set_DIM(3);
+  //gd_uc.cell.DIM = 3;
+
   gd_uc.cell.v[0] = uc->m_geom->cell.v[0];
   gd_uc.cell.v[1] = uc->m_geom->cell.v[1];
   gd_uc.cell.v[2] = uc->m_geom->cell.v[2];

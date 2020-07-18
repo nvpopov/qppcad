@@ -22,7 +22,7 @@ void sel_parity_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  index zero = index::D(al->m_geom->DIM).all(0);
+  index zero = index::D(al->m_geom->get_DIM()).all(0);
   for (auto &elem : al->m_atom_idx_sel)
     if (elem.m_idx == zero) {
         std::array<int, 2> parity_d{-1,1};

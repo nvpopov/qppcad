@@ -26,7 +26,7 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  if (al->m_geom->DIM == 0) {
+  if (al->m_geom->get_DIM() == 0) {
       QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
                            QObject::tr("The structure must be 3d."));
       return;

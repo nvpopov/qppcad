@@ -391,8 +391,8 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
           auto nt_gv = nt->cast_as<geom_view_t>();
           if (!nt_gv) return;
           nt_gv->m_tws_tr->do_action(act_lock | act_clear_all);
-          nt_gv->m_geom->DIM = 3;
-          nt_gv->m_geom->cell.DIM = 3;
+          nt_gv->m_geom->set_DIM(3);
+          //nt_gv->m_geom->cell.DIM = 3;
 
           switch (ccm) {
 
@@ -400,9 +400,7 @@ void add_new_ws_item_widget_t::ok_button_clicked() {
                 vector3<float> cubic_a{float(m_type_cell_ctor_cubic_size->value()), 0, 0};
                 vector3<float> cubic_b{0, float(m_type_cell_ctor_cubic_size->value()), 0};
                 vector3<float> cubic_c{0, 0, float(m_type_cell_ctor_cubic_size->value())};
-                nt_gv->m_geom->cell = periodic_cell<float>(cubic_a,
-                                                           cubic_b,
-                                                           cubic_c);
+                nt_gv->m_geom->cell = periodic_cell<float>(cubic_a, cubic_b, cubic_c);
                 break;
               }
 

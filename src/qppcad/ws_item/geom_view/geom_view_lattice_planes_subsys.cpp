@@ -15,7 +15,7 @@ void geom_view_lat_planes_subsys_t::add_plane(int _h, int _k, int _l) {
 }
 
 void geom_view_lat_planes_subsys_t::render() {
-  if (p_owner->m_geom->DIM == 0) return;
+  if (p_owner->m_geom->get_DIM() == 0) return;
   app_state_t* astate = app_state_t::get_inst();
 
   astate->dp->begin_render_general_mesh();

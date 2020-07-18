@@ -15,10 +15,10 @@ namespace qpp {
       auto as_gv = item->cast_as<geom_view_t>();
       if (!as_gv) return false;
 
-      if (ALLOW_0D && as_gv->m_geom->DIM == 0) return true;
-      if (ALLOW_1D && as_gv->m_geom->DIM == 1) return true;
-      if (ALLOW_2D && as_gv->m_geom->DIM == 2) return true;
-      if (ALLOW_3D && as_gv->m_geom->DIM == 3) return true;
+      if (ALLOW_0D && as_gv->m_geom->get_DIM() == 0) return true;
+      if (ALLOW_1D && as_gv->m_geom->get_DIM() == 1) return true;
+      if (ALLOW_2D && as_gv->m_geom->get_DIM() == 2) return true;
+      if (ALLOW_3D && as_gv->m_geom->get_DIM() == 3) return true;
 
       return false;
 

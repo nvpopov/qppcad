@@ -8,7 +8,7 @@ namespace qpp {
     void geom_view_render_xlines::render(geom_view_t &al) {
 
       app_state_t* astate = app_state_t::get_inst();
-      index all_null = index::D(al.m_geom->DIM).all(0);
+      index all_null = index::D(al.m_geom->get_DIM()).all(0);
       astate->sp_line_mesh->begin_shader_program();
       astate->mesh_xline_mesh->begin_render_batch();
 

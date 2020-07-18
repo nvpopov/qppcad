@@ -37,16 +37,16 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
     }
 
   //intermediate geometry
-  xgeometry<float, periodic_cell<float> > g(al->m_geom->DIM);
+  xgeometry<float, periodic_cell<float> > g(al->m_geom->get_DIM());
 
-  g.DIM = al->m_geom->DIM;
-  g.cell.DIM = al->m_geom->cell.DIM;
+  g.set_DIM(al->m_geom->get_DIM());
+  //g.cell.DIM = al->m_geom->cell.DIM;
 
   //initialize tws_tree
   tws_tree_t<float, periodic_cell<float> > g_t(g);
   g_t.do_action(act_lock | act_lock_img);
 
-  index zero = index::D(al->m_geom->DIM).all(0);
+  index zero = index::D(al->m_geom->get_DIM()).all(0);
 
   //copy initial geometry
   al->copy_to_xgeom(g);
@@ -65,8 +65,7 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
         g_t.do_action(act_build_tree);
         g_t.do_action(act_lock | act_lock_img);
 
-        if (al->m_anim->m_anim_data[a_id].frames[f_id].atom_color.size() !=
-            al->m_geom->nat())
+        if (al->m_anim->m_anim_data[a_id].frames[f_id].atom_color.size() != al->m_geom->nat())
           al->m_anim->m_anim_data[a_id].frames[f_id].atom_color.resize(al->m_geom->nat());
 
         for (int i = 0; i < g.nat(); i++) {

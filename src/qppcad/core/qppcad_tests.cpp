@@ -956,20 +956,20 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_xg->get_cur_epoch() == 0);
     hs_xg->hs_change_DIM(xgeom_proxy_hs_act_type_e::hs_act_emit_both, 0);
     REQUIRE(hs_xg->get_cur_epoch() == 1);
-    REQUIRE(xg1.DIM == 0);
+    REQUIRE(xg1.get_DIM() == 0);
 
     hs_xg->hs_change_DIM(xgeom_proxy_hs_act_type_e::hs_act_emit_both, 3);
     REQUIRE(hs_xg->get_cur_epoch() == 2);
-    REQUIRE(xg1.DIM == 3);
+    REQUIRE(xg1.get_DIM() == 3);
 
     REQUIRE(xg1.cell.v[0] == vector3<double>(5, 0, 0));
     REQUIRE(xg1.cell.v[1] == vector3<double>(0, 5, 0));
     REQUIRE(xg1.cell.v[2] == vector3<double>(0, 0, 5));
 
     hs_xg->checkout_to_epoch(1);
-    REQUIRE(xg1.DIM == 0);
+    REQUIRE(xg1.get_DIM() == 0);
     hs_xg->checkout_to_epoch(2);
-    REQUIRE(xg1.DIM == 3);
+    REQUIRE(xg1.get_DIM() == 3);
 
     hs_xg->hs_change_cell(xgeom_proxy_hs_act_type_e::hs_act_emit_both,
                           vector3<double>(15,  0,  0),

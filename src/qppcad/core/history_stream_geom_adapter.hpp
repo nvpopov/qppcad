@@ -134,12 +134,12 @@ protected:
                            },
 
                            [geom_wrp](change_dim_event_t &ev) {
-                             geom_wrp->DIM = ev.old_dim;
+                             geom_wrp->set_DIM(ev.old_dim);
                            },
 
                            [geom_wrp](change_cell_event_t<REAL> &ev) {
                              for (size_t i = 0; i < 3; i++)
-                               if (geom_wrp->DIM > i && ev.old_cell[i])
+                               if (geom_wrp->get_DIM() > i && ev.old_cell[i])
                                  geom_wrp->cell.v[i] = *(ev.old_cell[i]);
                            },
 
@@ -179,12 +179,12 @@ protected:
                        },
 
                        [geom_wrp](change_dim_event_t &ev) {
-                         geom_wrp->DIM = ev.new_dim;
+                         geom_wrp->set_DIM(ev.new_dim);
                        },
 
                        [geom_wrp](change_cell_event_t<REAL> &ev) {
                          for (size_t i = 0; i < 3; i++)
-                           if (geom_wrp->DIM > i && ev.new_cell[i])
+                           if (geom_wrp->get_DIM() > i && ev.new_cell[i])
                              geom_wrp->cell.v[i] = *(ev.new_cell[i]);
                        },
 
@@ -225,12 +225,12 @@ public:
 
   uint32_t get_flags() override {
     return geometry_observer_supports_default
-           | geometry_observer_supports_added
-           | geometry_observer_supports_inserted
-           | geometry_observer_supports_changed
-           | geometry_observer_supports_erased
-           | geometry_observer_supports_shaded
-           | geometry_observer_supports_reordered;
+           | geometry_observer_supports_add
+           | geometry_observer_supports_insert
+           | geometry_observer_supports_change
+           | geometry_observer_supports_erase
+           | geometry_observer_supports_shadow
+           | geometry_observer_supports_reorder;
   };
 
   void added(before_after order,
@@ -390,14 +390,14 @@ public:
 
     if (evtype == hs_act_emit_hs_event || evtype == hs_act_emit_both) {
       change_dim_event_t change_dim_event;
-      change_dim_event.old_dim = p_xgeom->DIM;
+      change_dim_event.old_dim = p_xgeom->get_DIM();
       change_dim_event.new_dim = newdim;
       p_tmp_acts.push_back(std::move(change_dim_event));
     }
 
     if (evtype == hs_act_emit_geom_change || evtype == hs_act_emit_both) {
-      p_xgeom->DIM = newdim;
-      p_xgeom->cell.DIM = newdim;
+      p_xgeom->set_DIM(newdim);
+      //p_xgeom->cell.DIM = newdim;
     }
 
     if (!p_currently_editing) commit_changes(true);
@@ -414,20 +414,20 @@ public:
     if (evtype == hs_act_emit_hs_event || evtype == hs_act_emit_both) {
       change_cell_event_t<REAL> change_cell_event;
       //old cell
-      if (p_xgeom->DIM > 0) change_cell_event.old_cell[0] = p_xgeom->cell.v[0];
-      if (p_xgeom->DIM > 1) change_cell_event.old_cell[1] = p_xgeom->cell.v[1];
-      if (p_xgeom->DIM > 2) change_cell_event.old_cell[2] = p_xgeom->cell.v[2];
+      if (p_xgeom->get_DIM() > 0) change_cell_event.old_cell[0] = p_xgeom->cell.v[0];
+      if (p_xgeom->get_DIM() > 1) change_cell_event.old_cell[1] = p_xgeom->cell.v[1];
+      if (p_xgeom->get_DIM() > 2) change_cell_event.old_cell[2] = p_xgeom->cell.v[2];
       //new cell
-      if (a && p_xgeom->DIM > 0) change_cell_event.new_cell[0] = *a;
-      if (b && p_xgeom->DIM > 0) change_cell_event.new_cell[1] = *b;
-      if (c && p_xgeom->DIM > 0) change_cell_event.new_cell[2] = *c;
+      if (a && p_xgeom->get_DIM() > 0) change_cell_event.new_cell[0] = *a;
+      if (b && p_xgeom->get_DIM() > 0) change_cell_event.new_cell[1] = *b;
+      if (c && p_xgeom->get_DIM() > 0) change_cell_event.new_cell[2] = *c;
       p_tmp_acts.push_back(std::move(change_cell_event));
     }
 
     if (evtype == hs_act_emit_geom_change || evtype == hs_act_emit_both) {
-      if (a && p_xgeom->DIM > 0) p_xgeom->cell.v[0] = *a;
-      if (b && p_xgeom->DIM > 1) p_xgeom->cell.v[1] = *b;
-      if (c && p_xgeom->DIM > 2) p_xgeom->cell.v[2] = *c;
+      if (a && p_xgeom->get_DIM() > 0) p_xgeom->cell.v[0] = *a;
+      if (b && p_xgeom->get_DIM() > 1) p_xgeom->cell.v[1] = *b;
+      if (c && p_xgeom->get_DIM() > 2) p_xgeom->cell.v[2] = *c;
     }
 
     if (!p_currently_editing) commit_changes(true);

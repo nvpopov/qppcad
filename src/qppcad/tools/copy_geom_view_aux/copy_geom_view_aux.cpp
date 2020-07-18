@@ -146,9 +146,9 @@ void copy_geom_view_aux_widget_t::bind_item(ws_item_t *item) {
     auto slave_as_gv = slave->cast_as<geom_view_t>();
     if (!master_as_gv || !slave_as_gv) return false;
 
-    return master_as_gv != slave_as_gv &&
-        master_as_gv->m_geom->DIM == slave_as_gv->m_geom->DIM &&
-        master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
+    return master_as_gv != slave_as_gv
+           && master_as_gv->m_geom->get_DIM() == slave_as_gv->m_geom->get_DIM()
+           && master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
 
   });
 

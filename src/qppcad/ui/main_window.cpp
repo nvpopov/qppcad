@@ -1249,7 +1249,7 @@ void main_window_t::cur_ws_sel_item_changed() {
 
     if (as_al) {
 
-      bool al_is_3d = as_al->m_geom->DIM == 3;
+      bool al_is_3d = as_al->m_geom->get_DIM() == 3;
       //tp_camera_tool_act_a->setVisible(al_is_3d)
       m_tp_cam_tool_act_a->setVisible(al_is_3d);
       m_tp_cam_tool_act_b->setVisible(al_is_3d);
