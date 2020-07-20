@@ -10,43 +10,6 @@ void copy_geom_view_aux_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  //  copy_geom_view_aux_widget_t cgv;
-  //  cgv.sub_gv->m_ws_item_class = geom_view_t::get_type_static();
-
-  //  if (!item) return;
-
-  //  auto as_gv = item->cast_as<geom_view_t>();
-  //  if (!as_gv) return;
-
-  //  cgv.sub_gv->m_master_item = as_gv;
-  //  cgv.sub_gv->rebuild_sub_gvs([](ws_item_t *master, ws_item_t *slave) -> bool {
-
-  //    if (!master || !slave) return false;
-
-  //    auto master_as_gv = master->cast_as<geom_view_t>();
-  //    auto slave_as_gv = slave->cast_as<geom_view_t>();
-  //    if (!master_as_gv || !slave_as_gv) return false;
-
-  //    return master_as_gv != slave_as_gv &&
-  //           master_as_gv->m_geom->DIM == slave_as_gv->m_geom->DIM &&
-  //           master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
-
-  //  });
-
-  //  int ret_code = cgv.exec();
-
-  //  auto master_as_gv = cgv.sub_gv->m_master_item->cast_as<geom_view_t>();
-
-  //  if (ret_code != QDialog::Accepted) return;
-
-  //  for (size_t i = 0; i < cgv.sub_gv->count(); i++)
-  //    if (QListWidgetItem *item = cgv.sub_gv->item(i); item && item->checkState() == Qt::Checked)
-  //      if (auto slave_as_gv = cgv.sub_gv->m_sub_items[i]->cast_as<geom_view_t>(); slave_as_gv) {
-  //          if (cgv.cb_copy_settings->isChecked()) slave_as_gv->copy_settings(master_as_gv);
-  //          if (cgv.cb_copy_xgeom->isChecked()) slave_as_gv->copy_xgeom_aux(master_as_gv);
-  //          if (cgv.cb_copy_msr->isChecked()) slave_as_gv->copy_measurements(master_as_gv);
-  //        }
-
 }
 
 ws_item_inline_tool_widget_t *copy_geom_view_aux_tool_t::construct_inline_tool() {
@@ -122,15 +85,10 @@ void copy_geom_view_aux_widget_t::bind_item(ws_item_t *item) {
   ws_item_inline_tool_widget_t::bind_item(item);
 
   if (m_src->get_type() == geom_view_t::get_type_static()) {
-
       m_src_gv = m_src->cast_as<geom_view_t>();
-
     } else {
-
       m_src_gv = nullptr;
-
       sub_gv->m_master_item = nullptr;
-
     }
 
   if (!m_src_gv) return;

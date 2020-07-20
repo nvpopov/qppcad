@@ -1044,35 +1044,25 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
     }
 
     if (DIM == 2) {
-
       float sq1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).norm();
       float sq2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).norm();
-
       if (sq1 > sq2) tmp_dst->copy_cell(*gv_src1, false);
       else tmp_dst->copy_cell(*gv_src2, false);
-
     }
 
     if (DIM == 3) {
-
       float vol1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).dot(
           gv_src1->m_geom->cell.v[2]);
       float vol2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).dot(
           gv_src2->m_geom->cell.v[2]);
-
       if (vol1 > vol2) tmp_dst->copy_cell(*gv_src1, false);
       else tmp_dst->copy_cell(*gv_src2, false);
-
     }
 
   } else if (gv_src1->m_geom->get_DIM() > gv_src2->m_geom->get_DIM()) {
-
     tmp_dst->copy_cell(*gv_src1, false);
-
   } else if (gv_src1->m_geom->get_DIM() < gv_src2->m_geom->get_DIM()) {
-
     tmp_dst->copy_cell(*gv_src2, false);
-
   }
 
   astate->tlog("MERGE DIM {}", tmp_dst->m_geom->get_DIM());
