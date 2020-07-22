@@ -160,43 +160,36 @@ protected:
                              geom_wrp->get_format(fn, ft);
 
                              switch (ft[ev.m_field_id]) {
-
                              case type_int: {
                                geom_wrp->template set_xfield<int>(ev.m_field_id, ev.m_atom_id,
                                                                   std::get<int>(ev.m_before));
                                break;
                              }
-
                              case type_real: {
                                geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
                                                                      std::get<double>(ev.m_before));
                                break;
                              }
-
                              case type_double: {
                                geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
                                                                      std::get<double>(ev.m_before));
                                break;
                              }
-
                              case type_float: {
                                geom_wrp->template set_xfield<float>(ev.m_field_id, ev.m_atom_id,
                                                                     std::get<float>(ev.m_before));
                                break;
                              }
-
                              case type_bool: {
                                geom_wrp->template set_xfield<bool>(ev.m_field_id, ev.m_atom_id,
                                                                    std::get<bool>(ev.m_before));
                                break;
                              }
-
                              case type_string: {
                                geom_wrp->template set_xfield<STRING_EX>(
                                    ev.m_field_id, ev.m_atom_id,std::get<STRING_EX>(ev.m_before));
                                break;
                              }
-
                              }
 
                            },
@@ -260,37 +253,31 @@ protected:
                                                               std::get<int>(ev.m_after));
                            break;
                          }
-
                          case type_real: {
                            geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
                                                                  std::get<double>(ev.m_after));
                            break;
                          }
-
                          case type_double: {
                            geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
                                                                  std::get<double>(ev.m_after));
                            break;
                          }
-
                          case type_float: {
                            geom_wrp->template set_xfield<float>(ev.m_field_id, ev.m_atom_id,
                                                                 std::get<float>(ev.m_after));
                            break;
                          }
-
                          case type_bool: {
                            geom_wrp->template set_xfield<bool>(ev.m_field_id, ev.m_atom_id,
                                                                std::get<bool>(ev.m_after));
                            break;
                          }
-
                          case type_string: {
                            geom_wrp->template set_xfield<STRING_EX>(
                                ev.m_field_id, ev.m_atom_id,std::get<STRING_EX>(ev.m_after));
                            break;
                          }
-
                          }
 
                        },
@@ -457,7 +444,7 @@ public:
 
   }
 
-  void xfield_changed(int at, int xid, before_after ord) override {
+  void xfield_changed(int xid, int at, before_after ord) override {
 
     if (p_currently_applying_dstate) return;
 
@@ -465,6 +452,7 @@ public:
     std::vector<basic_types> ft;
 
     p_xgeom->get_format(fn, ft);
+    //std::cout << "@@@XFIELD_CHANGED size(fn) " << size(fn) << " " << size(ft) << std::endl;
 
     if (ord == before_after::before) {
 

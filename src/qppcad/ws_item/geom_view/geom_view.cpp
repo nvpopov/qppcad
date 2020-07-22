@@ -166,16 +166,16 @@ geom_view_t::geom_view_t(): ws_item_t() {
 
 }
 
-void geom_view_t::vote_for_view_vectors(vector3<float> &out_look_pos,
-                                        vector3<float> &out_look_at) {
+void geom_view_t::vote_for_view_vectors(vector3<float> &out_look_pos, vector3<float> &out_look_at){
   if (m_geom->nat() > 1) {
     out_look_at += (m_ext_obs->aabb.max + m_ext_obs->aabb.min) / 2.0;
     vector3<float> bb_size = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
     float size = bb_size.norm();
     float g_sz_mod = 2.0f;
-    out_look_pos +=
-        g_sz_mod * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 60.0);
-  } else out_look_pos += vector3<float>(0.0, 0.0, -5.0);
+    out_look_pos += g_sz_mod * m_ext_obs->aabb.max.normalized() * clamp<float>(size, 10.0, 60.0);
+  } else {
+    out_look_pos += vector3<float>(0.0, 0.0, -5.0);
+  }
 
 }
 
@@ -188,11 +188,13 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   auto new_target_view = target_view_src;
 
   if (new_target_view == cam_tv_e::tv_auto) {
-    if (m_geom->get_DIM() != 0) new_target_view = cam_tv_e::tv_a;
-    else if (m_ext_obs->aabb.center().isApprox(vector3<float>{0}, 0.001f))
+    if (m_geom->get_DIM() != 0) {
+      new_target_view = cam_tv_e::tv_a;
+    } else if (m_ext_obs->aabb.center().isApprox(vector3<float>{0}, 0.001f)) {
       new_target_view = cam_tv_e::tv_x;
-    else
+    } else {
       new_target_view = cam_tv_e::tv_cc;
+    }
   }
 
   switch (new_target_view) {
