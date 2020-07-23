@@ -1116,6 +1116,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_xg->get_cur_epoch() == 1);
     REQUIRE(xg1.nat() == 5);
 
+    /* testing double */
     hs_xg->begin_editing();
     xg1.set_xfield<double>(4, 0, -20);
     hs_xg->end_editing();
@@ -1132,6 +1133,30 @@ TEST_CASE("history stream test") {
 
     hs_xg->checkout_to_epoch(1);
     REQUIRE(xg1.get_xfield<double>(4, 0) == 0);
+
+    /* testing string */
+    REQUIRE(xg1.xfield<std::string>(0, 0) == "S0");
+    xg1.set_xfield<std::string>(0, 0, "X0");
+    REQUIRE(hs_xg->get_cur_epoch() == 4);
+    REQUIRE(xg1.xfield<std::string>(0, 0) == "X0");
+    hs_xg->checkout_to_epoch(1);
+    REQUIRE(xg1.xfield<std::string>(0, 0) == "S0");
+
+    /* testing int */
+    REQUIRE(xg1.xfield<int>(5, 0) == 0);
+    xg1.set_xfield<int>(5, 0, 1);
+    REQUIRE(hs_xg->get_cur_epoch() == 5);
+    REQUIRE(xg1.xfield<int>(5, 0) == 1);
+    hs_xg->checkout_to_epoch(1);
+    REQUIRE(xg1.xfield<int>(5, 0) == 0);
+
+    /* testing bool */
+    REQUIRE(xg1.xfield<bool>(6, 0) == false);
+    xg1.set_xfield<bool>(6, 0, true);
+    REQUIRE(hs_xg->get_cur_epoch() == 6);
+    REQUIRE(xg1.xfield<bool>(6, 0) == true);
+    hs_xg->checkout_to_epoch(1);
+    REQUIRE(xg1.xfield<bool>(6, 0) == false);
 
   }
 
