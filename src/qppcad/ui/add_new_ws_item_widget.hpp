@@ -26,7 +26,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum cell_construct_mode : int {
+    enum class cell_construct_mode : int {
       construct_cubic = 0,
       construct_ortho = 1,
       construct_3angles_3len = 2,

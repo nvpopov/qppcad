@@ -544,7 +544,7 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
   geom_anim_record_t<float> new_anim;
   new_anim.frames.resize(gvs.size());
   new_anim.m_anim_name = "composed0";
-  new_anim.m_anim_type = geom_anim_t::anim_geo_opt;
+  new_anim.m_anim_type = geom_anim_e::anim_geo_opt;
 
   for (auto list_itm : gvs)
     if (py::isinstance<geom_view_t &>(list_itm)) {
@@ -684,7 +684,7 @@ void geom_view_tools_t::gen_pair_dist_anim(geom_view_t *gv,
   //compose new anim
   geom_anim_record_t<float> new_anim;
   new_anim.m_anim_name = fmt::format("pair_dist{}", gv->m_anim->get_total_anims());
-  new_anim.m_anim_type = geom_anim_t::anim_generic;
+  new_anim.m_anim_type = geom_anim_e::anim_generic;
 
   new_anim.frames.resize(num_frames);
 

@@ -38,12 +38,12 @@ void py_geom_view_reg_helper_t::reg(
           .export_values();
 
   /* geom_anim_t pyexport */
-  py::enum_<geom_anim_t>(module, "geom_anim_e", py::arithmetic(), "")
-          .value("anim_static", anim_static, "anim_static")
-          .value("anim_generic", anim_generic, "anim_generic")
-          .value("anim_geo_opt", anim_geo_opt, "anim_geo_opt")
-          .value("anim_md", anim_md, "anim_md")
-          .value("anim_vib", anim_vib, "anim_vib")
+  py::enum_<geom_anim_e>(module, "geom_anim_e", py::arithmetic(), "")
+      .value("anim_static", geom_anim_e::anim_static, "anim_static")
+          .value("anim_generic", geom_anim_e::anim_generic, "anim_generic")
+          .value("anim_geo_opt", geom_anim_e::anim_geo_opt, "anim_geo_opt")
+          .value("anim_md", geom_anim_e::anim_md, "anim_md")
+          .value("anim_vib", geom_anim_e::anim_vib, "anim_vib")
           .export_values();
 
   /* py_geom_view_anim pyexport */

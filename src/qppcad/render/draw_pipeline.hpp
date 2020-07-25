@@ -11,7 +11,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum draw_pipeline_depth_func {
+    enum class draw_pipeline_depth_func {
       depth_equal,
       depth_lequal,
       depth_greater,
@@ -21,7 +21,7 @@ namespace qpp {
       depth_enabled
     };
 
-    enum draw_pipeline_cull_func {
+    enum class draw_pipeline_cull_func {
       cull_front,
       cull_back,
       cull_enable,

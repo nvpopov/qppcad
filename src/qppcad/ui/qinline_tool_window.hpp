@@ -10,7 +10,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum qinline_tool_type_e {
+    enum class qinline_tool_type_e {
       tool_vertical,
       tool_horizontal
     };

@@ -10,7 +10,7 @@ namespace qpp {
 
 namespace cad {
 
-enum sf_parameter_e : int {
+enum class sf_parameter_e : int {
   sfpar_none,
   sfpar_int,
   sfpar_bool,

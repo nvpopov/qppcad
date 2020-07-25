@@ -56,7 +56,8 @@ void colorize_by_xfield_widget_t::build_xfield() {
   b_gv->m_geom->get_format(b_fn, b_ft);
 
   for (size_t i = 0; i < b_fn.size(); i++)
-    if (b_ft[i] == type_real) m_cmb_xfield_name->addItem(QString::fromStdString(b_fn[i]));
+    if (b_ft[i] == basic_types::type_real)
+      m_cmb_xfield_name->addItem(QString::fromStdString(b_fn[i]));
 
 }
 

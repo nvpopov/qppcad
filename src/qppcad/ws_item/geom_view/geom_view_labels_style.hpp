@@ -5,22 +5,20 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    enum geom_labels_style_e : int {
+enum  geom_labels_style_e : int {
+  show_none,
+  show_id,
+  show_type,
+  show_id_type,
+  show_charge,
+  show_charge_type,
+  show_charge_id_type,
+  show_custom
+};
 
-      show_none,
-      show_id,
-      show_type,
-      show_id_type,
-      show_charge,
-      show_charge_type,
-      show_charge_id_type,
-      show_custom
-
-    };
-
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

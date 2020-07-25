@@ -10,12 +10,12 @@ namespace cad {
 class hs_doc_base_t;
 using epoch_t = std::size_t;
 
-enum hs_dstate_e {
+enum class hs_dstate_e {
   hs_dstate_inst, /* instant */
   hs_dstate_incr  /* incremental */
 };
 
-enum hs_result_e {
+enum class hs_result_e {
   hs_error = 0,
   hs_success = 1,
   hs_invalid_epoch = 2,
@@ -28,17 +28,17 @@ enum hs_result_e {
   hs_dead = 9
 };
 
-enum hs_dstate_dir_e {
+enum class hs_dstate_dir_e {
   hs_ds_dir_forward,
   hs_ds_dir_backward
 };
 
-enum hs_dstate_apply_e {
+enum class hs_dstate_apply_e {
   hs_ds_apply,
   hs_ds_unapply
 };
 
-enum hs_doc_type_e {
+enum class hs_doc_type_e {
   hs_doc_persistent,
   hs_doc_temporary
 };
@@ -516,7 +516,7 @@ public:
     p_cur_value = new_val;
 
     if (hs_doc_base_t *super_parent = get_super_parent();
-        get_doctype() == hs_doc_persistent
+        get_doctype() == hs_doc_type_e::hs_doc_persistent
         && super_parent
         && super_parent->get_commit_exclusive_on_change())
       commit_value_exclusive(STYPE(p_cur_value));

@@ -9,7 +9,7 @@ namespace qpp {
 
     class app_state_t;
 
-    enum fixture_type_e : int {
+    enum class fixture_type_e : int {
       ft_none,
       ft_ws_item_tool,
       ft_file_format

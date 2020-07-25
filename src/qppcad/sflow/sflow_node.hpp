@@ -17,12 +17,10 @@ namespace cad {
 class sf_node_t;
 struct sf_connectivity_data_t;
 
-enum sf_data_group_e {
-
+enum class sf_data_group_e {
   ipl_d,
   inp_d,
   out_d
-
 };
 
 struct sf_socket_info_t {

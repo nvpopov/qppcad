@@ -70,7 +70,7 @@ namespace qpp {
 
         void make_animable();
         void make_anim(const std::string &anim_name,
-                       const geom_anim_t anim_type,
+                       const geom_anim_e anim_type,
                        const size_t num_frames);
         void make_static_anim(bool do_it_anyway = false);
 
@@ -89,8 +89,8 @@ namespace qpp {
         void manual_frame_manipulate(const int frame_mod);
 
         geom_anim_record_t<float>* get_current_anim();
-        geom_anim_t get_cur_anim_type() const;
-        geom_anim_t get_anim_type_by_idx(size_t anim_idx) const;
+        geom_anim_e get_cur_anim_type() const;
+        geom_anim_e get_anim_type_by_idx(size_t anim_idx) const;
 
         size_t get_total_anims () const;
         size_t frame_count (const size_t anim_id) const;

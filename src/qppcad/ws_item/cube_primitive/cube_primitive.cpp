@@ -20,7 +20,7 @@ cube_primitive_t::cube_primitive_t() : ws_item_t() {
   add_hs_child(&m_alpha);
   add_hs_child(&m_alpha_enabled);
 
-  m_render_mode.set_value(render_solid);
+  m_render_mode.set_value(ws_cube_rendering_mode::render_solid);
   m_scale.set_value({1, 1, 1});
   m_color.set_value({1, 0, 0});
   m_alpha.set_value(0.9f);

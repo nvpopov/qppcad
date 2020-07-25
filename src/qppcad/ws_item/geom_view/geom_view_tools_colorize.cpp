@@ -25,7 +25,7 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
 
       geom_anim_record_t<float> anim;
 
-      anim.m_anim_type = geom_anim_t::anim_static;
+      anim.m_anim_type = geom_anim_e::anim_static;
       anim.m_anim_name = "static";
       anim.frames.resize(1);
       anim.frames[0].atom_pos.resize(al->m_geom->nat());

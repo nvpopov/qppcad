@@ -29,16 +29,16 @@ void ccd_view_t::manual_step_update(const int dir) {
 void ccd_view_t::manual_update_vib() {
 
   for (auto &items : m_connected_items) {
-      auto al = items->cast_as<geom_view_t>();
-      if (al && al->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1)  {
-          al->m_anim->m_cur_anim = m_cur_vib + 1;
-          al->m_anim->m_cur_anim_time = 0.0f;
-          //TODO batch changes
-          al->m_anim->m_play_anim.set_value(true);
-          al->m_anim->m_play_cyclic.set_value(true);
-          al->m_anim->m_anim_frame_time.set_value(0.1f);
-        }
+    auto al = items->cast_as<geom_view_t>();
+    if (al && al->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1)  {
+      al->m_anim->m_cur_anim = m_cur_vib + 1;
+      al->m_anim->m_cur_anim_time = 0.0f;
+      //TODO batch changes
+      al->m_anim->m_play_anim.set_value(true);
+      al->m_anim->m_play_cyclic.set_value(true);
+      al->m_anim->m_anim_frame_time.set_value(0.1f);
     }
+  }
 
 }
 
@@ -52,54 +52,54 @@ void ccd_view_t::update_connected_items() {
 
   switch (m_ccd->m_run_t) {
 
-    case comp_chem_program_run_e::rt_unknown : {
-        break;
+  case comp_chem_program_run_e::rt_unknown : {
+    break;
+  }
+
+  case comp_chem_program_run_e::rt_energy : {
+    break;
+  }
+
+  case comp_chem_program_run_e::rt_geo_opt : {
+
+    for (auto con_itm : m_connected_items)
+      if (auto as_gv = con_itm->cast_as<geom_view_t>(); as_gv && as_gv->m_anim->animable()) {
+        for (size_t i = 0; i < as_gv->m_anim->get_total_anims(); i++)
+          if (as_gv->m_anim->m_anim_data[i].m_anim_type == geom_anim_e::anim_geo_opt) {
+            as_gv->m_anim->update_and_set_anim(i, m_cur_step);
+            as_gv->m_anim->m_play_anim.set_value(false);
+
+            //copy charges
+            if (m_copy_charges.get_value() != ccd_copy_charges_mode::do_not_copy_charges
+                && m_cur_step < m_ccd->m_steps.size() && m_connected_items.size() == 1)
+              update_charges(as_gv, 0, as_gv->m_geom->nat());
+            //end copy charges
+            break;
+          }
       }
 
-    case comp_chem_program_run_e::rt_energy : {
-        break;
+    break;
+
+  }
+
+  case comp_chem_program_run_e::rt_vib : case comp_chem_program_run_e::rt_raman : {
+    for (auto con_itm : m_connected_items)
+      if (auto as_gv = con_itm->cast_as<geom_view_t>();
+          as_gv &&
+          as_gv->m_anim->animable() &&
+          as_gv->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1 &&
+          as_gv->m_anim->m_anim_data[m_cur_vib+1].m_anim_type == geom_anim_e::anim_vib) {
+        as_gv->m_anim->update_and_set_anim(m_cur_vib+1, 0);
+        as_gv->m_anim->m_play_anim.set_value(true);
       }
+    break;
+  }
 
-    case comp_chem_program_run_e::rt_geo_opt : {
+  default : {
+    break;
+  }
 
-        for (auto con_itm : m_connected_items)
-          if (auto as_gv = con_itm->cast_as<geom_view_t>(); as_gv && as_gv->m_anim->animable()) {
-              for (size_t i = 0; i < as_gv->m_anim->get_total_anims(); i++)
-                if (as_gv->m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_geo_opt) {
-                    as_gv->m_anim->update_and_set_anim(i, m_cur_step);
-                    as_gv->m_anim->m_play_anim.set_value(false);
-
-                    //copy charges
-                    if (m_copy_charges.get_value() != ccd_copy_charges_mode::do_not_copy_charges
-                        && m_cur_step < m_ccd->m_steps.size() && m_connected_items.size() == 1)
-                      update_charges(as_gv, 0, as_gv->m_geom->nat());
-                    //end copy charges
-                    break;
-                  }
-            }
-
-        break;
-
-      }
-
-    case comp_chem_program_run_e::rt_vib : case comp_chem_program_run_e::rt_raman : {
-        for (auto con_itm : m_connected_items)
-          if (auto as_gv = con_itm->cast_as<geom_view_t>();
-              as_gv &&
-              as_gv->m_anim->animable() &&
-              as_gv->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1 &&
-              as_gv->m_anim->m_anim_data[m_cur_vib+1].m_anim_type == geom_anim_t::anim_vib) {
-              as_gv->m_anim->update_and_set_anim(m_cur_vib+1, 0);
-              as_gv->m_anim->m_play_anim.set_value(true);
-            }
-        break;
-      }
-
-    default : {
-        break;
-      }
-
-    }
+  }
 
 }
 
@@ -107,63 +107,63 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
 
   for (size_t c = start_atom; c < end_atom; c++) {
 
-      bool succes{false};
+    bool succes{false};
 
-      switch (m_copy_charges.get_value()) {
+    switch (m_copy_charges.get_value()) {
 
-        case ccd_copy_charges_mode::copy_mulliken : {
+    case ccd_copy_charges_mode::copy_mulliken : {
 
-            if (c < m_ccd->m_steps[m_cur_step].m_mulliken_pop_per_atom.size()) {
-                gv->m_geom->xfield<float>(xgeom_charge, c) =
-                    m_ccd->m_steps[m_cur_step].m_mulliken_net_chg_per_atom[c];
-                succes = true;
-              }
-            break;
+      if (c < m_ccd->m_steps[m_cur_step].m_mulliken_pop_per_atom.size()) {
+        gv->m_geom->xfield<float>(xgeom_charge, c) =
+            m_ccd->m_steps[m_cur_step].m_mulliken_net_chg_per_atom[c];
+        succes = true;
+      }
+      break;
 
-          };
+    };
 
-        case ccd_copy_charges_mode::copy_mulliken_spin : {
+    case ccd_copy_charges_mode::copy_mulliken_spin : {
 
-            if (c < m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom.size()) {
-                gv->m_geom->xfield<float>(xgeom_charge, c) =
-                    m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom[c];
-                succes = true;
-              }
-            break;
+      if (c < m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom.size()) {
+        gv->m_geom->xfield<float>(xgeom_charge, c) =
+            m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom[c];
+        succes = true;
+      }
+      break;
 
-          };
+    };
 
-        case ccd_copy_charges_mode::copy_lowdin : {
+    case ccd_copy_charges_mode::copy_lowdin : {
 
-            if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
-                gv->m_geom->xfield<float>(xgeom_charge, c) =
-                    m_ccd->m_steps[m_cur_step].m_lowdin_net_chg_per_atom[c];
-                succes = true;
-              }
-            break;
+      if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
+        gv->m_geom->xfield<float>(xgeom_charge, c) =
+            m_ccd->m_steps[m_cur_step].m_lowdin_net_chg_per_atom[c];
+        succes = true;
+      }
+      break;
 
-          };
+    };
 
-        case ccd_copy_charges_mode::copy_lowdin_spin : {
+    case ccd_copy_charges_mode::copy_lowdin_spin : {
 
-            if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
-                gv->m_geom->xfield<float>(xgeom_charge, c) =
-                    m_ccd->m_steps[m_cur_step].m_lowdin_spin_pop_per_atom[c];
-                succes = true;
-              }
-            break;
+      if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
+        gv->m_geom->xfield<float>(xgeom_charge, c) =
+            m_ccd->m_steps[m_cur_step].m_lowdin_spin_pop_per_atom[c];
+        succes = true;
+      }
+      break;
 
-          };
+    };
 
-        default: {
-            break;
-          };
+    default: {
+      break;
+    };
 
-        }
+    }
 
-      if (!succes) gv->m_geom->xfield<float>(xgeom_charge, c) = 0;
+    if (!succes) gv->m_geom->xfield<float>(xgeom_charge, c) = 0;
 
-    } // end for
+  } // end for
 
 }
 
@@ -179,13 +179,13 @@ void ccd_view_t::render() {
 void ccd_view_t::update_joined_atoms_list_animation(size_t step_idx) {
 
   for (auto &items : m_connected_items) {
-      auto al = items->cast_as<geom_view_t>();
-      if (al && al->m_anim->get_total_anims() > 1
-          && al->m_anim->m_anim_data[1].frames.size() == m_ccd->m_steps.size())  {
-          //fmt::print(std::cout, "Hallelujiah\n");
-          al->m_anim->update_and_set_anim(1, step_idx);
-        }
+    auto al = items->cast_as<geom_view_t>();
+    if (al && al->m_anim->get_total_anims() > 1
+        && al->m_anim->m_anim_data[1].frames.size() == m_ccd->m_steps.size())  {
+      //fmt::print(std::cout, "Hallelujiah\n");
+      al->m_anim->update_and_set_anim(1, step_idx);
     }
+  }
 
 }
 
@@ -213,16 +213,16 @@ void ccd_view_t::updated_externally(uint32_t update_reason) {
 
   switch (update_reason) {
 
-    case ws_item_updf_regenerate_content: {
-        update_connected_items();
-        break;
-      }
+  case ws_item_updf_regenerate_content: {
+    update_connected_items();
+    break;
+  }
 
-    default: {
-        break;
-      }
+  default: {
+    break;
+  }
 
-    }
+  }
 
 }
 
@@ -265,14 +265,14 @@ std::vector<size_t> ccd_view_t::query_vib_by_atoms(std::vector<size_t> atoms, fl
 
   for (size_t i = 0; i < m_ccd->m_vibs.size(); i++) {
 
-      bool passed = true;
+    bool passed = true;
 
-      for (size_t q = 0; q < m_ccd->m_tot_nat; q++)
-        if (m_ccd->m_vibs[i].m_disp[q].norm() < gate) passed = false;
+    for (size_t q = 0; q < m_ccd->m_tot_nat; q++)
+      if (m_ccd->m_vibs[i].m_disp[q].norm() < gate) passed = false;
 
-      if (passed) ret.push_back(i);
+    if (passed) ret.push_back(i);
 
-    }
+  }
 
   return ret;
 

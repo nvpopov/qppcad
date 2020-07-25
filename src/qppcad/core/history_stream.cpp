@@ -171,7 +171,7 @@ hs_result_e hs_doc_base_t::reset() {
 
   std::vector<bool> child_reseted;
   for (auto child: p_children)
-    if (child) child_reseted.push_back(child->reset());
+    if (child) child_reseted.push_back(child->reset() == hs_result_e::hs_success);
 
   hs_result_e self_rt = reset_impl();
   bool all_child_succeded =
@@ -439,17 +439,19 @@ hs_result_e hs_doc_base_t::checkout_to_epoch(epoch_t target_epoch,
      * hl = 0 1 2 3 4 5 6 , ce = 6, pe = 2, seq = 2u->3a, 3u->4a, 4u->5a, 5u->6a | upward
      * a - apply, u - unapply
      */
-    hs_dstate_dir_e ds_dir = cur_epoch > prev_epoch ? hs_ds_dir_backward : hs_ds_dir_forward;
+    hs_dstate_dir_e ds_dir = cur_epoch > prev_epoch ?
+                                                    hs_dstate_dir_e::hs_ds_dir_backward :
+                                                    hs_dstate_dir_e::hs_ds_dir_forward;
 
     auto cur_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
     auto prev_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), prev_epoch);
 
     std::vector<epoch_t> ds_hl;
-    std::copy(ds_dir == hs_ds_dir_forward ? cur_epoch_it : prev_epoch_it ,
-              ds_dir == hs_ds_dir_forward ? prev_epoch_it + 1 : cur_epoch_it + 1,
+    std::copy(ds_dir == hs_dstate_dir_e::hs_ds_dir_forward ? cur_epoch_it : prev_epoch_it ,
+              ds_dir == hs_dstate_dir_e::hs_ds_dir_forward ? prev_epoch_it + 1 : cur_epoch_it + 1,
               std::back_inserter(ds_hl));
 
-    if (ds_dir == hs_ds_dir_forward) std::reverse(begin(ds_hl), end(ds_hl));
+    if (ds_dir == hs_dstate_dir_e::hs_ds_dir_forward) std::reverse(begin(ds_hl), end(ds_hl));
 
     if (ds_dir == hs_dstate_dir_e::hs_ds_dir_forward) {
       for (size_t i = 0; i < size(ds_hl)-1; i++) {

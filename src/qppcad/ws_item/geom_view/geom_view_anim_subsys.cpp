@@ -120,7 +120,7 @@ void geom_view_anim_subsys_t::update_current_frame_to(const int new_frame) {
 
   if (!animable()) return;
   if (m_cur_anim >= m_anim_data.size()) return;
-  if (get_current_anim()->m_anim_type == geom_anim_t::anim_static) return;
+  if (get_current_anim()->m_anim_type == geom_anim_e::anim_static) return;
 
   m_cur_anim_time = new_frame;
   update_geom_to_anim();
@@ -160,7 +160,7 @@ void geom_view_anim_subsys_t::update(const float delta_time) {
     }
 
   //if current anim type equals static -> update to static and switch m_cur_anim_time = 0
-  if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_t::anim_static) {
+  if (m_anim_data[m_cur_anim].m_anim_type == geom_anim_e::anim_static) {
       m_cur_anim_time = 0.0f;
       m_play_anim.set_value(false);
       //m_play_cyclic = false;
@@ -288,7 +288,7 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
 
   geom_anim_record_t<float> new_anim;
   new_anim.m_anim_name = new_anim_name;
-  new_anim.m_anim_type = geom_anim_t::anim_generic;
+  new_anim.m_anim_type = geom_anim_e::anim_generic;
 
   new_anim.frames.resize(num_frames);
 
@@ -322,7 +322,7 @@ void geom_view_anim_subsys_t::make_animable() {
 
   if (m_anim_data.empty()) {
       geom_anim_record_t<float> new_static_rec;
-      new_static_rec.m_anim_type = geom_anim_t::anim_generic;
+      new_static_rec.m_anim_type = geom_anim_e::anim_generic;
       new_static_rec.m_anim_name = "static";
       m_anim_data.emplace_back(std::move(new_static_rec));
     }
@@ -349,7 +349,7 @@ void geom_view_anim_subsys_t::make_animable() {
 }
 
 void geom_view_anim_subsys_t::make_anim(const std::string &anim_name,
-                                        const geom_anim_t anim_type,
+                                        const geom_anim_e anim_type,
                                         const size_t num_frames) {
 
   geom_anim_record_t<float> new_anim_rec;
@@ -367,13 +367,13 @@ void geom_view_anim_subsys_t::make_static_anim(bool do_it_anyway) {
 
   auto static_it = std::find_if(std::cbegin(m_anim_data), std::cend(m_anim_data),
                                 [](const geom_anim_record_t<float> &rec)
-                                {return rec.m_anim_type == geom_anim_t::anim_static;});
+                                {return rec.m_anim_type == geom_anim_e::anim_static;});
 
   if (static_it != std::cend(m_anim_data) && !do_it_anyway) return;
 
   geom_anim_record_t<float> new_anim_rec;
   new_anim_rec.m_anim_name = fmt::format("static{}", m_anim_data.size());
-  new_anim_rec.m_anim_type = geom_anim_t::anim_static;
+  new_anim_rec.m_anim_type = geom_anim_e::anim_static;
 
   new_anim_rec.frames.resize(1);
   new_anim_rec.frames[0].atom_pos.resize(p_owner->m_geom->nat());
@@ -469,17 +469,17 @@ geom_anim_record_t<float> *geom_view_anim_subsys_t::get_current_anim() {
   else return nullptr;
 }
 
-geom_anim_t geom_view_anim_subsys_t::get_cur_anim_type() const {
+geom_anim_e geom_view_anim_subsys_t::get_cur_anim_type() const {
   return m_anim_data[m_cur_anim].m_anim_type;
 }
 
-geom_anim_t geom_view_anim_subsys_t::get_anim_type_by_idx(size_t anim_idx) const {
+geom_anim_e geom_view_anim_subsys_t::get_anim_type_by_idx(size_t anim_idx) const {
 
   if (anim_idx < m_anim_data.size())
     return m_anim_data[anim_idx].m_anim_type;
   else {
       throw std::out_of_range("invalid animation index");
-      return geom_anim_t::anim_generic;
+      return geom_anim_e::anim_generic;
     }
 
 }

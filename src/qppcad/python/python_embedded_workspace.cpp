@@ -137,14 +137,14 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
 
   /*hr result*/
   py::enum_<hs_result_e>(m, "hs_result_e", py::arithmetic(), "")
-      .value("hs_error", hs_error, "hs_error")
-      .value("hs_success", hs_success, "hs_success")
-      .value("hs_invalid_epoch", hs_invalid_epoch, "hs_invalid_epoch")
-      .value("hs_epoch_ill_defined", hs_epoch_ill_defined, "hs_epoch_ill_defined")
-      .value("hs_invalid_child", hs_invalid_child, "hs_invalid_child")
-      .value("hs_invalid_child_epoch", hs_invalid_child_epoch, "hs_invalid_child_epoch")
-      .value("hs_true", hs_true, "hs_true")
-      .value("hs_false", hs_false, "hs_false")
+      .value("hs_error", hs_result_e::hs_error, "hs_error")
+      .value("hs_success", hs_result_e::hs_success, "hs_success")
+      .value("hs_invalid_epoch", hs_result_e::hs_invalid_epoch, "hs_invalid_epoch")
+      .value("hs_epoch_ill_defined", hs_result_e::hs_epoch_ill_defined, "hs_epoch_ill_defined")
+      .value("hs_invalid_child", hs_result_e::hs_invalid_child, "hs_invalid_child")
+      .value("hs_invalid_child_epoch", hs_result_e::hs_invalid_child_epoch, "hs_invalid_child_epoch")
+      .value("hs_true", hs_result_e::hs_true, "hs_true")
+      .value("hs_false", hs_result_e::hs_false, "hs_false")
       .export_values();
 
   /* workspace_manager_t pybindings */

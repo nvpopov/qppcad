@@ -11,7 +11,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum cam_proj_t : size_t {
+    enum class cam_proj_t : size_t {
       proj_ortho,
       proj_persp
     };

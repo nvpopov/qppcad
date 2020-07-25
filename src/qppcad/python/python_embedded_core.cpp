@@ -51,10 +51,10 @@ PYBIND11_EMBEDDED_MODULE(core, m) {
   auto bhv_module = m.def_submodule("bhv", "ws_item bhv manager");
 
   py::enum_<fixture_type_e>(bhv_module, "fixture_type_e", py::arithmetic(), "")
-          .value("ft_none", ft_none, "ft_none")
-          .value("ft_ws_item_tool", ft_ws_item_tool, "ft_ws_item_tool")
-          .value("ft_file_format", ft_file_format, "ft_file_format")
-          .export_values();
+      .value("ft_none", fixture_type_e::ft_none, "ft_none")
+      .value("ft_ws_item_tool", fixture_type_e::ft_ws_item_tool, "ft_ws_item_tool")
+      .value("ft_file_format", fixture_type_e::ft_file_format, "ft_file_format")
+      .export_values();
 
   /* fixture info */
   py::class_<fixture_info_t> py_fixture_info_t(bhv_module, "fixture_info_t");

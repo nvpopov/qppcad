@@ -216,8 +216,8 @@ sf_status_e sf_context_t::propagate_data(sf_connectivity_data_t *cd,
                  copy_par,
                  *(cd->m_out_sck),
                  *(cd->m_inp_sck),
-                 cd->m_out_node->m_out_schema[*(cd->m_out_sck)].m_type,
-                 cd->m_inp_node->m_inp_schema[*(cd->m_inp_sck)].m_type
+                 static_cast<int>(cd->m_out_node->m_out_schema[*(cd->m_out_sck)].m_type),
+                 static_cast<int>(cd->m_inp_node->m_inp_schema[*(cd->m_inp_sck)].m_type)
                  );
 
     //check that inputs have space for fun

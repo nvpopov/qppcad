@@ -1998,7 +1998,7 @@ void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
 
       auto cur_anim = b_al->m_anim->get_current_anim();
 
-      if (cur_anim && cur_anim->m_anim_type != geom_anim_t::anim_static) {
+      if (cur_anim && cur_anim->m_anim_type != geom_anim_e::anim_static) {
 
         m_anim_play->blockSignals(true);
         m_anim_play->setChecked(b_al->m_anim->m_play_anim.get_value());
@@ -2499,7 +2499,7 @@ void geom_view_obj_insp_widget_t::mod_group_op_make_static_anim() {
   b_al->m_anim->make_animable();
 
   std::string _anim_name = fmt::format("static_{}", b_al->m_anim->get_total_anims());
-  b_al->m_anim->make_anim(_anim_name, geom_anim_t::anim_static, 1);
+  b_al->m_anim->make_anim(_anim_name, geom_anim_e::anim_static, 1);
 
 }
 

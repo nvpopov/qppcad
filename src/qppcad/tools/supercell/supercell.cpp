@@ -89,7 +89,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
     sc_al->m_tws_tr->do_action(act_lock);
     xgeometry<float, periodic_cell<float> > g(3); //intermediate xgeom
-    g.set_format({"charge"},{type_real});
+    g.set_format({"charge"},{basic_types::type_real});
     g.set_DIM(3);
     //g.cell.DIM = 3;
     g.cell.v[0] = sc_al->m_geom->cell.v[0];

@@ -21,41 +21,39 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    enum ext_editor_geom_policy_e : int {
+enum class ext_editor_geom_policy_e : int {
+  always_max,
+  always_min,
+  start_max,
+  start_min
+};
 
-      always_max,
-      always_min,
-      start_max,
-      start_min
+class ws_item_extended_editor_t : public QWidget {
 
-    };
+  Q_OBJECT
 
-    class ws_item_extended_editor_t : public QWidget {
+public:
 
-      Q_OBJECT
+  ws_item_t *m_binded_item{nullptr};
 
-    public:
+  ws_item_extended_editor_t();
 
-      ws_item_t *m_binded_item{nullptr};
+  virtual ext_editor_geom_policy_e get_geom_policy();
 
-      ws_item_extended_editor_t();
+  virtual bool can_be_binded_to(ws_item_t* _item_to_bind);
 
-      virtual ext_editor_geom_policy_e get_geom_policy();
+  virtual int get_minimum_width();
+  virtual void bind_to_item(ws_item_t *_binding_item);
+  virtual void unbind_item();
+  virtual void update_from_ws_item();
+  virtual int first_time_width_percentage();
+  virtual QString header_name_hint() = 0;
 
-      virtual bool can_be_binded_to(ws_item_t* _item_to_bind);
+};
 
-      virtual int get_minimum_width();
-      virtual void bind_to_item(ws_item_t *_binding_item);
-      virtual void unbind_item();
-      virtual void update_from_ws_item();
-      virtual int first_time_width_percentage();
-      virtual QString header_name_hint() = 0;
-
-    };
-
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

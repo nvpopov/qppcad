@@ -8,9 +8,9 @@ using namespace qpp::cad;
 
 toolbar_element_t::toolbar_element_t() {
 
-//  m_parent = parent;
-//  m_style = style;
-//  m_applicable_types = std::move(applicable_types);
+  //  m_parent = parent;
+  //  m_style = style;
+  //  m_applicable_types = std::move(applicable_types);
 
 }
 
@@ -36,7 +36,7 @@ std::tuple<size_t, size_t> toolbar_element_t::get_size(size_t btn_id) {
   return {
       astate->size_guide.tool_panel_ctrl_w(),
       astate->size_guide.tool_panel_ctrl_h()
-    };
+  };
 
 }
 

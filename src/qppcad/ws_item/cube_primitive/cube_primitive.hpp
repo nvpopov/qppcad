@@ -19,7 +19,7 @@ class cube_primitive_t final: public ws_item_t {
 
 public:
 
-  hs_prop_int_t m_render_mode;
+  hist_property_t<int> m_render_mode;
   hs_prop_v3f_t m_scale;
   hs_prop_v3f_t m_color;
   hs_prop_float_t m_alpha{};

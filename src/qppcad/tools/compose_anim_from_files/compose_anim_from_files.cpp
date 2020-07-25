@@ -44,7 +44,7 @@ void compose_anim_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       geom_anim_record_t<float> new_anim;
       new_anim.frames.resize(sel_query.size());
       new_anim.m_anim_name = "composed0";
-      new_anim.m_anim_type = geom_anim_t::anim_geo_opt;
+      new_anim.m_anim_type = geom_anim_e::anim_geo_opt;
       int img_idx = 0;
 
       for (auto &rec : sel_query) {

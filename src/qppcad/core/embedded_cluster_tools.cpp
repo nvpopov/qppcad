@@ -27,7 +27,7 @@ void embedded_cluster_tools::find_high_symmetry_qm_cluster(geom_view_t *uc,
   for (size_t i = 0; i < total_steps; i++) {
 
       xgeometry<float, periodic_cell<float> > g_all_m(0);
-      g_all_m.set_format({"charge"},{type_real});
+      g_all_m.set_format({"charge"},{basic_types::type_real});
       g_all_m.additive(xgeom_charge) = true;
       g_all_m.tol_geom = 0.01f;
 
@@ -120,7 +120,7 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
 
   //copy uc to intermediate
   xgeometry<float, periodic_cell<float> > gd_uc(3);
-  gd_uc.set_format({"charge"},{type_real});
+  gd_uc.set_format({"charge"},{basic_types::type_real});
   gd_uc.set_DIM(3);
   //gd_uc.cell.DIM = 3;
 
@@ -139,11 +139,11 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   //initialize intermidiates for charge counting
   xgeometry<float, periodic_cell<float> > g_all_m(0);
 
-  g_all_m.set_format({"charge"},{type_real});
+  g_all_m.set_format({"charge"},{basic_types::type_real});
   g_all_m.additive(xgeom_charge) = true;
   g_all_m.tol_geom = 0.01f;
 
-  gd_chg.set_format({"charge"},{type_real});
+  gd_chg.set_format({"charge"},{basic_types::type_real});
   gd_chg.additive(xgeom_charge) = true;
   gd_chg.tol_geom = 0.01f;
 
@@ -151,7 +151,7 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
 
   if (do_legacy) {
       mode_m = mode_m | legacy_fill;
-    }
+  }
 
   qpp::fill(g_all_m, gd_uc, sp, mode_m);
 

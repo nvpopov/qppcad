@@ -11,7 +11,7 @@ namespace qpp {
 
 namespace cad {
 
-enum ws_volume_t  : int {
+enum class ws_volume_t  : int {
   volume_mo,
   volume_density
 };

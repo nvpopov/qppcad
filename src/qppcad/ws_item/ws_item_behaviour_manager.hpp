@@ -14,8 +14,7 @@ namespace qpp {
 
 namespace cad {
 
-enum ws_item_io_status {
-
+enum class ws_item_io_status {
   io_status_succes,
   io_status_file_doesnt_exists,
   io_status_invalid_file_format,
@@ -24,17 +23,14 @@ enum ws_item_io_status {
   io_status_file_format_not_supports_loading,
   io_status_invalid_type,
   io_status_parsing_error
-
 };
 
-enum ws_item_tool_type_e {
-
+enum class ws_item_tool_type_e {
   ws_item_tool_invalid,
   ws_item_tool_modal,
   ws_item_tool_inline_horizontal,
   ws_item_tool_inline_vertical,
   ws_item_tool_popup
-
 };
 
 

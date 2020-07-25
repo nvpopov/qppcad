@@ -11,7 +11,7 @@ namespace qpp {
 
   namespace cad {
 
-    enum gizmo_transform_type {
+    enum class gizmo_transform_type {
       translation,
       rotation
     };

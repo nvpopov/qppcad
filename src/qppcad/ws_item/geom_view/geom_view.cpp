@@ -127,21 +127,21 @@ geom_view_t::geom_view_t(): ws_item_t() {
           "tag" //14
       },
 
-      {type_string, //0
-          type_real, //1
-          type_real, //2
-          type_real, //3
-          type_real, //4
-          type_int, //5
-          type_bool, //6
-          type_bool, //7
-          type_real, //8
-          type_real, //9
-          type_real, //10
-          type_string, //11
-          type_bool, // 12
-          type_real, // 13
-          type_string //14
+      {basic_types::type_string, //0
+       basic_types::type_real, //1
+       basic_types::type_real, //2
+       basic_types::type_real, //3
+       basic_types::type_real, //4
+       basic_types::type_int, //5
+       basic_types::type_bool, //6
+       basic_types::type_bool, //7
+       basic_types::type_real, //8
+       basic_types::type_real, //9
+       basic_types::type_real, //10
+       basic_types::type_string, //11
+       basic_types::type_bool, // 12
+       basic_types::type_real, // 13
+       basic_types::type_string //14
       } );
 
   m_geom->set_DIM(0);
@@ -1018,7 +1018,7 @@ void geom_view_t::load_color_from_static_anim() {
 
     int static_anim = -1;
     for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
-      if (m_anim->m_anim_data[i].m_anim_type == geom_anim_t::anim_static) static_anim = i;
+      if (m_anim->m_anim_data[i].m_anim_type == geom_anim_e::anim_static) static_anim = i;
 
     if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
         m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
@@ -1076,7 +1076,7 @@ void geom_view_t::set_xcolorf(const size_t atm,
 
 std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id) {
 
-  if (m_geom->field_type(xfield_id) != type_real) {
+  if (m_geom->field_type(xfield_id) != basic_types::type_real) {
     throw std::invalid_argument(fmt::format("wrong xfield type with id {} ", xfield_id));
   }
 
@@ -1740,12 +1740,12 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
     if (auto val_itr2 = data.find(JSON_GEOM_VIEW_XFIELD_TYPES); val_itr2 != data.end())
       for (auto &elem : val_itr2.value()) {
         STRING_EX fv = elem.get<STRING_EX>();
-        if (fv == "b") ft.push_back(type_bool);
-        if (fv == "i") ft.push_back(type_int);
-        if (fv == "r") ft.push_back(type_real);
-        if (fv == "d") ft.push_back(type_double);
-        if (fv == "f") ft.push_back(type_float);
-        if (fv == "s") ft.push_back(type_string);
+        if (fv == "b") ft.push_back(basic_types::type_bool);
+        if (fv == "i") ft.push_back(basic_types::type_int);
+        if (fv == "r") ft.push_back(basic_types::type_real);
+        if (fv == "d") ft.push_back(basic_types::type_double);
+        if (fv == "f") ft.push_back(basic_types::type_float);
+        if (fv == "s") ft.push_back(basic_types::type_string);
 
       } else throw std::runtime_error("Invalid xfield types");
 
@@ -1853,7 +1853,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
       }
 
-      if (tmp_anim_rec.m_anim_type == geom_anim_t::anim_static) static_anim_found = true;
+      if (tmp_anim_rec.m_anim_type == geom_anim_e::anim_static) static_anim_found = true;
       m_anim->m_anim_data.push_back(std::move(tmp_anim_rec));
 
     }
@@ -1862,7 +1862,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
       geom_anim_record_t<float> tmp_anim_static;
       tmp_anim_static.m_anim_name = "static";
-      tmp_anim_static.m_anim_type = geom_anim_t::anim_static;
+      tmp_anim_static.m_anim_type = geom_anim_e::anim_static;
       tmp_anim_static.frames.resize(1);
       for (auto i = 0; i < m_geom->nat(); i++)
         tmp_anim_static.frames[0].atom_pos.push_back(m_geom->pos(i));

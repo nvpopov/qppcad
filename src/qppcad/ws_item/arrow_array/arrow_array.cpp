@@ -50,7 +50,7 @@ void arrow_array_t::render() {
 
   auto cur_anim = m_binded_gv->m_anim->get_current_anim();
 
-  if (cur_anim && m_binded_gv->m_anim->get_current_anim()->m_anim_type == geom_anim_t::anim_static)
+  if (cur_anim && m_binded_gv->m_anim->get_current_anim()->m_anim_type == geom_anim_e::anim_static)
     return;
 
   if (cur_anim->frames.size() == 0) return;

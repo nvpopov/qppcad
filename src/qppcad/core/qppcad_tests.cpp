@@ -178,15 +178,15 @@ TEST_CASE("history stream test") {
     REQUIRE(hsi1->get_history_size() == 4);
     REQUIRE(hsi1->get_cur_epoch() == 3);
 
-    REQUIRE(hsi1->checkout_to_epoch(1));
+    REQUIRE(hsi1->checkout_to_epoch(1) == hs_result_e::hs_success);
     REQUIRE(hsi1->get_cur_epoch() == 1);
     REQUIRE(hsi1->get_value() == 2);
 
-    REQUIRE(hsi1->checkout_to_epoch(2));
+    REQUIRE(hsi1->checkout_to_epoch(2) == hs_result_e::hs_success);
     REQUIRE(hsi1->get_cur_epoch() == 2);
     REQUIRE(hsi1->get_value() == 3);
 
-    REQUIRE(hsi1->checkout_to_epoch(3));
+    REQUIRE(hsi1->checkout_to_epoch(3) == hs_result_e::hs_success);
     REQUIRE(hsi1->get_cur_epoch() == 3);
     REQUIRE(hsi1->get_value() == 4);
 
@@ -195,11 +195,11 @@ TEST_CASE("history stream test") {
     REQUIRE(hsv1->checkout_to_epoch(1) == hs_result_e::hs_success);
     hsv1->push_epoch_with_value({0, 2, 0});
 
-    REQUIRE(hsv1->checkout_to_epoch(1));
+    REQUIRE(hsv1->checkout_to_epoch(1) == hs_result_e::hs_success);
     REQUIRE(hsv1->get_cur_epoch() == 1);
     REQUIRE(hsv1->get_value() == vector3<float>{0, 1, 0});
 
-    REQUIRE(hsv1->checkout_to_epoch(2));
+    REQUIRE(hsv1->checkout_to_epoch(2) == hs_result_e::hs_success);
     REQUIRE(hsv1->get_cur_epoch() == 2);
     REQUIRE(hsv1->get_value() ==  vector3<float>{0, 2, 0});
 
@@ -518,7 +518,7 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_root->get_hs_child(0) == hs_el1);
     REQUIRE(hs_root->get_hs_child(1) == hs_el2);
 
-    REQUIRE(hs_root->set_alive_hs_child(hs_el1, false));
+    REQUIRE(hs_root->set_alive_hs_child(hs_el1, false) == hs_result_e::hs_success);
     REQUIRE(hs_root->get_hs_children_count() == 1);
     REQUIRE(hs_root->get_hs_child(0) == hs_el2);
     REQUIRE(hs_root->get_cur_epoch() == 6);
@@ -549,8 +549,8 @@ TEST_CASE("history stream test") {
     hs_root->add_hs_child(hs_el4, true);
     REQUIRE(hs_root->get_cur_epoch() == 4);
 
-    REQUIRE(hs_root->set_alive_hs_child(hs_el1, false));
-    REQUIRE(hs_root->set_alive_hs_child(hs_el3, false));
+    REQUIRE(hs_root->set_alive_hs_child(hs_el1, false) == hs_result_e::hs_success);
+    REQUIRE(hs_root->set_alive_hs_child(hs_el3, false) == hs_result_e::hs_success);
     REQUIRE(hs_root->get_hs_children_count() == 2);
     REQUIRE(hs_root->is_child_alive(hs_root->get_cur_epoch(), hs_el1) == hs_result_e::hs_dead);
     REQUIRE(hs_root->is_child_alive(hs_root->get_cur_epoch(), hs_el3) == hs_result_e::hs_dead);
@@ -886,11 +886,11 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.nat() == 4);
     REQUIRE(hs_xg->get_cur_epoch() == 2);
 
-    REQUIRE(hs_xg->checkout_to_epoch(1));
+    REQUIRE(hs_xg->checkout_to_epoch(1) == hs_result_e::hs_success);
     REQUIRE(xg1.nat() == 1);
     REQUIRE(hs_xg->get_cur_epoch() == 1);
 
-    REQUIRE(hs_xg->checkout_to_epoch(2));
+    REQUIRE(hs_xg->checkout_to_epoch(2) == hs_result_e::hs_success);
     REQUIRE(xg1.nat() == 4);
     REQUIRE(hs_xg->get_cur_epoch() == 2);
     REQUIRE(xg1.pos(0) == vector3<double>{0});
@@ -912,20 +912,20 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.atom_of_type(xg1.type(1)) == "Ca");
     REQUIRE(xg1.atom_of_type(xg1.type(2)) == "F");
 
-    REQUIRE(hs_xg->checkout_to_epoch(2));
+    REQUIRE(hs_xg->checkout_to_epoch(2) == hs_result_e::hs_success);
     REQUIRE(xg1.nat() == 4);
     REQUIRE(xg1.atom_of_type(xg1.type(0)) == "C");
     REQUIRE(xg1.atom_of_type(xg1.type(1)) == "S");
     REQUIRE(xg1.atom_of_type(xg1.type(2)) == "Ca");
     REQUIRE(xg1.atom_of_type(xg1.type(3)) == "F");
-    REQUIRE(hs_xg->checkout_to_epoch(2));
+    REQUIRE(hs_xg->checkout_to_epoch(2) == hs_result_e::hs_success);
 
     hs_xg->begin_editing();
     xg1.erase(0);
     hs_xg->end_editing();
     REQUIRE(hs_xg->get_cur_epoch() == 4);
     REQUIRE(xg1.nat() == 3);
-    REQUIRE(hs_xg->checkout_to_epoch(2));
+    REQUIRE(hs_xg->checkout_to_epoch(2) == hs_result_e::hs_success);
     REQUIRE(xg1.nat() == 4);
 
     hs_xg->begin_editing();
@@ -1084,21 +1084,21 @@ TEST_CASE("history stream test") {
                    },
 
                    {
-                       type_string, //0
-                       type_real, //1
-                       type_real, //2
-                       type_real, //3
-                       type_real, //4
-                       type_int, //5
-                       type_bool, //6
-                       type_bool, //7
-                       type_real, //8
-                       type_real, //9
-                       type_real, //10
-                       type_string, //11
-                       type_bool, // 12
-                       type_real, // 13
-                       type_string //14
+                       basic_types::type_string, //0
+                       basic_types::type_real, //1
+                       basic_types::type_real, //2
+                       basic_types::type_real, //3
+                       basic_types::type_real, //4
+                       basic_types::type_int, //5
+                       basic_types::type_bool, //6
+                       basic_types::type_bool, //7
+                       basic_types::type_real, //8
+                       basic_types::type_real, //9
+                       basic_types::type_real, //10
+                       basic_types::type_string, //11
+                       basic_types::type_bool, // 12
+                       basic_types::type_real, // 13
+                       basic_types::type_string //14
                    } );
 
     hs_xg->set_xgeom(&xg1);

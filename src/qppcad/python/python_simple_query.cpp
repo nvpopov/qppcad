@@ -660,22 +660,23 @@ std::vector<std::string> simple_query::get_xgeom_dfn() {
 std::vector<basic_types> simple_query::get_xgeom_dft() {
 
   return  {
-      type_string, //0
-      type_real, //1
-      type_real, //2
-      type_real, //3
-      type_real, //4
-      type_int, //5
-      type_bool, //6
-      type_bool, //7
-      type_real, //8
-      type_real, //9
-      type_real, //10
-      type_string, //11
-      type_bool, // 12
-      type_real, // 13
-      type_real //14
+      basic_types::type_string, //0
+      basic_types::type_real, //1
+      basic_types::type_real, //2
+      basic_types::type_real, //3
+      basic_types::type_real, //4
+      basic_types::type_int, //5
+      basic_types::type_bool, //6
+      basic_types::type_bool, //7
+      basic_types::type_real, //8
+      basic_types::type_real, //9
+      basic_types::type_real, //10
+      basic_types::type_string, //11
+      basic_types::type_bool, // 12
+      basic_types::type_real, // 13
+      basic_types::type_real //14
   };
+
 }
 
 void simple_query::rebond() {

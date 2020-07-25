@@ -5,7 +5,7 @@ namespace qpp {
 
 namespace cad {
 
-enum sf_status_e : int {
+enum class sf_status_e : int {
   no_error,
   pin1_invalid,
   pin2_invalid,

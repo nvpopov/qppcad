@@ -55,8 +55,8 @@ struct atom_tdist_rec_t {
 };
 
 /**
-     * @brief The geom_view_render_style_e enum
-     */
+* @brief The geom_view_render_style_e enum
+*/
 enum geom_view_render_style_e : int {
   ball_and_stick,
   suprematic_atoms,
@@ -67,8 +67,8 @@ enum geom_view_render_style_e : int {
 };
 
 /**
-     * @brief The geom_view_role_e enum
-     */
+* @brief The geom_view_role_e enum
+*/
 enum geom_view_role_e : int {
   r_generic,
   r_uc,
@@ -78,16 +78,16 @@ enum geom_view_role_e : int {
 };
 
 /**
-     * @brief The geom_view_color_e enum
-     */
+* @brief The geom_view_color_e enum
+*/
 enum geom_view_color_e : int {
   color_from_ptable,
   color_from_xgeom
 };
 
 /**
-     * @brief The pair_dist_mode_e enum
-     */
+* @brief The pair_dist_mode_e enum
+*/
 enum pair_dist_mode_e : int {
   transform_both,
   fix_first,

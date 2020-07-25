@@ -2015,21 +2015,21 @@ void main_window_t::act_bhv_tools_menus_clicked() {
 
     switch (it_t->second.m_tool_type) {
 
-    case ws_item_tool_invalid:
+    case ws_item_tool_type_e::ws_item_tool_invalid:
       break;
 
-    case ws_item_tool_modal:
+    case ws_item_tool_type_e::ws_item_tool_modal:
       bhv_mgr->exec_tool(cur_it.get(), t_hash);
       break;
 
-    case ws_item_tool_inline_vertical:
+    case ws_item_tool_type_e::ws_item_tool_inline_vertical:
       process_bhv_tool(it_t->first, cur_it.get());
       break;
 
-    case ws_item_tool_popup:
+    case ws_item_tool_type_e::ws_item_tool_popup:
       break;
 
-    case ws_item_tool_inline_horizontal:
+    case ws_item_tool_type_e::ws_item_tool_inline_horizontal:
       process_bhv_tool(it_t->first, cur_it.get());
       break;
 
