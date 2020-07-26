@@ -16,8 +16,8 @@ geom_view_anim_subsys_t::geom_view_anim_subsys_t(geom_view_t &_p_owner) {
 
 }
 
-void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id,
-                                                  const float current_frame) {
+void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float current_frame) {
+
   float start_frame = int(current_frame);
   float end_frame   = std::ceil(current_frame);
   float frame_delta = 1 - (current_frame - start_frame);

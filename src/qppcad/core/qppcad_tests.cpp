@@ -878,13 +878,13 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_xg->get_cur_epoch() == 1);
 
     hs_xg->begin_editing();
-    xg1.add("S", vector3<double>{1});
+    xg1.add("S",  vector3<double>{1});
     xg1.add("Ca", vector3<double>{2});
-    xg1.add("F", vector3<double>{3});
+    xg1.add("F",  vector3<double>{3});
     hs_xg->end_editing();
 
-    REQUIRE(xg1.nat() == 4);
     REQUIRE(hs_xg->get_cur_epoch() == 2);
+    REQUIRE(xg1.nat() == 4);
 
     REQUIRE(hs_xg->checkout_to_epoch(1) == hs_result_e::hs_success);
     REQUIRE(xg1.nat() == 1);

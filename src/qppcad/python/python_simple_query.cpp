@@ -586,10 +586,9 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_c->m_name.set_value(fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
       }
 
-    } else if (cur_ws->m_edit_type == ws_edit_e::edit_content &&
-               !al->m_atom_idx_sel.empty()) {
-      auto ws_pg_partial = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(
-          psg_view_t::get_type_static());
+    } else if (cur_ws->m_edit_type == ws_edit_e::edit_content && !al->m_atom_idx_sel.empty()) {
+      auto ws_pg_partial =
+          astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
       auto ws_pg_partial_c = ws_pg_partial->cast_as<psg_view_t>();
       if (ws_pg_partial_c) {
         al->add_follower(ws_pg_partial);
