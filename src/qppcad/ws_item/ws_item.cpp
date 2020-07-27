@@ -316,10 +316,11 @@ void ws_item_t::updated_externally(uint32_t update_reason) {
 
 void ws_item_t::on_begin_node_gizmo_translate() {
   m_pos_old = m_pos.get_value();
+  std::cout << "ws_item_t::on_begin_node_gizmo_translate()" << std::endl;
 }
 
 void ws_item_t::on_end_node_gizmo_translate() {
-
+  std::cout << "ws_item_t::on_end_node_gizmo_translate()" << std::endl;
 }
 
 void ws_item_t::on_begin_content_gizmo_translate() {
