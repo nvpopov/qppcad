@@ -1378,8 +1378,7 @@ size_t geom_view_t::get_content_count() {
 }
 
 void geom_view_t::on_begin_content_gizmo_translate() {
-  //c_app::log(fmt::format("Start of translating node [{}] content", m_name));
-  //m_tws_tr->do_action(act_lock);
+  std::cout << "geom_view_t::on_begin_content_gizmo_translate()" << std::endl;
 }
 
 void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos) {
@@ -1403,8 +1402,7 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
 }
 
 void geom_view_t::on_end_content_gizmo_translate() {
-  //c_app::log(fmt::format("End of translating node [{}] content", m_name));
-  //m_tws_tr->do_action(act_unlock);
+  std::cout << "geom_view_t::on_end_content_gizmo_translate()" << std::endl;
 }
 
 void geom_view_t::recalc_gizmo_barycenter() {
@@ -1972,16 +1970,14 @@ void geom_view_t::copy_measurements(geom_view_t *src) {
   for (size_t i = 0; i < src->m_measure->m_dist_recs.get_hs_children_count(); i++) {
     auto msr = src->m_measure->m_dist_recs.get_hs_child_as_array(i);
     auto copy_dist = std::make_shared<msr_bond_rec_t<uint32_t>>(
-      msr->m_at1, msr->m_at2, msr->m_idx1, msr->m_idx2
-    );
+      msr->m_at1, msr->m_at2, msr->m_idx1, msr->m_idx2);
     m_measure->m_dist_recs.add_hs_child_as_array(msr);
   }
 
   for (size_t i = 0; i < src->m_measure->m_angle_recs.get_hs_children_count(); i++) {
     auto msr = src->m_measure->m_angle_recs.get_hs_child_as_array(i);
     auto copy_dist = std::make_shared<msr_angle_rec_t<uint32_t>>(
-        msr->m_at1, msr->m_at2, msr->m_at3, msr->m_idx1, msr->m_idx2, msr->m_idx3
-        );
+        msr->m_at1, msr->m_at2, msr->m_at3, msr->m_idx1, msr->m_idx2, msr->m_idx3);
     m_measure->m_angle_recs.add_hs_child_as_array(msr);
   }
 

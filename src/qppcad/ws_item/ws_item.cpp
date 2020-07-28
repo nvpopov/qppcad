@@ -321,6 +321,7 @@ void ws_item_t::on_begin_node_gizmo_translate() {
 
 void ws_item_t::on_end_node_gizmo_translate() {
   std::cout << "ws_item_t::on_end_node_gizmo_translate()" << std::endl;
+  m_pos.commit_exclusive();
 }
 
 void ws_item_t::on_begin_content_gizmo_translate() {
