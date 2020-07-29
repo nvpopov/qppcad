@@ -1402,7 +1402,17 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
 }
 
 void geom_view_t::on_end_content_gizmo_translate() {
+
   std::cout << "geom_view_t::on_end_content_gizmo_translate()" << std::endl;
+
+  if (m_atom_idx_sel.empty()) return;
+//  std::vector<geom_view_t::m_>
+//  //submit changes in atoms positions
+//  for (auto &atom : m_atom_idx_sel) {
+//    if (atom.m_idx != index::D(m_geom->get_DIM()).all(0)) continue;
+
+//  }
+
 }
 
 void geom_view_t::recalc_gizmo_barycenter() {

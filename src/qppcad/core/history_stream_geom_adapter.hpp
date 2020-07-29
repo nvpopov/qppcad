@@ -316,6 +316,12 @@ public:
 
   }
 
+  void commit_changes_external(std::vector<acts_t> &acts, bool new_epoch, bool clear_tmp) {
+    if (clear_tmp) p_cur_acts.clear();
+    std::copy(begin(acts), end(acts), std::back_inserter(p_cur_acts));
+    commit_changes(new_epoch);
+  }
+
   uint32_t get_flags() override {
     return geometry_observer_supports_default
            | geometry_observer_supports_add
