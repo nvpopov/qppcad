@@ -47,6 +47,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
   add_hs_child(&m_subcell_color);
   add_hs_child(&m_sel_vis);
   add_hs_child(&m_sel_vis_affect_bonds);
+  add_hs_child(&m_xgeom_proxy);
 
   m_shading_specular_power.set_value(12.0f);
   m_atom_scale_factor.set_value(0.3f);

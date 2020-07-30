@@ -12,6 +12,7 @@ namespace py = pybind11;
 #include <geom/xgeom.hpp>
 #include <geom/geom_anim.hpp>
 #include <geom/extents_observer.hpp>
+#include <qppcad/core/history_stream_geom_adapter.hpp>
 #include <geom/tws_tree.hpp>
 #include <data/color.hpp>
 #include <symm/index_set.hpp>
@@ -166,6 +167,8 @@ public:
   hs_prop_v3f_t m_subcell_color;
   hs_prop_bool_t m_sel_vis;
   hs_prop_bool_t m_sel_vis_affect_bonds;
+
+  hist_doc_xgeom_proxy_t<float, periodic_cell<float>> m_xgeom_proxy;
 
   geom_view_t();
 
