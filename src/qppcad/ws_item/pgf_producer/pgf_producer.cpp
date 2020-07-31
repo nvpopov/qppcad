@@ -126,8 +126,8 @@ void pgf_producer_t::generate_geom() {
   astate->tlog("pgf_producer_t::generate_geom() info:");
   astate->tlog("m_imd.cell.DIM = {}", m_imd.cell.DIM);
   astate->tlog("m_orders_range.size() = {}", m_orders_range.size());
-  astate->tlog("m_imd.cell._begin = {}", m_imd.cell._begin);
-  astate->tlog("m_imd.cell._end = {}", m_imd.cell._end);
+  astate->tlog("m_imd.cell._begin = {}", m_imd.cell.begin());
+  astate->tlog("m_imd.cell._end = {}", m_imd.cell.end());
 
   //generate geom
   if (m_orders_range.size() == m_imd.get_DIM()) {
@@ -153,8 +153,8 @@ void pgf_producer_t::generate_geom() {
     replicate(*(m_dst_gv->m_geom.get()),
               m_imd,
               m_imd.cell,
-              m_imd.cell._begin,
-              m_imd.cell._end);
+              m_imd.cell.begin(),
+              m_imd.cell.end());
 
     astate->tlog("pgf_producer_t::generate_geom() exiting in generation process");
 

@@ -470,7 +470,7 @@ std::tuple<std::string, vector3<float> > simple_query::get_point_sym_group(float
     array_group<matrix3<float> > G;
     vector3<float> new_center;
     find_point_symm(G, *(al->m_geom), new_center, tolerance);
-    return std::make_tuple(G.name, new_center);
+    return std::make_tuple(G.m_name, new_center);
   }
 
   return ret_empty();

@@ -124,11 +124,11 @@ void psg_view_obj_insp_widget_t::update_from_ws_item() {
 
       for (size_t i = 0; i < AXIS_COLORIZE_SIZE; i++) m_gb_colorize_ctrls[i]->load_value_ex();
 
-      m_tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag->name));
+      m_tg_info_sym_gr->setText(QString::fromStdString(b_pg->m_ag->m_name));
 
       m_tg_info_general->setText(tr("Inverted? : %1, Bounded? : %2")
-                               .arg(b_pg->m_pg_axes.inversion ? tr("Yes") : tr("No"))
-                               .arg(b_pg->is_bounded() ? tr("Yes") : tr("No")));
+                                .arg(b_pg->m_pg_axes.inversion ? tr("Yes") : tr("No"))
+                                .arg(b_pg->is_bounded() ? tr("Yes") : tr("No")));
 
       m_tg_info_numbers->setText(tr("Ops.: %1, Axes: %2, Planes.: %3")
                                     .arg(b_pg->m_ag->size())
