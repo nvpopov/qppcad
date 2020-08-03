@@ -300,8 +300,8 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   }
 
-  astate->tlog("@@@ ws_on_epoch_changed -> b = {}, a = {}, pe = {}, ce = {}",
-               alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
+  astate->tlog("@@@ ws_on_epoch_changed({}) -> b = {}, a = {}, pe = {}, ce = {}",
+               m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
 
   if (cur_ws && cur_ws.get() == this) {
     if (alive_cnt_after != alive_cnt_before) astate->astate_evd->cur_ws_changed();
@@ -332,9 +332,9 @@ void workspace_t::render() {
 
       vector3<float> vScrTW = astate->camera->unproject(-0.92f, -0.90f);
       float axis_magn =
-          astate->camera->m_cur_proj == cam_proj_t::proj_persp ?
-                                                               0.07f *astate->camera->m_cam_state.m_stored_dist :
-                                                               m_camera->m_cam_state.m_ortho_scale * 0.1f;
+          astate->camera->m_cur_proj ==
+                  cam_proj_t::proj_persp ? 0.07f *astate->camera->m_cam_state.m_stored_dist
+                                         : m_camera->m_cam_state.m_ortho_scale * 0.1f;
 
       astate->dp->begin_render_line();
 

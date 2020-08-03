@@ -30,6 +30,13 @@ struct change_atom_event_t {
 };
 
 template<typename REAL>
+struct change_atom_pos_event_t {
+  size_t m_atom_idx;
+  vector3<REAL> m_before_apos;
+  vector3<REAL> m_after_apos;
+};
+
+template<typename REAL>
 struct change_cell_event_t {
   std::array<std::optional<vector3<REAL>>, 3> new_cell;
   std::array<std::optional<vector3<REAL>>, 3> old_cell;
@@ -66,6 +73,7 @@ template<typename REAL>
 struct xgeom_acts_vt {
   using type = std::variant<insert_atom_event_t<REAL>,
                             change_atom_event_t<REAL>,
+                            change_atom_pos_event_t<REAL>,
                             change_cell_event_t<REAL>,
                             reorder_atoms_event_t,
                             change_dim_event_t,
@@ -83,14 +91,18 @@ enum class xgeom_proxy_hs_act_type_e {
 template<typename REAL, typename CELL>
 class hist_doc_xgeom_proxy_t : public hs_doc_base_t, public geometry_observer<REAL> {
 
-private:
+public:
 
   using acts_t = typename xgeom_acts_vt<REAL>::type;
+
+private:
+
   xgeometry<REAL, CELL> *p_xgeom{};
   std::map<epoch_t, std::vector<acts_t>> p_epoch_data;
   std::vector<acts_t> p_cur_acts;
   bool p_currently_editing;
   bool p_currently_applying_dstate{false};
+  bool p_ignore_changes{false};
   //bool p_ignore_changes
   std::optional<STRING_EX> p_stored_aname;
   std::optional<vector3<REAL>> p_stored_apos;
@@ -116,6 +128,10 @@ protected:
 
                    [geom_wrp](change_atom_event_t<REAL> &ev) {
                      geom_wrp->change(ev.m_atom_idx, ev.m_after_aname, ev.m_after_apos);
+                   },
+
+                   [geom_wrp](change_atom_pos_event_t<REAL> &ev) {
+                     geom_wrp->change_pos(ev.m_atom_idx, ev.m_after_apos);
                    },
 
                    [geom_wrp](erase_atom_event_t<REAL> &ev) {
@@ -198,6 +214,10 @@ protected:
 
                    [geom_wrp](change_atom_event_t<REAL> &ev) {
                      geom_wrp->change(ev.m_atom_idx, ev.m_before_aname, ev.m_before_apos);
+                   },
+
+                   [geom_wrp](change_atom_pos_event_t<REAL> &ev) {
+                     geom_wrp->change_pos(ev.m_atom_idx, ev.m_before_apos);
                    },
 
                    [geom_wrp](erase_atom_event_t<REAL> &ev) {
@@ -335,7 +355,7 @@ public:
 
   void added(before_after order, const STRING_EX &aname, const vector3<REAL> &apos) override {
 
-    if (p_currently_applying_dstate) return;
+    if (p_currently_applying_dstate || p_ignore_changes) return;
     if (order == before_after::before) return;
     insert_atom_event_t<REAL> insert_atom_event;
     insert_atom_event.m_atom_name = aname;
@@ -349,7 +369,7 @@ public:
   void inserted(int at, before_after order, const STRING_EX &aname,
                 const vector3<REAL> &apos) override {
 
-    if (p_currently_applying_dstate) return;
+    if (p_currently_applying_dstate || p_ignore_changes) return;
 
     if (order == before_after::before) return;
 
@@ -366,7 +386,7 @@ public:
   void changed(int at, before_after order, const STRING_EX &aname,
                const vector3<REAL> &apos) override {
 
-    if (p_currently_applying_dstate) return;
+    if (p_currently_applying_dstate || p_ignore_changes) return;
 
     if (order == before_after::before) {
       p_stored_aname = p_xgeom->atom_name(at);
@@ -398,7 +418,7 @@ public:
 
   void erased(int at, before_after order) override {
 
-    if (p_currently_applying_dstate) return;
+    if (p_currently_applying_dstate || p_ignore_changes) return;
 
     if (order == before_after::after) return;
 
@@ -415,13 +435,13 @@ public:
 
   void shaded(int at, before_after, bool) override {
 
-    if (p_currently_applying_dstate) return;
+    if (p_currently_applying_dstate || p_ignore_changes) return;
 
   }
 
   void reordered (const std::vector<int> &ord, before_after order) override {
 
-    if (p_currently_applying_dstate) return;
+    if (p_currently_applying_dstate || p_ignore_changes) return;
     if (order == before_after::after) return;
 
     reorder_atoms_event_t reorder_atoms_event;
@@ -447,7 +467,7 @@ public:
 
   void xfield_changed(int xid, int at, before_after ord) override {
 
-    if (p_currently_applying_dstate) return;
+    if (p_currently_applying_dstate || p_ignore_changes) return;
 
     std::vector<STRING_EX> fn;
     std::vector<basic_types> ft;
@@ -521,6 +541,12 @@ public:
 
   }
 
+  void modify_epoch(acts_t &&act, epoch_t epoch) {
+    auto epoch_it = p_epoch_data.find(epoch);
+    if (epoch_it == end(p_epoch_data)) return;
+    p_epoch_data[epoch].push_back(act);
+  }
+
   xgeometry<REAL, CELL> *get_xgeom() {
     return p_xgeom;
   }
@@ -537,6 +563,14 @@ public:
     assert(p_currently_editing);
     commit_changes(new_epoch);
     p_currently_editing = false;
+  }
+
+  bool get_ignore_changes() {
+    return p_ignore_changes;
+  }
+
+  void set_ignore_changes(bool new_ignore_changes) {
+    p_ignore_changes = new_ignore_changes;
   }
 
   //explicit editing methods

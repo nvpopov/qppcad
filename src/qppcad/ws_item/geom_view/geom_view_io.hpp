@@ -24,14 +24,15 @@ namespace cad {
 class geom_view_io_helpers_t {
 
 public :
-  static std::optional<std::tuple<size_t, size_t> >
+
+  static std::optional<std::tuple<size_t, size_t>>
   extract_state_spin_subspace_from_name(const std::string &file_name);
 
 };
 
 /**
-     * @brief The ws_item_io_bt_bhv_t class
-     */
+ * @brief The wsitem_io_bt_bhv_t class
+ */
 class ws_item_io_bt_bhv_t : public ws_item_io_inherited_bhv_hooked_t<geom_view_t> {
 
 public:
@@ -39,28 +40,30 @@ public:
   bool can_save() override { return true; }
   bool can_load() override { return false; }
 
-  void pre_load_hook(geom_view_t *_item, workspace_t *ws) override {
+  void pre_load_hook(geom_view_t *item, workspace_t *ws) override {
 
-    _item->begin_structure_change();
-
-  }
-
-  void post_load_hook(geom_view_t *_item, workspace_t *ws) override {
-
-    if (_item->m_geom->nat() > 20000) {
-      _item->m_render_style.set_value(geom_view_render_style_e::billboards);
-    }
-    else if (_item->m_geom->nat() > 7000) {
-      _item->m_draw_bonds.set_value(false);
-      _item->m_draw_img_bonds.set_value(false);
-    }
-
-    _item->end_structure_change() ;
+    item->begin_structure_change();
+    item->m_xgeom_proxy.set_ignore_changes(true);
 
   }
 
-  void pre_save_hook(geom_view_t *_item) override {}
-  void post_save_hook(geom_view_t *_item) override {}
+  void post_load_hook(geom_view_t *item, workspace_t *ws) override {
+
+    if (item->m_geom->nat() > 20000) {
+      item->m_render_style.set_value(geom_view_render_style_e::billboards);
+    }
+    else if (item->m_geom->nat() > 7000) {
+      item->m_draw_bonds.set_value(false);
+      item->m_draw_img_bonds.set_value(false);
+    }
+
+    item->end_structure_change() ;
+    item->m_xgeom_proxy.set_ignore_changes(false);
+
+  }
+
+  void pre_save_hook(geom_view_t *item) override {}
+  void post_save_hook(geom_view_t *item) override {}
 
 };
 
@@ -72,13 +75,13 @@ public:
   bool can_save() override { return true; }
   bool can_load() override { return false; }
 
-  bool check_before_save_ex(geom_view_t *_item, std::string &message) override {
+  bool check_before_save_ex(geom_view_t *item, std::string &message) override {
 
     if (CHECK_DIM) {
-      bool check = _item->m_geom->get_DIM() == REQUIRED_DIM;
+      bool check = item->m_geom->get_DIM() == REQUIRED_DIM;
       if (!check)
         message = fmt::format("Invalid dimension -> REQUIRED = {}, FOUND = {}",
-                              REQUIRED_DIM, _item->m_geom->get_DIM());
+                              REQUIRED_DIM, item->m_geom->get_DIM());
       return check;
     } else {
       return true;
@@ -87,13 +90,12 @@ public:
   }
 
   void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                           geom_view_t *_item,
+                           geom_view_t *item,
                            workspace_t *ws) override {
   }
 
-  void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                         geom_view_t *_item) override {
-    GEN_FUNC_GEOM(stream, *(_item->m_geom.get()));
+  void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream, geom_view_t *item) override {
+    GEN_FUNC_GEOM(stream, *(item->m_geom.get()));
   }
 
 };
@@ -109,21 +111,21 @@ public:
   bool can_load() override { return true; }
 
   void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                           geom_view_t *_item,
+                           geom_view_t *item,
                            workspace_t *ws) override {
 
     if (FORCED_DIM != -1) {
-      _item->m_geom->set_DIM(FORCED_DIM);
-      //_item->m_geom->cell.DIM = FORCED_DIM;
+      item->m_geom->set_DIM(FORCED_DIM);
+      //item->m_geom->cell.DIM = FORCED_DIM;
     }
 
-    GEN_FUNC_GEOM(stream, *(_item->m_geom.get()));
-    _item->m_role.set_value(ROLE);
+    GEN_FUNC_GEOM(stream, *(item->m_geom.get()));
+    item->m_role.set_value(ROLE);
 
   }
 
   void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                         geom_view_t *_item) override {
+                         geom_view_t *item) override {
     //do nothing
   }
 
@@ -138,20 +140,20 @@ public:
   bool can_load() override { return true; }
 
   void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                           geom_view_t *_item,
+                           geom_view_t *item,
                            workspace_t *ws) override {
 
     if (FORCED_DIM != -1) {
-      _item->m_geom->set_DIM(FORCED_DIM);
-      //_item->m_geom->cell.DIM = FORCED_DIM;
+      item->m_geom->set_DIM(FORCED_DIM);
+      //item->m_geom->cell.DIM = FORCED_DIM;
     }
 
-    GENERIC_FUNC_GEOM_ANIM(stream, *(_item->m_geom.get()), _item->m_anim->m_anim_data);
+    GENERIC_FUNC_GEOM_ANIM(stream, *(item->m_geom.get()), item->m_anim->m_anim_data);
 
   }
 
   void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                         geom_view_t *_item) override {
+                         geom_view_t *item) override {
     //do nothing
   }
 
@@ -172,7 +174,7 @@ public:
   bool can_load() override { return true; }
 
   void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                           geom_view_t *_item,
+                           geom_view_t *item,
                            workspace_t *ws) override {
 
     app_state_t* astate = app_state_t::get_inst();
@@ -181,8 +183,8 @@ public:
     CCD_FUNC(stream, cc_inst);
 
     if (FORCED_DIM != -1) {
-      _item->m_geom->set_DIM(FORCED_DIM);
-      //_item->m_geom->cell.DIM = FORCED_DIM;
+      item->m_geom->set_DIM(FORCED_DIM);
+      //item->m_geom->cell.DIM = FORCED_DIM;
     }
 
     if (COMPILE_CCD) {
@@ -192,21 +194,21 @@ public:
     }
 
     if (COPY_DIM_FROM_CCD) {
-      _item->m_geom->set_DIM(cc_inst.m_DIM);
-      //_item->m_geom->cell.DIM = cc_inst.m_DIM;
+      item->m_geom->set_DIM(cc_inst.m_DIM);
+      //item->m_geom->cell.DIM = cc_inst.m_DIM;
     }
 
     if (COMPILE_FROM_CCD) {
 
-      bool succes_comp_geom = compile_geometry(cc_inst, *(_item->m_geom.get()));
+      bool succes_comp_geom = compile_geometry(cc_inst, *(item->m_geom.get()));
       bool succes_comp_static_anim =
-          compile_static_animation(cc_inst, _item->m_anim->m_anim_data);
-      bool succes_anims = compile_animation(cc_inst, _item->m_anim->m_anim_data);
+          compile_static_animation(cc_inst, item->m_anim->m_anim_data);
+      bool succes_anims = compile_animation(cc_inst, item->m_anim->m_anim_data);
 
       astate->tlog("Is geometry compilation succes? {}",
                    succes_comp_geom && succes_comp_static_anim);
 
-      if (_item->m_anim->get_total_anims() > 1 && succes_anims)
+      if (item->m_anim->get_total_anims() > 1 && succes_anims)
         astate->tlog("Animations have been added to geom");
 
     }
@@ -215,12 +217,12 @@ public:
 
       std::shared_ptr<ccd_view_t> extracted_ccd =
           std::make_shared<ccd_view_t>();
-      extracted_ccd->m_name.set_value(_item->m_name.get_value() + "_ccd");
+      extracted_ccd->m_name.set_value(item->m_name.get_value() + "_ccd");
       extracted_ccd->m_ccd =
           std::make_shared<comp_chem_program_data_t<float> >(std::move(cc_inst));
-      extracted_ccd->m_connected_items.push_back(_item->shared_from_this());
+      extracted_ccd->m_connected_items.push_back(item->shared_from_this());
       extracted_ccd->m_connected_items_stride.push_back(0);
-      _item->m_parent_ws->add_item_to_ws(extracted_ccd);
+      item->m_parent_ws->add_item_to_ws(extracted_ccd);
 
     }
 
@@ -228,16 +230,16 @@ public:
 
       vector3<float> center(0.0, 0.0, 0.0);
 
-      for (int i = 0; i < _item->m_geom->nat(); i++)
-        center += _item->m_geom->pos(i);
-      center *= (1.0f / _item->m_geom->nat());
-      for (int i = 0; i < _item->m_geom->nat(); i++)
-        _item->m_geom->coord(i) = -center + _item->m_geom->pos(i) ;
+      for (int i = 0; i < item->m_geom->nat(); i++)
+        center += item->m_geom->pos(i);
+      center *= (1.0f / item->m_geom->nat());
+      for (int i = 0; i < item->m_geom->nat(); i++)
+        item->m_geom->coord(i) = -center + item->m_geom->pos(i) ;
 
-      _item->m_ext_obs->aabb.min = -center + _item->m_ext_obs->aabb.min;
-      _item->m_ext_obs->aabb.max = -center + _item->m_ext_obs->aabb.max;
+      item->m_ext_obs->aabb.min = -center + item->m_ext_obs->aabb.min;
+      item->m_ext_obs->aabb.max = -center + item->m_ext_obs->aabb.max;
 
-      for (auto &anim : _item->m_anim->m_anim_data)
+      for (auto &anim : item->m_anim->m_anim_data)
         for (auto &anim_frame : anim.frames)
           for (auto &anim_frame_rec : anim_frame.atom_pos)
             anim_frame_rec -= center;
@@ -247,7 +249,7 @@ public:
   }
 
   void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                         geom_view_t *_item) override {
+                         geom_view_t *item) override {
     //do nothing
   }
 
@@ -263,11 +265,11 @@ public:
   bool can_load() override { return true; }
 
   void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                           geom_view_t *_item,
+                           geom_view_t *item,
                            workspace_t *ws) override ;
 
   void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                         geom_view_t *_item) override {
+                         geom_view_t *item) override {
     //do nothing
   }
 
@@ -283,11 +285,11 @@ public:
   bool can_load() override { return true; }
 
   void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                           geom_view_t *_item,
+                           geom_view_t *item,
                            workspace_t *ws) override ;
 
   void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                         geom_view_t *_item) override {}
+                         geom_view_t *item) override {}
 
 }; // class geom_view_molcas_grid_t
 
@@ -299,11 +301,11 @@ public:
   bool can_load() override { return true; }
 
   void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                           geom_view_t *_item,
+                           geom_view_t *item,
                            workspace_t *ws) override ;
 
   void save_to_stream_ex(std::basic_ostream<CHAR_EX,TRAITS> &stream,
-                         geom_view_t *_item) override {}
+                         geom_view_t *item) override {}
 
 }; // class geom_view_molcas_grid_t
 

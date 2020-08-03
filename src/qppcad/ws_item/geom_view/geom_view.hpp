@@ -115,6 +115,10 @@ class geom_view_t final : public ws_item_t {
 
   QPP_OBJECT(geom_view_t, ws_item_t)
 
+private:
+
+  bool p_content_tr_started{false};
+
 public:
 
   std::shared_ptr<xgeometry<float, periodic_cell<float> > > m_geom{};

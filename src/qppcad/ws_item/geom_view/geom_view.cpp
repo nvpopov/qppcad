@@ -47,7 +47,6 @@ geom_view_t::geom_view_t(): ws_item_t() {
   add_hs_child(&m_subcell_color);
   add_hs_child(&m_sel_vis);
   add_hs_child(&m_sel_vis_affect_bonds);
-  add_hs_child(&m_xgeom_proxy);
 
   m_shading_specular_power.set_value(12.0f);
   m_atom_scale_factor.set_value(0.3f);
@@ -77,7 +76,6 @@ geom_view_t::geom_view_t(): ws_item_t() {
   m_sel_vis.set_value(false);
   m_sel_vis_affect_bonds.set_value(false);
 
-  end_recording();
   /*hs end*/
 
   set_default_flags(ws_item_flags_default
@@ -94,7 +92,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
                     | ws_item_flags_support_view_voting
                     | ws_item_flags_cam_target_view);
 
-  m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3,"rg1");
+  m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3, "rg1");
 
   /* 0 atom
    * 1 X
@@ -148,6 +146,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
   m_geom->set_DIM(0);
   //m_geom->cell.DIM = 0;
   m_geom->auto_update_types = true;
+  end_recording();
 
   m_ext_obs = std::make_unique<extents_observer_t<float>>(*m_geom);
   m_tws_tr  = std::make_unique<tws_tree_t<float>>(*m_geom);
@@ -159,6 +158,9 @@ geom_view_t::geom_view_t(): ws_item_t() {
   m_lat_planes = std::make_shared<geom_view_lat_planes_subsys_t>(*this);
   m_selg = std::make_shared<geom_view_sel_groups_subsys_t>(*this);
 
+  m_xgeom_proxy.set_xgeom(m_geom.get());
+
+  add_hs_child(&m_xgeom_proxy);
   add_hs_child(m_anim.get());
   add_hs_child(m_measure.get());
   add_hs_child(m_labels.get());
@@ -1379,7 +1381,10 @@ size_t geom_view_t::get_content_count() {
 }
 
 void geom_view_t::on_begin_content_gizmo_translate() {
+
   std::cout << "geom_view_t::on_begin_content_gizmo_translate()" << std::endl;
+  m_xgeom_proxy.set_ignore_changes(true);
+
 }
 
 void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos) {
@@ -1395,6 +1400,8 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
     someone_from_atoms_were_translated = true;
   }
 
+  p_content_tr_started = true;
+
   if (someone_from_atoms_were_translated) {
     recalc_gizmo_barycenter();
     astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
@@ -1404,14 +1411,21 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
 
 void geom_view_t::on_end_content_gizmo_translate() {
 
+  p_content_tr_started = false;
+  m_xgeom_proxy.set_ignore_changes(true);
+
   std::cout << "geom_view_t::on_end_content_gizmo_translate()" << std::endl;
 
   if (m_atom_idx_sel.empty()) return;
-//  std::vector<geom_view_t::m_>
-//  //submit changes in atoms positions
-//  for (auto &atom : m_atom_idx_sel) {
-//    if (atom.m_idx != index::D(m_geom->get_DIM()).all(0)) continue;
+  index zero{index::D(m_geom->get_DIM()).all(0)};
 
+
+//  std::vector<hist_doc_xgeom_proxy_t<float, periodic_cell<float>>::acts_t> tmp_acts;
+//  for (auto &atom : m_atom_idx_sel) {
+//    if (atom.m_idx != zero) continue;
+//    change_atom_event_t<float> chg_atom_ev;
+//    chg_atom_ev.m_atom_idx = atom.m_atm;
+//    chg_atom_ev.m
 //  }
 
 }
