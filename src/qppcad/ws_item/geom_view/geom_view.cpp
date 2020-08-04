@@ -440,20 +440,22 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
     local_geom_ray.start = click_ray->start - m_pos.get_value();
     local_geom_ray.dir = click_ray->dir;
 
-    if (m_draw_img_atoms.get_value())
+    if (m_draw_img_atoms.get_value()) {
       m_tws_tr->query_ray<query_ray_add_all<float>>(local_geom_ray,
                                                     res,
                                                     m_atom_type_to_hide,
                                                     m_atom_scale_factor.get_value(),
                                                     m_sel_vis.get_value(),
                                                     xgeom_sel_vis_hide);
-    else
+    } else {
       m_tws_tr->query_ray<query_ray_add_ignore_img<float>>(local_geom_ray,
                                                            res,
                                                            m_atom_type_to_hide,
                                                            m_atom_scale_factor.get_value(),
                                                            m_sel_vis.get_value(),
                                                            xgeom_sel_vis_hide);
+    }
+
     recalc_gizmo_barycenter();
 
     if (!res.empty()) {
@@ -1385,6 +1387,20 @@ void geom_view_t::on_begin_content_gizmo_translate() {
   std::cout << "geom_view_t::on_begin_content_gizmo_translate()" << std::endl;
   m_xgeom_proxy.set_ignore_changes(true);
 
+  if (!m_geom) return;
+  std::vector<hist_doc_xgeom_proxy_t<float, periodic_cell<float>>::acts_t> tmp_acts;
+
+  for (auto &it : m_atom_idx_sel) {
+
+      change_atom_pos_event_t<float> change_atom_pos_ev;
+      change_atom_pos_ev.m_atom_idx = it.m_atm;
+      change_atom_pos_ev.m_before_apos = m_geom->pos(it.m_atm);
+      tmp_acts.push_back(std::move(change_atom_pos_ev));
+
+  }
+
+  m_xgeom_proxy.set_tmp_acts(std::move(tmp_acts));
+
 }
 
 void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos) {
@@ -1400,8 +1416,6 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
     someone_from_atoms_were_translated = true;
   }
 
-  p_content_tr_started = true;
-
   if (someone_from_atoms_were_translated) {
     recalc_gizmo_barycenter();
     astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
@@ -1411,22 +1425,10 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
 
 void geom_view_t::on_end_content_gizmo_translate() {
 
-  p_content_tr_started = false;
   m_xgeom_proxy.set_ignore_changes(true);
+  m_xgeom_proxy.make_tmp_epoch_permanent();
 
   std::cout << "geom_view_t::on_end_content_gizmo_translate()" << std::endl;
-
-  if (m_atom_idx_sel.empty()) return;
-  index zero{index::D(m_geom->get_DIM()).all(0)};
-
-
-//  std::vector<hist_doc_xgeom_proxy_t<float, periodic_cell<float>>::acts_t> tmp_acts;
-//  for (auto &atom : m_atom_idx_sel) {
-//    if (atom.m_idx != zero) continue;
-//    change_atom_event_t<float> chg_atom_ev;
-//    chg_atom_ev.m_atom_idx = atom.m_atm;
-//    chg_atom_ev.m
-//  }
 
 }
 

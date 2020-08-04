@@ -41,16 +41,12 @@ void hs_doc_base_t::end_recording() {
 }
 
 hs_doc_base_t::epoch_t hs_doc_base_t::get_cur_epoch() {
-  //std::cout << "GETTING CUR_EPOCH = " << p_cur_epoch << std::endl;
   return p_cur_epoch;
 }
 
 hs_result_e hs_doc_base_t::set_cur_epoch(hs_doc_base_t::epoch_t cur_epoch, bool emit_event) {
 
   auto it_ce = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
-
-  //  if (cur_epoch > 10)
-  //  std::cout << "SETTING CUR_EPOCH = " << cur_epoch << std::endl;
 
   if (it_ce != end(p_hist_line)) {
     epoch_t prev_epoch = get_cur_epoch();

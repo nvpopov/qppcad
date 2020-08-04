@@ -51,14 +51,14 @@ public:
 
     if (item->m_geom->nat() > 20000) {
       item->m_render_style.set_value(geom_view_render_style_e::billboards);
-    }
-    else if (item->m_geom->nat() > 7000) {
+    } else if (item->m_geom->nat() > 7000) {
       item->m_draw_bonds.set_value(false);
       item->m_draw_img_bonds.set_value(false);
     }
 
     item->end_structure_change() ;
     item->m_xgeom_proxy.set_ignore_changes(false);
+    item->m_xgeom_proxy.init_base_epoch();
 
   }
 
