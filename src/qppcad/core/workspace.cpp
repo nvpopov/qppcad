@@ -880,8 +880,11 @@ void workspace_manager_t::init_default () {
 
   auto g1 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
   auto g1_gv = g1->cast_as<geom_view_t>();
-  g1_gv->ins_atom("Si", vector3<float>(0,-2,0));
-  g1_gv->ins_atom("Si", vector3<float>(0,2,0));
+  g1_gv->m_xgeom_proxy.set_ignore_changes(true);
+  g1_gv->ins_atom("Si", vector3<float>(0, -2, 0));
+  g1_gv->ins_atom("Si", vector3<float>(0,  2, 0));
+  g1_gv->m_xgeom_proxy.set_ignore_changes(false);
+  g1_gv->m_xgeom_proxy.init_base_epoch();
   g1->m_name.set_value("g1_src");
   m_ws.back()->add_item_to_ws(g1);
 

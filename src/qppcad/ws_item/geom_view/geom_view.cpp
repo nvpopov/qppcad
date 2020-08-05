@@ -1180,10 +1180,15 @@ void geom_view_t::update_inter_atomic_dist_ex(float new_dist,
 void geom_view_t::translate_selected(const vector3<float> &t_vec) {
 
   if (!m_geom) return;
+  if (m_atom_idx_sel.empty()) return;
+
+  m_xgeom_proxy.begin_editing();
 
   for (auto &elem : m_atom_idx_sel)
     if (elem.m_idx == index::D(m_geom->get_DIM()).all(0))
       upd_atom(elem.m_atm, m_geom->pos(elem.m_atm) + t_vec);
+
+  m_xgeom_proxy.end_editing();
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
@@ -2014,4 +2019,8 @@ void geom_view_t::copy_measurements(geom_view_t *src) {
 //  m_measure->m_dist_recs = src->m_measure->m_dist_recs;
 //  m_measure->m_angle_recs = src->m_measure->m_angle_recs;
 
+}
+
+std::string geom_view_t::print_epoch_info(int epoch) {
+  return m_xgeom_proxy.print_epoch_info(epoch);
 }

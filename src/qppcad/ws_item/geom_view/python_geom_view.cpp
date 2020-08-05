@@ -264,6 +264,7 @@ void py_geom_view_reg_helper_t::reg(
               py::arg("mode") = pair_dist_mode_e::transform_both)
          .def("begin_structure_change", &geom_view_t::begin_structure_change)
          .def("end_structure_change", &geom_view_t::end_structure_change)
+         .def("print_epoch_info", &geom_view_t::print_epoch_info)
          .def_readonly("anim", &geom_view_t::m_anim)
          .def_readonly("lbl", &geom_view_t::m_labels)
          .def_readonly("sg", &geom_view_t::m_selg);

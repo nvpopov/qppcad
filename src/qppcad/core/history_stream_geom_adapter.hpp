@@ -644,6 +644,7 @@ public:
     assert(p_xgeom != nullptr);
 
     epoch_t cur_epoch = get_cur_epoch();
+    assert(cur_epoch == 0);
 
     //clean old data
     std::vector<acts_t> &acts = p_epoch_data[cur_epoch];
@@ -777,6 +778,116 @@ public:
 
     p_epoch_data[get_cur_epoch()] = p_cur_acts;
     p_cur_acts.clear();
+
+  }
+
+  std::string print_epoch_info(epoch_t epoch) {
+
+    std::string message;
+
+    if (!has_epoch(epoch)) {
+      message = fmt::format("Epoch {} doesn't exsist!\n", epoch);
+      return message;
+    }
+
+    auto epd_it = p_epoch_data.find(epoch);
+    if (epd_it == end(p_epoch_data)) {
+      message = fmt::format("Epoch {} is empty!\n", epoch);
+      return message;
+    }
+
+    xgeometry<REAL, CELL> *geom_wrp = p_xgeom;
+
+
+    auto &epd = epd_it->second;
+    for (auto &event_inst : epd)
+      std::visit(overloaded {
+
+                     [&message, geom_wrp](auto arg) {},
+
+                     [&message, geom_wrp](insert_atom_event_t<REAL> &ev) {
+                       message += fmt::format("insert_atom_event id={}, name={}, pos={}\n",
+                                              ev.m_atom_idx.value_or(geom_wrp->nat()),
+                                              ev.m_atom_name, ev.m_atom_pos);
+                     },
+
+                     [&message, geom_wrp](change_atom_event_t<REAL> &ev) {
+                       message += fmt::format("change_atom id={}, name from {} to {},"
+                                              " pos from {} to {}\n",
+                                              ev.m_atom_idx, ev.m_before_aname, ev.m_after_aname,
+                                              ev.m_before_apos, ev.m_after_apos);
+                     },
+
+                     [&message, geom_wrp](change_atom_pos_event_t<REAL> &ev) {
+                       //geom_wrp->change_pos(ev.m_atom_idx, ev.m_before_apos);
+                       //ev.m_after_apos = geom_wrp->pos(ev.m_atom_idx);
+                       message += fmt::format("change_atom_pos id={} from {} to {}\n",
+                                              ev.m_atom_idx, ev.m_before_apos, ev.m_after_apos);
+                     },
+
+                     [&message, geom_wrp](erase_atom_event_t<REAL> &ev) {
+                       //geom_wrp->insert(ev.m_atom_idx, ev.m_atom_name, ev.m_atom_pos);
+                     },
+
+                     [&message, geom_wrp](reorder_atoms_event_t &ev) {
+                       //geom_wrp->reorder(ev.m_atoms_order);
+                     },
+
+                     [&message, geom_wrp](change_dim_event_t &ev) {
+                       //geom_wrp->set_DIM(ev.old_dim);
+                     },
+
+                     [&message, geom_wrp](change_cell_event_t<REAL> &ev) {
+                       //                       for (size_t i = 0; i < 3; i++)
+                       //                         if (geom_wrp->get_DIM() > i && ev.old_cell[i])
+                       //                           geom_wrp->cell.v[i] = *(ev.old_cell[i]);
+                     },
+
+                     [&message, geom_wrp](xfield_changed_event_t &ev) {
+
+                       //                       std::vector<STRING_EX> fn;
+                       //                       std::vector<basic_types> ft;
+
+                       //                       geom_wrp->get_format(fn, ft);
+
+                       //                       switch (ft[ev.m_field_id]) {
+                       //                       case basic_types::type_int: {
+                       //                         geom_wrp->template set_xfield<int>(ev.m_field_id, ev.m_atom_id,
+                       //                                                            std::get<int>(ev.m_before));
+                       //                         break;
+                       //                       }
+                       //                       case basic_types::type_real: {
+                       //                         geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
+                       //                                                               std::get<double>(ev.m_before));
+                       //                         break;
+                       //                       }
+                       //                       case basic_types::type_double: {
+                       //                         geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
+                       //                                                               std::get<double>(ev.m_before));
+                       //                         break;
+                       //                       }
+                       //                       case basic_types::type_float: {
+                       //                         geom_wrp->template set_xfield<float>(ev.m_field_id, ev.m_atom_id,
+                       //                                                              std::get<float>(ev.m_before));
+                       //                         break;
+                       //                       }
+                       //                       case basic_types::type_bool: {
+                       //                         geom_wrp->template set_xfield<bool>(ev.m_field_id, ev.m_atom_id,
+                       //                                                             std::get<bool>(ev.m_before));
+                       //                         break;
+                       //                       }
+                       //                       case basic_types::type_string: {
+                       //                         geom_wrp->template set_xfield<STRING_EX>(
+                       //                             ev.m_field_id, ev.m_atom_id,std::get<STRING_EX>(ev.m_before));
+                       //                         break;
+                       //                       }
+
+                     },
+
+                     [&message, geom_wrp](select_atoms_event_t &ev) {},
+                     }, event_inst);
+
+    return message;
 
   }
 

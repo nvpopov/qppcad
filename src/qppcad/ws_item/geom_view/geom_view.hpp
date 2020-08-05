@@ -338,6 +338,8 @@ public:
   void copy_xgeom_aux(geom_view_t *src);
   void copy_measurements(geom_view_t *src);
 
+  std::string print_epoch_info(int epoch);
+
 };
 
 } // namespace qpp::cad
