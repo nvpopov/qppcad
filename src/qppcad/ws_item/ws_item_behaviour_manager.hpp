@@ -157,7 +157,7 @@ public:
     if (item && item->get_type() == T::get_type_static()) {
       T* casted_item = item->cast_as<T>();
       if (casted_item) {
-        casted_item->begin_recording();
+        casted_item->begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
         load_from_stream_ex(stream, casted_item, ws);
         casted_item->end_recording();
       }

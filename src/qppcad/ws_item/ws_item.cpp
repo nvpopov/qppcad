@@ -9,7 +9,7 @@ using namespace qpp::cad;
 
 ws_item_t::ws_item_t() {
 
-  begin_recording(true);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_show_bb);
   add_hs_child(&m_is_visible);

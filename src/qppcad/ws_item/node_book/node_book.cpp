@@ -15,7 +15,7 @@ node_book_t::node_book_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default);
 
-  begin_recording(true);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_highlight_dirty_nodes);
   add_hs_child(&m_auto_recompute);

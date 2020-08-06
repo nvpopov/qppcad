@@ -12,7 +12,7 @@ cube_primitive_t::cube_primitive_t() : ws_item_t() {
                     | ws_item_flags_support_moveto
                     | ws_item_flags_support_tr);
 
-  begin_recording(true);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_render_mode);
   add_hs_child(&m_scale);

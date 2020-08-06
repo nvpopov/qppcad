@@ -102,15 +102,27 @@ private:
   std::map<epoch_t, std::vector<acts_t>> p_epoch_data;
   std::vector<acts_t> p_cur_acts;
   std::vector<acts_t> p_tmp_acts;
-  bool p_currently_editing;
   bool p_currently_applying_dstate{false};
   bool p_ignore_changes{false};
-  //bool p_ignore_changes
   std::optional<STRING_EX> p_stored_aname;
   std::optional<vector3<REAL>> p_stored_apos;
   std::variant<double, float, int, std::string, bool, std::monostate> m_xfield_bval;
 
 protected:
+
+  void begin_recording_impl() override {
+
+  };
+
+  void record_impl(hs_doc_rec_type_e record_type) override {
+
+  };
+
+  void end_recording_impl() override {
+
+    commit_changes(get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init);
+
+  };
 
   void apply_action(acts_t &act) {
 
@@ -372,7 +384,7 @@ public:
     insert_atom_event.m_atom_pos = apos;
     p_cur_acts.push_back(std::move(insert_atom_event));
 
-    if (!p_currently_editing) commit_changes(true);
+    if (!get_is_recording()) commit_changes(true);
 
   }
 
@@ -389,7 +401,7 @@ public:
     insert_atom_event.m_atom_idx = std::optional<size_t>(at);
     p_cur_acts.push_back(std::move(insert_atom_event));
 
-    if (!p_currently_editing) commit_changes(true);
+    if (!get_is_recording()) commit_changes(true);
 
   }
 
@@ -399,8 +411,10 @@ public:
     if (p_currently_applying_dstate || p_ignore_changes) return;
 
     if (order == before_after::before) {
+
       p_stored_aname = p_xgeom->atom_name(at);
       p_stored_apos = p_xgeom->pos(at);
+
     } else {
 
       if (p_stored_apos && p_stored_aname) {
@@ -415,7 +429,7 @@ public:
         change_atom_event.m_after_apos = apos;
         p_cur_acts.push_back(std::move(change_atom_event));
 
-        if (!p_currently_editing) commit_changes(true);
+        if (!get_is_recording()) commit_changes(true);
 
       }
 
@@ -439,7 +453,7 @@ public:
     erase_atom_event.m_atom_name = p_xgeom->atom(at);
     p_cur_acts.push_back(std::move(erase_atom_event));
 
-    if (!p_currently_editing) commit_changes(true);
+    if (!get_is_recording()) commit_changes(true);
 
   }
 
@@ -458,14 +472,13 @@ public:
     reorder_atoms_event.m_atoms_order = ord;
     p_cur_acts.push_back(std::move(reorder_atoms_event));
 
-    if (!p_currently_editing) commit_changes(true);
+    if (!get_is_recording()) commit_changes(true);
 
   }
 
   void geometry_destroyed () override {
 
   }
-
 
   void dim_changed(before_after ord) override {
 
@@ -538,7 +551,7 @@ public:
 
     }
 
-    if (!p_currently_editing) commit_changes(true);
+    if (!get_is_recording()) commit_changes(true);
 
   }
 
@@ -563,16 +576,6 @@ public:
 
   hist_doc_xgeom_proxy_t() {
     set_dstate_type(hs_dstate_e::hs_dstate_incr);
-  }
-
-  void begin_editing() {
-    p_currently_editing = true;
-  }
-
-  void end_editing(bool new_epoch = true) {
-    assert(p_currently_editing);
-    commit_changes(new_epoch);
-    p_currently_editing = false;
   }
 
   bool get_ignore_changes() {
@@ -603,7 +606,7 @@ public:
       //p_xgeom->cell.DIM = newdim;
     }
 
-    if (!p_currently_editing) commit_changes(true);
+    if (!get_is_recording()) commit_changes(true);
 
   }
 
@@ -635,7 +638,7 @@ public:
       if (c && p_xgeom->get_DIM() > 2) p_xgeom->cell.v[2] = *c;
     }
 
-    if (!p_currently_editing) commit_changes(true);
+    if (!get_is_recording()) commit_changes(true);
 
   }
 

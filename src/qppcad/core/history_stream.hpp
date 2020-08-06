@@ -28,10 +28,11 @@ enum class hs_result_e {
   hs_dead = 9
 };
 
-enum class hs_dstate_dir_e {
-  hs_ds_dir_forward,
-  hs_ds_dir_backward
-};
+//deprecated
+//enum class hs_dstate_dir_e {
+//  hs_ds_dir_forward,
+//  hs_ds_dir_backward
+//};
 
 enum class hs_dstate_apply_e {
   hs_ds_apply,
@@ -43,7 +44,15 @@ enum class hs_doc_type_e {
   hs_doc_temporary
 };
 
-//Stores augment meta info for each child in each parent's epoch
+///@brief controls how begin_recording/record/end_recording works
+enum class hs_doc_rec_type_e {
+  hs_doc_rec_disabled,      /// disabled
+  hs_doc_rec_as_new_epoch,  /// regular commit
+  hs_doc_rec_init,          /// executes recursively from root
+  hs_doc_rec_init_local     /// executes !only! for current hs_doc
+};
+
+///Stores augment meta info for each child in each parent's epoch
 struct hs_child_state_meta_t {
   epoch_t m_child_epoch{0};
   bool m_is_alive{false};
@@ -73,9 +82,9 @@ private:
   bool p_commit_exclusive_on_change{false};
   bool p_commit_exclusive_on_change_old{false};
   bool p_is_recording{false};
-  bool p_init_as_base_commit{false};
   bool p_auto_delete{false};
   bool p_auto_delete_children{false};
+  hs_doc_rec_type_e p_cur_rec_type{hs_doc_rec_type_e::hs_doc_rec_disabled};
   hs_dstate_e p_dstate{hs_dstate_e::hs_dstate_inst};
   hs_doc_type_e p_doctype{hs_doc_type_e::hs_doc_persistent};
 
@@ -106,12 +115,14 @@ private:
 
 protected:
 
-  virtual void record_impl(bool init_as_base_commit);
   virtual hs_result_e reset_impl();
   virtual bool is_unmodified_impl();
   virtual hs_result_e squash_impl();
   virtual hs_result_e dstate_change(hs_dstate_apply_e ds_dir, epoch_t target);
-  //void update_super_root(hist_doc_base_t *new_super_root);
+
+  virtual void begin_recording_impl();
+  virtual void record_impl(hs_doc_rec_type_e record_type);
+  virtual void end_recording_impl();
 
 public:
 
@@ -122,18 +133,21 @@ public:
    * @brief begin_recoring
    * @param init_as_base_commit
    */
-  void begin_recording(bool init_as_base_commit = false);
+  void begin_recording(hs_doc_rec_type_e record_type);
 
   /**
    * @brief end_recording
    */
   void end_recording();
 
+  bool get_is_recording();
+  hs_doc_rec_type_e get_cur_rec_type() const;
+
   /**
   * @brief get_cur_epoch
   * @return
   */
-  epoch_t get_cur_epoch();
+  epoch_t get_cur_epoch() const;
 
   /**
   * @brief set_cur_epoch
@@ -405,14 +419,14 @@ protected:
 
   }
 
-  void record_impl(bool init_as_base_commit) override {
+  void record_impl(hs_doc_rec_type_e record_type) override {
 
-    if (init_as_base_commit) {
+    if (get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init) {
       p_stored_values.clear();
       p_stored_values[get_cur_epoch()] = p_cur_value;
     }
 
-    hs_doc_base_t::record_impl(init_as_base_commit);
+    hs_doc_base_t::record_impl(record_type);
 
   }
 

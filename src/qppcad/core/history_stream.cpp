@@ -14,15 +14,19 @@ hs_doc_base_t::~hs_doc_base_t() {
 
 }
 
-void hs_doc_base_t::begin_recording(bool init_as_base_commit) {
+void hs_doc_base_t::begin_recording(hs_doc_rec_type_e record_type) {
+
+  p_cur_rec_type = record_type;
 
   hs_doc_base_t *parent = get_super_parent();
   //must be false when we start recording
   assert(!parent->p_is_recording);
   parent->p_is_recording = true;
-  parent->p_init_as_base_commit = init_as_base_commit;
+  p_is_recording = true;
   parent->p_commit_exclusive_on_change_old = parent->p_commit_exclusive_on_change;
   parent->p_commit_exclusive_on_change = false;
+  parent->p_cur_rec_type = record_type;
+  parent->record_impl(record_type);
 
 }
 
@@ -31,16 +35,27 @@ void hs_doc_base_t::end_recording() {
   hs_doc_base_t *parent = get_super_parent();
   //must be true when we stop recording
   assert(parent->p_is_recording);
+  assert(p_cur_rec_type != hs_doc_rec_type_e::hs_doc_rec_disabled);
 
-  parent->record_impl(parent->p_init_as_base_commit);
-
+  parent->record_impl(parent->p_cur_rec_type);
   parent->p_is_recording = false;
-  parent->p_init_as_base_commit = false;
   parent->p_commit_exclusive_on_change = parent->p_commit_exclusive_on_change_old;
 
 }
 
-hs_doc_base_t::epoch_t hs_doc_base_t::get_cur_epoch() {
+bool hs_doc_base_t::get_is_recording() {
+
+  hs_doc_base_t *parent = get_super_parent();
+  assert(parent->p_is_recording == p_is_recording);
+  return p_is_recording;
+
+}
+
+hs_doc_rec_type_e hs_doc_base_t::get_cur_rec_type() const {
+  return p_cur_rec_type;
+}
+
+hs_doc_base_t::epoch_t hs_doc_base_t::get_cur_epoch() const {
   return p_cur_epoch;
 }
 
@@ -163,6 +178,14 @@ hs_result_e hs_doc_base_t::dstate_change(hs_dstate_apply_e ds_dir, epoch_t targe
   return hs_result_e::hs_success;
 }
 
+void hs_doc_base_t::begin_recording_impl() {
+
+}
+
+void hs_doc_base_t::end_recording_impl() {
+
+}
+
 hs_result_e hs_doc_base_t::reset() {
 
   std::vector<bool> child_reseted;
@@ -213,15 +236,15 @@ hs_result_e hs_doc_base_t::squash() {
 
 }
 
-void hs_doc_base_t::record_impl(bool init_as_base_commit) {
+void hs_doc_base_t::record_impl(hs_doc_rec_type_e record_type) {
 
-  if (init_as_base_commit) {
+  if (record_type == hs_doc_rec_type_e::hs_doc_rec_init) {
     p_hist_line = {0};
     p_cur_epoch = 0;
   }
 
   for (auto child : p_children)
-    if (child) child->record_impl(init_as_base_commit);
+    if (child) child->record_impl(record_type);
 
 }
 
@@ -278,10 +301,6 @@ std::tuple<hs_result_e, std::optional<hs_doc_base_t::epoch_t> > hs_doc_base_t::p
 
       std::vector<hs_doc_base_t*> children_to_delete;
 
-      //      for (auto child : p_children)
-      //        if (child)
-      //          fmt::print(std::cout, "foreach p_child : is_unused = {}\n", is_child_unused(child));
-
       auto cpy_ifl = [this](hs_doc_base_t *lchld) -> bool {
         return lchld
                && lchld->get_auto_delete()
@@ -291,13 +310,8 @@ std::tuple<hs_result_e, std::optional<hs_doc_base_t::epoch_t> > hs_doc_base_t::p
                             lchld) == end(this->p_just_added_children);
       };
 
-      std::copy_if(begin(p_children),
-                   end(p_children),
-                   std::back_inserter(children_to_delete),
+      std::copy_if(begin(p_children), end(p_children), std::back_inserter(children_to_delete),
                    cpy_ifl);
-
-      //      fmt::print(std::cout, "INSIDE GET_AUTO_DELETE: sz(cld) = {}, sz(ctd) = {}, cur_epoch = {}\n",
-      //                 size(p_children), size(children_to_delete), cur_epoch);
 
       for (auto child_to_delete : children_to_delete)
         if (child_to_delete) {
@@ -405,8 +419,7 @@ hs_result_e hs_doc_base_t::is_child_alive(epoch_t target_epoch, hs_doc_base_t* c
 
 }
 
-hs_result_e hs_doc_base_t::checkout_to_epoch(epoch_t target_epoch,
-                                             bool process_dstates) {
+hs_result_e hs_doc_base_t::checkout_to_epoch(epoch_t target_epoch, bool process_dstates) {
 
   epoch_t prev_epoch = get_cur_epoch();
 
@@ -435,21 +448,19 @@ hs_result_e hs_doc_base_t::checkout_to_epoch(epoch_t target_epoch,
      * hl = 0 1 2 3 4 5 6 , ce = 6, pe = 2, seq = 2u->3a, 3u->4a, 4u->5a, 5u->6a | upward
      * a - apply, u - unapply
      */
-    hs_dstate_dir_e ds_dir = cur_epoch > prev_epoch ?
-                                                    hs_dstate_dir_e::hs_ds_dir_backward :
-                                                    hs_dstate_dir_e::hs_ds_dir_forward;
+    bool is_forward = cur_epoch > prev_epoch;
 
     auto cur_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), cur_epoch);
     auto prev_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), prev_epoch);
 
     std::vector<epoch_t> ds_hl;
-    std::copy(ds_dir == hs_dstate_dir_e::hs_ds_dir_forward ? cur_epoch_it : prev_epoch_it ,
-              ds_dir == hs_dstate_dir_e::hs_ds_dir_forward ? prev_epoch_it + 1 : cur_epoch_it + 1,
+    std::copy(is_forward ? cur_epoch_it : prev_epoch_it ,
+              is_forward ? prev_epoch_it + 1 : cur_epoch_it + 1,
               std::back_inserter(ds_hl));
 
-    if (ds_dir == hs_dstate_dir_e::hs_ds_dir_forward) std::reverse(begin(ds_hl), end(ds_hl));
+    if (is_forward) std::reverse(begin(ds_hl), end(ds_hl));
 
-    if (ds_dir == hs_dstate_dir_e::hs_ds_dir_forward) {
+    if (is_forward) {
       for (size_t i = 0; i < size(ds_hl)-1; i++) {
         dstate_change(hs_dstate_apply_e::hs_ds_unapply, ds_hl[i]);
       }

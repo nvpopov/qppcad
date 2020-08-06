@@ -11,7 +11,7 @@ arrow_array_t::arrow_array_t() : ws_item_t() {
 
   set_default_flags(ws_item_flags_default | ws_item_flags_support_rendering);
 
-  begin_recording(true);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_unf_arrow_len);
   add_hs_child(&m_unf_arrow_cap_len);

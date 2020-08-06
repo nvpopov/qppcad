@@ -439,7 +439,7 @@ TEST_CASE("history stream test") {
     hs_doc_t<int> *hs_el1 = new hs_doc_t<int>(0);
     hs_doc_t<int> *hs_el2 = new hs_doc_t<int>(0);
 
-    hs_it1->begin_recording(true); // init as base epoch
+    hs_it1->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch); // init as base epoch
 
     REQUIRE(hs_it1->add_hs_child(hs_el1) == hs_result_e::hs_success);
     REQUIRE(hs_it1->add_hs_child(hs_el2) == hs_result_e::hs_success);
@@ -475,7 +475,7 @@ TEST_CASE("history stream test") {
     hs_doc_t<int> *hs_el1 = new hs_doc_t<int>(0);
     hs_doc_t<int> *hs_el2 = new hs_doc_t<int>(0);
 
-    hs_it1->begin_recording(true); // init as base epoch
+    hs_it1->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch); // init as base epoch
 
     REQUIRE(hs_it1->add_hs_child(hs_el1) == hs_result_e::hs_success);
     REQUIRE(hs_it1->add_hs_child(hs_el2) == hs_result_e::hs_success);
@@ -870,18 +870,18 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.add("C", vector3<double>{0});
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     REQUIRE(xg1.nat() == 1);
     REQUIRE(hs_xg->get_cur_epoch() == 1);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.add("S",  vector3<double>{1});
     xg1.add("Ca", vector3<double>{2});
     xg1.add("F",  vector3<double>{3});
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     REQUIRE(hs_xg->get_cur_epoch() == 2);
     REQUIRE(xg1.nat() == 4);
@@ -903,9 +903,9 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.atom_of_type(xg1.type(3)) == "F");
 
     //testing erase
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.erase(0);
-    hs_xg->end_editing();
+    hs_xg->end_recording();
     REQUIRE(xg1.nat() == 3);
     REQUIRE(hs_xg->get_cur_epoch() == 3);
     REQUIRE(xg1.atom_of_type(xg1.type(0)) == "S");
@@ -920,17 +920,17 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.atom_of_type(xg1.type(3)) == "F");
     REQUIRE(hs_xg->checkout_to_epoch(2) == hs_result_e::hs_success);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.erase(0);
-    hs_xg->end_editing();
+    hs_xg->end_recording();
     REQUIRE(hs_xg->get_cur_epoch() == 4);
     REQUIRE(xg1.nat() == 3);
     REQUIRE(hs_xg->checkout_to_epoch(2) == hs_result_e::hs_success);
     REQUIRE(xg1.nat() == 4);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.insert(1, "He", vector3<double>{0, 10, 10});
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     REQUIRE(hs_xg->get_cur_epoch() == 5);
     REQUIRE(xg1.atom_of_type(xg1.type(0)) == "C");
@@ -996,18 +996,18 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.add("C", vector3<double>{2, 3, 4});
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     REQUIRE(xg1.nat() == 1);
     REQUIRE(hs_xg->get_cur_epoch() == 1);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.add("S", vector3<double>{1});
     xg1.add("Ca", vector3<double>{2});
     xg1.add("F", vector3<double>{3});
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     xg1.change_pos(0, vector3<double>{12});
 
@@ -1029,13 +1029,13 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.add("S0", vector3<double>{0});
     xg1.add("S1", vector3<double>{1});
     xg1.add("S2", vector3<double>{2});
     xg1.add("S3", vector3<double>{3});
     xg1.add("S4", vector3<double>{4});
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     REQUIRE(hs_xg->get_cur_epoch() == 1);
     REQUIRE(xg1.nat() == 5);
@@ -1105,21 +1105,21 @@ TEST_CASE("history stream test") {
 
     REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
 
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.add("S0", vector3<double>{0});
     xg1.add("S1", vector3<double>{1});
     xg1.add("S2", vector3<double>{2});
     xg1.add("S3", vector3<double>{3});
     xg1.add("S4", vector3<double>{4});
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     REQUIRE(hs_xg->get_cur_epoch() == 1);
     REQUIRE(xg1.nat() == 5);
 
     /* testing double */
-    hs_xg->begin_editing();
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     xg1.set_xfield<double>(4, 0, -20);
-    hs_xg->end_editing();
+    hs_xg->end_recording();
 
     REQUIRE(hs_xg->get_cur_epoch() == 2);
     REQUIRE(xg1.get_xfield<double>(4, 0) == -20);

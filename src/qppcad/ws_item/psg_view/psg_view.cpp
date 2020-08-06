@@ -11,7 +11,7 @@ psg_view_t::psg_view_t() : ws_item_t() {
                     | ws_item_flags_translate_emit_upd_event
                     | ws_item_flags_support_rendering);
 
-  begin_recording(true);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_plane_alpha);
   add_hs_child(&m_plane_alpha_enabled);

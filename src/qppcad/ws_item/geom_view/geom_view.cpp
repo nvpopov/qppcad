@@ -22,7 +22,7 @@ using namespace qpp::cad;
 geom_view_t::geom_view_t(): ws_item_t() {
 
   /*hs begin*/
-  begin_recording(true);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_shading_specular_power);
   add_hs_child(&m_atom_scale_factor);
@@ -1171,9 +1171,11 @@ void geom_view_t::update_inter_atomic_dist_ex(float new_dist,
 
   if (!m_geom) return;
 
+  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
   update_inter_atomic_dist(new_dist, at1, at2,
                            index::D(m_geom->get_DIM()).all(0),
                            index::D(m_geom->get_DIM()).all(0), mode);
+  m_xgeom_proxy.end_recording();
 
 }
 
@@ -1182,13 +1184,11 @@ void geom_view_t::translate_selected(const vector3<float> &t_vec) {
   if (!m_geom) return;
   if (m_atom_idx_sel.empty()) return;
 
-  m_xgeom_proxy.begin_editing();
-
+  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
   for (auto &elem : m_atom_idx_sel)
     if (elem.m_idx == index::D(m_geom->get_DIM()).all(0))
       upd_atom(elem.m_atm, m_geom->pos(elem.m_atm) + t_vec);
-
-  m_xgeom_proxy.end_editing();
+  m_xgeom_proxy.end_recording();
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();

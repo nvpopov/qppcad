@@ -27,7 +27,7 @@ workspace_t::workspace_t(std::string _ws_name) {
   m_camera->reset_camera();
   m_gizmo = std::make_unique<gizmo_t>();
 
-  begin_recording(true);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
   add_hs_child(&m_ws_items);
   end_recording();
 
@@ -561,7 +561,7 @@ void workspace_t::load_ws_from_json(const std::string filename) {
               astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(obj_hash);
 
           if (obj) {
-            obj->begin_recording();
+            obj->begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
             obj->load_from_json(object, rep_info);
             obj->end_recording();
             add_item_to_ws(obj);
