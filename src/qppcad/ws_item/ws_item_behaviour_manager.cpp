@@ -60,7 +60,8 @@ void ws_item_behaviour_manager_t::load_fixtures_from_path(
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     const std::string &file_name,
     size_t io_bhv_idx,
-    workspace_t *ws) {
+    workspace_t *ws,
+    hs_doc_rec_type_e rec_type) {
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -76,7 +77,9 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 
     std::ifstream input(file_name);
     new_ws_item->m_name.set_value(extract_base_name(file_name));
+    new_ws_item->begin_recording(rec_type);
     m_ws_item_io[io_bhv_idx]->load_from_stream(input, new_ws_item.get(), ws);
+    new_ws_item->end_recording();
     return new_ws_item;
 
   } else {
@@ -89,23 +92,19 @@ std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
 
 std::shared_ptr<ws_item_t> ws_item_behaviour_manager_t::load_ws_itm_from_file(
     const std::string &file_name,
-    workspace_t *ws) {
+    workspace_t *ws,
+    hs_doc_rec_type_e rec_type) {
 
   QFileInfo check_file(QString::fromStdString(file_name));
-
   if (!check_file.exists() || !check_file.isFile()) return nullptr;
 
   auto file_format = get_ff_by_finger_print(file_name);
-
   if (file_format) {
-
     std::optional<size_t> io_bhv_id = get_io_bhv_by_file_format(*file_format);
-
     if (io_bhv_id) {
-      auto ret_sp = load_ws_itm_from_file(file_name, *io_bhv_id, ws);
+      auto ret_sp = load_ws_itm_from_file(file_name, *io_bhv_id, ws, rec_type);
       return ret_sp;
     }
-
   }
 
   return nullptr;

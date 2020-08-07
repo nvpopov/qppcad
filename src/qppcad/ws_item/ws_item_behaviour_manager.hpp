@@ -37,50 +37,43 @@ enum class ws_item_tool_type_e {
 class workspace_t; //fwd decl
 
 /**
-     * @brief The ws_item_io_file_format_group_t class
-     */
+ * @brief The ws_item_io_file_format_group_t class
+*/
 struct ws_item_io_file_format_group_t {
-
   std::string m_full_name;
   std::string m_short_name;
   std::set<size_t> m_ffs_lookup;
-
 };
 
 /**
-     * @brief The ws_item_io_file_format_t class
-     */
+ * @brief The ws_item_io_file_format_t class
+*/
 struct ws_item_io_file_format_t {
-
   std::string m_full_name;
   std::string m_shortname;
   std::vector<std::string> m_finger_prints;
   std::optional<size_t> m_group_hash;
-
 };
 
 /**
-     * @brief The ws_item_tool_t class
-     */
+ * @brief The ws_item_tool_t class
+*/
 struct ws_item_tool_t {
-
   virtual void exec(ws_item_t *item, uint32_t error_ctx) = 0;
   virtual ws_item_inline_tool_widget_t* construct_inline_tool() {return nullptr;}
-
 };
 
 /**
-     * @brief The ws_item_tool_group_t class
-     */
+ * @brief The ws_item_tool_group_t class
+*/
 struct ws_item_tool_group_t {
   std::string m_full_name;
 };
 
 /**
-     * @brief The ws_item_tool_info_t class
-     */
+ * @brief The ws_item_tool_info_t class
+*/
 struct ws_item_tool_info_t {
-
   std::string m_full_name;
   size_t m_group_hash;
   size_t m_accepted_type;
@@ -89,25 +82,22 @@ struct ws_item_tool_info_t {
   bool m_item_required{true};
   std::function<std::shared_ptr<ws_item_tool_t>() > m_fabric;
   std::function<bool(ws_item_t*)> m_can_apply;
-
 };
 
 /**
-     * @brief The ws_item_extended_editor_info_t class
-     */
+ * @brief The ws_item_extended_editor_info_t class
+*/
 struct ws_item_extended_editor_info_t {
-
   std::string m_full_name;
   size_t m_type;
   size_t m_order;
   std::function<std::shared_ptr<ws_item_extended_editor_t>() > m_fabric;
   std::shared_ptr<ws_item_extended_editor_t> m_inst{nullptr};
-
 };
 
 /**
-     * @brief The ws_item_io_behaviour_t class
-     */
+ * @brief The ws_item_io_behaviour_t class
+*/
 struct ws_item_io_behaviour_t {
 
   size_t m_accepted_type;
@@ -125,10 +115,10 @@ struct ws_item_io_behaviour_t {
   }
 
   virtual void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                                ws_item_t *_item,
+                                ws_item_t *item,
                                 workspace_t *ws) = 0;
 
-  virtual void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream, ws_item_t *_item) = 0;
+  virtual void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream, ws_item_t *item) = 0;
 
   bool is_type_accepted(size_t accepted_type);
 
@@ -157,9 +147,7 @@ public:
     if (item && item->get_type() == T::get_type_static()) {
       T* casted_item = item->cast_as<T>();
       if (casted_item) {
-        casted_item->begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
         load_from_stream_ex(stream, casted_item, ws);
-        casted_item->end_recording();
       }
     }
   }
@@ -196,10 +184,10 @@ public:
     return true;
   }
 
-  virtual void pre_load_hook(T *_item, workspace_t *ws)  = 0;
-  virtual void post_load_hook(T *_item, workspace_t *ws)  = 0;
-  virtual void pre_save_hook(T *_item)  = 0;
-  virtual void post_save_hook(T *_item)  = 0;
+  virtual void pre_load_hook(T *item, workspace_t *ws)  = 0;
+  virtual void post_load_hook(T *sitem, workspace_t *ws)  = 0;
+  virtual void pre_save_hook(T *item)  = 0;
+  virtual void post_save_hook(T *item)  = 0;
 
   void load_from_stream(std::basic_istream<CHAR_EX,TRAITS> &stream,
                         ws_item_t *item,
@@ -215,7 +203,7 @@ public:
   }
 
   virtual void load_from_stream_ex(std::basic_istream<CHAR_EX,TRAITS> &stream,
-                                   T *_item,
+                                   T *item,
                                    workspace_t *ws) = 0;
 
   void save_to_stream(std::basic_ostream<CHAR_EX,TRAITS> &stream, ws_item_t *item) override {
@@ -234,8 +222,8 @@ public:
 };
 
 /**
-     * @brief The ws_item_behaviour_manager_t class
-     */
+ * @brief The ws_item_behaviour_manager_t class
+*/
 class ws_item_behaviour_manager_t {
 
 public:
@@ -286,10 +274,12 @@ public:
 
   std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
                                                    size_t io_bhv_idx,
-                                                   workspace_t *ws);
+                                                   workspace_t *ws,
+                                                   hs_doc_rec_type_e rec_type);
 
   std::shared_ptr<ws_item_t> load_ws_itm_from_file(const std::string &file_name,
-                                                   workspace_t *ws);
+                                                   workspace_t *ws,
+                                                   hs_doc_rec_type_e rec_type);
 
   bool save_ws_itm_to_file(std::string &file_name,
                            std::shared_ptr<ws_item_t> ws_item,
@@ -313,21 +303,17 @@ public:
   std::optional<size_t> get_io_bhv_by_file_format_ex(size_t file_format, size_t type_hash);
 
   void reg_io_bhv(std::shared_ptr<ws_item_io_behaviour_t> io_bhv_inst,
-                  size_t accepted_file_format,
-                  size_t accepted_type);
+                  size_t accepted_file_format, size_t accepted_type);
 
   void reg_item_fbr(size_t hash, std::function<std::shared_ptr<ws_item_t>()> func);
 
   void reg_obj_insp_fbr(size_t hash,
                         std::function<std::shared_ptr<ws_item_obj_insp_widget_t>()> func);
 
-  void reg_ext_editor_fbr(size_t hash,
-                          size_t editor_order,
-                          std::string editor_name,
+  void reg_ext_editor_fbr(size_t hash, size_t editor_order, std::string editor_name,
                           std::function<std::shared_ptr<ws_item_extended_editor_t>()> func);
 
-  void reg_toolbar_elem_fbr(size_t hash,
-                            std::string editor_name,
+  void reg_toolbar_elem_fbr(size_t hash, std::string editor_name,
                             std::function<std::shared_ptr<toolbar_element_t>()> func);
 
   bool is_obj_insp_fbr_exists(size_t hash);
@@ -347,21 +333,21 @@ public:
   std::shared_ptr<ws_item_t> fbr_ws_item_by_name(const std::string &type_name);
 
   /**
-       * @brief reg_tool_grp
-       * @param full_name
-       * @return
-       */
+   * @brief reg_tool_grp
+   * @param full_name
+   * @return
+  */
   size_t reg_tool_grp(std::string full_name);
 
   /**
-       * @brief reg_tool
-       * @param full_name
-       * @param g_hash
-       * @param t_hash
-       * @param itm_req
-       * @param fabric
-       * @return
-       */
+   * @brief reg_tool
+   * @param full_name
+   * @param g_hash
+   * @param t_hash
+   * @param itm_req
+   * @param fabric
+   * @return
+  */
   size_t reg_tool(
       std::string full_name,
       size_t grgp_hash,
@@ -376,20 +362,20 @@ public:
                         size_t g_hash,
                         std::function<std::shared_ptr<sf_node_t>() > fabric);
   /**
-       * @brief exec_tool
-       * @param item
-       * @param tool_hash
-       * @param error_ctx
-       */
+   * @brief exec_tool
+   * @param item
+   * @param tool_hash
+   * @param error_ctx
+  */
   void exec_tool(ws_item_t* item, size_t tool_hash, uint32_t error_ctx = error_ctx_mbox);
   ws_item_tool_type_e get_tool_type(size_t tool_hash);
 
   /**
-       * @brief exec_tool_by_name
-       * @param tool_name
-       * @param item
-       * @param error_ctx
-       */
+   * @brief exec_tool_by_name
+   * @param tool_name
+   * @param item
+   * @param error_ctx
+  */
   void exec_tool_by_name(std::string tool_name,
                          ws_item_t *item = nullptr,
                          uint32_t error_ctx = error_ctx_mbox);

@@ -58,7 +58,8 @@ public:
 
     item->end_structure_change() ;
     item->m_xgeom_proxy.set_ignore_changes(false);
-    item->m_xgeom_proxy.init_base_epoch();
+    //moved to end_recording
+    //item->m_xgeom_proxy.init_base_epoch();
 
   }
 

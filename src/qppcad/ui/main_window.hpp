@@ -293,8 +293,6 @@ public slots:
   void act_bhv_export_sel();
   void control_bhv_menus_activity();
 
-  //void overview_changed(const std::string &new_overview_text);
-
   void make_screenshot();
 
 };

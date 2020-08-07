@@ -1093,8 +1093,12 @@ void workspace_manager_t::import_from_file(const std::string &fname,
     std::shared_ptr<ws_item_t> p_new_itm{nullptr};
 
     try {
-      p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get());
+
+      auto rec_type = need_to_squash_hs ? hs_doc_rec_type_e::hs_doc_rec_init :
+                                          hs_doc_rec_type_e::hs_doc_rec_as_new_epoch;
+      p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get(), rec_type);
       if (need_to_squash_hs) exec_ws.get()->squash();
+
     } catch (const qpp::parsing_error_t &exc) {
       loading_is_succesfull = false;
 
