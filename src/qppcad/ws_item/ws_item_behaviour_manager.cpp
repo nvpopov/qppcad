@@ -120,8 +120,10 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
 
   if (!ws_item) return false;
 
-  if (bhv_id < m_ws_item_io.size() && m_ws_item_io[bhv_id]->can_save()
+  if (bhv_id < m_ws_item_io.size()
+      && m_ws_item_io[bhv_id]->can_save()
       && m_ws_item_io[bhv_id]->m_accepted_type == ws_item->get_type()) {
+
     astate->tlog("Saving ws_item[{}] to file {} from workspace {}",
                  ws_item->m_name.get_value(), file_name, ws_item->m_parent_ws->m_ws_name);
 
@@ -134,6 +136,7 @@ bool ws_item_behaviour_manager_t::save_ws_itm_to_file(std::string &file_name,
       astate->tlog("Checking failed for ws_item={}, file={}, workspace={}",
                    ws_item->m_name.get_value(), file_name, ws_item->m_parent_ws->m_ws_name);
       return false;
+
     }
 
   }

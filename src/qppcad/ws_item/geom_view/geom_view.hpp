@@ -12,7 +12,7 @@ namespace py = pybind11;
 #include <geom/xgeom.hpp>
 #include <geom/geom_anim.hpp>
 #include <geom/extents_observer.hpp>
-#include <qppcad/core/history_stream_geom_adapter.hpp>
+#include <qppcad/core/history_stream_geom_proxy.hpp>
 #include <geom/tws_tree.hpp>
 #include <data/color.hpp>
 #include <symm/index_set.hpp>
