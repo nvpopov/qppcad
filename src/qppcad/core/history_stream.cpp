@@ -14,6 +14,48 @@ hs_doc_base_t::~hs_doc_base_t() {
 
 }
 
+void hs_doc_base_t::begin_recording_impl() {
+
+  for (auto child : p_children)
+    if (child) {
+      child->p_cur_rec_type = p_cur_rec_type;
+      child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
+      child->p_is_recording = p_is_recording;
+      child->begin_recording_impl();
+    }
+
+  on_begin_recording();
+
+}
+
+void hs_doc_base_t::recording_impl() {
+
+  if (p_cur_rec_type == hs_doc_rec_type_e::hs_doc_rec_init) {
+    p_hist_line = {0};
+    p_cur_epoch = 0;
+  }
+
+  for (auto child : p_children)
+    if (child) child->recording_impl();
+
+  on_recording();
+
+}
+
+void hs_doc_base_t::end_recording_impl() {
+
+  for (auto child : p_children)
+    if (child) {
+      child->p_cur_rec_type = p_cur_rec_type;
+      child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
+      child->p_is_recording = p_is_recording;
+      child->end_recording_impl();
+    }
+
+  on_end_recording();
+
+}
+
 void hs_doc_base_t::begin_recording(hs_doc_rec_type_e record_type) {
 
   p_cur_rec_type = record_type;
@@ -26,7 +68,16 @@ void hs_doc_base_t::begin_recording(hs_doc_rec_type_e record_type) {
   parent->p_commit_exclusive_on_change_old = parent->p_commit_exclusive_on_change;
   parent->p_commit_exclusive_on_change = false;
   parent->p_cur_rec_type = record_type;
-  parent->record_impl(record_type);
+
+  /*
+   * we need to propagate next values:
+   *  record_type
+   *  is_recording
+   *  commit_exclusive_on_change
+   */
+
+  parent->begin_recording_impl();
+  parent->recording_impl();
 
 }
 
@@ -37,9 +88,11 @@ void hs_doc_base_t::end_recording() {
   assert(parent->p_is_recording);
   assert(p_cur_rec_type != hs_doc_rec_type_e::hs_doc_rec_disabled);
 
-  parent->record_impl(parent->p_cur_rec_type);
+  //parent->record_impl(parent->p_cur_rec_type);
   parent->p_is_recording = false;
   parent->p_commit_exclusive_on_change = parent->p_commit_exclusive_on_change_old;
+
+  parent->end_recording_impl();
 
 }
 
@@ -178,14 +231,6 @@ hs_result_e hs_doc_base_t::dstate_change(hs_dstate_apply_e ds_dir, epoch_t targe
   return hs_result_e::hs_success;
 }
 
-void hs_doc_base_t::begin_recording_impl() {
-
-}
-
-void hs_doc_base_t::end_recording_impl() {
-
-}
-
 hs_result_e hs_doc_base_t::reset() {
 
   std::vector<bool> child_reseted;
@@ -233,18 +278,6 @@ hs_result_e hs_doc_base_t::squash() {
 
   return (self_squash_res == hs_result_e::hs_success && all_squashed) ? hs_result_e::hs_success:
                                                                       hs_result_e::hs_error;
-
-}
-
-void hs_doc_base_t::record_impl(hs_doc_rec_type_e record_type) {
-
-  if (record_type == hs_doc_rec_type_e::hs_doc_rec_init) {
-    p_hist_line = {0};
-    p_cur_epoch = 0;
-  }
-
-  for (auto child : p_children)
-    if (child) child->record_impl(record_type);
 
 }
 

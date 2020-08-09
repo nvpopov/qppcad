@@ -107,12 +107,6 @@ private:
   */
   size_t get_children_count() const;
 
-  /**
-   * @brief is_child_unused
-   * @param child
-   * @return
-   */
-
 protected:
 
   virtual hs_result_e reset_impl();
@@ -120,9 +114,10 @@ protected:
   virtual hs_result_e squash_impl();
   virtual hs_result_e dstate_change(hs_dstate_apply_e ds_dir, epoch_t target);
 
-  virtual void begin_recording_impl();
-  virtual void record_impl(hs_doc_rec_type_e record_type);
-  virtual void end_recording_impl();
+  //recursive stuff
+  void begin_recording_impl();
+  void recording_impl();
+  void end_recording_impl();
 
 public:
 
@@ -134,13 +129,12 @@ public:
    * @param init_as_base_commit
    */
   void begin_recording(hs_doc_rec_type_e record_type);
-
-  /**
-   * @brief end_recording
-   */
+  virtual void on_begin_recording(){};
+  virtual void on_recording(){};
+  virtual void on_end_recording(){};
   void end_recording();
-
   bool get_is_recording();
+
   hs_doc_rec_type_e get_cur_rec_type() const;
 
   /**
@@ -419,14 +413,12 @@ protected:
 
   }
 
-  void record_impl(hs_doc_rec_type_e record_type) override {
+  void on_recording() override {
 
     if (get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init) {
       p_stored_values.clear();
       p_stored_values[get_cur_epoch()] = p_cur_value;
     }
-
-    hs_doc_base_t::record_impl(record_type);
 
   }
 

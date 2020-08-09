@@ -110,17 +110,37 @@ private:
 
 protected:
 
-  void begin_recording_impl() override {
+  void on_begin_recording() override {
 
   };
 
-  void record_impl(hs_doc_rec_type_e record_type) override {
+  void on_recording() override {
 
   };
 
-  void end_recording_impl() override {
+  void on_end_recording() override {
 
-    commit_changes(get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init);
+    auto cur_rec_type = get_cur_rec_type();
+
+    switch (cur_rec_type) {
+
+    case hs_doc_rec_type_e::hs_doc_rec_init : {
+      init_base_epoch();
+    }
+
+    case hs_doc_rec_type_e::hs_doc_rec_init_local : {
+
+    }
+
+    case hs_doc_rec_type_e::hs_doc_rec_as_new_epoch : {
+      commit_changes(get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init);
+    }
+
+    default: {
+
+    }
+
+    }
 
   };
 
