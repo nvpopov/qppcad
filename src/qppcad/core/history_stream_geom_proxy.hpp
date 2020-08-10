@@ -133,7 +133,7 @@ protected:
     }
 
     case hs_doc_rec_type_e::hs_doc_rec_as_new_epoch : {
-      commit_changes(get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init);
+      commit_changes(true);
     }
 
     default: {

@@ -417,8 +417,9 @@ protected:
 
     if (get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init) {
       p_stored_values.clear();
-      p_stored_values[get_cur_epoch()] = p_cur_value;
     }
+
+    p_stored_values[get_cur_epoch()] = p_cur_value;
 
   }
 

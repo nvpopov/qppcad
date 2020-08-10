@@ -60,8 +60,9 @@ void hs_doc_base_t::begin_recording(hs_doc_rec_type_e record_type) {
 
   p_cur_rec_type = record_type;
 
-  hs_doc_base_t *parent = get_super_parent();
-  //must be false when we start recording
+  hs_doc_base_t *parent =
+      record_type == hs_doc_rec_type_e::hs_doc_rec_init_local ? this : get_super_parent();
+
   assert(!parent->p_is_recording);
   parent->p_is_recording = true;
   p_is_recording = true;
@@ -77,14 +78,14 @@ void hs_doc_base_t::begin_recording(hs_doc_rec_type_e record_type) {
    */
 
   parent->begin_recording_impl();
-  parent->recording_impl();
 
 }
 
 void hs_doc_base_t::end_recording() {
 
-  hs_doc_base_t *parent = get_super_parent();
-  //must be true when we stop recording
+  hs_doc_base_t *parent =
+      p_cur_rec_type == hs_doc_rec_type_e::hs_doc_rec_init_local ? this : get_super_parent();
+
   assert(parent->p_is_recording);
   assert(p_cur_rec_type != hs_doc_rec_type_e::hs_doc_rec_disabled);
 
@@ -92,6 +93,7 @@ void hs_doc_base_t::end_recording() {
   parent->p_is_recording = false;
   parent->p_commit_exclusive_on_change = parent->p_commit_exclusive_on_change_old;
 
+  parent->recording_impl();
   parent->end_recording_impl();
 
 }
