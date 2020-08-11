@@ -16,13 +16,14 @@ hs_doc_base_t::~hs_doc_base_t() {
 
 void hs_doc_base_t::begin_recording_impl() {
 
-  for (auto child : p_children)
-    if (child) {
-      child->p_cur_rec_type = p_cur_rec_type;
-      child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
-      child->p_is_recording = p_is_recording;
-      child->begin_recording_impl();
-    }
+  if (p_cur_rec_type != hs_doc_rec_type_e::hs_doc_rec_init_local)
+    for (auto child : p_children)
+      if (child) {
+        child->p_cur_rec_type = p_cur_rec_type;
+        child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
+        child->p_is_recording = p_is_recording;
+        child->begin_recording_impl();
+      }
 
   on_begin_recording();
 
@@ -30,13 +31,14 @@ void hs_doc_base_t::begin_recording_impl() {
 
 void hs_doc_base_t::recording_impl() {
 
-  if (p_cur_rec_type == hs_doc_rec_type_e::hs_doc_rec_init) {
+  if (p_cur_rec_type == hs_doc_rec_type_e::hs_doc_rec_init
+      || p_cur_rec_type == hs_doc_rec_type_e::hs_doc_rec_init_local) {
     p_hist_line = {0};
     p_cur_epoch = 0;
   }
 
-  for (auto child : p_children)
-    if (child) child->recording_impl();
+  if (p_cur_rec_type != hs_doc_rec_type_e::hs_doc_rec_init_local)
+    for (auto child : p_children) if (child) child->recording_impl();
 
   on_recording();
 
@@ -44,13 +46,14 @@ void hs_doc_base_t::recording_impl() {
 
 void hs_doc_base_t::end_recording_impl() {
 
-  for (auto child : p_children)
-    if (child) {
-      child->p_cur_rec_type = p_cur_rec_type;
-      child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
-      child->p_is_recording = p_is_recording;
-      child->end_recording_impl();
-    }
+  if (p_cur_rec_type != hs_doc_rec_type_e::hs_doc_rec_init_local)
+    for (auto child : p_children)
+      if (child) {
+        child->p_cur_rec_type = p_cur_rec_type;
+        child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
+        child->p_is_recording = p_is_recording;
+        child->end_recording_impl();
+      }
 
   on_end_recording();
 
@@ -489,19 +492,33 @@ hs_result_e hs_doc_base_t::checkout_to_epoch(epoch_t target_epoch, bool process_
     auto prev_epoch_it = std::find(begin(p_hist_line), end(p_hist_line), prev_epoch);
 
     std::vector<epoch_t> ds_hl;
-    std::copy(is_forward ? cur_epoch_it : prev_epoch_it ,
-              is_forward ? prev_epoch_it + 1 : cur_epoch_it + 1,
+    std::copy(is_forward ? prev_epoch_it : cur_epoch_it,
+              is_forward ? cur_epoch_it + 1 : prev_epoch_it + 1,
               std::back_inserter(ds_hl));
 
-    if (is_forward) std::reverse(begin(ds_hl), end(ds_hl));
+//    #ifdef QPPCAD_DEBUG
+//    std::cout <<"IS_FORWARD? == " << is_forward
+//              << " DS_HL_BEGIN == " << (is_forward ? *(prev_epoch_it) : *(cur_epoch_it))
+//              <<" DS_HL_END == " << (is_forward ? *cur_epoch_it : *prev_epoch_it)
+//              << std::endl;
+//    std::cout <<"SIZE(DS_HL) == " << size(ds_hl) << std::endl;
+//    #endif
+
+    if (!is_forward) std::reverse(begin(ds_hl), end(ds_hl));
+
+//    #ifdef QPPCAD_DEBUG
+//    std::cout << "DS_HL[] == ";
+//    for (auto const &elem : ds_hl) std::cout << elem << " ";
+//    std::cout << std::endl;
+//    #endif
 
     if (is_forward) {
-      for (size_t i = 0; i < size(ds_hl)-1; i++) {
-        dstate_change(hs_dstate_apply_e::hs_ds_unapply, ds_hl[i]);
-      }
-    } else {
       for (size_t i = 1; i < size(ds_hl); i++) {
         dstate_change(hs_dstate_apply_e::hs_ds_apply, ds_hl[i]);
+      }
+    } else {
+      for (size_t i = 0; i < size(ds_hl)-1; i++) {
+        dstate_change(hs_dstate_apply_e::hs_ds_unapply, ds_hl[i]);
       }
     }
 

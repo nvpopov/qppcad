@@ -889,6 +889,11 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.nat() == 4);
 
     REQUIRE(hs_xg->checkout_to_epoch(1) == hs_result_e::hs_success);
+//    std::cout << "EP0: "<< std::endl << hs_xg->print_epoch_info(0) << std::endl;
+//    std::cout << "EP1: "<< std::endl << hs_xg->print_epoch_info(1) << std::endl;
+//    std::cout << "EP2: "<< std::endl << hs_xg->print_epoch_info(2) << std::endl;
+
+    //hs_xg->checkout_to_epoch(1);
     REQUIRE(xg1.nat() == 1);
     REQUIRE(hs_xg->get_cur_epoch() == 1);
 
