@@ -496,10 +496,6 @@ public:
 
   }
 
-  void geometry_destroyed () override {
-
-  }
-
   void dim_changed(before_after ord) override {
 
   }
@@ -574,6 +570,10 @@ public:
     if (!get_is_recording()) commit_changes(true);
 
   }
+
+  void selected(int at, before_after) override {
+
+  };
 
   void set_xgeom(xgeometry<REAL, CELL> *xgeom) {
 
