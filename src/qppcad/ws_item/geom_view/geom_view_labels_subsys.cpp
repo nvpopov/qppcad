@@ -63,6 +63,8 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   QRect font_rec;
   transform.reset();
 
+  bool no_one_is_selected = p_owner->m_geom->no_selected();
+
   //render labels
   for (int i = -3; i < p_owner->m_geom->nat(); i++) {
 
@@ -75,8 +77,8 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       //std::cout << fmt::format("DEBUG !!!{}\n", axis_id) << std::endl;
       auto parent_ws = p_owner->m_parent_ws;
 
-      if (is_axis && parent_ws->m_edit_type == ws_edit_e::edit_content &&
-          p_owner->m_atom_idx_sel.empty()) continue;
+      if (is_axis && parent_ws->m_edit_type == ws_edit_e::edit_content
+          && no_one_is_selected) continue;
 
       if (is_axis && (!p_owner->m_selected
                      || !parent_ws->m_gizmo->m_is_visible
@@ -244,12 +246,19 @@ void geom_view_labels_subsys_t::labelize_sel_by_neighbours_count() {
 
   m_style.set_value(geom_labels_style_e::show_custom);
 
-  for (auto &rec : p_owner->m_atom_idx_sel) {
-      p_owner->m_geom->xfield<std::string>(xgeom_label_text, rec.m_atm) =
-          fmt::format("{}_{}",
-                      p_owner->m_geom->atom_name(rec.m_atm),
-                      p_owner->m_tws_tr->n(rec.m_atm));
-      p_owner->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = true;
+//  for (auto &rec : p_owner->m_atom_idx_sel) {
+//      p_owner->m_geom->xfield<std::string>(xgeom_label_text, rec.m_atm) =
+//          fmt::format("{}_{}",
+//                      p_owner->m_geom->atom_name(rec.m_atm),
+//                      p_owner->m_tws_tr->n(rec.m_atm));
+//      p_owner->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = true;
+//    }
+
+  for (auto i = 0; i < p_owner->m_geom->nat(); i++)
+    if (p_owner->m_geom->selected(i)) {
+            p_owner->m_geom->xfield<std::string>(xgeom_label_text, i) =
+                fmt::format("{}_{}", p_owner->m_geom->atom_name(i), p_owner->m_tws_tr->n(i));
+            p_owner->m_geom->xfield<bool>(xgeom_label_show, i) = true;
     }
 
 }
@@ -265,18 +274,7 @@ void geom_view_labels_subsys_t::labelize_sel_by_dist_factor() {
   std::vector<std::vector<atom_dist_rec_t<float> > > ngbs_dp;
   std::vector<size_t> ngbs_lookup;
 
-  for (auto &rec : p_owner->m_atom_idx_sel) {
 
-      ngbs_lookup.push_back(rec.m_atm);
-
-      atom_dist_rec_t<float> new_rec;
-
-      //iterate over all neighbours
-      for (size_t i = 0; i < p_owner->m_tws_tr->n(rec.m_atm); i++) {
-
-        }
-
-    }
 
 }
 

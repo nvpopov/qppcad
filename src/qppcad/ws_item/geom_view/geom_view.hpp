@@ -130,8 +130,7 @@ public:
   std::unique_ptr<bonding_table<float> > m_bt{};
   std::unique_ptr<tws_tree_t<float, periodic_cell<float> > > m_tws_tr{};
   std::unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs{};
-  //std::set<uint16_t>                                                           m_atom_sel;
-  std::unordered_set<atom_index_set_key, atom_index_set_key_hash> m_atom_idx_sel;
+  //std::unordered_set<atom_index_set_key, atom_index_set_key_hash> m_atom_idx_sel;
   std::deque<atom_index_set_key> m_atom_ord_sel;
   std::unique_ptr<geom_view_render_buffered_billboards_t> m_bs{};
   std::unordered_set<size_t> m_atom_type_to_hide;
@@ -213,7 +212,6 @@ public:
    * @param atom_id
    */
   void sel_atom(int atom_id);
-  void toggle_atom_sel(int atom_id);
 
   /**
    * @brief sel_atom
@@ -249,28 +247,22 @@ public:
 
   template <typename TRANSFORM_CLASS>
   void transform_sel(const TRANSFORM_CLASS &tm) {
-    for (auto &elem : m_atom_idx_sel)
-      if (elem.m_idx == index::D(m_geom->get_DIM()).all(0)) transform_atom(elem.m_atm, tm);
+    for (size_t i = 0; i < m_geom->nat(); i++)
+      if (m_geom->selected(i)) transform_atom(i, tm);
     recalc_gizmo_barycenter();
   }
 
   template <typename XFIELD>
-  void xfill(size_t field_id, XFIELD value) {
-    index zero = index::D(m_geom->get_DIM()).all(0);
-    for (auto &elem : m_atom_idx_sel)
-      if (elem.m_idx == zero) m_geom->xfield<XFIELD>(field_id, elem.m_atm) = value;
+  void xfill_selected(size_t field_id, XFIELD value) {
+    for (size_t i = 0; i < m_geom->nat(); i++)
+      if (m_geom->selected(i)) m_geom->xfield<XFIELD>(field_id, i) = value;
   }
 
   template <typename XFIELD>
   bool any_of_sel_xfield_equal(int xfield_id, XFIELD xfield_val) {
-
-    auto cnt_override =
-        [this, &xfield_id, &xfield_val](const atom_index_set_key &rec) -> bool {
-      return this->m_geom->xfield<XFIELD>(xfield_id, rec.m_atm) == xfield_val;
-    };
-
-    return std::any_of(m_atom_idx_sel.begin(), m_atom_idx_sel.end(), cnt_override);
-
+    for (size_t i = 0; i < m_geom->nat(); i++)
+      if (m_geom->selected(i) && m_geom->xfield<XFIELD>(xfield_id, i) == xfield_val) return true;
+    return false;
   }
 
   void xbool_invert_selected(size_t field_id);

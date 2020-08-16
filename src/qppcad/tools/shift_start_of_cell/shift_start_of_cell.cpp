@@ -38,19 +38,22 @@ void shift_start_of_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  if (al->m_atom_idx_sel.empty()) {
-      QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
-                           QObject::tr("The list of selected atoms is empty."));
-      return;
-    }
+  if (al->m_geom->no_selected()) {
+    QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),
+                         QObject::tr("The list of selected atoms is empty."));
+    return;
+  }
 
   // compute new center
   vector3<float> new_center{0};
 
-  for (auto &rec : al->m_atom_idx_sel)
-    new_center += al->m_geom->pos(rec.m_atm, rec.m_idx);
+  for (auto i = 0; i < al->m_geom->num_aselected(); i++) {
+    auto rec = al->m_geom->nth_selected(i);
+    if (!rec) continue;
+    new_center += al->m_geom->pos((*rec).m_atm, (*rec).m_idx);
+  }
 
-  new_center /= al->m_atom_idx_sel.size();
+  new_center /= al->m_geom->num_aselected();
 
 //  for (size_t i = 0; i < al->m_geom->nat(); i++)
 //    al->m_geom->coord(i) -= new_center;

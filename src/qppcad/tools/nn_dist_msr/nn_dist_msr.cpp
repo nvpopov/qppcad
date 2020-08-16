@@ -23,14 +23,16 @@ void nn_dist_msr_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  for (auto &sel : al->m_atom_idx_sel)
-    for (size_t i = 0; i < al->m_tws_tr->n(sel.m_atm); i++) {
-        al->m_measure->add_bond_msr(sel.m_atm,
-                                    al->m_tws_tr->table_atm(sel.m_atm, i),
-                                    sel.m_idx,
-                                    al->m_tws_tr->table_idx(sel.m_atm, i));
-      }
+  for (auto i = 0; i < al->m_geom->num_aselected(); i++) {
+    auto rec = al->m_geom->nth_selected(i);
+    if (!rec) continue;
 
+    for (size_t i = 0; i < al->m_tws_tr->n((*rec).m_atm); i++) {
+      al->m_measure->add_bond_msr((*rec).m_atm, al->m_tws_tr->table_atm((*rec).m_atm, i),
+                                  (*rec).m_idx, al->m_tws_tr->table_idx((*rec).m_atm, i));
+    }
+
+  }
   astate->make_viewport_dirty();
 
 }

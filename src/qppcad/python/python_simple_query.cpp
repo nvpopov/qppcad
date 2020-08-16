@@ -139,16 +139,19 @@ void simple_query::sel_cnt_parity() {
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   index zero = index::D(al->m_geom->get_DIM()).all(0);
-  for (auto &elem : al->m_atom_idx_sel)
-    if (elem.m_idx == zero) {
+  for (auto i = 0; i < al->m_geom->num_selected(); i++) {
+    auto rec = al->m_geom->nth_selected(i);
+    if (!rec) continue;
+    auto val = *rec;
+    if (val.m_idx == zero) {
       std::array<int, 2> parity_d{-1,1};
       for (auto &p_x : parity_d)
         for (auto &p_y : parity_d)
           for (auto &p_z : parity_d) {
             vector3<float> new_pos{0};
-            new_pos[0] = al->m_geom->coord(elem.m_atm)[0] * p_x;
-            new_pos[1] = al->m_geom->coord(elem.m_atm)[1] * p_y;
-            new_pos[2] = al->m_geom->coord(elem.m_atm)[2] * p_z;
+            new_pos[0] = al->m_geom->coord(val.m_atm)[0] * p_x;
+            new_pos[1] = al->m_geom->coord(val.m_atm)[1] * p_y;
+            new_pos[2] = al->m_geom->coord(val.m_atm)[2] * p_z;
             std::vector<tws_node_content_t<float> > res;
             const float eps_dist = 0.01;
             al->m_tws_tr->query_sphere(eps_dist, new_pos, res);
@@ -156,6 +159,7 @@ void simple_query::sel_cnt_parity() {
               if (res_elem.m_idx == zero) al->sel_atom(res_elem.m_atm);
           }
     }
+  }
 
   astate->make_viewport_dirty();
 
@@ -325,8 +329,14 @@ pybind11::list simple_query::get_sel() {
 
   if (!al) return py::none();
 
-  for (auto &elem : al->m_atom_idx_sel)
-    if (elem.m_idx == index::D(al->m_geom->get_DIM()).all(0)) res.append(elem.m_atm);
+//  for (auto &elem : al->m_atom_idx_sel)
+//    if (elem.m_idx == index::D(al->m_geom->get_DIM()).all(0)) res.append(elem.m_atm);
+
+  for (auto i = 0; i < al->m_geom->num_selected(); i++) {
+    auto rec = al->m_geom->nth_selected(i);
+    if (!rec) continue;
+    if ((*rec).m_idx.is_zero()) res.append((*rec).m_atm);
+  }
 
   return res;
 
@@ -495,15 +505,15 @@ void simple_query::embed_cube() {
     throw std::invalid_argument("embed_cube : edit_type != edit_content");
   }
 
-  if (al->m_atom_idx_sel.size() != 2) {
+  if (al->m_geom->num_aselected() != 2) {
     throw std::invalid_argument("embed_cube : sel.size() != 2 ");
   }
 
-  auto it1 = al->m_atom_idx_sel.begin();
-  auto it2 = ++(al->m_atom_idx_sel.begin());
+  auto it1 = al->m_geom->nth_selected(0);
+  auto it2 = al->m_geom->nth_selected(1);
 
-  vector3<float> p1 = al->m_geom->pos(it1->m_atm, it1->m_idx) + al->m_pos.get_value();
-  vector3<float> p2 = al->m_geom->pos(it2->m_atm, it2->m_idx) + al->m_pos.get_value();
+  vector3<float> p1 = al->m_geom->pos((*it1).m_atm, (*it1).m_idx) + al->m_pos.get_value();
+  vector3<float> p2 = al->m_geom->pos((*it2).m_atm, (*it2).m_idx) + al->m_pos.get_value();
 
   vector3<float> center = (p1 + p2) * 0.5f;
   vector3<float> len{0};
@@ -586,7 +596,7 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_c->m_name.set_value(fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
       }
 
-    } else if (cur_ws->m_edit_type == ws_edit_e::edit_content && !al->m_atom_idx_sel.empty()) {
+    } else if (cur_ws->m_edit_type == ws_edit_e::edit_content && !al->m_geom->no_selected()) {
       auto ws_pg_partial =
           astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
       auto ws_pg_partial_c = ws_pg_partial->cast_as<psg_view_t>();
@@ -711,10 +721,19 @@ void simple_query::set_charge(float charge) {
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   if (al && cur_ws->m_edit_type == ws_edit_e::edit_content) {
-    index zero = index::D(al->m_geom->get_DIM()).all(0);
-    for (auto &elem : al->m_atom_idx_sel)
-      if (elem.m_idx == zero)
-        al->m_geom->xfield<float>(xgeom_charge, elem.m_atm) = charge;
+
+//    index zero = index::D(al->m_geom->get_DIM()).all(0);
+//    for (auto &elem : al->m_atom_idx_sel)
+//      if (elem.m_idx == zero)
+//        al->m_geom->xfield<float>(xgeom_charge, elem.m_atm) = charge;
+
+    for (auto i = 0; i < al->m_geom->num_selected(); i++) {
+      auto rec = al->m_geom->nth_selected(i);
+      if (!rec) continue;
+      if ((*rec).m_idx.is_zero())
+        al->m_geom->xfield<float>(xgeom_charge, (*rec).m_atm) = charge;
+    }
+
   }
 
   astate->make_viewport_dirty();
@@ -811,17 +830,20 @@ void simple_query::set_sel_color(float r, float g, float b) {
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-  for (auto &elem : al->m_atom_idx_sel) {
-    al->m_geom->xfield<float>(xgeom_ccr, elem.m_atm) = r;
-    al->m_geom->xfield<float>(xgeom_ccg, elem.m_atm) = g;
-    al->m_geom->xfield<float>(xgeom_ccb, elem.m_atm) = b;
+  for (auto i = 0; i < al->m_geom->num_selected(); i++) {
+    auto rec = al->m_geom->nth_selected(i);
+    if (!rec) continue;
+    auto val = *rec;
+    al->m_geom->xfield<float>(xgeom_ccr, val.m_atm) = r;
+    al->m_geom->xfield<float>(xgeom_ccg, val.m_atm) = g;
+    al->m_geom->xfield<float>(xgeom_ccb, val.m_atm) = b;
 
     if (al->m_anim->get_total_anims() > 0
         && !al->m_anim->m_anim_data[0].frames.empty()
         && al->m_anim->m_anim_data[0].frames[0].atom_color.size() == al->m_geom->nat()) {
-      al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][0] = r;
-      al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][1] = g;
-      al->m_anim->m_anim_data[0].frames[0].atom_color[elem.m_atm][2] = b;
+      al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][0] = r;
+      al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][1] = g;
+      al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][2] = b;
     }
 
   }

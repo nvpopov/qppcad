@@ -359,9 +359,9 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls(std::shared_ptr<geom_view_t
   if (!cls || !qm) {
       throw std::runtime_error("!chg || !cls || !qm");
     } else {
-      for (auto &elem : qm->m_atom_idx_sel) {
-          cls->ins_atom(qm->m_geom->atom(elem.m_atm), qm->m_geom->pos(elem.m_atm));
-        }
+      for (int i = 0; i < qm->m_geom->nat(); i++)
+        if (qm->m_geom->selected(i))
+          cls->ins_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
       qm->delete_selected_atoms();
     }
 

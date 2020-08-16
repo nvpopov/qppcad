@@ -392,6 +392,7 @@ public:
            | geometry_observer_supports_erase
            | geometry_observer_supports_shadow
            | geometry_observer_supports_reorder
+           | geometry_observer_supports_select
            | geometry_observer_supports_xfield_change;
   };
 
@@ -571,7 +572,7 @@ public:
 
   }
 
-  void selected(int at, before_after) override {
+  void selected(int nth, before_after, bool state) override {
 
   };
 

@@ -175,9 +175,11 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
   if (!gv) return ret;
 
   bool first = true;
-  for (auto &rec : gv->m_atom_idx_sel) {
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+    auto rec = gv->m_geom->nth_selected(i);
+    if (!rec) continue;
 
-    vector3<float> pos_i = gv->m_geom->pos(rec.m_atm) - new_frame;
+    vector3<float> pos_i = gv->m_geom->pos((*rec).m_atm) - new_frame;
 
     geom_labels_style_e cur_style =
         gv->m_labels->m_style.get_value() == show_none ?
@@ -186,7 +188,7 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
 
     ret +=
         fmt::format(first ? "{} {:8.8f} {:8.8f} {:8.8f}" : "\n{} {:8.8f} {:8.8f} {:8.8f}",
-                    geom_view_labels_subsys_t::label_gen_fn(gv, cur_style, rec.m_atm),
+                    geom_view_labels_subsys_t::label_gen_fn(gv, cur_style, (*rec).m_atm),
                     pos_i[0], pos_i[1], pos_i[2]);
 
     first = false;
@@ -205,12 +207,12 @@ void geom_view_tools_t::name_sel_atoms_by_order(geom_view_t *gv) {
 
   size_t atom_ord_c{0};
 
-  for (auto &rec : gv->m_atom_idx_sel) {
-
-    gv->m_geom->xfield<std::string>(xgeom_label_text, rec.m_atm) = std::to_string(atom_ord_c);
-    gv->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = true;
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+    auto rec = gv->m_geom->nth_selected(i);
+    if (!rec) continue;
+    gv->m_geom->xfield<std::string>(xgeom_label_text, (*rec).m_atm) = std::to_string(atom_ord_c);
+    gv->m_geom->xfield<bool>(xgeom_label_show, (*rec).m_atm) = true;
     atom_ord_c++;
-
   }
 
 }
@@ -224,12 +226,12 @@ void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3
 
   std::vector<std::tuple<size_t, float> > tmp_dists;
 
-  for (auto &rec : gv->m_atom_idx_sel) {
-
-    float dist = (gv->m_geom->pos(rec.m_atm, rec.m_idx) - point).norm();
-    std::tuple<size_t, float> tmp_dist_rec{rec.m_atm, dist};
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+    auto rec = gv->m_geom->nth_selected(i);
+    if (!rec) continue;
+    float dist = (gv->m_geom->pos((*rec).m_atm, (*rec).m_idx) - point).norm();
+    std::tuple<size_t, float> tmp_dist_rec{(*rec).m_atm, dist};
     tmp_dists.push_back(std::move(tmp_dist_rec));
-
   }
 
   std::sort(std::begin(tmp_dists),
@@ -278,9 +280,12 @@ void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, f
 
   index zero = index::D(gv->m_geom->get_DIM()).all(0);
 
-  for (auto &sel : gv->m_atom_idx_sel)
-    if (sel.m_idx == zero)
-      geom_view_tools_t::flip_atom_in_cell(gv, sel.m_atm, dim_id, flip_magn, false);
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+    auto rec = gv->m_geom->nth_selected(i);
+    if (!rec) continue;
+    if ((*rec).m_idx == zero)
+      geom_view_tools_t::flip_atom_in_cell(gv, (*rec).m_atm, dim_id, flip_magn, false);
+  }
 
   gv->end_structure_change();
 
@@ -418,12 +423,9 @@ void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selecti
 
   //update geometry
   for (int i = 0; i < gv->m_geom->nat(); i++)
-    if (gv->m_atom_idx_sel.find(atom_index_set_key(i, index::D(gv->m_geom->get_DIM()).all(0)))
-            != gv->m_atom_idx_sel.end() || ignore_selection) {
-
+    if (gv->m_geom->selected(i) || ignore_selection) {
       vector3<float> pos = gv->m_geom->pos(i);
       gv->m_geom->change_pos(i, gv->m_geom->cell.reduce(pos));
-
     }
 
   //update animations
@@ -750,7 +752,7 @@ void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
 void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selected) {
 
   if (!gv) return;
-  if (gv->m_atom_idx_sel.empty()) return;
+  if (gv->m_geom->no_selected()) return;
 
   std::shared_ptr<geom_view_t> ret_gv = std::make_shared<geom_view_t>();
   ret_gv->copy_cell(*gv, false);
@@ -758,13 +760,18 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
   ret_gv->begin_structure_change();
 
   index zero_gv = index::D(gv->m_geom->get_DIM()).all(0);
-  for (auto &rec : gv->m_atom_idx_sel)
-    if (rec.m_idx == zero_gv) {
-      ret_gv->m_geom->add(gv->m_geom->atom(rec.m_atm), gv->m_geom->pos(rec.m_atm, rec.m_idx));
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+    auto rec = gv->m_geom->nth_selected(i);
+    if (!rec) continue;
+    auto val = *rec;
+    if (val.m_idx == zero_gv) {
+      ret_gv->m_geom->add(gv->m_geom->atom(val.m_atm), gv->m_geom->pos(val.m_atm, val.m_idx));
       std::vector<datum> v;
-      gv->m_geom->get_fields(rec.m_atm, v);
+      gv->m_geom->get_fields(val.m_atm, v);
       ret_gv->m_geom->set_fields(ret_gv->m_geom->nat()-1, v);
     }
+
+  }
 
   ret_gv->end_structure_change();
 
@@ -786,9 +793,17 @@ std::map<std::string, size_t> geom_view_tools_t::get_sel_types(geom_view_t *gv) 
   tmp_tc.resize(gv->m_geom->n_types());
 
   index zero = index::D(gv->m_geom->get_DIM()).all(0);
-  for (auto &rec : gv->m_atom_idx_sel)
-    if (rec.m_idx == zero)
-      tmp_tc[gv->m_geom->type_table(rec.m_atm)]++;
+//  for (auto &rec : gv->m_atom_idx_sel)
+//    if (rec.m_idx == zero)
+//      tmp_tc[gv->m_geom->type_table(rec.m_atm)]++;
+
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+    auto rec = gv->m_geom->nth_selected(i);
+    if (!rec) continue;
+    auto val = *rec;
+    if (val.m_idx == zero)
+      tmp_tc[gv->m_geom->type_table(val.m_atm)]++;
+  }
 
   for (size_t i = 0; i < gv->m_geom->n_types(); i++)
     retv[gv->m_geom->atom_of_type(i)] = tmp_tc[i];

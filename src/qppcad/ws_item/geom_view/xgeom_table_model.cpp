@@ -33,10 +33,7 @@ QVariant xgeom_table_model_t::data(const QModelIndex &index, int role) const {
   int atom_id = index.row();
   basic_types field_type = m_gv->m_geom->field_type(xfield_index);
 
-  if (role == Qt::BackgroundRole
-      && m_gv->m_atom_idx_sel.find({atom_id, index::D(m_gv->m_geom->get_DIM()).all(0)}) !=
-         m_gv->m_atom_idx_sel.end()) {
-
+  if (role == Qt::BackgroundRole && m_gv->m_geom->selected(atom_id)) {
       return QVariant(QColor(Qt::gray));
     }
 

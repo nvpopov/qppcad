@@ -63,11 +63,11 @@ namespace qpp {
               color[2] = al.m_geom->xfield<float>(xgeom_ccb, i);
             }
 
-          if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
-              if (al.m_atom_idx_sel.find(atom_index_set_key(i, zero_idx)) !=
-                  al.m_atom_idx_sel.end() && al.m_selected)
-                color = vector3<float>(0.43f, 0.55f, 0.12f);
-            }
+//          if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
+//              if (al.m_atom_idx_sel.find(atom_index_set_key(i, zero_idx)) !=
+//                  al.m_atom_idx_sel.end() && al.m_selected)
+//                color = vector3<float>(0.43f, 0.55f, 0.12f);
+//            }
 
           astate->sp_bs_sphere->set_u(sp_u_name::v_color, color.data());
           astate->sp_bs_sphere->set_u(sp_u_name::f_scale, &dr_rad);

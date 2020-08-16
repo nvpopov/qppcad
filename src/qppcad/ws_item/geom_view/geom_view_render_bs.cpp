@@ -200,8 +200,7 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
     }
 
   if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
-      if (al.m_atom_idx_sel.find(atom_index_set_key(at_num, at_index)) !=
-          al.m_atom_idx_sel.end() && al.m_selected)
+      if (al.m_geom->iselected(at_num, at_index) && al.m_selected)
         color = vector3<float>(0.43f, 0.55f, 0.12f);
     }
 
@@ -248,8 +247,7 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
     }
 
   if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
-      if (al.m_atom_idx_sel.find(atom_index_set_key(at_num, at_index)) !=
-          al.m_atom_idx_sel.end() && al.m_selected)
+      if (al.m_geom->iselected(at_num, at_index) && al.m_selected)
         color = vector3<float>(0.43f, 0.55f, 0.12f);
     }
 

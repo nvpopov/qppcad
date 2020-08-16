@@ -191,7 +191,11 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
   std::set<size_t> sel_atoms;
 
   for (auto &gs : {g1, g2})
-    for (auto &rec : gs->m_atom_idx_sel) sel_atoms.insert(rec.m_atm);
+    for (auto i = 0; i < gs->m_geom->num_selected(); i++) {
+      auto rec = gs->m_geom->nth_selected(i);
+      if (!rec) continue;
+      sel_atoms.insert((*rec).m_atm);
+    }
 
   m_str_sim_table->setRowCount(op_on_sel_atoms ? sel_atoms.size() : g1->m_geom->nat());
 
@@ -295,7 +299,11 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
   std::set<size_t> sel_atoms;
 
   for (auto &gs : {g1, g2})
-    for (auto &rec : gs->m_atom_idx_sel) sel_atoms.insert(rec.m_atm);
+    for (auto i = 0; i < gs->m_geom->num_selected(); i++) {
+      auto rec = gs->m_geom->nth_selected(i);
+      if (!rec) continue;
+      sel_atoms.insert((*rec).m_atm);
+    }
 
   m_str_sim_table->setRowCount(op_on_sel_atoms ? sel_atoms.size() : g1->m_geom->nat());
 

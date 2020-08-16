@@ -1505,7 +1505,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
       m_tm_override_atom_color->unbind_value();
       m_tm_override_atom_radii->unbind_value();
 
-      if (b_al->m_atom_idx_sel.empty()) {
+      if (b_al->m_geom->no_selected()) {
         m_tm_gb_single_atom->hide();
         m_tm_gb_add_atom->show();
         m_tm_gb_pair_dist->hide();
@@ -1520,7 +1520,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         fill_combo_with_atom_types(m_tm_add_atom_combo, b_al);
       }
 
-      if (b_al->m_atom_idx_sel.size() == 1) {
+      if (b_al->m_geom->num_aselected() == 1) {
         m_tm_gb_single_atom->show();
         m_tm_gb_add_atom->hide();
         m_tm_gb_pair_dist->hide();
@@ -1533,25 +1533,26 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
 
         fill_combo_with_atom_types(m_tm_single_atom_combo, b_al);
 
-        auto it = b_al->m_atom_idx_sel.begin();
+        auto oval = b_al->m_geom->nth_selected(0);
 
-        if (it != b_al->m_atom_idx_sel.end()) {
+        if (oval) {
 
+          auto val = *oval;
           m_tm_single_atom_info->setText(
-              QString::fromStdString(fmt::format("№{} {}", it->m_atm, it->m_idx)));
+              QString::fromStdString(fmt::format("№{} {}", val.m_atm, val.m_idx)));
 
           m_tm_single_atom_combo->setCurrentText(
-              QString::fromStdString(b_al->m_geom->atom_name(it->m_atm)));
+              QString::fromStdString(b_al->m_geom->atom_name(val.m_atm)));
 
-          m_tm_single_atom_v3->sb_x->setValue(double(b_al->m_geom->pos(it->m_atm)[0]));
-          m_tm_single_atom_v3->sb_y->setValue(double(b_al->m_geom->pos(it->m_atm)[1]));
-          m_tm_single_atom_v3->sb_z->setValue(double(b_al->m_geom->pos(it->m_atm)[2]));
+          m_tm_single_atom_v3->sb_x->setValue(double(b_al->m_geom->pos(val.m_atm)[0]));
+          m_tm_single_atom_v3->sb_y->setValue(double(b_al->m_geom->pos(val.m_atm)[1]));
+          m_tm_single_atom_v3->sb_z->setValue(double(b_al->m_geom->pos(val.m_atm)[2]));
 
         }
 
       }
 
-      if (b_al->m_atom_idx_sel.size() == 2) {
+      if (b_al->m_geom->num_aselected() == 2) {
 
         m_tm_gb_add_atom->hide();
         m_tm_gb_single_atom->hide();
@@ -1563,26 +1564,30 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         m_tm_gb_grp_op->show();
         m_tm_gb_override_atom->hide();
 
-        auto it1 = b_al->m_atom_idx_sel.begin();
-        auto it2 = it1++;
-        if (it2 != b_al->m_atom_idx_sel.end()) {
+        auto oval1 = b_al->m_geom->nth_selected(0);
+        auto oval2 = b_al->m_geom->nth_selected(0);
+
+        if (oval1 && oval2) {
+
+          auto val1 = *oval1;
+          auto val2 = *oval2;
 
           m_tm_pair_dist_atom1->setText(
               QString::fromStdString(fmt::format("{}{} {}",
-                                                 b_al->m_geom->atom_name(it1->m_atm),
-                                                 it1->m_atm,
-                                                 it1->m_idx)));
+                                                 b_al->m_geom->atom_name(val1.m_atm),
+                                                 val1.m_atm,
+                                                 val1.m_idx)));
           m_tm_pair_dist_atom2->setText(
               QString::fromStdString(fmt::format("{}{} {}",
-                                                 b_al->m_geom->atom_name(it2->m_atm),
-                                                 it2->m_atm,
-                                                 it1->m_idx)));
+                                                 b_al->m_geom->atom_name(val2.m_atm),
+                                                 val2.m_atm,
+                                                 val2.m_idx)));
 
-          if (it1->m_idx == index::D(b_al->m_geom->get_DIM()).all(0) &&
-              it2->m_idx == index::D(b_al->m_geom->get_DIM()).all(0)) {
+          if (val1.m_idx == index::D(b_al->m_geom->get_DIM()).all(0)
+              && val2.m_idx == index::D(b_al->m_geom->get_DIM()).all(0)) {
             m_tm_pair_dist_spinbox->show();
-            float dist_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) -
-                              b_al->m_geom->pos(it2->m_atm, it2->m_idx)).norm();
+            float dist_btw = (b_al->m_geom->pos(val1.m_atm, val1.m_idx) -
+                              b_al->m_geom->pos(val2.m_atm, val2.m_idx)).norm();
 
             m_tm_pair_dist_spinbox->blockSignals(true);
             m_tm_pair_dist_spinbox->setValue(double(dist_btw));
@@ -1601,7 +1606,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         }
       }
 
-      if (b_al->m_atom_idx_sel.size() > 2) {
+      if (b_al->m_geom->num_aselected() > 2) {
 
         m_tm_gb_add_atom->hide();
         m_tm_gb_single_atom->hide();
@@ -1615,7 +1620,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
 
       }
 
-      if (b_al->m_atom_idx_sel.size() > 0) {
+      if (b_al->m_geom->num_aselected() > 0) {
 
         if (b_al->m_geom->get_DIM() == 3) {
           //tm_translate_coord_type_label->show();
@@ -1631,8 +1636,8 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
 
           std::set<size_t> atoms_id_to_bind;
           std::transform(
-              b_al->m_atom_idx_sel.begin(),
-              b_al->m_atom_idx_sel.end(),
+              b_al->m_geom->cbegin_selected(),
+              b_al->m_geom->cend_selected(),
               std::inserter(atoms_id_to_bind, atoms_id_to_bind.begin()),
               [](auto &sel_rec){return sel_rec.m_atm;}
               );
@@ -2243,19 +2248,17 @@ void geom_view_obj_insp_widget_t::mod_add_atom_button_clicked() {
 
 void geom_view_obj_insp_widget_t::mod_single_atom_button_clicked() {
 
-  if (b_al && b_al->m_atom_idx_sel.size() == 1) {
+  if (!(b_al && b_al->m_geom->num_aselected() != 1))
+    return;
 
-    auto it = b_al->m_atom_idx_sel.begin();
-
-    if (it != b_al->m_atom_idx_sel.end()) {
-      auto itv = *it;
-      b_al->upd_atom(itv.m_atm, m_tm_single_atom_combo->currentText().toStdString(),
-                     vector3<float>(float(m_tm_single_atom_v3->sb_x->value()),
-                                    float(m_tm_single_atom_v3->sb_y->value()),
-                                    float(m_tm_single_atom_v3->sb_z->value())));
-      update_anim_section_status();
-    }
-
+  auto oval = b_al->m_geom->nth_selected(0);
+  if (oval) {
+    auto val = *oval;
+    b_al->upd_atom(val.m_atm, m_tm_single_atom_combo->currentText().toStdString(),
+                   vector3<float>(float(m_tm_single_atom_v3->sb_x->value()),
+                                  float(m_tm_single_atom_v3->sb_y->value()),
+                                  float(m_tm_single_atom_v3->sb_z->value())));
+    update_anim_section_status();
   }
 
 }
@@ -2299,15 +2302,18 @@ void geom_view_obj_insp_widget_t::mod_pair_dist_spinbox_value_changed(double new
 
 void geom_view_obj_insp_widget_t::mod_pair_dist_swap_button_clicked() {
 
-  if (b_al && b_al->m_atom_idx_sel.size() == 2) {
+  if (!(b_al && b_al->m_geom->num_aselected() != 2))
+    return;
 
-    auto it1 = b_al->m_atom_idx_sel.begin();
-    auto it2 = it1++;
+  auto oval1 = b_al->m_geom->nth_selected(0);
+  auto oval2 = b_al->m_geom->nth_selected(1);
 
-    if (it1->m_idx == index::D(b_al->m_geom->get_DIM()).all(0)
-        && it2->m_idx == index::D(b_al->m_geom->get_DIM()).all(0))
-      b_al->swap_atoms(it1->m_atm, it2->m_atm);
-
+  if (oval1 && oval2) {
+    auto val1 = *oval1;
+    auto val2 = *oval2;
+    if (val1.m_idx == index::D(b_al->m_geom->get_DIM()).all(0)
+        && val2.m_idx == index::D(b_al->m_geom->get_DIM()).all(0))
+      b_al->swap_atoms(val1.m_atm, val2.m_atm);
   }
 
 }
@@ -2316,16 +2322,18 @@ void geom_view_obj_insp_widget_t::mod_add_atom_between_pair() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (b_al) {
+  if (!(b_al && b_al->m_geom->num_aselected() != 2))
+    return;
 
-    auto it1 = b_al->m_atom_idx_sel.begin();
-    auto it2 = it1++;
+  auto oval1 = b_al->m_geom->nth_selected(0);
+  auto oval2 = b_al->m_geom->nth_selected(1);
+
+  if (oval1 && oval2 && (*oval1).m_idx.is_zero() && (*oval2).m_idx.is_zero()) {
+    auto val1 = *oval1;
+    auto val2 = *oval2;
     vector3<float> r_btw{0.0, 0.0, 0.0};
-
-    if (it1 != b_al->m_atom_idx_sel.end() && it2 != b_al->m_atom_idx_sel.end())
-      r_btw = (b_al->m_geom->pos(it1->m_atm, it1->m_idx) +
-               b_al->m_geom->pos(it2->m_atm, it2->m_idx))*0.5f;
-
+    r_btw = (b_al->m_geom->pos(val1.m_atm, val1.m_idx) +
+             b_al->m_geom->pos(val2.m_atm, val2.m_idx))*0.5f;
     std::string new_atom_name = m_tm_pair_creation_combo->currentText().toStdString();
     b_al->ins_atom(new_atom_name, r_btw);
     update_anim_section_status();
@@ -2342,20 +2350,27 @@ void geom_view_obj_insp_widget_t::mod_barycentric_scale_button_clicked() {
   if (b_al) {
 
     vector3<float> center{0.0f, 0.0f, 0.0f};
-    for (auto &rec : b_al->m_atom_idx_sel) center += b_al->m_geom->pos(rec.m_atm);
-    center /= b_al->m_atom_idx_sel.size();
+//    for (auto &rec : b_al->m_atom_idx_sel) center += b_al->m_geom->pos(rec.m_atm);
+//    center /= b_al->m_atom_idx_sel.size();
 
-    for (auto &rec : b_al->m_atom_idx_sel) {
+    for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
+      auto rec = b_al->m_geom->nth_selected(i);
+      if (rec)  center += b_al->m_geom->pos((*rec).m_atm);;
+    }
 
-      vector3<float> new_pos_dist = center - b_al->m_geom->pos(rec.m_atm);
-      vector3<float> new_pos = b_al->m_geom->pos(rec.m_atm);
+    center /= b_al->m_geom->num_selected();
+
+
+    for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
+      auto rec = b_al->m_geom->nth_selected(i);
+      if (!rec) continue;
+      vector3<float> new_pos_dist = center - b_al->m_geom->pos((*rec).m_atm);
+      vector3<float> new_pos = b_al->m_geom->pos((*rec).m_atm);
       auto scaleval = m_tm_u_scale_v3_val.get_value();
       new_pos[0] +=  (1 - scaleval[0]) * new_pos_dist[0];
       new_pos[1] +=  (1 - scaleval[1]) * new_pos_dist[1];
       new_pos[2] +=  (1 - scaleval[2]) * new_pos_dist[2] ;
-
-      b_al->upd_atom(rec.m_atm, new_pos);
-
+      b_al->upd_atom((*rec).m_atm, new_pos);
     }
 
     update_anim_section_status();

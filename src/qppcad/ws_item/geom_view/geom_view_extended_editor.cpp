@@ -121,7 +121,7 @@ void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_ind
   if (m_xgeom_tv && m_xgeom_tmdl && m_binded_gv) {
 
       //std::cout << "@int logical_index =" << logical_index << std::endl;
-      m_binded_gv->toggle_atom_sel(logical_index);
+      m_binded_gv->m_geom->toggle_selected(logical_index);
 
       if (m_binded_gv->m_parent_ws &&
           m_binded_gv->m_parent_ws->m_edit_type != ws_edit_e::edit_content)
@@ -134,7 +134,7 @@ void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_ind
 void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
 
   if (!m_xgeom_tv || !m_xgeom_tmdl || !m_binded_gv) return;
-  if (m_binded_gv->m_atom_idx_sel.empty()) return;
+  if (m_binded_gv->m_geom->no_selected()) return;
 
   app_state_t *astate = app_state_t::get_inst();
 
@@ -158,7 +158,7 @@ void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
                                       ),
                                     0, -10000, 10000, 4, &ok
                                     );
-        if (ok) m_binded_gv->xfill<float>(logical_index, float(new_val));
+        if (ok) m_binded_gv->xfill_selected<float>(logical_index, float(new_val));
         break;
       }
     case basic_types::type_int : {
