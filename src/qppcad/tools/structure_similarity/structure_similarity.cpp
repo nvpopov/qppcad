@@ -192,7 +192,7 @@ void structure_similarity_widget_t::compute_structure_similarity_naive(geom_view
 
   for (auto &gs : {g1, g2})
     for (auto i = 0; i < gs->m_geom->num_selected(); i++) {
-      auto rec = gs->m_geom->nth_selected(i);
+      auto rec = gs->m_geom->nth_aselected(i);
       if (!rec) continue;
       sel_atoms.insert((*rec).m_atm);
     }
@@ -290,8 +290,11 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
   auto g1 = m_anim_info[0]->m_binded_gv;
   auto g2 = m_anim_info[1]->m_binded_gv;
 
-  if (!g1 || !g2) return;
-  if (g1->m_geom->nat() != g2->m_geom->nat()) return;
+  if (!g1 || !g2)
+    return;
+
+  if (g1->m_geom->nat() != g2->m_geom->nat())
+    return;
 
   std::string out_str = "name1, name2, id, x1, y1, z1, x2, y2, z2, dt, dx, dy, dz\n";
   //                       0      1    2   3   4   5   6   7   8   9   10  11  12
@@ -300,8 +303,9 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
 
   for (auto &gs : {g1, g2})
     for (auto i = 0; i < gs->m_geom->num_selected(); i++) {
-      auto rec = gs->m_geom->nth_selected(i);
-      if (!rec) continue;
+      auto rec = gs->m_geom->nth_aselected(i);
+      if (!rec)
+        continue;
       sel_atoms.insert((*rec).m_atm);
     }
 
@@ -416,7 +420,6 @@ void str_sim_ws_item_rec_t::rebuild_wss_list() {
   app_state_t *astate = app_state_t::get_inst();
 
   if (astate->ws_mgr->has_wss()) {
-
     m_cmb_ws->clear();
     m_cmb_ws->setEnabled(true);
     m_cmb_ws->blockSignals(true);
@@ -424,12 +427,9 @@ void str_sim_ws_item_rec_t::rebuild_wss_list() {
       m_cmb_ws->addItem(QString::fromStdString(astate->ws_mgr->m_ws[i]->m_ws_name));
     m_cmb_ws->blockSignals(false);
     cmb_ws_changed(0);
-
   } else {
-
     m_cmb_ws->clear();
     m_cmb_ws->setEnabled(false);
-
   }
 
 }

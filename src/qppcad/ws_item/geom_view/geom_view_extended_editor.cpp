@@ -134,7 +134,7 @@ void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_ind
 void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
 
   if (!m_xgeom_tv || !m_xgeom_tmdl || !m_binded_gv) return;
-  if (m_binded_gv->m_geom->no_selected()) return;
+  if (m_binded_gv->m_geom->no_aselected()) return;
 
   app_state_t *astate = app_state_t::get_inst();
 

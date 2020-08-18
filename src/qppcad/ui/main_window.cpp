@@ -1318,7 +1318,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
 
     /* detect selective labels */
     need_to_hide_force_sel_lbl_vis =
-        cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_geom->no_selected();
+        cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_geom->no_aselected();
 
     if (!need_to_hide_force_sel_lbl_vis) {
 
@@ -1337,7 +1337,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
     m_tp_add_point_sym_group->show();
 
     /* detect atom override */
-    if (!(as_al->m_geom->no_selected() || cur_ws->m_edit_type == ws_edit_e::edit_item)) {
+    if (!(as_al->m_geom->no_aselected() || cur_ws->m_edit_type == ws_edit_e::edit_item)) {
 
       need_to_hide_atom_override = false;
 
@@ -1364,8 +1364,8 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
       m_tp_msr_dist->show();
       need_to_hide_al_cntls = false;
 
-      auto it1 = as_al->m_geom->nth_selected(0);
-      auto it2 = as_al->m_geom->nth_selected(1);
+      auto it1 = as_al->m_geom->nth_aselected(0);
+      auto it2 = as_al->m_geom->nth_aselected(1);
 
       auto cur_sel =
           as_al->m_measure->is_bond_msr_exists((*it1).m_atm, (*it2).m_atm,
@@ -1443,18 +1443,14 @@ void main_window_t::tp_dist_button_clicked(bool checked) {
 
     m_tp_msr_dist->show();
 
-    auto it1 = as_al->m_geom->nth_selected(0);
-    auto it2 = as_al->m_geom->nth_selected(1);
+    auto it1 = as_al->m_geom->nth_aselected(0);
+    auto it2 = as_al->m_geom->nth_aselected(1);
 
-    auto cur_sel = as_al->m_measure->is_bond_msr_exists((*it1).m_atm,
-                                                        (*it2).m_atm,
-                                                        (*it1).m_idx,
-                                                        (*it2).m_idx);
+    auto cur_sel = as_al->m_measure->is_bond_msr_exists((*it1).m_atm, (*it2).m_atm,
+                                                        (*it1).m_idx, (*it2).m_idx);
 
-    if (checked) as_al->m_measure->add_bond_msr((*it1).m_atm,
-                                                (*it2).m_atm,
-                                                (*it1).m_idx,
-                                                (*it2).m_idx);
+    if (checked)
+      as_al->m_measure->add_bond_msr((*it1).m_atm, (*it2).m_atm, (*it1).m_idx, (*it2).m_idx);
 
     else as_al->m_measure->rm_bond_msr(*cur_sel);
 
@@ -1471,8 +1467,7 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
   if (!ok) return;
 
-  if (as_al->m_geom->num_aselected() == 3
-      && cur_ws->m_edit_type == ws_edit_e::edit_content) {
+  if (as_al->m_geom->num_aselected() == 3 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
     m_tp_msr_angle->show();
 
@@ -1483,14 +1478,16 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
                                                          as_al->m_atom_ord_sel[1].m_idx,
                                                          as_al->m_atom_ord_sel[2].m_idx);
 
-    if (checked) as_al->m_measure->add_angle_msr(as_al->m_atom_ord_sel[0].m_atm,
+    if (checked)
+      as_al->m_measure->add_angle_msr(as_al->m_atom_ord_sel[0].m_atm,
                                       as_al->m_atom_ord_sel[1].m_atm,
                                       as_al->m_atom_ord_sel[2].m_atm,
                                       as_al->m_atom_ord_sel[0].m_idx,
                                       as_al->m_atom_ord_sel[1].m_idx,
                                       as_al->m_atom_ord_sel[2].m_idx);
 
-    else as_al->m_measure->rm_angle_msr(*cur_sel);
+    else
+      as_al->m_measure->rm_angle_msr(*cur_sel);
 
   }
 
@@ -1524,13 +1521,13 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 //      as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = checked;
   if (as_al && cur_ws->m_edit_type == ws_edit_e::edit_content)
   for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
-    auto rec = as_al->m_geom->nth_selected(i);
+    auto rec = as_al->m_geom->nth_aselected(i);
     if (!rec) continue;
     as_al->m_geom->xfield<bool>(xgeom_label_show, (*rec).m_atm) = checked;
   }
 
   // if selective labels rendering unchecked - force it and select some random style
-  if (!as_al->m_geom->no_selected() && !as_al->m_labels->m_selective_lbl.get_value()) {
+  if (!as_al->m_geom->no_aselected() && !as_al->m_labels->m_selective_lbl.get_value()) {
 
     as_al->m_labels->m_selective_lbl.set_value(true);
     as_al->m_labels->m_style.set_value(geom_labels_style_e::show_id_type);
@@ -1550,7 +1547,7 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
   if (!ok || cur_ws->m_edit_type == ws_edit_e::edit_item) return;
 
   for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
-    auto rec = as_al->m_geom->nth_selected(i);
+    auto rec = as_al->m_geom->nth_aselected(i);
     if (!rec) continue;
 
     as_al->m_geom->xfield<bool>(xgeom_override, (*rec).m_atm) = checked;
@@ -1655,11 +1652,11 @@ void main_window_t::toggle_fullscreen(bool checked) {
 
   } else {
 
-    setWindowFlags(Qt::CustomizeWindowHint |
-                   Qt::WindowStaysOnTopHint |
-                   Qt::WindowMinimizeButtonHint |
-                   Qt::WindowMaximizeButtonHint |
-                   Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::CustomizeWindowHint
+                   | Qt::WindowStaysOnTopHint
+                   | Qt::WindowMinimizeButtonHint
+                   | Qt::WindowMaximizeButtonHint
+                   | Qt::WindowCloseButtonHint);
     show();
 
   }
@@ -1755,7 +1752,8 @@ void main_window_t::act_toggle_console() {
 
 void main_window_t::rebuild_recent_files_menu() {
 
-  if (!m_file_menu_recent_files) return;
+  if (!m_file_menu_recent_files)
+    return;
 
   for (auto &elem : m_file_menu_recent_entries)
     elem->setVisible(false);
@@ -1800,8 +1798,9 @@ void main_window_t::recent_files_clicked() {
 
     auto &rec_idx = astate->m_recent_files[idx];
 
-    if (rec_idx.m_native) astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
-    else {
+    if (rec_idx.m_native) {
+      astate->ws_mgr->load_from_file(rec_idx.m_file_name, false);
+    } else {
 
       auto bhv_id = astate->ws_mgr->m_bhv_mgr->get_io_bhv_by_file_format(rec_idx.m_ff_id);
       if (bhv_id)
@@ -1838,7 +1837,8 @@ void main_window_t::build_bhv_menus_and_actions() {
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
-  if (!bhv_mgr) return;
+  if (!bhv_mgr)
+    return;
 
   //init groups for IMPORTED TO WS
   for (auto &ff_grp : bhv_mgr->m_file_format_groups) {

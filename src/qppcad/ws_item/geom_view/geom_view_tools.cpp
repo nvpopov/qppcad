@@ -176,7 +176,7 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
 
   bool first = true;
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
-    auto rec = gv->m_geom->nth_selected(i);
+    auto rec = gv->m_geom->nth_aselected(i);
     if (!rec) continue;
 
     vector3<float> pos_i = gv->m_geom->pos((*rec).m_atm) - new_frame;
@@ -208,7 +208,7 @@ void geom_view_tools_t::name_sel_atoms_by_order(geom_view_t *gv) {
   size_t atom_ord_c{0};
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
-    auto rec = gv->m_geom->nth_selected(i);
+    auto rec = gv->m_geom->nth_aselected(i);
     if (!rec) continue;
     gv->m_geom->xfield<std::string>(xgeom_label_text, (*rec).m_atm) = std::to_string(atom_ord_c);
     gv->m_geom->xfield<bool>(xgeom_label_show, (*rec).m_atm) = true;
@@ -227,7 +227,7 @@ void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3
   std::vector<std::tuple<size_t, float> > tmp_dists;
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
-    auto rec = gv->m_geom->nth_selected(i);
+    auto rec = gv->m_geom->nth_aselected(i);
     if (!rec) continue;
     float dist = (gv->m_geom->pos((*rec).m_atm, (*rec).m_idx) - point).norm();
     std::tuple<size_t, float> tmp_dist_rec{(*rec).m_atm, dist};
@@ -281,7 +281,7 @@ void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, f
   index zero = index::D(gv->m_geom->get_DIM()).all(0);
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
-    auto rec = gv->m_geom->nth_selected(i);
+    auto rec = gv->m_geom->nth_aselected(i);
     if (!rec) continue;
     if ((*rec).m_idx == zero)
       geom_view_tools_t::flip_atom_in_cell(gv, (*rec).m_atm, dim_id, flip_magn, false);
@@ -752,7 +752,7 @@ void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
 void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selected) {
 
   if (!gv) return;
-  if (gv->m_geom->no_selected()) return;
+  if (gv->m_geom->no_aselected()) return;
 
   std::shared_ptr<geom_view_t> ret_gv = std::make_shared<geom_view_t>();
   ret_gv->copy_cell(*gv, false);
@@ -761,7 +761,7 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
   index zero_gv = index::D(gv->m_geom->get_DIM()).all(0);
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
-    auto rec = gv->m_geom->nth_selected(i);
+    auto rec = gv->m_geom->nth_aselected(i);
     if (!rec) continue;
     auto val = *rec;
     if (val.m_idx == zero_gv) {
@@ -798,7 +798,7 @@ std::map<std::string, size_t> geom_view_tools_t::get_sel_types(geom_view_t *gv) 
 //      tmp_tc[gv->m_geom->type_table(rec.m_atm)]++;
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
-    auto rec = gv->m_geom->nth_selected(i);
+    auto rec = gv->m_geom->nth_aselected(i);
     if (!rec) continue;
     auto val = *rec;
     if (val.m_idx == zero)

@@ -140,7 +140,7 @@ void simple_query::sel_cnt_parity() {
 
   index zero = index::D(al->m_geom->get_DIM()).all(0);
   for (auto i = 0; i < al->m_geom->num_selected(); i++) {
-    auto rec = al->m_geom->nth_selected(i);
+    auto rec = al->m_geom->nth_aselected(i);
     if (!rec) continue;
     auto val = *rec;
     if (val.m_idx == zero) {
@@ -333,7 +333,7 @@ pybind11::list simple_query::get_sel() {
 //    if (elem.m_idx == index::D(al->m_geom->get_DIM()).all(0)) res.append(elem.m_atm);
 
   for (auto i = 0; i < al->m_geom->num_selected(); i++) {
-    auto rec = al->m_geom->nth_selected(i);
+    auto rec = al->m_geom->nth_aselected(i);
     if (!rec) continue;
     if ((*rec).m_idx.is_zero()) res.append((*rec).m_atm);
   }
@@ -509,8 +509,8 @@ void simple_query::embed_cube() {
     throw std::invalid_argument("embed_cube : sel.size() != 2 ");
   }
 
-  auto it1 = al->m_geom->nth_selected(0);
-  auto it2 = al->m_geom->nth_selected(1);
+  auto it1 = al->m_geom->nth_aselected(0);
+  auto it2 = al->m_geom->nth_aselected(1);
 
   vector3<float> p1 = al->m_geom->pos((*it1).m_atm, (*it1).m_idx) + al->m_pos.get_value();
   vector3<float> p2 = al->m_geom->pos((*it2).m_atm, (*it2).m_idx) + al->m_pos.get_value();
@@ -596,7 +596,7 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_c->m_name.set_value(fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
       }
 
-    } else if (cur_ws->m_edit_type == ws_edit_e::edit_content && !al->m_geom->no_selected()) {
+    } else if (cur_ws->m_edit_type == ws_edit_e::edit_content && !al->m_geom->no_aselected()) {
       auto ws_pg_partial =
           astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
       auto ws_pg_partial_c = ws_pg_partial->cast_as<psg_view_t>();
@@ -704,8 +704,12 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
 
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-  if (cur_ws->m_edit_type == ws_edit_e::edit_item) al->translate(vector3<float>(tx, ty, tz));
-  else al->translate_selected(vector3<float>(tx, ty, tz));
+
+  if (cur_ws->m_edit_type == ws_edit_e::edit_item)
+    al->translate(vector3<float>(tx, ty, tz));
+  else
+    al->translate_selected(vector3<float>(tx, ty, tz));
+
   astate->make_viewport_dirty();
 
 }
@@ -722,14 +726,10 @@ void simple_query::set_charge(float charge) {
 
   if (al && cur_ws->m_edit_type == ws_edit_e::edit_content) {
 
-//    index zero = index::D(al->m_geom->get_DIM()).all(0);
-//    for (auto &elem : al->m_atom_idx_sel)
-//      if (elem.m_idx == zero)
-//        al->m_geom->xfield<float>(xgeom_charge, elem.m_atm) = charge;
-
     for (auto i = 0; i < al->m_geom->num_selected(); i++) {
-      auto rec = al->m_geom->nth_selected(i);
-      if (!rec) continue;
+      auto rec = al->m_geom->nth_aselected(i);
+      if (!rec)
+        continue;
       if ((*rec).m_idx.is_zero())
         al->m_geom->xfield<float>(xgeom_charge, (*rec).m_atm) = charge;
     }
@@ -743,9 +743,13 @@ void simple_query::set_charge(float charge) {
 void simple_query::set_ws_bg(vector3<float> bg) {
 
   app_state_t *astate = app_state_t::get_inst();
-  if (!astate->ws_mgr->has_wss()) return;
+  if (!astate->ws_mgr->has_wss())
+    return;
+
   auto cur_ws = astate->ws_mgr->get_cur_ws();
-  if (!cur_ws) return;
+  if (!cur_ws)
+    return;
+
   cur_ws->m_bg_color = bg;
 
 }
@@ -755,18 +759,17 @@ std::shared_ptr<workspace_t> simple_query::cur_ws() {
   return astate->ws_mgr->get_cur_ws();
 }
 
-void simple_query::make_cube_p(std::string name,
-                               vector3<float> pos,
-                               float size_a,
-                               float size_b,
-                               float size_c) {
+void simple_query::make_cube_p(std::string name, vector3<float> pos,
+                               float size_a, float size_b, float size_c) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (!astate->ws_mgr->has_wss()) return;
+  if (!astate->ws_mgr->has_wss())
+    return;
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
-  if (!cur_ws) return;
+  if (!cur_ws)
+    return;
 
   auto new_cube = std::make_shared<cube_primitive_t>();
   new_cube->m_name.set_cvalue(name);
@@ -782,10 +785,12 @@ void simple_query::make_arrow_p(vector3<float> from,
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (!astate->ws_mgr->has_wss()) return;
+  if (!astate->ws_mgr->has_wss())
+    return;
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
-  if (!cur_ws) return;
+  if (!cur_ws)
+    return;
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
   new_arr->m_name.set_value(name.empty() ?
@@ -831,8 +836,9 @@ void simple_query::set_sel_color(float r, float g, float b) {
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   for (auto i = 0; i < al->m_geom->num_selected(); i++) {
-    auto rec = al->m_geom->nth_selected(i);
-    if (!rec) continue;
+    auto rec = al->m_geom->nth_aselected(i);
+    if (!rec)
+      continue;
     auto val = *rec;
     al->m_geom->xfield<float>(xgeom_ccr, val.m_atm) = r;
     al->m_geom->xfield<float>(xgeom_ccg, val.m_atm) = g;
@@ -873,7 +879,8 @@ void simple_query::ptable_set_color_by_number_as_vector(int num, vector3<float> 
 void simple_query::ptable_set_color_by_name(std::string name, float r, float g, float b) {
 
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) ptable_set_color_by_number(*ap_idx, r, g, b);
+  if (ap_idx)
+    ptable_set_color_by_number(*ap_idx, r, g, b);
 
 }
 
@@ -893,29 +900,38 @@ void simple_query::ptable_set_r_by_number(int num, float r) {
 
 void simple_query::ptable_set_r_by_name(std::string name, float r) {
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) ptable_set_r_by_number(*ap_idx, r);
+  if (ap_idx)
+    ptable_set_r_by_number(*ap_idx, r);
 }
 
 vector3<float> simple_query::ptable_get_color_by_number(int num) {
-  if (num > 0 && num <100) return ptable::get_inst()->arecs[num-1].m_color_jmol;
-  else return vector3<float>::Zero();
+  if (num > 0 && num <100)
+    return ptable::get_inst()->arecs[num-1].m_color_jmol;
+  else
+    return vector3<float>::Zero();
 }
 
 vector3<float> simple_query::ptable_get_color_by_name(std::string name) {
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) return ptable_get_color_by_number(*ap_idx);
-  else return vector3<float>::Zero();
+  if (ap_idx)
+    return ptable_get_color_by_number(*ap_idx);
+  else
+    return vector3<float>::Zero();
 }
 
 float simple_query::ptable_get_r_by_number(int num) {
-  if (num > 0 && num <100) return ptable::get_inst()->arecs[num-1].m_radius;
-  else return 0.0f;
+  if (num > 0 && num <100)
+    return ptable::get_inst()->arecs[num-1].m_radius;
+  else
+    return 0.0f;
 }
 
 float simple_query::ptable_get_r_by_name(std::string name) {
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) return ptable_get_r_by_number(*ap_idx);
-  else return 0.0f;
+  if (ap_idx)
+    return ptable_get_r_by_number(*ap_idx);
+  else
+    return 0.0f;
 }
 
 void simple_query::ptable_set_cov_r_by_number(int num, float r) {
@@ -928,44 +944,53 @@ void simple_query::ptable_set_cov_r_by_number(int num, float r) {
 
 void simple_query::ptable_set_cov_r_by_name(std::string name, float r) {
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) ptable_set_cov_r_by_number(*ap_idx, r);
+  if (ap_idx)
+    ptable_set_cov_r_by_number(*ap_idx, r);
 }
 
 float simple_query::ptable_get_cov_r_by_number(int num) {
-  if (num > 0 && num <100) return ptable::get_inst()->arecs[num-1].m_covrad_slater;
-  else return 0.0f;
+  if (num > 0 && num <100)
+    return ptable::get_inst()->arecs[num-1].m_covrad_slater;
+  else
+    return 0.0f;
 }
 
 float simple_query::ptable_get_cov_r_by_name(std::string name) {
   auto ap_idx = ptable::number_by_symbol(name);
-  if (ap_idx) return ptable_get_cov_r_by_number(*ap_idx);
-  else return 0.0f;
+  if (ap_idx)
+    return ptable_get_cov_r_by_number(*ap_idx);
+  else
+    return 0.0f;
 }
 
 void simple_query::camera_move(vector3<float> axis, float magnitude) {
   app_state_t *astate = app_state_t::get_inst();
-  if (!astate->camera) return;
+  if (!astate->camera)
+    return;
   astate->camera->translate_camera(axis * magnitude);
   astate->camera->update_camera();
 }
 
 void simple_query::camera_rotate_yaw(float magnitude) {
   app_state_t *astate = app_state_t::get_inst();
-  if (!astate->camera) return;
+  if (!astate->camera)
+    return;
   astate->camera->rotate_camera_orbit_yaw(magnitude);
   astate->camera->update_camera();
 }
 
 void simple_query::camera_rotate_pitch(float magnitude) {
   app_state_t *astate = app_state_t::get_inst();
-  if (!astate->camera) return;
+  if (!astate->camera)
+    return;
   astate->camera->rotate_camera_orbit_pitch(magnitude);
   astate->camera->update_camera();
 }
 
 void simple_query::camera_zoom(float magnitude) {
   app_state_t *astate = app_state_t::get_inst();
-  if (!astate->camera) return;
+  if (!astate->camera)
+    return;
   astate->camera->update_camera_zoom(magnitude);
   astate->camera->update_camera();
 }
@@ -979,16 +1004,20 @@ float simple_query::camera_get_zoom() {
 
 void simple_query::camera_mode(int mode) {
   app_state_t *astate = app_state_t::get_inst();
-  if (!astate->camera) return;
-  if (mode == 0) astate->camera->set_projection(cam_proj_t::proj_persp);
-  else astate->camera->set_projection(cam_proj_t::proj_ortho);
+  if (!astate->camera)
+    return;
+  if (mode == 0)
+    astate->camera->set_projection(cam_proj_t::proj_persp);
+  else
+    astate->camera->set_projection(cam_proj_t::proj_ortho);
   astate->camera->update_camera();
 }
 
 void simple_query::copy_camera_from_ws(int ws_id) {
   app_state_t *astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
-  if (!ok) return;
+  if (!ok)
+    return;
   auto ws_ref = astate->ws_mgr->get_ws(ws_id);
   cur_ws->copy_cam(ws_ref);
 }

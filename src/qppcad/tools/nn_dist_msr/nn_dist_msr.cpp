@@ -24,7 +24,7 @@ void nn_dist_msr_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
     }
 
   for (auto i = 0; i < al->m_geom->num_aselected(); i++) {
-    auto rec = al->m_geom->nth_selected(i);
+    auto rec = al->m_geom->nth_aselected(i);
     if (!rec) continue;
 
     for (size_t i = 0; i < al->m_tws_tr->n((*rec).m_atm); i++) {

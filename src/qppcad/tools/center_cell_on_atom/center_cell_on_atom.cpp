@@ -38,7 +38,7 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
       return;
     }
 
-  if (al->m_geom->no_selected()) {
+  if (al->m_geom->no_aselected()) {
     QMessageBox::warning(nullptr, QObject::tr("Center cell on atom"),
                          QObject::tr("The list of selected atoms is empty."));
     return;
@@ -51,7 +51,7 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 //    new_center += al->m_geom->pos(rec.m_atm, rec.m_idx);
 
   for (auto i = 0; i < al->m_geom->num_aselected(); i++) {
-    auto rec = al->m_geom->nth_selected(i);
+    auto rec = al->m_geom->nth_aselected(i);
     if (!rec) continue;
     new_center += al->m_geom->pos((*rec).m_atm, (*rec).m_idx);
   }

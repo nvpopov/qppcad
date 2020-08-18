@@ -717,8 +717,8 @@ void geom_view_t::sq_sel_by_box(const float box_scale = 1.1) {
 
   if (m_geom->num_aselected() != 2) return;
 
-  auto idx1 = m_geom->nth_selected(0);
-  auto idx2 = m_geom->nth_selected(1);
+  auto idx1 = m_geom->nth_aselected(0);
+  auto idx2 = m_geom->nth_aselected(1);
   auto pos1 = m_geom->pos(idx1->m_atm, idx1->m_idx);
   auto pos2 = m_geom->pos(idx2->m_atm, idx2->m_idx);
 
@@ -824,7 +824,7 @@ void geom_view_t::sv_modify_selected(bool state) {
   app_state_t *astate = app_state_t::get_inst();
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
+    auto rec = m_geom->nth_aselected(i);
     if (rec && (*rec).m_idx.is_zero())
       m_geom->xfield<bool>(xgeom_sel_vis_hide, (*rec).m_atm) = state;
   }
@@ -847,7 +847,7 @@ void geom_view_t::sv_hide_invert_selected() {
   //for (auto &elem : m_atom_idx_sel) cap_idx.insert(elem.m_atm);
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
+    auto rec = m_geom->nth_aselected(i);
     if (rec) cap_idx.insert((*rec).m_atm);
   }
 
@@ -866,15 +866,8 @@ void geom_view_t::sv_hide_invert_selected() {
 
 void geom_view_t::xbool_invert_selected(size_t field_id) {
 
-//  index zero = index::D(m_geom->get_DIM()).all(0);
-
-//  for (auto &elem : m_atom_idx_sel)
-//    if (elem.m_idx == zero)
-//      m_geom->xfield<bool>(field_id, elem.m_atm) = !m_geom->xfield<bool>(field_id, elem.m_atm);
-
-
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
+    auto rec = m_geom->nth_aselected(i);
     if (rec && (*rec).m_idx.is_zero())
       m_geom->xfield<bool>(field_id, (*rec).m_atm) = !m_geom->xfield<bool>(field_id, (*rec).m_atm);
   }
@@ -906,7 +899,7 @@ void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_i
   if (copy_selected) {
 
     for (auto i = 0; i < m_geom->num_selected(); i++) {
-      auto rec = m_geom->nth_selected(i);
+      auto rec = m_geom->nth_aselected(i);
       if (rec && (*rec).m_idx.is_zero())
         xgeom_inst.add(m_geom->atom((*rec).m_atm), m_geom->pos((*rec).m_atm, (*rec).m_idx));
     }
@@ -1100,7 +1093,7 @@ void geom_view_t::sel_selected_atoms_ngbs() {
 //  for (auto &rec : m_atom_idx_sel)
 //    if (rec.m_idx == index::D(m_geom->get_DIM()).all(0)) stored_sel.insert(rec.m_atm);
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
+    auto rec = m_geom->nth_aselected(i);
     if (rec && (*rec).m_idx.is_zero())
       stored_sel.insert((*rec).m_atm);
   }
@@ -1167,7 +1160,7 @@ void geom_view_t::update_inter_atomic_dist_ex(float new_dist,
 void geom_view_t::translate_selected(const vector3<float> &t_vec) {
 
   if (!m_geom) return;
-  if (m_geom->no_selected()) return;
+  if (m_geom->no_aselected()) return;
 
   m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
@@ -1176,7 +1169,7 @@ void geom_view_t::translate_selected(const vector3<float> &t_vec) {
 //      upd_atom(elem.m_atm, m_geom->pos(elem.m_atm) + t_vec);
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
+    auto rec = m_geom->nth_aselected(i);
     if (rec && (*rec).m_idx.is_zero())
       upd_atom((*rec).m_atm, m_geom->pos((*rec).m_atm) + t_vec);
   }
@@ -1194,7 +1187,7 @@ void geom_view_t::delete_selected_atoms() {
 
   if (!m_geom) return;
 
-  if (!m_geom->no_selected()) m_anim->m_force_non_animable = true;
+  if (!m_geom->no_aselected()) m_anim->m_force_non_animable = true;
 
   std::vector<int> all_atom_num;
   all_atom_num.reserve(m_geom->num_aselected());
@@ -1207,7 +1200,7 @@ void geom_view_t::delete_selected_atoms() {
 //  }
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
+    auto rec = m_geom->nth_aselected(i);
     all_atom_num.push_back((*rec).m_atm);
     m_measure->notify_atom_has_been_deleted((*rec).m_atm);
     atoms_to_unselect.push_back((*rec));
@@ -1307,7 +1300,7 @@ std::string geom_view_t::compose_overview() {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (m_geom->num_aselected() < astate->m_gv_overview_max_atoms && !m_geom->no_selected()) {
+  if (m_geom->num_aselected() < astate->m_gv_overview_max_atoms && !m_geom->no_aselected()) {
 
     std::map<size_t, size_t> lkp_sel_types;
     bool succes{true};
@@ -1315,7 +1308,7 @@ std::string geom_view_t::compose_overview() {
 
     for (auto q = 0; q < m_geom->num_selected(); q++) {
 
-      auto rec = m_geom->nth_selected(q);
+      auto rec = m_geom->nth_aselected(q);
       if (!rec) continue;
       auto i = *rec;
       auto it = lkp_sel_types.find(m_geom->type_of_atom(i.m_atm));
@@ -1403,7 +1396,7 @@ void geom_view_t::on_begin_content_gizmo_translate() {
   std::vector<hist_doc_xgeom_proxy_t<float, periodic_cell<float>>::acts_t> tmp_acts;
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-      auto rec = m_geom->nth_selected(i);
+      auto rec = m_geom->nth_aselected(i);
       if (!rec) continue;
       auto it = *rec;
       change_atom_pos_event_t<float> change_atom_pos_ev;
@@ -1425,7 +1418,7 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
   bool someone_from_atoms_were_translated = false;
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
+    auto rec = m_geom->nth_aselected(i);
     if (!rec) continue;
     auto it = *rec;
     vector3<float> acc_pos = m_geom->coord(it.m_atm) + pos;
@@ -1453,10 +1446,10 @@ void geom_view_t::recalc_gizmo_barycenter() {
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
 
-  if (!m_geom->no_selected() || m_geom->nat() == 0) {
+  if (!m_geom->no_aselected() || m_geom->nat() == 0) {
 
     for (auto i = 0; i < m_geom->num_selected(); i++) {
-      auto rec = m_geom->nth_selected(i);
+      auto rec = m_geom->nth_aselected(i);
       if (!rec) continue;
       auto it = *rec;
       m_gizmo_barycenter += m_geom->pos(it.m_atm, it.m_idx);
@@ -1938,7 +1931,7 @@ py::list geom_view_t::get_sel_atoms(int index_offset) {
   py::list ret;
   std::set<size_t> sels;
   for (auto q = 0; q < m_geom->num_selected(); q++) {
-    auto rec = m_geom->nth_selected(q);
+    auto rec = m_geom->nth_aselected(q);
     if (!rec) continue;
     auto i = *rec;
     sels.insert(i.m_atm);
@@ -1956,7 +1949,7 @@ py::list geom_view_t::get_unsel_atoms(int index_offset) {
   py::list ret;
   std::set<size_t> sels;
   for (auto q = 0; q < m_geom->num_selected(); q++) {
-    auto rec = m_geom->nth_selected(q);
+    auto rec = m_geom->nth_aselected(q);
     if (!rec) continue;
     auto i = *rec;
     sels.insert(i.m_atm);

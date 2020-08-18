@@ -1505,7 +1505,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
       m_tm_override_atom_color->unbind_value();
       m_tm_override_atom_radii->unbind_value();
 
-      if (b_al->m_geom->no_selected()) {
+      if (b_al->m_geom->no_aselected()) {
         m_tm_gb_single_atom->hide();
         m_tm_gb_add_atom->show();
         m_tm_gb_pair_dist->hide();
@@ -1533,7 +1533,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
 
         fill_combo_with_atom_types(m_tm_single_atom_combo, b_al);
 
-        auto oval = b_al->m_geom->nth_selected(0);
+        auto oval = b_al->m_geom->nth_aselected(0);
 
         if (oval) {
 
@@ -1564,8 +1564,8 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         m_tm_gb_grp_op->show();
         m_tm_gb_override_atom->hide();
 
-        auto oval1 = b_al->m_geom->nth_selected(0);
-        auto oval2 = b_al->m_geom->nth_selected(0);
+        auto oval1 = b_al->m_geom->nth_aselected(0);
+        auto oval2 = b_al->m_geom->nth_aselected(0);
 
         if (oval1 && oval2) {
 
@@ -2251,7 +2251,7 @@ void geom_view_obj_insp_widget_t::mod_single_atom_button_clicked() {
   if (!(b_al && b_al->m_geom->num_aselected() != 1))
     return;
 
-  auto oval = b_al->m_geom->nth_selected(0);
+  auto oval = b_al->m_geom->nth_aselected(0);
   if (oval) {
     auto val = *oval;
     b_al->upd_atom(val.m_atm, m_tm_single_atom_combo->currentText().toStdString(),
@@ -2305,8 +2305,8 @@ void geom_view_obj_insp_widget_t::mod_pair_dist_swap_button_clicked() {
   if (!(b_al && b_al->m_geom->num_aselected() != 2))
     return;
 
-  auto oval1 = b_al->m_geom->nth_selected(0);
-  auto oval2 = b_al->m_geom->nth_selected(1);
+  auto oval1 = b_al->m_geom->nth_aselected(0);
+  auto oval2 = b_al->m_geom->nth_aselected(1);
 
   if (oval1 && oval2) {
     auto val1 = *oval1;
@@ -2325,8 +2325,8 @@ void geom_view_obj_insp_widget_t::mod_add_atom_between_pair() {
   if (!(b_al && b_al->m_geom->num_aselected() != 2))
     return;
 
-  auto oval1 = b_al->m_geom->nth_selected(0);
-  auto oval2 = b_al->m_geom->nth_selected(1);
+  auto oval1 = b_al->m_geom->nth_aselected(0);
+  auto oval2 = b_al->m_geom->nth_aselected(1);
 
   if (oval1 && oval2 && (*oval1).m_idx.is_zero() && (*oval2).m_idx.is_zero()) {
     auto val1 = *oval1;
@@ -2354,7 +2354,7 @@ void geom_view_obj_insp_widget_t::mod_barycentric_scale_button_clicked() {
 //    center /= b_al->m_atom_idx_sel.size();
 
     for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
-      auto rec = b_al->m_geom->nth_selected(i);
+      auto rec = b_al->m_geom->nth_aselected(i);
       if (rec)  center += b_al->m_geom->pos((*rec).m_atm);;
     }
 
@@ -2362,7 +2362,7 @@ void geom_view_obj_insp_widget_t::mod_barycentric_scale_button_clicked() {
 
 
     for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
-      auto rec = b_al->m_geom->nth_selected(i);
+      auto rec = b_al->m_geom->nth_aselected(i);
       if (!rec) continue;
       vector3<float> new_pos_dist = center - b_al->m_geom->pos((*rec).m_atm);
       vector3<float> new_pos = b_al->m_geom->pos((*rec).m_atm);

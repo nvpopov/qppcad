@@ -26,15 +26,15 @@ public:
   static std::shared_ptr<workspace_manager_t> get_ws_mgr();
 
   /**
-         * @brief set_font_size set python console font size
-         * @param new_font_size in pt.
-         */
+   * @brief set_font_size set python console font size
+   * @param new_font_size in pt.
+   */
   static void set_font_size(int new_font_size);
 
   /**
-         * @brief get_build_info
-         * @return git revision && build date
-         */
+   * @brief get_build_info
+   * @return git revision && build date
+   */
   static std::tuple<std::string, std::string> get_build_info();
   static void quit();
   static void open_file(std::string file_name, bool to_current);
@@ -78,13 +78,13 @@ public:
   static py::bool_ is_instance_of_by_hash(size_t _type_hash);
   static py::bool_ is_instance_of_by_type_name(std::string _type_name);
   static void set_inline_tool_visibility(size_t id, bool visible);
-  //static void bopen(std::string _file_name);
+
   static vector3<float> gizmo_pos();
   static std::tuple<std::string, vector3<float> > get_point_sym_group(float tolerance);
 
   /**
-         * @brief embed_cube create cube_primitive_t based on selected atoms from geom_view_ts
-         */
+   * @brief embed_cube create cube_primitive_t based on selected atoms from geom_view_ts
+   */
   static void embed_cube();
   static void embed_arrow();
 

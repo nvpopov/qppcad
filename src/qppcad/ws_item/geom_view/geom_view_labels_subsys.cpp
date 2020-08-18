@@ -63,7 +63,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   QRect font_rec;
   transform.reset();
 
-  bool no_one_is_selected = p_owner->m_geom->no_selected();
+  bool no_one_is_selected = p_owner->m_geom->no_aselected();
 
   //render labels
   for (int i = -3; i < p_owner->m_geom->nat(); i++) {

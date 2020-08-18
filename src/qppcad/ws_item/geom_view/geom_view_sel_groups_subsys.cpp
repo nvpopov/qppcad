@@ -13,13 +13,12 @@ geom_view_sel_groups_subsys_t::geom_view_sel_groups_subsys_t(geom_view_t &_p_own
 
 void geom_view_sel_groups_subsys_t::make_from_selected() {
 
-  if (!p_owner || p_owner->m_geom->no_selected()) return;
+  if (!p_owner || p_owner->m_geom->no_aselected()) return;
 
   geom_view_sel_group_t gvs_tmp(fmt::format("from_sel{}", m_sel_grps.size()));
-  //for (auto &rec : p_owner->m_atom_idx_sel) _tmp.append(rec);
 
   for (auto i = 0; i < p_owner->m_geom->num_selected(); i++) {
-    auto rec = p_owner->m_geom->nth_selected(i);
+    auto rec = p_owner->m_geom->nth_aselected(i);
     if (rec) gvs_tmp.append((*rec));
   }
 

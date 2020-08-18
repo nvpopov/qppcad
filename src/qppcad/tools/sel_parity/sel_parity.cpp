@@ -25,7 +25,7 @@ void sel_parity_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   index zero = index::D(al->m_geom->get_DIM()).all(0);
 
   for (auto i = 0; i < al->m_geom->num_aselected(); i++) {
-    auto rec = al->m_geom->nth_selected(i);
+    auto rec = al->m_geom->nth_aselected(i);
     if (!rec) continue;
     if ((*rec).m_idx == zero) {
         std::array<int, 2> parity_d{-1,1};
