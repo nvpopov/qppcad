@@ -51,7 +51,9 @@ struct erase_atom_event_t {
 };
 
 struct select_atoms_event_t {
-  std::vector<std::tuple<size_t, index>> sel_atoms;
+  atom_index_set_key m_atom;
+  std::optional<size_t> idx;
+  bool m_state{true};
 };
 
 struct change_dim_event_t {
@@ -229,7 +231,11 @@ protected:
 
                    },
 
-                   [geom_wrp](select_atoms_event_t &ev) {},
+                   [geom_wrp](select_atoms_event_t &ev) {
+                     geom_wrp->iselect(ev.m_atom.m_atm, ev.m_atom.m_idx, ev.m_state,
+                                       std::nullopt,
+                                       false);
+                   }
                    }, act);
 
   }
@@ -314,7 +320,11 @@ protected:
 
                    },
 
-                   [geom_wrp](select_atoms_event_t &ev) {},
+                   [geom_wrp](select_atoms_event_t &ev) {
+                     geom_wrp->iselect(ev.m_atom.m_atm, ev.m_atom.m_idx, !ev.m_state,
+                                       std::nullopt,
+                                       false);
+                   },
                    }, act);
 
   }
@@ -572,7 +582,19 @@ public:
 
   }
 
-  void selected(int nth, before_after, bool state) override {
+  void selected(atom_index_set_key &sel_at, before_after ord, bool state) override {
+
+//    std::cout << fmt::format("@@@ SELECTED nth={}, ord={}, state={}", nth, ord, state)
+//              << std::endl;
+
+    if (p_currently_applying_dstate || p_ignore_changes) return;
+
+    if (ord == before_after::before) {
+      select_atoms_event_t ev;
+      ev.m_atom = sel_at;
+      ev.m_state = state;
+      p_cur_acts.push_back(std::move(ev));
+    }
 
   };
 

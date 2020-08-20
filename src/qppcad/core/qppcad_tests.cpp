@@ -1167,4 +1167,79 @@ TEST_CASE("history stream test") {
 
   }
 
+  SECTION ("xgeom proxy - selection tests") {
+
+    using hs_xg_t = hist_doc_xgeom_proxy_t<double, qpp::periodic_cell<double>>;
+    hs_xg_t *hs_xg = new hs_xg_t;
+    xgeometry<double, periodic_cell<double>> xg1(0);
+
+    xg1.set_format( {
+                       "atom", //0
+                       "x",//1
+                       "y",//2
+                       "z",//3
+                       "charge",//4
+                       "number", //5
+                       "hide",//6
+                       "lshow",//7
+                       "r",//8
+                       "g",//9
+                       "b",//10
+                       "ltext",//11
+                       "ov",//12
+                       "atom_r", // 13
+                       "tag" //14
+                   },
+
+                   {
+                       basic_types::type_string, //0
+                       basic_types::type_real, //1
+                       basic_types::type_real, //2
+                       basic_types::type_real, //3
+                       basic_types::type_real, //4
+                       basic_types::type_int, //5
+                       basic_types::type_bool, //6
+                       basic_types::type_bool, //7
+                       basic_types::type_real, //8
+                       basic_types::type_real, //9
+                       basic_types::type_real, //10
+                       basic_types::type_string, //11
+                       basic_types::type_bool, // 12
+                       basic_types::type_real, // 13
+                       basic_types::type_string //14
+                   } );
+
+    hs_xg->set_xgeom(&xg1);
+
+    REQUIRE(hs_xg->get_dstate_type() == hs_dstate_e::hs_dstate_incr);
+
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+    xg1.add("S0", vector3<double>{0});
+    xg1.add("S1", vector3<double>{1});
+    xg1.add("S2", vector3<double>{2});
+    xg1.add("S3", vector3<double>{3});
+    xg1.add("S4", vector3<double>{4});
+    hs_xg->end_recording();
+    REQUIRE(hs_xg->get_cur_epoch() == 1);
+
+    REQUIRE(xg1.num_selected() == 0);
+
+    hs_xg->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+    xg1.select(0);
+    xg1.select(1);
+    hs_xg->end_recording();
+
+    REQUIRE(xg1.num_selected() == 2);
+    REQUIRE(hs_xg->get_cur_epoch() == 2);
+
+    hs_xg->checkout_to_epoch(1);
+    REQUIRE(hs_xg->get_cur_epoch() == 1);
+    REQUIRE(xg1.num_selected() == 0);
+
+    hs_xg->checkout_to_epoch(2);
+    REQUIRE(hs_xg->get_cur_epoch() == 2);
+    REQUIRE(xg1.num_selected() == 2);
+
+  }
+
 }
