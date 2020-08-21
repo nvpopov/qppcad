@@ -1240,6 +1240,11 @@ TEST_CASE("history stream test") {
     REQUIRE(hs_xg->get_cur_epoch() == 2);
     REQUIRE(xg1.num_selected() == 2);
 
+    REQUIRE(xg1.selected(0));
+    REQUIRE(xg1.selected(1));
+    REQUIRE(!xg1.selected(2));
+    REQUIRE(!xg1.selected(3));
+
   }
 
 }

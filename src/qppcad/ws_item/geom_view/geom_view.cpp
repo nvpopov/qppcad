@@ -464,8 +464,11 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
 
       if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
 
-        if (res[0].m_idx == index::D(m_geom->get_DIM()).all(0))
+        if (res[0].m_idx == index::D(m_geom->get_DIM()).all(0)) {
+          begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
           m_geom->toggle_selected(res[0].m_atm);
+          end_recording();
+        }
 
       }
 
@@ -1448,14 +1451,14 @@ void geom_view_t::recalc_gizmo_barycenter() {
 
   if (!m_geom->no_aselected() || m_geom->nat() == 0) {
 
-    for (auto i = 0; i < m_geom->num_selected(); i++) {
+    for (auto i = 0; i < m_geom->num_aselected(); i++) {
       auto rec = m_geom->nth_aselected(i);
       if (!rec) continue;
       auto it = *rec;
       m_gizmo_barycenter += m_geom->pos(it.m_atm, it.m_idx);
     }
 
-    m_gizmo_barycenter /= m_geom->num_selected();
+    m_gizmo_barycenter /= m_geom->num_aselected();
 
   }
   else m_gizmo_barycenter = m_aabb.min;
