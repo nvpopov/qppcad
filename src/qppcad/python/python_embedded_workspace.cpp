@@ -165,12 +165,12 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
         auto [cur_ws, cur_it, ok] = wsm.get_sel_tpl_itm_nc();
         return cur_it;
       })
-      .def("next_ws", &workspace_manager_t::next_ws)
-      .def("prev_ws", &workspace_manager_t::prev_ws)
+      .def("next_ws",   &workspace_manager_t::next_ws)
+      .def("prev_ws",   &workspace_manager_t::prev_ws)
       .def("next_item", &workspace_manager_t::cur_ws_next_item)
       .def("prev_item", &workspace_manager_t::cur_ws_prev_item)
-      .def("has_wss", &workspace_manager_t::has_wss)
-      .def("set_cur", &workspace_manager_t::set_cur_id);
+      .def("has_wss",   &workspace_manager_t::has_wss)
+      .def("set_cur",   &workspace_manager_t::set_cur_id);
 
   /* workspace_t pybindings */
   py::class_<workspace_t,  std::shared_ptr<workspace_t>> py_workspace_t(m, "workspace_t");

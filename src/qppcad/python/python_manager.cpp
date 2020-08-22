@@ -24,23 +24,25 @@ bool python_manager_t::execute(std::string command) {
 
     if(!comm_is_empty) {
         if (!comm_has_equality && !comm_is_multiline && !comm_has_statement && !comm_is_multi) {
-            py::object res = py::eval(command, py::globals());
 
-            if (py::isinstance<py::int_>(res)
-                || py::isinstance<py::float_>(res)
+            py::object res = py::eval(command, py::globals());
+            if (py::isinstance<py::str>(res)) {
+              std::string as_str = py::cast<py::str>(res);
+              if (as_str[as_str.size()-1] == '\n') as_str.resize(as_str.size()-1);
+              py::print(as_str);
+            } else if (py::isinstance<py::int_>(res)  || py::isinstance<py::float_>(res)
                 || py::isinstance<py::list>(res)
                 || py::isinstance<py::dict>(res)
                 || py::isinstance<py::bool_>(res)
                 || py::isinstance<vector3<float> >(res)
                 || py::isinstance<matrix3<float> >(res)) {
-                py::print(res);
-            } else if (py::isinstance<py::str>(res)) {
-              std::string as_str = py::cast<py::str>(res);
-              if (as_str[as_str.size()-1] == '\n') as_str.resize(as_str.size()-1);
-              py::print(as_str);
+              py::print(res);
             } else {
-            py::eval<py::eval_statements>(command, py::globals());
-          }
+
+            }
+
+      } else {
+        py::eval<py::eval_statements>(command, py::globals());
       }
 
     }
