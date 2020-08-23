@@ -330,7 +330,10 @@ public:
   void copy_xgeom_aux(geom_view_t *src);
   void copy_measurements(geom_view_t *src);
 
+  /* hs stuff */
   std::string print_epoch_info(int epoch);
+  hs_result_e on_epoch_changed(epoch_t prev_epoch) override;
+  /* end of hs stuff */
 
 };
 

@@ -2043,3 +2043,8 @@ void geom_view_t::copy_measurements(geom_view_t *src) {
 std::string geom_view_t::print_epoch_info(int epoch) {
   return m_xgeom_proxy.print_epoch_info(epoch);
 }
+
+hs_result_e geom_view_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
+  if (is_selected()) recalc_gizmo_barycenter();
+  return hs_result_e::hs_success;
+}

@@ -28,9 +28,9 @@ struct repair_ws_item_field_t {
 };
 
 /*
-     *This data structure is necessary to reconstruct links between workspace
-     *items after it has been restored from a file
-     */
+ *This data structure is necessary to reconstruct links between workspace
+ *items after it has been restored from a file
+ */
 struct repair_connection_info_t {
   std::map<std::string, std::vector<std::string> > m_connected_items;
   std::map<std::string, std::string> m_leader_con_info;
