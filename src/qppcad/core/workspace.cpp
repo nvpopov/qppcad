@@ -27,9 +27,14 @@ workspace_t::workspace_t(std::string _ws_name) {
   m_camera->reset_camera();
   m_gizmo = std::make_unique<gizmo_t>();
 
+  //m_cur_itm.set_value(-1);
+
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
   add_hs_child(&m_ws_items);
+  m_cur_itm.set_value(-1);
+  add_hs_child(&m_cur_itm);
   end_recording();
+  //m_cur_itm.set_commit_exclusive_on_change(true);
 
 }
 
@@ -85,13 +90,14 @@ std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
 
 }
 
-bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
+bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit_hs_event) {
 
   app_state_t* astate = app_state_t::get_inst();
 
   unsel_all();
 
-  astate->log(fmt::format("workspace_t::set_selected_item ({} {})", sel_idx, emit_signal));
+  astate->log(fmt::format("!!!! workspace_t::set_selected_item ({} {} {})",
+                          sel_idx, emit_signal, emit_hs_event));
 
   if (sel_idx < num_items() && num_items() != 0) {
 
@@ -99,6 +105,8 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
     if (!ws_item) return false;
 
     ws_item->m_selected = true;
+    if (emit_hs_event)
+      m_cur_itm.commit_value_exclusive(sel_idx);
 
     if (ws_item->get_flags() & ws_item_flags_support_tr) {
 
@@ -120,41 +128,43 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal) {
 
   //astate->make_viewport_dirty();
   update_overview("");
-  if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
+  if (emit_signal)
+    astate->astate_evd->cur_ws_selected_item_changed();
+  if (emit_hs_event)
+    m_cur_itm.commit_value_exclusive(-1);
   return false;
 
 }
 
-bool workspace_t::set_sel_item(ws_item_t *item, bool emit_signal) {
+bool workspace_t::set_sel_item(ws_item_t *item, bool emit_signal, bool emit_hs_event) {
 
   auto itm_idx = get_item_idx(item);
-  if (!itm_idx) return false;
+  if (!itm_idx)
+    return false;
 
-  return set_sel_item(*itm_idx, emit_signal);
+  return set_sel_item(*itm_idx, emit_signal, emit_hs_event);
 
 }
 
 void workspace_t::next_item() {
-
   size_t target_id = get_sel_idx().value_or(0) + 1;
-  if (target_id >= num_items()) target_id = 0;
+  if (target_id >= num_items())
+    target_id = 0;
   set_sel_item(target_id);
-
 }
 
 void workspace_t::prev_item() {
-
   int target_id = get_sel_idx().value_or(0) - 1;
   if (target_id < 0) target_id = num_items() - 1;
   set_sel_item(target_id);
-
 }
 
 void workspace_t::unsel_all(bool emit_signal) {
 
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
-    if (!ws_item) continue;
+    if (!ws_item)
+      continue;
     ws_item->m_selected = false;
   }
 
@@ -196,11 +206,9 @@ void workspace_t::reset_cam() {
 void workspace_t::set_best_view() {
 
   if (num_items() == 0) {
-
     m_camera->reset_camera();
     m_camera->update_camera();
     return;
-
   }
 
   vector3<float> vec_look_at{0.0, 0.0, 0.0};
@@ -208,7 +216,6 @@ void workspace_t::set_best_view() {
   vector3<float> vec_look_up{0.0, 0.0, 0.0};
 
   // special case : there is only one element in the workspace that supports cam_target_view
-
   int num_items_tv = 0;
   bool need_to_update_camera{false};
   bool cam_staged{false};
@@ -304,6 +311,14 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
                m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
 
   if (cur_ws && cur_ws.get() == this) {
+    m_cur_itm.set_commit_exclusive_on_change(false);
+    if (m_cur_itm.get_value() == -1 ) {
+      unsel_all(true);
+    } else {
+      astate->tlog("@@@ ws_on_epoch_changed({}) set_sel_item {}", m_cur_itm.get_value());
+      set_sel_item(m_cur_itm.get_value(), true, false);
+    }
+    m_cur_itm.set_commit_exclusive_on_change(true);
     if (alive_cnt_after != alive_cnt_before) astate->astate_evd->cur_ws_changed();
     if (affected) astate->astate_evd->cur_ws_selected_item_changed();
   }
@@ -502,8 +517,8 @@ void workspace_t::save_ws_to_json(const std::string filename) {
 
   data[JSON_QPPCAD_VERSION] = "1.0-aa";
 
-  json_helper::save_var(JSON_WS_NAME, m_ws_name, data);
-  json_helper::save_vec3(JSON_BG_CLR, m_bg_color, data);
+  json_io::save_var(JSON_WS_NAME, m_ws_name, data);
+  json_io::save_vec3(JSON_BG_CLR, m_bg_color, data);
 
   json camera_data;
   m_camera->save_to_json(camera_data);
@@ -543,8 +558,8 @@ void workspace_t::load_ws_from_json(const std::string filename) {
 
     data = json::parse(ifile);
 
-    json_helper::load_var(JSON_WS_NAME, m_ws_name, data);
-    json_helper::load_vec3(JSON_BG_CLR, m_bg_color, data);
+    json_io::load_var(JSON_WS_NAME, m_ws_name, data);
+    json_io::load_vec3(JSON_BG_CLR, m_bg_color, data);
 
     auto data_camera = data.find(JSON_WS_CAMERA);
     //    if (data_camera != data.end()) m_camera->load_from_json(data_camera.value());

@@ -1497,47 +1497,47 @@ void geom_view_t::save_to_json(json &data) {
 
   ws_item_t::save_to_json(data);
 
-  data[JSON_GEOM_VIEW_DIM] = m_geom->get_DIM();
-  data[JSON_GEOM_VIEW_SHOW_IMG_ATOMS] = m_draw_img_atoms.get_value();
-  data[JSON_GEOM_VIEW_SHOW_IMG_BONDS] = m_draw_img_bonds.get_value();
-  data[JSON_GEOM_VIEW_SHOW_BONDS] = m_draw_bonds.get_value();
-  data[JSON_GEOM_VIEW_SHOW_ATOMS] = m_draw_atoms.get_value();
-  data[JSON_GEOM_VIEW_BT_SHOW_DSBL] = m_bt_show_disabled_record.get_value();
-  data[JSON_GEOM_VIEW_ATOM_SCALE] = m_atom_scale_factor.get_value();
-  data[JSON_GEOM_VIEW_BOND_SCALE] = m_bond_scale_factor.get_value();
-  data[JSON_GEOM_VIEW_RENDER_TYPE] = m_render_style.get_value();
-  data[JSON_GEOM_VIEW_DRAW_SPECULAR] = m_draw_specular.get_value();
-  data[JSON_GEOM_VIEW_SPECULAR] = m_shading_specular_power.get_value();
+  data[JSON_GV_DIM] = m_geom->get_DIM();
+  data[JSON_GV_SHOW_IMG_ATOMS] = m_draw_img_atoms.get_value();
+  data[JSON_GV_SHOW_IMG_BONDS] = m_draw_img_bonds.get_value();
+  data[JSON_GV_SHOW_BONDS] = m_draw_bonds.get_value();
+  data[JSON_GV_SHOW_ATOMS] = m_draw_atoms.get_value();
+  data[JSON_GV_BT_SHOW_DSBL] = m_bt_show_disabled_record.get_value();
+  data[JSON_GV_ATOM_SCALE] = m_atom_scale_factor.get_value();
+  data[JSON_GV_BOND_SCALE] = m_bond_scale_factor.get_value();
+  data[JSON_GV_RENDER_TYPE] = m_render_style.get_value();
+  data[JSON_GV_DRAW_SPECULAR] = m_draw_specular.get_value();
+  data[JSON_GV_SPECULAR] = m_shading_specular_power.get_value();
 
-  data[JSON_GEOM_VIEW_LABELS_TYPE] = m_labels->m_style.get_value();
-  data[JSON_GEOM_VIEW_LABELS_SIZE] = m_labels->m_lbl_font_size.get_value();
-  data[JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines.get_value();
-  data[JSON_GEOM_VIEW_LABELS_INPLACE] = m_labels->m_render_inplace_hud.get_value();
-  data[JSON_GEOM_VIEW_LABELS_SEL_VIS] = m_labels->m_selective_lbl.get_value();
-  data[JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale.get_value();
-  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X] = m_labels->m_inplace_offset.get_value()[0];
-  data[JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y] = m_labels->m_inplace_offset.get_value()[1];
-  data[JSON_GEOM_VIEW_LABELS_OUTLINE_SZ] = m_labels->m_outline_size.get_value();
-  data[JSON_GEOM_VIEW_ROLE] = m_role.get_value();
+  data[JSON_GV_LABELS_TYPE] = m_labels->m_style.get_value();
+  data[JSON_GV_LABELS_SIZE] = m_labels->m_lbl_font_size.get_value();
+  data[JSON_GV_LABELS_DRAW_OUTLINE] = m_labels->m_render_outlines.get_value();
+  data[JSON_GV_LABELS_INPLACE] = m_labels->m_render_inplace_hud.get_value();
+  data[JSON_GV_LABELS_SEL_VIS] = m_labels->m_selective_lbl.get_value();
+  data[JSON_GV_LABELS_SCREEN_SPC_SCALE] = m_labels->m_screen_scale.get_value();
+  data[JSON_GV_LABELS_INPLACE_OFFSET_X] = m_labels->m_inplace_offset.get_value()[0];
+  data[JSON_GV_LABELS_INPLACE_OFFSET_Y] = m_labels->m_inplace_offset.get_value()[1];
+  data[JSON_GV_LABELS_OUTLINE_SZ] = m_labels->m_outline_size.get_value();
+  data[JSON_GV_ROLE] = m_role.get_value();
 
   //cell
-  data[JSON_GEOM_VIEW_PERIODIC_DRAW_CELL] = m_draw_cell.get_value();
-  json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
+  data[JSON_GV_PERIODIC_DRAW_CELL] = m_draw_cell.get_value();
+  json_io::hs_save_vec3(JSON_GV_PERIODIC_CELL_COLOR, m_cell_color, data);
 
   //cell vectors
-  data[JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS] = m_draw_cell_vectors.get_value();
-  data[JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO] = m_cell_vectors_ratio.get_value();
-  json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
-  json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
+  data[JSON_GV_PERIODIC_DRAW_VECTORS] = m_draw_cell_vectors.get_value();
+  data[JSON_GV_PERIODIC_VECTORS_RATIO] = m_cell_vectors_ratio.get_value();
+  json_io::hs_save_vec3(JSON_GV_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
+  json_io::hs_save_vec3(JSON_GV_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
 
-  data[JSON_GEOM_VIEW_BONDING_TABLE] = json::array({});
+  data[JSON_GV_BONDING_TABLE] = json::array({});
 
-  data[JSON_GEOM_VIEW_SEL_VIS] = m_sel_vis.get_value();
-  data[JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds.get_value();
+  data[JSON_GV_SEL_VIS] = m_sel_vis.get_value();
+  data[JSON_GV_SEL_VIS_AFFECT_BONDS] = m_sel_vis_affect_bonds.get_value();
 
   if (m_geom->get_DIM() == 3) {
-    data[JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS] = m_draw_subcells.get_value();
-    json_helper::hs_save_vec3(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE, m_subcells_range, data);
+    data[JSON_GV_PERIODIC_DRAW_SUBCELLS] = m_draw_subcells.get_value();
+    json_io::hs_save_vec3(JSON_GV_PERIODIC_SUBCELLS_RANGE, m_subcells_range, data);
   }
 
   for (auto &record: m_tws_tr->m_bonding_table.m_dist) {
@@ -1546,7 +1546,7 @@ void geom_view_t::save_to_json(json &data) {
     bt_rec.push_back(m_geom->atom_of_type(record.first.m_b));
     bt_rec.push_back(record.second.m_bonding_dist);
     bt_rec.push_back(record.second.m_enabled);
-    data[JSON_GEOM_VIEW_BONDING_TABLE].push_back(bt_rec);
+    data[JSON_GV_BONDING_TABLE].push_back(bt_rec);
   }
 
   if (m_geom->get_DIM() > 0) {
@@ -1556,7 +1556,7 @@ void geom_view_t::save_to_json(json &data) {
       for (uint8_t q = 0; q < 3; q++) cell_data.push_back(m_geom->cell.v[i][q]);
       cell.push_back(cell_data);
     }
-    data[JSON_GEOM_VIEW_CELL] = cell;
+    data[JSON_GV_CELL] = cell;
   }
 
   json xfield_names = json::array({});
@@ -1592,10 +1592,10 @@ void geom_view_t::save_to_json(json &data) {
     }
     }
 
-  data[JSON_GEOM_VIEW_XFIELD_NAMES] = xfield_names;
-  data[JSON_GEOM_VIEW_XFIELD_TYPES] = xfield_types;
+  data[JSON_GV_XFIELD_NAMES] = xfield_names;
+  data[JSON_GV_XFIELD_TYPES] = xfield_types;
 
-  data[JSON_GEOM_VIEW_ATOMS] = json::array({});
+  data[JSON_GV_ATOMS] = json::array({});
   for (auto q = 0; q < m_geom->nat(); q++) {
     json atom = json::array({});
     for (int i = 0; i < m_geom->nfields(); i++)
@@ -1625,12 +1625,12 @@ void geom_view_t::save_to_json(json &data) {
         break;
       }
       }
-    data[JSON_GEOM_VIEW_ATOMS].push_back(atom);
+    data[JSON_GV_ATOMS].push_back(atom);
   }
 
   if (!m_type_color_override.empty()) {
 
-    data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE] = json::array({});
+    data[JSON_GV_TYPE_COLOR_OVERRIDE] = json::array({});
 
     for (auto &elem : m_type_color_override) {
       json color_override_rec = json::array({});
@@ -1638,7 +1638,7 @@ void geom_view_t::save_to_json(json &data) {
       color_override_rec.push_back(elem.second[0]);
       color_override_rec.push_back(elem.second[1]);
       color_override_rec.push_back(elem.second[2]);
-      data[JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE].push_back(color_override_rec);
+      data[JSON_GV_TYPE_COLOR_OVERRIDE].push_back(color_override_rec);
     }
   }
 
@@ -1649,8 +1649,8 @@ void geom_view_t::save_to_json(json &data) {
     for (auto &anim : m_anim->m_anim_data) {
 
       json animation = json::object();
-      animation[JSON_GEOM_VIEW_ANIMATION_NAME] = anim.m_anim_name;
-      animation[JSON_GEOM_VIEW_ANIMATION_TYPE] = anim.m_anim_type;
+      animation[JSON_GV_ANIMATION_NAME] = anim.m_anim_name;
+      animation[JSON_GV_ANIMATION_TYPE] = anim.m_anim_type;
       json frames = json::array();
 
       for (auto &frame : anim.frames) {
@@ -1666,11 +1666,11 @@ void geom_view_t::save_to_json(json &data) {
         frames.push_back(frame_chunk);
       }
 
-      animation[JSON_GEOM_VIEW_ANIMATION_FRAMES] = frames;
+      animation[JSON_GV_ANIMATION_FRAMES] = frames;
       animations.push_back(animation);
     }
 
-    data[JSON_GEOM_VIEW_ANIMATIONS] = animations;
+    data[JSON_GV_ANIMATIONS] = animations;
   }
 
   m_measure->save_to_json(data);
@@ -1681,60 +1681,60 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   ws_item_t::load_from_json(data, rep_info);
 
-  if (auto val_itr = data.find(JSON_GEOM_VIEW_DIM); val_itr != data.end()) {
+  if (auto val_itr = data.find(JSON_GV_DIM); val_itr != data.end()) {
     m_geom->set_DIM(val_itr.value());
     //m_geom->cell.DIM = m_geom->DIM;
   }
 
-  json_helper::hs_load_var(JSON_GEOM_VIEW_ATOM_SCALE, m_atom_scale_factor, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_BOND_SCALE, m_bond_scale_factor, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_RENDER_TYPE, m_render_style, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_DRAW_SPECULAR, m_draw_specular, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SPECULAR, m_shading_specular_power, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_TYPE, m_labels->m_style, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_SIZE, m_labels->m_lbl_font_size, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_DRAW_OUTLINE, m_labels->m_render_outlines, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_SEL_VIS, m_labels->m_selective_lbl, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_LABELS_OUTLINE_SZ, m_labels->m_outline_size, data);
+  json_io::hs_load_var(JSON_GV_ATOM_SCALE, m_atom_scale_factor, data);
+  json_io::hs_load_var(JSON_GV_BOND_SCALE, m_bond_scale_factor, data);
+  json_io::hs_load_var(JSON_GV_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
+  json_io::hs_load_var(JSON_GV_RENDER_TYPE, m_render_style, data);
+  json_io::hs_load_var(JSON_GV_DRAW_SPECULAR, m_draw_specular, data);
+  json_io::hs_load_var(JSON_GV_SPECULAR, m_shading_specular_power, data);
+  json_io::hs_load_var(JSON_GV_LABELS_TYPE, m_labels->m_style, data);
+  json_io::hs_load_var(JSON_GV_LABELS_SIZE, m_labels->m_lbl_font_size, data);
+  json_io::hs_load_var(JSON_GV_LABELS_DRAW_OUTLINE, m_labels->m_render_outlines, data);
+  json_io::hs_load_var(JSON_GV_LABELS_INPLACE, m_labels->m_render_inplace_hud, data);
+  json_io::hs_load_var(JSON_GV_LABELS_SEL_VIS, m_labels->m_selective_lbl, data);
+  json_io::hs_load_var(JSON_GV_LABELS_SCREEN_SPC_SCALE, m_labels->m_screen_scale, data);
+  json_io::hs_load_var(JSON_GV_LABELS_OUTLINE_SZ, m_labels->m_outline_size, data);
 
-  //  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_X,
+  //  json_helper::load_var(JSON_GV_LABELS_INPLACE_OFFSET_X,
   //                        m_labels->m_inplace_offset[0],
   //                        data);
-  //  json_helper::load_var(JSON_GEOM_VIEW_LABELS_INPLACE_OFFSET_Y,
+  //  json_helper::load_var(JSON_GV_LABELS_INPLACE_OFFSET_Y,
   //                        m_labels->m_inplace_offset[1],
   //                        data);
 
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_IMG_BONDS, m_draw_img_bonds, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_BONDS, m_draw_bonds, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_ATOMS, m_draw_atoms, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_BT_SHOW_DSBL, m_bt_show_disabled_record, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_SUBCELLS, m_draw_subcells, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SEL_VIS, m_sel_vis, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_ROLE, m_role, data);
+  json_io::hs_load_var(JSON_GV_SHOW_IMG_BONDS, m_draw_img_bonds, data);
+  json_io::hs_load_var(JSON_GV_SHOW_BONDS, m_draw_bonds, data);
+  json_io::hs_load_var(JSON_GV_SHOW_ATOMS, m_draw_atoms, data);
+  json_io::hs_load_var(JSON_GV_SHOW_IMG_ATOMS, m_draw_img_atoms, data);
+  json_io::hs_load_var(JSON_GV_BT_SHOW_DSBL, m_bt_show_disabled_record, data);
+  json_io::hs_load_var(JSON_GV_PERIODIC_DRAW_SUBCELLS, m_draw_subcells, data);
+  json_io::hs_load_var(JSON_GV_SEL_VIS, m_sel_vis, data);
+  json_io::hs_load_var(JSON_GV_SEL_VIS_AFFECT_BONDS, m_sel_vis_affect_bonds, data);
+  json_io::hs_load_var(JSON_GV_ROLE, m_role, data);
 
   //cell
-  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_CELL, m_draw_cell, data);
-  json_helper::hs_load_vec3(JSON_GEOM_VIEW_PERIODIC_CELL_COLOR, m_cell_color, data);
+  json_io::hs_load_var(JSON_GV_PERIODIC_DRAW_CELL, m_draw_cell, data);
+  json_io::hs_load_vec3(JSON_GV_PERIODIC_CELL_COLOR, m_cell_color, data);
 
   //cell vectors
-  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_DRAW_VECTORS, m_draw_cell_vectors, data);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_PERIODIC_VECTORS_RATIO, m_cell_vectors_ratio, data);
-  json_helper::hs_load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
-  json_helper::hs_load_vec3(JSON_GEOM_VIEW_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
+  json_io::hs_load_var(JSON_GV_PERIODIC_DRAW_VECTORS, m_draw_cell_vectors, data);
+  json_io::hs_load_var(JSON_GV_PERIODIC_VECTORS_RATIO, m_cell_vectors_ratio, data);
+  json_io::hs_load_vec3(JSON_GV_PERIODIC_VECTORS_OFFSET, m_cell_vector_offset, data);
+  json_io::hs_load_vec3(JSON_GV_PERIODIC_VECTORS_COLOR, m_cell_vector_color, data);
 
-  if (data.find(JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE) != data.end()) {
-    int sc_a = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][0].get<int>();
-    int sc_b = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][1].get<int>();
-    int sc_c = data[JSON_GEOM_VIEW_PERIODIC_SUBCELLS_RANGE][2].get<int>();
+  if (data.find(JSON_GV_PERIODIC_SUBCELLS_RANGE) != data.end()) {
+    int sc_a = data[JSON_GV_PERIODIC_SUBCELLS_RANGE][0].get<int>();
+    int sc_b = data[JSON_GV_PERIODIC_SUBCELLS_RANGE][1].get<int>();
+    int sc_c = data[JSON_GV_PERIODIC_SUBCELLS_RANGE][2].get<int>();
     m_subcells_range.set_value(vector3<int>(sc_a, sc_b, sc_c));
   }
 
-  if (auto val_itr = data.find(JSON_GEOM_VIEW_TYPE_COLOR_OVERRIDE); val_itr != data.end()) {
+  if (auto val_itr = data.find(JSON_GV_TYPE_COLOR_OVERRIDE); val_itr != data.end()) {
 
     m_type_color_override.clear();
 
@@ -1756,7 +1756,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   if (m_geom->get_DIM() > 0) {
 
-    if (auto val_itr = data.find(JSON_GEOM_VIEW_CELL); val_itr != data.end()) {
+    if (auto val_itr = data.find(JSON_GV_CELL); val_itr != data.end()) {
 
       for (uint8_t i = 0; i < m_geom->get_DIM(); i++) {
         vector3<float> cellv(val_itr.value()[i][0].get<float>(),
@@ -1771,7 +1771,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   }
 
-  if (auto val_itr = data.find(JSON_GEOM_VIEW_XFIELD_NAMES); val_itr != data.end()) {
+  if (auto val_itr = data.find(JSON_GV_XFIELD_NAMES); val_itr != data.end()) {
 
     std::vector<STRING_EX> fn;
     std::vector<basic_types> ft;
@@ -1780,7 +1780,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
     std::transform(data_xf_names.begin(), data_xf_names.end(), std::back_inserter(fn),
                    [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
 
-    if (auto val_itr2 = data.find(JSON_GEOM_VIEW_XFIELD_TYPES); val_itr2 != data.end())
+    if (auto val_itr2 = data.find(JSON_GV_XFIELD_TYPES); val_itr2 != data.end())
       for (auto &elem : val_itr2.value()) {
         STRING_EX fv = elem.get<STRING_EX>();
         if (fv == "b") ft.push_back(basic_types::type_bool);
@@ -1796,7 +1796,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   }
 
-  if (auto val_itr = data.find(JSON_GEOM_VIEW_ATOMS); val_itr != data.end())
+  if (auto val_itr = data.find(JSON_GV_ATOMS); val_itr != data.end())
     for (const auto &atom : val_itr.value()) {
 
       m_geom->add(atom[0].get<std::string>(),
@@ -1839,7 +1839,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
     }
 
-  if (auto val_itr = data.find(JSON_GEOM_VIEW_BONDING_TABLE); val_itr != data.end()) {
+  if (auto val_itr = data.find(JSON_GV_BONDING_TABLE); val_itr != data.end()) {
 
     for (auto &elem : val_itr.value()) {
 
@@ -1856,7 +1856,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   }
 
-  if (auto val_itr = data.find(JSON_GEOM_VIEW_ANIMATIONS); val_itr != data.end()) {
+  if (auto val_itr = data.find(JSON_GV_ANIMATIONS); val_itr != data.end()) {
 
     bool static_anim_found{false};
 
@@ -1864,15 +1864,15 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
       geom_anim_record_t<float> tmp_anim_rec;
 
-      if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_NAME); val_itr2 != anim.end())
+      if (auto val_itr2 = anim.find(JSON_GV_ANIMATION_NAME); val_itr2 != anim.end())
         tmp_anim_rec.m_anim_name = val_itr2.value();
       else
         tmp_anim_rec.m_anim_name = "generic1";
 
-      if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_TYPE); val_itr2 != anim.end())
+      if (auto val_itr2 = anim.find(JSON_GV_ANIMATION_TYPE); val_itr2 != anim.end())
         tmp_anim_rec.m_anim_type = val_itr2.value();
 
-      if (auto val_itr2 = anim.find(JSON_GEOM_VIEW_ANIMATION_FRAMES); val_itr2 != anim.end()) {
+      if (auto val_itr2 = anim.find(JSON_GV_ANIMATION_FRAMES); val_itr2 != anim.end()) {
         tmp_anim_rec.frames.reserve(val_itr2.value().size());
 
         for (auto &frame : val_itr2.value()) {

@@ -352,21 +352,21 @@ void ws_item_t::translate(const vector3<float> &tr_vec) {
 
 void ws_item_t::save_to_json(json &data) {
 
-  json_helper::hs_save_var(JSON_WS_ITEM_NAME, m_name, data);
-  json_helper::save_var(JSON_WS_ITEM_TYPE, get_type_name(), data);
-  json_helper::hs_save_var(JSON_IS_VISIBLE, m_is_visible, data);
+  json_io::hs_save_var(JSON_WS_ITEM_NAME, m_name, data);
+  json_io::save_var(JSON_WS_ITEM_TYPE, get_type_name(), data);
+  json_io::hs_save_var(JSON_IS_VISIBLE, m_is_visible, data);
 
   if (get_flags() & ws_item_flags_support_render_bb)
-    json_helper::hs_save_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
+    json_io::hs_save_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
 
   if (get_flags() & ws_item_flags_support_tr) {
     auto pos = m_pos.get_value();
-    json_helper::save_vec3(JSON_POS, pos, data);
+    json_io::save_vec3(JSON_POS, pos, data);
   }
 
   if (m_leader) {
     auto leader_name = m_leader->m_name.get_value();
-    json_helper::save_var(JSON_WS_ITEM_LEADER, leader_name, data);
+    json_io::save_var(JSON_WS_ITEM_LEADER, leader_name, data);
   }
 
   if (!m_connected_items.empty()) {
@@ -386,15 +386,15 @@ void ws_item_t::save_to_json(json &data) {
 
 void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
-  json_helper::hs_load_var(JSON_WS_ITEM_NAME, m_name, data);
-  json_helper::hs_load_var(JSON_IS_VISIBLE, m_is_visible, data);
+  json_io::hs_load_var(JSON_WS_ITEM_NAME, m_name, data);
+  json_io::hs_load_var(JSON_IS_VISIBLE, m_is_visible, data);
 
   if (get_flags() & ws_item_flags_support_render_bb)
-    json_helper::hs_load_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
+    json_io::hs_load_var(JSON_WS_ITEM_SHOW_BB, m_show_bb, data);
 
   if (get_flags() | ws_item_flags_support_tr) {
     vector3<float> pos;
-    json_helper::load_vec3(JSON_POS, pos, data);
+    json_io::load_vec3(JSON_POS, pos, data);
     m_pos.set_value(std::move(pos));
   }
 

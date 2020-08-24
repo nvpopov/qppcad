@@ -112,11 +112,11 @@ void cube_primitive_t::save_to_json(json &data) {
 
   ws_item_t::save_to_json(data);
 
-  json_helper::hs_save_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
-  json_helper::hs_save_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
-  json_helper::hs_save_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
-  json_helper::hs_save_var(JSON_WS_CUBE_P_EALPHA, m_alpha_enabled, data);
-  json_helper::hs_save_var(JSON_WS_CUBE_P_ALPHA, m_alpha, data);
+  json_io::hs_save_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
+  json_io::hs_save_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
+  json_io::hs_save_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
+  json_io::hs_save_var(JSON_WS_CUBE_P_EALPHA, m_alpha_enabled, data);
+  json_io::hs_save_var(JSON_WS_CUBE_P_ALPHA, m_alpha, data);
 
 }
 
@@ -124,11 +124,11 @@ void cube_primitive_t::load_from_json(json &data, repair_connection_info_t &rep_
 
   ws_item_t::load_from_json(data, rep_info);
 
-  json_helper::hs_load_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
-  json_helper::hs_load_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
-  json_helper::hs_load_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
-  json_helper::hs_load_var(JSON_WS_CUBE_P_EALPHA, m_alpha_enabled, data);
-  json_helper::hs_load_var(JSON_WS_CUBE_P_ALPHA, m_alpha, data);
+  json_io::hs_load_vec3(JSON_WS_CUBE_P_SCALE, m_scale, data);
+  json_io::hs_load_vec3(JSON_WS_CUBE_P_COLOR, m_color, data);
+  json_io::hs_load_var(JSON_WS_CUBE_P_STYLE, m_render_mode, data);
+  json_io::hs_load_var(JSON_WS_CUBE_P_EALPHA, m_alpha_enabled, data);
+  json_io::hs_load_var(JSON_WS_CUBE_P_ALPHA, m_alpha, data);
 
 }
 

@@ -9,7 +9,7 @@ namespace qpp {
 
 namespace cad {
 
-class json_helper {
+class json_io {
 
 public:
 

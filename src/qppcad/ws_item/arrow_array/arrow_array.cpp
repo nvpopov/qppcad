@@ -159,12 +159,12 @@ void arrow_array_t::save_to_json(json &data) {
   ws_item_t::save_to_json(data);
 
   save_ws_item_field(JSON_AARRAY_SRD, m_src, data);
-  json_helper::hs_save_var(JSON_AARRAY_ARROW_LEN, m_unf_arrow_len, data);
-  json_helper::hs_save_var(JSON_AARRAY_ARROW_CAP_LEN, m_unf_arrow_cap_len, data);
-  json_helper::hs_save_var(JSON_AARRAY_ARROW_SCALE, m_unf_arrow_scale, data);
-  json_helper::hs_save_var(JSON_AARRAY_ARROW_CAP_SCALE, m_unf_arrow_cap_scale, data);
-  json_helper::hs_save_var(JSON_AARRAY_AFFECTED_BY_SV, m_affected_by_sv, data);
-  json_helper::hs_save_vec3(JSON_AARRAY_COLOR, m_color, data);
+  json_io::hs_save_var(JSON_AARRAY_ARROW_LEN, m_unf_arrow_len, data);
+  json_io::hs_save_var(JSON_AARRAY_ARROW_CAP_LEN, m_unf_arrow_cap_len, data);
+  json_io::hs_save_var(JSON_AARRAY_ARROW_SCALE, m_unf_arrow_scale, data);
+  json_io::hs_save_var(JSON_AARRAY_ARROW_CAP_SCALE, m_unf_arrow_cap_scale, data);
+  json_io::hs_save_var(JSON_AARRAY_AFFECTED_BY_SV, m_affected_by_sv, data);
+  json_io::hs_save_vec3(JSON_AARRAY_COLOR, m_color, data);
 
 }
 
@@ -172,12 +172,12 @@ void arrow_array_t::load_from_json(json &data, repair_connection_info_t &rep_inf
 
   ws_item_t::load_from_json(data, rep_info);
   load_ws_item_field(JSON_AARRAY_SRD, &m_src, data, rep_info);
-  json_helper::hs_load_var(JSON_AARRAY_ARROW_LEN, m_unf_arrow_len, data);
-  json_helper::hs_load_var(JSON_AARRAY_ARROW_CAP_LEN, m_unf_arrow_cap_len, data);
-  json_helper::hs_load_var(JSON_AARRAY_ARROW_SCALE, m_unf_arrow_scale, data);
-  json_helper::hs_load_var(JSON_AARRAY_ARROW_CAP_SCALE, m_unf_arrow_cap_scale, data);
-  json_helper::hs_load_var(JSON_AARRAY_AFFECTED_BY_SV, m_affected_by_sv, data);
-  json_helper::hs_load_vec3(JSON_AARRAY_COLOR, m_color, data);
+  json_io::hs_load_var(JSON_AARRAY_ARROW_LEN, m_unf_arrow_len, data);
+  json_io::hs_load_var(JSON_AARRAY_ARROW_CAP_LEN, m_unf_arrow_cap_len, data);
+  json_io::hs_load_var(JSON_AARRAY_ARROW_SCALE, m_unf_arrow_scale, data);
+  json_io::hs_load_var(JSON_AARRAY_ARROW_CAP_SCALE, m_unf_arrow_cap_scale, data);
+  json_io::hs_load_var(JSON_AARRAY_AFFECTED_BY_SV, m_affected_by_sv, data);
+  json_io::hs_load_vec3(JSON_AARRAY_COLOR, m_color, data);
 
 }
 

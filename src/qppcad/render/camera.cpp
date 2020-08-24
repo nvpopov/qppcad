@@ -335,17 +335,17 @@ std::optional<vector2<float> > camera_t::project (const vector3<float> point) {
 
 void camera_t::save_to_json(json &data) {
 
-  json_helper::save_vec3(JSON_WS_CAMERA_LOOK_AT, m_cam_state.m_look_at, data);
-  json_helper::save_vec3(JSON_WS_CAMERA_VIEW_POINT, m_cam_state.m_view_point, data);
-  json_helper::save_var(JSON_WS_CAMERA_ORTHO_SCALE, m_cam_state.m_ortho_scale, data);
+  json_io::save_vec3(JSON_WS_CAMERA_LOOK_AT, m_cam_state.m_look_at, data);
+  json_io::save_vec3(JSON_WS_CAMERA_VIEW_POINT, m_cam_state.m_view_point, data);
+  json_io::save_var(JSON_WS_CAMERA_ORTHO_SCALE, m_cam_state.m_ortho_scale, data);
 
 }
 
 void camera_t::load_from_json(json &data) {
 
-  json_helper::load_vec3(JSON_WS_CAMERA_LOOK_AT, m_cam_state.m_look_at, data);
-  json_helper::load_vec3(JSON_WS_CAMERA_VIEW_POINT, m_cam_state.m_view_point, data);
-  json_helper::load_var(JSON_WS_CAMERA_ORTHO_SCALE, m_cam_state.m_ortho_scale, data);
+  json_io::load_vec3(JSON_WS_CAMERA_LOOK_AT, m_cam_state.m_look_at, data);
+  json_io::load_vec3(JSON_WS_CAMERA_VIEW_POINT, m_cam_state.m_view_point, data);
+  json_io::load_var(JSON_WS_CAMERA_ORTHO_SCALE, m_cam_state.m_ortho_scale, data);
 
   m_already_loaded = true;
 

@@ -75,22 +75,22 @@ bool arrow_primitive_t::can_be_written_to_json() {
 void arrow_primitive_t::save_to_json(json &data) {
 
   ws_item_t::save_to_json(data);
-  json_helper::hs_save_vec3(JSON_ARROW_PR_ARROW_TO, m_arrow_to, data);
-  json_helper::hs_save_vec3(JSON_ARROW_PR_COLOR, m_color, data);
-  json_helper::hs_save_var(JSON_ARROW_PR_ARROW_SCALE, m_arrow_scale, data);
-  json_helper::hs_save_var(JSON_ARROW_PR_CAP_SCALE, m_arrow_cap_scale, data);
-  json_helper::hs_save_var(JSON_ARROW_PR_CAP_LEN, m_arrow_cap_len, data);
+  json_io::hs_save_vec3(JSON_ARROW_PR_ARROW_TO, m_arrow_to, data);
+  json_io::hs_save_vec3(JSON_ARROW_PR_COLOR, m_color, data);
+  json_io::hs_save_var(JSON_ARROW_PR_ARROW_SCALE, m_arrow_scale, data);
+  json_io::hs_save_var(JSON_ARROW_PR_CAP_SCALE, m_arrow_cap_scale, data);
+  json_io::hs_save_var(JSON_ARROW_PR_CAP_LEN, m_arrow_cap_len, data);
 
 }
 
 void arrow_primitive_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
 
   ws_item_t::load_from_json(data, rep_info);
-  json_helper::hs_load_vec3(JSON_ARROW_PR_ARROW_TO, m_arrow_to, data);
-  json_helper::hs_load_vec3(JSON_ARROW_PR_COLOR, m_color, data);
-  json_helper::hs_load_var(JSON_ARROW_PR_ARROW_SCALE, m_arrow_scale, data);
-  json_helper::hs_load_var(JSON_ARROW_PR_CAP_SCALE, m_arrow_cap_scale, data);
-  json_helper::hs_load_var(JSON_ARROW_PR_CAP_LEN, m_arrow_cap_len, data);
+  json_io::hs_load_vec3(JSON_ARROW_PR_ARROW_TO, m_arrow_to, data);
+  json_io::hs_load_vec3(JSON_ARROW_PR_COLOR, m_color, data);
+  json_io::hs_load_var(JSON_ARROW_PR_ARROW_SCALE, m_arrow_scale, data);
+  json_io::hs_load_var(JSON_ARROW_PR_CAP_SCALE, m_arrow_cap_scale, data);
+  json_io::hs_load_var(JSON_ARROW_PR_CAP_LEN, m_arrow_cap_len, data);
 
 }
 

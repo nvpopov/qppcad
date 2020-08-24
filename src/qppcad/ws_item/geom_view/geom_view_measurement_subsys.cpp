@@ -528,28 +528,28 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
     if (!rec) continue;
 
     json msr_dist_inst;
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_AT1] = rec->m_at1;
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_AT2] = rec->m_at2;
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_SHOW] = rec->m_show.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_SH_LBL] = rec->m_show_label.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_AT1] = rec->m_at1;
+    msr_dist_inst[JSON_GV_MSR_DIST_AT2] = rec->m_at2;
+    msr_dist_inst[JSON_GV_MSR_DIST_SHOW] = rec->m_show.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_SH_LBL] = rec->m_show_label.get_value();
 
-    json_helper::hs_save_vec3(JSON_GEOM_VIEW_MSR_DIST_COLOR, rec->m_bond_color, msr_dist_inst);
+    json_io::hs_save_vec3(JSON_GV_MSR_DIST_COLOR, rec->m_bond_color, msr_dist_inst);
 
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_LSIZE] = rec->m_line_size.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_FSIZE] = rec->m_font_size.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_LSTYLE] = rec->m_line_render_style.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_FSTYLE] = rec->m_label_render_style.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_SHOW_CL] = rec->m_show_custom_label.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_CL_TEXT] = rec->m_custom_label_text.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_DANGLE] = rec->m_delta_angle.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_TRM_ST] = rec->m_pair_term_style.get_value();
-    msr_dist_inst[JSON_GEOM_VIEW_MSR_DIST_TRM_WD] = rec->m_pair_term_width.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_LSIZE] = rec->m_line_size.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_FSIZE] = rec->m_font_size.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_LSTYLE] = rec->m_line_render_style.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_FSTYLE] = rec->m_label_render_style.get_value();
+    msr_dist_inst[JSON_GV_MSR_SHOW_CL] = rec->m_show_custom_label.get_value();
+    msr_dist_inst[JSON_GV_MSR_CL_TEXT] = rec->m_custom_label_text.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_DANGLE] = rec->m_delta_angle.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_TRM_ST] = rec->m_pair_term_style.get_value();
+    msr_dist_inst[JSON_GV_MSR_DIST_TRM_WD] = rec->m_pair_term_width.get_value();
 
-    json_helper::hs_save_vec3(JSON_GEOM_VIEW_MSR_DIST_DOFFSET, rec->m_delta_offset, msr_dist_inst);
+    json_io::hs_save_vec3(JSON_GV_MSR_DIST_DOFFSET, rec->m_delta_offset, msr_dist_inst);
 
     if (p_owner->m_geom->get_DIM() != 0) {
-      json_helper::save_index(JSON_GEOM_VIEW_MSR_DIST_IDX1, rec->m_idx1, msr_dist_inst);
-      json_helper::save_index(JSON_GEOM_VIEW_MSR_DIST_IDX2, rec->m_idx2, msr_dist_inst);
+      json_io::save_index(JSON_GV_MSR_DIST_IDX1, rec->m_idx1, msr_dist_inst);
+      json_io::save_index(JSON_GV_MSR_DIST_IDX2, rec->m_idx2, msr_dist_inst);
     }
 
     msr_dists.push_back(msr_dist_inst);
@@ -564,110 +564,110 @@ void geom_view_msr_subsys_t::save_to_json(json &data) {
     if (!rec) continue;
 
     json msr_angle_inst;
-    msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_AT1] = rec->m_at1;
-    msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_AT2] = rec->m_at2;
-    msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_AT3] = rec->m_at3;
-    msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_SHOW] = rec->m_show.get_value();
-    msr_angle_inst[JSON_GEOM_VIEW_MSR_ANGLE_ORDER] = rec->m_order.get_value();
+    msr_angle_inst[JSON_GV_MSR_ANGLE_AT1] = rec->m_at1;
+    msr_angle_inst[JSON_GV_MSR_ANGLE_AT2] = rec->m_at2;
+    msr_angle_inst[JSON_GV_MSR_ANGLE_AT3] = rec->m_at3;
+    msr_angle_inst[JSON_GV_MSR_ANGLE_SHOW] = rec->m_show.get_value();
+    msr_angle_inst[JSON_GV_MSR_ANGLE_ORDER] = rec->m_order.get_value();
 
     if (p_owner->m_geom->get_DIM() != 0) {
-      json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX1, rec->m_idx1, msr_angle_inst);
-      json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX2, rec->m_idx2, msr_angle_inst);
-      json_helper::save_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX3, rec->m_idx3, msr_angle_inst);
+      json_io::save_index(JSON_GV_MSR_ANGLE_IDX1, rec->m_idx1, msr_angle_inst);
+      json_io::save_index(JSON_GV_MSR_ANGLE_IDX2, rec->m_idx2, msr_angle_inst);
+      json_io::save_index(JSON_GV_MSR_ANGLE_IDX3, rec->m_idx3, msr_angle_inst);
     }
 
     msr_angles.push_back(msr_angle_inst);
 
   }
 
-  msr_object[JSON_GEOM_VIEW_MSR_DIST] = msr_dists;
-  msr_object[JSON_GEOM_VIEW_MSR_ANGLE] = msr_angles;
-  msr_object[JSON_GEOM_VIEW_MSR_SHOW_DIST] = m_render_dist.get_value();
-  msr_object[JSON_GEOM_VIEW_MSR_SHOW_ANGLE] = m_render_angle.get_value();
-  msr_object[JSON_GEOM_VIEW_MSR_SHOW_LDIST] = m_render_dist_legend.get_value();
-  msr_object[JSON_GEOM_VIEW_MSR_SHOW_LANGLE] = m_render_angle_legend.get_value();
+  msr_object[JSON_GV_MSR_DIST] = msr_dists;
+  msr_object[JSON_GV_MSR_ANGLE] = msr_angles;
+  msr_object[JSON_GV_MSR_SHOW_DIST] = m_render_dist.get_value();
+  msr_object[JSON_GV_MSR_SHOW_ANGLE] = m_render_angle.get_value();
+  msr_object[JSON_GV_MSR_SHOW_LDIST] = m_render_dist_legend.get_value();
+  msr_object[JSON_GV_MSR_SHOW_LANGLE] = m_render_angle_legend.get_value();
 
-  data[JSON_GEOM_VIEW_MSR] = msr_object;
+  data[JSON_GV_MSR] = msr_object;
 
 }
 
 void geom_view_msr_subsys_t::load_from_json(json &data) {
 
-  auto msr_object = data.find(JSON_GEOM_VIEW_MSR);
+  auto msr_object = data.find(JSON_GV_MSR);
   if (msr_object == data.end()) return;
 
-  json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_SHOW_DIST, m_render_dist, *msr_object);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_SHOW_ANGLE, m_render_angle, *msr_object);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_SHOW_LDIST, m_render_dist_legend, *msr_object);
-  json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_SHOW_LANGLE, m_render_angle_legend, *msr_object);
+  json_io::hs_load_var(JSON_GV_MSR_SHOW_DIST, m_render_dist, *msr_object);
+  json_io::hs_load_var(JSON_GV_MSR_SHOW_ANGLE, m_render_angle, *msr_object);
+  json_io::hs_load_var(JSON_GV_MSR_SHOW_LDIST, m_render_dist_legend, *msr_object);
+  json_io::hs_load_var(JSON_GV_MSR_SHOW_LANGLE, m_render_angle_legend, *msr_object);
 
-  auto msr_dist = msr_object.value().find(JSON_GEOM_VIEW_MSR_DIST);
+  auto msr_dist = msr_object.value().find(JSON_GV_MSR_DIST);
   if (msr_dist != msr_object.value().end())
     for (auto &msr_record : msr_dist.value()) {
 
-      size_t at1 = msr_record[JSON_GEOM_VIEW_MSR_DIST_AT1];
-      size_t at2 = msr_record[JSON_GEOM_VIEW_MSR_DIST_AT2];
+      size_t at1 = msr_record[JSON_GV_MSR_DIST_AT1];
+      size_t at2 = msr_record[JSON_GV_MSR_DIST_AT2];
       index idx1 = index::D(p_owner->m_geom->get_DIM()).all(0);
       index idx2 = index::D(p_owner->m_geom->get_DIM()).all(0);
 
       if (p_owner->m_geom->get_DIM() != 0) {
-        idx1 = json_helper::load_index(JSON_GEOM_VIEW_MSR_DIST_IDX1, msr_record);
-        idx2 = json_helper::load_index(JSON_GEOM_VIEW_MSR_DIST_IDX2, msr_record);
+        idx1 = json_io::load_index(JSON_GV_MSR_DIST_IDX1, msr_record);
+        idx2 = json_io::load_index(JSON_GV_MSR_DIST_IDX2, msr_record);
       }
 
       add_bond_msr(at1, at2, idx1, idx2);
 
       auto lmsr = m_dist_recs.get_hs_child_as_array(m_dist_recs.get_hs_children_count() - 1);
       if (lmsr) {
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_SHOW, lmsr->m_show, msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_SH_LBL, lmsr->m_show_label, msr_record);
-        json_helper::hs_load_vec3(JSON_GEOM_VIEW_MSR_DIST_COLOR, lmsr->m_bond_color, msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_LSIZE, lmsr->m_line_size, msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_FSIZE, lmsr->m_font_size, msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_LSTYLE, lmsr->m_line_render_style,
+        json_io::hs_load_var(JSON_GV_MSR_DIST_SHOW, lmsr->m_show, msr_record);
+        json_io::hs_load_var(JSON_GV_MSR_DIST_SH_LBL, lmsr->m_show_label, msr_record);
+        json_io::hs_load_vec3(JSON_GV_MSR_DIST_COLOR, lmsr->m_bond_color, msr_record);
+        json_io::hs_load_var(JSON_GV_MSR_DIST_LSIZE, lmsr->m_line_size, msr_record);
+        json_io::hs_load_var(JSON_GV_MSR_DIST_FSIZE, lmsr->m_font_size, msr_record);
+        json_io::hs_load_var(JSON_GV_MSR_DIST_LSTYLE, lmsr->m_line_render_style,
                                  msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_FSTYLE, lmsr->m_label_render_style,
+        json_io::hs_load_var(JSON_GV_MSR_DIST_FSTYLE, lmsr->m_label_render_style,
                                  msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_SHOW_CL, lmsr->m_show_custom_label,
+        json_io::hs_load_var(JSON_GV_MSR_SHOW_CL, lmsr->m_show_custom_label,
                                  msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_CL_TEXT, lmsr->m_custom_label_text,
+        json_io::hs_load_var(JSON_GV_MSR_CL_TEXT, lmsr->m_custom_label_text,
                                  msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_DANGLE, lmsr->m_delta_angle,
+        json_io::hs_load_var(JSON_GV_MSR_DIST_DANGLE, lmsr->m_delta_angle,
                                  msr_record);
-        json_helper::hs_load_vec3(JSON_GEOM_VIEW_MSR_DIST_DOFFSET, lmsr->m_delta_offset,
+        json_io::hs_load_vec3(JSON_GV_MSR_DIST_DOFFSET, lmsr->m_delta_offset,
                                   msr_record);
 
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_TRM_ST, lmsr->m_pair_term_style,
+        json_io::hs_load_var(JSON_GV_MSR_DIST_TRM_ST, lmsr->m_pair_term_style,
                                  msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_DIST_TRM_WD, lmsr->m_pair_term_width,
+        json_io::hs_load_var(JSON_GV_MSR_DIST_TRM_WD, lmsr->m_pair_term_width,
                                  msr_record);
       }
 
     }
 
-  auto msr_angle = msr_object.value().find(JSON_GEOM_VIEW_MSR_ANGLE);
+  auto msr_angle = msr_object.value().find(JSON_GV_MSR_ANGLE);
   if (msr_angle != msr_object.value().end())
     for (auto &msr_record : msr_angle.value()) {
 
-      size_t at1 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT1];
-      size_t at2 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT2];
-      size_t at3 = msr_record[JSON_GEOM_VIEW_MSR_ANGLE_AT3];
+      size_t at1 = msr_record[JSON_GV_MSR_ANGLE_AT1];
+      size_t at2 = msr_record[JSON_GV_MSR_ANGLE_AT2];
+      size_t at3 = msr_record[JSON_GV_MSR_ANGLE_AT3];
       index idx1 = index::D(p_owner->m_geom->get_DIM()).all(0);
       index idx2 = index::D(p_owner->m_geom->get_DIM()).all(0);
       index idx3 = index::D(p_owner->m_geom->get_DIM()).all(0);
 
       if (p_owner->m_geom->get_DIM() != 0) {
-        idx1 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX1, msr_record);
-        idx2 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX2, msr_record);
-        idx3 = json_helper::load_index(JSON_GEOM_VIEW_MSR_ANGLE_IDX3, msr_record);
+        idx1 = json_io::load_index(JSON_GV_MSR_ANGLE_IDX1, msr_record);
+        idx2 = json_io::load_index(JSON_GV_MSR_ANGLE_IDX2, msr_record);
+        idx3 = json_io::load_index(JSON_GV_MSR_ANGLE_IDX3, msr_record);
       }
 
       add_angle_msr(at1, at2, at3, idx1, idx2, idx3);
       // auto &last_msr = m_angle_recs.back();
       auto lmsr = m_angle_recs.get_hs_child_as_array(m_angle_recs.get_hs_children_count() - 1);
       if (lmsr) {
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_ANGLE_SHOW, lmsr->m_show, msr_record);
-        json_helper::hs_load_var(JSON_GEOM_VIEW_MSR_ANGLE_ORDER, lmsr->m_order, msr_record);
+        json_io::hs_load_var(JSON_GV_MSR_ANGLE_SHOW, lmsr->m_show, msr_record);
+        json_io::hs_load_var(JSON_GV_MSR_ANGLE_ORDER, lmsr->m_order, msr_record);
       }
     }
 
