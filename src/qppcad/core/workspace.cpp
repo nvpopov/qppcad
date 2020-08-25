@@ -31,8 +31,8 @@ workspace_t::workspace_t(std::string _ws_name) {
 
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
   add_hs_child(&m_ws_items);
-  m_cur_itm.set_value(-1);
   add_hs_child(&m_cur_itm);
+  m_cur_itm.set_value(-1);
   end_recording();
   //m_cur_itm.set_commit_exclusive_on_change(true);
 
@@ -313,10 +313,10 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
   if (cur_ws && cur_ws.get() == this) {
     m_cur_itm.set_commit_exclusive_on_change(false);
     if (m_cur_itm.get_value() == -1 ) {
-      unsel_all(true);
+     // unsel_all(true);
     } else {
       astate->tlog("@@@ ws_on_epoch_changed({}) set_sel_item {}", m_cur_itm.get_value());
-      set_sel_item(m_cur_itm.get_value(), true, false);
+     // set_sel_item(m_cur_itm.get_value(), true, false);
     }
     m_cur_itm.set_commit_exclusive_on_change(true);
     if (alive_cnt_after != alive_cnt_before) astate->astate_evd->cur_ws_changed();

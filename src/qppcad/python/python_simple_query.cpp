@@ -114,8 +114,10 @@ void simple_query::sel_cnt(int cnt_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   al->sel_atom(cnt_idx);
   astate->make_viewport_dirty();
+  al->end_recording();
 
 }
 
@@ -124,9 +126,11 @@ void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto i = 0; i < al->m_geom->nat(); i++)
     if (cfn(al->m_geom->pos(i)[0], al->m_geom->pos(i)[1], al->m_geom->pos(i)[2]))
       al->sel_atom(i);
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
@@ -138,6 +142,7 @@ void simple_query::sel_cnt_parity() {
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   index zero = index::D(al->m_geom->get_DIM()).all(0);
   for (auto i = 0; i < al->m_geom->num_selected(); i++) {
     auto rec = al->m_geom->nth_aselected(i);
@@ -160,6 +165,7 @@ void simple_query::sel_cnt_parity() {
           }
     }
   }
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
@@ -169,8 +175,10 @@ void simple_query::sel_invert() {
 
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   al->inv_sel_atoms();
   astate->make_viewport_dirty();
+  al->end_recording();
 
 }
 
@@ -178,8 +186,10 @@ void simple_query::sel_cnt_all() {
 
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   al->sel_atoms(true);
   astate->make_viewport_dirty();
+  al->end_recording();
 
 }
 
@@ -188,8 +198,10 @@ void simple_query::sel_cnt_list(pybind11::list sel_list) {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto itm : sel_list)
     if (py::isinstance<py::int_>(itm)) al->sel_atom(py::cast<int>(itm));
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
@@ -200,9 +212,11 @@ void simple_query::sel_cnt_type(pybind11::str sel_type) {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   std::string type_name = py::cast<std::string>(sel_type);
   int type_id = al->m_geom->type_of_atom(type_name);
   if (type_id != -1) al->sel_by_type(type_id);
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
@@ -216,11 +230,13 @@ void simple_query::sel_cnt_sphere(vector3<float> sph_center, float sph_rad) {
 
   std::vector<tws_node_content_t<float> > cnt;
   al->m_tws_tr->query_sphere(sph_rad, sph_center, cnt);
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
 
   for (auto &item : cnt)
     if (item.m_idx == index::D(al->m_geom->get_DIM()).all(0))
       al->sel_atom(item.m_atm);
 
+  al->end_recording();
   astate->make_viewport_dirty();
 
 }
@@ -230,7 +246,9 @@ void simple_query::sel_cnt_gsph(float sph_rad) {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   if (!al) return;
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   simple_query::sel_cnt_sphere(cur_ws->m_gizmo->m_pos, sph_rad);
+  al->end_recording();
 
 }
 
@@ -241,10 +259,13 @@ void simple_query::sel_hemisphere(int coord_idx, bool positive) {
   if (coord_idx < 0 || coord_idx > 2) return;
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
 
   for (int i = 0; i < al->m_geom->nat(); i++)
     if (positive == al->m_geom->pos(i)[coord_idx] > -0.01)
       al->sel_atom(i);
+
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
@@ -255,7 +276,9 @@ void simple_query::sel_vis() {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   if (!al) return;
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   al->sel_visible();
+  al->end_recording();
 
 }
 
@@ -279,8 +302,12 @@ void simple_query::unsel_cnt_all() {
 
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   al->sel_atoms(true);
   al->inv_sel_atoms();
+  al->end_recording();
+
   astate->make_viewport_dirty();
 
 }
@@ -289,8 +316,11 @@ void simple_query::unsel_cnt(int cnt_idx) {
 
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
+
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   al->unsel_atom(cnt_idx);
   astate->make_viewport_dirty();
+  al->end_recording();
 
 }
 
@@ -299,8 +329,10 @@ void simple_query::unsel_cnt_list(pybind11::list sel_list) {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto itm : sel_list)
     if (py::isinstance<py::int_>(itm)) al->unsel_atom(py::cast<int>(itm));
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
@@ -312,9 +344,11 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   std::string type_name = py::cast<std::string>(sel_type);
   int type_id = al->m_geom->type_of_atom(type_name);
   if (type_id != -1) al->unsel_by_type(type_id);
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
