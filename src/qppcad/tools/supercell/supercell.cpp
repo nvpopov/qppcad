@@ -72,10 +72,10 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   geom_view_tools_t::gen_supercell(al->m_geom.get(), sc_al->m_geom.get(),
                                    sc_dim, geom_view_role_e(al->m_role.get_value()));
 
+  al->m_parent_ws->add_item_to_ws(sc_al);
+
   sc_al->m_pos.set_value(al->m_pos.get_value() + al->m_geom->cell.v[0] * 1.4f);
   sc_al->m_name.set_value(fmt::format("{}_sc_{}_{}_{}", al->m_name.get_value(), a_n, b_n, c_n));
-
-  al->m_parent_ws->add_item_to_ws(sc_al);
 
   if (sc_al->m_geom->nat() > 200) {
     sc_al->m_draw_img_atoms.set_value(false);

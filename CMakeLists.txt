@@ -4,8 +4,8 @@ project(qppcad CXX C)
 #set(CMAKE_BUILD_TYPE "Debug")
 #set(CMAKE_BUILD_TYPE "Release")
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "No build type selected, default to Release")
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (default Release)" FORCE)
+	message(STATUS "No build type selected, default to RelWithDebInfo")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build type (default RelWithDebInfo)" FORCE)
 endif()
 message("-- Build type: ${CMAKE_BUILD_TYPE}")
 
@@ -17,7 +17,9 @@ if(NOT MSVC)
   set(CMAKE_CXX_FLAGS_DEBUG
       "-DQPPCAD_DEBUG ${CMAKE_CXX_FLAGS} -O0 -fno-omit-frame-pointer -g3 -ggdb")
   set(CMAKE_CXX_FLAGS_RELEASE
-      "-DQPPCAD_RELEASE ${CMAKE_CXX_FLAGS} -O3 -ffast-math -fno-finite-math-only -g")
+      "-DQPPCAD_RELEASE ${CMAKE_CXX_FLAGS} -O3 -ffast-math -fno-finite-math-only")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
+      "-DQPPCAD_RELEASE ${CMAKE_CXX_FLAGS} -O3 -ffast-math -fno-finite-math-only -g3 -ggdb")
 elseif(MSVC)
   add_definitions(-D_ENABLE_EXTENDED_ALIGNED_STORAGE -DHAVE_SNPRINTF)
   add_compile_options("/std:c++latest")

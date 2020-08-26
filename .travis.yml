@@ -33,7 +33,8 @@ script:
  - make > mymake.log 2>&1
  - make install > mymakeinstall.log 2>&1
  - cd $TRAVIS_BUILD_DIR
- - mkdir build && cd build && cmake .. -DPYTHON_EXECUTABLE=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad/bin/python3 -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
+ - mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=$TRAVIS_BUILD_DIR/packaging/appimage/qppcad/bin/python3 \
+   -DBUILD_QC=OFF -DPYTHON_BINDINGS=OFF -DBUILD_EXAMPLES=OFF && cmake --build .
  - cd $TRAVIS_BUILD_DIR/packaging/appimage
  - ./make_appimage.sh
  - ls -lrt
