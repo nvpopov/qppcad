@@ -50,7 +50,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   m_widget_list->setContentsMargins(0, 0, 0, 0);
 
   m_widget_list_lt = new QVBoxLayout;
-  m_widget_list_lt->setContentsMargins(0, 0, 0, 0);
+  m_widget_list_lt->setContentsMargins(0, 0, 8, 0);
   m_widget_list->setLayout(m_widget_list_lt);
 
   m_hbox_frm->addWidget(m_action_btn);
