@@ -21,7 +21,7 @@ void hs_doc_base_t::begin_recording_impl() {
       if (child) {
         child->p_cur_rec_type = p_cur_rec_type;
         child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
-        child->p_is_recording = p_is_recording;
+        child->p_is_recording = true;
         child->begin_recording_impl();
       }
 
@@ -38,7 +38,9 @@ void hs_doc_base_t::recording_impl() {
   }
 
   if (p_cur_rec_type != hs_doc_rec_type_e::hs_doc_rec_init_local)
-    for (auto child : p_children) if (child) child->recording_impl();
+    for (auto child : p_children)
+      if (child)
+        child->recording_impl();
 
   on_recording();
 
@@ -51,7 +53,7 @@ void hs_doc_base_t::end_recording_impl() {
       if (child) {
         child->p_cur_rec_type = p_cur_rec_type;
         child->p_commit_exclusive_on_change = p_commit_exclusive_on_change;
-        child->p_is_recording = p_is_recording;
+        child->p_is_recording = false;
         child->end_recording_impl();
       }
 
@@ -104,7 +106,7 @@ void hs_doc_base_t::end_recording() {
 bool hs_doc_base_t::get_is_recording() {
 
   hs_doc_base_t *parent = get_super_parent();
-  assert(parent->p_is_recording == p_is_recording);
+  //assert(parent->p_is_recording == p_is_recording);
   return p_is_recording;
 
 }
@@ -678,7 +680,7 @@ hs_doc_base_t *hs_doc_base_t::get_parent() {
 
 hs_doc_base_t *hs_doc_base_t::get_super_parent() {
   if (p_parent)
-    return p_parent->get_parent();
+    return p_parent->get_super_parent();
   return this;
 }
 

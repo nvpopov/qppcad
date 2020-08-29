@@ -46,10 +46,11 @@ enum class hs_doc_type_e {
 
 ///@brief controls how begin_recording/record/end_recording works
 enum class hs_doc_rec_type_e {
-  hs_doc_rec_disabled,      /// disabled
-  hs_doc_rec_as_new_epoch,  /// regular commit
-  hs_doc_rec_init,          /// executes recursively from root
-  hs_doc_rec_init_local     /// executes !only! for current hs_doc
+  hs_doc_rec_disabled,        /// disabled
+  hs_doc_rec_as_new_epoch,    /// regular commit
+  hs_doc_rec_init,            /// executes recursively from root
+  hs_doc_rec_init_local,      /// executes !only! for current hs_doc
+  hs_doc_rec_to_current_epoch /// record to current epoch
 };
 
 ///Stores augment meta info for each child in each parent's epoch

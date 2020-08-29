@@ -70,7 +70,7 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
 
   supercell_tool_t sct;
   sct.make_super_cell(al, sc_a, sc_b, sc_c);
-  cur_ws->set_sel_item(cur_ws->num_items() - 1);
+  //cur_ws->set_sel_item(cur_ws->num_items() - 1);
   astate->astate_evd->python_console_focus_requested();
   astate->make_viewport_dirty();
 

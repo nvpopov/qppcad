@@ -96,8 +96,8 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
 
   unsel_all();
 
-  astate->log(fmt::format("!!!! workspace_t::set_selected_item ({} {} {})",
-                          sel_idx, emit_signal, emit_hs_event));
+  astate->tlog("Setting selected item in ws \"{}\" to {}, emit_signal = {}, emit_hs_event={}",
+               m_ws_name, sel_idx, emit_signal, emit_hs_event);
 
   if (sel_idx < num_items() && num_items() != 0) {
 
@@ -307,7 +307,8 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   }
 
-  astate->tlog("@@@ ws_on_epoch_changed({}) -> b = {}, a = {}, pe = {}, ce = {}",
+  astate->tlog("@@@ ws_on_epoch_changed({}) -> alive_cnt_bef = {}, alive_cnt_aft = {},"
+               " prev_epoch = {}, cur_epoch = {}",
                m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
 
   if (cur_ws && cur_ws.get() == this) {
@@ -479,9 +480,15 @@ void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
 void workspace_t::add_item_to_ws(std::shared_ptr<ws_item_t> item_to_add, bool add_new_epoch) {
 
+  app_state_t *astate = app_state_t::get_inst();
   item_to_add->m_parent_ws = this;
   m_ws_items.add_hs_child_as_array(item_to_add, add_new_epoch);
-  app_state_t::get_inst()->astate_evd->cur_ws_changed();
+  astate->tlog("Adding item \"{}\" to workspace \"{}\", type = {}, add_new_epoch = {}",
+               item_to_add ? item_to_add->m_name.get_value() : "None",
+               m_ws_name,
+               item_to_add ? item_to_add->get_type_name() : "None",
+               add_new_epoch);
+  astate->astate_evd->cur_ws_changed();
 
 }
 

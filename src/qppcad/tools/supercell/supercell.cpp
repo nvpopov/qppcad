@@ -56,6 +56,10 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   }
 
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
+
+  al->m_parent_ws->add_item_to_ws(sc_al);
+  sc_al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+
   sc_al->m_geom->set_DIM(3);
   //sc_al->m_geom->cell.DIM = 3;
 
@@ -71,8 +75,6 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
   geom_view_tools_t::gen_supercell(al->m_geom.get(), sc_al->m_geom.get(),
                                    sc_dim, geom_view_role_e(al->m_role.get_value()));
-
-  al->m_parent_ws->add_item_to_ws(sc_al);
 
   sc_al->m_pos.set_value(al->m_pos.get_value() + al->m_geom->cell.v[0] * 1.4f);
   sc_al->m_name.set_value(fmt::format("{}_sc_{}_{}_{}", al->m_name.get_value(), a_n, b_n, c_n));
@@ -108,7 +110,8 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
       for (auto &elem : res)
         if (elem.m_idx == index::D(sc_al->m_geom->get_DIM()).all(0)) {
           accum_chg += sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
-          if (i > elem.m_atm) need_to_add = false;
+          if (i > elem.m_atm)
+            need_to_add = false;
         }
 
       if (need_to_add) {
@@ -123,6 +126,8 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
     sc_al->m_tws_tr->do_action(act_unlock | act_rebuild_all);
 
   }
+
+  sc_al->end_recording();
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_changed();
@@ -231,8 +236,10 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
   }
 
   auto diml = m_sc_tool_mode.get_value() == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
+
+  m_dst_gv->m_parent_ws->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+
   m_dst_gv->m_geom->set_DIM(diml);
-  //m_dst_gv->m_geom->cell.DIM = diml;
   m_dst_gv->begin_structure_change();
   m_dst_gv->m_geom->clear();
 
@@ -287,6 +294,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
     m_dst_gv->apply_target_view(cam_tv_e::tv_b);
 
   m_dst_gv->end_structure_change();
+  m_dst_gv->m_parent_ws->end_recording();
 
 }
 
