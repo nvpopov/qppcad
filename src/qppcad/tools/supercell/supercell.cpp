@@ -11,7 +11,7 @@ void supercell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->log("Supercell tools::exec()");
+  astate->tlog("Supercell tools::exec()");
 
   if (!item) {
     QMessageBox::warning(nullptr, QObject::tr("Supercell generation"),
@@ -102,7 +102,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
 
     for (int i = 0; i < sc_al->m_geom->nat(); i++) {
 
-      std::vector<tws_node_content_t<float>> res;
+      std::vector<tws_node_cnt_t<float>> res;
       sc_al->m_tws_tr->query_sphere(equality_dist, sc_al->m_geom->pos(i), res);
       float accum_chg = 0;
 

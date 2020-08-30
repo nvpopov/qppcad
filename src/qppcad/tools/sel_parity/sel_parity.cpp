@@ -36,7 +36,7 @@ void sel_parity_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
                 new_pos[0] = al->m_geom->coord((*rec).m_atm)[0] * p_x;
                 new_pos[1] = al->m_geom->coord((*rec).m_atm)[1] * p_y;
                 new_pos[2] = al->m_geom->coord((*rec).m_atm)[2] * p_z;
-                std::vector<tws_node_content_t<float> > res;
+                std::vector<tws_node_cnt_t<float> > res;
                 const float eps_dist = 0.01;
                 al->m_tws_tr->query_sphere(eps_dist, new_pos, res);
                 for (auto &res_elem : res)

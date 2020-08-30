@@ -11,7 +11,7 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->log("center_cell_on_atom_tool_t::exec()");
+  astate->tlog("center_cell_on_atom_tool_t::exec()");
 
   if (!item) {
       QMessageBox::warning(nullptr, QObject::tr("Center cell on atom"),
@@ -47,12 +47,10 @@ void center_cell_on_atom_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   // compute new center
   vector3<float> new_center{0};
 
-//  for (auto &rec : al->m_atom_idx_sel)
-//    new_center += al->m_geom->pos(rec.m_atm, rec.m_idx);
-
   for (auto i = 0; i < al->m_geom->num_aselected(); i++) {
     auto rec = al->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    if (!rec)
+      continue;
     new_center += al->m_geom->pos((*rec).m_atm, (*rec).m_idx);
   }
 

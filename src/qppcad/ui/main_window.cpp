@@ -855,9 +855,9 @@ void main_window_t::dropEvent(QDropEvent *event) {
 
 void main_window_t::resizeEvent(QResizeEvent *event) {
 
-  app_state_t::get_inst()->log(fmt::format("main_window::resizeEvent(width={}, height={})",
-                                           event->size().width(),
-                                           event->size().height()));
+  app_state_t::get_inst()->tlog("main_window::resizeEvent(width={}, height={})",
+                                event->size().width(),
+                                event->size().height());
 
   QMainWindow::resizeEvent(event);
 
@@ -919,8 +919,8 @@ void main_window_t::wss_changed_slot() {
 
   }
 
-  astate->log(fmt::format("main_window::workspaces_changed_slot(), total ws = {}",
-                          astate->ws_mgr->m_ws.size()));
+  astate->tlog("main_window::workspaces_changed_slot(), total ws = {}",
+               astate->ws_mgr->m_ws.size());
 
 }
 
@@ -931,8 +931,7 @@ void main_window_t::ws_selector_selection_changed(int index) {
   if (astate->ws_mgr->has_wss()) {
 
     auto current = astate->ws_mgr->get_cur_id();
-    astate->log(fmt::format("ws_selector_selection_changed index: {}, ws_cur_id: {}",
-                            index, *current));
+    astate->tlog("ws_selector_selection_changed index: {}, ws_cur_id: {}", index, *current);
     if (current) {
       astate->ws_mgr->set_cur_id(std::optional<size_t>(index));
       astate->make_viewport_dirty();

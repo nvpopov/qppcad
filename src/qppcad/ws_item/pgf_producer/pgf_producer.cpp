@@ -43,13 +43,13 @@ bool pgf_producer_t::check_consistency() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  astate->log(fmt::format("pgf_producer_t::check_consistency() -> "
-                          "src.is_valid? = {}, "
-                          "dst.is_valid? = {}, "
-                          "psg.is_valid? = {}",
-                          m_src_gv != nullptr,
-                          m_dst_gv != nullptr,
-                          m_sg_psg != nullptr));
+  astate->tlog("pgf_producer_t::check_consistency() -> "
+               "src.is_valid? = {}, "
+               "dst.is_valid? = {}, "
+               "psg.is_valid? = {}",
+               m_src_gv != nullptr,
+               m_dst_gv != nullptr,
+               m_sg_psg != nullptr);
 
   return m_src_gv && m_dst_gv && m_sg_psg /*&& m_src_gv->m_geom->DIM == m_dst_gv->m_geom->DIM*/;
 
@@ -170,7 +170,7 @@ void pgf_producer_t::updated_externally(uint32_t update_reason) {
 
   ws_item_t::updated_externally(update_reason);
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("pgf_producer_t::updated_internally()");
+  astate->tlog("pgf_producer_t::updated_internally()");
 
   if (update_reason & ws_item_updf_generic) {
 
@@ -183,13 +183,13 @@ void pgf_producer_t::updated_externally(uint32_t update_reason) {
     //check src
     if (!m_src) {
       clean_intermediates();
-      astate->log("pgf_producer_t::updated_internally() !m_src");
+      astate->tlog("pgf_producer_t::updated_internally() !m_src");
       return;
     }
 
     auto _src_as_gv = m_src->cast_as<geom_view_t>();
     if (!_src_as_gv) {
-      astate->log("pgf_producer_t::updated_internally() !_src_as_gv");
+      astate->tlog("pgf_producer_t::updated_internally() !_src_as_gv");
       clean_intermediates();
       return;
     }
@@ -197,21 +197,21 @@ void pgf_producer_t::updated_externally(uint32_t update_reason) {
     m_src_gv = _src_as_gv;
 
     if (m_src == m_dst) {
-      astate->log("pgf_producer_t::updated_internally() m_src == m_dst");
+      astate->tlog("pgf_producer_t::updated_internally() m_src == m_dst");
       clean_intermediates();
       return;
     }
 
     //check dst
     if (!m_dst) {
-      astate->log("pgf_producer_t::updated_internally() !m_dst");
+      astate->tlog("pgf_producer_t::updated_internally() !m_dst");
       clean_intermediates();
       return;
     }
 
     auto _dst_as_gv = m_dst->cast_as<geom_view_t>();
     if (!_dst_as_gv) {
-      astate->log("pgf_producer_t::updated_internally() _dst_as_gv");
+      astate->tlog("pgf_producer_t::updated_internally() _dst_as_gv");
       clean_intermediates();
       return;
     }
@@ -220,14 +220,14 @@ void pgf_producer_t::updated_externally(uint32_t update_reason) {
 
     //check psg
     if (!m_psg) {
-      astate->log("pgf_producer_t::updated_internally() !m_ag");
+      astate->tlog("pgf_producer_t::updated_internally() !m_ag");
       clean_intermediates();
       return;
     }
 
     auto _ag_as_psg = m_psg->cast_as<psg_view_t>();
     if (!_ag_as_psg) {
-      astate->log("pgf_producer_t::updated_internally() !_ag_as_psg");
+      astate->tlog("pgf_producer_t::updated_internally() !_ag_as_psg");
       clean_intermediates();
       return;
     }

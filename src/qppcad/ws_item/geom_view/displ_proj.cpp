@@ -77,7 +77,7 @@ std::vector<displ_proj_mapping_t> displ_proj_package_t::gen_mapping(std::shared_
       auto &rec = m_recs[i];
       auto ps_infr = apply_point + rec.m_start_pos;
 
-      std::vector<tws_node_content_t<float> > qs_res;
+      std::vector<tws_node_cnt_t<float> > qs_res;
       gv->m_tws_tr->query_sphere(eps_sr, ps_infr, qs_res);
 
       py::print(fmt::format("rec_id = {}, an = \"{}\", qs_res.sz = {}, spc = [{}, {}, {}]",

@@ -9,7 +9,7 @@ using namespace qpp::cad;
 void axial_scale_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t* astate = app_state_t::get_inst();
-  astate->log("axial_scale_tool_t::exec()");
+  astate->tlog("axial_scale_tool_t::exec()");
 
   auto [cur_ws, cur_it, al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>(_error_ctx);
 

@@ -362,20 +362,9 @@ void app_state_t::save_settings() {
 
 }
 
-void app_state_t::log(std::string logstr, bool flush) {
-
-  std::setlocale(LC_ALL, "C");
-  std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-  std::string ts( ctime( &t) );
-  std::cout << fmt::format("[{}] {}\n", ts.substr( 0, ts.length() -1  ), logstr);
-  if (flush) std::cout << std::flush;
-
-}
-
 void app_state_t::pylog(std::string logstr) {
-
-  if (py_mgr) py_mgr->m_output_buffer += "\n" + logstr;
-
+  if (py_mgr)
+    py_mgr->m_output_buffer += "\n" + logstr;
 }
 
 void app_state_t::add_recent_file(const std::string &file_name,

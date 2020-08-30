@@ -70,7 +70,7 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
 
         for (int i = 0; i < g.nat(); i++) {
 
-            std::vector<tws_node_content_t<float> > res;
+            std::vector<tws_node_cnt_t<float> > res;
             g_t.query_sphere(min_dist + 0.05f, g.coord(i), res);
 
             vector3<float> final_color = over_dist_color;

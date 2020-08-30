@@ -157,7 +157,7 @@ void simple_query::sel_cnt_parity() {
             new_pos[0] = al->m_geom->coord(val.m_atm)[0] * p_x;
             new_pos[1] = al->m_geom->coord(val.m_atm)[1] * p_y;
             new_pos[2] = al->m_geom->coord(val.m_atm)[2] * p_z;
-            std::vector<tws_node_content_t<float> > res;
+            std::vector<tws_node_cnt_t<float> > res;
             const float eps_dist = 0.01;
             al->m_tws_tr->query_sphere(eps_dist, new_pos, res);
             for (auto &res_elem : res)
@@ -228,7 +228,7 @@ void simple_query::sel_cnt_sphere(vector3<float> sph_center, float sph_rad) {
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-  std::vector<tws_node_content_t<float> > cnt;
+  std::vector<tws_node_cnt_t<float> > cnt;
   al->m_tws_tr->query_sphere(sph_rad, sph_center, cnt);
   al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
 

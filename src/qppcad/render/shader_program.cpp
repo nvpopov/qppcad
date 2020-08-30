@@ -33,7 +33,7 @@ qpp::cad::shader_program_t::shader_program_t(const std::string &_program_name,
   glapi->glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &vs_proc_res);
   glapi->glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &fs_proc_res);
 
-  astate->tlog("Program[{}] vs_sh_stat = {}, fs_sh_stat = {}",
+  astate->tlog("[SHADER] Program[{}] vs_sh_stat = {}, fs_sh_stat = {}",
                program_name, vs_proc_res, fs_proc_res);
 
   glapi->glAttachShader(program_id, vertexShaderID);
@@ -46,13 +46,13 @@ qpp::cad::shader_program_t::shader_program_t(const std::string &_program_name,
   glapi->glGetProgramiv(program_id, GL_LINK_STATUS, &proc_res);
   glapi->glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-  astate->tlog("Shader program[{}] compilation status: {}", program_name, proc_res);
+  astate->tlog("[SHADER] Shader program[{}] compilation status: {}", program_name, proc_res);
 
   if (infoLogLength > 0) {
       std::vector<char> ProgramErrorMessage(infoLogLength+1);
       glapi->glGetProgramInfoLog(program_id, infoLogLength, nullptr, &ProgramErrorMessage[0]);
       std::string str(ProgramErrorMessage.begin(), ProgramErrorMessage.end());
-      astate->tlog("Shader/Program compilation/linking failed: {}", str);
+      astate->tlog("[SHADER] Shader/Program compilation/linking failed: {}", str);
     }
 
   glapi->glDeleteShader(vertexShaderID);
@@ -68,34 +68,35 @@ void qpp::cad::shader_program_t::u_on(qpp::cad::sp_u_name _val) {
   unf_rec[_val].h_prog = glapi->glGetUniformLocation(program_id, map_u2s[_val].c_str());
 
   if (unf_rec[_val].h_prog == -1) {
-      astate->tlog("WARNING: invalid uniform[{}] in program {}", map_u2s[_val], program_name);
+      astate->tlog("[SHADER] Warning: invalid uniform[{}] in program {}",
+                   map_u2s[_val], program_name);
     }
 }
 
-void qpp::cad::shader_program_t::set_u(qpp::cad::sp_u_name _ut, GLfloat *_val) {
+void qpp::cad::shader_program_t::set_u(qpp::cad::sp_u_name ut, GLfloat *val) {
 
   app_state_t* astate = app_state_t::get_inst();
   glapi_t* glapi = astate->glapi;
 
-  if (unf_rec[_ut].enabled) {
-      qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[_ut];
-      GLint uloc = unf_rec[_ut].h_prog;
+  if (unf_rec[ut].enabled) {
+      qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[ut];
+      GLint uloc = unf_rec[ut].h_prog;
       switch(_utype){
 
         case qpp::cad::sp_u_type::a_v3f :
-          glapi->glUniform3fv(uloc, 1, _val);
+          glapi->glUniform3fv(uloc, 1, val);
           break;
 
         case qpp::cad::sp_u_type::a_m4f :
-          glapi->glUniformMatrix4fv(uloc, 1, GL_FALSE, _val);
+          glapi->glUniformMatrix4fv(uloc, 1, GL_FALSE, val);
           break;
 
         case qpp::cad::sp_u_type::a_m3f :
-          glapi->glUniformMatrix3fv(uloc, 1, GL_FALSE, _val);
+          glapi->glUniformMatrix3fv(uloc, 1, GL_FALSE, val);
           break;
 
         case qpp::cad::sp_u_type::a_sf :
-          glapi->glUniform1fv(uloc, 1, _val);
+          glapi->glUniform1fv(uloc, 1, val);
           break;
 
         default:

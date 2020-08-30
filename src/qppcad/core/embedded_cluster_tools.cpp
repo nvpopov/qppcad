@@ -166,7 +166,7 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
 
   for (int i = 0; i < g_all_m.nat(); i++) {
 
-      std::vector<tws_node_content_t<float> > res;
+      std::vector<tws_node_cnt_t<float> > res;
       sum_tree.query_sphere(equality_dist, g_all_m.pos(i), res);
       float accum_chg = 0;
 
@@ -319,7 +319,7 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
 
   //phase 1 : move atoms from cls to qm
 
-  std::vector<tws_node_content_t<float> > redu_cls;
+  std::vector<tws_node_cnt_t<float> > redu_cls;
 
   cls->m_tws_tr->query_sphere(new_r, vector3<float>(0), redu_cls);
   std::set<int> redu_cls_set; //set for fast search
@@ -334,7 +334,7 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
   cls->delete_atoms(redu_cls_set);
 
   //phase 2 : move atoms from qm to cls
-  std::vector<tws_node_content_t<float> > redu_qm;
+  std::vector<tws_node_cnt_t<float> > redu_qm;
   std::set<int> redu_qm_inside, redu_qm_outside;
 
   //construct direct set - atoms inside sphere with r = new_r

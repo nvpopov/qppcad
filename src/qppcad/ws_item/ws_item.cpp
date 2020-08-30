@@ -245,10 +245,8 @@ void ws_item_t::render_overlay(QPainter &painter) {
 }
 
 void ws_item_t::mouse_double_click(ray_t<float> *ray) {
-
   app_state_t* astate = app_state_t::get_inst();
   astate->tlog("ws_item_t::mouse_double_click, name = {}", m_name.get_value());
-
 }
 
 
@@ -277,7 +275,8 @@ void ws_item_t::on_leader_call() {
 }
 
 void ws_item_t::call_followers() {
-  for (auto follower : m_followers) follower->on_leader_call();
+  for (auto follower : m_followers)
+    follower->on_leader_call();
 }
 
 
@@ -302,12 +301,12 @@ void ws_item_t::updated_externally(uint32_t update_reason) {
   if (update_reason & ws_item_updf_pos_changed) {
     //notify followers about changes
     for (auto &follower : m_followers)
-      if (follower) follower->updated_externally(ws_item_updf_leader_changed);
+      if (follower)
+        follower->updated_externally(ws_item_updf_leader_changed);
   }
 
   if ((update_reason & ws_item_updf_leader_changed)
-      && m_leader
-      && (p_flags & ws_item_flags_fetch_leader_pos)) {
+      && m_leader && (p_flags & ws_item_flags_fetch_leader_pos)) {
     //copy pos from leader and apply offset
     m_pos.set_value(m_leader->m_pos.get_value() + m_leader_offset);
   }

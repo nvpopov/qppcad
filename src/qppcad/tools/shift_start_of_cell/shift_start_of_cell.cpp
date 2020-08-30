@@ -11,7 +11,7 @@ void shift_start_of_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  astate->log("shift_center_of_cell_tool_t::exec()");
+  astate->tlog("shift_center_of_cell_tool_t::exec()");
 
   if (!item) {
       QMessageBox::warning(nullptr, QObject::tr("Shift start of cell to atoms"),

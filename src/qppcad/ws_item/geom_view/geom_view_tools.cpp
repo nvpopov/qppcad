@@ -504,7 +504,7 @@ void geom_view_tools_t::tr_align_geoms(geom_view_t *what_gv, geom_view_t *to_gv,
         for (size_t q = 0; q < what_gv->m_geom->nat(); q++) {
 
           atom_pos = what_gv->m_geom->pos(q) + cur_offset;
-          std::vector<tws_node_content_t<float, size_t> > res;
+          std::vector<tws_node_cnt_t<float, size_t> > res;
           to_gv->m_tws_tr->query_sphere(sphere_query_eps, atom_pos, res);
 
           for (auto &rec : res)
@@ -823,7 +823,7 @@ void geom_view_tools_t::naive_project_displ(geom_view_t *src,
 
   for (size_t i = 0; i < dst->m_geom->nat(); i++) {
 
-    std::vector<tws_node_content_t<float> > qs_res;
+    std::vector<tws_node_cnt_t<float> > qs_res;
     src->m_tws_tr->query_sphere(eps_dist, dst->m_geom->pos(i), qs_res);
 
     if (qs_res.empty()) continue;
@@ -902,7 +902,7 @@ std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compl_list
       // transform from world to model frame
       atom_pos -= model->m_pos.get_value();
 
-      std::vector<tws_node_content_t<float> > qs_res;
+      std::vector<tws_node_cnt_t<float> > qs_res;
       model->m_tws_tr->query_sphere(compl_eps, atom_pos, qs_res);
 
       if (!qs_res.empty() && qs_res.front().m_atm < model->m_geom->nat() &&

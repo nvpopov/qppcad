@@ -403,13 +403,13 @@ py::list node_book_t::py_get_visible_rect() {
 
   auto views = m_scene->views();
 
-  astate->tlog("@DEBUG: node_book_t::py_get_visible_rect -> views.size={}", views.size());
+  astate->tlog("[DEBUG] node_book_t::py_get_visible_rect -> views.size={}", views.size());
   if (views.empty()) return py::none();
-  astate->tlog("@DEBUG: node_book_t::py_get_visible_rect -> views!empty");
+  astate->tlog("[DEBUG] node_book_t::py_get_visible_rect -> views!empty");
 
   auto nb_view = qobject_cast<node_book_graphics_view_t*>(views.first());
   if (!nb_view) return py::none();
-  astate->tlog("@DEBUG: node_book_t::py_get_visible_rect -> nb_view");
+  astate->tlog("[DEBUG] node_book_t::py_get_visible_rect -> nb_view");
 
   auto vis_rect = nb_view->get_visible_rect();
 

@@ -96,8 +96,9 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
 
   unsel_all();
 
-  astate->tlog("Setting selected item in ws \"{}\" to {}, emit_signal = {}, emit_hs_event={}",
-               m_ws_name, sel_idx, emit_signal, emit_hs_event);
+  astate->tlog("\n{2} Setting selected item in ws \"{0}\" to {1} ->\n"
+               "{2} emit_signal = {3}, emit_hs_event={4}",
+               m_ws_name, sel_idx, LOG_PADDING, emit_signal, emit_hs_event);
 
   if (sel_idx < num_items() && num_items() != 0) {
 
@@ -307,16 +308,17 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   }
 
-  astate->tlog("@@@ ws_on_epoch_changed({}) -> alive_cnt_bef = {}, alive_cnt_aft = {},"
-               " prev_epoch = {}, cur_epoch = {}",
-               m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
+  astate->tlog("\n{1} Epoch changed in workspace {0} -> \n"
+               "{1} alive_cnt_bef = {2}, alive_cnt_aft = {3}, prev_epoch = {4}, cur_epoch = {5}",
+               m_ws_name, LOG_PADDING, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
 
   if (cur_ws && cur_ws.get() == this) {
     m_cur_itm.set_commit_exclusive_on_change(false);
     if (m_cur_itm.get_value() == -1 ) {
      // unsel_all(true);
     } else {
-      astate->tlog("@@@ ws_on_epoch_changed({}) set_sel_item {}", m_cur_itm.get_value());
+      astate->tlog("Epoch changed in workspace {} -> set_sel_item {}",
+                   m_ws_name, m_cur_itm.get_value());
      // set_sel_item(m_cur_itm.get_value(), true, false);
     }
     m_cur_itm.set_commit_exclusive_on_change(true);
@@ -407,7 +409,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
         (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_cam_state.m_view_point).normalized();
   } else {
 
-    float z_p =  (m_camera->m_cam_state.m_znear_ortho + m_camera->m_cam_state.m_zfar_ortho)
+    float z_p = (m_camera->m_cam_state.m_znear_ortho + m_camera->m_cam_state.m_zfar_ortho)
                 / (m_camera->m_cam_state.m_znear_ortho - m_camera->m_cam_state.m_zfar_ortho);
 
     m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
@@ -416,7 +418,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   }
 
   if (m_gizmo->m_is_visible && m_gizmo->attached_item && m_gizmo->process_ray(&m_ray)) {
-    astate->log("gizmo clicked");
+    astate->tlog("[UI] gizmo clicked");
     return;
   }
 
@@ -591,10 +593,8 @@ void workspace_t::load_ws_from_json(const std::string filename) {
 
         } else {
 
-          astate->log(
-              fmt::format("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
-                          object[JSON_WS_ITEM_NAME].get<std::string>(), filename)
-              );
+          astate->tlog("WARNING: Cannot find type for object \"{}\" in file \"{}\"!",
+                       object[JSON_WS_ITEM_NAME].get<std::string>(), filename);
 
         }
 
@@ -754,21 +754,21 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
   app_state_t* astate = app_state_t::get_inst();
 
   if (!m_owner) {
-    astate->log("ERROR: workspace_t::py_construct_item -> no ws mgr");
+    astate->tlog("ERROR: workspace_t::py_construct_item -> no ws mgr");
     return nullptr;
   }
 
   auto type_hash = astate->hash_reg->calc_hash_ub(class_name);
 
   if (!type_hash) {
-    astate->log("ERROR: workspace_t::py_construct_item -> invalid hash");
+    astate->tlog("ERROR: workspace_t::py_construct_item -> invalid hash");
     return nullptr;
   }
 
   auto new_item = m_owner->m_bhv_mgr->fbr_ws_item_by_type(type_hash);
 
   if (!new_item) {
-    astate->log("ERROR: workspace_t::py_construct_item -> fabric error");
+    astate->tlog("ERROR: workspace_t::py_construct_item -> fabric error");
     return nullptr;
   }
 
@@ -999,8 +999,8 @@ void workspace_manager_t::mouse_click () {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  astate->log(fmt::format("Mouse click {} {}", astate->mouse_x, astate->mouse_y));
-  astate->log(fmt::format("Mouse click in ws {} {}", astate->mouse_x_dc, astate->mouse_y_dc));
+  astate->tlog("Mouse click {} {}", astate->mouse_x, astate->mouse_y);
+  astate->tlog("Mouse click in ws {} {}", astate->mouse_x_dc, astate->mouse_y_dc);
 
   if (has_wss()) {
     get_cur_ws()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
@@ -1203,11 +1203,11 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name
   QString absolute_file_name = file_info.absoluteFilePath();
   auto absolute_file_name_native = absolute_file_name.toStdString();
 
-  astate->tlog("@DEBUG: workspace_manager_t::load_from_file_autodeduce, {}",
+  astate->tlog("workspace_manager_t::load_from_file_autodeduce, {}",
                absolute_file_name.toStdString());
 
   if (!QFileInfo(absolute_file_name).exists()) {
-    astate->tlog("@ERROR while opening file \"{}\" - invalid name of the file", file_name);
+    astate->tlog("Error while opening file \"{}\" - invalid name of the file", file_name);
     return;
   }
 
