@@ -40,7 +40,7 @@ struct hs_arr_sptr_policy {
 
   }
 
-  static hs_doc_base_t *cast_from_holder(holder_type_t holder) {
+  static hs_doc_base_t *cast_from_holder(holder_type_t &holder) {
     return static_cast<hs_doc_base_t*>(holder.get());
   }
 
@@ -70,7 +70,8 @@ public:
   hs_result_e add_hs_child_as_array(holder_type_t new_arr_element, bool add_new_epoch = true) {
 
     hs_doc_base_t *as_hsd = STYPE_STRG_POL::cast_from_holder(new_arr_element);
-    if (!as_hsd) return hs_result_e::hs_error;
+    if (!as_hsd)
+      return hs_result_e::hs_error;
 
     p_array_data.push_back(new_arr_element);
     p_map_hs_to_array[as_hsd] = new_arr_element;
@@ -81,7 +82,8 @@ public:
   holder_type_t get_hs_child_as_array(size_t chl_idx) {
 
     hs_doc_base_t *elem = get_hs_child(chl_idx);
-    if (!elem) return nullptr;
+    if (!elem)
+      return nullptr;
 
     auto map_itr = p_map_hs_to_array.find(elem);
     return map_itr != end(p_map_hs_to_array) ? map_itr->second : nullptr;
@@ -91,13 +93,15 @@ public:
   void request_child_deletion(hs_doc_base_t *child) override {
 
     auto map_itr = p_map_hs_to_array.find(child);
-    if (map_itr == end(p_map_hs_to_array)) return;
+    if (map_itr == end(p_map_hs_to_array))
+      return;
 
     holder_type_t childw = map_itr->second;
     p_map_hs_to_array.erase(map_itr);
 
     auto arr_data_it = std::find(begin(p_array_data), end(p_array_data), childw);
-    if (arr_data_it != end(p_array_data)) p_array_data.erase(arr_data_it);
+    if (arr_data_it != end(p_array_data))
+      p_array_data.erase(arr_data_it);
 
     STYPE_STRG_POL::delete_holder(childw);
 
@@ -109,10 +113,12 @@ public:
 
   hs_result_e hs_remove_child_force_rawptr(STYPE *child) {
 
-    if (!child) return hs_result_e::hs_invalid_child;
+    if (!child)
+      return hs_result_e::hs_invalid_child;
 
     hs_result_e rem_res = hs_remove_child(child, false);
-    if (rem_res != hs_result_e::hs_success) return hs_result_e::hs_error;
+    if (rem_res != hs_result_e::hs_success)
+      return hs_result_e::hs_error;
 
     request_child_deletion(child);
 
@@ -121,17 +127,17 @@ public:
   }
 
   typename std::enable_if<!std::is_same<holder_type_t, STYPE>::value, bool>::type
-  is_child_unused(holder_type_t child) {
+  is_child_unused(holder_type_t &child) {
     return hs_doc_base_t::is_child_unused(STYPE_STRG_POL::cast_from_holder(child));
   }
 
   typename std::enable_if<!std::is_same<holder_type_t, STYPE>::value, hs_result_e>::type
-  is_child_alive(epoch_t target_epoch, holder_type_t child) const {
+  is_child_alive(epoch_t target_epoch, holder_type_t &child) const {
     return hs_doc_base_t::is_child_alive(target_epoch, STYPE_STRG_POL::cast_from_holder(child));
   }
 
   typename std::enable_if<!std::is_same<holder_type_t, STYPE>::value, hs_result_e>::type
-  set_alive_hs_child(holder_type_t child, bool alive) {
+  set_alive_hs_child(holder_type_t &child, bool alive) {
     return hs_doc_base_t::set_alive_hs_child(STYPE_STRG_POL::cast_from_holder(child), alive);
   }
 

@@ -230,8 +230,8 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
 
   if (!m_dst_gv) {
     m_dst_gv = std::make_shared<geom_view_t>();
-    m_dst_gv->m_name.set_value(m_src_gv->m_name.get_value() +
-                               fmt::format("_sc_{}_{}_{}", sc_dim[0], sc_dim[1], sc_dim[2]));
+    m_dst_gv->m_name.set_value(fmt::format("{}_sc_{}_{}_{}",m_src_gv->m_name.get_value(),
+                                           sc_dim[0], sc_dim[1], sc_dim[2]));
     m_src_gv->m_parent_ws->add_item_to_ws(m_dst_gv);
   }
 
@@ -248,8 +248,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
   case supercell_tool_mode_e::sc_tool_mode_default : {
 
     index sc_idx{sc_dim[0] - 1, sc_dim[1] - 1, sc_dim[2] - 1};
-    geom_view_tools_t::gen_supercell(m_src_gv->m_geom.get(),
-                                     m_dst_gv->m_geom.get(), sc_idx);
+    geom_view_tools_t::gen_supercell(m_src_gv->m_geom.get(), m_dst_gv->m_geom.get(), sc_idx);
     m_dst_gv->m_pos.set_value(m_src_gv->m_pos.get_value() + m_src_gv->m_geom->cell.v[0] * 1.4f);
 
     break;
