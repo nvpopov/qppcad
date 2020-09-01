@@ -111,6 +111,14 @@ bool hs_doc_base_t::get_is_recording() {
 
 }
 
+bool hs_doc_base_t::get_ignore_changes() {
+  return p_ignore_changes;
+}
+
+void hs_doc_base_t::set_ignore_changes(bool new_ignore_changes) {
+  p_ignore_changes = new_ignore_changes;
+}
+
 hs_doc_rec_type_e hs_doc_base_t::get_cur_rec_type() const {
   return p_cur_rec_type;
 }

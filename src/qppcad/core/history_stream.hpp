@@ -28,12 +28,6 @@ enum class hs_result_e {
   hs_dead = 9
 };
 
-//deprecated
-//enum class hs_dstate_dir_e {
-//  hs_ds_dir_forward,
-//  hs_ds_dir_backward
-//};
-
 enum class hs_dstate_apply_e {
   hs_ds_apply,
   hs_ds_unapply
@@ -80,6 +74,7 @@ private:
   std::map<hs_doc_base_t*, hs_child_state_meta_t> p_current_child_state;
   std::vector<epoch_t> p_hist_line{0};
   bool p_is_bad{false};
+  bool p_ignore_changes{false};
   bool p_commit_exclusive_on_change{false};
   bool p_commit_exclusive_on_change_old{false};
   bool p_is_recording{false};
@@ -135,6 +130,8 @@ public:
   virtual void on_end_recording(){};
   void end_recording();
   bool get_is_recording();
+  bool get_ignore_changes();
+  void set_ignore_changes(bool new_ignore_changes);
 
   hs_doc_rec_type_e get_cur_rec_type() const;
 
@@ -523,6 +520,9 @@ public:
 
     p_cur_value = new_val;
 
+    if (get_ignore_changes())
+      return;
+
     if (hs_doc_base_t *super_parent = get_super_parent();
         get_doctype() == hs_doc_type_e::hs_doc_persistent
         && super_parent
@@ -532,7 +532,7 @@ public:
   }
 
   void set_cvalue(STYPE new_val) {
-    p_cur_value = new_val;
+    set_value(std::move(new_val));
   }
 
 };

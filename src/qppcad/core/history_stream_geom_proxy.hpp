@@ -105,7 +105,6 @@ private:
   std::vector<acts_t> p_cur_acts;
   std::vector<acts_t> p_tmp_acts;
   bool p_currently_applying_dstate{false};
-  bool p_ignore_changes{false};
   std::optional<STRING_EX> p_stored_aname;
   std::optional<vector3<REAL>> p_stored_apos;
   std::variant<double, float, int, std::string, bool, std::monostate> m_xfield_bval;
@@ -369,11 +368,13 @@ public:
 
   void commit_changes(bool new_epoch, bool ignore_empty_cur_acts = false) {
 
-    if (!ignore_empty_cur_acts && p_cur_acts.empty()) return;
+    if (!ignore_empty_cur_acts && p_cur_acts.empty())
+      return;
 
     if (new_epoch) {
       auto res = commit_exclusive(nullptr, std::nullopt, false);
-      if (res != hs_result_e::hs_success) return;
+      if (res != hs_result_e::hs_success)
+        return;
     }
 
     epoch_t cur_epoch = get_cur_epoch();
@@ -389,9 +390,13 @@ public:
   }
 
   void commit_changes_external(std::vector<acts_t> &acts, bool new_epoch, bool clear_tmp) {
-    if (clear_tmp) p_cur_acts.clear();
+
+    if (clear_tmp)
+      p_cur_acts.clear();
+
     std::copy(begin(acts), end(acts), std::back_inserter(p_cur_acts));
     commit_changes(new_epoch);
+
   }
 
   uint32_t get_flags() override {
@@ -408,23 +413,30 @@ public:
 
   void added(before_after order, const STRING_EX &aname, const vector3<REAL> &apos) override {
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
-    if (order == before_after::before) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
+
+    if (order == before_after::before)
+      return;
+
     insert_atom_event_t<REAL> insert_atom_event;
     insert_atom_event.m_atom_name = aname;
     insert_atom_event.m_atom_pos = apos;
     p_cur_acts.push_back(std::move(insert_atom_event));
 
-    if (!get_is_recording()) commit_changes(true);
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
   void inserted(int at, before_after order, const STRING_EX &aname,
                 const vector3<REAL> &apos) override {
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
 
-    if (order == before_after::before) return;
+    if (order == before_after::before)
+      return;
 
     insert_atom_event_t<REAL> insert_atom_event;
     insert_atom_event.m_atom_name = aname;
@@ -432,14 +444,16 @@ public:
     insert_atom_event.m_atom_idx = std::optional<size_t>(at);
     p_cur_acts.push_back(std::move(insert_atom_event));
 
-    if (!get_is_recording()) commit_changes(true);
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
   void changed(int at, before_after order, const STRING_EX &aname,
                const vector3<REAL> &apos) override {
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
 
     if (order == before_after::before) {
 
@@ -460,7 +474,8 @@ public:
         change_atom_event.m_after_apos = apos;
         p_cur_acts.push_back(std::move(change_atom_event));
 
-        if (!get_is_recording()) commit_changes(true);
+        if (!get_is_recording())
+          commit_changes(true);
 
       }
 
@@ -473,9 +488,11 @@ public:
 
   void erased(int at, before_after order) override {
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
 
-    if (order == before_after::after) return;
+    if (order == before_after::after)
+      return;
 
     erase_atom_event_t<REAL> erase_atom_event;
     //std::cout << "@@@ " << at << std::endl;
@@ -484,26 +501,32 @@ public:
     erase_atom_event.m_atom_name = p_xgeom->atom(at);
     p_cur_acts.push_back(std::move(erase_atom_event));
 
-    if (!get_is_recording()) commit_changes(true);
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
   void shaded(int at, before_after, bool) override {
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
 
   }
 
   void reordered (const std::vector<int> &ord, before_after order) override {
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
-    if (order == before_after::after) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
+
+    if (order == before_after::after)
+      return;
 
     reorder_atoms_event_t reorder_atoms_event;
     reorder_atoms_event.m_atoms_order = ord;
     p_cur_acts.push_back(std::move(reorder_atoms_event));
 
-    if (!get_is_recording()) commit_changes(true);
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
@@ -517,7 +540,8 @@ public:
 
   void xfield_changed(int xid, int at, before_after ord) override {
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
 
     std::vector<STRING_EX> fn;
     std::vector<basic_types> ft;
@@ -587,7 +611,8 @@ public:
 //    std::cout << fmt::format("@@@ SELECTED nth={}, ord={}, state={}", nth, ord, state)
 //              << std::endl;
 
-    if (p_currently_applying_dstate || p_ignore_changes) return;
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
 
     if (ord == before_after::before) {
       select_atom_event_t ev;
@@ -619,14 +644,6 @@ public:
 
   hist_doc_xgeom_proxy_t() {
     set_dstate_type(hs_dstate_e::hs_dstate_incr);
-  }
-
-  bool get_ignore_changes() {
-    return p_ignore_changes;
-  }
-
-  void set_ignore_changes(bool new_ignore_changes) {
-    p_ignore_changes = new_ignore_changes;
   }
 
   //explicit editing methods

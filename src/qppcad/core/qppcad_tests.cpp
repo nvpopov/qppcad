@@ -824,12 +824,6 @@ TEST_CASE("history stream test") {
     REQUIRE(std::get<0>(hs1->push_epoch(std::nullopt, true)) == hs_result_e::hs_success);
     REQUIRE(hs1->get_history() == std::vector<epoch_t>{0, 1, 2, 3});
 
-//    REQUIRE(hs1->get_cur_epoch() == 3);
-//    REQUIRE(hs1->checkout_to_epoch(0) == hs_result_e::hs_success);
-//    REQUIRE(hs1->get_cur_epoch() == 0);
-//    REQUIRE(hs1->checkout_to_epoch(3) == hs_result_e::hs_success);
-//    REQUIRE(hs1->get_cur_epoch() == 3);
-
   }
 
   SECTION ("testing temporary objects") {
@@ -1244,6 +1238,10 @@ TEST_CASE("history stream test") {
     REQUIRE(xg1.selected(1));
     REQUIRE(!xg1.selected(2));
     REQUIRE(!xg1.selected(3));
+
+  }
+
+  SECTION("hs temporary objects") {
 
   }
 
