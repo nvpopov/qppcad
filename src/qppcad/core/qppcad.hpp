@@ -24,8 +24,6 @@ namespace qpp {
 
 namespace cad {
 
-const std::string LOG_PADDING = "          ";
-
 using size_t   = std::size_t;
 using uint8_t  = std::uint8_t;
 using uint16_t = std::uint16_t;

@@ -96,9 +96,9 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
 
   unsel_all();
 
-  astate->tlog("\n{2} Setting selected item in ws \"{0}\" to {1} ->\n"
-               "{2} emit_signal = {3}, emit_hs_event={4}",
-               m_ws_name, sel_idx, LOG_PADDING, emit_signal, emit_hs_event);
+  astate->tlog("\n Setting selected item in ws \"{0}\" to {1}\n"
+               " emit_signal = {2}, emit_hs_event={3}",
+               m_ws_name, sel_idx, emit_signal, emit_hs_event);
 
   if (sel_idx < num_items() && num_items() != 0) {
 
@@ -308,9 +308,9 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   }
 
-  astate->tlog("\n{1} Epoch changed in workspace {0} -> \n"
-               "{1} alive_cnt_bef = {2}, alive_cnt_aft = {3}, prev_epoch = {4}, cur_epoch = {5}",
-               m_ws_name, LOG_PADDING, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
+  astate->tlog("\n Epoch changed in workspace {0}\n"
+               " alive_cnt_bef = {1}, alive_cnt_aft = {2}, prev_epoch = {3}, cur_epoch = {4}",
+               m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
 
   if (cur_ws && cur_ws.get() == this) {
     m_cur_itm.set_commit_exclusive_on_change(false);
