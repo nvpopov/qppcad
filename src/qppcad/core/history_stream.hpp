@@ -25,7 +25,8 @@ enum class hs_result_e {
   hs_true = 6,
   hs_false = 7,
   hs_alive = 8,
-  hs_dead = 9
+  hs_dead = 9,
+  hs_committing_changes_in_tmp_doc = 10
 };
 
 enum class hs_dstate_apply_e {
@@ -458,6 +459,10 @@ public:
 
   hs_result_e commit_value_exclusive(STYPE &&new_val,
                                      std::optional<epoch_t> new_epoch = std::nullopt) {
+
+
+    if (get_doctype() != hs_doc_type_e::hs_doc_persistent)
+      return hs_result_e::hs_committing_changes_in_tmp_doc;
 
     STYPE loc_var(new_val);
     auto push_epoch_with_value_res =

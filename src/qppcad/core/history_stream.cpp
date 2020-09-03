@@ -153,6 +153,9 @@ hs_result_e hs_doc_base_t::commit_exclusive(hs_doc_base_t *child,
                                             std::optional<epoch_t> child_epoch,
                                             bool triggers_dstate) {
 
+  if (get_doctype() != hs_doc_type_e::hs_doc_persistent)
+    return hs_result_e::hs_committing_changes_in_tmp_doc;
+
   auto [push_result, new_epoch] = push_epoch(std::nullopt, true);
 
   if ((push_result != hs_result_e::hs_success) || !new_epoch)
@@ -192,7 +195,25 @@ hs_dstate_e hs_doc_base_t::get_dstate_type() {
 }
 
 void hs_doc_base_t::set_doctype(hs_doc_type_e new_doctype) {
+
+  bool need_to_augment_child = p_doctype == hs_doc_type_e::hs_doc_temporary
+                               && new_doctype == hs_doc_type_e::hs_doc_persistent;
   p_doctype = new_doctype;
+
+  if (!need_to_augment_child)
+    return;
+
+  if (!p_parent)
+    return;
+
+  p_parent->commit_exclusive(this);
+  epoch_t cur_epoch = p_parent->get_cur_epoch();
+  auto epoch_it = std::find(begin(p_parent->p_hist_line), end(p_parent->p_hist_line), cur_epoch);
+  auto epoch_dist = static_cast<size_t>(std::distance(begin(p_parent->p_hist_line), epoch_it));
+
+  for (size_t i = 0; i <= epoch_dist; i++)
+    p_parent->augment_epoch(i, this, this->get_cur_epoch(), i == epoch_dist ? true : false);
+
 }
 
 hs_doc_type_e hs_doc_base_t::get_doctype() {
