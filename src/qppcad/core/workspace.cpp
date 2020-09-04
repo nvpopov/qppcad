@@ -42,8 +42,10 @@ std::optional<size_t> workspace_t::get_sel_idx() {
 
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
-    if (!ws_item) continue;
-    if (ws_item->m_selected) return std::optional<size_t>(i);
+    if (!ws_item)
+      continue;
+    if (ws_item->m_selected)
+      return std::optional<size_t>(i);
   }
 
   return std::nullopt;
@@ -53,16 +55,20 @@ std::optional<size_t> workspace_t::get_sel_idx() {
 ws_item_t *workspace_t::get_sel() {
 
   std::optional<size_t> sel_idx = get_sel_idx();
-  if (sel_idx) return m_ws_items.get_hs_child_as_array(*sel_idx).get();
-  else return nullptr;
+  if (sel_idx)
+    return m_ws_items.get_hs_child_as_array(*sel_idx).get();
+  else
+    return nullptr;
 
 }
 
 std::shared_ptr<ws_item_t> workspace_t::get_sel_sp() {
 
   std::optional<size_t> sel_idx = get_sel_idx();
-  if (sel_idx) return m_ws_items.get_hs_child_as_array(*sel_idx);
-  else return nullptr;
+  if (sel_idx)
+    return m_ws_items.get_hs_child_as_array(*sel_idx);
+  else
+    return nullptr;
 
 }
 
@@ -70,8 +76,10 @@ std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string name) {
 
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
-    if (!ws_item) continue;
-    if (ws_item->m_name.get_value() == name) return ws_item;
+    if (!ws_item)
+      continue;
+    if (ws_item->m_name.get_value() == name)
+      return ws_item;
   }
 
   return nullptr;
@@ -82,8 +90,10 @@ std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
 
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
-    if (!ws_item) continue;
-    if (ws_item == item) return std::optional{i};
+    if (!ws_item)
+      continue;
+    if (ws_item == item)
+      return std::optional{i};
   }
 
   return std::nullopt;
@@ -103,7 +113,8 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
   if (sel_idx < num_items() && num_items() != 0) {
 
     auto ws_item = m_ws_items.get_hs_child_as_array(sel_idx).get();
-    if (!ws_item) return false;
+    if (!ws_item)
+      return false;
 
     ws_item->m_selected = true;
     if (emit_hs_event)
@@ -121,7 +132,8 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
     }
 
     //astate->make_viewport_dirty();
-    if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
+    if (emit_signal)
+      astate->astate_evd->cur_ws_selected_item_changed();
     update_overview(ws_item->compose_overview());
     return true;
 
@@ -186,10 +198,6 @@ void workspace_t::toggle_edit_mode() {
   }
 
   astate->astate_evd->cur_ws_edit_type_changed();
-
-}
-
-void workspace_t::ws_changed() {
 
 }
 
@@ -506,7 +514,8 @@ void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delet
   for (size_t i = 0; i < num_items(); i++) {
 
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
-    if (!ws_item) continue;
+    if (!ws_item)
+      continue;
 
     auto it = std::find(begin(ws_item->m_connected_items),
                         end(ws_item->m_connected_items),
@@ -538,7 +547,8 @@ void workspace_t::save_ws_to_json(const std::string filename) {
   for (size_t i = 0; i < num_items(); i++) {
 
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
-    if (!ws_item) continue;
+    if (!ws_item)
+      continue;
 
     json ws_object;
     ws_item->save_to_json(ws_object);
@@ -607,7 +617,8 @@ void workspace_t::load_ws_from_json(const std::string filename) {
       if (cur_obj)
         for (auto &rec_values : rec.second) {
           auto con_obj = get_by_name(rec_values);
-          if (con_obj) cur_obj->m_connected_items.push_back(con_obj);
+          if (con_obj)
+            cur_obj->m_connected_items.push_back(con_obj);
         }
 
     }
@@ -617,7 +628,8 @@ void workspace_t::load_ws_from_json(const std::string filename) {
     for (auto &rec : rep_info.m_fields) {
       //astate->tlog("revive class field {}", rec.m_field_name);
       auto target_obj = get_by_name(rec.m_field_name);
-      if (target_obj) *rec.m_field = target_obj;
+      if (target_obj)
+        *rec.m_field = target_obj;
     }
 
     //end of revive ws_item_t class fields
@@ -627,7 +639,8 @@ void workspace_t::load_ws_from_json(const std::string filename) {
     for (size_t i = 0; i < num_items(); i++) {
 
       auto ws_item = m_ws_items.get_hs_child_as_array(i);
-      if (!ws_item) continue;
+      if (!ws_item)
+        continue;
       ws_item->updated_externally();
 
     }
@@ -645,7 +658,8 @@ void workspace_t::update(float delta_time) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_first_render) {
-    if (!m_camera->m_already_loaded) set_best_view();
+    if (!m_camera->m_already_loaded)
+      set_best_view();
     m_first_render = false;
   }
 
@@ -663,37 +677,14 @@ void workspace_t::update(float delta_time) {
 
   }
 
-  //handle deletion before hs
-
-  //  for (auto it = m_ws_items.begin(); it != m_ws_items.end(); )
-  //    if ((*it)->m_marked_for_deletion) {
-
-  //      if (it->get() == m_gizmo->attached_item)
-  //        m_gizmo->attached_item = nullptr;
-
-  //      if (it->get()->m_selected) unsel_all(true);
-
-  //      clear_connected_items(*it);
-  //      it->get()->m_parent_ws = nullptr;
-  //      it->get()->m_connected_items.clear();
-  //      it = m_ws_items.erase(it);
-  //      //it->reset();
-  //      astate->astate_evd->cur_ws_changed();
-
-  //    }
-  //    else {
-  //      ++it;
-  //    }
-
-  ws_changed();
-
   //update cycle
   //for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
 
   for (size_t i = 0; i < num_items(); i++) {
 
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
-    if (!ws_item) continue;
+    if (!ws_item)
+      continue;
     ws_item->update(delta_time);
 
   }
@@ -710,9 +701,14 @@ void workspace_t::set_edit_type (const ws_edit_e new_edit_type) {
 
 void workspace_t::copy_cam(std::shared_ptr<workspace_t> source) {
 
-  if (!source) return;
-  if (!source->m_camera) return;
-  if (!m_camera) return;
+  if (!source)
+    return;
+
+  if (!source->m_camera)
+    return;
+
+  if (!m_camera)
+    return;
 
   m_first_render = false;
   m_camera->update_camera();
@@ -1031,7 +1027,6 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 
   ws_to_add->m_owner = this;
   m_ws.push_back(ws_to_add);
-  ws_to_add->ws_changed();
   ws_mgr_changed();
 
 }

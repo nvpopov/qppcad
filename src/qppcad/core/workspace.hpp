@@ -79,7 +79,6 @@ public:
   void prev_item();
   void unsel_all(bool emit_signal = true);
   void toggle_edit_mode();
-  void ws_changed();
   size_t num_items();
 
   //render & ui

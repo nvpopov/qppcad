@@ -95,7 +95,7 @@ void ws_item_t::set_name(const std::string &name) {
   if (m_name.get_value() != name) {
     auto vname(name);
     m_name.set_value(std::move(vname));
-    m_parent_ws->ws_changed();
+    //m_parent_ws->ws_changed();
   }
 
 }
@@ -104,26 +104,29 @@ void ws_item_t::set_name(const char *name) {
 
   if (m_name.get_value() != name) {
     m_name.set_value(std::string(name));
-    m_parent_ws->ws_changed();
+    //m_parent_ws->ws_changed();
   }
 
 }
 
 void ws_item_t::add_connected_item(std::shared_ptr<ws_item_t> new_item) {
-  if (!is_connected(new_item)) m_connected_items.push_back(new_item);
+  if (!is_connected(new_item))
+    m_connected_items.push_back(new_item);
 }
 
 void ws_item_t::rm_connected_item(std::shared_ptr<ws_item_t> item_to_remove) {
 
   auto idx = get_connected_idx(item_to_remove);
-  if (idx) m_connected_items.erase(m_connected_items.begin() + *idx);
+  if (idx)
+    m_connected_items.erase(m_connected_items.begin() + *idx);
 
 }
 
 std::optional<size_t> ws_item_t::get_connected_idx(std::shared_ptr<ws_item_t> item_to_find) {
 
   for (size_t i = 0; i < m_connected_items.size(); i++)
-    if (m_connected_items[i].get() == item_to_find.get()) return std::optional<size_t>(i);
+    if (m_connected_items[i].get() == item_to_find.get())
+      return std::optional<size_t>(i);
   return std::nullopt;
 
 }
@@ -134,7 +137,8 @@ bool ws_item_t::is_connected(std::shared_ptr<ws_item_t> item_to_find) {
 
 void ws_item_t::add_follower(std::shared_ptr<ws_item_t> new_item) {
 
-  if (!is_follower(new_item)) m_followers.push_back(new_item);
+  if (!is_follower(new_item))
+    m_followers.push_back(new_item);
   new_item->m_leader = shared_from_this();
   new_item->on_leader_changed();
 
@@ -202,16 +206,12 @@ void ws_item_t::hs_delete(bool emit_ws_changed) {
   if (!m_parent_ws) return;
 
   auto holderv = m_parent_ws->m_ws_items.holder_lookup(this);
-  if (!holderv) return;
+  if (!holderv)
+    return;
 
   m_parent_ws->m_ws_items.set_alive_hs_child(holderv, false);
-//  if (!force_delete) {
-//    m_parent_ws->m_ws_items.set_alive_hs_child(holderv, false);
-//  } else {
-//    m_parent_ws->m_ws_items.remove_child(this, true);
-//  }
-
-  if (emit_ws_changed) app_state_t::get_inst()->astate_evd->cur_ws_changed();
+  if (emit_ws_changed)
+    app_state_t::get_inst()->astate_evd->cur_ws_changed();
 
 }
 
@@ -338,9 +338,15 @@ void ws_item_t::on_end_content_gizmo_translate() {
 void ws_item_t::translate(const vector3<float> &tr_vec) {
 
   app_state_t* astate = app_state_t::get_inst();
-  if (get_flags() & ws_item_flags_support_tr) m_pos.set_value(m_pos.get_value() + tr_vec);
-  if (get_flags() & ws_item_flags_translate_emit_upd_event) updated_externally();
-  if (is_selected()) astate->astate_evd->cur_ws_selected_item_position_changed();
+
+  if (get_flags() & ws_item_flags_support_tr)
+    m_pos.set_value(m_pos.get_value() + tr_vec);
+
+  if (get_flags() & ws_item_flags_translate_emit_upd_event)
+    updated_externally();
+
+  if (is_selected())
+    astate->astate_evd->cur_ws_selected_item_position_changed();
 
   //notify followers about changes
   updated_externally(ws_item_updf_pos_changed);
@@ -371,13 +377,16 @@ void ws_item_t::save_to_json(json &data) {
   if (!m_connected_items.empty()) {
     json con_items = json::array({});
     for (auto &elem : m_connected_items)
-      if(elem) con_items.push_back(elem->m_name.get_value());
+      if(elem)
+        con_items.push_back(elem->m_name.get_value());
     data[JSON_WS_ITEM_CONNECTED_ITEMS] = con_items;
   }
 
   if (!m_followers.empty()) {
     json flw_items = json::array({});
-    for (auto &elem : m_followers) if(elem) flw_items.push_back(elem->m_name.get_value());
+    for (auto &elem : m_followers)
+      if(elem)
+        flw_items.push_back(elem->m_name.get_value());
     data[JSON_WS_ITEM_CONNECTED_ITEMS] = flw_items;
   }
 
@@ -440,7 +449,8 @@ void ws_item_t::save_ws_item_field(const std::string &field_name,
                                    std::shared_ptr<ws_item_t> field_ws_item,
                                    json &data) {
 
-  if (field_ws_item) data[field_name] = field_ws_item->m_name.get_value();
+  if (field_ws_item)
+    data[field_name] = field_ws_item->m_name.get_value();
 
 }
 

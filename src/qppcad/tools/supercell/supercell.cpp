@@ -56,6 +56,7 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
   }
 
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
+  //sc_al->set_doctype(hs_doc_type_e::hs_doc_temporary);
 
   al->m_parent_ws->add_item_to_ws(sc_al);
   sc_al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
@@ -230,6 +231,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
 
   if (!m_dst_gv) {
     m_dst_gv = std::make_shared<geom_view_t>();
+    m_dst_gv->set_doctype(hs_doc_type_e::hs_doc_temporary);
     m_dst_gv->m_name.set_value(fmt::format("{}_sc_{}_{}_{}",m_src_gv->m_name.get_value(),
                                            sc_dim[0], sc_dim[1], sc_dim[2]));
     m_src_gv->m_parent_ws->add_item_to_ws(m_dst_gv);
@@ -237,8 +239,9 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
 
   auto diml = m_sc_tool_mode.get_value() == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
 
-  m_dst_gv->m_parent_ws->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  //m_dst_gv->m_parent_ws->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
 
+  m_dst_gv->set_ignore_changes(true);
   m_dst_gv->m_geom->set_DIM(diml);
   m_dst_gv->begin_structure_change();
   m_dst_gv->m_geom->clear();
@@ -293,7 +296,7 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
     m_dst_gv->apply_target_view(cam_tv_e::tv_b);
 
   m_dst_gv->end_structure_change();
-  m_dst_gv->m_parent_ws->end_recording();
+  //m_dst_gv->m_parent_ws->end_recording();
 
 }
 
@@ -302,6 +305,11 @@ bool super_cell_widget_t::restore_cam_on_cancel() {
 }
 
 void super_cell_widget_t::on_apply() {
+
+  if (m_dst_gv) {
+    m_dst_gv->set_doctype(hs_doc_type_e::hs_doc_persistent);
+    m_dst_gv->set_ignore_changes(true);
+  }
 
 }
 
@@ -312,7 +320,9 @@ void super_cell_widget_t::on_cancel() {
 
     auto dst_ws = m_dst_gv->m_parent_ws;
     if (dst_ws) {
-      dst_ws->m_ws_items.hs_remove_child_force_rawptr(m_dst_gv.get());
+      dst_ws->m_ws_items.hs_remove_child_force(m_dst_gv);
+      app_state_t *astate = app_state_t::get_inst();
+      //astate->astate_evd->cur_ws_changed();
     }
 
     m_dst_gv = nullptr;
