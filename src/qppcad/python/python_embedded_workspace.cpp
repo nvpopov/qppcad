@@ -31,11 +31,18 @@ std::shared_ptr<ws_item_t> construct_from_vector3f(workspace_t &ws,
                                                    vector3<float> vec,
                                                    const std::string &name) {
 
-  auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(ws_vector3_t::get_type_static());
-  if (!new_item) return nullptr;
+  auto ws_mgr = ws.get_mgr();
+  if (!ws_mgr)
+    return nullptr;
+
+  auto new_item = ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(ws_vector3_t::get_type_static());
+  if (!new_item)
+    return nullptr;
 
   auto as_wsv3 = new_item->cast_as<ws_vector3_t>();
-  if(!as_wsv3) return nullptr;
+  if(!as_wsv3)
+    return nullptr;
+
   as_wsv3->set_pos(vec);
   as_wsv3->m_name.set_cvalue(name);
   ws.add_item_to_ws(new_item);
@@ -46,14 +53,21 @@ std::shared_ptr<ws_item_t> construct_from_vector3f(workspace_t &ws,
 
 std::shared_ptr<ws_item_t> construct_from_geom(
     workspace_t &ws,
-    std::shared_ptr<xgeometry<float, periodic_cell<float> > > geom,
+    std::shared_ptr<xgeometry<float, periodic_cell<float>>> geom,
     const std::string &name) {
 
-  auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
-  if (!new_item) return nullptr;
+  auto ws_mgr = ws.get_mgr();
+  if (!ws_mgr)
+    return nullptr;
+
+  auto new_item = ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
+
+  if (!new_item)
+    return nullptr;
 
   auto as_gv = new_item->cast_as<geom_view_t>();
   if(!as_gv) return nullptr;
+
 
   if (as_gv->m_geom) {
     as_gv->m_geom->remove_observer(*as_gv->m_ext_obs);
@@ -81,11 +95,17 @@ std::shared_ptr<ws_item_t> construct_from_array_group(
     std::shared_ptr<array_group<matrix3<float>>> ag,
     const std::string &name) {
 
-  auto new_item = ws.m_owner->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
-  if (!new_item) return nullptr;
+  auto ws_mgr = ws.get_mgr();
+  if (!ws_mgr)
+    return nullptr;
+
+  auto new_item = ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
+  if (!new_item)
+    return nullptr;
 
   auto as_psg = new_item->cast_as<psg_view_t>();
-  if(!as_psg) return nullptr;
+  if(!as_psg)
+    return nullptr;
 
   as_psg->m_ag = ag;
   as_psg->m_name.set_cvalue(name);

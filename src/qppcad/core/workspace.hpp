@@ -34,11 +34,10 @@ class workspace_t : public qpp_object_t,
 
 private:
 
-//private data
+  workspace_manager_t                      *p_mgr{nullptr};
 
 public:
 
-  workspace_manager_t                      *m_owner{nullptr};
   std::string                              m_fs_path{""};
   ws_edit_e                                m_edit_type{ws_edit_e::edit_item};
   std::string                              m_ws_name;
@@ -59,6 +58,10 @@ public:
   vector3<float> m_scenic_rotation_speed{0.0f, 0.0f, 0.1f};
 
   workspace_t(std::string _ws_name = "default");
+
+  bool is_current();
+  void set_mgr(workspace_manager_t *new_wsm);
+  workspace_manager_t *get_mgr();
 
   //selection routines
   std::optional<size_t>  get_sel_idx();
@@ -131,9 +134,6 @@ public:
   std::optional<size_t> get_cur_id();
 
   bool set_cur_id(const std::optional<size_t> ws_index);
-
-  template<int I>
-  void force_set_cur_ws(){set_cur_id(std::optional<size_t>(I));}
 
   std::shared_ptr<workspace_t> get_ws(int id);
   void next_ws();

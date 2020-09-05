@@ -38,6 +38,18 @@ workspace_t::workspace_t(std::string _ws_name) {
 
 }
 
+bool workspace_t::is_current() {
+
+}
+
+void workspace_t::set_mgr(workspace_manager_t *new_wsm) {
+  p_mgr = new_wsm;
+}
+
+workspace_manager_t *workspace_t::get_mgr() {
+  return p_mgr;
+}
+
 std::optional<size_t> workspace_t::get_sel_idx() {
 
   for (size_t i = 0; i < num_items(); i++) {
@@ -749,7 +761,7 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!m_owner) {
+  if (!p_mgr) {
     astate->tlog("ERROR: workspace_t::py_construct_item -> no ws mgr");
     return nullptr;
   }
@@ -761,7 +773,7 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
     return nullptr;
   }
 
-  auto new_item = m_owner->m_bhv_mgr->fbr_ws_item_by_type(type_hash);
+  auto new_item = p_mgr->m_bhv_mgr->fbr_ws_item_by_type(type_hash);
 
   if (!new_item) {
     astate->tlog("ERROR: workspace_t::py_construct_item -> fabric error");
@@ -1025,7 +1037,7 @@ void workspace_manager_t::ws_mgr_changed() {
 
 void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add) {
 
-  ws_to_add->m_owner = this;
+  ws_to_add->set_mgr(this);
   m_ws.push_back(ws_to_add);
   ws_mgr_changed();
 
@@ -1050,7 +1062,9 @@ void workspace_manager_t::move_ws(size_t from, size_t to) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (from == to || from >= m_ws.size() || to >= m_ws.size()) return;
+  if (from == to || from >= m_ws.size() || to >= m_ws.size())
+    return;
+
   std::swap(m_ws[from], m_ws[to]);
   set_cur_id(std::optional<size_t>(to));
 
@@ -1113,10 +1127,14 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
       auto rec_type = need_to_squash_hs ? hs_doc_rec_type_e::hs_doc_rec_init :
                                           hs_doc_rec_type_e::hs_doc_rec_as_new_epoch;
+
       p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get(), rec_type);
-      if (need_to_squash_hs) exec_ws.get()->squash();
+
+      if (need_to_squash_hs)
+        exec_ws.get()->squash();
 
     } catch (const qpp::parsing_error_t &exc) {
+
       loading_is_succesfull = false;
 
       //compose error message
@@ -1155,16 +1173,17 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
       if (need_to_create_new_ws && p_new_itm) {
         exec_ws->m_ws_name = p_new_itm->m_name.get_value();
-        if (!exec_ws->m_camera->m_already_loaded) exec_ws->set_best_view();
+        if (!exec_ws->m_camera->m_already_loaded)
+          exec_ws->set_best_view();
       }
 
-      astate->astate_evd->new_file_loaded(
-          fname,
-          m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
-          false);
+      astate->astate_evd->new_file_loaded(fname,
+                                          m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
+                                          false);
 
     } else {
-      if (need_to_create_new_ws && exec_ws) exec_ws->m_marked_for_deletion = true;
+      if (need_to_create_new_ws && exec_ws)
+        exec_ws->m_marked_for_deletion = true;
     }
 
     astate->astate_evd->wss_changed();
@@ -1238,7 +1257,7 @@ void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
 
   auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
-  new_ws->m_owner = this;
+  new_ws->set_mgr(this);
   m_ws.push_back(new_ws);
 
   if (switch_to_new_workspace) set_cur_id(m_ws.size()-1);
@@ -1272,10 +1291,15 @@ void workspace_manager_t::utility_event_loop() {
       auto cur_ws_idx = get_cur_id();
 
       if (cur_ws_idx) {
+
         //last?
-        if (m_ws.size() == 1) m_cur_ws_id = std::nullopt;
-        else if (int(*cur_ws_idx) - 1 < 0) m_cur_ws_id = std::optional<size_t>(0);
-        else m_cur_ws_id = std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
+        if (m_ws.size() == 1)
+          m_cur_ws_id = std::nullopt;
+        else if (int(*cur_ws_idx) - 1 < 0)
+          m_cur_ws_id = std::optional<size_t>(0);
+        else
+          m_cur_ws_id = std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
+
       }
 
       it = m_ws.erase(it);
