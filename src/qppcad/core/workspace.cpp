@@ -505,11 +505,13 @@ void workspace_t::add_item_to_ws(std::shared_ptr<ws_item_t> item_to_add, bool ad
   app_state_t *astate = app_state_t::get_inst();
   item_to_add->m_parent_ws = this;
   m_ws_items.add_hs_child_as_array(item_to_add, add_new_epoch);
+
   astate->tlog("Adding item \"{}\" to workspace \"{}\", type = {}, add_new_epoch = {}",
                item_to_add ? item_to_add->m_name.get_value() : "None",
                m_ws_name,
                item_to_add ? item_to_add->get_type_name() : "None",
                add_new_epoch);
+
   astate->astate_evd->cur_ws_changed();
 
 }
@@ -742,7 +744,8 @@ void workspace_t::del_item_by_index(size_t idx) {
 
   if (idx < num_items()) {
     auto ws_item = m_ws_items.get_hs_child_as_array(idx);
-    if (!ws_item) return;
+    if (!ws_item)
+      return;
     ws_item->hs_delete();
   }
 
@@ -796,8 +799,12 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
 
-  if (!m_cur_ws_id) return nullptr;
-  if (*m_cur_ws_id >= m_ws.size()) return nullptr;
+  if (!m_cur_ws_id)
+    return nullptr;
+
+  if (*m_cur_ws_id >= m_ws.size())
+    return nullptr;
+
   return m_ws[*m_cur_ws_id];
 
 }
@@ -814,7 +821,8 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target
 
 std::optional<size_t> workspace_manager_t::get_cur_id() {
 
-  if (!m_ws.empty()) return m_cur_ws_id;
+  if (!m_ws.empty())
+    return m_cur_ws_id;
   return std::nullopt;
 
 }
@@ -856,15 +864,18 @@ bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
 
-  if (!m_ws.empty() && id >= 0 && id < m_ws.size()) return m_ws[id];
-  else return nullptr;
+  if (!m_ws.empty() && id >= 0 && id < m_ws.size())
+    return m_ws[id];
+  else
+    return nullptr;
 
 }
 
 void workspace_manager_t::next_ws() {
 
   size_t target_id = get_cur_id().value_or(0) + 1;
-  if (target_id >= m_ws.size()) target_id = 0;
+  if (target_id >= m_ws.size())
+    target_id = 0;
   set_cur_id(std::optional<size_t>(target_id));
 
 }
@@ -872,7 +883,8 @@ void workspace_manager_t::next_ws() {
 void workspace_manager_t::prev_ws() {
 
   int target_id = get_cur_id().value_or(0) - 1;
-  if (target_id < 0) target_id = m_ws.size() - 1;
+  if (target_id < 0)
+    target_id = m_ws.size() - 1;
   set_cur_id(std::optional<size_t>(target_id));
 
 }
@@ -880,7 +892,8 @@ void workspace_manager_t::prev_ws() {
 void workspace_manager_t::cur_ws_next_item() {
 
   auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
-  if (ok) cur_ws->next_item();
+  if (ok)
+    cur_ws->next_item();
 
 }
 
@@ -924,28 +937,6 @@ void workspace_manager_t::init_default () {
   m_ws.back()->add_item_to_ws(nb1);
   m_ws.back()->squash();
 
-  //  auto g2 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
-  //  auto ag = shnfl<float>::group("C4v");
-  //  auto psg_prod = m_bhv_mgr->fbr_ws_item_by_name("pgf_producer_t");
-
-
-
-  //  auto psgv1 = m_bhv_mgr->fbr_ws_item_by_name("psg_view_t");
-  //  auto psgv1_c = psgv1->cast_as<psg_view_t>();
-  //  psgv1_c->m_ag =
-  //      std::make_shared<array_group<matrix3<float>>>(ag);
-  //  psgv1->m_name = "psg_c4v1";
-  //  psgv1_c->update_view();
-
-
-  //  g2->m_name = "g2_dst";
-  //  psg_prod->m_name = "psg_prod1";
-
-
-  //  m_ws.back()->add_item_to_ws(g2);
-  //  m_ws.back()->add_item_to_ws(psgv1);
-  //  m_ws.back()->add_item_to_ws(psg_prod);
-
 }
 
 void workspace_manager_t::render_cur_ws () {
@@ -982,21 +973,6 @@ void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
   if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
 
     m_ws[*m_cur_ws_id]->render_overlay(painter);
-
-    //      if (m_ws[*m_cur_ws_id]->m_gizmo->m_is_visible) {
-
-    //          auto &gizmo = m_ws[*m_cur_ws_id]->m_gizmo;
-
-    //          auto proj_pos_x =
-    //              astate->camera->project(gizmo->m_pos + gizmo_axis[0] * gizmo->m_shift_magn);
-
-    //          auto proj_pos_y =
-    //              astate->camera->project(gizmo->m_pos + gizmo_axis[1] * gizmo->m_shift_magn);
-
-    //          auto proj_pos_z =
-    //              astate->camera->project(gizmo->m_pos + gizmo_axis[2] * gizmo->m_shift_magn);
-
-    //        }
 
   }
 

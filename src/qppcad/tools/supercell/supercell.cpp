@@ -165,7 +165,11 @@ int super_cell_widget_t::get_replication_coeff(int dim_num) {
 super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool_widget_t(parent) {
 
   app_state_t *astate = app_state_t::get_inst();
+
+  m_sc_dim.set_ignore_changes(true);
   m_sc_dim.set_value({1,1,1});
+
+  m_sc_tool_mode.set_ignore_changes(true);
   m_sc_tool_mode.set_value(sc_tool_mode_default);
 
   //setFixedWidth(250);
@@ -199,6 +203,7 @@ super_cell_widget_t::super_cell_widget_t (QWidget *parent) : ws_item_inline_tool
 
   for (size_t i = 0; i < 3; i++) {
 
+    m_boundaries_values[i].set_ignore_changes(true);
     m_boundaries_values[i].set_value({-1, 0, -1});
     m_boundaries[i] = new qbinded_int2b_input_t;
     m_boundaries[i]->set_min_max_step(-10, 10, 1);
@@ -230,12 +235,15 @@ void super_cell_widget_t::make_super_cell(bool target_cam) {
   auto sc_dim = m_sc_dim.get_value();
 
   if (!m_dst_gv) {
-    m_dst_gv = std::make_shared<geom_view_t>();
+    auto dst_as_sp = std::make_shared<geom_view_t>();
+    m_dst_gv = dst_as_sp.get();
     m_dst_gv->set_doctype(hs_doc_type_e::hs_doc_temporary);
     m_dst_gv->m_name.set_value(fmt::format("{}_sc_{}_{}_{}",m_src_gv->m_name.get_value(),
                                            sc_dim[0], sc_dim[1], sc_dim[2]));
-    m_src_gv->m_parent_ws->add_item_to_ws(m_dst_gv);
+    m_src_gv->m_parent_ws->add_item_to_ws(dst_as_sp, false);
   }
+
+  m_dst_gv->set_doctype(hs_doc_type_e::hs_doc_temporary);
 
   auto diml = m_sc_tool_mode.get_value() == supercell_tool_mode_e::sc_tool_mode_default ? 3 : 0;
 
@@ -307,7 +315,10 @@ bool super_cell_widget_t::restore_cam_on_cancel() {
 void super_cell_widget_t::on_apply() {
 
   if (m_dst_gv) {
+  //  std::cout << "@@@ UC" << m_dst_gv.use_count() << std::endl;
     m_dst_gv->set_doctype(hs_doc_type_e::hs_doc_persistent);
+   // std::cout << "@@@ UC" << m_dst_gv.use_count() << std::endl;
+    assert(m_dst_gv != nullptr);
     m_dst_gv->set_ignore_changes(true);
   }
 
@@ -320,15 +331,15 @@ void super_cell_widget_t::on_cancel() {
 
     auto dst_ws = m_dst_gv->m_parent_ws;
     if (dst_ws) {
-      dst_ws->m_ws_items.hs_remove_child_force(m_dst_gv);
+      //dst_ws->m_ws_items.hs_remove_child_force(m_dst_gv);
       app_state_t *astate = app_state_t::get_inst();
       //astate->astate_evd->cur_ws_changed();
     }
 
-    m_dst_gv = nullptr;
-    m_src_gv = nullptr;
-
   }
+
+  m_dst_gv = nullptr;
+  m_src_gv = nullptr;
 
 }
 
@@ -383,9 +394,13 @@ void super_cell_widget_t::mode_changed() {
 
 bool super_cell_can_apply_helper_t::can_apply(ws_item_t *item) {
 
-  if (!item) return false;
+  if (!item)
+    return false;
+
   auto as_gv = item->cast_as<geom_view_t>();
-  if (!as_gv) return false;
+  if (!as_gv)
+    return false;
+
   return as_gv->m_geom->get_DIM() == 3;
 
 }

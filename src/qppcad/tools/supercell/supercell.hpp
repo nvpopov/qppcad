@@ -52,7 +52,7 @@ public:
   QFormLayout *m_gb_rep_par_lt;
   QVBoxLayout *m_dialog_lt;
 
-  std::shared_ptr<geom_view_t> m_dst_gv{nullptr};
+  geom_view_t *m_dst_gv{nullptr};
   geom_view_t *m_src_gv{nullptr};
 
   hs_prop_v3i_t m_sc_dim;
