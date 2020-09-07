@@ -130,6 +130,7 @@ public:
   workspace_manager_t(app_state_t *_astate);
 
   std::shared_ptr<workspace_t> get_cur_ws();
+  workspace_t *get_cur_rptr();
   std::shared_ptr<workspace_t> get_by_name(std::string target_name);
   std::optional<size_t> get_cur_id();
 

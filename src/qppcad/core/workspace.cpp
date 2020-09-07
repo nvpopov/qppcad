@@ -39,7 +39,7 @@ workspace_t::workspace_t(std::string _ws_name) {
 }
 
 bool workspace_t::is_current() {
-
+  return p_mgr ? (p_mgr->get_cur_rptr() == this ? true : false) : false;
 }
 
 void workspace_t::set_mgr(workspace_manager_t *new_wsm) {
@@ -320,11 +320,15 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
   for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
 
     auto itm = m_ws_items.get_hs_child_as_array(i);
-    if (!itm) continue;
-    if (itm->is_selected()) affected = true;
+    if (!itm)
+      continue;
+    if (itm->is_selected())
+      affected = true;
 
-    if (m_ws_items.is_child_alive(prev_epoch, itm) == hs_result_e::hs_alive) alive_cnt_before++;
-    if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive) alive_cnt_after++;
+    if (m_ws_items.is_child_alive(prev_epoch, itm) == hs_result_e::hs_alive)
+      alive_cnt_before++;
+    if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive)
+      alive_cnt_after++;
 
   }
 
@@ -342,8 +346,10 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
      // set_sel_item(m_cur_itm.get_value(), true, false);
     }
     m_cur_itm.set_commit_exclusive_on_change(true);
-    if (alive_cnt_after != alive_cnt_before) astate->astate_evd->cur_ws_changed();
-    if (affected) astate->astate_evd->cur_ws_selected_item_changed();
+    if (alive_cnt_after != alive_cnt_before)
+      astate->astate_evd->cur_ws_changed();
+    if (affected)
+      astate->astate_evd->cur_ws_selected_item_changed();
   }
 
   return hs_result_e::hs_success;
@@ -398,7 +404,8 @@ void workspace_t::render() {
 
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
-    if (!ws_item) continue;
+    if (!ws_item)
+      continue;
     ws_item->render();
   }
 
@@ -411,8 +418,10 @@ void workspace_t::render_overlay(QPainter &painter) {
 
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
-    if (!ws_item) continue;
-    if (ws_item->m_is_visible.get_value()) ws_item->render_overlay(painter);
+    if (!ws_item)
+      continue;
+    if (ws_item->m_is_visible.get_value())
+      ws_item->render_overlay(painter);
   }
 
 
@@ -449,7 +458,8 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
     //for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
     for (size_t i = 0; i < num_items(); i++) {
       auto ws_item = m_ws_items.get_hs_child_as_array(i);
-      if (!ws_item) continue;
+      if (!ws_item)
+        continue;
       ws_item->m_selected = false;
     }
 
@@ -460,7 +470,8 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   for (size_t i = 0; i < num_items(); i++) {
 
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
-    if (!ws_item) continue;
+    if (!ws_item)
+      continue;
 
     bool is_hit = ws_item->mouse_click(&m_ray);
     hit_any = hit_any || is_hit;
@@ -487,7 +498,8 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
 
   auto cur_it = get_sel();
-  if (!cur_it) return;
+  if (!cur_it)
+    return;
 
   if (m_edit_type == ws_edit_e::edit_item) {
     cur_it->mouse_double_click(nullptr);
@@ -806,6 +818,18 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
     return nullptr;
 
   return m_ws[*m_cur_ws_id];
+
+}
+
+workspace_t *workspace_manager_t::get_cur_rptr() {
+
+  if (!m_cur_ws_id)
+    return nullptr;
+
+  if (*m_cur_ws_id >= m_ws.size())
+    return nullptr;
+
+  return m_ws[*m_cur_ws_id].get();
 
 }
 

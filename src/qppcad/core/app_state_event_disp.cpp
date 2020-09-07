@@ -14,7 +14,7 @@ void app_state_event_disp_t::cur_ws_changed() {
 }
 
 void app_state_event_disp_t::cur_ws_edit_type_changed(){
-   emit(cur_ws_edit_type_changed_signal());
+  emit(cur_ws_edit_type_changed_signal());
 }
 
 void app_state_event_disp_t::cur_ws_selected_item_changed() {
@@ -30,7 +30,7 @@ void app_state_event_disp_t::cur_ws_selected_item_frame_changed() {
 }
 
 void app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed() {
-   emit(cur_ws_selected_atoms_list_selection_changed_signal());
+  emit(cur_ws_selected_atoms_list_selection_changed_signal());
 }
 
 void app_state_event_disp_t::cur_ws_selected_atoms_list_cell_changed() {
@@ -70,7 +70,7 @@ void app_state_event_disp_t::extended_editor_close_requested() {
 }
 
 void app_state_event_disp_t::request_update_overview(const std::string &newoverview) {
-   emit(request_update_overview_signal(newoverview));
+  emit(request_update_overview_signal(newoverview));
 }
 
 void app_state_event_disp_t::new_file_loaded(const std::string &file_name,
