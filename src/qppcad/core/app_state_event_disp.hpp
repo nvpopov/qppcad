@@ -19,6 +19,7 @@ signals:
   void cur_ws_changed_signal();
 
   void cur_ws_edit_type_changed_signal();
+  void cur_ws_content_changed_signal();
   void cur_ws_selected_item_changed_signal();
   void cur_ws_selected_item_content_changed_signal();
   void cur_ws_selected_item_frame_changed_signal();
@@ -51,6 +52,7 @@ public:
 
   void wss_changed();
   void cur_ws_changed();
+  void cur_ws_content_changed();
   void cur_ws_edit_type_changed();
   void cur_ws_selected_item_changed();
   void cur_ws_selected_item_content_changed();

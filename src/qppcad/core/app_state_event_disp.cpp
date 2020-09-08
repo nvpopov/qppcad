@@ -13,6 +13,10 @@ void app_state_event_disp_t::cur_ws_changed() {
   emit(cur_ws_changed_signal());
 }
 
+void app_state_event_disp_t::cur_ws_content_changed() {
+  emit(cur_ws_content_changed_signal());
+}
+
 void app_state_event_disp_t::cur_ws_edit_type_changed(){
   emit(cur_ws_edit_type_changed_signal());
 }

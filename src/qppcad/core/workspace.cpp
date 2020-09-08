@@ -347,7 +347,7 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
     }
     m_cur_itm.set_commit_exclusive_on_change(true);
     if (alive_cnt_after != alive_cnt_before)
-      astate->astate_evd->cur_ws_changed();
+      astate->astate_evd->cur_ws_content_changed_signal();
     if (affected)
       astate->astate_evd->cur_ws_selected_item_changed();
   }

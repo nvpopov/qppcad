@@ -33,8 +33,10 @@ qinline_tool_window_t::qinline_tool_window_t(qinline_tool_type_e inline_tool_typ
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-  if (m_inline_tool_type == qinline_tool_type_e::tool_vertical) mark_as_vertical();
-  else mark_as_horizontal();
+  if (m_inline_tool_type == qinline_tool_type_e::tool_vertical)
+    mark_as_vertical();
+  else
+    mark_as_horizontal();
 
 }
 
@@ -63,32 +65,38 @@ bool qinline_tool_window_t::is_active() {
 
 void qinline_tool_window_t::apply_triggered() {
 
+  p_currently_applying.store(true);
+
   if (m_cur_wdgt) {
-      m_cur_wdgt->apply();
-    }
+    m_cur_wdgt->apply();
+  }
 
   app_state_t *astate = app_state_t::get_inst();
 
   if (m_inline_tool_type == qinline_tool_type_e::tool_vertical) {
-      astate->astate_evd->set_left_inline_tool_visibility(false);
-    } else {
-      astate->astate_evd->set_bottom_inline_tool_visibility(false);
-    }
+    astate->astate_evd->set_left_inline_tool_visibility(false);
+  } else {
+    astate->astate_evd->set_bottom_inline_tool_visibility(false);
+  }
+
+  p_currently_applying.store(false);
 
 }
 
 void qinline_tool_window_t::close_triggered() {
 
+  assert(!p_currently_applying.load());
+
   if (m_cur_wdgt) {
-      m_cur_wdgt->cancel();
-    }
+    m_cur_wdgt->cancel();
+  }
 
   app_state_t *astate = app_state_t::get_inst();
 
   if (m_inline_tool_type == qinline_tool_type_e::tool_vertical) {
-      astate->astate_evd->set_left_inline_tool_visibility(false);
-    } else {
-      astate->astate_evd->set_bottom_inline_tool_visibility(false);
-    }
+    astate->astate_evd->set_left_inline_tool_visibility(false);
+  } else {
+    astate->astate_evd->set_bottom_inline_tool_visibility(false);
+  }
 
 }
