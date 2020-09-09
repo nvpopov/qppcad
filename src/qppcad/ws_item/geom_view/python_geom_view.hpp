@@ -17,17 +17,16 @@ namespace py = pybind11;
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    struct py_geom_view_reg_helper_t {
+struct py_geom_view_reg_helper_t {
 
-        static void reg(
-            py::module &module,
-            py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> &ws_item_base);
+  static void reg(py::module &module,
+                  py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> &ws_item_base);
 
-    };
+};
 
-  } // namespace cad
+} // namespace cad
 
 } // namespace qpp
 

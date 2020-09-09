@@ -602,7 +602,8 @@ public:
 
     }
 
-    if (!get_is_recording()) commit_changes(true);
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
@@ -633,9 +634,14 @@ public:
   }
 
   void modify_epoch(acts_t &&act, epoch_t epoch) {
+
     auto epoch_it = p_epoch_data.find(epoch);
-    if (epoch_it == end(p_epoch_data)) return;
+
+    if (epoch_it == end(p_epoch_data))
+      return;
+
     p_epoch_data[epoch].push_back(act);
+
   }
 
   xgeometry<REAL, CELL> *get_xgeom() {
@@ -650,7 +656,8 @@ public:
 
   void hs_change_DIM(xgeom_proxy_hs_act_type_e evtype, int newdim) {
 
-    if (!p_xgeom) return;
+    if (!p_xgeom)
+      return;
 
     if (evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_hs_event
         || evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_both) {
@@ -666,7 +673,8 @@ public:
       //p_xgeom->cell.DIM = newdim;
     }
 
-    if (!get_is_recording()) commit_changes(true);
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
@@ -679,23 +687,44 @@ public:
 
     if (evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_hs_event
         || evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_both) {
+
       change_cell_event_t<REAL> change_cell_event;
       //old cell
-      if (p_xgeom->get_DIM() > 0) change_cell_event.old_cell[0] = p_xgeom->cell.v[0];
-      if (p_xgeom->get_DIM() > 1) change_cell_event.old_cell[1] = p_xgeom->cell.v[1];
-      if (p_xgeom->get_DIM() > 2) change_cell_event.old_cell[2] = p_xgeom->cell.v[2];
+      if (p_xgeom->get_DIM() > 0)
+        change_cell_event.old_cell[0] = p_xgeom->cell.v[0];
+
+      if (p_xgeom->get_DIM() > 1)
+        change_cell_event.old_cell[1] = p_xgeom->cell.v[1];
+
+      if (p_xgeom->get_DIM() > 2)
+        change_cell_event.old_cell[2] = p_xgeom->cell.v[2];
+
       //new cell
-      if (a && p_xgeom->get_DIM() > 0) change_cell_event.new_cell[0] = *a;
-      if (b && p_xgeom->get_DIM() > 0) change_cell_event.new_cell[1] = *b;
-      if (c && p_xgeom->get_DIM() > 0) change_cell_event.new_cell[2] = *c;
+      if (a && p_xgeom->get_DIM() > 0)
+        change_cell_event.new_cell[0] = *a;
+
+      if (b && p_xgeom->get_DIM() > 0)
+        change_cell_event.new_cell[1] = *b;
+
+      if (c && p_xgeom->get_DIM() > 0)
+        change_cell_event.new_cell[2] = *c;
+
       p_cur_acts.push_back(std::move(change_cell_event));
+
     }
 
     if (evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_geom_change
         || evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_both) {
-      if (a && p_xgeom->get_DIM() > 0) p_xgeom->cell.v[0] = *a;
-      if (b && p_xgeom->get_DIM() > 1) p_xgeom->cell.v[1] = *b;
-      if (c && p_xgeom->get_DIM() > 2) p_xgeom->cell.v[2] = *c;
+
+      if (a && p_xgeom->get_DIM() > 0)
+        p_xgeom->cell.v[0] = *a;
+
+      if (b && p_xgeom->get_DIM() > 1)
+        p_xgeom->cell.v[1] = *b;
+
+      if (c && p_xgeom->get_DIM() > 2)
+        p_xgeom->cell.v[2] = *c;
+
     }
 
     if (!get_is_recording()) commit_changes(true);
@@ -706,12 +735,13 @@ public:
 
     assert(p_xgeom != nullptr);
 
-    epoch_t cur_epoch = get_cur_epoch();
-    assert(cur_epoch == 0);
+    //epoch_t cur_epoch = get_cur_epoch();
+    //assert(cur_epoch == 0);
 
     //clean old data
-    std::vector<acts_t> &acts = p_epoch_data[cur_epoch];
-    acts.clear();
+    p_epoch_data.clear();
+    std::vector<acts_t> &acts = p_epoch_data[0];
+    clear_epoch_data();
 
     //fill dim
     change_dim_event_t change_dim_ev;

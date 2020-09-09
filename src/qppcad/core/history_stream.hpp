@@ -133,6 +133,7 @@ public:
   bool get_is_recording();
   bool get_ignore_changes();
   void set_ignore_changes(bool new_ignore_changes);
+  void clear_epoch_data();
 
   hs_doc_rec_type_e get_cur_rec_type() const;
 

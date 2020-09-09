@@ -320,6 +320,7 @@ void super_cell_widget_t::on_apply() {
    // std::cout << "@@@ UC" << m_dst_gv.use_count() << std::endl;
     assert(m_dst_gv != nullptr);
     m_dst_gv->set_ignore_changes(true);
+    m_dst_gv->m_xgeom_proxy.init_base_epoch();
   }
 
 }

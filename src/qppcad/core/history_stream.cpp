@@ -119,6 +119,11 @@ void hs_doc_base_t::set_ignore_changes(bool new_ignore_changes) {
   p_ignore_changes = new_ignore_changes;
 }
 
+void hs_doc_base_t::clear_epoch_data() {
+  p_cur_epoch = 0;
+  p_hist_line = {0};
+}
+
 hs_doc_rec_type_e hs_doc_base_t::get_cur_rec_type() const {
   return p_cur_rec_type;
 }
