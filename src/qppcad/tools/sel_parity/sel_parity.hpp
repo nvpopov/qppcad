@@ -5,18 +5,18 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class sel_parity_tool_t : public ws_item_tool_t {
-    
-      public:
-      
-        void exec(ws_item_t *item, uint32_t _error_ctx) override;
-        
-    };
-    
-  } // namespace qpp::cad
- 
+class sel_parity_tool_t : public ws_item_tool_t {
+
+public:
+
+  void exec(ws_item_t *item, uint32_t _error_ctx) override;
+
+};
+
+} // namespace qpp::cad
+
 } // namespace qpp
 
 #endif
