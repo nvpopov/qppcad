@@ -144,8 +144,11 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
   if (m_cur_obj_insp_widget) {
 
     m_cur_obj_insp_widget->unbind_item();
+
     auto coiw_ptr = m_cur_obj_insp_widget.get();
-    if (coiw_ptr) m_main_lt->removeWidget(coiw_ptr);
+    if (coiw_ptr)
+      m_main_lt->removeWidget(coiw_ptr);
+
     m_cur_obj_insp_widget->setParent(nullptr);
     m_cur_obj_insp_widget = nullptr;
     m_none_item_placeholder->show();
@@ -154,14 +157,16 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
 
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
 
-  if (!ok) return;
+  if (!ok)
+    return;
 
   size_t thash = cur_it->get_type();
   auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
   if (obj_insp_w) {
 
     // a dirty hack for preventing object inspectors widgets from being unbounded
-    for (auto elem : bhv_mgr->m_obj_insp_widgets) elem.second->setVisible(false);
+    for (auto elem : bhv_mgr->m_obj_insp_widgets)
+      elem.second->setVisible(false);
 
     m_none_item_placeholder->hide();
     m_main_lt->insertWidget(2, obj_insp_w.get());
@@ -190,7 +195,8 @@ void object_inspector_widget_t::cur_ws_changed() {
     for (size_t i = 0; i < cur_ws->num_items(); i++) {
 
       auto ws_item = cur_ws->m_ws_items.get_hs_child_as_array(i);
-      if (!ws_item) continue;
+      if (!ws_item)
+        continue;
 
       m_ws_items_list->addItem(
           QString::fromStdString(fmt::format("[{}] {} ", i, ws_item->m_name.get_value()))
@@ -301,7 +307,8 @@ void object_inspector_widget_t::add_new_ws_item_button_clicked() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!astate->ws_mgr->has_wss()) return;
+  if (!astate->ws_mgr->has_wss())
+    return;
 
   add_new_ws_item_widget_t add_dialog;
   add_dialog.exec();
@@ -314,7 +321,8 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
 
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
 
-  if (!ok) return;
+  if (!ok)
+    return;
 
   size_t total_ext_editors{0};
 
@@ -332,17 +340,21 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
 
     }
 
-  if (total_ext_editors <= 1) return;
+  if (total_ext_editors <= 1)
+    return;
 
   QPoint item = m_ws_items_list->mapToGlobal(pos);
   QMenu submenu;
-  for (auto &elem : ext_acts) submenu.addAction(elem);
+  for (auto &elem : ext_acts)
+    submenu.addAction(elem);
 
   QAction* right_click_item = submenu.exec(item);
-  if (!right_click_item) return;
+  if (!right_click_item)
+    return;
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(right_click_item);
-  if (!ext_act) return;
+  if (!ext_act)
+    return;
 
   astate->astate_evd->extended_editor_open_requested_with_order(ext_act->m_joined_data[1]);
 
@@ -357,8 +369,11 @@ void object_inspector_widget_t::open_tab_requested(int tab_id) {
   if (!m_cur_obj_insp_widget) return;
 
   auto tab_cnt = m_cur_obj_insp_widget->count();
-  if (tab_cnt == 0 || tab_id < 0 || tab_id >= tab_cnt ||
-      !m_cur_obj_insp_widget->tabBar()->isTabEnabled(tab_id)) return;
+  if (tab_cnt == 0
+      || tab_id < 0
+      || tab_id >= tab_cnt
+      || !m_cur_obj_insp_widget->tabBar()->isTabEnabled(tab_id))
+    return;
 
   m_cur_obj_insp_widget->setCurrentIndex(tab_id);
 

@@ -521,7 +521,8 @@ void geom_view_t::sel_atoms(bool all) {
 
 void geom_view_t::sel_atom(int atom_id) {
 
-  if (!m_geom) return;
+  if (!m_geom)
+    return;
   sel_atom(atom_id, index::D(m_geom->get_DIM()).all(0));
 
 }
