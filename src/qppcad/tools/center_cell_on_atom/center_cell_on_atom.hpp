@@ -5,17 +5,17 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class center_cell_on_atom_tool_t : public ws_item_tool_t {
+class center_cell_on_atom_tool_t : public ws_item_tool_t {
 
-      public:
+public:
 
-        void exec(ws_item_t *item, uint32_t _error_ctx) override;
+  void exec(ws_item_t *item, uint32_t _error_ctx) override;
 
-    };
+};
 
-  } // namespace cad
+} // namespace cad
 
 } // namespace qpp
 

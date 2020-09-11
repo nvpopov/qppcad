@@ -13,7 +13,8 @@ void geom_view_tools_t::shake_atoms(geom_view_t *gv,
                                     std::set<size_t> atoms_to_shake,
                                     float magn) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -35,7 +36,8 @@ void geom_view_tools_t::shake_atoms(geom_view_t *gv,
 
 void geom_view_tools_t::py_shake_atoms(geom_view_t *gv, py::list atoms_to_shake, float magn) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   std::set<size_t> atoms;
   for (auto elem : atoms_to_shake)
@@ -47,9 +49,11 @@ void geom_view_tools_t::py_shake_atoms(geom_view_t *gv, py::list atoms_to_shake,
 
 void geom_view_tools_t::purify_boundary_atoms(geom_view_t *dst, geom_view_t *src) {
 
-  if (!dst || !src) return;
+  if (!dst || !src)
+    return;
 
-  if (!src || src->m_geom->nat() != dst->m_geom->nat()) return;
+  if (!src || src->m_geom->nat() != dst->m_geom->nat())
+    return;
 
   dst->begin_structure_change();
 
@@ -81,7 +85,8 @@ void geom_view_tools_t::purify_boundary_atoms(geom_view_t *dst, geom_view_t *src
 
 vector3<float> geom_view_tools_t::dipole_moment(geom_view_t *gv) {
 
-  if (!gv) return vector3<float>(std::numeric_limits<float>::max());
+  if (!gv)
+    return vector3<float>(std::numeric_limits<float>::max());
 
   vector3<float> accum_dm{0,0,0};
   for (int i = 0; i < gv->m_geom->nat(); i++)
@@ -92,7 +97,8 @@ vector3<float> geom_view_tools_t::dipole_moment(geom_view_t *gv) {
 
 float geom_view_tools_t::total_charge(geom_view_t *gv) {
 
-  if (!gv) return std::numeric_limits<float>::max();
+  if (!gv)
+    return std::numeric_limits<float>::max();
 
   float accum_charge{0};
   for (int i = 0; i < gv->m_geom->nat(); i++)
@@ -105,7 +111,8 @@ std::vector<scalar_partition_per_type_t<> > geom_view_tools_t::get_charge_partit
     geom_view_t *gv) {
 
   std::vector<scalar_partition_per_type_t<>> retcp;
-  if (!gv) return retcp;
+  if (!gv)
+    return retcp;
 
   const auto ch_eps = 0.0001f;
 
@@ -137,7 +144,8 @@ std::vector<scalar_partition_per_type_t<> > geom_view_tools_t::get_charge_partit
 py::list geom_view_tools_t::py_get_charge_partition(geom_view_t *gv) {
 
   py::list ret_list;
-  if (!gv) return ret_list;
+  if (!gv)
+    return ret_list;
 
   auto charge_part =geom_view_tools_t::get_charge_partition(gv);
 
@@ -159,9 +167,11 @@ py::list geom_view_tools_t::py_get_charge_partition(geom_view_t *gv) {
 void geom_view_tools_t::pertrub_via_normal_mode(geom_view_t *gv,
                                                 generic_array_t<vector3<float>, float> &disp) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
-  if (static_cast<size_t>(gv->m_geom->nat()) != disp.size()) return;
+  if (static_cast<size_t>(gv->m_geom->nat()) != disp.size())
+    return;
 
   for (size_t i = 0; i < static_cast<size_t>(gv->m_geom->nat()); i++)
     gv->m_geom->coord(i) = gv->m_geom->coord(i) + disp[i];
@@ -172,12 +182,15 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
                                                            vector3<float> new_frame) {
 
   std::string ret;
-  if (!gv) return ret;
+
+  if (!gv)
+    return ret;
 
   bool first = true;
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
     auto rec = gv->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    if (!rec)
+      continue;
 
     vector3<float> pos_i = gv->m_geom->pos((*rec).m_atm) - new_frame;
 
@@ -201,18 +214,23 @@ std::string geom_view_tools_t::pretty_print_selected_atoms(geom_view_t *gv,
 
 void geom_view_tools_t::name_sel_atoms_by_order(geom_view_t *gv) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   gv->m_labels->m_style.set_value(geom_labels_style_e::show_custom);
 
   size_t atom_ord_c{0};
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+
     auto rec = gv->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    if (!rec)
+      continue;
+
     gv->m_geom->xfield<std::string>(xgeom_label_text, (*rec).m_atm) = std::to_string(atom_ord_c);
     gv->m_geom->xfield<bool>(xgeom_label_show, (*rec).m_atm) = true;
     atom_ord_c++;
+
   }
 
 }
@@ -220,18 +238,23 @@ void geom_view_tools_t::name_sel_atoms_by_order(geom_view_t *gv) {
 void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3<float> point) {
 
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   gv->m_labels->m_style.set_value(geom_labels_style_e::show_custom);
 
   std::vector<std::tuple<size_t, float> > tmp_dists;
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+
     auto rec = gv->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    if (!rec)
+      continue;
+
     float dist = (gv->m_geom->pos((*rec).m_atm, (*rec).m_idx) - point).norm();
     std::tuple<size_t, float> tmp_dist_rec{(*rec).m_atm, dist};
     tmp_dists.push_back(std::move(tmp_dist_rec));
+
   }
 
   std::sort(std::begin(tmp_dists),
@@ -252,21 +275,25 @@ void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3
 void geom_view_tools_t::flip_atom_in_cell(geom_view_t *gv, size_t at_id, size_t dim_id,
                                           float flip_magn, bool rebuild_tree) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   app_state_t *astate = app_state_t::get_inst();
 
   if (at_id >= static_cast<size_t>(gv->m_geom->nat())
-      || dim_id > static_cast<size_t>(gv->m_geom->get_DIM())) return;
+      || dim_id > static_cast<size_t>(gv->m_geom->get_DIM()))
+    return;
 
-  if (rebuild_tree) gv->begin_structure_change();
+  if (rebuild_tree)
+    gv->begin_structure_change();
 
   auto as_frac = gv->m_geom->cell.cart2frac(gv->m_geom->pos(at_id));
   as_frac[dim_id] = as_frac[dim_id] + flip_magn;
   auto as_cart = gv->m_geom->cell.frac2cart(as_frac);
   gv->m_geom->coord(at_id) = as_cart;
 
-  if (rebuild_tree) gv->end_structure_change();
+  if (rebuild_tree)
+    gv->end_structure_change();
 
   astate->make_viewport_dirty();
 
@@ -281,10 +308,14 @@ void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, f
   index zero = index::D(gv->m_geom->get_DIM()).all(0);
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+
     auto rec = gv->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    if (!rec)
+      continue;
+
     if ((*rec).m_idx == zero)
       geom_view_tools_t::flip_atom_in_cell(gv, (*rec).m_atm, dim_id, flip_magn, false);
+
   }
 
   gv->end_structure_change();
@@ -293,7 +324,8 @@ void geom_view_tools_t::flip_sel_atoms_in_cell(geom_view_t *gv, size_t dim_id, f
 
 void geom_view_tools_t::align_atoms_to_point(geom_view_t *gv, vector3<float> fpoint) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   gv->begin_structure_change();
 
@@ -324,7 +356,8 @@ std::vector<size_t> geom_view_tools_t::get_atoms_cn(geom_view_t *gv) {
 
   std::vector<size_t> retv;
 
-  if (!gv) return retv;
+  if (!gv)
+    return retv;
 
   retv.resize(gv->m_geom->nat(), 0);
   tws_tree_t<float, periodic_cell<float> > l_tws_tree(*gv->m_geom);
@@ -334,7 +367,8 @@ std::vector<size_t> geom_view_tools_t::get_atoms_cn(geom_view_t *gv) {
   l_tws_tree.do_action(act_unlock | act_rebuild_tree);
   l_tws_tree.do_action(act_rebuild_ntable);
 
-  for (size_t i = 0; i < gv->m_geom->nat(); i++) retv[i] = l_tws_tree.n(i);
+  for (size_t i = 0; i < gv->m_geom->nat(); i++)
+    retv[i] = l_tws_tree.n(i);
 
   return retv;
 
@@ -344,7 +378,8 @@ std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv, fl
 
   std::vector<size_t> retv, sfv;
 
-  if (!gv) return retv;
+  if (!gv)
+    return retv;
 
   retv.resize(gv->m_geom->nat(), 0);
   sfv.resize(gv->m_geom->nat(), 0);
@@ -419,7 +454,8 @@ std::vector<size_t> geom_view_tools_t::get_atoms_sublattices(geom_view_t *gv, fl
 void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selection,
                                             bool affect_anim) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   //update geometry
   for (int i = 0; i < gv->m_geom->nat(); i++)
@@ -442,18 +478,22 @@ void geom_view_tools_t::clamp_atoms_to_cell(geom_view_t *gv, bool ignore_selecti
 void geom_view_tools_t::translate_atoms_in_cell(geom_view_t *gv, vector3<float> tr_vec,
                                                 bool clamp_atoms, bool affect_anim) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   app_state_t *astate = app_state_t::get_inst();
 
-  for (size_t i = 0; i < gv->m_geom->nat(); i++) gv->m_geom->coord(i) += tr_vec;
+  for (size_t i = 0; i < gv->m_geom->nat(); i++)
+    gv->m_geom->change_pos(i, gv->m_geom->coord(i) + tr_vec);
+
   if (affect_anim)
     for (auto &anim_rec : gv->m_anim->m_anim_data)
       for (auto &frame : anim_rec.frames)
         for (auto &atom_pos : frame.atom_pos)
           atom_pos += tr_vec;
 
-  if (clamp_atoms) geom_view_tools_t::clamp_atoms_to_cell(gv, true, affect_anim);
+  if (clamp_atoms)
+    geom_view_tools_t::clamp_atoms_to_cell(gv, true, affect_anim);
 
   astate->make_viewport_dirty();
 
@@ -464,9 +504,11 @@ vector3<float> geom_view_tools_t::center_cell_on(geom_view_t *gv, vector3<float>
 
   //compute cell center
   vector3<float> cell_cnt{0};
-  if (!gv) return cell_cnt;
+  if (!gv)
+    return cell_cnt;
 
-  for (size_t i = 0 ; i < gv->m_geom->get_DIM(); i++) cell_cnt += gv->m_geom->cell.v[i] * 0.5f;
+  for (size_t i = 0 ; i < gv->m_geom->get_DIM(); i++)
+    cell_cnt += gv->m_geom->cell.v[i] * 0.5f;
 
   vector3<float> delta = cell_cnt - new_cnt;
   geom_view_tools_t::translate_atoms_in_cell(gv, delta, clamp_atoms, affect_anim);
@@ -479,7 +521,8 @@ void geom_view_tools_t::tr_align_geoms(geom_view_t *what_gv, geom_view_t *to_gv,
                                        vector3<float> start_offset, vector3<float> axis_steps,
                                        size_t total_steps) {
 
-  if (!what_gv || !to_gv) return;
+  if (!what_gv || !to_gv)
+    return;
 
   vector3<float> cur_offset{0};
   float cur_score{0};
@@ -531,7 +574,8 @@ void geom_view_tools_t::compose_gv_from_images(pybind11::list gvs) {
   app_state_t *astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
 
-  if (!ok) throw std::invalid_argument("invalid ws");
+  if (!ok)
+    throw std::invalid_argument("invalid ws");
 
   //bool succes{false};
 
@@ -582,8 +626,11 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::gen_ncells(geom_view_t *gv,
                                                            int s_b, int e_b,
                                                            int s_c, int e_c) {
 
-  if (!gv) return nullptr;
-  if (gv->m_geom->get_DIM() != 3) return nullptr;
+  if (!gv)
+    return nullptr;
+
+  if (gv->m_geom->get_DIM() != 3)
+    return nullptr;
 
   std::shared_ptr<geom_view_t> sc_al = std::make_shared<geom_view_t>();
   sc_al->m_geom->set_DIM(0);
@@ -648,8 +695,11 @@ void geom_view_tools_t::gen_supercell(geometry<float, periodic_cell<float>> *src
   xgeometry<float, periodic_cell<float> > *xsrc = nullptr;
   xgeometry<float, periodic_cell<float> > *xdst = nullptr;
 
-  if (src->is_xgeometry()) xsrc = (xgeometry<float, periodic_cell<float> > *)(&src);
-  if (dst->is_xgeometry()) xdst = (xgeometry<float, periodic_cell<float> > *)(&dst);
+  if (src->is_xgeometry())
+    xsrc = (xgeometry<float, periodic_cell<float> > *)(&src);
+
+  if (dst->is_xgeometry())
+    xdst = (xgeometry<float, periodic_cell<float> > *)(&dst);
 
   for (auto i = 0; i < src->nat(); i++)
     for (iterator idx_it(index::D(src->get_DIM()).all(0), sc_dim); !idx_it.end(); idx_it++ ) {
@@ -670,9 +720,14 @@ void geom_view_tools_t::gen_pair_dist_anim(geom_view_t *gv,
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!gv) return;
-  if (at1 >= gv->m_geom->nat() || at2 >= gv->m_geom->nat() || at1 == at2) return;
-  if (start_r > end_r || start_r < 0 || end_r < 0) return;
+  if (!gv)
+    return;
+
+  if (at1 >= gv->m_geom->nat() || at2 >= gv->m_geom->nat() || at1 == at2)
+    return;
+
+  if (start_r > end_r || start_r < 0 || end_r < 0)
+    return;
 
   //compose transformation data
   auto cnt = (gv->m_geom->pos(at1) + gv->m_geom->pos(at2)) * 0.5f;
@@ -718,7 +773,8 @@ void geom_view_tools_t::filter_uniq(geom_view_t *gv) {
 void geom_view_tools_t::set_charge_for_type(geom_view_t *gv,
                                             std::map<std::string, float> &map_t_chg) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   for (size_t i = 0; i < gv->m_geom->nat(); i++)
     if (auto chg_rec_ex = map_t_chg.find(gv->m_geom->atom_name(i));
@@ -730,7 +786,8 @@ void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   for (size_t i = 0; i < gv->m_geom->nat(); i++) {
 
@@ -751,8 +808,11 @@ void geom_view_tools_t::purify_atom_names_from_numbers(geom_view_t *gv) {
 
 void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selected) {
 
-  if (!gv) return;
-  if (gv->m_geom->no_aselected()) return;
+  if (!gv)
+    return;
+
+  if (gv->m_geom->no_aselected())
+    return;
 
   std::shared_ptr<geom_view_t> ret_gv = std::make_shared<geom_view_t>();
   ret_gv->copy_cell(*gv, false);
@@ -761,8 +821,11 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
   index zero_gv = index::D(gv->m_geom->get_DIM()).all(0);
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+
     auto rec = gv->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    if (!rec)
+      continue;
+
     auto val = *rec;
     if (val.m_idx == zero_gv) {
       ret_gv->m_geom->add(gv->m_geom->atom(val.m_atm), gv->m_geom->pos(val.m_atm, val.m_idx));
@@ -775,7 +838,8 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
   ret_gv->end_structure_change();
 
-  if (cut_selected) gv->delete_selected_atoms();
+  if (cut_selected)
+    gv->delete_selected_atoms();
 
   ret_gv->m_name.set_value(
       fmt::format("{}{}", gv->m_name.get_value(), gv->m_parent_ws->num_items()));
@@ -787,7 +851,8 @@ std::map<std::string, size_t> geom_view_tools_t::get_sel_types(geom_view_t *gv) 
 
   std::map<std::string, size_t> retv;
 
-  if (!gv) return retv;
+  if (!gv)
+    return retv;
 
   std::vector<size_t> tmp_tc;
   tmp_tc.resize(gv->m_geom->n_types());
@@ -798,11 +863,15 @@ std::map<std::string, size_t> geom_view_tools_t::get_sel_types(geom_view_t *gv) 
 //      tmp_tc[gv->m_geom->type_table(rec.m_atm)]++;
 
   for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+
     auto rec = gv->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    if (!rec)
+      continue;
+
     auto val = *rec;
     if (val.m_idx == zero)
       tmp_tc[gv->m_geom->type_table(val.m_atm)]++;
+
   }
 
   for (size_t i = 0; i < gv->m_geom->n_types(); i++)
@@ -817,7 +886,8 @@ void geom_view_tools_t::naive_project_displ(geom_view_t *src,
                                             float eps_dist,
                                             bool check_run) {
 
-  if (!src || !dst || eps_dist < 0) return;
+  if (!src || !dst || eps_dist < 0)
+    return;
 
   py::print(fmt::format("Check run = {}", check_run));
 
@@ -826,7 +896,8 @@ void geom_view_tools_t::naive_project_displ(geom_view_t *src,
     std::vector<tws_node_cnt_t<float> > qs_res;
     src->m_tws_tr->query_sphere(eps_dist, dst->m_geom->pos(i), qs_res);
 
-    if (qs_res.empty()) continue;
+    if (qs_res.empty())
+      continue;
 
     auto pos_src = src->m_geom->pos(qs_res.front().m_atm);
     auto pos_dst = dst->m_geom->pos(i);
@@ -851,7 +922,8 @@ void geom_view_tools_t::naive_fit_str(geom_view_t *model,
                                       std::vector<size_t> &model_idx,
                                       std::vector<size_t> &target_idx) {
 
-  if (!model || !target || (model_idx.size() != target_idx.size())) return;
+  if (!model || !target || (model_idx.size() != target_idx.size()))
+    return;
 
   std::vector<vector3<float> > model_pos;
   std::vector<vector3<float> > target_pos;
@@ -887,7 +959,8 @@ std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compl_list
     bool only_affect_visible_atoms) {
 
   std::vector<std::tuple<size_t, size_t> > retv;
-  if (!model || !target) return retv;
+  if (!model || !target)
+    return retv;
 
   for (size_t i = 0; i < target->m_geom->nat(); i++)
     if (!only_affect_visible_atoms ||
@@ -942,7 +1015,8 @@ void geom_view_tools_t::displ_geom_by_comp_list(
     int d_start_frame,
     int d_end_frame) {
 
-  if (!d_start || !d_end || !target || comp_l.empty()) return ;
+  if (!d_start || !d_end || !target || comp_l.empty())
+    return ;
 
   //first anim invalid
   if (d_start_anim > -1 && d_start_anim >= d_start->m_anim->m_anim_data.size() &&
@@ -994,7 +1068,8 @@ void geom_view_tools_t::change_atom_type(const std::string &src,
 
   if (!tmp_gv) {
     auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-    if (al) tmp_gv = al;
+    if (al)
+      tmp_gv = al;
   }
 
   int src_id = tmp_gv->m_geom->type_of_atom(src);
@@ -1059,19 +1134,29 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
     }
 
     if (DIM == 2) {
+
       float sq1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).norm();
       float sq2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).norm();
-      if (sq1 > sq2) tmp_dst->copy_cell(*gv_src1, false);
-      else tmp_dst->copy_cell(*gv_src2, false);
+
+      if (sq1 > sq2)
+        tmp_dst->copy_cell(*gv_src1, false);
+      else
+        tmp_dst->copy_cell(*gv_src2, false);
+
     }
 
     if (DIM == 3) {
+
       float vol1 = (gv_src1->m_geom->cell.v[0].cross(gv_src1->m_geom->cell.v[1])).dot(
           gv_src1->m_geom->cell.v[2]);
       float vol2 = (gv_src2->m_geom->cell.v[0].cross(gv_src2->m_geom->cell.v[1])).dot(
           gv_src2->m_geom->cell.v[2]);
-      if (vol1 > vol2) tmp_dst->copy_cell(*gv_src1, false);
-      else tmp_dst->copy_cell(*gv_src2, false);
+      if (vol1 > vol2)
+
+        tmp_dst->copy_cell(*gv_src1, false);
+      else
+        tmp_dst->copy_cell(*gv_src2, false);
+
     }
 
   } else if (gv_src1->m_geom->get_DIM() > gv_src2->m_geom->get_DIM()) {
@@ -1122,7 +1207,9 @@ void geom_view_tools_t::sort_gv(
     geom_view_t *gv,
     const std::function<float (const geom_view_tools_t::geometry_t &, int)> &key) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
+
   gv->begin_structure_change();
   gv->m_geom->sort(key);
   gv->end_structure_change();
@@ -1131,7 +1218,8 @@ void geom_view_tools_t::sort_gv(
 
 void geom_view_tools_t::transform_gv(geom_view_t *gv, matrix3<float> trmat) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   periodic_cell<float> newcell(gv->m_geom->cell.DIM);
   for (int i = 0; i < newcell.DIM; i++)
@@ -1154,6 +1242,7 @@ void geom_view_tools_t::transform_gv(geom_view_t *gv, matrix3<float> trmat) {
 vector3<float> geom_view_tools_t::vec_from_miller_indicies(geom_view_t *gv, int i0, int i1, int i2) {
 
   if (!gv || gv->m_geom->cell.DIM !=3) return vector3<float>{0};
+
   vector3<float> retvec;
   retvec =
       (gv->m_geom->cell.v[0] / i0) + (gv->m_geom->cell.v[1] / i1)+ (gv->m_geom->cell.v[2] / i2);
@@ -1166,7 +1255,8 @@ void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
                                                vector3<float> new_b,
                                                vector3<float> new_c) {
 
-  if (!gv) return;
+  if (!gv)
+    return;
 
   gv->begin_structure_change();
 
