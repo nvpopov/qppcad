@@ -16,14 +16,19 @@ void clamp_atoms_to_cell_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   if (!ok) return;
 
   if (al->m_geom->get_DIM() != 3) {
-      QMessageBox::warning(nullptr,
-                           QObject::tr("Supercell generation"),
-                           QObject::tr("Structure's dimension is not equals to 3  ")
-                           );
-      return;
-    }
+    QMessageBox::warning(nullptr,
+                         QObject::tr("Supercell generation"),
+                         QObject::tr("Structure's dimension is not equals to 3  ")
+                         );
+    return;
+  }
+
+
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
 
   geom_view_tools_t::clamp_atoms_to_cell(al, ignore_selection);
+
+  al->end_recording();
 
   astate->make_viewport_dirty();
 
