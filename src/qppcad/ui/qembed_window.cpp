@@ -41,7 +41,7 @@ qembed_window_sub_header_t::qembed_window_sub_header_t(QWidget *parent) : QFrame
   setLayout(m_main_lt);
 
   m_text = new QLabel;
-  m_text->setText(tr("Subheader"));
+  //m_text->setText(tr("Subheader"));
 
   m_main_lt->addWidget(m_text);
 
