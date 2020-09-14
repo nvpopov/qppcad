@@ -40,14 +40,17 @@ void axial_scale_tool_t::apply_axial_scale(geom_view_t *al,
                                            const float scale_a,
                                            const float scale_b,
                                            const float scale_c) {
-  if (al->m_geom->get_DIM() != 3) return;
+  if (al->m_geom->get_DIM() != 3)
+    return;
 
   std::array<vector3<float>, 3> new_cell;
   new_cell[0] = al->m_geom->cell.v[0] * scale_a;
   new_cell[1] = al->m_geom->cell.v[1] * scale_b;
   new_cell[2] = al->m_geom->cell.v[2] * scale_c;
 
+  al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   geom_view_tools_t::change_cell_keep_atoms(al, new_cell[0], new_cell[1], new_cell[2]);
+  al->end_recording();
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_cell_changed();
@@ -139,9 +142,13 @@ axial_scale_widget_t::axial_scale_widget_t() : QDialog () {
 
 bool axial_scale_can_apply_helper_t::can_apply(ws_item_t *item) {
 
-  if (!item) return false;
+  if (!item)
+    return false;
+
   auto as_gv = item->cast_as<geom_view_t>();
-  if (!as_gv) return false;
+  if (!as_gv)
+    return false;
+
   return as_gv->m_geom->get_DIM() == 3;
 
 }

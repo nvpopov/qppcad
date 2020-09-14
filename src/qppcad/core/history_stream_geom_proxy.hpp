@@ -333,9 +333,11 @@ protected:
     p_currently_applying_dstate = true;
 
     if (ds_dir == hs_dstate_apply_e::hs_ds_unapply) {
-      for (auto i = rbegin(acts); i != rend(acts); ++i) unapply_action(*i);
+      for (auto i = rbegin(acts); i != rend(acts); ++i)
+        unapply_action(*i);
     } else { /*ds_dir == hs_ds_apply*/
-      for (auto i = begin(acts); i != end(acts); ++i) apply_action(*i);
+      for (auto i = begin(acts); i != end(acts); ++i)
+        apply_action(*i);
     }
 
     p_currently_applying_dstate = false;
