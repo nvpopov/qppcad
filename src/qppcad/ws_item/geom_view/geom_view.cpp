@@ -1968,7 +1968,8 @@ py::list geom_view_t::get_unsel_atoms(int index_offset) {
 
 void geom_view_t::copy_settings(geom_view_t *src) {
 
-  if (!src) return;
+  if (!src)
+    return;
 
   m_draw_atoms             = src->m_draw_atoms;
   m_draw_bonds             = src->m_draw_bonds;

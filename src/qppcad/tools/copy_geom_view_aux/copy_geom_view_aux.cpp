@@ -1,27 +1,22 @@
-#include <qppcad/tools/copy_geom_view_aux/copy_geom_view_aux.hpp>
 #include <qppcad/core/app_state.hpp>
-#include <qppcad/ws_item/geom_view/geom_view.hpp>
+#include <qppcad/tools/copy_geom_view_aux/copy_geom_view_aux.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
 
-void copy_geom_view_aux_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
+void copy_geom_view_aux_tool_t::exec(ws_item_t* item, uint32_t _error_ctx) {
+  app_state_t* astate = app_state_t::get_inst();
 }
 
-ws_item_inline_tool_widget_t *copy_geom_view_aux_tool_t::construct_inline_tool() {
-
+ws_item_inline_tool_widget_t* copy_geom_view_aux_tool_t::construct_inline_tool() {
   return new copy_geom_view_aux_widget_t();
-
 }
 
-copy_geom_view_aux_widget_t::copy_geom_view_aux_widget_t(QWidget *parent)
+copy_geom_view_aux_widget_t::copy_geom_view_aux_widget_t(QWidget* parent)
   : ws_item_inline_tool_widget_t(parent) {
 
-  app_state_t *astate = app_state_t::get_inst();
+  app_state_t* astate = app_state_t::get_inst();
 
   setWindowTitle(tr("Copy geom. view aux data"));
 
@@ -34,9 +29,7 @@ copy_geom_view_aux_widget_t::copy_geom_view_aux_widget_t(QWidget *parent)
 
   actions_lt = new QHBoxLayout;
   action_select_all = new QPushButton(tr(" Toggle selection "));
-  connect(action_select_all,
-          &QPushButton::clicked,
-          sub_gv,
+  connect(action_select_all, &QPushButton::clicked, sub_gv,
           &ws_item_list_widget_t::select_all_clicked);
 
   cb_copy_settings = new QCheckBox(nullptr);
@@ -59,45 +52,62 @@ copy_geom_view_aux_widget_t::copy_geom_view_aux_widget_t(QWidget *parent)
 
   main_lt->addLayout(actions_lt);
   main_lt->addWidget(sub_gv);
-  //main_lt->addWidget(dialog_bb);
+  // main_lt->addWidget(dialog_bb);
 
 }
 
 void copy_geom_view_aux_widget_t::on_apply() {
 
   auto master_as_gv = sub_gv->m_master_item->cast_as<geom_view_t>();
+
+  if (sub_gv->count() == 0)
+    return;
+
   for (size_t i = 0; i < sub_gv->count(); i++)
-    if (QListWidgetItem *item = sub_gv->item(i); item && item->checkState() == Qt::Checked)
+    if (QListWidgetItem* item = sub_gv->item(i); item && item->checkState() == Qt::Checked)
       if (auto slave_as_gv = sub_gv->m_sub_items[i]->cast_as<geom_view_t>(); slave_as_gv) {
-          if (cb_copy_settings->isChecked()) slave_as_gv->copy_settings(master_as_gv);
-          if (cb_copy_xgeom->isChecked()) slave_as_gv->copy_xgeom_aux(master_as_gv);
-          if (cb_copy_msr->isChecked()) slave_as_gv->copy_measurements(master_as_gv);
-        }
+
+        bool need_to_record = cb_copy_settings->isChecked()
+                              || cb_copy_settings->isChecked()
+                              || cb_copy_msr->isChecked();
+
+        if (need_to_record)
+          slave_as_gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+
+        if (cb_copy_settings->isChecked())
+          slave_as_gv->copy_settings(master_as_gv);
+
+        if (cb_copy_xgeom->isChecked())
+          slave_as_gv->copy_xgeom_aux(master_as_gv);
+
+        if (cb_copy_msr->isChecked())
+          slave_as_gv->copy_measurements(master_as_gv);
+
+        if (need_to_record)
+          slave_as_gv->end_recording();
+
+      }
 
 }
 
-void copy_geom_view_aux_widget_t::on_cancel() {
+void copy_geom_view_aux_widget_t::on_cancel() {}
 
-}
-
-void copy_geom_view_aux_widget_t::bind_item(ws_item_t *item) {
+void copy_geom_view_aux_widget_t::bind_item(ws_item_t* item) {
 
   ws_item_inline_tool_widget_t::bind_item(item);
 
   if (m_src->get_type() == geom_view_t::get_type_static()) {
-      m_src_gv = m_src->cast_as<geom_view_t>();
-    } else {
-      m_src_gv = nullptr;
-      sub_gv->m_master_item = nullptr;
-    }
+    m_src_gv = m_src->cast_as<geom_view_t>();
+  } else {
+    m_src_gv = nullptr;
+    sub_gv->m_master_item = nullptr;
+  }
 
-  if (!m_src_gv) return;
-
-  //std::cout << "@@@ MSRCGV SET " << m_src_gv->m_name << std::endl;
+  if (!m_src_gv)
+    return;
 
   sub_gv->m_master_item = m_src_gv;
-  sub_gv->rebuild_sub_gvs([](ws_item_t *master, ws_item_t *slave) -> bool {
-
+  sub_gv->rebuild_sub_gvs([](ws_item_t* master, ws_item_t* slave) -> bool {
     if (!master || !slave) return false;
 
     auto master_as_gv = master->cast_as<geom_view_t>();
@@ -105,14 +115,10 @@ void copy_geom_view_aux_widget_t::bind_item(ws_item_t *item) {
     if (!master_as_gv || !slave_as_gv) return false;
 
     return master_as_gv != slave_as_gv
-           && master_as_gv->m_geom->get_DIM() == slave_as_gv->m_geom->get_DIM()
-           && master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
-
+                           && master_as_gv->m_geom->get_DIM() == slave_as_gv->m_geom->get_DIM()
+                           && master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
   });
 
 }
 
-void copy_geom_view_aux_widget_t::updated_externally(uint32_t update_reason) {
-
-}
-
+void copy_geom_view_aux_widget_t::updated_externally(uint32_t update_reason) {}
