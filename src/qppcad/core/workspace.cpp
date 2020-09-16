@@ -65,23 +65,19 @@ std::optional<size_t> workspace_t::get_sel_idx() {
 }
 
 ws_item_t *workspace_t::get_sel() {
-
   std::optional<size_t> sel_idx = get_sel_idx();
   if (sel_idx)
     return m_ws_items.get_hs_child_as_array(*sel_idx).get();
   else
     return nullptr;
-
 }
 
 std::shared_ptr<ws_item_t> workspace_t::get_sel_sp() {
-
   std::optional<size_t> sel_idx = get_sel_idx();
   if (sel_idx)
     return m_ws_items.get_hs_child_as_array(*sel_idx);
   else
     return nullptr;
-
 }
 
 std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string name) {
@@ -133,11 +129,9 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
       m_cur_itm.commit_value_exclusive(sel_idx);
 
     if (ws_item->get_flags() & ws_item_flags_support_tr) {
-
       m_gizmo->attached_item = ws_item;
       m_gizmo->update_gizmo(0.1f, true);
       astate->make_viewport_dirty();
-
     } else {
       m_gizmo->attached_item = nullptr;
       m_gizmo->update_gizmo(0.1f, true);
@@ -151,12 +145,15 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
 
   }
 
-  //astate->make_viewport_dirty();
+  //nothing selected
   update_overview("");
+
   if (emit_signal)
     astate->astate_evd->cur_ws_selected_item_changed();
+
   if (emit_hs_event)
     m_cur_itm.commit_value_exclusive(-1);
+
   return false;
 
 }
@@ -180,7 +177,8 @@ void workspace_t::next_item() {
 
 void workspace_t::prev_item() {
   int target_id = get_sel_idx().value_or(0) - 1;
-  if (target_id < 0) target_id = num_items() - 1;
+  if (target_id < 0)
+    target_id = num_items() - 1;
   set_sel_item(target_id);
 }
 
@@ -195,7 +193,9 @@ void workspace_t::unsel_all(bool emit_signal) {
 
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->request_update_overview("");
-  if (emit_signal) astate->astate_evd->cur_ws_selected_item_changed();
+
+  if (emit_signal)
+    astate->astate_evd->cur_ws_selected_item_changed();
 
 }
 
@@ -218,10 +218,8 @@ size_t workspace_t::num_items() {
 }
 
 void workspace_t::reset_cam() {
-
   m_camera->reset_camera();
   set_best_view();
-
 }
 
 void workspace_t::set_best_view() {
@@ -266,15 +264,7 @@ void workspace_t::set_best_view() {
 
   // if special case failed fallback to vote view
   if (!cam_staged) {
-
     size_t total_voters = 0;
-
-    //    for (auto &ws_item : m_ws_items)
-    //      if (ws_item->get_flags() & ws_item_flags_support_view_voting) {
-    //        total_voters+=1;
-    //        ws_item->vote_for_view_vectors(vec_look_pos, vec_look_at);
-    //      }
-
     for (size_t i = 0; i < num_items(); i++) {
       auto ws_item = m_ws_items.get_hs_child_as_array(i);
       if (!ws_item) continue;
@@ -297,8 +287,8 @@ void workspace_t::set_best_view() {
   m_camera->orthogonalize_gs();
   m_camera->update_camera();
 
-  if ((m_camera->m_cam_state.m_look_at-m_camera->m_cam_state.m_view_point).norm() < 0.4f ||
-      vec_look_at == vec_look_pos)
+  if ((m_camera->m_cam_state.m_look_at-m_camera->m_cam_state.m_view_point).norm() < 0.4f
+      || vec_look_at == vec_look_pos)
     m_camera->reset_camera();
 
 }
@@ -322,11 +312,13 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
     auto itm = m_ws_items.get_hs_child_as_array(i);
     if (!itm)
       continue;
+
     if (itm->is_selected())
       affected = true;
 
     if (m_ws_items.is_child_alive(prev_epoch, itm) == hs_result_e::hs_alive)
       alive_cnt_before++;
+
     if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive)
       alive_cnt_after++;
 
@@ -337,17 +329,20 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
                m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
 
   if (cur_ws && cur_ws.get() == this) {
+
     m_cur_itm.set_commit_exclusive_on_change(false);
-    if (m_cur_itm.get_value() == -1 ) {
-     // unsel_all(true);
+    if (m_cur_itm.get_value() == -1) {
+      //unsel_all(true);
     } else {
       astate->tlog("Epoch changed in workspace {} -> set_sel_item {}",
                    m_ws_name, m_cur_itm.get_value());
-     // set_sel_item(m_cur_itm.get_value(), true, false);
+      //set_sel_item(m_cur_itm.get_value(), true, false);
     }
+
     m_cur_itm.set_commit_exclusive_on_change(true);
     if (alive_cnt_after != alive_cnt_before)
       astate->astate_evd->cur_ws_content_changed_signal();
+
     if (affected)
       astate->astate_evd->cur_ws_selected_item_changed();
   }
@@ -360,14 +355,13 @@ void workspace_t::render() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_gizmo->m_is_active && m_gizmo->attached_item) m_gizmo->render();
+  if (m_gizmo->m_is_active && m_gizmo->attached_item)
+    m_gizmo->render();
 
   if (astate->m_debug_show_selection_ray) {
-
     astate->dp->begin_render_line();
     astate->dp->render_line({1.0, 1.0, 0.0}, m_ray.start, m_ray.start + m_ray.dir * 155.0);
     astate->dp->end_render_line();
-
   }
 
   if (astate->dp) {
@@ -400,8 +394,6 @@ void workspace_t::render() {
 
   }
 
-  //  for (auto &ws_item : m_ws_items) ws_item->render();
-
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
     if (!ws_item)
@@ -412,10 +404,6 @@ void workspace_t::render() {
 }
 
 void workspace_t::render_overlay(QPainter &painter) {
-
-  //  for (auto &ws_item : m_ws_items)
-  //    if (ws_item->m_is_visible.get_value()) ws_item->render_overlay(painter);
-
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
     if (!ws_item)
@@ -423,8 +411,6 @@ void workspace_t::render_overlay(QPainter &painter) {
     if (ws_item->m_is_visible.get_value())
       ws_item->render_overlay(painter);
   }
-
-
 }
 
 void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
@@ -432,18 +418,15 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
-
     m_ray.start = m_camera->m_cam_state.m_view_point;
     m_ray.dir =
         (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_cam_state.m_view_point).normalized();
   } else {
-
     float z_p = (m_camera->m_cam_state.m_znear_ortho + m_camera->m_cam_state.m_zfar_ortho)
                 / (m_camera->m_cam_state.m_znear_ortho - m_camera->m_cam_state.m_zfar_ortho);
 
     m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
     m_ray.dir = (m_camera->m_cam_state.m_look_at - m_camera->m_cam_state.m_view_point).normalized();
-
   }
 
   if (m_gizmo->m_is_visible && m_gizmo->attached_item && m_gizmo->process_ray(&m_ray)) {
@@ -453,18 +436,17 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
   bool hit_any = false;
 
+  int sel_idx{-1};
   if (m_edit_type != ws_edit_e::edit_content) {
-
-    //for (auto &ws_item : m_ws_items) ws_item->m_selected = false;
     for (size_t i = 0; i < num_items(); i++) {
       auto ws_item = m_ws_items.get_hs_child_as_array(i);
       if (!ws_item)
         continue;
+      if (ws_item->m_selected)
+        sel_idx = i;
       ws_item->m_selected = false;
     }
-
     m_gizmo->attached_item = nullptr;
-
   }
 
   for (size_t i = 0; i < num_items(); i++) {
@@ -476,7 +458,8 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
     bool is_hit = ws_item->mouse_click(&m_ray);
     hit_any = hit_any || is_hit;
 
-    if (is_hit && m_edit_type == ws_edit_e::edit_item
+    if (is_hit
+        && m_edit_type == ws_edit_e::edit_item
         && ws_item->m_is_visible.get_value()
         && (ws_item->get_flags() & ws_item_flags_support_sel)) {
 
@@ -491,6 +474,11 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   if (m_edit_type != ws_edit_e::edit_content && !hit_any) {
     m_gizmo->attached_item = nullptr;
     unsel_all();
+  }
+
+  //the item was unselected, we need to commit -1 to m_cur_itm proxy
+  if (sel_idx != -1 && !hit_any) {
+    m_cur_itm.commit_value_exclusive(-1);
   }
 
 }
@@ -536,20 +524,16 @@ void workspace_t::update_overview(const std::string &overview_text) {
 }
 
 void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete) {
-
   for (size_t i = 0; i < num_items(); i++) {
-
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
     if (!ws_item)
       continue;
-
     auto it = std::find(begin(ws_item->m_connected_items),
                         end(ws_item->m_connected_items),
                         item_to_delete);
-    if (it != end(ws_item->m_connected_items)) ws_item->m_connected_items.erase(it);
-
+    if (it != end(ws_item->m_connected_items))
+      ws_item->m_connected_items.erase(it);
   }
-
 }
 
 void workspace_t::save_ws_to_json(const std::string filename) {
@@ -660,15 +644,11 @@ void workspace_t::load_ws_from_json(const std::string filename) {
 
     //end of revive ws_item_t class fields
 
-    //for (auto &item : m_ws_items) if (item) item->updated_externally();
-
     for (size_t i = 0; i < num_items(); i++) {
-
       auto ws_item = m_ws_items.get_hs_child_as_array(i);
       if (!ws_item)
         continue;
       ws_item->updated_externally();
-
     }
 
     m_fs_path = filename;
@@ -693,36 +673,27 @@ void workspace_t::update(float delta_time) {
 
   //scenic camera rotation
   if (m_scenic_rotation) {
-
     m_camera->rotate_camera_orbit_roll(m_scenic_rotation_speed[0] * delta_time);
     m_camera->rotate_camera_orbit_pitch(m_scenic_rotation_speed[1] * delta_time);
     m_camera->rotate_camera_orbit_yaw(m_scenic_rotation_speed[2] * delta_time);
     m_camera->update_camera();
-
     astate->make_viewport_dirty();
-
   }
 
   //update cycle
-  //for (auto &ws_item : m_ws_items) ws_item->update(delta_time);
-
   for (size_t i = 0; i < num_items(); i++) {
-
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
     if (!ws_item)
       continue;
     ws_item->update(delta_time);
-
   }
 
 }
 
 void workspace_t::set_edit_type (const ws_edit_e new_edit_type) {
-
   app_state_t* astate = app_state_t::get_inst();
   m_edit_type = new_edit_type;
   astate->astate_evd->cur_ws_edit_type_changed();
-
 }
 
 void workspace_t::copy_cam(std::shared_ptr<workspace_t> source) {
@@ -753,14 +724,12 @@ void workspace_t::pop_cam_state() {
 }
 
 void workspace_t::del_item_by_index(size_t idx) {
-
   if (idx < num_items()) {
     auto ws_item = m_ws_items.get_hs_child_as_array(idx);
     if (!ws_item)
       return;
     ws_item->hs_delete();
   }
-
 }
 
 void workspace_t::make_overview_dirty() {
@@ -803,10 +772,8 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
 }
 
 workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
-
   m_cur_ws_id = 0;
   cached_astate = _astate;
-
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
@@ -844,22 +811,16 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target
 }
 
 std::optional<size_t> workspace_manager_t::get_cur_id() {
-
   if (!m_ws.empty())
     return m_cur_ws_id;
   return std::nullopt;
-
 }
 
 bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
 
-  //c_app::log("set current called");
   app_state_t* astate = app_state_t::get_inst();
 
-  //astate->tlog("ws::set_cur_id({})", *ws_index);
-
   if (has_wss()) {
-
     if (ws_index && *ws_index < m_ws.size()) {
       m_cur_ws_id = std::optional<size_t>(ws_index);
       //update_window_title();
@@ -871,15 +832,12 @@ bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
                    m_ws[*ws_index]->m_ws_name);
       astate->astate_evd->cur_ws_changed();
       return true;
-
     }
   } else {
-
     m_cur_ws_id = std::nullopt;
     astate->camera = nullptr;
     astate->astate_evd->cur_ws_changed();
     return false;
-
   }
 
   return false;
@@ -887,45 +845,36 @@ bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
-
   if (!m_ws.empty() && id >= 0 && id < m_ws.size())
     return m_ws[id];
   else
     return nullptr;
-
 }
 
 void workspace_manager_t::next_ws() {
-
   size_t target_id = get_cur_id().value_or(0) + 1;
   if (target_id >= m_ws.size())
     target_id = 0;
   set_cur_id(std::optional<size_t>(target_id));
-
 }
 
 void workspace_manager_t::prev_ws() {
-
   int target_id = get_cur_id().value_or(0) - 1;
   if (target_id < 0)
     target_id = m_ws.size() - 1;
   set_cur_id(std::optional<size_t>(target_id));
-
 }
 
 void workspace_manager_t::cur_ws_next_item() {
-
   auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
   if (ok)
     cur_ws->next_item();
-
 }
 
 void workspace_manager_t::cur_ws_prev_item() {
-
   auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
-  if (ok) cur_ws->prev_item();
-
+  if (ok)
+      cur_ws->prev_item();
 }
 
 void workspace_manager_t::init_default () {
@@ -938,9 +887,9 @@ void workspace_manager_t::init_default () {
 
   for (auto &file : files)
     load_from_file_autodeduce(QDir::toNativeSeparators(file).toStdString(),
-                              "", /*for autodeduce*/
-                              true, /*create new ws*/
-                              true /*squash hs*/
+                              "",   /* for autodeduce */
+                              true, /* create new ws */
+                              true  /* squash hs */
                               );
 
   create_new_ws();
@@ -968,9 +917,7 @@ void workspace_manager_t::render_cur_ws () {
   app_state_t* astate = app_state_t::get_inst();
 
   if (has_wss()) {
-
     if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
-
       astate->glapi->glClearColor(m_ws[*m_cur_ws_id]->m_bg_color[0],
                                   m_ws[*m_cur_ws_id]->m_bg_color[1],
                                   m_ws[*m_cur_ws_id]->m_bg_color[2],
@@ -978,9 +925,7 @@ void workspace_manager_t::render_cur_ws () {
       astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       m_ws[*m_cur_ws_id]->render();
       return ;
-
     }
-
   }
 
   astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
@@ -992,12 +937,11 @@ void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
   app_state_t *astate = app_state_t::get_inst();
 
-  if (!has_wss()) return;
+  if (!has_wss())
+    return;
 
   if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
-
     m_ws[*m_cur_ws_id]->render_overlay(painter);
-
   }
 
 }
@@ -1029,18 +973,14 @@ void workspace_manager_t::mouse_double_click() {
 }
 
 void workspace_manager_t::ws_mgr_changed() {
-
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->wss_changed();
-
 }
 
 void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add) {
-
   ws_to_add->set_mgr(this);
   m_ws.push_back(ws_to_add);
   ws_mgr_changed();
-
 }
 
 void workspace_manager_t::init_ws_item_bhv_mgr() {
@@ -1260,7 +1200,8 @@ void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
   new_ws->set_mgr(this);
   m_ws.push_back(new_ws);
 
-  if (switch_to_new_workspace) set_cur_id(m_ws.size()-1);
+  if (switch_to_new_workspace)
+    set_cur_id(m_ws.size()-1);
   ws_mgr_changed();
 
 }
@@ -1268,10 +1209,12 @@ void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
 std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
 
   auto cur_ws = get_cur_ws();
-  if (!cur_ws) return nullptr;
+  if (!cur_ws)
+    return nullptr;
 
   auto cur_it = cur_ws->get_sel_sp();
-  if (!cur_it) return nullptr;
+  if (!cur_it)
+    return nullptr;
 
   return cur_it;
 
@@ -1312,7 +1255,8 @@ void workspace_manager_t::utility_event_loop() {
 
   }
 
-  if (has_been_deleted) astate->astate_evd->wss_changed();
+  if (has_been_deleted)
+    astate->astate_evd->wss_changed();
 
 }
 

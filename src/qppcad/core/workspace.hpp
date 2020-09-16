@@ -72,7 +72,7 @@ public:
   template<typename T>
   T* get_sel_as() {
     auto cur_it = get_sel();
-    return  cur_it->cast_as<T>();
+    return cur_it->cast_as<T>();
   }
 
   std::optional<size_t> get_item_idx(ws_item_t *item);
@@ -151,17 +151,14 @@ public:
   void add_ws(const std::shared_ptr<workspace_t> &ws_to_add);
   void init_ws_item_bhv_mgr();
   void move_ws(size_t from, size_t to);
-  void load_from_file_autodeduce(const std::string &file_name,
-                                 const std::string &file_format,
-                                 bool create_new_ws ,
-                                 bool need_to_squash_hs);
+
+  void load_from_file_autodeduce(const std::string &file_name, const std::string &file_format,
+                                 bool create_new_ws, bool need_to_squash_hs);
 
   void load_from_file(const std::string &fname, bool override = true);
 
-  void import_from_file(const std::string &fname,
-                        size_t bhv_id,
-                        bool need_to_create_new_ws,
-                        bool need_to_squash_hs);
+  void import_from_file(const std::string &fname, size_t bhv_id,
+                        bool need_to_create_new_ws, bool need_to_squash_hs);
 
   void save_ws_item_to_file(std::string &file_name,
                             std::shared_ptr<ws_item_t> ws_item,
@@ -174,19 +171,19 @@ public:
   void utility_event_loop();
 
   /**
-         * @brief get_sel_tuple
-         * @param _error_context
-         * @return
-         */
+   * @brief get_sel_tuple
+   * @param _error_context
+   * @return
+   */
   template<typename T>
   std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*>
-  get_sel_tpl_itm(uint32_t _error_context = error_ctx_def) {
+  get_sel_tpl_itm(uint32_t error_context = error_ctx_def) {
 
     auto cur_ws = get_cur_ws();
     if (!cur_ws) {
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("Invalid workspace!");
-      if (_error_context & error_ctx_mbox)
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("Invalid workspace!"));
@@ -195,9 +192,9 @@ public:
 
     auto cur_it = cur_ws->get_sel_sp();
     if (!cur_it) {
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("No item selected in the workspace");
-      if (_error_context & error_ctx_mbox)
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("No item selected in the workspace"));
@@ -206,13 +203,12 @@ public:
 
     auto casted_it = cur_it->cast_as<T>();
     if (!casted_it) {
-      if (_error_context & error_ctx_throw) {
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument(
             fmt::format("Cannot cast types: from {} to {}",
                         cur_it->get_type_name(), T::get_type_name_static())
             );
-      }
-      if (_error_context & error_ctx_mbox)
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("Cannot cast types: from %1 to %2")
@@ -227,63 +223,47 @@ public:
   }
 
   /**
-         * @brief get_sel_tpl_itmc
-         * @param _error_context
-         * @return
-         */
+   * @brief get_sel_tpl_itmc
+   * @param _error_context
+   * @return
+   */
   template<typename T>
   std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*, bool>
-  get_sel_tpl_itmc(uint32_t _error_context = error_ctx_def) {
+  get_sel_tpl_itmc(uint32_t error_context = error_ctx_def) {
 
     auto cur_ws = get_cur_ws();
-
     if (!cur_ws) {
-
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("Invalid workspace!");
-      if (_error_context & error_ctx_mbox)
-        QMessageBox::warning(nullptr,
-                             QObject::tr("Error"),
-                             QObject::tr("Invalid workspace!"));
+      if (error_context & error_ctx_mbox)
+        QMessageBox::warning(nullptr, QObject::tr("Error"), QObject::tr("Invalid workspace!"));
       return {nullptr, nullptr, nullptr, false};
-
     }
 
     auto cur_it = cur_ws->get_sel_sp();
-
     if (!cur_it) {
-
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("No item selected in the workspace");
-      if (_error_context & error_ctx_mbox)
-        QMessageBox::warning(nullptr,
-                             QObject::tr("Error"),
+      if (error_context & error_ctx_mbox)
+        QMessageBox::warning(nullptr, QObject::tr("Error"),
                              QObject::tr("No item selected in the workspace"));
       return {cur_ws, nullptr, nullptr, false};
-
     }
 
     auto casted_it = cur_it->cast_as<T>();
-
     if (!casted_it) {
-
-      if (_error_context & error_ctx_throw) {
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument(
             fmt::format("Cannot cast types: from {} to {}",
-                        cur_it->get_type_name(), T::get_type_name_static())
-            );
-      }
-
-      if (_error_context & error_ctx_mbox)
+                        cur_it->get_type_name(), T::get_type_name_static()));
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("Cannot cast types: from %1 to %2")
                                  .arg(QString::fromStdString(cur_it->get_type_name()))
                                  .arg(QString::fromStdString(T::get_type_name_static()))
                              );
-
       return  {cur_ws, cur_it, nullptr, false};
-
     }
 
     return {cur_ws, cur_it, casted_it, true};
@@ -291,39 +271,33 @@ public:
   }
 
   /**
-         * @brief get selection tuple without casting
-         * @param _error_context
-         * @return
-         */
+   * @brief get selection tuple without casting
+   * @param _error_context
+   * @return
+   */
   std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, bool >
-  get_sel_tpl_itm_nc(uint32_t _error_context = error_ctx_def) {
+  get_sel_tpl_itm_nc(uint32_t error_context = error_ctx_def) {
 
     auto cur_ws = get_cur_ws();
-
     if (!cur_ws) {
-
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("Invalid workspace!");
-      if (_error_context & error_ctx_mbox)
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("Invalid workspace!"));
       return {nullptr, nullptr, false};
-
     }
 
     auto cur_it = cur_ws->get_sel_sp();
-
     if (!cur_it) {
-
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("No item selected in the workspace");
-      if (_error_context & error_ctx_mbox)
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("No item selected in the workspace"));
       return {cur_ws, nullptr, false};
-
     }
 
     return {cur_ws, cur_it, true};
@@ -331,37 +305,32 @@ public:
   }
 
   /**
-         * @brief get_context
-         * @param _error_context
-         * @return
-         */
+   * @brief get_context
+   * @param _error_context
+   * @return
+   */
   std::tuple<bool, std::shared_ptr<workspace_t> >
-  get_sel_tuple_ws(uint32_t _error_context = error_ctx_def) {
+  get_sel_tuple_ws(uint32_t error_context = error_ctx_def) {
 
     if (!has_wss()) {
-
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("There are`t workspaces in the field");
-      if (_error_context & error_ctx_mbox)
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("There are`t workspaces in the field"));
       return {false, nullptr};
-
     }
 
     auto cur_ws = get_cur_ws();
-
     if (!cur_ws) {
-
-      if (_error_context & error_ctx_throw)
+      if (error_context & error_ctx_throw)
         throw std::invalid_argument("Invalid workspace!");
-      if (_error_context & error_ctx_mbox)
+      if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
                              QObject::tr("Invalid workspace!"));
       return {true, nullptr};
-
     }
 
     return {true, cur_ws};
