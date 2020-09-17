@@ -127,8 +127,10 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
     }
     ws_item->m_selected = true;
     if (emit_hs_event) {
-      m_cur_itm.commit_value_exclusive(sel_idx);
-      //astate->tlog()
+      assert(m_cur_itm.commit_value_exclusive(sel_idx) == hs_result_e::hs_success);
+      astate->tlog("@@@ DEBUG: sel_idx = {}, m_cur_itm.val == {}",
+                   sel_idx,
+                   m_cur_itm.get_value());
     }
     if (ws_item->get_flags() & ws_item_flags_support_tr) {
       m_gizmo->attached_item = ws_item;

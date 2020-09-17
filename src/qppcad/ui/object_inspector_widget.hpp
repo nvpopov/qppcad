@@ -13,51 +13,51 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class object_inspector_widget_t : public qembed_window_t {
+class object_inspector_widget_t : public qembed_window_t {
 
-        Q_OBJECT
+  Q_OBJECT
 
-      public:
+public:
 
-        explicit object_inspector_widget_t(QWidget *parent = nullptr);
-        ~object_inspector_widget_t();
+  explicit object_inspector_widget_t(QWidget *parent = nullptr);
+  ~object_inspector_widget_t();
 
-        void update_ws_items_view_widget();
+  void update_ws_items_view_widget();
 
-        QLabel *m_ws_items_label;
-        QListWidget *m_ws_items_list;
+  QLabel *m_ws_items_label;
+  QListWidget *m_ws_items_list;
 
-        QPushButton *m_btn_add_new_ws_item;
-        QPushButton *m_btn_refresh_oi;
+  QPushButton *m_btn_add_new_ws_item;
+  QPushButton *m_btn_refresh_oi;
 
-        qembed_window_sub_header_t *m_ws_item_prop_hdr;
-        QWidget *m_none_item_placeholder;
+  qembed_window_sub_header_t *m_ws_item_prop_hdr;
+  QWidget *m_none_item_placeholder;
 
-        qembed_window_sub_header_t *m_ws_item_overview;
+  qembed_window_sub_header_t *m_ws_item_overview;
 
-        std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
+  std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
 
-      public slots:
+public slots:
 
-        void cur_ws_changed();
-        void cur_ws_selected_item_changed();
-        void ui_cur_ws_selected_item_changed();
-        void need_to_update_obj_insp_received();
+  void cur_ws_changed();
+  void cur_ws_selected_item_changed();
+  void ui_cur_ws_selected_item_changed();
+  void need_to_update_obj_insp_received();
 
-        void ws_item_list_double_clicked(QListWidgetItem * item);
-        void refresh_button_clicked();
-        void add_new_ws_item_button_clicked();
+  void ws_item_list_double_clicked(QListWidgetItem * item);
+  void refresh_button_clicked();
+  void add_new_ws_item_button_clicked();
 
-        void provide_context_menu_for_ws_items(const QPoint &pos);
+  void provide_context_menu_for_ws_items(const QPoint &pos);
 
-        void open_tab_requested(int tab_id);
-        void overview_changed(const std::string &new_overview_text);
+  void open_tab_requested(int tab_id);
+  void overview_changed(const std::string &new_overview_text);
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

@@ -443,15 +443,15 @@ public:
   hs_result_e push_epoch_with_value(STYPE &&new_val,
                                     std::optional<epoch_t> new_epoch = std::nullopt,
                                     bool checkout_to_new_epoch = false) {
-
     auto push_epoch_res = push_epoch(new_epoch, checkout_to_new_epoch);
     if (std::get<0>(push_epoch_res) == hs_result_e::hs_success) {
+      if (checkout_to_new_epoch)
+        p_cur_value = new_val;
       p_stored_values[*std::get<1>(push_epoch_res)] = new_val;
       return hs_result_e::hs_success;
     } else {
       return hs_result_e::hs_error;
     }
-
   }
 
   void on_commit_exclusive() override {
@@ -460,6 +460,9 @@ public:
 
   hs_result_e commit_value_exclusive(STYPE &&new_val,
                                      std::optional<epoch_t> new_epoch = std::nullopt) {
+
+    if (p_cur_value == new_val)
+      return hs_result_e::hs_success;
 
     if (get_doctype() != hs_doc_type_e::hs_doc_persistent)
       return hs_result_e::hs_committing_changes_in_tmp_doc;
@@ -472,6 +475,7 @@ public:
       return hs_result_e::hs_error;
 
     commit_exclusive();
+
     return hs_result_e::hs_success;
 
   }
@@ -498,9 +502,11 @@ public:
   }
 
   bool is_unmodified_impl() override {
-    if (p_stored_values.empty()) return false;
+    if (p_stored_values.empty())
+      return false;
     auto stored_val_it = p_stored_values.find(get_cur_epoch());
-    if (stored_val_it == end(p_stored_values)) return false;
+    if (stored_val_it == end(p_stored_values))
+      return false;
     return p_cur_value == stored_val_it->second;
   }
 

@@ -122,16 +122,12 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
 }
 
 object_inspector_widget_t::~object_inspector_widget_t() {
-
   if (m_cur_obj_insp_widget) {
-
     m_cur_obj_insp_widget->unbind_item();
     m_main_lt->removeWidget(m_cur_obj_insp_widget.get());
     m_cur_obj_insp_widget->setParent(nullptr);
     m_cur_obj_insp_widget = nullptr;
-
   }
-
 }
 
 void object_inspector_widget_t::update_ws_items_view_widget() {
@@ -139,7 +135,8 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
-  if (!bhv_mgr) return;
+  if (!bhv_mgr)
+    return;
 
   if (m_cur_obj_insp_widget) {
 
@@ -158,7 +155,7 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
 
   if (!ok)
-    return;
+  return;
 
   size_t thash = cur_it->get_type();
   auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
@@ -192,16 +189,16 @@ void object_inspector_widget_t::cur_ws_changed() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (cur_ws)
-    for (size_t i = 0; i < cur_ws->num_items(); i++) {
+  for (size_t i = 0; i < cur_ws->num_items(); i++) {
 
-      auto ws_item = cur_ws->m_ws_items.get_hs_child_as_array(i);
-      if (!ws_item)
-        continue;
+    auto ws_item = cur_ws->m_ws_items.get_hs_child_as_array(i);
+    if (!ws_item)
+      continue;
 
-      m_ws_items_list->addItem(
+    m_ws_items_list->addItem(
           QString::fromStdString(fmt::format("[{}] {} ", i, ws_item->m_name.get_value()))
           );
-    }
+  }
 
   cur_ws_selected_item_changed();
   m_ws_items_list->blockSignals(false);
@@ -217,32 +214,22 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
   m_ws_items_list->blockSignals(true);
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
-
   if (cur_ws) {
-
     astate->tlog("[DEBUG] cur_ws_selected_item_changed(), [num_wsi = {}]", cur_ws->num_items());
-
     auto cur_id = cur_ws->get_sel_idx();
-
     if (cur_id) {
-
       auto ws_item = cur_ws->m_ws_items.get_hs_child_as_array(*cur_id);
-
       m_ws_item_prop_hdr->setVisible(true);
-
       QString item_name =QString::fromStdString(ws_item->m_name.get_value());
       m_ws_item_prop_hdr->m_text->setText(tr("%1 <b>%2</b>")
-                                              .arg(tr("Properties of"))
-                                              .arg(qt_hlp::clamp_string(item_name, 28)));
-
+                                          .arg(tr("Properties of"))
+                                          .arg(qt_hlp::clamp_string(item_name, 28)));
       m_ws_items_list->item(*cur_id)->setSelected(true);
       m_ws_items_list->scrollToItem(m_ws_items_list->item(*cur_id));
 
     } else {
-
       m_ws_item_prop_hdr->setVisible(false);
       m_ws_items_list->clearSelection();
-
     }
 
   }
@@ -261,46 +248,33 @@ void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
 
   if (cur_ws) {
-
     cur_ws->set_sel_item(size_t(m_ws_items_list->currentRow()), true);
-
     if (m_ws_items_list->currentRow() != -1) {
-
       m_ws_items_list->blockSignals(true);
       m_ws_items_list->item(m_ws_items_list->currentRow())->setSelected(true);
       m_ws_items_list->blockSignals(false);
-
     }
-
     astate->make_viewport_dirty();
-
   }
 
   //TODO: probably fix twin things
   //update_ws_items_view_widget();
-
 }
 
 void object_inspector_widget_t::need_to_update_obj_insp_received() {
-
   if (m_cur_obj_insp_widget) {
     m_cur_obj_insp_widget->update_from_ws_item();
   }
-
 }
 
 void object_inspector_widget_t::ws_item_list_double_clicked(QListWidgetItem *item) {
-
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->extended_editor_open_requested();
-
 }
 
 void object_inspector_widget_t::refresh_button_clicked() {
-
   if (m_cur_obj_insp_widget)
     m_cur_obj_insp_widget->update_from_ws_item();
-
 }
 
 void object_inspector_widget_t::add_new_ws_item_button_clicked() {
@@ -382,8 +356,6 @@ void object_inspector_widget_t::open_tab_requested(int tab_id) {
 }
 
 void object_inspector_widget_t::overview_changed(const std::string &new_overview_text) {
-
   if (m_ws_item_overview)
     m_ws_item_overview->m_text->setText(QString::fromStdString(new_overview_text));
-
 }
