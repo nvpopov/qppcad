@@ -35,6 +35,7 @@ class workspace_t : public qpp_object_t,
 private:
 
   workspace_manager_t                      *p_mgr{nullptr};
+  bool                                     p_inside_selection_event{false};
 
 public:
 

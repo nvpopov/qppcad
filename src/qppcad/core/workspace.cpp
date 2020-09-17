@@ -111,6 +111,7 @@ std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
 bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit_hs_event) {
 
   app_state_t* astate = app_state_t::get_inst();
+  p_inside_selection_event = true;
 
   unsel_all();
 
@@ -119,15 +120,16 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
                m_ws_name, sel_idx, emit_signal, emit_hs_event);
 
   if (sel_idx < num_items() && num_items() != 0) {
-
     auto ws_item = m_ws_items.get_hs_child_as_array(sel_idx).get();
-    if (!ws_item)
+    if (!ws_item) {
+      p_inside_selection_event = false;
       return false;
-
+    }
     ws_item->m_selected = true;
-    if (emit_hs_event)
+    if (emit_hs_event) {
       m_cur_itm.commit_value_exclusive(sel_idx);
-
+      //astate->tlog()
+    }
     if (ws_item->get_flags() & ws_item_flags_support_tr) {
       m_gizmo->attached_item = ws_item;
       m_gizmo->update_gizmo(0.1f, true);
@@ -136,13 +138,11 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
       m_gizmo->attached_item = nullptr;
       m_gizmo->update_gizmo(0.1f, true);
     }
-
-    //astate->make_viewport_dirty();
     if (emit_signal)
       astate->astate_evd->cur_ws_selected_item_changed();
     update_overview(ws_item->compose_overview());
+    p_inside_selection_event = false;
     return true;
-
   }
 
   //nothing selected
@@ -154,6 +154,7 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
   if (emit_hs_event)
     m_cur_itm.commit_value_exclusive(-1);
 
+  p_inside_selection_event = false;
   return false;
 
 }
@@ -307,44 +308,47 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
 
-  for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
-
-    auto itm = m_ws_items.get_hs_child_as_array(i);
-    if (!itm)
-      continue;
-
-    if (itm->is_selected())
-      affected = true;
-
-    if (m_ws_items.is_child_alive(prev_epoch, itm) == hs_result_e::hs_alive)
-      alive_cnt_before++;
-
-    if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive)
-      alive_cnt_after++;
-
-  }
-
-  astate->tlog("\n Epoch changed in workspace {0}\n"
-               " alive_cnt_bef = {1}, alive_cnt_aft = {2}, prev_epoch = {3}, cur_epoch = {4}",
-               m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
-
   if (cur_ws && cur_ws.get() == this) {
 
-    m_cur_itm.set_commit_exclusive_on_change(false);
-    if (m_cur_itm.get_value() == -1) {
-      //unsel_all(true);
-    } else {
-      astate->tlog("Epoch changed in workspace {} -> set_sel_item {}",
-                   m_ws_name, m_cur_itm.get_value());
-      //set_sel_item(m_cur_itm.get_value(), true, false);
+    for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
+
+      auto itm = m_ws_items.get_hs_child_as_array(i);
+      if (!itm)
+        continue;
+
+      if (itm->is_selected())
+        affected = true;
+
+      if (m_ws_items.is_child_alive(prev_epoch, itm) == hs_result_e::hs_alive)
+        alive_cnt_before++;
+
+      if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive)
+        alive_cnt_after++;
+
     }
 
+    astate->tlog("\n Epoch changed in workspace {0}\n"
+                 " alive_cnt_bef = {1}, alive_cnt_aft = {2}, prev_epoch = {3}, cur_epoch = {4}",
+                 m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
+
+    m_cur_itm.set_commit_exclusive_on_change(false);
+    astate->tlog("@@@ OnEPChanged, m_cur_itm = {}", m_cur_itm.get_value());
+    if (!p_inside_selection_event) {
+      if (m_cur_itm.get_value() == -1) {
+        unsel_all(true);
+      } else {
+        astate->tlog("Epoch changed in workspace {} -> set_sel_item {}",
+                     m_ws_name, m_cur_itm.get_value());
+        set_sel_item(m_cur_itm.get_value(), true, false);
+      }
+    }
     m_cur_itm.set_commit_exclusive_on_change(true);
+
     if (alive_cnt_after != alive_cnt_before)
       astate->astate_evd->cur_ws_content_changed_signal();
-
     if (affected)
       astate->astate_evd->cur_ws_selected_item_changed();
+
   }
 
   return hs_result_e::hs_success;
@@ -371,8 +375,8 @@ void workspace_t::render() {
       vector3<float> vScrTW = astate->camera->unproject(-0.92f, -0.90f);
       float axis_magn =
           astate->camera->m_cur_proj ==
-                  cam_proj_t::proj_persp ? 0.07f *astate->camera->m_cam_state.m_stored_dist
-                                         : m_camera->m_cam_state.m_ortho_scale * 0.1f;
+          cam_proj_t::proj_persp ? 0.07f *astate->camera->m_cam_state.m_stored_dist
+                                 : m_camera->m_cam_state.m_ortho_scale * 0.1f;
 
       astate->dp->begin_render_line();
 
@@ -804,8 +808,8 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target
 
   auto result = std::find_if(m_ws.begin(), m_ws.end(),
                              [&target_name](std::shared_ptr<workspace_t> src)
-                             {return src->m_ws_name == target_name;}
-                             );
+  {return src->m_ws_name == target_name;}
+                );
   return *result;
 
 }
@@ -867,397 +871,397 @@ void workspace_manager_t::prev_ws() {
 
 void workspace_manager_t::cur_ws_next_item() {
   auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
-  if (ok)
-    cur_ws->next_item();
+      if (ok)
+      cur_ws->next_item();
 }
 
-void workspace_manager_t::cur_ws_prev_item() {
-  auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
-  if (ok)
-      cur_ws->prev_item();
-}
+      void workspace_manager_t::cur_ws_prev_item() {
+    auto [ok, cur_ws] = get_sel_tuple_ws(error_ctx_ignore);
+        if (ok)
+        cur_ws->prev_item();
+  }
 
-void workspace_manager_t::init_default () {
+        void workspace_manager_t::init_default () {
 
-  QStringList files = {
-      "../data/refs/POSCAR.mp-558947_SiO2",
-      "../data/refs/mp-971662_Si.vasp",
-      "../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz"
-  };
+      QStringList files = {
+        "../data/refs/POSCAR.mp-558947_SiO2",
+        "../data/refs/mp-971662_Si.vasp",
+        "../deps/qpp/examples/io/ref_data/xyz/nanotube.xyz"
+      };
 
-  for (auto &file : files)
-    load_from_file_autodeduce(QDir::toNativeSeparators(file).toStdString(),
-                              "",   /* for autodeduce */
-                              true, /* create new ws */
-                              true  /* squash hs */
-                              );
+      for (auto &file : files)
+        load_from_file_autodeduce(QDir::toNativeSeparators(file).toStdString(),
+                                  "",   /* for autodeduce */
+                                  true, /* create new ws */
+                                  true  /* squash hs */
+                                  );
 
-  create_new_ws();
+      create_new_ws();
 
-  auto g1 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
-  auto g1_gv = g1->cast_as<geom_view_t>();
-  g1_gv->m_xgeom_proxy.set_ignore_changes(true);
-  g1_gv->ins_atom("Si", vector3<float>(0, -2, 0));
-  g1_gv->ins_atom("Si", vector3<float>(0,  2, 0));
-  g1_gv->m_xgeom_proxy.set_ignore_changes(false);
-  g1_gv->m_xgeom_proxy.init_base_epoch();
-  g1->m_name.set_value("g1_src");
-  m_ws.back()->add_item_to_ws(g1);
+      auto g1 = m_bhv_mgr->fbr_ws_item_by_name("geom_view_t");
+      auto g1_gv = g1->cast_as<geom_view_t>();
+      g1_gv->m_xgeom_proxy.set_ignore_changes(true);
+      g1_gv->ins_atom("Si", vector3<float>(0, -2, 0));
+      g1_gv->ins_atom("Si", vector3<float>(0,  2, 0));
+      g1_gv->m_xgeom_proxy.set_ignore_changes(false);
+      g1_gv->m_xgeom_proxy.init_base_epoch();
+      g1->m_name.set_value("g1_src");
+      m_ws.back()->add_item_to_ws(g1);
 
-  auto nb1 = m_bhv_mgr->fbr_ws_item_by_name("node_book_t");
-  auto nb1_c = nb1->cast_as<node_book_t>();
-  nb1_c->m_name.set_value("nodebook1");
-  m_ws.back()->add_item_to_ws(nb1);
-  m_ws.back()->squash();
+      auto nb1 = m_bhv_mgr->fbr_ws_item_by_name("node_book_t");
+      auto nb1_c = nb1->cast_as<node_book_t>();
+      nb1_c->m_name.set_value("nodebook1");
+      m_ws.back()->add_item_to_ws(nb1);
+      m_ws.back()->squash();
 
-}
-
-void workspace_manager_t::render_cur_ws () {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (has_wss()) {
-    if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
-      astate->glapi->glClearColor(m_ws[*m_cur_ws_id]->m_bg_color[0],
-                                  m_ws[*m_cur_ws_id]->m_bg_color[1],
-                                  m_ws[*m_cur_ws_id]->m_bg_color[2],
-                                  1);
-      astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      m_ws[*m_cur_ws_id]->render();
-      return ;
     }
-  }
 
-  astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
-  astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    void workspace_manager_t::render_cur_ws () {
 
-}
+      app_state_t* astate = app_state_t::get_inst();
 
-void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  if (!has_wss())
-    return;
-
-  if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
-    m_ws[*m_cur_ws_id]->render_overlay(painter);
-  }
-
-}
-
-
-void workspace_manager_t::mouse_click () {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  astate->tlog("Mouse click {} {}", astate->mouse_x, astate->mouse_y);
-  astate->tlog("Mouse click in ws {} {}", astate->mouse_x_dc, astate->mouse_y_dc);
-
-  if (has_wss()) {
-    get_cur_ws()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
-    astate->make_viewport_dirty();
-  }
-
-}
-
-void workspace_manager_t::mouse_double_click() {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (has_wss()) {
-    get_cur_ws()->mouse_double_click(astate->mouse_x_dc, astate->mouse_y_dc);
-    astate->make_viewport_dirty();
-  }
-
-}
-
-void workspace_manager_t::ws_mgr_changed() {
-  app_state_t* astate = app_state_t::get_inst();
-  astate->astate_evd->wss_changed();
-}
-
-void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add) {
-  ws_to_add->set_mgr(this);
-  m_ws.push_back(ws_to_add);
-  ws_mgr_changed();
-}
-
-void workspace_manager_t::init_ws_item_bhv_mgr() {
-
-  m_bhv_mgr = std::make_shared<ws_item_behaviour_manager_t>();
-
-  registration_helper_t::reg_ws_item_fbr(m_bhv_mgr.get());
-  registration_helper_t::reg_ws_item_io_bhv(m_bhv_mgr.get());
-  registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
-  registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
-  registration_helper_t::reg_ws_item_ext_edt(m_bhv_mgr.get());
-  registration_helper_t::reg_toolbar_elements_bhv(m_bhv_mgr.get());
-
-  sf_node_reg_hlp_t::reg_sf_info(m_bhv_mgr.get());
-
-}
-
-void workspace_manager_t::move_ws(size_t from, size_t to) {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (from == to || from >= m_ws.size() || to >= m_ws.size())
-    return;
-
-  std::swap(m_ws[from], m_ws[to]);
-  set_cur_id(std::optional<size_t>(to));
-
-  astate->astate_evd->wss_changed();
-
-}
-
-
-void workspace_manager_t::load_from_file(const std::string &fname, bool override) {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (!override)
-    for (size_t i = 0; i < m_ws.size(); i++)
-      if (m_ws[i]->m_fs_path.find(fname) != std::string::npos) {
-        set_cur_id(i);
-        astate->astate_evd->cur_ws_changed();
-        return;
+      if (has_wss()) {
+        if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
+          astate->glapi->glClearColor(m_ws[*m_cur_ws_id]->m_bg_color[0],
+              m_ws[*m_cur_ws_id]->m_bg_color[1],
+              m_ws[*m_cur_ws_id]->m_bg_color[2],
+              1);
+          astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+          m_ws[*m_cur_ws_id]->render();
+          return ;
+        }
       }
 
-  auto new_ws = std::make_shared<workspace_t>();
+      astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
+      astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  std::string file_name_extr = qpp::extract_base_name(fname);
-  new_ws->m_ws_name = file_name_extr;
-  new_ws->m_fs_path = fname;
-  new_ws->load_ws_from_json(fname);
+    }
 
-  add_ws(new_ws);
-  set_cur_id(m_ws.size()-1);
+    void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
-  astate->astate_evd->new_file_loaded(fname, 0, true);
+      app_state_t *astate = app_state_t::get_inst();
 
-}
+      if (!has_wss())
+        return;
 
-void workspace_manager_t::import_from_file(const std::string &fname,
-                                           size_t bhv_id,
-                                           bool need_to_create_new_ws,
-                                           bool need_to_squash_hs) {
+      if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
+        m_ws[*m_cur_ws_id]->render_overlay(painter);
+      }
 
-  app_state_t* astate = app_state_t::get_inst();
+    }
 
-  if (!need_to_create_new_ws && !has_wss()) return;
 
-  std::shared_ptr<workspace_t> exec_ws{nullptr};
+    void workspace_manager_t::mouse_click () {
 
-  bool loading_is_succesfull{true};
+      app_state_t* astate = app_state_t::get_inst();
 
-  if (need_to_create_new_ws) {
-    create_new_ws(true);
-    exec_ws = m_ws[m_ws.size()-1];
-  } else {
-    exec_ws = get_cur_ws();
-  }
+      astate->tlog("Mouse click {} {}", astate->mouse_x, astate->mouse_y);
+      astate->tlog("Mouse click in ws {} {}", astate->mouse_x_dc, astate->mouse_y_dc);
 
-  if (exec_ws) {
+      if (has_wss()) {
+        get_cur_ws()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
+        astate->make_viewport_dirty();
+      }
 
-    std::shared_ptr<ws_item_t> p_new_itm{nullptr};
+    }
 
-    try {
+    void workspace_manager_t::mouse_double_click() {
 
-      auto rec_type = need_to_squash_hs ? hs_doc_rec_type_e::hs_doc_rec_init :
-                                          hs_doc_rec_type_e::hs_doc_rec_as_new_epoch;
+      app_state_t* astate = app_state_t::get_inst();
 
-      p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get(), rec_type);
+      if (has_wss()) {
+        get_cur_ws()->mouse_double_click(astate->mouse_x_dc, astate->mouse_y_dc);
+        astate->make_viewport_dirty();
+      }
 
-      if (need_to_squash_hs)
-        exec_ws.get()->squash();
+    }
 
-    } catch (const qpp::parsing_error_t &exc) {
+    void workspace_manager_t::ws_mgr_changed() {
+      app_state_t* astate = app_state_t::get_inst();
+      astate->astate_evd->wss_changed();
+    }
 
-      loading_is_succesfull = false;
+    void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add) {
+      ws_to_add->set_mgr(this);
+      m_ws.push_back(ws_to_add);
+      ws_mgr_changed();
+    }
 
-      //compose error message
-      QString msg_box_title = "Error";
-      QString error_message = QObject::tr("An error has occured while parsing the file:\n"
-                                          "%1").arg(QString::fromStdString(fname));
-      QString error_detail =
-          QObject::tr("File name : \n"
-                      "\"%1\"\n"
-                      "\n"
-                      "Line number : \n"
-                      "%2\n"
-                      "\n"
-                      "Line : \"%3\"\n"
-                      "\n"
-                      "Message : \n"
-                      "\"%4\"")
+    void workspace_manager_t::init_ws_item_bhv_mgr() {
+
+      m_bhv_mgr = std::make_shared<ws_item_behaviour_manager_t>();
+
+      registration_helper_t::reg_ws_item_fbr(m_bhv_mgr.get());
+      registration_helper_t::reg_ws_item_io_bhv(m_bhv_mgr.get());
+      registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
+      registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
+      registration_helper_t::reg_ws_item_ext_edt(m_bhv_mgr.get());
+      registration_helper_t::reg_toolbar_elements_bhv(m_bhv_mgr.get());
+
+      sf_node_reg_hlp_t::reg_sf_info(m_bhv_mgr.get());
+
+    }
+
+    void workspace_manager_t::move_ws(size_t from, size_t to) {
+
+      app_state_t* astate = app_state_t::get_inst();
+
+      if (from == to || from >= m_ws.size() || to >= m_ws.size())
+        return;
+
+      std::swap(m_ws[from], m_ws[to]);
+      set_cur_id(std::optional<size_t>(to));
+
+      astate->astate_evd->wss_changed();
+
+    }
+
+
+    void workspace_manager_t::load_from_file(const std::string &fname, bool override) {
+
+      app_state_t* astate = app_state_t::get_inst();
+
+      if (!override)
+        for (size_t i = 0; i < m_ws.size(); i++)
+          if (m_ws[i]->m_fs_path.find(fname) != std::string::npos) {
+            set_cur_id(i);
+            astate->astate_evd->cur_ws_changed();
+            return;
+          }
+
+      auto new_ws = std::make_shared<workspace_t>();
+
+      std::string file_name_extr = qpp::extract_base_name(fname);
+      new_ws->m_ws_name = file_name_extr;
+      new_ws->m_fs_path = fname;
+      new_ws->load_ws_from_json(fname);
+
+      add_ws(new_ws);
+      set_cur_id(m_ws.size()-1);
+
+      astate->astate_evd->new_file_loaded(fname, 0, true);
+
+    }
+
+    void workspace_manager_t::import_from_file(const std::string &fname,
+                                               size_t bhv_id,
+                                               bool need_to_create_new_ws,
+                                               bool need_to_squash_hs) {
+
+      app_state_t* astate = app_state_t::get_inst();
+
+      if (!need_to_create_new_ws && !has_wss()) return;
+
+      std::shared_ptr<workspace_t> exec_ws{nullptr};
+
+      bool loading_is_succesfull{true};
+
+      if (need_to_create_new_ws) {
+        create_new_ws(true);
+        exec_ws = m_ws[m_ws.size()-1];
+      } else {
+        exec_ws = get_cur_ws();
+      }
+
+      if (exec_ws) {
+
+        std::shared_ptr<ws_item_t> p_new_itm{nullptr};
+
+        try {
+
+          auto rec_type = need_to_squash_hs ? hs_doc_rec_type_e::hs_doc_rec_init :
+                                              hs_doc_rec_type_e::hs_doc_rec_as_new_epoch;
+
+          p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get(), rec_type);
+
+          if (need_to_squash_hs)
+            exec_ws.get()->squash();
+
+        } catch (const qpp::parsing_error_t &exc) {
+
+          loading_is_succesfull = false;
+
+          //compose error message
+          QString msg_box_title = "Error";
+          QString error_message = QObject::tr("An error has occured while parsing the file:\n"
+                                              "%1").arg(QString::fromStdString(fname));
+          QString error_detail =
+              QObject::tr("File name : \n"
+                          "\"%1\"\n"
+                          "\n"
+                          "Line number : \n"
+                          "%2\n"
+                          "\n"
+                          "Line : \"%3\"\n"
+                          "\n"
+                          "Message : \n"
+                          "\"%4\"")
               .arg(QString::fromStdString(fname))
               .arg(exc.m_line_num)
               .arg(QString::fromStdString(exc.m_exception_src))
               .arg(QString::fromStdString(exc.m_exception_msg));
 
-      qrich_error_message_box_t err_msg(msg_box_title, error_message, error_detail);
-      err_msg.exec();
+          qrich_error_message_box_t err_msg(msg_box_title, error_message, error_detail);
+          err_msg.exec();
 
-    } catch (...) {
-      loading_is_succesfull = false;
-      QString error_message =
-          QObject::tr("An error has occured while parsing the file\n");
-      QMessageBox::critical(nullptr, "Error", error_message);
-    }
+        } catch (...) {
+          loading_is_succesfull = false;
+          QString error_message =
+              QObject::tr("An error has occured while parsing the file\n");
+          QMessageBox::critical(nullptr, "Error", error_message);
+        }
 
-    astate->astate_evd->cur_ws_changed();
+        astate->astate_evd->cur_ws_changed();
 
-    if (loading_is_succesfull) {
+        if (loading_is_succesfull) {
 
-      if (need_to_create_new_ws && p_new_itm) {
-        exec_ws->m_ws_name = p_new_itm->m_name.get_value();
-        if (!exec_ws->m_camera->m_already_loaded)
-          exec_ws->set_best_view();
-      }
+          if (need_to_create_new_ws && p_new_itm) {
+            exec_ws->m_ws_name = p_new_itm->m_name.get_value();
+            if (!exec_ws->m_camera->m_already_loaded)
+              exec_ws->set_best_view();
+          }
 
-      astate->astate_evd->new_file_loaded(fname,
-                                          m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
-                                          false);
+          astate->astate_evd->new_file_loaded(fname,
+                                              m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
+                                              false);
 
-    } else {
-      if (need_to_create_new_ws && exec_ws)
-        exec_ws->m_marked_for_deletion = true;
-    }
+        } else {
+          if (need_to_create_new_ws && exec_ws)
+            exec_ws->m_marked_for_deletion = true;
+        }
 
-    astate->astate_evd->wss_changed();
-
-  }
-
-}
-
-void workspace_manager_t::save_ws_item_to_file(std::string &file_name,
-                                               std::shared_ptr<ws_item_t> ws_item,
-                                               size_t bhv_id) {
-
-  std::string message;
-  bool save_res = m_bhv_mgr->save_ws_itm_to_file(file_name, ws_item, bhv_id, message);
-
-  if (!save_res) {
-    QMessageBox::critical(nullptr, "Error", QString::fromStdString(message));
-  }
-
-}
-
-void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name,
-                                                    const std::string &file_format,
-                                                    bool new_ws,
-                                                    bool squash_hs) {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  //restore file`s absolute path
-  QFileInfo file_info(QString::fromStdString(file_name));
-  QString absolute_file_name = file_info.absoluteFilePath();
-  auto absolute_file_name_native = absolute_file_name.toStdString();
-
-  astate->tlog("workspace_manager_t::load_from_file_autodeduce, {}",
-               absolute_file_name.toStdString());
-
-  if (!QFileInfo(absolute_file_name).exists()) {
-    astate->tlog("Error while opening file \"{}\" - invalid name of the file", file_name);
-    return;
-  }
-
-  if (file_name.find("json") != std::string::npos
-      ||file_format.find("json") != std::string::npos) {
-    load_from_file(absolute_file_name_native, false);
-  } else {
-    //do autodeduce magic
-    if (!file_format.empty()) {
-
-      auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
-      if (ff) {
-        auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-        if (bhv_id)
-          import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
-      }
-
-    } else {
-
-      auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
-      if (ff) {
-        auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
-        if (bhv_id)
-          import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
-      }
-
-    }
-  }
-
-}
-
-void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
-
-  auto new_ws = std::make_shared<workspace_t>();
-  new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
-  new_ws->set_mgr(this);
-  m_ws.push_back(new_ws);
-
-  if (switch_to_new_workspace)
-    set_cur_id(m_ws.size()-1);
-  ws_mgr_changed();
-
-}
-
-std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
-
-  auto cur_ws = get_cur_ws();
-  if (!cur_ws)
-    return nullptr;
-
-  auto cur_it = cur_ws->get_sel_sp();
-  if (!cur_it)
-    return nullptr;
-
-  return cur_it;
-
-}
-
-void workspace_manager_t::utility_event_loop() {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  bool has_been_deleted{false};
-
-  for (auto it = m_ws.begin(); it != m_ws.end(); ) {
-
-    if ((*it)->m_marked_for_deletion) {
-
-      has_been_deleted = true;
-      auto cur_ws_idx = get_cur_id();
-
-      if (cur_ws_idx) {
-
-        //last?
-        if (m_ws.size() == 1)
-          m_cur_ws_id = std::nullopt;
-        else if (int(*cur_ws_idx) - 1 < 0)
-          m_cur_ws_id = std::optional<size_t>(0);
-        else
-          m_cur_ws_id = std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
+        astate->astate_evd->wss_changed();
 
       }
 
-      it = m_ws.erase(it);
-      set_cur_id(m_cur_ws_id);
-      astate->astate_evd->cur_ws_changed();
-
-    } else {
-      ++it;
     }
 
-  }
+    void workspace_manager_t::save_ws_item_to_file(std::string &file_name,
+                                                   std::shared_ptr<ws_item_t> ws_item,
+                                                   size_t bhv_id) {
 
-  if (has_been_deleted)
-    astate->astate_evd->wss_changed();
+      std::string message;
+      bool save_res = m_bhv_mgr->save_ws_itm_to_file(file_name, ws_item, bhv_id, message);
 
-}
+      if (!save_res) {
+        QMessageBox::critical(nullptr, "Error", QString::fromStdString(message));
+      }
+
+    }
+
+    void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name,
+                                                        const std::string &file_format,
+                                                        bool new_ws,
+                                                        bool squash_hs) {
+
+      app_state_t* astate = app_state_t::get_inst();
+
+      //restore file`s absolute path
+      QFileInfo file_info(QString::fromStdString(file_name));
+      QString absolute_file_name = file_info.absoluteFilePath();
+      auto absolute_file_name_native = absolute_file_name.toStdString();
+
+      astate->tlog("workspace_manager_t::load_from_file_autodeduce, {}",
+                   absolute_file_name.toStdString());
+
+      if (!QFileInfo(absolute_file_name).exists()) {
+        astate->tlog("Error while opening file \"{}\" - invalid name of the file", file_name);
+        return;
+      }
+
+      if (file_name.find("json") != std::string::npos
+          ||file_format.find("json") != std::string::npos) {
+        load_from_file(absolute_file_name_native, false);
+      } else {
+        //do autodeduce magic
+        if (!file_format.empty()) {
+
+          auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
+          if (ff) {
+            auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
+            if (bhv_id)
+              import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
+          }
+
+        } else {
+
+          auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
+          if (ff) {
+            auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
+            if (bhv_id)
+              import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
+          }
+
+        }
+      }
+
+    }
+
+    void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
+
+      auto new_ws = std::make_shared<workspace_t>();
+      new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
+      new_ws->set_mgr(this);
+      m_ws.push_back(new_ws);
+
+      if (switch_to_new_workspace)
+        set_cur_id(m_ws.size()-1);
+      ws_mgr_changed();
+
+    }
+
+    std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
+
+      auto cur_ws = get_cur_ws();
+      if (!cur_ws)
+        return nullptr;
+
+      auto cur_it = cur_ws->get_sel_sp();
+      if (!cur_it)
+        return nullptr;
+
+      return cur_it;
+
+    }
+
+    void workspace_manager_t::utility_event_loop() {
+
+      app_state_t* astate = app_state_t::get_inst();
+
+      bool has_been_deleted{false};
+
+      for (auto it = m_ws.begin(); it != m_ws.end(); ) {
+
+        if ((*it)->m_marked_for_deletion) {
+
+          has_been_deleted = true;
+          auto cur_ws_idx = get_cur_id();
+
+          if (cur_ws_idx) {
+
+            //last?
+            if (m_ws.size() == 1)
+              m_cur_ws_id = std::nullopt;
+            else if (int(*cur_ws_idx) - 1 < 0)
+              m_cur_ws_id = std::optional<size_t>(0);
+            else
+              m_cur_ws_id = std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
+
+          }
+
+          it = m_ws.erase(it);
+          set_cur_id(m_cur_ws_id);
+          astate->astate_evd->cur_ws_changed();
+
+        } else {
+          ++it;
+        }
+
+      }
+
+      if (has_been_deleted)
+        astate->astate_evd->wss_changed();
+
+    }
 
 

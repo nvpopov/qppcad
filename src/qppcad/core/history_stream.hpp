@@ -461,7 +461,6 @@ public:
   hs_result_e commit_value_exclusive(STYPE &&new_val,
                                      std::optional<epoch_t> new_epoch = std::nullopt) {
 
-
     if (get_doctype() != hs_doc_type_e::hs_doc_persistent)
       return hs_result_e::hs_committing_changes_in_tmp_doc;
 
@@ -473,13 +472,11 @@ public:
       return hs_result_e::hs_error;
 
     commit_exclusive();
-
     return hs_result_e::hs_success;
 
   }
 
   hs_result_e on_epoch_changed(epoch_t prev_epoch) override {
-
     auto cur_epoch = get_cur_epoch();
     auto val_it = p_stored_values.find(cur_epoch);
     if (val_it != p_stored_values.end()) {
@@ -488,11 +485,9 @@ public:
     } else {
       return hs_result_e::hs_error;
     }
-
   }
 
   hs_result_e on_epoch_removed(epoch_t epoch_to_remove) override {
-
     auto it = p_stored_values.find(epoch_to_remove);
     if (it != p_stored_values.end()) {
       p_stored_values.erase(it);
@@ -500,7 +495,6 @@ public:
     } else {
       return hs_result_e::hs_error;
     }
-
   }
 
   bool is_unmodified_impl() override {

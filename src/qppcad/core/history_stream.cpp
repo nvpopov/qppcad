@@ -327,8 +327,8 @@ hs_result_e hs_doc_base_t::squash() {
                                               end(squashed_children),
                                               lambda_all_squashed_pred);
 
-  return (self_squash_res == hs_result_e::hs_success && all_squashed) ? hs_result_e::hs_success:
-                                                                      hs_result_e::hs_error;
+  return (self_squash_res == hs_result_e::hs_success && all_squashed) ? hs_result_e::hs_success
+                                                                      : hs_result_e::hs_error;
 
 }
 
@@ -405,19 +405,15 @@ std::tuple<hs_result_e, std::optional<hs_doc_base_t::epoch_t> > hs_doc_base_t::p
 
       for (auto child_to_delete : children_to_delete)
         if (child_to_delete) {
-
           for (auto &&[epoch, child_states] : p_children_states) {
             auto child_states_it = child_states.find(child_to_delete);
             if (child_states_it != end(child_states))
               child_states.erase(child_states_it);
           }
-
           auto child_it = std::find(begin(p_children), end(p_children), child_to_delete);
           if (child_it != end(p_children))
             p_children.erase(child_it);
-
           request_child_deletion(child_to_delete);
-
         }
 
       p_just_added_children.clear();
@@ -462,7 +458,7 @@ hs_result_e hs_doc_base_t::augment_epoch(epoch_t target_epoch,
 
 }
 
-size_t hs_doc_base_t::get_augmented_count(hs_doc_base_t::epoch_t target_epoch) const {
+size_t hs_doc_base_t::get_augmented_count(epoch_t target_epoch) const {
 
   auto aug_elist_it = p_children_states.find(target_epoch);
   if (aug_elist_it == end(p_children_states))
@@ -472,8 +468,7 @@ size_t hs_doc_base_t::get_augmented_count(hs_doc_base_t::epoch_t target_epoch) c
 
 }
 
-bool hs_doc_base_t::is_augmented_by(hs_doc_base_t::epoch_t target_epoch,
-                                    hs_doc_base_t *child) {
+bool hs_doc_base_t::is_augmented_by(epoch_t target_epoch, hs_doc_base_t *child) {
 
   auto aug_elist_it = p_children_states.find(target_epoch);
   if (aug_elist_it == end(p_children_states))
@@ -487,12 +482,11 @@ bool hs_doc_base_t::is_augmented_by(hs_doc_base_t::epoch_t target_epoch,
 
 }
 
-bool hs_doc_base_t::has_epoch(hs_doc_base_t::epoch_t target_epoch) {
+bool hs_doc_base_t::has_epoch(epoch_t target_epoch) {
   return std::find(begin(p_hist_line), end(p_hist_line), target_epoch) != end(p_hist_line);
 }
 
-hs_result_e hs_doc_base_t::remove_augment_from_epoch(hs_doc_base_t *child,
-                                                     hs_doc_base_t::epoch_t target_epoch) {
+hs_result_e hs_doc_base_t::remove_augment_from_epoch(hs_doc_base_t *child, epoch_t target_epoch) {
 
   auto epoch_it = p_children_states.find(target_epoch);
   if (epoch_it == end(p_children_states))
@@ -530,7 +524,6 @@ hs_result_e hs_doc_base_t::checkout_to_epoch(epoch_t target_epoch, bool process_
   }
 
   hs_result_e cur_res = set_cur_epoch(target_epoch, false);
-
   if (cur_res != hs_result_e::hs_success) {
     return hs_result_e::hs_invalid_epoch;
   }
@@ -599,16 +592,13 @@ hs_result_e hs_doc_base_t::checkout_to_epoch(epoch_t target_epoch, bool process_
     //check that augmented data is valid
     size_t valid_children{0};
     for (auto &elem : epoch_aug_vec) {
-
       auto child = std::get<0>(elem);
       auto child_epoch_meta = std::get<1>(elem);
-
       if (child && child->has_epoch(child_epoch_meta.m_child_epoch)) {
         valid_children++;
       } else {
         return hs_result_e::hs_invalid_epoch;
       }
-
     }
 
     if (valid_children != epoch_aug_vec.size()) {

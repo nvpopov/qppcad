@@ -77,16 +77,13 @@ public:
     std::string ts( ctime( &t) );
     std::string pf = fmt::format("[{}] ", ts.substr( 0, ts.length() - 1));
     std::string body = fmt::vformat(format, fmt::make_format_args(args...));
-    std::string message = pf + body + "\n";
-    fmt::print(message);
+    std::cout << pf << body << std::endl;
   }
 
   template <typename... Args>
   void wlog(const char *format, const Args & ... args) {
-
     std::string body = fmt::vformat(format, fmt::make_format_args(args...));
     astate_evd->log_widget_query(body);
-
   }
 
   void add_recent_file(const std::string &file_name,
