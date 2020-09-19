@@ -36,11 +36,12 @@ private:
 
   workspace_manager_t                      *p_mgr{nullptr};
   bool                                     p_inside_selection_event{false};
+  ws_edit_e                                p_edit_type{ws_edit_e::edit_item};
 
 public:
 
   std::string                              m_fs_path{""};
-  ws_edit_e                                m_edit_type{ws_edit_e::edit_item};
+
   std::string                              m_ws_name;
   std::unique_ptr<camera_t>                m_camera;
   ray_t<float>                             m_ray;
@@ -99,6 +100,7 @@ public:
   void load_ws_from_json(const std::string filename);
   void update(float delta_time);
   void set_edit_type(const ws_edit_e new_edit_type);
+  ws_edit_e get_edit_type();
 
   //camera stuff
   void copy_cam(std::shared_ptr<workspace_t> source);

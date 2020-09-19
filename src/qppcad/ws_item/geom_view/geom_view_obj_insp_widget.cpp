@@ -1490,8 +1490,8 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
 
   if (b_al) {
 
-    if (b_al->m_parent_ws &&
-        b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
+    if (b_al->m_parent_ws
+        && b_al->m_parent_ws->get_edit_type() == ws_edit_e::edit_content) {
 
       m_tm_grp_op_flip_a_p->setEnabled(b_al->m_geom->get_DIM() > 0);
       m_tm_grp_op_flip_b_p->setEnabled(b_al->m_geom->get_DIM() > 1);
@@ -1858,23 +1858,22 @@ void geom_view_obj_insp_widget_t::update_sel_tab() {
     m_ts_cur_sel_grp->blockSignals(true);
     m_ts_cur_sel_grp->clear();
     m_ts_cur_sel_grp->addItem(tr("None"));
+
     for (size_t i = 0 ; i < b_al->m_selg->m_sel_grps.size(); i++)
       m_ts_cur_sel_grp->addItem(QString("[%1] %2")
                                     .arg(i)
                                     .arg(QString::fromStdString(b_al->m_selg->m_sel_grps[i].m_name)));
     m_ts_cur_sel_grp->blockSignals(false);
 
-    if (b_al->m_parent_ws &&
-        b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
+    if (b_al->m_parent_ws
+        && b_al->m_parent_ws->get_edit_type() == ws_edit_e::edit_content) {
       set_tab_enabled(m_tab_select, false);
     } else {
       set_tab_enabled(m_tab_select, false);
     }
 
   } else {
-
     unbind_sel_tab();
-
   }
 
 }
@@ -2420,7 +2419,9 @@ void geom_view_obj_insp_widget_t::mod_bc_rot_angle_type_change(int new_angle_typ
 
 void geom_view_obj_insp_widget_t::mod_bc_rot_apply() {
 
-  if (b_al && b_al->m_parent_ws && b_al->m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
+  if (b_al
+      && b_al->m_parent_ws
+      && b_al->m_parent_ws->get_edit_type() == ws_edit_e::edit_content) {
 
     float angle;
 

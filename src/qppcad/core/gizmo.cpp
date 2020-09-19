@@ -25,7 +25,7 @@ void gizmo_t::render () {
   if (!m_is_visible) return;
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_edit_e cur_edit_type = astate->ws_mgr->get_cur_ws()->m_edit_type;
+  ws_edit_e cur_edit_type = astate->ws_mgr->get_cur_ws()->get_edit_type();
 
   bool is_edit_item = cur_edit_type == ws_edit_e::edit_item;
 
@@ -137,10 +137,10 @@ bool gizmo_t::check_attached_item_in_content_mode() {
 
   return
       (attached_item && attached_item->m_parent_ws
-       && attached_item->m_parent_ws->m_edit_type == ws_edit_e::edit_content
+       && attached_item->m_parent_ws->get_edit_type() == ws_edit_e::edit_content
        && attached_item->get_num_cnt_selected() > 0)
       || (attached_item && attached_item->m_parent_ws
-          && attached_item->m_parent_ws->m_edit_type == ws_edit_e::edit_item);
+          && attached_item->m_parent_ws->get_edit_type() == ws_edit_e::edit_item);
 
 }
 
@@ -161,7 +161,7 @@ void gizmo_t::translate_attached(float delta_time) {
 
   if (attached_item) {
 
-    ws_edit_e cur_edit_type = astate->ws_mgr->get_cur_ws()->m_edit_type;
+    ws_edit_e cur_edit_type = astate->ws_mgr->get_cur_ws()->get_edit_type();
 
     vector3<float> unproj_mouse_hit_old =
         astate->camera->unproject(astate->mouse_x_dc_old, astate->mouse_y_dc_old);
@@ -214,7 +214,7 @@ void gizmo_t::clear_selected_axis () {
 void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
 
   app_state_t* astate = app_state_t::get_inst();
-  ws_edit_e cur_edit_type = astate->ws_mgr->get_cur_ws()->m_edit_type;
+  ws_edit_e cur_edit_type = astate->ws_mgr->get_cur_ws()->get_edit_type();
 
   // update gizmo position according to the current workspace`s edit type value
   // if we are in node edit mode - snap to aabb min
@@ -235,7 +235,6 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
 
   //release events begin
   // we release left mouse button - fire event(on_end_content_translate)
-
   if (attached_item && !astate->mouse_lb_pressed
       && cur_edit_type == ws_edit_e::edit_item
       && m_is_interacting) {

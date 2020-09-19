@@ -622,7 +622,7 @@ void simple_query::embed_cube() {
     throw std::invalid_argument("embed_cube : invalid context");
   }
 
-  if (cur_ws->m_edit_type != ws_edit_e::edit_content) {
+  if (cur_ws->get_edit_type() != ws_edit_e::edit_content) {
     throw std::invalid_argument("embed_cube : edit_type != edit_content");
   }
 
@@ -655,7 +655,7 @@ void simple_query::embed_arrow() {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-  if (!al || cur_ws->m_edit_type != ws_edit_e::edit_content)
+  if (!al || cur_ws->get_edit_type() != ws_edit_e::edit_content)
     return;
 
   if (al->m_atom_ord_sel.size() != 2)
@@ -709,11 +709,10 @@ void simple_query::make_psg_view(float tolerance) {
 
   if (al && al->m_parent_ws && cur_ws) {
 
-    if (cur_ws->m_edit_type == ws_edit_e::edit_item && al->m_geom->get_DIM() == 0) {
+    if (cur_ws->get_edit_type() == ws_edit_e::edit_item && al->m_geom->get_DIM() == 0) {
       auto ws_pg = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(
           psg_view_t::get_type_static());
       auto ws_pg_c = ws_pg->cast_as<psg_view_t>();
-
       if (ws_pg_c) {
         al->add_follower(ws_pg);
         ws_pg_c->set_bounded_to_leader(true);
@@ -722,7 +721,7 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_c->m_name.set_value(fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
       }
 
-    } else if (cur_ws->m_edit_type == ws_edit_e::edit_content && !al->m_geom->no_aselected()) {
+    } else if (cur_ws->get_edit_type() == ws_edit_e::edit_content && !al->m_geom->no_aselected()) {
       auto ws_pg_partial =
           astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
       auto ws_pg_partial_c = ws_pg_partial->cast_as<psg_view_t>();
@@ -833,7 +832,7 @@ void simple_query::translate_selected(float tx, float ty, float tz) {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-  if (cur_ws->m_edit_type == ws_edit_e::edit_item)
+  if (cur_ws->get_edit_type() == ws_edit_e::edit_item)
     al->translate(vector3<float>(tx, ty, tz));
   else
     al->translate_selected(vector3<float>(tx, ty, tz));
@@ -852,8 +851,7 @@ void simple_query::set_charge(float charge) {
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
-  if (al && cur_ws->m_edit_type == ws_edit_e::edit_content) {
-
+  if (al && cur_ws->get_edit_type() == ws_edit_e::edit_content) {
     for (auto i = 0; i < al->m_geom->num_selected(); i++) {
       auto rec = al->m_geom->nth_aselected(i);
       if (!rec)
@@ -861,7 +859,6 @@ void simple_query::set_charge(float charge) {
       if ((*rec).m_idx.is_zero())
         al->m_geom->xfield<float>(xgeom_charge, (*rec).m_atm) = charge;
     }
-
   }
 
   astate->make_viewport_dirty();
@@ -921,9 +918,8 @@ void simple_query::make_arrow_p(vector3<float> from,
     return;
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
-  new_arr->m_name.set_value(name.empty() ?
-                                         fmt::format("arrow_{}", cur_ws->num_items()) :
-                                         name);
+  new_arr->m_name.set_value(name.empty() ? fmt::format("arrow_{}", cur_ws->num_items())
+                                         : name);
   new_arr->m_pos.set_cvalue(from);
   new_arr->m_arrow_to.set_cvalue(to);
   cur_ws->add_item_to_ws(new_arr);

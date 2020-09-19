@@ -199,7 +199,7 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
       color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
     }
 
-  if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
+  if (al.m_parent_ws->get_edit_type() == ws_edit_e::edit_content) {
       if (al.m_geom->iselected(at_num, at_index) && al.m_selected)
         color = vector3<float>(0.43f, 0.55f, 0.12f);
     }
@@ -239,14 +239,14 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
 
   dr_rad = pre_rad * al.m_atom_scale_factor.get_value();
 
-  if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom ||
-      al.m_geom->xfield<bool>(xgeom_override, at_num)) {
+  if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom
+      || al.m_geom->xfield<bool>(xgeom_override, at_num)) {
       color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
       color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
       color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
     }
 
-  if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {
+  if (al.m_parent_ws->get_edit_type() == ws_edit_e::edit_content) {
       if (al.m_geom->iselected(at_num, at_index) && al.m_selected)
         color = vector3<float>(0.43f, 0.55f, 0.12f);
     }

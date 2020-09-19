@@ -206,10 +206,10 @@ void workspace_t::toggle_edit_mode() {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (m_edit_type == ws_edit_e::edit_item) {
-    m_edit_type = ws_edit_e::edit_content;
+  if (p_edit_type == ws_edit_e::edit_item) {
+    p_edit_type = ws_edit_e::edit_content;
   } else {
-    m_edit_type = ws_edit_e::edit_item;
+    p_edit_type = ws_edit_e::edit_item;
   }
 
   astate->astate_evd->cur_ws_edit_type_changed();
@@ -443,7 +443,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   bool hit_any = false;
 
   int sel_idx{-1};
-  if (m_edit_type != ws_edit_e::edit_content) {
+  if (p_edit_type != ws_edit_e::edit_content) {
     for (size_t i = 0; i < num_items(); i++) {
       auto ws_item = m_ws_items.get_hs_child_as_array(i);
       if (!ws_item)
@@ -465,7 +465,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
     hit_any = hit_any || is_hit;
 
     if (is_hit
-        && m_edit_type == ws_edit_e::edit_item
+        && p_edit_type == ws_edit_e::edit_item
         && ws_item->m_is_visible.get_value()
         && (ws_item->get_flags() & ws_item_flags_support_sel)) {
 
@@ -477,7 +477,7 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
   } // end of for (auto &ws_item : m_ws_items)
 
-  if (m_edit_type != ws_edit_e::edit_content && !hit_any) {
+  if (p_edit_type != ws_edit_e::edit_content && !hit_any) {
     m_gizmo->attached_item = nullptr;
     unsel_all();
   }
@@ -495,12 +495,12 @@ void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
   if (!cur_it)
     return;
 
-  if (m_edit_type == ws_edit_e::edit_item) {
+  if (p_edit_type == ws_edit_e::edit_item) {
     cur_it->mouse_double_click(nullptr);
     return;
   }
 
-  if (cur_it->get_num_cnt_selected() == 0 && m_edit_type == ws_edit_e::edit_content) {
+  if (cur_it->get_num_cnt_selected() == 0 && p_edit_type == ws_edit_e::edit_content) {
     set_edit_type(ws_edit_e::edit_item);
   }
 
@@ -698,8 +698,12 @@ void workspace_t::update(float delta_time) {
 
 void workspace_t::set_edit_type (const ws_edit_e new_edit_type) {
   app_state_t* astate = app_state_t::get_inst();
-  m_edit_type = new_edit_type;
+  p_edit_type = new_edit_type;
   astate->astate_evd->cur_ws_edit_type_changed();
+}
+
+ws_edit_e workspace_t::get_edit_type() {
+  return p_edit_type;
 }
 
 void workspace_t::copy_cam(std::shared_ptr<workspace_t> source) {

@@ -1281,7 +1281,7 @@ void main_window_t::cur_ws_props_changed() {
 
   if (ok) {
 
-    bool check_t = cur_ws->m_edit_type == ws_edit_e::edit_item;
+    bool check_t = cur_ws->get_edit_type() == ws_edit_e::edit_item;
     m_tp_edit_mode_item->blockSignals(true);
     m_tp_edit_mode_cnt->blockSignals(true);
     m_tp_edit_mode_item->setChecked(check_t);
@@ -1317,7 +1317,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
 
     /* detect selective labels */
     need_to_hide_force_sel_lbl_vis =
-        cur_ws->m_edit_type == ws_edit_e::edit_item || as_al->m_geom->no_aselected();
+        cur_ws->get_edit_type() == ws_edit_e::edit_item || as_al->m_geom->no_aselected();
 
     if (!need_to_hide_force_sel_lbl_vis) {
 
@@ -1336,7 +1336,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
     m_tp_add_point_sym_group->show();
 
     /* detect atom override */
-    if (!(as_al->m_geom->no_aselected() || cur_ws->m_edit_type == ws_edit_e::edit_item)) {
+    if (!(as_al->m_geom->no_aselected() || cur_ws->get_edit_type() == ws_edit_e::edit_item)) {
 
       need_to_hide_atom_override = false;
 
@@ -1353,7 +1353,8 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
     /* end of detect atom override */
 
     /* add cube or arrow between 2 atoms */
-    if (as_al->m_geom->num_aselected() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
+    if (as_al->m_geom->num_aselected() == 2
+        && cur_ws->get_edit_type() == ws_edit_e::edit_content) {
 
       m_tp_add_arrow->show();
       m_tp_add_cube->show();
@@ -1379,7 +1380,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
 
     /* angle between 3 atoms */
     if (as_al->m_geom->num_aselected() == 3
-        && cur_ws->m_edit_type == ws_edit_e::edit_content
+        && cur_ws->get_edit_type() == ws_edit_e::edit_content
         && as_al->m_atom_ord_sel.size() == 3) {
 
       need_to_hide_al_cntls = false;
@@ -1438,7 +1439,7 @@ void main_window_t::tp_dist_button_clicked(bool checked) {
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
   if (!ok) return;
 
-  if (as_al->m_geom->num_aselected() == 2 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
+  if (as_al->m_geom->num_aselected() == 2 && cur_ws->get_edit_type() == ws_edit_e::edit_content) {
 
     m_tp_msr_dist->show();
 
@@ -1464,12 +1465,11 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
 
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
-  if (!ok) return;
+  if (!ok)
+      return;
 
-  if (as_al->m_geom->num_aselected() == 3 && cur_ws->m_edit_type == ws_edit_e::edit_content) {
-
+  if (as_al->m_geom->num_aselected() == 3 && cur_ws->get_edit_type() == ws_edit_e::edit_content) {
     m_tp_msr_angle->show();
-
     auto cur_sel = as_al->m_measure->is_angle_msr_exists(as_al->m_atom_ord_sel[0].m_atm,
                                                          as_al->m_atom_ord_sel[1].m_atm,
                                                          as_al->m_atom_ord_sel[2].m_atm,
@@ -1484,10 +1484,8 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
                                       as_al->m_atom_ord_sel[0].m_idx,
                                       as_al->m_atom_ord_sel[1].m_idx,
                                       as_al->m_atom_ord_sel[2].m_idx);
-
     else
       as_al->m_measure->rm_angle_msr(*cur_sel);
-
   }
 
   astate->make_viewport_dirty();
@@ -1500,8 +1498,10 @@ void main_window_t::ws_edit_mode_selector_button_clicked(int id) {
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
   if (ok) {
-    if (id == 0) cur_ws->m_edit_type = ws_edit_e::edit_item;
-    else cur_ws->m_edit_type = ws_edit_e::edit_content;
+    if (id == 0)
+      cur_ws->set_edit_type(ws_edit_e::edit_item);
+    else
+      cur_ws->set_edit_type(ws_edit_e::edit_content);
   }
 
   astate->astate_evd->cur_ws_edit_type_changed();
@@ -1518,7 +1518,7 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 //  if (as_al && cur_ws->m_edit_type == ws_edit_e::edit_content)
 //    for (auto &rec : as_al->m_atom_idx_sel)
 //      as_al->m_geom->xfield<bool>(xgeom_label_show, rec.m_atm) = checked;
-  if (as_al && cur_ws->m_edit_type == ws_edit_e::edit_content)
+  if (as_al && cur_ws->get_edit_type() == ws_edit_e::edit_content)
   for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
     auto rec = as_al->m_geom->nth_aselected(i);
     if (!rec) continue;
@@ -1543,7 +1543,7 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
   app_state_t* astate = app_state_t::get_inst();
 
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
-  if (!ok || cur_ws->m_edit_type == ws_edit_e::edit_item) return;
+  if (!ok || cur_ws->get_edit_type() == ws_edit_e::edit_item) return;
 
   for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
     auto rec = as_al->m_geom->nth_aselected(i);
@@ -1567,19 +1567,23 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
 
 void main_window_t::tp_camera_tool_button_triggered(QAction *action) {
 
-  if (!action) return;
+  if (!action)
+    return;
 
   qextended_action *ext_act = qobject_cast<qextended_action*>(action);
-  if (!ext_act) return;
+  if (!ext_act)
+    return;
 
   app_state_t* astate = app_state_t::get_inst();
 
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
-  if (!ok) return;
+  if (!ok)
+    return;
 
   cam_tv_e _tv = static_cast<cam_tv_e>(ext_act->m_joined_data[0]);
 
-  if (as_al) as_al->apply_target_view(_tv);
+  if (as_al)
+    as_al->apply_target_view(_tv);
 
   astate->make_viewport_dirty();
 
@@ -1590,7 +1594,8 @@ void main_window_t::tp_fast_forward_anim_clicked() {
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_itm, as_al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
 
-  if (!as_al || !as_al->m_anim->animable()) return;
+  if (!as_al || !as_al->m_anim->animable())
+    return;
 
   as_al->m_anim->m_cur_anim = as_al->m_anim->get_total_anims()-1;
   as_al->m_anim->update_current_frame_to_end();
@@ -1631,83 +1636,57 @@ void main_window_t::apply_camera_view_change(cam_tv_e target_view) {
 }
 
 void main_window_t::toggle_ws_edit_mode() {
-
   app_state_t* astate = app_state_t::get_inst();
-  //astate->log("RERERERERER");
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
-
   if (ok) {
     cur_ws->toggle_edit_mode();
     cur_ws_changed();
   }
-
 }
 
 void main_window_t::toggle_fullscreen(bool checked) {
-
   if (checked) {
-
     setWindowState(windowState() | Qt::WindowFullScreen);
-
   } else {
-
     setWindowFlags(Qt::CustomizeWindowHint
                    | Qt::WindowStaysOnTopHint
                    | Qt::WindowMinimizeButtonHint
                    | Qt::WindowMaximizeButtonHint
                    | Qt::WindowCloseButtonHint);
     show();
-
   }
-
 }
 
 void main_window_t::toggle_immersive_mode() {
-
   app_state_t* astate = app_state_t::get_inst();
-
-  //  if (!astate->ws_mgr->has_wss()) return;
-
   astate->m_immersive_mode = !astate->m_immersive_mode;
-
   if (astate->m_immersive_mode) {
-
     menuBar()->hide();
     m_tp_wdgt->hide();
     m_ws_tabbar_wdgt->hide();
     m_obj_insp_wdgt->hide();
     m_view_menu_toggle_fullscreen->setChecked(true);
-
   } else {
-
     m_tp_wdgt->show();
     m_ws_tabbar_wdgt->show();
     m_obj_insp_wdgt->show();
     menuBar()->show();
     m_view_menu_toggle_fullscreen->setChecked(false);
-
   }
-
 }
 
 void main_window_t::start_update_cycle() {
-
   if (m_ws_viewer_wdgt && m_ws_viewer_wdgt->m_update_timer) {
     m_ws_viewer_wdgt->m_update_timer->start();
   }
-
 }
 
 void main_window_t::stop_update_cycle() {
-
   if (m_ws_viewer_wdgt && m_ws_viewer_wdgt->m_update_timer) {
-
     p_elapsed_time_in_event_loop =  m_ws_viewer_wdgt->m_update_timer->remainingTime();
     m_ws_viewer_wdgt->m_update_timer->stop();
     m_ws_viewer_wdgt->m_update_timer->setInterval(p_elapsed_time_in_event_loop);
-
   }
-
 }
 
 void main_window_t::act_sel_all_cnt() {
@@ -1719,25 +1698,21 @@ void main_window_t::act_sel_all_cnt() {
 }
 
 void main_window_t::act_unsel_all_cnt() {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
-  if (al) al->sel_atoms(false);
-
+  if (al)
+    al->sel_atoms(false);
 }
 
 void main_window_t::act_invert_sel_cnt() {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
-  if (al) al->inv_sel_atoms();
-
+  if (al)
+    al->inv_sel_atoms();
 }
 
 void main_window_t::act_toggle_console() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (m_py_console_wdgt->isVisible()) {
     m_py_console_wdgt->hide();
     astate->m_show_console = true;
@@ -1746,7 +1721,6 @@ void main_window_t::act_toggle_console() {
     m_py_console_wdgt->m_py_tedit->setFocus();
     astate->m_show_console = false;
   }
-
 }
 
 void main_window_t::rebuild_recent_files_menu() {
@@ -1820,15 +1794,11 @@ void main_window_t::inline_tool_left_ctrl_visibility(bool visible) {
 }
 
 void main_window_t::inline_tool_bottom_ctrl_visibility(bool visible) {
-
   m_inline_btm_tool->setVisible(visible);
-
 }
 
 void main_window_t::modern_menu_clicked() {
-
   m_modern_menu->exec(QCursor::pos());
-
 }
 
 void main_window_t::build_bhv_menus_and_actions() {

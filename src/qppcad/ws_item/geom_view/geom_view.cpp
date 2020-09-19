@@ -326,8 +326,10 @@ void geom_view_t::render() {
       vector3<float> cell_clr = m_cell_color.get_value();
 
       if (m_selected) {
-        if(m_parent_ws->m_edit_type == ws_edit_e::edit_item) cell_clr = clr_red;
-        if(m_parent_ws->m_edit_type == ws_edit_e::edit_content) cell_clr = clr_maroon;
+        if(m_parent_ws->get_edit_type() == ws_edit_e::edit_item)
+          cell_clr = clr_red;
+        if(m_parent_ws->get_edit_type() == ws_edit_e::edit_content)
+          cell_clr = clr_maroon;
       }
 
       astate->dp->render_cell_3d(cell_clr, m_geom->cell.v[0], m_geom->cell.v[1],
@@ -459,27 +461,21 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
     recalc_gizmo_barycenter();
 
     if (!res.empty()) {
-
       std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
-
-      if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
-
+      if (m_parent_ws->get_edit_type() == ws_edit_e::edit_content && m_selected) {
         if (res[0].m_idx == index::D(m_geom->get_DIM()).all(0)) {
           begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
           m_geom->toggle_selected(res[0].m_atm);
           end_recording();
         }
-
       }
-
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
       astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
       return true;
 
     } else {
-
-      if (m_parent_ws->m_edit_type == ws_edit_e::edit_content && m_selected ) {
+      if (m_parent_ws->get_edit_type() == ws_edit_e::edit_content && m_selected ) {
         sel_atoms(false);
       }
 
@@ -493,21 +489,21 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
 }
 
 void geom_view_t::mouse_double_click(ray_t<float> *ray) {
-
   app_state_t* astate = app_state_t::get_inst();
-
-  if (is_selected() && m_parent_ws && m_parent_ws->m_edit_type == ws_edit_e::edit_item) {
+  if (is_selected()
+      && m_parent_ws
+      && m_parent_ws->get_edit_type() == ws_edit_e::edit_item) {
     m_parent_ws->set_edit_type(ws_edit_e::edit_content);
     astate->astate_evd->obj_insp_tab_open_requested(3);
   }
-
 }
 
 void geom_view_t::sel_atoms(bool all) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!m_geom) return;
+  if (!m_geom)
+    return;
 
   for (int i = 0; i < m_geom->nat(); i++)
     m_geom->select(i, all); // TODO all?? realy?

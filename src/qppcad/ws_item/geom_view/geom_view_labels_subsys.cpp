@@ -77,7 +77,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       //std::cout << fmt::format("DEBUG !!!{}\n", axis_id) << std::endl;
       auto parent_ws = p_owner->m_parent_ws;
 
-      if (is_axis && parent_ws->m_edit_type == ws_edit_e::edit_content
+      if (is_axis && parent_ws->get_edit_type() == ws_edit_e::edit_content
           && no_one_is_selected) continue;
 
       if (is_axis && (!p_owner->m_selected
@@ -88,14 +88,17 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       if (!is_axis) {
 
           if (p_owner->m_sel_vis.get_value()
-              && p_owner->m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) continue;
+              && p_owner->m_geom->xfield<bool>(xgeom_sel_vis_hide, i))
+            continue;
 
           if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i)
-              && m_selective_lbl.get_value()) continue;
+              && m_selective_lbl.get_value())
+            continue;
 
           if (!p_owner->m_atom_type_to_hide.empty()) {
               auto it = p_owner->m_atom_type_to_hide.find(p_owner->m_geom->type_table(i));
-              if (it != p_owner->m_atom_type_to_hide.end()) return;
+              if (it != p_owner->m_atom_type_to_hide.end())
+                return;
             }
 
         }
@@ -124,15 +127,11 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
               auto cached_pp = m_pp_cache.find({label, font_size});
 
               if (cached_pp == m_pp_cache.end()) {
-
                   auto &new_pp = m_pp_cache[{label, font_size}];
                   new_pp.addText(0, 0, text_font_lb, label_qs);
                   text_path = &new_pp;
-
                 } else {
-
                   text_path = &cached_pp->second;
-
                 }
 
               transform.reset();
