@@ -326,9 +326,9 @@ void geom_view_t::render() {
       vector3<float> cell_clr = m_cell_color.get_value();
 
       if (m_selected) {
-        if(m_parent_ws->get_edit_type() == ws_edit_e::edit_item)
+        if(m_parent_ws->get_edit_type() == ws_edit_type_e::edit_item)
           cell_clr = clr_red;
-        if(m_parent_ws->get_edit_type() == ws_edit_e::edit_content)
+        if(m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content)
           cell_clr = clr_maroon;
       }
 
@@ -462,7 +462,7 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
 
     if (!res.empty()) {
       std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
-      if (m_parent_ws->get_edit_type() == ws_edit_e::edit_content && m_selected) {
+      if (m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content && m_selected) {
         if (res[0].m_idx == index::D(m_geom->get_DIM()).all(0)) {
           begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
           m_geom->toggle_selected(res[0].m_atm);
@@ -475,7 +475,7 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
       return true;
 
     } else {
-      if (m_parent_ws->get_edit_type() == ws_edit_e::edit_content && m_selected ) {
+      if (m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content && m_selected ) {
         sel_atoms(false);
       }
 
@@ -492,8 +492,8 @@ void geom_view_t::mouse_double_click(ray_t<float> *ray) {
   app_state_t* astate = app_state_t::get_inst();
   if (is_selected()
       && m_parent_ws
-      && m_parent_ws->get_edit_type() == ws_edit_e::edit_item) {
-    m_parent_ws->set_edit_type(ws_edit_e::edit_content);
+      && m_parent_ws->get_edit_type() == ws_edit_type_e::edit_item) {
+    m_parent_ws->set_edit_type(ws_edit_type_e::edit_content);
     astate->astate_evd->obj_insp_tab_open_requested(3);
   }
 }

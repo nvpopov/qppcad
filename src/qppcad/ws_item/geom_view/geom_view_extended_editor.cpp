@@ -120,8 +120,8 @@ void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_ind
   if (m_xgeom_tv && m_xgeom_tmdl && m_binded_gv) {
       m_binded_gv->m_geom->toggle_selected(logical_index);
       if (m_binded_gv->m_parent_ws
-          && m_binded_gv->m_parent_ws->get_edit_type() != ws_edit_e::edit_content)
-        m_binded_gv->m_parent_ws->set_edit_type(ws_edit_e::edit_content);
+          && m_binded_gv->m_parent_ws->get_edit_type() != ws_edit_type_e::edit_content)
+        m_binded_gv->m_parent_ws->set_edit_type(ws_edit_type_e::edit_content);
     }
 }
 

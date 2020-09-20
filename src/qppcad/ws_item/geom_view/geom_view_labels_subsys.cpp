@@ -77,7 +77,7 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       //std::cout << fmt::format("DEBUG !!!{}\n", axis_id) << std::endl;
       auto parent_ws = p_owner->m_parent_ws;
 
-      if (is_axis && parent_ws->get_edit_type() == ws_edit_e::edit_content
+      if (is_axis && parent_ws->get_edit_type() == ws_edit_type_e::edit_content
           && no_one_is_selected) continue;
 
       if (is_axis && (!p_owner->m_selected

@@ -46,7 +46,7 @@ enum spatial_units_e : int {
 /**
  * @brief The ws_edit_e enum
  */
-enum ws_edit_e {
+enum ws_edit_type_e {
   edit_item = 0,
   edit_content = 1
 };
