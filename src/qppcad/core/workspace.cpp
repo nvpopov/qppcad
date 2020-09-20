@@ -314,6 +314,11 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   if (cur_ws && cur_ws.get() == this) {
 
+    // set the edit type
+    if (m_cur_edit_type.get_value() != p_edit_type) {
+      set_edit_type(static_cast<ws_edit_type_e>(m_cur_edit_type.get_value()), false);
+    }
+
     for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
 
       auto itm = m_ws_items.get_hs_child_as_array(i);
@@ -698,10 +703,12 @@ void workspace_t::update(float delta_time) {
 
 }
 
-void workspace_t::set_edit_type (const ws_edit_type_e new_edit_type) {
+void workspace_t::set_edit_type (const ws_edit_type_e new_edit_type, bool emit_hs_event) {
   app_state_t* astate = app_state_t::get_inst();
   p_edit_type = new_edit_type;
   astate->astate_evd->cur_ws_edit_type_changed();
+  if (emit_hs_event)
+    m_cur_edit_type.commit_value_exclusive(new_edit_type);
 }
 
 ws_edit_type_e workspace_t::get_edit_type() {

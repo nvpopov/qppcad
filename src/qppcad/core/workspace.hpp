@@ -36,7 +36,7 @@ private:
 
   workspace_manager_t                      *p_mgr{nullptr};
   bool                                     p_inside_selection_event{false};
-  ws_edit_type_e                                p_edit_type{ws_edit_type_e::edit_item};
+  ws_edit_type_e                           p_edit_type{ws_edit_type_e::edit_item};
 
 public:
 
@@ -100,7 +100,7 @@ public:
   void save_ws_to_json(const std::string filename);
   void load_ws_from_json(const std::string filename);
   void update(float delta_time);
-  void set_edit_type(const ws_edit_type_e new_edit_type);
+  void set_edit_type(const ws_edit_type_e new_edit_type, bool emit_hs_event = true);
   ws_edit_type_e get_edit_type();
 
   //camera stuff
