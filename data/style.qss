@@ -2,7 +2,7 @@
  font-family : "Heebo";
  font-size: 13pt;
  font-weight: normal;
- color: rgb(229, 229, 229);
+ color: rgb(209, 209, 209);
  background: rgb(79, 79, 79);
 }
 

@@ -320,20 +320,15 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
     }
 
     for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
-
       auto itm = m_ws_items.get_hs_child_as_array(i);
       if (!itm)
         continue;
-
       if (itm->is_selected())
         affected = true;
-
       if (m_ws_items.is_child_alive(prev_epoch, itm) == hs_result_e::hs_alive)
         alive_cnt_before++;
-
       if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive)
         alive_cnt_after++;
-
     }
 
     astate->tlog("\n Epoch changed in workspace {0}\n"
