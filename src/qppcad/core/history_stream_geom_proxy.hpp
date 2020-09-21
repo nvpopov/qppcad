@@ -39,8 +39,8 @@ struct change_atom_pos_event_t {
 
 template<typename REAL>
 struct change_cell_event_t {
-  std::array<std::optional<vector3<REAL>>, 3> new_cell;
-  std::array<std::optional<vector3<REAL>>, 3> old_cell;
+  std::array<std::optional<vector3<REAL>>, 3> new_cell{std::nullopt, std::nullopt, std::nullopt};
+  std::array<std::optional<vector3<REAL>>, 3> old_cell{std::nullopt, std::nullopt, std::nullopt};
 };
 
 template<typename REAL>
@@ -109,6 +109,9 @@ private:
   std::optional<vector3<REAL>> p_stored_apos;
   std::variant<double, float, int, std::string, bool, std::monostate> m_xfield_bval;
 
+  std::optional<int> p_dim_bef{std::nullopt};
+  std::array<std::optional<vector3<REAL>>, 3> p_cell_bef{std::nullopt, std::nullopt, std::nullopt};
+
 protected:
 
   void on_begin_recording() override {
@@ -120,29 +123,21 @@ protected:
   };
 
   void on_end_recording() override {
-
     auto cur_rec_type = get_cur_rec_type();
-
     switch (cur_rec_type) {
-
     case hs_doc_rec_type_e::hs_doc_rec_init : {
       init_base_epoch();
     }
-
     case hs_doc_rec_type_e::hs_doc_rec_init_local : {
 
     }
-
     case hs_doc_rec_type_e::hs_doc_rec_as_new_epoch : {
       commit_changes(true);
     }
-
     default: {
 
     }
-
     }
-
   };
 
   void apply_action(acts_t &act) {
@@ -184,7 +179,7 @@ protected:
                    [geom_wrp](change_cell_event_t<REAL> &ev) {
                      for (size_t i = 0; i < 3; i++)
                        if (geom_wrp->get_DIM() > i && ev.new_cell[i])
-                         geom_wrp->cell.v[i] = *(ev.new_cell[i]);
+                         geom_wrp->set_cell_vector(*(ev.new_cell[i]), i, false);
                    },
 
                    [geom_wrp](xfield_changed_event_t &ev) {
@@ -274,16 +269,13 @@ protected:
                    [geom_wrp](change_cell_event_t<REAL> &ev) {
                      for (size_t i = 0; i < 3; i++)
                        if (geom_wrp->get_DIM() > i && ev.old_cell[i])
-                         geom_wrp->cell.v[i] = *(ev.old_cell[i]);
+                         geom_wrp->set_cell_vector(*(ev.old_cell[i]), i, false);
                    },
 
                    [geom_wrp](xfield_changed_event_t &ev) {
-
                      std::vector<STRING_EX> fn;
                      std::vector<basic_types> ft;
-
                      geom_wrp->get_format(fn, ft);
-
                      switch (ft[ev.m_field_id]) {
                      case basic_types::type_int: {
                        geom_wrp->template set_xfield<int>(ev.m_field_id, ev.m_atom_id,
@@ -316,7 +308,6 @@ protected:
                        break;
                      }
                      }
-
                    },
 
                    [geom_wrp](select_atom_event_t &ev) {
@@ -329,9 +320,7 @@ protected:
   }
 
   void process_acts(std::vector<acts_t> &acts, hs_dstate_apply_e ds_dir) {
-
     p_currently_applying_dstate = true;
-
     if (ds_dir == hs_dstate_apply_e::hs_ds_unapply) {
       for (auto i = rbegin(acts); i != rend(acts); ++i)
         unapply_action(*i);
@@ -339,9 +328,7 @@ protected:
       for (auto i = begin(acts); i != end(acts); ++i)
         apply_action(*i);
     }
-
     p_currently_applying_dstate = false;
-
   }
 
   hs_result_e dstate_change(hs_dstate_apply_e ds_dir, epoch_t target) override {
@@ -410,6 +397,7 @@ public:
            | geometry_observer_supports_shadow
            | geometry_observer_supports_reorder
            | geometry_observer_supports_select
+           | geometry_observer_supports_cell_change
            | geometry_observer_supports_xfield_change;
   };
 
@@ -458,16 +446,10 @@ public:
       return;
 
     if (order == before_after::before) {
-
       p_stored_aname = p_xgeom->atom_name(at);
       p_stored_apos = p_xgeom->pos(at);
-
     } else {
-
       if (p_stored_apos && p_stored_aname) {
-
-        //std::cout << "CHANGED " << aname << " " << apos << std::endl;
-
         change_atom_event_t<REAL> change_atom_event;
         change_atom_event.m_atom_idx = at;
         change_atom_event.m_before_aname = *p_stored_aname;
@@ -475,15 +457,11 @@ public:
         change_atom_event.m_after_aname = aname;
         change_atom_event.m_after_apos = apos;
         p_cur_acts.push_back(std::move(change_atom_event));
-
         if (!get_is_recording())
           commit_changes(true);
-
       }
-
       p_stored_apos = std::nullopt;
       p_stored_aname = std::nullopt;
-
     }
 
   }
@@ -497,7 +475,6 @@ public:
       return;
 
     erase_atom_event_t<REAL> erase_atom_event;
-    //std::cout << "@@@ " << at << std::endl;
     erase_atom_event.m_atom_idx = at;
     erase_atom_event.m_atom_pos = p_xgeom->pos(at);
     erase_atom_event.m_atom_name = p_xgeom->atom(at);
@@ -534,9 +511,59 @@ public:
 
   void dim_changed(before_after ord) override {
 
+    if (p_currently_applying_dstate || get_ignore_changes())
+      return;
+
+    if (ord == before_after::before) {
+      p_dim_bef = p_xgeom->get_DIM();
+      return;
+    } else {
+      change_dim_event_t chgd_ev;
+      chgd_ev.old_dim = p_dim_bef.value_or(p_xgeom->get_DIM());
+      chgd_ev.new_dim = p_xgeom->get_DIM();
+      p_cur_acts.push_back(std::move(chgd_ev));
+      p_dim_bef = std::nullopt;
+    }
+
+    if (!get_is_recording())
+      commit_changes(true);
+
   }
 
   void cell_changed(before_after ord) override {
+
+    if (p_currently_applying_dstate || get_ignore_changes() || p_xgeom->get_DIM() == 0)
+      return;
+
+    if (ord == before_after::before) {
+      if (p_xgeom->get_DIM() == 0) {
+        p_cell_bef = {std::nullopt, std::nullopt, std::nullopt};
+        return;
+      } else if (p_xgeom->get_DIM() == 1) {
+        p_cell_bef[0] = p_xgeom->cell.v[0];
+        p_cell_bef[1] = std::nullopt;
+        p_cell_bef[2] = std::nullopt;
+      } else if (p_xgeom->get_DIM() == 2) {
+        p_cell_bef[0] = p_xgeom->cell.v[0];
+        p_cell_bef[1] = p_xgeom->cell.v[1];
+        p_cell_bef[2] = std::nullopt;
+      } else if (p_xgeom->get_DIM() == 3)
+        p_cell_bef[0] = p_xgeom->cell.v[0];
+        p_cell_bef[1] = p_xgeom->cell.v[1];
+        p_cell_bef[2] = p_xgeom->cell.v[2];
+      return;
+    } else {
+      change_cell_event_t<REAL> chgc_ev;
+      for (int i = 0; i < 3; i++)
+        if (p_xgeom->get_DIM() > i && p_cell_bef[i]) {
+          chgc_ev.old_cell[i] = *p_cell_bef[i];
+          chgc_ev.new_cell[i] = p_xgeom->get_cell_vector(i);
+        }
+      p_cur_acts.push_back(std::move(chgc_ev));
+    }
+
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
@@ -610,40 +637,28 @@ public:
   }
 
   void selected(atom_index_set_key &sel_at, before_after ord, bool state) override {
-
-//    std::cout << fmt::format("@@@ SELECTED nth={}, ord={}, state={}", nth, ord, state)
-//              << std::endl;
-
     if (p_currently_applying_dstate || get_ignore_changes())
       return;
-
     if (ord == before_after::before) {
       select_atom_event_t ev;
       ev.m_atom = sel_at;
       ev.m_state = state;
       p_cur_acts.push_back(std::move(ev));
     }
-
   };
 
   void set_xgeom(xgeometry<REAL, CELL> *xgeom) {
-
     if (xgeom) {
       p_xgeom = xgeom;
       p_xgeom->add_observer(*this);
     }
-
   }
 
   void modify_epoch(acts_t &&act, epoch_t epoch) {
-
     auto epoch_it = p_epoch_data.find(epoch);
-
     if (epoch_it == end(p_epoch_data))
       return;
-
     p_epoch_data[epoch].push_back(act);
-
   }
 
   xgeometry<REAL, CELL> *get_xgeom() {
@@ -655,7 +670,6 @@ public:
   }
 
   //explicit editing methods
-
   void hs_change_DIM(xgeom_proxy_hs_act_type_e evtype, int newdim) {
 
     if (!p_xgeom)
@@ -685,51 +699,41 @@ public:
                       std::optional<vector3<REAL>> b = std::nullopt,
                       std::optional<vector3<REAL>> c = std::nullopt) {
 
-    if (!p_xgeom) return;
+    if (!p_xgeom)
+      return;
 
     if (evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_hs_event
         || evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_both) {
-
       change_cell_event_t<REAL> change_cell_event;
       //old cell
       if (p_xgeom->get_DIM() > 0)
         change_cell_event.old_cell[0] = p_xgeom->cell.v[0];
-
       if (p_xgeom->get_DIM() > 1)
         change_cell_event.old_cell[1] = p_xgeom->cell.v[1];
-
       if (p_xgeom->get_DIM() > 2)
         change_cell_event.old_cell[2] = p_xgeom->cell.v[2];
-
       //new cell
       if (a && p_xgeom->get_DIM() > 0)
         change_cell_event.new_cell[0] = *a;
-
       if (b && p_xgeom->get_DIM() > 0)
         change_cell_event.new_cell[1] = *b;
-
       if (c && p_xgeom->get_DIM() > 0)
         change_cell_event.new_cell[2] = *c;
-
       p_cur_acts.push_back(std::move(change_cell_event));
-
     }
 
     if (evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_geom_change
         || evtype == xgeom_proxy_hs_act_type_e::hs_act_emit_both) {
-
       if (a && p_xgeom->get_DIM() > 0)
         p_xgeom->cell.v[0] = *a;
-
       if (b && p_xgeom->get_DIM() > 1)
         p_xgeom->cell.v[1] = *b;
-
       if (c && p_xgeom->get_DIM() > 2)
         p_xgeom->cell.v[2] = *c;
-
     }
 
-    if (!get_is_recording()) commit_changes(true);
+    if (!get_is_recording())
+      commit_changes(true);
 
   }
 
@@ -933,7 +937,18 @@ public:
                      },
 
                      [&message, geom_wrp](change_cell_event_t<REAL> &ev) {
-
+                       message += "change_cell_event begin\n";
+                       for (int i = 0; i < geom_wrp->get_DIM(); i++)
+                        message += fmt::format("dim = {}, bx = {}, by = {}, bz = {},"
+                                               "ax = {}, ay = {}, az = {}\n",
+                                               i,
+                                               (*ev.old_cell[i])[0],
+                                               (*ev.old_cell[i])[1],
+                                               (*ev.old_cell[i])[2],
+                                               (*ev.new_cell[i])[0],
+                                               (*ev.new_cell[i])[1],
+                                               (*ev.new_cell[i])[2]);
+                       message += "change_cell_event end\n";
                      },
 
                      [&message, geom_wrp](xfield_changed_event_t &ev) {

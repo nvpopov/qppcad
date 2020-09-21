@@ -1270,9 +1270,9 @@ void geom_view_tools_t::change_cell_keep_atoms(geom_view_t *gv,
     gv->m_geom->change_pos(i, new_cell.frac2cart(frac_in_old_cell));
   }
 
-  gv->m_geom->cell.v[0] = new_cell.v[0];
-  gv->m_geom->cell.v[1] = new_cell.v[1];
-  gv->m_geom->cell.v[2] = new_cell.v[2];
+  for (int i = 0; i < gv->m_geom->get_DIM(); i++)
+    if (gv->m_geom->get_DIM() > i)
+      gv->m_geom->set_cell_vector(new_cell.v[i], i);
 
   gv->end_structure_change();
 

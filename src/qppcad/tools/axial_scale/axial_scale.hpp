@@ -13,45 +13,45 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    struct axial_scale_can_apply_helper_t {
+struct axial_scale_can_apply_helper_t {
 
-      static bool can_apply(ws_item_t *item);
+  static bool can_apply(ws_item_t *item);
 
-    };
+};
 
-    class axial_scale_tool_t : public ws_item_tool_t {
+class axial_scale_tool_t : public ws_item_tool_t {
 
-      public:
+public:
 
-        void exec(ws_item_t *item, uint32_t _error_ctx) override;
-        void apply_axial_scale (geom_view_t *al,
-                                const float scale_a,
-                                const float scale_b,
-                                const float scale_c);
-    };
+  void exec(ws_item_t *item, uint32_t _error_ctx) override;
+  void apply_axial_scale (geom_view_t *al,
+                          const float scale_a,
+                          const float scale_b,
+                          const float scale_c);
+};
 
-    class axial_scale_widget_t : public QDialog {
+class axial_scale_widget_t : public QDialog {
 
-        Q_OBJECT
+  Q_OBJECT
 
-      public:
+public:
 
-        QDoubleSpinBox *m_sb_sc_a;
-        QDoubleSpinBox *m_sb_sc_b;
-        QDoubleSpinBox *m_sb_sc_c;
-        qspoiler_widget_t *m_gb_sc_par;
-        QFormLayout *m_gb_sc_par_lt;
-        QVBoxLayout *m_dialog_lt;
-        QDialogButtonBox *m_dialog_bb;
+  QDoubleSpinBox *m_sb_sc_a;
+  QDoubleSpinBox *m_sb_sc_b;
+  QDoubleSpinBox *m_sb_sc_c;
+  qspoiler_widget_t *m_gb_sc_par;
+  QFormLayout *m_gb_sc_par_lt;
+  QVBoxLayout *m_dialog_lt;
+  QDialogButtonBox *m_dialog_bb;
 
-        double get_scale_value(int dim_id);
-        axial_scale_widget_t();
+  double get_scale_value(int dim_id);
+  axial_scale_widget_t();
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 
