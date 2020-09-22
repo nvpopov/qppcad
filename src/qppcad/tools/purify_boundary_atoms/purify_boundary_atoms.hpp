@@ -16,35 +16,32 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class geom_view_t;
+class geom_view_t;
 
-    class purify_boundary_atoms_widget_t : public QDialog {
+class purify_boundary_atoms_widget_t : public QDialog {
 
-      Q_OBJECT
+  Q_OBJECT
 
-    public:
+public:
 
-      QVBoxLayout *main_lt;
-      QDialogButtonBox *dialog_bb;
-      QHBoxLayout *actions_lt;
-      QPushButton *action_select_all;
-      ws_item_list_widget_t *sub_gv;
+  QVBoxLayout *main_lt;
+  QDialogButtonBox *dialog_bb;
+  QHBoxLayout *actions_lt;
+  QPushButton *action_select_all;
+  ws_item_list_widget_t *sub_gv;
 
-      purify_boundary_atoms_widget_t();
+  purify_boundary_atoms_widget_t();
 
-    };
+};
 
-    class purify_boundary_atoms_tool_t : public ws_item_tool_t {
+class purify_boundary_atoms_tool_t : public ws_item_tool_t {
+public:
+  void exec(ws_item_t *item, uint32_t _error_ctx) override;
+};
 
-    public:
-
-      void exec(ws_item_t *item, uint32_t _error_ctx) override;
-
-    };
-
-  } // namespace cad
+} // namespace cad
 
 } // namespace qpp
 

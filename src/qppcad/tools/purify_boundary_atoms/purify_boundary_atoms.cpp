@@ -13,41 +13,41 @@ void purify_boundary_atoms_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   purify_boundary_atoms_widget_t paw;
   paw.sub_gv->m_ws_item_class = geom_view_t::get_type_static();
 
-  if (!item) return;
+  if (!item)
+    return;
 
   auto as_gv = item->cast_as<geom_view_t>();
-  if (!as_gv) return;
+  if (!as_gv)
+    return;
 
   paw.sub_gv->m_master_item = as_gv;
   paw.sub_gv->rebuild_sub_gvs([](ws_item_t *master, ws_item_t *slave) -> bool {
-
-    if (!master || !slave) return false;
-
+    if (!master || !slave)
+      return false;
     auto master_as_gv = master->cast_as<geom_view_t>();
     auto slave_as_gv = slave->cast_as<geom_view_t>();
-    if (!master_as_gv || !slave_as_gv) return false;
-
+    if (!master_as_gv || !slave_as_gv)
+      return false;
     return master_as_gv != slave_as_gv
-           && master_as_gv->m_geom->get_DIM() == slave_as_gv->m_geom->get_DIM()
-           && master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
-
+                           && master_as_gv->m_geom->get_DIM() == slave_as_gv->m_geom->get_DIM()
+                           && master_as_gv->m_geom->nat() == slave_as_gv->m_geom->nat();
   });
 
   int ret_code = paw.exec();
 
   auto master_as_gv = paw.sub_gv->m_master_item->cast_as<geom_view_t>();
-
   if (ret_code == QDialog::Accepted)
     for (size_t i = 0; i < paw.sub_gv->count(); i++) {
-
-        QListWidgetItem *item = paw.sub_gv->item(i);
-        if (item->checkState() == Qt::Checked) {
-            auto slave_as_gv = paw.sub_gv->m_sub_items[i]->cast_as<geom_view_t>();
-            if (slave_as_gv)
-              geom_view_tools_t::purify_boundary_atoms(slave_as_gv, master_as_gv);
-          }
-
+      QListWidgetItem *item = paw.sub_gv->item(i);
+      if (item->checkState() == Qt::Checked) {
+        auto slave_as_gv = paw.sub_gv->m_sub_items[i]->cast_as<geom_view_t>();
+        if (slave_as_gv) {
+          slave_as_gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+          geom_view_tools_t::purify_boundary_atoms(slave_as_gv, master_as_gv);
+          slave_as_gv->end_recording();
+        }
       }
+    }
 
 }
 
