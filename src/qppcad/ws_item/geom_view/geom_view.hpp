@@ -109,8 +109,8 @@ const int xgeom_external     = 14;
 const int max_sel_in_deque = 4;
 
 /**
-     * @brief The geom_view_t class
-     */
+ * @brief The geom_view_t class
+ */
 class geom_view_t final : public ws_item_t {
 
   QPP_OBJECT(geom_view_t, ws_item_t)

@@ -68,49 +68,42 @@ public:
   }
 
   hs_result_e add_hs_child_as_array(holder_type_t new_arr_element, bool add_new_epoch = true) {
-
     hs_doc_base_t *as_hsd = STYPE_STRG_POL::cast_from_holder(new_arr_element);
     if (!as_hsd)
       return hs_result_e::hs_error;
-
     //check if exists
     auto ad_itr = std::find(begin(p_array_data), end(p_array_data), new_arr_element);
-
     if (ad_itr == end(p_array_data))
       p_array_data.push_back(new_arr_element);
-
     p_map_hs_to_array[as_hsd] = new_arr_element;
-
     return add_hs_child(as_hsd, add_new_epoch);
-
   }
 
   holder_type_t get_hs_child_as_array(size_t chl_idx) {
-
     hs_doc_base_t *elem = get_hs_child(chl_idx);
     if (!elem)
       return nullptr;
-
     auto map_itr = p_map_hs_to_array.find(elem);
     return map_itr != end(p_map_hs_to_array) ? map_itr->second : nullptr;
+  }
 
+  holder_type_t get_hs_child_as_array_rawptr(size_t chl_idx) {
+    hs_doc_base_t *elem = get_hs_child(chl_idx);
+    if (!elem)
+      return nullptr;
+    return static_cast<STYPE*>(elem);
   }
 
   void request_child_deletion(hs_doc_base_t *child) override {
-
     auto map_itr = p_map_hs_to_array.find(child);
     if (map_itr == end(p_map_hs_to_array))
       return;
-
     holder_type_t childw = map_itr->second;
     p_map_hs_to_array.erase(map_itr);
-
     auto arr_data_it = std::find(begin(p_array_data), end(p_array_data), childw);
     if (arr_data_it != end(p_array_data))
       p_array_data.erase(arr_data_it);
-
     STYPE_STRG_POL::delete_holder(childw);
-
   }
 
   hs_result_e hs_remove_child_force(holder_type_t child) {
