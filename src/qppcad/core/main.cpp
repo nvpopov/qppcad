@@ -10,6 +10,7 @@
 #include <QMainWindow>
 #include <QTextStream>
 #include <QCommandLineParser>
+#include <qppcad/core/ittnotify_support.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -34,6 +35,7 @@ void on_app_exit(int signal) {
 int main (int argc, char **argv) {
 
   std::ios_base::sync_with_stdio(false);
+  instrumentation::init();
 
   QCoreApplication::setOrganizationName("igc");
   QCoreApplication::setOrganizationDomain("igc.irk.ru");

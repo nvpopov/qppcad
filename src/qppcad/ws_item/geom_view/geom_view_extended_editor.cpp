@@ -34,17 +34,20 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this,
-          &geom_view_extended_editor_t::selection_changed);
+          &geom_view_extended_editor_t::selection_changed,
+          Qt::DirectConnection);
 
   connect(m_xgeom_tv->verticalHeader(),
           &QHeaderView::sectionDoubleClicked,
           this,
-          &geom_view_extended_editor_t::header_vertical_double_clicked);
+          &geom_view_extended_editor_t::header_vertical_double_clicked,
+          Qt::DirectConnection);
 
   connect(m_xgeom_tv->horizontalHeader(),
           &QHeaderView::sectionDoubleClicked,
           this,
-          &geom_view_extended_editor_t::header_horizontal_clicked);
+          &geom_view_extended_editor_t::header_horizontal_clicked,
+          Qt::DirectConnection);
 
 }
 

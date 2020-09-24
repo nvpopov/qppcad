@@ -40,7 +40,8 @@ ws_item_tab_widget_t *ws_item_obj_insp_widget_t::def_tab(QString tab_name,
   setTabToolTip(tmp->tab_id, tab_name);
 
   tmp->icon_enabled = new QIcon(icon_name_enabled);
-  if (icon_name_disabled != "") tmp->icon_disabled = new QIcon(icon_name_disabled);
+  if (icon_name_disabled != "")
+    tmp->icon_disabled = new QIcon(icon_name_disabled);
   setTabIcon(tmp->tab_id, *tmp->icon_enabled);
 
   return tmp;
@@ -54,8 +55,10 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
   if (m_binded_item) {
 
     int target_index = -1;
-    if (m_binded_item->m_last_tab >= 0) target_index = m_binded_item->m_last_tab;
-    else target_index = 0;
+    if (m_binded_item->m_last_tab >= 0)
+      target_index = m_binded_item->m_last_tab;
+    else
+      target_index = 0;
 
     auto *widget_to_focus = widget(target_index);
 
@@ -104,8 +107,7 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
     m_ws_item_name->setToolTip(name_qstr);
 
     auto name_tstr =
-        qt_hlp::clamp_string(QString::fromStdString(m_binded_item->compose_type_descr()),
-                             trc_type);
+        qt_hlp::clamp_string(QString::fromStdString(m_binded_item->compose_type_descr()), trc_type);
     m_ws_item_type->setText(name_tstr);
 
     m_ws_item_show_item_bb->load_value();
@@ -117,11 +119,14 @@ void ws_item_obj_insp_widget_t::update_from_ws_item() {
 
 void ws_item_obj_insp_widget_t::set_tab_enabled(ws_item_tab_widget_t *tab,
                                                 bool v_enabled) {
-  if (!tab) return;
+  if (!tab)
+    return;
   setTabEnabled(tab->tab_id, v_enabled);
 
-  if (!v_enabled && tab->icon_disabled) setTabIcon(tab->tab_id, *tab->icon_disabled);
-  else setTabIcon(tab->tab_id, *tab->icon_enabled);
+  if (!v_enabled && tab->icon_disabled)
+    setTabIcon(tab->tab_id, *tab->icon_disabled);
+  else
+    setTabIcon(tab->tab_id, *tab->icon_enabled);
 
 }
 
@@ -130,32 +135,23 @@ void ws_item_obj_insp_widget_t::pre_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
 }
 
 void ws_item_obj_insp_widget_t::post_init_gb(QGroupBox *gb, QFormLayout *gb_lt) {
-
   app_state_t *astate = app_state_t::get_inst();
   qt_hlp::resize_form_lt_lbls(gb_lt, astate->size_guide.obj_insp_lbl_w());
-
 }
 
 void ws_item_obj_insp_widget_t::init_form_lt(QFormLayout *frm_lt) {
-
   app_state_t *astate = app_state_t::get_inst();
   qt_hlp::resize_form_lt_lbls(frm_lt, astate->size_guide.obj_insp_lbl_w());
   frm_lt->setSpacing(1);
-  //frm_lt->setLabelAlignment(Qt::AlignCenter);
-
 }
 
 void ws_item_obj_insp_widget_t::init_form_lt_lbl(QLabel *_label) {
-
   app_state_t *astate = app_state_t::get_inst();
   qt_hlp::resize_form_lt_lbl(_label, astate->size_guide.obj_insp_lbl_w());
-
 }
 
 void ws_item_obj_insp_widget_t::resizeEvent(QResizeEvent *event) {
-
   QTabWidget::resizeEvent(event);
-
 }
 
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
@@ -232,7 +228,8 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_position_changed_signal,
           this,
-          &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
+          &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed,
+          Qt::DirectConnection);
 
   m_tab_general->tab_inner_widget_lt->addWidget(m_sp_info_wdgt);
   m_tab_general->tab_inner_widget_lt->addWidget(m_tg_acts);
@@ -240,20 +237,17 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   connect(this,
           &ws_item_obj_insp_widget_t::currentChanged,
           this,
-          &ws_item_obj_insp_widget_t::cur_tab_changed);
+          &ws_item_obj_insp_widget_t::cur_tab_changed,
+          Qt::DirectConnection);
 
 }
 
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
-
   if (m_binded_item) {
-
     if (m_binded_item->get_flags() & ws_item_flags_support_tr) {
       m_ws_item_pos->load_value_ex();
     }
-
   }
-
 }
 
 void ws_item_obj_insp_widget_t::rename_current_item() {
@@ -269,11 +263,9 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
                                          QString::fromStdString(m_binded_item->m_name.get_value()),
                                          &ok);
     if (ok && text != "") {
-
       m_binded_item->m_name.set_value(text.toStdString());
       astate->astate_evd->cur_ws_selected_item_changed();
       astate->astate_evd->cur_ws_changed();
-
     }
 
   }
@@ -291,7 +283,8 @@ void ws_item_obj_insp_widget_t::delete_current_item() {
                                    tr("Are you sure?"),
                                    QMessageBox::Ok | QMessageBox::Cancel);
 
-    if (ret == QMessageBox::Cancel) return;
+    if (ret == QMessageBox::Cancel)
+      return;
 
     ws_item_t *binded_item = m_binded_item;
     unbind_item();
@@ -303,20 +296,16 @@ void ws_item_obj_insp_widget_t::delete_current_item() {
     astate->astate_evd->wss_changed();
 
   } else {
-
     astate->ws_mgr->get_cur_ws()->unsel_all();
     astate->astate_evd->cur_ws_changed();
     astate->astate_evd->wss_changed();
-
   }
 
 }
 
 void ws_item_obj_insp_widget_t::cur_tab_changed(int index) {
-
   if (m_binded_item) {
     m_binded_item->m_last_tab = index;
   }
-
 }
 

@@ -17,6 +17,8 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/node_book/node_book.hpp>
 
+#include <qppcad/core/ittnotify_support.hpp>
+
 using namespace qpp;
 using namespace qpp::cad;
 
@@ -954,6 +956,13 @@ void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
 
 void workspace_manager_t::mouse_click () {
 
+  #ifdef WITH_VTUNE_INSTRUMENTATION
+  __itt_task_begin(instrumentation::d_qppcad,
+                   __itt_null,
+                   __itt_null,
+                   instrumentation::h_ws_mouse_click);
+  #endif
+
   app_state_t* astate = app_state_t::get_inst();
 
   astate->tlog("Mouse click {} {}", astate->mouse_x, astate->mouse_y);
@@ -963,6 +972,10 @@ void workspace_manager_t::mouse_click () {
     get_cur_ws()->mouse_click(astate->mouse_x_dc, astate->mouse_y_dc);
     astate->make_viewport_dirty();
   }
+
+  #ifdef WITH_VTUNE_INSTRUMENTATION
+  __itt_task_end(instrumentation::d_qppcad);
+  #endif
 
 }
 
@@ -1232,14 +1245,10 @@ void workspace_manager_t::utility_event_loop() {
   bool has_been_deleted{false};
 
   for (auto it = m_ws.begin(); it != m_ws.end(); ) {
-
     if ((*it)->m_marked_for_deletion) {
-
       has_been_deleted = true;
       auto cur_ws_idx = get_cur_id();
-
       if (cur_ws_idx) {
-
         //last?
         if (m_ws.size() == 1)
           m_cur_ws_id = std::nullopt;
@@ -1247,17 +1256,13 @@ void workspace_manager_t::utility_event_loop() {
           m_cur_ws_id = std::optional<size_t>(0);
         else
           m_cur_ws_id = std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
-
       }
-
       it = m_ws.erase(it);
       set_cur_id(m_cur_ws_id);
       astate->astate_evd->cur_ws_changed();
-
     } else {
       ++it;
     }
-
   }
 
   if (has_been_deleted)

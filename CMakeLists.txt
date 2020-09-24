@@ -9,6 +9,19 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 message("-- Build type: ${CMAKE_BUILD_TYPE}")
 
+set(ADDITIONAL_LIBRARIES "")
+
+set(WITH_VTUNE "OFF" CACHE BOOL "build with VTUNE instrumentation")
+message("-- With VTune api: ${WITH_VTUNE}")
+if(WITH_VTUNE)
+    set(VTUNE_TOP_DIR "/home/$ENV{USERNAME}/intel/vtune_profiler")
+    include_directories(${VTUNE_TOP_DIR}/sdk/include)
+    add_library(ittnotify STATIC IMPORTED)
+    set_target_properties(ittnotify PROPERTIES IMPORTED_LOCATION ${VTUNE_TOP_DIR}/sdk/lib64/libittnotify.a)
+    set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ittnotify)
+    add_definitions(-DWITH_VTUNE_INSTRUMENTATION)
+endif()
+
 add_definitions(-DFMT_HEADER_ONLY)
 if(NOT MSVC)
   add_definitions(-fPIC)
@@ -167,6 +180,7 @@ add_executable(
 
     src/qppcad/core/main.cpp
     src/qppcad/core/gitversion.cpp
+    src/qppcad/core/ittnotify_support.cpp
 
     src/qppcad/core/app_state.cpp
     src/qppcad/core/app_state_event_disp.cpp
@@ -235,6 +249,7 @@ else()
     ${OPENGL_LIBRARIES}
     pybind11::embed
     ${PYTHON_LIBRARIES}
+    ${ADDITIONAL_LIBRARIES}
     pthread
     dl
     util

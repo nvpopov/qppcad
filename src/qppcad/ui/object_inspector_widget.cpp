@@ -88,32 +88,38 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
           this,
-          &object_inspector_widget_t::cur_ws_selected_item_changed);
+          &object_inspector_widget_t::cur_ws_selected_item_changed,
+          Qt::DirectConnection);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::obj_insp_tab_open_requested_signal,
           this,
-          &object_inspector_widget_t::open_tab_requested);
+          &object_inspector_widget_t::open_tab_requested,
+          Qt::DirectConnection);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_changed_signal,
           this,
-          &object_inspector_widget_t::cur_ws_changed);
+          &object_inspector_widget_t::cur_ws_changed,
+          Qt::DirectConnection);
 
   connect(m_ws_items_list,
           &QListWidget::itemSelectionChanged,
           this,
-          &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
+          &object_inspector_widget_t::ui_cur_ws_selected_item_changed,
+          Qt::DirectConnection);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_need_to_update_obj_insp_signal,
           this,
-          &object_inspector_widget_t::need_to_update_obj_insp_received);
+          &object_inspector_widget_t::need_to_update_obj_insp_received,
+          Qt::DirectConnection);
 
   connect(m_ws_items_list,
           &QListWidget::itemDoubleClicked,
           this,
-          &object_inspector_widget_t::ws_item_list_double_clicked);
+          &object_inspector_widget_t::ws_item_list_double_clicked,
+          Qt::DirectConnection);
 
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();

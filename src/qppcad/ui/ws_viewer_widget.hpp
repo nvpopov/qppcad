@@ -2,6 +2,7 @@
 #define QPPCAD_WS_VIEWER_WIDGET_H
 
 #include <qppcad/core/qppcad.hpp>
+#include <qppcad/core/ittnotify_support.hpp>
 #include <QOpenGLWidget>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions_3_3_Core>
@@ -13,41 +14,41 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class ws_viewer_widget_t : public QOpenGLWidget {
+class ws_viewer_widget_t : public QOpenGLWidget {
 
-      Q_OBJECT
+  Q_OBJECT
 
-      public:
+public:
 
-        ws_viewer_widget_t(QWidget *parent);
-        QTimer *m_update_timer;
-        QElapsedTimer *m_update_timer_gpu;
-        QElapsedTimer *m_update_timer_cpu;
+  ws_viewer_widget_t(QWidget *parent);
+  QTimer *m_update_timer;
+  QElapsedTimer *m_update_timer_gpu;
+  QElapsedTimer *m_update_timer_cpu;
 
-        void draw_text_logo(QPainter &painter);
-        void draw_scanline(QPainter &painter);
+  void draw_text_logo(QPainter &painter);
+  void draw_scanline(QPainter &painter);
 
-      public slots:
+public slots:
 
-        void update_cycle();
-        void show_context_menu(const QPoint &pos);
+  void update_cycle();
+  void show_context_menu(const QPoint &pos);
 
-      protected:
+protected:
 
-        void initializeGL() override;
-        void resizeGL(int w, int h) override;
-        void paintGL() override;
-        void mousePressEvent(QMouseEvent * event) override;
-        void mouseReleaseEvent(QMouseEvent * event) override;
-        void mouseMoveEvent(QMouseEvent * event) override;
-        void mouseDoubleClickEvent(QMouseEvent *event) override;
-        void wheelEvent(QWheelEvent *event) override;
+  void initializeGL() override;
+  void resizeGL(int w, int h) override;
+  void paintGL() override;
+  void mousePressEvent(QMouseEvent * event) override;
+  void mouseReleaseEvent(QMouseEvent * event) override;
+  void mouseMoveEvent(QMouseEvent * event) override;
+  void mouseDoubleClickEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

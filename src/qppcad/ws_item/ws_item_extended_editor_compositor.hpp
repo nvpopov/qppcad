@@ -12,38 +12,38 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class ws_item_extended_editor_compositor_t : public qembed_window_t {
+class ws_item_extended_editor_compositor_t : public qembed_window_t {
 
-        Q_OBJECT
+  Q_OBJECT
 
-      public:
+public:
 
-        QWidget *m_ext_edt_plch;
-        QPushButton *m_top_btn_close;
-        QPushButton *m_top_btn_refresh;
+  QWidget *m_ext_edt_plch;
+  QPushButton *m_top_btn_close;
+  QPushButton *m_top_btn_refresh;
 
-        std::shared_ptr<ws_item_extended_editor_t> m_cur_ext_editor_widget{nullptr};
+  std::shared_ptr<ws_item_extended_editor_t> m_cur_ext_editor_widget{nullptr};
 
-        ws_item_extended_editor_compositor_t(QWidget *parent = nullptr);
-        ~ws_item_extended_editor_compositor_t();
+  ws_item_extended_editor_compositor_t(QWidget *parent = nullptr);
+  ~ws_item_extended_editor_compositor_t();
 
-        void open_extended_editor(size_t editor_id = 0);
+  void open_extended_editor(size_t editor_id = 0);
 
-      public slots:
+public slots:
 
-        void open_requested();
-        void open_requested_with_order(size_t editor_id);
-        void cur_ws_selected_item_changed();
-        void cur_ws_changed();
+  void open_requested();
+  void open_requested_with_order(size_t editor_id);
+  void cur_ws_selected_item_changed();
+  void cur_ws_changed();
 
-        void close_ext_editor_btn_clicked();
-        void refresh_ext_editor_btn_clicked();
+  void close_ext_editor_btn_clicked();
+  void refresh_ext_editor_btn_clicked();
 
-    };
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 
