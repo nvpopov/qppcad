@@ -18,6 +18,7 @@
 #include <qppcad/ws_item/node_book/node_book.hpp>
 
 #include <qppcad/core/ittnotify_support.hpp>
+#include <qppcad/core/timing.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -421,6 +422,8 @@ void workspace_t::render_overlay(QPainter &painter) {
 
 void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
+  timer_t mc_time;
+
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
@@ -486,6 +489,8 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   if (sel_idx != -1 && !hit_any) {
     m_cur_itm.commit_value_exclusive(-1);
   }
+
+  astate->tlog("ws::mouse click spent {} sec.", mc_time.elapsed());
 
 }
 

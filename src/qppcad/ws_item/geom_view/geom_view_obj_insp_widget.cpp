@@ -1074,15 +1074,11 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
 }
 
 void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
-
-  auto _tmp = _binding_item->cast_as<geom_view_t>();
-
-  if (_tmp) {
-    b_al = _tmp;
+  auto tmp = _binding_item->cast_as<geom_view_t>();
+  if (tmp) {
+    b_al = tmp;
   }
-
   ws_item_obj_insp_widget_t::bind_to_item(_binding_item);
-
 }
 
 void geom_view_obj_insp_widget_t::update_from_ws_item() {
