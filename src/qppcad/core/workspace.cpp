@@ -310,14 +310,11 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
   epoch_t cur_epoch = get_cur_epoch();
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
-
   if (cur_ws && cur_ws.get() == this) {
-
     // set the edit type
     if (m_cur_edit_type.get_value() != p_edit_type) {
       set_edit_type(static_cast<ws_edit_type_e>(m_cur_edit_type.get_value()), false);
     }
-
     for (size_t i = 0; i < m_ws_items.get_hs_children_count(); i++) {
       auto itm = m_ws_items.get_hs_child_as_array(i);
       if (!itm)
@@ -329,11 +326,9 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
       if (m_ws_items.is_child_alive(cur_epoch, itm)  == hs_result_e::hs_alive)
         alive_cnt_after++;
     }
-
     astate->tlog("\n Epoch changed in workspace {0}\n"
                  " alive_cnt_bef = {1}, alive_cnt_aft = {2}, prev_epoch = {3}, cur_epoch = {4}",
                  m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
-
     m_cur_itm.set_commit_exclusive_on_change(false);
     astate->tlog("@@@ OnEPChanged, m_cur_itm = {}", m_cur_itm.get_value());
     if (!p_inside_selection_event) {
@@ -346,12 +341,10 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
       }
     }
     m_cur_itm.set_commit_exclusive_on_change(true);
-
     if (alive_cnt_after != alive_cnt_before)
       astate->astate_evd->cur_ws_content_changed_signal();
     if (affected)
       astate->astate_evd->cur_ws_selected_item_changed();
-
   }
 
   return hs_result_e::hs_success;

@@ -12,6 +12,7 @@
 #include <qppcad/ws_item/ccd_view/ccd_view.hpp>
 #include <qppcad/core/json_helpers.hpp>
 #include <qppcad/core/app_state.hpp>
+#include <qppcad/core/timing.hpp>
 
 #include <random>
 #include <clocale>
@@ -466,19 +467,21 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
       }
       recalc_gizmo_barycenter();
       m_parent_ws->m_gizmo->update_gizmo(0.01f);
+      timer_t timer_sel_nempty;
       astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+      astate->tlog("gv::mouse_click::atoms_selected spent {} sec.", timer_sel_nempty.elapsed());
       return true;
-
     } else {
       if (m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content && m_selected ) {
         sel_atoms(false);
       }
-
     }
 
   }
 
+  timer_t timer_sel_empty;
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+  astate->tlog("gv::mouse_click::atoms_nonselected spent {} sec.", timer_sel_empty.elapsed());
   return false;
 
 }

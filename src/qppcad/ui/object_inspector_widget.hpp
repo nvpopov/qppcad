@@ -38,6 +38,8 @@ public:
   qembed_window_sub_header_t *m_ws_item_overview;
 
   std::shared_ptr<ws_item_obj_insp_widget_t> m_cur_obj_insp_widget{nullptr};
+  ws_item_t *m_last_object{nullptr};
+  int m_last_object_type{-1};
 
 public slots:
 

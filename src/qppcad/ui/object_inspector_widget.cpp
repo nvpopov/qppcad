@@ -138,45 +138,63 @@ object_inspector_widget_t::~object_inspector_widget_t() {
 
 void object_inspector_widget_t::update_ws_items_view_widget() {
 
+  ws_item_t *last_object = m_last_object;
+  int last_object_type = last_object ? last_object->get_type() : -1;
+
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
   if (!bhv_mgr)
     return;
 
-  if (m_cur_obj_insp_widget) {
+  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
+  m_last_object = cur_it.get();
 
-    m_cur_obj_insp_widget->unbind_item();
-
-    auto coiw_ptr = m_cur_obj_insp_widget.get();
-    if (coiw_ptr)
-      m_main_lt->removeWidget(coiw_ptr);
-
-    m_cur_obj_insp_widget->setParent(nullptr);
-    m_cur_obj_insp_widget = nullptr;
-    m_none_item_placeholder->show();
-
+  if (m_last_object) {
+    m_last_object_type = m_last_object->get_type();
   }
 
-  auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
+  if (m_cur_obj_insp_widget) {
+    //last_object == new object do nothing, like a clicking on the same item
+    if (m_last_object
+        && last_object
+        && m_last_object == last_object
+        && m_cur_obj_insp_widget->parent() == this) {
+      //do nothing
+      return;
+    }
+    // if current selected item and previously selected item have the same type it is
+    // not necessary to remove associated object inspector widget
+    // we need to unbind anyway for select same type items and none selected
+    m_cur_obj_insp_widget->unbind_item();
+    if (!ok || m_last_object_type != last_object_type) {
+      auto coiw_ptr = m_cur_obj_insp_widget.get();
+      if (coiw_ptr)
+        m_main_lt->removeWidget(coiw_ptr);
+      m_cur_obj_insp_widget->setParent(nullptr);
+      m_cur_obj_insp_widget = nullptr;
+    }
+    if (!ok)
+       m_none_item_placeholder->show();
+  }
 
-  if (!ok)
-  return;
+  if (!ok) {
+    m_last_object = nullptr;
+    m_last_object_type = -1;
+    return;
+  }
 
   size_t thash = cur_it->get_type();
   auto obj_insp_w = bhv_mgr->get_obj_insp_widget_sp(thash);
   if (obj_insp_w) {
-
     // a dirty hack for preventing object inspectors widgets from being unbounded
     for (auto elem : bhv_mgr->m_obj_insp_widgets)
       elem.second->setVisible(false);
-
     m_none_item_placeholder->hide();
     m_main_lt->insertWidget(2, obj_insp_w.get());
     m_cur_obj_insp_widget = obj_insp_w;
     obj_insp_w->bind_to_item(cur_it.get());
     obj_insp_w->show();
-
   }
 
 }
