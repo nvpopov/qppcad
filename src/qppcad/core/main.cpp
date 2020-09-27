@@ -40,8 +40,8 @@ int main (int argc, char **argv) {
   instrumentation::init();
   #endif
 
-  QCoreApplication::setOrganizationName("igc");
-  QCoreApplication::setOrganizationDomain("igc.irk.ru");
+  QCoreApplication::setOrganizationName("100ways");
+  QCoreApplication::setOrganizationDomain("100ways.dev");
   QCoreApplication::setApplicationName("qppcad");
   QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
