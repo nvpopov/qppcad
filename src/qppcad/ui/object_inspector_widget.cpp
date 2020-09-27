@@ -163,8 +163,8 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
       //do nothing
       return;
     }
-    // if current selected item and previously selected item have the same type it is
-    // not necessary to remove associated object inspector widget
+    // if current selected item and previously selected item have the same type
+    // then it isn't necessary to remove associated object inspector widget
     // we need to unbind anyway for select same type items and none selected
     m_cur_obj_insp_widget->unbind_item();
     if (!ok || m_last_object_type != last_object_type) {
