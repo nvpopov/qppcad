@@ -35,7 +35,10 @@ void on_app_exit(int signal) {
 int main (int argc, char **argv) {
 
   std::ios_base::sync_with_stdio(false);
+
+  #ifdef WITH_VTUNE_INSTRUMENTATION
   instrumentation::init();
+  #endif
 
   QCoreApplication::setOrganizationName("igc");
   QCoreApplication::setOrganizationDomain("igc.irk.ru");
