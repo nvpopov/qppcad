@@ -40,7 +40,7 @@ std::shared_ptr<ws_item_t> construct_from_vector3f(workspace_t &ws,
     return nullptr;
 
   auto as_wsv3 = new_item->cast_as<ws_vector3_t>();
-  if(!as_wsv3)
+  if (!as_wsv3)
     return nullptr;
 
   as_wsv3->set_pos(vec);
@@ -61,13 +61,12 @@ std::shared_ptr<ws_item_t> construct_from_geom(
     return nullptr;
 
   auto new_item = ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
-
   if (!new_item)
     return nullptr;
 
   auto as_gv = new_item->cast_as<geom_view_t>();
-  if(!as_gv) return nullptr;
-
+  if(!as_gv)
+    return nullptr;
 
   if (as_gv->m_geom) {
     as_gv->m_geom->remove_observer(*as_gv->m_ext_obs);
@@ -116,18 +115,10 @@ std::shared_ptr<ws_item_t> construct_from_array_group(
 
 }
 
-//void upd_oi(ws_item_t *_item) {
-
-//  if (_item && _item->m_selected)
-//    app_state_t::get_inst()->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-
-//}
-
 void mvd() {
   app_state_t *astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
 }
-
 
 void cws_changed() {
   app_state_t *astate = app_state_t::get_inst();

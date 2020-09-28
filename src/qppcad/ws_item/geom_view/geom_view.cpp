@@ -431,13 +431,10 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
   m_need_to_update_overview = true;
 
   if (click_ray && m_geom && m_parent_ws) {
-
     std::vector<tws_query_data_t<float, size_t> > res;
-
     ray_t<float> local_geom_ray;
     local_geom_ray.start = click_ray->start - m_pos.get_value();
     local_geom_ray.dir = click_ray->dir;
-
     if (m_draw_img_atoms.get_value()) {
       m_tws_tr->query_ray<query_ray_add_all<float>>(local_geom_ray,
                                                     res,
@@ -453,9 +450,7 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
                                                            m_sel_vis.get_value(),
                                                            xgeom_sel_vis_hide);
     }
-
     recalc_gizmo_barycenter();
-
     if (!res.empty()) {
       std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
       if (m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content && m_selected) {
@@ -497,20 +492,26 @@ void geom_view_t::mouse_double_click(ray_t<float> *ray) {
 }
 
 void geom_view_t::sel_atoms(bool all) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (!m_geom)
     return;
-
-  for (int i = 0; i < m_geom->nat(); i++)
-    m_geom->select(i, all); // TODO all?? realy?
-
+  std::set<int> selected_atoms;
+  for (int i = 0; i < m_geom->num_aselected(); i++)
+    selected_atoms.insert((*m_geom->nth_aselected(i)).m_atm);
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  if (all) {
+    for (int i = 0; i < m_geom->nat(); i++)
+      if (selected_atoms.find(i) == end(selected_atoms))
+        m_geom->select(i, true);
+  } else { // need to unselect all, iterates over selecting
+    for (auto &sel_rec : selected_atoms)
+      m_geom->select(sel_rec, false);
+  }
+  end_recording();
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   astate->make_viewport_dirty();
-
 }
 
 void geom_view_t::sel_atom(int atom_id) {

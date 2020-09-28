@@ -37,6 +37,7 @@ signals:
   void extended_editor_close_requested_signal();
 
   void request_update_overview_signal(const std::string &newoverview);
+  void request_undo_redo_buttons_update_signal();
 
   void new_file_loaded_signal();
   void python_console_clear_requested_signal();
@@ -70,6 +71,7 @@ public:
   void extended_editor_close_requested();
 
   void request_update_overview(const std::string &newoverview);
+  void request_undo_redo_buttons_update();
 
   void new_file_loaded(const std::string &file_name,
                        const size_t ff,

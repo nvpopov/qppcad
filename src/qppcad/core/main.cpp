@@ -16,20 +16,16 @@ using namespace qpp;
 using namespace qpp::cad;
 
 void signal_handler(int signal) {
-
   std::signal(signal, SIG_IGN);
   std::cout << "SIGNAL RECEIVED " << signal << std::endl;
   app_state_t::get_inst()->save_settings();
-
 }
 
 void on_app_exit(int signal) {
-
   std::cout << std::endl <<"SIGNAL RECEIVED " << signal << std::endl
             << "qppcad has been terminated." << std::endl;
   app_state_t::get_inst()->save_settings();
   QCoreApplication::exit(0);
-
 }
 
 int main (int argc, char **argv) {
@@ -75,9 +71,7 @@ int main (int argc, char **argv) {
   }
 
   app_state_t::init_inst();
-
   app_state_t *astate = app_state_t::get_inst();
-
   astate->tlog("@GIT_REVISION={}, @BUILD_DATE={}",
                build_info_t::get_git_version(), build_info_t::get_git_version());
 
@@ -96,25 +90,19 @@ int main (int argc, char **argv) {
   }
 
   if (!args.empty()) {
-
     std::string file_format = "";
-
     if (parser.isSet(target_fmt_option))
       file_format = parser.value(target_fmt_option).toStdString();
-
     for (auto &rec : args) {
       astate->tlog("@DEBUG: passed to load_from_file_autodeduce, path={}, ff={}",
                    rec.toStdString(), file_format.empty() ? "NONE" : file_format);
       astate->ws_mgr->load_from_file_autodeduce(rec.toStdString(), file_format, true, true);
     }
-
   } else {
-
     if (parser.isSet(target_fmt_option)) {
       astate->tlog("ERROR: Invalid input");
       return 0;
     }
-
   }
 
   QSurfaceFormat format;

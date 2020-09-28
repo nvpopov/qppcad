@@ -229,6 +229,7 @@ public slots:
   void show_gizmo_state_changed(bool checked);
   void show_log_wdgt_state_changed(bool checked);
   void show_modern_menu_state_changed(bool checked);
+  void request_undo_redo_buttons_update();
 
   void create_new_ws();
   void open_ws();
@@ -270,6 +271,9 @@ public slots:
   void act_unsel_all_cnt();
   void act_invert_sel_cnt();
   void act_toggle_console();
+
+  void act_undo();
+  void act_redo();
 
   void rebuild_recent_files_menu();
   void recent_files_clicked();

@@ -311,6 +311,7 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (cur_ws && cur_ws.get() == this) {
+    astate->astate_evd->request_undo_redo_buttons_update();
     // set the edit type
     if (m_cur_edit_type.get_value() != p_edit_type) {
       set_edit_type(static_cast<ws_edit_type_e>(m_cur_edit_type.get_value()), false);
