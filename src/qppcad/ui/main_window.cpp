@@ -222,7 +222,7 @@ void main_window_t::init_menus() {
   m_edit_menu_undo = new QAction(nullptr);
   m_edit_menu_undo->setText(tr("Undo"));
   m_edit_menu_undo->setEnabled(false);
-  m_edit_menu_undo->setShortcut(QKeySequence(tr("Ctrl+u")));
+  m_edit_menu_undo->setShortcut(QKeySequence(tr("Ctrl+z")));
   m_edit_menu->addAction(m_edit_menu_undo);
   connect(m_edit_menu_undo,
           &QAction::triggered,
@@ -232,7 +232,7 @@ void main_window_t::init_menus() {
   m_edit_menu_redo = new QAction(nullptr);
   m_edit_menu_redo->setText(tr("Redo"));
   m_edit_menu_redo->setEnabled(false);
-  m_edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+r")));
+  m_edit_menu_redo->setShortcut(QKeySequence(tr("Ctrl+Shift+z")));
   m_edit_menu->addAction(m_edit_menu_redo);
   connect(m_edit_menu_redo,
           &QAction::triggered,

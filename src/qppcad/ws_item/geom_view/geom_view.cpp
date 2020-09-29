@@ -521,29 +521,20 @@ void geom_view_t::sel_atom(int atom_id) {
 }
 
 void geom_view_t::sel_atom(int atom_id, index atom_idx) {
-
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   m_need_to_update_overview = true;
-
   if (!m_geom)
     return;
-
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
-
-    //m_atom_idx_sel.insert(atom_index_set_key(atom_id, atom_idx));
     m_geom->select(atom_id);
-
     if (m_atom_ord_sel.size() >= max_sel_in_deque) {
       m_atom_ord_sel.resize(max_sel_in_deque);
       m_atom_ord_sel.pop_front();
     }
-
     m_atom_ord_sel.push_back(atom_index_set_key(atom_id, atom_idx));
-
     recalc_gizmo_barycenter();
     m_parent_ws->m_gizmo->update_gizmo(0.01f);
-
     if (m_geom->nat() < 1000) {
       astate->wlog(">> SEL: {}{:<8} {:>16.5f} {:>16.5f} {:>16.5f} {}",
                    m_geom->atom_name(atom_id),
@@ -555,32 +546,27 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
     }
     astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
     return;
-
   }
-
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
-
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   return;
-
 }
 
 void geom_view_t::sel_visible() {
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (size_t i = 0; i < m_geom->nat(); i++)
     if (!m_geom->xfield<bool>(xgeom_sel_vis_hide, i))
       sel_atom(i);
+  end_recording();
 }
 
 void geom_view_t::unsel_atom(int atom_id) {
-
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   m_need_to_update_overview = true;
-
   if (!m_geom)
     return;
-
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
     for (iterator idx(index::D(m_geom->get_DIM()).all(-1), index::D(m_geom->get_DIM()).all(1));
          !idx.end(); idx++ ) {
@@ -595,25 +581,19 @@ void geom_view_t::unsel_atom(int atom_id) {
     astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
     return;
   }
-
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
-
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   return;
-
 }
 
 void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
-
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   m_need_to_update_overview = true;
-
   if (!m_geom)
     return;
-
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
     auto key = atom_index_set_key(atom_id, atom_idx);
     m_geom->select(atom_id, false);
@@ -624,103 +604,84 @@ void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
     m_parent_ws->m_gizmo->update_gizmo(0.01f);
     return;
   }
-
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
-
   return;
-
 }
 
 void geom_view_t::sel_by_type(const int item_type_to_select) {
-
   app_state_t* astate = app_state_t::get_inst();
   if (!m_geom)
     return;
-
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto i = 0; i < m_geom->nat(); i++)
     if (m_geom->type_table(i) == item_type_to_select)
       sel_atom(i);
-
+  end_recording();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
-
 }
 
 void geom_view_t::unsel_by_type(const int item_type_to_unselect) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (!m_geom)
     return;
-
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto i = 0; i < m_geom->nat(); i++)
-    if (m_geom->type_table(i) == item_type_to_unselect) unsel_atom(i);
-
+    if (m_geom->type_table(i) == item_type_to_unselect)
+      unsel_atom(i);
+  end_recording();
   recalc_gizmo_barycenter();
-
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
-
 }
 
 void geom_view_t::inv_sel_atoms() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (!m_geom)
     return;
-
   std::set<int> sel_atm;
   index zero = index::D(m_geom->get_DIM()).all(0);
-
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (int i = 0; i < m_geom->nat(); i++)
     m_geom->toggle_selected(i);
-
+  end_recording();
   recalc_gizmo_barycenter();
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
-
 }
 
 void geom_view_t::sel_by_box(vector3<float> start_pos, vector3<float> end_pos) {
-
   /**
    * brute force solution
   */
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (size_t i = 0; i < m_geom->nat(); i++) {
     aabb_3d_t<float> aabb{start_pos, end_pos};
     auto is_inside_aabb = aabb.test_point(m_geom->pos(i));
     if (is_inside_aabb)
       sel_atom(i);
   }
-
+  end_recording();
 }
 
 void geom_view_t::sq_sel_by_box(const float box_scale = 1.1) {
-
   if (m_geom->num_aselected() != 2)
     return;
-
   auto idx1 = m_geom->nth_aselected(0);
   auto idx2 = m_geom->nth_aselected(1);
   auto pos1 = m_geom->pos(idx1->m_atm, idx1->m_idx);
   auto pos2 = m_geom->pos(idx2->m_atm, idx2->m_idx);
-
   vector3<float> center = (pos1 + pos2) * 0.5f;
   vector3<float> len{0};
-
   for (size_t i = 0; i < 3; i++)
     len[i] = std::max(std::max(pos1[i], pos2[i]) - std::min(pos1[i], pos2[i]), 0.1f);
-
   auto pos1_r = center - len * 0.5f * box_scale;
   auto pos2_r = center + len * 0.5f * box_scale;
-
   sel_by_box(pos1_r, pos2_r);
-
 }
 
 void geom_view_t::ins_atom(const int atom_type, const vector3<float> &pos) {
