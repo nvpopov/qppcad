@@ -400,27 +400,20 @@ private:
 protected:
 
   hs_result_e reset_impl() override {
-
     if (p_stored_values.empty())
       return hs_result_e::hs_invalid_epoch;
-
     auto stored_val_it = p_stored_values.find(get_cur_epoch());
     if (stored_val_it == end(p_stored_values))
       return hs_result_e::hs_invalid_epoch;
-
     p_cur_value = stored_val_it->second;
     return hs_result_e::hs_success;
-
   }
 
   void on_recording() override {
-
     if (get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init) {
       p_stored_values.clear();
     }
-
     p_stored_values[get_cur_epoch()] = p_cur_value;
-
   }
 
   hs_result_e squash_impl() override {
@@ -460,24 +453,17 @@ public:
 
   hs_result_e commit_value_exclusive(STYPE &&new_val,
                                      std::optional<epoch_t> new_epoch = std::nullopt) {
-
     if (p_cur_value == new_val)
       return hs_result_e::hs_success;
-
     if (get_doctype() != hs_doc_type_e::hs_doc_persistent)
       return hs_result_e::hs_committing_changes_in_tmp_doc;
-
     STYPE loc_var(new_val);
     auto push_epoch_with_value_res =
         push_epoch_with_value(std::move(loc_var), new_epoch, true);
-
     if (push_epoch_with_value_res != hs_result_e::hs_success)
       return hs_result_e::hs_error;
-
     commit_exclusive();
-
     return hs_result_e::hs_success;
-
   }
 
   hs_result_e on_epoch_changed(epoch_t prev_epoch) override {
@@ -515,7 +501,6 @@ public:
   }
 
   void set_value(STYPE &&new_val) {
-
     if constexpr (std::is_floating_point<STYPE>::value) {
       if (std::fabs(p_cur_value - new_val) < std::numeric_limits<STYPE>::epsilon())
         return;
@@ -523,18 +508,14 @@ public:
       if (p_cur_value == new_val)
         return;
     }
-
     p_cur_value = new_val;
-
     if (get_ignore_changes())
       return;
-
     if (hs_doc_base_t *super_parent = get_super_parent();
         get_doctype() == hs_doc_type_e::hs_doc_persistent
         && super_parent
         && super_parent->get_commit_exclusive_on_change())
       commit_value_exclusive(STYPE(p_cur_value));
-
   }
 
   void set_cvalue(STYPE new_val) {
