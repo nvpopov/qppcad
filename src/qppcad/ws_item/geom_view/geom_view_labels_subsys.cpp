@@ -38,11 +38,9 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
   float outline_size = m_outline_size.get_value();
 
   if (m_screen_scale.get_value()) {
-
-      float clmp_os = std::clamp(astate->camera->m_cam_state.m_ortho_scale, 1.0f, 20.0f);
+      float clmp_os = std::clamp(astate->camera->get_ortho_scale(), 1.0f, 20.0f);
       font_size = m_lbl_font_size.get_value() * 10 / clmp_os;
       outline_size = m_outline_size.get_value() * 10 / clmp_os;
-
     }
 
   QPen rectpen(QPen(Qt::black, m_render_outlines.get_value() ? outline_size : 1, Qt::SolidLine));

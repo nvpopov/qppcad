@@ -5,21 +5,21 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    struct geom_view_render_billboards {
+struct geom_view_render_billboards {
 
-        static void render(geom_view_t &al);
+  static void render(geom_view_t &al);
 
-        static void render_atom(geom_view_t &al, const uint32_t at_num,
-                                const index &at_index);
+  static void render_atom(geom_view_t &al, const uint32_t at_num,
+                          const index &at_index);
 
-        static void render_bond(geom_view_t &al, const uint32_t at_num1,
-                                const index &at_index1, const uint32_t at_num2,
-                                const index &at_index2);
-    };
+  static void render_bond(geom_view_t &al, const uint32_t at_num1,
+                          const index &at_index1, const uint32_t at_num2,
+                          const index &at_index2);
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

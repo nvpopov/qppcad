@@ -282,4 +282,54 @@ void camera_t::on_commit_exclusive() {
   p_cam_states[cur_epoch] = p_cam_state;
 }
 
+vector3<float> camera_t::get_look_at() {
+  return p_cam_state.m_look_at;
+}
+
+vector3<float> camera_t::get_view_point() {
+  return p_cam_state.m_view_point;
+}
+
+float camera_t::get_znear_ortho() {
+  return p_cam_state.m_znear_ortho;
+}
+
+float camera_t::get_zfar_ortho() {
+  return p_cam_state.m_zfar_ortho;
+}
+
+float camera_t::get_stored_dist() {
+  return p_cam_state.m_stored_dist;
+}
+
+float camera_t::get_ortho_scale() {
+  return p_cam_state.m_ortho_scale;
+}
+
+void camera_t::update_camera_state(const vector3<float> &new_look_at,
+                                   const vector3<float> &new_look_pos) {
+  p_cam_state.m_look_at = new_look_at;
+  p_cam_state.m_view_point = new_look_pos;
+}
+
+void camera_t::update_camera_state_v2(const vector3<float> &new_look_at,
+                                      const vector3<float> &new_look_pos,
+                                      const vector3<float> &new_look_up) {
+  p_cam_state.m_look_at = new_look_at;
+  p_cam_state.m_view_point = new_look_pos;
+  p_cam_state.m_look_up = new_look_up;
+}
+
+matrix4<float> &camera_t::get_mat_view() {
+  return p_cam_state.m_mat_view;
+}
+
+matrix4<float> &camera_t::get_proj_view() {
+  return p_cam_state.m_proj_view;
+}
+
+matrix4<float> &camera_t::get_mat_proj() {
+  return p_cam_state.m_mat_proj;
+}
+
 

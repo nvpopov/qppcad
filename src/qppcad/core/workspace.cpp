@@ -39,8 +39,6 @@ workspace_t::workspace_t(std::string _ws_name) {
   add_hs_child(&m_cur_edit_type);
   end_recording();
 
-  //m_cur_itm.set_commit_exclusive_on_change(true);
-
 }
 
 bool workspace_t::is_current() {
@@ -56,7 +54,6 @@ workspace_manager_t *workspace_t::get_mgr() {
 }
 
 std::optional<size_t> workspace_t::get_sel_idx() {
-
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
     if (!ws_item)
@@ -64,9 +61,7 @@ std::optional<size_t> workspace_t::get_sel_idx() {
     if (ws_item->m_selected)
       return std::optional<size_t>(i);
   }
-
   return std::nullopt;
-
 }
 
 ws_item_t *workspace_t::get_sel() {
@@ -86,7 +81,6 @@ std::shared_ptr<ws_item_t> workspace_t::get_sel_sp() {
 }
 
 std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string name) {
-
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
     if (!ws_item)
@@ -94,13 +88,10 @@ std::shared_ptr<ws_item_t> workspace_t::get_by_name(std::string name) {
     if (ws_item->m_name.get_value() == name)
       return ws_item;
   }
-
   return nullptr;
-
 }
 
 std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
-
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
     if (!ws_item)
@@ -108,9 +99,7 @@ std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
     if (ws_item == item)
       return std::optional{i};
   }
-
   return std::nullopt;
-
 }
 
 bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit_hs_event) {
@@ -167,13 +156,10 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
 }
 
 bool workspace_t::set_sel_item(ws_item_t *item, bool emit_signal, bool emit_hs_event) {
-
   auto itm_idx = get_item_idx(item);
   if (!itm_idx)
     return false;
-
   return set_sel_item(*itm_idx, emit_signal, emit_hs_event);
-
 }
 
 void workspace_t::next_item() {
@@ -191,34 +177,26 @@ void workspace_t::prev_item() {
 }
 
 void workspace_t::unsel_all(bool emit_signal) {
-
   for (size_t i = 0; i < num_items(); i++) {
     auto ws_item = m_ws_items.get_hs_child_as_array(i).get();
     if (!ws_item)
       continue;
     ws_item->m_selected = false;
   }
-
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->request_update_overview("");
-
   if (emit_signal)
     astate->astate_evd->cur_ws_selected_item_changed();
-
 }
 
 void workspace_t::toggle_edit_mode() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (p_edit_type == ws_edit_type_e::edit_item) {
     p_edit_type = ws_edit_type_e::edit_content;
   } else {
     p_edit_type = ws_edit_type_e::edit_item;
   }
-
   astate->astate_evd->cur_ws_edit_type_changed();
-
 }
 
 size_t workspace_t::num_items() {
@@ -285,13 +263,11 @@ void workspace_t::set_best_view() {
     vec_look_pos /= total_voters;
   }
 
-  m_camera->m_cam_state.m_look_at = vec_look_at;
-  m_camera->m_cam_state.m_view_point = vec_look_pos;
-
+  m_camera->update_camera_state(vec_look_at, vec_look_pos);
   m_camera->orthogonalize_gs();
   m_camera->update_camera();
 
-  if ((m_camera->m_cam_state.m_look_at-m_camera->m_cam_state.m_view_point).norm() < 0.4f
+  if ((m_camera->get_look_at() - m_camera->get_view_point()).norm() < 0.4f
       || vec_look_at == vec_look_pos)
     m_camera->reset_camera();
 
@@ -372,8 +348,8 @@ void workspace_t::render() {
       vector3<float> vScrTW = astate->camera->unproject(-0.92f, -0.90f);
       float axis_magn =
           astate->camera->m_cur_proj ==
-          cam_proj_t::proj_persp ? 0.07f *astate->camera->m_cam_state.m_stored_dist
-                                 : m_camera->m_cam_state.m_ortho_scale * 0.1f;
+          cam_proj_t::proj_persp ? 0.07f *astate->camera->get_stored_dist()
+                                 : m_camera->get_ortho_scale() * 0.1f;
 
       astate->dp->begin_render_line();
 
@@ -421,15 +397,15 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
-    m_ray.start = m_camera->m_cam_state.m_view_point;
+    m_ray.start = m_camera->get_view_point();
     m_ray.dir =
-        (m_camera->unproject(mouse_x, mouse_y) - m_camera->m_cam_state.m_view_point).normalized();
+        (m_camera->unproject(mouse_x, mouse_y) - m_camera->get_view_point()).normalized();
   } else {
-    float z_p = (m_camera->m_cam_state.m_znear_ortho + m_camera->m_cam_state.m_zfar_ortho)
-                / (m_camera->m_cam_state.m_znear_ortho - m_camera->m_cam_state.m_zfar_ortho);
+    float z_p = (m_camera->get_znear_ortho() + m_camera->get_zfar_ortho())
+                / (m_camera->get_znear_ortho() - m_camera->get_zfar_ortho());
 
     m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
-    m_ray.dir = (m_camera->m_cam_state.m_look_at - m_camera->m_cam_state.m_view_point).normalized();
+    m_ray.dir = (m_camera->get_look_at() - m_camera->get_view_point()).normalized();
   }
 
   if (m_gizmo->m_is_visible && m_gizmo->attached_item && m_gizmo->process_ray(&m_ray)) {

@@ -73,15 +73,10 @@ void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
   target_view(target_view_src, look_from, look_to, look_up, need_to_update_camera);
 
   if (need_to_update_camera && m_parent_ws && m_parent_ws->m_camera) {
-
-    m_parent_ws->m_camera->m_cam_state.m_view_point = look_from;
-    m_parent_ws->m_camera->m_cam_state.m_look_at = look_to;
-    m_parent_ws->m_camera->m_cam_state.m_look_up = look_up;
+    m_parent_ws->m_camera->update_camera_state_v2(look_from, look_to, look_up);
     m_parent_ws->m_camera->orthogonalize_gs();
     m_parent_ws->m_camera->update_camera();
-
     astate->make_viewport_dirty();
-
   }
 
 }
@@ -91,22 +86,18 @@ const std::string ws_item_t::get_name() {
 }
 
 void ws_item_t::set_name(const std::string &name) {
-
   if (m_name.get_value() != name) {
     auto vname(name);
     m_name.set_value(std::move(vname));
     //m_parent_ws->ws_changed();
   }
-
 }
 
 void ws_item_t::set_name(const char *name) {
-
   if (m_name.get_value() != name) {
     m_name.set_value(std::string(name));
     //m_parent_ws->ws_changed();
   }
-
 }
 
 void ws_item_t::add_connected_item(std::shared_ptr<ws_item_t> new_item) {
@@ -115,20 +106,16 @@ void ws_item_t::add_connected_item(std::shared_ptr<ws_item_t> new_item) {
 }
 
 void ws_item_t::rm_connected_item(std::shared_ptr<ws_item_t> item_to_remove) {
-
   auto idx = get_connected_idx(item_to_remove);
   if (idx)
     m_connected_items.erase(m_connected_items.begin() + *idx);
-
 }
 
 std::optional<size_t> ws_item_t::get_connected_idx(std::shared_ptr<ws_item_t> item_to_find) {
-
   for (size_t i = 0; i < m_connected_items.size(); i++)
     if (m_connected_items[i].get() == item_to_find.get())
       return std::optional<size_t>(i);
   return std::nullopt;
-
 }
 
 bool ws_item_t::is_connected(std::shared_ptr<ws_item_t> item_to_find) {
@@ -136,22 +123,17 @@ bool ws_item_t::is_connected(std::shared_ptr<ws_item_t> item_to_find) {
 }
 
 void ws_item_t::add_follower(std::shared_ptr<ws_item_t> new_item) {
-
   if (!is_follower(new_item))
     m_followers.push_back(new_item);
   new_item->m_leader = shared_from_this();
   new_item->on_leader_changed();
-
 }
 
 std::optional<size_t> ws_item_t::get_follower_idx(std::shared_ptr<ws_item_t> item_to_find) {
-
   for (size_t i = 0; i < m_followers.size(); i++)
     if (m_followers[i].get() == item_to_find.get())
       return std::optional<size_t>(i);
-
   return std::nullopt;
-
 }
 
 bool ws_item_t::is_follower(std::shared_ptr<ws_item_t> item_to_find) {
@@ -159,32 +141,24 @@ bool ws_item_t::is_follower(std::shared_ptr<ws_item_t> item_to_find) {
 }
 
 void ws_item_t::rm_follower(std::shared_ptr<ws_item_t> item_to_remove) {
-
   auto idx = get_follower_idx(item_to_remove);
   if (idx) {
     m_followers.erase(m_followers.begin() + *idx);
     item_to_remove->m_leader = nullptr;
     item_to_remove->on_leader_changed();
   }
-
 }
 
 void ws_item_t::set_bounded_to_leader(bool bounding) {
-
   if (bounding) {
-
     unset_flag(ws_item_flags_support_tr);
     unset_flag(ws_item_flags_translate_emit_upd_event);
     set_flag(ws_item_flags_fetch_leader_pos);
-
   } else {
-
     set_flag(ws_item_flags_support_tr);
     set_flag(ws_item_flags_translate_emit_upd_event);
     unset_flag(ws_item_flags_fetch_leader_pos);
-
   }
-
 }
 
 bool ws_item_t::is_bounded() {
@@ -192,52 +166,40 @@ bool ws_item_t::is_bounded() {
 }
 
 bool ws_item_t::is_selected() {
-
   if (m_parent_ws) {
     return m_parent_ws->get_sel() == this;
   } else {
     return false;
   }
-
 }
 
 void ws_item_t::hs_delete(bool emit_ws_changed) {
-
-  if (!m_parent_ws) return;
-
+  if (!m_parent_ws)
+    return;
   auto holderv = m_parent_ws->m_ws_items.holder_lookup(this);
   if (!holderv)
     return;
-
   m_parent_ws->m_ws_items.set_alive_hs_child(holderv, false);
   if (emit_ws_changed)
     app_state_t::get_inst()->astate_evd->cur_ws_changed();
-
 }
 
 void ws_item_t::render () {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (m_selected
       && (get_flags() & ws_item_flags_support_sel)
       && (get_flags() & ws_item_flags_support_render_bb)
       && is_bb_visible()
       && m_show_bb.get_value()) {
-
     astate->dp->begin_render_aabb();
     auto pos = m_pos.get_value();
-
     if (m_parent_ws->get_edit_type() == ws_edit_type_e::edit_item) {
       astate->dp->render_aabb(clr_fuchsia, pos + m_aabb.min, pos + m_aabb.max);
     } else {
       astate->dp->render_aabb(clr_olive, pos + m_aabb.min, pos + m_aabb.max);
     }
-
     astate->dp->end_render_aabb();
-
   }
-
 }
 
 void ws_item_t::render_overlay(QPainter &painter) {

@@ -3,58 +3,57 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    void geom_view_render_xlines::render(geom_view_t &al) {
+void geom_view_render_xlines::render(geom_view_t &al) {
 
-      app_state_t* astate = app_state_t::get_inst();
-      index all_null = index::D(al.m_geom->get_DIM()).all(0);
-      astate->sp_line_mesh->begin_shader_program();
-      astate->mesh_xline_mesh->begin_render_batch();
+  app_state_t* astate = app_state_t::get_inst();
+  index all_null = index::D(al.m_geom->get_DIM()).all(0);
+  astate->sp_line_mesh->begin_shader_program();
+  astate->mesh_xline_mesh->begin_render_batch();
 
-      auto draw_atoms = al.m_draw_atoms.get_value();
-      auto draw_img_atoms = al.m_draw_img_atoms.get_value();
-      auto draw_bonds = al.m_draw_bonds.get_value();
-      auto draw_img_bonds = al.m_draw_img_bonds.get_value();
-      auto atom_scale_factor = al.m_atom_scale_factor.get_value();
-      auto pos = al.m_pos.get_value();
+  auto draw_atoms = al.m_draw_atoms.get_value();
+  auto draw_img_atoms = al.m_draw_img_atoms.get_value();
+  auto draw_bonds = al.m_draw_bonds.get_value();
+  auto draw_img_bonds = al.m_draw_img_bonds.get_value();
+  auto atom_scale_factor = al.m_atom_scale_factor.get_value();
+  auto pos = al.m_pos.get_value();
 
-      /*
+  /*
         sp->u_on(sp_u_name::m_model_view_proj);
         sp->u_on(sp_u_name::v_translate);
         sp->u_on(sp_u_name::v_color);
          */
-      astate->sp_line_mesh->set_u(sp_u_name::m_model_view_proj,
-                                  astate->camera->m_cam_state.m_proj_view.data());
-      //glLineWidth(al.m_atom_scale_factor*3);
+  astate->sp_line_mesh->set_u(sp_u_name::m_model_view_proj,astate->camera->get_proj_view().data());
+  //glLineWidth(al.m_atom_scale_factor*3);
 
-      for (uint32_t i = 0; i < al.m_geom->nat(); i++)
-        if (draw_atoms &&
-            al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
-            al.m_atom_type_to_hide.end()) {
+  for (uint32_t i = 0; i < al.m_geom->nat(); i++)
+    if (draw_atoms &&
+        al.m_atom_type_to_hide.find(al.m_geom->type_table(i)) ==
+        al.m_atom_type_to_hide.end()) {
 
-            vector3<float> color(0.0, 0.0, 1.0);
-            auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
-            float dr_rad = 0.4f;
+      vector3<float> color(0.0, 0.0, 1.0);
+      auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
+      float dr_rad = 0.4f;
 
-            if (ap_idx) {
-                dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius * atom_scale_factor;
-                color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
-              }
+      if (ap_idx) {
+        dr_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius * atom_scale_factor;
+        color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
+      }
 
-            vector3<float> xpos = al.m_geom->pos(i) + pos;
-            astate->sp_line_mesh->set_u(sp_u_name::v_translate, xpos.data());
-            astate->sp_line_mesh->set_u(sp_u_name::v_color, color.data());
-            astate->mesh_xline_mesh->render_batch();
-
-          }
-
-      astate->mesh_xline_mesh->end_render_batch();
-      astate->sp_line_mesh->end_shader_program();
+      vector3<float> xpos = al.m_geom->pos(i) + pos;
+      astate->sp_line_mesh->set_u(sp_u_name::v_translate, xpos.data());
+      astate->sp_line_mesh->set_u(sp_u_name::v_color, color.data());
+      astate->mesh_xline_mesh->render_batch();
 
     }
 
+  astate->mesh_xline_mesh->end_render_batch();
+  astate->sp_line_mesh->end_shader_program();
 
-  }
+}
+
+
+}
 
 }

@@ -5,13 +5,13 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    struct geom_view_render_xlines {
-        static void render (geom_view_t &al);
-    };
+struct geom_view_render_xlines {
+  static void render (geom_view_t &al);
+};
 
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 

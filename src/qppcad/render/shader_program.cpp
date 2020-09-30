@@ -49,11 +49,11 @@ qpp::cad::shader_program_t::shader_program_t(const std::string &_program_name,
   astate->tlog("[SHADER] Shader program[{}] compilation status: {}", program_name, proc_res);
 
   if (infoLogLength > 0) {
-      std::vector<char> ProgramErrorMessage(infoLogLength+1);
-      glapi->glGetProgramInfoLog(program_id, infoLogLength, nullptr, &ProgramErrorMessage[0]);
-      std::string str(ProgramErrorMessage.begin(), ProgramErrorMessage.end());
-      astate->tlog("[SHADER] Shader/Program compilation/linking failed: {}", str);
-    }
+    std::vector<char> ProgramErrorMessage(infoLogLength+1);
+    glapi->glGetProgramInfoLog(program_id, infoLogLength, nullptr, &ProgramErrorMessage[0]);
+    std::string str(ProgramErrorMessage.begin(), ProgramErrorMessage.end());
+    astate->tlog("[SHADER] Shader/Program compilation/linking failed: {}", str);
+  }
 
   glapi->glDeleteShader(vertexShaderID);
   glapi->glDeleteShader(fragmentShaderID);
@@ -68,9 +68,9 @@ void qpp::cad::shader_program_t::u_on(qpp::cad::sp_u_name _val) {
   unf_rec[_val].h_prog = glapi->glGetUniformLocation(program_id, map_u2s[_val].c_str());
 
   if (unf_rec[_val].h_prog == -1) {
-      astate->tlog("[SHADER] Warning: invalid uniform[{}] in program {}",
-                   map_u2s[_val], program_name);
-    }
+    astate->tlog("[SHADER] Warning: invalid uniform[{}] in program {}",
+                 map_u2s[_val], program_name);
+  }
 }
 
 void qpp::cad::shader_program_t::set_u(qpp::cad::sp_u_name ut, GLfloat *val) {
@@ -79,34 +79,34 @@ void qpp::cad::shader_program_t::set_u(qpp::cad::sp_u_name ut, GLfloat *val) {
   glapi_t* glapi = astate->glapi;
 
   if (unf_rec[ut].enabled) {
-      qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[ut];
-      GLint uloc = unf_rec[ut].h_prog;
-      switch(_utype){
+    qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[ut];
+    GLint uloc = unf_rec[ut].h_prog;
+    switch(_utype){
 
-        case qpp::cad::sp_u_type::a_v3f :
-          glapi->glUniform3fv(uloc, 1, val);
-          break;
+    case qpp::cad::sp_u_type::a_v3f :
+      glapi->glUniform3fv(uloc, 1, val);
+      break;
 
-        case qpp::cad::sp_u_type::a_m4f :
-          glapi->glUniformMatrix4fv(uloc, 1, GL_FALSE, val);
-          break;
+    case qpp::cad::sp_u_type::a_m4f :
+      glapi->glUniformMatrix4fv(uloc, 1, GL_FALSE, val);
+      break;
 
-        case qpp::cad::sp_u_type::a_m3f :
-          glapi->glUniformMatrix3fv(uloc, 1, GL_FALSE, val);
-          break;
+    case qpp::cad::sp_u_type::a_m3f :
+      glapi->glUniformMatrix3fv(uloc, 1, GL_FALSE, val);
+      break;
 
-        case qpp::cad::sp_u_type::a_sf :
-          glapi->glUniform1fv(uloc, 1, val);
-          break;
+    case qpp::cad::sp_u_type::a_sf :
+      glapi->glUniform1fv(uloc, 1, val);
+      break;
 
-        default:
-          break;
-        }
+    default:
+      break;
     }
+  }
 
   else {
 
-    }
+  }
 }
 
 void qpp::cad::shader_program_t::set_u_sampler(qpp::cad::sp_u_name _ut, GLint val) {
@@ -115,10 +115,10 @@ void qpp::cad::shader_program_t::set_u_sampler(qpp::cad::sp_u_name _ut, GLint va
   glapi_t* glapi = astate->glapi;
 
   if (unf_rec[_ut].enabled) {
-      //qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[_ut];
-      GLint uloc = unf_rec[_ut].h_prog;
-      glapi->glUniform1i(uloc, val);
-    }
+    //qpp::cad::sp_u_type _utype = qpp::cad::map_u2at[_ut];
+    GLint uloc = unf_rec[_ut].h_prog;
+    glapi->glUniform1i(uloc, val);
+  }
 
 }
 
@@ -147,8 +147,8 @@ void qpp::cad::shader_program_t::begin_shader_program() {
   //    }
 
   if (unf_rec[sp_u_name::v_eye_pos].enabled && astate->camera) {
-      set_u(sp_u_name::v_eye_pos, astate->camera->m_cam_state.m_view_point.data());
-    }
+    set_u(sp_u_name::v_eye_pos, astate->camera->get_view_point().data());
+  }
 
 }
 

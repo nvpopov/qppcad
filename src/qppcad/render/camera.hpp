@@ -109,6 +109,21 @@ public:
   hs_result_e on_epoch_removed(epoch_t epoch_to_remove) override;
   void on_commit_exclusive() override;
 
+  vector3<float> get_look_at();
+  vector3<float> get_view_point();
+  float get_znear_ortho();
+  float get_zfar_ortho();
+  float get_stored_dist();
+  float get_ortho_scale();
+  void update_camera_state(const vector3<float> &new_look_at,
+                           const vector3<float> &new_look_pos);
+  void update_camera_state_v2(const vector3<float> &new_look_at,
+                              const vector3<float> &new_look_pos,
+                              const vector3<float> &new_look_up);
+  matrix4<float> & get_mat_view();
+  matrix4<float> & get_proj_view();
+  matrix4<float> & get_mat_proj();
+
 };
 
 } // namespace qpp::cad

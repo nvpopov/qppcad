@@ -1059,7 +1059,7 @@ void simple_query::camera_zoom(float magnitude) {
 float simple_query::camera_get_zoom() {
   app_state_t *astate = app_state_t::get_inst();
   if (astate->camera && astate->camera->m_cur_proj == cam_proj_t::proj_ortho)
-    return astate->camera->m_cam_state.m_ortho_scale;
+    return astate->camera->get_ortho_scale();
   return 0.0f;
 }
 
