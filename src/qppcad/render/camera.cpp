@@ -5,6 +5,13 @@
 using namespace qpp;
 using namespace qpp::cad;
 
+void camera_t::on_recording() {
+  if (get_cur_rec_type() == hs_doc_rec_type_e::hs_doc_rec_init) {
+    p_cam_states.clear();
+  }
+  p_cam_states[get_cur_epoch()] = p_cam_state;
+}
+
 camera_t::camera_t () {
   app_state_t* astate = app_state_t::get_inst();
   m_cur_proj = astate->m_default_cam_proj;
@@ -270,11 +277,25 @@ void camera_t::load_from_json(json &data) {
 }
 
 hs_result_e camera_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
-
+  auto cur_epoch = get_cur_epoch();
+  auto it = p_cam_states.find(cur_epoch);
+  if (it == end(p_cam_states)) {
+    return hs_result_e::hs_invalid_epoch;
+  }
+  p_cam_state = it->second;
+  orthogonalize_gs();
+  update_camera();
+  return hs_result_e::hs_success;
 }
 
 hs_result_e camera_t::on_epoch_removed(hs_doc_base_t::epoch_t epoch_to_remove) {
-
+  auto it = p_cam_states.find(epoch_to_remove);
+  if (it != p_cam_states.end()) {
+    p_cam_states.erase(it);
+    return hs_result_e::hs_success;
+  } else {
+    return hs_result_e::hs_error;
+  }
 }
 
 void camera_t::on_commit_exclusive() {

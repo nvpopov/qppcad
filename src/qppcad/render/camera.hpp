@@ -16,15 +16,6 @@ enum class cam_proj_t : size_t {
   proj_persp
 };
 
-template <typename T>
-struct stored_type_t {
-  size_t m_cur_epoch;
-  T m_data;
-  bool operator>=(const stored_type_t<T>& rhs) {
-    return this->m_cur_epoch >= rhs.m_cur_epoch;
-  }
-};
-
 struct camera_state_t {
   vector3<float> m_view_point;
   vector3<float> m_view_dir;
@@ -54,6 +45,10 @@ private:
   bool m_upd_on_epoch_changed{false};
   camera_state_t p_cam_state;
   std::map<epoch_t, camera_state_t> p_cam_states;
+
+protected:
+
+  void on_recording() override;
 
 public:
 
