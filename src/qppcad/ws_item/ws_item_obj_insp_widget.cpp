@@ -249,9 +249,7 @@ void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {
 }
 
 void ws_item_obj_insp_widget_t::rename_current_item() {
-
   if (m_binded_item) {
-
     app_state_t* astate = app_state_t::get_inst();
     bool ok;
     QString text = QInputDialog::getText(this,
@@ -265,17 +263,12 @@ void ws_item_obj_insp_widget_t::rename_current_item() {
       astate->astate_evd->cur_ws_selected_item_changed();
       astate->astate_evd->cur_ws_changed();
     }
-
   }
-
 }
 
 void ws_item_obj_insp_widget_t::delete_current_item() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (m_binded_item) {
-
     int ret = QMessageBox::warning(this,
                                    tr("Confirm the deletion"),
                                    tr("Are you sure?"),
@@ -283,22 +276,17 @@ void ws_item_obj_insp_widget_t::delete_current_item() {
 
     if (ret == QMessageBox::Cancel)
       return;
-
     ws_item_t *binded_item = m_binded_item;
     unbind_item();
-
     astate->ws_mgr->get_cur_ws()->unsel_all();
     binded_item->hs_delete();
-
     astate->astate_evd->cur_ws_changed();
     astate->astate_evd->wss_changed();
-
   } else {
     astate->ws_mgr->get_cur_ws()->unsel_all();
     astate->astate_evd->cur_ws_changed();
     astate->astate_evd->wss_changed();
   }
-
 }
 
 void ws_item_obj_insp_widget_t::cur_tab_changed(int index) {
@@ -306,4 +294,3 @@ void ws_item_obj_insp_widget_t::cur_tab_changed(int index) {
     m_binded_item->m_last_tab = index;
   }
 }
-

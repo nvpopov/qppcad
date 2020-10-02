@@ -1060,13 +1060,11 @@ void geom_view_t::update_inter_atomic_dist(float new_dist,
 }
 
 void geom_view_t::update_inter_atomic_dist_ex(float new_dist,
-                                              const int at1,
-                                              const int at2,
+                                              const int at1, const int at2,
                                               pair_dist_mode_e mode) {
-
   if (!m_geom)
     return;
-  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
+  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   update_inter_atomic_dist(new_dist, at1, at2, index::D(m_geom->get_DIM()).all(0),
                            index::D(m_geom->get_DIM()).all(0), mode);
   m_xgeom_proxy.end_recording();
@@ -1079,7 +1077,7 @@ void geom_view_t::translate_selected(const vector3<float> &t_vec) {
   if (m_geom->no_aselected())
     return;
 
-  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
+  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
     auto rec = m_geom->nth_aselected(i);

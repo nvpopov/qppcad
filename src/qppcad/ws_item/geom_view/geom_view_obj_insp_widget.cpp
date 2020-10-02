@@ -1528,7 +1528,6 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
       }
 
       if (b_al->m_geom->num_aselected() == 2) {
-
         m_tm_gb_add_atom->hide();
         m_tm_gb_single_atom->hide();
         m_tm_gb_pair_dist->show();
@@ -1538,15 +1537,11 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         m_tm_gb_bc_rot->show();
         m_tm_gb_grp_op->show();
         m_tm_gb_override_atom->hide();
-
         auto oval1 = b_al->m_geom->nth_aselected(0);
-        auto oval2 = b_al->m_geom->nth_aselected(0);
-
+        auto oval2 = b_al->m_geom->nth_aselected(1);
         if (oval1 && oval2) {
-
           auto val1 = *oval1;
           auto val2 = *oval2;
-
           m_tm_pair_dist_atom1->setText(
               QString::fromStdString(fmt::format("{}{} {}",
                                                  b_al->m_geom->atom_name(val1.m_atm),
@@ -1557,13 +1552,10 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
                                                  b_al->m_geom->atom_name(val2.m_atm),
                                                  val2.m_atm,
                                                  val2.m_idx)));
-
-          if (val1.m_idx == index::D(b_al->m_geom->get_DIM()).all(0)
-              && val2.m_idx == index::D(b_al->m_geom->get_DIM()).all(0)) {
+          if (val1.m_idx.is_zero() && val2.m_idx.is_zero()) {
             m_tm_pair_dist_spinbox->show();
             float dist_btw = (b_al->m_geom->pos(val1.m_atm, val1.m_idx) -
                               b_al->m_geom->pos(val2.m_atm, val2.m_idx)).norm();
-
             m_tm_pair_dist_spinbox->blockSignals(true);
             m_tm_pair_dist_spinbox->setValue(double(dist_btw));
             m_tm_pair_dist_spinbox->blockSignals(false);
@@ -1575,7 +1567,6 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
             m_tm_pair_dist_spinbox->hide();
             m_tm_pair_dist_swap_atoms->hide();
           }
-
           //atom between
           fill_combo_with_atom_types(m_tm_pair_creation_combo, b_al);
         }
@@ -2216,14 +2207,13 @@ void geom_view_obj_insp_widget_t::mod_single_atom_delete_button_clicked() {
 
 void geom_view_obj_insp_widget_t::mod_pair_dist_spinbox_value_changed(double newval) {
   app_state_t *astate = app_state_t::get_inst();
-  if (b_al && b_al->m_atom_ord_sel.size() == 2) {
-    auto it1 = b_al->m_atom_ord_sel.begin();
-    auto it2 = it1++;
-    if (it1->m_idx == index::D(b_al->m_geom->get_DIM()).all(0)
-        && it2->m_idx == index::D(b_al->m_geom->get_DIM()).all(0)) {
+  if (b_al && b_al->m_geom->num_selected() == 2) {
+    auto at1 = b_al->m_geom->nth_selected(0);
+    auto at2 = b_al->m_geom->nth_aselected(1);
+    if (at1 && at2) {
       pair_dist_mode_e mode;
       mode = static_cast<pair_dist_mode_e>(m_tm_pair_dist_t_mode->currentIndex());
-      b_al->update_inter_atomic_dist_ex(float(newval), it1->m_atm, it2->m_atm, mode);
+      b_al->update_inter_atomic_dist_ex(float(newval), (*at1).m_atm, (*at2).m_atm, mode);
       astate->make_viewport_dirty();
     }
   }
