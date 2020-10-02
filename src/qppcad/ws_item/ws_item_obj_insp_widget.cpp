@@ -228,8 +228,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_position_changed_signal,
           this,
-          &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed,
-          Qt::DirectConnection);
+          &ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed);
 
   m_tab_general->tab_inner_widget_lt->addWidget(m_sp_info_wdgt);
   m_tab_general->tab_inner_widget_lt->addWidget(m_tg_acts);
@@ -237,8 +236,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   connect(this,
           &ws_item_obj_insp_widget_t::currentChanged,
           this,
-          &ws_item_obj_insp_widget_t::cur_tab_changed,
-          Qt::DirectConnection);
+          &ws_item_obj_insp_widget_t::cur_tab_changed);
 
 }
 

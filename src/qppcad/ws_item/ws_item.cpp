@@ -72,10 +72,10 @@ void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
 
   target_view(target_view_src, look_from, look_to, look_up, need_to_update_camera);
 
-  if (need_to_update_camera && m_parent_ws && m_parent_ws->m_camera) {
-    m_parent_ws->m_camera->update_camera_state_v2(look_from, look_to, look_up);
-    m_parent_ws->m_camera->orthogonalize_gs();
-    m_parent_ws->m_camera->update_camera();
+  if (need_to_update_camera && m_parent_ws) {
+    m_parent_ws->m_camera.update_camera_state_v2(look_from, look_to, look_up);
+    m_parent_ws->m_camera.orthogonalize_gs();
+    m_parent_ws->m_camera.update_camera();
     astate->make_viewport_dirty();
   }
 

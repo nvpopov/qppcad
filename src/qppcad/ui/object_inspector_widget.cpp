@@ -88,38 +88,32 @@ object_inspector_widget_t::object_inspector_widget_t(QWidget *parent) : qembed_w
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
           this,
-          &object_inspector_widget_t::cur_ws_selected_item_changed,
-          Qt::DirectConnection);
+          &object_inspector_widget_t::cur_ws_selected_item_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::obj_insp_tab_open_requested_signal,
           this,
-          &object_inspector_widget_t::open_tab_requested,
-          Qt::DirectConnection);
+          &object_inspector_widget_t::open_tab_requested);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_changed_signal,
           this,
-          &object_inspector_widget_t::cur_ws_changed,
-          Qt::DirectConnection);
+          &object_inspector_widget_t::cur_ws_changed);
 
   connect(m_ws_items_list,
           &QListWidget::itemSelectionChanged,
           this,
-          &object_inspector_widget_t::ui_cur_ws_selected_item_changed,
-          Qt::DirectConnection);
+          &object_inspector_widget_t::ui_cur_ws_selected_item_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_need_to_update_obj_insp_signal,
           this,
-          &object_inspector_widget_t::need_to_update_obj_insp_received,
-          Qt::DirectConnection);
+          &object_inspector_widget_t::need_to_update_obj_insp_received);
 
   connect(m_ws_items_list,
           &QListWidget::itemDoubleClicked,
           this,
-          &object_inspector_widget_t::ws_item_list_double_clicked,
-          Qt::DirectConnection);
+          &object_inspector_widget_t::ws_item_list_double_clicked);
 
   cur_ws_changed();
   ui_cur_ws_selected_item_changed();
@@ -214,11 +208,9 @@ void object_inspector_widget_t::cur_ws_changed() {
 
   if (cur_ws)
   for (size_t i = 0; i < cur_ws->num_items(); i++) {
-
     auto ws_item = cur_ws->m_ws_items.get_hs_child_as_array(i);
     if (!ws_item)
       continue;
-
     m_ws_items_list->addItem(
           QString::fromStdString(fmt::format("[{}] {} ", i, ws_item->m_name.get_value()))
           );
@@ -250,12 +242,10 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
                                           .arg(qt_hlp::clamp_string(item_name, 28)));
       m_ws_items_list->item(*cur_id)->setSelected(true);
       m_ws_items_list->scrollToItem(m_ws_items_list->item(*cur_id));
-
     } else {
       m_ws_item_prop_hdr->setVisible(false);
       m_ws_items_list->clearSelection();
     }
-
   }
 
   update_ws_items_view_widget();
@@ -302,15 +292,11 @@ void object_inspector_widget_t::refresh_button_clicked() {
 }
 
 void object_inspector_widget_t::add_new_ws_item_button_clicked() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return;
-
   add_new_ws_item_widget_t add_dialog;
   add_dialog.exec();
-
 }
 
 void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &pos) {
@@ -328,14 +314,12 @@ void object_inspector_widget_t::provide_context_menu_for_ws_items(const QPoint &
 
   for (auto &ext_edt_info : astate->ws_mgr->m_bhv_mgr->m_ext_editors_info)
     if (ext_edt_info.second.m_type == cur_it->get_type()) {
-
       total_ext_editors++;
       qextended_action *new_act = new qextended_action;
       new_act->setText(QString::fromStdString(ext_edt_info.second.m_full_name));
       new_act->m_joined_data[0] = ext_edt_info.second.m_type;
       new_act->m_joined_data[1] = ext_edt_info.second.m_order;
       ext_acts.push_back(new_act);
-
     }
 
   if (total_ext_editors <= 1)
@@ -362,9 +346,8 @@ void object_inspector_widget_t::open_tab_requested(int tab_id) {
 
   app_state_t* astate = app_state_t::get_inst();
 
-  //astate->tlog("@DEBUG: enter object_inspector_widget_t::open_tab_requested(tab_id={})", tab_id);
-
-  if (!m_cur_obj_insp_widget) return;
+  if (!m_cur_obj_insp_widget)
+    return;
 
   auto tab_cnt = m_cur_obj_insp_widget->count();
   if (tab_cnt == 0
@@ -374,8 +357,6 @@ void object_inspector_widget_t::open_tab_requested(int tab_id) {
     return;
 
   m_cur_obj_insp_widget->setCurrentIndex(tab_id);
-
-  //astate->tlog("@DEBUG: exit object_inspector_widget_t::open_tab_requested(tab_id={})", tab_id);
 
 }
 

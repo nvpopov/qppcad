@@ -34,20 +34,17 @@ geom_view_extended_editor_t::geom_view_extended_editor_t() {
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this,
-          &geom_view_extended_editor_t::selection_changed,
-          Qt::DirectConnection);
+          &geom_view_extended_editor_t::selection_changed);
 
   connect(m_xgeom_tv->verticalHeader(),
           &QHeaderView::sectionDoubleClicked,
           this,
-          &geom_view_extended_editor_t::header_vertical_double_clicked,
-          Qt::DirectConnection);
+          &geom_view_extended_editor_t::header_vertical_double_clicked);
 
   connect(m_xgeom_tv->horizontalHeader(),
           &QHeaderView::sectionDoubleClicked,
           this,
-          &geom_view_extended_editor_t::header_horizontal_clicked,
-          Qt::DirectConnection);
+          &geom_view_extended_editor_t::header_horizontal_clicked);
 
 }
 
@@ -78,23 +75,17 @@ void geom_view_extended_editor_t::bind_to_item(ws_item_t *_binding_item) {
 }
 
 void geom_view_extended_editor_t::update_from_ws_item() {
-
   m_xgeom_tv->update();
   ws_item_extended_editor_t::update_from_ws_item();
-
 }
 
 void geom_view_extended_editor_t::unbind_item() {
-
   ws_item_extended_editor_t::unbind_item();
   m_xgeom_tmdl->unbind();
-
 }
 
 bool geom_view_extended_editor_t::can_be_binded_to(ws_item_t *item) {
-
   return item && item->get_type() == geom_view_t::get_type_static();
-
 }
 
 QString geom_view_extended_editor_t::header_name_hint() {
@@ -102,21 +93,16 @@ QString geom_view_extended_editor_t::header_name_hint() {
 }
 
 void geom_view_extended_editor_t::selection_changed() {
-
   if (m_binded_gv) {
       m_xgeom_tv->update();
     }
-
 }
 
 void geom_view_extended_editor_t::resizeEvent(QResizeEvent *event) {
-
   if (m_xgeom_tv) {
       m_xgeom_tv->setFixedHeight(event->size().height() * 0.98);
     }
-
   ws_item_extended_editor_t::resizeEvent(event);
-
 }
 
 void geom_view_extended_editor_t::header_vertical_double_clicked(int logical_index) {

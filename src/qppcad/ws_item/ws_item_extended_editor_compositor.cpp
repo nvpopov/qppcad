@@ -52,26 +52,22 @@ ws_item_extended_editor_compositor_t::ws_item_extended_editor_compositor_t(QWidg
   connect(astate->astate_evd,
           &app_state_event_disp_t::extended_editor_open_requested_signal,
           this,
-          &ws_item_extended_editor_compositor_t::open_requested,
-          Qt::DirectConnection);
+          &ws_item_extended_editor_compositor_t::open_requested);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::extended_editor_open_requested_with_order_signal,
           this,
-          &ws_item_extended_editor_compositor_t::open_requested_with_order,
-          Qt::DirectConnection);
+          &ws_item_extended_editor_compositor_t::open_requested_with_order);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
           this,
-          &ws_item_extended_editor_compositor_t::cur_ws_selected_item_changed,
-          Qt::DirectConnection);
+          &ws_item_extended_editor_compositor_t::cur_ws_selected_item_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_changed_signal,
           this,
-          &ws_item_extended_editor_compositor_t::cur_ws_changed,
-          Qt::DirectConnection);
+          &ws_item_extended_editor_compositor_t::cur_ws_changed);
 
 }
 

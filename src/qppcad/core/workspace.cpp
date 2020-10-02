@@ -24,21 +24,18 @@ using namespace qpp;
 using namespace qpp::cad;
 
 workspace_t::workspace_t(std::string _ws_name) {
-
   m_ws_name = _ws_name;
-  m_camera = std::make_unique<camera_t>();
-  m_camera->reset_camera();
+  m_camera.reset_camera();
   m_gizmo = std::make_unique<gizmo_t>();
-
   //m_cur_itm.set_value(-1);
   m_cur_itm.set_value(-1);
   m_cur_edit_type.set_value(ws_edit_type_e::edit_item);
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
   add_hs_child(&m_ws_items);
+  add_hs_child(&m_camera);
   add_hs_child(&m_cur_itm);
   add_hs_child(&m_cur_edit_type);
   end_recording();
-
 }
 
 bool workspace_t::is_current() {
@@ -204,15 +201,15 @@ size_t workspace_t::num_items() {
 }
 
 void workspace_t::reset_cam() {
-  m_camera->reset_camera();
+  m_camera.reset_camera();
   set_best_view();
 }
 
 void workspace_t::set_best_view() {
 
   if (num_items() == 0) {
-    m_camera->reset_camera();
-    m_camera->update_camera();
+    m_camera.reset_camera();
+    m_camera.update_camera();
     return;
   }
 
@@ -263,13 +260,13 @@ void workspace_t::set_best_view() {
     vec_look_pos /= total_voters;
   }
 
-  m_camera->update_camera_state(vec_look_at, vec_look_pos);
-  m_camera->orthogonalize_gs();
-  m_camera->update_camera();
+  m_camera.update_camera_state(vec_look_at, vec_look_pos);
+  m_camera.orthogonalize_gs();
+  m_camera.update_camera();
 
-  if ((m_camera->get_look_at() - m_camera->get_view_point()).norm() < 0.4f
+  if ((m_camera.get_look_at() - m_camera.get_view_point()).norm() < 0.4f
       || vec_look_at == vec_look_pos)
-    m_camera->reset_camera();
+    m_camera.reset_camera();
 
 }
 
@@ -349,7 +346,7 @@ void workspace_t::render() {
       float axis_magn =
           astate->camera->m_cur_proj ==
           cam_proj_t::proj_persp ? 0.07f *astate->camera->get_stored_dist()
-                                 : m_camera->get_ortho_scale() * 0.1f;
+                                 : m_camera.get_ortho_scale() * 0.1f;
 
       astate->dp->begin_render_line();
 
@@ -393,19 +390,16 @@ void workspace_t::render_overlay(QPainter &painter) {
 void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
 
   timer_t mc_time;
-
   app_state_t* astate = app_state_t::get_inst();
-
-  if (m_camera->m_cur_proj == cam_proj_t::proj_persp) {
-    m_ray.start = m_camera->get_view_point();
+  if (m_camera.m_cur_proj == cam_proj_t::proj_persp) {
+    m_ray.start = m_camera.get_view_point();
     m_ray.dir =
-        (m_camera->unproject(mouse_x, mouse_y) - m_camera->get_view_point()).normalized();
+        (m_camera.unproject(mouse_x, mouse_y) - m_camera.get_view_point()).normalized();
   } else {
-    float z_p = (m_camera->get_znear_ortho() + m_camera->get_zfar_ortho())
-                / (m_camera->get_znear_ortho() - m_camera->get_zfar_ortho());
-
-    m_ray.start = m_camera->unproject(mouse_x, mouse_y, z_p);
-    m_ray.dir = (m_camera->get_look_at() - m_camera->get_view_point()).normalized();
+    float z_p = (m_camera.get_znear_ortho() + m_camera.get_zfar_ortho())
+                / (m_camera.get_znear_ortho() - m_camera.get_zfar_ortho());
+    m_ray.start = m_camera.unproject(mouse_x, mouse_y, z_p);
+    m_ray.dir = (m_camera.get_look_at() - m_camera.get_view_point()).normalized();
   }
 
   if (m_gizmo->m_is_visible && m_gizmo->attached_item && m_gizmo->process_ray(&m_ray)) {
@@ -530,7 +524,7 @@ void workspace_t::save_ws_to_json(const std::string filename) {
   json_io::save_vec3(JSON_BG_CLR, m_bg_color, data);
 
   json camera_data;
-  m_camera->save_to_json(camera_data);
+  m_camera.save_to_json(camera_data);
   data[JSON_WS_CAMERA] = camera_data;
 
   json ws_objects = json::array({});
@@ -640,7 +634,7 @@ void workspace_t::update(float delta_time) {
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_first_render) {
-    if (!m_camera->m_already_loaded)
+    if (!m_camera.m_already_loaded)
       set_best_view();
     m_first_render = false;
   }
@@ -649,10 +643,10 @@ void workspace_t::update(float delta_time) {
 
   //scenic camera rotation
   if (m_scenic_rotation) {
-    m_camera->rotate_camera_orbit_roll(m_scenic_rotation_speed[0] * delta_time);
-    m_camera->rotate_camera_orbit_pitch(m_scenic_rotation_speed[1] * delta_time);
-    m_camera->rotate_camera_orbit_yaw(m_scenic_rotation_speed[2] * delta_time);
-    m_camera->update_camera();
+    m_camera.rotate_camera_orbit_roll(m_scenic_rotation_speed[0] * delta_time);
+    m_camera.rotate_camera_orbit_pitch(m_scenic_rotation_speed[1] * delta_time);
+    m_camera.rotate_camera_orbit_yaw(m_scenic_rotation_speed[2] * delta_time);
+    m_camera.update_camera();
     astate->make_viewport_dirty();
   }
 
@@ -679,30 +673,19 @@ ws_edit_type_e workspace_t::get_edit_type() {
 }
 
 void workspace_t::copy_cam(std::shared_ptr<workspace_t> source) {
-
   if (!source)
     return;
-
-  if (!source->m_camera)
-    return;
-
-  if (!m_camera)
-    return;
-
   m_first_render = false;
-  m_camera->update_camera();
-  m_camera->copy_from_camera(*source->m_camera);
-
+  m_camera.update_camera();
+  m_camera.copy_from_camera(source->m_camera);
 }
 
 void workspace_t::push_cam_state() {
-  if (m_camera)
-    m_camera->push_cam_state();
+  m_camera.push_cam_state();
 }
 
 void workspace_t::pop_cam_state() {
-  if (m_camera)
-    m_camera->pop_cam_state();
+  m_camera.pop_cam_state();
 }
 
 void workspace_t::del_item_by_index(size_t idx) {
@@ -733,14 +716,12 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
   }
 
   auto type_hash = astate->hash_reg->calc_hash_ub(class_name);
-
   if (!type_hash) {
     astate->tlog("ERROR: workspace_t::py_construct_item -> invalid hash");
     return nullptr;
   }
 
   auto new_item = p_mgr->m_bhv_mgr->fbr_ws_item_by_type(type_hash);
-
   if (!new_item) {
     astate->tlog("ERROR: workspace_t::py_construct_item -> fabric error");
     return nullptr;
@@ -748,7 +729,6 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
 
   new_item->m_name.set_value(std::move(item_name));
   add_item_to_ws(new_item);
-
   return new_item;
 
 }
@@ -759,15 +739,11 @@ workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
-
   if (!m_cur_ws_id)
     return nullptr;
-
   if (*m_cur_ws_id >= m_ws.size())
     return nullptr;
-
   return m_ws[*m_cur_ws_id];
-
 }
 
 workspace_t *workspace_manager_t::get_cur_rptr() {
@@ -783,13 +759,10 @@ workspace_t *workspace_manager_t::get_cur_rptr() {
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target_name) {
-
   auto result = std::find_if(m_ws.begin(), m_ws.end(),
                              [&target_name](std::shared_ptr<workspace_t> src)
-  {return src->m_ws_name == target_name;}
-                );
+                             {return src->m_ws_name == target_name;});
   return *result;
-
 }
 
 std::optional<size_t> workspace_manager_t::get_cur_id() {
@@ -806,7 +779,7 @@ bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
     if (ws_index && *ws_index < m_ws.size()) {
       m_cur_ws_id = std::optional<size_t>(ws_index);
       //update_window_title();
-      astate->camera = m_ws[*ws_index]->m_camera.get();
+      astate->camera = &m_ws[*ws_index]->m_camera;
       astate->camera->update_camera();
       astate->wlog("========================================================"
                    "\n    Workspace changed: {}\n"
@@ -1039,12 +1012,11 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 
   app_state_t* astate = app_state_t::get_inst();
 
-  if (!need_to_create_new_ws && !has_wss()) return;
+  if (!need_to_create_new_ws && !has_wss())
+    return;
 
   std::shared_ptr<workspace_t> exec_ws{nullptr};
-
   bool loading_is_succesfull{true};
-
   if (need_to_create_new_ws) {
     create_new_ws(true);
     exec_ws = m_ws[m_ws.size()-1];
@@ -1053,23 +1025,15 @@ void workspace_manager_t::import_from_file(const std::string &fname,
   }
 
   if (exec_ws) {
-
     std::shared_ptr<ws_item_t> p_new_itm{nullptr};
-
     try {
-
       auto rec_type = need_to_squash_hs ? hs_doc_rec_type_e::hs_doc_rec_init :
                                           hs_doc_rec_type_e::hs_doc_rec_as_new_epoch;
-
       p_new_itm = m_bhv_mgr->load_ws_itm_from_file(fname, bhv_id, exec_ws.get(), rec_type);
-
       if (need_to_squash_hs)
         exec_ws.get()->squash();
-
     } catch (const qpp::parsing_error_t &exc) {
-
       loading_is_succesfull = false;
-
       //compose error message
       QString msg_box_title = "Error";
       QString error_message = QObject::tr("An error has occured while parsing the file:\n"
@@ -1089,10 +1053,8 @@ void workspace_manager_t::import_from_file(const std::string &fname,
           .arg(exc.m_line_num)
           .arg(QString::fromStdString(exc.m_exception_src))
           .arg(QString::fromStdString(exc.m_exception_msg));
-
       qrich_error_message_box_t err_msg(msg_box_title, error_message, error_detail);
       err_msg.exec();
-
     } catch (...) {
       loading_is_succesfull = false;
       QString error_message =
@@ -1103,17 +1065,14 @@ void workspace_manager_t::import_from_file(const std::string &fname,
     astate->astate_evd->cur_ws_changed();
 
     if (loading_is_succesfull) {
-
       if (need_to_create_new_ws && p_new_itm) {
         exec_ws->m_ws_name = p_new_itm->m_name.get_value();
-        if (!exec_ws->m_camera->m_already_loaded)
+        if (!exec_ws->m_camera.m_already_loaded)
           exec_ws->set_best_view();
       }
-
       astate->astate_evd->new_file_loaded(fname,
                                           m_bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_file_format,
                                           false);
-
     } else {
       if (need_to_create_new_ws && exec_ws)
         exec_ws->m_marked_for_deletion = true;
@@ -1128,14 +1087,11 @@ void workspace_manager_t::import_from_file(const std::string &fname,
 void workspace_manager_t::save_ws_item_to_file(std::string &file_name,
                                                std::shared_ptr<ws_item_t> ws_item,
                                                size_t bhv_id) {
-
   std::string message;
   bool save_res = m_bhv_mgr->save_ws_itm_to_file(file_name, ws_item, bhv_id, message);
-
   if (!save_res) {
     QMessageBox::critical(nullptr, "Error", QString::fromStdString(message));
   }
-
 }
 
 void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name,
@@ -1164,23 +1120,19 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name
   } else {
     //do autodeduce magic
     if (!file_format.empty()) {
-
       auto ff = m_bhv_mgr->get_ff_by_short_name(file_format);
       if (ff) {
         auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
         if (bhv_id)
           import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
       }
-
     } else {
-
       auto ff = m_bhv_mgr->get_ff_by_finger_print(file_name);
       if (ff) {
         auto bhv_id = m_bhv_mgr->get_io_bhv_by_file_format(*ff);
         if (bhv_id)
           import_from_file(absolute_file_name_native, *bhv_id, new_ws, squash_hs);
       }
-
     }
   }
 
@@ -1218,7 +1170,6 @@ void workspace_manager_t::utility_event_loop() {
   app_state_t* astate = app_state_t::get_inst();
 
   bool has_been_deleted{false};
-
   for (auto it = m_ws.begin(); it != m_ws.end(); ) {
     if ((*it)->m_marked_for_deletion) {
       has_been_deleted = true;

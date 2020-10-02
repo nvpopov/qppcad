@@ -43,7 +43,7 @@ public:
   std::string                              m_fs_path{""};
 
   std::string                              m_ws_name;
-  std::unique_ptr<camera_t>                m_camera;
+  camera_t                                 m_camera;
   ray_t<float>                             m_ray;
   std::unique_ptr<gizmo_t>                 m_gizmo;
   vector3<float>                           m_bg_color{0.5f, 0.5f, 0.5f};

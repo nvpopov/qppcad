@@ -55,56 +55,47 @@ main_window_t::main_window_t(QWidget *parent) : QMainWindow(parent) {
   connect(astate->astate_evd,
           &app_state_event_disp_t::wss_changed_signal,
           this,
-          &main_window_t::wss_changed_slot,
-          Qt::DirectConnection);
+          &main_window_t::wss_changed_slot);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_changed_signal,
           this,
-          &main_window_t::cur_ws_changed,
-          Qt::DirectConnection);
+          &main_window_t::cur_ws_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_item_changed_signal,
           this,
-          &main_window_t::cur_ws_sel_item_changed,
-          Qt::DirectConnection);
+          &main_window_t::cur_ws_sel_item_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_edit_type_changed_signal,
           this,
-          &main_window_t::cur_ws_edit_type_changed,
-          Qt::DirectConnection);
+          &main_window_t::cur_ws_edit_type_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::cur_ws_selected_atoms_list_selection_changed_signal,
           this,
-          &main_window_t::cur_ws_sel_atoms_list_sel_changed,
-          Qt::DirectConnection);
+          &main_window_t::cur_ws_sel_atoms_list_sel_changed);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::new_file_loaded_signal,
           this,
-          &main_window_t::rebuild_recent_files_menu,
-          Qt::DirectConnection);
+          &main_window_t::rebuild_recent_files_menu);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::set_left_inline_tool_visibility_signal,
           this,
-          &main_window_t::inline_tool_left_ctrl_visibility,
-          Qt::DirectConnection);
+          &main_window_t::inline_tool_left_ctrl_visibility);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::set_bottom_inline_tool_visibility_signal,
           this,
-          &main_window_t::inline_tool_bottom_ctrl_visibility,
-          Qt::DirectConnection);
+          &main_window_t::inline_tool_bottom_ctrl_visibility);
 
   connect(astate->astate_evd,
           &app_state_event_disp_t::request_undo_redo_buttons_update_signal,
           this,
-          &main_window_t::request_undo_redo_buttons_update,
-          Qt::DirectConnection);
+          &main_window_t::request_undo_redo_buttons_update);
 
   wss_changed_slot();
   cur_ws_changed();
