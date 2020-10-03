@@ -2308,22 +2308,16 @@ void geom_view_obj_insp_widget_t::mod_bc_rot_angle_type_change(int new_angle_typ
 }
 
 void geom_view_obj_insp_widget_t::mod_bc_rot_apply() {
-
   if (b_al
       && b_al->m_parent_ws
       && b_al->m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content) {
-
     float angle;
-
     if (m_tm_bc_rot_angle_type->currentIndex() == 0)
       angle = float(m_tm_bc_rot_angle->value() * qpp::pi) / 180.0f;
     else //bypass input value
       angle = float(m_tm_bc_rot_angle->value());
-
     vector3<float> rot_center = b_al->get_gizmo_content_barycenter();
-
     vector3<float> rot_axis{vector3<float>::Zero()};
-
     switch (m_tm_bc_rot_axis->currentIndex()) {
     case 0: {
       rot_axis = {1, 0, 0};
@@ -2338,21 +2332,16 @@ void geom_view_obj_insp_widget_t::mod_bc_rot_apply() {
       break;
     }
     }
-
     Eigen::Affine3f t;
     Eigen::AngleAxisf rot(angle, rot_axis);
     Eigen::Translation<float,3> tb(-rot_center);
     Eigen::Translation<float,3> ta(rot_center);
     t = ta * rot * tb;
-
     matrix4<float> tm = t.matrix();
-
     b_al->transform_sel(tm);
     app_state_t *astate = app_state_t::get_inst();
     astate->make_viewport_dirty();
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::mod_group_op_sv_show() {

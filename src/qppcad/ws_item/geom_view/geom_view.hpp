@@ -246,22 +246,34 @@ public:
   void sv_hide_invert_selected();
 
   template <typename TRANSFORM_CLASS>
-  void transform_sel(const TRANSFORM_CLASS &tm) {
-    for (size_t i = 0; i < m_geom->nat(); i++)
-      if (m_geom->selected(i)) transform_atom(i, tm);
+  void transform_sel(const TRANSFORM_CLASS &tm, bool emit_hs_event = true) {
+    auto num_selected = m_geom->num_selected();
+    if (num_selected == 0)
+      return;
+    if (emit_hs_event)
+      begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+    for (auto i = 0; i < m_geom->num_selected(); i++) {
+      auto nth_atom = m_geom->nth_selected(i);
+      if (nth_atom)
+        transform_atom((*nth_atom).m_atm, tm);
+    }
     recalc_gizmo_barycenter();
+    if (emit_hs_event)
+      end_recording();
   }
 
   template <typename XFIELD>
   void xfill_selected(size_t field_id, XFIELD value) {
     for (size_t i = 0; i < m_geom->nat(); i++)
-      if (m_geom->selected(i)) m_geom->xfield<XFIELD>(field_id, i) = value;
+      if (m_geom->selected(i))
+        m_geom->xfield<XFIELD>(field_id, i) = value;
   }
 
   template <typename XFIELD>
   bool any_of_sel_xfield_equal(int xfield_id, XFIELD xfield_val) {
     for (size_t i = 0; i < m_geom->nat(); i++)
-      if (m_geom->selected(i) && m_geom->xfield<XFIELD>(xfield_id, i) == xfield_val) return true;
+      if (m_geom->selected(i) && m_geom->xfield<XFIELD>(xfield_id, i) == xfield_val)
+        return true;
     return false;
   }
 
