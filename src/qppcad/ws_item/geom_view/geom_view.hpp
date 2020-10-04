@@ -233,9 +233,10 @@ public:
   void ins_atom(const int atom_type, const vector3<float> &pos);
   void ins_atom(const std::string &atom_name, const vector3<float> &pos);
 
-  void upd_atom(const int at_id, const vector3<float> &pos);
-  void upd_atom(const int at_id, const std::string &at_name);
-  void upd_atom(const int at_id, const std::string &at_name, const vector3<float> &pos);
+  void upd_atom(const int at_id, const vector3<float> &pos, bool emit_hs_rec = true);
+  void upd_atom(const int at_id, const std::string &at_name, bool emit_hs_rec = true);
+  void upd_atom(const int at_id, const std::string &at_name,
+                const vector3<float> &pos, bool emit_hs_rec = true);
 
   void transform_atom(const int at_id, const matrix3<float> &tm);
   void transform_atom(const int at_id, const matrix4<float> &tm);

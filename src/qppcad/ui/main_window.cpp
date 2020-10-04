@@ -985,10 +985,8 @@ void main_window_t::create_new_ws() {
 
 void main_window_t::open_ws() {
   app_state_t* astate = app_state_t::get_inst();
-  QString file_name = QFileDialog::getOpenFileName(this,
-                                                   "Open qpp::cad workspace",
-                                                   astate->m_last_dir,
-                                                   "*.json");
+  QString file_name =
+      QFileDialog::getOpenFileName(this, "Open workspace", astate->m_last_dir, "*.json");
   if (file_name != "") {
     astate->ws_mgr->load_from_file(file_name.toStdString(), true);
     wss_changed_slot();
@@ -1009,10 +1007,9 @@ void main_window_t::save_ws() {
       cur_ws->m_is_ws_imported = false;
       cur_ws->save_ws_to_json(cur_ws->m_fs_path);
     } else {
-      QString file_name = QFileDialog::getSaveFileName(this,
-                                                       "Save qpp::cad workspace",
-                                                       astate->m_last_dir,
-                                                       "*.json");
+      QString file_name =
+          QFileDialog::getSaveFileName(this, "Save workspace", astate->m_last_dir,
+                                       "*.json");
       if (file_name != "") {
         if (!file_name.endsWith(".json")) file_name += ".json";
         cur_ws->save_ws_to_json(file_name.toStdString());
@@ -1028,27 +1025,21 @@ void main_window_t::save_ws() {
 }
 
 void main_window_t::save_ws_as() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   stop_update_cycle();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
-
   if (ok) {
-    QString file_name = QFileDialog::getSaveFileName(this,
-                                                     "Save qpp::cad workspace",
-                                                     astate->m_last_dir,
-                                                     "*.json");
+    QString file_name =
+        QFileDialog::getSaveFileName(this, "Save workspace", astate->m_last_dir,
+                                     "*.json");
     if (file_name != "") {
       cur_ws->save_ws_to_json(file_name.toStdString());
       cur_ws->m_is_ws_imported = false;
       cur_ws->m_fs_path = file_name.toStdString();
     }
   }
-
   cur_ws_changed();
   start_update_cycle();
-
 }
 
 void main_window_t::close_cur_ws() {
@@ -1095,12 +1086,12 @@ void main_window_t::change_cur_ws_bg() {
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
   if (ok) {
-    QColor _stored_color = QColor::fromRgbF(
+    QColor stored_color = QColor::fromRgbF(
         cur_ws->m_bg_color[0],
         cur_ws->m_bg_color[1],
         cur_ws->m_bg_color[2]
         );
-    const QColor clr = QColorDialog::getColor(_stored_color, this,
+    const QColor clr = QColorDialog::getColor(stored_color, this,
                                               "Select workspace`s background color");
     if (clr.isValid()) {
       cur_ws->m_bg_color = vector3<float> {
@@ -1124,15 +1115,11 @@ void main_window_t::cam_copy_to_all() {
 }
 
 void main_window_t::cur_ws_changed() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
-
   for (auto elem : {m_inline_left_tool, m_inline_btm_tool})
     if (elem && elem->is_active())
       elem->close_triggered();
-
   if (ok) {
     m_tp_scenic_rot_cam->blockSignals(true);
     m_tp_scenic_rot_cam->setChecked(cur_ws->m_scenic_rotation);
@@ -1148,23 +1135,17 @@ void main_window_t::cur_ws_changed() {
     m_view_menu_show_oi->setVisible(false);
     this->setWindowTitle("qpp::cad");
   }
-
   wss_changed_slot();
   cur_ws_props_changed();
   cur_ws_sel_item_changed();
   request_undo_redo_buttons_update();
-
 }
 
 void main_window_t::cur_ws_sel_item_changed() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   bool show_cam_button{false};
   bool show_fast_forward_button{false};
-
   auto [cur_ws, cur_itm, as_al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
-
   if (cur_itm) {
     if (cur_itm->get_flags() & ws_item_flags_cam_target_view)
       show_cam_button = true;
@@ -1181,14 +1162,11 @@ void main_window_t::cur_ws_sel_item_changed() {
       show_fast_forward_button = as_al->m_anim->animable();
     }
   }
-
   m_tp_cam_tool->setVisible(show_cam_button);
   m_tp_anim_fast_forward->setVisible(show_fast_forward_button);
-
   cur_ws_edit_type_changed();
   control_bhv_menus_activity();
   control_bhv_tools_menus_activity();
-
 }
 
 void main_window_t::cur_ws_props_changed() {

@@ -1414,57 +1414,42 @@ void geom_view_obj_insp_widget_t::bind_angle_msr_tab() {
 }
 
 void geom_view_obj_insp_widget_t::unbind_angle_msr_tab() {
-
   m_tms_angle_enabled->unbind_value();
   m_tms_angle_enabled->setEnabled(false);
-
   m_tms_angle_order->unbind_value();
   m_tms_angle_order->setEnabled(false);
-
 }
 
 void geom_view_obj_insp_widget_t::bind_sel_tab() {
-
   m_ts_auto_apply->bind_value(&b_al->m_selg->m_auto_apply);
-
 }
 
 void geom_view_obj_insp_widget_t::unbind_sel_tab() {
-
   m_ts_auto_apply->unbind_value();
-
 }
 
 void geom_view_obj_insp_widget_t::update_anim_tab() {
-
   if (b_al) {
     cur_anim_index_changed(b_al->m_anim->m_cur_anim);
     update_anim_tab_visibility();
   }
-
 }
 
 void geom_view_obj_insp_widget_t::update_anim_tab_visibility() {
-
   if (b_al) {
-
     auto cur_anim = b_al->m_anim->get_current_anim();
     if (cur_anim) {
       m_anim_buttons->show();
       m_gb_anim_timeline->show();
-    }
-    else {
+    } else {
       m_gb_anim_timeline->hide();
       m_anim_buttons->hide();
     }
   }
-
 }
 
 void geom_view_obj_insp_widget_t::update_mod_tab() {
-
   if (b_al) {
-
     if (b_al->m_parent_ws
         && b_al->m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content) {
 
@@ -1474,9 +1459,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
       m_tm_grp_op_flip_a_n->setEnabled(b_al->m_geom->get_DIM() > 0);
       m_tm_grp_op_flip_b_n->setEnabled(b_al->m_geom->get_DIM() > 1);
       m_tm_grp_op_flip_c_n->setEnabled(b_al->m_geom->get_DIM() > 2);
-
       set_tab_enabled(m_tab_modify, true);
-
       m_tm_override_atom_color->unbind_value();
       m_tm_override_atom_radii->unbind_value();
 
@@ -1490,7 +1473,6 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         m_tm_gb_bc_rot->hide();
         m_tm_gb_grp_op->hide();
         m_tm_gb_override_atom->hide();
-
         //update atom names combobox
         fill_combo_with_atom_types(m_tm_add_atom_combo, b_al);
       }
@@ -1505,13 +1487,9 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         m_tm_gb_bc_rot->hide();
         m_tm_gb_grp_op->show();
         m_tm_gb_override_atom->hide();
-
         fill_combo_with_atom_types(m_tm_single_atom_combo, b_al);
-
         auto oval = b_al->m_geom->nth_aselected(0);
-
         if (oval) {
-
           auto val = *oval;
           m_tm_single_atom_info->setText(
               QString::fromStdString(fmt::format("№{} {}", val.m_atm, val.m_idx)));
@@ -1522,9 +1500,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
           m_tm_single_atom_v3->sb_x->setValue(double(b_al->m_geom->pos(val.m_atm)[0]));
           m_tm_single_atom_v3->sb_y->setValue(double(b_al->m_geom->pos(val.m_atm)[1]));
           m_tm_single_atom_v3->sb_z->setValue(double(b_al->m_geom->pos(val.m_atm)[2]));
-
         }
-
       }
 
       if (b_al->m_geom->num_aselected() == 2) {
@@ -1573,7 +1549,6 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
       }
 
       if (b_al->m_geom->num_aselected() > 2) {
-
         m_tm_gb_add_atom->hide();
         m_tm_gb_single_atom->hide();
         m_tm_gb_pair_creation->hide();
@@ -1583,11 +1558,9 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
         m_tm_gb_bc_rot->show();
         m_tm_gb_grp_op->show();
         m_tm_gb_override_atom->hide();
-
       }
 
       if (b_al->m_geom->num_aselected() > 0) {
-
         if (b_al->m_geom->get_DIM() == 3) {
           //tm_translate_coord_type_label->show();
           m_tm_translate_coord_type->show();
@@ -1596,10 +1569,8 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
           m_tm_translate_coord_type->hide();
           //tm_translate_coord_type_label->hide();
         }
-
         /* begin atom override */
         if (!b_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)) {
-
           std::set<size_t> atoms_id_to_bind;
           std::transform(
               b_al->m_geom->cbegin_selected(),
@@ -1607,27 +1578,21 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
               std::inserter(atoms_id_to_bind, atoms_id_to_bind.begin()),
               [](auto &sel_rec){return sel_rec.m_atm;}
               );
-
           m_tm_gb_override_atom->show();
           m_tm_override_atom_color->bind_value(b_al->m_geom.get(),
                                                {xgeom_ccr, xgeom_ccg, xgeom_ccb},
                                                std::set<size_t>(atoms_id_to_bind)
                                                );
-
           m_tm_override_atom_radii->bind_value(b_al->m_geom.get(),
                                                xgeom_atom_r,
                                                std::move(atoms_id_to_bind)
                                                );
-
         }
         /* end atom override */
-
       }
 
     } else {
-
       set_tab_enabled(m_tab_modify, false);
-
       m_tm_gb_add_atom->hide();
       m_tm_gb_pair_creation->hide();
       m_tm_gb_single_atom->hide();
@@ -1637,7 +1602,6 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
       m_tm_gb_bc_rot->hide();
       m_tm_gb_grp_op->hide();
       m_tm_gb_override_atom->hide();
-
     }
 
   }
@@ -1655,16 +1619,14 @@ void geom_view_obj_insp_widget_t::update_msr_tab() {
     index zero = index::D(b_al->m_geom->get_DIM()).all(0);
 
     for (size_t i = 0; i < b_al->m_measure->m_dist_recs.get_hs_children_count(); i++) {
-
       auto dmr = b_al->m_measure->m_dist_recs.get_hs_child_as_array(i);
-      if (!dmr) continue;
-
+      if (!dmr)
+        continue;
       //compose dist msr name
       int at1 = dmr->m_at1;
       int at2 = dmr->m_at2;
       bool at1_img = dmr->m_idx1 != zero;
       bool at2_img = dmr->m_idx2 != zero;
-
       std::string item_name = fmt::format("[{}] {}{}{} - {}{}{}",
                                           i,
                                           b_al->m_geom->atom_name(at1),
@@ -1675,7 +1637,6 @@ void geom_view_obj_insp_widget_t::update_msr_tab() {
                                           at2_img ? "*" : "");
 
       m_tms_pair_cur_msr->addItem(QString::fromStdString(item_name));
-
     }
 
     m_tms_pair_cur_msr->setCurrentIndex(b_al->m_measure->m_cur_dist_rec_ui);
@@ -1687,18 +1648,15 @@ void geom_view_obj_insp_widget_t::update_msr_tab() {
     m_tms_angle_cur_msr->clear();
     m_tms_angle_cur_msr->addItem(tr("None"));
     for (size_t i = 0; i < b_al->m_measure->m_angle_recs.get_hs_children_count(); i++) {
-
       auto amr = b_al->m_measure->m_angle_recs.get_hs_child_as_array(i);
-      if (!amr) continue;
-
+      if (!amr)
+        continue;
       int at1 = amr->m_at1;
       int at2 = amr->m_at2;
       int at3 = amr->m_at3;
-
       bool at1_img = amr->m_idx1 != zero;
       bool at2_img = amr->m_idx2 != zero;
       bool at3_img = amr->m_idx2 != zero;
-
       std::string item_name = fmt::format("[{}] {}{}{} - {}{}{} - {}{}{}",
                                           i,
                                           b_al->m_geom->atom_name(at1),
@@ -1710,46 +1668,32 @@ void geom_view_obj_insp_widget_t::update_msr_tab() {
                                           b_al->m_geom->atom_name(at3),
                                           at3,
                                           at3_img ? "*" : "");
-
       m_tms_angle_cur_msr->addItem(QString::fromStdString(item_name));
-
     }
-
-
     m_tms_angle_cur_msr->setCurrentIndex(b_al->m_measure->m_cur_angle_rec_ui);
     update_angle_msr_tab_info();
     m_tms_angle_cur_msr->blockSignals(false);
-
   }
 
 }
 
 void geom_view_obj_insp_widget_t::update_dist_msr_tab_info() {
-
   if (b_al) {
-
     //transform dist msr id
     int cur_dist_msr = b_al->m_measure->m_cur_dist_rec_ui - 1;
-
     if (cur_dist_msr < 0 || b_al->m_measure->m_dist_recs.get_hs_children_count() == 0) {
-
       const QString empty_label = "-";
       m_tms_pair_at1_info->setText(empty_label);
       m_tms_pair_at2_info->setText(empty_label);
       unbind_dist_msr_tab();
-
     } else {
-
       auto rec = b_al->m_measure->m_dist_recs.get_hs_child_as_array(cur_dist_msr);
-
       if (rec) {
-
         QString atom1_info = tr("%1 [%2] %3")
                                  .arg(QString::fromStdString(b_al->m_geom->atom_name(rec->m_at1)))
                                  .arg(rec->m_at1)
                                  .arg(QString::fromStdString(fmt::format("{}",rec->m_idx1)));
         m_tms_pair_at1_info->setText(atom1_info);
-
         QString atom2_info = tr("%1 [%2] %3")
                                  .arg(QString::fromStdString(b_al->m_geom->atom_name(rec->m_at2)))
                                  .arg(rec->m_at2)
@@ -1757,102 +1701,73 @@ void geom_view_obj_insp_widget_t::update_dist_msr_tab_info() {
         m_tms_pair_at2_info->setText(atom2_info);
 
         bind_dist_msr_tab();
-
       }
-
     }
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::update_angle_msr_tab_info()  {
-
   if (b_al) {
     //transform dist msr id
     int cur_angle_msr = b_al->m_measure->m_cur_angle_rec_ui - 1;
-
     if (cur_angle_msr < 0 || b_al->m_measure->m_angle_recs.get_hs_children_count() == 0) {
-
       const QString empty_label = "-";
       m_tms_angle_at1_info->setText(empty_label);
       m_tms_angle_at2_info->setText(empty_label);
       m_tms_angle_at3_info->setText(empty_label);
       unbind_angle_msr_tab();
-
     } else {
-
       auto rec = b_al->m_measure->m_angle_recs.get_hs_child_as_array(cur_angle_msr);
-
       if (rec) {
-
         QString atom1_info = tr("%1 [%2] %3")
                                  .arg(QString::fromStdString(b_al->m_geom->atom_name(rec->m_at1)))
                                  .arg(rec->m_at1)
                                  .arg(QString::fromStdString(fmt::format("{}", rec->m_idx1)));
         m_tms_angle_at1_info->setText(atom1_info);
-
         QString atom2_info = tr("%1 [%2] %3")
                                  .arg(QString::fromStdString(b_al->m_geom->atom_name(rec->m_at2)))
                                  .arg(rec->m_at2)
                                  .arg(QString::fromStdString(fmt::format("{}", rec->m_idx2)));
         m_tms_angle_at2_info->setText(atom2_info);
-
         QString atom3_info = tr("%1 [%2] %3")
                                  .arg(QString::fromStdString(b_al->m_geom->atom_name(rec->m_at3)))
                                  .arg(rec->m_at3)
                                  .arg(QString::fromStdString(fmt::format("{}", rec->m_idx3)));
         m_tms_angle_at3_info->setText(atom3_info);
-
         bind_angle_msr_tab();
-
       }
-
     }
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::update_sel_tab() {
-
   if (b_al) {
-
     bind_sel_tab();
-
     m_ts_total_grps->setText(QString("%1").arg(b_al->m_selg->m_sel_grps.size()));
     m_ts_cur_sel_grp->blockSignals(true);
     m_ts_cur_sel_grp->clear();
     m_ts_cur_sel_grp->addItem(tr("None"));
-
     for (size_t i = 0 ; i < b_al->m_selg->m_sel_grps.size(); i++)
       m_ts_cur_sel_grp->addItem(QString("[%1] %2")
                                     .arg(i)
                                     .arg(QString::fromStdString(b_al->m_selg->m_sel_grps[i].m_name)));
     m_ts_cur_sel_grp->blockSignals(false);
-
     if (b_al->m_parent_ws
         && b_al->m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content) {
       set_tab_enabled(m_tab_select, false);
     } else {
       set_tab_enabled(m_tab_select, false);
     }
-
   } else {
     unbind_sel_tab();
   }
-
 }
 
 void geom_view_obj_insp_widget_t::update_xgeom_tab() {
-
   if (b_al) {
-
     //tab xgeom
     qt_hlp::vrt_resize_tv_to_cnt(m_txg_info_tv);
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo, geom_view_t *_al) {
@@ -1861,7 +1776,6 @@ void geom_view_obj_insp_widget_t::fill_combo_with_atom_types(QComboBox *combo, g
     for (auto i = 0 ; i < _al->m_geom->n_atom_types(); i++)
       combo->addItem(QString::fromStdString(_al->m_geom->atom_of_type(i)));
   }
-
 }
 
 void geom_view_obj_insp_widget_t::tab_modify_flip_cell_clicked(size_t flip_dim, float flip_magn) {
@@ -2030,16 +1944,12 @@ void geom_view_obj_insp_widget_t::anim_button_frame_move_backward_clicked() {
 }
 
 void geom_view_obj_insp_widget_t::anim_act_ren_clicked() {
-
   if (!b_al || !b_al->m_anim->animable())
     return;
-
   auto cur_anim = b_al->m_anim->get_current_anim();
   if (!cur_anim)
     return;
-
   QString cur_name = QString::fromStdString(cur_anim->m_anim_name);
-
   bool ok;
   QString new_name = QInputDialog::getText(this,
                                            tr("QInputDialog::getText()"),
@@ -2047,19 +1957,15 @@ void geom_view_obj_insp_widget_t::anim_act_ren_clicked() {
                                            QLineEdit::Normal,
                                            cur_name,
                                            &ok);
-
   if (ok && !new_name.isEmpty()) {
     cur_anim->m_anim_name = new_name.toStdString();
     update_from_ws_item();
   }
-
 }
 
 void geom_view_obj_insp_widget_t::anim_act_del_clicked() {
-
   if (!b_al || !b_al->m_anim->animable())
     return;
-
   if (b_al->m_anim->get_total_anims() == 1) {
     QMessageBox::warning(nullptr,
                          "Warning",
@@ -2067,72 +1973,53 @@ void geom_view_obj_insp_widget_t::anim_act_del_clicked() {
                          "Please make geom. view non animable first!");
     return;
   }
-
   size_t cur_anim_idx = b_al->m_anim->m_cur_anim;
   if (cur_anim_idx >= b_al->m_anim->get_total_anims()) {
     return;
   }
-
   QMessageBox::StandardButton reply;
   reply = QMessageBox::question(this, tr("Delete animation"),
                                 tr("Do you really want to delete the current animation?"),
                                 QMessageBox::Yes | QMessageBox::No);
-
   if (reply == QMessageBox::No) {
     return;
   }
-
   b_al->m_anim->m_anim_data.erase(b_al->m_anim->m_anim_data.begin() + cur_anim_idx);
   int new_anim_idx = std::clamp<int>(cur_anim_idx - 1, 0, b_al->m_anim->m_anim_data.size());
   b_al->m_anim->m_cur_anim = new_anim_idx;
-
   update_from_ws_item();
-
 }
 
 void geom_view_obj_insp_widget_t::disp_switch_cur_changed(int index) {
-
   m_gb_disp_s->setVisible(index == 0);
   m_gb_periodic_related_render->setVisible(index == 0 && b_al && b_al->m_geom->get_DIM() > 0);
   m_gb_disp_shading->setVisible(index == 0);
-
   m_gb_disp_labels->setVisible(index == 1);
   m_gb_disp_bt->setVisible(index == 2);
   m_gb_disp_type_spec_rend->setVisible(index == 3);
-
 }
 
 void geom_view_obj_insp_widget_t::cell_changed() {
-
   if (b_al) {
-
     if (b_al->m_geom->get_DIM() > 0) {
-
       m_tg_gb_cell_tbl->setRowCount(b_al->m_geom->get_DIM());
       QStringList table_hdr_cell_v;
       table_hdr_cell_v.push_back("a");
       table_hdr_cell_v.push_back("b");
       table_hdr_cell_v.push_back("c");
       m_tg_gb_cell_tbl->setVerticalHeaderLabels(table_hdr_cell_v);
-
       for (int c = 0; c < b_al->m_geom->get_DIM(); c++)
         for (int i = 0; i < 3; i++) {
-
           float cell_amp = b_al->m_geom->cell.v[c][i];
           QTableWidgetItem *n_ax = new QTableWidgetItem(tr("%1").arg(double(cell_amp)));
           m_tg_gb_cell_tbl->setItem(c, i, n_ax);
-
         }
-
       m_tg_gb_cell_tbl->resizeRowsToContents();
       m_tg_gb_cell->show();
-
     } else {
       m_tg_gb_cell->hide();
     }
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::draw_subcells_changed(int state) {
@@ -2162,9 +2049,7 @@ void geom_view_obj_insp_widget_t::cur_it_list_sel_changed() {
 }
 
 void geom_view_obj_insp_widget_t::mod_add_atom_button_clicked() {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (b_al) {
     vector3<float> new_atom_pos{
         float(m_tm_add_atom_vec3->sb_x->value()),
@@ -2176,14 +2061,11 @@ void geom_view_obj_insp_widget_t::mod_add_atom_button_clicked() {
     update_anim_section_status();
     astate->make_viewport_dirty();
   }
-
 }
 
 void geom_view_obj_insp_widget_t::mod_single_atom_button_clicked() {
-
   if (!(b_al && b_al->m_geom->num_aselected() != 1))
     return;
-
   auto oval = b_al->m_geom->nth_aselected(0);
   if (oval) {
     auto val = *oval;
@@ -2193,7 +2075,6 @@ void geom_view_obj_insp_widget_t::mod_single_atom_button_clicked() {
                                   float(m_tm_single_atom_v3->sb_z->value())));
     update_anim_section_status();
   }
-
 }
 
 void geom_view_obj_insp_widget_t::mod_single_atom_delete_button_clicked() {
@@ -2209,7 +2090,7 @@ void geom_view_obj_insp_widget_t::mod_pair_dist_spinbox_value_changed(double new
   app_state_t *astate = app_state_t::get_inst();
   if (b_al && b_al->m_geom->num_selected() == 2) {
     auto at1 = b_al->m_geom->nth_selected(0);
-    auto at2 = b_al->m_geom->nth_aselected(1);
+    auto at2 = b_al->m_geom->nth_selected(1);
     if (at1 && at2) {
       pair_dist_mode_e mode;
       mode = static_cast<pair_dist_mode_e>(m_tm_pair_dist_t_mode->currentIndex());
@@ -2235,11 +2116,14 @@ void geom_view_obj_insp_widget_t::mod_pair_dist_swap_button_clicked() {
 
 void geom_view_obj_insp_widget_t::mod_add_atom_between_pair() {
   app_state_t *astate = app_state_t::get_inst();
-  if (!(b_al && b_al->m_geom->num_aselected() != 2))
+  if (!b_al || b_al->m_geom->num_selected() != 2)
     return;
-  auto oval1 = b_al->m_geom->nth_aselected(0);
-  auto oval2 = b_al->m_geom->nth_aselected(1);
-  if (oval1 && oval2 && (*oval1).m_idx.is_zero() && (*oval2).m_idx.is_zero()) {
+  auto oval1 = b_al->m_geom->nth_selected(0);
+  auto oval2 = b_al->m_geom->nth_selected(1);
+  if (oval1
+      && oval2
+      && (*oval1).m_idx.is_zero()
+      && (*oval2).m_idx.is_zero()) {
     auto val1 = *oval1;
     auto val2 = *oval2;
     vector3<float> r_btw{0.0, 0.0, 0.0};
@@ -2258,7 +2142,8 @@ void geom_view_obj_insp_widget_t::mod_barycentric_scale_button_clicked() {
     vector3<float> center{0.0f, 0.0f, 0.0f};
     for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
       auto rec = b_al->m_geom->nth_aselected(i);
-      if (rec)  center += b_al->m_geom->pos((*rec).m_atm);;
+      if (rec)
+        center += b_al->m_geom->pos((*rec).m_atm);;
     }
     center /= b_al->m_geom->num_selected();
     for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
@@ -2452,23 +2337,16 @@ void geom_view_obj_insp_widget_t::cur_it_selected_content_changed() {
 }
 
 void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (!b_al)
     return;
-
   int atom_type_idx = index.row();
   int col_idx = index.column();
-
   //type is valid
   if (atom_type_idx < b_al->m_geom->n_types() && col_idx == 2) {
-
     auto it = b_al->m_type_color_override.find(atom_type_idx);
     auto ap_idx = ptable::number_by_symbol(b_al->m_geom->atom_of_type(atom_type_idx));
-
     QColor _stored_color = Qt::black;
-
     //first load a color from ptable
     if (ap_idx && *ap_idx > 0 && *ap_idx <100) {
       _stored_color = QColor::fromRgbF(
@@ -2476,34 +2354,30 @@ void geom_view_obj_insp_widget_t::type_summary_clicked(const QModelIndex &index)
           ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[1],
           ptable::get_inst()->arecs[*ap_idx-1].m_color_jmol[2]);
     }
-
     if (it != b_al->m_type_color_override.end())
       _stored_color = QColor::fromRgbF(it->second[0], it->second[1], it->second[2]);
-
     const QColor clr = QColorDialog::getColor(_stored_color, this, "Select Color");
     if (clr.isValid()) {
-
       if (it != b_al->m_type_color_override.end()) b_al->m_type_color_override.erase(it);
       auto new_c = std::make_pair(size_t(atom_type_idx),
                                   vector3<float>(clr.redF(), clr.greenF(), clr.blueF()));
       b_al->m_type_color_override.insert(new_c);
       update_from_ws_item();
       astate->make_viewport_dirty();
-
     }
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::rebond_button_clicked() {
-  if (!b_al) return;
+  if (!b_al)
+    return;
   b_al->rebond();
 }
 
 void geom_view_obj_insp_widget_t::clear_color_override_button_clicked() {
   app_state_t *astate = app_state_t::get_inst();
-  if (!b_al) return;
+  if (!b_al)
+    return;
   b_al->m_type_color_override.clear();
   update_from_ws_item();
   astate->make_viewport_dirty();

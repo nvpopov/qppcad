@@ -687,44 +687,59 @@ void geom_view_t::sq_sel_by_box(const float box_scale = 1.1) {
 void geom_view_t::ins_atom(const int atom_type, const vector3<float> &pos) {
   if (!m_geom)
     return;
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   m_anim->m_force_non_animable = true;
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
+  end_recording();
 }
 
 void geom_view_t::ins_atom(const std::string &atom_name, const vector3<float> &pos) {
   if (!m_geom)
     return;
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   m_anim->m_force_non_animable = true;
   m_geom->add(atom_name, pos);
+  end_recording();
 }
 
-void geom_view_t::upd_atom(const int at_id, const vector3<float> &pos) {
+void geom_view_t::upd_atom(const int at_id, const vector3<float> &pos, bool emit_hs_rec) {
   if (!m_geom)
     return;
+  if (emit_hs_rec)
+    begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   m_anim->m_force_non_animable = true;
   m_geom->change_pos(at_id, pos);
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
+  if (emit_hs_rec)
+    end_recording();
 }
 
-void geom_view_t::upd_atom(const int at_id, const std::string &at_name) {
+void geom_view_t::upd_atom(const int at_id, const std::string &at_name, bool emit_hs_rec) {
   if (!m_geom)
     return;
+  if (emit_hs_rec)
+    begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
-  if (!m_geom)
-    return;
+  if (emit_hs_rec)
+    end_recording();
 }
 
-void geom_view_t::upd_atom(const int at_id, const std::string &at_name, const vector3<float> &pos) {
+void geom_view_t::upd_atom(const int at_id, const std::string &at_name,
+                           const vector3<float> &pos, bool emit_hs_rec) {
   if (!m_geom)
     return;
+  if (emit_hs_rec)
+    begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   m_anim->m_force_non_animable = true;
   m_geom->change(at_id, at_name, pos);
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
+  if (emit_hs_rec)
+    end_recording();
 }
 
 void geom_view_t::transform_atom(const int at_id, const matrix3<float> &tm) {
@@ -925,33 +940,24 @@ std::shared_ptr<ws_item_t> geom_view_t::clone_on_the_spot() {
 }
 
 void geom_view_t::load_color_from_static_anim() {
-
-  if (!m_geom) return;
-
+  if (!m_geom)
+    return;
   if (m_anim->m_anim_data.size() > 0) {
-
     int static_anim = -1;
     for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
       if (m_anim->m_anim_data[i].m_anim_type == geom_anim_e::anim_static) static_anim = i;
-
     if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
         m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
-
       for (int i = 0; i < m_geom->nat(); i++) {
-
         m_geom->xfield<float>(xgeom_ccr, i) =
             m_anim->m_anim_data[static_anim].frames[0].atom_color[i][0];
         m_geom->xfield<float>(xgeom_ccg, i) =
             m_anim->m_anim_data[static_anim].frames[0].atom_color[i][1];
         m_geom->xfield<float>(xgeom_ccb, i) =
             m_anim->m_anim_data[static_anim].frames[0].atom_color[i][2];
-
       }
-
     }
-
   }
-
 }
 
 vector3<float> geom_view_t::get_xcolor(const size_t atm) {
@@ -978,26 +984,22 @@ void geom_view_t::set_xcolorf(const size_t atm, const float c_r, const float c_g
 }
 
 std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id) {
-
   if (m_geom->field_type(xfield_id) != basic_types::type_real) {
     throw std::invalid_argument(fmt::format("wrong xfield type with id {} ", xfield_id));
   }
-
   if (m_geom->nat() == 0) {
     throw std::invalid_argument("m_geom->nat() == 0");
   }
-
   float min_v = m_geom->xfield<float>(xfield_id, 0);
   float max_v = m_geom->xfield<float>(xfield_id, 0);
-
   for (size_t i = 0; i < m_geom->nat(); i++) {
     float val = m_geom->xfield<float>(xfield_id, i);
-    if (min_v > val) min_v = val;
-    if (max_v < val) max_v = val;
+    if (min_v > val)
+      min_v = val;
+    if (max_v < val)
+      max_v = val;
   }
-
   return {min_v, max_v};
-
 }
 
 void geom_view_t::sel_atom_ngbs(const int at_id) {
@@ -1064,32 +1066,27 @@ void geom_view_t::update_inter_atomic_dist_ex(float new_dist,
                                               pair_dist_mode_e mode) {
   if (!m_geom)
     return;
-  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  update_inter_atomic_dist(new_dist, at1, at2, index::D(m_geom->get_DIM()).all(0),
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  update_inter_atomic_dist(new_dist, at1, at2,
+                           index::D(m_geom->get_DIM()).all(0),
                            index::D(m_geom->get_DIM()).all(0), mode);
-  m_xgeom_proxy.end_recording();
+  end_recording();
 }
 
 void geom_view_t::translate_selected(const vector3<float> &t_vec) {
-
   if (!m_geom)
     return;
   if (m_geom->no_aselected())
     return;
-
-  m_xgeom_proxy.begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-
-  for (auto i = 0; i < m_geom->num_selected(); i++) {
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  for (auto i = 0; i < m_geom->num_aselected(); i++) {
     auto rec = m_geom->nth_aselected(i);
     if (rec && (*rec).m_idx.is_zero())
-      upd_atom((*rec).m_atm, m_geom->pos((*rec).m_atm) + t_vec);
+      upd_atom((*rec).m_atm, m_geom->pos((*rec).m_atm) + t_vec, false);
   }
-
-  m_xgeom_proxy.end_recording();
-
+  end_recording();
   app_state_t* astate = app_state_t::get_inst();
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
-
 }
 
 void geom_view_t::delete_selected_atoms() {
@@ -1098,7 +1095,6 @@ void geom_view_t::delete_selected_atoms() {
 
   if (!m_geom)
     return;
-
   if (!m_geom->no_aselected())
     m_anim->m_force_non_animable = true;
 
@@ -1123,10 +1119,8 @@ void geom_view_t::delete_selected_atoms() {
     m_geom->iselect(elem.m_atm, elem.m_idx, false);
 
   begin_structure_change();
-
   for (uint16_t delta = 0; delta < all_atom_num.size(); delta++)
     m_geom->erase(all_atom_num[delta] - delta);
-
   end_structure_change();
 
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
