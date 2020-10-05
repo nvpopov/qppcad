@@ -2064,16 +2064,19 @@ void geom_view_obj_insp_widget_t::mod_add_atom_button_clicked() {
 }
 
 void geom_view_obj_insp_widget_t::mod_single_atom_button_clicked() {
-  if (!(b_al && b_al->m_geom->num_aselected() != 1))
-    return;
-  auto oval = b_al->m_geom->nth_aselected(0);
-  if (oval) {
-    auto val = *oval;
-    b_al->upd_atom(val.m_atm, m_tm_single_atom_combo->currentText().toStdString(),
-                   vector3<float>(float(m_tm_single_atom_v3->sb_x->value()),
-                                  float(m_tm_single_atom_v3->sb_y->value()),
-                                  float(m_tm_single_atom_v3->sb_z->value())));
-    update_anim_section_status();
+  if (b_al && b_al->m_geom->num_selected() == 1) {
+    auto oval = b_al->m_geom->nth_selected(0);
+    if (oval) {
+      auto val = *oval;
+      b_al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+      b_al->upd_atom(val.m_atm, m_tm_single_atom_combo->currentText().toStdString(),
+                     vector3<float>(float(m_tm_single_atom_v3->sb_x->value()),
+                                    float(m_tm_single_atom_v3->sb_y->value()),
+                                    float(m_tm_single_atom_v3->sb_z->value())),
+                     false /* off hs rec inside upd_atom procedure*/);
+      b_al->end_recording();
+      update_anim_section_status();
+    }
   }
 }
 
@@ -2108,8 +2111,7 @@ void geom_view_obj_insp_widget_t::mod_pair_dist_swap_button_clicked() {
   if (oval1 && oval2) {
     auto val1 = *oval1;
     auto val2 = *oval2;
-    if (val1.m_idx == index::D(b_al->m_geom->get_DIM()).all(0)
-        && val2.m_idx == index::D(b_al->m_geom->get_DIM()).all(0))
+    if (val1.m_idx.is_zero() && val2.m_idx.is_zero())
       b_al->swap_atoms(val1.m_atm, val2.m_atm);
   }
 }
@@ -2138,16 +2140,18 @@ void geom_view_obj_insp_widget_t::mod_add_atom_between_pair() {
 
 void geom_view_obj_insp_widget_t::mod_barycentric_scale_button_clicked() {
   app_state_t *astate = app_state_t::get_inst();
-  if (b_al) {
+  if (b_al && b_al->m_geom->num_selected() > 0) {
+    b_al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     vector3<float> center{0.0f, 0.0f, 0.0f};
     for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
-      auto rec = b_al->m_geom->nth_aselected(i);
+      auto rec = b_al->m_geom->nth_selected(i);
       if (rec)
         center += b_al->m_geom->pos((*rec).m_atm);;
     }
     center /= b_al->m_geom->num_selected();
     for (auto i = 0; i < b_al->m_geom->num_selected(); i++) {
-      auto rec = b_al->m_geom->nth_aselected(i);
+      auto rec =
+          b_al->m_geom->nth_selected(i);
       if (!rec) continue;
       vector3<float> new_pos_dist = center - b_al->m_geom->pos((*rec).m_atm);
       vector3<float> new_pos = b_al->m_geom->pos((*rec).m_atm);
@@ -2155,8 +2159,9 @@ void geom_view_obj_insp_widget_t::mod_barycentric_scale_button_clicked() {
       new_pos[0] +=  (1 - scaleval[0]) * new_pos_dist[0];
       new_pos[1] +=  (1 - scaleval[1]) * new_pos_dist[1];
       new_pos[2] +=  (1 - scaleval[2]) * new_pos_dist[2] ;
-      b_al->upd_atom((*rec).m_atm, new_pos);
+      b_al->upd_atom((*rec).m_atm, new_pos, false);
     }
+    b_al->end_recording();
     update_anim_section_status();
     astate->make_viewport_dirty();
   }

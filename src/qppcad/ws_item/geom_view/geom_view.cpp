@@ -1090,81 +1090,63 @@ void geom_view_t::translate_selected(const vector3<float> &t_vec) {
 }
 
 void geom_view_t::delete_selected_atoms() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (!m_geom)
     return;
-  if (!m_geom->no_aselected())
+  if (m_geom->num_selected() == 0) {
+    return;
+  } else {
     m_anim->m_force_non_animable = true;
-
+  }
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   std::vector<int> all_atom_num;
   all_atom_num.reserve(m_geom->num_aselected());
   std::vector<atom_index_set_key> atoms_to_unselect;
-
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_aselected(i);
+    auto rec = m_geom->nth_selected(i);
     all_atom_num.push_back((*rec).m_atm);
     m_measure->notify_atom_has_been_deleted((*rec).m_atm);
     atoms_to_unselect.push_back((*rec));
   }
-
   auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
   all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
-
   //sort by ancending order
   std::sort(all_atom_num.begin(), all_atom_num.end());
-
   for (auto &elem : atoms_to_unselect)
-    m_geom->iselect(elem.m_atm, elem.m_idx, false);
-
+    m_geom->select(elem.m_atm, false);
   begin_structure_change();
   for (uint16_t delta = 0; delta < all_atom_num.size(); delta++)
     m_geom->erase(all_atom_num[delta] - delta);
   end_structure_change();
-
+  end_recording();
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
-
 }
 
 void geom_view_t::delete_atoms(std::set<int> &to_delete) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (!m_geom)
     return;
-
   if (!to_delete.empty())
     m_anim->m_force_non_animable = true;
-
   std::vector<int> all_atom_num;
   all_atom_num.reserve(to_delete.size());
-
   //get unique selected atoms
   for(auto &elem : to_delete) {
     all_atom_num.push_back(elem);
     m_measure->notify_atom_has_been_deleted(elem);
   }
-
   auto uniq_atoms_last = std::unique(all_atom_num.begin(), all_atom_num.end());
   all_atom_num.erase(uniq_atoms_last, all_atom_num.end());
-
   //sort by ancending order
   std::sort(all_atom_num.begin(), all_atom_num.end());
-
   //m_atom_idx_sel.clear();
   for (auto &elem : all_atom_num)
     m_geom->select(elem, false);
-
   begin_structure_change();
-
   for (uint16_t delta = 0; delta < all_atom_num.size(); delta++)
     m_geom->erase(all_atom_num[delta] - delta);
-
   end_structure_change();
-
   astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
-
 }
 
 void geom_view_t::begin_structure_change() {
