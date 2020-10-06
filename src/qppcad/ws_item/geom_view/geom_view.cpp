@@ -771,67 +771,56 @@ void geom_view_t::swap_atoms(const size_t at1, const size_t at2, bool swap_names
 }
 
 void geom_view_t::sv_modify_selected(bool state) {
-
   app_state_t *astate = app_state_t::get_inst();
-
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_aselected(i);
+    auto rec = m_geom->nth_selected(i);
     if (rec && (*rec).m_idx.is_zero())
-      m_geom->xfield<bool>(xgeom_sel_vis_hide, (*rec).m_atm) = state;
+      m_geom->set_xfield<bool>(xgeom_sel_vis_hide, (*rec).m_atm, state);
   }
-
   if (!m_sel_vis.get_value()) {
     m_sel_vis.set_value(true);
     m_sel_vis_affect_bonds.set_value(true);
   }
-
+  end_recording();
   astate->make_viewport_dirty();
-
 }
 
 void geom_view_t::sv_hide_invert_selected() {
-
   app_state_t *astate = app_state_t::get_inst();
-
   std::unordered_set<size_t> cap_idx;
-
-  //for (auto &elem : m_atom_idx_sel) cap_idx.insert(elem.m_atm);
-
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_aselected(i);
-    if (rec) cap_idx.insert((*rec).m_atm);
+    auto rec = m_geom->nth_selected(i);
+    if (rec)
+      cap_idx.insert((*rec).m_atm);
   }
-
   for (size_t i = 0; i < m_geom->nat(); i++)
     if (cap_idx.find(i) == cap_idx.end())
-      m_geom->xfield<bool>(xgeom_sel_vis_hide, i) = true;
-
+     m_geom->set_xfield<bool>(xgeom_sel_vis_hide, i, true);
   if (!m_sel_vis.get_value()) {
     m_sel_vis.set_value(true);
     m_sel_vis_affect_bonds.set_value(true);
   }
-
+  end_recording();
   astate->make_viewport_dirty();
-
 }
 
 void geom_view_t::xbool_invert_selected(size_t field_id) {
-
   for (auto i = 0; i < m_geom->num_selected(); i++) {
     auto rec = m_geom->nth_aselected(i);
     if (rec && (*rec).m_idx.is_zero())
       m_geom->xfield<bool>(field_id, (*rec).m_atm) = !m_geom->xfield<bool>(field_id, (*rec).m_atm);
   }
-
 }
 
-void geom_view_t::copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst) {
+void geom_view_t::copy_from_xgeom(xgeometry<float, periodic_cell<float>> &xgeom_inst) {
   if (!m_geom)
     return;
   xgeom_inst.clone(*m_geom, true);
 }
 
-void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst,
+void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float>> &xgeom_inst,
                                 bool copy_selected, bool copy_cell) {
 
   if (!m_geom)
@@ -850,7 +839,6 @@ void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_i
       if (rec && (*rec).m_idx.is_zero())
         xgeom_inst.add(m_geom->atom((*rec).m_atm), m_geom->pos((*rec).m_atm, (*rec).m_idx));
     }
-
   } else {
     for (int i = 0; i < m_geom->nat(); i++)
       xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
@@ -869,7 +857,8 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tree) {
 
   m_geom->set_DIM(src.m_geom->get_DIM());
   for (int i = 0; i < 3; i++)
-    if (m_geom->get_DIM() > i) m_geom->cell.v[i] = src.m_geom->cell.v[i];
+    if (m_geom->get_DIM() > i)
+      m_geom->cell.v[i] = src.m_geom->cell.v[i];
 
   if (rebuild_tree) {
     m_tws_tr->do_action(act_unlock | act_rebuild_tree);
@@ -942,6 +931,7 @@ std::shared_ptr<ws_item_t> geom_view_t::clone_on_the_spot() {
 void geom_view_t::load_color_from_static_anim() {
   if (!m_geom)
     return;
+
   if (m_anim->m_anim_data.size() > 0) {
     int static_anim = -1;
     for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
@@ -964,6 +954,7 @@ vector3<float> geom_view_t::get_xcolor(const size_t atm) {
   if (atm >= m_geom->nat()) {
     throw std::out_of_range("invalid atom id");
   }
+
   return vector3<float>{m_geom->xfield<float>(xgeom_ccr, atm),
                         m_geom->xfield<float>(xgeom_ccg, atm),
                         m_geom->xfield<float>(xgeom_ccb, atm)};
@@ -973,6 +964,7 @@ void geom_view_t::set_xcolorv(const size_t atm, const vector3<float> color) {
   if (atm >= m_geom->nat()) {
     throw std::out_of_range("invalid atom id");
   }
+
   m_geom->xfield<float>(xgeom_ccr, atm) = color[0];
   m_geom->xfield<float>(xgeom_ccg, atm) = color[1];
   m_geom->xfield<float>(xgeom_ccb, atm) = color[2];
@@ -990,6 +982,7 @@ std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id)
   if (m_geom->nat() == 0) {
     throw std::invalid_argument("m_geom->nat() == 0");
   }
+
   float min_v = m_geom->xfield<float>(xfield_id, 0);
   float max_v = m_geom->xfield<float>(xfield_id, 0);
   for (size_t i = 0; i < m_geom->nat(); i++) {
@@ -999,6 +992,7 @@ std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id)
     if (max_v < val)
       max_v = val;
   }
+
   return {min_v, max_v};
 }
 
@@ -1323,18 +1317,16 @@ void geom_view_t::recalc_gizmo_barycenter() {
   m_gizmo_barycenter = vector3<float>::Zero();
 
   if (!m_geom->no_aselected() || m_geom->nat() == 0) {
-
     for (auto i = 0; i < m_geom->num_aselected(); i++) {
       auto rec = m_geom->nth_aselected(i);
       if (!rec) continue;
       auto it = *rec;
       m_gizmo_barycenter += m_geom->pos(it.m_atm, it.m_idx);
     }
-
     m_gizmo_barycenter /= m_geom->num_aselected();
-
+  } else {
+    m_gizmo_barycenter = m_aabb.min;
   }
-  else m_gizmo_barycenter = m_aabb.min;
 
 }
 
@@ -1343,9 +1335,7 @@ const vector3<float> geom_view_t::get_gizmo_content_barycenter() {
 }
 
 void geom_view_t::updated_externally(uint32_t update_reason) {
-
   ws_item_t::updated_externally(update_reason);
-
 }
 
 void geom_view_t::shift(const vector3<float> shift) {
@@ -1503,9 +1493,7 @@ void geom_view_t::save_to_json(json &data) {
   }
 
   if (!m_type_color_override.empty()) {
-
     data[JSON_GV_TYPE_COLOR_OVERRIDE] = json::array({});
-
     for (auto &elem : m_type_color_override) {
       json color_override_rec = json::array({});
       color_override_rec.push_back(elem.first);
@@ -1517,18 +1505,13 @@ void geom_view_t::save_to_json(json &data) {
   }
 
   if (m_anim->animable()) {
-
     json animations = json::array({});
-
     for (auto &anim : m_anim->m_anim_data) {
-
       json animation = json::object();
       animation[JSON_GV_ANIMATION_NAME] = anim.m_anim_name;
       animation[JSON_GV_ANIMATION_TYPE] = anim.m_anim_type;
       json frames = json::array();
-
       for (auto &frame : anim.frames) {
-
         json frame_chunk = json::array({});
         for (auto &frame_coord : frame.atom_pos) {
           json frame_chunk_coord = json::array({});
@@ -1539,11 +1522,9 @@ void geom_view_t::save_to_json(json &data) {
         }
         frames.push_back(frame_chunk);
       }
-
       animation[JSON_GV_ANIMATION_FRAMES] = frames;
       animations.push_back(animation);
     }
-
     data[JSON_GV_ANIMATIONS] = animations;
   }
 
@@ -1609,19 +1590,14 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   }
 
   if (auto val_itr = data.find(JSON_GV_TYPE_COLOR_OVERRIDE); val_itr != data.end()) {
-
     m_type_color_override.clear();
-
     for (const auto &rec : val_itr.value()) {
-
       size_t type_idx = rec[0].get<size_t>();
       float tco_r = rec[1].get<float>();
       float tco_g = rec[2].get<float>();
       float tco_b = rec[3].get<float>();
       m_type_color_override.insert({type_idx, vector3<float>{tco_r, tco_g, tco_b}});
-
     }
-
   }
 
   m_tws_tr->do_action(act_lock | act_clear_all);
@@ -1629,9 +1605,7 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
   m_ext_obs->first_data = true;
 
   if (m_geom->get_DIM() > 0) {
-
     if (auto val_itr = data.find(JSON_GV_CELL); val_itr != data.end()) {
-
       for (uint8_t i = 0; i < m_geom->get_DIM(); i++) {
         vector3<float> cellv(val_itr.value()[i][0].get<float>(),
                              val_itr.value()[i][1].get<float>(),
@@ -1642,18 +1616,14 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
       m_geom->set_DIM(0);
       //("Cannot load cell data for geom with DIM>0");
     }
-
   }
 
   if (auto val_itr = data.find(JSON_GV_XFIELD_NAMES); val_itr != data.end()) {
-
     std::vector<STRING_EX> fn;
     std::vector<basic_types> ft;
-
     auto &data_xf_names = val_itr.value();
     std::transform(data_xf_names.begin(), data_xf_names.end(), std::back_inserter(fn),
                    [](auto &_elem)->STRING_EX{return _elem.template get<STRING_EX>();});
-
     if (auto val_itr2 = data.find(JSON_GV_XFIELD_TYPES); val_itr2 != data.end())
       for (auto &elem : val_itr2.value()) {
         STRING_EX fv = elem.get<STRING_EX>();
@@ -1663,25 +1633,17 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
         if (fv == "d") ft.push_back(basic_types::type_double);
         if (fv == "f") ft.push_back(basic_types::type_float);
         if (fv == "s") ft.push_back(basic_types::type_string);
-
       } else throw std::runtime_error("Invalid xfield types");
-
     m_geom->set_format(fn, ft);
-
   }
 
   if (auto val_itr = data.find(JSON_GV_ATOMS); val_itr != data.end())
     for (const auto &atom : val_itr.value()) {
-
       m_geom->add(atom[0].get<std::string>(),
                   vector3<float>(atom[1].get<float>(), atom[2].get<float>(), atom[3].get<float>()));
-
       size_t atom_id = m_geom->nat() - 1;
-
       for (size_t i = 4; i < atom.size(); i++) {
-
         switch (m_geom->field_type(i)) {
-
         case basic_types::type_bool : {
           m_geom->xfield<bool>(i, atom_id) = atom[i].get<bool>();
           break;
@@ -1706,58 +1668,39 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
           m_geom->xfield<std::string>(i, atom_id) = atom[i].get<std::string>();
           break;
         }
-
         }
-
       }
-
     }
 
   if (auto val_itr = data.find(JSON_GV_BONDING_TABLE); val_itr != data.end()) {
-
     for (auto &elem : val_itr.value()) {
-
       int type1 = m_geom->type_of_atom(elem[0].get<std::string>());
       int type2 = m_geom->type_of_atom(elem[1].get<std::string>());
       float dist = elem[2].get<float>();
       bool br_enabled = elem[3].get<bool>();
       m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_bonding_dist = dist;
       m_tws_tr->m_bonding_table.m_dist[sym_key<size_t>(type1, type2)].m_enabled = br_enabled;
-
     }
-
     m_tws_tr->m_bonding_table.update_pair_max_dist_all();
-
   }
 
   if (auto val_itr = data.find(JSON_GV_ANIMATIONS); val_itr != data.end()) {
-
     bool static_anim_found{false};
-
     for (auto &anim : val_itr.value()) {
-
       geom_anim_record_t<float> tmp_anim_rec;
-
       if (auto val_itr2 = anim.find(JSON_GV_ANIMATION_NAME); val_itr2 != anim.end())
         tmp_anim_rec.m_anim_name = val_itr2.value();
       else
         tmp_anim_rec.m_anim_name = "generic1";
-
       if (auto val_itr2 = anim.find(JSON_GV_ANIMATION_TYPE); val_itr2 != anim.end())
         tmp_anim_rec.m_anim_type = val_itr2.value();
-
       if (auto val_itr2 = anim.find(JSON_GV_ANIMATION_FRAMES); val_itr2 != anim.end()) {
         tmp_anim_rec.frames.reserve(val_itr2.value().size());
-
         for (auto &frame : val_itr2.value()) {
-
           tmp_anim_rec.frames.resize(tmp_anim_rec.frames.size() + 1);
           size_t nf_id = tmp_anim_rec.frames.size() - 1;
-
           tmp_anim_rec.frames[nf_id].atom_pos.reserve(frame.size());
-
           for (auto &frame_data : frame) {
-
             vector3<float> frame_coord;
             frame_coord[0] = frame_data[0].get<float>();
             frame_coord[1] = frame_data[1].get<float>();
@@ -1765,18 +1708,14 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
             //std::cout << frame_coord.to_string_vec() << std::endl;
             tmp_anim_rec.frames[nf_id].atom_pos.push_back(frame_coord);
           }
-
         }
-
       }
-
-      if (tmp_anim_rec.m_anim_type == geom_anim_e::anim_static) static_anim_found = true;
+      if (tmp_anim_rec.m_anim_type == geom_anim_e::anim_static)
+        static_anim_found = true;
       m_anim->m_anim_data.push_back(std::move(tmp_anim_rec));
-
     }
 
     if (!static_anim_found) {
-
       geom_anim_record_t<float> tmp_anim_static;
       tmp_anim_static.m_anim_name = "static";
       tmp_anim_static.m_anim_type = geom_anim_e::anim_static;
@@ -1784,7 +1723,6 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
       for (auto i = 0; i < m_geom->nat(); i++)
         tmp_anim_static.frames[0].atom_pos.push_back(m_geom->pos(i));
       m_anim->m_anim_data.insert(m_anim->m_anim_data.begin(), std::move(tmp_anim_static));
-
     }
 
   }
@@ -1802,39 +1740,35 @@ bool geom_view_t::can_be_written_to_json() {
 }
 
 py::list geom_view_t::get_sel_atoms(int index_offset) {
-
   py::list ret;
   std::set<size_t> sels;
   for (auto q = 0; q < m_geom->num_selected(); q++) {
     auto rec = m_geom->nth_aselected(q);
-    if (!rec) continue;
+    if (!rec)
+      continue;
     auto i = *rec;
     sels.insert(i.m_atm);
   }
-
   for (size_t i = 0; i < m_geom->nat(); i++)
-    if (sels.find(i) != sels.end()) ret.append(i+index_offset);
-
+    if (sels.find(i) != sels.end())
+      ret.append(i+index_offset);
   return ret;
-
 }
 
 py::list geom_view_t::get_unsel_atoms(int index_offset) {
-
   py::list ret;
   std::set<size_t> sels;
   for (auto q = 0; q < m_geom->num_selected(); q++) {
     auto rec = m_geom->nth_aselected(q);
-    if (!rec) continue;
+    if (!rec)
+      continue;
     auto i = *rec;
     sels.insert(i.m_atm);
   }
-
   for (size_t i = 0; i < m_geom->nat(); i++)
-    if (sels.find(i) == sels.end()) ret.append(i+index_offset);
-
+    if (sels.find(i) == sels.end())
+      ret.append(i+index_offset);
   return ret;
-
 }
 
 void geom_view_t::copy_settings(geom_view_t *src) {
@@ -1867,10 +1801,8 @@ void geom_view_t::copy_settings(geom_view_t *src) {
 }
 
 void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
-
   if (!src || src->m_geom->nat() != m_geom->nat())
     return;
-
   for (size_t i = 0; i < m_geom->nat(); i++) {
     m_geom->xfield<bool>(xgeom_sel_vis_hide,i) = src->m_geom->xfield<bool>(xgeom_sel_vis_hide,i);
     m_geom->xfield<bool>(xgeom_override,i)     = src->m_geom->xfield<bool>(xgeom_override,i);
@@ -1882,28 +1814,23 @@ void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
     m_geom->xfield<std::string>(xgeom_label_text, i) =
         src->m_geom->xfield<std::string>(xgeom_label_text, i);
   }
-
 }
 
 void geom_view_t::copy_measurements(geom_view_t *src) {
-
   if (!src || src->m_geom->nat() != m_geom->nat())
     return;
-
   for (size_t i = 0; i < src->m_measure->m_dist_recs.get_hs_children_count(); i++) {
     auto msr = src->m_measure->m_dist_recs.get_hs_child_as_array(i);
     auto copy_dist = std::make_shared<msr_bond_rec_t<uint32_t>>(
       msr->m_at1, msr->m_at2, msr->m_idx1, msr->m_idx2);
     m_measure->m_dist_recs.add_hs_child_as_array(msr);
   }
-
   for (size_t i = 0; i < src->m_measure->m_angle_recs.get_hs_children_count(); i++) {
     auto msr = src->m_measure->m_angle_recs.get_hs_child_as_array(i);
     auto copy_dist = std::make_shared<msr_angle_rec_t<uint32_t>>(
         msr->m_at1, msr->m_at2, msr->m_at3, msr->m_idx1, msr->m_idx2, msr->m_idx3);
     m_measure->m_angle_recs.add_hs_child_as_array(msr);
   }
-
 }
 
 std::string geom_view_t::print_epoch_info(int epoch) {
@@ -1911,6 +1838,7 @@ std::string geom_view_t::print_epoch_info(int epoch) {
 }
 
 hs_result_e geom_view_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
-  if (is_selected()) recalc_gizmo_barycenter();
+  if (is_selected())
+    recalc_gizmo_barycenter();
   return hs_result_e::hs_success;
 }
