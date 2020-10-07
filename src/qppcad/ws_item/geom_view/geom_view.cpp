@@ -830,7 +830,8 @@ void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float>> &xgeom_in
   if (copy_cell) {
     xgeom_inst.set_DIM(m_geom->get_DIM());
     for (int i = 0; i < 3; i++)
-      if (m_geom->get_DIM() > i) xgeom_inst.cell.v[i] = m_geom->cell.v[i];
+      if (m_geom->get_DIM() > i)
+        xgeom_inst.cell.v[i] = m_geom->cell.v[i];
   }
 
   if (copy_selected) {
@@ -954,7 +955,6 @@ vector3<float> geom_view_t::get_xcolor(const size_t atm) {
   if (atm >= m_geom->nat()) {
     throw std::out_of_range("invalid atom id");
   }
-
   return vector3<float>{m_geom->xfield<float>(xgeom_ccr, atm),
                         m_geom->xfield<float>(xgeom_ccg, atm),
                         m_geom->xfield<float>(xgeom_ccb, atm)};
@@ -964,7 +964,6 @@ void geom_view_t::set_xcolorv(const size_t atm, const vector3<float> color) {
   if (atm >= m_geom->nat()) {
     throw std::out_of_range("invalid atom id");
   }
-
   m_geom->xfield<float>(xgeom_ccr, atm) = color[0];
   m_geom->xfield<float>(xgeom_ccg, atm) = color[1];
   m_geom->xfield<float>(xgeom_ccb, atm) = color[2];
@@ -1009,12 +1008,16 @@ void geom_view_t::sel_selected_atoms_ngbs() {
     return;
   std::set<int> stored_sel;
   for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_aselected(i);
+    auto rec = m_geom->nth_selected(i);
     if (rec && (*rec).m_idx.is_zero())
       stored_sel.insert((*rec).m_atm);
   }
+  if (stored_sel.empty())
+    return;
+  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto &rec : stored_sel)
     sel_atom_ngbs(rec);
+  end_recording();
 }
 
 void geom_view_t::update_inter_atomic_dist(float new_dist,
