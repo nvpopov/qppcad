@@ -441,14 +441,14 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
                                                     m_atom_type_to_hide,
                                                     m_atom_scale_factor.get_value(),
                                                     m_sel_vis.get_value(),
-                                                    xgeom_sel_vis_hide);
+                                                    xg_sv_h);
     } else {
       m_tws_tr->query_ray<query_ray_add_ignore_img<float>>(local_geom_ray,
                                                            res,
                                                            m_atom_type_to_hide,
                                                            m_atom_scale_factor.get_value(),
                                                            m_sel_vis.get_value(),
-                                                           xgeom_sel_vis_hide);
+                                                           xg_sv_h);
     }
     recalc_gizmo_barycenter();
     if (!res.empty()) {
@@ -528,11 +528,6 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
     return;
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
     m_geom->select(atom_id);
-    if (m_atom_ord_sel.size() >= max_sel_in_deque) {
-      m_atom_ord_sel.resize(max_sel_in_deque);
-      m_atom_ord_sel.pop_front();
-    }
-    m_atom_ord_sel.push_back(atom_index_set_key(atom_id, atom_idx));
     recalc_gizmo_barycenter();
     m_parent_ws->m_gizmo->update_gizmo(0.01f);
     if (m_geom->nat() < 1000) {
@@ -556,7 +551,7 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
 void geom_view_t::sel_visible() {
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (size_t i = 0; i < m_geom->nat(); i++)
-    if (!m_geom->xfield<bool>(xgeom_sel_vis_hide, i))
+    if (!m_geom->xfield<bool>(xg_sv_h, i))
       sel_atom(i);
   end_recording();
 }
@@ -572,9 +567,6 @@ void geom_view_t::unsel_atom(int atom_id) {
          !idx.end(); idx++ ) {
       auto key = atom_index_set_key(atom_id, idx);
       m_geom->select(atom_id, false);
-      auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
-      if (it_ordered != m_atom_ord_sel.end())
-        m_atom_ord_sel.erase(it_ordered);
     }
     recalc_gizmo_barycenter();
     m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -597,9 +589,6 @@ void geom_view_t::unsel_atom(int atom_id, index atom_idx) {
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
     auto key = atom_index_set_key(atom_id, atom_idx);
     m_geom->select(atom_id, false);
-    auto it_ordered = std::find(m_atom_ord_sel.begin(), m_atom_ord_sel.end(), key);
-    if (it_ordered != m_atom_ord_sel.end())
-      m_atom_ord_sel.erase(it_ordered);
     recalc_gizmo_barycenter();
     m_parent_ws->m_gizmo->update_gizmo(0.01f);
     return;
@@ -776,7 +765,7 @@ void geom_view_t::sv_modify_selected(bool state) {
   for (auto i = 0; i < m_geom->num_selected(); i++) {
     auto rec = m_geom->nth_selected(i);
     if (rec && (*rec).m_idx.is_zero())
-      m_geom->set_xfield<bool>(xgeom_sel_vis_hide, (*rec).m_atm, state);
+      m_geom->set_xfield<bool>(xg_sv_h, (*rec).m_atm, state);
   }
   if (!m_sel_vis.get_value()) {
     m_sel_vis.set_value(true);
@@ -797,7 +786,7 @@ void geom_view_t::sv_hide_invert_selected() {
   }
   for (size_t i = 0; i < m_geom->nat(); i++)
     if (cap_idx.find(i) == cap_idx.end())
-     m_geom->set_xfield<bool>(xgeom_sel_vis_hide, i, true);
+     m_geom->set_xfield<bool>(xg_sv_h, i, true);
   if (!m_sel_vis.get_value()) {
     m_sel_vis.set_value(true);
     m_sel_vis_affect_bonds.set_value(true);
@@ -940,11 +929,11 @@ void geom_view_t::load_color_from_static_anim() {
     if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
         m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
       for (int i = 0; i < m_geom->nat(); i++) {
-        m_geom->xfield<float>(xgeom_ccr, i) =
+        m_geom->xfield<float>(xg_ccr, i) =
             m_anim->m_anim_data[static_anim].frames[0].atom_color[i][0];
-        m_geom->xfield<float>(xgeom_ccg, i) =
+        m_geom->xfield<float>(xg_ccg, i) =
             m_anim->m_anim_data[static_anim].frames[0].atom_color[i][1];
-        m_geom->xfield<float>(xgeom_ccb, i) =
+        m_geom->xfield<float>(xg_ccb, i) =
             m_anim->m_anim_data[static_anim].frames[0].atom_color[i][2];
       }
     }
@@ -955,18 +944,18 @@ vector3<float> geom_view_t::get_xcolor(const size_t atm) {
   if (atm >= m_geom->nat()) {
     throw std::out_of_range("invalid atom id");
   }
-  return vector3<float>{m_geom->xfield<float>(xgeom_ccr, atm),
-                        m_geom->xfield<float>(xgeom_ccg, atm),
-                        m_geom->xfield<float>(xgeom_ccb, atm)};
+  return vector3<float>{m_geom->xfield<float>(xg_ccr, atm),
+                        m_geom->xfield<float>(xg_ccg, atm),
+                        m_geom->xfield<float>(xg_ccb, atm)};
 }
 
 void geom_view_t::set_xcolorv(const size_t atm, const vector3<float> color) {
   if (atm >= m_geom->nat()) {
     throw std::out_of_range("invalid atom id");
   }
-  m_geom->xfield<float>(xgeom_ccr, atm) = color[0];
-  m_geom->xfield<float>(xgeom_ccg, atm) = color[1];
-  m_geom->xfield<float>(xgeom_ccb, atm) = color[2];
+  m_geom->xfield<float>(xg_ccr, atm) = color[0];
+  m_geom->xfield<float>(xg_ccg, atm) = color[1];
+  m_geom->xfield<float>(xg_ccb, atm) = color[2];
 }
 
 void geom_view_t::set_xcolorf(const size_t atm, const float c_r, const float c_g, const float c_b) {
@@ -1779,27 +1768,28 @@ void geom_view_t::copy_settings(geom_view_t *src) {
   if (!src)
     return;
 
-  m_draw_atoms             = src->m_draw_atoms;
-  m_draw_bonds             = src->m_draw_bonds;
-  m_draw_img_atoms         = src->m_draw_img_atoms;
-  m_draw_img_bonds         = src->m_draw_img_bonds;
-  m_render_style           = src->m_render_style;
-  m_sel_vis                = src->m_sel_vis;
-  m_sel_vis_affect_bonds   = src->m_sel_vis_affect_bonds;
-  m_atom_scale_factor      = src->m_atom_scale_factor;
-  m_bond_scale_factor      = src->m_bond_scale_factor;
+  m_draw_atoms.set_value(src->m_draw_atoms.get_value());
+  m_draw_bonds.set_value(src->m_draw_bonds.get_value());
+  m_draw_img_atoms.set_value(src->m_draw_img_atoms.get_value());
+  m_draw_img_bonds.set_value(src->m_draw_img_bonds.get_value());
+  m_render_style.set_value(src->m_render_style.get_value());
+  m_sel_vis.set_value(src->m_sel_vis.get_value());
+  m_sel_vis_affect_bonds.set_value(src->m_sel_vis_affect_bonds.get_value());
+  m_atom_scale_factor.set_value(src->m_atom_scale_factor.get_value());
+  m_bond_scale_factor.set_value(src->m_bond_scale_factor.get_value());
 
-  m_labels->m_style         = src->m_labels->m_style;
-  m_labels->m_screen_scale  = src->m_labels->m_screen_scale;
-  m_labels->m_selective_lbl = src->m_labels->m_selective_lbl;
+  m_labels->m_style.set_value(src->m_labels->m_style.get_value());
+  m_labels->m_screen_scale.set_value(src->m_labels->m_screen_scale.get_value());
+  m_labels->m_selective_lbl.set_value(src->m_labels->m_selective_lbl.get_value());
 
-  m_show_bb                 = src->m_show_bb;
+  m_show_bb.set_value(src->m_show_bb.get_value());
 
-  m_type_color_override     = src->m_type_color_override;
+  //TODO: hs for type_color_override
+  //m_type_color_override.set_value(src->m_type_color_override.get_value());
   //m_atom_idx_sel            = src->m_atom_idx_sel;
-  m_atom_ord_sel            = src->m_atom_ord_sel;
-  m_atom_type_to_hide       = src->m_atom_type_to_hide;
-  m_atom_type_to_hide_bond  = src->m_atom_type_to_hide_bond;
+  //m_atom_ord_sel.set_value(src->m_atom_ord_sel.get_value());
+  m_atom_type_to_hide = src->m_atom_type_to_hide;
+  m_atom_type_to_hide_bond = src->m_atom_type_to_hide_bond;
 
 }
 
@@ -1807,15 +1797,14 @@ void geom_view_t::copy_xgeom_aux(geom_view_t *src) {
   if (!src || src->m_geom->nat() != m_geom->nat())
     return;
   for (size_t i = 0; i < m_geom->nat(); i++) {
-    m_geom->xfield<bool>(xgeom_sel_vis_hide,i) = src->m_geom->xfield<bool>(xgeom_sel_vis_hide,i);
-    m_geom->xfield<bool>(xgeom_override,i)     = src->m_geom->xfield<bool>(xgeom_override,i);
-    m_geom->xfield<bool>(xgeom_label_show,i)   = src->m_geom->xfield<bool>(xgeom_label_show,i);
-    m_geom->xfield<float>(xgeom_atom_r, i)     = src->m_geom->xfield<float>(xgeom_atom_r, i);
-    m_geom->xfield<float>(xgeom_ccr, i)        = src->m_geom->xfield<float>(xgeom_ccr, i);
-    m_geom->xfield<float>(xgeom_ccg, i)        = src->m_geom->xfield<float>(xgeom_ccg, i);
-    m_geom->xfield<float>(xgeom_ccb, i)        = src->m_geom->xfield<float>(xgeom_ccb, i);
-    m_geom->xfield<std::string>(xgeom_label_text, i) =
-        src->m_geom->xfield<std::string>(xgeom_label_text, i);
+    m_geom->set_xfield<bool>(xg_sv_h, i, src->m_geom->xfield<bool>(xg_sv_h,i));
+    m_geom->set_xfield<bool>(xg_override, i, src->m_geom->xfield<bool>(xg_override,i));
+    m_geom->set_xfield<bool>(xg_lbl, i, src->m_geom->xfield<bool>(xg_lbl,i));
+    m_geom->set_xfield<float>(xg_atom_r, i, src->m_geom->xfield<float>(xg_atom_r, i));
+    m_geom->set_xfield<float>(xg_ccr, i, src->m_geom->xfield<float>(xg_ccr, i));
+    m_geom->set_xfield<float>(xg_ccg, i, src->m_geom->xfield<float>(xg_ccg, i));
+    m_geom->set_xfield<float>(xg_ccb, i, src->m_geom->xfield<float>(xg_ccb, i));
+    m_geom->set_xfield<std::string>(xg_lbl_text, i, src->m_geom->xfield<std::string>(xg_lbl_text, i));
   }
 }
 

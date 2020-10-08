@@ -1570,7 +1570,7 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
           //tm_translate_coord_type_label->hide();
         }
         /* begin atom override */
-        if (!b_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)) {
+        if (!b_al->any_of_sel_xfield_equal<bool>(xg_override, false)) {
           std::set<size_t> atoms_id_to_bind;
           std::transform(
               b_al->m_geom->cbegin_selected(),
@@ -1580,11 +1580,11 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
               );
           m_tm_gb_override_atom->show();
           m_tm_override_atom_color->bind_value(b_al->m_geom.get(),
-                                               {xgeom_ccr, xgeom_ccg, xgeom_ccb},
+                                               {xg_ccr, xg_ccg, xg_ccb},
                                                std::set<size_t>(atoms_id_to_bind)
                                                );
           m_tm_override_atom_radii->bind_value(b_al->m_geom.get(),
-                                               xgeom_atom_r,
+                                               xg_atom_r,
                                                std::move(atoms_id_to_bind)
                                                );
         }

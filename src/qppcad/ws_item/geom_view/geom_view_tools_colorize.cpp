@@ -182,9 +182,9 @@ void geom_view_colorizer_helper::colorize_by_xfield(geom_view_t *gv,
     float len = std::get<1>(field_min_max) - std::get<0>(field_min_max);
     vector3<float> color_interp = color_low + (color_high - color_low) * (1 - el_val / len);
 
-    gv->m_geom->xfield<float>(xgeom_ccr, i) = color_interp[0];
-    gv->m_geom->xfield<float>(xgeom_ccg, i) = color_interp[1];
-    gv->m_geom->xfield<float>(xgeom_ccb, i) = color_interp[2];
+    gv->m_geom->xfield<float>(xg_ccr, i) = color_interp[0];
+    gv->m_geom->xfield<float>(xg_ccg, i) = color_interp[1];
+    gv->m_geom->xfield<float>(xg_ccb, i) = color_interp[2];
 
     //TODO: propagate colors to first static anim
 

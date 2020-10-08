@@ -95,16 +95,17 @@ enum pair_dist_mode_e : int {
   fix_second
 };
 
-const int xgeom_charge       = 4;
-const int xgeom_sel_vis_hide = 6;
-const int xgeom_label_show   = 7;
-const int xgeom_ccr          = 8;
-const int xgeom_ccg          = 9;
-const int xgeom_ccb          = 10;
-const int xgeom_label_text   = 11;
-const int xgeom_override     = 12;
-const int xgeom_atom_r       = 13;
-const int xgeom_external     = 14;
+// xgeometry fields
+const int xg_charge       = 4;
+const int xg_sv_h         = 6; /* selective visible - hide if true */
+const int xg_lbl          = 7; /* show label if true */
+const int xg_ccr          = 8;
+const int xg_ccg          = 9;
+const int xg_ccb          = 10;
+const int xg_lbl_text     = 11; /* label text */
+const int xg_override     = 12;
+const int xg_atom_r       = 13;
+const int xg_external     = 14;
 
 const int max_sel_in_deque = 4;
 
@@ -130,8 +131,6 @@ public:
   std::unique_ptr<bonding_table<float> > m_bt{};
   std::unique_ptr<tws_tree_t<float, periodic_cell<float> > > m_tws_tr{};
   std::unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs{};
-  //std::unordered_set<atom_index_set_key, atom_index_set_key_hash> m_atom_idx_sel;
-  std::deque<atom_index_set_key> m_atom_ord_sel;
   std::unique_ptr<geom_view_render_buffered_billboards_t> m_bs{};
   std::unordered_set<size_t> m_atom_type_to_hide;
   std::unordered_set<size_t> m_atom_type_to_hide_bond;

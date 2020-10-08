@@ -70,15 +70,15 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
               vector3<float> new_color =
                   m_anim_data[anim_id].frames[start_frame_n].atom_color[i] * (frame_delta) +
                   m_anim_data[anim_id].frames[end_frame_n].atom_color[i] * (1-frame_delta);
-              p_owner->m_geom->xfield<float>(xgeom_ccr, i) = new_color[0];
-              p_owner->m_geom->xfield<float>(xgeom_ccg, i) = new_color[1];
-              p_owner->m_geom->xfield<float>(xgeom_ccb, i) = new_color[2];
+              p_owner->m_geom->xfield<float>(xg_ccr, i) = new_color[0];
+              p_owner->m_geom->xfield<float>(xg_ccg, i) = new_color[1];
+              p_owner->m_geom->xfield<float>(xg_ccb, i) = new_color[2];
             }
           // otherwise - load default colors
           else {
-              p_owner->m_geom->xfield<float>(xgeom_ccr, i) = 0.0f;
-              p_owner->m_geom->xfield<float>(xgeom_ccg, i) = 0.0f;
-              p_owner->m_geom->xfield<float>(xgeom_ccb, i) = 0.0f;
+              p_owner->m_geom->xfield<float>(xg_ccr, i) = 0.0f;
+              p_owner->m_geom->xfield<float>(xg_ccg, i) = 0.0f;
+              p_owner->m_geom->xfield<float>(xg_ccb, i) = 0.0f;
             }
 
         }

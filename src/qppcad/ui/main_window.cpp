@@ -1208,7 +1208,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
       m_tp_force_sel_lbl_vis->show();
       m_tp_force_sel_lbl_vis->blockSignals(true);
       m_tp_force_sel_lbl_vis->setChecked(
-          !as_al->any_of_sel_xfield_equal<bool>(xgeom_label_show, false)
+          !as_al->any_of_sel_xfield_equal<bool>(xg_lbl, false)
           );
       m_tp_force_sel_lbl_vis->blockSignals(false);
       /* end of detect selective labels */
@@ -1223,7 +1223,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
       m_tp_toggle_atom_override->show();
       m_tp_toggle_atom_override->blockSignals(true);
       m_tp_toggle_atom_override->setChecked(
-          !as_al->any_of_sel_xfield_equal<bool>(xgeom_override, false)
+          !as_al->any_of_sel_xfield_equal<bool>(xg_override, false)
           );
       m_tp_toggle_atom_override->blockSignals(false);
     }
@@ -1251,15 +1251,16 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
 
     /* angle between 3 atoms */
     if (as_al->m_geom->num_aselected() == 3
-        && cur_ws->get_edit_type() == ws_edit_type_e::edit_content
-        && as_al->m_atom_ord_sel.size() == 3) {
+        && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
       need_to_hide_al_cntls = false;
-      auto cur_sel = as_al->m_measure->is_angle_msr_exists(as_al->m_atom_ord_sel[0].m_atm,
-                                                           as_al->m_atom_ord_sel[1].m_atm,
-                                                           as_al->m_atom_ord_sel[2].m_atm,
-                                                           as_al->m_atom_ord_sel[0].m_idx,
-                                                           as_al->m_atom_ord_sel[1].m_idx,
-                                                           as_al->m_atom_ord_sel[2].m_idx);
+      std::array<std::optional<atom_index_set_key>, 3> sel = {
+        as_al->m_geom->nth_aselected(0),
+        as_al->m_geom->nth_aselected(1),
+        as_al->m_geom->nth_aselected(2)
+      };
+      auto cur_sel =
+          as_al->m_measure->is_angle_msr_exists((*sel[0]).m_atm, (*sel[1]).m_atm, (*sel[2]).m_atm,
+                                                (*sel[0]).m_idx, (*sel[1]).m_idx, (*sel[2]).m_idx);
       m_tp_msr_dist->hide();
       m_tp_msr_angle->show();
       m_tp_msr_angle->blockSignals(true);
@@ -1330,19 +1331,17 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
   if (as_al->m_geom->num_aselected() == 3
       && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
     m_tp_msr_angle->show();
-    auto cur_sel = as_al->m_measure->is_angle_msr_exists(as_al->m_atom_ord_sel[0].m_atm,
-                                                         as_al->m_atom_ord_sel[1].m_atm,
-                                                         as_al->m_atom_ord_sel[2].m_atm,
-                                                         as_al->m_atom_ord_sel[0].m_idx,
-                                                         as_al->m_atom_ord_sel[1].m_idx,
-                                                         as_al->m_atom_ord_sel[2].m_idx);
+    std::array<std::optional<atom_index_set_key>, 3> sel = {
+      as_al->m_geom->nth_aselected(0),
+      as_al->m_geom->nth_aselected(1),
+      as_al->m_geom->nth_aselected(2)
+    };
+    auto cur_sel =
+        as_al->m_measure->is_angle_msr_exists((*sel[0]).m_atm, (*sel[1]).m_atm, (*sel[2]).m_atm,
+                                              (*sel[0]).m_idx, (*sel[1]).m_idx, (*sel[2]).m_idx);
     if (checked)
-      as_al->m_measure->add_angle_msr(as_al->m_atom_ord_sel[0].m_atm,
-                                      as_al->m_atom_ord_sel[1].m_atm,
-                                      as_al->m_atom_ord_sel[2].m_atm,
-                                      as_al->m_atom_ord_sel[0].m_idx,
-                                      as_al->m_atom_ord_sel[1].m_idx,
-                                      as_al->m_atom_ord_sel[2].m_idx);
+      as_al->m_measure->add_angle_msr((*sel[0]).m_atm, (*sel[1]).m_atm, (*sel[2]).m_atm,
+                                      (*sel[0]).m_idx, (*sel[1]).m_idx, (*sel[2]).m_idx);
     else
       as_al->m_measure->rm_angle_msr(*cur_sel);
   }
@@ -1375,7 +1374,7 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
   for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
     auto rec = as_al->m_geom->nth_aselected(i);
     if (!rec) continue;
-    as_al->m_geom->xfield<bool>(xgeom_label_show, (*rec).m_atm) = checked;
+    as_al->m_geom->xfield<bool>(xg_lbl, (*rec).m_atm) = checked;
   }
 
   // if selective labels rendering unchecked - force it and select some random style
@@ -1401,12 +1400,12 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
     auto rec = as_al->m_geom->nth_aselected(i);
     if (!rec)
       continue;
-    as_al->m_geom->xfield<bool>(xgeom_override, (*rec).m_atm) = checked;
-    if (as_al->m_geom->xfield<float>(xgeom_atom_r, (*rec).m_atm) < 0.01f) {
+    as_al->m_geom->xfield<bool>(xg_override, (*rec).m_atm) = checked;
+    if (as_al->m_geom->xfield<float>(xg_atom_r, (*rec).m_atm) < 0.01f) {
       auto ap_idx = ptable::number_by_symbol(as_al->m_geom->atom((*rec).m_atm));
       float _rad = 1.0f;
       if (ap_idx) _rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
-      as_al->m_geom->xfield<float>(xgeom_atom_r, (*rec).m_atm) = _rad;
+      as_al->m_geom->xfield<float>(xg_atom_r, (*rec).m_atm) = _rad;
     }
   }
 

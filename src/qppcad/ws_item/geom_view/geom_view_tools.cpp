@@ -90,7 +90,7 @@ vector3<float> geom_view_tools_t::dipole_moment(geom_view_t *gv) {
 
   vector3<float> accum_dm{0,0,0};
   for (int i = 0; i < gv->m_geom->nat(); i++)
-    accum_dm += gv->m_geom->pos(i) * gv->m_geom->xfield<float>(xgeom_charge, i);
+    accum_dm += gv->m_geom->pos(i) * gv->m_geom->xfield<float>(xg_charge, i);
   return accum_dm;
 
 }
@@ -102,7 +102,7 @@ float geom_view_tools_t::total_charge(geom_view_t *gv) {
 
   float accum_charge{0};
   for (int i = 0; i < gv->m_geom->nat(); i++)
-    accum_charge += gv->m_geom->xfield<float>(xgeom_charge, i);
+    accum_charge += gv->m_geom->xfield<float>(xg_charge, i);
   return accum_charge;
 
 }
@@ -122,7 +122,7 @@ std::vector<scalar_partition_per_type_t<> > geom_view_tools_t::get_charge_partit
 
     for (size_t q = 0; q < retcp.size(); q++)
       if (retcp[q].atype == gv->m_geom->type(i)
-          && (std::fabs(retcp[q].value - gv->m_geom->xfield<float>(xgeom_charge, i)) < ch_eps)) {
+          && (std::fabs(retcp[q].value - gv->m_geom->xfield<float>(xg_charge, i)) < ch_eps)) {
         rec_founded = true;
         retcp[q].count++;
       }
@@ -130,7 +130,7 @@ std::vector<scalar_partition_per_type_t<> > geom_view_tools_t::get_charge_partit
     if (!rec_founded) {
       scalar_partition_per_type_t<> tmp_rec;
       tmp_rec.atype = gv->m_geom->type(i);
-      tmp_rec.value = gv->m_geom->xfield<float>(xgeom_charge, i);
+      tmp_rec.value = gv->m_geom->xfield<float>(xg_charge, i);
       tmp_rec.count = 1;
       retcp.push_back(std::move(tmp_rec));
     }
@@ -227,8 +227,8 @@ void geom_view_tools_t::name_sel_atoms_by_order(geom_view_t *gv) {
     if (!rec)
       continue;
 
-    gv->m_geom->xfield<std::string>(xgeom_label_text, (*rec).m_atm) = std::to_string(atom_ord_c);
-    gv->m_geom->xfield<bool>(xgeom_label_show, (*rec).m_atm) = true;
+    gv->m_geom->xfield<std::string>(xg_lbl_text, (*rec).m_atm) = std::to_string(atom_ord_c);
+    gv->m_geom->xfield<bool>(xg_lbl, (*rec).m_atm) = true;
     atom_ord_c++;
 
   }
@@ -264,8 +264,8 @@ void geom_view_tools_t::name_sel_atoms_by_dist_to_point(geom_view_t *gv, vector3
 
   for (size_t i = 0; i < std::size(tmp_dists); i++) {
 
-    gv->m_geom->xfield<bool>(xgeom_label_show, std::get<0>(tmp_dists[i])) = true;
-    gv->m_geom->xfield<std::string>(xgeom_label_text, std::get<0>(tmp_dists[i])) =
+    gv->m_geom->xfield<bool>(xg_lbl, std::get<0>(tmp_dists[i])) = true;
+    gv->m_geom->xfield<std::string>(xg_lbl_text, std::get<0>(tmp_dists[i])) =
         std::to_string(i);
 
   }
@@ -643,8 +643,8 @@ std::shared_ptr<geom_view_t> geom_view_tools_t::gen_ncells(geom_view_t *gv,
     for (iterator i_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c})); !i_it.end(); i_it++ ) {
       vector3<float> new_atom_pos = gv->m_geom->pos(i, i_it);
       sc_al->m_geom->add(gv->m_geom->atom(i), new_atom_pos);
-      sc_al->m_geom->xfield<float>(xgeom_charge, sc_al->m_geom->nat()-1) =
-          gv->m_geom->xfield<float>(xgeom_charge, i);
+      sc_al->m_geom->xfield<float>(xg_charge, sc_al->m_geom->nat()-1) =
+          gv->m_geom->xfield<float>(xg_charge, i);
     }
 
   sc_al->end_structure_change();
@@ -671,7 +671,7 @@ void geom_view_tools_t::gen_ncells_ex(
     for (iterator i_it(index({s_a, s_b, s_c}), index({e_a, e_b, e_c})); !i_it.end(); i_it++) {
       vector3<float> new_atom_pos = src->pos(i, i_it);
       dst->add(src->atom(i), new_atom_pos);
-      dst->xfield<float>(xgeom_charge, dst->nat() - 1) = src->xfield<float>(xgeom_charge, i);
+      dst->xfield<float>(xg_charge, dst->nat() - 1) = src->xfield<float>(xg_charge, i);
     }
 }
 
@@ -707,7 +707,7 @@ void geom_view_tools_t::gen_supercell(geometry<float, periodic_cell<float>> *src
       vector3<float> new_atom_pos = src->pos(i, idx_it);
       dst->add(src->atom(i), new_atom_pos);
       if (xsrc && xdst && role && *role == geom_view_role_e::r_uc)
-        xdst->xfield<float>(xgeom_charge, src->nat()-1) = xsrc->xfield<float>(xgeom_charge, i);
+        xdst->xfield<float>(xg_charge, src->nat()-1) = xsrc->xfield<float>(xg_charge, i);
     }
 }
 
@@ -964,7 +964,7 @@ std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compl_list
 
   for (size_t i = 0; i < target->m_geom->nat(); i++)
     if (!only_affect_visible_atoms ||
-        (only_affect_visible_atoms && !target->m_geom->xfield<bool>(xgeom_sel_vis_hide, i))) {
+        (only_affect_visible_atoms && !target->m_geom->xfield<bool>(xg_sv_h, i))) {
 
       // accuire atom pos
       auto atom_pos = target->m_geom->pos(i);
@@ -979,7 +979,7 @@ std::vector<std::tuple<size_t, size_t> > geom_view_tools_t::gen_geoms_compl_list
       model->m_tws_tr->query_sphere(compl_eps, atom_pos, qs_res);
 
       if (!qs_res.empty() && qs_res.front().m_atm < model->m_geom->nat() &&
-          !model->m_geom->xfield<bool>(xgeom_sel_vis_hide, qs_res.front().m_atm))
+          !model->m_geom->xfield<bool>(xg_sv_h, qs_res.front().m_atm))
         retv.push_back({qs_res.front().m_atm, i});
 
     }
@@ -1175,8 +1175,8 @@ void geom_view_tools_t::merge_gv(geom_view_t *gv_src1,
     if (elem != tmp_dst)
       for (size_t i = 0; i < elem->m_geom->nat(); i++) {
         tmp_dst->m_geom->add(elem->m_geom->atom(i), elem->m_geom->pos(i));
-        tmp_dst->m_geom->xfield<float>(xgeom_charge, tmp_dst->m_geom->nat()-1) =
-            elem->m_geom->xfield<float>(xgeom_charge, i);
+        tmp_dst->m_geom->xfield<float>(xg_charge, tmp_dst->m_geom->nat()-1) =
+            elem->m_geom->xfield<float>(xg_charge, i);
       }
 
   tmp_dst->end_structure_change();

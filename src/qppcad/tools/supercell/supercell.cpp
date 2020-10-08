@@ -110,14 +110,14 @@ void supercell_tool_t::make_super_cell(geom_view_t *al,
       bool need_to_add{true};
       for (auto &elem : res)
         if (elem.m_idx == index::D(sc_al->m_geom->get_DIM()).all(0)) {
-          accum_chg += sc_al->m_geom->xfield<float>(xgeom_charge, elem.m_atm);
+          accum_chg += sc_al->m_geom->xfield<float>(xg_charge, elem.m_atm);
           if (i > elem.m_atm)
             need_to_add = false;
         }
 
       if (need_to_add) {
         g.add(sc_al->m_geom->atom(i), sc_al->m_geom->pos(i));
-        g.xfield<float>(xgeom_charge, g.nat()-1) = accum_chg;
+        g.xfield<float>(xg_charge, g.nat()-1) = accum_chg;
       }
 
     }

@@ -114,7 +114,7 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
     case ccd_copy_charges_mode::copy_mulliken : {
 
       if (c < m_ccd->m_steps[m_cur_step].m_mulliken_pop_per_atom.size()) {
-        gv->m_geom->xfield<float>(xgeom_charge, c) =
+        gv->m_geom->xfield<float>(xg_charge, c) =
             m_ccd->m_steps[m_cur_step].m_mulliken_net_chg_per_atom[c];
         succes = true;
       }
@@ -125,7 +125,7 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
     case ccd_copy_charges_mode::copy_mulliken_spin : {
 
       if (c < m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom.size()) {
-        gv->m_geom->xfield<float>(xgeom_charge, c) =
+        gv->m_geom->xfield<float>(xg_charge, c) =
             m_ccd->m_steps[m_cur_step].m_mulliken_spin_pop_per_atom[c];
         succes = true;
       }
@@ -136,7 +136,7 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
     case ccd_copy_charges_mode::copy_lowdin : {
 
       if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
-        gv->m_geom->xfield<float>(xgeom_charge, c) =
+        gv->m_geom->xfield<float>(xg_charge, c) =
             m_ccd->m_steps[m_cur_step].m_lowdin_net_chg_per_atom[c];
         succes = true;
       }
@@ -147,7 +147,7 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
     case ccd_copy_charges_mode::copy_lowdin_spin : {
 
       if (c < m_ccd->m_steps[m_cur_step].m_lowdin_pop_per_atom.size()) {
-        gv->m_geom->xfield<float>(xgeom_charge, c) =
+        gv->m_geom->xfield<float>(xg_charge, c) =
             m_ccd->m_steps[m_cur_step].m_lowdin_spin_pop_per_atom[c];
         succes = true;
       }
@@ -161,7 +161,7 @@ void ccd_view_t::update_charges(geom_view_t *gv, size_t start_atom, size_t end_a
 
     }
 
-    if (!succes) gv->m_geom->xfield<float>(xgeom_charge, c) = 0;
+    if (!succes) gv->m_geom->xfield<float>(xg_charge, c) = 0;
 
   } // end for
 

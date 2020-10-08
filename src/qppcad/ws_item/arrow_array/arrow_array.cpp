@@ -84,7 +84,7 @@ void arrow_array_t::render() {
   astate->dp->begin_render_general_mesh();
   for (size_t i = 0; i < m_binded_gv->m_geom->nat(); i++) {
 
-      if (m_affected_by_sv.get_value() && m_binded_gv->m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) continue;
+      if (m_affected_by_sv.get_value() && m_binded_gv->m_geom->xfield<bool>(xg_sv_h, i)) continue;
 
       vector3<float> start_pos = cur_anim->frames[start_frame_n_0].atom_pos[i] * (frame_delta_0)
                                  + cur_anim->frames[end_frame_n_0].atom_pos[i] * (1-frame_delta_0)

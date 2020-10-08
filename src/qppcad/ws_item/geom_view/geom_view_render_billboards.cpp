@@ -37,7 +37,7 @@ void geom_view_render_billboards::render(geom_view_t &al) {
 
   for (uint32_t i = 0; i < al.m_geom->nat(); i++) {
 
-    if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, i)) return;
+    if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xg_sv_h, i)) return;
 
     auto ap_idx = ptable::number_by_symbol(al.m_geom->atom(i));
     if (ap_idx) {
@@ -45,8 +45,8 @@ void geom_view_render_billboards::render(geom_view_t &al) {
       color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
     }
 
-    if (al.m_geom->xfield<bool>(xgeom_override, i)) {
-      dr_rad = al.m_geom->xfield<float>(xgeom_atom_r, i);
+    if (al.m_geom->xfield<bool>(xg_override, i)) {
+      dr_rad = al.m_geom->xfield<float>(xg_atom_r, i);
     }
 
     if (!al.m_type_color_override.empty()) {
@@ -56,10 +56,10 @@ void geom_view_render_billboards::render(geom_view_t &al) {
 
     dr_rad = dr_rad * atom_scale_factor;
 
-    if (color_mode == color_from_xgeom || al.m_geom->xfield<bool>(xgeom_override, i)) {
-      color[0] = al.m_geom->xfield<float>(xgeom_ccr, i);
-      color[1] = al.m_geom->xfield<float>(xgeom_ccg, i);
-      color[2] = al.m_geom->xfield<float>(xgeom_ccb, i);
+    if (color_mode == color_from_xgeom || al.m_geom->xfield<bool>(xg_override, i)) {
+      color[0] = al.m_geom->xfield<float>(xg_ccr, i);
+      color[1] = al.m_geom->xfield<float>(xg_ccg, i);
+      color[2] = al.m_geom->xfield<float>(xg_ccb, i);
     }
 
     //          if (al.m_parent_ws->m_edit_type == ws_edit_e::edit_content) {

@@ -342,7 +342,7 @@ void structure_similarity_widget_t::copy_to_cb_btn_clck() {
                              p1[0], p1[1], p1[2],
                              p2[0], p2[1], p2[2],
                              dp.norm(), dp[0], dp[1], dp[2],
-                             g1->m_geom->xfield<std::string>(xgeom_label_text,i)
+                             g1->m_geom->xfield<std::string>(xg_lbl_text,i)
                              );
 
     }

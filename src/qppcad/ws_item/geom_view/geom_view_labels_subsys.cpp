@@ -86,10 +86,10 @@ void geom_view_labels_subsys_t::render_labels(QPainter &painter) {
       if (!is_axis) {
 
           if (p_owner->m_sel_vis.get_value()
-              && p_owner->m_geom->xfield<bool>(xgeom_sel_vis_hide, i))
+              && p_owner->m_geom->xfield<bool>(xg_sv_h, i))
             continue;
 
-          if (!p_owner->m_geom->xfield<bool>(xgeom_label_show, i)
+          if (!p_owner->m_geom->xfield<bool>(xg_lbl, i)
               && m_selective_lbl.get_value())
             continue;
 
@@ -253,9 +253,9 @@ void geom_view_labels_subsys_t::labelize_sel_by_neighbours_count() {
 
   for (auto i = 0; i < p_owner->m_geom->nat(); i++)
     if (p_owner->m_geom->selected(i)) {
-            p_owner->m_geom->xfield<std::string>(xgeom_label_text, i) =
+            p_owner->m_geom->xfield<std::string>(xg_lbl_text, i) =
                 fmt::format("{}_{}", p_owner->m_geom->atom_name(i), p_owner->m_tws_tr->n(i));
-            p_owner->m_geom->xfield<bool>(xgeom_label_show, i) = true;
+            p_owner->m_geom->xfield<bool>(xg_lbl, i) = true;
     }
 
 }
@@ -294,25 +294,25 @@ std::string geom_view_labels_subsys_t::label_gen_fn(geom_view_t *owner,
       }
 
     case geom_labels_style_e::show_charge : {
-        return fmt::format("{:2.2f}", owner->m_geom->xfield<float>(xgeom_charge, atom_id));
+        return fmt::format("{:2.2f}", owner->m_geom->xfield<float>(xg_charge, atom_id));
       }
 
     case geom_labels_style_e::show_charge_type : {
         return fmt::format("{}[{:2.2f}]",
                            owner->m_geom->atom(atom_id),
-                           owner->m_geom->xfield<float>(xgeom_charge, atom_id));
+                           owner->m_geom->xfield<float>(xg_charge, atom_id));
       }
 
     case geom_labels_style_e::show_charge_id_type : {
         return fmt::format("{}{}[{:2.2f}]",
                            owner->m_geom->atom(atom_id),
                            atom_id,
-                           owner->m_geom->xfield<float>(xgeom_charge, atom_id));
+                           owner->m_geom->xfield<float>(xg_charge, atom_id));
       }
 
     case geom_labels_style_e::show_custom : {
-        if (owner->m_geom->xfield<bool>(xgeom_label_show, atom_id)) {
-            return owner->m_geom->xfield<std::string>(xgeom_label_text, atom_id);
+        if (owner->m_geom->xfield<bool>(xg_lbl, atom_id)) {
+            return owner->m_geom->xfield<std::string>(xg_lbl_text, atom_id);
           }
         break;
       }

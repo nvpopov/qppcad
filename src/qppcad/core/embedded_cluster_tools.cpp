@@ -28,7 +28,7 @@ void embedded_cluster_tools::find_high_symmetry_qm_cluster(geom_view_t *uc,
 
       xgeometry<float, periodic_cell<float> > g_all_m(0);
       g_all_m.set_format({"charge"},{basic_types::type_real});
-      g_all_m.additive(xgeom_charge) = true;
+      g_all_m.additive(xg_charge) = true;
       g_all_m.tol_geom = 0.01f;
 
       float cluster_r = qm_r_start_scan + dr * i;
@@ -130,7 +130,7 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
 
   for (int i = 0 ; i < uc->m_geom->nat(); i++) {
       gd_uc.add(uc->m_geom->atom(i), uc->m_geom->pos(i));
-      gd_uc.xfield<float>(xgeom_charge, i) = uc->m_geom->xfield<float>(xgeom_charge, i);
+      gd_uc.xfield<float>(xg_charge, i) = uc->m_geom->xfield<float>(xg_charge, i);
     }
 
   //initialize result xgeometries
@@ -140,11 +140,11 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   xgeometry<float, periodic_cell<float> > g_all_m(0);
 
   g_all_m.set_format({"charge"},{basic_types::type_real});
-  g_all_m.additive(xgeom_charge) = true;
+  g_all_m.additive(xg_charge) = true;
   g_all_m.tol_geom = 0.01f;
 
   gd_chg.set_format({"charge"},{basic_types::type_real});
-  gd_chg.additive(xgeom_charge) = true;
+  gd_chg.additive(xg_charge) = true;
   gd_chg.tol_geom = 0.01f;
 
   int mode_m = crowd_ignore | fill_cells;
@@ -173,13 +173,13 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
       std::set<int> num_occur;
 
       for (auto &elem : res) {
-          accum_chg += g_all_m.xfield<float>(xgeom_charge, elem.m_atm);
+          accum_chg += g_all_m.xfield<float>(xg_charge, elem.m_atm);
           num_occur.insert(elem.m_atm);
         }
 
       if (!num_occur.empty() && i == *num_occur.begin()) {
           gd_chg.add(g_all_m.atom(i), g_all_m.pos(i));
-          gd_chg.xfield<float>(xgeom_charge, gd_chg.nat()-1) = accum_chg;
+          gd_chg.xfield<float>(xg_charge, gd_chg.nat()-1) = accum_chg;
         }
 
     }
@@ -188,7 +188,7 @@ void embedded_cluster_tools::gen_spherical_cluster(geom_view_t *uc,
   auto add_atom_to_xgeom = [](xgeometry<float, periodic_cell<float> > &g1,
       xgeometry<float, periodic_cell<float> > &g2, int atom_id ) {
     g2.add(g1.atom(atom_id), g1.pos(atom_id));
-    g2.xfield<float>(xgeom_charge, g2.nat()-1) = g1.xfield<float>(xgeom_charge, atom_id);
+    g2.xfield<float>(xg_charge, g2.nat()-1) = g1.xfield<float>(xg_charge, atom_id);
   };
 
   for (int i = 0; i < gd_chg.nat(); i++) {
@@ -345,8 +345,8 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
   for (int i = 0; i < qm->m_geom->nat(); i++)
     if (redu_qm_inside.find(i) == redu_qm_inside.end()) {
         cls->ins_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
-        cls->m_geom->xfield<float>(xgeom_charge, cls->m_geom->nat()-1) =
-            qm->m_geom->xfield<float>(xgeom_charge, i);
+        cls->m_geom->xfield<float>(xg_charge, cls->m_geom->nat()-1) =
+            qm->m_geom->xfield<float>(xg_charge, i);
         redu_qm_outside.insert(i);
       }
 
@@ -478,7 +478,7 @@ vector3<float> embedded_cluster_tools::calc_dipole_moment() {
           if (cur_it_al) {
               for (int i = 0; i < cur_it_al->m_geom->nat(); i++)
                 accum_dm += cur_it_al->m_geom->pos(i) *
-                            cur_it_al->m_geom->xfield<float>(xgeom_charge, i);
+                            cur_it_al->m_geom->xfield<float>(xg_charge, i);
             }
         }
     }
@@ -569,7 +569,7 @@ void embedded_cluster_tools::generate_molcas_embc_sp_input(std::string outdir) {
           chg->m_geom->pos(i)[0],
           chg->m_geom->pos(i)[1],
           chg->m_geom->pos(i)[2],
-          chg->m_geom->xfield<float>(xgeom_charge, i)
+          chg->m_geom->xfield<float>(xg_charge, i)
         );
 
   fmt::print(embc_inp, "XField\n");
@@ -633,7 +633,7 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
                 add_ecp ? "{0}> {1} {2} {3} {4} NewECP \"{0}_emb\" end\n" :
                           "{0}> {1} {2} {3} {4} \n",
                 cls->m_geom->atom_name(i),
-                cls->m_geom->xfield<float>(xgeom_charge, i),
+                cls->m_geom->xfield<float>(xg_charge, i),
                 cls->m_geom->pos(i)[0],
                 cls->m_geom->pos(i)[1],
                 cls->m_geom->pos(i)[2]
@@ -647,7 +647,7 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
       for (int i = 0; i < chg->m_geom->nat(); i++)
         fmt::print(
               embc_pc, "{} {} {} {}\n",
-              chg->m_geom->xfield<float>(xgeom_charge, i),
+              chg->m_geom->xfield<float>(xg_charge, i),
               chg->m_geom->pos(i)[0],
               chg->m_geom->pos(i)[1],
               chg->m_geom->pos(i)[2]
@@ -661,7 +661,7 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
       for (int i = 0; i < cls->m_geom->nat(); i++)
         fmt::print(
               embc_pc, "{} {} {} {}\n",
-              cls->m_geom->xfield<float>(xgeom_charge, i),
+              cls->m_geom->xfield<float>(xg_charge, i),
               cls->m_geom->pos(i)[0],
               cls->m_geom->pos(i)[1],
               cls->m_geom->pos(i)[2]
@@ -670,7 +670,7 @@ void embedded_cluster_tools::generate_orca_embc_sp_input(std::string outdir,
       for (int i = 0; i < chg->m_geom->nat(); i++)
         fmt::print(
               embc_pc, "{} {} {} {}\n",
-              chg->m_geom->xfield<float>(xgeom_charge, i),
+              chg->m_geom->xfield<float>(xg_charge, i),
               chg->m_geom->pos(i)[0],
               chg->m_geom->pos(i)[1],
               chg->m_geom->pos(i)[2]

@@ -595,20 +595,20 @@ void simple_query::embed_arrow() {
   if (!al || cur_ws->get_edit_type() != ws_edit_type_e::edit_content)
     return;
 
-  if (al->m_atom_ord_sel.size() != 2)
+  if (al->m_geom->num_aselected() != 2)
     return;
 
   auto new_arr = std::make_shared<arrow_primitive_t>();
   new_arr->m_name.set_value(fmt::format("arrow_{}", cur_ws->num_items()));
-  auto sel_first = al->m_atom_ord_sel.begin();
-  auto sel_second = ++(al->m_atom_ord_sel.begin());
+  auto sel_first  = al->m_geom->nth_aselected(0);
+  auto sel_second = al->m_geom->nth_aselected(1);
 
-  auto pos_first = al->m_geom->pos(sel_first->m_atm, sel_first->m_idx);
-  auto pos_second = al->m_geom->pos(sel_second->m_atm, sel_second->m_idx);
+  auto pos_first = al->m_geom->pos((*sel_first).m_atm, (*sel_first).m_idx);
+  auto pos_second = al->m_geom->pos((*sel_second).m_atm, (*sel_second).m_idx);
 
   auto dir = (pos_second - pos_first).normalized();
 
-  auto ap_idx = ptable::number_by_symbol(al->m_geom->atom(sel_second->m_atm));
+  auto ap_idx = ptable::number_by_symbol(al->m_geom->atom((*sel_second).m_atm));
   float dr_rad = 0.4f;
   float pre_rad = 0.4f;
 
@@ -794,7 +794,7 @@ void simple_query::set_charge(float charge) {
       if (!rec)
         continue;
       if ((*rec).m_idx.is_zero())
-        al->m_geom->xfield<float>(xgeom_charge, (*rec).m_atm) = charge;
+        al->m_geom->xfield<float>(xg_charge, (*rec).m_atm) = charge;
     }
   }
 
@@ -901,9 +901,9 @@ void simple_query::set_sel_color(float r, float g, float b) {
     if (!rec)
       continue;
     auto val = *rec;
-    al->m_geom->xfield<float>(xgeom_ccr, val.m_atm) = r;
-    al->m_geom->xfield<float>(xgeom_ccg, val.m_atm) = g;
-    al->m_geom->xfield<float>(xgeom_ccb, val.m_atm) = b;
+    al->m_geom->xfield<float>(xg_ccr, val.m_atm) = r;
+    al->m_geom->xfield<float>(xg_ccg, val.m_atm) = g;
+    al->m_geom->xfield<float>(xg_ccb, val.m_atm) = b;
 
     if (al->m_anim->get_total_anims() > 0
         && !al->m_anim->m_anim_data[0].frames.empty()

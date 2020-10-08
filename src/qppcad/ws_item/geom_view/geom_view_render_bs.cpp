@@ -167,7 +167,7 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
                                        const uint32_t at_num,
                                        const index &at_index) {
 
-  if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
+  if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xg_sv_h, at_num)) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -181,8 +181,8 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
       color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
     }
 
-  if (al.m_geom->xfield<bool>(xgeom_override, at_num)) {
-      pre_rad = al.m_geom->xfield<float>(xgeom_atom_r, at_num);
+  if (al.m_geom->xfield<bool>(xg_override, at_num)) {
+      pre_rad = al.m_geom->xfield<float>(xg_atom_r, at_num);
     }
 
   if (!al.m_type_color_override.empty()) {
@@ -193,10 +193,10 @@ void geom_view_render_bs::render_atom (geom_view_t &al,
   dr_rad = pre_rad * al.m_atom_scale_factor.get_value();
 
   if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom ||
-      al.m_geom->xfield<bool>(xgeom_override, at_num)) {
-      color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
-      color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
-      color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
+      al.m_geom->xfield<bool>(xg_override, at_num)) {
+      color[0] = al.m_geom->xfield<float>(xg_ccr, at_num);
+      color[1] = al.m_geom->xfield<float>(xg_ccg, at_num);
+      color[2] = al.m_geom->xfield<float>(xg_ccb, at_num);
     }
 
   if (al.m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content) {
@@ -213,7 +213,7 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
                                                  const index &at_index,
                                                  bool backpass) {
 
-  if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num)) return;
+  if (al.m_sel_vis.get_value() && al.m_geom->xfield<bool>(xg_sv_h, at_num)) return;
 
   app_state_t* astate = app_state_t::get_inst();
 
@@ -227,8 +227,8 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
       color = ptable::get_inst()->arecs[*ap_idx - 1].m_color_jmol;
     }
 
-  if (al.m_geom->xfield<bool>(xgeom_override, at_num)) {
-      pre_rad = al.m_geom->xfield<float>(xgeom_atom_r, at_num);
+  if (al.m_geom->xfield<bool>(xg_override, at_num)) {
+      pre_rad = al.m_geom->xfield<float>(xg_atom_r, at_num);
     }
 
   if (!al.m_type_color_override.empty()) {
@@ -240,10 +240,10 @@ void geom_view_render_bs::render_atom_suprematic(geom_view_t &al,
   dr_rad = pre_rad * al.m_atom_scale_factor.get_value();
 
   if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom
-      || al.m_geom->xfield<bool>(xgeom_override, at_num)) {
-      color[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num);
-      color[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num);
-      color[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num);
+      || al.m_geom->xfield<bool>(xg_override, at_num)) {
+      color[0] = al.m_geom->xfield<float>(xg_ccr, at_num);
+      color[1] = al.m_geom->xfield<float>(xg_ccg, at_num);
+      color[2] = al.m_geom->xfield<float>(xg_ccb, at_num);
     }
 
   if (al.m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content) {
@@ -266,8 +266,8 @@ void geom_view_render_bs::render_bond (geom_view_t &al,
   app_state_t* astate = app_state_t::get_inst();
 
   if (al.m_sel_vis.get_value() && al.m_sel_vis_affect_bonds.get_value() &&
-      (al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num1) ||
-       al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num2) )) return;
+      (al.m_geom->xfield<bool>(xg_sv_h, at_num1) ||
+       al.m_geom->xfield<bool>(xg_sv_h, at_num2) )) return;
 
   if (al.m_atom_type_to_hide_bond.find(al.m_geom->type_table(at_num1)) !=
       al.m_atom_type_to_hide_bond.end() ||
@@ -296,25 +296,25 @@ void geom_view_render_bs::render_bond (geom_view_t &al,
     }
 
   if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom) {
-      bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
-      bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
-      bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
+      bcolor1[0] = al.m_geom->xfield<float>(xg_ccr, at_num1);
+      bcolor1[1] = al.m_geom->xfield<float>(xg_ccg, at_num1);
+      bcolor1[2] = al.m_geom->xfield<float>(xg_ccb, at_num1);
 
-      bcolor2[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num2);
-      bcolor2[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num2);
-      bcolor2[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num2);
+      bcolor2[0] = al.m_geom->xfield<float>(xg_ccr, at_num2);
+      bcolor2[1] = al.m_geom->xfield<float>(xg_ccg, at_num2);
+      bcolor2[2] = al.m_geom->xfield<float>(xg_ccb, at_num2);
     }
 
-  if (al.m_geom->xfield<bool>(xgeom_override, at_num1)) {
-      bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
-      bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
-      bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
+  if (al.m_geom->xfield<bool>(xg_override, at_num1)) {
+      bcolor1[0] = al.m_geom->xfield<float>(xg_ccr, at_num1);
+      bcolor1[1] = al.m_geom->xfield<float>(xg_ccg, at_num1);
+      bcolor1[2] = al.m_geom->xfield<float>(xg_ccb, at_num1);
     }
 
-  if (al.m_geom->xfield<bool>(xgeom_override, at_num2)) {
-      bcolor2[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num2);
-      bcolor2[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num2);
-      bcolor2[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num2);
+  if (al.m_geom->xfield<bool>(xg_override, at_num2)) {
+      bcolor2[0] = al.m_geom->xfield<float>(xg_ccr, at_num2);
+      bcolor2[1] = al.m_geom->xfield<float>(xg_ccg, at_num2);
+      bcolor2[2] = al.m_geom->xfield<float>(xg_ccb, at_num2);
     }
 
   astate->dp->render_2c_bond(bcolor1, bcolor2,
@@ -333,8 +333,8 @@ void geom_view_render_bs::render_bond_suprematic(geom_view_t &al,
   app_state_t* astate = app_state_t::get_inst();
 
   if (al.m_sel_vis.get_value() && al.m_sel_vis_affect_bonds.get_value() &&
-      (al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num1) ||
-       al.m_geom->xfield<bool>(xgeom_sel_vis_hide, at_num2) )) return;
+      (al.m_geom->xfield<bool>(xg_sv_h, at_num1) ||
+       al.m_geom->xfield<bool>(xg_sv_h, at_num2) )) return;
 
   if (al.m_atom_type_to_hide_bond.find(al.m_geom->type_table(at_num1)) !=
       al.m_atom_type_to_hide_bond.end() ||
@@ -364,25 +364,25 @@ void geom_view_render_bs::render_bond_suprematic(geom_view_t &al,
     }
 
   if (al.m_color_mode.get_value() == geom_view_color_e::color_from_xgeom) {
-      bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
-      bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
-      bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
+      bcolor1[0] = al.m_geom->xfield<float>(xg_ccr, at_num1);
+      bcolor1[1] = al.m_geom->xfield<float>(xg_ccg, at_num1);
+      bcolor1[2] = al.m_geom->xfield<float>(xg_ccb, at_num1);
 
-      bcolor2[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num2);
-      bcolor2[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num2);
-      bcolor2[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num2);
+      bcolor2[0] = al.m_geom->xfield<float>(xg_ccr, at_num2);
+      bcolor2[1] = al.m_geom->xfield<float>(xg_ccg, at_num2);
+      bcolor2[2] = al.m_geom->xfield<float>(xg_ccb, at_num2);
     }
 
-  if (al.m_geom->xfield<bool>(xgeom_override, at_num1)) {
-      bcolor1[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num1);
-      bcolor1[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num1);
-      bcolor1[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num1);
+  if (al.m_geom->xfield<bool>(xg_override, at_num1)) {
+      bcolor1[0] = al.m_geom->xfield<float>(xg_ccr, at_num1);
+      bcolor1[1] = al.m_geom->xfield<float>(xg_ccg, at_num1);
+      bcolor1[2] = al.m_geom->xfield<float>(xg_ccb, at_num1);
     }
 
-  if (al.m_geom->xfield<bool>(xgeom_override, at_num2)) {
-      bcolor2[0] = al.m_geom->xfield<float>(xgeom_ccr, at_num2);
-      bcolor2[1] = al.m_geom->xfield<float>(xgeom_ccg, at_num2);
-      bcolor2[2] = al.m_geom->xfield<float>(xgeom_ccb, at_num2);
+  if (al.m_geom->xfield<bool>(xg_override, at_num2)) {
+      bcolor2[0] = al.m_geom->xfield<float>(xg_ccr, at_num2);
+      bcolor2[1] = al.m_geom->xfield<float>(xg_ccg, at_num2);
+      bcolor2[2] = al.m_geom->xfield<float>(xg_ccb, at_num2);
     }
 
   astate->dp->render_2c_bond_suprematic(
