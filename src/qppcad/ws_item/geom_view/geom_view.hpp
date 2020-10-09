@@ -122,15 +122,15 @@ private:
 
 public:
 
-  std::shared_ptr<xgeometry<float, periodic_cell<float> > > m_geom{};
+  std::shared_ptr<xgeometry<float, periodic_cell<float>>> m_geom{};
   std::shared_ptr<geom_view_anim_subsys_t> m_anim{};
   std::shared_ptr<geom_view_msr_subsys_t> m_measure{};
   std::shared_ptr<geom_view_labels_subsys_t> m_labels{};
   std::shared_ptr<geom_view_lat_planes_subsys_t> m_lat_planes{};
   std::shared_ptr<geom_view_sel_groups_subsys_t> m_selg{};
-  std::unique_ptr<bonding_table<float> > m_bt{};
-  std::unique_ptr<tws_tree_t<float, periodic_cell<float> > > m_tws_tr{};
-  std::unique_ptr<extents_observer_t<float, periodic_cell<float> > > m_ext_obs{};
+  std::unique_ptr<bonding_table<float>> m_bt{};
+  std::unique_ptr<tws_tree_t<float, periodic_cell<float>>> m_tws_tr{};
+  std::unique_ptr<extents_observer_t<float, periodic_cell<float>>> m_ext_obs{};
   std::unique_ptr<geom_view_render_buffered_billboards_t> m_bs{};
   std::unordered_set<size_t> m_atom_type_to_hide;
   std::unordered_set<size_t> m_atom_type_to_hide_bond;
@@ -210,24 +210,20 @@ public:
    * @brief sel_atom
    * @param atom_id
    */
-  void sel_atom(int atom_id);
+  void sel_atom(int atom_id, bool hs_rec = false);
 
   /**
    * @brief sel_atom
    * @param atom_id
    * @param atom_idx
    */
-  void sel_atom(int atom_id, index atom_idx);
-  void sel_visible();
-
+  void sel_atom(int atom_id, index atom_idx, bool hs_rec = false);
   void unsel_atom(int atom_id);
   void unsel_atom(int atom_id, index atom_idx);
 
   void sel_by_type(const int item_type_to_select);
   void unsel_by_type(const int item_type_to_unselect);
   void inv_sel_atoms();
-  void sel_by_box(vector3<float> start_pos, vector3<float> end_pos);
-  void sq_sel_by_box(const float box_scale);
 
   void ins_atom(const int atom_type, const vector3<float> &pos);
   void ins_atom(const std::string &atom_name, const vector3<float> &pos);

@@ -250,8 +250,6 @@ void py_geom_view_reg_helper_t::reg(
          .def("cp_msr", &geom_view_t::copy_measurements)
          .def("get_sel_atoms", &geom_view_t::get_sel_atoms, py::arg("index_offset") = 0)
          .def("get_unsel_atoms", &geom_view_t::get_unsel_atoms, py::arg("index_offset") = 0)
-         .def("sel_by_box", &geom_view_t::sel_by_box)
-         .def("sel_by_box", &geom_view_t::sq_sel_by_box, py::arg("box_scale") = 1.1)
          .def("clone_on_the_spot", &geom_view_t::clone_on_the_spot)
          .def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord)
          .def("rebond", &geom_view_t::rebond)

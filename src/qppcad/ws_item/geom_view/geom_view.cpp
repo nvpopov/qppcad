@@ -514,19 +514,21 @@ void geom_view_t::sel_atoms(bool all) {
   astate->make_viewport_dirty();
 }
 
-void geom_view_t::sel_atom(int atom_id) {
+void geom_view_t::sel_atom(int atom_id, bool hs_rec) {
   if (!m_geom)
     return;
-  sel_atom(atom_id, index::D(m_geom->get_DIM()).all(0));
+  sel_atom(atom_id, index::D(m_geom->get_DIM()).all(0), hs_rec);
 }
 
-void geom_view_t::sel_atom(int atom_id, index atom_idx) {
+void geom_view_t::sel_atom(int atom_id, index atom_idx, bool hs_rec) {
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
   m_need_to_update_overview = true;
   if (!m_geom)
     return;
   if (atom_id >= 0 && atom_id < m_geom->nat()) {
+    if (hs_rec)
+      begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
     m_geom->select(atom_id);
     recalc_gizmo_barycenter();
     m_parent_ws->m_gizmo->update_gizmo(0.01f);
@@ -538,7 +540,9 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
                    m_geom->pos(atom_id)[1],
                    m_geom->pos(atom_id)[2],
                    atom_idx == index::D(m_geom->get_DIM()).all(0) ? "" : "*");
-    }
+    };
+    if (hs_rec)
+      end_recording();
     astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
     return;
   }
@@ -546,14 +550,6 @@ void geom_view_t::sel_atom(int atom_id, index atom_idx) {
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
   return;
-}
-
-void geom_view_t::sel_visible() {
-  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  for (size_t i = 0; i < m_geom->nat(); i++)
-    if (!m_geom->xfield<bool>(xg_sv_h, i))
-      sel_atom(i);
-  end_recording();
 }
 
 void geom_view_t::unsel_atom(int atom_id) {
@@ -641,36 +637,6 @@ void geom_view_t::inv_sel_atoms() {
   m_parent_ws->m_gizmo->update_gizmo(0.01f);
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
-}
-
-void geom_view_t::sel_by_box(vector3<float> start_pos, vector3<float> end_pos) {
-  /**
-   * brute force solution
-  */
-  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  for (size_t i = 0; i < m_geom->nat(); i++) {
-    aabb_3d_t<float> aabb{start_pos, end_pos};
-    auto is_inside_aabb = aabb.test_point(m_geom->pos(i));
-    if (is_inside_aabb)
-      sel_atom(i);
-  }
-  end_recording();
-}
-
-void geom_view_t::sq_sel_by_box(const float box_scale = 1.1) {
-  if (m_geom->num_aselected() != 2)
-    return;
-  auto idx1 = m_geom->nth_aselected(0);
-  auto idx2 = m_geom->nth_aselected(1);
-  auto pos1 = m_geom->pos(idx1->m_atm, idx1->m_idx);
-  auto pos2 = m_geom->pos(idx2->m_atm, idx2->m_idx);
-  vector3<float> center = (pos1 + pos2) * 0.5f;
-  vector3<float> len{0};
-  for (size_t i = 0; i < 3; i++)
-    len[i] = std::max(std::max(pos1[i], pos2[i]) - std::min(pos1[i], pos2[i]), 0.1f);
-  auto pos1_r = center - len * 0.5f * box_scale;
-  auto pos2_r = center + len * 0.5f * box_scale;
-  sel_by_box(pos1_r, pos2_r);
 }
 
 void geom_view_t::ins_atom(const int atom_type, const vector3<float> &pos) {
@@ -982,31 +948,6 @@ std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id)
   }
 
   return {min_v, max_v};
-}
-
-void geom_view_t::sel_atom_ngbs(const int at_id) {
-  if (!m_geom)
-    return;
-  for (int i = 0; i < m_tws_tr->n(at_id); i++)
-    if (m_tws_tr->table_idx(at_id, i) == index::D(m_geom->get_DIM()).all(0))
-      sel_atom(m_tws_tr->table_atm(at_id, i));
-}
-
-void geom_view_t::sel_selected_atoms_ngbs() {
-  if (!m_geom)
-    return;
-  std::set<int> stored_sel;
-  for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_selected(i);
-    if (rec && (*rec).m_idx.is_zero())
-      stored_sel.insert((*rec).m_atm);
-  }
-  if (stored_sel.empty())
-    return;
-  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  for (auto &rec : stored_sel)
-    sel_atom_ngbs(rec);
-  end_recording();
 }
 
 void geom_view_t::update_inter_atomic_dist(float new_dist,

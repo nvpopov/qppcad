@@ -1,6 +1,7 @@
 #include <qppcad/tools/sel_vis/sel_vis.hpp>
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/core/app_state.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -23,7 +24,7 @@ void sel_vis_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   }
 
   al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  al->sel_visible();
+  api_gv_sel_visible_atoms(al);
   al->end_recording();
 
 }

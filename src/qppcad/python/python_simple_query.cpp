@@ -4,6 +4,8 @@
 #include <qppcad/ws_item/geom_view/geom_view.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
+
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
 #include <qppcad/ws_item/traj_hl/traj_hl.hpp>
@@ -264,7 +266,7 @@ void simple_query::sel_vis() {
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   if (!al)
     return;
-  al->sel_visible();
+  api_gv_sel_visible_atoms(al, true);
 }
 
 void simple_query::edit_mode(int mode) {

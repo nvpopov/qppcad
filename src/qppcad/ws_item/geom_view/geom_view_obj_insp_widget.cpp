@@ -5,6 +5,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
 
 #include <qppcad/ws_item/geom_view/qbonding_table_model.hpp>
 #include <qppcad/ws_item/geom_view/qtype_specific_rendering_model.hpp>
@@ -2258,7 +2259,7 @@ void geom_view_obj_insp_widget_t::mod_group_op_sv_hide_invert() {
 void geom_view_obj_insp_widget_t::mod_group_op_sel_ngbs() {
   app_state_t *astate = app_state_t::get_inst();
   if (b_al)
-    b_al->sel_selected_atoms_ngbs();
+    api_gv_sel_selected_atoms_ngbs(b_al, true);
   astate->make_viewport_dirty();
 }
 
