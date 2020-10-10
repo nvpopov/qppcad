@@ -6,6 +6,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_type_summary_popup.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
 #include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_general.hpp>
 
 #include <qppcad/ws_item/geom_view/qbonding_table_model.hpp>
 #include <qppcad/ws_item/geom_view/qtype_specific_rendering_model.hpp>
@@ -2237,21 +2238,21 @@ void geom_view_obj_insp_widget_t::mod_bc_rot_apply() {
 
 void geom_view_obj_insp_widget_t::mod_group_op_sv_show() {
   if (b_al) {
-    b_al->sv_modify_selected(false);
+    api_gv_sv_set_for_selected(b_al, false, true);
     update_from_ws_item();
   }
 }
 
 void geom_view_obj_insp_widget_t::mod_group_op_sv_hide() {
   if (b_al) {
-    b_al->sv_modify_selected(true);
+    api_gv_sv_set_for_selected(b_al, true, true);
     update_from_ws_item();
   }
 }
 
 void geom_view_obj_insp_widget_t::mod_group_op_sv_hide_invert() {
   if (b_al) {
-    b_al->sv_hide_invert_selected();
+    api_gv_sv_set_hide_for_invselected(b_al, true);
     update_from_ws_item();
   }
 }

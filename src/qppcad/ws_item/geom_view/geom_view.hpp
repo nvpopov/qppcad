@@ -221,10 +221,6 @@ public:
   void unsel_atom(int atom_id);
   void unsel_atom(int atom_id, index atom_idx);
 
-  void sel_by_type(const int item_type_to_select);
-  void unsel_by_type(const int item_type_to_unselect);
-  void inv_sel_atoms();
-
   void ins_atom(const int atom_type, const vector3<float> &pos);
   void ins_atom(const std::string &atom_name, const vector3<float> &pos);
 
@@ -237,9 +233,6 @@ public:
   void transform_atom(const int at_id, const matrix4<float> &tm);
 
   void swap_atoms(const size_t at1, const size_t at2, bool swap_names = true);
-
-  void sv_modify_selected(bool state);
-  void sv_hide_invert_selected();
 
   template <typename TRANSFORM_CLASS>
   void transform_sel(const TRANSFORM_CLASS &tm, bool emit_hs_event = true) {
@@ -291,9 +284,6 @@ public:
   void set_xcolorf(const size_t atm, const float _r, const float _g, const float _b);
 
   std::tuple<float, float> get_min_max_xfield(const size_t xfield_id);
-
-  void sel_atom_ngbs(const int at_id);
-  void sel_selected_atoms_ngbs();
 
   void update_inter_atomic_dist(float new_dist,
                                 const int at1, const int at2,

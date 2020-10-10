@@ -192,7 +192,7 @@ void simple_query::sel_cnt_parity() {
 void simple_query::sel_invert() {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-  al->inv_sel_atoms();
+  api_gv_inv_selected_atoms(al, true);
   astate->make_viewport_dirty();
 }
 
@@ -221,7 +221,7 @@ void simple_query::sel_cnt_type(pybind11::str sel_type) {
   std::string type_name = py::cast<std::string>(sel_type);
   int type_id = al->m_geom->type_of_atom(type_name);
   if (type_id != -1)
-    al->sel_by_type(type_id);
+    api_gv_sel_atoms_by_type(al, type_id, true);
   astate->make_viewport_dirty();
 }
 
@@ -286,7 +286,7 @@ void simple_query::edit_mode(int mode) {
 void simple_query::unsel_cnt_all() {
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-  al->inv_sel_atoms();
+  api_gv_inv_selected_atoms(al, true);
   astate->make_viewport_dirty();
 }
 
@@ -323,7 +323,7 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
   std::string type_name = py::cast<std::string>(sel_type);
   int type_id = al->m_geom->type_of_atom(type_name);
   if (type_id != -1)
-    al->unsel_by_type(type_id);
+    api_gv_unsel_atoms_by_type(al, type_id, true);
 
   al->end_recording();
 
@@ -342,15 +342,11 @@ pybind11::list simple_query::get_sel() {
     return py::none();
 
   for (auto i = 0; i < al->m_geom->num_selected(); i++) {
-
     auto rec = al->m_geom->nth_aselected(i);
-
     if (!rec)
       continue;
-
     if ((*rec).m_idx.is_zero())
       res.append((*rec).m_atm);
-
   }
 
   return res;

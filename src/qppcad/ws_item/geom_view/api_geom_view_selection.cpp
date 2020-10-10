@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
+#include <qppcad/core/app_state.hpp>
 
 namespace qpp {
 
@@ -74,6 +75,60 @@ void api_gv_sel_by_box_sq(geom_view_t *gv, const float box_scale, bool hs_rec) {
   auto pos1_r = center - len * 0.5f * box_scale;
   auto pos2_r = center + len * 0.5f * box_scale;
   api_gv_sel_atoms_by_box(gv, pos1_r, pos2_r, hs_rec);
+}
+
+void api_gv_sel_atoms_by_type(geom_view_t *gv, const int atom_type, bool hs_rec) {
+  app_state_t* astate = app_state_t::get_inst();
+  if (!gv)
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  for (auto i = 0; i < gv->m_geom->nat(); i++)
+    if (gv->m_geom->type_table(i) == atom_type)
+      gv->sel_atom(i);
+  if (hs_rec)
+    gv->end_recording();
+  if (gv->m_parent_ws)
+    gv->m_parent_ws->m_gizmo->update_gizmo(0.01f);
+  astate->make_viewport_dirty();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+}
+
+void api_gv_unsel_atoms_by_type(geom_view_t *gv, const int atom_type, bool hs_rec) {
+  app_state_t* astate = app_state_t::get_inst();
+  if (!gv)
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  for (auto i = 0; i < gv->m_geom->nat(); i++)
+    if (gv->m_geom->type_table(i) == atom_type)
+      gv->unsel_atom(i);
+  if (hs_rec)
+    gv->end_recording();
+  gv->recalc_gizmo_barycenter();
+  if (gv->m_parent_ws)
+    gv->m_parent_ws->m_gizmo->update_gizmo(0.01f);
+  astate->make_viewport_dirty();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
+}
+
+void api_gv_inv_selected_atoms(geom_view_t *gv, bool hs_rec) {
+  app_state_t* astate = app_state_t::get_inst();
+  if (!gv)
+    return;
+  std::set<int> sel_atm;
+  index zero = index::D(gv->m_geom->get_DIM()).all(0);
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  for (int i = 0; i < gv->m_geom->nat(); i++)
+    gv->m_geom->toggle_selected(i);
+  if (hs_rec)
+    gv->end_recording();
+  gv->recalc_gizmo_barycenter();
+  if (gv->m_parent_ws)
+    gv->m_parent_ws->m_gizmo->update_gizmo(0.01f);
+  astate->make_viewport_dirty();
+  astate->astate_evd->cur_ws_selected_atoms_list_selection_changed();
 }
 
 }

@@ -12,6 +12,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/python/python_simple_query.hpp>
 
@@ -1536,7 +1537,7 @@ void main_window_t::act_invert_sel_cnt() {
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
   if (al)
-    al->inv_sel_atoms();
+    api_gv_inv_selected_atoms(al, true);
 }
 
 void main_window_t::act_toggle_console() {
