@@ -13,6 +13,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_measurement_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_general.hpp>
 #include <qppcad/ws_item/arrow_primitive/arrow_primitive.hpp>
 #include <qppcad/python/python_simple_query.hpp>
 
@@ -1208,9 +1209,8 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
     if (!need_to_hide_force_sel_lbl_vis) {
       m_tp_force_sel_lbl_vis->show();
       m_tp_force_sel_lbl_vis->blockSignals(true);
-      m_tp_force_sel_lbl_vis->setChecked(
-          !as_al->any_of_sel_xfield_equal<bool>(xg_lbl, false)
-          );
+      //!as_al->any_of_sel_xfield_equal<bool>(xg_lbl, false)
+      m_tp_force_sel_lbl_vis->setChecked(!api_gv_any_of_sel_xfield_equal(as_al, xg_lbl, false));
       m_tp_force_sel_lbl_vis->blockSignals(false);
       /* end of detect selective labels */
     }
@@ -1223,9 +1223,9 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
       need_to_hide_atom_override = false;
       m_tp_toggle_atom_override->show();
       m_tp_toggle_atom_override->blockSignals(true);
-      m_tp_toggle_atom_override->setChecked(
-          !as_al->any_of_sel_xfield_equal<bool>(xg_override, false)
-          );
+      //!as_al->any_of_sel_xfield_equal<bool>(xg_override, false)
+      m_tp_toggle_atom_override->setChecked(!api_gv_any_of_sel_xfield_equal(as_al,
+                                                                            xg_override, false));
       m_tp_toggle_atom_override->blockSignals(false);
     }
     /* end of detect atom override */

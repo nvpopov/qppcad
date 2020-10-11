@@ -49,6 +49,34 @@ void api_gv_sv_set_hide_for_invselected(geom_view_t *gv, bool hs_rec) {
   astate->make_viewport_dirty();
 }
 
+void api_gv_xbool_invert(geom_view_t *gv, size_t field_id, bool hs_rec) {
+  if (!gv)
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  for (auto i = 0; i < gv->m_geom->nat(); i++) {
+    gv->m_geom->set_xfield<bool>(field_id, i, !gv->m_geom->xfield<bool>(field_id, i));
+  }
+  if (hs_rec)
+    gv->end_recording();
+}
+
+void api_gv_xbool_invert_selected(geom_view_t *gv, size_t field_id, bool hs_rec) {
+  if (!gv)
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++) {
+    auto rec = gv->m_geom->nth_selected(i);
+    if (rec && (*rec).m_idx.is_zero())
+      gv->m_geom->set_xfield<bool>(field_id,
+                                   (*rec).m_atm,
+                                   !gv->m_geom->xfield<bool>(field_id, (*rec).m_atm));
+  }
+  if (hs_rec)
+    gv->end_recording();
+}
+
 }
 
 }

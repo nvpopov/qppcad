@@ -1572,7 +1572,8 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
           //tm_translate_coord_type_label->hide();
         }
         /* begin atom override */
-        if (!b_al->any_of_sel_xfield_equal<bool>(xg_override, false)) {
+        //!b_al->any_of_sel_xfield_equal<bool>(xg_override, false)
+        if (!api_gv_any_of_sel_xfield_equal(b_al, xg_override, false)) {
           std::set<size_t> atoms_id_to_bind;
           std::transform(
               b_al->m_geom->cbegin_selected(),
@@ -2230,7 +2231,7 @@ void geom_view_obj_insp_widget_t::mod_bc_rot_apply() {
     Eigen::Translation<float,3> ta(rot_center);
     t = ta * rot * tb;
     matrix4<float> tm = t.matrix();
-    b_al->transform_sel(tm);
+    api_gv_transform_sel(b_al, tm, true);
     app_state_t *astate = app_state_t::get_inst();
     astate->make_viewport_dirty();
   }

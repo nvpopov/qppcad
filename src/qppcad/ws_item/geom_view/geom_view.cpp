@@ -680,14 +680,6 @@ void geom_view_t::swap_atoms(const size_t at1, const size_t at2, bool swap_names
   astate->make_viewport_dirty();
 }
 
-void geom_view_t::xbool_invert_selected(size_t field_id) {
-  for (auto i = 0; i < m_geom->num_selected(); i++) {
-    auto rec = m_geom->nth_aselected(i);
-    if (rec && (*rec).m_idx.is_zero())
-      m_geom->xfield<bool>(field_id, (*rec).m_atm) = !m_geom->xfield<bool>(field_id, (*rec).m_atm);
-  }
-}
-
 void geom_view_t::copy_from_xgeom(xgeometry<float, periodic_cell<float>> &xgeom_inst) {
   if (!m_geom)
     return;

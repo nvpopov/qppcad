@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/geom_view/geom_view_extended_editor.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_general.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <QResizeEvent>
 #include <QInputDialog>
@@ -128,7 +129,7 @@ void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
 
   switch (field_type) {
     case basic_types::type_bool : {
-        m_binded_gv->xbool_invert_selected(logical_index);
+        api_gv_xbool_invert_selected(m_binded_gv, logical_index, true);
         m_xgeom_tv->update();
       }
     case basic_types::type_double : {
@@ -144,7 +145,8 @@ void geom_view_extended_editor_t::header_horizontal_clicked(int logical_index) {
                                       ),
                                     0, -10000, 10000, 4, &ok
                                     );
-        if (ok) m_binded_gv->xfill_selected<float>(logical_index, float(new_val));
+        if (ok)
+          api_gv_xfill_selected<float>(m_binded_gv, logical_index, float(new_val), true);
         break;
       }
     case basic_types::type_int : {
