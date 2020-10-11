@@ -1205,7 +1205,7 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
   if (ok) {
     /* detect selective labels */
     need_to_hide_force_sel_lbl_vis =
-        cur_ws->get_edit_type() == ws_edit_type_e::edit_item || as_al->m_geom->no_aselected();
+        cur_ws->get_edit_type() == ws_edit_type_e::edit_item || as_al->m_geom->num_selected() == 0;
     if (!need_to_hide_force_sel_lbl_vis) {
       m_tp_force_sel_lbl_vis->show();
       m_tp_force_sel_lbl_vis->blockSignals(true);
@@ -1219,19 +1219,20 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
     m_tp_add_point_sym_group->show();
 
     /* detect atom override */
-    if (!(as_al->m_geom->no_aselected() || cur_ws->get_edit_type() == ws_edit_type_e::edit_item)) {
+    if (!(as_al->m_geom->num_selected() == 0
+          || cur_ws->get_edit_type() == ws_edit_type_e::edit_item)) {
       need_to_hide_atom_override = false;
       m_tp_toggle_atom_override->show();
       m_tp_toggle_atom_override->blockSignals(true);
       //!as_al->any_of_sel_xfield_equal<bool>(xg_override, false)
-      m_tp_toggle_atom_override->setChecked(!api_gv_any_of_sel_xfield_equal(as_al,
-                                                                            xg_override, false));
+      m_tp_toggle_atom_override->setChecked(
+            !api_gv_any_of_sel_xfield_equal(as_al, xg_override, false));
       m_tp_toggle_atom_override->blockSignals(false);
     }
     /* end of detect atom override */
 
     /* add cube or arrow between 2 atoms */
-    if (as_al->m_geom->num_aselected() == 2
+    if (as_al->m_geom->num_selected() == 2
         && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
       m_tp_add_arrow->show();
       m_tp_add_cube->show();
@@ -1239,8 +1240,8 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
       m_tp_msr_angle->hide();
       m_tp_msr_dist->show();
       need_to_hide_al_cntls = false;
-      auto it1 = as_al->m_geom->nth_aselected(0);
-      auto it2 = as_al->m_geom->nth_aselected(1);
+      auto it1 = as_al->m_geom->nth_selected(0);
+      auto it2 = as_al->m_geom->nth_selected(1);
       auto cur_sel =
           as_al->m_measure->is_bond_msr_exists((*it1).m_atm, (*it2).m_atm,
                                                (*it1).m_idx, (*it2).m_idx);
@@ -1251,13 +1252,13 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
     /* end of add cube or arrow between 2 atoms */
 
     /* angle between 3 atoms */
-    if (as_al->m_geom->num_aselected() == 3
+    if (as_al->m_geom->num_selected() == 3
         && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
       need_to_hide_al_cntls = false;
       std::array<std::optional<atom_index_set_key>, 3> sel = {
-        as_al->m_geom->nth_aselected(0),
-        as_al->m_geom->nth_aselected(1),
-        as_al->m_geom->nth_aselected(2)
+        as_al->m_geom->nth_selected(0),
+        as_al->m_geom->nth_selected(1),
+        as_al->m_geom->nth_selected(2)
       };
       auto cur_sel =
           as_al->m_measure->is_angle_msr_exists((*sel[0]).m_atm, (*sel[1]).m_atm, (*sel[2]).m_atm,
@@ -1305,11 +1306,11 @@ void main_window_t::tp_dist_button_clicked(bool checked) {
   if (!ok)
       return;
 
-  if (as_al->m_geom->num_aselected() == 2
+  if (as_al->m_geom->num_selected() == 2
       && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
     m_tp_msr_dist->show();
-    auto it1 = as_al->m_geom->nth_aselected(0);
-    auto it2 = as_al->m_geom->nth_aselected(1);
+    auto it1 = as_al->m_geom->nth_selected(0);
+    auto it2 = as_al->m_geom->nth_selected(1);
     auto cur_sel = as_al->m_measure->is_bond_msr_exists((*it1).m_atm, (*it2).m_atm,
                                                         (*it1).m_idx, (*it2).m_idx);
     if (checked)
@@ -1329,13 +1330,13 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
   if (!ok)
       return;
 
-  if (as_al->m_geom->num_aselected() == 3
+  if (as_al->m_geom->num_selected() == 3
       && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
     m_tp_msr_angle->show();
     std::array<std::optional<atom_index_set_key>, 3> sel = {
-      as_al->m_geom->nth_aselected(0),
-      as_al->m_geom->nth_aselected(1),
-      as_al->m_geom->nth_aselected(2)
+      as_al->m_geom->nth_selected(0),
+      as_al->m_geom->nth_selected(1),
+      as_al->m_geom->nth_selected(2)
     };
     auto cur_sel =
         as_al->m_measure->is_angle_msr_exists((*sel[0]).m_atm, (*sel[1]).m_atm, (*sel[2]).m_atm,
@@ -1373,13 +1374,15 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 
   if (as_al && cur_ws->get_edit_type() == ws_edit_type_e::edit_content)
   for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
-    auto rec = as_al->m_geom->nth_aselected(i);
-    if (!rec) continue;
+    auto rec = as_al->m_geom->nth_selected(i);
+    if (!rec)
+      continue;
     as_al->m_geom->xfield<bool>(xg_lbl, (*rec).m_atm) = checked;
   }
 
   // if selective labels rendering unchecked - force it and select some random style
-  if (!as_al->m_geom->no_aselected() && !as_al->m_labels->m_selective_lbl.get_value()) {
+  if (as_al->m_geom->num_selected() != 0
+      && !as_al->m_labels->m_selective_lbl.get_value()) {
     as_al->m_labels->m_selective_lbl.set_value(true);
     as_al->m_labels->m_style.set_value(geom_labels_style_e::show_id_type);
     astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
@@ -1397,18 +1400,14 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
   if (!ok || cur_ws->get_edit_type() == ws_edit_type_e::edit_item)
     return;
 
+  as_al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
-    auto rec = as_al->m_geom->nth_aselected(i);
+    auto rec = as_al->m_geom->nth_selected(i);
     if (!rec)
       continue;
-    as_al->m_geom->xfield<bool>(xg_override, (*rec).m_atm) = checked;
-    if (as_al->m_geom->xfield<float>(xg_atom_r, (*rec).m_atm) < 0.01f) {
-      auto ap_idx = ptable::number_by_symbol(as_al->m_geom->atom((*rec).m_atm));
-      float _rad = 1.0f;
-      if (ap_idx) _rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
-      as_al->m_geom->xfield<float>(xg_atom_r, (*rec).m_atm) = _rad;
-    }
+    api_gv_set_atom_override(as_al, (*rec).m_atm, checked, false);
   }
+  as_al->end_recording();
 
   astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
   astate->make_viewport_dirty();

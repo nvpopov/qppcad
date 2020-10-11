@@ -229,8 +229,8 @@ public:
   void upd_atom(const int at_id, const std::string &at_name,
                 const vector3<float> &pos, bool emit_hs_rec = true);
 
-  void transform_atom(const int at_id, const matrix3<float> &tm);
-  void transform_atom(const int at_id, const matrix4<float> &tm);
+  void transform_atom(const int at_id, const matrix3<float> &tm, bool hs_rec = false);
+  void transform_atom(const int at_id, const matrix4<float> &tm, bool hs_rec = false);
 
   void swap_atoms(const size_t at1, const size_t at2, bool swap_names = true);
 

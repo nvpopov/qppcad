@@ -141,13 +141,9 @@ protected:
   };
 
   void apply_action(acts_t &act) {
-
     xgeometry<REAL, CELL> *geom_wrp = p_xgeom;
-
     std::visit(overloaded {
-
                    [geom_wrp](auto arg) {},
-
                    [geom_wrp](insert_atom_event_t<REAL> &ev) {
                      if (ev.m_atom_idx) {
                        geom_wrp->insert(*(ev.m_atom_idx), ev.m_atom_name, ev.m_atom_pos);
@@ -155,50 +151,39 @@ protected:
                        geom_wrp->add(ev.m_atom_name, ev.m_atom_pos);
                      }
                    },
-
                    [geom_wrp](change_atom_event_t<REAL> &ev) {
                      geom_wrp->change(ev.m_atom_idx, ev.m_after_aname, ev.m_after_apos);
                    },
-
                    [geom_wrp](change_atom_pos_event_t<REAL> &ev) {
                      geom_wrp->change_pos(ev.m_atom_idx, ev.m_after_apos);
                    },
-
                    [geom_wrp](erase_atom_event_t<REAL> &ev) {
                      geom_wrp->erase(ev.m_atom_idx);
                    },
-
                    [geom_wrp](reorder_atoms_event_t &ev) {
                      geom_wrp->reorder(ev.m_atoms_order);
                    },
-
                    [geom_wrp](change_dim_event_t &ev) {
                      geom_wrp->set_DIM(ev.new_dim);
                    },
-
                    [geom_wrp](change_cell_event_t<REAL> &ev) {
                      for (size_t i = 0; i < 3; i++)
                        if (geom_wrp->get_DIM() > i && ev.new_cell[i])
                          geom_wrp->set_cell_vector(*(ev.new_cell[i]), i, false);
                    },
-
                    [geom_wrp](xfield_changed_event_t &ev) {
-
                      std::vector<STRING_EX> fn;
                      std::vector<basic_types> ft;
-
                      geom_wrp->get_format(fn, ft);
-
                      switch (ft[ev.m_field_id]) {
-
                      case basic_types::type_int: {
                        geom_wrp->template set_xfield<int>(ev.m_field_id, ev.m_atom_id,
                                                           std::get<int>(ev.m_after));
                        break;
                      }
                      case basic_types::type_real: {
-                       geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
-                                                             std::get<double>(ev.m_after));
+                       geom_wrp->template set_xfield<float>(ev.m_field_id, ev.m_atom_id,
+                                                            std::get<float>(ev.m_after));
                        break;
                      }
                      case basic_types::type_double: {
@@ -222,56 +207,42 @@ protected:
                        break;
                      }
                      }
-
                    },
-
                    [geom_wrp](select_atom_event_t &ev) {
                      geom_wrp->iselect(ev.m_atom.m_atm, ev.m_atom.m_idx, ev.m_state,
                                        std::nullopt,
                                        false);
                    }
                    }, act);
-
   }
 
   void unapply_action(acts_t &act) {
-
     xgeometry<REAL, CELL> *geom_wrp = p_xgeom;
-
     std::visit(overloaded {
-
                    [geom_wrp](auto arg) {},
-
                    [geom_wrp](insert_atom_event_t<REAL> &ev) {
                      geom_wrp->erase(ev.m_atom_idx.value_or(geom_wrp->nat()-1));
                    },
-
                    [geom_wrp](change_atom_event_t<REAL> &ev) {
                      geom_wrp->change(ev.m_atom_idx, ev.m_before_aname, ev.m_before_apos);
                    },
-
                    [geom_wrp](change_atom_pos_event_t<REAL> &ev) {
                      geom_wrp->change_pos(ev.m_atom_idx, ev.m_before_apos);
                    },
-
                    [geom_wrp](erase_atom_event_t<REAL> &ev) {
                      geom_wrp->insert(ev.m_atom_idx, ev.m_atom_name, ev.m_atom_pos);
                    },
-
                    [geom_wrp](reorder_atoms_event_t &ev) {
                      geom_wrp->reorder(ev.m_atoms_order);
                    },
-
                    [geom_wrp](change_dim_event_t &ev) {
                      geom_wrp->set_DIM(ev.old_dim);
                    },
-
                    [geom_wrp](change_cell_event_t<REAL> &ev) {
                      for (size_t i = 0; i < 3; i++)
                        if (geom_wrp->get_DIM() > i && ev.old_cell[i])
                          geom_wrp->set_cell_vector(*(ev.old_cell[i]), i, false);
                    },
-
                    [geom_wrp](xfield_changed_event_t &ev) {
                      std::vector<STRING_EX> fn;
                      std::vector<basic_types> ft;
@@ -283,8 +254,8 @@ protected:
                        break;
                      }
                      case basic_types::type_real: {
-                       geom_wrp->template set_xfield<double>(ev.m_field_id, ev.m_atom_id,
-                                                             std::get<double>(ev.m_before));
+                       geom_wrp->template set_xfield<float>(ev.m_field_id, ev.m_atom_id,
+                                                            std::get<float>(ev.m_before));
                        break;
                      }
                      case basic_types::type_double: {
@@ -309,14 +280,12 @@ protected:
                      }
                      }
                    },
-
                    [geom_wrp](select_atom_event_t &ev) {
                      geom_wrp->iselect(ev.m_atom.m_atm, ev.m_atom.m_idx, !ev.m_state,
                                        std::nullopt,
                                        false);
                    },
                    }, act);
-
   }
 
   void process_acts(std::vector<acts_t> &acts, hs_dstate_apply_e ds_dir) {
@@ -584,7 +553,7 @@ public:
          m_xfield_bval = p_xgeom->template get_xfield<int>(xid, at); break;
        }
        case basic_types::type_real: {
-         m_xfield_bval = p_xgeom->template get_xfield<double>(xid, at); break;
+         m_xfield_bval = p_xgeom->template get_xfield<float>(xid, at); break;
        }
        case basic_types::type_double: {
          m_xfield_bval = p_xgeom->template get_xfield<double>(xid, at); break;
@@ -611,7 +580,7 @@ public:
          xch_ev.m_after = p_xgeom->template get_xfield<int>(xid, at);break;
        }
        case basic_types::type_real: {
-         xch_ev.m_after = p_xgeom->template get_xfield<double>(xid, at); break;
+         xch_ev.m_after = p_xgeom->template get_xfield<float>(xid, at); break;
        }
        case basic_types::type_double: {
          xch_ev.m_after = p_xgeom->template get_xfield<double>(xid, at); break;

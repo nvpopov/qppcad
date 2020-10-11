@@ -652,21 +652,29 @@ void geom_view_t::upd_atom(const int at_id, const std::string &at_name,
     end_recording();
 }
 
-void geom_view_t::transform_atom(const int at_id, const matrix3<float> &tm) {
+void geom_view_t::transform_atom(const int at_id, const matrix3<float> &tm, bool hs_rec) {
   if (!m_geom)
     return;
+  if (hs_rec)
+    begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   vector3<float> pos = m_geom->coord(at_id);
   vector3<float> new_pos = tm * pos;
   m_geom->coord(at_id) = new_pos;
+  if (hs_rec)
+    end_recording();
 }
 
-void geom_view_t::transform_atom(const int at_id, const matrix4<float> &tm) {
+void geom_view_t::transform_atom(const int at_id, const matrix4<float> &tm, bool hs_rec) {
   if (!m_geom)
     return;
+  if (hs_rec)
+    begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   vector4<float> p_aff(m_geom->pos(at_id)[0], m_geom->pos(at_id)[1], m_geom->pos(at_id)[2], 1.0f);
   vector4<float> new_p = tm * p_aff;
   vector3<float> new_pos3(new_p[0], new_p[1], new_p[2]);
   m_geom->change_pos(at_id, new_pos3);
+  if (hs_rec)
+    end_recording();
 }
 
 void geom_view_t::swap_atoms(const size_t at1, const size_t at2, bool swap_names) {

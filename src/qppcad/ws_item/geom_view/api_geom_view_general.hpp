@@ -7,6 +7,11 @@ namespace qpp {
 
 namespace cad {
 
+  //ui helpers - atom override
+  void api_gv_set_atom_override(geom_view_t *gv, int atom_id, bool state, bool hs_rec = false);
+  void api_gv_get_atom_override(geom_view_t *gv, int atom_id, bool &state);
+  void api_gv_toggle_atom_override(geom_view_t *gv, int atom_id, bool hs_rec = false);
+
   //selective visibility
   void api_gv_sv_set_for_selected(geom_view_t *gv, bool state, bool hs_rec = false);
   void api_gv_sv_set_hide_for_invselected(geom_view_t *gv, bool hs_rec = false);
@@ -31,13 +36,17 @@ namespace cad {
   bool api_gv_any_of_sel_xfield_equal(geom_view_t *gv,int xfield_id, XFIELD xfield_val) {
     if (!gv)
       return false;
-    for (size_t i = 0; i < gv->m_geom->num_selected(); i++)
-      if (gv->m_geom->xfield<XFIELD>(xfield_id, i) == xfield_val)
+    for (size_t i = 0; i < gv->m_geom->num_selected(); i++) {
+      auto sel_rec = gv->m_geom->nth_selected(i);
+      if (!sel_rec)
+        return false;
+      if (gv->m_geom->xfield<XFIELD>(xfield_id, (*sel_rec).m_atm) == xfield_val)
         return true;
+    }
     return false;
   }
 
-  //general transformationss
+  //general transformations
   template <typename TRANSFORM_CLASS>
   void api_gv_transform_sel(geom_view_t *gv,const TRANSFORM_CLASS &tm, bool hs_rec = false) {
     if (!gv)
