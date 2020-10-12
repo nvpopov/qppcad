@@ -250,16 +250,13 @@ void py_geom_view_reg_helper_t::reg(
          .def("cp_msr", &geom_view_t::copy_measurements)
          .def("get_sel_atoms", &geom_view_t::get_sel_atoms, py::arg("index_offset") = 0)
          .def("get_unsel_atoms", &geom_view_t::get_unsel_atoms, py::arg("index_offset") = 0)
-         .def("clone_on_the_spot", &geom_view_t::clone_on_the_spot)
+         //.def("clone_on_the_spot", &geom_view_t::clone_on_the_spot)
          .def("refine_from_frac_coord", &geom_view_t::refine_from_frac_coord)
          .def("rebond", &geom_view_t::rebond)
          .def_property("cell_within_eps",
                        [](geom_view_t &src){ return src.m_tws_tr->m_cell_within_eps;},
                        &geom_view_t::set_cell_within_eps)
          .def("bb_ext", [](geom_view_t &src){return src.m_ext_obs->aabb;})
-         .def("upd_dist", &geom_view_t::update_inter_atomic_dist_ex,
-              py::arg("new_dist"), py::arg("at1"), py::arg("at2"),
-              py::arg("mode") = pair_dist_mode_e::transform_both)
          .def("begin_structure_change", &geom_view_t::begin_structure_change)
          .def("end_structure_change", &geom_view_t::end_structure_change)
          .def("print_epoch_info", &geom_view_t::print_epoch_info)

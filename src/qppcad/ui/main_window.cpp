@@ -1366,30 +1366,28 @@ void main_window_t::ws_edit_mode_selector_button_clicked(int id) {
 }
 
 void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
   if (!ok)
-      return;
-
-  if (as_al && cur_ws->get_edit_type() == ws_edit_type_e::edit_content)
-  for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
-    auto rec = as_al->m_geom->nth_selected(i);
-    if (!rec)
-      continue;
-    as_al->m_geom->xfield<bool>(xg_lbl, (*rec).m_atm) = checked;
+    return;
+  if (as_al && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
+    as_al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+    for (auto i = 0; i < as_al->m_geom->num_selected(); i++) {
+      auto rec = as_al->m_geom->nth_selected(i);
+      if (!rec)
+        continue;
+      api_gv_xfill(as_al, xg_lbl, (*rec).m_atm, checked, false);
+    }
+    // if selective labels rendering unchecked - force it and select some random style
+    if (as_al->m_geom->num_selected() != 0
+        && !as_al->m_labels->m_selective_lbl.get_value()) {
+      as_al->m_labels->m_selective_lbl.set_value(true);
+      as_al->m_labels->m_style.set_value(geom_labels_style_e::show_id_type);
+      astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+    }
+    as_al->end_recording();
+    astate->make_viewport_dirty();
   }
-
-  // if selective labels rendering unchecked - force it and select some random style
-  if (as_al->m_geom->num_selected() != 0
-      && !as_al->m_labels->m_selective_lbl.get_value()) {
-    as_al->m_labels->m_selective_lbl.set_value(true);
-    as_al->m_labels->m_style.set_value(geom_labels_style_e::show_id_type);
-    astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-  }
-
-  astate->make_viewport_dirty();
-
 }
 
 void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {

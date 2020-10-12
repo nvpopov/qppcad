@@ -242,8 +242,6 @@ public:
                 std::optional<vector3<float>> b = std::nullopt,
                 std::optional<vector3<float>> c = std::nullopt);
 
-  std::shared_ptr<ws_item_t> clone_on_the_spot();
-
   void load_color_from_static_anim();
 
   vector3<float> get_xcolor(const size_t atm);
@@ -251,14 +249,6 @@ public:
   void set_xcolorf(const size_t atm, const float _r, const float _g, const float _b);
 
   std::tuple<float, float> get_min_max_xfield(const size_t xfield_id);
-
-  void update_inter_atomic_dist(float new_dist,
-                                const int at1, const int at2,
-                                const index id1, const index id2,
-                                pair_dist_mode_e mode);
-  void update_inter_atomic_dist_ex(float new_dist,
-                                   const int at1, const int at2,
-                                   pair_dist_mode_e mode);
 
   void translate_selected(const vector3<float> &t_vec);
   void delete_selected_atoms();

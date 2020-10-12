@@ -775,34 +775,6 @@ void geom_view_t::set_cell(std::optional<vector3<float> > a,
 
 }
 
-std::shared_ptr<ws_item_t> geom_view_t::clone_on_the_spot() {
-
-  app_state_t *astate = app_state_t::get_inst();
-
-  auto cloned = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(geom_view_t::get_type_static());
-  if (!cloned)
-    return nullptr;
-  cloned->m_name.set_value(fmt::format("{}_clone", m_name.get_value()));
-
-  auto c_gv = cloned->cast_as<geom_view_t>();
-  if (!c_gv)
-    return nullptr;
-
-  c_gv->m_tws_tr->do_action(act_lock | act_clear_all);
-
-  copy_to_xgeom(*(c_gv->m_geom));
-
-  c_gv->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
-  c_gv->m_tws_tr->do_action(act_rebuild_ntable);
-
-  if (m_parent_ws) {
-    m_parent_ws->add_item_to_ws(cloned);
-  }
-
-  return cloned;
-
-}
-
 void geom_view_t::load_color_from_static_anim() {
   if (!m_geom)
     return;
@@ -867,56 +839,6 @@ std::tuple<float, float> geom_view_t::get_min_max_xfield(const size_t xfield_id)
   }
 
   return {min_v, max_v};
-}
-
-void geom_view_t::update_inter_atomic_dist(float new_dist,
-                                           const int at1,
-                                           const int at2,
-                                           const index id1,
-                                           const index id2,
-                                           pair_dist_mode_e mode) {
-
-  app_state_t* astate = app_state_t::get_inst();
-
-  if (!m_geom)
-    return;
-  if (at1 >= m_geom->nat() || at2 >= m_geom->nat())
-    return;
-
-  vector3<float> r_btw = (m_geom->pos(at1, id1) + m_geom->pos(at2, id2))*0.5f;
-  vector3<float> dir_f = (m_geom->pos(at1, id1) - r_btw).normalized();
-  vector3<float> dir_s = (m_geom->pos(at2, id2) - r_btw).normalized();
-
-  switch (mode) {
-  case pair_dist_mode_e::transform_both : {
-    m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f);
-    m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
-    break;
-  }
-  case pair_dist_mode_e::fix_first : {
-    m_geom->change_pos(at1, r_btw + dir_f * new_dist * 0.5f );
-    break;
-  }
-  case pair_dist_mode_e::fix_second : {
-    m_geom->change_pos(at2, r_btw + dir_s * new_dist * 0.5f);
-    break;
-  }
-  }
-
-  astate->make_viewport_dirty();
-
-}
-
-void geom_view_t::update_inter_atomic_dist_ex(float new_dist,
-                                              const int at1, const int at2,
-                                              pair_dist_mode_e mode) {
-  if (!m_geom)
-    return;
-  begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  update_inter_atomic_dist(new_dist, at1, at2,
-                           index::D(m_geom->get_DIM()).all(0),
-                           index::D(m_geom->get_DIM()).all(0), mode);
-  end_recording();
 }
 
 void geom_view_t::translate_selected(const vector3<float> &t_vec) {

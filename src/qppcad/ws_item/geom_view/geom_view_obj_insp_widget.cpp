@@ -2100,7 +2100,7 @@ void geom_view_obj_insp_widget_t::mod_pair_dist_spinbox_value_changed(double new
     if (at1 && at2) {
       pair_dist_mode_e mode;
       mode = static_cast<pair_dist_mode_e>(m_tm_pair_dist_t_mode->currentIndex());
-      b_al->update_inter_atomic_dist_ex(float(newval), (*at1).m_atm, (*at2).m_atm, mode);
+      api_gv_update_interatomic_dist(b_al, float(newval), (*at1).m_atm, (*at2).m_atm, mode, true);
       astate->make_viewport_dirty();
     }
   }

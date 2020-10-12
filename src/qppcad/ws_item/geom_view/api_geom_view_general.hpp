@@ -7,10 +7,15 @@ namespace qpp {
 
 namespace cad {
 
+  //cloning stuff
+  void api_gv_clone(geom_view_t *src, std::shared_ptr<ws_item_t> &dst);
+
   //ui helpers - atom override
   void api_gv_set_atom_override(geom_view_t *gv, int atom_id, bool state, bool hs_rec = false);
   void api_gv_get_atom_override(geom_view_t *gv, int atom_id, bool &state);
   void api_gv_toggle_atom_override(geom_view_t *gv, int atom_id, bool hs_rec = false);
+
+  //ui helpers - custom label
 
   //selective visibility
   void api_gv_sv_set_for_selected(geom_view_t *gv, bool state, bool hs_rec = false);
@@ -19,6 +24,18 @@ namespace cad {
   //xifelds
   void api_gv_xbool_invert(geom_view_t *gv, size_t field_id, bool hs_rec = false);
   void api_gv_xbool_invert_selected(geom_view_t *gv, size_t field_id, bool hs_rec = false);
+
+  template<typename XFIELD_TYPE>
+  void api_gv_xfill(geom_view_t *gv, size_t field_id, size_t atom_id, XFIELD_TYPE value, bool
+                    hs_rec = false) {
+    if (!gv)
+      return;
+    if (hs_rec)
+      gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+    gv->m_geom->set_xfield<XFIELD_TYPE>(field_id, atom_id, value);
+    if (hs_rec)
+      gv->end_recording();
+  }
 
   template <typename XFIELD>
   void api_gv_xfill_selected(geom_view_t *gv, size_t field_id, XFIELD value, bool hs_rec = false) {
@@ -65,6 +82,15 @@ namespace cad {
     if (hs_rec)
       gv->end_recording();
   }
+
+  void api_gv_iupdate_interatomic_dist(geom_view_t *gv, float new_dist,
+                                       const int at1, const int at2,
+                                       const index id1, const index id2,
+                                       pair_dist_mode_e mode, bool hs_rec = false);
+
+  void api_gv_update_interatomic_dist(geom_view_t *gv, float new_dist,
+                                      const int at1, const int at2,
+                                      pair_dist_mode_e mode, bool hs_rec = false);
 
 }
 
