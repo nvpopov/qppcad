@@ -10,6 +10,9 @@ namespace cad {
   //cloning stuff
   void api_gv_clone(geom_view_t *src, std::shared_ptr<ws_item_t> &dst);
 
+  //deletion stuff
+  void api_gv_delete_selected_atoms(geom_view_t *gv, bool hs_rec = false);
+
   //ui helpers - atom override
   void api_gv_set_atom_override(geom_view_t *gv, int atom_id, bool state, bool hs_rec = false);
   void api_gv_get_atom_override(geom_view_t *gv, int atom_id, bool &state);
@@ -91,6 +94,14 @@ namespace cad {
   void api_gv_update_interatomic_dist(geom_view_t *gv, float new_dist,
                                       const int at1, const int at2,
                                       pair_dist_mode_e mode, bool hs_rec = false);
+
+  void api_gv_swap_atoms(geom_view_t *gv, const size_t at1, const size_t at2,
+                         bool swap_names = true, bool hs_rec = false);
+
+  void api_gv_shift_all_atoms(geom_view_t *gv, const vector3<float> shift, bool hs_rec = false);
+  void api_gv_shift_atoms(geom_view_t *gv, const vector3<float> shift,
+                          std::set<size_t> &atoms,bool hs_rec = false);
+  void api_gv_shift_selected_atoms(geom_view_t *gv, const vector3<float> shift, bool hs_rec = false);
 
 }
 

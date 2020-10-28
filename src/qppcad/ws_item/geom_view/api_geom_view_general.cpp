@@ -1,4 +1,5 @@
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
+#include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/geom_view/api_geom_view_general.hpp>
 #include <qppcad/core/app_state.hpp>
 
@@ -202,6 +203,99 @@ void api_gv_update_interatomic_dist(geom_view_t *gv, float new_dist, const int a
   api_gv_iupdate_interatomic_dist(gv, new_dist, at1, at2,
                                   index::D(gv->m_geom->get_DIM()).all(0),
                                   index::D(gv->m_geom->get_DIM()).all(0), mode, false);
+  if (hs_rec)
+    gv->end_recording();
+}
+
+void api_gv_swap_atoms(geom_view_t *gv, const size_t at1, const size_t at2,
+                       bool swap_names, bool hs_rec) {
+  if (!gv)
+    return;
+  if (at1 >= gv->m_geom->nat() || at2 >= gv->m_geom->nat())
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  app_state_t *astate = app_state_t::get_inst();
+  std::string atom1_name = swap_names ? gv->m_geom->atom_name(at1) : gv->m_geom->atom_name(at2);
+  std::string atom2_name = swap_names ? gv->m_geom->atom_name(at2) : gv->m_geom->atom_name(at1);
+  vector3<float> atom1_pos = gv->m_geom->pos(at1);
+  vector3<float> atom2_pos = gv->m_geom->pos(at2);
+  gv->m_geom->change(at1, atom1_name, atom2_pos);
+  gv->m_geom->change(at2, atom2_name, atom1_pos);
+  astate->make_viewport_dirty();
+  if (hs_rec)
+    gv->end_recording();
+}
+
+void api_gv_shift_all_atoms(geom_view_t *gv, const vector3<float> shift, bool hs_rec) {
+  if (!gv)
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  gv->m_tws_tr->do_action(act_lock);
+  for (int i = 0; i < gv->m_geom->nat(); i++)
+    gv->m_geom->change_pos(i, shift + gv->m_geom->pos(i)) ;
+  gv->m_ext_obs->aabb.min = shift + gv->m_ext_obs->aabb.min;
+  gv->m_ext_obs->aabb.max = shift + gv->m_ext_obs->aabb.max;
+  gv->m_tws_tr->apply_shift(shift);
+  gv->m_tws_tr->do_action(act_unlock);
+  gv->geometry_changed();
+  if (hs_rec)
+    gv->end_recording();
+}
+
+void api_gv_shift_atoms(geom_view_t *gv, const vector3<float> shift,
+                        std::set<size_t> &atoms, bool hs_rec) {
+  if (!gv)
+    return;
+  if (atoms.empty())
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  gv->m_tws_tr->do_action(act_lock);
+  for (auto &rec : atoms)
+    gv->m_geom->change_pos(rec, shift + gv->m_geom->pos(rec)) ;
+  gv->m_ext_obs->aabb.min = shift + gv->m_ext_obs->aabb.min;
+  gv->m_ext_obs->aabb.max = shift + gv->m_ext_obs->aabb.max;
+  gv->m_tws_tr->apply_shift(shift);
+  gv->m_tws_tr->do_action(act_unlock);
+  gv->geometry_changed();
+  if (hs_rec)
+    gv->end_recording();
+}
+
+void api_gv_shift_selected_atoms(geom_view_t *gv, const vector3<float> shift, bool hs_rec) {
+  if (!gv)
+    return;
+  if (gv->m_geom->no_aselected())
+    return;
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  for (auto i = 0; i < gv->m_geom->num_aselected(); i++) {
+    auto rec = gv->m_geom->nth_aselected(i);
+    if (rec && (*rec).m_idx.is_zero())
+      gv->upd_atom((*rec).m_atm, gv->m_geom->pos((*rec).m_atm) + shift, false);
+  }
+  if (hs_rec)
+    gv->end_recording();
+  app_state_t* astate = app_state_t::get_inst();
+  astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
+}
+
+void api_gv_delete_selected_atoms(geom_view_t *gv, bool hs_rec) {
+  if (!gv)
+    return;
+  if (gv->m_geom->num_selected() == 0) {
+    return;
+  } else {
+    gv->m_anim->m_force_non_animable = true;
+  }
+  std::set<int> sel_atoms;
+  for (auto i = 0; i < gv->m_geom->num_selected(); i++)
+    sel_atoms.insert((*gv->m_geom->nth_selected(i)).m_atm);
+  if (hs_rec)
+    gv->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
+  gv->delete_atoms(sel_atoms, false);
   if (hs_rec)
     gv->end_recording();
 }

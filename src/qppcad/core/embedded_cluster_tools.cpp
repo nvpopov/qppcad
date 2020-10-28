@@ -3,6 +3,7 @@
 #include <geom/shape.hpp>
 #include <qppcad/core/app_state.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_tools.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_general.hpp>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -331,7 +332,7 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
       qm->ins_atom(cls->m_geom->atom(i), cls->m_geom->pos(i));
 
   //delete atoms from cls
-  cls->delete_atoms(redu_cls_set);
+  cls->delete_atoms(redu_cls_set, false);
 
   //phase 2 : move atoms from qm to cls
   std::vector<tws_node_cnt_t<float> > redu_qm;
@@ -350,7 +351,7 @@ void embedded_cluster_tools::set_qm_cluster_r(std::shared_ptr<geom_view_t> qm,
         redu_qm_outside.insert(i);
       }
 
-  qm->delete_atoms(redu_qm_outside);
+  qm->delete_atoms(redu_qm_outside, false);
 
 }
 
@@ -362,7 +363,7 @@ void embedded_cluster_tools::move_sel_from_qm_to_cls(std::shared_ptr<geom_view_t
       for (int i = 0; i < qm->m_geom->nat(); i++)
         if (qm->m_geom->selected(i))
           cls->ins_atom(qm->m_geom->atom(i), qm->m_geom->pos(i));
-      qm->delete_selected_atoms();
+      api_gv_delete_selected_atoms(qm.get(), true);
     }
 
 }

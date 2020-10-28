@@ -232,8 +232,6 @@ public:
   void transform_atom(const int at_id, const matrix3<float> &tm, bool hs_rec = false);
   void transform_atom(const int at_id, const matrix4<float> &tm, bool hs_rec = false);
 
-  void swap_atoms(const size_t at1, const size_t at2, bool swap_names = true);
-
   void copy_from_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst);
   void copy_to_xgeom(xgeometry<float, periodic_cell<float> > &xgeom_inst,
                      bool copy_selected = false, bool copy_cell = true);
@@ -250,9 +248,7 @@ public:
 
   std::tuple<float, float> get_min_max_xfield(const size_t xfield_id);
 
-  void translate_selected(const vector3<float> &t_vec);
-  void delete_selected_atoms();
-  void delete_atoms(std::set<int> &to_delete);
+  void delete_atoms(const std::set<int> &to_delete, bool hs_rec);
 
   void begin_structure_change();
   void end_structure_change();
@@ -273,8 +269,6 @@ public:
   void recalc_gizmo_barycenter();
   const vector3<float> get_gizmo_content_barycenter() override;
   void updated_externally(uint32_t update_reason) override;
-
-  void shift(const vector3<float> shift);
 
   void save_to_json(json &data) override;
   void load_from_json(json &data, repair_connection_info_t &rep_info) override;

@@ -838,8 +838,8 @@ void geom_view_tools_t::cut_selected_as_new_gv(geom_view_t *gv, bool cut_selecte
 
   ret_gv->end_structure_change();
 
-  if (cut_selected)
-    gv->delete_selected_atoms();
+//  if (cut_selected)
+//    api_gv_delete_selected_atoms();
 
   ret_gv->m_name.set_value(
       fmt::format("{}{}", gv->m_name.get_value(), gv->m_parent_ws->num_items()));

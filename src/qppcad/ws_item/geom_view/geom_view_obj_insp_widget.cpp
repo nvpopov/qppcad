@@ -2086,7 +2086,7 @@ void geom_view_obj_insp_widget_t::mod_single_atom_button_clicked() {
 void geom_view_obj_insp_widget_t::mod_single_atom_delete_button_clicked() {
   app_state_t *astate = app_state_t::get_inst();
   if (b_al) {
-    b_al->delete_selected_atoms();
+    api_gv_delete_selected_atoms(b_al, true);
     astate->make_viewport_dirty();
     update_anim_section_status();
   }
@@ -2115,7 +2115,7 @@ void geom_view_obj_insp_widget_t::mod_pair_dist_swap_button_clicked() {
     auto val1 = *oval1;
     auto val2 = *oval2;
     if (val1.m_idx.is_zero() && val2.m_idx.is_zero())
-      b_al->swap_atoms(val1.m_atm, val2.m_atm);
+      api_gv_swap_atoms(b_al, val1.m_atm, val2.m_atm, true, true);
   }
 }
 
@@ -2176,11 +2176,12 @@ void geom_view_obj_insp_widget_t::mod_translate_selected_atoms_clicked() {
     vector3<float> tr_vec(float(m_tm_translate_v3->sb_x->value()),
                           float(m_tm_translate_v3->sb_y->value()),
                           float(m_tm_translate_v3->sb_z->value()));
-    if (m_tm_translate_coord_type->currentIndex() == 1 && b_al->m_geom->get_DIM() == 3) {
+    if (m_tm_translate_coord_type->currentIndex() == 1
+        && b_al->m_geom->get_DIM() == 3) {
       vector3<float> tr_vec_c = tr_vec;
       tr_vec = b_al->m_geom->cell.frac2cart(tr_vec_c);
     }
-    b_al->translate_selected(tr_vec);
+    api_gv_shift_selected_atoms(b_al, tr_vec, true);
   }
   astate->make_viewport_dirty();
 }
@@ -2268,7 +2269,7 @@ void geom_view_obj_insp_widget_t::mod_group_op_sel_ngbs() {
 void geom_view_obj_insp_widget_t::mod_group_op_del_sel() {
   app_state_t *astate = app_state_t::get_inst();
   if (b_al)
-    b_al->delete_selected_atoms();
+    api_gv_delete_selected_atoms(b_al, true);
   astate->make_viewport_dirty();
 }
 

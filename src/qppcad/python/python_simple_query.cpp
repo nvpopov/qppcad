@@ -5,6 +5,7 @@
 #include <qppcad/ws_item/geom_view/geom_view_anim_subsys.hpp>
 #include <qppcad/ws_item/geom_view/geom_view_labels_subsys.hpp>
 #include <qppcad/ws_item/geom_view/api_geom_view_selection.hpp>
+#include <qppcad/ws_item/geom_view/api_geom_view_general.hpp>
 
 #include <qppcad/ws_item/volume_view/volume_view.hpp>
 #include <qppcad/ws_item/psg_view/psg_view.hpp>
@@ -43,21 +44,17 @@ void simple_query::quit() {
 }
 
 void simple_query::open_file(std::string file_name, bool to_current) {
-
   app_state_t *astate = app_state_t::get_inst();
   astate->ws_mgr->load_from_file_autodeduce(file_name, "", !to_current, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
-
 }
 
 void simple_query::open_file_query(std::string f_name,  std::string f_format, bool to_current) {
-
   app_state_t *astate = app_state_t::get_inst();
   astate->ws_mgr->load_from_file_autodeduce(f_name, f_format, !to_current, !to_current);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
-
 }
 
 void simple_query::to_clipboard(std::string data) {
@@ -66,7 +63,6 @@ void simple_query::to_clipboard(std::string data) {
 }
 
 void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_c) {
-
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
@@ -75,7 +71,6 @@ void simple_query::make_super_cell(const int sc_a, const int sc_b, const int sc_
   //cur_ws->set_sel_item(cur_ws->num_items() - 1);
   astate->astate_evd->python_console_focus_requested();
   astate->make_viewport_dirty();
-
 }
 
 void simple_query::set_msr_digits(int digits){
@@ -104,35 +99,27 @@ void simple_query::sel_ws(int ws_idx) {
 }
 
 void simple_query::sel_itm(int itm_idx) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return;
-
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws)
     return;
-
   cur_ws->set_sel_item(itm_idx);
   astate->make_viewport_dirty();
   astate->astate_evd->python_console_focus_requested();
-
 }
 
 void simple_query::sel_cnt(int cnt_idx) {
-
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   al->sel_atom(cnt_idx);
   astate->make_viewport_dirty();
   al->end_recording();
-
 }
 
 void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
-
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
@@ -143,25 +130,19 @@ void simple_query::sel_cnt_fn(std::function<bool (float, float, float)> cfn) {
   al->end_recording();
 
   astate->make_viewport_dirty();
-
 }
 
 void simple_query::sel_cnt_parity() {
-
   app_state_t *astate = app_state_t::get_inst();
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   index zero = index::D(al->m_geom->get_DIM()).all(0);
 
   for (auto i = 0; i < al->m_geom->num_selected(); i++) {
-
     auto rec = al->m_geom->nth_aselected(i);
-
     if (!rec)
       continue;
-
     auto val = *rec;
     if (val.m_idx == zero) {
       std::array<int, 2> parity_d{-1,1};
@@ -179,14 +160,11 @@ void simple_query::sel_cnt_parity() {
               if (res_elem.m_idx == zero)
                 al->sel_atom(res_elem.m_atm);
           }
-
     }
-
   }
   al->end_recording();
 
   astate->make_viewport_dirty();
-
 }
 
 void simple_query::sel_invert() {
@@ -215,7 +193,6 @@ void simple_query::sel_cnt_list(pybind11::list sel_list) {
 }
 
 void simple_query::sel_cnt_type(pybind11::str sel_type) {
-
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
   std::string type_name = py::cast<std::string>(sel_type);
@@ -298,24 +275,18 @@ void simple_query::unsel_cnt(int cnt_idx) {
 }
 
 void simple_query::unsel_cnt_list(pybind11::list sel_list) {
-
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
   for (auto itm : sel_list)
     if (py::isinstance<py::int_>(itm))
       al->unsel_atom(py::cast<int>(itm));
   al->end_recording();
-
   astate->make_viewport_dirty();
-
 }
 
 void simple_query::unsel_cnt_type(pybind11::str sel_type) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
   al->begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
@@ -328,16 +299,13 @@ void simple_query::unsel_cnt_type(pybind11::str sel_type) {
   al->end_recording();
 
   astate->make_viewport_dirty();
-
 }
 
 pybind11::list simple_query::get_sel() {
-
   app_state_t *astate = app_state_t::get_inst();
   py::list res;
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   if (!al)
     return py::none();
 
@@ -350,7 +318,6 @@ pybind11::list simple_query::get_sel() {
   }
 
   return res;
-
 }
 
 void simple_query::py_labels(geom_labels_style_e lstyle){
@@ -384,64 +351,46 @@ void simple_query::exec_tool(std::shared_ptr<ws_item_t> ws_item, std::string too
 }
 
 py::str simple_query::get_type_name() {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return py::none();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   if (!cur_ws)
     return py::none();
   if (cur_it)
     return cur_it->get_type_name();
-
   return "unknown";
-
 }
 
 py::int_ simple_query::get_type_hash() {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return py::none();
-
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws)
     return py::none();
-
   auto cur_it = cur_ws->get_sel();
   if (cur_it)
     return cur_it->get_type();
-
   return py::none();
-
 }
 
 py::list simple_query::get_connected_items(std::shared_ptr<ws_item_t> ws_item) {
-
   py::list retl;
-
   if (ws_item)
     for (auto &elem : ws_item->m_connected_items)
       if (elem)
         retl.append(elem->m_name);
   return retl;
-
 }
 
 py::list simple_query::get_followers(std::shared_ptr<ws_item_t> ws_item) {
-
   py::list retl;
-
   if (ws_item)
     for (auto &elem : ws_item->m_followers)
       if (elem)
         retl.append(elem->m_name);
-
   return retl;
-
 }
 
 py::str simple_query::get_leader(std::shared_ptr<ws_item_t> ws_item) {
@@ -452,115 +401,83 @@ py::str simple_query::get_leader(std::shared_ptr<ws_item_t> ws_item) {
 }
 
 pybind11::bool_ simple_query::is_instance_of_by_hash(size_t _type_hash) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return false;
-
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws)
     return false;
-
   auto cur_it = cur_ws->get_sel();
   if (cur_it)
     return cur_it->is_instance_of(_type_hash);
-
   return false;
-
 }
 
 pybind11::bool_ simple_query::is_instance_of_by_type_name(std::string _type_name) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return false;
-
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws)
     return false;
   auto cur_it = cur_ws->get_sel();
   if (cur_it)
     return cur_it->get_type_name() == _type_name;
-
   return false;
-
 }
 
 void simple_query::set_inline_tool_visibility(size_t id, bool visible) {
-
   app_state_t *astate = app_state_t::get_inst();
   if (id == 0)
     astate->astate_evd->set_left_inline_tool_visibility(visible);
   else
     astate->astate_evd->set_bottom_inline_tool_visibility(visible);
-
 }
 
 
 vector3<float> simple_query::gizmo_pos() {
-
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   if (!cur_ws)
     return vector3<float>::Zero();
-
   if (!al)
     return vector3<float>::Zero();
-
   if (al)
     return al->get_gizmo_content_barycenter();
-
   return vector3<float>::Zero();
-
 }
 
 std::tuple<std::string, vector3<float> > simple_query::get_point_sym_group(float tolerance) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   auto ret_empty = [](){return std::make_tuple("C1", vector3<float>{0});};
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   if (!astate->ws_mgr->has_wss())
     return ret_empty();
   if (!cur_ws)
     return ret_empty();
   if (!al)
     return ret_empty();
-
   if (al && al->m_geom->get_DIM() == 0) {
     array_group<matrix3<float> > G;
     vector3<float> new_center;
     find_point_symm(G, *(al->m_geom), new_center, tolerance);
     return std::make_tuple(G.m_name, new_center);
   }
-
   return ret_empty();
-
 }
 
 void simple_query::embed_cube() {
-
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   if (!al) {
     throw std::invalid_argument("embed_cube : select geom_view_t");
   }
-
   if (!al->m_parent_ws || !cur_ws) {
     throw std::invalid_argument("embed_cube : invalid context");
   }
-
   if (cur_ws->get_edit_type() != ws_edit_type_e::edit_content) {
     throw std::invalid_argument("embed_cube : edit_type != edit_content");
   }
-
   if (al->m_geom->num_aselected() != 2) {
     throw std::invalid_argument("embed_cube : sel.size() != 2 ");
   }
@@ -582,11 +499,9 @@ void simple_query::embed_cube() {
   new_cube->m_pos.set_cvalue(center);
   new_cube->m_scale.set_cvalue(len);
   cur_ws->add_item_to_ws(new_cube);
-
 }
 
 void simple_query::embed_arrow() {
-
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
 
@@ -600,50 +515,40 @@ void simple_query::embed_arrow() {
   new_arr->m_name.set_value(fmt::format("arrow_{}", cur_ws->num_items()));
   auto sel_first  = al->m_geom->nth_aselected(0);
   auto sel_second = al->m_geom->nth_aselected(1);
-
   auto pos_first = al->m_geom->pos((*sel_first).m_atm, (*sel_first).m_idx);
   auto pos_second = al->m_geom->pos((*sel_second).m_atm, (*sel_second).m_idx);
-
   auto dir = (pos_second - pos_first).normalized();
-
   auto ap_idx = ptable::number_by_symbol(al->m_geom->atom((*sel_second).m_atm));
   float dr_rad = 0.4f;
   float pre_rad = 0.4f;
 
   if (ap_idx)
     pre_rad = ptable::get_inst()->arecs[*ap_idx - 1].m_radius;
-
   dr_rad = pre_rad * al->m_atom_scale_factor.get_value();
 
   auto pos_end = pos_second - dir * dr_rad * 1.8;
   new_arr->m_pos.set_cvalue(pos_first);
   new_arr->m_arrow_to.set_cvalue(pos_end);
   cur_ws->add_item_to_ws(new_arr);
-
 }
 
 void simple_query::make_psg_view(float tolerance) {
-
   app_state_t *astate = app_state_t::get_inst();
 
   auto cur_ws = astate->ws_mgr->get_cur_ws();
-
   if (!cur_ws) {
     return;
   }
-
   auto cur_it = cur_ws->get_sel();
   if (!cur_it) {
     return;
   }
-
   auto al = cur_it->cast_as<geom_view_t>();
   if (!al) {
     return;
   }
 
   if (al && al->m_parent_ws && cur_ws) {
-
     if (cur_ws->get_edit_type() == ws_edit_type_e::edit_item && al->m_geom->get_DIM() == 0) {
       auto ws_pg = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(
           psg_view_t::get_type_static());
@@ -655,7 +560,6 @@ void simple_query::make_psg_view(float tolerance) {
         al->m_parent_ws->add_item_to_ws(ws_pg);
         ws_pg_c->m_name.set_value(fmt::format("point_sym_grp{}", al->m_parent_ws->num_items()));
       }
-
     } else if (cur_ws->get_edit_type() == ws_edit_type_e::edit_content && !al->m_geom->no_aselected()) {
       auto ws_pg_partial =
           astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(psg_view_t::get_type_static());
@@ -670,17 +574,13 @@ void simple_query::make_psg_view(float tolerance) {
         ws_pg_partial_c->m_name.set_value(
             fmt::format("point_sym_grp_part{}", al->m_parent_ws->num_items()));
       }
-
     }
-
   }
 
   astate->astate_evd->cur_ws_changed();
-
 }
 
 void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
-
   app_state_t *astate = app_state_t::get_inst();
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
@@ -688,13 +588,11 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   auto traj_hl = astate->ws_mgr->m_bhv_mgr->fbr_ws_item_by_type(traj_hl_t::get_type_static());
   if (!traj_hl)
     return;
-
   traj_hl->m_name.set_value(fmt::format("traj_highlighter_{}", cur_ws->num_items()));
 
   auto traj_hl_casted = traj_hl->cast_as<traj_hl_t>();
   if (!traj_hl_casted)
     return;
-
   traj_hl_casted->m_anim_id = anim_id;
   traj_hl_casted->m_atom_id = atom_id;
 
@@ -702,12 +600,10 @@ void simple_query::make_traj_highlight(size_t atom_id, size_t anim_id) {
   cur_ws->add_item_to_ws(traj_hl);
 
   astate->make_viewport_dirty();
-
 }
 
 //TODO: need to update
 std::vector<std::string> simple_query::get_xgeom_dfn() {
-
   return {
       "atom", //0
       "x",//1
@@ -725,11 +621,9 @@ std::vector<std::string> simple_query::get_xgeom_dfn() {
       "atom_r", // 13
       "external" //14
   };
-
 }
 
 std::vector<basic_types> simple_query::get_xgeom_dft() {
-
   return  {
       basic_types::type_string, //0
       basic_types::type_real, //1
@@ -747,33 +641,24 @@ std::vector<basic_types> simple_query::get_xgeom_dft() {
       basic_types::type_real, // 13
       basic_types::type_real //14
   };
-
 }
 
 void simple_query::rebond() {
-
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   al->m_tws_tr->m_bonding_table.init_default(al->m_geom.get());
   al->m_tws_tr->do_action(act_rebuild_ntable);
   astate->astate_evd->cur_ws_selected_item_changed();
-
 }
 
 void simple_query::translate_selected(float tx, float ty, float tz) {
-
   app_state_t *astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   if (cur_ws->get_edit_type() == ws_edit_type_e::edit_item)
-    al->translate(vector3<float>(tx, ty, tz));
+    api_gv_shift_all_atoms(al, vector3<float>(tx, ty, tz), true);
   else
-    al->translate_selected(vector3<float>(tx, ty, tz));
-
+    api_gv_shift_selected_atoms(al, vector3<float>(tx, ty, tz), true);
   astate->make_viewport_dirty();
-
 }
 
 void simple_query::translate_selected_v3(const vector3<float> vec) {
@@ -781,11 +666,8 @@ void simple_query::translate_selected_v3(const vector3<float> vec) {
 }
 
 void simple_query::set_charge(float charge) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   if (al && cur_ws->get_edit_type() == ws_edit_type_e::edit_content) {
     for (auto i = 0; i < al->m_geom->num_selected(); i++) {
       auto rec = al->m_geom->nth_aselected(i);
@@ -795,23 +677,17 @@ void simple_query::set_charge(float charge) {
         al->m_geom->xfield<float>(xg_charge, (*rec).m_atm) = charge;
     }
   }
-
   astate->make_viewport_dirty();
-
 }
 
 void simple_query::set_ws_bg(vector3<float> bg) {
-
   app_state_t *astate = app_state_t::get_inst();
   if (!astate->ws_mgr->has_wss())
     return;
-
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws)
     return;
-
   cur_ws->m_bg_color = bg;
-
 }
 
 std::shared_ptr<workspace_t> simple_query::cur_ws() {
@@ -821,67 +697,51 @@ std::shared_ptr<workspace_t> simple_query::cur_ws() {
 
 void simple_query::make_cube_p(std::string name, vector3<float> pos,
                                float size_a, float size_b, float size_c) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return;
-
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws)
     return;
-
   auto new_cube = std::make_shared<cube_primitive_t>();
   new_cube->m_name.set_cvalue(name);
   new_cube->m_pos.set_cvalue(pos);
   new_cube->m_scale.set_value({size_a, size_b, size_c});
   cur_ws->add_item_to_ws(new_cube);
-
 }
 
-void simple_query::make_arrow_p(vector3<float> from,
-                                vector3<float> to,
-                                std::string name) {
-
+void simple_query::make_arrow_p(vector3<float> from, vector3<float> to, std::string name) {
   app_state_t *astate = app_state_t::get_inst();
-
   if (!astate->ws_mgr->has_wss())
     return;
-
   auto cur_ws = astate->ws_mgr->get_cur_ws();
   if (!cur_ws)
     return;
-
   auto new_arr = std::make_shared<arrow_primitive_t>();
-  new_arr->m_name.set_value(name.empty() ? fmt::format("arrow_{}", cur_ws->num_items())
-                                         : name);
+  new_arr->m_name.set_value(name.empty() ? fmt::format("arrow_{}", cur_ws->num_items()) : name);
   new_arr->m_pos.set_cvalue(from);
   new_arr->m_arrow_to.set_cvalue(to);
   cur_ws->add_item_to_ws(new_arr);
-
 }
 
 void simple_query::convert_selected_units(spatial_units_e new_unit) {
-
   app_state_t *astate = app_state_t::get_inst();
-
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   float mod = new_unit == spatial_units_ang ? qpp::bohr_to_angs : qpp::ang_to_bohr;
-
   al->m_tws_tr->do_action(act_lock | act_clear_all);
   al->m_ext_obs->first_data = true;
 
   //transform cell
-  for (int i = 0; i < al->m_geom->get_DIM(); i++) al->m_geom->cell.v[i] *= mod;
+  for (int i = 0; i < al->m_geom->get_DIM(); i++)
+      al->m_geom->cell.v[i] *= mod;
 
   //transform content
-  for (int i = 0; i < al->m_geom->nat(); i++) al->m_geom->coord(i) *= mod;
+  for (int i = 0; i < al->m_geom->nat(); i++)
+      al->m_geom->coord(i) *= mod;
 
   al->geometry_changed();
   al->m_tws_tr->do_action(act_unlock | act_rebuild_tree);
   al->m_tws_tr->do_action(act_rebuild_ntable);
-
 }
 
 void simple_query::set_sel_color_vec(vector3<float> color) {
@@ -889,11 +749,9 @@ void simple_query::set_sel_color_vec(vector3<float> color) {
 }
 
 void simple_query::set_sel_color(float r, float g, float b) {
-
   app_state_t *astate = app_state_t::get_inst();
 
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>(error_ctx_throw);
-
   for (auto i = 0; i < al->m_geom->num_selected(); i++) {
     auto rec = al->m_geom->nth_aselected(i);
     if (!rec)
@@ -902,7 +760,6 @@ void simple_query::set_sel_color(float r, float g, float b) {
     al->m_geom->xfield<float>(xg_ccr, val.m_atm) = r;
     al->m_geom->xfield<float>(xg_ccg, val.m_atm) = g;
     al->m_geom->xfield<float>(xg_ccb, val.m_atm) = b;
-
     if (al->m_anim->get_total_anims() > 0
         && !al->m_anim->m_anim_data[0].frames.empty()
         && al->m_anim->m_anim_data[0].frames[0].atom_color.size() == al->m_geom->nat()) {
@@ -910,15 +767,11 @@ void simple_query::set_sel_color(float r, float g, float b) {
       al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][1] = g;
       al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][2] = b;
     }
-
   }
-
   astate->make_viewport_dirty();
-
 }
 
 void simple_query::ptable_set_color_by_number(int num, float r, float g, float b) {
-
   app_state_t *astate = app_state_t::get_inst();
 
   if (num > 0 && num < 100) {
@@ -928,7 +781,6 @@ void simple_query::ptable_set_color_by_number(int num, float r, float g, float b
     astate->astate_evd->cur_ws_selected_item_changed();
     astate->astate_evd->python_console_focus_requested();
   }
-
 }
 
 void simple_query::ptable_set_color_by_number_as_vector(int num, vector3<float> color) {
@@ -936,11 +788,9 @@ void simple_query::ptable_set_color_by_number_as_vector(int num, vector3<float> 
 }
 
 void simple_query::ptable_set_color_by_name(std::string name, float r, float g, float b) {
-
   auto ap_idx = ptable::number_by_symbol(name);
   if (ap_idx)
     ptable_set_color_by_number(*ap_idx, r, g, b);
-
 }
 
 void simple_query::ptable_set_color_by_name_as_vector(std::string name, vector3<float> color) {
@@ -948,13 +798,11 @@ void simple_query::ptable_set_color_by_name_as_vector(std::string name, vector3<
 }
 
 void simple_query::ptable_set_r_by_number(int num, float r) {
-
   if (num > 0 && num <100) {
     ptable_atom_record &rec = ptable::get_inst()->arecs[num-1];
     rec.m_radius = r;
     rec.m_redefined = true;
   }
-
 }
 
 void simple_query::ptable_set_r_by_name(std::string name, float r) {
