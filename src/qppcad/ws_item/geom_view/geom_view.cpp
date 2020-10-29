@@ -295,10 +295,8 @@ void geom_view_t::render() {
 
     if (astate->m_debug_show_tws_tree) {
       astate->dp->begin_render_aabb();
-      m_tws_tr->apply_visitor([astate, _pos](tws_node_t<float> *in_node, int deep_level) {
-        astate->dp->render_aabb(clr_maroon,
-                                in_node->m_bb.min+_pos,
-                                in_node->m_bb.max+_pos);
+      m_tws_tr->apply_visitor([astate, _pos](auto  in_node, int deep_level) {
+        astate->dp->render_aabb(clr_maroon, in_node->m_bb.min+_pos, in_node->m_bb.max+_pos);
       });
       astate->dp->end_render_aabb();
     }
@@ -452,7 +450,7 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
     }
     recalc_gizmo_barycenter();
     if (!res.empty()) {
-      std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float>);
+      std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float, size_t>);
       if (m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content && m_selected) {
         if (res[0].m_idx == index::D(m_geom->get_DIM()).all(0)) {
           begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
