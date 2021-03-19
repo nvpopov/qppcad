@@ -54,6 +54,8 @@ struct hs_child_state_meta_t {
   bool m_is_alive{false};
 };
 
+static bool DEV_ENABLE_HSDOC = false;
+
 /**
 * @brief The hist_doc_base_t class
 */

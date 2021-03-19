@@ -50,6 +50,8 @@ void hs_doc_base_t::end_recording_impl() {
 }
 
 void hs_doc_base_t::begin_recording(hs_doc_rec_type_e record_type) {
+  if (!DEV_ENABLE_HSDOC)
+    return;
   p_cur_rec_type = record_type;
   hs_doc_base_t *parent =
       record_type == hs_doc_rec_type_e::hs_doc_rec_init_local ? this : get_super_parent();
@@ -69,6 +71,8 @@ void hs_doc_base_t::begin_recording(hs_doc_rec_type_e record_type) {
 }
 
 void hs_doc_base_t::end_recording() {
+  if (!DEV_ENABLE_HSDOC)
+    return;
   hs_doc_base_t *parent =
       p_cur_rec_type == hs_doc_rec_type_e::hs_doc_rec_init_local ? this : get_super_parent();
   assert(parent->p_is_recording);
@@ -85,7 +89,7 @@ bool hs_doc_base_t::get_is_recording() {
 }
 
 bool hs_doc_base_t::get_ignore_changes() {
-  return p_ignore_changes;
+  return p_ignore_changes || !DEV_ENABLE_HSDOC;
 }
 
 void hs_doc_base_t::set_ignore_changes(bool new_ignore_changes) {

@@ -966,7 +966,7 @@ void main_window_t::request_undo_redo_buttons_update() {
     return;
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
-  if (ok) {
+  if (ok && DEV_ENABLE_HSDOC) {
     auto cur_ws_sp = cur_ws.get();
     if (cur_ws_sp) {
       m_edit_menu_undo->setEnabled(cur_ws_sp->can_checkout_by_dist(-1));

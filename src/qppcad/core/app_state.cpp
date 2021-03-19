@@ -49,7 +49,6 @@ void app_state_t::init_shaders() {
 }
 
 void app_state_t::init_meshes() {
-
   mesh_spheres.push_back(mesh_generators::sphere(m_sphere_quality, m_sphere_quality));
   mesh_cylinder = mesh_generators::cylinder_mk2(2, m_cylinder_quality, 1.0f, 1.0f);
   mesh_unit_line = mesh_generators::unit_line();
@@ -60,23 +59,18 @@ void app_state_t::init_meshes() {
   mesh_zup_quad = mesh_generators::quad_zup();
   mesh_xline_mesh = mesh_generators::cross_line_atom();
   mesh_zl_plane = mesh_generators::plane_zl();
-
 }
 
 void app_state_t::init_managers() {
-
   hash_reg   = std::make_unique<string_hash_register_t>();
   ws_mgr     = std::make_shared<workspace_manager_t>(this);
   py_mgr     = std::make_unique<python_manager_t>();
   hotkey_mgr = std::make_shared<hotkey_manager_t>();
-
 }
 
 void app_state_t::init_styles() {
-
   icons.icon_arrow_up = new QIcon("://images/outline-arrow_upward-24px.svg");
   icons.icon_arrow_down = new QIcon("://images/outline-arrow_downward-24px.svg");
-
 }
 
 void app_state_t::make_viewport_dirty() {
@@ -97,11 +91,9 @@ bool app_state_t::is_viewport_dirty() {
 }
 
 void app_state_t::cleanup_viewport() {
-
   if (m_viewport_dirty) {
     m_viewport_dirty = false;
   }
-
 }
 
 void app_state_t::load_settings() {
@@ -152,14 +144,17 @@ void app_state_t::load_settings() {
     float cov_rad = settings.value("covrad").toFloat(&ok_cov_rad);
 
     if (ok_number && number > 0 && number < 100) {
-
-      if (ok_c_r) table->arecs[number-1].m_color_jmol[0] = c_r;
-      if (ok_c_g) table->arecs[number-1].m_color_jmol[1] = c_g;
-      if (ok_c_b) table->arecs[number-1].m_color_jmol[2] = c_b;
-      if (ok_rad) table->arecs[number-1].m_radius = rad;
-      if (ok_cov_rad) table->arecs[number-1].m_covrad_slater = cov_rad;
+      if (ok_c_r)
+        table->arecs[number-1].m_color_jmol[0] = c_r;
+      if (ok_c_g)
+        table->arecs[number-1].m_color_jmol[1] = c_g;
+      if (ok_c_b)
+        table->arecs[number-1].m_color_jmol[2] = c_b;
+      if (ok_rad)
+        table->arecs[number-1].m_radius = rad;
+      if (ok_cov_rad)
+        table->arecs[number-1].m_covrad_slater = cov_rad;
       table->arecs[number-1].m_redefined = true;
-
     }
 
   }
@@ -396,26 +391,25 @@ void app_state_t::add_recent_file(const std::string &file_name,
 }
 
 void app_state_t::init_fixtures() {
-
   // try to use ${USER}/.qppcad
   if (!m_fixtures_dir_is_set) {
-
     QString home_path = QDir::homePath();
     QString qc_home_path = QString("%1/.qppcad").arg(home_path);
     QDir si_qc_home_path(qc_home_path);
     m_fixtures_dirs.push_back(si_qc_home_path.path().toStdString());
     m_fixtures_dir_is_set = true;
-
   }
 
   if (!m_fixtures_dir_is_set) {
     tlog("Fixture dir is not set!");
     return;
   } else {
-    tlog("Fixtures dir size = {}", m_fixtures_dirs.size());
+    std::string fixtures_dirs_flat = "";
+    for (auto &fdref : m_fixtures_dirs)
+      fixtures_dirs_flat += fdref + ",";
+    tlog("Fixtures dir = \"{}\", fixtures dir size = {}", fixtures_dirs_flat, m_fixtures_dirs.size());
     ws_mgr->m_bhv_mgr->load_fixtures_from_path(m_fixtures_dirs);
   }
-
 }
 
 app_state_t* app_state_t::g_inst = nullptr;

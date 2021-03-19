@@ -44,13 +44,15 @@ public:
   }
 
   void set_value(T&& new_value) {
-    if (!is_binded()) return;
+    if (!is_binded())
+      return;
     auto val(new_value);
     m_binded_value->set_value(std::move(new_value));
   }
 
   std::optional<T> get_value() {
-    if (!is_binded()) return std::nullopt;
+    if (!is_binded())
+      return std::nullopt;
     return m_binded_value->get_value();
   }
 
@@ -63,7 +65,8 @@ public:
   }
 
   void on_value_changed() {
-    if (m_binded_item && m_updated_externally_event) m_binded_item->updated_externally(m_upd_flag);
+    if (m_binded_item && m_updated_externally_event)
+      m_binded_item->updated_externally(m_upd_flag);
   }
 
   virtual void load_value_ex() = 0;
