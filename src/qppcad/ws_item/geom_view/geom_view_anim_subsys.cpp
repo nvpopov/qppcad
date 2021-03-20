@@ -6,18 +6,15 @@ using namespace qpp;
 using namespace qpp::cad;
 
 geom_view_anim_subsys_t::geom_view_anim_subsys_t(geom_view_t &_p_owner) {
-
   p_owner = &_p_owner;
   m_anim_frame_time.set_value(0.25f); add_hs_child(&m_anim_frame_time);
   m_rebuild_bonds_in_anim.set_value(true); add_hs_child(&m_rebuild_bonds_in_anim);
   m_play_cyclic.set_value(true); add_hs_child(&m_play_cyclic);
   m_play_anim.set_value(false); add_hs_child(&m_play_anim);
   m_interpolate_anim.set_value(true); add_hs_child(&m_interpolate_anim);
-
 }
 
 void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float current_frame) {
-
   float start_frame = int(current_frame);
   float end_frame   = std::ceil(current_frame);
   float frame_delta = 1 - (current_frame - start_frame);
@@ -41,8 +38,10 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
             m_anim_data[anim_id].frames[start_frame_n].m_cell[vc_i] * (frame_delta) +
             m_anim_data[anim_id].frames[end_frame_n].m_cell[vc_i]  * (1-frame_delta);
     } else {
-      if (!m_rebuild_bonds_in_anim.get_value()) p_owner->m_tws_tr->do_action(act_lock);
-      else if (p_owner->m_geom->get_DIM() > 0) p_owner->m_tws_tr->do_action(act_lock_img);
+      if (!m_rebuild_bonds_in_anim.get_value())
+        p_owner->m_tws_tr->do_action(act_lock);
+      else if (p_owner->m_geom->get_DIM() > 0)
+        p_owner->m_tws_tr->do_action(act_lock_img);
     }
 
   size_t nat = p_owner->m_geom->nat();
@@ -53,7 +52,6 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
     }
 
   for (auto i = 0; i < p_owner->m_geom->nat(); i++) { // update atom data
-
       vector3<float> new_pos =
           m_interpolate_anim.get_value() ?
             m_anim_data[anim_id].frames[start_frame_n].atom_pos[i] * (frame_delta) +
@@ -63,7 +61,6 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
       p_owner->m_geom->change_pos(i, new_pos);
 
       if (p_owner->m_color_mode.get_value() == geom_view_color_e::color_from_xgeom) {
-
           // check that colors in frame_data are avaiable
           if (m_anim_data[anim_id].frames[start_frame_n].atom_color.size() == nat &&
               m_anim_data[anim_id].frames[end_frame_n].atom_color.size() == nat) {
@@ -80,17 +77,17 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
               p_owner->m_geom->xfield<float>(xg_ccg, i) = 0.0f;
               p_owner->m_geom->xfield<float>(xg_ccb, i) = 0.0f;
             }
-
         }
-
     }  // end of update atom data
 
   if (is_variable_cell_anim) {
       p_owner->m_tws_tr->do_action(act_unlock | act_rebuild_tree | act_unlock_img);
       p_owner->m_tws_tr->do_action(act_rebuild_all);
     } else {
-      if (!m_rebuild_bonds_in_anim.get_value()) p_owner->m_tws_tr->do_action(act_unlock);
-      else if (p_owner->m_geom->get_DIM() > 0) p_owner->m_tws_tr->do_action(act_unlock_img);
+      if (!m_rebuild_bonds_in_anim.get_value())
+        p_owner->m_tws_tr->do_action(act_unlock);
+      else if (p_owner->m_geom->get_DIM() > 0)
+        p_owner->m_tws_tr->do_action(act_unlock_img);
     }
 
   p_owner->call_followers();
@@ -98,60 +95,56 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
 
   if (p_owner->is_selected())
     astate->astate_evd->cur_ws_selected_item_frame_changed();
-
 }
 
 void geom_view_anim_subsys_t::update_and_set_anim(const int anim_id,
                                                   const float current_frame) {
-
   m_cur_anim = anim_id;
   m_cur_anim_time = current_frame;
   update_geom_to_anim(anim_id, current_frame);
-
 }
 
 void geom_view_anim_subsys_t::update_geom_to_anim() {
-
   update_geom_to_anim(m_cur_anim, m_cur_anim_time);
-
 }
 
 void geom_view_anim_subsys_t::update_current_frame_to(const int new_frame) {
-
-  if (!animable()) return;
-  if (m_cur_anim >= m_anim_data.size()) return;
-  if (get_current_anim()->m_anim_type == geom_anim_e::anim_static) return;
+  if (!animable())
+    return;
+  if (m_cur_anim >= m_anim_data.size())
+    return;
+  if (get_current_anim()->m_anim_type == geom_anim_e::anim_static)
+    return;
 
   m_cur_anim_time = new_frame;
   update_geom_to_anim();
-
 }
 
 void geom_view_anim_subsys_t::update_current_frame_to_begin() {
-
   update_current_frame_to(0);
-
 }
 
 void geom_view_anim_subsys_t::update_current_frame_to_end() {
-
   update_current_frame_to(m_anim_data[m_cur_anim].frames.size()-1);
-
 }
 
 void geom_view_anim_subsys_t::update(const float delta_time) {
-
   ws_item_subsystem_t::update(delta_time);
 
-  if (m_cur_anim >= m_anim_data.size()) return; // wrong animation index
-  if (m_anim_data[m_cur_anim].frames.empty()) return;
-  if (!animable()) return;
-  if (!m_play_anim.get_value()) return;
+  if (m_cur_anim >= m_anim_data.size())
+    return; // wrong animation index
+  if (m_anim_data[m_cur_anim].frames.empty())
+    return;
+  if (!animable())
+    return;
+  if (!m_play_anim.get_value())
+    return;
 
   m_cur_anim_time += 1 / (m_anim_frame_time.get_value() * 60);
   if (m_cur_anim_time > m_anim_data[m_cur_anim].frames.size() - 1) {
-      if (m_play_cyclic.get_value()) m_cur_anim_time = 0.0f;
-      else {
+      if (m_play_cyclic.get_value()) {
+        m_cur_anim_time = 0.0f;
+      } else {
         m_play_anim.set_value(false);
           m_cur_anim_time = m_anim_data[m_cur_anim].frames.size() - 1;
         }
@@ -166,13 +159,13 @@ void geom_view_anim_subsys_t::update(const float delta_time) {
       //m_play_cyclic = false;
     }
   //astate->make_viewport_dirty();
-
 }
 
 bool geom_view_anim_subsys_t::animable() const {
-
-  if (m_force_non_animable) return false;
-  if (m_anim_data.empty()) return false;
+  if (m_force_non_animable)
+    return false;
+  if (m_anim_data.empty())
+    return false;
 
 //  TODO: check everything is good
 //  if (m_anim_data.size() == 1)
@@ -182,23 +175,17 @@ bool geom_view_anim_subsys_t::animable() const {
                                      [](const geom_anim_record_t<float> &rec) -> bool
                                      {return rec.frames.empty();});
   return !has_empty_anims;
-
 }
 
 void geom_view_anim_subsys_t::next_anim() {
-
   traverse_anim(1);
-
 }
 
 void geom_view_anim_subsys_t::prev_anim() {
-
   traverse_anim(-1);
-
 }
 
 void geom_view_anim_subsys_t::traverse_anim(int travel_dir) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   int target_anim = m_cur_anim + travel_dir;
@@ -231,7 +218,6 @@ void geom_view_anim_subsys_t::traverse_anim(int travel_dir) {
 
   if (p_owner->m_selected)
     astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-
 }
 
 void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
@@ -241,7 +227,6 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
                                                      size_t anim2_id,
                                                      size_t anim2_frm,
                                                      bool bounce) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   auto validate_anim_idx =
@@ -295,17 +280,12 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
   size_t tot_at = p_owner->m_geom->nat();
 
   for (size_t i = 0; i < num_frames; i++) {
-
       new_anim.frames[i].atom_pos.resize(tot_at);
       float alpha = 1 - ((i) / float(num_frames-1));
-
       for (size_t q = 0; q < tot_at; q++) {
-
           vector3<float> s_fr = r_fr1.atom_pos[q];
           vector3<float> e_fr = r_fr2.atom_pos[q];
-
           new_anim.frames[i].atom_pos[q] = s_fr * (alpha) + e_fr * (1-alpha);
-
         }
     }
 
@@ -313,11 +293,9 @@ void geom_view_anim_subsys_t::make_interpolated_anim(std::string new_anim_name,
 
   if (p_owner->is_selected())
     astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-
 }
 
 void geom_view_anim_subsys_t::make_animable() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_anim_data.empty()) {
@@ -345,13 +323,11 @@ void geom_view_anim_subsys_t::make_animable() {
 
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-
 }
 
 void geom_view_anim_subsys_t::make_anim(const std::string &anim_name,
                                         const geom_anim_e anim_type,
                                         const size_t num_frames) {
-
   geom_anim_record_t<float> new_anim_rec;
   new_anim_rec.m_anim_name = anim_name;
   new_anim_rec.m_anim_type = anim_type;
@@ -360,16 +336,15 @@ void geom_view_anim_subsys_t::make_anim(const std::string &anim_name,
   m_anim_data.emplace_back(std::move(new_anim_rec));
 
   make_animable();
-
 }
 
 void geom_view_anim_subsys_t::make_static_anim(bool do_it_anyway) {
-
   auto static_it = std::find_if(std::cbegin(m_anim_data), std::cend(m_anim_data),
                                 [](const geom_anim_record_t<float> &rec)
                                 {return rec.m_anim_type == geom_anim_e::anim_static;});
 
-  if (static_it != std::cend(m_anim_data) && !do_it_anyway) return;
+  if (static_it != std::cend(m_anim_data) && !do_it_anyway)
+    return;
 
   geom_anim_record_t<float> new_anim_rec;
   new_anim_rec.m_anim_name = fmt::format("static{}", m_anim_data.size());
@@ -384,19 +359,15 @@ void geom_view_anim_subsys_t::make_static_anim(bool do_it_anyway) {
   m_anim_data.emplace_back(std::move(new_anim_rec));
 
   make_animable();
-
 }
 
 int geom_view_anim_subsys_t::current_frame_truncated() {
-
   return std::floor(p_owner->m_anim->m_cur_anim_time);
-
 }
 
 void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id,
                                               bool lerp_from_start,
                                               bool propagate_to_the_end) {
-
   if (!animable()) {
       throw std::runtime_error("Object is not animable!");
     }
@@ -432,41 +403,35 @@ void geom_view_anim_subsys_t::commit_atom_pos(size_t atom_id,
     }
 
   for (int i = 0; i < c_start_frame; i++) {
-
       if (cur_anim->frames[i].atom_pos.size() <= atom_id)
         throw std::out_of_range(fmt::format("cur_anim->frames[{}].atom_pos not populated!", i));
-
       if (cur_anim->frames[c_start_frame].atom_pos.size() <= atom_id)
         throw std::out_of_range(fmt::format("cur_anim->frames[{}].atom_pos not populated!",
                                             c_start_frame));
-
       float i_c = i / (c_start_frame - i);
       cur_anim->frames[i].atom_pos[atom_id] = cur_anim->frames[i].atom_pos[atom_id] +
           (cur_anim->frames[i].atom_pos[atom_id] - cur_anim->frames[i].atom_pos[atom_id]) * i_c;
-
     }
-
 }
 
 void geom_view_anim_subsys_t::manual_frame_manipulate(const int frame_mod) {
-
   if (!animable()) {
       throw std::runtime_error("Object is not animable!");
     }
-
-  if (m_cur_anim >= m_anim_data.size()) return;
-
+  if (m_cur_anim >= m_anim_data.size())
+    return;
   m_cur_anim_time += frame_mod;
   m_cur_anim_time = std::clamp(m_cur_anim_time,
                                0.0f,
                                float(m_anim_data[m_cur_anim].frames.size()- 1));
   update_geom_to_anim();
-
 }
 
 geom_anim_record_t<float> *geom_view_anim_subsys_t::get_current_anim() {
-  if (m_cur_anim < m_anim_data.size()) return &m_anim_data[m_cur_anim];
-  else return nullptr;
+  if (m_cur_anim < m_anim_data.size())
+    return &m_anim_data[m_cur_anim];
+  else
+    return nullptr;
 }
 
 geom_anim_e geom_view_anim_subsys_t::get_cur_anim_type() const {
@@ -474,14 +439,12 @@ geom_anim_e geom_view_anim_subsys_t::get_cur_anim_type() const {
 }
 
 geom_anim_e geom_view_anim_subsys_t::get_anim_type_by_idx(size_t anim_idx) const {
-
-  if (anim_idx < m_anim_data.size())
+  if (anim_idx < m_anim_data.size()) {
     return m_anim_data[anim_idx].m_anim_type;
-  else {
-      throw std::out_of_range("invalid animation index");
-      return geom_anim_e::anim_generic;
-    }
-
+  } else {
+    throw std::out_of_range("invalid animation index");
+    return geom_anim_e::anim_generic;
+  }
 }
 
 size_t geom_view_anim_subsys_t::get_total_anims() const {
@@ -498,14 +461,15 @@ size_t geom_view_anim_subsys_t::current_frame_count() const {
 
 bool geom_view_anim_subsys_t::is_cell_animable(size_t anim_id, size_t frame_id) {
 
-  if (anim_id >= m_anim_data.size()) return false;
-  if (frame_id >= m_anim_data[anim_id].frames.size()) return false;
+  if (anim_id >= m_anim_data.size())
+    return false;
+  if (frame_id >= m_anim_data[anim_id].frames.size())
+    return false;
   return m_anim_data[anim_id].frames[frame_id].m_cell_is_animable;
 
 }
 
-vector3<float> geom_view_anim_subsys_t::get_cell_vectors(size_t anim_id,
-                                                         size_t frame_id,
+vector3<float> geom_view_anim_subsys_t::get_cell_vectors(size_t anim_id, size_t frame_id,
                                                          size_t cell_id) {
   if (is_cell_animable(anim_id, frame_id))
     return m_anim_data[anim_id].frames[frame_id].m_cell[cell_id];
@@ -514,17 +478,16 @@ vector3<float> geom_view_anim_subsys_t::get_cell_vectors(size_t anim_id,
     return p_owner->m_geom->cell.v[cell_id];
 
   return vector3<float>{0};
-
 }
 
 vector3<float> geom_view_anim_subsys_t::get_atom_pos(size_t anim_id,
                                                      size_t frame_id,
                                                      size_t atom_id) {
-
-  if (anim_id >= m_anim_data.size()) return vector3<float>{0};
-  if (frame_id >= m_anim_data[anim_id].frames.size()) return vector3<float>{0};
-  if (atom_id >= m_anim_data[anim_id].frames[frame_id].atom_pos.size()) return vector3<float>{0};
-
+  if (anim_id >= m_anim_data.size())
+    return vector3<float>{0};
+  if (frame_id >= m_anim_data[anim_id].frames.size())
+    return vector3<float>{0};
+  if (atom_id >= m_anim_data[anim_id].frames[frame_id].atom_pos.size())
+    return vector3<float>{0};
   return m_anim_data[anim_id].frames[frame_id].atom_pos[atom_id];
-
 }
