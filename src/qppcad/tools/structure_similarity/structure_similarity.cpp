@@ -57,7 +57,7 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
           this,
           &structure_similarity_widget_t::copy_to_cb_btn_clck);
 
-  m_gb_str_sim_main_lt->addRow(tr("Method"), m_cmb_method);
+  //m_gb_str_sim_main_lt->addRow(tr("Method"), m_cmb_method);
   m_gb_str_sim_main_lt->addRow(tr("Only selected"), m_chck_only_selected);
   m_gb_str_sim_main_lt->addRow(tr(""), m_btn_compute);
   m_gb_str_sim_main_lt->addRow(tr(""), m_btn_copy_to_clipboard);
@@ -71,7 +71,7 @@ structure_similarity_widget_t::structure_similarity_widget_t() : QDialog () {
     m_wdgt_lt->addWidget(m_anim_info[i]);
   }
 
-  m_gb_str_sim_out = new qspoiler_widget_t(tr("Results"));
+  m_gb_str_sim_out = new qspoiler_widget_t(tr("Results"), nullptr, false);
   m_gb_str_sim_out->setFixedWidth(QWIDGETSIZE_MAX);
   m_gb_str_sim_out_lt = new QVBoxLayout;
   m_gb_str_sim_out->add_content_layout(m_gb_str_sim_out_lt);
@@ -494,13 +494,10 @@ void str_sim_ws_item_rec_t::cmb_anim_changed(int idx) {
   m_cmb_anim_frame->clear();
 
   if (m_binded_gv && m_binded_gv->m_anim->animable()) {
-
     size_t anim_id = m_cmb_anim_name->currentIndex();
-
     if (anim_id < m_binded_gv->m_anim->get_total_anims())
       for (size_t i = 0 ; i < m_binded_gv->m_anim->m_anim_data[anim_id].frames.size(); i++)
         m_cmb_anim_frame->addItem(QString("%1").arg(i));
-
   }
 
   m_cmb_anim_frame->blockSignals(false);
