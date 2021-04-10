@@ -124,7 +124,7 @@ int size_guide_t::obj_insp_button_h() {
 }
 
 int size_guide_t::obj_insp_lbl_w() {
-  return 135;
+  return 115;
 }
 
 int size_guide_t::obj_insp_list_wdgt_h() {

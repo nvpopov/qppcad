@@ -11,6 +11,7 @@
 #include <QTextStream>
 #include <QCommandLineParser>
 #include <qppcad/core/ittnotify_support.hpp>
+#include <atomic>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -28,8 +29,10 @@ void on_app_exit(int signal) {
   QCoreApplication::exit(0);
 }
 
-int main (int argc, char **argv) {
+std::atomic_flag lock = ATOMIC_FLAG_INIT;
 
+int main (int argc, char **argv) {
+  std::atomic_flag_test_and_set(&lock);
   std::ios_base::sync_with_stdio(false);
 
   #ifdef WITH_VTUNE_INSTRUMENTATION

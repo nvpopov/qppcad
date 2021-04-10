@@ -36,7 +36,7 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
   m_top_frm->setLayout(m_hbox_frm);
 
   m_lbl_frm = new QLabel(title);
-  m_lbl_frm->setAlignment(Qt::AlignHCenter);
+  m_lbl_frm->setAlignment(Qt::AlignLeft);
   m_lbl_frm->setProperty("s_class", "qsplrhdr");
 
   m_action_btn = new QPushButton;
@@ -73,7 +73,6 @@ qspoiler_widget_t::qspoiler_widget_t(const QString & title,
           &qspoiler_widget_t::collapse_button_pressed);
 
   process_state();
-
 }
 
 void qspoiler_widget_t::set_top_border(bool border_enabled) {

@@ -22,7 +22,6 @@ using namespace qpp;
 using namespace qpp::cad;
 
 void geom_view_obj_insp_widget_t::construct_general_tab() {
-
   app_state_t *astate = app_state_t::get_inst();
 
   m_tg_geom_sum_total_atoms = new QLabel;
@@ -99,11 +98,9 @@ void geom_view_obj_insp_widget_t::construct_general_tab() {
   m_tab_general->tab_inner_widget_lt->addWidget(m_tg_gb_cell);
 
   m_tab_general->tab_inner_widget_lt->addStretch();
-
 }
 
 void geom_view_obj_insp_widget_t::construct_disp_tab() {
-
   app_state_t *astate = app_state_t::get_inst();
 
   m_gb_disp_s = new qspoiler_widget_t(tr("Draw Settings"));

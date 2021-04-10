@@ -193,7 +193,7 @@ void main_window_t::init_menus() {
   m_file_menu_export_sel_as = m_file_menu->addMenu(tr("Export selected item"));
 
   m_file_menu_recent_files = m_file_menu->addMenu(tr("Recent files"));
-  for (int i = 0; i < qpp::cad::max_recent_files; i++) {
+  for (int i = 0; i < static_cast<int>(qpp::cad::max_recent_files); i++) {
     QAction *recent_act = new QAction(m_file_menu_recent_files);
     m_file_menu_recent_entries[i] = recent_act;
     m_file_menu_recent_files->addAction(recent_act);
@@ -723,7 +723,6 @@ void main_window_t::init_widgets() {
 }
 
 void main_window_t::init_layouts() {
-
   app_state_t *astate = app_state_t::get_inst();
 
   m_main_lt = new QVBoxLayout;
@@ -829,7 +828,6 @@ void main_window_t::init_layouts() {
   m_tp_lt->addSpacing(10);
   //tool_panel_widget->stackUnder(ws_viewer_widget);
   m_ws_viewer_wdgt->lower();
-
 }
 
 void main_window_t::dragEnterEvent(QDragEnterEvent *event) {

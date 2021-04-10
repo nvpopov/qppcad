@@ -1,6 +1,6 @@
 * {
  font-family : "Heebo";
- font-size: 13pt;
+ font-size: 100%;
  font-weight: normal;
  color: rgb(209, 209, 209);
  background: rgb(79, 79, 79);
@@ -27,7 +27,7 @@ QLabel[s_class="thin_label"]{
 
 QLabel[s_class="lbl_overview"] {
  font-weight: 1;
- font-size: 11pt;
+ font-size: 100%;
  padding-top: 3px;
 }
 
@@ -468,7 +468,7 @@ QPushButton, QSpinBox, QDoubleSpinBox{
 }
 
 QSpinBox, QDoubleSpinBox{
- font-size: 12pt;
+ font-size: 100%;
 }
 
 QToolButton {
