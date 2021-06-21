@@ -81,7 +81,6 @@ using namespace qpp;
 using namespace qpp::cad;
 
 void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr) {
-
   reg_ws_item_fbr<geom_view_t>(bhv_mgr);
   reg_ws_item_fbr<ccd_view_t>(bhv_mgr);
   reg_ws_item_fbr<volume_view_t>(bhv_mgr);
@@ -97,11 +96,9 @@ void registration_helper_t::reg_ws_item_fbr(ws_item_behaviour_manager_t *bhv_mgr
   reg_ws_item_fbr<compl_list_view_t>(bhv_mgr);
   reg_ws_item_fbr<ws_vector3_t>(bhv_mgr);
   reg_ws_item_fbr<ws_matrix3_t>(bhv_mgr);
-
 }
 
 void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bhv_mgr) {
-
   reg_ws_item_obj_insp_fbr<geom_view_t, geom_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<volume_view_t, volume_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<ccd_view_t, ccd_view_obj_insp_widget_t>(bhv_mgr);
@@ -117,11 +114,9 @@ void registration_helper_t::reg_ws_item_obj_insp(ws_item_behaviour_manager_t *bh
   reg_ws_item_obj_insp_fbr<compl_list_view_t, compl_list_view_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<ws_vector3_t, ws_vector3_obj_insp_widget_t>(bhv_mgr);
   reg_ws_item_obj_insp_fbr<ws_matrix3_t, ws_matrix3_obj_insp_widget_t>(bhv_mgr);
-
 }
 
 void registration_helper_t::reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv_mgr) {
-
   reg_ws_item_ext_edt_fbr<node_book_t, node_book_extended_editor_t>(
       0, "node book editor", bhv_mgr);
 
@@ -139,13 +134,10 @@ void registration_helper_t::reg_ws_item_ext_edt(ws_item_behaviour_manager_t *bhv
 
   reg_ws_item_ext_edt_fbr<pdos_view_t, pdos_view_extended_editor_t>(
       0, "pdos viewer", bhv_mgr);
-
 }
 
 void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
-
   /* ff hashes */
-
   size_t xyz_ff_g_hash = bhv_mgr->reg_ffg("XYZ", "xyz");
   size_t vasp_ff_g_hash = bhv_mgr->reg_ffg("VASP", "vasp");
   size_t firefly_ff_g_hash = bhv_mgr->reg_ffg("Firefly", "ff");
@@ -353,7 +345,6 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
   bhv_mgr->reg_io_bhv(orca_output_mgf, orca_output_ff_hash,
                       geom_view_t::get_type_static());
-
 }
 
 void registration_helper_t::reg_toolbar_elements_bhv(ws_item_behaviour_manager_t *bhv_mgr) {
@@ -361,7 +352,6 @@ void registration_helper_t::reg_toolbar_elements_bhv(ws_item_behaviour_manager_t
 }
 
 void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_mgr) {
-
   size_t hash_t_generator = bhv_mgr->reg_tool_grp("Generators");
   size_t hash_t_colorize = bhv_mgr->reg_tool_grp("Colorize");
   size_t hash_t_tr = bhv_mgr->reg_tool_grp("Modify geometry");
@@ -428,5 +418,4 @@ void registration_helper_t::reg_ws_item_tools(ws_item_behaviour_manager_t *bhv_m
 
   registration_helper_t::reg_ws_item_tool<sel_parity_tool_t, geom_view_t>(
       "Select atoms by parity", hash_t_selection, bhv_mgr, true);
-
 }

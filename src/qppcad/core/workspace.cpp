@@ -388,7 +388,6 @@ void workspace_t::render_overlay(QPainter &painter) {
 }
 
 void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
-
   timer_t mc_time;
   app_state_t* astate = app_state_t::get_inst();
   if (m_camera.m_cur_proj == cam_proj_t::proj_persp) {
@@ -423,7 +422,6 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   }
 
   for (size_t i = 0; i < num_items(); i++) {
-
     auto ws_item = m_ws_items.get_hs_child_as_array(i);
     if (!ws_item)
       continue;
@@ -435,11 +433,9 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
         && p_edit_type == ws_edit_type_e::edit_item
         && ws_item->m_is_visible.get_value()
         && (ws_item->get_flags() & ws_item_flags_support_sel)) {
-
       m_gizmo->attached_item = ws_item.get();
       set_sel_item(i);
       break;
-
     }
 
   } // end of for (auto &ws_item : m_ws_items)
@@ -455,11 +451,9 @@ void workspace_t::mouse_click(const float mouse_x, const float mouse_y) {
   }
 
   astate->tlog("ws::mouse click spent {} sec.", mc_time.elapsed());
-
 }
 
 void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
-
   auto cur_it = get_sel();
   if (!cur_it)
     return;
@@ -472,11 +466,10 @@ void workspace_t::mouse_double_click(const float mouse_x, const float mouse_y) {
   if (cur_it->get_num_cnt_selected() == 0 && p_edit_type == ws_edit_type_e::edit_content) {
     set_edit_type(ws_edit_type_e::edit_item);
   }
-
 }
 
-void workspace_t::add_item_to_ws(std::shared_ptr<ws_item_t> item_to_add, bool add_new_epoch) {
-
+void workspace_t::add_item_to_ws(std::shared_ptr<ws_item_t> item_to_add,
+                                 bool add_new_epoch) {
   app_state_t *astate = app_state_t::get_inst();
   item_to_add->m_parent_ws = this;
   m_ws_items.add_hs_child_as_array(item_to_add, add_new_epoch);
@@ -488,14 +481,11 @@ void workspace_t::add_item_to_ws(std::shared_ptr<ws_item_t> item_to_add, bool ad
                add_new_epoch);
 
   astate->astate_evd->cur_ws_changed();
-
 }
 
 void workspace_t::update_overview(const std::string &overview_text) {
-
   app_state_t *astate = app_state_t::get_inst();
   astate->astate_evd->request_update_overview(overview_text);
-
 }
 
 void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delete) {
