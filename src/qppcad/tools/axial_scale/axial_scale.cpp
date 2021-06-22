@@ -18,7 +18,7 @@ void axial_scale_tool_t::exec(ws_item_t *item, uint32_t _error_ctx) {
   if (al->m_geom->get_DIM() != 3) {
     QMessageBox::warning(nullptr,
                          QObject::tr("Axial scale"),
-                         QObject::tr("Structure's dimension is not equals to 3"));
+                         QObject::tr("Dimension of structure is not equal to 3"));
     return;
   }
 

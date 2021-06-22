@@ -138,7 +138,8 @@ public:
   }
 };
 
-template<auto CCD_FUNC, bool COMPILE_CCD = false, bool EXTRACT_CCD = false,
+template<auto CCD_FUNC,
+         bool COMPILE_CCD = false, bool EXTRACT_CCD = false,
          bool COMPILE_FROM_CCD = false, bool AUTO_CENTER = false,
          bool COPY_DIM_FROM_CCD = false, int FORCED_DIM = -1>
 class geom_view_io_ccd_t : public ws_item_io_bt_bhv_t {

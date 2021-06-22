@@ -99,8 +99,9 @@ std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
   return std::nullopt;
 }
 
-bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit_hs_event) {
-
+bool workspace_t::set_sel_item(const size_t sel_idx,
+                               bool emit_signal,
+                               bool emit_hs_event) {
   app_state_t* astate = app_state_t::get_inst();
   p_inside_selection_event = true;
 
@@ -149,7 +150,6 @@ bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit
 
   p_inside_selection_event = false;
   return false;
-
 }
 
 bool workspace_t::set_sel_item(ws_item_t *item, bool emit_signal, bool emit_hs_event) {
@@ -206,7 +206,6 @@ void workspace_t::reset_cam() {
 }
 
 void workspace_t::set_best_view() {
-
   if (num_items() == 0) {
     m_camera.reset_camera();
     m_camera.update_camera();
@@ -217,7 +216,8 @@ void workspace_t::set_best_view() {
   vector3<float> vec_look_pos{0.0, 0.0, 0.0};
   vector3<float> vec_look_up{0.0, 0.0, 0.0};
 
-  // special case : there is only one element in the workspace that supports cam_target_view
+  // special case : there is only one element in the workspace
+  // that supports cam_target_view
   int num_items_tv = 0;
   bool need_to_update_camera{false};
   bool cam_staged{false};
@@ -267,11 +267,9 @@ void workspace_t::set_best_view() {
   if ((m_camera.get_look_at() - m_camera.get_view_point()).norm() < 0.4f
       || vec_look_at == vec_look_pos)
     m_camera.reset_camera();
-
 }
 
 hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
-
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
 
@@ -301,7 +299,8 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
         alive_cnt_after++;
     }
     astate->tlog("\n Epoch changed in workspace {0}\n"
-                 " alive_cnt_bef = {1}, alive_cnt_aft = {2}, prev_epoch = {3}, cur_epoch = {4}",
+                 " alive_cnt_bef = {1}, alive_cnt_aft = {2},"
+                 " prev_epoch = {3}, cur_epoch = {4}",
                  m_ws_name, alive_cnt_before, alive_cnt_after, prev_epoch, cur_epoch);
     m_cur_itm.set_commit_exclusive_on_change(false);
     astate->tlog("@@@ OnEPChanged, m_cur_itm = {}", m_cur_itm.get_value());
@@ -322,11 +321,9 @@ hs_result_e workspace_t::on_epoch_changed(hs_doc_base_t::epoch_t prev_epoch) {
   }
 
   return hs_result_e::hs_success;
-
 }
 
 void workspace_t::render() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_gizmo->m_is_active && m_gizmo->attached_item)
@@ -374,7 +371,6 @@ void workspace_t::render() {
       continue;
     ws_item->render();
   }
-
 }
 
 void workspace_t::render_overlay(QPainter &painter) {
@@ -502,7 +498,6 @@ void workspace_t::clear_connected_items(std::shared_ptr<ws_item_t> item_to_delet
 }
 
 void workspace_t::save_ws_to_json(const std::string filename) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   std::ofstream out_file(filename);
@@ -531,18 +526,15 @@ void workspace_t::save_ws_to_json(const std::string filename) {
   data[JSON_OBJECTS] = ws_objects;
   out_file << data.dump(2);
   astate->astate_evd->new_file_loaded(filename, 0, true);
-
 }
 
 void workspace_t::load_ws_from_json(const std::string filename) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   std::fstream ifile(filename);
   json data;
 
   try {
-
     repair_connection_info_t rep_info;
 
     data = json::parse(ifile);
@@ -605,15 +597,12 @@ void workspace_t::load_ws_from_json(const std::string filename) {
     }
 
     m_fs_path = filename;
-
   } catch (json::parse_error &e) {
     std::cerr << e.what() << " " << std::endl;
   }
-
 }
 
 void workspace_t::update(float delta_time) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (m_first_render) {
@@ -640,7 +629,6 @@ void workspace_t::update(float delta_time) {
       continue;
     ws_item->update(delta_time);
   }
-
 }
 
 void workspace_t::set_edit_type (const ws_edit_type_e new_edit_type, bool emit_hs_event) {
@@ -690,7 +678,6 @@ std::string workspace_t::py_get_repr() {
 
 std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name,
                                                           std::string item_name) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (!p_mgr) {
@@ -713,7 +700,6 @@ std::shared_ptr<ws_item_t> workspace_t::py_construct_item(std::string class_name
   new_item->m_name.set_value(std::move(item_name));
   add_item_to_ws(new_item);
   return new_item;
-
 }
 
 workspace_manager_t::workspace_manager_t (app_state_t *_astate) {
@@ -730,7 +716,6 @@ std::shared_ptr<workspace_t> workspace_manager_t::get_cur_ws () {
 }
 
 workspace_t *workspace_manager_t::get_cur_rptr() {
-
   if (!m_cur_ws_id)
     return nullptr;
 
@@ -738,7 +723,6 @@ workspace_t *workspace_manager_t::get_cur_rptr() {
     return nullptr;
 
   return m_ws[*m_cur_ws_id].get();
-
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_by_name(std::string target_name) {
@@ -755,7 +739,6 @@ std::optional<size_t> workspace_manager_t::get_cur_id() {
 }
 
 bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (has_wss()) {
@@ -779,7 +762,6 @@ bool workspace_manager_t::set_cur_id(const std::optional<size_t> ws_index) {
   }
 
   return false;
-
 }
 
 std::shared_ptr<workspace_t> workspace_manager_t::get_ws(int id) {
@@ -816,7 +798,6 @@ void workspace_manager_t::cur_ws_prev_item() {
 }
 
 void workspace_manager_t::init_default () {
-
   QStringList files = {
     "../data/refs/POSCAR.mp-558947_SiO2",
     "../data/refs/mp-971662_Si.vasp",
@@ -847,11 +828,9 @@ void workspace_manager_t::init_default () {
   nb1_c->m_name.set_value("nodebook1");
   m_ws.back()->add_item_to_ws(nb1);
   m_ws.back()->squash();
-
 }
 
 void workspace_manager_t::render_cur_ws () {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (has_wss()) {
@@ -868,11 +847,9 @@ void workspace_manager_t::render_cur_ws () {
 
   astate->glapi->glClearColor(0.4f, 0.4f, 0.4f, 1);
   astate->glapi->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 }
 
 void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
-
   app_state_t *astate = app_state_t::get_inst();
 
   if (!has_wss())
@@ -881,12 +858,10 @@ void workspace_manager_t::render_cur_ws_overlay(QPainter &painter) {
   if (m_cur_ws_id && *m_cur_ws_id < m_ws.size()) {
     m_ws[*m_cur_ws_id]->render_overlay(painter);
   }
-
 }
 
 
 void workspace_manager_t::mouse_click () {
-
   #ifdef WITH_VTUNE_INSTRUMENTATION
   __itt_task_begin(instrumentation::d_qppcad,
                    __itt_null,
@@ -907,18 +882,14 @@ void workspace_manager_t::mouse_click () {
   #ifdef WITH_VTUNE_INSTRUMENTATION
   __itt_task_end(instrumentation::d_qppcad);
   #endif
-
 }
 
 void workspace_manager_t::mouse_double_click() {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (has_wss()) {
     get_cur_ws()->mouse_double_click(astate->mouse_x_dc, astate->mouse_y_dc);
     astate->make_viewport_dirty();
   }
-
 }
 
 void workspace_manager_t::ws_mgr_changed() {
@@ -933,37 +904,27 @@ void workspace_manager_t::add_ws (const std::shared_ptr<workspace_t> &ws_to_add)
 }
 
 void workspace_manager_t::init_ws_item_bhv_mgr() {
-
   m_bhv_mgr = std::make_shared<ws_item_behaviour_manager_t>();
-
   registration_helper_t::reg_ws_item_fbr(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_io_bhv(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_obj_insp(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_tools(m_bhv_mgr.get());
   registration_helper_t::reg_ws_item_ext_edt(m_bhv_mgr.get());
   registration_helper_t::reg_toolbar_elements_bhv(m_bhv_mgr.get());
-
   sf_node_reg_hlp_t::reg_sf_info(m_bhv_mgr.get());
-
 }
 
 void workspace_manager_t::move_ws(size_t from, size_t to) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (from == to || from >= m_ws.size() || to >= m_ws.size())
     return;
-
   std::swap(m_ws[from], m_ws[to]);
   set_cur_id(std::optional<size_t>(to));
-
   astate->astate_evd->wss_changed();
-
 }
 
 
 void workspace_manager_t::load_from_file(const std::string &fname, bool override) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (!override)
@@ -985,7 +946,6 @@ void workspace_manager_t::load_from_file(const std::string &fname, bool override
   set_cur_id(m_ws.size()-1);
 
   astate->astate_evd->new_file_loaded(fname, 0, true);
-
 }
 
 void workspace_manager_t::import_from_file(const std::string &fname,
@@ -1081,7 +1041,6 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name
                                                     const std::string &file_format,
                                                     bool new_ws,
                                                     bool squash_hs) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   //restore file`s absolute path
@@ -1118,24 +1077,19 @@ void workspace_manager_t::load_from_file_autodeduce(const std::string &file_name
       }
     }
   }
-
 }
 
 void workspace_manager_t::create_new_ws(bool switch_to_new_workspace) {
-
   auto new_ws = std::make_shared<workspace_t>();
   new_ws->m_ws_name = fmt::format("new_workspace{}", m_ws.size());
   new_ws->set_mgr(this);
   m_ws.push_back(new_ws);
-
   if (switch_to_new_workspace)
     set_cur_id(m_ws.size()-1);
   ws_mgr_changed();
-
 }
 
 std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
-
   auto cur_ws = get_cur_ws();
   if (!cur_ws)
     return nullptr;
@@ -1145,11 +1099,9 @@ std::shared_ptr<ws_item_t> workspace_manager_t::get_sel_itm_sp() {
     return nullptr;
 
   return cur_it;
-
 }
 
 void workspace_manager_t::utility_event_loop() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   bool has_been_deleted{false};
@@ -1164,7 +1116,8 @@ void workspace_manager_t::utility_event_loop() {
         else if (int(*cur_ws_idx) - 1 < 0)
           m_cur_ws_id = std::optional<size_t>(0);
         else
-          m_cur_ws_id = std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
+          m_cur_ws_id =
+              std::optional<size_t>(std::clamp<size_t>(int(*cur_ws_idx) - 1, 0, 100));
       }
       it = m_ws.erase(it);
       set_cur_id(m_cur_ws_id);
@@ -1176,7 +1129,6 @@ void workspace_manager_t::utility_event_loop() {
 
   if (has_been_deleted)
     astate->astate_evd->wss_changed();
-
 }
 
 

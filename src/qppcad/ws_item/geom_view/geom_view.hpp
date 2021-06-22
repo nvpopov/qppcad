@@ -174,7 +174,8 @@ public:
 
   geom_view_t();
 
-  void vote_for_view_vectors(vector3<float> &out_look_pos, vector3<float> &out_look_at) override ;
+  void vote_for_view_vectors(vector3<float> &out_look_pos,
+                             vector3<float> &out_look_at) override ;
 
   /**
    * @brief target_view

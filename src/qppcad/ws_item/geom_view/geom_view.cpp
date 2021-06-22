@@ -21,8 +21,7 @@ using namespace qpp;
 using namespace qpp::cad;
 
 geom_view_t::geom_view_t(): ws_item_t() {
-
-  /*hs begin*/
+  /*hs basic begin*/
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_shading_specular_power);
@@ -77,7 +76,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
   m_sel_vis.set_value(false);
   m_sel_vis_affect_bonds.set_value(false);
 
-  /*hs end*/
+  /*hs basic end*/
 
   set_default_flags(ws_item_flags_default
                     | ws_item_flags_support_tr
@@ -93,7 +92,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
                     | ws_item_flags_support_view_voting
                     | ws_item_flags_cam_target_view);
 
-  m_geom = std::make_shared<xgeometry<float, periodic_cell<float> > >(3, "rg1");
+  m_geom = std::make_shared<xgeometry<float, periodic_cell<float>>>(3, "rg1");
 
   /* 0 atom
    * 1 X
@@ -109,7 +108,6 @@ geom_view_t::geom_view_t(): ws_item_t() {
    */
 
   m_geom->set_format(
-
       {"atom", //0
           "x",//1
           "y",//2
@@ -142,7 +140,7 @@ geom_view_t::geom_view_t(): ws_item_t() {
        basic_types::type_bool, // 12
        basic_types::type_real, // 13
        basic_types::type_string //14
-      } );
+      });
 
   m_geom->set_DIM(0);
   //m_geom->cell.DIM = 0;
@@ -153,11 +151,11 @@ geom_view_t::geom_view_t(): ws_item_t() {
   m_tws_tr  = std::make_unique<tws_tree_t<float>>(*m_geom);
   m_tws_tr->do_action(act_unlock);
 
-  m_anim = std::make_shared<geom_view_anim_subsys_t>(*this);
-  m_measure = std::make_shared<geom_view_msr_subsys_t>(*this);
-  m_labels = std::make_shared<geom_view_labels_subsys_t>(*this);
+  m_anim       = std::make_shared<geom_view_anim_subsys_t>(*this);
+  m_measure    = std::make_shared<geom_view_msr_subsys_t>(*this);
+  m_labels     = std::make_shared<geom_view_labels_subsys_t>(*this);
   m_lat_planes = std::make_shared<geom_view_lat_planes_subsys_t>(*this);
-  m_selg = std::make_shared<geom_view_sel_groups_subsys_t>(*this);
+  m_selg       = std::make_shared<geom_view_sel_groups_subsys_t>(*this);
 
   m_xgeom_proxy.set_xgeom(m_geom.get());
 
@@ -167,7 +165,6 @@ geom_view_t::geom_view_t(): ws_item_t() {
   add_hs_child(m_labels.get());
   add_hs_child(m_lat_planes.get());
   add_hs_child(m_selg.get());
-
 }
 
 void geom_view_t::vote_for_view_vectors(vector3<float> &out_look_pos, vector3<float> &out_look_at){
@@ -188,7 +185,6 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
                               vector3<float> &look_to,
                               vector3<float> &look_up,
                               bool &need_to_update_camera) {
-
   auto new_target_view = target_view_src;
 
   if (new_target_view == cam_tv_e::tv_auto) {
@@ -205,8 +201,10 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
   case cam_tv_e::tv_x : {
     float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-    look_from = m_pos.get_value() - 2.0f*vector3<float>(axis_size, 0.0, 0.0);
-    look_to = m_pos.get_value();
+    look_from = m_pos.get_value()
+                + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
+
+    look_to = m_pos.get_value() + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
     look_up = {0.0 , 0.0 , 1.0};
     need_to_update_camera = true;
     break;
@@ -214,7 +212,7 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
   case cam_tv_e::tv_y : {
     float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
-    look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, axis_size, 0.0);
+    look_from = m_pos.get_value() - 1.0f*vector3<float>(0.0, axis_size, 0.0);
     look_to = m_pos.get_value();
     look_up = {0.0, 0.0, 1.0};
     need_to_update_camera = true;
@@ -223,7 +221,7 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
 
   case cam_tv_e::tv_z : {
     float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
-    look_from = m_pos.get_value() - 2.0f*vector3<float>(0.0, 0.0, axis_size);
+    look_from = m_pos.get_value() - 1.0f*vector3<float>(0.0, 0.0, axis_size);
     look_to = m_pos.get_value();
     look_up = {0.0, 1.0, 0.0};
     need_to_update_camera = true;
@@ -231,7 +229,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   }
 
   case cam_tv_e::tv_a : {
-    vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    vector3<float> center =
+        0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
     look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[0];
     look_to = m_pos.get_value()  + center;
     look_up = {0.0 , 0.0 , 1.0};
@@ -240,7 +239,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   }
 
   case cam_tv_e::tv_b : {
-    vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    vector3<float> center =
+        0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
     look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[1];
     look_to = m_pos.get_value()  + center;
     look_up = {0.0, 0.0, 1.0};
@@ -249,7 +249,8 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   }
 
   case cam_tv_e::tv_c : {
-    vector3<float> center = 0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    vector3<float> center =
+        0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
     look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[2];
     look_to = m_pos.get_value()  + center;
     look_up = {0.0, 1.0, 0.0};
@@ -272,7 +273,6 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   }
 
   }
-
 }
 
 void geom_view_t::geometry_changed() {
@@ -452,7 +452,7 @@ bool geom_view_t::mouse_click(ray_t<float> *click_ray) {
     if (!res.empty()) {
       std::sort(res.begin(), res.end(), &tws_query_data_sort_by_dist<float, size_t>);
       if (m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content && m_selected) {
-        if (res[0].m_idx == index::D(m_geom->get_DIM()).all(0)) {
+        if (res[0].m_idx.is_zero()) {
           begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
           m_geom->toggle_selected(res[0].m_atm);
           end_recording();
@@ -683,7 +683,6 @@ void geom_view_t::copy_from_xgeom(xgeometry<float, periodic_cell<float>> &xgeom_
 
 void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float>> &xgeom_inst,
                                 bool copy_selected, bool copy_cell) {
-
   if (!m_geom)
     return;
 
@@ -705,11 +704,9 @@ void geom_view_t::copy_to_xgeom(xgeometry<float, periodic_cell<float>> &xgeom_in
     for (int i = 0; i < m_geom->nat(); i++)
       xgeom_inst.add(m_geom->atom(i), m_geom->pos(i));
   }
-
 }
 
 void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tree) {
-
   app_state_t *astate = app_state_t::get_inst();
 
   if (rebuild_tree) {
@@ -729,13 +726,11 @@ void geom_view_t::copy_cell(geom_view_t &src, bool rebuild_tree) {
 
   if (is_selected() && m_parent_ws)
     astate->astate_evd->cur_ws_selected_item_changed();
-
 }
 
 void geom_view_t::set_cell(std::optional<vector3<float> > a,
                            std::optional<vector3<float> > b,
                            std::optional<vector3<float> > c) {
-
   if (m_geom->get_DIM() == 1 && a) {
     begin_structure_change();
     m_geom->cell.v[0] = *a;
@@ -759,7 +754,6 @@ void geom_view_t::set_cell(std::optional<vector3<float> > a,
     end_structure_change();
     return;
   }
-
 }
 
 void geom_view_t::load_color_from_static_anim() {
@@ -883,11 +877,9 @@ std::string geom_view_t::compose_type_descr() {
 }
 
 std::string geom_view_t::compose_overview() {
-
   app_state_t *astate = app_state_t::get_inst();
-
-  if (m_geom->num_aselected() < astate->m_gv_overview_max_atoms && !m_geom->no_aselected()) {
-
+  if (m_geom->num_aselected() < astate->m_gv_overview_max_atoms
+      && !m_geom->no_aselected()) {
     std::map<size_t, size_t> lkp_sel_types;
     bool succes{true};
     size_t tot_sel_types{0};
@@ -920,17 +912,13 @@ std::string geom_view_t::compose_overview() {
       }
 
       return fmt::format("[Selected : [{}]]", selection);
-
     }
-
   }
 
   return fmt::format("[Selected : {}]", m_geom->num_aselected());
-
 }
 
 void geom_view_t::update (float delta_time) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   ws_item_t::update(delta_time);
@@ -942,14 +930,14 @@ void geom_view_t::update (float delta_time) {
 
   if (m_tws_tr->m_atoms_existence_is_broken) {
     m_tws_tr->m_atoms_existence_is_broken = false;
-    if (m_selected) astate->astate_evd->cur_ws_selected_item_changed();
+    if (m_selected)
+      astate->astate_evd->cur_ws_selected_item_changed();
   }
 
   if (m_need_to_update_overview && m_selected && m_parent_ws) {
     m_parent_ws->update_overview(compose_overview());
     m_need_to_update_overview = false;
   }
-
 }
 
 float geom_view_t::get_bb_prescaller() {
@@ -971,7 +959,6 @@ size_t geom_view_t::get_content_count() {
 }
 
 void geom_view_t::on_begin_content_gizmo_translate() {
-
   std::cout << "geom_view_t::on_begin_content_gizmo_translate()" << std::endl;
   m_xgeom_proxy.set_ignore_changes(true);
 
@@ -981,21 +968,19 @@ void geom_view_t::on_begin_content_gizmo_translate() {
 
   for (auto i = 0; i < m_geom->num_selected(); i++) {
       auto rec = m_geom->nth_aselected(i);
-      if (!rec) continue;
+      if (!rec)
+        continue;
       auto it = *rec;
       change_atom_pos_event_t<float> change_atom_pos_ev;
       change_atom_pos_ev.m_atom_idx = it.m_atm;
       change_atom_pos_ev.m_before_apos = m_geom->pos(it.m_atm);
       tmp_acts.push_back(std::move(change_atom_pos_ev));
-
   }
 
   m_xgeom_proxy.set_tmp_acts(std::move(tmp_acts));
-
 }
 
 void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos) {
-
   app_state_t* astate = app_state_t::get_inst();
   if (!m_geom)
     return;
@@ -1015,26 +1000,22 @@ void geom_view_t::apply_intermediate_translate_content(const vector3<float> &pos
     recalc_gizmo_barycenter();
     astate->astate_evd->cur_ws_selected_atoms_list_selected_content_changed();
   }
-
 }
 
 void geom_view_t::on_end_content_gizmo_translate() {
-
   m_xgeom_proxy.set_ignore_changes(true);
   m_xgeom_proxy.make_tmp_epoch_permanent();
-
   std::cout << "geom_view_t::on_end_content_gizmo_translate()" << std::endl;
-
 }
 
 void geom_view_t::recalc_gizmo_barycenter() {
   //barycenter in local frame
   m_gizmo_barycenter = vector3<float>::Zero();
-
   if (!m_geom->no_aselected() || m_geom->nat() == 0) {
     for (auto i = 0; i < m_geom->num_aselected(); i++) {
       auto rec = m_geom->nth_aselected(i);
-      if (!rec) continue;
+      if (!rec)
+        continue;
       auto it = *rec;
       m_gizmo_barycenter += m_geom->pos(it.m_atm, it.m_idx);
     }
@@ -1042,7 +1023,6 @@ void geom_view_t::recalc_gizmo_barycenter() {
   } else {
     m_gizmo_barycenter = m_aabb.min;
   }
-
 }
 
 const vector3<float> geom_view_t::get_gizmo_content_barycenter() {
@@ -1054,7 +1034,6 @@ void geom_view_t::updated_externally(uint32_t update_reason) {
 }
 
 void geom_view_t::save_to_json(json &data) {
-
   ws_item_t::save_to_json(data);
 
   data[JSON_GV_DIM] = m_geom->get_DIM();
@@ -1225,11 +1204,9 @@ void geom_view_t::save_to_json(json &data) {
   }
 
   m_measure->save_to_json(data);
-
 }
 
 void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
-
   ws_item_t::load_from_json(data, rep_info);
 
   if (auto val_itr = data.find(JSON_GV_DIM); val_itr != data.end()) {
@@ -1428,7 +1405,6 @@ void geom_view_t::load_from_json(json &data, repair_connection_info_t &rep_info)
 
   geometry_changed();
   m_tws_tr->do_action(act_unlock | act_build_all);
-
 }
 
 bool geom_view_t::can_be_written_to_json() {
@@ -1468,7 +1444,6 @@ py::list geom_view_t::get_unsel_atoms(int index_offset) {
 }
 
 void geom_view_t::copy_settings(geom_view_t *src) {
-
   if (!src)
     return;
 

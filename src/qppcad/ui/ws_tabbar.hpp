@@ -6,28 +6,25 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    class ws_tabbar_t : public QTabBar {
+class ws_tabbar_t : public QTabBar {
 
-        Q_OBJECT
+  Q_OBJECT
 
-      public:
+public:
+  explicit ws_tabbar_t(QWidget *parent = nullptr);
+  void update_tabs();
 
-        explicit ws_tabbar_t(QWidget *parent = nullptr);
-        void update_tabs();
+public slots:
+  void tabs_closed(int index);
+  void cur_ws_changed();
+  void wss_changed_slot();
+  void current_changed(int current);
+  void tab_double_clicked(int index);
+};
 
-      public slots:
-
-        void tabs_closed(int index);
-        void cur_ws_changed();
-        void wss_changed_slot();
-        void current_changed(int current);
-        void tab_double_clicked(int index);
-
-    };
-
-  } // namespace cad
+} // namespace cad
 
 } // namespace qpp
 
