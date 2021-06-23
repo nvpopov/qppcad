@@ -203,58 +203,41 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   /* ws_item_t io mgrs */
   auto xyz_ff_mgr =
       std::make_shared<
-          geom_view_io_ccd_t<
-              read_ccd_from_xyz_file<float>, true, true, true, false, false >
-          >();
+          geom_view_io_ccd_t<read_ccd_from_xyz_file<float>, true, true, true, true, false>>();
 
   auto xyz_s_ff_mgr =
       std::make_shared<
-          geom_view_io_saver_t<
-              write_xyz<float, periodic_cell<float> > >
-          >();
+          geom_view_io_saver_t<write_xyz<float, periodic_cell<float>>>>();
 
   auto xyzq_mgf =
       std::make_shared<
           geom_view_io_loader_t<
-              read_xyzq_wrp_def<float, periodic_cell<float> >, geom_view_role_e::r_uc >
-          >();
+            read_xyzq_wrp_def<float, periodic_cell<float>>, geom_view_role_e::r_uc>>();
 
   auto xyzq_s_mgf =
       std::make_shared<
-          geom_view_io_saver_t<
-              write_xyzq<float, periodic_cell<float> >, true, 3 >
-          >();
+          geom_view_io_saver_t<write_xyzq<float, periodic_cell<float>>, true, 3>>();
 
   auto ff_output_mgf =
       std::make_shared<
-          geom_view_io_ccd_t<
-              read_ccd_from_firefly_output<float>, true, true, true, true, false, 0 >
-          >();
+          geom_view_io_ccd_t<read_ccd_from_firefly_output<float>, true, true, true, true, false, 0>>();
 
   auto cp2k_output_mgf =
       std::make_shared<
-          geom_view_io_ccd_t<
-              read_ccd_from_cp2k_output<float>, true, true, true, false, true >
-          >();
+          geom_view_io_ccd_t<read_ccd_from_cp2k_output<float>, true, true, true, false, true>>();
 
   auto cp2k_cs_mgf =
       std::make_shared<
-          geom_view_io_saver_t<
-              write_cp2k_coord_section<float, periodic_cell<float> >, true, 3 >
-          >();
+          geom_view_io_saver_t<write_cp2k_coord_section<float, periodic_cell<float> >, true, 3>>();
 
   auto vasp_poscar_mgf =
       std::make_shared<
-          geom_view_io_loader_t<
-              read_vasp_poscar<float, periodic_cell<float> >, geom_view_role_e::r_generic, 3 >
-          >();
+          geom_view_io_loader_t<read_vasp_poscar<float, periodic_cell<float>>,
+                                geom_view_role_e::r_generic, 3>>();
 
   auto vasp_poscar_s_mgf =
       std::make_shared<
-          geom_view_io_saver_t<
-              write_vasp_poscar<
-                  float, periodic_cell<float> >, true, 3 >
-          >();
+          geom_view_io_saver_t<write_vasp_poscar<float, periodic_cell<float>>, true, 3>>();
 
   auto vasp_chgcar_mgf = std::make_shared<geom_view_vasp_chgcar_t>();
 
@@ -273,23 +256,23 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
   auto write_atoms_with_coord_and_chg_mgf =
       std::make_shared<
           geom_view_io_saver_t<write_atoms_with_coord_and_chg<float, periodic_cell<float> >,
-                               false, 0 > >();
+                               false, 0>>();
 
   auto vasp_outcar_mgf =
       std::make_shared<
           geom_view_io_anim_loader_t<
-              read_vasp_outcar_md_with_frames<float, periodic_cell<float> >, 3 >
+              read_vasp_outcar_md_with_frames<float, periodic_cell<float>>, 3>
           >();
 
   auto generic_cube_mgf = std::make_shared<geom_view_io_cube_t>();
 
   auto molden_mgf =
       std::make_shared<
-          geom_view_io_ccd_t<read_ccd_from_molden<float>,  true, true, true, false, false, 0> >();
+          geom_view_io_ccd_t<read_ccd_from_molden<float>,  true, true, true, false, false, 0>>();
 
   auto hoomd_xml_mgf =
       std::make_shared<
-          geom_view_io_ccd_t<read_ccd_from_hoomd_xml<float>,  true, true, true, false, false, 3> >();
+          geom_view_io_ccd_t<read_ccd_from_hoomd_xml<float>,  true, true, true, false, false, 3>>();
 
   auto generic_cube3d_mgf = std::make_shared<geom_view_io_cube_t>();
 
@@ -299,7 +282,7 @@ void registration_helper_t::reg_ws_item_io_bhv(ws_item_behaviour_manager_t *bhv_
 
   auto orca_output_mgf =
       std::make_shared<
-          geom_view_io_ccd_t<read_ccd_from_orca_output<float>,  true, true, true, false, false, 0> >();
+          geom_view_io_ccd_t<read_ccd_from_orca_output<float>, true, true, true, false, false, 0>>();
 
   /* register ws_item io bhv */
 

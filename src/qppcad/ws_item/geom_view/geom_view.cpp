@@ -181,8 +181,8 @@ void geom_view_t::vote_for_view_vectors(vector3<float> &out_look_pos, vector3<fl
 }
 
 void geom_view_t::target_view(cam_tv_e target_view_src,
-                              vector3<float> &look_from,
-                              vector3<float> &look_to,
+                              vector3<float> &look_view_point,
+                              vector3<float> &look_at,
                               vector3<float> &look_up,
                               bool &need_to_update_camera) {
   auto new_target_view = target_view_src;
@@ -200,69 +200,68 @@ void geom_view_t::target_view(cam_tv_e target_view_src,
   switch (new_target_view) {
 
   case cam_tv_e::tv_x : {
-    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-    look_from = m_pos.get_value()
-                + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
-
-    look_to = m_pos.get_value() + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
-    look_up = {0.0 , 0.0 , 1.0};
+    auto bbsize = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
+    auto center = m_pos.get_value() + 0.5 * bbsize;
+    look_at = center;
+    look_view_point = center + vector3<float>{1.2 * bbsize.x(), 0, 0};
+    look_up = {0.0, 0.0, 1.0};
     need_to_update_camera = true;
     break;
   }
 
   case cam_tv_e::tv_y : {
-    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[1] - m_ext_obs->aabb.min[1]);
-    look_from = m_pos.get_value() - 1.0f*vector3<float>(0.0, axis_size, 0.0);
-    look_to = m_pos.get_value();
+    auto bbsize = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
+    auto center = m_pos.get_value() + 0.5 * bbsize;
+    look_at = center;
+    look_view_point = center + vector3<float>{0.0, 1.2 * bbsize.y(), 0.0};
     look_up = {0.0, 0.0, 1.0};
     need_to_update_camera = true;
     break;
   }
 
   case cam_tv_e::tv_z : {
-    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[2] - m_ext_obs->aabb.min[2]);
-    look_from = m_pos.get_value() - 1.0f*vector3<float>(0.0, 0.0, axis_size);
-    look_to = m_pos.get_value();
-    look_up = {0.0, 1.0, 0.0};
+    auto bbsize = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
+    auto center = m_pos.get_value() + 0.5 * bbsize;
+    look_at = center;
+    look_view_point = center + vector3<float>{0.0, 0.0, 1.2 * bbsize.z()};
+    look_up = {0.0, 0.0, 1.0};
     need_to_update_camera = true;
     break;
   }
 
   case cam_tv_e::tv_a : {
-    vector3<float> center =
-        0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-    look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[0];
-    look_to = m_pos.get_value()  + center;
+    auto center = 0.5 * (m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    look_view_point = m_pos.get_value() + center - 2.0f * m_geom->cell.v[0];
+    look_at = m_pos.get_value()  + center;
     look_up = {0.0 , 0.0 , 1.0};
     need_to_update_camera = true;
     break;
   }
 
   case cam_tv_e::tv_b : {
-    vector3<float> center =
-        0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-    look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[1];
-    look_to = m_pos.get_value()  + center;
+    auto center = 0.5 * (m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    look_view_point = m_pos.get_value() + center - 2.0f * m_geom->cell.v[1];
+    look_at = m_pos.get_value()  + center;
     look_up = {0.0, 0.0, 1.0};
     need_to_update_camera = true;
     break;
   }
 
   case cam_tv_e::tv_c : {
-    vector3<float> center =
-        0.5*(m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
-    look_from = m_pos.get_value() + center - 2.0f * m_geom->cell.v[2];
-    look_to = m_pos.get_value()  + center;
+    auto center = 0.5 * (m_geom->cell.v[0] + m_geom->cell.v[1] + m_geom->cell.v[2]);
+    look_view_point = m_pos.get_value() + center - 2.0f * m_geom->cell.v[2];
+    look_at = m_pos.get_value()  + center;
     look_up = {0.0, 1.0, 0.0};
     need_to_update_camera = true;
     break;
   }
 
   case cam_tv_e::tv_cc : {
-    float axis_size = std::max(2.0f, m_ext_obs->aabb.max[0] - m_ext_obs->aabb.min[0]);
-    look_from = m_pos.get_value()
+    auto bbsize = m_ext_obs->aabb.max - m_ext_obs->aabb.min;
+    float axis_size = std::max({bbsize.x(), bbsize.y(), bbsize.z()});
+    look_view_point = m_pos.get_value()
                 + axis_size * (m_ext_obs->aabb.max - m_ext_obs->aabb.min).normalized();
-    look_to = m_pos.get_value() + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
+    look_at = m_pos.get_value() + (m_ext_obs->aabb.max + m_ext_obs->aabb.min) * 0.5;
     look_up = {0.0 , 0.0 , 1.0};
     need_to_update_camera = true;
     break;

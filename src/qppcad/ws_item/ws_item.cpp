@@ -44,41 +44,37 @@ void ws_item_t::set_pos(vector3<float> new_pos) {
 }
 
 void ws_item_t::set_selected() {
-
   if (!m_parent_ws) {
     return;
   }
-
   m_parent_ws->set_sel_item(this);
-
 }
 
-void ws_item_t::target_view(cam_tv_e target_view,
-                            vector3<float> &look_from,
-                            vector3<float> &look_to,
+void ws_item_t::target_view(cam_tv_e target_view_src,
+                            vector3<float> &view_point,
+                            vector3<float> &look_at,
                             vector3<float> &look_up,
                             bool &need_to_update_camera) {
 
 }
 
 void ws_item_t::apply_target_view(cam_tv_e target_view_src) {
-
   app_state_t* astate = app_state_t::get_inst();
 
-  vector3<float> look_from;
-  vector3<float> look_to;
+  vector3<float> view_point;
+  vector3<float> look_at;
   vector3<float> look_up{0.0, 1.0, 0.0};
   bool need_to_update_camera{false};
 
-  target_view(target_view_src, look_from, look_to, look_up, need_to_update_camera);
+  target_view(target_view_src, view_point, look_at, look_up, need_to_update_camera);
 
   if (need_to_update_camera && m_parent_ws) {
-    m_parent_ws->m_camera.update_camera_state_v2(look_from, look_to, look_up);
+    m_parent_ws->m_camera.update_camera_state_v2(look_at, view_point, look_up);
+    m_parent_ws->m_camera.orthogonalize_gs();
     m_parent_ws->m_camera.orthogonalize_gs();
     m_parent_ws->m_camera.update_camera();
     astate->make_viewport_dirty();
   }
-
 }
 
 const std::string ws_item_t::get_name() {
@@ -298,7 +294,6 @@ void ws_item_t::on_end_content_gizmo_translate() {
 }
 
 void ws_item_t::translate(const vector3<float> &tr_vec) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (get_flags() & ws_item_flags_support_tr)
@@ -314,11 +309,9 @@ void ws_item_t::translate(const vector3<float> &tr_vec) {
   updated_externally(ws_item_updf_pos_changed);
 
   astate->make_viewport_dirty();
-
 }
 
 void ws_item_t::save_to_json(json &data) {
-
   json_io::hs_save_var(JSON_WS_ITEM_NAME, m_name, data);
   json_io::save_var(JSON_WS_ITEM_TYPE, get_type_name(), data);
   json_io::hs_save_var(JSON_IS_VISIBLE, m_is_visible, data);
@@ -351,11 +344,9 @@ void ws_item_t::save_to_json(json &data) {
         flw_items.push_back(elem->m_name.get_value());
     data[JSON_WS_ITEM_CONNECTED_ITEMS] = flw_items;
   }
-
 }
 
 void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
-
   json_io::hs_load_var(JSON_WS_ITEM_NAME, m_name, data);
   json_io::hs_load_var(JSON_IS_VISIBLE, m_is_visible, data);
 
@@ -376,7 +367,6 @@ void ws_item_t::load_from_json(json &data, repair_connection_info_t &rep_info) {
                    [](auto &elem)->STRING_EX{return elem.template get<STRING_EX>();});
     rep_info.m_connected_items[m_name.get_value()] = rc_ci;
   }
-
 }
 
 
@@ -397,10 +387,8 @@ void ws_item_t::save_from_file(std::string &file_name) {
 }
 
 void ws_item_t::update_oi() {
-
   if (m_selected)
     app_state_t::get_inst()->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
-
 }
 
 bool ws_item_t::can_be_written_to_json() {
@@ -410,17 +398,14 @@ bool ws_item_t::can_be_written_to_json() {
 void ws_item_t::save_ws_item_field(const std::string &field_name,
                                    std::shared_ptr<ws_item_t> field_ws_item,
                                    json &data) {
-
   if (field_ws_item)
     data[field_name] = field_ws_item->m_name.get_value();
-
 }
 
 void ws_item_t::load_ws_item_field(const std::string &field_name,
                                    std::shared_ptr<ws_item_t> *field_ws_item,
                                    json &data,
                                    repair_connection_info_t &rep_info) {
-
   auto it = data.find(field_name);
   if (it != data.end()) {
     repair_ws_item_field_t rep_ws_item;
@@ -428,7 +413,6 @@ void ws_item_t::load_ws_item_field(const std::string &field_name,
     rep_ws_item.m_field = field_ws_item;
     rep_info.m_fields.emplace_back(std::move(rep_ws_item));
   }
-
 }
 
 std::string ws_item_t::py_get_repr() {

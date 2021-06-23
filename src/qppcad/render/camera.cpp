@@ -19,7 +19,6 @@ camera_t::camera_t () {
 }
 
 void camera_t::orthogonalize_gs () {
-
   p_cam_state.m_view_dir = p_cam_state.m_look_at - p_cam_state.m_view_point;
   p_cam_state.m_stored_dist = p_cam_state.m_view_dir.norm();
   vector3<float> view_dir_new = p_cam_state.m_view_dir.normalized();
@@ -40,7 +39,6 @@ void camera_t::orthogonalize_gs () {
   }
 
   p_cam_state.m_forward = p_cam_state.m_look_up.cross(p_cam_state.m_right);
-
 }
 
 void camera_t::rotate_camera_around_origin (const matrix3<float> &mat_rot,
