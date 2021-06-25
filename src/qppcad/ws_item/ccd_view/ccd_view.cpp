@@ -230,7 +230,7 @@ uint32_t ccd_view_t::get_num_cnt_selected() {
   return 0;
 }
 
-size_t ccd_view_t::get_content_count() {
+size_t ccd_view_t::content_count() {
   return 0;
 }
 

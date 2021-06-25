@@ -262,7 +262,7 @@ public:
   bool is_bb_visible() override;
 
   uint32_t get_num_cnt_selected() override;
-  size_t get_content_count() override;
+  size_t content_count() override;
 
   void on_begin_content_gizmo_translate() override;
   void apply_intermediate_translate_content(const vector3<float> &new_pos) override;

@@ -83,7 +83,7 @@ uint32_t pgf_producer_t::get_num_cnt_selected() {
   return 0;
 }
 
-size_t pgf_producer_t::get_content_count() {
+size_t pgf_producer_t::content_count() {
   return 0;
 }
 

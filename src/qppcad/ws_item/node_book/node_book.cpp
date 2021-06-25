@@ -69,7 +69,7 @@ uint32_t node_book_t::get_num_cnt_selected() {
   return 0;
 }
 
-size_t node_book_t::get_content_count() {
+size_t node_book_t::content_count() {
   return 0;
 }
 

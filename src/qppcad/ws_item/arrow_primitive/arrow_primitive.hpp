@@ -38,7 +38,7 @@ namespace qpp {
         float get_bb_prescaller() override;
         void updated_externally(uint32_t update_reason) override;
         uint32_t get_num_cnt_selected() override;
-        size_t get_content_count() override;
+        size_t content_count() override;
         bool can_be_written_to_json() override;
 
         void save_to_json(json &data) override;

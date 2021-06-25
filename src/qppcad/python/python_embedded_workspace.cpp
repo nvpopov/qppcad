@@ -252,7 +252,7 @@ PYBIND11_EMBEDDED_MODULE(cad, m) {
   py::class_<ws_item_t, std::shared_ptr<ws_item_t>, py_ws_item_t> py_ws_item_t(m, "ws_item_t");
 
   py_ws_item_t.def_readwrite("name", &ws_item_t::m_name)
-      .def("get_cnt_count", &ws_item_t::get_content_count)
+      .def("get_cnt_count", &ws_item_t::content_count)
       .def("get_parent_ws", [](ws_item_t &wsi){return wsi.m_parent_ws;})
       // .def_readwrite("m_pos", &ws_item_t::get_pos, &ws_item_t::set_pos)
       .def_readonly("genesis_file_name", &ws_item_t::m_genesis_file_name)

@@ -150,7 +150,7 @@ uint32_t arrow_array_t::get_num_cnt_selected() {
   return 0;
 }
 
-size_t arrow_array_t::get_content_count() {
+size_t arrow_array_t::content_count() {
   return 0;
 }
 

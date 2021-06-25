@@ -953,7 +953,7 @@ uint32_t geom_view_t::get_num_cnt_selected() {
   return this->m_geom->num_aselected();
 }
 
-size_t geom_view_t::get_content_count() {
+size_t geom_view_t::content_count() {
   return m_geom ? m_geom->nat() : 0;
 }
 

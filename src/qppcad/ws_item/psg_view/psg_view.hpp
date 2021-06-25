@@ -74,7 +74,7 @@ namespace qpp {
         void on_leader_call() override ;
 
         uint32_t get_num_cnt_selected() override;
-        size_t get_content_count() override;
+        size_t content_count() override;
 
         void save_to_json(json &data) override;
         void load_from_json(json &data, repair_connection_info_t &rep_info) override;

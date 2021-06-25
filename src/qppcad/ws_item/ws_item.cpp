@@ -255,7 +255,6 @@ const vector3<float> ws_item_t::get_gizmo_content_barycenter() {
 }
 
 void ws_item_t::updated_externally(uint32_t update_reason) {
-
   if (update_reason & ws_item_updf_pos_changed) {
     //notify followers about changes
     for (auto &follower : m_followers)
@@ -268,7 +267,6 @@ void ws_item_t::updated_externally(uint32_t update_reason) {
     //copy pos from leader and apply offset
     m_pos.set_value(m_leader->m_pos.get_value() + m_leader_offset);
   }
-
 }
 
 void ws_item_t::on_begin_node_gizmo_translate() {

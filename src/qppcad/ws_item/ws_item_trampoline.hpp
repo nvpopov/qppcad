@@ -6,22 +6,15 @@
 
 namespace qpp {
 
-  namespace cad {
+namespace cad {
 
-    struct py_ws_item_t : ws_item_t, std::enable_shared_from_this<py_ws_item_t> {
+struct py_ws_item_t : ws_item_t, std::enable_shared_from_this<py_ws_item_t> {
+  using ws_item_t::ws_item_t;
+  size_t content_count() override {PYBIND11_OVERLOAD_PURE(size_t, ws_item_t, content_count);}
 
-        using ws_item_t::ws_item_t;
+};
 
-        size_t get_content_count() override {
-          PYBIND11_OVERLOAD_PURE(
-                size_t,
-                ws_item_t,
-                get_content_count);
-        }
-
-    };
-
-  } // namespace qpp::cad
+} // namespace qpp::cad
 
 } // namespace qpp
 
