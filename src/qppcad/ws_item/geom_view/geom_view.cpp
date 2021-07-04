@@ -595,7 +595,7 @@ void geom_view_t::ins_atom(const int atom_type, const vector3<float> &pos) {
   if (!m_geom)
     return;
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  m_anim->m_force_non_animable = true;
+  m_anim->make_nonanimable();
   m_geom->add(m_geom->atom_of_type(atom_type), pos);
   end_recording();
 }
@@ -604,7 +604,7 @@ void geom_view_t::ins_atom(const std::string &atom_name, const vector3<float> &p
   if (!m_geom)
     return;
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  m_anim->m_force_non_animable = true;
+  m_anim->make_nonanimable();
   m_geom->add(atom_name, pos);
   end_recording();
 }
@@ -614,7 +614,7 @@ void geom_view_t::upd_atom(const int at_id, const vector3<float> &pos, bool emit
     return;
   if (emit_hs_rec)
     begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  m_anim->m_force_non_animable = true;
+  m_anim->make_nonanimable();
   m_geom->change_pos(at_id, pos);
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
@@ -627,7 +627,7 @@ void geom_view_t::upd_atom(const int at_id, const std::string &at_name, bool emi
     return;
   if (emit_hs_rec)
     begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  m_anim->m_force_non_animable = true;
+  m_anim->make_nonanimable();
   m_geom->change(at_id, at_name, m_geom->pos(at_id));
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
@@ -641,7 +641,7 @@ void geom_view_t::upd_atom(const int at_id, const std::string &at_name,
     return;
   if (emit_hs_rec)
     begin_recording(hs_doc_rec_type_e::hs_doc_rec_as_new_epoch);
-  m_anim->m_force_non_animable = true;
+  m_anim->make_nonanimable();
   m_geom->change(at_id, at_name, pos);
   app_state_t* astate = app_state_t::get_inst();
   astate->make_viewport_dirty();
@@ -764,14 +764,14 @@ void geom_view_t::load_color_from_static_anim() {
     for (size_t i = 0; i < m_anim->m_anim_data.size(); i++)
       if (m_anim->m_anim_data[i].m_anim_type == geom_anim_e::anim_static) static_anim = i;
     if (static_anim >= 0 && m_anim->m_anim_data[static_anim].frames.size() > 0 &&
-        m_anim->m_anim_data[static_anim].frames[0].atom_color.size() == m_geom->nat()) {
+        m_anim->m_anim_data[static_anim].frames[0].atom_colors.size() == m_geom->nat()) {
       for (int i = 0; i < m_geom->nat(); i++) {
         m_geom->xfield<float>(xg_ccr, i) =
-            m_anim->m_anim_data[static_anim].frames[0].atom_color[i][0];
+            m_anim->m_anim_data[static_anim].frames[0].atom_colors[i][0];
         m_geom->xfield<float>(xg_ccg, i) =
-            m_anim->m_anim_data[static_anim].frames[0].atom_color[i][1];
+            m_anim->m_anim_data[static_anim].frames[0].atom_colors[i][1];
         m_geom->xfield<float>(xg_ccb, i) =
-            m_anim->m_anim_data[static_anim].frames[0].atom_color[i][2];
+            m_anim->m_anim_data[static_anim].frames[0].atom_colors[i][2];
       }
     }
   }
@@ -826,7 +826,7 @@ void geom_view_t::delete_atoms(const std::set<int> &to_delete, bool hs_rec) {
   if (!m_geom)
     return;
   if (!to_delete.empty())
-    m_anim->m_force_non_animable = true;
+    m_anim->make_nonanimable();
 
   std::vector<int> atoms_to_delete;
   atoms_to_delete.reserve(to_delete.size());

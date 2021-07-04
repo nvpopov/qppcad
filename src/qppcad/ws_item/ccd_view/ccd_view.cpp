@@ -31,8 +31,8 @@ void ccd_view_t::manual_update_vib() {
   for (auto &items : m_connected_items) {
     auto al = items->cast_as<geom_view_t>();
     if (al && al->m_anim->get_total_anims() == m_ccd->m_vibs.size() + 1)  {
-      al->m_anim->m_cur_anim = m_cur_vib + 1;
-      al->m_anim->m_cur_anim_time = 0.0f;
+      al->m_anim->set_cur_anim(m_cur_vib + 1);
+      al->m_anim->set_cur_anim_time(0.0f);
       //TODO batch changes
       al->m_anim->m_play_anim.set_value(true);
       al->m_anim->m_play_cyclic.set_value(true);

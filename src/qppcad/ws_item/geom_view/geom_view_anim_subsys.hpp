@@ -20,12 +20,13 @@ class geom_view_anim_subsys_t : public ws_item_subsystem_t {
 
 private:
     geom_view_t* p_owner;
+    float m_cur_anim_time{0.0f};
+    int m_cur_anim{0};
+    int m_prev_anim{0};
+    bool m_force_non_animable;
 
 public:
   std::vector<geom_anim_record_t<float>>  m_anim_data;
-  float m_cur_anim_time{0.0f};
-  int m_cur_anim{0};
-  bool m_force_non_animable;
 
   hs_prop_float_t m_anim_frame_time;
   hs_prop_bool_t m_rebuild_bonds_in_anim;
@@ -34,6 +35,11 @@ public:
   hs_prop_bool_t m_interpolate_anim;
 
   explicit geom_view_anim_subsys_t (geom_view_t &_p_owner);
+
+  void set_cur_anim(int new_cur_anim);
+  int get_cur_anim();
+  float get_cur_anim_time();
+  void set_cur_anim_time(float new_cur_anim_time);
 
   void update_geom_to_anim (const int anim_id, const float current_frame);
   void update_and_set_anim (const int anim_id, const float current_frame);
@@ -67,6 +73,7 @@ public:
                               bool bounce = false);
 
   void make_animable();
+  void make_nonanimable();
   void make_anim(const std::string &anim_name,
                  const geom_anim_e anim_type,
                  const size_t num_frames);

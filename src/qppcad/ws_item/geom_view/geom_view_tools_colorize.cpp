@@ -65,8 +65,8 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
         g_t.do_action(act_build_tree);
         g_t.do_action(act_lock | act_lock_img);
 
-        if (al->m_anim->m_anim_data[a_id].frames[f_id].atom_color.size() != al->m_geom->nat())
-          al->m_anim->m_anim_data[a_id].frames[f_id].atom_color.resize(al->m_geom->nat());
+        if (al->m_anim->m_anim_data[a_id].frames[f_id].atom_colors.size() != al->m_geom->nat())
+          al->m_anim->m_anim_data[a_id].frames[f_id].atom_colors.resize(al->m_geom->nat());
 
         for (int i = 0; i < g.nat(); i++) {
 
@@ -101,7 +101,7 @@ void geom_view_colorizer_helper::colorize_by_distance(geom_view_t *al,
 
               }
 
-            al->m_anim->m_anim_data[a_id].frames[f_id].atom_color[i] = final_color;
+            al->m_anim->m_anim_data[a_id].frames[f_id].atom_colors[i] = final_color;
 
           }
 

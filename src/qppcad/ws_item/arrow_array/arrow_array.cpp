@@ -58,16 +58,16 @@ void arrow_array_t::render() {
   auto gv_pos = m_binded_gv->m_pos.get_value();
 
   int total_frames    = cur_anim->frames.size();
-  float start_frame_0 = int(m_binded_gv->m_anim->m_cur_anim_time);
-  float end_frame_0   = std::ceil(m_binded_gv->m_anim->m_cur_anim_time);
-  float frame_delta_0 = 1 - (m_binded_gv->m_anim->m_cur_anim_time - start_frame_0);
+  float start_frame_0 = int(m_binded_gv->m_anim->get_cur_anim_time());
+  float end_frame_0   = std::ceil(m_binded_gv->m_anim->get_cur_anim_time());
+  float frame_delta_0 = 1 - (m_binded_gv->m_anim->get_cur_anim_time() - start_frame_0);
   int start_frame_n_0 = std::clamp(int(start_frame_0), 0, total_frames-1);
   int end_frame_n_0   = std::clamp(int(end_frame_0), 0, total_frames-1);
 
   float integrated_dt = 1.01 / (m_binded_gv->m_anim->m_anim_frame_time.get_value() * 60);
-  float start_frame_1 = int(m_binded_gv->m_anim->m_cur_anim_time + integrated_dt);
-  float end_frame_1   = std::ceil(m_binded_gv->m_anim->m_cur_anim_time + integrated_dt);
-  float frame_delta_1 = 1 - (m_binded_gv->m_anim->m_cur_anim_time + integrated_dt - start_frame_1);
+  float start_frame_1 = int(m_binded_gv->m_anim->get_cur_anim_time() + integrated_dt);
+  float end_frame_1   = std::ceil(m_binded_gv->m_anim->get_cur_anim_time() + integrated_dt);
+  float frame_delta_1 = 1 - (m_binded_gv->m_anim->get_cur_anim_time() + integrated_dt - start_frame_1);
   int start_frame_n_1 = std::clamp(int(start_frame_1), 0, total_frames-1);
   int end_frame_n_1   = std::clamp(int(end_frame_1), 0, total_frames-1);
 

@@ -762,10 +762,10 @@ void simple_query::set_sel_color(float r, float g, float b) {
     al->m_geom->xfield<float>(xg_ccb, val.m_atm) = b;
     if (al->m_anim->get_total_anims() > 0
         && !al->m_anim->m_anim_data[0].frames.empty()
-        && al->m_anim->m_anim_data[0].frames[0].atom_color.size() == al->m_geom->nat()) {
-      al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][0] = r;
-      al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][1] = g;
-      al->m_anim->m_anim_data[0].frames[0].atom_color[val.m_atm][2] = b;
+        && al->m_anim->m_anim_data[0].frames[0].atom_colors.size() == al->m_geom->nat()) {
+      al->m_anim->m_anim_data[0].frames[0].atom_colors[val.m_atm][0] = r;
+      al->m_anim->m_anim_data[0].frames[0].atom_colors[val.m_atm][1] = g;
+      al->m_anim->m_anim_data[0].frames[0].atom_colors[val.m_atm][2] = b;
     }
   }
   astate->make_viewport_dirty();

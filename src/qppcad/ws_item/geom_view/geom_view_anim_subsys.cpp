@@ -14,29 +14,61 @@ geom_view_anim_subsys_t::geom_view_anim_subsys_t(geom_view_t &_p_owner) {
   m_interpolate_anim.set_value(true); add_hs_child(&m_interpolate_anim);
 }
 
+void geom_view_anim_subsys_t::set_cur_anim(int new_cur_anim) {
+  m_prev_anim = m_cur_anim;
+  m_cur_anim = new_cur_anim;
+}
+
+int geom_view_anim_subsys_t::get_cur_anim() {
+  return m_cur_anim;
+}
+
+float geom_view_anim_subsys_t::get_cur_anim_time() {
+  return m_cur_anim_time;
+}
+
+void geom_view_anim_subsys_t::set_cur_anim_time(float new_cur_anim_time) {
+  m_cur_anim_time = new_cur_anim_time;
+}
+
 void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float current_frame) {
+  int prev_anim = m_prev_anim;
   float start_frame = int(current_frame);
   float end_frame   = std::ceil(current_frame);
   float frame_delta = 1 - (current_frame - start_frame);
   int start_frame_n = int(start_frame);
   int end_frame_n   = int(end_frame);
+  bool force_disable_interpolation{false};
+  bool force_complete_rebuild{false};
+  bool recreate_atoms{false};
+  bool interpolate_anim = m_interpolate_anim.get_value();
+  bool curframe_nonconst_an = m_anim_data[anim_id].frames[current_frame].tot_nat != -1;
+  bool startframe_nonconst_an = m_anim_data[anim_id].frames[start_frame_n].tot_nat != -1;
+  bool endframe_nonconst_an = m_anim_data[anim_id].frames[end_frame_n].tot_nat != -1;
+  bool nonconst_an = curframe_nonconst_an || startframe_nonconst_an || endframe_nonconst_an;
+  bool prevanim_nonconst_nat = m_anim_data[prev_anim].has_nonconstant_num_at();
 
   app_state_t* astate = app_state_t::get_inst();
 
   //TODO: throw
-  if (anim_id > m_anim_data.size()) return;
+  if (anim_id > m_anim_data.size())
+    return;
+
+  if (nonconst_an || prevanim_nonconst_nat) {
+    force_disable_interpolation = true;
+    force_complete_rebuild = true;
+    recreate_atoms = true;
+  }
 
   bool is_variable_cell_anim =
       m_anim_data[anim_id].m_variable_cell_anim && p_owner->m_geom->get_DIM() > 0;
 
-  // tws_tree setup before modification the geometry
   if (is_variable_cell_anim) {
-    p_owner->m_tws_tr->do_action(act_lock | act_clear_all | act_clear_img);
-    // update cell
-    for (size_t vc_i = 0; vc_i < p_owner->m_geom->get_DIM(); vc_i++)
-      p_owner->m_geom->cell.v[vc_i] =
-          m_anim_data[anim_id].frames[start_frame_n].m_cell[vc_i] * (frame_delta) +
-          m_anim_data[anim_id].frames[end_frame_n].m_cell[vc_i]  * (1-frame_delta);
+    force_complete_rebuild = true;
+  }
+
+  if (force_complete_rebuild) {
+     p_owner->m_tws_tr->do_action(act_lock | act_clear_all | act_clear_img);
   } else {
     if (!m_rebuild_bonds_in_anim.get_value())
       p_owner->m_tws_tr->do_action(act_lock);
@@ -44,35 +76,45 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
       p_owner->m_tws_tr->do_action(act_lock_img);
   }
 
-  size_t nat = p_owner->m_geom->nat();
-  if (m_anim_data[anim_id].frames[start_frame_n].atom_pos.size() != nat
-      || m_anim_data[anim_id].frames[end_frame_n].atom_pos.size() != nat) {
-    m_force_non_animable = true;
-    return;
+  // update cell
+  if (is_variable_cell_anim) {
+    for (size_t vc_i = 0; vc_i < p_owner->m_geom->get_DIM(); vc_i++)
+      p_owner->m_geom->cell.v[vc_i] =
+          m_anim_data[anim_id].frames[start_frame_n].m_cell[vc_i] * (frame_delta)
+          + m_anim_data[anim_id].frames[end_frame_n].m_cell[vc_i] * (1-frame_delta);
   }
 
-  for (auto i = 0; i < p_owner->m_geom->nat(); i++) { // update atom data
-    vector3<float> new_pos =
-        m_interpolate_anim.get_value() ?
-          m_anim_data[anim_id].frames[start_frame_n].atom_pos[i] * (frame_delta) +
-          m_anim_data[anim_id].frames[end_frame_n].atom_pos[i] * (1-frame_delta) :
-          m_anim_data[anim_id].frames[start_frame_n].atom_pos[i];
+  // recreate atoms
+  if (recreate_atoms) {
+    p_owner->m_geom->clear();
+    //std::cout << "@@@ " << m_anim_data[anim_id].frames[end_frame_n].atom_types.size() << std::endl;
+    for (int i = 0; i < m_anim_data[anim_id].frames[end_frame_n].atom_types.size(); i++) {
+      p_owner->m_geom->add(m_anim_data[anim_id].frames[end_frame_n].atom_types[i],
+                           m_anim_data[anim_id].frames[end_frame_n].atom_pos[i]);
+    }
+  }
 
+  size_t nat = p_owner->m_geom->nat();
+
+  for (auto i = 0; i < p_owner->m_geom->nat(); i++) { // update atom data
+    vector3<float> new_pos = interpolate_anim && !force_disable_interpolation ?
+                           m_anim_data[anim_id].frames[start_frame_n].atom_pos[i] * (frame_delta)
+                           + m_anim_data[anim_id].frames[end_frame_n].atom_pos[i] * (1-frame_delta):
+                           m_anim_data[anim_id].frames[end_frame_n].atom_pos[i];
     p_owner->m_geom->change_pos(i, new_pos);
 
     if (p_owner->m_color_mode.get_value() == geom_view_color_e::color_from_xgeom) {
       // check that colors in frame_data are avaiable
-      if (m_anim_data[anim_id].frames[start_frame_n].atom_color.size() == nat &&
-          m_anim_data[anim_id].frames[end_frame_n].atom_color.size() == nat) {
-        vector3<float> new_color =
-            m_anim_data[anim_id].frames[start_frame_n].atom_color[i] * (frame_delta) +
-            m_anim_data[anim_id].frames[end_frame_n].atom_color[i] * (1-frame_delta);
+      if (m_anim_data[anim_id].frames[start_frame_n].atom_colors.size() == nat
+          && m_anim_data[anim_id].frames[end_frame_n].atom_colors.size() == nat) {
+        vector3<float> new_color = interpolate_anim ?
+                      m_anim_data[anim_id].frames[start_frame_n].atom_colors[i] * (frame_delta)
+                      + m_anim_data[anim_id].frames[end_frame_n].atom_colors[i] * (1-frame_delta) :
+                      m_anim_data[anim_id].frames[start_frame_n].atom_colors[i];
         p_owner->m_geom->xfield<float>(xg_ccr, i) = new_color[0];
         p_owner->m_geom->xfield<float>(xg_ccg, i) = new_color[1];
         p_owner->m_geom->xfield<float>(xg_ccb, i) = new_color[2];
-      }
-      // otherwise - load default colors
-      else {
+      } else { // otherwise - load default colors
         p_owner->m_geom->xfield<float>(xg_ccr, i) = 0.0f;
         p_owner->m_geom->xfield<float>(xg_ccg, i) = 0.0f;
         p_owner->m_geom->xfield<float>(xg_ccb, i) = 0.0f;
@@ -80,7 +122,7 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
     }
   }  // end of update atom data
 
-  if (is_variable_cell_anim) {
+  if (force_complete_rebuild) {
     p_owner->m_tws_tr->do_action(act_unlock | act_rebuild_tree | act_unlock_img);
     p_owner->m_tws_tr->do_action(act_rebuild_all);
   } else {
@@ -99,6 +141,7 @@ void geom_view_anim_subsys_t::update_geom_to_anim(const int anim_id, const float
 
 void geom_view_anim_subsys_t::update_and_set_anim(const int anim_id,
                                                   const float current_frame) {
+  m_prev_anim = m_cur_anim;
   m_cur_anim = anim_id;
   m_cur_anim_time = current_frame;
   update_geom_to_anim(anim_id, current_frame);
@@ -210,7 +253,7 @@ void geom_view_anim_subsys_t::traverse_anim(int travel_dir) {
   if (need_to_update_anim) {
     //          c_app::log(fmt::format("TRAVERSE ANIM ta={} lta={} asz={}",
     //                                 target_anim, locked_target_anim, get_total_anims()));
-
+    m_prev_anim = m_cur_anim;
     m_cur_anim = locked_target_anim;
     m_cur_anim_time = 0.0f;
     update_geom_to_anim();
@@ -309,7 +352,8 @@ void geom_view_anim_subsys_t::make_animable() {
   for (auto &anim : m_anim_data) {
     if (anim.frames.empty())
       anim.frames.resize(1);
-    for (auto &frame : anim.frames) {
+    for (auto &frame : anim.frames)
+    if (frame.tot_nat == -1) { // repair animation with constant number of atoms
       if (frame.atom_pos.size() != static_cast<size_t>(p_owner->m_geom->nat())) {
         frame.atom_pos.resize(p_owner->m_geom->nat());
         for (size_t i = 0; i < static_cast<size_t>(p_owner->m_geom->nat()); i++)
@@ -322,6 +366,10 @@ void geom_view_anim_subsys_t::make_animable() {
 
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
+}
+
+void geom_view_anim_subsys_t::make_nonanimable() {
+  m_force_non_animable = true;
 }
 
 void geom_view_anim_subsys_t::make_anim(const std::string &anim_name,

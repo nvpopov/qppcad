@@ -288,7 +288,7 @@ void api_gv_delete_selected_atoms(geom_view_t *gv, bool hs_rec) {
   if (gv->m_geom->num_selected() == 0) {
     return;
   } else {
-    gv->m_anim->m_force_non_animable = true;
+    gv->m_anim->make_nonanimable();
   }
   std::set<int> sel_atoms;
   for (auto i = 0; i < gv->m_geom->num_selected(); i++)

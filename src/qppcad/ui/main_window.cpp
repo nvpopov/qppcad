@@ -1431,7 +1431,7 @@ void main_window_t::tp_fast_forward_anim_clicked() {
   auto [cur_ws, cur_itm, as_al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
   if (!as_al || !as_al->m_anim->animable())
     return;
-  as_al->m_anim->m_cur_anim = as_al->m_anim->get_total_anims()-1;
+  as_al->m_anim->set_cur_anim(as_al->m_anim->get_total_anims()-1);
   as_al->m_anim->update_current_frame_to_end();
   astate->make_viewport_dirty();
   astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();

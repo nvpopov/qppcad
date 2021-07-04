@@ -1197,7 +1197,7 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
                                              i,
                                              b_al->m_anim->m_anim_data[i].m_anim_name)));
 
-    m_anim_current_anim->setCurrentIndex(b_al->m_anim->m_cur_anim);
+    m_anim_current_anim->setCurrentIndex(b_al->m_anim->get_cur_anim());
     m_anim_current_anim->blockSignals(false);
     update_anim_tab();
 
@@ -1429,7 +1429,7 @@ void geom_view_obj_insp_widget_t::unbind_sel_tab() {
 
 void geom_view_obj_insp_widget_t::update_anim_tab() {
   if (b_al) {
-    cur_anim_index_changed(b_al->m_anim->m_cur_anim);
+    cur_anim_index_changed(b_al->m_anim->get_cur_anim());
     update_anim_tab_visibility();
   }
 }
@@ -1865,9 +1865,9 @@ geom_view_obj_insp_widget_t::geom_view_obj_insp_widget_t() : ws_item_obj_insp_wi
 void geom_view_obj_insp_widget_t::cur_anim_index_changed(int index) {
   if (b_al) {
     if (index < int(b_al->m_anim->get_total_anims())) {
-      if (b_al->m_anim->m_cur_anim != index) {
-        b_al->m_anim->m_cur_anim = index;
-        b_al->m_anim->m_cur_anim_time = 0.0f;
+      if (b_al->m_anim->get_cur_anim() != index) {
+        b_al->m_anim->set_cur_anim(index);
+        b_al->m_anim->set_cur_anim_time(0.0f);
         b_al->m_anim->update_geom_to_anim();
       }
       auto cur_anim = b_al->m_anim->get_current_anim();
@@ -1918,7 +1918,7 @@ void geom_view_obj_insp_widget_t::anim_timeline_slider_value_changed(int value) 
   if (b_al) {
     auto cur_anim = b_al->m_anim->get_current_anim();
     if (cur_anim && value < cur_anim->frames.size()) {
-      b_al->m_anim->update_and_set_anim(b_al->m_anim->m_cur_anim, value);
+      b_al->m_anim->update_and_set_anim(b_al->m_anim->get_cur_anim(), value);
     }
   }
 }
@@ -1973,7 +1973,7 @@ void geom_view_obj_insp_widget_t::anim_act_del_clicked() {
                          "Please make geom. view non animable first!");
     return;
   }
-  size_t cur_anim_idx = b_al->m_anim->m_cur_anim;
+  size_t cur_anim_idx = b_al->m_anim->get_cur_anim();
   if (cur_anim_idx >= b_al->m_anim->get_total_anims()) {
     return;
   }
@@ -1986,7 +1986,7 @@ void geom_view_obj_insp_widget_t::anim_act_del_clicked() {
   }
   b_al->m_anim->m_anim_data.erase(b_al->m_anim->m_anim_data.begin() + cur_anim_idx);
   int new_anim_idx = std::clamp<int>(cur_anim_idx - 1, 0, b_al->m_anim->m_anim_data.size());
-  b_al->m_anim->m_cur_anim = new_anim_idx;
+  b_al->m_anim->set_cur_anim(new_anim_idx);
   update_from_ws_item();
 }
 
