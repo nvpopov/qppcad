@@ -52,3 +52,5 @@ apt install libqt5opengl5-dev libqt5charts5-dev libqt5svg5-dev libqt5core5a libq
 11. exprtk - http://www.partow.net/programming/exprtk/index.html
 12. icons - https://material.io/resources/icons/
 13. font - OpenSans
+
+
