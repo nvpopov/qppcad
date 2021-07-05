@@ -11,6 +11,9 @@ message("-- Build type: ${CMAKE_BUILD_TYPE}")
 
 set(ADDITIONAL_LIBRARIES "")
 
+set(QPPCAD_TESTS "ON" CACHE BOOL "build test suite and minor stuff")
+message("-- With tests: ${QPPCAD_TESTS}")
+
 set(WITH_VTUNE "OFF" CACHE BOOL "build with VTUNE instrumentation")
 message("-- With VTune api: ${WITH_VTUNE}")
 if(WITH_VTUNE)
@@ -139,40 +142,43 @@ file(GLOB_RECURSE SRC_PYTHON_EMBEDDED "src/qppcad/python/*.cpp")
 #gather render src
 file(GLOB_RECURSE SRC_RENDER "src/qppcad/render/*.cpp")
 
+#qppcad test suite and other minor stuff
 #build sflow tests
 #build qppcad application
-add_executable(
-    sflow-tests
-    src/qppcad/sflow/sflow_test.cpp
-    src/qppcad/sflow/sflow.cpp
-    src/qppcad/sflow/sflow_node.cpp
-    src/qppcad/sflow/sflow_base_nodes_int.cpp
-    src/qppcad/sflow/sflow_base_nodes_float.cpp
-    src/qppcad/sflow/sflow_base_nodes_vec3.cpp
-    src/qppcad/sflow/sflow_base_nodes_xgeom.cpp
-    src/qppcad/sflow/sflow_parameter.cpp
-    src/qppcad/core/type_info.cpp
-    src/qppcad/core/string_hash_register.cpp
-    src/qppcad/core/qpp_object.cpp
-    src/qppcad/core/history_stream.cpp
-    )
+if (QPPCAD_TESTS)
+    add_executable(
+        sflow-tests
+        src/qppcad/sflow/sflow_test.cpp
+        src/qppcad/sflow/sflow.cpp
+        src/qppcad/sflow/sflow_node.cpp
+        src/qppcad/sflow/sflow_base_nodes_int.cpp
+        src/qppcad/sflow/sflow_base_nodes_float.cpp
+        src/qppcad/sflow/sflow_base_nodes_vec3.cpp
+        src/qppcad/sflow/sflow_base_nodes_xgeom.cpp
+        src/qppcad/sflow/sflow_parameter.cpp
+        src/qppcad/core/type_info.cpp
+        src/qppcad/core/string_hash_register.cpp
+        src/qppcad/core/qpp_object.cpp
+        src/qppcad/core/history_stream.cpp
+        )
 
-add_executable(
-    qppcad-tests
-    src/qppcad/core/history_stream.cpp
-    src/qppcad/core/qppcad_tests.cpp
-  )
+    add_executable(
+        qppcad-tests
+        src/qppcad/core/history_stream.cpp
+        src/qppcad/core/qppcad_tests.cpp
+        )
 
-add_executable(
-    qppcad-misc-tests
-    src/qppcad/ui/color_map.cpp
-    src/qppcad/core/qppcad_misc_tests.cpp
-  )
+    add_executable(
+        qppcad-misc-tests
+        src/qppcad/ui/color_map.cpp
+        src/qppcad/core/qppcad_misc_tests.cpp
+        )
 
-target_link_libraries(qppcad-tests qpp)
-target_link_libraries(sflow-tests qpp)
+    target_link_libraries(qppcad-tests qpp)
+    target_link_libraries(sflow-tests qpp)
 
-qt5_use_modules(sflow-tests Core Gui Widgets)
+    qt5_use_modules(sflow-tests Core Gui Widgets)
+endif()
 
 #build qppcad application
 add_executable(
