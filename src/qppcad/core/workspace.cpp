@@ -99,12 +99,9 @@ std::optional<size_t> workspace_t::get_item_idx(ws_item_t *item) {
   return std::nullopt;
 }
 
-bool workspace_t::set_sel_item(const size_t sel_idx,
-                               bool emit_signal,
-                               bool emit_hs_event) {
+bool workspace_t::set_sel_item(const size_t sel_idx, bool emit_signal, bool emit_hs_event) {
   app_state_t* astate = app_state_t::get_inst();
   p_inside_selection_event = true;
-
   unsel_all();
 
   astate->tlog("\n Setting selected item in ws \"{0}\" to {1}\n"

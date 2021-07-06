@@ -46,7 +46,7 @@ public:
   camera_t                                 m_camera;
   ray_t<float>                             m_ray;
   std::unique_ptr<gizmo_t>                 m_gizmo;
-  vector3<float>                           m_bg_color{0.5f, 0.5f, 0.5f};
+  vector3<float>                           m_bg_color{211.0f/255.0f, 215.0f/255.0f, 207.0f/255.0f};
 
   hist_doc_array_proxy_t<ws_item_t, hs_arr_sptr_policy<ws_item_t>> m_ws_items;
   hs_prop_int_t m_cur_itm;
@@ -182,7 +182,6 @@ public:
   template<typename T>
   std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*>
   get_sel_tpl_itm(uint32_t error_context = error_ctx_def) {
-
     auto cur_ws = get_cur_ws();
     if (!cur_ws) {
       if (error_context & error_ctx_throw)
@@ -223,7 +222,6 @@ public:
     }
 
     return {cur_ws, cur_it, casted_it};
-
   }
 
   /**
@@ -234,7 +232,6 @@ public:
   template<typename T>
   std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, T*, bool>
   get_sel_tpl_itmc(uint32_t error_context = error_ctx_def) {
-
     auto cur_ws = get_cur_ws();
     if (!cur_ws) {
       if (error_context & error_ctx_throw)
@@ -271,7 +268,6 @@ public:
     }
 
     return {cur_ws, cur_it, casted_it, true};
-
   }
 
   /**
@@ -281,7 +277,6 @@ public:
    */
   std::tuple<std::shared_ptr<workspace_t>, std::shared_ptr<ws_item_t>, bool >
   get_sel_tpl_itm_nc(uint32_t error_context = error_ctx_def) {
-
     auto cur_ws = get_cur_ws();
     if (!cur_ws) {
       if (error_context & error_ctx_throw)
@@ -305,7 +300,6 @@ public:
     }
 
     return {cur_ws, cur_it, true};
-
   }
 
   /**
@@ -315,7 +309,6 @@ public:
    */
   std::tuple<bool, std::shared_ptr<workspace_t> >
   get_sel_tuple_ws(uint32_t error_context = error_ctx_def) {
-
     if (!has_wss()) {
       if (error_context & error_ctx_throw)
         throw std::invalid_argument("There are`t workspaces in the field");
@@ -338,7 +331,6 @@ public:
     }
 
     return {true, cur_ws};
-
   }
 
 };
