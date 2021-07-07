@@ -122,9 +122,9 @@ int main (int argc, char **argv) {
   //qApp->setPalette(astate->m_app_palette);
 
   std::vector<int> fnt_id = {
-      QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Light.ttf"),
-      QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Regular.ttf"),
-      QFontDatabase::addApplicationFont("://fonts/Heebo/Heebo-Bold.ttf"),
+      QFontDatabase::addApplicationFont("://fonts/Nunito/Nunito-Light.ttf"),
+      QFontDatabase::addApplicationFont("://fonts/Nunito/Nunito-Regular.ttf"),
+      QFontDatabase::addApplicationFont("://fonts/Nunito/Nunito-Bold.ttf"),
       };
 
   QString family = QFontDatabase::applicationFontFamilies(fnt_id[0]).at(0);
@@ -152,5 +152,4 @@ int main (int argc, char **argv) {
   app_state_t::get_inst()->save_settings();
 
   return ret_code;
-
 }
