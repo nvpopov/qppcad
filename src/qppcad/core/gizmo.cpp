@@ -21,8 +21,8 @@ gizmo_t::gizmo_t () {
 }
 
 void gizmo_t::render () {
-
-  if (!m_is_visible) return;
+  if (!m_is_visible || (attached_item && !attached_item->m_show_gizmo.get_value()))
+    return;
 
   app_state_t* astate = app_state_t::get_inst();
   ws_edit_type_e cur_edit_type = astate->ws_mgr->get_cur_ws()->get_edit_type();
@@ -31,7 +31,8 @@ void gizmo_t::render () {
 
   //prevent showing gizmo when no content selected
   if (attached_item && attached_item->get_num_cnt_selected() == 0
-      && cur_edit_type == ws_edit_type_e::edit_content) return;
+      && cur_edit_type == ws_edit_type_e::edit_content)
+    return;
 
   astate->dp->begin_render_general_mesh();
 
@@ -40,12 +41,11 @@ void gizmo_t::render () {
 
   if (!m_is_interacting
       && (is_edit_item || (!is_edit_item && attached_item->get_num_cnt_selected() > 0))) {
-
     astate->dp->render_cube(m_pos, v_scale * 1.2f, clr_gray);
     std::array<vector3<float>, 3> tmp_pos_hat {
-        m_pos + gizmo_axis[0] * m_shift_magn,
-        m_pos + gizmo_axis[1] * m_shift_magn,
-        m_pos + gizmo_axis[2] * m_shift_magn
+      m_pos + gizmo_axis[0] * m_shift_magn,
+          m_pos + gizmo_axis[1] * m_shift_magn,
+          m_pos + gizmo_axis[2] * m_shift_magn
     };
 
     auto lambda_proj_pos = [astate](const vector3<float> &pos){
@@ -60,48 +60,47 @@ void gizmo_t::render () {
     m_proj_axes_cnt = (m_proj_axes[0] + m_proj_axes[1] + m_proj_axes[2]) / 3.0f;
 
     astate->dp->render_general_mesh(tmp_pos_hat[0],
-                                    v_one * 0.35f,
-                                    vector3<float>( 0.0f, float(pi) / 2, 0.0f ),
-                                    gizmo_color[0],
-                                    astate->mesh_unit_cone);
+        v_one * 0.35f,
+        vector3<float>( 0.0f, float(pi) / 2, 0.0f ),
+        gizmo_color[0],
+        astate->mesh_unit_cone);
 
     astate->dp->render_general_mesh(tmp_pos_hat[1],
-                                    v_one * 0.35f,
-                                    vector3<float>( 0.0f, 0.0f, -float(pi) / 2 ),
-                                    gizmo_color[1],
-                                    astate->mesh_unit_cone);
+        v_one * 0.35f,
+        vector3<float>( 0.0f, 0.0f, -float(pi) / 2 ),
+        gizmo_color[1],
+        astate->mesh_unit_cone);
 
     astate->dp->render_general_mesh(tmp_pos_hat[2],
-                                    v_one * 0.35f,
-                                    vector3<float>( 0.0f, 0.0f, 0.0f),
-                                    gizmo_color[2],
-                                    astate->mesh_unit_cone);
+        v_one * 0.35f,
+        vector3<float>( 0.0f, 0.0f, 0.0f),
+        gizmo_color[2],
+        astate->mesh_unit_cone);
 
     astate->dp->render_general_mesh(m_pos + gizmo_axis[0] * (m_shift_magn-m_box_size-1.25f),
-                                    vector3<float>( v_scale[0] , v_scale[1] ,
-                                                   (m_shift_magn/2-m_box_size) + 1.75f),
-                                    vector3<float>( 0.0f, float(pi) / 2.0,  0.0f),
-                                    gizmo_color[0],
-                                    astate->mesh_cylinder);
+        vector3<float>( v_scale[0] , v_scale[1] ,
+        (m_shift_magn/2-m_box_size) + 1.75f),
+        vector3<float>( 0.0f, float(pi) / 2.0,  0.0f),
+        gizmo_color[0],
+        astate->mesh_cylinder);
 
     astate->dp->render_general_mesh(m_pos + gizmo_axis[1] * (m_shift_magn-m_box_size+0.75),
-                                    vector3<float>( v_scale[0] , v_scale[1] ,
-                                                   (m_shift_magn/2-m_box_size) + 1.75f),
-                                    vector3<float>( 0.0f, 0.0f,  float(pi) / 2.0),
-                                    gizmo_color[1],
-                                    astate->mesh_cylinder);
+        vector3<float>( v_scale[0] , v_scale[1] ,
+        (m_shift_magn/2-m_box_size) + 1.75f),
+        vector3<float>( 0.0f, 0.0f,  float(pi) / 2.0),
+        gizmo_color[1],
+        astate->mesh_cylinder);
 
     astate->dp->render_general_mesh(m_pos + gizmo_axis[2] * (m_shift_magn-m_box_size-1.25f),
-                                    vector3<float>( v_scale[0] , v_scale[1] ,
-                                                   (m_shift_magn/2-m_box_size) + 1.75f),
-                                    vector3<float>( 0.0f, 0.0f,  0.0f),
-                                    gizmo_color[2],
-                                    astate->mesh_cylinder);
+        vector3<float>( v_scale[0] , v_scale[1] ,
+        (m_shift_magn/2-m_box_size) + 1.75f),
+        vector3<float>( 0.0f, 0.0f,  0.0f),
+        gizmo_color[2],
+        astate->mesh_cylinder);
 
     astate->dp->end_render_general_mesh();
 
   } else {
-
     vector3<float> vec_small_aliasing(0.05f, 0.05f, 0.05f);
     astate->dp->begin_render_line();
 
@@ -116,17 +115,13 @@ void gizmo_t::render () {
                                 m_pos + gizmo_axis[i] * 2 + vec_small_aliasing);
       }
     astate->dp->end_render_line();
-
   }
-
 }
 
 bool gizmo_t::is_any_axis_touched() {
-
   return std::any_of(std::begin(m_bx_touched),
                      std::end(m_bx_touched),
                      [](const auto &elem){return elem;});
-
 }
 
 vector2<float> gizmo_t::get_axis_coord(size_t axis_id, float displ) {
@@ -134,18 +129,15 @@ vector2<float> gizmo_t::get_axis_coord(size_t axis_id, float displ) {
 }
 
 bool gizmo_t::check_attached_item_in_content_mode() {
-
   return
       (attached_item && attached_item->m_parent_ws
        && attached_item->m_parent_ws->get_edit_type() == ws_edit_type_e::edit_content
        && attached_item->get_num_cnt_selected() > 0)
-      || (attached_item && attached_item->m_parent_ws
+       ||(attached_item && attached_item->m_parent_ws
           && attached_item->m_parent_ws->get_edit_type() == ws_edit_type_e::edit_item);
-
 }
 
 void gizmo_t::translate_attached(float delta_time) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (!astate->mouse_lb_pressed) {
@@ -199,20 +191,17 @@ void gizmo_t::translate_attached(float delta_time) {
       } else {
         m_acc_tr = vector3<float>::Zero();
       }
-
     }
-
   } // if (attached_item)
-
 }
 
 void gizmo_t::clear_selected_axis () {
-  for (int i = 0; i < 3; i++) m_bx_touched[i] = false;
+  for (int i = 0; i < 3; i++)
+    m_bx_touched[i] = false;
   m_is_interacting = false;
 }
 
 void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
-
   app_state_t* astate = app_state_t::get_inst();
   ws_edit_type_e cur_edit_type = astate->ws_mgr->get_cur_ws()->get_edit_type();
 
@@ -294,7 +283,4 @@ void gizmo_t::update_gizmo (float delta_time, bool force_repaint) {
     translate_attached(delta_time);
     astate->make_viewport_dirty();
   }
-
-
-
 }

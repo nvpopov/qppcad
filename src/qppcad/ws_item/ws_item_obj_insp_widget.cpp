@@ -68,7 +68,9 @@ void ws_item_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
     }
 
     m_ws_item_pos->bind_value(&m_binded_item->m_pos, m_binded_item);
-    m_ws_item_show_item_bb->bind_value({&m_binded_item->m_is_visible, &m_binded_item->m_show_bb});
+    m_ws_item_show_item_bb->bind_value({&m_binded_item->m_is_visible,
+                                        &m_binded_item->m_show_bb,
+                                        &m_binded_item->m_show_gizmo});
 
     qt_hlp::form_lt_ctrl_visibility(m_binded_item->get_flags() & ws_item_flags_support_tr,
                                     m_tg_form_lt,
@@ -156,7 +158,6 @@ void ws_item_obj_insp_widget_t::resizeEvent(QResizeEvent *event) {
 }
 
 ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
-
   app_state_t *astate = app_state_t::get_inst();
 
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -176,7 +177,7 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
   m_ws_item_type = new QLabel;
   m_ws_item_type->setProperty("s_class", "thin_label");
 
-  m_ws_item_show_item_bb = new qbinded_bool_named_vector_t({tr("Item"), tr("BBox")});
+  m_ws_item_show_item_bb = new qbinded_bool_named_vector_t({tr("Item"), tr("BBox"), tr("Gizmo")});
 
   m_ws_item_pos_label = new QLabel(tr("Position[%1]").arg(astate->m_spatial_suffix));
   m_ws_item_pos = new qbinded_float3_input_t;
@@ -238,7 +239,6 @@ ws_item_obj_insp_widget_t::ws_item_obj_insp_widget_t() {
           &ws_item_obj_insp_widget_t::currentChanged,
           this,
           &ws_item_obj_insp_widget_t::cur_tab_changed);
-
 }
 
 void ws_item_obj_insp_widget_t::cur_ws_selected_item_position_changed() {

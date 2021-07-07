@@ -115,6 +115,7 @@ public:
   hs_prop_str_t      m_name;
   hs_prop_str_t      m_genesis_file_name;
   hs_prop_bool_t     m_show_bb;
+  hs_prop_bool_t     m_show_gizmo;
   hs_prop_bool_t     m_is_visible;
   hs_prop_v3f_t      m_pos;
   hs_prop_v3f_t      m_scale;

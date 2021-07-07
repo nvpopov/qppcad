@@ -8,23 +8,23 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_item_t::ws_item_t() {
-
   begin_recording(hs_doc_rec_type_e::hs_doc_rec_init);
 
   add_hs_child(&m_show_bb);
+  add_hs_child(&m_show_gizmo);
   add_hs_child(&m_is_visible);
   add_hs_child(&m_pos);
   add_hs_child(&m_rotation);
   add_hs_child(&m_scale);
 
   m_show_bb.set_value(true);
+  m_show_gizmo.set_value(true);
   m_is_visible.set_value(true);
   m_pos.set_value(vector3<float>{0});
   m_rotation.set_value(vector3<float>{0});
   m_scale.set_value(vector3<float>{1, 1, 1});
 
   end_recording();
-
 }
 
 vector3<float> ws_item_t::get_pos() {
@@ -32,7 +32,6 @@ vector3<float> ws_item_t::get_pos() {
 }
 
 void ws_item_t::set_pos(vector3<float> new_pos) {
-
   app_state_t* astate = app_state_t::get_inst();
   m_pos.set_value(std::move(new_pos));
 
@@ -40,7 +39,6 @@ void ws_item_t::set_pos(vector3<float> new_pos) {
   updated_externally(ws_item_updf_pos_changed);
 
   astate->make_viewport_dirty();
-
 }
 
 void ws_item_t::set_selected() {
