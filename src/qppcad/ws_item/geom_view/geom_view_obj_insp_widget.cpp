@@ -979,11 +979,9 @@ void geom_view_obj_insp_widget_t::construct_mod_tab() {
   m_tab_modify->tab_inner_widget_lt->addWidget(m_tm_gb_grp_op);
 
   m_tab_modify->tab_inner_widget_lt->addStretch(1);
-
 }
 
 void geom_view_obj_insp_widget_t::construct_sel_tab() {
-
   app_state_t *astate = app_state_t::get_inst();
 
   // general settings
@@ -1012,11 +1010,9 @@ void geom_view_obj_insp_widget_t::construct_sel_tab() {
   m_tab_select->tab_inner_widget_lt->addWidget(m_ts_gb_general);
   m_tab_select->tab_inner_widget_lt->addWidget(m_ts_gb_sel_grp_details);
   m_tab_select->tab_inner_widget_lt->addStretch(1);
-
 }
 
 void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
-
   app_state_t *astate = app_state_t::get_inst();
 
   m_txg_gb_info = new qspoiler_widget_t(tr("XGeometry Fields"));
@@ -1069,7 +1065,6 @@ void geom_view_obj_insp_widget_t::construct_xgeom_tab() {
   m_tab_xgeom->tab_inner_widget_lt->addWidget(m_txg_gb_info);
   m_tab_xgeom->tab_inner_widget_lt->addWidget(m_txg_gb_comp_prop);
   m_tab_xgeom->tab_inner_widget_lt->addStretch(1);
-
 }
 
 void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
@@ -1081,11 +1076,9 @@ void geom_view_obj_insp_widget_t::bind_to_item(ws_item_t *_binding_item) {
 }
 
 void geom_view_obj_insp_widget_t::update_from_ws_item() {
-
   ws_item_obj_insp_widget_t::update_from_ws_item();
 
   if (b_al) {
-
     //General tab
     m_tg_geom_sum_total_atoms->setText(
         QString::fromStdString(fmt::format("[Atoms:{}], [Types:{}]",
@@ -1232,13 +1225,10 @@ void geom_view_obj_insp_widget_t::update_from_ws_item() {
     update_msr_tab();
     update_sel_tab();
     update_xgeom_tab();
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::unbind_item() {
-
   ws_item_obj_insp_widget_t::unbind_item();
 
   m_disp_s_draw_atoms_bonds->unbind_value();
@@ -1292,18 +1282,14 @@ void geom_view_obj_insp_widget_t::unbind_item() {
   unbind_sel_tab();
 
   b_al = nullptr;
-
 }
 
 void geom_view_obj_insp_widget_t::bind_dist_msr_tab() {
-
   if (b_al) {
-
     int cur_msr = b_al->m_measure->m_cur_dist_rec_ui - 1;
     auto dmr = b_al->m_measure->m_dist_recs.get_hs_child_as_array(cur_msr);
 
     if (dmr) {
-
       m_tms_pair_dist_color->bind_value(&dmr->m_bond_color);
       m_tms_pair_show->bind_value(&dmr->m_show);
       m_tms_pair_label_enabled->bind_value(&dmr->m_show_label);
@@ -1343,13 +1329,10 @@ void geom_view_obj_insp_widget_t::bind_dist_msr_tab() {
     } else {
       unbind_dist_msr_tab();
     }
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::unbind_dist_msr_tab() {
-
   m_tms_pair_dist_color->unbind_value();
   m_tms_pair_show->unbind_value();
   m_tms_pair_line_style->unbind_value();
@@ -1386,30 +1369,23 @@ void geom_view_obj_insp_widget_t::unbind_dist_msr_tab() {
 
   m_tms_pair_custom_text_edit->setEnabled(false);
   m_tms_pair_custom_text_enabled->setEnabled(false);
-
 }
 
 void geom_view_obj_insp_widget_t::bind_angle_msr_tab() {
-
   if (b_al) {
-
     int cur_msr = b_al->m_measure->m_cur_angle_rec_ui - 1;
     auto amr = b_al->m_measure->m_angle_recs.get_hs_child_as_array(cur_msr);
 
     if (amr) {
-
       m_tms_angle_enabled->bind_value(&amr->m_show);
       m_tms_angle_enabled->setEnabled(true);
 
       m_tms_angle_order->bind_value(&amr->m_order);
       m_tms_angle_order->setEnabled(true);
-
     } else {
       unbind_angle_msr_tab();
     }
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::unbind_angle_msr_tab() {
@@ -1603,15 +1579,11 @@ void geom_view_obj_insp_widget_t::update_mod_tab() {
       m_tm_gb_grp_op->hide();
       m_tm_gb_override_atom->hide();
     }
-
   }
-
 }
 
 void geom_view_obj_insp_widget_t::update_msr_tab() {
-
   if (b_al) {
-
     m_tms_pair_cur_msr->blockSignals(true);
     m_tms_pair_cur_msr->clear();
     m_tms_pair_cur_msr->addItem(tr("None"));
@@ -1674,7 +1646,6 @@ void geom_view_obj_insp_widget_t::update_msr_tab() {
     update_angle_msr_tab_info();
     m_tms_angle_cur_msr->blockSignals(false);
   }
-
 }
 
 void geom_view_obj_insp_widget_t::update_dist_msr_tab_info() {

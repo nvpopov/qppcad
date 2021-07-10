@@ -34,13 +34,11 @@ public:
   bool m_updated_externally_event{false};
 
   void bind_value(hs_doc_t<T> *binded_value, iupdatable_externally_t *item_to_bind = nullptr) {
-
     m_binded_value = binded_value;
     m_binded_item = item_to_bind;
     m_ignore_state_change = true;
     if (m_binded_value) load_value_ex();
     m_ignore_state_change = false;
-
   }
 
   void set_value(T&& new_value) {
@@ -70,7 +68,6 @@ public:
   }
 
   virtual void load_value_ex() = 0;
-
 };
 
 /**
@@ -260,7 +257,7 @@ private slots:
  * @brief The qbinded_float3_input_t class
  */
 class qbinded_float3_input_t : public QWidget,
-                               public generic_binded_input_t<vector3<float> > {
+                               public generic_binded_input_t<vector3<float>> {
 
   Q_OBJECT
 
@@ -291,7 +288,7 @@ private slots:
  * @brief The qbinded_matrix3_input_t class
  */
 class qbinded_matrix3_input_t : public QWidget,
-                                public generic_binded_input_t<matrix3<float> > {
+                                public generic_binded_input_t<matrix3<float>> {
 
   Q_OBJECT
 
@@ -319,7 +316,7 @@ private slots:
  * @brief The qbinded_color3_input_t class
  */
 class qbinded_color3_input_t : public QWidget,
-                               public generic_binded_input_t<vector3<float> > {
+                               public generic_binded_input_t<vector3<float>> {
 
   Q_OBJECT
 

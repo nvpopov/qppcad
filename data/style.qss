@@ -182,8 +182,8 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 }
 
 QScrollBar::add-line:horizontal {
-  border: none;
-  background: none;
+ border: none;
+ background: none;
 }
 
 QScrollBar::sub-line:horizontal {
@@ -218,7 +218,7 @@ QListWidget {
 }
 
 QListWidget::item {
-  margin: 5px;
+ margin: 5px;
 }
 
 QSplitter {
@@ -450,7 +450,7 @@ QComboBox:disabled, QSpinBox:disabled, QDoubleSpinBox:disabled {
 }
 
 QComboBox {
- padding: 3px 6px 3px 6px;
+ padding: 1px 6px 1px 6px;
 }
 
 QPushButton, QComboBox, QSpinBox, QDoubleSpinBox, QToolButton{

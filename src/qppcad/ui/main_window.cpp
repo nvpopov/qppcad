@@ -963,7 +963,7 @@ void main_window_t::request_undo_redo_buttons_update() {
   if (!m_edit_menu_undo || !m_edit_menu_redo)
     return;
   app_state_t* astate = app_state_t::get_inst();
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
   if (ok && DEV_ENABLE_HSDOC) {
     auto cur_ws_sp = cur_ws.get();
     if (cur_ws_sp) {
@@ -994,7 +994,6 @@ void main_window_t::open_ws() {
 }
 
 void main_window_t::save_ws() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   stop_update_cycle();
@@ -1021,7 +1020,6 @@ void main_window_t::save_ws() {
 
   start_update_cycle();
   cur_ws_changed();
-
 }
 
 void main_window_t::save_ws_as() {
@@ -1352,7 +1350,7 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
 
 void main_window_t::ws_edit_mode_selector_button_clicked(int id) {
   app_state_t* astate = app_state_t::get_inst();
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
   if (ok) {
     if (id == 0)
       cur_ws->set_edit_type(ws_edit_type_e::edit_item);
@@ -1451,7 +1449,7 @@ void main_window_t::tp_add_point_sym_group_clicked() {
 
 void main_window_t::tp_scenic_rotation_toggle() {
   app_state_t* astate = app_state_t::get_inst();
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
   cur_ws->m_scenic_rotation = !cur_ws->m_scenic_rotation;
 }
 
@@ -1461,7 +1459,7 @@ void main_window_t::apply_camera_view_change(cam_tv_e target_view) {
 
 void main_window_t::toggle_ws_edit_mode() {
   app_state_t* astate = app_state_t::get_inst();
-  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws();
+  auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
   if (ok) {
     cur_ws->toggle_edit_mode();
     cur_ws_changed();
@@ -2050,7 +2048,6 @@ void main_window_t::control_bhv_menus_activity() {
 }
 
 void main_window_t::make_screenshot() {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
 
@@ -2065,7 +2062,6 @@ void main_window_t::make_screenshot() {
 
   astate->m_ignore_scanline = false;
   astate->make_viewport_dirty();
-
 }
 
 void main_window_t::slot_shortcut_terminate_app() {

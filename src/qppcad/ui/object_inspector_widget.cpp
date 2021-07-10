@@ -194,18 +194,15 @@ void object_inspector_widget_t::update_ws_items_view_widget() {
 }
 
 void object_inspector_widget_t::cur_ws_changed() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   astate->tlog("[DEBUG] object_inspector_widget_t::cur_ws_changed");
 
   m_ws_items_list->blockSignals(true);
-
   m_ws_items_list->clear();
   m_ws_items_list->clearSelection();
 
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_ignore);
-
   if (cur_ws)
   for (size_t i = 0; i < cur_ws->num_items(); i++) {
     auto ws_item = cur_ws->m_ws_items.get_hs_child_as_array(i);
@@ -218,7 +215,6 @@ void object_inspector_widget_t::cur_ws_changed() {
 
   cur_ws_selected_item_changed();
   m_ws_items_list->blockSignals(false);
-
 }
 
 void object_inspector_widget_t::cur_ws_selected_item_changed() {
@@ -254,7 +250,6 @@ void object_inspector_widget_t::cur_ws_selected_item_changed() {
 }
 
 void object_inspector_widget_t::ui_cur_ws_selected_item_changed() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   astate->tlog("[DEBUG] ui_cur_ws_selected_item_changed");

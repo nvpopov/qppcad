@@ -9,7 +9,6 @@ namespace qpp {
 namespace cad {
 
 struct geom_view_tools_t {
-
   /* shake tools */
   static void shake_atoms(geom_view_t *gv, std::set<size_t> atoms_to_shake, float magn);
 
@@ -69,20 +68,17 @@ struct geom_view_tools_t {
   static std::vector<size_t> get_atoms_sublattices(geom_view_t *gv, float score_eps = 0.1f);
 
   /* structure aligning */
-  static void tr_align_geoms(geom_view_t *what_gv,
-                             geom_view_t *to_gv,
-                             vector3<float> start_offset,
-                             vector3<float> axis_steps,
+  static void tr_align_geoms(geom_view_t *what_gv, geom_view_t *to_gv,
+                             vector3<float> start_offset, vector3<float> axis_steps,
                              size_t total_steps);
 
   /* composing */
   static void compose_gv_from_images(py::list gvs);
 
   /* generators */
-  static std::shared_ptr<geom_view_t> gen_ncells(geom_view_t *gv, int s_a,
-                                                 int e_a, int s_b,
-                                                 int e_b, int s_c,
-                                                 int e_c);
+  static std::shared_ptr<geom_view_t> gen_ncells(geom_view_t *gv,
+                                                 int s_a, int e_a, int s_b, int e_b,
+                                                 int s_c, int e_c);
 
   static void gen_ncells_ex(xgeometry<float, periodic_cell<float>> *src,
                             xgeometry<float, periodic_cell<float>> *dst,
@@ -158,7 +154,6 @@ struct geom_view_tools_t {
   static void transform_gv(geom_view_t *gv, matrix3<float> trmat);
 
   static vector3<float> vec_from_miller_indicies(geom_view_t *gv, int i0, int i1, int i2);
-
 };
 
 } // namespace cad

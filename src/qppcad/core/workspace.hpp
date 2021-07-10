@@ -196,11 +196,11 @@ public:
     auto cur_it = cur_ws->get_sel_sp();
     if (!cur_it) {
       if (error_context & error_ctx_throw)
-        throw std::invalid_argument("No item selected in the workspace");
+        throw std::invalid_argument("No item in the workspace is selected");
       if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
-                             QObject::tr("No item selected in the workspace"));
+                             QObject::tr("No item in the workspace is selected"));
       return {cur_ws, nullptr, nullptr};
     }
 
@@ -208,13 +208,13 @@ public:
     if (!casted_it) {
       if (error_context & error_ctx_throw)
         throw std::invalid_argument(
-            fmt::format("Cannot cast types: from {} to {}",
+            fmt::format("Cannot perform typecast: from {} to {}",
                         cur_it->get_type_name(), T::get_type_name_static())
             );
       if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
-                             QObject::tr("Cannot cast types: from %1 to %2")
+                             QObject::tr("Cannot perform typecast: from %1 to %2")
                                  .arg(QString::fromStdString(cur_it->get_type_name()))
                                  .arg(QString::fromStdString(T::get_type_name_static()))
                              );
@@ -244,10 +244,10 @@ public:
     auto cur_it = cur_ws->get_sel_sp();
     if (!cur_it) {
       if (error_context & error_ctx_throw)
-        throw std::invalid_argument("No item selected in the workspace");
+        throw std::invalid_argument("No item in the workspace is selected");
       if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr, QObject::tr("Error"),
-                             QObject::tr("No item selected in the workspace"));
+                             QObject::tr("No item in the workspace is selected"));
       return {cur_ws, nullptr, nullptr, false};
     }
 
@@ -255,12 +255,12 @@ public:
     if (!casted_it) {
       if (error_context & error_ctx_throw)
         throw std::invalid_argument(
-            fmt::format("Cannot cast types: from {} to {}",
+            fmt::format("Cannot perform typecast: from {} to {}",
                         cur_it->get_type_name(), T::get_type_name_static()));
       if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
-                             QObject::tr("Cannot cast types: from %1 to %2")
+                             QObject::tr("Cannot perform typecast: from %1 to %2")
                                  .arg(QString::fromStdString(cur_it->get_type_name()))
                                  .arg(QString::fromStdString(T::get_type_name_static()))
                              );
@@ -291,11 +291,11 @@ public:
     auto cur_it = cur_ws->get_sel_sp();
     if (!cur_it) {
       if (error_context & error_ctx_throw)
-        throw std::invalid_argument("No item selected in the workspace");
+        throw std::invalid_argument("No item in the workspace is selected");
       if (error_context & error_ctx_mbox)
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
-                             QObject::tr("No item selected in the workspace"));
+                             QObject::tr("No item in the workspace is selected"));
       return {cur_ws, nullptr, false};
     }
 
@@ -311,11 +311,12 @@ public:
   get_sel_tuple_ws(uint32_t error_context = error_ctx_def) {
     if (!has_wss()) {
       if (error_context & error_ctx_throw)
-        throw std::invalid_argument("There are`t workspaces in the field");
-      if (error_context & error_ctx_mbox)
+        throw std::invalid_argument("The list of open workspaces is empty");
+      if (error_context & error_ctx_mbox) {
         QMessageBox::warning(nullptr,
                              QObject::tr("Error"),
-                             QObject::tr("There are`t workspaces in the field"));
+                             QObject::tr("The list of open workspaces is empty"));
+      }
       return {false, nullptr};
     }
 

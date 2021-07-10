@@ -43,7 +43,7 @@ void gizmo_t::render () {
       && (is_edit_item || (!is_edit_item && attached_item->get_num_cnt_selected() > 0))) {
     astate->dp->render_cube(m_pos, v_scale * 1.2f, clr_gray);
     std::array<vector3<float>, 3> tmp_pos_hat {
-      m_pos + gizmo_axis[0] * m_shift_magn,
+          m_pos + gizmo_axis[0] * m_shift_magn,
           m_pos + gizmo_axis[1] * m_shift_magn,
           m_pos + gizmo_axis[2] * m_shift_magn
     };
