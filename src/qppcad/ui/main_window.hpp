@@ -35,9 +35,7 @@
 #include <QFileDialog>
 #include <QTimer>
 
-namespace qpp {
-
-namespace cad {
+namespace qpp::cad {
 
 class toolbar_element_t;
 
@@ -302,7 +300,5 @@ public slots:
 };
 
 } // namespace qpp::cad
-
-} // namespace qpp
 
 #endif

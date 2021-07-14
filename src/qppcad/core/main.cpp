@@ -12,6 +12,7 @@
 #include <QCommandLineParser>
 #include <qppcad/core/ittnotify_support.hpp>
 #include <atomic>
+#include <QtGlobal>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -43,6 +44,18 @@ int main (int argc, char **argv) {
   QCoreApplication::setOrganizationDomain("100ways.dev");
   QCoreApplication::setApplicationName("qppcad");
   QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+  app_state_t::init_inst();
+  app_state_t *astate = app_state_t::get_inst();
+  astate->init_managers();
+  astate->ws_mgr->init_ws_item_bhv_mgr();
+  astate->load_settings();
+  //bool scale_factor_redefined{false};
+  if (qEnvironmentVariableIsSet("QT_SCALE_FACTOR")) {
+    astate->m_qt_scale_factor = qEnvironmentVariable("QT_SCALE_FACTOR").toFloat();
+    astate->size_guide.m_scale_factor = astate->m_qt_scale_factor.value_or(1.0f);
+  }
 
   QApplication app(argc, argv);
 
@@ -73,17 +86,11 @@ int main (int argc, char **argv) {
     std::signal(SIGTERM, on_app_exit);
   }
 
-  app_state_t::init_inst();
-  app_state_t *astate = app_state_t::get_inst();
   astate->tlog("@GIT_REVISION={}, @BUILD_DATE={}",
                build_info_t::get_git_version(), build_info_t::get_git_version());
 
   std::ifstream test_in_dev_env("../data/refs/laf3_p3.vasp");
   bool under_dev_env = test_in_dev_env.good();
-
-  astate->init_managers();
-  astate->ws_mgr->init_ws_item_bhv_mgr();
-  astate->load_settings();
 
   astate->init_fixtures();
 

@@ -6,7 +6,6 @@ using namespace qpp;
 using namespace qpp::cad;
 
 ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent) {
-
   m_update_timer = new QTimer;
 
   m_update_timer->connect(m_update_timer,
@@ -30,11 +29,9 @@ ws_viewer_widget_t::ws_viewer_widget_t(QWidget *parent) : QOpenGLWidget (parent)
 
   m_update_timer_cpu = new QElapsedTimer;
   m_update_timer_gpu = new QElapsedTimer;
-
 }
 
 void ws_viewer_widget_t::draw_text_logo(QPainter &painter) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   QFont font(QFont(astate->m_font_name, 42, QFont::Medium));
@@ -50,20 +47,16 @@ void ws_viewer_widget_t::draw_text_logo(QPainter &painter) {
 
   painter.setPen(logo_color);
   painter.drawText(c_x, c_y, logo_string);
-
 }
 
 void ws_viewer_widget_t::draw_scanline(QPainter &painter) {
-
   app_state_t* astate = app_state_t::get_inst();
   painter.resetTransform();
   //painter.setPen(QPen(astate->m_app_palette.color(QPalette::Window), 3));
   painter.drawLine(0, 0, painter.window().width(), 0);
-
 }
 
 void ws_viewer_widget_t::update_cycle() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (astate->is_viewport_dirty()) {
@@ -89,7 +82,6 @@ void ws_viewer_widget_t::update_cycle() {
 
   astate->is_mouse_moving = false;
   astate->ws_mgr->utility_event_loop();
-
 }
 
 void ws_viewer_widget_t::initializeGL() {
@@ -101,14 +93,13 @@ void ws_viewer_widget_t::initializeGL() {
 
 void ws_viewer_widget_t::resizeGL(int w, int h) {
   app_state_t* astate = app_state_t::get_inst();
-  astate->viewport_size[0] = w;
-  astate->viewport_size[1] = h;
+  astate->viewport_size[0] = w ;
+  astate->viewport_size[1] = h ;
   if (astate->camera)
     astate->camera->update_camera();
 }
 
 void ws_viewer_widget_t::paintGL() {
-
   #ifdef WITH_VTUNE_INSTRUMENTATION
   __itt_task_begin(instrumentation::d_qppcad,
                    __itt_null,
@@ -124,10 +115,12 @@ void ws_viewer_widget_t::paintGL() {
   if (astate->m_disable_app)
     return;
 
+  auto scale_factor = astate->m_qt_scale_factor.value_or(1.0);
+  //astate->tlog("@@@ SCALE FACTOR IS {}", scale_factor);
   glapi->glViewport(static_cast<int>(0),
                     static_cast<int>(0),
-                    static_cast<int>(astate->viewport_size(0)),
-                    static_cast<int>(astate->viewport_size(1)));
+                    static_cast<int>(astate->viewport_size(0) * scale_factor),
+                    static_cast<int>(astate->viewport_size(1) * scale_factor));
 
   QPainter painter(this);
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -141,9 +134,7 @@ void ws_viewer_widget_t::paintGL() {
   astate->dp->cull_func(draw_pipeline_cull_func::cull_disable);
 
   if (astate->m_show_debug_frame_stats && !astate->ws_mgr->m_ws.empty()) {
-
     painter.setFont(QFont(astate->m_font_name, 13));
-
     //build contrast color for font
     QColor debug_hud_color = Qt::black;
     if (astate->ws_mgr->has_wss()) {
@@ -152,23 +143,19 @@ void ws_viewer_widget_t::paintGL() {
       debug_hud_color.setGreenF(1 - cur_ws->m_bg_color[1]);
       debug_hud_color.setBlueF(1 - cur_ws->m_bg_color[2]);
     }
-
     painter.setPen(debug_hud_color);
     painter.drawText(width()-240, height()-30, 280, 30, Qt::AlignLeft,
                      QString::fromStdString(fmt::format("Frame time GPU: {:6.6f} ms.",
                                                         (astate->m_last_frame_time_gpu)/
-                                                        1000000.0))
-                     );
+                                                        1000000.0)));
 
     painter.drawText(width()-240, height()-60, 280, 30, Qt::AlignLeft,
                      QString::fromStdString(fmt::format("Frame time CPU: {:6.6f} ms.",
                                                         (astate->m_last_frame_time_cpu)/
-                                                        1000000.0))
-                     );
+                                                        1000000.0)));
   }
 
   astate->ws_mgr->render_cur_ws_overlay(painter);
-
   if (!astate->ws_mgr->has_wss())
     draw_text_logo(painter);
 
@@ -178,13 +165,10 @@ void ws_viewer_widget_t::paintGL() {
   #ifdef WITH_VTUNE_INSTRUMENTATION
   __itt_task_end(instrumentation::d_qppcad);
   #endif
-
 }
 
 void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (event) {
     if (event->button() == Qt::LeftButton)  {
       astate->mouse_lb_pressed = true;
@@ -201,13 +185,10 @@ void ws_viewer_widget_t::mousePressEvent(QMouseEvent *event) {
       astate->mouse_md_pressed = true;
     }
   }
-
 }
 
 void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (event) {
     bool need_to_cancel_cam_transform = false;
     if (event->button() == Qt::LeftButton) {
@@ -228,15 +209,11 @@ void ws_viewer_widget_t::mouseReleaseEvent(QMouseEvent *event) {
       astate->camera->m_move_camera = false;
     }
   }
-
 }
 
 void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (event) {
-
     astate->mouse_x_old = astate->mouse_x;
     astate->mouse_y_old = astate->mouse_y;
     astate->mouse_x_dc_old = astate->mouse_x_dc;
@@ -279,31 +256,24 @@ void ws_viewer_widget_t::mouseMoveEvent(QMouseEvent *event) {
           astate->camera->m_rotate_camera && (kb_mod & Qt::ControlModifier);
     }
   }
-
 }
 
 void ws_viewer_widget_t::mouseDoubleClickEvent(QMouseEvent *event) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (event && event->button() == Qt::LeftButton) {
     astate->ws_mgr->mouse_double_click();
     event->accept();
   }
-
 }
 
 void ws_viewer_widget_t::wheelEvent(QWheelEvent *event) {
-
   app_state_t* astate = app_state_t::get_inst();
-
   if (astate->camera) {
     astate->camera->update_camera_zoom(
           event->delta() / 180.0f * astate->m_middle_mb_translate_mode);
     astate->camera->update_camera();
     astate->make_viewport_dirty();
   }
-
 }
 
 void ws_viewer_widget_t::show_context_menu(const QPoint &pos) {

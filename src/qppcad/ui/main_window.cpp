@@ -449,11 +449,9 @@ void main_window_t::init_menus() {
   //m_menu_wdgt->setDefaultWidget(m_menu_wdgt_hldr);
 
   menuBar()->setCornerWidget(m_menu_wdgt_hldr);
-
 }
 
 void main_window_t::init_widgets() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   m_tp_wdgt = new QFrame(nullptr);
@@ -719,7 +717,6 @@ void main_window_t::init_widgets() {
   m_inline_btm_tool =
       new qinline_tool_window_t(qinline_tool_type_e::tool_horizontal, nullptr);
   m_inline_btm_tool->setVisible(false);
-
 }
 
 void main_window_t::init_layouts() {
@@ -1084,11 +1081,9 @@ void main_window_t::change_cur_ws_bg() {
   app_state_t* astate = app_state_t::get_inst();
   auto [ok, cur_ws] = astate->ws_mgr->get_sel_tuple_ws(error_ctx_mbox);
   if (ok) {
-    QColor stored_color = QColor::fromRgbF(
-        cur_ws->m_bg_color[0],
-        cur_ws->m_bg_color[1],
-        cur_ws->m_bg_color[2]
-        );
+    QColor stored_color = QColor::fromRgbF(cur_ws->m_bg_color[0],
+                                           cur_ws->m_bg_color[1],
+                                           cur_ws->m_bg_color[2]);
     const QColor clr = QColorDialog::getColor(stored_color, this,
                                               "Select workspace`s background color");
     if (clr.isValid()) {
@@ -1188,7 +1183,6 @@ void main_window_t::cur_ws_edit_type_changed() {
 }
 
 void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
 
@@ -1266,7 +1260,6 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
       m_tp_msr_angle->blockSignals(false);
     }
     /* end of angle between 3 atoms */
-
   }
 
   if (need_to_hide_add_primitives) {
@@ -1292,11 +1285,9 @@ void main_window_t::cur_ws_sel_atoms_list_sel_changed() {
   if (need_to_hide_make_psg) {
     m_tp_add_point_sym_group->hide();
   }
-
 }
 
 void main_window_t::tp_dist_button_clicked(bool checked) {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
   if (!ok)
@@ -1316,11 +1307,9 @@ void main_window_t::tp_dist_button_clicked(bool checked) {
   }
 
   astate->make_viewport_dirty();
-
 }
 
 void main_window_t::tp_angle_button_clicked(bool checked) {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
   if (!ok)
@@ -1345,7 +1334,6 @@ void main_window_t::tp_angle_button_clicked(bool checked) {
   }
 
   astate->make_viewport_dirty();
-
 }
 
 void main_window_t::ws_edit_mode_selector_button_clicked(int id) {
@@ -1387,7 +1375,6 @@ void main_window_t::tp_force_sel_lbl_vis_button_clicked(bool checked) {
 }
 
 void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
-
   app_state_t* astate = app_state_t::get_inst();
 
   auto [cur_ws, cur_item, as_al, ok] = astate->ws_mgr->get_sel_tpl_itmc<geom_view_t>();
@@ -1405,7 +1392,6 @@ void main_window_t::tp_toggle_atom_override_button_clicked(bool checked) {
 
   astate->astate_evd->cur_ws_selected_item_need_to_update_obj_insp();
   astate->make_viewport_dirty();
-
 }
 
 void main_window_t::tp_camera_tool_button_triggered(QAction *action) {
@@ -1512,11 +1498,10 @@ void main_window_t::stop_update_cycle() {
 }
 
 void main_window_t::act_sel_all_cnt() {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, al] = astate->ws_mgr->get_sel_tpl_itm<geom_view_t>();
-  if (al) al->sel_atoms(true);
-
+  if (al)
+      al->sel_atoms(true);
 }
 
 void main_window_t::act_unsel_all_cnt() {
@@ -1564,7 +1549,6 @@ void main_window_t::act_redo() {
 }
 
 void main_window_t::rebuild_recent_files_menu() {
-
   if (!m_file_menu_recent_files)
     return;
 
@@ -1588,11 +1572,9 @@ void main_window_t::rebuild_recent_files_menu() {
                                    astate->m_recent_files[i].m_file_name);
     m_file_menu_recent_entries[i]->setText(QString::fromStdString(rec_menu_entry));
   }
-
 }
 
 void main_window_t::recent_files_clicked() {
-
   int idx = -1;
   app_state_t* astate = app_state_t::get_inst();
 
@@ -1615,13 +1597,10 @@ void main_window_t::recent_files_clicked() {
         astate->ws_mgr->load_from_file_autodeduce(rec_idx.m_file_name, "", true, true);
     }
   }
-
 }
 
 void main_window_t::inline_tool_left_ctrl_visibility(bool visible) {
-
   m_inline_left_tool->setVisible(visible);
-
 }
 
 void main_window_t::inline_tool_bottom_ctrl_visibility(bool visible) {
@@ -1633,7 +1612,6 @@ void main_window_t::modern_menu_clicked() {
 }
 
 void main_window_t::build_bhv_menus_and_actions() {
-
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -1708,11 +1686,9 @@ void main_window_t::build_bhv_menus_and_actions() {
   }
 
   //TODO: make lookup for bhv
-
 }
 
 void main_window_t::build_bhv_tools_menus() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   using pss = std::tuple<size_t, std::string>;
@@ -1764,11 +1740,9 @@ void main_window_t::build_bhv_tools_menus() {
       m_tools_menu->addAction(new_act);
     m_tools_menu_acts.push_back(new_act);
   }
-
 }
 
 void main_window_t::build_bhv_tool_panel() {
-
   app_state_t *astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -1778,11 +1752,9 @@ void main_window_t::build_bhv_tool_panel() {
     new_tb->init_element(m_tp_wdgt);
     m_toolbar_elements.push_back(new_tb);
   }
-
 }
 
 void main_window_t::act_bhv_tools_menus_clicked() {
-
   app_state_t* astate = app_state_t::get_inst();
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc(error_ctx_ignore);
 
@@ -1821,11 +1793,9 @@ void main_window_t::act_bhv_tools_menus_clicked() {
     }
 
   }
-
 }
 
 void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
-
   app_state_t *astate = app_state_t::get_inst();
   auto &bhv_mgr = *astate->ws_mgr->m_bhv_mgr.get();
 
@@ -1897,11 +1867,9 @@ void main_window_t::process_bhv_tool(size_t tool_id, ws_item_t *sel_item) {
     inline_tool_left_ctrl_visibility(false);
     inline_tool_bottom_ctrl_visibility(true);
   }
-
 }
 
 void main_window_t::control_bhv_tools_menus_activity() {
-
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -1923,11 +1891,9 @@ void main_window_t::control_bhv_tools_menus_activity() {
       }
     }
   }
-
 }
 
 void main_window_t::act_bhv_import_to_cur_ws() {
-
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -1949,11 +1915,9 @@ void main_window_t::act_bhv_import_to_cur_ws() {
     if (!file_name.empty())
       astate->ws_mgr->import_from_file(file_name, b_id, false, false);
   }
-
 }
 
 void main_window_t::act_bhv_import_as_new_ws() {
-
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -1975,11 +1939,9 @@ void main_window_t::act_bhv_import_as_new_ws() {
     if (!file_name.empty())
       astate->ws_mgr->import_from_file(file_name, b_id, true, true);
   }
-
 }
 
 void main_window_t::act_bhv_export_sel() {
-
   app_state_t* astate = app_state_t::get_inst();
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
 
@@ -2006,35 +1968,30 @@ void main_window_t::act_bhv_export_sel() {
       astate->ws_mgr->save_ws_item_to_file(file_name, cur_it, b_id);
     }
   }
-
 }
 
 void main_window_t::control_bhv_menus_activity() {
-
   app_state_t* astate = app_state_t::get_inst();
 
   if (!astate->ws_mgr)
     return;
 
   ws_item_behaviour_manager_t *bhv_mgr = astate->ws_mgr->m_bhv_mgr.get();
-
   auto [cur_ws, cur_it, ok] = astate->ws_mgr->get_sel_tpl_itm_nc();
-
   if (cur_ws)
       m_file_menu_import_to_cur_ws->setEnabled(true);
   else
       m_file_menu_import_to_cur_ws->setEnabled(false);
 
   if (!ok) {
-    //
     m_file_menu_export_sel_as->setEnabled(false);
   } else {
     if (cur_it) {
       m_file_menu_export_sel_as->setEnabled(true);
       for (auto &exp_act : m_file_menu_export_sel_as_acts) {
         size_t bhv_id = exp_act->m_joined_data[0];
-        if (bhv_mgr->m_ws_item_io[bhv_id]->can_save() &&
-            bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
+        if (bhv_mgr->m_ws_item_io[bhv_id]->can_save()
+            && bhv_mgr->m_ws_item_io[bhv_id]->m_accepted_type == cur_it->get_type()) {
           //need_to_enable_export_menu = true;
           exp_act->setEnabled(true);
           //save item dialog
@@ -2044,7 +2001,6 @@ void main_window_t::control_bhv_menus_activity() {
       }
     }
   } // not ok
-
 }
 
 void main_window_t::make_screenshot() {

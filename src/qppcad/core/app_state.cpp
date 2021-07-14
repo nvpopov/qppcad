@@ -20,10 +20,8 @@ app_state_t *app_state_t::get_inst() {
 }
 
 app_state_t::app_state_t() {
-
   astate_evd = new app_state_event_disp_t;
   m_utility_thread_count = std::thread::hardware_concurrency();
-
 }
 
 void app_state_t::init_glapi(){
@@ -32,7 +30,6 @@ void app_state_t::init_glapi(){
 }
 
 void app_state_t::init_shaders() {
-
   sp_default    = shader_generators::gen_sp_default();
   sp_default_suprematic = shader_generators::gen_sp_default_suprematic();
   sp_unit_line  = shader_generators::gen_sp_unit_line();
@@ -45,7 +42,6 @@ void app_state_t::init_shaders() {
   sp_buf_bs = shader_generators::gen_sp_buf_bs_sphere();
   sp_2c_cylinder = shader_generators::gen_sp_2c_cylinder();
   sp_2c_cylinder_suprematic = shader_generators::gen_sp_2c_cylinder_suprematic();
-
 }
 
 void app_state_t::init_meshes() {
@@ -237,11 +233,9 @@ void app_state_t::load_settings() {
   settings.beginGroup("hotkey_manager");
   hotkey_mgr->load_from_settings(settings);
   settings.endGroup();
-
 }
 
 void app_state_t::save_settings() {
-
   QSettings settings;
   settings.setValue("test", 68);
 
@@ -250,14 +244,12 @@ void app_state_t::save_settings() {
   settings.setValue("console_font_size", m_console_font_size);
 
   if (m_fixtures_dir_is_set) {
-
     // join fixtures dir
     std::string fd_joined;
     std::for_each(m_fixtures_dirs.begin(), m_fixtures_dirs.end(),
                   [&fd_joined](const std::string &piece){ fd_joined += piece + ";"; });
 
     settings.setValue("fixtures_dir", QString::fromStdString(fd_joined));
-
   }
   // end of general settings
 
@@ -275,7 +267,6 @@ void app_state_t::save_settings() {
 
   for (auto &rec : table->arecs)
     if (rec.m_redefined) {
-
       settings.setArrayIndex(i);
       settings.setValue("number", int(rec.m_number));
       settings.setValue("c_r", double(rec.m_color_jmol[0]));
@@ -284,7 +275,6 @@ void app_state_t::save_settings() {
       settings.setValue("r", double(rec.m_radius));
       settings.setValue("covrad", double(rec.m_covrad_slater));
       i+=1;
-
     }
 
   settings.endArray();
@@ -307,7 +297,6 @@ void app_state_t::save_settings() {
 
   settings.beginWriteArray("recent_files");
   for (int q = 0; q < static_cast<int>(m_recent_files.size()); q++) {
-
     settings.setArrayIndex(q);
     settings.setValue("filename", QString::fromStdString(m_recent_files[q].m_file_name));
     std::string ff_name =
@@ -341,12 +330,10 @@ void app_state_t::save_settings() {
 
   settings.beginGroup("cache_vector");
   for (auto &rec : m_env_vec3) {
-
     QStringList vecl;
     vecl.reserve(3);
     for (size_t q = 0; q < 3; q++) vecl.push_back(QString("%1").arg(rec.second[q]));
     settings.setValue(QString::fromStdString(rec.first), vecl);
-
   }
 
   settings.endGroup();
@@ -354,7 +341,6 @@ void app_state_t::save_settings() {
   settings.beginGroup("hotkey_manager");
   hotkey_mgr->save_to_settings(settings);
   settings.endGroup();
-
 }
 
 void app_state_t::pylog(std::string logstr) {
@@ -365,7 +351,6 @@ void app_state_t::pylog(std::string logstr) {
 void app_state_t::add_recent_file(const std::string &file_name,
                                   const bool is_native,
                                   const size_t ff_id) {
-
   QFileInfo file_info(QString::fromStdString(file_name));
   m_last_dir =  file_info.absoluteDir().path();
   tlog("M_LAST_DIR= {}", m_last_dir.toStdString());

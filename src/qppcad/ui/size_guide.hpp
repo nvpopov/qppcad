@@ -16,7 +16,9 @@ class size_guide_t {
 
 public:
 
-  size_guide_t();
+  float m_scale_factor{1.0f};
+
+  size_guide_t() = default;
 
   /**
    * @brief main_window_h

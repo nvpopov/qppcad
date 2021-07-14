@@ -21,6 +21,7 @@
 #include <qppcad/ws_item/ws_item_behaviour_manager.hpp>
 
 #include <qppcad/core/app_state.hpp>
+#include <QApplication>
 
 using namespace qpp;
 using namespace qpp::cad;
@@ -125,7 +126,12 @@ void cws_changed() {
   astate->astate_evd->cur_ws_changed();
 }
 
+void ev_update() {
+  qApp->processEvents();
+}
+
 PYBIND11_EMBEDDED_MODULE(cad, m) {
+  m.def("ev_update", &ev_update);
 
   py::class_<hs_doc_base_t> py_hist_doc_base_t(m, "hist_doc_base_t");
   py_hist_doc_base_t.def("get_cur_epoch", &hs_doc_base_t::get_cur_epoch);

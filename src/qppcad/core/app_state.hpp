@@ -199,6 +199,7 @@ public:
   bool m_disable_app{false};
   bool m_viewport_dirty{true};
   bool m_immersive_mode{false};
+  std::optional<float>  m_qt_scale_factor{};
 
   size_t m_gv_overview_max_atoms{15000};
   size_t m_gv_overview_max_sel_types{6};

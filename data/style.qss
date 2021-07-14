@@ -1,6 +1,5 @@
 * {
  font-family : "Nunito";
- font-size: 100%;
  font-weight: normal;
  color: rgb(209, 209, 209);
  background: rgb(79, 79, 79);

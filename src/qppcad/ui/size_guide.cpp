@@ -3,10 +3,6 @@
 using namespace qpp;
 using namespace qpp::cad;
 
-size_guide_t::size_guide_t() {
-
-}
-
 int size_guide_t::main_window_h() {
   return 300 ;
 }
